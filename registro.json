@@ -3381,7 +3381,6 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473725000,
    "SPORT|136355906": 1794470235000,
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-decretos-vivienda-afrontan-examen-definitivo-congreso-dia-despues-huelga-20261111123833.html": 1794397113000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/contundente-reaccion-marcos-llorente-polemico-video-miembros-piquete-echando-anciano-cafeteria-espana-me-das-miedo-20261112_3473663.html": 1794483441000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261112/1004250179/asi-sera-sorteo-mundial-femenino-brasil-2027.html": 1794481548000,
    "SPORT|136371700": 1794486892000,
@@ -7650,13 +7649,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2436,
+   "ok": 2437,
    "fallos": 0,
-   "ejecuciones": 1903,
+   "ejecuciones": 1904,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T11:36:13.919Z"
+   "ultima": "2026-11-14T11:41:13.538Z"
   }
  },
  "ptsDirecto": {},
@@ -7673,15 +7672,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:36:17.567Z"
+   "ultimaBien": "2026-11-14T11:41:19.546Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:36:17.567Z"
+   "ultimaBien": "2026-11-14T11:41:19.546Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:36:17.567Z"
+   "ultimaBien": "2026-11-14T11:41:19.546Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7689,11 +7688,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:36:17.567Z"
+   "ultimaBien": "2026-11-14T11:41:19.546Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:36:17.567Z"
+   "ultimaBien": "2026-11-14T11:41:19.546Z"
   }
  },
  "avisos": [
