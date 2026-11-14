@@ -429,6 +429,21 @@ export function analizar(D, H, c, extra = {}) {
     const a = jornadas[i - 1], b = jornadas[i];
     if (b.ini - a.fin > 9 * DIA && !parones.some((p) => p.ini < b.ini && p.fin > a.fin)) parones.push({ ini: a.fin, fin: b.ini, nombre: 'Parón de selecciones', delCalendario: true });
   }
+  // (0.7.12) la recompensa diaria: 100 mil por día, y 2 de 100 mil en los parones (Carlos, 14 nov). Para los días de
+  // parón vale todo el hueco entre jornadas (más de 9 días sin partidos), no solo las fechas FIFA de PARONES
+  const huecos = [...PAR];
+  for (let i = 1; i < jornadas.length; i++) { const a = jornadas[i - 1], b = jornadas[i]; if (b.ini - a.fin > 9 * DIA) huecos.push({ ini: a.fin, fin: b.ini }); }
+  const enHueco = (t) => huecos.some((p) => t >= p.ini && t < p.fin);
+  M.RECOMPENSA = 0.1e6;
+  /** la recompensa diaria de un día (lo que da LaLiga si la coges): el doble en un parón */
+  M.recompensaDia = (t) => (enHueco(t) ? 2 : 1) * M.RECOMPENSA;
+  /** lo que suman las recompensas diarias entre dos momentos (cada día con la suya; el trozo del final, en proporción) */
+  M.recompensas = (t0, t1) => {
+    if (!t0 || !t1 || t1 <= t0) return 0;
+    let x = 0, t = t0;
+    for (; t + DIA <= t1; t += DIA) x += M.recompensaDia(t + DIA / 2);
+    return x + ((t1 - t) / DIA) * M.recompensaDia((t + t1) / 2);
+  };
   M.paron = parones.filter((p) => p.fin > ahora).sort((a, b) => a.ini - b.ini)[0] || null;
   M.enParon = !!(M.paron && M.paron.ini <= ahora);
   // los partidos por fecha, no por jornada: un aplazado de una jornada pasada (o de la que se juega) no se cuela como
@@ -762,12 +777,13 @@ export function analizar(D, H, c, extra = {}) {
   // la base común: lo que tendrías sin moverte (100 M de salida más las recompensas diarias que has cogido)
   const miF = flujos[yoTid] || { v: 0, raros: 0 }, miSub = subidas[yoTid] || { v: 0, dudas: 0 };
   const baseV = D.dinero != null ? num(D.dinero) - miF.v + miSub.v : null;
-  const baseMin = 100e6 - 0.5e6, baseMax = 100e6 + diasMov * 0.1e6 + 0.5e6;
+  const recTotal = AH.desde ? M.recompensas(AH.desde, ahora) : 0;
+  const baseMin = 100e6 - 0.5e6, baseMax = 100e6 + recTotal + 0.5e6;
   const desvio = baseV == null || !AH.completa || D.demo ? 0 : baseV < baseMin ? baseMin - baseV : baseV > baseMax ? baseV - baseMax : 0;
   M.baseDinero = baseV == null ? null : { v: baseV, min: baseMin, max: baseMax, desvio, saldo: num(D.dinero), mov: miF.v, subidas: miSub.v, dias: diasMov };
   const dichos = extra.dichos || {};
-  /** la cuenta con los movimientos, sin lo que te haya dicho */
-  M.dineroCuenta = (tid) => {
+  /** la cuenta con los movimientos, sin lo que te haya dicho ni corregir (con esta se apunta cuánto fallaba) */
+  M.dineroCuentaBruta = (tid) => {
     if (!tid || tid === yoTid) return null;
     if (D.dinero == null) return { v: null, exacto: false, fiable: 'no', motivo: 'no se sabe tu saldo' };
     if (!AH.completa) return { v: null, exacto: false, fiable: 'no', motivo: `faltan los movimientos del principio de la liga (hay desde ${AH.desde ? cuando(AH.desde, { hora: false }) : '?'})` };
@@ -778,8 +794,28 @@ export function analizar(D, H, c, extra = {}) {
     // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
     if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
     // la recompensa diaria que uno coge y otro no, las subidas que no se pueden medir, lo raro y lo que no cuadra en la base
-    const margen = Math.round((1e6 + Math.min(diasMov, 150) * 0.05e6 + s.dudas + num(miSub.dudas) + desvio + (num(f.raros) + num(miF.raros)) * 1e6) / 1e5) * 1e5;
+    const margen = Math.round((1e6 + Math.min(recTotal, 15e6) * 0.5 + s.dudas + num(miSub.dudas) + desvio + (num(f.raros) + num(miF.raros)) * 1e6) / 1e5) * 1e5;
     return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: baseV, mov: f.v, subidas: s.v, nSubidas: s.n } };
+  };
+  /* (0.7.12, Carlos 14 nov: «con el dinero que apunta la gente… se tendría que retroalimentar y mejorar la predicción»)
+     lo que te han dicho los rivales corrige la cuenta de los demás. Cada vez que apuntas lo que tiene uno, se guarda lo
+     que daba la cuenta en ese momento (est): la diferencia es lo que la cuenta no ve (recompensas diarias que no coge,
+     subidas de cláusula que no se ven, la base). Para un rival que te lo dijo hace tiempo (ya no vale como punto de
+     partida), se usa su propia diferencia; para los demás, la mediana de las de todos, a medias con 2 y entera con 5.
+     Solo cuenta lo apuntado en los últimos 120 días */
+  const errores = Object.entries(dichos).filter(([, dc]) => dc && dc.v != null && dc.est != null && dc.t && ahora - dc.t < 120 * DIA).map(([tid, dc]) => ({ tid, e: dc.v - dc.est }));
+  const medianaE = (() => { const xs = errores.map((x) => x.e).sort((a, b) => a - b); if (!xs.length) return 0; const m = Math.floor(xs.length / 2); return xs.length % 2 ? xs[m] : (xs[m - 1] + xs[m]) / 2; })();
+  const pesoG = errores.length >= 2 ? Math.min(1, (errores.length - 1) / 4) : 0;
+  M.correccionDinero = { n: errores.length, mediana: Math.round(medianaE), peso: pesoG };
+  /** la cuenta con los movimientos, corregida con lo que te han dicho (el suyo o el de todos) */
+  M.dineroCuenta = (tid) => {
+    const c = M.dineroCuentaBruta(tid);
+    if (!c || c.v == null) return c;
+    const propio = errores.find((x) => x.tid === String(tid));
+    const corr = propio ? propio.e : medianaE * pesoG;
+    if (!corr || Math.abs(corr) < 1e5) return c;
+    const margen = propio ? c.margen : Math.max(5e5, Math.round((c.margen * 0.85) / 1e5) * 1e5);
+    return { ...c, v: c.v + corr, margen, correccion: { v: Math.round(corr), propio: !!propio, n: errores.length } };
   };
   /**
    * { v, exacto: true, fuente } si LaLiga lo da; si te ha dicho cuánto tiene, eso más lo que ha movido desde entonces;
@@ -796,9 +832,10 @@ export function analizar(D, H, c, extra = {}) {
       const f = flujos[tid] || { ev: [], n: 0 };
       const mov = f.ev.filter(([t]) => t > dc.t).reduce((x, [, d]) => x + d, 0);
       const sub = (H.mov || []).filter((m) => M.blindaPagada(m) && m.teamId === tid && m.t > dc.t).reduce((x, m) => x + (m.a - m.de) / 2, 0);
-      const dias = (ahora - dc.t) / DIA;
-      const margen = Math.round((num(dc.r) + 0.3e6 + dias * 0.1e6) / 1e5) * 1e5;
-      return { v: dc.v + mov - sub, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub, n: f.n };
+      // (0.7.12) más las recompensas diarias desde que te lo dijo (el doble en el parón), que antes solo iban al margen
+      const rec = M.recompensas(dc.t, ahora);
+      const margen = Math.round((num(dc.r) + 0.3e6 + rec * 0.5) / 1e5) * 1e5;
+      return { v: dc.v + mov - sub + rec, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec, n: f.n };
     }
     return M.dineroCuenta(tid);
   };

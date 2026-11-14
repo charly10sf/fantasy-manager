@@ -2965,7 +2965,7 @@ document.addEventListener('click', async (ev) => {
       if (a == null && b == null) { tostada('Pon cuánto te ha dicho que tiene'); break; }
       if (a == null) a = b; if (b == null) b = a;
       if (a > b) [a, b] = [b, a];
-      const cu = S.M && S.M.dineroCuenta ? S.M.dineroCuenta(d.tid) : null;
+      const cu = S.M && (S.M.dineroCuentaBruta || S.M.dineroCuenta) ? (S.M.dineroCuentaBruta || S.M.dineroCuenta)(d.tid) : null;
       const todos = LS.get(K('dinero-dicho'), {});
       todos[d.tid] = { v: Math.round((a + b) / 2), r: Math.round((b - a) / 2), min: Math.round(a), max: Math.round(b), t: Date.now(), est: cu && cu.v != null ? Math.round(cu.v) : null };
       LS.set(K('dinero-dicho'), todos);

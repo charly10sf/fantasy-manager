@@ -649,7 +649,7 @@ export function fichaRival(S, tid) {
     if (!bloqueada('dineroRivales', tid)) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
     // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
     if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', tid)) {
-      const dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(tid) : null;
+      const dc = r.dinero && r.dinero.dicho, cu = (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
       h += `<div class="dicho">`;
       if (dc) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''} <button class="enlace" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></p>`;
       h += `<details class="dicho-f"><summary>${icono('euro')}${dc ? 'Te ha dicho otra cifra' : '¿Te ha dicho cuánto tiene?'}</summary>

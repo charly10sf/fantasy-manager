@@ -704,6 +704,54 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 16c: (0.7.12) la recompensa diaria: 100 mil al día y 200 mil en los días de parón (Carlos, 14 nov)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(() => {
+    const M = window.S.M, js = M.jornadas, DIA = 864e5;
+    let hueco = null;
+    for (let i = 1; i < js.length; i++) if (js[i].ini - js[i - 1].fin > 9 * DIA) { hueco = [js[i - 1].fin, js[i].ini]; break; }
+    if (!hueco) return { sinHueco: true };
+    const enP = hueco[0] + 2 * DIA, fuera = hueco[0] - 3 * DIA;
+    return { paron: M.recompensaDia(enP), normal: M.recompensaDia(fuera), tresDiasParon: Math.round(M.recompensas(enP, enP + 3 * DIA)), tresDias: Math.round(M.recompensas(fuera - 3 * DIA, fuera)) };
+  });
+  if (r.sinHueco || r.paron !== 200000 || r.normal !== 100000 || r.tresDiasParon !== 600000 || r.tresDias !== 300000) mal(`recompensa diaria del parón: ${JSON.stringify(r)}`);
+  else bien('recompensa diaria: 100 mil al día y 200 mil en el parón (3 días de parón, 600 mil)');
+  if (errores.length) mal(`recompensa del parón: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16d: (0.7.12) lo que te han dicho los rivales corrige la cuenta: el que te lo dijo hace tiempo, con su diferencia;
+// los demás, con la mediana de todos (a medias con 3 apuntes)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const antes = await page.evaluate(async () => {
+    const { LS } = await import('/js/util.js');
+    const { K } = await import('/js/datos.js');
+    const M = window.S.M, ids = M.rivalesTid.filter((t) => { const c = M.dineroCuentaBruta(t); return c && c.v != null; }).slice(0, 4);
+    const t = Date.now() - 60 * 864e5, d = {};
+    for (const tid of ids.slice(0, 3)) { const c = M.dineroCuentaBruta(tid); d[tid] = { v: Math.round(c.v + 3e6), r: 0, min: Math.round(c.v + 3e6), max: Math.round(c.v + 3e6), t, est: Math.round(c.v) }; }
+    LS.set(K('dinero-dicho'), d);
+    return { ids, bruta: ids.map((tid) => M.dineroCuentaBruta(tid).v) };
+  });
+  await page.reload();
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  // (en la liga de ejemplo el dinero viene exacto: se mira la cuenta, que es lo que se usa en una liga de verdad)
+  const r = await page.evaluate((ids) => { const M = window.S.M; return { corr: M.correccionDinero, propio: M.dineroCuenta(ids[0]), brutaP: M.dineroCuentaBruta(ids[0]), otro: M.dineroCuenta(ids[3]), brutaOtro: M.dineroCuentaBruta(ids[3]) }; }, antes.ids);
+  const dif = (a, b) => Math.abs(a - b) < 2e5;
+  if (antes.ids.length < 4 || !r.propio || !r.otro || r.corr.n !== 3 || !r.propio.correccion || !r.propio.correccion.propio || !dif(r.propio.v - r.brutaP.v, 3e6) || !r.otro.correccion || !dif(r.otro.v - r.brutaOtro.v, 1.5e6)) mal(`dinero corregido con lo apuntado: ${JSON.stringify({ antes, r })}`);
+  else bien(`dinero corregido con lo apuntado: el que lo dijo hace 60 días, +3 M (el suyo); otro rival, +1,5 M (mediana de 3, a medias)`);
+  if (errores.length) mal(`dinero corregido: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 17: (14 nov) el APK de GitHub se despide: la ventana del paso a Google Play solo en esa app (ni en Play ni en la web),
 // con «Ahora no» antes del cierre y sin cerrar después; la banda de arriba también
 for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.11f';
+export const VERSION = '0.7.12';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.11f';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.12', f: '2026-11-15', h: '00:26', t: 'Un rival, toda la jornada',
+    cosas: [
+      { importante: true, para: 'play', tipo: 'mejora', d: 'candado', t: 'El dinero de un rival, toda la jornada', x: 'Ahora se abre por rival: con dos anuncios seguidos ves su dinero y qué cláusulas tuyas le llegan hasta que acabe la jornada, sin volver a pedirte nada. Puedes abrir hasta 3 rivales por jornada.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'hucha', t: 'El dinero de los rivales, más fino', x: 'En los parones cuenta la recompensa diaria doble, y lo que te dicen los rivales que tienen sirve para corregir la cuenta de los demás.', ir: { v: 'rivales' } },
+    ],
+  },
   {
     v: '0.7.11f', f: '2026-11-14', h: '19:17', t: 'Cabecera más limpia',
     cosas: [
