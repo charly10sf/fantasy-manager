@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
+import { esc, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -73,7 +73,7 @@ const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: 
 function pantallaEntrar(error = '') {
   ponerBanner(false);
   // la portada de antes de entrar: en la web, con los móviles de abajo; dentro de la app, solo lo de entrar
-  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}"><div class="pantalla"><div class="pant-i"><div class="pant-top">${LOGO}${enApp ? '' : proxPlayHero()}</div>
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}"><div class="pantalla"><div class="pant-i"><div class="pant-top">${LOGO}${enApp ? '' : botonPlay('hero')}</div>
     <h1>Fantasy<br><span>Manager</span></h1>
     ${enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : ''}
     <p>Tu director deportivo para LaLiga Fantasy: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
@@ -165,15 +165,12 @@ const qrEntrarHTML = (tit = true) => `<div class="entrar-qr">
  * ya la tiene, el QR y el código; los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada,
  * van plegados en «No tengo la app en el móvil» (el texto del iPhone lo nombra así).
  */
-const APK_WEB = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 function entrarWebHTML() {
   const movil = movilDe();
   if (movil === 'android') {
-    return `<a class="btn ancho cta-grande" href="${APK_WEB}">${icono('descargar')}Descargar la app para Android</a>
+    return `<a class="btn ancho cta-grande" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a>
     <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
     ${botonDemo('sec')}
-    <details class="sin-app"><summary>¿El móvil no te deja instalarla?</summary>
-      <p>Abre esta página en <b>Chrome</b> (no dentro de WhatsApp). Si avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo. <a href="instalar.html#android">Más ayuda</a></p></details>
     <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
   }
   if (movil === 'iphone') {
@@ -206,12 +203,12 @@ function entrarWebHTML() {
     <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>Descárgala</h2></div>
       <div class="ent-dos">
       <div class="ent-op ent-and">
-        <div class="ent-oc"><span class="ent-logo">${ANDROID}</span><div><b class="ent-ot">Android</b><span class="ent-os">Descarga la app e instálala. Es gratis.</span></div></div>
+        <div class="ent-oc"><span class="ent-logo">${ANDROID}</span><div><b class="ent-ot">Android</b><span class="ent-os">Está en Google Play. Es gratis.</span></div></div>
         <div class="en-apk">
-          <div class="en-apk-qr" title="Escanéalo con la cámara del móvil">${qrSVG(APK_WEB)}</div>
-          <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Escanea el QR con la cámara del móvil, o pulsa el botón.</span></li><li><span class="ent-sn">2</span><span>Abre el archivo descargado e instálalo.</span></li></ol>
+          <div class="en-apk-qr" title="Escanéalo con la cámara del móvil">${qrSVG(PLAY_URL)}</div>
+          <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Escanea el QR con la cámara del móvil, o pulsa el botón.</span></li><li><span class="ent-sn">2</span><span>Se abre Google Play: pulsa <b>Instalar</b>.</span></li></ol>
         </div>
-        <a class="btn sec ancho" href="${APK_WEB}">${icono('descargar')}Descargar para Android</a>
+        ${botonPlay()}
       </div>
       <div class="ent-op en-ios">
         <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari y se deja en la pantalla de inicio.</span></div></div>
@@ -409,10 +406,7 @@ async function codigoDeMudanza() {
     return false;
   }
 }
-/* el aviso de que la app sigue en desarrollo, arriba en todas las pestañas, en la web y en la app (lo pidió Carlos el
-   2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 72 h de cerrarlo (Carlos, 9 nov 10:32; antes
-   24 h y, antes, 7 días). Cerrar la pantalla de bienvenida cuenta como cerrarlo */
-const BETA_VUELVE = 3 * DIA;
+/* (la banda «App en desarrollo y en pruebas…», de arriba, se quitó en la 0.7.3a, con la app ya en Google Play) */
 /* la pantalla de bienvenida (Carlos, 9 nov 10:20: «en vez del aviso de arriba»): la primera vez que alguien entra con su
    liga, una vez por cuenta (en local y en el Worker, para que no salga otra vez en otro dispositivo: soporte.js). Nunca en
    la liga de ejemplo ni antes de entrar, ni encima del tutorial, las novedades o el límite: espera a que no haya nada
@@ -445,16 +439,11 @@ function cerrarBienvenida() {
   const b = $('#bienvenida');
   const yo = S.M && S.M.yo;
   apuntarBienvenida({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: (S.D && S.D.liga && S.D.liga.id) || '', equipo: yo ? yo.nombre : '' });
-  // el aviso de arriba dice lo mismo: no vuelve hasta dentro de 72 h
-  LS.set('beta-cerrada', Date.now());
-  $$('.banda.beta').forEach((x) => x.remove());
   S.bienvenidaPendiente = false;
   if (b) { b.classList.remove('on'); setTimeout(() => b.remove(), 220); }
   if (!S.hoja) document.body.style.overflow = '';
 }
-// (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
-const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
-  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+
 /* el almacenamiento del navegador lleno: algo importante no se ha podido guardar ni haciendo sitio (util.js, A8) */
 const QUE_LLENO = [[/^n-sesion/, 'tu sesión de LaLiga (tendrás que volver a entrar)'], [/^n-gemini/, 'tu clave de la IA'], [/^chat/, 'el chat'], [/^hist/, 'el histórico de valores'], [/^datos/, 'tu liga'], [/^planes/, 'el plan'], [/^notas/, 'tus notas']];
 const queLleno = (k) => (QUE_LLENO.find(([re]) => re.test(k)) || [null, 'lo último'])[1];
@@ -685,7 +674,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -2841,7 +2830,6 @@ document.addEventListener('click', async (ev) => {
     case 'otroQR': iniciarQR(); break;
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
-    case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
     case 'bienvenidaOk': cerrarBienvenida(); break;
     case 'bienvenidaReportar': cerrarBienvenida(); abrirAvisos(); break;
     case 'cerrarLleno': olvidarLleno(); el.closest('.banda')?.remove(); break;
@@ -2860,7 +2848,8 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
-        <button class="btn ancho" data-accion="cerrarHoja">Entendido</button></div>`);
+        ${enApp ? '' : botonPlay()}
+        <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
     }
     case 'mandarAviso': enviarAviso(); break;

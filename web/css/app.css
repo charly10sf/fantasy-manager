@@ -414,7 +414,6 @@ h1.titulo { font-weight: 700; }
 .banda button { margin-left: auto; color: var(--rojo-l); font-weight: 700; white-space: nowrap; }
 .banda .banda-x { margin-left: 0; color: var(--texto2); opacity: .8; padding-left: 4px; padding-right: 4px; }
 .banda .banda-x .ic { color: inherit; width: 16px; height: 16px; }
-.banda.beta { font-size: var(--t-sec2); }
 /* la pantalla de bienvenida (9 nov): la primera vez que alguien entra con su liga, el mensaje de Carlos */
 .bv { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px 18px calc(20px + env(safe-area-inset-bottom)); background: rgba(4, 4, 6, 0.8); opacity: 0; transition: opacity 0.22s; }
 .bv.on { opacity: 1; }
@@ -2610,10 +2609,10 @@ button.cr-p:active { background: var(--plano); }
 .pg-todas .btn .ic { width: 20px; height: 20px; margin-right: 6px; }
 .pg-todas span { flex: 1 1 260px; font-size: 15px; line-height: 1.5; color: var(--texto2); }
 /* el once (div.pc: las caras también llevan la clase pc y, con estas columnas, las iniciales se iban a la izquierda) */
-div.pc { display: grid; gap: 18px; }
+div.pc { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 .escritorio div.pc { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; gap: 56px; }
 .pc-campo-w { perspective: 1100px; }
-.pc-campo { position: relative; display: grid; gap: 14px; padding: 22px 8px 18px; border-radius: 22px; overflow: hidden;
+.pc-campo { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 22px 8px 18px; border-radius: 22px; overflow: hidden;
   background: repeating-linear-gradient(180deg, #0f3d26 0 46px, #0d361f 46px 92px); border: 1px solid #1d5a3a;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), inset 0 0 120px rgba(0, 0, 0, 0.35);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -2621,10 +2620,10 @@ div.pc { display: grid; gap: 18px; }
 .pc-campo::before { content: ''; position: absolute; left: 50%; top: -60px; width: 150px; height: 120px; transform: translateX(-50%); border: 2px solid rgba(255, 255, 255, 0.14); border-radius: 50%; }
 .pc-campo::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 46%; height: 64px; transform: translateX(-50%); border: 2px solid rgba(255, 255, 255, 0.14); border-bottom: 0; }
 .pc-linea { position: relative; z-index: 1; display: flex; justify-content: space-evenly; }
-.pc-j { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 4px 0; border: 0; background: none; color: var(--texto); cursor: pointer; font: inherit; }
+.pc-j { display: grid; justify-items: center; gap: 6px; width: 76px; flex: 0 1 76px; min-width: 0; padding: 4px 0; border: 0; background: none; color: var(--texto); cursor: pointer; font: inherit; }
 .pc-j .mq-av { width: 48px; height: 48px; font-size: 15px; background: #0b2a1b; transition: transform 0.2s, box-shadow 0.2s; }
 .pc-j:hover .mq-av { transform: scale(1.07); }
-.escritorio .pc-j { width: 104px; }
+.escritorio .pc-j { width: 104px; flex-basis: 104px; }
 .escritorio .pc-j .mq-av { width: 64px; height: 64px; }
 .pc-j b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 7px; border-radius: 6px; background: rgba(0, 0, 0, 0.55); font: 600 12px var(--cond); letter-spacing: 0.2px; }
 .pc-j[aria-pressed="true"] .mq-av { transform: scale(1.14); box-shadow: 0 0 0 3px #0b2a1b, 0 0 0 5px var(--rojo), 0 6px 24px rgba(238, 28, 60, 0.65); }
@@ -2771,29 +2770,19 @@ div.pc { display: grid; gap: 18px; }
 .pt-largo { display: none; }
 .escritorio .pt-largo { display: inline; }
 
-/* «Próximamente en Google Play» */
-.play-pronto { display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px 7px 12px; margin: 18px auto 0; border: 1px solid var(--rojo3); border-radius: var(--r-ctl); background: var(--plano2); color: var(--texto); text-align: left; line-height: 1.1; }
-.play-pronto .play-ic { width: 26px; height: 26px; flex: none; }
-.play-pronto span { display: grid; gap: 2px; }
-.play-pronto small { font-size: var(--t-mini); letter-spacing: 0.04em; color: var(--apagado); }
-.play-pronto b { font: 700 var(--t-cuerpo) var(--cond); }
-.pz-fin .play-pronto, .portada .pantalla .play-pronto { display: flex; width: fit-content; }
-
-/* «Próximamente en Google Play» en la cabecera de la entrada: junto al logo, sin restar altura */
+/* el distintivo oficial de Google Play (util.js, botonPlay): la imagen trae su margen transparente */
+.play-badge { display: block; width: fit-content; margin: 14px auto 0; line-height: 0; border-radius: var(--r-ctl); }
+.play-badge img { display: block; width: 180px; height: auto; }
+.play-badge:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+.bloq-hoja .play-badge { margin: 4px auto 14px; }
+/* en la cabecera de la entrada (solo en la web), junto al logo */
 .pant-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-.play-hero { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 11px; padding: 9px 18px 9px 13px; border-radius: var(--r-tarj); border: 1px solid rgba(255, 255, 255, 0.16); background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); line-height: 1.05; animation: play-entra 0.7s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-.play-hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent); transform: skewX(-18deg); animation: play-brillo 1.3s 1.1s ease-out 1 both; }
-.play-hero .play-ic { width: 30px; height: 30px; flex: none; }
-.play-hero span { display: grid; gap: 3px; }
-.play-hero small { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--texto2); }
-.play-hero b { font: 700 var(--t-sec) var(--cond); letter-spacing: 0.02em; color: var(--texto); }
+.play-badge.hero { margin: 0; }
+.play-badge.hero img { width: 150px; }
 .escritorio .pant-top { justify-content: flex-start; gap: 26px; }
-.escritorio .play-hero { padding: 11px 22px 11px 16px; border-radius: var(--r-tarj); }
-.escritorio .play-hero .play-ic { width: 36px; height: 36px; }
-.escritorio .play-hero b { font-size: var(--t-cifra); }
+.escritorio .play-badge.hero img { width: 190px; }
 @keyframes play-entra { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
-@keyframes play-brillo { from { transform: translateX(0) skewX(-18deg); } to { transform: translateX(475%) skewX(-18deg); } }
-@media (prefers-reduced-motion: reduce) { .play-hero { animation: none; } .play-hero::after { display: none; } }
+@media (prefers-reduced-motion: reduce) { .play-badge.hero { animation: none; } }
 /* (3 nov) la web ya deja hacer zoom: Safari del iPhone amplía la página al tocar un campo con letra de menos de 16 px. Solo en iOS
    (-webkit-touch-callout solo existe ahí), los campos van a 16 px como mínimo */
 @supports (-webkit-touch-callout: none) { input, textarea, select { font-size: max(16px, 1em) !important; } }
