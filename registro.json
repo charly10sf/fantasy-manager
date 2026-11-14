@@ -1921,7 +1921,6 @@
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000,
-   "SPORT|136343392": 1794415761000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mujer-marcao-estalla-criticas-sevillismo_0_2008475561.html": 1794420208000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/paron-terror-grandes-clubes/0003_202611G12P36992.htm": 1794421380000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249984/tuchel-pronuncia-sobre-jobe-bellingham.html": 1794421267000,
@@ -7525,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2499,
+   "ok": 2500,
    "fallos": 0,
-   "ejecuciones": 1966,
+   "ejecuciones": 1967,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T16:46:11.912Z"
+   "ultima": "2026-11-14T16:51:11.098Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:46:14.537Z"
+   "ultimaBien": "2026-11-14T16:51:15.692Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:46:14.537Z"
+   "ultimaBien": "2026-11-14T16:51:15.692Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:46:14.537Z"
+   "ultimaBien": "2026-11-14T16:51:15.692Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:46:14.537Z"
+   "ultimaBien": "2026-11-14T16:51:15.692Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:46:14.537Z"
+   "ultimaBien": "2026-11-14T16:51:15.692Z"
   }
  },
  "avisos": [
