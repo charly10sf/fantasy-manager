@@ -39,8 +39,13 @@
  *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
  *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
  *
+ *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra }: el plan del día con la IA de Carlos (Claude), con
+ *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
+ *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
+
+import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio } from '../../web/js/plan-sistema.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -207,6 +212,8 @@ const demasiadas = (c, cuando = 'en un minuto') => json({ e: `Demasiadas peticio
 export const FRENOS = {
   vincular: { min: 6, dia: 20, todos: 300 }, usar: { min: 10 }, qrDejar: { min: 6, dia: 20 }, qrEsperar: { min: 45 },
   fallos: { min: 30 }, falloNuevo: { min: 5, dia: 10 }, uso: { min: 6 }, hola: { min: 6 },
+  // /plan, por cuenta: 3 al minuto (el cupo del día lo lleva aparte)
+  plan: { min: 3 },
 };
 async function frenoIP(req, env, c, nombre) {
   const f = FRENOS[nombre], ip = ipDe(req);
@@ -296,7 +303,26 @@ export class Emparejar {
   async fetch(req) {
     const st = this.estado.storage;
     // los frenos por día (cabeHoy): un objeto por clave y día, que se borra solo a las 30 h
-    if (new URL(req.url).pathname === '/contar') {
+    const ruta = new URL(req.url).pathname;
+    // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
+    if (ruta === '/plan') {
+      const b = await req.json().catch(() => ({}));
+      const ya = (await st.get('plan')) || {};
+      const y = cupoCuenta(ya, b.op, { gratis: Number(b.gratis) || 0, max: Number(b.max) || 0, extra: !!b.extra });
+      if (y.u !== (Number(ya.u) || 0) || y.x !== (Number(ya.x) || 0)) {
+        await st.put('plan', { u: y.u, x: y.x });
+        if (!ya.u && !ya.x) await st.setAlarm(Date.now() + 30 * 3600e3);
+      }
+      return new Response(JSON.stringify(y), { status: 200 });
+    }
+    // lo gastado en planes entre todos en un día, en millonésimas de dólar: suma lo que llega y devuelve el total
+    if (ruta === '/gasto') {
+      const mas = Math.max(0, Number(await req.text()) || 0);
+      const n = (Number(await st.get('g')) || 0) + mas;
+      if (mas) { await st.put('g', n); if (n === mas) await st.setAlarm(Date.now() + 30 * 3600e3); }
+      return new Response(String(n), { status: 200 });
+    }
+    if (ruta === '/contar') {
       const max = Number(await req.text()) || 0;
       const n = (Number(await st.get('n')) || 0) + 1;
       if (n > max) return new Response(String(n - 1), { status: 429 });
@@ -564,6 +590,163 @@ async function uso(req, env, c) {
   return json({ dia, seg }, 200, c);
 }
 
+/* ---------- el plan del día con la IA de Carlos (Claude), 2 al día por cuenta ---------- */
+/*
+ * POST /plan { pedido, tono, bloq, anuncio, alias, extra }: el pedido del plan corto que arma la app (pedidoCorto de
+ * web/js/ia.js, ya con alias) se le manda a Claude con la clave de Carlos (el secreto CLAUDE_PLANES) y se devuelve el plan
+ * ({ plan, cupo }). Las instrucciones las arma el Worker con piezas fijas (web/js/plan-sistema.js): la app solo elige el
+ * tono, qué funciones tiene cerradas y si van alias. El tope de respuesta es fijo, el pedido tiene que tener la forma del
+ * plan corto y de la respuesta solo sale el plan (planLimpio): la ruta no sirve como IA gratis para otra cosa.
+ * Quién llama lo dice LaLiga (quienEs, con su sesión), no la app.
+ * Cupo por cuenta y día de Madrid: `gratis` planes y, con `extra: true` (la app lo manda al acabar un anuncio bonificado),
+ * uno más cada vez hasta `max`, pase lo que pase. Y entre todos, como mucho `topeUsdDia` dólares al día. Lo cuenta el Durable
+ * Object (el de los frenos por día), no el KV: no gasta escrituras del KV. Los números, en «planes» de limites.json (con
+ * los de PLANES_DEF si no se puede leer) y nunca por encima de PLAN_TOPE_USD de wrangler.toml.
+ * Mientras Claude piensa (10-20 s) la respuesta va mandando espacios cada 5 s: la app de Android corta a los 30 s sin
+ * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
+ * estado 200 y { e } en el cuerpo.
+ */
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3 };
+export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
+// lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
+const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
+const LIMITES_URL = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
+let limitesW = { t: 0, p: null };
+/** «planes» de limites.json (10 minutos en memoria), con sus topes */
+export async function cfgPlanes(env) {
+  if (!limitesW.p || Date.now() - limitesW.t > 10 * 60e3) {
+    let p = null;
+    for (const u of LIMITES_URL) {
+      try { const r = await fetch(u, { cf: { cacheTtl: 300 } }); if (r.ok) { const j = await r.json(); p = (j && j.planes) || {}; break; } } catch (e) { /* el siguiente */ }
+    }
+    // (sin poder leerlo, lo último que se leyó; y si nunca, lo de por defecto)
+    limitesW = { t: Date.now(), p: p || limitesW.p || {} };
+  }
+  const p = { ...PLANES_DEF, ...limitesW.p };
+  const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
+  const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
+  const gratis = Math.floor(n(p.gratis, 2, 0, 10));
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO) };
+}
+/** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
+const CUPO_MEM = new Map();
+export function cupoCuenta(x, op, { gratis, max, extra = false }) {
+  const u = Number(x.u) || 0;
+  let e = Number(x.x) || 0;
+  if (op === 'devolver') return { ok: true, u: Math.max(0, u - 1), x: e };
+  if (op === 'mirar') return { ok: true, u, x: e };
+  // un anuncio visto da un plan más, pero solo si ya no quedan de los gratis y sin pasar del máximo
+  if (extra && u >= gratis + e && gratis + e < max) e++;
+  const cabe = u < Math.min(max, gratis + e);
+  return { ok: cabe, u: cabe ? u + 1 : u, x: e };
+}
+async function cupo(env, uid, op, c) {
+  const dia = hoyMadrid();
+  const cuerpo = JSON.stringify({ op, gratis: c.gratis, max: c.max, extra: !!c.extra });
+  if (env.QR) {
+    try {
+      const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|${uid}`)).fetch('https://freno/plan', { method: 'POST', body: cuerpo });
+      if (r.status === 200) return await r.json();
+    } catch (e) { /* a la memoria */ }
+  }
+  const k = `${dia}|${uid}`, y = cupoCuenta(CUPO_MEM.get(k) || {}, op, c);
+  if (CUPO_MEM.size > 20000) CUPO_MEM.clear();
+  CUPO_MEM.set(k, { u: y.u, x: y.x });
+  return y;
+}
+/** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
+let GASTO_MEM = { dia: '', n: 0 };
+async function gastoHoy(env, mas = 0) {
+  const dia = hoyMadrid();
+  if (env.QR) {
+    try {
+      const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|gasto`)).fetch('https://freno/gasto', { method: 'POST', body: String(Math.max(0, Math.round(mas))) });
+      if (r.status === 200) return Number(await r.text()) || 0;
+    } catch (e) { /* a la memoria */ }
+  }
+  if (GASTO_MEM.dia !== dia) GASTO_MEM = { dia, n: 0 };
+  GASTO_MEM.n += Math.max(0, Math.round(mas));
+  return GASTO_MEM.n;
+}
+const cupoTxt = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: y.u < c.max });
+const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
+/** la llamada a Claude: { texto, entra, sale, fin } o lanza un error */
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch) {
+  const cuerpo = { model: modelo, max_tokens: PLAN_TOKENS, output_config: { effort: 'low' }, system: sistema, messages: [{ role: 'user', content: pedido }] };
+  let ult = '';
+  for (let n = 0; n < 3; n++) {
+    let r, x;
+    try {
+      r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(100000) });
+      x = await r.json().catch(() => ({}));
+    } catch (e) { ult = String((e && e.message) || e); continue; }
+    if (r.ok && Array.isArray(x.content)) {
+      const u = x.usage || {};
+      return { texto: x.content.filter((b) => b && b.type === 'text').map((b) => b.text).join(''), entra: u.input_tokens || 0, sale: u.output_tokens || 0, fin: x.stop_reason || '' };
+    }
+    ult = `${r.status} ${String((x.error && x.error.message) || '').slice(0, 160)}`;
+    // (por si el modelo no conoce el esfuerzo: se quita y se repite)
+    if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(JSON.stringify(x))) { delete cuerpo.output_config; continue; }
+    if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
+    await new Promise((ok) => setTimeout(ok, r.status === 429 ? 4000 : 1500));
+  }
+  throw new Error(`Claude: ${ult || 'sin respuesta'}`);
+}
+async function planIA(req, env, c, ctx) {
+  const P = await cfgPlanes(env);
+  if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
+  if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de los planes (falta la clave CLAUDE_PLANES).', servicio: true, sinClave: true }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo. Tienes el plan de la app; vuelve a probar en un rato.' }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `plan|${u.uid}`, FRENOS.plan.min))) return demasiadas(c);
+  // (el cuerpo, con su tope antes de leerlo entero)
+  const largo = Number(req.headers.get('content-length') || 0);
+  if (largo > MAX_PEDIDO * 3) return json({ e: 'El pedido del plan es demasiado grande.' }, 413, c);
+  const txt = await req.text();
+  if (txt.length > MAX_PEDIDO * 3) return json({ e: 'El pedido del plan es demasiado grande.' }, 413, c);
+  let b = null;
+  try { b = JSON.parse(txt); } catch (e) { b = null; }
+  if (!b || typeof b !== 'object') return json({ e: 'Pedido no válido' }, 400, c);
+  if (typeof b.pedido === 'string' && b.pedido.length > MAX_PEDIDO) return json({ e: 'El pedido del plan es demasiado grande.' }, 413, c);
+  if (!esPedidoCorto(b.pedido)) return json({ e: 'Eso no es un pedido del plan.' }, 400, c);
+  const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
+  const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias });
+  // entre todos, el tope de gasto del día
+  if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
+  const y = await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
+  if (!y.ok) {
+    const ct = cupoTxt(P, y);
+    return json({ e: ct.masConAnuncio && b.extra !== true ? `Ya has hecho tus ${Math.min(P.max, P.gratis + y.x)} planes con la IA de hoy.` : `Ya has hecho los ${P.max} planes con la IA de hoy, el máximo. Mañana tienes otros ${P.gratis}.`, cupo: ct }, 429, c);
+  }
+  // la respuesta, ya empezada: espacios cada 5 s mientras Claude piensa (JSON.parse se los salta)
+  const { readable, writable } = new TransformStream();
+  const w = writable.getWriter(), enc = new TextEncoder();
+  const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
+  const t0 = Date.now();
+  const trabajo = (async () => {
+    let fin;
+    try {
+      const r = await llamarClaude(env, P.modelo, sistema, b.pedido);
+      const [pe, ps] = PRECIOS[P.modelo] || PRECIOS[PLAN_MODELO];
+      ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, r.entra * pe + r.sale * ps).catch(() => {})) : await gastoHoy(env, r.entra * pe + r.sale * ps).catch(() => {});
+      const plan = planLimpio(jsonDe(r.texto));
+      if (!plan) {
+        await cupo(env, u.uid, 'devolver', P);
+        fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
+      } else fin = { plan, cupo: cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale }, ms: Date.now() - t0, fin: r.fin };
+    } catch (e) {
+      // (lo que no ha llegado a dar un plan no cuenta)
+      await cupo(env, u.uid, 'devolver', P).catch(() => {});
+      console.log('plan:', String((e && e.message) || e));
+      fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
+    }
+    clearInterval(latido);
+    try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido: ya está contado */ }
+  })();
+  if (ctx && ctx.waitUntil) ctx.waitUntil(trabajo);
+  return new Response(readable, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store, no-transform' } });
+}
+
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
 /**
  * borra todo lo que el servidor guarda de quien llama: su ficha de /hola (p:), su registro (r:), sus minutos de uso
@@ -790,7 +973,7 @@ export default {
     ctx.waitUntil(lanzarBot(env, fetch, inputs).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
   },
 
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const c = cors(req.headers.get('Origin'));
     if (!c) return new Response('Origen no permitido', { status: 403 });
@@ -810,6 +993,7 @@ export default {
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/borrar' && req.method === 'POST') return await borrarMios(req, env, c);
+      if (url.pathname === '/plan' && req.method === 'POST') return await planIA(req, env, c, ctx);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);

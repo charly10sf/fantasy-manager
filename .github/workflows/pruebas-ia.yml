@@ -2,7 +2,8 @@
 # y deja las respuestas como artefacto. Se puntúan fuera, con .github/ia/puntuar.mjs.
 # (14 nov, el motor del plan) Los cinco planes con el contrato corto, dos pasadas con cada modelo. PASO elige qué se
 # pregunta: «noche» (Gemini ligero, Haiku y Sonnet; antes de las 9:00 no hay cupo de los Gemini buenos) o «buenos»
-# (los tres Gemini buenos, cuando vuelva el cupo: cambiar PASO a «buenos» y subir).
+# (los tres Gemini buenos, cuando vuelva el cupo: cambiar PASO a «buenos» y subir) o «worker» (los cinco por la ruta /plan del
+# Worker, con Haiku: llamar-worker.mjs).
 name: Pruebas IA
 on:
   push:
@@ -10,7 +11,7 @@ on:
 permissions:
   contents: read
 env:
-  PASO: noche
+  PASO: worker
 jobs:
   ia:
     runs-on: ubuntu-latest
@@ -43,6 +44,12 @@ jobs:
           MODELOS: claude-sonnet-5-5
           PASADAS: "2"
           TOPE_USD: "2"
+      # (14 nov) los cinco planes por la ruta /plan del Worker, con su código y Haiku de verdad: PASO «worker»
+      - name: Por el Worker (/plan), dos pasadas
+        if: env.PASO == 'worker'
+        run: node .github/ia/llamar-worker.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       - name: Gemini buenos, dos pasadas (con el cupo del día)
         if: env.PASO == 'buenos'
         run: node .github/ia/llamar.mjs
