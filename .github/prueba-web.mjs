@@ -671,13 +671,13 @@ for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null,
   await page.waitForTimeout(1500);
   const r = await page.evaluate(() => {
     const d = document.getElementById('aviso-play');
-    return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: /ya no se actualiza/.test((document.getElementById('banda') || {}).innerText || '') };
+    return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: (() => { const b = document.querySelector('#banda .banda-play'); return !!b && /Esta app deja de funcionar (en \d+ días|mañana|hoy)/.test(b.innerText) && !/noviembre/.test(b.innerText) && !!b.querySelector('[data-abrir*="play.google.com"] img[src*="google-play"]'); })() };
   });
   const ok = espera === 'nada' ? !r.hay && !r.banda
     : espera === 'aviso' ? r.hay && r.ahoraNo && r.play && r.banda && /dejará de funcionar el sábado 21 de noviembre/.test(r.t) && /gracias/.test(r.t)
       : r.hay && !r.ahoraNo && r.play && /ya no funciona/.test(r.t);
   if (!ok) mal(`paso a Play, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
-  else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda' : 'la ventana sin cerrar'}`);
+  else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda fija (los días que quedan y la insignia de Google Play)' : 'la ventana sin cerrar'}`);
   if (errores.length) mal(`paso a Play, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
