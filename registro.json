@@ -3337,7 +3337,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388256000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794389939000,
@@ -7653,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2405,
+   "ok": 2406,
    "fallos": 0,
-   "ejecuciones": 1872,
+   "ejecuciones": 1873,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:06:23.479Z"
+   "ultima": "2026-11-14T09:11:11.394Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:06:28.308Z"
+   "ultimaBien": "2026-11-14T09:11:17.559Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:06:28.308Z"
+   "ultimaBien": "2026-11-14T09:11:17.559Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:06:28.308Z"
+   "ultimaBien": "2026-11-14T09:11:17.559Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:06:28.308Z"
+   "ultimaBien": "2026-11-14T09:11:17.559Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:06:28.308Z"
+   "ultimaBien": "2026-11-14T09:11:17.559Z"
   }
  },
  "avisos": [
