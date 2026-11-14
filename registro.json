@@ -1921,7 +1921,6 @@
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
-   "SPORT|136342823": 1794414623000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000,
    "SPORT|136343392": 1794415761000,
@@ -3256,7 +3255,6 @@
    "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794414600000,
    "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420555000,
    "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422281000,
@@ -7543,13 +7541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2495,
+   "ok": 2496,
    "fallos": 0,
-   "ejecuciones": 1962,
+   "ejecuciones": 1963,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T16:26:10.733Z"
+   "ultima": "2026-11-14T16:31:13.288Z"
   }
  },
  "ptsDirecto": {},
@@ -7566,15 +7564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:26:13.994Z"
+   "ultimaBien": "2026-11-14T16:31:18.403Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:26:13.994Z"
+   "ultimaBien": "2026-11-14T16:31:18.403Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:26:13.994Z"
+   "ultimaBien": "2026-11-14T16:31:18.403Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7582,11 +7580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:26:13.994Z"
+   "ultimaBien": "2026-11-14T16:31:18.403Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:26:13.994Z"
+   "ultimaBien": "2026-11-14T16:31:18.403Z"
   }
  },
  "avisos": [
