@@ -137,6 +137,14 @@ b, strong { font-weight: 600; color: var(--texto); }
 /* un fallo al cargar, explicado */
 .banda.mal { background: var(--baja-s); }
 .banda.mal .ic { color: var(--baja); }
+/* el APK de GitHub se despide (14 nov): fija, en rojo y con el enlace a Google Play */
+.banda.banda-play { align-items: flex-start; background: var(--baja-s); border: 1px solid var(--baja); }
+.banda.banda-play > .ic { color: var(--baja); margin-top: 2px; }
+.banda-play-c { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.banda-play-c b { font-size: var(--t-sec); }
+.banda-play-b { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.banda .banda-play-b button { margin-left: 0; }
+.banda .banda-play-b .btn { color: #fff; }
 .fallo p { margin: 0 0 10px; font-size: var(--t-cuerpo); line-height: 1.5; color: var(--texto2); }
 .error-c .fallo-det { margin-top: 6px; font-size: var(--t-mini); color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
 .fallo p.fallo-det { font-size: var(--t-mini); color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }

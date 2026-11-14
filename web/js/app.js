@@ -459,7 +459,16 @@ window.addEventListener('fm-lleno', (e) => {
 });
 /* el APK de GitHub ya no se actualiza: una banda fija hasta que se pasen a Google Play (avisoPlay, más abajo) */
 const enApkGithub = () => enApp && nativo.canal() === 'github';
-const bandaPlay = () => (enApkGithub() ? `<div class="banda">${icono('descargar')}<span>Esta app ya no se actualiza: instálala desde Google Play</span><button data-accion="avisoPlay">Ver</button></div>` : '');
+// (Carlos, 14 nov) fija arriba en todas las pestañas, sin cerrar: que ya no recibe nada y cuándo deja de funcionar, con el
+// enlace a Google Play y «Cómo» (hay que desinstalar esta antes: la de Google Play no se instala encima)
+const bandaPlay = () => {
+  if (!enApkGithub()) return '';
+  // (días del calendario: el sábado por la tarde, «en 7 días» hasta el sábado siguiente)
+  const c = cierreApk(), d0 = (t) => { const x = new Date(t); return new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime(); };
+  const dias = c.hasta ? Math.round((d0(c.hasta) - d0(Date.now())) / DIA) : 0;
+  const cuando = !c.hasta ? '' : dias > 1 ? ` y dejará de funcionar el ${fechaLarga(c.hasta)} (en ${dias} días)` : dias === 1 ? ' y dejará de funcionar mañana' : ' y deja de funcionar hoy';
+  return `<div class="banda banda-play">${icono('alerta')}<div class="banda-play-c"><b>Pásate a Google Play</b><span>Esta app ya no recibirá actualizaciones ni mejoras${cuando}.</span><div class="banda-play-b"><button class="btn chico" data-abrir="${PLAY_URL}">Ir a Google Play</button><button data-accion="avisoPlay">Cómo</button></div></div></div>`;
+};
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
 /* ---------------- la pantalla de carga ---------------- */
