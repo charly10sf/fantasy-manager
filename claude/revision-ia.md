@@ -305,11 +305,25 @@ nada que especular), sin descartes. Histórico de reventas: 633 de 700 bien, +1,
   es lo que se paga de más al pujar, así que el histórico mide si la regla funciona.
 - 13: mientras la IA piensa, si falla o sin cupo, se ve el último plan de la IA SI ES DE HOY, con «de hoy 10:32 (hace 2 h)»
   y una banda «puede que no esté al día» (también si tiene más de 3 h). Si no hay de hoy, el automático (ya era así).
-- 14: que la IA vuelva a buscar en Google. SIN HACER en esta sesión (sesión aparte): toca el Worker (`tools` con
-  `web_search_20250305`, `max_uses`, 0,01 $ por búsqueda más los tokens de los resultados; hay que tenerlo activado en la
-  consola de Anthropic), las instrucciones del plan corto, `planLimpio` (que deje pasar las fuentes) y `aplicarCorto`
-  (que una noticia con fuente de la búsqueda valga para quitar o meter). Medirlo en `pruebas-ia` antes de prometer nada:
-  hoy un plan cuesta ~0,0018 $; con 2 búsquedas, del orden de 0,02-0,03 $.
+- 14: que la IA vuelva a buscar en Google. HECHO Y PUBLICADO en la 0.7.11a (14 nov, tarde), con 1 búsqueda por plan.
+  - Worker: `llamarClaude` lleva `web_search_20250305` con `max_uses` = «planes.web» de limites.json (0-3; 0 apagado) y
+    `user_location` España; junta los bloques de texto (vienen partidos y con citas), sigue si vuelve a medias
+    (`pause_turn`, dos veces como mucho) y, si la consola no tiene la búsqueda activada (400/403), repite sin ella. El
+    gasto suma 0,01 $ por búsqueda (`costeDe`). Devuelve `tok.web` (las búsquedas hechas).
+  - Las fuentes nunca salen de la IA: `fuentesDe` (plan-sistema.js) deja en cada `fuente` de quita, mete y noticias solo
+    urls que salieron de verdad en la búsqueda y pone en `fuentes` las usadas y las citadas (6 como mucho); lo que la IA
+    escriba en su propio «fuentes» se tira. `planLimpio` deja pasar `fuente` y `fuentes` (https y título corto).
+  - Sistema: `webTxt(n)` se añade a `sistemaCorto` solo por el Worker (busca solo noticias de última hora de los del plan
+    y titulares dudosos; la fuente, la url tal cual; si no hay nada claro y reciente, no cambia nada).
+  - App (`aplicarCorto`): una noticia con fuente de la búsqueda vale para quitar o meter (como prensa, estado, nota o
+    partidazo); sin fuente, no. `P.web` (si buscó) y `P.fuentes` (sin webs de fantasy; para quitar sí valen). Casos
+    nuevos: corto-quita-por-busqueda, corto-busqueda-sin-fuente, corto-fuentes-fantasy. Worker: 16 casos nuevos en datos.mjs.
+  - La consola de Anthropic ya tenía activada la búsqueda web (org Toisón, Capacidades, sin restricciones).
+  - Medido en `pruebas-ia` con Haiku por el Worker (los 5 planes, 2 pasadas): con 1 como mucho, 0,0117 $ por plan (0,8
+    búsquedas, 21.000 tokens de entrada, 3.100 de salida, 16,5 s) y 4 noticias con fuente en 10 planes; con 2, 0,0163 $
+    (1,2 búsquedas, 17,8 s) y 5 noticias. Sin búsqueda, ~0,0022 $. Ninguno quitó ni metió pasos (la liga de ejemplo, en el
+    parón); las noticias, reales y con sentido (Raphinha sin lesión con Brasil, Baena convocado). Carlos eligió 1: ~0,70 $
+    por usuario al mes con 2 planes al día; el tope de 3 $ al día da para ~250 planes.
 
 Casos nuevos (`motor-…` en casos.mjs, escenas en banco.mjs): baja-sin-relevo-avisa, baja-con-relevo-a-la-venta,
 giro-titular-no-se-vende, reventa-se-aguanta, reventa-antes-de-la-proteccion, 24-no-puja-de-mas, blinda-al-arrancar y las
