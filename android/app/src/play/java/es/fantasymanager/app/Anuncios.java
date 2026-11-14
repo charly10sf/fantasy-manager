@@ -130,7 +130,9 @@ final class Anuncios {
         DisplayMetrics m = act.getResources().getDisplayMetrics();
         int px = hueco.getWidth() > 0 ? hueco.getWidth() : m.widthPixels;
         anchoBanner = px;
-        return AdSize.getLargeAnchoredAdaptiveBannerAdSize(act, (int) (px / m.density));
+        // (14 nov, Carlos: «corta demasiada pantalla») el adaptable de siempre (unos 50-60 dp de alto), no el grande (hasta
+        // ~100 dp en un móvil grande)
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(act, (int) (px / m.density));
     }
 
     private static AdRequest pedido() {

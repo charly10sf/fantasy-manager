@@ -75,14 +75,15 @@ const DIB = {
     <rect class="toast" x="94" y="146" width="112" height="22" rx="11"/><text class="tt" x="150" y="160.6" text-anchor="middle">Copied to clipboard</text>`),
 };
 
-/** la pestaña de la IA sin clave: la guía entera */
-export function guiaClave() {
+/** la pestaña de la IA sin clave: la guía entera. planApp: el plan del día va con la IA de la app (no hace falta la clave
+    para él, solo para preguntar; Carlos, 14 nov) */
+export function guiaClave(planApp = false) {
   const pegar = !enApp && typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.readText === 'function';
   contar('v', { una: true });
   const paso = (n, t, cuerpo, extra = '') => `<li class="gc-paso"${extra}><span class="gc-num">${n}</span><div class="gc-c"><b class="gc-t">${t}</b>${cuerpo}</div></li>`;
   return `<div class="ia-alta gc">
     <div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
-    <p class="entradilla"><b>Para hacerle preguntas, primero necesita tu clave</b> (se saca una sola vez). Es la IA de Google, con tu propia clave de Google AI Studio: contesta lo que le preguntes de tu liga, también con capturas, y te hace el plan de cada día leyendo noticias, lesiones y onces probables. Mientras, en Hoy tienes el plan automático.</p>
+    <p class="entradilla"><b>Para hacerle preguntas, primero necesita tu clave</b> (se saca una sola vez). Es la IA de Google, con tu propia clave de Google AI Studio: contesta lo que le preguntes de tu liga, también con capturas${planApp ? '. El plan de cada día no la necesita: te lo hace la IA de la app en Hoy.' : ', y te hace el plan de cada día leyendo noticias, lesiones y onces probables. Mientras, en Hoy tienes el plan automático.'}</p>
     <div class="gc-chips"><span>${icono('ok')}Gratis</span><span>${icono('ok')}Sin tarjeta</span><span>${icono('reloj')}3 minutos</span></div>
     ${vieneDeAIStudio() ? `<a class="gc-vuelta" href="#pegaClave" data-accion="irAPegar">${icono('copiar')}<span>¿Ya la tienes copiada? <b>Pégala abajo</b></span></a>` : ''}
     <ol class="gc-pasos">
@@ -91,11 +92,11 @@ export function guiaClave() {
       ${paso(2, 'Acepta las condiciones', `<p>Solo la primera vez. Marca la casilla de las condiciones y pulsa <b>Continue</b>. La de recibir correos de Google no hace falta.</p>${DIB.condiciones}`)}
       ${paso(3, 'Busca tu clave', `<p>Google te crea una al entrar por primera vez: sale en la lista de <b>API Keys</b>. Si no tienes ninguna, pulsa <b>Create API key</b>, ponle de nombre «Fantasy» y créala en un proyecto nuevo (<b>Create project</b>). Usa una clave de un proyecto <b>sin facturación</b>: si en ese proyecto has puesto una tarjeta en Google Cloud, lo que gaste la IA lo paga tu tarjeta.</p>${DIB.claves}`)}
       ${paso(4, 'Cópiala', `<p>Toca la clave y luego el icono de copiar. Empieza por <span class="gc-mono">AQ.</span> (las de antes, por <span class="gc-mono">AIza</span>). Cópiala entera.</p>${DIB.copiar}`)}
-      ${paso(5, 'Vuelve aquí y pégala', `<p>${enApp ? 'Mantén el dedo en la casilla y pulsa <b>Pegar</b>.' : 'Pégala en la casilla.'} En cuanto la pegues, la app la prueba y te hace el plan.</p>
-        <div class="gc-aviso"><b>Antes de pegarla</b><p>Cuando pides el plan o preguntas, la app le manda a la IA de Google los datos de tu liga: tu plantilla, tu saldo, tus ofertas y el mercado. Se cambian los nombres en los datos de la liga (tus rivales van como «Rival 1», «Rival 2»…); lo que escribas tú o las capturas van tal cual. Con la clave gratuita, Google puede usar lo que le mandas para mejorar sus productos, y puede que lo lean personas: no escribas en el chat datos personales tuyos ni de otros. La clave se guarda en tu dispositivo y la quitas cuando quieras en Ajustes. <a href="#" data-abrir="https://ai.google.dev/gemini-api/terms">Condiciones de Google</a></p>
+      ${paso(5, 'Vuelve aquí y pégala', `<p>${enApp ? 'Mantén el dedo en la casilla y pulsa <b>Pegar</b>.' : 'Pégala en la casilla.'} En cuanto la pegues, la app la prueba${planApp ? '' : ' y te hace el plan'}.</p>
+        <div class="gc-aviso"><b>Antes de pegarla</b><p>Cuando ${planApp ? 'le preguntas' : 'pides el plan o preguntas'}, la app le manda a la IA de Google los datos de tu liga: tu plantilla, tu saldo, tus ofertas y el mercado. Se cambian los nombres en los datos de la liga (tus rivales van como «Rival 1», «Rival 2»…); lo que escribas tú o las capturas van tal cual. Con la clave gratuita, Google puede usar lo que le mandas para mejorar sus productos, y puede que lo lean personas: no escribas en el chat datos personales tuyos ni de otros. La clave se guarda en tu dispositivo y la quitas cuando quieras en Ajustes. <a href="#" data-abrir="https://ai.google.dev/gemini-api/terms">Condiciones de Google</a></p>
         <label class="gc-ok"><input type="checkbox" id="claveOK"${LS.get('clave-aviso-ok', false) ? ' checked' : ''}><span>Tengo 18 años o más y lo he leído</span></label></div>
         <div class="gc-fila"><input class="campo-t gc-campo" id="claveIA" placeholder="AQ.… o AIza…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Tu clave de Google AI Studio">${pegar ? `<button class="btn sec gc-pegar" data-accion="pegarClave">${icono('copiar')}Pegar</button>` : ''}</div>
-        <button class="btn ancho gc-guardar" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button>`, ' id="pegaClave"')}
+        <button class="btn ancho gc-guardar" data-accion="guardarClave">${icono('ok')}${planApp ? 'Guardar' : 'Guardar y hacer el plan'}</button>`, ' id="pegaClave"')}
     </ol>
     <details class="gc-ayuda"><summary>${icono('info')}¿Algo no te sale así?</summary>
       <dl>
@@ -103,7 +104,7 @@ export function guiaClave() {
         <dt>«Create API key» sale en gris</dt><dd>Pasa con cuentas de empresa o de colegio, que no tienen permiso. Entra con una cuenta personal de Gmail.</dd>
         <dt>Me pide tarjeta o «billing»</dt><dd>No hace falta. Ignóralo: la clave funciona con el cupo gratis.</dd>
         <dt>Dice que la clave no vale</dt><dd>Cópiala otra vez entera, sin espacios. Si sigue igual, crea otra en un proyecto nuevo: las claves viejas de otras apps a veces están bloqueadas. Si usas una que ya tenías de otra cosa, mira que su proyecto no tenga la facturación activada: con facturación, Google cobra cada pregunta a tu tarjeta.</dd>
-        <dt>¿Es gratis de verdad?</dt><dd>Sí, con una clave de un proyecto sin facturación (lo normal si la creas como aquí): Google da un cupo diario gratis por clave. Si el proyecto tiene la facturación activada, deja de ser gratis y paga tu tarjeta. Si un día se acaba, tienes el plan automático (sale de los números, sin noticias) y la IA vuelve al día siguiente, hacia las 9 de la mañana.</dd>
+        <dt>¿Es gratis de verdad?</dt><dd>Sí, con una clave de un proyecto sin facturación (lo normal si la creas como aquí): Google da un cupo diario gratis por clave. Si el proyecto tiene la facturación activada, deja de ser gratis y paga tu tarjeta. Si un día se acaba, ${planApp ? 'el chat vuelve al día siguiente, hacia las 9 de la mañana (el plan de Hoy no depende de tu clave)' : 'tienes el plan automático (sale de los números, sin noticias) y la IA vuelve al día siguiente, hacia las 9 de la mañana'}.</dd>
       </dl>
     </details>
     <p class="gc-priv">${icono('candado')}<span>La clave se queda en tu ${enApp ? 'móvil' : 'dispositivo'} y las preguntas van directas a Google. Puedes quitarla cuando quieras en Ajustes.</span></p>

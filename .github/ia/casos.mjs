@@ -26,9 +26,16 @@ const op = (ref, accion, jugador, mas = {}) => ({ ref, accion, jugador, motivo: 
 /* el plan corto: lo que «contesta» la IA lleva los ids que la app pone a los pasos; se buscan en lo que la app manda */
 const textoDe = (q) => ((q && q.contents) || []).flatMap((c) => c.parts || []).map((p) => p.text || '').join('\n');
 const idDe = (q, nombre) => (textoDe(q).match(new RegExp(`^\\[([pa]\\d+)\\][^\\n]*· ${nombre}`, 'm')) || [])[1] || 'p99';
+const altsDe = (q) => [...(textoDe(q).split('ALTERNATIVAS QUE TAMBIÉN VALEN')[1] || '').split('MIRADO Y DESCARTADO')[0].matchAll(/^\[(a\d+)\]/gm)].map((m) => m[1]);
 const pasosDe = (q) => [...textoDe(q).matchAll(/^\[(p\d+)\]/gm)].map((m) => m[1]);
 const C = (q, { quita = [], mete = [], frase = () => 'Bien visto: los números de la app salen.', titular = 'Plan de hoy, sin sorpresas', situacion = 'Equipo en orden.', orden = null, noticias = [], rivales = [] } = {}) => JSON.stringify({
   pasos: (orden || pasosDe(q)).filter((id) => !quita.some((x) => x.id === id)).map((id) => ({ id, frase: frase(id) })), quita, mete, situacion, noticias, rivales, titular });
+
+/* (14 nov, punto 14) la respuesta con la búsqueda en Google: el JSON entero de Google con las fuentes que salieron
+   (groundingMetadata). Por el Worker llegan igual, ya comprobadas con la búsqueda (fuentesDe de plan-sistema.js) */
+const MARCA = 'https://www.marca.com/futbol/real-madrid/2026/11/10/fran-garcia-lesion.html';
+const FFW = 'https://www.futbolfantasy.com/noticias/fran-garcia-once';
+const conGoogle = (texto, fuentes) => ({ candidates: [{ content: { role: 'model', parts: [{ text: texto }] }, finishReason: 'STOP', groundingMetadata: { groundingChunks: fuentes.map(([uri, title]) => ({ web: { uri, title } })) } }], usageMetadata: { promptTokenCount: 1, candidatesTokenCount: 1, totalTokenCount: 2 } });
 
 export const CASOS = [
   /* ------------------------------ el plan, con la respuesta de la IA escrita a mano ------------------------------ */
@@ -249,19 +256,19 @@ export const CASOS = [
 
   /* --------------------- el plan corto: el motor propone, la IA ordena, recorta y explica (14 nov) --------------------- */
   { id: 'corto-bueno-no-se-toca', tipo: 'corto', escena: 'martes', de: 'control: la IA explica el plan de la app sin cambiar nada y sale tal cual, con sus frases',
-    ia: (q) => C(q, { frase: (id) => (id === idDe(q, 'Niño') ? 'Un chollo a su valor que entra directo en tu once.' : 'Bien visto: los números de la app salen.'), titular: 'Raphinha a la venta y Niño al once' }),
-    debe: ['^TITULAR: Raphinha a la venta y Niño al once', '^OP: vender Raphinha', '^OP: clausular Niño', '^FRASE Niño: Un chollo a su valor', '^CAMBIOS: quita \\[\\]; mete \\[\\]; no aplicado \\[\\]; frases de la app 0', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
+    ia: (q) => C(q, { frase: (id) => (id === idDe(q, 'Niño') ? 'Un chollo a su valor que entra directo en tu once.' : 'Bien visto: los números de la app salen.'), titular: 'Fran García a la venta y Niño al once' }),
+    debe: ['^TITULAR: Fran García a la venta y Niño al once', '^OP: vender Fran García', '^OP: clausular Niño', '^FRASE Niño: Un chollo a su valor', '^CAMBIOS: quita \\[\\]; mete \\[\\]; no aplicado \\[\\]; frases de la app 0', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
   { id: 'corto-lleva-poco', tipo: 'corto', escena: 'martes', de: 'el objetivo: menos de 12.000 tokens de entrada (unos 36.000 caracteres con el sistema)',
     ia: (q) => C(q), debe: ['^PEDIDO: (\\d{1,4}|[12]\\d{4}|3[0-5]\\d{3}) caracteres'] },
   { id: 'corto-quita-por-noticia', tipo: 'corto', escena: 'm-noticia', de: 'la IA quita un paso por una noticia de prensa: sale de los pasos, queda en «mirados» con el porqué y el titular no lo nombra',
-    ia: (q) => C(q, { quita: [{ id: idDe(q, 'R. Terrats'), motivo: 'Es duda para el sábado por un golpe en el tobillo.' }], titular: 'Vende a Raphinha y puja por R. Terrats', noticias: [{ jugador: 'R. Terrats', texto: 'Duda para el sábado por un golpe en el tobillo.', efecto: 'baja' }] }),
-    debe: ['^MIRADO R. Terrats: La IA lo quita del plan: Es duda', '^CAMBIOS: quita \\[R. Terrats\\]', '^OP: vender Raphinha', '^NOTICIA R. Terrats: Duda', '^REGLAS: ok'], nunca: ['^OP: pujar R. Terrats', '^TITULAR:[^\\n]*Terrats', '^DESCARTADA:'] },
+    ia: (q) => C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Va a ser titular el sábado: su valor puede remontar.' }], titular: 'Vende a Rodri y a Fran García', noticias: [{ jugador: 'Fran García', texto: 'El técnico confirma que será titular el sábado.', efecto: 'sube' }] }),
+    debe: ['^MIRADO Fran García: La IA lo quita del plan: Va a ser titular', '^CAMBIOS: quita \\[Fran García\\]', '^OP: clausular Niño', '^NOTICIA Fran García: El técnico', '^REGLAS: ok'], nunca: ['^OP: vender Fran García', '^TITULAR:[^\\n]*Fran García', '^DESCARTADA:'] },
   { id: 'corto-quita-sin-noticia', tipo: 'corto', escena: 'martes', de: 'medido con el modelo ligero (14 nov): quitaba pasos «porque sobra margen». Sin prensa, estado ni nota de ese jugador, no se quita',
     ia: (q) => C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Baja poco y nos sobra margen con las otras ventas.' }] }),
     debe: ['^OP: vender Fran García', '^CAMBIOS: quita \\[\\][^\\n]*no aplicado \\[quitar Fran García \\(sin noticia'], nunca: ['^MIRADO Fran García'] },
   { id: 'corto-noticias-inventadas', tipo: 'corto', escena: 'martes', de: 'medido con el modelo ligero (14 nov): «se habrá marcado un buen baile en el vestuario». Noticias, solo de quien tiene prensa, estado o una nota',
     ia: (q) => C(q, { noticias: [{ jugador: 'Kang-In Lee', texto: 'Se ha marcado un buen baile en el vestuario y anda de discotecas.', efecto: 'neutro' }, { jugador: 'Raphinha', texto: 'Nos gastamos los dineros en fiesta y luego pasa lo que pasa.', efecto: 'baja' }] }),
-    nunca: ['^NOTICIA', 'baile', 'fiesta'], debe: ['^OP: vender Raphinha'] },
+    nunca: ['^NOTICIA', 'baile', 'fiesta'], debe: ['^OP: vender Fran García'] },
   { id: 'corto-no-quita-lo-que-hace-falta', tipo: 'corto', escena: 'm-cierre-negativo', de: 'regla 10: la IA no puede quitar la venta que hace falta para empezar la jornada en positivo',
     ia: (q) => C(q, { quita: [{ id: idDe(q, 'Álex Baena'), motivo: 'Es titular y juega mañana.' }] }),
     debe: ['^OP: Aceptar oferta Álex Baena', '^CAMBIOS:[^\\n]*no aplicado \\[quitar Álex Baena', '^REGLAS: ok'] },
@@ -269,25 +276,34 @@ export const CASOS = [
     ia: (q) => JSON.stringify({ pasos: [{ id: 'p77', frase: 'Ficha a Mbappé.' }, ...pasosDe(q).map((id) => ({ id, frase: 'Vale.' }))], quita: [{ id: 'p99', motivo: 'porque sí' }], mete: [{ id: 'a9', frase: 'Clausula a Mbappé.' }, { id: 'C-1089', frase: 'Y a Lamine.' }], titular: 'Plan de hoy' }),
     debe: ['^OP: clausular Niño', '^CAMBIOS: quita \\[\\]; mete \\[\\]', '^REGLAS: ok'], nunca: ['Mbappé', 'Lamine', '^DESCARTADA:'] },
   { id: 'corto-mete-para-cubrir', tipo: 'corto', escena: 'm-noticia', de: 'la IA quita un paso por una noticia y mete una alternativa de las que la app le pasa para cubrirlo: entra con las cuentas rehechas por el motor',
-    ia: (q) => C(q, { quita: [{ id: idDe(q, 'R. Terrats'), motivo: 'Es duda para el sábado.' }], mete: [{ id: idDe(q, 'El Hilali'), frase: 'Sube fuerte y da tiempo a venderlo antes de la jornada.' }] }),
-    debe: ['^OP: pujar El Hilali', '^CAMBIOS: quita \\[R. Terrats\\]; mete \\[El Hilali\\]', '^FRASE El Hilali: Sube fuerte', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: pujar R. Terrats'] },
+    ia: (q) => C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Va a ser titular el sábado.' }], mete: [{ id: altsDe(q)[0], frase: 'Entra para cubrir lo que quitamos.' }] }),
+    debe: ['^CAMBIOS: quita \\[Fran García\\]; mete \\[[^\\]]+\\]', '^FRASE [^:\\n]+: Entra para cubrir', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^OP: vender Fran García'] },
   { id: 'corto-mete-sin-motivo', tipo: 'corto', escena: 'martes', de: 'medido con el modelo ligero (14 nov): metía alternativas sin noticia. Los números ya los ha mirado el motor: sin noticia ni nada que cubrir, no entra',
-    ia: (q) => C(q, { mete: [{ id: idDe(q, 'El Hilali'), frase: 'Me gusta para revender.' }] }),
-    debe: ['^CAMBIOS: quita \\[\\]; mete \\[\\]; no aplicado \\[meter El Hilali', '^REGLAS: ok'], nunca: ['^OP: pujar El Hilali'] },
-  { id: 'corto-mete-lo-que-no-cabe', tipo: 'corto', escena: 'm-noticia', de: 'las cuentas las hace la app: tres alternativas que juntas pasan el tope de deuda; entra lo que cabe y el resto se dice',
-    ia: (q) => C(q, { quita: [{ id: idDe(q, 'R. Terrats'), motivo: 'Es duda para el sábado.' }], mete: ['Unai Simón', 'Natan', 'El Hilali'].map((n) => ({ id: idDe(q, n), frase: 'Me gusta.' })) }),
-    debe: ['^CAMBIOS:[^\\n]*mete \\[[^\\]]+\\][^\\n]*no aplicado \\[[^\\]]*meter', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
+    ia: (q) => C(q, { mete: altsDe(q).map((id) => ({ id, frase: 'Me gusta para revender.' })) }),
+    debe: ['^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
+  { id: 'corto-mete-de-todo', tipo: 'corto', escena: 'm-noticia', de: 'las cuentas las hace la app: la IA mete todas las alternativas a la vez; entra solo lo que cabe (deuda, 25, dos para revender) y nada que la app tacharía',
+    ia: (q) => C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Va a ser titular el sábado.' }], mete: altsDe(q).map((id) => ({ id, frase: 'Me gusta.' })) }),
+    debe: ['^CAMBIOS: quita \\[Fran García\\]', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
   { id: 'corto-cifra-inventada', tipo: 'corto', escena: 'martes', de: 'cifras que se inventa (7 nov, «107 + 35 = 75»): una frase con una cifra que no está en los datos no se usa; sale la de la app',
     ia: (q) => C(q, { frase: (id) => (id === idDe(q, 'Niño') ? 'Vale 9,90 M y su cláusula es de 3,30 M: un chollo.' : 'Bien visto.') }),
     debe: ['^FRASE Niño: [^\\n]*1,0[12] M', '^CAMBIOS:[^\\n]*frases de la app 1'], nunca: ['9,90 M', '3,30 M'] },
   { id: 'corto-nombra-el-modelo', tipo: 'corto', escena: 'martes', de: 'reglas de Carlos y de Domy: ni el nombre del modelo ni otras webs de fantasy',
     ia: (q) => C(q, { titular: 'Vende a Raphinha, lo dice Comuniate', situacion: 'Soy Gemini 3.5 Flash, un modelo de lenguaje de Google. Tu equipo va bien.', frase: () => 'Según Jornada Perfecta y SofaScore, bien visto.' }),
-    nunca: ['Gemini', 'Comuniate', 'Jornada Perfecta', 'SofaScore', 'modelo de lenguaje'], debe: ['^OP: vender Raphinha'] },
-  { id: 'corto-orden-que-no-cuadra', tipo: 'corto', escena: 'm-negativo', de: 'el orden es de la IA, pero el dinero manda: una cláusula no puede ir antes de la oferta que la paga',
+    nunca: ['Gemini', 'Comuniate', 'Jornada Perfecta', 'SofaScore', 'modelo de lenguaje'], debe: ['^OP: vender Fran García'] },
+  { id: 'corto-orden-que-no-cuadra', tipo: 'corto', escena: 'm-negativo', de: 'el orden es de la IA dentro de cada clase, pero el dinero manda: lo que se paga con las ventas (la puja para revender) no va antes que ellas',
     ia: (q) => C(q, { orden: [...pasosDe(q)].reverse() }),
-    debe: ['^OP: Aceptar oferta Álex Baena[\\s\\S]*^OP: clausular Niño', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+    debe: ['^OP: (Aceptar oferta|vender) [^\\n]*[\\s\\S]*^OP: vender Fran García[\\s\\S]*^OP: pujar Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
   { id: 'corto-respuesta-sin-formato', tipo: 'corto', escena: 'martes', de: 'la IA contesta sin el formato: se dice y se queda el plan de la app',
     ia: 'Claro, te cuento: yo vendería a Raphinha y poco más. ¡Suerte!', error: 'sin el formato del plan' },
+  { id: 'corto-quita-por-busqueda', tipo: 'corto', escena: 'martes', de: 'Carlos, 14 nov (punto 14): una noticia de la búsqueda en Google, con su fuente, vale para quitar un paso aunque la app no tenga prensa de ese jugador',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Se ha lesionado en el entrenamiento: así no se vende bien.', fuente: MARCA }], titular: 'Niño al once y a esperar', noticias: [{ jugador: 'Fran García', texto: 'Se ha lesionado en el entrenamiento de hoy.', efecto: 'baja', fuente: MARCA }] }), [[MARCA, 'Marca: Fran García, lesionado']]),
+    debe: ['^MIRADO Fran García: La IA lo quita del plan: Se ha lesionado', '^CAMBIOS: quita \\[Fran García\\]', '^NOTICIA Fran García: Se ha lesionado', '^WEB: sí', '^FUENTE Marca: Fran García, lesionado · https://www\\.marca\\.com/', '^REGLAS: ok'], nunca: ['^OP: vender Fran García', '^DESCARTADA:'] },
+  { id: 'corto-busqueda-sin-fuente', tipo: 'corto', escena: 'martes', de: 'punto 14: una «noticia» sin fuente de la búsqueda (o con una url que no salió en ella) no vale para quitar: sin prensa de la app, no se quita',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'He leído que está lesionado.', fuente: 'https://www.inventada.es/fran-garcia' }], noticias: [{ jugador: 'Fran García', texto: 'Está lesionado.', efecto: 'baja' }] }), [[MARCA, 'Marca: otra cosa']]),
+    debe: ['^OP: vender Fran García', '^CAMBIOS: quita \\[\\][^\\n]*no aplicado \\[quitar Fran García \\(sin noticia'], nunca: ['^MIRADO Fran García', '^NOTICIA Fran García', 'inventada'] },
+  { id: 'corto-fuentes-fantasy', tipo: 'corto', escena: 'martes', de: 'punto 14 y regla de la app: las fuentes de webs de fantasy no se enseñan (ni en «Fuentes» ni en las frases)',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Según Futbolfantasy, se ha lesionado.', fuente: MARCA }], noticias: [{ jugador: 'Fran García', texto: 'Lesionado, lo cuenta Futbolfantasy.', efecto: 'baja', fuente: FFW }] }), [[MARCA, 'Marca: Fran García, lesionado'], [FFW, 'Futbolfantasy: onces probables']]),
+    debe: ['^CAMBIOS: quita \\[Fran García\\]', '^FUENTE Marca'], nunca: ['futbolfantasy', 'Futbolfantasy', '^OP: vender Fran García'] },
   { id: 'corto-paron', tipo: 'corto', escena: 'paron', de: 'Domy, 9 nov: en el parón, dinero antes que once (el plan corto sale del motor)',
     ia: (q) => C(q, { titular: 'Parón: toca mover el dinero' }), debe: ['^OP: [^\\n]*Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
   { id: 'corto-en-juego', tipo: 'corto', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego, ni alinear ni once',
@@ -314,6 +330,8 @@ export const CASOS = [
     debe: ['^OP: (clausular|pujar) [^\\n]*\\[titular\\]'] },
   { id: 'motor-cierre-no-toca-el-once', tipo: 'motor', escena: 'm-cierre', de: 'revisión del 25 oct: a un día de la jornada no se vende a un titular que no se puede reponer',
     nunca: ['^ONCE_BAJA', '^OP: clausular[^\\n]*\\(ahora\\)'], debe: ['^OP: alinear'] },
+  { id: 'motor-cierre-retira-la-puja', tipo: 'motor', escena: 'veda', de: 'Carlos, 14 nov: una puja se puede retirar cuando se quiera. En el cierre, con una puja que dejaría en negativo, se retira antes que vender a un titular',
+    debe: ['^OP: Retirar puja', '^REGLAS: ok'], nunca: ['^OP: Aceptar oferta Álex Baena', '^ONCE_BAJA'] },
   { id: 'motor-cierre-negativo', tipo: 'motor', escena: 'm-cierre-negativo', de: 'regla 10: en negativo y sin cambios de mercado antes de la jornada, solo vale el dinero que entra hoy (aceptar la oferta)',
     debe: ['^OP: Aceptar oferta Álex Baena'] },
   { id: 'motor-en-juego', tipo: 'motor', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego el once está cerrado',
@@ -330,4 +348,23 @@ export const CASOS = [
     debe: ['^OP: Blindar Ionut Radu'], nunca: ['^OP: Subir cláusula Ionut Radu'] },
   { id: 'motor-reventa-toca-vender', tipo: 'motor', escena: 'm-reventa', de: 'Carlos: lo que compro para revender lo vendo antes de la jornada',
     debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
+
+  /* -------------------- la segunda vuelta del motor: lo que contestó Carlos el 14 nov (claude/prompt-motor-2.md) -------------------- */
+  ...['m-baja-sin-relevo', 'm-baja-con-relevo', 'm-reventa-aguanta', 'm-reventa-protege', 'm-24-puja', 'm-blinda-arranque'].map((escena) => ({
+    id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md, en las escenas de la segunda vuelta',
+    debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
+  { id: 'motor-baja-sin-relevo-avisa', tipo: 'motor', escena: 'm-baja-sin-relevo', de: 'Carlos, 14 nov (punto 2, Pedrosa): un titular que baja todos los días y no tiene a otro en su puesto que puntúe no se vende: se avisa de que hace falta sustituto',
+    nunca: ['^OP: (vender|Aceptar oferta) Catena'], debe: ['^MIRADO Catena:[^\\n]*sustituto', '^MIRADO Catena:[^\\n]*temporada'] },
+  { id: 'motor-baja-con-relevo-a-la-venta', tipo: 'motor', escena: 'm-baja-con-relevo', de: 'Carlos, 14 nov (punto 2): si baja todos los días, a la venta por si llega una oferta mejor (con otro en su puesto que puntúe)',
+    debe: ['^OP: vender Julián Álvarez[^\\n]*\\((hoy|ahora)\\)'] },
+  { id: 'motor-giro-titular-no-se-vende', tipo: 'motor', escena: 'm-limpio', de: 'Carlos, 14 nov (punto 2): un titular que acaba de girar (aún no baja todos los días) no se vende por la inercia',
+    nunca: ['^OP: vender (Raphinha|Catena)'] },
+  { id: 'motor-reventa-se-aguanta', tipo: 'motor', escena: 'm-reventa-aguanta', de: 'Carlos, 14 nov (punto 5): lo de revender se aguanta más de una jornada si sigue subiendo, empiezas en positivo sin venderlo y le quedan días de protección',
+    nunca: ['^OP: vender Jon Martin'], debe: ['^MIRADO Jon Martin:[^\\n]*aguant'] },
+  { id: 'motor-reventa-antes-de-la-proteccion', tipo: 'motor', escena: 'm-reventa-protege', de: 'Carlos, 14 nov (punto 5): se vende antes de que se le acaben los 14 días de protección',
+    debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
+  { id: 'motor-24-no-puja-de-mas', tipo: 'motor', escena: 'm-24-puja', de: 'regla 7 sin comprobar (Carlos, 14 nov: no lo sabe): con 24 y una puja viva, no se ficha a nadie más (podrías acabar con 26)',
+    nunca: ['^OP: (pujar|clausular)'] },
+  { id: 'motor-blinda-al-arrancar', tipo: 'motor', escena: 'm-blinda-arranque', de: 'Carlos, 14 nov (punto 9): cuando empieza la jornada se reabren las cláusulas; si te queda un blindaje y tienes un titular a tiro, se dice',
+    debe: ['^DIAS [^\\n]*se reabren las cláusulas[^\\n]*Ionut Radu'] },
 ];

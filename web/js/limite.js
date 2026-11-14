@@ -160,12 +160,25 @@ export function anuncioTopVisto(clave) {
   contar('t');
   return true;
 }
+/** sin anuncio que enseñar (sin consentimiento, sin relleno, un DNS que los bloquea…): gratis UNA vez al día por
+    dispositivo, contando todas las funciones top juntas (Carlos, 14 nov). La segunda vez del día ya no se abre */
+export const puedeTopGratis = () => { const g = LS.get('top-sin-anuncio', null); return !g || g.dia !== diaDe(); };
 /** sin anuncio que enseñar: se abre igual lo que pedías, pero solo «min» minutos (y en las de los rivales cuenta como
-    una vez: así no se abren gratis tocando el candado antes de que AdMob arranque) */
+    una vez: así no se abren gratis tocando el candado antes de que AdMob arranque). Apunta el día (`puedeTopGratis`) */
 export function abrirTopGratis(clave, min = 30) {
+  LS.set('top-sin-anuncio', { dia: diaDe() });
   if (!porJornada(clave)) { const h = hoyTop(); guardarHoy({ ...h, libreHasta: Date.now() + min * 60e3 }); return; }
   const x = deJornada(clave);
   guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + Math.min(min, cfgTop().minutos) * 60e3, uno: false });
+}
+/* «planes» en limites.json: los planes del día con la IA de Carlos (el Worker, /plan). on: si van por ahí (si no, como
+   antes: con la clave de Google de cada uno); gratis y max: los de cada día y el tope con anuncios. Quien cuenta de verdad
+   es el Worker (lee el mismo limites.json); esto es para los textos. Sin «planes» (un limites.json de antes), apagado. */
+export function planesCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
+  const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
+  // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
+  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
 }
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
@@ -191,6 +204,16 @@ export function anunciosWebModo() {
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }
 export const anunciosWebOk = () => anunciosWebModo() === 'real';
+/* El APK de GitHub (el de la liga) se despide (Carlos, 14 nov): desde la 0.7.10 todo va por Google Play, el APK ya no se
+   actualiza y deja de funcionar a la semana. «cierreApk» en limites.json mueve la fecha (false: solo el aviso, sin cerrar).
+   Al dueño no se le cierra: la pre-release «prueba» de pendiente es un APK de GitHub */
+const CIERRE_APK = '2026-11-21T23:59:00+01:00';
+export function cierreApk() {
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const f = cfg.cierreApk === false ? 0 : Date.parse(cfg.cierreApk || CIERRE_APK) || Date.parse(CIERRE_APK);
+  const dueno = !!yoB && [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
+  return { hasta: f, cerrada: !!f && Date.now() > f && !dueno };
+}
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
    de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no

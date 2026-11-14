@@ -45,11 +45,14 @@ jobs:
           PASADAS: "2"
           TOPE_USD: "2"
       # (14 nov) los cinco planes por la ruta /plan del Worker, con su código y Haiku de verdad: PASO «worker»
-      - name: Por el Worker (/plan), dos pasadas
+      # (14 nov, punto 14) con la búsqueda en Google: 2 por plan, una pasada y 0,10 $ de tope
+      - name: Por el Worker (/plan), con búsqueda
         if: env.PASO == 'worker'
         run: node .github/ia/llamar-worker.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WEB: "2"
+          PASADAS: "1"
       - name: Gemini buenos, dos pasadas (con el cupo del día)
         if: env.PASO == 'buenos'
         run: node .github/ia/llamar.mjs

@@ -11,9 +11,11 @@ import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
-import { bloqueada, topConAnuncio } from './limite.js';
+import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
+import { pedirWorker } from './soporte.js';
 import { rematarAuto } from './motor.js';
 import { planDeHoy, planMotor, titularMotor } from './plan.js';
+import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -895,7 +897,9 @@ export function seudonimos(D) {
   const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|[Ee][Xx][Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
   return {
     n: alias.size,
-    aviso: `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}${ex ? '; los que ya se fueron de la liga, como «Exrival N»' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.`,
+    aviso: avisoAlias(porPuesto, ex),
+    // (para el Worker, que arma el aviso él: /plan)
+    porPuesto, ex: ex > 0,
     tapar: (t0) => {
       if (!todo || typeof t0 !== 'string') return t0;
       const t = t0.normalize('NFC'), d = doblar(t);
@@ -1181,26 +1185,9 @@ const PULLITAS = {
   no: 'SIN PULLITAS: no hagas bromas ni te metas con nadie. Si sale una noticia extradeportiva que afecte al jugador, cuéntala en una línea, seria. Lo extradeportivo NUNCA es motivo para comprar ni vender. En «noticias», lo extradeportivo va con efecto «neutro».',
 };
 /** las instrucciones de la IA con las pullitas elegidas */
-// las funciones top bloqueadas (hasta los anuncios): la IA las usa para decidir, pero no da las cifras
-const SOBRE_BLOQUEO = {
-  dineroRivales: 'cuánto dinero tiene cada rival (no des cifras de su saldo ni de lo que pueden gastar)',
-  quienPaga: 'qué rivales pueden pagar cada una de mis cláusulas (no digas nombres de quién me la puede pagar; la subida justa, cuánto subirla, sí lo puedes decir)',
-  inercia: 'cuántos días le quedan subiendo o cuándo gira cada jugador (puedes decir si sube o baja, pero no le pongas días ni fecha al giro)',
-  perfilRival: 'cómo juega cada rival (cuántos clausulazos hace y a quién, cuánto tarda en vender, a qué hora se mueve: úsalo para saber quién puede ir a por mis jugadores, pero no lo cuentes con cifras)',
-  ventasRivales: 'lo que LaLiga le ofrece a cada rival por lo que tiene en venta (no des esa cifra ni lo que tiene en venta cada rival si no te lo pregunta por un jugador concreto)',
-};
 function reglasBloqueo() {
-  const b = Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k));
-  if (!b.length) return '';
-  const como = topConAnuncio() ? 'se abren viendo anuncios cortos: tocando su candado; las de los rivales (su dinero, lo que venden, cómo juegan y quién puede pagar tus cláusulas) con dos anuncios, un rato y unas pocas veces por jornada, y cuándo gira un jugador con uno, hasta medianoche' : 'se desbloquearán viendo un anuncio, más adelante';
-  // (revisión total, M4) de dineroRivales, quienPaga e inercia ya no van las cifras, solo categorías: que no las invente
-  const sinCifras = ['dineroRivales', 'quienPaga', 'inercia'].filter((k) => b.includes(k));
-  return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (${como}): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes.${sinCifras.length ? ` De ${sinCifras.length > 1 ? 'esas' : 'esa'} no te paso cifras ni nombres, solo categorías (el dinero de cada rival, «mucho», «algo», «poco» o «en negativo»; de mis cláusulas, si a algún rival le sobra, le llega justo o no le llega; la inercia sin días): decide con eso y no te inventes cifras, nombres ni días.` : ''} Si te lo pide, dile en una frase que es una función top y que ${como}.`;
+  return bloqueoTxt(Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), topConAnuncio());
 }
-const CHISTES = {
-  serio: 'Nada de chascarrillos ni expresiones de colega de bar («tururú», «que se lo pida a su abuela», «si tiene huevos»).',
-  broma: 'Puedes tener chispa y soltar alguna broma (mira PULLITAS), pero las cifras y el consejo van en serio; nada de palabrotas ni de expresiones de caricatura («tururú», «que se lo pida a su abuela», «si tiene huevos»).',
-};
 const sistemaIA = () => {
   const p = cfgIA().pullitas || 'normal';
   return SISTEMA.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']).replace('{{PULLITAS}}', PULLITAS[p] || PULLITAS.normal) + reglasBloqueo();
@@ -1352,21 +1339,13 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
    por qué, qué alternativa mete, una o dos frases por paso, el titular, la situación, las noticias y los rivales. La app
    aplica los cambios con el propio motor (que rehace las cuentas) y lo pasa otra vez por cuadrarPlan: si lo que pide la
    IA no cuadra, se queda el plan del motor con sus frases. Si la IA no contesta, el plan del motor ya está en pantalla. */
-const SISTEMA_CORTO = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo ni de quién es.
-
-CÓMO TRABAJAMOS. El plan de hoy ya lo ha hecho la app, que conoce las reglas de LaLiga Fantasy y ha hecho todas las cuentas (saldo, deuda, cláusulas, plantilla, empezar la jornada en positivo). Tú NO propones operaciones nuevas ni cambias importes, pujas, días ni jugadores. Tu trabajo es:
-1. ORDENAR los pasos como los harías tú (la app recoloca lo que haga falta para que el dinero cuadre).
-2. QUITAR un paso SOLO si una noticia o algo que me ha contado el manager lo desaconseja (una lesión, que no va convocado, un trato ya hecho…), y decir por qué en una frase. Sin un motivo así no quites nada: los números ya los ha mirado la app. Un paso marcado «HACE FALTA» no se quita.
-3. METER una ALTERNATIVA, solo de las que te paso y con su id, si una noticia la hace mejor que un paso del plan o si cubre lo que quitas.
-4. EXPLICAR cada paso en una o dos frases, con las cifras que te paso (ni una inventada) y, si la hay, la noticia que lo respalda. Sin repetir el nombre de la operación.
-5. El titular (8 a 16 palabras, solo con lo que queda en el plan), la situación (2 frases, con cifras), las noticias que afectan a mi equipo y qué hacen mis rivales.
-
-REGLAS: solo cifras que estén en los datos. Nada de nombres de webs de fantasy. Lo «mirado y descartado» no se puede meter. En «noticias» va SOLO lo que salga en PRENSA, en un ESTADO (lesión, sanción, duda) o en lo que me ha contado el manager: si no hay nada de eso, la lista va vacía. No te inventes nada de la vida de los jugadores (fiestas, bailes, redes). Lo que hace un jugador en el campo y cómo va su valor ya va en la frase de su paso, no en «noticias».`;
-const sistemaCorto = () => {
+/** lo que elige la app para las instrucciones del plan corto (el Worker las arma igual con esto: plan-sistema.js) */
+const opSistemaCorto = () => {
   const p = cfgIA().pullitas || 'normal';
   // (sin PULLITAS: con el plan corto el modelo ligero se inventaba fiestas y bailes para tener de qué hacer la broma)
-  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']) + reglasBloqueo();
+  return { tono: p === 'normal' || p === 'saco' ? 'broma' : 'serio', bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() };
 };
+const sistemaCorto = () => sistemaCortoDe(opSistemaCorto());
 export const ESQUEMA_CORTO = T('OBJECT', {
   properties: {
     pasos: T('ARRAY', { items: T('OBJECT', { properties: { id: TXT, frase: TXT }, required: ['id', 'frase'] }) }),
@@ -1394,7 +1373,7 @@ export function idsCorto(R) {
 export function pedidoCorto(D, M, c, R) {
   const { lista } = idsCorto(R);
   const L = [];
-  const acc = (o) => (o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '') ? 'ACEPTAR LA OFERTA' : o.accion === 'vender' ? 'PONER A LA VENTA' : o.accion === 'blindar' ? (o.importe ? 'SUBIR LA CLÁUSULA' : 'BLINDAR GRATIS') : String(o.accion || '').toUpperCase());
+  const acc = (o) => (o.retira ? 'RETIRAR LA PUJA' : o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '') ? 'ACEPTAR LA OFERTA' : o.accion === 'vender' ? 'PONER A LA VENTA' : o.accion === 'blindar' ? (o.importe ? 'SUBIR LA CLÁUSULA' : 'BLINDAR GRATIS') : String(o.accion || '').toUpperCase());
   const paso = ({ id, o }) => {
     const j = o.pid ? D.maestro[o.pid] || o.j : null, d = o.datos || {};
     L.push(`[${id}] ${acc(o)}${o.jugador ? ` · ${o.jugador}` : ''}${o.importe ? ` · ${eur(o.puja_max || o.importe)}` : ''}${o.cuando ? ` · ${o.cuando}` : ''}${o.objetivo && OBJ_TXT[o.objetivo] ? ` · para ${OBJ_TXT[o.objetivo]}` : ''}${o.vender_el ? ` · se vende el ${o.vender_el}` : ''}${o.hace_falta ? ' · HACE FALTA (no se quita)' : ''}`);
@@ -1466,6 +1445,11 @@ export function aplicarCorto(json, R, D, M, c) {
   const frases = new Map();
   for (const x of [...(Array.isArray(json.pasos) ? json.pasos : []), ...(Array.isArray(json.mete) ? json.mete : [])]) { const y = de(x); if (y && x.frase) frases.set(y.k, String(x.frase)); }
   const motivos = new Map((Array.isArray(json.quita) ? json.quita : []).map((x) => [de(x) && de(x).k, String((x && x.motivo) || '')]));
+  // (punto 14, Carlos 14 nov) una noticia de la búsqueda en Google también vale, pero solo con su fuente: la url tiene que
+  // estar entre las que salieron de verdad en la búsqueda (json.fuentes lo pone el Worker, o Google; nunca la IA)
+  const fuentesOK = new Set((Array.isArray(json.fuentes) ? json.fuentes : []).map((f) => claveUrl(f && f.u)).filter(Boolean));
+  const conFuente = (x) => !!(x && x.fuente && fuentesOK.has(claveUrl(x.fuente)));
+  const porBusqueda = new Set([...(Array.isArray(json.quita) ? json.quita : []), ...(Array.isArray(json.mete) ? json.mete : [])].filter(conFuente).map((x) => de(x)).filter(Boolean).map((x) => x.k));
   const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); return (cu.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); };
   // Quitar o meter algo es cosa de las noticias (los números ya los ha mirado el motor): solo si de ese jugador hay
   // prensa, un estado (lesión, sanción, duda), algo que el mánager ha contado o un partidazo reciente. Si no, no se aplica
@@ -1486,9 +1470,10 @@ export function aplicarCorto(json, R, D, M, c) {
   // no se lleva por delante a las demás, y lo que hace falta para empezar la jornada en positivo no se va)
   let r = intento([], []);
   if (!r) return null;
-  for (const k of quita0) { if (!conNoticia(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
+  const respaldo = (k) => conNoticia(k) || porBusqueda.has(k);
+  for (const k of quita0) { if (!respaldo(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
   // (una alternativa entra si cubre algo que se ha quitado o si la noticia es suya)
-  for (const k of mete0) { if (!r.quita.length && !conNoticia(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
+  for (const k of mete0) { if (!r.quita.length && !respaldo(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
   const P = r.P;
   // las frases: la de la IA si no trae cifras que no estén en los datos del paso; si no, la de la app
   let sinFrase = 0;
@@ -1527,37 +1512,99 @@ export function aplicarCorto(json, R, D, M, c) {
     situacion: sit && !nombra(sit) ? `${sit}${P.modo === 'paron' && !/par[oó]n/i.test(`${sit} ${tit}`) ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero.' : ''}` : P.situacion,
     descartes: [...quitados, ...(P.descartes || []).filter((d) => !quitados.some((q) => q.pid && q.pid === d.pid))],
     // las noticias, solo de quien tiene prensa, estado o una nota (lo demás es relleno o invento), y en corto: dos frases
-    noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length); })
-      .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)) })).filter((n) => n.texto),
+    // (o con su fuente de la búsqueda)
+    noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length || conFuente(n)); })
+      .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)), ...(conFuente(n) && !esWebFantasy(n.fuente) ? { fuente: n.fuente } : {}) })).filter((n) => n.texto),
     rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 3).map((n) => ({ ...n, texto: breve(limpio(n && n.texto)) })).filter((n) => n.manager && n.texto),
     proximos_dias: prox,
-    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${conNoticia(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
+    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
   };
 }
-/** el plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo) */
-async function planCorto(D, M, c, { signal, alPaso } = {}) {
+/* ---------------- el plan con la IA de Carlos (el Worker, /plan) ---------------- */
+// (14 nov, Carlos) los planes del día los paga él con Claude: 2 al día por cuenta y, en la app de Google Play, uno más
+// por cada anuncio bonificado, hasta 5. Lo cuenta el Worker; aquí se guarda lo último que ha dicho, para los textos.
+// Las preguntas del chat siguen con la clave de cada uno.
+/** ¿el plan va por la IA de la app? (limites.json «planes.on» y con tu cuenta de LaLiga: en la liga de ejemplo, no) */
+export const planesApp = (demo) => !demo && planesCfg().on;
+/** ¿se puede pedir un plan con IA? (la de la app o tu clave) */
+export const puedePlanIA = (demo) => planesApp(demo) || hayClave();
+/** lo último que ha dicho el Worker del cupo de hoy ({ usados, gratis, max, extras, quedan, masConAnuncio }) o null */
+export function cupoPlanes() {
+  const g = LS.get('planes-cupo', null);
+  return g && g.dia === diaDe() ? g : null;
+}
+const guardarCupo = (c) => { if (c && typeof c === 'object') LS.set('planes-cupo', { ...c, dia: diaDe() }); };
+/** al Worker: el pedido ya con alias; devuelve { texto (el plan en JSON, destapado), modelo, tok } o lanza un ErrorIA */
+async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {}) {
+  const sd = seudo && seudo.n ? seudo : null;
+  const t0 = Date.now();
+  if (alPaso) alPaso(planesCfg().web ? 'La IA está leyendo tu plan y buscando las últimas noticias…' : 'La IA está leyendo tu plan y las noticias…');
+  let j;
+  try {
+    j = await pedirWorker('POST', '/plan', { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra }, { tiempo: 120000, signal });
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+    const d = e.datos || {};
+    if (d.cupo) guardarCupo(d.cupo);
+    apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}`, ms: Date.now() - t0 });
+    // sin cupo hoy: no es un fallo (lo dice el Worker); lo demás es que el servicio no está (y vale tu clave, si la tienes)
+    if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo });
+    if (e.sesion || e.estado === 401) throw new ErrorIA(e.message || 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo.', 401, { servicio: true });
+    throw new ErrorIA(e.estado === 0 ? e.message : 'La IA de los planes no está disponible ahora mismo. Tienes el plan de la app; vuelve a probar en un rato.', e.estado || 0, { servicio: true });
+  }
+  // (la respuesta ya empezada trae el error en el cuerpo: el Worker manda espacios mientras la IA piensa)
+  if (j && j.e) {
+    apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${j.estado || 200} ${j.e}`, ms: Date.now() - t0 });
+    throw new ErrorIA(j.e, j.estado || 0, { servicio: !!j.servicio });
+  }
+  if (j.cupo) guardarCupo(j.cupo);
+  const busquedas = (j.tok && Number(j.tok.web)) || 0;
+  apuntar({ modelo: 'app', s: 'plan', ok: true, web: busquedas > 0, ms: Date.now() - t0, tok: j.tok || null });
+  const texto = JSON.stringify(j.plan || {});
+  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
+}
+/**
+ * El plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo).
+ * porApp: con la IA de la app (el Worker); si no, con tu clave de Google. extra: viene de un anuncio bonificado.
+ */
+async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = false } = {}) {
   const R = planDeHoy(D, M, c);
   if (!R || !R.motor) return null;
   const pedido = pedidoCorto(D, M, c, R);
   const seudo = seudonimos(D);
   // (corto de verdad: 1.500 tokens de respuesta sobran; el resto del tope es lo que piense. Y un minuto como mucho)
-  const r = await preguntar({ sistema: sistemaCorto(), contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 5000, total: 75000, web: false, seudo, seudoJSON: true, esquema: ESQUEMA_CORTO });
+  const r = porApp ? await planPorApp(pedido, seudo, { signal, alPaso, extra })
+    : await preguntar({ sistema: sistemaCorto(), contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 5000, total: 75000, web: false, seudo, seudoJSON: true, esquema: ESQUEMA_CORTO });
   const json = sacarJSON(r.texto);
   if (!json || (!Array.isArray(json.pasos) && !json.titular)) {
-    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `el plan corto no se puede leer (${r.fin || 'sin motivo'}, ${r.texto.length} caracteres${r.tok ? `, ${r.tok.th} pensando` : ''})`, ms: 0 });
+    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `el plan corto no se puede leer (${r.fin || 'sin motivo'}, ${r.texto.length} caracteres${r.tok && r.tok.th ? `, ${r.tok.th} pensando` : ''})`, ms: 0 });
     throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Tienes el plan de la app; vuelve a probar cuando quieras.`, 0);
   }
+  // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
+  json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
   const A = aplicarCorto(json, R, D, M, c);
   if (!A) throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
-  return { ...A, fuentes: [], modelo: r.modelo, web: false, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
+  // (en «Fuentes», sin las webs de fantasy: para quitar o meter sí han valido)
+  const fuentes = json.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).slice(0, 6).map((f) => ({ t: String(f.t || f.u).slice(0, 120), u: f.u }));
+  return { ...A, fuentes, modelo: r.modelo, web: porApp ? r.web > 0 : json.fuentes.length > 0, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, ...(porApp ? { app: true } : {}), foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
 }
 /**
  * El plan del día con la IA. Con el motor (plan.js), el corto: la IA ordena, recorta y explica el plan de la app. El
  * largo de siempre (la IA escribe las operaciones) queda para cuando el motor no puede o si se pide (cfg-ia.planLargo).
+ * Con «planes.on» en limites.json va por la IA de la app (op.demo: en la liga de ejemplo, no); si ese servicio no está
+ * (sin clave en el Worker, apagado, su tope del día, caído), con tu clave de Google si la tienes. Sin cupo, no: los de más
+ * van con anuncio (Carlos, 14 nov).
  */
 export async function planDelDia(D, M, c, op = {}) {
-  if (cfgIA().planLargo) return planLargo(D, M, c, op);
-  const P = await planCorto(D, M, c, op);
+  if (cfgIA().planLargo && hayClave()) return planLargo(D, M, c, op);
+  let P = null;
+  if (planesApp(op.demo)) {
+    try { P = await planCorto(D, M, c, { ...op, porApp: true }); } catch (e) {
+      if (!(e.servicio && hayClave())) throw e;
+      P = await planCorto(D, M, c, op);
+    }
+    if (!P && !hayClave()) throw new ErrorIA('Hoy la app no ha podido montar su plan con las cuentas, así que la IA no tiene qué ordenar. Tienes el plan automático.', 0);
+  } else P = await planCorto(D, M, c, op);
   if (!P) return planLargo(D, M, c, op);
   try { const cu = cuadrarPlan(P, D, M); P.recs = recsDe(cu.ops, M); P.cuadradas = opsCuadradas(cu.ops); } catch (e) { P.recs = []; }
   const lista = planes();
@@ -1577,6 +1624,18 @@ export function planViejo(M) {
   // hecho antes de que empezara la jornada: con ella en juego cambia todo (se reabren las cláusulas, el once ya está puesto)
   if (M && M.enJuego && p.t < M.enJuego.ini) return true;
   return Date.now() - p.t > 10 * 3600e3;
+}
+
+/** ¿se hace sola un plan nuevo con la IA? Con la de la app (2 al día) solo el primero del día y tras el cambio de mercado,
+    y nunca si el Worker ya ha dicho que hoy no quedan: los demás los pide cada uno con «Otro plan». Con tu clave, planViejo */
+export function planViejoAuto(M, demo) {
+  if (!planesApp(demo)) return planViejo(M);
+  if (!planViejo(M)) return false;
+  const cu = cupoPlanes();
+  if (cu && cu.quedan <= 0) return false;
+  const p = ultimoPlan();
+  if (!p || p.dia !== diaDe()) return true;
+  return !!(M && M.cierreMercado && p.mercado && Math.abs(M.cierreMercado - p.mercado) > 3600e3);
 }
 
 /** su próximo partido en corto: «vs Getafe 18º» en casa, «en Real Madrid 3º» fuera */
@@ -1950,7 +2009,7 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       // (una cláusula o un blindaje pagados también bajan lo que se puede pujar o comprar después)
       if (margen != null && signo < 0 && !['pujar', 'comprar'].includes(accion)) margen -= importe;
     }
-    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
+    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : o.retira ? 'Retirar puja' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
   });
   // los blindajes gratis de LaLiga: 2 por jornada. Si el plan pide más de los que te quedan, sobran los últimos
   const ES = M.escudosMios;
@@ -2070,6 +2129,8 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     if (!x || ['injured', 'suspended'].includes(x.j.estado)) continue;
     const t = M.tend(o.pid), ine = M.inercia ? M.inercia(o.pid) : null;
     if ((ine && x.j.valor && num(ine.ult) < -0.03 * x.j.valor) || (t.p1 != null && t.p1 < -3)) continue;
+    // (Carlos, 14 nov) si baja todos los días, no es malvender: a la venta por si llega una oferta mejor (o aceptarla)
+    if (M.bajaSeguido && M.bajaSeguido(o.pid) && +o.importe >= x.j.valor * 0.995) continue;
     o.sugerencia = true;
     o.hoy = false;
     o.cuando = 'sin prisa';

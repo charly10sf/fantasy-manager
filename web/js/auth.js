@@ -126,5 +126,8 @@ function textoError(m) {
   if (/AADB2C90091|cancel/i.test(t)) return 'Has cancelado el inicio de sesión';
   if (/AADB2C90006|redirect/i.test(t)) return 'LaLiga no acepta la vuelta a esta app. Avísame con este mensaje: ' + t.slice(0, 160);
   if (/AADB2C90079|AADB2C90080|expired/i.test(t)) return 'El inicio de sesión ha caducado. Vuelve a probar.';
+  // (14 nov, Carlos) la primera vez con Google, los servidores de LaLiga a veces fallan al dar de alta la cuenta (AADB2C90075,
+  // «InternalServerError»): es cosa suya y a la segunda entra
+  if (/AADB2C90075|InternalServerError|Internal Server Error/i.test(t)) return 'Los servidores de LaLiga han fallado al entrar (es cosa suya, no de tu cuenta). Vuelve a darle a «Entrar con mi cuenta de LaLiga»: a la segunda suele entrar.';
   return t.slice(0, 220) || 'No se ha podido entrar';
 }

@@ -6,7 +6,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 
 ## Reglas de Carlos
 
-- No se publica nada sin su OK en su último mensaje («Sí», «Publica»…). Un push a main es publicar: sale la web en GitHub Pages, el APK y app.json. Lo que no está publicado va a la rama `pendiente` con `git push -q -f origin HEAD:refs/heads/pendiente` (si `pendiente` es la base del trabajo, basta un push normal, sin -f; el -f lo puede frenar el entorno, así que mejor partir de `pendiente`).
+- No se publica nada sin su OK en su último mensaje («Sí», «Publica»…). Un push a main es publicar: sale la web en GitHub Pages (a los móviles les llega sola) y se compila el AAB de Google Play. Lo que no está publicado va a la rama `pendiente` con `git push -q -f origin HEAD:refs/heads/pendiente` (si `pendiente` es la base del trabajo, basta un push normal, sin -f; el -f lo puede frenar el entorno, así que mejor partir de `pendiente`).
 - Un solo chat trabajando a la vez: `pendiente` se sube con -f y version.js lo tocan todas las versiones, así que dos chats a la vez se pisan.
 - Para cerrar una versión, lee claude/cerrar-version.md.
 - El token de Cloudflare y el Account ID no se piden ni se pegan en el chat.
@@ -14,8 +14,9 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 - Fantasy Manager y GrowFolio van del todo separados: ni código, ni cuentas, ni Cloudflare compartidos.
 - Ceñirse al roadmap. Lo nuevo que salga va a versiones posteriores.
 - Respuestas en español informal, directas y con números.
-- El enlace del APK (https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk) solo se le pasa a Carlos cuando cambia la parte Android (huella nativa nueva: hace falta instalarlo); si solo cambia la web, le llega sola. Lo decidió él el 25 oct.
+- TODO VA POR GOOGLE PLAY (Carlos, 14 nov): desde la 0.7.10b el APK de GitHub ya no se publica ni se le pasa a nadie (ni el enlace de la release «app»). Si cambia la parte Android (huella nativa nueva), el AAB lo compila «App Android» en main (artefacto) y lo sube Carlos a Play Console; si solo cambia la web, les llega sola. La pre-release `prueba` (APK de `pendiente`) queda solo para que Carlos pruebe.
 - Carlos no quiere publicar lo que no esté comprobado que funciona (30 oct: se quitó probar la foto de cada rival con su id).
+- La app es pública: se trabaja como un producto para cualquiera. Las novedades de version.js (y todo lo que se ve en la app, la web y Play) van escritas para un usuario cualquiera, sin cosas de dentro: ni Worker, ni limites.json, ni archivos, funciones, cupos internos ni modelos de IA, tampoco en las que solo ve el dueño (`para: 'dueño'`). Eso va a claude/ y a ESTADO.md (Carlos, 14 nov).
 
 ## Cómo está montada
 
@@ -62,11 +63,12 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 - Cloudflare Worker con KV VINCULOS. Rutas /p (proxy a LaLiga), /img, /vincular (código para abrir en otro dispositivo), /fallos (avisos de fallo con respuesta), /hola (quién usa la app) y /caras (las fotos de los de tu liga que usan la app). ADMINS = 667015 (Carlos) en wrangler.toml.
 - /p e /img solo responden si la petición trae un `Origin` de `ORIGENES` y solo siguen redirecciones a sitios de `PERMITIDOS`. Si se cambian, cambiarlos también en el intermediario de Deno (repo charly10sf/fantasy-manager-proxy, `main.ts`; cada push a su `main` se publica solo).
 - Las escrituras gratis de KV (unas mil al día) se comparten entre todo.
+- /plan (desde la 0.7.10): el plan del día con la IA de Carlos (Claude Haiku, secreto `CLAUDE_PLANES`, lo copia worker.yml). Las instrucciones las arma el Worker con web/js/plan-sistema.js (el mismo módulo que ia.js); el cupo (2 al día y uno más por anuncio hasta 5) y el gasto del día van en el Durable Object, no en el KV; los números, en «planes» de limites.json. El chat sigue con la clave de cada uno.
 
 ### .github/
 
 - Las acciones van fijadas por SHA con su etiqueta en un comentario (Dependabot propone subirlas una vez al mes) y wrangler con versión exacta.
-- android.yml (tres trabajos: compilar, con los secretos de firma y solo lectura; publicar, sin secretos y con escritura; registro. versionCode = run_number × 10 + run_attempt, y es el «version» de app.json. En main sube también fantasy-manager-<versión>-<código>.apk a la release «app» (se guardan los 20 últimos) y no se cancela a medias. Compila en main y pendiente, publica APK y app.json solo desde main; desde pendiente deja el APK de GitHub en la pre-release `prueba`, enlace directo para probarlo en el móvil: https://github.com/charly10sf/fantasy-manager/releases/download/prueba/fantasy-manager-prueba.apk; lo pidió Carlos el 31 oct), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo). vista-previa.yml: cada push a una rama `web-…` sube web/ a Cloudflare Pages como vista previa, sin publicar nada, en https://<rama>.fantasy-manager-61v.pages.dev.
+- android.yml (tres trabajos: compilar, con los secretos de firma y solo lectura; publicar, sin secretos y con escritura; registro. versionCode = run_number × 10 + run_attempt, y es el «version» de app.json. En main subía también fantasy-manager-<versión>-<código>.apk a la release «app» y app.json; DESDE LA 0.7.10b (Carlos, 14 nov) EL APK DE GITHUB YA NO SE PUBLICA (`APK_GITHUB: "no"`): la release «app» y app.json se quedan en la 0.7.10a (5701) y la web le pide a quien lo tiene que se pase a Google Play (`avisoPlay` en app.js; deja de funcionar el 21 nov, `cierreApk` en limites.json, salvo al dueño). No se cancela a medias en main. Compila en main y pendiente, publica APK y app.json solo desde main; desde pendiente deja el APK de GitHub en la pre-release `prueba`, enlace directo para probarlo en el móvil: https://github.com/charly10sf/fantasy-manager/releases/download/prueba/fantasy-manager-prueba.apk; lo pidió Carlos el 31 oct), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo). vista-previa.yml: cada push a una rama `web-…` sube web/ a Cloudflare Pages como vista previa, sin publicar nada, en https://<rama>.fantasy-manager-61v.pages.dev.
 - paquete.py genera paquete.json con las huellas (la nativa cubre android/app/src más build.gradle, settings.gradle, gradle.properties y reglas-r8.pro) y pone en web/index.html cada módulo con su huella (`js/x.js?v=…`): en el repo index.html va sin huellas, se ponen al publicar.
 
 ## Avisos de Fallo
@@ -86,7 +88,7 @@ Revisarlos antes de cada versión y contestar solo con lo ya publicado. También
 4. Esperar las Actions «Web» y «App Android» (y «Worker» si cambia worker/).
 5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://fantasymanagerapp.com/paquete.json y paquete.json.sig (GitHub Pages; github.io redirige ahí) y, tras la Action «Dominio», el respaldo https://fantasy-manager-61v.pages.dev/paquete.json.
 
-Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan el APK nuevo. Si no, la web les llega sola.
+Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan la versión nueva de Google Play: el AAB del artefacto de «App Android», que sube Carlos a Play Console. Si no, la web les llega sola.
 
 ## Probar
 

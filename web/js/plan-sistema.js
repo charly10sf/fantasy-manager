@@ -46,8 +46,49 @@ REGLAS: solo cifras que estén en los datos. Nada de nombres de webs de fantasy.
  * Las instrucciones enteras del plan corto. tono: 'broma' o 'serio'; bloq: las funciones cerradas; anuncio: si se abren
  * con anuncios; alias: null o { puesto, ex } (los rivales van con alias). Lo que no se conoce, fuera.
  */
-export function sistemaCorto({ tono = 'broma', bloq = [], anuncio = false, alias = null } = {}) {
-  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[tono === 'serio' ? 'serio' : 'broma']) + bloqueoTxt(bloq, !!anuncio) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '');
+export function sistemaCorto({ tono = 'broma', bloq = [], anuncio = false, alias = null, web = 0 } = {}) {
+  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[tono === 'serio' ? 'serio' : 'broma']) + bloqueoTxt(bloq, !!anuncio) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '') + webTxt(web);
+}
+
+/* ---------- la búsqueda en Google del plan corto (solo por el Worker: «web» en «planes» de limites.json) ---------- */
+// (Carlos, 14 nov) que la IA vuelva a mirar las noticias de última hora para quitar o meter un paso con una noticia detrás.
+// Las cuentas las sigue haciendo la app; lo que encuentre solo vale con su fuente (la url tal cual sale en la búsqueda: el
+// Worker borra las que no salieron y la app no deja quitar ni meter con una noticia sin fuente)
+export const WEB_MAX = 3;
+/** el número de búsquedas por plan, entre 0 y WEB_MAX */
+export const webN = (x) => { const v = Math.floor(Number(x)); return Number.isFinite(v) ? Math.max(0, Math.min(WEB_MAX, v)) : 0; };
+export function webTxt(web) {
+  const n = webN(web);
+  if (!n) return '';
+  return `\n\nBÚSQUEDA EN GOOGLE: puedes hacer como mucho ${n} ${n > 1 ? 'búsquedas' : 'búsqueda'}, en español. Úsala${n > 1 ? 's' : ''} SOLO para las noticias de última hora de los jugadores del plan (los pasos y las alternativas) y de mis titulares dudosos: lesión, convocatoria, once probable, sanción. Nada de precios, puntos ni cláusulas: eso ya lo tiene la app. Mira la fecha: una noticia de antes de la última jornada no vale. Una noticia de la búsqueda vale para QUITAR o METER un paso solo si pones en «fuente» la url tal cual sale en la búsqueda (sin ella no vale y la app no lo aplica); en «noticias», lo mismo: cada una con su «fuente». Así: "quita": [{"id": "p3", "motivo": "…", "fuente": "https://…"}], "mete": [{"id": "a1", "frase": "…", "fuente": "https://…"}], "noticias": [{"jugador": "…", "texto": "…", "efecto": "baja", "fuente": "https://…"}]. Si no encuentras nada claro y reciente, no cambies nada por la búsqueda. Contesta igual SOLO con el bloque \`\`\`json, sin texto antes ni después.`;
+}
+/** una url de fuente: https, sin espacios y corta; '' si no */
+export const urlFuente = (u) => (typeof u === 'string' && /^https:\/\/[^\s"<>]{4,400}$/.test(u.trim()) ? u.trim() : '');
+/** para comparar dos urls (sin #, sin barra al final y sin mayúsculas en el dominio) */
+export const claveUrl = (u) => { const x = urlFuente(u).replace(/#.*$/, '').replace(/\/+$/, ''); const i = x.indexOf('/', 8); return i < 0 ? x.toLowerCase() : x.slice(0, i).toLowerCase() + x.slice(i); };
+/**
+ * Las fuentes de un plan: deja en cada «fuente» de quita, mete y noticias solo las urls que salieron de verdad en la búsqueda
+ * (vistas: [{ u, t }] del Worker; las citadas primero) y pone en `fuentes` las que usa el plan y, detrás, las citadas, como
+ * mucho 6. Lo que la IA escriba en su propio «fuentes» no cuenta.
+ */
+export function fuentesDe(j, vistas, citadas = []) {
+  if (!j || typeof j !== 'object') return j;
+  const hay = new Map();
+  for (const f of Array.isArray(vistas) ? vistas : []) { const k = f && claveUrl(f.u); if (k && !hay.has(k)) hay.set(k, { u: urlFuente(f.u), t: String(f.t || '').replace(/\s+/g, ' ').trim().slice(0, 120) || urlFuente(f.u).replace(/^https:\/\/(www\.)?/, '').split('/')[0] }); }
+  const usadas = [];
+  const limpia = (x) => {
+    if (!x || typeof x !== 'object') return x;
+    const k = claveUrl(x.fuente), f = k && hay.get(k);
+    const { fuente, ...resto } = x;
+    if (!f) return resto;
+    if (!usadas.includes(f)) usadas.push(f);
+    return { ...resto, fuente: f.u };
+  };
+  const out = { ...j };
+  for (const c of ['quita', 'mete', 'noticias']) if (Array.isArray(j[c])) out[c] = j[c].map(limpia);
+  for (const f of Array.isArray(citadas) ? citadas : []) { const y = f && hay.get(claveUrl(f.u)); if (y && !usadas.includes(y)) usadas.push(y); }
+  out.fuentes = usadas.slice(0, 6);
+  return out;
 }
 
 /* ---------- lo que se deja pasar del plan corto (el Worker solo devuelve esto) ---------- */
@@ -70,6 +111,7 @@ export function jsonDe(t) {
   return null;
 }
 const txt = (x, n) => (typeof x === 'string' ? x.slice(0, n) : '');
+const conFuente = (y) => (urlFuente(y.fuente) ? { fuente: urlFuente(y.fuente) } : {});
 const lista = (x, n, f) => (Array.isArray(x) ? x.slice(0, n).map((y) => (y && typeof y === 'object' ? f(y) : null)).filter(Boolean) : []);
 /** el plan corto con solo sus campos y cada texto con su tope; null si no trae ni pasos ni titular */
 export function planLimpio(j) {
@@ -77,12 +119,14 @@ export function planLimpio(j) {
   const id = (y) => txt(y.id, 8);
   const P = {
     pasos: lista(j.pasos, 20, (y) => (id(y) ? { id: id(y), frase: txt(y.frase, 500) } : null)),
-    quita: lista(j.quita, 20, (y) => (id(y) ? { id: id(y), motivo: txt(y.motivo, 300) } : null)),
-    mete: lista(j.mete, 10, (y) => (id(y) ? { id: id(y), frase: txt(y.frase, 500) } : null)),
+    quita: lista(j.quita, 20, (y) => (id(y) ? { id: id(y), motivo: txt(y.motivo, 300), ...conFuente(y) } : null)),
+    mete: lista(j.mete, 10, (y) => (id(y) ? { id: id(y), frase: txt(y.frase, 500), ...conFuente(y) } : null)),
     situacion: txt(j.situacion, 600),
-    noticias: lista(j.noticias, 6, (y) => ({ jugador: txt(y.jugador, 60), texto: txt(y.texto, 400), efecto: ['sube', 'baja', 'neutro'].includes(y.efecto) ? y.efecto : 'neutro' })),
+    noticias: lista(j.noticias, 6, (y) => ({ jugador: txt(y.jugador, 60), texto: txt(y.texto, 400), efecto: ['sube', 'baja', 'neutro'].includes(y.efecto) ? y.efecto : 'neutro', ...conFuente(y) })),
     rivales: lista(j.rivales, 5, (y) => ({ manager: txt(y.manager, 60), texto: txt(y.texto, 400) })),
     titular: txt(j.titular, 200),
+    // (las de la búsqueda, ya comprobadas por fuentesDe: https y un título corto)
+    fuentes: lista(j.fuentes, 6, (y) => (urlFuente(y.u) ? { u: urlFuente(y.u), t: txt(y.t, 120) || urlFuente(y.u) } : null)),
   };
   return P.pasos.length || P.titular ? P : null;
 }

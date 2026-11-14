@@ -13,6 +13,7 @@
 //  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
+//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, sin cupo y con la ruta caída.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -148,11 +149,12 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 }
 
 // 6: en el parón (la demo con la jornada 10 a 12 días), el sitio de Directo es la pestaña Parón, con sus cuentas, y su
-// selector vuelve al Directo de siempre (21, 9 nov)
+// selector vuelve al Directo de siempre (21, 9 nov). (14 nov) La 9, 14 días antes del sábado de la demo: con 9, un sábado
+// por la tarde (el «próximo sábado» ya es el siguiente) la 9 seguía en juego y no había parón
 for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenador']]) {
   const { ctx, page, errores } = await pagina({ ancho, alto });
   await ctx.route('**/js/demo.js', async (r) => {
-    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 14 * DIA, 10: base + 7 * DIA,');
     r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
   });
   await page.goto(`${BASE}/index.html`);
@@ -336,7 +338,9 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const Mo = await import('./js/motor.js');
     const { D, c } = window.S;
     const M = Object.create(window.S.M);
-    const x = M.clausulas.find((y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado));
+    // (14 nov) una que esté abierta de verdad: con una cerrada, cuadrarPlan la descarta por la fecha y no por la regla
+    const sano = (y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado);
+    const x = M.clausulas.find((y) => sano(y) && y.abierta) || M.clausulas.find(sano);
     if (!x) return { sin: true };
     M.clausulas = [x]; x.abierta = true; x.meLlega = true; x.ratio = 2; D.dinero = Math.max(D.dinero, x.clausula * 2 + 1e6);
     M.mias = M.mias.filter((y) => y.j.pos !== x.j.pos);
@@ -354,7 +358,8 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const op = (I.cuadrarPlan(P(), D, S0).ops || [])[0] || {};
     S0.mejora = mej; y.ratio = rat;
     res.ia = { plan: !op.descartada, hoy: false }; // Hoy no la enseña: el plan de la IA tampoco
-    res.iaMotivo = /no es una cláusula que la app recomiende/.test(op.aviso || '');
+    // (14 nov) según el día, la de la demo puede estar aún cerrada: entonces se descarta por la fecha, que también vale
+    res.iaMotivo = !!op.descartada && /no es una cláusula que la app recomiende|no se abre hasta/.test(op.aviso || '');
     return res;
   });
   if (r.sin) mal('plan y Hoy: la liga de ejemplo no trae cláusulas para probar');
@@ -398,7 +403,7 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
 {
   const { ctx, page, errores } = await pagina();
   await ctx.route('**/js/demo.js', async (r) => {
-    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 14 * DIA, 10: base + 7 * DIA,');
     r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
   });
   await page.goto(`${BASE}/index.html`);
@@ -555,6 +560,125 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else if (r.mal.length || r.hoy) mal(`valor del equipo día a día: ${r.mal.join(' · ')}${r.hoy ? ` · hoy no cuadra (${r.hoy})` : ''}`);
   else bien('valor del equipo día a día: cuenta los jugadores que tenías cada día');
   if (errores.length) mal(`valor del equipo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 15: (14 nov) el plan con la IA de la app (el Worker, /plan, interceptado): sin clave de Google, el plan llega por ahí con el
+// pedido corto y sin instrucciones de la app; con el cupo gastado se queda el plan de la app con una caja clara (en la web,
+// sin anuncio) y no se pide solo otro; con la ruta caída, un error claro. La hoja del anuncio de un plan de más
+{
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
+  let modo = 'bien', cuerpo = null;
+  await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
+    const q = r.request();
+    const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
+    if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
+    if (!q.url().endsWith('/plan')) return r.abort('blockedbyclient');
+    cuerpo = JSON.parse(q.postData() || 'null');
+    if (modo === 'caido') return r.abort('connectionrefused');
+    const cupo = (u) => ({ usados: u, gratis: 2, max: 5, extras: 0, quedan: Math.max(0, 2 - u), masConAnuncio: true });
+    if (modo === 'cupo') return r.fulfill({ status: 429, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ e: 'Ya has hecho tus 2 planes con la IA de hoy.', cupo: cupo(2) }) });
+    if (modo === 'tarde') return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `     ${JSON.stringify({ e: 'La IA de los planes no contesta ahora mismo.', estado: 503, servicio: true })}` });
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `   ${JSON.stringify({ plan: { pasos: [{ id: 'p1', frase: 'Este paso lo explica la IA de la app.' }], quita: [], mete: [], situacion: '', noticias: [], rivales: [], titular: 'Titular de prueba de la IA de la app' }, cupo: cupo(1), tok: { entra: 5200, sale: 2500 } })}` });
+  });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
+  const prueba = (m) => page.evaluate(async (m) => {
+    const ia = await import('/js/ia.js');
+    const S = window.S;
+    try { const P = await ia.planDelDia(S.D, S.M, S.c, { demo: false }); return { ok: true, app: !!P.app, titular: P.titular, corto: !!P.corto, frase: ((P.operaciones || []).some((o) => o._k) ? ((P.operaciones || []).find((o) => /IA de la app/.test(o.motivo || '')) || {}).motivo || '' : 'sin pasos hoy'), cupo: ia.cupoPlanes(), auto: ia.planViejoAuto(S.M, false) }; } catch (e) { return { ok: false, e: e.message, cupo: e.cupo || null, servicio: !!e.servicio, cache: ia.cupoPlanes(), auto: ia.planViejoAuto(S.M, false) }; }
+  }, m);
+  const sinClave = await page.evaluate(async () => { const ia = await import('/js/ia.js'); return !ia.hayClave() && ia.planesApp(false) && ia.puedePlanIA(false) && !ia.planesApp(true); });
+  if (!sinClave) mal('IA de la app: sin clave de Google no se puede pedir el plan con la IA de la app (planes.on de limites.json)');
+  let r = await prueba('bien');
+  if (!r.ok || !r.app || !r.corto || r.titular !== 'Titular de prueba de la IA de la app' || !r.frase || !r.cupo || r.cupo.quedan !== 1) mal(`IA de la app: el plan no llega bien: ${JSON.stringify(r)}`);
+  else if (!cuerpo || !/^HOY: /.test(cuerpo.pedido) || 'sistema' in cuerpo || !['broma', 'serio'].includes(cuerpo.tono) || !Array.isArray(cuerpo.bloq) || cuerpo.extra !== false) mal(`IA de la app: lo que se manda al Worker: ${JSON.stringify(cuerpo).slice(0, 200)}`);
+  else bien(`IA de la app: el plan llega por el Worker, sin clave y con el pedido corto (${cuerpo.pedido.length} caracteres, alias: ${JSON.stringify(cuerpo.alias)})`);
+  modo = 'cupo';
+  r = await prueba('cupo');
+  if (r.ok || !r.cupo || r.cupo.quedan !== 0 || !r.cache || r.auto) mal(`IA de la app: con el cupo gastado: ${JSON.stringify(r)}`);
+  else bien('IA de la app: con los 2 de hoy gastados, error de cupo, se guarda y no se pide otro solo');
+  const caja = await page.evaluate(async (cu) => {
+    window.S.planEstado = { cupo: cu, error: 'Ya has hecho tus 2 planes con la IA de hoy.' };
+    window.dispatchEvent(new Event('limites-nuevos'));
+    await new Promise((ok) => setTimeout(ok, 300));
+    const c = document.querySelector('.plan-cupo');
+    return { t: c ? c.innerText.replace(/\s+/g, ' ') : '', boton: !!(c && c.querySelector('button')), error: !!document.querySelector('.plan .error-c'), plan: !!document.querySelector('.plan-titular') };
+  }, r.cupo);
+  if (!caja.t || caja.boton || caja.error || !caja.plan || !/Mañana tienes otros 2/.test(caja.t)) mal(`IA de la app: la caja sin cupo en la web: ${JSON.stringify(caja)}`);
+  else bien(`IA de la app: sin cupo, el plan de la app y la caja, sin anuncio en la web («${caja.t.slice(0, 70)}…»)`);
+  modo = 'tarde';
+  r = await prueba('tarde');
+  if (r.ok || !r.servicio || !/no contesta/.test(r.e)) mal(`IA de la app: el error en el cuerpo (con la respuesta empezada): ${JSON.stringify(r)}`);
+  else bien('IA de la app: un error con la respuesta ya empezada se entiende');
+  modo = 'caido';
+  r = await prueba('caido');
+  if (r.ok || !r.servicio || !r.e) mal(`IA de la app: con la ruta caída: ${JSON.stringify(r)}`);
+  else bien(`IA de la app: con la ruta caída, error claro («${r.e.slice(0, 60)}…»)`);
+  const hoja = await page.evaluate(async () => { const h = await import('/js/hojas.js'); return h.anuncioHTML({ anuncio: {}, D: { demo: false } }, 'plan'); });
+  if (!/Otro plan con la IA/.test(hoja) || !/data-para="plan"/.test(hoja) || !/hasta 5/.test(hoja)) mal(`IA de la app: la hoja del anuncio de un plan de más: ${hoja.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 160)}`);
+  else bien('IA de la app: la hoja del anuncio de un plan de más, como la de las funciones top');
+  if (errores.length) mal(`IA de la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16: (14 nov) las funciones top sin anuncio (en Play, sin consentimiento o sin relleno): gratis UNA vez al día por
+// dispositivo, todas juntas; la segunda vez del día no se abren y la hoja dice que no hay anuncio; al día siguiente, otra vez
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const L = await import('/js/limite.js');
+    const { LS } = await import('/js/util.js');
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    const cerrar = () => { LS.del ? (LS.del('top-abierto'), LS.del('top-jornada')) : (localStorage.removeItem('fm-top-abierto'), localStorage.removeItem('fm-top-jornada')); };
+    const vez = async (clave) => {
+      window.S.anuncio = { para: 'top', clave };
+      window.anuncioVisto('top', false, 'sin anuncio');
+      await espera(200);
+      return { abierta: L.topAbierto(clave), error: (window.S.anuncio && window.S.anuncio.error) || null };
+    };
+    cerrar();
+    const una = await vez('inercia');
+    cerrar();
+    const dos = await vez('dineroRivales');
+    cerrar();
+    LS.set('top-sin-anuncio', { dia: '2000-01-01' });
+    const tres = await vez('dineroRivales');
+    return { una, dos, tres };
+  });
+  if (!r.una.abierta || r.una.error) mal(`top sin anuncio: la primera del día no se abre: ${JSON.stringify(r.una)}`);
+  else bien('top sin anuncio: la primera vez del día se abre gratis');
+  if (r.dos.abierta || !/no hay anuncio/i.test(r.dos.error || '')) mal(`top sin anuncio: la segunda del día: ${JSON.stringify(r.dos)}`);
+  else bien(`top sin anuncio: la segunda del día (otra función) no se abre («${r.dos.error}»)`);
+  if (!r.tres.abierta || r.tres.error) mal(`top sin anuncio: al día siguiente no vuelve a abrir: ${JSON.stringify(r.tres)}`);
+  else bien('top sin anuncio: al día siguiente vuelve a abrirse una vez');
+  if (errores.length) mal(`top sin anuncio: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 17: (14 nov) el APK de GitHub se despide: la ventana del paso a Google Play solo en esa app (ni en Play ni en la web),
+// con «Ahora no» antes del cierre y sin cerrar después; la banda de arriba también
+for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {
+  const lim = cierre ? `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: ${JSON.stringify(cierre)} } }));` : '';
+  const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '5701', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+  const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); ${lim}` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(1500);
+  const r = await page.evaluate(() => {
+    const d = document.getElementById('aviso-play');
+    return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: /ya no se actualiza/.test((document.getElementById('banda') || {}).innerText || '') };
+  });
+  const ok = espera === 'nada' ? !r.hay && !r.banda
+    : espera === 'aviso' ? r.hay && r.ahoraNo && r.play && r.banda && /dejará de funcionar el sábado 21 de noviembre/.test(r.t) && /gracias/.test(r.t)
+      : r.hay && !r.ahoraNo && r.play && /ya no funciona/.test(r.t);
+  if (!ok) mal(`paso a Play, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
+  else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda' : 'la ventana sin cerrar'}`);
+  if (errores.length) mal(`paso a Play, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

@@ -1,5 +1,6 @@
 # Las pruebas en cada push (revisión total, A13), en cualquier rama menos bot-estado (la escribe el bot cada 5 min):
-#   web: la misma prueba de la web que hace «Web» antes de publicar (.github/prueba-web.mjs);
+#   web: la misma prueba de la web que hace «Web» antes de publicar (.github/prueba-web.mjs) y los casos de la IA sin
+#     red (.github/prueba-ia.mjs);
 #   sin-red: worker/prueba/datos.mjs y las bot/prueba/*-ejemplo.mjs con la red cortada (.github/pruebas-sin-red.sh).
 #   firma: Ed25519.java (el que comprueba paquete.json en el APK) contra los vectores del RFC 8032 y, con el secreto
 #     PAQUETE_FIRMA, firma el paquete.json de esta rama y lo verifica con la clave pública de AlDia.java, igual que
@@ -22,7 +23,7 @@ concurrency:
 jobs:
   web:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -34,6 +35,9 @@ jobs:
           "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
       - name: Probar la web
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-web.mjs
+      # los fallos reales de la IA (plan y chat), con Google de mentira: la app tiene que pararlos (.github/ia/casos.mjs)
+      - name: Probar la IA sin red
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ia.mjs
 
   sin-red:
     runs-on: ubuntu-latest

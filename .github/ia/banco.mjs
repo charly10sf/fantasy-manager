@@ -14,6 +14,11 @@ const TIPOS = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 
 /* Los escenarios: la liga de ejemplo en distintos momentos. La jornada 10 de la demo empieza siempre «el próximo sábado
    a las 14:00», así que con la hora fija (martes 3 nov 2026) cae el sábado 7. */
+// (para las escenas: la serie de valores de un jugador, `sube` días subiendo un 1 % y `baja` días bajando un 1,5 %, que
+// acaba en su valor de hoy)
+const SERIE = `const serie = (nombre, sube, baja) => { const j = Object.values(S.D.maestro).find((x) => x.nombre === nombre); const s = [];
+  for (let k = sube + baja; k >= 1; k--) { const v = k <= baja ? j.valor * Math.pow(1.015, k) : j.valor * Math.pow(1.015, baja) / Math.pow(1.01, k - baja); s.push([new Date(Date.now() - k * 864e5 + 3600e3).toISOString().slice(0, 10), Math.round(v)]); }
+  S.H.v = S.H.v || {}; S.H.v[j.id] = s; if (S.det && S.det[j.id]) delete S.det[j.id].valores; };`;
 export const ESCENAS = {
   // martes por la mañana, jornada el sábado: lo normal entre semana
   martes: { hora: '2026-11-03T10:00:00+01:00' },
@@ -49,8 +54,30 @@ export const ESCENAS = {
   // un titular mío (Ionut Radu) con la cláusula abierta y casi a su valor: le llega a varios rivales
   'm-clausula-mia': { hora: '2026-11-03T10:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
-  // martes, con una noticia de prensa de R. Terrats (el que el motor manda pujar): la IA puede quitarlo por ella
-  'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'R. Terrats'); return { noticias: { lista: [{ titulo: 'Terrats, duda para el partido del sábado por un golpe en el tobillo en el entrenamiento', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
+  // martes, con una noticia de prensa de Fran García (uno que el motor manda vender): la IA puede quitarlo por ella
+  'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Fran García'); return { noticias: { lista: [{ titulo: 'Fran García será titular el sábado: el técnico lo confirma en rueda de prensa tras la lesión de su compañero', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
+  /* --- segunda vuelta del motor (Carlos, 14 nov). `serie(nombre, sube, baja)`: su valor de las últimas semanas, subiendo
+     hasta hace `baja` días y bajando un 1,5 % al día desde entonces (y sin el histórico de LaLiga, que manda) --- */
+  // martes: Catena (titular, sin otro defensa que puntúe como él) baja todos los días
+  'm-baja-sin-relevo': { hora: '2026-11-03T10:00:00+01:00', prep: 'for (const m of S.D.mercado) m.miPuja = null;', extra: `${SERIE} serie('Catena', 40, 5); return {};` },
+  // martes: Julián Álvarez (titular con relevo: sin él, el once pierde poco) baja todos los días
+  'm-baja-con-relevo': { hora: '2026-11-03T10:00:00+01:00', prep: 'for (const m of S.D.mercado) m.miPuja = null;', extra: `${SERIE} serie('Julián Álvarez', 40, 5); return {};` },
+  // jueves, con 60 M y Jon Martin comprado para revender, que sigue subiendo y tiene 12 días de protección: se aguanta
+  'm-reventa-aguanta': { hora: '2026-11-05T12:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
+    const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 12 * 864e5;`,
+    extra: `${SERIE} serie('Jon Martin', 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
+  // lo mismo, pero se le acaba la protección mañana: toca venderlo
+  'm-reventa-protege': { hora: '2026-11-05T12:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
+    const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 20 * 3600e3;`,
+    extra: `${SERIE} serie('Jon Martin', 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 12 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
+  // 24 jugadores, con dinero y la puja de 36,3 M que trae la liga de ejemplo: una puja más podría dejarte con 26
+  'm-24-puja': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 60000000;
+    const con = new Set(Object.values(S.D.plantillas).flat().map((f) => f.pid)), enM = new Set(S.D.mercado.map((m) => m.pid));
+    const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, 9);
+    for (const j of libres) S.D.plantillas[S.D.yo.teamId].push({ pid: j.id, ptId: 'pt' + j.id, clausula: Math.round(j.valor * 1.6), protegidoHasta: Date.now() + 10 * 864e5, compra: j.valor });` },
+  // jueves, un titular mío (Ionut Radu) con la cláusula a su valor y sin protección: la jornada empieza el sábado
+  'm-blinda-arranque': { hora: '2026-11-05T12:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
+    f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
   // jueves, con uno comprado para revender (Jon Martin): toca ponerlo a la venta para el último cambio de mercado
   'm-reventa': { hora: '2026-11-05T12:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
 };
@@ -184,6 +211,9 @@ export async function plan(escena, contesta, { largo = false } = {}) {
         for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
         for (const n of Pl.noticias || []) L.push(`NOTICIA ${n.jugador}: ${n.texto}`);
         for (const n of Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);
+        // (punto 14) la búsqueda en Google: «Con la IA y Google» y la lista «Fuentes» de Hoy
+        if (Pl.web) L.push('WEB: sí');
+        for (const f of Pl.fuentes || []) L.push(`FUENTE ${f.t} · ${f.u}`);
         L.push(...window.__arbitro(r, D, M, U.eur));
       }
       const ops = (r.ops || []).filter((o) => !['alinear', 'esperar'].includes(o.accion));
@@ -236,7 +266,8 @@ export function arbitro(R, D, M, eur) {
       if (!x) { mal.push(`${q} no es mío`); continue; }
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
       else { escudos++; if (hoy && !x.abierta) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
-    } else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
+    } else if (o.retira) pujado -= +o.retira;   // una puja retirada deja de contar (se puede retirar cuando se quiera)
+    else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
   }
   if (M.escudosMios && escudos > M.escudosMios.quedan) mal.push(`r9: ${escudos} blindajes y quedan ${M.escudosMios.quedan}`);
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)
@@ -312,6 +343,8 @@ export async function motor(escena) {
       if (al) L.push(`ONCE: ${al.formacion || ''} · ${(al.titulares || []).map((t) => (t && t.nombre) || t).join(', ')}`);
       if (R.avisoSaldo) L.push(`SALDO: ${R.avisoSaldo}`);
       if (R.avisoOnce) L.push(`AVISO_ONCE: ${R.avisoOnce}`);
+      for (const d of R.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
+      for (const d of R.proximos_dias || []) L.push(`DIAS ${d.dia}: ${d.texto}`);
       if (R.cuentas && R.cuentas.punto) L.push(`MOTOR: 1 punto en una jornada ≈ ${eur(R.cuentas.punto.v)} (${R.cuentas.punto.de}) · ${R.cuentas.candidatos} candidatos, ${R.cuentas.probados} en la búsqueda${R.vueltas ? `, ${R.vueltas} vuelta${R.vueltas > 1 ? 's' : ''} por descartes` : ''}${R.cuentas.backtest ? ` · reventas pasadas: ${R.cuentas.backtest.bien} de ${R.cuentas.backtest.n} bien, ${eur(R.cuentas.backtest.media, { signo: true })} de media a ${R.cuentas.backtest.dias} días` : ''}`);
 
       L.push(...arbitro(R, D, M, eur));

@@ -53,6 +53,30 @@ public class Principal extends Activity {
     /** la dirección authredirect://... con el código de LaLiga, hasta que la web la recoge */
     volatile String loginPendiente;
 
+    /**
+     * (33) La pantalla a la frecuencia más alta que da con su resolución de ahora (120 Hz en el S25 Edge de Carlos).
+     * Sin pedirlo, muchos móviles dejan las apps a 60 Hz. Solo cambia los hercios, nunca la resolución, y si el sistema
+     * prefiere otra cosa (ahorro de batería) manda él. Se pide al crear la ventana y al volver a ella.
+     */
+    private void pedirMasHercios() {
+        try {
+            android.view.Display d = Build.VERSION.SDK_INT >= 30 ? getDisplay() : getWindowManager().getDefaultDisplay();
+            if (d == null) return;
+            android.view.Display.Mode ahora = d.getMode(), mejor = ahora;
+            for (android.view.Display.Mode m : d.getSupportedModes()) {
+                if (m.getPhysicalWidth() == ahora.getPhysicalWidth() && m.getPhysicalHeight() == ahora.getPhysicalHeight()
+                        && m.getRefreshRate() > mejor.getRefreshRate() + 0.5f) mejor = m;
+            }
+            android.view.WindowManager.LayoutParams lp = getWindow().getAttributes();
+            if (lp.preferredDisplayModeId == mejor.getModeId() && lp.preferredRefreshRate == mejor.getRefreshRate()) return;
+            lp.preferredDisplayModeId = mejor.getModeId();
+            lp.preferredRefreshRate = mejor.getRefreshRate();
+            getWindow().setAttributes(lp);
+        } catch (RuntimeException e) {
+            // un fabricante raro no debe impedir que se abra la app
+        }
+    }
+
     @Override
     protected void onCreate(Bundle guardado) {
         super.onCreate(guardado);
@@ -77,6 +101,7 @@ public class Principal extends Activity {
         columna.addView(hueco, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         caja.addView(columna, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(caja);
+        pedirMasHercios();
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(caja, (v, ins) -> {
             Insets b = ins.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
@@ -446,6 +471,7 @@ public class Principal extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        pedirMasHercios();
         aLaVista = true;
         abierta = true;
         web.onResume();

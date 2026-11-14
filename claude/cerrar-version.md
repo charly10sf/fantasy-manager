@@ -17,6 +17,7 @@ Lo que se hace al acabar una versión o un parche. Los comandos de publicar est�
 - Los arreglos (`tipo: 'arreglo'`) no van en cromos: salen al final, numerados («Notas de la actualización → Correcciones», como un videojuego; lo pidió Carlos el 25 oct), para todos, menos los de otra versión.
 - Una versión con solo arreglos no abre la presentación: se juntan para la siguiente con algo nuevo (`version-vista2` no avanza).
 - Cada novedad nueva se marca al escribirla.
+- La app es pública (Carlos, 14 nov): cada novedad se escribe para un usuario cualquiera, en su idioma y con lo que gana él. Nada de cosas de dentro (Worker, limites.json, archivos, funciones, cupos internos, modelos de IA), tampoco con `para: 'dueño'`: lo técnico va a claude/ y a ESTADO.md.
 
 ## Antes de publicar
 

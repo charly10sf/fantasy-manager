@@ -354,6 +354,23 @@ export function analizar(D, H, c, extra = {}) {
     return { pts, n, nivel: pts >= 10 ? 3 : pts >= 8 ? 2 : 1 };
   };
   /** ¿hay que venderlo ya por la inercia? (ha girado o se ha parado tras subir, o está a punto) */
+  /** lo más alto y lo más bajo que ha valido esta temporada (el histórico desde julio): cuánto margen le queda para bajar */
+  const cacheRango = {};
+  M.rango = (pid) => {
+    if (pid in cacheRango) return cacheRango[pid];
+    const t = M.tend(pid), j = J(pid);
+    const vs = ((t && t.dias) || []).map((x) => +x[1]).filter((v) => v > 0);
+    if (j && j.valor) vs.push(j.valor);
+    return (cacheRango[pid] = vs.length >= 5 ? { min: Math.min(...vs), max: Math.max(...vs) } : null);
+  };
+  /** si baja todos los días (Carlos, 14 nov): 3 o más días seguidos bajando. { dias, p7, min, max } o null */
+  M.bajaSeguido = (pid) => {
+    const t = M.tend(pid);
+    if (!t || !Array.isArray(t.sub) || !t.sub.length) return null;
+    let dias = 0;
+    for (let i = t.sub.length - 1; i >= 0 && t.sub[i] < -0.001; i--) dias++;
+    return dias >= 3 ? { dias, p7: t.p7, ...(M.rango(pid) || {}) } : null;
+  };
   M.ventaPorInercia = (pid) => {
     const x = M.inercia(pid);
     if (!x) return null;
@@ -2487,7 +2504,7 @@ function proximosAuto(dias, fuera = new Set()) {
   const texto = (c) => {
     if (!c.rev) return c.texto;
     const quien = c.rev.filter((x) => !fuera.has(String(x.pid))).map((x) => x.nombre);
-    return quien.length ? `pon a la venta lo de revender (${quien.join(', ')}) y acepta las ofertas antes de la jornada` : '';
+    return quien.length ? `lo de revender (${quien.join(', ')}): a la venta si ha dejado de subir o te hace falta para empezar la jornada en positivo; si sigue subiendo, lo puedes aguantar` : '';
   };
   return dias.map((d) => ({ t: d.t, cosas: d.cosas.map((c) => ({ prio: c.prio, texto: texto(c) })).filter((c) => c.texto) })).filter((d) => d.cosas.length).slice(0, 5).map((d) => {
     const cosas = d.cosas.sort((a, b) => b.prio - a.prio);

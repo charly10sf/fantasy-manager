@@ -6,7 +6,7 @@ import { LS } from './util.js';
 import { pendientes, mandados } from './eventos.js';
 
 /** una petición al Worker con la sesión de LaLiga (para saber quién es); también la usa el límite de minutos */
-export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000 } = {}) {
+export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000, signal } = {}) {
   const tk = await token(); // sin sesión de LaLiga lanza un error de sesión
   const cab = { Authorization: `Bearer ${tk}`, 'content-type': 'application/json', Accept: 'application/json' };
   let s, b;
@@ -16,12 +16,19 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000 
     if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0 });
   } else {
     let r;
-    try { r = await fetch(WORKER_PUBLICO + ruta, { method: metodo, headers: cab, body: cuerpo ? JSON.stringify(cuerpo) : undefined }); } catch (e) { throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0 }); }
+    // (con su tiempo también aquí: el plan de la IA tarda, pero no puede quedarse colgado)
+    const ctl = new AbortController(), reloj = setTimeout(() => ctl.abort(), tiempo);
+    const parar = () => ctl.abort();
+    if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', parar, { once: true }); }
+    try { r = await fetch(WORKER_PUBLICO + ruta, { method: metodo, headers: cab, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: ctl.signal }); } catch (e) {
+      if (signal && signal.aborted) throw Object.assign(new Error('Parado'), { name: 'AbortError' });
+      throw Object.assign(new Error(ctl.signal.aborted ? 'El servidor ha tardado demasiado: vuelve a probar en un rato' : 'Sin conexión: vuelve a probar en un rato'), { estado: 0 });
+    } finally { clearTimeout(reloj); if (signal) signal.removeEventListener('abort', parar); }
     s = r.status; b = await r.text();
   }
   let j = null;
   try { j = JSON.parse(b || 'null'); } catch (e) { j = null; }
-  if (s >= 400 || !j) throw Object.assign(new Error((j && j.e) || `El servidor de avisos responde ${s}`), { estado: s, sesion: !!(j && j.sesion) });
+  if (s >= 400 || !j) throw Object.assign(new Error((j && j.e) || `El servidor de avisos responde ${s}`), { estado: s, sesion: !!(j && j.sesion), datos: j });
   return j;
 }
 

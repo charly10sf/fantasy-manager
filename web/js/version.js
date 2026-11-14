@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.9';
+export const VERSION = '0.7.11';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -12,12 +12,48 @@ export const VERSION = '0.7.9';
 // A los que no son el dueño solo les sale lo que les cambia algo (el filtro, en app.js): ni los arreglos, ni lo que lleva
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
+// (14 nov, Carlos) La app es pública: las novedades se escriben para cualquier usuario, también las que solo ve el dueño.
+// Nada de cosas de dentro (Worker, limites.json, nombres de archivos o funciones, cupos internos, modelos de IA): eso va a
+// claude/ y a ESTADO.md, nunca aquí.
 // importante: true (11 nov, Carlos) la pone en «Novedades» de Ajustes para todos: solo lo gordo, lo que cambia cómo se
 // usa la app (un menú nuevo, la ficha rehecha). Pocas: un par por versión como mucho. Debajo, en pequeño, los arreglos
 // de esas mismas versiones (sin los `menor` ni los de 'dueño').
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.11', f: '2026-11-14', h: '16:01', t: 'El plan, más fino',
+    cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Los titulares que bajan', x: 'El plan solo pone a la venta a un titular cuando baja todos los días, y mira también lo más alto y lo más bajo que ha valido esta temporada. Si no tienes a otro en su puesto que puntúe, no te lo vende: te avisa en «Mirados y descartados» de que antes hace falta un sustituto.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'especular', t: 'Revender a más de una jornada', x: 'Lo que compras para revender ya no hay que venderlo siempre antes de la jornada. Si sigue subiendo, empiezas la jornada en positivo sin venderlo y aún está protegido, el plan te dice que lo puedes aguantar. Se vende cuando deja de subir o antes de que se le acabe la protección.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'escudo', t: 'Blindajes al empezar la jornada', x: 'En «Los próximos días» sale cuándo se reabren las cláusulas al empezar la jornada y, si te queda un blindaje gratis, en quién usarlo.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 25 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
+      { tipo: 'mejora', d: 'reloj', t: 'El plan de la IA dice de cuándo es', x: 'Cuando ves el último plan hecho con la IA, sale la hora a la que se hizo y, si puede no estar al día (está preparando otro, ha fallado o ya tiene unas horas), te lo avisa.', menor: true },
+    ],
+  },
+  {
+    v: '0.7.10b', f: '2026-11-14', h: '14:45', t: 'Ya estamos en Google Play',
+    cosas: [
+      { importante: true, tipo: 'nuevo', d: 'movil', t: 'Ya estamos en Google Play', x: 'Fantasy Manager ya está en Google Play. Los botones de descargar de la web llevan directamente a la tienda.' },
+      { para: 'play', tipo: 'mejora', d: 'candado', t: 'Las funciones top cuando no hay anuncio', x: 'Si no hay ningún anuncio que enseñar, la función que pedías se abre gratis una vez al día. Si vuelve a pasar, prueba un poco más tarde.', menor: true },
+      { tipo: 'arreglo', d: 'camiseta', t: 'El nombre de tu equipo, entero', x: 'En Equipo, la franja de delante del nombre de tu equipo salía cortada y, en el modo Vice City, el brillo se veía dentro de un recuadro. En el ordenador, la pestaña elegida del menú ya no lleva un puntito debajo.' },
+    ],
+  },
+  {
+    v: '0.7.10a', f: '2026-11-14', h: '13:00', t: 'El anuncio de abajo, más pequeño',
+    cosas: [
+      { tipo: 'mejora', para: 'play', d: 'movil', t: 'El anuncio de abajo, más pequeño', x: 'El anuncio de debajo de las pestañas ocupa menos pantalla: ahora deja más sitio para la app.' },
+      { tipo: 'mejora', para: 'app', d: 'cohete', t: 'Más fluida en los móviles de 90 y 120 Hz', x: 'En los móviles con pantalla rápida, la app se mueve a la frecuencia más alta que permita tu pantalla.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Un error raro al entrar por primera vez', x: 'A veces, al entrar por primera vez con Google, los servidores de LaLiga devuelven un error largo en inglés. Ahora la app te dice qué pasa: es cosa de LaLiga y a la segunda suele entrar.' },
+    ],
+  },
+  {
+    v: '0.7.10', f: '2026-11-14', h: '12:25', t: 'La IA te hace el plan del día, sin clave', todos: true,
+    cosas: [
+      { importante: true, tipo: 'nuevo', d: 'ia', t: 'La IA te hace el plan del día, sin clave', x: 'Ya no hace falta poner ninguna clave para que la IA repase tu plan con las noticias, las lesiones y los onces: tienes 2 planes al día con la IA y, en la app de Google Play, alguno más viendo un anuncio corto. La clave de Google sigue sirviendo para preguntarle lo que quieras en el chat.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'ia', t: 'El plan, más rápido y sin contradicciones', x: 'El plan lo monta la app con todas las cuentas hechas (saldo, deuda, cláusulas, empezar la jornada en positivo) y la IA lo ordena y lo explica. Sale antes, con menos pasos y sin cosas que la app tenga que tachar. Mientras la IA piensa, o si no puede, tienes el plan de la app de hoy.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.7.9', f: '2026-11-14', h: '00:54', t: 'La IA, mejorada y optimizada', todos: true,
     cosas: [
