@@ -3386,17 +3386,6 @@
  },
  "liga": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
-   "SPORT|136299647": 1794373265000,
-   "SPORT|136282723": 1794373251000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794369600000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-denuncian-cargas-agresiones-policia-nacional-contra-varios-piquetes-informativos-20261111070541.html": 1794377141000,
-   "SPORT|136311761": 1794373944000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-arranca-huelga-general-vivienda-salarios-primera-presidencia-pedro-sanchez-20261111000049.html": 1794351649000,
-   "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794377670000,
-   "SPORT|136315088": 1794379975000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000,
    "SPORT|136318110": 1794384030000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388256000,
@@ -7714,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2379,
+   "ok": 2380,
    "fallos": 0,
-   "ejecuciones": 1846,
+   "ejecuciones": 1847,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T06:56:12.200Z"
+   "ultima": "2026-11-14T07:01:12.217Z"
   }
  },
  "ptsDirecto": {},
@@ -7737,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T06:56:12.910Z"
+   "ultimaBien": "2026-11-14T07:01:17.102Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T06:56:12.910Z"
+   "ultimaBien": "2026-11-14T07:01:17.102Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T06:56:12.910Z"
+   "ultimaBien": "2026-11-14T07:01:17.102Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7753,7 +7742,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T22:56:14.998Z"
+   "ultimaBien": "2026-11-14T07:01:17.102Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
