@@ -22,7 +22,7 @@ export const VERSION = '0.7.10b';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.10b', f: '2026-11-14', h: '00:00', t: 'Ya estamos en Google Play',
+    v: '0.7.10b', f: '2026-11-14', h: '14:45', t: 'Ya estamos en Google Play',
     cosas: [
       { importante: true, tipo: 'nuevo', d: 'movil', t: 'Ya estamos en Google Play', x: 'Fantasy Manager ya está en Google Play. Los botones de descargar de la web llevan directamente a la tienda.' },
       { para: 'play', tipo: 'mejora', d: 'candado', t: 'Las funciones top cuando no hay anuncio', x: 'Si no hay ningún anuncio que enseñar, la función que pedías se abre gratis una vez al día. Si vuelve a pasar, prueba un poco más tarde.', menor: true },
