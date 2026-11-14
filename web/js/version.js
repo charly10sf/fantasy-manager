@@ -26,6 +26,7 @@ export const NOVEDADES = [
     cosas: [
       { importante: true, tipo: 'nuevo', d: 'movil', t: 'Ya estamos en Google Play', x: 'Fantasy Manager ya está en Google Play. Los botones de descargar de la web llevan directamente a la tienda.' },
       { para: 'play', tipo: 'mejora', d: 'candado', t: 'Las funciones top cuando no hay anuncio', x: 'Si no hay ningún anuncio que enseñar, la función que pedías se abre gratis una vez al día. Si vuelve a pasar, prueba un poco más tarde.', menor: true },
+      { tipo: 'arreglo', d: 'camiseta', t: 'El nombre de tu equipo, entero', x: 'En Equipo, la franja de delante del nombre de tu equipo salía cortada y, en el modo Vice City, el brillo se veía dentro de un recuadro. En el ordenador, la pestaña elegida del menú ya no lleva un puntito debajo.' },
     ],
   },
   {

@@ -2240,7 +2240,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .eq2-quien { display: flex; align-items: center; gap: 14px; }
 .eq2-quien .cara-m.g { width: 58px; height: 58px; box-shadow: 0 0 0 2px var(--fondo), 0 0 0 4px var(--rojo); }
 .eq2-nom { min-width: 0; }
-.eq2-nom .titulo { margin: 4px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eq2-nom .titulo { margin: 4px 0 0; min-width: 0; }
+/* el nombre se corta con «…» en su caja, no en el título: si no, el recorte se comía la franja inclinada y el brillo
+   del modo Vice City salía en un rectángulo. El relleno con margen negativo deja sitio al brillo sin mover nada */
+.eq2-nombre { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 10px 14px; margin: -10px -14px; }
 .eq2-num { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr) minmax(0, 1.05fr) minmax(0, 0.85fr); gap: 1px; margin-top: 14px; border-radius: var(--r-tarj); overflow: hidden; background: var(--linea); border: 1px solid var(--linea); }
 .eq2-num > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 10px 9px 9px; background: var(--plano); }
 .eq2-num b { font: 700 var(--t-sec)/1.05 var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -2922,6 +2925,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .sup { border-bottom-color: transparent; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04); }
 .nav { background: var(--negro); border-top-color: rgba(255, 255, 255, 0.05); }
 .nav button.activo::before { left: 44%; right: 44%; height: 3px; border-radius: 3px; top: auto; bottom: 6px; }
+/* en el menú lateral del ordenador, la pestaña elegida ya va con su fondo: el puntito sobra (Carlos, 14 nov) */
+.escritorio .nav button.activo::before { display: none; }
 
 /* títulos: el de pestaña y el de cualquier ficha, iguales; delante del de pestaña, la franja */
 .titulo, .ficha-top h2, .hoja-cab h2, .club-hero h2, .bloq-hoja h2 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }

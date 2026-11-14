@@ -892,7 +892,7 @@ function eqCabHTML(S) {
   const dv = con7.length ? con7.reduce((s, x) => s + num(x.tend.d7), 0) : null;
   const jug = M.mias.filter((x) => x.j.pos !== 5).length, ent = M.mias.length - jug;
   return `<div class="eq2-cab">
-    <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><h1 class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</h1></div></div>
+    <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><h1 class="titulo"><span class="eq2-nombre">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</span></h1></div></div>
     <div class="eq2-num">
       <button data-accion="ver" data-seg2="equipo:dinero" data-sel="#eq-valor" title="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
       <button data-ir="rivales" data-seg="rivales:clasif" title="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
