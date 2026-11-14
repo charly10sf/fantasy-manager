@@ -1920,14 +1920,11 @@
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
-   "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
-   "SPORT|136334527": 1794402050000,
-   "SPORT|136322901": 1794402031000,
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
@@ -2152,7 +2149,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000,
    "SPORT|136435184": 1794655925000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000,
-   "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000
+   "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000
   },
   "hechos": [
    {
@@ -2421,7 +2419,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3350,17 +3348,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 133498,
-  "salida": 13494,
+  "entrada": 135473,
+  "salida": 13764,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.229789,
+  "dolares": 0.230122,
   "reservado": 0
  },
  "recientes": {
@@ -7567,13 +7565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2452,
+   "ok": 2453,
    "fallos": 0,
-   "ejecuciones": 1919,
+   "ejecuciones": 1920,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:56:13.425Z"
+   "ultima": "2026-11-14T13:01:11.528Z"
   }
  },
  "ptsDirecto": {},
@@ -7590,15 +7588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:56:18.461Z"
+   "ultimaBien": "2026-11-14T13:01:18.896Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:56:18.461Z"
+   "ultimaBien": "2026-11-14T13:01:18.896Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:56:18.461Z"
+   "ultimaBien": "2026-11-14T13:01:18.896Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7606,11 +7604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:56:18.461Z"
+   "ultimaBien": "2026-11-14T13:01:18.896Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:56:18.461Z"
+   "ultimaBien": "2026-11-14T13:01:18.896Z"
   }
  },
  "avisos": [
