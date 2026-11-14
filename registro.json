@@ -2159,7 +2159,9 @@
    "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
    "SPORT|136432118": 1794641299000,
    "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/oasisdelibertad/audios/oasisdelibertad-13-20261114_3475247.html": 1794615879000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/oasisdelibertad/audios/oasisdelibertad-13-20261114_3475247.html": 1794615879000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
+   "SPORT|136433028": 1794644887000
   },
   "hechos": [
    {
@@ -2493,7 +2495,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3439,17 +3441,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 4,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 76735,
-  "salida": 7183,
+  "entrada": 78977,
+  "salida": 7399,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.143908,
+  "dolares": 0.14424,
   "reservado": 0
  },
  "recientes": {
@@ -7652,13 +7654,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2411,
+   "ok": 2412,
    "fallos": 0,
-   "ejecuciones": 1878,
+   "ejecuciones": 1879,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:31:14.871Z"
+   "ultima": "2026-11-14T09:36:10.328Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7677,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:31:21.009Z"
+   "ultimaBien": "2026-11-14T09:36:16.304Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:31:21.009Z"
+   "ultimaBien": "2026-11-14T09:36:16.304Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:31:21.009Z"
+   "ultimaBien": "2026-11-14T09:36:16.304Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7693,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:31:21.009Z"
+   "ultimaBien": "2026-11-14T09:36:16.304Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:31:21.009Z"
+   "ultimaBien": "2026-11-14T09:36:16.304Z"
   }
  },
  "avisos": [
