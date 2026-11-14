@@ -1919,9 +1919,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
@@ -2150,7 +2148,8 @@
    "SPORT|136435184": 1794655925000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000,
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000
   },
   "hechos": [
    {
@@ -2419,7 +2418,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3348,17 +3347,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 135473,
-  "salida": 13764,
+  "entrada": 137509,
+  "salida": 14472,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.230122,
+  "dolares": 0.23068,
   "reservado": 0
  },
  "recientes": {
@@ -7565,13 +7564,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2453,
+   "ok": 2454,
    "fallos": 0,
-   "ejecuciones": 1920,
+   "ejecuciones": 1921,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:01:11.528Z"
+   "ultima": "2026-11-14T13:06:11.945Z"
   }
  },
  "ptsDirecto": {},
@@ -7588,15 +7587,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:01:18.896Z"
+   "ultimaBien": "2026-11-14T13:06:22.585Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:01:18.896Z"
+   "ultimaBien": "2026-11-14T13:06:22.585Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:01:18.896Z"
+   "ultimaBien": "2026-11-14T13:06:22.585Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7604,11 +7603,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:01:18.896Z"
+   "ultimaBien": "2026-11-14T13:06:22.585Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:01:18.896Z"
+   "ultimaBien": "2026-11-14T13:06:22.585Z"
   }
  },
  "avisos": [
