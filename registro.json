@@ -1919,12 +1919,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/paron-terror-grandes-clubes/0003_202611G12P36992.htm": 1794421380000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laporte-duda-jugar-frente-republica-checa-proceso-virico-20261111_3473310.html": 1794421558000,
    "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000,
-   "SPORT|136345794": 1794421376000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
    "SPORT|136347080": 1794422141000,
@@ -7523,13 +7520,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2518,
+   "ok": 2519,
    "fallos": 0,
-   "ejecuciones": 1985,
+   "ejecuciones": 1986,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T18:21:11.433Z"
+   "ultima": "2026-11-14T18:26:13.499Z"
   }
  },
  "ptsDirecto": {},
@@ -7546,15 +7543,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:21:14.523Z"
+   "ultimaBien": "2026-11-14T18:26:19.658Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:21:14.523Z"
+   "ultimaBien": "2026-11-14T18:26:19.658Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:21:14.523Z"
+   "ultimaBien": "2026-11-14T18:26:19.658Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7562,11 +7559,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:21:14.523Z"
+   "ultimaBien": "2026-11-14T18:26:19.658Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:21:14.523Z"
+   "ultimaBien": "2026-11-14T18:26:19.658Z"
   }
  },
  "avisos": [
