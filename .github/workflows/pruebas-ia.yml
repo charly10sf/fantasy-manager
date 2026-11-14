@@ -1,26 +1,56 @@
-# Solo en la rama pruebas-ia (no se fusiona): manda a Gemini lo que la app le mandaría en cada caso de .github/ia/casos.mjs
+# Solo en la rama pruebas-ia (no se fusiona): manda a la IA lo que la app le mandaría en cada caso de .github/ia/casos.mjs
 # y deja las respuestas como artefacto. Se puntúan fuera, con .github/ia/puntuar.mjs.
+# (14 nov, el motor del plan) Los cinco planes con el contrato corto, dos pasadas con cada modelo. PASO elige qué se
+# pregunta: «noche» (Gemini ligero, Haiku y Sonnet; antes de las 9:00 no hay cupo de los Gemini buenos) o «buenos»
+# (los tres Gemini buenos, cuando vuelva el cupo: cambiar PASO a «buenos» y subir).
 name: Pruebas IA
 on:
   push:
     branches: [pruebas-ia]
 permissions:
   contents: read
+env:
+  PASO: noche
 jobs:
   ia:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
-      # (14 nov) solo Claude: el cupo de Gemini de hoy ya está gastado
-      - run: node .github/ia/llamar-claude.mjs
+      - name: Gemini ligero, dos pasadas
+        if: env.PASO == 'noche'
+        continue-on-error: true
+        run: node .github/ia/llamar.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MODELOS: gemini-3.5-flash-lite
+          SALIDA: ./respuestas-ligero.json
+      - name: Haiku, dos pasadas (primero el barato)
+        if: env.PASO == 'noche'
+        run: node .github/ia/llamar-claude.mjs && mv .github/ia/respuestas-claude.json .github/ia/respuestas-haiku.json
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SOLO: ia-plan
           MODELOS: claude-haiku-5-5
-          PENSAR: "no"
+          PASADAS: "2"
+          TOPE_USD: "0.5"
+      - name: Sonnet, dos pasadas
+        if: env.PASO == 'noche'
+        run: node .github/ia/llamar-claude.mjs && mv .github/ia/respuestas-claude.json .github/ia/respuestas-sonnet.json
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODELOS: claude-sonnet-5-5
+          PASADAS: "2"
+          TOPE_USD: "2"
+      - name: Gemini buenos, dos pasadas (con el cupo del día)
+        if: env.PASO == 'buenos'
+        run: node .github/ia/llamar.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MODELOS: gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash
+          SALIDA: ./respuestas-buenos.json
+          PAUSA: "6000"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
-        with: { name: respuestas-claude, path: .github/ia/respuestas-claude.json, retention-days: 7 }
+        with: { name: respuestas, path: ".github/ia/respuestas-*.json", retention-days: 7 }

@@ -227,6 +227,9 @@ function urgentesDe(S) {
   // descartó). Solo sale la que se ha abierto después, y lo dice
   const P = S.plan;
   const conIA = !!(P && !P.auto && !P.viejo && P.t);
+  // (14 nov) el plan del motor (plan.js) es lo que la app haría hoy: lo que ha mirado y dejado fuera («Mirados y
+  // descartados», con su porqué) no sale aquí arriba como urgente. Hoy y el plan dicen lo mismo
+  const delMotor = new Set(P && P.motor && Array.isArray(P.descartes) ? P.descartes.map((d) => String(d && d.pid)).filter(Boolean) : []);
   const descartados = new Set(conIA && Array.isArray(P.descartes) ? P.descartes.map((d) => norm(d && d.jugador)).filter(Boolean) : []);
   const ahora = Date.now();
   const despuesDelPlan = (x) => (x.protegidoHasta && x.protegidoHasta > P.t) || (M.vedas || []).some((v) => v.ini <= P.t && v.fin > P.t && v.fin <= ahora);
@@ -238,7 +241,7 @@ function urgentesDe(S) {
     nota[a.pid] = 'Se ha abierto después de tu plan: no lo tiene en cuenta.';
     return false;
   };
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a)).slice(0, 3);
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
   // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
   // arriba y el plan de debajo sin Rodri, sin explicar nada)
   const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];

@@ -4,7 +4,8 @@ import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, 
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
-import { analizar, planAuto, rematarAuto } from './motor.js';
+import { analizar, rematarAuto } from './motor.js';
+import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
@@ -1098,14 +1099,15 @@ function apuntarReventa() {
   return cambia;
 }
 
-/** el plan que se enseña: el de la IA si es de hoy (o el último mientras llega el nuevo); si no, el automático */
+/** el plan que se enseña: el de la IA si es de hoy; si no (no hay, es de otro día, la IA aún piensa o ha fallado), el del
+ * motor de hoy (plan.js), que ya viene cuadrado. Antes, mientras llegaba el nuevo o si fallaba, se veía el de ayer */
 function montarPlan() {
   const P = ultimoPlan();
-  let base;
-  if (P && (P.dia === diaDe() || S.planEstado.cargando || !hayClave())) base = { ...P, viejo: P.dia !== diaDe() };
-  else if (P && S.planEstado.error && Date.now() - P.t < 2 * 86400e3) base = { ...P, viejo: true };
-  else base = planAuto(S.D, S.M, S.c);
-  S.plan = rematarAuto(cuadrarPlan(base, S.D, S.M));
+  if (P && P.dia === diaDe()) {
+    S.plan = rematarAuto(cuadrarPlan(P, S.D, S.M));
+    // el plan corto de la IA sale del motor: mientras no cambie el saldo, sus cuentas para la jornada siguen valiendo
+    if (P.motor && P.cuentas && P.foto && P.foto.dinero === S.D.dinero) S.plan = rematarMotor(S.plan, S.M, { titular: false });
+  } else S.plan = planDeHoy(S.D, S.M, S.c);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
 }

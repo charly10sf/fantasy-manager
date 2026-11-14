@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8h';
+export const VERSION = '0.7.9';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,15 @@ export const VERSION = '0.7.8h';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.9', f: '2026-11-14', h: '00:54', t: 'La IA, mejorada y optimizada', todos: true,
+    cosas: [
+      { importante: true, tipo: 'mejora', d: 'ia', t: 'La IA, mejorada y optimizada', x: 'Tu director deportivo afina más. Antes de darte el plan del día, la app comprueba cada operación con los datos de tu liga, y en el chat repasa lo que te recomienda y las cifras antes de enseñártelo. Si algo no cuadra, debajo de la respuesta sale «Revisado por la app» con el dato bueno. Además va más ligera: le llega solo lo que necesita para decidir.', ir: { v: 'ia' } },
+      { tipo: 'mejora', para: 'dueño', d: 'ia', t: 'El plan ya no propone lo que la app iba a tachar', x: 'Antes de pedirle el plan, la app comprueba una a una las operaciones posibles de hoy y a la IA solo le llegan las que valen, cada una con su aviso. Así salen menos «Descartado por la app» y el titular cuadra con lo que hay debajo.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'ia', t: 'Reglas del juego mejor explicadas', x: 'A un jugador de un rival que no está a la venta sí se le puede hacer una oferta desde su ficha (decide él); tras cualquier fichaje la cláusula queda cerrada 14 días; la oferta de LaLiga por lo que pones a la venta llega en el siguiente cambio de mercado; y una cláusula nunca se paga con deuda.' },
+      { tipo: 'arreglo', para: 'dueño', d: 'ia', t: 'Más cosas del plan que se escapaban', x: 'El titular ya no nombra un blindaje que la app ha quitado, y el paso de alinear no puede nombrar a un jugador que no es tuyo.', menor: true },
+    ],
+  },
   {
     v: '0.7.8h', f: '2026-11-13', h: '20:58', t: 'El chat ya no confunde lo que un rival tiene a la venta con un trato',
     cosas: [

@@ -36,7 +36,7 @@ async function pedir(p, lote, primero) {
         if (r.ok && x.candidates) {
           const u = x.usageMetadata || {};
           console.log(`OK  ${lote} ${p.id} · ${modelo} · ${Math.round((Date.now() - t0) / 1000)} s · entra ${u.promptTokenCount || '?'} · piensa ${u.thoughtsTokenCount || 0} · escribe ${u.candidatesTokenCount || '?'} · ${x.candidates[0].finishReason}`);
-          return { id: p.id, lote, modelo, ms: Date.now() - t0, respuesta: x };
+          return { id: p.id, lote, modelo, ms: Date.now() - t0, entra: u.promptTokenCount || 0, piensa: u.thoughtsTokenCount || 0, sale: u.candidatesTokenCount || 0, respuesta: x };
         }
         console.log(`  ${p.id}: ${modelo} ${r.status} ${String((x.error && x.error.message) || '').slice(0, 90)}`);
         if (r.status === 429) { if (/per day|daily|PerDay/i.test(JSON.stringify(x))) { vivos = vivos.filter((m) => m !== modelo); console.log(`  (${modelo} sin cupo: fuera para el resto)`); break; } await espera(35000); } else if (r.status === 400) break; else await espera(6000);
@@ -52,7 +52,7 @@ for (const p of A) {
   out.push(a);
   const pb = B.find((x) => x.id === p.id);
   if (pb) { await espera(2500); out.push(await pedir(pb, 'b', a.modelo)); }
-  writeFileSync(new URL('./respuestas.json', import.meta.url), JSON.stringify(out));
+  writeFileSync(new URL(process.env.SALIDA || './respuestas.json', import.meta.url), JSON.stringify(out));
   if (!vivos.length) { console.log('Sin modelos con cupo: lo dejo aquí'); break; }
   await espera(+(process.env.PAUSA || 2500));
 }
