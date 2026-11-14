@@ -1919,9 +1919,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
-   "SPORT|136338637": 1794409048000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
@@ -3239,10 +3237,8 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-diaz-reprocha-pp-burlas-sindicatos-traslada-apoyo-trabajadores-huelga-20261111160104.html": 1794409264000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
    "Europa Press|https://www.europapress.es/madrid/noticia-huelga-general-resuena-madrid-piquetes-protestas-pese-relativa-normalidad-servicios-publicos-20261111163042.html": 1794411042000,
-   "SPORT|136338548": 1794409167000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
@@ -7536,13 +7532,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2476,
+   "ok": 2477,
    "fallos": 0,
-   "ejecuciones": 1943,
+   "ejecuciones": 1944,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T14:56:14.256Z"
+   "ultima": "2026-11-14T15:01:11.329Z"
   }
  },
  "ptsDirecto": {},
@@ -7559,15 +7555,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:56:20.769Z"
+   "ultimaBien": "2026-11-14T15:01:14.374Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:56:20.769Z"
+   "ultimaBien": "2026-11-14T15:01:14.374Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:56:20.769Z"
+   "ultimaBien": "2026-11-14T15:01:14.374Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7575,11 +7571,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:56:20.769Z"
+   "ultimaBien": "2026-11-14T15:01:14.374Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:56:20.769Z"
+   "ultimaBien": "2026-11-14T15:01:14.374Z"
   }
  },
  "avisos": [
