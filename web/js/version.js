@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.10b';
+export const VERSION = '0.7.11';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,16 @@ export const VERSION = '0.7.10b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.11', f: '2026-11-14', h: '16:01', t: 'El plan, más fino',
+    cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Los titulares que bajan', x: 'El plan solo pone a la venta a un titular cuando baja todos los días, y mira también lo más alto y lo más bajo que ha valido esta temporada. Si no tienes a otro en su puesto que puntúe, no te lo vende: te avisa en «Mirados y descartados» de que antes hace falta un sustituto.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'especular', t: 'Revender a más de una jornada', x: 'Lo que compras para revender ya no hay que venderlo siempre antes de la jornada. Si sigue subiendo, empiezas la jornada en positivo sin venderlo y aún está protegido, el plan te dice que lo puedes aguantar. Se vende cuando deja de subir o antes de que se le acabe la protección.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'escudo', t: 'Blindajes al empezar la jornada', x: 'En «Los próximos días» sale cuándo se reabren las cláusulas al empezar la jornada y, si te queda un blindaje gratis, en quién usarlo.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'candado', t: 'Tus pujas ocupan sitio', x: 'Si estás cerca de los 25 jugadores, el plan cuenta las pujas que ya tienes puestas: si las ganas, ocupan sitio, así que no te propone fichar a nadie más.' },
+      { tipo: 'mejora', d: 'reloj', t: 'El plan de la IA dice de cuándo es', x: 'Cuando ves el último plan hecho con la IA, sale la hora a la que se hizo y, si puede no estar al día (está preparando otro, ha fallado o ya tiene unas horas), te lo avisa.', menor: true },
+    ],
+  },
   {
     v: '0.7.10b', f: '2026-11-14', h: '14:45', t: 'Ya estamos en Google Play',
     cosas: [
