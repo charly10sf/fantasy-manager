@@ -2159,7 +2159,8 @@
    "SPORT|136407108": 1794639611000,
    "SPORT|135274018": 1794639600000,
    "SPORT|135166253": 1794639600000,
-   "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000
+   "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000,
+   "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000
   },
   "hechos": [
    {
@@ -2493,7 +2494,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3445,17 +3446,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 4,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 68840,
-  "salida": 6421,
+  "entrada": 70794,
+  "salida": 6513,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.142738,
+  "dolares": 0.142979,
   "reservado": 0
  },
  "recientes": {
@@ -7658,13 +7659,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2395,
+   "ok": 2396,
    "fallos": 0,
-   "ejecuciones": 1862,
+   "ejecuciones": 1863,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:16:14.447Z"
+   "ultima": "2026-11-14T08:21:12.456Z"
   }
  },
  "ptsDirecto": {},
@@ -7681,15 +7682,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:16:23.739Z"
+   "ultimaBien": "2026-11-14T08:21:17.652Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:16:23.739Z"
+   "ultimaBien": "2026-11-14T08:21:17.652Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:16:23.739Z"
+   "ultimaBien": "2026-11-14T08:21:17.652Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7697,11 +7698,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:16:23.739Z"
+   "ultimaBien": "2026-11-14T08:21:17.652Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:16:23.739Z"
+   "ultimaBien": "2026-11-14T08:21:17.652Z"
   }
  },
  "avisos": [
