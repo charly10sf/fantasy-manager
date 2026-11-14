@@ -159,6 +159,10 @@ export function elDia(t) {
   return /^(hoy|mañana|ayer)$/.test(c) ? c : `el ${c}`;
 }
 export const fechaCorta = (t) => { const p = partes(t); return `${p.d} ${MESES[p.m]}`; };
+const DIAS_L = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const MESES_L = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+/** «sábado 21 de noviembre» */
+export const fechaLarga = (t) => { const p = partes(t); return `${DIAS_L[p.dw]} ${p.d} de ${MESES_L[p.m]}`; };
 export const horaDe = (t) => { const p = partes(t); return `${p.h}:${p.min}`; };
 
 /* ---------- nombres ---------- */

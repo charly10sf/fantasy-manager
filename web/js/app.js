@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
+import { esc, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara, cierreApk } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -457,6 +457,9 @@ window.addEventListener('fm-lleno', (e) => {
   const b = $('#banda');
   if (b && !$('.banda-lleno', b)) b.insertAdjacentHTML('afterbegin', bandaLleno());
 });
+/* el APK de GitHub ya no se actualiza: una banda fija hasta que se pasen a Google Play (avisoPlay, más abajo) */
+const enApkGithub = () => enApp && nativo.canal() === 'github';
+const bandaPlay = () => (enApkGithub() ? `<div class="banda">${icono('descargar')}<span>Esta app ya no se actualiza: instálala desde Google Play</span><button data-accion="avisoPlay">Ver</button></div>` : '');
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
 /* ---------------- la pantalla de carga ---------------- */
@@ -674,7 +677,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -884,6 +887,8 @@ function rehacer() {
   fijarMotor(S.M);
   // quién eres, para lo bloqueado (antes de pintar nada)
   fijarYo(yoReal(), enDemo());
+  // el cierre del APK de GitHub no va con el dueño: sabido quién es, se quita la ventana si ya no toca
+  if (enApkGithub() && !cierreApk().cerrada) { const v = document.getElementById('aviso-play'); if (v && !v.querySelector('[data-accion="cerrarAvisoPlay"]')) v.remove(); }
   fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n);
   cerrarTopA();
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
@@ -1557,7 +1562,32 @@ async function paquetePublicado() {
   }
   return null;
 }
+/* La ventana del paso a Google Play en el APK de GitHub (Carlos, 14 nov). Antes del cierre, una vez al día (y desde la
+   banda), con «Ahora no»; después, sin cerrar. Devuelve si la app ya está cerrada (entonces no se pide versión nueva:
+   el APK de GitHub ya no se publica) */
+function avisoPlay(forzado = false) {
+  if (!enApkGithub()) return false;
+  const c = cierreApk();
+  if (!c.cerrada && !forzado) { const g = LS.get('aviso-play', null); if (g && g.dia === diaDe()) return false; }
+  if (!c.cerrada) LS.set('aviso-play', { dia: diaDe() });
+  let d = document.getElementById('aviso-play');
+  if (!d) {
+    d = document.createElement('div');
+    d.id = 'aviso-play'; d.className = 'forzar'; d.setAttribute('role', 'alertdialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'aviso-play-t');
+    document.body.appendChild(d);
+  }
+  const cuando = c.hasta ? `el ${fechaLarga(c.hasta)}` : '';
+  const pasos = 'Primero desinstala esta (la de Google Play no se puede instalar encima) y luego descárgala de la tienda. Tendrás que volver a entrar con tu cuenta de LaLiga.';
+  const txt = c.cerrada
+    ? `<p>Esta versión de la app ya no funciona. Para seguir usando Fantasy Manager, instálala desde Google Play.</p><p>${pasos}</p>`
+    : `<p>Esta versión de la app ya no se va a actualizar más${cuando ? ` y dejará de funcionar ${cuando}` : ''}. Para seguir usándola, instálala desde Google Play.</p><p>${pasos}</p>`;
+  d.innerHTML = `<div class="forzar-c"><span class="forzar-ic">${icono('descargar')}</span><h2 id="aviso-play-t">Fantasy Manager ya está en Google Play</h2>${txt}<p><b>¡Muchas gracias por probar Fantasy Manager desde tan pronto!</b></p><div class="forzar-b"><button class="btn ancho" data-abrir="${PLAY_URL}">Ir a Google Play</button>${c.cerrada ? '' : '<button class="btn ancho sec" data-accion="cerrarAvisoPlay">Ahora no</button>'}</div></div>`;
+  const b = d.querySelector('button');
+  if (b) b.focus();
+  return c.cerrada;
+}
 async function mirarAppNueva() {
+  if (avisoPlay()) return;
   const j = await paquetePublicado();
   if (!j || cmpVer(j.version, VERSION) <= 0) return;
   const mia = nativo.huellaNativa();
@@ -3018,6 +3048,8 @@ document.addEventListener('click', async (ev) => {
     case 'buscarVersion': buscarVersion(true); break;
     case 'ponerWeb': ponerWebNueva(); break;
     case 'ponerAppNueva': ponerAppNueva(); break;
+    case 'avisoPlay': avisoPlay(true); break;
+    case 'cerrarAvisoPlay': { const d = document.getElementById('aviso-play'); if (d) d.remove(); break; }
     case 'bajarApp': nativo.actualizar((S.nueva && S.nueva.apk) || APK_URL); tostada('Descargando la app… Cuando acabe, instálala encima', 6000); break;
     case 'recargarWeb': recargarWeb(); break;
     case 'buscarWeb': {

@@ -203,6 +203,16 @@ export function anunciosWebModo() {
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }
 export const anunciosWebOk = () => anunciosWebModo() === 'real';
+/* El APK de GitHub (el de la liga) se despide (Carlos, 14 nov): desde la 0.7.10 todo va por Google Play, el APK ya no se
+   actualiza y deja de funcionar a la semana. «cierreApk» en limites.json mueve la fecha (false: solo el aviso, sin cerrar).
+   Al dueño no se le cierra: la pre-release «prueba» de pendiente es un APK de GitHub */
+const CIERRE_APK = '2026-11-21T23:59:00+01:00';
+export function cierreApk() {
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const f = cfg.cierreApk === false ? 0 : Date.parse(cfg.cierreApk || CIERRE_APK) || Date.parse(CIERRE_APK);
+  const dueno = !!yoB && [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
+  return { hasta: f, cerrada: !!f && Date.now() > f && !dueno };
+}
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
    de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.10a';
+export const VERSION = '0.7.10b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.10a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.10b', f: '2026-11-14', h: '00:00', t: 'Ya estamos en Google Play',
+    cosas: [
+      { importante: true, tipo: 'nuevo', d: 'movil', t: 'Ya estamos en Google Play', x: 'Fantasy Manager ya está en Google Play. Los botones de descargar de la web llevan directamente a la tienda.' },
+      { para: 'play', tipo: 'mejora', d: 'candado', t: 'Las funciones top cuando no hay anuncio', x: 'Si no hay ningún anuncio que enseñar, la función que pedías se abre gratis una vez al día. Si vuelve a pasar, prueba un poco más tarde.', menor: true },
+    ],
+  },
   {
     v: '0.7.10a', f: '2026-11-14', h: '13:00', t: 'El anuncio de abajo, más pequeño',
     cosas: [
