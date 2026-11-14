@@ -3339,7 +3339,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388256000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261111/1004249774/betis-estrena-copa-diez-bajas.html": 1794387926000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794387738000,
@@ -7659,13 +7658,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2399,
+   "ok": 2400,
    "fallos": 0,
-   "ejecuciones": 1866,
+   "ejecuciones": 1867,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:36:12.374Z"
+   "ultima": "2026-11-14T08:41:13.856Z"
   }
  },
  "ptsDirecto": {},
@@ -7682,15 +7681,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:36:15.917Z"
+   "ultimaBien": "2026-11-14T08:41:20.745Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:36:15.917Z"
+   "ultimaBien": "2026-11-14T08:41:20.745Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:36:15.917Z"
+   "ultimaBien": "2026-11-14T08:41:20.745Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7698,11 +7697,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:36:15.917Z"
+   "ultimaBien": "2026-11-14T08:41:20.745Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:36:15.917Z"
+   "ultimaBien": "2026-11-14T08:41:20.745Z"
   }
  },
  "avisos": [
