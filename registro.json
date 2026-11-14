@@ -2141,7 +2141,8 @@
    "SPORT|136439696": 1794661472000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
    "SPORT|136443141": 1794667376000,
-   "SPORT|136442560": 1794668198000
+   "SPORT|136442560": 1794668198000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/pontevedra/pontevedra/2026/11/14/fallece-90-anos-genaro-santome-forofo-pontevedra-cf-nino-gracias-tio-pachecho/00031794672054155764317.htm": 1794673920000
   },
   "hechos": [
    {
@@ -2390,7 +2391,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3237,7 +3238,6 @@
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
    "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420555000,
    "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000,
@@ -3308,17 +3308,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 156187,
-  "salida": 17176,
+  "entrada": 158128,
+  "salida": 17268,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.233899,
+  "dolares": 0.234139,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2497,
+   "ok": 2498,
    "fallos": 0,
-   "ejecuciones": 1964,
+   "ejecuciones": 1965,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T16:36:13.856Z"
+   "ultima": "2026-11-14T16:41:11.577Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:36:17.270Z"
+   "ultimaBien": "2026-11-14T16:41:17.954Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:36:17.270Z"
+   "ultimaBien": "2026-11-14T16:41:17.954Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:36:17.270Z"
+   "ultimaBien": "2026-11-14T16:41:17.954Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:36:17.270Z"
+   "ultimaBien": "2026-11-14T16:41:17.954Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:36:17.270Z"
+   "ultimaBien": "2026-11-14T16:41:17.954Z"
   }
  },
  "avisos": [
