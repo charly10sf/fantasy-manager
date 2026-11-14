@@ -1023,6 +1023,13 @@
    "jornada": 12,
    "id": "2121513917750886540",
    "t": "2026-11-14T08:01:49.099Z"
+  },
+  {
+   "clave": "selecciones-dia|12|20261113",
+   "tipo": "selecciones-dia",
+   "jornada": 12,
+   "id": "2121545318126821812",
+   "t": "2026-11-14T10:06:35.272Z"
   }
  ],
  "estados": {
@@ -3437,16 +3444,16 @@
   "dia": "2026-11-14",
   "llamadas": {
    "clasificar": 9,
-   "redactar": 4,
-   "revisar": 2,
+   "redactar": 6,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 78977,
-  "salida": 7399,
-  "cacheLee": 0,
-  "cacheEscribe": 5806,
-  "dolares": 0.14424,
+  "entrada": 110447,
+  "salida": 8421,
+  "cacheLee": 2903,
+  "cacheEscribe": 8709,
+  "dolares": 0.224948,
   "reservado": 0
  },
  "recientes": {
@@ -3674,6 +3681,10 @@
    {
     "t": "2026-11-13T06:01:50.810Z",
     "texto": "🌍 Baena marcó con España 🇪🇸 en el 2-0 a Chequia 🇨🇿 y jugó los 90 minutos. Se queda en 95,2 M, aunque en el parón ha bajado 5,8 M.\n\nDiomande dio una asistencia con Costa de Marfil 🇨🇮 en el 2-1 a Gambia y sube 5,7 M. Arda Güler hizo un gol con Turquía 🇹🇷, aunque perdió con Bélgica 🇧🇪 (1-2): vale 142,1 M y suma 11,5 M en el parón.\n\nGrimaldo, Joan García y Konaté se quedaron en el banquillo sin jugar."
+   },
+   {
+    "t": "2026-11-14T10:06:35.274Z",
+    "texto": "🌍 Zabiri marcó con Marruecos 🇲🇦 en el 5-1 a Niger y sube 9,1 M en el parón: ya vale 56,2 M.\n\nDumfries dio dos asistencias en el 7-0 de Países Bajos 🇳🇱 a Grecia 🇬🇷 y jugó los 90, pero baja 1,6 M. Oskarsson hizo un gol con Islandia 🇮🇸 ante Bulgaria 🇧🇬 (5-0) en 46 minutos.\n\nKang-In Lee jugó entero la derrota de Corea del Sur 🇰🇷 contra Arabia Saudí 🇸🇦 (2-3) y baja 6,7 M. Vlachodimos se quedó en el banquillo con Grecia sin jugar."
    }
   ],
   "calendario": [
@@ -7649,13 +7660,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2417,
+   "ok": 2418,
    "fallos": 0,
-   "ejecuciones": 1884,
+   "ejecuciones": 1885,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:01:11.563Z"
+   "ultima": "2026-11-14T10:06:16.793Z"
   }
  },
  "ptsDirecto": {},
@@ -7672,15 +7683,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:01:14.774Z"
+   "ultimaBien": "2026-11-14T10:06:35.277Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:01:14.774Z"
+   "ultimaBien": "2026-11-14T10:06:35.277Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:01:14.774Z"
+   "ultimaBien": "2026-11-14T10:06:35.277Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7688,11 +7699,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:01:14.774Z"
+   "ultimaBien": "2026-11-14T10:06:35.277Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:01:14.774Z"
+   "ultimaBien": "2026-11-14T10:06:35.277Z"
   }
  },
  "avisos": [
