@@ -2167,7 +2167,8 @@
    "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/oasisdelibertad/audios/oasisdelibertad-13-20261114_3475247.html": 1794615879000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
-   "SPORT|136433028": 1794644887000
+   "SPORT|136433028": 1794644887000,
+   "SPORT|136433845": 1794647382000
   },
   "hechos": [
    {
@@ -2501,7 +2502,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3443,17 +3444,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 110447,
-  "salida": 8421,
+  "entrada": 112480,
+  "salida": 9209,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.224948,
+  "dolares": 0.225545,
   "reservado": 0
  },
  "recientes": {
@@ -7660,13 +7661,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2418,
+   "ok": 2419,
    "fallos": 0,
-   "ejecuciones": 1885,
+   "ejecuciones": 1886,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:06:16.793Z"
+   "ultima": "2026-11-14T10:11:12.221Z"
   }
  },
  "ptsDirecto": {},
@@ -7683,15 +7684,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:06:35.277Z"
+   "ultimaBien": "2026-11-14T10:11:21.482Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:06:35.277Z"
+   "ultimaBien": "2026-11-14T10:11:21.482Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:06:35.277Z"
+   "ultimaBien": "2026-11-14T10:11:21.482Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7699,11 +7700,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:06:35.277Z"
+   "ultimaBien": "2026-11-14T10:11:21.482Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:06:35.277Z"
+   "ultimaBien": "2026-11-14T10:11:21.482Z"
   }
  },
  "avisos": [
