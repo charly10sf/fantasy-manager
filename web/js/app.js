@@ -466,8 +466,8 @@ const bandaPlay = () => {
   // (días del calendario: el sábado por la tarde, «en 7 días» hasta el sábado siguiente)
   const c = cierreApk(), d0 = (t) => { const x = new Date(t); return new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime(); };
   const dias = c.hasta ? Math.round((d0(c.hasta) - d0(Date.now())) / DIA) : 0;
-  const cuando = !c.hasta ? '' : dias > 1 ? ` y dejará de funcionar el ${fechaLarga(c.hasta)} (en ${dias} días)` : dias === 1 ? ' y dejará de funcionar mañana' : ' y deja de funcionar hoy';
-  return `<div class="banda banda-play">${icono('alerta')}<div class="banda-play-c"><b>Pásate a Google Play</b><span>Esta app ya no recibirá actualizaciones ni mejoras${cuando}.</span><div class="banda-play-b"><button class="btn chico" data-abrir="${PLAY_URL}">Ir a Google Play</button><button data-accion="avisoPlay">Cómo</button></div></div></div>`;
+  const cuando = !c.hasta ? 'pronto' : dias > 1 ? `en ${dias} días` : dias === 1 ? 'mañana' : 'hoy';
+  return `<div class="banda banda-play">${icono('alerta')}<div class="banda-play-c"><b>Esta app deja de funcionar ${cuando}</b><span>Ya no recibe actualizaciones ni mejoras. Instálala desde Google Play.</span><div class="banda-play-b"><button class="banda-play-ins" data-abrir="${PLAY_URL}" aria-label="Ir a Google Play"><img src="img/google-play.png" alt="Disponible en Google Play" width="646" height="250"></button><button data-accion="avisoPlay">Cómo</button></div></div></div>`;
 };
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
