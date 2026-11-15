@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
@@ -2135,18 +2134,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794491638000,
-    "id": "2617",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Sadiq no entrena con el grupo tras un golpe",
-    "motivo": "golpe en la articulación de la rodilla",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html",
     "medio": "Diario de Sevilla",
@@ -7462,13 +7449,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2792,
+   "ok": 2793,
    "fallos": 0,
-   "ejecuciones": 2222,
+   "ejecuciones": 2223,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T13:51:11.269Z"
+   "ultima": "2026-11-15T13:56:11.720Z"
   }
  },
  "ptsDirecto": {},
@@ -7485,15 +7472,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:51:14.994Z"
+   "ultimaBien": "2026-11-15T13:56:15.603Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:51:14.994Z"
+   "ultimaBien": "2026-11-15T13:56:15.603Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:51:14.994Z"
+   "ultimaBien": "2026-11-15T13:56:15.603Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7501,11 +7488,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:51:14.994Z"
+   "ultimaBien": "2026-11-15T13:56:15.603Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:51:14.994Z"
+   "ultimaBien": "2026-11-15T13:56:15.603Z"
   }
  },
  "avisos": [
