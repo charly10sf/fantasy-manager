@@ -2140,7 +2140,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000,
    "SPORT|136450564": 1794729623000,
-   "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000
+   "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000,
+   "AS|https://as.com/futbol/la-conversion-de-deossa-f202611-n/": 1794733920000
   },
   "hechos": [
    {
@@ -2390,7 +2391,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3285,12 +3286,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000,
+   "Europa Press|https://www.europapress.es/catalunya/noticia-colau-critica-sanchez-suspendido-materia-vivienda-20261115101621.html": 1794734181000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -3298,17 +3300,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 8,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 161022,
-  "salida": 10917,
+  "entrada": 164646,
+  "salida": 11523,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.366507,
+  "dolares": 0.367172,
   "reservado": 0
  },
  "recientes": {
@@ -7535,13 +7537,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2739,
+   "ok": 2740,
    "fallos": 0,
-   "ejecuciones": 2169,
+   "ejecuciones": 2170,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T09:26:15.690Z"
+   "ultima": "2026-11-15T09:31:11.108Z"
   }
  },
  "ptsDirecto": {},
@@ -7558,15 +7560,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:26:19.731Z"
+   "ultimaBien": "2026-11-15T09:31:20.151Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:26:19.731Z"
+   "ultimaBien": "2026-11-15T09:31:20.151Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:26:19.731Z"
+   "ultimaBien": "2026-11-15T09:31:20.151Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7574,11 +7576,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:26:19.731Z"
+   "ultimaBien": "2026-11-15T09:31:20.151Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:26:19.731Z"
+   "ultimaBien": "2026-11-15T09:31:20.151Z"
   }
  },
  "avisos": [
