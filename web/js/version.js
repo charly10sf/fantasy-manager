@@ -22,9 +22,10 @@ export const VERSION = '0.7.12';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.12', f: '2026-11-15', h: '02:23', t: 'Menos anuncios',
+    v: '0.7.12', f: '2026-11-15', h: '02:41', t: 'Menos anuncios',
     cosas: [
       { importante: true, para: 'play', tipo: 'mejora', d: 'candado', t: 'Menos anuncios para abrir funciones', x: 'Todo se abre con un solo anuncio menos el dinero de un rival, que pide dos y se ve 5 minutos (2 veces por jornada). Quién puede pagar tu cláusula queda abierto 5 horas y cuándo gira un jugador, hasta medianoche.', ir: { v: 'rivales' } },
+      { para: 'play', tipo: 'mejora', d: 'ia', t: 'Con tu clave de Google, sin anuncios', x: 'Si usas tu propia clave de la IA, puedes pedirle planes nuevos sin límite y sin ver ningún anuncio.' },
       { tipo: 'mejora', d: 'hucha', t: 'El dinero de los rivales, más fino', x: 'En los parones cuenta la recompensa diaria doble, y lo que te dicen los rivales que tienen sirve para corregir la cuenta de los demás.', ir: { v: 'rivales' } },
     ],
   },

@@ -750,8 +750,7 @@ function vistaConContenido() {
   return n >= TEXTO_MIN_ANUNCIO;
 }
 const conAnuncios = () => enApp && !EN_FONDO && nativo.hayAnuncios();
-// «Pedir otro plan a la IA»: 3 veces al día gratis; a partir de la 4.ª, viendo un anuncio (solo en la de Google Play)
-const PLANES_GRATIS = 3;
+// «Pedir otro plan a la IA» con la clave de cada uno: sin límite y sin anuncios (0.7.12)
 const planesHoy = () => { const g = LS.get('planes-mano', null); return g && g.dia === diaDe() ? g.n : 0; };
 const contarPlan = () => LS.set('planes-mano', { dia: diaDe(), n: planesHoy() + 1 });
 /** con la IA de la app: sin planes hoy, el anuncio para uno más (solo en la de Google Play y si queda alguno hasta el tope);
@@ -770,9 +769,9 @@ function pedirOtroPlan() {
     generarPlan();
     return;
   }
-  // (el primero con IA del día no cuenta: solo cuando ya hay uno de la IA)
+  // (0.7.12, Carlos 15 nov: «esa IA no depende de mí») con la clave de Google de cada uno, sin anuncios ni tope: los
+  // anuncios solo van en los planes que paga la app. Se sigue contando para el diagnóstico
   const yaHay = S.plan && !S.plan.auto && S.plan.dia === diaDe();
-  if (yaHay && conAnuncios() && planesHoy() >= PLANES_GRATIS) { S.anuncio = { para: 'plan' }; hoja('anuncio', 'plan'); return; }
   if (yaHay) contarPlan();
   S.planEstado = {};
   generarPlan();
