@@ -3192,7 +3192,6 @@
  "liga": {
   "vistas": {
    "SPORT|136371700": 1794486892000,
-   "SPORT|136370681": 1794485522000,
    "SPORT|136233790": 1794497100000,
    "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
    "SPORT|136382347": 1794500847000,
@@ -7491,13 +7490,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2772,
+   "ok": 2773,
    "fallos": 0,
-   "ejecuciones": 2202,
+   "ejecuciones": 2203,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T12:11:11.182Z"
+   "ultima": "2026-11-15T12:16:14.125Z"
   }
  },
  "ptsDirecto": {},
@@ -7514,15 +7513,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:11:16.181Z"
+   "ultimaBien": "2026-11-15T12:16:19.935Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:11:16.181Z"
+   "ultimaBien": "2026-11-15T12:16:19.935Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:11:16.181Z"
+   "ultimaBien": "2026-11-15T12:16:19.935Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7530,11 +7529,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:11:16.181Z"
+   "ultimaBien": "2026-11-15T12:16:19.935Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:11:16.181Z"
+   "ultimaBien": "2026-11-15T12:16:19.935Z"
   }
  },
  "avisos": [
