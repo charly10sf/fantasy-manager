@@ -1952,9 +1952,7 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000,
-   "SPORT|136374311": 1794499233000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/problemas-seleccion-francesa-crece-tension-zidane-mbappe/00031794503136115710202.htm": 1794503280000,
-   "SPORT|136380749": 1794499231000,
    "AS|https://as.com/futbol/primera/tchouameni-lo-intentara-f202611-n/": 1794503672000,
    "SPORT|136378344": 1794502528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250331/real-esperara-magia.html": 1794504716000,
@@ -7435,13 +7433,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2818,
+   "ok": 2819,
    "fallos": 0,
-   "ejecuciones": 2248,
+   "ejecuciones": 2249,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T15:56:14.212Z"
+   "ultima": "2026-11-15T16:01:12.117Z"
   }
  },
  "ptsDirecto": {},
@@ -7458,15 +7456,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:56:20.444Z"
+   "ultimaBien": "2026-11-15T16:01:16.686Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:56:20.444Z"
+   "ultimaBien": "2026-11-15T16:01:16.686Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:56:20.444Z"
+   "ultimaBien": "2026-11-15T16:01:16.686Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7474,11 +7472,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:56:20.444Z"
+   "ultimaBien": "2026-11-15T16:01:16.686Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:56:20.444Z"
+   "ultimaBien": "2026-11-15T16:01:16.686Z"
   }
  },
  "avisos": [
