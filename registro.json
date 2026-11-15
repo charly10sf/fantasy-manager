@@ -1955,7 +1955,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
-   "SPORT|136366242": 1794488476000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
@@ -2134,7 +2133,8 @@
    "SPORT|136463190": 1794740210000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261115/1004251220/paradoja-todavia-inedito-gorosabel.html": 1794745526000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251218/hay-recuperar-julian-activo-atletico-madrid.html": 1794744587000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/plaga-lesiones-obliga-real-madrid-repescar-eli-ndiaye-20261115_3475431.html": 1794745910000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/plaga-lesiones-obliga-real-madrid-repescar-eli-ndiaye-20261115_3475431.html": 1794745910000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251211/real-madrid-atento-virus-fifa.html": 1794747600000
   },
   "hechos": [
    {
@@ -2333,7 +2333,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3239,17 +3239,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187598,
-  "salida": 15567,
+  "entrada": 189651,
+  "salida": 16472,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.371489,
+  "dolares": 0.372147,
   "reservado": 0
  },
  "recientes": {
@@ -7476,13 +7476,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2781,
+   "ok": 2782,
    "fallos": 0,
-   "ejecuciones": 2211,
+   "ejecuciones": 2212,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T12:56:13.762Z"
+   "ultima": "2026-11-15T13:01:18.226Z"
   }
  },
  "ptsDirecto": {},
@@ -7499,15 +7499,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:56:18.557Z"
+   "ultimaBien": "2026-11-15T13:01:29.495Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:56:18.557Z"
+   "ultimaBien": "2026-11-15T13:01:29.495Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:56:18.557Z"
+   "ultimaBien": "2026-11-15T13:01:29.495Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7515,11 +7515,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:56:18.557Z"
+   "ultimaBien": "2026-11-15T13:01:29.495Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T12:56:18.557Z"
+   "ultimaBien": "2026-11-15T13:01:29.495Z"
   }
  },
  "avisos": [
