@@ -6,11 +6,14 @@
 //   3. una IA que no cambia nada NUNCA tira el plan, y el plan sale con los mismos pasos, sin tener que rehacerlo;
 //   4. una IA que quita y mete al azar tampoco lo tira, y lo que sale no lleva nada tachado;
 //   5. si la IA tarda (20 min, 3 h, 26 h: el mercado cambia, las cláusulas se cierran), el plan sale igual;
+//   7. el árbitro de banco.mjs (las reglas de LaLiga, con una cuenta aparte) da por bueno el plan de la app y el que
+//      sale de los cambios de la IA; la única excepción, cuando no hay forma de empezar la jornada en positivo (saldo en
+//      negativo sin cambios de mercado por delante): ahí el plan tiene que avisarlo («Ni con este plan llegas…»).
 //   6. si el plan de la app ya no vale para la liga de ahora (el de la liga removida anterior: otro saldo, otros
 //      jugadores, otras cláusulas), el plan sale igual: se rehace con el motor y no lleva nada tachado.
 // Uso: node .github/ia/azar-plan.mjs [vueltas por escenario, 40] [semilla, 1]   (PW_MODULO como en prueba-web.mjs)
 // Sale con 1 si algo falla, y dice la semilla y la vuelta para repetirlo.
-import { pagina, cerrar } from './banco.mjs';
+import { pagina, cerrar, arbitro } from './banco.mjs';
 
 const N = Number(process.argv[2]) || 40, SEMILLA = Number(process.argv[3]) || 1;
 const ESCENAS_AZAR = ['martes', 'veda', 'enjuego', 'paron', 'm-cierre', 'm-reventa'];
@@ -19,13 +22,16 @@ const resumen = {};
 for (const escena of ESCENAS_AZAR) {
   const P = await pagina(escena);
   try {
+    await P.page.evaluate(`window.__arbitro = ${arbitro.toString()}`);
     const r = await P.page.evaluate(async ({ N, SEMILLA, escena }) => {
+      const U = await import('./js/util.js');
+      const reglas = (X, D, M) => window.__arbitro(X, D, M, U.eur).filter((x) => /^REGLAS:/.test(x) && !/^REGLAS: ok/.test(x)).join(' | ');
       const I = await import('./js/ia.js'), Mo = await import('./js/motor.js'), Pm = await import('./js/plan.js'), Dt = await import('./js/datos.js');
       const S = window.S;
       for (let i = 0; i < 40 && !S.fuentes; i++) await new Promise((ok) => setTimeout(ok, 50));
       const f = S.fuentes || {};
       const D0 = JSON.stringify(S.D), H0 = JSON.stringify(S.H);
-      const fallos = [], cuenta = { planes: 0, pasos: 0, vetos: 0, rehechos: 0, viejos: 0, quita: 0, mete: 0 };
+      const fallos = [], cuenta = { planes: 0, pasos: 0, vetos: 0, rehechos: 0, viejos: 0, quita: 0, mete: 0, sinSalida: 0 };
       const avisos = [];
       const warn = console.warn; console.warn = (...a) => { avisos.push(a.map((x) => (x && x.stack) || String(x)).join(' ').slice(0, 400)); };
       const ahora0 = Date.now();
@@ -79,6 +85,10 @@ for (const escena of ESCENAS_AZAR) {
         const tach = (X) => (X.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia)).map((o) => `${o._k} (${String(o.aviso || '').slice(0, 90)})`);
         if (tach(R).length) falla(`el plan de la app lleva algo tachado: ${tach(R).join('; ')}`);
         const ks = (X) => (X.operaciones || []).filter((o) => o._k).map((o) => o._k).sort().join(' ');
+        // 7 (el del motor)
+        const rR = reglas(R, D, M), sinSalida = /^REGLAS: MAL r10:[^|]*$/.test(rR) && /Ni con este plan llegas en positivo/.test(R.avisoSaldo || '');
+        if (rR && !sinSalida) falla(`el árbitro no da por bueno el plan de la app: ${rR.slice(0, 260)}`);
+        if (sinSalida) cuenta.sinSalida++;
         cuenta.pasos += (R.ops || []).filter((o) => o._k).length; cuenta.vetos += (R.vetos || []).length;
         // 3
         const { lista } = I.idsCorto(R);
@@ -105,6 +115,9 @@ for (const escena of ESCENAS_AZAR) {
           const cu = I.cuadrarPlan(B, D, M);
           if (tach(cu).length) falla(`el plan con cambios al azar lleva algo tachado: ${tach(cu).join('; ')}`);
           if (R.cuentas && R.cuentas.jornada >= 0 && B.cuentas && B.cuentas.jornada < 0) falla('con los cambios de la IA la jornada empezaría en negativo');
+          // 7 (el de la IA): si el de la app pasaba, este también
+          const rB = reglas(cu, D, M);
+          if (rB && !rR) falla(`el árbitro no da por bueno el plan con los cambios de la IA: ${rB.slice(0, 260)}`);
         }
         // 5 (el reloj de la página es de mentira: se adelanta y se vuelve a poner)
         for (const salto of [20 * 60e3, 3 * 3600e3, 26 * 3600e3]) {
@@ -133,7 +146,7 @@ for (const escena of ESCENAS_AZAR) {
     total += r.cuenta.planes; mal += r.fallos.length; resumen[escena] = r.cuenta;
     for (const f of r.fallos.slice(0, 12)) console.log(`MAL  ${f}`);
     if (r.fallos.length > 12) console.log(`     … y ${r.fallos.length - 12} más en ${escena}`);
-    console.log(`${r.fallos.length ? 'MAL ' : 'BIEN'} ${escena}: ${r.cuenta.planes} ligas, ${r.cuenta.pasos} pasos, ${r.cuenta.vetos} vetos de la app, ${r.cuenta.quita} quitados y ${r.cuenta.mete} metidos por la «IA», ${r.cuenta.rehechos} rehechos por el paso del tiempo y ${r.cuenta.viejos} por venir de otra liga${P.errores.length ? ` · errores de la página: ${P.errores.slice(0, 2).join(' | ')}` : ''}`);
+    console.log(`${r.fallos.length ? 'MAL ' : 'BIEN'} ${escena}: ${r.cuenta.planes} ligas, ${r.cuenta.pasos} pasos, ${r.cuenta.vetos} vetos de la app, ${r.cuenta.quita} quitados y ${r.cuenta.mete} metidos por la «IA», ${r.cuenta.rehechos} rehechos por el paso del tiempo y ${r.cuenta.viejos} por venir de otra liga, ${r.cuenta.sinSalida} sin salida (avisado)${P.errores.length ? ` · errores de la página: ${P.errores.slice(0, 2).join(' | ')}` : ''}`);
   } finally { await P.cerrar(); }
 }
 await cerrar();
