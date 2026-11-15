@@ -1951,8 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-rincon-caen-convocatoria-euskal-selekzioa-amistoso-20261112113833-nt.html": 1794479913000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250174/vivian-hugo-rincon-sufren-sendas-sobrecargas.html": 1794480892000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250164/carmona-candidato-salir-mercado-invierno.html": 1794479934000,
@@ -1961,7 +1959,6 @@
    "SPORT|136363255": 1794479245000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
-   "AS|https://as.com/futbol/primera/cinco-leones-en-modo-euskadi-sin-salir-de-casa-f202611-n/": 1794477728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
@@ -2141,7 +2138,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/14-nov-2026-tramo-final-juego-20261115_3475378.html": 1794702000000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/vuelta-pesos-pesados-deja-jugar-nuevos-inglaterra-20261115_3475406.html": 1794735997000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/horas-completas/14-nov-2026-tramo-final-juego-20261115_3475376.html": 1794702000000,
-   "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000
+   "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000,
+   "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000
   },
   "hechos": [
    {
@@ -2387,11 +2385,23 @@
     "motivo": "no apto tras evaluación clínica",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html",
+    "medio": "MARCA",
+    "t": 1794736898000,
+    "id": "2602",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Álvaro se pierde el próximo partido en el Bernabéu",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3300,17 +3310,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169335,
-  "salida": 11919,
+  "entrada": 171249,
+  "salida": 12628,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.367839,
+  "dolares": 0.368385,
   "reservado": 0
  },
  "recientes": {
@@ -7537,13 +7547,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2746,
+   "ok": 2747,
    "fallos": 0,
-   "ejecuciones": 2176,
+   "ejecuciones": 2177,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T10:01:12.949Z"
+   "ultima": "2026-11-15T10:06:23.095Z"
   }
  },
  "ptsDirecto": {},
@@ -7560,15 +7570,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:01:18.665Z"
+   "ultimaBien": "2026-11-15T10:06:31.012Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:01:18.665Z"
+   "ultimaBien": "2026-11-15T10:06:31.012Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:01:18.665Z"
+   "ultimaBien": "2026-11-15T10:06:31.012Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7576,11 +7586,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:01:18.665Z"
+   "ultimaBien": "2026-11-15T10:06:31.012Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:01:18.665Z"
+   "ultimaBien": "2026-11-15T10:06:31.012Z"
   }
  },
  "avisos": [
