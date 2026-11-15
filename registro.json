@@ -1951,12 +1951,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
-   "SPORT|136368075": 1794483010000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000,
@@ -2133,7 +2131,8 @@
    "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000
   },
   "hechos": [
    {
@@ -2371,7 +2370,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3280,17 +3279,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 176862,
-  "salida": 14073,
+  "entrada": 178876,
+  "salida": 14222,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.369669,
+  "dolares": 0.369945,
   "reservado": 0
  },
  "recientes": {
@@ -7517,13 +7516,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2763,
+   "ok": 2764,
    "fallos": 0,
-   "ejecuciones": 2193,
+   "ejecuciones": 2194,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:26:12.150Z"
+   "ultima": "2026-11-15T11:31:13.356Z"
   }
  },
  "ptsDirecto": {},
@@ -7540,15 +7539,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:26:15.725Z"
+   "ultimaBien": "2026-11-15T11:31:21.022Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:26:15.725Z"
+   "ultimaBien": "2026-11-15T11:31:21.022Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:26:15.725Z"
+   "ultimaBien": "2026-11-15T11:31:21.022Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7556,11 +7555,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:26:15.725Z"
+   "ultimaBien": "2026-11-15T11:31:21.022Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:26:15.725Z"
+   "ultimaBien": "2026-11-15T11:31:21.022Z"
   }
  },
  "avisos": [
