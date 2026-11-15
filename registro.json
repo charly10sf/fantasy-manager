@@ -1062,6 +1062,13 @@
    "jornada": 12,
    "id": "2121877539899809996",
    "t": "2026-11-15T08:06:43.116Z"
+  },
+  {
+   "clave": "novedades|2562:lesion|2026-11-15",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2122062452850659340",
+   "t": "2026-11-15T20:21:29.747Z"
   }
  ],
  "estados": {
@@ -3218,16 +3225,16 @@
   "dia": "2026-11-15",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 9,
-   "revisar": 7,
+   "redactar": 10,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 217936,
-  "salida": 19854,
+  "entrada": 232118,
+  "salida": 20030,
   "cacheLee": 14515,
-  "cacheEscribe": 5806,
-  "dolares": 0.376667,
+  "cacheEscribe": 8709,
+  "dolares": 0.414049,
   "reservado": 0
  },
  "recientes": {
@@ -3387,10 +3394,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-08T20:31:39.971Z",
-    "texto": "✅ Nico Williams supera sus calambres en los isquiotibiales y vuelve a estar disponible\n\nEl delantero del Athletic 🦁 promedia 6,4 puntos, pero su titularidad en Fantasy Manager se queda en un 47 %.\n\nTodo apunta a que el Athletic Club tendrá un encuentro cómodo recibiendo al Espanyol, clasificado 13º."
-   },
-   {
     "t": "2026-11-09T07:36:33.330Z",
     "texto": "✅ Buenas noticias para dos delanteros: Vini Jr. y Oyarzabal vuelven a estar disponibles.\n\nVinícius llega con 6,3 de media y el Real Madrid ⚪ se mide al Celta. Oyarzabal juega con la Real Sociedad contra el Racing ⚓. Si los tienes, ya puedes contar con los dos."
    },
@@ -3405,6 +3408,10 @@
    {
     "t": "2026-11-14T19:26:26.207Z",
     "texto": "✅ Se despeja lo de Mbappé: ya está disponible y llega sin problemas a la vuelta de la liga.\n\nEl Madrid ⚪ recibe al Celta en el Bernabéu el sábado 21, tras el parón. El Celta encaja poco, así que a un delantero no le pone la vida fácil, pero Kylian Mbappé lleva 13 goles y 2 asistencias en la liga y con un 97 % de titularidad es fijo."
+   },
+   {
+    "t": "2026-11-15T20:21:29.749Z",
+    "texto": "⁉️ Marc Pubill arrastra unas molestias sin determinar desde el 15 de noviembre y se pone en duda para la vuelta de la liga.\n\nEl defensa del Atleti llegaba lanzado: 19 puntos en las tres últimas jornadas. El Atlético visita al Getafe en el Coliseum el domingo 22 de noviembre, tras el parón, y de momento no hay plazo que diga si llega."
    }
   ],
   "resumen": [
@@ -7454,13 +7461,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2871,
+   "ok": 2872,
    "fallos": 0,
-   "ejecuciones": 2301,
+   "ejecuciones": 2302,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T20:16:21.197Z"
+   "ultima": "2026-11-15T20:21:18.583Z"
   }
  },
  "ptsDirecto": {},
@@ -7477,15 +7484,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:16:26.730Z"
+   "ultimaBien": "2026-11-15T20:21:29.820Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:16:26.730Z"
+   "ultimaBien": "2026-11-15T20:21:29.820Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:16:26.730Z"
+   "ultimaBien": "2026-11-15T20:21:29.820Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7493,11 +7500,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:16:26.730Z"
+   "ultimaBien": "2026-11-15T20:21:29.820Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:16:26.730Z"
+   "ultimaBien": "2026-11-15T20:21:29.820Z"
   }
  },
  "avisos": [
