@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
    "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
    "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
@@ -2141,7 +2140,8 @@
    "SPORT|136445752": 1794722431000,
    "SPORT|136456829": 1794715260000,
    "SPORT|136452331": 1794691903000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000
   },
   "hechos": [
    {
@@ -2374,11 +2374,24 @@
     "motivo": "rodilla inflamada",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794732360000,
+    "id": "3116",
+    "que": "lesion",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Bernardo Silva deja la concentración de Portugal por lesión",
+    "motivo": "no apto tras evaluación clínica",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3286,17 +3299,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 155028,
-  "salida": 9199,
+  "entrada": 157054,
+  "salida": 9328,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.365048,
+  "dolares": 0.365315,
   "reservado": 0
  },
  "recientes": {
@@ -7523,13 +7536,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2733,
+   "ok": 2734,
    "fallos": 0,
-   "ejecuciones": 2163,
+   "ejecuciones": 2164,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T08:56:11.969Z"
+   "ultima": "2026-11-15T09:01:17.985Z"
   }
  },
  "ptsDirecto": {},
@@ -7546,15 +7559,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:56:15.446Z"
+   "ultimaBien": "2026-11-15T09:01:24.124Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:56:15.446Z"
+   "ultimaBien": "2026-11-15T09:01:24.124Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:56:15.446Z"
+   "ultimaBien": "2026-11-15T09:01:24.124Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7562,11 +7575,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:56:15.446Z"
+   "ultimaBien": "2026-11-15T09:01:24.124Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:56:15.446Z"
+   "ultimaBien": "2026-11-15T09:01:24.124Z"
   }
  },
  "avisos": [
