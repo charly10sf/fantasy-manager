@@ -34,8 +34,10 @@ export function metas(h) {
  * El HTML del contenido. `textos`: { intro, clausulas, sancionados, apercibidos, bajas, vuelven, mercado } (null = sin análisis).
  * `siguiente`: la ruta de la previa siguiente si ya existe (las viejas avisan de que la jornada ya se jugó).
  */
-export function contenido(h, textos = {}, { siguiente = null } = {}) {
+export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {}) {
   const J = h.jornada, t = textos || {}, v = vista(h);
+  // el nombre del jugador, enlazado a su ficha del portal si la tiene (rutas: { jugador(id) } desde la raíz de la web)
+  const jn = (x) => { const r = rutas && x.id != null ? rutas.jugador(x.id) : null; return r ? `<b><a href="../${e(r)}">${e(x.nombre)}</a></b>` : `<b>${e(x.nombre)}</b>`; };
   const o = [];
   o.push(`  <h1>Jornada ${J} de <span>LaLiga Fantasy</span></h1>`);
   if (siguiente) o.push(`  <p class="aviso">Esta jornada ya se ha jugado. La previa de la siguiente está en <a href="${e(siguiente.split('/').pop())}">${e(siguiente.split('/').pop().replace('.html', '').replace('jornada-', 'jornada '))}</a>.</p>`);
@@ -55,14 +57,14 @@ export function contenido(h, textos = {}, { siguiente = null } = {}) {
   o.push(`\n  <h2>Sancionados</h2>`);
   if (h.sancionados.length) {
     o.push(parrafo(t.sancionados || `No juegan la jornada ${J}: ${h.sancionados.length === 1 ? 'un jugador que pesa en el fantasy' : `${h.sancionados.length} jugadores que pesan en el fantasy`}.`).trimEnd());
-    o.push(tabla(['Jugador', 'Equipo', 'Motivo', 'Media'], h.sancionados.map((x) => [`<b>${e(x.nombre)}</b>`, e(x.equipo), w(x.motivo), coma(x.media)])).trimEnd());
+    o.push(tabla(['Jugador', 'Equipo', 'Motivo', 'Media'], h.sancionados.map((x) => [jn(x), e(x.equipo), w(x.motivo), coma(x.media)])).trimEnd());
   } else o.push(`  <p>LaLiga no tiene a ningún jugador importante sancionado para esta jornada.</p>`);
 
   // apercibidos
   o.push(`\n  <h2>Apercibidos</h2>`);
   if (h.apercibidos.length) {
     o.push(parrafo(t.apercibidos || `Juegan la jornada ${J}, pero con una amarilla más se pierden la ${J + 1}.`).trimEnd());
-    o.push(tabla(['Jugador', 'Equipo', `Jornada ${J}`, `Se perdería (J${J + 1})`], h.apercibidos.map((x) => [`<b>${e(x.nombre)}</b>`, e(x.equipo), rival(x), x.rivalSiguiente ? e(x.rivalSiguiente) : '']), 'tabla-pos').trimEnd());
+    o.push(tabla(['Jugador', 'Equipo', `Jornada ${J}`, `Se perdería (J${J + 1})`], h.apercibidos.map((x) => [jn(x), e(x.equipo), rival(x), x.rivalSiguiente ? e(x.rivalSiguiente) : '']), 'tabla-pos').trimEnd());
     o.push(`  <p class="peq">Solo titulares habituales con cuatro amarillas en su ficha de LaLiga. Qué hacer con ellos, en <a href="apercibidos-laliga.html">apercibidos en LaLiga Fantasy</a>.</p>`);
   } else o.push(`  <p>Ningún titular habitual está a una amarilla de la sanción.</p>`);
 
@@ -71,7 +73,7 @@ export function contenido(h, textos = {}, { siguiente = null } = {}) {
   const filasBaja = [...h.bajas.map((x) => [x, 'Baja']), ...h.dudas.map((x) => [x, 'Duda'])];
   if (filasBaja.length) {
     o.push(parrafo(t.bajas || 'Las bajas y dudas que más pesan en el fantasy, por valor de mercado.').trimEnd());
-    o.push(tabla(['Jugador', 'Equipo', 'Estado', 'Parte', 'Vuelta prevista'], filasBaja.map(([x, est]) => [`<b>${e(x.nombre)}</b>`, e(x.equipo), est, w(x.lesion), e(x.hasta || '')])).trimEnd());
+    o.push(tabla(['Jugador', 'Equipo', 'Estado', 'Parte', 'Vuelta prevista'], filasBaja.map(([x, est]) => [jn(x), e(x.equipo), est, w(x.lesion), e(x.hasta || '')])).trimEnd());
     o.push(`  <p class="peq">Vender o aguantar a un lesionado, en <a href="cuando-vender.html">cuándo vender en LaLiga Fantasy</a>.</p>`);
   } else o.push(`  <p>No hay bajas importantes.</p>`);
 
@@ -79,13 +81,13 @@ export function contenido(h, textos = {}, { siguiente = null } = {}) {
   if (h.vuelven.length) {
     o.push(`\n  <h2>Los que vuelven</h2>`);
     o.push(parrafo(t.vuelven || 'Disponibles para esta jornada después de diez días o más fuera.').trimEnd());
-    o.push(tabla(['Jugador', 'Equipo', 'Tenía', 'Días fuera', 'Media'], h.vuelven.map((x) => [`<b>${e(x.nombre)}</b>`, e(x.equipo), w(x.lesion), String(x.diasFuera), coma(x.media)])).trimEnd());
+    o.push(tabla(['Jugador', 'Equipo', 'Tenía', 'Días fuera', 'Media'], h.vuelven.map((x) => [jn(x), e(x.equipo), w(x.lesion), String(x.diasFuera), coma(x.media)])).trimEnd());
   }
 
   // mercado
   o.push(`\n  <h2>Los que más suben y bajan esta semana</h2>`);
   o.push(parrafo(t.mercado || 'Los cambios de valor más grandes de los últimos siete cambios de mercado.').trimEnd());
-  const fm = (x, k) => [`<b>${e(x.nombre)}</b>`, e(x.equipo), e(dinero(x.valor)), e(dif(x.dif7)), e(pct(x.pct7)), String(k)];
+  const fm = (x, k) => [jn(x), e(x.equipo), e(dinero(x.valor)), e(dif(x.dif7)), e(pct(x.pct7)), String(k)];
   o.push(`  <h3>Suben</h3>`);
   o.push(tabla(['Jugador', 'Equipo', 'Valor', '7 días', '%', 'Días seguidos'], h.suben.map((x) => fm(x, x.diasSubiendo))).trimEnd());
   o.push(`  <h3>Bajan</h3>`);

@@ -64,7 +64,7 @@ export async function hechosMercado(api, { ahora = Date.now(), exigirHoy = true,
       media: num(j.averagePoints), puntos: num(j.points), nuevo: v, valor: v, antes: a, dif: v - a, pct: ((v - a) / a) * 100,
       dif7: v - h7, pct7: ((v - h7) / h7) * 100, racha: signo * racha, rachaDif: v - desde.v, rachaDesde: desde.t,
       max: Math.max(...temp.map((x) => x.v), v), min: Math.min(...temp.map((x) => x.v), v),
-      serie: s.slice(-30).map((x) => x.v) });
+      serie: s.slice(-30).map((x) => x.v), temporada: temp });
   });
   if (filas.length < 100) { log(`  (portal) solo ${filas.length} jugadores con el valor de ${dia}`); return null; }
   const ord = (k, s, f = () => true) => filas.filter(f).sort((x, y) => s * (y[k] - x[k]));
@@ -91,7 +91,7 @@ export async function hechosMercado(api, { ahora = Date.now(), exigirHoy = true,
     movido: filas.reduce((s, f) => s + f.dif, 0), valorTotal: filas.reduce((s, f) => s + f.nuevo, 0),
     suben: suben.slice(0, 10), bajan: bajan.slice(0, 10), suben7: suben7.slice(0, 10), bajan7: bajan7.slice(0, 10),
     rachaSube: rachaSube.slice(0, 8), rachaBaja: rachaBaja.slice(0, 6), nRachaSube: rachaSube.length, maximos: maximos.slice(0, 6), nMaximos: maximos.length,
-    chollo: chollo(suben), equipos, proxima: prox,
+    chollo: chollo(suben), equipos, proxima: prox, todas: filas, eqNombre, eqEscudo,
   };
 }
 
@@ -111,7 +111,12 @@ function lectura(h) {
   return o;
 }
 
-export function contenidoMercado(h, { previa = null, resumen = null } = {}) {
+/** las rutas de las fichas (fase 2): { jugador(id), equipo(teamId) } desde la raíz de la web, o null si no hay página */
+const SIN = { jugador: () => null, equipo: () => null };
+const en = (r) => (r ? `../${r}` : null);
+
+export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN } = {}) {
+  const fj = (f, d) => filaJugador(f, d, { enlace: en(rutas.jugador(f.id)) });
   const o = [];
   o.push(`  <h1>Mercado de <span>LaLiga Fantasy</span> hoy</h1>`);
   o.push(`  <p class="lead">${e(lectura(h).join(' '))}</p>`);
@@ -124,32 +129,32 @@ export function contenidoMercado(h, { previa = null, resumen = null } = {}) {
   ], 'cifras'));
   if (h.proxima) o.push(proximaCaja(h.proxima, { previa, resumen }));
 
-  o.push(`  <div class="dos dos-bq">${bloque('Los que más suben hoy', lista(h.suben.map((f) => filaJugador(f, conMini(f, derechaDia(f))))),
-    { id: 'suben', linea: 'Lo ganado en el último cambio de mercado y su valor de los últimos 30 días.' })}${bloque('Los que más bajan hoy', lista(h.bajan.map((f) => filaJugador(f, conMini(f, derechaDia(f))))),
+  o.push(`  <div class="dos dos-bq">${bloque('Los que más suben hoy', lista(h.suben.map((f) => fj(f, conMini(f, derechaDia(f))))),
+    { id: 'suben', linea: 'Lo ganado en el último cambio de mercado y su valor de los últimos 30 días.' })}${bloque('Los que más bajan hoy', lista(h.bajan.map((f) => fj(f, conMini(f, derechaDia(f))))),
     { id: 'bajan', linea: 'Lo perdido en el último cambio de mercado y su valor de los últimos 30 días.' })}</div>`);
 
   const ch = h.chollo;
   if (ch) {
-    o.push(bloque('Barato, en forma y subiendo', `  <div class="dest">${cara(ch, 'g')}<div><p class="dest-n">${e(ch.nombre)} <small>${e(ch.equipo)} · ${e(POS[ch.pos] || '')}</small></p>`
+    o.push(bloque('Barato, en forma y subiendo', `  <div class="dest">${cara(ch, 'g')}<div><p class="dest-n">${rutas.jugador(ch.id) ? `<a href="${e(en(rutas.jugador(ch.id)))}">${e(ch.nombre)}</a>` : e(ch.nombre)} <small>${e(ch.equipo)} · ${e(POS[ch.pos] || '')}</small></p>`
       + `<p>Vale ${e(dinero(ch.nuevo))}, lleva ${e(coma(ch.media))} puntos de media y ${e(String(ch.puntos))} en la temporada, y hoy sube un ${e(pct(ch.pct))}. Es el que más puntos de media da por cada millón entre los que suben hoy, valen 8 M o menos y están disponibles.</p></div></div>`,
     { id: 'chollo' }));
   }
 
   // rachas: lo que dicen los datos de la temporada (guía de valor de mercado, .github/datos-guias)
   const rs = h.rachaSube;
-  o.push(bloque('Rachas: los que no paran de subir', lista(rs.map((f) => filaJugador(f, `<span class="fj-n"><b class="racha">${e(dif(f.rachaDif))}</b><small>${f.racha} días, desde el ${e(fechaCorta(f.rachaDesde))}</small></span>`))),
+  o.push(bloque('Rachas: los que no paran de subir', lista(rs.map((f) => fj(f, `<span class="fj-n"><b class="racha">${e(dif(f.rachaDif))}</b><small>${f.racha} días, desde el ${e(fechaCorta(f.rachaDesde))}</small></span>`))),
     { id: 'rachas', linea: e(`Esta temporada, de los que llevan tres días seguidos subiendo, el 87,3 % sube también el cuarto, y una racha que llega a tres días dura una mediana de ocho. Hoy hay ${h.nRachaSube} jugadores con tres días o más; aquí, los que más llevan ganado en su racha.`) + ' <a href="../guias/valor-de-mercado.html">Cómo se mueve el valor</a>.' }));
-  if (h.rachaBaja.length) o.push(bloque('Rachas a la baja', lista(h.rachaBaja.map((f) => filaJugador(f, `<span class="fj-n"><b class="racha baja-t">${e(dif(f.rachaDif))}</b><small>${-f.racha} días, desde el ${e(fechaCorta(f.rachaDesde))}</small></span>`))),
+  if (h.rachaBaja.length) o.push(bloque('Rachas a la baja', lista(h.rachaBaja.map((f) => fj(f, `<span class="fj-n"><b class="racha baja-t">${e(dif(f.rachaDif))}</b><small>${-f.racha} días, desde el ${e(fechaCorta(f.rachaDesde))}</small></span>`))),
     { linea: 'Los que más llevan perdido en su racha. Tras tres días bajando, el 88,4 % baja también el cuarto.' }));
 
-  o.push(bloque('La semana: más suben y más bajan en 7 días', `  <div class="dos"><div><h3>Suben</h3>${lista(h.suben7.slice(0, 8).map((f) => filaJugador(f, `<span class="fj-n">${derecha7(f)}</span>`)))}</div><div><h3>Bajan</h3>${lista(h.bajan7.slice(0, 8).map((f) => filaJugador(f, `<span class="fj-n">${derecha7(f)}</span>`)))}</div></div>`,
+  o.push(bloque('La semana: más suben y más bajan en 7 días', `  <div class="dos"><div><h3>Suben</h3>${lista(h.suben7.slice(0, 8).map((f) => fj(f, `<span class="fj-n">${derecha7(f)}</span>`)))}</div><div><h3>Bajan</h3>${lista(h.bajan7.slice(0, 8).map((f) => fj(f, `<span class="fj-n">${derecha7(f)}</span>`)))}</div></div>`,
     { id: 'semana', linea: 'Valor de hoy frente al de hace siete cambios de mercado.' }));
 
-  if (h.maximos.length) o.push(bloque('En su máximo de la temporada', lista(h.maximos.map((f) => filaJugador(f, `<span class="fj-n">${e(dinero(f.nuevo))}<small>mínimo ${e(dinero(f.min))}</small></span>`))),
+  if (h.maximos.length) o.push(bloque('En su máximo de la temporada', lista(h.maximos.map((f) => fj(f, `<span class="fj-n">${e(dinero(f.nuevo))}<small>mínimo ${e(dinero(f.min))}</small></span>`))),
     { linea: `Hoy valen más que nunca desde que empezó la temporada. Comprar arriba es caro: mira cuánto pujar con <a href="../guias/cuanto-pujar.html">la calculadora de puja</a>.` }));
 
   const top5 = h.equipos.slice().sort((x, y) => y.dif - x.dif);
-  const eqFila = (q) => `<li class="fe">${escudo(q.escudoUrl, q.nombre, 28)}<b>${e(q.nombre)}</b>${cambio(q.dif, dif(q.dif))}</li>`;
+  const eqFila = (q) => `<li class="fe">${escudo(q.escudoUrl, q.nombre, 28)}<b>${rutas.equipo(q.id) ? `<a href="${e(en(rutas.equipo(q.id)))}">${e(q.nombre)}</a>` : e(q.nombre)}</b>${cambio(q.dif, dif(q.dif))}</li>`;
   o.push(bloque('Los equipos que más ganan y pierden hoy', `  <div class="dos"><ul class="le">${top5.slice(0, 5).map(eqFila).join('')}</ul><ul class="le">${top5.slice(-5).reverse().map(eqFila).join('')}</ul></div>\n  <p class="peq">Sumando el cambio de todos sus jugadores. El valor de cada plantilla, en <a href="../equipos/">los 20 equipos</a>.</p>`));
 
   o.push(bloque('De dónde salen los datos', `  <p>El valor de cada jugador es el que publica LaLiga Fantasy cada noche, hacia las 00:15, para todas las ligas. Aquí se compara con el del día anterior y con el de hace siete cambios, entre los ${h.jugadores} jugadores que siguen en LaLiga. Una racha cuenta los días seguidos que el valor sube (o baja) hasta hoy. Las cifras de cuánto duran las rachas salen de 52.302 cambios de valor de esta temporada (<a href="../guias/valor-de-mercado.html">la guía de valor de mercado</a>).</p>`));
@@ -170,17 +175,20 @@ export function proximaCaja(p, { previa = null, resumen = null, raiz = '../', to
   return `  <aside class="prox"><p class="prox-t">Jornada ${J}</p>${lineas.join('')}<div class="cta-b">${enl.join('')}</div></aside>`;
 }
 
-/** /equipos/: los 20, con lo que vale su plantilla y su mejor jugador (las páginas de cada equipo llegan en la fase 2) */
-export function contenidoEquipos(h) {
+/** /equipos/: los 20, con lo que vale su plantilla y su mejor jugador; cada uno enlaza a su página (bot/web/fichas.mjs) */
+export function contenidoEquipos(h, { rutas = SIN, jugadores = null } = {}) {
   const o = [];
+  const nom = (q) => (rutas.equipo(q.id) ? `<a href="${e(rutas.equipo(q.id).split('/').pop())}">${e(q.nombre)}</a>` : e(q.nombre));
+  const jn = (f) => (rutas.jugador(f.id) ? `<a href="${e(en(rutas.jugador(f.id)))}">${e(f.nombre)}</a>` : e(f.nombre));
   const caro = h.equipos[0], barato = h.equipos[h.equipos.length - 1];
   const masGana = [...h.equipos].sort((x, y) => y.dif7 - x.dif7)[0];
   o.push(`  <h1>Equipos de <span>LaLiga Fantasy</span></h1>`);
   o.push(`  <p class="lead">${e(`Lo que vale la plantilla de cada equipo en el mercado de LaLiga Fantasy, sumando a todos sus jugadores. La más cara es la del ${caro.nombre}, ${dinero(caro.valor)}; la más barata, la del ${barato.nombre}, ${dinero(barato.valor)}. En la última semana, la que más ha ganado es la del ${masGana.nombre}: ${dif(masGana.dif7)}.`)}</p>`);
   o.push(`  <p class="peq">Valores del ${e(fechaDia(h.dia))}. Se rehace sola cada noche.</p>`);
-  const filas = h.equipos.map((q, i) => `      <tr><td>${i + 1}</td><td class="eq">${escudo(q.escudoUrl, q.nombre, 24)}<b>${e(q.nombre)}</b></td><td>${e(dinero(q.valor))}</td><td>${cambio(q.dif, dif(q.dif))}</td><td>${cambio(q.dif7, dif(q.dif7))}</td><td><span class="w">${e(q.top.nombre)}</span> <small>${e(dinero(q.top.nuevo))}</small></td><td>${q.media ? `<span class="w">${e(q.media.nombre)}</span> <small>${e(coma(q.media.media))}</small>` : ''}</td></tr>`);
+  const filas = h.equipos.map((q, i) => `      <tr><td>${i + 1}</td><td class="eq">${escudo(q.escudoUrl, q.nombre, 24)}<b>${nom(q)}</b></td><td>${e(dinero(q.valor))}</td><td>${cambio(q.dif, dif(q.dif))}</td><td>${cambio(q.dif7, dif(q.dif7))}</td><td><span class="w">${jn(q.top)}</span> <small>${e(dinero(q.top.nuevo))}</small></td><td>${q.media ? `<span class="w">${jn(q.media)}</span> <small>${e(coma(q.media.media))}</small>` : ''}</td></tr>`);
   o.push(bloque('Valor de cada plantilla', `  <div class="tabla-scroll"><table class="tabla-eq">\n    <thead><tr><th>#</th><th>Equipo</th><th>Plantilla</th><th>Hoy</th><th>7 días</th><th>El que más vale</th><th>Mejor media</th></tr></thead>\n    <tbody>\n${filas.join('\n')}\n    </tbody>\n  </table></div>`,
     { linea: '«Mejor media»: el de más puntos de media entre los que llevan 20 puntos o más en la temporada.' }));
+  if (jugadores) o.push(`  <p>Cada equipo tiene su página con la plantilla, los puntos de cada jornada y los próximos rivales, y los jugadores que más pesan en el juego, la suya: <a href="../jugadores/">los ${jugadores} jugadores con ficha</a>.</p>`);
   o.push(bloque('De dónde salen los datos', `  <p>Los valores son los que publica LaLiga Fantasy cada noche para todas las ligas, de los ${h.jugadores} jugadores que siguen en LaLiga. La plantilla suma a todos los que tiene cada club en el juego, jueguen o no.</p>`));
   return o.join('\n');
 }

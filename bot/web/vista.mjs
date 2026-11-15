@@ -21,7 +21,7 @@ export const hora = (t) => enMadrid(t).hora;
 
 const coma = (x, d = 1) => (Math.round(Number(x) * 10 ** d) / 10 ** d).toFixed(d).replace('.', ',');
 /** «132,2 M» o «735 mil» */
-export const dinero = (x) => { const a = Math.abs(Number(x)) || 0; return a >= 1e6 ? `${coma(a / 1e6)} M` : `${Math.round(a / 1e3)} mil`; };
+export const dinero = (x) => { const a = Math.abs(Number(x)) || 0; return a >= 1e6 ? `${coma(a / 1e6).replace(/^(\d+)(\d{3})(?=,|$)/, '$1.$2')} M` : `${Math.round(a / 1e3)} mil`; };
 /** «+19,4 M» / «-9,6 M» */
 export const dif = (x) => `${x >= 0 ? '+' : '-'}${dinero(x)}`;
 export const pct = (x) => `${x >= 0 ? '+' : ''}${coma(x)} %`;

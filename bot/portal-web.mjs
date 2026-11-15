@@ -1,9 +1,10 @@
 // El portal de datos de la web: el mercado de hoy (/mercado/), los 20 equipos (/equipos/), las jornadas (/jornada/) con el resumen de
 // cada una al acabar y lo que lee la portada (mercado/hoy.json). Lo lanza cada noche .github/workflows/portal-web.yml, después del
 // cambio de mercado; también a mano:
-//   node bot/portal-web.mjs [--forzar=1] [--resumen=12] [--cache=carpeta] [--sin-tarjeta=1]
+//   node bot/portal-web.mjs [--forzar=1] [--resumen=12] [--cache=carpeta] [--sin-tarjeta=1] [--fichas=150]
 // --forzar rehace el mercado aunque el valor de hoy no haya llegado (con el último que haya) o ya esté hecho; --resumen rehace el de esa
-// jornada; --cache guarda y reutiliza lo bajado de la API (para probar sin pedirlo todo otra vez). Escribe el contenido de cada página,
+// jornada; --cache guarda y reutiliza lo bajado de la API (para probar sin pedirlo todo otra vez); --fichas, cuántos jugadores con
+// página como mucho (fase 2: una página por equipo y por jugador, con el mercado; 0 = sin fichas). Escribe el contenido de cada página,
 // su entrada en .github/paginas.json y .github/portal/estado.json, y ejecuta .github/paginas.py. Git lo hace la Action.
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -11,7 +12,8 @@ import path from 'node:path';
 import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
-import { RAIZ, escribirPagina, paginas, diaMadrid } from './web/portal.mjs';
+import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid } from './web/portal.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
 const salida = (k, v) => { if (process.env.GITHUB_OUTPUT) writeFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`, { flag: 'a' }); };
@@ -31,13 +33,19 @@ const conCache = (nombre, f) => async (...a) => {
   return r;
 };
 const api = { jugadores: conCache('jugadores', LL.jugadores), valorMercado: conCache('valor', LL.valorMercado), statsSemana: conCache('semana', LL.statsSemana),
-  semanaActual: conCache('actual', LL.semanaActual) };
+  semanaActual: conCache('actual', LL.semanaActual), ficha: conCache('ficha', LL.ficha) };
 
 const DIR = path.join(RAIZ, '.github', 'portal');
 mkdirSync(DIR, { recursive: true });
 const fEstado = path.join(DIR, 'estado.json');
 const estado = existsSync(fEstado) ? JSON.parse(readFileSync(fEstado, 'utf8')) : { mercado: null, resumenes: {} };
 let cambios = false;
+const maxFichas = arg('fichas') != null ? Number(arg('fichas')) : 150;
+
+// las rutas de las fichas que ya existen (para enlazar desde el resumen antes de rehacerlas; luego, las de hoy)
+const rutasDe = (f) => ({ jugador: (id) => (f && f.jugadores && f.jugadores[String(id)] ? `jugadores/${f.jugadores[String(id)]}.html` : null),
+  equipo: (id) => (f && f.equipos && f.equipos[String(id)] ? `equipos/${f.equipos[String(id)]}.html` : null) });
+let rutas = rutasDe(estado.fichas);
 
 const previas = () => paginas().filter((p) => p.grupo === 'jornadas' && p.jornada != null).map((p) => ({ ruta: p.ruta, jornada: p.jornada })).sort((a, b) => b.jornada - a.jornada);
 const resumenes = () => paginas().filter((p) => p.grupo === 'resumenes' && p.jornada != null).map((p) => ({ ruta: p.ruta, jornada: p.jornada })).sort((a, b) => b.jornada - a.jornada);
@@ -78,9 +86,17 @@ for (const J of candidatas) {
       } else if (tj) log(`  tarjeta: no pasa el validador (${(tj.errores || []).join('; ')})`);
     } catch (err) { log(`  tarjeta: ${err.message}`); }
   }
+  // sin tarjeta nueva (--sin-tarjeta o si falla), la que ya hubiera de esa jornada
+  const ya0 = path.join(RAIZ, 'web', 'jornada', 'img', `resumen-${J}.webp`);
+  if (!tarjeta && existsSync(ya0)) {
+    try {
+      const [w, hh] = execFileSync('python3', ['-c', 'import sys\nfrom PIL import Image\nprint(*Image.open(sys.argv[1]).size)', ya0]).toString().trim().split(' ').map(Number);
+      tarjeta = `img/resumen-${J}.webp`; tarjetaAlto = Math.round((hh * 1080) / w);
+    } catch { /* sin Pillow: sin tarjeta */ }
+  }
   const pv = previas().find((p) => p.jornada === J), sig = previas().find((p) => p.jornada === J + 1);
   const ruta = `jornada/resumen-jornada-${J}.html`;
-  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto }));
+  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas }));
   estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3) };
   cambios = true;
   log(`Jornada ${J}: resumen hecho (${h.mejores[0].nombre} ${h.mejores[0].pts})`);
@@ -91,16 +107,36 @@ const hoy = diaMadrid();
 let hm = null;
 if (forzar || !estado.mercado || estado.mercado.dia !== hoy) {
   hm = await hechosMercado(api, { exigirHoy: !forzar, log });
+  if (hm && maxFichas > 0) {
+    // fase 2: una página por equipo y por jugador. Si falla, el mercado sale igual (con los enlaces de ayer)
+    try {
+      const H = await hechosFichas(api, hm, { estado: estado.fichas || {}, max: maxFichas, log });
+      if (H) {
+        H.previa = (hm.proxima && previas().find((p) => p.jornada === hm.proxima.jornada)) || previas()[0] || null;
+        const pags = [
+          ...H.equipos.map((q) => ({ entrada: metasEquipo(q), html: contenidoEquipo(q, H) })),
+          ...H.jugadores.map((x) => ({ entrada: metasJugador(x), html: contenidoJugador(x, H) })),
+          { entrada: metasJugadores(), html: contenidoJugadores(H) },
+        ];
+        const n = escribirFichas(pags);
+        estado.fichas = H.slugs;
+        rutas = H.rutas;
+        hm.nFichas = H.jugadores.length;
+        if (n) cambios = true;
+        log(`Fichas: ${H.equipos.length} equipos y ${H.jugadores.length} jugadores (${n} páginas cambiadas)`);
+      }
+    } catch (err) { log(`::warning::Fichas sin hacer: ${err.stack || err.message}`); }
+  }
   if (hm) {
     const prox = hm.proxima;
     const pv = prox && previas().find((p) => p.jornada === prox.jornada);
     const rs = resumenes()[0] || null;
     escribirPagina({ ruta: 'mercado/index.html', seccion: 'mercado', titulo: 'Mercado de LaLiga Fantasy hoy: quién sube y quién baja',
       h1: 'Mercado de LaLiga Fantasy hoy', descripcion: `Los jugadores que más suben y bajan hoy en el mercado de LaLiga Fantasy, las rachas, los que están en su máximo y la semana, con el valor de cada uno. Se pone al día cada noche.` },
-    contenidoMercado(hm, { previa: pv ? pv.ruta : null, resumen: rs }));
+    contenidoMercado(hm, { previa: pv ? pv.ruta : null, resumen: rs, rutas }));
     escribirPagina({ ruta: 'equipos/index.html', seccion: 'equipos', titulo: 'Equipos de LaLiga Fantasy: valor de cada plantilla',
       h1: 'Equipos de LaLiga Fantasy', descripcion: 'Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.' },
-    contenidoEquipos(hm));
+    contenidoEquipos(hm, { rutas, jugadores: hm.nFichas || null }));
     writeFileSync(path.join(RAIZ, 'web', 'mercado', 'hoy.json'), JSON.stringify(hoyJson(hm, { previa: pv ? pv.ruta : null, resumen: rs })) + '\n');
     estado.mercado = { dia: hm.dia, hecho: Date.now() };
     cambios = true;

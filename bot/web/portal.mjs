@@ -2,7 +2,7 @@
 // HTML sin JavaScript: caras y escudos oficiales de LaLiga (assets-fantasy, enlazados, sin bajarlos), minigráficas en SVG pintadas
 // en el propio HTML y fichas de puntos con los cortes de la app (10+, 6-9, 2-5, 1 o menos). Lo de alrededor (cabecera, menú, pie,
 // metas) lo pone .github/paginas.py; aquí solo el contenido que va entre sus marcas y la entrada de la página en paginas.json.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dinero, dif, pct } from './vista.mjs';
@@ -74,17 +74,21 @@ export function graficaValor(serie, { ancho = 640, alto = 180, fecha = (t) => ne
 }
 
 /** barras de puntos por jornada (fase 2: ficha de jugador y de equipo): [[jornada, puntos], …] */
-export function barrasPuntos(jornadas, { ancho = 640, alto = 120 } = {}) {
-  const xs = (jornadas || []).filter(([, p]) => Number.isFinite(p));
-  if (!xs.length) return '';
-  const max = Math.max(10, ...xs.map(([, p]) => p)), min = Math.min(0, ...xs.map(([, p]) => p));
+export function barrasPuntos(jornadas, { ancho = 640, alto = 120, clase = clasePuntos } = {}) {
+  // una jornada con null (no jugó) deja su hueco con el número debajo, sin barra
+  const xs = (jornadas || []).filter(([, p]) => p === null || Number.isFinite(p));
+  const ys = xs.filter(([, p]) => p !== null);
+  if (!ys.length) return '';
+  const max = Math.max(10, ...ys.map(([, p]) => p)), min = Math.min(0, ...ys.map(([, p]) => p));
   const aba = 16, h = alto - aba - 4, cero = 4 + (h * max) / (max - min), paso = ancho / xs.length, bw = Math.max(4, paso * 0.62);
   const barras = xs.map(([j, p], i) => {
-    const x = i * paso + (paso - bw) / 2, y = p >= 0 ? cero - (p * h) / (max - min) : cero, hh = Math.abs(p * h) / (max - min) || 1;
-    return `<rect class="${clasePuntos(p)}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}"><title>J${j}: ${p} puntos</title></rect>`
+    const x = i * paso + (paso - bw) / 2;
+    if (p === null) return `<text class="nj" x="${(x + bw / 2).toFixed(1)}" y="${alto - 3}" text-anchor="middle">${j}</text>`;
+    const y = p >= 0 ? cero - (p * h) / (max - min) : cero, hh = Math.abs(p * h) / (max - min) || 1;
+    return `<rect class="${clase(p, j)}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}"><title>J${j}: ${p} puntos</title></rect>`
       + `<text x="${(x + bw / 2).toFixed(1)}" y="${alto - 3}" text-anchor="middle">${j}</text>`;
   }).join('');
-  return `<svg class="barras" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Puntos por jornada: ${xs.map(([j, p]) => `J${j} ${p}`).join(', ')}`)}">${barras}</svg>`;
+  return `<svg class="barras" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Puntos por jornada: ${xs.map(([j, p]) => `J${j} ${p === null ? 'no jugó' : p}`).join(', ')}`)}">${barras}</svg>`;
 }
 
 /** una fila de jugador: cara, nombre, equipo y puesto, y a la derecha lo que se pida (cifras ya en HTML) */
@@ -140,4 +144,34 @@ export function escribirPagina(entrada, html) {
 /** las páginas ya registradas (para enlazar previas y resúmenes entre sí) */
 export function paginas() {
   return JSON.parse(readFileSync(path.join(RAIZ, '.github', 'paginas.json'), 'utf8')).paginas;
+}
+
+/** el registro de las fichas de la fase 2 (equipos y jugadores): aparte de paginas.json para no llenarlo con 170 entradas a mano */
+export const FICHAS = path.join(RAIZ, '.github', 'portal', 'fichas.json');
+
+/**
+ * Escribe de una vez muchas páginas del portal (las fichas): el contenido de cada una y sus entradas en .github/portal/fichas.json,
+ * que lee paginas.py junto a paginas.json. [{ entrada, html }]. Si el contenido no cambia, se queda la fecha de antes (así el
+ * sitemap no dice que han cambiado todas cada noche); `publicada` se conserva. Las que ya estaban y hoy no salen se quedan como estaban.
+ */
+export function escribirFichas(paginasNuevas) {
+  const R = existsSync(FICHAS) ? JSON.parse(readFileSync(FICHAS, 'utf8')) : { _leeme: 'Lo escribe bot/portal-web.mjs (bot/web/fichas.mjs): las páginas de cada equipo y de cada jugador. Lo lee .github/paginas.py junto a paginas.json. No se edita a mano.', paginas: [] };
+  const hoy = diaMadrid();
+  const porRuta = new Map(R.paginas.map((p) => [p.ruta, p]));
+  let cambiadas = 0;
+  for (const { entrada, html } of paginasNuevas) {
+    const archivo = path.join(RAIZ, 'web', entrada.ruta);
+    const nuevo = `<!-- contenido -->\n${html}\n<!-- /contenido -->\n`;
+    const vieja = porRuta.get(entrada.ruta);
+    const antes = existsSync(archivo) ? readFileSync(archivo, 'utf8') : null;
+    // el contenido guardado es ya la página entera (paginas.py la rehace): se compara lo que hay entre las marcas
+    const m = antes && antes.match(/<!-- contenido -->\n([\s\S]*?)\n<!-- \/contenido -->/);
+    const igual = vieja && m && m[1] === html;
+    porRuta.set(entrada.ruta, { tipo: 'portal', ...entrada, fecha: igual ? vieja.fecha : hoy, publicada: (vieja && vieja.publicada) || hoy });
+    if (!igual) { mkdirSync(path.dirname(archivo), { recursive: true }); writeFileSync(archivo, nuevo); cambiadas++; }
+  }
+  R.paginas = [...porRuta.values()].sort((a, b) => a.ruta.localeCompare(b.ruta));
+  mkdirSync(path.dirname(FICHAS), { recursive: true });
+  writeFileSync(FICHAS, bonito(R) + '\n');
+  return cambiadas;
 }

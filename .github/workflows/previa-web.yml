@@ -74,7 +74,7 @@ jobs:
         run: |
           git config user.name 'Fantasy Manager'
           git config user.email 'fantasymanager.web.app@gmail.com'
-          git add -A web/guias web/sitemap.xml web/robots.txt web/index.html web/js/portada.js .github/previas .github/paginas.json
+          git add -A web/guias web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/previas .github/paginas.json
           if git diff --cached --quiet; then echo "Nada nuevo"; echo "como=nada" >> "$GITHUB_OUTPUT"; exit 0; fi
           git commit -q -m "Previa de la jornada $J (automática)"
           if [ "$OK" = "true" ]; then

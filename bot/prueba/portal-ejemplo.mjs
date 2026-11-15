@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson } from '../web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas } from '../web/resumen.mjs';
 import { cara, minigrafica, chipPuntos, clasePuntos, slug, graficaValor, barrasPuntos } from '../web/portal.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, cuando } from '../web/fichas.mjs';
 
 const DIA = 864e5;
 const hoy = Date.parse('2026-11-15T10:00:00Z');
@@ -32,7 +33,14 @@ const semana = (J) => {
     lado.players.push({ id: Number(j.id), nickname: j.nickname, positionId: Number(j.positionId), weekPoints: (Number(j.id) * 7) % 17 - 2, images: { transparent: { '256x256': IMG(j.id) } } });
   return ps;
 };
+// los puntos de cada jornada en la lista y la ficha de cada uno (minutos, goles, paradas…), para las fichas de la fase 2
+for (const j of jug) j.weekPoints = Array.from({ length: 12 }, (_, i) => ({ weekNumber: i + 1, points: (Number(j.id) * 7 + i) % 17 - 2 }));
+const st = (v) => [v, 0];
+const ficha = (id) => ({ id, name: id === '0' ? 'Jugador Cero Completo' : `Jugador ${id}`, nickname: `Jugador ${id}`, playerStats: Array.from({ length: 12 }, (_, i) => ({ weekNumber: i + 1,
+  totalPoints: (Number(id) * 7 + i) % 17 - 2, stats: { mins_played: st(Number(id) % 3 === 0 && i % 2 ? 0 : 90 - (Number(id) % 4) * 10), goals: st(i % 5 === 0 ? 1 : 0), goal_assist: st(0),
+    yellow_card: st(i < 4 && Number(id) === 2 ? 1 : 0), red_card: st(0), second_yellow_card: st(0), saves: st(Number(id) % 4 === 0 ? 3 : 0), goals_conceded: st(i % 3) } })) });
 const api = {
+  ficha: async (id) => ficha(String(id)),
   jugadores: async () => jug, valorMercado: async (id) => hist(Number(id)), statsSemana: async (J) => semana(J),
   semanaActual: async () => ({ weekNumber: 13, nextWeek: 14, previousWeek: 12 }),
 };
@@ -104,4 +112,46 @@ limpio(cj, 'jornadas');
 assert.match(cj, /Jornada 13<\/b><span><a href="\.\.\/guias\/jornada-13\.html">Previa<\/a><\/span>/);
 assert.match(cj, /resumen-jornada-12\.html">Resumen/);
 assert.doesNotMatch(cj, /Todas las jornadas<\/a>/, 'la de las jornadas no se enlaza a sí misma');
+// las fichas (fase 2): equipos y jugadores
+const H = await hechosFichas(api, hm, { estado: { jugadores: { 9: 'jugador-9' } }, max: 20, ahora: hoy });
+assert.ok(H, 'con jornadas jugadas, fichas');
+assert.equal(H.ultimaJugada, 12);
+assert.equal(H.equipos.length, 12);
+assert.equal(H.jugadores.length, 20, 'como mucho max');
+assert.ok(H.jugadores.some((x) => x.id === '9'), 'el que ya tenía página se queda');
+assert.equal(H.slugs.jugadores['9'], 'jugador-9', 'y su URL no cambia');
+assert.equal(new Set(Object.values(H.slugs.jugadores)).size, Object.keys(H.slugs.jugadores).length, 'URL sin repetir');
+assert.ok(H.jugadores.every((x) => x.pesa || x.id === '9'));
+for (const q of H.equipos) {
+  assert.equal(q.resultados.length, 12, `${q.nombre}: un partido por jornada`);
+  assert.deepEqual(q.resultados.map((r) => r.J), [...q.resultados.map((r) => r.J)].sort((a, b) => a - b), 'por jornada');
+  assert.ok(q.proximos.length >= 2 && q.proximos.length <= 4, 'próximos rivales');
+  assert.equal(q.aCero, q.resultados.filter((r) => r.gc === 0).length);
+  assert.equal(q.puntosTotal, q.ptsJ.reduce((s, [, p]) => s + p, 0));
+  assert.ok(q.serie.length >= 30, 'la evolución del valor');
+  const c = contenidoEquipo(q, H);
+  limpio(c, `equipo ${q.nombre}`);
+  assert.match(c, /Próximos rivales/);
+  assert.match(metasEquipo(q).ruta, /^equipos\/[a-z0-9-]+\.html$/);
+}
+const x0 = H.todos.find((x) => x.id === '0');
+assert.equal(x0.nombreCompleto, 'Jugador Cero Completo');
+assert.equal(x0.jornadas.length, 12);
+assert.equal(x0.titular, x0.jornadas.filter((r) => r.min >= 60).length);
+for (const x of H.jugadores) {
+  const c = contenidoJugador(x, H);
+  limpio(c, `jugador ${x.nombre}`);
+  assert.match(c, /Jornada a jornada/);
+  assert.match(metasJugador(x).ruta, /^jugadores\/[a-z0-9-]+\.html$/);
+  assert.ok(metasJugador(x).titulo.length <= 70);
+}
+const ix = contenidoJugadores(H);
+limpio(ix, 'jugadores');
+assert.equal((ix.match(/class="fj"/g) || []).length, 20, 'todos en el índice');
+// con las rutas, el mercado y /equipos/ enlazan a las fichas
+const cm2 = contenidoMercado(hm, { rutas: H.rutas });
+assert.match(cm2, /href="\.\.\/jugadores\/[a-z0-9-]+\.html"/);
+assert.match(contenidoEquipos(hm, { rutas: H.rutas, jugadores: 20 }), /href="[a-z0-9-]+\.html"/);
+assert.equal(cuando(Date.parse('2026-12-06T00:00:00Z')), 'domingo 6 de diciembre, hora por confirmar');
+assert.match(cuando(Date.parse('2026-12-06T20:00:00Z')), /a las 21:00/);
 console.log('portal-ejemplo: todo BIEN');

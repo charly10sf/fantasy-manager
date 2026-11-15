@@ -150,6 +150,8 @@ def en_guias(p):
 
 def migas_de(p):
     """[(nombre, ruta desde la raíz)] de Inicio a la sección de la página (sin la propia página)"""
+    if p.get('migas'):
+        return [(n, r) for n, r in p['migas']]
     if p['ruta'] in ('mercado/index.html', 'jornada/index.html', 'equipos/index.html'):
         return [('Inicio', '')]
     if p.get('tipo') == 'portal':
@@ -184,6 +186,8 @@ def datos_estructurados(p, url):
     else:
         principal = {'@type': 'WebPage', 'name': titulo, 'description': p['descripcion'], 'inLanguage': 'es-ES', 'url': url,
                      'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'], 'publisher': org}
+        if p.get('sobre'):
+            principal['about'] = p['sobre']
     items = [(n, DOMINIO + r) for n, r in migas_de(p)] + [(titulo, url)]
     migas_ld = {'@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(items)]}
@@ -364,6 +368,11 @@ def portada(guias, faq):
 def main():
     with open(os.path.join(RAIZ, '.github', 'paginas.json'), encoding='utf-8') as f:
         paginas = json.load(f)['paginas']
+    # las fichas de cada equipo y de cada jugador (portal, fase 2): las escribe bot/portal-web.mjs en su propio registro
+    fichas = os.path.join(RAIZ, '.github', 'portal', 'fichas.json')
+    if os.path.exists(fichas):
+        with open(fichas, encoding='utf-8') as f:
+            paginas = paginas + json.load(f)['paginas']
     guias = [p for p in paginas if p['tipo'] == 'guia' and publicada(p)]
     GUIAS_PUB[:] = guias
     PREVIAS[:] = sorted([g for g in guias if es_previa(g)], key=lambda g: -g['jornada'])
@@ -400,14 +409,35 @@ def main():
             f.write(pagina(p, contenido, hay_guias))
         escritas.append(p)
 
-    # el sitemap: la portada y solo lo publicado
-    urls = [(DOMINIO, hoy)] + [(DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta']), p['fecha'])
-                               for p in escritas if indexable(p)]
+    # el sitemap: la portada y solo lo publicado. Es un índice con tres (páginas, equipos y jugadores), para ver en Search Console
+    # cuántas se indexan de cada tipo
+    def url_de(p):
+        return DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta'])
+    def tipo_sitemap(p):
+        return 'equipos' if p.get('grupo') == 'equipo' else 'jugadores' if p.get('grupo') in ('jugador', 'jugadores') else 'paginas'
+    grupos = {'paginas': [(DOMINIO, hoy)], 'equipos': [], 'jugadores': []}
+    for p in escritas:
+        if indexable(p):
+            grupos[tipo_sitemap(p)].append((url_de(p), p['fecha']))
+    urls = [u for xs in grupos.values() for u in xs]
+    indice_sm = []
+    for nombre, xs in grupos.items():
+        archivo = os.path.join(WEB, f'sitemap-{nombre}.xml')
+        if not xs:
+            if os.path.exists(archivo):
+                os.remove(archivo)
+            continue
+        with open(archivo, 'w', encoding='utf-8') as f:
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+            for u, fe in xs:
+                f.write(f'  <url><loc>{u}</loc><lastmod>{fe}</lastmod></url>\n')
+            f.write('</urlset>\n')
+        indice_sm.append((f'{DOMINIO}sitemap-{nombre}.xml', max(fe for _, fe in xs)))
     with open(os.path.join(WEB, 'sitemap.xml'), 'w', encoding='utf-8') as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        for u, fe in urls:
-            f.write(f'  <url><loc>{u}</loc><lastmod>{fe}</lastmod></url>\n')
-        f.write('</urlset>\n')
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        for u, fe in indice_sm:
+            f.write(f'  <sitemap><loc>{u}</loc><lastmod>{fe}</lastmod></sitemap>\n')
+        f.write('</sitemapindex>\n')
     portada(guias, faq)
     largos = [p['ruta'] for p in escritas if len(p['titulo']) > 60]
     if largos:

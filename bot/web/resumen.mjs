@@ -67,7 +67,9 @@ function campoOnce(once) {
   return `  <div class="campo" role="img" aria-label="${e(`Once ideal ${once.formacion}: ${once.lineas.flat().map((x) => `${x.nombre} ${x.pts}`).join(', ')}`)}">${lin}</div>`;
 }
 
-export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta = null, tarjetaAlto = null } = {}) {
+export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta = null, tarjetaAlto = null, rutas = null } = {}) {
+  // las filas enlazan a la ficha del jugador si la tiene (fase 2)
+  const fila = (x, d) => filaJugador(x, d, { enlace: rutas && rutas.jugador(x.id) ? `../${rutas.jugador(x.id)}` : null });
   const J = h.jornada, o = [];
   const a = h.mejores[0], eq = h.equipos[0];
   o.push(`  <h1>Resumen de la <span>jornada ${J}</span></h1>`);
@@ -83,17 +85,17 @@ export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta =
   if (siguiente) enl.push(`<a class="btn sec" href="../${e(siguiente.ruta)}">Previa de la jornada ${siguiente.jornada}</a>`);
   if (enl.length) o.push(`  <div class="cta-b">${enl.join('')}</div>`);
 
-  o.push(bloque('Los mejores de la jornada', lista(h.mejores.map((x) => filaJugador(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`)))));
+  o.push(bloque('Los mejores de la jornada', lista(h.mejores.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`)))));
   if (tarjeta) o.push(`  <figure class="tarjeta-bot"><img src="${e(tarjeta)}" alt="${e(`Tarjeta de los mejores de la jornada ${J}: ${h.mejores.slice(0, 6).map((x) => `${x.nombre} ${x.pts}`).join(', ')}`)}" width="1080" height="${tarjetaAlto || 875}" loading="lazy" decoding="async"><figcaption>La tarjeta que publicó <a href="https://x.com/Fantasyman_app" rel="noopener">@Fantasyman_app</a> al acabar la jornada.</figcaption></figure>`);
   if (h.once) o.push(bloque(`Once ideal de la jornada ${J}`, campoOnce(h.once), { linea: e(`El mejor portero y los mejores de cada línea en la formación que más suma (${h.once.formacion}, ${h.once.suma} puntos). Es el once de lo que ya se jugó, no una recomendación.`) }));
 
   o.push(bloque('Resultados y MVP de cada partido', `  <ul class="lp">${h.partidos.map((p) => `<li><span class="lp-p">${escudo(p.escL, p.local, 22)}<b>${e(p.local)}</b>${marcador(p)}<b>${e(p.visitante)}</b>${escudo(p.escV, p.visitante, 22)}</span>`
-    + `<span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span>${p.mvp ? `<span class="lp-m">${cara(p.mvp, 'p')}<span>MVP: <b>${e(p.mvp.nombre)}</b> ${chipPuntos(p.mvp.pts)}</span></span>` : ''}</li>`).join('')}</ul>`,
+    + `<span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span>${p.mvp ? `<span class="lp-m">${cara(p.mvp, 'p')}<span>MVP: <b>${rutas && rutas.jugador(p.mvp.id) ? `<a href="../${e(rutas.jugador(p.mvp.id))}">${e(p.mvp.nombre)}</a>` : e(p.mvp.nombre)}</b> ${chipPuntos(p.mvp.pts)}</span></span>` : ''}</li>`).join('')}</ul>`,
   { linea: 'El MVP es el jugador de los dos equipos que más puntos de LaLiga Fantasy sacó en ese partido.' }));
 
-  if (h.doblan.length) o.push(bloque('Los que doblaron su media', lista(h.doblan.map((x) => filaJugador(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
+  if (h.doblan.length) o.push(bloque('Los que doblaron su media', lista(h.doblan.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
     { linea: 'Con 3 puntos de media o más y al menos 10 en esta jornada: sacaron el doble (o más) de lo que suelen.' }));
-  if (h.peores.length) o.push(bloque('Los peores de la jornada', lista(h.peores.map((x) => filaJugador(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
+  if (h.peores.length) o.push(bloque('Los peores de la jornada', lista(h.peores.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
     { linea: 'Los que acabaron en negativo: una expulsión, un penalti fallado o muchos goles encajados.' }));
 
   const top = h.equipos.slice(0, 5), cola = h.equipos.slice(-3).reverse();

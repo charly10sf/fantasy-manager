@@ -102,7 +102,10 @@ if (vieja) Object.assign(vieja, entrada); else {
 }
 writeFileSync(pj, bonito(P) + '\n');
 const archivo = path.join(RAIZ, 'web', ruta);
-writeFileSync(archivo, `<!-- contenido -->\n${contenido(h, r.textos)}\n<!-- /contenido -->\n`);
+// los jugadores con ficha en el portal (bot/portal-web.mjs, fase 2) van enlazados
+const fichas = (() => { try { return json(path.join(RAIZ, '.github', 'portal', 'estado.json')).fichas || null; } catch { return null; } })();
+const rutas = { jugador: (id) => (fichas && fichas.jugadores && fichas.jugadores[String(id)] ? `jugadores/${fichas.jugadores[String(id)]}.html` : null) };
+writeFileSync(archivo, `<!-- contenido -->\n${contenido(h, r.textos, { rutas })}\n<!-- /contenido -->\n`);
 execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });
 salida('ok', r.ok ? 'true' : 'false');
 salida('jornada', String(J));

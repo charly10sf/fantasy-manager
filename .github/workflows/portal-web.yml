@@ -61,7 +61,7 @@ jobs:
         run: |
           git config user.name 'Fantasy Manager'
           git config user.email 'fantasymanager.web.app@gmail.com'
-          git add -A web/mercado web/jornada web/equipos web/guias web/sitemap.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
+          git add -A web/mercado web/jornada web/equipos web/jugadores web/guias web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
           if git diff --cached --quiet; then echo "Nada nuevo"; exit 0; fi
           git commit -q -m "Portal: datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
           for espera in 0 5 15 30; do
