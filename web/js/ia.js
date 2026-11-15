@@ -15,7 +15,7 @@ import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { rematarAuto } from './motor.js';
-import { planDeHoy, planMotor, titularMotor } from './plan.js';
+import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
@@ -1451,7 +1451,8 @@ export function aplicarCorto(json, R, D, M, c) {
   const fuentesOK = new Set((Array.isArray(json.fuentes) ? json.fuentes : []).map((f) => claveUrl(f && f.u)).filter(Boolean));
   const conFuente = (x) => !!(x && x.fuente && fuentesOK.has(claveUrl(x.fuente)));
   const porBusqueda = new Set([...(Array.isArray(json.quita) ? json.quita : []), ...(Array.isArray(json.mete) ? json.mete : [])].filter(conFuente).map((x) => de(x)).filter(Boolean).map((x) => x.k));
-  const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); return (cu.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); };
+  // (lo primero que la app tacharía de ese plan, con su aviso; '' si pasa entero)
+  const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); const o = (cu.ops || []).find((y) => y._k && (y.descartada || y.sugerencia)); return o ? `${o._k} (${String(o.aviso || 'sin aviso').slice(0, 110)})` : ''; };
   // Quitar o meter algo es cosa de las noticias (los números ya los ha mirado el motor): solo si de ese jugador hay
   // prensa, un estado (lesión, sanción, duda), algo que el mánager ha contado o un partidazo reciente. Si no, no se aplica
   // (el modelo ligero quitaba pasos «porque sobra margen»; medido el 14 nov)
@@ -1460,19 +1461,45 @@ export function aplicarCorto(json, R, D, M, c) {
     if (!j) return false;
     return !!((M.noticiasDe && M.noticiasDe(pid).length) || (j.estado && j.estado !== 'ok') || notasDe(pid).length || ((M.partidazo && M.partidazo(pid)) || {}).nivel >= 2);
   };
+  // (15 nov) lo que la app vetó al montar el plan del motor (las vueltas de planVueltas) sigue vetado aquí: si no, el
+  // motor lo volvía a proponer (subir una cláusula, un blindaje), la app lo volvía a tachar y el plan entero «no cuadraba»
+  let vet0 = new Set((R.vetos || []).map((v) => v.k));
+  let pasosBase = base;
+  let porque = '';
   const intento = (q, m) => {
     let P = null;
-    try { P = planMotor(D, M, c, { fijar: new Set([...base.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set(q.filter(esPost)), prefer: orden }); } catch (e) { P = null; }
+    try { P = planMotor(D, M, c, { fijar: new Set([...pasosBase.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set([...vet0, ...q.filter(esPost)]), prefer: orden }); } catch (e) { porque = `el motor falla: ${String((e && e.message) || e).slice(0, 110)}`; return null; }
+    if (!P) { porque = 'las cuentas no salen'; return null; }
     // nunca peor para la jornada (si el del motor llegaba en positivo, este también) ni con algo que la app tacharía
-    if (!P || (R.cuentas && R.cuentas.jornada >= 0 && P.cuentas.jornada < 0) || tachado(P)) return null;
+    if (R.cuentas && R.cuentas.jornada >= 0 && P.cuentas.jornada < 0) { porque = 'la jornada empezaría en negativo'; return null; }
+    const t = tachado(P);
+    if (t) { porque = `la app tacha ${t}`; return null; }
     return { P, quita: q, mete: m };
   };
   // de uno en uno: cada cosa que quita o mete se queda solo si el plan sigue cuadrando con ella (así una que no cabe
   // no se lleva por delante a las demás, y lo que hace falta para empezar la jornada en positivo no se va)
   let r = intento([], []);
-  if (!r) return null;
+  // (15 nov, Carlos: «pone esto cuando es mentira») el plan del motor, sin que la IA toque nada, puede no cuadrar aquí: ha
+  // pasado un rato desde que se montó (una cláusula que se cierra, el mercado que cambia, una oferta que caduca) o el
+  // motor y la app no dicen lo mismo de algo. Antes eso tiraba el plan entero con «lo que pide la IA no cuadra», aunque la
+  // IA no pidiera nada. Ahora nunca: el motor lo elige otra vez con sus vueltas (lo mismo que hace Hoy) y, si ni eso, se
+  // queda el que ya está en pantalla. La IA pone las frases sobre el que salga
+  let rehecho = '';
+  if (!r) {
+    rehecho = porque || 'no cuadra';
+    try {
+      const V2 = planVueltas(D, M, c, { prefer: orden });
+      vet0 = new Set((V2.R.vetos || []).map((v) => v.k));
+      pasosBase = (V2.P.operaciones || []).filter((o) => o._k).map((o) => o._k);
+      r = { P: V2.P, quita: [], mete: [] };
+    } catch (e) {
+      rehecho += `; y al rehacerlo: ${String((e && e.message) || e).slice(0, 110)}`;
+      const fuera = new Set((R.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia)).map((o) => o._k));
+      r = { P: { ...R, operaciones: (R.operaciones || []).filter((o) => !fuera.has(o._k)).map((o) => ({ ...o })) }, quita: [], mete: [] };
+    }
+  }
   const respaldo = (k) => conNoticia(k) || porBusqueda.has(k);
-  for (const k of quita0) { if (!respaldo(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
+  for (const k of quita0) { if (!respaldo(k) || !pasosBase.includes(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
   // (una alternativa entra si cubre algo que se ha quitado o si la noticia es suya)
   for (const k of mete0) { if (!r.quita.length && !respaldo(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
   const P = r.P;
@@ -1518,7 +1545,7 @@ export function aplicarCorto(json, R, D, M, c) {
       .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)), ...(conFuente(n) && !esWebFantasy(n.fuente) ? { fuente: n.fuente } : {}) })).filter((n) => n.texto),
     rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 3).map((n) => ({ ...n, texto: breve(limpio(n && n.texto)) })).filter((n) => n.manager && n.texto),
     proximos_dias: prox,
-    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
+    cambios: { ...(rehecho ? { rehecho } : {}), quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
   };
 }
 /* ---------------- el plan con la IA de Carlos (el Worker, /plan) ---------------- */
@@ -1629,11 +1656,17 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
   }
   // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
   json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
-  const A = aplicarCorto(json, R, D, M, c);
+  // (15 nov) lo que conteste la IA nunca tira el plan: lo que no cabe no se aplica y, si el plan de la app ya no cuadra tal
+  // cual, se rehace (aplicarCorto). Si aun así algo fallara, solo sus textos; y el error, solo si ni eso (con su porqué)
+  let A = null, fallo = '';
+  try { A = aplicarCorto(json, R, D, M, c); } catch (e) { fallo = String((e && e.message) || e); }
+  if (!A) { try { A = aplicarCorto({ titular: json.titular, situacion: json.situacion, pasos: [], quita: [], mete: [], fuentes: json.fuentes }, R, D, M, c); if (A) A.cambios.rehecho = `solo los textos de la IA: ${fallo || 'lo demás no cuadraba'}`; } catch (e) { fallo = fallo || String((e && e.message) || e); } }
   if (!A) {
-    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `no cuadra: ${String(r.texto || '').slice(0, 300)}`, ms: 0 });
-    throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
+    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `no cuadra${fallo ? ` (${fallo.slice(0, 160)})` : ''}: ${String(r.texto || '').slice(0, 300)}`, ms: 0 });
+    throw new ErrorIA('La IA ha contestado, pero no se ha podido aplicar al plan de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
   }
+  // (para el diagnóstico: por qué el plan de la app no cuadraba tal cual; no es un fallo, el plan sale igual)
+  if (A.cambios && A.cambios.rehecho) apuntar({ modelo: r.modelo, web: r.web, s: 'plan', ok: true, fin: `plan rehecho al aplicar: ${String(A.cambios.rehecho).slice(0, 260)}`, ms: 0 });
   // (en «Fuentes», sin las webs de fantasy: para quitar o meter sí han valido)
   const fuentes = json.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).slice(0, 6).map((f) => ({ t: String(f.t || f.u).slice(0, 120), u: f.u }));
   return { ...A, fuentes, modelo: r.modelo, web: porApp ? r.web > 0 : json.fuentes.length > 0, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, ...(porApp ? { app: true } : {}), foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13f';
+export const VERSION = '0.7.13g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13f';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13g', f: '2026-11-15', h: '17:31', t: 'El plan con la IA ya no se cae',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan con la IA fallaba con «no cuadra»', x: 'A veces, al pedir el plan con la IA, salía «lo que pide no cuadra con las cuentas de hoy» aunque la IA no hubiera pedido nada raro, y el plan no llegaba. Ahora sale siempre: si algo de lo que propone no encaja, eso no se aplica y el resto del plan se queda.' },
+      { tipo: 'arreglo', d: 'especular', t: 'Las cuentas con varios jugadores para revender', x: 'Con más jugadores comprados para revender de los que la app aconseja llevar a la vez, el plan decía que empezarías la jornada en negativo y descartaba fichajes por falta de saldo sin ser verdad. Ya hace las cuentas con el dinero que tienes.' },
+    ],
+  },
   {
     v: '0.7.13f', f: '2026-11-15', h: '15:39', t: 'Aviso del plan con la app cerrada',
     cosas: [

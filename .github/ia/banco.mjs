@@ -78,6 +78,12 @@ export const ESCENAS = {
   // jueves, un titular mío (Ionut Radu) con la cláusula a su valor y sin protección: la jornada empieza el sábado
   'm-blinda-arranque': { hora: '2026-11-05T12:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
+  // martes, con 60 M y TRES comprados para revender que se aguantan (suben y les quedan 12 días de protección): uno más
+  // del tope de «2 a la vez» de entre semana (se compraron en el parón, que deja 3, o por tu cuenta). El 15 nov, con eso,
+  // no cuadraba ninguna combinación: el plan de la app salía con las cuentas a medias y el de la IA fallaba siempre
+  'm-reventa-de-mas': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
+    for (const n of ['Jon Martin', 'Catena', 'Ionut Radu']) { const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === n); f.protegidoHasta = Date.now() + 12 * 864e5; }`,
+    extra: `${SERIE} const r = {}; for (const n of ['Jon Martin', 'Catena', 'Ionut Radu']) { serie(n, 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === n); r[j.id] = { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) }; } return { reventa: r };` },
   // jueves, con uno comprado para revender (Jon Martin): toca ponerlo a la venta para el último cambio de mercado
   'm-reventa': { hora: '2026-11-05T12:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
 };
@@ -207,7 +213,7 @@ export async function plan(escena, contesta, { largo = false } = {}) {
       if (Pl.corto) {
         for (const o of r.ops || []) if (o._k) L.push(`FRASE ${(o.j && o.j.nombre) || o.jugador || ''}: ${o.motivo}`);
         const c = Pl.cambios || {};
-        L.push(`CAMBIOS: quita [${(c.quita || []).join(', ')}]; mete [${(c.mete || []).join(', ')}]; no aplicado [${(c.noAplicado || []).join(', ')}]; frases de la app ${c.sinFrase || 0}`);
+        L.push(`CAMBIOS: quita [${(c.quita || []).join(', ')}]; mete [${(c.mete || []).join(', ')}]; no aplicado [${(c.noAplicado || []).join(', ')}]; frases de la app ${c.sinFrase || 0}${c.rehecho ? `; REHECHO (${c.rehecho})` : ''}`);
         for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
         for (const n of Pl.noticias || []) L.push(`NOTICIA ${n.jugador}: ${n.texto}`);
         for (const n of Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);

@@ -347,7 +347,10 @@ function cuentas(X, lista) {
   }
   for (const o of lista) if (o.clase === 'vender' && (ciclos >= 1)) ventas += o.futura * A.margenVenta;
   // (con las pujas ya puestas puedes pasar de 25 sobre el papel: eso no impide vender, solo fichar a nadie más)
-  if ((n > 25 && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista)) return null;
+  // (15 nov) el tope de «2 a la vez» (3 en el parón) es para lo que se COMPRA hoy para revender. Antes, con más de eso ya
+  // en la plantilla (compraste 3 en el parón y el tope vuelve a 2, o los fichaste por tu cuenta), no cuadraba NINGUNA
+  // combinación, ni la de no hacer nada: el plan salía con las cuentas a medias y el de la IA fallaba siempre («no cuadra»)
+  if ((n > 25 && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || (nE > 0 && nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista))) return null;
   const fin = margen - M.deuda;   // el saldo al acabar el día, contando como gastado todo lo pujado
   if (hayRev && fin < -M.deuda * A.topeDeuda) return null;
   // lo pujado se cobra en el cambio de mercado: si el próximo es después de que empiece la jornada (el mismo día del
@@ -671,26 +674,39 @@ export function titularMotor(P) {
 }
 
 /**
- * El plan de hoy sin IA, ya cuadrado por la app (lo que pinta Hoy). El motor elige, cuadrarPlan lo revisa y, si descarta
- * algo o lo deja «sin prisa», ese candidato se veta y se elige otra vez (como mucho 6 vueltas). Si algo falla, el de antes.
+ * Las vueltas del motor: elige, cuadrarPlan lo revisa y, si descarta algo o lo deja «sin prisa», ese candidato se veta y
+ * se elige otra vez (como mucho 6). Devuelve { R, P }: el plan ya cuadrado, sin nada descartado (con `vetos`, lo que no
+ * pasó), y el mismo sin cuadrar (como sale de planMotor). `op` va a planMotor (ahora, prefer). Lanza lo que lance el motor.
+ */
+export function planVueltas(D, M, c, op = {}) {
+  let R = null, P = null;
+  const vetados = new Set(), vetos = [];
+  for (let vuelta = 0; vuelta < 6; vuelta++) {
+    P = planMotor(D, M, c, { ...op, vetados });
+    R = cuadrarPlan(P, D, M);
+    const mal = (R.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia));
+    if (!mal.length) break;
+    for (const o of mal) { vetados.add(o._k); vetos.push({ k: o._k, jugador: (o.j && o.j.nombre) || o.jugador, aviso: o.aviso || '' }); }
+  }
+  // (red de seguridad: si tras las vueltas quedara algo descartado, fuera)
+  if ((R.ops || []).some((o) => o.descartada || o.sugerencia)) {
+    P = { ...P, operaciones: (P.operaciones || []).filter((o) => !(R.ops || []).some((x) => x._k && x._k === o._k && (x.descartada || x.sugerencia))) };
+    R = cuadrarPlan(P, D, M);
+  }
+  // (lo que la app no dejó pasar al cuadrar, con su motivo: para el diagnóstico, las pruebas y para rehacer el mismo plan)
+  if (vetos.length) { R.vueltas = vetos.length; R.vetos = vetos; }
+  return { R, P };
+}
+
+/**
+ * El plan de hoy sin IA, ya cuadrado por la app (lo que pinta Hoy): el del motor con sus vueltas (planVueltas). Si algo
+ * falla, el de antes.
  */
 export function planDeHoy(D, M, c) {
   if (M._planHoy && M._planHoy.dia === diaDe() && M._planHoy.dinero === D.dinero) return M._planHoy.plan;
   let R = null;
   try {
-    const vetados = new Set(), vetos = [];
-    for (let vuelta = 0; vuelta < 6; vuelta++) {
-      const P = planMotor(D, M, c, { vetados });
-      R = cuadrarPlan(P, D, M);
-      const mal = (R.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia));
-      if (!mal.length) break;
-      for (const o of mal) { vetados.add(o._k); vetos.push({ k: o._k, jugador: (o.j && o.j.nombre) || o.jugador, aviso: o.aviso || '' }); }
-    }
-    // (lo que la app no dejó pasar al cuadrar, con su motivo: para el diagnóstico y las pruebas)
-    if (vetos.length) { R.vueltas = vetos.length; R.vetos = vetos; }
-    // (red de seguridad: si tras las vueltas quedara algo descartado, fuera)
-    if ((R.ops || []).some((o) => o.descartada || o.sugerencia)) R = cuadrarPlan({ ...R, operaciones: (R.operaciones || []).filter((o) => !(R.ops || []).some((x) => x._k && x._k === o._k && (x.descartada || x.sugerencia))) }, D, M);
-    R = rematarMotor(R, M);
+    R = rematarMotor(planVueltas(D, M, c).R, M);
   } catch (e) {
     try { console.warn('plan.js:', e); } catch (e2) { /* sin consola */ }
     R = rematarAuto(cuadrarPlan(planAuto(D, M, c), D, M));
