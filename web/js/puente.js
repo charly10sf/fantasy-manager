@@ -276,6 +276,9 @@ export const nativo = {
     return N && typeof N.trabajandoCon === 'function' ? llamar('trabajandoCon', !!si, titulo, texto) : llamar('trabajando', !!si, texto);
   },
   aLaVista: () => (N && typeof N.aLaVista === 'function' ? !!llamar('aLaVista') : !document.hidden),
+  // (15 nov) el plan con la IA en marcha (su id y la sesión): si sales de la app, Android avisa y lo recoge (Recoger.java)
+  planEnMarcha: (rid, tk) => llamar('planEnMarcha', String(rid || ''), String(tk || '')),
+  planAcabado: () => llamar('planAcabado'),
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
   fondoTerminado: () => llamar('fondoTerminado'),

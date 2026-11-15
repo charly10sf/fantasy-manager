@@ -5,6 +5,7 @@
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
+import { token } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
@@ -1567,10 +1568,15 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
     window.addEventListener('fm-vuelta', ya);
     document.addEventListener('visibilitychange', ya);
   });
+  // (15 nov) para el aviso del móvil si sales de la app (versión de Google Play); en la web no hace nada
+  if (enApp) { try { nativo.planEnMarcha(rid, await token()); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
+  // como mucho 3 minutos en total: nunca se queda «preparando» sin fin
+  const TOPE = 180000;
   try {
     for (let vez = 0; ; vez++) {
       try { j = await una(); break; } catch (e) {
         if (e.name === 'AbortError' || e.estado !== 0 || vez >= 3 || (signal && signal.aborted)) throw e;
+        if (Date.now() - t0 > TOPE) throw Object.assign(new Error('La IA ha tardado demasiado. Tienes el plan de la app; vuelve a probar en un rato.'), { estado: 0, detalle: 'más de 3 min' });
         apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: 0 corte${e.detalle ? ` (${e.detalle})` : ''}; lo repito`, ms: Date.now() - t0 });
         await aLaVista();
         if (alPaso) alPaso('Recogiendo tu plan…');
@@ -1579,12 +1585,14 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
       }
     }
     LS.del('plan-rid');
+    nativo.planAcabado();
   } catch (e) {
     if (e.name === 'AbortError') throw e;
     const d = e.datos || {};
     if (d.cupo) guardarCupo(d.cupo);
     // (lo que no es un corte no se va a recoger después: el id se suelta)
     if (e.estado !== 0) LS.del('plan-rid');
+    nativo.planAcabado();
     apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}${e.detalle ? ` (${e.detalle})` : ''}`, ms: Date.now() - t0 });
     // sin cupo hoy: no es un fallo (lo dice el Worker); lo demás es que el servicio no está (y vale tu clave, si la tienes)
     if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo });
@@ -1622,7 +1630,10 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
   // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
   json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
   const A = aplicarCorto(json, R, D, M, c);
-  if (!A) throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
+  if (!A) {
+    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `no cuadra: ${String(r.texto || '').slice(0, 300)}`, ms: 0 });
+    throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
+  }
   // (en «Fuentes», sin las webs de fantasy: para quitar o meter sí han valido)
   const fuentes = json.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).slice(0, 6).map((f) => ({ t: String(f.t || f.u).slice(0, 120), u: f.u }));
   return { ...A, fuentes, modelo: r.modelo, web: porApp ? r.web > 0 : json.fuentes.length > 0, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, ...(porApp ? { app: true } : {}), foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };

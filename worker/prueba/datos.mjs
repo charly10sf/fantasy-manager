@@ -364,6 +364,13 @@ ok(r.s === 200 && r.j.cupo.usados === 2 && r.j.cupo.quedan === 0, `/plan: el seg
 const antesR = aClaude.length;
 r = await plan({ rid: 'corte1234abc' });
 ok(r.s === 200 && r.j.plan && r.j.cupo.usados === 2 && aClaude.length === antesR, `/plan repetido con el mismo rid: devuelve el ya hecho, sin volver a Claude ni contar otra vez (${r.t.slice(0, 120)})`);
+// (15 nov) lo que pregunta el móvil con la app en segundo plano (Recoger.java), sin Origin
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=corte1234abc', origen: null, e: envP });
+ok(r.s === 200 && r.j.fin && r.j.fin.plan && r.j.fin.plan.titular, `GET /plan/res: el plan hecho de ese pedido (${r.t.slice(0, 80)})`);
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=otro9999zzz', origen: null, e: envP });
+ok(r.s === 200 && !r.j.fin && r.j.marcha === false, `GET /plan/res de un pedido que no existe: ni plan ni en marcha (${r.t})`);
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=corte1234abc', origen: null, tk: '', e: envP });
+ok(r.s === 401, `GET /plan/res sin sesión: ${r.s}`);
 const antesC = aClaude.length;
 r = await plan({});
 ok(r.s === 429 && r.j.cupo && r.j.cupo.masConAnuncio && aClaude.length === antesC, `/plan: el tercero sin anuncio, 429 y no llega a Claude (${r.t})`);

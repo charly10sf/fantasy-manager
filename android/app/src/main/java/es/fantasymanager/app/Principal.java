@@ -463,6 +463,8 @@ public class Principal extends Activity {
         Anuncios.alPausar();
         aLaVista = false;
         abierta = false;
+        // (15 nov) con el plan de la IA a medias y sin el servicio en primer plano (Google Play): el aviso y la recogida
+        if (Puente.ocupada && Recoger.rid != null && !Canal.TRABAJO) Recoger.empezar(getApplicationContext());
         web.onPause();
         CookieManager.getInstance().flush();
         super.onPause();
@@ -474,6 +476,7 @@ public class Principal extends Activity {
         pedirMasHercios();
         aLaVista = true;
         abierta = true;
+        Recoger.parar(getApplicationContext());
         web.onResume();
         Anuncios.alVolver();
         // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)

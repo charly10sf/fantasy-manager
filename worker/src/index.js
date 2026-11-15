@@ -1203,6 +1203,13 @@ export default {
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/borrar' && req.method === 'POST') return await borrarMios(req, env, c);
       if (url.pathname === '/plan' && req.method === 'POST') return await planIA(req, env, c, ctx);
+      // (15 nov) el plan de un pedido, para el aviso del móvil con la app en segundo plano (Recoger.java): { fin } o { marcha }
+      if (url.pathname === '/plan/res' && req.method === 'GET') {
+        const u = await quienEs(req);
+        if (!u) return json({ e: 'Sin sesión' }, 401, c);
+        const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
+        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+      }
       if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);

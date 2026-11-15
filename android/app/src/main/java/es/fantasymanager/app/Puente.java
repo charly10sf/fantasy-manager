@@ -423,6 +423,22 @@ public class Puente {
         trabajandoCon(si, null, texto);
     }
 
+    /** (15 nov) el plan con la IA en marcha: su id y la sesión, para avisar y recogerlo si sales de la app (Recoger) */
+    @JavascriptInterface
+    public void planEnMarcha(String rid, String token) {
+        Recoger.rid = rid == null || rid.isEmpty() ? null : rid;
+        Recoger.token = token == null || token.isEmpty() ? null : token;
+    }
+
+    /** el plan ya ha llegado (o ha fallado): nada que recoger */
+    @JavascriptInterface
+    public void planAcabado() {
+        Recoger.rid = null;
+        Recoger.token = null;
+        Recoger.parar(ctx);
+        if (act != null && act.aLaVista) Recoger.quitarListo(ctx);
+    }
+
     /** lo mismo, con el título de la notificación fija («Preparando tu plan», «Pensando la respuesta»…) */
     @JavascriptInterface
     public void trabajandoCon(boolean si, String titulo, String texto) {
