@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250127/endrick-vuelve-pensar-posible-equipo-pole.html": 1794473364000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
    "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
@@ -7525,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2731,
+   "ok": 2732,
    "fallos": 0,
-   "ejecuciones": 2161,
+   "ejecuciones": 2162,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T08:46:12.017Z"
+   "ultima": "2026-11-15T08:51:14.372Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:46:15.118Z"
+   "ultimaBien": "2026-11-15T08:51:19.046Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:46:15.118Z"
+   "ultimaBien": "2026-11-15T08:51:19.046Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:46:15.118Z"
+   "ultimaBien": "2026-11-15T08:51:19.046Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:46:15.118Z"
+   "ultimaBien": "2026-11-15T08:51:19.046Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:46:15.118Z"
+   "ultimaBien": "2026-11-15T08:51:19.046Z"
   }
  },
  "avisos": [
