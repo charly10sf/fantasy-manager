@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
@@ -2135,18 +2134,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794483136000,
-    "id": "1480",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Tchouaméni entrena al margen del grupo en Valdebebas",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html",
     "medio": "COPE",
@@ -7516,13 +7503,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2764,
+   "ok": 2765,
    "fallos": 0,
-   "ejecuciones": 2194,
+   "ejecuciones": 2195,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:31:13.356Z"
+   "ultima": "2026-11-15T11:36:11.267Z"
   }
  },
  "ptsDirecto": {},
@@ -7539,15 +7526,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:31:21.022Z"
+   "ultimaBien": "2026-11-15T11:36:14.816Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:31:21.022Z"
+   "ultimaBien": "2026-11-15T11:36:14.816Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:31:21.022Z"
+   "ultimaBien": "2026-11-15T11:36:14.816Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7555,11 +7542,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:31:21.022Z"
+   "ultimaBien": "2026-11-15T11:36:14.816Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:31:21.022Z"
+   "ultimaBien": "2026-11-15T11:36:14.816Z"
   }
  },
  "avisos": [
