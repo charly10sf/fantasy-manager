@@ -489,3 +489,69 @@ r = await plan({}, { tk: 'u'.repeat(30) });
 ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen con su cupo (${r.s} ${JSON.stringify(r.j && r.j.cupo)})`);
 r = await plan({}, { tk: 'DUENO'.padEnd(30, 'x'), e: { ...envP, ADMINS: '1' } });
 ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMINS, con cupo como todos (${r.s})`);
+
+// ---------- (0.7.13) el dinero de los rivales: lo que apunta todo el mundo ----------
+{
+  // un Durable Object falso con list y delete (como el de SQLite de Cloudflare)
+  const objs = new Map();
+  const QRd = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objs.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, structuredClone(v)); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); }, deleteAll: async () => m.clear(), setAlarm: async () => {},
+          list: async ({ prefix = '', end, reverse, limit } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (end == null || k < end)).sort(); if (reverse) ks.reverse(); if (limit) ks = ks.slice(0, limit); return new Map(ks.map((k) => [k, m.get(k)])); },
+        };
+        objs.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objs.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eD = { VINCULOS: KV, ADMINS: '667015', QR: QRd };
+  const almacen = () => objs.get('dinero|todos').m;
+  const hx = (i) => i.toString(16).padStart(24, '0');
+  const ap = (i, o = {}) => ({ h: hx(i), e: -2e6, m: 3e6, r: 0, dl: 70, dp: 3, mov: 40, sub: 2, pago: false, val: 150e6, pos: 3, nr: 10, est: 20e6, ...o });
+  minuto();
+  // sin sesión, no; con ella, sí, y no se guarda de quién es
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1), tk: 'corto', e: eD });
+  ok(r.s === 401, `/dinero sin sesión: ${r.s}`);
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1), e: eD });
+  const guardados = [...almacen().entries()].filter(([k]) => k.startsWith('r|'));
+  ok(r.s === 200 && guardados.length === 1 && !JSON.stringify(guardados).includes('4242') && !('h' in guardados[0][1]) && guardados[0][1].e === -2e6, `/dinero guarda el apunte sin la cuenta: ${r.s} ${JSON.stringify(guardados)}`);
+  // lo raro no entra
+  r = await pide({ ruta: '/dinero', cuerpo: ap(2, { e: 9e9 }), e: eD });
+  const r2 = await pide({ ruta: '/dinero', cuerpo: { ...ap(3), h: 'NOESHEX' }, e: eD });
+  const r3 = await pide({ ruta: '/dinero', cuerpo: ap(4, { nombre: 'Pepe', liga: '77' }), e: eD });
+  ok(r.s === 400 && r2.s === 400 && r3.s === 200 && !JSON.stringify([...almacen().values()]).includes('Pepe'), `lo que no cuadra, 400; lo de más (nombres, liga) no se guarda (${r.s} ${r2.s} ${r3.s})`);
+  // el mismo rival el mismo día (misma huella): uno solo, el último
+  minuto();
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1, { e: -5e6 }), e: eD });
+  const deUno = [...almacen().entries()].filter(([k]) => k.endsWith(hx(1)));
+  ok(r.s === 200 && deUno.length === 1 && deUno[0][1].e === -5e6, 'el mismo rival el mismo día cuenta una vez (lo último)');
+  // por cuenta: 6 al minuto y DINERO_CUENTA_DIA al día
+  let s429 = 0, s200 = 0;
+  for (let i = 0; i < 10; i++) { const x = await pide({ ruta: '/dinero', cuerpo: ap(100 + i), tk: 'y'.repeat(30), ip: `10.1.0.${i}`, e: eD }); if (x.s === 429) s429++; else if (x.s === 200) s200++; }
+  ok(s200 === 6 && s429 === 4, `por cuenta, 6 al minuto (${s200} bien, ${s429} frenados)`);
+  let dia = 0;
+  for (let k = 0; k < 8; k++) { minuto(); for (let i = 0; i < 6; i++) { const x = await pide({ ruta: '/dinero', cuerpo: ap(200 + k * 10 + i), tk: 'y'.repeat(30), ip: `10.2.${k}.${i}`, e: eD }); if (x.s === 200) dia++; } }
+  ok(dia + s200 === W2.DINERO_CUENTA_DIA, `por cuenta, ${W2.DINERO_CUENTA_DIA} al día (${dia + s200})`);
+  // la corrección: mediana y tramos
+  const cal0 = W2.calDinero([{ e: -1e6, dl: 10, sub: 0, dp: 0 }, { e: -3e6, dl: 80, sub: 2, dp: 4 }, { e: -5e6, dl: 120, sub: 5, dp: 6 }, { e: 1e6, dl: 20, sub: 0, dp: 0 }, { e: -4e6, dl: 90, sub: 1, dp: 3 }]);
+  const tr = (l, d) => l.find((x) => x.desde === d);
+  ok(cal0.n === 5 && cal0.med === -3e6 && tr(cal0.porDias, 0).n === 2 && tr(cal0.porDias, 0).med === 0 && tr(cal0.porDias, 60).n === 2 && tr(cal0.porSub, 3).n === 1 && tr(cal0.porParon, 1).n === 3 && cal0.p10 < cal0.p90, `calDinero: mediana y tramos ${JSON.stringify(cal0)}`);
+  // /dinero/cal: sin sesión vale, y se guarda 6 h
+  r = await pide({ m: 'GET', ruta: '/dinero/cal', tk: '', e: eD });
+  const n0 = r.j && r.j.n;
+  ok(r.s === 200 && n0 >= 30 && r.j.porDias.length === 4 && almacen().has('cal'), `/dinero/cal: ${r.s} n=${n0}`);
+  // con un apunte de hace 200 días: se borra al rehacer la corrección (pasadas las 6 h)
+  almacen().set(`r|${new Date(Date.now() - 200 * 864e5).toISOString().slice(0, 10)}|${hx(9)}`, { e: 0, dl: 1, sub: 0, dp: 0 });
+  desfase += 7 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/dinero/cal', tk: '', e: eD });
+  ok(r.s === 200 && ![...almacen().keys()].some((k) => k.endsWith(hx(9))), 'lo de más de 180 días se borra al rehacer la corrección');
+  // sin el objeto, 503 claro
+  r = await pide({ ruta: '/dinero', cuerpo: ap(5), e: { VINCULOS: KV } });
+  ok(r.s === 503, `/dinero sin objeto: ${r.s}`);
+}

@@ -116,3 +116,29 @@ export async function responderAviso(id, respuesta) {
   if (a.admin) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;
 }
+
+/* ---------- (0.7.13) el dinero de los rivales: aprender de lo que apunta todo el mundo ---------- */
+/** si el usuario deja mandar datos de su liga, sin nombres, para afinar la IA (Ajustes → Datos y privacidad; viene activado) */
+export const mejorarIA = () => LS.get('mejorar-ia', true) !== false;
+export const ponerMejorarIA = (on) => LS.set('mejorar-ia', !!on);
+/** la huella de liga|rival|día (24 hex): no lleva ni la liga ni el rival, y cambia cada día */
+export async function huellaDinero(liga, tid, dia) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-dinero|${liga}|${tid}|${dia}`));
+  return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+/** manda un apunte del dinero (sin nombres); si falla, no pasa nada */
+export async function mandarDinero(apunte) {
+  if (!mejorarIA()) return false;
+  try { await pedirWorker('POST', '/dinero', apunte, { tiempo: 15000 }); return true; } catch (e) { return false; }
+}
+/** la corrección de todos, con 6 h de caché: { t, cal } (cal null si no se ha podido leer nunca) */
+export const calDineroGuardada = () => LS.get('dinero-cal', { t: 0, cal: null });
+export async function leerCalDinero() {
+  const ya = calDineroGuardada();
+  if (Date.now() - (ya.t || 0) < 6 * 3600e3) return null;
+  let cal = null;
+  try { cal = await pedirWorker('GET', '/dinero/cal', null, { tiempo: 15000 }); } catch (e) { LS.set('dinero-cal', { ...ya, t: Date.now() - 5 * 3600e3 }); return null; }
+  if (!cal || typeof cal.n !== 'number') return null;
+  LS.set('dinero-cal', { t: Date.now(), cal });
+  return cal;
+}

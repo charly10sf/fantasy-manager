@@ -355,13 +355,18 @@ export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.l
 /** el dinero de un rival en corto: «12,3 M» si es exacto, «≈ 8,1 M» si es estimado */
 export const dineroCorto = (d) => (!d || d.v == null ? '' : d.exacto ? eur(d.v) : `≈ ${eur(d.v)}`);
 /** y en largo, con de dónde sale */
+/** de dónde sale la corrección de la cuenta del dinero de un rival (lo de su liga, lo de él o lo que apunta la gente) */
+function correccionTxt(c) {
+  const de = c.propio ? 'lo que te dijo él la última vez' : [c.n ? `lo que te han dicho ${c.n} rival${c.n === 1 ? '' : 'es'}` : '', c.todos ? 'lo que apunta la gente en todas las ligas' : ''].filter(Boolean).join(' y ');
+  return c.v ? ` Corregido ${eur(c.v, { signo: true })} con ${de}: la cuenta solía fallar por ahí.` : ` El margen, ajustado con ${de}.`;
+}
 export function dineroLargo(d) {
   if (!d) return 'No se sabe: LaLiga no lo da y aún no hay movimientos guardados.';
   if (d.v == null) return `No se sabe todavía: LaLiga no lo da y para calcularlo ${d.motivo || 'faltan datos'}.`;
   if (d.exacto) return `${eur(d.v)}, exacto (${d.fuente === 'API' ? 'lo da LaLiga' : `de ${d.fuente}`}).`;
   if (d.dicho) return `Unos ${eur(d.v)} (± ${eur(d.margen)}). Te dijo que tenía ${d.dicho.min === d.dicho.max ? eur(d.dicho.v) : `entre ${eur(d.dicho.min)} y ${eur(d.dicho.max)}`} ${cuando(d.dicho.t)}${d.desdeDicho ? ` y desde entonces, con lo que ha movido y las recompensas diarias, lleva ${eur(d.desdeDicho, { signo: true })}` : ' y no ha movido nada desde entonces'}.`;
   const c = d.cuenta;
-  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. La recompensa diaria no sale en ningún sitio, por eso el margen.${d.correccion ? ` Corregido ${eur(d.correccion.v, { signo: true })} con ${d.correccion.propio ? 'lo que te dijo él la última vez' : `lo que te han dicho ${d.correccion.n} rivales`}: la cuenta solía fallar por ahí.` : ''}${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
+  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. La recompensa diaria no sale en ningún sitio, por eso el margen.${d.correccion ? correccionTxt(d.correccion) : ''}${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
 }
 
 /* ---------- las funciones top, bloqueadas (limite.js: bloqueada) ---------- */

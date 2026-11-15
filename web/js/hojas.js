@@ -1,6 +1,6 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
-import { avisosGuardados } from './soporte.js';
+import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, mini } from './graficos.js';
@@ -928,6 +928,8 @@ export function ajustes(S) {
   /* ---- datos y privacidad ---- */
   let c5 = '';
   c5 += fila('Borrar los datos guardados', 'Histórico, fichas y planes', btnA('borrarDatos', 'Borrar'), 'limpiar cache');
+  // (0.7.13, Carlos 15 nov: viene activado) lo de tu liga que se manda, sin nombres, para que la IA y las cuentas afinen
+  c5 += fila('Ayudar a mejorar la IA', 'Compartir datos de tu liga, sin nombres, solo para afinar la IA, sus predicciones y sus planes', interr(mejorarIA(), 'mejorarIA', '', 'Ayudar a mejorar la IA'), 'compartir datos enviar mejorar ia predicciones dinero rivales privacidad');
   if (!enDemo() && ses) c5 += fila('Borrar mis datos del servidor', 'Uso de la app y avisos de fallo', btnA('borrarServidor', 'Borrar'), 'eliminar cuenta rgpd');
   // (en Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
   if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) c5 += fila('Privacidad de los anuncios', 'Si pueden usar tus datos', btnA('privAnuncios', 'Cambiar'), 'consentimiento');

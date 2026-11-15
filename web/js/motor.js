@@ -12,6 +12,8 @@ const PARONES = [
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 // los tramos de valor en los que se cuenta lo que se paga en la liga por los libres (motor y contexto de la IA)
 const TRAMOS_PUJA = [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, Infinity]];
+// (0.7.13) lo que apunta la gente del dinero de los rivales (calDinero del servidor): desde cuántos apuntes cuenta, en total o en un tramo
+const CAL_MIN = 8;
 
 // la tendencia de 7 días para decidir: con 2 o más días subiendo seguidos, la de esos días (`p7e` de M.tend, 0.7n)
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -807,15 +809,31 @@ export function analizar(D, H, c, extra = {}) {
   const medianaE = (() => { const xs = errores.map((x) => x.e).sort((a, b) => a - b); if (!xs.length) return 0; const m = Math.floor(xs.length / 2); return xs.length % 2 ? xs[m] : (xs[m - 1] + xs[m]) / 2; })();
   const pesoG = errores.length >= 2 ? Math.min(1, (errores.length - 1) / 4) : 0;
   M.correccionDinero = { n: errores.length, mediana: Math.round(medianaE), peso: pesoG };
-  /** la cuenta con los movimientos, corregida con lo que te han dicho (el suyo o el de todos) */
+  /* (0.7.13, Carlos 15 nov: «el dinero que apuntan quiero que se use para autoalimentarse y mejorarse la app e IA, da igual
+     la liga que sea») lo que falla la cuenta en TODAS las ligas, de lo que apunta la gente (extra.calDinero, la mediana y el
+     reparto, en total y por días de liga). Va por debajo de lo de tu liga: lo tuyo pesa más (con 5 apuntes tuyos ya no
+     cuenta lo de todos), y lo de todos pesa entero con 40 apuntes en su tramo. Con datos, el margen se acerca a lo que de
+     verdad falla la cuenta (la mitad del p10-p90): se estrecha si la cuenta acierta y se abre si no */
+  const calD = extra.calDinero && Number(extra.calDinero.n) >= CAL_MIN ? extra.calDinero : null;
+  M.calDinero = calD ? { n: calD.n, med: calD.med, margen: Math.max(5e5, Math.round((calD.p90 - calD.p10) / 2 / 1e5) * 1e5) } : null;
+  const deTodos = (c) => {
+    if (!calD) return null;
+    const dl = c.desde ? (ahora - c.desde) / DIA : 0;
+    const tr = (calD.porDias || []).find((x) => dl >= x.desde && dl < x.hasta && x.n >= CAL_MIN);
+    const b = tr || calD;
+    return { v: num(b.med), w: Math.min(1, b.n / 40), margen: Math.max(5e5, (num(b.p90) - num(b.p10)) / 2), n: calD.n };
+  };
+  /** la cuenta con los movimientos, corregida con lo que te han dicho (el suyo o el de todos) y con lo de todas las ligas */
   M.dineroCuenta = (tid) => {
     const c = M.dineroCuentaBruta(tid);
     if (!c || c.v == null) return c;
     const propio = errores.find((x) => x.tid === String(tid));
-    const corr = propio ? propio.e : medianaE * pesoG;
-    if (!corr || Math.abs(corr) < 1e5) return c;
-    const margen = propio ? c.margen : Math.max(5e5, Math.round((c.margen * 0.85) / 1e5) * 1e5);
-    return { ...c, v: c.v + corr, margen, correccion: { v: Math.round(corr), propio: !!propio, n: errores.length } };
+    const g = propio ? null : deTodos(c), wg = g ? (1 - pesoG) * g.w : 0;
+    const corr = propio ? propio.e : medianaE * pesoG + (g ? wg * g.v : 0);
+    let margen = propio || !pesoG ? c.margen : Math.max(5e5, Math.round((c.margen * 0.85) / 1e5) * 1e5);
+    if (wg) margen = Math.max(5e5, Math.round((margen * (1 - wg) + g.margen * wg) / 1e5) * 1e5);
+    if ((!corr || Math.abs(corr) < 1e5) && margen === c.margen) return c;
+    return { ...c, v: c.v + (Math.abs(corr) < 1e5 ? 0 : corr), margen, correccion: { v: Math.abs(corr) < 1e5 ? 0 : Math.round(corr), propio: !!propio, n: errores.length, todos: wg ? g.n : 0 } };
   };
   /**
    * { v, exacto: true, fuente } si LaLiga lo da; si te ha dicho cuánto tiene, eso más lo que ha movido desde entonces;

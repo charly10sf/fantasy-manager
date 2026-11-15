@@ -30,7 +30,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -1120,7 +1120,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -1246,6 +1246,7 @@ async function cargar0({ silencio = false } = {}) {
 /** avisa al servidor de que la app está abierta (para la lista «Quién usa la app» del dueño); nada en la de ejemplo */
 function saludarSiToca() {
   if (!S.D || enDemo() || !haySesion() || document.hidden) return Promise.resolve();
+  calDineroSiToca();
   const yo = S.M && S.M.yo;
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
@@ -1254,6 +1255,29 @@ function saludarSiToca() {
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
 }
 setInterval(saludarSiToca, 10 * 60e3);
+/* (0.7.13) lo que falla la cuenta del dinero de los rivales en todas las ligas (de lo que apunta la gente), cada 6 h: si
+   ha cambiado, se rehace el análisis para que entre en el dinero de los rivales */
+function calDineroSiToca() {
+  const antes = calDineroGuardada().cal;
+  leerCalDinero().then((cal) => {
+    if (!cal || !S.D || (antes && antes.n === cal.n && antes.med === cal.med)) return;
+    rehacer(); if (!S.hoja) pintar();
+  }).catch(() => {});
+}
+/** (0.7.13) lo apuntado de un rival, sin nombres ni ids, para afinar la cuenta de todos (si el usuario lo deja) */
+async function apunteDinero(tid, dicho, cu) {
+  if (enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !cu || cu.v == null || dicho.est == null) return;
+  const M = S.M, ahora = Date.now();
+  const dl = cu.desde ? Math.max(0, (ahora - cu.desde) / DIA) : 0;
+  // los días de parón en medio: lo que suman las recompensas por encima de una al día
+  const dp = cu.desde && M.recompensas && M.RECOMPENSA ? Math.max(0, M.recompensas(cu.desde, ahora) / M.RECOMPENSA - dl) : 0;
+  const eq = (S.D.clasif || []).find((x) => String(x.teamId) === String(tid)) || {};
+  const h = await huellaDinero(S.D.liga ? S.D.liga.id : '', tid, diaDe(ahora));
+  return mandarDinero({
+    h, e: dicho.v - dicho.est, m: cu.margen || 0, r: dicho.r || 0, dl: Math.round(dl), dp: Math.round(dp), mov: cu.n || 0, sub: (cu.cuenta && cu.cuenta.nSubidas) || 0,
+    pago: !!(S.D.liga && S.D.liga.premium), val: Math.max(0, Number(eq.valor) || 0), pos: Number(eq.pos) || 0, nr: (S.D.clasif || []).length, est: dicho.est,
+  });
+}
 // con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
 if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) comprobarAvisos(); }, 10 * 60e3 + 5e3);
 // con la configuración nueva de limites.json puede cambiar lo que está bloqueado
@@ -2969,10 +2993,12 @@ document.addEventListener('click', async (ev) => {
       const todos = LS.get(K('dinero-dicho'), {});
       todos[d.tid] = { v: Math.round((a + b) / 2), r: Math.round((b - a) / 2), min: Math.round(a), max: Math.round(b), t: Date.now(), est: cu && cu.v != null ? Math.round(cu.v) : null };
       LS.set(K('dinero-dicho'), todos);
+      apunteDinero(d.tid, todos[d.tid], cu).catch(() => {});
       rehacer(); repintarHoja(); pintar();
       tostada(cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(todos[d.tid].v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
       break;
     }
+    case 'mejorarIA': ponerMejorarIA(!mejorarIA()); repintarHoja(); tostada(mejorarIA() ? 'Gracias: así la IA afina más' : 'Hecho: no se manda nada más'); break;
     case 'borrarDicho': {
       const todos = LS.get(K('dinero-dicho'), {});
       delete todos[d.tid];

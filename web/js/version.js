@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.12';
+export const VERSION = '0.7.13';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,14 @@ export const VERSION = '0.7.12';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13', f: '2026-11-15', h: '03:25', t: 'El dinero, aprendido de todos',
+    cosas: [
+      { importante: true, tipo: 'nuevo', d: 'hucha', t: 'El dinero de los rivales aprende de todos', x: 'Cuando alguien apunta cuánto le ha dicho un rival que tiene, la app aprende cuánto fallaba su cuenta. Con lo de todas las ligas, sin nombres, el dinero de tus rivales sale más fino y con un margen más justo, aunque tú no hayas apuntado nada. Lo que apuntes de tu liga sigue pesando más.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'escudo', t: 'Ayudar a mejorar la IA', x: 'En Ajustes → Datos y privacidad eliges si compartes datos de tu liga, sin nombres, solo para afinar la IA, sus predicciones y sus planes. Viene activado y se apaga con un toque.' },
+      { tipo: 'mejora', d: 'ia', t: 'La IA duda lo justo', x: 'La IA sabe cuánto suele fallar la cuenta del dinero de los rivales y no da por buenas diferencias más pequeñas que eso.' },
+    ],
+  },
   {
     v: '0.7.12', f: '2026-11-15', h: '02:41', t: 'Menos anuncios',
     cosas: [

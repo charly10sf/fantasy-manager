@@ -765,6 +765,41 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 16e: (0.7.13) lo que apunta la gente en todas las ligas corrige la cuenta de los rivales sin nada apuntado (y su margen),
+// por debajo de lo de tu liga; el texto lo dice, y Ajustes trae la casilla para no mandar nada (activada por defecto)
+{
+  const cal = { n: 60, med: -2e6, p10: -6e6, p25: -4e6, p75: 0, p90: 2e6, porDias: [[0, 30], [30, 60], [60, 100], [100, 9999]].map(([desde, hasta]) => ({ desde, hasta, n: 0, med: 0, p10: 0, p25: 0, p75: 0, p90: 0 })), porSub: [], porParon: [], t: Date.now() };
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-dinero-cal', ${JSON.stringify(JSON.stringify({ t: Date.now(), cal }))});` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const { dineroLargo } = await import('/js/comunes.js');
+    const M = window.S.M, tid = M.rivalesTid.find((t) => { const c = M.dineroCuentaBruta(t); return c && c.v != null; });
+    const b = M.dineroCuentaBruta(tid), c = M.dineroCuenta(tid);
+    return { cal: M.calDinero, b, c, txt: dineroLargo(c) };
+  });
+  const ok16e = r.cal && r.cal.n === 60 && r.c && r.c.correccion && r.c.correccion.todos === 60 && Math.abs(r.c.v - r.b.v + 2e6) < 1e5 && r.c.margen === 4e6 && /apunta la gente/.test(r.txt);
+  if (!ok16e) mal(`dinero con lo de todas las ligas: ${JSON.stringify(r)}`);
+  else bien('dinero con lo de todas las ligas: -2 M (la mediana de 60 apuntes) y margen de 4 M (la mitad del p10-p90), y el texto lo dice');
+  // la casilla de Ajustes: activada, se apaga y se queda apagada
+  const k = await page.evaluate(async () => {
+    const s = await import('/js/soporte.js');
+    const antes = s.mejorarIA();
+    window.S.tipoHoja = null;
+    return { antes };
+  });
+  await page.evaluate(() => document.querySelector('[data-accion="ajustes"]') && document.querySelector('[data-accion="ajustes"]').click());
+  await page.waitForTimeout(500);
+  const hay = await page.$('[data-accion="mejorarIA"]');
+  if (hay) { await page.evaluate(() => document.querySelector('[data-accion="mejorarIA"]').click()); await page.waitForTimeout(300); }
+  const despues = await page.evaluate(async () => (await import('/js/soporte.js')).mejorarIA());
+  if (!k.antes || !hay || despues) mal(`casilla «Ayudar a mejorar la IA»: ${JSON.stringify({ antes: k.antes, hay: !!hay, despues })}`);
+  else bien('casilla «Ayudar a mejorar la IA» en Ajustes: viene activada y se apaga');
+  if (errores.length) mal(`dinero de todas las ligas: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 17: (14 nov) el APK de GitHub se despide: la ventana del paso a Google Play solo en esa app (ni en Play ni en la web),
 // con «Ahora no» antes del cierre y sin cerrar después; la banda de arriba también
 for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {

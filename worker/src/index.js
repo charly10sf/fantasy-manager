@@ -42,6 +42,12 @@
  *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra }: el plan del día con la IA de Carlos (Claude), con
  *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
  *
+ *   El dinero de los rivales, aprendido de lo que apunta la gente (0.7.13; Carlos, 15 nov: «el dinero que apuntan quiero que
+ *   se use para autoalimentarse y mejorarse la app e IA, da igual la liga que sea»):
+ *   POST /dinero              un apunte SIN NOMBRES NI IDS: { h, e, m, dl, dp, mov, sub, pago, val, pos, nr, est, r } (dineroDe).
+ *                             Con la sesión de LaLiga (solo para frenar a quien no juega), pero no se guarda de quién es.
+ *   GET  /dinero/cal          la corrección de todos (calDinero), rehecha como mucho cada 6 h. Sin sesión.
+ *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
@@ -214,6 +220,8 @@ export const FRENOS = {
   fallos: { min: 30 }, falloNuevo: { min: 5, dia: 10 }, uso: { min: 6 }, hola: { min: 6 },
   // /plan, por cuenta: 3 al minuto (el cupo del día lo lleva aparte)
   plan: { min: 3 },
+  // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
+  dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
 };
 async function frenoIP(req, env, c, nombre) {
   const f = FRENOS[nombre], ip = ipDe(req);
@@ -321,6 +329,25 @@ export class Emparejar {
       const n = (Number(await st.get('g')) || 0) + mas;
       if (mas) { await st.put('g', n); if (n === mas) await st.setAlarm(Date.now() + 30 * 3600e3); }
       return new Response(String(n), { status: 200 });
+    }
+    // (0.7.13) el dinero de los rivales: lo apuntado por todos, en un solo objeto («dinero|todos»), que nunca pone alarma
+    if (ruta === '/dinero/poner') {
+      const b = await req.json().catch(() => null);
+      if (!b || !b.k || !b.x) return new Response('mal', { status: 400 });
+      await st.put(b.k, b.x);
+      return new Response('ok', { status: 200 });
+    }
+    if (ruta === '/dinero/cal') {
+      const ya = await st.get('cal');
+      if (ya && Date.now() - ya.t < DINERO_CAL_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+      // lo de más de DINERO_DIAS días se borra (de 128 en 128, lo que deja delete)
+      const limite = `r|${diaHace(DINERO_DIAS)}`;
+      const viejos = [...(await st.list({ prefix: 'r|', end: limite, limit: 2000 })).keys()];
+      for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+      const regs = [...(await st.list({ prefix: 'r|', reverse: true, limit: DINERO_MAX })).values()];
+      const cal = { ...calDinero(regs), t: Date.now() };
+      await st.put('cal', cal);
+      return new Response(JSON.stringify(cal), { status: 200 });
     }
     if (ruta === '/contar') {
       const max = Number(await req.text()) || 0;
@@ -794,6 +821,76 @@ async function planIA(req, env, c, ctx) {
   return new Response(readable, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store, no-transform' } });
 }
 
+/* ---------- el dinero de los rivales: aprender de lo que apunta todo el mundo (0.7.13) ---------- */
+/*
+ * Cuando alguien apunta lo que le ha dicho un rival que tiene, la app manda cuánto fallaba su cuenta en ese momento y el
+ * contexto de la cuenta, SIN NOMBRES NI IDS de nadie: ni de quien lo manda, ni del rival, ni de la liga ni del equipo.
+ *   h    huella (SHA-256, 24 hex) de liga|rival|día, hecha en el móvil: solo sirve para no contar dos veces lo mismo el mismo
+ *        día (dos de la misma liga que apuntan al mismo rival). Cambia cada día, así que no une apuntes de días distintos.
+ *   e    lo apuntado menos lo que daba la cuenta (v - est); m el margen de la cuenta; r la mitad del rango apuntado
+ *   dl   días desde el principio de la liga; dp días de parón en medio (recompensa doble); mov y sub, movimientos y
+ *        subidas de cláusula del rival; pago, si la liga es de pago; val, pos y nr: valor del equipo del rival, su puesto
+ *        y cuántos equipos hay; est lo que daba la cuenta (Carlos, 15 nov: «eso y más para la IA», para afinarla después)
+ * Va en el Durable Object («dinero|todos»), no en el KV (unas mil escrituras al día entre todo). Se quedan DINERO_DIAS días.
+ * La sesión de LaLiga solo sirve para frenar (por cuenta y día, en el freno del día, que se borra a las 30 h): no se guarda
+ * con el apunte. La corrección (calDinero) se rehace como mucho cada 6 h y la app la lee con 6 h de caché.
+ */
+export const DINERO_DIAS = 180, DINERO_MAX = 20000, DINERO_CAL_CADA = 6 * 3600e3, DINERO_CUENTA_DIA = 30, DINERO_TODOS_DIA = 5000;
+const diaHace = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+const numEn = (x, lo, hi, ent = false) => { const v = Number(x); if (!Number.isFinite(v) || v < lo || v > hi) return null; return ent ? Math.round(v) : Math.round(v / 1e3) * 1e3; };
+/** un apunte limpio (lo que se guarda) o null si algo no cuadra */
+export function apunteDinero(b) {
+  if (!b || typeof b !== 'object' || !/^[0-9a-f]{24}$/.test(String(b.h || ''))) return null;
+  const x = {
+    e: numEn(b.e, -300e6, 300e6), m: numEn(b.m, 0, 200e6), r: numEn(b.r ?? 0, 0, 200e6), dl: numEn(b.dl, 0, 400, true), dp: numEn(b.dp ?? 0, 0, 400, true),
+    mov: numEn(b.mov ?? 0, 0, 5000, true), sub: numEn(b.sub ?? 0, 0, 500, true), pago: b.pago === true, val: numEn(b.val ?? 0, 0, 5e9), pos: numEn(b.pos ?? 0, 0, 60, true),
+    nr: numEn(b.nr ?? 0, 0, 60, true), est: numEn(b.est ?? 0, -1e9, 5e9),
+  };
+  if (Object.values(x).some((v) => v === null) || x.dp > x.dl + 1) return null;
+  return x;
+}
+const cuantilD = (o, q) => { if (!o.length) return 0; const i = (o.length - 1) * q, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
+const resumenE = (xs) => { const o = xs.map((x) => x.e).sort((a, b) => a - b); const r = (q) => Math.round(cuantilD(o, q) / 1e3) * 1e3; return { n: o.length, med: r(0.5), p10: r(0.1), p25: r(0.25), p75: r(0.75), p90: r(0.9) }; };
+// los tramos: por días de liga (lo que más pesa: la recompensa diaria que uno coge y otro no se va sumando), por subidas
+// de cláusula y por si ha habido parón en medio
+export const TRAMOS_DINERO = {
+  dias: [[0, 30], [30, 60], [60, 100], [100, 9999]],
+  sub: [[0, 1], [1, 3], [3, 9999]],
+  paron: [[0, 1], [1, 9999]],
+};
+/** la corrección de todos: la mediana y el reparto de lo que falla la cuenta, en total y por tramos */
+export function calDinero(regs) {
+  const l = (regs || []).filter((x) => x && Number.isFinite(x.e));
+  const tramos = (k, campo) => TRAMOS_DINERO[k].map(([desde, hasta]) => ({ desde, hasta, ...resumenE(l.filter((x) => x[campo] >= desde && x[campo] < hasta)) }));
+  return { ...resumenE(l), porDias: tramos('dias', 'dl'), porSub: tramos('sub', 'sub'), porParon: tramos('paron', 'dp') };
+}
+const objDinero = (env) => env.QR.get(env.QR.idFromName('dinero|todos'));
+async function dineroApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `dinero|${u.uid}`, 6))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  const x = apunteDinero(b);
+  if (!x) return json({ e: 'Apunte no válido' }, 400, c);
+  // por cuenta y entre todos, al día
+  if (!(await cabeHoy(env, `dinero|${u.uid}`, DINERO_CUENTA_DIA))) return demasiadas(c, 'mañana');
+  if (!(await cabeHoy(env, 'dinero|todos', DINERO_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
+  // uno por rival y día: el de la misma huella el mismo día se sustituye (lo último apuntado manda)
+  const r = await objDinero(env).fetch('https://dinero/dinero/poner', { method: 'POST', body: JSON.stringify({ k: `r|${hoyMadrid()}|${b.h}`, x }) });
+  return r.status === 200 ? json({ ok: true }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+}
+let CAL_MEM = { t: 0, cal: null };
+async function dineroCal(env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  if (!CAL_MEM.cal || Date.now() - CAL_MEM.t > 10 * 60e3) {
+    const r = await objDinero(env).fetch('https://dinero/dinero/cal', { method: 'POST' });
+    if (r.status !== 200) return json({ e: 'No se ha podido leer' }, 503, c);
+    CAL_MEM = { t: Date.now(), cal: await r.json() };
+  }
+  return json(CAL_MEM.cal, 200, c);
+}
+
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
 /**
  * borra todo lo que el servidor guarda de quien llama: su ficha de /hola (p:), su registro (r:), sus minutos de uso
@@ -1008,6 +1105,7 @@ export async function lanzarBot(env, pedir = fetch, inputs = null) {
 // qué freno por IP lleva cada ruta (FRENOS)
 const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
+  'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
 };
 
 export default {
@@ -1041,6 +1139,8 @@ export default {
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/borrar' && req.method === 'POST') return await borrarMios(req, env, c);
       if (url.pathname === '/plan' && req.method === 'POST') return await planIA(req, env, c, ctx);
+      if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
+      if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
