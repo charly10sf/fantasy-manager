@@ -24,16 +24,15 @@ Reglas:
 
 const ESQUEMA = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'STRING' }])), required: claves });
 
-const REVISOR = `Revisas el análisis de la previa de una jornada de LaLiga Fantasy antes de publicarlo en una web. Tienes los HECHOS (lo único que se sabe) y el TEXTO de cada apartado.
+const REVISOR = `Compruebas los datos del análisis de la previa de una jornada de LaLiga Fantasy antes de publicarlo en una web. Tienes los HECHOS (lo único que se sabe) y el TEXTO de cada apartado. Las cifras y los nombres ya los ha comprobado un programa: tú miras que lo que se dice de cada uno cuadre con los hechos.
 
 ${REGLAS} La reapertura de cláusulas es a la hora del primer partido de la jornada (viene en los hechos).
 
-Marca un apartado como no publicable solo si pasa algo grave de esto:
-- dice algo que no está en los hechos o lo contradice (una lesión, un rival, una cifra, un equipo o un estado cambiados o inventados);
-- da un consejo que los datos no sostienen o que es peligroso para quien juega (por ejemplo, fichar a un sancionado para esta jornada);
-- suena a plantilla o a texto automático, o repite la estructura de otro apartado;
-- nombra webs, fuentes o «expertos».
-Si solo es mejorable o es cuestión de estilo, es publicable. Si dudas, es publicable: marca solo errores de hecho claros, comparando con los hechos palabra por palabra antes de decidir. Devuelve cada apartado con ok y, si no está bien, el motivo en una frase.`;
+Un apartado NO es publicable solo por una de estas dos cosas:
+1. Un error de hecho: algo que contradice los hechos o no está en ellos (un jugador en otro equipo, otro rival o día de partido, otro estado, una lesión distinta, una cifra atribuida a quien no es, una racha o un dato que no viene).
+2. Un consejo peligroso: alinear o fichar para esta jornada a un sancionado o a un lesionado, o pagar una cláusula con deuda.
+Las opiniones, los consejos discutibles, el estilo, lo que el texto no cuenta y las palabras parecidas («cumple sanción» por «no juega») NO son motivo: eso es publicable.
+En el motivo, copia la frase del texto que está mal y el dato de los hechos que la contradice. Si no puedes señalar las dos cosas, es publicable.`;
 
 const ESQUEMA_REV = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'OBJECT', properties: { ok: { type: 'BOOLEAN' }, motivo: { type: 'STRING' } }, required: ['ok', 'motivo'] }])), required: claves });
 
