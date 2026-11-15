@@ -216,7 +216,8 @@ export async function plan(escena, contesta, { largo = false } = {}) {
         L.push(`CAMBIOS: quita [${(c.quita || []).join(', ')}]; mete [${(c.mete || []).join(', ')}]; no aplicado [${(c.noAplicado || []).join(', ')}]; frases de la app ${c.sinFrase || 0}${c.rehecho ? `; REHECHO (${c.rehecho})` : ''}`);
         for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
         for (const n of Pl.noticias || []) L.push(`NOTICIA ${n.jugador}: ${n.texto}`);
-        for (const n of Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);
+        // (los rivales, como se ven: cuadrarPlan quita lo que ya no es verdad con la liga de ahora)
+        for (const n of r.rivales || Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);
         // (punto 14) la búsqueda en Google: «Con la IA y Google» y la lista «Fuentes» de Hoy
         if (Pl.web) L.push('WEB: sí');
         for (const f of Pl.fuentes || []) L.push(`FUENTE ${f.t} · ${f.u}`);

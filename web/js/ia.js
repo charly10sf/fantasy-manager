@@ -1130,7 +1130,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 7 * DIA && a.clase !== 'premio').slice(0, chat ? 12 : corto ? 20 : 45);
   if (act.length) {
     L.push('\nMOVIMIENTOS DE LA LIGA (7 días):');
-    for (const a of act) L.push(`- ${cuando(a.t)}: ${a.esYo ? 'YO' : a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó', entra: 'entró' })[a.clase] || 'movió'} ${a.nombreJ || ''}${a.clase === 'blindaje' ? ' (escudo gratis)' : a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro && a.otro !== a.quien ? ` a ${a.contraMi ? 'MÍ' : a.otro}` : ''}`);
+    for (const a of act) L.push(`- ${cuando(a.t)}: ${a.esYo ? 'YO' : a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó', entra: 'entró' })[a.clase] || 'movió'} ${a.nombreJ || ''}${a.clase === 'blindaje' ? ' (escudo gratis)' : a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro && a.otro !== a.quien ? ` a ${a.contraMi ? 'MÍ' : a.otro}` : ''}${a.esYo ? '' : yaNoEsSuyo(a, D, M)}`);
   }
   return L.join('\n');
 }
@@ -1370,6 +1370,55 @@ export function idsCorto(R) {
   for (const o of R.alternativas || []) if (o._k) lista.push({ id: `a${++a}`, k: o._k, o, alt: true });
   return { lista, porId: new Map(lista.map((x) => [x.id, x])) };
 }
+/** (15 nov, Domy) de un fichaje, una cláusula o un blindaje de un rival: si ese jugador ya no es suyo (lo has fichado tú
+ * después, lo ha vendido), se dice. Sin esto la IA contaba «X fichó a Chust» de uno que ya era del mánager */
+function yaNoEsSuyo(a, D, M) {
+  if (!a || !a.pid || !a.quienT || !['compra', 'clausula', 'blindaje'].includes(a.clase)) return '';
+  const de = (M.dueno || {})[a.pid] || null;
+  if (de === a.quienT) return '';
+  return de && D.yo && de === D.yo.teamId ? ' (ya no lo tiene: ahora es MÍO)' : ' (ya no lo tiene)';
+}
+/**
+ * (15 nov, Domy: «me indica que U.D. Carlista algo de Chust y ya lo he fichado») «Tus rivales» lo escribe la IA y se
+ * queda en pantalla todo el día. Una frase que dice que ese rival ha fichado, tiene o ha blindado a un jugador que no es
+ * suyo (lo has fichado tú después, lo ha vendido) se quita; si no queda nada que decir de él, se quita el rival. Se mira
+ * cada vez que se pinta el plan (cuadrarPlan), con la liga de ese momento: así se pone al día solo.
+ */
+const RIVAL_TIENE = /\b(ficho|ha fichado|compro|ha comprado|clausulo|ha clausulado|se llevo|se ha llevado|se hizo con|se ha hecho con|pago|ha pagado|blindo|ha blindado|tiene|sigue con|cuenta con|acaba de (?:fichar|comprar|clausular|blindar))\b/g;
+const RIVAL_SUELTA = /\b(vend\w*|perd\w*|solt\w*|traspas\w*|quit\w*|en venta|a la venta)\b/;
+export function revisarRivales(rivales, D, M) {
+  if (!Array.isArray(rivales) || !rivales.length || !M || !M.dueno || !M.teamDeManager) return rivales;
+  const yo = D.yo && D.yo.teamId;
+  const out = [];
+  for (const r of rivales) {
+    if (!r || !r.texto) continue;
+    const tid = M.teamDeManager(r.manager);
+    // (un «rival» que no es de la liga o que soy yo: no hay con qué comprobarlo; el primero se deja, el segundo sobra)
+    if (!tid) { out.push(r); continue; }
+    if (tid === yo) continue;
+    const vale = (frase) => {
+      const t = ` ${norm(frase)} `;
+      const verbos = [...t.matchAll(RIVAL_TIENE)].map((m) => m.index);
+      if (!verbos.length) return true;
+      for (const j of jugadoresEn(frase, D)) {
+        if ((M.dueno[j.id] || null) === tid) continue;
+        const n = norm(j.nombre), ap = n.split(' ').pop();
+        let pos = t.indexOf(` ${n} `);
+        if (pos < 0) pos = t.indexOf(` ${ap} `);
+        if (pos < 0) continue;
+        // el verbo, antes del nombre, cerca y sin un «vendió» o «perdió» en medio: habla de tenerlo, y no lo tiene
+        if (verbos.some((v) => v < pos && pos - v <= 80 && !RIVAL_SUELTA.test(t.slice(v, pos)))) return false;
+      }
+      return true;
+    };
+    // (por frases; el punto de una inicial, «V. Chust», no corta; el de «80 M.», sí)
+    const frases = String(r.texto).split(/(?<!(?:^|(?<!\d)[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.!?;])\s+/).filter(Boolean);
+    const buenas = frases.filter(vale);
+    if (buenas.length === frases.length) out.push(r);
+    else if (buenas.length) { const x = buenas.join(' ').replace(/;$/, '.'); out.push({ ...r, texto: x.charAt(0).toUpperCase() + x.slice(1) }); }
+  }
+  return out;
+}
 /** lo que se le manda a la IA para el plan corto (sin el sistema) */
 export function pedidoCorto(D, M, c, R) {
   const { lista } = idsCorto(R);
@@ -1401,7 +1450,7 @@ export function pedidoCorto(D, M, c, R) {
   // los rivales, en corto: la clasificación y lo que han movido en 3 días
   if (M.rivales && M.rivales.length) L.push(`\nCLASIFICACIÓN DE MI LIGA: ${M.yo ? `yo ${M.yo.pos}º con ${M.yo.puntos} pts; ` : ''}${M.rivales.slice(0, 12).map((r) => `${r.e.pos}º ${r.e.manager || r.e.nombre} ${r.e.puntos}`).join(', ')}.`);
   const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 3 * DIA && a.clase !== 'premio' && !a.esYo).slice(0, 12);
-  if (act.length) L.push(`MOVIMIENTOS DE MIS RIVALES (3 días): ${act.map((a) => `${a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó' })[a.clase] || 'movió'} a ${a.nombreJ || '?'}${a.clase !== 'blindaje' && a.importe ? ` por ${eur(a.importe)}` : ''}${a.contraMi ? ' (a MÍ)' : ''}`).join('; ')}.`);
+  if (act.length) L.push(`MOVIMIENTOS DE MIS RIVALES (3 días): ${act.map((a) => `${a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó' })[a.clase] || 'movió'} a ${a.nombreJ || '?'}${a.clase !== 'blindaje' && a.importe ? ` por ${eur(a.importe)}` : ''}${a.contraMi ? ' (a MÍ)' : ''}${yaNoEsSuyo(a, D, M)}`).join('; ')}.`);
   L.push(`
 Ordena, recorta y explica el plan. Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 {
@@ -2340,7 +2389,10 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     Object.assign(o, { j: null, pid: null, jugador: '', aviso: `${o.aviso ? `${o.aviso} ` : ''}La IA nombraba aquí a ${quien}, que no es tuyo: no puede ir en tu once.` });
   }
   const { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA, quitados);
-  return { ...P, titular, situacion, titularApp, descartes, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion, avisoOnce, avisoAlin, pujasHechas: +M.misPujas || 0 };
+  // («Tus rivales», al día: lo que dice de un rival y ya no es verdad con la liga de ahora, fuera)
+  let rivales = P.rivales;
+  try { rivales = revisarRivales(P.rivales, D, M); } catch (e) { rivales = P.rivales; }
+  return { ...P, titular, situacion, titularApp, descartes, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion, avisoOnce, avisoAlin, pujasHechas: +M.misPujas || 0, ...(Array.isArray(P.rivales) ? { rivales } : {}) };
 }
 
 /* (0.7.8g, aviso de Carlos, 13 nov 19:58: el titular decía «hoy toca hacer caja aceptando la oferta por Fornals» y justo
