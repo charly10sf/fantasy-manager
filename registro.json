@@ -1956,7 +1956,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250164/carmona-candidato-salir-mercado-invierno.html": 1794479934000,
    "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/": 1794482297000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
-   "SPORT|136363255": 1794479245000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
@@ -7547,13 +7546,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2751,
+   "ok": 2752,
    "fallos": 0,
-   "ejecuciones": 2181,
+   "ejecuciones": 2182,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T10:26:12.098Z"
+   "ultima": "2026-11-15T10:31:21.491Z"
   }
  },
  "ptsDirecto": {},
@@ -7570,15 +7569,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:26:16.901Z"
+   "ultimaBien": "2026-11-15T10:31:27.186Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:26:16.901Z"
+   "ultimaBien": "2026-11-15T10:31:27.186Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:26:16.901Z"
+   "ultimaBien": "2026-11-15T10:31:27.186Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7586,11 +7585,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:26:16.901Z"
+   "ultimaBien": "2026-11-15T10:31:27.186Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:26:16.901Z"
+   "ultimaBien": "2026-11-15T10:31:27.186Z"
   }
  },
  "avisos": [
