@@ -1952,7 +1952,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
@@ -7476,13 +7475,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2782,
+   "ok": 2783,
    "fallos": 0,
-   "ejecuciones": 2212,
+   "ejecuciones": 2213,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T13:01:18.226Z"
+   "ultima": "2026-11-15T13:06:13.129Z"
   }
  },
  "ptsDirecto": {},
@@ -7499,15 +7498,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:01:29.495Z"
+   "ultimaBien": "2026-11-15T13:06:16.793Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:01:29.495Z"
+   "ultimaBien": "2026-11-15T13:06:16.793Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:01:29.495Z"
+   "ultimaBien": "2026-11-15T13:06:16.793Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7515,11 +7514,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:01:29.495Z"
+   "ultimaBien": "2026-11-15T13:06:16.793Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:01:29.495Z"
+   "ultimaBien": "2026-11-15T13:06:16.793Z"
   }
  },
  "avisos": [
