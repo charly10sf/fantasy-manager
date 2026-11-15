@@ -10,7 +10,7 @@ import { baseTitular } from '../tipos/caidas.mjs';
 import { motivoSancion } from '../lib/partes.mjs';
 import { corto, el, del, al } from '../lib/texto.mjs';
 import { fechaHora } from './vista.mjs';
-import { e, coma, dinero, dif, pct, cara, escudo, chipPuntos, cambio, graficaValor, barrasPuntos, filaJugador, bloque, lista, tarjetas, slug, diaMadrid, fechaCorta, POS, PUESTO } from './portal.mjs';
+import { e, coma, dinero, dif, pct, cara, escudo, chipPuntos, cambio, graficaValor, filaJugador, bloque, lista, tarjetas, slug, diaMadrid, fechaCorta, POS, PUESTO } from './portal.mjs';
 
 const num = (x) => Number(x) || 0;
 const CASA = 0.85, FUERA = 1.15;   // como bot/tipos/calendario.mjs: jugar fuera pesa más que en casa
@@ -224,6 +224,13 @@ function lecturaEquipo(q, H) {
 
 // ---------------------------------------------------------------- el HTML
 
+/** las fichas de las jornadas, con la forma de las de la app: [{ J, pts (null si no jugó), abajo, icono, titulo, clase }] */
+function fichasJornada(xs) {
+  const nivel = (p) => (p >= 10 ? 'top' : p >= 6 ? 'bien' : p >= 2 ? 'medio' : 'mal');
+  return `  <div class="jt-fila">${xs.map((x) => `<div class="jt ${x.pts == null ? 'nada' : x.clase || nivel(x.pts)}" title="${e(x.titulo)}">${x.icono ? `<i class="gol" aria-hidden="true">${x.icono}</i>` : ''}`
+    + `<span class="jt-n">J${x.J}</span><b>${x.pts == null ? '–' : x.pts}</b>${x.pts == null ? '<small class="nj">no<br>jugó</small>' : `<small>${e(x.abajo || '')}</small>`}</div>`).join('')}</div>`;
+}
+
 /** el texto de arriba: las primeras `k` frases en grande y el resto en párrafos de dos frases */
 function parrafos(fr, k) {
   const o = [`  <p class="lead">${e(fr.slice(0, k).join(' '))}</p>`];
@@ -279,8 +286,11 @@ export function contenidoEquipo(q, H) {
   if (q.ptsJ.length) {
     const media = H.mediaJornada;
     const encima = q.ptsJ.filter(([j, p]) => p > media[j]).length;
-    o.push(bloque('Puntos fantasy por jornada', `  ${barrasPuntos(q.ptsJ, { clase: (p, j) => claseEquipo(p, media[j]) })}`,
-      { linea: e(`Lo que suman todos sus jugadores cada jornada. En verde, por encima de la media de los ${H.equipos.length} equipos esa jornada: lo ha estado en ${encima} de ${q.ptsJ.length}.`) }));
+    const resJ = new Map(q.resultados.map((r) => [r.J, r]));
+    const nivelEq = { p10: 'top', p6: 'bien', p2: 'medio', p1: 'mal' };
+    o.push(bloque('Puntos fantasy por jornada', fichasJornada(q.ptsJ.map(([j, p]) => { const r = resJ.get(j); return { J: j, pts: p, clase: nivelEq[claseEquipo(p, media[j])],
+      abajo: r ? `${r.r} ${r.gf}-${r.gc}` : '', titulo: `J${j}: ${p} puntos entre todos${r ? ` · ${r.casa ? 'en casa' : 'fuera'} contra ${el(r.rival)}, ${r.gf}-${r.gc}` : ''}` }; })),
+      { linea: e(`Lo que suman todos sus jugadores cada jornada, y debajo el resultado. En verde, por encima de la media de los ${H.equipos.length} equipos esa jornada: lo ha estado en ${encima} de ${q.ptsJ.length}.`) }));
   }
 
   if (q.resultados.length) {
@@ -346,14 +356,18 @@ export function contenidoJugador(x, H) {
     { id: 'valor', linea: e(`Su valor cada día desde el ${fechaCorta(s[0].t)}.${x.racha ? ` Ahora lleva ${Math.abs(x.racha)} ${Math.abs(x.racha) === 1 ? 'día' : 'días'} ${x.racha > 0 ? 'subiendo' : 'bajando'} (${dif(x.rachaDif)}).` : ''}`) + ` <a href="${raiz}guias/valor-de-mercado.html">Cómo se mueve el valor</a>.` }));
   }
 
-  // los puntos
+  // los puntos: una ficha por jornada, como en la app (web/js/hojas.js, `jornadasPtsHTML`): la jornada, los puntos con el color
+  // de lo buenos que son (10+, 6-9, 2-5, 1 o menos) y los minutos; las que no jugó, «–» y «no jugó»; el balón o la roja en la esquina
   const pj = x.jornadas.filter((r) => r.pts != null && r.min > 0).map((r) => [r.J, r.pts]);
-  const todas = x.jornadas.map((r) => [r.J, r.pts != null && r.min > 0 ? r.pts : null]);
   if (pj.length) {
     const sorted = [...pj].sort((a, b) => b[1] - a[1]);
     const n10 = pj.filter(([, p]) => p >= 10).length, n1 = pj.filter(([, p]) => p <= 1).length;
-    o.push(bloque('Puntos por jornada', `  ${barrasPuntos(todas)}\n  <p class="leyenda"><span>${chipPuntos(10)} 10 o más</span><span>${chipPuntos(6)} de 6 a 9</span><span>${chipPuntos(2)} de 2 a 5</span><span>${chipPuntos(1)} 1 o menos</span></p>`,
-      { linea: e(`${pj.length < todas.length ? 'Sin barra, las jornadas que no jugó. ' : ''}Su mejor partido, ${sorted[0][1]} puntos en la jornada ${sorted[0][0]}; ${n10 ? `${n10} de 10 o más` : 'ninguno de 10 o más'} y ${n1 ? `${n1} de 1 o menos` : 'ninguno de 1 o menos'}.`) }));
+    o.push(bloque('Puntos por jornada', fichasJornada(x.jornadas.map((r) => {
+      const jugo = r.min > 0 && r.pts != null;
+      const extra = [r.g ? `${r.g} gol${r.g > 1 ? 'es' : ''}` : '', r.a ? `${r.a} asist.` : '', r.roja ? 'roja' : r.am ? 'amarilla' : ''].filter(Boolean).join(', ');
+      return { J: r.J, pts: jugo ? r.pts : null, abajo: jugo ? `${r.min}'` : null, icono: jugo ? (r.g ? '⚽' : r.roja ? '🟥' : '') : '',
+        titulo: jugo ? `J${r.J}: ${r.pts} pts · ${r.min} min${extra ? ` · ${extra}` : ''} · ${r.casa ? 'en casa' : 'fuera'} contra ${el(r.rival)}` : `J${r.J}: no jugó` };
+    })), { linea: e(`Su mejor partido, ${sorted[0][1]} puntos en la jornada ${sorted[0][0]}; ${n10 ? `${n10} de 10 o más` : 'ninguno de 10 o más'} y ${n1 ? `${n1} de 1 o menos` : 'ninguno de 1 o menos'}. Debajo de cada jornada, los minutos que jugó.`) }));
   }
 
   // jornada a jornada

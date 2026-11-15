@@ -312,3 +312,17 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .cifra-c b span.sube { color: var(--sube); font: inherit; } .cifra-c b span.baja { color: var(--baja); font: inherit; } .cifra-c b span.igual { font: inherit; }
 .barras text.nj { opacity: 0.5; }
 .cifra-c span.sube { color: var(--sube); display: inline; } .cifra-c span.baja { color: var(--baja); display: inline; }
+/* puntos por jornada: las mismas fichas que la app (app.css, .jt) */
+.jt-fila { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 4px 0 14px; }
+@media (min-width: 760px) { .jt-fila { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); } }
+.jt { position: relative; display: grid; justify-items: center; gap: 3px; padding: 7px 2px 6px; border-radius: 14px; background: var(--s2); border: 1px solid var(--linea); min-width: 0; line-height: 1.2; }
+.jt b { font: 700 28px/1 'Barlow Condensed', sans-serif; color: var(--texto); }
+.jt-n { font: 600 12.5px 'Barlow', sans-serif; color: var(--texto2); }
+.jt small { font: 500 12.5px 'Barlow', sans-serif; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.jt small.nj { white-space: normal; overflow: visible; line-height: 1.15; text-align: center; }
+.jt .gol { position: absolute; top: -6px; right: -4px; font-size: 12.5px; line-height: 1; font-style: normal; }
+.jt.top { background: rgba(61, 220, 143, 0.2); border: 2px solid #3ddc8f; } .jt.top b { color: #3ddc8f; }
+.jt.bien { background: rgba(47, 209, 143, 0.12); border-color: rgba(47, 209, 143, 0.35); } .jt.bien b { color: var(--sube); }
+.jt.medio { background: rgba(255, 197, 71, 0.12); border-color: rgba(255, 197, 71, 0.3); } .jt.medio b { color: var(--oro); }
+.jt.mal { background: rgba(255, 111, 97, 0.12); border-color: rgba(255, 111, 97, 0.3); } .jt.mal b { color: var(--baja); }
+.jt.nada b { color: var(--apagado); }
