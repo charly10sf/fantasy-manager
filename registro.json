@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/tchouameni-lo-intentara-f202611-n/": 1794503672000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250331/real-esperara-magia.html": 1794504716000,
    "SPORT|136384919": 1794505413000,
    "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000,
@@ -7429,13 +7428,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2833,
+   "ok": 2834,
    "fallos": 0,
-   "ejecuciones": 2263,
+   "ejecuciones": 2264,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T17:11:22.084Z"
+   "ultima": "2026-11-15T17:16:12.741Z"
   }
  },
  "ptsDirecto": {},
@@ -7452,15 +7451,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:11:27.234Z"
+   "ultimaBien": "2026-11-15T17:16:15.802Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:11:27.234Z"
+   "ultimaBien": "2026-11-15T17:16:15.802Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:11:27.234Z"
+   "ultimaBien": "2026-11-15T17:16:15.802Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7468,11 +7467,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:11:27.234Z"
+   "ultimaBien": "2026-11-15T17:16:15.802Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:11:27.234Z"
+   "ultimaBien": "2026-11-15T17:16:15.802Z"
   }
  },
  "avisos": [
