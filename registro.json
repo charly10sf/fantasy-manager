@@ -1956,7 +1956,6 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/20261112/11682301/seleccion-espanola-futbol-nations-league-republica-checa-lista-convocados-tres-descartes-laporte-nico-williams-valles-nuevo-diez-victor-munoz-fuente.html": 1794476843000,
-   "SPORT|136324306": 1794475127000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-rincon-caen-convocatoria-euskal-selekzioa-amistoso-20261112113833-nt.html": 1794479913000,
    "SPORT|136360245": 1794476991000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250174/vivian-hugo-rincon-sufren-sendas-sobrecargas.html": 1794480892000,
@@ -7536,13 +7535,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2737,
+   "ok": 2738,
    "fallos": 0,
-   "ejecuciones": 2167,
+   "ejecuciones": 2168,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T09:16:14.754Z"
+   "ultima": "2026-11-15T09:21:19.784Z"
   }
  },
  "ptsDirecto": {},
@@ -7559,15 +7558,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:16:22.245Z"
+   "ultimaBien": "2026-11-15T09:21:23.785Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:16:22.245Z"
+   "ultimaBien": "2026-11-15T09:21:23.785Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:16:22.245Z"
+   "ultimaBien": "2026-11-15T09:21:23.785Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7575,11 +7574,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:16:22.245Z"
+   "ultimaBien": "2026-11-15T09:21:23.785Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:16:22.245Z"
+   "ultimaBien": "2026-11-15T09:21:23.785Z"
   }
  },
  "avisos": [
