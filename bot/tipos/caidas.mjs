@@ -102,7 +102,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const p = c.parte;
     return jugadorH({ id: c.id, nickname: c.nombre, positionId: c.pos, teamId: c.teamId, equipo: c.equipo, averagePoints: c.media },
       { estado: estadoH(c), tit: c.estado === 'duda' && c.pct != null ? { pct: c.pct } : null,
-        motivo: c.estado === 'sancionado' ? (c.motivoSan ? c.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
+        motivo: c.estado === 'sancionado' ? (c.motivoSan ? c.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p, ahora) ? ` ${desdeTxt(p, ahora)}` : ''}` : '',
         plazo: c.estado === 'lesionado' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
         extra: { titularHabitual: true, ...(c.estado === 'lesionado' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {}),
           ...(L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? { minutos: c.n60 === c.ult ? `60 minutos o más en sus ${c.ult} últimos partidos` : `60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos` } : {}) } });
@@ -149,7 +149,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       : dudaWeb ? `🚨 ${c.nombre} apunta a perderse ${pr ? `el partido contra ${el(pr.rival)}` : 'el próximo partido'}`
       : R([`🚨 ${c.nombre} se cae del once ${del(c.equipo)}`, `🚨 ${cap(el(c.equipo))} pierde a ${c.nombre}`, c.media >= 5 ? `🚨 Baja importante en ${el(c.equipo)}: ${c.nombre}` : `🚨 ${c.nombre} no estará con ${el(c.equipo)}`], 'cab');
     const ideas = [
-      p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
+      p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p, ahora) ? ` ${desdeTxt(p, ahora)}` : ''}`, prio: 9 } : null,
       p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ Aún no está descartado del todo', '⁉️ De momento no está descartado'], 'desc'), prio: 7 } : null,
       c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,

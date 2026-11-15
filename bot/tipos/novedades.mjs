@@ -7,7 +7,8 @@ import { tweet, cap, segunda, proximoPartido, paraLa, cuando, lejos, aparte } fr
 import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { clubes as clubesH, partido as partidoH, jugador as jugadorH, sinLiga } from '../lib/hechos.mjs';
-import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
+import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria, lesionNueva } from '../lib/partes.mjs';
+import { marcarSeleccion } from '../lib/lesion-seleccion.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
 import { prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
@@ -18,7 +19,7 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const ESTADO_DE = { lesion: 'injured', sancion: 'suspended', vuelve: 'ok' };
 const HORA = 36e5;
 
-export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, paron = null, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga, info = null }) {
+export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, paron = null, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga, info = null, pedirActas = undefined }) {
   const [hD, hH] = horas(config, 'horasNovedades', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   const actual = {};
@@ -70,6 +71,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   if (listos.length < eventos.length) log(`  (novedades) sin parte todavía, esperan: ${eventos.filter((e) => !listos.includes(e)).map((e) => e.nombre).join(', ')}`);
   eventos.length = 0; eventos.push(...listos);
   if (!eventos.length) return [];
+  // en el parón, una lesión de hoy o de ayer: ¿fue jugando con su selección? (lib/lesion-seleccion.mjs; Carlos, 16 nov, Pubill)
+  await marcarSeleccion(eventos, { jugadores, equipos, paron, ahora, registro, log, ...(pedirActas ? { pedir: pedirActas } : {}) }).catch(() => {});
   log(`  (novedades) ${eventos.length} pendientes: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
   eventos.sort((a, b) => b.media - a.media);
   // la ficha y el histórico de valor de los que pueden salir, para su dato (lib/datos-jugador.mjs; Carlos, 9 nov: no siempre la media)
@@ -107,8 +110,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     if (e.que === 'lesion') {
       const dudaWeb = p && p.estado === 'duda';
       const venta = ventaObligatoria(p, ahora);
-      cab = R([`🚨 ${e.nombre} se cae por lesión`, `🚨 Saltan las alarmas con ${e.nombre}`, `🚨 Lesión de ${e.nombre}`], 'cabL');
-      ideas = [p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
+      const sl = e.seleccion;
+      cab = sl ? R([`🚨 ${e.nombre} vuelve tocado de la selección`, `🚨 Mal parón para ${e.nombre}`, `🚨 Saltan las alarmas con ${e.nombre}`], 'cabLS')
+        : R([`🚨 ${e.nombre} se cae por lesión`, `🚨 Saltan las alarmas con ${e.nombre}`, `🚨 Lesión de ${e.nombre}`], 'cabL');
+      // con la selección, lo que pasó en el partido delante y el parte detrás, sin la fecha («⚠️ Se retiró lesionado en el minuto 21 del
+      // partido de España contra Inglaterra; de momento, molestias sin determinar»)
+      ideas = [sl ? { t: `⚠️ ${cap(sl.cuando === 'hoy' || sl.cuando === 'ayer' ? `${sl.cuando} ${sl.txt}` : sl.txt)}${p && p.lesion ? `; de momento, ${lesionTxt(p)}` : ''}`, prio: 9 }
+        : p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p, ahora) ? ` ${desdeTxt(p, ahora)}` : ''}`, prio: 9 } : null,
         p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ De momento no está descartado', '⁉️ Aún no está descartado del todo'], 'desc'), prio: 7 } : null,
         mediaT, { t: venta ? '💸 Venta obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
@@ -153,11 +161,15 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const hechos = { tipo: 'novedades', noticia: e.que === 'vuelve' ? `vuelve a estar disponible: ${e.antes === 'injured' ? 'estaba lesionado' : e.antes === 'suspended' ? 'estaba sancionado' : 'estaba en duda'}`
       : e.que === 'lesion' ? (estadoH === 'duda' ? 'es duda' : 'está lesionado') : 'está sancionado',
       jugadores: [jugadorH(jH, { equipos, estado: estadoH, tit: titH,
-        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
+        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '')
+          : e.seleccion ? `${e.seleccion.txt}${p && p.lesion ? `; lo que se sabe de momento: ${lesionTxt(p)}` : ''}`
+          : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p, ahora) ? ` ${desdeTxt(p, ahora)}` : ''}` : '',
         plazo: e.que === 'lesion' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
-        extra: e.que === 'lesion' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {} })],
+        extra: { ...(e.que === 'lesion' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {}),
+          ...(e.que === 'lesion' && e.seleccion ? { ...e.seleccion.hechos, ojo: 'la lesión es de ese partido con la selección: es nueva, no la viene arrastrando de antes' } : {}),
+          ...(e.que === 'lesion' && !e.seleccion && lesionNueva(p, ahora) ? { ojo: lesionNueva(p, ahora) } : {}) } })],
       ...(e.pp ? { partido: partidoH(e.pp, { equipo: e.equipo, riv: rivH, posId: e.pos, ahora, paron }) } : {}), clubes: clubesH(e.equipo, e.pp && e.pp.rival), etiqueta: etiquetaH };
-    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(dato ? dato.numeros : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(dato ? dato.numeros : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.seleccion ? e.seleccion.numeros : []), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
@@ -196,13 +208,14 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const hechos = { tipo: 'novedades', noticia: 'novedades de varios jugadores: lesiones, sanciones o vueltas',
       jugadores: xs.map((e) => jugadorH(porId.get(String(e.id)), { equipos, principal: true,
         estado: e.que === 'lesion' ? (e.parte && e.parte.estado === 'duda' ? 'duda' : 'lesionado') : e.que === 'sancion' ? 'sancionado' : 'disponible',
-        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : e.que === 'lesion' && e.parte && e.parte.lesion ? lesionTxt(e.parte) : '',
-        extra: e.pp ? { proximoRival: el(e.pp.rival) } : {} })),
+        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : e.que === 'lesion' && e.seleccion ? e.seleccion.txt : e.que === 'lesion' && e.parte && e.parte.lesion ? lesionTxt(e.parte) : '',
+        extra: { ...(e.pp ? { proximoRival: el(e.pp.rival) } : {}), ...(e.que === 'lesion' && e.seleccion ? { ...e.seleccion.hechos, ojo: 'la lesión es de ese partido con la selección: es nueva, no la viene arrastrando de antes' } : {}),
+          ...(e.que === 'lesion' && !e.seleccion && lesionNueva(e.parte, ahora) ? { ojo: lesionNueva(e.parte, ahora) } : {}) } })),
       clubes: clubesH(xs.map((e) => e.equipo), xs.map((e) => e.pp && e.pp.rival)), etiqueta,
       // (9 nov) en el parón, cuándo vuelve la liga: el primero de los partidos que vienen
       ...(() => { const pp = xs.map((e) => e.pp).filter((p) => p && p.fecha).sort((a, b) => Date.parse(a.fecha) - Date.parse(b.fecha))[0];
         const lj = pp ? lejos(pp.fecha, { ahora, paron, jornada: pp.jornada }) : null; return lj ? { partido: { jornada: pp.jornada, fecha: pp.fecha, ...sinLiga(lj, pp.jornada) } } : {}; })() };
-    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
+    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.seleccion ? m.seleccion.numeros : []), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
       // buenas y malas noticias juntas: dos tarjetas, la verde con los que vuelven y la de bajas con el resto (Carlos, 5 nov 07:08)
       tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };

@@ -55,8 +55,35 @@ export function parteDe(j, lista) {
   return parte.length === 1 ? parte[0] : null;
 }
 
-/** «desde el 21 de octubre» */
-export const desdeTxt = (p) => (p && p.dia && p.mes ? `desde el ${p.dia} de ${MESES[p.mes - 1]}` : '');
+const DIA_MAD = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+/** el día del parte en AAAAMMDD (el año, el de hoy en Madrid; si saliera en el futuro, el anterior) o null */
+export function diaDelParte(p, ahora = Date.now()) {
+  if (!p || !p.dia || !p.mes) return null;
+  const hoy = DIA_MAD.format(new Date(ahora)).replace(/-/g, '');
+  let y = +hoy.slice(0, 4);
+  const d = (a) => `${a}${String(p.mes).padStart(2, '0')}${String(p.dia).padStart(2, '0')}`;
+  if (d(y) > hoy) y--;
+  return d(y);
+}
+/** cuántos días tiene el parte (0: es de hoy; 1: de ayer) o null si no trae fecha */
+export function diasDelParte(p, ahora = Date.now()) {
+  const d = diaDelParte(p, ahora);
+  if (!d) return null;
+  const hoy = DIA_MAD.format(new Date(ahora));
+  return Math.round((Date.parse(`${hoy}T12:00:00Z`) - Date.parse(`${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}T12:00:00Z`)) / 864e5);
+}
+/** «desde el 21 de octubre»; nada si el parte es de hoy o de ayer (Carlos, 16 nov: «¿cómo que desde el 15, si el 15 es hoy y ha sido
+    hace 2 h?»: con la fecha, la IA escribía «arrastra unas molestias desde el 15» de una lesión de esa misma noche) */
+export const desdeTxt = (p, ahora = Date.now()) => {
+  if (!(p && p.dia && p.mes)) return '';
+  const n = diasDelParte(p, ahora);
+  return n != null && n <= 1 ? '' : `desde el ${p.dia} de ${MESES[p.mes - 1]}`;
+};
+/** para los hechos de la IA: la lesión es nueva (de hoy o de ayer), no algo que viene arrastrando */
+export const lesionNueva = (p, ahora = Date.now()) => {
+  const n = diasDelParte(p, ahora);
+  return n === 0 ? 'se ha lesionado hoy: es una lesión nueva, no viene arrastrándola de antes' : n === 1 ? 'se lesionó ayer: es una lesión nueva, no viene arrastrándola de antes' : '';
+};
 /** «rotura fibrilar en el aductor» */
 // (un motivo personal, familiar o de salud, sin detalles: «motivos personales»; revisión total, M14)
 export const lesionTxt = (p) => (p && p.lesion ? (esPersonal(p.lesion) ? motivoPersonal(p.lesion) : minus(p.lesion)) : '');
