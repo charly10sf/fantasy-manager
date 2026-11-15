@@ -2124,7 +2124,8 @@
    "SPORT|136471879": 1794764063000,
    "SPORT|136475479": 1794767368000,
    "SPORT|136475632": 1794768134000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000
   },
   "hechos": [
    {
@@ -2287,7 +2288,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3208,17 +3209,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 213834,
-  "salida": 19670,
+  "entrada": 215883,
+  "salida": 19762,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.376165,
+  "dolares": 0.376416,
   "reservado": 0
  },
  "recientes": {
@@ -7445,13 +7446,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2866,
+   "ok": 2867,
    "fallos": 0,
-   "ejecuciones": 2296,
+   "ejecuciones": 2297,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T19:56:19.981Z"
+   "ultima": "2026-11-15T20:01:18.733Z"
   }
  },
  "ptsDirecto": {},
@@ -7468,15 +7469,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:56:23.330Z"
+   "ultimaBien": "2026-11-15T20:01:23.782Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:56:23.330Z"
+   "ultimaBien": "2026-11-15T20:01:23.782Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:56:23.330Z"
+   "ultimaBien": "2026-11-15T20:01:23.782Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7484,11 +7485,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:56:23.330Z"
+   "ultimaBien": "2026-11-15T20:01:23.782Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:56:23.330Z"
+   "ultimaBien": "2026-11-15T20:01:23.782Z"
   }
  },
  "avisos": [
