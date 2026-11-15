@@ -3182,3 +3182,25 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .pz-hoy-j a svg { width: 16px; height: 16px; }
 .pz-hoy-b { display: flex; flex-wrap: wrap; gap: 10px; }
 .pz-hoy-b .btn svg { width: 18px; height: 18px; }
+
+/* (0.7.13i) el semáforo de LaLiga Fantasy: en la pantalla de entrar y en la de «no se ha podido cargar» (semaforo.js) */
+.estado-ll { display: flex; align-items: flex-start; gap: 10px; width: 100%; margin: 0 0 14px; padding: 10px 12px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--texto); font: inherit; font-size: var(--t-sec2); line-height: 1.35; text-align: left; cursor: pointer; flex-wrap: wrap; }
+.estado-ll .el-p { flex: none; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: var(--apagado); }
+.estado-ll .el-c { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.estado-ll .el-c span { color: var(--apagado); font-size: var(--t-mini); }
+.estado-ll small { flex: 1 0 100%; padding-left: 20px; color: var(--apagado); font-size: 11px; }
+.estado-ll small:empty { display: none; }
+.estado-ll[data-nivel="verde"] .el-p { background: var(--sube); box-shadow: 0 0 0 4px rgba(47, 209, 143, 0.18); }
+.estado-ll[data-nivel="amarillo"] { border-color: rgba(255, 197, 71, 0.45); }
+.estado-ll[data-nivel="amarillo"] .el-p { background: var(--oro); box-shadow: 0 0 0 4px var(--oro-s); }
+.estado-ll[data-nivel="rojo"] { border-color: var(--rojo); }
+.estado-ll[data-nivel="rojo"] .el-p { background: var(--rojo); box-shadow: 0 0 0 4px rgba(238, 28, 60, 0.2); }
+.estado-ll[data-nivel="mirando"] .el-p { animation: el-latido 1.1s ease-in-out infinite; }
+@keyframes el-latido { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .estado-ll[data-nivel="mirando"] .el-p { animation: none; } }
+.carga .estado-ll { margin-top: 14px; }
+/* (0.7.13i) «Antes de entrar», en Quién usa la app */
+.emb-t { width: 100%; margin: 4px 0 10px; border-collapse: collapse; font-size: var(--t-sec2); }
+.emb-t th { color: var(--apagado); font-weight: 600; font-size: var(--t-mini); text-align: right; padding: 4px 6px; }
+.emb-t td { padding: 6px; border-top: 1px solid var(--linea); text-align: right; font-variant-numeric: tabular-nums; }
+.emb-t td:first-child, .emb-t th:first-child { text-align: left; padding-left: 0; }

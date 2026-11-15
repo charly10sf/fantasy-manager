@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13h';
+export const VERSION = '0.7.13i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13h';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13i', f: '2026-11-15', h: '23:45', t: 'Cómo va LaLiga Fantasy, de un vistazo',
+    cosas: [
+      { tipo: 'nuevo', d: 'conexion', t: 'El semáforo de LaLiga Fantasy', x: 'En la pantalla de entrar, y si tu liga no carga, un punto verde, amarillo o rojo te dice si los servidores de LaLiga Fantasy funcionan, van lentos o no responden. Así sabes si es cosa de LaLiga o vale la pena volver a probar. Tócalo para mirarlo otra vez.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'grafica', t: 'Lo que pasa antes de entrar', x: 'En Quién usa la app, el bloque «Antes de entrar»: cuántos ven la pantalla de entrar, tocan Google Play en la web, miran la liga de ejemplo, le dan a entrar, entran o fallan (y si falla LaLiga), hoy, ayer y en 7 días; por dónde y, si llegan a la web desde un enlace con campaña, de cuál. Sin saber de quién.' },
+    ],
+  },
   {
     v: '0.7.13h', f: '2026-11-15', h: '18:30', t: '«Tus rivales», al día',
     cosas: [

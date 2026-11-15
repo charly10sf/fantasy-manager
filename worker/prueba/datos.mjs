@@ -566,3 +566,66 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   r = await pide({ ruta: '/dinero', cuerpo: ap(5), e: { VINCULOS: KV } });
   ok(r.s === 503, `/dinero sin objeto: ${r.s}`);
 }
+
+// (0.7.13i) el semáforo de LaLiga (/estado) y la entrada paso a paso (/embudo), con un objeto que también lista y borra
+{
+  const objE = new Map();
+  const QRE = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objE.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => m.set(k, v), deleteAll: async () => m.clear(), setAlarm: async () => {}, getAlarm: async () => null,
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); },
+          list: async ({ prefix = '', end, reverse, limit = 1e9 } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (!end || k < end)).sort(); if (reverse) ks.reverse(); return new Map(ks.slice(0, limit).map((k) => [k, m.get(k)])); },
+        };
+        objE.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objE.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eE = { VINCULOS: KV, ADMINS: '667015', QR: QRE };
+  // LaLiga falsa: «vivo» contesta como ahora; «caido», 502 en todo
+  let laliga = 'vivo', probadas = 0;
+  const fAntes = globalThis.fetch;
+  globalThis.fetch = async (u, o) => {
+    const s = String(u);
+    if (s.includes('login.laliga.es') || s.includes('/teams-master') || (s.includes('/user/me') && !(o && o.headers && new Headers(o.headers).get('authorization')))) {
+      probadas++;
+      if (laliga === 'caido') return new Response('<h1>502</h1>', { status: 502 });
+      if (s.includes('login.laliga.es')) return new Response('{"error":"invalid_grant","error_description":"AADB2C90090: x"}', { status: 400 });
+      if (s.includes('/teams-master')) return new Response(JSON.stringify(Array.from({ length: 20 }, (_, i) => ({ id: i, name: `Equipo ${i}` }))), { status: 200 });
+      return new Response('{"message":"Unauthorized"}', { status: 401 });
+    }
+    return fAntes(u, o);
+  };
+  minuto();
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.s === 200 && r.j.nivel === 'verde' && r.j.login.e === 'ok' && r.j.api.e === 'ok' && r.j.cuenta.e === 'ok', `/estado con LaLiga bien: ${r.s} ${r.j && r.j.nivel}`);
+  const p0 = probadas;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE, ip: '10.0.0.7' });
+  ok(r.j.nivel === 'verde' && probadas === p0, 'el estado se guarda 2 minutos (no se vuelve a mirar)');
+  laliga = 'caido'; desfase += 3 * 60e3;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.nivel === 'rojo', `/estado con LaLiga caída: ${r.j && r.j.nivel}`);
+  // los pasos: sin sesión; uno raro, 400
+  laliga = 'vivo'; desfase += 3 * 60e3; minuto();
+  for (const p of ['ver', 'l', 'x-laliga', 'x-laliga', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
+  await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
+  r = await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'borrar', k: 'play' }), tk: '', e: eE });
+  ok(r.s === 400, `/embudo con un paso que no existe: ${r.s}`);
+  // con más fallos de LaLiga que entradas, amarillo aunque contesten
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.nivel === 'amarillo' && r.j.entradas.x === 3 && r.j.entradas.ok === 1, `/estado con 3 entradas fallidas y 1 buena: ${r.j && r.j.nivel}`);
+  const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
+  const hoy = Object.keys(dias)[0], d = dias[hoy];
+  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 3 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  // freno por IP: 20 al minuto
+  minuto();
+  const est = [];
+  for (let i = 0; i < 25; i++) est.push((await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-pc' }), tk: '', e: eE, ip: '9.9.9.9' })).s);
+  ok(est.filter((s) => s === 429).length === 5, `/embudo, 25 seguidas desde una IP: ${est.filter((s) => s === 429).length} con 429`);
+  globalThis.fetch = fAntes;
+}

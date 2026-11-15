@@ -1062,6 +1062,7 @@ export function quienUsaHTML(S) {
   const conApp = deLiga.size;
   const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
   if (Q.registro) h += registradosHTML(Q.registro, lista, ahora);
+  if (Q.embudo) h += embudoHTML(Q.embudo, ahora);
   h += tiempoHTML(lista, Q.dias);
   if (Q.registro) h += `<div class="grupo"><span>Tu liga</span></div>`;
   h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
@@ -1125,6 +1126,39 @@ function usoHTML(reg, activos) {
     ${(() => { const pc = (b, f) => (b + f ? `${Math.round((f / (b + f)) * 1000) / 10} %`.replace('.', ',') : '—'); return `<p class="quien-res">Cargas de la liga que fallan esta semana: <b>${pc(sem.a || 0, sem.f || 0)}</b> fuera de jornada · <b>${pc(sem.A || 0, sem.F || 0)}</b> con jornada en juego (${(sem.A || 0) + (sem.F || 0)} cargas).</p>`; })()}
     <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
     <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;
+}
+/**
+ * (0.7.13i) lo que pasa antes de entrar con la cuenta, sin saber de quién: cuántos ven la pantalla de entrar (una vez al día
+ * por dispositivo), tocan Google Play en la web, miran la liga de ejemplo, le dan a entrar, entran o fallan, hoy, ayer y en
+ * 7 días; por dónde y, si llegaron a la web desde una campaña con ?utm_source=…, de cuál
+ */
+const PASO_TXT = [
+  ['ver', 'Ven la pantalla de entrar'], ['play', 'Tocan Google Play en la web'], ['demo', 'Miran la liga de ejemplo'],
+  ['l', 'Le dan a entrar con LaLiga'], ['ok', 'Entran'], ['x-laliga', 'Falla LaLiga al entrar'], ['x-cancel', 'Cancelan en la página de LaLiga'],
+  ['x-otros', 'Otros fallos al entrar'],
+];
+const CANAL_PASO = { play: 'Google Play', github: 'APK', 'web-android': 'web en Android', 'web-iphone': 'web en iPhone', 'web-pc': 'web en ordenador' };
+const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
+function embudoHTML(E, ahora) {
+  const dias = (E && E.dias) || {};
+  const hoy = diaDe(ahora), ayer = diaDe(ahora - DIA);
+  const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
+  const deGrupo = (x, paso) => (paso === 'x-otros' ? OTROS_FALLOS.reduce((t, k) => t + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0);
+  // suma de los canales (sin las campañas, que repiten lo mismo) de los días que valgan
+  const suma = (vale, paso, solo = null) => Object.entries(dias).filter(([d]) => vale(d)).reduce((t, [, g]) => t
+    + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + deGrupo(x, paso), 0), 0);
+  const es7 = (d) => ult7.has(d);
+  const filas = PASO_TXT.map(([p, t]) => [t, suma((d) => d === hoy, p), suma((d) => d === ayer, p), suma(es7, p)]).filter((f, i) => i < 5 || f[3]);
+  let h = `<div class="grupo"><span>Antes de entrar</span></div>`;
+  if (!Object.keys(dias).length) return `${h}<p class="quien-res">Aún no hay nada: se empieza a contar con esta versión.</p>`;
+  h += `<table class="emb-t"><thead><tr><th></th><th>Hoy</th><th>Ayer</th><th>7 días</th></tr></thead><tbody>${filas.map(([t, a, b, c]) => `<tr><td>${esc(t)}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join('')}</tbody></table>`;
+  const canales = Object.keys(CANAL_PASO).map((k) => [k, suma(es7, 'ver', k), suma(es7, 'ok', k)]).filter((x) => x[1] || x[2]);
+  if (canales.length) h += `<p class="quien-res">Por dónde (7 días, ven · entran): ${canales.map(([k, v, o]) => `${CANAL_PASO[k]} <b>${v}</b> · <b>${o}</b>`).join(' — ')}</p>`;
+  const origenes = [...new Set(Object.values(dias).flatMap((g) => Object.keys(g).filter((k) => k.startsWith('o:'))))]
+    .map((k) => [k.slice(2), suma(es7, 'ver', k), suma(es7, 'ok', k)]).filter((x) => x[1] || x[2]).sort((a, b) => b[1] - a[1]);
+  if (origenes.length) h += `<p class="quien-res">De campañas a la web (7 días, ven · entran): ${origenes.map(([o, v, n]) => `${esc(o)} <b>${v}</b> · <b>${n}</b>`).join(' — ')}</p>`;
+  h += '<p class="peq apag">Sin saber de quién: cada móvil u ordenador cuenta una vez al día en «ven la pantalla», «Google Play» y «liga de ejemplo». Tus pruebas no cuentan. Quien llega desde el anuncio de Google Play cuenta al abrir la app.</p>';
+  return h;
 }
 function registradosHTML(reg, lista, ahora) {
   const hace = (d) => ahora - d * DIA;

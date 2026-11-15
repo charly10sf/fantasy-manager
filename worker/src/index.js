@@ -48,9 +48,18 @@
  *                             Con la sesión de LaLiga (solo para frenar a quien no juega), pero no se guarda de quién es.
  *   GET  /dinero/cal          la corrección de todos (calDinero), rehecha como mucho cada 6 h. Sin sesión.
  *
+ *   El semáforo de LaLiga y la entrada paso a paso (0.7.13i; Carlos, 15 nov: con 27 clics en la campaña de X no se veía
+ *   a nadie entrar, y lo que pasa antes de entrar con la cuenta no llegaba al servidor):
+ *   GET  /estado              { nivel: verde | amarillo | rojo, t, login, api, cuenta, entradas }: cómo van los servidores de
+ *                             LaLiga (web/js/estado-laliga.js), mirado como mucho cada 2 minutos para todos. Sin sesión.
+ *   POST /embudo              { p, k, o }: un paso antes de entrar (p: EMB_PASOS), desde dónde (k: EMB_CANALES) y de qué
+ *                             campaña llegó a la web (o: utm_source). Sin sesión, sin ids ni nada de quién es: solo se suma
+ *                             al día. Lo ve el dueño en /hola/todos (embudo).
+ *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
+import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
 
 const PERMITIDOS = new Set([
@@ -222,6 +231,8 @@ export const FRENOS = {
   plan: { min: 3 },
   // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
+  // (0.7.13i) los pasos antes de entrar y el semáforo de LaLiga, sin sesión: por IP
+  embudo: { min: 20, dia: 120 }, estado: { min: 30 },
 };
 async function frenoIP(req, env, c, nombre) {
   const f = FRENOS[nombre], ip = ipDe(req);
@@ -307,11 +318,13 @@ async function usar(req, env, c) {
 const idQR = (x) => (typeof x === 'string' && /^[A-Za-z0-9_-]{22,64}$/.test(x) ? x : null);
 
 export class Emparejar {
-  constructor(estado) { this.estado = estado; }
+  constructor(estado) { this.estado = estado; this.memo = {}; }
   async fetch(req) {
     const st = this.estado.storage;
     // los frenos por día (cabeHoy): un objeto por clave y día, que se borra solo a las 30 h
     const ruta = new URL(req.url).pathname;
+    // (0.7.13i) el semáforo de LaLiga y la entrada paso a paso, en «embudo|todos»
+    if (ruta === '/embudo/sumar' || ruta === '/embudo/leer' || ruta === '/estado') return embudoObjeto(st, ruta, req, this.memo);
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -1124,7 +1137,7 @@ async function hola(req, env, c, ruta) {
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
       else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
     }
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias }, 200, c);
+    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo: await leerEmbudo(env) }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }
@@ -1167,9 +1180,113 @@ export async function lanzarBot(env, pedir = fetch, inputs = null) {
 }
 
 // qué freno por IP lleva cada ruta (FRENOS)
+/* ---------- el semáforo de LaLiga y la entrada paso a paso (0.7.13i) ---------- */
+// Todo en un solo Durable Object («embudo|todos»): las cuentas de cada día (e|AAAA-MM-DD → { canal: { paso: n }, 'o:x': … }),
+// las entradas de cada hora para el semáforo (h|AAAA-MM-DDTHH → { ok, x }) y la última comprobación (est). Nunca pone alarma:
+// lo viejo se borra al leer.
+export const EMB_PASOS = new Set(['ver', 'demo', 'play', 'l', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
+export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
+const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
+const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
+const horaMadrid = (t = Date.now()) => `${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t))}T${horaMadridF.format(new Date(t)).padStart(2, '0')}`;
+const objEmbudo = (env) => env.QR.get(env.QR.idFromName('embudo|todos'));
+
+/** prueba cada cosa de PRUEBAS desde el Worker */
+export async function probarLaLiga(f = fetch) {
+  const vez = async (p) => {
+    const t0 = Date.now();
+    try {
+      const r = await f(p.url, { method: p.metodo, headers: p.cabeceras, body: p.cuerpo || undefined, signal: AbortSignal.timeout(ESTADO_TIEMPO), redirect: 'manual' });
+      const txt = await r.text();
+      return resultado(p, r.status, txt, Date.now() - t0);
+    } catch (e) { return resultado(p, 0, '', Date.now() - t0); }
+  };
+  // (la página de entrar de LaLiga da a veces un 503 suelto, como el «falla a la primera» al entrar: solo cuenta como caída
+  // si falla también la segunda; si la segunda va, cuenta lo que tardó)
+  const una = async (p) => { const a = await vez(p); return a.e === 'mal' ? vez(p) : a; };
+  const [login, api, cuenta] = await Promise.all([una(PRUEBAS.login), una(PRUEBAS.api), una(PRUEBAS.cuenta)]);
+  return { login, api, cuenta };
+}
+/** lo que hace el objeto: sumar un paso, leer los días y el estado */
+async function embudoObjeto(st, ruta, req, memo) {
+  if (ruta === '/embudo/sumar') {
+    const b = await req.json().catch(() => null);
+    if (!b || !EMB_PASOS.has(b.p) || !EMB_CANALES.has(b.k) || !/^\d{4}-\d\d-\d\d$/.test(b.d || '')) return new Response('mal', { status: 400 });
+    const kd = `e|${b.d}`, x = (await st.get(kd)) || {};
+    const sumar = (g) => { const o = x[g] || (x[g] = {}); o[b.p] = (o[b.p] || 0) + 1; };
+    sumar(b.k);
+    const o = typeof b.o === 'string' && /^[a-z0-9_-]{1,24}$/.test(b.o) ? b.o : '';
+    if (o && (x[`o:${o}`] || Object.keys(x).filter((k) => k.startsWith('o:')).length < EMB_ORIGENES)) sumar(`o:${o}`);
+    await st.put(kd, x);
+    if (b.p === 'ok' || b.p === 'x-laliga') {
+      const kh = `h|${b.h}`, y = (await st.get(kh)) || {};
+      y[b.p === 'ok' ? 'ok' : 'x'] = (y[b.p === 'ok' ? 'ok' : 'x'] || 0) + 1;
+      await st.put(kh, y);
+    }
+    return new Response('ok', { status: 200 });
+  }
+  if (ruta === '/embudo/leer') {
+    const viejos = [...(await st.list({ prefix: 'e|', end: `e|${diaHace(EMB_DIAS)}`, limit: 500 })).keys()];
+    for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+    const dias = {};
+    for (const [k, v] of await st.list({ prefix: 'e|', reverse: true, limit: EMB_VER })) dias[k.slice(2)] = v;
+    return new Response(JSON.stringify({ dias }), { status: 200 });
+  }
+  if (ruta === '/estado') {
+    const ya = memo.est || (await st.get('est'));
+    if (ya && Date.now() - ya.t < ESTADO_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+    // (dos a la vez: la segunda espera a la primera)
+    if (!memo.mirando) {
+      memo.mirando = (async () => {
+        const p = await probarLaLiga();
+        const ahora = Date.now(), horas = [horaMadrid(ahora), horaMadrid(ahora - 3600e3)];
+        const entradas = { ok: 0, x: 0 };
+        for (const h of horas) { const y = await st.get(`h|${h}`); if (y) { entradas.ok += y.ok || 0; entradas.x += y.x || 0; } }
+        const viejas = [...(await st.list({ prefix: 'h|', end: `h|${horaMadrid(ahora - 48 * 3600e3)}`, limit: 200 })).keys()];
+        if (viejas.length) await st.delete(viejas.slice(0, 128));
+        const est = { nivel: nivelDe(p, entradas), t: ahora, ...p, entradas };
+        await st.put('est', est);
+        memo.est = est;
+        return est;
+      })().finally(() => { memo.mirando = null; });
+    }
+    return new Response(JSON.stringify(await memo.mirando), { status: 200 });
+  }
+  return null;
+}
+// sin el objeto (si Cloudflare no dejó crearlo): el estado en la memoria del Worker, sin las entradas
+let ESTADO_MEM = null;
+async function estadoLaLiga(env, c) {
+  const cab = { ...c, 'cache-control': 'no-store' };
+  if (env.QR) {
+    try {
+      const r = await objEmbudo(env).fetch('https://embudo/estado');
+      if (r.status === 200) return new Response(await r.text(), { status: 200, headers: { ...cab, 'content-type': 'application/json' } });
+    } catch (e) { /* a la memoria */ }
+  }
+  if (!ESTADO_MEM || Date.now() - ESTADO_MEM.t > ESTADO_CADA) { const p = await probarLaLiga(); ESTADO_MEM = { nivel: nivelDe(p), t: Date.now(), ...p, entradas: null }; }
+  return json(ESTADO_MEM, 200, cab);
+}
+async function embudoApunte(req, env, c) {
+  const txt = await req.text();
+  if (txt.length > 400) return json({ e: 'Demasiados datos' }, 413, c);
+  let b;
+  try { b = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
+  if (!b || !EMB_PASOS.has(b.p) || !EMB_CANALES.has(b.k)) return json({ e: 'Paso no válido' }, 400, c);
+  if (!env.QR) return json({ ok: false }, 200, c);
+  const r = await objEmbudo(env).fetch('https://embudo/embudo/sumar', { method: 'POST', body: JSON.stringify({ p: b.p, k: b.k, o: b.o || '', d: hoyMadrid(), h: horaMadrid() }) });
+  return json({ ok: r.status === 200 }, 200, c);
+}
+/** los 14 últimos días, para «Quién usa la app» (null si no se puede) */
+async function leerEmbudo(env) {
+  if (!env.QR) return null;
+  try { const r = await objEmbudo(env).fetch('https://embudo/embudo/leer'); return r.status === 200 ? await r.json() : null; } catch (e) { return null; }
+}
+
 const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
   'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
+  'POST /embudo': 'embudo', 'GET /estado': 'estado',
 };
 
 export default {
@@ -1212,6 +1329,8 @@ export default {
       }
       if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
+      if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
+      if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);

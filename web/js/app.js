@@ -40,6 +40,7 @@ import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
+import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen } from './semaforo.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
 
@@ -84,6 +85,7 @@ function pantallaEntrar(error = '') {
       <li>${icono('rivales')}Lo que hace cada rival y quién va a por tus jugadores</li>
     </ul></div><div class="pant-d">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
+    ${estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
     <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
@@ -92,6 +94,9 @@ function pantallaEntrar(error = '') {
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
+  // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta
+  pintarEstado();
+  marcarPaso('ver', { una: true });
   // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12)
   if (!enApp && !movilDe()) iniciarQR(); else pararQR();
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
@@ -283,6 +288,7 @@ async function entrarConVinculo(j) {
   try {
     traerVinculo(j);
     contar('e');
+    marcarPaso('ok');
     S.D = null; S.planEstado = {};
     await cargar();
   } catch (e) { pantallaEntrar(e.message || String(e)); }
@@ -520,7 +526,7 @@ function cargaHTML(paso, error, liga) {
       </div>
       <div class="carga-der">
         ${error ? `<div class="fallo"><p>${esc(error.texto)}</p>${error.detalle && error.detalle !== error.texto ? `<p class="fallo-det">${esc(error.detalle)}</p>` : ''}</div>
-          <div class="carga-btns">${botonesError(error, icono)}</div>`
+          <div class="carga-btns">${botonesError(error, icono)}</div>${estadoHTML()}`
           : `<ol class="carga-pasos">${pasosHTML(paso)}</ol>
           <div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
       </div>
@@ -547,6 +553,8 @@ function pantallaCarga(paso = -1, error = null) {
   }
   // la primera vez (o desde la pantalla de arranque de index.html): se pinta entera
   raiz().innerHTML = cargaHTML(paso, error, liga);
+  // (0.7.13i) si no carga la liga, el semáforo dice si es cosa de LaLiga
+  if (error) pintarEstado();
   clearInterval(consejoT); consejoT = null;
   clearInterval(relojCarga); relojCarga = null;
   if (!error) {
@@ -2627,8 +2635,10 @@ window.vueltaLogin = async () => {
   const url = nativo.loginPendiente();
   if (!url) return;
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
+  // (0.7.13i) si entra o en qué falla, sin cuenta (semaforo.js): los fallos de la carga de después no cuentan aquí
+  try { await terminarLogin(url); } catch (e) { marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); return; }
+  marcarPaso('ok');
   try {
-    await terminarLogin(url);
     contar('e');
     mirarCuentaNueva();
     LS.del('demo');
@@ -2770,6 +2780,8 @@ if (enApp) {
 
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {
+  // (0.7.13i) el botón de Google Play de la web, sin cuenta: una vez al día
+  if (!enApp && !haySesion() && ev.target.closest && ev.target.closest('a[href*="play.google.com/store/apps/details"]')) marcarPaso('play', { una: true });
   const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-club],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
   if (!el) return;
   const d = el.dataset;
@@ -2841,7 +2853,8 @@ document.addEventListener('click', async (ev) => {
       pintarVivo({ forzar: true });
       break;
     }
-    case 'entrar': try { contar('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    case 'entrar': try { contar('l'); marcarPaso('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    case 'mirarEstado': pintarEstado(true); break;
     case 'entTab': {
       const t = d.tab === 'app' ? 'app' : 'nuevo';
       LS.set('entTab', t);
@@ -2853,7 +2866,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'abrirSinApp': { const x = document.querySelector('#entPanNuevo details.sin-app'); if (x) { x.open = true; x.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break; }
-    case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
+    case 'entrarDemo': { if (!haySesion()) marcarPaso('demo', { una: true }); const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
       if (cod.length !== 8) { errorCodigo(cod.length ? `El código tiene 8 letras y números (llevas ${cod.length})` : 'Escribe el código de 8 letras y números', el); break; }
@@ -2870,7 +2883,9 @@ document.addEventListener('click', async (ev) => {
       const url = (($('#vueltaWeb') || {}).value || '').trim();
       if (!/[?&]code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
       el.disabled = true;
-      try { await terminarLogin(url); contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
+      try { await terminarLogin(url); } catch (e) { marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); break; }
+      marcarPaso('ok');
+      try { contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
       break;
     }
     case 'vincularWeb': {
@@ -3523,6 +3538,7 @@ async function arrancar() {
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
   leerInvitacion();
+  leerOrigen();
   // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
   mirarWebNueva();
   comprobarFotos();
