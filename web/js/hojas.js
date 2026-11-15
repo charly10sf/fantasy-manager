@@ -1028,49 +1028,107 @@ function bandejaAvisos(A) {
 }
 
 /* ================= QUIÉN USA LA APP (el dueño) ================= */
+/* (0.7.13k, Carlos, 16 nov: «más sencilla e intuitiva») arriba, las cifras de un vistazo y lo que hay que mirar (quién tiene
+   la app de Google Play vieja y por eso no le llega la web nueva, quién sigue con el APK de GitHub, a quién no le carga la
+   liga); debajo, cuatro pestañas: Cuentas (tu liga y el resto, con la versión de la web y de la app de cada uno), Tiempo,
+   Antes de entrar y Altas. Se abre tocando la etiqueta BETA del logo (solo el dueño) o desde Ajustes */
+const QUIEN_TABS = [['cuentas', 'Cuentas'], ['tiempo', 'Tiempo'], ['entrar', 'Antes de entrar'], ['altas', 'Altas']];
+const DENTRO_Q = 12 * 60e3;
+const webDe = (x) => String((x && x.v) || '').replace(/ !$/, '');
+/** el código de la app de Google Play a partir del cual llega la web de ahora: «playMin» de limites.json y, si no está,
+    el más bajo de los que ya tienen la web de ahora (esos tienen por fuerza la parte del móvil al día) */
+export function playMinimo(lista) {
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const conf = Math.round(Number(cfg.playMin) || 0);
+  if (conf) return conf;
+  const al = (lista || []).filter((x) => x.canal === 'play' && x.app > 0 && webDe(x) === VERSION).map((x) => x.app);
+  return al.length ? Math.min(...al) : 0;
+}
+/** lo que le pasa a una cuenta: { tipo, txt } o null. playVieja: su app de Google Play no recibe la web nueva */
+export function problemaDe(x, minPlay) {
+  if (!x) return null;
+  const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
+  if (x.canal === 'github') return { tipo: 'github', txt: 'APK de GitHub: ya no se actualiza, tiene que pasarse a Google Play' };
+  if (x.canal === 'play' && atras && minPlay && x.app > 0 && x.app < minPlay) return { tipo: 'play', txt: `App de Google Play vieja (${x.app}; hace falta la ${minPlay}): no le llega la web nueva hasta que Google Play se la actualice` };
+  if (/ !$/.test(x.v || '')) return { tipo: 'carga', txt: 'No le carga la liga' };
+  if (atras && x.ad) return { tipo: 'web', txt: `La web no se le pone sola: ${x.ad}` };
+  return null;
+}
 export function quienUsaHTML(S) {
   const Q = S.quien || {};
   let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
   const lista = Q.lista || [], ahora = Q.ahora || Date.now();
+  const minPlay = playMinimo(lista);
   const porUid = new Map(lista.map((x) => [String(x.uid), x]));
   const D = S.D;
   const tabla = D ? [...D.clasif].sort((a, b) => a.pos - b.pos) : [];
   const deLiga = new Set();
-  const DENTRO = 12 * 60e3;
-  const fila = (nombre, equipo, x) => {
-    const dentro = x && ahora - x.ultima < DENTRO;
-    const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
-    const fallo = x && / !$/.test(x.v || '');
-    const sub = !x ? 'Aún no ha entrado'
-      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.ad && x.v && cmpVer(String(x.v).replace(/ !$/, ''), VERSION) < 0 ? ` · <b class="rojo">no se actualiza: ${esc(x.ad)}</b>` : ''}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}`;
-    return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
-  };
-  let filas = '';
   // por su número de cuenta; si no cuadra (LaLiga no siempre da el mismo id en la clasificación que en la cuenta),
   // por el nombre de su equipo en esta liga o por su nombre de mánager
   const ligaId = D && D.liga ? String(D.liga.id) : '';
   const buscar = (e) => porUid.get(String(e.managerId)) || porUid.get(String(e.userId))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && String(x.liga || '') === ligaId && norm(x.equipo) === norm(e.nombre))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.nombre && e.manager && norm(x.nombre) === norm(e.manager));
-  for (const e of tabla) {
-    const x = buscar(e);
-    if (x) deLiga.add(String(x.uid));
-    filas += fila(e.manager || e.nombre, e.manager ? e.nombre : '', x);
-  }
-  const conApp = deLiga.size;
-  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
-  if (Q.registro) h += registradosHTML(Q.registro, lista, ahora);
-  if (Q.embudo) h += embudoHTML(Q.embudo, ahora);
-  h += tiempoHTML(lista, Q.dias);
-  if (Q.registro) h += `<div class="grupo"><span>Tu liga</span></div>`;
-  h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
-  h += `<div class="quien-l">${filas}</div>`;
+  const liga = tabla.map((e) => { const x = buscar(e); if (x) deLiga.add(String(x.uid)); return { nombre: e.manager || e.nombre, equipo: e.manager ? e.nombre : '', x }; });
   const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
-  if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
-  h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo, o tiene una versión anterior a la 0.4.4, no sale.</p>`;
+  const hace = (d) => ahora - d * DIA;
+  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO_Q).length;
+  const hoy = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length;
+  const reg = Q.registro || [];
+  const sem = reg.length ? reg.filter((x) => x.ultima >= hace(7)).length : lista.filter((x) => x.ultima >= hace(7)).length;
+  h += `<div class="reg-cifras q-cifras">
+    <div><b>${dentro}</b><span>dentro ahora</span></div>
+    <div><b>${hoy}</b><span>han entrado hoy</span></div>
+    <div><b>${sem}</b><span>activas en 7 días</span></div>
+    <div><b>${reg.length || lista.length}</b><span>cuentas en total</span></div>
+  </div>`;
+  // lo que hay que mirar, de los que han entrado en los últimos 30 días
+  const recientes = lista.filter((x) => x.ultima >= hace(30));
+  const grupos = { play: [], github: [], carga: [], web: [] };
+  for (const x of recientes) { const p = problemaDe(x, minPlay); if (p) grupos[p.tipo].push(x); }
+  const nombres = (xs) => xs.slice(0, 6).map((x) => esc(x.nombre || x.equipo || 'Sin nombre')).join(', ') + (xs.length > 6 ? ` y ${xs.length - 6} más` : '');
+  const alertas = [
+    grupos.play.length && `<b>${grupos.play.length} con la app de Google Play vieja</b>: no les llega la web nueva hasta que Google Play les actualice la app (${nombres(grupos.play)}).`,
+    grupos.github.length && `<b>${grupos.github.length} con el APK de GitHub</b>, que ya no se actualiza (${nombres(grupos.github)}).`,
+    grupos.carga.length && `<b>${grupos.carga.length} a los que no les carga la liga</b> (${nombres(grupos.carga)}).`,
+    grupos.web.length && `<b>${grupos.web.length} a los que la web no se les pone sola</b> (${nombres(grupos.web)}).`,
+  ].filter(Boolean);
+  h += alertas.length
+    ? `<div class="q-alerta">${icono('alerta')}<div>${alertas.map((t) => `<p>${t}</p>`).join('')}</div></div>`
+    : '<p class="quien-res q-ok">Todos los que han entrado en 30 días tienen la app al día.</p>';
+  const tab = QUIEN_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'cuentas';
+  h += `<div class="filtros q-tabs" role="tablist">${QUIEN_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'activo' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
+  if (tab === 'cuentas') {
+    const conApp = liga.filter((f) => f.x).length;
+    if (tabla.length) {
+      h += `<div class="grupo"><span>Tu liga · ${conApp} de ${tabla.length} la usan</span></div>`;
+      // primero los que la usan; los que no, en una línea (antes, una fila por cada uno)
+      const usan = liga.filter((f) => f.x).sort((a, b) => b.x.ultima - a.x.ultima), no = liga.filter((f) => !f.x);
+      if (usan.length) h += `<div class="quien-l">${usan.map((f) => filaQuien(f.nombre, f.equipo, f.x, ahora, minPlay)).join('')}</div>`;
+      if (no.length) h += `<p class="quien-res q-no"><b>No la usan:</b> ${no.map((f) => esc(f.nombre)).join(', ')}.</p>`;
+    }
+    if (fuera.length) h += `<div class="grupo"><span>${tabla.length ? 'De fuera de tu liga' : 'Cuentas'} · ${fuera.length}</span></div><div class="quien-l">${fuera.map((x) => filaQuien(x.nombre || 'Sin nombre', x.equipo, x, ahora, minPlay)).join('')}</div>`;
+    h += '<p class="peq apag" style="margin-top:14px">Punto verde: ha tenido la app abierta en los últimos 12 minutos. «Web» es la versión de la app que tiene puesta y «app», la de Google Play instalada en su móvil. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo no sale.</p>';
+  } else if (tab === 'tiempo') h += tiempoHTML(lista, Q.dias);
+  else if (tab === 'entrar') h += Q.embudo ? embudoHTML(Q.embudo, ahora) : '<p class="quien-res">Aún no hay nada contado.</p>';
+  else h += reg.length ? registradosHTML(reg, lista, ahora) : '<p class="quien-res">Aún no hay altas contadas.</p>';
   return h;
+}
+const DONDE_Q = { web: 'Web', play: 'Google Play', github: 'APK de GitHub' };
+function filaQuien(nombre, equipo, x, ahora, minPlay) {
+  if (!x) return `<div class="quien-f no"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}Aún no ha entrado</span></div></div>`;
+  const esta = ahora - x.ultima < DENTRO_Q;
+  const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
+  const p = problemaDe(x, minPlay);
+  const chips = [
+    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}</i>`,
+    v ? `<i class="q-chip${atras ? ' viejo' : ''}">web ${esc(v)}</i>` : '',
+    x.canal !== 'web' && x.app > 0 ? `<i class="q-chip${p && p.tipo === 'play' ? ' mal' : ''}">app ${esc(String(x.app))}</i>` : '',
+  ].join('');
+  const cuandoTxt = esta ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`;
+  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${cuandoTxt}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${p ? `<span class="q-mal">${esc(p.txt)}</span>` : ''}</div>${x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
 }
 
 /** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */
@@ -1176,12 +1234,7 @@ function registradosHTML(reg, lista, ahora) {
   const max = Math.max(1, ...semanas.map((x) => x.n));
   const porUid = new Map(lista.map((x) => [String(x.uid), x]));
   const ultimas = [...reg].sort((a, b) => b.primera - a.primera).slice(0, 8);
-  let h = `<div class="grupo"><span>Todas las cuentas</span></div>`;
-  h += `<div class="reg-cifras">
-    <div><b>${reg.length}</b><span>han entrado alguna vez</span></div>
-    <div><b>${activos.d7}</b><span>activas esta semana</span></div>
-    <div><b>${activos.d30}</b><span>activas en 30 días</span></div>
-  </div>`;
+  let h = `<p class="quien-res">Han entrado alguna vez <b>${reg.length}</b> cuentas · activas en 30 días <b>${activos.d30}</b>.</p>`;
   // ligas con varios que la usan (roadmap: la unidad de captación es la liga): por la liga de /hola, últimos 30 días
   const porLiga = {};
   for (const x of lista) if (x.liga && x.ultima >= hace(30)) porLiga[x.liga] = (porLiga[x.liga] || 0) + 1;

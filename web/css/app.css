@@ -1370,6 +1370,21 @@ body.en-tour { overflow: hidden; }
 .reg-b i { display: block; width: 100%; max-width: 26px; min-height: 2px; border-radius: 5px 5px 2px 2px; background: var(--rojo-l); align-self: end; }
 .reg-n { font: 600 var(--t-mini) 'Barlow'; color: var(--texto2); min-height: 15px; }
 .reg-b small { font-size: var(--t-mini); color: var(--apagado); white-space: nowrap; }
+.q-cifras { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 440px) { .q-cifras { grid-template-columns: repeat(2, 1fr); } .q-tabs button { padding: 8px 10px; font-size: var(--t-sec2); } }
+.q-alerta { display: flex; gap: 10px; margin: 0 0 14px; padding: 11px 13px; border-radius: var(--r-ctl); background: var(--oro-s); border: 1px solid rgba(255, 197, 71, 0.4); }
+.q-alerta > .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--oro); }
+.q-alerta p { margin: 0 0 6px; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto); }
+.q-alerta p:last-child { margin-bottom: 0; }
+.q-ok { color: var(--sube); }
+.q-no { margin-top: 10px; }
+.q-tabs { margin-top: 4px; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.q-tabs button { padding: 8px 12px; white-space: nowrap; }
+.q-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.q-chip { font-style: normal; font-size: var(--t-mini); font-weight: 600; color: var(--texto2); padding: 2px 7px; border-radius: 999px; background: var(--plano2); }
+.q-chip.viejo { color: var(--oro); background: var(--oro-s); }
+.q-chip.mal { color: var(--texto); background: var(--rojo-s); box-shadow: inset 0 0 0 1px var(--rojo-l); }
+.qf-c .q-mal { margin-top: 3px; font-size: var(--t-sec2); line-height: 1.4; color: var(--rojo-texto); }
 /* las funciones top bloqueadas (hasta los anuncios) */
 .bloq { display: flex; align-items: center; gap: 12px; width: 100%; margin: 12px 0; padding: 13px 14px; border-radius: var(--r-tarj); text-align: left; color: var(--texto);
   background: repeating-linear-gradient(135deg, rgba(255, 197, 71, 0.07) 0 10px, rgba(255, 197, 71, 0.03) 10px 20px), var(--plano2); border: 1px dashed rgba(255, 197, 71, 0.45); }

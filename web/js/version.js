@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13j';
+export const VERSION = '0.7.13k';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,12 @@ export const VERSION = '0.7.13j';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13k', f: '2026-11-16', h: '00:45', t: 'Quién usa la app, más clara',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, rehecha', x: 'Se abre tocando la etiqueta BETA del logo. Arriba, las cifras de un vistazo y un aviso con quién tiene la app de Google Play vieja (y por eso no le llega la versión nueva), quién sigue con la app de fuera de Google Play y a quién no le carga la liga. Debajo, cuatro pestañas: Cuentas, con la versión que tiene cada uno; Tiempo; Antes de entrar, que antes no salía; y Altas.' },
+    ],
+  },
   {
     v: '0.7.13j', f: '2026-11-16', h: '00:34', t: 'Solo desde Google Play',
     cosas: [

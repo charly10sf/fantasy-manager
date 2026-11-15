@@ -596,7 +596,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="avisos" aria-label="Versión beta: reportar un fallo o proponer una idea">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="beta" aria-label="${avisosGuardados().admin ? 'Versión beta: quién usa la app' : 'Versión beta: reportar un fallo o proponer una idea'}">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -1761,9 +1761,11 @@ function repintarAvisos() {
 }
 /** (el dueño) quién de la liga tiene la app, cuándo entró y quién está dentro ahora */
 async function abrirQuien() {
-  S.quien = { cargando: true };
+  const tab = (S.quien && S.quien.tab) || 'cuentas';
+  S.quien = { cargando: true, tab };
   hoja('quien');
-  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null }; }
+  // (0.7.13k) también «embudo» (Antes de entrar), que hasta ahora no se guardaba y no salía
+  try { const r = await quienUsa(); S.quien = { tab, lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null }; }
   catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }
@@ -2929,6 +2931,9 @@ document.addEventListener('click', async (ev) => {
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
+    // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
+    case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;
+    case 'quienTab': if (S.quien) { S.quien.tab = d.t; repintarHoja(); } break;
     case 'bloqueada': {
       // en la de Google Play se abren viendo un anuncio
       if (topConAnuncio()) {
