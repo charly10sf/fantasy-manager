@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
@@ -2136,18 +2135,6 @@
    "SPORT|136465336": 1794748235000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794493034000,
-    "id": "3265",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Fofana no entrena con el grupo del Sevilla FC",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136324164",
     "medio": "SPORT",
@@ -7451,13 +7438,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2797,
+   "ok": 2798,
    "fallos": 0,
-   "ejecuciones": 2227,
+   "ejecuciones": 2228,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T14:16:13.058Z"
+   "ultima": "2026-11-15T14:21:11.935Z"
   }
  },
  "ptsDirecto": {},
@@ -7474,15 +7461,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:16:22.929Z"
+   "ultimaBien": "2026-11-15T14:21:16.301Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:16:22.929Z"
+   "ultimaBien": "2026-11-15T14:21:16.301Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:16:22.929Z"
+   "ultimaBien": "2026-11-15T14:21:16.301Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7490,11 +7477,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:16:22.929Z"
+   "ultimaBien": "2026-11-15T14:21:16.301Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:16:22.929Z"
+   "ultimaBien": "2026-11-15T14:21:16.301Z"
   }
  },
  "avisos": [
