@@ -1951,13 +1951,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
-   "SPORT|136362137": 1794482672000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
    "SPORT|136368075": 1794483010000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000,
@@ -2139,18 +2136,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794482666000,
-    "id": "3265",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Fofana no entrena con el grupo del Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html",
     "medio": "Mundo Deportivo",
@@ -7532,13 +7517,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2762,
+   "ok": 2763,
    "fallos": 0,
-   "ejecuciones": 2192,
+   "ejecuciones": 2193,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:21:12.719Z"
+   "ultima": "2026-11-15T11:26:12.150Z"
   }
  },
  "ptsDirecto": {},
@@ -7555,15 +7540,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:21:18.555Z"
+   "ultimaBien": "2026-11-15T11:26:15.725Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:21:18.555Z"
+   "ultimaBien": "2026-11-15T11:26:15.725Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:21:18.555Z"
+   "ultimaBien": "2026-11-15T11:26:15.725Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7571,11 +7556,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:21:18.555Z"
+   "ultimaBien": "2026-11-15T11:26:15.725Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:21:18.555Z"
+   "ultimaBien": "2026-11-15T11:26:15.725Z"
   }
  },
  "avisos": [
