@@ -1955,7 +1955,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
    "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
-   "SPORT|136358456": 1794472225000,
    "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
@@ -2142,7 +2141,8 @@
    "SPORT|136444741": 1794722432000,
    "SPORT|136445752": 1794722431000,
    "SPORT|136456829": 1794715260000,
-   "SPORT|136452331": 1794691903000
+   "SPORT|136452331": 1794691903000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000
   },
   "hechos": [
    {
@@ -2379,7 +2379,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3288,17 +3288,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152917,
-  "salida": 9107,
+  "entrada": 155028,
+  "salida": 9199,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.364791,
+  "dolares": 0.365048,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2727,
+   "ok": 2728,
    "fallos": 0,
-   "ejecuciones": 2157,
+   "ejecuciones": 2158,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T08:26:09.752Z"
+   "ultima": "2026-11-15T08:31:12.489Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:26:14.066Z"
+   "ultimaBien": "2026-11-15T08:31:19.820Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:26:14.066Z"
+   "ultimaBien": "2026-11-15T08:31:19.820Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:26:14.066Z"
+   "ultimaBien": "2026-11-15T08:31:19.820Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:26:14.066Z"
+   "ultimaBien": "2026-11-15T08:31:19.820Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T08:26:14.066Z"
+   "ultimaBien": "2026-11-15T08:31:19.820Z"
   }
  },
  "avisos": [
