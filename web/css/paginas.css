@@ -326,3 +326,8 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .jt.medio { background: rgba(255, 197, 71, 0.12); border-color: rgba(255, 197, 71, 0.3); } .jt.medio b { color: var(--oro); }
 .jt.mal { background: rgba(255, 111, 97, 0.12); border-color: rgba(255, 111, 97, 0.3); } .jt.mal b { color: var(--baja); }
 .jt.nada b { color: var(--apagado); }
+.bq > .barras-eq { max-width: 600px; }
+.barras-eq text { font-size: 10px; }
+.barras-eq .g-et { fill: var(--texto); font: 700 12px 'Barlow Condensed', sans-serif; }
+.barras-eq .g-res { font-size: 9.5px; } .barras-eq .r-G { fill: var(--sube); } .barras-eq .r-E { fill: var(--oro); } .barras-eq .r-P { fill: var(--baja); }
+.barras-eq .media { fill: none; stroke: var(--texto2); stroke-width: 1.5; stroke-dasharray: 4 3; opacity: 0.8; }

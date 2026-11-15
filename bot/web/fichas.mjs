@@ -224,6 +224,25 @@ function lecturaEquipo(q, H) {
 
 // ---------------------------------------------------------------- el HTML
 
+/** la gráfica de los puntos de un equipo por jornada (como `barras` de web/js/graficos.js: barras redondeadas con la cifra encima y
+    la jornada debajo), con la media de los equipos de cada jornada en discontinua y el resultado debajo de la jornada */
+function graficaEquipo(ptsJ, media, res, { ancho = 400, alto = 170 } = {}) {
+  if (!ptsJ.length) return '';
+  const max = Math.max(...ptsJ.map(([, p]) => p), ...ptsJ.map(([j]) => media[j] || 0), 1), min = Math.min(0, ...ptsJ.map(([, p]) => p));
+  const arr = 18, aba = 28, h = alto - arr - aba, paso = (ancho - 8) / ptsJ.length, bw = paso * 0.66;
+  const y = (v) => arr + h - ((v - min) * h) / (max - min);
+  const barras = ptsJ.map(([j, p], i) => {
+    const x = 4 + i * paso + (paso - bw) / 2, r = res.get(j);
+    const y0 = y(Math.max(0, p)), hh = Math.max(3, Math.abs(y(p) - y(0)));
+    return `<rect class="${claseEquipo(p, media[j])}" x="${x.toFixed(1)}" y="${(p >= 0 ? y0 : y(0)).toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}" rx="4"><title>J${j}: ${p} puntos (media ${Math.round(media[j])})${r ? ` · ${r.r === 'G' ? 'ganó' : r.r === 'E' ? 'empató' : 'perdió'} ${r.gf}-${r.gc} ${r.casa ? 'en casa' : 'fuera'} contra ${el(r.rival)}` : ''}</title></rect>`
+      + `<text class="g-et" x="${(x + bw / 2).toFixed(1)}" y="${(Math.min(y0, y(media[j] || 0)) - 5).toFixed(1)}" text-anchor="middle">${p}</text>`
+      + `<text x="${(x + bw / 2).toFixed(1)}" y="${alto - 15}" text-anchor="middle">J${j}</text>`
+      + (r ? `<text class="g-res r-${r.r}" x="${(x + bw / 2).toFixed(1)}" y="${alto - 4}" text-anchor="middle">${r.gf}-${r.gc}</text>` : '');
+  }).join('');
+  const m = ptsJ.map(([j], i) => `M${(4 + i * paso + 2).toFixed(1)} ${y(media[j] || 0).toFixed(1)}L${(4 + (i + 1) * paso - 2).toFixed(1)} ${y(media[j] || 0).toFixed(1)}`).join('');
+  return `<svg class="barras barras-eq" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Puntos fantasy por jornada: ${ptsJ.map(([j, p]) => `J${j} ${p}`).join(', ')}`)}">${barras}<path class="media" d="${m}"/></svg>`;
+}
+
 /** las fichas de las jornadas, con la forma de las de la app: [{ J, pts (null si no jugó), abajo, icono, titulo, clase }] */
 function fichasJornada(xs) {
   const nivel = (p) => (p >= 10 ? 'top' : p >= 6 ? 'bien' : p >= 2 ? 'medio' : 'mal');
@@ -286,11 +305,8 @@ export function contenidoEquipo(q, H) {
   if (q.ptsJ.length) {
     const media = H.mediaJornada;
     const encima = q.ptsJ.filter(([j, p]) => p > media[j]).length;
-    const resJ = new Map(q.resultados.map((r) => [r.J, r]));
-    const nivelEq = { p10: 'top', p6: 'bien', p2: 'medio', p1: 'mal' };
-    o.push(bloque('Puntos fantasy por jornada', fichasJornada(q.ptsJ.map(([j, p]) => { const r = resJ.get(j); return { J: j, pts: p, clase: nivelEq[claseEquipo(p, media[j])],
-      abajo: r ? `${r.r} ${r.gf}-${r.gc}` : '', titulo: `J${j}: ${p} puntos entre todos${r ? ` · ${r.casa ? 'en casa' : 'fuera'} contra ${el(r.rival)}, ${r.gf}-${r.gc}` : ''}` }; })),
-      { linea: e(`Lo que suman todos sus jugadores cada jornada, y debajo el resultado. En verde, por encima de la media de los ${H.equipos.length} equipos esa jornada: lo ha estado en ${encima} de ${q.ptsJ.length}.`) }));
+    o.push(bloque('Puntos fantasy por jornada', `  ${graficaEquipo(q.ptsJ, media, new Map(q.resultados.map((r) => [r.J, r])))}`,
+      { linea: e(`Lo que suman todos sus jugadores cada jornada; la línea discontinua es la media de los ${H.equipos.length} equipos esa jornada. En verde, por encima de la media: lo ha estado en ${encima} de ${q.ptsJ.length}.`) }));
   }
 
   if (q.resultados.length) {
