@@ -1951,8 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/20261112/11682301/seleccion-espanola-futbol-nations-league-republica-checa-lista-convocados-tres-descartes-laporte-nico-williams-valles-nuevo-diez-victor-munoz-fuente.html": 1794476843000,
@@ -7537,13 +7535,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2740,
+   "ok": 2741,
    "fallos": 0,
-   "ejecuciones": 2170,
+   "ejecuciones": 2171,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T09:31:11.108Z"
+   "ultima": "2026-11-15T09:36:11.951Z"
   }
  },
  "ptsDirecto": {},
@@ -7560,15 +7558,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:31:20.151Z"
+   "ultimaBien": "2026-11-15T09:36:15.053Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:31:20.151Z"
+   "ultimaBien": "2026-11-15T09:36:15.053Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:31:20.151Z"
+   "ultimaBien": "2026-11-15T09:36:15.053Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7576,11 +7574,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:31:20.151Z"
+   "ultimaBien": "2026-11-15T09:36:15.053Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:31:20.151Z"
+   "ultimaBien": "2026-11-15T09:36:15.053Z"
   }
  },
  "avisos": [
