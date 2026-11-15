@@ -1952,7 +1952,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
@@ -2145,18 +2144,6 @@
     "oficial": false,
     "hecho": "Sadiq no entrena con el grupo tras un golpe",
     "motivo": "golpe en la articulación de la rodilla",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794491015000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea sufre una lesión grave y estará de baja",
-    "motivo": "lesión severa",
     "plazo": "",
     "nums": []
    },
@@ -7475,13 +7462,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2790,
+   "ok": 2791,
    "fallos": 0,
-   "ejecuciones": 2220,
+   "ejecuciones": 2221,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T13:41:11.184Z"
+   "ultima": "2026-11-15T13:46:20.710Z"
   }
  },
  "ptsDirecto": {},
@@ -7498,15 +7485,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:41:15.936Z"
+   "ultimaBien": "2026-11-15T13:46:24.226Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:41:15.936Z"
+   "ultimaBien": "2026-11-15T13:46:24.226Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:41:15.936Z"
+   "ultimaBien": "2026-11-15T13:46:24.226Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7514,11 +7501,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:41:15.936Z"
+   "ultimaBien": "2026-11-15T13:46:24.226Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T13:41:15.936Z"
+   "ultimaBien": "2026-11-15T13:46:24.226Z"
   }
  },
  "avisos": [
