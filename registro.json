@@ -2132,7 +2132,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000,
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
    "SPORT|136465336": 1794748235000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
+   "SPORT|136469023": 1794751165000
   },
   "hechos": [
    {
@@ -2295,7 +2296,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3201,17 +3202,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 195975,
-  "salida": 18127,
+  "entrada": 198013,
+  "salida": 18253,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.373607,
+  "dolares": 0.373874,
   "reservado": 0
  },
  "recientes": {
@@ -7438,13 +7439,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2806,
+   "ok": 2807,
    "fallos": 0,
-   "ejecuciones": 2236,
+   "ejecuciones": 2237,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T14:56:11.849Z"
+   "ultima": "2026-11-15T15:01:16.083Z"
   }
  },
  "ptsDirecto": {},
@@ -7461,15 +7462,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:56:15.988Z"
+   "ultimaBien": "2026-11-15T15:01:23.467Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:56:15.988Z"
+   "ultimaBien": "2026-11-15T15:01:23.467Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:56:15.988Z"
+   "ultimaBien": "2026-11-15T15:01:23.467Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7477,11 +7478,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:56:15.988Z"
+   "ultimaBien": "2026-11-15T15:01:23.467Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:56:15.988Z"
+   "ultimaBien": "2026-11-15T15:01:23.467Z"
   }
  },
  "avisos": [
