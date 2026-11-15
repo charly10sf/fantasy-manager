@@ -3138,8 +3138,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794521252000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/var-agita-victoria-espana-republica_0_2008485398.html": 1794521253000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794526017000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794525212000,
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
@@ -7451,13 +7449,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2893,
+   "ok": 2894,
    "fallos": 0,
-   "ejecuciones": 2323,
+   "ejecuciones": 2324,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T22:06:10.936Z"
+   "ultima": "2026-11-15T22:11:15.223Z"
   }
  },
  "ptsDirecto": {},
@@ -7474,15 +7472,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T22:06:15.131Z"
+   "ultimaBien": "2026-11-15T22:11:20.113Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T22:06:15.131Z"
+   "ultimaBien": "2026-11-15T22:11:20.113Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T22:06:15.131Z"
+   "ultimaBien": "2026-11-15T22:11:20.113Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7490,7 +7488,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T22:06:15.131Z"
+   "ultimaBien": "2026-11-15T22:11:20.113Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
