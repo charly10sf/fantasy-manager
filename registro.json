@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
    "SPORT|135971655": 1794497453000,
@@ -2132,7 +2131,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251211/real-madrid-atento-virus-fifa.html": 1794747600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000,
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
-   "SPORT|136465336": 1794748235000
+   "SPORT|136465336": 1794748235000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000
   },
   "hechos": [
    {
@@ -2295,7 +2295,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3201,17 +3201,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 193867,
-  "salida": 18035,
+  "entrada": 195975,
+  "salida": 18127,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.37335,
+  "dolares": 0.373607,
   "reservado": 0
  },
  "recientes": {
@@ -7438,13 +7438,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2805,
+   "ok": 2806,
    "fallos": 0,
-   "ejecuciones": 2235,
+   "ejecuciones": 2236,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T14:51:20.281Z"
+   "ultima": "2026-11-15T14:56:11.849Z"
   }
  },
  "ptsDirecto": {},
@@ -7461,15 +7461,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:51:26.131Z"
+   "ultimaBien": "2026-11-15T14:56:15.988Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:51:26.131Z"
+   "ultimaBien": "2026-11-15T14:56:15.988Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:51:26.131Z"
+   "ultimaBien": "2026-11-15T14:56:15.988Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7477,11 +7477,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:51:26.131Z"
+   "ultimaBien": "2026-11-15T14:56:15.988Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T14:51:26.131Z"
+   "ultimaBien": "2026-11-15T14:56:15.988Z"
   }
  },
  "avisos": [
