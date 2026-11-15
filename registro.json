@@ -2125,7 +2125,8 @@
    "SPORT|136475479": 1794767368000,
    "SPORT|136475632": 1794768134000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000
   },
   "hechos": [
    {
@@ -2288,7 +2289,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3209,17 +3210,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 215883,
-  "salida": 19762,
+  "entrada": 217936,
+  "salida": 19854,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.376416,
+  "dolares": 0.376667,
   "reservado": 0
  },
  "recientes": {
@@ -7446,13 +7447,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2867,
+   "ok": 2868,
    "fallos": 0,
-   "ejecuciones": 2297,
+   "ejecuciones": 2298,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T20:01:18.733Z"
+   "ultima": "2026-11-15T20:06:11.996Z"
   }
  },
  "ptsDirecto": {},
@@ -7469,15 +7470,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:01:23.782Z"
+   "ultimaBien": "2026-11-15T20:06:17.328Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:01:23.782Z"
+   "ultimaBien": "2026-11-15T20:06:17.328Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:01:23.782Z"
+   "ultimaBien": "2026-11-15T20:06:17.328Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7485,11 +7486,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:01:23.782Z"
+   "ultimaBien": "2026-11-15T20:06:17.328Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:01:23.782Z"
+   "ultimaBien": "2026-11-15T20:06:17.328Z"
   }
  },
  "avisos": [
