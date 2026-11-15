@@ -1,7 +1,7 @@
 {
  "hechos": {
   "jornada": 13,
-  "generada": 1794743607813,
+  "generada": 1794745517964,
   "primero": 1795204800000,
   "ultimo": 1795464000000,
   "cierre": 1795118400000,
@@ -427,6 +427,17 @@
     "hasta": null,
     "parteEstado": "duda",
     "titularPct": 88
+   },
+   {
+    "id": "3116",
+    "nombre": "Bernardo Silva",
+    "equipo": "Real Madrid",
+    "pos": "centrocampista",
+    "media": 3.3,
+    "valor": 28246544,
+    "rival": "Celta",
+    "casa": true,
+    "titularPct": 50
    },
    {
     "id": "2939",

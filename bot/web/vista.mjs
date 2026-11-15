@@ -40,7 +40,7 @@ export function vista(h) {
     ultimoPartido: `el ${fechaHora(h.ultimo)}`,
     ...(h.diasDesdeAnterior > 9 ? { paron: `viene de un parón: ${h.diasDesdeAnterior} días sin partidos de LaLiga` } : {}),
     clausulas: {
-      cierre: `el ${fechaHora(h.cierre)}`, reapertura: `el ${fechaHora(h.reapertura)}`,
+      cierre: `el ${fechaHora(h.cierre)} (24 horas antes del primer partido)`, reapertura: `el ${fechaHora(h.reapertura)} (cuando empieza el primer partido)`,
       cambiosDeMercadoAntesDelCierre: cambios.length ? `${cambios.length}: las noches del ${cambios.map((t) => fecha(t - 36e5)).join(', ')}` : 'ninguno',
     },
     partidos: h.partidos.map((p) => `${fechaHora(p.t)}: ${p.local}-${p.visitante}`),

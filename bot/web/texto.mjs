@@ -6,16 +6,18 @@ import { preguntarJson as claudeJson, SONNET, coste } from '../lib/claude.mjs';
 import { norm } from '../lib/texto.mjs';
 import { vista, APARTADOS } from './vista.mjs';
 
+const REGLAS = 'Reglas del juego que se pueden usar aunque no estén en los hechos: desde 24 horas antes del primer partido de la jornada nadie puede pagar una cláusula, y se reabren cuando empieza ese partido; una cláusula solo se paga con saldo, no con deuda; empezar la jornada con el saldo en negativo deja sin puntos toda la jornada; con 5 amarillas se cumple un partido de sanción; el valor de mercado cambia cada noche, hacia las 00:15. Una racha de subidas no garantiza que siga.';
+
 const SISTEMA = `Escribes el análisis de la previa de una jornada de LaLiga Fantasy para la web de Fantasy Manager. Lo lee un mánager que quiere saber qué hacer antes del cierre de cláusulas.
 
 Reglas:
 - Solo lo que viene en los HECHOS. Nada de lesiones, rivales, rachas, formas de jugar o cifras que no estén. Si un dato no está, no lo supongas ni lo menciones.
 - Las cifras se copian tal cual vienen escritas en los hechos («132,2 M», «17,2 %», «21:00», «jornada 14»). No hagas cuentas nuevas ni redondees a otra cosa.
-- Cada apartado lleva de 2 a 4 frases. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
+- Cada apartado lleva de 2 a 4 frases y no pasa de 600 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
 - Prosa normal, castellano de España, cercano pero serio. Sin listas, negritas, emojis ni guiones largos. Frases de longitud variada.
 - Cada apartado empieza de forma distinta y no repite la estructura de otro. Prohibido: «cabe destacar», «es importante», «en resumen», «sin duda», «no solo… sino también», «a tener en cuenta», «ojo al dato», frases de cierre genéricas y exageraciones.
 - No nombres webs, medios, fuentes ni «expertos». No hables de inteligencia artificial.
-- Reglas del juego que puedes usar: desde 24 horas antes del primer partido de la jornada nadie puede pagar una cláusula, y se reabren cuando empieza ese partido; una cláusula solo se paga con saldo, no con deuda; empezar la jornada con el saldo en negativo deja sin puntos toda la jornada; con 5 amarillas se cumple un partido de sanción; el valor de mercado cambia cada noche, hacia las 00:15. Una racha de subidas no garantiza que siga.
+- ${REGLAS}
 - Un sancionado no juega esta jornada. Un apercibido sí juega, pero si ve una amarilla se pierde la siguiente.
 - Si un jugador sale en dos apartados (apercibido y duda, por ejemplo), dilo una vez y bien.`;
 
@@ -23,7 +25,9 @@ const ESQUEMA = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(cl
 
 const REVISOR = `Revisas el análisis de la previa de una jornada de LaLiga Fantasy antes de publicarlo en una web. Tienes los HECHOS (lo único que se sabe) y el TEXTO de cada apartado.
 
-Marca un apartado como no publicable solo si pasa algo de esto:
+${REGLAS} La reapertura de cláusulas es a la hora del primer partido de la jornada (viene en los hechos).
+
+Marca un apartado como no publicable solo si pasa algo grave de esto:
 - dice algo que no está en los hechos o lo contradice (una lesión, un rival, una cifra, un equipo o un estado cambiados o inventados);
 - da un consejo que los datos no sostienen o que es peligroso para quien juega (por ejemplo, fichar a un sancionado para esta jornada);
 - suena a plantilla o a texto automático, o repite la estructura de otro apartado;
@@ -44,8 +48,8 @@ const cifras = (s) => (String(s).match(/\d+(?:[.,:]\d+)*/g) || []).map((x) => x.
 export function validar(texto, { permitidas, nombresHechos, nombresLiga }) {
   const t = String(texto || '').trim();
   if (!t) return 'vacío';
-  if (t.length > 900) return `demasiado largo (${t.length} caracteres)`;
-  const frases = t.split(/(?<=[.!?])\s+/).filter(Boolean).length;
+  if (t.length > 1000) return `demasiado largo (${t.length} caracteres)`;
+  const frases = t.replace(/(^|[\s(])([A-ZÁÉÍÓÚÑ])\.\s/g, '$1$2· ').split(/(?<=[.!?])\s+/).filter(Boolean).length;
   if (frases > 5) return `${frases} frases`;
   const m = t.match(MALAS);
   if (m) return `frase prohibida: «${m[0]}»`;
