@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136384002": 1794513351000,
    "SPORT|136389889": 1794515511000,
    "MARCA|https://www.marca.com/futbol/2026/11/12/sancet-primera-convocatoria-euskadi-ojala-algun-dia-podamos-pelear-mundial-seleccion-nuestro-pais.html": 1794519215000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250422/buena-senal.html": 1794549600000,
@@ -7446,13 +7445,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2865,
+   "ok": 2866,
    "fallos": 0,
-   "ejecuciones": 2295,
+   "ejecuciones": 2296,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T19:51:12.608Z"
+   "ultima": "2026-11-15T19:56:19.981Z"
   }
  },
  "ptsDirecto": {},
@@ -7469,15 +7468,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:51:19.205Z"
+   "ultimaBien": "2026-11-15T19:56:23.330Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:51:19.205Z"
+   "ultimaBien": "2026-11-15T19:56:23.330Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:51:19.205Z"
+   "ultimaBien": "2026-11-15T19:56:23.330Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7485,11 +7484,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:51:19.205Z"
+   "ultimaBien": "2026-11-15T19:56:23.330Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:51:19.205Z"
+   "ultimaBien": "2026-11-15T19:56:23.330Z"
   }
  },
  "avisos": [
