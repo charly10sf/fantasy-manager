@@ -156,6 +156,31 @@ def datos_estructurados(p, url):
 
 
 GUIAS_PUB = []  # las guías publicadas, en orden (la rellena main)
+PREVIAS = []  # las previas de jornada publicadas, de la más nueva a la más vieja (la rellena main)
+
+
+def es_previa(p):
+    return p.get('grupo') == 'jornadas' and p.get('jornada') is not None
+
+
+def aviso_previa(p):
+    """en una previa vieja: que esa jornada ya se jugó y dónde está la de la siguiente"""
+    if not es_previa(p) or not PREVIAS or PREVIAS[0]['ruta'] == p['ruta'] or PREVIAS[0]['jornada'] < p['jornada']:
+        return ''
+    u = PREVIAS[0]
+    return f'\n  <p class="aviso">Esta jornada ya se ha jugado. La previa de la siguiente: <a href="{u["ruta"].split("/", 1)[1]}">{e(u["h1"])}</a>.</p>'
+
+
+def poner_previa(contenido, p):
+    """las marcas <!-- previa --> … <!-- /previa --> de cualquier página: el enlace a la previa de la jornada que viene"""
+    if '<!-- previa -->' not in contenido:
+        return contenido
+    if PREVIAS:
+        u = PREVIAS[0]
+        enlace = f'<p class="aviso"><b>Jornada {u["jornada"]}:</b> los apercibidos, sancionados y lesionados de esta semana, con la hora del cierre de cláusulas, en <a href="{os.path.relpath(u["ruta"], os.path.dirname(p["ruta"]) or ".")}">la previa de la jornada {u["jornada"]}</a>.</p>'
+    else:
+        enlace = ''
+    return re.sub(r'<!-- previa -->.*?<!-- /previa -->', lambda m: f'<!-- previa -->{enlace}<!-- /previa -->', contenido, flags=re.S)
 
 
 def mas_guias(p):
@@ -166,8 +191,9 @@ def mas_guias(p):
     por_ruta = {g['ruta']: g for g in GUIAS_PUB}
     sig = [por_ruta[r] for r in p.get('relacionadas', []) if r in por_ruta and r != p['ruta']][:3]
     if not sig:
-        i = next((k for k, g in enumerate(GUIAS_PUB) if g['ruta'] == p['ruta']), -1)
-        sig = [GUIAS_PUB[(i + k) % len(GUIAS_PUB)] for k in range(1, min(4, len(GUIAS_PUB)))]
+        normales = [g for g in GUIAS_PUB if not es_previa(g)]
+        i = next((k for k, g in enumerate(normales) if g['ruta'] == p['ruta']), -1)
+        sig = [normales[(i + k) % len(normales)] for k in range(1, min(4, len(normales)))]
     filas = ''.join(f'<li><a href="{g["ruta"].split("/", 1)[1]}"><b>{e(g["h1"])}</b><span>{e(g["descripcion"])}</span></a></li>' for g in sig)
     return f'\n  <nav class="mas-guias" aria-label="Más guías"><h2>Sigue leyendo</h2><ul class="lista-guias">{filas}</ul><p><a href="./">Todas las guías</a></p></nav>'
 
@@ -181,7 +207,9 @@ def pagina(p, contenido, hay_guias):
         fecha = f'\n  <p class="fecha">Actualizada el {fecha_larga(p["fecha"])}</p>'
     pie_guia = f'\n  {cta(raiz)}' if p['tipo'] == 'guia' or en_guias(p) else ''
     m = migas(raiz, p, hay_guias)
-    migas_linea = f'\n  {m}' if m else ''
+    migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
+    contenido = poner_previa(contenido, p)
+    script = f'\n  <script src="{p["script"]}" defer></script>' if p.get('script') else ''
     return f'''<!doctype html>
 <!-- Generada por .github/paginas.py: el texto se edita entre las marcas de contenido; lo demás se rehace al ejecutarlo -->
 <html lang="es">
@@ -205,7 +233,7 @@ def pagina(p, contenido, hay_guias):
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="{raiz}img/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{raiz}img/icono-180.png">
-  <link rel="stylesheet" href="{raiz}css/paginas.css">{datos_estructurados(p, url)}
+  <link rel="stylesheet" href="{raiz}css/paginas.css">{script}{datos_estructurados(p, url)}
 </head>
 <body>
 {menu(raiz, hay_guias)}
@@ -222,6 +250,7 @@ def pagina(p, contenido, hay_guias):
 
 # los grupos del índice de guías, en orden: [clave de «grupo» en paginas.json, título, una línea de qué hay]
 GRUPOS = [
+    ('jornadas', 'Previas de cada jornada', 'A qué hora se cierran las cláusulas, quién no juega, quién está a una amarilla y quién sube en el mercado. Se hacen solas con los datos de LaLiga Fantasy y se ponen al día antes del cierre.'),
     ('empezar', 'Para empezar', 'Las reglas básicas: cómo se puntúa, qué significa cada palabra del juego y qué hacer los primeros días.'),
     ('clausulas', 'Cláusulas', 'Cómo funcionan, cuánto subir las de tus jugadores y cuándo pagar la de un rival.'),
     ('mercado', 'Mercado y dinero', 'Cuándo cambia el mercado, cuánto pujar, cuándo vender y cómo no quedarte en negativo.'),
@@ -244,6 +273,8 @@ def indice_guias(guias, faq=None):
     sueltas = [g for g in guias if g.get('grupo') not in claves]
     for clave, titulo, linea in GRUPOS + ([('', 'Más guías', '')] if sueltas else []):
         del_grupo = [g for g in guias if g.get('grupo') == clave] if clave else sueltas
+        if clave == 'jornadas':
+            del_grupo = sorted(del_grupo, key=lambda g: -g['jornada'])
         if not del_grupo:
             continue
         filas.append(f'\n  <h2>{e(titulo)}</h2>')
@@ -274,6 +305,7 @@ def portada(guias, faq):
     """la lista de guías de la portada: los enlaces para rastreadores de index.html y TODAS_GUIAS de portada.js"""
     def corto(g):
         return g.get('corto') or g['h1']
+    guias = PREVIAS[:1] + [g for g in guias if not es_previa(g)]
     enlaces = ''.join(f'\n        <li><a href="{g["ruta"]}">{e(g["h1"])}</a></li>' for g in guias)
     if faq:
         enlaces += f'\n        <li><a href="{faq["ruta"]}">{e(faq["titulo"])}</a></li>'
@@ -281,6 +313,8 @@ def portada(guias, faq):
                 f'\n      <ul>{enlaces}\n      </ul>\n      ')
     lista = ',\n'.join(f'  [{json.dumps(g["ruta"].split("/", 1)[1])}, {json.dumps(corto(g), ensure_ascii=False)}]' for g in guias)
     faq_js = f'\nconst FAQ_GUIA = {json.dumps(faq["ruta"].split("/", 1)[1]) if faq else "null"};\n'
+    previa = json.dumps([PREVIAS[0]['ruta'].split('/', 1)[1], PREVIAS[0]['jornada']]) if PREVIAS else 'null'
+    faq_js += f'/** la previa de la jornada que viene: [archivo en guias/, jornada] */\nconst PREVIA = {previa};\n'
     poner_entre(os.path.join(WEB, 'js', 'portada.js'), '// <guias>', '// </guias>',
                 f'\n/** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */\nconst TODAS_GUIAS = [\n{lista},\n];{faq_js}')
 
@@ -290,6 +324,7 @@ def main():
         paginas = json.load(f)['paginas']
     guias = [p for p in paginas if p['tipo'] == 'guia' and publicada(p)]
     GUIAS_PUB[:] = guias
+    PREVIAS[:] = sorted([g for g in guias if es_previa(g)], key=lambda g: -g['jornada'])
     faq = next((p for p in paginas if p['ruta'] == 'guias/preguntas-frecuentes.html' and publicada(p)), None)
     hay_guias = bool(guias)
     hoy = max((p['fecha'] for p in guias), default='2026-11-02')

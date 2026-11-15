@@ -120,3 +120,26 @@ th { color: var(--texto); font-weight: 600; }
   .instalar .p-figs { width: 390px; }
   .instalar .p-m .p-figs { width: 210px; }
 }
+
+/* previas de jornada (bot/previa-web.mjs) y calculadoras (guias/calc.js) */
+.lead { font-size: 18px; color: var(--texto); }
+.tabla-scroll { overflow-x: auto; margin: 0 0 16px; }
+.tabla-scroll table { margin: 0; min-width: 460px; }
+.tabla-scroll td { white-space: nowrap; }
+.tabla-scroll td .w { white-space: normal; display: inline-block; min-width: 140px; }
+h3 + .tabla-scroll { margin-top: 4px; }
+.calc { border: 1px solid var(--linea); background: var(--plano); border-radius: 16px; padding: 16px; margin: 18px 0 24px; }
+.calc h2 { margin-top: 0; }
+.calc-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; margin: 0 0 14px; }
+.calc label { display: flex; flex-direction: column; justify-content: flex-end; gap: 5px; font-size: 14.5px; color: var(--texto2); }
+.calc input, .calc select { font: 600 17px 'Barlow', sans-serif; color: var(--texto); background: var(--fondo); border: 1px solid var(--linea); border-radius: 10px; padding: 9px 11px; min-height: 44px; width: 100%; box-sizing: border-box; }
+.calc input:focus-visible, .calc select:focus-visible { outline: 2px solid var(--rojo); outline-offset: 1px; }
+.calc .ud { font-size: 13px; color: var(--apagado); }
+.calc-res { border-top: 1px solid var(--linea); padding-top: 12px; }
+.calc-res .cifra { font: 700 30px/1.05 'Barlow Condensed', sans-serif; color: var(--texto); margin: 2px 0 8px; }
+.calc-res .cifra.mal { color: var(--rojo-l); }
+.calc-res ul { margin: 0 0 10px; padding-left: 20px; }
+.calc-res li { margin: 0 0 6px; }
+.calc-res .peq { margin: 0; }
+.calc noscript p { margin: 0; }
+.calc-res:empty { display: none; }

@@ -232,16 +232,17 @@ const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'],
 // <guias>
 /** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */
 const TODAS_GUIAS = [
+  ["jornada-13.html", "Previa de la jornada 13"],
   ["empezar-liga.html", "Empezar una liga"],
   ["puntos-laliga-fantasy.html", "Puntos"],
   ["glosario.html", "Glosario"],
   ["clausulas-laliga-fantasy.html", "Cláusulas"],
-  ["subir-clausula.html", "Subir la cláusula"],
+  ["subir-clausula.html", "Calculadora de cláusula"],
   ["blindaje-laliga-fantasy.html", "Blindaje"],
   ["cuando-clausular.html", "Cuándo clausular"],
   ["hora-mercado-laliga-fantasy.html", "Hora del mercado"],
   ["valor-de-mercado.html", "Valor de mercado"],
-  ["cuanto-pujar.html", "Cuánto pujar"],
+  ["cuanto-pujar.html", "Calculadora de puja"],
   ["cuando-vender.html", "Cuándo vender"],
   ["saldo-negativo.html", "Saldo negativo"],
   ["alineacion.html", "Alineación"],
@@ -250,6 +251,8 @@ const TODAS_GUIAS = [
   ["apercibidos-laliga.html", "Apercibidos"],
 ];
 const FAQ_GUIA = "preguntas-frecuentes.html";
+/** la previa de la jornada que viene: [archivo en guias/, jornada] */
+const PREVIA = ["jornada-13.html", 13];
 // </guias>
 
 /** las guías con tarjeta en la portada: [archivo en guias/, icono, título, de qué va]. El resto sale en «También:» */
@@ -320,7 +323,7 @@ export function seccionMoviles() {
     <div class="pk rv" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 
-  ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
+  ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${PREVIA ? `<a class="pg-c pg-previa rv" href="guias/${PREVIA[0]}"><span class="pg-ic">${icono('reloj')}</span><span class="pg-n">J${PREVIA[1]}</span><h3>Previa de la jornada ${PREVIA[1]}</h3><p>A qué hora se cierran las cláusulas, quién no juega, quién está a una amarilla y quién sube esta semana.</p><span class="pg-ir">Ver la previa${icono('flecha')}</span></a>` : ''}${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
     <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las ${TODAS_GUIAS.length + (FAQ_GUIA ? 1 : 0)} guías</a><span>También: ${otrasGuias()}.</span></div>`,
     'Cómo funcionan las cláusulas, el mercado y el dinero de LaLiga Fantasy, explicado con números. Gratis y sin entrar.')}
 

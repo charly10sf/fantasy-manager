@@ -45,6 +45,19 @@
       "fecha": "2026-11-03"
     },
     {
+      "ruta": "guias/jornada-13.html",
+      "tipo": "guia",
+      "grupo": "jornadas",
+      "jornada": 13,
+      "titulo": "Jornada 13 de LaLiga Fantasy: cláusulas, bajas y mercado",
+      "h1": "Jornada 13 de LaLiga Fantasy",
+      "corto": "Previa de la jornada 13",
+      "descripcion": "Previa de la jornada 13 de LaLiga Fantasy: a qué hora se cierran y se reabren las cláusulas, sancionados, apercibidos, lesionados y los jugadores que más suben de valor.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15",
+      "relacionadas": ["guias/apercibidos-laliga.html", "guias/blindaje-laliga-fantasy.html", "guias/cuanto-pujar.html"]
+    },
+    {
       "ruta": "guias/empezar-liga.html",
       "tipo": "guia",
       "fecha": "2026-11-03",
@@ -124,11 +137,11 @@
     {
       "ruta": "guias/subir-clausula.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
-      "h1": "Cuánto subir la cláusula de un jugador en LaLiga Fantasy",
-      "titulo": "Subir la cláusula en LaLiga Fantasy: cuánto y cuándo vale",
-      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa, cuándo es tirar el dinero y cuándo basta con el blindaje gratis.",
-      "busqueda": "subir cláusula LaLiga Fantasy",
+      "fecha": "2026-11-15",
+      "h1": "Calculadora de cláusula: cuánto subirla en LaLiga Fantasy",
+      "titulo": "Calculadora de cláusula de LaLiga Fantasy: cuánto subirla",
+      "descripcion": "Calcula cuánto subir la cláusula de tu jugador para que no le llegue al rival más rico, lo que cuesta, si compensa o basta el blindaje, y si te compensa clausular.",
+      "busqueda": "calculadora cláusula LaLiga Fantasy",
       "esquema": [
         ["Subir la cláusula o blindar", "Pagar para subir la cláusula frente al blindaje gratis de 24 h."],
         ["Cuánto cuesta subirla", "La relación entre lo que pagas y lo que sube la cláusula, con el cálculo paso a paso. Comprobar la regla exacta del juego."],
@@ -138,8 +151,10 @@
         ["Ejemplo", "Un delantero de 20 M con cláusula de 24 M y dos rivales con 30 M en caja."]
       ],
       "grupo": "clausulas",
-      "corto": "Subir la cláusula",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"]
+      "corto": "Calculadora de cláusula",
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"],
+      "publicada": "2026-11-02",
+      "script": "calc.js"
     },
     {
       "ruta": "guias/blindaje-laliga-fantasy.html",
@@ -220,11 +235,11 @@
     {
       "ruta": "guias/cuanto-pujar.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
-      "h1": "Cuánto pujar por un jugador en LaLiga Fantasy",
-      "titulo": "Cuánto pujar en el mercado de LaLiga Fantasy",
-      "descripcion": "Cómo funcionan las pujas, cuánto ponerte por encima del valor, hasta dónde llega el margen de deuda y cómo pujan tus rivales.",
-      "busqueda": "cuánto pujar LaLiga Fantasy",
+      "fecha": "2026-11-15",
+      "h1": "Calculadora de puja: cuánto pujar en LaLiga Fantasy",
+      "titulo": "Calculadora de puja de LaLiga Fantasy: cuánto pujar",
+      "descripcion": "Calcula cuánto pujar por un jugador de LaLiga Fantasy con lo que vale, lo que sube hasta la jornada, lo que se paga en tu liga y tu margen de deuda.",
+      "busqueda": "calculadora puja LaLiga Fantasy",
       "esquema": [
         ["Cómo funcionan las pujas", "Pujas a ciegas, quién se lo lleva y qué pasa con el dinero si pierdes."],
         ["Cuánto ponerte por encima del valor", "Un porcentaje según lo buscado que esté el jugador y lo que pueda subir antes de la jornada."],
@@ -233,8 +248,10 @@
         ["Ejemplo", "Un jugador de 8 M que sale al mercado con tres rivales con saldo."]
       ],
       "grupo": "mercado",
-      "corto": "Cuánto pujar",
-      "relacionadas": ["guias/saldo-negativo.html", "guias/hora-mercado-laliga-fantasy.html", "guias/valor-de-mercado.html"]
+      "corto": "Calculadora de puja",
+      "relacionadas": ["guias/saldo-negativo.html", "guias/hora-mercado-laliga-fantasy.html", "guias/valor-de-mercado.html"],
+      "publicada": "2026-11-02",
+      "script": "calc.js"
     },
     {
       "ruta": "guias/cuando-vender.html",

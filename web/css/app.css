@@ -2614,6 +2614,7 @@ button.cr-p:active { background: var(--plano); }
 .escritorio .pg { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .pg-c { position: relative; display: flex; flex-direction: column; padding: 20px 20px 18px; border-radius: 20px; background: var(--plano); border: 1px solid var(--linea); color: var(--texto); text-decoration: none; transition: border-color 0.25s, transform 0.25s, background 0.25s; }
 .pg-c:hover { border-color: var(--rojo3); background: var(--plano2); transform: translateY(-3px); }
+.pg-c.pg-previa { border-color: var(--rojo3); }
 .pg-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--rojo-s); color: var(--rojo-l); }
 .pg-ic .ic { width: 22px; height: 22px; }
 .pg-n { position: absolute; top: 18px; right: 20px; font: 700 15px var(--cond); color: var(--apagado); }
