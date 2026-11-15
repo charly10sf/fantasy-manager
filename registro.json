@@ -3247,8 +3247,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
-   "SPORT|136354062": 1794463248000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473725000,
    "SPORT|136355906": 1794470235000,
@@ -3305,11 +3303,13 @@
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-14",
-   "n": 12,
+   "dia": "2026-11-15",
+   "n": 0,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794726037930
+  }
  },
  "ia": {
   "dia": "2026-11-15",
@@ -7547,13 +7547,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2708,
+   "ok": 2709,
    "fallos": 0,
-   "ejecuciones": 2138,
+   "ejecuciones": 2139,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T06:56:11.905Z"
+   "ultima": "2026-11-15T07:00:37.930Z"
   }
  },
  "ptsDirecto": {},
@@ -7570,15 +7570,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T06:56:12.278Z"
+   "ultimaBien": "2026-11-15T07:00:42.647Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T06:56:12.278Z"
+   "ultimaBien": "2026-11-15T07:00:42.647Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T06:56:12.278Z"
+   "ultimaBien": "2026-11-15T07:00:42.647Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7586,7 +7586,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T22:56:20.560Z"
+   "ultimaBien": "2026-11-15T07:00:42.647Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
