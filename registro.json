@@ -3134,7 +3134,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
-   "SPORT|136385497": 1794507196000,
    "SPORT|136387136": 1794508997000,
    "SPORT|136388353": 1794511706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794521252000,
@@ -7450,13 +7449,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2845,
+   "ok": 2846,
    "fallos": 0,
-   "ejecuciones": 2275,
+   "ejecuciones": 2276,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T18:11:12.119Z"
+   "ultima": "2026-11-15T18:16:20.840Z"
   }
  },
  "ptsDirecto": {},
@@ -7473,15 +7472,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T18:11:20.891Z"
+   "ultimaBien": "2026-11-15T18:16:25.330Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T18:11:20.891Z"
+   "ultimaBien": "2026-11-15T18:16:25.330Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T18:11:20.891Z"
+   "ultimaBien": "2026-11-15T18:16:25.330Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7489,11 +7488,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T18:11:20.891Z"
+   "ultimaBien": "2026-11-15T18:16:25.330Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T18:11:20.891Z"
+   "ultimaBien": "2026-11-15T18:16:25.330Z"
   }
  },
  "avisos": [
