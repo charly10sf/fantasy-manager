@@ -2131,7 +2131,8 @@
    "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000
   },
   "hechos": [
    {
@@ -2357,7 +2358,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3202,7 +3203,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/contundente-reaccion-marcos-llorente-polemico-video-miembros-piquete-echando-anciano-cafeteria-espana-me-das-miedo-20261112_3473663.html": 1794483441000,
    "SPORT|136371700": 1794486892000,
    "SPORT|136370681": 1794485522000,
    "SPORT|136233790": 1794497100000,
@@ -3266,17 +3266,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 178876,
-  "salida": 14222,
+  "entrada": 180813,
+  "salida": 14335,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.369945,
+  "dolares": 0.370195,
   "reservado": 0
  },
  "recientes": {
@@ -7503,13 +7503,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2765,
+   "ok": 2766,
    "fallos": 0,
-   "ejecuciones": 2195,
+   "ejecuciones": 2196,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:36:11.267Z"
+   "ultima": "2026-11-15T11:41:15.191Z"
   }
  },
  "ptsDirecto": {},
@@ -7526,15 +7526,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:36:14.816Z"
+   "ultimaBien": "2026-11-15T11:41:21.263Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:36:14.816Z"
+   "ultimaBien": "2026-11-15T11:41:21.263Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:36:14.816Z"
+   "ultimaBien": "2026-11-15T11:41:21.263Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7542,11 +7542,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:36:14.816Z"
+   "ultimaBien": "2026-11-15T11:41:21.263Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:36:14.816Z"
+   "ultimaBien": "2026-11-15T11:41:21.263Z"
   }
  },
  "avisos": [
