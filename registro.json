@@ -3133,7 +3133,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136382650": 1794505061000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
    "SPORT|136385497": 1794507196000,
    "SPORT|136387136": 1794508997000,
@@ -7427,13 +7426,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2838,
+   "ok": 2839,
    "fallos": 0,
-   "ejecuciones": 2268,
+   "ejecuciones": 2269,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T17:36:13.553Z"
+   "ultima": "2026-11-15T17:41:14.677Z"
   }
  },
  "ptsDirecto": {},
@@ -7450,15 +7449,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:36:17.392Z"
+   "ultimaBien": "2026-11-15T17:41:20.334Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:36:17.392Z"
+   "ultimaBien": "2026-11-15T17:41:20.334Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:36:17.392Z"
+   "ultimaBien": "2026-11-15T17:41:20.334Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7466,11 +7465,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:36:17.392Z"
+   "ultimaBien": "2026-11-15T17:41:20.334Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:36:17.392Z"
+   "ultimaBien": "2026-11-15T17:41:20.334Z"
   }
  },
  "avisos": [
