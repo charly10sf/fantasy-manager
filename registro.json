@@ -3137,7 +3137,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
-   "SPORT|136382347": 1794500847000,
    "SPORT|136383251": 1794501918000,
    "SPORT|136382650": 1794505061000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
@@ -7433,13 +7432,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2824,
+   "ok": 2825,
    "fallos": 0,
-   "ejecuciones": 2254,
+   "ejecuciones": 2255,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T16:26:12.080Z"
+   "ultima": "2026-11-15T16:31:17.603Z"
   }
  },
  "ptsDirecto": {},
@@ -7456,15 +7455,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:26:14.737Z"
+   "ultimaBien": "2026-11-15T16:31:23.147Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:26:14.737Z"
+   "ultimaBien": "2026-11-15T16:31:23.147Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:26:14.737Z"
+   "ultimaBien": "2026-11-15T16:31:23.147Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7472,11 +7471,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:26:14.737Z"
+   "ultimaBien": "2026-11-15T16:31:23.147Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:26:14.737Z"
+   "ultimaBien": "2026-11-15T16:31:23.147Z"
   }
  },
  "avisos": [
