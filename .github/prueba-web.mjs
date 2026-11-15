@@ -13,7 +13,7 @@
 //  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
-//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, sin cupo y con la ruta caída.
+//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, se repite tras un corte, sin cupo y con la ruta caída.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -569,14 +569,17 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 {
   const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
   const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
-  let modo = 'bien', cuerpo = null;
+  let modo = 'bien', cuerpo = null, rids = [];
   await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
     const q = r.request();
     const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
     if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
     if (!q.url().endsWith('/plan')) return r.abort('blockedbyclient');
     cuerpo = JSON.parse(q.postData() || 'null');
+    rids.push(cuerpo && cuerpo.rid);
     if (modo === 'caido') return r.abort('connectionrefused');
+    // (15 nov) la conexión se corta la primera vez: la app lo repite sola con el mismo id
+    if (modo === 'corte' && rids.length === 1) return r.abort('connectionreset');
     const cupo = (u) => ({ usados: u, gratis: 2, max: 5, extras: 0, quedan: Math.max(0, 2 - u), masConAnuncio: true });
     if (modo === 'cupo') return r.fulfill({ status: 429, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ e: 'Ya has hecho tus 2 planes con la IA de hoy.', cupo: cupo(2) }) });
     if (modo === 'tarde') return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `     ${JSON.stringify({ e: 'La IA de los planes no contesta ahora mismo.', estado: 503, servicio: true })}` });
@@ -595,6 +598,10 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   if (!r.ok || !r.app || !r.corto || r.titular !== 'Titular de prueba de la IA de la app' || !r.frase || !r.cupo || r.cupo.quedan !== 1) mal(`IA de la app: el plan no llega bien: ${JSON.stringify(r)}`);
   else if (!cuerpo || !/^HOY: /.test(cuerpo.pedido) || 'sistema' in cuerpo || !['broma', 'serio'].includes(cuerpo.tono) || !Array.isArray(cuerpo.bloq) || cuerpo.extra !== false) mal(`IA de la app: lo que se manda al Worker: ${JSON.stringify(cuerpo).slice(0, 200)}`);
   else bien(`IA de la app: el plan llega por el Worker, sin clave y con el pedido corto (${cuerpo.pedido.length} caracteres, alias: ${JSON.stringify(cuerpo.alias)})`);
+  modo = 'corte'; rids = [];
+  r = await prueba('corte');
+  if (!r.ok || !r.app || rids.length !== 2 || !rids[0] || rids[0] !== rids[1]) mal(`IA de la app: con un corte, se repite una vez con el mismo id: ${JSON.stringify(r).slice(0, 160)} · ${JSON.stringify(rids)}`);
+  else bien('IA de la app: se corta la conexión y la app lo repite sola una vez, con el mismo id (no cuenta dos veces)');
   modo = 'cupo';
   r = await prueba('cupo');
   if (r.ok || !r.cupo || r.cupo.quedan !== 0 || !r.cache || r.auto) mal(`IA de la app: con el cupo gastado: ${JSON.stringify(r)}`);

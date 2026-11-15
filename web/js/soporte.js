@@ -13,7 +13,8 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
   if (enApp) {
     const r = await http(metodo, WORKER_PUBLICO + ruta, { cabeceras: cab, cuerpo: cuerpo ? JSON.stringify(cuerpo) : null, tiempo });
     s = r.s; b = r.b;
-    if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0 });
+    // (detalle: lo que dice el móvil del corte, para el Diagnóstico; al usuario, el texto de siempre)
+    if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: String(r.e || '').slice(0, 160) });
   } else {
     let r;
     // (con su tiempo también aquí: el plan de la IA tarda, pero no puede quedarse colgado)
@@ -22,7 +23,7 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
     if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', parar, { once: true }); }
     try { r = await fetch(WORKER_PUBLICO + ruta, { method: metodo, headers: cab, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: ctl.signal }); } catch (e) {
       if (signal && signal.aborted) throw Object.assign(new Error('Parado'), { name: 'AbortError' });
-      throw Object.assign(new Error(ctl.signal.aborted ? 'El servidor ha tardado demasiado: vuelve a probar en un rato' : 'Sin conexión: vuelve a probar en un rato'), { estado: 0 });
+      throw Object.assign(new Error(ctl.signal.aborted ? 'El servidor ha tardado demasiado: vuelve a probar en un rato' : 'Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: String((e && e.message) || e).slice(0, 160) });
     } finally { clearTimeout(reloj); if (signal) signal.removeEventListener('abort', parar); }
     s = r.status; b = await r.text();
   }

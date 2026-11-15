@@ -39,7 +39,7 @@
  *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
  *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
  *
- *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra }: el plan del día con la IA de Carlos (Claude), con
+ *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra, rid }: el plan del día con la IA de Carlos (Claude), con
  *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
  *
  *   El dinero de los rivales, aprendido de lo que apunta la gente (0.7.13; Carlos, 15 nov: «el dinero que apuntan quiero que
@@ -316,9 +316,9 @@ export class Emparejar {
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
       const ya = (await st.get('plan')) || {};
-      const y = cupoCuenta(ya, b.op, { gratis: Number(b.gratis) || 0, max: Number(b.max) || 0, extra: !!b.extra });
-      if (y.u !== (Number(ya.u) || 0) || y.x !== (Number(ya.x) || 0)) {
-        await st.put('plan', { u: y.u, x: y.x });
+      const y = cupoCuenta(ya, b.op, { gratis: Number(b.gratis) || 0, max: Number(b.max) || 0, extra: !!b.extra, rid: b.rid });
+      if (y.u !== (Number(ya.u) || 0) || y.x !== (Number(ya.x) || 0) || (y.r || '') !== (ya.r || '')) {
+        await st.put('plan', { u: y.u, x: y.x, r: y.r || '' });
         if (!ya.u && !ya.x) await st.setAlarm(Date.now() + 30 * 3600e3);
       }
       return new Response(JSON.stringify(y), { status: 200 });
@@ -619,14 +619,14 @@ async function uso(req, env, c) {
 
 /* ---------- el plan del día con la IA de Carlos (Claude), 2 al día por cuenta ---------- */
 /*
- * POST /plan { pedido, tono, bloq, anuncio, alias, extra }: el pedido del plan corto que arma la app (pedidoCorto de
+ * POST /plan { pedido, tono, bloq, anuncio, alias, extra, rid }: el pedido del plan corto que arma la app (pedidoCorto de
  * web/js/ia.js, ya con alias) se le manda a Claude con la clave de Carlos (el secreto CLAUDE_PLANES) y se devuelve el plan
  * ({ plan, cupo }). Las instrucciones las arma el Worker con piezas fijas (web/js/plan-sistema.js): la app solo elige el
  * tono, qué funciones tiene cerradas y si van alias. El tope de respuesta es fijo, el pedido tiene que tener la forma del
  * plan corto y de la respuesta solo sale el plan (planLimpio): la ruta no sirve como IA gratis para otra cosa.
  * Quién llama lo dice LaLiga (quienEs, con su sesión), no la app.
  * Cupo por cuenta y día de Madrid: `gratis` planes y, con `extra: true` (la app lo manda al acabar un anuncio bonificado),
- * uno más cada vez hasta `max`, pase lo que pase. Y entre todos, como mucho `topeUsdDia` dólares al día. Lo cuenta el Durable
+ * uno más cada vez hasta `max`, pase lo que pase. Con `rid` (id del pedido), un reintento de la app tras un corte no cuenta dos veces. Y entre todos, como mucho `topeUsdDia` dólares al día. Lo cuenta el Durable
  * Object (el de los frenos por día), no el KV: no gasta escrituras del KV. Los números, en «planes» de limites.json (con
  * los de PLANES_DEF si no se puede leer) y nunca por encima de PLAN_TOPE_USD de wrangler.toml.
  * Mientras Claude piensa (10-20 s) la respuesta va mandando espacios cada 5 s: la app de Android corta a los 30 s sin
@@ -659,19 +659,23 @@ export async function cfgPlanes(env) {
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
-export function cupoCuenta(x, op, { gratis, max, extra = false }) {
-  const u = Number(x.u) || 0;
+/** rid: el id del pedido que pone la app; si la app lo repite (se cortó la conexión y lo reintenta), no cuenta otra vez */
+export const ridDe = (x) => (typeof x === 'string' && /^[a-z0-9]{8,24}$/.test(x) ? x : '');
+export function cupoCuenta(x, op, { gratis, max, extra = false, rid = '' }) {
+  const u = Number(x.u) || 0, r0 = String(x.r || ''), r = ridDe(rid);
   let e = Number(x.x) || 0;
-  if (op === 'devolver') return { ok: true, u: Math.max(0, u - 1), x: e };
-  if (op === 'mirar') return { ok: true, u, x: e };
+  if (op === 'devolver') return { ok: true, u: Math.max(0, u - 1), x: e, r: '' };
+  if (op === 'mirar') return { ok: true, u, x: e, r: r0 };
+  // el mismo pedido otra vez (reintento tras un corte): ya se contó
+  if (r && r === r0) return { ok: true, u, x: e, r: r0 };
   // un anuncio visto da un plan más, pero solo si ya no quedan de los gratis y sin pasar del máximo
   if (extra && u >= gratis + e && gratis + e < max) e++;
   const cabe = u < Math.min(max, gratis + e);
-  return { ok: cabe, u: cabe ? u + 1 : u, x: e };
+  return { ok: cabe, u: cabe ? u + 1 : u, x: e, r: cabe ? r : r0 };
 }
 async function cupo(env, uid, op, c) {
   const dia = hoyMadrid();
-  const cuerpo = JSON.stringify({ op, gratis: c.gratis, max: c.max, extra: !!c.extra });
+  const cuerpo = JSON.stringify({ op, gratis: c.gratis, max: c.max, extra: !!c.extra, rid: ridDe(c.rid) });
   if (env.QR) {
     try {
       const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|${uid}`)).fetch('https://freno/plan', { method: 'POST', body: cuerpo });
@@ -680,7 +684,7 @@ async function cupo(env, uid, op, c) {
   }
   const k = `${dia}|${uid}`, y = cupoCuenta(CUPO_MEM.get(k) || {}, op, c);
   if (CUPO_MEM.size > 20000) CUPO_MEM.clear();
-  CUPO_MEM.set(k, { u: y.u, x: y.x });
+  CUPO_MEM.set(k, { u: y.u, x: y.x, r: y.r || '' });
   return y;
 }
 /** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
@@ -785,7 +789,7 @@ async function planIA(req, env, c, ctx) {
   // entre todos, el tope de gasto del día
   if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
-  const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
+  const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid });
   if (!y.ok) {
     const ct = cupoTxt(P, y);
     return json({ e: ct.masConAnuncio && b.extra !== true ? `Ya has hecho tus ${Math.min(P.max, P.gratis + y.x)} planes con la IA de hoy.` : `Ya has hecho los ${P.max} planes con la IA de hoy, el máximo. Mañana tienes otros ${P.gratis}.`, cupo: ct }, 429, c);

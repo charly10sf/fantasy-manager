@@ -1540,13 +1540,26 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
   const t0 = Date.now();
   if (alPaso) alPaso(planesCfg().web ? 'La IA está leyendo tu plan y buscando las últimas noticias…' : 'La IA está leyendo tu plan y las noticias…');
   let j;
+  // (15 nov) el id del pedido: si la conexión se corta a medias, se repite una vez con el mismo id y el Worker no lo cuenta
+  // dos veces en el cupo del día
+  const rid = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
+  const cuerpo = { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra, rid };
   try {
-    j = await pedirWorker('POST', '/plan', { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra }, { tiempo: 120000, signal });
+    try {
+      j = await pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal });
+    } catch (e) {
+      if (e.name === 'AbortError' || e.estado !== 0 || (signal && signal.aborted)) throw e;
+      apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: 0 corte${e.detalle ? ` (${e.detalle})` : ''}; lo repito`, ms: Date.now() - t0 });
+      if (alPaso) alPaso('Se ha cortado la conexión: lo intento otra vez…');
+      await new Promise((ok) => setTimeout(ok, 2000));
+      if (signal && signal.aborted) throw Object.assign(new Error('Parado'), { name: 'AbortError' });
+      j = await pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal });
+    }
   } catch (e) {
     if (e.name === 'AbortError') throw e;
     const d = e.datos || {};
     if (d.cupo) guardarCupo(d.cupo);
-    apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}`, ms: Date.now() - t0 });
+    apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}${e.detalle ? ` (${e.detalle})` : ''}`, ms: Date.now() - t0 });
     // sin cupo hoy: no es un fallo (lo dice el Worker); lo demás es que el servicio no está (y vale tu clave, si la tienes)
     if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo });
     if (e.sesion || e.estado === 401) throw new ErrorIA(e.message || 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo.', 401, { servicio: true });

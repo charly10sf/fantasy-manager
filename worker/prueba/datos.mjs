@@ -358,8 +358,11 @@ const c1 = aClaude[aClaude.length - 1];
 ok(r.s === 200 && r.j.plan && r.j.plan.titular === 'Vende a X y espera' && r.j.cupo.usados === 1 && r.j.cupo.quedan === 1, `/plan: el primero del día (${r.t.slice(0, 160)})`);
 ok(c1 && c1.clave === 'sk-ant-prueba' && c1.b.model === 'claude-haiku-5-5' && c1.b.max_tokens === 5000 && c1.b.system === PS.sistemaCorto({ tono: 'broma', bloq: ['dineroRivales'], anuncio: true, alias: { puesto: true, ex: false } }) && !c1.b.system.includes('Olvida'), 'a Claude le llega el sistema fijo del Worker (sin lo que mande la app), Haiku y 5.000 de tope');
 ok(c1.b.system.includes('LOS DE LA LIGA VAN CON ALIAS') && c1.b.system.includes('FUNCIONES BLOQUEADAS') && c1.b.messages[0].content === PEDIDO, 'con el aviso de los alias, las funciones cerradas y el pedido tal cual');
-r = await plan({});
+r = await plan({ rid: 'corte1234abc' });
 ok(r.s === 200 && r.j.cupo.usados === 2 && r.j.cupo.quedan === 0, `/plan: el segundo (${r.j && JSON.stringify(r.j.cupo)})`);
+// (15 nov) el mismo pedido otra vez (la app lo repite tras un corte, con el mismo rid): sale y no cuenta dos veces
+r = await plan({ rid: 'corte1234abc' });
+ok(r.s === 200 && r.j.plan && r.j.cupo.usados === 2, `/plan repetido con el mismo rid: no cuenta otra vez (${r.t.slice(0, 120)})`);
 const antesC = aClaude.length;
 r = await plan({});
 ok(r.s === 429 && r.j.cupo && r.j.cupo.masConAnuncio && aClaude.length === antesC, `/plan: el tercero sin anuncio, 429 y no llega a Claude (${r.t})`);
