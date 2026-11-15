@@ -3213,16 +3213,16 @@
   "dia": "2026-11-16",
   "llamadas": {
    "clasificar": 0,
-   "redactar": 8,
-   "revisar": 2,
+   "redactar": 12,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 112540,
-  "salida": 2321,
-  "cacheLee": 2903,
+  "entrada": 171927,
+  "salida": 4112,
+  "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.255838,
+  "dolares": 0.393102,
   "reservado": 0
  },
  "recientes": {
@@ -3628,9 +3628,9 @@
  ],
  "fallosRedaccion": {
   "mercado|2026-11-16": {
-   "n": 2,
+   "n": 3,
    "t": "2026-11-15T23:15:25.099Z",
-   "ultima": "2026-11-15T23:16:00.366Z"
+   "ultima": "2026-11-15T23:16:37.882Z"
   }
  },
  "rasgos": {
@@ -7471,13 +7471,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2909,
+   "ok": 2911,
    "fallos": 0,
-   "ejecuciones": 2336,
+   "ejecuciones": 2337,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T23:11:21.884Z"
+   "ultima": "2026-11-15T23:16:13.688Z"
   }
  },
  "ptsDirecto": {},
@@ -7494,15 +7494,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T23:16:00.385Z"
+   "ultimaBien": "2026-11-15T23:16:38.401Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T23:11:24.121Z"
+   "ultimaBien": "2026-11-15T23:16:38.401Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T23:11:24.121Z"
+   "ultimaBien": "2026-11-15T23:16:38.401Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
