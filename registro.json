@@ -3213,16 +3213,16 @@
   "dia": "2026-11-16",
   "llamadas": {
    "clasificar": 0,
-   "redactar": 12,
-   "revisar": 4,
+   "redactar": 16,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 171927,
-  "salida": 4112,
-  "cacheLee": 8709,
+  "entrada": 230999,
+  "salida": 6136,
+  "cacheLee": 14515,
   "cacheEscribe": 2903,
-  "dolares": 0.393102,
+  "dolares": 0.532066,
   "reservado": 0
  },
  "recientes": {
@@ -3628,9 +3628,9 @@
  ],
  "fallosRedaccion": {
   "mercado|2026-11-16": {
-   "n": 3,
+   "n": 4,
    "t": "2026-11-15T23:15:25.099Z",
-   "ultima": "2026-11-15T23:16:37.882Z"
+   "ultima": "2026-11-15T23:17:17.125Z"
   }
  },
  "rasgos": {
@@ -7494,7 +7494,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T23:16:38.401Z"
+   "ultimaBien": "2026-11-15T23:17:17.135Z"
   },
   "FotMob": {
    "seguidas": 0,
