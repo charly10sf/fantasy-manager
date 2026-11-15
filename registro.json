@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
@@ -2131,7 +2130,10 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000,
+   "AS|https://as.com/futbol/primera/optimismo-con-rodri-f202611-n/": 1794743623000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261115/1004251209/parrott-topa-schlager-valles-vuelve-quedar-fuera.html": 1794743523000,
+   "SPORT|136463190": 1794740210000
   },
   "hechos": [
    {
@@ -2344,7 +2346,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3252,17 +3254,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 180813,
-  "salida": 14335,
+  "entrada": 183241,
+  "salida": 14694,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.370195,
+  "dolares": 0.370617,
   "reservado": 0
  },
  "recientes": {
@@ -7489,13 +7491,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2769,
+   "ok": 2770,
    "fallos": 0,
-   "ejecuciones": 2199,
+   "ejecuciones": 2200,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:56:14.518Z"
+   "ultima": "2026-11-15T12:01:20.101Z"
   }
  },
  "ptsDirecto": {},
@@ -7512,15 +7514,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:56:18.950Z"
+   "ultimaBien": "2026-11-15T12:01:27.085Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:56:18.950Z"
+   "ultimaBien": "2026-11-15T12:01:27.085Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:56:18.950Z"
+   "ultimaBien": "2026-11-15T12:01:27.085Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7528,11 +7530,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:56:18.950Z"
+   "ultimaBien": "2026-11-15T12:01:27.085Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:56:18.950Z"
+   "ultimaBien": "2026-11-15T12:01:27.085Z"
   }
  },
  "avisos": [
