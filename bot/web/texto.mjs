@@ -12,6 +12,7 @@ const SISTEMA = `Escribes el análisis de la previa de una jornada de LaLiga Fan
 
 Reglas:
 - Solo lo que viene en los HECHOS. Nada de lesiones, rivales, rachas, formas de jugar o cifras que no estén. Si un dato no está, no lo supongas ni lo menciones.
+- No califiques a los equipos ni a los partidos («rival fuerte», «partido de muchas tarjetas», «equipo goleador»): eso no viene en los hechos.
 - Las cifras se copian tal cual vienen escritas en los hechos («132,2 M», «17,2 %», «21:00», «jornada 14»). No hagas cuentas nuevas ni redondees a otra cosa.
 - Cada apartado lleva de 2 a 4 frases (5 como mucho si hay muchos jugadores) y no pasa de 700 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
 - Debajo de cada apartado la página ya lleva una tabla con todos los datos: no los enumeres. Elige a uno, dos o tres jugadores que importen y cuenta qué significa para quien juega. Una frase como «Le siguen X (+18,0 M, +27,4 %, 10 días), Y (…)» es volcar la tabla: prohibido. Como mucho dos cifras por frase.
@@ -29,7 +30,7 @@ const REVISOR = `Compruebas los datos del análisis de la previa de una jornada 
 ${REGLAS} La reapertura de cláusulas es a la hora del primer partido de la jornada (viene en los hechos).
 
 Un apartado NO es publicable solo por una de estas dos cosas:
-1. Un error de hecho: algo que contradice los hechos o no está en ellos (un jugador en otro equipo, otro rival o día de partido, otro estado, una lesión distinta, una cifra atribuida a quien no es, una racha o un dato que no viene).
+1. Un error de hecho: algo que contradice los hechos o no está en ellos (un jugador en otro equipo, otro rival o día de partido, otro estado, una lesión distinta, una cifra atribuida a quien no es, una racha o un dato que no viene; también calificar un rival o un partido, como «rival fuerte» o «un partido que suele traer tarjetas»).
 2. Un consejo peligroso: alinear o fichar para esta jornada a un sancionado o a un lesionado, o pagar una cláusula con deuda.
 Las opiniones, los consejos discutibles, el estilo, lo que el texto no cuenta y las palabras parecidas («cumple sanción» por «no juega») NO son motivo: eso es publicable.
 En el motivo, copia la frase del texto que está mal y el dato de los hechos que la contradice. Si no puedes señalar las dos cosas, es publicable.`;
