@@ -2124,7 +2124,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
    "SPORT|136471879": 1794764063000,
    "SPORT|136475479": 1794767368000,
-   "SPORT|136475632": 1794768134000
+   "SPORT|136475632": 1794768134000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000
   },
   "hechos": [
    {
@@ -2287,7 +2288,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3208,17 +3209,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 211964,
-  "salida": 19558,
+  "entrada": 213834,
+  "salida": 19670,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.375922,
+  "dolares": 0.376165,
   "reservado": 0
  },
  "recientes": {
@@ -7445,13 +7446,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2864,
+   "ok": 2865,
    "fallos": 0,
-   "ejecuciones": 2294,
+   "ejecuciones": 2295,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T19:46:18.752Z"
+   "ultima": "2026-11-15T19:51:12.608Z"
   }
  },
  "ptsDirecto": {},
@@ -7468,15 +7469,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:46:23.508Z"
+   "ultimaBien": "2026-11-15T19:51:19.205Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:46:23.508Z"
+   "ultimaBien": "2026-11-15T19:51:19.205Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:46:23.508Z"
+   "ultimaBien": "2026-11-15T19:51:19.205Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7484,11 +7485,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:46:23.508Z"
+   "ultimaBien": "2026-11-15T19:51:19.205Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:46:23.508Z"
+   "ultimaBien": "2026-11-15T19:51:19.205Z"
   }
  },
  "avisos": [
