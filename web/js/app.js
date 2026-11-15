@@ -1590,8 +1590,9 @@ async function recargarWeb() {
    ventana que no se cierra. Con la misma parte Android, «Actualizar ahora» la baja con AlDia y recarga; si AlDia no
    puede (ya la descartó una vez, falla la descarga…) o hace falta la parte Android nueva, «Descargar la app», que se
    instala encima sin perder nada. En la de Google Play no se obliga a la parte Android nueva: la da la tienda cuando
-   Google la revisa, y hasta entonces no hay nada que poner */
-const APK_URL = 'https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk';
+   Google la revisa, y hasta entonces no hay nada que poner. Desde la 0.7.13j (Carlos, 16 nov: «no quiero que se descargue
+   de ningún lado que no sea esa») la app solo se descarga de Google Play: el APK de GitHub ya no baja nada, ve el aviso
+   de pasarse a Google Play (avisoPlay) y, donde antes decía «Descargar la app», sale «Ir a Google Play» */
 async function paquetePublicado() {
   // (solo del dominio: el puente del móvil no deja pedir a otros sitios, y es de donde lo baja AlDia)
   for (const u of ['https://fantasymanagerapp.com/paquete.json']) {
@@ -1635,7 +1636,9 @@ async function mirarAppNueva() {
   const mia = nativo.huellaNativa();
   const apk = !!(mia && j.nativo && j.nativo !== mia);
   const play = nativo.canal() === 'play';
-  if (apk && play) return;
+  // con la parte Android nueva no hay nada que poner: en Google Play la da la tienda y el APK de GitHub ya no se publica
+  // (0.7.13j: solo el aviso de pasarse a Google Play, nunca una descarga de fuera)
+  if (apk) return;
   S.appNueva = { version: j.version, apk, play };
   forzarAppNueva(apk ? 'apk' : 'pide');
 }
@@ -1652,11 +1655,11 @@ function forzarAppNueva(paso, detalle = '') {
   }
   A.paso = paso;
   clearTimeout(forzarT);
-  const bajar = '<button class="btn ancho" data-accion="bajarApp">Descargar la app</button>';
+  const bajar = `<button class="btn ancho" data-abrir="${PLAY_URL}">Ir a Google Play</button>`;
   const otra = (prim) => `<button class="btn ancho${prim ? '' : ' sec'}" data-accion="ponerAppNueva">${paso === 'fallo' ? 'Volver a intentarlo' : 'Actualizar ahora'}</button>`;
   let txt, botones;
   if (paso === 'apk') {
-    txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Esta trae cambios en la parte del móvil, así que hay que descargar la app otra vez: se instala encima y no pierdes nada.`;
+    txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Esta trae cambios en la parte del móvil: se instala desde Google Play.`;
     botones = bajar;
   } else if (paso === 'bajando') {
     txt = `Descargando la <b>${esc(A.version)}</b>… En cuanto esté, la app se abre sola con ella.`;
@@ -1666,7 +1669,7 @@ function forzarAppNueva(paso, detalle = '') {
   } else if (paso === 'fallo') {
     txt = A.play
       ? `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Prueba otra vez en un rato y, si sigue, actualiza la app desde Google Play.`
-      : `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Descarga la app otra vez: se instala encima y no pierdes nada.`;
+      : `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Instala la app desde Google Play.`;
     botones = A.play ? otra(true) : bajar + otra(false);
   } else {
     txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Actualiza para seguir: es un momento y no pierdes nada.`;
@@ -2559,6 +2562,8 @@ window.vozTexto = (texto, error) => {
 async function buscarVersion(avisar = false) {
   // la de Google Play la actualiza la tienda; la web siempre está al día
   if (!enApp || nativo.canal() === 'play') { if (avisar) tostada(enApp ? 'Las versiones nuevas llegan por Google Play' : 'La web siempre está en la última versión'); return; }
+  // el APK de GitHub ya no se publica: ni versión nueva ni descarga, solo el paso a Google Play (0.7.13j)
+  if (enApkGithub()) { if (avisar) avisoPlay(true); return; }
   // la web nueva se baja sola (contesta webBuscada); el APK nuevo solo hace falta si ha cambiado la parte Android
   S.versionT = Date.now();
   const conAlDia = avisar ? nativo.buscarWeb() : !!nativo.estadoWeb();
@@ -3110,7 +3115,7 @@ document.addEventListener('click', async (ev) => {
     case 'ponerAppNueva': ponerAppNueva(); break;
     case 'avisoPlay': avisoPlay(true); break;
     case 'cerrarAvisoPlay': { const d = document.getElementById('aviso-play'); if (d) d.remove(); break; }
-    case 'bajarApp': nativo.actualizar((S.nueva && S.nueva.apk) || APK_URL); tostada('Descargando la app… Cuando acabe, instálala encima', 6000); break;
+    case 'bajarApp': if (enApkGithub()) avisoPlay(true); else nativo.abrir(PLAY_URL); break;
     case 'recargarWeb': recargarWeb(); break;
     case 'buscarWeb': {
       tostada('Buscando versión nueva…', 2000);
@@ -3119,7 +3124,7 @@ document.addEventListener('click', async (ev) => {
       if (S.webNuevaWeb) recargarWeb(); else tostada(`Tienes la última: la ${VERSION}`);
       break;
     }
-    case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Descargando la versión nueva…'); } break;
+    case 'actualizarApp': if (enApkGithub()) avisoPlay(true); else if (S.nueva) nativo.abrir(PLAY_URL); break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); olvidarLleno(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarServidor':
       if (!confirm('¿Borrar lo que guarda Fantasy Manager de ti en su servidor? Es que usas la app, cuánto rato y tus avisos de fallo con sus respuestas. Tu liga, tu sesión y tu clave están en este dispositivo y no se tocan. Si sigues usando la app, se volverá a apuntar que la usas.')) break;

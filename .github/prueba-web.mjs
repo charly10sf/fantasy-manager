@@ -486,7 +486,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   const casos = [
     ['misma parte Android, AlDia la baja', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva' }, 'recarga'],
     ['AlDia ya la descartó', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'igual' }, 'descargar'],
-    ['parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'apk'],
+    // (0.7.13j) el APK de GitHub ya no se publica: con la parte Android nueva no ofrece ninguna descarga
+    ['APK de GitHub con parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
     ['Google Play con parte Android nueva', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
     ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
     ['la publicada no es más nueva', { canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
@@ -514,7 +515,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
           if (espera === 'recarga') { if (cargas < 2) r = 'no recarga con la nueva'; }
           else {
             const b1 = await botones();
-            if (espera === 'descargar' && b1.join() !== 'Descargar la app,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
+            if (espera === 'descargar' && b1.join() !== 'Ir a Google Play,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
+            if (espera === 'descargar' && await page.$('#forzar [data-accion="bajarApp"]')) r = 'aún ofrece descargar la app de fuera de Google Play';
             if (espera === 'reintentar' && b1.join() !== 'Volver a intentarlo') r = `botones tras el error ${b1.join()}`;
             const txt = await page.$eval('#forzar p', (p) => p.textContent);
             if (espera === 'reintentar' && !/sin red/.test(txt)) r = `no dice el motivo: ${txt}`;

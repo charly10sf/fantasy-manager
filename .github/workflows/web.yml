@@ -2,8 +2,9 @@
 # https://charly10sf.github.io/fantasy-manager/ y, con el dominio en GitHub Pages (el plan de claude/BLOQUEO-LALIGA.md,
 # para que con partidos no lo corten), https://fantasymanagerapp.com. Hace falta una vez: Settings > Pages > Source:
 # «GitHub Actions» (y el dominio en «Custom domain»). Lleva también lo que antes solo subía dominio.yml a Cloudflare:
-# app.json y el APK en /descargas/ (ads.txt y app-ads.txt ya van en web/). Por eso se vuelve a lanzar al acabar
-# «App Android» en main: es cuando cambian app.json y el APK.
+# app.json (ads.txt y app-ads.txt ya van en web/). Por eso se vuelve a lanzar al acabar «App Android» en main.
+# Desde el 16 nov (Carlos: «no quiero que se descargue de ningún lado que no sea esa») ya no lleva el APK en /descargas/:
+# la app solo se descarga de Google Play.
 name: Web
 
 on:
@@ -70,13 +71,8 @@ jobs:
           PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}
         run: bash .github/firmar-paquete.sh web/paquete.json
       # después de las huellas: no van en paquete.json (AlDia no las baja), solo se sirven
-      - name: app.json y el APK
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cp app.json web/app.json
-          mkdir -p web/descargas
-          gh release download app -p fantasy-manager.apk -D web/descargas -R "${{ github.repository }}" || echo "::warning::No se ha podido bajar el APK de la release"
+      - name: app.json
+        run: cp app.json web/app.json
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: web

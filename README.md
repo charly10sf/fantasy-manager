@@ -2,7 +2,7 @@
 
 App de Android para seguir mi liga privada de LaLiga Fantasy desde el móvil: cláusulas de los rivales y cuándo se abren, cuándo caducan las mías y quién me las puede quitar, el mercado, quién sube y quién baja, los movimientos de cada rival y un análisis diario con IA (Gemini, gratis) que lee las noticias, el calendario y los parones de selecciones.
 
-**Descargar:** [fantasy-manager.apk](https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk) (abrir en el móvil e instalar). Las versiones nuevas las ofrece la propia app.
+**Descargar:** solo desde [Google Play](https://play.google.com/store/apps/details?id=es.fantasymanager.app). En iPhone y en el ordenador, desde la web: https://fantasymanagerapp.com
 
 ## Cómo funciona
 
