@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/": 1794482297000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
@@ -2140,18 +2139,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/",
-    "medio": "AS",
-    "t": 1794482297000,
-    "id": "2617",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Sadiq se va de vacaciones tocado físicamente",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html",
     "medio": "Diario de Sevilla",
@@ -7545,13 +7532,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2761,
+   "ok": 2762,
    "fallos": 0,
-   "ejecuciones": 2191,
+   "ejecuciones": 2192,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:16:19.101Z"
+   "ultima": "2026-11-15T11:21:12.719Z"
   }
  },
  "ptsDirecto": {},
@@ -7568,15 +7555,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:16:21.060Z"
+   "ultimaBien": "2026-11-15T11:21:18.555Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:16:21.060Z"
+   "ultimaBien": "2026-11-15T11:21:18.555Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:16:21.060Z"
+   "ultimaBien": "2026-11-15T11:21:18.555Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7584,11 +7571,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:16:21.060Z"
+   "ultimaBien": "2026-11-15T11:21:18.555Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:16:21.060Z"
+   "ultimaBien": "2026-11-15T11:21:18.555Z"
   }
  },
  "avisos": [
