@@ -13,7 +13,7 @@ const SISTEMA = `Escribes el análisis de la previa de una jornada de LaLiga Fan
 Reglas:
 - Solo lo que viene en los HECHOS. Nada de lesiones, rivales, rachas, formas de jugar o cifras que no estén. Si un dato no está, no lo supongas ni lo menciones.
 - Las cifras se copian tal cual vienen escritas en los hechos («132,2 M», «17,2 %», «21:00», «jornada 14»). No hagas cuentas nuevas ni redondees a otra cosa.
-- Cada apartado lleva de 2 a 4 frases y no pasa de 600 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
+- Cada apartado lleva de 2 a 4 frases (5 como mucho si hay muchos jugadores) y no pasa de 700 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
 - Prosa normal, castellano de España, cercano pero serio. Sin listas, negritas, emojis ni guiones largos. Frases de longitud variada.
 - Cada apartado empieza de forma distinta y no repite la estructura de otro. Prohibido: «cabe destacar», «es importante», «en resumen», «sin duda», «no solo… sino también», «a tener en cuenta», «ojo al dato», frases de cierre genéricas y exageraciones.
 - No nombres webs, medios, fuentes ni «expertos». No hables de inteligencia artificial.
@@ -50,7 +50,7 @@ export function validar(texto, { permitidas, nombresHechos, nombresLiga }) {
   if (!t) return 'vacío';
   if (t.length > 1000) return `demasiado largo (${t.length} caracteres)`;
   const frases = t.replace(/(^|[\s(])([A-ZÁÉÍÓÚÑ])\.\s/g, '$1$2· ').split(/(?<=[.!?])\s+/).filter(Boolean).length;
-  if (frases > 5) return `${frases} frases`;
+  if (frases > 6) return `${frases} frases`;
   const m = t.match(MALAS);
   if (m) return `frase prohibida: «${m[0]}»`;
   for (const c of cifras(t)) {

@@ -83,6 +83,8 @@ if (arg('textos')) {
 }
 console.log(`Texto: ${Object.values(r.textos).filter(Boolean).length} apartados con análisis; sin él: ${Object.entries(r.fallos).map(([k, m]) => `${k} (${m})`).join(', ') || 'ninguno'}; ${r.dolares} $`);
 
+for (const [k, t] of Object.entries(r.textos)) console.log(`\n[${k}] ${t || '(sin análisis)'}`);
+
 // los archivos
 mkdirSync(DIR, { recursive: true });
 writeFileSync(path.join(DIR, `${J}.json`), JSON.stringify({ hechos: h, textos: r.textos, fallos: r.fallos, dolares: r.dolares, ok: r.ok }, null, 1) + '\n');
