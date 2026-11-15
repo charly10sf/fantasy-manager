@@ -2140,7 +2140,8 @@
    "SPORT|136452331": 1794691903000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000,
-   "SPORT|136450564": 1794729623000
+   "SPORT|136450564": 1794729623000,
+   "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000
   },
   "hechos": [
    {
@@ -2390,7 +2391,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3298,17 +3299,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 159104,
-  "salida": 10257,
+  "entrada": 161022,
+  "salida": 10917,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.365985,
+  "dolares": 0.366507,
   "reservado": 0
  },
  "recientes": {
@@ -7535,13 +7536,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2736,
+   "ok": 2737,
    "fallos": 0,
-   "ejecuciones": 2166,
+   "ejecuciones": 2167,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T09:11:13.916Z"
+   "ultima": "2026-11-15T09:16:14.754Z"
   }
  },
  "ptsDirecto": {},
@@ -7558,15 +7559,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:11:20.159Z"
+   "ultimaBien": "2026-11-15T09:16:22.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:11:20.159Z"
+   "ultimaBien": "2026-11-15T09:16:22.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:11:20.159Z"
+   "ultimaBien": "2026-11-15T09:16:22.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7574,11 +7575,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:11:20.159Z"
+   "ultimaBien": "2026-11-15T09:16:22.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:11:20.159Z"
+   "ultimaBien": "2026-11-15T09:16:22.245Z"
   }
  },
  "avisos": [
