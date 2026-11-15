@@ -1955,14 +1955,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2562",
-   "que": "lesion",
-   "antes": "ok",
-   "t": 1794773641898
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "SPORT|136389889": 1794515511000,
@@ -2140,7 +2133,8 @@
    "SPORT|136475632": 1794768134000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000,
+   "SPORT|136476258": 1794770321000
   },
   "hechos": [
    {
@@ -2303,7 +2297,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3224,17 +3218,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 232118,
-  "salida": 20030,
+  "entrada": 234176,
+  "salida": 20148,
   "cacheLee": 14515,
   "cacheEscribe": 8709,
-  "dolares": 0.414049,
+  "dolares": 0.414314,
   "reservado": 0
  },
  "recientes": {
@@ -7461,13 +7455,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2872,
+   "ok": 2873,
    "fallos": 0,
-   "ejecuciones": 2302,
+   "ejecuciones": 2303,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T20:21:18.583Z"
+   "ultima": "2026-11-15T20:26:11.237Z"
   }
  },
  "ptsDirecto": {},
@@ -7484,15 +7478,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:21:29.820Z"
+   "ultimaBien": "2026-11-15T20:26:17.128Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:21:29.820Z"
+   "ultimaBien": "2026-11-15T20:26:17.128Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:21:29.820Z"
+   "ultimaBien": "2026-11-15T20:26:17.128Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7500,11 +7494,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:21:29.820Z"
+   "ultimaBien": "2026-11-15T20:26:17.128Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T20:21:29.820Z"
+   "ultimaBien": "2026-11-15T20:26:17.128Z"
   }
  },
  "avisos": [
