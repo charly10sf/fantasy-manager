@@ -22,7 +22,7 @@ export const VERSION = '0.7.13h';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.13h', f: '2026-11-15', h: 'HH:MM', t: '«Tus rivales», al día',
+    v: '0.7.13h', f: '2026-11-15', h: '18:30', t: '«Tus rivales», al día',
     cosas: [
       { tipo: 'arreglo', d: 'lupa', t: '«Tus rivales» contaba fichajes que ya no valían', x: 'En el plan con la IA, «Tus rivales» podía decir que un rival había fichado o tenía a un jugador que ya no era suyo, por ejemplo porque se lo habías quitado tú después. Ahora se comprueba con tu liga cada vez que se actualiza la app, y lo que ya no es verdad se quita.' },
     ],
