@@ -2128,7 +2128,8 @@
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
    "SPORT|136465336": 1794748235000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
-   "SPORT|136469023": 1794751165000
+   "SPORT|136469023": 1794751165000,
+   "SPORT|136471100": 1794756556000
   },
   "hechos": [
    {
@@ -2291,7 +2292,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3195,17 +3196,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 198013,
-  "salida": 18253,
+  "entrada": 200058,
+  "salida": 18372,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.373874,
+  "dolares": 0.374138,
   "reservado": 0
  },
  "recientes": {
@@ -7432,13 +7433,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2825,
+   "ok": 2826,
    "fallos": 0,
-   "ejecuciones": 2255,
+   "ejecuciones": 2256,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T16:31:17.603Z"
+   "ultima": "2026-11-15T16:36:20.382Z"
   }
  },
  "ptsDirecto": {},
@@ -7455,15 +7456,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:31:23.147Z"
+   "ultimaBien": "2026-11-15T16:36:25.186Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:31:23.147Z"
+   "ultimaBien": "2026-11-15T16:36:25.186Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:31:23.147Z"
+   "ultimaBien": "2026-11-15T16:36:25.186Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7471,11 +7472,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:31:23.147Z"
+   "ultimaBien": "2026-11-15T16:36:25.186Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T16:31:23.147Z"
+   "ultimaBien": "2026-11-15T16:36:25.186Z"
   }
  },
  "avisos": [
