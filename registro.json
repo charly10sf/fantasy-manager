@@ -1951,9 +1951,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/vivian-rincon-caen-convocatoria-euskal-selekzioa-amistoso-20261112113833-nt.html": 1794479913000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250174/vivian-hugo-rincon-sufren-sendas-sobrecargas.html": 1794480892000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250164/carmona-candidato-salir-mercado-invierno.html": 1794479934000,
    "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/": 1794482297000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
@@ -7546,13 +7544,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2753,
+   "ok": 2754,
    "fallos": 0,
-   "ejecuciones": 2183,
+   "ejecuciones": 2184,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T10:36:09.496Z"
+   "ultima": "2026-11-15T10:41:20.267Z"
   }
  },
  "ptsDirecto": {},
@@ -7569,15 +7567,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:36:12.066Z"
+   "ultimaBien": "2026-11-15T10:41:26.157Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:36:12.066Z"
+   "ultimaBien": "2026-11-15T10:41:26.157Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:36:12.066Z"
+   "ultimaBien": "2026-11-15T10:41:26.157Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7585,11 +7583,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:36:12.066Z"
+   "ultimaBien": "2026-11-15T10:41:26.157Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:36:12.066Z"
+   "ultimaBien": "2026-11-15T10:41:26.157Z"
   }
  },
  "avisos": [
