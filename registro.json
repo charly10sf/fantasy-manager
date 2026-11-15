@@ -3299,32 +3299,31 @@
    "SPORT|136448657": 1794681682000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794726037930
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 2,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 29525,
-  "salida": 399,
+  "entrada": 31255,
+  "salida": 485,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.070298,
+  "dolares": 0.070514,
   "reservado": 0
  },
  "recientes": {
@@ -7547,13 +7546,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2713,
+   "ok": 2714,
    "fallos": 0,
-   "ejecuciones": 2143,
+   "ejecuciones": 2144,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T07:16:19.340Z"
+   "ultima": "2026-11-15T07:21:13.443Z"
   }
  },
  "ptsDirecto": {},
@@ -7570,15 +7569,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T07:16:23.946Z"
+   "ultimaBien": "2026-11-15T07:21:19.675Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T07:16:23.946Z"
+   "ultimaBien": "2026-11-15T07:21:19.675Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T07:16:23.946Z"
+   "ultimaBien": "2026-11-15T07:21:19.675Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7586,7 +7585,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T07:16:23.946Z"
+   "ultimaBien": "2026-11-15T07:21:19.675Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
