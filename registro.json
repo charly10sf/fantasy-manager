@@ -1952,7 +1952,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
    "SPORT|135971655": 1794497453000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000,
    "SPORT|136374311": 1794499233000,
@@ -7439,13 +7438,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2807,
+   "ok": 2808,
    "fallos": 0,
-   "ejecuciones": 2237,
+   "ejecuciones": 2238,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T15:01:16.083Z"
+   "ultima": "2026-11-15T15:06:17.198Z"
   }
  },
  "ptsDirecto": {},
@@ -7462,15 +7461,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:01:23.467Z"
+   "ultimaBien": "2026-11-15T15:06:21.305Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:01:23.467Z"
+   "ultimaBien": "2026-11-15T15:06:21.305Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:01:23.467Z"
+   "ultimaBien": "2026-11-15T15:06:21.305Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7478,11 +7477,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:01:23.467Z"
+   "ultimaBien": "2026-11-15T15:06:21.305Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T15:01:23.467Z"
+   "ultimaBien": "2026-11-15T15:06:21.305Z"
   }
  },
  "avisos": [
