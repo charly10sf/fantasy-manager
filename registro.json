@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136384919": 1794505413000,
    "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000,
    "SPORT|136386826": 1794509158000,
    "SPORT|136387136": 1794508997000,
@@ -7426,13 +7425,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2839,
+   "ok": 2840,
    "fallos": 0,
-   "ejecuciones": 2269,
+   "ejecuciones": 2270,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T17:41:14.677Z"
+   "ultima": "2026-11-15T17:46:14.139Z"
   }
  },
  "ptsDirecto": {},
@@ -7449,15 +7448,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:41:20.334Z"
+   "ultimaBien": "2026-11-15T17:46:17.622Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:41:20.334Z"
+   "ultimaBien": "2026-11-15T17:46:17.622Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:41:20.334Z"
+   "ultimaBien": "2026-11-15T17:46:17.622Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7465,11 +7464,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:41:20.334Z"
+   "ultimaBien": "2026-11-15T17:46:17.622Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:41:20.334Z"
+   "ultimaBien": "2026-11-15T17:46:17.622Z"
   }
  },
  "avisos": [
