@@ -61,7 +61,36 @@ def esquema_html(p):
 
 
 def publicada(p):
-    return not p.get('borrador')
+    """escrita y en su sitio: sale en el menú, el índice de guías, la portada y «Sigue leyendo»"""
+    return not p.get('borrador') and not p.get('redirige')
+
+
+def indexable(p):
+    """publicada y para Google: va al sitemap y sin noindex. Con "indexar": false sigue enlazada para los usuarios,
+    pero fuera del índice de Google (guías útiles que no aportan nada que no tenga otra web)"""
+    return publicada(p) and p.get('indexar', True)
+
+
+def redireccion(p):
+    """una página fundida en otra ("redirige": ruta de destino): GitHub Pages no hace redirecciones de servidor, así
+    que va una página mínima con refresh a 0 (Google lo trata como redirección permanente) y la canónica del destino"""
+    destino = p['redirige']
+    url = DOMINIO + (destino[:-len('index.html')] if destino.endswith('index.html') else destino)
+    rel = os.path.relpath(destino, os.path.dirname(p['ruta']) or '.')
+    return f'''<!doctype html>
+<!-- Generada por .github/paginas.py: esta página se fundió en {destino} -->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{e(p['titulo'])}</title>
+  <link rel="canonical" href="{url}">
+  <meta http-equiv="refresh" content="0; url={rel}">
+</head>
+<body>
+  <p>Esta guía ahora está dentro de <a href="{rel}">{url}</a>.</p>
+</body>
+</html>
+'''
 
 
 def menu(raiz, hay_guias):
@@ -108,7 +137,7 @@ def migas(raiz, p, hay_guias):
 
 def datos_estructurados(p, url):
     """en las guías: el artículo (con la imagen de compartir) y las migas Inicio › Guías › guía"""
-    if not publicada(p) or p['tipo'] != 'guia' or p['ruta'] == 'guias/index.html':
+    if not indexable(p) or p['tipo'] != 'guia' or p['ruta'] == 'guias/index.html':
         return ''
     titulo = p.get('h1') or p['titulo']
     articulo = {'@type': 'Article', 'headline': titulo,
@@ -146,7 +175,7 @@ def mas_guias(p):
 def pagina(p, contenido, hay_guias):
     raiz = '../' * p['ruta'].count('/')
     url = DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta'])
-    robots = '' if publicada(p) else '\n  <meta name="robots" content="noindex, follow">'
+    robots = '' if indexable(p) else '\n  <meta name="robots" content="noindex, follow">'
     fecha = ''
     if p['tipo'] == 'guia' and p['ruta'] != 'guias/index.html' and publicada(p):
         fecha = f'\n  <p class="fecha">Actualizada el {fecha_larga(p["fecha"])}</p>'
@@ -274,6 +303,11 @@ def main():
     escritas = []
     for p in paginas + [indice]:
         ruta = os.path.join(WEB, p['ruta'])
+        if p.get('redirige'):
+            with open(ruta, 'w', encoding='utf-8') as f:
+                f.write(redireccion(p))
+            escritas.append(p)
+            continue
         if p is indice:
             contenido = indice_guias(guias, faq)
         else:
@@ -289,7 +323,7 @@ def main():
 
     # el sitemap: la portada y solo lo publicado
     urls = [(DOMINIO, hoy)] + [(DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta']), p['fecha'])
-                               for p in escritas if publicada(p)]
+                               for p in escritas if indexable(p)]
     with open(os.path.join(WEB, 'sitemap.xml'), 'w', encoding='utf-8') as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         for u, fe in urls:
@@ -301,8 +335,10 @@ def main():
         print('Títulos de más de 60 caracteres:', ', '.join(largos))
     with open(os.path.join(WEB, 'robots.txt'), 'w', encoding='utf-8') as f:
         f.write(f'User-agent: *\nAllow: /\n\nSitemap: {DOMINIO}sitemap.xml\n')
-    borradores = sum(1 for p in escritas if not publicada(p))
-    print(f'{len(escritas)} páginas ({borradores} borradores), {len(urls)} direcciones en el sitemap')
+    borradores = sum(1 for p in escritas if not publicada(p) and not p.get('redirige'))
+    fuera = sum(1 for p in escritas if publicada(p) and not indexable(p))
+    redir = sum(1 for p in escritas if p.get('redirige'))
+    print(f'{len(escritas)} páginas ({borradores} borradores, {fuera} sin indexar, {redir} redirecciones), {len(urls)} direcciones en el sitemap')
 
 
 if __name__ == '__main__':

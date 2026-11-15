@@ -244,11 +244,9 @@ const TODAS_GUIAS = [
   ["cuanto-pujar.html", "Cuánto pujar"],
   ["cuando-vender.html", "Cuándo vender"],
   ["saldo-negativo.html", "Saldo negativo"],
-  ["ganar-dinero.html", "Ganar dinero"],
   ["alineacion.html", "Alineación"],
   ["puntos-porteros-laliga-fantasy.html", "Puntos de los porteros"],
   ["puntos-dazn-laliga-fantasy.html", "Puntos DAZN"],
-  ["lesionados-sancionados.html", "Lesionados"],
   ["apercibidos-laliga.html", "Apercibidos"],
 ];
 const FAQ_GUIA = "preguntas-frecuentes.html";

@@ -1,5 +1,5 @@
 {
-  "_leeme": "Las páginas públicas de la web (HTML real, sin JavaScript). Las genera .github/paginas.py: cabecera, menú, pie, sitemap.xml y robots.txt. El texto de cada página va dentro de su archivo, entre <!-- contenido --> y <!-- /contenido -->, y se edita ahí. Una guía con \"borrador\": true no se indexa (noindex), no va al sitemap ni al índice de guías ni al menú; al tener el texto escrito, se quita \"borrador\" y se pone la fecha. \"titulo\" es el <title> (unos 60 caracteres como mucho) y \"descripcion\" la meta description (unos 150). En las guías, «grupo» es el apartado del índice (empezar, clausulas, mercado, once), «corto» el nombre en la línea «También: …» de la portada y «relacionadas» las tres rutas de «Sigue leyendo» (si falta, las tres siguientes).",
+  "_leeme": "Las páginas públicas de la web (HTML real, sin JavaScript). Las genera .github/paginas.py: cabecera, menú, pie, sitemap.xml y robots.txt. El texto de cada página va dentro de su archivo, entre <!-- contenido --> y <!-- /contenido -->, y se edita ahí. Una guía con \"borrador\": true no se indexa (noindex), no va al sitemap ni al índice de guías ni al menú; al tener el texto escrito, se quita \"borrador\" y se pone la fecha. \"titulo\" es el <title> (unos 60 caracteres como mucho) y \"descripcion\" la meta description (unos 150). En las guías, «grupo» es el apartado del índice (empezar, clausulas, mercado, once), «corto» el nombre en la línea «También: …» de la portada y «relacionadas» las tres rutas de «Sigue leyendo» (si falta, las tres siguientes). «indexar»: false deja la guía publicada y enlazada, pero con noindex y fuera del sitemap. «redirige»: ruta de la guía en la que se fundió; se escribe una página que lleva a ella y sale de todas las listas.",
   "paginas": [
     {
       "ruta": "privacidad.html",
@@ -60,7 +60,8 @@
       ],
       "grupo": "empezar",
       "corto": "Empezar una liga",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/clausulas-laliga-fantasy.html", "guias/cuanto-pujar.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/clausulas-laliga-fantasy.html", "guias/cuanto-pujar.html"],
+      "indexar": false
     },
     {
       "ruta": "guias/puntos-laliga-fantasy.html",
@@ -97,7 +98,8 @@
       ],
       "grupo": "empezar",
       "corto": "Glosario",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/puntos-laliga-fantasy.html", "guias/empezar-liga.html"]
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/puntos-laliga-fantasy.html", "guias/empezar-liga.html"],
+      "indexar": false
     },
     {
       "ruta": "guias/clausulas-laliga-fantasy.html",
@@ -199,10 +201,10 @@
     {
       "ruta": "guias/valor-de-mercado.html",
       "tipo": "guia",
-      "fecha": "2026-11-03",
-      "h1": "Cómo sube y baja el valor de los jugadores en LaLiga Fantasy",
-      "titulo": "Valor de mercado en LaLiga Fantasy: por qué suben y bajan",
-      "descripcion": "Cuándo cambia el valor de los jugadores, qué lo mueve, cómo leer las rachas de subida y qué pasa con un lesionado.",
+      "fecha": "2026-11-15",
+      "h1": "Valor de mercado en LaLiga Fantasy: cómo sube, cómo baja y cómo ganar dinero",
+      "titulo": "Valor de mercado en LaLiga Fantasy y cómo ganar dinero",
+      "descripcion": "Cuándo cambia el valor, qué lo mueve, cómo leer las rachas y cómo ganar dinero con la compraventa sin perder puntos.",
       "busqueda": "cómo suben los jugadores LaLiga Fantasy",
       "esquema": [
         ["Cuándo cambia el valor", "La hora del cambio de mercado y cada cuánto se actualiza. Comprobar en el juego antes de escribirlo."],
@@ -213,7 +215,7 @@
       ],
       "grupo": "mercado",
       "corto": "Valor de mercado",
-      "relacionadas": ["guias/hora-mercado-laliga-fantasy.html", "guias/ganar-dinero.html", "guias/cuando-vender.html"]
+      "relacionadas": ["guias/hora-mercado-laliga-fantasy.html", "guias/cuando-vender.html", "guias/cuando-clausular.html"]
     },
     {
       "ruta": "guias/cuanto-pujar.html",
@@ -237,10 +239,10 @@
     {
       "ruta": "guias/cuando-vender.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
+      "fecha": "2026-11-15",
       "h1": "Cuándo vender un jugador en LaLiga Fantasy",
-      "titulo": "Cuándo vender jugadores en LaLiga Fantasy (y cuándo esperar)",
-      "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y qué hacer con lesionados y sancionados.",
+      "titulo": "Cuándo vender en LaLiga Fantasy: bajadas y lesionados",
+      "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y si vender o no a un lesionado o un sancionado.",
       "busqueda": "cuándo vender jugadores LaLiga Fantasy",
       "esquema": [
         ["Vender a LaLiga o a un rival", "Cuánto da cada camino y cuándo esperar una oferta."],
@@ -251,7 +253,7 @@
       ],
       "grupo": "mercado",
       "corto": "Cuándo vender",
-      "relacionadas": ["guias/valor-de-mercado.html", "guias/lesionados-sancionados.html", "guias/ganar-dinero.html"]
+      "relacionadas": ["guias/valor-de-mercado.html", "guias/apercibidos-laliga.html", "guias/cuanto-pujar.html"]
     },
     {
       "ruta": "guias/saldo-negativo.html",
@@ -288,7 +290,8 @@
       ],
       "grupo": "mercado",
       "corto": "Ganar dinero",
-      "relacionadas": ["guias/valor-de-mercado.html", "guias/cuando-vender.html", "guias/cuanto-pujar.html"]
+      "relacionadas": ["guias/valor-de-mercado.html", "guias/cuando-vender.html", "guias/cuanto-pujar.html"],
+      "redirige": "guias/valor-de-mercado.html"
     },
     {
       "ruta": "guias/alineacion.html",
@@ -307,7 +310,7 @@
       ],
       "grupo": "once",
       "corto": "Alineación",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/lesionados-sancionados.html", "guias/apercibidos-laliga.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/apercibidos-laliga.html", "guias/cuando-vender.html"]
     },
     {
       "ruta": "guias/puntos-porteros-laliga-fantasy.html",
@@ -362,7 +365,8 @@
       ],
       "grupo": "once",
       "corto": "Lesionados",
-      "relacionadas": ["guias/apercibidos-laliga.html", "guias/cuando-vender.html", "guias/alineacion.html"]
+      "relacionadas": ["guias/apercibidos-laliga.html", "guias/cuando-vender.html", "guias/alineacion.html"],
+      "redirige": "guias/cuando-vender.html"
     },
     {
       "ruta": "guias/apercibidos-laliga.html",
@@ -381,7 +385,7 @@
       ],
       "grupo": "once",
       "corto": "Apercibidos",
-      "relacionadas": ["guias/lesionados-sancionados.html", "guias/alineacion.html", "guias/puntos-laliga-fantasy.html"]
+      "relacionadas": ["guias/cuando-vender.html", "guias/alineacion.html", "guias/puntos-laliga-fantasy.html"]
     },
     {
       "ruta": "guias/preguntas-frecuentes.html",
