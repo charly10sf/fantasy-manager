@@ -3210,19 +3210,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-15",
+  "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 38,
-   "redactar": 10,
-   "revisar": 8,
+   "clasificar": 0,
+   "redactar": 4,
+   "revisar": 0,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 240014,
-  "salida": 21188,
-  "cacheLee": 14515,
-  "cacheEscribe": 8709,
-  "dolares": 0.415419,
+  "entrada": 53386,
+  "salida": 800,
+  "cacheLee": 0,
+  "cacheEscribe": 0,
+  "dolares": 0.114772,
   "reservado": 0
  },
  "recientes": {
@@ -3608,9 +3608,31 @@
    "cacheEscribe": 14515,
    "dolares": 0.537048,
    "reservado": 0
+  },
+  {
+   "dia": "2026-11-15",
+   "llamadas": {
+    "clasificar": 38,
+    "redactar": 10,
+    "revisar": 8,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 240014,
+   "salida": 21188,
+   "cacheLee": 14515,
+   "cacheEscribe": 8709,
+   "dolares": 0.415419,
+   "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "mercado|2026-11-16": {
+   "n": 1,
+   "t": "2026-11-15T23:15:25.099Z",
+   "ultima": "2026-11-15T23:15:25.099Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7472,7 +7494,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T23:11:24.121Z"
+   "ultimaBien": "2026-11-15T23:15:25.107Z"
   },
   "FotMob": {
    "seguidas": 0,
