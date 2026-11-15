@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/problemas-seleccion-francesa-crece-tension-zidane-mbappe/00031794503136115710202.htm": 1794503280000,
    "AS|https://as.com/futbol/primera/tchouameni-lo-intentara-f202611-n/": 1794503672000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250331/real-esperara-magia.html": 1794504716000,
    "SPORT|136384919": 1794505413000,
@@ -3136,7 +3135,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
    "SPORT|136382650": 1794505061000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
    "SPORT|136385497": 1794507196000,
@@ -7431,13 +7429,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2832,
+   "ok": 2833,
    "fallos": 0,
-   "ejecuciones": 2262,
+   "ejecuciones": 2263,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T17:06:13.260Z"
+   "ultima": "2026-11-15T17:11:22.084Z"
   }
  },
  "ptsDirecto": {},
@@ -7454,15 +7452,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:06:17.830Z"
+   "ultimaBien": "2026-11-15T17:11:27.234Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:06:17.830Z"
+   "ultimaBien": "2026-11-15T17:11:27.234Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:06:17.830Z"
+   "ultimaBien": "2026-11-15T17:11:27.234Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7470,11 +7468,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:06:17.830Z"
+   "ultimaBien": "2026-11-15T17:11:27.234Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:06:17.830Z"
+   "ultimaBien": "2026-11-15T17:11:27.234Z"
   }
  },
  "avisos": [
