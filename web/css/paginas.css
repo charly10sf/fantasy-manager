@@ -184,15 +184,18 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .prox p { margin: 0 0 10px; }
 .prox .btn { min-height: 44px; font-size: 16px; padding: 8px 14px; }
 
-/* las caras: aro del color del puesto, iniciales debajo por si la foto no llega, escudo en la esquina */
-.ava { position: relative; flex: none; display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
+/* las caras, como en la app (app.css, .ava-w y .ava): el círculo recorta la foto encuadrada en la cabeza (el recorte lo pone el
+   generador en cada foto), el aro del color del puesto va encima y el escudo, fuera del círculo, en la esquina */
+.ava-w { position: relative; flex: none; display: inline-block; width: 48px; height: 48px; vertical-align: middle; }
+.ava { position: absolute; inset: 0; display: block; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
 .ava::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--s3); pointer-events: none; }
 .ava.p1::after { box-shadow: inset 0 0 0 2px var(--por); } .ava.p2::after { box-shadow: inset 0 0 0 2px var(--def); } .ava.p3::after { box-shadow: inset 0 0 0 2px var(--med); } .ava.p4::after { box-shadow: inset 0 0 0 2px var(--del); } .ava.p5::after { box-shadow: inset 0 0 0 2px #9a96a0; }
 .ava .ini { position: absolute; inset: 0; display: grid; place-items: center; font: 700 16px 'Barlow Condensed', sans-serif; color: var(--texto2); }
-.ava img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
-.ava img.esc { inset: auto -3px -3px auto; width: 20px; height: 20px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; box-shadow: 0 0 0 2px var(--fondo); }
-.ava-p { width: 36px; height: 36px; } .ava-p .ini { font-size: 13px; } .ava-p img.esc { width: 16px; height: 16px; }
-.ava-g { width: 88px; height: 88px; } .ava-g .ini { font-size: 26px; } .ava-g img.esc { width: 28px; height: 28px; }
+.ava img.cara { position: absolute; left: 0; top: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 0; }
+.ava img.cara.enc { object-fit: fill; }
+.ava-w .esc { position: absolute; right: -3px; bottom: -3px; z-index: 1; width: 20px; height: 20px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; box-shadow: 0 0 0 2px var(--fondo); }
+.ava-p { width: 36px; height: 36px; } .ava-p .ini { font-size: 13px; } .ava-p .esc { width: 16px; height: 16px; right: -4px; bottom: -4px; }
+.ava-g { width: 88px; height: 88px; } .ava-g .ini { font-size: 26px; } .ava-g .esc { width: 28px; height: 28px; }
 .escudo { display: inline-block; vertical-align: middle; object-fit: contain; flex: none; }
 
 /* listas de jugadores */

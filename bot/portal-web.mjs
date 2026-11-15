@@ -12,7 +12,7 @@ import path from 'node:path';
 import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
-import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid } from './web/portal.mjs';
+import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
@@ -54,6 +54,11 @@ const resumenes = () => paginas().filter((p) => p.grupo === 'resumenes' && p.jor
 // LaLiga corrige puntos (el de DAZN llega tarde): como mucho una vez cada 20 h
 const sem = await api.semanaActual();
 const jugadores = await api.jugadores();
+// el encuadre de las caras (dónde está la cabeza en cada foto): .github/portal/encuadres.py, con Pillow; solo baja las nuevas
+try {
+  execFileSync('python3', [path.join(RAIZ, '.github', 'portal', 'encuadres.py')], { input: JSON.stringify(jugadores.map((j) => j.image).filter(Boolean)), stdio: ['pipe', 'inherit', 'inherit'] });
+} catch (err) { log(`  encuadres: ${err.message.split('\n')[0]}`); }
+cargarEncuadres();
 const candidatas = arg('resumen') ? [Number(arg('resumen'))] : [sem.weekNumber, sem.previousWeek].filter((x) => x > 0);
 for (const J of candidatas) {
   const st = await api.statsSemana(J);

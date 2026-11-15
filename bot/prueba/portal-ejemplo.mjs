@@ -46,7 +46,8 @@ const api = {
 };
 
 // las piezas
-assert.match(cara({ caraUrl: IMG(1), escudoUrl: ESC(1), nombre: 'Fermín', pos: 3, equipo: 'Barça' }), /<img src="https:\/\/assets-fantasy[^"]+\?v=123"/);
+assert.match(cara({ caraUrl: IMG(1), escudoUrl: ESC(1), nombre: "Fermín", pos: 3, equipo: "Barça" }), /<img class="cara[^"]*" src="https:\/\/assets-fantasy[^"]+\?v=123"/);
+assert.match(cara({ caraUrl: IMG(1), escudoUrl: ESC(1), nombre: "F", pos: 3 }), /<\/span><img class="esc"/, "el escudo, fuera del círculo");
 assert.doesNotMatch(cara({ caraUrl: 'https://otra.web/x.png', nombre: 'A B' }), /<img/, 'solo imágenes de LaLiga');
 assert.match(cara({ nombre: 'Álex Baena' }), />ÁB</, 'sin foto, las iniciales');
 assert.deepEqual([10, 9, 6, 5, 2, 1, 0, -3].map(clasePuntos), ['p10', 'p6', 'p6', 'p2', 'p2', 'p1', 'p1', 'p1']);

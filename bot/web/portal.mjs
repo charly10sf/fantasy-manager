@@ -19,12 +19,28 @@ const IMG_OK = /^https:\/\/assets-fantasy\.llt-services\.com\/[\w./-]+\.png(\?v=
 const img = (u) => (u && IMG_OK.test(u) ? u : null);
 const iniciales = (n) => String(n || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
 
-/** la cara con su aro del color del puesto y, si se pasa, el escudo en la esquina. tam: 'p' (36), 'm' (48) o 'g' (88) */
+// el encuadre de cada cara (dónde está la cabeza en la foto: { x, y, s }), calculado al generar por .github/portal/encuadres.py con
+// el mismo cálculo que hace la app (web/js/caras.js). Sin él, la foto entera centrada arriba.
+let ENCUADRES = null;
+export function cargarEncuadres() {
+  try { ENCUADRES = JSON.parse(readFileSync(path.join(RAIZ, '.github', 'portal', 'encuadres.json'), 'utf8')); } catch { ENCUADRES = {}; }
+  return ENCUADRES;
+}
+const encuadre = (u) => { if (!ENCUADRES) cargarEncuadres(); const c = ENCUADRES[String(u).split('?')[0]]; return c && c.s ? c : null; };
+
+/**
+ * La cara con su aro del color del puesto y, si se pasa, el escudo en la esquina: como `ava` de la app (web/js/comunes.js), el
+ * círculo recorta la foto encuadrada en la cabeza y el escudo va fuera del círculo. tam: 'p' (36), 'm' (48) o 'g' (88)
+ */
 export function cara({ caraUrl, escudoUrl = null, nombre = '', pos = null, equipo = '' }, tam = 'm') {
   const px = { p: 36, m: 48, g: 88 }[tam] || 48;
   const u = img(caraUrl), es = img(escudoUrl);
-  return `<span class="ava ava-${tam}${pos ? ` p${pos}` : ''}"><span class="ini" aria-hidden="true">${e(iniciales(nombre))}</span>`
-    + (u ? `<img src="${e(u)}" alt="" width="${px}" height="${px}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : '')
+  const c = u ? encuadre(u) : null;
+  const k = c ? 100 / c.s : 0;
+  const estilo = c ? ` style="width:${+k.toFixed(1)}%;height:${+k.toFixed(1)}%;left:${+(-c.x * k).toFixed(1)}%;top:${+(-c.y * k).toFixed(1)}%"` : '';
+  return `<span class="ava-w ava-${tam}"><span class="ava${pos ? ` p${pos}` : ''}"><span class="ini" aria-hidden="true">${e(iniciales(nombre))}</span>`
+    + (u ? `<img class="cara${c ? ' enc' : ''}" src="${e(u)}" alt="" width="${px}" height="${px}"${estilo} loading="lazy" decoding="async" referrerpolicy="no-referrer">` : '')
+    + '</span>'
     + (es ? `<img class="esc" src="${e(es)}" alt="${e(equipo)}" width="20" height="20" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : '')
     + '</span>';
 }
