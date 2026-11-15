@@ -32,7 +32,7 @@ Marca un apartado como no publicable solo si pasa algo grave de esto:
 - da un consejo que los datos no sostienen o que es peligroso para quien juega (por ejemplo, fichar a un sancionado para esta jornada);
 - suena a plantilla o a texto automático, o repite la estructura de otro apartado;
 - nombra webs, fuentes o «expertos».
-Si solo es mejorable, es publicable. Devuelve cada apartado con ok y, si no está bien, el motivo en una frase.`;
+Si solo es mejorable o es cuestión de estilo, es publicable. Si dudas, es publicable: marca solo errores de hecho claros, comparando con los hechos palabra por palabra antes de decidir. Devuelve cada apartado con ok y, si no está bien, el motivo en una frase.`;
 
 const ESQUEMA_REV = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'OBJECT', properties: { ok: { type: 'BOOLEAN' }, motivo: { type: 'STRING' } }, required: ['ok', 'motivo'] }])), required: claves });
 
@@ -69,6 +69,7 @@ export function validar(texto, { permitidas, nombresHechos, nombresLiga }) {
 /** las cifras que se pueden escribir: las que aparecen escritas en la vista de los hechos */
 export function permitidasDe(v) {
   const s = new Set(cifras(JSON.stringify(v)));
+  for (const x of ['00:15', '24', '5']) s.add(x);   // los de las reglas del juego que se le dan a quien redacta
   return s;
 }
 
@@ -84,9 +85,9 @@ export async function escribir(h, { nombresLiga = [], clave = process.env.ANTHRO
   const liga = nombresLiga.map((n) => [norm(n), n]);
   const ctx = { permitidas, nombresHechos, nombresLiga: liga };
   let dolares = 0;
-  const pedir = async (sistema, prompt, esquema, maxTokens) => {
+  const pedir = async (sistema, prompt, esquema, maxTokens, pensar = false) => {
     if (dolares >= topeDolares) throw new Error(`tope de ${topeDolares} $ para la previa`);
-    const r = await claude({ clave, sistema, prompt, esquema, modelo: SONNET, maxTokens, esfuerzo: 'medium', pensar: false, tiempo: 90000, hasta: Date.now() + 200000, log });
+    const r = await claude({ clave, sistema, prompt, esquema, modelo: SONNET, maxTokens, esfuerzo: 'medium', pensar, tiempo: 90000, hasta: Date.now() + 200000, log });
     dolares += r.dolares ?? (r.uso ? coste(SONNET, r.uso) : 0);
     if (!r.ok) throw new Error(r.error || 'sin respuesta');
     return r.datos || r.json || r.respuesta;
@@ -108,7 +109,7 @@ export async function escribir(h, { nombresLiga = [], clave = process.env.ANTHRO
     const aRevisar = Object.keys(candidatos);
     if (aRevisar.length) {
       let rev = null;
-      try { rev = await pedir(REVISOR, `HECHOS:\n${hechosTxt}\n\nTEXTO:\n${aRevisar.map((k) => `[${k}]\n${candidatos[k]}`).join('\n\n')}`, ESQUEMA_REV(aRevisar), 800); }
+      try { rev = await pedir(REVISOR, `HECHOS:\n${hechosTxt}\n\nTEXTO:\n${aRevisar.map((k) => `[${k}]\n${candidatos[k]}`).join('\n\n')}`, ESQUEMA_REV(aRevisar), 4000, true); }
       catch (e) { log(`  (previa web) revisor: ${e.message}`); }
       for (const k of aRevisar) {
         const x = rev && rev[k];

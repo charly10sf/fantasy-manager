@@ -34,11 +34,11 @@ export function vista(h) {
   const J = h.jornada;
   const cambios = h.cambiosAntesDelCierre || [];
   return {
-    jornada: `jornada ${J}`,
-    siguiente: `jornada ${J + 1}`,
+    jornada: `jornada ${J} (la de esta previa: todavía no ha empezado)`,
+    siguiente: `jornada ${J + 1} (la de después; la que se perdería un apercibido que vea amarilla en la ${J})`,
     primerPartido: `${h.primerPartido.local}-${h.primerPartido.visitante}, el ${fechaHora(h.primero)}`,
     ultimoPartido: `el ${fechaHora(h.ultimo)}`,
-    ...(h.diasDesdeAnterior > 9 ? { paron: `viene de un parón: ${h.diasDesdeAnterior} días sin partidos de LaLiga` } : {}),
+    ...(h.diasDesdeAnterior > 9 ? { paron: `antes de la jornada ${J} hay un parón: ${h.diasDesdeAnterior} días sin partidos desde que acabó la ${J - 1}` } : {}),
     clausulas: {
       cierre: `el ${fechaHora(h.cierre)} (24 horas antes del primer partido)`, reapertura: `el ${fechaHora(h.reapertura)} (cuando empieza el primer partido)`,
       cambiosDeMercadoAntesDelCierre: cambios.length ? `${cambios.length}: las noches del ${cambios.map((t) => fecha(t - 36e5)).join(', ')}` : 'ninguno',
