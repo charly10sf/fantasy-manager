@@ -323,6 +323,20 @@ export class Emparejar {
       }
       return new Response(JSON.stringify(y), { status: 200 });
     }
+    // (15 nov) el plan de un pedido (rid), para recogerlo si la app se fue a segundo plano y se cortó la conexión:
+    // { op: 'leer' | 'marcha' | 'poner' | 'borrar', rid, fin } → { marcha?, fin? }. Se borra con lo demás a las 30 h
+    if (ruta === '/plan/res') {
+      const b = await req.json().catch(() => ({}));
+      const rid = ridDe(b.rid);
+      if (!rid) return new Response('{}', { status: 200 });
+      const k = `res:${rid}`;
+      if (b.op === 'marcha') await st.put(k, { marcha: Date.now() });
+      else if (b.op === 'poner' && b.fin && typeof b.fin === 'object') await st.put(k, { fin: b.fin });
+      else if (b.op === 'borrar') await st.delete(k);
+      else return new Response(JSON.stringify((await st.get(k)) || {}), { status: 200 });
+      if (b.op !== 'borrar' && !(await st.getAlarm())) await st.setAlarm(Date.now() + 30 * 3600e3);
+      return new Response('{}', { status: 200 });
+    }
     // lo gastado en planes entre todos en un día, en millonésimas de dólar: suma lo que llega y devuelve el total
     if (ruta === '/gasto') {
       const mas = Math.max(0, Number(await req.text()) || 0);
@@ -687,6 +701,37 @@ async function cupo(env, uid, op, c) {
   CUPO_MEM.set(k, { u: y.u, x: y.x, r: y.r || '' });
   return y;
 }
+/** el plan guardado de un pedido (rid) en el Durable Object de la cuenta y el día; sin él, en la memoria del Worker */
+const RES_MEM = new Map();
+export const RES_MARCHA_MS = 100000;
+async function resPlan(env, uid, op, rid, fin = null) {
+  rid = ridDe(rid);
+  if (!rid) return {};
+  const dia = hoyMadrid();
+  if (env.QR) {
+    try {
+      const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin }) });
+      if (r.status === 200) return await r.json();
+    } catch (e) { /* a la memoria */ }
+  }
+  const k = `${dia}|${uid}|${rid}`;
+  if (op === 'leer') return RES_MEM.get(k) || {};
+  if (RES_MEM.size > 2000) RES_MEM.clear();
+  if (op === 'marcha') RES_MEM.set(k, { marcha: Date.now() });
+  else if (op === 'poner') RES_MEM.set(k, { fin });
+  else if (op === 'borrar') RES_MEM.delete(k);
+  return {};
+}
+/** espera a que acabe el plan del mismo pedido que ya está en marcha (otra petición de la app, que se cortó): su resultado o null */
+async function esperarRes(env, uid, rid, desde) {
+  while (Date.now() - desde < RES_MARCHA_MS) {
+    await new Promise((ok) => setTimeout(ok, 2000));
+    const x = await resPlan(env, uid, 'leer', rid);
+    if (x.fin) return x.fin;
+    if (!x.marcha || Date.now() - x.marcha > RES_MARCHA_MS) return null;
+  }
+  return null;
+}
 /** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
 let GASTO_MEM = { dia: '', n: 0 };
 async function gastoHoy(env, mas = 0) {
@@ -786,8 +831,14 @@ async function planIA(req, env, c, ctx) {
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
   // (si se busca en Google lo decide el Worker, con «planes.web» de limites.json; la app no lo elige)
   const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, web: P.web });
+  // (15 nov) el mismo pedido otra vez (la app se fue a segundo plano y se cortó): si ya está hecho, se devuelve; si sigue
+  // en marcha, se espera a ese en vez de volver a pedírselo a Claude
+  const rid = ridDe(b.rid);
+  const previo = rid ? await resPlan(env, u.uid, 'leer', rid) : {};
+  if (previo.fin) return json(previo.fin, 200, c);
+  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
   // entre todos, el tope de gasto del día
-  if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
+  if (!enMarcha && (await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
   const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid });
   if (!y.ok) {
@@ -800,7 +851,13 @@ async function planIA(req, env, c, ctx) {
   const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
   const t0 = Date.now();
   const trabajo = (async () => {
-    let fin;
+    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now()).catch(() => null) : null;
+    if (fin) {
+      clearInterval(latido);
+      try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido */ }
+      return;
+    }
+    if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
     try {
       const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web });
       const gasto = costeDe(r, P.modelo);
@@ -812,10 +869,13 @@ async function planIA(req, env, c, ctx) {
         if (!libre) await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
       } else fin = { plan, cupo: libre ? cupoLibre(P) : cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+      // (guardado antes de mandarlo: si la app ya no está, lo recoge al volver con el mismo rid)
+      if (rid) await resPlan(env, u.uid, fin.plan ? 'poner' : 'borrar', rid, fin.plan ? fin : null).catch(() => {});
     } catch (e) {
       // (lo que no ha llegado a dar un plan no cuenta)
       if (!libre) await cupo(env, u.uid, 'devolver', P).catch(() => {});
       console.log('plan:', String((e && e.message) || e));
+      if (rid) await resPlan(env, u.uid, 'borrar', rid).catch(() => {});
       fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
     }
     clearInterval(latido);

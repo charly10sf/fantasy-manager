@@ -4,7 +4,7 @@
    Google es un ajuste (en el chat, solo cuando hace falta; en el plan, apagada por defecto: tarda el doble).
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
-import { leer, guardar, http, enApp, despues } from './puente.js';
+import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
@@ -1540,25 +1540,51 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
   const t0 = Date.now();
   if (alPaso) alPaso(planesCfg().web ? 'La IA está leyendo tu plan y buscando las últimas noticias…' : 'La IA está leyendo tu plan y las noticias…');
   let j;
-  // (15 nov) el id del pedido: si la conexión se corta a medias, se repite una vez con el mismo id y el Worker no lo cuenta
-  // dos veces en el cupo del día
-  const rid = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
+  // (15 nov) el id del pedido. En la app de Google Play, al salir de la app Android la congela y se corta la conexión con
+  // el servidor, pero el plan se sigue haciendo allí y se guarda con este id: al volver se pide otra vez con el mismo id y
+  // llega el que ya estaba hecho (sin gastar otro plan del día ni volver a pedírselo a la IA). El id se queda guardado
+  // hasta que llega el plan, por si Android cierra la app del todo: el siguiente plan de los 30 min siguientes lo recoge.
+  const pend = LS.get('plan-rid', null);
+  const rid = pend && pend.dia === diaDe() && Date.now() - pend.t < 30 * 60e3 && /^[a-z0-9]{8,24}$/.test(pend.rid || '') ? pend.rid
+    : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
+  if (!pend || pend.rid !== rid) LS.set('plan-rid', { rid, t: Date.now(), dia: diaDe() });
   const cuerpo = { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra, rid };
+  const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
+  // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
+  const una = () => new Promise((ok, ko) => {
+    let hecho = false, reloj = null;
+    const fin = () => { hecho = true; if (reloj) clearTimeout(reloj); window.removeEventListener('fm-vuelta', vuelta); document.removeEventListener('visibilitychange', vis); };
+    const vuelta = () => { if (hecho || reloj) return; reloj = setTimeout(() => { if (hecho) return; fin(); ko(Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: 'la app ha vuelto de segundo plano' })); }, 3000); };
+    const vis = () => { if (!document.hidden) vuelta(); };
+    window.addEventListener('fm-vuelta', vuelta);
+    document.addEventListener('visibilitychange', vis);
+    pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal }).then((r) => { if (!hecho) { fin(); ok(r); } }, (e) => { if (!hecho) { fin(); ko(e); } });
+  });
+  // a que la app esté a la vista (si se ha cortado con la app en segundo plano, se repite al volver)
+  const aLaVista = () => new Promise((ok) => {
+    if (nativo.aLaVista()) return ok();
+    const ya = () => { window.removeEventListener('fm-vuelta', ya); document.removeEventListener('visibilitychange', ya); ok(); };
+    window.addEventListener('fm-vuelta', ya);
+    document.addEventListener('visibilitychange', ya);
+  });
   try {
-    try {
-      j = await pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal });
-    } catch (e) {
-      if (e.name === 'AbortError' || e.estado !== 0 || (signal && signal.aborted)) throw e;
-      apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: 0 corte${e.detalle ? ` (${e.detalle})` : ''}; lo repito`, ms: Date.now() - t0 });
-      if (alPaso) alPaso('Se ha cortado la conexión: lo intento otra vez…');
-      await new Promise((ok) => setTimeout(ok, 2000));
-      if (signal && signal.aborted) throw Object.assign(new Error('Parado'), { name: 'AbortError' });
-      j = await pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal });
+    for (let vez = 0; ; vez++) {
+      try { j = await una(); break; } catch (e) {
+        if (e.name === 'AbortError' || e.estado !== 0 || vez >= 3 || (signal && signal.aborted)) throw e;
+        apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: 0 corte${e.detalle ? ` (${e.detalle})` : ''}; lo repito`, ms: Date.now() - t0 });
+        await aLaVista();
+        if (alPaso) alPaso('Recogiendo tu plan…');
+        await new Promise((ok) => setTimeout(ok, 1500));
+        if (signal && signal.aborted) throw parado();
+      }
     }
+    LS.del('plan-rid');
   } catch (e) {
     if (e.name === 'AbortError') throw e;
     const d = e.datos || {};
     if (d.cupo) guardarCupo(d.cupo);
+    // (lo que no es un corte no se va a recoger después: el id se suelta)
+    if (e.estado !== 0) LS.del('plan-rid');
     apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}${e.detalle ? ` (${e.detalle})` : ''}`, ms: Date.now() - t0 });
     // sin cupo hoy: no es un fallo (lo dice el Worker); lo demás es que el servicio no está (y vale tu clave, si la tienes)
     if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo });

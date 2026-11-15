@@ -361,8 +361,9 @@ ok(c1.b.system.includes('LOS DE LA LIGA VAN CON ALIAS') && c1.b.system.includes(
 r = await plan({ rid: 'corte1234abc' });
 ok(r.s === 200 && r.j.cupo.usados === 2 && r.j.cupo.quedan === 0, `/plan: el segundo (${r.j && JSON.stringify(r.j.cupo)})`);
 // (15 nov) el mismo pedido otra vez (la app lo repite tras un corte, con el mismo rid): sale y no cuenta dos veces
+const antesR = aClaude.length;
 r = await plan({ rid: 'corte1234abc' });
-ok(r.s === 200 && r.j.plan && r.j.cupo.usados === 2, `/plan repetido con el mismo rid: no cuenta otra vez (${r.t.slice(0, 120)})`);
+ok(r.s === 200 && r.j.plan && r.j.cupo.usados === 2 && aClaude.length === antesR, `/plan repetido con el mismo rid: devuelve el ya hecho, sin volver a Claude ni contar otra vez (${r.t.slice(0, 120)})`);
 const antesC = aClaude.length;
 r = await plan({});
 ok(r.s === 429 && r.j.cupo && r.j.cupo.masConAnuncio && aClaude.length === antesC, `/plan: el tercero sin anuncio, 429 y no llega a Claude (${r.t})`);

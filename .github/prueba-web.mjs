@@ -580,6 +580,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     if (modo === 'caido') return r.abort('connectionrefused');
     // (15 nov) la conexión se corta la primera vez: la app lo repite sola con el mismo id
     if (modo === 'corte' && rids.length === 1) return r.abort('connectionreset');
+    // (15 nov) la app se va a segundo plano y la petición se queda colgada: al volver (fm-vuelta) se repite con el mismo id
+    if (modo === 'colgado' && rids.length === 1) return new Promise((ok) => setTimeout(ok, 20000)).then(() => r.abort('timedout')).catch(() => {});
     const cupo = (u) => ({ usados: u, gratis: 2, max: 5, extras: 0, quedan: Math.max(0, 2 - u), masConAnuncio: true });
     if (modo === 'cupo') return r.fulfill({ status: 429, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ e: 'Ya has hecho tus 2 planes con la IA de hoy.', cupo: cupo(2) }) });
     if (modo === 'tarde') return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `     ${JSON.stringify({ e: 'La IA de los planes no contesta ahora mismo.', estado: 503, servicio: true })}` });
@@ -602,6 +604,16 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   r = await prueba('corte');
   if (!r.ok || !r.app || rids.length !== 2 || !rids[0] || rids[0] !== rids[1]) mal(`IA de la app: con un corte, se repite una vez con el mismo id: ${JSON.stringify(r).slice(0, 160)} · ${JSON.stringify(rids)}`);
   else bien('IA de la app: se corta la conexión y la app lo repite sola una vez, con el mismo id (no cuenta dos veces)');
+  modo = 'colgado'; rids = [];
+  const vuelta = page.evaluate(() => new Promise((ok) => setTimeout(() => { window.dispatchEvent(new Event('fm-vuelta')); ok(); }, 1500)));
+  const t0c = Date.now();
+  r = await prueba('colgado');
+  await vuelta;
+  const segC = Math.round((Date.now() - t0c) / 1000);
+  if (!r.ok || !r.app || rids.length !== 2 || rids[0] !== rids[1] || segC > 12) mal(`IA de la app: al volver de segundo plano con la petición colgada: ${JSON.stringify(r).slice(0, 160)} · ${JSON.stringify(rids)} · ${segC} s`);
+  else bien(`IA de la app: vuelve de segundo plano con el plan colgado y lo recoge con el mismo id (${segC} s)`);
+  const ridSuelto = await page.evaluate(() => localStorage.getItem('fm-plan-rid'));
+  if (ridSuelto) mal(`IA de la app: el id del pedido se queda guardado tras llegar el plan: ${ridSuelto}`);
   modo = 'cupo';
   r = await prueba('cupo');
   if (r.ok || !r.cupo || r.cupo.quedan !== 0 || !r.cache || r.auto) mal(`IA de la app: con el cupo gastado: ${JSON.stringify(r)}`);

@@ -2293,6 +2293,8 @@ window.atras = () => {
   return false;
 };
 window.alVolver = () => {
+  // (15 nov) el plan con la IA que se cortó al salir de la app se recoge al volver (ia.js, planPorApp)
+  window.dispatchEvent(new Event('fm-vuelta'));
   comprobarAvisos();
   if (S.vista === 'ia' && !hayClave() && vieneDeAIStudio()) setTimeout(aPegar, 250);
   if (enApp && Date.now() - (S.versionT || 0) > 30 * MIN) buscarVersion(false);
