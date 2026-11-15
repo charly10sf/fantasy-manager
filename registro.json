@@ -3245,7 +3245,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/contundente-reaccion-marcos-llorente-polemico-video-miembros-piquete-echando-anciano-cafeteria-espana-me-das-miedo-20261112_3473663.html": 1794483441000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261112/1004250179/asi-sera-sorteo-mundial-femenino-brasil-2027.html": 1794481548000,
    "SPORT|136371700": 1794486892000,
    "SPORT|136370681": 1794485522000,
    "SPORT|136233790": 1794497100000,
@@ -7546,13 +7545,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2758,
+   "ok": 2759,
    "fallos": 0,
-   "ejecuciones": 2188,
+   "ejecuciones": 2189,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:01:14.420Z"
+   "ultima": "2026-11-15T11:06:17.173Z"
   }
  },
  "ptsDirecto": {},
@@ -7569,15 +7568,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:01:24.118Z"
+   "ultimaBien": "2026-11-15T11:06:19.908Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:01:24.118Z"
+   "ultimaBien": "2026-11-15T11:06:19.908Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:01:24.118Z"
+   "ultimaBien": "2026-11-15T11:06:19.908Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7585,11 +7584,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:01:24.118Z"
+   "ultimaBien": "2026-11-15T11:06:19.908Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:01:24.118Z"
+   "ultimaBien": "2026-11-15T11:06:19.908Z"
   }
  },
  "avisos": [
