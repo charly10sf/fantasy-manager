@@ -79,14 +79,16 @@ export function graficaValor(serie, { ancho = 640, alto = 180, fecha = (t) => ne
   const s = (serie || []).filter((x) => x && Number.isFinite(x.v));
   if (s.length < 2) return '';
   const min = Math.min(...s.map((x) => x.v)), max = Math.max(...s.map((x) => x.v)), r = max - min || 1;
-  const izq = 4, der = 4, arr = 14, aba = 20, w = ancho - izq - der, h = alto - arr - aba;
+  // a la izquierda, un hueco para el máximo y el mínimo (así no pisan la línea)
+  const izq = 50, der = 4, arr = 8, aba = 20, w = ancho - izq - der, h = alto - arr - aba;
   const P = s.map((x, i) => [izq + (i * w) / (s.length - 1), arr + h - ((x.v - min) * h) / r]);
   const d = P.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join('');
   const clase = s[s.length - 1].v >= s[0].v ? 'sube' : 'baja';
   return `<svg class="graf ${clase}" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Valor de mercado: de ${dinero(s[0].v)} el ${fecha(s[0].t)} a ${dinero(s[s.length - 1].v)} el ${fecha(s[s.length - 1].t)}; máximo ${dinero(max)} y mínimo ${dinero(min)}`)}">`
     + `<path class="a" d="${d}L${P[P.length - 1][0].toFixed(1)} ${arr + h}L${P[0][0].toFixed(1)} ${arr + h}Z"/><path class="l" d="${d}"/>`
-    + `<text x="${izq}" y="10">${e(dinero(max))}</text><text x="${izq}" y="${arr + h - 3}">${e(dinero(min))}</text>`
-    + `<text x="${izq}" y="${alto - 4}">${e(fecha(s[0].t))}</text><text x="${ancho - der}" y="${alto - 4}" text-anchor="end">${e(fecha(s[s.length - 1].t))}</text></svg>`;
+    + `<path class="eje" d="M${izq} ${arr}H${ancho - der}M${izq} ${arr + h}H${ancho - der}"/>`
+    + `<text x="${izq - 6}" y="${arr + 4}" text-anchor="end">${e(dinero(max))}</text><text x="${izq - 6}" y="${arr + h + 4}" text-anchor="end">${e(dinero(min))}</text>`
+    + `<text x="${izq}" y="${alto - 3}">${e(fecha(s[0].t))}</text><text x="${ancho - der}" y="${alto - 4}" text-anchor="end">${e(fecha(s[s.length - 1].t))}</text></svg>`;
 }
 
 /** barras de puntos por jornada (fase 2: ficha de jugador y de equipo): [[jornada, puntos], …] */
@@ -107,16 +109,69 @@ export function barrasPuntos(jornadas, { ancho = 640, alto = 120, clase = claseP
   return `<svg class="barras" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Puntos por jornada: ${xs.map(([j, p]) => `J${j} ${p === null ? 'no jugó' : p}`).join(', ')}`)}">${barras}</svg>`;
 }
 
-/** una fila de jugador: cara, nombre, equipo y puesto, y a la derecha lo que se pida (cifras ya en HTML) */
-export function filaJugador(x, derecha = '', { enlace = null, sub = null } = {}) {
+/** un bloque del portal: título con franja, el contenido y, si hay, una línea pequeña DEBAJO (qué es cada cifra: primero los datos) */
+export const bloque = (titulo, cuerpo, { id = null, linea = '' } = {}) => `\n  <section class="bq"${id ? ` id="${e(id)}"` : ''}>\n  <h2>${e(titulo)}</h2>\n${cuerpo}${linea ? `\n  <p class="bq-l">${linea}</p>` : ''}\n  </section>`;
+
+// ---------------------------------------------------------------- fase 2b: cabeceras compactas, tablas densas y pestañas sin JS
+
+/** la celda de un jugador en una tabla: cara pequeña con su aro y escudo, el nombre (enlazado si tiene ficha) y una línea debajo */
+export function celdaJug(x, { enlace = null, sub = null, tam = 'p' } = {}) {
   const nombre = enlace ? `<a href="${e(enlace)}">${e(x.nombre)}</a>` : e(x.nombre);
-  return `<li class="fj">${cara(x, 'm')}<span class="fj-c"><b>${nombre}</b><span>${e(sub ?? `${x.equipo}${x.pos ? ` · ${POS[x.pos] || ''}` : ''}`)}</span></span><span class="fj-d">${derecha}</span></li>`;
+  const s = sub ?? `${x.pos ? `${POS[x.pos] || ''} · ` : ''}${x.equipo || ''}`;
+  return `<td class="c-j"><div class="tjug">${cara(x, tam)}<span class="tjug-t"><b>${nombre}</b>${s ? `<small>${e(s)}</small>` : ''}</span></div></td>`;
 }
 
-/** la cabecera de un bloque del portal: título con franja y, si hay, una línea debajo */
-export const bloque = (titulo, cuerpo, { id = null, linea = '' } = {}) => `\n  <section class="bq"${id ? ` id="${e(id)}"` : ''}>\n  <h2>${e(titulo)}</h2>${linea ? `\n  <p class="bq-l">${linea}</p>` : ''}\n${cuerpo}\n  </section>`;
-export const tarjetas = (xs, clase = '') => `  <div class="tj${clase ? ` ${clase}` : ''}">${xs.join('')}</div>`;
-export const lista = (filas, clase = '') => (filas.length ? `  <ul class="lj${clase ? ` ${clase}` : ''}">${filas.join('')}</ul>` : '');
+/**
+ * Una tabla compacta. cols: [{ t: 'Valor', c: 'n' (cifra, a la derecha) | 'm' (se esconde en el móvil) | 'j' (jugador), titulo }];
+ * filas: cada una, el HTML de sus <td> (o { td, attrs }). Con `grupos`, [{ t, filas }]: una fila de título por grupo (la plantilla por puestos).
+ */
+export function tabla(cols, filas, { clase = '', grupos = null, id = null, cap = '' } = {}) {
+  const th = cols.map((c) => `<th${c.c ? ` class="${c.c}"` : ''}${c.titulo ? ` title="${e(c.titulo)}"` : ''} scope="col">${c.t}</th>`).join('');
+  const tr = (f) => (typeof f === 'string' ? `      <tr>${f}</tr>` : `      <tr${f.attrs || ''}>${f.td}</tr>`);
+  const cuerpo = grupos
+    ? grupos.filter((g) => g.filas.length).map((g) => `    <tbody>\n      <tr class="grp"><th colspan="${cols.length}" scope="rowgroup">${e(g.t)}</th></tr>\n${g.filas.map(tr).join('\n')}\n    </tbody>`).join('\n')
+    : `    <tbody>\n${filas.map(tr).join('\n')}\n    </tbody>`;
+  return `  <div class="tabla-scroll ts"><table class="td${clase ? ` ${clase}` : ''}"${id ? ` id="${e(id)}"` : ''}>${cap ? `<caption>${cap}</caption>` : ''}\n    <thead><tr>${th}</tr></thead>\n${cuerpo}\n  </table></div>`;
+}
+
+/** las cifras clave en una tira compacta (cabecera de ficha y de lista): [{ v: html, l: 'qué es', s: html debajo }] */
+export const kpis = (xs, clase = '') => `  <div class="kpi${clase ? ` ${clase}` : ''}">${xs.filter(Boolean).map((x) => `<div><b>${x.v}</b><span>${x.l}</span>${x.s ? `<small>${x.s}</small>` : ''}</div>`).join('')}</div>`;
+
+/** la barra de saltos de una página larga (sin JS: enlaces a las secciones). [[id, texto]] */
+export const subnav = (xs) => `  <nav class="subnav" aria-label="En esta página">${xs.filter(Boolean).map(([id, t]) => `<a href="#${e(id)}">${e(t)}</a>`).join('')}</nav>`;
+
+/**
+ * Pestañas sin JavaScript (radios y CSS): todo el contenido va en el HTML y Google lo lee; sin CSS se ve todo seguido.
+ * En el ordenador, si son dos, van una al lado de la otra con su título (h3) y sin pestañas.
+ * id: único en la página; xs: [[etiqueta, html]]
+ */
+export function pestanas(id, xs) {
+  const ok = xs.filter(([, h]) => h);
+  if (!ok.length) return '';
+  if (ok.length === 1) return ok[0][1];
+  const r = ok.map(([t], i) => `<input type="radio" name="pt-${e(id)}" id="pt-${e(id)}-${i}"${i ? '' : ' checked'}><label for="pt-${e(id)}-${i}">${e(t)}</label>`).join('');
+  return `  <div class="pest pest-${ok.length}">${r}\n${ok.map(([t, h]) => `  <div class="pest-p" role="group" aria-label="${e(t)}">\n  <h3 class="pest-h">${e(t)}</h3>\n${h}\n  </div>`).join('\n')}\n  </div>`;
+}
+
+/** la racha de resultados de un equipo: G, E, P de colores (y con la letra: nunca solo color) */
+export const forma = (rs) => `<span class="forma" aria-label="${e(`Últimos resultados: ${rs.map((r) => (r.r === 'G' ? 'ganó' : r.r === 'E' ? 'empató' : 'perdió')).join(', ')}`)}">${rs.map((r) => `<span class="res-c res-${r.r}" title="J${r.J}: ${r.gf}-${r.gc} ${r.casa ? 'en casa' : 'fuera'} contra ${e(r.rival)}">${r.r}</span>`).join('')}</span>`;
+
+/** el puesto escrito en su chapita de color (POR amarillo, DEF azul, MED verde, DEL rojo, como el aro de las caras) */
+export const chapaPos = (p) => (POS[p] ? `<span class="chapa p${p}">${POS[p]}</span>` : '');
+
+/** la dificultad de un rival (fácil, media, difícil) */
+const NIVEL_C = { 'fácil': 'facil', media: 'media', 'difícil': 'dificil' };
+export const nivelChip = (n) => `<span class="niv niv-${NIVEL_C[n] || 'media'}">${e(n || 'media')}</span>`;
+
+/**
+ * Las fichas de las jornadas, con la forma de las de la app (web/js/hojas.js, `jornadasPtsHTML`):
+ * [{ J, pts (null si no jugó), abajo, icono, titulo }]. `mini`: la tira corta de la cabecera (sin minutos).
+ */
+export function fichasJornada(xs, { mini = false } = {}) {
+  const nivel = (p) => (p >= 10 ? 'top' : p >= 6 ? 'bien' : p >= 2 ? 'medio' : 'mal');
+  return `<div class="jt-fila${mini ? ' jt-mini' : ''}">${xs.map((x) => `<div class="jt ${x.pts == null ? 'nada' : nivel(x.pts)}" title="${e(x.titulo)}">${x.icono ? `<i class="gol" aria-hidden="true">${x.icono}</i>` : ''}`
+    + `<span class="jt-n">J${x.J}</span><b>${x.pts == null ? '–' : x.pts}</b>${mini ? '' : x.pts == null ? '<small class="nj">no<br>jugó</small>' : `<small>${e(x.abajo || '')}</small>`}</div>`).join('')}</div>`;
+}
 
 /** para las URL de la fase 2 (/jugadores/fermin.html, /equipos/barca.html): sin tildes, minúsculas y guiones */
 export const slug = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

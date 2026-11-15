@@ -29,6 +29,18 @@ INICIO, FIN = '<!-- contenido -->', '<!-- /contenido -->'
 # la versión de paginas.css (sus 8 primeras cifras de sha-256): al cambiar la hoja, las páginas la piden de nuevo
 with open(os.path.join(WEB, 'css', 'paginas.css'), 'rb') as _f:
     VERSION_CSS = __import__('hashlib').sha256(_f.read()).hexdigest()[:8]
+# el JS ligero del portal (buscador del menú y filtros de jugadores/): web/portal/portal.js, igual con su versión
+try:
+    with open(os.path.join(WEB, 'portal', 'portal.js'), 'rb') as _f:
+        VERSION_JS = __import__('hashlib').sha256(_f.read()).hexdigest()[:8]
+except OSError:
+    VERSION_JS = None
+# la tira de los 20 escudos del pie (la escribe bot/portal-web.mjs): [{n, r, u}]
+try:
+    with open(os.path.join(RAIZ, '.github', 'portal', 'escudos.json'), encoding='utf8') as _f:
+        ESCUDOS = [x for x in json.load(_f) if x.get('r') and re.fullmatch(r'https://assets-fantasy\.llt-services\.com/[\w./-]+\.png(\?v=\d+)?', x.get('u') or '')]
+except (OSError, ValueError):
+    ESCUDOS = []
 
 e = html.escape
 
@@ -112,14 +124,27 @@ def seccion_de(p):
 
 
 def menu(raiz, hay_guias, actual=''):
-    """la cabecera del portal: el logo, las cinco secciones (en el móvil, una fila que se desliza) y la app"""
+    """la cabecera del portal: el logo, las cinco secciones (en el móvil, una fila que se desliza), el buscador y la app.
+    El buscador es un formulario normal (sin JS lleva a jugadores/?q=, con la tabla entera); con JS (portal.js) sugiere fichas.
+    En el móvil se abre con la lupa (una casilla y CSS, sin JS)."""
     enlaces = ''.join(f'<a href="{raiz}{h}"{" aria-current=\"page\"" if c == actual else ""}>{t}</a>'
                       for c, h, t in SECCIONES if hay_guias or not h.startswith('guias/'))
+    lupa = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
-            f'<div class="cab-app"><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> en Google Play</span></a></div>'
+            f'<input type="checkbox" id="busca-t" class="busca-t" aria-label="Abrir el buscador">'
+            f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> en Google Play</span></a></div>'
             f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
+            f'<form class="busca" role="search" action="{raiz}jugadores/" method="get" data-raiz="{raiz}"><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar">{lupa}</button><ul class="busca-r" hidden></ul></form>'
             f'</div></header>')
+
+
+def escudos(raiz):
+    """encima del pie, los 20 equipos con su escudo: para ir de cualquier página a cualquier equipo"""
+    if not ESCUDOS:
+        return ''
+    filas = ''.join(f'<a href="{raiz}{x["r"]}" title="{e(x["n"])}"><img src="{e(x["u"])}" alt="{e(x["n"])}" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>' for x in ESCUDOS)
+    return f'<nav class="escudos" aria-label="Los 20 equipos"><div class="escudos-in">{filas}</div></nav>\n'
 
 
 def cta(raiz):
@@ -254,6 +279,8 @@ def pagina(p, contenido, hay_guias):
     migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
     contenido = poner_previa(contenido, p)
     script = f'\n  <script src="{p["script"]}" defer></script>' if p.get('script') else ''
+    if VERSION_JS:
+        script += f'\n  <script src="{raiz}portal/portal.js?v={VERSION_JS}" defer></script>'
     return f'''<!doctype html>
 <!-- Generada por .github/paginas.py: el texto se edita entre las marcas de contenido; lo demás se rehace al ejecutarlo -->
 <html lang="es">
@@ -286,7 +313,7 @@ def pagina(p, contenido, hay_guias):
 {contenido}
 {FIN}{fecha}{mas_guias(p)}{pie_guia}
 </main>
-{pie(raiz, hay_guias)}
+{escudos(raiz)}{pie(raiz, hay_guias)}
 </body>
 </html>
 '''

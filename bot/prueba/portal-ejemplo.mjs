@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson } from '../web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas } from '../web/resumen.mjs';
 import { cara, minigrafica, chipPuntos, clasePuntos, slug, graficaValor, barrasPuntos } from '../web/portal.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, cuando } from '../web/fichas.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie } from '../web/fichas.mjs';
+import { pestanas, tabla, kpis } from '../web/portal.mjs';
 
 const DIA = 864e5;
 const hoy = Date.parse('2026-11-15T10:00:00Z');
@@ -77,6 +78,11 @@ assert.equal(hm.proxima.jornada, 13);
 assert.equal(hm.proxima.cierre, hm.proxima.primero - 24 * 36e5, 'el cierre, 24 h antes del primer partido');
 const limpio = (html, que) => {
   assert.doesNotMatch(html, /undefined|NaN|\[object/, `${que}: sin huecos`);
+  // fase 2b: ningún id repetido (los saltos y las pestañas van por id) y cada salto lleva a una sección que existe
+  const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length, `${que}: ids sin repetir (${ids.filter((x, i) => ids.indexOf(x) !== i)})`);
+  for (const [, a] of html.matchAll(/<nav class="subnav"[^>]*>(.*?)<\/nav>/g)) for (const [, id] of a.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(id), `${que}: el salto #${id} tiene sección`);
+  for (const [, n] of html.matchAll(/<input type="radio" name="([^"]+)" id="([^"]+)"/g)) assert.ok(html.includes(`for="${n.replace(/^pt-/, 'pt-')}`), `${que}: pestañas con su etiqueta`);
   assert.doesNotMatch(html, /Raro <b>/, `${que}: escapado`);
   assert.doesNotMatch(html, /otra\.web/, `${que}: solo imágenes de LaLiga`);
 };
@@ -87,7 +93,8 @@ assert.match(cm, /href="\.\.\/guias\/jornada-13\.html"/);
 assert.match(cm, /10 días, desde el/);
 const ce = contenidoEquipos(hm);
 limpio(ce, 'equipos');
-assert.equal((ce.match(/<tr><td>\d+<\/td>/g) || []).length, 12);
+assert.equal((ce.match(/<tr><td class="n m">\d+<\/td>/g) || []).length, 12, 'los 12 equipos en la tabla');
+assert.equal((ce.match(/class="rejilla-eq"/g) || []).length, 1, 'la rejilla de escudos');
 const hj = hoyJson(hm, { previa: 'guias/jornada-13.html' });
 assert.equal(hj.suben.length, 5);
 assert.equal(hj.jornada.n, 13);
@@ -110,7 +117,7 @@ assert.match(cr, /Once ideal de la jornada 12/);
 assert.match(cr, /height="875"/);
 const cj = contenidoJornadas({ proxima: hm.proxima, previas: [{ ruta: 'guias/jornada-13.html', jornada: 13 }], resumenes: [{ ruta: 'jornada/resumen-jornada-12.html', jornada: 12 }], ultimo: { jornada: 12, mejores: hr.mejores.slice(0, 3) } });
 limpio(cj, 'jornadas');
-assert.match(cj, /Jornada 13<\/b><span><a href="\.\.\/guias\/jornada-13\.html">Previa<\/a><\/span>/);
+assert.match(cj, /<b>Jornada 13<\/b><\/td><td><a href="\.\.\/guias\/jornada-13\.html">Previa<\/a><\/td>/);
 assert.match(cj, /resumen-jornada-12\.html">Resumen/);
 assert.doesNotMatch(cj, /Todas las jornadas<\/a>/, 'la de las jornadas no se enlaza a sí misma');
 // las fichas (fase 2): equipos y jugadores
@@ -143,16 +150,32 @@ for (const x of H.jugadores) {
   const c = contenidoJugador(x, H);
   limpio(c, `jugador ${x.nombre}`);
   assert.match(c, /Jornada a jornada/);
+  assert.match(c, /<div class="fcab">/, 'la cabecera compacta');
+  assert.ok(c.indexOf('class="kpi k4"') < c.indexOf('id="analisis"'), 'las cifras arriba y el texto abajo');
   assert.match(metasJugador(x).ruta, /^jugadores\/[a-z0-9-]+\.html$/);
   assert.ok(metasJugador(x).titulo.length <= 70);
 }
 const ix = contenidoJugadores(H);
 limpio(ix, 'jugadores');
-assert.equal((ix.match(/class="fj"/g) || []).length, 20, 'todos en el índice');
+assert.equal((ix.match(/<tr data-p=/g) || []).length, H.todos.length, 'todos los jugadores en la tabla');
+assert.equal((ix.match(/<a href="[a-z0-9-]+\.html">/g) || []).length, 20, 'los que tienen ficha, enlazados');
+assert.match(ix, /<form class="filtros" id="filtros" hidden>/, 'los filtros, escondidos sin JS');
+assert.match(ix, /<table class="td td-todos" id="todos">/);
+const ib = indiceBuscador(H);
+assert.equal(ib.j.length, 20); assert.equal(ib.e.length, 12);
+assert.ok(ib.j.every((x) => /^jugadores\/[a-z0-9-]+\.html$/.test(x[2])), 'el buscador lleva a las fichas');
+assert.ok(escudosPie(H).every((x) => /^equipos\/[a-z0-9-]+\.html$/.test(x.r) && /^https:\/\/assets-fantasy/.test(x.u)));
 // con las rutas, el mercado y /equipos/ enlazan a las fichas
 const cm2 = contenidoMercado(hm, { rutas: H.rutas });
 assert.match(cm2, /href="\.\.\/jugadores\/[a-z0-9-]+\.html"/);
 assert.match(contenidoEquipos(hm, { rutas: H.rutas, jugadores: 20 }), /href="[a-z0-9-]+\.html"/);
 assert.equal(cuando(Date.parse('2026-12-06T00:00:00Z')), 'domingo 6 de diciembre, hora por confirmar');
 assert.match(cuando(Date.parse('2026-12-06T20:00:00Z')), /a las 21:00/);
+// las piezas de la fase 2b
+assert.equal(pestanas('x', [['A', '<p>a</p>']]), '<p>a</p>', 'una sola pestaña no lleva pestañas');
+assert.equal(pestanas('x', [['A', ''], ['B', '']]), '', 'sin contenido, nada');
+assert.match(pestanas('x', [['A', '<p>a</p>'], ['B', '<p>b</p>']]), /id="pt-x-0" checked><label for="pt-x-0">A<\/label>/);
+assert.match(tabla([{ t: 'A' }], null, { grupos: [{ t: 'Porteros', filas: ['<td>1</td>'] }, { t: 'Nadie', filas: [] }] }), /<tr class="grp"><th colspan="1" scope="rowgroup">Porteros<\/th><\/tr>/);
+assert.doesNotMatch(tabla([{ t: 'A' }], null, { grupos: [{ t: 'Nadie', filas: [] }] }), /Nadie/, 'un grupo vacío no sale');
+assert.doesNotMatch(kpis([null, { v: '1', l: 'x' }]), /null/);
 console.log('portal-ejemplo: todo BIEN');

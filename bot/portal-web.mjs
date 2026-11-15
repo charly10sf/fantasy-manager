@@ -13,7 +13,7 @@ import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores } from './web/fichas.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, indiceBuscador, escudosPie } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
 const salida = (k, v) => { if (process.env.GITHUB_OUTPUT) writeFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`, { flag: 'a' }); };
@@ -124,6 +124,11 @@ if (forzar || !estado.mercado || estado.mercado.dia !== hoy) {
           { entrada: metasJugadores(), html: contenidoJugadores(H) },
         ];
         const n = escribirFichas(pags);
+        // el buscador del menú (web/portal/portal.js) y la tira de escudos del pie (la pinta paginas.py)
+        const ij = path.join(RAIZ, 'web', 'jugadores', 'indice.json'), ej = path.join(DIR, 'escudos.json');
+        const nij = JSON.stringify(indiceBuscador(H)) + '\n', nej = JSON.stringify(escudosPie(H), null, 1) + '\n';
+        if (!existsSync(ij) || readFileSync(ij, 'utf8') !== nij) { writeFileSync(ij, nij); cambios = true; }
+        if (!existsSync(ej) || readFileSync(ej, 'utf8') !== nej) { writeFileSync(ej, nej); cambios = true; }
         estado.fichas = H.slugs;
         rutas = H.rutas;
         hm.nFichas = H.jugadores.length;

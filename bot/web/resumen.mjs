@@ -4,7 +4,7 @@
 import { corto } from '../lib/texto.mjs';
 import { FORMACIONES } from '../lib/once-ideal.mjs';
 import { fechaHora, fecha, diaCorto, hora } from './vista.mjs';
-import { e, coma, dinero, cara, escudo, chipPuntos, filaJugador, bloque, lista, tarjetas, POS } from './portal.mjs';
+import { e, coma, cara, escudo, chipPuntos, bloque, celdaJug, tabla, kpis, subnav, pestanas } from './portal.mjs';
 import { proximaCaja } from './mercado.mjs';
 
 const num = (x) => Number(x) || 0;
@@ -68,40 +68,50 @@ function campoOnce(once) {
 }
 
 export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta = null, tarjetaAlto = null, rutas = null } = {}) {
-  // las filas enlazan a la ficha del jugador si la tiene (fase 2)
-  const fila = (x, d) => filaJugador(x, d, { enlace: rutas && rutas.jugador(x.id) ? `../${rutas.jugador(x.id)}` : null });
+  // los nombres enlazan a la ficha del jugador si la tiene (fase 2)
+  const enl = (x) => (rutas && rutas.jugador(x.id) ? `../${rutas.jugador(x.id)}` : null);
   const J = h.jornada, o = [];
   const a = h.mejores[0], eq = h.equipos[0];
   o.push(`  <h1>Resumen de la <span>jornada ${J}</span></h1>`);
+  o.push(`  <p class="fresco">Del ${e(fecha(h.primero))} al ${e(fecha(h.ultimo))} · puntos oficiales con los de DAZN, a ${e(fechaHora(h.generada))}</p>`);
+  o.push(kpis([
+    { v: String(h.partidos.length), l: 'Partidos', s: `${h.goles} goles` },
+    { v: String(a.pts), l: 'El mejor', s: e(a.nombre) },
+    h.once ? { v: String(h.once.suma), l: 'Once ideal', s: e(h.once.formacion) } : null,
+    eq ? { v: String(eq.pts), l: 'Mejor equipo', s: e(eq.nombre) } : null,
+  ], 'k4'));
+  const ir = [];
+  if (previa) ir.push(`<a href="../${e(previa)}">La previa de la jornada ${J}</a>`);
+  if (siguiente) ir.push(`<a href="../${e(siguiente.ruta)}">Previa de la jornada ${siguiente.jornada}</a>`);
+  if (ir.length) o.push(`  <p class="enl-j">${ir.join(' · ')}</p>`);
+  o.push(subnav([['mejores', 'Mejores'], h.once && ['once', 'Once ideal'], ['partidos', 'Partidos'], h.doblan.length && ['doblan', 'Doblan su media'], h.peores.length && ['peores', 'Peores'], ['equipos', 'Equipos'], ['analisis', 'Análisis']]));
+
+  const tPts = (xs, rango = true) => tabla([rango && { t: '#', c: 'n m' }, { t: 'Jugador', c: 'j' }, { t: 'Pts', c: 'n' }, { t: 'Media', c: 'n' }].filter(Boolean),
+    xs.map((x, i) => `${rango ? `<td class="n m">${i + 1}</td>` : ''}${celdaJug(x, { enlace: enl(x) })}<td class="n">${chipPuntos(x.pts)}</td><td class="n">${e(coma(x.media))}</td>`));
+  o.push(bloque('Los mejores de la jornada', tPts(h.mejores), { id: 'mejores', linea: 'Puntos de la jornada y media de toda la temporada.' }));
+  if (h.once) o.push(bloque(`Once ideal de la jornada ${J}`, campoOnce(h.once), { id: 'once', linea: e(`El mejor portero y los mejores de cada línea en la formación que más suma (${h.once.formacion}, ${h.once.suma} puntos). Es el once de lo que ya se jugó, no una recomendación.`) }));
+  if (tarjeta) o.push(`  <figure class="tarjeta-bot"><img src="${e(tarjeta)}" alt="${e(`Tarjeta de los mejores de la jornada ${J}: ${h.mejores.slice(0, 6).map((x) => `${x.nombre} ${x.pts}`).join(', ')}`)}" width="1080" height="${tarjetaAlto || 875}" loading="lazy" decoding="async"><figcaption>La tarjeta que publicó <a href="https://x.com/Fantasyman_app" rel="noopener">@Fantasyman_app</a> al acabar la jornada.</figcaption></figure>`);
+
+  o.push(bloque('Resultados y MVP de cada partido', `  <ul class="lp">${h.partidos.map((p) => `<li><span class="lp-p">${escudo(p.escL, p.local, 22)}<b>${e(p.local)}</b>${marcador(p)}<b>${e(p.visitante)}</b>${escudo(p.escV, p.visitante, 22)}</span>`
+    + `<span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span>${p.mvp ? `<span class="lp-m">${cara(p.mvp, 'p')}<span>MVP: <b>${enl(p.mvp) ? `<a href="${e(enl(p.mvp))}">${e(p.mvp.nombre)}</a>` : e(p.mvp.nombre)}</b> ${chipPuntos(p.mvp.pts)}</span></span>` : ''}</li>`).join('')}</ul>`,
+  { id: 'partidos', linea: 'El MVP es el jugador de los dos equipos que más puntos de LaLiga Fantasy sacó en ese partido.' }));
+
+  if (h.doblan.length) o.push(bloque('Los que doblaron su media', tPts(h.doblan, false),
+    { id: 'doblan', linea: 'Con 3 puntos de media o más y al menos 10 en esta jornada: sacaron el doble (o más) de lo que suelen.' }));
+  if (h.peores.length) o.push(bloque('Los peores de la jornada', tPts(h.peores, false),
+    { id: 'peores', linea: 'Los que acabaron en negativo: una expulsión, un penalti fallado o muchos goles encajados.' }));
+
+  const tE = (xs) => tabla([{ t: 'Equipo', c: 'j' }, { t: 'Pts', c: 'n' }], xs.map((q) => `<td class="c-j"><div class="tjug">${escudo(q.escudoUrl, q.nombre, 28)}<span class="tjug-t"><b>${e(q.nombre)}</b><small>${q.n} con 6 puntos o más</small></span></div></td><td class="n">${q.pts}</td>`));
+  o.push(bloque('Los equipos que más puntos dieron', pestanas('equipos', [['Los que más', tE(h.equipos.slice(0, 5))], ['Los que menos', tE(h.equipos.slice(-3).reverse())]]),
+    { id: 'equipos', linea: 'Sumando los puntos de todos sus jugadores en la jornada.' }));
+
+  // el texto, abajo
   const t = [`La jornada ${J} de LaLiga Fantasy se jugó del ${fecha(h.primero)} al ${fecha(h.ultimo)}: ${h.partidos.length} partidos y ${h.goles} goles.`];
   const empatados = h.mejores.filter((x) => x.pts === a.pts);
   t.push(empatados.length > 1 ? `Arriba, empatados a ${a.pts} puntos, ${empatados.map((x) => `${x.nombre} (${x.equipo})`).join(' y ')}.` : `El que más puntos sacó fue ${a.nombre} (${a.equipo}), con ${a.pts}.`);
   if (h.once) t.push(`El once ideal de lo que se jugó, en ${h.once.formacion}, suma ${h.once.suma} puntos.`);
   if (eq) t.push(`El equipo que más puntos dio entre todos sus jugadores fue el ${eq.nombre}, con ${eq.pts}.`);
-  o.push(`  <p class="lead">${e(t.join(' '))}</p>`);
-  o.push(`  <p class="peq">Puntos oficiales de LaLiga Fantasy, con los de DAZN incluidos, tal como estaban el ${e(fechaHora(h.generada))}.</p>`);
-  const enl = [];
-  if (previa) enl.push(`<a class="btn sec" href="../${e(previa)}">La previa de la jornada ${J}</a>`);
-  if (siguiente) enl.push(`<a class="btn sec" href="../${e(siguiente.ruta)}">Previa de la jornada ${siguiente.jornada}</a>`);
-  if (enl.length) o.push(`  <div class="cta-b">${enl.join('')}</div>`);
-
-  o.push(bloque('Los mejores de la jornada', lista(h.mejores.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`)))));
-  if (tarjeta) o.push(`  <figure class="tarjeta-bot"><img src="${e(tarjeta)}" alt="${e(`Tarjeta de los mejores de la jornada ${J}: ${h.mejores.slice(0, 6).map((x) => `${x.nombre} ${x.pts}`).join(', ')}`)}" width="1080" height="${tarjetaAlto || 875}" loading="lazy" decoding="async"><figcaption>La tarjeta que publicó <a href="https://x.com/Fantasyman_app" rel="noopener">@Fantasyman_app</a> al acabar la jornada.</figcaption></figure>`);
-  if (h.once) o.push(bloque(`Once ideal de la jornada ${J}`, campoOnce(h.once), { linea: e(`El mejor portero y los mejores de cada línea en la formación que más suma (${h.once.formacion}, ${h.once.suma} puntos). Es el once de lo que ya se jugó, no una recomendación.`) }));
-
-  o.push(bloque('Resultados y MVP de cada partido', `  <ul class="lp">${h.partidos.map((p) => `<li><span class="lp-p">${escudo(p.escL, p.local, 22)}<b>${e(p.local)}</b>${marcador(p)}<b>${e(p.visitante)}</b>${escudo(p.escV, p.visitante, 22)}</span>`
-    + `<span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span>${p.mvp ? `<span class="lp-m">${cara(p.mvp, 'p')}<span>MVP: <b>${rutas && rutas.jugador(p.mvp.id) ? `<a href="../${e(rutas.jugador(p.mvp.id))}">${e(p.mvp.nombre)}</a>` : e(p.mvp.nombre)}</b> ${chipPuntos(p.mvp.pts)}</span></span>` : ''}</li>`).join('')}</ul>`,
-  { linea: 'El MVP es el jugador de los dos equipos que más puntos de LaLiga Fantasy sacó en ese partido.' }));
-
-  if (h.doblan.length) o.push(bloque('Los que doblaron su media', lista(h.doblan.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
-    { linea: 'Con 3 puntos de media o más y al menos 10 en esta jornada: sacaron el doble (o más) de lo que suelen.' }));
-  if (h.peores.length) o.push(bloque('Los peores de la jornada', lista(h.peores.map((x) => fila(x, `<span class="fj-n">${chipPuntos(x.pts)}<small>media ${e(coma(x.media))}</small></span>`))),
-    { linea: 'Los que acabaron en negativo: una expulsión, un penalti fallado o muchos goles encajados.' }));
-
-  const top = h.equipos.slice(0, 5), cola = h.equipos.slice(-3).reverse();
-  const fe = (q) => `<li class="fe">${escudo(q.escudoUrl, q.nombre, 28)}<b>${e(q.nombre)}</b><span>${e(String(q.pts))} pts</span></li>`;
-  o.push(bloque('Los equipos que más puntos dieron', `  <div class="dos"><ul class="le">${top.map(fe).join('')}</ul><ul class="le">${cola.map(fe).join('')}</ul></div>\n  <p class="peq">Sumando los puntos de todos sus jugadores en la jornada. Arriba, los cinco que más; abajo, los tres que menos.</p>`));
-
+  o.push(bloque(`La jornada ${J}, en corto`, `  <p>${e(t.join(' '))}</p>`, { id: 'analisis' }));
   o.push(bloque('De dónde salen los datos', `  <p>Los puntos son los oficiales de LaLiga Fantasy de cada jugador en la jornada ${J}, con los de DAZN, de los ${h.nJugadores} jugadores que salen en las estadísticas de los partidos. La media es la de toda la temporada. Si LaLiga corrige algún punto después, la página se rehace al día siguiente.</p>`));
   o.push(bloque('Con Fantasy Manager', `  <p>La app te dice cada día qué hacer con tu equipo: quién de los tuyos sube o baja, a quién vender, cuánto pujar y qué cláusulas te llegan antes de la siguiente jornada.</p>`));
   return o.join('\n');
@@ -111,20 +121,23 @@ export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta =
 export function contenidoJornadas({ proxima = null, previas = [], resumenes = [], ultimo = null }) {
   const o = [];
   o.push(`  <h1>Jornadas de <span>LaLiga Fantasy</span></h1>`);
-  o.push(`  <p class="lead">Antes de cada jornada, la previa: a qué hora se cierran las cláusulas, quién no juega y quién está a una amarilla. Después, el resumen: los que más puntos sacaron, el once ideal y el MVP de cada partido. Las dos se hacen solas con los datos de LaLiga Fantasy.</p>`);
+  o.push(`  <p class="fresco">La previa antes de cada jornada y el resumen al acabar · se hacen solas con los datos de LaLiga Fantasy</p>`);
   if (proxima) {
     const pv = previas.find((p) => p.jornada === proxima.jornada);
     o.push(proximaCaja(proxima, { previa: pv ? pv.ruta : null, resumen: null, todas: false }));
-    o.push(bloque(`Partidos de la jornada ${proxima.jornada}`, `  <ul class="lp">${proxima.partidos.map((p) => `<li><span class="lp-p">${escudo(p.escL, p.local, 22)}<b>${e(p.local)}</b>${p.estado === 7 ? `<span class="res">${e(String(p.gl))}-${e(String(p.gv))}</span>` : '<span class="res vs">vs</span>'}<b>${e(p.visitante)}</b>${escudo(p.escV, p.visitante, 22)}</span><span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span></li>`).join('')}</ul>`));
+    o.push(bloque(`Partidos de la jornada ${proxima.jornada}`, `  <ul class="lp">${proxima.partidos.map((p) => `<li><span class="lp-p">${escudo(p.escL, p.local, 22)}<b>${e(p.local)}</b>${p.estado === 7 ? `<span class="res">${e(String(p.gl))}-${e(String(p.gv))}</span>` : `<span class="res hora"><small>${e(diaCorto(p.t))}</small>${e(hora(p.t))}</span>`}<b>${e(p.visitante)}</b>${escudo(p.escV, p.visitante, 22)}</span>${p.estado === 7 ? `<span class="lp-f">${e(diaCorto(p.t))}, ${e(hora(p.t))}</span>` : ''}</li>`).join('')}</ul>`, { id: 'partidos' }));
   }
   if (ultimo) {
     const a = ultimo.mejores.slice(0, 3);
-    o.push(bloque(`La última: jornada ${ultimo.jornada}`, lista(a.map((x) => filaJugador(x, `<span class="fj-n">${chipPuntos(x.pts)}</span>`))) + `\n  <p><a class="btn sec" href="../jornada/resumen-jornada-${ultimo.jornada}.html">Ver el resumen de la jornada ${ultimo.jornada}</a></p>`));
+    o.push(bloque(`La última: jornada ${ultimo.jornada}`, tabla([{ t: 'Jugador', c: 'j' }, { t: 'Pts', c: 'n' }], a.map((x) => `${celdaJug(x)}<td class="n">${chipPuntos(x.pts)}</td>`))
+      + `\n  <p><a class="btn sec" href="../jornada/resumen-jornada-${ultimo.jornada}.html">Ver el resumen de la jornada ${ultimo.jornada}</a></p>`, { id: 'ultima' }));
   }
   const filasJ = new Map();
   for (const p of previas) filasJ.set(p.jornada, { ...(filasJ.get(p.jornada) || {}), previa: p });
   for (const r of resumenes) filasJ.set(r.jornada, { ...(filasJ.get(r.jornada) || {}), resumen: r });
   const js = [...filasJ.entries()].sort((a, b) => b[0] - a[0]);
-  if (js.length) o.push(bloque('Todas las jornadas', `  <ul class="lista-guias">${js.map(([n, x]) => `<li><div class="lg-j"><b>Jornada ${n}</b><span>${[x.previa ? `<a href="../${e(x.previa.ruta)}">Previa</a>` : '', x.resumen ? `<a href="../${e(x.resumen.ruta)}">Resumen</a>` : ''].filter(Boolean).join(' · ')}</span></div></li>`).join('')}</ul>`));
+  if (js.length) o.push(bloque('Todas las jornadas', tabla([{ t: 'Jornada' }, { t: 'Previa' }, { t: 'Resumen' }],
+    js.map(([n, x]) => `<td><b>Jornada ${n}</b></td><td>${x.previa ? `<a href="../${e(x.previa.ruta)}">Previa</a>` : '—'}</td><td>${x.resumen ? `<a href="../${e(x.resumen.ruta)}">Resumen</a>` : '—'}</td>`), { clase: 'td-js' }), { id: 'todas' }));
+  o.push(bloque('Previas y resúmenes', `  <p>Antes de cada jornada, la previa: a qué hora se cierran las cláusulas, quién no juega y quién está a una amarilla. Después, el resumen: los que más puntos sacaron, el once ideal y el MVP de cada partido. Las dos se hacen solas con los datos de LaLiga Fantasy.</p>`, { id: 'analisis' }));
   return o.join('\n');
 }

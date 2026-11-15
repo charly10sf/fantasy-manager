@@ -2303,7 +2303,7 @@
       "grupo": "jugadores",
       "titulo": "Jugadores de LaLiga Fantasy: valor y puntos de cada uno",
       "h1": "Jugadores de LaLiga Fantasy",
-      "descripcion": "Las fichas de los jugadores que más pesan en LaLiga Fantasy, por equipo: valor de mercado día a día, puntos por jornada, titularidad y próximos rivales.",
+      "descripcion": "Todos los jugadores de LaLiga Fantasy con su valor de mercado, lo que suben o bajan hoy, sus puntos y su media, con filtros por puesto y equipo. Se pone al día cada noche.",
       "migas": [
         ["Inicio", ""],
         ["Equipos", "equipos/"]
