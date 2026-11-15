@@ -1951,8 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
    "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
@@ -7537,13 +7535,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2735,
+   "ok": 2736,
    "fallos": 0,
-   "ejecuciones": 2165,
+   "ejecuciones": 2166,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T09:06:11.125Z"
+   "ultima": "2026-11-15T09:11:13.916Z"
   }
  },
  "ptsDirecto": {},
@@ -7560,15 +7558,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:06:20.365Z"
+   "ultimaBien": "2026-11-15T09:11:20.159Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:06:20.365Z"
+   "ultimaBien": "2026-11-15T09:11:20.159Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:06:20.365Z"
+   "ultimaBien": "2026-11-15T09:11:20.159Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7576,11 +7574,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:06:20.365Z"
+   "ultimaBien": "2026-11-15T09:11:20.159Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T09:06:20.365Z"
+   "ultimaBien": "2026-11-15T09:11:20.159Z"
   }
  },
  "avisos": [
