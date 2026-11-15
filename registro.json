@@ -2136,7 +2136,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/horas-completas/14-nov-2026-tramo-final-juego-20261115_3475376.html": 1794702000000,
    "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000
   },
   "hechos": [
    {
@@ -2398,7 +2399,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3308,17 +3309,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 174943,
-  "salida": 13455,
+  "entrada": 176862,
+  "salida": 14073,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.369168,
+  "dolares": 0.369669,
   "reservado": 0
  },
  "recientes": {
@@ -7545,13 +7546,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2757,
+   "ok": 2758,
    "fallos": 0,
-   "ejecuciones": 2187,
+   "ejecuciones": 2188,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T10:56:11.013Z"
+   "ultima": "2026-11-15T11:01:14.420Z"
   }
  },
  "ptsDirecto": {},
@@ -7568,15 +7569,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:56:13.755Z"
+   "ultimaBien": "2026-11-15T11:01:24.118Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:56:13.755Z"
+   "ultimaBien": "2026-11-15T11:01:24.118Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:56:13.755Z"
+   "ultimaBien": "2026-11-15T11:01:24.118Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7584,11 +7585,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:56:13.755Z"
+   "ultimaBien": "2026-11-15T11:01:24.118Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:56:13.755Z"
+   "ultimaBien": "2026-11-15T11:01:24.118Z"
   }
  },
  "avisos": [
