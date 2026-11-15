@@ -22,9 +22,9 @@ export const VERSION = '0.7.12';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.12', f: '2026-11-15', h: '00:26', t: 'Un rival, toda la jornada',
+    v: '0.7.12', f: '2026-11-15', h: '02:23', t: 'Menos anuncios',
     cosas: [
-      { importante: true, para: 'play', tipo: 'mejora', d: 'candado', t: 'El dinero de un rival, toda la jornada', x: 'Ahora se abre por rival: con dos anuncios seguidos ves su dinero y qué cláusulas tuyas le llegan hasta que acabe la jornada, sin volver a pedirte nada. Puedes abrir hasta 3 rivales por jornada.', ir: { v: 'rivales' } },
+      { importante: true, para: 'play', tipo: 'mejora', d: 'candado', t: 'Menos anuncios para abrir funciones', x: 'Todo se abre con un solo anuncio menos el dinero de un rival, que pide dos y se ve 5 minutos (2 veces por jornada). Quién puede pagar tu cláusula queda abierto 5 horas y cuándo gira un jugador, hasta medianoche.', ir: { v: 'rivales' } },
       { tipo: 'mejora', d: 'hucha', t: 'El dinero de los rivales, más fino', x: 'En los parones cuenta la recompensa diaria doble, y lo que te dicen los rivales que tienen sirve para corregir la cuenta de los demás.', ir: { v: 'rivales' } },
     ],
   },

@@ -73,34 +73,39 @@ function esDe(yo) {
 /* Las funciones top, bloqueadas.
    limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
    todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas.
-   En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados:
-   - Las de los rivales (dineroRivales y quienPaga), POR RIVAL desde la 0.7.12 (Carlos, 14 nov: «un anuncio por cada
-     rival que quieras verle el dinero… máximo 3 por jornada» y, a las 21:13, «2 anuncios seguidos»): 2 anuncios seguidos
-     abren UN rival (su dinero y qué cláusulas tuyas le llegan) para TODA LA JORNADA, y como mucho 3 rivales por jornada,
-     contando las dos funciones juntas. Antes (0.6.3a-0.7.11f) iba por función: 2 anuncios, 2 veces por jornada y 1 hora,
-     y a un amigo de Carlos le salieron dos rondas seguidas para ver a un solo rival. Se cambia en limites.json con
-     «top»: { "rivales": 3, "anuncios": 2 }.
+   En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados. Desde la 0.7.12 (Carlos,
+   15 nov, 02:08: «TODO un solo anuncio salvo ver el dinero del rival durante 5 minutos, que serán 2»):
+   - El dinero de un rival (dineroRivales), POR RIVAL: 2 anuncios seguidos lo abren 5 MINUTOS; como mucho 2 veces por
+     jornada. «top» en limites.json: { "rivales": 2, "anuncios": 2, "minutos": 5 }.
+   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 5 HORAS («horasQuien»: 5). Sin tope.
    - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
      hasta las 00:00 de Madrid.
-   Si no hay anuncio que enseñar, se abre igual (un rival, que cuenta como uno de los 3; cuándo gira, media hora), pero
-   solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga limites.json. Todo se guarda en el
-   móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin un servidor, y no compensa). */
+   Antes (0.6.3a-0.7.11f) las de los rivales iban por función: 2 anuncios, 2 veces por jornada y 1 hora, y a un amigo
+   de Carlos le salieron dos rondas seguidas para ver a un solo rival.
+   Si no hay anuncio que enseñar, se abre igual lo que pedías (un rival, que cuenta como una de las 2; quién paga y
+   cuándo gira, media hora), pero solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga
+   limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin
+   un servidor, y no compensa). */
 const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
-/** las que van por rival y jornada */
-export const POR_JORNADA = ['dineroRivales', 'quienPaga'];
+/** las que van por rival (y unas veces por jornada): solo el dinero */
+export const POR_JORNADA = ['dineroRivales'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
 const NUEVAS = [];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
+const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
 const cfgTop = () => {
   const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {};
-  return { rivales: Number(t.rivales) > 0 ? Math.floor(Number(t.rivales)) : 3, anuncios: Number(t.anuncios) > 0 ? Math.min(3, Math.floor(Number(t.anuncios))) : 2 };
+  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5) };
 };
-/** cuántos anuncios pide cada vez (los de un rival, todos seguidos) */
+/** cuántos anuncios pide cada vez (los del dinero de un rival, todos seguidos) */
 export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : 1);
+/** cuánto queda abierto el dinero de un rival (minutos) y quién paga (horas) */
+export const minutosRival = () => cfgTop().minutos;
+export const horasQuien = () => cfgTop().horasQuien;
 /** ¿se pueden abrir viendo un anuncio? (solo en la versión de Google Play) */
 export const topConAnuncio = () => enApp && nativo.hayAnuncios();
 let jornadaB = 0;
-/** la jornada para contar los rivales abiertos: la que se juega o, si no, la próxima (lo pone la app al rehacer los datos) */
+/** la jornada para contar las veces: la que se juega o, si no, la próxima (lo pone la app al rehacer los datos) */
 export function fijarJornada(n) { if (Number(n) > 0) jornadaB = Number(n); }
 
 /* lo de hoy (para cuándo gira): cuántos anuncios has visto y, si no había anuncio, hasta cuándo va abierta gratis */
@@ -113,30 +118,46 @@ function hoyTop() {
 }
 // con «hasta: 1»: la web de la 0.6.3 y anteriores (la que va dentro del APK, si AlDia vuelve a ella) lo lee como cerrado
 const guardarHoy = (h) => LS.set('top-abierto', { dia: diaDe(), t: Date.now(), vistos: h.vistos, libreHasta: h.libreHasta || 0, hasta: 1 });
-/* los rivales abiertos esta jornada: { j, abiertos: [tid…], uno: { tid, n } } (uno: los anuncios ya vistos del rival
-   que estás abriendo; se guarda aunque cambie la jornada, para no hacerle ver otra vez el que ya vio) */
+/* el dinero de los rivales: { j, usos, abiertos: { tid: hasta }, uno: { tid, n } } (uno: los anuncios ya vistos del
+   rival que estás abriendo; se guarda aunque cambie la jornada, para no hacerle ver otra vez el que ya vio) */
 function rivalesTop() {
   const g = LS.get('top-rivales', null);
-  if (g && (g.j === jornadaB || !jornadaB)) return { j: g.j, abiertos: Array.isArray(g.abiertos) ? g.abiertos : [], uno: g.uno || null };
-  return { j: jornadaB, abiertos: [], uno: (g && g.uno) || null };
+  const ab = g && g.abiertos && !Array.isArray(g.abiertos) ? g.abiertos : {};
+  if (g && (g.j === jornadaB || !jornadaB)) return { j: g.j, usos: g.usos || 0, abiertos: ab, uno: g.uno || null };
+  return { j: jornadaB, usos: 0, abiertos: ab, uno: (g && g.uno) || null };
 }
 const guardarRivales = (g) => LS.set('top-rivales', g);
-/** los rivales que has abierto esta jornada (sus teamId, en texto) */
-export const rivalesAbiertos = () => rivalesTop().abiertos.map(String);
+const abrirRival = (g, rid, min) => guardarRivales({ j: g.j, usos: g.usos + 1, abiertos: { ...g.abiertos, [String(rid)]: Date.now() + min * 60e3 }, uno: null });
+/** los rivales con el dinero abierto ahora (sus teamId, en texto) */
+export const rivalesAbiertos = () => { const ab = rivalesTop().abiertos, t = Date.now(); return Object.keys(ab).filter((k) => ab[k] > t); };
 const abiertoRival = (rid) => rid != null && rivalesAbiertos().includes(String(rid));
-/** lo que se cerraba a una hora: ya no queda nada así (los rivales van por jornada y cuándo gira, hasta medianoche) */
-export function proximoCierreTop() { return 0; }
+/** hasta cuándo está abierto el dinero de ese rival (0 si no) */
+export const rivalAbiertoHasta = (rid) => (abiertoRival(rid) ? rivalesTop().abiertos[String(rid)] : 0);
+/* quién paga: { hasta } */
+const quienHasta = () => { const g = LS.get('top-quien', null); return g && g.hasta > Date.now() ? g.hasta : 0; };
+/** la hora más cercana a la que se cierra algo abierto por un rato (para volver a pintar), o 0 */
+export function proximoCierreTop() {
+  const t = Date.now(), hs = [...Object.values(rivalesTop().abiertos), quienHasta(), hoyTop().libreHasta].filter((h) => h > t);
+  return hs.length ? Math.min(...hs) : 0;
+}
+/** hasta cuándo está abierta (las de un rato); 0 si no lo está o si va hasta medianoche */
+export function abiertaHasta(clave, rid = null) {
+  if (porJornada(clave)) return rivalAbiertoHasta(rid);
+  if (clave === 'quienPaga') return quienHasta();
+  return 0;
+}
 
-/** ¿está abierta ahora? (las de los rivales, para ese rival) */
+/** ¿está abierta ahora? (el dinero, para ese rival) */
 export function topAbierto(clave, rid = null) {
   if (porJornada(clave)) return abiertoRival(rid);
+  if (clave === 'quienPaga') return quienHasta() > 0;
   const h = hoyTop();
   return h.vistos > 0 || Date.now() < h.libreHasta;
 }
-/** cuántos rivales te quedan por abrir esta jornada */
-export const usosQuedan = (clave) => (porJornada(clave) ? Math.max(0, cfgTop().rivales - rivalesTop().abiertos.length) : Infinity);
+/** cuántas veces te quedan para abrir el dinero de un rival esta jornada */
+export const usosQuedan = (clave) => (porJornada(clave) ? Math.max(0, cfgTop().rivales - rivalesTop().usos) : Infinity);
 export const usosPorJornada = () => cfgTop().rivales;
-/** cuántos anuncios te faltan para abrir ese rival */
+/** cuántos anuncios te faltan para abrirla (el dinero, para ese rival) */
 export function faltanAnuncios(clave, rid = null) {
   if (topAbierto(clave, rid)) return 0;
   if (!porJornada(clave)) return 1;
@@ -148,26 +169,27 @@ export function anuncioTopVisto(clave, rid = null) {
   const h = hoyTop();
   guardarHoy({ ...h, vistos: h.vistos + 1 });
   contar('b');
+  if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + cfgTop().horasQuien * 3600e3 }); contar('t'); return true; }
   if (!porJornada(clave)) { contar('t'); return true; }
   if (rid == null) return false;
-  const g = rivalesTop(), n = cfgTop().anuncios;
+  const g = rivalesTop(), c = cfgTop();
   const vistos = (g.uno && String(g.uno.tid) === String(rid) ? g.uno.n || 0 : 0) + 1;
-  if (vistos < n) { guardarRivales({ ...g, uno: { tid: String(rid), n: vistos } }); return false; }
-  guardarRivales({ j: g.j, abiertos: [...new Set([...g.abiertos.map(String), String(rid)])], uno: null });
+  if (vistos < c.anuncios) { guardarRivales({ ...g, uno: { tid: String(rid), n: vistos } }); return false; }
+  abrirRival(g, rid, c.minutos);
   contar('t');
   return true;
 }
 /** sin anuncio que enseñar (sin consentimiento, sin relleno, un DNS que los bloquea…): gratis UNA vez al día por
     dispositivo, contando todas las funciones top juntas (Carlos, 14 nov). La segunda vez del día ya no se abre */
 export const puedeTopGratis = () => { const g = LS.get('top-sin-anuncio', null); return !g || g.dia !== diaDe(); };
-/** sin anuncio que enseñar: se abre igual lo que pedías (un rival, que cuenta como uno de los 3; cuándo gira, «min»
-    minutos). Apunta el día (`puedeTopGratis`) */
+/** sin anuncio que enseñar: se abre igual lo que pedías (el dinero de un rival, sus minutos y cuenta como una de las
+    veces; quién paga y cuándo gira, «min» minutos). Apunta el día (`puedeTopGratis`) */
 export function abrirTopGratis(clave, min = 30, rid = null) {
   LS.set('top-sin-anuncio', { dia: diaDe() });
+  if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + min * 60e3 }); return; }
   if (!porJornada(clave)) { const h = hoyTop(); guardarHoy({ ...h, libreHasta: Date.now() + min * 60e3 }); return; }
   if (rid == null) return;
-  const g = rivalesTop();
-  guardarRivales({ j: g.j, abiertos: [...new Set([...g.abiertos.map(String), String(rid)])], uno: null });
+  abrirRival(rivalesTop(), rid, cfgTop().minutos);
 }
 /* «planes» en limites.json: los planes del día con la IA de Carlos (el Worker, /plan). on: si van por ahí (si no, como
    antes: con la clave de Google de cada uno); gratis y max: los de cada día y el tope con anuncios. Quien cuenta de verdad

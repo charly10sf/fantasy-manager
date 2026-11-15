@@ -17,7 +17,7 @@ import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos } from './limite.js';
+import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
@@ -325,16 +325,7 @@ export function fichaJugador(S, pid) {
       : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
     if (gratis || liga) h += `<div class="aviso-ficha verde peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join(' ')}</div></div>`;
     const pg = mia.pagan;
-    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) {
-      // (0.7.12) cerrada por rival: de los que has abierto esta jornada sí se dice si le llega
-      const ab = new Set(rivalesAbiertos()), es = (x) => ab.has(String(x.tid));
-      const vistos = (S.M.rivalesTid || []).filter((t) => ab.has(String(t)));
-      if (vistos.length) {
-        const ya = [...pg.seguro.filter(es).map((x) => `<b>${esc(x.nombre)}</b>`), ...pg.quiza.filter(es).map((x) => `${esc(x.nombre)} (justo)`)];
-        h += `<div class="aviso-ficha ${ya.length ? 'oro' : 'verde'} peq">${icono('rivales')}<div>De los rivales que has abierto esta jornada, ${ya.length ? `le llega a ${ya.join(', ')}` : 'no le llega a ninguno'}.</div></div>`;
-      }
-      cerradas.push('quienPaga');
-    }
+    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
       // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
@@ -594,7 +585,7 @@ export function fichaRival(S, tid) {
   const conDinero = r.dinero && r.dinero.v != null;
   const tDinero = bloqueada('dineroRivales', tid)
     ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
-    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'} ›</span></button>`;
+    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
     tDinero,
@@ -731,21 +722,21 @@ function anuncioPlanHTML(A, cu) {
   return h;
 }
 
-/** las funciones top: las de los rivales, por rival (sus anuncios seguidos, toda la jornada, unos rivales por jornada);
-    cuándo gira, con 1, hasta medianoche. Sin rival (un candado de una lista o de un jugador tuyo), se elige aquí */
+/** las funciones top: el dinero de un rival, con sus anuncios seguidos, unos minutos y unas veces por jornada; quién
+    paga, con 1, unas horas; cuándo gira, con 1, hasta medianoche. El dinero sin rival (el candado de la lista): se elige */
 function anuncioTopHTML(A, S) {
   const [t, x] = BLOQUEO[A.como] || BLOQUEO[A.clave] || ['Funciones top', ''];
-  const rivales = POR_JORNADA.includes(A.clave), q = usosQuedan(A.clave), n = usosPorJornada(), a = anunciosPorVez(A.clave);
+  const rivales = POR_JORNADA.includes(A.clave), q = usosQuedan(A.clave), n = usosPorJornada(), a = anunciosPorVez(A.clave), min = minutosRival();
   const rid = A.rival != null ? String(A.rival) : null;
   const M = S && S.M, nom = (tid) => { const r = M && M.rivales.find((y) => String(y.e.teamId) === String(tid)); return r ? r.e.nombre : 'este rival'; };
   const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
+  const veces = (k) => (k === 1 ? '1 vez' : `${k} veces`);
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
     <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
   const yaAb = rivales ? rivalesAbiertos() : [];
   if (rivales && rid == null) {
-    // elegir rival: los abiertos ya se ven; los demás, con sus anuncios
     const rs = M ? M.rivales : [];
-    h += `<p>Se abre <b>por rival</b>: su dinero y qué cláusulas tuyas le llegan, <b>toda la jornada</b>, con ${ads}. ${q ? `Te ${q === 1 ? 'queda 1 rival' : `quedan ${q} rivales`} esta jornada.` : `Ya has abierto los ${n} de esta jornada.`}</p>`;
+    h += `<p>Se abre <b>por rival</b>, ${min} minutos, con ${ads}. ${q ? `Te ${q === 1 ? 'queda 1 vez' : `quedan ${veces(q)}`} esta jornada.` : `Ya lo has abierto las ${veces(n)} de esta jornada.`}</p>`;
     h += `<div class="lista-rival-top">${rs.map((r) => {
       const ab = yaAb.includes(String(r.e.teamId));
       return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('candado')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
@@ -754,13 +745,14 @@ function anuncioTopHTML(A, S) {
     return h;
   }
   if (rivales && !q && !yaAb.includes(rid)) {
-    h += `<p><b>Ya has abierto los ${n} rivales de esta jornada.</b> En la siguiente puedes abrir otros ${n}.</p>
+    h += `<p><b>Ya has visto el dinero de un rival las ${veces(n)} de esta jornada.</b> En la siguiente puedes volver a abrirlo.</p>
       <button class="btn ancho sec" data-accion="noTop">Entendido</button></div>`;
     return h;
   }
   const faltan = faltanAnuncios(A.clave, rid);
-  if (rivales && faltan >= a) h += `<p>Abre a <b>${esc(nom(rid))}</b> toda la jornada viendo ${ads}. Puedes abrir ${n} rivales por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
-  else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y ${esc(nom(rid))} se queda abierto toda la jornada.</p>`;
+  if (rivales && faltan >= a) h += `<p>Mira el dinero de <b>${esc(nom(rid))}</b> durante ${min} minutos viendo ${ads}. Puedes hacerlo ${veces(n)} por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
+  else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y verás el dinero de ${esc(nom(rid))} ${min} minutos.</p>`;
+  else if (A.clave === 'quienPaga') h += `<p>Mira un anuncio corto y se abre <b>${horasQuien()} horas</b>.</p>`;
   else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   const txt = A.cargando ? 'Cargando el anuncio…' : rivales && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';

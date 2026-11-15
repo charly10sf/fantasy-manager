@@ -661,8 +661,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
-// 16b: (0.7.12) las de los rivales, POR RIVAL: 2 anuncios seguidos abren UN rival toda la jornada (su dinero y quién
-// paga), como mucho 3 rivales por jornada contando las dos funciones; el resto sigue cerrado; jornada nueva, a cero
+// 16b: (0.7.12, Carlos 15 nov) todo con 1 anuncio salvo el dinero de un rival: 2 anuncios seguidos, ese rival 5
+// minutos, 2 veces por jornada; quién paga, 1 anuncio y 5 horas (todos los rivales); jornada nueva, a cero
 {
   const { ctx, page, errores } = await pagina();
   await page.goto(`${BASE}/index.html`);
@@ -671,36 +671,49 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   const r = await page.evaluate(async () => {
     const L = await import('/js/limite.js');
     const H = await import('/js/hojas.js');
+    const { LS } = await import('/js/util.js');
     const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
-    for (const k of ['top-abierto', 'top-jornada', 'top-rivales', 'top-sin-anuncio']) localStorage.removeItem(`fm-${k}`);
+    for (const k of ['top-abierto', 'top-jornada', 'top-rivales', 'top-quien', 'top-sin-anuncio']) localStorage.removeItem(`fm-${k}`);
     L.fijarJornada(13);
     const ids = window.S.M.rivales.map((x) => String(x.e.teamId));
     const ver = async (clave, rid) => { window.S.anuncio = { para: 'top', clave, rival: rid }; window.anuncioVisto('top', true, ''); await espera(150); };
     const out = {};
     await ver('dineroRivales', ids[0]);
-    out.unoDeDos = { abierto: L.topAbierto('dineroRivales', ids[0]), faltan: L.faltanAnuncios('dineroRivales', ids[0]), hoja: (window.S.anuncio && !window.S.anuncio.error) };
+    out.unoDeDos = { abierto: L.topAbierto('dineroRivales', ids[0]), faltan: L.faltanAnuncios('dineroRivales', ids[0]) };
     await ver('dineroRivales', ids[0]);
-    out.dos = { abierto: !L.bloqueada('dineroRivales', ids[0]), quien: !L.bloqueada('quienPaga', ids[0]), otro: L.bloqueada('dineroRivales', ids[1]), general: L.bloqueada('dineroRivales'), quedan: L.usosQuedan('dineroRivales') };
-    await ver('quienPaga', ids[1]); await ver('quienPaga', ids[1]);
-    await ver('dineroRivales', ids[2]); await ver('dineroRivales', ids[2]);
-    out.tres = { quedan: L.usosQuedan('dineroRivales'), abiertos: L.rivalesAbiertos().length, cuarto: L.bloqueada('dineroRivales', ids[3]) };
-    out.hojaLlena = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales', rival: ids[3] }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-    out.elegir = H.anuncioHTML({ anuncio: { para: 'top', clave: 'quienPaga' }, M: window.S.M, D: { demo: false } }, 'top');
+    const hasta = L.rivalAbiertoHasta(ids[0]);
+    out.dos = { abierto: !L.bloqueada('dineroRivales', ids[0]), min: Math.round((hasta - Date.now()) / 60e3), otro: L.bloqueada('dineroRivales', ids[1]), quien: L.bloqueada('quienPaga'), quedan: L.usosQuedan('dineroRivales'), cierre: L.proximoCierreTop() === hasta };
+    // pasados los 5 minutos, cerrado
+    const g = LS.get('top-rivales', null); g.abiertos[ids[0]] = Date.now() - 1000; LS.set('top-rivales', g);
+    out.pasado = L.bloqueada('dineroRivales', ids[0]);
+    await ver('quienPaga', null);
+    out.quien = { abierta: !L.bloqueada('quienPaga'), conRival: !L.bloqueada('quienPaga', ids[2]), horas: Math.round((L.abiertaHasta('quienPaga') - Date.now()) / 3600e3), faltan: L.faltanAnuncios('dineroRivales', ids[1]) };
+    await ver('dineroRivales', ids[1]); await ver('dineroRivales', ids[1]);
+    out.tope = { quedan: L.usosQuedan('dineroRivales'), tercero: L.bloqueada('dineroRivales', ids[2]) };
+    out.hojaLlena = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales', rival: ids[2] }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    out.hojaQuien = H.anuncioHTML({ anuncio: { para: 'top', clave: 'quienPaga' }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    out.elegir = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales' }, M: window.S.M, D: { demo: false } }, 'top');
     L.fijarJornada(14);
-    out.nueva = { quedan: L.usosQuedan('dineroRivales'), primero: L.bloqueada('dineroRivales', ids[0]) };
+    out.nueva = { quedan: L.usosQuedan('dineroRivales') };
     return out;
   });
-  if (r.unoDeDos.abierto || r.unoDeDos.faltan !== 1) mal(`top por rival: con 1 de 2 ya se abre o no cuenta: ${JSON.stringify(r.unoDeDos)}`);
-  else bien('top por rival: con el primero de los dos anuncios sigue cerrado y falta 1');
-  if (!r.dos.abierto || !r.dos.quien || !r.dos.otro || !r.dos.general || r.dos.quedan !== 2) mal(`top por rival: con 2 anuncios: ${JSON.stringify(r.dos)}`);
-  else bien('top por rival: con 2 anuncios se abre ese rival (dinero y quién paga) y los demás siguen cerrados; quedan 2');
-  if (r.tres.quedan !== 0 || r.tres.abiertos !== 3 || !r.tres.cuarto || !/Ya has abierto los 3 rivales/.test(r.hojaLlena)) mal(`top por rival: el tope de 3: ${JSON.stringify(r.tres)} / ${r.hojaLlena.slice(0, 160)}`);
-  else bien('top por rival: 3 rivales por jornada (las dos funciones juntas) y el cuarto ya no');
-  if ((r.elegir.match(/data-rival="/g) || []).length || (r.elegir.match(/data-r="/g) || []).length !== 3) mal(`top por rival: la elección de rival sin rival: ${r.elegir.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 200)}`);
-  else bien('top por rival: sin rival se elige de la lista (los 3 abiertos, para verlos; el resto, sin tope, cerrados)');
-  if (r.nueva.quedan !== 3 || !r.nueva.primero) mal(`top por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
-  else bien('top por rival: en la jornada siguiente se vuelven a poder abrir 3');
-  if (errores.length) mal(`top por rival: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  if (r.unoDeDos.abierto || r.unoDeDos.faltan !== 1) mal(`dinero por rival: con 1 de 2 ya se abre o no cuenta: ${JSON.stringify(r.unoDeDos)}`);
+  else bien('dinero por rival: con el primero de los dos anuncios sigue cerrado y falta 1');
+  if (!r.dos.abierto || r.dos.min !== 5 || !r.dos.otro || !r.dos.quien || r.dos.quedan !== 1 || !r.dos.cierre) mal(`dinero por rival: con 2 anuncios: ${JSON.stringify(r.dos)}`);
+  else bien('dinero por rival: con 2 anuncios, ese rival 5 minutos (los demás y quién paga, cerrados); queda 1 vez');
+  if (!r.pasado) mal('dinero por rival: pasados los 5 minutos sigue abierto');
+  else bien('dinero por rival: pasados los 5 minutos se cierra');
+  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 5 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
+  else bien('quién paga: 1 anuncio, todos los rivales, 5 horas (y no gasta las veces del dinero)');
+  if (r.tope.quedan !== 0 || !r.tope.tercero || !/Ya has visto el dinero de un rival las 2 veces/.test(r.hojaLlena)) mal(`dinero por rival: el tope de 2: ${JSON.stringify(r.tope)} / ${r.hojaLlena.slice(0, 160)}`);
+  else bien('dinero por rival: 2 veces por jornada y la tercera ya no');
+  if (!/5 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
+  else bien('quién paga: la hoja dice un anuncio y 5 horas');
+  if ((r.elegir.match(/data-rival="/g) || []).length) mal('dinero por rival: con el tope gastado, la elección deja abrir otro');
+  else bien('dinero por rival: sin rival se elige de la lista (con el tope gastado, ninguno se puede abrir)');
+  if (r.nueva.quedan !== 2) mal(`dinero por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
+  else bien('dinero por rival: en la jornada siguiente se vuelve a poder 2 veces');
+  if (errores.length) mal(`dinero por rival: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

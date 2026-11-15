@@ -44,7 +44,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 
 Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pages, con 6 h de caché.
 
-- Claves: `abre`, `mensajeApertura`, `ligas`, `minutosLiga`, `minutos`, `equipos`, `extra`, `sinLimite`, `bloqueadas`, `todoAbierto`, `anunciosWeb`, `anunciosWebDueno`, `sinFotos` y `top` (opcional: si no está, 2 usos y 60 min).
+- Claves: `abre`, `mensajeApertura`, `ligas`, `minutosLiga`, `minutos`, `equipos`, `extra`, `sinLimite`, `bloqueadas`, `todoAbierto`, `anunciosWeb`, `anunciosWebDueno`, `sinFotos` y `top` (opcional; desde la 0.7.12: `rivales` 2 veces por jornada, `anuncios` 2 y `minutos` 5 para el dinero de un rival, y `horasQuien` 5 para quién paga, con 1 anuncio).
 - La cuenta atrás y los minutos, solo para las cuentas con alguna liga de `ligas` (ahora «Maulazzos»). `minutosLiga` está a 0 desde el 24 oct (sin límite). `minutos` está a 0 porque las versiones viejas se congelaban al contar el tiempo. `equipos` da minutos a un equipo concreto sea cual sea su liga, y `extra`, minutos de más a un equipo un día concreto.
 - `bloqueadas`: las funciones top (dineroRivales, quienPaga, inercia; ventasRivales y perfilRival se abrieron para todos el 8 nov), cerradas para todos menos `todoAbierto`. En `play` se abren con bonificados (cuántos y cuánto, en `top` y limite.js). Sin plan de pago, solo anuncios.
 - `sinLimite` y `todoAbierto` van por id de cuenta (667015), nunca por nombre de equipo: un nombre lo puede copiar cualquiera.

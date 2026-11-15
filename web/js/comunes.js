@@ -2,7 +2,7 @@
 import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
 import { enApp } from './puente.js';
 import { mini } from './graficos.js';
-import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez } from './limite.js';
+import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien } from './limite.js';
 import { esFav } from './favoritos.js';
 import { aviso } from './avisos-ficha.js';
 
@@ -390,13 +390,14 @@ export function candado(clave, { como = null, rid = null } = {}) {
 export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' En la web no se abren: sí en la app de Android de Google Play, gratis, viendo un anuncio corto.');
 /** lo que dice un candado de cómo se abre */
 export function colaCandado(clave, rid = null) {
-  // (sesión 8, A9) sin promesas que en la web no se cumplen: aquí no se abre; en la app de Google Play, con un anuncio
+  // (sesión 8, A9) sin promesas que en la web no se cumplen: aquí no se abre; en la app de Google Play, con anuncios
   if (!topConAnuncio()) return dondeTop();
+  if (clave === 'quienPaga') return ` Tócalo y ábrela ${horasQuien()} horas viendo un anuncio corto.`;
   if (!POR_JORNADA.includes(clave)) return ' Tócalo y ábrela hasta medianoche viendo un anuncio corto.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
-  if (!q) return ` Ya has abierto los ${n} rivales de esta jornada: vuelve en la siguiente.`;
+  if (!q) return ` Ya lo has abierto las ${n} veces de esta jornada: vuelve en la siguiente.`;
   const ads = a === 1 ? 'un anuncio corto' : `${a === 2 ? 'dos' : a} anuncios cortos seguidos`;
-  return ` Tócalo y ${rid != null ? 'abre a este rival' : 'elige un rival'} toda la jornada con ${ads}. Puedes abrir ${n} rivales por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.`;
+  return ` Tócalo y ${rid != null ? 'mira el de este rival' : 'elige un rival'} ${minutosRival()} minutos con ${ads}. ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.`;
 }
 /** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
