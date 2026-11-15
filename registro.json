@@ -1951,7 +1951,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250174/vivian-hugo-rincon-sufren-sendas-sobrecargas.html": 1794480892000,
    "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/": 1794482297000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
@@ -7546,13 +7545,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2756,
+   "ok": 2757,
    "fallos": 0,
-   "ejecuciones": 2186,
+   "ejecuciones": 2187,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T10:51:12.275Z"
+   "ultima": "2026-11-15T10:56:11.013Z"
   }
  },
  "ptsDirecto": {},
@@ -7569,15 +7568,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:51:21.390Z"
+   "ultimaBien": "2026-11-15T10:56:13.755Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:51:21.390Z"
+   "ultimaBien": "2026-11-15T10:56:13.755Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:51:21.390Z"
+   "ultimaBien": "2026-11-15T10:56:13.755Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7585,11 +7584,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:51:21.390Z"
+   "ultimaBien": "2026-11-15T10:56:13.755Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T10:51:21.390Z"
+   "ultimaBien": "2026-11-15T10:56:13.755Z"
   }
  },
  "avisos": [
