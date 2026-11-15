@@ -2210,6 +2210,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pnz-rk-bd .tray { margin: 6px 0 4px; }
 .pnz-rank { counter-reset: rk; } .pnz-rk { counter-increment: rk; } .pnz-rk .i::before { content: counter(rk); }
 .pnz-mer-l.ver-tu .ver-liga, .pnz-mer-l.ver-liga .ver-tu { display: none; }
+.pnz-mer-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .pnz-ver { display: inline-flex; margin: 12px 0 0; padding: 3px; border-radius: var(--r-ctl); background: rgba(0, 0, 0, 0.3); border: 1px solid var(--linea); }
 .pnz-ver button { padding: 6px 12px; border-radius: var(--r-pl); font: 600 var(--t-sec2) 'Barlow'; color: var(--texto2); }
 .pnz-ver button[aria-selected="true"] { background: var(--sube-s); color: var(--sube); }
@@ -2235,6 +2236,8 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
   .pnz-mer-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .pnz-mer.lado-sube .pnz-mer-l.baja, .pnz-mer.lado-baja .pnz-mer-l.sube { display: block; }
   .pnz-mer-l h3 { display: block; } .pnz-mer-p { margin-top: 2px; }
+  /* (15 nov) la cabecera de las dos columnas, del mismo alto: título y, en «Cómpralos», las pestañas al lado */
+  .pnz-mer-h { margin-top: 14px; min-height: 40px; } .pnz-mer-h h3 { margin: 0 2px; } .pnz-mer-h .pnz-ver { margin: 0; }
   .pnz-rk > summary { grid-template-columns: 16px 32px minmax(0, 1fr) 26% 58px 14px; }
   .pnz-mer, .pnz-mer.lado-baja { background: linear-gradient(90deg, rgba(47, 209, 143, 0.07), rgba(255, 111, 97, 0.07)), var(--plano); border-color: rgba(255, 197, 71, 0.35); }
 }
