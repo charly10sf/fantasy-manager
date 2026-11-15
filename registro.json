@@ -1952,7 +1952,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
@@ -2135,19 +2134,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html",
-    "medio": "COPE",
-    "t": 1794484080000,
-    "id": "3104",
-    "que": "molestias",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Lamine Yamal arrastra molestias en una rodilla",
-    "motivo": "inflamación y líquido en una rodilla",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html",
     "medio": "Mundo Deportivo",
@@ -7503,13 +7489,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2767,
+   "ok": 2768,
    "fallos": 0,
-   "ejecuciones": 2197,
+   "ejecuciones": 2198,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T11:46:13.153Z"
+   "ultima": "2026-11-15T11:51:21.870Z"
   }
  },
  "ptsDirecto": {},
@@ -7526,15 +7512,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:46:16.735Z"
+   "ultimaBien": "2026-11-15T11:51:27.191Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:46:16.735Z"
+   "ultimaBien": "2026-11-15T11:51:27.191Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:46:16.735Z"
+   "ultimaBien": "2026-11-15T11:51:27.191Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7542,11 +7528,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:46:16.735Z"
+   "ultimaBien": "2026-11-15T11:51:27.191Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T11:46:16.735Z"
+   "ultimaBien": "2026-11-15T11:51:27.191Z"
   }
  },
  "avisos": [
