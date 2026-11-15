@@ -1958,7 +1958,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/2026/11/12/sancet-primera-convocatoria-euskadi-ojala-algun-dia-podamos-pelear-mundial-seleccion-nuestro-pais.html": 1794519215000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250422/buena-senal.html": 1794549600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250408/dia-reencuentros-lezama-san-mames.html": 1794549600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250434/matarazzo-busca-extremo-haga-barrene.html": 1794548400000,
@@ -1966,7 +1965,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261112/1004250406/baena-equipo-hecho-gran-esfuerzo.html": 1794520433000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261112/1004250369/italia-francia.html": 1794520180000,
    "SPORT|136382083": 1794544214000,
-   "SPORT|136390672": 1794519205000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/de-la-fuente-confirma-que-lamine-y-oyarzabal-estaran-disponibles-para-el-partido-ante-inglaterra-en-el-metropolitano-cadena-ser/": 1794522744000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/sancet-en-su-primera-convocatoria-con-euskadi-ojala-algun-dia-podamos-pelear-un-mundial-con-la-seleccion-de-nuestro-pais-cadena-ser/": 1794522580000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-recupera-lamine-yamal-oyarzabal-jugar-inglaterra-20261112_3474248.html": 1794524509000,
@@ -7456,13 +7454,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2886,
+   "ok": 2887,
    "fallos": 0,
-   "ejecuciones": 2316,
+   "ejecuciones": 2317,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T21:31:13.248Z"
+   "ultima": "2026-11-15T21:36:13.286Z"
   }
  },
  "ptsDirecto": {},
@@ -7479,15 +7477,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:31:16.594Z"
+   "ultimaBien": "2026-11-15T21:36:17.148Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:31:16.594Z"
+   "ultimaBien": "2026-11-15T21:36:17.148Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:31:16.594Z"
+   "ultimaBien": "2026-11-15T21:36:17.148Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7495,11 +7493,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:31:16.594Z"
+   "ultimaBien": "2026-11-15T21:36:17.148Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:31:16.594Z"
+   "ultimaBien": "2026-11-15T21:36:17.148Z"
   }
  },
  "avisos": [
