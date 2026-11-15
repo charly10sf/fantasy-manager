@@ -3175,12 +3175,36 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-colau-critica-sanchez-suspendido-materia-vivienda-20261115101621.html": 1794734181000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000
+   "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000
   },
-  "hechos": [],
+  "hechos": [
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html",
+    "medio": "COPE",
+    "t": 1794765116000,
+    "tipo": "horario",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 15,
+    "jTxt": true,
+    "clubes": [],
+    "luto": false,
+    "oficial": false,
+    "contexto": "LaLiga publica los horarios de la jornada del Puente de la Constitución",
+    "detalle": "",
+    "nums": [
+     15,
+     4,
+     21,
+     0,
+     14
+    ]
+   }
+  ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
   "espera": {}
@@ -3188,17 +3212,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 202119,
-  "salida": 18483,
+  "entrada": 203868,
+  "salida": 18664,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.3744,
+  "dolares": 0.374665,
   "reservado": 0
  },
  "recientes": {
@@ -7425,13 +7449,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2841,
+   "ok": 2842,
    "fallos": 0,
-   "ejecuciones": 2271,
+   "ejecuciones": 2272,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T17:51:14.277Z"
+   "ultima": "2026-11-15T17:56:13.259Z"
   }
  },
  "ptsDirecto": {},
@@ -7448,15 +7472,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:51:20.123Z"
+   "ultimaBien": "2026-11-15T17:56:19.424Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:51:20.123Z"
+   "ultimaBien": "2026-11-15T17:56:19.424Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:51:20.123Z"
+   "ultimaBien": "2026-11-15T17:56:19.424Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7464,11 +7488,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:51:20.123Z"
+   "ultimaBien": "2026-11-15T17:56:19.424Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T17:51:20.123Z"
+   "ultimaBien": "2026-11-15T17:56:19.424Z"
   }
  },
  "avisos": [
