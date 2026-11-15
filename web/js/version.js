@@ -26,6 +26,7 @@ export const NOVEDADES = [
     cosas: [
       { para: 'web', tipo: 'nuevo', d: 'calendario', t: 'La previa de cada jornada', x: 'En las guías de la web hay una página por jornada con la hora del cierre y la reapertura de cláusulas, los sancionados, los apercibidos, las bajas y los jugadores que más suben. Se pone al día sola antes del cierre.' },
       { para: 'web', tipo: 'nuevo', d: 'balanza', t: 'Calculadoras de cláusula y de puja', x: 'Las guías de subir la cláusula y de cuánto pujar traen su calculadora: metes tus números y te dice cuánto subirla, si compensa clausular a un rival y cuánto pujar por un jugador.' },
+      { para: 'web', tipo: 'mejora', d: 'grafica', t: 'Guías con datos de esta temporada', x: 'Porteros, valor de mercado y alineación traen cifras de esta temporada: porterías a cero y paradas de cada equipo, cuánto suelen durar las rachas de subida y cuántos puntos pierde un suplente en cada puesto.' },
     ],
   },
   {

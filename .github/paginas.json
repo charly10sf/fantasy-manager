@@ -219,7 +219,7 @@
       "fecha": "2026-11-15",
       "h1": "Valor de mercado en LaLiga Fantasy: cómo sube, cómo baja y cómo ganar dinero",
       "titulo": "Valor de mercado en LaLiga Fantasy y cómo ganar dinero",
-      "descripcion": "Cuándo cambia el valor, qué lo mueve, cómo leer las rachas y cómo ganar dinero con la compraventa sin perder puntos.",
+      "descripcion": "Cuándo cambia el valor, qué lo mueve, cuánto duran las rachas con datos de esta temporada y cómo ganar dinero con la compraventa sin perder puntos.",
       "busqueda": "cómo suben los jugadores LaLiga Fantasy",
       "esquema": [
         ["Cuándo cambia el valor", "La hora del cambio de mercado y cada cuánto se actualiza. Comprobar en el juego antes de escribirlo."],
@@ -313,10 +313,10 @@
     {
       "ruta": "guias/alineacion.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
+      "fecha": "2026-11-15",
       "h1": "Cómo hacer la alineación en LaLiga Fantasy",
       "titulo": "La mejor alineación en LaLiga Fantasy: cómo elegir el once",
-      "descripcion": "Formaciones, titulares probables, partidos del viernes frente a los del lunes y qué hacer con los cambios de última hora.",
+      "descripcion": "Formaciones, titulares probables, cuántos puntos pierde un suplente en cada puesto según los datos y qué hacer con los cambios de última hora.",
       "busqueda": "mejor alineación LaLiga Fantasy",
       "esquema": [
         ["Las formaciones", "Cuáles deja el juego y cuándo compensa cada una."],
@@ -332,10 +332,10 @@
     {
       "ruta": "guias/puntos-porteros-laliga-fantasy.html",
       "tipo": "guia",
-      "fecha": "2026-11-03",
+      "fecha": "2026-11-15",
       "h1": "Cómo puntúan los porteros en LaLiga Fantasy",
       "titulo": "Puntos del portero en LaLiga Fantasy: tabla y ejemplos",
-      "descripcion": "Cuánto da la portería a cero, cómo restan los goles encajados, cuánto valen las paradas y dos partidos de ejemplo con los puntos de un portero.",
+      "descripcion": "Cómo puntúan los porteros en LaLiga Fantasy, lo que sacan según los goles que encajan y las paradas, y las porterías a cero de cada equipo esta temporada.",
       "busqueda": "puntos portero LaLiga Fantasy",
       "esquema": [
         ["La tabla del portero", "Minutos, portería a cero, encajados, paradas, penalti parado, despejes, recuperaciones, pérdidas, asistencia, tarjetas y DAZN."],
