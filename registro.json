@@ -2122,7 +2122,8 @@
    "SPORT|136471100": 1794756556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794761251000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
-   "SPORT|136471879": 1794764063000
+   "SPORT|136471879": 1794764063000,
+   "SPORT|136475479": 1794767368000
   },
   "hechos": [
    {
@@ -2285,7 +2286,7 @@
   ],
   "gemini": {
    "dia": "2026-11-15",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3206,17 +3207,17 @@
  "ia": {
   "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 207905,
-  "salida": 19098,
+  "entrada": 209940,
+  "salida": 19466,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.375286,
+  "dolares": 0.375674,
   "reservado": 0
  },
  "recientes": {
@@ -7443,13 +7444,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2861,
+   "ok": 2862,
    "fallos": 0,
-   "ejecuciones": 2291,
+   "ejecuciones": 2292,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-15T19:31:17.077Z"
+   "ultima": "2026-11-15T19:36:12.712Z"
   }
  },
  "ptsDirecto": {},
@@ -7466,15 +7467,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:31:22.966Z"
+   "ultimaBien": "2026-11-15T19:36:18.732Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:31:22.966Z"
+   "ultimaBien": "2026-11-15T19:36:18.732Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:31:22.966Z"
+   "ultimaBien": "2026-11-15T19:36:18.732Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7482,11 +7483,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:31:22.966Z"
+   "ultimaBien": "2026-11-15T19:36:18.732Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T19:31:22.966Z"
+   "ultimaBien": "2026-11-15T19:36:18.732Z"
   }
  },
  "avisos": [
