@@ -14,7 +14,8 @@ Reglas:
 - Solo lo que viene en los HECHOS. Nada de lesiones, rivales, rachas, formas de jugar o cifras que no estén. Si un dato no está, no lo supongas ni lo menciones.
 - Las cifras se copian tal cual vienen escritas en los hechos («132,2 M», «17,2 %», «21:00», «jornada 14»). No hagas cuentas nuevas ni redondees a otra cosa.
 - Cada apartado lleva de 2 a 4 frases (5 como mucho si hay muchos jugadores) y no pasa de 700 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
-- Prosa normal, castellano de España, cercano pero serio. Sin listas, negritas, emojis ni guiones largos. Frases de longitud variada.
+- Debajo de cada apartado la página ya lleva una tabla con todos los datos: no los enumeres. Elige a uno, dos o tres jugadores que importen y cuenta qué significa para quien juega. Una frase como «Le siguen X (+18,0 M, +27,4 %, 10 días), Y (…)» es volcar la tabla: prohibido. Como mucho dos cifras por frase.
+- Prosa normal, castellano de España, cercano pero serio. Nada de frases hechas («poner en el punto de mira», «echar a rodar», «piezas clave», «cupo de titularidad»). Sin listas, negritas, emojis ni guiones largos. Frases de longitud variada.
 - Cada apartado empieza de forma distinta y no repite la estructura de otro. Prohibido: «cabe destacar», «es importante», «en resumen», «sin duda», «no solo… sino también», «a tener en cuenta», «ojo al dato», frases de cierre genéricas y exageraciones.
 - No nombres webs, medios, fuentes ni «expertos». No hables de inteligencia artificial.
 - ${REGLAS}
