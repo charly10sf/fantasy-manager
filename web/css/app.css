@@ -3154,3 +3154,28 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* (12 nov) ficha del jugador: cuándo se abre la cláusula, en su línea; con 5 datos (Pagaste), el próximo partido a lo ancho */
 .dato .v small.cl-cuando { display: block; margin: 4px 0 0; }
 .rej-j > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* la portada: el bloque «Hoy» (mercado/hoy.json, que escribe bot/portal-web.mjs cada noche) */
+.pz-hoy { display: grid; gap: 14px; }
+.pz-hoy-d { display: grid; gap: 14px; }
+.escritorio .pz-hoy-d { grid-template-columns: 3fr 2fr; align-items: start; }
+.pz-hoy-m, .pz-hoy-j { background: var(--s1); border-radius: var(--r-tarj); padding: 16px 18px; }
+.pz-hoy-j { box-shadow: inset 0 2px 0 var(--rojo); }
+.pz-hoy-k { display: block; font: 700 var(--t-sec2)/1 var(--cond); text-transform: uppercase; letter-spacing: 1px; color: var(--rojo-texto); margin-bottom: 10px; }
+.pz-hoy ul { list-style: none; margin: 0; padding: 0; }
+.pz-hoy li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--linea); }
+.pz-hoy li:last-child { border-bottom: 0; }
+.pz-hoy-a { position: relative; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
+.pz-hoy-a .f { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
+.pz-hoy-a .e { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; }
+.pz-hoy-n { display: flex; flex-direction: column; min-width: 0; }
+.pz-hoy-n b { font-weight: 600; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pz-hoy-n small { font-size: var(--t-sec2); color: var(--texto-3); }
+.pz-hoy li .sube, .pz-hoy li .baja { font-weight: 700; white-space: nowrap; }
+.pz-hoy-c { margin: 8px 0 0; font-size: var(--t-sec2); color: var(--texto-2); }
+.pz-hoy-j p { margin: 0 0 10px; color: var(--texto-2); line-height: 1.5; }
+.pz-hoy-j b { color: var(--texto); }
+.pz-hoy-j a { display: inline-flex; align-items: center; gap: 6px; margin: 0 16px 6px 0; color: var(--rojo-texto); font-weight: 600; text-decoration: none; min-height: 32px; }
+.pz-hoy-j a svg { width: 16px; height: 16px; }
+.pz-hoy-b { display: flex; flex-wrap: wrap; gap: 10px; }
+.pz-hoy-b .btn svg { width: 18px; height: 18px; }

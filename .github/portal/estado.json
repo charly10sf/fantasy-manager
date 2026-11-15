@@ -1,0 +1,50 @@
+{
+ "mercado": {
+  "dia": "2026-11-15",
+  "hecho": 1794748496906
+ },
+ "resumenes": {
+  "12": {
+   "generada": 1794748495141,
+   "ultimo": 1794168000000,
+   "mejores": [
+    {
+     "id": "1674",
+     "nombre": "Arda Güler",
+     "pos": 3,
+     "equipo": "Real Madrid",
+     "teamId": "15",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t186/p1674/256x256/p1674_t186_1_001_000.png?v=1790590196364",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+     "pts": 19,
+     "media": 10.416666666666666,
+     "valor": 146092065
+    },
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "pos": 3,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p1715/256x256/p1715_t178_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 17,
+     "media": 9.25,
+     "valor": 132227574
+    },
+    {
+     "id": "121",
+     "nombre": "Bartra",
+     "pos": 2,
+     "equipo": "Betis",
+     "teamId": "5",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t185/p121/256x256/p121_t185_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png",
+     "pts": 17,
+     "media": 5.583333333333333,
+     "valor": 30295706
+    }
+   ]
+  }
+ }
+}

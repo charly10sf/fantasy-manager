@@ -45,6 +45,49 @@
       "fecha": "2026-11-03"
     },
     {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-12.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 12,
+      "titulo": "Jornada 12 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 12",
+      "corto": "Resumen de la jornada 12",
+      "descripcion": "Resumen de la jornada 12 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "mercado/index.html",
+      "seccion": "mercado",
+      "titulo": "Mercado de LaLiga Fantasy hoy: quién sube y quién baja",
+      "h1": "Mercado de LaLiga Fantasy hoy",
+      "descripcion": "Los jugadores que más suben y bajan hoy en el mercado de LaLiga Fantasy, las rachas, los que están en su máximo y la semana, con el valor de cada uno. Se pone al día cada noche.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/index.html",
+      "seccion": "equipos",
+      "titulo": "Equipos de LaLiga Fantasy: valor de cada plantilla",
+      "h1": "Equipos de LaLiga Fantasy",
+      "descripcion": "Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/index.html",
+      "seccion": "jornada",
+      "titulo": "Jornadas de LaLiga Fantasy: previas y resúmenes",
+      "h1": "Jornadas de LaLiga Fantasy",
+      "descripcion": "La próxima jornada de LaLiga Fantasy con su cierre de cláusulas, y la previa y el resumen de cada jornada: mejores, peores, once ideal y MVP de cada partido.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15"
+    },
+    {
       "ruta": "guias/jornada-13.html",
       "tipo": "guia",
       "grupo": "jornadas",
@@ -150,7 +193,7 @@
         ["A quién subírsela primero", "Los que suben, los titulares fijos y los que tus rivales pueden pagar hoy con su saldo."],
         ["Ejemplo", "Un delantero de 20 M con cláusula de 24 M y dos rivales con 30 M en caja."]
       ],
-      "grupo": "clausulas",
+      "grupo": "calculadoras",
       "corto": "Calculadora de cláusula",
       "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"],
       "publicada": "2026-11-02",
@@ -247,7 +290,7 @@
         ["Cómo pujan tus rivales", "Cada mánager tiene sus costumbres: quién se pasa y quién no."],
         ["Ejemplo", "Un jugador de 8 M que sale al mercado con tres rivales con saldo."]
       ],
-      "grupo": "mercado",
+      "grupo": "calculadoras",
       "corto": "Calculadora de puja",
       "relacionadas": ["guias/saldo-negativo.html", "guias/hora-mercado-laliga-fantasy.html", "guias/valor-de-mercado.html"],
       "publicada": "2026-11-02",

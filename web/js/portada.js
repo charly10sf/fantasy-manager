@@ -278,7 +278,7 @@ function otrasGuias() {
 const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
   <header class="ps-c rv"><div><div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2></div>${intro ? `<p class="ps-i">${intro}</p>` : ''}</header>${cuerpo}</section>`;
 
-const MENU = [['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pGuias', 'Guías'], ['pFaq', 'Preguntas']];
+const MENU = [['pHoy', 'Hoy'], ['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pGuias', 'Guías'], ['pFaq', 'Preguntas']];
 
 /** «Cómo funciona»: en el ordenador, el móvil se queda quieto a la derecha y cambia de pantalla según bajas; en el
     móvil, uno detrás de otro deslizando de lado */
@@ -303,6 +303,10 @@ export function seccionMoviles() {
     <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
     <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
     <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
+
+  ${seccion('pHoy', 'Datos del día', 'Hoy en LaLiga Fantasy', `<div class="pz-hoy rv"><div class="pz-hoy-d" aria-live="polite"><p class="pz-hoy-c">Los que más suben en el mercado de hoy, la próxima jornada y su cierre de cláusulas.</p></div>
+    <nav class="pz-hoy-b" aria-label="Datos"><a class="btn sec" href="mercado/">Mercado de hoy${icono('flecha')}</a><a class="btn sec" href="jornada/">Jornadas</a><a class="btn sec" href="equipos/">Equipos</a></nav></div>`,
+    'Lo mismo para todas las ligas, con los datos de LaLiga Fantasy de esta noche. Sin entrar.')}
 
   ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
@@ -372,6 +376,7 @@ export function activarPortada() {
   relojes.forEach(clearInterval); relojes.length = 0;
   const raiz = document.querySelector('.portada-m');
   if (!raiz) return;
+  ponerHoy(raiz);
   const portada = raiz.closest('.portada');
   const hayIO = typeof IntersectionObserver === 'function';
   if (hayIO && !sinMovimiento()) portada.classList.add('pr-js');
@@ -582,4 +587,23 @@ export function ponerCarasPortada(g) {
     const u = g.escudos && g.escudos[el.dataset.eq];
     if (u && !el.querySelector('img.e')) el.insertAdjacentHTML('beforeend', img('e', u));
   });
+}
+
+/** el bloque «Hoy»: lo escribe cada noche bot/portal-web.mjs en mercado/hoy.json (solo en la web; si no llega, se quedan los enlaces) */
+async function ponerHoy(raiz) {
+  const caja = raiz.querySelector('.pz-hoy-d');
+  if (!caja || caja.dataset.hecho) return;
+  let h;
+  try {
+    const r = await fetch('mercado/hoy.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    h = await r.json();
+  } catch { return; }
+  if (!h || !Array.isArray(h.suben) || !h.suben.length) return;
+  caja.dataset.hecho = '1';
+  const img = (u, cls) => (/^https:\/\/assets-fantasy\.llt-services\.com\//.test(u || '') ? `<img class="${cls}" src="${esc(u)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : '');
+  const fila = (x) => `<li><span class="pz-hoy-a">${img(x.cara, 'f')}${img(x.escudo, 'e')}</span><span class="pz-hoy-n"><b>${esc(x.nombre)}</b><small>${esc(x.equipo)} · ${esc(x.valor)}</small></span><span class="${x.sube ? 'sube' : 'baja'}">${x.sube ? '▲' : '▼'} ${esc(x.dif)}</span></li>`;
+  const j = h.jornada;
+  const jor = j ? `<div class="pz-hoy-j"><span class="pz-hoy-k">Jornada ${esc(String(j.n))}</span>${j.enJuego ? '<p>Se está jugando.</p>' : `<p>Empieza el <b>${esc(j.primero)}</b> con el ${esc(j.partido)}. Las cláusulas se cierran el <b>${esc(j.cierre)}</b>.</p>`}${h.previa ? `<a href="${esc(h.previa)}">Ver la previa${icono('flecha')}</a>` : ''}${h.resumen ? `<a href="${esc(h.resumen.ruta)}">Resumen de la jornada ${esc(String(h.resumen.jornada))}${icono('flecha')}</a>` : ''}</div>` : '';
+  caja.innerHTML = `<div class="pz-hoy-m"><span class="pz-hoy-k">Suben hoy · ${esc(h.fecha)}</span><ul>${h.suben.map(fila).join('')}</ul><p class="pz-hoy-c">${esc(String(h.nSuben))} suben y ${esc(String(h.nBajan))} bajan.</p></div>${jor}`;
 }

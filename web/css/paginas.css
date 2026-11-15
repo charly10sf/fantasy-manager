@@ -10,23 +10,41 @@ body { margin: 0; background: var(--fondo); color: var(--texto2); font: 400 17px
 a { color: var(--rojo-l); }
 b, strong { color: var(--texto); font-weight: 600; }
 
-/* cabecera y menú */
-.cab { border-bottom: 1px solid var(--linea); background: var(--fondo); position: sticky; top: 0; z-index: 2; }
-/* en el móvil el menú ocupa dos filas: fija se comería media pantalla, así que se queda arriba y se va al bajar */
-@media (max-width: 599px) { .cab { position: static; } }
-.cab-in { max-width: 960px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
-.marca { display: inline-flex; align-items: center; gap: 9px; color: var(--texto); text-decoration: none; font: 700 22px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.3px; }
+/* cabecera del portal: logo y la app arriba; las cinco secciones debajo (en el móvil, una fila que se desliza de lado) */
+.cab { border-bottom: 1px solid var(--linea); background: rgba(8, 8, 10, 0.94); position: sticky; top: 0; z-index: 2; backdrop-filter: saturate(1.4); }
+.cab-in { max-width: 1040px; margin: 0 auto; padding: 8px 16px 0; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 16px; }
+.marca { display: inline-flex; align-items: center; gap: 9px; color: var(--texto); text-decoration: none; font: 700 22px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.3px; min-height: 44px; }
 .marca b { color: var(--rojo); font-weight: 700; }
-.menu { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin-left: auto; font-size: 15px; }
-.menu a { color: var(--texto2); text-decoration: none; padding: 4px 0; }
+.cab-app { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.cab-app a { text-decoration: none; font-weight: 600; border-radius: 9px; padding: 7px 12px; }
+.menu-cta { color: #fff; background: var(--rojo); }
+.menu-web { color: var(--texto); border: 1px solid rgba(255, 255, 255, 0.18); }
+.menu-web:hover { border-color: var(--rojo); }
+.menu { grid-column: 1 / -1; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 12px; -webkit-overflow-scrolling: touch; }
+.menu::-webkit-scrollbar { display: none; }
+.menu a { flex: none; color: var(--texto2); text-decoration: none; font: 700 17px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 10px 13px; border-bottom: 3px solid transparent; }
 .menu a:hover { color: var(--texto); }
-.menu a.menu-cta { color: #fff; background: var(--rojo); border-radius: 9px; padding: 6px 12px; font-weight: 600; }
+.menu a[aria-current="page"] { color: var(--texto); border-bottom-color: var(--rojo); }
+.menu a:focus-visible, .cab-app a:focus-visible, .marca:focus-visible { outline: 2px solid var(--texto); outline-offset: 2px; }
+@media (max-width: 599px) {
+  .cab { position: static; }
+  .menu-web, .menu-cta .largo { display: none; }
+}
+@media (min-width: 900px) {
+  .cab-in { grid-template-columns: auto 1fr auto; padding-top: 0; }
+  .menu { grid-column: 2; grid-row: 1; margin: 0; padding: 0; justify-content: center; }
+  .menu a { padding: 20px 12px 17px; }
+}
 
 /* texto */
-main { max-width: 720px; margin: 0 auto; padding: 22px 16px 48px; }
-h1 { font: 700 40px/1.02 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); margin: 14px 0 10px; }
+main { max-width: 720px; margin: 0 auto; padding: 18px 16px 48px; }
+.portal main { max-width: 1040px; }
+h1 { font: 700 40px/1.02 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); margin: 14px 0 10px; position: relative; padding-left: 24px; }
+h1::before { content: ''; position: absolute; left: 5px; top: 0.08em; width: 10px; height: 0.82em; background: var(--rojo); transform: skewX(-14deg); }
 h1 span { color: var(--rojo); }
-h2 { font: 700 23px/1.2 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); margin: 32px 0 8px; }
+h2 { font: 700 24px/1.15 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); margin: 34px 0 10px; position: relative; padding-left: 16px; }
+h2::before { content: ''; position: absolute; left: 3px; top: 0.16em; width: 6px; height: 0.72em; background: var(--rojo); transform: skewX(-14deg); }
+.instalar h2, .cta h2, .calc h2 { padding-left: 0; } .instalar h2::before, .calc h2::before { display: none; }
 h3 { font-size: 18px; color: var(--texto); margin: 22px 0 6px; }
 p, li { margin: 0 0 12px; }
 ul, ol { padding-left: 22px; }
@@ -143,3 +161,120 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .calc-res .peq { margin: 0; }
 .calc noscript p { margin: 0; }
 .calc-res:empty { display: none; }
+
+/* ---------- portal de datos (mercado, jornada, equipos; bot/web/portal.mjs) ---------- */
+.portal .lead { max-width: 760px; }
+.bq { margin: 8px 0 0; }
+.bq-l { color: var(--texto2); font-size: 15.5px; margin: -2px 0 12px; max-width: 760px; }
+.bq h3 { font: 700 18px/1.2 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); margin: 4px 0 8px; }
+.peq a, .bq-l a { color: var(--rojo-l); }
+:root { --s1: #111114; --s2: #19191e; --s3: #24242b; --sube: #2fd18f; --baja: #ff6f61; --oro: #ffc547; --por: #ffc547; --def: #58a6ff; --med: #2fd18f; --del: #ee1c3c; }
+
+/* las cifras de arriba */
+.tj { display: grid; gap: 10px; }
+.tj.cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 16px 0 18px; }
+.cifra-c { background: var(--s1); border-radius: 16px; padding: 12px 14px; }
+.cifra-c b { display: block; font: 700 34px/1 'Barlow Condensed', sans-serif; color: var(--texto); }
+.cifra-c span { font-size: 14px; color: var(--texto2); line-height: 1.3; display: block; margin-top: 4px; }
+@media (min-width: 760px) { .tj.cifras { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* la próxima jornada */
+.prox { background: var(--s1); border-radius: 18px; box-shadow: inset 0 2px 0 var(--rojo); padding: 14px 16px 6px; margin: 8px 0 10px; }
+.prox-t { font: 700 15px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 1px; color: var(--rojo-l); margin: 0 0 8px; }
+.prox p { margin: 0 0 10px; }
+.prox .btn { min-height: 44px; font-size: 16px; padding: 8px 14px; }
+
+/* las caras: aro del color del puesto, iniciales debajo por si la foto no llega, escudo en la esquina */
+.ava { position: relative; flex: none; display: inline-block; width: 48px; height: 48px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
+.ava::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--s3); pointer-events: none; }
+.ava.p1::after { box-shadow: inset 0 0 0 2px var(--por); } .ava.p2::after { box-shadow: inset 0 0 0 2px var(--def); } .ava.p3::after { box-shadow: inset 0 0 0 2px var(--med); } .ava.p4::after { box-shadow: inset 0 0 0 2px var(--del); } .ava.p5::after { box-shadow: inset 0 0 0 2px #9a96a0; }
+.ava .ini { position: absolute; inset: 0; display: grid; place-items: center; font: 700 16px 'Barlow Condensed', sans-serif; color: var(--texto2); }
+.ava img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
+.ava img.esc { inset: auto -3px -3px auto; width: 20px; height: 20px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; box-shadow: 0 0 0 2px var(--fondo); }
+.ava-p { width: 36px; height: 36px; } .ava-p .ini { font-size: 13px; } .ava-p img.esc { width: 16px; height: 16px; }
+.ava-g { width: 88px; height: 88px; } .ava-g .ini { font-size: 26px; } .ava-g img.esc { width: 28px; height: 28px; }
+.escudo { display: inline-block; vertical-align: middle; object-fit: contain; flex: none; }
+
+/* listas de jugadores */
+.lj { list-style: none; padding: 0; margin: 0 0 12px; background: var(--s1); border-radius: 18px; padding: 2px 14px; }
+.fj { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 0; margin: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.fj:last-child { border-bottom: 0; }
+.fj-c { min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+.fj-c b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fj-c b a { color: var(--texto); }
+.fj-c span { font-size: 14px; color: var(--apagado); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fj-d { display: flex; align-items: center; gap: 10px; text-align: right; }
+.fj-n { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; font-weight: 600; color: var(--texto); white-space: nowrap; }
+.fj-d small, .fj-n small { font-size: 13px; font-weight: 400; color: var(--apagado); white-space: nowrap; }
+.sube { color: var(--sube); font-weight: 600; } .baja, .baja-t { color: var(--baja); font-weight: 600; } .igual { color: var(--apagado); }
+.racha { font: 700 20px/1 'Barlow Condensed', sans-serif; color: var(--sube); }
+.racha.baja-t { color: var(--baja); }
+.mini { display: block; flex: none; }
+.mini .l, .graf .l { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.mini.sube .l, .graf.sube .l { stroke: var(--sube); } .mini.baja .l, .graf.baja .l { stroke: var(--baja); } .mini.igual .l { stroke: var(--apagado); }
+.mini .a, .graf .a { opacity: 0.16; } .mini.sube .a, .graf.sube .a { fill: var(--sube); } .mini.baja .a, .graf.baja .a { fill: var(--baja); } .mini.igual .a { fill: none; }
+.graf { width: 100%; height: auto; } .graf text { fill: var(--apagado); font: 12px 'Barlow', sans-serif; }
+@media (max-width: 420px) { .fj .mini { width: 64px; } .fj { gap: 10px; } }
+
+/* puntos de una jornada: los cortes de la app */
+.pts { display: inline-grid; place-items: center; min-width: 34px; height: 28px; padding: 0 7px; border-radius: 8px; font: 700 18px/1 'Barlow Condensed', sans-serif; border: 1px solid; }
+.pts.p10 { background: rgba(61, 220, 143, 0.2); border: 2px solid #3ddc8f; color: #3ddc8f; }
+.pts.p6 { background: rgba(47, 209, 143, 0.12); border-color: rgba(47, 209, 143, 0.35); color: var(--sube); }
+.pts.p2 { background: rgba(255, 197, 71, 0.12); border-color: rgba(255, 197, 71, 0.3); color: var(--oro); }
+.pts.p1 { background: rgba(255, 111, 97, 0.12); border-color: rgba(255, 111, 97, 0.3); color: var(--baja); }
+.barras rect.p10 { fill: #3ddc8f; } .barras rect.p6 { fill: var(--sube); } .barras rect.p2 { fill: var(--oro); } .barras rect.p1 { fill: var(--baja); }
+.barras { width: 100%; height: auto; } .barras text { fill: var(--apagado); font: 11px 'Barlow', sans-serif; }
+
+/* dos columnas en el ordenador */
+.dos { display: grid; gap: 0 16px; }
+@media (min-width: 760px) { .dos { grid-template-columns: 1fr 1fr; } }
+
+/* el destacado (el barato que sube) */
+.dest { display: flex; gap: 16px; align-items: center; background: var(--s1); border-radius: 18px; padding: 16px; }
+.dest p { margin: 0 0 6px; }
+.dest-n { font: 700 24px/1.1 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); }
+.dest-n small { font: 400 14px 'Barlow', sans-serif; text-transform: none; color: var(--apagado); margin-left: 6px; }
+
+/* equipos */
+.le { list-style: none; padding: 2px 14px; margin: 0 0 12px; background: var(--s1); border-radius: 18px; }
+.fe { display: flex; align-items: center; gap: 12px; padding: 10px 0; margin: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.fe:last-child { border-bottom: 0; }
+.fe b { flex: 1; min-width: 0; }
+.tabla-eq td.eq { display: flex; align-items: center; gap: 10px; }
+.tabla-eq small, .tabla-scroll small { color: var(--apagado); }
+
+/* partidos */
+.lp { list-style: none; padding: 2px 14px; margin: 0 0 12px; background: var(--s1); border-radius: 18px; }
+.lp li { padding: 10px 0; margin: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); display: grid; gap: 4px; }
+.lp li:last-child { border-bottom: 0; }
+.lp-p { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto minmax(0, 1fr) 22px; align-items: center; gap: 8px; }
+.lp-p b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto); }
+.lp-p b:nth-of-type(2) { text-align: right; }
+.lp-p .res { font: 700 20px/1 'Barlow Condensed', sans-serif; color: var(--texto); background: var(--s3); border-radius: 8px; padding: 4px 9px; text-align: center; min-width: 52px; }
+.lp-p .res.vs { color: var(--apagado); font-size: 15px; }
+.lp-f { font-size: 13.5px; color: var(--apagado); text-align: center; }
+.lp-m { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14.5px; }
+@media (min-width: 760px) { .lp { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; } .lp li:nth-last-child(2):nth-child(odd) { border-bottom: 0; } }
+
+/* el once en su campo */
+.campo { background: linear-gradient(180deg, #0f3a24, #0b2a1a); border-radius: 18px; padding: 14px 6px; display: grid; gap: 14px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08); }
+.cl { display: flex; justify-content: space-around; gap: 4px; }
+.cj { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; flex: 1; max-width: 120px; text-align: center; }
+.cj b { font-size: 13.5px; line-height: 1.15; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.cj span { font-size: 12px; color: var(--texto2); display: flex; align-items: center; gap: 4px; }
+.cj .pts { min-width: 26px; height: 22px; font-size: 15px; padding: 0 4px; }
+.cj .eqn { display: none; }
+@media (min-width: 560px) { .cj .eqn { display: inline; } }
+.dos-bq { align-items: start; }
+.dos-bq .bq-l { min-height: 0; }
+@media (min-width: 760px) { .campo { max-width: 640px; } .cj b { font-size: 15px; } }
+
+/* la tarjeta del bot */
+.tarjeta-bot { margin: 0 0 16px; }
+.tarjeta-bot img { display: block; width: 100%; max-width: 540px; height: auto; border-radius: 14px; }
+.tarjeta-bot figcaption { font-size: 14px; color: var(--apagado); margin-top: 6px; }
+
+/* la lista de jornadas */
+.lg-j { display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; background: var(--plano); }
+.lg-j b { font: 700 20px/1.2 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.lg-j a { padding: 6px 4px; }

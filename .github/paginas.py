@@ -26,6 +26,9 @@ IMAGEN = DOMINIO + 'img/compartir.jpg'  # la de compartir (1200 × 630)
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
          'noviembre', 'diciembre']
 INICIO, FIN = '<!-- contenido -->', '<!-- /contenido -->'
+# la versión de paginas.css (sus 8 primeras cifras de sha-256): al cambiar la hoja, las páginas la piden de nuevo
+with open(os.path.join(WEB, 'css', 'paginas.css'), 'rb') as _f:
+    VERSION_CSS = __import__('hashlib').sha256(_f.read()).hexdigest()[:8]
 
 e = html.escape
 
@@ -93,12 +96,29 @@ def redireccion(p):
 '''
 
 
-def menu(raiz, hay_guias):
-    guias = f'<a href="{raiz}guias/">Guías</a>' if hay_guias else ''
+SECCIONES = [('mercado', 'mercado/', 'Mercado'), ('jornada', 'jornada/', 'Jornada'), ('equipos', 'equipos/', 'Equipos'),
+             ('aprende', 'guias/', 'Aprende'), ('calculadoras', 'guias/#calculadoras', 'Calculadoras')]
+
+
+def seccion_de(p):
+    """la sección del menú que se marca: la del portal o, en guías, «Aprende» (las calculadoras, «Calculadoras»)"""
+    if p.get('seccion'):
+        return p['seccion']
+    if p.get('grupo') == 'calculadoras':
+        return 'calculadoras'
+    if p['ruta'].startswith('guias/'):
+        return 'jornada' if p.get('grupo') == 'jornadas' else 'aprende'
+    return ''
+
+
+def menu(raiz, hay_guias, actual=''):
+    """la cabecera del portal: el logo, las cinco secciones (en el móvil, una fila que se desliza) y la app"""
+    enlaces = ''.join(f'<a href="{raiz}{h}"{" aria-current=\"page\"" if c == actual else ""}>{t}</a>'
+                      for c, h, t in SECCIONES if hay_guias or not h.startswith('guias/'))
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
-            f'<nav class="menu" aria-label="Menú">{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}contacto.html">Contacto</a><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a></nav>'
+            f'<div class="cab-app"><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> en Google Play</span></a></div>'
+            f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
             f'</div></header>')
 
 
@@ -115,7 +135,7 @@ def cta(raiz):
 def pie(raiz, hay_guias):
     guias = f'<a href="{raiz}guias/">Guías</a>' if hay_guias else ''
     return (f'<footer class="pie"><div class="pie-in">'
-            f'<nav aria-label="Pie"><a href="{raiz or "./"}">Abrir la app</a>{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
+            f'<nav aria-label="Pie"><a href="{raiz or "./"}">Abrir la app</a><a href="{raiz}mercado/">Mercado</a><a href="{raiz}jornada/">Jornadas</a><a href="{raiz}equipos/">Equipos</a>{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
             f'<a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}condiciones.html">Condiciones</a>'
             f'<a href="{raiz}aviso-legal.html">Aviso legal</a><a href="{raiz}instalar.html">Instalar</a></nav>'
             f'<p>Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores.</p>'
@@ -128,35 +148,52 @@ def en_guias(p):
     return p['ruta'].startswith('guias/') and p['ruta'] != 'guias/index.html'
 
 
+def migas_de(p):
+    """[(nombre, ruta desde la raíz)] de Inicio a la sección de la página (sin la propia página)"""
+    if p['ruta'] in ('mercado/index.html', 'jornada/index.html', 'equipos/index.html'):
+        return [('Inicio', '')]
+    if p.get('tipo') == 'portal':
+        nombre = {'mercado': 'Mercado', 'jornada': 'Jornadas', 'equipos': 'Equipos'}.get(p.get('seccion'), '')
+        return [('Inicio', ''), (nombre, p['ruta'].split('/')[0] + '/')] if nombre else [('Inicio', '')]
+    if es_previa(p):
+        return [('Inicio', ''), ('Jornadas', 'jornada/')]
+    if en_guias(p):
+        return [('Inicio', ''), ('Aprende', 'guias/')]
+    return []
+
+
 def migas(raiz, p, hay_guias):
-    if not en_guias(p):
+    m = migas_de(p)
+    if not m:
         return ''
-    guias = f' › <a href="{raiz}guias/">Guías</a>' if hay_guias else ''
-    return f'<nav class="migas" aria-label="Estás en"><a href="{raiz or "./"}">Inicio</a>{guias}</nav>'
+    return '<nav class="migas" aria-label="Estás en">' + ' › '.join(f'<a href="{raiz}{r or ""}">{e(n)}</a>' if r else f'<a href="{raiz or "./"}">{e(n)}</a>' for n, r in m) + '</nav>'
 
 
 def datos_estructurados(p, url):
-    """en las guías: el artículo (con la imagen de compartir) y las migas Inicio › Guías › guía"""
-    if not indexable(p) or p['tipo'] != 'guia' or p['ruta'] == 'guias/index.html':
+    """en las guías, el artículo; en el portal, la página con su fecha; en las dos, las migas"""
+    if not indexable(p) or p['ruta'] == 'guias/index.html' or p['tipo'] not in ('guia', 'portal'):
         return ''
     titulo = p.get('h1') or p['titulo']
-    articulo = {'@type': 'Article', 'headline': titulo,
-                'description': p['descripcion'], 'inLanguage': 'es-ES', 'mainEntityOfPage': url,
-                'image': {'@type': 'ImageObject', 'url': IMAGEN, 'width': 1200, 'height': 630},
-                'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'],
-                'author': {'@type': 'Organization', 'name': 'Fantasy Manager', 'url': DOMINIO},
-                'publisher': {'@type': 'Organization', 'name': 'Fantasy Manager', 'url': DOMINIO,
-                              'logo': {'@type': 'ImageObject', 'url': DOMINIO + 'img/icono-180.png'}}}
+    org = {'@type': 'Organization', 'name': 'Fantasy Manager', 'url': DOMINIO, 'logo': {'@type': 'ImageObject', 'url': DOMINIO + 'img/icono-180.png'}}
+    if p['tipo'] == 'guia':
+        principal = {'@type': 'Article', 'headline': titulo,
+                     'description': p['descripcion'], 'inLanguage': 'es-ES', 'mainEntityOfPage': url,
+                     'image': {'@type': 'ImageObject', 'url': IMAGEN, 'width': 1200, 'height': 630},
+                     'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'],
+                     'author': {'@type': 'Organization', 'name': 'Fantasy Manager', 'url': DOMINIO}, 'publisher': org}
+    else:
+        principal = {'@type': 'WebPage', 'name': titulo, 'description': p['descripcion'], 'inLanguage': 'es-ES', 'url': url,
+                     'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'], 'publisher': org}
+    items = [(n, DOMINIO + r) for n, r in migas_de(p)] + [(titulo, url)]
     migas_ld = {'@type': 'BreadcrumbList', 'itemListElement': [
-        {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': DOMINIO},
-        {'@type': 'ListItem', 'position': 2, 'name': 'Guías', 'item': DOMINIO + 'guias/'},
-        {'@type': 'ListItem', 'position': 3, 'name': titulo, 'item': url}]}
-    d = {'@context': 'https://schema.org', '@graph': [articulo, migas_ld]}
+        {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(items)]}
+    d = {'@context': 'https://schema.org', '@graph': [principal, migas_ld]}
     return f'\n  <script type="application/ld+json">{json.dumps(d, ensure_ascii=False)}</script>'
 
 
 GUIAS_PUB = []  # las guías publicadas, en orden (la rellena main)
 PREVIAS = []  # las previas de jornada publicadas, de la más nueva a la más vieja (la rellena main)
+RESUMENES = {}  # jornada -> página del resumen (jornada/resumen-jornada-N.html; la rellena main)
 
 
 def es_previa(p):
@@ -164,11 +201,14 @@ def es_previa(p):
 
 
 def aviso_previa(p):
-    """en una previa vieja: que esa jornada ya se jugó y dónde está la de la siguiente"""
+    """en una previa vieja: que esa jornada ya se jugó, su resumen y dónde está la de la siguiente"""
     if not es_previa(p) or not PREVIAS or PREVIAS[0]['ruta'] == p['ruta'] or PREVIAS[0]['jornada'] < p['jornada']:
-        return ''
+        r = RESUMENES.get(p.get('jornada')) if es_previa(p) else None
+        return f'\n  <p class="aviso">Esta jornada ya se ha jugado: <a href="../{r["ruta"]}">el resumen de la jornada {p["jornada"]}</a>, con los mejores, el once ideal y el MVP de cada partido.</p>' if r else ''
     u = PREVIAS[0]
-    return f'\n  <p class="aviso">Esta jornada ya se ha jugado. La previa de la siguiente: <a href="{u["ruta"].split("/", 1)[1]}">{e(u["h1"])}</a>.</p>'
+    r = RESUMENES.get(p['jornada'])
+    resumen = f' Cómo fue: <a href="../{r["ruta"]}">el resumen de la jornada {p["jornada"]}</a>.' if r else ''
+    return f'\n  <p class="aviso">Esta jornada ya se ha jugado.{resumen} La previa de la siguiente: <a href="{u["ruta"].split("/", 1)[1]}">{e(u["h1"])}</a>.</p>'
 
 
 def poner_previa(contenido, p):
@@ -205,7 +245,7 @@ def pagina(p, contenido, hay_guias):
     fecha = ''
     if p['tipo'] == 'guia' and p['ruta'] != 'guias/index.html' and publicada(p):
         fecha = f'\n  <p class="fecha">Actualizada el {fecha_larga(p["fecha"])}</p>'
-    pie_guia = f'\n  {cta(raiz)}' if p['tipo'] == 'guia' or en_guias(p) else ''
+    pie_guia = f'\n  {cta(raiz)}' if p['tipo'] in ('guia', 'portal') or en_guias(p) else ''
     m = migas(raiz, p, hay_guias)
     migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
     contenido = poner_previa(contenido, p)
@@ -233,10 +273,10 @@ def pagina(p, contenido, hay_guias):
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="{raiz}img/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{raiz}img/icono-180.png">
-  <link rel="stylesheet" href="{raiz}css/paginas.css">{script}{datos_estructurados(p, url)}
+  <link rel="stylesheet" href="{raiz}css/paginas.css?v={VERSION_CSS}">{script}{datos_estructurados(p, url)}
 </head>
-<body>
-{menu(raiz, hay_guias)}
+<body class="{'portal' if p['tipo'] == 'portal' else 'texto'}">
+{menu(raiz, hay_guias, seccion_de(p))}
 <main>{migas_linea}
 {INICIO}
 {contenido}
@@ -251,6 +291,7 @@ def pagina(p, contenido, hay_guias):
 # los grupos del índice de guías, en orden: [clave de «grupo» en paginas.json, título, una línea de qué hay]
 GRUPOS = [
     ('jornadas', 'Previas de cada jornada', 'A qué hora se cierran las cláusulas, quién no juega, quién está a una amarilla y quién sube en el mercado. Se hacen solas con los datos de LaLiga Fantasy y se ponen al día antes del cierre.'),
+    ('calculadoras', 'Calculadoras', 'Mete tus números y sale la cuenta: cuánto subir una cláusula, si compensa pagar la de un rival y cuánto pujar. Sin cuenta y sin datos de nadie.'),
     ('empezar', 'Para empezar', 'Las reglas básicas: cómo se puntúa, qué significa cada palabra del juego y qué hacer los primeros días.'),
     ('clausulas', 'Cláusulas', 'Cómo funcionan, cuánto subir las de tus jugadores y cuándo pagar la de un rival.'),
     ('mercado', 'Mercado y dinero', 'Cuándo cambia el mercado, cuánto pujar, cuándo vender y cómo no quedarte en negativo.'),
@@ -264,8 +305,9 @@ def fila_guia(g, sangria='    '):
 
 
 def indice_guias(guias, faq=None):
-    filas = ['  <h1>Guías de <span>LaLiga Fantasy</span></h1>',
-             '  <p>Las guías de Fantasy Manager: cómo funcionan las cláusulas, el mercado, la alineación y el dinero en LaLiga Fantasy, explicado con números. Al final de cada una, lo que hace la app por ti en ese tema.</p>']
+    filas = ['  <h1>Aprende <span>LaLiga Fantasy</span></h1>',
+             '  <p>Las guías de Fantasy Manager: cómo funcionan las cláusulas, el mercado, la alineación y el dinero en LaLiga Fantasy, explicado con números. Al final de cada una, lo que hace la app por ti en ese tema.</p>',
+             '  <p class="peq">Los datos de cada día están en <a href="../mercado/">el mercado de hoy</a>, <a href="../jornada/">las jornadas</a> y <a href="../equipos/">los equipos</a>.</p>']
     if not guias:
         filas.append('  <p class="borrador">Todavía no hay ninguna guía publicada.</p>')
         return '\n'.join(filas)
@@ -277,7 +319,7 @@ def indice_guias(guias, faq=None):
             del_grupo = sorted(del_grupo, key=lambda g: -g['jornada'])
         if not del_grupo:
             continue
-        filas.append(f'\n  <h2>{e(titulo)}</h2>')
+        filas.append(f'\n  <h2 id="{clave}">{e(titulo)}</h2>' if clave else f'\n  <h2>{e(titulo)}</h2>')
         if linea:
             filas.append(f'  <p>{e(linea)}</p>')
         filas.append('  <ul class="lista-guias">')
@@ -325,6 +367,8 @@ def main():
     guias = [p for p in paginas if p['tipo'] == 'guia' and publicada(p)]
     GUIAS_PUB[:] = guias
     PREVIAS[:] = sorted([g for g in guias if es_previa(g)], key=lambda g: -g['jornada'])
+    RESUMENES.clear()
+    RESUMENES.update({p['jornada']: p for p in paginas if p.get('grupo') == 'resumenes' and p.get('jornada') is not None and publicada(p)})
     faq = next((p for p in paginas if p['ruta'] == 'guias/preguntas-frecuentes.html' and publicada(p)), None)
     hay_guias = bool(guias)
     hoy = max((p['fecha'] for p in guias), default='2026-11-02')
