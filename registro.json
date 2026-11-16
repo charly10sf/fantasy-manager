@@ -1108,6 +1108,13 @@
    "jornada": 13,
    "id": "2122330496864588096",
    "t": "2026-11-16T14:06:36.473Z"
+  },
+  {
+   "clave": "noticias|2338:buena|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122351878134522164",
+   "t": "2026-11-16T15:31:34.166Z"
   }
  ],
  "estados": {
@@ -1760,7 +1767,7 @@
   "3076": "ok",
   "3077": "ok",
   "3078": "ok",
-  "3079": "ok",
+  "3079": "doubtful",
   "3080": "ok",
   "3081": "ok",
   "3082": "ok",
@@ -1997,7 +2004,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000,
    "SPORT|136406482": 1794584740000,
@@ -2168,7 +2174,9 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
-   "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000
+   "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
+   "SPORT|136505787": 1794839189000
   },
   "hechos": [
    {
@@ -2464,11 +2472,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794842359000,
+    "id": "2338",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aimar vuelve a entrenar con el grupo tras la lesión",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3068,8 +3088,8 @@
     "t": 0
    },
    "3079": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794843074185
    },
    "3080": {
     "e": "ok",
@@ -3314,7 +3334,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
-   "SPORT|136418514": 1794583694000,
    "Europa Press|https://www.europapress.es/madrid/noticia-sindicatos-educativos-muestran-satisfechos-reunion-consejeria-mantienen-huelga-indefinida-20261113181028.html": 1794589828000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/duelos-aplazados-fallecimiento-jesus-miguel-fecha-horario-20261113_3475158.html": 1794590104000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602522000,
@@ -3385,17 +3404,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 36,
-   "redactar": 31,
-   "revisar": 15,
+   "clasificar": 37,
+   "redactar": 32,
+   "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 544990,
-  "salida": 31293,
+  "entrada": 561872,
+  "salida": 32591,
   "cacheLee": 29030,
-  "cacheEscribe": 14515,
-  "dolares": 1.116794,
+  "cacheEscribe": 17418,
+  "dolares": 1.156215,
   "reservado": 0
  },
  "recientes": {
@@ -3511,10 +3530,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-12T14:26:25.848Z",
-    "texto": "⁉️ Sadiq no se ha ejercitado con el grupo por un golpe en la articulación de la rodilla, según AS y Mundo Deportivo.\n\nEl delantero del Valencia 🦇 va a 4,2 puntos de media y, de momento, no hay plazo para saber si llega bien. Con la liga parada, el Rayo ⚡ no le toca hasta el sábado 21 de noviembre en Vallecas, así que hay margen. Si ese día es titular, el partido le viene bien: el Rayo es de los que más goles encajan."
-   },
-   {
     "t": "2026-11-14T20:16:32.070Z",
     "texto": "❌ Raphinha no volverá a Barcelona: se queda retenido por Brasil tras su expulsión, según SPORT y Cadena SER.\n\nTuvo su mejor jornada en la 2, con 24 puntos, así que su ausencia se nota si lo tienes. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y por ahora no se sabe si llega a ese partido."
    },
@@ -3529,6 +3544,10 @@
    {
     "t": "2026-11-16T14:06:36.476Z",
     "texto": "⁉️ Cubarsí es duda para el Villarreal por unas molestias en la cadera, lo ha comunicado el club.\n\nEl central vale 59,5 M, así que si lo tienes es un caso a seguir. El partido es el domingo 22 de noviembre, tras el parón, y no hay plazo para saber si llega bien. El Villarreal 🚢 va 8º, un rival de dificultad media."
+   },
+   {
+    "t": "2026-11-16T15:31:34.168Z",
+    "texto": "👀 Aimar vuelve a entrenar con el grupo tras la lesión, según MARCA y Mundo Deportivo.\n\nEl centrocampista del Osasuna 🐂 vale 2,1 M y ha perdido 2,4 M en el último mes, así que está barato si te fías de su vuelta. Con la liga parada, el partido que importa es el del domingo 22 de noviembre en El Sadar contra el Málaga 🐟, que va último y de los que más goles encajan. Para un medio, eso le viene bien."
    }
   ],
   "directo": [
@@ -7642,13 +7661,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3139,
+   "ok": 3140,
    "fallos": 0,
-   "ejecuciones": 2532,
+   "ejecuciones": 2533,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T15:26:13.966Z"
+   "ultima": "2026-11-16T15:31:14.185Z"
   }
  },
  "ptsDirecto": {},
@@ -7665,15 +7684,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:26:18.312Z"
+   "ultimaBien": "2026-11-16T15:31:34.197Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:26:18.312Z"
+   "ultimaBien": "2026-11-16T15:31:34.197Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:26:18.312Z"
+   "ultimaBien": "2026-11-16T15:31:34.197Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7681,11 +7700,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:26:18.312Z"
+   "ultimaBien": "2026-11-16T15:31:34.197Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:26:18.312Z"
+   "ultimaBien": "2026-11-16T15:31:34.197Z"
   }
  },
  "avisos": [
