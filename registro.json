@@ -2170,7 +2170,8 @@
    "SPORT|136499877": 1794834381000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-pel-barca-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000
   },
   "hechos": [
    {
@@ -2470,7 +2471,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3380,22 +3381,25 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839472325,
+   "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794839472325
+  }
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 31,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 537100,
-  "salida": 29719,
+  "entrada": 539111,
+  "salida": 29831,
   "cacheLee": 29030,
   "cacheEscribe": 14515,
-  "dolares": 1.115218,
+  "dolares": 1.115475,
   "reservado": 0
  },
  "recientes": {
@@ -7642,13 +7646,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3125,
+   "ok": 3126,
    "fallos": 0,
-   "ejecuciones": 2518,
+   "ejecuciones": 2519,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T14:26:14.682Z"
+   "ultima": "2026-11-16T14:31:12.325Z"
   }
  },
  "ptsDirecto": {},
@@ -7665,15 +7669,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:26:26.676Z"
+   "ultimaBien": "2026-11-16T14:31:17.640Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:26:26.676Z"
+   "ultimaBien": "2026-11-16T14:31:17.640Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:26:26.676Z"
+   "ultimaBien": "2026-11-16T14:31:17.640Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7681,11 +7685,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:26:26.676Z"
+   "ultimaBien": "2026-11-16T14:31:17.640Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:26:26.676Z"
+   "ultimaBien": "2026-11-16T14:31:17.640Z"
   }
  },
  "avisos": [
