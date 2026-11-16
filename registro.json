@@ -3454,7 +3454,6 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1794603763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250691/precedentes.html": 1794605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000,
    "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000,
@@ -7781,13 +7780,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3207,
+   "ok": 3208,
    "fallos": 0,
-   "ejecuciones": 2600,
+   "ejecuciones": 2601,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T21:01:14.791Z"
+   "ultima": "2026-11-16T21:06:22.086Z"
   }
  },
  "ptsDirecto": {},
@@ -7804,15 +7803,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:01:18.525Z"
+   "ultimaBien": "2026-11-16T21:06:23.849Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:01:18.525Z"
+   "ultimaBien": "2026-11-16T21:06:23.849Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:01:18.525Z"
+   "ultimaBien": "2026-11-16T21:06:23.849Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7820,11 +7819,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:01:18.525Z"
+   "ultimaBien": "2026-11-16T21:06:23.849Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:01:18.525Z"
+   "ultimaBien": "2026-11-16T21:06:23.849Z"
   }
  },
  "avisos": [
