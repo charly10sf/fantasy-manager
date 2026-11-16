@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250551/raul-da-pistas-sobre-oviedo-espera-queremos-verticales.html": 1794566621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
@@ -2139,18 +2138,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794565299000,
-    "id": "3265",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Fofana no entrena con el grupo del Sevilla FC",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html",
     "medio": "MARCA",
@@ -7470,13 +7457,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3078,
+   "ok": 3079,
    "fallos": 0,
-   "ejecuciones": 2471,
+   "ejecuciones": 2472,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:21:13.862Z"
+   "ultima": "2026-11-16T10:26:12.667Z"
   }
  },
  "ptsDirecto": {},
@@ -7493,15 +7480,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:21:20.918Z"
+   "ultimaBien": "2026-11-16T10:26:15.976Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:21:20.918Z"
+   "ultimaBien": "2026-11-16T10:26:15.976Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:21:20.918Z"
+   "ultimaBien": "2026-11-16T10:26:15.976Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7509,11 +7496,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:21:20.918Z"
+   "ultimaBien": "2026-11-16T10:26:15.976Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:21:20.918Z"
+   "ultimaBien": "2026-11-16T10:26:15.976Z"
   }
  },
  "avisos": [
