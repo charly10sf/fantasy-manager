@@ -3360,7 +3360,9 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
    "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794830643000
+   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794830643000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850659000,
+   "SPORT|136510996": 1794838920000
   },
   "hechos": [
    {
@@ -3388,28 +3390,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136510996": 1794849677226,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850872151
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 33,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 588087,
-  "salida": 35323,
+  "entrada": 589983,
+  "salida": 35484,
   "cacheLee": 29030,
   "cacheEscribe": 20321,
-  "dolares": 1.19604,
+  "dolares": 1.19631,
   "reservado": 0
  },
  "recientes": {
@@ -7656,13 +7655,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3167,
+   "ok": 3168,
    "fallos": 0,
-   "ejecuciones": 2560,
+   "ejecuciones": 2561,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T17:41:12.151Z"
+   "ultima": "2026-11-16T17:46:14.132Z"
   }
  },
  "ptsDirecto": {},
@@ -7679,15 +7678,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:41:16.569Z"
+   "ultimaBien": "2026-11-16T17:46:22.032Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:41:16.569Z"
+   "ultimaBien": "2026-11-16T17:46:22.032Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:41:16.569Z"
+   "ultimaBien": "2026-11-16T17:46:22.032Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7695,11 +7694,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:41:16.569Z"
+   "ultimaBien": "2026-11-16T17:46:22.032Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:41:16.569Z"
+   "ultimaBien": "2026-11-16T17:46:22.032Z"
   }
  },
  "avisos": [
