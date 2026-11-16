@@ -1080,6 +1080,13 @@
     "clase": "mercado",
     "chollo": "680"
    }
+  },
+  {
+   "clave": "selecciones-dia|12|20261115",
+   "tipo": "selecciones-dia",
+   "jornada": 12,
+   "id": "2122209736774787145",
+   "t": "2026-11-16T06:06:45.164Z"
   }
  ],
  "estados": {
@@ -3234,16 +3241,16 @@
   "dia": "2026-11-16",
   "llamadas": {
    "clasificar": 1,
-   "redactar": 27,
-   "revisar": 11,
+   "redactar": 28,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 410003,
-  "salida": 15598,
-  "cacheLee": 26127,
+  "entrada": 430152,
+  "salida": 15902,
+  "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.943315,
+  "dolares": 0.986943,
   "reservado": 0
  },
  "recientes": {
@@ -3479,6 +3486,10 @@
    {
     "t": "2026-11-15T08:06:43.117Z",
     "texto": "🌍 J. David hizo un gol y una asistencia en el 3-2 de Canadá 🇨🇦 a Guatemala 🇬🇹 y fue el mejor del partido, pero en el parón baja 9,2 M: vale 49,4 M. Oluwaseyi, del Villarreal 🚢, también marcó en esos 82 minutos.\n\nJulián Alvarez marcó con Argentina 🇦🇷 en la derrota ante Uruguay 🇺🇾 (1-2) y sube 9,2 M en el parón: ya vale 71,9 M.\n\nLo peor: Raphinha vio la roja en el 90 en el 2-3 de Brasil 🇧🇷 ante Japón 🇯🇵 y baja 7,6 M. Mikautadze jugó entero la derrota de Georgia 🇬🇪 ante Hungría 🇭🇺 (0-2), con un 6 de nota."
+   },
+   {
+    "t": "2026-11-16T06:06:45.166Z",
+    "texto": "🌍 Noche de derrota para España 🇪🇸 ante Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿 (2-3), pero Lamine Yamal dio una asistencia, fue el mejor del partido y jugó los 90. Aun así baja 7,2 M en el parón: vale 176,8 M.\n\nBellingham también asistió en la victoria inglesa y sube 11,6 M. Arda Güler dio un pase de gol con Turquía 🇹🇷 en la derrota ante Francia 🇫🇷 (1-2), suma 17 M y lleva 180 minutos en el parón.\n\nLo malo: Marc Pubill se retiró lesionado en el minuto 21, y Unai Simón cayó a un 5,6 de nota."
    }
   ],
   "calendario": [
@@ -3647,13 +3658,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "selecciones-dia|12|20261115": {
-   "n": 1,
-   "t": "2026-11-16T06:02:29.690Z",
-   "ultima": "2026-11-16T06:02:29.690Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7492,13 +7497,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3025,
+   "ok": 3026,
    "fallos": 0,
-   "ejecuciones": 2418,
+   "ejecuciones": 2419,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T06:01:14.399Z"
+   "ultima": "2026-11-16T06:06:29.424Z"
   }
  },
  "ptsDirecto": {},
@@ -7515,15 +7520,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:02:29.711Z"
+   "ultimaBien": "2026-11-16T06:06:45.172Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:02:29.711Z"
+   "ultimaBien": "2026-11-16T06:06:45.172Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:02:29.711Z"
+   "ultimaBien": "2026-11-16T06:06:45.172Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7531,11 +7536,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:02:29.711Z"
+   "ultimaBien": "2026-11-16T06:06:45.172Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:02:29.711Z"
+   "ultimaBien": "2026-11-16T06:06:45.172Z"
   }
  },
  "avisos": [
