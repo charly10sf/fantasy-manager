@@ -376,7 +376,7 @@ function cuentas(X, lista) {
   return { caja, margen, n, fin, jornada, vuelve, ventas };
 }
 
-function elegir(X, libres, fijos) {
+function elegir(X, libres, fijos, oblig = 0) {
   const { D, M, A, ciclos } = X;
   // los puntos esperados de cada uno, una vez (el once se rehace cientos de veces)
   const pps = new Map();
@@ -450,6 +450,7 @@ function elegir(X, libres, fijos) {
     const ventas = ciclos >= 1 ? (sVen[mask] + venFijas) * A.margenVenta : 0;
     const jornada = X.pujasAntes ? fin + sRev[mask] * A.margenRev + ventas : caja + ventas;
     cabe[mask] = 1; jor[mask] = jornada;
+    if ((mask & oblig) !== oblig) continue;
     let valor;
     // empezar la jornada en negativo es no puntuar: lo primero. Si no hay forma, lo que más se acerque
     if (jornada < 0) valor = -1e12 + jornada;
@@ -483,7 +484,7 @@ function elegir(X, libres, fijos) {
  * El plan del día del motor, sin cuadrar todavía (con la forma del plan de la IA, como planAuto). `vetados`: candidatos
  * que no pueden ir (los que la app descartó en la vuelta anterior).
  */
-export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fijar = null, prefer = null } = {}) {
+export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fijar = null, prefer = null, incluir = null } = {}) {
   const X = contextoDe(D, M, c, ahora);
   X.backtest = reventasPasadas(D, M);
   // si en esta liga lo que la app habría comprado para revender no ha ganado a no hacer nada, no se especula
@@ -519,6 +520,15 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     libres = libres.filter((o) => o.clase !== 'vender');
     for (let i = fijos.length - 1; i >= 0; i--) if (fijos[i].clase === 'vender') fijos.splice(i, 1);
   }
+  // (17 nov) `incluir`: candidatos que van sí o sí (los pasos de un plan anterior que la IA ya ha explicado); el resto se
+  // busca como siempre, con las mismas cuentas (en `elegir`, solo valen las combinaciones que los llevan). Lo que ya no es
+  // candidato no se fuerza
+  let oblig = 0;
+  if (incluir && incluir.size && !fijar) {
+    const inc = todos.filter((o) => incluir.has(o.k) && !(apuro && ciclos === 0 && o.clase === 'vender'));
+    libres = [...inc, ...libres.filter((o) => !incluir.has(o.k))].slice(0, Math.max(13, inc.length));
+    oblig = (1 << inc.length) - 1;
+  }
   // `fijar`: la combinación viene dada (el plan del motor con lo que la IA quita o mete); no se busca, se comprueba
   let E;
   if (fijar) {
@@ -526,7 +536,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const c2 = cuentas(X, l2);
     if (!c2) return null;
     E = { lista: l2, cu: c2, valor: null };
-  } else E = elegir(X, libres, fijos);
+  } else E = elegir(X, libres, fijos, oblig);
   const lista = E.lista || fijos;
   const cu = E.cu || base;
 

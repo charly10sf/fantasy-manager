@@ -1518,7 +1518,8 @@ export function aplicarCorto(json, R, D, M, c) {
   const conFuente = (x) => !!(x && x.fuente && fuentesOK.has(claveUrl(x.fuente)));
   const porBusqueda = new Set([...(Array.isArray(json.quita) ? json.quita : []), ...(Array.isArray(json.mete) ? json.mete : [])].filter(conFuente).map((x) => de(x)).filter(Boolean).map((x) => x.k));
   // (lo primero que la app tacharía de ese plan, con su aviso; '' si pasa entero)
-  const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); const o = (cu.ops || []).find((y) => y._k && (y.descartada || y.sugerencia)); return o ? `${o._k} (${String(o.aviso || 'sin aviso').slice(0, 110)})` : ''; };
+  let malo = null;
+  const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); const o = (cu.ops || []).find((y) => y._k && (y.descartada || y.sugerencia)); malo = o ? { k: o._k, aviso: String(o.aviso || '') } : null; return o ? `${o._k} (${String(o.aviso || 'sin aviso').slice(0, 110)})` : ''; };
   // Quitar o meter algo es cosa de las noticias (los números ya los ha mirado el motor): solo si de ese jugador hay
   // prensa, un estado (lesión, sanción, duda), algo que el mánager ha contado o un partidazo reciente. Si no, no se aplica
   // (el modelo ligero quitaba pasos «porque sobra margen»; medido el 14 nov)
@@ -1530,14 +1531,25 @@ export function aplicarCorto(json, R, D, M, c) {
   // (15 nov) lo que la app vetó al montar el plan del motor (las vueltas de planVueltas) sigue vetado aquí: si no, el
   // motor lo volvía a proponer (subir una cláusula, un blindaje), la app lo volvía a tachar y el plan entero «no cuadraba»
   let vet0 = new Set((R.vetos || []).map((v) => v.k));
+  // (17 nov) con qué se compara la jornada: la del plan del motor y, si esa salía en negativo, la del plan de hoy de esta
+  // misma liga (si el plan que llega es de antes, la liga de ahora puede llegar en positivo; con la de antes, aquel plan
+  // pasaba aunque se quedara en negativo)
+  let refJ = null;
+  const refJornada = () => {
+    if (refJ !== null) return refJ;
+    refJ = R.cuentas ? R.cuentas.jornada : -1;
+    if (refJ < 0) { try { const H = planDeHoy(D, M, c); if (H && H.motor && H.cuentas) refJ = Math.max(refJ, H.cuentas.jornada); } catch (e) { /* el de antes */ } }
+    return refJ;
+  };
   let pasosBase = base;
   let porque = '';
   const intento = (q, m) => {
     let P = null;
+    malo = null;
     try { P = planMotor(D, M, c, { fijar: new Set([...pasosBase.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set([...vet0, ...q.filter(esPost)]), prefer: orden }); } catch (e) { porque = `el motor falla: ${String((e && e.message) || e).slice(0, 110)}`; return null; }
     if (!P) { porque = 'las cuentas no salen'; return null; }
     // nunca peor para la jornada (si el del motor llegaba en positivo, este también) ni con algo que la app tacharía
-    if (R.cuentas && R.cuentas.jornada >= 0 && P.cuentas.jornada < 0) { porque = 'la jornada empezaría en negativo'; return null; }
+    if (P.cuentas.jornada < 0 && refJornada() >= 0) { porque = 'la jornada empezaría en negativo'; return null; }
     const t = tachado(P);
     if (t) { porque = `la app tacha ${t}`; return null; }
     return { P, quita: q, mete: m };
@@ -1551,6 +1563,53 @@ export function aplicarCorto(json, R, D, M, c) {
   // IA no pidiera nada. Ahora nunca: el motor lo elige otra vez con sus vueltas (lo mismo que hace Hoy) y, si ni eso, se
   // queda el que ya está en pantalla. La IA pone las frases sobre el que salga
   let rehecho = '';
+  // (17 nov) antes de rehacerlo entero, el mismo plan sin lo que ya no cabe: primero lo que la app tacharía, luego de uno
+  // en uno y de dos en dos (como mucho 24 pruebas). Así se quedan los pasos que la IA ha explicado y solo sale lo que ya
+  // no se puede (va a «descartados» con su porqué). Pasaba con un plan que ya no es de ahora: la liga ha cambiado desde
+  // que se pidió (el plan que se recoge al volver a la app, otro saldo, una puja ganada)
+  const ajustes = [];
+  let anadidos = [];
+  if (!r && base.length) {
+    const motivoTxt = (por, m) => (m && m.aviso ? m.aviso : /negativo/.test(por) ? 'con él empezarías la jornada en negativo' : /cuentas/.test(por) ? 'con tu saldo de ahora ya no salen las cuentas' : 'ya no cabe en el plan');
+    const p0 = porque, m0 = malo;
+    const pruebas = [];
+    if (m0 && base.includes(m0.k)) pruebas.push([m0.k]);
+    for (const k of base) if (!pruebas.some((x) => x.length === 1 && x[0] === k)) pruebas.push([k]);
+    for (let i = 0; i < base.length; i++) for (let k = i + 1; k < base.length; k++) pruebas.push([base[i], base[k]]);
+    for (const q of pruebas.slice(0, 24)) {
+      const x = intento(q, []);
+      if (!x) continue;
+      for (const k of q) ajustes.push({ k, motivo: k === (m0 && m0.k) ? motivoTxt(p0, m0) : motivoTxt(p0, null) });
+      pasosBase = pasosBase.filter((k) => !q.includes(k));
+      vet0 = new Set([...vet0, ...q.filter(esPost)]);
+      r = intento([], []) || { ...x, quita: [] };
+      break;
+    }
+    // (y si quitando no sale, el mismo plan con lo que haga falta de más: el motor busca el resto con esos pasos dentro,
+    // como mucho 3 vueltas, y lo que la app tacharía sale de los que van dentro o se veta)
+    const sinPost = base.filter((k) => !esPost(k));
+    for (const sin of [null, ...sinPost].slice(0, 8)) {
+      if (r) break;
+      let inc = sinPost.filter((k) => k !== sin), vet = new Set(vet0);
+      const fuera = sin ? [{ k: sin, motivo: motivoTxt(p0, null) }] : [];
+      for (let v = 0; v < 3 && !r; v++) {
+        let X = null;
+        try { X = planMotor(D, M, c, { incluir: new Set(inc), vetados: vet, prefer: orden }); } catch (e) { break; }
+        if (!X) break;
+        if (X.cuentas.jornada < 0 && refJornada() >= 0) break;
+        if (!tachado(X)) { r = { P: X, quita: [], mete: [] }; break; }
+        if (inc.includes(malo.k)) { inc = inc.filter((k) => k !== malo.k); fuera.push({ k: malo.k, motivo: motivoTxt('', malo) }); } else vet.add(malo.k);
+      }
+      if (r) {
+        ajustes.push(...fuera.filter((a) => !r.P.operaciones.some((o) => o._k === a.k)));
+        for (const k of base) if (!r.P.operaciones.some((o) => o._k === k) && !fuera.some((a) => a.k === k)) ajustes.push({ k, motivo: motivoTxt(p0, null) });
+        pasosBase = r.P.operaciones.filter((o) => o._k).map((o) => o._k);
+        vet0 = vet;
+        anadidos = pasosBase.filter((k) => !base.includes(k));
+      }
+    }
+    if (!r) porque = p0;
+  }
   if (!r) {
     rehecho = porque || 'no cuadra';
     try {
@@ -1596,22 +1655,26 @@ export function aplicarCorto(json, R, D, M, c) {
   const cu = cuBase;
   const prox = rematarAuto({ ...cu, auto: true }).proximos_dias || [];
   // el titular y la situación no pueden nombrar a quien no está en el plan (lo que se ha quitado o no se ha podido meter)
-  const fueraN = [...quita0.filter((k) => r.quita.includes(k)), ...mete0.filter((k) => !r.mete.includes(k))].map(nombreK).filter(Boolean).map(norm);
+  // (17 nov) y tampoco a quien ha salido del plan porque ya no cabía (los ajustes y, si se ha rehecho, lo que ya no está)
+  const enP = new Set((P.operaciones || []).map((o) => o._k).filter(Boolean));
+  const fueraN = [...quita0.filter((k) => r.quita.includes(k)), ...mete0.filter((k) => !r.mete.includes(k)), ...base.filter((k) => !enP.has(k) && !r.quita.includes(k))].map(nombreK).filter(Boolean).map(norm);
+  const ajustados = ajustes.map((a) => ({ pid: ((lista.find((y) => y.k === a.k) || {}).o || {}).pid || null, jugador: nombreK(a.k), motivo: `La app lo saca del plan: ${limpio(a.motivo).replace(/^La app lo descarta:\s*/i, '')}` })).filter((d) => d.jugador);
   const nombra = (t) => { const n = norm(t); return fueraN.some((x) => x && n.includes(x)); };
   const tit = limpio(json.titular), sit = limpio(json.situacion);
   return {
     ...P, auto: false, corto: true,
     titular: tit && !nombra(tit) ? tit : titularMotor({ ...cu, modo: P.modo }),
     // (Domy, 9 nov) en el parón el plan va de dinero: si la IA no lo dice, se añade
-    situacion: sit && !nombra(sit) ? `${sit}${P.modo === 'paron' && !/par[oó]n/i.test(`${sit} ${tit}`) ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero.' : ''}` : P.situacion,
-    descartes: [...quitados, ...(P.descartes || []).filter((d) => !quitados.some((q) => q.pid && q.pid === d.pid))],
+    // (si el plan se ha rehecho, la situación de la IA hablaba de otro: saldo, pasos; va la de la app)
+    situacion: sit && !nombra(sit) && !rehecho ? `${sit}${P.modo === 'paron' && !/par[oó]n/i.test(`${sit} ${tit}`) ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero.' : ''}` : P.situacion,
+    descartes: [...quitados, ...ajustados, ...(P.descartes || []).filter((d) => ![...quitados, ...ajustados].some((q) => q.pid && q.pid === d.pid))],
     // las noticias, solo de quien tiene prensa, estado o una nota (lo demás es relleno o invento), y en corto: dos frases
     // (o con su fuente de la búsqueda)
     noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length || conFuente(n)); })
       .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)), ...(conFuente(n) && !esWebFantasy(n.fuente) ? { fuente: n.fuente } : {}) })).filter((n) => n.texto),
     rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 3).map((n) => ({ ...n, texto: breve(limpio(n && n.texto)) })).filter((n) => n.manager && n.texto),
     proximos_dias: prox,
-    cambios: { ...(rehecho ? { rehecho } : {}), quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
+    cambios: { ...(rehecho ? { rehecho } : {}), ...(ajustes.length || anadidos.length ? { ajustado: [...ajustes.map((a) => `fuera ${nombreK(a.k)}: ${String(a.motivo).slice(0, 120)}`), ...anadidos.map((k) => `entra ${((r.P.operaciones.find((o) => o._k === k)) || {}).jugador || k}`)] } : {}), quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
   };
 }
 /* ---------------- el plan con la IA de Carlos (el Worker, /plan) ---------------- */
@@ -1629,7 +1692,7 @@ export function cupoPlanes() {
 }
 const guardarCupo = (c) => { if (c && typeof c === 'object') LS.set('planes-cupo', { ...c, dia: diaDe() }); };
 /** al Worker: el pedido ya con alias; devuelve { texto (el plan en JSON, destapado), modelo, tok } o lanza un ErrorIA */
-async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {}) {
+async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = null } = {}) {
   const sd = seudo && seudo.n ? seudo : null;
   const t0 = Date.now();
   if (alPaso) alPaso(planesCfg().web ? 'La IA está leyendo tu plan y buscando las últimas noticias…' : 'La IA está leyendo tu plan y las noticias…');
@@ -1641,7 +1704,10 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
   const pend = LS.get('plan-rid', null);
   const rid = pend && pend.dia === diaDe() && Date.now() - pend.t < 30 * 60e3 && /^[a-z0-9]{8,24}$/.test(pend.rid || '') ? pend.rid
     : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
-  if (!pend || pend.rid !== rid) LS.set('plan-rid', { rid, t: Date.now(), dia: diaDe() });
+  // (17 nov) con el id va lo que era cada paso de ese pedido (p1 → vender a X…): si se recoge después, el plan de ahora
+  // puede ser otro y sus p1, p2… ya no son los mismos (ver planCorto)
+  const idsDe = pend && pend.rid === rid && Array.isArray(pend.ids) ? pend.ids : ids;
+  if (!pend || pend.rid !== rid) LS.set('plan-rid', { rid, t: Date.now(), dia: diaDe(), ...(ids ? { ids } : {}) });
   const cuerpo = { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra, rid };
   const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
   // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
@@ -1701,7 +1767,28 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
   const busquedas = (j.tok && Number(j.tok.web)) || 0;
   apuntar({ modelo: 'app', s: 'plan', ok: true, web: busquedas > 0, ms: Date.now() - t0, tok: j.tok || null });
   const texto = JSON.stringify(j.plan || {});
-  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
+  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, idsDe, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
+}
+/**
+ * (17 nov) los ids del plan corto (p1, a2…) son la posición de cada paso en el plan que se mandó. Si la respuesta es de
+ * otro pedido (`viejos`, [[id, clave]] de entonces) y el plan de ahora (`nuevos`) no es el mismo, se cambian en el json
+ * por los de ahora según la clave de cada paso (V-123: vender a ese jugador…); lo que ya no está se quita. Cambia `json`
+ * y devuelve un resumen para el diagnóstico, o '' si no hacía falta.
+ */
+export function traducirIds(json, viejos, nuevos) {
+  if (!json || !Array.isArray(viejos) || !viejos.length || !Array.isArray(nuevos)) return '';
+  if (viejos.length === nuevos.length && viejos.every(([id, k], i) => nuevos[i][0] === id && nuevos[i][1] === k)) return '';
+  const kDe = new Map(viejos.map(([id, k]) => [id, k])), idDe = new Map(nuevos.map(([id, k]) => [k, id]));
+  let iguales = 0, fuera = 0;
+  for (const campo of ['pasos', 'quita', 'mete']) {
+    if (!Array.isArray(json[campo])) continue;
+    json[campo] = json[campo].filter((x) => {
+      const id = x && idDe.get(kDe.get(idLimpio(x.id)));
+      if (!id) { fuera++; return false; }
+      iguales++; x.id = id; return true;
+    });
+  }
+  return `${iguales} pasos siguen, ${fuera} ya no están`;
 }
 /**
  * El plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo).
@@ -1713,13 +1800,17 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
   const pedido = pedidoCorto(D, M, c, R);
   const seudo = seudonimos(D);
   // (corto de verdad: 1.500 tokens de respuesta sobran; el resto del tope es lo que piense. Y un minuto como mucho)
-  const r = porApp ? await planPorApp(pedido, seudo, { signal, alPaso, extra })
+  const ids = idsCorto(R).lista.map((x) => [x.id, x.k]);
+  const r = porApp ? await planPorApp(pedido, seudo, { signal, alPaso, extra, ids })
     : await preguntar({ sistema: sistemaCorto(), contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 5000, total: 75000, web: false, seudo, seudoJSON: true, esquema: ESQUEMA_CORTO });
   const json = sacarJSON(r.texto);
   if (!json || (!Array.isArray(json.pasos) && !json.titular)) {
     apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `el plan corto no se puede leer (${r.fin || 'sin motivo'}, ${r.texto.length} caracteres${r.tok && r.tok.th ? `, ${r.tok.th} pensando` : ''})`, ms: 0 });
     throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Tienes el plan de la app; vuelve a probar cuando quieras.`, 0);
   }
+  // (17 nov) el plan recogido de un pedido de antes (la app se cerró mientras la IA contestaba): sus ids eran los de aquel
+  // plan; se pasan a los de este por lo que era cada paso. Lo que ya no está en el plan de ahora no se aplica
+  const traducidos = traducirIds(json, r.idsDe, ids);
   // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
   json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
   // (15 nov) lo que conteste la IA nunca tira el plan: lo que no cabe no se aplica y, si el plan de la app ya no cuadra tal
@@ -1732,6 +1823,7 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
     throw new ErrorIA('La IA ha contestado, pero no se ha podido aplicar al plan de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
   }
   // (para el diagnóstico: por qué el plan de la app no cuadraba tal cual; no es un fallo, el plan sale igual)
+  if (traducidos) apuntar({ modelo: r.modelo, web: r.web, s: 'plan', ok: true, fin: `plan recogido de un pedido anterior: ${traducidos}`, ms: 0 });
   if (A.cambios && A.cambios.rehecho) apuntar({ modelo: r.modelo, web: r.web, s: 'plan', ok: true, fin: `plan rehecho al aplicar: ${String(A.cambios.rehecho).slice(0, 260)}`, ms: 0 });
   // (en «Fuentes», sin las webs de fantasy: para quitar o meter sí han valido)
   const fuentes = json.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).slice(0, 6).map((f) => ({ t: String(f.t || f.u).slice(0, 120), u: f.u }));
