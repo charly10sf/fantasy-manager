@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250551/raul-da-pistas-sobre-oviedo-espera-queremos-verticales.html": 1794566621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000,
@@ -2135,7 +2134,8 @@
    "SPORT|136485072": 1794815966000,
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
+   "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000
   },
   "hechos": [
    {
@@ -2283,11 +2283,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/",
+    "medio": "AS",
+    "t": 1794824898000,
+    "id": "3197",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Cuti Romero está lesionado tras el parón de selecciones",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/",
+    "medio": "AS",
+    "t": 1794824898000,
+    "id": "3079",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lookman se lastimó durante el parón de selecciones",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3200,17 +3224,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 447543,
-  "salida": 18247,
+  "entrada": 449531,
+  "salida": 19218,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.989853,
+  "dolares": 0.990537,
   "reservado": 0
  },
  "recientes": {
@@ -7457,13 +7481,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3082,
+   "ok": 3083,
    "fallos": 0,
-   "ejecuciones": 2475,
+   "ejecuciones": 2476,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:41:13.298Z"
+   "ultima": "2026-11-16T10:46:12.414Z"
   }
  },
  "ptsDirecto": {},
@@ -7480,15 +7504,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:41:19.050Z"
+   "ultimaBien": "2026-11-16T10:46:20.892Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:41:19.050Z"
+   "ultimaBien": "2026-11-16T10:46:20.892Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:41:19.050Z"
+   "ultimaBien": "2026-11-16T10:46:20.892Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7496,11 +7520,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:41:19.050Z"
+   "ultimaBien": "2026-11-16T10:46:20.892Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:41:19.050Z"
+   "ultimaBien": "2026-11-16T10:46:20.892Z"
   }
  },
  "avisos": [
