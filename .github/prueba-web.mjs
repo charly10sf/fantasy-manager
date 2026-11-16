@@ -707,6 +707,33 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 15c: (16 nov, 0.7.13p, aviso de Domy) en el parón, un fichaje que la app ve subiendo hasta la vuelta no se descarta
+// aunque la IA lo ponga para el once (es dinero y llega a tiempo); uno que no sube, sí
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const I = await import('/js/ia.js');
+    const S = window.S, M = S.M, D = S.D, n = Date.now();
+    const antes = { paron: M.paron, enParon: M.enParon, ini: M.proxima && M.proxima.ini, esp: M.especular };
+    M.paron = { ini: n - 3 * 864e5, fin: n + 5 * 864e5 }; M.enParon = true;
+    if (M.proxima) M.proxima.ini = n + 5 * 864e5;
+    const m = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 5e6) || M.mercado[0];
+    const j = m.j, precio = Math.round(j.valor * 1.08);
+    const una = (esp) => { M.especular = esp; const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: j.nombre, pid: j.id, importe: precio, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(j.id)); return o ? !!o.descartada : null; };
+    const esp0 = (antes.esp || []).filter((x) => x.pid !== j.id);
+    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: j.valor * 1.2, r: 0.025, beneficio: j.valor * 0.12 }]);
+    const quieto = una(esp0);
+    M.paron = antes.paron; M.enParon = antes.enParon; if (M.proxima) M.proxima.ini = antes.ini; M.especular = antes.esp;
+    return { sube, quieto };
+  });
+  if (r.sube !== false || r.quieto !== true) mal(`parón: el fichaje que sube hasta la vuelta (descartado: ${r.sube}) o el que no (descartado: ${r.quieto})`);
+  else bien('parón: el fichaje que sube hasta la vuelta no se descarta aunque sea para el once; el que no sube, sí');
+  if (errores.length) mal(`parón y fichajes que suben: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 16: (14 nov) las funciones top sin anuncio (en Play, sin consentimiento o sin relleno): gratis UNA vez al día por
 // dispositivo, todas juntas; la segunda vez del día no se abren y la hoja dice que no hay anuncio; al día siguiente, otra vez
 {
