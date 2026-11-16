@@ -120,6 +120,14 @@ export async function hechosFichas(api, hm, { estado = {}, max = 150, ahora = Da
   for (const p of [1, 2, 3, 4]) {
     const xs = J.filter((x) => x.pos === p && x.jugados >= 5).sort((a, b) => b.media - a.media);
     xs.forEach((x, i) => { x.rangoMedia = i + 1; x.deRango = xs.length; });
+    // (sesión 4) más puestos dentro de su puesto: por valor (todos), por puntos en total, por puntos por millón y por cada 90 minutos
+    const todosP = J.filter((x) => x.pos === p);
+    [...todosP].sort((a, b) => b.valor - a.valor).forEach((x, i) => { x.rangoValor = i + 1; x.deValor = todosP.length; });
+    [...todosP].filter((x) => x.puntos > 0).sort((a, b) => b.puntos - a.puntos).forEach((x, i) => { x.rangoPuntos = i + 1; });
+    [...xs].filter((x) => x.valor > 0 && x.puntos > 0).map((x) => ({ x, r: x.puntos / (x.valor / 1e6) })).sort((a, b) => b.r - a.r)
+      .forEach(({ x, r }, i) => { x.ptsMillon = r; x.rangoMillon = i + 1; });
+    [...todosP].filter((x) => x.minutos >= 450).map((x) => ({ x, r: (x.puntos / x.minutos) * 90 })).sort((a, b) => b.r - a.r)
+      .forEach(({ x, r }, i, arr) => { x.pts90 = r; x.rango90 = i + 1; x.de90 = arr.length; });
   }
 
   // (16 nov, idea 1 del plan de AdSense) lo que hace falta para los «hechos raros» de cada ficha: quién fue el mejor de su puesto en
@@ -237,11 +245,15 @@ export function hechosJugador(x, H, eq) {
     if (r >= 25) add('temporada', 3 + Math.min(3, r / 50), [
       `En agosto costaba ${dinero(desde.v)} y hoy ${dinero(x.valor)}: un ${pctTxt(r)} más.`,
       `Desde que empezó la temporada su valor ha crecido un ${pctTxt(r)}, de ${dinero(desde.v)} a ${dinero(x.valor)}.`,
-      `Quien lo fichara a principios de agosto, por ${dinero(desde.v)}, tendría ahora un jugador de ${dinero(x.valor)}.`]);
+      `Quien lo fichara a principios de agosto, por ${dinero(desde.v)}, tendría ahora un jugador de ${dinero(x.valor)}.`,
+      `Es de los que han hecho ganar dinero: ${dif(x.valor - desde.v)} desde el arranque de la temporada.`,
+      `Sus ${dinero(desde.v)} de agosto se han convertido en ${dinero(x.valor)}.`]);
     else if (r <= -25) add('temporada', 3 + Math.min(3, -r / 30), [
       `Ha perdido un ${pctTxt(r)} de su valor desde agosto: entonces costaba ${dinero(desde.v)} y ahora ${dinero(x.valor)}.`,
       `Empezó la temporada en ${dinero(desde.v)} y se ha quedado en ${dinero(x.valor)}, un ${pctTxt(r)} menos.`,
-      `Su precio va cuesta abajo desde agosto: de ${dinero(desde.v)} a ${dinero(x.valor)} (-${pctTxt(r)}).`]);
+      `Su precio va cuesta abajo desde agosto: de ${dinero(desde.v)} a ${dinero(x.valor)} (-${pctTxt(r)}).`,
+      `Quien lo tenga desde el principio ha perdido ${dinero(desde.v - x.valor)} con él.`,
+      `Hoy sale bastante más barato que en verano: ${dinero(x.valor)}, cuando arrancó en ${dinero(desde.v)}.`]);
   }
   if (max && s.length > 10 && x.valor >= max.v && desde && x.valor > desde.v * 1.05) add('maximo', 4, [
     `Hoy vale más que nunca esta temporada.`,
@@ -253,20 +265,30 @@ export function hechosJugador(x, H, eq) {
 
   // la racha, con lo que suele pasar después (52.302 cambios, guía de valor de mercado)
   const frena = x.racha >= 3 && x.difAyer > 0 && x.dif > 0 && x.dif < x.difAyer / 2;
+  // (sesión 4) más formas, con la fecha y el valor de partida de la racha: es el hecho que sale en casi todas las fichas
+  const rd = x.rachaDesde ? fechaCorta(x.rachaDesde) : null, r0 = x.valor - (x.rachaDif || 0), porDia = x.racha ? Math.abs(x.rachaDif / x.racha) : 0;
   if (x.racha >= 3) {
     const larga = x.racha >= 8;
     add('racha', 3 + Math.min(3, x.racha / 4), frena ? [
       `Lleva ${x.racha} días subiendo (${dif(x.rachaDif)} en total), pero hoy ha subido menos de la mitad que ayer, y cuando pasa eso la racha sigue solo el 61,9 % de las veces.`,
-      `Sube desde hace ${x.racha} días, aunque frenando: hoy ${dif(x.dif)} después de ${dif(x.difAyer)} ayer. Esta temporada, con un frenazo así, el 61,9 % ha subido también al día siguiente.`]
+      `Sube desde hace ${x.racha} días, aunque frenando: hoy ${dif(x.dif)} después de ${dif(x.difAyer)} ayer. Esta temporada, con un frenazo así, el 61,9 % ha subido también al día siguiente.`,
+      ...(rd ? [`El empujón que empezó el ${rd} pierde fuerza: ${dif(x.difAyer)} ayer y solo ${dif(x.dif)} hoy. Con un frenazo de ese tamaño, algo más de seis de cada diez rachas aguantan otro día.`] : [])]
       : larga ? [
         `Encadena ${x.racha} días seguidos subiendo, ${dif(x.rachaDif)} en total. Las rachas que llegan a tres días suelen durar unos ocho: la suya ya va por encima.`,
-        `${x.racha} cambios de mercado seguidos al alza (${dif(x.rachaDif)}): de las rachas de esta temporada, solo el 42,2 % ha llegado a diez días.`]
+        `${x.racha} cambios de mercado seguidos al alza (${dif(x.rachaDif)}): de las rachas de esta temporada, solo el 42,2 % ha llegado a diez días.`,
+        ...(rd ? [`No ha bajado ni un día desde el ${rd}, cuando valía ${dinero(r0)}; desde entonces gana de media ${dinero(porDia)} por cambio de mercado.`,
+          `Quien lo comprara el ${rd} lleva ${dinero(x.rachaDif)} de beneficio: son ${x.racha} subidas sin una sola bajada.`] : [])]
         : [
           `Lleva ${x.racha} días seguidos subiendo (${dif(x.rachaDif)}). De los que llevan tres días al alza, el 87,3 % sube también el cuarto.`,
-          `Su valor sube desde hace ${x.racha} días, ${dif(x.rachaDif)} en total; tras tres subidas seguidas, lo normal esta temporada es que venga una cuarta (87,3 %).`]);
+          `Su valor sube desde hace ${x.racha} días, ${dif(x.rachaDif)} en total; tras tres subidas seguidas, lo normal esta temporada es que venga una cuarta (87,3 %).`,
+          ...(rd ? [`Valía ${dinero(r0)} el ${rd} y ahora ${dinero(x.valor)}, sin un día en rojo por medio.`,
+            `Desde el ${rd} solo ha subido: ${dif(x.rachaDif)} en ${x.racha} cambios de mercado.`] : [])]);
   } else if (x.racha <= -3) add('racha', 3 + Math.min(3, -x.racha / 4), [
     `Lleva ${-x.racha} días seguidos bajando (${dif(x.rachaDif)}); tras tres bajadas, el 88,4 % baja también el cuarto día.`,
-    `${-x.racha} días a la baja y ${dif(-x.rachaDif).replace(/^\+/, '')} perdidos: cuando un jugador encadena tres bajadas, casi nueve de cada diez veces llega la cuarta.`]);
+    `${-x.racha} días a la baja y ${dif(-x.rachaDif).replace(/^\+/, '')} perdidos: cuando un jugador encadena tres bajadas, casi nueve de cada diez veces llega la cuarta.`,
+    ...(rd ? [`El ${rd} valía ${dinero(r0)}; hoy, ${dinero(x.valor)}. No ha tenido un solo día de subida desde entonces.`,
+      `Desde el ${rd} pierde una media de ${dinero(porDia)} por cambio de mercado: ${-x.racha} bajadas seguidas.`,
+      `Quien lo tenga desde el ${rd} ha visto cómo se le iban ${dinero(x.rachaDif)} sin un respiro.`] : [])]);
 
   // valor y puntos en sentidos contrarios
   if (P && x.jugados >= 5 && x.pct7 >= 5 && x.media < P.media50) add('subeSinPuntos', 4, [
@@ -353,7 +375,9 @@ export function hechosJugador(x, H, eq) {
     if (mj.pts >= 8 && !(x.mejorPuesto || []).some((r) => r.J === mj.J)) add('mejorPartido', 2, [
       `Su mejor día fue la jornada ${mj.J}, ${mj.casa ? 'en casa' : 'fuera'} contra ${el(mj.rival)}: ${mj.pts} puntos${con ? ` con ${con}` : ''}.`,
       `${mj.pts} puntos ante ${el(mj.rival)} en la jornada ${mj.J}${con ? ` (${con})` : ''}: es su tope esta temporada.`,
-      `Lo máximo que ha dado son ${mj.pts} puntos, en la jornada ${mj.J}${con ? `, con ${con},` : ','} ${mj.r === 'G' ? 'en una victoria' : mj.r === 'E' ? 'en un empate' : 'aunque su equipo perdió'} contra ${el(mj.rival)}.`]);
+      `Lo máximo que ha dado son ${mj.pts} puntos, en la jornada ${mj.J}${con ? `, con ${con},` : ','} ${mj.r === 'G' ? 'en una victoria' : mj.r === 'E' ? 'en un empate' : 'aunque su equipo perdió'} contra ${el(mj.rival)}.`,
+      `Si hay que quedarse con un partido, el de la jornada ${mj.J} ${mj.casa ? 'en casa' : 'fuera'} ante ${el(mj.rival)}: ${mj.pts} puntos${con ? ` con ${con}` : ''}.`,
+      `Su techo está en ${mj.pts} puntos${con ? `, con ${con},` : ''} y lo tocó en la jornada ${mj.J} contra ${el(mj.rival)}.`]);
   }
 
   // en casa y fuera, y contra los de arriba (la tabla de hoy)
@@ -397,7 +421,7 @@ export function hechosJugador(x, H, eq) {
     `Sus ${x.paradas} paradas (${coma(x.paradas / x.titular)} por partido) le dan puntos incluso cuando le marcan.`]);
   if ((x.pos === 3 || x.pos === 4) && x.goles >= 5) add('goles', 3 + Math.min(2, x.goles / 5), [
     `Lleva ${x.goles} goles en ${x.jugados} partidos.`,
-    `Con ${x.goles} goles, marca de media uno cada ${coma(x.minutos / x.goles)} minutos.`]);
+    `Con ${x.goles} goles, marca de media uno cada ${Math.round(x.minutos / x.goles)} minutos.`]);
   else if (x.pos === 2 && x.goles >= 2) add('goles', 3, [
     `Para ser defensa, marca: ${x.goles} goles esta temporada.`,
     `${x.goles} goles de un defensa, algo que se paga bien en puntos.`]);
@@ -441,6 +465,89 @@ export function hechosJugador(x, H, eq) {
       `${may(el(eq.nombre))} afronta uno de los peores calendarios de las próximas jornadas: ${ps}.`], false);
   }
 
+  // (sesión 4) más hechos propios, cada uno con su umbral (lista en web/metodo.html#fichas)
+  const ya = (k) => o.some((h) => h.k === k);
+  // cómo le ha ido por tramos: la primera mitad de las jornadas jugadas frente a la segunda
+  const mitad = Math.floor(H.ultimaJugada / 2);
+  const t1 = pj.filter((r) => r.J <= mitad), t2 = pj.filter((r) => r.J > mitad);
+  if (mitad >= 4 && t1.length >= 3 && t2.length >= 3 && !ya('forma')) {
+    const m1 = media(t1), m2 = media(t2);
+    if (m2 - m1 >= 2 && m2 >= m1 * 1.4) add('tramos', 3.5, [
+      `Va de menos a más: ${coma(m1)} puntos de media hasta la jornada ${mitad} y ${coma(m2)} desde entonces.`,
+      `Su temporada tiene dos caras, y la buena es la de ahora: de la jornada ${mitad + 1} en adelante promedia ${coma(m2)}, cuando antes se quedaba en ${coma(m1)}.`,
+      `Ha ido a mejor según avanzaba el curso (${coma(m1)} de media en las ${mitad} primeras jornadas, ${coma(m2)} en las siguientes).`]);
+    else if (m1 - m2 >= 2 && m1 >= m2 * 1.4) add('tramos', 3.5, [
+      `Empezó mejor de lo que va ahora: ${coma(m1)} puntos de media hasta la jornada ${mitad} y ${coma(m2)} después.`,
+      `Su arranque fue lo mejor (${coma(m1)} por partido en las ${mitad} primeras jornadas); desde la ${mitad + 1}, ${coma(m2)}.`,
+      `La primera parte de la temporada le salió bastante mejor que la segunda: de ${coma(m1)} de media ha pasado a ${coma(m2)}.`]);
+  }
+  // dónde está su precio entre los de su puesto
+  if (x.rangoValor && x.rangoValor <= 5 && x.valor >= 10e6 && !ya('caro')) add('rangoValor', 3, x.rangoValor === 1 ? [
+    `No hay ${p} más caro en todo el juego.`,
+    `Es el ${p} que más vale de LaLiga Fantasy.`,
+    `Ningún otro ${p} cuesta tanto como él.`]
+    : [
+      `Solo ${['', 'un', 'dos', 'tres', 'cuatro'][x.rangoValor - 1]} ${x.rangoValor - 1 === 1 ? p : pl} ${x.rangoValor - 1 === 1 ? 'vale' : 'valen'} más que él en todo el juego.`,
+      `Por precio, es el ${ordinal(x.rangoValor)} ${p} de LaLiga Fantasy.`,
+      `Está en el top 5 de los ${pl} más caros: ${ordinal(x.rangoValor)} de ${x.deValor}.`]);
+  // puntos por millón (lo que da por lo que cuesta) y por cada 90 minutos, frente a los de su puesto
+  if (x.rangoMillon && x.rangoMillon <= 5 && !ya('barato')) add('porMillon', 3.5, [
+    `Por cada millón que vale ha sumado ${coma(x.ptsMillon)} puntos: ${x.rangoMillon === 1 ? `ningún ${p} da más por su precio` : `el ${ordinal(x.rangoMillon)} ${p} que más rinde por lo que cuesta`}.`,
+    `Pocos fichajes salen tan rentables: ${coma(x.ptsMillon)} puntos por millón de valor, ${ordinal(x.rangoMillon)} entre los ${pl} con cinco partidos.`]);
+  if (x.rango90 && x.rango90 <= 5 && x.de90 >= 15 && !ya('topMedia')) add('por90', 3, [
+    `Si se cuenta por minuto, rinde como pocos: ${coma(x.pts90)} puntos por cada 90 minutos en el campo, ${ordinal(x.rango90)} de los ${x.de90} ${pl} con 450 minutos o más.`,
+    `Aprovecha el tiempo que juega: ${coma(x.pts90)} puntos por cada 90 minutos, de los cinco mejores de su puesto.`]);
+  else if (x.rango90 && x.de90 >= 15 && x.rango90 > x.de90 - 5 && x.jugados >= 6) add('por90', 2.5, [
+    `Juega minutos pero puntúa poco con ellos: ${coma(x.pts90)} puntos por cada 90, de lo más bajo de los ${pl} con 450 minutos.`,
+    `Por minuto en el campo está a la cola de su puesto (${coma(x.pts90)} puntos por cada 90).`]);
+  // el total de puntos entre los de su puesto, si no lo dice ya la media
+  if (x.rangoPuntos && x.rangoPuntos <= 8 && !ya('topMedia') && !ya('bajaConPuntos')) add('rangoPuntos', 3, [
+    `Con ${x.puntos} puntos es el ${ordinal(x.rangoPuntos)} ${p} que más suma en LaLiga Fantasy.`,
+    `En puntos totales va ${ordinal(x.rangoPuntos)} entre todos los ${pl}: ${x.puntos}.`,
+    `${x.puntos} puntos le ponen ${ordinal(x.rangoPuntos)} en la tabla de ${pl} del juego.`]);
+  // frente a los de su puesto en su equipo: el más caro que no es el que más puntúa, o al revés
+  if (eq && x.jugados >= 5) {
+    const mismos = eq.jugadores.filter((y) => y.pos === x.pos && y.jugados >= 5);
+    if (mismos.length >= 2) {
+      const caro = [...mismos].sort((a, c) => c.valor - a.valor)[0], top = [...mismos].sort((a, c) => c.puntos - a.puntos)[0];
+      if (caro.id === x.id && top.id !== x.id && top.puntos - x.puntos >= 10) add('enSuEquipo', 3, [
+        `Es el ${p} más caro ${del(eq.nombre)}, pero no el que más puntúa: ${top.nombre} lleva ${top.puntos} y él ${x.puntos}.`,
+        `En ${el(eq.nombre)} nadie de su puesto vale más, aunque ${top.nombre} le saca ${top.puntos - x.puntos} puntos.`]);
+      else if (top.id === x.id && caro.id !== x.id && caro.valor >= x.valor * 1.2) add('enSuEquipo', 3, [
+        `Ningún ${p} ${del(eq.nombre)} suma más que él (${x.puntos}), y eso que ${caro.nombre} cuesta ${dinero(caro.valor)}.`,
+        `Le gana en puntos a ${caro.nombre} (${x.puntos} frente a ${caro.puntos}) valiendo ${dinero(caro.valor - x.valor)} menos.`]);
+    }
+  }
+  // los partidos en negativo
+  const neg = pj.filter((r) => r.pts < 0);
+  if (neg.length >= 2) {
+    const peor = [...neg].sort((a, c) => a.pts - c.pts)[0];
+    add('negativos', 2.5, [
+      `Ha restado puntos en ${neg.length} partidos; el peor, ${peor.pts} en la jornada ${peor.J} contra ${el(peor.rival)}.`,
+      `${may(enLetraA(neg.length))} veces ha terminado en negativo, con un ${peor.pts} ante ${el(peor.rival)} como tope.`]);
+  }
+  // cuando su equipo gana o pierde
+  const enG = pj.filter((r) => r.r === 'G'), enP = pj.filter((r) => r.r === 'P');
+  if (enG.length >= 3 && enP.length >= 3) {
+    const mg = media(enG), mp = media(enP);
+    if (mg - mp >= 3.5) add('resultado', 3, [
+      `Sus puntos van con los resultados ${del(eq ? eq.nombre : x.equipo)}: ${coma(mg)} de media cuando gana y ${coma(mp)} cuando pierde.`,
+      `Depende mucho de cómo le vaya al equipo: con victoria saca ${coma(mg)}; con derrota, ${coma(mp)}.`]);
+    else if (mp - mg >= 1.5) add('resultado', 3, [
+      `Rara vez pasa, pero puntúa más en las derrotas de su equipo (${coma(mp)}) que en las victorias (${coma(mg)}).`,
+      `Aunque su equipo pierda, él suma: ${coma(mp)} de media en las derrotas, más que en las victorias (${coma(mg)}).`]);
+  }
+  // la racha de partidos buenos que sigue abierta
+  let buenos = 0;
+  for (let i = x.jornadas.length - 1; i >= 0 && x.jornadas[i].min > 0 && x.jornadas[i].pts != null && x.jornadas[i].pts >= 6; i--) buenos++;
+  if (buenos >= 4 && !ya('forma') && !ya('tramos')) add('seguidas', 3.5, [
+    `Lleva ${buenos} jornadas seguidas con 6 puntos o más.`,
+    `No baja de 6 puntos desde la jornada ${x.jornadas[x.jornadas.length - buenos].J}: ${buenos} partidos así seguidos.`]);
+  // los defensas con portería a cero
+  if (x.pos === 2 && x.aCero >= 4) add('aCeroDef', 2.5, [
+    `Con él de titular, su equipo ha dejado la portería a cero ${veces(x.aCero)}, y eso da puntos a un defensa.`,
+    `${x.aCero} de sus partidos de titular terminaron sin goles en contra.`]);
+
   // avisos (no cuentan como propios: no dicen nada de cómo juega)
   if (!x.ok && ESTADOS[x.estado]) add('estado', 10, [`LaLiga lo da ahora como ${ESTADOS[x.estado]}${x.motivo ? ` (${x.motivo.txt.charAt(0).toLowerCase() + x.motivo.txt.slice(1)})` : ''}.`], false);
   if (x.amarillas % 5 === 4 && x.ok) add('amarillas', 6, [
@@ -461,8 +568,9 @@ function proximoJugador(x, H, eq) {
   const nombre = el(px.rival);
   let dato = null;
   if (t && t.pj >= 3) {
-    if (x.pos <= 2) dato = `marca ${coma(t.gf / t.pj)} goles por partido`;
-    else dato = `encaja ${coma(t.gc / t.pj)} goles por partido`;
+    const gpp = (v) => (coma(v) === '1' ? '1 gol' : `${coma(v)} goles`);
+    if (x.pos <= 2) dato = `marca ${gpp(t.gf / t.pj)} por partido`;
+    else dato = `encaja ${gpp(t.gc / t.pj)} por partido`;
   }
   const nivel = NIVEL_TXT[px.nivel] || 'un rival de nivel medio';
   return elige(`${x.id}|px${px.J}`, [
@@ -480,11 +588,11 @@ function entradaJugador(x) {
     `${nombre}, ${p} ${del(x.equipo)}, vale ${dinero(x.valor)} y lleva ${x.puntos} puntos en ${partidosTxt(x.jugados)} (${coma(x.media)} de media).`,
     `${x.puntos} puntos en ${partidosTxt(x.jugados)} y ${dinero(x.valor)} de valor: así llega ${nombre}, ${p} ${del(x.equipo)}.`,
     `${nombre} juega de ${p} en ${el(x.equipo)}, cuesta ${dinero(x.valor)} y promedia ${coma(x.media)} puntos por partido.`,
-    `Con ${coma(x.media)} puntos de media en ${partidosTxt(x.jugados)}, ${nombre} (${p}, ${x.equipo}) vale hoy ${dinero(x.valor)}.`]);
+    `Con ${coma(x.media)} puntos de media en ${partidosTxt(x.jugados)}, ${nombre}${nombre.includes('(') ? `, ${p} ${del(x.equipo)},` : ` (${p}, ${x.equipo})`} vale hoy ${dinero(x.valor)}.`]);
 }
 
 /** cuántos hechos se escriben como mucho, y lo mínimo para que la ficha vaya a Google (si no, noindex, follow) */
-const MAX_HECHOS = 9, MIN_PROPIOS = 3, MIN_PARTIDOS = 5;
+const MAX_HECHOS = 11, MIN_PROPIOS = 3, MIN_PARTIDOS = 5;
 export function analisisJugador(x, H, eq) {
   const hs = hechosJugador(x, H, eq);
   const elegidos = hs.slice(0, MAX_HECHOS);
@@ -496,7 +604,8 @@ export function analisisJugador(x, H, eq) {
 /** los hechos de un equipo, igual que los de un jugador */
 export function hechosEquipo(q, H) {
   const o = [];
-  const add = (k, peso, formas) => o.push({ k, peso, txt: elige(`e${q.id}|${k}`, formas) });
+  // quien: el jugador del que habla (si lo hay); un mismo jugador sale en un solo hecho, el que más pesa
+  const add = (k, peso, formas, quien = null) => o.push({ k, peso, quien, txt: elige(`e${q.id}|${k}`, formas) });
   const t = q.tabla, n = H.equipos.length;
   const r = q.resultados;
   // racha de resultados
@@ -535,13 +644,13 @@ export function hechosEquipo(q, H) {
   // el valor de la plantilla en 7 días
   const d7 = [...H.equipos].sort((a, b) => b.dif7 - a.dif7);
   const rk = d7.findIndex((x) => x.id === q.id) + 1;
-  if (rk && rk <= 3 && q.dif7 > 0) add('valor7', 3, [`Su plantilla es de las que más valor han ganado esta semana: ${dif(q.dif7)}.`, `En siete días sus jugadores valen ${dif(q.dif7)} más, el ${ordinal(rk)} que más sube.`]);
+  if (rk && rk <= 3 && q.dif7 > 0) add('valor7', 3, [`Su plantilla es de las que más valor han ganado esta semana: ${dif(q.dif7)}.`, `En siete días sus jugadores valen ${dinero(q.dif7)} más, el ${ordinal(rk)} que más sube.`]);
   else if (rk >= n - 2 && q.dif7 < 0) add('valor7', 3, [`Su plantilla es de las que más valor han perdido esta semana: ${dif(q.dif7)}.`, `En siete días ha perdido ${dif(q.dif7).replace(/^-/, '')} de valor, de los peores datos de los ${n}.`]);
   // dependencia de un jugador
   const top = [...q.jugadores].sort((a, b) => b.puntos - a.puntos)[0];
   if (top && q.puntosTotal > 0 && top.puntos / q.puntosTotal >= 0.18) add('depende', 3.5, [
     `Depende mucho de ${top.nombre}: el ${pctTxt(top.puntos / q.puntosTotal * 100)} de los puntos fantasy del equipo son suyos.`,
-    `${top.nombre} pone ${top.puntos} de sus ${q.puntosTotal} puntos fantasy.`]);
+    `${top.nombre} pone ${top.puntos} de sus ${q.puntosTotal} puntos fantasy.`], top.id);
   // jornadas por encima de la media
   if (q.ptsJ.length >= 6) {
     const enc = q.ptsJ.filter(([j, p]) => p > H.mediaJornada[j]).length;
@@ -579,7 +688,7 @@ export function hechosEquipo(q, H) {
   const sube = [...q.jugadores].filter((x) => x.dif7 > 0).sort((a, b) => b.dif7 - a.dif7)[0];
   if (sube && sube.dif7 >= 1e6) add('subeSemana', 2.5, [
     `El que más se ha revalorizado esta semana es ${sube.nombre}: ${dif(sube.dif7)}.`,
-    `${sube.nombre} vale ${dinero(sube.dif7)} más que hace siete días, más que nadie de su equipo.`]);
+    `${sube.nombre} vale ${dinero(sube.dif7)} más que hace siete días, más que nadie de su equipo.`], sube.id);
   if (q.serie.length > 30) {
     const a0 = q.serie[0].v, z = q.serie[q.serie.length - 1].v, r0 = (z - a0) / a0 * 100;
     if (Math.abs(r0) >= 15) add('valorTemporada', 3, r0 > 0 ? [
@@ -591,17 +700,97 @@ export function hechosEquipo(q, H) {
   const pr = q.portero;
   if (pr && pr.titular >= 4 && !o.some((h) => h.k === 'aCero')) add('portero', 2, [
     `En la portería juega ${pr.nombre}: ${partidosTxt(pr.titular)} de titular, ${coma(pr.mediaTit)} puntos de media cuando sale de inicio.`,
-    `${pr.nombre} es su portero titular (${pr.titular} partidos de inicio) y saca ${coma(pr.mediaTit)} de media.`,
-    `Bajo palos, ${pr.nombre}: ${q.paradas} paradas entre todos sus porteros y ${q.aCero} ${q.aCero === 1 ? 'portería' : 'porterías'} a cero.`]);
+    `${pr.nombre} es su portero titular (${pr.titular} partidos de inicio) y saca ${coma(pr.mediaTit)} de media en esos partidos.`,
+    `Bajo palos, ${pr.nombre}: ${q.paradas} paradas entre todos sus porteros y ${q.aCero} ${q.aCero === 1 ? 'portería' : 'porterías'} a cero.`], pr.id);
   // su mejor jornada
   const mj = [...q.ptsJ].sort((a, b) => b[1] - a[1])[0];
   if (mj) {
     const rj = r.find((x) => x.J === mj[0]);
     add('mejorJornada', 1.8, [
       `Su mejor jornada fue la ${mj[0]}, con ${mj[1]} puntos entre todos${rj ? ` (${rj.gf}-${rj.gc} ${rj.casa ? 'en casa' : 'fuera'} contra ${el(rj.rival)})` : ''}.`,
-      `Nunca han sumado más que en la jornada ${mj[0]}: ${mj[1]} puntos${rj ? `, el día que ${rj.r === 'G' ? 'ganó' : rj.r === 'E' ? 'empató' : 'perdió'} ${rj.gf}-${rj.gc} contra ${el(rj.rival)}` : ''}.`]);
+      `Nunca han sumado más que en la jornada ${mj[0]}: ${mj[1]} puntos${rj ? `, el día que ${rj.r === 'G' ? 'ganó' : rj.r === 'E' ? 'empató' : 'perdió'} ${rj.gf}-${rj.gc} contra ${el(rj.rival)}` : ''}.`,
+      `El techo de la temporada, ${mj[1]} puntos, llegó en la jornada ${mj[0]}${rj ? ` ${rj.casa ? 'en casa' : 'fuera'} ante ${el(rj.rival)}` : ''}.`]);
   }
-  return o.sort((a, b) => b.peso - a.peso);
+  // (sesión 4) más hechos de equipo, con su umbral (lista en web/metodo.html#fichas)
+  const ya = (k) => o.some((h) => h.k === k);
+  const jug = q.jugadores.filter((x) => x.jugados > 0);
+  // el que más marca de verdad (goles, no puntos)
+  const gol = [...jug].sort((a, b) => b.goles - a.goles || b.minutos - a.minutos)[0];
+  if (gol && gol.goles >= 3 && t && t.gf > 0) {
+    const r2 = [...jug].sort((a, b) => b.goles - a.goles)[1];
+    add('goleador', 3, [
+      `Su máximo goleador es ${gol.nombre}, con ${gol.goles} de los ${t.gf} goles del equipo.`,
+      `Los goles los pone sobre todo ${gol.nombre} (${gol.goles})${r2 && r2.goles >= 2 ? `, por delante de ${r2.nombre} (${r2.goles})` : ''}.`,
+      `${gol.nombre} ha marcado ${gol.goles} veces: el ${pctTxt(gol.goles / t.gf * 100)} de lo que lleva el equipo.`,
+      `Cuando hay que mirar quién marca, el nombre es ${gol.nombre}: ${gol.goles} goles en ${partidosTxt(gol.jugados)}.`], gol.id);
+  }
+  // el mejor de cada puesto por media (5 partidos o más)
+  const mejorDe = [2, 3, 4].map((p) => [...jug].filter((x) => x.pos === p && x.jugados >= 5).sort((a, b) => b.media - a.media)[0]).filter(Boolean);
+  if (mejorDe.length >= 3) {
+    const que = mejorDe.map((x) => `${x.nombre} ${x.pos === 1 ? 'en la portería' : x.pos === 2 ? 'en defensa' : x.pos === 3 ? 'en el centro del campo' : 'arriba'} (${coma(x.media)})`);
+    add('porPuesto', 2.4, [
+      `Por puestos, la mejor media es la de ${que.slice(0, -1).join(', ')} y ${que[que.length - 1]}.`,
+      `Si se mira la media de cada línea, mandan ${que.slice(0, -1).join(', ')} y ${que[que.length - 1]}.`,
+      `Línea a línea, quien más puntúa por partido es ${que.slice(0, -1).join(', ')} y ${que[que.length - 1]}.`]);
+  }
+  // contra los seis primeros de la tabla de hoy
+  const arriba = new Set(T.filter((x) => x.pos <= 6).map((x) => String(x.id)));
+  const vsA = r.filter((x) => arriba.has(String(x.rivalId)));
+  if (vsA.length >= 3 && t && t.pos > 6) {
+    const g = vsA.filter((x) => x.r === 'G').length, pp = vsA.filter((x) => x.r === 'P').length;
+    if (g >= 2) add('vsArriba', 3, [`Contra los seis primeros da la talla: ha ganado ${g} de ${vsA.length}.`, `A los de arriba les ha sacado ${g} victorias en ${partidosTxt(vsA.length)}.`]);
+    else if (pp === vsA.length) add('vsArriba', 3, [`Contra los seis primeros no ha puntuado: ${vsA.length} partidos, ${vsA.length} derrotas.`, `Los de arriba se le dan mal: ha perdido los ${vsA.length} partidos que ha jugado contra ellos.`]);
+  } else if (vsA.length >= 3 && t && t.pos <= 6) {
+    const g = vsA.filter((x) => x.r === 'G').length;
+    if (g === 0) add('vsArriba', 3, [`Contra sus rivales directos de arriba no ha ganado todavía (${partidosTxt(vsA.length)}).`, `Gana a los de abajo, pero contra el resto de los seis primeros lleva 0 victorias en ${vsA.length}.`]);
+    else if (g === vsA.length) add('vsArriba', 3, [`Ha ganado todos sus partidos contra los otros equipos de arriba (${vsA.length}).`, `Contra los que pelean con él por arriba, pleno: ${g} de ${g}.`]);
+  }
+  // los tramos de la temporada: puntos fantasy por jornada en la primera mitad y en la segunda
+  if (q.ptsJ.length >= 8) {
+    const mi = Math.floor(q.ptsJ.length / 2), a1 = q.ptsJ.slice(0, mi), a2 = q.ptsJ.slice(mi);
+    const m = (xs) => xs.reduce((s, [, p]) => s + p, 0) / xs.length, m1 = m(a1), m2 = m(a2);
+    if (m2 >= m1 * 1.25 && m2 - m1 >= 12) add('tramos', 3, [`Sus jugadores van a más: ${Math.round(m1)} puntos por jornada hasta la ${a1[a1.length - 1][0]} y ${Math.round(m2)} desde entonces.`, `De la jornada ${a2[0][0]} en adelante suma ${Math.round(m2)} puntos por jornada, bastante más que en el arranque (${Math.round(m1)}).`]);
+    else if (m1 >= m2 * 1.25 && m1 - m2 >= 12) add('tramos', 3, [`Empezó dando más puntos que ahora: ${Math.round(m1)} por jornada hasta la ${a1[a1.length - 1][0]} y ${Math.round(m2)} después.`, `Ha ido a menos: de ${Math.round(m1)} puntos por jornada en el arranque a ${Math.round(m2)} desde la jornada ${a2[0][0]}.`]);
+  }
+  // cuántos fijos tiene: los que han jugado 60 minutos en tres de cada cuatro jornadas o más
+  if (r.length >= 8) {
+    const fijos = jug.filter((x) => x.titular >= r.length * 0.75);
+    if (fijos.length <= 5) add('fijos', 3, [`Rota mucho: solo ${fijos.length} jugadores han sido titulares en tres de cada cuatro jornadas.`, `Pocos fijos: ${fijos.length} han jugado 60 minutos en al menos ${Math.ceil(r.length * 0.75)} de las ${r.length} jornadas.`]);
+    else if (fijos.length >= 10) add('fijos', 3, [`Su once se adivina fácil: ${fijos.length} jugadores han sido titulares en tres de cada cuatro jornadas o más.`, `Casi no rota: ${fijos.length} fijos con 60 minutos en ${Math.ceil(r.length * 0.75)} jornadas o más.`]);
+  }
+  // muchos empates
+  // el más caro y lo que pesa en el valor de la plantilla
+  const caro = [...q.jugadores].sort((a, b) => b.valor - a.valor)[0];
+  if (caro && q.valor > 0) {
+    const pc = caro.valor / q.valor * 100;
+    add('masCaro', pc >= 20 ? 2.8 : 1.9, pc >= 20 ? [
+      `Buena parte de lo que vale la plantilla es ${caro.nombre}: ${dinero(caro.valor)}, el ${pctTxt(pc)} del total.`,
+      `${caro.nombre} cuesta ${dinero(caro.valor)} y él solo es el ${pctTxt(pc)} del valor del equipo.`]
+      : [
+        `Su jugador más caro es ${caro.nombre} (${dinero(caro.valor)}), aunque el valor está repartido: no llega al ${pctTxt(Math.ceil(pc / 5) * 5)} del total.`,
+        `El que más vale es ${caro.nombre}, ${dinero(caro.valor)}, en una plantilla sin un jugador que se lleve todo el valor.`,
+        `${caro.nombre} encabeza la lista de precios del equipo con ${dinero(caro.valor)}.`], caro.id);
+  }
+  // las tarjetas: los que más amarillas suman y los apercibidos (a una de la sanción)
+  const amE = H.equipos.map((y) => ({ id: y.id, n: y.jugadores.reduce((a, x) => a + x.amarillas, 0) })).sort((a, b) => b.n - a.n);
+  const rkAm = amE.findIndex((y) => y.id === q.id) + 1, nAm = (amE[rkAm - 1] || {}).n || 0;
+  if (rkAm && rkAm <= 3 && nAm >= 15) add('tarjetas', 2.6, [`Es de los equipos que más amarillas ven: ${nAm} entre todos sus jugadores.`, `Juega al límite: ${nAm} amarillas, ${ordinal(rkAm)} equipo con más.`]);
+  else if (rkAm && rkAm > n - 3) add('tarjetas', 2.2, [`Es de los más limpios: ${nAm} amarillas entre todos.`, `Apenas ve tarjetas (${nAm} amarillas, de las cifras más bajas).`]);
+  const aperc = jug.filter((x) => x.amarillas % 5 === 4 && x.ok);
+  if (aperc.length >= 2) add('apercibidos', 3.2, [`Tiene ${aperc.length} apercibidos: ${aperc.map((x) => x.nombre).join(', ')}.`, `${aperc.map((x) => x.nombre).join(', ')}: a una amarilla de perderse un partido.`]);
+  // la portería a cero que sigue abierta
+  let imb = 0;
+  for (let i = r.length - 1; i >= 0 && r[i].gc === 0; i--) imb++;
+  if (imb >= 3) add('imbatido', 3.5, [`No le marcan desde hace ${imb} partidos.`, `Lleva ${imb} jornadas seguidas con la portería a cero.`]);
+  // los defensas que marcan
+  const gDef = jug.filter((x) => x.pos === 2).reduce((a, x) => a + x.goles, 0);
+  if (gDef >= 4) add('golesDefensa', 2.6, [`Sus defensas han marcado ${gDef} goles, y en este juego un gol de defensa se paga caro.`, `${gDef} goles de sus defensas: un plus de puntos que no tienen muchos equipos.`]);
+  const iTops = o.findIndex((h) => h.k === 'tops');
+  if (ya('porPuesto') && iTops >= 0) o.splice(iTops, 1);
+  const emp = r.filter((x) => x.r === 'E').length;
+  if (r.length >= 8 && emp >= Math.max(5, r.length * 0.4)) add('empates', 2.5, [`Empata mucho: ${emp} de sus ${r.length} partidos.`, `${emp} empates en ${r.length} jornadas, de los equipos que más reparten puntos.`]);
+  const vistos = new Set();
+  return o.sort((a, b) => b.peso - a.peso).filter((h) => !h.quien || (!vistos.has(h.quien) && vistos.add(h.quien)));
 }
 
 function entradaEquipo(q, H) {
@@ -610,7 +799,7 @@ function entradaEquipo(q, H) {
   return may(elige(`e${q.id}|entrada`, [
     `${q.club}${liga ? ` va ${liga}` : ''} y su plantilla vale ${dinero(q.valor)} en LaLiga Fantasy, la ${ordinalA(q.puestoValor)} más cara.`,
     `La plantilla ${del(q.nombre)} cuesta ${dinero(q.valor)} en el juego (${ordinalA(q.puestoValor)} de ${H.equipos.length})${liga ? ` y el equipo es ${liga}` : ''}.`,
-    `${liga ? `${liga.charAt(0).toUpperCase() + liga.slice(1)}, ` : ''}${el(q.nombre)} suma ${q.puntosTotal} puntos fantasy entre todos sus jugadores (${ordinal(q.puestoPuntos)} de ${H.equipos.length}).`]));
+    `${liga ? `${liga.charAt(0).toUpperCase() + liga.slice(1)}, ` : ''}${el(q.nombre)} suma ${miles(q.puntosTotal)} puntos fantasy entre todos sus jugadores (${ordinal(q.puestoPuntos)} de ${H.equipos.length}).`]));
 }
 export function analisisEquipo(q, H) {
   return [entradaEquipo(q, H), ...hechosEquipo(q, H).slice(0, MAX_HECHOS).map((h) => h.txt)];
@@ -645,6 +834,12 @@ const parrafos = (fr) => { const o = []; for (let i = 0; i < fr.length; i += 2) 
 
 /** los puntos de un equipo en una jornada frente a la media de los 20 esa jornada (los mismos colores que los de un jugador) */
 const claseEquipo = (p, m) => (p >= m * 1.2 ? 'p10' : p >= m ? 'p6' : p >= m * 0.8 ? 'p2' : 'p1');
+/** «9 victorias, 0 empates y 3 derrotas; 48 goles a favor y 14 en contra» */
+const balance = (rs) => {
+  const n = (k) => rs.filter((r) => r.r === k).length, g = rs.reduce((a, r) => a + r.gf, 0), c = rs.reduce((a, r) => a + r.gc, 0);
+  const pl = (k, uno, varios) => `${k} ${k === 1 ? uno : varios}`;
+  return `${may(pl(n('G'), 'victoria', 'victorias'))}, ${pl(n('E'), 'empate', 'empates')} y ${pl(n('P'), 'derrota', 'derrotas')}; ${g} goles a favor y ${c} en contra.`;
+};
 const resChip = (r) => `<span class="res-c res-${r.r}" title="${r.r === 'G' ? 'Ganó' : r.r === 'E' ? 'Empate' : 'Perdió'}">${r.r}</span>`;
 /** «dom 22 nov, 21:00» o «dom 22 nov, hora por confirmar» (LaLiga pone las 00:00 UTC cuando aún no la sabe) */
 const cuandoCorto = (t) => { const d = new Date(t); return `${diaCorto(t).split(' ')[0]} ${fechaCorta(t)}, ${d.getUTCHours() === 0 && d.getUTCMinutes() === 0 ? 'por confirmar' : hora(t)}`; };
@@ -692,13 +887,13 @@ export function contenidoEquipo(q, H) {
     { id: 'plantilla' }));
 
   if (q.proximos.length) o.push(bloque('Próximos rivales', proximosTabla(q),
-    { id: 'calendario', linea: (q.puestoCal ? e(`El ${ordinal(q.puestoCal)} calendario más fácil de los ${H.nCalendario}. `) : '') + `<a href="${raiz}metodo.html#rivales">Cómo medimos la dificultad</a>.` }));
+    { id: 'calendario', linea: (q.puestoCal ? e(elige(`e${q.id}|lcal`, [`El ${ordinal(q.puestoCal)} calendario más fácil de los ${H.nCalendario}. `, `Por dificultad, ${ordinal(q.puestoCal)} de ${H.nCalendario} (1.º, el más fácil). `])) : '') + `<a href="${raiz}metodo.html#rivales">Cómo medimos la dificultad</a>.` }));
 
   if (q.ptsJ.length) {
     const media = H.mediaJornada;
     const encima = q.ptsJ.filter(([j, p]) => p > media[j]).length;
     o.push(bloque('Puntos fantasy por jornada', `  ${graficaEquipo(q.ptsJ, media, new Map(q.resultados.map((r) => [r.J, r])))}`,
-      { id: 'puntos', linea: e(`La suma de todos sus jugadores; la discontinua, la media de los ${H.equipos.length} equipos. Por encima de esa media en ${encima} de ${q.ptsJ.length} jornadas.`) }));
+      { id: 'puntos', linea: e(elige(`e${q.id}|lpts`, [`Por encima de la media de los equipos (la discontinua) en ${encima} de ${q.ptsJ.length} jornadas.`, `${encima} de ${q.ptsJ.length} jornadas por encima de la discontinua, que es la media de los ${H.equipos.length}.`])) }));
   }
 
   if (q.resultados.length) {
@@ -707,20 +902,20 @@ export function contenidoEquipo(q, H) {
       return `<td class="n">${r.J}</td>${rivalCelda({ ...r, pos: null })}<td>${resChip(r)} ${r.gf}-${r.gc}</td><td class="n">${pt ? `<span class="pts ${claseEquipo(pt[1], H.mediaJornada[r.J])}">${pt[1]}</span>` : ''}</td>`;
     });
     o.push(bloque('Resultados', tabla([{ t: 'J', c: 'n' }, { t: 'Rival' }, { t: 'Res.' }, { t: 'Pts', c: 'n', titulo: 'Puntos fantasy de todos sus jugadores' }], filas, { clase: 'td-res' }),
-      { id: 'resultados', linea: '«vs», en casa; «en», fuera. Los puntos son la suma de todos sus jugadores esa jornada.' }));
+      { id: 'resultados', linea: e(balance(q.resultados)) }));
   }
 
   if (q.serie.length > 10) {
     const a = q.serie[0], z = q.serie[q.serie.length - 1];
     o.push(bloque('El valor de la plantilla', `  ${graficaValor(q.serie, { fecha: fechaCorta })}`,
-      { id: 'valor', linea: e(`La suma del valor de los jugadores que tiene hoy, día a día desde el ${fechaCorta(a.t)}: de ${dinero(a.v)} a ${dinero(z.v)} (${dif(z.v - a.v)}).`) }));
+      { id: 'valor', linea: e(`Desde el ${fechaCorta(a.t)}: de ${dinero(a.v)} a ${dinero(z.v)} (${dif(z.v - a.v)}).`) }));
   }
 
   // la portería
   const pr = q.portero;
   if (pr) {
     o.push(bloque('La portería', kpis([
-      { v: String(q.aCero), l: 'A cero', s: `en ${partidosTxt(q.resultados.length)}` },
+      { v: t ? String(t.gc) : '—', l: 'Encajados', s: t && t.pj ? `${coma(t.gc / t.pj)} por partido` : '' },
       { v: String(q.paradas), l: 'Paradas', s: 'de sus porteros' },
       { v: e(coma(pr.media)), l: 'Media', s: rj(pr) ? `<a href="${e(rj(pr))}">${e(pr.nombre)}</a>` : e(pr.nombre) },
     ], 'k3') + `\n  <p class="bq-l"><a href="${raiz}guias/puntos-porteros-laliga-fantasy.html">Cómo puntúan los porteros</a>.</p>`, { id: 'porteria' }));
@@ -730,12 +925,12 @@ export function contenidoEquipo(q, H) {
   const sub = [...mov].sort((a, b) => b.dif7 - a.dif7).filter((x) => x.dif7 > 0).slice(0, 5), baj = [...mov].sort((a, b) => a.dif7 - b.dif7).filter((x) => x.dif7 < 0).slice(0, 5);
   const t7 = (xs) => (xs.length ? tabla([{ t: 'Jugador', c: 'j' }, { t: '7 días', c: 'n' }, { t: 'Valor', c: 'n' }], xs.map((x) => celdaJug(x, { enlace: rj(x), sub: `${POS[x.pos]} · ${pct(x.pct7)}` }) + `<td class="n">${cambio(x.dif7, dif(x.dif7))}</td><td class="n">${e(dinero(x.valor))}</td>`)) : '');
   if (sub.length || baj.length) o.push(bloque('Los que más suben y bajan en 7 días', pestanas('mov', [['Suben', t7(sub)], ['Bajan', t7(baj)]]),
-    { id: 'mercado', linea: 'Todo el mercado del día, en <a href="../mercado/">el mercado de hoy</a>.' }));
+    { id: 'mercado' }));
 
   // bajas
   o.push(bloque('Bajas y sancionados', bj.length ? tabla([{ t: 'Jugador', c: 'j' }, { t: 'Estado' }], bj.map((x) => celdaJug(x, { enlace: rj(x) }) + `<td><b class="baja-t">${e(ESTADOS[x.estado] || x.estado)}</b>${x.motivo ? `<br><small>${e(x.motivo.txt)}</small>` : ''}</td>`))
-    : `  <p>LaLiga Fantasy no da ahora a ningún jugador del ${e(q.nombre)} que juegue habitualmente como lesionado, en duda ni sancionado.</p>`,
-  { id: 'bajas', linea: H.previa ? `Apercibidos y cierre de cláusulas, en <a href="${raiz}${e(H.previa.ruta)}">la previa de la jornada ${H.previa.jornada}</a>.` : '' }));
+    : `  <p>${e(elige(`e${q.id}|sinbajas`, ['Ahora mismo no tiene ningún habitual lesionado, en duda ni sancionado.', `Sin bajas que pesen: LaLiga no da a nadie importante ${del(q.nombre)} como lesionado o sancionado.`, 'Todos los que suelen jugar están disponibles.']))}</p>`,
+  { id: 'bajas', linea: bj.length ? elige(`e${q.id}|lbaj`, [`Las de los 20 equipos, con apercibidos y quién vuelve, en <a href="${raiz}bajas/">las bajas de la jornada</a>.`, `<a href="${raiz}bajas/">Todas las bajas de LaLiga</a>, al día.`]) : '' }));
 
   o.push(bloque(`${el(q.nombre).charAt(0).toUpperCase() + el(q.nombre).slice(1)} en LaLiga Fantasy`, parrafos(analisisEquipo(q, H)) + metodoLinea(raiz), { id: 'analisis' }));
   return o.join('\n');
