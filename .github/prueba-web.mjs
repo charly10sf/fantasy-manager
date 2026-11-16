@@ -952,6 +952,31 @@ for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null,
   await ctx.close();
 }
 
+// 18: (16 nov, 0.7.13w) la app de Google Play por debajo de «playMin»: la banda «Hay una versión nueva de la app» con el
+// enlace a la ficha. Solo en Play, solo por debajo, nunca sin «playMin» ni en la liga de ejemplo (la prueba sale de ella a mano)
+for (const [nombre, canal, version, playMin, espera] of [['Play por debajo', 'play', '6171', 6181, true], ['Play al día', 'play', '6171', 6171, false], ['Play por encima', 'play', '6181', 6171, false], ['Play sin playMin', 'play', '6171', null, false], ['APK de GitHub', 'github', '5701', 9999, false], ['web', null, null, 9999, false]]) {
+  const lim = `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: ${JSON.stringify(playMin ? { playMin } : {})} }));`;
+  const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '${version}', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+  const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); ${lim}` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(1200);
+  const r = await page.evaluate(async () => {
+    const enDemo = !!document.querySelector('#banda .banda-actualizar');
+    window.S.D.demo = false;
+    const otra = [...document.querySelectorAll('.nav button[data-ir]')].find((b) => b.dataset.ir !== window.S.vista);
+    if (otra) otra.click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const b = document.querySelector('#banda .banda-actualizar');
+    return { enDemo, hay: !!b, t: b ? b.innerText.replace(/\s+/g, ' ') : '', play: !!(b && b.querySelector('[data-abrir="https://play.google.com/store/apps/details?id=es.fantasymanager.app"]')) };
+  });
+  const ok = !r.enDemo && (espera ? r.hay && r.play && /Hay una versión nueva de la app/.test(r.t) && /Actualizar en Google Play/.test(r.t) && !/limites|playMin|compilaci/i.test(r.t) : !r.hay);
+  if (!ok) mal(`app de Play atrás, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
+  else bien(`app de Play atrás, ${nombre}: ${espera ? 'la banda con «Actualizar en Google Play» (y nada en la liga de ejemplo)' : 'sin banda'}`);
+  if (errores.length) mal(`app de Play atrás, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

@@ -3308,3 +3308,6 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
 .m-t .ic { width: 14px; height: 14px; color: var(--apagado); }
 .m-t b { font-weight: 700; color: var(--texto); }
+/* (0.7.13w) la app de Google Play se ha quedado atrás: fija, con el borde rojo, hasta que se actualice */
+.banda.banda-actualizar { border: 1px solid var(--rojo); }
+.banda.banda-actualizar > .ic { color: var(--rojo); }

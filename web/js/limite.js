@@ -236,6 +236,15 @@ export function cierreApk() {
   const dueno = !!yoB && [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
   return { hasta: f, cerrada: !!f && Date.now() > f && !dueno };
 }
+/* La app de Google Play está por debajo de «playMin» de limites.json (0.7.13w): ya hay otra en la tienda y esta, con la
+   parte del móvil de antes, deja de recibir la web nueva. «playMin» se sube al código nuevo solo cuando Google lo ha
+   aprobado (si no, la banda manda a una ficha que aún no la tiene). Sin «playMin», nada */
+export function playDesfasada() {
+  if (!enApp || nativo.canal() !== 'play') return false;
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const min = Math.round(Number(cfg.playMin) || 0), mia = Math.round(Number(nativo.version()) || 0);
+  return min > 0 && mia > 0 && mia < min;
+}
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
    de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no
