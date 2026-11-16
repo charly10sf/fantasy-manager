@@ -108,7 +108,9 @@ export function separarNotas(t) {
   // el bloque, que si no queda detrás de él y no se encuentra
   let s = String(t || '').replace(/<\/?br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '');
   let bloque = null;
-  const m = s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
+  // (séptima pasada con Haiku, 17 nov) también entre etiquetas: «<notas>{…}</notas>»
+  const m = s.match(/(?:^|\n)[ \t]*<notas>[ \t]*\n?([\s\S]*?)(?:<\/notas>|$)/i)
+    || s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
     || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }
