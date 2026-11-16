@@ -3097,7 +3097,7 @@ const guardarCupoP = (cu) => { if (cu && typeof cu === 'object') LS.set('preg-cu
 export const preguntaPendiente = () => { const p = LS.get('preg-rid', null); return p && p.dia === diaDe() && Date.now() - p.ts < 15 * 60e3 && /^[a-z0-9]{8,24}$/.test(p.rid || '') ? p : null; };
 const nuevoRid = () => (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
 /** al Worker: devuelve { texto (destapado), tok, cupo } o lanza un ErrorIA (cupo: sin preguntas; servicio: no está) */
-async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, texto = '' } = {}) {
+async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ = '' } = {}) {
   const t0 = Date.now();
   const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
   // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s (Android
@@ -3120,7 +3120,7 @@ async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, texto = '' } = {}
   if (alPaso) alPaso('La IA está leyendo tu liga…');
   // (16 nov) si sales de la app con la pregunta en marcha, Android avisa «Pensando tu respuesta» y, al contestar, «Tu
   // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.7.14)
-  if (enApp && cuerpo.rid) { try { nativo.preguntaEnMarcha(cuerpo.rid, await token(), (seudo && seudo.vuelta) || {}, texto); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
+  if (enApp && cuerpo.rid) { try { nativo.preguntaEnMarcha(cuerpo.rid, await token(), (seudo && seudo.vuelta) || {}, textoQ); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
   let j;
   try {
     for (let vez = 0; ; vez++) {
@@ -3192,7 +3192,7 @@ export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid 
 async function charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra = false, rid } = {}) {
   const seudo = seudonimos(D);
   const cuerpo = pedidoChat(pregunta, D, M, c, hist, fotos, { extra, rid }, seudo);
-  const r = await preguntaPorApp(cuerpo, seudo, { signal, alPaso, texto: pregunta });
+  const r = await preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ: pregunta });
   return { texto: r.texto, fuentes: [], modelo: 'app', tok: r.tok, cupo: r.cupo };
 }
 
