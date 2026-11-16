@@ -2918,7 +2918,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   const reVal = new RegExp(`\\b(?:vale(?:n)?|valor(?: actual| de mercado)?(?: es)?(?: de|:)?)\\s+(?:ahora |hoy |ya |unos |sobre |alrededor de |aproximadamente |mismo )*${NUM_M}`, 'i');
   const reSaldo = new RegExp(`(?:\\b(?:tu|el) (?:saldo|caja)(?: actual| de ahora| de hoy)?(?: es| está)?(?: de| en|:)?\\s+(?:unos |los |solo )?${NUM_M})|(?:\\b(?:con|tienes) (?:tus |unos |los |solo )?${NUM_M} (?:de saldo|en caja|de caja|en el banco))`, 'i');
   // (una frase que habla de un supuesto o de otra cifra —«si sube a…», «la pagaste a…», «súbela hasta…»— no se compara)
-  const SUPUESTO = /\b(hasta|por encima|por debajo|mas de|menos de|si|cuando|tras|despues de|antes de)\b|\b(podr|seria|quedar|dejar|valia|llego a valer|valdr|tendr|pagaste|pague|pagar|costo|compraste|fichaste)\w*/;
+  const SUPUESTO = /\b(hasta|por encima|por debajo|mas de|menos de|si|cuando|tras|despues de|antes de)\b|\b(podr|seria|quedar|dejar|valia|llego a valer|valdr|tendr|pagaste|pague|pagar|costo|compraste|fichaste|aguant)\w*/;
   const SUBIRLA = /\bsub(ir|e|es|as|ida|irla|irle|ela|ele)\b/;
   for (const fr of frases) {
     const k = norm(fr);
@@ -2927,7 +2927,9 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
       const j = js[0];
       const mc = fr.match(reCl), cl = clDe(j.id);
       if (mc && cl && !SUBIRLA.test(k) && !casi(aEuros(mc[1], mc[2]), cl.clausula)) nota(`${N(j)}: su cláusula es de ${eur(cl.clausula)} (no de ${mc[1]} ${mc[2]}).`);
-      const mv = !mc && fr.match(reVal);
+      // («aguantarlo 11 días vale unos 2,55 M más»: es lo que gana, no su valor; segunda pasada con Haiku, 16 nov)
+      const mv0 = !mc && fr.match(reVal);
+      const mv = mv0 && !/^\s*(?:m[aá]s|menos|de m[aá]s|extra|por encima|por debajo)\b/i.test(fr.slice(mv0.index + mv0[0].length)) ? mv0 : null;
       if (mv && j.valor && !casi(aEuros(mv[1], mv[2]), j.valor) && !(cl && casi(aEuros(mv[1], mv[2]), cl.clausula))) nota(`${N(j)}: vale ${eur(j.valor)} (no ${mv[1]} ${mv[2]}).`);
     }
     const ms = saldo != null && !/\b(si|quedar|tendr|tras|despues|acept|vend)\w*/.test(k) ? fr.match(reSaldo) : null;
@@ -2950,7 +2952,8 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     const k = norm(fr);
     // una cláusula con deuda
     // (si la respuesta ya dice la regla —«nunca con deuda», «solo con saldo»—, una frase suelta sin el «no» no es un error)
-    if (/clausul/.test(k) && /\b(deuda|en negativo|margen)\b/.test(k) && !/\b(no|solo|sin|nunca|ni|tampoco|olvidate)\b/.test(k) && !yaLoDice && saldo != null) nota(`Una cláusula solo se paga con saldo, sin deuda: ahora tienes ${eur(Math.max(0, saldo))}. El margen de deuda solo vale para pujar o comprar en el mercado.`);
+    // («lo harías con margen antes del cierre de cláusulas»: un margen de tiempo, no de deuda; segunda pasada, 16 nov)
+    if (/clausul/.test(k) && /\b(deuda|en negativo|margen de deuda|tirando del margen|con el margen)\b/.test(k) && !/\b(no|solo|sin|nunca|ni|tampoco|olvidate)\b/.test(k) && !/\bcierre de (las )?clausulas\b|\bclausulas se (cierran|reabren)\b/.test(k) && !yaLoDice && saldo != null) nota(`Una cláusula solo se paga con saldo, sin deuda: ahora tienes ${eur(Math.max(0, saldo))}. El margen de deuda solo vale para pujar o comprar en el mercado.`);
     // «te viene bien que te lo clausulen»
     if (/clausul/.test(k) && /\b(te viene bien|buena noticia|haces caja|hacer caja|negocio redondo|te conviene que|mejor para ti)\b/.test(k) && !/\b(no|nunca|tampoco)\b/.test(k)) {
       const js = enFrase(fr), j = js.length === 1 ? js[0] : !js.length && enPreg.length === 1 ? enPreg[0] : null, x = j && mia(j.id);
@@ -3068,7 +3071,9 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
       ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
-  return `${CABECERA_DATOS}\n${contexto(D, M, c, { chat: true })}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
+  // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
+  const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta');
+  return `${CABECERA_DATOS}\n${ctx}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
 export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });

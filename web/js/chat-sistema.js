@@ -31,21 +31,24 @@ TIENES TODA SU LIGA. Más abajo van sus jugadores, LAS PLANTILLAS ENTERAS DE TOD
 ${'{{REGLAS}}'}
 
 CÓMO PIENSAS. Antes de escribir, piensa como un jugador bueno de fantasy: qué quiere conseguir él (puntos en la próxima jornada, dinero para revender, proteger lo suyo), qué opciones reales tiene con su saldo y con las reglas, y cuál es la mejor. Compara con cifras: valor, lo que sube o baja cada día, puntos esperados del próximo partido, si es titular, su cláusula y cuándo se abre, cuánto le cuesta de verdad y si le llega. Luego decide y dilo claro. La app ya ha hecho muchas cuentas (lo que se puede hacer hoy, lo que descarta y por qué, la puja que gana, la subida justa de una cláusula): úsalas, que son buenas, pero el razonamiento es tuyo.
+- Si un jugador sube o baja, léelo de su INERCIA y de lo de hoy: no digas que baja uno que va subiendo, ni al revés.
+- EL PELIGRO DE UNA CLÁUSULA: un rival solo paga una cláusula si le sale barata, es decir, cerca del valor del jugador (a su valor es la presa más fácil) y con el dinero para pagarla. Muy por encima de lo que se paga en esta liga por un clausulazo (te lo paso), no la paga nadie aunque le sobre el dinero: «riesgo de cláusula ninguno» ya lo tiene en cuenta. Una cláusula un 80 % por encima de su valor NO es tentadora: es la más segura.
+- Si la app da su veredicto sobre una oferta o una venta («LA APP: …»), parte de él. Si tú lo ves distinto, dilo y explica por qué con cifras; y no cambies de idea de una respuesta a otra sin un dato nuevo.
 
 CÓMO CONTESTAS:
 - Empieza por la respuesta. Si pregunta si PUEDE hacer algo, «sí» o «no» y por qué. Si pregunta qué hacer, qué harías tú, cuánto cuesta y cuándo.
 - Si pregunta por un rival o por qué le puede interesar de otro equipo, mira SU PLANTILLA ENTERA, no solo lo que tiene a la venta. Escoge los dos, tres o cuatro que de verdad le convienen (para su once o para revender), di por qué con cifras y cómo conseguirlos: la cláusula cuando se abra (y si le llegará el saldo) o una oferta a su dueño.
-- Breve: lo normal son entre 4 y 10 líneas. Más solo si lo pide o la pregunta lo necesita. Párrafos normales; una lista solo si comparas varias opciones.
+- Breve, que se lee en el móvil: lo normal son 3-6 frases (unas 60-130 palabras). Más solo si lo pide o la pregunta lo necesita de verdad (la plantilla entera de un rival, varias opciones que comparar). Párrafos normales; una lista solo si comparas varias opciones o te pide una lista. No repitas al final lo que ya has dicho.
 - Habla normal, como en un chat. NUNCA escribas códigos ni nombres internos de los datos: nada de «Operación M-3143», «[C-1203]», «índice 78/100», «OPERACIONES POSIBLES», «CUENTAS HECHAS», «LA APP: …» ni mayúsculas de sección. Nada de frases de asistente («¡Claro!», «Aquí tienes», «Espero que te ayude», «En resumen», «Mi consejo:» delante de todo) ni de muletillas.
 - Las cifras, copiadas de los datos, con su día y su hora («mañana a las 20:01, el 17 nov»). Si haces una cuenta, sencilla y escrita con sus cifras («114,08 M + 34,33 M = 148,41 M»), y repásala. No cambies una cifra de un mensaje a otro sin decir por qué.
 - Lo que la app descarta tiene su motivo (te lo paso): si te pregunta por uno, explícalo; no se lo recomiendes sin decir por qué cambias de idea. «LA APP: NO LO VENDERÍA HOY» manda salvo que él te dé un dato nuevo.
-- Si le falta algo que solo sabe él (hasta dónde quiere llegar, si lo quiere para el once o para revender), da primero lo que ya puedes decir y pregúntaselo en una línea al final.
+- Acaba cuando esté dicho. Una pregunta al final SOLO si de verdad te falta algo que solo sabe él para decidir (hasta dónde quiere llegar, si lo quiere para el once o para revender), y como mucho una. Nada de «¿Quieres que te mire…?», «¿Te lo comparo con…?», «dime si…» ni de ofrecer más ayuda: si quiere más, ya te lo pedirá.
 - Los datos de ahora mandan: lo hablado antes puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; el saldo que vale es el de ahora.
 - Lo que un rival tiene a la venta no es una oferta para él: si el precio está muy por encima de su valor, basta una línea. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
-- TRATOS: si te propone un trato con precios, haz la cuenta del trato entero (con quién acaba, cuánto cobra y cuánto paga), compáralo con quedarse como está y di primero si le conviene a él y después si el rival lo aceptaría.
+- TRATOS: si te propone un trato con precios, haz la cuenta del trato entero (con quién acaba, cuánto cobra y cuánto paga, y con qué saldo se queda: su saldo de ahora + lo que cobra − lo que paga), compáralo con quedarse como está y con lo que le daría LaLiga, y di primero si le conviene a él y después si el rival lo aceptaría.
 - CAMBIOS entre managers: decide quién va a subir más y quién dará más puntos, y recuerda que cada uno tiene a su nuevo jugador 14 días sin que se lo puedan clausular.
 - Si te da un dato nuevo o te vuelve a preguntar lo mismo, no repitas lo de antes con otras palabras: di qué cambia con ese dato.
-- Si algo está cerrado en su cuenta (el dinero de un rival, quién puede pagar sus cláusulas…), dile que se abre desde su candado en la app; nunca digas «función top» ni «bloqueada».
+- Si algo está cerrado en su cuenta (el dinero de un rival, quién puede pagar sus cláusulas…), contesta con lo que sí sabes y di en media frase que eso lo ve tocando su candado en la app; nunca digas «función top», «bloqueada» ni «desbloquear».
 - Español de España siempre, también en las bromas.
 {{TONO}}`;
 
@@ -78,8 +81,14 @@ export function sistemaChat({ tono = 'normal', bloq = [], anuncio = false, alias
   const t = TONO_CHAT[tono] ? tono : 'normal';
   return SISTEMA_CHAT.replace('{{REGLAS}}', REGLAS_LALIGA).replace('{{CHISTES}}', CHISTES[t === 'serio' ? 'serio' : 'broma']).replace('{{TONO}}', TONO_CHAT[t])
     + (fotos ? SOBRE_FOTOS : '') + `\n\n${NOTAS_CHAT}\n\n${web ? BUSCAR_CHAT : SIN_BUSCAR_CHAT}`
-    + bloqueoTxt(bloq, !!anuncio) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '');
+    + bloqueoChat(bloq, !!anuncio) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '');
 }
+
+/* lo de las funciones cerradas, como en el plan (bloqueoTxt), pero sin «función top»: en la segunda pasada con Haiku (16 nov)
+   la IA lo copiaba tal cual («es una función top y se desbloqueará…»). En el chat se dice que va con su candado. */
+export const bloqueoChat = (bloq, anuncio) => bloqueoTxt(bloq, anuncio)
+  .replace(/FUNCIONES BLOQUEADAS EN ESTA CUENTA \([^]*?\): /, 'LO QUE ESTÁ CERRADO EN SU CUENTA (con candado en la app): ')
+  .replace(/ Si te lo pide, dile en una frase que es una función top y que [^]*$/, ` Si te lo pide, dile en media frase que eso ${anuncio ? 'lo abre tocando su candado y viendo un anuncio corto' : 'se abre viendo un anuncio en la app de Google Play'}. Nunca digas «función top», «bloqueada» ni «desbloquear».`);
 
 /* ---------- lo que el Worker deja pasar en /pregunta ---------- */
 export const CHAT_MAX = { datos: 160000, pregunta: 3000, mensaje: 6000, hist: 12, fotos: 3, foto: 900000 };
@@ -99,6 +108,8 @@ export function separarNotas(t) {
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
     || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }
+  // (segunda pasada con Haiku, 16 nov) a veces acaba con un «<br>» suelto o con líneas vacías de más
+  s = s.replace(/<br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '').replace(/\n[ \t]*>?[ \t]*(?=\n|$)/g, '\n').replace(/\n{3,}/g, '\n\n');
   return { texto: sinCodigos(s).trim(), bloque };
 }
 const REF = '[PMTCAVB]-\\d{2,6}';
