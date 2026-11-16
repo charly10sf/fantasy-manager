@@ -1977,7 +1977,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
@@ -7477,13 +7476,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3064,
+   "ok": 3065,
    "fallos": 0,
-   "ejecuciones": 2457,
+   "ejecuciones": 2458,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T09:11:14.222Z"
+   "ultima": "2026-11-16T09:16:14.686Z"
   }
  },
  "ptsDirecto": {},
@@ -7500,15 +7499,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:11:19.405Z"
+   "ultimaBien": "2026-11-16T09:16:20.565Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:11:19.405Z"
+   "ultimaBien": "2026-11-16T09:16:20.565Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:11:19.405Z"
+   "ultimaBien": "2026-11-16T09:16:20.565Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7516,11 +7515,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:11:19.405Z"
+   "ultimaBien": "2026-11-16T09:16:20.565Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:11:19.405Z"
+   "ultimaBien": "2026-11-16T09:16:20.565Z"
   }
  },
  "avisos": [
