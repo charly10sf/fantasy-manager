@@ -1718,7 +1718,13 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
     const vis = () => { if (!document.hidden) vuelta(); };
     window.addEventListener('fm-vuelta', vuelta);
     document.addEventListener('visibilitychange', vis);
-    pedirWorker('POST', '/plan', cuerpo, { tiempo: 120000, signal }).then((r) => { if (!hecho) { fin(); ok(r); } }, (e) => { if (!hecho) { fin(); ko(e); } });
+    // (17 nov) cada intento, con lo que quede de los 3 minutos (antes, 2 minutos cada uno: podían ser 4 en total). Y una
+    // respuesta que no llega entera (se corta con el servidor ya contestando: solo los espacios de mientras piensa, medio
+    // plan) es un corte como otro: se repite con el mismo id y, si el plan ya estaba hecho, llega sin gastar otro
+    const tiempo = Math.max(15000, Math.min(120000, TOPE - (Date.now() - t0)));
+    const cortada = (e) => (e && e.name !== 'AbortError' && ((e instanceof TypeError && e.estado === undefined) || (e.estado >= 200 && e.estado < 300 && !e.datos))
+      ? Object.assign(new Error('La respuesta de la IA se ha cortado por el camino. Tienes el plan de la app; vuelve a probar en un rato.'), { estado: 0, detalle: `respuesta cortada${e.estado ? ` (${e.estado})` : ''}: ${String(e.message || e).slice(0, 80)}` }) : e);
+    pedirWorker('POST', '/plan', cuerpo, { tiempo, signal }).then((r) => { if (!hecho) { fin(); ok(r); } }, (e) => { if (!hecho) { fin(); ko(cortada(e)); } });
   });
   // a que la app esté a la vista (si se ha cortado con la app en segundo plano, se repite al volver)
   const aLaVista = () => new Promise((ok) => {
@@ -1755,6 +1761,8 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
     apuntar({ modelo: 'app', s: 'plan', e: `la IA de la app: ${e.estado || 0} ${e.message}${e.detalle ? ` (${e.detalle})` : ''}`, ms: Date.now() - t0 });
     // sin cupo hoy: no es un fallo (lo dice el Worker); lo demás es que el servicio no está (y vale tu clave, si la tienes)
     if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo });
+    // (17 nov) el tope de gasto del día de la IA de la app: no vuelve «en un rato», sino mañana (lo dice el servidor)
+    if (d.tope && d.e) throw new ErrorIA(String(d.e), e.estado || 503, { servicio: true });
     if (e.sesion || e.estado === 401) throw new ErrorIA(e.message || 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo.', 401, { servicio: true });
     throw new ErrorIA(e.estado === 0 ? e.message : 'La IA de los planes no está disponible ahora mismo. Tienes el plan de la app; vuelve a probar en un rato.', e.estado || 0, { servicio: true });
   }

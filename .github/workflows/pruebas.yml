@@ -41,6 +41,9 @@ jobs:
       # el plan a prueba de azar: cientos de ligas removidas, y el plan (el de la app y el de la IA) tiene que salir siempre
       - name: Probar el plan con ligas al azar
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/azar-plan.mjs 60 1
+      # el plan con la IA de la app cuando la conexión falla a medias: siempre queda el de la app, con un aviso que dice la verdad
+      - name: Probar el plan cuando falla la conexión
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-conexion.mjs
 
   sin-red:
     runs-on: ubuntu-latest
