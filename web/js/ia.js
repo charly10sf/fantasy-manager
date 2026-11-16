@@ -3128,7 +3128,7 @@ async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ = '' } = {
   });
   if (alPaso) alPaso('La IA está leyendo tu liga…');
   // (16 nov) si sales de la app con la pregunta en marcha, Android avisa «Pensando tu respuesta» y, al contestar, «Tu
-  // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.7.14)
+  // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.8)
   if (enApp && cuerpo.rid) { try { nativo.preguntaEnMarcha(cuerpo.rid, await token(), (seudo && seudo.vuelta) || {}, textoQ); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
   let j;
   try {
