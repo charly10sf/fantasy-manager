@@ -1997,7 +1997,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
@@ -7642,13 +7641,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3123,
+   "ok": 3124,
    "fallos": 0,
-   "ejecuciones": 2516,
+   "ejecuciones": 2517,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T14:16:11.699Z"
+   "ultima": "2026-11-16T14:21:11.999Z"
   }
  },
  "ptsDirecto": {},
@@ -7665,15 +7664,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:16:19.189Z"
+   "ultimaBien": "2026-11-16T14:21:15.501Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:16:19.189Z"
+   "ultimaBien": "2026-11-16T14:21:15.501Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:16:19.189Z"
+   "ultimaBien": "2026-11-16T14:21:15.501Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7681,11 +7680,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:16:19.189Z"
+   "ultimaBien": "2026-11-16T14:21:15.501Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:16:19.189Z"
+   "ultimaBien": "2026-11-16T14:21:15.501Z"
   }
  },
  "avisos": [
