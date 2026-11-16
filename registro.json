@@ -3308,7 +3308,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000,
    "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822222000,
-   "SPORT|136493729": 1794825978000
+   "SPORT|136493729": 1794825978000,
+   "SPORT|136499689": 1794831300000
   },
   "hechos": [
    {
@@ -3336,27 +3337,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136499689": 1794835278621
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 508518,
-  "salida": 25119,
+  "entrada": 510285,
+  "salida": 25240,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.073585,
+  "dolares": 1.073822,
   "reservado": 0
  },
  "recientes": {
@@ -7603,13 +7602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3118,
+   "ok": 3119,
    "fallos": 0,
-   "ejecuciones": 2511,
+   "ejecuciones": 2512,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T13:41:15.373Z"
+   "ultima": "2026-11-16T13:46:13.887Z"
   }
  },
  "ptsDirecto": {},
@@ -7626,15 +7625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:41:23.004Z"
+   "ultimaBien": "2026-11-16T13:46:20.933Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:41:23.004Z"
+   "ultimaBien": "2026-11-16T13:46:20.933Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:41:23.004Z"
+   "ultimaBien": "2026-11-16T13:46:20.933Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7642,11 +7641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:41:23.004Z"
+   "ultimaBien": "2026-11-16T13:46:20.933Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:41:23.004Z"
+   "ultimaBien": "2026-11-16T13:46:20.933Z"
   }
  },
  "avisos": [
