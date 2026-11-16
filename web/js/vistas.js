@@ -477,7 +477,7 @@ function pasoOp(S, P, o) {
       ${cara}
       <span class="pp-c">
         <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
-        <span class="pp-l2s">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
+        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
     </summary><div class="pp-d">${dentro}</div></details>`;

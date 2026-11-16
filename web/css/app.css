@@ -2099,6 +2099,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-l2s { display: flex; align-items: baseline; gap: 5px; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); white-space: nowrap; overflow: hidden; }
 .pp-l2s i { font-style: normal; flex: none; }
 .pp-l2s .pp-cu, .pp-l2s .pp-est { flex: none; font-size: var(--t-sec2); max-width: 70%; }
+/* (0.7.13x) con un estado de LaLiga («Pujado 29,15 M · se resuelve a las 20:00») se ve entero, aunque baje a otra línea, y el porqué se queda para cuando se abre el paso */
+.pp-l2s.con-est { flex-wrap: wrap; white-space: normal; row-gap: 2px; }
+.pp-l2s.con-est .pp-est { display: block; flex: 0 1 auto; max-width: 100%; white-space: normal; overflow: visible; text-overflow: clip; }
+.pp-l2s.con-est i, .pp-l2s.con-est .pp-porque { display: none; }
 .pp-l2s .pp-porque { display: block; -webkit-line-clamp: unset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); }
 .paso3[open] .pp-l2s .pp-porque { display: none; } .paso3[open] .pp-l2s i { display: none; }
 .paso3 .pp-imp { font-size: var(--t-cuerpo); }
