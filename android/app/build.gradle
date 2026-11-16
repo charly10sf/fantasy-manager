@@ -62,15 +62,20 @@ android {
         github {
             dimension 'canal'
             if (rutaFirma && claveFirma) signingConfig signingConfigs.release
-            buildConfigField 'String', 'BANNER', '""'
             buildConfigField 'String', 'BONIFICADO', '""'
+            buildConfigField 'String', 'INTERSTICIAL', '""'
         }
         play {
             dimension 'canal'
             if (rutaSubida && claveSubida) signingConfig signingConfigs.subida
-            // Banner Inferior y Bonificado Desbloqueo (creados el 23 oct en AdMob); los de prueba, los de Google
-            buildConfigField 'String', 'BANNER', bloque('ca-app-pub-3175956326240112/5804998548', 'ca-app-pub-3940256099942544/9214589741')
+            // Bonificado Desbloqueo (creado el 23 oct en AdMob); los de prueba, los de Google. Desde la 0.8 no hay banner (el
+            // «Banner Inferior», ca-app-pub-3175956326240112/5804998548, ya no se usa): lo sustituye el intersticial.
             buildConfigField 'String', 'BONIFICADO', bloque('ca-app-pub-3175956326240112/4365466356', 'ca-app-pub-3940256099942544/5224354917')
+            // EL INTERSTICIAL. >>> ID REAL: cuando Carlos cree el bloque en AdMob (Bloques de anuncios → Intersticial), poner
+            // aquí su id ('ca-app-pub-3175956326240112/NNNNNNNNNN') en lugar de ''. Mientras esté vacío, la app usa el
+            // «bloque» de «intersticial» de limites.json (solo si es de esta cuenta) y, sin él, no enseña intersticiales.
+            // Con fm.anunciosReales=false, siempre el de prueba de Google.
+            buildConfigField 'String', 'INTERSTICIAL', bloque('', 'ca-app-pub-3940256099942544/1033173712')
         }
     }
 

@@ -1576,7 +1576,7 @@ export default {
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
         return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
       }
-      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.7.14): { fin: { resumen } } o { marcha }
+      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.8): { fin: { resumen } } o { marcha }
       if (url.pathname === '/pregunta/res' && req.method === 'GET') {
         const u = await quienEs(req);
         if (!u) return json({ e: 'Sin sesión' }, 401, c);

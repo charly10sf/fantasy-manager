@@ -496,10 +496,16 @@ public class Puente {
         return Anuncios.HAY;
     }
 
-    /** si en la pantalla de ahora va el banner de abajo */
+    /** (0.8) si la web tiene ya su liga cargada (hasta entonces, ningún anuncio) y el bloque del intersticial de limites.json */
     @JavascriptInterface
-    public void banner(boolean si) {
-        if (act != null) Anuncios.banner(si);
+    public void zonaAnuncios(boolean si, String bloque) {
+        if (act != null) Anuncios.zona(si, bloque);
+    }
+
+    /** (0.8) un intersticial en una pausa natural (lo decide la web); contesta con intersticialVisto(visto, motivo) */
+    @JavascriptInterface
+    public void intersticial(String bloque) {
+        if (act != null) Anuncios.intersticial(bloque);
     }
 
     /** el anuncio bonificado para desbloquear algo («plan»); contesta con anuncioVisto(para, visto, motivo) */

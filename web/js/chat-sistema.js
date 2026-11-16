@@ -34,7 +34,7 @@ CÓMO PIENSAS. Antes de escribir, piensa como un jugador bueno de fantasy: qué 
 - Si un jugador sube o baja, léelo de su INERCIA y de lo de hoy: no digas que baja uno que va subiendo, ni al revés.
 - EL DINERO: aceptar una oferta que ya tiene (de LaLiga o de otro mánager) mete el dinero AL MOMENTO; lo que pone hoy a la venta no da nada hasta que llegue una oferta (en el próximo cambio de mercado) y la acepte. Para pujar, lo que le queda en el mercado ya viene con sus pujas de ahora descontadas.
 - «Protegido hasta…» (los 14 días tras ficharlo) no es un blindaje: el blindaje es el escudo de 24 h que pone él. No los mezcles.
-- EL PELIGRO DE UNA CLÁUSULA: un rival solo paga una cláusula si le sale barata, es decir, cerca del valor del jugador (a su valor es la presa más fácil) y con el dinero para pagarla. Muy por encima de lo que se paga en esta liga por un clausulazo (te lo paso), no la paga nadie aunque le sobre el dinero: «riesgo de cláusula ninguno» ya lo tiene en cuenta. Una cláusula un 80 % por encima de su valor NO es tentadora: es la más segura.
+- EL PELIGRO DE UNA CLÁUSULA: un rival solo paga una cláusula si le sale barata, es decir, cerca del valor del jugador (a su valor es la presa más fácil) y con el dinero para pagarla. Muy por encima de lo que se paga en esta liga por un clausulazo (te lo paso), no la paga nadie aunque le sobre el dinero: «riesgo de cláusula ninguno» ya lo tiene en cuenta. Una cláusula un 80 % por encima de su valor NO es tentadora: es la más segura. Para sus jugadores te paso «SUS CLÁUSULAS» ya ordenadas así: tira de esa lista.
 - Si la app da su veredicto sobre una oferta o una venta («LA APP: …»), parte de él. Si tú lo ves distinto, dilo y explica por qué con cifras; y no cambies de idea de una respuesta a otra sin un dato nuevo.
 
 CÓMO CONTESTAS:
@@ -104,7 +104,9 @@ export const esDatosChat = (x) => typeof x === 'string' && x.length <= CHAT_MAX.
  * { texto, bloque } con el JSON del bloque, si lo había, para que la app lo aplique.
  */
 export function separarNotas(t) {
-  let s = String(t || '');
+  // (segunda y cuarta pasada con Haiku, 16-17 nov) a veces acaba con un «<br>» o un «</br>» suelto: fuera antes de buscar
+  // el bloque, que si no queda detrás de él y no se encuentra
+  let s = String(t || '').replace(/<\/?br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '');
   let bloque = null;
   const m = s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
@@ -117,8 +119,8 @@ export function separarNotas(t) {
     if (r) { bloque = r[1].trim().startsWith('[') ? `{"recomiendo": ${r[1].trim()}}` : r[1]; s = s.slice(0, r.index); }
   }
   s = s.replace(/\n[ \t]*[_*`(\[]*notas[_ a-z]{0,24}[_*`)\]]*[ \t]*$/i, '').replace(/\n[ \t]*(?:```|~~~)[ \t]*$/, '');
-  // (segunda pasada con Haiku, 16 nov) a veces acaba con un «<br>» suelto o con líneas vacías de más
-  s = s.replace(/<br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '').replace(/\n[ \t]*>?[ \t]*(?=\n|$)/g, '\n').replace(/\n{3,}/g, '\n\n');
+  // (y las líneas vacías de más)
+  s = s.replace(/\n[ \t]*>?[ \t]*(?=\n|$)/g, '\n').replace(/\n{3,}/g, '\n\n');
   return { texto: sinCodigos(s).trim(), bloque };
 }
 const REF = '[PMTCAVB]-\\d{2,6}';

@@ -2932,7 +2932,8 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
       const mv = mv0 && !/^\s*(?:m[aá]s|menos|de m[aá]s|extra|por encima|por debajo)\b/i.test(fr.slice(mv0.index + mv0[0].length)) ? mv0 : null;
       if (mv && j.valor && !casi(aEuros(mv[1], mv[2]), j.valor) && !(cl && casi(aEuros(mv[1], mv[2]), cl.clausula))) nota(`${N(j)}: vale ${eur(j.valor)} (no ${mv[1]} ${mv[2]}).`);
     }
-    const ms = saldo != null && !/\b(si|quedar|tendr|tras|despues|acept|vend)\w*/.test(k) ? fr.match(reSaldo) : null;
+    // («te deja con 3,90 M de saldo», «tu saldo pasa de… a…»: lo que le quedaría, no su saldo de ahora; cuarta pasada, 17 nov)
+    const ms = saldo != null && !/\b(si|quedar|tendr|tras|despues|acept|vend|dej|pasa|pasar|baj|subir|cost|seria|cambi)\w*/.test(k) ? fr.match(reSaldo) : null;
     if (ms) { const v = aEuros(ms[1] || ms[3], ms[2] || ms[4]); if (!casi(v, saldo)) nota(`Tu saldo ahora es de ${eur(saldo)} (no de ${ms[1] || ms[3]} ${ms[2] || ms[4]}).`); }
   }
 
@@ -2987,7 +2988,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
 export function plantillasRivalesTxt(D, M, enteros = new Set()) {
   const saldo = num(D.dinero);
   const enVenta = new Map((M.mercado || []).filter((m) => m.tipo === 'manager').map((m) => [String(m.pid), m]));
-  const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula y cuándo se puede pagar, con mi saldo de ahora de ${eur(saldo)} | si lo tiene en venta). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
+  const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula, cuándo se puede pagar y si le llega con su saldo de ahora, ${eur(saldo)} | si lo tiene en venta). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
   const rivales = [...(M.rivales || [])].sort((a, b) => (enteros.has(String(b.e.teamId)) ? 1 : 0) - (enteros.has(String(a.e.teamId)) ? 1 : 0) || (a.e.pos || 99) - (b.e.pos || 99));
   for (const r of rivales) {
     const fichas = (r.fichas || []).filter((x) => x && x.j && x.j.pos !== 5).sort((a, b) => (a.j.pos - b.j.pos) || (b.j.valor - a.j.valor));
@@ -2997,7 +2998,7 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
     for (const x of fichas) {
       const j = x.j, t = x.tend || (M.tend ? M.tend(j.id) : null) || {};
       const T = det && M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
-      const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'me llega' : `me faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
+      const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'le llega' : `le faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
       const v = enVenta.get(String(j.id));
       L.push(`  - ${[
         POS[j.pos] || '?', j.nombre, j.equipo || '?', eur(j.valor),
@@ -3014,6 +3015,25 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
   return L.length > 1 ? L.join('\n') : '';
 }
 /** los rivales de los que habla: por el nombre de su equipo o de su mánager (enteros o la palabra larga que los distingue) */
+/**
+ * (cuarta pasada con Haiku, 17 nov) sus cláusulas, de la más fácil de pagar a la más cara, comparadas con lo que se paga en
+ * la liga por un clausulazo. A «¿quién me puede clausular?» o «¿blindo a alguien?» contestaba a veces al revés (una
+ * cláusula un 87 % por encima de su valor, «la más tentadora»; una un 11 % por encima, «muy por encima de lo que se paga»).
+ * Solo el precio: quién puede pagarla va (o no, si está cerrado) en sus líneas de siempre.
+ */
+export function misClausulasTxt(D, M) {
+  const cz = M.clausulazos && M.clausulazos.n >= 3 ? M.clausulazos : null;
+  const med = cz ? cz.med : 0.2, p90 = cz ? cz.p90 : 0.3;
+  const l = (M.mias || []).filter((x) => x && x.j && x.j.pos !== 5 && x.clausula && x.j.valor).map((x) => ({ x, r: x.clausula / x.j.valor - 1 })).sort((a, b) => a.r - b.r);
+  if (!l.length) return '';
+  const L = [`\nSUS CLÁUSULAS, DE LA MÁS FÁCIL DE PAGAR A LA MÁS CARA (lo que pide cada una sobre su valor, frente a lo que se paga en esta liga por un clausulazo: ${cz ? `de mediana ${pct(med * 100)}, el 90 % hasta ${pct(p90 * 100)}` : 'sin clausulazos suficientes en la liga: se toma +20 % de referencia'}; cuanto más cerca de su valor, más peligro):`];
+  for (const { x, r } of l) {
+    const zona = r <= 0.03 ? 'A SU VALOR: la presa más fácil' : r <= med ? 'POR DEBAJO de lo que se suele pagar aquí: tentadora si a alguien le llega el dinero' : r <= p90 + 0.05 ? 'en la zona de lo que se paga aquí: puede pasar' : 'muy por encima de lo que se paga aquí: no la paga nadie';
+    const cuando = x.abierta ? 'ABIERTA' : x.veda ? `a salvo por el cierre hasta que empiece la jornada ${x.veda.n}` : `${x.escudo ? 'blindada' : 'protegida'} hasta ${cuandoF(x.protegidoHasta)}`;
+    L.push(`- ${x.j.nombre}: ${eur(x.clausula)} (${r <= 0.03 ? 'a su valor' : pct(r * 100, 0)}) | ${cuando} | ${zona}${M.enVenta && M.enVenta.has(x.pid) ? ' | lo tiene en venta' : ''}`);
+  }
+  return L.join('\n');
+}
 export function rivalesEn(texto, D, M) {
   const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
   const out = new Set();
@@ -3056,8 +3076,9 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
   let enteros = rivalesEn(pregunta, D, M);
   if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);
-  let rivales = '';
+  let rivales = '', mias = '';
   try { rivales = plantillasRivalesTxt(D, M, enteros); } catch (e) { rivales = ''; }
+  try { mias = misClausulasTxt(D, M); } catch (e) { mias = ''; }
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
   let plan = '';
   if (p) {
@@ -3077,7 +3098,7 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // también el plan: aquí solo se aclara la frase para el chat
   const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta')
     .replace(/EN EL MERCADO PUEDO GASTAR COMO MUCHO ([^ (]+ (?:M|mil|€))(?: \(ya tengo ([^)]+?) comprometidos en pujas\))?/, (_, max, ya) => `EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${max} COMO MUCHO${ya ? ` (ya descontados los ${ya} que tengo comprometidos en pujas: una puja nueva de hasta ${max} cabe)` : ''}`);
-  return `${CABECERA_DATOS}\n${ctx}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
+  return `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
 export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });
@@ -3128,7 +3149,7 @@ async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ = '' } = {
   });
   if (alPaso) alPaso('La IA está leyendo tu liga…');
   // (16 nov) si sales de la app con la pregunta en marcha, Android avisa «Pensando tu respuesta» y, al contestar, «Tu
-  // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.7.14)
+  // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.8)
   if (enApp && cuerpo.rid) { try { nativo.preguntaEnMarcha(cuerpo.rid, await token(), (seudo && seudo.vuelta) || {}, textoQ); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
   let j;
   try {
