@@ -1245,6 +1245,18 @@ async function hola(req, env, c, ruta) {
 // Si ya hay una ejecución en marcha, la nueva espera (concurrency bot-x en bot.yml): no se pisan.
 const BOT_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/bot.yml/dispatches';
 
+// El portal de datos de la web (16 nov): el cron de «Portal web» (portal-web.yml) tampoco ha disparado nunca, así que este
+// Worker lo lanza igual, con el mismo token: a las 00:47 (después del mercado de las 00:15) y a las 07:13 de Madrid. Los dos
+// crons van en UTC y cubren verano e invierno; `tocaPortal` descarta la franja que no toca. Si ya hay una ejecución
+// (concurrency portal-web), la nueva espera. portal-web.yml sigue con su schedule por si algún día funciona: entre las dos
+// no se pisan.
+const PORTAL_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/portal-web.yml/dispatches';
+export const CRON_PORTAL = ['47 22,23 * * *', '13 5,6 * * *'];
+export function tocaPortal(t) {
+  const [h, m] = HM.format(new Date(t)).split(':').map(Number);
+  return (h === 0 && m === 47) || (h === 7 && m === 13);
+}
+
 // El mercado de cada noche (3 nov, Carlos: «a las 0:16/0:17»): LaLiga actualiza los valores hacia las 00:15 de Madrid y Analítica
 // y FútbolFantasy lo publican a las 00:16-00:17. Con el cron de 5 min salía a las 00:20-00:25, así que de 00:13 a 00:30 se lanza
 // cada minuto solo el mercado (el bot ya mira si ha llegado el valor del día y si ya se publicó). En los minutos múltiplos de 5
@@ -1256,10 +1268,10 @@ export function tocaMercado(t) {
   return h === 0 && m >= 13 && m <= 30 && m % 5 !== 0;
 }
 
-export async function lanzarBot(env, pedir = fetch, inputs = null) {
+export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_FLUJO) {
   const token = env.BOT_DISPATCH_TOKEN;
   if (!token) return { ok: false, motivo: 'sin BOT_DISPATCH_TOKEN' };
-  const r = await pedir(BOT_FLUJO, {
+  const r = await pedir(flujo, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -1273,7 +1285,7 @@ export async function lanzarBot(env, pedir = fetch, inputs = null) {
   if (r.status === 204) return { ok: true };
   // el error de GitHub sin el token (no lo lleva, pero por si acaso se corta y se limpia)
   const texto = (await r.text().catch(() => '')).replaceAll(token, '***').slice(0, 300);
-  throw new Error(`GitHub contestó ${r.status} al lanzar «Bot X»: ${texto}`);
+  throw new Error(`GitHub contestó ${r.status} al lanzar «${flujo === PORTAL_FLUJO ? 'Portal web' : 'Bot X'}»: ${texto}`);
 }
 
 // qué freno por IP lleva cada ruta (FRENOS)
@@ -1389,6 +1401,11 @@ const FRENO_RUTA = {
 
 export default {
   async scheduled(evento, env, ctx) {
+    if (CRON_PORTAL.includes(evento.cron)) {
+      if (!tocaPortal(evento.scheduledTime)) return;
+      ctx.waitUntil(lanzarBot(env, fetch, null, PORTAL_FLUJO).then((r) => { if (!r.ok) console.log('Portal web no lanzado:', r.motivo); }));
+      return;
+    }
     let inputs = null;
     if (evento.cron === CRON_MERCADO) {
       if (!tocaMercado(evento.scheduledTime)) return;

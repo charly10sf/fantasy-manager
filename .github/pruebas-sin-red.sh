@@ -13,6 +13,7 @@ correr() {
   if timeout 180 node "$1" > "$log" 2>&1; then echo "BIEN $1"; else echo "MAL  $1"; tail -n 25 "$log" | sed 's/^/     /'; fallos=$((fallos + 1)); fi
 }
 correr worker/prueba/datos.mjs
+correr worker/prueba/portal.mjs
 for f in bot/prueba/*-ejemplo.mjs; do
   case "$f" in */tarjetas-ejemplo.mjs) continue ;; esac
   correr "$f"
