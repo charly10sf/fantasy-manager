@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
    "AS|https://as.com/futbol/primera/gordon-no-consigue-cerrar-el-debate-f202611-n/": 1794559136000,
    "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/": 1794559518000,
    "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000,
@@ -7494,13 +7493,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3045,
+   "ok": 3046,
    "fallos": 0,
-   "ejecuciones": 2438,
+   "ejecuciones": 2439,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T07:36:12.981Z"
+   "ultima": "2026-11-16T07:41:12.591Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7516,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:36:18.037Z"
+   "ultimaBien": "2026-11-16T07:41:17.437Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:36:18.037Z"
+   "ultimaBien": "2026-11-16T07:41:17.437Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:36:18.037Z"
+   "ultimaBien": "2026-11-16T07:41:17.437Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7532,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:36:18.037Z"
+   "ultimaBien": "2026-11-16T07:41:17.437Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:36:18.037Z"
+   "ultimaBien": "2026-11-16T07:41:17.437Z"
   }
  },
  "avisos": [
