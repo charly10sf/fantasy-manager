@@ -1087,6 +1087,38 @@ export function problemaDe(x, minPlay) {
   if (atras && x.ad) return { tipo: 'web', corto: 'Web sin poner', largo: 'sin la web nueva' };
   return null;
 }
+/** (16 nov, Carlos: «hay uno que pone que no le carga, ¿qué significa?») por qué le pasa y qué tiene que hacer, en
+    palabras de cualquiera. `fc` es el motivo que manda la app desde la 0.7.13t; `ad`, por qué no se le pone la web nueva */
+const POR_CARGA = {
+  red: ['Se le cortó la conexión al cargar su liga (la red del móvil, o la operadora cortando en día de partido).', 'Suele arreglarse solo. Si le sigue, que pruebe con wifi o con otra red.'],
+  lento: ['Su conexión iba tan lenta que la liga no llegó a cargar.', 'Que lo intente con mejor cobertura o con wifi.'],
+  laliga: ['LaLiga no le contestó bien al pedir su liga: es un fallo de LaLiga, no de la app.', 'Suele volver solo en un rato. Si dura más de un día, que mande un aviso desde la app.'],
+  sinLigas: ['Su cuenta de LaLiga no tiene ninguna liga de LaLiga Fantasy.', 'Que entre con la cuenta en la que tiene su liga, o que se una a una.'],
+  vacia: ['LaLiga le da su liga vacía (sin equipos o sin datos).', 'Si es una liga recién creada, es normal hasta que empiece. Si no, que mande un aviso desde la app.'],
+  cambio: ['LaLiga ha cambiado algo en lo que devuelve y la app no lo entiende.', 'Es de la app: hay que mirarlo y sacar un arreglo.'],
+  otro: ['Algo de la app ha fallado al cargar su liga.', 'Es de la app: que mande un aviso desde Ajustes con el diagnóstico para verlo.'],
+};
+function queLePasa(p, x, minPlay) {
+  if (!p) return null;
+  if (p.tipo === 'github') return ['Tiene la app instalada desde fuera de Google Play y ya solo ve el aviso para pasarse.', 'Que la desinstale y se baje la de Google Play.'];
+  if (p.tipo === 'play') return [`Tiene la app ${x.app} de Google Play y la web nueva solo llega desde la ${minPlay}: se ha quedado en la ${webDe(x)}.`, 'Que actualice en Google Play: Play Store → Fantasy Manager → Actualizar.'];
+  if (p.tipo === 'web') {
+    const ad = String(x.ad || '');
+    const por = /firma/.test(ad) ? 'la web nueva le llega con la firma mal (puede ser una red que la cambia por el camino)'
+      : /huella|cuadra/.test(ad) ? 'la web nueva le llega a medias o corrupta'
+      : /sitio|grande/.test(ad) ? 'no le queda sitio en el móvil para guardarla'
+      : /arrancaba/.test(ad) ? 'la web nueva no le arrancaba y su móvil volvió a la de antes'
+      : `su móvil dice «${ad}»`;
+    return [`No se le pone la web nueva: ${por}.`, /sitio/.test(ad) ? 'Que libere espacio en el móvil y abra la app otra vez.' : 'Que cierre la app del todo y la abra con wifi. Si sigue, que la actualice o reinstale desde Google Play.'];
+  }
+  if (p.tipo === 'carga') {
+    const m = String(x.fc || ''), tipo = m.split(/[ :]/)[0];
+    if (!m) return ['La última vez que abrió la app no le cargó la liga. Su versión no manda el motivo (desde la 0.7.13t, sí).', 'Si vuelve a pasarle, aquí saldrá por qué. Mientras, que mande un aviso desde la app.'];
+    const [por, hacer] = POR_CARGA[tipo] || POR_CARGA.otro;
+    return [`${por} (${m})`, hacer];
+  }
+  return null;
+}
 /** barras en horizontal: [[etiqueta, valor, texto del valor?]] */
 const barrasH = (filas, { max = null, clase = '' } = {}) => {
   const tope = max || Math.max(1, ...filas.map((f) => f[1]));
@@ -1153,6 +1185,27 @@ function resumenQ(Q, lista, reg, ahora) {
     const total = tiempo.reduce((t, f) => t + f[1], 0);
     h += tarjetaQ('Tiempo hoy', barrasH(tiempo.slice(0, 8).map(([n, v]) => [n, v, corto(v)])), `Entre todos, <b>${corto(total)}</b>`);
   }
+  // (16 nov, Carlos: «revisa el tema de las versiones de forma extensa») de los que han abierto la app en 30 días: cuántos
+  // tienen la versión de ahora, en qué versión se han quedado los demás y por qué
+  const v30 = lista.filter((x) => x.ultima >= hace(30) && webDe(x));
+  if (v30.length) {
+    const minP = playMinimo(lista);
+    const alDia = v30.filter((x) => cmpVer(webDe(x), VERSION) >= 0).length;
+    const porV = {};
+    for (const x of v30) if (cmpVer(webDe(x), VERSION) < 0) porV[webDe(x)] = (porV[webDe(x)] || 0) + 1;
+    const filasV = [[`${VERSION} (la de ahora)`, alDia], ...Object.entries(porV).sort((a, b) => cmpVer(b[0], a[0])).slice(0, 7)];
+    const motivos = {};
+    for (const x of v30) { const p = problemaDe(x, minP); if (p) motivos[p.corto] = (motivos[p.corto] || 0) + 1; }
+    const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, minP)).length;
+    const playC = {};
+    for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
+    const pie = [
+      Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
+      sinMotivo > 0 ? `Atrasados sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola la próxima vez que la abran)` : '',
+      Object.keys(playC).length ? `App de Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${minP && Number(c) < minP ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${minP ? `. La web nueva llega desde la ${minP}` : ''}` : '',
+    ].filter(Boolean).join('<br>');
+    h += tarjetaQ(`Versiones · ${alDia} de ${v30.length} al día`, barrasH(filasV), pie);
+  }
   // qué hacen esta semana
   const lunes = (() => { const t = new Date(`${diaDe(ahora)}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); })();
   const semEv = {};
@@ -1216,7 +1269,7 @@ function filaQuien(nombre, equipo, x, ahora, minPlay) {
     v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
-  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${corto(x.segHoy)}` : ''}</span><span class="q-chips">${chips}</span></div></div>`;
+  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${corto(x.segHoy)}` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 
 /** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */

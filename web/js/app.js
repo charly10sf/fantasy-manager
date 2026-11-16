@@ -1249,8 +1249,11 @@ async function cargar0({ silencio = false } = {}) {
     if (!e.cancelada) console.error(e);
     if (e.sesion) { S.D = null; pantallaEntrar(e.message); return; }
     // ha entrado con su cuenta pero no le carga la liga: que el dueño lo vea en «Quién usa la app»
-    if (!enDemo() && haySesion() && !document.hidden) saludar({ v: `${VERSION} !`, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: '', equipo: '' });
     const x = { ...explicarError(e), detalle: e.message || String(e), t: Date.now() };
+    // (16 nov, Carlos: «hay uno que pone que no le carga, ¿por qué?») con el motivo: el tipo del error y el principio del
+    // mensaje, sin números largos (ids de liga o de cuenta)
+    const fc = `${x.tipo || 'otro'}${e.estado ? ` ${e.estado}` : ''}: ${String(x.detalle).replace(/\d{5,}/g, '…')}`.slice(0, 60);
+    if (!enDemo() && haySesion() && !document.hidden) { if (LS.get('fc-dicho', '') !== fc) { LS.set('hola-t', 0); LS.set('fc-dicho', fc); } saludar({ v: `${VERSION} !`, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: '', equipo: '', fc }); }
     S.errorCarga = x;
     // (las aperturas fallidas, aparte si hay jornada en juego: es cuando las operadoras cortan Cloudflare)
     if (!enDemo() && haySesion()) contar(S.M && S.M.enJuego ? 'F' : 'f');
@@ -1279,6 +1282,8 @@ function saludarSiToca() {
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
   if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
+  // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
+  if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
   return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
 }

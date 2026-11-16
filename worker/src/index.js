@@ -1077,6 +1077,8 @@ async function hola(req, env, c, ruta) {
       foto: u.foto || '',
       // por qué no se le pone la web nueva (el último fallo de AlDia en su móvil, desde la 0.7.6)
       ...(b.ad ? { ad: corta(b.ad, 90) } : {}),
+      // por qué no le carga la liga (16 nov): el tipo de error y el principio del mensaje, solo con la versión acabada en « !»
+      ...(b.fc && / !$/.test(String(b.v || '')) ? { fc: corta(b.fc, 60) } : {}),
       // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
       ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
     };
@@ -1085,7 +1087,7 @@ async function hola(req, env, c, ruta) {
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
     // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
     // total, C1. Con más, el cambio entra en la escritura de cada hora)
-    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || ''));
+    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
     // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
     const bvNueva = !!nuevo.bv && !(m && m.bv);
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;

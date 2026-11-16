@@ -1382,6 +1382,8 @@ body.en-tour { overflow: hidden; }
 .q-tabs { margin-top: 4px; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
 .q-tabs button { padding: 8px 12px; white-space: nowrap; }
 .q-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.qf-c .qf-por { color: var(--texto2); line-height: 1.35; margin-top: 2px; }
+.qf-c .qf-por b { color: var(--texto); font-weight: 600; font-size: inherit; }
 .q-chip { font-style: normal; font-size: var(--t-mini); font-weight: 600; color: var(--texto2); padding: 2px 7px; border-radius: 999px; background: var(--plano2); }
 .q-chip.viejo { color: var(--oro); background: var(--oro-s); }
 .q-chip.mal { color: var(--texto); background: var(--rojo-s); box-shadow: inset 0 0 0 1px var(--rojo-l); }

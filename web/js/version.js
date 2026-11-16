@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13s';
+export const VERSION = '0.7.13t';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13s';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13t', f: '2026-11-16', h: '10:34', t: 'Quién usa la app: el porqué de cada problema',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'Por qué no le carga a alguien', x: 'En Quién usa la app, debajo de cada cuenta con problema sale qué le pasa (no le carga la liga, tiene la app vieja, no se le pone la web nueva) y qué tiene que hacer. Si a alguien no le carga, ahora se ve el motivo: la conexión, LaLiga o la propia app.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Las versiones de un vistazo', x: 'En el resumen, una tarjeta con cuántos tienen la versión de ahora, en cuál se han quedado los demás y por qué, y qué versión de la app de Google Play tiene cada uno.' },
+    ],
+  },
   {
     v: '0.7.13s', f: '2026-11-16', h: '10:02', t: 'Lo que sube, también en euros',
     cosas: [
