@@ -658,6 +658,9 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const { LS, diaDe } = await import('/js/util.js');
     const S = window.S, M = { cierreMercado: S.M.cierreMercado };
     const hs = H.horasPlan(M).map((x) => x.txt);
+    // (la hora del móvil: en Madrid, 00:25 y 12:25; en la Action, que va en UTC, 23:25 y 11:25)
+    const hm = (t) => { const d = new Date(t); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+    const espera = M.cierreMercado ? [hm(M.cierreMercado + 10 * 60e3), hm(M.cierreMercado + 10 * 60e3 + 12 * 3600e3)] : ['00:25', '12:25'];
     // un turno de hoy que ya ha pasado: las horas elegidas, una hace 20 minutos
     const d = new Date(Date.now() - 20 * 60e3), hh = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     const mismoDia = diaDe(d.getTime()) === diaDe();
@@ -670,10 +673,10 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const sinCupo = ia.planViejoAuto(S.M, false);
     H.guardarCfgHoras({ h1: '', h2: '' });
     localStorage.removeItem('fm-planes-cupo');
-    return { hs, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
+    return { hs, espera, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
   });
-  const def = JSON.stringify(r.hs) === '["00:25","12:25"]' || /^00:[1-5]\d$/.test(r.hs[0]);
-  if (!def) mal(`planes a su hora: las horas por defecto no son las del mercado: ${JSON.stringify(r.hs)}`);
+  const def = JSON.stringify(r.hs) === JSON.stringify(r.espera);
+  if (!def) mal(`planes a su hora: las horas por defecto no son las del mercado: ${JSON.stringify(r.hs)} y debían ser ${JSON.stringify(r.espera)}`);
   else if (r.mismoDia && (!r.pend || r.cubierto)) mal(`planes a su hora: el turno pasado sin plan: ${JSON.stringify(r)}`);
   else if (r.mismoDia && (!r.conCupo || r.sinCupo)) mal(`planes a su hora: con y sin planes de hoy: ${JSON.stringify(r)}`);
   else bien(`planes a su hora: ${r.hs.join(' y ')} por defecto; uno pasado sin plan sale solo y no si no quedan de hoy`);
