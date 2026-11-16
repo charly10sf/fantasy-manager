@@ -2143,7 +2143,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/futbolgallego/2026/11/16/medio-siglo-banquillos/0003_202611V16C8994.htm": 1794801600000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-deja-agujero-sevilla_0_2008508110.html": 1794807040000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251358/jauregizar-quiere-recuperar-lugar.html": 1794810600000,
-   "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000
+   "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000,
+   "SPORT|136484016": 1794813943000
   },
   "hechos": [
    {
@@ -2319,7 +2320,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3237,17 +3238,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 434091,
-  "salida": 16478,
+  "entrada": 436126,
+  "salida": 16570,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.987625,
+  "dolares": 0.987875,
   "reservado": 0
  },
  "recientes": {
@@ -7494,13 +7495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3056,
+   "ok": 3057,
    "fallos": 0,
-   "ejecuciones": 2449,
+   "ejecuciones": 2450,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T08:31:12.105Z"
+   "ultima": "2026-11-16T08:36:14.526Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:31:16.720Z"
+   "ultimaBien": "2026-11-16T08:36:19.659Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:31:16.720Z"
+   "ultimaBien": "2026-11-16T08:36:19.659Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:31:16.720Z"
+   "ultimaBien": "2026-11-16T08:36:19.659Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:31:16.720Z"
+   "ultimaBien": "2026-11-16T08:36:19.659Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:31:16.720Z"
+   "ultimaBien": "2026-11-16T08:36:19.659Z"
   }
  },
  "avisos": [
