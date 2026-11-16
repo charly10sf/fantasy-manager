@@ -2018,7 +2018,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/13/6af6e303fdddff1f1a8b45b1.html": 1794601637000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250766/siempre-les-quedara-lamine.html": 1794636000000,
@@ -7702,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3179,
+   "ok": 3180,
    "fallos": 0,
-   "ejecuciones": 2572,
+   "ejecuciones": 2573,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:41:19.551Z"
+   "ultima": "2026-11-16T18:46:14.666Z"
   }
  },
  "ptsDirecto": {},
@@ -7725,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:41:26.310Z"
+   "ultimaBien": "2026-11-16T18:46:19.456Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:41:26.310Z"
+   "ultimaBien": "2026-11-16T18:46:19.456Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:41:26.310Z"
+   "ultimaBien": "2026-11-16T18:46:19.456Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7741,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:41:26.310Z"
+   "ultimaBien": "2026-11-16T18:46:19.456Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:41:26.310Z"
+   "ultimaBien": "2026-11-16T18:46:19.456Z"
   }
  },
  "avisos": [
