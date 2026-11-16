@@ -524,6 +524,11 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   r = await preg({ rid: 'preguntauno01' }, { tk: 'w'.repeat(30) });
   const r2 = await preg({ rid: 'preguntauno01' }, { tk: 'w'.repeat(30) });
   ok(r.s === 200 && r2.s === 200 && r2.j.texto === r.j.texto && aClaude.length === n0 + 1 && r2.j.cupo.usados === 1, `con el mismo rid, la respuesta guardada (${aClaude.length - n0} llamadas, usados ${r2.j.cupo && r2.j.cupo.usados})`);
+  // lo que pregunta Android (Recoger.java) con la app cerrada: el principio de la respuesta, sin el bloque de notas
+  const rr = await pide({ m: 'GET', ruta: '/pregunta/res?rid=preguntauno01', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
+  ok(rr.s === 200 && rr.j.fin && rr.j.fin.resumen === 'Diomande: su cláusula se abre mañana.', `/pregunta/res: el resumen para el aviso («${rr.j && rr.j.fin && rr.j.fin.resumen}»)`);
+  const rn = await pide({ m: 'GET', ruta: '/pregunta/res?rid=noexiste0001', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
+  ok(rn.s === 200 && rn.j.marcha === false && !rn.j.fin, '/pregunta/res de una que no existe: ni en marcha ni hecha');
   // el cupo: 5 gratis; con anuncio, 3 más
   let ult = null;
   for (let i = 0; i < 6; i++) ult = await preg({}, { tk: 'v'.repeat(30) });

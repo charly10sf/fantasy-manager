@@ -464,7 +464,8 @@ public class Principal extends Activity {
         aLaVista = false;
         abierta = false;
         // (15 nov) con el plan de la IA a medias y sin el servicio en primer plano (Google Play): el aviso y la recogida
-        if (Puente.ocupada && Recoger.rid != null && !Canal.TRABAJO) Recoger.empezar(getApplicationContext());
+        // (16 nov) también con una pregunta a la IA a medias
+        if (Puente.ocupada && (Recoger.rid != null || Recoger.ridP != null) && !Canal.TRABAJO) Recoger.empezar(getApplicationContext());
         web.onPause();
         CookieManager.getInstance().flush();
         super.onPause();

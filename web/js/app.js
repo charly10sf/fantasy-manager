@@ -2541,7 +2541,8 @@ async function enviarPregunta(texto, { extra = false } = {}) {
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
     }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra });
     if (!enDemo()) contar('q');
-    if (!nativo.aLaVista()) {
+    // (con la IA de la app y la parte Android de la 0.7.14, el aviso lo pone Android: ia.js, preguntaAcabada)
+    if (!nativo.aLaVista() && !(preguntasApp(enDemo()) && nativo.hayAvisoPregunta())) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
     }
@@ -2562,7 +2563,7 @@ async function enviarPregunta(texto, { extra = false } = {}) {
       // (16 nov) sin preguntas hoy con la IA de la app: el anuncio para 3 más (en la de Google Play); si no hay anuncio, lo dice
       else if (e.cupo && e.cupo.masConAnuncio && conAnuncios() && !extra) { S.anuncio = { para: 'pregunta', cupo: e.cupo, t }; setTimeout(() => hoja('anuncio', 'pregunta'), 0); }
       else S.errorChat = { t, n: fotos.length, msg: e.cupo ? `${e.message} ${e.cupo.masConAnuncio && !conAnuncios() ? 'En la app de Google Play puedes sacar más viendo un anuncio corto.' : `Mañana tienes otras ${e.cupo.gratis}.`}` : (e.message || 'No ha contestado'), cupo: !!e.cupo };
-      if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
+      if (!nativo.aLaVista() && !(preguntasApp(enDemo()) && nativo.hayAvisoPregunta())) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
     }
   } finally {
     if (S.chatCtl === ctl) S.chatCtl = null;
@@ -2584,7 +2585,7 @@ async function recogerPregunta() {
   if (S.vista === 'ia') pintar();
   try {
     const r = await reanudarPregunta(S.D, S.M, S.c, { alPaso: (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; } });
-    if (r && !nativo.aLaVista()) nativo.notificar('Tu director deportivo ha contestado', 'Entra para leer la respuesta', 'ia');
+    if (r && !nativo.aLaVista() && !nativo.hayAvisoPregunta()) nativo.notificar('Tu director deportivo ha contestado', 'Entra para leer la respuesta', 'ia');
   } catch (e) {
     // no se ha podido: la pregunta vuelve a la caja para mandarla otra vez
     quitarUltimaPregunta(p.t);

@@ -66,7 +66,7 @@
 
 import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
-import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT } from '../../web/js/chat-sistema.js';
+import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta } from '../../web/js/chat-sistema.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -983,6 +983,19 @@ export function mensajesChat(hist, pregunta, fotos) {
   poner('user', [...fs.map((d) => ({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: d } })), { type: 'text', text: q || (fs.length > 1 ? 'Mira estas capturas.' : 'Mira esta captura.') }]);
   return out;
 }
+/**
+ * Lo que se le manda a Claude de una pregunta ya leída (b): { sistema, mensajes } o null si no vale. Lo usa también la
+ * prueba con Haiku de verdad (.github/ia/chat-haiku.mjs), para preguntar exactamente lo mismo que el Worker.
+ */
+export function armarChat(b) {
+  if (!b || typeof b !== 'object' || !esDatosChat(b.datos)) return null;
+  const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
+  if (!mensajes) return null;
+  const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
+  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
+  // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
+  return { sistema: [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, { type: 'text', text: b.datos }], mensajes };
+}
 async function preguntaIA(req, env, c, ctx) {
   const P = await cfgPreguntas(env);
   if (!P.on) return json({ e: 'Las preguntas con la IA de la app están apagadas ahora.', servicio: true }, 503, c);
@@ -996,13 +1009,9 @@ async function preguntaIA(req, env, c, ctx) {
   if (txt.length > tope * 1.2) return json({ e: 'La pregunta es demasiado grande (prueba con menos fotos).' }, 413, c);
   let b = null;
   try { b = JSON.parse(txt); } catch (e) { b = null; }
-  if (!b || typeof b !== 'object' || !esDatosChat(b.datos)) return json({ e: 'Pregunta no válida' }, 400, c);
-  const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
-  if (!mensajes) return json({ e: 'Pregunta no válida' }, 400, c);
-  const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
-  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
-  // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
-  const sistema = [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, { type: 'text', text: b.datos }];
+  const armado = armarChat(b);
+  if (!armado) return json({ e: 'Pregunta no válida' }, 400, c);
+  const { sistema, mensajes } = armado;
   const rid = ridDe(b.rid);
   const previo = rid ? await resPlan(env, u.uid, 'leer', rid, null, 'preg') : {};
   if (previo.fin) return json(previo.fin, 200, c);
@@ -1030,7 +1039,7 @@ async function preguntaIA(req, env, c, ctx) {
         if (!texto) {
           if (!libre) await cupo(env, u.uid, 'devolver', P, 'preg').catch(() => {});
           fin = { e: 'La IA ha contestado vacío. Vuelve a preguntar (esta no cuenta).', estado: 502 };
-        } else fin = { texto, cupo: libre ? cupoLibreP(P) : cupoTxtP(P, y), tok: { entra: r.entra, sale: r.sale }, ms: Date.now() - t0, fin: r.fin };
+        } else fin = { texto, resumen: resumenRespuesta(texto), cupo: libre ? cupoLibreP(P) : cupoTxtP(P, y), tok: { entra: r.entra, sale: r.sale }, ms: Date.now() - t0, fin: r.fin };
         if (rid) await resPlan(env, u.uid, fin.texto ? 'poner' : 'borrar', rid, fin.texto ? fin : null, 'preg').catch(() => {});
       } catch (e) {
         if (!libre) await cupo(env, u.uid, 'devolver', P, 'preg').catch(() => {});
@@ -1564,6 +1573,13 @@ export default {
         if (!u) return json({ e: 'Sin sesión' }, 401, c);
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
         return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+      }
+      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.7.14): { fin: { resumen } } o { marcha }
+      if (url.pathname === '/pregunta/res' && req.method === 'GET') {
+        const u = await quienEs(req);
+        if (!u) return json({ e: 'Sin sesión' }, 401, c);
+        const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '', null, 'preg');
+        return json(x.fin ? { fin: x.fin.texto ? { resumen: x.fin.resumen || resumenRespuesta(x.fin.texto) } : { e: x.fin.e || '' } } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
       }
       if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);

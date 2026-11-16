@@ -903,6 +903,8 @@ export function seudonimos(D) {
     aviso: avisoAlias(porPuesto, ex),
     // (para el Worker, que arma el aviso él: /plan)
     porPuesto, ex: ex > 0,
+    // (16 nov) los alias a sus nombres («rival 2» → nombre), para el aviso de Android cuando contesta con la app fuera
+    vuelta,
     tapar: (t0) => {
       if (!todo || typeof t0 !== 'string') return t0;
       const t = t0.normalize('NFC'), d = doblar(t);
@@ -3095,17 +3097,18 @@ const guardarCupoP = (cu) => { if (cu && typeof cu === 'object') LS.set('preg-cu
 export const preguntaPendiente = () => { const p = LS.get('preg-rid', null); return p && p.dia === diaDe() && Date.now() - p.ts < 15 * 60e3 && /^[a-z0-9]{8,24}$/.test(p.rid || '') ? p : null; };
 const nuevoRid = () => (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
 /** al Worker: devuelve { texto (destapado), tok, cupo } o lanza un ErrorIA (cupo: sin preguntas; servicio: no está) */
-async function preguntaPorApp(cuerpo, seudo, { signal, alPaso } = {}) {
+async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, texto = '' } = {}) {
   const t0 = Date.now();
   const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
-  // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
+  // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s (Android
+  // congela la app y corta la conexión; el servidor la sigue y se recoge con el mismo id). En el navegador, cambiar de
+  // pestaña no corta nada: ahí no se da por cortada (antes se repetía la petición al volver a la pestaña)
   const una = () => new Promise((ok, ko) => {
     let hecho = false, reloj = null;
     const fin = () => { hecho = true; if (reloj) clearTimeout(reloj); window.removeEventListener('fm-vuelta', vuelta); document.removeEventListener('visibilitychange', vis); };
     const vuelta = () => { if (hecho || reloj) return; reloj = setTimeout(() => { if (hecho) return; fin(); ko(Object.assign(new Error('Sin conexión'), { estado: 0, detalle: 'la app ha vuelto de segundo plano' })); }, 3000); };
     const vis = () => { if (!document.hidden) vuelta(); };
-    window.addEventListener('fm-vuelta', vuelta);
-    document.addEventListener('visibilitychange', vis);
+    if (enApp) { window.addEventListener('fm-vuelta', vuelta); document.addEventListener('visibilitychange', vis); }
     pedirWorker('POST', '/pregunta', cuerpo, { tiempo: 90000, signal }).then((r) => { if (!hecho) { fin(); ok(r); } }, (e) => { if (!hecho) { fin(); ko(e); } });
   });
   const aLaVista = () => new Promise((ok) => {
@@ -3115,6 +3118,9 @@ async function preguntaPorApp(cuerpo, seudo, { signal, alPaso } = {}) {
     document.addEventListener('visibilitychange', ya);
   });
   if (alPaso) alPaso('La IA está leyendo tu liga…');
+  // (16 nov) si sales de la app con la pregunta en marcha, Android avisa «Pensando tu respuesta» y, al contestar, «Tu
+  // director deportivo ha contestado» (Recoger.java; desde la parte Android de la 0.7.14)
+  if (enApp && cuerpo.rid) { try { nativo.preguntaEnMarcha(cuerpo.rid, await token(), (seudo && seudo.vuelta) || {}, texto); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
   let j;
   try {
     for (let vez = 0; ; vez++) {
@@ -3186,7 +3192,7 @@ export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid 
 async function charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra = false, rid } = {}) {
   const seudo = seudonimos(D);
   const cuerpo = pedidoChat(pregunta, D, M, c, hist, fotos, { extra, rid }, seudo);
-  const r = await preguntaPorApp(cuerpo, seudo, { signal, alPaso });
+  const r = await preguntaPorApp(cuerpo, seudo, { signal, alPaso, texto: pregunta });
   return { texto: r.texto, fuentes: [], modelo: 'app', tok: r.tok, cupo: r.cupo };
 }
 
@@ -3203,6 +3209,11 @@ async function charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, sig
   const sd = seudo.n ? { ...seudo, aviso: '' } : seudo;
   return preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinWebsChat(sinModelos(separarNotas(t).texto))) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: sd });
 }
+
+/** el principio de una respuesta para el aviso del móvil: sin markdown ni la revisión de la app */
+export const resumenAviso = (t) => String(t || '').replace(/\n\n\*\*Revisado por la app:\*\*[\s\S]*$/, '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim().slice(0, 300);
+/** a Android: la pregunta ha acabado (el aviso, si la app no está a la vista) */
+const acabadaApp = (ok, t) => { if (enApp) nativo.preguntaAcabada(ok, ok ? resumenAviso(t) : String(t || '')); };
 
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false } = {}) {
   const hist = conversacion();
@@ -3223,12 +3234,18 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
     try {
       r = await charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra, rid });
       LS.del('preg-rid');
+      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist);
+      acabadaApp(true, fin.texto);
+      return fin;
     } catch (e) {
       // (un corte de conexión deja el id: al volver a preguntar lo mismo, o al abrir la app, se recoge sin contar otra vez)
       if (!e.corte) LS.del('preg-rid');
-      // el servicio no está y tienes tu clave: con ella
-      if (e.servicio && hayClave() && e.name !== 'AbortError') r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso);
-      else throw e;
+      // el servicio no está y tienes tu clave: con ella (el aviso de Android, al acabar esa)
+      if (!(e.servicio && hayClave() && e.name !== 'AbortError')) { acabadaApp(false, e.name === 'AbortError' ? '' : e.message); throw e; }
+      try { r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso); } catch (e2) { acabadaApp(false, e2.name === 'AbortError' ? '' : e2.message); throw e2; }
+      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist);
+      acabadaApp(true, fin.texto);
+      return fin;
     }
   } else r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso);
   return rematarRespuesta(r, pregunta, D, M, fotos, hist);
@@ -3247,8 +3264,11 @@ export async function reanudarPregunta(D, M, c, { signal, alPaso } = {}) {
   try {
     const r = await charlarApp(p.t, D, M, c, hist, [], { signal, alPaso, rid: p.rid });
     LS.del('preg-rid');
-    return rematarRespuesta(r, p.t, D, M, [], hist);
+    const fin = rematarRespuesta(r, p.t, D, M, [], hist);
+    acabadaApp(true, fin.texto);
+    return fin;
   } catch (e) {
+    acabadaApp(false, e.message);
     if (!e.corte) LS.del('preg-rid');
     throw e;
   }

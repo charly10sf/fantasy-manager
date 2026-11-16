@@ -430,6 +430,37 @@ public class Puente {
         Recoger.token = token == null || token.isEmpty() ? null : token;
     }
 
+    /**
+     * (16 nov) una pregunta a la IA de la app en marcha: su id, la sesión, la vuelta de los alias (JSON, «rival 2» →
+     * nombre) y lo que se ha preguntado, para avisar y saber cuándo contesta si sales de la app (Recoger)
+     */
+    @JavascriptInterface
+    public void preguntaEnMarcha(String rid, String token, String vuelta, String texto) {
+        Recoger.ridP = rid == null || rid.isEmpty() ? null : rid;
+        Recoger.tokenP = token == null || token.isEmpty() ? null : token;
+        Recoger.vueltaP = vuelta;
+        Recoger.textoP = texto;
+    }
+
+    /**
+     * la respuesta ha llegado a la web (o ha fallado): nada que recoger. Con la app fuera de la vista, el aviso de que ha
+     * contestado lo pone esta parte, con el principio de la respuesta (resumen) ya con los nombres
+     */
+    @JavascriptInterface
+    public void preguntaAcabada(boolean ok, String resumen) {
+        Recoger.ridP = null;
+        Recoger.tokenP = null;
+        Recoger.vueltaP = null;
+        Recoger.textoP = null;
+        try {
+            androidx.work.WorkManager.getInstance(ctx).cancelUniqueWork(Recoger.NOMBRE_P);
+        } catch (Exception e) {
+            // nada
+        }
+        if (act != null && act.aLaVista) { Recoger.parar(ctx); Recoger.quitarListo(ctx); }
+        else Recoger.contestado(ctx, resumen, ok);
+    }
+
     /** el plan ya ha llegado (o ha fallado): nada que recoger */
     @JavascriptInterface
     public void planAcabado() {

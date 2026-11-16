@@ -279,6 +279,11 @@ export const nativo = {
   // (15 nov) el plan con la IA en marcha (su id y la sesión): si sales de la app, Android avisa y lo recoge (Recoger.java)
   planEnMarcha: (rid, tk) => llamar('planEnMarcha', String(rid || ''), String(tk || '')),
   planAcabado: () => llamar('planAcabado'),
+  // (16 nov) lo mismo con una pregunta a la IA de la app (desde la parte Android de la 0.7.14; antes no hacen nada):
+  // vuelta, los alias de los rivales a sus nombres para el aviso; al acabar, con la app fuera, el aviso lo pone Android
+  hayAvisoPregunta: () => !!(N && typeof N.preguntaAcabada === 'function'),
+  preguntaEnMarcha: (rid, tk, vuelta, texto) => llamar('preguntaEnMarcha', String(rid || ''), String(tk || ''), JSON.stringify(vuelta || {}), String(texto || '')),
+  preguntaAcabada: (ok, resumen) => llamar('preguntaAcabada', !!ok, String(resumen || '')),
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
   fondoTerminado: () => llamar('fondoTerminado'),

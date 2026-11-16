@@ -108,3 +108,6 @@ export function sinCodigos(t) {
     .replace(new RegExp(`\\s+${REF}\\b`, 'g'), '')
     .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ');
 }
+
+/** el principio de una respuesta, para el aviso del móvil con la app cerrada (sin notas, sin markdown; con los alias) */
+export const resumenRespuesta = (t) => separarNotas(t).texto.replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim().slice(0, 300);
