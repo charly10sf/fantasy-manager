@@ -2011,7 +2011,6 @@
  ],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rajada-pique-federacion-no-haber-sacado-dos-semanas-sanciones-tenerife-andorra-no-constancia-ninguna-owono-jugar-manana-obviamente-no-viajar-20261113_3475149.html": 1794588819000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000,
@@ -3340,7 +3339,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "Europa Press|https://www.europapress.es/madrid/noticia-sindicatos-educativos-muestran-satisfechos-reunion-consejeria-mantienen-huelga-indefinida-20261113181028.html": 1794589828000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/duelos-aplazados-fallecimiento-jesus-miguel-fecha-horario-20261113_3475158.html": 1794590104000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602522000,
@@ -7668,13 +7666,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3148,
+   "ok": 3149,
    "fallos": 0,
-   "ejecuciones": 2541,
+   "ejecuciones": 2542,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:11:11.905Z"
+   "ultima": "2026-11-16T16:16:12.633Z"
   }
  },
  "ptsDirecto": {},
@@ -7691,15 +7689,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:11:18.104Z"
+   "ultimaBien": "2026-11-16T16:16:18.114Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:11:18.104Z"
+   "ultimaBien": "2026-11-16T16:16:18.114Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:11:18.104Z"
+   "ultimaBien": "2026-11-16T16:16:18.114Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7707,11 +7705,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:11:18.104Z"
+   "ultimaBien": "2026-11-16T16:16:18.114Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:11:18.104Z"
+   "ultimaBien": "2026-11-16T16:16:18.114Z"
   }
  },
  "avisos": [
