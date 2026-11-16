@@ -134,7 +134,7 @@ public class Principal extends Activity {
                 AlDia.cargaT = System.currentTimeMillis();
                 // cada página empieza sin anuncios (al recargar, o al volver a la entrada): hasta que la web nueva diga
                 // que su liga está cargada, nada de anuncios encima de la carga
-                Anuncios.zona(false, null);
+                Anuncios.zona(false, null, false);
             }
 
             @Override

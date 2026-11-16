@@ -496,10 +496,13 @@ public class Puente {
         return Anuncios.HAY;
     }
 
-    /** (0.8) si la web tiene ya su liga cargada (hasta entonces, ningún anuncio) y el bloque del intersticial de limites.json */
+    /**
+     * (0.8) si la web tiene ya su liga cargada (hasta entonces, ningún anuncio), el bloque del intersticial de limites.json
+     * y si a esta cuenta le tocan intersticiales (al dueño y a los de su liga, no: ni se cargan)
+     */
     @JavascriptInterface
-    public void zonaAnuncios(boolean si, String bloque) {
-        if (act != null) Anuncios.zona(si, bloque);
+    public void zonaAnuncios(boolean si, String bloque, boolean inter) {
+        if (act != null) Anuncios.zona(si, bloque, inter);
     }
 
     /** (0.8) un intersticial en una pausa natural (lo decide la web); contesta con intersticialVisto(visto, motivo) */
