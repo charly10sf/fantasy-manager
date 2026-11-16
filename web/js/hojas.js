@@ -1256,7 +1256,23 @@ function cuentasQ(S, lista, ahora, minPlay) {
     if (usan.length) h += `<div class="quien-l">${usan.map((f) => filaQuien(f.nombre, f.equipo, f.x, ahora, minPlay)).join('')}</div>`;
     if (no.length) h += `<p class="q-no">Sin la app: ${no.map((f) => esc(f.nombre)).join(', ')}</p>`;
   }
-  if (fuera.length) h += `<div class="grupo"><span>${tabla.length ? 'Otras ligas' : 'Cuentas'} · ${fuera.length}</span></div><div class="quien-l">${fuera.map((x) => filaQuien(x.nombre || 'Sin nombre', x.equipo, x, ahora, minPlay)).join('')}</div>`;
+  if (fuera.length) {
+    // (0.7.13za, Carlos 16 nov: «¿de las que han entrado, hay alguna de la misma liga?») las de fuera, agrupadas por la liga que
+    // manda cada cuenta: las que comparten liga, juntas y primero; después, las que van solas en la suya; y al final, las que
+    // aún no han dicho la suya (la app no les cargó la liga). Si el equipo se llama igual que el mánager, no se repite.
+    const porLiga = new Map();
+    for (const x of fuera) { const k = String(x.liga || ''); if (!porLiga.has(k)) porLiga.set(k, []); porLiga.get(k).push(x); }
+    const juntas = [...porLiga].filter(([k, l]) => k && l.length > 1).sort((a, b) => b[1].length - a[1].length || b[1][0].ultima - a[1][0].ultima);
+    const solas = [...porLiga].filter(([k, l]) => k && l.length === 1).map(([, l]) => l[0]);
+    const sinLiga = porLiga.get('') || [];
+    const nLigas = juntas.length + solas.length;
+    const fila = (x) => filaQuien(x.nombre || 'Sin nombre', x.equipo && norm(x.equipo) !== norm(x.nombre || '') ? x.equipo : '', x, ahora, minPlay);
+    h += `<div class="grupo"><span>${tabla.length ? 'Otras ligas' : 'Cuentas'} · ${fuera.length}${nLigas ? ` · ${nLigas} liga${nLigas > 1 ? 's' : ''}${sinLiga.length ? ` y ${sinLiga.length} sin liga` : ''}` : ''}</span></div>`;
+    h += `<p class="q-no">${juntas.length ? `${juntas.length} liga${juntas.length > 1 ? 's' : ''} con más de una cuenta (${juntas.reduce((t, [, l]) => t + l.length, 0)} cuentas).` : 'Ninguna comparte liga: cada cuenta es de una liga distinta.'}</p>`;
+    for (const [k, l] of juntas) h += `<div class="grupo"><span>${k === ligaId ? 'Tu liga' : `Liga ${esc(k)}`} · ${l.length} cuentas</span></div><div class="quien-l">${l.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+    if (solas.length) h += `<div class="grupo"><span>Una cuenta por liga · ${solas.length}</span></div><div class="quien-l">${solas.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+    if (sinLiga.length) h += `<div class="grupo"><span>Sin liga todavía · ${sinLiga.length}</span></div><div class="quien-l">${sinLiga.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+  }
   return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
 }
 const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK' };
