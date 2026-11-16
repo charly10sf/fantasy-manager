@@ -3326,7 +3326,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/duelos-aplazados-fallecimiento-jesus-miguel-fecha-horario-20261113_3475158.html": 1794590104000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602522000,
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1794603763000,
    "SPORT|136418123": 1794601251000,
@@ -7653,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3161,
+   "ok": 3162,
    "fallos": 0,
-   "ejecuciones": 2554,
+   "ejecuciones": 2555,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T17:11:14.409Z"
+   "ultima": "2026-11-16T17:16:17.236Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:11:21.966Z"
+   "ultimaBien": "2026-11-16T17:16:23.089Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:11:21.966Z"
+   "ultimaBien": "2026-11-16T17:16:23.089Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:11:21.966Z"
+   "ultimaBien": "2026-11-16T17:16:23.089Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:11:21.966Z"
+   "ultimaBien": "2026-11-16T17:16:23.089Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:11:21.966Z"
+   "ultimaBien": "2026-11-16T17:16:23.089Z"
   }
  },
  "avisos": [
