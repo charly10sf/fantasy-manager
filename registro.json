@@ -1122,6 +1122,13 @@
    "jornada": 13,
    "id": "2122364426846118110",
    "t": "2026-11-16T16:21:26.224Z"
+  },
+  {
+   "clave": "noticias|3092:buena|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122397231135457600",
+   "t": "2026-11-16T18:31:47.166Z"
   }
  ],
  "estados": {
@@ -2011,7 +2018,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/13/6af6e303fdddff1f1a8b45b1.html": 1794601637000,
@@ -2183,7 +2189,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/buenas-noticias-pubill-descartada-lesion-grave-20261116_3476205.html": 1794848379000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
    "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
-   "SPORT|136506735": 1794848428000
+   "SPORT|136506735": 1794848428000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000
   },
   "hechos": [
    {
@@ -2493,11 +2500,35 @@
     "nums": [
      13
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794852250000,
+    "id": "3092",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Olmo vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794852250000,
+    "id": "2355",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Kounde sigue trabajando al margen del grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -3415,17 +3446,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 46,
-   "redactar": 33,
-   "revisar": 17,
+   "clasificar": 47,
+   "redactar": 34,
+   "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 593991,
-  "salida": 36517,
+  "entrada": 610609,
+  "salida": 37946,
   "cacheLee": 29030,
-  "cacheEscribe": 20321,
-  "dolares": 1.197227,
+  "cacheEscribe": 23224,
+  "dolares": 1.236252,
   "reservado": 0
  },
  "recientes": {
@@ -3541,10 +3572,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-14T20:16:32.070Z",
-    "texto": "❌ Raphinha no volverá a Barcelona: se queda retenido por Brasil tras su expulsión, según SPORT y Cadena SER.\n\nTuvo su mejor jornada en la 2, con 24 puntos, así que su ausencia se nota si lo tienes. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y por ahora no se sabe si llega a ese partido."
-   },
-   {
     "t": "2026-11-16T11:01:27.551Z",
     "texto": "👀 Cucho vuelve a entrenar a medias con el grupo, según MARCA y Mundo Deportivo.\n\nEs buena señal para el delantero del Betis, que lleva 2 goles y 2 asistencias en la liga. Con la liga parada, la vuelta que importa es la del sábado 21 contra el Sevilla, que va 6º, en el Sánchez-Pizjuán. Aún falta para saber si llega con sitio en el once."
    },
@@ -3559,6 +3586,10 @@
    {
     "t": "2026-11-16T15:31:34.168Z",
     "texto": "👀 Aimar vuelve a entrenar con el grupo tras la lesión, según MARCA y Mundo Deportivo.\n\nEl centrocampista del Osasuna 🐂 vale 2,1 M y ha perdido 2,4 M en el último mes, así que está barato si te fías de su vuelta. Con la liga parada, el partido que importa es el del domingo 22 de noviembre en El Sadar contra el Málaga 🐟, que va último y de los que más goles encajan. Para un medio, eso le viene bien."
+   },
+   {
+    "t": "2026-11-16T18:31:47.168Z",
+    "texto": "👀 Olmo vuelve a entrenar con el grupo, según Mundo Deportivo y SPORT.\n\nEl centrocampista del Barça lleva 1 gol y 3 asistencias en la liga, así que su regreso es una buena noticia si lo tienes. Con la liga parada, el partido que importa es el del domingo 22 de noviembre, tras el parón, contra el Villarreal 🚢, que va 8º. Aún no se sabe si llega con sitio en el once."
    }
   ],
   "directo": [
@@ -7672,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3176,
+   "ok": 3177,
    "fallos": 0,
-   "ejecuciones": 2569,
+   "ejecuciones": 2570,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:26:21.245Z"
+   "ultima": "2026-11-16T18:31:14.186Z"
   }
  },
  "ptsDirecto": {},
@@ -7695,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:26:25.454Z"
+   "ultimaBien": "2026-11-16T18:31:47.193Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:26:25.454Z"
+   "ultimaBien": "2026-11-16T18:31:47.193Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:26:25.454Z"
+   "ultimaBien": "2026-11-16T18:31:47.193Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7711,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:26:25.454Z"
+   "ultimaBien": "2026-11-16T18:31:47.193Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:26:25.454Z"
+   "ultimaBien": "2026-11-16T18:31:47.193Z"
   }
  },
  "avisos": [
