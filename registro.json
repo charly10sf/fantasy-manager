@@ -1136,6 +1136,13 @@
    "jornada": 13,
    "id": "2122405944667607470",
    "t": "2026-11-16T19:06:24.611Z"
+  },
+  {
+   "clave": "noticias|2562:mala|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122424885947642271",
+   "t": "2026-11-16T20:21:40.529Z"
   }
  ],
  "estados": {
@@ -2025,7 +2032,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/13/6af6e303fdddff1f1a8b45b1.html": 1794601637000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250766/siempre-les-quedara-lamine.html": 1794636000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250813/debate-indecente.html": 1794628200000,
@@ -3441,16 +3447,15 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-08",
-  "n": 7,
-  "ok": 6,
-  "mal": 2
+  "dia": "2026-11-16",
+  "n": 1,
+  "ok": 1,
+  "mal": 0
  },
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602522000,
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1794603763000,
-   "SPORT|136418123": 1794601251000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250691/precedentes.html": 1794605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000,
    "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000,
@@ -3522,15 +3527,15 @@
   "llamadas": {
    "clasificar": 52,
    "redactar": 35,
-   "revisar": 19,
-   "pulir": 0
+   "revisar": 20,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 635516,
-  "salida": 40235,
+  "entrada": 637713,
+  "salida": 40397,
   "cacheLee": 29030,
-  "cacheEscribe": 26127,
-  "dolares": 1.276977,
+  "cacheEscribe": 29030,
+  "dolares": 1.290249,
   "reservado": 0
  },
  "recientes": {
@@ -3646,10 +3651,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T11:46:28.776Z",
-    "texto": "👀 Bernardo Silva estará disponible para la vuelta de LaLiga, según MARCA y AS.\n\nEl centrocampista del Madrid llega al sábado 21 de noviembre, el primer partido tras el parón, ante un Celta que encaja poco, y eso para un medio no ayuda. Va a 3,3 puntos de media, así que de momento no es de los que mueven la jornada."
-   },
-   {
     "t": "2026-11-16T14:06:36.476Z",
     "texto": "⁉️ Cubarsí es duda para el Villarreal por unas molestias en la cadera, lo ha comunicado el club.\n\nEl central vale 59,5 M, así que si lo tienes es un caso a seguir. El partido es el domingo 22 de noviembre, tras el parón, y no hay plazo para saber si llega bien. El Villarreal 🚢 va 8º, un rival de dificultad media."
    },
@@ -3664,6 +3665,10 @@
    {
     "t": "2026-11-16T19:06:24.613Z",
     "texto": "❌ Vivian vuelve a la enfermería con una lesión moderada en el sóleo, según Mundo Deportivo, la Cadena SER y El Correo.\n\nEl defensa del Athletic 🦁 venía de sumar 27 puntos en las tres últimas jornadas, así que la baja duele. Se pierde los partidos con su selección y no hay plazo para saber si llega al Athletic-Espanyol del viernes 20, tras el parón. Si lo tienes, ve pensando en un recambio."
+   },
+   {
+    "t": "2026-11-16T20:21:40.531Z",
+    "texto": "🚨 Marc Pubill sufre un esguince leve de tobillo, según ha comunicado el club.\n\nEl defensa del Atleti suma 19 puntos en las tres últimas jornadas. Su próximo partido es tras el parón, el domingo 22 de noviembre."
    }
   ],
   "directo": [
@@ -7777,13 +7782,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3197,
+   "ok": 3198,
    "fallos": 0,
-   "ejecuciones": 2590,
+   "ejecuciones": 2591,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T20:16:12.181Z"
+   "ultima": "2026-11-16T20:21:29.803Z"
   }
  },
  "ptsDirecto": {},
@@ -7800,15 +7805,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:16:14.649Z"
+   "ultimaBien": "2026-11-16T20:21:40.551Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:16:14.649Z"
+   "ultimaBien": "2026-11-16T20:21:40.551Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:16:14.649Z"
+   "ultimaBien": "2026-11-16T20:21:40.551Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7816,11 +7821,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:16:14.649Z"
+   "ultimaBien": "2026-11-16T20:21:40.551Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:16:14.649Z"
+   "ultimaBien": "2026-11-16T20:21:40.551Z"
   }
  },
  "avisos": [
