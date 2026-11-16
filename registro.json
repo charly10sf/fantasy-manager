@@ -1143,6 +1143,17 @@
    "jornada": 13,
    "id": "2122424885947642271",
    "t": "2026-11-16T20:21:40.529Z"
+  },
+  {
+   "clave": "mercado|2026-11-17",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2122468640867922412",
+   "t": "2026-11-16T23:15:32.626Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2448"
+   }
   }
  ],
  "estados": {
@@ -3519,19 +3530,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-16",
+  "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 54,
-   "redactar": 35,
-   "revisar": 20,
-   "pulir": 1
+   "clasificar": 0,
+   "redactar": 4,
+   "revisar": 2,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 641780,
-  "salida": 40973,
-  "cacheLee": 29030,
-  "cacheEscribe": 29030,
-  "dolares": 1.290944,
+  "entrada": 59014,
+  "salida": 1055,
+  "cacheLee": 2903,
+  "cacheEscribe": 2903,
+  "dolares": 0.136126,
   "reservado": 0
  },
  "recientes": {
@@ -3603,10 +3614,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-11T23:15:24.820Z",
-    "texto": "📈 El Barça copa los extremos del mercado de esta noche. Fermín López sube 3,4 M (+2,8 %) y se va a 123,9 M, mientras Rodri cae 1,8 M y se queda en 74,5 M.\n\nUn chollo barato: Redondo, del Elche 🌴, cuesta 2,2 M y ha sumado 24 puntos en las tres últimas jornadas. En la imagen tienes los cinco que más suben y los cinco que más bajan."
-   },
-   {
     "t": "2026-11-12T23:16:55.843Z",
     "texto": "📈 Fermín López lidera las subidas de hoy: +2,6 M y se planta en 126,5 M con el Barça. Rodri, en cambio, es la mayor bajada: -1,7 M y se queda en 72,8 M.\n\nPara quien busque barato, Redondo, del Elche 🌴, cuesta 2,3 M y trae 24 puntos en sus tres últimas jornadas. En la imagen, los cinco que más suben y los cinco que más bajan."
    },
@@ -3621,6 +3628,10 @@
    {
     "t": "2026-11-15T23:19:03.273Z",
     "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 16/11\n\n📈 Nadie sube más que Valverde: +2,4 M en un día (+2,9 %), y ya vale 86,1 M.\n\n📉 Rodri del Barcelona va en sentido contrario: cae 1,5 M, un 2,1 %, hasta los 68,1 M.\n\n🛒 Chollo Fantasy: Moi Gómez del Osasuna vale 6 M, suma 6 de media y hoy sube un 2,5 %"
+   },
+   {
+    "t": "2026-11-16T23:15:32.628Z",
+    "texto": "📈 Fermín sube 2,3 M esta noche y ya vale 136,8 M con el Barça. Lleva 27 días seguidos al alza, 46,7 M desde el 21 de octubre.\n\nValverde, que también fue el que más subió ayer, suma 12 días seguidos subiendo. Entre todos los jugadores del Real Madrid ⚪ ganan 10,3 M, y los del Atlético pierden 6,2 M.\n\nDe barato, Oskarsson, de la Real Sociedad, vale 5,3 M y suma 23 puntos en sus tres últimas jornadas."
    }
   ],
   "previa": [
@@ -3936,6 +3947,22 @@
    "cacheLee": 14515,
    "cacheEscribe": 8709,
    "dolares": 0.415419,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-16",
+   "llamadas": {
+    "clasificar": 54,
+    "redactar": 35,
+    "revisar": 20,
+    "pulir": 1
+   },
+   "fallos": 0,
+   "entrada": 641780,
+   "salida": 40973,
+   "cacheLee": 29030,
+   "cacheEscribe": 29030,
+   "dolares": 1.290944,
    "reservado": 0
   }
  ],
@@ -7801,7 +7828,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T23:11:14.131Z"
+   "ultimaBien": "2026-11-16T23:15:32.630Z"
   },
   "FotMob": {
    "seguidas": 0,
