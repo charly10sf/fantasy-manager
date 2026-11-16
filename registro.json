@@ -2180,7 +2180,8 @@
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
    "SPORT|136505787": 1794839189000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000,
+   "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/16/cubarsi-algodones-partido-villarreal-136507663.html": 1794847474000
   },
   "hechos": [
    {
@@ -2480,7 +2481,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3390,22 +3391,24 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794847572484
+  }
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 33,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 578154,
-  "salida": 32872,
+  "entrada": 580177,
+  "salida": 33013,
   "cacheLee": 29030,
   "cacheEscribe": 20321,
-  "dolares": 1.193821,
+  "dolares": 1.194094,
   "reservado": 0
  },
  "recientes": {
@@ -7652,13 +7655,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3155,
+   "ok": 3156,
    "fallos": 0,
-   "ejecuciones": 2548,
+   "ejecuciones": 2549,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:43:49.589Z"
+   "ultima": "2026-11-16T16:46:12.484Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7678,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:43:53.132Z"
+   "ultimaBien": "2026-11-16T16:46:18.255Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:43:53.132Z"
+   "ultimaBien": "2026-11-16T16:46:18.255Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:43:53.132Z"
+   "ultimaBien": "2026-11-16T16:46:18.255Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7694,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:43:53.132Z"
+   "ultimaBien": "2026-11-16T16:46:18.255Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:43:53.132Z"
+   "ultimaBien": "2026-11-16T16:46:18.255Z"
   }
  },
  "avisos": [
