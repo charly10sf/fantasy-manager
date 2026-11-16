@@ -1233,7 +1233,7 @@
   "2335": "ok",
   "2336": "ok",
   "2337": "ok",
-  "2338": "injured",
+  "2338": "ok",
   "2339": "ok",
   "2342": "ok",
   "2346": "injured",
@@ -1835,7 +1835,7 @@
   "3137": "ok",
   "3138": "ok",
   "3139": "ok",
-  "3140": "injured",
+  "3140": "doubtful",
   "3141": "out_of_league",
   "3142": "ok",
   "3143": "ok",
@@ -2008,17 +2008,9 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2939",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1794844829435
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rajada-pique-federacion-no-haber-sacado-dos-semanas-sanciones-tenerife-andorra-no-constancia-ninguna-owono-jugar-manana-obviamente-no-viajar-20261113_3475149.html": 1794588819000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000,
    "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
@@ -2192,18 +2184,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794587065000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea sufre una lesión muscular en el muslo derecho",
-    "motivo": "lesión en la musculatura isquiosural del muslo derecho",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/",
     "medio": "AS",
@@ -2689,8 +2669,8 @@
     "t": 1794490571834
    },
    "2338": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1794846374304
    },
    "2354": {
     "e": "ok",
@@ -7673,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3150,
+   "ok": 3151,
    "fallos": 0,
-   "ejecuciones": 2543,
+   "ejecuciones": 2544,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:21:12.817Z"
+   "ultima": "2026-11-16T16:26:14.304Z"
   }
  },
  "ptsDirecto": {},
@@ -7696,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:21:26.304Z"
+   "ultimaBien": "2026-11-16T16:26:18.180Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:21:26.304Z"
+   "ultimaBien": "2026-11-16T16:26:18.180Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:21:26.304Z"
+   "ultimaBien": "2026-11-16T16:26:18.180Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7712,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:21:26.304Z"
+   "ultimaBien": "2026-11-16T16:26:18.180Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:21:26.304Z"
+   "ultimaBien": "2026-11-16T16:26:18.180Z"
   }
  },
  "avisos": [
