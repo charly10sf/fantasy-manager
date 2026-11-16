@@ -2189,7 +2189,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
    "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
    "SPORT|136506735": 1794848428000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
+   "SPORT|136513344": 1794850973000,
+   "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000
   },
   "hechos": [
    {
@@ -2523,11 +2525,36 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136513344",
+    "medio": "SPORT",
+    "t": 1794850973000,
+    "id": "2562",
+    "que": "lesion",
+    "oficial": true,
+    "hecho": "Marc Pubill sufre un esguince leve de tobillo",
+    "motivo": "esguince leve de tobillo",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html",
+    "medio": "El Correo",
+    "t": 1794854516000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "",
+    "motivo": "lesión moderada en el sóleo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3444,17 +3471,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 34,
    "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 612365,
-  "salida": 38081,
+  "entrada": 614519,
+  "salida": 39329,
   "cacheLee": 29030,
   "cacheEscribe": 23224,
-  "dolares": 1.236495,
+  "dolares": 1.237334,
   "reservado": 0
  },
  "recientes": {
@@ -7701,13 +7728,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3180,
+   "ok": 3181,
    "fallos": 0,
-   "ejecuciones": 2573,
+   "ejecuciones": 2574,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:46:14.666Z"
+   "ultima": "2026-11-16T18:51:16.893Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7751,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:46:19.456Z"
+   "ultimaBien": "2026-11-16T18:51:29.784Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:46:19.456Z"
+   "ultimaBien": "2026-11-16T18:51:29.784Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:46:19.456Z"
+   "ultimaBien": "2026-11-16T18:51:29.784Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7767,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:46:19.456Z"
+   "ultimaBien": "2026-11-16T18:51:29.784Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:46:19.456Z"
+   "ultimaBien": "2026-11-16T18:51:29.784Z"
   }
  },
  "avisos": [
