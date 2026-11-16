@@ -1094,6 +1094,13 @@
    "jornada": 13,
    "id": "2122283902542795043",
    "t": "2026-11-16T11:01:27.549Z"
+  },
+  {
+   "clave": "noticias|3116:buena|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122295232276451789",
+   "t": "2026-11-16T11:46:28.774Z"
   }
  ],
  "estados": {
@@ -2146,7 +2153,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000,
+   "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/": 1794827987000
   },
   "hechos": [
    {
@@ -2367,11 +2375,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/",
+    "medio": "AS",
+    "t": 1794827987000,
+    "id": "3116",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Bernardo Silva podrá jugar contra el Celta",
+    "motivo": "posible lesión descartada",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3283,17 +3303,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 17,
-   "redactar": 29,
-   "revisar": 13,
+   "clasificar": 18,
+   "redactar": 30,
+   "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 477201,
-  "salida": 21003,
+  "entrada": 494033,
+  "salida": 21933,
   "cacheLee": 29030,
-  "cacheEscribe": 8709,
-  "dolares": 1.031323,
+  "cacheEscribe": 11612,
+  "dolares": 1.070543,
   "reservado": 0
  },
  "recientes": {
@@ -3409,10 +3429,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-12T08:36:43.051Z",
-    "texto": "⁉️ Lamine Yamal no viaja con España por un golpe en la rodilla derecha con líquido, según Mundo Deportivo y SPORT. Se pierde los partidos con su selección.\n\nLleva 10 goles y 8 asistencias en la liga, así que conviene seguirle de cerca. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y sin plazo de recuperación no se puede saber si llega bien.\n\nUn 58 % de titularidad deja el caso a medias: más probable que juegue que lo contrario, pero sin garantías."
-   },
-   {
     "t": "2026-11-12T12:36:26.694Z",
     "texto": "⁉️ Fofana no se ejercita con el grupo por problemas físicos, según Mundo Deportivo y Diario de Sevilla.\n\nEl centrocampista del Sevilla vale 40,2 M y ha ganado 13,4 M en el último mes, así que su caso mueve el mercado. Si lo tienes, no hay prisa: el Betis, que va 4º, llega el sábado 21 de noviembre, tras el parón, y sin plazo no se sabe si llega bien."
    },
@@ -3427,6 +3443,10 @@
    {
     "t": "2026-11-16T11:01:27.551Z",
     "texto": "👀 Cucho vuelve a entrenar a medias con el grupo, según MARCA y Mundo Deportivo.\n\nEs buena señal para el delantero del Betis, que lleva 2 goles y 2 asistencias en la liga. Con la liga parada, la vuelta que importa es la del sábado 21 contra el Sevilla, que va 6º, en el Sánchez-Pizjuán. Aún falta para saber si llega con sitio en el once."
+   },
+   {
+    "t": "2026-11-16T11:46:28.776Z",
+    "texto": "👀 Bernardo Silva estará disponible para la vuelta de LaLiga, según MARCA y AS.\n\nEl centrocampista del Madrid llega al sábado 21 de noviembre, el primer partido tras el parón, ante un Celta que encaja poco, y eso para un medio no ayuda. Va a 3,3 puntos de media, así que de momento no es de los que mueven la jornada."
    }
   ],
   "directo": [
@@ -7540,13 +7560,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3094,
+   "ok": 3095,
    "fallos": 0,
-   "ejecuciones": 2487,
+   "ejecuciones": 2488,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:41:15.526Z"
+   "ultima": "2026-11-16T11:46:12.633Z"
   }
  },
  "ptsDirecto": {},
@@ -7563,15 +7583,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:41:20.753Z"
+   "ultimaBien": "2026-11-16T11:46:28.800Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:41:20.753Z"
+   "ultimaBien": "2026-11-16T11:46:28.800Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:41:20.753Z"
+   "ultimaBien": "2026-11-16T11:46:28.800Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7579,11 +7599,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:41:20.753Z"
+   "ultimaBien": "2026-11-16T11:46:28.800Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:41:20.753Z"
+   "ultimaBien": "2026-11-16T11:46:28.800Z"
   }
  },
  "avisos": [
