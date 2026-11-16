@@ -2022,14 +2022,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2314",
-   "que": "lesion",
-   "antes": "ok",
-   "t": 1794855673586
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
@@ -2210,7 +2203,8 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html": 1794854713000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000,
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000
   },
   "hechos": [
    {
@@ -2593,11 +2587,23 @@
     "motivo": "problema muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html",
+    "medio": "MARCA",
+    "t": 1794855948000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Vivian se pierde el partido ante el Espanyol por lesión",
+    "motivo": "lesión en el sóleo",
+    "plazo": "podría estar fuera hasta diciembre",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -3514,17 +3520,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 35,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 633632,
-  "salida": 40094,
+  "entrada": 635516,
+  "salida": 40235,
   "cacheLee": 29030,
   "cacheEscribe": 26127,
-  "dolares": 1.276718,
+  "dolares": 1.276977,
   "reservado": 0
  },
  "recientes": {
@@ -7771,13 +7777,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3184,
+   "ok": 3185,
    "fallos": 0,
-   "ejecuciones": 2577,
+   "ejecuciones": 2578,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T19:06:12.089Z"
+   "ultima": "2026-11-16T19:15:34.417Z"
   }
  },
  "ptsDirecto": {},
@@ -7794,15 +7800,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:06:24.632Z"
+   "ultimaBien": "2026-11-16T19:15:40.870Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:06:24.632Z"
+   "ultimaBien": "2026-11-16T19:15:40.870Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:06:24.632Z"
+   "ultimaBien": "2026-11-16T19:15:40.870Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7810,11 +7816,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:06:24.632Z"
+   "ultimaBien": "2026-11-16T19:15:40.870Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:06:24.632Z"
+   "ultimaBien": "2026-11-16T19:15:40.870Z"
   }
  },
  "avisos": [
