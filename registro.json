@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
@@ -2156,7 +2155,9 @@
    "AS|https://as.com/futbol/primera/giuliano-crecimiento-sostenido-f202611-n/": 1794829515000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251598/olmo-entrena-grupo-apunta-villarreal.html": 1794828986000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251598/olmo-entrena-grupo-apunta-villarreal.html": 1794828986000,
+   "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000
   },
   "hechos": [
    {
@@ -2389,11 +2390,23 @@
     "motivo": "posible lesión descartada",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html",
+    "medio": "Superdeporte",
+    "t": 1794830956000,
+    "id": "2617",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Umar Sadiq regresa a los entrenamientos del Valencia",
+    "motivo": "vendaje en la rodilla derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3306,17 +3319,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 498450,
-  "salida": 22476,
+  "entrada": 500637,
+  "salida": 23561,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.071256,
+  "dolares": 1.072017,
   "reservado": 0
  },
  "recientes": {
@@ -7563,13 +7576,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3099,
+   "ok": 3100,
    "fallos": 0,
-   "ejecuciones": 2492,
+   "ejecuciones": 2493,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T12:06:14.659Z"
+   "ultima": "2026-11-16T12:16:12.851Z"
   }
  },
  "ptsDirecto": {},
@@ -7586,15 +7599,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:06:17.117Z"
+   "ultimaBien": "2026-11-16T12:16:24.074Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:06:17.117Z"
+   "ultimaBien": "2026-11-16T12:16:24.074Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:06:17.117Z"
+   "ultimaBien": "2026-11-16T12:16:24.074Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7602,11 +7615,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:06:17.117Z"
+   "ultimaBien": "2026-11-16T12:16:24.074Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:06:17.117Z"
+   "ultimaBien": "2026-11-16T12:16:24.074Z"
   }
  },
  "avisos": [
