@@ -822,8 +822,11 @@ export function analizar(D, H, c, extra = {}) {
     // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
     if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
     // la recompensa diaria que uno coge y otro no, las subidas que no se pueden medir, lo raro y lo que no cuadra en la base
-    const margen = Math.round((1e6 + Math.min(recTotal, 15e6) * 0.5 + s.dudas + num(miSub.dudas) + desvio + (num(f.raros) + num(miF.raros)) * 1e6) / 1e5) * 1e5;
-    return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: baseV, mov: f.v, subidas: s.v, nSubidas: s.n } };
+    // (0.7.13z) el margen, por partes (el Diagnóstico las enseña): 1 M fijo, la mitad de las recompensas de la liga (cada
+    // rival ha cogido entre 0 y todas), las subidas de cláusula que no se miden, lo que no cuadra en tu base y lo raro
+    const partes = { fija: 1e6, rec: Math.min(recTotal, 15e6) * 0.5, dudas: num(s.dudas) + num(miSub.dudas), desvio, raros: (num(f.raros) + num(miF.raros)) * 1e6 };
+    const margen = Math.round((partes.fija + partes.rec + partes.dudas + partes.desvio + partes.raros) / 1e5) * 1e5;
+    return { v, exacto: false, margen, partes, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: baseV, mov: f.v, subidas: s.v, nSubidas: s.n } };
   };
   /* (0.7.12, Carlos 14 nov: «con el dinero que apunta la gente… se tendría que retroalimentar y mejorar la predicción»)
      lo que te han dicho los rivales corrige la cuenta de los demás. Cada vez que apuntas lo que tiene uno, se guarda lo
@@ -858,8 +861,17 @@ export function analizar(D, H, c, extra = {}) {
     const corr = propio ? propio.e : medianaE * pesoG + (g ? wg * g.v : 0);
     let margen = propio || !pesoG ? c.margen : Math.max(5e5, Math.round((c.margen * 0.85) / 1e5) * 1e5);
     if (wg) margen = Math.max(5e5, Math.round((margen * (1 - wg) + g.margen * wg) / 1e5) * 1e5);
-    if ((!corr || Math.abs(corr) < 1e5) && margen === c.margen) return c;
-    return { ...c, v: c.v + (Math.abs(corr) < 1e5 ? 0 : corr), margen, correccion: { v: Math.abs(corr) < 1e5 ? 0 : Math.round(corr), propio: !!propio, n: errores.length, todos: wg ? g.n : 0 } };
+    /* (0.7.13z, Carlos 16 nov: «el ± es la mitad, y la cifra tiene que estar en medio») la cuenta parte de TU saldo, o sea,
+       da por hecho que el rival ha cogido tantas recompensas diarias como tú; pero ha podido coger desde ninguna hasta todas
+       y el ± ya es la mitad de ese hueco. Sin datos de nadie, la cifra se pone en el punto medio de lo que puede ser su base
+       (de 100 M a 100 M + las recompensas de la liga); con lo que te han dicho, lo aprendido pesa y el punto medio, menos. */
+    const pesoDatos = propio ? 1 : Math.min(1, pesoG + wg);
+    const centro = baseV == null || D.demo ? 0 : Math.round(((baseMin + baseMax) / 2 - baseV) * (1 - pesoDatos) / 1e5) * 1e5;
+    const cc = Math.abs(corr) < 1e5 ? 0 : corr;
+    if (!cc && !centro && margen === c.margen) return c;
+    const out = { ...c, v: c.v + cc + centro, margen, centro };
+    if (cc || margen !== c.margen) out.correccion = { v: Math.round(cc), propio: !!propio, n: errores.length, todos: wg ? g.n : 0 };
+    return out;
   };
   /**
    * { v, exacto: true, fuente } si LaLiga lo da; si te ha dicho cuánto tiene, eso más lo que ha movido desde entonces;
@@ -879,7 +891,8 @@ export function analizar(D, H, c, extra = {}) {
       // (0.7.12) más las recompensas diarias desde que te lo dijo (el doble en el parón), que antes solo iban al margen
       const rec = M.recompensas(dc.t, ahora);
       const margen = Math.round((num(dc.r) + 0.3e6 + rec * 0.5) / 1e5) * 1e5;
-      return { v: dc.v + mov - sub + rec, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec, n: f.n };
+      // (0.7.13z) desde que te lo dijo ha podido coger entre 0 y `rec`: la cifra va en medio (rec / 2) y el margen es esa mitad
+      return { v: dc.v + mov - sub + rec * 0.5, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub + rec * 0.5, n: f.n };
     }
     return M.dineroCuenta(tid);
   };
