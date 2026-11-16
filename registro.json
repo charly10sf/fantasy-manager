@@ -3408,7 +3408,8 @@
    "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000,
    "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794830643000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850659000,
-   "SPORT|136510996": 1794838920000
+   "SPORT|136510996": 1794838920000,
+   "SPORT|136513679": 1794849264000
   },
   "hechos": [
    {
@@ -3436,27 +3437,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136513679": 1794852974930
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 34,
    "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 610609,
-  "salida": 37946,
+  "entrada": 612365,
+  "salida": 38081,
   "cacheLee": 29030,
   "cacheEscribe": 23224,
-  "dolares": 1.236252,
+  "dolares": 1.236495,
   "reservado": 0
  },
  "recientes": {
@@ -7703,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3178,
+   "ok": 3179,
    "fallos": 0,
-   "ejecuciones": 2571,
+   "ejecuciones": 2572,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:36:14.841Z"
+   "ultima": "2026-11-16T18:41:19.551Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:36:17.956Z"
+   "ultimaBien": "2026-11-16T18:41:26.310Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:36:17.956Z"
+   "ultimaBien": "2026-11-16T18:41:26.310Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:36:17.956Z"
+   "ultimaBien": "2026-11-16T18:41:26.310Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:36:17.956Z"
+   "ultimaBien": "2026-11-16T18:41:26.310Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:36:17.956Z"
+   "ultimaBien": "2026-11-16T18:41:26.310Z"
   }
  },
  "avisos": [
