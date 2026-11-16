@@ -1491,7 +1491,10 @@ export function analizar(D, H, c, extra = {}) {
     const rend = clamp(num(j.media) / 7, 0, 1.3) * 30;
     if (j.media) partes.push(`${String(Math.round(j.media * 10) / 10).replace('.', ',')} pts de media`);
     const mov = P7(t) != null ? P7(t) : t.p1 != null ? t.p1 * 3 : 0;
-    const mom0 = clamp(mov / 10, -1, 1) * 15;
+    // (16 nov, Carlos) y en euros: un +1 % al día de uno de 90 M (900.000 €) pesa más que un +3 % de uno de 10 M; hasta
+    // 6 puntos más (o menos) con un millón al día
+    const eurosDia = j.valor ? j.valor * (P7(t) != null ? P7(t) / 7 : num(t.p1)) / 100 : 0;
+    const mom0 = clamp(mov / 10, -1, 1) * 15 + clamp(eurosDia / 1e6, -1, 1) * 6;
     let momentum = mom0;
     // lo que importa es hacia dónde va ahora: un +10 % en 7 días que ya ha girado no es una subida
     const ine = M.inercia(j.id);
@@ -1727,8 +1730,9 @@ export function analizar(D, H, c, extra = {}) {
     const sobre = j.valor ? precioReal / j.valor - 1 : 0;
     let veredicto = 'normal';
     if (MALOS.has(j.estado)) veredicto = 'evitar';
-    else if (sobre <= 0.02 && !(t.p1 != null && t.p1 < -0.5) && ((P7(t) != null && P7(t) > 2) || (t.p1 != null && t.p1 > 0.8) || num(j.media) >= 5)) veredicto = 'chollo';
-    else if (t.p1 != null && t.p1 > 1) veredicto = 'sube';
+    // (16 nov, Carlos) la subida cuenta en % y en euros: +1 % de uno de 90 M pesa más que +3 % de uno de 10 M
+    else if (sobre <= 0.02 && !(t.p1 != null && t.p1 < -0.5) && ((P7(t) != null && P7(t) > 2) || (t.p1 != null && (t.p1 > 0.8 || (t.p1 > 0.3 && j.valor * t.p1 / 100 >= 4e5))) || num(j.media) >= 5)) veredicto = 'chollo';
+    else if (t.p1 != null && (t.p1 > 1 || (t.p1 > 0.4 && j.valor * t.p1 / 100 >= 5e5))) veredicto = 'sube';
     else if (sobre > 0.15) veredicto = 'caro';
     else if (P7(t) != null && P7(t) < -4) veredicto = 'baja';
     // la inercia manda sobre la tendencia de la semana

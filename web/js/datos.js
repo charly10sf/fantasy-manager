@@ -610,7 +610,7 @@ export async function fuentesExternas(D, M) {
   ]);
   return { onces, noticias: nots, avanzadas: av, alineaciones: alin };
 }
-export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null), avanzadas: LS.get('avanzadas', null), alineaciones: LS.get('alineaciones', null) });
+export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias2', null), avanzadas: LS.get('avanzadas', null), alineaciones: LS.get('alineaciones', null) });
 
 /** en la demostración, la alineación de un partido de tus jugadores ya confirmada (para ver cómo sale) */
 function alineacionDemo(D, onces) {

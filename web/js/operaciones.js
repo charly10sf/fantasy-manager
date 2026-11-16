@@ -64,9 +64,15 @@ export function subeHastaVuelta(M, j, precio) {
   if (e && e.valorFuturo > precio) return { futuro: e.valorFuturo, txt: `sube un ${String(Math.round(e.r * 1000) / 10).replace('.', ',')} % al día` };
   const ine = M.inercia ? M.inercia(j.id) : null, t = M.tend ? M.tend(j.id) : null;
   if (!ine || !t || !['sube', 'acelera'].includes(ine.fase)) return null;
-  if (!(t.p1 != null && t.p1 >= 1.5 && t.p7 != null && t.p7 >= 4)) return null;
-  // sin la cuenta de la app, solo si ni siquiera paga por encima de lo que valdrá en dos días a la mitad de su ritmo de hoy
-  if (precio > j.valor * (1 + (t.p1 / 100))) return null;
+  if (t.p1 == null || t.p7 == null) return null;
+  // (16 nov, Carlos: «una subida de un 1 % a un jugador de 90 M es mucho más importante que una del 3 % a uno de 10 M»)
+  // cuenta el % y también los euros: +1,5 % al día (+4 % en 7), o medio millón al día con +0,4 % (+2 % en 7)
+  const euros = j.valor * t.p1 / 100;
+  if (!((t.p1 >= 1.5 && t.p7 >= 4) || (euros >= 5e5 && t.p1 >= 0.4 && t.p7 >= 2))) return null;
+  // sin la cuenta de la app, solo si lo que paga de más lo recupera con lo que sube hasta la jornada (a un 60 % de su
+  // ritmo de hoy; como mínimo, un día)
+  const dias = M.proxima && M.proxima.ini ? Math.max(1, (M.proxima.ini - Date.now()) / 864e5) : 1;
+  if (precio > j.valor + euros * Math.max(1, dias * 0.6)) return null;
   return { futuro: null, txt: `sube cada día (${eur(Math.round(j.valor * t.p1 / 100), { signo: true })} hoy)` };
 }
 /** lo que el catálogo le dice a la IA de cada cláusula o puja en el parón: chollo para el once, solo para revender o nada */

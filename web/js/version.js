@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13r';
+export const VERSION = '0.7.13s';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13r';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13s', f: '2026-11-16', h: '10:02', t: 'Lo que sube, también en euros',
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'grafica', t: 'Lo que sube, también en euros', x: 'Que un jugador suba un 1 % al día no pesa igual si vale 90 M que si vale 10 M. Ahora la app mira también cuántos euros sube cada día: los caros que suben poco a poco ya salen como fichajes que suben y cuentan más en el interés del mercado.' },
+      { tipo: 'arreglo', d: 'periodico', t: 'Fuera las noticias de otros deportes', x: 'Se colaban titulares de motos o de tiro deportivo solo por coincidir con el apellido de un jugador o venir de un diario deportivo. Ahora, de los diarios que cuentan todos los deportes, solo entra la noticia si es de fútbol o nombra bien al jugador o a su equipo.' },
+    ],
+  },
   {
     v: '0.7.13r', f: '2026-11-16', h: '09:44', t: 'Noticias de cada jugador, sin colarse otros',
     cosas: [
