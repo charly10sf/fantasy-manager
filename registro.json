@@ -2154,7 +2154,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
    "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000,
-   "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000
+   "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000
   },
   "hechos": [
    {
@@ -2412,11 +2413,25 @@
     "motivo": "leves molestias físicas",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794835777000,
+    "id": "1775",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Cubarsí duda para el Villarreal por molestias en la cadera",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     19
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3330,17 +3345,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 504612,
-  "salida": 24330,
+  "entrada": 506590,
+  "salida": 25003,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.0728,
+  "dolares": 1.073334,
   "reservado": 0
  },
  "recientes": {
@@ -7587,13 +7602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3116,
+   "ok": 3117,
    "fallos": 0,
-   "ejecuciones": 2509,
+   "ejecuciones": 2510,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T13:31:14.477Z"
+   "ultima": "2026-11-16T13:36:20.557Z"
   }
  },
  "ptsDirecto": {},
@@ -7610,15 +7625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:31:22.980Z"
+   "ultimaBien": "2026-11-16T13:36:26.656Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:31:22.980Z"
+   "ultimaBien": "2026-11-16T13:36:26.656Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:31:22.980Z"
+   "ultimaBien": "2026-11-16T13:36:26.656Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7626,11 +7641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:31:22.980Z"
+   "ultimaBien": "2026-11-16T13:36:26.656Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:31:22.980Z"
+   "ultimaBien": "2026-11-16T13:36:26.656Z"
   }
  },
  "avisos": [
