@@ -3373,7 +3373,8 @@
    "SPORT|136501552": 1794833131000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
-   "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000
+   "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794830643000
   },
   "hechos": [
    {
@@ -3401,27 +3402,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794847572484
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 33,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 582422,
-  "salida": 34994,
+  "entrada": 584139,
+  "salida": 35080,
   "cacheLee": 29030,
   "cacheEscribe": 20321,
-  "dolares": 1.195309,
+  "dolares": 1.195524,
   "reservado": 0
  },
  "recientes": {
@@ -7668,13 +7667,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3159,
+   "ok": 3160,
    "fallos": 0,
-   "ejecuciones": 2552,
+   "ejecuciones": 2553,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T17:01:12.842Z"
+   "ultima": "2026-11-16T17:06:12.818Z"
   }
  },
  "ptsDirecto": {},
@@ -7691,15 +7690,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:01:27.084Z"
+   "ultimaBien": "2026-11-16T17:06:17.312Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:01:27.084Z"
+   "ultimaBien": "2026-11-16T17:06:17.312Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:01:27.084Z"
+   "ultimaBien": "2026-11-16T17:06:17.312Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7707,11 +7706,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:01:27.084Z"
+   "ultimaBien": "2026-11-16T17:06:17.312Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:01:27.084Z"
+   "ultimaBien": "2026-11-16T17:06:17.312Z"
   }
  },
  "avisos": [
