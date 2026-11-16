@@ -21,7 +21,9 @@ Reglas:
 - No nombres webs, medios, fuentes ni «expertos». No hables de inteligencia artificial.
 - ${REGLAS}
 - Un sancionado no juega esta jornada. Un apercibido sí juega, pero si ve una amarilla se pierde la siguiente.
-- Si un jugador sale en dos apartados (apercibido y duda, por ejemplo), dilo una vez y bien.`;
+- Si un jugador sale en dos apartados (apercibido y duda, por ejemplo), dilo una vez y bien.
+- Escribe a cada jugador con el nombre exacto de los hechos («Peio Canales», «A. Fortuño»), nunca solo el apellido: un apellido suelto puede ser otro jugador de LaLiga.
+- No digas más de lo que dice un dato: «4 de sus 5 últimos partidos con 60 minutos o más» no es «los jugó enteros».`;
 
 const ESQUEMA = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'STRING' }])), required: claves });
 
