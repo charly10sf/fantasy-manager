@@ -30,7 +30,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -1148,7 +1148,28 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
+    pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal };
+}
+
+/* (0.7.13u) tus pujas del mercado, para aprender de las que ganas y pierdes: cada una que la app ve puesta (jugador, lo que
+   pujaste, lo que valía y cuándo se cierra). Al cerrarse el mercado, el motor mira en la actividad de la liga quién se lo
+   llevó y por cuánto. 45 días; nada en la liga de ejemplo */
+function apuntarMisPujas() {
+  const k = K('pujas-mias'), ya = LS.get(k, {});
+  if (!S.D || enDemo()) return ya;
+  const ahora = Date.now();
+  let cambia = false;
+  for (const m of S.D.mercado || []) {
+    if (m.tipo !== 'liga' || !(Number(m.miPuja) > 0) || !m.cierra || m.cierra < ahora) continue;
+    const c = `${m.pid}|${m.cierra}`, j = (S.D.maestro || {})[m.pid] || {};
+    if (ya[c] && ya[c].puja === Number(m.miPuja)) continue;
+    ya[c] = { pid: m.pid, puja: Number(m.miPuja), valor: Number(j.valor) || 0, precio: Number(m.precio) || 0, cierra: m.cierra, t: ahora };
+    cambia = true;
+  }
+  for (const [c, p] of Object.entries(ya)) if (!p || !p.cierra || ahora - p.cierra > 45 * DIA) { delete ya[c]; cambia = true; }
+  if (cambia) LS.set(k, ya);
+  return ya;
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -1278,6 +1299,8 @@ async function cargar0({ silencio = false } = {}) {
 function saludarSiToca() {
   if (!S.D || enDemo() || !haySesion() || document.hidden) return Promise.resolve();
   calDineroSiToca();
+  calPujasSiToca();
+  comprasSiToca();
   const yo = S.M && S.M.yo;
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
@@ -1296,6 +1319,35 @@ function calDineroSiToca() {
     if (!cal || !S.D || (antes && antes.n === cal.n && antes.med === cal.med)) return;
     rehacer(); if (!S.hoja) pintar();
   }).catch(() => {});
+}
+/* (0.7.13u) lo que se paga por los libres en todas las ligas, cada 6 h: si ha cambiado, se rehace el análisis (las pujas) */
+function calPujasSiToca() {
+  const antes = calPujasGuardada().cal;
+  leerCalPujas().then((cal) => {
+    if (!cal || !S.D || (antes && antes.n === cal.n)) return;
+    rehacer(); if (!S.hoja) pintar();
+  }).catch(() => {});
+}
+/* (0.7.13u) las compras de tu liga a LaLiga, sin nombres ni ids (lo pagado sobre su valor, su valor, lo que subía y si era de
+   los top), para que aprendan las ligas con pocos datos. Una vez al día, solo las que no se han mandado ya, y solo si el
+   usuario deja «Ayudar a mejorar la IA» */
+async function comprasSiToca() {
+  if (enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !S.D.liga) return;
+  const hoy = diaDe(), kd = K('pujas-mandadas');
+  const ya = LS.get(kd, { dia: '', c: {} });
+  if (ya.dia === hoy) return;
+  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya.c[`${x.pid}|${x.t}`]).slice(0, 80);
+  if (!nuevas.length) { LS.set(kd, { ...ya, dia: hoy }); return; }
+  const c = [];
+  for (const x of nuevas) {
+    c.push({ k: await huellaCompra(S.D.liga.id, x.pid, x.t), d: new Date(x.t).toISOString().slice(0, 10), s: Math.round(x.s * 1000) / 1000, v: Math.round(x.v / 1e4) * 1e4,
+      r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top });
+  }
+  if (!(await mandarCompras(c))) return;
+  const ahora = Date.now();
+  for (const x of nuevas) ya.c[`${x.pid}|${x.t}`] = x.t;
+  for (const [k, t] of Object.entries(ya.c)) if (ahora - t > 50 * DIA) delete ya.c[k];
+  LS.set(kd, { dia: hoy, c: ya.c });
 }
 /** (0.7.13) lo apuntado de un rival, sin nombres ni ids, para afinar la cuenta de todos (si el usuario lo deja) */
 async function apunteDinero(tid, dicho, cu) {

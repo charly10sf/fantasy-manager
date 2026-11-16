@@ -567,6 +567,63 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.s === 503, `/dinero sin objeto: ${r.s}`);
 }
 
+// ---------- (0.7.13u) lo que se paga por los libres en todas las ligas: /pujas y /pujas/cal ----------
+{
+  const objs = new Map();
+  const QRp = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objs.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, structuredClone(b)); else m.set(k, structuredClone(v)); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); }, deleteAll: async () => m.clear(), setAlarm: async () => { m.set('__alarma', 1); },
+          list: async ({ prefix = '', end, reverse, limit } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (end == null || k < end)).sort(); if (reverse) ks.reverse(); if (limit) ks = ks.slice(0, limit); return new Map(ks.map((k) => [k, m.get(k)])); },
+        };
+        objs.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objs.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eP = { VINCULOS: KV, ADMINS: '667015', QR: QRp };
+  const almacen = () => objs.get('pujas|todos').m;
+  const hx = (i) => i.toString(16).padStart(24, '0');
+  const hoyD = new Date(Date.now()).toISOString().slice(0, 10);
+  const cp = (i, o = {}) => ({ k: hx(i), d: hoyD, s: 0.08, v: 30e6, r: 0.015, top: false, ...o });
+  minuto();
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(1)] }, tk: 'corto', e: eP });
+  ok(r.s === 401, `/pujas sin sesión: ${r.s}`);
+  // de golpe, varias; lo raro (sin huella, valor imposible, de hace 3 meses) se queda fuera y lo de más no se guarda
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(1), cp(2, { s: 0.2, v: 86e6, r: 0.029, top: true }), cp(3, { k: 'NO' }), cp(4, { v: 9e9 }), cp(5, { d: '2026-01-01' }), cp(6, { nombre: 'Valverde', liga: '77', pid: 1234 })] }, e: eP });
+  const g = [...almacen().entries()].filter(([k]) => k.startsWith('c|'));
+  ok(r.s === 200 && r.j.n === 3 && g.length === 3 && !JSON.stringify(g).includes('Valverde') && !JSON.stringify(g).includes('1234') && !("k" in g[0][1]) && !almacen().has('__alarma'), `/pujas guarda 3 de 6, sin nombres ni ids ni alarma: ${r.s} ${JSON.stringify(g)}`);
+  // la misma compra mandada por otro de la liga (misma huella): una sola
+  minuto();
+  await pide({ ruta: '/pujas', cuerpo: { c: [cp(1, { s: 0.09 })] }, tk: 'z'.repeat(30), e: eP });
+  ok([...almacen().keys()].filter((k) => k.endsWith(hx(1))).length === 1, 'la misma compra desde dos móviles cuenta una vez');
+  // nada válido, 400; por cuenta, 4 al día
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(9, { s: 'x' })] }, e: eP });
+  ok(r.s === 400, `/pujas sin nada válido: ${r.s}`);
+  let dia = 0;
+  for (let k = 0; k < 6; k++) { minuto(); const x = await pide({ ruta: '/pujas', cuerpo: { c: [cp(50 + k)] }, tk: 'w'.repeat(30), ip: `10.5.0.${k}`, e: eP }); if (x.s === 200) dia++; }
+  ok(dia === W2.PUJAS_CUENTA_DIA, `por cuenta, ${W2.PUJAS_CUENTA_DIA} veces al día (${dia})`);
+  // los tramos: los que suben fuerte y los top aparte
+  const regs = [];
+  for (let i = 0; i < 10; i++) regs.push({ s: 0.03 + i * 0.002, v: 32e6, r: 0.002, top: false }, { s: 0.14 + i * 0.004, v: 32e6, r: 0.02, top: false }, { s: 0.18 + i * 0.004, v: 85e6, r: 0.025, top: true });
+  const cal = W2.calPujas(regs), cel = (k) => cal.celdas.find((x) => x.k === k);
+  ok(cal.n === 30 && cel('4|0').n === 10 && cel('4|2').n === 20 && cel('top|2').n === 10 && cel('4|2').med > cel('4|0').med + 0.1 && cel('top|2').med > cel('4|2').med && cel('4|*').n === 30 && cal.tv.length === 5 && cal.tr.length === 3, `calPujas por tramos: ${JSON.stringify(cal.celdas.map((x) => [x.k, x.n, x.med]))}`);
+  r = await pide({ m: 'GET', ruta: '/pujas/cal', tk: '', e: eP });
+  ok(r.s === 200 && r.j.n >= 3 && Array.isArray(r.j.celdas) && almacen().has('cal'), `/pujas/cal: ${r.s} n=${r.j && r.j.n}`);
+  // lo de más de 120 días se borra al rehacerlo (pasadas las 6 h)
+  almacen().set(`c|${new Date(Date.now() - 130 * 864e5).toISOString().slice(0, 10)}|${hx(99)}`, { s: 0, v: 1e6, r: null, top: false });
+  desfase += 7 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/pujas/cal', tk: '', e: eP });
+  ok(r.s === 200 && ![...almacen().keys()].some((k) => k.endsWith(hx(99))), 'lo de más de 120 días se borra al rehacer');
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(7)] }, e: { VINCULOS: KV } });
+  ok(r.s === 503, `/pujas sin objeto: ${r.s}`);
+}
+
 // (0.7.13i) el semáforo de LaLiga (/estado) y la entrada paso a paso (/embudo), con un objeto que también lista y borra
 {
   const objE = new Map();

@@ -19,8 +19,10 @@
    Una venta siempre tiene un motivo (está de baja, ha girado, le pagan de más, es de revender y toca, o hace falta para
    empezar la jornada en positivo): nunca «por hacer caja». Si este motor falla, sale el plan de antes (planAuto). */
 import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia } from './util.js';
-import { planAuto, rematarAuto, mereceClausula, mejorOnce } from './motor.js';
-import { paronLejos, cholloParon } from './operaciones.js';
+
+const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
+import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt } from './motor.js';
+import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, pujaReal } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
@@ -284,14 +286,21 @@ function candidatos(X, vetados) {
   }
 
   /* P. pujas del mercado para el once */
-  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio))).slice(0, 5)) {
+  // (0.7.13u) en el parón, lo mismo que el plan de la app de antes (motor.js, paso 3): lo que sube hasta la vuelta y, con
+  // dinero de sobra, el bueno a su valor que se paga con el saldo sin deuda (Carlos, 16 nov: Pepe, Unai López, Valverde).
+  // Antes este plan solo dejaba pasar los chollos del parón y esos no salían nunca
+  const dineroP = num(D.dinero) - num(M.misPujas);
+  // (con la puja que de verdad gana si con la de la app casi nunca te lo llevas: `pujaReal`)
+  const vaParon = (y) => cholloParon(M, y.j, pujaReal(y)) || subeHastaVuelta(M, y.j, pujaReal(y)) || aSuValorParon(M, y, pujaReal(y), dineroP);
+  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && (((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || vaParon(y)))
+    || (paron && ['normal', 'frena'].includes(y.veredicto) && aSuValorParon(M, y, pujaReal(y), dineroP)))).slice(0, 5)) {
     const ver = V[`P-${m.pid}`];
     if (!ver || !ver.ok || !/^el once/.test(ver.para || '')) continue;
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
     nuevo({ k: `P-${m.pid}`, clase: 'pujar', objetivo: 'titular', pid: m.pid, j: m.j, importe: m.puja, puja: m.puja, entra: m.j, incierta: true, euros: -(m.puja - m.j.valor), ref: `P-${m.pid}`, interes: m.interes,
       op: (cu) => ({ accion: 'pujar', ref: `P-${m.pid}`, objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
-        motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. ${cu.gana >= 0.3 ? `Mejora tu once unos ${d1(cu.gana)} pts por jornada` : 'Refuerza tu plantilla'}${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''} Es una subasta a ciegas: si no la ganas, no pagas nada.`,
+        motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. ${cu.gana >= 0.3 ? `Mejora tu once unos ${d1(cu.gana)} pts por jornada` : 'Refuerza tu plantilla'}${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}${pujaOnceTxt(M, m)} Es una subasta a ciegas: si no la ganas, no pagas nada.`,
         datos: { porque: cu.gana >= 0.3 ? `mejora tu once: +${d1(cu.gana)} pts por jornada` : 'refuerza tu plantilla', cuanto: `puja de ${eur(m.puja)} (sale a ${eur(m.precio)})`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: 'se lo lleva otro o vuelve a LaLiga' } }) });
   }
 
@@ -313,9 +322,17 @@ function candidatos(X, vetados) {
         op: () => ({ accion: esM ? 'pujar' : 'clausular', ref: `${esM ? 'P' : 'C'}-${e.pid}`, objetivo: 'revender', pid: e.pid, jugador: e.j.nombre,
           donde: esM ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: esM ? e.precioMercado : e.precio, puja_max: esM ? e.puja : null,
           cuando: esM ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora', vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio), confianza: e.confianza,
-          motivo: `Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.${X.backtest && X.backtest.n >= 8 && X.backtest.media > 0 ? ` En esta liga, lo que la app habría comprado así en las últimas semanas salió bien ${X.backtest.bien} de ${X.backtest.n} veces (${eur(X.backtest.media, { signo: true })} de media).` : ''}`,
+          motivo: `${pujaRevTxt(M, e)}Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.${X.backtest && X.backtest.n >= 8 && X.backtest.media > 0 ? ` En esta liga, lo que la app habría comprado así en las últimas semanas salió bien ${X.backtest.bien} de ${X.backtest.n} veces (${eur(X.backtest.media, { signo: true })} de media).` : ''}`,
           datos: { porque: `sube un ${pct(e.r * 100, 1, false)} al día`, cuanto: `${eur(e.precio)}; ${elDiaVenta} valdría unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })})`, cuando: esM ? 'hoy' : 'ahora', siNo: 'te pierdes la subida; no afecta a tu once', vender: elDiaVenta } }) });
     }
+  }
+  // (0.7.13u) lo que sube fuerte pero, a la puja que gana en tu liga, no sale revenderlo: a «Mirados», con las cuentas
+  // (si entra en el plan para el once, no sale aquí: lo dice su motivo)
+  // (los que más euros suben al día primero: +1 % de uno de 90 M pesa más que +3 % de uno de 10 M; Carlos, 16 nov)
+  const interesDe = (pid) => ((M.mercado || []).find((m) => m.pid === pid) || {}).interes || 0;
+  for (const nr of Object.values(M.noRevender || {}).filter((x) => x.r > 0.008 && x.j && !MALOS_PLAN.has(x.j.estado) && (interesDe(x.pid) >= 55 || x.j.valor * x.r >= 3e5))
+    .sort((a, b) => b.j.valor * b.r * (interesDe(b.pid) >= 55 ? 2 : 1) - a.j.valor * a.r * (interesDe(a.pid) >= 55 ? 2 : 1)).slice(0, 6)) {
+    X.avisos.push({ pid: nr.pid, jugador: nr.j.nombre, motivo: noRevenderTxt(M, nr) });
   }
   return { libres: out, fijos };
 }

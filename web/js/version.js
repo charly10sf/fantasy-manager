@@ -22,9 +22,10 @@ export const VERSION = '0.7.13u';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.13u', f: '2026-11-16', h: '10:59', t: 'Los que suben, con su puja justa',
+    v: '0.7.13u', f: '2026-11-16', h: '11:45', t: 'Pujas que aprenden de tu liga',
     cosas: [
-      { tipo: 'mejora', importante: true, d: 'especular', t: 'Los que suben, con su puja justa', x: 'Si un jugador sube cada día pero, pujando lo que se suele pagar en tu liga, ya no te sale a cuenta, el plan te lo propone igual con un tope: «puja como mucho X». Por encima ya no ganas; por debajo, puede que no te llegue, pero si te lo llevas, ganas.' },
+      { tipo: 'mejora', importante: true, d: 'balanza', t: 'Pujas que aprenden de tu liga', x: 'La puja que te propone la app por cada libre ya no mira solo su valor: mira también cómo viene (si sube fuerte o es de los top) y lo que se ha pagado en tu liga por los que venían igual. Aprende de tus pujas: si pierdes muchas, puja más alto; si las ganas todas, un poco menos. Si en tu liga hay pocas compras parecidas, tira de lo que se paga en todas las ligas, sin nombres (con «Ayudar a mejorar la IA» activado).' },
+      { tipo: 'mejora', d: 'especular', t: 'Con esa puja, ¿sale a cuenta?', x: 'Para los que suben, el plan te dice con cuánto te lo llevarías de verdad en tu liga y si, pagando eso, sale a cuenta revenderlo antes de la jornada o tenerlo (en cuántos días recuperas lo que pagas de más). Si no sale ninguna de las dos, lo verás en «Mirados» con las cuentas. Y en la ficha del jugador, cuántas veces de cada 10 ganarías con la puja de la app.' },
     ],
   },
   {

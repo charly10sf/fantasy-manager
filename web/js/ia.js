@@ -1080,6 +1080,18 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   if (PL && !PL.poco) {
     L.push(`\nLO QUE SE PAGA EN ESTA LIGA POR LOS LIBRES DEL MERCADO (${PL.n} compras de las últimas 6 semanas, sobre el valor que tenían ese día): mediana ${pct(PL.med * 100)}, la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}, el 10 % más alto ${pct(PL.p90 * 100)} o más. Eso mezcla jugadores de todos los valores, y cuanto más barato, más se paga en porcentaje: NO lo uses para un jugador concreto${PL.tramos && PL.tramos.length ? `. Por tramos de valor: ${PL.tramos.map((x) => `${tramoTxt(x)}, mediana ${pct(x.med * 100)}, 3 de cada 4 hasta ${pct(x.p75 * 100)} y el 90 % hasta ${pct(x.p90 * 100)} (${x.n} compras)`).join('; ')}` : ''}. Con cada puja (P-) te paso lo que se paga aquí por los de su valor, en porcentaje y en euros: esa es la referencia. Últimas: ${PL.ult.slice(0, 6).map((x) => `${(D.maestro[x.pid] || {}).nombre || '?'} ${eur(x.imp)} (${pct(x.s * 100)}, ${x.tid ? nombreTid(M, x.tid) : '?'})`).join('; ')}.`);
   }
+  // (0.7.13u, Carlos 16 nov: «los top o los que suben mucho se pagan bastante por encima de la media») cómo se paga según
+  // cómo venía el jugador, en esta liga y en todas, y cómo le va al mánager con sus pujas
+  {
+    const CL = M.comprasLiga || [];
+    const med = (f) => { const l = CL.filter(f).map((x) => x.s).sort((a, b) => a - b); if (l.length < 3) return null; const m = (l.length - 1) / 2; return { n: l.length, med: (l[Math.floor(m)] + l[Math.ceil(m)]) / 2 }; };
+    const g = [['subían más de un 1,2 % al día', med((x) => x.r != null && x.r > 0.012)], ['subían de un 0,4 a un 1,2 % al día', med((x) => x.r != null && x.r > 0.004 && x.r <= 0.012)],
+      ['no subían', med((x) => x.r != null && x.r <= 0.004)], [`eran de los top (más de ${eur(M.corteTop, { dec: 0 })})`, med((x) => x.top)]].filter(([, x]) => x);
+    const MP = M.misPujasRes;
+    if (g.length || M.calPujas || MP) {
+      L.push(`\nCÓMO SE PAGA SEGÚN CÓMO VIENE EL JUGADOR${g.length ? ` (compras de esta liga, con lo que subía cada uno esos días): ${g.map(([t, x]) => `los que ${t}, mediana ${pct(x.med * 100)} sobre su valor (${x.n})`).join('; ')}` : ''}.${M.calPujas ? ` En todas las ligas hay ${M.calPujas.n} compras apuntadas, sin nombres: cuando aquí hay pocas parecidas, la puja de cada P- mezcla las de aquí con esas.` : ''} La puja de la app (P-) ya va con los que venían como él: para uno que sube fuerte, no la bajes, que en esta liga con menos se lo lleva otro. Si con esa puja no sale revenderlo, se dice en su línea (PARA REVENDER NO SALE) y entonces solo vale para tenerlo.${MP ? ` MIS PUJAS (las ${MP.n} últimas que vio la app): ganadas ${MP.ganadas}, perdidas ${MP.perdidas}${MP.falta != null ? `; en las perdidas, quien se lo llevó pagó de mediana ${pct(MP.falta * 100, 1, false)} más sobre su valor que yo` : ''}${MP.ajuste > 0.01 ? '; por eso la app puja algo más arriba de lo normal en esta liga' : MP.ajuste < -0.01 ? '; las gano casi todas, así que la app puja algo más abajo' : ''}.` : ''}`);
+    }
+  }
   // lo que se puede hacer hoy, cada cosa con los datos de su jugador (forma, once, rivales, prensa)
   const cat = catDe(D, M);
   L.push('');
@@ -1992,21 +2004,24 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
           // (como mucho hasta lo que se puede pujar hoy: si no, la puja entera se descartaría)
           const cabe = margen != null ? margen + (opC.miPuja ? +opC.miPuja : 0) : Infinity;
           // (16 nov) si es para revender y la app solo lo ve rentable pujando hasta un tope (`pujaJusta`), no se sube de ahí
-          const espJ = String(o.objetivo || '').startsWith('revend') ? (M.especular || []).find((e) => String(e.pid) === String(opC.pid) && e.pujaJusta) : null;
-          const sube = Math.min(espJ ? espJ.puja : (opC.puja || 0), Math.floor(cabe / 10000) * 10000);
+          // (0.7.13u) y para revender, la puja es la que gana en tu liga (`pujaGana`), sin los recortes por lo que aporta al once
+          const espR = String(o.objetivo || '').startsWith('revend') ? (M.especular || []).find((e) => String(e.pid) === String(opC.pid) && e.origen === 'mercado') : null;
+          const espJ = espR && espR.pujaJusta ? espR : null;
+          const objetivoP = espR ? espR.puja : (opC.puja || 0);
+          const sube = Math.min(objetivoP, Math.floor(cabe / 10000) * 10000);
           if (espJ && importe > espJ.puja) { aviso = `${aviso ? `${aviso}. ` : ''}Para revenderlo, la app la deja en ${eur(espJ.puja)}: con más ya no sale a cuenta.`; importe = Math.max(espJ.puja, opC.precio); o.puja_max = importe; }
           // (con lo que se paga por los de su valor: la mediana de todos engaña con los baratos; Carlos, 30 oct)
-          const PV = M.pagaLiga && opC.j && opC.j.valor ? M.pagaLiga(opC.j.valor) : null;
-          if (sube > importe && PL && !PL.poco) {
-            aviso = `${aviso ? `${aviso}. ` : ''}Subida de ${eur(importe)} a ${eur(sube)}: ${PV ? `en esta liga, los libres de su valor (de ${eur(PV.desde)} a ${eur(PV.hasta)}) se llevan de mediana con un ${pct(PV.med * 100)} sobre su valor (la mitad, entre ${pct(PV.p25 * 100)} y ${pct(PV.p75 * 100)})` : `en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad, entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)})`}; con menos lo normal es perderlo${sube < opC.puja ? `. La app pujaría ${eur(opC.puja)}, pero no te llega para más` : ''}.`;
+          const PV = M.pagaLiga && opC.j && opC.j.valor ? M.pagaLiga(opC.j.valor, opC.pid) : null;
+          if (sube > importe && (PV || (PL && !PL.poco))) {
+            aviso = `${aviso ? `${aviso}. ` : ''}Subida de ${eur(importe)} a ${eur(sube)}: ${PV ? `por ${M.pagaTxt(PV)}, se los llevan de mediana con un ${pct(PV.med * 100)} sobre su valor (la mitad, entre ${pct(PV.p25 * 100)} y ${pct(PV.p75 * 100)})` : `en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad, entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)})`}; con menos lo normal es perderlo${sube < objetivoP ? `. La app pujaría ${eur(objetivoP)}, pero no te llega para más` : ''}.`;
             importe = sube; o.puja_max = importe;
-          } else if (opC.puja && opC.puja >= opC.precio && importe > opC.puja * 1.1 && importe - opC.puja > 500000) {
+          } else if (objetivoP && objetivoP >= opC.precio && importe > objetivoP * 1.1 && importe - objetivoP > 500000) {
             // y al revés: si la IA puja claramente más que la app, se baja a la de la app. La de la app ya cuenta las
             // pujas que lleva, si está subiendo, lo que se paga en esta liga por los de su valor (hasta el p90 con
             // muchas pujas) y lo que aguanta pagar por lo que aporta; un 10 % por encima ya es pagar de más. Y como
             // poco medio millón: en los baratos un 10 % son cuatro duros y se pagan más caros en porcentaje
-            aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(importe)}. La app la deja en ${eur(opC.puja)}: con más pagarías de más.`;
-            importe = opC.puja; o.puja_max = importe;
+            aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(importe)}. La app la deja en ${eur(objetivoP)}: con más pagarías de más.`;
+            importe = objetivoP; o.puja_max = importe;
           }
           break;
         }
@@ -2485,7 +2500,7 @@ export function veredictos(D, M) {
     if (t === 'C' || t === 'P') {
       // para el once y para revender no pasan los mismos filtros: vale si vale para alguna de las dos
       const tit = uno(o, { objetivo: 'titular', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null });
-      const espO = (M.especular || []).find((e) => e.pid === o.pid), pujaRev = espO && espO.pujaJusta ? espO.puja : o.puja;
+      const espO = (M.especular || []).find((e) => e.pid === o.pid), pujaRev = espO && espO.origen === 'mercado' ? espO.puja : o.puja;
       const rev = espO ? uno(o, { objetivo: 'revender', importe: t === 'P' ? pujaRev : o.precio, puja_max: t === 'P' ? pujaRev : null }) : { ok: false };
       V[o.ref] = tit.ok && rev.ok ? { ...tit, para: 'el once o revender' } : tit.ok ? { ...tit, para: 'el once' } : rev.ok ? { ...rev, para: 'revender (para el once, no)' } : { ...tit, ok: false };
     } else if (t === 'B') V[o.ref] = uno(o, { objetivo: 'proteger', importe: o.escudoGratis || !o.blindaje || o.blindaje.yaVale || o.blindaje.caro ? 0 : o.blindaje.coste });

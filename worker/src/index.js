@@ -48,6 +48,11 @@
  *                             Con la sesión de LaLiga (solo para frenar a quien no juega), pero no se guarda de quién es.
  *   GET  /dinero/cal          la corrección de todos (calDinero), rehecha como mucho cada 6 h. Sin sesión.
  *
+ *   Lo que se paga por los libres en todas las ligas (0.7.13u; Carlos, 16 nov: «que se mejore solo, general y liga a liga»):
+ *   POST /pujas               { c: [{ k, d, s, v, r, top }] } las compras de una liga, SIN NOMBRES NI IDS (compraLimpia), con la
+ *                             sesión de LaLiga solo para frenar. Como mucho 80 por vez y 4 veces al día por cuenta.
+ *   GET  /pujas/cal           lo pagado sobre el valor por tramo de valor y de subida (calPujas), rehecho cada 6 h. Sin sesión.
+ *
  *   El semáforo de LaLiga y la entrada paso a paso (0.7.13i; Carlos, 15 nov: con 27 clics en la campaña de X no se veía
  *   a nadie entrar, y lo que pasa antes de entrar con la cuenta no llegaba al servidor):
  *   GET  /estado              { nivel: verde | amarillo | rojo, t, login, api, cuenta, entradas }: cómo van los servidores de
@@ -231,6 +236,8 @@ export const FRENOS = {
   plan: { min: 3 },
   // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
+  // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
+  pujas: { min: 6, dia: 30 }, pujasCal: { min: 20 },
   // (0.7.13i) los pasos antes de entrar y el semáforo de LaLiga, sin sesión: por IP
   embudo: { min: 20, dia: 120 }, estado: { min: 30 },
 };
@@ -373,6 +380,25 @@ export class Emparejar {
       for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
       const regs = [...(await st.list({ prefix: 'r|', reverse: true, limit: DINERO_MAX })).values()];
       const cal = { ...calDinero(regs), t: Date.now() };
+      await st.put('cal', cal);
+      return new Response(JSON.stringify(cal), { status: 200 });
+    }
+    // (0.7.13u) las compras de todas las ligas, en otro objeto («pujas|todos»): de una vez, como mucho 128
+    if (ruta === '/pujas/poner') {
+      const b = await req.json().catch(() => null);
+      if (!b || !b.xs || typeof b.xs !== 'object') return new Response('mal', { status: 400 });
+      const ks = Object.keys(b.xs).slice(0, 128);
+      if (ks.length) await st.put(Object.fromEntries(ks.map((k) => [k, b.xs[k]])));
+      return new Response('ok', { status: 200 });
+    }
+    if (ruta === '/pujas/cal') {
+      const ya = await st.get('cal');
+      if (ya && Date.now() - ya.t < PUJAS_CAL_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+      const limite = `c|${diaHace(PUJAS_DIAS)}`;
+      const viejos = [...(await st.list({ prefix: 'c|', end: limite, limit: 2000 })).keys()];
+      for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+      const regs = [...(await st.list({ prefix: 'c|', reverse: true, limit: PUJAS_MAX })).values()];
+      const cal = { ...calPujas(regs), t: Date.now() };
       await st.put('cal', cal);
       return new Response(JSON.stringify(cal), { status: 200 });
     }
@@ -968,6 +994,75 @@ async function dineroCal(env, c) {
   return json(CAL_MEM.cal, 200, c);
 }
 
+/* ---------- lo que se paga por los libres del mercado en todas las ligas (0.7.13u) ---------- */
+/*
+ * Carlos, 16 nov: «los top o los que suben mucho se pagan bastante por encima de la media… que se mejore solo, de forma
+ * general y liga a liga». La app manda una vez al día las compras a LaLiga de su liga que no ha mandado ya, SIN NOMBRES NI
+ * IDS de nadie (ni del jugador, ni de quien compró, ni de la liga):
+ *   k    huella (SHA-256, 24 hex) de liga|jugador|hora de la compra, hecha en el móvil: solo para que dos de la misma liga
+ *        no cuenten dos veces la misma compra
+ *   d    el día de la compra; s lo pagado sobre su valor (0,12 = un 12 % más); v su valor (redondeado a 10 mil);
+ *   r    lo que subía al día en los 3 días de antes (null si no se sabe); top, si era de los 30 que más valen
+ * Va en su Durable Object («pujas|todos») y se queda PUJAS_DIAS días desde el día de la compra. Con la sesión de LaLiga
+ * solo para frenar (por cuenta y día); no se guarda de quién es. La app lo lee con /pujas/cal (6 h de caché), por tramos
+ * de valor y de subida, y lo mezcla con lo de su liga cuando esta tiene pocas compras parecidas (M.pagaLiga).
+ */
+export const PUJAS_DIAS = 120, PUJAS_MAX = 30000, PUJAS_CAL_CADA = 6 * 3600e3, PUJAS_CUENTA_DIA = 4, PUJAS_TODOS_DIA = 4000, PUJAS_POR_VEZ = 80;
+// los tramos de valor (como TRAMOS_PUJA de motor.js) y de subida al día; van en la respuesta, así que la app usa estos
+export const TRAMOS_PUJAS = { v: [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, 1e12]], r: [[-1, 0.004], [0.004, 0.012], [0.012, 1]] };
+/** una compra limpia (lo que se guarda: { s, v, r, top }) o null si algo no cuadra */
+export function compraLimpia(b, hoy = Date.now()) {
+  if (!b || typeof b !== 'object' || !/^[0-9a-f]{24}$/.test(String(b.k || '')) || !/^\d{4}-\d{2}-\d{2}$/.test(String(b.d || ''))) return null;
+  const td = Date.parse(`${b.d}T12:00:00Z`);
+  if (!Number.isFinite(td) || td > hoy + 864e5 || hoy - td > 60 * 864e5) return null;
+  const s = Number(b.s), v = Number(b.v), r = b.r == null ? null : Number(b.r);
+  if (!Number.isFinite(s) || s < -0.1 || s > 5 || !Number.isFinite(v) || v < 1e5 || v > 400e6) return null;
+  if (r != null && (!Number.isFinite(r) || r < -0.2 || r > 0.3)) return null;
+  return { s: Math.round(s * 1000) / 1000, v: Math.round(v / 1e4) * 1e4, r: r == null ? null : Math.round(r * 1e4) / 1e4, top: b.top === true };
+}
+const resumenS = (xs) => { const o = xs.map((x) => x.s).sort((a, b) => a - b); const q = (p) => Math.round(cuantilD(o, p) * 1000) / 1000; return { n: o.length, p10: q(0.1), p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9) }; };
+/** lo que se paga en todas las ligas: por tramo de valor y de subida («i|j»), por valor («i|*») y los top por subida («top|j») */
+export function calPujas(regs) {
+  const l = (regs || []).filter((x) => x && Number.isFinite(x.s) && Number.isFinite(x.v));
+  const en = (tr, x) => tr.findIndex(([lo, hi]) => x >= lo && x < hi);
+  const celdas = [];
+  const poner = (k, xs) => { if (xs.length) celdas.push({ k, ...resumenS(xs) }); };
+  TRAMOS_PUJAS.v.forEach((_, i) => {
+    const deV = l.filter((x) => en(TRAMOS_PUJAS.v, x.v) === i);
+    poner(`${i}|*`, deV);
+    TRAMOS_PUJAS.r.forEach((__, j) => poner(`${i}|${j}`, deV.filter((x) => x.r != null && en(TRAMOS_PUJAS.r, x.r) === j)));
+  });
+  TRAMOS_PUJAS.r.forEach((_, j) => poner(`top|${j}`, l.filter((x) => x.top && x.r != null && en(TRAMOS_PUJAS.r, x.r) === j)));
+  return { n: l.length, tv: TRAMOS_PUJAS.v, tr: TRAMOS_PUJAS.r, celdas };
+}
+const objPujas = (env) => env.QR.get(env.QR.idFromName('pujas|todos'));
+async function pujasApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `pujas|${u.uid}`, 3))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  const lista = b && Array.isArray(b.c) ? b.c.slice(0, PUJAS_POR_VEZ) : null;
+  if (!lista || !lista.length) return json({ e: 'Nada que apuntar' }, 400, c);
+  const xs = {};
+  for (const y of lista) { const x = compraLimpia(y); if (x) xs[`c|${y.d}|${y.k}`] = x; }
+  if (!Object.keys(xs).length) return json({ e: 'Compras no válidas' }, 400, c);
+  if (!(await cabeHoy(env, `pujas|${u.uid}`, PUJAS_CUENTA_DIA))) return demasiadas(c, 'mañana');
+  if (!(await cabeHoy(env, 'pujas|todos', PUJAS_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
+  const r = await objPujas(env).fetch('https://pujas/pujas/poner', { method: 'POST', body: JSON.stringify({ xs }) });
+  return r.status === 200 ? json({ ok: true, n: Object.keys(xs).length }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+}
+let PUJAS_MEM = { t: 0, cal: null };
+async function pujasCal(env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  if (!PUJAS_MEM.cal || Date.now() - PUJAS_MEM.t > 10 * 60e3) {
+    const r = await objPujas(env).fetch('https://pujas/pujas/cal', { method: 'POST' });
+    if (r.status !== 200) return json({ e: 'No se ha podido leer' }, 503, c);
+    PUJAS_MEM = { t: Date.now(), cal: await r.json() };
+  }
+  return json(PUJAS_MEM.cal, 200, c);
+}
+
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
 /**
  * borra todo lo que el servidor guarda de quien llama: su ficha de /hola (p:), su registro (r:), sus minutos de uso
@@ -1288,6 +1383,7 @@ async function leerEmbudo(env) {
 const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
   'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
+  'POST /pujas': 'pujas', 'GET /pujas/cal': 'pujasCal',
   'POST /embudo': 'embudo', 'GET /estado': 'estado',
 };
 
@@ -1331,6 +1427,8 @@ export default {
       }
       if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
+      if (url.pathname === '/pujas' && req.method === 'POST') return await pujasApunte(req, env, c);
+      if (url.pathname === '/pujas/cal' && req.method === 'GET') return await pujasCal(env, c);
       if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
       if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);

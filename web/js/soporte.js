@@ -132,6 +132,29 @@ export async function mandarDinero(apunte) {
   if (!mejorarIA()) return false;
   try { await pedirWorker('POST', '/dinero', apunte, { tiempo: 15000 }); return true; } catch (e) { return false; }
 }
+/* ---------- (0.7.13u) lo que se paga por los libres del mercado: aprender de todas las ligas ---------- */
+/** la huella de una compra (liga|jugador|hora, 24 hex): no deja saber cuál es, solo sirve para no contarla dos veces */
+export async function huellaCompra(liga, pid, t) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-puja|${liga}|${pid}|${t}`));
+  return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top }] }; true si han entrado */
+export async function mandarCompras(c) {
+  if (!mejorarIA() || !c || !c.length) return false;
+  try { await pedirWorker('POST', '/pujas', { c }, { tiempo: 15000 }); return true; } catch (e) { return false; }
+}
+/** lo que se paga en todas las ligas por tramo de valor y de subida, con 6 h de caché: { t, cal } */
+export const calPujasGuardada = () => LS.get('pujas-cal', { t: 0, cal: null });
+export async function leerCalPujas() {
+  const ya = calPujasGuardada();
+  if (Date.now() - (ya.t || 0) < 6 * 3600e3) return null;
+  let cal = null;
+  try { cal = await pedirWorker('GET', '/pujas/cal', null, { tiempo: 15000 }); } catch (e) { LS.set('pujas-cal', { ...ya, t: Date.now() - 5 * 3600e3 }); return null; }
+  if (!cal || typeof cal.n !== 'number') return null;
+  LS.set('pujas-cal', { t: Date.now(), cal });
+  return cal;
+}
+
 /** la corrección de todos, con 6 h de caché: { t, cal } (cal null si no se ha podido leer nunca) */
 export const calDineroGuardada = () => LS.get('dinero-cal', { t: 0, cal: null });
 export async function leerCalDinero() {
