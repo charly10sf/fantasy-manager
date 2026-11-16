@@ -2183,7 +2183,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251777/lesion-pubill-no-reviste-gravedad.html": 1794848176000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/buenas-noticias-pubill-descartada-lesion-grave-20261116_3476205.html": 1794848379000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
-   "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000
+   "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
+   "SPORT|136506735": 1794848428000
   },
   "hechos": [
    {
@@ -2479,11 +2480,25 @@
     "motivo": "dos lesiones musculares consecutivas",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136506735",
+    "medio": "SPORT",
+    "t": 1794848428000,
+    "id": "3092",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Olmo entrena con el grupo y espera la convocatoria",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     13
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -3399,17 +3414,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 33,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 591933,
-  "salida": 36006,
+  "entrada": 593991,
+  "salida": 36517,
   "cacheLee": 29030,
   "cacheEscribe": 20321,
-  "dolares": 1.196766,
+  "dolares": 1.197227,
   "reservado": 0
  },
  "recientes": {
@@ -7656,13 +7671,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3171,
+   "ok": 3172,
    "fallos": 0,
-   "ejecuciones": 2564,
+   "ejecuciones": 2565,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:01:12.623Z"
+   "ultima": "2026-11-16T18:06:31.419Z"
   }
  },
  "ptsDirecto": {},
@@ -7679,15 +7694,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:01:18.700Z"
+   "ultimaBien": "2026-11-16T18:06:38.344Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:01:18.700Z"
+   "ultimaBien": "2026-11-16T18:06:38.344Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:01:18.700Z"
+   "ultimaBien": "2026-11-16T18:06:38.344Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7695,11 +7710,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:01:18.700Z"
+   "ultimaBien": "2026-11-16T18:06:38.344Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:01:18.700Z"
+   "ultimaBien": "2026-11-16T18:06:38.344Z"
   }
  },
  "avisos": [
