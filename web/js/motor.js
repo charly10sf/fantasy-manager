@@ -1995,10 +1995,18 @@ export function analizar(D, H, c, extra = {}) {
       const dias = Math.max(M.ventanaEsp.ciclos, M.ventanaEsp.diasValor || 0);
       const vu = vuelve(j, t);
       const { r, v } = proyectar(j, t, dias, vu);
-      const beneficio = v - precio;
+      let beneficio = v - precio;
+      // (16 nov, Carlos: «Valverde, Pepe y Unai López son compras claras por cómo se revalorizan») si con la puja que
+      // hace falta en tu liga ya no compensa, la puja más alta que aún sale a cuenta, si llega a la mínima: «puja hasta X»
+      // (puede que no baste para llevárselo, y se dice). Antes se descartaba sin más
+      let pujaJusta = false;
+      if (origen === 'mercado' && extraInfo && extraInfo.precioMercado && r > 0.004 && beneficio < Math.max(250000, precio * 0.025)) {
+        const tope = Math.floor(Math.min(v / 1.025, v - 250000) / 10000) * 10000;
+        if (tope >= extraInfo.precioMercado && tope < precio) { extraInfo = { ...extraInfo, puja: tope, pujaLiga: precio }; precio = tope; beneficio = v - tope; pujaJusta = true; }
+      }
       if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
       const confianza = vu && r > 0.01 ? 'alta' : t.p7 != null && r > 0.008 ? 'media' : 'baja';
-      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza, vuelve: vu, ...extraInfo });
+      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: pujaJusta && confianza === 'alta' ? 'media' : confianza, vuelve: vu, pujaJusta, ...extraInfo });
     };
     // la puja es la misma que en Mercado → Fichar y en el plan (`m.puja`: lo que hace falta en tu liga para llevártelo).
     // Antes, para revender, se pujaba un 1,2 % más por puja sobre el precio, pero al cuadrar el plan se subía a `m.puja`
@@ -2498,7 +2506,7 @@ export function planAuto(D, M, c) {
         donde: e.origen === 'mercado' ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: e.origen === 'mercado' ? e.precioMercado : e.precio, puja_max: e.origen === 'mercado' ? e.puja : null,
         cuando: e.origen === 'mercado' ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora',
         vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio),
-        motivo: `Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.`,
+        motivo: `${e.pujaJusta ? `Puja como mucho ${eur(e.puja)}: por encima ya no sale a cuenta. En tu liga se suele pagar ${eur(e.pujaLiga)} por uno así, así que puede que no te llegue, pero a ese precio ganas. ` : ''}Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.`,
         confianza: e.confianza });
     }
     saldo = espSaldo;

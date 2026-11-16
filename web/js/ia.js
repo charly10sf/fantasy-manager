@@ -1991,7 +1991,10 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
           const PL = M.pujasLiga;
           // (como mucho hasta lo que se puede pujar hoy: si no, la puja entera se descartaría)
           const cabe = margen != null ? margen + (opC.miPuja ? +opC.miPuja : 0) : Infinity;
-          const sube = Math.min(opC.puja || 0, Math.floor(cabe / 10000) * 10000);
+          // (16 nov) si es para revender y la app solo lo ve rentable pujando hasta un tope (`pujaJusta`), no se sube de ahí
+          const espJ = String(o.objetivo || '').startsWith('revend') ? (M.especular || []).find((e) => String(e.pid) === String(opC.pid) && e.pujaJusta) : null;
+          const sube = Math.min(espJ ? espJ.puja : (opC.puja || 0), Math.floor(cabe / 10000) * 10000);
+          if (espJ && importe > espJ.puja) { aviso = `${aviso ? `${aviso}. ` : ''}Para revenderlo, la app la deja en ${eur(espJ.puja)}: con más ya no sale a cuenta.`; importe = Math.max(espJ.puja, opC.precio); o.puja_max = importe; }
           // (con lo que se paga por los de su valor: la mediana de todos engaña con los baratos; Carlos, 30 oct)
           const PV = M.pagaLiga && opC.j && opC.j.valor ? M.pagaLiga(opC.j.valor) : null;
           if (sube > importe && PL && !PL.poco) {
@@ -2482,7 +2485,8 @@ export function veredictos(D, M) {
     if (t === 'C' || t === 'P') {
       // para el once y para revender no pasan los mismos filtros: vale si vale para alguna de las dos
       const tit = uno(o, { objetivo: 'titular', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null });
-      const rev = (M.especular || []).some((e) => e.pid === o.pid) ? uno(o, { objetivo: 'revender', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null }) : { ok: false };
+      const espO = (M.especular || []).find((e) => e.pid === o.pid), pujaRev = espO && espO.pujaJusta ? espO.puja : o.puja;
+      const rev = espO ? uno(o, { objetivo: 'revender', importe: t === 'P' ? pujaRev : o.precio, puja_max: t === 'P' ? pujaRev : null }) : { ok: false };
       V[o.ref] = tit.ok && rev.ok ? { ...tit, para: 'el once o revender' } : tit.ok ? { ...tit, para: 'el once' } : rev.ok ? { ...rev, para: 'revender (para el once, no)' } : { ...tit, ok: false };
     } else if (t === 'B') V[o.ref] = uno(o, { objetivo: 'proteger', importe: o.escudoGratis || !o.blindaje || o.blindaje.yaVale || o.blindaje.caro ? 0 : o.blindaje.coste });
     else if (t === 'A') V[o.ref] = uno(o, { objetivo: 'caja', importe: o.precio });
