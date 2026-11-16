@@ -1129,6 +1129,13 @@
    "jornada": 13,
    "id": "2122397231135457600",
    "t": "2026-11-16T18:31:47.166Z"
+  },
+  {
+   "clave": "noticias|2314:mala|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122405944667607470",
+   "t": "2026-11-16T19:06:24.611Z"
   }
  ],
  "estados": {
@@ -2201,7 +2208,9 @@
    "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html": 1794854713000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000
   },
   "hechos": [
    {
@@ -2572,11 +2581,23 @@
     "motivo": "problema en el sóleo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794854713000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Vivian vuelve a lesionarse y entra en la enfermería",
+    "motivo": "problema muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -3493,17 +3514,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 50,
-   "redactar": 34,
-   "revisar": 18,
+   "clasificar": 51,
+   "redactar": 35,
+   "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 616727,
-  "salida": 39641,
+  "entrada": 633632,
+  "salida": 40094,
   "cacheLee": 29030,
-  "cacheEscribe": 23224,
-  "dolares": 1.237711,
+  "cacheEscribe": 26127,
+  "dolares": 1.276718,
   "reservado": 0
  },
  "recientes": {
@@ -3619,10 +3640,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T11:01:27.551Z",
-    "texto": "👀 Cucho vuelve a entrenar a medias con el grupo, según MARCA y Mundo Deportivo.\n\nEs buena señal para el delantero del Betis, que lleva 2 goles y 2 asistencias en la liga. Con la liga parada, la vuelta que importa es la del sábado 21 contra el Sevilla, que va 6º, en el Sánchez-Pizjuán. Aún falta para saber si llega con sitio en el once."
-   },
-   {
     "t": "2026-11-16T11:46:28.776Z",
     "texto": "👀 Bernardo Silva estará disponible para la vuelta de LaLiga, según MARCA y AS.\n\nEl centrocampista del Madrid llega al sábado 21 de noviembre, el primer partido tras el parón, ante un Celta que encaja poco, y eso para un medio no ayuda. Va a 3,3 puntos de media, así que de momento no es de los que mueven la jornada."
    },
@@ -3637,6 +3654,10 @@
    {
     "t": "2026-11-16T18:31:47.168Z",
     "texto": "👀 Olmo vuelve a entrenar con el grupo, según Mundo Deportivo y SPORT.\n\nEl centrocampista del Barça lleva 1 gol y 3 asistencias en la liga, así que su regreso es una buena noticia si lo tienes. Con la liga parada, el partido que importa es el del domingo 22 de noviembre, tras el parón, contra el Villarreal 🚢, que va 8º. Aún no se sabe si llega con sitio en el once."
+   },
+   {
+    "t": "2026-11-16T19:06:24.613Z",
+    "texto": "❌ Vivian vuelve a la enfermería con una lesión moderada en el sóleo, según Mundo Deportivo, la Cadena SER y El Correo.\n\nEl defensa del Athletic 🦁 venía de sumar 27 puntos en las tres últimas jornadas, así que la baja duele. Se pierde los partidos con su selección y no hay plazo para saber si llega al Athletic-Espanyol del viernes 20, tras el parón. Si lo tienes, ve pensando en un recambio."
    }
   ],
   "directo": [
@@ -7750,13 +7771,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3183,
+   "ok": 3184,
    "fallos": 0,
-   "ejecuciones": 2576,
+   "ejecuciones": 2577,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T19:01:13.586Z"
+   "ultima": "2026-11-16T19:06:12.089Z"
   }
  },
  "ptsDirecto": {},
@@ -7773,15 +7794,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:01:22.064Z"
+   "ultimaBien": "2026-11-16T19:06:24.632Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:01:22.064Z"
+   "ultimaBien": "2026-11-16T19:06:24.632Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:01:22.064Z"
+   "ultimaBien": "2026-11-16T19:06:24.632Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7789,11 +7810,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:01:22.064Z"
+   "ultimaBien": "2026-11-16T19:06:24.632Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T19:01:22.064Z"
+   "ultimaBien": "2026-11-16T19:06:24.632Z"
   }
  },
  "avisos": [
