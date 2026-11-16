@@ -9,7 +9,7 @@ import { token } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
-import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, PARON_VUELTA, noMerece } from './operaciones.js';
+import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
@@ -1824,20 +1824,6 @@ export function mejorarAlin(js, pool, M, no = new Set()) {
 /** las operaciones del plan con sus jugadores y el saldo después de cada una, con los números de la app */
 /* (revisión de la IA, 14 nov) `chat`: lo mismo para lo que la IA recomienda en el chat (su bloque «recomiendo»). Ahí lo que un
    rival tiene a la venta sí se mira (con su precio mínimo y lo que le da LaLiga) y el once va aparte (revisarChat) */
-/** (0.7.13p) en el parón, ¿sube lo bastante hasta la vuelta para que comprarlo a este precio sea ganar dinero? Si la app lo
-    tiene para revender (M.especular), con su cuenta; si no, si sube con fuerza (sube o acelera, +1,5 % hoy o más y +4 % o
-    más en 7 días) y no ha girado. { futuro, txt } o null */
-export function subeHastaVuelta(M, j, precio) {
-  if (!M || !j || !j.valor || !precio) return null;
-  const e = (M.especular || []).find((x) => x.pid === j.id);
-  if (e && e.valorFuturo > precio) return { futuro: e.valorFuturo, txt: `sube un ${String(Math.round(e.r * 1000) / 10).replace('.', ',')} % al día` };
-  const ine = M.inercia ? M.inercia(j.id) : null, t = M.tend ? M.tend(j.id) : null;
-  if (!ine || !t || !['sube', 'acelera'].includes(ine.fase)) return null;
-  if (!(t.p1 != null && t.p1 >= 1.5 && t.p7 != null && t.p7 >= 4)) return null;
-  // sin la cuenta de la app, solo si ni siquiera paga por encima de lo que valdrá en dos días a la mitad de su ritmo de hoy
-  if (precio > j.valor * (1 + (t.p1 / 100))) return null;
-  return { futuro: null, txt: `sube cada día (${eur(Math.round(j.valor * t.p1 / 100), { signo: true })} hoy)` };
-}
 export function cuadrarPlan(P, D, M, { chat = false } = {}) {
   if (!P) return null;
   const buscar = (n) => {
@@ -2070,7 +2056,10 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       if (subeParon.futuro) { o.beneficio_esperado = Math.round(subeParon.futuro - importe); o.beneficioApp = true; }
       aviso = `${aviso ? `${aviso} ` : ''}En el parón, pero ${subeParon.txt}: ${subeParon.futuro ? `pagando ${eur(importe)}, antes de la vuelta valdría unos ${eur(subeParon.futuro)} (${eur(subeParon.futuro - importe, { signo: true })}). ` : ''}Comprarlo ahora sale a cuenta y llega a tiempo para el once de la jornada ${M.proxima.n}.`;
     }
+    // (0.7.13p) ni uno del mercado a su valor, bueno y sin bajar que se paga con el saldo, sin deuda (aSuValorParon)
+    const mParon = accion !== 'clausular' && (M.mercado || []).find((x) => String(x.pid) === String(pid));
     if (!ya && !descartada && !subeParon && signo < 0 && importe && j && ['clausular', 'pujar', 'comprar'].includes(accion) && !String(o.objetivo || '').startsWith('revend') && paronLejos(M) && !cholloParon(M, j, importe)
+      && !(mParon && aSuValorParon(M, mParon, importe, num(D.dinero) - num(M.misPujas)))
       && !(opC && opC.trato) && !notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe)) {
       descartada = true;
       o.paron = true;

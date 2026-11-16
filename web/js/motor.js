@@ -2,7 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
-import { paronLejos, cholloParon } from './operaciones.js';
+import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './operaciones.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -2418,12 +2418,19 @@ export function planAuto(D, M, c) {
   // 3. pujar por los chollos del mercado
   let pujas = 0;
   // (19) en el parón, para el once nada del mercado que no sea un chollo claro: lo que sube va por «especular»
-  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio)))) {
-    if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
+  // (0.7.13p, aviso de Domy) ni lo que sube hasta la vuelta y se paga a buen precio: en el parón es dinero y llega al once
+  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && ((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio) || subeHastaVuelta(M, y.j, y.puja || y.precio) || aSuValorParon(M, y, y.puja || y.precio, Math.min(saldo, caja)))
+    // (0.7.13p) en el parón, con dinero de sobra, también el que está a su valor aunque la app no lo vea chollo (ni frenando)
+    || (paron && ['normal', 'frena'].includes(y.veredicto) && aSuValorParon(M, y, y.puja || y.precio, Math.min(saldo, caja)))))) {
+    // (0.7.13p) en el parón, el que entra por estar a su valor se paga con el saldo que queda, sin deuda; con eso, hasta 3
+    // pujas y sin el tope de uno por puesto (Carlos, 16 nov: Pepe, Unai López y Valverde, dos de ellos centrocampistas)
+    const porValor = paron && !cholloParon(M, m.j, m.puja || m.precio) && !subeHastaVuelta(M, m.j, m.puja || m.precio);
+    if (pujas >= (paron ? 3 : 2) || m.puja > presupuesto() || (yaHoy.has(m.j.pos) && !paron) || !hueco(m.j)) continue;
+    if (porValor && (m.puja || m.precio) > saldo) continue;
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
     op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
-      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}` });
+      motivo: `${porValor ? 'En el parón, pero sale a su valor, no baja y lo pagas con tu saldo, sin deuda: con dinero de sobra, tenerlo ya no cuesta nada. ' : ''}Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
   // lo mejor que no te llega todavía, para que sepas cuánto te falta

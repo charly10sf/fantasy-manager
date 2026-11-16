@@ -723,13 +723,32 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const j = m.j, precio = Math.round(j.valor * 1.08);
     const una = (esp) => { M.especular = esp; const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: j.nombre, pid: j.id, importe: precio, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(j.id)); return o ? !!o.descartada : null; };
     const esp0 = (antes.esp || []).filter((x) => x.pid !== j.id);
+    // (sin saldo, para que no entre por estar a su valor)
+    const dOrig = D.dinero; D.dinero = 0;
     const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: j.valor * 1.2, r: 0.025, beneficio: j.valor * 0.12 }]);
     const quieto = una(esp0);
+    D.dinero = dOrig;
+    // (0.7.13p) uno a su valor, bueno y sin bajar, que se paga con el saldo: vale para el once aunque no sea chollo; si no
+    // te llega con el saldo, no
+    const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02) || null;
+    let aValor = null, sinSaldo = null;
+    if (m2) {
+      m2.interes = Math.max(m2.interes || 0, 60);
+      const imp = Math.round(m2.j.valor * 1.09);
+      const d0 = D.dinero, ine0 = M.inercia, tend0 = M.tend;
+      M.inercia = (pid) => (String(pid) === String(m2.j.id) ? { fase: 'plano' } : ine0(pid));
+      M.tend = (pid) => (String(pid) === String(m2.j.id) ? { ...tend0(pid), p1: 0, p7: 0 } : tend0(pid));
+      const prueba = () => { const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: m2.j.nombre, pid: m2.j.id, importe: imp, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(m2.j.id)); return o ? !!o.descartada : null; };
+      D.dinero = imp * 2 + (M.misPujas || 0); aValor = prueba();
+      D.dinero = Math.round(imp / 2) + (M.misPujas || 0); sinSaldo = prueba();
+      D.dinero = d0; M.inercia = ine0; M.tend = tend0;
+    }
     M.paron = antes.paron; M.enParon = antes.enParon; if (M.proxima) M.proxima.ini = antes.ini; M.especular = antes.esp;
-    return { sube, quieto };
+    return { sube, quieto, aValor, sinSaldo };
   });
   if (r.sube !== false || r.quieto !== true) mal(`parón: el fichaje que sube hasta la vuelta (descartado: ${r.sube}) o el que no (descartado: ${r.quieto})`);
-  else bien('parón: el fichaje que sube hasta la vuelta no se descarta aunque sea para el once; el que no sube, sí');
+  else if (r.aValor !== null && (r.aValor !== false || r.sinSaldo !== true)) mal(`parón: el que sale a su valor con saldo de sobra (descartado: ${r.aValor}) o sin saldo (descartado: ${r.sinSaldo})`);
+  else bien(`parón: lo que sube hasta la vuelta y${r.aValor === null ? '' : ' lo que sale a su valor pagado con el saldo'} no se descarta aunque sea para el once; lo demás, sí`);
   if (errores.length) mal(`parón y fichajes que suben: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
