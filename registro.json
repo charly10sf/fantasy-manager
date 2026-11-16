@@ -1450,7 +1450,7 @@
   "2748": "ok",
   "2749": "ok",
   "2753": "ok",
-  "2754": "ok",
+  "2754": "injured",
   "2755": "ok",
   "2756": "out_of_league",
   "2757": "ok",
@@ -1969,20 +1969,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250422/buena-senal.html": 1794549600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250408/dia-reencuentros-lezama-san-mames.html": 1794549600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250434/matarazzo-busca-extremo-haga-barrene.html": 1794548400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250420/portada-hoy-edicion-bizkaia-araba-mundo-deportivo.html": 1794525463000,
-   "SPORT|136382083": 1794544214000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/12/de-la-fuente-confirma-que-lamine-y-oyarzabal-estaran-disponibles-para-el-partido-ante-inglaterra-en-el-metropolitano-cadena-ser/": 1794522744000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/12/sancet-en-su-primera-convocatoria-con-euskadi-ojala-algun-dia-podamos-pelear-un-mundial-con-la-seleccion-de-nuestro-pais-cadena-ser/": 1794522580000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-recupera-lamine-yamal-oyarzabal-jugar-inglaterra-20261112_3474248.html": 1794524509000,
-   "ABC|https://www.abc.es/deportes/futbol/lamine-rodri-espana-sufre-20261112233025-nt.html": 1794534035000,
-   "SPORT|136394638": 1794546217000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250414/cupo-rojiblanco-euskal-selekzioa-llega-diez-jugadores.html": 1794551400000,
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/13/oihan-sancet-sueno-defender-espana-sueno-jugar-euskadi-mundial.html": 1794552560000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250415/sancet-contentos-terzic-gran-tio.html": 1794553200000,
-   "SPORT|136324164": 1794549602000,
    "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
    "SPORT|136396955": 1794555227000,
@@ -2141,23 +2130,20 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000,
    "SPORT|136476258": 1794770321000,
    "SPORT|136477261": 1794773168000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/arma-fundamental-aguirre-obligado-recuperar-valencia-cf-corners-gol-estrategia-laliga-136477381.html": 1794778833000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/arma-fundamental-aguirre-obligado-recuperar-valencia-cf-corners-gol-estrategia-laliga-136477381.html": 1794778833000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794808800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html": 1794782131000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251424/nico-williams-le-coge-medida-inglaterra.html": 1794780779000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251401/francia.html": 1794780266000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251405/partido-completo-baena-espana-perdera-proximo.html": 1794779193000,
+   "SPORT|136426028": 1794803462000,
+   "SPORT|136480594": 1794801644000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261115/11684932/fuente-cubarsi-tenia-molestia-muscular.html": 1794782711000,
+   "ABC|https://www.abc.es/deportes/futbol/francia-turquia-belgica-italia-20261115214719-nt.html": 1794788851000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/futbolgallego/2026/11/16/medio-siglo-banquillos/0003_202611V16C8994.htm": 1794801600000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-deja-agujero-sevilla_0_2008508110.html": 1794807040000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136324164",
-    "medio": "SPORT",
-    "t": 1794549602000,
-    "id": "3104",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Lamine Yamal sufre molestias en la rodilla derecha tras el Atlético",
-    "motivo": "molestias en la rodilla derecha",
-    "plazo": "",
-    "nums": [
-     19
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/",
     "medio": "AS",
@@ -2300,11 +2286,38 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794782131000,
+    "id": "1775",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Pau Cubarsí sufre molestias en la cadera y pasa pruebas",
+    "motivo": "molestias en la cadera",
+    "plazo": "",
+    "nums": [
+     2,
+     3
+    ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-deja-agujero-sevilla_0_2008508110.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794807040000,
+    "id": "2746",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Miguel Sierra sufre una lesión en el Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-15",
-   "n": 33
+   "dia": "2026-11-16",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3149,12 +3162,9 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794526017000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794525212000,
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000,
    "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000,
@@ -3223,17 +3233,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 24,
-   "revisar": 8,
+   "clasificar": 1,
+   "redactar": 27,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 343936,
-  "salida": 9024,
-  "cacheLee": 20321,
-  "cacheEscribe": 2903,
-  "dolares": 0.7874,
+  "entrada": 410003,
+  "salida": 15598,
+  "cacheLee": 26127,
+  "cacheEscribe": 5806,
+  "dolares": 0.943315,
   "reservado": 0
  },
  "recientes": {
@@ -3637,7 +3647,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "selecciones-dia|12|20261115": {
+   "n": 1,
+   "t": "2026-11-16T06:02:29.690Z",
+   "ultima": "2026-11-16T06:02:29.690Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7476,13 +7492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3024,
+   "ok": 3025,
    "fallos": 0,
-   "ejecuciones": 2417,
+   "ejecuciones": 2418,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T05:56:15.830Z"
+   "ultima": "2026-11-16T06:01:14.399Z"
   }
  },
  "ptsDirecto": {},
@@ -7499,15 +7515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T05:56:16.432Z"
+   "ultimaBien": "2026-11-16T06:02:29.711Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T05:56:16.432Z"
+   "ultimaBien": "2026-11-16T06:02:29.711Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T05:56:16.432Z"
+   "ultimaBien": "2026-11-16T06:02:29.711Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7515,11 +7531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T22:56:13.432Z"
+   "ultimaBien": "2026-11-16T06:02:29.711Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-15T21:56:17.575Z"
+   "ultimaBien": "2026-11-16T06:02:29.711Z"
   }
  },
  "avisos": [
@@ -10313,6 +10329,584 @@
       "clubFm": "Deportivo Las Sabanas",
       "club": "Deportivo",
       "codigo": "NCA",
+      "casa": false,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     }
+    ]
+   }
+  ],
+  "20261115": [
+   {
+    "id": 5181799,
+    "fecha": "20261115",
+    "liga": "UEFA Nations League A Grp. 1",
+    "hora": "2026-11-15T19:45:00.000Z",
+    "casa": {
+     "nombre": "France",
+     "codigo": "FRA",
+     "idFm": 6723,
+     "goles": 2
+    },
+    "fuera": {
+     "nombre": "Turkiye",
+     "codigo": "TUR",
+     "idFm": 6595,
+     "goles": 1
+    },
+    "jugadores": [
+     {
+      "id": "820140",
+      "nombre": "Ibrahima Konaté",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "FRA",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 7.4,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "701154",
+      "nombre": "Kylian Mbappé",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "FRA",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 7.7,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1015185",
+      "nombre": "Eduardo Camavinga",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "FRA",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 27,
+      "nota": 6.1,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1253890",
+      "nombre": "Arda Güler",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "TUR",
+      "casa": false,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 8.1,
+      "goles": 0,
+      "asist": 1,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "464486",
+      "nombre": "Enes Ünal",
+      "clubFm": "Getafe",
+      "club": "Getafe",
+      "codigo": "TUR",
+      "casa": false,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     }
+    ]
+   },
+   {
+    "id": 5181859,
+    "fecha": "20261115",
+    "liga": "UEFA Nations League A Grp. 3",
+    "hora": "2026-11-15T19:45:00.000Z",
+    "casa": {
+     "nombre": "Croatia",
+     "codigo": "CRO",
+     "idFm": 10155,
+     "goles": 2
+    },
+    "fuera": {
+     "nombre": "Czechia",
+     "codigo": "CZE",
+     "idFm": 8496,
+     "goles": 1
+    },
+    "jugadores": [
+     {
+      "id": "383971",
+      "nombre": "Dominik Livaković",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "CRO",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 5.9,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "251269",
+      "nombre": "Ante Budimir",
+      "clubFm": "Osasuna",
+      "club": "Osasuna",
+      "codigo": "CRO",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     }
+    ]
+   },
+   {
+    "id": 5181860,
+    "fecha": "20261115",
+    "liga": "UEFA Nations League A Grp. 3",
+    "hora": "2026-11-15T19:45:00.000Z",
+    "casa": {
+     "nombre": "Spain",
+     "codigo": "ESP",
+     "idFm": 6720,
+     "goles": 2
+    },
+    "fuera": {
+     "nombre": "England",
+     "codigo": "ENG",
+     "idFm": 8491,
+     "goles": 3
+    },
+    "jugadores": [
+     {
+      "id": "660625",
+      "nombre": "Unai Simón",
+      "clubFm": "Athletic Club",
+      "club": "Athletic",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 5.6,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1323897",
+      "nombre": "Marc Pubill",
+      "clubFm": "Atlético Madrid",
+      "club": "Atlético",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 21,
+      "nota": 6.1,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": 21,
+      "mejor": false
+     },
+     {
+      "id": "1532137",
+      "nombre": "Pau Cubarsí",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 46,
+      "nota": 5.9,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "411617",
+      "nombre": "Aymeric Laporte",
+      "clubFm": "Athletic Club",
+      "club": "Athletic",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 6.2,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "873289",
+      "nombre": "Marc Cucurella",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 6.1,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1467236",
+      "nombre": "Lamine Yamal",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 8.4,
+      "goles": 0,
+      "asist": 1,
+      "roja": null,
+      "lesion": null,
+      "mejor": true
+     },
+     {
+      "id": "942372",
+      "nombre": "Álex Baena",
+      "clubFm": "Atlético Madrid",
+      "club": "Atlético",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 7,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "678234",
+      "nombre": "Mikel Oyarzabal",
+      "clubFm": "Real Sociedad",
+      "club": "Real Sociedad",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 90,
+      "nota": 7.2,
+      "goles": 1,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1367619",
+      "nombre": "Dean Huijsen",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 44,
+      "nota": 6.1,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1404415",
+      "nombre": "Fermín López",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 44,
+      "nota": 6.6,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1083323",
+      "nombre": "Pedri",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 44,
+      "nota": 6.9,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1202110",
+      "nombre": "Nico Williams",
+      "clubFm": "Athletic Club",
+      "club": "Athletic",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 18,
+      "nota": 7.3,
+      "goles": 1,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1167220",
+      "nombre": "Joan García",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "640220",
+      "nombre": "Marc Roca",
+      "clubFm": "Real Betis",
+      "club": "Betis",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1338192",
+      "nombre": "Pablo Barrios",
+      "clubFm": "Atlético Madrid",
+      "club": "Atlético",
+      "codigo": "ESP",
+      "casa": true,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "1077894",
+      "nombre": "Jude Bellingham",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "ENG",
+      "casa": false,
+      "titular": true,
+      "convocado": true,
+      "min": 83,
+      "nota": 8.3,
+      "goles": 0,
+      "asist": 1,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "906937",
+      "nombre": "Anthony Gordon",
+      "clubFm": "Barcelona",
+      "club": "Barça",
+      "codigo": "ENG",
+      "casa": false,
+      "titular": true,
+      "convocado": true,
+      "min": 83,
+      "nota": 6.7,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "760712",
+      "nombre": "Trent Alexander-Arnold",
+      "clubFm": "Real Madrid",
+      "club": "Real Madrid",
+      "codigo": "ENG",
+      "casa": false,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     }
+    ]
+   },
+   {
+    "id": 5181905,
+    "fecha": "20261115",
+    "liga": "UEFA Nations League C Grp. 1",
+    "hora": "2026-11-15T17:00:00.000Z",
+    "casa": {
+     "nombre": "Finland",
+     "codigo": "FIN",
+     "idFm": 7871,
+     "goles": 7
+    },
+    "fuera": {
+     "nombre": "San Marino",
+     "codigo": "SMR",
+     "idFm": 6035,
+     "goles": 2
+    },
+    "jugadores": [
+     {
+      "id": "1056461",
+      "nombre": "Ville Koski",
+      "clubFm": "Deportivo Alavés",
+      "club": "Alavés",
+      "codigo": "FIN",
+      "casa": true,
+      "titular": true,
+      "convocado": true,
+      "min": 46,
+      "nota": 6.8,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     }
+    ]
+   },
+   {
+    "id": 6391965,
+    "fecha": "20261115",
+    "liga": "CONCACAF Nations League A Championship Playoff",
+    "hora": "2026-11-15T01:00:00.000Z",
+    "casa": {
+     "nombre": "Jamaica",
+     "codigo": "JAM",
+     "idFm": 5806,
+     "goles": 3
+    },
+    "fuera": {
+     "nombre": "Mexico",
+     "codigo": "MEX",
+     "idFm": 6710,
+     "goles": 2
+    },
+    "jugadores": [
+     {
+      "id": "1401997",
+      "nombre": "Álex Padilla",
+      "clubFm": "Athletic Club",
+      "club": "Athletic",
+      "codigo": "MEX",
+      "casa": false,
+      "titular": false,
+      "convocado": true,
+      "min": 0,
+      "nota": null,
+      "goles": 0,
+      "asist": 0,
+      "roja": null,
+      "lesion": null,
+      "mejor": false
+     },
+     {
+      "id": "895954",
+      "nombre": "Álvaro Fidalgo",
+      "clubFm": "Real Betis",
+      "club": "Betis",
+      "codigo": "MEX",
       "casa": false,
       "titular": false,
       "convocado": true,
