@@ -29,6 +29,17 @@ export const NOVEDADES = [
       { para: 'play', tipo: 'mejora', d: 'campana', t: 'Te avisa cuando la IA te contesta', x: 'Si sales de la app mientras la IA piensa tu pregunta, arriba sale «Pensando tu respuesta» y, cuando contesta, un aviso con el principio de la respuesta. Tócalo y vas directo a Pregunta.' },
       { para: 'play', tipo: 'mejora', importante: true, d: 'movil', t: 'La pantalla entera, sin banner abajo', x: 'Ya no hay un anuncio fijo debajo de las pestañas: la app se ve entera. A cambio, de vez en cuando, al cambiar de pestaña o al cerrar una ficha puede salir un anuncio que se cierra con la X. Nunca al abrir la app, mientras escribes ni mientras la IA piensa.' },
       { tipo: 'arreglo', d: 'ia', t: 'Respuestas sin restos raros', x: 'Debajo de algunas respuestas salía un bloque de texto técnico, y a veces la IA escribía códigos como «M-3143». Ya no.' },
+      // (17 nov, la sesión de los planes, rama web-plan-2: lo suyo va aquí, detrás de lo del chat)
+      { tipo: 'mejora', d: 'plan', t: 'El plan con la IA, fiel a lo que explica', x: 'Si tu liga cambia mientras la IA prepara el plan (ganas una puja, cambia tu saldo) o lo recoges al volver a la app, el plan se queda con los pasos que la IA te ha explicado y solo quita lo que ya no se puede, con su porqué en «Mirados y descartados». Antes se hacía de nuevo y alguna explicación podía acabar junto a otro jugador.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Cuando el plan con la IA no sale, te dice la verdad', x: 'Si la respuesta se corta por el camino, lo dice y al reintentar no se gasta otro plan; si la IA ya ha hecho todos los de hoy, dice que hasta mañana, no «en un rato»; y nunca se queda esperando más de 3 minutos. Mientras, tienes el plan de la app.' },
+      { tipo: 'arreglo', d: 'campana', t: 'Los avisos de vender, como en Hoy', x: 'Con la app cerrada ya no te avisa de vender por cómo va su valor a quien Hoy te dice que esperes (porque te pueden pagar su cláusula), ni dos veces a un lesionado.' },
+      { menor: true, tipo: 'arreglo', d: 'ajustes', t: 'Fuera un interruptor que no hacía nada', x: 'En Ajustes, «Buscar en Google en el plan» ya no hacía nada con el plan de ahora: se ha quitado.' },
+    ],
+  },
+  {
+    v: '0.7.13za', f: '2026-11-16', h: '23:49', t: 'Quién usa la app, por ligas',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Las cuentas de fuera, agrupadas por liga', x: 'En Quién usa la app, pestaña Cuentas, las de otras ligas salen agrupadas: primero las ligas con más de una cuenta, después las que van solas en su liga y al final las que aún no han dicho la suya. Arriba se dice cuántas ligas distintas hay, y el equipo ya no repite el nombre del mánager cuando se llaman igual.' },
     ],
   },
   {
