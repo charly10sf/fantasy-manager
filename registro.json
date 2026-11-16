@@ -2032,7 +2032,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/13/6af6e303fdddff1f1a8b45b1.html": 1794601637000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250766/siempre-les-quedara-lamine.html": 1794636000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250813/debate-indecente.html": 1794628200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250811/arnau-blanco-explica-relacion-hansi-flick.html": 1794610348000,
@@ -2210,7 +2209,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html": 1794854713000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000,
-   "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000,
+   "SPORT|136517232": 1794856951000
   },
   "hechos": [
    {
@@ -2609,7 +2609,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -3525,17 +3525,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 35,
    "revisar": 20,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 637713,
-  "salida": 40397,
+  "entrada": 639775,
+  "salida": 40512,
   "cacheLee": 29030,
   "cacheEscribe": 29030,
-  "dolares": 1.290249,
+  "dolares": 1.290513,
   "reservado": 0
  },
  "recientes": {
@@ -7782,13 +7782,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3199,
+   "ok": 3200,
    "fallos": 0,
-   "ejecuciones": 2592,
+   "ejecuciones": 2593,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T20:26:12.624Z"
+   "ultima": "2026-11-16T20:31:16.251Z"
   }
  },
  "ptsDirecto": {},
@@ -7805,15 +7805,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:26:16.544Z"
+   "ultimaBien": "2026-11-16T20:31:24.000Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:26:16.544Z"
+   "ultimaBien": "2026-11-16T20:31:24.000Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:26:16.544Z"
+   "ultimaBien": "2026-11-16T20:31:24.000Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7821,11 +7821,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:26:16.544Z"
+   "ultimaBien": "2026-11-16T20:31:24.000Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T20:26:16.544Z"
+   "ultimaBien": "2026-11-16T20:31:24.000Z"
   }
  },
  "avisos": [
