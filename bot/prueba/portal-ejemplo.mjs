@@ -247,3 +247,25 @@ console.log('cláusulas: bien');
   assert.ok(metasBajas(hb).titulo.length <= 60, 'título corto');
 }
 console.log('bajas: bien');
+
+// (sesión 4) el análisis del resumen con la temporada al lado y la semana del mercado (idea 7)
+{
+  const { hechosResumen, analisisResumen, resumenCorto, semanaMercado, contenidoResumen } = await import('../web/resumen.mjs');
+  const hs = [10, 11, 12].map((J) => hechosResumen(J, semana(J), jug)).filter(Boolean);
+  assert.equal(hs.length, 3, 'tres jornadas acabadas');
+  const T = hs.map(resumenCorto);
+  const an = analisisResumen(hs[2], T);
+  assert.ok(an.length >= 2 && an.every((p) => p.length > 20), 'dos párrafos o más');
+  assert.doesNotMatch(an.join(' '), /undefined|NaN/);
+  const hmS = await hechosMercado(api, { ahora: hoy });
+  const finAnt = Math.max(...semana(11).map((m) => Date.parse(m.date)));
+  const sm = semanaMercado(hs[2], hmS.todas, finAnt);
+  // la jornada 12 de ejemplo es de hace una semana: su semana del mercado cae dentro de la serie de 40 días
+  assert.ok(sm && sm.ganan.length && sm.pierden.length, 'quién ganó y quién perdió');
+  assert.ok(sm.ganan[0].gana >= sm.ganan[sm.ganan.length - 1].gana, 'de más a menos');
+  assert.ok(sm.negocio.every((x) => x.negocio === x.gana + x.pts * 1e5), 'negocio = subida + puntos a 100 mil');
+  const cr = contenidoResumen(hs[2], { temporada: T, semana: sm });
+  assert.match(cr, /id="semana"/);
+  assert.doesNotMatch(cr, /undefined|NaN|\[object/);
+}
+console.log('resumen con la temporada y la semana del mercado: bien');

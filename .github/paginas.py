@@ -164,7 +164,8 @@ CTA_CORTA = (
 
 def cta(raiz, p=None):
     # (16 nov) en las fichas de jugador y equipo, la versión corta: el bloque entero, igual en 170 páginas, era la mitad del texto repetido
-    if p and p.get('grupo') in ('jugador', 'equipo'):
+    # (sesión 4) también en los resúmenes de jornada, que desde la J1 son 12
+    if p and p.get('grupo') in ('jugador', 'equipo', 'resumenes'):
         return (f'<aside class="cta" aria-label="La app">'
                 f'<p class="cta-t">{CTA_CORTA[int(hashlib.md5(p["ruta"].encode()).hexdigest(), 16) % len(CTA_CORTA)]}</p>'
                 f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'

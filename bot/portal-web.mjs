@@ -1,7 +1,7 @@
 // El portal de datos de la web: el mercado de hoy (/mercado/), los 20 equipos (/equipos/), las jornadas (/jornada/) con el resumen de
 // cada una al acabar y lo que lee la portada (mercado/hoy.json). Lo lanza cada noche .github/workflows/portal-web.yml, después del
 // cambio de mercado; también a mano:
-//   node bot/portal-web.mjs [--forzar=1] [--resumen=12] [--cache=carpeta] [--sin-tarjeta=1] [--fichas=150]
+//   node bot/portal-web.mjs [--forzar=1] [--resumen=12 | --resumen=1-11] [--cache=carpeta] [--sin-tarjeta=1] [--fichas=150]
 // --forzar rehace el mercado aunque el valor de hoy no haya llegado (con el último que haya) o ya esté hecho; --resumen rehace el de esa
 // jornada; --cache guarda y reutiliza lo bajado de la API (para probar sin pedirlo todo otra vez); --fichas, cuántos jugadores con
 // página como mucho (fase 2: una página por equipo y por jugador, con el mercado; 0 = sin fichas). Escribe el contenido de cada página,
@@ -11,7 +11,7 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
-import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
+import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen, resumenCorto, semanaMercado } from './web/resumen.mjs';
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
 import { hechosBajas, contenidoBajas, metasBajas } from './web/bajas.mjs';
@@ -61,7 +61,22 @@ try {
   execFileSync('python3', [path.join(RAIZ, '.github', 'portal', 'encuadres.py')], { input: JSON.stringify(jugadores.map((j) => j.image).filter(Boolean)), stdio: ['pipe', 'inherit', 'inherit'] });
 } catch (err) { log(`  encuadres: ${err.message.split('\n')[0]}`); }
 cargarEncuadres();
-const candidatas = arg('resumen') ? [Number(arg('resumen'))] : [sem.weekNumber, sem.previousWeek].filter((x) => x > 0);
+// --resumen=12 rehace ese; --resumen=1-11, todos los de ese tramo (sesión 4: los de la J1 a la J11 de una vez)
+const rango = arg('resumen') && /^\d+-\d+$/.test(arg('resumen')) ? arg('resumen').split('-').map(Number) : null;
+const candidatas = rango ? Array.from({ length: rango[1] - rango[0] + 1 }, (_, i) => rango[0] + i)
+  : arg('resumen') ? [Number(arg('resumen'))] : [sem.weekNumber, sem.previousWeek].filter((x) => x > 0);
+// (sesión 4) el mercado de hoy antes del resumen: la semana del mercado de cada jornada (idea 7) sale de su serie de valor
+const hoy = diaMadrid();
+const tocaMercado = forzar || !estado.mercado || estado.mercado.dia !== hoy;
+let hm = tocaMercado ? await hechosMercado(api, { exigirHoy: !forzar, log }) : null;
+// lo de cada jornada jugada, para comparar en el análisis del resumen (la más goleadora, el récord de puntos, el once más alto)
+const temporada = [];
+const statsDe = {};
+if (candidatas.length) for (let k = 1; k <= Math.max(...candidatas); k++) {
+  statsDe[k] = await api.statsSemana(k).catch(() => []);
+  const hk = hechosResumen(k, statsDe[k], jugadores);
+  if (hk) temporada.push(resumenCorto(hk));
+}
 for (const J of candidatas) {
   const st = await api.statsSemana(J);
   const h = hechosResumen(J, st, jugadores);
@@ -103,17 +118,18 @@ for (const J of candidatas) {
   }
   const pv = previas().find((p) => p.jornada === J), sig = previas().find((p) => p.jornada === J + 1);
   const ruta = `jornada/resumen-jornada-${J}.html`;
-  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas }));
-  estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3) };
+  // la semana del mercado: con el mercado de esta noche o, si hoy ya estaba hecho, la que se guardó la última vez
+  const ant = J > 1 ? (statsDe[J - 1] || await api.statsSemana(J - 1).catch(() => [])) : [];
+  const finAnt = ant.length ? Math.max(...ant.map((m) => Date.parse(m.date))) : null;
+  const semana = (hm && semanaMercado(h, hm.todas, finAnt)) || (ya && ya.semana) || null;
+  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas, temporada, semana }));
+  estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3), ...(semana ? { semana } : {}) };
   cambios = true;
   log(`Jornada ${J}: resumen hecho (${h.mejores[0].nombre} ${h.mejores[0].pts})`);
 }
 
-// 2. el mercado de hoy y los equipos (una vez por día de mercado)
-const hoy = diaMadrid();
-let hm = null;
-if (forzar || !estado.mercado || estado.mercado.dia !== hoy) {
-  hm = await hechosMercado(api, { exigirHoy: !forzar, log });
+// 2. el mercado de hoy y los equipos (una vez por día de mercado; `hm`, ya bajado arriba)
+if (tocaMercado) {
   if (hm && maxFichas > 0) {
     // fase 2: una página por equipo y por jugador. Si falla, el mercado sale igual (con los enlaces de ayer)
     try {
