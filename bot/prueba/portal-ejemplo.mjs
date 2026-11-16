@@ -199,3 +199,22 @@ console.log('portal-ejemplo: todo BIEN');
   assert.match(hechosJugador(z, H2, null).find((h) => h.k === 'racha').txt, /4 días|cuatro/, 'la racha con sus días');
 }
 console.log('portal-ejemplo: todo bien');
+
+// (16 nov) el calendario de cláusulas
+{
+  const { hechosClausulas, contenidoClausulas, cambiosEntre, enHoraMadrid, PROTEGIDO } = await import('../web/clausulas.mjs');
+  const hc = await hechosClausulas(api, { ahora: hoy });
+  assert.ok(hc && hc.jornadas.length >= 1, 'jornadas por jugar');
+  assert.equal(hc.siguiente.J, 13);
+  assert.equal(hc.siguiente.cierre, hc.siguiente.primero - 24 * 36e5, 'cierre 24 h antes');
+  assert.equal(hc.fichajes.length, 7);
+  assert.ok(hc.fichajes[0].dia > hoy, 'el primero, el próximo cambio');
+  for (const f of hc.fichajes) { assert.equal(f.protegido - f.dia, PROTEGIDO); assert.ok(f.libre >= f.protegido); }
+  assert.equal(enHoraMadrid(2026, 11, 20, 0, 15), Date.parse('2026-11-19T23:15:00Z'), '00:15 de Madrid en invierno');
+  assert.equal(enHoraMadrid(2026, 8, 20, 0, 15), Date.parse('2026-08-19T22:15:00Z'), 'y en verano');
+  assert.equal(cambiosEntre(Date.parse('2026-11-16T10:00:00Z'), Date.parse('2026-11-19T20:00:00Z')), 3, 'tres cambios: 17, 18 y 19');
+  const ch = contenidoClausulas(hc);
+  assert.doesNotMatch(ch, /undefined|NaN|\[object/);
+  assert.match(ch, /<h1>Calendario de <span>cláusulas<\/span><\/h1>/);
+}
+console.log('cláusulas: bien');

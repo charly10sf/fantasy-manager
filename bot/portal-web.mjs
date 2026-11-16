@@ -13,6 +13,7 @@ import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
+import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
 import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, metasPaginaJugadores, nPaginasJugadores, jugadoresJson, indiceBuscador, escudosPie } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
@@ -167,6 +168,19 @@ const antes = existsSync(pj) ? readFileSync(pj, 'utf8') : '';
 escribirPagina({ ruta: 'jornada/index.html', seccion: 'jornada', titulo: 'Jornadas de LaLiga Fantasy: previas y resúmenes',
   h1: 'Jornadas de LaLiga Fantasy', descripcion: 'La próxima jornada de LaLiga Fantasy con su cierre de cláusulas, y la previa y el resumen de cada jornada: mejores, peores, once ideal y MVP de cada partido.' },
 contenidoJornadas({ proxima: prox, previas: previas(), resumenes: rs, ultimo: ult }));
+
+// 4. el calendario de cláusulas (clausulas/): siempre, porque cambia cada día (lo que queda hasta el cierre y la protección de un fichaje de hoy)
+try {
+  const hc = await hechosClausulas(api);
+  if (hc) {
+    const pc = path.join(RAIZ, 'web', 'clausulas', 'index.html');
+    const antesC = existsSync(pc) ? readFileSync(pc, 'utf8') : '';
+    const pvC = hc.siguiente && previas().find((p) => p.jornada === hc.siguiente.J);
+    escribirPagina(metasClausulas(), contenidoClausulas(hc, { previa: pvC || null }));
+    if (antesC !== readFileSync(pc, 'utf8')) cambios = true;
+    log(`Cláusulas: próximo cierre ${hc.siguiente ? `J${hc.siguiente.J}, ${hc.cambios} cambios de mercado` : 'sin fecha'}`);
+  }
+} catch (err) { log(`::warning::Cláusulas sin hacer: ${err.stack || err.message}`); }
 
 writeFileSync(fEstado, JSON.stringify(estado, null, 1) + '\n');
 execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });

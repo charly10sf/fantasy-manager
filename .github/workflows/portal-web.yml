@@ -61,7 +61,7 @@ jobs:
         run: |
           git config user.name 'Fantasy Manager'
           git config user.email 'fantasymanager.web.app@gmail.com'
-          git add -A web/mercado web/jornada web/equipos web/jugadores web/guias web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
+          git add -A web/mercado web/jornada web/equipos web/jugadores web/clausulas web/guias web/metodo.html web/quienes-somos.html web/privacidad.html web/aviso-legal.html web/condiciones.html web/contacto.html web/instalar.html web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
           if git diff --cached --quiet; then echo "Nada nuevo"; exit 0; fi
           git commit -q -m "Portal: datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
           # (16 nov) lo que la generación toca fuera de lo de arriba no se sube, pero frenaba el pull («You have unstaged

@@ -95,6 +95,20 @@
       "publicada": "2026-11-15"
     },
     {
+      "tipo": "portal",
+      "ruta": "clausulas/index.html",
+      "seccion": "jornada",
+      "titulo": "Cierre de cláusulas en LaLiga Fantasy: calendario y horas",
+      "h1": "Calendario de cláusulas",
+      "descripcion": "Cuándo se cierran y se reabren las cláusulas en LaLiga Fantasy en las próximas jornadas, cuántos cambios de mercado quedan y hasta cuándo está protegido un fichaje. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Jornadas", "jornada/"]
+      ],
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
       "ruta": "guias/jornada-13.html",
       "tipo": "guia",
       "grupo": "jornadas",
