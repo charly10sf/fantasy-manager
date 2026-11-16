@@ -24,7 +24,7 @@ jobs:
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/chat-haiku.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          ESFUERZOS: medium,low
+          ESFUERZOS: low
           ESCENAS: martes,paron
           TOPE_USD: "0.4"
       - name: Guardar las respuestas en la rama
