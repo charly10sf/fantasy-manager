@@ -3392,7 +3392,8 @@
    "fallos": 0
   },
   "espera": {
-   "SPORT|136510996": 1794849677226
+   "SPORT|136510996": 1794849677226,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850872151
   }
  },
  "ia": {
@@ -7655,13 +7656,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3166,
+   "ok": 3167,
    "fallos": 0,
-   "ejecuciones": 2559,
+   "ejecuciones": 2560,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T17:36:18.672Z"
+   "ultima": "2026-11-16T17:41:12.151Z"
   }
  },
  "ptsDirecto": {},
@@ -7678,15 +7679,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:36:21.796Z"
+   "ultimaBien": "2026-11-16T17:41:16.569Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:36:21.796Z"
+   "ultimaBien": "2026-11-16T17:41:16.569Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:36:21.796Z"
+   "ultimaBien": "2026-11-16T17:41:16.569Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7694,11 +7695,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:36:21.796Z"
+   "ultimaBien": "2026-11-16T17:41:16.569Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T17:36:21.796Z"
+   "ultimaBien": "2026-11-16T17:41:16.569Z"
   }
  },
  "avisos": [
