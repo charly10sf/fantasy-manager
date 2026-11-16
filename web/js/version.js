@@ -22,9 +22,9 @@ export const VERSION = '0.7.13z';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.13z', f: '2026-11-16', h: '20:53', t: 'El dinero de los rivales, en el punto medio',
+    v: '0.7.13z', f: '2026-11-16', h: '21:11', t: 'El dinero de los rivales, en el punto medio',
     cosas: [
-      { tipo: 'mejora', d: 'dinero', t: 'Su dinero estimado, mejor centrado', x: 'La cifra del dinero de un rival que no se sabe exacto ya no da por hecho que ha cogido tantas recompensas diarias como tú: la pone en el punto medio entre ninguna y todas, y el ± es la mitad de ese hueco. En el Diagnóstico se ve de qué se compone cada margen.' },
+      { tipo: 'mejora', d: 'dinero', t: 'Su dinero estimado, mejor centrado', x: 'La cifra del dinero de un rival que no se sabe exacto ya no da por hecho que ha cogido tantas recompensas diarias como tú: la pone en el punto medio entre ninguna y todas, y el ± es la mitad de ese hueco. En la ficha del rival queda solo la cifra, sin el párrafo de debajo ni el número de compras; en el Diagnóstico se ve de qué se compone cada margen.' },
     ],
   },
   {

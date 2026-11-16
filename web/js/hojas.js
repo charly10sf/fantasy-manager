@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
@@ -638,8 +638,7 @@ export function fichaRival(S, tid) {
     // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
     if (bloqueada('dineroRivales', tid)) cerradas.push('dineroRivales');
     h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
-      <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</span></div></div>`;
-    if (!bloqueada('dineroRivales', tid)) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
+      <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado` : 'sin compras al mercado'}</span></div></div>`;
     // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
     if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', tid)) {
       const dc = r.dinero && r.dinero.dicho, cu = (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
