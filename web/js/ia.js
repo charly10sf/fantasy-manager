@@ -2873,7 +2873,10 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
       for (const [acc, re] of ORDENES) {
         const m = k.match(re);
         if (!m || !/^(?:(?:si|pues|entonces|asi que|y|mejor|hoy|ahora|ya|venga|primero|luego|despues|adelante|yo|tu)\s+)*$/.test(`${k.slice(0, m.index).trim()} `.replace(/^ $/, ''))) continue;
-        const aqui = enFrase(inciso).length ? enFrase(inciso) : enFrase(fr);
+        // («véndelo por eso y no para clausular a Oyarzabal»: con «véndelo», «clausúlalo»…, el jugador es el de antes, no
+        // el que sale detrás; quinta pasada con Haiku, 17 nov)
+        const antes = /(?:lo|la)$/.test(m[0]) ? enFrase(fr.slice(0, Math.max(0, fr.indexOf(inciso)))) : [];
+        const aqui = antes.length ? antes : enFrase(inciso).length ? enFrase(inciso) : enFrase(fr);
         // «clausúlalo», sin nombre en la frase: el único del que va la pregunta
         const j = aqui.length === 1 ? aqui[0] : !aqui.length && enPreg.length === 1 ? enPreg[0] : null;
         if (j && !pasos.some((p) => p.j.id === j.id)) meter(acc, j, { cuando: /\b(ya|ahora|hoy)\b/.test(norm(fr)) ? 'ahora' : '' });

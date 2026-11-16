@@ -31,6 +31,13 @@ window.FantasyApp = new Proxy({
   zonaAnuncios: (si, b) => { window.__pedidos.push(['zona', si, b]); },
   intersticial: (b) => { window.__pedidos.push(['intersticial', b]); setTimeout(() => window.intersticialVisto && window.intersticialVisto(true, ''), 50); },
   verAnuncio: (p) => { window.__pedidos.push(['bonificado', p]); },
+  preguntaEnMarcha: (rid, tk, vuelta, texto) => { window.__pedidos.push(['enMarcha', rid, vuelta, texto]); },
+  preguntaAcabada: (ok, resumen) => { window.__pedidos.push(['acabada', ok, resumen]); },
+  trabajandoCon: (si) => { window.__pedidos.push(['trabajando', si]); },
+  guardar: (k, v) => { localStorage.setItem('fm-n-' + k, v); }, borrar: (k) => { localStorage.removeItem('fm-n-' + k); }, leer: (k) => localStorage.getItem('fm-n-' + k),
+  // las peticiones de la app van por Android (sin CORS): aquí, un fetch normal que la prueba intercepta
+  http: (id, metodo, url, cab, cuerpo) => { fetch(url, { method: metodo, headers: JSON.parse(cab || '{}'), body: cuerpo || undefined }).then(async (r) => ({ s: r.status, b: await r.text() }), (e) => ({ s: 0, e: String(e) })).then((r) => { (window.__resp ||= {})[id] = JSON.stringify(r); window.__http(id); }); },
+  respuesta: (id) => { const r = (window.__resp || {})[id]; if (window.__resp) delete window.__resp[id]; return r || null; },
 }, { get: (o, k) => { if (k === 'banner') window.__pedidos.push(['banner']); return k in o ? o[k] : undefined; } });
 localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1');`;
 
@@ -163,6 +170,51 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   await A.uso(4);
   await A.pestana('equipo');
   ok(await A.pedidos() === 1, 'a los de su liga con «suLiga»: sí');
+  await A.cerrar();
+}
+{
+  // (de paso) el chat en la app de Google Play: sin preguntas hoy sale la hoja del anuncio y, visto, se repregunta con
+  // las 3 de más; Android sabe que hay una pregunta en marcha y cuándo acaba
+  const A = await abrir();
+  const pedidos = [];
+  await A.page.route('**/fantasy-manager.fantasymanager-web-app.workers.dev/**', async (rt) => {
+    const q = rt.request(), cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
+    if (q.method() === 'OPTIONS') return rt.fulfill({ status: 204, headers: cors });
+    if (!q.url().endsWith('/pregunta')) return rt.fulfill({ status: 404, headers: cors, body: '{}' });
+    const b = JSON.parse(q.postData() || '{}');
+    pedidos.push(b);
+    const j = b.extra ? { texto: 'Con el anuncio: mira a Rival 2.', cupo: { usados: 6, gratis: 5, max: 20, extras: 1, porAnuncio: 3, quedan: 2, masConAnuncio: true } }
+      : { e: 'Ya has hecho tus 5 preguntas de hoy.', cupo: { usados: 5, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } };
+    return rt.fulfill({ status: j.e ? 429 : 200, headers: cors, contentType: 'application/json', body: JSON.stringify(j) });
+  });
+  await A.page.evaluate(async () => {
+    const Pu = await import('./js/puente.js'), U = await import('./js/util.js');
+    await Pu.guardar('sesion', { token: 'x'.repeat(40), caduca: Date.now() + 3600e3 });
+    await Pu.guardar('gemini', null);
+    const g = U.LS.get('limites', null); g.cfg.preguntas = { on: true, gratis: 5, porAnuncio: 3, max: 20 }; U.LS.set('limites', g);
+  });
+  await A.page.click('#bPregunta');
+  await A.page.clock.runFor(600);
+  await A.page.fill('#pregunta', '¿Qué le ficho al segundo?');
+  await A.page.click('[data-accion="enviar"]');
+  for (let i = 0; i < 40 && !(await A.page.evaluate(() => window.S.tipoHoja && window.S.tipoHoja[0] === 'anuncio')); i++) { await A.page.waitForTimeout(100); await A.page.clock.runFor(300); }
+  const hoja = await A.page.evaluate(() => (document.querySelector('.hoja') || {}).innerText || '');
+  if (!/Más preguntas/i.test(hoja)) console.log('   (depurar)', hoja.slice(0, 200));
+  ok(/Más preguntas a la IA/i.test(hoja) && /Ver el anuncio/i.test(hoja), 'sin preguntas hoy, en la de Google Play sale la hoja del anuncio');
+  await A.page.click('.hoja [data-accion="verAnuncio"]');
+  await A.page.clock.runFor(300);
+  const pidio = await A.page.evaluate(() => window.__pedidos.some((p) => p[0] === 'bonificado' && p[1] === 'pregunta'));
+  await A.page.evaluate(() => window.anuncioVisto('pregunta', true, ''));
+  for (let i = 0; i < 40 && (await A.page.evaluate(() => window.S.charlando || !document.querySelector('.msg.ia'))); i++) { await A.page.waitForTimeout(100); await A.page.clock.runFor(300); }
+  const visto = await A.page.evaluate(() => [...document.querySelectorAll('.msg.ia')].pop()?.innerText || '');
+  ok(pidio && pedidos.length === 2 && pedidos[1].extra === true && pedidos[1].pregunta === pedidos[0].pregunta, 'visto el anuncio, la misma pregunta otra vez con las de más');
+  ok(/Con el anuncio: mira a /.test(visto) && !/Rival 2/.test(visto), `la respuesta, con los nombres de verdad («${visto.replace(/\s+/g, ' ').slice(0, 60)}»)`);
+  const p = await A.page.evaluate(() => window.__pedidos);
+  const em = p.filter((x) => x[0] === 'enMarcha'), ac = p.filter((x) => x[0] === 'acabada');
+  ok(em.length === 2 && em.every((x) => /^[a-z0-9]{8,24}$/.test(x[1])) && /^\{.*"rival 2"/.test(em[0][2]) && em[0][3] === '¿Qué le ficho al segundo?', 'Android sabe de cada pregunta en marcha (id, la vuelta de los alias y el texto)');
+  ok(ac.length === 2 && ac[0][1] === false && ac[1][1] === true && /^Con el anuncio: mira a /.test(ac[1][2]) && !/Rival 2/.test(ac[1][2]), 'y de cuándo acaba (la primera sin cupo, la segunda con el principio de la respuesta y los nombres)');
+  ok(p.some((x) => x[0] === 'trabajando' && x[1] === true) && p.filter((x) => x[0] === 'trabajando').pop()[1] === false, 'la app se marca ocupada mientras piensa y libre al acabar');
+  ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
   await A.cerrar();
 }
 {
