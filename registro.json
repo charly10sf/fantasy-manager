@@ -2153,7 +2153,8 @@
    "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
-   "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000
+   "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000,
+   "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000
   },
   "hechos": [
    {
@@ -2415,7 +2416,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3329,17 +3330,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 502712,
-  "salida": 23791,
+  "entrada": 504612,
+  "salida": 24330,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.07234,
+  "dolares": 1.0728,
   "reservado": 0
  },
  "recientes": {
@@ -7586,13 +7587,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3115,
+   "ok": 3116,
    "fallos": 0,
-   "ejecuciones": 2508,
+   "ejecuciones": 2509,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T13:26:22.532Z"
+   "ultima": "2026-11-16T13:31:14.477Z"
   }
  },
  "ptsDirecto": {},
@@ -7609,15 +7610,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:26:25.537Z"
+   "ultimaBien": "2026-11-16T13:31:22.980Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:26:25.537Z"
+   "ultimaBien": "2026-11-16T13:31:22.980Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:26:25.537Z"
+   "ultimaBien": "2026-11-16T13:31:22.980Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7625,11 +7626,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:26:25.537Z"
+   "ultimaBien": "2026-11-16T13:31:22.980Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:26:25.537Z"
+   "ultimaBien": "2026-11-16T13:31:22.980Z"
   }
  },
  "avisos": [
