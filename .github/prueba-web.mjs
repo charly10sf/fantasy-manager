@@ -730,7 +730,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     D.dinero = dOrig;
     // (0.7.13p) uno a su valor, bueno y sin bajar, que se paga con el saldo: vale para el once aunque no sea chollo; si no
     // te llega con el saldo, no
-    const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02) || null;
+    const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02 && !(antes.esp || []).some((e) => String(e.pid) === String(x.j.id))) || null;
     let aValor = null, sinSaldo = null;
     if (m2) {
       m2.interes = Math.max(m2.interes || 0, 60);
