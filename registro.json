@@ -2210,7 +2210,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html": 1794854713000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000,
-   "SPORT|136517232": 1794856951000
+   "SPORT|136517232": 1794856951000,
+   "SPORT|136497675": 1794859858000
   },
   "hechos": [
    {
@@ -2609,7 +2610,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -3523,17 +3524,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 35,
    "revisar": 20,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 639775,
-  "salida": 40512,
+  "entrada": 641780,
+  "salida": 40973,
   "cacheLee": 29030,
   "cacheEscribe": 29030,
-  "dolares": 1.290513,
+  "dolares": 1.290944,
   "reservado": 0
  },
  "recientes": {
@@ -7780,13 +7781,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3209,
+   "ok": 3210,
    "fallos": 0,
-   "ejecuciones": 2602,
+   "ejecuciones": 2603,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T21:11:12.575Z"
+   "ultima": "2026-11-16T21:16:12.325Z"
   }
  },
  "ptsDirecto": {},
@@ -7803,15 +7804,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:11:17.085Z"
+   "ultimaBien": "2026-11-16T21:16:19.066Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:11:17.085Z"
+   "ultimaBien": "2026-11-16T21:16:19.066Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:11:17.085Z"
+   "ultimaBien": "2026-11-16T21:16:19.066Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7819,11 +7820,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:11:17.085Z"
+   "ultimaBien": "2026-11-16T21:16:19.066Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:11:17.085Z"
+   "ultimaBien": "2026-11-16T21:16:19.066Z"
   }
  },
  "avisos": [
