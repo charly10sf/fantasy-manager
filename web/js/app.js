@@ -3210,7 +3210,6 @@ document.addEventListener('click', async (ev) => {
     case 'borrarClave': if (confirm('¿Quitar la clave de la IA?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
     case 'probarIA': try { const l = await probarClave(); tostada(`La clave funciona: ${l.length} versiones de la IA disponibles`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
-    case 'iaWebPlan': guardarCfgIA({ webPlan: !cfgIA().webPlan }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     // (0.7.13l) los planes que salen solos a su hora, y los ajustes del plan desde el propio plan
     case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? 'Los planes saldrán solos a su hora' : 'Los planes solo saldrán cuando los pidas'); break; }

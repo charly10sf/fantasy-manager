@@ -24,12 +24,15 @@ const JSONC = (status, j) => ({ status, headers: cors, contentType: 'application
  * route.fulfill, 'cortar', 'colgar' o una promesa de eso) y devuelve lo que se ve. `adelantar`: ms que se adelanta el
  * reloj de la página cada vez que llega un pedido que se cuelga. `clave`: con tu clave de Google además.
  */
-async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000 }) {
+const PLAN_JS = await readFile(join(WEB, 'js', 'plan.js'), 'utf8');
+async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000, romperMotor = false }) {
   const P = await pagina('martes', google || undefined);
   const rids = [];
   try {
     const { page } = P;
     await page.route('**/js/ia.js*', (r) => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: IA }));
+    // (el motor del plan roto: planDeHoy cae al plan de antes, sin motor)
+    if (romperMotor) await page.route('**/js/plan.js*', (r) => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: PLAN_JS.replace('R = rematarMotor(planVueltas(D, M, c).R, M);', "throw new Error('motor roto (prueba)');") }));
     let n = 0, reloj = null;
     await page.route(`${SERVIDOR}/**`, async (r) => {
       const q = r.request();
@@ -52,7 +55,7 @@ async function caso({ servir, adelantar = 0, clave = false, google = null, esper
     await page.reload();
     await page.waitForFunction(() => window.S && window.S.D && window.S.M && window.S.plan, null, { timeout: 30000 });
     await page.waitForSelector('.plan-rehacer', { timeout: 10000 });
-    const antes = await page.evaluate(() => ({ auto: !!window.S.plan.auto, motor: !!window.S.plan.motor, pasos: (window.S.plan.ops || []).filter((o) => !o.descartada).length }));
+    const antes = await page.evaluate(() => ({ auto: !!window.S.plan.auto, motor: !!window.S.plan.motor, pasos: (window.S.plan.ops || []).filter((o) => !o.descartada && !o.sugerencia).length }));
     const desde = await page.evaluate(() => Date.now());
     await page.click('.plan-rehacer');
     const t0 = Date.now();
@@ -145,6 +148,15 @@ for (const [que, body] of [['vacía', ''], ['solo los espacios', '      '], ['co
 {
   const r = await caso({ clave: true, servir: () => JSONC(503, { e: 'La IA de los planes no contesta ahora mismo.', servicio: true }), google: () => '```json\n{"pasos": [], "quita": [], "mete": [], "titular": "Hoy, con tu clave", "situacion": "Todo en orden."}\n```' });
   ok(r.plan && r.plan.ia && !r.error, `503 con tu clave: sale el plan con ella (${r.plan && r.plan.titular})`);
+}
+// 10. el motor del plan roto (con tu clave y con la IA de la app): la IA no tiene qué ordenar, se dice y queda el automático
+// (antes, con tu clave, la IA escribía el plan entero: planLargo, quitado el 17 nov)
+for (const clave of [false, true]) {
+  const que = `motor roto${clave ? ' y con tu clave' : ''}`;
+  const r = await caso({ clave, romperMotor: true, servir: () => JSONC(200, PLAN_OK), google: () => '{"operaciones": [], "titular": "x"}' });
+  ok(r.plan && r.plan.auto && !r.plan.motor && !r.cargando, `${que}: sigue el plan automático (${r.plan && r.plan.pasos} pasos)`);
+  ok(/no ha podido montar su plan/.test(r.error) && (r.error.match(/plan automático/g) || []).length === 1, `${que}: lo dice una vez («${r.error.slice(0, 170)}»)`);
+  ok(r.veces === 0, `${que}: no se le pide nada a la IA de la app (${r.veces})`);
 }
 await cerrar();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');

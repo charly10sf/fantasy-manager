@@ -179,7 +179,9 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
 
 /**
  * pide el plan como lo hace la app y lo pasa por cuadrarPlan; devuelve la «vista»: lo que acaba viendo el mánager.
- * `largo`: con el contrato de antes (la IA escribe las operaciones; hoy es lo que queda si el motor no puede). Sin él, el
+ * `largo`: un plan escrito por la IA con el contrato de antes (la IA escribe las operaciones), como los planes guardados
+ * de antes: lo que «contesta» va tal cual a cuadrarPlan (desde el 17 nov la app ya no lo pide: se quitó planLargo; lo que
+ * se prueba es que cuadrarPlan lo para). Sin él, el
  * corto: el plan lo hace el motor y la IA lo ordena, lo recorta y lo explica. En el corto se ve además
  *   FRASE <jugador>: la explicación de cada paso (la de la IA, o la de la app si la de la IA no vale)
  *   CAMBIOS: lo que la IA quitó o metió y lo que la app no le dejó
@@ -187,9 +189,10 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
  */
 export async function plan(escena, contesta, { largo = false } = {}) {
   const P = await pagina(escena, contesta);
+  const escrito = largo ? String(await contesta(null, '')) : null;
   try {
     await P.page.evaluate(`window.__arbitro = ${arbitro.toString()}`);
-    const r = await conCuerda(P.page, P.page.evaluate(async ({ largo, extra }) => {
+    const r = await conCuerda(P.page, P.page.evaluate(async ({ largo, extra, escrito, modelo }) => {
       const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
       const S = window.S;
       if (!largo) {
@@ -202,7 +205,11 @@ export async function plan(escena, contesta, { largo = false } = {}) {
       }
       const { D, M } = S;
       let Pl;
-      try { Pl = await (largo ? I.planLargo : I.planDelDia)(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; }
+      if (largo) {
+        let json = null;
+        try { json = JSON.parse(String(escrito).replace(/^[\s\S]*?```(?:json)?\s*|```[\s\S]*$/g, '')); } catch (e) { return { error: `el plan escrito no es JSON: ${e.message}` }; }
+        Pl = { ...json, fuentes: [], modelo, web: false, t: Date.now(), dia: U.diaDe(), mercado: M.cierreMercado || null };
+      } else { try { Pl = await I.planDelDia(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; } }
       const r = I.cuadrarPlan(Pl, D, M);
       const L = [`TITULAR: ${r.titular || Pl.titular || ''}`, `SITUACION: ${r.situacion || Pl.situacion || ''}`];
       const linea = (o) => `${o.etiqueta || o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${U.eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}${o.aviso ? ` | ${o.aviso}` : ''}`;
@@ -225,7 +232,7 @@ export async function plan(escena, contesta, { largo = false } = {}) {
       }
       const ops = (r.ops || []).filter((o) => !['alinear', 'esperar'].includes(o.accion));
       return { vista: L.join('\n'), n: ops.length, descartadas: ops.filter((o) => o.descartada).length, crudo: Pl, corto: !!Pl.corto, tok: Pl.tok || null };
-    }, { largo, extra: (ESCENAS[escena] || {}).extra || null }));
+    }, { largo, extra: (ESCENAS[escena] || {}).extra || null, escrito, modelo: MODELO_FALSO }));
     // lo que ocupa lo que la app manda a la IA (el sistema y los mensajes)
     const q = (P.pedidos.find((x) => x.cuerpo && x.cuerpo.contents) || {}).cuerpo;
     if (r.vista && r.corto && q) r.vista += `\nPEDIDO: ${(q.systemInstruction ? q.systemInstruction.parts[0].text.length : 0) + q.contents.flatMap((c) => c.parts || []).reduce((t, p) => t + (p.text || '').length, 0)} caracteres`;

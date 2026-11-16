@@ -953,7 +953,6 @@ export function ajustes(S) {
     if (!pApp) c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
     c3 += filasHorasPlan(S, pApp);
     if (k && !qApp) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
-    if (k && !pApp) c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
