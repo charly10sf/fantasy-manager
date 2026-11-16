@@ -3177,7 +3177,8 @@
    "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822222000
   },
   "hechos": [
    {
@@ -3205,27 +3206,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822374886
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 441843,
-  "salida": 17953,
+  "entrada": 443588,
+  "salida": 18039,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.989137,
+  "dolares": 0.989354,
   "reservado": 0
  },
  "recientes": {
@@ -7472,13 +7471,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3074,
+   "ok": 3075,
    "fallos": 0,
-   "ejecuciones": 2467,
+   "ejecuciones": 2468,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:01:22.117Z"
+   "ultima": "2026-11-16T10:06:16.124Z"
   }
  },
  "ptsDirecto": {},
@@ -7495,15 +7494,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:01:26.742Z"
+   "ultimaBien": "2026-11-16T10:06:22.046Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:01:26.742Z"
+   "ultimaBien": "2026-11-16T10:06:22.046Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:01:26.742Z"
+   "ultimaBien": "2026-11-16T10:06:22.046Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7511,11 +7510,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:01:26.742Z"
+   "ultimaBien": "2026-11-16T10:06:22.046Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:01:26.742Z"
+   "ultimaBien": "2026-11-16T10:06:22.046Z"
   }
  },
  "avisos": [
