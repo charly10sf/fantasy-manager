@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13x';
+export const VERSION = '0.7.13y';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,12 @@ export const VERSION = '0.7.13x';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13y', f: '2026-11-16', h: '19:41', t: 'La puja hecha, más corta en el plan',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'semaforo', t: 'Menos texto en lo que ya has pujado', x: 'En el plan, un paso ya pujado en LaLiga dice solo «Pujado 29,15 M», sin repetir cuándo se resuelve.' },
+    ],
+  },
   {
     v: '0.7.13x', f: '2026-11-16', h: '19:39', t: 'El estado de tu puja ya no se corta',
     cosas: [

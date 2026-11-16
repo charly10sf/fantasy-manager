@@ -399,7 +399,6 @@ export function hechoEnLiga(S, P, o) {
   const desde = P.auto ? Date.parse(P.dia + 'T00:00:00') : P.t;
   const mio = (clases) => M.actividad.find((a) => a.esYo && a.pid === o.pid && a.t > desde && clases.includes(a.clase));
   const porImp = (a, verbo) => `${verbo}${a && a.importe ? ` por ${eur(a.importe)}` : ''}`;
-  const resuelve = M.cierreMercado ? ` · se resuelve ${cuando(M.cierreMercado)}` : '';
   switch (o.accion) {
     case 'vender': {
       const a = mio(['venta']);
@@ -414,7 +413,7 @@ export function hechoEnLiga(S, P, o) {
       if (a) return { estado: 'hecho', texto: porImp(a, a.clase === 'clausula' ? 'Clausulado' : 'Fichado') };
       if (o.accion !== 'clausular') {
         const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja);
-        if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}${resuelve}` };
+        if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}` };
       }
       return null;
     }
