@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/13/oihan-sancet-sueno-defender-espana-sueno-jugar-euskadi-mundial.html": 1794552560000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250415/sancet-contentos-terzic-gran-tio.html": 1794553200000,
    "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
@@ -7498,13 +7497,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3035,
+   "ok": 3036,
    "fallos": 0,
-   "ejecuciones": 2428,
+   "ejecuciones": 2429,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T06:46:11.498Z"
+   "ultima": "2026-11-16T06:51:11.717Z"
   }
  },
  "ptsDirecto": {},
@@ -7521,15 +7520,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:46:14.279Z"
+   "ultimaBien": "2026-11-16T06:51:16.760Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:46:14.279Z"
+   "ultimaBien": "2026-11-16T06:51:16.760Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:46:14.279Z"
+   "ultimaBien": "2026-11-16T06:51:16.760Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7537,11 +7536,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:46:14.279Z"
+   "ultimaBien": "2026-11-16T06:51:16.760Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T06:46:14.279Z"
+   "ultimaBien": "2026-11-16T06:51:16.760Z"
   }
  },
  "avisos": [
