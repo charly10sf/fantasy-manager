@@ -22,7 +22,7 @@ export const VERSION = '0.7.13q';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.13q', f: '2026-11-16', h: 'HORA', t: 'En el parón, lo que sube',
+    v: '0.7.13q', f: '2026-11-16', h: '09:34', t: 'En el parón, lo que sube',
     cosas: [
       { tipo: 'arreglo', importante: true, d: 'plan', t: 'En el parón, lo que sube fuerte ya no se descarta', x: 'En el parón la app descartaba fichajes para tu once aunque subieran mucho cada día. Si sube hasta la vuelta y comprándolo ganas dinero, ahora se queda en el plan, con lo que valdría antes de la jornada: es dinero en el parón y llega a tiempo para tu once.' },
       { tipo: 'arreglo', d: 'hucha', t: 'Con dinero de sobra, el parón no frena los buenos fichajes', x: 'Si un jugador bueno sale en el mercado a su valor, no está bajando y lo pagas con tu saldo sin quedarte en negativo, el plan ya te lo propone aunque sea parón: tener el dinero parado no te da nada.' },
