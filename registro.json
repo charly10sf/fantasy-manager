@@ -2011,10 +2011,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rajada-pique-federacion-no-haber-sacado-dos-semanas-sanciones-tenerife-andorra-no-constancia-ninguna-owono-jugar-manana-obviamente-no-viajar-20261113_3475149.html": 1794588819000,
    "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
    "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000,
-   "SPORT|136419217": 1794588765000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
@@ -7655,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3157,
+   "ok": 3158,
    "fallos": 0,
-   "ejecuciones": 2550,
+   "ejecuciones": 2551,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:51:14.380Z"
+   "ultima": "2026-11-16T16:56:11.386Z"
   }
  },
  "ptsDirecto": {},
@@ -7678,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:51:19.301Z"
+   "ultimaBien": "2026-11-16T16:56:13.721Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:51:19.301Z"
+   "ultimaBien": "2026-11-16T16:56:13.721Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:51:19.301Z"
+   "ultimaBien": "2026-11-16T16:56:13.721Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7694,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:51:19.301Z"
+   "ultimaBien": "2026-11-16T16:56:13.721Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:51:19.301Z"
+   "ultimaBien": "2026-11-16T16:56:13.721Z"
   }
  },
  "avisos": [
