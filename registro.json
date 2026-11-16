@@ -1983,11 +1983,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/13/alvaro-juan-regresa-convocatoria-racing-club-ferrol-tras-seis-meses/00031794566195015609667.htm": 1794569580000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
@@ -7543,13 +7541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3090,
+   "ok": 3091,
    "fallos": 0,
-   "ejecuciones": 2483,
+   "ejecuciones": 2484,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:21:11.972Z"
+   "ultima": "2026-11-16T11:26:15.245Z"
   }
  },
  "ptsDirecto": {},
@@ -7566,15 +7564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:21:18.078Z"
+   "ultimaBien": "2026-11-16T11:26:21.466Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:21:18.078Z"
+   "ultimaBien": "2026-11-16T11:26:21.466Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:21:18.078Z"
+   "ultimaBien": "2026-11-16T11:26:21.466Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7582,11 +7580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:21:18.078Z"
+   "ultimaBien": "2026-11-16T11:26:21.466Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:21:18.078Z"
+   "ultimaBien": "2026-11-16T11:26:21.466Z"
   }
  },
  "avisos": [
