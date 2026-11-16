@@ -1115,6 +1115,13 @@
    "jornada": 13,
    "id": "2122351878134522164",
    "t": "2026-11-16T15:31:34.166Z"
+  },
+  {
+   "clave": "novedades|2939:vuelve|2026-11-16",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2122364426846118110",
+   "t": "2026-11-16T16:21:26.224Z"
   }
  ],
  "estados": {
@@ -3410,16 +3417,16 @@
   "dia": "2026-11-16",
   "llamadas": {
    "clasificar": 38,
-   "redactar": 32,
-   "revisar": 16,
+   "redactar": 33,
+   "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 563917,
-  "salida": 32711,
+  "entrada": 578154,
+  "salida": 32872,
   "cacheLee": 29030,
-  "cacheEscribe": 17418,
-  "dolares": 1.156479,
+  "cacheEscribe": 20321,
+  "dolares": 1.193821,
   "reservado": 0
  },
  "recientes": {
@@ -3579,10 +3586,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-09T07:36:33.330Z",
-    "texto": "✅ Buenas noticias para dos delanteros: Vini Jr. y Oyarzabal vuelven a estar disponibles.\n\nVinícius llega con 6,3 de media y el Real Madrid ⚪ se mide al Celta. Oyarzabal juega con la Real Sociedad contra el Racing ⚓. Si los tienes, ya puedes contar con los dos."
-   },
-   {
     "t": "2026-11-12T13:36:25.635Z",
     "texto": "✅ Herrando vuelve a estar disponible: el defensa del Osasuna 🐂 supera la lesión en el aductor que arrastraba desde el 31 de agosto.\n\nEl Málaga 🐟, último de la tabla, visita El Sadar tras el parón, el domingo 22 de noviembre, y marca poquísimo, justo lo que le conviene a un defensa. Eso sí, con un 19 % de titularidad no parece que Herrando vaya a tener sitio fijo en el once, así que mejor no darlo por hecho."
    },
@@ -3597,6 +3600,10 @@
    {
     "t": "2026-11-15T20:21:29.749Z",
     "texto": "⁉️ Marc Pubill arrastra unas molestias sin determinar desde el 15 de noviembre y se pone en duda para la vuelta de la liga.\n\nEl defensa del Atleti llegaba lanzado: 19 puntos en las tres últimas jornadas. El Atlético visita al Getafe en el Coliseum el domingo 22 de noviembre, tras el parón, y de momento no hay plazo que diga si llega."
+   },
+   {
+    "t": "2026-11-16T16:21:26.226Z",
+    "texto": "✅ Villar vuelve a estar disponible: era duda y queda despejada.\n\nEl centrocampista del Elche 🌴 se encuentra con el Levante 🐸, que va 17º, el lunes 23 de noviembre en el Ciutat de València, tras el parón. Es un partido asequible para un medio, aunque con un 46 % de titularidad no tiene el puesto asegurado."
    }
   ],
   "resumen": [
@@ -7666,13 +7673,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3149,
+   "ok": 3150,
    "fallos": 0,
-   "ejecuciones": 2542,
+   "ejecuciones": 2543,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:16:12.633Z"
+   "ultima": "2026-11-16T16:21:12.817Z"
   }
  },
  "ptsDirecto": {},
@@ -7689,15 +7696,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:16:18.114Z"
+   "ultimaBien": "2026-11-16T16:21:26.304Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:16:18.114Z"
+   "ultimaBien": "2026-11-16T16:21:26.304Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:16:18.114Z"
+   "ultimaBien": "2026-11-16T16:21:26.304Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7705,11 +7712,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:16:18.114Z"
+   "ultimaBien": "2026-11-16T16:21:26.304Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:16:18.114Z"
+   "ultimaBien": "2026-11-16T16:21:26.304Z"
   }
  },
  "avisos": [
