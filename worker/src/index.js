@@ -945,15 +945,17 @@ async function planIA(req, env, c, ctx) {
  * La respuesta va mandando espacios cada 5 s mientras la IA piensa (Android corta a los 30 s sin recibir nada).
  * Devuelve { texto, cupo, tok, ms } (el texto con los alias puestos: la app los quita) o { e, estado }.
  */
-export const PREGUNTAS_DEF = { on: true, gratis: 5, porAnuncio: 3, max: 20, topeUsdDia: 3, esfuerzo: 'medium' };
-export const PREGUNTA_TOKENS = 3000;
+// (16 nov, prueba con Haiku de verdad: 40 respuestas) con 3000 tokens y esfuerzo «medium», 4 de 10 salían VACÍAS (lo que piensa
+// cuenta en los tokens de salida y se los comía todos); con «low» tarda un 10 % menos y contesta igual de bien
+export const PREGUNTAS_DEF = { on: true, gratis: 5, porAnuncio: 3, max: 20, topeUsdDia: 3, esfuerzo: 'low' };
+export const PREGUNTA_TOKENS = 8000;
 /** «preguntas» de limites.json, con sus topes */
 export async function cfgPreguntas(env) {
   const p = { ...PREGUNTAS_DEF, ...((await limitesJson()).preguntas || {}) };
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 5, 0, 100));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 20, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'medium' };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 20, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
 }
 const cupoTxtP = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, porAnuncio: c.porAnuncio, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: Math.min(c.max, c.gratis + y.x) < c.max });
 const cupoLibreP = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, porAnuncio: c.porAnuncio, quedan: 99, masConAnuncio: true, ilimitado: true });
@@ -1574,7 +1576,7 @@ export default {
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
         return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
       }
-      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.7.14): { fin: { resumen } } o { marcha }
+      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.8): { fin: { resumen } } o { marcha }
       if (url.pathname === '/pregunta/res' && req.method === 'GET') {
         const u = await quienEs(req);
         if (!u) return json({ e: 'Sin sesión' }, 401, c);

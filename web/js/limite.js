@@ -208,7 +208,29 @@ export function preguntasCfg() {
   const gratis = n(p && p.gratis, 5);
   return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 20)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
 }
+/** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
+    gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
+    reloj, como poco); maxDia: cuántos al día; trasBonificado: minutos sin intersticial después de un bonificado; bloque:
+    el id del bloque de AdMob (si la app no lo lleva puesto; Android solo acepta los de la cuenta de Carlos); suLiga: si
+    también a los de sus ligas («ligas»). Sin «intersticial» (o con «on»: false), ninguno */
+export function intersticialCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
+  const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
+  return {
+    on: !!(p && p.on), gracia: n(p && p.graciaMin, 3, 1, 60) * 60e3, cada: n(p && p.cadaMin, 5, 3, 240) * 60e3,
+    maxDia: Math.floor(n(p && p.maxDia, 6, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
+    bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
+  };
+}
 let yoB = null, demoB = false;
+/** ¿a esta cuenta se le enseñan intersticiales? Al dueño nunca; a los de sus ligas, solo con «suLiga» */
+export function intersticialParaMi() {
+  const g = LS.get('limites', null), cfg = g && g.cfg;
+  if (!cfg || !yoB || demoB) return false;
+  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return false;
+  if (!intersticialCfg().suLiga && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return false;
+  return true;
+}
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
 /** ¿cerrada? Las de los rivales, con «rid», para ese rival (abierto con sus anuncios esta jornada); sin «rid», si

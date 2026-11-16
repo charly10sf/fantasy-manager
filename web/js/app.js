@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -35,6 +35,7 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
+import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
 import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
@@ -741,15 +742,18 @@ function pintar({ arriba = false } = {}) {
   if (S.vista === 'directo' && (S.seg.directo === 'jornadas' || V.ancho())) cargarPtsJornadas();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
-  // el banner de los anuncios (solo en la versión de Google Play): en las pestañas, nunca en Pregunta
-  ponerBanner(S.vista !== 'ia');
+  // los anuncios: en la web, el de AdSense en las pestañas (nunca en Pregunta); en la app de Google Play, que ya se pueden
+  // cargar (desde la 0.8 sin banner: los intersticiales, en una pausa)
+  ponerBanner(S.vista !== 'ia', true);
 }
 /* ---------------- anuncios: AdMob en la versión de Google Play y AdSense en la web ---------------- */
 let bannerYa = null;
-function ponerBanner(si) {
+/** si: el anuncio de la web va en esta pantalla; zona (la app de Google Play): ya se pueden cargar los suyos (por defecto, si) */
+function ponerBanner(si, zona = si) {
   if (EN_FONDO) return;
   // nunca en la pantalla del límite de minutos o la cuenta atrás (Google no deja anuncios en una pantalla sin salida)
-  si = !!si && !document.body.classList.contains('limitado');
+  const limitado = document.body.classList.contains('limitado');
+  si = !!si && !limitado;
   // en la web, los de AdSense (anuncios-web.js), solo con la liga ya cargada (antes no se sabe quién eres) y solo en
   // una pestaña con contenido. Ni en la portada, ni en la carga, ni en la entrada con código, ni en una pestaña vacía:
   // AdSense rechazó la web el 2 nov por anuncios en pantallas sin contenido. Por eso el script ya no se pone en la
@@ -757,13 +761,35 @@ function ponerBanner(si) {
   // google-adsense-account de index.html y con ads.txt)
   // En las dos (web y Google Play), solo con la sesión de tu liga iniciada (Carlos, 8 nov): ni antes de entrar, ni
   // mientras carga, ni en la liga de ejemplo, ni en una pestaña vacía o cargando
-  si = si && !!S.D && !S.D.demo && !enDemo() && vistaConContenido();
-  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), false, modo === 'prueba'); return; }
-  if (si === bannerYa) return;
-  bannerYa = si;
-  nativo.banner(si);
+  const tuLiga = !!S.D && !S.D.demo && !enDemo();
+  if (!enApp) { si = si && tuLiga && vistaConContenido(); const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), false, modo === 'prueba'); return; }
+  // (0.8, Carlos 16 nov 23:24) en la app de Google Play ya no hay banner abajo: Android solo necesita saber si tu liga
+  // está cargada (hasta entonces no carga ni precarga ningún anuncio) y si no está la pantalla del límite. Los
+  // intersticiales los pide pausaNatural
+  const z = !!zona && tuLiga && !limitado;
+  if (z === bannerYa) return;
+  bannerYa = z;
+  nativo.zonaAnuncios(z, intersticialCfg().bloque);
 }
-window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia'));
+window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
+/* (0.8) el intersticial, solo en una pausa natural: al cambiar de pestaña con la barra de abajo o al cerrar una ficha con
+   la X o arrastrándola (nunca con el «atrás» de Android, que puede ser para salir). Lo demás (cada cuánto, la gracia al
+   empezar, el tope del día, a quién) lo mira intersticial.js con «intersticial» de limites.json */
+const FICHAS_PAUSA = new Set(['j', 'r', 'c', 'p', 'sust', 'resumen']);
+/** ¿la pantalla está libre para un anuncio a pantalla completa? Nada abierto, nada a medias, la IA sin pensar */
+function pantallaLibre() {
+  if (EN_FONDO || !S.D || !S.M || S.D.demo || enDemo() || !$('#vista')) return false;
+  if (S.hoja || $('.hoja') || $('.visor') || $('#bienvenida') || tourAbierto() || document.body.classList.contains('en-tour') || document.body.classList.contains('con-nv')) return false;
+  if (document.body.classList.contains('limitado') || S.vista === 'ia' || S.anuncio) return false;
+  if (S.charlando || (S.planEstado && S.planEstado.cargando) || preguntaPendiente()) return false;
+  const a = document.activeElement;
+  return !(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+}
+function pausaNatural() {
+  if (!conAnuncios()) return;
+  // tras la animación de cerrar la ficha o con la pestaña nueva ya pintada; si mientras tanto ha abierto otra cosa, nada
+  setTimeout(() => { try { quizaIntersticial(pantallaLibre()); } catch (e) { /* sin anuncio, la app sigue */ } }, 450);
+}
 /** ¿la pestaña tiene contenido de verdad? Sin contar los «no hay nada» (.vacio) ni el «pensando» de la IA, tiene que
     quedar texto de sobra; si no (una lista vacía, una pestaña cargando), no hay anuncio */
 const TEXTO_MIN_ANUNCIO = 400;
@@ -813,6 +839,8 @@ function cerrarTopA() {
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
+  // (0.8) los intersticiales esperan un rato después de un bonificado
+  if (visto) bonificadoVisto();
   const sinAnuncio = !visto && /sin anuncio|sin consentimiento|no se pudo/.test(motivo || '');
   // las funciones top (limite.js): el dinero de un rival, 2 anuncios (5 min, 2 veces por jornada); lo demás, 1
   if (para === 'top') {
@@ -2196,7 +2224,7 @@ function gestoHoja(hoja, velo) {
     hoja.classList.remove('arrastrando');
     hoja.style.transition = ''; hoja.style.transform = '';
     if (velo) { velo.style.transition = ''; velo.style.opacity = ''; }
-    if (cierra) { nativo.toque(); cerrarHoja(); }
+    if (cierra) { nativo.toque(); const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); }
   };
   hoja.addEventListener('touchstart', (e) => {
     g = null;
@@ -2541,7 +2569,9 @@ async function enviarPregunta(texto, { extra = false } = {}) {
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
     }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra });
     if (!enDemo()) contar('q');
-    // (con la IA de la app y la parte Android de la 0.7.14, el aviso lo pone Android: ia.js, preguntaAcabada)
+    // (16 nov) si mientras pensaba te has ido a otra pestaña de la app, que sepas que ya está
+    if (S.vista !== 'ia' && nativo.aLaVista()) tostada('Ya tienes la respuesta en Pregunta', 4000);
+    // (con la IA de la app y la parte Android de la 0.8, el aviso lo pone Android: ia.js, preguntaAcabada)
     if (!nativo.aLaVista() && !(preguntasApp(enDemo()) && nativo.hayAvisoPregunta())) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
@@ -2940,7 +2970,13 @@ document.addEventListener('click', async (ev) => {
   if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
   if (d.club && S.D && !d.accion) { S.segClub = null; hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
   if (d.r && S.D) { S.segRival = null; hoja('r', d.r); cargarOnceRival(d.r); return; }
-  if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
+  if (d.ir && !d.accion) {
+    // (0.8) cambiar de pestaña con la barra de abajo es una pausa natural (a Pregunta, no: va a escribir)
+    const pausa = !!el.closest('.nav') && d.ir !== 'ia' && (ALIAS[d.ir] || d.ir) !== S.vista && !S.hoja;
+    cerrarHoja(); ir(d.ir);
+    if (pausa) pausaNatural();
+    return;
+  }
   switch (d.accion) {
     case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
     case 'volverHoja': volverHoja(); break;
@@ -3120,7 +3156,7 @@ document.addEventListener('click', async (ev) => {
     }
     case 'cambiarClave': guardarClave(''); S.planEstado = {}; S.claveMal = false; rehacer(); ir('ia'); tostada('Pega la clave nueva'); break;
     // (el toque que acaba un arrastre que no llegó a cerrar no cuenta como tocar el asa)
-    case 'cerrarHoja': if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) cerrarHoja(); break;
+    case 'cerrarHoja': if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) { const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); } break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
@@ -3686,6 +3722,8 @@ function abrirGuardada() {
   }
 }
 async function arrancar() {
+  // (0.8) el reloj del rato de uso para los intersticiales (solo en la app)
+  arrancarIntersticiales();
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
   const aFallos = h === 'fallos';
