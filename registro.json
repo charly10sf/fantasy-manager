@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000,
@@ -3146,8 +3145,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
-   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000,
    "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
@@ -7475,13 +7472,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3067,
+   "ok": 3068,
    "fallos": 0,
-   "ejecuciones": 2460,
+   "ejecuciones": 2461,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T09:26:18.367Z"
+   "ultima": "2026-11-16T09:31:15.201Z"
   }
  },
  "ptsDirecto": {},
@@ -7498,15 +7495,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:26:22.750Z"
+   "ultimaBien": "2026-11-16T09:31:20.392Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:26:22.750Z"
+   "ultimaBien": "2026-11-16T09:31:20.392Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:26:22.750Z"
+   "ultimaBien": "2026-11-16T09:31:20.392Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7514,11 +7511,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:26:22.750Z"
+   "ultimaBien": "2026-11-16T09:31:20.392Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:26:22.750Z"
+   "ultimaBien": "2026-11-16T09:31:20.392Z"
   }
  },
  "avisos": [
