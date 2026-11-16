@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000,
@@ -7576,13 +7575,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3101,
+   "ok": 3102,
    "fallos": 0,
-   "ejecuciones": 2494,
+   "ejecuciones": 2495,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T12:21:13.941Z"
+   "ultima": "2026-11-16T12:26:23.571Z"
   }
  },
  "ptsDirecto": {},
@@ -7599,15 +7598,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:21:37.126Z"
+   "ultimaBien": "2026-11-16T12:26:28.461Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:21:37.126Z"
+   "ultimaBien": "2026-11-16T12:26:28.461Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:21:37.126Z"
+   "ultimaBien": "2026-11-16T12:26:28.461Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7615,11 +7614,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:21:37.126Z"
+   "ultimaBien": "2026-11-16T12:26:28.461Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:21:37.126Z"
+   "ultimaBien": "2026-11-16T12:26:28.461Z"
   }
  },
  "avisos": [
