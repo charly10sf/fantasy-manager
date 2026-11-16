@@ -3145,10 +3145,8 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
-   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "SPORT|136418514": 1794583694000,
@@ -7474,13 +7472,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3072,
+   "ok": 3073,
    "fallos": 0,
-   "ejecuciones": 2465,
+   "ejecuciones": 2466,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T09:51:14.821Z"
+   "ultima": "2026-11-16T09:56:14.804Z"
   }
  },
  "ptsDirecto": {},
@@ -7497,15 +7495,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:51:20.304Z"
+   "ultimaBien": "2026-11-16T09:56:18.892Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:51:20.304Z"
+   "ultimaBien": "2026-11-16T09:56:18.892Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:51:20.304Z"
+   "ultimaBien": "2026-11-16T09:56:18.892Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7513,11 +7511,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:51:20.304Z"
+   "ultimaBien": "2026-11-16T09:56:18.892Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:51:20.304Z"
+   "ultimaBien": "2026-11-16T09:56:18.892Z"
   }
  },
  "avisos": [
