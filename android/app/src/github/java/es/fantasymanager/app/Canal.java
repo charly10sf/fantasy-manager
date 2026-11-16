@@ -69,4 +69,8 @@ final class Canal {
         else act.progreso(100, "permiso");
         return true;
     }
+
+    /** (solo en la de Google Play: la actualización dentro de la app) */
+    static void alVolver(Principal act) {
+    }
 }

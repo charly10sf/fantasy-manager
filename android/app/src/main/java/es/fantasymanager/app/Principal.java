@@ -479,6 +479,8 @@ public class Principal extends Activity {
         Recoger.parar(getApplicationContext());
         web.onResume();
         Anuncios.alVolver();
+        // en la de Google Play, si la tienda tiene una versión más nueva, se ofrece aquí mismo (ActualizarPlay)
+        Canal.alVolver(this);
         // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)
         if (!web.hasFocus()) web.requestFocus();
         js("window.alVolver && alVolver()");

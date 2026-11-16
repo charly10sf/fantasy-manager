@@ -23,6 +23,11 @@ final class Canal {
     }
 
     static boolean resultado(Principal act, int pedido) {
-        return false;
+        return ActualizarPlay.resultado(pedido);
+    }
+
+    /** al abrir la app o volver a ella: si Google Play tiene una versión más nueva, se ofrece aquí mismo */
+    static void alVolver(Principal act) {
+        ActualizarPlay.mirar(act);
     }
 }
