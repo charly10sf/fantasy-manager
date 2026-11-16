@@ -55,6 +55,8 @@ th { color: var(--texto); font-weight: 600; }
 .tabla-pos td + td, .tabla-pos th + th { text-align: center; }
 .peq { font-size: 14px; color: var(--apagado); }
 .fecha { color: var(--apagado); font-size: 14px; }
+.firma { color: var(--apagado); font-size: 14px; margin: 0 0 18px; }
+.firma a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .aviso { border: 1px solid var(--linea); background: var(--plano); border-radius: 12px; padding: 12px 14px; margin: 16px 0; }
 .volver { display: inline-flex; gap: 8px; align-items: center; color: var(--texto2); text-decoration: none; border: 1px solid var(--linea); border-radius: 10px; padding: 8px 12px; background: var(--plano); }
 .migas { font-size: 14px; color: var(--apagado); }

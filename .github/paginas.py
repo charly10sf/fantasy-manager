@@ -164,7 +164,7 @@ def pie(raiz, hay_guias):
     guias = f'<a href="{raiz}guias/">Guías</a>' if hay_guias else ''
     return (f'<footer class="pie"><div class="pie-in">'
             f'<nav aria-label="Pie"><a href="{raiz or "./"}">Abrir la app</a><a href="{raiz}mercado/">Mercado</a><a href="{raiz}jornada/">Jornadas</a><a href="{raiz}equipos/">Equipos</a>{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}condiciones.html">Condiciones</a>'
+            f'<a href="{raiz}metodo.html">Cómo calculamos</a><a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}condiciones.html">Condiciones</a>'
             f'<a href="{raiz}aviso-legal.html">Aviso legal</a><a href="{raiz}instalar.html">Instalar</a></nav>'
             f'<p>Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores.</p>'
             f'<p>© 2026 Fantasy Manager · <a href="mailto:fantasymanager.web.app@gmail.com">fantasymanager.web.app@gmail.com</a></p>'
@@ -199,6 +199,32 @@ def migas(raiz, p, hay_guias):
     return '<nav class="migas" aria-label="Estás en">' + ' › '.join(f'<a href="{raiz}{r or ""}">{e(n)}</a>' if r else f'<a href="{raiz or "./"}">{e(n)}</a>' for n, r in m) + '</nav>'
 
 
+# quien firma las guías y las previas (16 nov, idea 2 del plan de AdSense): una persona con nombre, no la marca
+AUTOR = {'@type': 'Person', 'name': 'Carlos Díez', 'url': DOMINIO + 'quienes-somos.html'}
+
+
+def firma(p, raiz):
+    """debajo del h1 de una guía: quién la firma y cuándo se puso al día; en las previas, que se hacen con los datos y cómo"""
+    if p['tipo'] != 'guia' or p['ruta'] == 'guias/index.html' or not publicada(p):
+        return ''
+    quien = f'<a href="{raiz}quienes-somos.html">Carlos Díez</a>'
+    if es_previa(p):
+        return (f'<p class="firma">Preparada por {quien} con los datos de LaLiga Fantasy · actualizada el {fecha_larga(p["fecha"])} · '
+                f'<a href="{raiz}metodo.html#previas">cómo se hace</a></p>')
+    return f'<p class="firma">Por {quien} · actualizada el {fecha_larga(p["fecha"])}</p>'
+
+
+def poner_firma(contenido, p, raiz):
+    # la firma va dentro de las marcas de contenido: la de la vez anterior se quita para poner la fecha de hoy
+    contenido = re.sub(r'\n?[ \t]*<p class="firma">.*?</p>', '', contenido)
+    f = firma(p, raiz)
+    if not f:
+        return contenido
+    if '</h1>' in contenido:
+        return contenido.replace('</h1>', f'</h1>\n  {f}', 1)
+    return f'  {f}\n{contenido}'
+
+
 def datos_estructurados(p, url):
     """en las guías, el artículo; en el portal, la página con su fecha; en las dos, las migas"""
     if not indexable(p) or p['ruta'] == 'guias/index.html' or p['tipo'] not in ('guia', 'portal'):
@@ -210,7 +236,7 @@ def datos_estructurados(p, url):
                      'description': p['descripcion'], 'inLanguage': 'es-ES', 'mainEntityOfPage': url,
                      'image': {'@type': 'ImageObject', 'url': IMAGEN, 'width': 1200, 'height': 630},
                      'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'],
-                     'author': {'@type': 'Organization', 'name': 'Fantasy Manager', 'url': DOMINIO}, 'publisher': org}
+                     'author': AUTOR, 'publisher': org}
     else:
         principal = {'@type': 'WebPage', 'name': titulo, 'description': p['descripcion'], 'inLanguage': 'es-ES', 'url': url,
                      'datePublished': p.get('publicada', p['fecha']), 'dateModified': p['fecha'], 'publisher': org}
@@ -275,12 +301,10 @@ def pagina(p, contenido, hay_guias):
     url = DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta'])
     robots = '' if indexable(p) else '\n  <meta name="robots" content="noindex, follow">'
     fecha = ''
-    if p['tipo'] == 'guia' and p['ruta'] != 'guias/index.html' and publicada(p):
-        fecha = f'\n  <p class="fecha">Actualizada el {fecha_larga(p["fecha"])}</p>'
     pie_guia = f'\n  {cta(raiz)}' if p['tipo'] in ('guia', 'portal') or en_guias(p) else ''
     m = migas(raiz, p, hay_guias)
     migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
-    contenido = poner_previa(contenido, p)
+    contenido = poner_firma(poner_previa(contenido, p), p, raiz)
     script = f'\n  <script src="{p["script"]}" defer></script>' if p.get('script') else ''
     if VERSION_JS:
         script += f'\n  <script src="{raiz}portal/portal.js?v={VERSION_JS}" defer></script>'

@@ -1,0 +1,90 @@
+<!doctype html>
+<!-- Generada por .github/paginas.py: el texto se edita entre las marcas de contenido; lo demás se rehace al ejecutarlo -->
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08080a">
+  <title>Cómo calculamos cada cifra · Fantasy Manager</title>
+  <meta name="description" content="De dónde salen los valores, puntos, rachas, medias por puesto y la dificultad de los rivales de Fantasy Manager, cómo se hacen las previas y qué no sabemos.">
+  <link rel="canonical" href="https://fantasymanagerapp.com/metodo.html">
+  <meta name="google-adsense-account" content="ca-pub-3175956326240112">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Fantasy Manager">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:title" content="Cómo calculamos cada cifra · Fantasy Manager">
+  <meta property="og:description" content="De dónde salen los valores, puntos, rachas, medias por puesto y la dificultad de los rivales de Fantasy Manager, cómo se hacen las previas y qué no sabemos.">
+  <meta property="og:url" content="https://fantasymanagerapp.com/metodo.html">
+  <meta property="og:image" content="https://fantasymanagerapp.com/img/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/icono-180.png">
+  <link rel="stylesheet" href="css/paginas.css?v=1bea0f1d">
+  <script src="portal/portal.js?v=5790cfef" defer></script>
+</head>
+<body class="texto">
+<header class="cab"><div class="cab-in"><a class="marca" href="./"><img src="img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a><input type="checkbox" id="busca-t" class="busca-t" aria-label="Abrir el buscador"><div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></label><a class="menu-web" href="./">Usar en la web</a><a class="menu-cta" href="https://play.google.com/store/apps/details?id=es.fantasymanager.app" target="_blank" rel="noopener">Descargar<span class="largo"> en Google Play</span></a></div><nav class="menu" aria-label="Secciones"><a href="mercado/">Mercado</a><a href="jornada/">Jornada</a><a href="equipos/">Equipos</a><a href="jugadores/">Jugadores</a><a href="guias/">Aprende</a><a href="guias/#calculadoras">Calculadoras</a></nav><form class="busca" role="search" action="jugadores/" method="get" data-raiz=""><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><ul class="busca-r" hidden></ul></form></div></header>
+<main>
+<!-- contenido -->
+  <h1>Cómo calculamos <span>cada cifra</span></h1>
+  <p>Todo lo que sale en el mercado, las jornadas, los equipos y las fichas de jugador de esta web se hace solo cada noche con los datos públicos de LaLiga Fantasy: los mismos para todas las ligas, sin entrar en la liga de nadie. Aquí está de dónde sale cada número, qué cuenta hacemos con él y qué no sabemos. Si ves una cifra que no cuadra, escríbenos a <a href="mailto:fantasymanager.web.app@gmail.com">fantasymanager.web.app@gmail.com</a> y la miramos.</p>
+
+  <h2 id="datos">De dónde salen los datos</h2>
+  <ul>
+    <li><b>Valor de mercado.</b> El que publica LaLiga Fantasy para cada jugador después del cambio de mercado, hacia las 00:15. Guardamos el de cada día desde el 1 de agosto. Cuando LaLiga tarda en publicarlo, la página espera y se rehace más tarde (a las 07:13 hay una segunda vuelta).</li>
+    <li><b>Puntos, minutos, goles, asistencias, tarjetas, paradas y goles encajados.</b> Los de la ficha oficial de cada jugador en LaLiga Fantasy, jornada a jornada. Si LaLiga corrige unos puntos días después (pasa con la parte de DAZN), lo corregimos en la siguiente noche.</li>
+    <li><b>Resultados, clasificación y calendario.</b> Los partidos de cada jornada tal y como los da LaLiga Fantasy. La hora de un partido que LaLiga aún no ha fijado sale como «por confirmar».</li>
+    <li><b>Lesiones, dudas y sanciones.</b> El estado que LaLiga Fantasy pone a cada jugador. No lo cambiamos ni lo adivinamos: si LaLiga dice que está disponible, para nosotros lo está.</li>
+    <li><b>Fotos y escudos.</b> Los oficiales de LaLiga Fantasy, enlazados desde sus servidores.</li>
+  </ul>
+  <p>No usamos alineaciones, cifras ni textos de otras webs de fantasy.</p>
+
+  <h2 id="valor">El valor y las rachas</h2>
+  <p>Lo que sube o baja un jugador «hoy» es su valor después del último cambio de mercado frente al del día anterior; «en 7 días», frente al de siete cambios atrás. Una racha son los días seguidos que el valor se mueve en el mismo sentido hasta hoy: si un día no se mueve, la racha se corta.</p>
+  <p>Las probabilidades de que una racha siga salen de 52.302 cambios de valor de esta temporada (del 14 de agosto al 15 de noviembre de 2026). Por ejemplo: un día cualquiera sube el 34,4 % de los jugadores, pero de los que llevan tres días subiendo, el 87,3 % sube también el cuarto. Si la subida de hoy es menos de la mitad que la de ayer, solo sigue el 61,9 %. El detalle, en <a href="guias/valor-de-mercado.html">cómo se mueve el valor de mercado</a>. Es lo que ha pasado esta temporada, no una promesa: LaLiga no publica cómo calcula el precio.</p>
+
+  <h2 id="puntos">Medias, titularidad y puestos</h2>
+  <ul>
+    <li><b>Media.</b> Puntos de la temporada entre partidos jugados (los que no jugó no cuentan).</li>
+    <li><b>Titular.</b> Un partido cuenta como titular si jugó 60 minutos o más. El porcentaje de titularidad mezcla las cinco últimas jornadas (60 %) con toda la temporada (40 %), para que pese más lo reciente. Hace falta haber jugado al menos tres partidos.</li>
+    <li><b>Lo normal en cada puesto.</b> Cuando decimos que alguien puntúa más o menos que «un titular de su puesto», comparamos con 3.758 partidos jugados de las jornadas 1 a 12: un defensa con 60 minutos o más saca 4,7 de media; un centrocampista, 5,5; un delantero, 6,4, y un portero, 6,6. Saliendo del banquillo, esas cifras se quedan en la mitad o menos (<a href="guias/alineacion.html">la guía de la alineación</a>).</li>
+    <li><b>Porteros.</b> 237 partidos de portero titular: con 0 goles encajados la media es de 11,4 puntos; con uno, 6,3; con dos, 4,7, y con tres o más, 2,2 (<a href="guias/puntos-porteros-laliga-fantasy.html">los puntos de los porteros</a>).</li>
+    <li><b>Puesto por media.</b> El ranking de cada puesto solo cuenta a los que llevan cinco partidos jugados o más, para que no gane uno que jugó un partido bueno.</li>
+  </ul>
+
+  <h2 id="rivales">La dificultad de cada rival</h2>
+  <p>Para cada rival miramos sus puntos por partido en la clasificación frente a la media de los 20. Jugar fuera pesa un 15 % más y en casa un 15 % menos. Un rival es «difícil» si saca un 25 % más de puntos que la media o está entre los cuatro primeros, y «fácil» si saca un 20 % menos o está entre los cuatro últimos. El calendario de un equipo es la media de sus cuatro próximos partidos (como mínimo dos), y con esa cuenta se ordenan los 20 del más fácil al más difícil. Con menos de tres partidos jugados no damos nivel.</p>
+
+  <h2 id="fichas">Qué cuenta la ficha de cada jugador</h2>
+  <p>Tienen ficha propia unos 150 jugadores: los que juegan de titular la mitad de las veces o más, los que llevan 3 puntos de media o más y los que valen 8 M o más, empezando por los más caros. Las cifras de arriba (valor, puntos, media, titularidad, partidos y rivales) salen siempre. El texto del análisis, no: solo escribimos lo que de verdad dice algo de ese jugador, y cada cosa tiene un umbral. Algunos ejemplos:</p>
+  <ul>
+    <li>Que lleva tres días o más subiendo o bajando seguidos, con lo que suele pasar después.</li>
+    <li>Que ha ganado o perdido un 25 % o más de su valor desde agosto, que hoy marca su máximo o que está muy lejos de él.</li>
+    <li>Que su valor y sus puntos van en sentidos contrarios (sube con una media floja o baja con una de las mejores de su puesto).</li>
+    <li>Que ha perdido el sitio en el once en las últimas jornadas, o que se lo ha ganado.</li>
+    <li>Que puntúa como titular claramente por encima o por debajo de lo normal en su puesto.</li>
+    <li>Que ha sido el que más puntos ha sacado de su puesto en alguna jornada, o que tiene muchos partidos de 10 puntos o más (o de 1 o menos).</li>
+    <li>Que su equipo tiene uno de los calendarios más fáciles o más difíciles de las próximas jornadas, que está a una amarilla de la sanción o que LaLiga lo da como lesionado, en duda o sancionado.</li>
+  </ul>
+  <p>Si un jugador lleva menos de cinco partidos jugados o no tiene al menos tres cosas propias que contar, su ficha sigue abierta para quien la busque, pero le pedimos a Google que no la meta en sus resultados hasta que las tenga.</p>
+
+  <h2 id="previas">Las previas y los resúmenes de cada jornada</h2>
+  <p>Los datos de cada previa (la hora del cierre y de la reapertura de las cláusulas, los sancionados, los apercibidos, las bajas, los que vuelven y los que más suben) salen de LaLiga Fantasy con reglas fijas. El texto de cada apartado lo redacta una IA a partir de esos datos y nada más. Antes de publicarlo, un programa comprueba que cada cifra y cada jugador que nombra está en los datos, y una segunda revisión busca errores de hecho y consejos que no se sostienen. Si un apartado no pasa las dos, sale solo con la tabla, sin texto. La previa se hace unas 76 horas antes del primer partido y se pone al día unas 34 horas antes.</p>
+  <p>Los resúmenes se escriben con reglas, sin IA: los que más y menos puntos sacaron, el MVP de cada partido (el que más puntos sacó en él), los que doblaron su media (con 3 o más de media y 10 puntos o más) y el once ideal de lo jugado (la formación que más suma con el mejor portero y los mejores de cada línea).</p>
+
+  <h2 id="clausulas">Cláusulas y fechas</h2>
+  <p>Las reglas que usamos son las de LaLiga Fantasy: no se puede pagar ninguna cláusula en las 24 horas antes del primer partido de la jornada y se vuelven a abrir a esa hora; un jugador recién fichado tiene la cláusula protegida 14 días; una cláusula solo se paga con saldo, sin deuda. Todas las horas son de Madrid. Las cuentas de cuánto subir una cláusula o cuánto pujar están en las <a href="guias/#calculadoras">calculadoras</a>.</p>
+
+  <h2 id="limites">Lo que no sabemos</h2>
+  <p>No vemos el dinero de nadie, ni las pujas, ni las cláusulas que se pagan en cada liga: eso es privado y solo lo ve cada uno en su app. Tampoco sabemos quién va a jugar antes de que el entrenador dé el once. Cuando una cifra es una tendencia de esta temporada (una racha, la dificultad de un rival), lo decimos como tendencia.</p>
+
+  <h2>Quién lo hace</h2>
+  <p>La web y la app las hace Carlos Díez, desde San Fernando de Henares (Madrid). Más en <a href="quienes-somos.html">quiénes somos</a>.</p>
+<!-- /contenido -->
+</main>
+<nav class="escudos" aria-label="Los 20 equipos"><div class="escudos-in"><a href="equipos/alaves.html" title="Alavés"><img src="https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png" alt="Alavés" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/athletic.html" title="Athletic"><img src="https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png" alt="Athletic" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/atletico.html" title="Atlético"><img src="https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png" alt="Atlético" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/barca.html" title="Barça"><img src="https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png" alt="Barça" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/betis.html" title="Betis"><img src="https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png" alt="Betis" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/celta.html" title="Celta"><img src="https://assets-fantasy.llt-services.com/teambadge/t176/color/t176_rc-celta.png" alt="Celta" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/deportivo.html" title="Deportivo"><img src="https://assets-fantasy.llt-services.com/teambadge/t180/color/t180_rc-deportivo.png" alt="Deportivo" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/elche.html" title="Elche"><img src="https://assets-fantasy.llt-services.com/teambadge/t954/color/t954_elche-c-f.png" alt="Elche" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/espanyol.html" title="Espanyol"><img src="https://assets-fantasy.llt-services.com/teambadge/t177/color/t177_rcd-espanyol.png" alt="Espanyol" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/getafe.html" title="Getafe"><img src="https://assets-fantasy.llt-services.com/teambadge/t1450/color/t1450_getafe-cf.png" alt="Getafe" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/levante.html" title="Levante"><img src="https://assets-fantasy.llt-services.com/teambadge/t855/color/t855_levante-ud.png" alt="Levante" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/malaga.html" title="Málaga"><img src="https://assets-fantasy.llt-services.com/teambadge/t182/color/t182_malaga-cf.png" alt="Málaga" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/osasuna.html" title="Osasuna"><img src="https://assets-fantasy.llt-services.com/teambadge/t450/color/t450_c-a-osasuna.png" alt="Osasuna" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/racing.html" title="Racing"><img src="https://assets-fantasy.llt-services.com/teambadge/t189/color/t189_r-racing-club.png" alt="Racing" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/rayo.html" title="Rayo"><img src="https://assets-fantasy.llt-services.com/teambadge/t184/color/t184_rayo-vallecano.png" alt="Rayo" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/real-madrid.html" title="Real Madrid"><img src="https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png" alt="Real Madrid" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/real-sociedad.html" title="Real Sociedad"><img src="https://assets-fantasy.llt-services.com/teambadge/t188/color/t188_real-sociedad.png" alt="Real Sociedad" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/sevilla.html" title="Sevilla"><img src="https://assets-fantasy.llt-services.com/teambadge/t179/color/t179_sevilla-fc.png" alt="Sevilla" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/valencia.html" title="Valencia"><img src="https://assets-fantasy.llt-services.com/teambadge/t191/color/t191_valencia-cf.png" alt="Valencia" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a><a href="equipos/villarreal.html" title="Villarreal"><img src="https://assets-fantasy.llt-services.com/teambadge/t449/color/t449_villarreal-cf.png" alt="Villarreal" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a></div></nav>
+<footer class="pie"><div class="pie-in"><nav aria-label="Pie"><a href="./">Abrir la app</a><a href="mercado/">Mercado</a><a href="jornada/">Jornadas</a><a href="equipos/">Equipos</a><a href="guias/">Guías</a><a href="quienes-somos.html">Quiénes somos</a><a href="metodo.html">Cómo calculamos</a><a href="contacto.html">Contacto</a><a href="privacidad.html">Privacidad</a><a href="condiciones.html">Condiciones</a><a href="aviso-legal.html">Aviso legal</a><a href="instalar.html">Instalar</a></nav><p>Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores.</p><p>© 2026 Fantasy Manager · <a href="mailto:fantasymanager.web.app@gmail.com">fantasymanager.web.app@gmail.com</a></p></div></footer>
+</body>
+</html>
