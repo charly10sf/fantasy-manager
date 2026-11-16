@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
@@ -2154,7 +2153,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000,
-   "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/": 1794827987000
+   "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/": 1794827987000,
+   "AS|https://as.com/futbol/primera/giuliano-crecimiento-sostenido-f202611-n/": 1794829515000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251598/olmo-entrena-grupo-apunta-villarreal.html": 1794828986000
   },
   "hechos": [
    {
@@ -2391,7 +2394,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3304,17 +3307,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 495774,
-  "salida": 22039,
+  "entrada": 498450,
+  "salida": 22476,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.07077,
+  "dolares": 1.071256,
   "reservado": 0
  },
  "recientes": {
@@ -7561,13 +7564,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3097,
+   "ok": 3098,
    "fallos": 0,
-   "ejecuciones": 2490,
+   "ejecuciones": 2491,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:56:13.036Z"
+   "ultima": "2026-11-16T12:01:12.784Z"
   }
  },
  "ptsDirecto": {},
@@ -7584,15 +7587,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:56:16.114Z"
+   "ultimaBien": "2026-11-16T12:01:20.310Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:56:16.114Z"
+   "ultimaBien": "2026-11-16T12:01:20.310Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:56:16.114Z"
+   "ultimaBien": "2026-11-16T12:01:20.310Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7600,11 +7603,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:56:16.114Z"
+   "ultimaBien": "2026-11-16T12:01:20.310Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:56:16.114Z"
+   "ultimaBien": "2026-11-16T12:01:20.310Z"
   }
  },
  "avisos": [
