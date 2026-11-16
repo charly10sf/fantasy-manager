@@ -178,10 +178,14 @@ const PAL_FUTBOL = ['gol', 'goles', 'golazo', 'doblete', 'hat trick', 'fichaje',
   'partido', 'partidos', 'jornada', 'liga', 'laliga', 'champions', 'europa league', 'conference league', 'copa del rey', 'supercopa', 'derbi', 'clasico', 'estadio', 'penalti', 'penaltis',
   'arbitro', 'var', 'sancion', 'sancionado', 'expulsion', 'expulsado', 'tarjeta roja', 'amarilla', 'asistencia', 'remontada', 'empate', 'empata', 'marcador', 'en directo', 'previa', 'cronica',
   'fantasy', 'seleccion espanola', 'mundial', 'balon de oro', 'primera division', 'segunda division'];
-const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf'];
+const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf',
+  // (16 nov, un aviso: las noticias de Ryan, el portero del Levante, con las de un Ryan de la NFL)
+  'nfl', 'futbol americano', 'super bowl', 'superbowl', 'quarterback', 'mariscal de campo', 'touchdown', 'touchdowns', 'yardas', 'mlb', 'beisbol', 'nhl', 'hockey', 'ufc', 'boxeo', 'mma'];
 const MEDIOS = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'defensa central', 'eldesmarque', 'el desmarque', 'futbolfantasy', 'jornada perfecta',
   'comuniate', 'analitica fantasy', 'superdeporte', 'fichajes net', 'fichajes', 'besoccer', 'goal', 'goal com', 'sportyou', 'todofichajes', 'futbol emotion', 'cope deportes', 'tribuna deportiva'];
 const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
+/** el titular viene de un medio deportivo o de fútbol */
+export const medioFutbol = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS.includes(f) || / (deport|futbol|fichaj)/.test(` ${f}`)); };
 export function esDeFutbol(n) {
   if (!n || !n.titulo) return false;
   const t = ` ${norm(n.titulo)} `;

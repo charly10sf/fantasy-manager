@@ -586,7 +586,7 @@ export function fichaRival(S, tid) {
   const conDinero = r.dinero && r.dinero.v != null;
   const tDinero = bloqueada('dineroRivales', tid)
     ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
-    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
+    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
     tDinero,
@@ -636,7 +636,7 @@ export function fichaRival(S, tid) {
   } else if (seg === 'clausulas') {
     // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
     if (bloqueada('dineroRivales', tid)) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}</span></div>`}
+    h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
       <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</span></div></div>`;
     if (!bloqueada('dineroRivales', tid)) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
     // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva

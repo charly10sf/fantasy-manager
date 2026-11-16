@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13q';
+export const VERSION = '0.7.13r';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13q';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13r', f: '2026-11-16', h: '09:44', t: 'Noticias de cada jugador, sin colarse otros',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Las noticias, solo de tu jugador', x: 'Con jugadores de un solo nombre (como Ryan, el portero del Levante) se colaban noticias de otros deportes, como la NFL. Ahora un nombre suelto solo cuenta si la noticia nombra también a su equipo o viene de un medio de fútbol.' },
+      { menor: true, tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, mejor explicado', x: 'Al abrir el dinero de un rival, el ± se explica: es por la recompensa diaria, que no sale en ningún sitio, así que la app no puede saber cuánto ha cogido cada uno.' },
+    ],
+  },
   {
     v: '0.7.13q', f: '2026-11-16', h: '09:34', t: 'En el parón, lo que sube',
     cosas: [

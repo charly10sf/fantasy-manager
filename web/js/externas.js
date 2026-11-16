@@ -8,7 +8,7 @@
 import { http, enWeb, hayDeno, httpPorDeno } from './puente.js';
 import { api, apuntarRegistro, registro } from './api.js';
 import { guardarMuestraVivo } from './vivo.js';
-import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol } from './util.js';
+import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol, medioFutbol } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 
@@ -352,9 +352,17 @@ export async function noticias(D, M) {
   // a qué jugadores se refiere cada titular
   const candidatos = Object.values(D.maestro).filter((j) => j.nombre && j.nombre.length > 3);
   const alias = Object.entries(D.equipos || {}).map(([id, e]) => ({ id, a: aliasEquipo(e.nombre || '') }));
+  const aliasDe = Object.fromEntries(alias.map((x) => [String(x.id), x.a]));
   for (const n of todas) {
     const t = ` ${norm(n.titulo)} `;
-    n.pids = candidatos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
+    // (16 nov, aviso de un usuario: «Ryan», del Levante, con un Ryan de la NFL) un nombre de una sola palabra solo cuenta
+    // si el titular nombra también a su equipo o viene de un medio de fútbol; con nombre y apellido, basta el nombre
+    const deFutbol = medioFutbol(n.fuente);
+    n.pids = candidatos.filter((j) => {
+      const nn = norm(j.nombre);
+      if (!t.includes(` ${nn} `)) return false;
+      return nn.includes(' ') || deFutbol || (aliasDe[String(j.equipoId)] || []).some((a) => t.includes(` ${a} `));
+    }).map((j) => j.id).slice(0, 4);
     n.equipos = alias.filter((x) => x.a.some((a) => t.includes(` ${a} `))).map((x) => x.id).slice(0, 3);
   }
   const lista = todas.filter((n) => esDeFutbol(n) && (!n.t || Date.now() - n.t < 4 * DIA)).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 140);
