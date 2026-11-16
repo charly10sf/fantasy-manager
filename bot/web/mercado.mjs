@@ -180,6 +180,7 @@ export function proximaCaja(p, { previa = null, resumen = null, raiz = '../', to
   if (previa) enl.push(`<a href="${raiz}${e(previa)}">Previa de la jornada ${J}</a>`);
   if (resumen) enl.push(`<a href="${raiz}${e(resumen.ruta)}">Resumen de la jornada ${resumen.jornada}</a>`);
   enl.push(`<a href="${raiz}clausulas/">Calendario de cláusulas</a>`);
+  enl.push(`<a href="${raiz}bajas/">Bajas de la jornada</a>`);
   if (todas) enl.push(`<a href="${raiz}jornada/">Todas las jornadas</a>`);
   return `  <aside class="prox2"><p class="prox-t">Jornada ${J}</p>${linea}${enl.length ? `<p class="prox-e">${enl.join(' · ')}</p>` : ''}</aside>`;
 }

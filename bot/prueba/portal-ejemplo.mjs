@@ -218,3 +218,32 @@ console.log('portal-ejemplo: todo bien');
   assert.match(ch, /<h1>Calendario de <span>cláusulas<\/span><\/h1>/);
 }
 console.log('cláusulas: bien');
+
+// (sesión 4) las bajas de la jornada (bajas/): el lesionado de ejemplo, con su parte, su valor y qué suele compensar
+{
+  const { hechosBajas, contenidoBajas, metasBajas, consejo } = await import('../web/bajas.mjs');
+  // el 3 está lesionado; con 9 M en la lista pesa en el fantasy (si no, la página no lo saca)
+  const apiB = { ...api, jugadores: async () => jug.map((j) => (j.id === '3' ? { ...j, marketValue: '9000000' } : j)), disciplina: async () => [], lesionados: async () => [{ nombre: 'Jugador 3', slug: 'jugador-3', lesion: 'Rotura fibrilar en el aductor', dia: 1, mes: 11, dias: 14, estado: 'baja', hasta: 'enero', jornada: null }] };
+  const hmB = await hechosMercado(api, { ahora: hoy });
+  const hb = await hechosBajas(apiB, hmB, { ahora: hoy });
+  assert.ok(hb, 'hay jornada por delante');
+  assert.equal(hb.jornada, 13);
+  const b3 = hb.bajas.find((x) => x.id === '3');
+  assert.ok(b3, 'el lesionado de ejemplo');
+  assert.equal(b3.consejo.k, 'vende', 'hasta enero: un mes o más, vender pronto');
+  assert.ok(b3.valor > 0 && b3.dif7 != null, 'con el valor de esa noche');
+  assert.equal(consejo({ tipo: 'sancion' }).k, 'aguanta', 'un partido de sanción, aguantar');
+  assert.equal(consejo({ tipo: 'sancion', partidos: 4 }).k, 'depende');
+  assert.equal(consejo({ tipo: 'duda' }).k, 'aguanta');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: null } }).k, 'sin', 'sin fecha no se adivina');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: 'finales de noviembre' } }, hoy).k, 'aguanta', 'diez días: aguantar');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: 'principios de diciembre' } }, hoy).k, 'depende', 'tres semanas: depende');
+  const cb = contenidoBajas(hb);
+  assert.doesNotMatch(cb, /undefined|NaN|\[object/);
+  assert.match(cb, /<h1>Bajas de la jornada <span>13<\/span><\/h1>/);
+  assert.match(cb, /Rotura fibrilar en el aductor/);
+  assert.match(cb, /cons-vende/);
+  assert.match(cb, /guias\/cuando-vender\.html/, 'enlaza a la guía que explica el consejo');
+  assert.ok(metasBajas(hb).titulo.length <= 60, 'título corto');
+}
+console.log('bajas: bien');

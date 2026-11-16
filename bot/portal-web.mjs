@@ -14,6 +14,7 @@ import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJorn
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen } from './web/resumen.mjs';
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
+import { hechosBajas, contenidoBajas, metasBajas } from './web/bajas.mjs';
 import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, metasPaginaJugadores, nPaginasJugadores, jugadoresJson, indiceBuscador, escudosPie } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
@@ -181,6 +182,19 @@ try {
     log(`Cláusulas: próximo cierre ${hc.siguiente ? `J${hc.siguiente.J}, ${hc.cambios} cambios de mercado` : 'sin fecha'}`);
   }
 } catch (err) { log(`::warning::Cláusulas sin hacer: ${err.stack || err.message}`); }
+
+// 5. las bajas de la jornada (bajas/, sesión 4 de AdSense): con el mercado de esta noche (el valor y la racha de cada uno), una vez por día
+if (hm) {
+  try {
+    const hb = await hechosBajas(api, hm, { rutas, log });
+    if (hb) {
+      const pvB = previas().find((p) => p.jornada === hb.jornada) || null;
+      escribirPagina(metasBajas(hb), contenidoBajas(hb, { previa: pvB }));
+      cambios = true;
+      log(`Bajas: jornada ${hb.jornada}, ${hb.bajas.length} lesionados, ${hb.dudas.length} dudas, ${hb.sancionados.length} sancionados, ${hb.apercibidos.length} apercibidos`);
+    }
+  } catch (err) { log(`::warning::Bajas sin hacer: ${err.stack || err.message}`); }
+}
 
 writeFileSync(fEstado, JSON.stringify(estado, null, 1) + '\n');
 execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });

@@ -253,6 +253,13 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .niv-facil { color: var(--sube); border-color: rgba(47, 209, 143, 0.4); background: rgba(47, 209, 143, 0.1); }
 .niv-media { color: var(--oro); border-color: rgba(255, 197, 71, 0.35); background: rgba(255, 197, 71, 0.08); }
 .niv-dificil { color: var(--baja); border-color: rgba(255, 111, 97, 0.4); background: rgba(255, 111, 97, 0.1); }
+/* bajas/ (sesión 4): qué suele compensar con cada baja, con los colores de la dificultad */
+.cons { display: inline-block; font-size: 13px; line-height: 1.3; padding: 4px 8px; border-radius: 8px; border: 1px solid; }
+.cons-aguanta { color: var(--sube); border-color: rgba(47, 209, 143, 0.4); background: rgba(47, 209, 143, 0.1); }
+.cons-depende, .cons-sin { color: var(--oro); border-color: rgba(255, 197, 71, 0.35); background: rgba(255, 197, 71, 0.08); }
+.cons-sin { color: var(--apagado); border-color: rgba(255, 255, 255, 0.15); background: transparent; }
+.cons-vende { color: var(--baja); border-color: rgba(255, 111, 97, 0.4); background: rgba(255, 111, 97, 0.1); }
+.td-bajas td small { color: var(--apagado); }
 .res-c { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; font: 700 13px/1 'Barlow Condensed', sans-serif; margin-right: 4px; }
 .res-G { background: rgba(47, 209, 143, 0.16); color: var(--sube); } .res-E { background: rgba(255, 197, 71, 0.14); color: var(--oro); } .res-P { background: rgba(255, 111, 97, 0.14); color: var(--baja); }
 .eq-c { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }

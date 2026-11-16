@@ -43,7 +43,9 @@ function partidosPorEquipo(stats, equipos) {
  * Los hechos de la jornada `jornada` (por defecto, la que viene). `ahora` para las pruebas. Devuelve null si la jornada ya ha
  * empezado (la previa no tiene sentido) o no hay calendario.
  */
-export async function hechosJornada({ jornada = null, ahora = Date.now(), log = () => {}, api = {} } = {}) {
+// completo (la página de bajas/, sesión 4 de AdSense): las listas enteras, sin recortar, y el parte de cada uno; sinMercado: sin bajar el
+// histórico de valor de todos (bajas/ ya lo tiene del mercado de esa noche)
+export async function hechosJornada({ jornada = null, ahora = Date.now(), log = () => {}, api = {}, completo = false, sinMercado = false } = {}) {
   const semana = api.semanaActual || semanaActual, jugadores = api.jugadores || pedirJugadores, semanaStats = api.statsSemana || statsSemana;
   const ficha = api.ficha || pedirFicha, valor = api.valorMercado || valorMercado, pagina = api.disciplina || disciplina, partes = api.lesionados || lesionados;
   const sem = await semana();
@@ -92,7 +94,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     const ms = motivoSancion(fichaDe.get(String(j.id)));
     const motivo = w && w.motivo === 'roja' ? 'roja directa' : w && w.motivo === 'amarillas' ? 'quinta amarilla'
       : w && w.motivo === 'disciplinaria' && w.partido && w.de ? `sanción de ${w.de} partidos (cumple el ${w.partido}.º)` : ms ? ms.txt.toLowerCase() : 'sanción';
-    sancionados.push({ ...base(j), motivo, titularPct: pct(b) });
+    sancionados.push({ ...base(j), motivo, titularPct: pct(b), ...(completo && w && w.motivo === 'disciplinaria' && w.de ? { partidos: Number(w.de), cumple: Number(w.partido) || null } : {}) });
   }
   // apercibidos: la web los da y la ficha de LaLiga cuenta 4, 9, 14… amarillas; solo titulares habituales que juegan
   const apercibidos = [];
@@ -111,7 +113,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
   for (const j of enLiga.filter((x) => x.playerStatus === 'injured' || x.playerStatus === 'doubtful')) {
     const b = titular(j);
     if (!pesa(j, b)) continue;
-    (j.playerStatus === 'injured' ? bajas : dudas).push({ ...base(j), ...conParte(j), titularPct: pct(b) });
+    (j.playerStatus === 'injured' ? bajas : dudas).push({ ...base(j), ...conParte(j), titularPct: pct(b), ...(completo ? { parte: partesDe.get(String(j.id)) || null } : {}) });
   }
   // vuelven: el parte los da disponibles para esta jornada tras 10 días o más fuera y LaLiga ya no los tiene de baja
   const vuelven = [];
@@ -124,7 +126,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
   }
 
   // el mercado de los últimos 7 días: de todos los que valen 1 M o más
-  const conValor = enLiga.filter((j) => num(j.marketValue) >= 1e6);
+  const conValor = sinMercado ? [] : enLiga.filter((j) => num(j.marketValue) >= 1e6);
   const hist = await enParalelo(conValor, 25, (j) => valor(j.id).catch(() => null));
   const filas = [];
   conValor.forEach((j, i) => {
@@ -150,7 +152,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     partidos, primerPartido: partidos[0], cambiosAntesDelCierre: cambiosMercado(ahora, cierre),
     diasDesdeAnterior: finAnterior ? Math.round((primero - finAnterior) / DIA) : null,
     sancionados: sancionados.sort(porValor), apercibidos: apercibidos.sort(porValor),
-    bajas: bajas.sort(porValor).slice(0, 10), dudas: dudas.sort(porValor).slice(0, 8), vuelven: vuelven.sort(porValor).slice(0, 8),
+    bajas: bajas.sort(porValor).slice(0, completo ? 99 : 10), dudas: dudas.sort(porValor).slice(0, completo ? 99 : 8), vuelven: vuelven.sort(porValor).slice(0, completo ? 99 : 8),
     suben, bajan, fechaValor, jugadoresMirados: filas.length,
   };
 }
