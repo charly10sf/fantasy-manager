@@ -1087,6 +1087,13 @@
    "jornada": 12,
    "id": "2122209736774787145",
    "t": "2026-11-16T06:06:45.164Z"
+  },
+  {
+   "clave": "noticias|2217:buena|2026-11-16",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2122283902542795043",
+   "t": "2026-11-16T11:01:27.549Z"
   }
  ],
  "estados": {
@@ -1976,7 +1983,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000,
@@ -2136,7 +2142,11 @@
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
    "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000,
-   "SPORT|136489884": 1794822319000
+   "SPORT|136489884": 1794822319000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000
   },
   "hechos": [
    {
@@ -2320,11 +2330,38 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794825869000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     18,
+     30
+    ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html",
+    "medio": "MARCA",
+    "t": 1794826739000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cucho Hernández trabaja parcialmente con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3237,17 +3274,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 12,
-   "redactar": 28,
-   "revisar": 12,
+   "clasificar": 13,
+   "redactar": 29,
+   "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 451538,
-  "salida": 19335,
+  "entrada": 468869,
+  "salida": 19951,
   "cacheLee": 29030,
-  "cacheEscribe": 5806,
-  "dolares": 0.990796,
+  "cacheEscribe": 8709,
+  "dolares": 1.029963,
   "reservado": 0
  },
  "recientes": {
@@ -3363,10 +3400,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-11T08:01:46.615Z",
-    "texto": "✅ Eric García vuelve tras su lesión y el Barça recupera una opción en defensa, según Mundo Deportivo y SPORT.\n\nEn nueve partidos ha dejado la portería a cero en tres, un dato que le da valor. Con un 65 % de titularidad, lo normal es que salga cuando se reanude la liga.\n\nEl Barça recibe al Villarreal el domingo 22 de noviembre, tras el parón."
-   },
-   {
     "t": "2026-11-12T08:36:43.051Z",
     "texto": "⁉️ Lamine Yamal no viaja con España por un golpe en la rodilla derecha con líquido, según Mundo Deportivo y SPORT. Se pierde los partidos con su selección.\n\nLleva 10 goles y 8 asistencias en la liga, así que conviene seguirle de cerca. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y sin plazo de recuperación no se puede saber si llega bien.\n\nUn 58 % de titularidad deja el caso a medias: más probable que juegue que lo contrario, pero sin garantías."
    },
@@ -3381,6 +3414,10 @@
    {
     "t": "2026-11-14T20:16:32.070Z",
     "texto": "❌ Raphinha no volverá a Barcelona: se queda retenido por Brasil tras su expulsión, según SPORT y Cadena SER.\n\nTuvo su mejor jornada en la 2, con 24 puntos, así que su ausencia se nota si lo tienes. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y por ahora no se sabe si llega a ese partido."
+   },
+   {
+    "t": "2026-11-16T11:01:27.551Z",
+    "texto": "👀 Cucho vuelve a entrenar a medias con el grupo, según MARCA y Mundo Deportivo.\n\nEs buena señal para el delantero del Betis, que lleva 2 goles y 2 asistencias en la liga. Con la liga parada, la vuelta que importa es la del sábado 21 contra el Sevilla, que va 6º, en el Sánchez-Pizjuán. Aún falta para saber si llega con sitio en el once."
    }
   ],
   "directo": [
@@ -7494,13 +7531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3085,
+   "ok": 3086,
    "fallos": 0,
-   "ejecuciones": 2478,
+   "ejecuciones": 2479,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:56:11.709Z"
+   "ultima": "2026-11-16T11:01:13.359Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7554,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:56:15.229Z"
+   "ultimaBien": "2026-11-16T11:01:27.578Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:56:15.229Z"
+   "ultimaBien": "2026-11-16T11:01:27.578Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:56:15.229Z"
+   "ultimaBien": "2026-11-16T11:01:27.578Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7570,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:56:15.229Z"
+   "ultimaBien": "2026-11-16T11:01:27.578Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:56:15.229Z"
+   "ultimaBien": "2026-11-16T11:01:27.578Z"
   }
  },
  "avisos": [
