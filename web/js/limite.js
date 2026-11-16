@@ -200,6 +200,14 @@ export function planesCfg() {
   // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
   return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
 }
+/** (16 nov) las preguntas del chat con la IA de la app (el Worker, /pregunta): «preguntas» de limites.json. porAnuncio: las que
+    da cada anuncio bonificado cuando se acaban las gratis */
+export function preguntasCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.preguntas) || null;
+  const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
+  const gratis = n(p && p.gratis, 5);
+  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 20)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
+}
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }

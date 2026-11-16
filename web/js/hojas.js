@@ -5,7 +5,7 @@ import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURA
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
-import { hayClave, planesApp, cupoPlanes, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
+import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
 import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
@@ -18,7 +18,7 @@ import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
+import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
@@ -700,6 +700,7 @@ export function fichaRival(S, tid) {
 export function anuncioHTML(S, para) {
   const A = S.anuncio || {};
   if (para === 'top') return anuncioTopHTML(A, S);
+  if (para === 'pregunta') return anuncioPreguntaHTML(A);
   // con la IA de la app (2 planes al día; Carlos, 14 nov): igual que las funciones top, un anuncio por cada plan de más
   if (planesApp(!!(S.D && S.D.demo))) return anuncioPlanHTML(A, cupoPlanes());
   let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
@@ -707,6 +708,21 @@ export function anuncioHTML(S, para) {
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-accion="verAnuncio" data-para="${esc(para)}"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button><button class="btn sec" data-accion="cerrarHoja">Ahora no</button></div>`;
   h += `<p class="t2 peq" style="margin-top:14px">Con los anuncios la app sigue siendo gratis. El plan automático, sin IA, no tiene límite.</p>`;
+  return h;
+}
+
+/** (16 nov) preguntas de más a la IA de la app: un anuncio entero, 3 más (hasta el tope del día) */
+function anuncioPreguntaHTML(A) {
+  const pc = preguntasCfg(), cu = A.cupo || {};
+  const g = cu.gratis ?? pc.gratis, max = cu.max ?? pc.max, por = cu.porAnuncio ?? pc.porAnuncio, usados = cu.usados ?? g;
+  const q = Math.max(0, max - usados);
+  let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+    <span class="bloq-grande">${icono('ia')}</span><h2>Más preguntas a la IA</h2><p>Hoy ya has hecho tus ${usados} preguntas. Cada día tienes ${g} y, viendo un anuncio corto, ${por} más cada vez, hasta ${max}.</p>`;
+  h += `<p>Mira el anuncio y la IA contesta tu pregunta. ${q ? `Hoy puedes hacer ${q === 1 ? '1 más' : `${Math.min(q, por)} más con este`}.` : ''}</p>`;
+  if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
+  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="pregunta"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button>
+    <button class="btn ancho sec" data-accion="cerrarHoja" style="margin-top:8px">Ahora no</button>
+    <p class="t2 peq" style="margin-top:14px">Tu pregunta sigue en la caja de abajo.</p></div>`;
   return h;
 }
 
@@ -920,7 +936,10 @@ export function ajustes(S) {
   // (14 nov) el plan del día, con la IA de la app: la clave queda para preguntar
   const pApp = planesApp(enDemo()), pc = planesCfg(), cuP = pApp ? cupoPlanes() : null;
   if (pApp) c3 += fila('Planes del día con la IA', `${pc.gratis} al día, sin clave${topConAnuncio() ? `; más viendo un anuncio, hasta ${pc.max}` : ''}${cuP ? ` · ${cuP.ilimitado ? 'sin límite' : cuP.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuP.quedan} hoy`}` : ''}`, '', 'plan planes ia app');
-  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  // (16 nov) las preguntas del chat, también con la IA de la app: la clave queda de reserva
+  const qApp = preguntasApp(enDemo()), qc = preguntasCfg(), cuQ = qApp ? cupoPreguntas() : null;
+  if (qApp) c3 += fila('Preguntas a la IA', `${qc.gratis} al día, sin clave${topConAnuncio() ? `; ${qc.porAnuncio} más por anuncio, hasta ${qc.max}` : ''}${cuQ ? ` · ${cuQ.ilimitado ? 'sin límite' : cuQ.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuQ.quedan} hoy`}` : ''}`, '', 'preguntas chat ia app');
+  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
@@ -933,12 +952,12 @@ export function ajustes(S) {
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).length;
     if (!pApp) c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
     c3 += filasHorasPlan(S, pApp);
-    if (k) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
+    if (k && !qApp) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
     if (k && !pApp) c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
-  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
+  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
 
   /* ---- la app ---- */
   let c4 = '';

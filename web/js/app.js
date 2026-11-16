@@ -13,7 +13,7 @@ import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -723,7 +723,7 @@ function pintar({ arriba = false } = {}) {
   }
   if (focoBusca != null) { const el = $('#buscaJ'); if (el) { el.focus({ preventScroll: true }); try { el.setSelectionRange(focoBusca, focoBusca); } catch (e) { /* nada */ } } }
   // el chat se lee de abajo arriba; la guía de la clave, de arriba abajo
-  if (S.vista === 'ia' && hayClave()) {
+  if (S.vista === 'ia' && $('#pregunta')) {
     bajarChat();
     // la pregunta que paraste vuelve a la caja
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
@@ -851,6 +851,23 @@ window.anuncioVisto = (para, visto, motivo) => {
     if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
     return;
   }
+  // (16 nov) las preguntas de más con la IA de la app: un anuncio entero, 3 más (lo cuenta el Worker con «extra»)
+  if (para === 'pregunta') {
+    if (visto) {
+      contar('b');
+      const ta = $('#pregunta');
+      const t = (S.anuncio && S.anuncio.t) || S.borrador || (ta ? ta.value : '');
+      S.anuncio = null; S.borrador = '';
+      if (ta) ta.value = '';
+      cerrarHoja();
+      if (S.vista !== 'ia') ir('ia');
+      enviarPregunta(t, { extra: true });
+      return;
+    }
+    S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: sinAnuncio ? 'Ahora no hay ningún anuncio que enseñar. Prueba en un rato; tu pregunta sigue en la caja.' : 'Para las preguntas de más hay que ver el anuncio hasta el final.' };
+    if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
+    return;
+  }
   if (para !== 'plan') return;
   // con la IA de la app: un anuncio visto entero, un plan más (lo cuenta el Worker con «extra»); sin anuncio, nada
   if (planesApp(enDemo())) {
@@ -936,6 +953,8 @@ function rehacer() {
     programarFondo();
     // lo que ves con la app abierta ya no te llega luego como notificación
     marcarVistos(avisosNuevos(null, S.D, S.M));
+    // (16 nov) una pregunta a la IA que se quedó a medias porque Android cerró la app
+    if (preguntaPendiente()) setTimeout(recogerPregunta, 800);
   }
 }
 /** la IA en segundo plano: cada 3 horas y unos minutos después del próximo cambio de mercado */
@@ -2402,6 +2421,7 @@ window.alVolver = () => {
   // (15 nov) el plan con la IA que se cortó al salir de la app se recoge al volver (ia.js, planPorApp)
   window.dispatchEvent(new Event('fm-vuelta'));
   comprobarAvisos();
+  setTimeout(recogerPregunta, 1500);
   if (S.vista === 'ia' && !hayClave() && vieneDeAIStudio()) setTimeout(aPegar, 250);
   if (enApp && Date.now() - (S.versionT || 0) > 30 * MIN) buscarVersion(false);
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
@@ -2499,7 +2519,7 @@ function preguntaJ(j) {
   if ((M.mercado || []).some((m) => String(m.pid) === String(j.id) && m.tipo === 'liga')) return `¿Qué hago con ${j.nombre}, que está libre en el mercado? Dime si pujar por él, cuánto como mucho y por qué.`;
   return `¿Qué hago con ${j.nombre}? Dime si me interesa, cómo conseguirlo, cuánto pagar como mucho y por qué.`;
 }
-async function enviarPregunta(texto) {
+async function enviarPregunta(texto, { extra = false } = {}) {
   const t = (texto || '').trim();
   if (S.charlando || S.preparandoFotos) return;
   const fotos = S.adjuntos.slice();
@@ -2519,7 +2539,7 @@ async function enviarPregunta(texto) {
       S.parcial = parcial;
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
-    }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; });
+    }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra });
     if (!enDemo()) contar('q');
     if (!nativo.aLaVista()) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
@@ -2539,7 +2559,9 @@ async function enviarPregunta(texto) {
       S.borrador = t;
       S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
       if (e.clave) S.claveMal = true;
-      else S.errorChat = { t, n: fotos.length, msg: e.message || 'No ha contestado' };
+      // (16 nov) sin preguntas hoy con la IA de la app: el anuncio para 3 más (en la de Google Play); si no hay anuncio, lo dice
+      else if (e.cupo && e.cupo.masConAnuncio && conAnuncios() && !extra) { S.anuncio = { para: 'pregunta', cupo: e.cupo, t }; setTimeout(() => hoja('anuncio', 'pregunta'), 0); }
+      else S.errorChat = { t, n: fotos.length, msg: e.cupo ? `${e.message} ${e.cupo.masConAnuncio && !conAnuncios() ? 'En la app de Google Play puedes sacar más viendo un anuncio corto.' : `Mañana tienes otras ${e.cupo.gratis}.`}` : (e.message || 'No ha contestado'), cupo: !!e.cupo };
       if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
     }
   } finally {
@@ -2549,6 +2571,29 @@ async function enviarPregunta(texto) {
   }
   S.charlando = false; S.parcial = '';
   if (S.vista === 'ia') pintar();
+}
+
+/**
+ * (16 nov) la pregunta a la IA de la app que se quedó sin respuesta porque Android cerró la app: al abrirla (o al volver,
+ * si no hay una pregunta en marcha) se recoge con su id, sin gastar otra. Si ya no está, la pregunta vuelve a la caja.
+ */
+async function recogerPregunta() {
+  if (S.charlando || !S.D || !S.M || enDemo() || !preguntasApp(false) || !preguntaPendiente()) return;
+  const p = preguntaPendiente();
+  S.charlando = true; S.parcial = ''; S.pasoChat = 'Recogiendo la respuesta…'; S.preguntaActual = p.t; S.fotosActuales = []; S.errorChat = null;
+  if (S.vista === 'ia') pintar();
+  try {
+    const r = await reanudarPregunta(S.D, S.M, S.c, { alPaso: (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; } });
+    if (r && !nativo.aLaVista()) nativo.notificar('Tu director deportivo ha contestado', 'Entra para leer la respuesta', 'ia');
+  } catch (e) {
+    // no se ha podido: la pregunta vuelve a la caja para mandarla otra vez
+    quitarUltimaPregunta(p.t);
+    S.borrador = p.t;
+    S.errorChat = { t: p.t, n: 0, msg: e.message || 'No ha contestado' };
+  } finally {
+    S.charlando = false; S.parcial = ''; S.preguntaActual = '';
+  }
+  if (S.vista === 'ia' && !S.hoja) pintar();
 }
 
 /* ---------------- fotos y capturas para la IA ---------------- */
@@ -2579,7 +2624,7 @@ async function anadirFotos(lista, preparar) {
   const ta = $('#pregunta'); if (ta && !S.charlando) ta.focus({ preventScroll: true });
 }
 function elegirFotos() {
-  if (!hayClave()) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
+  if (!puedeChat(enDemo())) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
   if (S.adjuntos.length >= MAX_FOTOS) { tostada(`Como mucho ${MAX_FOTOS} fotos por mensaje`); return; }
   S.fotosPara = null;
   if (enApp && nativo.hayFotos()) { nativo.fotos(MAX_FOTOS - S.adjuntos.length); return; }
@@ -2600,21 +2645,21 @@ window.fotosApp = (lista, error) => {
 };
 // pegar una captura (Ctrl+V) o arrastrarla encima del chat
 document.addEventListener('paste', (ev) => {
-  if (S.vista !== 'ia' || !hayClave() || S.charlando) return;
+  if (S.vista !== 'ia' || !puedeChat(enDemo()) || S.charlando) return;
   const fs = [...((ev.clipboardData && ev.clipboardData.files) || [])].filter((f) => /^image\//.test(f.type));
   if (!fs.length) return;
   ev.preventDefault();
   anadirFotos(fs, prepararArchivo);
 });
 document.addEventListener('dragover', (ev) => {
-  if (S.vista !== 'ia' || !hayClave() || !ev.dataTransfer || ![...ev.dataTransfer.types].includes('Files')) return;
+  if (S.vista !== 'ia' || !puedeChat(enDemo()) || !ev.dataTransfer || ![...ev.dataTransfer.types].includes('Files')) return;
   ev.preventDefault();
   document.body.classList.add('soltando');
 });
 document.addEventListener('dragleave', (ev) => { if (!ev.relatedTarget) document.body.classList.remove('soltando'); });
 document.addEventListener('drop', (ev) => {
   document.body.classList.remove('soltando');
-  if (S.vista !== 'ia' || !hayClave() || !ev.dataTransfer) return;
+  if (S.vista !== 'ia' || !puedeChat(enDemo()) || !ev.dataTransfer) return;
   const fs = [...(ev.dataTransfer.files || [])].filter((f) => /^image\//.test(f.type));
   ev.preventDefault();
   if (fs.length && !S.charlando) anadirFotos(fs, prepararArchivo);
@@ -2634,7 +2679,7 @@ async function verFoto(id, mini) {
 
 /* ---------------- preguntar con la voz ---------------- */
 function escuchar() {
-  if (!hayClave()) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
+  if (!puedeChat(enDemo())) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
   if (S.charlando) return;
   if (enApp) { nativo.voz(); return; }
   const R = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -3486,14 +3531,15 @@ function itemsEmpezar() {
     return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: enApp ? 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.' : 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga (sin la app de Android son unos pasos, solo la primera vez) y la web nunca ve tu contraseña.', b: 'Entrar' }];
   }
   // (con la IA de la app, el plan ya va con IA sin clave: la clave es para preguntar)
-  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: planesApp(enDemo()) ? 'Una clave gratis de Google en unos 3 minutos para preguntarle lo que quieras de tu liga. El plan de cada día ya lo hace la IA de la app.' : 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
+  // (16 nov) con las preguntas también por la IA de la app, no hace falta clave: el paso no sale
+  const l = preguntasApp(enDemo()) ? [] : [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: planesApp(enDemo()) ? 'Una clave gratis de Google en unos 3 minutos para preguntarle lo que quieras de tu liga. El plan de cada día ya lo hace la IA de la app.' : 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
   if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
   return l;
 }
 /** ¿se está viendo solo lo básico del tutorial? */
 const T_BASICO = () => tourBasico();
 function pasosTour() {
-  const demo = enDemo(), conClave = hayClave(), conIA = puedePlanIA(demo);
+  const demo = enDemo(), conClave = puedeChat(demo), conIA = puedePlanIA(demo);
   const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
   // en el ordenador, Pregunta está en la barra de la izquierda, no arriba
   const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón rojo de arriba';

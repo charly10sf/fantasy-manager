@@ -12,12 +12,13 @@ import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
-import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
+import { bloqueada, topConAnuncio, planesCfg, preguntasCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
+import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -2652,11 +2653,6 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
 // Lo que se apunta, SOLO lo que él cuenta como hecho o como decidido. El 7 nov apuntó dos veces «rechazó el trueque»
 // cuando Carlos solo preguntaba y luego estaba negociando: además de decírselo, aplicarNotas lo comprueba.
-const NOTAS_CHAT = `APUNTAR: solo lo que el manager te CUENTA en su último mensaje como un hecho o como algo que ya ha decidido: una oferta o un trato que le ha hecho otro manager (que exista la oferta es un hecho, aunque él no haya decidido nada), algo que ya ha hecho, algo que ha decidido hacer, un jugador que dice que no quiere vender, una preferencia. Que un rival tenga a alguien a la venta NO es un trato: apúntalo (si acaso) como «otro», sin importe; el importe solo si él te dice una cifra que le han ofrecido A ÉL. NUNCA apuntes una decisión que no te haya dicho él con sus palabras («lo he rechazado», «acepto», «voy a…»): si pregunta («¿lo acepto?», «¿qué hago?») o está negociando, no ha decidido nada; como mucho apunta la oferta tal cual («Rival 2 le ofrece A por B») o en qué va la negociación. Y nunca escribas que hizo algo por tu consejo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
-\`\`\`notas
-{"recomiendo": [{"ref": "la ref de OPERACIONES POSIBLES HOY si la tiene, o null", "accion": "aceptar_oferta|vender|pujar|comprar|clausular|blindar|alinear", "jugador": "nombre exacto", "importe": número en euros o null, "cuando": "ahora | hoy | el día y la hora"}], "apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
-\`\`\`
-En «recomiendo» van SOLO las operaciones que en esta respuesta le dices que HAGA (ninguna si le dices que espere, que no lo haga o solo le informas): la app las comprueba una a una antes de enseñarle tu respuesta, igual que en el plan. Si no recomiendas ninguna operación y no hay nada que apuntar ni que olvidar, no pongas el bloque. Si te cuenta una oferta o un trato, contesta además si le conviene, con cifras (precio frente a valor, lo que sube o baja al día, en cuántos días lo recupera, si entra en su once, si le llega el dinero y qué tendría que vender).`;
 
 // ¿su mensaje dice que ha hecho o decidido algo? (no vale una pregunta)
 const DECIDE = /\b(he|hemos) (rechazado|aceptado|decidido|vendido|fichado|clausulado|comprado|blindado|dicho que (si|no)|cerrado)\b|\b(lo|la|los) (rechazo|acepto|vendo|dejo|cierro)\b|\b(rechazo|acepto|vendo|descarto)\b|\bno (lo |la )?(acepto|vendo|quiero|voy)\b|\b(voy|vamos) a\b|\bme quedo con\b|\bpaso de\b|\bya (lo |la )?(he|hice)\b|\ble he (dicho|ofrecido|pedido)\b|\btrato hecho\b/;
@@ -2677,11 +2673,13 @@ export function notaValida(a, pregunta) {
 
 /** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
 export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
-  const m = String(texto || '').match(/```notas\s*([\s\S]*?)(```|$)/);
-  if (!m) return { texto, apuntadas: [], olvidadas: 0, recomiendo: [] };
-  const limpio = texto.replace(m[0], '').trim();
+  // (16 nov) el bloque también sin sus comillas («notas» y el JSON debajo: se quedaba a la vista) y sin los códigos de
+  // operación que la IA copia de los datos («Operación M-3143»)
+  const sep = separarNotas(texto);
+  const limpio = sep.texto;
+  if (!sep.bloque) return { texto: limpio, apuntadas: [], olvidadas: 0, recomiendo: [] };
   let j = null;
-  try { j = JSON.parse(m[1]); } catch (e) { j = sacarJSON(m[1]); }
+  try { j = JSON.parse(sep.bloque); } catch (e) { j = sacarJSON(sep.bloque); }
   if (!j) return { texto: limpio, apuntadas: [], olvidadas: 0, recomiendo: [] };
   let lista = notas();
   const antes = lista.length;
@@ -2737,11 +2735,6 @@ async function contenidosChat(hist, nuevas) {
   return out;
 }
 
-const SOBRE_FOTOS = `\nFOTOS: si te manda una captura o una foto, léela entera antes de contestar (puede ser del mercado, de una oferta que le han hecho, de la plantilla o las cláusulas de un rival, de un chat con otro manager, de una noticia). Di lo que ves que importa con sus cifras y crúzalo con los datos que te paso; si en la captura sale algo que no cuadra con los datos o un jugador que no tengo, dilo. Si se lee mal o está cortada, dilo en vez de inventarte lo que pone.`;
-
-// en el chat, Google solo cuando hace falta: cada búsqueda son unos segundos más de espera
-const SIN_BUSCAR_CHAT = 'EN EL CHAT NO TIENES BÚSQUEDA EN GOOGLE: contesta con los datos que te paso y, si para contestar falta algo de hoy (una lesión, un once), dilo.';
-const BUSCAR_CHAT = 'EN EL CHAT, BUSCA EN GOOGLE SOLO SI HACE FALTA: si la pregunta se contesta con los datos que te paso, contesta sin buscar. Busca cuando necesites algo de hoy que no esté aquí (una lesión, una rueda de prensa, un once, una noticia) o te lo pida. Si pregunta por cambiar, vender o comprar a un jugador que está en duda o lesionado, busca siempre qué tiene y cuánto puede estar fuera.';
 /**
  * las cuentas de los jugadores que nombra, hechas: valores, cláusulas, diferencias y quién puede pagar cada cláusula.
  * El 7 nov la IA dio «Berenguer + 33-35 M» y luego «+ 26 M», y sumó «107 + 35 = 75»: si las cifras le llegan hechas,
@@ -2795,30 +2788,6 @@ export function cuentasTxt(D, M, js, { web = true } = {}) {
   }
   return L.join('\n');
 }
-
-// cómo se habla en el chat: al grano, sin repetir el plan y con las cifras de los datos (Carlos, 7 nov)
-const REGLAS_CHAT = `
-EN EL CHAT:
-- Contesta a lo que te pregunta y nada más, al grano. NO repitas el plan del día ni operaciones que no ha preguntado; sácalo solo si cambia la respuesta a su pregunta, y entonces en una línea.
-- Si te pregunta si PUEDE hacer algo, empieza por «sí» o «no» según las REGLAS y lo que te paso de ese jugador («CÓMO CONSEGUIRLO», su cláusula y cuándo se abre, su saldo), y después dile si le conviene y lo que haría la app.
-- LO QUE UN RIVAL TIENE A LA VENTA (regla 8b) no es una oferta para él ni una negociación: si el precio está muy por encima de su valor, basta una línea («a ese precio no; lo tendrá puesto para ver qué le da LaLiga»). Lo que importa es si el jugador le interesa: su valor, su inercia, lo que aporta a su once y la oferta mínima con opciones si te la paso. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
-- No mezcles el pasado con lo de ahora: que un jugador fuera suyo hace días no cambia nada si ahora es de un rival; háblale de él como de cualquier jugador de ese rival.
-- CIFRAS, FECHAS Y HORAS: cópialas de los datos o de «CUENTAS HECHAS», con su día («mañana 20:00 (8 nov)»). No des horquillas sin decir de dónde salen. Si en este chat ya diste una cifra y ahora das otra, di por qué ha cambiado.
-- Si te falta un dato para aconsejar (qué quiere hacer, hasta dónde está dispuesto a llegar), pregúntaselo en vez de suponerlo.
-- TRATOS CON PRECIO: si propone un precio para cada jugador («le pido A por X y yo le vendo B por Y»), es un trato válido entre managers: no digas que son cifras inventadas ni lo descartes por haber cláusulas. Haz la cuenta del trato ENTERO (con qué jugador acaba, cuánto cobra y cuánto paga) y compáralo con la REFERENCIA de «CUENTAS HECHAS» y con quedarse como está. Primero si le conviene a él; después, aparte, si el rival lo aceptaría y por qué.
-- CAMBIOS ENTRE MANAGERS (regla 9): lo que decide es quién va a subir más y quién dará más puntos (tendencia, inercia, estado, forma, calendario, parón) y la PROTECCIÓN: tras el cambio, cada uno tiene a su nuevo jugador 14 días sin que se lo puedan clausular. Compáralos con cifras y da tu veredicto.
-- IDIOMA: español de España siempre, también en las bromas: nada de voseo ni de argentinismos.
-- SI TE DA UN DATO NUEVO (molestias, una lesión, una oferta, lo que le ha dicho un rival) o te vuelve a preguntar lo mismo, no repitas la respuesta de antes con otras palabras: empieza por lo que cambia ese dato y lo que no, con números. Si el dato no está en los datos, dalo por bueno y úsalo. Si tu consejo sigue siendo el mismo, explica por qué en una frase y dale la mejor alternativa para lo que le preocupa.
-{{TONO}}`;
-// el tono del chat, según Ajustes > Pullitas de la IA: con «Sin pullitas» o «Suaves», serio (0.7o); con «Normales» o
-// «A saco», con bromas y pullas como antes, pero sin tocar las cuentas (Domy, 8 nov: «quiero que me siga hablando con
-// pullas y bromas»)
-const TONO_CHAT = {
-  serio: '- TONO: el de un director deportivo serio y cercano. Las pullitas, solo con una noticia extradeportiva; nunca cuando hablas de una operación, de una oferta o de un manager con el que está negociando.',
-  normal: '- TONO: director deportivo con chispa: puedes soltar una broma o una pullita por respuesta (a los rivales por lo que hacen, a una noticia extradeportiva, o un vacile de colega al propio manager), siempre aparte de las cuentas y del consejo, que van en serio. Sin palabrotas ni expresiones de caricatura («tururú», «que se lo pida a su abuela»), y sin atribuirle ganas ni decisiones que no te ha dicho.',
-  saco: '- TONO: director deportivo con mucha guasa: dos o tres bromas o pullas por respuesta (a los rivales sin cortarte, a las noticias extradeportivas, y algún vacile de colega al propio manager), siempre aparte de las cuentas y del consejo, que van en serio. Sin palabrotas ni crueldad, y sin atribuirle ganas ni decisiones que no te ha dicho.',
-};
-const tonoChat = () => { const p = cfgIA().pullitas || 'normal'; return TONO_CHAT[p === 'saco' ? 'saco' : p === 'normal' ? 'normal' : 'serio']; };
 
 /* ---------------- la revisión del chat (revisión de la IA, 14 nov) ----------------
    En el plan, cuadrarPlan comprueba cada paso; en el chat no se comprobaba casi nada y lo que dijera la IA salía tal cual
@@ -3004,8 +2973,63 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   return { texto: t, notas };
 }
 
-/** lo que va a la IA en el chat (sin la conversación): se exporta para probarlo con la demo */
-export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web } = {}) {
+/**
+ * (16 nov, revisión del chat) las plantillas enteras de los rivales. Antes al chat solo le llegaba una línea por rival y
+ * lo que tenían a la venta, y si Carlos preguntaba qué le interesaba del equipo de un rival, la IA contestaba que no veía
+ * su plantilla y le pedía la lista. Cada jugador en una línea corta; los rivales de los que habla, con algo más.
+ * enteros: los teamId de los rivales que nombra en la pregunta (o en sus últimos mensajes).
+ */
+export function plantillasRivalesTxt(D, M, enteros = new Set()) {
+  const saldo = num(D.dinero);
+  const enVenta = new Map((M.mercado || []).filter((m) => m.tipo === 'manager').map((m) => [String(m.pid), m]));
+  const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula y cuándo se puede pagar, con mi saldo de ahora de ${eur(saldo)} | si lo tiene en venta). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
+  const rivales = [...(M.rivales || [])].sort((a, b) => (enteros.has(String(b.e.teamId)) ? 1 : 0) - (enteros.has(String(a.e.teamId)) ? 1 : 0) || (a.e.pos || 99) - (b.e.pos || 99));
+  for (const r of rivales) {
+    const fichas = (r.fichas || []).filter((x) => x && x.j && x.j.pos !== 5).sort((a, b) => (a.j.pos - b.j.pos) || (b.j.valor - a.j.valor));
+    if (!fichas.length) continue;
+    const det = enteros.has(String(r.e.teamId));
+    L.push(`${r.e.nombre} (${r.e.manager}, ${r.e.pos}º, ${fichas.length} jugadores)${det ? ' — DEL QUE PREGUNTA:' : ':'}`);
+    for (const x of fichas) {
+      const j = x.j, t = x.tend || (M.tend ? M.tend(j.id) : null) || {};
+      const T = det && M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
+      const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'me llega' : `me faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
+      const v = enVenta.get(String(j.id));
+      L.push(`  - ${[
+        POS[j.pos] || '?', j.nombre, j.equipo || '?', eur(j.valor),
+        [t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
+        j.media ? `media ${String(j.media).replace('.', ',')}` : null,
+        det ? (onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null)) : null,
+        det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
+        cl,
+        v ? `EN VENTA por ${eur(v.precio)}` : null,
+        j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
+      ].filter(Boolean).join(' | ')}`);
+    }
+  }
+  return L.length > 1 ? L.join('\n') : '';
+}
+/** los rivales de los que habla: por el nombre de su equipo o de su mánager (enteros o la palabra larga que los distingue) */
+export function rivalesEn(texto, D, M) {
+  const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
+  const out = new Set();
+  if (q.trim().length < 3) return out;
+  const pal = (s) => norm(s).replace(/[^a-z0-9ñ ]+/g, ' ').split(/\s+/).filter((w) => w.length >= 5);
+  const todas = (M.rivales || []).map((r) => ({ tid: String(r.e.teamId), ns: [r.e.nombre, r.e.manager].filter(Boolean).map((n) => norm(n).replace(/[^a-z0-9ñ ]+/g, ' ').replace(/\s+/g, ' ').trim()) }));
+  // cuántos rivales usan cada palabra (una palabra que tienen varios no sirve para distinguir)
+  const cuenta = {};
+  for (const r of todas) for (const w of new Set(r.ns.flatMap((n) => n.split(' ')).filter((w) => w.length >= 5))) cuenta[w] = (cuenta[w] || 0) + 1;
+  for (const r of todas) {
+    if (r.ns.some((n) => n.length >= 3 && q.includes(` ${n} `))) { out.add(r.tid); continue; }
+    if (r.ns.some((n) => pal(n).some((w) => cuenta[w] === 1 && q.includes(` ${w} `)))) out.add(r.tid);
+  }
+  return out;
+}
+
+/**
+ * Los datos de su liga para el chat: lo de siempre (contexto), los jugadores que nombra con todo, las plantillas de los
+ * rivales y el plan. Es lo que la app manda al Worker (empieza por CABECERA_DATOS); se exporta para probarlo con la demo.
+ */
+export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   const p = ultimoPlan();
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
@@ -3024,25 +3048,163 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = 
   const antes = (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '').join(' \n ');
   if (antes) for (const j of jugadoresEn(antes, D)) meter(j);
   const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados, { web })}` : '';
+  // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
+  let enteros = rivalesEn(pregunta, D, M);
+  if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);
+  let rivales = '';
+  try { rivales = plantillasRivalesTxt(D, M, enteros); } catch (e) { rivales = ''; }
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
-  // (lo repetía en cada respuesta: vender a Natan, Gulácsi y Macià en un chat sobre un trueque)
   let plan = '';
   if (p) {
     const ops = p.operaciones || [];
-    // (M3) lo que dejó la app, con lo de hoy (lo hecho desde entonces sale como hecho)
     let cu = null;
     try { cu = opsCuadradas(cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
     const q = norm(pregunta);
-    const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
+    const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && !enteros.size && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
     const cab = `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
     plan = vaDelPlan
       ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
-  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT.replace('{{TONO}}', tonoChat())}\n${NOTAS_CHAT}\n${web ? BUSCAR_CHAT : SIN_BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
+  return `${CABECERA_DATOS}\n${contexto(D, M, c, { chat: true })}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
+}
+/** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
+export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });
+/** lo que va a la IA en el chat con tu clave (sin la conversación): se exporta para probarlo con la demo */
+export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web, alias = null } = {}) {
+  return `${sistemaChat({ ...opcionesChat(), fotos, web, alias })}\n\n${datosChat(pregunta, D, M, c, { hist, web })}`;
 }
 
-export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null) {
+/* ---------------- el chat con la IA de la app (16 nov) ----------------
+   Como los planes: la pregunta va al Worker (/pregunta), que la hace con la IA de Carlos y la guarda con un id (rid). Si
+   sales de la app, Android la congela y se corta la conexión, pero allí se sigue haciendo: al volver, la app pide lo mismo
+   con el mismo id y le llega la respuesta que ya estaba hecha (sin gastar otra pregunta). El id se queda guardado con la
+   pregunta hasta que llega la respuesta, por si Android cierra la app del todo: al abrirla, reanudarPregunta la recoge.
+   Cupo: «preguntas» de limites.json (5 al día y 3 más por anuncio, hasta 20; Carlos, 16 nov). La clave de Google de cada
+   uno queda de reserva si el servicio no está. */
+export const preguntasApp = (demo) => !demo && preguntasCfg().on;
+/** ¿se puede usar el chat? (la IA de la app o tu clave) */
+export const puedeChat = (demo) => preguntasApp(demo) || hayClave();
+/** lo último que ha dicho el Worker del cupo de preguntas de hoy, o null */
+export function cupoPreguntas() {
+  const g = LS.get('preg-cupo', null);
+  return g && g.dia === diaDe() ? g : null;
+}
+const guardarCupoP = (cu) => { if (cu && typeof cu === 'object') LS.set('preg-cupo', { ...cu, dia: diaDe() }); };
+/** la pregunta en marcha (para recogerla al volver o al abrir la app): { rid, t, ts, dia } */
+export const preguntaPendiente = () => { const p = LS.get('preg-rid', null); return p && p.dia === diaDe() && Date.now() - p.ts < 15 * 60e3 && /^[a-z0-9]{8,24}$/.test(p.rid || '') ? p : null; };
+const nuevoRid = () => (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
+/** al Worker: devuelve { texto (destapado), tok, cupo } o lanza un ErrorIA (cupo: sin preguntas; servicio: no está) */
+async function preguntaPorApp(cuerpo, seudo, { signal, alPaso } = {}) {
+  const t0 = Date.now();
+  const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
+  // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
+  const una = () => new Promise((ok, ko) => {
+    let hecho = false, reloj = null;
+    const fin = () => { hecho = true; if (reloj) clearTimeout(reloj); window.removeEventListener('fm-vuelta', vuelta); document.removeEventListener('visibilitychange', vis); };
+    const vuelta = () => { if (hecho || reloj) return; reloj = setTimeout(() => { if (hecho) return; fin(); ko(Object.assign(new Error('Sin conexión'), { estado: 0, detalle: 'la app ha vuelto de segundo plano' })); }, 3000); };
+    const vis = () => { if (!document.hidden) vuelta(); };
+    window.addEventListener('fm-vuelta', vuelta);
+    document.addEventListener('visibilitychange', vis);
+    pedirWorker('POST', '/pregunta', cuerpo, { tiempo: 90000, signal }).then((r) => { if (!hecho) { fin(); ok(r); } }, (e) => { if (!hecho) { fin(); ko(e); } });
+  });
+  const aLaVista = () => new Promise((ok) => {
+    if (nativo.aLaVista()) return ok();
+    const ya = () => { window.removeEventListener('fm-vuelta', ya); document.removeEventListener('visibilitychange', ya); ok(); };
+    window.addEventListener('fm-vuelta', ya);
+    document.addEventListener('visibilitychange', ya);
+  });
+  if (alPaso) alPaso('La IA está leyendo tu liga…');
+  let j;
+  try {
+    for (let vez = 0; ; vez++) {
+      try { j = await una(); break; } catch (e) {
+        if (e.name === 'AbortError' || e.estado !== 0 || vez >= 3 || (signal && signal.aborted)) throw e;
+        if (Date.now() - t0 > 150000) throw Object.assign(new Error('La IA ha tardado demasiado. Vuelve a preguntar en un rato.'), { estado: 0, detalle: 'más de 2 min y medio' });
+        apuntar({ modelo: 'app', s: 'chat', e: `la IA de la app: corte${e.detalle ? ` (${e.detalle})` : ''}; lo repito`, ms: Date.now() - t0 });
+        await aLaVista();
+        if (alPaso) alPaso('Recogiendo la respuesta…');
+        await new Promise((ok) => setTimeout(ok, 1200));
+        if (signal && signal.aborted) throw parado();
+      }
+    }
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+    const d = e.datos || {};
+    if (d.cupo) guardarCupoP(d.cupo);
+    apuntar({ modelo: 'app', s: 'chat', e: `la IA de la app: ${e.estado || 0} ${e.message}${e.detalle ? ` (${e.detalle})` : ''}`, ms: Date.now() - t0 });
+    if (e.estado === 429 && d.cupo) throw new ErrorIA(e.message, 429, { cupo: d.cupo, corte: false });
+    if (e.sesion || e.estado === 401) throw new ErrorIA(e.message || 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo.', 401, { servicio: true });
+    if (e.estado === 0) throw new ErrorIA('Se ha cortado la conexión. Vuelve a preguntar (si ya estaba hecha, no cuenta otra vez).', 0, { red: true, corte: true });
+    throw new ErrorIA('La IA no está disponible ahora mismo. Vuelve a preguntar en un rato.', e.estado || 0, { servicio: true });
+  }
+  if (j && j.e) {
+    apuntar({ modelo: 'app', s: 'chat', e: `la IA de la app: ${j.estado || 200} ${j.e}`, ms: Date.now() - t0 });
+    throw new ErrorIA(j.e, j.estado || 0, { servicio: !!j.servicio });
+  }
+  if (j.cupo) guardarCupoP(j.cupo);
+  apuntar({ modelo: 'app', s: 'chat', ok: true, ms: Date.now() - t0, tok: j.tok || null, car: String(j.texto || '').length });
+  const texto = String(j.texto || '');
+  return { texto: seudo && seudo.n ? seudo.destapar(texto) : texto, tok: j.tok || null, cupo: j.cupo || null };
+}
+
+/** lo que se hace con una respuesta (de la app o de tu clave): notas, revisión y guardarla en el chat */
+function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
+  const n = aplicarNotas(sinWebsChat(sinModelos(r.texto)), D, pregunta, !!(fotos && fotos.length));
+  // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
+  // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
+  let rev = { texto: n.texto, notas: [] };
+  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
+  n.texto = rev.texto;
+  const h2 = conversacion();
+  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
+  LS.set(K('chat'), h2.slice(-40));
+  return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
+}
+
+/** con la IA de la app: la conversación de antes (sin la pregunta de ahora), con alias y sin fotos */
+function histParaApp(hist, seudo) {
+  const tap = (t) => (seudo && seudo.n ? seudo.tapar(t) : t);
+  return hist.slice(0, -1).slice(-12).map((m) => {
+    let t = m.r === 'ia' ? separarNotas(m.t || '').texto.replace(/\n\n\*\*Revisado por la app:\*\*[\s\S]*$/, '') : (m.t || '');
+    if (m.r === 'yo' && Array.isArray(m.fotos) && m.fotos.length) t = `${t}${t ? '\n' : ''}[Aquí mandó ${m.fotos.length} captura${m.fotos.length > 1 ? 's' : ''}: tira de lo que contestaste.]`;
+    return { r: m.r === 'ia' ? 'ia' : 'yo', t: tap(t).slice(0, 5800) };
+  }).filter((m) => m.t.trim());
+}
+
+/** lo que se manda al Worker en /pregunta (se exporta para probar que el Worker lo acepta) */
+export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid = '' } = {}, seudo = seudonimos(D)) {
+  const datos = datosChat(pregunta, D, M, c, { hist, web: false });
+  const fs = (fotos || []).map((f) => f && f.b64).filter((b) => typeof b === 'string' && b.length < 880000).slice(0, 3);
+  const o = opcionesChat();
+  const cuerpo = {
+    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? seudo.tapar(pregunta || '') : (pregunta || ''), hist: histParaApp(hist, seudo), fotos: fs,
+    conFotos: hist.some((m) => m.fotos && m.fotos.length), ...o, alias: seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null, extra: !!extra, rid,
+  };
+  return cuerpo;
+}
+async function charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra = false, rid } = {}) {
+  const seudo = seudonimos(D);
+  const cuerpo = pedidoChat(pregunta, D, M, c, hist, fotos, { extra, rid }, seudo);
+  const r = await preguntaPorApp(cuerpo, seudo, { signal, alPaso });
+  return { texto: r.texto, fuentes: [], modelo: 'app', tok: r.tok, cupo: r.cupo };
+}
+
+/** con tu clave de Google (la reserva, o si la app no tiene la IA de las preguntas encendida) */
+async function charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso) {
+  const contents = await contenidosChat(hist, nuevas);
+  const web = cfgIA().web, conFotos = !!(fotos && fotos.length) || hist.some((m) => m.fotos);
+  const seudo = seudonimos(D);
+  const alias = seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null;
+  const sistema = montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web, alias });
+  // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
+  const sistemaSinWeb = web ? montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web: false, alias }) : sistema;
+  // (el aviso de los alias ya va dentro del sistema: preguntar no lo vuelve a poner)
+  const sd = seudo.n ? { ...seudo, aviso: '' } : seudo;
+  return preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinWebsChat(sinModelos(separarNotas(t).texto))) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: sd });
+}
+
+export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false } = {}) {
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
   // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
@@ -3052,21 +3214,42 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
     guardarFoto(f).catch(() => {});
     guardarMini(f.id, f.mini).then((ok) => { if (!ok) reponerMini(f.id, f.mini); }).catch(() => reponerMini(f.id, f.mini));
   }
-  const contents = await contenidosChat(hist, nuevas);
-  const web = cfgIA().web, conFotos = !!(fotos && fotos.length) || hist.some((m) => m.fotos);
-  const sistema = montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web });
-  const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
-  // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
-  const sistemaSinWeb = web ? montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web: false }) : sistema;
-  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinWebsChat(sinModelos(sinBloque(t)))) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
-  const n = aplicarNotas(r.texto, D, pregunta, !!(fotos && fotos.length));
-  // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
-  // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
-  let rev = { texto: n.texto, notas: [] };
-  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
-  n.texto = rev.texto;
-  const h2 = conversacion();
-  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
-  LS.set(K('chat'), h2.slice(-40));
-  return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
+  let r;
+  if (preguntasApp(!!D.demo)) {
+    // (la misma pregunta otra vez tras un corte: con el mismo id, así llega la que ya estaba hecha y no cuenta dos veces)
+    const pend = preguntaPendiente();
+    const rid = pend && pend.t === pregunta && !(fotos || []).length ? pend.rid : nuevoRid();
+    LS.set('preg-rid', { rid, t: pregunta, ts: pend && pend.rid === rid ? pend.ts : Date.now(), dia: diaDe(), fotos: (fotos || []).length });
+    try {
+      r = await charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra, rid });
+      LS.del('preg-rid');
+    } catch (e) {
+      // (un corte de conexión deja el id: al volver a preguntar lo mismo, o al abrir la app, se recoge sin contar otra vez)
+      if (!e.corte) LS.del('preg-rid');
+      // el servicio no está y tienes tu clave: con ella
+      if (e.servicio && hayClave() && e.name !== 'AbortError') r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso);
+      else throw e;
+    }
+  } else r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso);
+  return rematarRespuesta(r, pregunta, D, M, fotos, hist);
+}
+
+/**
+ * Al abrir la app o volver a ella: si quedó una pregunta a la IA de la app sin respuesta (Android cerró la app), se recoge
+ * con su id. Devuelve la respuesta, null si no había nada que recoger, o lanza el error.
+ */
+export async function reanudarPregunta(D, M, c, { signal, alPaso } = {}) {
+  const p = preguntaPendiente();
+  if (!p || !preguntasApp(!!D.demo)) return null;
+  const hist = conversacion();
+  const ult = hist[hist.length - 1];
+  if (!ult || ult.r !== 'yo' || (ult.t || '') !== (p.t || '')) { LS.del('preg-rid'); return null; }
+  try {
+    const r = await charlarApp(p.t, D, M, c, hist, [], { signal, alPaso, rid: p.rid });
+    LS.del('preg-rid');
+    return rematarRespuesta(r, p.t, D, M, [], hist);
+  } catch (e) {
+    if (!e.corte) LS.del('preg-rid');
+    throw e;
+  }
 }

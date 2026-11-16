@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13z';
+export const VERSION = '0.7.14';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13z';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.14', f: '2026-11-16', h: '22:39', t: 'Las preguntas a la IA, rehechas',
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'ia', t: 'Pregúntale sin clave y sin esperas', x: 'Para preguntarle a la IA ya no hace falta tu clave de Google: contesta la IA de la app, en segundos. Conoce la plantilla entera de cada rival (no solo lo que tiene a la venta), razona con las cifras de tu liga y habla más claro. Si sales de la app mientras piensa, la respuesta te espera al volver. Tienes 5 preguntas al día y, viendo un anuncio corto, 3 más.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'ia', t: 'Respuestas sin restos raros', x: 'Debajo de algunas respuestas salía un bloque de texto técnico, y a veces la IA escribía códigos como «M-3143». Ya no.' },
+    ],
+  },
   {
     v: '0.7.13z', f: '2026-11-16', h: '21:11', t: 'El dinero de los rivales, en el punto medio',
     cosas: [
