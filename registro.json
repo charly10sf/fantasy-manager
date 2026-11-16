@@ -2135,7 +2135,8 @@
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
-   "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000
+   "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000,
+   "SPORT|136489884": 1794822319000
   },
   "hechos": [
    {
@@ -2307,11 +2308,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136489884",
+    "medio": "SPORT",
+    "t": 1794822319000,
+    "id": "2355",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Kounde sigue sin entrenar con el grupo tras el parón",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3224,17 +3237,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 449531,
-  "salida": 19218,
+  "entrada": 451538,
+  "salida": 19335,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.990537,
+  "dolares": 0.990796,
   "reservado": 0
  },
  "recientes": {
@@ -7481,13 +7494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3083,
+   "ok": 3084,
    "fallos": 0,
-   "ejecuciones": 2476,
+   "ejecuciones": 2477,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:46:12.414Z"
+   "ultima": "2026-11-16T10:51:11.912Z"
   }
  },
  "ptsDirecto": {},
@@ -7504,15 +7517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:46:20.892Z"
+   "ultimaBien": "2026-11-16T10:51:18.540Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:46:20.892Z"
+   "ultimaBien": "2026-11-16T10:51:18.540Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:46:20.892Z"
+   "ultimaBien": "2026-11-16T10:51:18.540Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7520,11 +7533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:46:20.892Z"
+   "ultimaBien": "2026-11-16T10:51:18.540Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:46:20.892Z"
+   "ultimaBien": "2026-11-16T10:51:18.540Z"
   }
  },
  "avisos": [
