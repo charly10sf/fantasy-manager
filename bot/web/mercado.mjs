@@ -209,9 +209,9 @@ export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN
   o.push(bloque('Los equipos que más ganan y pierden hoy', pestanas('equipos', [['Ganan', tE(top5.slice(0, 5))], ['Pierden', tE(top5.slice(-5).reverse())]]),
     { id: 'equipos', linea: 'Sumando el cambio de todos sus jugadores. El valor de cada plantilla, en <a href="../equipos/">los 20 equipos</a>.' }));
 
-  o.push(bloque('El mercado de hoy', lectura(h).map((x) => `  <p>${e(x)}</p>`).join('\n'), { id: 'analisis' }));
-  o.push(bloque('De dónde salen los datos', `  <p>El valor de cada jugador es el que publica LaLiga Fantasy cada noche, hacia las 00:15, para todas las ligas. Aquí se compara con el del día anterior y con el de hace siete cambios, entre los ${h.jugadores} jugadores que siguen en LaLiga. Una racha cuenta los días seguidos que el valor sube (o baja) hasta hoy. Las cifras de cuánto duran las rachas salen de 52.302 cambios de valor de esta temporada (<a href="../guias/valor-de-mercado.html">la guía de valor de mercado</a>). Todos los jugadores, con filtros por puesto y equipo, en <a href="../jugadores/">jugadores</a>.</p>`));
-  o.push(bloque('Con Fantasy Manager', `  <p>La app cruza este mercado con tu liga: te dice cuáles de los que suben tienes a la venta en tu mercado, cuánto pujar sin quedarte en negativo y cuándo vender a uno de los tuyos que empieza a bajar.</p>`));
+  o.push(bloque('El mercado de hoy', lectura(h).map((x) => `  <p>${e(x)}</p>`).join('\n'), { id: 'analisis',
+    linea: `${e(`Valor de LaLiga Fantasy de los ${h.jugadores} jugadores que siguen en LaLiga.`)} <a href="../metodo.html#valor">Cómo leemos el valor y las rachas</a> · <a href="../jugadores/">todos los jugadores</a>.` }));
+  // (sesión 3) sin «De dónde salen los datos» ni «Con Fantasy Manager», iguales cada noche: el método, en metodo.html#valor
   return o.join('\n');
 }
 
@@ -250,8 +250,8 @@ export function contenidoEquipos(h, { rutas = SIN, jugadores = null } = {}) {
   o.push(bloque('Valor de cada plantilla', tabla([{ t: '#', c: 'n m' }, { t: 'Equipo', c: 'j' }, { t: 'Plantilla', c: 'n' }, { t: 'Hoy', c: 'n m' }, { t: '7 días', c: 'n' }, { t: 'El que más vale', c: 'm' }, { t: 'Mejor media', c: 'm' }], filas, { clase: 'td-eqs' }),
     { id: 'valor', linea: '«Mejor media»: el de más puntos de media entre los que llevan 20 puntos o más en la temporada.' }));
   o.push(bloque('Las plantillas en LaLiga Fantasy', `  <p>${e(`Lo que vale la plantilla de cada equipo en el mercado de LaLiga Fantasy, sumando a todos sus jugadores. La más cara es la del ${caro.nombre}, ${dinero(caro.valor)}; la más barata, la del ${barato.nombre}, ${dinero(barato.valor)}. En la última semana, la que más ha ganado es la del ${masGana.nombre}: ${dif(masGana.dif7)}.`)}</p>`
-    + (jugadores ? `\n  <p>Cada equipo tiene su página con la plantilla, los puntos de cada jornada y los próximos rivales, y los jugadores que más pesan en el juego, la suya: <a href="../jugadores/">todos los jugadores</a>, con los ${jugadores} que tienen ficha enlazados.</p>` : ''), { id: 'analisis' }));
-  o.push(bloque('De dónde salen los datos', `  <p>Los valores son los que publica LaLiga Fantasy cada noche para todas las ligas, de los ${h.jugadores} jugadores que siguen en LaLiga. La plantilla suma a todos los que tiene cada club en el juego, jueguen o no.</p>`));
+    + (jugadores ? `\n  <p>Cada equipo tiene su página con la plantilla, los puntos de cada jornada y los próximos rivales, y los jugadores que más pesan en el juego, la suya: <a href="../jugadores/">todos los jugadores</a>, con los ${jugadores} que tienen ficha enlazados.</p>` : ''), { id: 'analisis', linea: `La plantilla suma a todos los que tiene cada club en el juego, jueguen o no. <a href="../metodo.html#valor">Cómo leemos el valor</a>.` }));
+  // (sesión 3) el párrafo de «De dónde salen los datos», en metodo.html#valor
   return o.join('\n');
 }
 

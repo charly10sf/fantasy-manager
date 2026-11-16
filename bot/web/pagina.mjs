@@ -1,7 +1,8 @@
 // La página de la previa (web/guias/jornada-N.html): el contenido que va entre las marcas de .github/paginas.py, que pone la
 // cabecera, el menú, el pie y las metas. HTML de verdad, sin JavaScript. Cada apartado: el análisis (si ha pasado la revisión) y
 // los datos en una tabla corta.
-import { vista, fechaHora, fecha, diaCorto, hora, dinero, dif, pct } from './vista.mjs';
+import { apartadoPrevia } from './onces.mjs';
+import { vista, fechaHora, fecha, diaCorto, hora, dinero, dif, pct, criterioChollos, quePasa } from './vista.mjs';
 
 const e = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const coma = (x) => String(Math.round(Number(x) * 10) / 10).replace('.', ',');
@@ -23,10 +24,10 @@ function noches(ts) {
 export function metas(h) {
   const J = h.jornada;
   return {
-    titulo: `Jornada ${J} de LaLiga Fantasy: cláusulas, bajas y mercado`,
+    titulo: `Jornada ${J} de LaLiga Fantasy: chollos, cláusulas, bajas y mercado`,
     h1: `Jornada ${J} de LaLiga Fantasy`,
     corto: `Previa de la jornada ${J}`,
-    descripcion: `Previa de la jornada ${J} de LaLiga Fantasy: a qué hora se cierran y se reabren las cláusulas, sancionados, apercibidos, lesionados y los jugadores que más suben de valor.`,
+    descripcion: `Previa de la jornada ${J} de LaLiga Fantasy: los chollos baratos y titulares, a qué hora se cierran las cláusulas, onces probables, sancionados, apercibidos, lesionados y quién sube de valor.`,
   };
 }
 
@@ -34,7 +35,7 @@ export function metas(h) {
  * El HTML del contenido. `textos`: { intro, clausulas, sancionados, apercibidos, bajas, vuelven, mercado } (null = sin análisis).
  * `siguiente`: la ruta de la previa siguiente si ya existe (las viejas avisan de que la jornada ya se jugó).
  */
-export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {}) {
+export function contenido(h, textos = {}, { siguiente = null, rutas = null, onces = null } = {}) {
   const J = h.jornada, t = textos || {}, v = vista(h);
   // el nombre del jugador, enlazado a su ficha del portal si la tiene (rutas: { jugador(id) } desde la raíz de la web)
   const jn = (x) => { const r = rutas && x.id != null ? rutas.jugador(x.id) : null; return r ? `<b><a href="../${e(r)}">${e(x.nombre)}</a></b>` : `<b>${e(x.nombre)}</b>`; };
@@ -52,6 +53,26 @@ export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {
   o.push(parrafo(t.clausulas).trimEnd());
   o.push(tabla(['Día', 'Hora', 'Partido'], h.partidos.map((p) => [e(diaCorto(p.t)), e(hora(p.t)), `${e(p.local)} - ${e(p.visitante)}`])).trimEnd());
   o.push(`  <p class="peq">Cómo funciona el cierre, en <a href="clausulas-laliga-fantasy.html">cláusulas en LaLiga Fantasy</a>; cuándo proteger a los tuyos, en <a href="blindaje-laliga-fantasy.html">el blindaje</a> y <a href="subir-clausula.html">la calculadora de cláusula</a>.</p>`);
+
+  // (sesión 3 de AdSense, idea 6) los chollos de la jornada, con el criterio a la vista
+  if (h.chollos) {
+    const c = h.chollos;
+    o.push(`\n  <h2 id="chollos">Chollos de la jornada ${J}</h2>`);
+    o.push(`  <p>Entran los jugadores que ${e(criterioChollos(c.criterio))}. Debajo de cada uno, lo que ha pasado esta temporada con las rachas como la suya.</p>`);
+    if (c.lista.length) {
+      o.push(parrafo(t.chollos).trimEnd());
+      o.push(tabla(['Jugador', 'Equipo', 'Valor', 'Media', 'Rival', 'Sube desde hace'], c.lista.map((x) => [jn(x), e(x.equipo), e(dinero(x.valor)), coma(x.media), `${rival(x)} <small>(${e(x.nivelRival)})</small>`, `${x.diasSubiendo} días`])).trimEnd());
+      // lo que suele pasar, agrupado por tipo de racha (una frase por grupo, no la misma frase con cada nombre)
+      const grupos = new Map();
+      for (const x of c.lista) grupos.set(x.por, [...(grupos.get(x.por) || []), x]);
+      const ys = (xs) => (xs.length === 1 ? jn(xs[0]) : `${xs.slice(0, -1).map(jn).join(', ')} y ${jn(xs[xs.length - 1])}`);
+      const frases = [...grupos.values()].map((xs) => `${ys(xs)}: ${e(quePasa(xs[0]))}.`);
+      const largas = c.lista.filter((x) => x.diasSubiendo >= 10);
+      if (largas.length) frases.push(`${ys(largas)} ${largas.length > 1 ? 'llevan' : 'lleva'} diez días o más: de las rachas que llegan a tres días, solo el 42,2 % llega a diez, así que ${largas.length > 1 ? 'ya están' : 'ya está'} en lo raro.`);
+      o.push(`  <p class="peq">${frases.join(' ')}</p>`);
+    } else o.push(`  <p>${e(c.mirados ? `Esta semana ninguno cumple todo: ${c.mirados === 1 ? 'el único barato que sube con un rival asequible no es' : `de los ${c.mirados} baratos que suben con un rival asequible, ninguno es`} titular fijo en sus últimos partidos.` : 'Esta semana ningún jugador barato con buena media sube de valor con un rival asequible.')}</p>`);
+    o.push(`  <p class="peq">Por qué esas cifras, en <a href="valor-de-mercado.html">cómo se mueve el valor de mercado</a>; cómo medimos la dificultad del rival, en <a href="../metodo.html#rivales">el método</a>.</p>`);
+  }
 
   // sancionados
   o.push(`\n  <h2>Sancionados</h2>`);
@@ -84,6 +105,9 @@ export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {
     o.push(tabla(['Jugador', 'Equipo', 'Tenía', 'Días fuera', 'Media'], h.vuelven.map((x) => [jn(x), e(x.equipo), w(x.lesion), String(x.diasFuera), coma(x.media)])).trimEnd());
   }
 
+  // (sesión 3, idea 12) los onces probables: el enlace a jornada/onces.html y las dudas más igualadas (con reglas, sin IA)
+  o.push(apartadoPrevia(onces, J));
+
   // mercado
   o.push(`\n  <h2>Los que más suben y bajan esta semana</h2>`);
   o.push(parrafo(t.mercado || 'Los cambios de valor más grandes de los últimos siete cambios de mercado.').trimEnd());
@@ -94,12 +118,7 @@ export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {
   o.push(tabla(['Jugador', 'Equipo', 'Valor', '7 días', '%', 'Días seguidos'], h.bajan.map((x) => fm(x, x.diasBajando))).trimEnd());
   o.push(`  <p class="peq">Qué mueve el valor y cuánto suelen durar las rachas, en <a href="valor-de-mercado.html">valor de mercado en LaLiga Fantasy</a>. Para pujar por uno que sube, <a href="cuanto-pujar.html">la calculadora de puja</a>.</p>`);
 
-  // de dónde sale
-  o.push(`\n  <h2>De dónde salen los datos</h2>`);
-  o.push(`  <p>El calendario, el estado de cada jugador (lesionado, duda o sancionado), las fichas con sus minutos y tarjetas y el valor de mercado de cada día son de LaLiga Fantasy. El motivo de cada sanción, la lista de apercibidos y los partes médicos salen de las listas públicas de bajas de la jornada, cruzadas con las fichas de LaLiga: un apercibido solo aparece si su ficha cuenta cuatro amarillas. «Titular habitual» es haber jugado más de 60 minutos en la mitad de los partidos o más. La subida de 7 días compara el valor de hoy con el de hace siete cambios de mercado, entre los ${h.jugadoresMirados} jugadores que valen 1 M o más.</p>`);
-
-  // con la app
-  o.push(`\n  <h2>Con Fantasy Manager</h2>`);
-  o.push(`  <p>La app cruza todo esto con tu liga: te avisa si tienes a un sancionado o a un apercibido en el once, te dice qué cláusulas de tus rivales puedes pagar antes del cierre y cuáles de las tuyas conviene proteger, y te recuerda la hora límite para cuadrar el saldo.</p>`);
+  // (sesión 3) lo que antes iba en «De dónde salen los datos» y «Con Fantasy Manager», igual en todas las previas, está en metodo.html
+  o.push(`\n  <p class="peq">${e(`Los datos son de LaLiga Fantasy, entre los ${h.jugadoresMirados} jugadores que valen 1 M o más.`)} De dónde sale cada lista y cómo se escribe el texto, en <a href="../metodo.html#previas">cómo hacemos las previas</a>.</p>`);
   return o.filter(Boolean).join('\n');
 }

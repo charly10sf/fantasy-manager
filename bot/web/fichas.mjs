@@ -10,6 +10,7 @@ import { baseTitular } from '../tipos/caidas.mjs';
 import { motivoSancion } from '../lib/partes.mjs';
 import { corto, el, del, al } from '../lib/texto.mjs';
 import { fechaHora, diaCorto, hora } from './vista.mjs';
+import { bloqueFicha } from './onces.mjs';
 import { e, coma, dinero, dif, pct, cara, escudo, chipPuntos, cambio, graficaValor, bloque, slug, diaMadrid, fechaCorta, POS, PUESTO,
   celdaJug, tabla, kpis, subnav, pestanas, forma, chapaPos, nivelChip, fichasJornada } from './portal.mjs';
 
@@ -889,7 +890,7 @@ export function contenidoEquipo(q, H) {
   const hayPort = !!q.portero;
   const mov = q.jugadores.filter((x) => x.dif7);
   const bj = q.bajas.filter((x) => x.pesa || x.jugados >= 3);
-  o.push(subnav([['plantilla', 'Plantilla'], q.proximos.length && ['calendario', 'Calendario'], q.ptsJ.length && ['puntos', 'Puntos'], q.resultados.length && ['resultados', 'Resultados'],
+  o.push(subnav([['plantilla', 'Plantilla'], H.onces && H.onces.equipos.some((y) => y.id === q.id) && ['once', 'Once probable'], q.proximos.length && ['calendario', 'Calendario'], q.ptsJ.length && ['puntos', 'Puntos'], q.resultados.length && ['resultados', 'Resultados'],
     q.serie.length > 10 && ['valor', 'Valor'], hayPort && ['porteria', 'Portería'], mov.length && ['mercado', 'Suben y bajan'], ['bajas', 'Bajas'], ['analisis', 'Análisis']]));
 
   // la plantilla por puestos, en una tabla
@@ -898,6 +899,10 @@ export function contenidoEquipo(q, H) {
   const grupos = [1, 2, 3, 4].map((p) => ({ t: PLURAL[p].charAt(0).toUpperCase() + PLURAL[p].slice(1), filas: q.jugadores.filter((x) => x.pos === p).sort((a, b) => b.puntos - a.puntos || b.valor - a.valor).map(filaP) }));
   o.push(bloque('La plantilla', tabla([{ t: 'Jugador', c: 'j' }, { t: 'Valor', c: 'n' }, { t: 'Hoy', c: 'n m' }, { t: 'Pts', c: 'n' }, { t: 'Media', c: 'n' }], null, { grupos, clase: 'td-plant' }),
     { id: 'plantilla' }));
+
+  // (sesión 3, idea 12) el once probable de la próxima jornada (jornada/onces.html tiene los 20)
+  const yOnce = H.onces && H.onces.equipos.find((y) => y.id === q.id);
+  if (yOnce) o.push(bloqueFicha(yOnce, H.onces.J, { ruta: (id) => rj({ id }) }));
 
   if (q.proximos.length) o.push(bloque('Próximos rivales', proximosTabla(q),
     { id: 'calendario', linea: (q.puestoCal ? e(elige(`e${q.id}|lcal`, [`El ${ordinal(q.puestoCal)} calendario más fácil de los ${H.nCalendario}. `, `Por dificultad, ${ordinal(q.puestoCal)} de ${H.nCalendario} (1.º, el más fácil). `])) : '') + `<a href="${raiz}metodo.html#rivales">Cómo medimos la dificultad</a>.` }));

@@ -164,7 +164,7 @@ function campoOnce(once) {
   return `  <div class="campo" role="img" aria-label="${e(`Once ideal ${once.formacion}: ${once.lineas.flat().map((x) => `${x.nombre} ${x.pts}`).join(', ')}`)}">${lin}</div>`;
 }
 
-export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta = null, tarjetaAlto = null, rutas = null, temporada = null, semana = null } = {}) {
+export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta = null, tarjetaAlto = null, rutas = null, temporada = null, semana = null, onces = '' } = {}) {
   // los nombres enlazan a la ficha del jugador si la tiene (fase 2)
   const enl = (x) => (rutas && rutas.jugador(x.id) ? `../${rutas.jugador(x.id)}` : null);
   const J = h.jornada, o = [];
@@ -206,9 +206,9 @@ export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta =
   if (semana && semana.ganan.length) o.push(bloqueSemana(h, semana, enl));
 
   // el texto, abajo: los hechos de esta jornada que se salen de lo normal, con la temporada al lado (sesión 4)
-  o.push(bloque(`La jornada ${J}, en corto`, analisisResumen(h, temporada).map((p) => `  <p>${e(p)}</p>`).join('\n'), { id: 'analisis' }));
-  o.push(bloque('De dónde salen los datos', `  <p>Los puntos son los oficiales de LaLiga Fantasy de cada jugador en la jornada ${J}, con los de DAZN, de los ${h.nJugadores} jugadores que salen en las estadísticas de los partidos. La media es la de toda la temporada. Si LaLiga corrige algún punto después, la página se rehace al día siguiente.</p>`));
-  o.push(bloque('Con Fantasy Manager', `  <p>La app te dice cada día qué hacer con tu equipo: quién de los tuyos sube o baja, a quién vender, cuánto pujar y qué cláusulas te llegan antes de la siguiente jornada.</p>`));
+  o.push(bloque(`La jornada ${J}, en corto`, [...analisisResumen(h, temporada), ...(onces ? [onces] : [])].map((p) => `  <p>${e(p)}</p>`).join('\n'), { id: 'analisis', linea: `Puntos oficiales de LaLiga Fantasy, con los de DAZN. <a href="../metodo.html#previas">Cómo hacemos el resumen</a>.` }));
+  // (sesión 3) «De dónde salen los datos» y «Con Fantasy Manager», iguales en los 12 resúmenes, ya no van: el método está en metodo.html y la
+  // llamada a la app es la corta (paginas.py)
   return o.join('\n');
 }
 

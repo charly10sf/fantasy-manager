@@ -20,6 +20,10 @@ on:
         description: 'Rehacer el resumen de esta jornada o de un tramo, como 1-11 (vacío: la última acabada, si toca)'
         type: string
         default: ''
+      onces:
+        description: 'Solo los onces confirmados de los partidos de la próxima hora (lo lanza el bot)'
+        type: boolean
+        default: false
       probar:
         description: 'Solo generarlo, sin subir nada'
         type: boolean
@@ -36,11 +40,13 @@ concurrency:
 jobs:
   portal:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # (sesión 3) con «onces», espera hasta 45 min a que salgan los onces oficiales
+    timeout-minutes: ${{ inputs.onces && 60 || 15 }}
     env:
       GH_TOKEN: ${{ github.token }}
       FORZAR: ${{ inputs.forzar && '1' || '' }}
       RESUMEN: ${{ inputs.resumen }}
+      ONCES: ${{ inputs.onces && '1' || '' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -55,15 +61,15 @@ jobs:
           python3 -c "import PIL" 2>/dev/null || pip install --quiet pillow 2>/dev/null || pip install --quiet --break-system-packages pillow || echo "::warning::Sin Pillow: el resumen sale sin la tarjeta"
       - name: Generar
         id: gen
-        run: node bot/portal-web.mjs ${FORZAR:+--forzar=1} ${RESUMEN:+--resumen=$RESUMEN}
+        run: node bot/portal-web.mjs ${FORZAR:+--forzar=1} ${RESUMEN:+--resumen=$RESUMEN} ${ONCES:+--onces=1}
       - name: Subir
         if: steps.gen.outputs.cambios == 'true' && !inputs.probar
         run: |
           git config user.name 'Fantasy Manager'
           git config user.email 'fantasymanager.web.app@gmail.com'
-          git add -A web/mercado web/jornada web/equipos web/jugadores web/clausulas web/guias web/metodo.html web/quienes-somos.html web/privacidad.html web/aviso-legal.html web/condiciones.html web/contacto.html web/instalar.html web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
+          git add -A web/mercado web/jornada web/equipos web/jugadores web/clausulas web/bajas web/guias web/metodo.html web/quienes-somos.html web/privacidad.html web/aviso-legal.html web/condiciones.html web/contacto.html web/instalar.html web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
           if git diff --cached --quiet; then echo "Nada nuevo"; exit 0; fi
-          git commit -q -m "Portal: datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
+          git commit -q -m "Portal: ${ONCES:+onces confirmados, }datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
           # (16 nov) lo que la generación toca fuera de lo de arriba no se sube, pero frenaba el pull («You have unstaged
           # changes») y la Action acababa en verde sin haber subido nada: ahora se aparta (--autostash), se dice qué era y,
           # si no se ha podido subir, falla (y avisa por Telegram)

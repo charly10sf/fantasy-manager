@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { toca } from '../web/toca.mjs';
 import { validar, permitidasDe, escribir } from '../web/texto.mjs';
 import { vista } from '../web/vista.mjs';
-import { contenido } from '../web/pagina.mjs';
+import { contenido, metas } from '../web/pagina.mjs';
 import { generar } from '../tipos/previaweb.mjs';
 import { validar as validarTuit } from '../lib/validar.mjs';
 import { norm } from '../lib/texto.mjs';
@@ -29,6 +29,8 @@ const h = {
   bajas: [j('Rodri', 'Barça', { lesion: 'Lesión en el bíceps femoral', hasta: 'principios de diciembre' })], dudas: [], vuelven: [],
   suben: [{ ...j('Fermín', 'Barça'), valor: 132.2e6, dif7: 19.4e6, pct7: 17.2, diasSubiendo: 25, estado: 'ok' }],
   bajan: [{ ...j('Moleiro', 'Villarreal'), valor: 71.6e6, dif7: -9.6e6, pct7: -11.8, diasBajando: 15, estado: 'ok' }], jugadoresMirados: 300,
+  // (sesión 3) los chollos: uno que cumple todo, con una racha larga
+  chollos: { criterio: { valor: 6e6, media: 3, racha: 3, ult5: 4 }, mirados: 4, lista: [{ ...j('Niño', 'Málaga'), valor: 4.8e6, media: 6.4, diasSubiendo: 37, ultimoDia: 0.1e6, ult5: 5, nivelRival: 'fácil', prob: 92.2, por: 'sube4' }] },
 };
 const v = vista(h);
 assert.match(v.clausulas.cierre, /jueves 19 de noviembre a las 21:00/);
@@ -49,6 +51,10 @@ const claude = async ({ prompt, esquema }) => {
   return { ok: true, dolares: 0.01, datos: Object.fromEntries(claves.map((k) => [k, t[k]])) };
 };
 const r = await escribir(h, { claude, clave: 'x', nombresLiga: ['Fermín', 'Mbappé'] });
+// (sesión 3) los chollos van a la IA con el criterio y lo que suele pasar con su racha
+assert.match(v.chollos.criterio, /menos de 6 M/);
+assert.match(v.chollos.lista[0].queSuelePasar, /92,2 %/);
+assert.ok(permitidasDe(v).has('92,2'), 'la cifra de la racha se puede escribir');
 assert.equal(r.textos.mercado, null);
 assert.match(r.fallos.mercado, /cifra/);
 assert.equal(r.textos.sancionados, 'Gayá no juega por la roja directa.');
@@ -62,6 +68,22 @@ assert.match(html, /<h1>Jornada 13 de <span>LaLiga Fantasy<\/span><\/h1>/);
 assert.match(html, /Gayá no juega por la roja directa/);
 assert.match(html, /\+19,4 M/);
 assert.match(html, /jueves 19 de noviembre a las 21:00/);
+// (sesión 3) chollos con su ancla y el criterio a la vista, sin la misma frase repetida con cada nombre; los onces con su enlace
+assert.match(html, /<h2 id="chollos">Chollos de la jornada 13<\/h2>/);
+assert.match(html, /valen menos de 6 M, han jugado 60 minutos o más en al menos 4 de sus 5 últimos partidos/);
+assert.match(html, /solo el 42,2 % llega a diez/);
+assert.match(html, /<h2 id="onces">Onces probables<\/h2>/);
+assert.match(html, /jornada\/onces\.html/);
+assert.doesNotMatch(html, /De dónde salen los datos|Con Fantasy Manager/, 'lo repetido en todas las previas, a metodo.html');
+assert.match(html, /metodo\.html#previas/);
+assert.match(metas(h).titulo, /chollos/);
+// sin ninguno que cumpla, una frase y nada para la IA
+const h0 = { ...h, chollos: { ...h.chollos, lista: [] } };
+assert.match(contenido(h0, {}), /ninguno es titular fijo/);
+assert.equal(vista(h0).chollos.lista.length, 0);
+// con los onces de esa jornada, las dudas más igualadas
+const on = { J: 13, equipos: [{ id: '1', nombre: 'Athletic', dudas: [{ linea: 3, a: { nombre: 'Sancet', p: 51 }, b: { nombre: 'Galarreta', p: 45 }, pa: 53 }], cambios: null }] };
+assert.match(contenido(h, r.textos, { onces: on }), /Sancet o Galarreta del Athletic \(53\/47\)/);
 
 // el tuit: el enlace va aparte y el texto pasa el validador del bot
 const P = { hechos: { ...h, generada: primero - 70 * H }, textos: r.textos };

@@ -536,3 +536,9 @@ main [id] { scroll-margin-top: 74px; }
 .paginas a { color: var(--texto); background: var(--plano); border: 1px solid var(--linea); text-decoration: none; }
 .paginas b { color: #fff; background: var(--rojo); }
 .td-todos .c-j .tjug-t { padding: 2px 0; }
+/* (sesión 3 de AdSense) los onces probables: una fila por línea, con el % de cada uno */
+table.once { width: 100%; border-collapse: collapse; }
+table.once th { text-align: left; white-space: nowrap; padding: 6px 12px 6px 0; vertical-align: top; color: var(--apagado); font-weight: 600; font-size: .92em; }
+table.once td { padding: 6px 0; line-height: 1.55; border-bottom: 1px solid var(--linea); }
+table.once .pp { opacity: .75; white-space: nowrap; }
+table.once td .w { display: inline; min-width: 0; }

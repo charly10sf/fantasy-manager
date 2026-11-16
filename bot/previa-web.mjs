@@ -105,7 +105,9 @@ const archivo = path.join(RAIZ, 'web', ruta);
 // los jugadores con ficha en el portal (bot/portal-web.mjs, fase 2) van enlazados
 const fichas = (() => { try { return json(path.join(RAIZ, '.github', 'portal', 'estado.json')).fichas || null; } catch { return null; } })();
 const rutas = { jugador: (id) => (fichas && fichas.jugadores && fichas.jugadores[String(id)] ? `jugadores/${fichas.jugadores[String(id)]}.html` : null) };
-writeFileSync(archivo, `<!-- contenido -->\n${contenido(h, r.textos, { rutas })}\n<!-- /contenido -->\n`);
+// (sesión 3, idea 12) los onces probables de esa jornada, si «Portal web» ya los ha hecho (.github/portal/onces.json)
+const onces = (() => { try { return json(path.join(RAIZ, '.github', 'portal', 'onces.json')); } catch { return null; } })();
+writeFileSync(archivo, `<!-- contenido -->\n${contenido(h, r.textos, { rutas, onces })}\n<!-- /contenido -->\n`);
 execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });
 salida('ok', r.ok ? 'true' : 'false');
 salida('jornada', String(J));

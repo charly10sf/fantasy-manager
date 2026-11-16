@@ -129,6 +129,7 @@ export async function escribir(h, { nombresLiga = [], clave = process.env.ANTHRO
 export const QUE = {
   intro: 'una o dos frases de entrada: qué jornada es, cuándo empieza y lo más importante de esta semana para quien juega (sin repetir lo de los apartados al detalle).',
   clausulas: 'el cierre y la reapertura de cláusulas con sus horas, cuántos cambios de mercado quedan antes del cierre y qué conviene hacer antes (proteger, clausular, cuadrar el saldo).',
+  chollos: 'los chollos que cumplen el criterio (viene en los hechos): por qué encaja cada uno, qué rival tiene y lo que suele pasar con una racha así según la cifra de «queSuelePasar» (es lo que ha pasado esta temporada, no una promesa). Si alguno tiene un riesgo que esté en los hechos (un rival de nivel medio, una racha que frena), dilo. No repitas el criterio entero: ya va escrito encima.',
   sancionados: 'quién no juega por sanción y qué hacer si lo tienes (con su media y su valor si ayudan).',
   apercibidos: 'quién está a una amarilla y qué partido de la jornada siguiente se perdería; si compensa alinearlo igual.',
   bajas: 'las bajas y dudas que más pesan, con lo que dice el parte y la vuelta prevista si viene; vender o aguantar.',

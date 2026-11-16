@@ -8,6 +8,8 @@ import { lesionados, parteDe, motivoSancion } from '../lib/partes.mjs';
 import { baseTitular } from '../tipos/caidas.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { corto } from '../lib/texto.mjs';
+import { tablaDe, nivelDe } from '../lib/info-jugador.mjs';
+import { PROB } from './mercado.mjs';
 
 const HORA = 36e5, DIA = 24 * HORA;
 export const VEDA_H = 24;   // el cierre de cláusulas: 24 h antes del primer partido (motor.js, M.VEDA_H)
@@ -15,6 +17,10 @@ const POS = { 1: 'portero', 2: 'defensa', 3: 'centrocampista', 4: 'delantero' };
 const num = (x) => Number(x) || 0;
 // pesa en el fantasy (lo mismo que tipos/sancionados.mjs): titular habitual, buena media o mucho valor
 const pesa = (j, b) => (b && b.p >= 0.5) || num(j.averagePoints) >= 3 || num(j.marketValue) >= 8e6;
+// (sesión 3 de AdSense, idea 6) los chollos de la jornada: baratos, titulares, con racha al alza y rival asequible. El corte de «barato»
+// sale de los datos del 16 nov: de los 139 titulares de entonces (60 minutos o más en 4 de sus 5 últimos partidos), el 25 % más barato
+// valía menos de 6,1 M (y 5,95 M para que «6,0 M» no salga en la tabla con el corte en «menos de 6 M»). Si se cambia, cambiar también metodo.html#chollos
+export const CHOLLO = { valor: 6e6, media: 3, racha: 3, ult5: 4 };
 const puntosValor = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: num(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
 
 /** los días de cambio de mercado (hacia las 00:15 de Madrid) entre dos momentos: [t, …] */
@@ -33,8 +39,8 @@ function partidosPorEquipo(stats, equipos) {
   const r = {};
   for (const m of stats) {
     const t = Date.parse(m.date), l = String(m.local.id), v = String(m.visitor.id);
-    r[l] = { rival: corto(equipos[v] || m.visitor.mainName), casa: true, t };
-    r[v] = { rival: corto(equipos[l] || m.local.mainName), casa: false, t };
+    r[l] = { rival: corto(equipos[v] || m.visitor.mainName), rivalId: v, casa: true, t };
+    r[v] = { rival: corto(equipos[l] || m.local.mainName), rivalId: l, casa: false, t };
   }
   return r;
 }
@@ -137,13 +143,38 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     for (let k = h.length - 1; k > 0 && h[k].v > h[k - 1].v; k--) racha++;
     let rachaBaja = 0;
     for (let k = h.length - 1; k > 0 && h[k].v < h[k - 1].v; k--) rachaBaja++;
-    filas.push({ ...base(j), valor: fin.v, dif7: fin.v - ini.v, pct7: Math.round(((fin.v - ini.v) / ini.v) * 1000) / 10,
-      ultimoDia: fin.v - h[h.length - 2].v, diasSubiendo: racha, diasBajando: rachaBaja, estado: j.playerStatus || 'ok', fechaValor: fin.t });
+    filas.push({ ...base(j), teamId: String(j.teamId), valor: fin.v, dif7: fin.v - ini.v, pct7: Math.round(((fin.v - ini.v) / ini.v) * 1000) / 10,
+      ultimoDia: fin.v - h[h.length - 2].v, diaAnterior: h[h.length - 2].v - h[h.length - 3].v, diasSubiendo: racha, diasBajando: rachaBaja, estado: j.playerStatus || 'ok', fechaValor: fin.t });
   });
   const ord = (k, s) => [...filas].sort((a, b) => s * (b[k] - a[k]));
   const suben = ord('dif7', 1).filter((x) => x.dif7 > 0).slice(0, 6);
   const bajan = ord('dif7', -1).filter((x) => x.dif7 < 0).slice(0, 6);
   const fechaValor = filas.length ? Math.max(...filas.map((x) => x.fechaValor)) : null;
+
+  // los chollos (idea 6): primero lo que no pide fichas (precio, media, racha, estado y rival); luego, la ficha de los que quedan
+  const chollos = { criterio: CHOLLO, lista: [], mirados: 0 };
+  if (!sinMercado) {
+    const jugadas = (await enParalelo(Array.from({ length: Math.max(0, J - 1) }, (_, i) => i + 1), 4, (k) => semanaStats(k).catch(() => []))).flat();
+    const tabla = tablaDe(jugadas);
+    const nivel = (x) => { const p = pp[x.teamId]; return p ? nivelDe(tabla.porId[String(p.rivalId)], tabla) || 'media' : null; };
+    const previos = filas.filter((x) => x.estado === 'ok' && x.valor < CHOLLO.valor - 5e4 && x.media >= CHOLLO.media && x.diasSubiendo >= CHOLLO.racha && x.rival && nivel(x) !== 'difícil');
+    const sinFicha = previos.filter((x) => !fichaDe.has(x.id));
+    const fs2 = await enParalelo(sinFicha, 6, (x) => ficha(x.id).catch(() => null));
+    sinFicha.forEach((x, i) => fichaDe.set(x.id, fs2[i]));
+    chollos.mirados = previos.length;
+    for (const x of previos) {
+      const f = fichaDe.get(x.id);
+      const b = f ? baseTitular(f.playerStats, J - 1) : null;
+      if (!b || b.ult < 5 || Math.round(b.a * 5) < CHOLLO.ult5) continue;
+      // lo que suele pasar con una racha así (las cifras de guias/valor-de-mercado.html, como «Mañana» en /mercado/)
+      const [prob, por] = x.diaAnterior > 0 && x.ultimoDia > x.diaAnterior ? [PROB.acelera, 'acelera'] : x.diaAnterior > 0 && x.ultimoDia < x.diaAnterior / 2 ? [PROB.frena, 'frena']
+        : x.diasSubiendo >= 4 ? [PROB.sube4, 'sube4'] : [PROB.sube3, 'sube3'];
+      chollos.lista.push({ ...x, nivelRival: nivel(x), ult5: Math.round(b.a * 5), titularPct: pct(b), prob, por });
+    }
+    chollos.lista.sort((a, b) => b.media - a.media || a.valor - b.valor);
+    chollos.lista = chollos.lista.slice(0, 6);
+    log(`  (previa web) chollos: ${previos.length} sin mirar la ficha, ${chollos.lista.length} cumplen todo`);
+  }
 
   const porValor = (a, b) => b.valor - a.valor;
   const cierre = primero - VEDA_H * HORA;
@@ -153,7 +184,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     diasDesdeAnterior: finAnterior ? Math.round((primero - finAnterior) / DIA) : null,
     sancionados: sancionados.sort(porValor), apercibidos: apercibidos.sort(porValor),
     bajas: bajas.sort(porValor).slice(0, completo ? 99 : 10), dudas: dudas.sort(porValor).slice(0, completo ? 99 : 8), vuelven: vuelven.sort(porValor).slice(0, completo ? 99 : 8),
-    suben, bajan, fechaValor, jugadoresMirados: filas.length,
+    suben, bajan, fechaValor, jugadoresMirados: filas.length, chollos,
   };
 }
 

@@ -2,6 +2,9 @@
 // cada una al acabar y lo que lee la portada (mercado/hoy.json). Lo lanza cada noche .github/workflows/portal-web.yml, después del
 // cambio de mercado; también a mano:
 //   node bot/portal-web.mjs [--forzar=1] [--resumen=12 | --resumen=1-11] [--cache=carpeta] [--sin-tarjeta=1] [--fichas=150]
+//   node bot/portal-web.mjs --onces=1 [--esperar=45]          solo los onces confirmados (sesión 3 de AdSense, idea 12): mira cada 3 min
+//                                                             hasta que estén los de los partidos de la próxima hora (o pasen 45 min)
+//   node bot/portal-web.mjs --onces-toca --estado=f.json [--apuntar=1]   ¿toca lanzarlo? (lo pregunta el bot cada 5 min)
 // --forzar rehace el mercado aunque el valor de hoy no haya llegado (con el último que haya) o ya esté hecho; --resumen rehace el de esa
 // jornada; --cache guarda y reutiliza lo bajado de la API (para probar sin pedirlo todo otra vez); --fichas, cuántos jugadores con
 // página como mucho (fase 2: una página por equipo y por jugador, con el mercado; 0 = sin fichas). Escribe el contenido de cada página,
@@ -15,6 +18,9 @@ import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen, resum
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
 import { hechosBajas, contenidoBajas, metasBajas } from './web/bajas.mjs';
+import { hechosOnces, contenidoOnces, metasOnces, confirmar, aciertoDe, lineaResumen } from './web/onces.mjs';
+import { confirmadosDe, pendientes, tocaOnces } from './web/confirmados.mjs';
+import { lesionados } from './lib/partes.mjs';
 import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, metasPaginaJugadores, nPaginasJugadores, jugadoresJson, indiceBuscador, escudosPie } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
@@ -51,6 +57,50 @@ let rutas = rutasDe(estado.fichas);
 
 const previas = () => paginas().filter((p) => p.grupo === 'jornadas' && p.jornada != null).map((p) => ({ ruta: p.ruta, jornada: p.jornada })).sort((a, b) => b.jornada - a.jornada);
 const resumenes = () => paginas().filter((p) => p.grupo === 'resumenes' && p.jornada != null).map((p) => ({ ruta: p.ruta, jornada: p.jornada })).sort((a, b) => b.jornada - a.jornada);
+
+// (sesión 3, idea 12) los onces probables de la jornada que viene: .github/portal/onces.json
+const fOnces = path.join(DIR, 'onces.json');
+const oncesPrevio = existsSync(fOnces) ? JSON.parse(readFileSync(fOnces, 'utf8')) : null;
+const guardarOnces = (o) => writeFileSync(fOnces, JSON.stringify(o, null, 1) + '\n');
+if (arg('onces-toca')) {
+  const fe = arg('estado');
+  const est = fe && existsSync(fe) ? JSON.parse(readFileSync(fe, 'utf8')) : {};
+  const st = oncesPrevio ? await LL.statsSemana(oncesPrevio.J).catch(() => []) : [];
+  const k = tocaOnces(st, oncesPrevio, est);
+  if (k && fe && arg('apuntar')) { est[k] = Date.now(); for (const x of Object.keys(est)) if (Date.now() - est[x] > 10 * 24 * HORA) delete est[x]; writeFileSync(fe, JSON.stringify(est) + '\n'); }
+  console.log(k);
+  salida('toca', k);
+  process.exit(0);
+}
+if (arg('onces') === '1') {
+  if (!oncesPrevio) { log('Sin onces probables guardados: nada que confirmar'); salida('cambios', 'false'); process.exit(0); }
+  const o = oncesPrevio;
+  const jugadores = await api.jugadores();
+  const fin = Date.now() + Number(arg('esperar') || 45) * 6e4;
+  let hay = false;
+  for (;;) {
+    const st = await LL.statsSemana(o.J).catch(() => []);
+    const ps = pendientes(st, o);
+    for (const m of ps) {
+      const c = await confirmadosDe(m, jugadores).catch((err) => { log(`  (onces) ${m.local.mainName}-${m.visitor.mainName}: ${err.message}`); return {}; });
+      for (const [id, xs] of Object.entries(c)) if (confirmar(o, id, xs)) { hay = true; log(`Once confirmado: ${(o.equipos.find((y) => y.id === id) || {}).nombre}`); }
+    }
+    const quedan = pendientes(st, o).filter((m) => Date.parse(m.date) - Date.now() < 65 * 6e4);
+    if (!quedan.length || Date.now() > fin) { if (quedan.length) log(`Sin once confirmado aún: ${quedan.map((m) => `${m.local.mainName}-${m.visitor.mainName}`).join(', ')}`); break; }
+    await new Promise((r) => setTimeout(r, 3 * 6e4));
+  }
+  if (hay) {
+    const a = aciertoDe(o);
+    if (a) { estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [o.J]: a }; log(`Acierto de la J${o.J} hasta ahora: ${a.ok} de ${a.n}`); }
+    guardarOnces(o);
+    const pv = paginas().find((p) => p.grupo === 'jornadas' && p.jornada === o.J);
+    escribirPagina(metasOnces(o.J), contenidoOnces(o, { rutas: rutasDe(estado.fichas), previa: pv ? pv.ruta : null, aciertos: estado.oncesAcierto || {} }));
+    writeFileSync(fEstado, JSON.stringify(estado, null, 1) + '\n');
+    execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });
+  }
+  salida('cambios', hay ? 'true' : 'false');
+  process.exit(0);
+}
 
 // 1. el resumen de la última jornada acabada (o el que se pida). Se rehace mientras no hayan pasado 48 h desde el último partido, por si
 // LaLiga corrige puntos (el de DAZN llega tarde): como mucho una vez cada 20 h
@@ -122,7 +172,10 @@ for (const J of candidatas) {
   const ant = J > 1 ? (statsDe[J - 1] || await api.statsSemana(J - 1).catch(() => [])) : [];
   const finAnt = ant.length ? Math.max(...ant.map((m) => Date.parse(m.date))) : null;
   const semana = (hm && semanaMercado(h, hm.todas, finAnt)) || (ya && ya.semana) || null;
-  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas, temporada, semana }));
+  // (sesión 3, idea 12) el acierto de los onces probables de esa jornada, si se guardaron sus confirmados
+  const acO = (oncesPrevio && oncesPrevio.J === J && aciertoDe(oncesPrevio)) || (estado.oncesAcierto || {})[J] || null;
+  if (acO) estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [J]: acO };
+  escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas, temporada, semana, onces: lineaResumen(acO, J) }));
   estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3), ...(semana ? { semana } : {}) };
   cambios = true;
   log(`Jornada ${J}: resumen hecho (${h.mejores[0].nombre} ${h.mejores[0].pts})`);
@@ -136,6 +189,19 @@ if (tocaMercado) {
       const H = await hechosFichas(api, hm, { estado: estado.fichas || {}, max: maxFichas, log });
       if (H) {
         H.previa = (hm.proxima && previas().find((p) => p.jornada === hm.proxima.jornada)) || previas()[0] || null;
+        // (sesión 3, idea 12) los onces probables, antes de pintar las fichas de equipo (llevan el suyo)
+        if (hm.proxima) {
+          try {
+            const partes = await lesionados({ log }).catch(() => []);
+            H.onces = hechosOnces(H, { J: hm.proxima.jornada, jugadores, partes, previo: oncesPrevio });
+            if (H.onces.equipos.length) {
+              guardarOnces(H.onces);
+              if (oncesPrevio && oncesPrevio.J === hm.proxima.jornada - 1) { const a = aciertoDe(oncesPrevio); if (a) estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [oncesPrevio.J]: a }; }
+              escribirPagina(metasOnces(H.onces.J), contenidoOnces(H.onces, { rutas: H.rutas, previa: H.previa && H.previa.jornada === H.onces.J ? H.previa.ruta : null, aciertos: estado.oncesAcierto || {} }));
+              log(`Onces: ${H.onces.equipos.length} equipos de la J${H.onces.J}, ${H.onces.equipos.reduce((s2, y) => s2 + y.dudas.length, 0)} dudas`);
+            }
+          } catch (err) { log(`::warning::Onces sin hacer: ${err.stack || err.message}`); }
+        }
         const pags = [
           ...H.equipos.map((q) => ({ entrada: metasEquipo(q), html: contenidoEquipo(q, H) })),
           ...H.jugadores.map((x) => ({ entrada: metasJugador(x, H), html: contenidoJugador(x, H) })),
