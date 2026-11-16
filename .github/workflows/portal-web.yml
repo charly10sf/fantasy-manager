@@ -64,10 +64,16 @@ jobs:
           git add -A web/mercado web/jornada web/equipos web/jugadores web/guias web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
           if git diff --cached --quiet; then echo "Nada nuevo"; exit 0; fi
           git commit -q -m "Portal: datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
+          # (16 nov) lo que la generación toca fuera de lo de arriba no se sube, pero frenaba el pull («You have unstaged
+          # changes») y la Action acababa en verde sin haber subido nada: ahora se aparta (--autostash), se dice qué era y,
+          # si no se ha podido subir, falla (y avisa por Telegram)
+          git status -s | head -20
+          subido=no
           for espera in 0 5 15 30; do
             sleep $espera
-            git pull -q --rebase origin main && git push -q origin HEAD:main && break
+            if git pull -q --rebase --autostash origin main && git push -q origin HEAD:main; then subido=si; break; fi
           done
+          if [ "$subido" != si ]; then echo "::error::No se ha podido subir el portal a main"; exit 1; fi
           gh workflow run web.yml --ref main
       - name: Aviso si falla (Telegram)
         if: failure()
