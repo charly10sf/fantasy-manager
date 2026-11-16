@@ -2011,7 +2011,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
@@ -7671,13 +7670,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3172,
+   "ok": 3173,
    "fallos": 0,
-   "ejecuciones": 2565,
+   "ejecuciones": 2566,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:06:31.419Z"
+   "ultima": "2026-11-16T18:11:16.497Z"
   }
  },
  "ptsDirecto": {},
@@ -7694,15 +7693,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:06:38.344Z"
+   "ultimaBien": "2026-11-16T18:11:20.418Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:06:38.344Z"
+   "ultimaBien": "2026-11-16T18:11:20.418Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:06:38.344Z"
+   "ultimaBien": "2026-11-16T18:11:20.418Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7710,11 +7709,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:06:38.344Z"
+   "ultimaBien": "2026-11-16T18:11:20.418Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:06:38.344Z"
+   "ultimaBien": "2026-11-16T18:11:20.418Z"
   }
  },
  "avisos": [
