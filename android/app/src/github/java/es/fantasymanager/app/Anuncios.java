@@ -10,7 +10,7 @@ final class Anuncios {
     static void alCrear(Principal a) {
     }
 
-    static void zona(boolean si, String bloque) {
+    static void zona(boolean si, String bloque, boolean inter) {
     }
 
     static void intersticial(String bloque) {

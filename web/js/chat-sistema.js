@@ -108,7 +108,9 @@ export function separarNotas(t) {
   // el bloque, que si no queda detrás de él y no se encuentra
   let s = String(t || '').replace(/<\/?br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '');
   let bloque = null;
-  const m = s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
+  // (séptima pasada con Haiku, 17 nov) también entre etiquetas: «<notas>{…}</notas>»
+  const m = s.match(/(?:^|\n)[ \t]*<notas>[ \t]*\n?([\s\S]*?)(?:<\/notas>|$)/i)
+    || s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
     || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }
@@ -131,7 +133,9 @@ export function sinCodigos(t) {
     .replace(new RegExp(`\\s*\\[${REF}\\]`, 'g'), '')
     .replace(new RegExp(`\\b(?:la\\s+)?(?:operaci[oó]n|ref\\.?)\\s+${REF}\\b`, 'gi'), '')
     .replace(new RegExp(`\\s+${REF}\\b`, 'g'), '')
-    .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ');
+    .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ')
+    // (sexta pasada con Haiku, 17 nov) «La puja de la app,, son…», «(44,70 M,)»
+    .replace(/,(?:\s*,)+/g, ',').replace(/,\)/g, ')');
 }
 
 /** el principio de una respuesta, para el aviso del móvil con la app cerrada (sin notas, sin markdown; con los alias) */
