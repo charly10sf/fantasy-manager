@@ -269,3 +269,22 @@ console.log('bajas: bien');
   assert.doesNotMatch(cr, /undefined|NaN|\[object/);
 }
 console.log('resumen con la temporada y la semana del mercado: bien');
+
+// (sesión 4, idea 4) la previsión de mañana y su acierto
+{
+  const { prevision, acierto, contenidoMercado, PROB } = await import('../web/mercado.mjs');
+  const hmP = await hechosMercado(api, { ahora: hoy });
+  const pv = prevision(hmP);
+  assert.ok(pv.suben.some((x) => x.id === '0'), 'el 0 lleva diez días subiendo');
+  assert.ok(pv.bajan.some((x) => x.id === '1'), 'el 1, cinco bajando');
+  assert.ok(pv.suben.every((x) => [PROB.sube3, PROB.sube4, PROB.frena, PROB.acelera].includes(x.p)));
+  assert.equal(acierto({ ...pv, dia: hmP.dia }, hmP), null, 'la del mismo día no se compara');
+  const ac = acierto({ ...pv, dia: '2026-11-14' }, hmP);
+  assert.equal(ac.sN, pv.suben.length);
+  assert.ok(ac.sOk <= ac.sN && ac.bOk <= ac.bN);
+  const cm = contenidoMercado(hmP, { prev: pv, aciertos: [ac, { ...ac, dia: '2026-11-13' }, { ...ac, dia: '2026-11-12' }] });
+  assert.match(cm, /id="manana"/);
+  assert.match(cm, /de acierto/);
+  assert.doesNotMatch(cm, /undefined|NaN|\[object/);
+}
+console.log('previsión de mañana: bien');

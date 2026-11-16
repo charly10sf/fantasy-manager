@@ -113,7 +113,54 @@ const en = (r) => (r ? `../${r}` : null);
 /** una cifra con su línea pequeña debajo, a la derecha (para tablas estrechas en el móvil) */
 const dosL = (arriba, abajo) => `<span class="dos-l">${arriba}<small>${abajo}</small></span>`;
 
-export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN } = {}) {
+// (sesión 4, idea 4) quién sube y quién baja mañana: la probabilidad de seguir de cada jugador en racha, con nuestras cifras de la
+// temporada (guía de valor de mercado, 52.302 cambios): tras 3 días subiendo sigue el 87,3 %, tras 4 el 92,2 %; si la subida de hoy
+// es menos de la mitad que la de ayer, el 61,9 %, y si es mayor, el 98,2 %; tras 3 días bajando, el 88,4 %. Solo rachas de 3 o más.
+export const PROB = { sube3: 87.3, sube4: 92.2, frena: 61.9, acelera: 98.2, baja3: 88.4 };
+const N_PREV = 40;
+/** la previsión de mañana: { dia, suben: [{ id, p, por }], bajan: [...] } (las 40 más probables de cada lado) */
+export function prevision(h) {
+  const conAyer = (f) => (f.serie && f.serie.length >= 3 ? f.serie[f.serie.length - 2] - f.serie[f.serie.length - 3] : null);
+  const suben = h.todas.filter((f) => f.racha >= 3 && f.pos >= 1 && f.pos <= 4).map((f) => {
+    const ay = conAyer(f);
+    const [p, por] = ay > 0 && f.dif > ay ? [PROB.acelera, 'acelera'] : ay > 0 && f.dif < ay / 2 ? [PROB.frena, 'frena'] : f.racha >= 4 ? [PROB.sube4, `${f.racha} días`] : [PROB.sube3, '3 días'];
+    return { id: f.id, p, por };
+  }).sort((a, b) => b.p - a.p || (h.todas.find((f) => f.id === b.id).dif - h.todas.find((f) => f.id === a.id).dif)).slice(0, N_PREV);
+  const bajan = h.todas.filter((f) => f.racha <= -3 && f.pos >= 1 && f.pos <= 4).map((f) => ({ id: f.id, p: PROB.baja3, por: `${-f.racha} días` }))
+    .sort((a, b) => h.todas.find((f) => f.id === a.id).dif - h.todas.find((f) => f.id === b.id).dif).slice(0, N_PREV);
+  return { dia: h.dia, suben, bajan };
+}
+/** cuántas de las previstas ayer se cumplieron hoy: { dia, sN, sOk, bN, bOk } (null si la previsión no es de la víspera) */
+export function acierto(prev, h) {
+  if (!prev || !prev.dia || prev.dia >= h.dia) return null;
+  const dif = new Map(h.todas.map((f) => [f.id, f.dif]));
+  const ok = (xs, signo) => xs.filter((x) => dif.has(x.id) && Math.sign(dif.get(x.id)) === signo).length;
+  const vale = (xs) => xs.filter((x) => dif.has(x.id));
+  return { dia: h.dia, de: prev.dia, sN: vale(prev.suben).length, sOk: ok(prev.suben, 1), bN: vale(prev.bajan).length, bOk: ok(prev.bajan, -1) };
+}
+const pctA = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+/** el bloque de arriba de /mercado/: mañana, con el acierto de ayer y el acumulado */
+function bloqueManana(h, cj, { prev, aciertos = [] }) {
+  const fila = new Map(h.todas.map((f) => [f.id, f]));
+  const t = (xs) => (xs.length ? tabla([{ t: 'Jugador', c: 'j' }, { t: 'Sigue', c: 'n' }, { t: 'Racha', c: 'n m' }], xs.slice(0, 10).map((x) => {
+    const f = fila.get(x.id);
+    return `${cj(f)}<td class="n"><b>${e(coma(x.p))} %</b></td><td class="n m">${dosL(e(x.por), e(dif(f.rachaDif)))}</td>`;
+  })) : '');
+  const ay = aciertos[aciertos.length - 1];
+  const ult = aciertos.filter((a) => a.sN + a.bN > 0).slice(-30);
+  const tot = ult.reduce((s, a) => s + a.sN + a.bN, 0), okT = ult.reduce((s, a) => s + a.sOk + a.bOk, 0);
+  const fr = [];
+  if (ay && ay.dia === h.dia && ay.sN + ay.bN) fr.push(`Ayer dimos ${ay.sN} subidas y ${ay.bN} bajadas para hoy: subieron ${ay.sOk} y bajaron ${ay.bOk} (${pctA(ay.sOk + ay.bOk, ay.sN + ay.bN)} % de acierto).`);
+  if (ult.length >= 3) fr.push(`En los últimos ${ult.length} cambios de mercado, ${pctA(okT, tot)} % de acierto (${okT} de ${tot}).`);
+  if (!fr.length) fr.push('La previsión se guarda cada noche y al día siguiente se compara con lo que pasó: el acierto sale aquí desde el segundo día.');
+  const n1 = h.todas.filter((f) => f.racha >= 3 && f.pos >= 1 && f.pos <= 4).length, n2 = h.todas.filter((f) => f.racha <= -3 && f.pos >= 1 && f.pos <= 4).length;
+  const nAc = prev.suben.filter((x) => x.por === 'acelera').length, nFr = prev.suben.filter((x) => x.por === 'frena').length;
+  const lead = `${n1} jugadores llevan tres días o más subiendo y ${n2} bajando. Con lo que ha pasado esta temporada en rachas así, esta es la probabilidad de que mañana sigan igual${nAc || nFr ? `: entre los ${prev.suben.length} de arriba, ${nAc} han acelerado hoy y ${nFr} han frenado` : ''}. La previsión guarda los ${N_PREV} más probables de cada lado.`;
+  return bloque('Mañana: quién sube y quién baja', `  <p>${e(lead)}</p>\n${pestanas('manana', [['Suben', t(prev.suben)], ['Bajan', t(prev.bajan)]])}\n  <p>${e(fr.join(' '))}</p>`,
+    { id: 'manana', linea: `«Frena»: hoy subió menos de la mitad que ayer; «acelera»: más que ayer. De dónde sale cada porcentaje, en <a href="../guias/valor-de-mercado.html">valor de mercado</a>. Es una tendencia, no una garantía.` });
+}
+
+export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN, prev = null, aciertos = [] } = {}) {
   const cj = (f, sub) => celdaJug(f, { enlace: en(rutas.jugador(f.id)), sub });
   const o = [];
   o.push(`  <h1>Mercado de <span>LaLiga Fantasy</span> hoy</h1>`);
@@ -126,7 +173,8 @@ export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN
   ], 'k4'));
   if (h.proxima) o.push(proximaCaja(h.proxima, { previa, resumen }));
   const ch = h.chollo;
-  o.push(subnav([['hoy', 'Hoy'], ['semana', '7 días'], ['rachas', 'Rachas'], h.maximos.length && ['maximos', 'Máximos'], ch && ['chollo', 'Chollo'], ['equipos', 'Equipos'], ['analisis', 'Análisis']]));
+  if (prev && (prev.suben.length || prev.bajan.length)) o.push(bloqueManana(h, cj, { prev, aciertos }));
+  o.push(subnav([prev && ['manana', 'Mañana'], ['hoy', 'Hoy'], ['semana', '7 días'], ['rachas', 'Rachas'], h.maximos.length && ['maximos', 'Máximos'], ch && ['chollo', 'Chollo'], ['equipos', 'Equipos'], ['analisis', 'Análisis']]));
 
   // hoy: los diez que más suben y bajan, con su minigráfica de 30 días
   const tHoy = (xs) => (xs.length ? tabla([{ t: '#', c: 'n m' }, { t: 'Jugador', c: 'j' }, { t: 'Hoy', c: 'n' }, { t: '30 días', c: 'd' }], xs.map((f, i) => `<td class="n m">${i + 1}</td>${cj(f)}`

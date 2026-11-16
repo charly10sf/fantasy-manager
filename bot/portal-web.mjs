@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'node
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import * as LL from './lib/laliga.mjs';
-import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada } from './web/mercado.mjs';
+import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada, prevision, acierto } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen, resumenCorto, semanaMercado } from './web/resumen.mjs';
 import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
@@ -163,9 +163,14 @@ if (tocaMercado) {
     const prox = hm.proxima;
     const pv = prox && previas().find((p) => p.jornada === prox.jornada);
     const rs = resumenes()[0] || null;
+    // (sesión 4, idea 4) la previsión de mañana: la de ayer se compara con lo de hoy y se guarda la nueva (30 días de acierto)
+    const ac = acierto(estado.prevision, hm);
+    if (ac) { estado.aciertos = [...(estado.aciertos || []).filter((a) => a.dia !== ac.dia), ac].slice(-60); log(`Previsión de ayer: ${ac.sOk}/${ac.sN} subidas y ${ac.bOk}/${ac.bN} bajadas`); }
+    const prev = prevision(hm);
+    if (!estado.prevision || estado.prevision.dia !== prev.dia || forzar) estado.prevision = prev;
     escribirPagina({ ruta: 'mercado/index.html', seccion: 'mercado', titulo: 'Mercado de LaLiga Fantasy hoy: quién sube y quién baja',
       h1: 'Mercado de LaLiga Fantasy hoy', descripcion: `Los jugadores que más suben y bajan hoy en el mercado de LaLiga Fantasy, las rachas, los que están en su máximo y la semana, con el valor de cada uno. Se pone al día cada noche.` },
-    contenidoMercado(hm, { previa: pv ? pv.ruta : null, resumen: rs, rutas }));
+    contenidoMercado(hm, { previa: pv ? pv.ruta : null, resumen: rs, rutas, prev, aciertos: estado.aciertos || [] }));
     escribirPagina({ ruta: 'equipos/index.html', seccion: 'equipos', titulo: 'Equipos de LaLiga Fantasy: valor de cada plantilla',
       h1: 'Equipos de LaLiga Fantasy', descripcion: 'Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.' },
     contenidoEquipos(hm, { rutas, jugadores: hm.nFichas || null }));
