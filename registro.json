@@ -1221,7 +1221,7 @@
   "2300": "ok",
   "2302": "ok",
   "2303": "ok",
-  "2314": "ok",
+  "2314": "injured",
   "2315": "injured",
   "2316": "ok",
   "2317": "out_of_league",
@@ -2015,7 +2015,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2314",
+   "que": "lesion",
+   "antes": "ok",
+   "t": 1794855673586
+  }
+ ],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
@@ -2191,7 +2198,10 @@
    "SPORT|136506735": 1794848428000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
    "SPORT|136513344": 1794850973000,
-   "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000
+   "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000
   },
   "hechos": [
    {
@@ -2550,11 +2560,23 @@
     "motivo": "lesión moderada en el sóleo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/",
+    "medio": "Cadena SER",
+    "t": 1794855373000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "problema en el sóleo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -2714,8 +2736,8 @@
     "t": 0
    },
    "2314": {
-    "e": "ok",
-    "t": 0
+    "e": "injured",
+    "t": 1794855673586
    },
    "2315": {
     "e": "injured",
@@ -3471,17 +3493,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 34,
    "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 614519,
-  "salida": 39329,
+  "entrada": 616727,
+  "salida": 39641,
   "cacheLee": 29030,
   "cacheEscribe": 23224,
-  "dolares": 1.237334,
+  "dolares": 1.237711,
   "reservado": 0
  },
  "recientes": {
@@ -7728,13 +7750,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3182,
+   "ok": 3183,
    "fallos": 0,
-   "ejecuciones": 2575,
+   "ejecuciones": 2576,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T18:56:13.935Z"
+   "ultima": "2026-11-16T19:01:13.586Z"
   }
  },
  "ptsDirecto": {},
@@ -7751,15 +7773,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:56:17.031Z"
+   "ultimaBien": "2026-11-16T19:01:22.064Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:56:17.031Z"
+   "ultimaBien": "2026-11-16T19:01:22.064Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:56:17.031Z"
+   "ultimaBien": "2026-11-16T19:01:22.064Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7767,11 +7789,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:56:17.031Z"
+   "ultimaBien": "2026-11-16T19:01:22.064Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T18:56:17.031Z"
+   "ultimaBien": "2026-11-16T19:01:22.064Z"
   }
  },
  "avisos": [
