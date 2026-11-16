@@ -201,7 +201,6 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   await A.page.click('[data-accion="enviar"]');
   for (let i = 0; i < 40 && !(await A.page.evaluate(() => window.S.tipoHoja && window.S.tipoHoja[0] === 'anuncio')); i++) { await A.page.waitForTimeout(100); await A.page.clock.runFor(300); }
   const hoja = await A.page.evaluate(() => (document.querySelector('.hoja') || {}).innerText || '');
-  if (!/Más preguntas/i.test(hoja)) console.log('   (depurar)', hoja.slice(0, 200));
   ok(/Más preguntas a la IA/i.test(hoja) && /Ver el anuncio/i.test(hoja), 'sin preguntas hoy, en la de Google Play sale la hoja del anuncio');
   await A.page.click('.hoja [data-accion="verAnuncio"]');
   await A.page.clock.runFor(300);
