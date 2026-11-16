@@ -3363,6 +3363,57 @@
     },
     {
       "tipo": "portal",
+      "ruta": "jugadores/pagina-2.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 2)",
+      "h1": "Jugadores de LaLiga Fantasy (página 2)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 151 al 300 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pagina-3.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 3)",
+      "h1": "Jugadores de LaLiga Fantasy (página 3)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 301 al 450 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pagina-4.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 4)",
+      "h1": "Jugadores de LaLiga Fantasy (página 4)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 451 al 600 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
       "ruta": "jugadores/paredes.html",
       "seccion": "equipos",
       "grupo": "jugador",

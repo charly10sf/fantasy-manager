@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson } from '../web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas } from '../web/resumen.mjs';
 import { cara, minigrafica, chipPuntos, clasePuntos, slug, graficaValor, barrasPuntos } from '../web/portal.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie } from '../web/fichas.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, jugadoresJson, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie } from '../web/fichas.mjs';
 import { pestanas, tabla, kpis } from '../web/portal.mjs';
 
 const DIA = 864e5;
@@ -160,7 +160,9 @@ limpio(ix, 'jugadores');
 assert.equal((ix.match(/<tr data-p=/g) || []).length, H.todos.length, 'todos los jugadores en la tabla');
 assert.equal((ix.match(/<a href="[a-z0-9-]+\.html">/g) || []).length, 20, 'los que tienen ficha, enlazados');
 assert.match(ix, /<form class="filtros" id="filtros" hidden>/, 'los filtros, escondidos sin JS');
-assert.match(ix, /<table class="td td-todos" id="todos">/);
+assert.match(ix, /<table class="td td-todos" id="todos" data-todos="todos.json">/);
+assert.doesNotMatch(ix, /<img/, "la tabla de todos, sin caras (sin JS)");
+{ const jj = jugadoresJson(H); assert.equal(jj.length, H.todos.length, "todos en el JSON"); assert.doesNotMatch(JSON.stringify(jj), /undefined|NaN/); assert.equal(contenidoJugadores(H, 2).includes("<tr data-p="), false, "con 144, una sola página"); }
 const ib = indiceBuscador(H);
 assert.equal(ib.j.length, 20); assert.equal(ib.e.length, 12);
 assert.ok(ib.j.every((x) => /^jugadores\/[a-z0-9-]+\.html$/.test(x[2])), 'el buscador lleva a las fichas');

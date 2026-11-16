@@ -523,3 +523,9 @@ h3 + .tabla-scroll { margin-top: 4px; }
 /* (16 nov) al saltar a un bloque, que no quede debajo de la cabecera fija (ni, en el móvil, de los saltos) */
 main [id] { scroll-margin-top: 74px; }
 @media (max-width: 599px) { main [id] { scroll-margin-top: calc(var(--cab-h, 103px) + 62px); } }
+/* jugadores/ por páginas sin JS (16 nov) */
+.paginas { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px; margin: 14px 0 6px; font-weight: 600; }
+.paginas a, .paginas b { padding: 6px 10px; border-radius: 8px; }
+.paginas a { color: var(--texto); background: var(--plano); border: 1px solid var(--linea); text-decoration: none; }
+.paginas b { color: #fff; background: var(--rojo); }
+.td-todos .c-j .tjug-t { padding: 2px 0; }

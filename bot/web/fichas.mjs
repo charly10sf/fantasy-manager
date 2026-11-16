@@ -430,19 +430,30 @@ export function contenidoJugador(x, H) {
 /** para el buscador y los filtros: el nombre sin tildes ni mayúsculas */
 const plano = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
+/** cuántos jugadores por página en jugadores/ (sin JS se lee por páginas; con JS, la tabla entera de jugadores/todos.json) */
+export const POR_PAGINA = 150;
+export const nPaginasJugadores = (H) => Math.max(1, Math.ceil(H.todos.length / POR_PAGINA));
+const rutaPagina = (n) => (n === 1 ? './' : `pagina-${n}.html`);
+
+/** la celda del jugador en la tabla de todos: sin cara ni escudo (16 nov, idea 9: 1.173 imágenes hacían la página de 18 s en un móvil) */
+const celdaLigera = (x, enlace, sub) => `<td class="c-j"><span class="tjug-t"><b>${enlace ? `<a href="${e(enlace)}">${e(x.nombre)}</a>` : e(x.nombre)}</b><small>${e(sub)}</small></span></td>`;
+const subJug = (x) => `${POS[x.pos]} · ${x.equipo}${!x.ok && ESTADOS[x.estado] ? ` · ${ESTADOS[x.estado]}` : ''}`;
+
 /**
- * jugadores/: TODOS los jugadores de LaLiga en una tabla (los que tienen ficha, enlazados), ordenada por valor. Con JavaScript
- * (web/portal/portal.js) se filtra por puesto, equipo y nombre y se ordena por valor, puntos, media o subida; sin él se lee entera.
+ * jugadores/ (y jugadores/pagina-N.html): TODOS los jugadores de LaLiga, por valor, de 150 en 150 (los que tienen ficha, enlazados).
+ * Con JavaScript (web/portal/portal.js) la tabla se rehace con los 576 de jugadores/todos.json, con sus caras, y se filtra por puesto,
+ * equipo y nombre y se ordena por valor, puntos, media o subida; sin él se lee por páginas. Las páginas 2 en adelante, sin indexar.
  */
-export function contenidoJugadores(H) {
+export function contenidoJugadores(H, pag = 1) {
   const o = [];
   const todos = [...H.todos].sort((a, b) => b.valor - a.valor);
-  const n = H.jugadores.length;
+  const n = H.jugadores.length, np = nPaginasJugadores(H);
+  const desde = (pag - 1) * POR_PAGINA, trozo = todos.slice(desde, desde + POR_PAGINA);
   const caro = todos[0];
   const mejor = [...todos].filter((x) => x.jugados >= 5).sort((a, b) => b.media - a.media)[0];
   const sube = [...todos].sort((a, b) => b.dif - a.dif)[0];
-  o.push(`  <h1>Jugadores de <span>LaLiga Fantasy</span></h1>`);
-  o.push(`  <p class="fresco">Los ${todos.length} jugadores de LaLiga · valores del ${e(fechaDia(H.dia))} · se rehace cada noche</p>`);
+  o.push(pag === 1 ? `  <h1>Jugadores de <span>LaLiga Fantasy</span></h1>` : `  <h1>Jugadores de <span>LaLiga Fantasy</span>: del ${desde + 1} al ${desde + trozo.length}</h1>`);
+  o.push(`  <p class="fresco">Los ${todos.length} jugadores de LaLiga, por valor · valores del ${e(fechaDia(H.dia))} · se rehace cada noche</p>`);
   const eqs = [...H.equipos].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
   // los filtros (solo con JS: sin él no harían nada; la tabla ya va ordenada por valor)
   o.push(`  <form class="filtros" id="filtros" hidden>
@@ -452,17 +463,38 @@ export function contenidoJugadores(H) {
     <label><span>Ordenar por</span><select name="o"><option value="v">Valor</option><option value="pt">Puntos</option><option value="m">Media</option><option value="d">Subida de hoy</option><option value="d7">Subida en 7 días</option></select></label>
   </form>
   <p class="cuenta" id="cuenta" aria-live="polite"></p>`);
-  const filas = todos.map((x) => {
+  const filas = trozo.map((x) => {
     const r = H.rutas.jugador(x.id);
     return { attrs: ` data-p="${x.pos}" data-e="${e(x.equipoSlug || '')}" data-v="${Math.round(x.valor)}" data-pt="${x.puntos}" data-m="${x.media}" data-d="${Math.round(x.dif)}" data-d7="${Math.round(x.dif7)}" data-n="${e(plano(`${x.nombre} ${x.nombreCompleto}`))}"`,
-      td: celdaJug(x, { enlace: r ? r.split('/').pop() : null, sub: `${POS[x.pos]} · ${x.equipo}${!x.ok && ESTADOS[x.estado] ? ` · ${ESTADOS[x.estado]}` : ''}` })
+      td: celdaLigera(x, r ? r.split('/').pop() : null, subJug(x))
         + `<td class="n">${e(dinero(x.valor))}</td><td class="n c-d">${cambio(x.dif, dif(x.dif))}</td><td class="n m c-d7">${cambio(x.dif7, dif(x.dif7))}</td><td class="n c-pt">${x.puntos}</td><td class="n c-me">${e(coma(x.media))}</td>` };
   });
-  o.push(tabla([{ t: 'Jugador', c: 'j' }, { t: 'Valor', c: 'n' }, { t: 'Hoy', c: 'n c-d' }, { t: '7 días', c: 'n m c-d7' }, { t: 'Pts', c: 'n c-pt' }, { t: 'Media', c: 'n c-me' }], filas, { clase: 'td-todos', id: 'todos' }));
+  o.push(tabla([{ t: 'Jugador', c: 'j' }, { t: 'Valor', c: 'n' }, { t: 'Hoy', c: 'n c-d' }, { t: '7 días', c: 'n m c-d7' }, { t: 'Pts', c: 'n c-pt' }, { t: 'Media', c: 'n c-me' }], filas, { clase: 'td-todos', id: 'todos' })
+    .replace('id="todos">', 'id="todos" data-todos="todos.json">'));
   o.push(`  <p class="mas-f"><button type="button" class="btn sec" id="ver-mas" hidden>Ver más jugadores</button></p>`);
-  o.push(bloque('Quién vale más y quién puntúa más', `  <p>${e(`Aquí están los ${todos.length} jugadores que siguen en LaLiga Fantasy, con su valor de mercado de hoy, lo que han ganado o perdido en el último cambio y en siete días, sus puntos de la temporada y su media por partido jugado. El que más vale hoy es ${caro.nombre} (${caro.equipo}), con ${dinero(caro.valor)}${mejor ? `; el de mejor media entre los que llevan cinco partidos o más, ${mejor.nombre}, con ${coma(mejor.media)}` : ''}${sube && sube.dif > 0 ? `, y el que más ha subido hoy, ${sube.nombre} (${dif(sube.dif)})` : ''}.`)}</p>\n  <p>${e(`Los ${n} que más pesan en el juego (titulares habituales, los de buena media y los más caros) tienen ficha propia, con su valor día a día, sus puntos de cada jornada, los minutos, la titularidad y sus próximos rivales: van enlazados en la tabla.`)}</p>`, { id: 'analisis' }));
-  o.push(bloque('De dónde salen los datos', `  <p>Tienen ficha los jugadores que juegan de titular la mitad de las veces o más, los que llevan 3 puntos de media o más y los que valen 8 M o más, empezando por los más caros. Los valores y los puntos son los de LaLiga Fantasy para todas las ligas. Los 20 equipos, en <a href="../equipos/">equipos</a>.</p>`));
+  if (np > 1) {
+    const enl = Array.from({ length: np }, (_, i) => i + 1).map((k) => (k === pag ? `<b aria-current="page">${k}</b>` : `<a href="${rutaPagina(k)}">${k}</a>`)).join(' ');
+    o.push(`  <nav class="paginas" id="paginas" aria-label="Páginas">${pag > 1 ? `<a href="${rutaPagina(pag - 1)}">‹ Anteriores</a> ` : ''}${enl}${pag < np ? ` <a href="${rutaPagina(pag + 1)}">Siguientes ›</a>` : ''}</nav>`);
+  }
+  if (pag === 1) {
+    o.push(bloque('Quién vale más y quién puntúa más', `  <p>${e(`Aquí están los ${todos.length} jugadores que siguen en LaLiga Fantasy, de ${POR_PAGINA} en ${POR_PAGINA} y del más caro al más barato, con su valor de mercado de hoy, lo que han ganado o perdido en el último cambio y en siete días, sus puntos de la temporada y su media por partido jugado. El que más vale hoy es ${caro.nombre} (${caro.equipo}), con ${dinero(caro.valor)}${mejor ? `; el de mejor media entre los que llevan cinco partidos o más, ${mejor.nombre}, con ${coma(mejor.media)}` : ''}${sube && sube.dif > 0 ? `, y el que más ha subido hoy, ${sube.nombre} (${dif(sube.dif)})` : ''}.`)}</p>\n  <p>${e(`Los ${n} que más pesan en el juego (titulares habituales, los de buena media y los más caros) tienen ficha propia, con su valor día a día, sus puntos de cada jornada, los minutos, la titularidad y sus próximos rivales: van enlazados en la tabla.`)} Cómo se calcula cada cifra, en <a href="../metodo.html">cómo calculamos</a>.</p>`, { id: 'analisis' }));
+  }
   return o.join('\n');
+}
+
+/** jugadores/todos.json: los de la tabla con JS (web/portal/portal.js), en listas cortas:
+    [ficha, nombre, sub, puesto, equipo (slug), valor, puntos, media, dif, dif7, buscar, valor txt, dif txt, dif7 txt, media txt, cara, encuadre, escudo, club] */
+export function jugadoresJson(H) {
+  return [...H.todos].sort((a, b) => b.valor - a.valor).map((x) => {
+    const r = H.rutas.jugador(x.id);
+    const c = cara(x, 'p');
+    const u = (c.match(/<img class="cara[^"]*" src="([^"]+)"/) || [])[1] || '';
+    const st = (c.match(/<img class="cara[^"]*"[^>]* style="([^"]+)"/) || [])[1] || '';
+    const es = (c.match(/<img class="esc" src="([^"]+)"/) || [])[1] || '';
+    const des = (s) => s.replace(/&amp;/g, '&');
+    return [r ? r.split('/').pop() : '', x.nombre, subJug(x), x.pos, x.equipoSlug || '', Math.round(x.valor), x.puntos, x.media, Math.round(x.dif), Math.round(x.dif7),
+      plano(`${x.nombre} ${x.nombreCompleto}`), dinero(x.valor), dif(x.dif), dif(x.dif7), coma(x.media), des(u), st, des(es), x.equipo];
+  });
 }
 
 /** lo que lee el buscador del menú (web/portal/portal.js): los jugadores con ficha y los 20 equipos, rutas desde la raíz */
@@ -490,6 +522,10 @@ export function metasJugador(x) {
     migas: [['Inicio', ''], ['Equipos', 'equipos/'], [x.club, `equipos/${x.equipoSlug}.html`]],
     sobre: { '@type': 'Person', name: x.nombreCompleto, memberOf: { '@type': 'SportsTeam', name: x.club } } };
 }
+export const metasPaginaJugadores = (n) => ({ ruta: `jugadores/pagina-${n}.html`, seccion: 'equipos', grupo: 'jugadores', indexar: false,
+  titulo: `Jugadores de LaLiga Fantasy por valor (página ${n})`, h1: `Jugadores de LaLiga Fantasy (página ${n})`,
+  descripcion: `Los jugadores de LaLiga Fantasy del ${(n - 1) * POR_PAGINA + 1} al ${n * POR_PAGINA} por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.`,
+  migas: [['Inicio', ''], ['Equipos', 'equipos/'], ['Jugadores', 'jugadores/']] });
 export const metasJugadores = () => ({ ruta: 'jugadores/index.html', seccion: 'equipos', grupo: 'jugadores',
   titulo: 'Jugadores de LaLiga Fantasy: valor y puntos de cada uno', h1: 'Jugadores de LaLiga Fantasy',
   descripcion: 'Todos los jugadores de LaLiga Fantasy con su valor de mercado, lo que suben o bajan hoy, sus puntos y su media, con filtros por puesto y equipo. Se pone al día cada noche.',

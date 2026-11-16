@@ -98,6 +98,47 @@
   if (!tabla || !filtros) return;
   var cuerpo = tabla.tBodies[0];
   var filas = Array.prototype.slice.call(cuerpo.rows);
+  // (16 nov) sin JS la tabla va por páginas de 150 y sin caras; con JS se rehace con todos (jugadores/todos.json) y sus caras
+  var hazFila = function (x) {
+    var tr = document.createElement('tr');
+    var d = tr.dataset;
+    d.p = String(x[3]); d.e = x[4]; d.v = String(x[5]); d.pt = String(x[6]); d.m = String(x[7]); d.d = String(x[8]); d.d7 = String(x[9]); d.n = x[10];
+    var td = function (cls, hijo) { var c = document.createElement('td'); c.className = cls; if (typeof hijo === 'string') c.textContent = hijo; else if (hijo) c.appendChild(hijo); tr.appendChild(c); return c; };
+    var cambio = function (n, t) { var s = document.createElement('span'); s.className = n > 0 ? 'sube' : n < 0 ? 'baja' : 'igual'; s.textContent = (n > 0 ? '▲ ' : n < 0 ? '▼ ' : '= ') + t; return s; };
+    var div = document.createElement('div'); div.className = 'tjug';
+    var w = document.createElement('span'); w.className = 'ava-w ava-p';
+    var a = document.createElement('span'); a.className = 'ava p' + x[3];
+    var ini = document.createElement('span'); ini.className = 'ini'; ini.setAttribute('aria-hidden', 'true');
+    ini.textContent = String(x[1] || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(function (p) { return p.charAt(0); }).join('').toUpperCase();
+    a.appendChild(ini);
+    if (x[15]) {
+      var im = document.createElement('img'); im.className = 'cara' + (x[16] ? ' enc' : ''); im.src = x[15]; im.alt = ''; im.width = 36; im.height = 36;
+      if (x[16]) im.setAttribute('style', x[16]);
+      im.loading = 'lazy'; im.decoding = 'async'; im.referrerPolicy = 'no-referrer'; a.appendChild(im);
+    }
+    w.appendChild(a);
+    if (x[17]) { var es = document.createElement('img'); es.className = 'esc'; es.src = x[17]; es.alt = x[18]; es.width = 20; es.height = 20; es.loading = 'lazy'; es.decoding = 'async'; es.referrerPolicy = 'no-referrer'; w.appendChild(es); }
+    var t = document.createElement('span'); t.className = 'tjug-t';
+    var b = document.createElement('b');
+    if (x[0]) { var en = document.createElement('a'); en.href = x[0]; en.textContent = x[1]; b.appendChild(en); } else b.textContent = x[1];
+    var sm = document.createElement('small'); sm.textContent = x[2];
+    t.appendChild(b); t.appendChild(sm); div.appendChild(w); div.appendChild(t);
+    td('c-j', div); td('n', x[11]); td('n c-d', cambio(x[8], x[12])); td('n m c-d7', cambio(x[9], x[13])); td('n c-pt', String(x[6])); td('n c-me', x[14]);
+    return tr;
+  };
+  var cargarTodos = function () {
+    var u = tabla.getAttribute('data-todos');
+    if (!u || !window.fetch) return Promise.resolve();
+    return fetch(u, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (xs) {
+      if (!Array.isArray(xs) || !xs.length) return;
+      var nuevas = xs.map(hazFila);
+      cuerpo.textContent = '';
+      nuevas.forEach(function (f) { cuerpo.appendChild(f); });
+      filas = nuevas;
+      var pg = document.getElementById('paginas');
+      if (pg) pg.hidden = true;
+    }).catch(function () { /* sin la lista, la tabla de esta página */ });
+  };
   var cuenta = document.getElementById('cuenta');
   var mas = document.getElementById('ver-mas');
   var TANDA = 60;
@@ -143,5 +184,5 @@
   q.addEventListener('input', function () { est.q = q.value; aplicar(true); });
   filtros.addEventListener('submit', function (ev) { ev.preventDefault(); });
   mas.addEventListener('click', function () { visibles += TANDA; aplicar(false); });
-  aplicar(true);
+  cargarTodos().then(function () { aplicar(true); });
 })();
