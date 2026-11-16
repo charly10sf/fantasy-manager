@@ -1983,8 +1983,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/13/alvaro-juan-regresa-convocatoria-racing-club-ferrol-tras-seis-meses/00031794566195015609667.htm": 1794569580000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
@@ -2145,23 +2143,12 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000,
    "SPORT|136489634": 1794823200000,
    "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html",
-    "medio": "MARCA",
-    "t": 1794569698000,
-    "id": "2607",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "molestias en el tendón rotuliano",
-    "plazo": "",
-    "nums": [
-     10
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html",
     "medio": "Mundo Deportivo",
@@ -2384,7 +2371,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3296,17 +3283,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 474762,
-  "salida": 20721,
+  "entrada": 477201,
+  "salida": 21003,
   "cacheLee": 29030,
   "cacheEscribe": 8709,
-  "dolares": 1.030938,
+  "dolares": 1.031323,
   "reservado": 0
  },
  "recientes": {
@@ -7553,13 +7540,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3092,
+   "ok": 3093,
    "fallos": 0,
-   "ejecuciones": 2485,
+   "ejecuciones": 2486,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:31:17.139Z"
+   "ultima": "2026-11-16T11:36:13.768Z"
   }
  },
  "ptsDirecto": {},
@@ -7576,15 +7563,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:31:25.737Z"
+   "ultimaBien": "2026-11-16T11:36:19.597Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:31:25.737Z"
+   "ultimaBien": "2026-11-16T11:36:19.597Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:31:25.737Z"
+   "ultimaBien": "2026-11-16T11:36:19.597Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7592,11 +7579,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:31:25.737Z"
+   "ultimaBien": "2026-11-16T11:36:19.597Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:31:25.737Z"
+   "ultimaBien": "2026-11-16T11:36:19.597Z"
   }
  },
  "avisos": [
