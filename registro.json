@@ -2182,7 +2182,8 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
-   "SPORT|136505787": 1794839189000
+   "SPORT|136505787": 1794839189000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000
   },
   "hechos": [
    {
@@ -2494,7 +2495,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3410,17 +3411,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 32,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 561872,
-  "salida": 32591,
+  "entrada": 563917,
+  "salida": 32711,
   "cacheLee": 29030,
   "cacheEscribe": 17418,
-  "dolares": 1.156215,
+  "dolares": 1.156479,
   "reservado": 0
  },
  "recientes": {
@@ -7667,13 +7668,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3145,
+   "ok": 3146,
    "fallos": 0,
-   "ejecuciones": 2538,
+   "ejecuciones": 2539,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T16:00:29.435Z"
+   "ultima": "2026-11-16T16:01:13.917Z"
   }
  },
  "ptsDirecto": {},
@@ -7690,15 +7691,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:00:36.366Z"
+   "ultimaBien": "2026-11-16T16:01:20.416Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:00:36.366Z"
+   "ultimaBien": "2026-11-16T16:01:20.416Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:00:36.366Z"
+   "ultimaBien": "2026-11-16T16:01:20.416Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7706,11 +7707,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:00:36.366Z"
+   "ultimaBien": "2026-11-16T16:01:20.416Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T16:00:36.366Z"
+   "ultimaBien": "2026-11-16T16:01:20.416Z"
   }
  },
  "avisos": [
