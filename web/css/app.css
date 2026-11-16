@@ -3266,3 +3266,37 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .sj-barra a { text-decoration: none; font-weight: 600; }
 .sj-barra b { color: var(--texto); }
 .sj-barra .sj-cta { margin-left: auto; padding: 6px 12px; border-radius: 999px; background: var(--rojo-btn); color: #fff; }
+
+/* (0.7.13n) en los ajustes del plan, cuántos hay gratis */
+.plan-cupo { display: flex; gap: 8px; align-items: flex-start; margin: 12px 2px 0; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto2); }
+.plan-cupo .ic { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--apagado); }
+
+/* (0.7.13n) Quién usa la app, más visual: cifras, chapitas de lo que hay que mirar y tarjetas con gráficas */
+.q-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 0 10px; }
+.q-kpi > div { padding: 10px 6px 8px; border-radius: var(--r-ctl); background: var(--plano); text-align: center; }
+.q-kpi b { display: block; font: 700 30px/1 var(--cond); color: var(--texto); }
+.q-kpi span { display: block; margin-top: 3px; font-size: var(--t-mini); color: var(--apagado); }
+.q-kpi .vivo b { color: var(--sube); }
+.q-chapas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.q-chapa { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 197, 71, 0.45); background: var(--oro-s); color: var(--texto); font: 500 var(--t-sec2) 'Barlow'; cursor: pointer; }
+.q-chapa .ic { width: 14px; height: 14px; color: var(--oro); }
+.q-chapa b { font-weight: 700; }
+.q-bien { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: var(--t-sec2); color: var(--sube); }
+.q-bien .ic { width: 15px; height: 15px; }
+.qc { margin: 12px 0 0; padding: 12px 13px; border-radius: var(--r-ctl); background: var(--plano); }
+.qc h3 { margin: 0 0 6px; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
+.qc .graf { margin: 2px 0 0; }
+.qc-pie { margin: 8px 0 0; font-size: var(--t-mini); color: var(--apagado); }
+.qc-pie b { color: var(--texto2); }
+.qh { display: grid; gap: 6px; }
+.qh + .qh { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--linea); }
+.qh-f { display: grid; grid-template-columns: minmax(84px, 36%) 1fr 72px; align-items: center; gap: 8px; font-size: var(--t-sec2); }
+.qh-f span { color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qh-f i { height: 10px; border-radius: 5px; background: var(--plano2); }
+.qh-f i::before { content: ''; display: block; width: calc(var(--n) * 1%); min-width: 3px; height: 100%; border-radius: 5px; background: var(--texto2); opacity: 0.75; }
+.qh-emb .qh-f:last-child i::before { background: var(--sube); opacity: 1; }
+.qh-mal .qh-f i::before { background: var(--rojo-l); opacity: 1; }
+.qh-f b { font-weight: 700; color: var(--texto); white-space: nowrap; text-align: right; }
+.qh-f b small { font-weight: 500; color: var(--apagado); font-size: var(--t-mini); }
+.q-prog { height: 8px; margin: 2px 0 8px; border-radius: 4px; background: var(--plano2); overflow: hidden; }
+.q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }

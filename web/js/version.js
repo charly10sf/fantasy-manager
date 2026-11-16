@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13m';
+export const VERSION = '0.7.13n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -22,6 +22,14 @@ export const VERSION = '0.7.13m';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    v: '0.7.13n', f: '2026-11-16', h: '05:41', t: 'Cada liga, a su hora',
+    cosas: [
+      { tipo: 'arreglo', importante: true, d: 'reloj', t: 'Los planes, con el mercado de tu liga', x: 'Cada liga tiene su hora de mercado. Los planes que salen solos van con la tuya: el primero, 10 minutos después de que se refresque el mercado de tu liga, y el segundo, 12 horas después.' },
+      { tipo: 'mejora', d: 'plan', t: 'Los ajustes del plan, más claros', x: 'Ya no está la imagen del plan para compartir. En su lugar se explica cuántos planes tienes: 2 gratis cada día y, a partir del tercero, cada uno con un anuncio.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, con gráficas', x: 'Menos texto y más gráficas: activos cada día, altas por semana, antes de entrar, desde dónde, el tiempo de hoy y qué hacen. Lo que hay que mirar, en chapitas arriba; las cuentas, en su pestaña.' },
+    ],
+  },
+  {
     v: '0.7.13m', f: '2026-11-16', h: '01:29', t: 'Los datos del día, en la portada',
     cosas: [
       { para: 'web', tipo: 'mejora', d: 'periodico', t: 'La portada, con los datos del día', x: 'Al abrir la web, lo primero son los datos de LaLiga Fantasy de hoy: los que más suben, la próxima jornada y los accesos al mercado, las jornadas, los equipos, los jugadores y las guías. La barra de arriba se queda siempre fija, y lo que es la app está en su apartado, «La app».' },
@@ -30,8 +38,8 @@ export const NOVEDADES = [
   {
     v: '0.7.13l', f: '2026-11-16', h: '01:17', t: 'Tu plan, a su hora',
     cosas: [
-      { tipo: 'nuevo', importante: true, d: 'reloj', t: 'Los planes con la IA salen solos', x: 'Uno de tus dos planes del día sale solo 10 minutos después de que se actualice el mercado (hacia las 00:25) y el otro 12 horas después (hacia las 12:25). Si prefieres otras horas, elígelas en los ajustes del plan o en Ajustes → La IA. Los que salen solos cuentan como dos de los planes del día.' },
-      { tipo: 'mejora', d: 'plan', t: '«Rehacer el plan», a mano', x: 'Arriba del plan, en grande, «Rehacer el plan». Al lado, sus ajustes: el tono de las bromas, a qué horas sale solo y la imagen del plan para el grupo de tu liga.' },
+      { tipo: 'nuevo', importante: true, d: 'reloj', t: 'Los planes con la IA salen solos', x: 'Uno de tus dos planes del día sale solo 10 minutos después de que se actualice el mercado de tu liga y el otro 12 horas después. Si prefieres otras horas, elígelas en los ajustes del plan o en Ajustes → La IA. Los que salen solos cuentan como dos de los planes del día.' },
+      { tipo: 'mejora', d: 'plan', t: '«Rehacer el plan», a mano', x: 'Arriba del plan, en grande, «Rehacer el plan». Al lado, sus ajustes: el tono de las bromas y a qué horas sale solo.' },
     ],
   },
   {

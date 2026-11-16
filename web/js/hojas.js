@@ -3,7 +3,7 @@ import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
-import { linea, barra, mini } from './graficos.js';
+import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
@@ -781,11 +781,14 @@ const antesOpts = (k) => OPC_ANTES[k].map((m) => [m, antesTxt(m)]);
 const OPC_HORA = Array.from({ length: 48 }, (_, i) => { const t = `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`; return [t, t]; });
 function filasHorasPlan(S, pApp) {
   const c = cfgHoras(), hs = horasPlan(S.M), def = horasDefecto(S.M);
-  const sub = c.on ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Apagado: solo cuando lo pidas';
+  // (0.7.13n) la de cada liga: 10 minutos después de que se refresque SU mercado
+  const d1 = def ? `${def[0]}, 10 min después de que se refresque el mercado de tu liga` : '10 min después de que se refresque el mercado de tu liga';
+  const d2 = def ? `${def[1]}, 12 h después` : '12 h después del primero';
+  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después';
   let h = fila('Planes que salen solos', sub, interr(c.on, 'planesHora', '', 'Planes que salen solos'), 'plan automatico hora horas');
   if (c.on) {
-    h += fila('Primer plan', `Por defecto, ${def[0]}: 10 minutos después de que se refresque el mercado`, selA('planH1', [['', `${def[0]} (mercado)`], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
-    h += fila('Segundo plan', `Por defecto, ${def[1]}: 12 horas después`, selA('planH2', [['', `${def[1]} (+12 h)`], ...OPC_HORA], c.h2 || '', 'Hora del segundo plan'), 'plan hora');
+    h += fila('Primer plan', `Por defecto, ${d1}`, selA('planH1', [['', def ? `${def[0]} (mercado)` : 'Con el mercado'], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
+    h += fila('Segundo plan', `Por defecto, ${d2}`, selA('planH2', [['', def ? `${def[1]} (+12 h)` : '+12 h'], ...OPC_HORA], c.h2 || '', 'Hora del segundo plan'), 'plan hora');
   }
   return h;
 }
@@ -799,7 +802,8 @@ export function planAjustesHTML(S) {
   h += `</div>`;
   if (cu && !cu.ilimitado) h += `<p class="t2 peq" style="margin:6px 2px 0">${cu.quedan > 0 ? (cu.quedan === 1 ? 'Hoy te queda 1 plan con la IA.' : `Hoy te quedan ${cu.quedan} planes con la IA.`) : 'Hoy ya no te quedan planes con la IA.'}</p>`;
   h += `<button class="btn ancho" style="margin-top:14px" data-accion="planYa">${icono('ia')}Rehacer el plan ahora</button>`;
-  h += `<button class="btn ancho sec" style="margin-top:8px" data-accion="tarjeta">${icono('enviar')}Imagen del plan para el grupo</button>`;
+  // (0.7.13n, Carlos 16 nov) sin imagen ni «Compartir»: en su lugar, cuántos planes hay gratis
+  if (pApp) h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>2 planes gratis</b> cada día. A partir del tercero, ${enApp && nativo.canal() === 'play' ? 'cada uno con un anuncio' : 'en la app de Google Play, cada uno con un anuncio'}.</span></p>`;
   return h;
 }
 
@@ -1057,11 +1061,11 @@ function bandejaAvisos(A) {
 }
 
 /* ================= QUIÉN USA LA APP (el dueño) ================= */
-/* (0.7.13k, Carlos, 16 nov: «más sencilla e intuitiva») arriba, las cifras de un vistazo y lo que hay que mirar (quién tiene
-   la app de Google Play vieja y por eso no le llega la web nueva, quién sigue con el APK de GitHub, a quién no le carga la
-   liga); debajo, cuatro pestañas: Cuentas (tu liga y el resto, con la versión de la web y de la app de cada uno), Tiempo,
-   Antes de entrar y Altas. Se abre tocando la etiqueta BETA del logo (solo el dueño) o desde Ajustes */
-const QUIEN_TABS = [['cuentas', 'Cuentas'], ['tiempo', 'Tiempo'], ['entrar', 'Antes de entrar'], ['altas', 'Altas']];
+/* (0.7.13n, Carlos 16 nov: «más intuitivo, con mucho menos texto, y más gráficas») se abre tocando la etiqueta BETA del
+   logo (solo el dueño) o desde Ajustes. Dos pestañas: Resumen (cuatro cifras, lo que hay que mirar en chapitas y gráficas:
+   activos cada día, altas por semana, antes de entrar, desde dónde, tiempo de hoy y qué hacen) y Cuentas (tu liga y el
+   resto, con su versión de la web y de la app de Google Play y una chapita roja si algo va mal). Sin notas al pie */
+const QUIEN_TABS = [['resumen', 'Resumen'], ['cuentas', 'Cuentas']];
 const DENTRO_Q = 12 * 60e3;
 const webDe = (x) => String((x && x.v) || '').replace(/ !$/, '');
 /** el código de la app de Google Play a partir del cual llega la web de ahora: «playMin» de limites.json y, si no está,
@@ -1073,91 +1077,146 @@ export function playMinimo(lista) {
   const al = (lista || []).filter((x) => x.canal === 'play' && x.app > 0 && webDe(x) === VERSION).map((x) => x.app);
   return al.length ? Math.min(...al) : 0;
 }
-/** lo que le pasa a una cuenta: { tipo, txt } o null. playVieja: su app de Google Play no recibe la web nueva */
+/** lo que le pasa a una cuenta: { tipo, corto } o null (play: su app de Google Play no recibe la web nueva) */
 export function problemaDe(x, minPlay) {
   if (!x) return null;
   const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
-  if (x.canal === 'github') return { tipo: 'github', txt: 'APK de GitHub: ya no se actualiza, tiene que pasarse a Google Play' };
-  if (x.canal === 'play' && atras && minPlay && x.app > 0 && x.app < minPlay) return { tipo: 'play', txt: `App de Google Play vieja (${x.app}; hace falta la ${minPlay}): no le llega la web nueva hasta que Google Play se la actualice` };
-  if (/ !$/.test(x.v || '')) return { tipo: 'carga', txt: 'No le carga la liga' };
-  if (atras && x.ad) return { tipo: 'web', txt: `La web no se le pone sola: ${x.ad}` };
+  if (x.canal === 'github') return { tipo: 'github', corto: 'APK de fuera', largo: 'con la app de fuera de Play' };
+  if (x.canal === 'play' && atras && minPlay && x.app > 0 && x.app < minPlay) return { tipo: 'play', corto: 'App de Play vieja', largo: 'con la app de Play vieja' };
+  if (/ !$/.test(x.v || '')) return { tipo: 'carga', corto: 'No le carga', largo: 'sin cargar la liga' };
+  if (atras && x.ad) return { tipo: 'web', corto: 'Web sin poner', largo: 'sin la web nueva' };
   return null;
 }
+/** barras en horizontal: [[etiqueta, valor, texto del valor?]] */
+const barrasH = (filas, { max = null, clase = '' } = {}) => {
+  const tope = max || Math.max(1, ...filas.map((f) => f[1]));
+  return `<div class="qh ${clase}">${filas.map(([et, v, txt]) => `<div class="qh-f"><span>${esc(et)}</span><i style="--n:${Math.round((v / tope) * 100)}"></i><b>${txt != null ? txt : v}</b></div>`).join('')}</div>`;
+};
+const tarjetaQ = (titulo, cuerpo, pie = '') => `<section class="qc"><h3>${titulo}</h3>${cuerpo}${pie ? `<p class="qc-pie">${pie}</p>` : ''}</section>`;
+const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
+const diaEt = (d) => { const t = new Date(`${d}T12:00:00Z`); return ['D', 'L', 'M', 'X', 'J', 'V', 'S'][t.getUTCDay()]; };
+
 export function quienUsaHTML(S) {
   const Q = S.quien || {};
   let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
-  const lista = Q.lista || [], ahora = Q.ahora || Date.now();
+  const lista = Q.lista || [], ahora = Q.ahora || Date.now(), reg = Q.registro || [];
   const minPlay = playMinimo(lista);
+  const hace = (d) => ahora - d * DIA;
+  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO_Q).length;
+  const hoyN = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length;
+  const base = reg.length ? reg : lista;
+  const sem = base.filter((x) => x.ultima >= hace(7)).length;
+  h += `<div class="q-kpi">
+    <div class="${dentro ? 'vivo' : ''}"><b>${dentro}</b><span>dentro ahora</span></div>
+    <div><b>${hoyN}</b><span>hoy</span></div>
+    <div><b>${sem}</b><span>7 días</span></div>
+    <div><b>${base.length}</b><span>total</span></div>
+  </div>`;
+  // lo que hay que mirar (de los de 30 días), en chapitas que llevan a Cuentas
+  const grupos = {};
+  for (const x of lista.filter((y) => y.ultima >= hace(30))) { const p = problemaDe(x, minPlay); if (p) (grupos[p.tipo] = grupos[p.tipo] || { p, n: 0 }).n++; }
+  const chapas = ['play', 'github', 'carga', 'web'].filter((k) => grupos[k]).map((k) => `<button class="q-chapa" data-accion="quienTab" data-t="cuentas">${icono('alerta')}<b>${grupos[k].n}</b> ${esc(grupos[k].p.largo)}</button>`);
+  h += chapas.length ? `<div class="q-chapas">${chapas.join('')}</div>` : `<p class="q-bien">${icono('ok')}Todos al día</p>`;
+  const tab = QUIEN_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'resumen';
+  h += `<div class="filtros q-tabs" role="tablist">${QUIEN_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'activo' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
+  h += tab === 'cuentas' ? cuentasQ(S, lista, ahora, minPlay) : resumenQ(Q, lista, reg, ahora);
+  return h;
+}
+
+function resumenQ(Q, lista, reg, ahora) {
+  const hace = (d) => ahora - d * DIA;
+  let h = '';
+  // activos cada día (los 7 últimos, por el tiempo de cada uno)
+  const ds = (Array.isArray(Q.dias) && Q.dias.length ? Q.dias : Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA))).slice(0, 7);
+  const act = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.filter((x) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) > 0).length, yo: i === 0 })).reverse();
+  if (act.some((x) => x.v)) h += tarjetaQ('Activos cada día', barras(act, { alto: 110 }));
+  // altas por semana (8)
+  if (reg.length) {
+    const semanas = Array.from({ length: 8 }, (_, i) => {
+      const hasta = hace(7 * i), desde = hace(7 * (i + 1));
+      return { et: i ? fechaCorta(desde).replace(/ de /, ' ') : 'Esta', v: reg.filter((x) => x.primera >= desde && x.primera < hasta).length, yo: i === 0 };
+    }).reverse();
+    const nuevosHoy = reg.filter((x) => diaDe(x.primera) === diaDe(ahora)).length;
+    h += tarjetaQ('Altas por semana', barras(semanas, { alto: 110 }), nuevosHoy ? `<b>${nuevosHoy}</b> nuevas hoy` : '');
+  }
+  // antes de entrar (7 días): el embudo
+  if (Q.embudo && Q.embudo.dias && Object.keys(Q.embudo.dias).length) h += embudoQ(Q.embudo, ahora);
+  // desde dónde (los de 30 días)
+  const act30 = lista.filter((x) => x.ultima >= hace(30));
+  const donde = [['Google Play', 'play'], ['Web', 'web'], ['APK de fuera', 'github']].map(([t, k]) => [t, act30.filter((x) => (x.canal || 'web') === k).length]).filter((f) => f[1]);
+  if (donde.length) h += tarjetaQ('Desde dónde · 30 días', barrasH(donde));
+  // tiempo de hoy, los que más
+  const tiempo = lista.map((x) => [x.nombre || x.equipo || 'Sin nombre', Number(((x.segDias || {})[ds[0]]) || x.segHoy || 0)]).filter((f) => f[1] > 0).sort((a, b) => b[1] - a[1]);
+  if (tiempo.length) {
+    const total = tiempo.reduce((t, f) => t + f[1], 0);
+    h += tarjetaQ('Tiempo hoy', barrasH(tiempo.slice(0, 8).map(([n, v]) => [n, v, corto(v)])), `Entre todos, <b>${corto(total)}</b>`);
+  }
+  // qué hacen esta semana
+  const lunes = (() => { const t = new Date(`${diaDe(ahora)}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); })();
+  const semEv = {};
+  for (const x of reg) for (const [k, n] of Object.entries((x.ev || {})[lunes] || {})) semEv[k] = (semEv[k] || 0) + n;
+  const hace7 = [['Planes', 'p'], ['Preguntas al chat', 'q'], ['Anuncios vistos', 'b'], ['Funciones top', 't'], ['Invitaciones', 'n']].map(([t, k]) => [t, semEv[k] || 0]).filter((f) => f[1]);
+  if (hace7.length) {
+    const malas = (semEv.f || 0) + (semEv.F || 0), buenas = (semEv.a || 0) + (semEv.A || 0);
+    h += tarjetaQ('Qué hacen esta semana', barrasH(hace7), buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '');
+  }
+  return h || '<p class="quien-res">Aún no hay nada contado.</p>';
+}
+
+/** antes de entrar (7 días), sin saber de quién: cuántos ven la entrada, le dan a entrar, entran y fallan */
+const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
+function embudoQ(E, ahora) {
+  const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
+  const suma = (paso, solo = null) => Object.entries(E.dias || {}).filter(([d]) => ult7.has(d)).reduce((t, [, g]) => t
+    + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + (paso === 'x-otros' ? OTROS_FALLOS.reduce((v, k) => v + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0), 0), 0);
+  const ven = suma('ver');
+  const pc = (n) => (ven ? `${n} <small>${Math.round((n / ven) * 100)} %</small>` : String(n));
+  const filas = [['Ven la entrada', ven, String(ven)], ['Tocan Google Play', suma('play')], ['Miran el ejemplo', suma('demo')], ['Le dan a entrar', suma('l')], ['Entran', suma('ok')]]
+    .map(([t, v, txt]) => [t, v, txt || pc(v)]);
+  const fallos = [['Falla LaLiga', suma('x-laliga')], ['Cancelan', suma('x-cancel')], ['Otros fallos', suma('x-otros')]].filter((f) => f[1]);
+  const canales = [['Google Play', 'play'], ['Web Android', 'web-android'], ['Web iPhone', 'web-iphone'], ['Web ordenador', 'web-pc']].map(([t, k]) => [t, suma('ver', k), suma('ok', k)]).filter((f) => f[1] || f[2]);
+  let h = barrasH(filas, { max: Math.max(1, ven), clase: 'qh-emb' });
+  if (fallos.length) h += barrasH(fallos, { max: Math.max(1, ven), clase: 'qh-mal' });
+  const pie = canales.length ? canales.map(([t, v, o]) => `${t} <b>${v}</b>→<b>${o}</b>`).join(' · ') : '';
+  return tarjetaQ('Antes de entrar · 7 días', h, pie);
+}
+
+function cuentasQ(S, lista, ahora, minPlay) {
   const porUid = new Map(lista.map((x) => [String(x.uid), x]));
   const D = S.D;
   const tabla = D ? [...D.clasif].sort((a, b) => a.pos - b.pos) : [];
   const deLiga = new Set();
-  // por su número de cuenta; si no cuadra (LaLiga no siempre da el mismo id en la clasificación que en la cuenta),
-  // por el nombre de su equipo en esta liga o por su nombre de mánager
+  // por su número de cuenta; si no cuadra, por el nombre de su equipo en esta liga o por su nombre de mánager
   const ligaId = D && D.liga ? String(D.liga.id) : '';
   const buscar = (e) => porUid.get(String(e.managerId)) || porUid.get(String(e.userId))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && String(x.liga || '') === ligaId && norm(x.equipo) === norm(e.nombre))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.nombre && e.manager && norm(x.nombre) === norm(e.manager));
   const liga = tabla.map((e) => { const x = buscar(e); if (x) deLiga.add(String(x.uid)); return { nombre: e.manager || e.nombre, equipo: e.manager ? e.nombre : '', x }; });
-  const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
-  const hace = (d) => ahora - d * DIA;
-  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO_Q).length;
-  const hoy = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length;
-  const reg = Q.registro || [];
-  const sem = reg.length ? reg.filter((x) => x.ultima >= hace(7)).length : lista.filter((x) => x.ultima >= hace(7)).length;
-  h += `<div class="reg-cifras q-cifras">
-    <div><b>${dentro}</b><span>dentro ahora</span></div>
-    <div><b>${hoy}</b><span>han entrado hoy</span></div>
-    <div><b>${sem}</b><span>activas en 7 días</span></div>
-    <div><b>${reg.length || lista.length}</b><span>cuentas en total</span></div>
-  </div>`;
-  // lo que hay que mirar, de los que han entrado en los últimos 30 días
-  const recientes = lista.filter((x) => x.ultima >= hace(30));
-  const grupos = { play: [], github: [], carga: [], web: [] };
-  for (const x of recientes) { const p = problemaDe(x, minPlay); if (p) grupos[p.tipo].push(x); }
-  const nombres = (xs) => xs.slice(0, 6).map((x) => esc(x.nombre || x.equipo || 'Sin nombre')).join(', ') + (xs.length > 6 ? ` y ${xs.length - 6} más` : '');
-  const alertas = [
-    grupos.play.length && `<b>${grupos.play.length} con la app de Google Play vieja</b>: no les llega la web nueva hasta que Google Play les actualice la app (${nombres(grupos.play)}).`,
-    grupos.github.length && `<b>${grupos.github.length} con el APK de GitHub</b>, que ya no se actualiza (${nombres(grupos.github)}).`,
-    grupos.carga.length && `<b>${grupos.carga.length} a los que no les carga la liga</b> (${nombres(grupos.carga)}).`,
-    grupos.web.length && `<b>${grupos.web.length} a los que la web no se les pone sola</b> (${nombres(grupos.web)}).`,
-  ].filter(Boolean);
-  h += alertas.length
-    ? `<div class="q-alerta">${icono('alerta')}<div>${alertas.map((t) => `<p>${t}</p>`).join('')}</div></div>`
-    : '<p class="quien-res q-ok">Todos los que han entrado en 30 días tienen la app al día.</p>';
-  const tab = QUIEN_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'cuentas';
-  h += `<div class="filtros q-tabs" role="tablist">${QUIEN_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'activo' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
-  if (tab === 'cuentas') {
-    const conApp = liga.filter((f) => f.x).length;
-    if (tabla.length) {
-      h += `<div class="grupo"><span>Tu liga · ${conApp} de ${tabla.length} la usan</span></div>`;
-      // primero los que la usan; los que no, en una línea (antes, una fila por cada uno)
-      const usan = liga.filter((f) => f.x).sort((a, b) => b.x.ultima - a.x.ultima), no = liga.filter((f) => !f.x);
-      if (usan.length) h += `<div class="quien-l">${usan.map((f) => filaQuien(f.nombre, f.equipo, f.x, ahora, minPlay)).join('')}</div>`;
-      if (no.length) h += `<p class="quien-res q-no"><b>No la usan:</b> ${no.map((f) => esc(f.nombre)).join(', ')}.</p>`;
-    }
-    if (fuera.length) h += `<div class="grupo"><span>${tabla.length ? 'De fuera de tu liga' : 'Cuentas'} · ${fuera.length}</span></div><div class="quien-l">${fuera.map((x) => filaQuien(x.nombre || 'Sin nombre', x.equipo, x, ahora, minPlay)).join('')}</div>`;
-    h += '<p class="peq apag" style="margin-top:14px">Punto verde: ha tenido la app abierta en los últimos 12 minutos. «Web» es la versión de la app que tiene puesta y «app», la de Google Play instalada en su móvil. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo no sale.</p>';
-  } else if (tab === 'tiempo') h += tiempoHTML(lista, Q.dias);
-  else if (tab === 'entrar') h += Q.embudo ? embudoHTML(Q.embudo, ahora) : '<p class="quien-res">Aún no hay nada contado.</p>';
-  else h += reg.length ? registradosHTML(reg, lista, ahora) : '<p class="quien-res">Aún no hay altas contadas.</p>';
-  return h;
+  const fuera = lista.filter((x) => !deLiga.has(String(x.uid))).sort((a, b) => b.ultima - a.ultima);
+  let h = '';
+  if (tabla.length) {
+    const usan = liga.filter((f) => f.x).sort((a, b) => b.x.ultima - a.x.ultima), no = liga.filter((f) => !f.x);
+    h += `<div class="grupo"><span>Tu liga · ${usan.length} de ${tabla.length}</span></div>`;
+    h += `<div class="q-prog" role="img" aria-label="${usan.length} de ${tabla.length} la usan"><i style="--n:${Math.round((usan.length / Math.max(1, tabla.length)) * 100)}"></i></div>`;
+    if (usan.length) h += `<div class="quien-l">${usan.map((f) => filaQuien(f.nombre, f.equipo, f.x, ahora, minPlay)).join('')}</div>`;
+    if (no.length) h += `<p class="q-no">Sin la app: ${no.map((f) => esc(f.nombre)).join(', ')}</p>`;
+  }
+  if (fuera.length) h += `<div class="grupo"><span>${tabla.length ? 'Otras ligas' : 'Cuentas'} · ${fuera.length}</span></div><div class="quien-l">${fuera.map((x) => filaQuien(x.nombre || 'Sin nombre', x.equipo, x, ahora, minPlay)).join('')}</div>`;
+  return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
 }
-const DONDE_Q = { web: 'Web', play: 'Google Play', github: 'APK de GitHub' };
+const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK' };
 function filaQuien(nombre, equipo, x, ahora, minPlay) {
-  if (!x) return `<div class="quien-f no"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}Aún no ha entrado</span></div></div>`;
   const esta = ahora - x.ultima < DENTRO_Q;
   const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
   const p = problemaDe(x, minPlay);
   const chips = [
-    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}</i>`,
-    v ? `<i class="q-chip${atras ? ' viejo' : ''}">web ${esc(v)}</i>` : '',
-    x.canal !== 'web' && x.app > 0 ? `<i class="q-chip${p && p.tipo === 'play' ? ' mal' : ''}">app ${esc(String(x.app))}</i>` : '',
+    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
+    v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
+    p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
-  const cuandoTxt = esta ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`;
-  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${cuandoTxt}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${p ? `<span class="q-mal">${esc(p.txt)}</span>` : ''}</div>${x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
+  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${corto(x.segHoy)}` : ''}</span><span class="q-chips">${chips}</span></div></div>`;
 }
 
 /** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */
@@ -1166,124 +1225,6 @@ export function tiempoTxt(seg) {
   if (m < 1) return 'menos de 1 min';
   if (m < 60) return `${m} min`;
   return `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
-}
-/** (el dueño, 0.7t) cuánto tiempo pasa cada uno en la app al día: hoy, ayer, la media de los días que entra y los 7
-    últimos días en barras. Lo manda la app al Worker (/uso); /hola/todos trae los 7 días de los que han entrado esta
-    semana */
-function tiempoHTML(lista, dias) {
-  const ds = Array.isArray(dias) && dias.length ? dias : [diaDe()];
-  const hoy = ds[0], ayer = ds[1];
-  const filas = lista.map((x) => {
-    const sd = x.segDias || (x.segHoy ? { [hoy]: x.segHoy } : {});
-    const vals = ds.map((d) => Number(sd[d]) || 0);
-    const conUso = vals.filter((v) => v > 0);
-    const total = conUso.reduce((a, b) => a + b, 0);
-    return { x, vals, hoy: vals[0], ayer: ayer ? vals[1] : 0, media: conUso.length ? total / conUso.length : 0, nd: conUso.length, total };
-  }).filter((f) => f.total > 0).sort((a, b) => b.hoy - a.hoy || b.media - a.media);
-  let h = `<div class="grupo"><span>Tiempo en la app</span></div>`;
-  if (!filas.length) return `${h}<p class="quien-res">Aún no hay tiempo contado. Se cuenta para todos desde la 0.7t: sale cuando cada uno abra la app con esa versión.</p>`;
-  const max = Math.max(60, ...filas.flatMap((f) => f.vals));
-  const sumaHoy = filas.reduce((a, f) => a + f.hoy, 0), hoyN = filas.filter((f) => f.hoy > 0).length;
-  const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
-  const fd = (d) => fechaCorta(Date.parse(`${d}T12:00:00Z`));
-  const barritas = (f) => `<span class="uso-b" role="img" aria-label="${esc(ds.slice().reverse().map((d, i) => `${fd(d)}: ${corto(f.vals[ds.length - 1 - i])}`).join(', '))}">${f.vals.slice().reverse().map((v, i) => `<i title="${esc(fd(ds[ds.length - 1 - i]))}: ${esc(corto(v))}" style="height:${v ? Math.max(8, Math.round((v / max) * 100)) : 0}%"></i>`).join('')}</span>`;
-  h += `<p class="quien-res">Hoy han estado dentro <b>${hoyN}</b>, entre todos <b>${tiempoTxt(sumaHoy)}</b>.</p>`;
-  h += `<table class="tabla reg-ev uso-t"><tr><th></th><th>Hoy</th><th>Ayer</th><th>Media</th><th>7 días</th></tr>${filas.map((f) => `<tr><td><b>${esc(f.x.nombre || 'Sin nombre')}</b>${f.x.equipo ? `<small>${esc(f.x.equipo)}</small>` : ''}</td><td><b>${corto(f.hoy)}</b></td><td>${corto(f.ayer)}</td><td>${corto(f.media)}<small>${f.nd} ${f.nd === 1 ? 'día' : 'días'}</small></td><td>${barritas(f)}</td></tr>`).join('')}</table>`;
-  h += `<p class="peq apag">Solo cuenta el tiempo con la app a la vista, entre la app y la web, y el día va de 00:00 a 00:00 en Madrid. La media es de los días que ha entrado de los 7 últimos; las barras van del más antiguo (izquierda) a hoy. Desde la 0.7t se cuenta para todos (antes, solo a los que tienen límite de minutos) y lo de quien no la tiene a la vista puede tardar hasta 5 minutos en llegar.</p>`;
-  return h;
-}
-
-/** (el dueño) todas las cuentas que han entrado alguna vez: total, activas, altas y desde dónde */
-const CANAL_TXT = { github: 'Android (APK)', play: 'Google Play', web: 'Web' };
-/** qué hace la gente (eventos.js): esta semana, las 4 anteriores y el embudo de entrada; desde la 0.7a */
-function usoHTML(reg, activos) {
-  const lunes = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
-  const esta = lunes(diaDe());
-  const antes = new Date(`${esta}T12:00:00Z`); antes.setUTCDate(antes.getUTCDate() - 28);
-  const desde4 = antes.toISOString().slice(0, 10);
-  const suma = (filtro) => { const o = {}; for (const x of reg) for (const [l, cs] of Object.entries(x.ev || {})) if (filtro(l)) for (const [k, n] of Object.entries(cs)) o[k] = (o[k] || 0) + n; return o; };
-  const sem = suma((l) => l === esta), cuatro = suma((l) => l >= desde4 && l < esta);
-  const con = (k) => reg.filter((x) => x.tot && x.tot[k] > 0).length;
-  if (!reg.some((x) => x.tot)) return `<div class="grupo"><span>Qué hacen</span></div><p class="quien-res">Aún no hay nada contado: se cuenta desde la 0.7a (planes, preguntas, anuncios, funciones top y la entrada).</p>`;
-  const fila = (k) => `<tr><td>${EVENTOS[k]}</td><td><b>${sem[k] || 0}</b></td><td>${cuatro[k] || 0}</td></tr>`;
-  const porActivo = activos.d7 ? Math.round(((sem.p || 0) / activos.d7) * 10) / 10 : 0;
-  return `<div class="grupo"><span>Qué hacen</span></div>
-    <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c', 'n', 'i'].map(fila).join('')}</table>
-    <p class="quien-res">Planes por cuenta activa esta semana: <b>${String(porActivo).replace('.', ',')}</b>.</p>
-    ${(() => { const pc = (b, f) => (b + f ? `${Math.round((f / (b + f)) * 1000) / 10} %`.replace('.', ',') : '—'); return `<p class="quien-res">Cargas de la liga que fallan esta semana: <b>${pc(sem.a || 0, sem.f || 0)}</b> fuera de jornada · <b>${pc(sem.A || 0, sem.F || 0)}</b> con jornada en juego (${(sem.A || 0) + (sem.F || 0)} cargas).</p>`; })()}
-    <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
-    <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;
-}
-/**
- * (0.7.13i) lo que pasa antes de entrar con la cuenta, sin saber de quién: cuántos ven la pantalla de entrar (una vez al día
- * por dispositivo), tocan Google Play en la web, miran la liga de ejemplo, le dan a entrar, entran o fallan, hoy, ayer y en
- * 7 días; por dónde y, si llegaron a la web desde una campaña con ?utm_source=…, de cuál
- */
-const PASO_TXT = [
-  ['ver', 'Ven la pantalla de entrar'], ['play', 'Tocan Google Play en la web'], ['demo', 'Miran la liga de ejemplo'],
-  ['l', 'Le dan a entrar con LaLiga'], ['ok', 'Entran'], ['x-laliga', 'Falla LaLiga al entrar'], ['x-cancel', 'Cancelan en la página de LaLiga'],
-  ['x-otros', 'Otros fallos al entrar'],
-];
-const CANAL_PASO = { play: 'Google Play', github: 'APK', 'web-android': 'web en Android', 'web-iphone': 'web en iPhone', 'web-pc': 'web en ordenador' };
-const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
-function embudoHTML(E, ahora) {
-  const dias = (E && E.dias) || {};
-  const hoy = diaDe(ahora), ayer = diaDe(ahora - DIA);
-  const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
-  const deGrupo = (x, paso) => (paso === 'x-otros' ? OTROS_FALLOS.reduce((t, k) => t + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0);
-  // suma de los canales (sin las campañas, que repiten lo mismo) de los días que valgan
-  const suma = (vale, paso, solo = null) => Object.entries(dias).filter(([d]) => vale(d)).reduce((t, [, g]) => t
-    + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + deGrupo(x, paso), 0), 0);
-  const es7 = (d) => ult7.has(d);
-  const filas = PASO_TXT.map(([p, t]) => [t, suma((d) => d === hoy, p), suma((d) => d === ayer, p), suma(es7, p)]).filter((f, i) => i < 5 || f[3]);
-  let h = `<div class="grupo"><span>Antes de entrar</span></div>`;
-  if (!Object.keys(dias).length) return `${h}<p class="quien-res">Aún no hay nada: se empieza a contar con esta versión.</p>`;
-  h += `<table class="emb-t"><thead><tr><th></th><th>Hoy</th><th>Ayer</th><th>7 días</th></tr></thead><tbody>${filas.map(([t, a, b, c]) => `<tr><td>${esc(t)}</td><td>${a}</td><td>${b}</td><td>${c}</td></tr>`).join('')}</tbody></table>`;
-  const canales = Object.keys(CANAL_PASO).map((k) => [k, suma(es7, 'ver', k), suma(es7, 'ok', k)]).filter((x) => x[1] || x[2]);
-  if (canales.length) h += `<p class="quien-res">Por dónde (7 días, ven · entran): ${canales.map(([k, v, o]) => `${CANAL_PASO[k]} <b>${v}</b> · <b>${o}</b>`).join(' — ')}</p>`;
-  const origenes = [...new Set(Object.values(dias).flatMap((g) => Object.keys(g).filter((k) => k.startsWith('o:'))))]
-    .map((k) => [k.slice(2), suma(es7, 'ver', k), suma(es7, 'ok', k)]).filter((x) => x[1] || x[2]).sort((a, b) => b[1] - a[1]);
-  if (origenes.length) h += `<p class="quien-res">De campañas a la web (7 días, ven · entran): ${origenes.map(([o, v, n]) => `${esc(o)} <b>${v}</b> · <b>${n}</b>`).join(' — ')}</p>`;
-  h += '<p class="peq apag">Sin saber de quién: cada móvil u ordenador cuenta una vez al día en «ven la pantalla», «Google Play» y «liga de ejemplo». Tus pruebas no cuentan. Quien llega desde el anuncio de Google Play cuenta al abrir la app.</p>';
-  return h;
-}
-function registradosHTML(reg, lista, ahora) {
-  const hace = (d) => ahora - d * DIA;
-  const hoy = diaDe(ahora);
-  const cuenta = (f) => reg.filter(f).length;
-  const nuevos = { hoy: cuenta((x) => diaDe(x.primera) === hoy), d7: cuenta((x) => x.primera >= hace(7)), d30: cuenta((x) => x.primera >= hace(30)) };
-  const activos = { d1: cuenta((x) => x.ultima >= hace(1)), d7: cuenta((x) => x.ultima >= hace(7)), d30: cuenta((x) => x.ultima >= hace(30)) };
-  const porCanal = {};
-  for (const x of reg) for (const c of String(x.canales || '').split(',').filter(Boolean)) porCanal[c] = (porCanal[c] || 0) + 1;
-  // altas por semana (las 8 últimas, de 7 en 7 días hacia atrás desde hoy)
-  const semanas = Array.from({ length: 8 }, (_, i) => {
-    const hasta = hace(7 * i), desde = hace(7 * (i + 1));
-    return { desde, n: cuenta((x) => x.primera >= desde && x.primera < hasta) };
-  }).reverse();
-  const max = Math.max(1, ...semanas.map((x) => x.n));
-  const porUid = new Map(lista.map((x) => [String(x.uid), x]));
-  const ultimas = [...reg].sort((a, b) => b.primera - a.primera).slice(0, 8);
-  let h = `<p class="quien-res">Han entrado alguna vez <b>${reg.length}</b> cuentas · activas en 30 días <b>${activos.d30}</b>.</p>`;
-  // ligas con varios que la usan (roadmap: la unidad de captación es la liga): por la liga de /hola, últimos 30 días
-  const porLiga = {};
-  for (const x of lista) if (x.liga && x.ultima >= hace(30)) porLiga[x.liga] = (porLiga[x.liga] || 0) + 1;
-  const nLigas = Object.keys(porLiga).length, de3 = Object.values(porLiga).filter((n) => n >= 3).length, de2 = Object.values(porLiga).filter((n) => n >= 2).length;
-  if (nLigas) h += `<p class="quien-res">Ligas (30 días): <b>${nLigas}</b> con alguien que la usa · <b>${de2}</b> con 2 o más · <b>${de3}</b> con 3 o más.</p>`;
-  h += `<p class="quien-res">Altas: <b>${nuevos.hoy}</b> hoy · <b>${nuevos.d7}</b> en 7 días · <b>${nuevos.d30}</b> en 30 días. Hoy han abierto la app <b>${activos.d1}</b>.</p>`;
-  const canales = Object.keys(CANAL_TXT).filter((c) => porCanal[c]);
-  if (canales.length) h += `<p class="quien-res">Desde dónde: ${canales.map((c) => `${CANAL_TXT[c]} <b>${porCanal[c]}</b>`).join(' · ')}</p>`;
-  h += `<div class="reg-sem" role="img" aria-label="Altas por semana, las 8 últimas: ${semanas.map((x) => x.n).join(', ')}">${semanas.map((x) => `<div class="reg-b"><span class="reg-n">${x.n || ''}</span><i style="height:${Math.round((x.n / max) * 100)}%"></i><small>${esc(fechaCorta(x.desde))}</small></div>`).join('')}</div>`;
-  if (ultimas.length) {
-    h += `<p class="t2 peq" style="margin:12px 0 2px">Últimas altas</p><div class="quien-l">${ultimas.map((x) => {
-      const p = porUid.get(String(x.uid));
-      const nombre = p ? p.nombre || 'Sin nombre' : `Cuenta ${x.uid}`;
-      const donde = String(x.canales || '').split(',').filter(Boolean).map((c) => CANAL_TXT[c] || c).join(', ');
-      return `<div class="quien-f si"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(donde || '¿?')} · última vez ${cuando(x.ultima)}${x.dias ? ` · ${x.dias} ${x.dias === 1 ? 'día' : 'días'} con la app` : ''}</span></div><small>alta ${esc(cuando(x.primera, { hora: false }))}</small></div>`;
-    }).join('')}</div>`;
-  }
-  h += usoHTML(reg, activos);
-  h += `<p class="peq apag" style="margin-top:10px">Cuenta todas las cuentas de LaLiga que han abierto la app con su sesión desde el 3 de noviembre, más las que la habían abierto en los 90 días anteriores. El nombre solo sale si la ha abierto en los últimos 90 días.</p>`;
-  return h;
 }
 
 /* ================= DIAGNÓSTICO ================= */

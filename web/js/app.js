@@ -3122,7 +3122,7 @@ document.addEventListener('click', async (ev) => {
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
     // las tarjetas para el grupo de la liga (0.6.11): el plan y sus pullitas como imagen
-    case 'tarjeta': S.tarjeta = { k: 'plan' }; hoja('tarjeta'); pintarTarjeta(); break;
+    // (0.7.13n, Carlos 16 nov) la imagen del plan para el grupo se ha quitado: ya no hay ningún botón que la abra
     case 'tarjetaVer': if (S.tarjeta && S.tarjeta.k !== d.k) { S.tarjeta = { k: d.k, titular: S.tarjeta.titular, chiva: S.tarjeta.chiva }; repintarHoja(); pintarTarjeta(); } break;
     case 'tarjetaTitular': {
       const T = S.tarjeta;

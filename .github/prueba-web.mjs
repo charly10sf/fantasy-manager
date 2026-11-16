@@ -660,7 +660,12 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const hs = H.horasPlan(M).map((x) => x.txt);
     // (la hora del móvil: en Madrid, 00:25 y 12:25; en la Action, que va en UTC, 23:25 y 11:25)
     const hm = (t) => { const d = new Date(t); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
-    const espera = M.cierreMercado ? [hm(M.cierreMercado + 10 * 60e3), hm(M.cierreMercado + 10 * 60e3 + 12 * 3600e3)] : ['00:25', '12:25'];
+    // (0.7.13n) la de su liga: 10 min después de su mercado; sin mercado conocido, la última que se vio, y si nunca, ninguna
+    const espera = M.cierreMercado ? [hm(M.cierreMercado + 10 * 60e3), hm(M.cierreMercado + 10 * 60e3 + 12 * 3600e3)] : [];
+    // otra liga con el mercado a las 20:00: sus planes, a las 20:10 y a las 08:10
+    const veinte = new Date(); veinte.setHours(20, 0, 0, 0); if (veinte.getTime() < Date.now()) veinte.setDate(veinte.getDate() + 1);
+    const otra = H.horasPlan({ cierreMercado: veinte.getTime() }).map((x) => x.txt).join(' y ');
+    H.horasPlan(M);
     // un turno de hoy que ya ha pasado: las horas elegidas, una hace 20 minutos
     const d = new Date(Date.now() - 20 * 60e3), hh = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     const mismoDia = diaDe(d.getTime()) === diaDe();
@@ -673,13 +678,14 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const sinCupo = ia.planViejoAuto(S.M, false);
     H.guardarCfgHoras({ h1: '', h2: '' });
     localStorage.removeItem('fm-planes-cupo');
-    return { hs, espera, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
+    return { hs, espera, otra, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
   });
   const def = JSON.stringify(r.hs) === JSON.stringify(r.espera);
   if (!def) mal(`planes a su hora: las horas por defecto no son las del mercado: ${JSON.stringify(r.hs)} y debían ser ${JSON.stringify(r.espera)}`);
+  else if (r.otra !== '20:10 y 08:10') mal(`planes a su hora: con el mercado de la liga a las 20:00 salen a las ${r.otra}`);
   else if (r.mismoDia && (!r.pend || r.cubierto)) mal(`planes a su hora: el turno pasado sin plan: ${JSON.stringify(r)}`);
   else if (r.mismoDia && (!r.conCupo || r.sinCupo)) mal(`planes a su hora: con y sin planes de hoy: ${JSON.stringify(r)}`);
-  else bien(`planes a su hora: ${r.hs.join(' y ')} por defecto; uno pasado sin plan sale solo y no si no quedan de hoy`);
+  else bien(`planes a su hora: los de su mercado (${r.hs.join(' y ')}; con el mercado a las 20:00, ${r.otra}); uno pasado sin plan sale solo y no si no quedan de hoy`);
   const cab = await page.evaluate(() => { const c = document.querySelector('.plan-cab'); return { t: c ? c.innerText : '', rehacer: !!document.querySelector('.plan-cab [data-accion="planYa"]'), aj: !!document.querySelector('.plan-cab [data-accion="planAjustes"]'), comp: !!document.querySelector('.plan-cab [data-accion="tarjeta"]'), quien: (document.querySelector('.plan-quien') || {}).innerText || '' }; });
   // (en la demo sin clave el plan es el de la app: el botón dice «Hacerlo con la IA» o no sale si no hay IA)
   if (cab.comp || /Compartir/.test(cab.t)) mal(`plan: sigue el botón «Compartir»: ${cab.t}`);
@@ -687,14 +693,15 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else bien(`plan: sin «Compartir»; ${cab.rehacer ? `«${cab.t.replace(/\s+/g, ' ').replace('Plan de hoy', '').trim()}» y ` : ''}sus ajustes en la cabecera`);
   await page.evaluate(() => document.querySelector('.plan-cab [data-accion="planAjustes"]').click());
   await page.waitForTimeout(500);
-  const aj = await page.evaluate(() => ({ h1: !!document.querySelector('select[data-cambia="planH1"]'), h2: !!document.querySelector('select[data-cambia="planH2"]'), tono: !!document.querySelector('select[data-cambia="pullitas"]'), rehacer: !!document.querySelector('[data-accion="planYa"]'), img: !!document.querySelector('[data-accion="tarjeta"]') }));
-  if (!aj.h1 || !aj.h2 || !aj.tono || !aj.img) mal(`plan: los ajustes del plan: ${JSON.stringify(aj)}`);
+  // (0.7.13n) sin imagen para el grupo ni «Compartir»
+  const aj = await page.evaluate(() => ({ h1: !!document.querySelector('select[data-cambia="planH1"]'), h2: !!document.querySelector('select[data-cambia="planH2"]'), tono: !!document.querySelector('select[data-cambia="pullitas"]'), rehacer: !!document.querySelector('[data-accion="planYa"]'), img: !!document.querySelector('[data-accion="tarjeta"]') || /Compartir|Imagen del plan/.test((document.querySelector('#hoja') || document.querySelector('.hoja') || {}).innerText || '') }));
+  if (!aj.h1 || !aj.h2 || !aj.tono || aj.img) mal(`plan: los ajustes del plan: ${JSON.stringify(aj)}`);
   else {
     await page.selectOption('select[data-cambia="planH2"]', '20:30');
     await page.waitForTimeout(400);
     const c = await page.evaluate(() => JSON.parse(localStorage.getItem('fm-cfg-planes-hora') || '{}'));
     if (c.h2 !== '20:30') mal(`plan: elegir la hora del segundo plan no se guarda: ${JSON.stringify(c)}`);
-    else bien('plan: sus ajustes (tono, las dos horas, rehacer e imagen para el grupo) y la hora elegida se guarda');
+    else bien('plan: sus ajustes (tono, las dos horas y rehacer, sin imagen ni «Compartir») y la hora elegida se guarda');
   }
   if (errores.length) mal(`planes a su hora: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();

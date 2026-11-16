@@ -1,5 +1,7 @@
 /* Los planes a su hora (0.7.13l; Carlos, 16 nov). Por defecto, uno de los dos planes del día con la IA sale solo 10 minutos
-   después de que se refresca el mercado (hacia las 00:25 de Madrid) y el otro 12 horas después (hacia las 12:25); cada
+   después de que se refresca el mercado DE SU LIGA y el otro 12 horas después (0.7.13n, Carlos: «a las 20h es MI mercado,
+   pero los de otras ligas tendrán el mercado a horas diferentes»): cada liga tiene su hora, que sale de `M.cierreMercado`
+   (cuándo caducan casi todos los libres de su mercado) y se guarda por si un día no se sabe (`plan-mercado`); cada
    uno puede elegir sus dos horas en Ajustes → La IA o en los ajustes del plan. Los que salen solos cuentan en los del día.
    Con la app abierta salen a su hora (el reloj de cada 10 minutos de app.js); con la app cerrada, en la pasada en segundo
    plano que se pide para esa hora (programarFondo) y, si Android no la hace a tiempo, en cuanto se abra la app.
@@ -17,17 +19,24 @@ const minutoDe = (t) => { const d = new Date(t); return d.getHours() * 60 + d.ge
 const hhmm = (m) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const leer = (s) => { const x = /^(\d{1,2}):(\d{2})$/.exec(String(s || '')); return x && +x[1] < 24 && +x[2] < 60 ? +x[1] * 60 + +x[2] : null; };
 
-/** el minuto del día (hora local) de los dos turnos: [{ m, txt, propia }] */
+/** el minuto del día (hora local) en que se refresca el mercado de su liga: el de su próximo cierre (y se guarda) o, si
+    hoy no se sabe, el último que se vio; null si nunca se ha visto (entonces no sale ninguno solo: no se adivina la hora) */
+export function minutoMercado(M) {
+  if (M && M.cierreMercado) { const m = minutoDe(M.cierreMercado); if (LS.get('plan-mercado', null) !== m) LS.set('plan-mercado', m); return m; }
+  const g = LS.get('plan-mercado', null);
+  return Number.isFinite(g) ? g : null;
+}
+/** el minuto del día (hora local) de los dos turnos: [{ m, txt, propia }]; [] si no se sabe la hora de su mercado y no
+    ha elegido las suyas */
 export function horasPlan(M) {
   const c = cfgHoras();
-  // la hora del refresco del mercado sale de su próximo cierre; si no se sabe, las 00:15
-  const base = M && M.cierreMercado ? minutoDe(M.cierreMercado) : 15;
-  const m1 = (base + 10) % 1440, m2 = (m1 + 720) % 1440;
+  const base = minutoMercado(M);
+  const m1 = base == null ? null : (base + 10) % 1440, m2 = m1 == null ? null : (m1 + 720) % 1440;
   const h1 = leer(c.h1), h2 = leer(c.h2);
-  return [h1 != null ? h1 : m1, h2 != null ? h2 : m2].map((m, i) => ({ m, txt: hhmm(m), propia: (i ? h2 : h1) != null }));
+  return [h1 != null ? h1 : m1, h2 != null ? h2 : m2].map((m, i) => (m == null ? null : { m, txt: hhmm(m), propia: (i ? h2 : h1) != null })).filter(Boolean);
 }
-/** las horas por defecto, para enseñarlas en Ajustes */
-export const horasDefecto = (M) => { const b = M && M.cierreMercado ? minutoDe(M.cierreMercado) : 15; const m1 = (b + 10) % 1440; return [hhmm(m1), hhmm((m1 + 720) % 1440)]; };
+/** las horas por defecto, para enseñarlas en Ajustes (null si no se sabe la hora de su mercado) */
+export const horasDefecto = (M) => { const b = minutoMercado(M); if (b == null) return null; const m1 = (b + 10) % 1440; return [hhmm(m1), hhmm((m1 + 720) % 1440)]; };
 
 /** los turnos de un día (el de `t`), con su hora exacta */
 function turnosDelDia(M, t) {
