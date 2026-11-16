@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson } from '../web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas } from '../web/resumen.mjs';
 import { cara, minigrafica, chipPuntos, clasePuntos, slug, graficaValor, barrasPuntos } from '../web/portal.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, jugadoresJson, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie } from '../web/fichas.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, jugadoresJson, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie, analisisJugador, hechosJugador } from '../web/fichas.mjs';
 import { pestanas, tabla, kpis } from '../web/portal.mjs';
 
 const DIA = 864e5;
@@ -150,6 +150,12 @@ for (const x of H.jugadores) {
   const c = contenidoJugador(x, H);
   limpio(c, `jugador ${x.nombre}`);
   assert.match(c, /Jornada a jornada/);
+  assert.doesNotMatch(c, /De dónde salen los datos|Lo que dicen los datos|Con Fantasy Manager/, 'lo repetido en todas, fuera (a metodo.html)');
+  assert.match(c, /metodo\.html#fichas/, 'enlaza al método');
+  const an = analisisJugador(x, H, H.equipos.find((q) => q.id === x.teamId));
+  assert.ok(an.frases.length >= 2 && an.frases.every((f) => typeof f === 'string' && f.length > 10), 'el análisis tiene frases');
+  assert.equal(an.frases.length, new Set(an.frases).size, 'sin frases repetidas');
+  assert.equal('indexar' in metasJugador(x, H), !an.indexar, 'noindex solo a las flojas');
   assert.match(c, /<div class="fcab">/, 'la cabecera compacta');
   assert.ok(c.indexOf('class="kpi k4"') < c.indexOf('id="analisis"'), 'las cifras arriba y el texto abajo');
   assert.match(metasJugador(x).ruta, /^jugadores\/[a-z0-9-]+\.html$/);
@@ -181,3 +187,15 @@ assert.match(tabla([{ t: 'A' }], null, { grupos: [{ t: 'Porteros', filas: ['<td>
 assert.doesNotMatch(tabla([{ t: 'A' }], null, { grupos: [{ t: 'Nadie', filas: [] }] }), /Nadie/, 'un grupo vacío no sale');
 assert.doesNotMatch(kpis([null, { v: '1', l: 'x' }]), /null/);
 console.log('portal-ejemplo: todo BIEN');
+
+// (16 nov) los hechos con umbral: un jugador con pocos partidos no se indexa, y cada hecho sale solo si se cumple
+{
+  const H2 = await hechosFichas(api, await hechosMercado(api, { ahora: hoy }), { estado: {}, max: 20 });
+  const x = { ...H2.jugadores[0], jugados: 3 };
+  assert.equal(metasJugador(x, H2).indexar, false, 'con menos de 5 partidos, sin indexar');
+  const y = { ...H2.jugadores[0], racha: 0, rachaDif: 0 };
+  assert.ok(!hechosJugador(y, H2, null).some((h) => h.k === 'racha'), 'sin racha, no se habla de racha');
+  const z = { ...H2.jugadores[0], racha: 4, rachaDif: 1.2e6, dif: 3e5, difAyer: 2e5 };
+  assert.match(hechosJugador(z, H2, null).find((h) => h.k === 'racha').txt, /4 días|cuatro/, 'la racha con sus días');
+}
+console.log('portal-ejemplo: todo bien');

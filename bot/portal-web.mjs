@@ -120,7 +120,7 @@ if (forzar || !estado.mercado || estado.mercado.dia !== hoy) {
         H.previa = (hm.proxima && previas().find((p) => p.jornada === hm.proxima.jornada)) || previas()[0] || null;
         const pags = [
           ...H.equipos.map((q) => ({ entrada: metasEquipo(q), html: contenidoEquipo(q, H) })),
-          ...H.jugadores.map((x) => ({ entrada: metasJugador(x), html: contenidoJugador(x, H) })),
+          ...H.jugadores.map((x) => ({ entrada: metasJugador(x, H), html: contenidoJugador(x, H) })),
           { entrada: metasJugadores(), html: contenidoJugadores(H) },
           ...Array.from({ length: nPaginasJugadores(H) - 1 }, (_, i) => ({ entrada: metasPaginaJugadores(i + 2), html: contenidoJugadores(H, i + 2) })),
         ];

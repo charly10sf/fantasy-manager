@@ -150,7 +150,14 @@ def escudos(raiz):
     return f'<nav class="escudos" aria-label="Los 20 equipos"><div class="escudos-in">{filas}</div></nav>\n'
 
 
-def cta(raiz):
+def cta(raiz, p=None):
+    # (16 nov) en las fichas de jugador y equipo, la versión corta: el bloque entero, igual en 170 páginas, era la mitad del texto repetido
+    if p and p.get('grupo') in ('jugador', 'equipo'):
+        return (f'<aside class="cta" aria-label="La app">'
+                f'<p class="cta-t">¿Lo tienes a tiro en tu liga? Fantasy Manager te lo dice con los datos de tu liga</p>'
+                f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
+                f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
+                f'</aside>')
     return (f'<aside class="cta" aria-label="La app">'
             f'<p class="cta-t">Fantasy Manager hace estas cuentas por ti con los datos de tu liga</p>'
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
@@ -301,7 +308,7 @@ def pagina(p, contenido, hay_guias):
     url = DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta'])
     robots = '' if indexable(p) else '\n  <meta name="robots" content="noindex, follow">'
     fecha = ''
-    pie_guia = f'\n  {cta(raiz)}' if p['tipo'] in ('guia', 'portal') or en_guias(p) else ''
+    pie_guia = f'\n  {cta(raiz, p)}' if p['tipo'] in ('guia', 'portal') or en_guias(p) else ''
     m = migas(raiz, p, hay_guias)
     migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
     contenido = poner_firma(poner_previa(contenido, p), p, raiz)
