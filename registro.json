@@ -1200,7 +1200,7 @@
   "2146": "injured",
   "2178": "injured",
   "2206": "ok",
-  "2217": "injured",
+  "2217": "doubtful",
   "2293": "out_of_league",
   "2294": "ok",
   "2295": "ok",
@@ -1631,7 +1631,7 @@
   "2936": "injured",
   "2937": "out_of_league",
   "2938": "ok",
-  "2939": "doubtful",
+  "2939": "ok",
   "2940": "ok",
   "2941": "ok",
   "2943": "out_of_league",
@@ -1870,7 +1870,7 @@
   "3179": "ok",
   "3180": "ok",
   "3181": "ok",
-  "3182": "injured",
+  "3182": "doubtful",
   "3183": "ok",
   "3184": "ok",
   "3185": "ok",
@@ -2001,7 +2001,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2939",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1794844829435
+  }
+ ],
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
@@ -2631,8 +2638,8 @@
     "t": 0
    },
    "2217": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794844829435
    },
    "2300": {
     "e": "ok",
@@ -3011,8 +3018,8 @@
     "t": 0
    },
    "2939": {
-    "e": "doubtful",
-    "t": 1793976373391
+    "e": "ok",
+    "t": 1794844829435
    },
    "2962": {
     "e": "ok",
@@ -3251,8 +3258,8 @@
     "t": 1793970074314
    },
    "3182": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794844829435
    },
    "3193": {
     "e": "ok",
@@ -7660,13 +7667,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3144,
+   "ok": 3145,
    "fallos": 0,
-   "ejecuciones": 2537,
+   "ejecuciones": 2538,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T15:56:12.173Z"
+   "ultima": "2026-11-16T16:00:29.435Z"
   }
  },
  "ptsDirecto": {},
@@ -7683,15 +7690,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:56:15.357Z"
+   "ultimaBien": "2026-11-16T16:00:36.366Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:56:15.357Z"
+   "ultimaBien": "2026-11-16T16:00:36.366Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:56:15.357Z"
+   "ultimaBien": "2026-11-16T16:00:36.366Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7699,11 +7706,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:56:15.357Z"
+   "ultimaBien": "2026-11-16T16:00:36.366Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:56:15.357Z"
+   "ultimaBien": "2026-11-16T16:00:36.366Z"
   }
  },
  "avisos": [
