@@ -1997,7 +1997,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
    "SPORT|136402229": 1794581404000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
@@ -7646,13 +7645,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3129,
+   "ok": 3130,
    "fallos": 0,
-   "ejecuciones": 2522,
+   "ejecuciones": 2523,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T14:41:13.493Z"
+   "ultima": "2026-11-16T14:46:14.410Z"
   }
  },
  "ptsDirecto": {},
@@ -7669,15 +7668,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:41:17.785Z"
+   "ultimaBien": "2026-11-16T14:46:19.904Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:41:17.785Z"
+   "ultimaBien": "2026-11-16T14:46:19.904Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:41:17.785Z"
+   "ultimaBien": "2026-11-16T14:46:19.904Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7685,11 +7684,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:41:17.785Z"
+   "ultimaBien": "2026-11-16T14:46:19.904Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:41:17.785Z"
+   "ultimaBien": "2026-11-16T14:46:19.904Z"
   }
  },
  "avisos": [
