@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13l';
+export const VERSION = '0.7.13m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,12 @@ export const VERSION = '0.7.13l';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13m', f: '2026-11-16', h: '01:29', t: 'Los datos del día, en la portada',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'periodico', t: 'La portada, con los datos del día', x: 'Al abrir la web, lo primero son los datos de LaLiga Fantasy de hoy: los que más suben, la próxima jornada y los accesos al mercado, las jornadas, los equipos, los jugadores y las guías. La barra de arriba se queda siempre fija, y lo que es la app está en su apartado, «La app».' },
+    ],
+  },
   {
     v: '0.7.13l', f: '2026-11-16', h: '01:17', t: 'Tu plan, a su hora',
     cosas: [

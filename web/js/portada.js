@@ -278,7 +278,6 @@ function otrasGuias() {
 const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
   <header class="ps-c rv"><div><div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2></div>${intro ? `<p class="ps-i">${intro}</p>` : ''}</header>${cuerpo}</section>`;
 
-const MENU = [['pHoy', 'Hoy'], ['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pGuias', 'Guías'], ['pFaq', 'Preguntas']];
 
 /** «Cómo funciona»: en el ordenador, el móvil se queda quieto a la derecha y cambia de pantalla según bajas; en el
     móvil, uno detrás de otro deslizando de lado */
@@ -293,22 +292,39 @@ function comoFunciona() {
     <div class="ph-fijo" aria-hidden="true"><div class="ph-marco">${pantallas}</div><div class="ph-puntos">${PIES.map((x, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div></div></div>`;
 }
 
-/** todo lo que va debajo de la entrada */
+/* (0.7.13m, Carlos 15 nov 23:51) la portada de la web con el portal a la vista: arriba, siempre fija, la barra con el portal
+   (mercado, jornada, equipos, jugadores y guías), «La app» (la presentación, que va en su apartado más abajo), entrar y
+   descargar de Google Play; debajo, el portal con el bloque «Hoy», al lado de lo de entrar */
+const PORTAL = [
+  ['mercado/', 'Mercado', 'Quién sube y quién baja hoy, las rachas y los máximos de la temporada'],
+  ['jornada/', 'Jornada', 'La previa con el cierre de cláusulas y el resumen con los mejores y el once ideal'],
+  ['equipos/', 'Equipos', 'Los 20: plantilla, valor, puntos y próximos rivales'],
+  ['jugadores/', 'Jugadores', 'Todos, con su valor día a día, sus puntos por jornada y si es titular'],
+  ['guias/', 'Guías', 'Cláusulas, mercado, puntos y calculadoras, explicado con números'],
+];
+export function barraPortal() {
+  return `<div class="pt-bar on pt-fija"><div class="pt-in">
+    <a class="pt-marca" href="#" data-arriba aria-label="Fantasy Manager: arriba">${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
+    <nav class="pt-menu" aria-label="Secciones"><a href="#pHoy" data-ir-a="pHoy" class="on">Hoy</a>${PORTAL.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="#pApp" data-ir-a="pApp">La app</a></nav>
+    <a class="btn sec pt-web" href="#entrar">Entrar</a>
+    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}<span>Descargar<span class="pt-largo"> en Google Play</span></span></a></div><i class="pt-prog"></i></div>`;
+}
+/** el portal, arriba a la izquierda (en el móvil, lo primero): la insignia de Google Play, el bloque «Hoy» y las secciones */
+export function portalHTML(insignia = '') {
+  return `<div class="po" id="pHoy">
+    ${insignia ? `<div class="po-top">${insignia}</div>` : ''}
+    <p class="po-k">Datos de cada día · gratis y sin entrar</p>
+    <h1 class="po-h1">LaLiga Fantasy, <span>hoy</span></h1>
+    <p class="po-i">El mercado, la jornada, los 20 equipos y todos los jugadores, con los datos de LaLiga Fantasy de esta noche.</p>
+    <div class="pz-hoy"><div class="pz-hoy-d" aria-live="polite"><p class="pz-hoy-c">Los que más suben en el mercado de hoy, la próxima jornada y su cierre de cláusulas.</p></div></div>
+    <nav class="po-g" aria-label="Datos de cada día">${PORTAL.map(([h, t, x]) => `<a class="po-c" href="${h}"><b>${t}${icono('flecha')}</b><span>${x}</span></a>`).join('')}</nav>
+  </div>`;
+}
+
+/** la presentación de la app: va en su apartado, «La app», debajo del portal y de lo de entrar */
 export function seccionMoviles() {
   return `<div class="portada-m">
-  <div class="pt-baja"><a class="pt-baja-a" href="#pAsi"><span>Mira cómo funciona</span>${icono('abajo')}</a><a class="pt-baja-g" href="#pGuias">${icono('nota')}<span>Guías del juego</span></a></div>
-  <a class="pt-pista" href="#pAsi" aria-hidden="true" tabindex="-1"><span>Baja: hay mucho más</span>${icono('abajo')}</a>
-  <div class="pt-bar" aria-hidden="true"><div class="pt-in">
-    <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
-    <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
-    <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
-    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
-
-  ${seccion('pHoy', 'Datos del día', 'Hoy en LaLiga Fantasy', `<div class="pz-hoy rv"><div class="pz-hoy-d" aria-live="polite"><p class="pz-hoy-c">Los que más suben en el mercado de hoy, la próxima jornada y su cierre de cláusulas.</p></div>
-    <nav class="pz-hoy-b" aria-label="Datos"><a class="btn sec" href="mercado/">Mercado de hoy${icono('flecha')}</a><a class="btn sec" href="jornada/">Jornadas</a><a class="btn sec" href="equipos/">Equipos</a></nav></div>`,
-    'Lo mismo para todas las ligas, con los datos de LaLiga Fantasy de esta noche. Sin entrar.')}
-
-  ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
+  ${seccion('pAsi', 'Paso a paso', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
   ${seccion('pOnce', 'Tu equipo', 'Tu once, de un vistazo', `<div class="pc"><div class="pc-campo-w rv">${campo()}</div><div class="pc-ficha rv" aria-live="polite">${fichaOnce(3103)}</div></div>`,
     'Toca un jugador: lo que vale, su cláusula, si va a jugar y qué te aconseja la app.')}
@@ -337,7 +353,7 @@ export function seccionMoviles() {
 
   <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
-    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
@@ -376,8 +392,8 @@ export function activarPortada() {
   relojes.forEach(clearInterval); relojes.length = 0;
   const raiz = document.querySelector('.portada-m');
   if (!raiz) return;
-  ponerHoy(raiz);
   const portada = raiz.closest('.portada');
+  ponerHoy(portada);
   const hayIO = typeof IntersectionObserver === 'function';
   if (hayIO && !sinMovimiento()) portada.classList.add('pr-js');
 
@@ -397,11 +413,14 @@ export function activarPortada() {
   } else raiz.querySelectorAll('.rv').forEach((el) => el.classList.add('vis'));
 
   // la barra de arriba: sale al pasar la entrada, marca la sección en la que estás y lo leído
-  const barra = raiz.querySelector('.pt-bar'), prog = raiz.querySelector('.pt-prog');
-  const entrada = portada.querySelector('.pantalla');
-  const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
+  // (0.7.13m) siempre a la vista: ya no sale al pasar la entrada; su alto deja sitio arriba (--pt-h)
+  const barra = portada.querySelector('.pt-bar'), prog = portada.querySelector('.pt-prog');
+  const secciones = ['pHoy', 'pApp'].map((id) => portada.querySelector(`#${id}`)).filter(Boolean);
   const menu = barra.querySelector('.pt-menu');
-  const pista = raiz.querySelector('.pt-pista'), baja = raiz.querySelector('.pt-baja');
+  const pista = null, baja = null;
+  const altoBarra = () => portada.style.setProperty('--pt-h', `${barra.offsetHeight}px`);
+  altoBarra();
+  escuchar(window, 'resize', altoBarra, { passive: true });
   // en el ordenador la pista va en la columna de la izquierda, debajo de los textos (fija abajo tapaba el panel de entrar)
   const col = document.documentElement.classList.contains('escritorio') ? portada.querySelector('.pant-i') : null;
   let pedido = false, ultimaSec = null;
@@ -410,16 +429,14 @@ export function activarPortada() {
     // (fuera de la portada, al entrar en la app, se deja de escuchar)
     if (!document.body.contains(raiz)) { quitar.forEach((f) => f()); quitar = []; relojes.forEach(clearInterval); relojes.length = 0; return; }
     const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
-    const fuera = entrada ? entrada.getBoundingClientRect().bottom < 40 : y > 300;
-    barra.classList.toggle('on', fuera);
+    const fuera = true;
     // la pista fija de abajo («Baja: hay mucho más»): solo arriba del todo y si los botones de «Mira cómo funciona»
     // no se ven ya en la primera pantalla (en una ventana baja o con zoom se quedan debajo y parece que no hay más)
     if (pista && !pista.classList.contains('en-col')) { const bj = baja ? baja.getBoundingClientRect().bottom : 0; pista.classList.toggle('on', y < 60 && bj > innerHeight - 8); }
-    barra.querySelectorAll('a').forEach((a) => (a.tabIndex = fuera ? 0 : -1));
-    barra.setAttribute('aria-hidden', String(!fuera));
     prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;
     let actual = '';
     for (const s of secciones) if (s.getBoundingClientRect().top < innerHeight * 0.4) actual = s.id;
+    if (fuera && !actual) actual = 'pHoy';
     barra.querySelectorAll('[data-ir-a]').forEach((a) => a.classList.toggle('on', a.dataset.irA === actual));
     if (actual !== ultimaSec) {
       ultimaSec = actual;
@@ -430,10 +447,10 @@ export function activarPortada() {
   escuchar(window, 'scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(alBajar); } }, { passive: true });
   alBajar();
   // los enlaces de dentro: suaves y sin dejar el # en la dirección (la app usa el hash para sus pestañas)
-  [...raiz.querySelectorAll('a[href^="#"]')].forEach((a) => escuchar(a, 'click', (ev) => {
+  [...portada.querySelectorAll('a[href^="#"]')].forEach((a) => escuchar(a, 'click', (ev) => {
     ev.preventDefault();
     const id = a.getAttribute('href').slice(1);
-    const el = id && raiz.querySelector(`#${id}`);
+    const el = id && portada.querySelector(`#${id}`);
     const top = el ? el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8 : 0;
     scrollTo({ top, behavior: sinMovimiento() ? 'auto' : 'smooth' });
   }));

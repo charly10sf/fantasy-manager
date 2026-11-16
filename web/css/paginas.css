@@ -26,8 +26,8 @@ b, strong { color: var(--texto); font-weight: 600; }
 .menu a:hover { color: var(--texto); }
 .menu a[aria-current="page"] { color: var(--texto); border-bottom-color: var(--rojo); }
 .menu a:focus-visible, .cab-app a:focus-visible, .marca:focus-visible { outline: 2px solid var(--texto); outline-offset: 2px; }
+/* (16 nov, Carlos: «la barra de arriba con los menús siempre fija, que no desaparezca») también fija en el móvil */
 @media (max-width: 599px) {
-  .cab { position: static; }
   .menu-web, .menu-cta .largo { display: none; }
 }
 @media (min-width: 900px) {
@@ -383,6 +383,9 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .subnav a { flex: none; font: 700 15px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto2); text-decoration: none; padding: 9px 12px; border-radius: 999px; background: var(--s2); border: 1px solid var(--linea); }
 .subnav a:hover { color: var(--texto); border-color: var(--rojo); }
 .subnav a:focus-visible { outline: 2px solid var(--texto); outline-offset: 1px; }
+/* (16 nov) debajo de la cabecera fija, no tapados por ella */
+@media (max-width: 599px) { .subnav { top: var(--cab-h, 103px); z-index: 3; background: var(--fondo); } }
+.cab { z-index: 4; background: var(--fondo); }
 @media (min-width: 600px) { .subnav { position: static; margin: 10px 0 0; padding: 0; flex-wrap: wrap; background: none; } }
 
 /* tablas densas */
@@ -515,3 +518,6 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .lp-p .res.hora { display: grid; font-size: 17px; line-height: 1.05; padding: 4px 8px; min-width: 64px; }
 .lp-p .res.hora small { font: 600 12px/1.2 'Barlow', sans-serif; color: var(--apagado); }
 .lp li { padding: 8px 0; }
+/* (16 nov) al saltar a un bloque, que no quede debajo de la cabecera fija (ni, en el móvil, de los saltos) */
+main [id] { scroll-margin-top: 74px; }
+@media (max-width: 599px) { main [id] { scroll-margin-top: calc(var(--cab-h, 103px) + 62px); } }

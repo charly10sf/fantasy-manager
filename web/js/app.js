@@ -35,7 +35,7 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
+import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
 import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
@@ -72,19 +72,23 @@ function tostada(t, ms = 3200) {
 
 /* ---------------- pantallas completas ---------------- */
 const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu propia cuenta, como su app, y la usas bajo tu responsabilidad; tu contraseña nunca la ve. <a href="privacidad.html">Privacidad</a> · <a href="condiciones.html">Condiciones</a></p>';
-function pantallaEntrar(error = '') {
-  ponerBanner(false);
-  // la portada de antes de entrar: en la web, con los móviles de abajo; dentro de la app, solo lo de entrar
-  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}"><div class="pantalla"><div class="pant-i"><div class="pant-top">${LOGO}${enApp ? '' : botonPlay('hero')}</div>
-    <h1>Fantasy<br><span>Manager</span></h1>
-    ${enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : ''}
+/** lo que es la app, en grande: dentro de la app, arriba de lo de entrar; en la web, en su apartado «La app» */
+const heroApp = (h = 'h1', id = '') => `<${h}${id ? ` id="${id}"` : ''} class="hero-t">Fantasy<br><span>Manager</span></${h}>
     <p>Tu director deportivo para LaLiga Fantasy: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
     <ul class="lista-ok">
       <li>${icono('rayo')}Plan del día paso a paso, con el saldo después de cada operación</li>
       <li>${icono('ia')}La IA lee lesiones, convocatorias, alineaciones y el calendario antes de decidir</li>
       <li>${icono('diana')}Aviso al minuto cuando se abre una cláusula que te interesa</li>
       <li>${icono('rivales')}Lo que hace cada rival y quién va a por tus jugadores</li>
-    </ul></div><div class="pant-d">
+    </ul>`;
+function pantallaEntrar(error = '') {
+  ponerBanner(false);
+  // dentro de la app, solo lo de entrar. En la web (0.7.13m, Carlos 15 nov 23:51: el portal a la vista), arriba la barra fija
+  // con el portal y Google Play; a la izquierda (en el móvil, lo primero) el portal con «Hoy»; a la derecha, lo de entrar, sin
+  // tocar; y debajo, en su apartado «La app», lo que es la app y los móviles
+  const mudanza = enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : '';
+  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(botonPlay('hero'))}`;
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}">${enApp ? '' : barraPortal()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
@@ -92,7 +96,7 @@ function pantallaEntrar(error = '') {
     <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
     <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${PIE_ENTRAR}
-  </div></div>${enApp ? '' : seccionMoviles()}</div>`;
+  </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles()}</section>`}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
   // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta

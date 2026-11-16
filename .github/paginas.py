@@ -108,12 +108,15 @@ def redireccion(p):
 '''
 
 
+# (16 nov) «Jugadores» también en el menú: las páginas del portal, todas a la vista desde cualquier página
 SECCIONES = [('mercado', 'mercado/', 'Mercado'), ('jornada', 'jornada/', 'Jornada'), ('equipos', 'equipos/', 'Equipos'),
-             ('aprende', 'guias/', 'Aprende'), ('calculadoras', 'guias/#calculadoras', 'Calculadoras')]
+             ('jugadores', 'jugadores/', 'Jugadores'), ('aprende', 'guias/', 'Aprende'), ('calculadoras', 'guias/#calculadoras', 'Calculadoras')]
 
 
 def seccion_de(p):
     """la sección del menú que se marca: la del portal o, en guías, «Aprende» (las calculadoras, «Calculadoras»)"""
+    if p.get('grupo') in ('jugador', 'jugadores'):
+        return 'jugadores'
     if p.get('seccion'):
         return p['seccion']
     if p.get('grupo') == 'calculadoras':

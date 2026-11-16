@@ -3224,3 +3224,45 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .emb-t th { color: var(--apagado); font-weight: 600; font-size: var(--t-mini); text-align: right; padding: 4px 6px; }
 .emb-t td { padding: 6px; border-top: 1px solid var(--linea); text-align: right; font-variant-numeric: tabular-nums; }
 .emb-t td:first-child, .emb-t th:first-child { text-align: left; padding-left: 0; }
+
+/* (0.7.13m, Carlos 15 nov 23:51) la portada de la web con el portal a la vista: la barra de arriba siempre fija (ya no
+   sale al bajar), el portal con «Hoy» y sus secciones arriba (a la izquierda en el ordenador, lo primero en el móvil), lo de
+   entrar al lado y la presentación de la app en su apartado, «La app» */
+.pt-bar.pt-fija { transform: none; }
+.portada.web { padding-top: var(--pt-h, 100px); }
+.escritorio .portada.web { padding-top: var(--pt-h, 60px); }
+.portada.web [id] { scroll-margin-top: calc(var(--pt-h, 100px) + 10px); }
+.portada.web .pantalla { justify-content: flex-start; padding-top: 18px; }
+.escritorio .portada.web .pantalla { align-items: start; padding-top: 36px; }
+.po { display: block; min-width: 0; margin-bottom: 18px; }
+.po-top { display: flex; margin: 0 0 14px; }
+.po-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
+.portada .pantalla h1.po-h1 { font: 700 46px/0.95 var(--cond); text-transform: uppercase; margin: 0 0 10px; }
+.escritorio .portada .pantalla h1.po-h1 { font-size: 64px; }
+.portada .pantalla p.po-i { margin: 0 0 14px; }
+.po .pz-hoy { margin: 0 0 14px; }
+.escritorio .po .pz-hoy-d { grid-template-columns: 1fr; }
+.po-g { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.portada .pantalla a.po-c { display: grid; align-content: start; gap: 3px; padding: 12px 13px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--linea); color: var(--texto2); text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+.po-c b { display: flex; align-items: center; justify-content: space-between; gap: 6px; font: 700 19px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.po-c b .ic { flex: none; width: 16px; height: 16px; color: var(--rojo-l); }
+.po-c span { font-size: 13.5px; line-height: 1.35; }
+.portada .pantalla a.po-c:hover { border-color: var(--rojo3); background: var(--rojo-s); }
+.po-c:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.po-hero { max-width: 1120px; margin: 0 auto; padding: 34px 24px 6px; border-top: 1px solid var(--linea); }
+.escritorio .po-hero { padding: 52px 48px 6px; }
+.po-hero .hero-t { font: 700 54px/0.92 var(--cond); text-transform: uppercase; margin: 6px 0 12px; color: var(--texto); }
+.po-hero .hero-t span { color: var(--rojo-l); }
+.escritorio .po-hero .hero-t { font-size: 80px; }
+.po-hero > p { margin: 0 0 6px; max-width: 60ch; color: var(--texto2); font-size: 17px; }
+.po-hero .lista-ok { margin: 12px 0 0; }
+.escritorio .po-hero .lista-ok { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; }
+/* en la barra fija, el menú del portal y «Entrar» siempre a la vista */
+.pt-fija .pt-menu a { font-size: 16px; }
+.pt-fija .pt-web.btn { min-height: 38px; }
+@media (max-width: 380px) { .pt-fija .pt-cta .pt-largo { display: none; } }
+.pt-bar.pt-fija { background: var(--fondo); }
+.sj-barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: -28px -20px 20px; padding: 12px 20px; background: var(--fondo); border-bottom: 1px solid var(--linea); font-size: 16px; }
+.sj-barra a { text-decoration: none; font-weight: 600; }
+.sj-barra b { color: var(--texto); }
+.sj-barra .sj-cta { margin-left: auto; padding: 6px 12px; border-radius: 999px; background: var(--rojo-btn); color: #fff; }

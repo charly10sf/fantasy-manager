@@ -8,6 +8,16 @@
   var plano = function (s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
   var POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
+  // ---------------------------------------------------------------- la cabecera fija (16 nov): los saltos de la página van
+  // justo debajo (sin JS, con el alto de siempre del CSS)
+  var cab = document.querySelector('.cab');
+  if (cab) {
+    var alto = function () { document.documentElement.style.setProperty('--cab-h', (cab.offsetHeight - 1) + 'px'); };
+    alto();
+    window.addEventListener('resize', alto, { passive: true });
+    if (window.ResizeObserver) new ResizeObserver(alto).observe(cab);
+  }
+
   // ---------------------------------------------------------------- el buscador
   var form = document.querySelector('form.busca');
   if (form) {
