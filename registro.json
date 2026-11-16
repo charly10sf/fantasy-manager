@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/": 1794559518000,
    "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
@@ -2146,18 +2145,6 @@
    "SPORT|136484016": 1794813943000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/",
-    "medio": "AS",
-    "t": 1794559518000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea está de baja de larga duración en la Real Sociedad",
-    "motivo": "",
-    "plazo": "baja de larga duración",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html",
     "medio": "Diario de Sevilla",
@@ -7494,13 +7481,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3058,
+   "ok": 3059,
    "fallos": 0,
-   "ejecuciones": 2451,
+   "ejecuciones": 2452,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T08:41:13.831Z"
+   "ultima": "2026-11-16T08:46:15.320Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7504,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:41:18.548Z"
+   "ultimaBien": "2026-11-16T08:46:20.473Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:41:18.548Z"
+   "ultimaBien": "2026-11-16T08:46:20.473Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:41:18.548Z"
+   "ultimaBien": "2026-11-16T08:46:20.473Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7520,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:41:18.548Z"
+   "ultimaBien": "2026-11-16T08:46:20.473Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:41:18.548Z"
+   "ultimaBien": "2026-11-16T08:46:20.473Z"
   }
  },
  "avisos": [
