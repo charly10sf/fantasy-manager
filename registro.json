@@ -1990,7 +1990,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
-   "SPORT|136406827": 1794568575000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
@@ -2147,7 +2146,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000,
-   "SPORT|136489634": 1794823200000
+   "SPORT|136489634": 1794823200000,
+   "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000
   },
   "hechos": [
    {
@@ -2358,11 +2358,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html",
+    "medio": "MARCA",
+    "t": 1794827611000,
+    "id": "2338",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aimar se incorpora al grupo de Osasuna tras sus lesiones",
+    "motivo": "dos lesiones musculares seguidas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3274,17 +3286,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 470981,
-  "salida": 20066,
+  "entrada": 472873,
+  "salida": 20201,
   "cacheLee": 29030,
   "cacheEscribe": 8709,
-  "dolares": 1.030232,
+  "dolares": 1.030489,
   "reservado": 0
  },
  "recientes": {
@@ -7531,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3089,
+   "ok": 3090,
    "fallos": 0,
-   "ejecuciones": 2482,
+   "ejecuciones": 2483,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:16:11.675Z"
+   "ultima": "2026-11-16T11:21:11.972Z"
   }
  },
  "ptsDirecto": {},
@@ -7554,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:16:16.123Z"
+   "ultimaBien": "2026-11-16T11:21:18.078Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:16:16.123Z"
+   "ultimaBien": "2026-11-16T11:21:18.078Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:16:16.123Z"
+   "ultimaBien": "2026-11-16T11:21:18.078Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7570,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:16:16.123Z"
+   "ultimaBien": "2026-11-16T11:21:18.078Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:16:16.123Z"
+   "ultimaBien": "2026-11-16T11:21:18.078Z"
   }
  },
  "avisos": [
