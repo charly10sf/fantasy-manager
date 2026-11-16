@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
@@ -7564,13 +7563,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3098,
+   "ok": 3099,
    "fallos": 0,
-   "ejecuciones": 2491,
+   "ejecuciones": 2492,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T12:01:12.784Z"
+   "ultima": "2026-11-16T12:06:14.659Z"
   }
  },
  "ptsDirecto": {},
@@ -7587,15 +7586,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:01:20.310Z"
+   "ultimaBien": "2026-11-16T12:06:17.117Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:01:20.310Z"
+   "ultimaBien": "2026-11-16T12:06:17.117Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:01:20.310Z"
+   "ultimaBien": "2026-11-16T12:06:17.117Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7603,11 +7602,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:01:20.310Z"
+   "ultimaBien": "2026-11-16T12:06:17.117Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:01:20.310Z"
+   "ultimaBien": "2026-11-16T12:06:17.117Z"
   }
  },
  "avisos": [
