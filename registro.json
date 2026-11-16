@@ -1791,7 +1791,7 @@
   "3114": "ok",
   "3115": "ok",
   "3116": "doubtful",
-  "3117": "ok",
+  "3117": "doubtful",
   "3118": "out_of_league",
   "3119": "ok",
   "3120": "ok",
@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000,
    "SPORT|136412927": 1794575000000,
@@ -2156,7 +2155,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251598/olmo-entrena-grupo-apunta-villarreal.html": 1794828986000,
    "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
+   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
+   "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000
   },
   "hechos": [
    {
@@ -2401,11 +2402,24 @@
     "motivo": "vendaje en la rodilla derecha",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/",
+    "medio": "AS",
+    "t": 1794831194000,
+    "id": "2746",
+    "que": "descartado",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Miguel Sierra deja la selección suiza y no está para el derbi",
+    "motivo": "leves molestias físicas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -3318,17 +3332,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 30,
    "revisar": 14,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 500637,
-  "salida": 23561,
+  "entrada": 502712,
+  "salida": 23791,
   "cacheLee": 29030,
   "cacheEscribe": 11612,
-  "dolares": 1.072017,
+  "dolares": 1.07234,
   "reservado": 0
  },
  "recientes": {
@@ -7575,13 +7589,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3102,
+   "ok": 3103,
    "fallos": 0,
-   "ejecuciones": 2495,
+   "ejecuciones": 2496,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T12:26:23.571Z"
+   "ultima": "2026-11-16T12:31:27.599Z"
   }
  },
  "ptsDirecto": {},
@@ -7598,15 +7612,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:26:28.461Z"
+   "ultimaBien": "2026-11-16T12:31:34.987Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:26:28.461Z"
+   "ultimaBien": "2026-11-16T12:31:34.987Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:26:28.461Z"
+   "ultimaBien": "2026-11-16T12:31:34.987Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7614,11 +7628,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:26:28.461Z"
+   "ultimaBien": "2026-11-16T12:31:34.987Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:26:28.461Z"
+   "ultimaBien": "2026-11-16T12:31:34.987Z"
   }
  },
  "avisos": [
