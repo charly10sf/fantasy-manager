@@ -1976,12 +1976,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
-   "SPORT|136398549": 1794559654000,
    "SPORT|136400234": 1794560446000,
    "SPORT|136399158": 1794560918000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
@@ -3186,7 +3184,8 @@
    "Europa Press|https://www.europapress.es/catalunya/noticia-colau-critica-sanchez-suspendido-materia-vivienda-20261115101621.html": 1794734181000,
    "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000
   },
   "hechos": [
    {
@@ -3214,27 +3213,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817872105
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 436126,
-  "salida": 16570,
+  "entrada": 437900,
+  "salida": 16676,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.987875,
+  "dolares": 0.988105,
   "reservado": 0
  },
  "recientes": {
@@ -7481,13 +7478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3059,
+   "ok": 3060,
    "fallos": 0,
-   "ejecuciones": 2452,
+   "ejecuciones": 2453,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T08:46:15.320Z"
+   "ultima": "2026-11-16T08:51:18.503Z"
   }
  },
  "ptsDirecto": {},
@@ -7504,15 +7501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:46:20.473Z"
+   "ultimaBien": "2026-11-16T08:51:26.112Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:46:20.473Z"
+   "ultimaBien": "2026-11-16T08:51:26.112Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:46:20.473Z"
+   "ultimaBien": "2026-11-16T08:51:26.112Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7520,11 +7517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:46:20.473Z"
+   "ultimaBien": "2026-11-16T08:51:26.112Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:46:20.473Z"
+   "ultimaBien": "2026-11-16T08:51:26.112Z"
   }
  },
  "avisos": [
