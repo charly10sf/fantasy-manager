@@ -2006,7 +2006,6 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000,
    "SPORT|136412927": 1794575000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250500/lamine-incorpora-hoy-seleccion.html": 1794556581000,
    "SPORT|136413561": 1794576230000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
@@ -7493,13 +7492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3049,
+   "ok": 3050,
    "fallos": 0,
-   "ejecuciones": 2442,
+   "ejecuciones": 2443,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T07:56:12.154Z"
+   "ultima": "2026-11-16T08:01:39.666Z"
   }
  },
  "ptsDirecto": {},
@@ -7516,15 +7515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:56:15.808Z"
+   "ultimaBien": "2026-11-16T08:01:45.736Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:56:15.808Z"
+   "ultimaBien": "2026-11-16T08:01:45.736Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:56:15.808Z"
+   "ultimaBien": "2026-11-16T08:01:45.736Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7532,11 +7531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:56:15.808Z"
+   "ultimaBien": "2026-11-16T08:01:45.736Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:56:15.808Z"
+   "ultimaBien": "2026-11-16T08:01:45.736Z"
   }
  },
  "avisos": [
