@@ -644,6 +644,59 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 15b: (16 nov, 0.7.13l) los planes a su hora y «Rehacer el plan»: por defecto a las 00:25 y las 12:25 (10 min después del
+// mercado y 12 h después); un turno pasado sin plan de la IA hace que salga solo, y no si no quedan de hoy; en el plan, «Rehacer
+// el plan» en lugar de «Compartir», y sus ajustes con el tono y las dos horas
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  const r = await page.evaluate(async () => {
+    const H = await import('/js/planes-hora.js');
+    const ia = await import('/js/ia.js');
+    const { LS, diaDe } = await import('/js/util.js');
+    const S = window.S, M = { cierreMercado: S.M.cierreMercado };
+    const hs = H.horasPlan(M).map((x) => x.txt);
+    // un turno de hoy que ya ha pasado: las horas elegidas, una hace 20 minutos
+    const d = new Date(Date.now() - 20 * 60e3), hh = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    const mismoDia = diaDe(d.getTime()) === diaDe();
+    H.guardarCfgHoras({ h1: hh, h2: '' });
+    const pend = H.turnoPendiente(M, { t: Date.now() - 5 * 3600e3 });
+    const cubierto = H.turnoPendiente(M, { t: Date.now() - 10 * 60e3 });
+    LS.set('planes-cupo', { dia: diaDe(), quedan: 1, gratis: 2, max: 5, usados: 1 });
+    const conCupo = ia.planViejoAuto(S.M, false);
+    LS.set('planes-cupo', { dia: diaDe(), quedan: 0, gratis: 2, max: 5, usados: 2 });
+    const sinCupo = ia.planViejoAuto(S.M, false);
+    H.guardarCfgHoras({ h1: '', h2: '' });
+    localStorage.removeItem('fm-planes-cupo');
+    return { hs, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
+  });
+  const def = JSON.stringify(r.hs) === '["00:25","12:25"]' || /^00:[1-5]\d$/.test(r.hs[0]);
+  if (!def) mal(`planes a su hora: las horas por defecto no son las del mercado: ${JSON.stringify(r.hs)}`);
+  else if (r.mismoDia && (!r.pend || r.cubierto)) mal(`planes a su hora: el turno pasado sin plan: ${JSON.stringify(r)}`);
+  else if (r.mismoDia && (!r.conCupo || r.sinCupo)) mal(`planes a su hora: con y sin planes de hoy: ${JSON.stringify(r)}`);
+  else bien(`planes a su hora: ${r.hs.join(' y ')} por defecto; uno pasado sin plan sale solo y no si no quedan de hoy`);
+  const cab = await page.evaluate(() => { const c = document.querySelector('.plan-cab'); return { t: c ? c.innerText : '', rehacer: !!document.querySelector('.plan-cab [data-accion="planYa"]'), aj: !!document.querySelector('.plan-cab [data-accion="planAjustes"]'), comp: !!document.querySelector('.plan-cab [data-accion="tarjeta"]'), quien: (document.querySelector('.plan-quien') || {}).innerText || '' }; });
+  // (en la demo sin clave el plan es el de la app: el botón dice «Hacerlo con la IA» o no sale si no hay IA)
+  if (cab.comp || /Compartir/.test(cab.t)) mal(`plan: sigue el botón «Compartir»: ${cab.t}`);
+  else if (!cab.aj) mal(`plan: faltan los ajustes del plan en la cabecera: ${cab.t}`);
+  else bien(`plan: sin «Compartir»; ${cab.rehacer ? `«${cab.t.replace(/\s+/g, ' ').replace('Plan de hoy', '').trim()}» y ` : ''}sus ajustes en la cabecera`);
+  await page.evaluate(() => document.querySelector('.plan-cab [data-accion="planAjustes"]').click());
+  await page.waitForTimeout(500);
+  const aj = await page.evaluate(() => ({ h1: !!document.querySelector('select[data-cambia="planH1"]'), h2: !!document.querySelector('select[data-cambia="planH2"]'), tono: !!document.querySelector('select[data-cambia="pullitas"]'), rehacer: !!document.querySelector('[data-accion="planYa"]'), img: !!document.querySelector('[data-accion="tarjeta"]') }));
+  if (!aj.h1 || !aj.h2 || !aj.tono || !aj.img) mal(`plan: los ajustes del plan: ${JSON.stringify(aj)}`);
+  else {
+    await page.selectOption('select[data-cambia="planH2"]', '20:30');
+    await page.waitForTimeout(400);
+    const c = await page.evaluate(() => JSON.parse(localStorage.getItem('fm-cfg-planes-hora') || '{}'));
+    if (c.h2 !== '20:30') mal(`plan: elegir la hora del segundo plan no se guarda: ${JSON.stringify(c)}`);
+    else bien('plan: sus ajustes (tono, las dos horas, rehacer e imagen para el grupo) y la hora elegida se guarda');
+  }
+  if (errores.length) mal(`planes a su hora: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 16: (14 nov) las funciones top sin anuncio (en Play, sin consentimiento o sin relleno): gratis UNA vez al día por
 // dispositivo, todas juntas; la segunda vez del día no se abren y la hoja dice que no hay anuncio; al día siguiente, otra vez
 {

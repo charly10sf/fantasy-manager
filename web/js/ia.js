@@ -14,6 +14,7 @@ import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
+import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
@@ -1758,16 +1759,15 @@ export function planViejo(M) {
   return Date.now() - p.t > 10 * 3600e3;
 }
 
-/** ¿se hace sola un plan nuevo con la IA? Con la de la app (2 al día) solo el primero del día y tras el cambio de mercado,
-    y nunca si el Worker ya ha dicho que hoy no quedan: los demás los pide cada uno con «Otro plan». Con tu clave, planViejo */
+/** ¿se hace sola un plan nuevo con la IA? (0.7.13l, Carlos 16 nov) A sus horas: por defecto, 10 minutos después de que se
+    refresque el mercado y 12 horas después, o las que elija en Ajustes (planes-hora.js). Con la de la app cuentan en los 2
+    del día, así que nunca si el Worker ya ha dicho que hoy no quedan. Con tu clave, además, si el plan es viejo (planViejo) */
 export function planViejoAuto(M, demo) {
-  if (!planesApp(demo)) return planViejo(M);
-  if (!planViejo(M)) return false;
+  const turno = !!turnoPendiente(M, ultimoPlan());
+  if (!planesApp(demo)) return turno || planViejo(M);
+  if (!turno) return false;
   const cu = cupoPlanes();
-  if (cu && cu.quedan <= 0) return false;
-  const p = ultimoPlan();
-  if (!p || p.dia !== diaDe()) return true;
-  return !!(M && M.cierreMercado && p.mercado && Math.abs(M.cierreMercado - p.mercado) > 3600e3);
+  return !(cu && !cu.ilimitado && cu.quedan <= 0);
 }
 
 /** su próximo partido en corto: «vs Getafe 18º» en casa, «en Real Madrid 3º» fuera */

@@ -16,6 +16,7 @@ import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
+import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
 import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
@@ -775,6 +776,33 @@ const fila = (t, s, der = '', q = '', cls = '') => `<div class="ajuste${cls ? ` 
 const selA = (cambia, opts, val, nombre, extra = '') => `<select data-cambia="${cambia}" aria-label="${esc(nombre)}" ${extra}>${opts.map(([v, t]) => `<option value="${esc(v)}"${String(val) === String(v) ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
 const antesOpts = (k) => OPC_ANTES[k].map((m) => [m, antesTxt(m)]);
 
+/* (0.7.13l) los dos planes que salen solos y a qué hora: «Al refrescar el mercado» (10 min después) y «12 h después»,
+   o la que elija, de media en media hora */
+const OPC_HORA = Array.from({ length: 48 }, (_, i) => { const t = `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`; return [t, t]; });
+function filasHorasPlan(S, pApp) {
+  const c = cfgHoras(), hs = horasPlan(S.M), def = horasDefecto(S.M);
+  const sub = c.on ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Apagado: solo cuando lo pidas';
+  let h = fila('Planes que salen solos', sub, interr(c.on, 'planesHora', '', 'Planes que salen solos'), 'plan automatico hora horas');
+  if (c.on) {
+    h += fila('Primer plan', `Por defecto, ${def[0]}: 10 minutos después de que se refresque el mercado`, selA('planH1', [['', `${def[0]} (mercado)`], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
+    h += fila('Segundo plan', `Por defecto, ${def[1]}: 12 horas después`, selA('planH2', [['', `${def[1]} (+12 h)`], ...OPC_HORA], c.h2 || '', 'Hora del segundo plan'), 'plan hora');
+  }
+  return h;
+}
+/** los ajustes del plan, desde el plan: el tono, a qué horas sale solo y rehacerlo ya */
+export function planAjustesHTML(S) {
+  const ci = cfgIA(), pApp = planesApp(enDemo()), cu = pApp ? cupoPlanes() : null;
+  let h = `<div class="hoja-cab"><h2>Tu plan</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  h += `<div class="plan-aj">`;
+  h += fila('Pullitas', 'El tono del plan: bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'));
+  h += filasHorasPlan(S, pApp);
+  h += `</div>`;
+  if (cu && !cu.ilimitado) h += `<p class="t2 peq" style="margin:6px 2px 0">${cu.quedan > 0 ? (cu.quedan === 1 ? 'Hoy te queda 1 plan con la IA.' : `Hoy te quedan ${cu.quedan} planes con la IA.`) : 'Hoy ya no te quedan planes con la IA.'}</p>`;
+  h += `<button class="btn ancho" style="margin-top:14px" data-accion="planYa">${icono('ia')}Rehacer el plan ahora</button>`;
+  h += `<button class="btn ancho sec" style="margin-top:8px" data-accion="tarjeta">${icono('enviar')}Imagen del plan para el grupo</button>`;
+  return h;
+}
+
 /** lo que busca: las filas que no casan se esconden y se abren las secciones que tienen alguna */
 export function filtrarAjustes(raiz, q) {
   const b = norm(String(q || '').trim());
@@ -892,14 +920,15 @@ export function ajustes(S) {
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
-    c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h y al cambiar el mercado. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
+    c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h, al cambiar el mercado y a la hora de tus planes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
   }
   if (k || pApp) {
     const lista = ((LS.get('ia-modelos', {}) || {}).lista) || [];
     const fuera = LS.get('ia-agotados', {}) || {};
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).length;
-    c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
+    if (!pApp) c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
+    c3 += filasHorasPlan(S, pApp);
     if (k) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
     if (k && !pApp) c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');

@@ -41,6 +41,7 @@ import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
 import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen } from './semaforo.js';
+import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
 
@@ -935,6 +936,9 @@ function programarFondo() {
   // y unos 50 y 20 minutos antes de cada partido en que juega alguno de tu once, para el once confirmado
   const tOnce = (S.D ? pasadasOnce(S.D) : LS.get('fondo-onces', [])).find((x) => x > Date.now() + MIN);
   if (tOnce && (!prox || prox < Date.now() || tOnce < prox)) prox = tOnce;
+  // (0.7.13l) y a la hora del próximo plan que sale solo (un minuto después, para que ya le toque)
+  const pt = puedePlanIA(enDemo()) ? proximoTurno(S.M || { cierreMercado: cierre }) : null;
+  if (pt && (!prox || prox < Date.now() || pt.t + MIN < prox)) prox = pt.t + MIN;
   nativo.programarFondo(cfgFondo().on && !enDemo(), prox);
 }
 
@@ -1051,12 +1055,14 @@ async function trabajoFondo() {
     if (!enApp || enDemo()) { paso('liga de ejemplo: nada que hacer'); return; }
     if (!cfgFondo().on) { paso('apagado en Ajustes'); return; }
     if (!haySesion()) { paso('sin sesión de LaLiga'); return; }
-    if (deNoche()) { paso('de noche: nada'); return; }
+    // (0.7.13l) de noche nada, salvo un plan a su hora (si eligió una de madrugada)
+    const turnoF = () => turnoPendiente(S.M || { cierreMercado: LS.get('fondo-cierre', 0) }, ultimoPlan());
+    if (deNoche() && !(puedePlanIA(enDemo()) && turnoF())) { paso('de noche: nada'); return; }
     // (de madrugada no se miran: se darían por avisadas sin avisar)
     const fallos = callado() ? [] : await avisosDeFallos();
     if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo`);
     const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
-    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre) {
+    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre && !(puedePlanIA(enDemo()) && turnoF())) {
       const lista = [...fallos];
       // con un partido de los tuyos a punto de empezar, el once confirmado (con la liga guardada: está al día)
       const g = foto();
@@ -1085,10 +1091,11 @@ async function trabajoFondo() {
       if (o.length) { lista.unshift(...o); paso('once confirmado: alguno de los tuyos no es titular'); }
     } catch (e) { if (e.sesion) throw e; paso(`once confirmado: ${e.message}`); }
     LS.set('fondo-completo', Date.now()); LS.set('fondo-cierre', (S.M && S.M.cierreMercado) || 0);
-    if (planViejo(S.M)) {
+    if (planViejo(S.M) || turnoF()) {
       let conIA = false;
-      // (con la IA de la app, 2 al día: sola, solo el primero del día o tras el cambio de mercado; planViejoAuto)
+      // (con la IA de la app, 2 al día: solos, a sus horas, y cuentan en los del día; planViejoAuto y planes-hora.js)
       if (puedePlanIA(enDemo()) && planViejoAuto(S.M, enDemo())) {
+        intentarTurno(turnoF());
         try {
           // (con un reloj que no se para en segundo plano, y que corta de verdad la pregunta si salta)
           const ctlF = new AbortController();
@@ -1287,7 +1294,7 @@ async function apunteDinero(tid, dicho, cu) {
   });
 }
 // con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
-if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) comprobarAvisos(); }, 10 * 60e3 + 5e3);
+if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) { comprobarAvisos(); planAHora(); } }, 10 * 60e3 + 5e3);
 // con la configuración nueva de limites.json puede cambiar lo que está bloqueado
 window.addEventListener('limites-nuevos', () => { if (S.D && S.M && !S.hoja) pintar(); });
 // las caras y los escudos de la liga de ejemplo llegan de LaLiga después de abrirla (la primera vez o pasados 3 días)
@@ -1740,7 +1747,19 @@ async function despues() {
   rehacerSiFalta();
   comprobarAvisos();
   const ci = cfgIA();
-  if (puedePlanIA(enDemo()) && ci.auto && planViejoAuto(S.M, enDemo()) && !S.planEstado.cargando && !S.planEstado.error && !S.planEstado.cupo) generarPlan({ auto: true });
+  planAHora(ci.auto);
+}
+/** (0.7.13l) el plan que sale solo a su hora (planes-hora.js): al abrir la app y, con ella abierta, cada 10 minutos. Con
+    la IA de la app manda la hora elegida; con la clave de cada uno, además «Plan automático al abrir» (ci.auto) */
+function planAHora(alAbrir = false) {
+  if (!S.D || !S.M || enDemo() || !puedePlanIA(enDemo())) return;
+  const E = S.planEstado || {};
+  if (E.cargando || E.error || E.cupo) return;
+  const turno = turnoPendiente(S.M, ultimoPlan());
+  if (!turno && !(alAbrir && !planesApp(enDemo()))) return;
+  if (!planViejoAuto(S.M, enDemo())) return;
+  intentarTurno(turno);
+  generarPlan({ auto: true });
 }
 
 /* ---------------- avisos de fallos (te llegan a ti y contestas desde la app) ---------------- */
@@ -2006,7 +2025,7 @@ async function generarPlan({ extra = false, auto = false } = {}) {
       S.planEstado = {};
       if (!S.D) return;
       rehacer();
-      tostada('Plan parado. Pide otro con «Pedir otro plan» cuando quieras');
+      tostada('Plan parado. Pide otro con «Rehacer el plan» cuando quieras');
     } else if (e.cupo) {
       // sin planes con la IA hoy (2 al día; más, con un anuncio en la app de Google Play): no es un fallo. Se queda el plan
       // de la app y, si lo ha pedido él, la caja con lo que puede hacer
@@ -2161,7 +2180,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3071,6 +3090,9 @@ document.addEventListener('click', async (ev) => {
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
     case 'iaWebPlan': guardarCfgIA({ webPlan: !cfgIA().webPlan }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
+    // (0.7.13l) los planes que salen solos a su hora, y los ajustes del plan desde el propio plan
+    case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? 'Los planes saldrán solos a su hora' : 'Los planes solo saldrán cuando los pidas'); break; }
+    case 'planAjustes': hoja('planAj'); break;
     case 'fondo': {
       const on = !cfgFondo().on;
       guardarCfgFondo({ on });
@@ -3180,6 +3202,7 @@ document.addEventListener('change', (ev) => {
   if (k === 'deuda') { guardarCfg({ deuda: +v }); rehacer(); pintar(); repintarHoja(); }
   if (k === 'liga') { cerrarHoja(true); cambiarDeLiga(v); }
   if (k === 'modelo') guardarCfgIA({ modelo: v });
+  if (k === 'planH1' || k === 'planH2') { guardarCfgHoras({ [k === 'planH1' ? 'h1' : 'h2']: v }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); }
   if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M, planAvisos()); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }

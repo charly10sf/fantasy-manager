@@ -5,6 +5,7 @@ import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, 
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { linea, barra } from './graficos.js';
+import { proximoTurno } from './planes-hora.js';
 import { hayClave, puedePlanIA, planesApp, cupoPlanes, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
@@ -596,12 +597,13 @@ function planHTML(S) {
   const queda = cu && cu.ilimitado ? ' · sin límite' : cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
   // (Carlos, 14 nov) el de la IA dice de cuándo es: «de hoy 10:32 (hace 2 h)»
   const quien = P ? (esIA ? `Con la IA${P.web ? ' y Google' : ''} · de ${cuando(P.t)} (${rel(P.t)})${queda}` : 'Automático, sin IA') : '';
-  // pedir otro: un botón pequeño en la cabecera (antes, uno grande con su explicación entre el resumen y los pasos)
-  const otro = conIA && !E.cargando && P ? `<button class="plan-otro-b" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Otro plan' : 'Con la IA'}</button>` : '';
-  // compartir: el plan (lo hecho) y sus pullitas como imagen para el grupo de la liga (0.6.11)
-  // (Carlos, 1 nov) con texto: solo el icono no se veía. Quién y cuándo, en su línea: al lado de los botones se cortaba en el móvil
-  const compartir = P && !E.cargando ? `<button class="plan-otro-b plan-comp" data-accion="tarjeta" title="Una imagen de tu plan para el grupo de tu liga">${icono('enviar')}Compartir</button>` : '';
-  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${compartir}${otro}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}</span></div>` : ''}`;
+  // (0.7.13l, Carlos 16 nov) en lugar de «Compartir» y del «Otro plan» pequeño, «Rehacer el plan», más grande, y al lado sus
+  // ajustes (el tono, a qué horas sale solo; la imagen para el grupo está ahí dentro). Cuándo sale solo el siguiente, debajo
+  const rehacer = conIA && !E.cargando && P ? `<button class="plan-rehacer" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Rehacer el plan' : 'Hacerlo con la IA'}</button>` : '';
+  const ajB = P && (conIA || !E.cargando) ? `<button class="b-ico plan-aj-b" data-accion="planAjustes" aria-label="Ajustes del plan" title="Ajustes del plan">${icono('ajustes')}</button>` : '';
+  const pt = conIA ? proximoTurno(M) : null;
+  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
+  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2">${nativo.canal() === 'play' ? 'Tarda menos de un minuto. Si sales de la app, se sigue haciendo y al volver lo tienes aquí.' : 'Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.'}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;

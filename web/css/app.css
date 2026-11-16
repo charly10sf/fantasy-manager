@@ -649,6 +649,7 @@ h1.titulo { font-weight: 700; }
 .aj-cuerpo .ajuste .c span { display: block; margin-top: 1px; font-size: 13px; line-height: 1.35; }
 .aj-cuerpo .ajuste select { max-width: 42%; padding: 7px 8px; font-size: 14px; }
 .aj-cuerpo .ajuste input[type=time] { padding: 6px 8px; }
+.plan-aj .ajuste select { max-width: 46%; }
 .aj-cuerpo .ajuste.sub { padding: 8px 0 10px 14px; border-left: 2px solid var(--plano3); margin-left: 2px; }
 .aj-cuerpo .ajuste.sub .c b { font-size: 14px; font-weight: 500; }
 .aj-quitar { flex: none; width: 34px; height: 34px; }
@@ -1988,6 +1989,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .plan-cab { flex-wrap: nowrap; }
 .plan-otro-b { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--rojo3); background: var(--rojo-s); color: var(--rojo-l); font: 700 var(--t-sec2) 'Barlow'; white-space: nowrap; }
 .plan-otro-b .ic { width: 15px; height: 15px; }
+/* (0.7.13l) «Rehacer el plan», en el sitio de «Compartir» y más grande, con sus ajustes al lado */
+.plan-rehacer { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--rojo3); background: var(--rojo-s); color: var(--texto); font: 700 var(--t-cuerpo) 'Barlow'; white-space: nowrap; }
+.plan-rehacer .ic { width: 18px; height: 18px; color: var(--rojo-l); }
+.plan-aj-b { flex: none; }
 .plan-quien { margin-left: auto; }
 .plan-titular { font-size: var(--t-cifra); margin: 8px 0 6px; }
 .plan-sit { font-size: var(--t-cuerpo); line-height: 1.45; margin-bottom: 4px; }
