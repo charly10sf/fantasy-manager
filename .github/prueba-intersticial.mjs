@@ -28,7 +28,7 @@ const ANDROID = `window.__pedidos = []; window.__vista = true;
 window.FantasyApp = new Proxy({
   avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {},
   hayAnuncios: () => true, aLaVista: () => window.__vista,
-  zonaAnuncios: (si, b) => { window.__pedidos.push(['zona', si, b]); },
+  zonaAnuncios: (si, b, inter) => { window.__pedidos.push(['zona', si, b, inter]); },
   intersticial: (b) => { window.__pedidos.push(['intersticial', b]); setTimeout(() => window.intersticialVisto && window.intersticialVisto(true, ''), 50); },
   verAnuncio: (p) => { window.__pedidos.push(['bonificado', p]); },
   preguntaEnMarcha: (rid, tk, vuelta, texto) => { window.__pedidos.push(['enMarcha', rid, vuelta, texto]); },
@@ -152,7 +152,7 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
   ok(await A.pedidos() === 5, 'y pasados, el siguiente');
   const p = await A.page.evaluate(() => window.__pedidos);
   ok(!p.some((x) => x[0] === 'banner'), 'ya no se pide nunca el banner de abajo');
-  ok(p.some((x) => x[0] === 'zona' && x[1] === true && x[2] === 'ca-app-pub-3175956326240112/1234567890'), 'Android sabe que la liga está cargada (y el bloque) para precargar');
+  ok(p.some((x) => x[0] === 'zona' && x[1] === true && x[2] === 'ca-app-pub-3175956326240112/1234567890' && x[3] === true), 'Android sabe que la liga está cargada, el bloque y que a esta cuenta le tocan (para precargar)');
   ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
   await A.cerrar();
 }
@@ -163,6 +163,8 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   await A.uso(6);
   await A.pestana('rivales');
   ok(await A.pedidos() === 0, `${t}: ninguno`);
+  const z = await A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'zona').pop());
+  ok(!z || z[3] === false, `${t}: Android ni siquiera los carga`);
   await A.cerrar();
 }
 {
@@ -199,7 +201,6 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   await A.page.click('[data-accion="enviar"]');
   for (let i = 0; i < 40 && !(await A.page.evaluate(() => window.S.tipoHoja && window.S.tipoHoja[0] === 'anuncio')); i++) { await A.page.waitForTimeout(100); await A.page.clock.runFor(300); }
   const hoja = await A.page.evaluate(() => (document.querySelector('.hoja') || {}).innerText || '');
-  if (!/Más preguntas/i.test(hoja)) console.log('   (depurar)', hoja.slice(0, 200));
   ok(/Más preguntas a la IA/i.test(hoja) && /Ver el anuncio/i.test(hoja), 'sin preguntas hoy, en la de Google Play sale la hoja del anuncio');
   await A.page.click('.hoja [data-accion="verAnuncio"]');
   await A.page.clock.runFor(300);

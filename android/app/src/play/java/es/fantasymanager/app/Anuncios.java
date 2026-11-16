@@ -55,8 +55,9 @@ final class Anuncios {
     private static boolean pidiendo;
     /** iniciado: ya se ha llamado a AdMob; listo: AdMob ya ha arrancado */
     private static volatile boolean iniciado, listo;
-    /** activado: la web de esta pantalla ya ha dicho alguna vez que su liga está cargada; quiere: lo dice ahora */
-    private static boolean activado, quiere, teclado;
+    /** activado: la web de esta pantalla ya ha dicho alguna vez que su liga está cargada; quiere: lo dice ahora;
+        conIntersticiales: a esta cuenta le tocan (al dueño y a los de su liga, no: ni se cargan) */
+    private static boolean activado, quiere, teclado, conIntersticiales;
     private static RewardedAd bonificado;
     private static long bonificadoT, bonificadoFin;
     private static boolean cargandoBonificado, ensenando;
@@ -134,19 +135,22 @@ final class Anuncios {
     }
 
     /** la web dice si su liga está cargada (y no está la pantalla del límite): hasta la primera vez, ningún anuncio */
-    static void zona(boolean si, String bloque) {
+    static void zona(boolean si, String bloque, boolean inter) {
         Principal a = act;
         if (a == null) return;
         a.runOnUiThread(() -> {
             if (a != act) return;
             if (bloque != null && bloque.startsWith(CUENTA) && bloque.matches("ca-app-pub-\\d{16}/\\d{10}")) bloqueWeb = bloque;
             quiere = si;
+            boolean antes = conIntersticiales;
+            conIntersticiales = si && inter;
+            if (!conIntersticiales) intersticial = null;
             if (si && !activado) {
-                // la primera vez: ahora sí, el intersticial y el bonificado precargados
+                // la primera vez: ahora sí, el intersticial (si le tocan) y el bonificado precargados
                 activado = true;
                 cargarIntersticial();
                 cargarBonificado();
-            }
+            } else if (conIntersticiales && !antes) cargarIntersticial();
         });
     }
 
@@ -172,6 +176,7 @@ final class Anuncios {
 
     private static void soltar() {
         quiere = false;
+        conIntersticiales = false;
         activado = false;
         pendiente = null;
         bonificado = null;
@@ -188,7 +193,7 @@ final class Anuncios {
     }
 
     private static void cargarIntersticial() {
-        if (act == null || !listo || !activado || cargandoIntersticial || ensenandoIntersticial) return;
+        if (act == null || !listo || !activado || !conIntersticiales || cargandoIntersticial || ensenandoIntersticial) return;
         long ahora = System.currentTimeMillis();
         if (intersticial != null && ahora - intersticialT < CADUCA) return;
         String id = bloqueIntersticial();
@@ -222,6 +227,7 @@ final class Anuncios {
         long ahora = System.currentTimeMillis();
         if (!listo) return iniciado ? "sin anuncio" : "sin consentimiento";
         if (!activado || !quiere) return "pantalla";
+        if (!conIntersticiales) return "no a esta cuenta";
         if (!a.aLaVista) return "fuera";
         if (teclado) return "teclado";
         if (Puente.ocupada) return "la IA trabaja";

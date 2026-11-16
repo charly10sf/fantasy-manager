@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -767,9 +767,12 @@ function ponerBanner(si, zona = si) {
   // está cargada (hasta entonces no carga ni precarga ningún anuncio) y si no está la pantalla del límite. Los
   // intersticiales los pide pausaNatural
   const z = !!zona && tuLiga && !limitado;
-  if (z === bannerYa) return;
-  bannerYa = z;
-  nativo.zonaAnuncios(z, intersticialCfg().bloque);
+  // (y si a esta cuenta le tocan intersticiales: al dueño y a los de su liga, Android ni los carga)
+  const ic = intersticialCfg(), inter = z && ic.on && intersticialParaMi();
+  const k = `${z}|${inter}|${ic.bloque}`;
+  if (k === bannerYa) return;
+  bannerYa = k;
+  nativo.zonaAnuncios(z, ic.bloque, inter);
 }
 window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 /* (0.8) el intersticial, solo en una pausa natural: al cambiar de pestaña con la barra de abajo o al cerrar una ficha con

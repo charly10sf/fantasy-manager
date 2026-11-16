@@ -131,7 +131,9 @@ export function sinCodigos(t) {
     .replace(new RegExp(`\\s*\\[${REF}\\]`, 'g'), '')
     .replace(new RegExp(`\\b(?:la\\s+)?(?:operaci[oó]n|ref\\.?)\\s+${REF}\\b`, 'gi'), '')
     .replace(new RegExp(`\\s+${REF}\\b`, 'g'), '')
-    .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ');
+    .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ')
+    // (sexta pasada con Haiku, 17 nov) «La puja de la app,, son…», «(44,70 M,)»
+    .replace(/,(?:\s*,)+/g, ',').replace(/,\)/g, ')');
 }
 
 /** el principio de una respuesta, para el aviso del móvil con la app cerrada (sin notas, sin markdown; con los alias) */

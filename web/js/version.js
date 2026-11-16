@@ -32,6 +32,12 @@ export const NOVEDADES = [
     ],
   },
   {
+    v: '0.7.13za', f: '2026-11-16', h: '23:49', t: 'Quién usa la app, por ligas',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Las cuentas de fuera, agrupadas por liga', x: 'En Quién usa la app, pestaña Cuentas, las de otras ligas salen agrupadas: primero las ligas con más de una cuenta, después las que van solas en su liga y al final las que aún no han dicho la suya. Arriba se dice cuántas ligas distintas hay, y el equipo ya no repite el nombre del mánager cuando se llaman igual.' },
+    ],
+  },
+  {
     v: '0.7.13z', f: '2026-11-16', h: '21:11', t: 'El dinero de los rivales, en el punto medio',
     cosas: [
       { tipo: 'mejora', d: 'dinero', t: 'Su dinero estimado, mejor centrado', x: 'La cifra del dinero de un rival que no se sabe exacto ya no da por hecho que ha cogido tantas recompensas diarias como tú: la pone en el punto medio entre ninguna y todas, y el ± es la mitad de ese hueco. En la ficha del rival queda solo la cifra, sin el párrafo de debajo ni el número de compras; en el Diagnóstico se ve de qué se compone cada margen.' },

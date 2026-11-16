@@ -307,7 +307,7 @@ export const nativo = {
   // intersticialVisto), el bonificado para desbloquear algo (contesta con anuncioVisto) y el consentimiento. Desde la 0.8
   // no hay banner abajo: lo sustituyen los intersticiales
   hayAnuncios: () => !!(N && typeof N.hayAnuncios === 'function' && llamar('hayAnuncios')),
-  zonaAnuncios: (si, bloque) => llamar('zonaAnuncios', !!si, String(bloque || '')),
+  zonaAnuncios: (si, bloque, inter) => llamar('zonaAnuncios', !!si, String(bloque || ''), !!inter),
   hayIntersticial: () => !!(N && typeof N.intersticial === 'function' && llamar('hayAnuncios')),
   intersticial: (bloque) => llamar('intersticial', String(bloque || '')),
   verAnuncio: (para) => llamar('verAnuncio', String(para || '')),
