@@ -27,6 +27,12 @@ const CASOS = [
   { id: 'quien-me-ataca', q: '¿Quién me puede clausular a alguien esta semana?' },
   { id: 'vago', q: 'Estoy perdido, ayúdame' },
   { id: 'mas-corto', sigue: true, q: 'Dímelo más corto' },
+  // (noche del 16 al 17 nov) preguntas típicas que no estaban: un trueque, el portero, un libre del mercado y cuánto pujar
+  { id: 'trueque', q: '{R2} me propone cambiarme {SUYO} por {MIO2}, uno por otro. ¿Me interesa?' },
+  { id: 'portero', q: '¿A quién pongo de portero esta jornada?' },
+  { id: 'libre', q: '¿Qué te parece {LIBRE}?' },
+  { id: 'cuanto-pujo', sigue: true, q: '¿Y cuánto pujo por él?' },
+  { id: 'blindar', q: '¿Blindo a alguien?' },
 ];
 
 let gastado = 0;
@@ -47,7 +53,10 @@ for (const escena of ESCENAS) {
           const rv = (n) => M.rivales.find((x) => x.e.pos === n) || M.rivales[Math.min(n - 1, M.rivales.length - 1)];
           const caro = (l) => [...l].sort((a, b) => (b.j.valor || 0) - (a.j.valor || 0))[0];
           const mio = caro(M.mias || []), suyo = caro((rv(2).fichas || []).filter((x) => x.j && x.j.pos !== 5));
-          const pre = q.replace(/\{R2\}/g, rv(2).e.manager).replace(/\{E2\}/g, rv(2).e.nombre).replace(/\{R5\}/g, rv(5).e.manager).replace(/\{E5\}/g, rv(5).e.nombre).replace(/\{e5\}/g, rv(5).e.nombre.toLowerCase()).replace(/\{MIO\}/g, mio.j.nombre).replace(/\{SUYO\}/g, suyo.j.nombre);
+          // el mío que vale más parecido al suyo (para el trueque) y el libre del mercado más caro que se puede pagar
+          const mio2 = [...(M.mias || [])].filter((x) => x.j && x.j.id !== mio.j.id).sort((a, b) => Math.abs(a.j.valor - suyo.j.valor) - Math.abs(b.j.valor - suyo.j.valor))[0];
+          const libre = (M.mercado || []).filter((m) => m.tipo !== 'manager').map((m) => M.J(m.pid)).filter((j) => j && j.pos !== 5 && j.valor < 50e6).sort((a, b) => b.valor - a.valor)[0];
+          const pre = q.replace(/\{R2\}/g, rv(2).e.manager).replace(/\{E2\}/g, rv(2).e.nombre).replace(/\{R5\}/g, rv(5).e.manager).replace(/\{E5\}/g, rv(5).e.nombre).replace(/\{e5\}/g, rv(5).e.nombre.toLowerCase()).replace(/\{MIO\}/g, mio.j.nombre).replace(/\{SUYO\}/g, suyo.j.nombre).replace(/\{MIO2\}/g, mio2.j.nombre).replace(/\{LIBRE\}/g, libre ? libre.nombre : 'Cubarsí');
           // la conversación como la guarda la app (con la pregunta de ahora la última)
           U.LS.set(Dt.K('chat'), [...hist, { r: 'yo', t: pre, ts: Date.now() }]);
           const h = I.conversacion();
@@ -81,8 +90,13 @@ for (const escena of ESCENAS) {
         if (/\b[PMTCAVB]-\d{2,6}\b|índice de sobrecoste|OPERACIONES POSIBLES|CUENTAS HECHAS|```|\bnotas\b\s*\{/i.test(vista.texto)) malas.push('restos internos');
         if (/Rival \d+|Equipo \d+/.test(vista.texto)) malas.push('alias sin destapar');
         if (/¡Claro!|Espero que te ayude|Aquí tienes|En resumen/i.test(vista.texto)) malas.push('frases de asistente');
-        resumen.push({ escena, esf, id: caso.id, ms, coste, malas, car: vista.texto.length });
-        out.push(`\n### ${caso.id}: «${prep.pre}»\n\n${ms} ms · ${r.entra} tokens de entrada (con caché) y ${r.sale} de salida · ${(coste / 1e4).toFixed(3)} céntimos${vista.revisadas ? ` · la app revisó ${vista.revisadas}` : ''}${malas.length ? ` · **MAL: ${malas.join(', ')}**` : ''}${vista.apuntadas.length ? ` · apuntó: ${vista.apuntadas.join(' | ')}` : ''}\n\n${vista.texto.split('\n').map((l) => `> ${l}`).join('\n')}\n`);
+        if (/<\/?[a-z]+[^>]*>/i.test(vista.texto)) malas.push('etiquetas HTML');
+        if (/desbloque|bloquead/i.test(vista.texto)) malas.push('dice «desbloquear» o «bloqueada»');
+        const sinRev = vista.texto.replace(/\n\n\*\*Revisado por la app:\*\*[\s\S]*$/, '').trim();
+        const acabaPregunta = /\?\s*$/.test(sinRev);
+        const palabras = sinRev.split(/\s+/).filter(Boolean).length;
+        resumen.push({ escena, esf, id: caso.id, ms, coste, malas, car: vista.texto.length, palabras, acabaPregunta });
+        out.push(`\n### ${caso.id}: «${prep.pre}»\n\n${ms} ms · ${r.entra} tokens de entrada (con caché) y ${r.sale} de salida · ${(coste / 1e4).toFixed(3)} céntimos · ${palabras} palabras${acabaPregunta ? ' · acaba en pregunta' : ''}${vista.revisadas ? ` · la app revisó ${vista.revisadas}` : ''}${malas.length ? ` · **MAL: ${malas.join(', ')}**` : ''}${vista.apuntadas.length ? ` · apuntó: ${vista.apuntadas.join(' | ')}` : ''}\n\n${vista.texto.split('\n').map((l) => `> ${l}`).join('\n')}\n`);
         hist = [...hist, { r: 'yo', t: prep.pre, ts: Date.now() }, { r: 'ia', t: vista.texto, ts: Date.now() }];
         console.log(`${malas.length ? 'MAL ' : 'BIEN'} ${escena}/${esf}/${caso.id} ${ms} ms ${(coste / 1e4).toFixed(3)} c${malas.length ? ` (${malas.join(', ')})` : ''}`);
       }
@@ -91,6 +105,6 @@ for (const escena of ESCENAS) {
 }
 await cerrar();
 const media = (l) => (l.length ? Math.round(l.reduce((s, x) => s + x, 0) / l.length) : 0);
-out.splice(1, 0, `\n**Resumen:** ${resumen.length} respuestas, ${resumen.filter((x) => x.malas.length).length} con fallos de forma; ${(gastado / 1e4).toFixed(2)} céntimos en total; tiempo medio ${media(resumen.map((x) => x.ms))} ms (${ESFUERZOS.map((e) => `${e}: ${media(resumen.filter((x) => x.esf === e).map((x) => x.ms))} ms`).join(', ')}); largo medio ${media(resumen.map((x) => x.car))} caracteres.\n`);
+out.splice(1, 0, `\n**Resumen:** ${resumen.length} respuestas, ${resumen.filter((x) => x.malas.length).length} con fallos de forma; ${(gastado / 1e4).toFixed(2)} céntimos en total; tiempo medio ${media(resumen.map((x) => x.ms))} ms (${ESFUERZOS.map((e) => `${e}: ${media(resumen.filter((x) => x.esf === e).map((x) => x.ms))} ms`).join(', ')}); largo medio ${media(resumen.map((x) => x.car))} caracteres (${media(resumen.map((x) => x.palabras))} palabras); ${resumen.filter((x) => x.acabaPregunta).length} acaban en pregunta.\n`);
 writeFileSync(new URL('./respuestas-chat.md', import.meta.url), out.join('\n'));
 console.log(`Gastado: ${(gastado / 1e4).toFixed(2)} céntimos`);
