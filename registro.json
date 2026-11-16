@@ -3145,7 +3145,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
@@ -7471,13 +7470,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3075,
+   "ok": 3076,
    "fallos": 0,
-   "ejecuciones": 2468,
+   "ejecuciones": 2469,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:06:16.124Z"
+   "ultima": "2026-11-16T10:11:15.748Z"
   }
  },
  "ptsDirecto": {},
@@ -7494,15 +7493,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:06:22.046Z"
+   "ultimaBien": "2026-11-16T10:11:20.896Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:06:22.046Z"
+   "ultimaBien": "2026-11-16T10:11:20.896Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:06:22.046Z"
+   "ultimaBien": "2026-11-16T10:11:20.896Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7510,11 +7509,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:06:22.046Z"
+   "ultimaBien": "2026-11-16T10:11:20.896Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:06:22.046Z"
+   "ultimaBien": "2026-11-16T10:11:20.896Z"
   }
  },
  "avisos": [
