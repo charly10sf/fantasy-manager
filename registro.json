@@ -1976,7 +1976,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
    "SPORT|136396955": 1794555227000,
    "AS|https://as.com/futbol/primera/gordon-no-consigue-cerrar-el-debate-f202611-n/": 1794559136000,
@@ -7496,13 +7495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3038,
+   "ok": 3039,
    "fallos": 0,
-   "ejecuciones": 2431,
+   "ejecuciones": 2432,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T07:01:11.372Z"
+   "ultima": "2026-11-16T07:06:17.701Z"
   }
  },
  "ptsDirecto": {},
@@ -7519,15 +7518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:01:14.653Z"
+   "ultimaBien": "2026-11-16T07:06:20.941Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:01:14.653Z"
+   "ultimaBien": "2026-11-16T07:06:20.941Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:01:14.653Z"
+   "ultimaBien": "2026-11-16T07:06:20.941Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7535,11 +7534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:01:14.653Z"
+   "ultimaBien": "2026-11-16T07:06:20.941Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T07:01:14.653Z"
+   "ultimaBien": "2026-11-16T07:06:20.941Z"
   }
  },
  "avisos": [
