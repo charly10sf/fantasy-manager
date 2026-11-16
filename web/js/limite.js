@@ -220,14 +220,16 @@ export function intersticialCfg() {
     on: !!(p && p.on), gracia: n(p && p.graciaMin, 3, 1, 60) * 60e3, cada: n(p && p.cadaMin, 5, 3, 240) * 60e3,
     maxDia: Math.floor(n(p && p.maxDia, 6, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
     bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
+    // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)
+    dueno: !!(p && p.dueno),
   };
 }
 let yoB = null, demoB = false;
-/** ¿a esta cuenta se le enseñan intersticiales? Al dueño nunca; a los de sus ligas, solo con «suLiga» */
+/** ¿a esta cuenta se le enseñan intersticiales? Al dueño no (salvo «dueno», para probarlos); a los de sus ligas, solo con «suLiga» */
 export function intersticialParaMi() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || !yoB || demoB) return false;
-  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return false;
+  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return intersticialCfg().dueno;
   if (!intersticialCfg().suLiga && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return false;
   return true;
 }

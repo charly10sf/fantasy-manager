@@ -168,6 +168,15 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   await A.cerrar();
 }
 {
+  // el dueño, con «dueno» (su móvil es de prueba en AdMob): para que pueda verlos
+  const A = await abrir({ dueno: true });
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); const g = U.LS.get('limites', null); g.cfg.intersticial.dueno = true; U.LS.set('limites', g); });
+  await A.uso(4);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 1, 'al dueño con «dueno» (para probarlos en su móvil de prueba): sí');
+  await A.cerrar();
+}
+{
   const A = await abrir({ enSuLiga: true, suLiga: true });
   await A.uso(4);
   await A.pestana('equipo');
