@@ -4,6 +4,426 @@
   "hecho": 1794864278416
  },
  "resumenes": {
+  "1": {
+   "generada": 1794864763844,
+   "ultimo": 1787857200000,
+   "mejores": [
+    {
+     "id": "3103",
+     "nombre": "Mbappé",
+     "pos": 4,
+     "equipo": "Real Madrid",
+     "teamId": "15",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t186/p3103/256x256/p3103_t186_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+     "pts": 22,
+     "media": 12.25,
+     "valor": 181492725
+    },
+    {
+     "id": "2600",
+     "nombre": "Mariano",
+     "pos": 4,
+     "equipo": "Alavés",
+     "teamId": "21",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t173/p2600/256x256/p2600_t173_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png",
+     "pts": 17,
+     "media": 5.166666666666667,
+     "valor": 14143236
+    },
+    {
+     "id": "1337",
+     "nombre": "Tenaglia",
+     "pos": 2,
+     "equipo": "Alavés",
+     "teamId": "21",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t173/p1337/256x256/p1337_t173_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png",
+     "pts": 17,
+     "media": 4.333333333333333,
+     "valor": 18410750
+    }
+   ]
+  },
+  "2": {
+   "generada": 1794864765067,
+   "ultimo": 1787599800000,
+   "mejores": [
+    {
+     "id": "2522",
+     "nombre": "Raphinha",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p2522/256x256/p2522_t178_1_001_000.png?v=1791555622995",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 24,
+     "media": 13.272727272727273,
+     "valor": 166528909
+    },
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "pos": 3,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p1715/256x256/p1715_t178_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 19,
+     "media": 9.25,
+     "valor": 134474044
+    },
+    {
+     "id": "2789",
+     "nombre": "Oso",
+     "pos": 2,
+     "equipo": "Sevilla",
+     "teamId": "17",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t179/p2789/256x256/p2789_t179_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t179/color/t179_sevilla-fc.png",
+     "pts": 17,
+     "media": 9,
+     "valor": 13827919
+    }
+   ]
+  },
+  "3": {
+   "generada": 1794864765965,
+   "ultimo": 1788204600000,
+   "mejores": [
+    {
+     "id": "3152",
+     "nombre": "Y. Zabiri",
+     "pos": 4,
+     "equipo": "Racing",
+     "teamId": "49",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t189/p3152/256x256/p3152_t189_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t189/color/t189_r-racing-club.png",
+     "pts": 21,
+     "media": 6.5,
+     "valor": 58538387
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 17,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    },
+    {
+     "id": "2534",
+     "nombre": "Álex Baena",
+     "pos": 3,
+     "equipo": "Atlético",
+     "teamId": "2",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t175/p2534/256x256/p2534_t175_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
+     "pts": 17,
+     "media": 7.333333333333333,
+     "valor": 91413246
+    }
+   ]
+  },
+  "4": {
+   "generada": 1794864766827,
+   "ultimo": 1788809400000,
+   "mejores": [
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "pos": 3,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p1715/256x256/p1715_t178_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 21,
+     "media": 9.25,
+     "valor": 134474044
+    },
+    {
+     "id": "2541",
+     "nombre": "Á. Valles",
+     "pos": 1,
+     "equipo": "Betis",
+     "teamId": "5",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t185/p2541/256x256/p2541_t185_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png",
+     "pts": 18,
+     "media": 9.166666666666666,
+     "valor": 51132631
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 17,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    }
+   ]
+  },
+  "5": {
+   "generada": 1794864767650,
+   "ultimo": 1789412400000,
+   "mejores": [
+    {
+     "id": "3103",
+     "nombre": "Mbappé",
+     "pos": 4,
+     "equipo": "Real Madrid",
+     "teamId": "15",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t186/p3103/256x256/p3103_t186_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+     "pts": 21,
+     "media": 12.25,
+     "valor": 181492725
+    },
+    {
+     "id": "3155",
+     "nombre": "Grimaldo",
+     "pos": 2,
+     "equipo": "Atlético",
+     "teamId": "2",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t175/p3155/256x256/p3155_t175_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
+     "pts": 19,
+     "media": 7.916666666666667,
+     "valor": 89642450
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 18,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    }
+   ]
+  },
+  "6": {
+   "generada": 1794864768484,
+   "ultimo": 1792605600000,
+   "mejores": [
+    {
+     "id": "2522",
+     "nombre": "Raphinha",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p2522/256x256/p2522_t178_1_001_000.png?v=1791555622995",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 21,
+     "media": 13.272727272727273,
+     "valor": 166528909
+    },
+    {
+     "id": "255",
+     "nombre": "Le Normand",
+     "pos": 2,
+     "equipo": "Atlético",
+     "teamId": "2",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t175/p255/256x256/p255_t175_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
+     "pts": 18,
+     "media": 2.909090909090909,
+     "valor": 4831936
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 17,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    }
+   ]
+  },
+  "7": {
+   "generada": 1794864769326,
+   "ultimo": 1789930800000,
+   "mejores": [
+    {
+     "id": "2522",
+     "nombre": "Raphinha",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p2522/256x256/p2522_t178_1_001_000.png?v=1791555622995",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 21,
+     "media": 13.272727272727273,
+     "valor": 166528909
+    },
+    {
+     "id": "3086",
+     "nombre": "Moleiro",
+     "pos": 3,
+     "equipo": "Villarreal",
+     "teamId": "20",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t449/p3086/256x256/p3086_t449_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t449/color/t449_villarreal-cf.png",
+     "pts": 21,
+     "media": 6.916666666666667,
+     "valor": 70509284
+    },
+    {
+     "id": "988",
+     "nombre": "Sivera",
+     "pos": 1,
+     "equipo": "Alavés",
+     "teamId": "21",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t173/p988/256x256/p988_t173_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png",
+     "pts": 19,
+     "media": 7.416666666666667,
+     "valor": 30543085
+    }
+   ]
+  },
+  "9": {
+   "generada": 1794864770326,
+   "ultimo": 1792436400000,
+   "mejores": [
+    {
+     "id": "3103",
+     "nombre": "Mbappé",
+     "pos": 4,
+     "equipo": "Real Madrid",
+     "teamId": "15",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t186/p3103/256x256/p3103_t186_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+     "pts": 18,
+     "media": 12.25,
+     "valor": 181492725
+    },
+    {
+     "id": "2074",
+     "nombre": "Javi Rodríguez",
+     "pos": 2,
+     "equipo": "Celta",
+     "teamId": "6",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t176/p2074/256x256/p2074_t176_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t176/color/t176_rc-celta.png",
+     "pts": 17,
+     "media": 3.5,
+     "valor": 7272604
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 16,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    }
+   ]
+  },
+  "10": {
+   "generada": 1794864771210,
+   "ultimo": 1793044800000,
+   "mejores": [
+    {
+     "id": "927",
+     "nombre": "Berenguer",
+     "pos": 4,
+     "equipo": "Athletic",
+     "teamId": "3",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t174/p927/256x256/p927_t174_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png",
+     "pts": 20,
+     "media": 6.583333333333333,
+     "valor": 40875503
+    },
+    {
+     "id": "2315",
+     "nombre": "Paredes",
+     "pos": 2,
+     "equipo": "Athletic",
+     "teamId": "3",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t174/p2315/256x256/p2315_t174_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png",
+     "pts": 16,
+     "media": 5.636363636363637,
+     "valor": 24147794
+    },
+    {
+     "id": "3088",
+     "nombre": "Julián Alvarez",
+     "pos": 4,
+     "equipo": "Atlético",
+     "teamId": "2",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t175/p3088/256x256/p3088_t175_1_001_000.png?v=1790589800091",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
+     "pts": 15,
+     "media": 6.125,
+     "valor": 73083587
+    }
+   ]
+  },
+  "11": {
+   "generada": 1794864772072,
+   "ultimo": 1793649600000,
+   "mejores": [
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p3104/256x256/p3104_t178_1_001_000.png?v=1792419831957",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 19,
+     "media": 13.083333333333334,
+     "valor": 176778730
+    },
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "pos": 3,
+     "equipo": "Barça",
+     "teamId": "4",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t178/p1715/256x256/p1715_t178_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+     "pts": 19,
+     "media": 9.25,
+     "valor": 134474044
+    },
+    {
+     "id": "3101",
+     "nombre": "Bellingham",
+     "pos": 3,
+     "equipo": "Real Madrid",
+     "teamId": "15",
+     "caraUrl": "https://assets-fantasy.llt-services.com/players/t186/p3101/256x256/p3101_t186_1_001_000.png",
+     "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+     "pts": 17,
+     "media": 9.833333333333334,
+     "valor": 152770110
+    }
+   ]
+  },
   "12": {
    "generada": 1794757119149,
    "ultimo": 1794168000000,
