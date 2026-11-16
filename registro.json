@@ -2146,7 +2146,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000,
+   "SPORT|136489634": 1794823200000
   },
   "hechos": [
    {
@@ -2361,7 +2362,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3206,7 +3207,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136406363": 1794567719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "SPORT|136418514": 1794583694000,
@@ -3274,17 +3274,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 468869,
-  "salida": 19951,
+  "entrada": 470981,
+  "salida": 20066,
   "cacheLee": 29030,
   "cacheEscribe": 8709,
-  "dolares": 1.029963,
+  "dolares": 1.030232,
   "reservado": 0
  },
  "recientes": {
@@ -7531,13 +7531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3086,
+   "ok": 3087,
    "fallos": 0,
-   "ejecuciones": 2479,
+   "ejecuciones": 2480,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T11:01:13.359Z"
+   "ultima": "2026-11-16T11:06:12.036Z"
   }
  },
  "ptsDirecto": {},
@@ -7554,15 +7554,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:01:27.578Z"
+   "ultimaBien": "2026-11-16T11:06:16.884Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:01:27.578Z"
+   "ultimaBien": "2026-11-16T11:06:16.884Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:01:27.578Z"
+   "ultimaBien": "2026-11-16T11:06:16.884Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7570,11 +7570,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:01:27.578Z"
+   "ultimaBien": "2026-11-16T11:06:16.884Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T11:01:27.578Z"
+   "ultimaBien": "2026-11-16T11:06:16.884Z"
   }
  },
  "avisos": [
