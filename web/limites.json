@@ -36,6 +36,7 @@
     "gratis": 5,
     "porAnuncio": 3,
     "max": 20,
-    "topeUsdDia": 3
+    "topeUsdDia": 3,
+    "esfuerzo": "low"
   }
 }

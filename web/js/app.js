@@ -2541,6 +2541,8 @@ async function enviarPregunta(texto, { extra = false } = {}) {
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
     }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra });
     if (!enDemo()) contar('q');
+    // (16 nov) si mientras pensaba te has ido a otra pestaña de la app, que sepas que ya está
+    if (S.vista !== 'ia' && nativo.aLaVista()) tostada('Ya tienes la respuesta en Pregunta', 4000);
     // (con la IA de la app y la parte Android de la 0.7.14, el aviso lo pone Android: ia.js, preguntaAcabada)
     if (!nativo.aLaVista() && !(preguntasApp(enDemo()) && nativo.hayAvisoPregunta())) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();

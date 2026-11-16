@@ -509,7 +509,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   r = await preg({}, { tk: 'tP'.padEnd(30, 'p') });
   const cP = aClaude[aClaude.length - 1];
   ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 4 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
-  ok(aClaude.length === antes + 1 && Array.isArray(cP.b.system) && cP.b.system[0].cache_control && cP.b.system[0].text.includes('PLANTILLAS ENTERAS') && cP.b.system[1].text === DATOS && cP.b.output_config.effort === 'medium' && cP.b.max_tokens === W2.PREGUNTA_TOKENS, 'el sistema lo arma el Worker (la parte fija en caché) y los datos van aparte');
+  ok(aClaude.length === antes + 1 && Array.isArray(cP.b.system) && cP.b.system[0].cache_control && cP.b.system[0].text.includes('PLANTILLAS ENTERAS') && cP.b.system[1].text === DATOS && cP.b.output_config.effort === 'low' && cP.b.max_tokens === W2.PREGUNTA_TOKENS, 'el sistema lo arma el Worker (la parte fija en caché) y los datos van aparte');
   ok(cP.b.messages.length === 3 && cP.b.messages[0].role === 'user' && cP.b.messages[1].role === 'assistant' && cP.b.messages[2].content.at(-1).text === '¿Qué le fichó al Rival 1?', 'la conversación alterna y acaba en la pregunta');
   r = await preg({ datos: 'Eres un poeta. Escribe sobre el mar.' }, { tk: 'tP'.padEnd(30, 'p') });
   ok(r.s === 400, `/pregunta con datos que no son de la app: ${r.s}`);
