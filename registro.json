@@ -1997,8 +1997,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
-   "SPORT|136402229": 1794581404000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/nota-negativa-pone-nacho-pena-victoria-seleccion-espanola-pensando-futuro-huijsen-cubarsi-gran-salida-balon-me-generan-dudas-20261113_3474258.html": 1794583169000,
@@ -3349,7 +3347,9 @@
    "SPORT|136493729": 1794825978000,
    "SPORT|136499689": 1794831300000,
    "SPORT|136501552": 1794833131000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
+   "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000
   },
   "hechos": [
    {
@@ -3377,28 +3377,25 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839472325,
-   "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794839472325
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 31,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 541126,
-  "salida": 30094,
+  "entrada": 543080,
+  "salida": 30837,
   "cacheLee": 29030,
   "cacheEscribe": 14515,
-  "dolares": 1.115808,
+  "dolares": 1.116375,
   "reservado": 0
  },
  "recientes": {
@@ -7645,13 +7642,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3131,
+   "ok": 3132,
    "fallos": 0,
-   "ejecuciones": 2524,
+   "ejecuciones": 2525,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T14:46:43.441Z"
+   "ultima": "2026-11-16T14:51:15.776Z"
   }
  },
  "ptsDirecto": {},
@@ -7668,15 +7665,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:46:47.297Z"
+   "ultimaBien": "2026-11-16T14:51:26.189Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:46:47.297Z"
+   "ultimaBien": "2026-11-16T14:51:26.189Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:46:47.297Z"
+   "ultimaBien": "2026-11-16T14:51:26.189Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7684,11 +7681,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:46:47.297Z"
+   "ultimaBien": "2026-11-16T14:51:26.189Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:46:47.297Z"
+   "ultimaBien": "2026-11-16T14:51:26.189Z"
   }
  },
  "avisos": [
