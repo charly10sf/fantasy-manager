@@ -3226,11 +3226,13 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-15",
-   "n": 5,
+   "dia": "2026-11-16",
+   "n": 0,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817872105
+  }
  },
  "ia": {
   "dia": "2026-11-16",
@@ -7492,13 +7494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3055,
+   "ok": 3056,
    "fallos": 0,
-   "ejecuciones": 2448,
+   "ejecuciones": 2449,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T08:26:14.038Z"
+   "ultima": "2026-11-16T08:31:12.105Z"
   }
  },
  "ptsDirecto": {},
@@ -7515,15 +7517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:26:17.508Z"
+   "ultimaBien": "2026-11-16T08:31:16.720Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:26:17.508Z"
+   "ultimaBien": "2026-11-16T08:31:16.720Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:26:17.508Z"
+   "ultimaBien": "2026-11-16T08:31:16.720Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7531,11 +7533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:26:17.508Z"
+   "ultimaBien": "2026-11-16T08:31:16.720Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T08:26:17.508Z"
+   "ultimaBien": "2026-11-16T08:31:16.720Z"
   }
  },
  "avisos": [
