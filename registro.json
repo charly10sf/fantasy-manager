@@ -1997,7 +1997,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
    "SPORT|136402229": 1794581404000,
@@ -2171,7 +2170,8 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-pel-barca-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000
   },
   "hechos": [
    {
@@ -2471,7 +2471,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3389,17 +3389,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 31,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 539111,
-  "salida": 29831,
+  "entrada": 541126,
+  "salida": 30094,
   "cacheLee": 29030,
   "cacheEscribe": 14515,
-  "dolares": 1.115475,
+  "dolares": 1.115808,
   "reservado": 0
  },
  "recientes": {
@@ -7646,13 +7646,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3126,
+   "ok": 3127,
    "fallos": 0,
-   "ejecuciones": 2519,
+   "ejecuciones": 2520,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T14:31:12.325Z"
+   "ultima": "2026-11-16T14:36:12.792Z"
   }
  },
  "ptsDirecto": {},
@@ -7669,15 +7669,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:31:17.640Z"
+   "ultimaBien": "2026-11-16T14:36:18.703Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:31:17.640Z"
+   "ultimaBien": "2026-11-16T14:36:18.703Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:31:17.640Z"
+   "ultimaBien": "2026-11-16T14:36:18.703Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7685,11 +7685,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:31:17.640Z"
+   "ultimaBien": "2026-11-16T14:36:18.703Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T14:31:17.640Z"
+   "ultimaBien": "2026-11-16T14:36:18.703Z"
   }
  },
  "avisos": [
