@@ -19,6 +19,7 @@ const CASOS = [
   { id: 'venta-rival', q: '¿Qué tiene {R2} a la venta?' },
   { id: 'plantilla-rival', sigue: true, q: 'Pero no solo lo que tiene en venta, mírame toda su plantilla. ¿Qué le puedo quitar?' },
   { id: 'por-equipo', q: '¿Qué jugadores interesantes tiene {E5}?' },
+  { id: 'equipo-minusculas', q: 'y el del {e5} que jugadores tiene? de toda su plantilla' },
   { id: 'puedo-clausular', q: '¿Puedo clausular a {SUYO}?' },
   { id: 'que-hago-hoy', q: '¿Qué hago hoy?' },
   { id: 'vender-mio', q: '¿Vendo a {MIO}?' },
@@ -46,7 +47,7 @@ for (const escena of ESCENAS) {
           const rv = (n) => M.rivales.find((x) => x.e.pos === n) || M.rivales[Math.min(n - 1, M.rivales.length - 1)];
           const caro = (l) => [...l].sort((a, b) => (b.j.valor || 0) - (a.j.valor || 0))[0];
           const mio = caro(M.mias || []), suyo = caro((rv(2).fichas || []).filter((x) => x.j && x.j.pos !== 5));
-          const pre = q.replace(/\{R2\}/g, rv(2).e.manager).replace(/\{E2\}/g, rv(2).e.nombre).replace(/\{R5\}/g, rv(5).e.manager).replace(/\{E5\}/g, rv(5).e.nombre).replace(/\{MIO\}/g, mio.j.nombre).replace(/\{SUYO\}/g, suyo.j.nombre);
+          const pre = q.replace(/\{R2\}/g, rv(2).e.manager).replace(/\{E2\}/g, rv(2).e.nombre).replace(/\{R5\}/g, rv(5).e.manager).replace(/\{E5\}/g, rv(5).e.nombre).replace(/\{e5\}/g, rv(5).e.nombre.toLowerCase()).replace(/\{MIO\}/g, mio.j.nombre).replace(/\{SUYO\}/g, suyo.j.nombre);
           // la conversación como la guarda la app (con la pregunta de ahora la última)
           U.LS.set(Dt.K('chat'), [...hist, { r: 'yo', t: pre, ts: Date.now() }]);
           const h = I.conversacion();
@@ -74,6 +75,9 @@ for (const escena of ESCENAS) {
         }, { texto: r.texto, pre: prep.pre, hist });
         const malas = [];
         if (/no (tengo|veo) (acceso|la plantilla|el listado)|p[áa]same (la lista|sus jugadores)|no puedo ver/i.test(vista.texto)) malas.push('dice que no ve datos');
+        if (!vista.texto.trim()) malas.push('VACÍA');
+        if (/\b(mi saldo|mi once|tengo de saldo|mi medio)\b/i.test(vista.texto)) malas.push('habla como si fuera el mánager');
+        if (/funci[óo]n top/i.test(vista.texto)) malas.push('dice «función top»');
         if (/\b[PMTCAVB]-\d{2,6}\b|índice de sobrecoste|OPERACIONES POSIBLES|CUENTAS HECHAS|```|\bnotas\b\s*\{/i.test(vista.texto)) malas.push('restos internos');
         if (/Rival \d+|Equipo \d+/.test(vista.texto)) malas.push('alias sin destapar');
         if (/¡Claro!|Espero que te ayude|Aquí tienes|En resumen/i.test(vista.texto)) malas.push('frases de asistente');
