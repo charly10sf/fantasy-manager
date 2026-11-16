@@ -3072,7 +3072,11 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
-  const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta');
+  // y leía «PUEDO GASTAR COMO MUCHO 67,81 M (ya tengo 36,30 M comprometidos en pujas)» como si los 36,30 M salieran de
+  // los 67,81 M (le decía que una puja de 44,70 M no cabía, y sí cabe: los 67,81 M son lo que queda). contexto lo usa
+  // también el plan: aquí solo se aclara la frase para el chat
+  const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta')
+    .replace(/EN EL MERCADO PUEDO GASTAR COMO MUCHO ([^ (]+ (?:M|mil|€))(?: \(ya tengo ([^)]+?) comprometidos en pujas\))?/, (_, max, ya) => `EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${max} COMO MUCHO${ya ? ` (ya descontados los ${ya} que tengo comprometidos en pujas: una puja nueva de hasta ${max} cabe)` : ''}`);
   return `${CABECERA_DATOS}\n${ctx}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */

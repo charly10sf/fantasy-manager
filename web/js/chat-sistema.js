@@ -32,6 +32,8 @@ ${'{{REGLAS}}'}
 
 CÓMO PIENSAS. Antes de escribir, piensa como un jugador bueno de fantasy: qué quiere conseguir él (puntos en la próxima jornada, dinero para revender, proteger lo suyo), qué opciones reales tiene con su saldo y con las reglas, y cuál es la mejor. Compara con cifras: valor, lo que sube o baja cada día, puntos esperados del próximo partido, si es titular, su cláusula y cuándo se abre, cuánto le cuesta de verdad y si le llega. Luego decide y dilo claro. La app ya ha hecho muchas cuentas (lo que se puede hacer hoy, lo que descarta y por qué, la puja que gana, la subida justa de una cláusula): úsalas, que son buenas, pero el razonamiento es tuyo.
 - Si un jugador sube o baja, léelo de su INERCIA y de lo de hoy: no digas que baja uno que va subiendo, ni al revés.
+- EL DINERO: aceptar una oferta que ya tiene (de LaLiga o de otro mánager) mete el dinero AL MOMENTO; lo que pone hoy a la venta no da nada hasta que llegue una oferta (en el próximo cambio de mercado) y la acepte. Para pujar, lo que le queda en el mercado ya viene con sus pujas de ahora descontadas.
+- «Protegido hasta…» (los 14 días tras ficharlo) no es un blindaje: el blindaje es el escudo de 24 h que pone él. No los mezcles.
 - EL PELIGRO DE UNA CLÁUSULA: un rival solo paga una cláusula si le sale barata, es decir, cerca del valor del jugador (a su valor es la presa más fácil) y con el dinero para pagarla. Muy por encima de lo que se paga en esta liga por un clausulazo (te lo paso), no la paga nadie aunque le sobre el dinero: «riesgo de cláusula ninguno» ya lo tiene en cuenta. Una cláusula un 80 % por encima de su valor NO es tentadora: es la más segura.
 - Si la app da su veredicto sobre una oferta o una venta («LA APP: …»), parte de él. Si tú lo ves distinto, dilo y explica por qué con cifras; y no cambies de idea de una respuesta a otra sin un dato nuevo.
 
@@ -108,6 +110,13 @@ export function separarNotas(t) {
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
     || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }
+  // (tercera pasada con Haiku, 17 nov) a veces el bloque sale sin su cabecera, solo la lista de lo que recomienda
+  // («[{"ref": "A-1003", "accion": …}]» y unas comillas sueltas detrás), o con una marca inventada («_notas_omitted»)
+  if (!m) {
+    const r = s.match(/\n[ \t]*(?:(?:```|~~~)[a-z]*[ \t]*\n)?[ \t]*(\[\s*\{[\s\S]*?"(?:ref|accion)"[\s\S]*\]|\{[\s\S]*?"(?:ref|accion|texto|tipo)"[\s\S]*\})[ \t]*(?:\n[ \t]*(?:```|~~~)[ \t]*)?\s*$/);
+    if (r) { bloque = r[1].trim().startsWith('[') ? `{"recomiendo": ${r[1].trim()}}` : r[1]; s = s.slice(0, r.index); }
+  }
+  s = s.replace(/\n[ \t]*[_*`(\[]*notas[_ a-z]{0,24}[_*`)\]]*[ \t]*$/i, '').replace(/\n[ \t]*(?:```|~~~)[ \t]*$/, '');
   // (segunda pasada con Haiku, 16 nov) a veces acaba con un «<br>» suelto o con líneas vacías de más
   s = s.replace(/<br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '').replace(/\n[ \t]*>?[ \t]*(?=\n|$)/g, '\n').replace(/\n{3,}/g, '\n\n');
   return { texto: sinCodigos(s).trim(), bloque };
