@@ -1978,7 +1978,6 @@
   "vistas": {
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261113/11683354/emocionado-raphinha-sale-paso-criticas-brasil-me-quiero-volver-lesionar.html": 1794565010000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250551/raul-da-pistas-sobre-oviedo-espera-queremos-verticales.html": 1794566621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
@@ -2136,7 +2135,8 @@
    "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000,
    "SPORT|136484016": 1794813943000,
    "SPORT|136485072": 1794815966000,
-   "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000
+   "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000
   },
   "hechos": [
    {
@@ -2300,7 +2300,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3213,17 +3213,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 443588,
-  "salida": 18039,
+  "entrada": 445559,
+  "salida": 18131,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.989354,
+  "dolares": 0.989597,
   "reservado": 0
  },
  "recientes": {
@@ -7470,13 +7470,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3077,
+   "ok": 3078,
    "fallos": 0,
-   "ejecuciones": 2470,
+   "ejecuciones": 2471,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T10:16:12.770Z"
+   "ultima": "2026-11-16T10:21:13.862Z"
   }
  },
  "ptsDirecto": {},
@@ -7493,15 +7493,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:16:16.709Z"
+   "ultimaBien": "2026-11-16T10:21:20.918Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:16:16.709Z"
+   "ultimaBien": "2026-11-16T10:21:20.918Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:16:16.709Z"
+   "ultimaBien": "2026-11-16T10:21:20.918Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7509,11 +7509,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:16:16.709Z"
+   "ultimaBien": "2026-11-16T10:21:20.918Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T10:16:16.709Z"
+   "ultimaBien": "2026-11-16T10:21:20.918Z"
   }
  },
  "avisos": [
