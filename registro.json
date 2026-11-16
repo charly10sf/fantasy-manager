@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136412927": 1794575000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
    "SPORT|136413561": 1794576230000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
@@ -7587,13 +7586,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3110,
+   "ok": 3111,
    "fallos": 0,
-   "ejecuciones": 2503,
+   "ejecuciones": 2504,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T13:01:16.417Z"
+   "ultima": "2026-11-16T13:06:13.259Z"
   }
  },
  "ptsDirecto": {},
@@ -7610,15 +7609,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:01:21.623Z"
+   "ultimaBien": "2026-11-16T13:06:16.116Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:01:21.623Z"
+   "ultimaBien": "2026-11-16T13:06:16.116Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:01:21.623Z"
+   "ultimaBien": "2026-11-16T13:06:16.116Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7626,11 +7625,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:01:21.623Z"
+   "ultimaBien": "2026-11-16T13:06:16.116Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T13:01:21.623Z"
+   "ultimaBien": "2026-11-16T13:06:16.116Z"
   }
  },
  "avisos": [
