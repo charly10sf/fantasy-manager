@@ -3455,7 +3455,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000,
    "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-reabre-espacio-aereo-suspension-vuelos-territorio-20261114025823.html": 1794621503000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-fijados-servicios-minimos-72-ave-75-cercanias-huelga-dia-17-renfe-20261114110842.html": 1794650922000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261114/1004250898/hay-fecha-encuentros-aplazados-tenerife-andorra-castellon.html": 1794655097000,
@@ -7779,13 +7778,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3215,
+   "ok": 3216,
    "fallos": 0,
-   "ejecuciones": 2608,
+   "ejecuciones": 2609,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T21:41:23.104Z"
+   "ultima": "2026-11-16T21:46:12.836Z"
   }
  },
  "ptsDirecto": {},
@@ -7802,15 +7801,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:41:28.301Z"
+   "ultimaBien": "2026-11-16T21:46:17.584Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:41:28.301Z"
+   "ultimaBien": "2026-11-16T21:46:17.584Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:41:28.301Z"
+   "ultimaBien": "2026-11-16T21:46:17.584Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7818,11 +7817,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:41:28.301Z"
+   "ultimaBien": "2026-11-16T21:46:17.584Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T21:41:28.301Z"
+   "ultimaBien": "2026-11-16T21:46:17.584Z"
   }
  },
  "avisos": [
