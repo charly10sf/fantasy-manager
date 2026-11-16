@@ -1990,7 +1990,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000,
    "SPORT|136412927": 1794575000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
@@ -7589,13 +7588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3104,
+   "ok": 3105,
    "fallos": 0,
-   "ejecuciones": 2497,
+   "ejecuciones": 2498,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T12:36:15.390Z"
+   "ultima": "2026-11-16T12:41:12.118Z"
   }
  },
  "ptsDirecto": {},
@@ -7612,15 +7611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:36:19.904Z"
+   "ultimaBien": "2026-11-16T12:41:16.516Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:36:19.904Z"
+   "ultimaBien": "2026-11-16T12:41:16.516Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:36:19.904Z"
+   "ultimaBien": "2026-11-16T12:41:16.516Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7628,11 +7627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:36:19.904Z"
+   "ultimaBien": "2026-11-16T12:41:16.516Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T12:36:19.904Z"
+   "ultimaBien": "2026-11-16T12:41:16.516Z"
   }
  },
  "avisos": [
