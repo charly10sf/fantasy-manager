@@ -3300,3 +3300,9 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .qh-f b small { font-weight: 500; color: var(--apagado); font-size: var(--t-mini); }
 .q-prog { height: 8px; margin: 2px 0 8px; border-radius: 4px; background: var(--plano2); overflow: hidden; }
 .q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }
+
+/* (0.7.13o) lo que falta para el mercado y demás, dentro del marcador de Hoy y en pequeño */
+.m-tiempos { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
+.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
+.m-t .ic { width: 14px; height: 14px; color: var(--apagado); }
+.m-t b { font-weight: 700; color: var(--texto); }

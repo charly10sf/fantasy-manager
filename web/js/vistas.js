@@ -52,7 +52,7 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-function marcador(S, { corto = false } = {}) {
+function marcador(S, { corto = false, tiempos = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
   const ahora = Date.now();
@@ -68,6 +68,9 @@ function marcador(S, { corto = false } = {}) {
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
       <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
     </div>`;
+  // (0.7.13o, Carlos 16 nov) lo que va a pasar pronto (el mercado, las cláusulas, el parón), dentro del marcador y en
+  // pequeño, en vez de en chips sueltos debajo
+  if (tiempos) h += tiemposHTML(S, { dentro: true });
   if (M.negativo && M.proxima) h += `<div class="alerta-m">${icono('alerta')}En negativo: si la jornada empieza así, no puntúas.</div>`;
   if (M.vedaAhora) h += `<div class="alerta-m oro">${icono('candado')}<span>Cláusulas cerradas: nadie puede clausular hasta que empiece la jornada ${M.vedaAhora.n}, ${cuando(M.vedaAhora.fin)}.</span></div>`;
   else if (M.proxima && M.proxima.ini - M.VEDA_H * HORA - ahora < 12 * HORA) h += `<div class="alerta-m oro">${icono('reloj')}<span>Las cláusulas se cierran ${cuando(M.proxima.ini - M.VEDA_H * HORA)}, 24 h antes de la jornada, y se reabren ${cuando(M.proxima.ini)}.</span></div>`;
@@ -121,7 +124,7 @@ export function puntosUltimaJornada(S) {
 }
 
 /** lo que va a pasar pronto, en chips: el mercado, las cláusulas, tu protección, el parón */
-function tiemposHTML(S) {
+function tiemposHTML(S, { dentro = false } = {}) {
   const { M } = S;
   const ahora = Date.now();
   const c = [];
@@ -134,6 +137,7 @@ function tiemposHTML(S) {
   if (!c.length) return '';
   // cada chip lleva a lo que dice: el jugador, el mercado o lo que pasa en el parón
   const destino = (a) => (a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a.startsWith('accion:') ? `data-accion="${esc(a.slice(7))}"` : a ? `data-ir="${a}"` : '');
+  if (dentro) return `<div class="m-tiempos">${c.map(([ic, t, sub, a]) => `<button type="button" class="m-t" ${destino(a)}>${icono(ic)}<span>${esc(t)}</span><b>${sub.replace(/^en /, '')}</b></button>`).join('')}</div>`;
   return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${destino(a)}>${icono(ic)}<div><b>${esc(t)}</b><span>${sub}</span></div>${a ? icono('flecha', 'tiempo-ir') : ''}</button>`).join('')}</div>`;
 }
 
@@ -794,10 +798,11 @@ export function hoy(S) {
   const { D, M } = S;
   let h = '';
   h += bandasHoy(S);
-  // (18, 9 nov) en el móvil, el marcador en una franja y el plan en la primera pantalla; sin saludo
-  h += marcador(S, { corto: true });
-  h += tiemposHTML(S);
+  // (0.7.13o, Carlos 16 nov) el aviso del parón arriba del todo, encima del marcador; lo que falta para el mercado y
+  // demás, dentro del marcador
   h += paronHTML(S);
+  // (18, 9 nov) en el móvil, el marcador en una franja y el plan en la primera pantalla; sin saludo
+  h += marcador(S, { corto: true, tiempos: true });
   h += ahoraHTML(S);
   h += planHTML(S);
   h += noticiasHTML(S, { plegar: true });
@@ -808,11 +813,11 @@ export function hoy(S) {
 /** Hoy en el ordenador: el plan en grande a la izquierda y la liga de un vistazo a la derecha */
 function hoyAncho(S) {
   const { M } = S;
-  let izq = saludoHTML(S) + paronHTML(S) + ahoraHTML(S) + planHTML(S);
+  let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
-  const der = marcador(S) + tiemposHTML(S) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
-  return bandasHoy(S) + cols(izq, der);
+  const der = marcador(S, { tiempos: true }) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
+  return bandasHoy(S) + paronHTML(S) + cols(izq, der);
 }
 function bandasHoy(S) {
   const { D } = S;

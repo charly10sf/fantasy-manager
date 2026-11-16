@@ -10,7 +10,7 @@ import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWe
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, PARON_VUELTA, noMerece } from './operaciones.js';
-import { recsDe, aprendeTxt } from './aprende.js';
+import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
@@ -1328,6 +1328,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
   // lo que recomienda, con el valor de cada jugador hoy, para ver dentro de unos días cómo salió
   try { const cu = cuadrarPlan(P, D, M); P.recs = recsDe(cu.ops, M); P.cuadradas = opsCuadradas(cu.ops); } catch (e) { P.recs = []; }
+  try { guardarRecs(P); } catch (e) { /* nada */ }
   const lista = planes();
   lista.unshift(P);
   LS.set(K('planes'), lista.slice(0, 10));
@@ -1740,6 +1741,7 @@ export async function planDelDia(D, M, c, op = {}) {
   } else P = await planCorto(D, M, c, op);
   if (!P) return planLargo(D, M, c, op);
   try { const cu = cuadrarPlan(P, D, M); P.recs = recsDe(cu.ops, M); P.cuadradas = opsCuadradas(cu.ops); } catch (e) { P.recs = []; }
+  try { guardarRecs(P); } catch (e) { /* nada */ }
   const lista = planes();
   lista.unshift(P);
   LS.set(K('planes'), lista.slice(0, 10));

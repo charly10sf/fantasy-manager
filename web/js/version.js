@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.13n';
+export const VERSION = '0.7.13o';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.7.13n';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.13o', f: '2026-11-16', h: '05:50', t: 'Hoy, más ordenado',
+    cosas: [
+      { tipo: 'mejora', d: 'reloj', t: 'Hoy, más ordenado', x: 'El aviso del parón va arriba del todo, encima de tu saldo y tu equipo. Lo que falta para el mercado nuevo o para que se abra una cláusula va ahora dentro de ese mismo recuadro, en pequeño.' },
+      { tipo: 'arreglo', d: 'diana', t: '«Cómo van sus aciertos», para todos', x: 'Si pedías muchos planes, la app no guardaba los suficientemente viejos para ver cómo salieron y no te enseñaba sus aciertos. Ahora guarda lo que te recomendó cada plan durante un mes: los aciertos salen cuando tus planes cumplan 2 días.' },
+    ],
+  },
   {
     v: '0.7.13n', f: '2026-11-16', h: '05:41', t: 'Cada liga, a su hora',
     cosas: [
