@@ -2135,7 +2135,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251358/jauregizar-quiere-recuperar-lugar.html": 1794810600000,
    "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000,
    "SPORT|136484016": 1794813943000,
-   "SPORT|136485072": 1794815966000
+   "SPORT|136485072": 1794815966000,
+   "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000
   },
   "hechos": [
    {
@@ -2299,7 +2300,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3209,22 +3210,24 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822374886
+  }
  },
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 28,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 439929,
-  "salida": 17489,
+  "entrada": 441843,
+  "salida": 17953,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.988714,
+  "dolares": 0.989137,
   "reservado": 0
  },
  "recientes": {
@@ -7471,13 +7474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3070,
+   "ok": 3071,
    "fallos": 0,
-   "ejecuciones": 2463,
+   "ejecuciones": 2464,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-16T09:41:15.789Z"
+   "ultima": "2026-11-16T09:46:14.886Z"
   }
  },
  "ptsDirecto": {},
@@ -7494,15 +7497,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:41:21.160Z"
+   "ultimaBien": "2026-11-16T09:46:21.932Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:41:21.160Z"
+   "ultimaBien": "2026-11-16T09:46:21.932Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:41:21.160Z"
+   "ultimaBien": "2026-11-16T09:46:21.932Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7510,11 +7513,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:41:21.160Z"
+   "ultimaBien": "2026-11-16T09:46:21.932Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T09:41:21.160Z"
+   "ultimaBien": "2026-11-16T09:46:21.932Z"
   }
  },
  "avisos": [
