@@ -11,6 +11,7 @@ y TODAS_GUIAS en web/js/portada.js (entre // <guias> y // </guias>), de donde sa
 Se ejecuta a mano y se sube lo que genera: python3 .github/paginas.py
 Las rutas son relativas (../ en guias/): privacidad.html se abre también dentro de la app, servida desde el APK.
 """
+import hashlib
 import html
 import json
 import os
@@ -150,11 +151,23 @@ def escudos(raiz):
     return f'<nav class="escudos" aria-label="Los 20 equipos"><div class="escudos-in">{filas}</div></nav>\n'
 
 
+# (sesión 4 de AdSense) la frase de la llamada corta cambia de una ficha a otra (siempre la misma para la misma página): con una sola,
+# era de lo que más se repetía entre las 170 fichas
+CTA_CORTA = (
+    '¿Lo tienes a tiro en tu liga? Fantasy Manager te lo dice con los datos de tu liga',
+    'Si juegas LaLiga Fantasy, la app mira tu plantilla y tu saldo y te dice si te conviene pujar, vender o clausular',
+    'Para saber cuánto pujar o si te lo pueden clausular, Fantasy Manager hace las cuentas con tu liga',
+    'Fantasy Manager cruza estas cifras con tu equipo y con los de tus rivales cada mañana',
+    '¿Fichar, vender o esperar? La app lo calcula con lo que pasa en tu liga, gratis',
+)
+
+
 def cta(raiz, p=None):
     # (16 nov) en las fichas de jugador y equipo, la versión corta: el bloque entero, igual en 170 páginas, era la mitad del texto repetido
-    if p and p.get('grupo') in ('jugador', 'equipo'):
+    # (sesión 4) también en los resúmenes de jornada, que desde la J1 son 12
+    if p and p.get('grupo') in ('jugador', 'equipo', 'resumenes'):
         return (f'<aside class="cta" aria-label="La app">'
-                f'<p class="cta-t">¿Lo tienes a tiro en tu liga? Fantasy Manager te lo dice con los datos de tu liga</p>'
+                f'<p class="cta-t">{CTA_CORTA[int(hashlib.md5(p["ruta"].encode()).hexdigest(), 16) % len(CTA_CORTA)]}</p>'
                 f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
                 f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
                 f'</aside>')

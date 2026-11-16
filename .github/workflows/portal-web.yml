@@ -17,7 +17,7 @@ on:
         type: boolean
         default: false
       resumen:
-        description: 'Rehacer el resumen de esta jornada (vacío: la última acabada, si toca)'
+        description: 'Rehacer el resumen de esta jornada o de un tramo, como 1-11 (vacío: la última acabada, si toca)'
         type: string
         default: ''
       probar:

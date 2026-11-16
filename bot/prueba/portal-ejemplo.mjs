@@ -218,3 +218,73 @@ console.log('portal-ejemplo: todo bien');
   assert.match(ch, /<h1>Calendario de <span>cláusulas<\/span><\/h1>/);
 }
 console.log('cláusulas: bien');
+
+// (sesión 4) las bajas de la jornada (bajas/): el lesionado de ejemplo, con su parte, su valor y qué suele compensar
+{
+  const { hechosBajas, contenidoBajas, metasBajas, consejo } = await import('../web/bajas.mjs');
+  // el 3 está lesionado; con 9 M en la lista pesa en el fantasy (si no, la página no lo saca)
+  const apiB = { ...api, jugadores: async () => jug.map((j) => (j.id === '3' ? { ...j, marketValue: '9000000' } : j)), disciplina: async () => [], lesionados: async () => [{ nombre: 'Jugador 3', slug: 'jugador-3', lesion: 'Rotura fibrilar en el aductor', dia: 1, mes: 11, dias: 14, estado: 'baja', hasta: 'enero', jornada: null }] };
+  const hmB = await hechosMercado(api, { ahora: hoy });
+  const hb = await hechosBajas(apiB, hmB, { ahora: hoy });
+  assert.ok(hb, 'hay jornada por delante');
+  assert.equal(hb.jornada, 13);
+  const b3 = hb.bajas.find((x) => x.id === '3');
+  assert.ok(b3, 'el lesionado de ejemplo');
+  assert.equal(b3.consejo.k, 'vende', 'hasta enero: un mes o más, vender pronto');
+  assert.ok(b3.valor > 0 && b3.dif7 != null, 'con el valor de esa noche');
+  assert.equal(consejo({ tipo: 'sancion' }).k, 'aguanta', 'un partido de sanción, aguantar');
+  assert.equal(consejo({ tipo: 'sancion', partidos: 4 }).k, 'depende');
+  assert.equal(consejo({ tipo: 'duda' }).k, 'aguanta');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: null } }).k, 'sin', 'sin fecha no se adivina');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: 'finales de noviembre' } }, hoy).k, 'aguanta', 'diez días: aguantar');
+  assert.equal(consejo({ tipo: 'baja', parte: { estado: 'baja', hasta: 'principios de diciembre' } }, hoy).k, 'depende', 'tres semanas: depende');
+  const cb = contenidoBajas(hb);
+  assert.doesNotMatch(cb, /undefined|NaN|\[object/);
+  assert.match(cb, /<h1>Bajas de la jornada <span>13<\/span><\/h1>/);
+  assert.match(cb, /Rotura fibrilar en el aductor/);
+  assert.match(cb, /cons-vende/);
+  assert.match(cb, /guias\/cuando-vender\.html/, 'enlaza a la guía que explica el consejo');
+  assert.ok(metasBajas(hb).titulo.length <= 60, 'título corto');
+}
+console.log('bajas: bien');
+
+// (sesión 4) el análisis del resumen con la temporada al lado y la semana del mercado (idea 7)
+{
+  const { hechosResumen, analisisResumen, resumenCorto, semanaMercado, contenidoResumen } = await import('../web/resumen.mjs');
+  const hs = [10, 11, 12].map((J) => hechosResumen(J, semana(J), jug)).filter(Boolean);
+  assert.equal(hs.length, 3, 'tres jornadas acabadas');
+  const T = hs.map(resumenCorto);
+  const an = analisisResumen(hs[2], T);
+  assert.ok(an.length >= 2 && an.every((p) => p.length > 20), 'dos párrafos o más');
+  assert.doesNotMatch(an.join(' '), /undefined|NaN/);
+  const hmS = await hechosMercado(api, { ahora: hoy });
+  const finAnt = Math.max(...semana(11).map((m) => Date.parse(m.date)));
+  const sm = semanaMercado(hs[2], hmS.todas, finAnt);
+  // la jornada 12 de ejemplo es de hace una semana: su semana del mercado cae dentro de la serie de 40 días
+  assert.ok(sm && sm.ganan.length && sm.pierden.length, 'quién ganó y quién perdió');
+  assert.ok(sm.ganan[0].gana >= sm.ganan[sm.ganan.length - 1].gana, 'de más a menos');
+  assert.ok(sm.negocio.every((x) => x.negocio === x.gana + x.pts * 1e5), 'negocio = subida + puntos a 100 mil');
+  const cr = contenidoResumen(hs[2], { temporada: T, semana: sm });
+  assert.match(cr, /id="semana"/);
+  assert.doesNotMatch(cr, /undefined|NaN|\[object/);
+}
+console.log('resumen con la temporada y la semana del mercado: bien');
+
+// (sesión 4, idea 4) la previsión de mañana y su acierto
+{
+  const { prevision, acierto, contenidoMercado, PROB } = await import('../web/mercado.mjs');
+  const hmP = await hechosMercado(api, { ahora: hoy });
+  const pv = prevision(hmP);
+  assert.ok(pv.suben.some((x) => x.id === '0'), 'el 0 lleva diez días subiendo');
+  assert.ok(pv.bajan.some((x) => x.id === '1'), 'el 1, cinco bajando');
+  assert.ok(pv.suben.every((x) => [PROB.sube3, PROB.sube4, PROB.frena, PROB.acelera].includes(x.p)));
+  assert.equal(acierto({ ...pv, dia: hmP.dia }, hmP), null, 'la del mismo día no se compara');
+  const ac = acierto({ ...pv, dia: '2026-11-14' }, hmP);
+  assert.equal(ac.sN, pv.suben.length);
+  assert.ok(ac.sOk <= ac.sN && ac.bOk <= ac.bN);
+  const cm = contenidoMercado(hmP, { prev: pv, aciertos: [ac, { ...ac, dia: '2026-11-13' }, { ...ac, dia: '2026-11-12' }] });
+  assert.match(cm, /id="manana"/);
+  assert.match(cm, /de acierto/);
+  assert.doesNotMatch(cm, /undefined|NaN|\[object/);
+}
+console.log('previsión de mañana: bien');

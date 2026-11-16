@@ -74,7 +74,7 @@ export function contenido(h, textos = {}, { siguiente = null, rutas = null } = {
   if (filasBaja.length) {
     o.push(parrafo(t.bajas || 'Las bajas y dudas que más pesan en el fantasy, por valor de mercado.').trimEnd());
     o.push(tabla(['Jugador', 'Equipo', 'Estado', 'Parte', 'Vuelta prevista'], filasBaja.map(([x, est]) => [jn(x), e(x.equipo), est, w(x.lesion), e(x.hasta || '')])).trimEnd());
-    o.push(`  <p class="peq">Vender o aguantar a un lesionado, en <a href="cuando-vender.html">cuándo vender en LaLiga Fantasy</a>.</p>`);
+    o.push(`  <p class="peq">La lista entera, con el valor de cada uno y lo que lleva bajando, en <a href="../bajas/">las bajas de la jornada</a>. Vender o aguantar a un lesionado, en <a href="cuando-vender.html">cuándo vender en LaLiga Fantasy</a>.</p>`);
   } else o.push(`  <p>No hay bajas importantes.</p>`);
 
   // vuelven
