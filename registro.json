@@ -2168,7 +2168,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
+   "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000
   },
   "hechos": [
    {
@@ -2468,7 +2469,7 @@
   ],
   "gemini": {
    "dia": "2026-11-16",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3385,17 +3386,17 @@
  "ia": {
   "dia": "2026-11-16",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 31,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 543080,
-  "salida": 30837,
+  "entrada": 544990,
+  "salida": 31293,
   "cacheLee": 29030,
   "cacheEscribe": 14515,
-  "dolares": 1.116375,
+  "dolares": 1.116794,
   "reservado": 0
  },
  "recientes": {
@@ -7642,13 +7643,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3135,
+   "ok": 3136,
    "fallos": 0,
-   "ejecuciones": 2528,
+   "ejecuciones": 2529,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-16T15:06:13.171Z"
+   "ultima": "2026-11-16T15:11:15.299Z"
   }
  },
  "ptsDirecto": {},
@@ -7665,15 +7666,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:06:15.608Z"
+   "ultimaBien": "2026-11-16T15:11:24.173Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:06:15.608Z"
+   "ultimaBien": "2026-11-16T15:11:24.173Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:06:15.608Z"
+   "ultimaBien": "2026-11-16T15:11:24.173Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7681,11 +7682,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:06:15.608Z"
+   "ultimaBien": "2026-11-16T15:11:24.173Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-16T15:06:15.608Z"
+   "ultimaBien": "2026-11-16T15:11:24.173Z"
   }
  },
  "avisos": [
