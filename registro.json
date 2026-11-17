@@ -1446,7 +1446,7 @@
   "2585": "out_of_league",
   "2586": "out_of_league",
   "2587": "ok",
-  "2588": "ok",
+  "2588": "doubtful",
   "2596": "ok",
   "2597": "out_of_league",
   "2600": "ok",
@@ -2279,7 +2279,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000,
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
-   "SPORT|136552816": 1794934765000
+   "SPORT|136552816": 1794934765000,
+   "SPORT|136553914": 1794934874000
   },
   "hechos": [
    {
@@ -2969,7 +2970,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -3814,7 +3815,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136446586": 1794679308000,
    "SPORT|136448657": 1794681682000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
@@ -3884,17 +3884,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 582656,
-  "salida": 36157,
+  "entrada": 584686,
+  "salida": 36598,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.131852,
+  "dolares": 1.132276,
   "reservado": 0
  },
  "recientes": {
@@ -8190,13 +8190,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3499,
+   "ok": 3500,
    "fallos": 0,
-   "ejecuciones": 2855,
+   "ejecuciones": 2856,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T18:01:24.429Z"
+   "ultima": "2026-11-17T18:06:27.223Z"
   }
  },
  "ptsDirecto": {},
@@ -8213,15 +8213,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:01:30.085Z"
+   "ultimaBien": "2026-11-17T18:06:33.312Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:01:30.085Z"
+   "ultimaBien": "2026-11-17T18:06:33.312Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:01:30.085Z"
+   "ultimaBien": "2026-11-17T18:06:33.312Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8229,11 +8229,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:01:30.085Z"
+   "ultimaBien": "2026-11-17T18:06:33.312Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:01:30.085Z"
+   "ultimaBien": "2026-11-17T18:06:33.312Z"
   }
  },
  "avisos": [
