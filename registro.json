@@ -2057,7 +2057,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/14/yan-diomande-sigue-alimentando-debate.html": 1794652317000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250890/giuliano-crecimiento-continuo.html": 1794653801000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250896/take-kubo-reivindica-japon-marca-brasil-precioso-gesto-barrene.html": 1794654594000,
@@ -2231,7 +2230,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
    "SPORT|136526095": 1794901531000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
-   "SPORT|136526952": 1794902430000
+   "SPORT|136526952": 1794902430000,
+   "SPORT|136495052": 1794903326000
   },
   "hechos": [
    {
@@ -2664,7 +2664,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3582,17 +3582,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 25,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 431373,
-  "salida": 13508,
+  "entrada": 433432,
+  "salida": 13623,
   "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.933814,
+  "dolares": 0.934077,
   "reservado": 0
  },
  "recientes": {
@@ -7882,13 +7882,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3394,
+   "ok": 3395,
    "fallos": 0,
-   "ejecuciones": 2750,
+   "ejecuciones": 2751,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T09:21:12.169Z"
+   "ultima": "2026-11-17T09:26:14.245Z"
   }
  },
  "ptsDirecto": {},
@@ -7905,15 +7905,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:21:16.175Z"
+   "ultimaBien": "2026-11-17T09:26:21.835Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:21:16.175Z"
+   "ultimaBien": "2026-11-17T09:26:21.835Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:21:16.175Z"
+   "ultimaBien": "2026-11-17T09:26:21.835Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7921,11 +7921,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:21:16.175Z"
+   "ultimaBien": "2026-11-17T09:26:21.835Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:21:16.175Z"
+   "ultimaBien": "2026-11-17T09:26:21.835Z"
   }
  },
  "avisos": [
