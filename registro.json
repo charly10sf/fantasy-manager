@@ -2224,7 +2224,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/opinion/2026/11/17/vuelve-vinicius-mou.html": 1794895154000,
    "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/": 1794898416000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251820/berenguer-recupera-galones-penaltis.html": 1794898800000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
+   "SPORT|136469900": 1794895217000
   },
   "hechos": [
    {
@@ -2645,7 +2646,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3558,17 +3559,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 116086,
-  "salida": 4585,
+  "entrada": 118166,
+  "salida": 4700,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.250051,
+  "dolares": 0.250317,
   "reservado": 0
  },
  "recientes": {
@@ -7837,13 +7838,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3365,
+   "ok": 3366,
    "fallos": 0,
-   "ejecuciones": 2721,
+   "ejecuciones": 2722,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-17T07:01:21.416Z"
+   "ultima": "2026-11-17T07:06:12.139Z"
   }
  },
  "ptsDirecto": {},
@@ -7860,15 +7861,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:01:32.258Z"
+   "ultimaBien": "2026-11-17T07:06:17.451Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:01:32.258Z"
+   "ultimaBien": "2026-11-17T07:06:17.451Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:01:32.258Z"
+   "ultimaBien": "2026-11-17T07:06:17.451Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7876,11 +7877,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:01:32.258Z"
+   "ultimaBien": "2026-11-17T07:06:17.451Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:01:32.258Z"
+   "ultimaBien": "2026-11-17T07:06:17.451Z"
   }
  },
  "avisos": [
