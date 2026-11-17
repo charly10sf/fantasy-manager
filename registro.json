@@ -3829,7 +3829,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136448657": 1794681682000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000,
@@ -8208,13 +8207,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3507,
+   "ok": 3508,
    "fallos": 0,
-   "ejecuciones": 2863,
+   "ejecuciones": 2864,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T18:41:12.962Z"
+   "ultima": "2026-11-17T18:46:12.680Z"
   }
  },
  "ptsDirecto": {},
@@ -8231,15 +8230,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:41:18.121Z"
+   "ultimaBien": "2026-11-17T18:46:15.521Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:41:18.121Z"
+   "ultimaBien": "2026-11-17T18:46:15.521Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:41:18.121Z"
+   "ultimaBien": "2026-11-17T18:46:15.521Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8247,11 +8246,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:41:18.121Z"
+   "ultimaBien": "2026-11-17T18:46:15.521Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:41:18.121Z"
+   "ultimaBien": "2026-11-17T18:46:15.521Z"
   }
  },
  "avisos": [
