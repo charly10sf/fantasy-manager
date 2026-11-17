@@ -310,6 +310,8 @@ export const nativo = {
   zonaAnuncios: (si, bloque, inter) => llamar('zonaAnuncios', !!si, String(bloque || ''), !!inter),
   hayIntersticial: () => !!(N && typeof N.intersticial === 'function' && llamar('hayAnuncios')),
   intersticial: (bloque) => llamar('intersticial', String(bloque || '')),
+  // (17 nov) el de apertura: si a esta cuenta le toca hoy (Android lo enseña solo en los primeros segundos de abrir la app)
+  aperturaAnuncios: (toca, bloque) => (N && typeof N.aperturaAnuncios === 'function' ? llamar('aperturaAnuncios', !!toca, String(bloque || '')) : null),
   verAnuncio: (para) => llamar('verAnuncio', String(para || '')),
   cancelarAnuncio: () => llamar('cancelarAnuncio'),
   hayPrivacidadAnuncios: () => !!(N && typeof N.hayPrivacidadAnuncios === 'function' && llamar('hayPrivacidadAnuncios')),

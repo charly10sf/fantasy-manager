@@ -92,6 +92,21 @@ window.intersticialVisto = (ok, motivo) => {
   void motivo;
 };
 
+/* (17 nov, Carlos) el anuncio de apertura: uno al día como mucho, al abrir la app (un intersticial al abrir lo prohíbe
+   Google; este formato es el que deja). Nunca el primer día que alguien usa la app con su liga (que la vea antes que un
+   anuncio). A quién (no al dueño ni a los de su liga) lo mira app.js con intersticialParaMi */
+export function aperturaToca() {
+  const d = diaDe(), desde = LS.get('ap-desde', null);
+  if (!desde) { LS.set('ap-desde', d); return false; }
+  if (desde === d) return false;
+  const a = LS.get('apertura', null);
+  return !(a && a.dia === d);
+}
+window.aperturaVista = (ok, motivo) => {
+  if (ok) LS.set('apertura', { dia: diaDe(), t: Date.now() });
+  window.dispatchEvent(new CustomEvent('apertura-vista', { detail: { ok: !!ok, motivo } }));
+};
+
 /** para las pruebas: el rato de uso de esta sesión (ms) y lo de hoy */
 export const estadoIntersticial = () => ({ usoSesion, usoDesde, enCurso, ...hoy() });
 /** para las pruebas: hace como si llevara ms de uso */

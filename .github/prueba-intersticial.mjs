@@ -29,6 +29,7 @@ window.FantasyApp = new Proxy({
   avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {},
   hayAnuncios: () => true, aLaVista: () => window.__vista,
   zonaAnuncios: (si, b, inter) => { window.__pedidos.push(['zona', si, b, inter]); },
+  aperturaAnuncios: (toca, b) => { window.__pedidos.push(['apertura', toca, b]); },
   intersticial: (b) => { window.__pedidos.push(['intersticial', b]); setTimeout(() => window.intersticialVisto && window.intersticialVisto(true, ''), 50); },
   verAnuncio: (p) => { window.__pedidos.push(['bonificado', p]); },
   preguntaEnMarcha: (rid, tk, vuelta, texto) => { window.__pedidos.push(['enMarcha', rid, vuelta, texto]); },
@@ -55,7 +56,7 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
     const U = await import('./js/util.js'), L = await import('./js/limite.js');
     const g = U.LS.get('limites', null) || { t: Date.now(), cfg: {} };
     g.t = Date.now();
-    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' } };
+    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' }, apertura: { on: true, bloque: 'ca-app-pub-3175956326240112/9876543210' } };
     U.LS.set('limites', g);
     if (!demo) { U.LS.del('demo'); window.S.D.demo = false; }
     const yo = { nombre: 'Unión Clausulera', teamId: window.S.D.yo.teamId, userId: dueno ? '667015' : '123456', ligas: [{ nombre: window.S.D.liga.nombre }] };
@@ -175,6 +176,36 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   ok(await A.pedidos() === 0, `${t}: ninguno`);
   const z = await A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'zona').pop());
   ok(!z || z[3] === false, `${t}: Android ni siquiera los carga`);
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('ap-desde', '2026-10-01'); U.LS.del('apertura'); window.dispatchEvent(new Event('limite-cambia')); });
+  await A.page.clock.runFor(300);
+  const ap = await A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'apertura').pop());
+  ok(!ap || ap[1] === false, `${t}: tampoco el de apertura`);
+  await A.cerrar();
+}
+{
+  // (17 nov) el de apertura: nunca el primer día; desde el segundo, uno al día; visto, ya no toca hasta mañana
+  const A = await abrir();
+  const ultAp = () => A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'apertura').pop());
+  const repintar = async () => { await A.page.evaluate(() => window.dispatchEvent(new Event('limite-cambia'))); await A.page.clock.runFor(300); };
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.del('ap-desde'); U.LS.del('apertura'); });
+  await repintar();
+  let ap = await ultAp();
+  ok(ap && ap[1] === false, 'el de apertura, el primer día que usa la app: no');
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('ap-desde', '2026-10-01'); });
+  await repintar();
+  ap = await ultAp();
+  ok(ap && ap[1] === true && ap[2] === 'ca-app-pub-3175956326240112/9876543210', 'desde el segundo día: le toca (con el bloque de limites.json)');
+  await A.page.evaluate(() => window.aperturaVista(true, ''));
+  await A.page.clock.runFor(300);
+  ap = await ultAp();
+  ok(ap && ap[1] === false, 'visto hoy: ya no toca hasta mañana');
+  const v = await A.page.evaluate(async () => { const U = await import('./js/util.js'); return U.LS.get('apertura', null); });
+  ok(v && v.dia === '2026-11-03', 'apunta el día en que salió');
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('apertura', { dia: '2026-11-02', t: 0 }); const g = U.LS.get('limites', null); g.cfg.apertura.on = false; U.LS.set('limites', g); });
+  await repintar();
+  ap = await ultAp();
+  ok(ap && ap[1] === false, 'con «on»: false en «apertura», ninguno');
+  ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
   await A.cerrar();
 }
 {

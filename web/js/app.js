@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -35,7 +35,7 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto } from './intersticial.js';
+import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
 import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
@@ -769,11 +769,17 @@ function ponerBanner(si, zona = si) {
   const z = !!zona && tuLiga && !limitado;
   // (y si a esta cuenta le tocan intersticiales: al dueño y a los de su liga, Android ni los carga)
   const ic = intersticialCfg(), inter = z && ic.on && intersticialParaMi();
-  const k = `${z}|${inter}|${ic.bloque}`;
+  // (17 nov) y si hoy le toca el de apertura (uno al día; nunca el primer día ni al dueño ni a los de su liga)
+  const ac = aperturaCfg(), ap = z && ac.on && intersticialParaMi() && aperturaToca();
+  const k = `${z}|${inter}|${ic.bloque}|${ap}|${ac.bloque}`;
   if (k === bannerYa) return;
   bannerYa = k;
   nativo.zonaAnuncios(z, ic.bloque, inter);
+  nativo.aperturaAnuncios(ap, ac.bloque);
 }
+window.addEventListener('apertura-vista', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
+// (al volver a la app, por si ha cambiado el día y hoy toca otra vez el de apertura)
+window.addEventListener('fm-vuelta', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 /* (0.8) el intersticial, solo en una pausa natural: al cambiar de pestaña con la barra de abajo o al cerrar una ficha con
    la X o arrastrándola (nunca con el «atrás» de Android, que puede ser para salir). Lo demás (cada cuánto, la gracia al

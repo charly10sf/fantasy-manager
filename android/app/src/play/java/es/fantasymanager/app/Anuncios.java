@@ -8,6 +8,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardedAd;
@@ -35,6 +36,11 @@ import org.json.JSONObject;
  * - Un bonificado para lo que la web quiera desbloquear («plan», «preg», «top»…). La web recibe anuncioVisto(para,
  *   visto, motivo) al acabar, pase lo que pase. Si lo pide antes del primer zona(true), se carga en ese momento (lo ha
  *   pedido el usuario con un botón), sin dejar otro precargado.
+ * - (17 nov, Carlos) Un anuncio de apertura (App Open, el formato que Google deja enseñar al abrir la app; un intersticial al
+ *   abrir está prohibido) una vez al día como mucho: la web dice con apertura(toca, bloque) si a esta cuenta le toca hoy
+ *   (nunca el primer día que usa la app, ni al dueño ni a los de su liga; intersticial.js) y aquí solo se enseña en los
+ *   primeros segundos de abrir la app o de volver a ella tras media hora fuera. Si no está cargado a tiempo, ese día se
+ *   espera a la próxima apertura: nunca en mitad del uso.
  * La versión de GitHub (src/github) no lleva nada de esto.
  */
 final class Anuncios {
@@ -70,6 +76,15 @@ final class Anuncios {
     private static long hoyDia;
     /** el bloque que manda la web, si la app no lleva uno puesto (BuildConfig.INTERSTICIAL) */
     private static String bloqueWeb = "";
+    /** el de apertura: Google dice que dura 4 horas cargado; solo en los primeros segundos al abrir o volver tras media hora */
+    private static final long CADUCA_APERTURA = 4 * 60 * 60 * 1000L - 10 * 60 * 1000L;
+    private static final long VENTANA_APERTURA = 12 * 1000L;
+    private static final long OTRA_SESION = 30 * 60 * 1000L;
+    private static AppOpenAd apertura;
+    private static long aperturaT, momentoHasta, pausadoDesde, aperturaDia = -1, esperaAperturaHasta;
+    private static boolean cargandoApertura, ensenandoApertura, aperturaToca;
+    private static int fallosApertura;
+    private static String bloqueAperturaWeb = "";
 
     private Anuncios() {
     }
@@ -79,6 +94,8 @@ final class Anuncios {
         // si Android ha vuelto a crear la pantalla, lo de la anterior no vale
         if (act != null && act != a) soltar();
         act = a;
+        // abrir la app: el momento del anuncio de apertura (si a esta cuenta le toca hoy y llega a tiempo)
+        momentoHasta = System.currentTimeMillis() + VENTANA_APERTURA;
         // pantalla nueva, web nueva: hasta que diga zona(true), nada (aunque AdMob ya estuviera arrancado)
         quiere = false;
         activado = false;
@@ -122,6 +139,7 @@ final class Anuncios {
                     if (activado) {
                         cargarIntersticial();
                         cargarBonificado();
+                        cargarApertura();
                     }
                 }));
             } catch (Throwable t) {
@@ -150,6 +168,7 @@ final class Anuncios {
                 activado = true;
                 cargarIntersticial();
                 cargarBonificado();
+                cargarApertura();
             } else if (conIntersticiales && !antes) cargarIntersticial();
         });
     }
@@ -160,11 +179,19 @@ final class Anuncios {
     }
 
     static void alPausar() {
+        pausadoDesde = System.currentTimeMillis();
     }
 
     static void alVolver() {
         // si al abrir no hubo red para el consentimiento, se prueba otra vez
         if (!iniciado) pedirConsentimiento();
+        // volver tras media hora fuera es como abrirla: otro momento para el de apertura (si hoy aún no ha salido)
+        long ahora = System.currentTimeMillis();
+        if (pausadoDesde > 0 && ahora - pausadoDesde >= OTRA_SESION) {
+            momentoHasta = ahora + VENTANA_APERTURA;
+            quizaApertura();
+        }
+        pausadoDesde = 0;
     }
 
     /** la pantalla se cierra: solo si es la de ahora (Android puede crear la nueva antes de cerrar la vieja) */
@@ -183,6 +210,9 @@ final class Anuncios {
         ensenando = false;
         intersticial = null;
         ensenandoIntersticial = false;
+        apertura = null;
+        aperturaToca = false;
+        ensenandoApertura = false;
     }
 
     /* ---------------- el intersticial ---------------- */
@@ -231,7 +261,7 @@ final class Anuncios {
         if (!a.aLaVista) return "fuera";
         if (teclado) return "teclado";
         if (Puente.ocupada) return "la IA trabaja";
-        if (ensenando || pendiente != null || ensenandoIntersticial) return "otro anuncio";
+        if (ensenando || pendiente != null || ensenandoIntersticial || ensenandoApertura) return "otro anuncio";
         if (ahora - bonificadoFin < TRAS_BONIFICADO) return "tras un bonificado";
         if (ahora - ultimoIntersticial < ENTRE_INTERSTICIALES) return "muy seguido";
         long dia = ahora / 86400000L;
@@ -296,6 +326,104 @@ final class Anuncios {
         if (a != null) a.js("window.intersticialVisto && intersticialVisto(" + visto + "," + JSONObject.quote(motivo) + ")");
     }
 
+    /* ---------------- el de apertura ---------------- */
+
+    /** la web dice si a esta cuenta le toca hoy el de apertura (y el bloque, si la app no lo lleva puesto) */
+    static void apertura(boolean toca, String bloque) {
+        Principal a = act;
+        if (a == null) return;
+        a.runOnUiThread(() -> {
+            if (a != act) return;
+            if (bloque != null && bloque.startsWith(CUENTA) && bloque.matches("ca-app-pub-\\d{16}/\\d{10}")) bloqueAperturaWeb = bloque;
+            aperturaToca = toca;
+            if (!toca) {
+                apertura = null;
+                return;
+            }
+            cargarApertura();
+            quizaApertura();
+        });
+    }
+
+    private static String bloqueApertura() {
+        return !BuildConfig.APERTURA.isEmpty() ? BuildConfig.APERTURA : bloqueAperturaWeb;
+    }
+
+    private static void cargarApertura() {
+        if (act == null || !listo || !activado || !aperturaToca || cargandoApertura || ensenandoApertura) return;
+        long ahora = System.currentTimeMillis();
+        if (apertura != null && ahora - aperturaT < CADUCA_APERTURA) return;
+        String id = bloqueApertura();
+        if (id.isEmpty() || ahora < esperaAperturaHasta) return;
+        apertura = null;
+        cargandoApertura = true;
+        final Principal a = act;
+        AppOpenAd.load(a.getApplicationContext(), id, pedido(), new AppOpenAd.AppOpenAdLoadCallback() {
+            @Override
+            public void onAdLoaded(AppOpenAd ad) {
+                cargandoApertura = false;
+                if (a != act) return;
+                apertura = ad;
+                aperturaT = System.currentTimeMillis();
+                fallosApertura = 0;
+                // si ha llegado dentro de los primeros segundos de abrir, ahora; si no, queda para la próxima apertura
+                quizaApertura();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError e) {
+                cargandoApertura = false;
+                apertura = null;
+                fallosApertura++;
+                esperaAperturaHasta = System.currentTimeMillis() + Math.min(30 * 60000L, 60000L * (1L << Math.min(fallosApertura - 1, 5)));
+            }
+        });
+    }
+
+    /** se enseña solo si toca, está cargado y estamos en los primeros segundos de abrir (o volver), con nada más encima */
+    private static void quizaApertura() {
+        final Principal a = act;
+        AppOpenAd ad = apertura;
+        if (a == null || !aperturaToca || ad == null) return;
+        long ahora = System.currentTimeMillis(), dia = ahora / 86400000L;
+        if (ahora > momentoHasta || dia == aperturaDia) return;
+        if (ahora - aperturaT >= CADUCA_APERTURA) {
+            apertura = null;
+            cargarApertura();
+            return;
+        }
+        if (!listo || !activado || !quiere || !a.aLaVista || teclado || Puente.ocupada) return;
+        if (ensenando || pendiente != null || ensenandoIntersticial || ensenandoApertura) return;
+        apertura = null;
+        ensenandoApertura = true;
+        ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdShowedFullScreenContent() {
+                aperturaDia = dia;
+                // el intersticial espera como poco su suelo desde este (la web espera más: «graciaMin»)
+                ultimoIntersticial = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                ensenandoApertura = false;
+                responderApertura(true, "");
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError e) {
+                ensenandoApertura = false;
+                responderApertura(false, "no se pudo enseñar");
+            }
+        });
+        ad.show(a);
+    }
+
+    private static void responderApertura(boolean visto, String motivo) {
+        Principal a = act;
+        if (a != null) a.js("window.aperturaVista && aperturaVista(" + visto + "," + JSONObject.quote(motivo) + ")");
+    }
+
     /* ---------------- el bonificado ---------------- */
 
     private static void cargarBonificado() {
@@ -337,7 +465,7 @@ final class Anuncios {
     /** enseña el bonificado; si aún no ha llegado, lo espera 10 segundos */
     static void ver(Principal a, String para) {
         a.runOnUiThread(() -> {
-            if (ensenando || pendiente != null || ensenandoIntersticial) return;
+            if (ensenando || pendiente != null || ensenandoIntersticial || ensenandoApertura) return;
             if (!listo) {
                 responder(para, false, iniciado ? "sin anuncio" : "sin consentimiento");
                 return;
