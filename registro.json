@@ -2072,8 +2072,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
    "SPORT|136443141": 1794667376000,
    "SPORT|136442560": 1794668198000,
@@ -8129,13 +8127,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3447,
+   "ok": 3448,
    "fallos": 0,
-   "ejecuciones": 2803,
+   "ejecuciones": 2804,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T13:46:11.933Z"
+   "ultima": "2026-11-17T13:51:11.620Z"
   }
  },
  "ptsDirecto": {},
@@ -8152,15 +8150,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:46:14.926Z"
+   "ultimaBien": "2026-11-17T13:51:16.620Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:46:14.926Z"
+   "ultimaBien": "2026-11-17T13:51:16.620Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:46:14.926Z"
+   "ultimaBien": "2026-11-17T13:51:16.620Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8168,11 +8166,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:46:14.926Z"
+   "ultimaBien": "2026-11-17T13:51:16.620Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:46:14.926Z"
+   "ultimaBien": "2026-11-17T13:51:16.620Z"
   }
  },
  "avisos": [
