@@ -2071,8 +2071,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250929/racing-descansa-estrellas-carburan-recibir-real.html": 1794661700000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
@@ -8080,13 +8078,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3436,
+   "ok": 3437,
    "fallos": 0,
-   "ejecuciones": 2792,
+   "ejecuciones": 2793,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T12:51:13.404Z"
+   "ultima": "2026-11-17T12:56:27.500Z"
   }
  },
  "ptsDirecto": {},
@@ -8103,15 +8101,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:51:21.808Z"
+   "ultimaBien": "2026-11-17T12:56:32.647Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:51:21.808Z"
+   "ultimaBien": "2026-11-17T12:56:32.647Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:51:21.808Z"
+   "ultimaBien": "2026-11-17T12:56:32.647Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8119,11 +8117,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:51:21.808Z"
+   "ultimaBien": "2026-11-17T12:56:32.647Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:51:21.808Z"
+   "ultimaBien": "2026-11-17T12:56:32.647Z"
   }
  },
  "avisos": [
