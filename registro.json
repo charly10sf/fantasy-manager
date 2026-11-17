@@ -2079,7 +2079,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
-   "SPORT|136449782": 1794687734000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251092/francia-mbappe-evitar-sustos-gueler-turquia.html": 1794722400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251060/lamine-blanco-facil.html": 1794722400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251120/sancet-no-dijo-pudiera-ofender-nadie.html": 1794722100000,
@@ -8234,13 +8233,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3527,
+   "ok": 3528,
    "fallos": 0,
-   "ejecuciones": 2883,
+   "ejecuciones": 2884,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T20:21:12.914Z"
+   "ultima": "2026-11-17T20:26:12.234Z"
   }
  },
  "ptsDirecto": {},
@@ -8257,15 +8256,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:21:17.630Z"
+   "ultimaBien": "2026-11-17T20:26:17.256Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:21:17.630Z"
+   "ultimaBien": "2026-11-17T20:26:17.256Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:21:17.630Z"
+   "ultimaBien": "2026-11-17T20:26:17.256Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8273,11 +8272,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:21:17.630Z"
+   "ultimaBien": "2026-11-17T20:26:17.256Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:21:17.630Z"
+   "ultimaBien": "2026-11-17T20:26:17.256Z"
   }
  },
  "avisos": [
