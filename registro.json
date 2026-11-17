@@ -2251,7 +2251,10 @@
    "SPORT|136531325": 1794909409000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000,
    "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
-   "SPORT|136528409": 1794910106000
+   "SPORT|136528409": 1794910106000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000
   },
   "hechos": [
    {
@@ -2775,11 +2778,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794914958000,
+    "id": "3265",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Fofana regresa al trabajo con el grupo tras molestias",
+    "motivo": "problemas leves tras un golpe",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794913259000,
+    "id": "2315",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "pequeña lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3696,17 +3723,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 490023,
-  "salida": 20562,
+  "entrada": 492553,
+  "salida": 20914,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.023425,
+  "dolares": 1.023854,
   "reservado": 0
  },
  "recientes": {
@@ -7996,13 +8023,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3419,
+   "ok": 3420,
    "fallos": 0,
-   "ejecuciones": 2775,
+   "ejecuciones": 2776,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:26:12.374Z"
+   "ultima": "2026-11-17T11:31:12.052Z"
   }
  },
  "ptsDirecto": {},
@@ -8019,15 +8046,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:26:16.126Z"
+   "ultimaBien": "2026-11-17T11:31:18.929Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:26:16.126Z"
+   "ultimaBien": "2026-11-17T11:31:18.929Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:26:16.126Z"
+   "ultimaBien": "2026-11-17T11:31:18.929Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8035,11 +8062,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:26:16.126Z"
+   "ultimaBien": "2026-11-17T11:31:18.929Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:26:16.126Z"
+   "ultimaBien": "2026-11-17T11:31:18.929Z"
   }
  },
  "avisos": [
