@@ -2280,7 +2280,9 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/": 1794944314000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261117/1004252309/bright-ede-zakaria-eddahchouri-novedades-vuelta-trabajo-deportivo.html": 1794944997000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252313/canales-juega-69-minutos-seleccion-sub-21.html": 1794945645000,
-   "SPORT|136533552": 1794945937000
+   "SPORT|136533552": 1794945937000,
+   "SPORT|136558895": 1794946522000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000
   },
   "hechos": [
    {
@@ -3014,7 +3016,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 52
+   "n": 53
   },
   "desde": {
    "67": {
@@ -3928,17 +3930,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 61,
+   "clasificar": 62,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 602719,
-  "salida": 41820,
+  "entrada": 604895,
+  "salida": 42045,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.13669,
+  "dolares": 1.13702,
   "reservado": 0
  },
  "recientes": {
@@ -8234,13 +8236,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3539,
+   "ok": 3540,
    "fallos": 0,
-   "ejecuciones": 2895,
+   "ejecuciones": 2896,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T21:21:13.946Z"
+   "ultima": "2026-11-17T21:26:13.140Z"
   }
  },
  "ptsDirecto": {},
@@ -8257,15 +8259,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:21:16.417Z"
+   "ultimaBien": "2026-11-17T21:26:20.982Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:21:16.417Z"
+   "ultimaBien": "2026-11-17T21:26:20.982Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:21:16.417Z"
+   "ultimaBien": "2026-11-17T21:26:20.982Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8273,11 +8275,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:21:16.417Z"
+   "ultimaBien": "2026-11-17T21:26:20.982Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:21:16.417Z"
+   "ultimaBien": "2026-11-17T21:26:20.982Z"
   }
  },
  "avisos": [
