@@ -1175,6 +1175,13 @@
    "jornada": 13,
    "id": "2122637519082930465",
    "t": "2026-11-17T10:26:36.319Z"
+  },
+  {
+   "clave": "previa|124",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2122668997803962690",
+   "t": "2026-11-17T12:31:41.735Z"
   }
  ],
  "estados": {
@@ -2255,7 +2262,8 @@
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
+   "SPORT|136536417": 1794914802000
   },
   "hechos": [
    {
@@ -2845,7 +2853,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -3690,7 +3698,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250916/precedentes-enfurecen-barca-atletic.html": 1794659189000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000,
    "SPORT|136377187": 1794672059000,
    "SPORT|136447078": 1794676174000,
@@ -3761,17 +3768,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 29,
-   "redactar": 27,
-   "revisar": 12,
+   "clasificar": 30,
+   "redactar": 29,
+   "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 500743,
-  "salida": 22401,
+  "entrada": 537427,
+  "salida": 23321,
   "cacheLee": 20321,
-  "cacheEscribe": 14515,
-  "dolares": 1.025417,
+  "cacheEscribe": 17418,
+  "dolares": 1.108171,
   "reservado": 0
  },
  "recientes": {
@@ -3865,10 +3872,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-07T08:02:50.801Z",
-    "texto": "🗓️ El Villarreal recibe al Getafe mañana a las 18:30 en La Cerámica, tras el 0-6 ante el PSG, según Cadena SER, y con Íñigo Pérez pidiendo reacción al vestuario.\n\nEl cruce le sienta bien a Gulácsi y a la zaga amarilla: el Getafe es de los que menos marcan. Arriba hay bajas, Akhomach y Gerard, y Mikautadze está en el aire, con un 50 % de titularidad en Fantasy Manager.\n\nEn el Getafe, David Soria y Satriano son fijos, y Mangala tiene el sitio por decidir."
-   },
-   {
     "t": "2026-11-07T08:02:53.809Z",
     "texto": "🗓️ Posibles onces de Celta-Levante, mañana a las 18:30\n\nIonut Radu es el fijo del Celta: 97 % y 8,8 de media. No estarán M. Román, Álvaro Núñez y Starfelt, lesionados, e Iago Aspas, H. González y Carreira, entre el 27 y el 45 %, no lo tienen ganado.\n\nEn el Levante, el más en el aire es Etta Eyong, con un 34 %. Ryan sí es fijo: 97 % y 6,1 de media.\n\nSobre el papel, el Celta lo tiene más fácil: va 11º y el Levante, 18º."
    },
@@ -3883,6 +3886,10 @@
    {
     "t": "2026-11-17T10:26:36.321Z",
     "texto": "🗓️ El Barça, líder y con 4 goles por partido, recibe el domingo al Villarreal, que llega 8º y con un cruce incómodo atrás.\n\nEn el Barça faltan Xavi Espart y Rodri, lesionados, pero Mundo Deportivo cuenta que Dani Olmo está en la recta final de su lesión y apunta a llegar. Adeyemi está a medias, con un 44 % de titularidad, y Gerard Martín tiene más papeletas de jugar que de quedarse fuera. Lamine Yamal es fijo.\n\nEl Villarreal 🚢 pierde a Akhomach por lesión. Mikautadze y Romero pueden salir, sin nada cerrado, y a Gulácsi le toca un Barça que marca mucho."
+   },
+   {
+    "t": "2026-11-17T12:31:41.737Z",
+    "texto": "🗓️ Yassir Zabiri es el fijo del Racing ⚓ y llega con 6,5 de media.\n\nLa Real Sociedad marca mucho, así que Agirrezabala y la zaga cántabra lo tienen cuesta arriba. Sin Andrés Martín, lesionado, Iker Luque y Pedro Felipe tienen más papeletas de jugar que de quedarse fuera.\n\nA la Real le encaja un cruce bueno para delanteros y medios, porque el Racing encaja mucho. Guedes lo normal es que salga y Sucic está a medias, aunque Mundo Deportivo cuenta que ya se ha reincorporado al grupo tras la amigdalitis. Barrenetxea es baja."
    }
   ],
   "noticias": [
@@ -8061,13 +8068,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3431,
+   "ok": 3432,
    "fallos": 0,
-   "ejecuciones": 2787,
+   "ejecuciones": 2788,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T12:26:13.868Z"
+   "ultima": "2026-11-17T12:31:20.783Z"
   }
  },
  "ptsDirecto": {},
@@ -8084,15 +8091,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:26:17.598Z"
+   "ultimaBien": "2026-11-17T12:31:44.480Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:26:17.598Z"
+   "ultimaBien": "2026-11-17T12:31:44.480Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:26:17.598Z"
+   "ultimaBien": "2026-11-17T12:31:44.480Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8100,11 +8107,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:26:17.598Z"
+   "ultimaBien": "2026-11-17T12:31:44.480Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:26:17.598Z"
+   "ultimaBien": "2026-11-17T12:31:44.480Z"
   }
  },
  "avisos": [
