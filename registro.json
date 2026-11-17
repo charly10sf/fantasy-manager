@@ -2065,7 +2065,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000,
-   "SPORT|136435184": 1794655925000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000,
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
@@ -8023,13 +8022,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3420,
+   "ok": 3421,
    "fallos": 0,
-   "ejecuciones": 2776,
+   "ejecuciones": 2777,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:31:12.052Z"
+   "ultima": "2026-11-17T11:36:11.045Z"
   }
  },
  "ptsDirecto": {},
@@ -8046,15 +8045,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:31:18.929Z"
+   "ultimaBien": "2026-11-17T11:36:14.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:31:18.929Z"
+   "ultimaBien": "2026-11-17T11:36:14.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:31:18.929Z"
+   "ultimaBien": "2026-11-17T11:36:14.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8062,11 +8061,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:31:18.929Z"
+   "ultimaBien": "2026-11-17T11:36:14.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:31:18.929Z"
+   "ultimaBien": "2026-11-17T11:36:14.225Z"
   }
  },
  "avisos": [
