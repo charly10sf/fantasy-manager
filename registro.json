@@ -2079,8 +2079,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
-   "SPORT|136449462": 1794685713000,
-   "SPORT|136448997": 1794685587000,
    "SPORT|136438982": 1794686444000,
    "SPORT|136449782": 1794687734000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251092/francia-mbappe-evitar-sustos-gueler-turquia.html": 1794722400000,
@@ -8238,13 +8236,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3520,
+   "ok": 3521,
    "fallos": 0,
-   "ejecuciones": 2876,
+   "ejecuciones": 2877,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T19:46:14.276Z"
+   "ultima": "2026-11-17T19:51:24.489Z"
   }
  },
  "ptsDirecto": {},
@@ -8261,15 +8259,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:46:18.375Z"
+   "ultimaBien": "2026-11-17T19:51:29.144Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:46:18.375Z"
+   "ultimaBien": "2026-11-17T19:51:29.144Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:46:18.375Z"
+   "ultimaBien": "2026-11-17T19:51:29.144Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8277,11 +8275,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:46:18.375Z"
+   "ultimaBien": "2026-11-17T19:51:29.144Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:46:18.375Z"
+   "ultimaBien": "2026-11-17T19:51:29.144Z"
   }
  },
  "avisos": [
