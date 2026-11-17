@@ -2276,7 +2276,9 @@
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/17/rodri-podria-regresar-frente-depor.html": 1794935356000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252268/pepe-mel-abandona-uci-pasa-planta.html": 1794936518000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252204/actualidad-barca-video-psg-juventus-interesados-balde.html": 1794936274000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000,
+   "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
+   "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000
   },
   "hechos": [
    {
@@ -2950,11 +2952,23 @@
      16,
      15
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/",
+    "medio": "AS",
+    "t": 1794936943000,
+    "id": "2602",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Álvaro vuelve a entrenar con sus compañeros del Elche",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -3867,17 +3881,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 578499,
-  "salida": 34596,
+  "entrada": 580608,
+  "salida": 36065,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.130656,
+  "dolares": 1.131601,
   "reservado": 0
  },
  "recientes": {
@@ -8173,13 +8187,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3494,
+   "ok": 3495,
    "fallos": 0,
-   "ejecuciones": 2850,
+   "ejecuciones": 2851,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T17:41:15.353Z"
+   "ultima": "2026-11-17T17:46:15.326Z"
   }
  },
  "ptsDirecto": {},
@@ -8196,15 +8210,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:41:19.485Z"
+   "ultimaBien": "2026-11-17T17:46:28.335Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:41:19.485Z"
+   "ultimaBien": "2026-11-17T17:46:28.335Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:41:19.485Z"
+   "ultimaBien": "2026-11-17T17:46:28.335Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8212,11 +8226,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:41:19.485Z"
+   "ultimaBien": "2026-11-17T17:46:28.335Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:41:19.485Z"
+   "ultimaBien": "2026-11-17T17:46:28.335Z"
   }
  },
  "avisos": [
