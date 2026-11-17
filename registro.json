@@ -3624,7 +3624,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261114/1004250898/hay-fecha-encuentros-aplazados-tenerife-andorra-castellon.html": 1794655097000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250852/suspenden-no-barca-atletic-girona-b.html": 1794657210000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250903/incomprensible-espera-barca-plan-girona-b.html": 1794656246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250916/precedentes-enfurecen-barca-atletic.html": 1794659189000,
@@ -7997,13 +7996,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3417,
+   "ok": 3418,
    "fallos": 0,
-   "ejecuciones": 2773,
+   "ejecuciones": 2774,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:16:12.414Z"
+   "ultima": "2026-11-17T11:21:12.029Z"
   }
  },
  "ptsDirecto": {},
@@ -8020,15 +8019,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:16:17.813Z"
+   "ultimaBien": "2026-11-17T11:21:16.095Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:16:17.813Z"
+   "ultimaBien": "2026-11-17T11:21:16.095Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:16:17.813Z"
+   "ultimaBien": "2026-11-17T11:21:16.095Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8036,11 +8035,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:16:17.813Z"
+   "ultimaBien": "2026-11-17T11:21:16.095Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:16:17.813Z"
+   "ultimaBien": "2026-11-17T11:21:16.095Z"
   }
  },
  "avisos": [
