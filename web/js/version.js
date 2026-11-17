@@ -24,8 +24,10 @@ export const NOVEDADES = [
   {
     // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
     // adelante; el cambio de mercado del día del partido). La hora, al publicar
-    v: '0.8a', f: '2026-11-17', h: '', t: 'Pujas para revender más realistas',
+    v: '0.8a', f: '2026-11-17', h: '', t: 'Apodos para tus rivales y pujas más realistas',
     cosas: [
+      { tipo: 'nuevo', importante: true, d: 'cara', t: 'Ponle un apodo a cada rival', x: 'Llama a cada rival como lo llamáis en tu liga: en su ficha («Ponle un apodo») o en Ajustes, en «Apodos de los rivales». Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'voz', t: 'La voz entiende mejor los nombres', x: 'Si el dictado escribe un nombre de tu liga un poco distinto («leao ere espabilado» por «Leao er Espabilao»), la IA sabe de quién hablas y te lo dice. Si puede ser más de uno, te pregunta cuál.', ir: { v: 'ia' } },
       { tipo: 'mejora', d: 'especular', t: 'Pujas para revender con las dos cifras', x: 'Cuando la app te propone pujar por alguien para revenderlo, te dice lo que hace falta en tu liga para llevártelo y hasta dónde te sale a cuenta. Si con la puja que sale a cuenta lo normal es que se lo lleve otro, ya no te lo propone y te cuenta por qué, y si te conviene para quedártelo.' },
       { tipo: 'mejora', d: 'balanza', t: 'El negativo, a su tiempo', x: 'Ir en negativo a mitad de semana para revender está bien: la app solo aprieta cuando quedan pocos cambios de mercado para vender antes de la jornada, y cuanto menos queda, menos te deja bajar.' },
       { tipo: 'mejora', d: 'reloj', t: 'Hasta el último cambio de mercado', x: 'Si ya estás en positivo, lo que tienes para revender puede esperar al cambio de mercado del día del partido. Te dice cuánto margen tendrás para aceptar la oferta y, si no vas a poder, cuál aceptar antes.' },

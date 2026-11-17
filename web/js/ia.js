@@ -8,6 +8,7 @@ import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
 import { token } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
+import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
@@ -851,7 +852,7 @@ const doblar = (t) => { let o = ''; for (let i = 0; i < t.length; i++) o += dobl
  *   tiene menos de 3, o si es una palabra de las instrucciones de la IA («Mercado»): no se sabría cuál es cuál.
  * - Lo que escribes tú pasa por aquí (el chat, las notas); las fotos que adjuntas, no: van tal cual.
  */
-export function seudonimos(D) {
+export function seudonimos(D, apodos = apodosLiga()) {
   const yo = D && D.yo && D.yo.teamId;
   const mio = ((D && D.clasif) || []).find((e) => e && e.teamId === yo);
   const otros = new Set();
@@ -866,16 +867,27 @@ export function seudonimos(D) {
   const porPuesto = puestos.every((x) => Number.isInteger(x) && x > 0) && new Set(puestos).size === puestos.length;
   // nombre doblado → alias (el primero que llega se queda: dos rivales que se escriben igual no se pueden separar)
   const alias = new Map(), vuelta = {};
+  // (0.8a) los nombres de los rivales y sus apodos, para reconocerlos aunque vengan mal escritos o dictados (`aproximar`),
+  // y el primer apodo de cada alias, para contestar con él («el Tito (Marcos)»)
+  const aprox = [], apodoDe = {};
   const poner = (nombre, a) => {
     const k = doblar(nombre.trim().normalize('NFC'));
     if (alias.has(k)) return;
     alias.set(k, a);
-    vuelta[a.toLowerCase()] = nombre.trim();
+    if (!(a.toLowerCase() in vuelta)) vuelta[a.toLowerCase()] = nombre.trim();
   };
   rivales.forEach((e, i) => {
     const n = porPuesto ? e.pos : i + 1;
-    if (vale(e.manager)) poner(e.manager, `Rival ${n}`);
-    if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) poner(e.nombre, `Equipo ${n}`);
+    if (vale(e.manager)) { poner(e.manager, `Rival ${n}`); aprox.push({ nombre: e.manager.trim(), clave: `Rival ${n}` }); }
+    if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) { poner(e.nombre, `Equipo ${n}`); aprox.push({ nombre: e.nombre.trim(), clave: `Equipo ${n}` }); }
+    // (0.8a, Carlos 17 nov) los apodos que le has puesto: apuntan al mismo «Rival N» (con las mismas reglas que un nombre)
+    const aps0 = listaApodos(apodos && apodos[String(e.teamId)]);
+    // «el Tito» vale también como «Tito» («al Tito», «del Tito»), pero contesta con «el Tito»
+    const aps = [...new Set([...aps0, ...aps0.map(sinArticulo).filter(Boolean)])].filter(vale);
+    const a = vale(e.manager) ? `Rival ${n}` : e.nombre && vale(e.nombre) ? `Equipo ${n}` : `Rival ${n}`;
+    for (const ap of aps) { poner(ap, a); aprox.push({ nombre: ap, clave: a }); }
+    if (aps.length && !apodoDe[a.toLowerCase()]) apodoDe[a.toLowerCase()] = aps[0];
+    if (!(a.toLowerCase() in vuelta) && aps.length) vuelta[a.toLowerCase()] = aps[0];
   });
   // los que se fueron de la liga: salen en la actividad (de lo más nuevo a lo más viejo) y no en la clasificación
   const ids = new Set(), nombres = new Set();
@@ -898,6 +910,22 @@ export function seudonimos(D) {
   // todo en una: lo de aparte y los rivales, de más largo a más corto; en cada sitio gana el que empieza antes y, ahí, el más largo
   const todo = reR ? palabra([...new Set([...aparte, ...claves])].sort((a, b) => b.length - a.length)) : null;
   const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|[Ee][Xx][Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
+  const tapar = (t0, { aprox: conAprox = false } = {}) => {
+    if (!todo || typeof t0 !== 'string') return t0;
+    if (conAprox) t0 = aproximar(t0, aprox, { prohibidos: igual, norm }).t;
+    const t = t0.normalize('NFC'), d = doblar(t);
+    let o = '', ult = 0;
+    todo.lastIndex = 0;
+    for (const m of d.matchAll(todo)) {
+      const a = alias.get(m[0]);
+      if (!a) continue; // un jugador o un club con el nombre dentro: tal cual
+      const orig = t.slice(m.index, m.index + m[0].length);
+      if (m[0].length < 4 && orig[0] === orig[0].toLowerCase()) continue; // «leo», «ana»: palabras, no nombres
+      o += t.slice(ult, m.index) + a;
+      ult = m.index + m[0].length;
+    }
+    return ult ? o + t.slice(ult) : t0;
+  };
   return {
     n: alias.size,
     aviso: avisoAlias(porPuesto, ex),
@@ -905,23 +933,22 @@ export function seudonimos(D) {
     porPuesto, ex: ex > 0,
     // (16 nov) los alias a sus nombres («rival 2» → nombre), para el aviso de Android cuando contesta con la app fuera
     vuelta,
-    tapar: (t0) => {
-      if (!todo || typeof t0 !== 'string') return t0;
-      const t = t0.normalize('NFC'), d = doblar(t);
-      let o = '', ult = 0;
-      todo.lastIndex = 0;
-      for (const m of d.matchAll(todo)) {
-        const a = alias.get(m[0]);
-        if (!a) continue; // un jugador o un club con el nombre dentro: tal cual
-        const orig = t.slice(m.index, m.index + m[0].length);
-        if (m[0].length < 4 && orig[0] === orig[0].toLowerCase()) continue; // «leo», «ana»: palabras, no nombres
-        o += t.slice(ult, m.index) + a;
-        ult = m.index + m[0].length;
-      }
-      return ult ? o + t.slice(ult) : t0;
+    tapar,
+    /** (0.8a) lo que escribes o dictas tú: con los nombres aproximados ya corregidos y tapado; `nota`, lo que se le dice
+        a la IA si había uno aproximado (a quién se refiere, o que pregunte si vale para dos) */
+    taparPregunta: (t0) => {
+      if (!todo || typeof t0 !== 'string') return { t: t0, nota: '' };
+      const r = aproximar(t0, aprox, { prohibidos: igual, norm });
+      const tt = r.t === t0 ? t0 : r.t;
+      const out = tapar(tt);
+      const notas = [];
+      if (r.cambios.length) notas.push(`en la pregunta había un nombre escrito o dictado de forma aproximada: se refiere a ${r.cambios.join(' y ')}. Empieza diciendo a quién entiendes que se refiere («Entiendo que hablas de ${r.cambios[0]}»)`);
+      for (const d of r.dudas) notas.push(`había un nombre aproximado que puede ser ${d.join(' o ')}: pregúntale a cuál se refiere antes de contestar sobre él`);
+      return { t: out, nota: notas.length ? `\n[Nota de la app: ${notas.join('; ')}.]` : '' };
     },
-    // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla
-    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? t.replace(deVuelta, (m, q, d) => { const v = vuelta[`${q.toLowerCase()} ${d}`]; return v == null ? m : json ? JSON.stringify(v).slice(1, -1) : v; }) : t),
+    // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla. (0.8a) En el chat,
+    // un rival con apodo sale con él: la primera vez «el Tito (Marcos)» y luego «el Tito»
+    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? ((vistos) => t.replace(deVuelta, (m, q, d) => { const k = `${q.toLowerCase()} ${d}`, v = vuelta[k]; if (v == null) return m; if (json) return JSON.stringify(v).slice(1, -1); const ap = apodoDe[k]; if (!ap || ap === v) return v; if (vistos.has(k)) return ap; vistos.add(k); return `${ap} (${v})`; }))(new Set()) : t),
   };
 }
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
@@ -3199,11 +3226,11 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
 
 /** con la IA de la app: la conversación de antes (sin la pregunta de ahora), con alias y sin fotos */
 function histParaApp(hist, seudo) {
-  const tap = (t) => (seudo && seudo.n ? seudo.tapar(t) : t);
+  const tap = (t, aprox) => (seudo && seudo.n ? seudo.tapar(t, { aprox }) : t);
   return hist.slice(0, -1).slice(-12).map((m) => {
     let t = m.r === 'ia' ? separarNotas(m.t || '').texto.replace(/\n\n\*\*Revisado por la app:\*\*[\s\S]*$/, '') : (m.t || '');
     if (m.r === 'yo' && Array.isArray(m.fotos) && m.fotos.length) t = `${t}${t ? '\n' : ''}[Aquí mandó ${m.fotos.length} captura${m.fotos.length > 1 ? 's' : ''}: tira de lo que contestaste.]`;
-    return { r: m.r === 'ia' ? 'ia' : 'yo', t: tap(t).slice(0, 5800) };
+    return { r: m.r === 'ia' ? 'ia' : 'yo', t: tap(t, m.r !== 'ia').slice(0, 5800) };
   }).filter((m) => m.t.trim());
 }
 
@@ -3213,7 +3240,7 @@ export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid 
   const fs = (fotos || []).map((f) => f && f.b64).filter((b) => typeof b === 'string' && b.length < 880000).slice(0, 3);
   const o = opcionesChat();
   const cuerpo = {
-    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? seudo.tapar(pregunta || '') : (pregunta || ''), hist: histParaApp(hist, seudo), fotos: fs,
+    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? (({ t, nota }) => `${t.slice(0, 3000 - nota.length)}${nota}`)(seudo.taparPregunta(pregunta || '')) : (pregunta || ''), hist: histParaApp(hist, seudo), fotos: fs,
     conFotos: hist.some((m) => m.fotos && m.fotos.length), ...o, alias: seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null, extra: !!extra, rid,
   };
   return cuerpo;

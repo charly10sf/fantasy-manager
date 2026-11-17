@@ -8,6 +8,7 @@ import { analizar, rematarAuto } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
+import { ponerApodo } from './apodos.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
@@ -692,7 +693,12 @@ function pintarSup() {
   }
   // Directo: un punto verde mientras se juega la jornada
   const gd = $('#gl-directo'); if (gd) { gd.classList.add('punto-v'); gd.classList.toggle('oculto', !S.M.enJuego); }
+  marcarApodos();
 }
+/* (0.8a, Carlos 17 nov) tras actualizar, el botón de Ajustes brilla hasta que lo tocas: la primera vez se abre en «Apodos
+   de los rivales». Una vez (por móvil); no en la liga de ejemplo, ni con el tutorial o las novedades delante */
+const apodosToca = () => !LS.get('apodos-visto', null) && !!S.D && !enDemo() && tourVisto() && !tourAbierto() && !document.body.classList.contains('con-nv');
+function marcarApodos() { const b = $('#bAjustes'); if (b) b.classList.toggle('brilla', apodosToca()); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
@@ -2286,6 +2292,7 @@ function gestoHoja(hoja, velo) {
   hoja.addEventListener('touchcancel', fin, { passive: true });
 }
 function cerrarHoja(ya = false, sigue = false) {
+  S.apodoEdita = null;
   const h = $('.hoja'), v = $('.velo');
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
@@ -3112,7 +3119,22 @@ document.addEventListener('click', async (ev) => {
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': sinErrorPlan(); cargar(); break;
     case 'usarGuardado': usarGuardado(); break;
-    case 'ajustes': S.ajBusca = ''; hoja('ajustes'); break;
+    case 'ajustes': {
+      S.ajBusca = '';
+      const aApodos = apodosToca();
+      if (aApodos) { LS.set('apodos-visto', 1); S.ajAbiertas = { ...(S.ajAbiertas || {}), apodos: 1 }; S.apodosUnaVez = true; } else if (S.apodosUnaVez && S.ajAbiertas) { delete S.ajAbiertas.apodos; S.apodosUnaVez = false; }
+      hoja('ajustes');
+      marcarApodos();
+      if (aApodos) requestAnimationFrame(() => { const sec = S.hoja && S.hoja.querySelector('details[data-k="apodos"]'); if (sec) { S.hoja.scrollTop = Math.max(0, sec.offsetTop - 70); sec.classList.add('resalta'); } });
+      break;
+    }
+    case 'apodoEditar': S.apodoEdita = String(d.tid); repintarHoja(); requestAnimationFrame(() => { const i = $('#apodoIn'); if (i) { i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }); break;
+    case 'apodoGuardar': {
+      const i = $('#apodoIn'), l = ponerApodo(d.tid, i ? i.value : '');
+      S.apodoEdita = null; repintarHoja();
+      tostada(l.length ? `Hecho: la IA lo reconocerá como ${l.map((x) => `«${x}»`).join(', ')}` : 'Apodo quitado');
+      break;
+    }
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
@@ -3370,6 +3392,7 @@ document.addEventListener('change', (ev) => {
   if (k === 'modelo') guardarCfgIA({ modelo: v });
   if (k === 'planH1' || k === 'planH2') { guardarCfgHoras({ [k === 'planH1' ? 'h1' : 'h2']: v }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); }
   if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
+  if (k === 'apodo') { const l = ponerApodo(el.dataset.tid, v); el.value = l.join(', '); el.classList.toggle('lleno', !!l.length); tostada(l.length ? 'Apodo guardado' : 'Apodo quitado', 1800); }
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M, planAvisos()); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
   // (40) cuánto antes avisa cada tipo, de cuáles de tus cláusulas y el aviso de un jugador concreto (desde su ficha o Ajustes)
@@ -3394,6 +3417,8 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && S.hoja && !tourAbierto()) { cerrarHoja(); return; }
   if ((ev.key === 'Enter' || ev.key === ' ') && ev.target && ev.target.matches && ev.target.matches('[role="button"][data-accion]')) { ev.preventDefault(); ev.target.click(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'apodoIn') { ev.preventDefault(); const b = $('[data-accion="apodoGuardar"]'); if (b) b.click(); return; }
+  if (ev.key === 'Enter' && ev.target && ev.target.matches && ev.target.matches('input[data-cambia="apodo"]')) { ev.preventDefault(); ev.target.blur(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
 // el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)

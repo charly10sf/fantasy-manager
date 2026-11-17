@@ -15,6 +15,7 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
+import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
@@ -572,6 +573,17 @@ function subenBajanRival(r, per) {
   return { tot, h };
 }
 
+/** (0.8a, Carlos 17 nov) el apodo del rival, debajo de su nombre: el botón para ponerlo, la caja para escribirlo o el que tiene */
+function apodoRival(S, e) {
+  const tid = String(e.teamId), aps = apodosDe(tid);
+  if (S.apodoEdita === tid) {
+    const por = [e.manager, e.nombre].filter((x, i, a) => x && a.indexOf(x) === i).map((x) => `«${esc(x)}»`).join(' y ');
+    return `<div class="apodo-ed"><label for="apodoIn">¿Cómo lo llamáis en tu liga?</label><div class="apodo-fila"><input id="apodoIn" data-tid="${esc(tid)}" value="${esc(aps.join(', '))}" maxlength="120" autocomplete="off" enterkeyhint="done" placeholder="el Tito"><button class="btn chico" data-accion="apodoGuardar" data-tid="${esc(tid)}">Guardar</button></div><small>Puedes poner varios separados por comas (el Tito, Titón). La IA y la voz lo reconocerán así, además de por ${por}. Solo lo ves tú.</small></div>`;
+  }
+  if (aps.length) return `<div class="apodo-l">Lo llamas <b>${aps.map((x) => `«${esc(x)}»`).join(', ')}</b><button class="apodo-chip chico" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Cambiar</button></div>`;
+  return `<div class="apodo-l"><button class="apodo-chip" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Ponle un apodo</button><span>para la IA y la voz</span></div>`;
+}
+
 export function fichaRival(S, tid) {
   const { M } = S;
   const r = M.rivales.find((x) => x.e.teamId === tid);
@@ -597,6 +609,7 @@ export function fichaRival(S, tid) {
   ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2 rival-sub">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
+  ${apodoRival(S, e)}
   <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;
   // la jornada en directo: lo que lleva y su once, jugador a jugador (encima de las pestañas, solo con partidos)
@@ -884,6 +897,20 @@ export function ajustes(S) {
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
+  /* ---- (0.8a) apodos de los rivales ---- */
+  if (S.D && Array.isArray(S.D.clasif)) {
+    const yo = S.D.yo && S.D.yo.teamId, ap = apodosLiga();
+    const rivs = S.D.clasif.filter((x) => x && x.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
+    if (rivs.length) {
+      const puestos = rivs.filter((x) => listaApodos(ap[String(x.teamId)]).length).length;
+      let c9 = '<p class="apo-nota">Ponle a cada rival el nombre con el que lo llamáis. Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.</p>';
+      for (const x of rivs) {
+        const v = listaApodos(ap[String(x.teamId)]).join(', ');
+        c9 += `<div class="ajuste apo-fila" data-q="${esc(norm(`apodo mote ${x.nombre} ${x.manager} ${v}`))}">${caraManager(x)}<div class="c"><b>${esc(x.nombre)}</b><span>${esc(x.manager && x.manager !== x.nombre ? `${x.manager} · ` : '')}${x.pos}º</span></div><input class="${v ? 'lleno' : ''}" data-cambia="apodo" data-tid="${esc(x.teamId)}" value="${esc(v)}" placeholder="Apodo" maxlength="120" autocomplete="off" enterkeyhint="done" aria-label="Apodo de ${esc(x.nombre)}"></div>`;
+      }
+      h += sec('apodos', 'rivales', 'Apodos de los rivales', `${puestos ? `${puestos} puesto${puestos === 1 ? '' : 's'}` : 'Ninguno puesto'} · para la IA y la voz`, c9, 'apodo mote nombre rival voz');
+    }
+  }
 
   /* ---- avisos y alarmas ---- */
   let c2 = '';
