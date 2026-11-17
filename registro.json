@@ -2068,7 +2068,6 @@
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000,
-   "SPORT|136438917": 1794658476000,
    "SPORT|136439152": 1794658639000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250929/racing-descansa-estrellas-carburan-recibir-real.html": 1794661700000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
@@ -3726,7 +3725,8 @@
    "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794900695000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794821132000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000,
+   "SPORT|136535420": 1794913964000
   },
   "hechos": [
    {
@@ -3754,7 +3754,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -3762,17 +3762,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 498960,
-  "salida": 22262,
+  "entrada": 500743,
+  "salida": 22401,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.025169,
+  "dolares": 1.025417,
   "reservado": 0
  },
  "recientes": {
@@ -8062,13 +8062,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3428,
+   "ok": 3429,
    "fallos": 0,
-   "ejecuciones": 2784,
+   "ejecuciones": 2785,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T12:11:14.333Z"
+   "ultima": "2026-11-17T12:16:13.597Z"
   }
  },
  "ptsDirecto": {},
@@ -8085,15 +8085,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:11:22.032Z"
+   "ultimaBien": "2026-11-17T12:16:19.645Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:11:22.032Z"
+   "ultimaBien": "2026-11-17T12:16:19.645Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:11:22.032Z"
+   "ultimaBien": "2026-11-17T12:16:19.645Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8101,11 +8101,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:11:22.032Z"
+   "ultimaBien": "2026-11-17T12:16:19.645Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:11:22.032Z"
+   "ultimaBien": "2026-11-17T12:16:19.645Z"
   }
  },
  "avisos": [
