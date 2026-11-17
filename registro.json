@@ -2078,7 +2078,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
@@ -2280,7 +2279,8 @@
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
    "SPORT|136552816": 1794934765000,
-   "SPORT|136553914": 1794934874000
+   "SPORT|136553914": 1794934874000,
+   "SPORT|136552874": 1794935174000
   },
   "hechos": [
    {
@@ -2966,11 +2966,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136552874",
+    "medio": "SPORT",
+    "t": 1794935174000,
+    "id": "3079",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     2
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3884,17 +3898,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 584686,
-  "salida": 36598,
+  "entrada": 586705,
+  "salida": 37061,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.132276,
+  "dolares": 1.132709,
   "reservado": 0
  },
  "recientes": {
@@ -8190,13 +8204,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3500,
+   "ok": 3501,
    "fallos": 0,
-   "ejecuciones": 2856,
+   "ejecuciones": 2857,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T18:06:27.223Z"
+   "ultima": "2026-11-17T18:11:14.052Z"
   }
  },
  "ptsDirecto": {},
@@ -8213,15 +8227,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:06:33.312Z"
+   "ultimaBien": "2026-11-17T18:11:21.834Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:06:33.312Z"
+   "ultimaBien": "2026-11-17T18:11:21.834Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:06:33.312Z"
+   "ultimaBien": "2026-11-17T18:11:21.834Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8229,11 +8243,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:06:33.312Z"
+   "ultimaBien": "2026-11-17T18:11:21.834Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:06:33.312Z"
+   "ultimaBien": "2026-11-17T18:11:21.834Z"
   }
  },
  "avisos": [
