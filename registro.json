@@ -2256,7 +2256,8 @@
    "SPORT|136534901": 1794912353000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000
   },
   "hechos": [
    {
@@ -2846,7 +2847,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3761,17 +3762,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 497038,
-  "salida": 21907,
+  "entrada": 498960,
+  "salida": 22262,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.024799,
+  "dolares": 1.025169,
   "reservado": 0
  },
  "recientes": {
@@ -8061,13 +8062,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3427,
+   "ok": 3428,
    "fallos": 0,
-   "ejecuciones": 2783,
+   "ejecuciones": 2784,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T12:06:12.709Z"
+   "ultima": "2026-11-17T12:11:14.333Z"
   }
  },
  "ptsDirecto": {},
@@ -8084,15 +8085,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:06:16.282Z"
+   "ultimaBien": "2026-11-17T12:11:22.032Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:06:16.282Z"
+   "ultimaBien": "2026-11-17T12:11:22.032Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:06:16.282Z"
+   "ultimaBien": "2026-11-17T12:11:22.032Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8100,11 +8101,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:06:16.282Z"
+   "ultimaBien": "2026-11-17T12:11:22.032Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:06:16.282Z"
+   "ultimaBien": "2026-11-17T12:11:22.032Z"
   }
  },
  "avisos": [
