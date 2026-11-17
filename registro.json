@@ -1168,6 +1168,13 @@
    "jornada": 13,
    "id": "2122606078240423987",
    "t": "2026-11-17T08:21:40.225Z"
+  },
+  {
+   "clave": "previa|128",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2122637519082930465",
+   "t": "2026-11-17T10:26:36.319Z"
   }
  ],
  "estados": {
@@ -2235,7 +2242,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000
   },
   "hechos": [
    {
@@ -2701,7 +2709,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3618,17 +3626,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 16,
-   "redactar": 25,
-   "revisar": 11,
+   "clasificar": 17,
+   "redactar": 27,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 437881,
-  "salida": 15476,
+  "entrada": 475411,
+  "salida": 16173,
   "cacheLee": 20321,
-  "cacheEscribe": 11612,
-  "dolares": 0.935448,
+  "cacheEscribe": 14515,
+  "dolares": 1.019769,
   "reservado": 0
  },
  "recientes": {
@@ -3722,10 +3730,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-07T08:02:48.147Z",
-    "texto": "🗓️ Real Sociedad-Rayo, mañana a las 16:15: posibles onces para la jornada 12\n\nLa duda está en Tsitaishvili (29 %) y Pedro Díaz en el Rayo Vallecano, y en Kubo (36 %), Zubeldia y Turrientes en la Real. Al Rayo le faltan A. Batalla, Álvaro García y Óscar Valentín, lesionados, y a la Real Sociedad, Odriozola, también lesionado.\n\nUnai Lopez (82 %, 5,5 de media) y Sucic (80 %) son los que no fallan.\n\nLa Real, 5º, parte como favorito frente al Rayo Vallecano, que es 12º. La Real Sociedad es de los que más marcan (1,8 por partido), mientras que el Rayo es de los que más encajan (2)."
-   },
-   {
     "t": "2026-11-07T08:02:50.801Z",
     "texto": "🗓️ El Villarreal recibe al Getafe mañana a las 18:30 en La Cerámica, tras el 0-6 ante el PSG, según Cadena SER, y con Íñigo Pérez pidiendo reacción al vestuario.\n\nEl cruce le sienta bien a Gulácsi y a la zaga amarilla: el Getafe es de los que menos marcan. Arriba hay bajas, Akhomach y Gerard, y Mikautadze está en el aire, con un 50 % de titularidad en Fantasy Manager.\n\nEn el Getafe, David Soria y Satriano son fijos, y Mangala tiene el sitio por decidir."
    },
@@ -3740,6 +3744,10 @@
    {
     "t": "2026-11-17T08:21:40.228Z",
     "texto": "🗓️ El Real Madrid recibe al Celta el sábado a las 21:00 con un cruce que solo le sirve atrás: el Celta marca poco, así que el portero y los defensas madridistas lo tienen de cara. Delanteros y medios, en cambio, se topan con un Celta que casi no encaja.\n\nMbappé es fijo, y Arda Güler también. Cucurella tiene más papeletas de jugar que de quedarse fuera, y Bernardo Silva, con un 38 % de titularidad, puede jugar o no, aunque MARCA recoge que estará disponible tras la baja con Portugal. Asencio es baja.\n\nEl Celta lo tiene malo por los dos lados: el Madrid encaja poco y marca mucho. Radu, el portero, lo normal es que salga, e Ilaix Moriba está a medias. Román no estará, lesionado."
+   },
+   {
+    "t": "2026-11-17T10:26:36.321Z",
+    "texto": "🗓️ El Barça, líder y con 4 goles por partido, recibe el domingo al Villarreal, que llega 8º y con un cruce incómodo atrás.\n\nEn el Barça faltan Xavi Espart y Rodri, lesionados, pero Mundo Deportivo cuenta que Dani Olmo está en la recta final de su lesión y apunta a llegar. Adeyemi está a medias, con un 44 % de titularidad, y Gerard Martín tiene más papeletas de jugar que de quedarse fuera. Lamine Yamal es fijo.\n\nEl Villarreal 🚢 pierde a Akhomach por lesión. Mikautadze y Romero pueden salir, sin nada cerrado, y a Gulácsi le toca un Barça que marca mucho."
    }
   ],
   "noticias": [
@@ -7918,13 +7926,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3406,
+   "ok": 3407,
    "fallos": 0,
-   "ejecuciones": 2762,
+   "ejecuciones": 2763,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T10:21:12.993Z"
+   "ultima": "2026-11-17T10:26:16.070Z"
   }
  },
  "ptsDirecto": {},
@@ -7941,15 +7949,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:21:15.832Z"
+   "ultimaBien": "2026-11-17T10:26:38.183Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:21:15.832Z"
+   "ultimaBien": "2026-11-17T10:26:38.183Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:21:15.832Z"
+   "ultimaBien": "2026-11-17T10:26:38.183Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7957,11 +7965,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:21:15.832Z"
+   "ultimaBien": "2026-11-17T10:26:38.183Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:21:15.832Z"
+   "ultimaBien": "2026-11-17T10:26:38.183Z"
   }
  },
  "avisos": [
