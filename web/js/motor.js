@@ -2089,7 +2089,8 @@ export function analizar(D, H, c, extra = {}) {
     const fueraJuego = (t) => !(M.enJuego && t <= M.enJuego.fin);
     const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && fueraJuego(t);
     const cambios = [];
-    // (17 nov, Carlos) el del mismo día que el primer partido (en su liga, a las 20:00 con la jornada a las 21:00) cuenta
+    // (17 nov, Carlos) el del mismo día que el primer partido (cada liga tiene su hora: en la de Carlos, las 20:00 con la
+    // jornada a las 21:00; en otras puede ser de madrugada, con muchas horas de margen) cuenta
     // para vender lo de revender, con aviso, pero el plan no depende de él para llegar en positivo: el negativo tiene que
     // quedar tapado con el cambio de antes (`limite`, `ciclos` y `cambios` siguen sin él). Con menos de 30 min de margen,
     // ni eso. Va con la hora de cambio de cada liga (`M.cierreMercado`); sin saberla, no se cuenta
