@@ -2071,7 +2071,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
@@ -2261,7 +2260,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
-   "SPORT|136539151": 1794917080000
+   "SPORT|136539151": 1794917080000,
+   "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000
   },
   "hechos": [
    {
@@ -2885,11 +2885,35 @@
     "nums": [
      21
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
+    "medio": "AS",
+    "t": 1794921256000,
+    "id": "1565",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Barrios vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
+    "medio": "AS",
+    "t": 1794921256000,
+    "id": "2561",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Hancko vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3804,17 +3828,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 545465,
-  "salida": 26027,
+  "entrada": 547533,
+  "salida": 27144,
   "cacheLee": 20321,
   "cacheEscribe": 17418,
-  "dolares": 1.110328,
+  "dolares": 1.111093,
   "reservado": 0
  },
  "recientes": {
@@ -8104,13 +8128,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3443,
+   "ok": 3444,
    "fallos": 0,
-   "ejecuciones": 2799,
+   "ejecuciones": 2800,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T13:26:16.051Z"
+   "ultima": "2026-11-17T13:31:12.366Z"
   }
  },
  "ptsDirecto": {},
@@ -8127,15 +8151,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:26:19.548Z"
+   "ultimaBien": "2026-11-17T13:31:23.446Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:26:19.548Z"
+   "ultimaBien": "2026-11-17T13:31:23.446Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:26:19.548Z"
+   "ultimaBien": "2026-11-17T13:31:23.446Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8143,11 +8167,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:26:19.548Z"
+   "ultimaBien": "2026-11-17T13:31:23.446Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:26:19.548Z"
+   "ultimaBien": "2026-11-17T13:31:23.446Z"
   }
  },
  "avisos": [
