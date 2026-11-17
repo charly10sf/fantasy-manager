@@ -2086,17 +2086,39 @@ export function analizar(D, H, c, extra = {}) {
     // mismo día (con una o dos horas de margen no se puede contar con él: aviso de Domy, 23 oct) ni los de mientras
     // se juega la jornada de ahora
     const diaJ = diaDe(inicioJ);
-    const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && !(M.enJuego && t <= M.enJuego.fin);
+    const fueraJuego = (t) => !(M.enJuego && t <= M.enJuego.fin);
+    const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && fueraJuego(t);
     const cambios = [];
+    // (17 nov, Carlos) el del mismo día que el primer partido (en su liga, a las 20:00 con la jornada a las 21:00) cuenta
+    // para vender lo de revender, con aviso, pero el plan no depende de él para llegar en positivo: el negativo tiene que
+    // quedar tapado con el cambio de antes (`limite`, `ciclos` y `cambios` siguen sin él). Con menos de 30 min de margen,
+    // ni eso. Va con la hora de cambio de cada liga (`M.cierreMercado`); sin saberla, no se cuenta
+    let justo = null;
     // día a día a la misma hora de Madrid (con masDias: la semana del cambio de hora un día dura 23 o 25 h)
-    if (M.cierreMercado) { for (let k = 0; k < 14; k++) { const t = masDias(M.cierreMercado, k); if (t >= inicioJ) break; if (vale(t)) cambios.push(t); } } else { for (let k = 1, t = masDias(inicioJ, -1); t > ahora && k <= 14; k++, t = masDias(inicioJ, -k)) if (vale(t)) cambios.unshift(t); }
+    if (M.cierreMercado) {
+      for (let k = 0; k < 14; k++) {
+        const t = masDias(M.cierreMercado, k); if (t >= inicioJ) break;
+        if (vale(t)) cambios.push(t);
+        else if (t > ahora && diaDe(t) === diaJ && t <= inicioJ - 30 * MIN && fueraJuego(t)) justo = t;
+      }
+    } else { for (let k = 1, t = masDias(inicioJ, -1); t > ahora && k <= 14; k++, t = masDias(inicioJ, -k)) if (vale(t)) cambios.unshift(t); }
     const ultimo = cambios.length ? cambios[cambios.length - 1] : null;
     // se pone a la venta después del penúltimo cambio, para aceptar la oferta que llega en el último
-    const ponerVenta = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
+    const ponerVentaSeguro = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
+    // lo ya comprado para revender, si ahora estás en positivo contando lo pujado (venderlo no te hace falta para llegar
+    // en positivo): se puede apurar hasta el cambio del día del partido (un día más de subida)
+    const pujado = (M.mercado || []).reduce((s, m) => s + (m.miPuja ? num(m.miPuja) : 0), 0);
+    const apura = !!justo && num(D.dinero) - pujado >= 0;
+    const ponerVenta = apura ? (ultimo || ahora) + 5 * MIN : ponerVentaSeguro;
     // los días que se mueve su valor hasta venderlo: todos, también los de la jornada en juego (el valor cambia cada día
     // aunque esos cambios no valgan para vender)
     const diasValor = ultimo ? clamp(Math.round((ultimo - ahora) / DIA), 1, 14) : 0;
-    M.ventanaEsp = { ponerVenta, limite: ultimo, ultimoMercado: ultimo, ciclos: cambios.length, cambios, diasValor };
+    const margenJ = justo ? Math.round((inicioJ - justo) / MIN) : null;
+    M.ventanaEsp = {
+      ponerVenta, ponerVentaSeguro, limite: ultimo, ultimoMercado: apura ? justo : ultimo, ciclos: cambios.length, cambios, diasValor, justo, apura,
+      // lo que se dice cuando se apura hasta ese cambio
+      avisoJusto: apura ? `El último cambio de mercado es ${cuando(justo)} y la jornada empieza ${cuando(inicioJ)}: tendrás ${margenJ >= 90 ? `${Math.round(margenJ / 60)} h` : `${margenJ} min`} para aceptar la oferta.${ultimo ? ` Si no vas a poder, acepta la de ${cuando(ultimo)}.` : ''}` : '',
+    };
   }
   M.reventa = extra.reventa || {};
   const vuelve = (j) => M.vuelve(j.id);
@@ -2152,13 +2174,14 @@ export function analizar(D, H, c, extra = {}) {
       let beneficio = v - precio;
       // (16 nov, Carlos: «Valverde, Pepe y Unai López son compras claras por cómo se revalorizan») la puja es la que de
       // verdad gana en tu liga por uno que viene como él (`m.pujaGana`). Si con esa ya no compensa revenderlo, la más
-      // alta que aún sale a cuenta («puja como mucho X»), pero solo si con ella se ganan al menos 1 de cada 4 de los
-      // parecidos de tu liga: si no, no se propone y se dice por qué (`M.noRevender`)
+      // alta que aún sale a cuenta («puja como mucho X»), pero solo si con ella se ganan al menos la mitad de los
+      // parecidos de tu liga (17 nov, Carlos, con Soriano: 1 de cada 4 era proponer una puja que casi nunca gana) y
+      // siempre diciendo las dos cifras; si no, no se propone y se dice por qué (`M.noRevender`)
       let pujaJusta = false, pGana = extraInfo && extraInfo.pGana != null ? extraInfo.pGana : null;
       if (origen === 'mercado' && extraInfo && extraInfo.precioMercado && r > 0.004 && beneficio < Math.max(250000, precio * 0.025)) {
         const tope = Math.floor(Math.min(v / 1.025, v - 250000) / 10000) * 10000;
         const PVt = M.pagaLiga(j.valor, j.id), pT = PVt ? PVt.f(tope / j.valor - 1) : null;
-        if (tope >= extraInfo.precioMercado && tope < precio && (pT == null || pT >= 0.25)) {
+        if (tope >= extraInfo.precioMercado && tope < precio && pT != null && pT >= 0.5) {
           extraInfo = { ...extraInfo, puja: tope, pujaLiga: precio }; precio = tope; beneficio = v - tope; pujaJusta = true; pGana = pT;
         } else {
           M.noRevender[j.id] = { pid: j.id, j, puja: precio, valorFuturo: v, beneficio, r, dias, tope: tope >= extraInfo.precioMercado ? tope : null, pTope: pT, tener: M.tener(j, t, precio, vu) };
@@ -2167,7 +2190,7 @@ export function analizar(D, H, c, extra = {}) {
       }
       if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
       const confianza = vu && r > 0.01 ? 'alta' : t.p7 != null && r > 0.008 ? 'media' : 'baja';
-      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: pujaJusta && confianza === 'alta' ? 'media' : confianza, vuelve: vu, pujaJusta, ...extraInfo, pGana, tener: origen === 'mercado' ? M.tener(j, t, precio, vu) : null });
+      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVentaSeguro, confianza: pujaJusta && confianza === 'alta' ? 'media' : confianza, vuelve: vu, pujaJusta, ...extraInfo, pGana, tener: origen === 'mercado' ? M.tener(j, t, precio, vu) : null });
     };
     // la puja es la misma que en Mercado → Fichar y en el plan (`m.puja`: lo que hace falta en tu liga para llevártelo).
     // Antes, para revender, se pujaba un 1,2 % más por puja sobre el precio, pero al cuadrar el plan se subía a `m.puja`
@@ -2369,6 +2392,22 @@ export const esClausulable = (M, x, ahora = Date.now()) => !!(x && x.meLlega && 
  * dinero cuadre (primero vender, luego clausular y pujar, después proteger y alinear). Tiene la misma forma
  * que el plan de la IA, así que se pinta igual.
  */
+/**
+ * (17 nov, Carlos: «el negativo no preocupa el martes; a partir del miércoles, y sobre todo jueves y viernes») con qué
+ * fuerza se avisa de ir en negativo, según los cambios de mercado que quedan para vender antes de la jornada (los que
+ * cuentan: el del día del partido no, `M.ventanaEsp.ciclos`). 3 o más: sin prisa; 2: ojo; 1: hoy hay que ponerlo a la
+ * venta; 0: solo queda, si acaso, el del día del partido. { nivel: 'calma'|'ojo'|'ya'|'tarde', tipo: 'plan'|'mal', txt }
+ */
+export function prisaNegativo(M) {
+  const v = M.ventanaEsp;
+  if (!v) return { nivel: 'tarde', tipo: 'mal', txt: '' };
+  const c = v.cambios || [], n = c.length;
+  if (n >= 3) return { nivel: 'calma', tipo: 'plan', txt: `Sin prisa: quedan ${n} cambios de mercado para vender, el último que cuenta ${cuando(v.limite)}.` };
+  if (n === 2) return { nivel: 'ojo', tipo: 'plan', txt: `Quedan dos cambios de mercado para vender (${cuando(c[0])} y ${cuando(c[1])}): ponlo a la venta antes del primero y, si la oferta no te convence, te queda el segundo.` };
+  if (n === 1) return { nivel: 'ya', tipo: 'mal', txt: `Solo queda un cambio de mercado para vender, ${cuando(c[0])}: ponlo a la venta hoy y acepta la oferta que llegue.` };
+  return { nivel: 'tarde', tipo: 'mal', txt: v.justo ? `Ya solo queda el cambio de ${cuando(v.justo)}, ${M.proxima && M.proxima.ini - v.justo < 3 * HORA ? 'muy pegado al primer partido' : 'el mismo día del primer partido'}: ponlo a la venta ya y acepta la oferta en cuanto llegue.` : 'Ya no queda ningún cambio de mercado antes de la jornada: solo puedes aceptar una oferta que ya tengas.' };
+}
+
 /** (0.7.13u) de cada 10 compras parecidas de tu liga, en cuántas habría bastado esa puja */
 export const vecesTxt = (p) => (Math.round(p * 10) <= 0 ? 'casi nunca te lo llevas' : Math.round(p * 10) >= 10 ? 'te lo llevas casi seguro' : `te lo llevas más o menos ${Math.round(p * 10)} de cada 10 veces`);
 
@@ -2376,7 +2415,8 @@ export const vecesTxt = (p) => (Math.round(p * 10) <= 0 ? 'casi nunca te lo llev
 export function pujaRevTxt(M, e) {
   if (!e || e.origen !== 'mercado') return '';
   const ganas = e.pGana != null ? ` Con ${eur(e.puja)}, ${vecesTxt(e.pGana)}.` : '';
-  if (e.pujaJusta) return `Puja como mucho ${eur(e.puja)}: por encima ya no sale a cuenta revenderlo. En tu liga, a uno que viene como él se lo llevan con unos ${eur(e.pujaLiga)}, así que puede que no te llegue, pero si te lo llevas, ganas.${ganas} `;
+  // (17 nov, Carlos) siempre las dos: la que hace falta para llevártelo y el tope para que revenderlo salga a cuenta
+  if (e.pujaJusta) return `Para llevártelo, en tu liga hacen falta unos ${eur(e.pujaLiga)}; para que revenderlo te salga a cuenta, puja como mucho ${eur(e.puja)}.${ganas} `;
   const P = M.pagaLiga ? M.pagaLiga(e.j.valor, e.pid) : null;
   return P && P.pf && P.pf.r != null && P.pf.r > 0.008 ? `En tu liga, a los que suben así se los llevan con un ${pct(P.med * 100)} sobre su valor de mediana: por eso la puja es de ${eur(e.puja)}.${ganas} ` : '';
 }
@@ -2387,7 +2427,9 @@ export function noRevenderTxt(M, nr) {
   const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
   const te = nr.tener;
   const tener = !te || !(te.deMas > 2e5) ? '' : te.dias && te.dias <= 10 ? ` Para tenerlo, sí: lo pagado de más (${eur(te.deMas)}) lo recuperas en ${te.dias} día${te.dias === 1 ? '' : 's'} si sigue subiendo así.` : te.dias ? ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) tarda ${te.dias} días en recuperarse si sigue subiendo así: solo si lo quieres para tu once.` : ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) no se recupera en un mes al ritmo de ahora: solo si lo quieres para tu once.`;
-  return `Sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''}. Pagando eso, revenderlo antes de la jornada no sale a cuenta: valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${tener}`;
+  // (17 nov) para quedártelo con esa puja: si te llega con tu margen de puja
+  const llega = te && te.deMas > 2e5 && M.pujaMax != null ? (nr.puja <= M.pujaMax ? ` Te llega para pujar ${eur(nr.puja)}.` : ` Ahora mismo no te llega: puedes pujar como mucho ${eur(Math.max(0, M.pujaMax))}.`) : '';
+  return `Para revender no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${tener}${llega}`;
 }
 
 /**
@@ -2406,6 +2448,7 @@ export function pujaOnceTxt(M, m) {
   const nr = (M.noRevender || {})[m.pid], esp = (M.especular || []).find((e) => e.pid === m.pid);
   if (nr) L.push(`Para revender antes de la jornada no sale: con ${eur(nr.puja)}, valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })}).`);
   else if (esp && !esp.pujaJusta) L.push(`Si al final no lo quieres, revenderlo también sale a cuenta (${eur(esp.beneficio, { signo: true })}).`);
+  else if (esp && esp.pujaJusta) L.push(`Para revender, en cambio, solo sale pujando como mucho ${eur(esp.puja)}.`);
   return L.length ? ` ${L.join(' ')}` : '';
 }
 
@@ -2554,7 +2597,7 @@ export function planAuto(D, M, c) {
     const toca = !ventana || ahora >= ventana.ponerVenta - 6 * HORA || (x.tend.p1 != null && x.tend.p1 < -1);
     if (!toca) continue;
     op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? antesDe(inicio) : 'hoy',
-      motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ' Toca venderlo para empezar la jornada en positivo.'}`, confianza: 'alta' });
+      motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ` Toca venderlo para empezar la jornada en positivo.${ventana && ventana.apura ? ` ${ventana.avisoJusto}` : ''}`}`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 

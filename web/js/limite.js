@@ -260,8 +260,9 @@ export function anunciosWebModo() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || cfg.anunciosWeb !== true || !yoB) return null;
   const dueno = [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
-  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad: nadie de la liga toca anuncios
-  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return null;
+  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad, salvo «intersticial.suLiga» (17 nov,
+  // Carlos: anuncios para todos, también los de su liga; el dueño sigue sin ellos)
+  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB) && !intersticialCfg().suLiga) return null;
   if (!dueno) return 'real';
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }

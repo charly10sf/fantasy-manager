@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8';
+export const VERSION = '0.8a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,16 @@ export const VERSION = '0.8';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
+    // adelante; el cambio de mercado del día del partido). La hora, al publicar
+    v: '0.8a', f: '2026-11-17', h: '', t: 'Pujas para revender más realistas',
+    cosas: [
+      { tipo: 'mejora', d: 'especular', t: 'Pujas para revender con las dos cifras', x: 'Cuando la app te propone pujar por alguien para revenderlo, te dice lo que hace falta en tu liga para llevártelo y hasta dónde te sale a cuenta. Si con la puja que sale a cuenta lo normal es que se lo lleve otro, ya no te lo propone y te cuenta por qué, y si te conviene para quedártelo.' },
+      { tipo: 'mejora', d: 'balanza', t: 'El negativo, a su tiempo', x: 'Ir en negativo a mitad de semana para revender está bien: la app solo aprieta cuando quedan pocos cambios de mercado para vender antes de la jornada, y cuanto menos queda, menos te deja bajar.' },
+      { tipo: 'mejora', d: 'reloj', t: 'Hasta el último cambio de mercado', x: 'Si ya estás en positivo, lo que tienes para revender puede esperar al cambio de mercado del día del partido. Te dice cuánto margen tendrás para aceptar la oferta y, si no vas a poder, cuál aceptar antes.' },
+    ],
+  },
   {
     // (17 nov, Carlos) la 0.8 se presenta a todos al actualizar (todos: true), con dibujos nuevos. La hora, al publicar
     v: '0.8', f: '2026-11-17', h: '13:41', t: 'La IA, al momento, y la pantalla entera', todos: true,

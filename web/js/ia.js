@@ -15,7 +15,7 @@ import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg, preguntasCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
-import { rematarAuto } from './motor.js';
+import { rematarAuto, prisaNegativo } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
@@ -1050,7 +1050,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   if (M.ventanaEsp) {
     const v = M.ventanaEsp;
     if (v.ciclos < 1) L.push(`\nNO ESPECULES AHORA: ${M.enJuego ? `la jornada ${M.enJuego.n} está en juego y antes de la siguiente no da tiempo` : 'antes de la jornada no queda ningún cambio de mercado que cuente para revender (el del mismo día en que empieza la jornada no da tiempo a vender)'}. Lo que compre ahora no lo puede vender a tiempo: nada de comprar «para revender». Esto es solo para revender: para FICHAR y alinear, lo que se gane en la subasta sí llega (mira EL MERCADO CAMBIA).`);
-    else L.push(`\nESPECULAR: hasta la jornada quedan ${v.ciclos} cambio${v.ciclos === 1 ? '' : 's'} de mercado que cuentan (${v.cambios.map((t) => cuando(t)).join(', ')}); el del mismo día que empieza la jornada NO cuenta. Lo de revender se pone a la venta ${cuando(v.ponerVenta)} para aceptar la oferta del cambio de ${cuando(v.ultimoMercado)}. Una compra en el mercado llega en el siguiente cambio y luego hay que ponerla a la venta: necesita 2 cambios; una cláusula, 1. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.${M.enJuego ? ` La jornada ${M.enJuego.n} está en juego, pero se puede comprar YA para revender antes de la ${M.proxima ? M.proxima.n : 'siguiente'}: el valor sigue cambiando cada día (y con lo que haga en su partido si aún juega esta jornada); lo que no vale es vender en los cambios de mientras se juega.` : ''}`);
+    else L.push(`\nESPECULAR: hasta la jornada quedan ${v.ciclos} cambio${v.ciclos === 1 ? '' : 's'} de mercado que cuentan (${v.cambios.map((t) => cuando(t)).join(', ')}); ${v.justo ? `el del mismo día que empieza la jornada (${cuando(v.justo)}) solo vale para vender lo que YA tienes para revender si estás en positivo: nunca para salir del negativo ni para lo que compres hoy` : 'el del mismo día que empieza la jornada NO cuenta'}. Lo que compres hoy para revender se pone a la venta ${cuando(v.ponerVentaSeguro)} para aceptar la oferta del cambio de ${cuando(v.limite)}.${v.apura ? ` Lo que ya tienes para revender puede esperar al de ${cuando(v.justo)} (${v.avisoJusto})` : ''} Una compra en el mercado llega en el siguiente cambio y luego hay que ponerla a la venta: necesita 2 cambios; una cláusula, 1. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.${M.enJuego ? ` La jornada ${M.enJuego.n} está en juego, pero se puede comprar YA para revender antes de la ${M.proxima ? M.proxima.n : 'siguiente'}: el valor sigue cambiando cada día (y con lo que haga en su partido si aún juega esta jornada); lo que no vale es vender en los cambios de mientras se juega.` : ''}`);
     if (M.paraRevender && M.paraRevender.length) L.push(`COMPRADOS PARA REVENDER: ${M.paraRevender.map((x) => `${x.j.nombre} (comprado a ${eur(x.rev.precio)}, vale ${eur(x.j.valor)}, ${eur(x.beneficioYa, { signo: true })})`).join('; ')}.`);
     if (M.especular && M.especular.length) {
       L.push('CANDIDATOS PARA REVENDER SEGÚN LA TENDENCIA (precio de compra | subida diaria | valor esperado el día de vender | beneficio):');
@@ -2309,11 +2309,16 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
   let avisoSaldo = null, avisoTipo = null;
   if (final != null && final < -M.deuda) { avisoSaldo = `Te pasarías del límite de deuda (${eur(-M.deuda)})`; avisoTipo = 'mal'; }
   else if (final != null && final < 0 && rev.length && final + recupera >= 0) {
-    avisoSaldo = `En negativo a propósito hasta que vendas lo de revender (${rev.map((o) => (o.j && o.j.nombre) || o.jugador).join(', ')}). Con eso vuelves a unos ${eur(final + recupera)} antes de la jornada`;
-    avisoTipo = 'plan';
+    // (17 nov) con más o menos fuerza según los cambios de mercado que quedan para vender
+    const pn = prisaNegativo(M);
+    avisoSaldo = `En negativo a propósito hasta que vendas lo de revender (${rev.map((o) => (o.j && o.j.nombre) || o.jugador).join(', ')}). ${pn.txt ? `${pn.txt} ` : ''}Con eso vuelves a unos ${eur(final + recupera)} antes de la jornada`;
+    avisoTipo = pn.tipo;
   } else if (final != null && final < 0 && sugeridas && final + sugeridas >= 0) {
-    avisoSaldo = `En negativo, pero sin prisa: tienes hasta ${M.ventanaEsp && M.ventanaEsp.limite ? cuando(M.ventanaEsp.limite) : 'antes de la jornada'} para vender y empezar la jornada en positivo (las ventas sugeridas te dejarían en ${eur(final + sugeridas)})`;
-    avisoTipo = 'plan';
+    const pn = prisaNegativo(M);
+    avisoSaldo = pn.nivel === 'calma'
+      ? `En negativo, pero sin prisa: tienes hasta ${M.ventanaEsp && M.ventanaEsp.limite ? cuando(M.ventanaEsp.limite) : 'antes de la jornada'} para vender y empezar la jornada en positivo (las ventas sugeridas te dejarían en ${eur(final + sugeridas)})`
+      : `En negativo: ${pn.txt.replace(/^./, (x) => x.toLowerCase())} Con las ventas sugeridas te quedarías en ${eur(final + sugeridas)}`;
+    avisoTipo = pn.tipo;
   } else if (final != null && final >= 0 && sugeridas > 0) {
     // (aviso de Carlos, 4 nov: «me pone de vender todo eso y me quedaría con 30 M teniendo 24 M») las ventas sin prisa
     // no cuentan en el saldo de hoy: se dice, con lo que tendrías si las haces también

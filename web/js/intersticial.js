@@ -9,8 +9,8 @@
      uno cada N minutos de uso (con la app a la vista; el rato fuera no cuenta), un máximo al día y no justo después de
      un anuncio bonificado.
    - Nunca con la IA pensando, en el tutorial, con una ficha o una ventana abierta, escribiendo, en la liga de ejemplo,
-     en la pantalla del límite ni antes de entrar en tu liga. Nunca al dueño (sinLimite/todoAbierto) y, salvo que
-     «suLiga» lo abra, tampoco a los de sus ligas (nadie cercano debe tocar un anuncio: AdMob cierra cuentas por eso).
+     en la pantalla del límite ni antes de entrar en tu liga. Nunca al dueño (sinLimite/todoAbierto). Con
+     «suLiga» (true desde el 17 nov), también a los de sus ligas: anuncios para todos menos el dueño.
    - Si no hay uno cargado, no pasa nada: Android ya está cargando el siguiente y no se reintenta en bucle.
    Los números, en «intersticial» de limites.json (intersticialCfg de limite.js), para cambiarlos sin sacar versión.
    Android (Anuncios.java de src/play) vuelve a comprobar lo suyo (la app a la vista, sin teclado, sin la IA trabajando,
