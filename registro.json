@@ -2248,7 +2248,10 @@
    "SPORT|136531054": 1794908320000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-lesionado-cuatro-dias-derbi-betis-sevilla_0_2008524681.html": 1794911808000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/video-entrenamiento-sevilla-fc-17-noviembre-2026_8_2008525335.html": 1794911542000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000,
+   "SPORT|136531987": 1794909577000,
+   "SPORT|136531325": 1794909409000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000
   },
   "hechos": [
    {
@@ -2748,11 +2751,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136531325",
+    "medio": "SPORT",
+    "t": 1794909409000,
+    "id": "2355",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Kounde sigue entrenando al margen del grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3670,17 +3685,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 485416,
-  "salida": 20006,
+  "entrada": 487851,
+  "salida": 20326,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.022686,
+  "dolares": 1.02309,
   "reservado": 0
  },
  "recientes": {
@@ -7970,13 +7985,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3414,
+   "ok": 3415,
    "fallos": 0,
-   "ejecuciones": 2770,
+   "ejecuciones": 2771,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:01:10.104Z"
+   "ultima": "2026-11-17T11:06:12.085Z"
   }
  },
  "ptsDirecto": {},
@@ -7993,15 +8008,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:01:16.085Z"
+   "ultimaBien": "2026-11-17T11:06:17.574Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:01:16.085Z"
+   "ultimaBien": "2026-11-17T11:06:17.574Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:01:16.085Z"
+   "ultimaBien": "2026-11-17T11:06:17.574Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8009,11 +8024,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:01:16.085Z"
+   "ultimaBien": "2026-11-17T11:06:17.574Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:01:16.085Z"
+   "ultimaBien": "2026-11-17T11:06:17.574Z"
   }
  },
  "avisos": [
