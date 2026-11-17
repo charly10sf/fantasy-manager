@@ -3153,7 +3153,7 @@ document.addEventListener('click', async (ev) => {
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
-        <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
+        <p>${esc(dondeTop().trim())}</p>
         ${enApp ? '' : botonPlay()}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
