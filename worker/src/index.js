@@ -1166,7 +1166,7 @@ async function hola(req, env, c, ruta) {
     const m = ya && ya.metadata ? ya.metadata : null;
     const ahora = Date.now();
     const nuevo = {
-      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20), v: corta(b.v, 12),
+      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20) || (m && m.liga) || '', v: corta(b.v, 12),
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
       foto: u.foto || '',
@@ -1185,10 +1185,13 @@ async function hola(req, env, c, ruta) {
     const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
     // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
     const bvNueva = !!nuevo.bv && !(m && m.bv);
+    // (la liga, igual, una vez por cuenta: el primer aviso sale a veces antes de que la app tenga la liga, y sin esto se quedaba
+    // «sin liga» hasta la siguiente escritura de la hora; 17 nov)
+    const ligaNueva = !!nuevo.liga && !!m && !m.liga;
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
     const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
     if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || bvNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
+    if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
     return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);
