@@ -2050,7 +2050,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000,
    "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
    "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
@@ -3537,7 +3536,8 @@
    "SPORT|136517839": 1794889846000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/vanessa-ares-agradece-apoyo-foz-arenka-fight-night-span-langglunha-loucuraspan/0003_202611X17C6991.htm": 1794888000000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-rodalies-avisa-maquinistas-no-cumplen-servicios-minimos-huelga-martes-20261117071907.html": 1794896347000,
-   "SPORT|136523846": 1794895219000
+   "SPORT|136523846": 1794895219000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794900695000
   },
   "hechos": [
    {
@@ -3565,27 +3565,25 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794901284287
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 7,
-   "redactar": 11,
+   "clasificar": 8,
+   "redactar": 15,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 188028,
-  "salida": 6946,
+  "entrada": 251268,
+  "salida": 8091,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.405455,
+  "dolares": 0.539368,
   "reservado": 0
  },
  "recientes": {
@@ -4020,6 +4018,11 @@
    "n": 1,
    "t": "2026-11-17T08:01:44.434Z",
    "ultima": "2026-11-17T08:01:44.434Z"
+  },
+  "previa|130": {
+   "n": 1,
+   "t": "2026-11-17T08:06:37.624Z",
+   "ultima": "2026-11-17T08:06:37.624Z"
   }
  },
  "rasgos": {
@@ -7860,13 +7863,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3377,
+   "ok": 3378,
    "fallos": 0,
-   "ejecuciones": 2733,
+   "ejecuciones": 2734,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T08:01:13.256Z"
+   "ultima": "2026-11-17T08:06:15.635Z"
   }
  },
  "ptsDirecto": {},
@@ -7883,15 +7886,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:01:44.556Z"
+   "ultimaBien": "2026-11-17T08:06:37.741Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:01:44.556Z"
+   "ultimaBien": "2026-11-17T08:06:37.741Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:01:44.556Z"
+   "ultimaBien": "2026-11-17T08:06:37.741Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7899,11 +7902,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:01:44.556Z"
+   "ultimaBien": "2026-11-17T08:06:37.741Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:01:44.556Z"
+   "ultimaBien": "2026-11-17T08:06:37.741Z"
   }
  },
  "avisos": [
