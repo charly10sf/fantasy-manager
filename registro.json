@@ -1161,6 +1161,13 @@
    "jornada": 12,
    "id": "2122570928106152207",
    "t": "2026-11-17T06:01:59.864Z"
+  },
+  {
+   "clave": "previa|122",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2122606078240423987",
+   "t": "2026-11-17T08:21:40.225Z"
   }
  ],
  "estados": {
@@ -3576,16 +3583,16 @@
   "dia": "2026-11-17",
   "llamadas": {
    "clasificar": 8,
-   "redactar": 23,
-   "revisar": 9,
+   "redactar": 25,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 383890,
-  "salida": 11368,
-  "cacheLee": 14515,
+  "entrada": 421496,
+  "salida": 12499,
+  "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.84522,
+  "dolares": 0.932322,
   "reservado": 0
  },
  "recientes": {
@@ -3679,10 +3686,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-07T08:02:45.114Z",
-    "texto": "🗓️ El Betis visita al Elche mañana a las 14:00 en el Martínez Valero, un 4º contra un 17º.\n\nEl portero Á. Valles es de los que más puntos dan, con 9 de media, y Fantasy Manager le da un 97 % de titularidad: al once sin pensarlo. En defensa hay una duda: Bartra está en torno al 50 % para Fantasy Manager, aunque Diario de Sevilla lo mete en el once probable de Pellegrini. Cucho, delantero, está lesionado.\n\nEn el Elche, Lemar no juega y Villar y Buonanotte, centrocampistas, tienen la titularidad en el aire."
-   },
-   {
     "t": "2026-11-07T08:02:48.147Z",
     "texto": "🗓️ Real Sociedad-Rayo, mañana a las 16:15: posibles onces para la jornada 12\n\nLa duda está en Tsitaishvili (29 %) y Pedro Díaz en el Rayo Vallecano, y en Kubo (36 %), Zubeldia y Turrientes en la Real. Al Rayo le faltan A. Batalla, Álvaro García y Óscar Valentín, lesionados, y a la Real Sociedad, Odriozola, también lesionado.\n\nUnai Lopez (82 %, 5,5 de media) y Sucic (80 %) son los que no fallan.\n\nLa Real, 5º, parte como favorito frente al Rayo Vallecano, que es 12º. La Real Sociedad es de los que más marcan (1,8 por partido), mientras que el Rayo es de los que más encajan (2)."
    },
@@ -3697,6 +3700,10 @@
    {
     "t": "2026-11-07T08:02:56.905Z",
     "texto": "🗓️ Atlético-Barça, mañana a las 21:00 en el Metropolitano: el 2º contra el 1º, y un cruce poco amable para los dos por detrás.\n\nOblak y Grimaldo son fijos, pero el Barça mete mucho y eso les pesa. Lo mismo para la zaga del Barça con el Atlético marcando tanto. Arriba pasa al revés: los delanteros y medios del Barça se topan con un Atlético que casi no encaja, aunque Raphinha (14,3 de media) y Lamine Yamal son fijos igualmente.\n\nJulián Alvarez está en el aire, con un 53 % de titularidad, y AS recuerda que le ha marcado cuatro goles al Barça en nueve partidos."
+   },
+   {
+    "t": "2026-11-17T08:21:40.228Z",
+    "texto": "🗓️ El Real Madrid recibe al Celta el sábado a las 21:00 con un cruce que solo le sirve atrás: el Celta marca poco, así que el portero y los defensas madridistas lo tienen de cara. Delanteros y medios, en cambio, se topan con un Celta que casi no encaja.\n\nMbappé es fijo, y Arda Güler también. Cucurella tiene más papeletas de jugar que de quedarse fuera, y Bernardo Silva, con un 38 % de titularidad, puede jugar o no, aunque MARCA recoge que estará disponible tras la baja con Portugal. Asencio es baja.\n\nEl Celta lo tiene malo por los dos lados: el Madrid encaja poco y marca mucho. Radu, el portero, lo normal es que salga, e Ilaix Moriba está a medias. Román no estará, lesionado."
    }
   ],
   "noticias": [
@@ -7875,13 +7882,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3380,
+   "ok": 3381,
    "fallos": 0,
-   "ejecuciones": 2736,
+   "ejecuciones": 2737,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T08:16:12.450Z"
+   "ultima": "2026-11-17T08:21:12.046Z"
   }
  },
  "ptsDirecto": {},
@@ -7898,15 +7905,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:16:35.821Z"
+   "ultimaBien": "2026-11-17T08:21:40.353Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:16:35.821Z"
+   "ultimaBien": "2026-11-17T08:21:40.353Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:16:35.821Z"
+   "ultimaBien": "2026-11-17T08:21:40.353Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7914,11 +7921,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:16:35.821Z"
+   "ultimaBien": "2026-11-17T08:21:40.353Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:16:35.821Z"
+   "ultimaBien": "2026-11-17T08:21:40.353Z"
   }
  },
  "avisos": [
