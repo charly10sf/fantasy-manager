@@ -2281,7 +2281,8 @@
    "SPORT|136553914": 1794934874000,
    "SPORT|136552874": 1794935174000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000
   },
   "hechos": [
    {
@@ -2983,11 +2984,25 @@
     "nums": [
      2026
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html",
+    "medio": "COPE",
+    "t": 1794944028000,
+    "id": "3079",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "estará un periodo de baja sin fecha concreta",
+    "nums": [
+     13
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3903,17 +3918,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 592738,
-  "salida": 40048,
+  "entrada": 594757,
+  "salida": 40200,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.134806,
+  "dolares": 1.135084,
   "reservado": 0
  },
  "recientes": {
@@ -8209,13 +8224,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3517,
+   "ok": 3518,
    "fallos": 0,
-   "ejecuciones": 2873,
+   "ejecuciones": 2874,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T19:31:16.110Z"
+   "ultima": "2026-11-17T19:36:12.258Z"
   }
  },
  "ptsDirecto": {},
@@ -8232,15 +8247,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:31:20.381Z"
+   "ultimaBien": "2026-11-17T19:36:16.548Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:31:20.381Z"
+   "ultimaBien": "2026-11-17T19:36:16.548Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:31:20.381Z"
+   "ultimaBien": "2026-11-17T19:36:16.548Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8248,11 +8263,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:31:20.381Z"
+   "ultimaBien": "2026-11-17T19:36:16.548Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:31:20.381Z"
+   "ultimaBien": "2026-11-17T19:36:16.548Z"
   }
  },
  "avisos": [
