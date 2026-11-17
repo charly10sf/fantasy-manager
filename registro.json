@@ -3621,7 +3621,8 @@
    "SPORT|136523846": 1794895219000,
    "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794900695000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794821132000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794821132000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000
   },
   "hechos": [
    {
@@ -3649,27 +3650,25 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911473557
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 481790,
-  "salida": 19356,
+  "entrada": 483487,
+  "salida": 19442,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.021998,
+  "dolares": 1.022211,
   "reservado": 0
  },
  "recientes": {
@@ -7959,13 +7958,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3411,
+   "ok": 3412,
    "fallos": 0,
-   "ejecuciones": 2767,
+   "ejecuciones": 2768,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T10:46:11.822Z"
+   "ultima": "2026-11-17T10:51:15.189Z"
   }
  },
  "ptsDirecto": {},
@@ -7982,15 +7981,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:46:24.383Z"
+   "ultimaBien": "2026-11-17T10:51:21.785Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:46:24.383Z"
+   "ultimaBien": "2026-11-17T10:51:21.785Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:46:24.383Z"
+   "ultimaBien": "2026-11-17T10:51:21.785Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7998,11 +7997,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:46:24.383Z"
+   "ultimaBien": "2026-11-17T10:51:21.785Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:46:24.383Z"
+   "ultimaBien": "2026-11-17T10:51:21.785Z"
   }
  },
  "avisos": [
