@@ -3523,7 +3523,9 @@
    "SPORT|136513679": 1794849264000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261117/1004251859/siete-encuentros-suspendidos-jornada-9.html": 1794895200000,
    "SPORT|136517839": 1794889846000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/vanessa-ares-agradece-apoyo-foz-arenka-fight-night-span-langglunha-loucuraspan/0003_202611X17C6991.htm": 1794888000000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/vanessa-ares-agradece-apoyo-foz-arenka-fight-night-span-langglunha-loucuraspan/0003_202611X17C6991.htm": 1794888000000,
+   "Europa Press|https://www.europapress.es/catalunya/noticia-rodalies-avisa-maquinistas-no-cumplen-servicios-minimos-huelga-martes-20261117071907.html": 1794896347000,
+   "SPORT|136523846": 1794895219000
   },
   "hechos": [
    {
@@ -3551,7 +3553,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -3559,17 +3561,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118166,
-  "salida": 4700,
+  "entrada": 119999,
+  "salida": 4861,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.250317,
+  "dolares": 0.250581,
   "reservado": 0
  },
  "recientes": {
@@ -7838,13 +7840,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3366,
+   "ok": 3367,
    "fallos": 0,
-   "ejecuciones": 2722,
+   "ejecuciones": 2723,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-17T07:06:12.139Z"
+   "ultima": "2026-11-17T07:11:13.553Z"
   }
  },
  "ptsDirecto": {},
@@ -7861,15 +7863,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:06:17.451Z"
+   "ultimaBien": "2026-11-17T07:11:20.653Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:06:17.451Z"
+   "ultimaBien": "2026-11-17T07:11:20.653Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:06:17.451Z"
+   "ultimaBien": "2026-11-17T07:11:20.653Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7877,11 +7879,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:06:17.451Z"
+   "ultimaBien": "2026-11-17T07:11:20.653Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:06:17.451Z"
+   "ultimaBien": "2026-11-17T07:11:20.653Z"
   }
  },
  "avisos": [
