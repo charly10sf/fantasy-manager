@@ -2052,7 +2052,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000,
    "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
-   "SPORT|136432118": 1794641299000,
    "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
    "SPORT|136433028": 1794644887000,
@@ -2225,7 +2224,8 @@
    "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/": 1794898416000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251820/berenguer-recupera-galones-penaltis.html": 1794898800000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
-   "SPORT|136469900": 1794895217000
+   "SPORT|136469900": 1794895217000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000
   },
   "hechos": [
    {
@@ -2642,11 +2642,23 @@
     "motivo": "recuperación de una lesión ralentizada",
     "plazo": "su regreso se retrasa más de un mes",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794900600000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Vivian se lesiona del músculo y entra en enfermería",
+    "motivo": "lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3561,17 +3573,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 119999,
-  "salida": 4861,
+  "entrada": 122032,
+  "salida": 5463,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.250581,
+  "dolares": 0.251085,
   "reservado": 0
  },
  "recientes": {
@@ -7840,13 +7852,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3370,
+   "ok": 3371,
    "fallos": 0,
-   "ejecuciones": 2726,
+   "ejecuciones": 2727,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-17T07:26:14.318Z"
+   "ultima": "2026-11-17T07:31:11.940Z"
   }
  },
  "ptsDirecto": {},
@@ -7863,15 +7875,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:26:19.275Z"
+   "ultimaBien": "2026-11-17T07:31:18.894Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:26:19.275Z"
+   "ultimaBien": "2026-11-17T07:31:18.894Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:26:19.275Z"
+   "ultimaBien": "2026-11-17T07:31:18.894Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7879,11 +7891,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:26:19.275Z"
+   "ultimaBien": "2026-11-17T07:31:18.894Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T07:26:19.275Z"
+   "ultimaBien": "2026-11-17T07:31:18.894Z"
   }
  },
  "avisos": [
