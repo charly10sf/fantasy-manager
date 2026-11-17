@@ -2071,7 +2071,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
    "SPORT|136442560": 1794668198000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/pontevedra/pontevedra/2026/11/14/fallece-90-anos-genaro-santome-forofo-pontevedra-cf-nino-gracias-tio-pachecho/00031794672054155764317.htm": 1794673920000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004251000/hancko-asiste-oblak-echa-cerrojo-mendoza-suma-minutos.html": 1794674685000,
@@ -8139,13 +8138,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3460,
+   "ok": 3461,
    "fallos": 0,
-   "ejecuciones": 2816,
+   "ejecuciones": 2817,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T14:51:15.478Z"
+   "ultima": "2026-11-17T14:56:13.600Z"
   }
  },
  "ptsDirecto": {},
@@ -8162,15 +8161,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:51:21.068Z"
+   "ultimaBien": "2026-11-17T14:56:16.307Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:51:21.068Z"
+   "ultimaBien": "2026-11-17T14:56:16.307Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:51:21.068Z"
+   "ultimaBien": "2026-11-17T14:56:16.307Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8178,11 +8177,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:51:21.068Z"
+   "ultimaBien": "2026-11-17T14:56:16.307Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:51:21.068Z"
+   "ultimaBien": "2026-11-17T14:56:16.307Z"
   }
  },
  "avisos": [
