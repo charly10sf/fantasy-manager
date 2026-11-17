@@ -2071,7 +2071,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136442560": 1794668198000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/pontevedra/pontevedra/2026/11/14/fallece-90-anos-genaro-santome-forofo-pontevedra-cf-nino-gracias-tio-pachecho/00031794672054155764317.htm": 1794673920000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004251000/hancko-asiste-oblak-echa-cerrojo-mendoza-suma-minutos.html": 1794674685000,
    "AS|https://as.com/futbol/primera/lookman-de-vuelta-para-madrid-con-un-esguince-de-rodilla-f202611-n/": 1794676215000,
@@ -2263,23 +2262,6 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136442560",
-    "medio": "SPORT",
-    "t": 1794668198000,
-    "id": "2522",
-    "que": "descartado",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Raphinha no volverá a Barcelona tras la expulsión con Brasil",
-    "motivo": "expulsión con Brasil ante Japón",
-    "plazo": "",
-    "nums": [
-     2,
-     3,
-     71
-    ]
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/",
     "medio": "Cadena SER",
@@ -8138,13 +8120,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3461,
+   "ok": 3462,
    "fallos": 0,
-   "ejecuciones": 2817,
+   "ejecuciones": 2818,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T14:56:13.600Z"
+   "ultima": "2026-11-17T15:01:13.088Z"
   }
  },
  "ptsDirecto": {},
@@ -8161,15 +8143,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:56:16.307Z"
+   "ultimaBien": "2026-11-17T15:01:18.024Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:56:16.307Z"
+   "ultimaBien": "2026-11-17T15:01:18.024Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:56:16.307Z"
+   "ultimaBien": "2026-11-17T15:01:18.024Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8177,11 +8159,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:56:16.307Z"
+   "ultimaBien": "2026-11-17T15:01:18.024Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T14:56:16.307Z"
+   "ultimaBien": "2026-11-17T15:01:18.024Z"
   }
  },
  "avisos": [
