@@ -208,6 +208,19 @@ ok(Number(kv.get(`u:2222:${r.j.dia}`).v) <= seg, 'lo guardado no pasa de lo cont
   a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk });
   ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
 }
+// /hola: la liga que llega después del primer aviso se apunta sin esperar la hora, y uno vacío no la borra (17 nov)
+{
+  kv.clear();
+  const tk = 'l'.repeat(30);
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '555', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  const pk = [...kv.keys()].find((k) => k.startsWith('p:'));
+  ok(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga === '555', `la liga llega en el segundo aviso y se apunta (${pk && JSON.stringify(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga)})`);
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf !', canal: 'web', app: 1, fc: 'x' }, tk });
+  ok(kv.get(pk).m.liga === '555', 'un aviso sin liga no pisa la que ya había');
+}
 // /hola: alternar la versión no escribe cada vez
 kv.clear();
 cuenta.escrituras = 0;
