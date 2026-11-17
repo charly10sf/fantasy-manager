@@ -2079,7 +2079,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/lookman-de-vuelta-para-madrid-con-un-esguince-de-rodilla-f202611-n/": 1794676215000,
-   "SPORT|136446311": 1794675429000,
    "SPORT|136447192": 1794676184000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000,
@@ -2273,7 +2272,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/kounde-supera-las-molestias-y-apunta-al-villarreal-cadena-ser/": 1794933877000,
    "SPORT|136549807": 1794930837000,
-   "Diario Sur|https://www.diariosur.es/malagacf/osasuna-sigue-acumulando-lesionados-problemas-bretones-20261117173106-nt.html": 1794933066000
+   "Diario Sur|https://www.diariosur.es/malagacf/osasuna-sigue-acumulando-lesionados-problemas-bretones-20261117173106-nt.html": 1794933066000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261117/1004252259/frutos-vuelta-vallecas-recibir-valencia.html": 1794934483000
   },
   "hechos": [
    {
@@ -2931,11 +2931,27 @@
      18,
      30
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261117/1004252259/frutos-vuelta-vallecas-recibir-valencia.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794934483000,
+    "id": "886",
+    "que": "vuelve",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "De Frutos vuelve a entrenar con el grupo del Rayo",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     16,
+     15
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3849,17 +3865,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 570110,
-  "salida": 33150,
+  "entrada": 572110,
+  "salida": 33268,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.129095,
+  "dolares": 1.129354,
   "reservado": 0
  },
  "recientes": {
@@ -8155,13 +8171,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3485,
+   "ok": 3486,
    "fallos": 0,
-   "ejecuciones": 2841,
+   "ejecuciones": 2842,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T16:56:14.735Z"
+   "ultima": "2026-11-17T17:01:13.912Z"
   }
  },
  "ptsDirecto": {},
@@ -8178,15 +8194,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:56:26.295Z"
+   "ultimaBien": "2026-11-17T17:01:18.263Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:56:26.295Z"
+   "ultimaBien": "2026-11-17T17:01:18.263Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:56:26.295Z"
+   "ultimaBien": "2026-11-17T17:01:18.263Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8194,11 +8210,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:56:26.295Z"
+   "ultimaBien": "2026-11-17T17:01:18.263Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:56:26.295Z"
+   "ultimaBien": "2026-11-17T17:01:18.263Z"
   }
  },
  "avisos": [
