@@ -2272,7 +2272,8 @@
    "SPORT|136549807": 1794930837000,
    "Diario Sur|https://www.diariosur.es/malagacf/osasuna-sigue-acumulando-lesionados-problemas-bretones-20261117173106-nt.html": 1794933066000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261117/1004252259/frutos-vuelta-vallecas-recibir-valencia.html": 1794934483000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/17/madrid-sigue-minimos-vuelta-trabajo.html": 1794935215000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/17/madrid-sigue-minimos-vuelta-trabajo.html": 1794935215000,
+   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/17/rodri-podria-regresar-frente-depor.html": 1794935356000
   },
   "hechos": [
    {
@@ -2950,7 +2951,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -3863,17 +3864,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 574067,
-  "salida": 33785,
+  "entrada": 575961,
+  "salida": 34291,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.129808,
+  "dolares": 1.13025,
   "reservado": 0
  },
  "recientes": {
@@ -8169,13 +8170,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3488,
+   "ok": 3489,
    "fallos": 0,
-   "ejecuciones": 2844,
+   "ejecuciones": 2845,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T17:11:21.428Z"
+   "ultima": "2026-11-17T17:16:13.118Z"
   }
  },
  "ptsDirecto": {},
@@ -8192,15 +8193,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:11:28.449Z"
+   "ultimaBien": "2026-11-17T17:16:18.897Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:11:28.449Z"
+   "ultimaBien": "2026-11-17T17:16:18.897Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:11:28.449Z"
+   "ultimaBien": "2026-11-17T17:16:18.897Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8208,11 +8209,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:11:28.449Z"
+   "ultimaBien": "2026-11-17T17:16:18.897Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T17:11:28.449Z"
+   "ultimaBien": "2026-11-17T17:16:18.897Z"
   }
  },
  "avisos": [
