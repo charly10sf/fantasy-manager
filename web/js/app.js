@@ -3433,7 +3433,7 @@ document.addEventListener('input', (ev) => {
   if (!ev.target || ev.target.id !== 'buscaJ') return;
   S.busca = ev.target.value;
   clearTimeout(buscaT);
-  buscaT = setTimeout(() => { const r = $('#buscaRes'); if (r && S.M) r.innerHTML = V.buscaHTML(S); }, 120);
+  buscaT = setTimeout(() => { const r = $('#buscaRes'); if (r && S.M) { r.innerHTML = V.buscaHTML(S); encuadrar(r); } }, 120);
 });
 document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }

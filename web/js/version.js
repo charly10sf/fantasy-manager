@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8a';
+export const VERSION = '0.8b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,16 @@ export const VERSION = '0.8a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (17 nov, Carlos: Fornals subiendo 1,1 M al día y titular, con 16 M en positivo, y el plan mandaba aceptar un 6 %
+    // «para la liquidez»; y el buscador del Mercado sin caras). La hora, al publicar
+    v: '0.8b', f: '2026-11-18', h: '00:21', t: 'Ofertas con más cabeza y caras en el buscador',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no te manda vender al que sigue subiendo', x: 'Si no te hace falta el dinero y el jugador sube tan rápido que en pocos días vale lo que te ofrecen (o algo menos si es de tu once), el plan te dice que lo aguantes en vez de aceptar. Y la explicación de cada paso ya no se inventa motivos, como que una venta hace falta para el dinero cuando no es así.' },
+      { tipo: 'arreglo', d: 'ia', t: 'Cuánto ofrecer por el jugador de un rival, con su subida', x: 'Si preguntas cuánto ofrecerle a otro mánager por un jugador, la respuesta ya cuenta lo que sube ese jugador cada día y lo que suele dar LaLiga en tu liga, en vez de sumar siempre un 10 % a su valor. Y si sube fuerte, te avisa de que su dueño querrá más.' },
+      { tipo: 'arreglo', d: 'cara', t: 'El buscador del Mercado enseña las caras', x: 'Al buscar un jugador, cada resultado sale con su foto en vez de con sus iniciales.' },
+    ],
+  },
   {
     // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
     // adelante; el cambio de mercado del día del partido). La hora, al publicar

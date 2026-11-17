@@ -374,6 +374,10 @@ export const CASOS = [
     debe: ['^OP: clausular Niño', '^JORNADA: 7\\d,\\d+ M', '^REGLAS: ok'], nunca: ['empezarías la jornada con', 'el del plan ya está gastado', 'pasarías del tope de deuda'] },
   { id: 'motor-24-no-puja-de-mas', tipo: 'motor', escena: 'm-24-puja', de: 'regla 7 sin comprobar (Carlos, 14 nov: no lo sabe): con 24 y una puja viva, no se ficha a nadie más (podrías acabar con 26)',
     nunca: ['^OP: (pujar|clausular)'] },
+  { id: 'motor-oferta-sube-no-se-acepta', tipo: 'motor', escena: 'm-oferta-sube', de: 'Carlos, 17 nov (Fornals): con dinero en positivo, una oferta un poco por encima de su valor no se acepta si el jugador sube y la gana solo en pocos días',
+    nunca: ['^OP: (vender|Aceptar oferta) Álex Baena', 'liquidez'] },
+  { id: 'motor-oferta-sube-alta-se-acepta', tipo: 'motor', escena: 'm-oferta-sube-alta', de: 'Carlos, 17 nov: la de un 12 % por encima, aunque suba un 1 % al día, sí',
+    debe: ['^OP: Aceptar oferta Álex Baena'] },
   { id: 'motor-blinda-al-arrancar', tipo: 'motor', escena: 'm-blinda-arranque', de: 'Carlos, 14 nov (punto 9): cuando empieza la jornada se reabren las cláusulas; si te queda un blindaje y tienes un titular a tiro, se dice',
     debe: ['^DIAS [^\\n]*se reabren las cláusulas[^\\n]*Ionut Radu'] },
 ];

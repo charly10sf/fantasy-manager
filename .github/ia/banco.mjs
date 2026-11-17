@@ -75,6 +75,11 @@ export const ESCENAS = {
     const con = new Set(Object.values(S.D.plantillas).flat().map((f) => f.pid)), enM = new Set(S.D.mercado.map((m) => m.pid));
     const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, 9);
     for (const j of libres) S.D.plantillas[S.D.yo.teamId].push({ pid: j.id, ptId: 'pt' + j.id, clausula: Math.round(j.valor * 1.6), protegidoHasta: Date.now() + 10 * 864e5, compra: j.valor });` },
+  // martes, con 30 M y Álex Baena en venta subiendo un 1 % al día: una oferta un 3 % por encima de su valor la gana solo
+  // en 3 días, no se acepta (Fornals, Carlos 17 nov); una un 12 % por encima, sí
+  ...Object.fromEntries([['m-oferta-sube', 1.03], ['m-oferta-sube-alta', 1.12]].map(([k, f]) => [k, { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 30000000; for (const m of S.D.mercado) m.miPuja = null;
+    const v = S.D.misVentas.find((x) => S.D.maestro[x.pid].nombre === 'Álex Baena'); v.ofertas = [{ ...v.ofertas[0], importe: Math.round(S.D.maestro[v.pid].valor * ${f}), deLiga: false }];`,
+    extra: `${SERIE} serie('Álex Baena', 40, 0); return {};` }])),
   // jueves, un titular mío (Ionut Radu) con la cláusula a su valor y sin protección: la jornada empieza el sábado
   'm-blinda-arranque': { hora: '2026-11-05T12:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },

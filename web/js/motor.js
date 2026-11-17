@@ -1965,6 +1965,18 @@ export function analizar(D, H, c, extra = {}) {
       consejo = 'esperar';
       porque = `Vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día; llegó a valer ${eur(ine.vuelve.max)}): mañana valdrá más de lo que te ofrecen hoy. Aguántalo mientras siga subiendo, salvo que necesites el dinero.`;
     }
+    // sigue subiendo y no te hace falta el dinero: lo que te pagan de más lo gana solo en pocos días (Carlos, 17 nov:
+    // Fornals subiendo 1,1 M al día, titular y con 16 M en positivo, y el plan mandaba aceptar un 6 % «para la liquidez»).
+    // Si es de tu once se aguanta más, que venderlo además quita puntos. Salvo la oferta alta de LaLiga o el de revender
+    // sin otro cambio de mercado antes de la jornada
+    else if (num(D.dinero) >= 0 && !M.vendeBaja({ j, tend: t }) && mejor.sobre > 0 && j.valor && !(liga && liga.posicion === 'alta')
+      && (ine ? ['sube', 'acelera'].includes(ine.fase) && num(ine.ult) > 0 : subiendo && num(t.d1) > 0)
+      && !((extra.reventa || {})[v.pid] && M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini)))
+      && (() => { const r = ine ? num(ine.ult) : num(t.d1), dias = (mejor.importe - j.valor) / r; return dias <= (M.perdida(v.pid) >= 0.3 ? 6 : 3); })()) {
+      const r = ine ? num(ine.ult) : num(t.d1), prima = mejor.importe - j.valor, dias = Math.max(1, Math.round(prima / r)), once = M.perdida(v.pid) >= 0.3;
+      consejo = 'esperar';
+      porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero (tienes ${eur(D.dinero)}): los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
+    }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
     // mejor (LaLiga hace una nueva en cada cambio de mercado). Salvo que caiga deprisa (más de un 3 % al día),

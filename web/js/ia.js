@@ -3014,10 +3014,27 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
  * su plantilla y le pedía la lista. Cada jugador en una línea corta; los rivales de los que habla, con algo más.
  * enteros: los teamId de los rivales que nombra en la pregunta (o en sus últimos mensajes).
  */
+/**
+ * cuánto hay que ofrecerle a un rival para que te venda a j (aviso de leao, 17 nov: el chat ofrecía un 10 % fijo, sin
+ * mirar si sube): lo que le daría LaLiga en el próximo cambio de mercado (la parte alta de lo que da en tu liga) sobre lo
+ * que valdrá para entonces con lo que sube al día. Si sube fuerte (más de un 1 % al día o un 8 % en 7 días), lo normal es
+ * que su dueño pida más. null si no hay valor
+ */
+export function ofertaDueno(M, j, t = {}) {
+  if (!j || !j.valor) return null;
+  const ine = M.inercia ? M.inercia(j.id) : null;
+  const dia = ine && ['sube', 'acelera', 'frena'].includes(ine.fase) ? num(ine.ult) : num(t.d1);
+  const OL = M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
+  const alta = OL && !OL.sinDatos && OL.max ? OL.max / j.valor - 1 : 0.1;
+  const v = Math.ceil(((j.valor + Math.max(0, dia)) * (1 + Math.max(0.02, alta))) / 1e4) * 1e4;
+  const sube = dia > j.valor * 0.01 || (t.p7 != null && t.p7 > 8);
+  return { v, sube };
+}
+
 export function plantillasRivalesTxt(D, M, enteros = new Set()) {
   const saldo = num(D.dinero);
   const enVenta = new Map((M.mercado || []).filter((m) => m.tipo === 'manager').map((m) => [String(m.pid), m]));
-  const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula, cuándo se puede pagar y si le llega con su saldo de ahora, ${eur(saldo)} | si lo tiene en venta). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
+  const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula, cuándo se puede pagar y si le llega con su saldo de ahora, ${eur(saldo)} | si lo tiene en venta | cuánto ofrecerle a su dueño). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
   const rivales = [...(M.rivales || [])].sort((a, b) => (enteros.has(String(b.e.teamId)) ? 1 : 0) - (enteros.has(String(a.e.teamId)) ? 1 : 0) || (a.e.pos || 99) - (b.e.pos || 99));
   for (const r of rivales) {
     const fichas = (r.fichas || []).filter((x) => x && x.j && x.j.pos !== 5).sort((a, b) => (a.j.pos - b.j.pos) || (b.j.valor - a.j.valor));
@@ -3029,6 +3046,7 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
       const T = det && M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
       const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'le llega' : `le faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
       const v = enVenta.get(String(j.id));
+      const of = ofertaDueno(M, j, t);
       L.push(`  - ${[
         POS[j.pos] || '?', j.nombre, j.equipo || '?', eur(j.valor),
         [t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
@@ -3037,6 +3055,7 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
         det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
         cl,
         v ? `EN VENTA por ${eur(v.precio)}` : null,
+        of ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
         j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
       ].filter(Boolean).join(' | ')}`);
     }
