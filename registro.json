@@ -2078,7 +2078,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
    "SPORT|136449462": 1794685713000,
    "SPORT|136448997": 1794685587000,
@@ -2282,7 +2281,8 @@
    "SPORT|136552874": 1794935174000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/": 1794944314000
   },
   "hechos": [
    {
@@ -2998,11 +2998,25 @@
     "nums": [
      13
     ]
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/",
+    "medio": "Cadena SER",
+    "t": 1794944314000,
+    "id": "3079",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     2
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -3918,17 +3932,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 594757,
-  "salida": 40200,
+  "entrada": 596691,
+  "salida": 40328,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.135084,
+  "dolares": 1.135341,
   "reservado": 0
  },
  "recientes": {
@@ -8224,13 +8238,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3518,
+   "ok": 3519,
    "fallos": 0,
-   "ejecuciones": 2874,
+   "ejecuciones": 2875,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T19:36:12.258Z"
+   "ultima": "2026-11-17T19:41:16.843Z"
   }
  },
  "ptsDirecto": {},
@@ -8247,15 +8261,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:36:16.548Z"
+   "ultimaBien": "2026-11-17T19:41:23.348Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:36:16.548Z"
+   "ultimaBien": "2026-11-17T19:41:23.348Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:36:16.548Z"
+   "ultimaBien": "2026-11-17T19:41:23.348Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8263,11 +8277,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:36:16.548Z"
+   "ultimaBien": "2026-11-17T19:41:23.348Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:36:16.548Z"
+   "ultimaBien": "2026-11-17T19:41:23.348Z"
   }
  },
  "avisos": [
