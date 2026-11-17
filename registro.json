@@ -2271,7 +2271,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000
   },
   "hechos": [
    {
@@ -2933,7 +2934,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -3847,17 +3848,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 563979,
-  "salida": 31017,
+  "entrada": 566049,
+  "salida": 31109,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.127415,
+  "dolares": 1.127668,
   "reservado": 0
  },
  "recientes": {
@@ -8153,13 +8154,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3477,
+   "ok": 3478,
    "fallos": 0,
-   "ejecuciones": 2833,
+   "ejecuciones": 2834,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T16:16:12.602Z"
+   "ultima": "2026-11-17T16:21:13.802Z"
   }
  },
  "ptsDirecto": {},
@@ -8176,15 +8177,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:16:15.493Z"
+   "ultimaBien": "2026-11-17T16:21:20.570Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:16:15.493Z"
+   "ultimaBien": "2026-11-17T16:21:20.570Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:16:15.493Z"
+   "ultimaBien": "2026-11-17T16:21:20.570Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8192,11 +8193,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:16:15.493Z"
+   "ultimaBien": "2026-11-17T16:21:20.570Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:16:15.493Z"
+   "ultimaBien": "2026-11-17T16:21:20.570Z"
   }
  },
  "avisos": [
