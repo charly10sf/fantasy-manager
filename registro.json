@@ -2224,7 +2224,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251858/oblak-vuelve-atletico-reconquistar-candado.html": 1794865700000,
    "SPORT|136506179": 1794889841000,
    "SPORT|136517118": 1794889838000,
-   "SPORT|136521770": 1794888632000
+   "SPORT|136521770": 1794888632000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/opinion/2026/11/17/vuelve-vinicius-mou.html": 1794895154000
   },
   "hechos": [
    {
@@ -2633,7 +2634,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3546,17 +3547,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 111809,
-  "salida": 3153,
+  "entrada": 113688,
+  "salida": 3245,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.248907,
+  "dolares": 0.249141,
   "reservado": 0
  },
  "recientes": {
@@ -7825,13 +7826,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3353,
+   "ok": 3354,
    "fallos": 0,
-   "ejecuciones": 2709,
+   "ejecuciones": 2710,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-17T06:01:13.494Z"
+   "ultima": "2026-11-17T06:06:13.919Z"
   }
  },
  "ptsDirecto": {},
@@ -7848,15 +7849,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:01:59.873Z"
+   "ultimaBien": "2026-11-17T06:06:18.981Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:01:59.873Z"
+   "ultimaBien": "2026-11-17T06:06:18.981Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:01:59.873Z"
+   "ultimaBien": "2026-11-17T06:06:18.981Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7864,11 +7865,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:01:59.873Z"
+   "ultimaBien": "2026-11-17T06:06:18.981Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:01:59.873Z"
+   "ultimaBien": "2026-11-17T06:06:18.981Z"
   }
  },
  "avisos": [
