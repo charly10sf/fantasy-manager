@@ -3568,23 +3568,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794903078050
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794903078050,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794903372450
   }
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
    "clasificar": 8,
-   "redactar": 19,
-   "revisar": 8,
+   "redactar": 23,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 318484,
-  "salida": 10063,
-  "cacheLee": 11612,
+  "entrada": 383890,
+  "salida": 11368,
+  "cacheLee": 14515,
   "cacheEscribe": 11612,
-  "dolares": 0.701068,
+  "dolares": 0.84522,
   "reservado": 0
  },
  "recientes": {
@@ -4029,6 +4030,11 @@
    "n": 1,
    "t": "2026-11-17T08:11:52.131Z",
    "ultima": "2026-11-17T08:11:52.131Z"
+  },
+  "previa|121": {
+   "n": 1,
+   "t": "2026-11-17T08:16:35.735Z",
+   "ultima": "2026-11-17T08:16:35.735Z"
   }
  },
  "rasgos": {
@@ -7869,13 +7875,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3379,
+   "ok": 3380,
    "fallos": 0,
-   "ejecuciones": 2735,
+   "ejecuciones": 2736,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T08:11:18.050Z"
+   "ultima": "2026-11-17T08:16:12.450Z"
   }
  },
  "ptsDirecto": {},
@@ -7892,15 +7898,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:11:52.350Z"
+   "ultimaBien": "2026-11-17T08:16:35.821Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:11:52.350Z"
+   "ultimaBien": "2026-11-17T08:16:35.821Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:11:52.350Z"
+   "ultimaBien": "2026-11-17T08:16:35.821Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7908,11 +7914,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:11:52.350Z"
+   "ultimaBien": "2026-11-17T08:16:35.821Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:11:52.350Z"
+   "ultimaBien": "2026-11-17T08:16:35.821Z"
   }
  },
  "avisos": [
