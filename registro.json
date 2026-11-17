@@ -2232,7 +2232,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
    "SPORT|136526952": 1794902430000,
    "SPORT|136495052": 1794903326000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000
   },
   "hechos": [
    {
@@ -2677,11 +2680,28 @@
      732,
      2019
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794908010000,
+    "id": "3116",
+    "que": "vuelve",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Bernardo Silva estará listo para jugar ante el Celta",
+    "motivo": "molestias sin lesión confirmada",
+    "plazo": "",
+    "nums": [
+     10,
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3599,17 +3619,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 25,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 435431,
-  "salida": 13750,
+  "entrada": 437881,
+  "salida": 15476,
   "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.93434,
+  "dolares": 0.935448,
   "reservado": 0
  },
  "recientes": {
@@ -7899,13 +7919,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3401,
+   "ok": 3402,
    "fallos": 0,
-   "ejecuciones": 2757,
+   "ejecuciones": 2758,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T09:56:14.273Z"
+   "ultima": "2026-11-17T10:01:15.511Z"
   }
  },
  "ptsDirecto": {},
@@ -7922,15 +7942,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:56:19.658Z"
+   "ultimaBien": "2026-11-17T10:01:29.491Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:56:19.658Z"
+   "ultimaBien": "2026-11-17T10:01:29.491Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:56:19.658Z"
+   "ultimaBien": "2026-11-17T10:01:29.491Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7938,11 +7958,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:56:19.658Z"
+   "ultimaBien": "2026-11-17T10:01:29.491Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:56:19.658Z"
+   "ultimaBien": "2026-11-17T10:01:29.491Z"
   }
  },
  "avisos": [
