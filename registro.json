@@ -2064,7 +2064,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000,
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
@@ -2255,7 +2254,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000,
    "SPORT|136534901": 1794912353000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000
   },
   "hechos": [
    {
@@ -2829,11 +2830,23 @@
     "motivo": "molestias musculares",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794916007000,
+    "id": "2444",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Sucic se reincorpora al grupo tras la amigdalitis",
+    "motivo": "amigdalitis",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3748,17 +3761,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 494811,
-  "salida": 21702,
+  "entrada": 497038,
+  "salida": 21907,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.024474,
+  "dolares": 1.024799,
   "reservado": 0
  },
  "recientes": {
@@ -8048,13 +8061,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3425,
+   "ok": 3426,
    "fallos": 0,
-   "ejecuciones": 2781,
+   "ejecuciones": 2782,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:56:11.446Z"
+   "ultima": "2026-11-17T12:01:20.748Z"
   }
  },
  "ptsDirecto": {},
@@ -8071,15 +8084,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:56:19.729Z"
+   "ultimaBien": "2026-11-17T12:01:26.854Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:56:19.729Z"
+   "ultimaBien": "2026-11-17T12:01:26.854Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:56:19.729Z"
+   "ultimaBien": "2026-11-17T12:01:26.854Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8087,11 +8100,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:56:19.729Z"
+   "ultimaBien": "2026-11-17T12:01:26.854Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:56:19.729Z"
+   "ultimaBien": "2026-11-17T12:01:26.854Z"
   }
  },
  "avisos": [
