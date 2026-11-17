@@ -2259,7 +2259,10 @@
    "SPORT|136540647": 1794918504000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000
   },
   "hechos": [
    {
@@ -2902,11 +2905,26 @@
     "motivo": "amigdalitis ya superada",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794927512000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos supera las pruebas y podría jugar el derbi",
+    "motivo": "molestias en un muslo",
+    "plazo": "",
+    "nums": [
+     18,
+     30
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3820,17 +3838,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 553749,
-  "salida": 28586,
+  "entrada": 556256,
+  "salida": 29941,
   "cacheLee": 20321,
   "cacheEscribe": 17418,
-  "dolares": 1.112436,
+  "dolares": 1.113364,
   "reservado": 0
  },
  "recientes": {
@@ -8120,13 +8138,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3462,
+   "ok": 3463,
    "fallos": 0,
-   "ejecuciones": 2818,
+   "ejecuciones": 2819,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T15:01:13.088Z"
+   "ultima": "2026-11-17T15:06:13.373Z"
   }
  },
  "ptsDirecto": {},
@@ -8143,15 +8161,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:01:18.024Z"
+   "ultimaBien": "2026-11-17T15:06:24.473Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:01:18.024Z"
+   "ultimaBien": "2026-11-17T15:06:24.473Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:01:18.024Z"
+   "ultimaBien": "2026-11-17T15:06:24.473Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8159,11 +8177,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:01:18.024Z"
+   "ultimaBien": "2026-11-17T15:06:24.473Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:01:18.024Z"
+   "ultimaBien": "2026-11-17T15:06:24.473Z"
   }
  },
  "avisos": [
