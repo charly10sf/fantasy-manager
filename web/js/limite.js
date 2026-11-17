@@ -217,7 +217,7 @@ export function intersticialCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
   const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
   return {
-    on: !!(p && p.on), gracia: n(p && p.graciaMin, 3, 1, 60) * 60e3, cada: n(p && p.cadaMin, 5, 3, 240) * 60e3,
+    on: !!(p && p.on), gracia: n(p && p.graciaMin, 2, 1, 60) * 60e3, cada: n(p && p.cadaMin, 10, 3, 240) * 60e3,
     maxDia: Math.floor(n(p && p.maxDia, 4, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
     bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
     // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)

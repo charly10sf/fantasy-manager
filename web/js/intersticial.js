@@ -22,7 +22,10 @@ import { intersticialCfg, intersticialParaMi } from './limite.js';
 const TICK = 10e3;
 // una vuelta a la app tras media hora o más fuera es otra sesión: vuelven los minutos de gracia
 const SESION_NUEVA = 30 * MIN;
-let ultimo = Date.now(), usoSesion = 0, usoDesde = 0, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
+// usoDesde: minutos de uso desde el último intersticial de ESTA sesión; en una sesión nueva empieza «cumplido» (Carlos,
+// 17 nov: el primero a los 2 min de cada sesión y después uno cada 10), y si la app se abre de nuevo poco después de uno
+// (Android la cerró), cuenta desde cero para no repetirlo
+let ultimo = Date.now(), usoSesion = 0, usoDesde = Infinity, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
 
 const aLaVista = () => !document.hidden && (!enApp || nativo.aLaVista());
 /** cuenta el rato de uso: solo con la app a la vista. Fuera de la app el reloj puede seguir (Android no siempre congela
@@ -31,8 +34,8 @@ function contar() {
   const ahora = Date.now(), dt = ahora - ultimo;
   ultimo = ahora;
   if (!aLaVista()) { if (!fueraDesde) fueraDesde = ahora - Math.min(dt, TICK); return; }
-  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) usoSesion = 0; return; }
-  if (dt >= SESION_NUEVA) { usoSesion = 0; return; }
+  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; } return; }
+  if (dt >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; return; }
   if (dt > TICK * 3) return;
   usoSesion += dt;
   usoDesde += dt;
@@ -45,6 +48,7 @@ export function arrancarIntersticiales() {
   if (arrancado || !enApp) return;
   arrancado = true;
   ultimo = Date.now();
+  { const h = hoy(); if (h.t && ultimo - h.t < SESION_NUEVA) usoDesde = 0; }
   setInterval(contar, TICK);
   document.addEventListener('visibilitychange', contar);
   window.addEventListener('fm-vuelta', contar);

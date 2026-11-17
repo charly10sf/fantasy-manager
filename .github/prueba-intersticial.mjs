@@ -150,6 +150,16 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
   await A.uso(2.5);
   await A.pestana('rivales');
   ok(await A.pedidos() === 5, 'y pasados, el siguiente');
+  // (17 nov) en una sesión nueva no hace falta esperar «cada» minutos desde el último de la sesión anterior: basta la gracia
+  await A.page.evaluate(() => { window.__vista = false; });
+  await A.uso(31);
+  await A.page.evaluate(() => { window.__vista = true; window.dispatchEvent(new Event('fm-vuelta')); });
+  await A.uso(3.5);
+  await A.pestana('hoy');
+  ok(await A.pedidos() === 6, 'otra sesión: pasada la gracia sale uno, aunque en uso no hayan pasado «cada» minutos desde el anterior');
+  await A.uso(2);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 6, 'y dentro de esa sesión, el siguiente espera sus «cada» minutos');
   const p = await A.page.evaluate(() => window.__pedidos);
   ok(!p.some((x) => x[0] === 'banner'), 'ya no se pide nunca el banner de abajo');
   ok(p.some((x) => x[0] === 'zona' && x[1] === true && x[2] === 'ca-app-pub-3175956326240112/1234567890' && x[3] === true), 'Android sabe que la liga está cargada, el bloque y que a esta cuenta le tocan (para precargar)');
