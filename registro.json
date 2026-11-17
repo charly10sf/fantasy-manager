@@ -3863,7 +3863,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/coruna/coruna/2026/11/17/oar-visita-san-pablo-burgos-volver-senda-victoria/00031794938102625457236.htm": 1794939060000,
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261117/11686779/cervera-responde-pique-sancion-owono-deberia-volver-ver-accion-lol.html": 1794938628000,
-   "SPORT|136552816": 1794934765000
+   "SPORT|136552816": 1794934765000,
+   "SPORT|136554388": 1794935954000
   },
   "hechos": [
    {
@@ -3891,27 +3892,25 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136554388": 1794939974184
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 54,
+   "clasificar": 55,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 588820,
-  "salida": 38697,
+  "entrada": 590558,
+  "salida": 38856,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.133739,
+  "dolares": 1.133992,
   "reservado": 0
  },
  "recientes": {
@@ -8207,13 +8206,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3508,
+   "ok": 3509,
    "fallos": 0,
-   "ejecuciones": 2864,
+   "ejecuciones": 2865,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T18:46:12.680Z"
+   "ultima": "2026-11-17T18:51:13.235Z"
   }
  },
  "ptsDirecto": {},
@@ -8230,15 +8229,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:46:15.521Z"
+   "ultimaBien": "2026-11-17T18:51:20.929Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:46:15.521Z"
+   "ultimaBien": "2026-11-17T18:51:20.929Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:46:15.521Z"
+   "ultimaBien": "2026-11-17T18:51:20.929Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8246,11 +8245,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:46:15.521Z"
+   "ultimaBien": "2026-11-17T18:51:20.929Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T18:46:15.521Z"
+   "ultimaBien": "2026-11-17T18:51:20.929Z"
   }
  },
  "avisos": [
