@@ -3507,9 +3507,9 @@ fijarFiltroNovedades((c) => paraMi(c) && (avisosGuardados().admin || !c.menor), 
 function novedades() {
   // (9 nov, 23:42, Carlos) la presentación al actualizar ya no se abre sola a nadie, tampoco al dueño: se marca como vista
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
-  LS.set('version-vista2', VERSION);
-  return;
+  // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
+  if (!vista || !NOVEDADES.some((n) => n.todos && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
