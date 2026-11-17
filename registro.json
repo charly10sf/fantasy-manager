@@ -2262,7 +2262,8 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000
   },
   "hechos": [
    {
@@ -2924,7 +2925,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3769,7 +3770,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136377187": 1794672059000,
    "SPORT|136447078": 1794676174000,
    "SPORT|136446586": 1794679308000,
    "SPORT|136448657": 1794681682000,
@@ -3802,7 +3802,8 @@
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794821132000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000,
-   "SPORT|136535420": 1794913964000
+   "SPORT|136535420": 1794913964000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794929755000
   },
   "hechos": [
    {
@@ -3830,27 +3831,25 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794930073473
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 41,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 556256,
-  "salida": 29941,
+  "entrada": 559914,
+  "salida": 30574,
   "cacheLee": 20321,
   "cacheEscribe": 17418,
-  "dolares": 1.113364,
+  "dolares": 1.114046,
   "reservado": 0
  },
  "recientes": {
@@ -8140,13 +8139,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3473,
+   "ok": 3474,
    "fallos": 0,
-   "ejecuciones": 2829,
+   "ejecuciones": 2830,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T15:56:26.891Z"
+   "ultima": "2026-11-17T16:01:20.875Z"
   }
  },
  "ptsDirecto": {},
@@ -8163,15 +8162,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:56:31.767Z"
+   "ultimaBien": "2026-11-17T16:01:28.775Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:56:31.767Z"
+   "ultimaBien": "2026-11-17T16:01:28.775Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:56:31.767Z"
+   "ultimaBien": "2026-11-17T16:01:28.775Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8179,11 +8178,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:56:31.767Z"
+   "ultimaBien": "2026-11-17T16:01:28.775Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:56:31.767Z"
+   "ultimaBien": "2026-11-17T16:01:28.775Z"
   }
  },
  "avisos": [
