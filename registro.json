@@ -2078,7 +2078,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
    "SPORT|136449462": 1794685713000,
@@ -2285,19 +2284,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/",
-    "medio": "Cadena SER",
-    "t": 1794684566000,
-    "id": "2522",
-    "que": "descartado",
-    "oficial": false,
-    "seleccion": "sigue",
-    "hecho": "",
-    "motivo": "retenido por la selección brasileña",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136445752",
     "medio": "SPORT",
@@ -8223,13 +8209,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3516,
+   "ok": 3517,
    "fallos": 0,
-   "ejecuciones": 2872,
+   "ejecuciones": 2873,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T19:26:13.606Z"
+   "ultima": "2026-11-17T19:31:16.110Z"
   }
  },
  "ptsDirecto": {},
@@ -8246,15 +8232,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:26:16.816Z"
+   "ultimaBien": "2026-11-17T19:31:20.381Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:26:16.816Z"
+   "ultimaBien": "2026-11-17T19:31:20.381Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:26:16.816Z"
+   "ultimaBien": "2026-11-17T19:31:20.381Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8262,11 +8248,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:26:16.816Z"
+   "ultimaBien": "2026-11-17T19:31:20.381Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T19:26:16.816Z"
+   "ultimaBien": "2026-11-17T19:31:20.381Z"
   }
  },
  "avisos": [
