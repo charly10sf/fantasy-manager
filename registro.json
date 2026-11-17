@@ -3833,7 +3833,9 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794930073473
+  }
  },
  "ia": {
   "dia": "2026-11-17",
@@ -8138,13 +8140,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3469,
+   "ok": 3470,
    "fallos": 0,
-   "ejecuciones": 2825,
+   "ejecuciones": 2826,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T15:36:14.573Z"
+   "ultima": "2026-11-17T15:41:13.473Z"
   }
  },
  "ptsDirecto": {},
@@ -8161,15 +8163,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:36:25.468Z"
+   "ultimaBien": "2026-11-17T15:41:16.692Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:36:25.468Z"
+   "ultimaBien": "2026-11-17T15:41:16.692Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:36:25.468Z"
+   "ultimaBien": "2026-11-17T15:41:16.692Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8177,11 +8179,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:36:25.468Z"
+   "ultimaBien": "2026-11-17T15:41:16.692Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T15:36:25.468Z"
+   "ultimaBien": "2026-11-17T15:41:16.692Z"
   }
  },
  "avisos": [
