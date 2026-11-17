@@ -3860,7 +3860,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-colau-critica-sanchez-suspendido-materia-vivienda-20261115101621.html": 1794734181000,
@@ -8236,13 +8235,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3524,
+   "ok": 3525,
    "fallos": 0,
-   "ejecuciones": 2880,
+   "ejecuciones": 2881,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T20:06:13.969Z"
+   "ultima": "2026-11-17T20:11:12.057Z"
   }
  },
  "ptsDirecto": {},
@@ -8259,15 +8258,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:06:23.180Z"
+   "ultimaBien": "2026-11-17T20:11:15.444Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:06:23.180Z"
+   "ultimaBien": "2026-11-17T20:11:15.444Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:06:23.180Z"
+   "ultimaBien": "2026-11-17T20:11:15.444Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8275,11 +8274,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:06:23.180Z"
+   "ultimaBien": "2026-11-17T20:11:15.444Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T20:06:23.180Z"
+   "ultimaBien": "2026-11-17T20:11:15.444Z"
   }
  },
  "avisos": [
