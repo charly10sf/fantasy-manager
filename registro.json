@@ -2231,7 +2231,8 @@
    "SPORT|136526095": 1794901531000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
    "SPORT|136526952": 1794902430000,
-   "SPORT|136495052": 1794903326000
+   "SPORT|136495052": 1794903326000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000
   },
   "hechos": [
    {
@@ -2660,11 +2661,27 @@
     "motivo": "lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794906894000,
+    "id": "2338",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aimar Oroz vuelve a contar con Osasuna este fin de semana",
+    "motivo": "lesión superada",
+    "plazo": "",
+    "nums": [
+     2,
+     732,
+     2019
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3582,17 +3599,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 25,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 433432,
-  "salida": 13623,
+  "entrada": 435431,
+  "salida": 13750,
   "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.934077,
+  "dolares": 0.93434,
   "reservado": 0
  },
  "recientes": {
@@ -7882,13 +7899,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3395,
+   "ok": 3396,
    "fallos": 0,
-   "ejecuciones": 2751,
+   "ejecuciones": 2752,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T09:26:14.245Z"
+   "ultima": "2026-11-17T09:31:26.917Z"
   }
  },
  "ptsDirecto": {},
@@ -7905,15 +7922,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:26:21.835Z"
+   "ultimaBien": "2026-11-17T09:31:33.721Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:26:21.835Z"
+   "ultimaBien": "2026-11-17T09:31:33.721Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:26:21.835Z"
+   "ultimaBien": "2026-11-17T09:31:33.721Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7921,11 +7938,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:26:21.835Z"
+   "ultimaBien": "2026-11-17T09:31:33.721Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T09:26:21.835Z"
+   "ultimaBien": "2026-11-17T09:31:33.721Z"
   }
  },
  "avisos": [
