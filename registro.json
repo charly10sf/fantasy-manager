@@ -2243,7 +2243,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000,
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html": 1794911315000
   },
   "hechos": [
    {
@@ -2705,11 +2706,23 @@
      21,
      0
     ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html",
+    "medio": "MARCA",
+    "t": 1794911315000,
+    "id": "2315",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Paredes sigue sin entrenar al ritmo del grupo",
+    "motivo": "secuelas de una lesión previa",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3621,22 +3634,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911473557
+  }
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 475411,
-  "salida": 16173,
+  "entrada": 477347,
+  "salida": 16812,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.019769,
+  "dolares": 1.020282,
   "reservado": 0
  },
  "recientes": {
@@ -7926,13 +7941,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3407,
+   "ok": 3408,
    "fallos": 0,
-   "ejecuciones": 2763,
+   "ejecuciones": 2764,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T10:26:16.070Z"
+   "ultima": "2026-11-17T10:31:13.557Z"
   }
  },
  "ptsDirecto": {},
@@ -7949,15 +7964,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:26:38.183Z"
+   "ultimaBien": "2026-11-17T10:31:19.887Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:26:38.183Z"
+   "ultimaBien": "2026-11-17T10:31:19.887Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:26:38.183Z"
+   "ultimaBien": "2026-11-17T10:31:19.887Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7965,11 +7980,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:26:38.183Z"
+   "ultimaBien": "2026-11-17T10:31:19.887Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:26:38.183Z"
+   "ultimaBien": "2026-11-17T10:31:19.887Z"
   }
  },
  "avisos": [
