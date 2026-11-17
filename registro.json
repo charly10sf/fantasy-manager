@@ -2261,7 +2261,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
    "SPORT|136539151": 1794917080000,
-   "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000
+   "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
+   "SPORT|136540647": 1794918504000
   },
   "hechos": [
    {
@@ -2913,7 +2914,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3828,17 +3829,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 547533,
-  "salida": 27144,
+  "entrada": 549611,
+  "salida": 27236,
   "cacheLee": 20321,
   "cacheEscribe": 17418,
-  "dolares": 1.111093,
+  "dolares": 1.111347,
   "reservado": 0
  },
  "recientes": {
@@ -8128,13 +8129,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3444,
+   "ok": 3445,
    "fallos": 0,
-   "ejecuciones": 2800,
+   "ejecuciones": 2801,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T13:31:12.366Z"
+   "ultima": "2026-11-17T13:36:15.647Z"
   }
  },
  "ptsDirecto": {},
@@ -8151,15 +8152,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:31:23.446Z"
+   "ultimaBien": "2026-11-17T13:36:20.719Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:31:23.446Z"
+   "ultimaBien": "2026-11-17T13:36:20.719Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:31:23.446Z"
+   "ultimaBien": "2026-11-17T13:36:20.719Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8167,11 +8168,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:31:23.446Z"
+   "ultimaBien": "2026-11-17T13:36:20.719Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:31:23.446Z"
+   "ultimaBien": "2026-11-17T13:36:20.719Z"
   }
  },
  "avisos": [
