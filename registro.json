@@ -2253,7 +2253,9 @@
    "SPORT|136528409": 1794910106000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000,
+   "SPORT|136534901": 1794912353000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000
   },
   "hechos": [
    {
@@ -2801,11 +2803,37 @@
     "motivo": "pequeña lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136534901",
+    "medio": "SPORT",
+    "t": 1794912353000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos no entrena por molestias musculares",
+    "motivo": "molestias musculares",
+    "plazo": "",
+    "nums": [
+     21
+    ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html",
+    "medio": "MARCA",
+    "t": 1794916205000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "molestias musculares",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3650,7 +3678,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250852/suspenden-no-barca-atletic-girona-b.html": 1794657210000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250916/precedentes-enfurecen-barca-atletic.html": 1794659189000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000,
    "SPORT|136377187": 1794672059000,
@@ -3721,17 +3748,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 492553,
-  "salida": 20914,
+  "entrada": 494811,
+  "salida": 21702,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.023854,
+  "dolares": 1.024474,
   "reservado": 0
  },
  "recientes": {
@@ -8021,13 +8048,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3424,
+   "ok": 3425,
    "fallos": 0,
-   "ejecuciones": 2780,
+   "ejecuciones": 2781,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T11:51:21.696Z"
+   "ultima": "2026-11-17T11:56:11.446Z"
   }
  },
  "ptsDirecto": {},
@@ -8044,15 +8071,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:51:23.615Z"
+   "ultimaBien": "2026-11-17T11:56:19.729Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:51:23.615Z"
+   "ultimaBien": "2026-11-17T11:56:19.729Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:51:23.615Z"
+   "ultimaBien": "2026-11-17T11:56:19.729Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8060,11 +8087,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:51:23.615Z"
+   "ultimaBien": "2026-11-17T11:56:19.729Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T11:51:23.615Z"
+   "ultimaBien": "2026-11-17T11:56:19.729Z"
   }
  },
  "avisos": [
