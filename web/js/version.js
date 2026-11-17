@@ -23,7 +23,7 @@ export const VERSION = '0.8';
 export const NOVEDADES = [
   {
     // (17 nov, Carlos) la 0.8 se presenta a todos al actualizar (todos: true), con dibujos nuevos. La hora, al publicar
-    v: '0.8', f: '2026-11-17', h: '00:00', t: 'La IA, al momento, y la pantalla entera', todos: true,
+    v: '0.8', f: '2026-11-17', h: '13:41', t: 'La IA, al momento, y la pantalla entera', todos: true,
     cosas: [
       { tipo: 'mejora', importante: true, d: 'chat', t: 'Pregúntale a la IA, sin clave y al momento', x: 'Ya no hace falta tu clave de Google: contesta la IA de la app en unos segundos. Se sabe la plantilla entera de cada rival y las cifras de tu liga, y va al grano. Tienes 3 preguntas al día, y en la app de Google Play, 3 más viendo un anuncio corto.', ir: { v: 'ia' } },
       { para: 'play', tipo: 'nuevo', d: 'aviso', t: 'Te avisa cuando la IA te contesta', x: 'Pregunta y sal de la app si quieres: arriba verás «Pensando tu respuesta» y, cuando conteste, un aviso con el principio. Tócalo y vas directo a la respuesta.' },
