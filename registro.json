@@ -2071,7 +2071,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
    "SPORT|136443141": 1794667376000,
    "SPORT|136442560": 1794668198000,
@@ -3757,7 +3756,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000,
    "SPORT|136377187": 1794672059000,
    "SPORT|136447078": 1794676174000,
    "SPORT|136446586": 1794679308000,
@@ -8127,13 +8125,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3449,
+   "ok": 3450,
    "fallos": 0,
-   "ejecuciones": 2805,
+   "ejecuciones": 2806,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T13:56:16.664Z"
+   "ultima": "2026-11-17T14:01:15.338Z"
   }
  },
  "ptsDirecto": {},
@@ -8150,15 +8148,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:56:21.423Z"
+   "ultimaBien": "2026-11-17T14:01:18.769Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:56:21.423Z"
+   "ultimaBien": "2026-11-17T14:01:18.769Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:56:21.423Z"
+   "ultimaBien": "2026-11-17T14:01:18.769Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8166,11 +8164,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:56:21.423Z"
+   "ultimaBien": "2026-11-17T14:01:18.769Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:56:21.423Z"
+   "ultimaBien": "2026-11-17T14:01:18.769Z"
   }
  },
  "avisos": [
