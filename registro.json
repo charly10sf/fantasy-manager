@@ -1182,6 +1182,13 @@
    "jornada": 13,
    "id": "2122668997803962690",
    "t": "2026-11-17T12:31:41.735Z"
+  },
+  {
+   "clave": "previaweb|13",
+   "tipo": "previaweb",
+   "jornada": 13,
+   "id": "2122723043797766197",
+   "t": "2026-11-17T16:06:26.750Z"
   }
  ],
  "estados": {
@@ -2263,7 +2270,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000
   },
   "hechos": [
    {
@@ -2925,7 +2933,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3763,7 +3771,7 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-16",
+  "dia": "2026-11-17",
   "n": 1,
   "ok": 1,
   "mal": 0
@@ -3839,17 +3847,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 29,
-   "revisar": 13,
-   "pulir": 0
+   "revisar": 14,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 559914,
-  "salida": 30574,
+  "entrada": 563979,
+  "salida": 31017,
   "cacheLee": 20321,
-  "cacheEscribe": 17418,
-  "dolares": 1.114046,
+  "cacheEscribe": 20321,
+  "dolares": 1.127415,
   "reservado": 0
  },
  "recientes": {
@@ -4101,6 +4109,12 @@
    {
     "t": "2026-11-17T06:01:59.866Z",
     "texto": "🌍 Oluwaseyi vuelve del parón con tres goles con Canadá 🇨🇦 ante Guatemala, en los dos partidos. J. David firmó dos goles y una asistencia en esos mismos encuentros y se hizo los 180 minutos.\n\nOskarsson, de la Real Sociedad, sumó un gol y dos asistencias con Islandia 🇮🇸. Arda Güler, un gol y un pase de gol con Turquía 🇹🇷, y también jugó los dos partidos completos.\n\nEl susto es de Marc Pubill: se retiró lesionado en el minuto 21 ante Inglaterra, con España 🇪🇸."
+   }
+  ],
+  "previaweb": [
+   {
+    "t": "2026-11-17T16:06:26.752Z",
+    "texto": "📋 La previa de la jornada 13 ya está en la web. Las cláusulas se cierran el jueves a las 21:00 y se reabren el viernes a las 21:00.\n\n🟨 Hay 3 sancionados y 10 titulares apercibidos, y el que más pesa es Y. Zabiri"
    }
   ]
  },
@@ -8139,13 +8153,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3474,
+   "ok": 3475,
    "fallos": 0,
-   "ejecuciones": 2830,
+   "ejecuciones": 2831,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T16:01:20.875Z"
+   "ultima": "2026-11-17T16:06:17.258Z"
   }
  },
  "ptsDirecto": {},
@@ -8162,15 +8176,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:01:28.775Z"
+   "ultimaBien": "2026-11-17T16:06:26.753Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:01:28.775Z"
+   "ultimaBien": "2026-11-17T16:06:26.753Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:01:28.775Z"
+   "ultimaBien": "2026-11-17T16:06:26.753Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8178,11 +8192,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:01:28.775Z"
+   "ultimaBien": "2026-11-17T16:06:26.753Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T16:01:28.775Z"
+   "ultimaBien": "2026-11-17T16:06:26.753Z"
   }
  },
  "avisos": [
