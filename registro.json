@@ -2050,7 +2050,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
    "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
    "SPORT|136433028": 1794644887000,
@@ -3568,22 +3567,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794903078050
+  }
  },
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
    "clasificar": 8,
-   "redactar": 15,
-   "revisar": 6,
+   "redactar": 19,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 251268,
-  "salida": 8091,
-  "cacheLee": 8709,
-  "cacheEscribe": 8709,
-  "dolares": 0.539368,
+  "entrada": 318484,
+  "salida": 10063,
+  "cacheLee": 11612,
+  "cacheEscribe": 11612,
+  "dolares": 0.701068,
   "reservado": 0
  },
  "recientes": {
@@ -4023,6 +4024,11 @@
    "n": 1,
    "t": "2026-11-17T08:06:37.624Z",
    "ultima": "2026-11-17T08:06:37.624Z"
+  },
+  "previa|123": {
+   "n": 1,
+   "t": "2026-11-17T08:11:52.131Z",
+   "ultima": "2026-11-17T08:11:52.131Z"
   }
  },
  "rasgos": {
@@ -7863,13 +7869,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3378,
+   "ok": 3379,
    "fallos": 0,
-   "ejecuciones": 2734,
+   "ejecuciones": 2735,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T08:06:15.635Z"
+   "ultima": "2026-11-17T08:11:18.050Z"
   }
  },
  "ptsDirecto": {},
@@ -7886,15 +7892,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:06:37.741Z"
+   "ultimaBien": "2026-11-17T08:11:52.350Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:06:37.741Z"
+   "ultimaBien": "2026-11-17T08:11:52.350Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:06:37.741Z"
+   "ultimaBien": "2026-11-17T08:11:52.350Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7902,11 +7908,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:06:37.741Z"
+   "ultimaBien": "2026-11-17T08:11:52.350Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:06:37.741Z"
+   "ultimaBien": "2026-11-17T08:11:52.350Z"
   }
  },
  "avisos": [
