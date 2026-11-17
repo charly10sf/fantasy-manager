@@ -1,6 +1,6 @@
 {
  "J": 13,
- "generada": 1794872888723,
+ "generada": 1794959289061,
  "equipos": [
   {
    "id": "3",
@@ -544,7 +544,7 @@
     {
      "id": "3149",
      "nombre": "Bright Ede",
-     "dias": 31,
+     "dias": 32,
      "lesion": "Lesión en el bíceps femoral",
      "antes": 56,
      "p": 58
@@ -776,7 +776,8 @@
      "id": "2588",
      "nombre": "Danjuma",
      "pos": 4,
-     "p": 78
+     "p": 47,
+     "duda": true
     },
     {
      "id": "1191",
@@ -2082,12 +2083,6 @@
      "p": 95
     },
     {
-     "id": "2005",
-     "nombre": "Abel Bretones",
-     "pos": 2,
-     "p": 93
-    },
-    {
      "id": "2559",
      "nombre": "V. Rosier",
      "pos": 2,
@@ -2098,6 +2093,12 @@
      "nombre": "Boyomo",
      "pos": 2,
      "p": 68
+    },
+    {
+     "id": "2846",
+     "nombre": "Arguibide",
+     "pos": 2,
+     "p": 35
     },
     {
      "id": "680",
@@ -2138,6 +2139,20 @@
    ],
    "dudas": [
     {
+     "linea": 2,
+     "a": {
+      "id": "2846",
+      "nombre": "Arguibide",
+      "p": 35
+     },
+     "b": {
+      "id": "2336",
+      "nombre": "Herrando",
+      "p": 33
+     },
+     "pa": 51
+    },
+    {
      "linea": 3,
      "a": {
       "id": "2338",
@@ -2168,6 +2183,12 @@
    ],
    "fuera": [
     {
+     "id": "2005",
+     "nombre": "Abel Bretones",
+     "estado": "lesionado",
+     "lesion": "Lesión en el sóleo"
+    },
+    {
      "id": "204",
      "nombre": "Aitor Fdez",
      "estado": "lesionado"
@@ -2177,7 +2198,7 @@
     {
      "id": "2336",
      "nombre": "Herrando",
-     "dias": 77,
+     "dias": 78,
      "lesion": "Lesión en el aductor",
      "antes": 33,
      "p": 33
@@ -2185,7 +2206,7 @@
     {
      "id": "2338",
      "nombre": "Aimar",
-     "dias": 37,
+     "dias": 38,
      "lesion": "Lesión en los isquiotibiales",
      "antes": 67,
      "p": 67
@@ -2203,6 +2224,11 @@
       "pos": 1
      },
      {
+      "id": "2846",
+      "nombre": "Arguibide",
+      "pos": 2
+     },
+     {
       "id": "2338",
       "nombre": "Aimar",
       "pos": 3
@@ -2218,6 +2244,12 @@
       "id": "204",
       "nombre": "Aitor Fdez",
       "pos": 1,
+      "por": "lesionado"
+     },
+     {
+      "id": "2005",
+      "nombre": "Abel Bretones",
+      "pos": 2,
       "por": "lesionado"
      },
      {
@@ -2701,6 +2733,12 @@
      "p": 95
     },
     {
+     "id": "2624",
+     "nombre": "Manu Sánchez",
+     "pos": 2,
+     "p": 95
+    },
+    {
      "id": "2742",
      "nombre": "Nacho Perez",
      "pos": 2,
@@ -2723,12 +2761,6 @@
      "nombre": "Dela",
      "pos": 2,
      "p": 65
-    },
-    {
-     "id": "2671",
-     "nombre": "Jeremy Toljan",
-     "pos": 2,
-     "p": 56
     },
     {
      "id": "2445",
@@ -2763,6 +2795,20 @@
    ],
    "dudas": [
     {
+     "linea": 2,
+     "a": {
+      "id": "2300",
+      "nombre": "Dela",
+      "p": 65
+     },
+     "b": {
+      "id": "2671",
+      "nombre": "Jeremy Toljan",
+      "p": 56
+     },
+     "pa": 54
+    },
+    {
      "linea": 3,
      "a": {
       "id": "2628",
@@ -2791,22 +2837,37 @@
      "pa": 51
     }
    ],
-   "fuera": [
+   "fuera": [],
+   "vuelven": [
     {
      "id": "2624",
      "nombre": "Manu Sánchez",
-     "estado": "lesionado",
-     "lesion": "Lesión en los isquiotibiales"
+     "dias": 17,
+     "lesion": "Lesión en los isquiotibiales",
+     "antes": 100,
+     "p": 95
     }
    ],
-   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
    },
    "cambios": {
-    "entran": [],
-    "salen": []
+    "entran": [
+     {
+      "id": "2624",
+      "nombre": "Manu Sánchez",
+      "pos": 2
+     }
+    ],
+    "salen": [
+     {
+      "id": "2671",
+      "nombre": "Jeremy Toljan",
+      "pos": 2,
+      "por": null
+     }
+    ]
    },
    "confirmado": null
   },
