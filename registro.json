@@ -2076,7 +2076,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
-   "SPORT|136439696": 1794661472000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
    "SPORT|136443141": 1794667376000,
    "SPORT|136442560": 1794668198000,
@@ -2261,7 +2260,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
    "SPORT|136536417": 1794914802000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000
   },
   "hechos": [
    {
@@ -2859,11 +2859,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794920367000,
+    "id": "3265",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3778,17 +3790,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 29,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 541470,
-  "salida": 24751,
+  "entrada": 543400,
+  "salida": 25560,
   "cacheLee": 20321,
   "cacheEscribe": 17418,
-  "dolares": 1.10929,
+  "dolares": 1.109888,
   "reservado": 0
  },
  "recientes": {
@@ -8078,13 +8090,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3438,
+   "ok": 3439,
    "fallos": 0,
-   "ejecuciones": 2794,
+   "ejecuciones": 2795,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T13:01:15.346Z"
+   "ultima": "2026-11-17T13:06:13.391Z"
   }
  },
  "ptsDirecto": {},
@@ -8101,15 +8113,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:01:19.095Z"
+   "ultimaBien": "2026-11-17T13:06:21.705Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:01:19.095Z"
+   "ultimaBien": "2026-11-17T13:06:21.705Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:01:19.095Z"
+   "ultimaBien": "2026-11-17T13:06:21.705Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8117,11 +8129,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:01:19.095Z"
+   "ultimaBien": "2026-11-17T13:06:21.705Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T13:01:19.095Z"
+   "ultimaBien": "2026-11-17T13:06:21.705Z"
   }
  },
  "avisos": [
