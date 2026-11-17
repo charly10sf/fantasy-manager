@@ -2244,7 +2244,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html": 1794911315000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/17/kounde-supera-les-molesties-i-apunta-al-villarreal-sercat/": 1794911275000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/17/kounde-supera-les-molesties-i-apunta-al-villarreal-sercat/": 1794911275000,
+   "AS|https://as.com/futbol/primera/terzic-debe-hacer-equilibrismos-en-el-eje-central-f202611-n/": 1794911893000,
+   "SPORT|136531054": 1794908320000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-lesionado-cuatro-dias-derbi-betis-sevilla_0_2008524681.html": 1794911808000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/video-entrenamiento-sevilla-fc-17-noviembre-2026_8_2008525335.html": 1794911542000
   },
   "hechos": [
    {
@@ -2718,11 +2722,25 @@
     "motivo": "secuelas de una lesión previa",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136531054",
+    "medio": "SPORT",
+    "t": 1794908320000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Dani Ceballos sufre molestias y duda para el derbi",
+    "motivo": "molestias de última hora",
+    "plazo": "",
+    "nums": [
+     100
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3641,17 +3659,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 27,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 479236,
-  "salida": 17604,
+  "entrada": 481790,
+  "salida": 19356,
   "cacheLee": 20321,
   "cacheEscribe": 14515,
-  "dolares": 1.020867,
+  "dolares": 1.021998,
   "reservado": 0
  },
  "recientes": {
@@ -7941,13 +7959,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3410,
+   "ok": 3411,
    "fallos": 0,
-   "ejecuciones": 2766,
+   "ejecuciones": 2767,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T10:41:11.445Z"
+   "ultima": "2026-11-17T10:46:11.822Z"
   }
  },
  "ptsDirecto": {},
@@ -7964,15 +7982,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:41:15.094Z"
+   "ultimaBien": "2026-11-17T10:46:24.383Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:41:15.094Z"
+   "ultimaBien": "2026-11-17T10:46:24.383Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:41:15.094Z"
+   "ultimaBien": "2026-11-17T10:46:24.383Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7980,11 +7998,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:41:15.094Z"
+   "ultimaBien": "2026-11-17T10:46:24.383Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T10:41:15.094Z"
+   "ultimaBien": "2026-11-17T10:46:24.383Z"
   }
  },
  "avisos": [
