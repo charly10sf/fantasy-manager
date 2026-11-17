@@ -2068,7 +2068,6 @@
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000,
-   "SPORT|136439152": 1794658639000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250929/racing-descansa-estrellas-carburan-recibir-real.html": 1794661700000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
@@ -8062,13 +8061,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3429,
+   "ok": 3430,
    "fallos": 0,
-   "ejecuciones": 2785,
+   "ejecuciones": 2786,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T12:16:13.597Z"
+   "ultima": "2026-11-17T12:21:31.311Z"
   }
  },
  "ptsDirecto": {},
@@ -8085,15 +8084,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:16:19.645Z"
+   "ultimaBien": "2026-11-17T12:21:36.244Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:16:19.645Z"
+   "ultimaBien": "2026-11-17T12:21:36.244Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:16:19.645Z"
+   "ultimaBien": "2026-11-17T12:21:36.244Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8101,11 +8100,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:16:19.645Z"
+   "ultimaBien": "2026-11-17T12:21:36.244Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T12:16:19.645Z"
+   "ultimaBien": "2026-11-17T12:21:36.244Z"
   }
  },
  "avisos": [
