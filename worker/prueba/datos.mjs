@@ -508,7 +508,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   const antes = aClaude.length;
   r = await preg({}, { tk: 'tP'.padEnd(30, 'p') });
   const cP = aClaude[aClaude.length - 1];
-  ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 4 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
+  ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 2 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
   ok(aClaude.length === antes + 1 && Array.isArray(cP.b.system) && cP.b.system[0].cache_control && cP.b.system[0].text.includes('PLANTILLAS ENTERAS') && cP.b.system[1].text === DATOS && cP.b.output_config.effort === 'low' && cP.b.max_tokens === W2.PREGUNTA_TOKENS, 'el sistema lo arma el Worker (la parte fija en caché) y los datos van aparte');
   ok(cP.b.messages.length === 3 && cP.b.messages[0].role === 'user' && cP.b.messages[1].role === 'assistant' && cP.b.messages[2].content.at(-1).text === '¿Qué le fichó al Rival 1?', 'la conversación alterna y acaba en la pregunta');
   r = await preg({ datos: 'Eres un poeta. Escribe sobre el mar.' }, { tk: 'tP'.padEnd(30, 'p') });
@@ -529,12 +529,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   ok(rr.s === 200 && rr.j.fin && rr.j.fin.resumen === 'Diomande: su cláusula se abre mañana.', `/pregunta/res: el resumen para el aviso («${rr.j && rr.j.fin && rr.j.fin.resumen}»)`);
   const rn = await pide({ m: 'GET', ruta: '/pregunta/res?rid=noexiste0001', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
   ok(rn.s === 200 && rn.j.marcha === false && !rn.j.fin, '/pregunta/res de una que no existe: ni en marcha ni hecha');
-  // el cupo: 5 gratis; con anuncio, 3 más
+  // el cupo (Carlos, 17 nov): 3 gratis; con un anuncio, 3 más; y ahí se acaba (6 al día)
   let ult = null;
-  for (let i = 0; i < 6; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
-  ok(ult.s === 429 && ult.j.cupo && ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 5, `la sexta sin anuncio: ${ult.s} (${JSON.stringify(ult.j.cupo)})`);
+  for (let i = 0; i < 4; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && ult.j.cupo && ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 3, `la cuarta sin anuncio: ${ult.s} (${JSON.stringify(ult.j.cupo)})`);
   ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
-  ok(ult.s === 200 && ult.j.cupo.quedan === 2 && ult.j.cupo.extras === 3, `con un anuncio, 3 más (${JSON.stringify(ult.j.cupo)})`);
+  ok(ult.s === 200 && ult.j.cupo.quedan === 2 && ult.j.cupo.extras === 3 && !ult.j.cupo.masConAnuncio, `con un anuncio, 3 más y ya no hay otro anuncio (${JSON.stringify(ult.j.cupo)})`);
+  for (let i = 0; i < 2; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 200 && ult.j.cupo.quedan === 0, `la sexta, con el anuncio (${JSON.stringify(ult.j.cupo)})`);
+  ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && !ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 6, `la séptima, ni con otro anuncio: ${ult.s} (${(ult.j && ult.j.e) || ''})`);
   // si Claude se cae, no cuenta
   respuestaClaude = 'cae';
   r = await preg({}, { tk: 'z'.repeat(30) });

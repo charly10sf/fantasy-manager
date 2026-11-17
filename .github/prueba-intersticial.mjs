@@ -194,15 +194,15 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
     if (!q.url().endsWith('/pregunta')) return rt.fulfill({ status: 404, headers: cors, body: '{}' });
     const b = JSON.parse(q.postData() || '{}');
     pedidos.push(b);
-    const j = b.extra ? { texto: 'Con el anuncio: mira a Rival 2.', cupo: { usados: 6, gratis: 5, max: 20, extras: 1, porAnuncio: 3, quedan: 2, masConAnuncio: true } }
-      : { e: 'Ya has hecho tus 5 preguntas de hoy.', cupo: { usados: 5, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } };
+    const j = b.extra ? { texto: 'Con el anuncio: mira a Rival 2.', cupo: { usados: 4, gratis: 3, max: 6, extras: 3, porAnuncio: 3, quedan: 2, masConAnuncio: false } }
+      : { e: 'Ya has hecho tus 3 preguntas de hoy.', cupo: { usados: 3, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } };
     return rt.fulfill({ status: j.e ? 429 : 200, headers: cors, contentType: 'application/json', body: JSON.stringify(j) });
   });
   await A.page.evaluate(async () => {
     const Pu = await import('./js/puente.js'), U = await import('./js/util.js');
     await Pu.guardar('sesion', { token: 'x'.repeat(40), caduca: Date.now() + 3600e3 });
     await Pu.guardar('gemini', null);
-    const g = U.LS.get('limites', null); g.cfg.preguntas = { on: true, gratis: 5, porAnuncio: 3, max: 20 }; U.LS.set('limites', g);
+    const g = U.LS.get('limites', null); g.cfg.preguntas = { on: true, gratis: 3, porAnuncio: 3, max: 6 }; U.LS.set('limites', g);
   });
   await A.page.click('#bPregunta');
   await A.page.clock.runFor(600);

@@ -75,7 +75,7 @@ ok(/SUS CLÁUSULAS, DE LA MÁS FÁCIL/.test(c.datos) && /EN EL MERCADO ME QUEDAN
     await Pu.guardar('sesion', { token: 'x'.repeat(40), caduca: Date.now() + 3600e3 });
     await Pu.guardar('gemini', null);
     const g = U.LS.get('limites', null) || { t: Date.now(), cfg: {} };
-    g.cfg = { ...(g.cfg || {}), preguntas: { on: true, gratis: 5, porAnuncio: 3, max: 20 } };
+    g.cfg = { ...(g.cfg || {}), preguntas: { on: true, gratis: 3, porAnuncio: 3, max: 6 } };
     U.LS.set('limites', g);
     window.S.D.demo = false;
     return true;
@@ -92,14 +92,14 @@ ok(/SUS CLÁUSULAS, DE LA MÁS FÁCIL/.test(c.datos) && /EN EL MERCADO ME QUEDAN
   ok(pedidos.length === 1 && pedidos[0].datos.startsWith('DATOS DE SU LIGA') && pedidos[0].pregunta === '¿Qué le ficho al segundo?' && /^[a-z0-9]{8,24}$/.test(pedidos[0].rid), `la pregunta va al servidor con sus datos y un id (${pedidos.length} pedido)`);
   ok(/plantilla entera/.test(visto) && !/notas|recomiendo|C-1203|Operación/.test(visto), `lo que se ve, limpio: «${visto.replace(/\s+/g, ' ').slice(0, 140)}»`);
   // sin preguntas hoy: 429 con el cupo; en la web no hay anuncio, así que lo dice y la pregunta vuelve a la caja
-  respuesta = () => ({ e: 'Ya has hecho tus 5 preguntas de hoy.', cupo: { usados: 5, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } });
+  respuesta = () => ({ e: 'Ya has hecho tus 3 preguntas de hoy.', cupo: { usados: 3, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } });
   await P2.page.fill('#pregunta', '¿Y otra?');
   await P2.page.click('[data-accion="enviar"]');
   await P2.page.waitForFunction(() => !window.S.charlando, null, { timeout: 20000 });
   const err = await P2.page.evaluate(() => ({ t: document.querySelector('.error-c')?.innerText || '', caja: document.querySelector('#pregunta')?.value || '' }));
-  ok(/5 preguntas de hoy/.test(err.t) && err.caja === '¿Y otra?', `sin cupo: lo dice y la pregunta vuelve a la caja («${err.t.replace(/\s+/g, ' ').slice(0, 120)}»)`);
+  ok(/3 preguntas de hoy/.test(err.t) && err.caja === '¿Y otra?', `sin cupo: lo dice y la pregunta vuelve a la caja («${err.t.replace(/\s+/g, ' ').slice(0, 120)}»)`);
   // Android cerró la app con una pregunta en marcha: al volver se recoge con el mismo id
-  respuesta = (b) => ({ texto: `Recogida: ${b.rid}`, cupo: { usados: 2, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 3, masConAnuncio: true } });
+  respuesta = (b) => ({ texto: `Recogida: ${b.rid}`, cupo: { usados: 2, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 1, masConAnuncio: true } });
   const rec = await P2.page.evaluate(async () => {
     const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
     const h = I.conversacion(); h.push({ r: 'yo', t: '¿Me la recoges?', ts: Date.now() }); U.LS.set(Dt.K('chat'), h);

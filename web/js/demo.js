@@ -186,6 +186,13 @@ export function demo() {
     });
   }
   void nombres;
+  // (17 nov) en LaLiga, el que acabas de fichar o clausular queda 14 días con la cláusula cerrada: en la demo salían
+  // recién clausulados con la cláusula abierta (Lucas Boyé, Cabrera, Amatucci) y la IA proponía volver a clausularlos
+  for (const a of actividad) {
+    if (!['compra', 'clausula'].includes(a.clase) || ahora - a.t >= 14 * DIA) continue;
+    const q = clasif.find((e) => e.manager === a.quien), f = q && (plantillas[q.teamId] || []).find((y) => y.pid === a.pid);
+    if (f) f.protegidoHasta = Math.max(f.protegidoHasta || 0, a.t + 14 * DIA);
+  }
   // lo que cobra cada uno por las dos últimas jornadas (en el Fantasy sale como «ha ganado X por jornada»)
   clasif.forEach((e, i) => {
     for (const k of [1, 2]) actividad.push({ id: `pr${i}-${k}`, t: ahora - k * 7 * DIA + 2 * HORA, tipo: 6, clase: 'premio', quien: e.manager, quienId: e.userId, otro: '', otroId: '', pid: '', jugador: '', importe: Math.round((1.2 + r() * 2.5) * 1e6 / 1000) * 1000, texto: '' });

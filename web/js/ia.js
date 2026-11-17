@@ -985,7 +985,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     L.push(`EL MERCADO CAMBIA: ${cuando(cm)} (en ${dura(cm - Date.now())}).${llega}`);
   }
   const yo = M.yo || {};
-  L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} (lo máximo para una cláusula) · EN EL MERCADO PUEDO GASTAR COMO MUCHO ${eur(M.pujaMax)}${M.misPujas ? ` (ya tengo ${eur(M.misPujas)} comprometidos en pujas)` : ''}.`);
+  L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} (lo máximo para una cláusula) · EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${eur(M.pujaMax)} COMO MUCHO${M.misPujas ? ` (ya descontados los ${eur(M.misPujas)} que tengo comprometidos en pujas: una puja nueva de hasta ${eur(M.pujaMax)} cabe)` : ''}.`);
   {
     // la caja de cada paso, hecha: la IA no tiene que sumarla (revisión del 25 oct: daba por imposibles cláusulas que
     // llegaban aceptando una oferta, y no contaba las pujas hechas al ver si se empieza la jornada en positivo)
@@ -1019,7 +1019,11 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const pp = M.perdida ? M.perdida(x.pid) : 0;
     return pp >= 0.3 ? ` | si lo vendo, mi once pierde ${d1(pp)} pts/jornada` : ' | venderlo no quita nada a mi once';
   };
-  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${M.esperarVenta && M.esperarVenta(x).tipo ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
+  // (17 nov, Baena) «NO VENDER AÚN» es para el que la app vendería por la bajada (inercia o una semana cayendo): salía
+  // también en uno que sube y tiene una oferta que la app aceptaría, y la IA leía dos órdenes contrarias
+  const noVenderAun = (x) => !!(M.esperarVenta && (x.ventaInercia || (x.tend && x.tend.p7 != null && x.tend.p7 < -4))
+    && !(veredictos(D, M) || {})[`A-${x.pid}`] && M.esperarVenta(x).tipo);
+  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -1914,7 +1918,16 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       const j = (porRef && porRef.pid && D.maestro[porRef.pid]) || buscar(o.jugador);
       const x = j && (M.mias || []).find((y) => y.pid === j.id);
       if (x && x.riesgo === 'ninguno') {
-        quitados.push({ jugador: j.nombre, ref: null, motivo: `La app lo quita: su cláusula (${eur(x.clausula)}) ya está ${x.ratio ? `un ${pct((x.ratio - 1) * 100, 0)} ` : ''}por encima de su valor (${eur(x.j.valor)}) y no hay riesgo de que te lo quiten.` });
+        // (17 nov) el porqué de verdad: antes decía «ya está un +11 % por encima de su valor y no hay riesgo», como si
+        // un +11 % fuera mucho en una liga que paga los clausulazos al +21,8 %
+        const CZ = M.clausulazos, pg = x.pagan, sobre = x.ratio ? x.ratio - 1 : null;
+        const porque = !x.abierta && x.protegidoHasta ? `sigue protegida hasta ${cuando(x.protegidoHasta)} (nadie puede pagarla hasta entonces y el blindaje solo se pone con la cláusula abierta)${sobre != null && sobre > 0.3 ? ` y, abierta, estaría un ${pct(sobre * 100, 0)} por encima de su valor` : ''}`
+          : CZ && CZ.n >= 3 && sobre != null && sobre > CZ.p90
+          ? `ya está un ${pct(sobre * 100, 0)} por encima de su valor (${eur(x.j.valor)}), más de lo que se paga en tu liga por un clausulazo (como mucho un ${pct(CZ.p90 * 100, 0)})`
+          : pg && pg.hayDatos && !pg.seguro.length && !pg.quiza.length ? 'a ningún rival le llega el dinero para pagarla'
+          : !x.importa ? 'no te quita puntos y, si te lo clausulan, cobras más de lo que te daría LaLiga'
+          : `${sobre != null ? `está un ${pct(sobre * 100, 0)} por encima de su valor (${eur(x.j.valor)}) y ` : ''}la app no ve a nadie dispuesto a pagarla`;
+        quitados.push({ jugador: j.nombre, ref: null, motivo: `La app lo quita: su cláusula (${eur(x.clausula)}) no corre peligro: ${porque}.` });
         return false;
       }
     }
@@ -2210,7 +2223,10 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     const dias = M.proxima ? Math.max(1, Math.ceil((M.proxima.ini - Date.now()) / DIA) - 1) : ine.hastaJ;
     const gana = ine.proy ? ine.proy(dias) : ine.proyJ;
     const extra = (o.importe || x.j.valor) - x.j.valor;
-    if (!(gana > 0) || extra >= gana) return null;
+    // (17 nov, Baena: la oferta pagaba 2,54 M sobre su valor y aguantarlo 11 días, 2,55 M) si la diferencia es de unos
+    // pocos miles, da igual venderlo hoy que aguantarlo: no se avisa de «véndelo solo si necesitas el dinero» sobre una
+    // oferta que la app da por buena
+    if (!(gana > 0) || extra >= gana - Math.max(5e5, x.j.valor * 0.01)) return null;
     const cerrada = !x.abierta && x.abreEn > DIA ? ` y su cláusula está cerrada ${dura ? `${dura(x.abreEn)} más` : 'unos días más'} (no te lo pueden quitar)` : '';
     return { x, gana, dias, txt: `sube ${eur(ine.ult, { signo: true })} al día${cerrada}: aguantándolo ${dias} día${dias === 1 ? '' : 's'} más vale unos ${eur(gana)} más de lo que te dan hoy.` };
   };
@@ -2254,7 +2270,10 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     const vc = x && M.ventaClausula ? M.ventaClausula(x) : null;
     if (!vc || /Su cláusula está abierta/.test(o.aviso || '')) continue;
     const urge = (M.vendeBaja && M.vendeBaja(x)) || pagaCaja(o) || (x.ventaInercia && x.ventaInercia.urgencia === 'ya');
-    o.aviso = `${o.aviso ? `${o.aviso} ` : ''}${vc.txt}${vc.espera && !urge ? ' Si no tienes prisa, mejor espera.' : ''}`;
+    // (17 nov, Baena) si la app ya aconseja aceptar la oferta que tiene (paga por encima de su valor), no se le añade
+    // «mejor espera»: salían las dos cosas juntas. Que te lo clausulen no es seguro y la oferta la tienes ya
+    const acepta = (M.misVentas || []).some((v) => v.pid === o.pid && v.consejo === 'aceptar');
+    o.aviso = `${o.aviso ? `${o.aviso} ` : ''}${vc.txt}${vc.espera && !urge && !acepta ? ' Si no tienes prisa, mejor espera.' : vc.espera && acepta ? ' Pero que te lo clausulen no es seguro y esta oferta la tienes ya.' : ''}`;
   }
   // (aviso de Carlos, 3 nov, 12:16: Ibañez y Javi Guerra, «Aceptar oferta · ahora» perdiendo 1,37 y 5,85 M, con el saldo
   // a −1,18 M y 3 días hasta la jornada) en negativo entre semana no hay que vender ya: lo obligatorio es empezar la
@@ -3071,11 +3090,8 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
-  // y leía «PUEDO GASTAR COMO MUCHO 67,81 M (ya tengo 36,30 M comprometidos en pujas)» como si los 36,30 M salieran de
-  // los 67,81 M (le decía que una puja de 44,70 M no cabía, y sí cabe: los 67,81 M son lo que queda). contexto lo usa
-  // también el plan: aquí solo se aclara la frase para el chat
-  const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta')
-    .replace(/EN EL MERCADO PUEDO GASTAR COMO MUCHO ([^ (]+ (?:M|mil|€))(?: \(ya tengo ([^)]+?) comprometidos en pujas\))?/, (_, max, ya) => `EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${max} COMO MUCHO${ya ? ` (ya descontados los ${ya} que tengo comprometidos en pujas: una puja nueva de hasta ${max} cabe)` : ''}`);
+  // (lo de lo que queda para pujar ya sale bien dicho de contexto, para el plan y el chat: 17 nov)
+  const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta');
   return `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
@@ -3090,7 +3106,7 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = 
    sales de la app, Android la congela y se corta la conexión, pero allí se sigue haciendo: al volver, la app pide lo mismo
    con el mismo id y le llega la respuesta que ya estaba hecha (sin gastar otra pregunta). El id se queda guardado con la
    pregunta hasta que llega la respuesta, por si Android cierra la app del todo: al abrirla, reanudarPregunta la recoge.
-   Cupo: «preguntas» de limites.json (5 al día y 3 más por anuncio, hasta 20; Carlos, 16 nov). La clave de Google de cada
+   Cupo: «preguntas» de limites.json (3 al día y 3 más con un anuncio, 6 como mucho; Carlos, 17 nov). La clave de Google de cada
    uno queda de reserva si el servicio no está. */
 export const preguntasApp = (demo) => !demo && preguntasCfg().on;
 /** ¿se puede usar el chat? (la IA de la app o tu clave) */

@@ -1718,6 +1718,14 @@ export function analizar(D, H, c, extra = {}) {
     }
     const CZ = M.clausulazos;
     if (r && CZ && CZ.n >= 3 && x.ratio - 1 > Math.max(CZ.p90, 0.05) + 0.03) r = 0;
+    // (17 nov, Baena con la cláusula al +11 % y «riesgo ninguno» cuando en su liga los clausulazos se pagan al +21,8 % de
+    // mediana: los euros de más, 7 M, pesaban como si nadie los pagara) con lo que se paga de verdad en tu liga, una
+    // cláusula por debajo de la mediana de los clausulazos es una presa (medio), y hasta el p90, posible (bajo). Luego
+    // siguen contando la inercia, si te importa y si a alguien le llega el dinero
+    if (CZ && CZ.n >= 3 && x.ratio != null && x.clausula && (x.abierta || x.abreEn < 36 * HORA)) {
+      const sobre = x.ratio - 1, minimo = sobre <= CZ.med ? 2 : sobre <= CZ.p90 ? 1 : 0;
+      r = Math.max(r, x.abierta ? minimo : Math.max(0, minimo - 1));
+    }
     // y si está bajando, menos: nadie paga de más por uno que pierde valor (salvo que acabe de hacer 8 puntos o más: ahí
     // lo normal es que la bajada se frene, y es justo cuando los demás lo miran)
     const ineR = M.inercia(x.pid);

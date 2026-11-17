@@ -205,8 +205,8 @@ export function planesCfg() {
 export function preguntasCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.preguntas) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
-  const gratis = n(p && p.gratis, 5);
-  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 20)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
+  const gratis = n(p && p.gratis, 3);
+  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 6)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
 }
 /** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
     gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
