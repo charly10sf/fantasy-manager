@@ -24,7 +24,7 @@ export const NOVEDADES = [
   {
     // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
     // adelante; el cambio de mercado del día del partido). La hora, al publicar
-    v: '0.8a', f: '2026-11-17', h: '', t: 'Apodos para tus rivales y pujas más realistas',
+    v: '0.8a', f: '2026-11-17', h: '22:43', t: 'Apodos para tus rivales y pujas más realistas',
     cosas: [
       { tipo: 'nuevo', importante: true, d: 'cara', t: 'Ponle un apodo a cada rival', x: 'Llama a cada rival como lo llamáis en tu liga: en su ficha («Ponle un apodo») o en Ajustes, en «Apodos de los rivales». Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.', ir: { v: 'rivales' } },
       { tipo: 'mejora', d: 'corona', t: 'Las funciones top, en dorado', x: 'Lo que se abre viendo un anuncio (el dinero de cada rival, quién paga tus cláusulas, el radar de subidas…) ahora se ve de un vistazo, con su sello dorado.', ir: { v: 'rivales' } },
