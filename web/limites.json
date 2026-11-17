@@ -43,7 +43,7 @@
     "on": true,
     "graciaMin": 3,
     "cadaMin": 5,
-    "maxDia": 6,
+    "maxDia": 4,
     "trasBonificadoMin": 3,
     "suLiga": false,
     "bloque": "",
