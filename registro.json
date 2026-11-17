@@ -2050,7 +2050,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/natan-kike-salas-reyes-despeje-laliga_0_2008497084.html": 1794637826000,
    "SPORT|136407108": 1794639611000,
    "SPORT|135274018": 1794639600000,
    "SPORT|135166253": 1794639600000,
@@ -7826,13 +7825,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3358,
+   "ok": 3359,
    "fallos": 0,
-   "ejecuciones": 2714,
+   "ejecuciones": 2715,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 436,
-   "ultima": "2026-11-17T06:26:20.318Z"
+   "ultima": "2026-11-17T06:31:13.586Z"
   }
  },
  "ptsDirecto": {},
@@ -7849,15 +7848,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:26:24.058Z"
+   "ultimaBien": "2026-11-17T06:31:16.313Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:26:24.058Z"
+   "ultimaBien": "2026-11-17T06:31:16.313Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:26:24.058Z"
+   "ultimaBien": "2026-11-17T06:31:16.313Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7865,11 +7864,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:26:24.058Z"
+   "ultimaBien": "2026-11-17T06:31:16.313Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T06:26:24.058Z"
+   "ultimaBien": "2026-11-17T06:31:16.313Z"
   }
  },
  "avisos": [
