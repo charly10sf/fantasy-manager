@@ -19,7 +19,7 @@ import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
-import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop } from './comunes.js';
+import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop, selloTop } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
@@ -3152,7 +3152,7 @@ document.addEventListener('click', async (ev) => {
       }
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-        <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
         ${enApp ? '' : botonPlay()}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);

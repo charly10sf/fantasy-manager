@@ -3340,3 +3340,24 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .aj-sec.resalta { animation: resaltaAj 2.4s ease-out 1; }
 @keyframes resaltaAj { 0%, 40% { box-shadow: 0 0 0 2px var(--rojo); } 100% { box-shadow: 0 0 0 0 transparent; } }
 @media (prefers-reduced-motion: reduce) { #bAjustes.brilla, #bAjustes.brilla .ic { animation: none; } #bAjustes.brilla { box-shadow: 0 0 0 2px var(--rojo); } .aj-sec.resalta { animation: none; } }
+
+/* (0.8a, Carlos 17 nov: «que las funciones top aparezcan más resaltadas, en dorado») el sello TOP y las cajas en dorado */
+.top-b { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 5px; border-radius: var(--r-red); background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; font: 800 10.5px/16px 'Barlow'; letter-spacing: .8px; font-style: normal; vertical-align: middle; box-shadow: 0 0 10px rgba(255, 197, 71, .35); flex: none; }
+.top-b .ic { width: 11px; height: 11px; stroke-width: 2.2; }
+/* (con el elemento delante: el tema de evento pone su filo con un :is() que pesa como dos clases) */
+button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; border: 1px solid rgba(255, 205, 90, .8); background: linear-gradient(135deg, rgba(255, 205, 90, .28), rgba(255, 205, 90, .08) 55%, rgba(255, 205, 90, .18)), var(--plano2); box-shadow: 0 0 0 1px rgba(255, 205, 90, .12), 0 6px 22px rgba(255, 180, 40, .14); }
+.bloq.dorado::after, .bloq-g.dorado::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 236, 175, .2), transparent); transform: skewX(-18deg); animation: brilloOro 5.5s ease-in-out infinite; pointer-events: none; }
+@keyframes brilloOro { 0%, 72% { left: -60%; } 100% { left: 130%; } }
+.dorado .bloq-ic { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 14px rgba(255, 197, 71, .45); }
+.dorado .bloq-c > b { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; color: #ffe7a6; }
+.bloq-g.dorado .bloq-i { border-top-color: rgba(255, 205, 90, .3); }
+.bloq-g.dorado .bloq-i b { color: #ffe7a6; }
+.pill.bloq-p.dorado { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; font-weight: 700; box-shadow: 0 0 12px rgba(255, 197, 71, .35); }
+.eq2-t.rival-bloq.dorado { border-color: rgba(255, 205, 90, .6); background: linear-gradient(135deg, rgba(255, 205, 90, .2), rgba(255, 205, 90, .05)), var(--plano); box-shadow: 0 0 18px rgba(255, 180, 40, .12); }
+.eq2-t.rival-bloq.dorado::before { background: linear-gradient(#ffe28a, #d48c0e); }
+.rival-tiles .rival-bloq.dorado b { display: flex; align-items: center; gap: 8px; color: var(--oro); }
+.rival-tiles .rival-bloq.dorado span { color: #ffe7a6; }
+.rival-tiles .rival-bloq.dorado b .top-b .ic { width: 11px; height: 11px; }
+@media (prefers-reduced-motion: reduce) { .bloq.dorado::after, .bloq-g.dorado::after { display: none; } }
+.bloq-hoja .bloq-grande { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 26px rgba(255, 197, 71, .45); }
+.top-sello { margin: -2px 0 8px; } .top-sello .top-b { font-size: 12px; line-height: 19px; padding: 1px 10px 1px 8px; } .top-sello .top-b .ic { width: 13px; height: 13px; }

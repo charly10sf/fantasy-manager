@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
@@ -598,7 +598,7 @@ export function fichaRival(S, tid) {
   const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
   const conDinero = r.dinero && r.dinero.v != null;
   const tDinero = bloqueada('dineroRivales', tid)
-    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
+    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}${selloTop()}</b><span>su dinero ›</span></button>`
     : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
@@ -762,7 +762,7 @@ function anuncioTopHTML(A, S) {
   const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
   const veces = (k) => (k === 1 ? '1 vez' : `${k} veces`);
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+    <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
   const yaAb = rivales ? rivalesAbiertos() : [];
   if (rivales && rid == null) {
     const rs = M ? M.rivales : [];
