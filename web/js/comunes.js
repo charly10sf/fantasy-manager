@@ -396,8 +396,12 @@ export function candado(clave, { como = null, rid = null } = {}) {
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
     que sale al tocarlas, nunca en las cajas */
 export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
-/** lo que dice un candado de cómo se abre, corto (0.8a): donde no se puede abrir, nada (lo dice la ventana al tocarlo) */
+/** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
+    ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
+  return '';
+}
+export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
@@ -418,7 +422,7 @@ export function candadosJuntos(lista, { rid = null } = {}) {
   const cs = lista.filter(Boolean).map((c) => (Array.isArray(c) ? c : [c])).filter(([c], i, a) => a.findIndex(([d]) => d === c) === i);
   if (!cs.length) return '';
   if (cs.length === 1) return candado(cs[0][0], { como: cs[0][1] || null, rid: POR_JORNADA.includes(cs[0][0]) ? rid : null });
-  const cola = topConAnuncio() ? 'Se abren con un anuncio corto.' : '';
+  const cola = '';
   return `<div class="bloq-g dorado"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${selloTop()}${cs.length} funciones top</b>${cola ? `<span>${cola}</span>` : ''}</span></div>
     ${cs.map(([clave, como]) => { const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', '']; return `<button class="bloq-i" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null && POR_JORNADA.includes(clave) ? ` data-rival="${esc(rid)}"` : ''}><b>${esc(t)}</b><span>${esc(x)}</span></button>`; }).join('')}</div>`;
 }
