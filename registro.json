@@ -2281,7 +2281,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252313/canales-juega-69-minutos-seleccion-sub-21.html": 1794945645000,
    "SPORT|136533552": 1794945937000,
    "SPORT|136558895": 1794946522000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000
   },
   "hechos": [
    {
@@ -3011,11 +3012,23 @@
     "nums": [
      2
     ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794951400000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos es duda seria para el derbi en Nervión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 53
+   "n": 54
   },
   "desde": {
    "67": {
@@ -3928,17 +3941,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 62,
+   "clasificar": 63,
    "redactar": 29,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 604895,
-  "salida": 42045,
+  "entrada": 606890,
+  "salida": 42799,
   "cacheLee": 20321,
   "cacheEscribe": 20321,
-  "dolares": 1.13702,
+  "dolares": 1.137597,
   "reservado": 0
  },
  "recientes": {
@@ -8234,13 +8247,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3542,
+   "ok": 3543,
    "fallos": 0,
-   "ejecuciones": 2898,
+   "ejecuciones": 2899,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T21:36:13.555Z"
+   "ultima": "2026-11-17T21:48:22.579Z"
   }
  },
  "ptsDirecto": {},
@@ -8257,15 +8270,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:36:17.200Z"
+   "ultimaBien": "2026-11-17T21:48:32.524Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:36:17.200Z"
+   "ultimaBien": "2026-11-17T21:48:32.524Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:36:17.200Z"
+   "ultimaBien": "2026-11-17T21:48:32.524Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8273,11 +8286,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:36:17.200Z"
+   "ultimaBien": "2026-11-17T21:48:32.524Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:36:17.200Z"
+   "ultimaBien": "2026-11-17T21:48:32.524Z"
   }
  },
  "avisos": [
