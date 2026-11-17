@@ -198,7 +198,9 @@ export function planesCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
   // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
-  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
+  // (17 nov) en la web y el iPhone (sin anuncios para pedir más) valen los gratis de «gratisWeb», si los hay
+  const gratis = n(p && p.gratis, 2), gw = !enApp ? n(p && p.gratisWeb, 0) : 0;
+  return { on: !!(p && p.on), gratis: Math.max(gratis, gw), max: Math.max(n(p && p.max, 5), gw), web: Math.min(3, n(p && p.web, 0)) };
 }
 /** (16 nov) las preguntas del chat con la IA de la app (el Worker, /pregunta): «preguntas» de limites.json. porAnuncio: las que
     da cada anuncio bonificado cuando se acaban las gratis */

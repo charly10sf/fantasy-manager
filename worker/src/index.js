@@ -689,7 +689,7 @@ async function uso(req, env, c) {
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0 };
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
 export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
@@ -715,7 +715,8 @@ export async function cfgPlanes(env) {
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web) };
+  // (17 nov, Carlos, por Domy) gratisWeb: los planes gratis de quien usa la web o el iPhone, que no tienen anuncios para pedir más
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)) };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
@@ -861,7 +862,10 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
 /** lo que cuesta una llamada, en millonésimas de dólar: los tokens y las búsquedas */
 export const costeDe = (r, modelo) => { const [pe, ps] = PRECIOS[modelo] || PRECIOS[PLAN_MODELO]; return r.entra * pe + r.sale * ps + (r.busquedas || 0) * USD_BUSQUEDA; };
 async function planIA(req, env, c, ctx) {
-  const P = await cfgPlanes(env);
+  const P0 = await cfgPlanes(env);
+  // (17 nov) la web y el iPhone (el navegador manda Origin; la app de Android pide por su lado, sin él) no tienen anuncios con
+  // los que pedir más planes: de momento, todos sus planes gratis (planes.gratisWeb de limites.json)
+  const P = req.headers.get('Origin') && P0.gratisWeb > P0.gratis ? { ...P0, gratis: P0.gratisWeb, max: Math.max(P0.max, P0.gratisWeb) } : P0;
   if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
   if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de los planes (falta la clave CLAUDE_PLANES).', servicio: true, sinClave: true }, 503, c);
   const u = await quienEs(req);

@@ -29,7 +29,8 @@
     "gratis": 2,
     "max": 5,
     "topeUsdDia": 3,
-    "web": 1
+    "web": 1,
+    "gratisWeb": 5
   },
   "preguntas": {
     "on": true,

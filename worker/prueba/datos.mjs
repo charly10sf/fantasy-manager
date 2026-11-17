@@ -323,9 +323,9 @@ let respuestaClaude = null, limitesPlanes = { on: true, gratis: 2, max: 5, topeU
 const fetchAntes = globalThis.fetch;
 globalThis.fetch = async (u, o) => {
   const s = String(u);
-  // (más cuentas: el token que empieza por z, w, v o u es una cuenta distinta)
+  // (más cuentas: el token que empieza por z, w, v, u, g o h es una cuenta distinta)
   const tkP = cabDe(o, 'authorization').replace('Bearer ', '');
-  if (s.includes('/user/me') && /^[zwvu]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvu'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
+  if (s.includes('/user/me') && /^[zwvugh]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvugh'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
   if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ ligas: [], planes: limitesPlanes }), { status: 200 });
   if (s === 'https://api.anthropic.com/v1/messages') {
     const b = JSON.parse(o.body);
@@ -433,6 +433,16 @@ limitesPlanes = { on: false };
 for (let i = 0; i < 11; i++) minuto();
 r = await plan({}, { tk: 'u'.repeat(30) });
 ok(r.s === 503 && r.j.servicio && !r.j.sinClave, `apagado en limites.json: 503 (${r.t})`);
+// (17 nov) la web y el iPhone (con Origin): sus planes gratis de «gratisWeb»; la app de Android (sin Origin), los de siempre
+limitesPlanes = { on: true, gratis: 2, max: 5, topeUsdDia: 3, gratisWeb: 5 };
+for (let i = 0; i < 11; i++) minuto();
+for (let i = 0; i < 5; i++) r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 200 && r.j.cupo.usados === 5 && r.j.cupo.gratis === 5, `en la web, 5 planes gratis (${JSON.stringify(r.j && r.j.cupo)})`);
+r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 429 && !r.j.cupo.masConAnuncio, `en la web, el sexto no (${r.s})`);
+for (let i = 0; i < 2; i++) r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+ok(r.s === 429 && r.j.cupo.gratis === 2 && r.j.cupo.masConAnuncio, `en la app de Android, 2 gratis y luego con anuncio (${r.s})`);
 limitesPlanes = { on: true, gratis: 50, max: 80 };
 for (let i = 0; i < 11; i++) minuto();
 const cfgP = await W2.cfgPlanes(envP);
