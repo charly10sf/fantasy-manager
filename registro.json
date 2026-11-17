@@ -2057,7 +2057,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
    "SPORT|136433845": 1794647382000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/14/yan-diomande-sigue-alimentando-debate.html": 1794652317000,
@@ -2230,7 +2229,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
    "SPORT|136469900": 1794895217000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
+   "SPORT|136526095": 1794901531000
   },
   "hechos": [
    {
@@ -2663,7 +2663,7 @@
   ],
   "gemini": {
    "dia": "2026-11-17",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3581,17 +3581,17 @@
  "ia": {
   "dia": "2026-11-17",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 25,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 425312,
-  "salida": 12783,
+  "entrada": 427350,
+  "salida": 12899,
   "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.932845,
+  "dolares": 0.933107,
   "reservado": 0
  },
  "recientes": {
@@ -7881,13 +7881,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3387,
+   "ok": 3388,
    "fallos": 0,
-   "ejecuciones": 2743,
+   "ejecuciones": 2744,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-17T08:46:25.882Z"
+   "ultima": "2026-11-17T08:51:10.335Z"
   }
  },
  "ptsDirecto": {},
@@ -7904,15 +7904,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:46:31.549Z"
+   "ultimaBien": "2026-11-17T08:51:16.059Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:46:31.549Z"
+   "ultimaBien": "2026-11-17T08:51:16.059Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:46:31.549Z"
+   "ultimaBien": "2026-11-17T08:51:16.059Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7920,11 +7920,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:46:31.549Z"
+   "ultimaBien": "2026-11-17T08:51:16.059Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T08:46:31.549Z"
+   "ultimaBien": "2026-11-17T08:51:16.059Z"
   }
  },
  "avisos": [
