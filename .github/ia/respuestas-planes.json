@@ -1,0 +1,1184 @@
+[
+ {
+  "escena": "martes",
+  "ms": 16574,
+  "coste": 14181.5,
+  "entra": 25305,
+  "sale": 3302,
+  "busquedas": 1,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p2\", \"frase\": \"Niño (Málaga) está en el once probable como titular con un 90 %, y el plan prevé +4,2 pts por jornada para tu once. Cláusularlo ahora por 1,02 M (vale 1,01 M) evita que otro rival con dinero te lo quite.\"},\n  {\"id\": \"p1\", \"frase\": \"Fran García, de 14,53 M, ha girado a la baja hoy (−71 mil) tras varios días de subida, y ahora mismo es suplente. Lo pagaste a 13,87 M, así que sacarlo a la venta hoy evita perder unos 478 mil en dos semanas si sigue cayendo.\"},\n  {\"id\": \"p3\", \"frase\": \"El Hilali sube a ritmo acelerado (+373 mil hoy, +31,6 % en 7 días), y puja de hasta 10,46 M antes de las 00:15 para revenderlo el jueves 5, cuando valdría unos 10,72 M. Es una puja para revender, no para el once, porque es suplente.\"},\n  {\"id\": \"p4\", \"frase\": \"Rodri (63,20 M) se pone a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15, y es lo que te permite empezar la jornada en positivo. Sin esta venta, empezarías en negativo y no puntuarías.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vas 1º con 697 puntos, 110 por delante del 2º, y sin vender empezarías la jornada con −29,87 M. Con el plan, la app calcula unos 38,23 M al empezar la jornada 10 (sáb 7, 14:00), y lo que buscamos hoy es meter a Niño en el once y liberar dinero sin perder valor.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ha clausulado a Lucas Boyé por 27,46 M, la operación más cara de la liga en estos tres días, y ha blindado a Koski. Ha demostrado que usa las cláusulas, así que conviene vigilar a Niño y a Rodri.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Ha fichado a Gueye por 16,62 M y es 2º con 587 puntos, a 110 de ti. Va a por el puesto de arriba y se mueve en el mercado, aunque no hay nada en sus movimientos que apunte directamente a Niño, Fran García o Rodri.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha fichado a Javi Guerra por 16,68 M, ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M. Es el que más se mueve de tu zona, y El Hilali es justo el jugador que tú quieres revender, así que hay competencia por él.\"}\n ],\n \"titular\": \"Niño entra hoy al once y Rodri se vende el jueves para empezar en positivo\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, clausular a Niño, especular con El Hilali para revender",
+   "modo": "normal",
+   "ops": [
+    "vender Fran García",
+    "clausular Niño",
+    "pujar El Hilali",
+    "vender Rodri",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Niño entra hoy al once y Rodri se vende el jueves para empezar en positivo",
+  "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º, y sin vender empezarías la jornada con −29,87 M. Con el plan, la app calcula unos 38,23 M al empezar la jornada 10 (sáb 7, 14:00), y lo que buscamos hoy es meter a Niño en el once y liberar dinero sin perder valor.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Fran García, de 14,53 M, ha girado a la baja hoy (−71 mil) tras varios días de subida, y ahora mismo es suplente. Lo pagaste a 13,87 M, así que sacarlo a la venta hoy evita perder unos 478 mil en dos semanas si sigue cayendo.",
+   "clausular Niño 1,02 M (ahora): Niño (Málaga) está en el once probable como titular con un 90 %, y el plan prevé +4,2 pts por jornada para tu once. Cláusularlo ahora por 1,02 M (vale 1,01 M) evita que otro rival con dinero te lo quite.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): El Hilali sube a ritmo acelerado (+373 mil hoy, +31,6 % en 7 días), y puja de hasta 10,46 M antes de las 00:15 para revenderlo el jueves 5, cuando valdría unos 10,72 M. Es una puja para revender, no para el once, porque es suplente.",
+   "vender Rodri 63,20 M (el jue 5, para aceptar la oferta de vie 6, 00:15): Rodri (63,20 M) se pone a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15, y es lo que te permite empezar la jornada en positivo. Sin esta venta, empezarías en negativo y no puntuarías.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 77), pero te faltan 49,91 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Ha clausulado a Lucas Boyé por 27,46 M, la operación más cara de la liga en estos tres días, y ha blindado a Koski. Ha demostrado que usa las cláusulas, así que conviene vigilar a Niño y a Rodri.",
+   ": Ha fichado a Gueye por 16,62 M y es 2º con 587 puntos, a 110 de ti. Va a por el puesto de arriba y se mueve en el mercado, aunque no hay nada en sus movimientos que apunte directamente a Niño, Fran García o Rodri.",
+   ": Ha fichado a Javi Guerra por 16,68 M, ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M. Es el que más se mueve de tu zona, y El Hilali es justo el jugador que tú quieres revender, así que hay competencia por él."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p2",
+     "frase": "Niño (Málaga) está en el once probable como titular con un 90 %, y el plan prevé +4,2 pts por jornada para tu once. Cláusularlo ahora por 1,02 M (vale 1,01 M) evita que otro rival con dinero te lo quite."
+    },
+    {
+     "id": "p1",
+     "frase": "Fran García, de 14,53 M, ha girado a la baja hoy (−71 mil) tras varios días de subida, y ahora mismo es suplente. Lo pagaste a 13,87 M, así que sacarlo a la venta hoy evita perder unos 478 mil en dos semanas si sigue cayendo."
+    },
+    {
+     "id": "p3",
+     "frase": "El Hilali sube a ritmo acelerado (+373 mil hoy, +31,6 % en 7 días), y puja de hasta 10,46 M antes de las 00:15 para revenderlo el jueves 5, cuando valdría unos 10,72 M. Es una puja para revender, no para el once, porque es suplente."
+    },
+    {
+     "id": "p4",
+     "frase": "Rodri (63,20 M) se pone a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15, y es lo que te permite empezar la jornada en positivo. Sin esta venta, empezarías en negativo y no puntuarías."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º, y sin vender empezarías la jornada con −29,87 M. Con el plan, la app calcula unos 38,23 M al empezar la jornada 10 (sáb 7, 14:00), y lo que buscamos hoy es meter a Niño en el once y liberar dinero sin perder valor.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ha clausulado a Lucas Boyé por 27,46 M, la operación más cara de la liga en estos tres días, y ha blindado a Koski. Ha demostrado que usa las cláusulas, así que conviene vigilar a Niño y a Rodri."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Ha fichado a Gueye por 16,62 M y es 2º con 587 puntos, a 110 de ti. Va a por el puesto de arriba y se mueve en el mercado, aunque no hay nada en sus movimientos que apunte directamente a Niño, Fran García o Rodri."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha fichado a Javi Guerra por 16,68 M, ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M. Es el que más se mueve de tu zona, y El Hilali es justo el jugador que tú quieres revender, así que hay competencia por él."
+    }
+   ],
+   "titular": "Niño entra hoy al once y Rodri se vende el jueves para empezar en positivo",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "veda",
+  "ms": 10126,
+  "coste": 13137.1,
+  "entra": 21436,
+  "sale": 1987,
+  "busquedas": 1,
+  "crudo": "```json\n{\n \"pasos\": [{\"id\": \"p1\", \"frase\": \"Es lo primero y no admite espera: si la puja por Courtois sale adelante, empezarías la jornada en negativo (−29,87 M contando lo pujado) y no puntuarías. Al retirarla liberas 36,30 M y pasas de 6,43 M de saldo a tener margen para empezar en positivo. Hazlo esta noche antes de las 00:15.\"}],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vamos 1º con 697 puntos, con 2º Rival 2 a 587 y 3º Rival 3 a 474, así que tenemos colchón de 110 puntos. Hoy el objetivo es cuadrar el dinero: con 6,43 M de saldo y la puja de 36,30 M retirada, la jornada 10 arranca en positivo sin tocar a los titulares, que las cláusulas están cerradas hasta mañana a las 14:00.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que el movimiento contra nosotros ya está hecho; hay que vigilar qué más le interesa de la plantilla.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es nuestro perseguidor más cercano (587 puntos) y acaba de fichar a Gueye por 16,62 M; tiene músculo reciente para moverse en el mercado.\"},\n  {\"manager\": \"Rival 10\", \"texto\": \"Ha fichado a Guedes por 22,90 M, la operación más cara de la liga en estos tres días; es un rival que está invirtiendo fuerte.\"}\n ],\n \"titular\": \"Retira la puja por Courtois esta noche para no empezar la jornada en negativo\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca retirar la puja por Courtois",
+   "modo": "cierre",
+   "ops": [
+    "esperar Courtois",
+    "alinear"
+   ]
+  },
+  "titular": "Retira la puja por Courtois esta noche para no empezar la jornada en negativo",
+  "situacion": "Vamos 1º con 697 puntos, con 2º Marcos a 587 y 3º Álex a 474, así que tenemos colchón de 110 puntos. Hoy el objetivo es cuadrar el dinero: con 6,43 M de saldo y la puja de 36,30 M retirada, la jornada 10 arranca en positivo sin tocar a los titulares, que las cláusulas están cerradas hasta mañana a las 14:00.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "esperar Courtois (esta noche antes de las 00:15): Es lo primero y no admite espera: si la puja por Courtois sale adelante, empezarías la jornada en negativo (−29,87 M contando lo pujado) y no puntuarías. Al retirarla liberas 36,30 M y pasas de 6,43 M de saldo a tener margen para empezar en positivo. Hazlo esta noche antes de las 00:15.",
+   "alinear  (antes de mañana a las 14:00): Pon el 4-4-2: Ionut Radu, Catena, V. Chust, Jon Martin, Sergio Gómez, Bellingham, Álex Baena, Moncayola, Rodri, Raphinha, Julián Álvarez."
+  ],
+  "rivales": [
+   ": Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que el movimiento contra nosotros ya está hecho; hay que vigilar qué más le interesa de la plantilla.",
+   ": Es nuestro perseguidor más cercano (587 puntos) y acaba de fichar a Gueye por 16,62 M; tiene músculo reciente para moverse en el mercado.",
+   ": Ha fichado a Guedes por 22,90 M, la operación más cara de la liga en estos tres días; es un rival que está invirtiendo fuerte."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Es lo primero y no admite espera: si la puja por Courtois sale adelante, empezarías la jornada en negativo (−29,87 M contando lo pujado) y no puntuarías. Al retirarla liberas 36,30 M y pasas de 6,43 M de saldo a tener margen para empezar en positivo. Hazlo esta noche antes de las 00:15."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vamos 1º con 697 puntos, con 2º Marcos a 587 y 3º Álex a 474, así que tenemos colchón de 110 puntos. Hoy el objetivo es cuadrar el dinero: con 6,43 M de saldo y la puja de 36,30 M retirada, la jornada 10 arranca en positivo sin tocar a los titulares, que las cláusulas están cerradas hasta mañana a las 14:00.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que el movimiento contra nosotros ya está hecho; hay que vigilar qué más le interesa de la plantilla."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es nuestro perseguidor más cercano (587 puntos) y acaba de fichar a Gueye por 16,62 M; tiene músculo reciente para moverse en el mercado."
+    },
+    {
+     "manager": "Pablo",
+     "texto": "Ha fichado a Guedes por 22,90 M, la operación más cara de la liga en estos tres días; es un rival que está invirtiendo fuerte."
+    }
+   ],
+   "titular": "Retira la puja por Courtois esta noche para no empezar la jornada en negativo",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "sabado",
+  "ms": 8734,
+  "coste": 1702.8000000000002,
+  "entra": 7158,
+  "sale": 1974,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vamos 1º con 697 puntos, 110 por encima del 2º (587), y arrancamos la jornada 10 con unos 6,43 M según las cuentas de la app. Hoy la app no ve ninguna operación clara, así que lo sensato es no mover nada y dejar la alineación 4-4-2 tal cual hasta las 14:00.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Es el que ha ido a por uno de mis jugadores: clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que vigilar el resto de mi plantilla.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Es el más activo de la liga en los últimos 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. No hay señales de que vaya a por mis jugadores, pero conviene seguirlo.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es el segundo clasificado (587 puntos) y acaba de fichar a Gueye por 16,62 M. Es el único que nos acerca en la tabla, así que cualquier movimiento suyo cuenta.\"}\n ],\n \"titular\": \"Hoy no hacemos nada: liderato con 697 puntos y alineación lista para la jornada 10\"\n}\n```",
+  "motor": {
+   "titular": "Hoy solo toca preparar la jornada",
+   "modo": "cierre",
+   "ops": [
+    "alinear"
+   ]
+  },
+  "titular": "Hoy no hacemos nada: liderato con 697 puntos y alineación lista para la jornada 10",
+  "situacion": "Vamos 1º con 697 puntos, 110 por encima del 2º (587), y arrancamos la jornada 10 con unos 6,43 M según las cuentas de la app. Hoy la app no ve ninguna operación clara, así que lo sensato es no mover nada y dejar la alineación 4-4-2 tal cual hasta las 14:00.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "alinear  (hoy antes de las 14:00): Pon el 4-4-2: Ionut Radu, Catena, V. Chust, Jon Martin, Sergio Gómez, Bellingham, Álex Baena, Moncayola, Rodri, Raphinha, Julián Álvarez."
+  ],
+  "rivales": [
+   ": Es el que ha ido a por uno de mis jugadores: clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que vigilar el resto de mi plantilla.",
+   ": Es el más activo de la liga en los últimos 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. No hay señales de que vaya a por mis jugadores, pero conviene seguirlo.",
+   ": Es el segundo clasificado (587 puntos) y acaba de fichar a Gueye por 16,62 M. Es el único que nos acerca en la tabla, así que cualquier movimiento suyo cuenta."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vamos 1º con 697 puntos, 110 por encima del 2º (587), y arrancamos la jornada 10 con unos 6,43 M según las cuentas de la app. Hoy la app no ve ninguna operación clara, así que lo sensato es no mover nada y dejar la alineación 4-4-2 tal cual hasta las 14:00.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Es el que ha ido a por uno de mis jugadores: clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que vigilar el resto de mi plantilla."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Es el más activo de la liga en los últimos 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. No hay señales de que vaya a por mis jugadores, pero conviene seguirlo."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es el segundo clasificado (587 puntos) y acaba de fichar a Gueye por 16,62 M. Es el único que nos acerca en la tabla, así que cualquier movimiento suyo cuenta."
+    }
+   ],
+   "titular": "Hoy no hacemos nada: liderato con 697 puntos y alineación lista para la jornada 10",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "sabado-justo",
+  "ms": 11332,
+  "coste": 1901.5,
+  "entra": 6640,
+  "sale": 2475,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [{\"id\": \"p1\", \"frase\": \"Retirar la puja por Courtois antes de las 12:00 es imprescindible: con esa puja ganada empezarías la jornada 10 en negativo (−29,87 M) y no puntuarías. Al retirarla liberas 36,30 M y te quedan 6,43 M para arrancar en positivo, con Courtois valorado en 34,58 M, media 7,1 y próximo partido ante el Espanyol con unos 6,7 puntos esperados.\"}],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vamos 1º con 697 puntos y empezaríamos la jornada 10 con unos 6,43 M tras aplicar el plan, lo que nos deja a salvo de quedar en negativo. El objetivo de hoy es ejecutar la retirada de la puja antes de las 12:00 y mantener la alineación 4-4-2 que ha preparado la app, sin tocar titulares antes de las 14:00.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 2\", \"texto\": \"Segundo con 587 puntos, ha fichado a Gueye por 16,62 M, así que está moviendo dinero en el mercado; de momento no hay señales de que vaya a por tus jugadores clave.\"},\n  {\"manager\": \"Rival 10\", \"texto\": \"Ha fichado a Guedes por 22,90 M, una de las operaciones más altas de la liga en los últimos tres días; vigila si vuelve a mover fichajes grandes.\"},\n  {\"manager\": \"Rival 5\", \"texto\": \"Ha clausulado a Lucas Boyé por 27,46 M, operación que te llega a ti, y ha blindado a Koski; es el rival que más movimientos ha hecho sobre tu plantilla, así que conviene seguirlo de cerca.\"}\n ],\n \"titular\": \"Hoy solo toca retirar la puja por Courtois para empezar la jornada 10 en positivo\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca retirar la puja por Courtois",
+   "modo": "cierre",
+   "ops": [
+    "esperar Courtois",
+    "alinear"
+   ]
+  },
+  "titular": "Hoy solo toca retirar la puja por Courtois para empezar la jornada 10 en positivo",
+  "situacion": "Vamos 1º con 697 puntos y empezaríamos la jornada 10 con unos 6,43 M tras aplicar el plan, lo que nos deja a salvo de quedar en negativo. El objetivo de hoy es ejecutar la retirada de la puja antes de las 12:00 y mantener la alineación 4-4-2 que ha preparado la app, sin tocar titulares antes de las 14:00.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "esperar Courtois (hoy antes de las 12:00): Retirar la puja por Courtois antes de las 12:00 es imprescindible: con esa puja ganada empezarías la jornada 10 en negativo (−29,87 M) y no puntuarías. Al retirarla liberas 36,30 M y te quedan 6,43 M para arrancar en positivo, con Courtois valorado en 34,58 M, media 7,1 y próximo partido ante el Espanyol con unos 6,7 puntos esperados.",
+   "alinear  (hoy antes de las 14:00): Pon el 4-4-2: Ionut Radu, Catena, V. Chust, Sergio Gómez, Jon Martin, Álex Baena, Bellingham, Rodri, Pathé I. Ciss, Raphinha, Julián Álvarez."
+  ],
+  "rivales": [
+   ": Segundo con 587 puntos, ha fichado a Gueye por 16,62 M, así que está moviendo dinero en el mercado; de momento no hay señales de que vaya a por tus jugadores clave.",
+   ": Ha fichado a Guedes por 22,90 M, una de las operaciones más altas de la liga en los últimos tres días; vigila si vuelve a mover fichajes grandes.",
+   ": Ha clausulado a Lucas Boyé por 27,46 M, operación que te llega a ti, y ha blindado a Koski; es el rival que más movimientos ha hecho sobre tu plantilla, así que conviene seguirlo de cerca."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Retirar la puja por Courtois antes de las 12:00 es imprescindible: con esa puja ganada empezarías la jornada 10 en negativo (−29,87 M) y no puntuarías. Al retirarla liberas 36,30 M y te quedan 6,43 M para arrancar en positivo, con Courtois valorado en 34,58 M, media 7,1 y próximo partido ante el Espanyol con unos 6,7 puntos esperados."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vamos 1º con 697 puntos y empezaríamos la jornada 10 con unos 6,43 M tras aplicar el plan, lo que nos deja a salvo de quedar en negativo. El objetivo de hoy es ejecutar la retirada de la puja antes de las 12:00 y mantener la alineación 4-4-2 que ha preparado la app, sin tocar titulares antes de las 14:00.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Marcos",
+     "texto": "Segundo con 587 puntos, ha fichado a Gueye por 16,62 M, así que está moviendo dinero en el mercado; de momento no hay señales de que vaya a por tus jugadores clave."
+    },
+    {
+     "manager": "Pablo",
+     "texto": "Ha fichado a Guedes por 22,90 M, una de las operaciones más altas de la liga en los últimos tres días; vigila si vuelve a mover fichajes grandes."
+    },
+    {
+     "manager": "Hugo",
+     "texto": "Ha clausulado a Lucas Boyé por 27,46 M, operación que te llega a ti, y ha blindado a Koski; es el rival que más movimientos ha hecho sobre tu plantilla, así que conviene seguirlo de cerca."
+    }
+   ],
+   "titular": "Hoy solo toca retirar la puja por Courtois para empezar la jornada 10 en positivo",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "enjuego",
+  "ms": 15801,
+  "coste": 2606.5,
+  "entra": 8770,
+  "sale": 3459,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p3\", \"frase\": \"Clausulas a Niño por 1,02 M, que vale 1,01 M, y con él entras en tu once, unos +4,9 pts por jornada. Va primero porque, si no lo haces ahora, otro rival puede quitártelo.\"},\n  {\"id\": \"p2\", \"frase\": \"Pones a la venta a Jon Martin a 15,02 M, frente a los 11,30 M que pagaste. Baja unos 68 mil al día y en siete días podría perder unos 321 mil; su cláusula sigue protegida un día más.\"},\n  {\"id\": \"p1\", \"frase\": \"Aceptas la oferta por Álex Baena a 66,17 M, un 4 % más que su valor de 63,63 M (+2,55 M). La oferta caduca esta noche antes de las 00:15 y su inercia ya ha girado a la baja.\"},\n  {\"id\": \"p4\", \"frase\": \"Pujas 47,63 M por Cubarsí para revender el jueves 12, cuando según los datos valdría unos 49,85 M (+2,22 M). No afecta a tu once.\"},\n  {\"id\": \"p5\", \"frase\": \"Pujas por El Hilali con un máximo de 10,94 M; para llevártelo hacen falta unos 11,32 M. El jueves 12 valdría unos 11,22 M (+278 mil) y tampoco toca tu once.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vas 1º con 697 puntos, 110 por delante del 2º (587), y tienes 6,43 M disponibles con hasta 67,81 M para pujar. Con el plan, la app calcula unos 44,12 M al empezar la jornada 10 (14 nov, 14:00), y el objetivo de hoy es dejar la liga en positivo y preparar la reventa de los que suben.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Es el más movido: ha fichado a Mikautadze por 29,81 M y a Enes Ünal por 5,81 M, y ha clausulado a Fer Niño por 43,09 M. No tengo datos de que vaya a por los nuestros, pero conviene vigilar nuestras cláusulas.\"},\n  {\"manager\": \"Rival 8\", \"texto\": \"Ha fichado a Unai Lopez por 18,96 M y a Mariano por 13,01 M en tres días. Sigue comprando, aunque por ahora no hay señales claras contra nuestros jugadores.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es el segundo y ha fichado a Giménez dos veces (19,58 M y 18,91 M). Lo tenemos a 110 puntos, así que quiere recortar distancia, pero no hay indicios de que busque a los nuestros.\"}\n ],\n \"titular\": \"Cerrar la venta de Baena y clausular a Niño, y dejar pujas para revender\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca aceptar la oferta por Álex Baena, poner a la venta a Jon Martin, clausular a Niño, especular con Cubarsí y El Hilali para revender",
+   "modo": "enjuego",
+   "ops": [
+    "vender Álex Baena",
+    "vender Jon Martin",
+    "clausular Niño",
+    "pujar Cubarsí",
+    "pujar El Hilali"
+   ]
+  },
+  "titular": "Cerrar la venta de Baena y clausular a Niño, y dejar pujas para revender",
+  "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º (587), y tienes 6,43 M disponibles con hasta 67,81 M para pujar. Con el plan, la app calcula unos 44,12 M al empezar la jornada 10 (14 nov, 14:00), y el objetivo de hoy es dejar la liga en positivo y preparar la reventa de los que suben.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Álex Baena 66,17 M (esta noche antes de las 00:15): Aceptas la oferta por Álex Baena a 66,17 M, un 4 % más que su valor de 63,63 M (+2,55 M). La oferta caduca esta noche antes de las 00:15 y su inercia ya ha girado a la baja.",
+   "vender Jon Martin 15,02 M (hoy): Pones a la venta a Jon Martin a 15,02 M, frente a los 11,30 M que pagaste. Baja unos 68 mil al día y en siete días podría perder unos 321 mil; su cláusula sigue protegida un día más.",
+   "clausular Niño 1,02 M (ahora): Clausulas a Niño por 1,02 M, que vale 1,01 M, y con él entras en tu once, unos +4,9 pts por jornada. Va primero porque, si no lo haces ahora, otro rival puede quitártelo.",
+   "pujar Cubarsí 43,44 M (esta noche antes de las 00:15): Pujas 47,63 M por Cubarsí para revender el jueves 12, cuando según los datos valdría unos 49,85 M (+2,22 M). No afecta a tu once.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): Pujas por El Hilali con un máximo de 10,94 M; para llevártelo hacen falta unos 11,32 M. El jueves 12 valdría unos 11,22 M (+278 mil) y tampoco toca tu once."
+  ],
+  "rivales": [
+   ": Es el más movido: ha fichado a Mikautadze por 29,81 M y a Enes Ünal por 5,81 M, y ha clausulado a Fer Niño por 43,09 M. No tengo datos de que vaya a por los nuestros, pero conviene vigilar nuestras cláusulas.",
+   ": Ha fichado a Unai Lopez por 18,96 M y a Mariano por 13,01 M en tres días. Sigue comprando, aunque por ahora no hay señales claras contra nuestros jugadores.",
+   ": Es el segundo y ha fichado a Giménez dos veces (19,58 M y 18,91 M). Lo tenemos a 110 puntos, así que quiere recortar distancia, pero no hay indicios de que busque a los nuestros."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p3",
+     "frase": "Clausulas a Niño por 1,02 M, que vale 1,01 M, y con él entras en tu once, unos +4,9 pts por jornada. Va primero porque, si no lo haces ahora, otro rival puede quitártelo."
+    },
+    {
+     "id": "p2",
+     "frase": "Pones a la venta a Jon Martin a 15,02 M, frente a los 11,30 M que pagaste. Baja unos 68 mil al día y en siete días podría perder unos 321 mil; su cláusula sigue protegida un día más."
+    },
+    {
+     "id": "p1",
+     "frase": "Aceptas la oferta por Álex Baena a 66,17 M, un 4 % más que su valor de 63,63 M (+2,55 M). La oferta caduca esta noche antes de las 00:15 y su inercia ya ha girado a la baja."
+    },
+    {
+     "id": "p4",
+     "frase": "Pujas 47,63 M por Cubarsí para revender el jueves 12, cuando según los datos valdría unos 49,85 M (+2,22 M). No afecta a tu once."
+    },
+    {
+     "id": "p5",
+     "frase": "Pujas por El Hilali con un máximo de 10,94 M; para llevártelo hacen falta unos 11,32 M. El jueves 12 valdría unos 11,22 M (+278 mil) y tampoco toca tu once."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º (587), y tienes 6,43 M disponibles con hasta 67,81 M para pujar. Con el plan, la app calcula unos 44,12 M al empezar la jornada 10 (14 nov, 14:00), y el objetivo de hoy es dejar la liga en positivo y preparar la reventa de los que suben.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Es el más movido: ha fichado a Mikautadze por 29,81 M y a Enes Ünal por 5,81 M, y ha clausulado a Fer Niño por 43,09 M. No tengo datos de que vaya a por los nuestros, pero conviene vigilar nuestras cláusulas."
+    },
+    {
+     "manager": "Javi",
+     "texto": "Ha fichado a Unai Lopez por 18,96 M y a Mariano por 13,01 M en tres días. Sigue comprando, aunque por ahora no hay señales claras contra nuestros jugadores."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es el segundo y ha fichado a Giménez dos veces (19,58 M y 18,91 M). Lo tenemos a 110 puntos, así que quiere recortar distancia, pero no hay indicios de que busque a los nuestros."
+    }
+   ],
+   "titular": "Cerrar la venta de Baena y clausular a Niño, y dejar pujas para revender",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "paron",
+  "ms": 21811,
+  "coste": 14689.7,
+  "entra": 24327,
+  "sale": 4514,
+  "busquedas": 1,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Es obligatorio: sin vender Raphinha (121,02 M) empezarías la jornada en negativo (−29,87 M) y no puntuarías. Hazlo antes del 13 nov a las 00:15, aunque sea titular probable (82 %).\"},\n  {\"id\": \"p2\", \"frase\": \"Fran García se ha frenado: hoy vale 14,53 M (−71 mil) tras días de subida, y en siete días podría perder unos 332 mil. Lo pagaste a 13,87 M; la cláusula paga más (15,27 M), pero no es seguro que algún rival la pague, así que conviene venderlo hoy.\"},\n  {\"id\": \"p3\", \"frase\": \"Cubarsí sube un 3,8 % al día (+1,43 M hoy, +26,4 % en 7 días) y el 12 nov valdría unos 51,29 M, +1,48 M sobre tu puja de 49,81 M. Pagas 6,37 M por encima de su valor, que recuperarías con la subida en unos cinco días, y como suplente no toca tu once.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vas 1º con 697 puntos, 110 por delante de Rival 2 (587), y en el parón manda el dinero: sin vender empezarías la jornada 10 en −29,87 M. El plan deja unos 88,14 M al empezar la jornada (14 nov, 14:00), vendiendo Raphinha y Fran García y pujando por Cubarsí.\",\n \"noticias\": [\n  {\"jugador\": \"Raphinha\", \"texto\": \"Vio la roja en la derrota de Brasil ante Japón y no podrá jugar el amistoso ante Singapur; la CBF se niega a liberarlo antes, algo que molesta en el Barça. No es sanción de LaLiga, pero confirma que sigue fuera de su club y con riesgo físico, lo que refuerza la venta obligatoria.\", \"efecto\": \"baja\", \"fuente\": \"https://www.madrid-barcelona.com/articulo/fc-barcelona/nueva-polemica-brasil-raphinha-puede-jugar-proximo-amistoso-tampoco-volver-barca/20261114183611038172.html\"}\n ],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya se llevó a Lucas Boyé de mi plantilla por 27,46 M y ha blindado a Koski; es el que más ha movido para cerrar fichajes con cláusula, así que vigila tu plantilla.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es el segundo clasificado a 110 puntos de ti y ha fichado a Gueye por 16,62 M; busca sumar jugadores de peso para pelear el liderato.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha tenido el movimiento más activo de la liga: fichó a Javi Guerra (16,68 M), vendió a El Hilali (11,61 M) y clausuló a Amatucci (5,24 M); sigue comprando.\"}\n ],\n \"titular\": \"Vender Raphinha y Fran García para empezar en positivo y pujar por Cubarsí para revender\"\n}\n```",
+  "motor": {
+   "titular": "Parón: hoy toca poner a la venta a Raphinha y Fran García, especular con Cubarsí para revender",
+   "modo": "paron",
+   "ops": [
+    "vender Raphinha",
+    "vender Fran García",
+    "pujar Cubarsí"
+   ]
+  },
+  "titular": "Vender Raphinha y Fran García para empezar en positivo y pujar por Cubarsí para revender",
+  "situacion": "Vas 1º con 697 puntos, 110 por delante de Marcos (587), y en el parón manda el dinero: sin vender empezarías la jornada 10 en −29,87 M. El plan deja unos 88,14 M al empezar la jornada (14 nov, 14:00), vendiendo Raphinha y Fran García y pujando por Cubarsí.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok",
+   "ONCE_BAJA: 4.2"
+  ],
+  "pasos": [
+   "vender Raphinha 121,02 M (antes del 13 nov a las 00:15): Es obligatorio: sin vender Raphinha (121,02 M) empezarías la jornada en negativo (−29,87 M) y no puntuarías. Hazlo antes del 13 nov a las 00:15, aunque sea titular probable (82 %).",
+   "vender Fran García 14,53 M (hoy): Fran García se ha frenado: hoy vale 14,53 M (−71 mil) tras días de subida, y en siete días podría perder unos 332 mil. Lo pagaste a 13,87 M; la cláusula paga más (15,27 M), pero no es seguro que algún rival la pague, así que conviene venderlo hoy.",
+   "pujar Cubarsí 43,44 M (esta noche antes de las 00:15): Cubarsí sube un 3,8 % al día (+1,43 M hoy, +26,4 % en 7 días) y el 12 nov valdría unos 51,29 M, +1,48 M sobre tu puja de 49,81 M. Pagas 6,37 M por encima de su valor, que recuperarías con la subida en unos cinco días, y como suplente no toca tu once."
+  ],
+  "rivales": [
+   ": Ya se llevó a Lucas Boyé de mi plantilla por 27,46 M y ha blindado a Koski; es el que más ha movido para cerrar fichajes con cláusula, así que vigila tu plantilla.",
+   ": Es el segundo clasificado a 110 puntos de ti y ha fichado a Gueye por 16,62 M; busca sumar jugadores de peso para pelear el liderato.",
+   ": Ha tenido el movimiento más activo de la liga: fichó a Javi Guerra (16,68 M), vendió a El Hilali (11,61 M) y clausuló a Amatucci (5,24 M); sigue comprando."
+  ],
+  "noticias": [
+   "Raphinha: Vio la roja en la derrota de Brasil ante Japón y no podrá jugar el amistoso ante Singapur; la CBF se niega a liberarlo antes, algo que molesta en el Barça. No es sanción de LaLiga, pero confirma que sigue fuera de su club y con riesgo…"
+  ],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Es obligatorio: sin vender Raphinha (121,02 M) empezarías la jornada en negativo (−29,87 M) y no puntuarías. Hazlo antes del 13 nov a las 00:15, aunque sea titular probable (82 %)."
+    },
+    {
+     "id": "p2",
+     "frase": "Fran García se ha frenado: hoy vale 14,53 M (−71 mil) tras días de subida, y en siete días podría perder unos 332 mil. Lo pagaste a 13,87 M; la cláusula paga más (15,27 M), pero no es seguro que algún rival la pague, así que conviene venderlo hoy."
+    },
+    {
+     "id": "p3",
+     "frase": "Cubarsí sube un 3,8 % al día (+1,43 M hoy, +26,4 % en 7 días) y el 12 nov valdría unos 51,29 M, +1,48 M sobre tu puja de 49,81 M. Pagas 6,37 M por encima de su valor, que recuperarías con la subida en unos cinco días, y como suplente no toca tu once."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vas 1º con 697 puntos, 110 por delante de Marcos (587), y en el parón manda el dinero: sin vender empezarías la jornada 10 en −29,87 M. El plan deja unos 88,14 M al empezar la jornada (14 nov, 14:00), vendiendo Raphinha y Fran García y pujando por Cubarsí.",
+   "noticias": [
+    {
+     "jugador": "Raphinha",
+     "texto": "Vio la roja en la derrota de Brasil ante Japón y no podrá jugar el amistoso ante Singapur; la CBF se niega a liberarlo antes, algo que molesta en el Barça. No es sanción de LaLiga, pero confirma que sigue fuera de su club y con riesgo físico, lo que refuerza la venta obligatoria.",
+     "efecto": "baja",
+     "fuente": "https://www.madrid-barcelona.com/articulo/fc-barcelona/nueva-polemica-brasil-raphinha-puede-jugar-proximo-amistoso-tampoco-volver-barca/20261114183611038172.html"
+    }
+   ],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ya se llevó a Lucas Boyé de mi plantilla por 27,46 M y ha blindado a Koski; es el que más ha movido para cerrar fichajes con cláusula, así que vigila tu plantilla."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es el segundo clasificado a 110 puntos de ti y ha fichado a Gueye por 16,62 M; busca sumar jugadores de peso para pelear el liderato."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha tenido el movimiento más activo de la liga: fichó a Javi Guerra (16,68 M), vendió a El Hilali (11,61 M) y clausuló a Amatucci (5,24 M); sigue comprando."
+    }
+   ],
+   "titular": "Vender Raphinha y Fran García para empezar en positivo y pujar por Cubarsí para revender",
+   "fuentes": [
+    {
+     "u": "https://www.madrid-barcelona.com/articulo/fc-barcelona/nueva-polemica-brasil-raphinha-puede-jugar-proximo-amistoso-tampoco-volver-barca/20261114183611038172.html",
+     "t": "Nueva polémica con Brasil: Raphinha no puede jugar el próximo amistoso, pero tampoco volver al Barça"
+    }
+   ]
+  }
+ },
+ {
+  "escena": "paron-final",
+  "ms": 20575,
+  "coste": 14387.6,
+  "entra": 22946,
+  "sale": 4186,
+  "busquedas": 1,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p2\", \"frase\": \"Clausular a Niño ahora (1,02 M; vale 1,01 M) para meterlo en el once: la app calcula +4,2 pts por jornada y 90 % de titular, con unos 5,7 pts esperados ante el Atlético (3º). Es lo primero porque es una decisión de hoy y el saldo de 6,43 M la cubre.\"},\n  {\"id\": \"p1\", \"frase\": \"Poner a la venta a Rodri esta noche antes de las 00:15 (63,20 M): hace falta para empezar la jornada en positivo, porque sin esta venta quedarías en −29,87 M y no puntuarías. Figura como suplente en el once probable y su valor cae un 3,4 % en 7 días.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Somos 1º con 697 puntos, 110 por delante del 2º (587), y sin mover nada empezaríamos la jornada en −29,87 M. Con las dos operaciones del plan debemos arrancar la J10 (jueves 5, 14:00) con unos 25,99 M, y la idea es sumar con Niño en el once sin dejar la liga en negativo.\",\n \"noticias\": [\n  {\"jugador\": \"Rodri\", \"texto\": \"Sufrió una lesión muscular en el bíceps femoral derecho en la Champions ante el Aston Villa. La noticia más reciente dice que podría volver a la convocatoria, pero el Barça priorizará su recuperación completa, así que no cuento con él a corto plazo. La venta sigue siendo obligatoria, porque el plan la exige.\", \"efecto\": \"baja\", \"fuente\": \"https://www.beinsports.com/es-us/football/la-liga/articles/rodri-le-da-una-buena-noticia-al-barcelona-y-hansi-flick-2026-11-18\"}\n ],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Es el que más se ha movido contra mí: clausuló a Lucas Boyé por 27,46 M, un jugador mío. Está 5º y es el rival más probable de ir a por otra de mis cláusulas.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Fichó a Gueye por 16,62 M en los últimos 3 días. Es el 2º, a 110 puntos de nosotros, y va a por jugadores de mitad de tabla más que a los míos.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha hecho tres movimientos en 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali y clausuló a Amatucci por 5,24 M. Está 9º y es el más activo del mercado ahora mismo.\"}\n ],\n \"titular\": \"Vender a Rodri esta noche y clausular a Niño para empezar la J10 en positivo\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Rodri, clausular a Niño",
+   "modo": "normal",
+   "ops": [
+    "vender Rodri",
+    "clausular Niño",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Vender a Rodri esta noche y clausular a Niño para empezar la J10 en positivo",
+  "situacion": "Somos 1º con 697 puntos, 110 por delante del 2º (587), y sin mover nada empezaríamos la jornada en −29,87 M. Con las dos operaciones del plan debemos arrancar la J10 (jueves 5, 14:00) con unos 25,99 M, y la idea es sumar con Niño en el once sin dejar la liga en negativo.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Rodri 63,20 M (esta noche antes de las 00:15): Poner a la venta a Rodri esta noche antes de las 00:15 (63,20 M): hace falta para empezar la jornada en positivo, porque sin esta venta quedarías en −29,87 M y no puntuarías. Figura como suplente en el once probable y su valor cae un 3,4 % en 7 días.",
+   "clausular Niño 1,02 M (ahora): Clausular a Niño ahora (1,02 M; vale 1,01 M) para meterlo en el once: la app calcula +4,2 pts por jornada y 90 % de titular, con unos 5,7 pts esperados ante el Atlético (3º). Es lo primero porque es una decisión de hoy y el saldo de 6,43 M la cubre.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 73), pero te faltan 49,91 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Es el que más se ha movido contra mí: clausuló a Lucas Boyé por 27,46 M, un jugador mío. Está 5º y es el rival más probable de ir a por otra de mis cláusulas.",
+   ": Fichó a Gueye por 16,62 M en los últimos 3 días. Es el 2º, a 110 puntos de nosotros, y va a por jugadores de mitad de tabla más que a los míos.",
+   ": Ha hecho tres movimientos en 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali y clausuló a Amatucci por 5,24 M. Está 9º y es el más activo del mercado ahora mismo."
+  ],
+  "noticias": [
+   "Rodri: Sufrió una lesión muscular en el bíceps femoral derecho en la Champions ante el Aston Villa. La noticia más reciente dice que podría volver a la convocatoria, pero el Barça priorizará su recuperación completa, así que no cuento con él a…"
+  ],
+  "json": {
+   "pasos": [
+    {
+     "id": "p2",
+     "frase": "Clausular a Niño ahora (1,02 M; vale 1,01 M) para meterlo en el once: la app calcula +4,2 pts por jornada y 90 % de titular, con unos 5,7 pts esperados ante el Atlético (3º). Es lo primero porque es una decisión de hoy y el saldo de 6,43 M la cubre."
+    },
+    {
+     "id": "p1",
+     "frase": "Poner a la venta a Rodri esta noche antes de las 00:15 (63,20 M): hace falta para empezar la jornada en positivo, porque sin esta venta quedarías en −29,87 M y no puntuarías. Figura como suplente en el once probable y su valor cae un 3,4 % en 7 días."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Somos 1º con 697 puntos, 110 por delante del 2º (587), y sin mover nada empezaríamos la jornada en −29,87 M. Con las dos operaciones del plan debemos arrancar la J10 (jueves 5, 14:00) con unos 25,99 M, y la idea es sumar con Niño en el once sin dejar la liga en negativo.",
+   "noticias": [
+    {
+     "jugador": "Rodri",
+     "texto": "Sufrió una lesión muscular en el bíceps femoral derecho en la Champions ante el Aston Villa. La noticia más reciente dice que podría volver a la convocatoria, pero el Barça priorizará su recuperación completa, así que no cuento con él a corto plazo. La venta sigue siendo obligatoria, porque el plan la exige.",
+     "efecto": "baja",
+     "fuente": "https://www.beinsports.com/es-us/football/la-liga/articles/rodri-le-da-una-buena-noticia-al-barcelona-y-hansi-flick-2026-11-18"
+    }
+   ],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Es el que más se ha movido contra mí: clausuló a Lucas Boyé por 27,46 M, un jugador mío. Está 5º y es el rival más probable de ir a por otra de mis cláusulas."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Fichó a Gueye por 16,62 M en los últimos 3 días. Es el 2º, a 110 puntos de nosotros, y va a por jugadores de mitad de tabla más que a los míos."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha hecho tres movimientos en 3 días: fichó a Javi Guerra por 16,68 M, vendió a El Hilali y clausuló a Amatucci por 5,24 M. Está 9º y es el más activo del mercado ahora mismo."
+    }
+   ],
+   "titular": "Vender a Rodri esta noche y clausular a Niño para empezar la J10 en positivo",
+   "fuentes": [
+    {
+     "u": "https://www.beinsports.com/es-us/football/la-liga/articles/rodri-le-da-una-buena-noticia-al-barcelona-y-hansi-flick-2026-11-18",
+     "t": "Rodri le da una buena noticia al Barcelona y Hansi Flick"
+    }
+   ]
+  }
+ },
+ {
+  "escena": "m-negativo",
+  "ms": 13066,
+  "coste": 2338.1,
+  "entra": 8216,
+  "sale": 3033,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Fran García (14,53 M) ha pasado a la baja: hoy −71 mil tras varios días de subidas, y ya está 680 mil por encima de lo que pagaste (13,87 M). Si se deja correr, en dos semanas podría perder unos 478 mil.\"},\n  {\"id\": \"p2\", \"frase\": \"Puja por El Hilali esta noche antes de las 00:15, con un máximo de 10,46 M, para revenderlo el jueves 5, cuando según la app valdría unos 10,72 M. Su valor acelera (+31,6 % en siete días) y no compromete el once.\"},\n  {\"id\": \"p3\", \"frase\": \"Agirrezabala (16,57 M) sale el jueves 5 para aceptar la oferta del viernes 6 a las 00:15; sin ese ingreso empezarías la jornada en negativo y no puntuarías. Viene de un partido de 12 puntos en la J9 y su valor sigue subiendo.\"},\n  {\"id\": \"p4\", \"frase\": \"Jon Martin (15,02 M) también se vende el jueves 5 para la oferta del viernes 6, y es necesario para cerrar el saldo en positivo. Su valor sube hoy +209 mil y su próximo partido, en Elche, se estima en unos 3,5 puntos.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vas 1º con 697 puntos, pero sin vender empezarías la jornada 10 con −40,50 M y no puntuarías. El plan deja unos 171 mil al empezar la jornada del sábado 7 a las 14:00, con la venta de Fran García hoy y las de Agirrezabala y Jon Martin el jueves 5.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 9\", \"texto\": \"Es el más activo del mercado: vendió a El Hilali por 11,61 M, fichó a Javi Guerra por 16,68 M y clausuló a Amatucci por 5,24 M. Conviene vigilar sus movimientos porque también anda detrás de jugadores de este tipo.\"},\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que sabe pagar cláusulas en esta liga. Tiene a Koski blindado, y no hay más señales de que vaya a por Agirrezabala o Jon Martin.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Fichó a Gueye por 16,62 M en los últimos tres días y es el segundo clasificado con 587 puntos. Sigue comprando, pero no hay indicios de que vaya a por nuestros jugadores del plan.\"}\n ],\n \"titular\": \"Vender a Fran García hoy y dejar el saldo en positivo para la jornada 10\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, especular con El Hilali para revender",
+   "modo": "negativo",
+   "ops": [
+    "vender Fran García",
+    "pujar El Hilali",
+    "vender Agirrezabala",
+    "vender Jon Martin",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Vender a Fran García hoy y dejar el saldo en positivo para la jornada 10",
+  "situacion": "Vas 1º con 697 puntos, pero sin vender empezarías la jornada 10 con −40,50 M y no puntuarías. El plan deja unos 171 mil al empezar la jornada del sábado 7 a las 14:00, con la venta de Fran García hoy y las de Agirrezabala y Jon Martin el jueves 5.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 1,
+   "frasesNo": [
+    {
+     "jugador": "Fran García",
+     "cifra": "680 mil",
+     "frase": "Fran García (14,53 M) ha pasado a la baja: hoy −71 mil tras varios días de subidas, y ya está 680 mil por encima de lo que pagaste (13,87 M). Si se deja correr, en dos semanas podría perder unos 478 mil."
+    }
+   ]
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Ha girado a la baja: venía subiendo (+170 mil, +86 mil al día) y hoy −71 mil. Si sigue así, en 5 días pierde unos 261 mil. Esta temporada ha ido de 14,06 M a 15,08 M. No entra en tu once: no pierdes puntos. La oferta de LaLiga llega en el siguiente cambio de mercado. Si no lo vendes, en dos semanas puede valer unos 478 mil menos.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): Puja por El Hilali esta noche antes de las 00:15, con un máximo de 10,46 M, para revenderlo el jueves 5, cuando según la app valdría unos 10,72 M. Su valor acelera (+31,6 % en siete días) y no compromete el once.",
+   "vender Agirrezabala 16,57 M (el jue 5, para aceptar la oferta de vie 6, 00:15): Agirrezabala (16,57 M) sale el jueves 5 para aceptar la oferta del viernes 6 a las 00:15; sin ese ingreso empezarías la jornada en negativo y no puntuarías. Viene de un partido de 12 puntos en la J9 y su valor sigue subiendo.",
+   "vender Jon Martin 15,02 M (el jue 5, para aceptar la oferta de vie 6, 00:15): Jon Martin (15,02 M) también se vende el jueves 5 para la oferta del viernes 6, y es necesario para cerrar el saldo en positivo. Su valor sube hoy +209 mil y su próximo partido, en Elche, se estima en unos 3,5 puntos.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 87), pero te faltan 59,52 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Es el más activo del mercado: vendió a El Hilali por 11,61 M, fichó a Javi Guerra por 16,68 M y clausuló a Amatucci por 5,24 M. Conviene vigilar sus movimientos porque también anda detrás de jugadores de este tipo.",
+   ": Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que sabe pagar cláusulas en esta liga. Tiene a Koski blindado, y no hay más señales de que vaya a por Agirrezabala o Jon Martin.",
+   ": Fichó a Gueye por 16,62 M en los últimos tres días y es el segundo clasificado con 587 puntos. Sigue comprando, pero no hay indicios de que vaya a por nuestros jugadores del plan."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Fran García (14,53 M) ha pasado a la baja: hoy −71 mil tras varios días de subidas, y ya está 680 mil por encima de lo que pagaste (13,87 M). Si se deja correr, en dos semanas podría perder unos 478 mil."
+    },
+    {
+     "id": "p2",
+     "frase": "Puja por El Hilali esta noche antes de las 00:15, con un máximo de 10,46 M, para revenderlo el jueves 5, cuando según la app valdría unos 10,72 M. Su valor acelera (+31,6 % en siete días) y no compromete el once."
+    },
+    {
+     "id": "p3",
+     "frase": "Agirrezabala (16,57 M) sale el jueves 5 para aceptar la oferta del viernes 6 a las 00:15; sin ese ingreso empezarías la jornada en negativo y no puntuarías. Viene de un partido de 12 puntos en la J9 y su valor sigue subiendo."
+    },
+    {
+     "id": "p4",
+     "frase": "Jon Martin (15,02 M) también se vende el jueves 5 para la oferta del viernes 6, y es necesario para cerrar el saldo en positivo. Su valor sube hoy +209 mil y su próximo partido, en Elche, se estima en unos 3,5 puntos."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vas 1º con 697 puntos, pero sin vender empezarías la jornada 10 con −40,50 M y no puntuarías. El plan deja unos 171 mil al empezar la jornada del sábado 7 a las 14:00, con la venta de Fran García hoy y las de Agirrezabala y Jon Martin el jueves 5.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Mario",
+     "texto": "Es el más activo del mercado: vendió a El Hilali por 11,61 M, fichó a Javi Guerra por 16,68 M y clausuló a Amatucci por 5,24 M. Conviene vigilar sus movimientos porque también anda detrás de jugadores de este tipo."
+    },
+    {
+     "manager": "Hugo",
+     "texto": "Ya nos ha clausulado a Lucas Boyé por 27,46 M, así que sabe pagar cláusulas en esta liga. Tiene a Koski blindado, y no hay más señales de que vaya a por Agirrezabala o Jon Martin."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Fichó a Gueye por 16,62 M en los últimos tres días y es el segundo clasificado con 587 puntos. Sigue comprando, pero no hay indicios de que vaya a por nuestros jugadores del plan."
+    }
+   ],
+   "titular": "Vender a Fran García hoy y dejar el saldo en positivo para la jornada 10",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "jueves-negativo",
+  "ms": 15186,
+  "coste": 13845.9,
+  "entra": 22484,
+  "sale": 3195,
+  "busquedas": 1,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Retira la puja por Courtois esta noche antes de las 00:15: con esa puja ganada empezarías la jornada en negativo, y retirarla libera 36,30 M. Sigue siendo un portero de media 7,1 con unos 6,7 pts esperados ante el Espanyol, pero el dinero manda ahora.\"},\n  {\"id\": \"p2\", \"frase\": \"Pon a la venta a Fran García por 14,53 M antes de las 00:15, porque es la única forma de empezar la jornada en positivo. Su inercia ha girado a la baja (−71 mil hoy) y tiene media 2,8; la cláusula paga más (27,14 M), pero no es seguro que algún rival la pague, así que cuenta con los 15,27 M que daría LaLiga.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vamos 1º con 697 puntos, 110 por delante de Rival 2 (587), pero sin hacer nada empezaríamos la jornada con −44,30 M y no puntuaríamos. Con el plan la cuenta queda en unos 5,08 M al empezar la jornada 10 (sábado 7, 14:00), y hoy buscamos recuperar esa positividad sin tocar el once.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Nos clausuló a Lucas Boyé por 27,46 M, así que ya ha puesto ojo en nuestra plantilla, y también ha blindado a Koski.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es el segundo con 587 puntos y ha fichado a Gueye por 16,62 M; es el rival que más nos aprieta en la tabla.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha movido mucho mercado en tres días (fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M), pero no aparece tocando a nuestros jugadores.\"}\n ],\n \"titular\": \"Retira la puja de Courtois y pon a Fran García en venta antes de las 00:15\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca retirar la puja por Courtois, poner a la venta a Fran García",
+   "modo": "negativo",
+   "ops": [
+    "esperar Courtois",
+    "vender Fran García",
+    "esperar Foyth"
+   ]
+  },
+  "titular": "Retira la puja de Courtois y pon a Fran García en venta antes de las 00:15",
+  "situacion": "Vamos 1º con 697 puntos, 110 por delante de Marcos (587), pero sin hacer nada empezaríamos la jornada con −44,30 M y no puntuaríamos. Con el plan la cuenta queda en unos 5,08 M al empezar la jornada 10 (sábado 7, 14:00), y hoy buscamos recuperar esa positividad sin tocar el once.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "esperar Courtois (esta noche antes de las 00:15): Retira la puja por Courtois esta noche antes de las 00:15: con esa puja ganada empezarías la jornada en negativo, y retirarla libera 36,30 M. Sigue siendo un portero de media 7,1 con unos 6,7 pts esperados ante el Espanyol, pero el dinero manda ahora.",
+   "vender Fran García 14,53 M (esta noche antes de las 00:15): Pon a la venta a Fran García por 14,53 M antes de las 00:15, porque es la única forma de empezar la jornada en positivo. Su inercia ha girado a la baja (−71 mil hoy) y tiene media 2,8; la cláusula paga más (27,14 M), pero no es seguro que algún rival la pague, así que cuenta con los 15,27 M que daría LaLiga.",
+   "esperar Foyth (si entra dinero): Es el mejor a tiro (interés 73), pero te faltan 16,34 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Nos clausuló a Lucas Boyé por 27,46 M, así que ya ha puesto ojo en nuestra plantilla, y también ha blindado a Koski.",
+   ": Es el segundo con 587 puntos y ha fichado a Gueye por 16,62 M; es el rival que más nos aprieta en la tabla.",
+   ": Ha movido mucho mercado en tres días (fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M), pero no aparece tocando a nuestros jugadores."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Retira la puja por Courtois esta noche antes de las 00:15: con esa puja ganada empezarías la jornada en negativo, y retirarla libera 36,30 M. Sigue siendo un portero de media 7,1 con unos 6,7 pts esperados ante el Espanyol, pero el dinero manda ahora."
+    },
+    {
+     "id": "p2",
+     "frase": "Pon a la venta a Fran García por 14,53 M antes de las 00:15, porque es la única forma de empezar la jornada en positivo. Su inercia ha girado a la baja (−71 mil hoy) y tiene media 2,8; la cláusula paga más (27,14 M), pero no es seguro que algún rival la pague, así que cuenta con los 15,27 M que daría LaLiga."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vamos 1º con 697 puntos, 110 por delante de Marcos (587), pero sin hacer nada empezaríamos la jornada con −44,30 M y no puntuaríamos. Con el plan la cuenta queda en unos 5,08 M al empezar la jornada 10 (sábado 7, 14:00), y hoy buscamos recuperar esa positividad sin tocar el once.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Nos clausuló a Lucas Boyé por 27,46 M, así que ya ha puesto ojo en nuestra plantilla, y también ha blindado a Koski."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es el segundo con 587 puntos y ha fichado a Gueye por 16,62 M; es el rival que más nos aprieta en la tabla."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha movido mucho mercado en tres días (fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M), pero no aparece tocando a nuestros jugadores."
+    }
+   ],
+   "titular": "Retira la puja de Courtois y pon a Fran García en venta antes de las 00:15",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "holgado",
+  "ms": 11421,
+  "coste": 2029.2,
+  "entra": 8447,
+  "sale": 2369,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Fran García ha girado a la baja: hoy baja 71 mil tras dos días de subidas, y en dos semanas podría valer unos 478 mil menos. Conviene sacarlo hoy a 14,53 M, sabiendo que su cláusula de 27,14 M no tiene comprador asegurado.\"},\n  {\"id\": \"p2\", \"frase\": \"Niño suma +2,7 pts por jornada para tu once y cuesta 1,02 M frente a un valor de 1,01 M. Clausularlo ahora evita que otro rival con dinero se lo quede.\"},\n  {\"id\": \"p3\", \"frase\": \"El Hilali sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M, así que la puja de esta noche (máximo 10,46 M, antes de las 00:15) busca esa subida. No afecta a tu once, es una inversión para revender.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Estás 1º con 697 pts, once puntos... no, con 110 pts de ventaja sobre el 2º (587 pts), y el plan deja unos 34,92 M al empezar la jornada 10. Hoy buscamos reforzar la defensa y el once con Niño, aligerar a Fran García antes de que siga cayendo y dejar una puja controlada por El Hilali.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya te ha clausulado a Lucas Boyé por 27,46 M, así que ha mostrado que va a por tus jugadores. Vigila la defensa de tu plantilla porque puede repetir con otro.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es tu perseguidor directo con 587 pts y ha fichado a Gueye por 16,62 M, lo que indica que quiere mejorar el once para la jornada 10.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M, así que está moviendo plantilla. Ojo a la puja por El Hilali, porque es el mismo jugador que tú quieres.\"}\n ],\n \"titular\": \"Vender a Fran García, clausular a Niño y pujar por El Hilali esta noche\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, clausular a Niño, especular con El Hilali para revender",
+   "modo": "normal",
+   "ops": [
+    "vender Fran García",
+    "clausular Niño",
+    "pujar El Hilali"
+   ]
+  },
+  "titular": "Vender a Fran García, clausular a Niño y pujar por El Hilali esta noche",
+  "situacion": "Estás 1º con 697 pts, once puntos... no, con 110 pts de ventaja sobre el 2º (587 pts), y el plan deja unos 34,92 M al empezar la jornada 10. Hoy buscamos reforzar la defensa y el once con Niño, aligerar a Fran García antes de que siga cayendo y dejar una puja controlada por El Hilali.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Fran García ha girado a la baja: hoy baja 71 mil tras dos días de subidas, y en dos semanas podría valer unos 478 mil menos. Conviene sacarlo hoy a 14,53 M, sabiendo que su cláusula de 27,14 M no tiene comprador asegurado.",
+   "clausular Niño 1,02 M (ahora): Niño suma +2,7 pts por jornada para tu once y cuesta 1,02 M frente a un valor de 1,01 M. Clausularlo ahora evita que otro rival con dinero se lo quede.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): El Hilali sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M, así que la puja de esta noche (máximo 10,46 M, antes de las 00:15) busca esa subida. No afecta a tu once, es una inversión para revender."
+  ],
+  "rivales": [
+   ": Ya te ha clausulado a Lucas Boyé por 27,46 M, así que ha mostrado que va a por tus jugadores. Vigila la defensa de tu plantilla porque puede repetir con otro.",
+   ": Es tu perseguidor directo con 587 pts y ha fichado a Gueye por 16,62 M, lo que indica que quiere mejorar el once para la jornada 10.",
+   ": Ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M, así que está moviendo plantilla. Ojo a la puja por El Hilali, porque es el mismo jugador que tú quieres."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Fran García ha girado a la baja: hoy baja 71 mil tras dos días de subidas, y en dos semanas podría valer unos 478 mil menos. Conviene sacarlo hoy a 14,53 M, sabiendo que su cláusula de 27,14 M no tiene comprador asegurado."
+    },
+    {
+     "id": "p2",
+     "frase": "Niño suma +2,7 pts por jornada para tu once y cuesta 1,02 M frente a un valor de 1,01 M. Clausularlo ahora evita que otro rival con dinero se lo quede."
+    },
+    {
+     "id": "p3",
+     "frase": "El Hilali sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M, así que la puja de esta noche (máximo 10,46 M, antes de las 00:15) busca esa subida. No afecta a tu once, es una inversión para revender."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Estás 1º con 697 pts, once puntos... no, con 110 pts de ventaja sobre el 2º (587 pts), y el plan deja unos 34,92 M al empezar la jornada 10. Hoy buscamos reforzar la defensa y el once con Niño, aligerar a Fran García antes de que siga cayendo y dejar una puja controlada por El Hilali.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ya te ha clausulado a Lucas Boyé por 27,46 M, así que ha mostrado que va a por tus jugadores. Vigila la defensa de tu plantilla porque puede repetir con otro."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es tu perseguidor directo con 587 pts y ha fichado a Gueye por 16,62 M, lo que indica que quiere mejorar el once para la jornada 10."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha vendido a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M, así que está moviendo plantilla. Ojo a la puja por El Hilali, porque es el mismo jugador que tú quieres."
+    }
+   ],
+   "titular": "Vender a Fran García, clausular a Niño y pujar por El Hilali esta noche",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "hora-20",
+  "ms": 12365,
+  "coste": 2131,
+  "entra": 8050,
+  "sale": 2652,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Fran García (14,53 M) ha girado a la baja: hoy −71 mil y, si sigue así, en 5 días perdería unos 261 mil. Lo pagaste a 13,87 M, así que conviene ponerlo a la venta hoy antes de que siga cayendo.\"},\n  {\"id\": \"p2\", \"frase\": \"Cubarsí sube un 3,8 % al día (+1,43 M hoy, 43,44 M de valor) y acaba de hacer un buen partido (7 pts en J9). Puja hoy antes de las 20:00 con un tope de 47,69 M para revenderlo el jue 5, cuando valdría unos 48,89 M.\"},\n  {\"id\": \"p3\", \"frase\": \"Agirrezabala (16,57 M) es imprescindible en este orden: sin esta venta empezarías la jornada en negativo y no puntuarías. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00.\"},\n  {\"id\": \"p4\", \"frase\": \"Jon Martin (15,02 M) también es necesario para empezar la jornada en positivo. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00, con +209 mil hoy y unos 3,5 pts esperados en Elche.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Estamos 1º con 697 pts, 110 por encima de Rival 2, con 6,43 M de saldo y 36,30 M ya pujados. Sin vender empezaríamos la jornada 10 con −29,87 M; el plan deja unos 7,82 M según las cuentas de la app.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya nos ha clausulado a Lucas Boyé por 27,46 M y ha blindado a Koski: es el rival más activo con mis jugadores y conviene vigilarlo.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Ha hecho tres operaciones en 3 días (fichajes, una venta y una cláusula), así que está en mercado; no hay nada concreto contra nuestros jugadores del plan.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Es nuestro perseguidor más cercano (587 pts) y ha fichado a Gueye por 16,62 M; a vigilar si sigue reforzándose antes de la jornada 10.\"}\n ],\n \"titular\": \"Vender Fran García hoy y Agirrezabala y Jon Martin el jueves para empezar en positivo\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, especular con Cubarsí para revender",
+   "modo": "normal",
+   "ops": [
+    "vender Fran García",
+    "pujar Cubarsí",
+    "vender Agirrezabala",
+    "vender Jon Martin",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Vender Fran García hoy y Agirrezabala y Jon Martin el jueves para empezar en positivo",
+  "situacion": "Estamos 1º con 697 pts, 110 por encima de Marcos, con 6,43 M de saldo y 36,30 M ya pujados. Sin vender empezaríamos la jornada 10 con −29,87 M; el plan deja unos 7,82 M según las cuentas de la app.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Fran García (14,53 M) ha girado a la baja: hoy −71 mil y, si sigue así, en 5 días perdería unos 261 mil. Lo pagaste a 13,87 M, así que conviene ponerlo a la venta hoy antes de que siga cayendo.",
+   "pujar Cubarsí 43,44 M (hoy antes de las 20:00): Cubarsí sube un 3,8 % al día (+1,43 M hoy, 43,44 M de valor) y acaba de hacer un buen partido (7 pts en J9). Puja hoy antes de las 20:00 con un tope de 47,69 M para revenderlo el jue 5, cuando valdría unos 48,89 M.",
+   "vender Agirrezabala 16,57 M (el jue 5, para aceptar la oferta de vie 6, 20:00): Agirrezabala (16,57 M) es imprescindible en este orden: sin esta venta empezarías la jornada en negativo y no puntuarías. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00.",
+   "vender Jon Martin 15,02 M (el jue 5, para aceptar la oferta de vie 6, 20:00): Jon Martin (15,02 M) también es necesario para empezar la jornada en positivo. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00, con +209 mil hoy y unos 3,5 pts esperados en Elche.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 87), pero te faltan 48,89 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Ya nos ha clausulado a Lucas Boyé por 27,46 M y ha blindado a Koski: es el rival más activo con mis jugadores y conviene vigilarlo.",
+   ": Ha hecho tres operaciones en 3 días (fichajes, una venta y una cláusula), así que está en mercado; no hay nada concreto contra nuestros jugadores del plan.",
+   ": Es nuestro perseguidor más cercano (587 pts) y ha fichado a Gueye por 16,62 M; a vigilar si sigue reforzándose antes de la jornada 10."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Fran García (14,53 M) ha girado a la baja: hoy −71 mil y, si sigue así, en 5 días perdería unos 261 mil. Lo pagaste a 13,87 M, así que conviene ponerlo a la venta hoy antes de que siga cayendo."
+    },
+    {
+     "id": "p2",
+     "frase": "Cubarsí sube un 3,8 % al día (+1,43 M hoy, 43,44 M de valor) y acaba de hacer un buen partido (7 pts en J9). Puja hoy antes de las 20:00 con un tope de 47,69 M para revenderlo el jue 5, cuando valdría unos 48,89 M."
+    },
+    {
+     "id": "p3",
+     "frase": "Agirrezabala (16,57 M) es imprescindible en este orden: sin esta venta empezarías la jornada en negativo y no puntuarías. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00."
+    },
+    {
+     "id": "p4",
+     "frase": "Jon Martin (15,02 M) también es necesario para empezar la jornada en positivo. Se pone a la venta el jue 5 para aceptar la oferta del vie 6 a las 20:00, con +209 mil hoy y unos 3,5 pts esperados en Elche."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Estamos 1º con 697 pts, 110 por encima de Marcos, con 6,43 M de saldo y 36,30 M ya pujados. Sin vender empezaríamos la jornada 10 con −29,87 M; el plan deja unos 7,82 M según las cuentas de la app.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ya nos ha clausulado a Lucas Boyé por 27,46 M y ha blindado a Koski: es el rival más activo con mis jugadores y conviene vigilarlo."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Ha hecho tres operaciones en 3 días (fichajes, una venta y una cláusula), así que está en mercado; no hay nada concreto contra nuestros jugadores del plan."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Es nuestro perseguidor más cercano (587 pts) y ha fichado a Gueye por 16,62 M; a vigilar si sigue reforzándose antes de la jornada 10."
+    }
+   ],
+   "titular": "Vender Fran García hoy y Agirrezabala y Jon Martin el jueves para empezar en positivo",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "m-oferta-sube",
+  "ms": 10327,
+  "coste": 1901,
+  "entra": 8480,
+  "sale": 2106,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Vende a Fran García ahora, con su valor en 14,53 M tras un −71 mil de hoy y una racha de bajadas que, de seguir, le restaría unos 261 mil en cinco días. Su cláusula (27,14 M) cobra más que el precio de venta, pero no hay garantía de que algún rival la pague.\"},\n  {\"id\": \"p2\", \"frase\": \"Clausula a Niño por 1,02 M para meterlo en el once, ya que aporta +2,7 pts por jornada y su valor (1,01 M) está prácticamente en línea con lo que pagas. Si no lo haces, otro rival con dinero puede quitártelo.\"},\n  {\"id\": \"p3\", \"frase\": \"Puja por El Hilali como mucho 10,46 M para revenderlo, porque sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M (+265 mil). No toca tu once, así que es una operación de beneficio sin riesgo para la alineación.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vas 1º con 697 puntos, 110 por delante del 2º, y partes de 30,00 M con un techo de gasto de 127,68 M. Con el plan, al empezar la jornada 10 (sábado 7, 14:00) tendrías unos 41,22 M, y lo que buscamos hoy es renovar la zona baja del once sin perder margen.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Ya se ha llevado a Lucas Boyé de tu plantilla por cláusula (27,46 M) y ha blindado a Koski, así que está activo en el mercado y puede volver a por tus jugadores de valor.\"},\n  {\"manager\": \"Rival 10\", \"texto\": \"Ha fichado a Guedes por 22,90 M, una compra grande que muestra que tiene margen para operar en el mercado de hoy.\"},\n  {\"manager\": \"Rival 2\", \"texto\": \"Ha fichado a Gueye por 16,62 M y es el segundo clasificado, así que sigue invirtiendo para acercarse a tu liderato.\"}\n ],\n \"titular\": \"Vender a Fran García y clausular a Niño; puja por El Hilali para revender\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, clausular a Niño, especular con El Hilali para revender",
+   "modo": "normal",
+   "ops": [
+    "vender Fran García",
+    "clausular Niño",
+    "pujar El Hilali",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Vender a Fran García y clausular a Niño; puja por El Hilali para revender",
+  "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º, y partes de 30,00 M con un techo de gasto de 127,68 M. Con el plan, al empezar la jornada 10 (sábado 7, 14:00) tendrías unos 41,22 M, y lo que buscamos hoy es renovar la zona baja del once sin perder margen.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Vende a Fran García ahora, con su valor en 14,53 M tras un −71 mil de hoy y una racha de bajadas que, de seguir, le restaría unos 261 mil en cinco días. Su cláusula (27,14 M) cobra más que el precio de venta, pero no hay garantía de que algún rival la pague.",
+   "clausular Niño 1,02 M (ahora): Clausula a Niño por 1,02 M para meterlo en el once, ya que aporta +2,7 pts por jornada y su valor (1,01 M) está prácticamente en línea con lo que pagas. Si no lo haces, otro rival con dinero puede quitártelo.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): Puja por El Hilali como mucho 10,46 M para revenderlo, porque sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M (+265 mil). No toca tu once, así que es una operación de beneficio sin riesgo para la alineación.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 87), pero te faltan 26,34 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Ya se ha llevado a Lucas Boyé de tu plantilla por cláusula (27,46 M) y ha blindado a Koski, así que está activo en el mercado y puede volver a por tus jugadores de valor.",
+   ": Ha fichado a Guedes por 22,90 M, una compra grande que muestra que tiene margen para operar en el mercado de hoy.",
+   ": Ha fichado a Gueye por 16,62 M y es el segundo clasificado, así que sigue invirtiendo para acercarse a tu liderato."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Vende a Fran García ahora, con su valor en 14,53 M tras un −71 mil de hoy y una racha de bajadas que, de seguir, le restaría unos 261 mil en cinco días. Su cláusula (27,14 M) cobra más que el precio de venta, pero no hay garantía de que algún rival la pague."
+    },
+    {
+     "id": "p2",
+     "frase": "Clausula a Niño por 1,02 M para meterlo en el once, ya que aporta +2,7 pts por jornada y su valor (1,01 M) está prácticamente en línea con lo que pagas. Si no lo haces, otro rival con dinero puede quitártelo."
+    },
+    {
+     "id": "p3",
+     "frase": "Puja por El Hilali como mucho 10,46 M para revenderlo, porque sube un 4,0 % al día y el jueves 5 podría valer unos 10,72 M (+265 mil). No toca tu once, así que es una operación de beneficio sin riesgo para la alineación."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vas 1º con 697 puntos, 110 por delante del 2º, y partes de 30,00 M con un techo de gasto de 127,68 M. Con el plan, al empezar la jornada 10 (sábado 7, 14:00) tendrías unos 41,22 M, y lo que buscamos hoy es renovar la zona baja del once sin perder margen.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Ya se ha llevado a Lucas Boyé de tu plantilla por cláusula (27,46 M) y ha blindado a Koski, así que está activo en el mercado y puede volver a por tus jugadores de valor."
+    },
+    {
+     "manager": "Pablo",
+     "texto": "Ha fichado a Guedes por 22,90 M, una compra grande que muestra que tiene margen para operar en el mercado de hoy."
+    },
+    {
+     "manager": "Marcos",
+     "texto": "Ha fichado a Gueye por 16,62 M y es el segundo clasificado, así que sigue invirtiendo para acercarse a tu liderato."
+    }
+   ],
+   "titular": "Vender a Fran García y clausular a Niño; puja por El Hilali para revender",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "m-25",
+  "ms": 15880,
+  "coste": 2668.1,
+  "entra": 8761,
+  "sale": 3584,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p1\", \"frase\": \"Arda Güler está lesionado y no te va a puntuar mientras dure la baja, así que conviene sacarlo a 85,30 M antes de que pierda valor; la app calcula unos 11,33 M menos en dos semanas si se queda. Aunque acaba de hacer 17 puntos en la J9, la baja física pesa más.\"},\n  {\"id\": \"p2\", \"frase\": \"Sergio Herrera ha girado a la baja, con −256 mil hoy tras varios días de subida, y vale 8,02 M. Si sigue así pierde unos 944 mil en cinco días, y la app estima unos 1,02 M menos en dos semanas. Su cláusula está protegida 10 días más, así que la venta puede esperar, pero el giro ya es claro.\"},\n  {\"id\": \"p3\", \"frase\": \"Fran García ha cambiado de tendencia, con −71 mil hoy, y vale 14,53 M; la app calcula unos 478 mil menos en dos semanas. Su cláusula abierta está en 27,14 M, pero LaLiga te daría 15,27 M por venta directa y no hay garantía de que algún rival la pague.\"},\n  {\"id\": \"p4\", \"frase\": \"Pepelu está lesionado y no juega hasta recuperarse, por lo que no te puntuará; vale 23,75 M. Aunque hoy sube (+301 mil) y acaba de hacer 9 puntos, la baja deportiva justifica venderlo ahora.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Estás 1º con 697 puntos y tienes 6,43 M con la plantilla llena (25 de 25), así que solo puedes fichar tras vender. El plan lleva el saldo a unos 124,87 M al empezar la jornada 10 (sábado 7, 14:00), y la clave es sacar a los lesionados y al jugador que más baja.\",\n  \"noticias\": [\n  {\"jugador\": \"Arda Güler\", \"texto\": \"Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto, aunque acaba de hacer 17 puntos en la J9.\", \"efecto\": \"baja\"},\n  {\"jugador\": \"Pepelu\", \"texto\": \"Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.\", \"efecto\": \"baja\"},\n  {\"jugador\": \"Boyomo\", \"texto\": \"Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.\", \"efecto\": \"baja\"},\n  {\"jugador\": \"Jorge Salinas\", \"texto\": \"Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.\", \"efecto\": \"baja\"}\n ],\n \"rivales\": [\n  {\"manager\": \"Rival 2\", \"texto\": \"Segundo con 587 puntos; fichó a Gueye por 16,62 M en los últimos tres días. Está activo en el mercado, pero no hay señales de que vaya a por tus jugadores.\"},\n  {\"manager\": \"Rival 5\", \"texto\": \"Clausuló a Lucas Boyé por 27,46 M, una operación que fue contra ti, y ha blindado a Koski. Es el rival más agresivo con las cláusulas de tu equipo.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. Está moviendo bastante plantilla, aunque no hay indicios de que vaya a por tus jugadores.\"}\n ],\n \"titular\": \"Cuatro ventas: Güler, Pepelu lesionados y dos bajadas, con 124,87 M previstos al empezar la J10\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a 4",
+   "modo": "normal",
+   "ops": [
+    "vender Arda Güler",
+    "vender Sergio Herrera",
+    "vender Fran García",
+    "vender Pepelu",
+    "esperar Kang-In Lee"
+   ]
+  },
+  "titular": "Cuatro ventas: Güler, Pepelu lesionados y dos bajadas, con 124,87 M previstos al empezar la J10",
+  "situacion": "Estás 1º con 697 puntos y tienes 6,43 M con la plantilla llena (25 de 25), así que solo puedes fichar tras vender. El plan lleva el saldo a unos 124,87 M al empezar la jornada 10 (sábado 7, 14:00), y la clave es sacar a los lesionados y al jugador que más baja.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Arda Güler 85,30 M (hoy): Arda Güler está lesionado y no te va a puntuar mientras dure la baja, así que conviene sacarlo a 85,30 M antes de que pierda valor; la app calcula unos 11,33 M menos en dos semanas si se queda. Aunque acaba de hacer 17 puntos en la J9, la baja física pesa más.",
+   "vender Sergio Herrera 8,02 M (hoy): Sergio Herrera ha girado a la baja, con −256 mil hoy tras varios días de subida, y vale 8,02 M. Si sigue así pierde unos 944 mil en cinco días, y la app estima unos 1,02 M menos en dos semanas. Su cláusula está protegida 10 días más, así que la venta puede esperar, pero el giro ya es claro.",
+   "vender Fran García 14,53 M (hoy): Fran García ha cambiado de tendencia, con −71 mil hoy, y vale 14,53 M; la app calcula unos 478 mil menos en dos semanas. Su cláusula abierta está en 27,14 M, pero LaLiga te daría 15,27 M por venta directa y no hay garantía de que algún rival la pague.",
+   "vender Pepelu 23,75 M (hoy): Pepelu está lesionado y no juega hasta recuperarse, por lo que no te puntuará; vale 23,75 M. Aunque hoy sube (+301 mil) y acaba de hacer 9 puntos, la baja deportiva justifica venderlo ahora.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 87), pero te faltan 48,89 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él."
+  ],
+  "rivales": [
+   ": Segundo con 587 puntos; fichó a Gueye por 16,62 M en los últimos tres días. Está activo en el mercado, pero no hay señales de que vaya a por tus jugadores.",
+   ": Clausuló a Lucas Boyé por 27,46 M, una operación que fue contra ti, y ha blindado a Koski. Es el rival más agresivo con las cláusulas de tu equipo.",
+   ": Fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. Está moviendo bastante plantilla, aunque no hay indicios de que vaya a por tus jugadores."
+  ],
+  "noticias": [
+   "Arda Güler: Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto, aunque acaba de hacer 17 puntos en la J9.",
+   "Pepelu: Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.",
+   "Boyomo: Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.",
+   "Jorge Salinas: Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto."
+  ],
+  "json": {
+   "pasos": [
+    {
+     "id": "p1",
+     "frase": "Arda Güler está lesionado y no te va a puntuar mientras dure la baja, así que conviene sacarlo a 85,30 M antes de que pierda valor; la app calcula unos 11,33 M menos en dos semanas si se queda. Aunque acaba de hacer 17 puntos en la J9, la baja física pesa más."
+    },
+    {
+     "id": "p2",
+     "frase": "Sergio Herrera ha girado a la baja, con −256 mil hoy tras varios días de subida, y vale 8,02 M. Si sigue así pierde unos 944 mil en cinco días, y la app estima unos 1,02 M menos en dos semanas. Su cláusula está protegida 10 días más, así que la venta puede esperar, pero el giro ya es claro."
+    },
+    {
+     "id": "p3",
+     "frase": "Fran García ha cambiado de tendencia, con −71 mil hoy, y vale 14,53 M; la app calcula unos 478 mil menos en dos semanas. Su cláusula abierta está en 27,14 M, pero LaLiga te daría 15,27 M por venta directa y no hay garantía de que algún rival la pague."
+    },
+    {
+     "id": "p4",
+     "frase": "Pepelu está lesionado y no juega hasta recuperarse, por lo que no te puntuará; vale 23,75 M. Aunque hoy sube (+301 mil) y acaba de hacer 9 puntos, la baja deportiva justifica venderlo ahora."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Estás 1º con 697 puntos y tienes 6,43 M con la plantilla llena (25 de 25), así que solo puedes fichar tras vender. El plan lleva el saldo a unos 124,87 M al empezar la jornada 10 (sábado 7, 14:00), y la clave es sacar a los lesionados y al jugador que más baja.",
+   "noticias": [
+    {
+     "jugador": "Arda Güler",
+     "texto": "Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto, aunque acaba de hacer 17 puntos en la J9.",
+     "efecto": "baja"
+    },
+    {
+     "jugador": "Pepelu",
+     "texto": "Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.",
+     "efecto": "baja"
+    },
+    {
+     "jugador": "Boyomo",
+     "texto": "Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.",
+     "efecto": "baja"
+    },
+    {
+     "jugador": "Jorge Salinas",
+     "texto": "Está lesionado y no juega hasta recuperarse; su valor baja mientras tanto.",
+     "efecto": "baja"
+    }
+   ],
+   "rivales": [
+    {
+     "manager": "Marcos",
+     "texto": "Segundo con 587 puntos; fichó a Gueye por 16,62 M en los últimos tres días. Está activo en el mercado, pero no hay señales de que vaya a por tus jugadores."
+    },
+    {
+     "manager": "Hugo",
+     "texto": "Clausuló a Lucas Boyé por 27,46 M, una operación que fue contra ti, y ha blindado a Koski. Es el rival más agresivo con las cláusulas de tu equipo."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Fichó a Javi Guerra por 16,68 M, vendió a El Hilali por 11,61 M y clausuló a Amatucci por 5,24 M. Está moviendo bastante plantilla, aunque no hay indicios de que vaya a por tus jugadores."
+    }
+   ],
+   "titular": "Cuatro ventas: Güler, Pepelu lesionados y dos bajadas, con 124,87 M previstos al empezar la J10",
+   "fuentes": []
+  }
+ },
+ {
+  "escena": "m-clausula-mia",
+  "ms": 17191,
+  "coste": 2702.7,
+  "entra": 8337,
+  "sale": 3738,
+  "busquedas": 0,
+  "crudo": "```json\n{\n \"pasos\": [\n  {\"id\": \"p5\", \"frase\": \"Blindar a Ionut Radu ahora es gratis con un anuncio, y lo hacemos primero porque su cláusula está abierta a tiro de 5 rivales y, si no, pueden quitárnoslo por 33,67 M. Vale 32,69 M y acaba de hacer un buen partido en J9.\"},\n  {\"id\": \"p1\", \"frase\": \"Vender a Fran García hoy: ha girado a la baja (−71 mil hoy) y, si sigue así, en 5 días perdería unos 261 mil. Vale 14,53 M y lo pagaste a 13,87 M; la cláusula paga más, pero no es seguro que algún rival la pague.\"},\n  {\"id\": \"p2\", \"frase\": \"Pujar por El Hilali esta noche antes de las 00:15 para revender: sube un 4,0 % al día y el jueves 5 valdría unos 10,72 M (+265 mil). Puja como mucho 10,46 M, y no afecta a tu once.\"},\n  {\"id\": \"p3\", \"frase\": \"Poner a Agirrezabala a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 16,57 M; si no se hace, empezarías la jornada en negativo y no puntuarías.\"},\n  {\"id\": \"p4\", \"frase\": \"Poner a Jon Martin a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 15,02 M; sin esta venta no empezarías la jornada en positivo.\"}\n ],\n \"quita\": [],\n \"mete\": [],\n \"situacion\": \"Vamos 1º con 697 puntos, con 6,43 M en caja y 36,30 M pujados; sin vender empezaríamos la jornada 10 con −29,87 M. Con el plan llegamos al sábado 7 a las 14:00 con unos 10,80 M, así que hoy toca blindar a Radu, sacar a Fran García y pujar por El Hilali.\",\n \"noticias\": [],\n \"rivales\": [\n  {\"manager\": \"Rival 5\", \"texto\": \"Es el más activo contra nosotros: nos clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que tener a Radu blindado cuanto antes, porque su cláusula está a tiro de este rival.\"},\n  {\"manager\": \"Rival 9\", \"texto\": \"Vendió a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M; es quien está moviendo el jugador que queremos revender, así que nuestra puja de esta noche va por delante.\"},\n  {\"manager\": \"Rival 10\", \"texto\": \"Ha fichado a Guedes por 22,90 M, la operación más grande de la liga en estos tres días. No hay señales de que vaya a por nuestros titulares, pero conviene vigilarlo.\"}\n ],\n \"titular\": \"Blindar a Radu hoy, vender a Fran García y pujar por El Hilali\"\n}\n```",
+  "motor": {
+   "titular": "Hoy toca poner a la venta a Fran García, proteger a Ionut Radu, especular con El Hilali para revender",
+   "modo": "normal",
+   "ops": [
+    "vender Fran García",
+    "pujar El Hilali",
+    "vender Agirrezabala",
+    "vender Jon Martin",
+    "esperar Kang-In Lee",
+    "blindar Ionut Radu"
+   ]
+  },
+  "titular": "Blindar a Radu hoy, vender a Fran García y pujar por El Hilali",
+  "situacion": "Vamos 1º con 697 puntos, con 6,43 M en caja y 36,30 M pujados; sin vender empezaríamos la jornada 10 con −29,87 M. Con el plan llegamos al sábado 7 a las 14:00 con unos 10,80 M, así que hoy toca blindar a Radu, sacar a Fran García y pujar por El Hilali.",
+  "cambios": {
+   "quita": [],
+   "mete": [],
+   "porBusqueda": [],
+   "noAplicado": [],
+   "sinFrase": 0,
+   "frasesNo": []
+  },
+  "tachados": [],
+  "reglas": [
+   "REGLAS: ok"
+  ],
+  "pasos": [
+   "vender Fran García 14,53 M (hoy): Vender a Fran García hoy: ha girado a la baja (−71 mil hoy) y, si sigue así, en 5 días perdería unos 261 mil. Vale 14,53 M y lo pagaste a 13,87 M; la cláusula paga más, pero no es seguro que algún rival la pague.",
+   "pujar El Hilali 9,69 M (esta noche antes de las 00:15): Pujar por El Hilali esta noche antes de las 00:15 para revender: sube un 4,0 % al día y el jueves 5 valdría unos 10,72 M (+265 mil). Puja como mucho 10,46 M, y no afecta a tu once.",
+   "vender Agirrezabala 16,57 M (el jue 5, para aceptar la oferta de vie 6, 00:15): Poner a Agirrezabala a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 16,57 M; si no se hace, empezarías la jornada en negativo y no puntuarías.",
+   "vender Jon Martin 15,02 M (el jue 5, para aceptar la oferta de vie 6, 00:15): Poner a Jon Martin a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 15,02 M; sin esta venta no empezarías la jornada en positivo.",
+   "esperar Kang-In Lee (si entra dinero): Es el mejor a tiro (interés 87), pero te faltan 48,89 M: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él.",
+   "blindar Ionut Radu (ahora): Blindar a Ionut Radu ahora es gratis con un anuncio, y lo hacemos primero porque su cláusula está abierta a tiro de 5 rivales y, si no, pueden quitárnoslo por 33,67 M. Vale 32,69 M y acaba de hacer un buen partido en J9."
+  ],
+  "rivales": [
+   ": Es el más activo contra nosotros: nos clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que tener a Radu blindado cuanto antes, porque su cláusula está a tiro de este rival.",
+   ": Vendió a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M; es quien está moviendo el jugador que queremos revender, así que nuestra puja de esta noche va por delante.",
+   ": Ha fichado a Guedes por 22,90 M, la operación más grande de la liga en estos tres días. No hay señales de que vaya a por nuestros titulares, pero conviene vigilarlo."
+  ],
+  "noticias": [],
+  "json": {
+   "pasos": [
+    {
+     "id": "p5",
+     "frase": "Blindar a Ionut Radu ahora es gratis con un anuncio, y lo hacemos primero porque su cláusula está abierta a tiro de 5 rivales y, si no, pueden quitárnoslo por 33,67 M. Vale 32,69 M y acaba de hacer un buen partido en J9."
+    },
+    {
+     "id": "p1",
+     "frase": "Vender a Fran García hoy: ha girado a la baja (−71 mil hoy) y, si sigue así, en 5 días perdería unos 261 mil. Vale 14,53 M y lo pagaste a 13,87 M; la cláusula paga más, pero no es seguro que algún rival la pague."
+    },
+    {
+     "id": "p2",
+     "frase": "Pujar por El Hilali esta noche antes de las 00:15 para revender: sube un 4,0 % al día y el jueves 5 valdría unos 10,72 M (+265 mil). Puja como mucho 10,46 M, y no afecta a tu once."
+    },
+    {
+     "id": "p3",
+     "frase": "Poner a Agirrezabala a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 16,57 M; si no se hace, empezarías la jornada en negativo y no puntuarías."
+    },
+    {
+     "id": "p4",
+     "frase": "Poner a Jon Martin a la venta el jueves 5 para aceptar la oferta del viernes 6 a las 00:15: hace falta para empezar la jornada en positivo. Vale 15,02 M; sin esta venta no empezarías la jornada en positivo."
+    }
+   ],
+   "quita": [],
+   "mete": [],
+   "situacion": "Vamos 1º con 697 puntos, con 6,43 M en caja y 36,30 M pujados; sin vender empezaríamos la jornada 10 con −29,87 M. Con el plan llegamos al sábado 7 a las 14:00 con unos 10,80 M, así que hoy toca blindar a Radu, sacar a Fran García y pujar por El Hilali.",
+   "noticias": [],
+   "rivales": [
+    {
+     "manager": "Hugo",
+     "texto": "Es el más activo contra nosotros: nos clausuló a Lucas Boyé por 27,46 M y ha blindado a Koski. Hay que tener a Radu blindado cuanto antes, porque su cláusula está a tiro de este rival."
+    },
+    {
+     "manager": "Mario",
+     "texto": "Vendió a El Hilali por 11,61 M y ha clausulado a Amatucci por 5,24 M; es quien está moviendo el jugador que queremos revender, así que nuestra puja de esta noche va por delante."
+    },
+    {
+     "manager": "Pablo",
+     "texto": "Ha fichado a Guedes por 22,90 M, la operación más grande de la liga en estos tres días. No hay señales de que vaya a por nuestros titulares, pero conviene vigilarlo."
+    }
+   ],
+   "titular": "Blindar a Radu hoy, vender a Fran García y pujar por El Hilali",
+   "fuentes": []
+  }
+ }
+]
