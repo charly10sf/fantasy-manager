@@ -2329,7 +2329,8 @@
    "SPORT|136565913": 1794992270000,
    "AS|https://as.com/futbol/primera/vuelve-aubameyang-casado-y-gimenez-los-dilemas-f202611-n/": 1794995998000,
    "SPORT|136568609": 1794993321000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000,
+   "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000
   },
   "hechos": [
    {
@@ -3102,7 +3103,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3947,7 +3948,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000,
@@ -3987,7 +3987,8 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-retira-presentador-atrapame-si-puedes-monolo-sarria-denuncia-presunto-acoso-sexual-20261118093207.html": 1794990727000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
-   "SPORT|136566732": 1794991027000
+   "SPORT|136566732": 1794991027000,
+   "SPORT|136566149": 1794994576000
   },
   "hechos": [
    {
@@ -4015,7 +4016,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -8345,13 +8346,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3735,
+   "ok": 3736,
    "fallos": 0,
-   "ejecuciones": 3055,
+   "ejecuciones": 3056,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T10:36:24.654Z"
+   "ultima": "2026-11-18T10:41:15.712Z"
   }
  },
  "ptsDirecto": {},
@@ -8368,15 +8369,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:36:46.132Z"
+   "ultimaBien": "2026-11-18T10:41:40.746Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:36:46.132Z"
+   "ultimaBien": "2026-11-18T10:41:40.746Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:36:46.132Z"
+   "ultimaBien": "2026-11-18T10:41:40.746Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8384,11 +8385,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:36:46.132Z"
+   "ultimaBien": "2026-11-18T10:41:40.746Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:36:46.132Z"
+   "ultimaBien": "2026-11-18T10:41:40.746Z"
   }
  },
  "avisos": [
