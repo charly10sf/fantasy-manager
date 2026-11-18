@@ -1221,6 +1221,13 @@
    "jornada": 13,
    "id": "2122970935359569953",
    "t": "2026-11-18T08:31:28.987Z"
+  },
+  {
+   "clave": "previa|127",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2123002464270156081",
+   "t": "2026-11-18T10:36:46.032Z"
   }
  ],
  "estados": {
@@ -3934,9 +3941,9 @@
  },
  "pulido": {
   "dia": "2026-11-18",
-  "n": 1,
+  "n": 2,
   "ok": 0,
-  "mal": 1
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -4120,10 +4127,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-17T08:21:40.228Z",
-    "texto": "🗓️ El Real Madrid recibe al Celta el sábado a las 21:00 con un cruce que solo le sirve atrás: el Celta marca poco, así que el portero y los defensas madridistas lo tienen de cara. Delanteros y medios, en cambio, se topan con un Celta que casi no encaja.\n\nMbappé es fijo, y Arda Güler también. Cucurella tiene más papeletas de jugar que de quedarse fuera, y Bernardo Silva, con un 38 % de titularidad, puede jugar o no, aunque MARCA recoge que estará disponible tras la baja con Portugal. Asencio es baja.\n\nEl Celta lo tiene malo por los dos lados: el Madrid encaja poco y marca mucho. Radu, el portero, lo normal es que salga, e Ilaix Moriba está a medias. Román no estará, lesionado."
-   },
-   {
     "t": "2026-11-17T10:26:36.321Z",
     "texto": "🗓️ El Barça, líder y con 4 goles por partido, recibe el domingo al Villarreal, que llega 8º y con un cruce incómodo atrás.\n\nEn el Barça faltan Xavi Espart y Rodri, lesionados, pero Mundo Deportivo cuenta que Dani Olmo está en la recta final de su lesión y apunta a llegar. Adeyemi está a medias, con un 44 % de titularidad, y Gerard Martín tiene más papeletas de jugar que de quedarse fuera. Lamine Yamal es fijo.\n\nEl Villarreal 🚢 pierde a Akhomach por lesión. Mikautadze y Romero pueden salir, sin nada cerrado, y a Gulácsi le toca un Barça que marca mucho."
    },
@@ -4138,6 +4141,10 @@
    {
     "t": "2026-11-18T08:31:28.988Z",
     "texto": "🗓️ Osasuna-Málaga (el domingo a las 18:30): así llegan los dos a la jornada 13\n\nEl Osasuna tiene en Budimir a su fijo: 92 % y 7,1 de media. Eso sí, no estarán Abel Bretones y Aitor Fdez, lesionados. Diego Rico, Raúl Moro y Torró, del 15 al 51 %, no tienen el sitio asegurado.\n\nAl otro lado, en el Málaga, C. Puga es quien más en el aire está, con un 39 %. No estarán Aznou, sancionado, ni Rafita y Haitam, lesionados. Donde no hay duda es con A. Herrero, al 97 %."
+   },
+   {
+    "t": "2026-11-18T10:36:46.034Z",
+    "texto": "🗓️ Getafe-Atlético, el domingo a las 21:00: posibles onces para la jornada 13\n\nLo que menos claro está es Le Normand en el Atleti, con un 38 %. También con dudas: Julián Alvarez y Barrios en el Atlético, y Francho y Boselli en el Getafe.\n\nBajas en los dos lados: en el Atleti no estarán Cuti Romero, lesionado, y en el Getafe, Gudelj, sancionado, ni Zaid Romero y Juanmi, lesionados. Sin discusión, Grimaldo (81 %, 7,9 de media) y David Soria (97 %).\n\nEl Atlético, 3º, parte como favorito frente al Getafe, que es 15º. Pocos goles a la vista: el Atleti encaja solo 0,8 por partido y el Getafe marca 0,7."
    }
   ],
   "noticias": [
@@ -4493,11 +4500,6 @@
    "n": 2,
    "t": "2026-11-17T08:16:35.735Z",
    "ultima": "2026-11-18T08:26:30.186Z"
-  },
-  "previa|127": {
-   "n": 1,
-   "t": "2026-11-18T06:07:08.332Z",
-   "ultima": "2026-11-18T06:07:08.332Z"
   },
   "previa|126": {
    "n": 1,
@@ -8343,13 +8345,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3734,
+   "ok": 3735,
    "fallos": 0,
-   "ejecuciones": 3054,
+   "ejecuciones": 3055,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T10:31:19.317Z"
+   "ultima": "2026-11-18T10:36:24.654Z"
   }
  },
  "ptsDirecto": {},
@@ -8366,15 +8368,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:31:52.993Z"
+   "ultimaBien": "2026-11-18T10:36:46.132Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:31:52.993Z"
+   "ultimaBien": "2026-11-18T10:36:46.132Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:31:52.993Z"
+   "ultimaBien": "2026-11-18T10:36:46.132Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8382,11 +8384,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:31:52.993Z"
+   "ultimaBien": "2026-11-18T10:36:46.132Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:31:52.993Z"
+   "ultimaBien": "2026-11-18T10:36:46.132Z"
   }
  },
  "avisos": [
