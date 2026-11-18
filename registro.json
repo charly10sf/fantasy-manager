@@ -2138,7 +2138,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
    "SPORT|136475479": 1794767368000,
    "SPORT|136475632": 1794768134000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
@@ -8486,13 +8485,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3826,
+   "ok": 3827,
    "fallos": 0,
-   "ejecuciones": 3146,
+   "ejecuciones": 3147,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T18:06:21.892Z"
+   "ultima": "2026-11-18T18:11:10.742Z"
   }
  },
  "ptsDirecto": {},
@@ -8509,15 +8508,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:06:33.021Z"
+   "ultimaBien": "2026-11-18T18:11:19.130Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:06:33.021Z"
+   "ultimaBien": "2026-11-18T18:11:19.130Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:06:33.021Z"
+   "ultimaBien": "2026-11-18T18:11:19.130Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8525,11 +8524,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:06:33.021Z"
+   "ultimaBien": "2026-11-18T18:11:19.130Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:06:33.021Z"
+   "ultimaBien": "2026-11-18T18:11:19.130Z"
   }
  },
  "avisos": [
