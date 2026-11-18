@@ -2356,7 +2356,8 @@
    "SPORT|136593985": 1795025545000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261118/1004252708/satriano-vuelve-tirar-ataque-getafe.html": 1795029584000,
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
+   "SPORT|136592622": 1795033687000
   },
   "hechos": [
    {
@@ -3294,7 +3295,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -8529,13 +8530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3866,
+   "ok": 3867,
    "fallos": 0,
-   "ejecuciones": 3186,
+   "ejecuciones": 3187,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:26:11.629Z"
+   "ultima": "2026-11-18T21:31:11.718Z"
   }
  },
  "ptsDirecto": {},
@@ -8552,15 +8553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:26:15.506Z"
+   "ultimaBien": "2026-11-18T21:31:27.256Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:26:15.506Z"
+   "ultimaBien": "2026-11-18T21:31:27.256Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:26:15.506Z"
+   "ultimaBien": "2026-11-18T21:31:27.256Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8568,11 +8569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:26:15.506Z"
+   "ultimaBien": "2026-11-18T21:31:27.256Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:26:15.506Z"
+   "ultimaBien": "2026-11-18T21:31:27.256Z"
   }
  },
  "avisos": [
