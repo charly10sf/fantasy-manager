@@ -2124,7 +2124,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000,
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
    "SPORT|136469023": 1794751165000,
@@ -8429,13 +8428,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3768,
+   "ok": 3769,
    "fallos": 0,
-   "ejecuciones": 3088,
+   "ejecuciones": 3089,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T13:21:11.802Z"
+   "ultima": "2026-11-18T13:26:12.990Z"
   }
  },
  "ptsDirecto": {},
@@ -8452,15 +8451,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:21:18.760Z"
+   "ultimaBien": "2026-11-18T13:26:23.227Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:21:18.760Z"
+   "ultimaBien": "2026-11-18T13:26:23.227Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:21:18.760Z"
+   "ultimaBien": "2026-11-18T13:26:23.227Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8468,11 +8467,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:21:18.760Z"
+   "ultimaBien": "2026-11-18T13:26:23.227Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:21:18.760Z"
+   "ultimaBien": "2026-11-18T13:26:23.227Z"
   }
  },
  "avisos": [
