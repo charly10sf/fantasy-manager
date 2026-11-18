@@ -4,14 +4,14 @@ name: Pruebas chat
 on:
   push:
     branches: [pruebas-chat-haiku]
-    paths-ignore: ['.github/ia/respuestas-chat.md']
+    paths-ignore: ['.github/ia/respuestas-chat.md', '.github/ia/respuestas-chat.json', '.github/ia/pasadas/**']
 permissions:
   contents: write
 concurrency: { group: pruebas-chat, cancel-in-progress: true }
 jobs:
   chat:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -25,14 +25,15 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ESFUERZOS: low
-          ESCENAS: martes,paron
-          TOPE_USD: "0.4"
+          ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado' }}
+          TOPE_USD: "0.75"
+          SOLO: ${{ vars.CHAT_SOLO || '' }}
       - name: Guardar las respuestas en la rama
         if: always()
         run: |
           [ -f .github/ia/respuestas-chat.md ] || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
-          git add .github/ia/respuestas-chat.md
+          git add .github/ia/respuestas-chat.md .github/ia/respuestas-chat.json
           git commit -q -m "Respuestas del chat con Haiku" || exit 0
           git push -q origin HEAD:pruebas-chat-haiku
