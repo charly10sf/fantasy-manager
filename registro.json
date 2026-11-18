@@ -4137,7 +4137,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000,
    "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822222000,
    "SPORT|136493729": 1794825978000,
@@ -8526,13 +8525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3857,
+   "ok": 3858,
    "fallos": 0,
-   "ejecuciones": 3177,
+   "ejecuciones": 3178,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T20:41:23.462Z"
+   "ultima": "2026-11-18T20:46:21.645Z"
   }
  },
  "ptsDirecto": {},
@@ -8549,15 +8548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T20:41:31.504Z"
+   "ultimaBien": "2026-11-18T20:46:24.888Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T20:41:31.504Z"
+   "ultimaBien": "2026-11-18T20:46:24.888Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T20:41:31.504Z"
+   "ultimaBien": "2026-11-18T20:46:24.888Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8565,11 +8564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T20:41:31.504Z"
+   "ultimaBien": "2026-11-18T20:46:24.888Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T20:41:31.504Z"
+   "ultimaBien": "2026-11-18T20:46:24.888Z"
   }
  },
  "avisos": [
