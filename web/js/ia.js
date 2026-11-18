@@ -1681,7 +1681,7 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
   const busquedas = (j.tok && Number(j.tok.web)) || 0;
   apuntar({ modelo: 'app', s: 'plan', ok: true, web: busquedas > 0, ms: Date.now() - t0, tok: j.tok || null });
   const texto = JSON.stringify(j.plan || {});
-  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, idsDe, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
+  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, idsDe, pedidoT: pend && pend.rid === rid && pend.t ? pend.t : t0, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
 }
 /**
  * (17 nov) los ids del plan corto (p1, a2…) son la posición de cada paso en el plan que se mandó. Si la respuesta es de
@@ -1724,6 +1724,13 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
   }
   // (17 nov) el plan recogido de un pedido de antes (la app se cerró mientras la IA contestaba): sus ids eran los de aquel
   // plan; se pasan a los de este por lo que era cada paso. Lo que ya no está en el plan de ahora no se aplica
+  // (19 nov, (72) de la segunda revisión) un plan pedido antes de que se cerraran las cláusulas y recogido ya con ellas
+  // cerradas era de otro mundo: sus cláusulas ya no se pueden pagar y no queda cambio de mercado para lo demás. Antes se
+  // rehacía con planVueltas y salía otro plan con las frases de la IA a medias; ahora no se aplica: queda el de la app
+  if (r.pedidoT && M.vedaAhora && r.pedidoT < M.vedaAhora.ini) {
+    apuntar({ modelo: r.modelo, s: 'plan', e: 'plan recogido de antes del cierre de cláusulas: no se aplica', ms: 0 });
+    throw new ErrorIA('El plan de la IA se pidió antes de que se cerraran las cláusulas y ya no vale: tienes el de la app, que ya cuenta con el cierre. Si quieres, pide otro.', 0, { recogidoViejo: true });
+  }
   const traducidos = traducirIds(json, r.idsDe, ids);
   // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
   json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
@@ -3098,12 +3105,25 @@ export function rivalesEn(texto, D, M) {
   return out;
 }
 
+/** el plan que se ve en Hoy ahora: el de la IA si es de hoy; si no, el del motor de hoy (marcado con motorHoy) */
+function planQueVe(D, M, c) {
+  const p = ultimoPlan();
+  if (p && p.dia === diaDe()) return p;
+  try {
+    const R = planDeHoy(D, M, c);
+    if (R && Array.isArray(R.ops) && R.ops.some((o) => !o.descartada)) return { motorHoy: true, t: Date.now(), titular: R.titular || '', operaciones: R.ops.filter((o) => !o.descartada).map((o) => ({ accion: o.accion, jugador: (o.j && o.j.nombre) || o.jugador || '' })), ops: R.ops };
+  } catch (e) { /* sin motor: el de antes, si lo hay */ }
+  return p;
+}
 /**
  * Los datos de su liga para el chat: lo de siempre (contexto), los jugadores que nombra con todo, las plantillas de los
  * rivales y el plan. Es lo que la app manda al Worker (empieza por CABECERA_DATOS); se exporta para probarlo con la demo.
  */
 export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
-  const p = ultimoPlan();
+  // (19 nov, tercera parte) el plan que ve en Hoy: el de la IA si es de hoy y, si no, el del motor de hoy (como montarPlan
+  // de app.js). Antes iba siempre el último plan de la IA, aunque fuera de ayer, y sin plan de la IA no iba ninguno: a
+  // «¿por qué el plan me dice que venda a X?» contestaba sin saber qué plan tenía delante
+  const p = planQueVe(D, M, c);
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
   // pila si solo hay uno («Nico»): sin eso, a la segunda pregunta ya no llevaba las cuentas ni la cláusula
@@ -3132,12 +3152,15 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   if (p) {
     const ops = p.operaciones || [];
     let cu = null;
-    try { cu = opsCuadradas(cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
+    try { cu = opsCuadradas(p.motorHoy ? p.ops.filter((o) => !o.descartada) : cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
     const q = norm(pregunta);
     const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && !enteros.size && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
-    const cab = `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
+    const cab = p.motorHoy ? 'EL PLAN DE HOY QUE VE EN LA APP (lo ha hecho la app, no tú)' : `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
+    // del plan de la app van también el cuándo y el porqué de cada paso (lo que ve él en Hoy), para «¿por qué me dice que…?»
+    const pasos = p.motorHoy ? p.ops.filter((o) => !o.descartada).slice(0, 8).map((o) => `- ${o.accion === 'esperar' ? 'esperar a' : o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}: ${String(o.motivo || '').replace(/\s*\(interés \d+\)/g, '').split(/(?<=\.)\s/).slice(0, 3).join(' ')}`).join('\n') : '';
     plan = vaDelPlan
-      ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
+      ? (pasos ? `\n\n${cab}, de referencia (no lo repitas si no viene a cuento; si te pregunta por un paso, explícalo con su porqué): ${p.titular}\n${pasos}`
+        : `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`)
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta

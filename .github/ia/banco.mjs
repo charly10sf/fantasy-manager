@@ -29,6 +29,19 @@ export const ESCENAS = {
   // (19 nov) sábado por la mañana, día del primer partido (14:00): cláusulas cerradas, el once aún se toca y el último
   // cambio de mercado de antes de la jornada ya ha pasado (00:15)
   sabado: { hora: '2026-11-07T10:30:00+01:00' },
+  // (19 nov, escenas nuevas del plan) el sábado del partido por la mañana, en una liga con el mercado a las 12:00: queda el
+  // cambio del mismo día del primer partido (14:00), con dos horas de margen
+  'sabado-justo': { hora: '2026-11-07T09:00:00+01:00', prep: `const t = Date.parse('2026-11-07T12:00:00+01:00');
+    for (const m of S.D.mercado) m.cierra = t; for (const v of S.D.misVentas || []) { v.cierra = t; for (const o of v.ofertas || []) o.caduca = t; }` },
+  // martes, en una liga con el mercado a las 20:00 (como la de Carlos)
+  'hora-20': { hora: '2026-11-03T10:00:00+01:00', prep: `const t = Date.parse('2026-11-03T20:00:00+01:00');
+    for (const m of S.D.mercado) m.cierra = t; for (const v of S.D.misVentas || []) { v.cierra = t; for (const o of v.ofertas || []) o.caduca = t; }` },
+  // jueves al mediodía en negativo: solo queda un cambio de mercado (vie 00:15) para llegar en positivo
+  'jueves-negativo': { hora: '2026-11-05T12:00:00+01:00', prep: 'S.D.dinero = -8000000;' },
+  // los dos últimos días del parón: la vuelta (jornada 10) el jueves a las 14:00, a dos días y cuatro horas
+  'paron-final': { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 16 * DIA, 10: base - 2 * DIA,') },
+  // (19 nov) diez minutos después del cierre de cláusulas (vie 14:00): para el plan pedido justo antes y recogido después
+  'veda-recien': { hora: '2026-11-06T14:10:00+01:00' },
   // parón de selecciones con la vuelta a más de 3 días
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
   // en negativo entre semana (ha tirado de deuda)
@@ -262,14 +275,42 @@ export function arbitro(R, D, M, eur) {
   const rev = (o) => String(o.objetivo || '').startsWith('revend');
   const acepta = (o) => o.accion === 'vender' && o.etiqueta === 'Aceptar oferta';
   let caja = +D.dinero, pujado = +M.misPujas || 0, n = M.mias.length, escudos = 0, vuelve = 0, ventas = 0;
-  const salen = new Set(), entran = [];
+  const salen = new Set(), entran = [], aceptadas = new Set();
+  /* (19 nov, tercera parte) reglas que el árbitro no miraba: con 25 no se puja (17), el parón (dinero antes que once salvo lo
+     que sube hasta la vuelta y los chollos o los buenos a su valor con saldo), nada «para hoy» que sea de otro día, en
+     negativo entre semana no se malvende, la hora de mercado de la liga, comprar por debajo del precio (6), lo que no está
+     en el mercado y el once con uno vendido hoy (18). La cuenta del parón, como paronLejos de operaciones.js */
+  const ahora = Date.now(), DIA = 864e5;
+  const paronLejos = !!(M.paron && M.proxima && M.paron.ini <= M.proxima.ini && M.paron.fin > ahora && M.proxima.ini - ahora > 3 * DIA);
+  const cambiosQuedan = ((M.ventanaEsp && M.ventanaEsp.cambios) || []).length;
+  const fmtH = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hour12: false });
+  const fmtD = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', day: 'numeric' });
+  const horaMercado = M.cierreMercado ? fmtH.format(new Date(M.cierreMercado)) : null;
+  const hoyD = Number(fmtD.format(new Date(ahora)));
+  const fase = (pid) => { const i = M.inercia ? M.inercia(pid) : null; return i ? i.fase : null; };
+  const cae = (pid) => { const t = (M.tend && M.tend(pid)) || {}; return ['giro', 'baja', 'frena'].includes(fase(pid)) || (t.p7 != null && t.p7 < -2) || (t.p1 != null && t.p1 < -0.5); };
   for (const o of vivos) {
     const hoy = o.hoy !== false, imp = +o.importe || 0, q = nom(o);
+    const cuando = String(o.cuando || '');
+    // «para hoy» con el día de otro (lo de Huijsen: recomendar hoy lo que no se puede hasta dentro de días)
+    const dMes = cuando.match(/\b(?:lun|mar|mié|jue|vie|sáb|dom)\w*\.?\s+(\d{1,2})\b/);
+    if (hoy && dMes && Number(dMes[1]) !== hoyD && !/\bpara aceptar\b|\bantes de\b/.test(cuando) && ['clausular', 'pujar', 'comprar', 'blindar'].includes(o.accion)) mal.push(`rH: ${o.accion} ${q} va como de hoy y es para ${dMes[0]}`);
+    // la hora del mercado de la liga (cada liga tiene la suya)
+    const hm = cuando.match(/antes de las (\d{1,2}:\d{2})/);
+    if (hm && horaMercado && hm[1].padStart(5, '0') !== horaMercado && /pujar|comprar/.test(o.accion)) mal.push(`rM: ${o.accion} ${q} «antes de las ${hm[1]}» y el mercado de la liga cambia a las ${horaMercado}`);
     if (['vender', 'clausular', 'pujar', 'comprar', 'blindar'].includes(o.accion) && !String(o.motivo || '').trim()) mal.push(`sin motivo: ${o.accion} ${q}`);
     if (o.accion === 'vender') {
       if (!M.mias.some((x) => x.pid === o.pid)) mal.push(`${q} no es mío`);
       salen.add(o.pid);
-      if (acepta(o)) { if (hoy) { caja += imp; n--; } } else if (ciclos >= 1) ventas += imp * 0.9;
+      if (acepta(o)) { if (hoy) { caja += imp; n--; aceptadas.add(o.pid); } } else if (ciclos >= 1) ventas += imp * 0.9;
+      // en negativo entre semana, con dos cambios de mercado o más por delante, no se malvende hoy lo que no está cayendo
+      // (Carlos, 3 nov): ni ponerlo a la venta «por caja» hoy, ni aceptar una oferta por debajo de su valor
+      const x0 = M.mias.find((y) => y.pid === o.pid);
+      if (hoy && +D.dinero < 0 && cambiosQuedan >= 2 && x0 && !cae(o.pid) && !rev(o) && !(M.vendeBaja && M.vendeBaja(x0)) && x0.j.pos !== 5) {
+        const v0 = (M.misVentas || []).find((y) => y.pid === o.pid);
+        if (acepta(o) && imp < x0.j.valor * 0.995 && !(v0 && v0.mejor && v0.mejor.sobre >= 0)) mal.push(`rN: en negativo y con ${cambiosQuedan} cambios por delante acepta ${eur(imp)} por ${q}, por debajo de su valor`);
+        else if (!acepta(o) && String(o.objetivo || '') === 'caja') mal.push(`rN: en negativo y con ${cambiosQuedan} cambios por delante pone hoy a la venta a ${q} solo por caja`);
+      }
     } else if (o.accion === 'clausular') {
       const cl = M.clausulas.find((x) => x.pid === o.pid);
       if (!cl) { mal.push(`${q} no tiene cláusula que pagar`); continue; }
@@ -279,11 +320,27 @@ export function arbitro(R, D, M, eur) {
       caja -= imp; n++; entran.push(o.j);
       if (rev(o)) { if (ciclos < 1) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
       else if (M.mereceClausula && !M.mereceClausula(cl) && !String(o.objetivo || '').startsWith('revend')) mal.push(`hoy: la cláusula de ${q} no pasa la regla de Hoy y las alarmas`);
+      if (hoy && n > 25) mal.push(`r17: clausula a ${q} con la plantilla llena`);
     } else if (o.accion === 'pujar' || o.accion === 'comprar') {
       if (M.dueno[o.pid] && o.accion === 'pujar') mal.push(`${q} tiene dueño: no se puja`);
+      const enM = (M.mercado || []).find((m) => m.pid === o.pid);
+      if (o.accion === 'pujar' && !enM) mal.push(`${q} no está en el mercado`);
+      if (o.accion === 'comprar' && enM && enM.tipo === 'manager' && enM.precio && imp && imp < enM.precio - 1) mal.push(`r6: ${eur(imp)} por ${q}, por debajo de lo que pide (${eur(enM.precio)})`);
+      if (hoy && n >= 25) mal.push(`r17: ${o.accion} por ${q} con ${n} jugadores`);
       if (hoy) { pujado += imp; n++; entran.push(o.j); }
       if (rev(o)) { if (ciclos < 2) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
-    } else if (o.accion === 'blindar') {
+    }
+    if (paronLejos && hoy && ['clausular', 'pujar', 'comprar'].includes(o.accion) && !rev(o) && o.j && o.j.valor) {
+      // en el parón, para el once solo lo que sube (inercia), un chollo (a un 5 % de su valor sin bajar) o uno bueno a su
+      // valor que se paga con el saldo
+      const sube = ['sube', 'acelera'].includes(fase(o.pid));
+      const mm = (M.mercado || []).find((m) => m.pid === o.pid);
+      const paga = Math.max(imp, +o.puja_max || 0);
+      // (un bueno a su valor: el precio del mercado a su valor y la puja que gana, con el saldo y sin deuda)
+      const chollo = !cae(o.pid) && (paga <= o.j.valor * 1.05 || (mm && mm.precio <= o.j.valor * 1.02 && paga <= caja - pujado + (o.accion === 'pujar' ? paga : 0) + 1));
+      if (!sube && !chollo) mal.push(`rP: en el parón ${o.accion} ${q} para el once (${eur(imp)} por uno de ${eur(o.j.valor)}, ${fase(o.pid) || 'sin inercia'})`);
+    }
+    if (o.accion === 'blindar') {
       const x = M.mias.find((y) => y.pid === o.pid);
       if (!x) { mal.push(`${q} no es mío`); continue; }
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
@@ -300,6 +357,14 @@ export function arbitro(R, D, M, eur) {
   const jornada = pujasAntes ? caja - pujado + vuelve + ventas : caja + ventas;
   if (jornada < 0) mal.push(`r10: empezaría la jornada en ${eur(jornada)}`);
   if (M.enJuego && R.alineacion) mal.push('r8: once con la jornada en juego');
+  // (18) uno vendido hoy (oferta aceptada) no puede ir en el once
+  if (R.alineacion && aceptadas.size) {
+    const tit = new Set((R.alineacion.titulares || []).map(String));
+    for (const pid of aceptadas) { const j = M.J ? M.J(pid) : null; if (j && tit.has(j.nombre)) mal.push(`r18: ${j.nombre} va en el once y se vende hoy`); }
+  }
+  // el titular no nombra a uno cuyo paso la app ha descartado
+  const fuera = (R.ops || []).filter((o) => o.descartada && !vivos.some((v) => v.pid === o.pid)).map(nom).filter((x) => x && x.length > 3);
+  for (const x of fuera) if (String(R.titular || '').includes(x)) mal.push(`titular: nombra a ${x}, que la app ha descartado`);
   L.push(`REGLAS: ${mal.length ? `MAL ${mal.join(' · ')}` : 'ok'}`);
   L.push(`JORNADA: ${eur(jornada)}`);
   const antes = M.mejorOnce(M.mias.map((x) => x.j));
