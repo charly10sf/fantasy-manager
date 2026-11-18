@@ -2337,7 +2337,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252548/vivir-ambiente-hostil.html": 1794999663000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
+   "SPORT|136574114": 1794999432000
   },
   "hechos": [
    {
@@ -3172,7 +3173,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4058,7 +4059,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
    "SPORT|136566732": 1794991027000,
    "SPORT|136566149": 1794994576000,
-   "SPORT|136569400": 1794994780000
+   "SPORT|136569400": 1794994780000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000
   },
   "hechos": [
    {
@@ -4086,7 +4088,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -8416,13 +8418,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3752,
+   "ok": 3753,
    "fallos": 0,
-   "ejecuciones": 3072,
+   "ejecuciones": 3073,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T12:01:16.846Z"
+   "ultima": "2026-11-18T12:06:15.510Z"
   }
  },
  "ptsDirecto": {},
@@ -8439,15 +8441,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:01:27.341Z"
+   "ultimaBien": "2026-11-18T12:06:50.369Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:01:27.341Z"
+   "ultimaBien": "2026-11-18T12:06:50.369Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:01:27.341Z"
+   "ultimaBien": "2026-11-18T12:06:50.369Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8455,11 +8457,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:01:27.341Z"
+   "ultimaBien": "2026-11-18T12:06:50.369Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:01:27.341Z"
+   "ultimaBien": "2026-11-18T12:06:50.369Z"
   }
  },
  "avisos": [
