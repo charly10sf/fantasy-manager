@@ -4099,7 +4099,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261115/1004251383/girona-no-falla-oberena-aplazado-jornada-4.html": 1794775497000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251493/barca-atletic-mantiene-liderato-puertas-derbi.html": 1794817719000,
    "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822222000,
@@ -4144,30 +4143,7 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010340000
   },
-  "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html",
-    "medio": "COPE",
-    "t": 1794765116000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 15,
-    "jTxt": true,
-    "clubes": [],
-    "luto": false,
-    "oficial": false,
-    "contexto": "LaLiga publica los horarios de la jornada del Puente de la Constitución",
-    "detalle": "",
-    "nums": [
-     15,
-     4,
-     21,
-     0,
-     14
-    ]
-   }
-  ],
+  "hechos": [],
   "gemini": {
    "dia": "2026-11-18",
    "n": 10,
@@ -8510,13 +8486,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3823,
+   "ok": 3824,
    "fallos": 0,
-   "ejecuciones": 3143,
+   "ejecuciones": 3144,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T17:51:13.967Z"
+   "ultima": "2026-11-18T17:56:11.099Z"
   }
  },
  "ptsDirecto": {},
@@ -8533,15 +8509,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:51:25.105Z"
+   "ultimaBien": "2026-11-18T17:56:20.988Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:51:25.105Z"
+   "ultimaBien": "2026-11-18T17:56:20.988Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:51:25.105Z"
+   "ultimaBien": "2026-11-18T17:56:20.988Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8549,11 +8525,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:51:25.105Z"
+   "ultimaBien": "2026-11-18T17:56:20.988Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:51:25.105Z"
+   "ultimaBien": "2026-11-18T17:56:20.988Z"
   }
  },
  "avisos": [
