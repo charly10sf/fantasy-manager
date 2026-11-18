@@ -2111,7 +2111,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/vuelta-pesos-pesados-deja-jugar-nuevos-inglaterra-20261115_3475406.html": 1794735997000,
-   "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
@@ -3982,7 +3981,9 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136566732": 1794995181066
+  }
  },
  "ia": {
   "dia": "2026-11-18",
@@ -8314,13 +8315,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3724,
+   "ok": 3725,
    "fallos": 0,
-   "ejecuciones": 3044,
+   "ejecuciones": 3045,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T09:41:17.385Z"
+   "ultima": "2026-11-18T09:46:21.066Z"
   }
  },
  "ptsDirecto": {},
@@ -8337,15 +8338,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:41:25.333Z"
+   "ultimaBien": "2026-11-18T09:46:29.938Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:41:25.333Z"
+   "ultimaBien": "2026-11-18T09:46:29.938Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:41:25.333Z"
+   "ultimaBien": "2026-11-18T09:46:29.938Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8353,11 +8354,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:41:25.333Z"
+   "ultimaBien": "2026-11-18T09:46:29.938Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:41:25.333Z"
+   "ultimaBien": "2026-11-18T09:46:29.938Z"
   }
  },
  "avisos": [
