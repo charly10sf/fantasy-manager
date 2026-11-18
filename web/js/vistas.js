@@ -52,19 +52,14 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-/** El dinero del marcador de Hoy (Fran, 18 nov: «cuánto te puedes quedar en negativo»): arriba lo que puedes gastar y debajo una barra
-    con las dos partes, lo que tienes (verde) y lo que te puedes quedar en negativo (rojo hueco), cada una con su cifra. Con el saldo
-    ya en rojo, el primer trozo es lo que ya usas del negativo. Sin margen de negativo, solo el total y el saldo. */
-function plataHTML(D, M) {
-  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), total = Math.max(0, M.pujaMax), rojo = dinero < 0;
-  let barra = '';
-  if (margen > 0) {
-    const v = rojo ? Math.min(100, -dinero / (-dinero + margen) * 100) : Math.max(8, Math.min(92, dinero / (dinero + margen) * 100));
-    barra = `<div class="plata-barra" aria-hidden="true"><i class="${rojo ? 'usado' : 'tuyo'}" style="flex:${v}"></i><i class="resto" style="flex:${100 - v}"></i></div>`;
-  }
-  const saldo = `<span class="gtxt">Saldo<b class="${rojo ? 'neg' : ''}">${eur(D.dinero)}</b></span>`;
-  const negat = margen > 0 ? `<span class="gtxt">Negativo hasta<b>−${eur(margen)}</b></span>` : '';
-  return `<div class="plata"><div class="v">${eur(total)}<small>puedes gastar</small></div><div class="plata-f">${saldo}${barra}${negat}</div></div>`;
+/** El marcador de Hoy (18 nov, Fran y Carlos: «cuánto te puedes quedar en negativo», sencillo y sin información de más). Tres cifras:
+    lo que puedes gastar y lo que vale tu equipo en grande, el puesto un poco más pequeño; y debajo una barra con el reparto de lo que
+    puedes gastar: lo tuyo (verde) y hasta dónde puedes quedarte en negativo (rojo hueco; macizo lo que ya usas si vas en rojo). */
+function negativoHTML(D, M) {
+  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), rojo = dinero < 0;
+  if (!(margen > 0)) return '';
+  const v = rojo ? Math.min(100, -dinero / (-dinero + margen) * 100) : Math.max(6, Math.min(94, dinero / (dinero + margen) * 100));
+  return `<div class="m-neg"><div class="m-barra" aria-hidden="true"><i class="${rojo ? 'usado' : 'tuyo'}" style="flex:${v}"></i><i class="resto" style="flex:${100 - v}"></i></div><span>puedes quedarte en <b>−${eur(margen)}</b></span></div>`;
 }
 
 function marcador(S, { corto = false, tiempos = false } = {}) {
@@ -78,11 +73,12 @@ function marcador(S, { corto = false, tiempos = false } = {}) {
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
-    ${plataHTML(D, M)}
-    <div class="resumen-f">
-      <span class="rf"><em>Equipo</em><b>${eur(D.valorEquipo, { dec: 1 })}</b><i class="${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '= hoy'}</i></span>
-      <span class="rf"><em>Puesto</em><b>${yo.pos || '–'}º<small>/${D.clasif.length}</small></b><i>${num(yo.puntos)} pts</i></span>
-    </div>`;
+    <div class="m-cols">
+      <div class="m-c"><div class="et">Puedes gastar</div><div class="v">${eur(Math.max(0, M.pujaMax))}</div><div class="d apag">saldo <b class="${num(D.dinero) < 0 ? 'neg' : ''}">${eur(D.dinero)}</b></div></div>
+      <div class="m-c"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
+      <div class="m-c m-pos"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div></div>
+    </div>
+    ${negativoHTML(D, M)}`;
   // (0.7.13o, Carlos 16 nov) lo que va a pasar pronto (el mercado, las cláusulas, el parón), dentro del marcador y en
   // pequeño, en vez de en chips sueltos debajo
   if (tiempos) h += tiemposHTML(S, { dentro: true });
