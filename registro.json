@@ -2138,8 +2138,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000,
    "SPORT|136477261": 1794773168000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/arma-fundamental-aguirre-obligado-recuperar-valencia-cf-corners-gol-estrategia-laliga-136477381.html": 1794778833000,
@@ -8529,13 +8527,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3846,
+   "ok": 3847,
    "fallos": 0,
-   "ejecuciones": 3166,
+   "ejecuciones": 3167,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T19:46:12.957Z"
+   "ultima": "2026-11-18T19:51:11.852Z"
   }
  },
  "ptsDirecto": {},
@@ -8552,15 +8550,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:46:23.171Z"
+   "ultimaBien": "2026-11-18T19:51:19.615Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:46:23.171Z"
+   "ultimaBien": "2026-11-18T19:51:19.615Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:46:23.171Z"
+   "ultimaBien": "2026-11-18T19:51:19.615Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8568,11 +8566,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:46:23.171Z"
+   "ultimaBien": "2026-11-18T19:51:19.615Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:46:23.171Z"
+   "ultimaBien": "2026-11-18T19:51:19.615Z"
   }
  },
  "avisos": [
