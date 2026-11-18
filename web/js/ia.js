@@ -18,7 +18,7 @@ import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
-import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
+import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
@@ -852,6 +852,8 @@ const doblar = (t) => { let o = ''; for (let i = 0; i < t.length; i++) o += dobl
  *   tiene menos de 3, o si es una palabra de las instrucciones de la IA («Mercado»): no se sabría cuál es cuál.
  * - Lo que escribes tú pasa por aquí (el chat, las notas); las fotos que adjuntas, no: van tal cual.
  */
+let palabrasS = null;
+const palabrasSistema = () => (palabrasS ||= ` ${norm(`${sistemaChat({})}\n${SISTEMA_CORTO}`)} `);
 export function seudonimos(D, apodos = apodosLiga()) {
   const yo = D && D.yo && D.yo.teamId;
   const mio = ((D && D.clasif) || []).find((e) => e && e.teamId === yo);
@@ -860,7 +862,9 @@ export function seudonimos(D, apodos = apodosLiga()) {
   for (const e of Object.values((D && D.equipos) || {})) if (e) for (const t of [e.nombre, e.corto]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
   for (const t of [D && D.yo && D.yo.nombre, mio && mio.manager, mio && mio.nombre]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
   const igual = new Set([...otros].map(norm));
-  const base = ` ${norm(SISTEMA)} `;
+  // (19 nov, (72)) las palabras de las instrucciones que de verdad lee la IA (las del chat y las del plan): un nombre que es
+  // una de ellas no se tapa con un alias. Antes se miraba SISTEMA, el sistema del plan largo, que ya no se mandaba a nadie
+  const base = palabrasSistema();
   const vale = (x) => typeof x === 'string' && x.trim().length >= 3 && /\p{L}/u.test(x) && !igual.has(norm(x)) && !base.includes(` ${norm(x)} `);
   const rivales = ((D && D.clasif) || []).filter((e) => e && e.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
   const puestos = rivales.map((e) => e.pos);
@@ -910,6 +914,7 @@ export function seudonimos(D, apodos = apodosLiga()) {
   // todo en una: lo de aparte y los rivales, de más largo a más corto; en cada sitio gana el que empieza antes y, ahí, el más largo
   const todo = reR ? palabra([...new Set([...aparte, ...claves])].sort((a, b) => b.length - a.length)) : null;
   const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|[Ee][Xx][Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
+  const conEl = Object.values(apodoDe).some((a) => /^el\s/i.test(a));
   const tapar = (t0, { aprox: conAprox = false } = {}) => {
     if (!todo || typeof t0 !== 'string') return t0;
     if (conAprox) t0 = aproximar(t0, aprox, { prohibidos: igual, norm }).t;
@@ -948,7 +953,8 @@ export function seudonimos(D, apodos = apodosLiga()) {
     },
     // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla. (0.8a) En el chat,
     // un rival con apodo sale con él: la primera vez «el Tito (Marcos)» y luego «el Tito»
-    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? ((vistos) => t.replace(deVuelta, (m, q, d) => { const k = `${q.toLowerCase()} ${d}`, v = vuelta[k]; if (v == null) return m; if (json) return JSON.stringify(v).slice(1, -1); const ap = apodoDe[k]; if (!ap || ap === v) return v; if (vistos.has(k)) return ap; vistos.add(k); return `${ap} (${v})`; }))(new Set()) : t),
+    // (19 nov) con un apodo que empieza por «el» («el Tito»): «de el Tito» → «del Tito», «a el Tito» → «al Tito»
+    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? ((vistos) => { const o = t.replace(deVuelta, (m, q, d) => { const k = `${q.toLowerCase()} ${d}`, v = vuelta[k]; if (v == null) return m; if (json) return JSON.stringify(v).slice(1, -1); const ap = apodoDe[k]; if (!ap || ap === v) return v; if (vistos.has(k)) return ap; vistos.add(k); return `${ap} (${v})`; }); return json || !conEl ? o : o.replace(/\b(De|de|Del|del|A|a|Al|al) el (?=\p{Lu})/gu, (m, p) => `${/^d/i.test(p) ? (p[0] === 'D' ? 'Del' : 'del') : (p[0] === 'A' ? 'Al' : 'al')} `); })(new Set()) : t),
   };
 }
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
@@ -987,7 +993,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // partidos»: solo le llegaba «ESTAMOS EN EL PARÓN: no hay partidos» y nada de la jornada que se acababa de jugar
   const ultJ = M.enJuego ? null : [...(M.jornadas || [])].reverse().find((j) => j.fin && j.fin <= Date.now());
   if (ultJ && Date.now() - ultJ.fin < 6 * DIA) L.push(`ÚLTIMA JORNADA JUGADA: la ${ultJ.n}, del ${cuandoF(ultJ.ini)} al ${cuandoF(ultJ.fin)}; acabó hace ${dura(Date.now() - ultJ.fin)}. Esos días SÍ hubo partidos de LaLiga y sus puntos ya cuentan: no digas que no hubo partidos ni que fue un fin de semana sin fútbol.`);
-  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
+  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).${chat && !M.enJuego ? ` El once de esa jornada se puede cambiar hasta esa hora (${cuando(M.proxima.ini)}); lo que se fiche o clausule después ya no puntúa en ella.` : ''}`);
   if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada (el once se cierra con el primer partido): no lo pongas en el once ni cuentes con sus puntos hasta la siguiente.`);
   else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada (el once se cierra con el primer partido): cuenta para la siguiente.`);
   // el parón, con lo que supone: la IA lo tenía en una línea y seguía hablando de uno que «sube como la espuma»
@@ -1013,6 +1019,12 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   }
   const yo = M.yo || {};
   L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} (lo máximo para una cláusula) · EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${eur(M.pujaMax)} COMO MUCHO${M.misPujas ? ` (ya descontados los ${eur(M.misPujas)} que tengo comprometidos en pujas: una puja nueva de hasta ${eur(M.pujaMax)} cabe)` : ''}.`);
+  // (19 nov, tercera parte) las pujas que ya tiene puestas, con nombre: antes solo salían dentro de las operaciones y el chat
+  // confundía una puja posible (R. Terrats) con la que ya tenía (Courtois)
+  if (chat) {
+    const pu = (D.mercado || []).filter((m) => m.miPuja).map((m) => `${(M.J(m.pid) || {}).nombre || '?'} ${eur(m.miPuja)}`);
+    if (pu.length) L.push(`MIS PUJAS YA PUESTAS (se resuelven en el cambio de mercado${M.cierreMercado ? `, ${cuando(M.cierreMercado)}` : ''}): ${pu.join('; ')}. Ninguna otra: lo que sale en PUJAR más abajo son opciones, no pujas mías.`);
+  }
   {
     // la caja de cada paso, hecha: la IA no tiene que sumarla (revisión del 25 oct: daba por imposibles cláusulas que
     // llegaban aceptando una oferta, y no contaba las pujas hechas al ver si se empieza la jornada en positivo)
@@ -1050,7 +1062,23 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // también en uno que sube y tiene una oferta que la app aceptaría, y la IA leía dos órdenes contrarias
   const noVenderAun = (x) => !!(M.esperarVenta && (x.ventaInercia || (x.tend && x.tend.p7 != null && x.tend.p7 < -4))
     && !(veredictos(D, M) || {})[`A-${x.pid}`] && M.esperarVenta(x).tipo);
-  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
+  // (19 nov) en el chat, lo que se dice de vender por la inercia sale de lo que hace el plan que ve en Hoy: antes decía
+  // «VENDER POR INERCIA» de uno que el plan aguanta («Te da 3,5 pts… se aguanta», en Mirados) y la IA mandaba venderlo
+  let vendeP = null, miradoP = null;
+  if (chat) {
+    try {
+      const Rp = planQueVe(D, M, c), Rm = planDeHoy(D, M, c);
+      const ops = Rp ? (Rp.motorHoy ? Rp.ops : cuadrarPlan(Rp, D, M).ops) : [];
+      vendeP = new Set(ops.filter((o) => !o.descartada && !o.sugerencia && o.accion === 'vender').map((o) => String(o.pid)));
+      miradoP = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.motivo || '')]));
+    } catch (e) { vendeP = null; }
+  }
+  const inerciaTxt = (x) => {
+    if (!x.ventaInercia) return '';
+    if (vendeP && !vendeP.has(String(x.pid))) { const mo = miradoP && miradoP.get(String(x.pid)); return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE${mo ? ` (${mo.split(/(?<=\.)\s/)[0]})` : ''} | `; }
+    return `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
+  };
+  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -1182,51 +1210,6 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   return L.join('\n');
 }
 
-/* (revisión de la IA, 14 nov) El sistema, rehecho: de 24.500 caracteres a menos de 10.000. Las reglas de LaLiga van una sola
-   vez, numeradas y comprobadas con Carlos (13 nov: oferta directa a cualquier jugador de un rival, 14 días de cláusula
-   cerrada tras cualquier fichaje, la oferta de LaLiga llega en el siguiente cambio de mercado, el tope de deuda suma todas
-   las pujas). Lo que antes eran párrafos de «cómo calcular» (cuándo vender, cuánto es pagar de más, la salida de un
-   clausulazo, el calendario) ahora lo decide la app antes de preguntar (veredictos) y aquí solo se explica cómo elegir.
-   Se quitan las contradicciones: «no se puede comprar a un rival que no vende» frente a «se cierra con una oferta desde
-   su ficha», y «lo que pide» para el precio que un rival pone en el mercado. */
-// (17 nov) ya no se le manda a ninguna IA (era el sistema del plan largo, quitado): se queda porque `seudonimos`, que
-// comparte el chat, no elige alias que choquen con sus palabras, y quitarlo cambiaría los alias
-const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle qué hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo ni de quién es. No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho: si necesitas saberlo, pregúntaselo.
-
-REGLAS DE LALIGA FANTASY (comprobadas; si algo de lo que vayas a decir choca con una de estas, está mal):
-1. CLÁUSULAS. Cada jugador tiene una. Con la protección acabada, cualquiera la paga y se lo lleva al instante. Una cláusula SOLO se paga con el SALDO que hay en ese momento: nunca con deuda ni con el dinero de lo que está en venta sin aceptar. Tras CUALQUIER fichaje (mercado, clausulazo o compra a otro manager) la cláusula del jugador queda cerrada 14 días. Si el valor pasa la cláusula, LaLiga la sube sola hasta el valor. El dueño puede subirla pagando (pagar X la sube 2X).
-2. CIERRE. En las 24 h antes del primer partido de cada jornada nadie puede clausular a nadie; se reabren justo a la hora de ese primer partido (te paso cada cláusula ya con la hora en que de verdad se puede pagar).
-3. EL ONCE se cierra con el primer partido de la jornada y no se puede tocar hasta la siguiente, ni a los que aún no han jugado. Lo que se ficha o se clausula después no puntúa en esa jornada.
-4. BLINDAJE (el escudo): 2 por jornada, gratis viendo un anuncio, 24 h (48 h en ligas Premium), y SOLO se puede poner con la cláusula ya abierta. «Blindar» y «blindaje» son solo eso; pagar para que la cláusula suba es «subir la cláusula» (en el plan, su acción es también "blindar", con su importe).
-5. MERCADO DE LIBRES: jugadores que no son de nadie; se puja a ciegas desde su precio y se los lleva la puja más alta cuando cambia el mercado (cada día).
-6. DEUDA: puede quedarse en negativo hasta el % del valor del equipo que te digo, pero SOLO pujando o comprando en el mercado, y cuenta la SUMA de todas las pujas que tenga puestas. Si empieza una jornada en negativo, no puntúa: eso es lo único obligatorio.
-7. VENDER: pone al jugador en el mercado; la oferta de LaLiga NO llega al momento, llega en el siguiente cambio de mercado, y en cada cambio hace una nueva. El dinero entra al aceptar una oferta, no antes.
-8. JUGADORES DE OTROS MANAGERS, tres caminos distintos: (a) su CLÁUSULA, cuando esté abierta: es el único seguro. (b) Lo tiene EN VENTA: el precio lo pone él a su gusto (muchas veces absurdo, solo para ver qué le ofrece LaLiga) y es el MÍNIMO: por debajo no se puede ofertar; él recibe además la oferta de LaLiga y se queda con la mejor. Ese precio no es un trato ni algo que «le pida» al manager. (c) NO lo tiene en venta: se le puede hacer una oferta igualmente desde la ficha del jugador, pero decide su dueño y lo normal es que no acepte por menos de lo que le daría LaLiga. Solo es un TRATO si el manager te cuenta que el otro le ha ofrecido el jugador A ÉL por una cifra.
-9. Un CAMBIO entre managers son dos compras, cada una a su precio (su valor, si no acuerdan otro): nadie regala ni pierde la diferencia, y cada jugador estrena 14 días de cláusula cerrada.
-10. PLANTILLA: 25 jugadores como mucho. Juega con la versión gratis: solo las formaciones que te digo y SIN ENTRENADOR (no se alinea ni puntúa: nunca recomiendes fichar uno; si tiene alguno, es dinero parado).
-
-LA APP DECIDE, TÚ ELIGES Y EXPLICAS. La app ya ha hecho las cuentas y ha comprobado cada operación con las reglas de arriba y con los datos de su liga:
-- En «OPERACIONES POSIBLES HOY» solo está lo que se puede hacer y la app daría por bueno; cada una lleva «→ LA APP: …» con para qué vale y sus avisos. Lo de «LO QUE LA APP YA HA DESCARTADO HOY» no se recomienda (si te preguntan por uno, explica el motivo que te paso). Un jugador de un rival que no está ahí no entra en el plan.
-- Con sus jugadores, cada uno lleva lo que haría la app si lo vende. «LA APP: NO LO VENDERÍA HOY» manda: no le digas que lo venda, salvo que el dinero haga falta de verdad para otra operación de hoy o que él te dé un dato nuevo, y entonces dilo.
-- Las cifras se COPIAN de los datos: valor, cláusula, saldo, lo que pagó, la puja de la app, la subida justa, la oferta mínima, fechas y horas. No las redondees a otra cosa ni las cambies de un mensaje a otro. Si haces una cuenta, que sea una suma o una resta sencilla, escrita con sus cifras («6,43 M + 66,17 M = 72,60 M»), y repásala.
-- Lo que no esté en los datos, no lo sabes: dilo así en vez de inventarlo (un precio «pactado», lo que LaLiga le ofrece hoy a un rival, una lesión que no sale).
-Tu parte es elegir entre lo que vale, ordenarlo para que el dinero cuadre y explicarlo: por qué ahora, qué riesgo tiene y qué haría falta para cambiar de idea. Mejor no hacer nada que hacer algo dudoso.
-
-CÓMO DECIDIR entre lo que vale:
-- DOS TIPOS DE FICHAJE, y di cuál es: para su ONCE (entra de titular y da puntos) o para REVENDER (sube y se vende con beneficio antes de la jornada; da igual que no lo vaya a alinear o que ya tenga a otro en su puesto). Para revender tiene que seguir subiendo hasta el día de venderlo y tiene que dar tiempo (te paso los cambios de mercado que quedan). Los marcados VUELVE (se hundieron por lesión o por no jugar, juegan otra vez y suben varios días seguidos) son la especulación más clara.
-- ¿JUEGA Y PUNTÚA? Once probable, minutos, lesión, sanción y prensa. Si lleva ALINEACIÓN CONFIRMADA, eso manda. Elige por los PUNTOS ESPERADOS de su próximo partido (ya cuentan el rival, casa o fuera y la portería a cero), no por su media ni por su nombre: un portero o un defensa contra un equipo que marca mucho puntúa poco; un delantero contra una defensa que no encaja, también. Su CALENDARIO (próximos partidos) cuenta para fichar, no para vender.
-- ¿QUÉ CUESTA? Lo que se paga por encima del valor se pierde: importan los EUROS, no solo el porcentaje (un +25 % son 750 mil en uno de 3 M y 10 M en uno de 40 M). Te paso el índice de sobrecoste y hasta dónde es aguantable; dilo en euros. La puja sale de lo que se paga en esta liga por los de su valor (te lo paso): como poco, la de la app.
-- INERCIA DEL VALOR: mira hacia dónde va AHORA (lo que cambia cada día), no el total de la semana. Si sube cada vez menos, está frenando y va a girar; si ha girado, lo normal es que siga bajando varios días. Un buen partido reciente (te lo marco) puede frenar la bajada o darle la vuelta.
-- VENDER: solo si hace falta el dinero (empezaría la jornada en negativo o paga una operación de hoy que compense), si está de baja o se hunde, si ha girado y no es imprescindible, o si la oferta es buena. Ser suplente, un calendario duro o «hacer caja» no son motivo. Di siempre cuánto gana o pierde frente a lo que pagó y a cuánto está su cláusula. Si la oferta de LaLiga de hoy es de las bajas y no hay prisa, que espere a la del siguiente cambio de mercado.
-- RIESGO DE CLÁUSULA (que le quiten a uno suyo): te lo paso calculado con el dinero de cada rival y lo que se paga en esta liga; no lo rebajes sin un dato nuevo y no lo mezcles con lo difícil que sea su calendario. Si le clausulan, cobra la cláusula, pero con la cláusula en su valor o cerca es REGALARLO (pierde sus puntos y lo que suba, y reponerlo cuesta más): nunca digas que le viene bien ni que «hace caja». Para protegerlo: primero el blindaje gratis si está abierta y le quedan; si no, la «subida justa» que te paso (no una cifra tuya), y solo si el jugador lo merece. Si no compensa, dilo: es un riesgo que asume.
-- EL DINERO: para clausular, solo el saldo de ahora (o el que tendría aceptando antes las ofertas que ya tiene); para pujar, el saldo más el margen de deuda menos lo ya pujado. Entre semana puede tirar de deuda para especular si antes de la jornada vuelve a positivo vendiendo: dile qué día vender cada cosa.
-- LOS RIVALES: mira qué hacen y quién puede ir a por sus jugadores (el que clausula a menudo y le llega es el peligro de verdad). Un rival sin dinero no puja fuerte ni clausula.
-- EL PARÓN: nadie puntúa hasta la vuelta y lo que manda es el dinero (mira PRIORIDAD EN EL PARÓN si te la paso).
-- LO QUE TE CUENTA EL MANAGER (tratos, ofertas por privado, lo que ha hecho o no quiere vender) cuenta tanto como los datos. Un trato se cierra con una oferta por ese importe desde la ficha del jugador: valóralo por su valor, lo que sube al día, si entra en su once y si le llega el dinero.
-- APRENDE: en «CÓMO VAN TUS ACIERTOS» te digo cuánto fallan los puntos esperados y cómo salieron tus recomendaciones; si algo salió mal, no lo repitas.
-
-DATOS Y FUENTES: usa lo que te paso (cifras en millones, «12,4 M», fechas y horas exactas) y no inventes jugadores ni cifras. No digas de qué web sale nada ni nombres webs de fantasy o de onces (ni con un «según»): di «la prensa» o «los onces probables». Si tienes la búsqueda de Google, úsala solo para lo que pueda cambiar una decisión (lesiones, sanciones, convocatorias, onces de última hora, rotaciones); si no has encontrado noticias, dilo. Confianza «alta» solo si todo cuadra y hay un dato que lo respalda.
-{{PULLITAS}}`;
 
 /* ---------------- el plan del día ---------------- */
 export const planes = () => LS.get(K('planes'), []);
@@ -1264,7 +1247,7 @@ const TXT = T('STRING'), TXTN = T('STRING', { nullable: true });
    aplica los cambios con el propio motor (que rehace las cuentas) y lo pasa otra vez por cuadrarPlan: si lo que pide la
    IA no cuadra, se queda el plan del motor con sus frases. Si la IA no contesta, el plan del motor ya está en pantalla. */
 /** lo que elige la app para las instrucciones del plan corto (el Worker las arma igual con esto: plan-sistema.js) */
-const opSistemaCorto = () => {
+export const opSistemaCorto = () => {
   const p = cfgIA().pullitas || 'normal';
   // (sin PULLITAS: con el plan corto el modelo ligero se inventaba fiestas y bailes para tener de qué hacer la broma)
   return { tono: p === 'normal' || p === 'saco' ? 'broma' : 'serio', bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() };
@@ -1681,7 +1664,7 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
   const busquedas = (j.tok && Number(j.tok.web)) || 0;
   apuntar({ modelo: 'app', s: 'plan', ok: true, web: busquedas > 0, ms: Date.now() - t0, tok: j.tok || null });
   const texto = JSON.stringify(j.plan || {});
-  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, idsDe, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
+  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, idsDe, pedidoT: pend && pend.rid === rid && pend.t ? pend.t : t0, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
 }
 /**
  * (17 nov) los ids del plan corto (p1, a2…) son la posición de cada paso en el plan que se mandó. Si la respuesta es de
@@ -1724,6 +1707,13 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
   }
   // (17 nov) el plan recogido de un pedido de antes (la app se cerró mientras la IA contestaba): sus ids eran los de aquel
   // plan; se pasan a los de este por lo que era cada paso. Lo que ya no está en el plan de ahora no se aplica
+  // (19 nov, (72) de la segunda revisión) un plan pedido antes de que se cerraran las cláusulas y recogido ya con ellas
+  // cerradas era de otro mundo: sus cláusulas ya no se pueden pagar y no queda cambio de mercado para lo demás. Antes se
+  // rehacía con planVueltas y salía otro plan con las frases de la IA a medias; ahora no se aplica: queda el de la app
+  if (r.pedidoT && M.vedaAhora && r.pedidoT < M.vedaAhora.ini) {
+    apuntar({ modelo: r.modelo, s: 'plan', e: 'plan recogido de antes del cierre de cláusulas: no se aplica', ms: 0 });
+    throw new ErrorIA('El plan de la IA se pidió antes de que se cerraran las cláusulas y ya no vale: tienes el de la app, que ya cuenta con el cierre. Si quieres, pide otro.', 0, { recogidoViejo: true });
+  }
   const traducidos = traducirIds(json, r.idsDe, ids);
   // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
   json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
@@ -2892,6 +2882,9 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   }
   for (const fr of frases) {
     if (/\?\s*$/.test(fr)) continue;
+    // (19 nov) una orden para más adelante y con condición no es de hoy: «Si el valor sigue cayendo en los próximos cambios
+    // de mercado…, véndelo entonces» hacía saltar «Revisado por la app» con una respuesta que decía «hoy no lo vendas»
+    if (/^\W*si\b/.test(norm(fr)) && /\b(sigue|siguen|proxim\w*|despues|cuando|manana|entonces|mas adelante|otro dia)\b/.test(norm(fr))) continue;
     // una orden va al principio de la frase o de un inciso («Sí, clausúlalo»; «entonces vende a X»): «una cláusula a su
     // valor», «Marcos vende a Camello» o «la puja por Terrats» no lo son (falsa alarma en la pasada con la IA, 13 nov)
     for (const inciso of fr.split(/[,;:()—–]/)) {
@@ -3031,7 +3024,9 @@ export function ofertaDueno(M, j, t = {}) {
   return { v, sube };
 }
 
-export function plantillasRivalesTxt(D, M, enteros = new Set()) {
+/* (19 nov, tercera parte) recortado para el chat: de los rivales de los que no pregunta, sin lo de hoy (va lo de 7 días) y sin
+   «oferta para que te lo venda» salvo que pregunte por ofertas o nombre al jugador (~20 % menos de lo que lee el chat) */
+export function plantillasRivalesTxt(D, M, enteros = new Set(), { nombrados = new Set(), ofertas = true } = {}) {
   const saldo = num(D.dinero);
   const enVenta = new Map((M.mercado || []).filter((m) => m.tipo === 'manager').map((m) => [String(m.pid), m]));
   const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula, cuándo se puede pagar y si le llega con su saldo de ahora, ${eur(saldo)} | si lo tiene en venta | cuánto ofrecerle a su dueño). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
@@ -3044,18 +3039,19 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
     for (const x of fichas) {
       const j = x.j, t = x.tend || (M.tend ? M.tend(j.id) : null) || {};
       const T = det && M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
+      const entero = det || nombrados.has(String(j.id));
       const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'le llega' : `le faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
       const v = enVenta.get(String(j.id));
       const of = ofertaDueno(M, j, t);
       L.push(`  - ${[
         POS[j.pos] || '?', j.nombre, j.equipo || '?', eur(j.valor),
-        [t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
+        [entero && t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
         j.media ? `media ${String(j.media).replace('.', ',')}` : null,
         det ? (onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null)) : null,
         det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
         cl,
         v ? `EN VENTA por ${eur(v.precio)}` : null,
-        of ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
+        of && (entero || ofertas) ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
         j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
       ].filter(Boolean).join(' | ')}`);
     }
@@ -3082,6 +3078,24 @@ export function misClausulasTxt(D, M) {
   }
   return L.join('\n');
 }
+/** los rivales que nombra por su apodo (Ajustes → Apodos de los rivales) o con el nombre aproximado (lo que escribe el dictado) */
+export function rivalesAprox(texto, D, M) {
+  const out = new Set();
+  if (!texto || !M || !M.rivales) return out;
+  const ap = apodosLiga(), nombres = [];
+  const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
+  for (const r of M.rivales) {
+    const tid = String(r.e.teamId);
+    for (const a of listaApodos(ap[tid])) {
+      for (const v of [a, sinArticulo(a)].filter(Boolean)) { const n = norm(v).replace(/[^a-z0-9ñ ]+/g, ' ').trim(); if (n.length >= 3 && q.includes(` ${n} `)) out.add(tid); nombres.push({ nombre: v, clave: tid }); }
+    }
+    for (const n of [r.e.nombre, r.e.manager].filter(Boolean)) nombres.push({ nombre: n, clave: tid });
+  }
+  if (out.size) return out;
+  const prohibidos = new Set(Object.values(D.maestro || {}).flatMap((j) => [j.nombre, j.equipo]).filter(Boolean).map(norm));
+  try { for (const k of aproximar(texto, nombres, { prohibidos, norm }).cambios) out.add(String(k)); } catch (e) { /* sin aproximar */ }
+  return out;
+}
 export function rivalesEn(texto, D, M) {
   const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
   const out = new Set();
@@ -3098,12 +3112,25 @@ export function rivalesEn(texto, D, M) {
   return out;
 }
 
+/** el plan que se ve en Hoy ahora: el de la IA si es de hoy; si no, el del motor de hoy (marcado con motorHoy) */
+function planQueVe(D, M, c) {
+  const p = ultimoPlan();
+  if (p && p.dia === diaDe()) return p;
+  try {
+    const R = planDeHoy(D, M, c);
+    if (R && Array.isArray(R.ops) && R.ops.some((o) => !o.descartada)) return { motorHoy: true, t: Date.now(), titular: R.titular || '', operaciones: R.ops.filter((o) => !o.descartada).map((o) => ({ accion: o.accion, jugador: (o.j && o.j.nombre) || o.jugador || '' })), ops: R.ops };
+  } catch (e) { /* sin motor: el de antes, si lo hay */ }
+  return p;
+}
 /**
  * Los datos de su liga para el chat: lo de siempre (contexto), los jugadores que nombra con todo, las plantillas de los
  * rivales y el plan. Es lo que la app manda al Worker (empieza por CABECERA_DATOS); se exporta para probarlo con la demo.
  */
 export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
-  const p = ultimoPlan();
+  // (19 nov, tercera parte) el plan que ve en Hoy: el de la IA si es de hoy y, si no, el del motor de hoy (como montarPlan
+  // de app.js). Antes iba siempre el último plan de la IA, aunque fuera de ayer, y sin plan de la IA no iba ninguno: a
+  // «¿por qué el plan me dice que venda a X?» contestaba sin saber qué plan tenía delante
+  const p = planQueVe(D, M, c);
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
   // pila si solo hay uno («Nico»): sin eso, a la segunda pregunta ya no llevaba las cuentas ni la cláusula
@@ -3124,20 +3151,27 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
   let enteros = rivalesEn(pregunta, D, M);
   if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);
+  // (19 nov) también por su apodo o con el nombre mal dictado («leao ere espabilado», «el Tito»): antes la IA lo entendía
+  // por los alias, pero a ese rival no le llegaban los datos enteros (titularidad, próximo partido)
+  if (!enteros.size) enteros = rivalesAprox(pregunta, D, M);
+  if (!enteros.size && antes) enteros = rivalesAprox(antes, D, M);
   let rivales = '', mias = '';
-  try { rivales = plantillasRivalesTxt(D, M, enteros); } catch (e) { rivales = ''; }
+  try { rivales = plantillasRivalesTxt(D, M, enteros, { nombrados: new Set(nombrados.map((j) => String(j.id))), ofertas: /\b(ofrec\w*|oferta\w*|cuanto|precio|trato|cambi\w*)\b/.test(norm(`${pregunta} ${antes}`)) }); } catch (e) { rivales = ''; }
   try { mias = misClausulasTxt(D, M); } catch (e) { mias = ''; }
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
   let plan = '';
   if (p) {
     const ops = p.operaciones || [];
     let cu = null;
-    try { cu = opsCuadradas(cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
+    try { cu = opsCuadradas(p.motorHoy ? p.ops.filter((o) => !o.descartada) : cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
     const q = norm(pregunta);
     const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && !enteros.size && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
-    const cab = `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
+    const cab = p.motorHoy ? 'EL PLAN DE HOY QUE VE EN LA APP (lo ha hecho la app, no tú)' : `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
+    // del plan de la app van también el cuándo y el porqué de cada paso (lo que ve él en Hoy), para «¿por qué me dice que…?»
+    const pasos = p.motorHoy ? p.ops.filter((o) => !o.descartada).slice(0, 8).map((o) => `- ${o.accion === 'esperar' ? 'esperar a' : o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}: ${String(o.motivo || '').replace(/\s*\(interés \d+\)/g, '').split(/(?<=\.)\s/).slice(0, 3).join(' ')}`).join('\n') : '';
     plan = vaDelPlan
-      ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
+      ? (pasos ? `\n\n${cab}, de referencia (no lo repitas si no viene a cuento; si te pregunta por un paso, explícalo con su porqué): ${p.titular}\n${pasos}`
+        : `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`)
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta

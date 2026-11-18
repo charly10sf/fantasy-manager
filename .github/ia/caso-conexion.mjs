@@ -25,8 +25,8 @@ const JSONC = (status, j) => ({ status, headers: cors, contentType: 'application
  * reloj de la página cada vez que llega un pedido que se cuelga. `clave`: con tu clave de Google además.
  */
 const PLAN_JS = await readFile(join(WEB, 'js', 'plan.js'), 'utf8');
-async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000, romperMotor = false }) {
-  const P = await pagina('martes', google || undefined);
+async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000, romperMotor = false, escena = 'martes', pendAntes = 0 }) {
+  const P = await pagina(escena, google || undefined);
   const rids = [];
   try {
     const { page } = P;
@@ -56,6 +56,8 @@ async function caso({ servir, adelantar = 0, clave = false, google = null, esper
     await page.waitForFunction(() => window.S && window.S.D && window.S.M && window.S.plan, null, { timeout: 30000 });
     await page.waitForSelector('.plan-rehacer', { timeout: 10000 });
     const antes = await page.evaluate(() => ({ auto: !!window.S.plan.auto, motor: !!window.S.plan.motor, pasos: (window.S.plan.ops || []).filter((o) => !o.descartada && !o.sugerencia).length }));
+    // (19 nov) un pedido de antes en marcha (la app se cerró mientras la IA contestaba), hecho hace `pendAntes` ms
+    if (pendAntes) await page.evaluate(async (antes) => { const U = await import('./js/util.js'); U.LS.set('plan-rid', { rid: 'pedidoviejo01', t: Date.now() - antes, dia: U.diaDe() }); }, pendAntes);
     const desde = await page.evaluate(() => Date.now());
     await page.click('.plan-rehacer');
     const t0 = Date.now();
@@ -137,6 +139,15 @@ for (const [que, body] of [['vacía', ''], ['solo los espacios', '      '], ['co
   ok(r.rids.length === 2 && r.rids[0] === r.rids[1], 'un corte y vuelve: el segundo pedido lleva el mismo id');
 }
 // 8. el servidor no contesta nunca: como mucho 3 minutos en total (el reloj de la página se adelanta)
+{
+  // (19 nov, (72)) pedido antes del cierre de cláusulas y recogido ya con ellas cerradas: no se aplica, queda el de la app
+  const r = await caso({ escena: 'veda-recien', pendAntes: 15 * 60e3, servir: () => JSONC(200, PLAN_OK) });
+  sigueLaApp(r, 'recogido de antes del cierre');
+  ok(/antes de que se cerraran las cláusulas/.test(r.error) && /pide otro/.test(r.error), `recogido de antes del cierre: lo dice («${r.error.slice(0, 160)}»)`);
+  ok(r.rids[0] === 'pedidoviejo01' && r.veces === 1, 'recogido de antes del cierre: se recoge con el id de entonces (no gasta otro)');
+  const r2 = await caso({ escena: 'veda-recien', pendAntes: 5 * 60e3, servir: () => JSONC(200, PLAN_OK) });
+  ok(r2.plan && r2.plan.ia && !r2.error, `pedido ya con el cierre y recogido: se aplica (${r2.plan && r2.plan.titular})`);
+}
 {
   const r = await caso({ servir: () => 'colgar', adelantar: 10000, espera: 60000 });
   sigueLaApp(r, 'no contesta');

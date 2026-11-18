@@ -27,7 +27,11 @@ import { pagina, cerrar, arbitro } from './banco.mjs';
 const N = Number(process.argv[2]) || 40, SEMILLA = Number(process.argv[3]) || 1;
 // [escena de banco.mjs, caso] (sin caso: solo el azar)
 const ESCENAS_AZAR = [['martes'], ['veda'], ['enjuego'], ['paron'], ['m-cierre'], ['m-reventa'],
-  ['paron', 'paron-rico'], ['m-limpio', 'lleno-25'], ['martes', 'negativo'], ['martes', 'clausula-pagada'], ['martes', 'puja-hecha'], ['enjuego', 'jornada-empezada'], ['martes', 'rival-clausulo']];
+  ['paron', 'paron-rico'], ['m-limpio', 'lleno-25'], ['martes', 'negativo'], ['martes', 'clausula-pagada'], ['martes', 'puja-hecha'], ['enjuego', 'jornada-empezada'], ['martes', 'rival-clausulo'],
+  // (19 nov, tercera parte) el sábado del partido con el cambio de ese mismo día, una liga con el mercado a otra hora, en
+  // negativo con un solo cambio por delante, un titular lesionado largo, una cuenta nueva, una liga sin clausulazos y los
+  // dos últimos días del parón
+  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado']];
 let mal = 0, total = 0;
 const resumen = {};
 const sum = { rehechos: 0, ajustados: 0, viejos: 0, cruzadas: 0, recogidos: 0 };
@@ -90,7 +94,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         // (de sobra: 60 a 150 M libres además de lo que ya tenga pujado)
         if (caso === 'paron-rico') { D.dinero = Math.round((60 + az() * 90) * 1e6) + D.mercado.reduce((t, m) => t + (+m.miPuja || 0), 0); cambios.push(`saldo ${D.dinero}`); }
         if (caso === 'lleno-25') { for (const m of D.mercado) m.miPuja = null; meter(libres(Math.max(0, 25 - mios.length))); mios.length = Math.min(mios.length, 25); cambios.push(`plantilla ${mios.length}`); }
-        if (caso === 'negativo') { D.dinero = -Math.round((0.5 + az() * 29.5) * 1e6); cambios.push(`saldo ${D.dinero}`); }
+        if (caso === 'negativo' || caso === 'negativo-ultimo') { D.dinero = -Math.round((0.5 + az() * 29.5) * 1e6); cambios.push(`saldo ${D.dinero}`); }
         if (caso === 'clausula-pagada' || caso === 'rival-clausulo') {
           // el mejor de un rival viene a mí (o uno de mis titulares se va a un rival), pagando su cláusula hace una hora
           const deTid = caso === 'clausula-pagada' ? uno(rivales) : yo, aTid = caso === 'clausula-pagada' ? yo : uno(rivales);
@@ -109,6 +113,17 @@ for (const [escena, caso] of ESCENAS_AZAR) {
           const m = uno(D.mercado.filter((y) => y.precio && y.tipo !== 'rival' && !(Object.values(D.plantillas).flat().some((z) => z.pid === y.pid))).sort((a, b) => b.precio - a.precio).slice(0, 6));
           if (m) { m.miPuja = Math.round(m.precio * (1.02 + az() * 0.15)); C.pid = m.pid; C.nombre = (D.maestro[m.pid] || {}).nombre; cambios.push(`puja ya hecha por ${C.nombre}`); }
         }
+        if (caso === 'lesionado') {
+          // uno de mis titulares (de los cinco más caros), lesionado largo
+          const x = [...mios].filter((y) => D.maestro[y.pid] && D.maestro[y.pid].pos !== 5).sort((a, b) => D.maestro[b.pid].valor - D.maestro[a.pid].valor)[Math.floor(az() * 5)];
+          const j = D.maestro[x.pid]; j.estado = 'injured'; j.lesion = { dias: 45, texto: 'rotura muscular' };
+          C.pid = x.pid; C.nombre = j.nombre; cambios.push(`${j.nombre} lesionado`);
+        }
+        if (caso === 'nueva') {
+          // el primer día con la app: sin histórico, sin movimientos de la liga y sin saber lo que pagó por cada uno
+          D.actividad = []; H.v = {}; for (const x of mios) x.compra = null; cambios.push('cuenta nueva');
+        }
+        if (caso === 'sin-clausulazos') { D.actividad = (D.actividad || []).filter((a) => a.clase !== 'clausula'); cambios.push('sin clausulazos'); }
         void yoC;
         const donde = `${caso ? `${escena}/${caso}` : escena} · semilla ${SEMILLA} · vuelta ${v} (${cambios.join(', ')})`;
         const falla = (t) => fallos.push(`${donde}: ${t}`);
@@ -163,6 +178,26 @@ for (const [escena, caso] of ESCENAS_AZAR) {
             if (p.length) falla(`${quien}: ya hay una puja por ${C.nombre} y el plan puja otra vez`);
             if (de(C.pid).length > 1) falla(`${quien}: dos pasos con ${C.nombre}`);
           }
+          if (caso === 'justo') {
+            if (!M.ventanaEsp || !M.ventanaEsp.justo) falla('el caso no tiene el cambio de mercado del día del partido');
+            if (vv.some((o) => /00:15/.test(String(o.cuando || '') + String(o.motivo || '')))) falla(`${quien}: habla de las 00:15 en una liga con el mercado a las 12:00`);
+          }
+          if (caso === 'hora-20') {
+            if (vv.some((o) => /00:15/.test(String(o.cuando || '') + String(o.motivo || '')))) falla(`${quien}: habla de las 00:15 en una liga con el mercado a las 20:00: ${vv.filter((o) => /00:15/.test(String(o.cuando || '') + String(o.motivo || ''))).map((o) => o.jugador).join(', ')}`);
+          }
+          if (caso === 'negativo-ultimo') {
+            if (X.modo !== 'negativo') falla(`${quien}: en negativo con un solo cambio por delante el plan no va en modo negativo (${X.modo})`);
+            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas/.test(X.avisoSaldo || '')) falla(`${quien}: acaba en negativo y no lo avisa`);
+            if (vv.some((o) => o.accion === 'vender' && o.hoy === false)) falla(`${quien}: con un solo cambio por delante deja una venta para otro día: ${vv.filter((o) => o.accion === 'vender' && o.hoy === false).map((o) => o.jugador).join(', ')}`);
+          }
+          if (caso === 'lesionado') {
+            if (X.alineacion && (X.alineacion.titulares || []).includes(C.nombre)) falla(`${quien}: ${C.nombre} está lesionado y va en el once`);
+            if (de(C.pid).some((o) => o.accion === 'blindar')) falla(`${quien}: blinda o sube la cláusula a ${C.nombre}, lesionado largo`);
+          }
+          if (caso === 'paron-final') {
+            if (X.modo === 'paron') falla(`${quien}: a dos días de la vuelta el plan sigue en modo parón`);
+          }
+          if (['pujar', 'comprar', 'clausular'].some((a) => vv.some((o) => o.accion === a && o.objetivo === 'titular' && o.j && ['injured', 'out'].includes(o.j.estado)))) falla(`${quien}: ficha para el once a uno lesionado: ${vv.filter((o) => o.objetivo === 'titular' && o.j && ['injured', 'out'].includes(o.j.estado)).map((o) => o.jugador).join(', ')}`);
           if (caso === 'jornada-empezada') {
             if (!M.enJuego) falla('el caso no tiene la jornada en juego');
             if (X.modo !== 'enjuego' && X.modo !== 'paron') falla(`${quien}: con la jornada empezada el plan no lo sabe (${X.modo})`);

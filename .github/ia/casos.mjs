@@ -96,6 +96,11 @@ export const CASOS = [
     pregunta: 'Marcos dice que vende a Camello',
     ia: `Marcos te pide 35,87 M por Camello, el precio que pactasteis. Es caro: vale 31,39 M.${bloque({ apuntar: [{ texto: 'Marcos vende a Camello por 35,87 M', jugador: 'Camello', tipo: 'trato', importe: 35867746 }] })}`,
     nunca: ['NOTA:[^\\n]*35,8', 'NOTA:[^\\n]*trato'], debe: ['no es un trato|no te lo ha ofrecido|precio que (él|Marcos) (le )?ha puesto'] },
+  // (19 nov, tercera parte, pasada «antes» con Haiku) «Revisado por la app» de más: la orden es para otro día y con condición
+  { id: 'chat-orden-condicional', tipo: 'chat', escena: 'paron', de: 'pasada con Haiku del 19 nov: «Si el valor sigue cayendo…, véndelo entonces» no es una orden de hoy',
+    pregunta: '¿Vendo a Julián Álvarez?',
+    ia: 'No, hoy no lo vendas. Vendido ahora pierdes 2,84 M sobre lo que pagaste. Si el valor sigue cayendo en los próximos cambios de mercado y te llega una oferta de LaLiga que se acerque a tu precio de compra, véndelo entonces.',
+    nunca: ['Revisado por la app'], debe: ['hoy no lo vendas'] },
   { id: 'chat-clausular-con-deuda', tipo: 'chat', escena: 'martes', de: 'regla: una cláusula no se paga con deuda',
     pregunta: '¿Puedo clausular a Kang-In Lee?',
     ia: 'Sí: tira del margen de deuda y clausúlalo hoy mismo por 55,32 M, que es un jugadorazo.',
