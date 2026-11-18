@@ -2351,7 +2351,8 @@
    "SPORT|136581134": 1795007753000,
    "SPORT|136580084": 1795008872000,
    "SPORT|136558313": 1795010451000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/18/jonathan-viera-caro-es-el-mejor-portero-jugando-con-los-pies-con-el-que-he-entrenado-junto-con-alvaro-valles-ser-las-palmas/": 1795016233000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/18/jonathan-viera-caro-es-el-mejor-portero-jugando-con-los-pies-con-el-que-he-entrenado-junto-con-alvaro-valles-ser-las-palmas/": 1795016233000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000
   },
   "hechos": [
    {
@@ -3194,11 +3195,25 @@
     "motivo": "días libres con la selección española",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795017925000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     39
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -8454,13 +8469,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3802,
+   "ok": 3803,
    "fallos": 0,
-   "ejecuciones": 3122,
+   "ejecuciones": 3123,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T16:11:13.429Z"
+   "ultima": "2026-11-18T16:16:22.049Z"
   }
  },
  "ptsDirecto": {},
@@ -8477,15 +8492,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T16:11:22.097Z"
+   "ultimaBien": "2026-11-18T16:16:48.386Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T16:11:22.097Z"
+   "ultimaBien": "2026-11-18T16:16:48.386Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T16:11:22.097Z"
+   "ultimaBien": "2026-11-18T16:16:48.386Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8493,11 +8508,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T16:11:22.097Z"
+   "ultimaBien": "2026-11-18T16:16:48.386Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T16:11:22.097Z"
+   "ultimaBien": "2026-11-18T16:16:48.386Z"
   }
  },
  "avisos": [
