@@ -914,6 +914,7 @@ export function seudonimos(D, apodos = apodosLiga()) {
   // todo en una: lo de aparte y los rivales, de más largo a más corto; en cada sitio gana el que empieza antes y, ahí, el más largo
   const todo = reR ? palabra([...new Set([...aparte, ...claves])].sort((a, b) => b.length - a.length)) : null;
   const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|[Ee][Xx][Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
+  const conEl = Object.values(apodoDe).some((a) => /^el\s/i.test(a));
   const tapar = (t0, { aprox: conAprox = false } = {}) => {
     if (!todo || typeof t0 !== 'string') return t0;
     if (conAprox) t0 = aproximar(t0, aprox, { prohibidos: igual, norm }).t;
@@ -952,7 +953,8 @@ export function seudonimos(D, apodos = apodosLiga()) {
     },
     // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla. (0.8a) En el chat,
     // un rival con apodo sale con él: la primera vez «el Tito (Marcos)» y luego «el Tito»
-    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? ((vistos) => t.replace(deVuelta, (m, q, d) => { const k = `${q.toLowerCase()} ${d}`, v = vuelta[k]; if (v == null) return m; if (json) return JSON.stringify(v).slice(1, -1); const ap = apodoDe[k]; if (!ap || ap === v) return v; if (vistos.has(k)) return ap; vistos.add(k); return `${ap} (${v})`; }))(new Set()) : t),
+    // (19 nov) con un apodo que empieza por «el» («el Tito»): «de el Tito» → «del Tito», «a el Tito» → «al Tito»
+    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? ((vistos) => { const o = t.replace(deVuelta, (m, q, d) => { const k = `${q.toLowerCase()} ${d}`, v = vuelta[k]; if (v == null) return m; if (json) return JSON.stringify(v).slice(1, -1); const ap = apodoDe[k]; if (!ap || ap === v) return v; if (vistos.has(k)) return ap; vistos.add(k); return `${ap} (${v})`; }); return json || !conEl ? o : o.replace(/\b(De|de|Del|del|A|a|Al|al) el (?=\p{Lu})/gu, (m, p) => `${/^d/i.test(p) ? (p[0] === 'D' ? 'Del' : 'del') : (p[0] === 'A' ? 'Al' : 'al')} `); })(new Set()) : t),
   };
 }
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
@@ -991,7 +993,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // partidos»: solo le llegaba «ESTAMOS EN EL PARÓN: no hay partidos» y nada de la jornada que se acababa de jugar
   const ultJ = M.enJuego ? null : [...(M.jornadas || [])].reverse().find((j) => j.fin && j.fin <= Date.now());
   if (ultJ && Date.now() - ultJ.fin < 6 * DIA) L.push(`ÚLTIMA JORNADA JUGADA: la ${ultJ.n}, del ${cuandoF(ultJ.ini)} al ${cuandoF(ultJ.fin)}; acabó hace ${dura(Date.now() - ultJ.fin)}. Esos días SÍ hubo partidos de LaLiga y sus puntos ya cuentan: no digas que no hubo partidos ni que fue un fin de semana sin fútbol.`);
-  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
+  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).${chat && !M.enJuego ? ` El once de esa jornada se puede cambiar hasta esa hora (${cuando(M.proxima.ini)}); lo que se fiche o clausule después ya no puntúa en ella.` : ''}`);
   if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada (el once se cierra con el primer partido): no lo pongas en el once ni cuentes con sus puntos hasta la siguiente.`);
   else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada (el once se cierra con el primer partido): cuenta para la siguiente.`);
   // el parón, con lo que supone: la IA lo tenía en una línea y seguía hablando de uno que «sube como la espuma»
@@ -1017,6 +1019,12 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   }
   const yo = M.yo || {};
   L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} (lo máximo para una cláusula) · EN EL MERCADO ME QUEDAN PARA PUJAS O COMPRAS NUEVAS ${eur(M.pujaMax)} COMO MUCHO${M.misPujas ? ` (ya descontados los ${eur(M.misPujas)} que tengo comprometidos en pujas: una puja nueva de hasta ${eur(M.pujaMax)} cabe)` : ''}.`);
+  // (19 nov, tercera parte) las pujas que ya tiene puestas, con nombre: antes solo salían dentro de las operaciones y el chat
+  // confundía una puja posible (R. Terrats) con la que ya tenía (Courtois)
+  if (chat) {
+    const pu = (D.mercado || []).filter((m) => m.miPuja).map((m) => `${(M.J(m.pid) || {}).nombre || '?'} ${eur(m.miPuja)}`);
+    if (pu.length) L.push(`MIS PUJAS YA PUESTAS (se resuelven en el cambio de mercado${M.cierreMercado ? `, ${cuando(M.cierreMercado)}` : ''}): ${pu.join('; ')}. Ninguna otra: lo que sale en PUJAR más abajo son opciones, no pujas mías.`);
+  }
   {
     // la caja de cada paso, hecha: la IA no tiene que sumarla (revisión del 25 oct: daba por imposibles cláusulas que
     // llegaban aceptando una oferta, y no contaba las pujas hechas al ver si se empieza la jornada en positivo)
@@ -1054,7 +1062,23 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // también en uno que sube y tiene una oferta que la app aceptaría, y la IA leía dos órdenes contrarias
   const noVenderAun = (x) => !!(M.esperarVenta && (x.ventaInercia || (x.tend && x.tend.p7 != null && x.tend.p7 < -4))
     && !(veredictos(D, M) || {})[`A-${x.pid}`] && M.esperarVenta(x).tipo);
-  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
+  // (19 nov) en el chat, lo que se dice de vender por la inercia sale de lo que hace el plan que ve en Hoy: antes decía
+  // «VENDER POR INERCIA» de uno que el plan aguanta («Te da 3,5 pts… se aguanta», en Mirados) y la IA mandaba venderlo
+  let vendeP = null, miradoP = null;
+  if (chat) {
+    try {
+      const Rp = planQueVe(D, M, c), Rm = planDeHoy(D, M, c);
+      const ops = Rp ? (Rp.motorHoy ? Rp.ops : cuadrarPlan(Rp, D, M).ops) : [];
+      vendeP = new Set(ops.filter((o) => !o.descartada && !o.sugerencia && o.accion === 'vender').map((o) => String(o.pid)));
+      miradoP = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.motivo || '')]));
+    } catch (e) { vendeP = null; }
+  }
+  const inerciaTxt = (x) => {
+    if (!x.ventaInercia) return '';
+    if (vendeP && !vendeP.has(String(x.pid))) { const mo = miradoP && miradoP.get(String(x.pid)); return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE${mo ? ` (${mo.split(/(?<=\.)\s/)[0]})` : ''} | `; }
+    return `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
+  };
+  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -2858,6 +2882,9 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   }
   for (const fr of frases) {
     if (/\?\s*$/.test(fr)) continue;
+    // (19 nov) una orden para más adelante y con condición no es de hoy: «Si el valor sigue cayendo en los próximos cambios
+    // de mercado…, véndelo entonces» hacía saltar «Revisado por la app» con una respuesta que decía «hoy no lo vendas»
+    if (/^\W*si\b/.test(norm(fr)) && /\b(sigue|siguen|proxim\w*|despues|cuando|manana|entonces|mas adelante|otro dia)\b/.test(norm(fr))) continue;
     // una orden va al principio de la frase o de un inciso («Sí, clausúlalo»; «entonces vende a X»): «una cláusula a su
     // valor», «Marcos vende a Camello» o «la puja por Terrats» no lo son (falsa alarma en la pasada con la IA, 13 nov)
     for (const inciso of fr.split(/[,;:()—–]/)) {
@@ -2997,7 +3024,9 @@ export function ofertaDueno(M, j, t = {}) {
   return { v, sube };
 }
 
-export function plantillasRivalesTxt(D, M, enteros = new Set()) {
+/* (19 nov, tercera parte) recortado para el chat: de los rivales de los que no pregunta, sin lo de hoy (va lo de 7 días) y sin
+   «oferta para que te lo venda» salvo que pregunte por ofertas o nombre al jugador (~20 % menos de lo que lee el chat) */
+export function plantillasRivalesTxt(D, M, enteros = new Set(), { nombrados = new Set(), ofertas = true } = {}) {
   const saldo = num(D.dinero);
   const enVenta = new Map((M.mercado || []).filter((m) => m.tipo === 'manager').map((m) => [String(m.pid), m]));
   const L = [`\nPLANTILLAS DE LOS RIVALES (todas enteras; cada jugador: puesto | nombre | equipo | valor | cómo va | media | su cláusula, cuándo se puede pagar y si le llega con su saldo de ahora, ${eur(saldo)} | si lo tiene en venta | cuánto ofrecerle a su dueño). Cualquiera de estos se consigue por su cláusula cuando esté abierta o con una oferta a su dueño, esté o no en venta:`];
@@ -3010,18 +3039,19 @@ export function plantillasRivalesTxt(D, M, enteros = new Set()) {
     for (const x of fichas) {
       const j = x.j, t = x.tend || (M.tend ? M.tend(j.id) : null) || {};
       const T = det && M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
+      const entero = det || nombrados.has(String(j.id));
       const cl = x.clausula ? `cláusula ${eur(x.clausula)}${x.ratio ? ` (${x.ratio <= 1.03 ? 'a su valor' : pct((x.ratio - 1) * 100, 0)})` : ''}: ${x.abierta ? 'ABIERTA' : `se abre ${cuandoF(x.protegidoHasta)}`}, ${x.clausula <= saldo ? 'le llega' : `le faltan ${eur(x.clausula - saldo)}`}` : 'sin cláusula';
       const v = enVenta.get(String(j.id));
       const of = ofertaDueno(M, j, t);
       L.push(`  - ${[
         POS[j.pos] || '?', j.nombre, j.equipo || '?', eur(j.valor),
-        [t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
+        [entero && t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null].filter(Boolean).join(', ') || null,
         j.media ? `media ${String(j.media).replace('.', ',')}` : null,
         det ? (onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null)) : null,
         det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
         cl,
         v ? `EN VENTA por ${eur(v.precio)}` : null,
-        of ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
+        of && (entero || ofertas) ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
         j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
       ].filter(Boolean).join(' | ')}`);
     }
@@ -3047,6 +3077,24 @@ export function misClausulasTxt(D, M) {
     L.push(`- ${x.j.nombre}: ${eur(x.clausula)} (${r <= 0.03 ? 'a su valor' : pct(r * 100, 0)}) | ${cuando} | ${zona}${M.enVenta && M.enVenta.has(x.pid) ? ' | lo tiene en venta' : ''}`);
   }
   return L.join('\n');
+}
+/** los rivales que nombra por su apodo (Ajustes → Apodos de los rivales) o con el nombre aproximado (lo que escribe el dictado) */
+export function rivalesAprox(texto, D, M) {
+  const out = new Set();
+  if (!texto || !M || !M.rivales) return out;
+  const ap = apodosLiga(), nombres = [];
+  const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
+  for (const r of M.rivales) {
+    const tid = String(r.e.teamId);
+    for (const a of listaApodos(ap[tid])) {
+      for (const v of [a, sinArticulo(a)].filter(Boolean)) { const n = norm(v).replace(/[^a-z0-9ñ ]+/g, ' ').trim(); if (n.length >= 3 && q.includes(` ${n} `)) out.add(tid); nombres.push({ nombre: v, clave: tid }); }
+    }
+    for (const n of [r.e.nombre, r.e.manager].filter(Boolean)) nombres.push({ nombre: n, clave: tid });
+  }
+  if (out.size) return out;
+  const prohibidos = new Set(Object.values(D.maestro || {}).flatMap((j) => [j.nombre, j.equipo]).filter(Boolean).map(norm));
+  try { for (const k of aproximar(texto, nombres, { prohibidos, norm }).cambios) out.add(String(k)); } catch (e) { /* sin aproximar */ }
+  return out;
 }
 export function rivalesEn(texto, D, M) {
   const q = ` ${norm(texto).replace(/[^a-z0-9ñ ]+/g, ' ')} `;
@@ -3103,8 +3151,12 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
   let enteros = rivalesEn(pregunta, D, M);
   if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);
+  // (19 nov) también por su apodo o con el nombre mal dictado («leao ere espabilado», «el Tito»): antes la IA lo entendía
+  // por los alias, pero a ese rival no le llegaban los datos enteros (titularidad, próximo partido)
+  if (!enteros.size) enteros = rivalesAprox(pregunta, D, M);
+  if (!enteros.size && antes) enteros = rivalesAprox(antes, D, M);
   let rivales = '', mias = '';
-  try { rivales = plantillasRivalesTxt(D, M, enteros); } catch (e) { rivales = ''; }
+  try { rivales = plantillasRivalesTxt(D, M, enteros, { nombrados: new Set(nombrados.map((j) => String(j.id))), ofertas: /\b(ofrec\w*|oferta\w*|cuanto|precio|trato|cambi\w*)\b/.test(norm(`${pregunta} ${antes}`)) }); } catch (e) { rivales = ''; }
   try { mias = misClausulasTxt(D, M); } catch (e) { mias = ''; }
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
   let plan = '';

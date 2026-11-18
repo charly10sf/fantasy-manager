@@ -29,7 +29,7 @@ export function bloqueoTxt(b, conAnuncio) {
 }
 
 /** el aviso de los alias de los rivales (seudonimos de ia.js): porPuesto, si «Rival N» es su puesto; ex, si hay exrivales */
-export const avisoAlias = (porPuesto, ex) => `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}${ex ? '; los que ya se fueron de la liga, como «Exrival N»' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.`;
+export const avisoAlias = (porPuesto, ex) => `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}${ex ? '; los que ya se fueron de la liga, como «Exrival N»' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad. Nunca le hables al manager de los alias ni de «Rival N»: para él son los nombres de su liga.`;
 
 export const SISTEMA_CORTO = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo ni de quién es.
 

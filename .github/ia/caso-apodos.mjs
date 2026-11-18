@@ -24,6 +24,8 @@ try {
       palabra: t('el portero es espabilado'),
       destapa: sd.destapar('Rival 2 anda por 12 M. Rival 2 no llega. Equipo 5 sí.'),
       json: sd.destapar('{"x":"Rival 2"}', { json: true }),
+      // (19 nov) «de el Tito» y «a el Tito», contraídos
+      contrae: sd.destapar('Los de Rival 2 no. Ofrécele a Rival 2 unos 20 M. Del Rival 2, nada.'),
     };
     A.ponerApodo('508', '');
     o.sinApodo = I.seudonimos(D).taparPregunta('¿Cuánto dinero le queda al Tito?');
@@ -39,6 +41,7 @@ try {
   ok(r.palabra.t === 'el portero es espabilado' && !r.palabra.nota, 'una palabra suelta del nombre no se toca');
   ok(r.destapa === 'el Tito (Marcos) anda por 12 M. el Tito no llega. Leao er Espabilao sí.', `la respuesta sale con el apodo (${r.destapa})`);
   ok(r.json === '{"x":"Marcos"}', 'en el plan (JSON), el nombre de LaLiga');
+  ok(r.contrae === 'Los del Tito (Marcos) no. Ofrécele al Tito unos 20 M. Del Tito, nada.', `«del Tito» y «al Tito», no «de el» ni «a el» (${r.contrae})`);
   ok(!/Rival 2/.test(r.sinApodo.t), 'sin el apodo, «el Tito» ya no es nadie');
   ok(!P.errores.length, `sin errores en la página${P.errores.length ? `: ${P.errores[0]}` : ''}`);
 } finally { await P.cerrar(); await cerrar(); }

@@ -34,6 +34,9 @@ for (const escena of ESCENAS) {
       // lo que se le pasa al chat
       const datos = I.datosChat('¿Qué hago con mis jugadores?', D, M, c, {});
       const noVende = new Set([...datos.matchAll(/^- \w{3} \| ([^|]+?) \|[^\n]*LA APP: NO LO VENDER[ÍI]A HOY/gm)].map((m) => m[1].trim()));
+      // (19 nov) lo que se le dice al chat de vender por la inercia, frente a lo que hace el plan con ese jugador
+      const porInercia = new Set([...datos.matchAll(/^- \w{3} \| ([^|]+?) \|[^\n]*VENDER POR INERCIA/gm)].map((m) => m[1].trim()));
+      const noLoVende = new Set([...datos.matchAll(/^- \w{3} \| ([^|]+?) \|[^\n]*EL PLAN DE HOY NO LO VENDE/gm)].map((m) => m[1].trim()));
       const chatOferta = Object.fromEntries([...datos.matchAll(/^- ([^(\n]+?) \(vale [^\n]*?→ la app aconseja ([A-ZÁÉÍÓÚ ]+?)(?=[:.]|$)/gm)].map((m) => [m[1].trim(), m[2].trim()]));
       const nombre = (pid) => (M.J(pid) || {}).nombre || pid;
       const mal = [];
@@ -42,6 +45,14 @@ for (const escena of ESCENAS) {
         const n = nombre(pid);
         if (l.some((x) => x === 'vender') && noVende.has(n)) mal.push(`${n}: el plan lo vende hoy y al chat se le dice «NO LO VENDERÍA HOY»`);
         if (l.includes('aceptar') && equipo[pid] === 'esperar') mal.push(`${n}: el plan acepta la oferta y en Equipo pone esperar`);
+      }
+      for (const n of porInercia) {
+        const x = (M.mias || []).find((y) => y.j.nombre === n);
+        if (x && !(plan[x.pid] || []).some((a) => /^vender|^aceptar/.test(a))) mal.push(`${n}: al chat se le dice «VENDER POR INERCIA» y el plan no lo vende${descartes.has(String(x.pid)) ? ` (en Mirados: «${descartes.get(String(x.pid)).slice(0, 90)}»)` : ''}`);
+      }
+      for (const n of noLoVende) {
+        const x = (M.mias || []).find((y) => y.j.nombre === n);
+        if (x && (plan[x.pid] || []).some((a) => /^vender|^aceptar/.test(a))) mal.push(`${n}: al chat se le dice «el plan de hoy no lo vende» y el plan lo vende`);
       }
       for (const [pid, con] of Object.entries(equipo)) {
         const n = nombre(pid), ch = chatOferta[n];
