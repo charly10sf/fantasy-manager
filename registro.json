@@ -1235,6 +1235,13 @@
    "jornada": 13,
    "id": "2123011313840377962",
    "t": "2026-11-18T11:11:55.912Z"
+  },
+  {
+   "clave": "sancionados|13|3270",
+   "tipo": "sancionados",
+   "jornada": 13,
+   "id": "2123054198208233917",
+   "t": "2026-11-18T14:02:20.271Z"
   }
  ],
  "estados": {
@@ -2126,7 +2133,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
-   "SPORT|136469023": 1794751165000,
    "SPORT|136471100": 1794756556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794761251000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
@@ -4023,9 +4029,9 @@
  },
  "pulido": {
   "dia": "2026-11-18",
-  "n": 3,
+  "n": 4,
   "ok": 0,
-  "mal": 3
+  "mal": 5
  },
  "liga": {
   "vistas": {
@@ -4102,7 +4108,9 @@
    "n": 9,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010493097
+  }
  },
  "ia": {
   "dia": "2026-11-18",
@@ -4375,6 +4383,12 @@
    {
     "t": "2026-11-17T16:06:26.752Z",
     "texto": "📋 La previa de la jornada 13 ya está en la web. Las cláusulas se cierran el jueves a las 21:00 y se reabren el viernes a las 21:00.\n\n🟨 Hay 3 sancionados y 10 titulares apercibidos, y el que más pesa es Y. Zabiri"
+   }
+  ],
+  "sancionados": [
+   {
+    "t": "2026-11-18T14:02:20.272Z",
+    "texto": "🟥 Aznou se pierde la jornada 13 por sanción. El defensa cumple sanción con el Málaga."
    }
   ]
  },
@@ -8429,13 +8443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3775,
+   "ok": 3776,
    "fallos": 0,
-   "ejecuciones": 3095,
+   "ejecuciones": 3096,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T13:56:15.748Z"
+   "ultima": "2026-11-18T14:01:33.097Z"
   }
  },
  "ptsDirecto": {},
@@ -8452,15 +8466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:56:25.985Z"
+   "ultimaBien": "2026-11-18T14:02:20.295Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:56:25.985Z"
+   "ultimaBien": "2026-11-18T14:02:20.295Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:56:25.985Z"
+   "ultimaBien": "2026-11-18T14:02:20.295Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8468,11 +8482,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:56:25.985Z"
+   "ultimaBien": "2026-11-18T14:02:20.295Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T13:56:25.985Z"
+   "ultimaBien": "2026-11-18T14:02:20.295Z"
   }
  },
  "avisos": [
