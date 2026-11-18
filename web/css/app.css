@@ -3361,11 +3361,31 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 @media (prefers-reduced-motion: reduce) { .bloq.dorado::after, .bloq-g.dorado::after { display: none; } }
 .bloq-hoja .bloq-grande { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 26px rgba(255, 197, 71, .45); }
 .top-sello { margin: -2px 0 8px; } .top-sello .top-b { font-size: 12px; line-height: 19px; padding: 1px 10px 1px 8px; } .top-sello .top-b .ic { width: 13px; height: 13px; }
-/* lo que puedes gastar, con el negativo a la vista (marcador de Hoy) */
-.marcador .gfila { display: flex; align-items: center; gap: 6px; margin: 5px 0 3px; }
-.marcador .gbarra { display: flex; gap: 2px; height: 6px; border-radius: 3px; overflow: hidden; flex: 1 1 auto; min-width: 36px; max-width: 64px; }
-.marcador .gbarra i { display: block; min-width: 4px; border-radius: 3px; }
-.marcador .gbarra .tuyo { background: var(--sube); }
-.marcador .gbarra .neg { background: var(--baja-s); box-shadow: inset 0 0 0 1px var(--baja); }
-.marcador .gbarra .usado { background: var(--baja); }
-.marcador .gneg { font: 600 var(--t-sec2) var(--cond); color: var(--baja); white-space: nowrap; }
+/* el marcador de Hoy: arriba el dinero (lo que puedes gastar y su reparto), debajo el equipo y el puesto */
+.marcador .plata { margin-top: 8px; }
+.marcador .plata .v { font: 700 var(--t-cifra)/1.05 var(--cond); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.marcador .plata .v small { font: 500 var(--t-sec2) 'Barlow'; color: var(--texto-3); margin-left: 8px; }
+.marcador .plata-barra { display: flex; gap: 2px; height: 7px; border-radius: 4px; overflow: hidden; flex: 1 1 36px; min-width: 36px; }
+.marcador .plata-f { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+.marcador .gtxt { display: inline-flex; align-items: center; white-space: nowrap; font: 500 var(--t-sec2)/1.2 'Barlow'; color: var(--texto-3); }
+.marcador .gtxt b { margin-left: 5px; font: 700 var(--t-sec2) var(--cond); color: var(--texto); }
+.marcador .gtxt b.neg { color: var(--baja); }
+.marcador .plata-barra i { display: block; min-width: 5px; border-radius: 4px; }
+.marcador .plata-barra .tuyo, .marcador .gdot.tuyo { background: var(--sube); }
+.marcador .plata-barra .usado, .marcador .gdot.usado { background: var(--baja); }
+.marcador .plata-barra .resto { background: var(--baja-s); box-shadow: inset 0 0 0 1px var(--baja); }
+.marcador .plata-pie span { display: inline-flex; align-items: center; }
+.marcador .plata-pie { display: flex; justify-content: space-between; gap: 10px; font: 500 var(--t-sec2)/1.2 'Barlow'; color: var(--texto-3); }
+.marcador .plata-pie b { margin-left: 5px; font: 700 var(--t-sec2) var(--cond); color: var(--texto); }
+.marcador .plata-pie b.neg { color: var(--baja); }
+.marcador .gdot { display: inline-block; width: 8px; height: 8px; min-width: 8px; border-radius: 50%; margin-right: 5px; flex: none; align-self: auto; }
+.marcador .gdot.resto { box-shadow: inset 0 0 0 1.5px var(--baja); }
+.marcador .resumen-f { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-top: 6px; }
+.marcador .rf { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; min-width: 0; }
+.marcador .rf em { font: 500 var(--t-sec2) 'Barlow'; font-style: normal; color: var(--texto-3); }
+.marcador .rf b { font: 700 var(--t-cuerpo) var(--cond); font-variant-numeric: tabular-nums; }
+.marcador .rf b small { font-size: var(--t-sec2); font-weight: 600; color: var(--texto2); margin-left: 1px; }
+.marcador .rf i { font: 600 var(--t-sec2) var(--cond); font-style: normal; color: var(--texto-3); }
+.marcador .rf i.sube { color: var(--sube); } .marcador .rf i.baja { color: var(--baja); }
+.marcador.corto .plata { margin-top: 7px; }
+.marcador.corto .resumen-f { margin-top: 6px; }
