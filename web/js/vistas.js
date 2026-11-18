@@ -64,7 +64,7 @@ function marcador(S, { corto = false, tiempos = false } = {}) {
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="cols">
-      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
+      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">${M.deuda - M.misPujas >= 0 ? `+ ${eur(M.deuda - M.misPujas)} en negativo` : `− ${eur(M.misPujas - M.deuda)} ya pujado`}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
       <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
     </div>`;
