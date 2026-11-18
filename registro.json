@@ -1900,7 +1900,7 @@
   "3089": "ok",
   "3090": "ok",
   "3091": "ok",
-  "3092": "injured",
+  "3092": "doubtful",
   "3093": "ok",
   "3094": "ok",
   "3095": "out_of_league",
@@ -2121,14 +2121,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3079",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1795000273290
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
@@ -3792,8 +3785,8 @@
     "t": 1794204073390
    },
    "3092": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1795000571423
    },
    "3099": {
     "e": "ok",
@@ -8384,13 +8377,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3742,
+   "ok": 3743,
    "fallos": 0,
-   "ejecuciones": 3062,
+   "ejecuciones": 3063,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T11:11:13.290Z"
+   "ultima": "2026-11-18T11:16:11.423Z"
   }
  },
  "ptsDirecto": {},
@@ -8407,15 +8400,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:11:55.987Z"
+   "ultimaBien": "2026-11-18T11:16:18.300Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:11:55.987Z"
+   "ultimaBien": "2026-11-18T11:16:18.300Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:11:55.987Z"
+   "ultimaBien": "2026-11-18T11:16:18.300Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8423,11 +8416,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:11:55.987Z"
+   "ultimaBien": "2026-11-18T11:16:18.300Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:11:55.987Z"
+   "ultimaBien": "2026-11-18T11:16:18.300Z"
   }
  },
  "avisos": [
