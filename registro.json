@@ -2124,7 +2124,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000,
    "AS|https://as.com/futbol/primera/optimismo-con-rodri-f202611-n/": 1794743623000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261115/1004251209/parrott-topa-schlager-valles-vuelve-quedar-fuera.html": 1794743523000,
@@ -8377,13 +8376,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3743,
+   "ok": 3744,
    "fallos": 0,
-   "ejecuciones": 3063,
+   "ejecuciones": 3064,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T11:16:11.423Z"
+   "ultima": "2026-11-18T11:21:12.037Z"
   }
  },
  "ptsDirecto": {},
@@ -8400,15 +8399,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:16:18.300Z"
+   "ultimaBien": "2026-11-18T11:21:19.650Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:16:18.300Z"
+   "ultimaBien": "2026-11-18T11:21:19.650Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:16:18.300Z"
+   "ultimaBien": "2026-11-18T11:21:19.650Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8416,11 +8415,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:16:18.300Z"
+   "ultimaBien": "2026-11-18T11:21:19.650Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:16:18.300Z"
+   "ultimaBien": "2026-11-18T11:21:19.650Z"
   }
  },
  "avisos": [
