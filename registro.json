@@ -1242,6 +1242,13 @@
    "jornada": 13,
    "id": "2123054198208233917",
    "t": "2026-11-18T14:02:20.271Z"
+  },
+  {
+   "clave": "apercibidos|13|3152-2206-2511-3128-2939-3119-3072-3026-2443-3206",
+   "tipo": "sancionados",
+   "jornada": 13,
+   "id": "2123070523764617358",
+   "t": "2026-11-18T15:07:12.751Z"
   }
  ],
  "estados": {
@@ -2343,7 +2350,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
    "SPORT|136565152": 1795005249000,
    "SPORT|136581134": 1795007753000,
-   "SPORT|136580084": 1795008872000
+   "SPORT|136580084": 1795008872000,
+   "SPORT|136558313": 1795010451000
   },
   "hechos": [
    {
@@ -3190,7 +3198,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -4029,7 +4037,7 @@
  },
  "pulido": {
   "dia": "2026-11-18",
-  "n": 4,
+  "n": 5,
   "ok": 0,
   "mal": 5
  },
@@ -4388,6 +4396,10 @@
    {
     "t": "2026-11-18T14:02:20.272Z",
     "texto": "🟥 Aznou se pierde la jornada 13 por sanción. El defensa cumple sanción con el Málaga."
+   },
+   {
+    "t": "2026-11-18T15:07:12.753Z",
+    "texto": "🟨 Diez titulares habituales, a una amarilla de la sanción. Si ven una más en la jornada 13, se pierden la 14.\n\nOjo sobre todo con Y. Zabiri, que se perdería el Levante-Racing. Y Yoel Lago se quedaría sin el Celta-Villarreal."
    }
   ]
  },
@@ -8442,13 +8454,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3788,
+   "ok": 3789,
    "fallos": 0,
-   "ejecuciones": 3108,
+   "ejecuciones": 3109,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T15:01:13.378Z"
+   "ultima": "2026-11-18T15:06:12.830Z"
   }
  },
  "ptsDirecto": {},
@@ -8465,15 +8477,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:01:23.038Z"
+   "ultimaBien": "2026-11-18T15:07:12.781Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:01:23.038Z"
+   "ultimaBien": "2026-11-18T15:07:12.781Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:01:23.038Z"
+   "ultimaBien": "2026-11-18T15:07:12.781Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8481,11 +8493,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:01:23.038Z"
+   "ultimaBien": "2026-11-18T15:07:12.781Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:01:23.038Z"
+   "ultimaBien": "2026-11-18T15:07:12.781Z"
   }
  },
  "avisos": [
