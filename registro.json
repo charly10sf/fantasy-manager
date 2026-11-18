@@ -8247,13 +8247,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3614,
+   "ok": 3616,
    "fallos": 0,
-   "ejecuciones": 2942,
+   "ejecuciones": 2943,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T01:16:14.819Z"
+   "ultima": "2026-11-18T01:21:17.908Z"
   }
  },
  "ptsDirecto": {},
@@ -8270,15 +8270,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T01:16:16.012Z"
+   "ultimaBien": "2026-11-18T01:21:18.668Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T01:16:16.012Z"
+   "ultimaBien": "2026-11-18T01:21:18.668Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T01:16:16.012Z"
+   "ultimaBien": "2026-11-18T01:21:18.668Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
