@@ -2110,7 +2110,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000,
    "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000,
    "AS|https://as.com/futbol/la-conversion-de-deossa-f202611-n/": 1794733920000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/vuelta-pesos-pesados-deja-jugar-nuevos-inglaterra-20261115_3475406.html": 1794735997000,
@@ -2321,19 +2320,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794732360000,
-    "id": "3116",
-    "que": "lesion",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Bernardo Silva deja la concentración de Portugal por lesión",
-    "motivo": "no apto tras evaluación clínica",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html",
     "medio": "MARCA",
@@ -8311,13 +8297,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3712,
+   "ok": 3713,
    "fallos": 0,
-   "ejecuciones": 3032,
+   "ejecuciones": 3033,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T08:41:16.488Z"
+   "ultima": "2026-11-18T08:46:11.801Z"
   }
  },
  "ptsDirecto": {},
@@ -8334,15 +8320,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:41:46.771Z"
+   "ultimaBien": "2026-11-18T08:46:19.325Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:41:46.771Z"
+   "ultimaBien": "2026-11-18T08:46:19.325Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:41:46.771Z"
+   "ultimaBien": "2026-11-18T08:46:19.325Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8350,11 +8336,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:41:46.771Z"
+   "ultimaBien": "2026-11-18T08:46:19.325Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:41:46.771Z"
+   "ultimaBien": "2026-11-18T08:46:19.325Z"
   }
  },
  "avisos": [
