@@ -2138,7 +2138,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/arma-fundamental-aguirre-obligado-recuperar-valencia-cf-corners-gol-estrategia-laliga-136477381.html": 1794778833000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794808800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html": 1794782131000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251424/nico-williams-le-coge-medida-inglaterra.html": 1794780779000,
@@ -8543,13 +8542,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3868,
+   "ok": 3869,
    "fallos": 0,
-   "ejecuciones": 3188,
+   "ejecuciones": 3189,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:36:16.165Z"
+   "ultima": "2026-11-18T21:41:12.741Z"
   }
  },
  "ptsDirecto": {},
@@ -8566,15 +8565,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:36:26.800Z"
+   "ultimaBien": "2026-11-18T21:41:19.419Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:36:26.800Z"
+   "ultimaBien": "2026-11-18T21:41:19.419Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:36:26.800Z"
+   "ultimaBien": "2026-11-18T21:41:19.419Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8582,11 +8581,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:36:26.800Z"
+   "ultimaBien": "2026-11-18T21:41:19.419Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:36:26.800Z"
+   "ultimaBien": "2026-11-18T21:41:19.419Z"
   }
  },
  "avisos": [
