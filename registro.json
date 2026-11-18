@@ -2336,7 +2336,8 @@
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
-   "SPORT|136574114": 1794999432000
+   "SPORT|136574114": 1794999432000,
+   "SPORT|136568727": 1795001073000
   },
   "hechos": [
    {
@@ -3171,7 +3172,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -8416,13 +8417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3757,
+   "ok": 3758,
    "fallos": 0,
-   "ejecuciones": 3077,
+   "ejecuciones": 3078,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T12:26:14.909Z"
+   "ultima": "2026-11-18T12:31:14.745Z"
   }
  },
  "ptsDirecto": {},
@@ -8439,15 +8440,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:26:22.904Z"
+   "ultimaBien": "2026-11-18T12:31:27.467Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:26:22.904Z"
+   "ultimaBien": "2026-11-18T12:31:27.467Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:26:22.904Z"
+   "ultimaBien": "2026-11-18T12:31:27.467Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8455,11 +8456,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:26:22.904Z"
+   "ultimaBien": "2026-11-18T12:31:27.467Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:26:22.904Z"
+   "ultimaBien": "2026-11-18T12:31:27.467Z"
   }
  },
  "avisos": [
