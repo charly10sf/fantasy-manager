@@ -3947,7 +3947,8 @@
    "SPORT|136562228": 1794974509000,
    "SPORT|136549199": 1794981626000,
    "SPORT|136563322": 1794981625000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000,
+   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-retira-presentador-atrapame-si-puedes-monolo-sarria-denuncia-presunto-acoso-sexual-20261118093207.html": 1794990727000
   },
   "hechos": [
    {
@@ -3975,7 +3976,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
   "espera": {}
@@ -8310,13 +8311,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3711,
+   "ok": 3712,
    "fallos": 0,
-   "ejecuciones": 3031,
+   "ejecuciones": 3032,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T08:36:12.078Z"
+   "ultima": "2026-11-18T08:41:16.488Z"
   }
  },
  "ptsDirecto": {},
@@ -8333,15 +8334,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:36:25.547Z"
+   "ultimaBien": "2026-11-18T08:41:46.771Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:36:25.547Z"
+   "ultimaBien": "2026-11-18T08:41:46.771Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:36:25.547Z"
+   "ultimaBien": "2026-11-18T08:41:46.771Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8349,11 +8350,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:36:25.547Z"
+   "ultimaBien": "2026-11-18T08:41:46.771Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:36:25.547Z"
+   "ultimaBien": "2026-11-18T08:41:46.771Z"
   }
  },
  "avisos": [
