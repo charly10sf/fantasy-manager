@@ -2131,7 +2131,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
    "SPORT|136471100": 1794756556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794761251000,
@@ -8443,13 +8442,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3777,
+   "ok": 3778,
    "fallos": 0,
-   "ejecuciones": 3097,
+   "ejecuciones": 3098,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T14:06:13.870Z"
+   "ultima": "2026-11-18T14:11:27.172Z"
   }
  },
  "ptsDirecto": {},
@@ -8466,15 +8465,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:06:24.842Z"
+   "ultimaBien": "2026-11-18T14:11:39.476Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:06:24.842Z"
+   "ultimaBien": "2026-11-18T14:11:39.476Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:06:24.842Z"
+   "ultimaBien": "2026-11-18T14:11:39.476Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8482,11 +8481,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:06:24.842Z"
+   "ultimaBien": "2026-11-18T14:11:39.476Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:06:24.842Z"
+   "ultimaBien": "2026-11-18T14:11:39.476Z"
   }
  },
  "avisos": [
