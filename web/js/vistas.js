@@ -52,6 +52,21 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
+/** Lo que puedes gastar partido en dos: lo que tienes y lo que te puedes quedar en negativo (Fran, 18 nov). Barra fina con los dos
+    trozos y, debajo, el total y el negativo. Con el saldo ya en rojo, la barra es el negativo y se llena lo que ya usas. */
+function gastoSaldo(D, M) {
+  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), total = M.pujaMax;
+  if (!(margen > 0) && dinero >= 0) return `<div class="d apag">gastas hasta ${eur(total)}</div>`;
+  if (dinero >= 0) {
+    const ver = Math.max(12, Math.min(88, dinero / (dinero + margen) * 100)); // un trozo verde que se vea aunque el saldo sea pequeño
+    return `<div class="gbarra" aria-hidden="true"><i class="tuyo" style="flex:${ver}"></i><i class="neg" style="flex:${100 - ver}"></i></div>
+      <div class="d apag">gastas hasta ${eur(total)}</div><div class="d gneg">${eur(margen)} en negativo</div>`;
+  }
+  const usado = Math.min(100, margen ? -dinero / (-dinero + margen) * 100 : 100);
+  return `<div class="gbarra" aria-hidden="true"><i class="usado" style="flex:${usado}"></i><i class="neg" style="flex:${100 - usado}"></i></div>
+    <div class="d apag">gastas hasta ${eur(Math.max(0, total))}</div><div class="d gneg">${eur(-dinero)} ya en negativo</div>`;
+}
+
 function marcador(S, { corto = false, tiempos = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
@@ -64,7 +79,7 @@ function marcador(S, { corto = false, tiempos = false } = {}) {
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="cols">
-      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">${M.deuda - M.misPujas >= 0 ? `+ ${eur(M.deuda - M.misPujas)} en negativo` : `− ${eur(M.misPujas - M.deuda)} ya pujado`}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
+      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div>${gastoSaldo(D, M)}</div>
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
       <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
     </div>`;
