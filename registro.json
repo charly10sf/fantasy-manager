@@ -2317,7 +2317,8 @@
    "SPORT|136513147": 1794981628000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/18/programada-dilema-mourinho-diomande-o-136563277.html": 1794985510000,
    "SPORT|136563343": 1794982609000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000,
+   "SPORT|136563278": 1794988253000
   },
   "hechos": [
    {
@@ -3050,7 +3051,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -8297,13 +8298,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3714,
+   "ok": 3715,
    "fallos": 0,
-   "ejecuciones": 3034,
+   "ejecuciones": 3035,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T08:51:13.056Z"
+   "ultima": "2026-11-18T08:56:13.463Z"
   }
  },
  "ptsDirecto": {},
@@ -8320,15 +8321,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:51:22.794Z"
+   "ultimaBien": "2026-11-18T08:56:22.678Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:51:22.794Z"
+   "ultimaBien": "2026-11-18T08:56:22.678Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:51:22.794Z"
+   "ultimaBien": "2026-11-18T08:56:22.678Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8336,11 +8337,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:51:22.794Z"
+   "ultimaBien": "2026-11-18T08:56:22.678Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T08:51:22.794Z"
+   "ultimaBien": "2026-11-18T08:56:22.678Z"
   }
  },
  "avisos": [
