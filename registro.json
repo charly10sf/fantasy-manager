@@ -2357,7 +2357,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
    "SPORT|136592622": 1795033687000,
    "SPORT|136597911": 1795033813000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000,
+   "SPORT|136598263": 1795035303000
   },
   "hechos": [
    {
@@ -3319,7 +3320,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -8554,13 +8555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3871,
+   "ok": 3872,
    "fallos": 0,
-   "ejecuciones": 3191,
+   "ejecuciones": 3192,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:51:13.966Z"
+   "ultima": "2026-11-18T21:56:15.217Z"
   }
  },
  "ptsDirecto": {},
@@ -8577,15 +8578,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:51:22.129Z"
+   "ultimaBien": "2026-11-18T21:56:48.761Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:51:22.129Z"
+   "ultimaBien": "2026-11-18T21:56:48.761Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:51:22.129Z"
+   "ultimaBien": "2026-11-18T21:56:48.761Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8593,11 +8594,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:51:22.129Z"
+   "ultimaBien": "2026-11-18T21:56:48.761Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:51:22.129Z"
+   "ultimaBien": "2026-11-18T21:56:48.761Z"
   }
  },
  "avisos": [
