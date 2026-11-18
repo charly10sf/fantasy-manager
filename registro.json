@@ -1189,6 +1189,17 @@
    "jornada": 13,
    "id": "2122723043797766197",
    "t": "2026-11-17T16:06:26.750Z"
+  },
+  {
+   "clave": "mercado|2026-11-18",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2122933421563584566",
+   "t": "2026-11-18T06:02:24.923Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2703"
+   }
   }
  ],
  "estados": {
@@ -2078,21 +2089,12 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251092/francia-mbappe-evitar-sustos-gueler-turquia.html": 1794722400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251060/lamine-blanco-facil.html": 1794722400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251120/sancet-no-dijo-pudiera-ofender-nadie.html": 1794722100000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004251125/grimaldo-perseguido-mala-suerte-seleccion-espanola.html": 1794694636000,
-   "SPORT|136444741": 1794722432000,
-   "SPORT|136445752": 1794722431000,
-   "SPORT|136456829": 1794715260000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000,
    "SPORT|136450564": 1794729623000,
    "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000,
    "AS|https://as.com/futbol/la-conversion-de-deossa-f202611-n/": 1794733920000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/14-nov-2026-tramo-final-juego-20261115_3475378.html": 1794702000000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/vuelta-pesos-pesados-deja-jugar-nuevos-inglaterra-20261115_3475406.html": 1794735997000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/horas-completas/14-nov-2026-tramo-final-juego-20261115_3475376.html": 1794702000000,
    "AS|https://as.com/futbol/primera/dani-diaz-acelera-hacia-la-elite-f202611-n/": 1794735759000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
@@ -2282,21 +2284,19 @@
    "SPORT|136533552": 1794945937000,
    "SPORT|136558895": 1794946522000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000,
+   "AS|https://as.com/futbol/de-la-fatalidad-al-once-de-gala-en-el-derbi-f202611-n/": 1794955695000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252319/sustos-finales-ultimos-internacionales-barca.html": 1794952389000,
+   "SPORT|136520259": 1794976224000,
+   "SPORT|136556602": 1794976223000,
+   "SPORT|136558035": 1794949100000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261118/11686717/frenkie-de-jong-llama-puerta-asi-recuperado-confianza-flick-ganarse-sitio-barca.html": 1794978000000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/kike-salas-bartra-duelo-killers-balon-parado-decidir-derbi-sevilla-fc-betis_0_2008529370.html": 1794979825000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-betis-frente-espejo_0_2008529420.html": 1794979825000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/duda-ceballos-doble-pivote-recurrente-betis_0_2008529376.html": 1794979520000,
+   "El Correo|https://www.elcorreo.com/athletic/lesiones-dan-tregua-athletic-20261117010326-nt.html": 1794960207000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136445752",
-    "medio": "SPORT",
-    "t": 1794722431000,
-    "id": "3104",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Lamine Yamal arrastra molestias con la rodilla inflamada",
-    "motivo": "rodilla inflamada",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html",
     "medio": "Mundo Deportivo",
@@ -3024,11 +3024,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136556602",
+    "medio": "SPORT",
+    "t": 1794976223000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lamine Yamal acaba el partido con molestias en la rodilla",
+    "motivo": "molestias en la rodilla derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-17",
-   "n": 54
+   "dia": "2026-11-18",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3873,7 +3885,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251128/camiseta-lamine-yamal.html": 1794722400000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-colau-critica-sanchez-suspendido-materia-vivienda-20261115101621.html": 1794734181000,
    "Europa Press|https://www.europapress.es/madrid/noticia-descarrila-tren-mercancias-zarzalejo-maquinista-requiere-atencion-hospitalaria-20261115113639.html": 1794738999000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/consulta-jugaran-encuentros-jornada-coincide-puente-constitucion-e-inmaculada-concepcion-20261115_3475465.html": 1794765116000,
@@ -3905,7 +3916,11 @@
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261117/11686779/cervera-responde-pique-sancion-owono-deberia-volver-ver-accion-lol.html": 1794938628000,
    "SPORT|136552816": 1794934765000,
-   "SPORT|136554388": 1794935954000
+   "SPORT|136554388": 1794935954000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252335/maldita-fila-12.html": 1794981600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261118/1004252321/reus-medirse-barakaldo.html": 1794981600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261118/1004252273/copa-pone-prueba-sabadell-mermado.html": 1794981600000,
+   "SPORT|136562228": 1794974509000
   },
   "hechos": [
    {
@@ -3932,26 +3947,26 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-17",
-   "n": 9,
+   "dia": "2026-11-18",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-17",
+  "dia": "2026-11-18",
   "llamadas": {
-   "clasificar": 63,
-   "redactar": 29,
-   "revisar": 14,
-   "pulir": 1
+   "clasificar": 2,
+   "redactar": 11,
+   "revisar": 5,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 606890,
-  "salida": 42799,
-  "cacheLee": 20321,
-  "cacheEscribe": 20321,
-  "dolares": 1.137597,
+  "entrada": 191495,
+  "salida": 7885,
+  "cacheLee": 11612,
+  "cacheEscribe": 2903,
+  "dolares": 0.428774,
   "reservado": 0
  },
  "recientes": {
@@ -4023,10 +4038,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-12T23:16:55.843Z",
-    "texto": "📈 Fermín López lidera las subidas de hoy: +2,6 M y se planta en 126,5 M con el Barça. Rodri, en cambio, es la mayor bajada: -1,7 M y se queda en 72,8 M.\n\nPara quien busque barato, Redondo, del Elche 🌴, cuesta 2,3 M y trae 24 puntos en sus tres últimas jornadas. En la imagen, los cinco que más suben y los cinco que más bajan."
-   },
-   {
     "t": "2026-11-13T23:15:25.816Z",
     "texto": "📊 La noche es del Real Madrid ⚪: sus jugadores suman 13,2 M entre todos, y Valverde, con casi 2,4 M más, se va a 81,3 M. El Barça, en cambio, pierde 6,9 M en conjunto.\n\nRodri sigue cayendo y ya van 18 días seguidos, 24,5 M menos desde el 27 de octubre. Fermín es su cara contraria: 24 días subiendo y 39,4 M más, con 40 puntos en tres jornadas."
    },
@@ -4041,6 +4052,10 @@
    {
     "t": "2026-11-16T23:15:32.628Z",
     "texto": "📈 Fermín sube 2,3 M esta noche y ya vale 136,8 M con el Barça. Lleva 27 días seguidos al alza, 46,7 M desde el 21 de octubre.\n\nValverde, que también fue el que más subió ayer, suma 12 días seguidos subiendo. Entre todos los jugadores del Real Madrid ⚪ ganan 10,3 M, y los del Atlético pierden 6,2 M.\n\nDe barato, Oskarsson, de la Real Sociedad, vale 5,3 M y suma 23 puntos en sus tres últimas jornadas."
+   },
+   {
+    "t": "2026-11-18T06:02:24.925Z",
+    "texto": "📈 Vinícius no se baja del ascensor: +2,4 M esta noche y ya vale 72,2 M. Van diez días seguidos subiendo y 17,5 M ganados desde el 8 de noviembre.\n\nRodri, por su parte, repite como el que más baja: 1,4 M menos y 22 días seguidos cayendo. En el Atlético, Grimaldo y Pubill se dejan dinero y los jugadores del Atleti pierden 5,6 M entre todos. El Real Madrid ⚪ suma 8,3 M."
    }
   ],
   "previa": [
@@ -4385,6 +4400,22 @@
    "cacheEscribe": 29030,
    "dolares": 1.290944,
    "reservado": 0
+  },
+  {
+   "dia": "2026-11-17",
+   "llamadas": {
+    "clasificar": 63,
+    "redactar": 29,
+    "revisar": 14,
+    "pulir": 1
+   },
+   "fallos": 0,
+   "entrada": 606890,
+   "salida": 42799,
+   "cacheLee": 20321,
+   "cacheEscribe": 20321,
+   "dolares": 1.137597,
+   "reservado": 0
   }
  ],
  "fallosRedaccion": {
@@ -4407,6 +4438,16 @@
    "n": 1,
    "t": "2026-11-17T08:16:35.735Z",
    "ultima": "2026-11-17T08:16:35.735Z"
+  },
+  "caidas|13|1775-2562-1480-701-2588-2005": {
+   "n": 1,
+   "t": "2026-11-18T06:02:03.102Z",
+   "ultima": "2026-11-18T06:02:03.102Z"
+  },
+  "previa|125": {
+   "n": 1,
+   "t": "2026-11-18T06:02:54.087Z",
+   "ultima": "2026-11-18T06:02:54.087Z"
   }
  },
  "rasgos": {
@@ -8247,13 +8288,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3678,
+   "ok": 3679,
    "fallos": 0,
-   "ejecuciones": 2998,
+   "ejecuciones": 2999,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T05:56:12.189Z"
+   "ultima": "2026-11-18T06:01:14.325Z"
   }
  },
  "ptsDirecto": {},
@@ -8270,15 +8311,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T05:56:12.379Z"
+   "ultimaBien": "2026-11-18T06:03:05.424Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T05:56:12.379Z"
+   "ultimaBien": "2026-11-18T06:03:05.424Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T05:56:12.379Z"
+   "ultimaBien": "2026-11-18T06:03:05.424Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8286,11 +8327,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T22:56:14.863Z"
+   "ultimaBien": "2026-11-18T06:03:05.424Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-17T21:56:16.759Z"
+   "ultimaBien": "2026-11-18T06:03:05.424Z"
   }
  },
  "avisos": [
