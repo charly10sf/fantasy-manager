@@ -689,7 +689,7 @@ async function uso(req, env, c) {
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0 };
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
 export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
@@ -715,7 +715,8 @@ export async function cfgPlanes(env) {
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web) };
+  // (17 nov, Carlos, por Domy) gratisWeb: los planes gratis de quien usa la web o el iPhone, que no tienen anuncios para pedir más
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)) };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
@@ -861,7 +862,10 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
 /** lo que cuesta una llamada, en millonésimas de dólar: los tokens y las búsquedas */
 export const costeDe = (r, modelo) => { const [pe, ps] = PRECIOS[modelo] || PRECIOS[PLAN_MODELO]; return r.entra * pe + r.sale * ps + (r.busquedas || 0) * USD_BUSQUEDA; };
 async function planIA(req, env, c, ctx) {
-  const P = await cfgPlanes(env);
+  const P0 = await cfgPlanes(env);
+  // (17 nov) la web y el iPhone (el navegador manda Origin; la app de Android pide por su lado, sin él) no tienen anuncios con
+  // los que pedir más planes: de momento, todos sus planes gratis (planes.gratisWeb de limites.json)
+  const P = req.headers.get('Origin') && P0.gratisWeb > P0.gratis ? { ...P0, gratis: P0.gratisWeb, max: Math.max(P0.max, P0.gratisWeb) } : P0;
   if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
   if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de los planes (falta la clave CLAUDE_PLANES).', servicio: true, sinClave: true }, 503, c);
   const u = await quienEs(req);
@@ -939,23 +943,23 @@ async function planIA(req, env, c, ctx) {
  * POST /pregunta { datos, pregunta, hist, fotos, tono, bloq, anuncio, alias, extra, rid }. Como /plan: quién pregunta lo
  * dice LaLiga (quienEs); las instrucciones las arma el Worker con web/js/chat-sistema.js y la app solo manda los datos de su
  * liga (tienen que empezar por la cabecera de la app: esDatosChat), la conversación (los últimos 12 mensajes, sin fotos)
- * y la pregunta con sus capturas. Cupo por cuenta y día de Madrid («preguntas» de limites.json: 5 gratis y 3 más por
- * anuncio hasta 20; el dueño sin cupo) y tope de gasto del día aparte del de los planes. Con `rid`, si la app se va a
+ * y la pregunta con sus capturas. Cupo por cuenta y día de Madrid («preguntas» de limites.json: 3 gratis y 3 más con
+ * un anuncio, 6 como mucho; Carlos, 17 nov; el dueño sin cupo) y tope de gasto del día aparte del de los planes. Con `rid`, si la app se va a
  * segundo plano y se corta, al volver pide lo mismo y le llega la respuesta que ya estaba hecha, sin contar otra vez.
  * La respuesta va mandando espacios cada 5 s mientras la IA piensa (Android corta a los 30 s sin recibir nada).
  * Devuelve { texto, cupo, tok, ms } (el texto con los alias puestos: la app los quita) o { e, estado }.
  */
 // (16 nov, prueba con Haiku de verdad: 40 respuestas) con 3000 tokens y esfuerzo «medium», 4 de 10 salían VACÍAS (lo que piensa
 // cuenta en los tokens de salida y se los comía todos); con «low» tarda un 10 % menos y contesta igual de bien
-export const PREGUNTAS_DEF = { on: true, gratis: 5, porAnuncio: 3, max: 20, topeUsdDia: 3, esfuerzo: 'low' };
+export const PREGUNTAS_DEF = { on: true, gratis: 3, porAnuncio: 3, max: 6, topeUsdDia: 3, esfuerzo: 'low' };
 export const PREGUNTA_TOKENS = 8000;
 /** «preguntas» de limites.json, con sus topes */
 export async function cfgPreguntas(env) {
   const p = { ...PREGUNTAS_DEF, ...((await limitesJson()).preguntas || {}) };
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
-  const gratis = Math.floor(n(p.gratis, 5, 0, 100));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 20, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
+  const gratis = Math.floor(n(p.gratis, 3, 0, 100));
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
 }
 const cupoTxtP = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, porAnuncio: c.porAnuncio, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: Math.min(c.max, c.gratis + y.x) < c.max });
 const cupoLibreP = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, porAnuncio: c.porAnuncio, quedan: 99, masConAnuncio: true, ilimitado: true });
@@ -1299,7 +1303,7 @@ async function hola(req, env, c, ruta) {
     const m = ya && ya.metadata ? ya.metadata : null;
     const ahora = Date.now();
     const nuevo = {
-      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20), v: corta(b.v, 12),
+      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20) || (m && m.liga) || '', v: corta(b.v, 12),
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
       foto: u.foto || '',
@@ -1318,10 +1322,13 @@ async function hola(req, env, c, ruta) {
     const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
     // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
     const bvNueva = !!nuevo.bv && !(m && m.bv);
+    // (la liga, igual, una vez por cuenta: el primer aviso sale a veces antes de que la app tenga la liga, y sin esto se quedaba
+    // «sin liga» hasta la siguiente escritura de la hora; 17 nov)
+    const ligaNueva = !!nuevo.liga && !!m && !m.liga;
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
     const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
     if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || bvNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
+    if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
     return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);

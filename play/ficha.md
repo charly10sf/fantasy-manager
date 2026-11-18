@@ -100,7 +100,7 @@ No hace falta dar usuario y contraseña.
 
 ## Anuncios
 
-«¿Contiene anuncios?»: **Sí**. Solo la versión de Google Play: desde la 0.8, intersticiales de AdMob en una pausa (al cambiar de pestaña o al cerrar una ficha, con sus tiempos en «intersticial» de limites.json) y bonificados para pedir más planes o preguntas a la IA y abrir funciones; de la 0.6 a la 0.7, un banner abajo, ya quitado.
+«¿Contiene anuncios?»: **Sí**. Solo la versión de Google Play: desde la 0.8, un anuncio de apertura de AdMob como mucho una vez al día al abrir la app (nunca el primer día) e intersticiales en una pausa (al cambiar de pestaña o al cerrar una ficha, con sus tiempos en «intersticial» y «apertura» de limites.json) y bonificados para pedir más planes o preguntas a la IA y abrir funciones; de la 0.6 a la 0.7, un banner abajo, ya quitado.
 
 ## ID de publicidad
 

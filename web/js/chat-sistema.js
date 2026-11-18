@@ -18,7 +18,7 @@ export const REGLAS_LALIGA = `REGLAS DE LALIGA FANTASY (comprobadas; si algo de 
 5. MERCADO DE LIBRES: jugadores que no son de nadie; se puja a ciegas desde su precio y se los lleva la puja más alta cuando cambia el mercado (cada día).
 6. DEUDA: puede quedarse en negativo hasta el % del valor del equipo que te digo, pero SOLO pujando o comprando en el mercado, y cuenta la SUMA de todas las pujas que tenga puestas. Si empieza una jornada en negativo, no puntúa: eso es lo único obligatorio.
 7. VENDER: pone al jugador en el mercado; la oferta de LaLiga NO llega al momento, llega en el siguiente cambio de mercado, y en cada cambio hace una nueva. El dinero entra al aceptar una oferta, no antes.
-8. JUGADORES DE OTROS MANAGERS, tres caminos: (a) su CLÁUSULA, cuando esté abierta: es el único seguro. (b) Lo tiene EN VENTA: el precio lo pone él a su gusto (muchas veces absurdo, solo para ver qué le ofrece LaLiga) y es el MÍNIMO; él recibe además la oferta de LaLiga y se queda con la mejor. Ese precio no es un trato. (c) NO lo tiene en venta: se le puede hacer una oferta igualmente desde la ficha del jugador; decide su dueño y lo normal es que no acepte por menos de lo que le daría LaLiga. Que un jugador esté o no en venta cambia poco: TODA la plantilla de un rival se puede conseguir por su cláusula o con una oferta.
+8. JUGADORES DE OTROS MANAGERS, tres caminos: (a) su CLÁUSULA, cuando esté abierta: es el único seguro. (b) Lo tiene EN VENTA: el precio lo pone él a su gusto (muchas veces absurdo, solo para ver qué le ofrece LaLiga) y es el MÍNIMO; él recibe además la oferta de LaLiga y se queda con la mejor. Ese precio no es un trato. (c) NO lo tiene en venta: se le puede hacer una oferta igualmente desde la ficha del jugador; decide su dueño y lo normal es que no acepte por menos de lo que le daría LaLiga. CUÁNTO OFRECER: parte de «oferta para que te lo venda» que te paso con cada jugador (ya cuenta lo que sube hasta el próximo cambio de mercado y lo que da LaLiga en esta liga); si sube fuerte, di que su dueño querrá más y hasta dónde merece la pena según lo que sube y lo que le aporta. Nunca un porcentaje fijo sobre su valor. Que un jugador esté o no en venta cambia poco: TODA la plantilla de un rival se puede conseguir por su cláusula o con una oferta.
 9. Un CAMBIO entre managers son dos compras, cada una a su precio: nadie regala ni pierde la diferencia, y cada jugador estrena 14 días de cláusula cerrada.
 10. PLANTILLA: 25 jugadores como mucho. Juega con la versión gratis: solo las formaciones que te digo y SIN ENTRENADOR (no se alinea ni puntúa: nunca recomiendes fichar uno).`;
 
@@ -108,7 +108,9 @@ export function separarNotas(t) {
   // el bloque, que si no queda detrás de él y no se encuentra
   let s = String(t || '').replace(/<\/?br\s*\/?>/gi, '\n').replace(/<\/?(?:p|div|span)\b[^>]*>/gi, '');
   let bloque = null;
-  const m = s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
+  // (séptima pasada con Haiku, 17 nov) también entre etiquetas: «<notas>{…}</notas>»
+  const m = s.match(/(?:^|\n)[ \t]*<notas>[ \t]*\n?([\s\S]*?)(?:<\/notas>|$)/i)
+    || s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
     || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }

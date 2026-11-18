@@ -48,7 +48,7 @@ export function cuentasParon(S) {
   const ventana = M.ventanaEsp || {};
   // los días que se mueve el valor hasta el último cambio de mercado que vale para vender antes de la vuelta
   const diasV = Math.max(1, ventana.diasValor || Math.round((v.ini - ahora) / DIA) - 1);
-  const vender = ventana.ponerVenta && ventana.ponerVenta > ahora ? ventana.ponerVenta : null;
+  const vender = ventana.ponerVentaSeguro && ventana.ponerVentaSeguro > ahora ? ventana.ponerVentaSeguro : null;
   const cierre = v.ini - M.VEDA_H * HORA, once = v.ini - PARON_VUELTA;
   const enPlan = (pid) => !!(S.opPorPid && S.opPorPid[pid]);
   // (Carlos, 15:11 y 15:30: que las recomendaciones dependan de cada uno) lo que tienes: el saldo (las cláusulas solo se

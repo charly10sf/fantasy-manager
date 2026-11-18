@@ -198,15 +198,17 @@ export function planesCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
   // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
-  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
+  // (17 nov) en la web y el iPhone (sin anuncios para pedir más) valen los gratis de «gratisWeb», si los hay
+  const gratis = n(p && p.gratis, 2), gw = !enApp ? n(p && p.gratisWeb, 0) : 0;
+  return { on: !!(p && p.on), gratis: Math.max(gratis, gw), max: Math.max(n(p && p.max, 5), gw), web: Math.min(3, n(p && p.web, 0)) };
 }
 /** (16 nov) las preguntas del chat con la IA de la app (el Worker, /pregunta): «preguntas» de limites.json. porAnuncio: las que
     da cada anuncio bonificado cuando se acaban las gratis */
 export function preguntasCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.preguntas) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
-  const gratis = n(p && p.gratis, 5);
-  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 20)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
+  const gratis = n(p && p.gratis, 3);
+  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 6)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
 }
 /** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
     gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
@@ -217,17 +219,25 @@ export function intersticialCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
   const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
   return {
-    on: !!(p && p.on), gracia: n(p && p.graciaMin, 3, 1, 60) * 60e3, cada: n(p && p.cadaMin, 5, 3, 240) * 60e3,
-    maxDia: Math.floor(n(p && p.maxDia, 6, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
+    on: !!(p && p.on), gracia: n(p && p.graciaMin, 10, 1, 60) * 60e3, cada: n(p && p.cadaMin, 10, 3, 240) * 60e3,
+    maxDia: Math.floor(n(p && p.maxDia, 5, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
     bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
+    // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)
+    dueno: !!(p && p.dueno),
   };
 }
+/** (17 nov, Carlos) el anuncio de apertura: uno al día como mucho al abrir la app (intersticial.js decide si toca hoy y
+    Android lo enseña solo en los primeros segundos). «apertura» de limites.json: on y bloque (si la app no lo lleva) */
+export function aperturaCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.apertura) || null;
+  return { on: !!(p && p.on), bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '' };
+}
 let yoB = null, demoB = false;
-/** ¿a esta cuenta se le enseñan intersticiales? Al dueño nunca; a los de sus ligas, solo con «suLiga» */
+/** ¿a esta cuenta se le enseñan intersticiales? Al dueño no (salvo «dueno», para probarlos); a los de sus ligas, solo con «suLiga» */
 export function intersticialParaMi() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || !yoB || demoB) return false;
-  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return false;
+  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return intersticialCfg().dueno;
   if (!intersticialCfg().suLiga && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return false;
   return true;
 }
@@ -250,8 +260,9 @@ export function anunciosWebModo() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || cfg.anunciosWeb !== true || !yoB) return null;
   const dueno = [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
-  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad: nadie de la liga toca anuncios
-  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return null;
+  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad, salvo «intersticial.suLiga» (17 nov,
+  // Carlos: anuncios para todos, también los de su liga; el dueño sigue sin ellos)
+  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB) && !intersticialCfg().suLiga) return null;
   if (!dueno) return 'real';
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }

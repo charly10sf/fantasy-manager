@@ -39,8 +39,21 @@ ok(c.hist.length === 4 && !c.hist.some((m) => m.t.includes('De toda su plantilla
 ok(TONOS(c.tono) && Array.isArray(c.bloq) && c.rid === 'pruebachat01', `tono «${c.tono}», funciones cerradas y el id`);
 ok(r.notaTexto === 'Ofrécele 140,33 M o espera a su cláusula.', `notas sin comillas y códigos fuera: «${r.notaTexto}»`);
 ok(r.gemTodo, 'con la clave de Google, las mismas instrucciones nuevas y los mismos datos');
+// (noche del 16 al 17 nov) las formas raras en que Haiku dejó el bloque de notas en las pasadas de verdad
+for (const [t, como] of [
+  ['Acepta.\n\n<notas>\n{"recomiendo": [{"ref": "A-1003", "accion": "aceptar_oferta", "jugador": "Álex Baena"}], "apuntar": [], "olvidar": []}\n</notas>', 'entre etiquetas <notas>'],
+  ['Acepta.\n\n[{"ref": "A-1003", "accion": "aceptar_oferta", "jugador": "Álex Baena", "importe": 66170000, "cuando": "ahora"}]\n```', 'solo la lista, con comillas sueltas detrás'],
+  ['Acepta.\n\n[{"ref": "A-1003", "accion": "aceptar_oferta", "jugador": "Álex Baena"}]\n</br>', 'solo la lista, con un </br> detrás'],
+  ['Acepta.\n\n_notas_omitted', 'con «_notas_omitted»'],
+  ['Acepta.\n\n\n<br>', 'con un <br> suelto'],
+]) {
+  const sep = CS.separarNotas(t);
+  ok(sep.texto === 'Acepta.' && (!/[\[{]/.test(t) || (sep.bloque && JSON.parse(sep.bloque).recomiendo.length === 1)), `notas ${como}: fuera del texto${/[\[{]/.test(t) ? ' y la app las lee' : ''}`);
+}
 const sis = CS.sistemaChat({ tono: c.tono, bloq: c.bloq, anuncio: c.anuncio, alias: c.alias });
 ok(sis.length < 16000 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `las instrucciones del chat, cortas (${sis.length} caracteres) y sin las del plan`);
+ok(!/es una función top/.test(CS.sistemaChat({ bloq: ['dineroRivales', 'quienPaga', 'inercia'], anuncio: true })) && /candado/.test(CS.sistemaChat({ bloq: ['quienPaga'], anuncio: true })), 'lo cerrado, con su candado y sin «función top»');
+ok(/SUS CLÁUSULAS, DE LA MÁS FÁCIL/.test(c.datos) && /EN EL MERCADO ME QUEDAN PARA PUJAS/.test(c.datos) && !/funci[oó]n top/.test(c.datos) && !/\bme faltan\b/.test(c.datos.slice(c.datos.indexOf('PLANTILLAS DE LOS RIVALES'))), 'los datos del chat: sus cláusulas ordenadas, lo que queda para pujar bien dicho, sin «función top» ni «me faltan» en los rivales');
 
 // ---- en la app, de punta a punta: la pregunta va al servidor (de mentira) y lo que se ve sale limpio ----
 {
@@ -62,7 +75,7 @@ ok(sis.length < 16000 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `l
     await Pu.guardar('sesion', { token: 'x'.repeat(40), caduca: Date.now() + 3600e3 });
     await Pu.guardar('gemini', null);
     const g = U.LS.get('limites', null) || { t: Date.now(), cfg: {} };
-    g.cfg = { ...(g.cfg || {}), preguntas: { on: true, gratis: 5, porAnuncio: 3, max: 20 } };
+    g.cfg = { ...(g.cfg || {}), preguntas: { on: true, gratis: 3, porAnuncio: 3, max: 6 } };
     U.LS.set('limites', g);
     window.S.D.demo = false;
     return true;
@@ -79,14 +92,14 @@ ok(sis.length < 16000 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `l
   ok(pedidos.length === 1 && pedidos[0].datos.startsWith('DATOS DE SU LIGA') && pedidos[0].pregunta === '¿Qué le ficho al segundo?' && /^[a-z0-9]{8,24}$/.test(pedidos[0].rid), `la pregunta va al servidor con sus datos y un id (${pedidos.length} pedido)`);
   ok(/plantilla entera/.test(visto) && !/notas|recomiendo|C-1203|Operación/.test(visto), `lo que se ve, limpio: «${visto.replace(/\s+/g, ' ').slice(0, 140)}»`);
   // sin preguntas hoy: 429 con el cupo; en la web no hay anuncio, así que lo dice y la pregunta vuelve a la caja
-  respuesta = () => ({ e: 'Ya has hecho tus 5 preguntas de hoy.', cupo: { usados: 5, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } });
+  respuesta = () => ({ e: 'Ya has hecho tus 3 preguntas de hoy.', cupo: { usados: 3, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } });
   await P2.page.fill('#pregunta', '¿Y otra?');
   await P2.page.click('[data-accion="enviar"]');
   await P2.page.waitForFunction(() => !window.S.charlando, null, { timeout: 20000 });
   const err = await P2.page.evaluate(() => ({ t: document.querySelector('.error-c')?.innerText || '', caja: document.querySelector('#pregunta')?.value || '' }));
-  ok(/5 preguntas de hoy/.test(err.t) && err.caja === '¿Y otra?', `sin cupo: lo dice y la pregunta vuelve a la caja («${err.t.replace(/\s+/g, ' ').slice(0, 120)}»)`);
+  ok(/3 preguntas de hoy/.test(err.t) && err.caja === '¿Y otra?', `sin cupo: lo dice y la pregunta vuelve a la caja («${err.t.replace(/\s+/g, ' ').slice(0, 120)}»)`);
   // Android cerró la app con una pregunta en marcha: al volver se recoge con el mismo id
-  respuesta = (b) => ({ texto: `Recogida: ${b.rid}`, cupo: { usados: 2, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 3, masConAnuncio: true } });
+  respuesta = (b) => ({ texto: `Recogida: ${b.rid}`, cupo: { usados: 2, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 1, masConAnuncio: true } });
   const rec = await P2.page.evaluate(async () => {
     const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
     const h = I.conversacion(); h.push({ r: 'yo', t: '¿Me la recoges?', ts: Date.now() }); U.LS.set(Dt.K('chat'), h);

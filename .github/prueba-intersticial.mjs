@@ -29,6 +29,7 @@ window.FantasyApp = new Proxy({
   avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {},
   hayAnuncios: () => true, aLaVista: () => window.__vista,
   zonaAnuncios: (si, b, inter) => { window.__pedidos.push(['zona', si, b, inter]); },
+  aperturaAnuncios: (toca, b) => { window.__pedidos.push(['apertura', toca, b]); },
   intersticial: (b) => { window.__pedidos.push(['intersticial', b]); setTimeout(() => window.intersticialVisto && window.intersticialVisto(true, ''), 50); },
   verAnuncio: (p) => { window.__pedidos.push(['bonificado', p]); },
   preguntaEnMarcha: (rid, tk, vuelta, texto) => { window.__pedidos.push(['enMarcha', rid, vuelta, texto]); },
@@ -55,7 +56,7 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
     const U = await import('./js/util.js'), L = await import('./js/limite.js');
     const g = U.LS.get('limites', null) || { t: Date.now(), cfg: {} };
     g.t = Date.now();
-    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' } };
+    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' }, apertura: { on: true, bloque: 'ca-app-pub-3175956326240112/9876543210' } };
     U.LS.set('limites', g);
     if (!demo) { U.LS.del('demo'); window.S.D.demo = false; }
     const yo = { nombre: 'Unión Clausulera', teamId: window.S.D.yo.teamId, userId: dueno ? '667015' : '123456', ligas: [{ nombre: window.S.D.liga.nombre }] };
@@ -150,6 +151,16 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
   await A.uso(2.5);
   await A.pestana('rivales');
   ok(await A.pedidos() === 5, 'y pasados, el siguiente');
+  // (17 nov) en una sesión nueva no hace falta esperar «cada» minutos desde el último de la sesión anterior: basta la gracia
+  await A.page.evaluate(() => { window.__vista = false; });
+  await A.uso(31);
+  await A.page.evaluate(() => { window.__vista = true; window.dispatchEvent(new Event('fm-vuelta')); });
+  await A.uso(3.5);
+  await A.pestana('hoy');
+  ok(await A.pedidos() === 6, 'otra sesión: pasada la gracia sale uno, aunque en uso no hayan pasado «cada» minutos desde el anterior');
+  await A.uso(2);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 6, 'y dentro de esa sesión, el siguiente espera sus «cada» minutos');
   const p = await A.page.evaluate(() => window.__pedidos);
   ok(!p.some((x) => x[0] === 'banner'), 'ya no se pide nunca el banner de abajo');
   ok(p.some((x) => x[0] === 'zona' && x[1] === true && x[2] === 'ca-app-pub-3175956326240112/1234567890' && x[3] === true), 'Android sabe que la liga está cargada, el bloque y que a esta cuenta le tocan (para precargar)');
@@ -165,6 +176,45 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   ok(await A.pedidos() === 0, `${t}: ninguno`);
   const z = await A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'zona').pop());
   ok(!z || z[3] === false, `${t}: Android ni siquiera los carga`);
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('ap-desde', '2026-10-01'); U.LS.del('apertura'); window.dispatchEvent(new Event('limite-cambia')); });
+  await A.page.clock.runFor(300);
+  const ap = await A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'apertura').pop());
+  ok(!ap || ap[1] === false, `${t}: tampoco el de apertura`);
+  await A.cerrar();
+}
+{
+  // (17 nov) el de apertura: nunca el primer día; desde el segundo, uno al día; visto, ya no toca hasta mañana
+  const A = await abrir();
+  const ultAp = () => A.page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'apertura').pop());
+  const repintar = async () => { await A.page.evaluate(() => window.dispatchEvent(new Event('limite-cambia'))); await A.page.clock.runFor(300); };
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.del('ap-desde'); U.LS.del('apertura'); });
+  await repintar();
+  let ap = await ultAp();
+  ok(ap && ap[1] === false, 'el de apertura, el primer día que usa la app: no');
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('ap-desde', '2026-10-01'); });
+  await repintar();
+  ap = await ultAp();
+  ok(ap && ap[1] === true && ap[2] === 'ca-app-pub-3175956326240112/9876543210', 'desde el segundo día: le toca (con el bloque de limites.json)');
+  await A.page.evaluate(() => window.aperturaVista(true, ''));
+  await A.page.clock.runFor(300);
+  ap = await ultAp();
+  ok(ap && ap[1] === false, 'visto hoy: ya no toca hasta mañana');
+  const v = await A.page.evaluate(async () => { const U = await import('./js/util.js'); return U.LS.get('apertura', null); });
+  ok(v && v.dia === '2026-11-03', 'apunta el día en que salió');
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('apertura', { dia: '2026-11-02', t: 0 }); const g = U.LS.get('limites', null); g.cfg.apertura.on = false; U.LS.set('limites', g); });
+  await repintar();
+  ap = await ultAp();
+  ok(ap && ap[1] === false, 'con «on»: false en «apertura», ninguno');
+  ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
+  await A.cerrar();
+}
+{
+  // el dueño, con «dueno» (su móvil es de prueba en AdMob): para que pueda verlos
+  const A = await abrir({ dueno: true });
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); const g = U.LS.get('limites', null); g.cfg.intersticial.dueno = true; U.LS.set('limites', g); });
+  await A.uso(4);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 1, 'al dueño con «dueno» (para probarlos en su móvil de prueba): sí');
   await A.cerrar();
 }
 {
@@ -185,15 +235,15 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
     if (!q.url().endsWith('/pregunta')) return rt.fulfill({ status: 404, headers: cors, body: '{}' });
     const b = JSON.parse(q.postData() || '{}');
     pedidos.push(b);
-    const j = b.extra ? { texto: 'Con el anuncio: mira a Rival 2.', cupo: { usados: 6, gratis: 5, max: 20, extras: 1, porAnuncio: 3, quedan: 2, masConAnuncio: true } }
-      : { e: 'Ya has hecho tus 5 preguntas de hoy.', cupo: { usados: 5, gratis: 5, max: 20, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } };
+    const j = b.extra ? { texto: 'Con el anuncio: mira a Rival 2.', cupo: { usados: 4, gratis: 3, max: 6, extras: 3, porAnuncio: 3, quedan: 2, masConAnuncio: false } }
+      : { e: 'Ya has hecho tus 3 preguntas de hoy.', cupo: { usados: 3, gratis: 3, max: 6, extras: 0, porAnuncio: 3, quedan: 0, masConAnuncio: true } };
     return rt.fulfill({ status: j.e ? 429 : 200, headers: cors, contentType: 'application/json', body: JSON.stringify(j) });
   });
   await A.page.evaluate(async () => {
     const Pu = await import('./js/puente.js'), U = await import('./js/util.js');
     await Pu.guardar('sesion', { token: 'x'.repeat(40), caduca: Date.now() + 3600e3 });
     await Pu.guardar('gemini', null);
-    const g = U.LS.get('limites', null); g.cfg.preguntas = { on: true, gratis: 5, porAnuncio: 3, max: 20 }; U.LS.set('limites', g);
+    const g = U.LS.get('limites', null); g.cfg.preguntas = { on: true, gratis: 3, porAnuncio: 3, max: 6 }; U.LS.set('limites', g);
   });
   await A.page.click('#bPregunta');
   await A.page.clock.runFor(600);

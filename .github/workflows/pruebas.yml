@@ -47,6 +47,15 @@ jobs:
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-chat.mjs
       - name: Probar los intersticiales
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-intersticial.mjs
+      # el plan con la IA de la app cuando la conexión falla a medias: siempre queda el de la app, con un aviso que dice la verdad
+      - name: Probar el plan cuando falla la conexión
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-conexion.mjs
+      # Hoy y los avisos con la app cerrada dicen lo mismo de a quién vender por la inercia
+      - name: Probar los avisos de vender por la inercia
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-fondo.mjs
+      # (0.8a) los nombres de los rivales mal dictados y los apodos
+      - name: Apodos y nombres aproximados
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs
 
   sin-red:
     runs-on: ubuntu-latest

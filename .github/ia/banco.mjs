@@ -26,6 +26,9 @@ export const ESCENAS = {
   veda: { hora: '2026-11-06T16:00:00+01:00' },
   // sábado por la tarde: la jornada en juego, el once cerrado
   enjuego: { hora: '2026-11-07T16:00:00+01:00' },
+  // (19 nov) sábado por la mañana, día del primer partido (14:00): cláusulas cerradas, el once aún se toca y el último
+  // cambio de mercado de antes de la jornada ya ha pasado (00:15)
+  sabado: { hora: '2026-11-07T10:30:00+01:00' },
   // parón de selecciones con la vuelta a más de 3 días
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
   // en negativo entre semana (ha tirado de deuda)
@@ -75,6 +78,11 @@ export const ESCENAS = {
     const con = new Set(Object.values(S.D.plantillas).flat().map((f) => f.pid)), enM = new Set(S.D.mercado.map((m) => m.pid));
     const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, 9);
     for (const j of libres) S.D.plantillas[S.D.yo.teamId].push({ pid: j.id, ptId: 'pt' + j.id, clausula: Math.round(j.valor * 1.6), protegidoHasta: Date.now() + 10 * 864e5, compra: j.valor });` },
+  // martes, con 30 M y Álex Baena en venta subiendo un 1 % al día: una oferta un 3 % por encima de su valor la gana solo
+  // en 3 días, no se acepta (Fornals, Carlos 17 nov); una un 12 % por encima, sí
+  ...Object.fromEntries([['m-oferta-sube', 1.03], ['m-oferta-sube-alta', 1.12]].map(([k, f]) => [k, { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 30000000; for (const m of S.D.mercado) m.miPuja = null;
+    const v = S.D.misVentas.find((x) => S.D.maestro[x.pid].nombre === 'Álex Baena'); v.ofertas = [{ ...v.ofertas[0], importe: Math.round(S.D.maestro[v.pid].valor * ${f}), deLiga: false }];`,
+    extra: `${SERIE} serie('Álex Baena', 40, 0); return {};` }])),
   // jueves, un titular mío (Ionut Radu) con la cláusula a su valor y sin protección: la jornada empieza el sábado
   'm-blinda-arranque': { hora: '2026-11-05T12:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
@@ -179,7 +187,9 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
 
 /**
  * pide el plan como lo hace la app y lo pasa por cuadrarPlan; devuelve la «vista»: lo que acaba viendo el mánager.
- * `largo`: con el contrato de antes (la IA escribe las operaciones; hoy es lo que queda si el motor no puede). Sin él, el
+ * `largo`: un plan escrito por la IA con el contrato de antes (la IA escribe las operaciones), como los planes guardados
+ * de antes: lo que «contesta» va tal cual a cuadrarPlan (desde el 17 nov la app ya no lo pide: se quitó planLargo; lo que
+ * se prueba es que cuadrarPlan lo para). Sin él, el
  * corto: el plan lo hace el motor y la IA lo ordena, lo recorta y lo explica. En el corto se ve además
  *   FRASE <jugador>: la explicación de cada paso (la de la IA, o la de la app si la de la IA no vale)
  *   CAMBIOS: lo que la IA quitó o metió y lo que la app no le dejó
@@ -187,9 +197,10 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
  */
 export async function plan(escena, contesta, { largo = false } = {}) {
   const P = await pagina(escena, contesta);
+  const escrito = largo ? String(await contesta(null, '')) : null;
   try {
     await P.page.evaluate(`window.__arbitro = ${arbitro.toString()}`);
-    const r = await conCuerda(P.page, P.page.evaluate(async ({ largo, extra }) => {
+    const r = await conCuerda(P.page, P.page.evaluate(async ({ largo, extra, escrito, modelo }) => {
       const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
       const S = window.S;
       if (!largo) {
@@ -202,7 +213,11 @@ export async function plan(escena, contesta, { largo = false } = {}) {
       }
       const { D, M } = S;
       let Pl;
-      try { Pl = await (largo ? I.planLargo : I.planDelDia)(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; }
+      if (largo) {
+        let json = null;
+        try { json = JSON.parse(String(escrito).replace(/^[\s\S]*?```(?:json)?\s*|```[\s\S]*$/g, '')); } catch (e) { return { error: `el plan escrito no es JSON: ${e.message}` }; }
+        Pl = { ...json, fuentes: [], modelo, web: false, t: Date.now(), dia: U.diaDe(), mercado: M.cierreMercado || null };
+      } else { try { Pl = await I.planDelDia(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; } }
       const r = I.cuadrarPlan(Pl, D, M);
       const L = [`TITULAR: ${r.titular || Pl.titular || ''}`, `SITUACION: ${r.situacion || Pl.situacion || ''}`];
       const linea = (o) => `${o.etiqueta || o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${U.eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}${o.aviso ? ` | ${o.aviso}` : ''}`;
@@ -225,7 +240,7 @@ export async function plan(escena, contesta, { largo = false } = {}) {
       }
       const ops = (r.ops || []).filter((o) => !['alinear', 'esperar'].includes(o.accion));
       return { vista: L.join('\n'), n: ops.length, descartadas: ops.filter((o) => o.descartada).length, crudo: Pl, corto: !!Pl.corto, tok: Pl.tok || null };
-    }, { largo, extra: (ESCENAS[escena] || {}).extra || null }));
+    }, { largo, extra: (ESCENAS[escena] || {}).extra || null, escrito, modelo: MODELO_FALSO }));
     // lo que ocupa lo que la app manda a la IA (el sistema y los mensajes)
     const q = (P.pedidos.find((x) => x.cuerpo && x.cuerpo.contents) || {}).cuerpo;
     if (r.vista && r.corto && q) r.vista += `\nPEDIDO: ${(q.systemInstruction ? q.systemInstruction.parts[0].text.length : 0) + q.contents.flatMap((c) => c.parts || []).reduce((t, p) => t + (p.text || '').length, 0)} caracteres`;

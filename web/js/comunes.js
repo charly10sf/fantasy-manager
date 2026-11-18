@@ -370,44 +370,49 @@ export function dineroLargo(d) {
 }
 
 /* ---------- las funciones top, bloqueadas (limite.js: bloqueada) ---------- */
+// [título, una línea]. (0.8a, Carlos 17 nov: «quita mucho texto, de forma general pone siempre mucho texto cuando no
+// hace falta tanto») una línea en las cajas y en la ventana que sale al tocarlas
 export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
-  quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador.'],
-  inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
-  perfilRival: ['Cómo juega cada rival', 'A quién clausula y cuánto paga, si vende rápido o aguanta, qué puestos ficha, si se protege y a qué hora se mueve.'],
-  radar: ['Radar de subidas', 'Los que más van a subir estos días según su inercia y los que acaban de hacer un partidazo, con de quién es cada uno. Se abre junto con «Cuándo gira un jugador».'],
-  ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le suele dar LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
+  quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
+  inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
+  perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
+  radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
+  ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
 };
 
 /* ---------- lo que tiene en venta cada rival (función top «ventasRivales») ---------- */
 /** sus jugadores en el mercado, con lo que pide y lo que suele dar LaLiga */
 export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(tid));
+/** (0.8a, Carlos 17 nov) el sello dorado de las funciones top */
+export const selloTop = () => `<i class="top-b">${icono('corona')}TOP</i>`;
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave, { como = null, rid = null } = {}) {
   // «como»: otra cara para la misma llave (el radar se abre con la de la inercia); «rid»: el rival (las de los rivales)
   const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', ''];
   // en la de Google Play se abre viendo anuncios (las de los rivales, por rival); en la web y la de la liga, no
-  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null ? ` data-rival="${esc(rid)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave, rid)}</span></span></button>`;
+  return `<button class="bloq dorado" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null ? ` data-rival="${esc(rid)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${selloTop()}${esc(t)}</b><span>${esc(x)}${colaCandado(clave, rid)}</span></span></button>`;
 }
-/** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios) */
-// (en la app de la liga, sin mandar a Google Play: la de Play no se instala encima, va firmada con otra clave, y los de
-//  la liga no tocan anuncios)
-export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' En la web no se abren: sí en la app de Android de Google Play, gratis, viendo un anuncio corto.');
-/** lo que dice un candado de cómo se abre */
+/** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
+    que sale al tocarlas, nunca en las cajas */
+export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
+/** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
+    ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
-  // (sesión 8, A9) sin promesas que en la web no se cumplen: aquí no se abre; en la app de Google Play, con anuncios
-  if (!topConAnuncio()) return dondeTop();
-  if (clave === 'quienPaga') return ` Tócalo y ábrela ${horasQuien()} horas viendo un anuncio corto.`;
-  if (!POR_JORNADA.includes(clave)) return ' Tócalo y ábrela hasta medianoche viendo un anuncio corto.';
+  return '';
+}
+export function colaCandadoLarga(clave, rid = null) {
+  if (!topConAnuncio()) return '';
+  if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
+  if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
-  if (!q) return ` Ya lo has abierto las ${n} veces de esta jornada: vuelve en la siguiente.`;
-  const ads = a === 1 ? 'un anuncio corto' : `${a === 2 ? 'dos' : a} anuncios cortos seguidos`;
-  return ` Tócalo y ${rid != null ? 'mira el de este rival' : 'elige un rival'} ${minutosRival()} minutos con ${ads}. ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.`;
+  if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;
+  return ` ${a === 1 ? 'Un anuncio' : `${a} anuncios`} por rival · te ${q === 1 ? 'queda 1' : `quedan ${q}`} esta jornada.`;
 }
 /** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  return `<button type="button" class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${esc(texto || t)}</button>`;
+  return `<button type="button" class="pill bloq-p dorado" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${esc(texto || t)}</button>`;
 }
 /**
  * los candados de una misma pantalla, juntos en una tarjeta (al final): [clave] o [clave, como]. Con uno solo, su caja
@@ -417,7 +422,7 @@ export function candadosJuntos(lista, { rid = null } = {}) {
   const cs = lista.filter(Boolean).map((c) => (Array.isArray(c) ? c : [c])).filter(([c], i, a) => a.findIndex(([d]) => d === c) === i);
   if (!cs.length) return '';
   if (cs.length === 1) return candado(cs[0][0], { como: cs[0][1] || null, rid: POR_JORNADA.includes(cs[0][0]) ? rid : null });
-  const cola = topConAnuncio() ? 'Toca una para ver cómo abrirla viendo un anuncio corto.' : dondeTop().trim();
-  return `<div class="bloq-g"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${cs.length} funciones top</b><span>${cola}</span></span></div>
+  const cola = '';
+  return `<div class="bloq-g dorado"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${selloTop()}${cs.length} funciones top</b>${cola ? `<span>${cola}</span>` : ''}</span></div>
     ${cs.map(([clave, como]) => { const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', '']; return `<button class="bloq-i" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}${rid != null && POR_JORNADA.includes(clave) ? ` data-rival="${esc(rid)}"` : ''}><b>${esc(t)}</b><span>${esc(x)}</span></button>`; }).join('')}</div>`;
 }

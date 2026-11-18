@@ -16,6 +16,9 @@ final class Anuncios {
     static void intersticial(String bloque) {
     }
 
+    static void apertura(boolean toca, String bloque) {
+    }
+
     static void teclado(boolean abierto) {
     }
 

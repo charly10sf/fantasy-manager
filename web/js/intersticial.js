@@ -9,8 +9,8 @@
      uno cada N minutos de uso (con la app a la vista; el rato fuera no cuenta), un máximo al día y no justo después de
      un anuncio bonificado.
    - Nunca con la IA pensando, en el tutorial, con una ficha o una ventana abierta, escribiendo, en la liga de ejemplo,
-     en la pantalla del límite ni antes de entrar en tu liga. Nunca al dueño (sinLimite/todoAbierto) y, salvo que
-     «suLiga» lo abra, tampoco a los de sus ligas (nadie cercano debe tocar un anuncio: AdMob cierra cuentas por eso).
+     en la pantalla del límite ni antes de entrar en tu liga. Nunca al dueño (sinLimite/todoAbierto). Con
+     «suLiga» (true desde el 17 nov), también a los de sus ligas: anuncios para todos menos el dueño.
    - Si no hay uno cargado, no pasa nada: Android ya está cargando el siguiente y no se reintenta en bucle.
    Los números, en «intersticial» de limites.json (intersticialCfg de limite.js), para cambiarlos sin sacar versión.
    Android (Anuncios.java de src/play) vuelve a comprobar lo suyo (la app a la vista, sin teclado, sin la IA trabajando,
@@ -22,7 +22,10 @@ import { intersticialCfg, intersticialParaMi } from './limite.js';
 const TICK = 10e3;
 // una vuelta a la app tras media hora o más fuera es otra sesión: vuelven los minutos de gracia
 const SESION_NUEVA = 30 * MIN;
-let ultimo = Date.now(), usoSesion = 0, usoDesde = 0, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
+// usoDesde: minutos de uso desde el último intersticial de ESTA sesión; en una sesión nueva empieza «cumplido» (Carlos,
+// 17 nov: el primero a los 2 min de cada sesión y después uno cada 10), y si la app se abre de nuevo poco después de uno
+// (Android la cerró), cuenta desde cero para no repetirlo
+let ultimo = Date.now(), usoSesion = 0, usoDesde = Infinity, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
 
 const aLaVista = () => !document.hidden && (!enApp || nativo.aLaVista());
 /** cuenta el rato de uso: solo con la app a la vista. Fuera de la app el reloj puede seguir (Android no siempre congela
@@ -31,8 +34,8 @@ function contar() {
   const ahora = Date.now(), dt = ahora - ultimo;
   ultimo = ahora;
   if (!aLaVista()) { if (!fueraDesde) fueraDesde = ahora - Math.min(dt, TICK); return; }
-  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) usoSesion = 0; return; }
-  if (dt >= SESION_NUEVA) { usoSesion = 0; return; }
+  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; } return; }
+  if (dt >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; return; }
   if (dt > TICK * 3) return;
   usoSesion += dt;
   usoDesde += dt;
@@ -45,6 +48,7 @@ export function arrancarIntersticiales() {
   if (arrancado || !enApp) return;
   arrancado = true;
   ultimo = Date.now();
+  { const h = hoy(); if (h.t && ultimo - h.t < SESION_NUEVA) usoDesde = 0; }
   setInterval(contar, TICK);
   document.addEventListener('visibilitychange', contar);
   window.addEventListener('fm-vuelta', contar);
@@ -86,6 +90,21 @@ window.intersticialVisto = (ok, motivo) => {
   usoDesde = 0;
   ultimo = Date.now();
   void motivo;
+};
+
+/* (17 nov, Carlos) el anuncio de apertura: uno al día como mucho, al abrir la app (un intersticial al abrir lo prohíbe
+   Google; este formato es el que deja). Nunca el primer día que alguien usa la app con su liga (que la vea antes que un
+   anuncio). A quién (no al dueño ni a los de su liga) lo mira app.js con intersticialParaMi */
+export function aperturaToca() {
+  const d = diaDe(), desde = LS.get('ap-desde', null);
+  if (!desde) { LS.set('ap-desde', d); return false; }
+  if (desde === d) return false;
+  const a = LS.get('apertura', null);
+  return !(a && a.dia === d);
+}
+window.aperturaVista = (ok, motivo) => {
+  if (ok) LS.set('apertura', { dia: diaDe(), t: Date.now() });
+  window.dispatchEvent(new CustomEvent('apertura-vista', { detail: { ok: !!ok, motivo } }));
 };
 
 /** para las pruebas: el rato de uso de esta sesión (ms) y lo de hoy */

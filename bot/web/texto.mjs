@@ -14,7 +14,7 @@ Reglas:
 - Solo lo que viene en los HECHOS. Nada de lesiones, rivales, rachas, formas de jugar o cifras que no estén. Si un dato no está, no lo supongas ni lo menciones.
 - No califiques a los equipos ni a los partidos («rival fuerte», «partido de muchas tarjetas», «equipo goleador»): eso no viene en los hechos.
 - Las cifras se copian tal cual vienen escritas en los hechos («132,2 M», «17,2 %», «21:00», «jornada 14»). No hagas cuentas nuevas ni redondees a otra cosa.
-- Cada apartado lleva de 2 a 4 frases (5 como mucho si hay muchos jugadores) y no pasa de 700 caracteres. Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
+- Cada apartado lleva de 2 a 4 frases (5 como mucho si hay muchos jugadores; en chollos, hasta 7) y no pasa de 700 caracteres (900 en chollos). Di qué significa para quien juega: a quién vender, aguantar o no fichar, qué vigilar y cuándo moverse. Con nombres, en concreto.
 - Debajo de cada apartado la página ya lleva una tabla con todos los datos: no los enumeres. Elige a uno, dos o tres jugadores que importen y cuenta qué significa para quien juega. Una frase como «Le siguen X (+18,0 M, +27,4 %, 10 días), Y (…)» es volcar la tabla: prohibido. Como mucho dos cifras por frase.
 - Prosa normal, castellano de España, cercano pero serio. Nada de frases hechas («poner en el punto de mira», «echar a rodar», «piezas clave», «cupo de titularidad»). Sin listas, negritas, emojis ni guiones largos. Frases de longitud variada.
 - Cada apartado empieza de forma distinta y no repite la estructura de otro. Prohibido: «cabe destacar», «es importante», «en resumen», «sin duda», «no solo… sino también», «a tener en cuenta», «ojo al dato», frases de cierre genéricas y exageraciones.
@@ -35,11 +35,18 @@ Un apartado NO es publicable solo por una de estas dos cosas:
 1. Un error de hecho: algo que contradice los hechos o no está en ellos (un jugador en otro equipo, otro rival o día de partido, otro estado, una lesión distinta, una cifra atribuida a quien no es, una racha o un dato que no viene; también calificar un rival o un partido, como «rival fuerte» o «un partido que suele traer tarjetas»).
 2. Un consejo peligroso: alinear o fichar para esta jornada a un sancionado o a un lesionado, o pagar una cláusula con deuda.
 Las opiniones, los consejos discutibles, el estilo, lo que el texto no cuenta y las palabras parecidas («cumple sanción» por «no juega») NO son motivo: eso es publicable.
-En el motivo, copia la frase del texto que está mal y el dato de los hechos que la contradice. Si no puedes señalar las dos cosas, es publicable.`;
+En el motivo, copia la frase del texto que está mal y el dato de los hechos que la contradice. Si no puedes señalar las dos cosas, es publicable. Escribe primero el motivo y después decide «ok»: si al repasarlo ves que no hay error de hecho ni consejo peligroso, «ok» es true.`;
 
-const ESQUEMA_REV = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'OBJECT', properties: { ok: { type: 'BOOLEAN' }, motivo: { type: 'STRING' } }, required: ['ok', 'motivo'] }])), required: claves });
+const ESQUEMA_REV = (claves) => ({ type: 'OBJECT', properties: Object.fromEntries(claves.map((k) => [k, { type: 'OBJECT', properties: { motivo: { type: 'STRING' }, ok: { type: 'BOOLEAN' } }, required: ['motivo', 'ok'] }])), required: claves });
 
 const MALAS = /cabe destacar|es importante|en resumen|en conclusi[oó]n|sin duda|no solo .{1,60} sino|a tener en cuenta|ojo al dato|expertos?|futbolfantasy|comuniate|biwenger|analitica fantasy|anal[ií]tica fantasy|jornada perfecta|sofascore|understat|marca\.com|\bas\.com|inteligencia artificial|\bIA\b|—/i;
+
+/** el revisor a veces marca «no» y en el mismo motivo acaba diciendo que no hay error (17 nov: chollos, apercibidos y bajas): eso vale como sí */
+export const revisorSeDesdice = (motivo) => {
+  const frases = String(motivo || '').trim().split(/(?<=[.!?])\s+/).filter(Boolean);
+  const ultima = frases[frases.length - 1] || '';
+  return /\bno hay (ninguna |ningún )?(contradicci[oó]n|error)|\b(es|son) publicables?\b|\bno es (un )?error\b/i.test(ultima) && !/\bpero\b|\bsin embargo\b/i.test(ultima);
+};
 
 /** las cifras de un texto: «132,2», «21:00», «17,2», «13»… (los años y las horas van enteros) */
 const cifras = (s) => (String(s).match(/\d+(?:[.,:]\d+)*/g) || []).map((x) => x.replace(/\.(?=\d{3}\b)/g, ''));
@@ -48,12 +55,12 @@ const cifras = (s) => (String(s).match(/\d+(?:[.,:]\d+)*/g) || []).map((x) => x.
  * Comprueba un apartado: cifras que salen de los hechos (o pequeñas: 0 a 10), jugadores que salen en los hechos, frases de las que
  * se notan y largo. Devuelve '' si vale o el motivo.
  */
-export function validar(texto, { permitidas, nombresHechos, nombresLiga }) {
+export function validar(texto, { permitidas, nombresHechos, nombresLiga, maxFrases = 6 }) {
   const t = String(texto || '').trim();
   if (!t) return 'vacío';
   if (t.length > 1000) return `demasiado largo (${t.length} caracteres)`;
   const frases = t.replace(/(^|[\s(])([A-ZÁÉÍÓÚÑ])\.\s/g, '$1$2· ').split(/(?<=[.!?])\s+/).filter(Boolean).length;
-  if (frases > 6) return `${frases} frases`;
+  if (frases > maxFrases) return `${frases} frases`;
   const m = t.match(MALAS);
   if (m) return `frase prohibida: «${m[0]}»`;
   for (const c of cifras(t)) {
@@ -106,7 +113,7 @@ export async function escribir(h, { nombresLiga = [], clave = process.env.ANTHRO
     const candidatos = {};
     for (const k of pendientes) {
       const t = String((r && r[k]) || '').trim();
-      const mal = validar(t, ctx);
+      const mal = validar(t, k === 'chollos' ? { ...ctx, maxFrases: 8 } : ctx);
       if (mal) { avisos[k] = mal; log(`  (previa web) ${k}: ${mal}`); } else candidatos[k] = t;
     }
     const aRevisar = Object.keys(candidatos);
@@ -116,7 +123,7 @@ export async function escribir(h, { nombresLiga = [], clave = process.env.ANTHRO
       catch (e) { log(`  (previa web) revisor: ${e.message}`); }
       for (const k of aRevisar) {
         const x = rev && rev[k];
-        if (x && x.ok) textos[k] = candidatos[k];
+        if (x && (x.ok || revisorSeDesdice(x.motivo))) textos[k] = candidatos[k];
         else { avisos[k] = x ? `el revisor: ${x.motivo}` : 'sin revisar'; log(`  (previa web) ${k}: ${avisos[k]}`); }
       }
     }

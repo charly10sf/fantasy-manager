@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
@@ -15,6 +15,7 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
+import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
@@ -219,7 +220,7 @@ export function resumenEquipo(S) {
   const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
   h += `<div class="rejilla" style="margin-top:12px">
     <div class="dato"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'baja' : ''}">${eur(D.dinero)}</div></div>
-    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda${num(M.misPujas) ? ', ya sin lo pujado' : ''}</small></div></div>
+    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>${eur(D.dinero)} de saldo ${M.deuda - M.misPujas >= 0 ? '+' : '−'} ${eur(Math.abs(M.deuda - M.misPujas))} en negativo${num(M.misPujas) ? ' (ya sin lo pujado)' : ''}</small></div></div>
     <div class="dato"><div class="et">En pujas</div><div class="v">${eur(M.misPujas || 0)}</div></div>
     <div class="dato"><div class="et">En venta</div><div class="v">${eur(enVenta)}<small>${M.misVentas.length} jugador${M.misVentas.length === 1 ? '' : 'es'}</small></div></div>
     ${M.conCompra ? `<div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${eur(M.ganadoTotal, { signo: true })}</div></div>` : ''}
@@ -572,6 +573,17 @@ function subenBajanRival(r, per) {
   return { tot, h };
 }
 
+/** (0.8a, Carlos 17 nov) el apodo del rival, debajo de su nombre: el botón para ponerlo, la caja para escribirlo o el que tiene */
+function apodoRival(S, e) {
+  const tid = String(e.teamId), aps = apodosDe(tid);
+  if (S.apodoEdita === tid) {
+    const por = [e.manager, e.nombre].filter((x, i, a) => x && a.indexOf(x) === i).map((x) => `«${esc(x)}»`).join(' y ');
+    return `<div class="apodo-ed"><label for="apodoIn">¿Cómo lo llamáis en tu liga?</label><div class="apodo-fila"><input id="apodoIn" data-tid="${esc(tid)}" value="${esc(aps.join(', '))}" maxlength="120" autocomplete="off" enterkeyhint="done" placeholder="el Tito"><button class="btn chico" data-accion="apodoGuardar" data-tid="${esc(tid)}">Guardar</button></div><small>Puedes poner varios separados por comas (el Tito, Titón). La IA y la voz lo reconocerán así, además de por ${por}. Solo lo ves tú.</small></div>`;
+  }
+  if (aps.length) return `<div class="apodo-l">Lo llamas <b>${aps.map((x) => `«${esc(x)}»`).join(', ')}</b><button class="apodo-chip chico" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Cambiar</button></div>`;
+  return `<div class="apodo-l"><button class="apodo-chip" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Ponle un apodo</button><span>para la IA y la voz</span></div>`;
+}
+
 export function fichaRival(S, tid) {
   const { M } = S;
   const r = M.rivales.find((x) => x.e.teamId === tid);
@@ -586,7 +598,7 @@ export function fichaRival(S, tid) {
   const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
   const conDinero = r.dinero && r.dinero.v != null;
   const tDinero = bloqueada('dineroRivales', tid)
-    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
+    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}${selloTop()}</b><span>su dinero ›</span></button>`
     : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
@@ -597,6 +609,7 @@ export function fichaRival(S, tid) {
   ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2 rival-sub">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
+  ${apodoRival(S, e)}
   <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;
   // la jornada en directo: lo que lleva y su once, jugador a jugador (encima de las pestañas, solo con partidos)
@@ -749,7 +762,7 @@ function anuncioTopHTML(A, S) {
   const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
   const veces = (k) => (k === 1 ? '1 vez' : `${k} veces`);
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+    <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
   const yaAb = rivales ? rivalesAbiertos() : [];
   if (rivales && rid == null) {
     const rs = M ? M.rivales : [];
@@ -884,6 +897,20 @@ export function ajustes(S) {
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
+  /* ---- (0.8a) apodos de los rivales ---- */
+  if (S.D && Array.isArray(S.D.clasif)) {
+    const yo = S.D.yo && S.D.yo.teamId, ap = apodosLiga();
+    const rivs = S.D.clasif.filter((x) => x && x.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
+    if (rivs.length) {
+      const puestos = rivs.filter((x) => listaApodos(ap[String(x.teamId)]).length).length;
+      let c9 = '<p class="apo-nota">Ponle a cada rival el nombre con el que lo llamáis. Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.</p>';
+      for (const x of rivs) {
+        const v = listaApodos(ap[String(x.teamId)]).join(', ');
+        c9 += `<div class="ajuste apo-fila" data-q="${esc(norm(`apodo mote ${x.nombre} ${x.manager} ${v}`))}">${caraManager(x)}<div class="c"><b>${esc(x.nombre)}</b><span>${esc(x.manager && x.manager !== x.nombre ? `${x.manager} · ` : '')}${x.pos}º</span></div><input class="${v ? 'lleno' : ''}" data-cambia="apodo" data-tid="${esc(x.teamId)}" value="${esc(v)}" placeholder="Apodo" maxlength="120" autocomplete="off" enterkeyhint="done" aria-label="Apodo de ${esc(x.nombre)}"></div>`;
+      }
+      h += sec('apodos', 'rivales', 'Apodos de los rivales', `${puestos ? `${puestos} puesto${puestos === 1 ? '' : 's'}` : 'Ninguno puesto'} · para la IA y la voz`, c9, 'apodo mote nombre rival voz');
+    }
+  }
 
   /* ---- avisos y alarmas ---- */
   let c2 = '';
@@ -953,7 +980,6 @@ export function ajustes(S) {
     if (!pApp) c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
     c3 += filasHorasPlan(S, pApp);
     if (k && !qApp) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
-    if (k && !pApp) c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }

@@ -52,21 +52,25 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
+/** El marcador de Hoy (18 nov, Fran y Carlos: sencillo y sin información de más): saldo y equipo en grande; debajo del saldo, hasta
+    dónde puedes quedarte en negativo (el saldo más bajo al que puedes llegar pujando: el margen de deuda menos lo ya pujado); el puesto,
+    en pequeño en la línea de la jornada. */
 function marcador(S, { corto = false, tiempos = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
   const ahora = Date.now();
+  const puesto = M.yo ? ` · <b>${yo.pos}º</b> de ${D.clasif.length} · ${num(yo.puntos)} pts` : '';
   let fila = '';
-  if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón: «J13 en 11 días» decía otra
-  else if (M.enJuego) fila = `<span class="vivo">Jornada ${M.enJuego.n} en juego</span><span class="der">hasta ${cuando(M.enJuego.fin)}</span>`;
-  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${cuenta(M.proxima.ini)}</span>`;
-  else fila = `<span>${esc(D.liga.nombre)}</span>`;
+  if (M.enParon) fila = `<span>${icono('bandera')} Parón${puesto}</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón
+  else if (M.enJuego) fila = `<span><span class="vivo">J${M.enJuego.n} en juego</span>${puesto}</span><span class="der">hasta ${cuando(M.enJuego.fin, { hora: false })}</span>`;
+  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}${puesto}</span><span class="der">${cuando(M.proxima.ini, { hora: false })} · ${cuenta(M.proxima.ini)}</span>`;
+  else fila = `<span>${esc(D.liga.nombre)}${puesto}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
+  const margen = Math.max(0, M.deuda - M.misPujas);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
-    <div class="cols">
-      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
-      <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
-      <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
+    <div class="m-cols">
+      <div class="m-c"><div class="et">Saldo</div><div class="v ${num(D.dinero) < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">${margen > 0 ? `puedes quedarte en <b class="neg">−${eur(margen)}</b>` : `gastas hasta ${eur(Math.max(0, M.pujaMax))}`}</div></div>
+      <div class="m-c"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
     </div>`;
   // (0.7.13o, Carlos 16 nov) lo que va a pasar pronto (el mercado, las cláusulas, el parón), dentro del marcador y en
   // pequeño, en vez de en chips sueltos debajo
@@ -609,7 +613,7 @@ function planHTML(S) {
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2">${nativo.canal() === 'play' ? 'Tarda menos de un minuto. Si sales de la app, se sigue haciendo y al volver lo tienes aquí.' : 'Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.'}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
-  else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
+  else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto && !/plan de la app|plan automático/i.test(E.error) ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (E.cupo && !E.callado) h += cupoPlanHTML(E.cupo);
   if (!P) return h + '</div>';
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
@@ -1246,7 +1250,7 @@ export function mercado(S) {
     const v = M.ventanaEsp;
     if (!v || v.ciclos < 1) h += nada(M.enJuego ? 'Con la jornada en juego no se especula: espera a que acabe.' : 'No da tiempo a comprar y vender antes de la jornada.');
     else {
-      h += `<p class="t2 peq">Compra lo que sube y véndelo antes de la jornada: entre medias puedes bajar hasta <b>${eur(-M.deuda)}</b>, pero la jornada tiene que empezar en positivo. Ponlo a la venta <b>${cuando(v.ponerVenta)}</b> y acepta la oferta de <b>${cuando(v.ultimoMercado)}</b> (la del día de la jornada no cuenta). Sale de la tendencia de estos días, que puede cambiar.</p>`;
+      h += `<p class="t2 peq">Compra lo que sube y véndelo antes de la jornada: entre medias puedes bajar hasta <b>${eur(-M.deuda)}</b>, pero la jornada tiene que empezar en positivo. Lo que compres hoy, ponlo a la venta <b>${cuando(v.ponerVentaSeguro)}</b> y acepta la oferta de <b>${cuando(v.limite)}</b>.${v.justo ? ` Hay otro cambio ${esc(cuando(v.justo))}, pero con la jornada a punto de empezar no cuentes con él para salir del negativo.` : ''} Sale de la tendencia de estos días, que puede cambiar.</p>`;
       if (M.paraRevender.length) h += `<div class="grupo"><span>Ya tienes para revender</span></div>${M.paraRevender.map((x) => filaJugador(x, { sub: `Comprado a ${eur(x.rev.precio)} · vale ${eur(x.j.valor)}`, derecha: `<div class="v ${clase(x.beneficioYa)}">${eur(x.beneficioYa, { signo: true })}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
       h += M.especular.length ? lista2(`<div class="grupo"><span>Candidatos</span><span>${M.especular.length}</span></div>` + M.especular.slice(0, 30).map((e) => filaJugador({ j: e.j, tend: e.tend }, {
         sub: `${e.origen === 'mercado' ? `Mercado · puja ${eur(e.puja)}` : `Cláusula ${eur(e.precio)} a ${esc(e.rival.manager || e.rival.nombre)}`}`,

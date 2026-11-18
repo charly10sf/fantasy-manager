@@ -64,6 +64,7 @@ android {
             if (rutaFirma && claveFirma) signingConfig signingConfigs.release
             buildConfigField 'String', 'BONIFICADO', '""'
             buildConfigField 'String', 'INTERSTICIAL', '""'
+            buildConfigField 'String', 'APERTURA', '""'
         }
         play {
             dimension 'canal'
@@ -75,7 +76,11 @@ android {
             // aquí su id ('ca-app-pub-3175956326240112/NNNNNNNNNN') en lugar de ''. Mientras esté vacío, la app usa el
             // «bloque» de «intersticial» de limites.json (solo si es de esta cuenta) y, sin él, no enseña intersticiales.
             // Con fm.anunciosReales=false, siempre el de prueba de Google.
-            buildConfigField 'String', 'INTERSTICIAL', bloque('', 'ca-app-pub-3940256099942544/1033173712')
+            buildConfigField 'String', 'INTERSTICIAL', bloque('ca-app-pub-3175956326240112/6553740872', 'ca-app-pub-3940256099942544/1033173712')
+            // EL DE APERTURA (17 nov, Carlos: uno al día al abrir la app). >>> ID REAL: cuando Carlos cree el bloque en AdMob
+            // (Bloques de anuncios → Anuncio de apertura de aplicación), poner aquí su id en lugar de ''. Mientras esté vacío,
+            // la app usa el «bloque» de «apertura» de limites.json (solo si es de esta cuenta) y, sin él, no enseña ninguno.
+            buildConfigField 'String', 'APERTURA', bloque('ca-app-pub-3175956326240112/8988332526', 'ca-app-pub-3940256099942544/9257395921')
         }
     }
 

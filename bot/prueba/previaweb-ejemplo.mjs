@@ -2,7 +2,7 @@
 // (un apartado que se inventa una cifra se queda sin análisis), la página y el tuit con el enlace.
 import assert from 'node:assert/strict';
 import { toca } from '../web/toca.mjs';
-import { validar, permitidasDe, escribir } from '../web/texto.mjs';
+import { validar, permitidasDe, escribir, revisorSeDesdice } from '../web/texto.mjs';
 import { vista } from '../web/vista.mjs';
 import { contenido, metas } from '../web/pagina.mjs';
 import { generar } from '../tipos/previaweb.mjs';
@@ -39,6 +39,17 @@ assert.equal(validar('Fermín ha sumado 19,4 M en siete días.', ctx), '');
 assert.match(validar('Fermín ha sumado 21,4 M en siete días.', ctx), /cifra/);
 assert.match(validar('Mbappé también sube.', ctx), /jugador/);
 assert.match(validar('Cabe destacar que Rodri baja.', ctx), /prohibida/);
+// (17 nov) los chollos pueden llevar más frases que el resto
+const sieteFrases = 'Rodri baja. Rodri baja. Rodri baja. Rodri baja. Rodri baja. Rodri baja. Rodri baja.';
+assert.match(validar(sieteFrases, ctx), /7 frases/);
+assert.equal(validar(sieteFrases, { ...ctx, maxFrases: 8 }), '');
+// (17 nov) el revisor marcó «no» con motivos que acababan diciendo que no había error: cuentan como sí
+assert.ok(revisorSeDesdice('El texto dice «A. Fortuño, del Espanyol, es el único portero de la lista». Revisando mejor: no hay contradicción real.'));
+assert.ok(revisorSeDesdice('Es opinión discutible, no un error. No hay error de hecho ni consejo peligroso.'));
+assert.ok(revisorSeDesdice('Barrenetxea con vuelta en mayo también cuadra. No hay contradicción.'));
+assert.ok(!revisorSeDesdice('El texto dice «Rodri vuelve en enero» y los hechos dicen principios de diciembre.'));
+assert.ok(!revisorSeDesdice('No hay contradicción en Rodri, pero Gayá está sancionado y el texto lo alinea.'));
+assert.ok(!revisorSeDesdice(''));
 
 // la redacción con un Claude falso: el mercado se inventa una cifra las dos veces y se queda sin análisis; el resto pasa
 let preguntas = 0;

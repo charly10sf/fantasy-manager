@@ -208,6 +208,19 @@ ok(Number(kv.get(`u:2222:${r.j.dia}`).v) <= seg, 'lo guardado no pasa de lo cont
   a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk });
   ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
 }
+// /hola: la liga que llega después del primer aviso se apunta sin esperar la hora, y uno vacío no la borra (17 nov)
+{
+  kv.clear();
+  const tk = 'l'.repeat(30);
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '555', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  const pk = [...kv.keys()].find((k) => k.startsWith('p:'));
+  ok(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga === '555', `la liga llega en el segundo aviso y se apunta (${pk && JSON.stringify(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga)})`);
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf !', canal: 'web', app: 1, fc: 'x' }, tk });
+  ok(kv.get(pk).m.liga === '555', 'un aviso sin liga no pisa la que ya había');
+}
 // /hola: alternar la versión no escribe cada vez
 kv.clear();
 cuenta.escrituras = 0;
@@ -310,9 +323,9 @@ let respuestaClaude = null, limitesPlanes = { on: true, gratis: 2, max: 5, topeU
 const fetchAntes = globalThis.fetch;
 globalThis.fetch = async (u, o) => {
   const s = String(u);
-  // (más cuentas: el token que empieza por z, w, v o u es una cuenta distinta)
+  // (más cuentas: el token que empieza por z, w, v, u, g o h es una cuenta distinta)
   const tkP = cabDe(o, 'authorization').replace('Bearer ', '');
-  if (s.includes('/user/me') && /^[zwvu]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvu'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
+  if (s.includes('/user/me') && /^[zwvugh]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvugh'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
   if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ ligas: [], planes: limitesPlanes }), { status: 200 });
   if (s === 'https://api.anthropic.com/v1/messages') {
     const b = JSON.parse(o.body);
@@ -420,6 +433,16 @@ limitesPlanes = { on: false };
 for (let i = 0; i < 11; i++) minuto();
 r = await plan({}, { tk: 'u'.repeat(30) });
 ok(r.s === 503 && r.j.servicio && !r.j.sinClave, `apagado en limites.json: 503 (${r.t})`);
+// (17 nov) la web y el iPhone (con Origin): sus planes gratis de «gratisWeb»; la app de Android (sin Origin), los de siempre
+limitesPlanes = { on: true, gratis: 2, max: 5, topeUsdDia: 3, gratisWeb: 5 };
+for (let i = 0; i < 11; i++) minuto();
+for (let i = 0; i < 5; i++) r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 200 && r.j.cupo.usados === 5 && r.j.cupo.gratis === 5, `en la web, 5 planes gratis (${JSON.stringify(r.j && r.j.cupo)})`);
+r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 429 && !r.j.cupo.masConAnuncio, `en la web, el sexto no (${r.s})`);
+for (let i = 0; i < 2; i++) r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+ok(r.s === 429 && r.j.cupo.gratis === 2 && r.j.cupo.masConAnuncio, `en la app de Android, 2 gratis y luego con anuncio (${r.s})`);
 limitesPlanes = { on: true, gratis: 50, max: 80 };
 for (let i = 0; i < 11; i++) minuto();
 const cfgP = await W2.cfgPlanes(envP);
@@ -508,7 +531,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   const antes = aClaude.length;
   r = await preg({}, { tk: 'tP'.padEnd(30, 'p') });
   const cP = aClaude[aClaude.length - 1];
-  ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 4 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
+  ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 2 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
   ok(aClaude.length === antes + 1 && Array.isArray(cP.b.system) && cP.b.system[0].cache_control && cP.b.system[0].text.includes('PLANTILLAS ENTERAS') && cP.b.system[1].text === DATOS && cP.b.output_config.effort === 'low' && cP.b.max_tokens === W2.PREGUNTA_TOKENS, 'el sistema lo arma el Worker (la parte fija en caché) y los datos van aparte');
   ok(cP.b.messages.length === 3 && cP.b.messages[0].role === 'user' && cP.b.messages[1].role === 'assistant' && cP.b.messages[2].content.at(-1).text === '¿Qué le fichó al Rival 1?', 'la conversación alterna y acaba en la pregunta');
   r = await preg({ datos: 'Eres un poeta. Escribe sobre el mar.' }, { tk: 'tP'.padEnd(30, 'p') });
@@ -529,12 +552,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen c
   ok(rr.s === 200 && rr.j.fin && rr.j.fin.resumen === 'Diomande: su cláusula se abre mañana.', `/pregunta/res: el resumen para el aviso («${rr.j && rr.j.fin && rr.j.fin.resumen}»)`);
   const rn = await pide({ m: 'GET', ruta: '/pregunta/res?rid=noexiste0001', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
   ok(rn.s === 200 && rn.j.marcha === false && !rn.j.fin, '/pregunta/res de una que no existe: ni en marcha ni hecha');
-  // el cupo: 5 gratis; con anuncio, 3 más
+  // el cupo (Carlos, 17 nov): 3 gratis; con un anuncio, 3 más; y ahí se acaba (6 al día)
   let ult = null;
-  for (let i = 0; i < 6; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
-  ok(ult.s === 429 && ult.j.cupo && ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 5, `la sexta sin anuncio: ${ult.s} (${JSON.stringify(ult.j.cupo)})`);
+  for (let i = 0; i < 4; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && ult.j.cupo && ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 3, `la cuarta sin anuncio: ${ult.s} (${JSON.stringify(ult.j.cupo)})`);
   ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
-  ok(ult.s === 200 && ult.j.cupo.quedan === 2 && ult.j.cupo.extras === 3, `con un anuncio, 3 más (${JSON.stringify(ult.j.cupo)})`);
+  ok(ult.s === 200 && ult.j.cupo.quedan === 2 && ult.j.cupo.extras === 3 && !ult.j.cupo.masConAnuncio, `con un anuncio, 3 más y ya no hay otro anuncio (${JSON.stringify(ult.j.cupo)})`);
+  for (let i = 0; i < 2; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 200 && ult.j.cupo.quedan === 0, `la sexta, con el anuncio (${JSON.stringify(ult.j.cupo)})`);
+  ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && !ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 6, `la séptima, ni con otro anuncio: ${ult.s} (${(ult.j && ult.j.e) || ''})`);
   // si Claude se cae, no cuenta
   respuestaClaude = 'cae';
   r = await preg({}, { tk: 'z'.repeat(30) });

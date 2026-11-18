@@ -1,7 +1,7 @@
 {
   "umbralCaida": 0.5,
   "onceProbable": true,
-  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 8, "previa": 10, "onceideal": 1, "onces": 10, "novedades": 20, "noticias": 15, "sancionados": 3, "lloros": 1, "liga": 6, "balance": 1, "revalorizaciones": 1, "calendario": 1, "selecciones": 1, "selecciones-dia": 7, "previaweb": 1 },
+  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 60, "previa": 10, "onceideal": 1, "onces": 10, "novedades": 20, "noticias": 15, "sancionados": 3, "lloros": 1, "liga": 6, "balance": 1, "revalorizaciones": 1, "calendario": 1, "selecciones": 1, "selecciones-dia": 7, "previaweb": 1 },
   "topeDiario": 40,
   "maxPorEjecucion": 6,
   "ventanaFinalHoras": 13,

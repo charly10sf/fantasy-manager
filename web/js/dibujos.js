@@ -1,6 +1,23 @@
 /* Los dibujos de las novedades (viewBox 0 0 160 120). Clases: d-l línea clara, d-al línea del color de la
    novedad, d-a relleno del color, d-s relleno suave, d-w línea blanca (sobre el color), d-t texto. */
 export const DIBUJOS = {
+  // (0.8) chat: la pregunta y la respuesta al momento (el rayo)
+  chat: `<path class="d-s" d="M22 22h70a12 12 0 0 1 12 12v34a12 12 0 0 1-12 12H54l-18 16V80H22a12 12 0 0 1-12-12V34a12 12 0 0 1 12-12z"/><path class="d-l" d="M22 22h70a12 12 0 0 1 12 12v34a12 12 0 0 1-12 12H54l-18 16V80H22a12 12 0 0 1-12-12V34a12 12 0 0 1 12-12z"/>
+    <circle class="d-a" cx="36" cy="51" r="5"/><circle class="d-a" cx="57" cy="51" r="5"/><circle class="d-a" cx="78" cy="51" r="5"/>
+    <path class="d-a" d="M120 36h22a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8h-4v12l-12-12h-6a8 8 0 0 1-8-8V44a8 8 0 0 1 8-8z"/><path class="d-w" d="M135 44l-9 15h9l-5 14"/>`,
+  // (0.8) aviso: el móvil con la notificación de la respuesta bajando por arriba
+  aviso: `<rect class="d-l" x="50" y="8" width="60" height="104" rx="12"/><rect class="d-s" x="58" y="48" width="44" height="8" rx="4"/><rect class="d-s" x="58" y="62" width="34" height="8" rx="4"/><rect class="d-s" x="58" y="76" width="40" height="8" rx="4"/>
+    <rect class="d-a" x="22" y="18" width="116" height="24" rx="12"/><circle class="d-w" cx="35" cy="30" r="5"/><path class="d-w" d="M48 26h44M48 34h28"/><path class="d-al" d="M144 14l8-6M146 30h10M144 46l8 6"/><path class="d-l" d="M72 102h16"/>`,
+  // (0.8) pantalla: el móvil que se estira a las cuatro esquinas, y el banner de abajo tachado
+  pantalla: `<rect class="d-s" x="46" y="8" width="68" height="104" rx="12"/><rect class="d-l" x="46" y="8" width="68" height="104" rx="12"/>
+    <path class="d-al" d="M58 36V22h14M102 36V22H88M58 84v14h14M102 84v14H88M60 24l14 14M100 24L86 38M60 96l14-14M100 96L86 82"/>
+    <rect class="d-l" x="122" y="92" width="30" height="12" rx="3" style="opacity:.55"/><path class="d-al" d="M118 108l38-20"/>`,
+  // (0.8) ruta: el plan como un camino con sus paradas hasta la bandera
+  ruta: `<path class="d-l" style="stroke-dasharray:6 7" d="M26 100c30 0 28-34 56-34s26-34 52-34"/><circle class="d-a" cx="26" cy="100" r="8"/><circle class="d-s" cx="82" cy="66" r="10"/><circle class="d-l" cx="82" cy="66" r="10"/>
+    <path class="d-al" d="M77 66l4 4 7-8"/><path class="d-l" d="M134 34V8"/><path class="d-a" d="M134 8h20l-7 8 7 8h-20z"/>`,
+  // (0.8) peligro: el marcador del riesgo de una cláusula, con la aguja casi en rojo
+  peligro: `<path class="d-s" d="M22 94a58 58 0 0 1 116 0z"/><path class="d-l" d="M22 94a58 58 0 0 1 116 0"/><path class="d-al" style="stroke-width:8" d="M103 54a46 46 0 0 1 23 40"/>
+    <path class="d-l" d="M80 42v8M43 57l6 6M117 57l-6 6M34 94h8M118 94h8"/><path class="d-al" d="M80 94l28-34"/><circle class="d-a" cx="80" cy="94" r="8"/><path class="d-l" d="M50 110h60"/>`,
   atardecer: `<path class="d-l" d="M14 92h132"/><path class="d-s" d="M46 92a32 32 0 0 1 64 0z"/><path class="d-l" d="M46 92a32 32 0 0 1 64 0"/><path class="d-al" d="M52 80h52M58 70h40M66 61h24"/>
     <path class="d-l" d="M126 92c0-16 2-30 6-42M132 50c-8-6-18-6-24 0M132 50c8-7 18-7 24-1M132 50c-3-8-9-12-16-13M132 50c3-8 9-12 16-12M132 50c-6 3-9 9-10 15M132 50c6 3 9 9 10 14"/><path class="d-l" d="M28 104h30M72 104h44"/>`,
   directo: `<rect class="d-s" x="18" y="34" width="124" height="62" rx="12"/><rect class="d-l" x="18" y="34" width="124" height="62" rx="12"/>

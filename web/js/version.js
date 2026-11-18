@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8';
+export const VERSION = '0.8b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -22,13 +22,42 @@ export const VERSION = '0.8';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    // (la hora se pone al publicar; si la sesión de los planes deja también su entrada 0.8, se juntan las dos en esta)
-    v: '0.8', f: '2026-11-17', h: '00:00', t: 'Pregunta a la IA sin clave y la pantalla entera',
+    // (17 nov, Carlos: Fornals subiendo 1,1 M al día y titular, con 16 M en positivo, y el plan mandaba aceptar un 6 %
+    // «para la liquidez»; y el buscador del Mercado sin caras). La hora, al publicar
+    v: '0.8b', f: '2026-11-18', h: '00:21', t: 'Ofertas con más cabeza y caras en el buscador',
     cosas: [
-      { tipo: 'mejora', importante: true, d: 'ia', t: 'Pregúntale sin clave y sin esperas', x: 'Para preguntarle a la IA ya no hace falta tu clave de Google: contesta la IA de la app, en segundos. Conoce la plantilla entera de cada rival (no solo lo que tiene a la venta), razona con las cifras de tu liga y va al grano. Si sales de la app mientras piensa, la respuesta te espera al volver. Tienes 5 preguntas al día y, viendo un anuncio corto, 3 más.', ir: { v: 'ia' } },
-      { para: 'play', tipo: 'mejora', d: 'campana', t: 'Te avisa cuando la IA te contesta', x: 'Si sales de la app mientras la IA piensa tu pregunta, arriba sale «Pensando tu respuesta» y, cuando contesta, un aviso con el principio de la respuesta. Tócalo y vas directo a Pregunta.' },
-      { para: 'play', tipo: 'mejora', importante: true, d: 'movil', t: 'La pantalla entera, sin banner abajo', x: 'Ya no hay un anuncio fijo debajo de las pestañas: la app se ve entera. A cambio, de vez en cuando, al cambiar de pestaña o al cerrar una ficha puede salir un anuncio que se cierra con la X. Nunca al abrir la app, mientras escribes ni mientras la IA piensa.' },
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no te manda vender al que sigue subiendo', x: 'Si no te hace falta el dinero y el jugador sube tan rápido que en pocos días vale lo que te ofrecen (o algo menos si es de tu once), el plan te dice que lo aguantes en vez de aceptar. Y la explicación de cada paso ya no se inventa motivos, como que una venta hace falta para el dinero cuando no es así.' },
+      { tipo: 'arreglo', d: 'ia', t: 'Cuánto ofrecer por el jugador de un rival, con su subida', x: 'Si preguntas cuánto ofrecerle a otro mánager por un jugador, la respuesta ya cuenta lo que sube ese jugador cada día y lo que suele dar LaLiga en tu liga, en vez de sumar siempre un 10 % a su valor. Y si sube fuerte, te avisa de que su dueño querrá más.' },
+      { tipo: 'arreglo', d: 'cara', t: 'El buscador del Mercado enseña las caras', x: 'Al buscar un jugador, cada resultado sale con su foto en vez de con sus iniciales.' },
+    ],
+  },
+  {
+    // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
+    // adelante; el cambio de mercado del día del partido). La hora, al publicar
+    v: '0.8a', f: '2026-11-17', h: '22:43', t: 'Apodos para tus rivales y pujas más realistas',
+    cosas: [
+      { tipo: 'nuevo', importante: true, d: 'cara', t: 'Ponle un apodo a cada rival', x: 'Llama a cada rival como lo llamáis en tu liga: en su ficha («Ponle un apodo») o en Ajustes, en «Apodos de los rivales». Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'corona', t: 'Las funciones top, en dorado', x: 'Lo que se abre viendo un anuncio (el dinero de cada rival, quién paga tus cláusulas, el radar de subidas…) ahora se ve de un vistazo, con su sello dorado.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'voz', t: 'La voz entiende mejor los nombres', x: 'Si el dictado escribe un nombre de tu liga un poco distinto («leao ere espabilado» por «Leao er Espabilao»), la IA sabe de quién hablas y te lo dice. Si puede ser más de uno, te pregunta cuál.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'especular', t: 'Pujas para revender con las dos cifras', x: 'Cuando la app te propone pujar por alguien para revenderlo, te dice lo que hace falta en tu liga para llevártelo y hasta dónde te sale a cuenta. Si con la puja que sale a cuenta lo normal es que se lo lleve otro, ya no te lo propone y te cuenta por qué, y si te conviene para quedártelo.' },
+      { tipo: 'mejora', d: 'balanza', t: 'El negativo, a su tiempo', x: 'Ir en negativo a mitad de semana para revender está bien: la app solo aprieta cuando quedan pocos cambios de mercado para vender antes de la jornada, y cuanto menos queda, menos te deja bajar.' },
+      { tipo: 'mejora', d: 'reloj', t: 'Hasta el último cambio de mercado', x: 'Si ya estás en positivo, lo que tienes para revender puede esperar al cambio de mercado del día del partido. Te dice cuánto margen tendrás para aceptar la oferta y, si no vas a poder, cuál aceptar antes.' },
+    ],
+  },
+  {
+    // (17 nov, Carlos) la 0.8 se presenta a todos al actualizar (todos: true), con dibujos nuevos. La hora, al publicar
+    v: '0.8', f: '2026-11-17', h: '13:41', t: 'La IA, al momento, y la pantalla entera', todos: true,
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'chat', t: 'Pregúntale a la IA, sin clave y al momento', x: 'Ya no hace falta tu clave de Google: contesta la IA de la app en unos segundos. Se sabe la plantilla entera de cada rival y las cifras de tu liga, y va al grano. Tienes 3 preguntas al día, y en la app de Google Play, 3 más viendo un anuncio corto.', ir: { v: 'ia' } },
+      { para: 'play', tipo: 'nuevo', d: 'aviso', t: 'Te avisa cuando la IA te contesta', x: 'Pregunta y sal de la app si quieres: arriba verás «Pensando tu respuesta» y, cuando conteste, un aviso con el principio. Tócalo y vas directo a la respuesta.' },
+      { tipo: 'mejora', d: 'ruta', t: 'El plan con la IA, más fiable', x: 'Si tu liga cambia mientras la IA prepara el plan, o lo recoges al volver a la app, se queda con los pasos que te explica y solo quita lo que ya no se puede hacer, diciéndote por qué. Y si la conexión falla, reintentar no te gasta otro plan.' },
+      { para: 'play', tipo: 'mejora', importante: true, d: 'pantalla', t: 'Más pantalla para lo que importa', x: 'Hemos rediseñado los anuncios para que estorben lo menos posible. La app se ve entera, con más espacio para tu equipo, el mercado y tus rivales, y todo es más cómodo de usar.' },
+      { tipo: 'mejora', d: 'peligro', t: 'Cuánto peligra cada cláusula, según tu liga', x: 'El riesgo de que te clausulen a uno se mide con lo que se paga de verdad en tu liga por un clausulazo. Una cláusula un 10 % por encima de su valor ya no sale «sin riesgo» si en tu liga se paga más.' },
       { tipo: 'arreglo', d: 'ia', t: 'Respuestas sin restos raros', x: 'Debajo de algunas respuestas salía un bloque de texto técnico, y a veces la IA escribía códigos como «M-3143». Ya no.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Cuando el plan con la IA no sale, te dice la verdad', x: 'Si la IA ya ha hecho todos los de hoy, dice que hasta mañana, no «en un rato», y nunca se queda esperando más de 3 minutos. Mientras, tienes el plan de la app.' },
+      { tipo: 'arreglo', d: 'campana', t: 'Los avisos de vender, como en Hoy', x: 'Con la app cerrada ya no te avisa de vender a quien Hoy te dice que esperes, ni dos veces a un lesionado.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Una oferta buena, sin consejos contrarios', x: 'Con una oferta que conviene aceptar ya no te dice a la vez que la aceptes y que esperes.' },
+      { menor: true, tipo: 'arreglo', d: 'ajustes', t: 'Fuera un interruptor que no hacía nada', x: 'En Ajustes, «Buscar en Google en el plan» ya no hacía nada con el plan de ahora: se ha quitado.' },
     ],
   },
   {

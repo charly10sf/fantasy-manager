@@ -8,6 +8,7 @@ import { analizar, rematarAuto } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
+import { ponerApodo } from './apodos.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
@@ -18,7 +19,7 @@ import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
-import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop } from './comunes.js';
+import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop, selloTop } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
@@ -26,7 +27,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -35,7 +36,7 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto } from './intersticial.js';
+import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
 import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
@@ -692,7 +693,12 @@ function pintarSup() {
   }
   // Directo: un punto verde mientras se juega la jornada
   const gd = $('#gl-directo'); if (gd) { gd.classList.add('punto-v'); gd.classList.toggle('oculto', !S.M.enJuego); }
+  marcarApodos();
 }
+/* (0.8a, Carlos 17 nov) tras actualizar, el botón de Ajustes brilla hasta que lo tocas: la primera vez se abre en «Apodos
+   de los rivales». Una vez (por móvil); no en la liga de ejemplo, ni con el tutorial o las novedades delante */
+const apodosToca = () => !LS.get('apodos-visto', null) && !!S.D && !enDemo() && tourVisto() && !tourAbierto() && !document.body.classList.contains('con-nv');
+function marcarApodos() { const b = $('#bAjustes'); if (b) b.classList.toggle('brilla', apodosToca()); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
@@ -769,11 +775,17 @@ function ponerBanner(si, zona = si) {
   const z = !!zona && tuLiga && !limitado;
   // (y si a esta cuenta le tocan intersticiales: al dueño y a los de su liga, Android ni los carga)
   const ic = intersticialCfg(), inter = z && ic.on && intersticialParaMi();
-  const k = `${z}|${inter}|${ic.bloque}`;
+  // (17 nov) y si hoy le toca el de apertura (uno al día; nunca el primer día ni al dueño ni a los de su liga)
+  const ac = aperturaCfg(), ap = z && ac.on && intersticialParaMi() && aperturaToca();
+  const k = `${z}|${inter}|${ic.bloque}|${ap}|${ac.bloque}`;
   if (k === bannerYa) return;
   bannerYa = k;
   nativo.zonaAnuncios(z, ic.bloque, inter);
+  nativo.aperturaAnuncios(ap, ac.bloque);
 }
+window.addEventListener('apertura-vista', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
+// (al volver a la app, por si ha cambiado el día y hoy toca otra vez el de apertura)
+window.addEventListener('fm-vuelta', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 /* (0.8) el intersticial, solo en una pausa natural: al cambiar de pestaña con la barra de abajo o al cerrar una ficha con
    la X o arrastrándola (nunca con el «atrás» de Android, que puede ser para salir). Lo demás (cada cuánto, la gracia al
@@ -2280,6 +2292,7 @@ function gestoHoja(hoja, velo) {
   hoja.addEventListener('touchcancel', fin, { passive: true });
 }
 function cerrarHoja(ya = false, sigue = false) {
+  S.apodoEdita = null;
   const h = $('.hoja'), v = $('.velo');
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
@@ -3106,7 +3119,22 @@ document.addEventListener('click', async (ev) => {
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': sinErrorPlan(); cargar(); break;
     case 'usarGuardado': usarGuardado(); break;
-    case 'ajustes': S.ajBusca = ''; hoja('ajustes'); break;
+    case 'ajustes': {
+      S.ajBusca = '';
+      const aApodos = apodosToca();
+      if (aApodos) { LS.set('apodos-visto', 1); S.ajAbiertas = { ...(S.ajAbiertas || {}), apodos: 1 }; S.apodosUnaVez = true; } else if (S.apodosUnaVez && S.ajAbiertas) { delete S.ajAbiertas.apodos; S.apodosUnaVez = false; }
+      hoja('ajustes');
+      marcarApodos();
+      if (aApodos) requestAnimationFrame(() => { const sec = S.hoja && S.hoja.querySelector('details[data-k="apodos"]'); if (sec) { S.hoja.scrollTop = Math.max(0, sec.offsetTop - 70); sec.classList.add('resalta'); } });
+      break;
+    }
+    case 'apodoEditar': S.apodoEdita = String(d.tid); repintarHoja(); requestAnimationFrame(() => { const i = $('#apodoIn'); if (i) { i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }); break;
+    case 'apodoGuardar': {
+      const i = $('#apodoIn'), l = ponerApodo(d.tid, i ? i.value : '');
+      S.apodoEdita = null; repintarHoja();
+      tostada(l.length ? `Hecho: la IA lo reconocerá como ${l.map((x) => `«${x}»`).join(', ')}` : 'Apodo quitado');
+      break;
+    }
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
@@ -3124,8 +3152,8 @@ document.addEventListener('click', async (ev) => {
       }
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-        <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
-        <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
+        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <p>${esc(dondeTop().trim())}</p>
         ${enApp ? '' : botonPlay()}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
@@ -3249,7 +3277,6 @@ document.addEventListener('click', async (ev) => {
     case 'borrarClave': if (confirm('¿Quitar la clave de la IA?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
     case 'probarIA': try { const l = await probarClave(); tostada(`La clave funciona: ${l.length} versiones de la IA disponibles`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
-    case 'iaWebPlan': guardarCfgIA({ webPlan: !cfgIA().webPlan }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     // (0.7.13l) los planes que salen solos a su hora, y los ajustes del plan desde el propio plan
     case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? 'Los planes saldrán solos a su hora' : 'Los planes solo saldrán cuando los pidas'); break; }
@@ -3365,6 +3392,7 @@ document.addEventListener('change', (ev) => {
   if (k === 'modelo') guardarCfgIA({ modelo: v });
   if (k === 'planH1' || k === 'planH2') { guardarCfgHoras({ [k === 'planH1' ? 'h1' : 'h2']: v }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); }
   if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
+  if (k === 'apodo') { const l = ponerApodo(el.dataset.tid, v); el.value = l.join(', '); el.classList.toggle('lleno', !!l.length); tostada(l.length ? 'Apodo guardado' : 'Apodo quitado', 1800); }
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M, planAvisos()); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
   // (40) cuánto antes avisa cada tipo, de cuáles de tus cláusulas y el aviso de un jugador concreto (desde su ficha o Ajustes)
@@ -3389,6 +3417,8 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && S.hoja && !tourAbierto()) { cerrarHoja(); return; }
   if ((ev.key === 'Enter' || ev.key === ' ') && ev.target && ev.target.matches && ev.target.matches('[role="button"][data-accion]')) { ev.preventDefault(); ev.target.click(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'apodoIn') { ev.preventDefault(); const b = $('[data-accion="apodoGuardar"]'); if (b) b.click(); return; }
+  if (ev.key === 'Enter' && ev.target && ev.target.matches && ev.target.matches('input[data-cambia="apodo"]')) { ev.preventDefault(); ev.target.blur(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
 // el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)
@@ -3403,7 +3433,7 @@ document.addEventListener('input', (ev) => {
   if (!ev.target || ev.target.id !== 'buscaJ') return;
   S.busca = ev.target.value;
   clearTimeout(buscaT);
-  buscaT = setTimeout(() => { const r = $('#buscaRes'); if (r && S.M) r.innerHTML = V.buscaHTML(S); }, 120);
+  buscaT = setTimeout(() => { const r = $('#buscaRes'); if (r && S.M) { r.innerHTML = V.buscaHTML(S); encuadrar(r); } }, 120);
 });
 document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }
@@ -3502,9 +3532,9 @@ fijarFiltroNovedades((c) => paraMi(c) && (avisosGuardados().admin || !c.menor), 
 function novedades() {
   // (9 nov, 23:42, Carlos) la presentación al actualizar ya no se abre sola a nadie, tampoco al dueño: se marca como vista
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
-  LS.set('version-vista2', VERSION);
-  return;
+  // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
+  if (!vista || !NOVEDADES.some((n) => n.todos && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
@@ -3585,7 +3615,7 @@ function pasosTour() {
   const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón rojo de arriba';
   return [
     { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día la app te dice qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Quieres ver lo básico o todo?` },
-    { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, lo que puedes gastar de verdad (contando la deuda que te dejan y tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },
+    { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, hasta dónde puedes quedarte en negativo (contando tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },
     { v: 'hoy', sel: '.tiempos', si: () => !!$('.tiempos'), t: 'Lo que viene', x: 'Cuándo cambia el mercado, cuándo se abre la cláusula de uno tuyo y las de rivales que te interesan. Toca uno para ir a él.' },
     { v: 'hoy', sel: '.llevas', si: () => !!$('.llevas'), t: 'Lo que llevas hoy', x: 'Lo que has hecho en LaLiga desde el último cambio de mercado: lo terminado y lo que está en marcha (pujas, ofertas, lo que tienes a la venta).' },
     { v: 'hoy', sel: '.plan-cab', b: true, con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Lo que toca hacer hoy, en orden y con el saldo que te queda tras cada paso. Cuando lo hagas en LaLiga, el paso se tacha solo (o lo marcas con «Hecho»).' },

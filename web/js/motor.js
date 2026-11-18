@@ -3,6 +3,7 @@
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './operaciones.js';
+import { acciones } from './acciones.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -1717,6 +1718,14 @@ export function analizar(D, H, c, extra = {}) {
     }
     const CZ = M.clausulazos;
     if (r && CZ && CZ.n >= 3 && x.ratio - 1 > Math.max(CZ.p90, 0.05) + 0.03) r = 0;
+    // (17 nov, Baena con la cláusula al +11 % y «riesgo ninguno» cuando en su liga los clausulazos se pagan al +21,8 % de
+    // mediana: los euros de más, 7 M, pesaban como si nadie los pagara) con lo que se paga de verdad en tu liga, una
+    // cláusula por debajo de la mediana de los clausulazos es una presa (medio), y hasta el p90, posible (bajo). Luego
+    // siguen contando la inercia, si te importa y si a alguien le llega el dinero
+    if (CZ && CZ.n >= 3 && x.ratio != null && x.clausula && (x.abierta || x.abreEn < 36 * HORA)) {
+      const sobre = x.ratio - 1, minimo = sobre <= CZ.med ? 2 : sobre <= CZ.p90 ? 1 : 0;
+      r = Math.max(r, x.abierta ? minimo : Math.max(0, minimo - 1));
+    }
     // y si está bajando, menos: nadie paga de más por uno que pierde valor (salvo que acabe de hacer 8 puntos o más: ahí
     // lo normal es que la bajada se frene, y es justo cuando los demás lo miran)
     const ineR = M.inercia(x.pid);
@@ -1956,6 +1965,18 @@ export function analizar(D, H, c, extra = {}) {
       consejo = 'esperar';
       porque = `Vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día; llegó a valer ${eur(ine.vuelve.max)}): mañana valdrá más de lo que te ofrecen hoy. Aguántalo mientras siga subiendo, salvo que necesites el dinero.`;
     }
+    // sigue subiendo y no te hace falta el dinero: lo que te pagan de más lo gana solo en pocos días (Carlos, 17 nov:
+    // Fornals subiendo 1,1 M al día, titular y con 16 M en positivo, y el plan mandaba aceptar un 6 % «para la liquidez»).
+    // Si es de tu once se aguanta más, que venderlo además quita puntos. Salvo la oferta alta de LaLiga o el de revender
+    // sin otro cambio de mercado antes de la jornada
+    else if (num(D.dinero) >= 0 && !M.vendeBaja({ j, tend: t }) && mejor.sobre > 0 && j.valor && !(liga && liga.posicion === 'alta')
+      && (ine ? ['sube', 'acelera'].includes(ine.fase) && num(ine.ult) > 0 : subiendo && num(t.d1) > 0)
+      && !((extra.reventa || {})[v.pid] && M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini)))
+      && (() => { const r = ine ? num(ine.ult) : num(t.d1), dias = (mejor.importe - j.valor) / r; return dias <= (M.perdida(v.pid) >= 0.3 ? 6 : 3); })()) {
+      const r = ine ? num(ine.ult) : num(t.d1), prima = mejor.importe - j.valor, dias = Math.max(1, Math.round(prima / r)), once = M.perdida(v.pid) >= 0.3;
+      consejo = 'esperar';
+      porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero (tienes ${eur(D.dinero)}): los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
+    }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
     // mejor (LaLiga hace una nueva en cada cambio de mercado). Salvo que caiga deprisa (más de un 3 % al día),
@@ -2077,17 +2098,40 @@ export function analizar(D, H, c, extra = {}) {
     // mismo día (con una o dos horas de margen no se puede contar con él: aviso de Domy, 23 oct) ni los de mientras
     // se juega la jornada de ahora
     const diaJ = diaDe(inicioJ);
-    const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && !(M.enJuego && t <= M.enJuego.fin);
+    const fueraJuego = (t) => !(M.enJuego && t <= M.enJuego.fin);
+    const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && fueraJuego(t);
     const cambios = [];
+    // (17 nov, Carlos) el del mismo día que el primer partido (cada liga tiene su hora: en la de Carlos, las 20:00 con la
+    // jornada a las 21:00; en otras puede ser de madrugada, con muchas horas de margen) cuenta
+    // para vender lo de revender, con aviso, pero el plan no depende de él para llegar en positivo: el negativo tiene que
+    // quedar tapado con el cambio de antes (`limite`, `ciclos` y `cambios` siguen sin él). Con menos de 30 min de margen,
+    // ni eso. Va con la hora de cambio de cada liga (`M.cierreMercado`); sin saberla, no se cuenta
+    let justo = null;
     // día a día a la misma hora de Madrid (con masDias: la semana del cambio de hora un día dura 23 o 25 h)
-    if (M.cierreMercado) { for (let k = 0; k < 14; k++) { const t = masDias(M.cierreMercado, k); if (t >= inicioJ) break; if (vale(t)) cambios.push(t); } } else { for (let k = 1, t = masDias(inicioJ, -1); t > ahora && k <= 14; k++, t = masDias(inicioJ, -k)) if (vale(t)) cambios.unshift(t); }
+    if (M.cierreMercado) {
+      for (let k = 0; k < 14; k++) {
+        const t = masDias(M.cierreMercado, k); if (t >= inicioJ) break;
+        if (vale(t)) cambios.push(t);
+        else if (t > ahora && diaDe(t) === diaJ && t <= inicioJ - 30 * MIN && fueraJuego(t)) justo = t;
+      }
+    } else { for (let k = 1, t = masDias(inicioJ, -1); t > ahora && k <= 14; k++, t = masDias(inicioJ, -k)) if (vale(t)) cambios.unshift(t); }
     const ultimo = cambios.length ? cambios[cambios.length - 1] : null;
     // se pone a la venta después del penúltimo cambio, para aceptar la oferta que llega en el último
-    const ponerVenta = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
+    const ponerVentaSeguro = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
+    // lo ya comprado para revender, si ahora estás en positivo contando lo pujado (venderlo no te hace falta para llegar
+    // en positivo): se puede apurar hasta el cambio del día del partido (un día más de subida)
+    const pujado = (M.mercado || []).reduce((s, m) => s + (m.miPuja ? num(m.miPuja) : 0), 0);
+    const apura = !!justo && num(D.dinero) - pujado >= 0;
+    const ponerVenta = apura ? (ultimo || ahora) + 5 * MIN : ponerVentaSeguro;
     // los días que se mueve su valor hasta venderlo: todos, también los de la jornada en juego (el valor cambia cada día
     // aunque esos cambios no valgan para vender)
     const diasValor = ultimo ? clamp(Math.round((ultimo - ahora) / DIA), 1, 14) : 0;
-    M.ventanaEsp = { ponerVenta, limite: ultimo, ultimoMercado: ultimo, ciclos: cambios.length, cambios, diasValor };
+    const margenJ = justo ? Math.round((inicioJ - justo) / MIN) : null;
+    M.ventanaEsp = {
+      ponerVenta, ponerVentaSeguro, limite: ultimo, ultimoMercado: apura ? justo : ultimo, ciclos: cambios.length, cambios, diasValor, justo, apura,
+      // lo que se dice cuando se apura hasta ese cambio
+      avisoJusto: apura ? `El último cambio de mercado es ${cuando(justo)} y la jornada empieza ${cuando(inicioJ)}: tendrás ${margenJ >= 90 ? `${Math.round(margenJ / 60)} h` : `${margenJ} min`} para aceptar la oferta.${ultimo ? ` Si no vas a poder, acepta la de ${cuando(ultimo)}.` : ''}` : '',
+    };
   }
   M.reventa = extra.reventa || {};
   const vuelve = (j) => M.vuelve(j.id);
@@ -2143,13 +2187,14 @@ export function analizar(D, H, c, extra = {}) {
       let beneficio = v - precio;
       // (16 nov, Carlos: «Valverde, Pepe y Unai López son compras claras por cómo se revalorizan») la puja es la que de
       // verdad gana en tu liga por uno que viene como él (`m.pujaGana`). Si con esa ya no compensa revenderlo, la más
-      // alta que aún sale a cuenta («puja como mucho X»), pero solo si con ella se ganan al menos 1 de cada 4 de los
-      // parecidos de tu liga: si no, no se propone y se dice por qué (`M.noRevender`)
+      // alta que aún sale a cuenta («puja como mucho X»), pero solo si con ella se ganan al menos la mitad de los
+      // parecidos de tu liga (17 nov, Carlos, con Soriano: 1 de cada 4 era proponer una puja que casi nunca gana) y
+      // siempre diciendo las dos cifras; si no, no se propone y se dice por qué (`M.noRevender`)
       let pujaJusta = false, pGana = extraInfo && extraInfo.pGana != null ? extraInfo.pGana : null;
       if (origen === 'mercado' && extraInfo && extraInfo.precioMercado && r > 0.004 && beneficio < Math.max(250000, precio * 0.025)) {
         const tope = Math.floor(Math.min(v / 1.025, v - 250000) / 10000) * 10000;
         const PVt = M.pagaLiga(j.valor, j.id), pT = PVt ? PVt.f(tope / j.valor - 1) : null;
-        if (tope >= extraInfo.precioMercado && tope < precio && (pT == null || pT >= 0.25)) {
+        if (tope >= extraInfo.precioMercado && tope < precio && pT != null && pT >= 0.5) {
           extraInfo = { ...extraInfo, puja: tope, pujaLiga: precio }; precio = tope; beneficio = v - tope; pujaJusta = true; pGana = pT;
         } else {
           M.noRevender[j.id] = { pid: j.id, j, puja: precio, valorFuturo: v, beneficio, r, dias, tope: tope >= extraInfo.precioMercado ? tope : null, pTope: pT, tener: M.tener(j, t, precio, vu) };
@@ -2158,7 +2203,7 @@ export function analizar(D, H, c, extra = {}) {
       }
       if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
       const confianza = vu && r > 0.01 ? 'alta' : t.p7 != null && r > 0.008 ? 'media' : 'baja';
-      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: pujaJusta && confianza === 'alta' ? 'media' : confianza, vuelve: vu, pujaJusta, ...extraInfo, pGana, tener: origen === 'mercado' ? M.tener(j, t, precio, vu) : null });
+      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVentaSeguro, confianza: pujaJusta && confianza === 'alta' ? 'media' : confianza, vuelve: vu, pujaJusta, ...extraInfo, pGana, tener: origen === 'mercado' ? M.tener(j, t, precio, vu) : null });
     };
     // la puja es la misma que en Mercado → Fichar y en el plan (`m.puja`: lo que hace falta en tu liga para llevártelo).
     // Antes, para revender, se pujaba un 1,2 % más por puja sobre el precio, pero al cuadrar el plan se subía a `m.puja`
@@ -2288,6 +2333,13 @@ export function analizar(D, H, c, extra = {}) {
     return { suben: radarSuben, partidazos: pz.slice(0, 8).map((x) => ({ ...enRadar(x.j), pz: x.p })) };
   };
 
+  // (17 nov) a quién blindar gratis (el escudo, viendo un anuncio): los importantes con la cláusula abierta y algún rival
+  // que la puede pagar; antes que gastar en subirla. Lo usan el plan, Hoy y la ficha
+  {
+    const ES = M.escudosMios || { quedan: 0 };
+    M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
+  }
+  // la lista de «lo que toca» de Hoy: sus textos, en acciones.js (aquí, solo cálculos)
   M.acciones = acciones(D, M, c);
   // el próximo momento en que algo cambia solo por la hora (se abre una cláusula, cierra el mercado, empieza o acaba un
   // partido, una jornada, un cierre de cláusulas o el parón, o cambia el día): el refresco de cada minuto de app.js solo
@@ -2346,140 +2398,6 @@ export function mereceClausula(M, x, ahora = Date.now()) {
 /** la cláusula se puede y merece la pena clausular hoy: te llega con tu saldo y pasa mereceClausula */
 export const esClausulable = (M, x, ahora = Date.now()) => !!(x && x.meLlega && mereceClausula(M, x, ahora));
 
-function acciones(D, M, c) {
-  const out = [];
-  const ahora = Date.now();
-  const add = (x) => out.push(x);
-  const inicio = M.proxima ? M.proxima.ini : null;
-
-  if (M.negativo) {
-    add({
-      tipo: 'saldo', prio: 100, icono: 'alerta', cuando: inicio ? `La jornada empieza ${cuando(inicio)}` : 'Ahora',
-      titulo: `Estás en negativo: ${eur(D.dinero)}`,
-      texto: `Si la jornada empieza con el saldo en negativo, no puntúas. Vende o espera a una oferta antes${inicio ? ` (${dura(inicio - ahora)})` : ''}.`,
-      hash: 'equipo',
-    });
-  }
-
-  // las que merecen la pena (abiertas ya o que se abren pronto: los mismos filtros, para que al empezar el cierre no
-  // salgan de golpe las caras que antes estaban descartadas)
-  const clausulable = (x) => esClausulable(M, x, ahora);
-  const abiertas = M.clausulas.filter((x) => x.abierta && clausulable(x))
-    .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
-  abiertas.slice(0, 3).forEach((x, k) => add({
-    tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20, icono: 'diana', pid: x.pid, cuando: 'Ya',
-    titulo: `Clausula a ${x.j.nombre}`,
-    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}${(() => { const s = M.salida(x.j, x.clausula, x.tend); return s && s.pierde > 0 ? ` ${s.txt[0].toUpperCase()}${s.txt.slice(1)}.` : ''; })()}`,
-  }));
-
-  const pronto = M.clausulas.filter((x) => !x.abierta && x.abreEn < 30 * HORA && clausulable(x));
-  pronto.sort((a, b) => a.abreEn - b.abreEn).slice(0, 3).forEach((x, k) => add({
-    tipo: 'pronto', prio: 75 - k * 2, icono: 'reloj', pid: x.pid, cuando: cuando(x.protegidoHasta),
-    titulo: `Se abre la cláusula de ${x.j.nombre}`,
-    texto: `En ${dura(x.abreEn)}${x.escudo ? ' (lo ha blindado su dueño)' : ''}. Es de ${x.rival.nombre} y cuesta ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Te aviso al momento si tienes los avisos puestos.`,
-  }));
-
-  // blindar gratis a los tuyos (el escudo, viendo un anuncio): los importantes con la cláusula abierta y algún rival
-  // que la puede pagar; antes que gastar en subirla
-  const ES = M.escudosMios || { quedan: 0 };
-  const paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan) : [];
-  M.paraEscudo = paraEscudo.map((x) => x.pid);
-  paraEscudo.forEach((x, k) => {
-    const quien = [...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ');
-    add({
-      tipo: 'escudo', prio: 84 - k, icono: 'escudo', pid: x.pid, cuando: 'Ahora',
-      titulo: `Blinda a ${x.j.nombre} (gratis)`,
-      texto: `Su cláusula (${eur(x.clausula)}) está abierta y le llega a ${quien}. Con el blindaje de LaLiga (viendo un anuncio) queda protegida ${M.ESCUDO_H} h, hasta ${cuando(ahora + M.ESCUDO_H * HORA)}. Te quedan ${ES.quedan} esta jornada.`,
-    });
-  });
-
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
-    .sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x, k) => {
-      const cerca = x.ratio < 1.05 ? `está en su valor (${eur(x.j.valor)})` : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor (${eur(x.j.valor)})`;
-      const quien = x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) ? ` Le llega a ${[...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ')}${x.pagan.seguro.length + x.pagan.quiza.length > 3 ? ' y más' : ''}.` : '';
-      const justo = x.blindaje && !x.blindaje.yaVale ? ` Subirla a ${eur(x.blindaje.objetivo)} te cuesta ${eur(x.blindaje.coste)}.` : '';
-      add({
-        tipo: 'blindar', prio: 80 - k * 2, icono: 'escudo', pid: x.pid, cuando: x.abierta ? 'Ahora' : cuando(x.protegidoHasta),
-        titulo: `Protege a ${x.j.nombre}`,
-        texto: `${x.abierta ? 'Cláusula abierta' : `Se abre en ${dura(x.abreEn)}`}: ${eur(x.clausula)}, que ${cerca}, y te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada.${quien}${justo}`,
-      });
-    });
-
-  // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
-  // (los que ya están en venta no: ahí manda la oferta que tengan, en «Tus jugadores en venta»)
-  // (si la cláusula está abierta por encima de LaLiga y a algún rival le llega, y aún no ha girado, no se manda vender: espera a que te la paguen)
-  M.mias.filter((x) => x.ventaInercia && !M.vendeBaja(x) && !M.enVenta.has(x.pid) && !(x.ventaInercia.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula')).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
-    const vi = x.ventaInercia, pierde = M.perdida(x.pid);
-    add({
-      tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
-      titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
-      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
-    });
-  });
-
-  // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
-    tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
-    titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
-    texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Subirle la cláusula hasta que no le llegue a nadie costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
-  }));
-
-  M.mias.filter((x) => M.vendeBaja(x)).slice(0, 2).forEach((x) => add({
-    tipo: 'vender', prio: 60, icono: 'lesion', pid: x.pid, cuando: 'Esta semana',
-    titulo: `${x.j.nombre}: ${x.j.estado === 'injured' ? 'lesionado' : x.j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'}`,
-    texto: `${M.deBaja(x.j) ? `${M.bajaTxt(x.j)}: no` : 'Sancionado una jornada, pero su valor cae deprisa: no'} te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
-  }));
-  // una sanción de un partido: se pierde la jornada y se aguanta (salvo que haya otra razón para venderlo, que va aparte)
-  M.mias.filter((x) => M.sancionCorta(x.j) && !M.vendeBaja(x) && !x.ventaInercia && !(x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -3) && !M.enVenta.has(x.pid)).slice(0, 2).forEach((x) => add({
-    tipo: 'alinear', prio: 56, icono: 'lesion', pid: x.pid, cuando: (M.sancion(x.j) || {}).jornada ? `Jornada ${M.sancion(x.j).jornada}` : 'Próxima jornada',
-    titulo: `${x.j.nombre}: sancionado una jornada`,
-    texto: `${M.sancionCortaTxt(x.j)} Si está en tu once, pon a otro.`,
-    hash: 'equipo',
-  }));
-
-  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -3 && !M.vendeBaja(x) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
-    tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
-    titulo: `Vende a ${x.j.nombre} con beneficio`,
-    texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
-  }));
-
-  M.mercado.filter((m) => !m.miPuja && m.veredicto === 'chollo' && m.meLlega && (m.puja || m.precio) <= M.pujaMax && !M.dueno[m.pid] && M.compraCal(m.j, m.puja || m.precio).ok).slice(0, 2).forEach((m, k) => add({
-    tipo: 'pujar', prio: 55 - k, icono: 'mercado', pid: m.pid, cuando: m.cierra ? `Cierra ${cuando(m.cierra)}` : 'Hoy',
-    titulo: `Puja por ${m.j.nombre}`,
-    texto: `Está a ${eur(m.precio)}${m.sobre <= 0.005 ? ', lo que vale' : ` (un ${Math.round(m.sobre * 100)} % sobre su valor)`}${m.por.length ? `: ${m.por.slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : ''}${M.compraCal(m.j, m.puja || m.precio).txt ? ` ${M.compraCal(m.j, m.puja || m.precio).txt}` : ''}`,
-  }));
-
-  if (paronLejos(M, ahora)) add({
-    tipo: 'paron', prio: 45, icono: 'bandera', cuando: `Hasta ${cuando(M.proxima.ini, { hora: false })}`,
-    titulo: 'Parón: toca sacar dinero',
-    texto: `No hay LaLiga hasta la jornada ${M.proxima.n} (${cuando(M.proxima.ini)}) y nadie puntúa, así que manda el dinero: compra lo que sube para venderlo antes de la vuelta y vende en lo alto lo que va a girar. Clausular para el once, solo un chollo o en los dos o tres días antes de la jornada.`,
-  });
-  if (M.paron && M.paron.ini > ahora && M.paron.ini - ahora < 12 * DIA) add({
-    tipo: 'paron', prio: 40, icono: 'bandera', cuando: `Desde ${cuando(M.paron.ini, { hora: false })}`,
-    titulo: M.paron.nombre,
-    texto: `Del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}. En los parones los valores se mueven menos y hay riesgo de lesiones con las selecciones: buen momento para vender a los que están arriba y comprar barato para la vuelta.`,
-  });
-
-  if (inicio && inicio - ahora < 26 * HORA && inicio > ahora) add({
-    tipo: 'alinear', prio: 70, icono: 'campo', cuando: cuando(inicio),
-    titulo: `Revisa tu alineación: jornada ${M.proxima.n}`,
-    texto: `Empieza en ${dura(inicio - ahora)}.${M.mias.some((x) => MALOS.has(x.j.estado) || x.j.estado === 'doubtful') ? ` Tienes ${M.mias.filter((x) => MALOS.has(x.j.estado) || x.j.estado === 'doubtful').map((x) => x.j.nombre).slice(0, 3).join(', ')} tocados.` : ''}`,
-    hash: 'equipo',
-  });
-
-  // las alineaciones confirmadas: los tuyos que se quedan en el banquillo o no van, si aún se puede cambiar el once:
-  // LaLiga lo cierra con el primer partido de la jornada, no con el suyo (aviso de Domy, 31 oct)
-  const cierreOnce = (t, eq) => { const jo = (M.jornadas || []).find((x) => x.partidos.some((p) => Math.abs(p.fecha - t) < 3 * HORA && String(eq) && (String(p.localId) === String(eq) || String(p.visitanteId) === String(eq)))); return jo ? jo.ini : t; };
-  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora && cierreOnce(a.ini, x.j.equipoId) > ahora && !(a.estado === 'nosale' && MALOS.has(x.j.estado)); });
-  if (noJuegan.length) add({
-    tipo: 'alinear', prio: 75, icono: 'campo', cuando: cuando(Math.min(...noJuegan.map((x) => M.alineacion(x.pid).ini))),
-    titulo: noJuegan.length === 1 ? `${noJuegan[0].j.nombre} no es titular` : `${noJuegan.length} de los tuyos no son titulares`,
-    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'nosale' ? 'no sale de titular' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo' : 'Si los tienes en el once, cámbialos'} antes de ${cuando(Math.min(...noJuegan.map((x) => cierreOnce(M.alineacion(x.pid).ini, x.j.equipoId))))}, cuando empieza la jornada y LaLiga cierra el once.`,
-    hash: 'equipo',
-  });
-
-  return out.sort((a, b) => b.prio - a.prio);
-}
 
 
 /**
@@ -2487,6 +2405,22 @@ function acciones(D, M, c) {
  * dinero cuadre (primero vender, luego clausular y pujar, después proteger y alinear). Tiene la misma forma
  * que el plan de la IA, así que se pinta igual.
  */
+/**
+ * (17 nov, Carlos: «el negativo no preocupa el martes; a partir del miércoles, y sobre todo jueves y viernes») con qué
+ * fuerza se avisa de ir en negativo, según los cambios de mercado que quedan para vender antes de la jornada (los que
+ * cuentan: el del día del partido no, `M.ventanaEsp.ciclos`). 3 o más: sin prisa; 2: ojo; 1: hoy hay que ponerlo a la
+ * venta; 0: solo queda, si acaso, el del día del partido. { nivel: 'calma'|'ojo'|'ya'|'tarde', tipo: 'plan'|'mal', txt }
+ */
+export function prisaNegativo(M) {
+  const v = M.ventanaEsp;
+  if (!v) return { nivel: 'tarde', tipo: 'mal', txt: '' };
+  const c = v.cambios || [], n = c.length;
+  if (n >= 3) return { nivel: 'calma', tipo: 'plan', txt: `Sin prisa: quedan ${n} cambios de mercado para vender, el último que cuenta ${cuando(v.limite)}.` };
+  if (n === 2) return { nivel: 'ojo', tipo: 'plan', txt: `Quedan dos cambios de mercado para vender (${cuando(c[0])} y ${cuando(c[1])}): ponlo a la venta antes del primero y, si la oferta no te convence, te queda el segundo.` };
+  if (n === 1) return { nivel: 'ya', tipo: 'mal', txt: `Solo queda un cambio de mercado para vender, ${cuando(c[0])}: ponlo a la venta hoy y acepta la oferta que llegue.` };
+  return { nivel: 'tarde', tipo: 'mal', txt: v.justo ? `Ya solo queda el cambio de ${cuando(v.justo)}, ${M.proxima && M.proxima.ini - v.justo < 3 * HORA ? 'muy pegado al primer partido' : 'el mismo día del primer partido'}: ponlo a la venta ya y acepta la oferta en cuanto llegue.` : 'Ya no queda ningún cambio de mercado antes de la jornada: solo puedes aceptar una oferta que ya tengas.' };
+}
+
 /** (0.7.13u) de cada 10 compras parecidas de tu liga, en cuántas habría bastado esa puja */
 export const vecesTxt = (p) => (Math.round(p * 10) <= 0 ? 'casi nunca te lo llevas' : Math.round(p * 10) >= 10 ? 'te lo llevas casi seguro' : `te lo llevas más o menos ${Math.round(p * 10)} de cada 10 veces`);
 
@@ -2494,7 +2428,8 @@ export const vecesTxt = (p) => (Math.round(p * 10) <= 0 ? 'casi nunca te lo llev
 export function pujaRevTxt(M, e) {
   if (!e || e.origen !== 'mercado') return '';
   const ganas = e.pGana != null ? ` Con ${eur(e.puja)}, ${vecesTxt(e.pGana)}.` : '';
-  if (e.pujaJusta) return `Puja como mucho ${eur(e.puja)}: por encima ya no sale a cuenta revenderlo. En tu liga, a uno que viene como él se lo llevan con unos ${eur(e.pujaLiga)}, así que puede que no te llegue, pero si te lo llevas, ganas.${ganas} `;
+  // (17 nov, Carlos) siempre las dos: la que hace falta para llevártelo y el tope para que revenderlo salga a cuenta
+  if (e.pujaJusta) return `Para llevártelo, en tu liga hacen falta unos ${eur(e.pujaLiga)}; para que revenderlo te salga a cuenta, puja como mucho ${eur(e.puja)}.${ganas} `;
   const P = M.pagaLiga ? M.pagaLiga(e.j.valor, e.pid) : null;
   return P && P.pf && P.pf.r != null && P.pf.r > 0.008 ? `En tu liga, a los que suben así se los llevan con un ${pct(P.med * 100)} sobre su valor de mediana: por eso la puja es de ${eur(e.puja)}.${ganas} ` : '';
 }
@@ -2505,7 +2440,9 @@ export function noRevenderTxt(M, nr) {
   const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
   const te = nr.tener;
   const tener = !te || !(te.deMas > 2e5) ? '' : te.dias && te.dias <= 10 ? ` Para tenerlo, sí: lo pagado de más (${eur(te.deMas)}) lo recuperas en ${te.dias} día${te.dias === 1 ? '' : 's'} si sigue subiendo así.` : te.dias ? ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) tarda ${te.dias} días en recuperarse si sigue subiendo así: solo si lo quieres para tu once.` : ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) no se recupera en un mes al ritmo de ahora: solo si lo quieres para tu once.`;
-  return `Sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''}. Pagando eso, revenderlo antes de la jornada no sale a cuenta: valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${tener}`;
+  // (17 nov) para quedártelo con esa puja: si te llega con tu margen de puja
+  const llega = te && te.deMas > 2e5 && M.pujaMax != null ? (nr.puja <= M.pujaMax ? ` Te llega para pujar ${eur(nr.puja)}.` : ` Ahora mismo no te llega: puedes pujar como mucho ${eur(Math.max(0, M.pujaMax))}.`) : '';
+  return `Para revender no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${tener}${llega}`;
 }
 
 /**
@@ -2524,6 +2461,7 @@ export function pujaOnceTxt(M, m) {
   const nr = (M.noRevender || {})[m.pid], esp = (M.especular || []).find((e) => e.pid === m.pid);
   if (nr) L.push(`Para revender antes de la jornada no sale: con ${eur(nr.puja)}, valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })}).`);
   else if (esp && !esp.pujaJusta) L.push(`Si al final no lo quieres, revenderlo también sale a cuenta (${eur(esp.beneficio, { signo: true })}).`);
+  else if (esp && esp.pujaJusta) L.push(`Para revender, en cambio, solo sale pujando como mucho ${eur(esp.puja)}.`);
   return L.length ? ` ${L.join(' ')}` : '';
 }
 
@@ -2672,7 +2610,7 @@ export function planAuto(D, M, c) {
     const toca = !ventana || ahora >= ventana.ponerVenta - 6 * HORA || (x.tend.p1 != null && x.tend.p1 < -1);
     if (!toca) continue;
     op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? antesDe(inicio) : 'hoy',
-      motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ' Toca venderlo para empezar la jornada en positivo.'}`, confianza: 'alta' });
+      motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ` Toca venderlo para empezar la jornada en positivo.${ventana && ventana.apura ? ` ${ventana.avisoJusto}` : ''}`}`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 

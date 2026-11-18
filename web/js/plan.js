@@ -21,7 +21,7 @@
 import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia } from './util.js';
 
 const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
-import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt } from './motor.js';
+import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, prisaNegativo } from './motor.js';
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, pujaReal } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
 
@@ -87,6 +87,9 @@ function contextoDe(D, M, c, ahora) {
   return {
     D, M, c, A, ahora, inicio, ventana, paron, cierre, dias, vp,
     ciclos: (ventana && ventana.ciclos) || 0,
+    // (17 nov, Carlos) cuanto menos queda para vender antes de la jornada, menos se baja en negativo especulando: con 3
+    // cambios o más, hasta el 90 % de la deuda permitida; con 2, el 70 %; con 1, la mitad
+    topeDeuda: A.topeDeuda * (!ventana || ventana.ciclos >= 3 ? 1 : ventana.ciclos === 2 ? 0.78 : 0.56),
     pujasAntes: !M.cierreMercado || !inicio || M.cierreMercado < inicio,
     enJuego: !!M.enJuego,
     cerca: !!M.enJuego || (!!inicio && inicio - ahora < 3 * DIA),
@@ -205,7 +208,7 @@ function candidatos(X, vetados) {
     // lo comprado para revender: el día antes de la jornada (o ya, si ha empezado a bajar). Si sigue subiendo y le quedan
     // días de protección, se aguanta (Carlos, 14 nov): solo se vende si hace falta para empezar la jornada en positivo
     const sigue = revPids.has(x.pid) && aguanta(X, x);
-    if (sigue && ventana && ahora >= ventana.ponerVenta - 6 * HORA) {
+    if (sigue && ventana && ahora >= (ventana.ponerVentaSeguro || ventana.ponerVenta) - 6 * HORA) {
       const r = M.paraRevender.find((y) => y.pid === x.pid);
       X.avisos.push({ pid: x.pid, jugador: x.j.nombre, motivo: `Lo compraste para revender (${eur(r.beneficioYa, { signo: true })}) y sigue subiendo: si empiezas la jornada en positivo sin venderlo, puedes aguantarlo. Véndelo cuando deje de subir o antes del ${cuando(x.protegidoHasta - DIA, { hora: false })}, que se le acaba la protección.` });
     }
@@ -216,7 +219,7 @@ function candidatos(X, vetados) {
       if (!ventana || ahora >= ventana.ponerVenta - 6 * HORA || baja || protege) {
         nuevo({ ...base, k: `V-${x.pid}`, fijo: true, motivo: 'revender', euros: Math.max(0, r.beneficioYa),
           op: () => op({ objetivo: 'revender', confianza: 'alta', cuando: inicio ? antesDe(inicio) : 'hoy',
-            motivo: `Lo compraste para revender a ${eur(r.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })}).${baja ? ' Ha empezado a bajar: mejor salir ya.' : protege ? ` Se le acaba la protección ${cuando(x.protegidoHasta)}: después cualquiera te lo puede quitar por su cláusula.` : ' Ha dejado de subir: toca ponerlo a la venta para aceptar la oferta del último cambio de mercado y empezar la jornada en positivo.'}`,
+            motivo: `Lo compraste para revender a ${eur(r.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })}).${baja ? ' Ha empezado a bajar: mejor salir ya.' : protege ? ` Se le acaba la protección ${cuando(x.protegidoHasta)}: después cualquiera te lo puede quitar por su cláusula.` : ' Ha dejado de subir: toca ponerlo a la venta para aceptar la oferta del último cambio de mercado y empezar la jornada en positivo.'}${ventana && ventana.apura && !baja && !protege ? ` ${ventana.avisoJusto}` : ''}`,
             datos: { porque: 'lo compraste para revender y toca', cuanto: `${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })})`, cuando: inicio ? antesDe(inicio) : 'hoy', siNo: 'podrías empezar la jornada en negativo' } }) });
       }
       continue;
@@ -323,7 +326,7 @@ function candidatos(X, vetados) {
           donde: esM ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: esM ? e.precioMercado : e.precio, puja_max: esM ? e.puja : null,
           cuando: esM ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora', vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio), confianza: e.confianza,
           motivo: `${pujaRevTxt(M, e)}Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.${X.backtest && X.backtest.n >= 8 && X.backtest.media > 0 ? ` En esta liga, lo que la app habría comprado así en las últimas semanas salió bien ${X.backtest.bien} de ${X.backtest.n} veces (${eur(X.backtest.media, { signo: true })} de media).` : ''}`,
-          datos: { porque: `sube un ${pct(e.r * 100, 1, false)} al día`, cuanto: `${eur(e.precio)}; ${elDiaVenta} valdría unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })})`, cuando: esM ? 'hoy' : 'ahora', siNo: 'te pierdes la subida; no afecta a tu once', vender: elDiaVenta } }) });
+          datos: { porque: `sube un ${pct(e.r * 100, 1, false)} al día`, cuanto: `${e.pujaJusta ? `puja como mucho ${eur(e.precio)} (para llevártelo hacen falta unos ${eur(e.pujaLiga)})` : eur(e.precio)}; ${elDiaVenta} valdría unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })})`, cuando: esM ? 'hoy' : 'ahora', siNo: 'te pierdes la subida; no afecta a tu once', vender: elDiaVenta } }) });
     }
   }
   // (0.7.13u) lo que sube fuerte pero, a la puja que gana en tu liga, no sale revenderlo: a «Mirados», con las cuentas
@@ -369,14 +372,14 @@ function cuentas(X, lista) {
   // combinación, ni la de no hacer nada: el plan salía con las cuentas a medias y el de la IA fallaba siempre («no cuadra»)
   if ((n > 25 && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || (nE > 0 && nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista))) return null;
   const fin = margen - M.deuda;   // el saldo al acabar el día, contando como gastado todo lo pujado
-  if (hayRev && fin < -M.deuda * A.topeDeuda) return null;
+  if (hayRev && fin < -M.deuda * X.topeDeuda) return null;
   // lo pujado se cobra en el cambio de mercado: si el próximo es después de que empiece la jornada (el mismo día del
   // partido, de madrugada ya ha pasado), para empezar ESTA jornada en positivo solo cuenta lo que hay en caja
   const jornada = X.pujasAntes ? fin + vuelve + ventas : caja + ventas;
   return { caja, margen, n, fin, jornada, vuelve, ventas };
 }
 
-function elegir(X, libres, fijos) {
+function elegir(X, libres, fijos, oblig = 0) {
   const { D, M, A, ciclos } = X;
   // los puntos esperados de cada uno, una vez (el once se rehace cientos de veces)
   const pps = new Map();
@@ -446,10 +449,11 @@ function elegir(X, libres, fijos) {
     if (bid > 0 && margen < 0) continue;
     if ((nC[mask] + nP[mask] + nE[mask] > 0 && n0 - nAcc[mask] + nC[mask] + nP[mask] + nE[mask] > 25) || nC[mask] > A.maxOnce || nP[mask] > A.maxOnce || nE[mask] > maxE) continue;
     const fin = margen - M.deuda;
-    if (nE[mask] && fin < -M.deuda * A.topeDeuda) continue;
+    if (nE[mask] && fin < -M.deuda * X.topeDeuda) continue;
     const ventas = ciclos >= 1 ? (sVen[mask] + venFijas) * A.margenVenta : 0;
     const jornada = X.pujasAntes ? fin + sRev[mask] * A.margenRev + ventas : caja + ventas;
     cabe[mask] = 1; jor[mask] = jornada;
+    if ((mask & oblig) !== oblig) continue;
     let valor;
     // empezar la jornada en negativo es no puntuar: lo primero. Si no hay forma, lo que más se acerque
     if (jornada < 0) valor = -1e12 + jornada;
@@ -483,7 +487,7 @@ function elegir(X, libres, fijos) {
  * El plan del día del motor, sin cuadrar todavía (con la forma del plan de la IA, como planAuto). `vetados`: candidatos
  * que no pueden ir (los que la app descartó en la vuelta anterior).
  */
-export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fijar = null, prefer = null } = {}) {
+export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fijar = null, prefer = null, incluir = null } = {}) {
   const X = contextoDe(D, M, c, ahora);
   X.backtest = reventasPasadas(D, M);
   // si en esta liga lo que la app habría comprado para revender no ha ganado a no hacer nada, no se especula
@@ -519,6 +523,15 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     libres = libres.filter((o) => o.clase !== 'vender');
     for (let i = fijos.length - 1; i >= 0; i--) if (fijos[i].clase === 'vender') fijos.splice(i, 1);
   }
+  // (17 nov) `incluir`: candidatos que van sí o sí (los pasos de un plan anterior que la IA ya ha explicado); el resto se
+  // busca como siempre, con las mismas cuentas (en `elegir`, solo valen las combinaciones que los llevan). Lo que ya no es
+  // candidato no se fuerza
+  let oblig = 0;
+  if (incluir && incluir.size && !fijar) {
+    const inc = todos.filter((o) => incluir.has(o.k) && !(apuro && ciclos === 0 && o.clase === 'vender'));
+    libres = [...inc, ...libres.filter((o) => !incluir.has(o.k))].slice(0, Math.max(13, inc.length));
+    oblig = (1 << inc.length) - 1;
+  }
   // `fijar`: la combinación viene dada (el plan del motor con lo que la IA quita o mete); no se busca, se comprueba
   let E;
   if (fijar) {
@@ -526,7 +539,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const c2 = cuentas(X, l2);
     if (!c2) return null;
     E = { lista: l2, cu: c2, valor: null };
-  } else E = elegir(X, libres, fijos);
+  } else E = elegir(X, libres, fijos, oblig);
   const lista = E.lista || fijos;
   const cu = E.cu || base;
 
@@ -747,11 +760,13 @@ export function rematarMotor(R, M, { titular = true } = {}) {
   if (cu.fin != null && cu.jornada != null && (cu.fin < 0 || luego.length || retira.length)) {
     const como = [retira.length && cu.fin < 0 && `retires la puja por ${nombres(retira)}`, rev.length && `vendas lo de revender (${nombres(rev)})`, (venta.length || luego.length) && `entre lo que pones en venta (${nombres([...venta, ...luego])})`].filter(Boolean).join(' y ');
     // (la cifra de la derecha es `final`: aquí, lo que habría al empezar la jornada, con los márgenes de seguridad)
+    // (17 nov, Carlos) en negativo a propósito, con más o menos fuerza según los cambios de mercado que quedan para vender
+    const pn = cu.fin < 0 && cu.jornada >= 0 ? prisaNegativo(M) : null;
     out.avisoSaldo = cu.jornada >= 0
-      ? `${cu.fin < 0 ? `En negativo a propósito (${eur(cu.fin)} contando todo lo pujado)` : retira.length ? `En positivo, retirando la puja por ${nombres(retira)}` : 'En positivo'}${como ? ` hasta que ${como}` : ''}. Aunque los valores bajen, a la jornada llegas con unos`
+      ? `${cu.fin < 0 ? `En negativo a propósito (${eur(cu.fin)} contando todo lo pujado)` : retira.length ? `En positivo, retirando la puja por ${nombres(retira)}` : 'En positivo'}${como ? ` hasta que ${como}` : ''}.${pn && pn.nivel !== 'calma' ? ` ${pn.txt}` : ''} Aunque los valores bajen, a la jornada llegas con unos`
       : `Ni con este plan llegas en positivo a la jornada: vende algo más antes de que empiece${M.proxima ? ` (${cuando(M.proxima.ini)})` : ''}. Te quedarías en`;
     out.final = Math.round(cu.jornada / 1e4) * 1e4;
-    out.avisoTipo = cu.jornada >= 0 ? 'plan' : 'mal';
+    out.avisoTipo = cu.jornada >= 0 ? (pn ? pn.tipo : 'plan') : 'mal';
   }
   return out;
 }

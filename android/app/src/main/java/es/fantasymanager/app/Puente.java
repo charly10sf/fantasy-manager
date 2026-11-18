@@ -511,6 +511,12 @@ public class Puente {
         if (act != null) Anuncios.intersticial(bloque);
     }
 
+    /** (0.8, 17 nov) si a esta cuenta le toca hoy el anuncio de apertura (lo decide la web); contesta con aperturaVista */
+    @JavascriptInterface
+    public void aperturaAnuncios(boolean toca, String bloque) {
+        if (act != null) Anuncios.apertura(toca, bloque);
+    }
+
     /** el anuncio bonificado para desbloquear algo («plan»); contesta con anuncioVisto(para, visto, motivo) */
     @JavascriptInterface
     public void verAnuncio(String para) {
