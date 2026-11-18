@@ -2353,7 +2353,8 @@
    "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
-   "SPORT|136589952": 1795022314000
+   "SPORT|136589952": 1795022314000,
+   "SPORT|136576189": 1795023205000
   },
   "hechos": [
    {
@@ -3267,7 +3268,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -8499,13 +8500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3831,
+   "ok": 3832,
    "fallos": 0,
-   "ejecuciones": 3151,
+   "ejecuciones": 3152,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T18:31:15.269Z"
+   "ultima": "2026-11-18T18:36:21.695Z"
   }
  },
  "ptsDirecto": {},
@@ -8522,15 +8523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:31:26.687Z"
+   "ultimaBien": "2026-11-18T18:36:39.808Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:31:26.687Z"
+   "ultimaBien": "2026-11-18T18:36:39.808Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:31:26.687Z"
+   "ultimaBien": "2026-11-18T18:36:39.808Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8538,11 +8539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:31:26.687Z"
+   "ultimaBien": "2026-11-18T18:36:39.808Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:31:26.687Z"
+   "ultimaBien": "2026-11-18T18:36:39.808Z"
   }
  },
  "avisos": [
