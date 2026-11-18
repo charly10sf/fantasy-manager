@@ -2131,7 +2131,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-ensalza-alvaro-cervera-entrenador-tenerife-gestion-tragedia-jesus-miguel-momento-pudiendo-hacerlo-hablado-rabia-20261115_3475446.html": 1794754190000,
    "SPORT|136471100": 1794756556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794761251000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
@@ -8443,13 +8442,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3785,
+   "ok": 3786,
    "fallos": 0,
-   "ejecuciones": 3105,
+   "ejecuciones": 3106,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T14:46:14.623Z"
+   "ultima": "2026-11-18T14:51:11.459Z"
   }
  },
  "ptsDirecto": {},
@@ -8466,15 +8465,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:46:25.534Z"
+   "ultimaBien": "2026-11-18T14:51:19.764Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:46:25.534Z"
+   "ultimaBien": "2026-11-18T14:51:19.764Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:46:25.534Z"
+   "ultimaBien": "2026-11-18T14:51:19.764Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8482,11 +8481,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:46:25.534Z"
+   "ultimaBien": "2026-11-18T14:51:19.764Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:46:25.534Z"
+   "ultimaBien": "2026-11-18T14:51:19.764Z"
   }
  },
  "avisos": [
