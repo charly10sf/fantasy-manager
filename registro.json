@@ -2357,7 +2357,8 @@
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
    "SPORT|136592622": 1795033687000,
-   "SPORT|136597911": 1795033813000
+   "SPORT|136597911": 1795033813000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000
   },
   "hechos": [
    {
@@ -3303,11 +3304,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html",
+    "medio": "MARCA",
+    "t": 1795038113000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cucho se recupera de su lesión y está disponible",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -8542,13 +8555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3869,
+   "ok": 3870,
    "fallos": 0,
-   "ejecuciones": 3189,
+   "ejecuciones": 3190,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:41:12.741Z"
+   "ultima": "2026-11-18T21:46:12.643Z"
   }
  },
  "ptsDirecto": {},
@@ -8565,15 +8578,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:41:19.419Z"
+   "ultimaBien": "2026-11-18T21:46:44.560Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:41:19.419Z"
+   "ultimaBien": "2026-11-18T21:46:44.560Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:41:19.419Z"
+   "ultimaBien": "2026-11-18T21:46:44.560Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8581,11 +8594,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:41:19.419Z"
+   "ultimaBien": "2026-11-18T21:46:44.560Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:41:19.419Z"
+   "ultimaBien": "2026-11-18T21:46:44.560Z"
   }
  },
  "avisos": [
