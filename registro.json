@@ -2355,7 +2355,9 @@
    "SPORT|136589952": 1795022314000,
    "SPORT|136576189": 1795023205000,
    "SPORT|136592925": 1795023498000,
-   "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000
+   "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
+   "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
+   "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000
   },
   "hechos": [
    {
@@ -3277,11 +3279,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/",
+    "medio": "AS",
+    "t": 1795028243000,
+    "id": "2938",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -8514,13 +8528,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3839,
+   "ok": 3840,
    "fallos": 0,
-   "ejecuciones": 3159,
+   "ejecuciones": 3160,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T19:11:11.462Z"
+   "ultima": "2026-11-18T19:16:16.234Z"
   }
  },
  "ptsDirecto": {},
@@ -8537,15 +8551,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:11:21.885Z"
+   "ultimaBien": "2026-11-18T19:16:57.194Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:11:21.885Z"
+   "ultimaBien": "2026-11-18T19:16:57.194Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:11:21.885Z"
+   "ultimaBien": "2026-11-18T19:16:57.194Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8553,11 +8567,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:11:21.885Z"
+   "ultimaBien": "2026-11-18T19:16:57.194Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:11:21.885Z"
+   "ultimaBien": "2026-11-18T19:16:57.194Z"
   }
  },
  "avisos": [
