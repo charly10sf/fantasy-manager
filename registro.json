@@ -2138,7 +2138,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136471100": 1794756556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794761251000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ronaldinho-regresa-futbol-46-anos-once-retirada-20261115_3475467.html": 1794766086000,
    "SPORT|136471879": 1794764063000,
@@ -8454,13 +8453,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3793,
+   "ok": 3794,
    "fallos": 0,
-   "ejecuciones": 3113,
+   "ejecuciones": 3114,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T15:26:13.871Z"
+   "ultima": "2026-11-18T15:31:12.605Z"
   }
  },
  "ptsDirecto": {},
@@ -8477,15 +8476,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:26:26.490Z"
+   "ultimaBien": "2026-11-18T15:31:21.257Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:26:26.490Z"
+   "ultimaBien": "2026-11-18T15:31:21.257Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:26:26.490Z"
+   "ultimaBien": "2026-11-18T15:31:21.257Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8493,11 +8492,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:26:26.490Z"
+   "ultimaBien": "2026-11-18T15:31:21.257Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T15:26:26.490Z"
+   "ultimaBien": "2026-11-18T15:31:21.257Z"
   }
  },
  "avisos": [
