@@ -1249,6 +1249,17 @@
    "jornada": 13,
    "id": "2123070523764617358",
    "t": "2026-11-18T15:07:12.751Z"
+  },
+  {
+   "clave": "mercado|2026-11-19",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2123193426414108895",
+   "t": "2026-11-18T23:15:34.913Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "3045"
+   }
   }
  ],
  "estados": {
@@ -4221,19 +4232,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-18",
+  "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 8,
-   "redactar": 33,
-   "revisar": 16,
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 583523,
-  "salida": 17923,
-  "cacheLee": 37739,
-  "cacheEscribe": 8709,
-  "dolares": 1.300394,
+  "entrada": 15980,
+  "salida": 285,
+  "cacheLee": 0,
+  "cacheEscribe": 2903,
+  "dolares": 0.042068,
   "reservado": 0
  },
  "recientes": {
@@ -4305,10 +4316,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-13T23:15:25.816Z",
-    "texto": "📊 La noche es del Real Madrid ⚪: sus jugadores suman 13,2 M entre todos, y Valverde, con casi 2,4 M más, se va a 81,3 M. El Barça, en cambio, pierde 6,9 M en conjunto.\n\nRodri sigue cayendo y ya van 18 días seguidos, 24,5 M menos desde el 27 de octubre. Fermín es su cara contraria: 24 días subiendo y 39,4 M más, con 40 puntos en tres jornadas."
-   },
-   {
     "t": "2026-11-14T23:15:26.758Z",
     "texto": "📈 Valverde es el segundo que más sube esta noche: +2,3 M y se va a 83,7 M, con diez días seguidos al alza. Es parte de una noche redonda para el Real Madrid ⚪, cuyos jugadores suman 12,1 M entre todos.\n\nEn el Atlético, al revés: Grimaldo y Álex Baena caen y el Atleti se deja 6,4 M en total. Y Fortuño, del Espanyol, vale 3,5 M y suma 32 puntos en tres jornadas."
    },
@@ -4323,6 +4330,10 @@
    {
     "t": "2026-11-18T06:02:24.925Z",
     "texto": "📈 Vinícius no se baja del ascensor: +2,4 M esta noche y ya vale 72,2 M. Van diez días seguidos subiendo y 17,5 M ganados desde el 8 de noviembre.\n\nRodri, por su parte, repite como el que más baja: 1,4 M menos y 22 días seguidos cayendo. En el Atlético, Grimaldo y Pubill se dejan dinero y los jugadores del Atleti pierden 5,6 M entre todos. El Real Madrid ⚪ suma 8,3 M."
+   },
+   {
+    "t": "2026-11-18T23:15:34.916Z",
+    "texto": "📈 El chollo de hoy es Niño, del Málaga 🐟: vale 5,5 M, trae una buena media de 6,4 y sube un 4,2 %. Para quien busque un fichaje barato, tiene pinta de opción.\n\nArriba del todo, Vinícius suma otros 2,4 M y se va a 74,6 M, con once días seguidos al alza. Eso sí, solo ha sumado 6 puntos en las tres últimas jornadas. Rodri, en cambio, no encuentra suelo: 23 días cayendo y 31,8 M menos desde el 27 de octubre.\n\nLos jugadores del Real Madrid ⚪ ganan 6,7 M entre todos; los del Atlético pierden 4,5 M."
    }
   ],
   "previa": [
@@ -4692,6 +4703,22 @@
    "cacheLee": 20321,
    "cacheEscribe": 20321,
    "dolares": 1.137597,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-18",
+   "llamadas": {
+    "clasificar": 8,
+    "redactar": 33,
+    "revisar": 16,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 583523,
+   "salida": 17923,
+   "cacheLee": 37739,
+   "cacheEscribe": 8709,
+   "dolares": 1.300394,
    "reservado": 0
   }
  ],
@@ -8578,7 +8605,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T23:11:14.670Z"
+   "ultimaBien": "2026-11-18T23:15:34.918Z"
   },
   "FotMob": {
    "seguidas": 0,
