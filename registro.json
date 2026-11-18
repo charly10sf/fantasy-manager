@@ -3971,7 +3971,9 @@
    "n": 2,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987672050
+  }
  },
  "ia": {
   "dia": "2026-11-18",
@@ -8308,13 +8310,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3698,
+   "ok": 3699,
    "fallos": 0,
-   "ejecuciones": 3018,
+   "ejecuciones": 3019,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T07:36:25.138Z"
+   "ultima": "2026-11-18T07:41:12.050Z"
   }
  },
  "ptsDirecto": {},
@@ -8331,15 +8333,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:36:32.851Z"
+   "ultimaBien": "2026-11-18T07:41:20.676Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:36:32.851Z"
+   "ultimaBien": "2026-11-18T07:41:20.676Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:36:32.851Z"
+   "ultimaBien": "2026-11-18T07:41:20.676Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8347,11 +8349,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:36:32.851Z"
+   "ultimaBien": "2026-11-18T07:41:20.676Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:36:32.851Z"
+   "ultimaBien": "2026-11-18T07:41:20.676Z"
   }
  },
  "avisos": [
