@@ -220,7 +220,7 @@ export function resumenEquipo(S) {
   const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
   h += `<div class="rejilla" style="margin-top:12px">
     <div class="dato"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'baja' : ''}">${eur(D.dinero)}</div></div>
-    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda${num(M.misPujas) ? ', ya sin lo pujado' : ''}</small></div></div>
+    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>${eur(D.dinero)} de saldo ${M.deuda - M.misPujas >= 0 ? '+' : '−'} ${eur(Math.abs(M.deuda - M.misPujas))} en negativo${num(M.misPujas) ? ' (ya sin lo pujado)' : ''}</small></div></div>
     <div class="dato"><div class="et">En pujas</div><div class="v">${eur(M.misPujas || 0)}</div></div>
     <div class="dato"><div class="et">En venta</div><div class="v">${eur(enVenta)}<small>${M.misVentas.length} jugador${M.misVentas.length === 1 ? '' : 'es'}</small></div></div>
     ${M.conCompra ? `<div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${eur(M.ganadoTotal, { signo: true })}</div></div>` : ''}

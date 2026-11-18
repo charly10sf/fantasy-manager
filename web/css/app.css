@@ -3361,3 +3361,15 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 @media (prefers-reduced-motion: reduce) { .bloq.dorado::after, .bloq-g.dorado::after { display: none; } }
 .bloq-hoja .bloq-grande { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 26px rgba(255, 197, 71, .45); }
 .top-sello { margin: -2px 0 8px; } .top-sello .top-b { font-size: 12px; line-height: 19px; padding: 1px 10px 1px 8px; } .top-sello .top-b .ic { width: 13px; height: 13px; }
+/* el marcador de Hoy (18 nov): saldo y equipo en grande, el negativo debajo del saldo y el puesto en la línea de la jornada */
+.marcador .m-cols { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; }
+.marcador .m-c { padding: 0 12px; border-left: 1px solid var(--linea); min-width: 0; }
+.marcador .m-c:first-child { padding-left: 0; border-left: 0; }
+.marcador .m-c .et { font: 600 var(--t-sec2)/1.2 'Barlow'; color: var(--texto-3); white-space: nowrap; }
+.marcador .m-c .v { font: 700 var(--t-cifra)/1.05 var(--cond); font-variant-numeric: tabular-nums; margin-top: 3px; white-space: nowrap; }
+.marcador .m-c .d { font: 600 var(--t-sec2) var(--cond); margin-top: 2px; white-space: nowrap; }
+.marcador .m-c .d b.neg { color: var(--baja); }
+.marcador .fila-j b { color: var(--texto); font-weight: 700; }
+.marcador .fila-j > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.marcador .fila-j .der { white-space: nowrap; }
+.marcador.corto .m-cols { margin-top: 8px; }
