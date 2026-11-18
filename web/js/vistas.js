@@ -52,33 +52,26 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-/** El marcador de Hoy (18 nov, Fran y Carlos: «cuánto te puedes quedar en negativo», sencillo y sin información de más). Tres cifras:
-    lo que puedes gastar y lo que vale tu equipo en grande, el puesto un poco más pequeño; y debajo una barra con el reparto de lo que
-    puedes gastar: lo tuyo (verde) y hasta dónde puedes quedarte en negativo (rojo hueco; macizo lo que ya usas si vas en rojo). */
-function negativoHTML(D, M) {
-  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), rojo = dinero < 0;
-  if (!(margen > 0)) return '';
-  const v = rojo ? Math.min(100, -dinero / (-dinero + margen) * 100) : Math.max(6, Math.min(94, dinero / (dinero + margen) * 100));
-  return `<div class="m-neg"><div class="m-barra" aria-hidden="true"><i class="${rojo ? 'usado' : 'tuyo'}" style="flex:${v}"></i><i class="resto" style="flex:${100 - v}"></i></div><span>puedes quedarte en <b>−${eur(margen)}</b></span></div>`;
-}
-
+/** El marcador de Hoy (18 nov, Fran y Carlos: sencillo y sin información de más): saldo y equipo en grande; debajo del saldo, hasta
+    dónde puedes quedarte en negativo (el saldo más bajo al que puedes llegar pujando: el margen de deuda menos lo ya pujado); el puesto,
+    en pequeño en la línea de la jornada. */
 function marcador(S, { corto = false, tiempos = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
   const ahora = Date.now();
+  const puesto = M.yo ? ` · <b>${yo.pos}º</b> de ${D.clasif.length} · ${num(yo.puntos)} pts` : '';
   let fila = '';
-  if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón: «J13 en 11 días» decía otra
-  else if (M.enJuego) fila = `<span class="vivo">Jornada ${M.enJuego.n} en juego</span><span class="der">hasta ${cuando(M.enJuego.fin)}</span>`;
-  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${cuenta(M.proxima.ini)}</span>`;
-  else fila = `<span>${esc(D.liga.nombre)}</span>`;
+  if (M.enParon) fila = `<span>${icono('bandera')} Parón${puesto}</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón
+  else if (M.enJuego) fila = `<span><span class="vivo">J${M.enJuego.n} en juego</span>${puesto}</span><span class="der">hasta ${cuando(M.enJuego.fin, { hora: false })}</span>`;
+  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}${puesto}</span><span class="der">${cuando(M.proxima.ini, { hora: false })} · ${cuenta(M.proxima.ini)}</span>`;
+  else fila = `<span>${esc(D.liga.nombre)}${puesto}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
+  const margen = Math.max(0, M.deuda - M.misPujas);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="m-cols">
-      <div class="m-c"><div class="et">Puedes gastar</div><div class="v">${eur(Math.max(0, M.pujaMax))}</div><div class="d apag">saldo <b class="${num(D.dinero) < 0 ? 'neg' : ''}">${eur(D.dinero)}</b></div></div>
+      <div class="m-c"><div class="et">Saldo</div><div class="v ${num(D.dinero) < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">${margen > 0 ? `puedes quedarte en <b class="neg">−${eur(margen)}</b>` : `gastas hasta ${eur(Math.max(0, M.pujaMax))}`}</div></div>
       <div class="m-c"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
-      <div class="m-c m-pos"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div></div>
-    </div>
-    ${negativoHTML(D, M)}`;
+    </div>`;
   // (0.7.13o, Carlos 16 nov) lo que va a pasar pronto (el mercado, las cláusulas, el parón), dentro del marcador y en
   // pequeño, en vez de en chips sueltos debajo
   if (tiempos) h += tiemposHTML(S, { dentro: true });
