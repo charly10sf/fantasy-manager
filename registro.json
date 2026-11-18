@@ -2309,7 +2309,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-betis-frente-espejo_0_2008529420.html": 1794979825000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/duda-ceballos-doble-pivote-recurrente-betis_0_2008529376.html": 1794979520000,
    "El Correo|https://www.elcorreo.com/athletic/lesiones-dan-tregua-athletic-20261117010326-nt.html": 1794960207000,
-   "SPORT|136563145": 1794981233000
+   "SPORT|136563145": 1794981233000,
+   "SPORT|136513147": 1794981628000
   },
   "hechos": [
    {
@@ -3055,7 +3056,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3966,22 +3967,24 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136549199": 1794985570763
+  }
  },
  "ia": {
   "dia": "2026-11-18",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 24,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 423419,
-  "salida": 12865,
+  "entrada": 425498,
+  "salida": 12985,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.946161,
+  "dolares": 0.946429,
   "reservado": 0
  },
  "recientes": {
@@ -8303,13 +8306,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3691,
+   "ok": 3692,
    "fallos": 0,
-   "ejecuciones": 3011,
+   "ejecuciones": 3012,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T07:01:14.442Z"
+   "ultima": "2026-11-18T07:06:10.763Z"
   }
  },
  "ptsDirecto": {},
@@ -8326,15 +8329,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:01:31.771Z"
+   "ultimaBien": "2026-11-18T07:06:18.351Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:01:31.771Z"
+   "ultimaBien": "2026-11-18T07:06:18.351Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:01:31.771Z"
+   "ultimaBien": "2026-11-18T07:06:18.351Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8342,11 +8345,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:01:31.771Z"
+   "ultimaBien": "2026-11-18T07:06:18.351Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:01:31.771Z"
+   "ultimaBien": "2026-11-18T07:06:18.351Z"
   }
  },
  "avisos": [
