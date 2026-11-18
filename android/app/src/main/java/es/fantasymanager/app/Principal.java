@@ -86,20 +86,11 @@ public class Principal extends Activity {
         web.setHorizontalScrollBarEnabled(false);
         // Desde Android 15 la app se dibuja de borde a borde, también debajo de la barra de arriba, de la de
         // abajo y del teclado. La web va en una caja que deja el hueco justo de lo que ocupan en cada momento.
-        // Debajo de la web, el hueco del banner de los anuncios (solo en la versión de Google Play; si no, no se ve).
+        // (0.8) Ya no hay banner de anuncios debajo de la web: la web ocupa toda la pantalla (los anuncios de la versión
+        // de Google Play son intersticiales: Anuncios.java de src/play).
         FrameLayout caja = new FrameLayout(this);
         caja.setBackgroundColor(0xFF0A0A0B);
-        android.widget.LinearLayout columna = new android.widget.LinearLayout(this);
-        columna.setOrientation(android.widget.LinearLayout.VERTICAL);
-        columna.addView(web, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
-        FrameLayout hueco = new FrameLayout(this);
-        hueco.setBackgroundColor(0xFF050506);
-        // aire entre las pestañas y el anuncio, y otro color, para no tocarlo sin querer
-        int aire = Math.round(12 * getResources().getDisplayMetrics().density);
-        hueco.setPadding(0, aire, 0, 0);
-        hueco.setVisibility(android.view.View.GONE);
-        columna.addView(hueco, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        caja.addView(columna, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        caja.addView(web, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(caja);
         pedirMasHercios();
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -107,7 +98,7 @@ public class Principal extends Activity {
             Insets b = ins.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             Insets t = ins.getInsets(WindowInsetsCompat.Type.ime());
             v.setPadding(b.left, b.top, b.right, Math.max(b.bottom, t.bottom));
-            // con el teclado abierto, sin banner
+            // con el teclado abierto, ningún intersticial
             Anuncios.teclado(t.bottom > b.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
@@ -141,9 +132,9 @@ public class Principal extends Activity {
             @Override
             public void onPageStarted(WebView v, String url, android.graphics.Bitmap icono) {
                 AlDia.cargaT = System.currentTimeMillis();
-                // cada página empieza sin banner (al recargar, o al volver a la entrada): hasta que la web nueva lo
-                // pida, nada de anuncios encima de la carga
-                Anuncios.banner(false);
+                // cada página empieza sin anuncios (al recargar, o al volver a la entrada): hasta que la web nueva diga
+                // que su liga está cargada, nada de anuncios encima de la carga
+                Anuncios.zona(false, null, false);
             }
 
             @Override
@@ -167,7 +158,7 @@ public class Principal extends Activity {
         // y el trabajo de la IA en segundo plano
         Fondo.reprogramar(this);
         // los anuncios (solo en la versión de Google Play): primero el consentimiento
-        Anuncios.alCrear(this, hueco);
+        Anuncios.alCrear(this);
     }
 
     @Override
@@ -463,6 +454,9 @@ public class Principal extends Activity {
         Anuncios.alPausar();
         aLaVista = false;
         abierta = false;
+        // (15 nov) con el plan de la IA a medias y sin el servicio en primer plano (Google Play): el aviso y la recogida
+        // (16 nov) también con una pregunta a la IA a medias
+        if (Puente.ocupada && (Recoger.rid != null || Recoger.ridP != null) && !Canal.TRABAJO) Recoger.empezar(getApplicationContext());
         web.onPause();
         CookieManager.getInstance().flush();
         super.onPause();
@@ -474,8 +468,11 @@ public class Principal extends Activity {
         pedirMasHercios();
         aLaVista = true;
         abierta = true;
+        Recoger.parar(getApplicationContext());
         web.onResume();
         Anuncios.alVolver();
+        // en la de Google Play, si la tienda tiene una versión más nueva, se ofrece aquí mismo (ActualizarPlay)
+        Canal.alVolver(this);
         // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)
         if (!web.hasFocus()) web.requestFocus();
         js("window.alVolver && alVolver()");

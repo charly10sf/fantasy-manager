@@ -48,7 +48,7 @@ export function cuentasParon(S) {
   const ventana = M.ventanaEsp || {};
   // los días que se mueve el valor hasta el último cambio de mercado que vale para vender antes de la vuelta
   const diasV = Math.max(1, ventana.diasValor || Math.round((v.ini - ahora) / DIA) - 1);
-  const vender = ventana.ponerVenta && ventana.ponerVenta > ahora ? ventana.ponerVenta : null;
+  const vender = ventana.ponerVentaSeguro && ventana.ponerVentaSeguro > ahora ? ventana.ponerVentaSeguro : null;
   const cierre = v.ini - M.VEDA_H * HORA, once = v.ini - PARON_VUELTA;
   const enPlan = (pid) => !!(S.opPorPid && S.opPorPid[pid]);
   // (Carlos, 15:11 y 15:30: que las recomendaciones dependan de cada uno) lo que tienes: el saldo (las cláusulas solo se
@@ -265,19 +265,19 @@ function paron(S) {
       const sS = suma(c.ligaSube), sBj = suma(c.ligaBaja);
       // «Para ti» (lo que puedes fichar con tu dinero, con lo que te falta por puesto delante) o toda la liga; se recuerda
       const ver = S.seg.pnzver === 'liga' ? 'liga' : 'tu';
-      const faltaP = c.faltaPuesto.length ? ` Te ${c.faltaPuesto.some((p) => p.faltan > 0) ? 'falta' : 'vendría bien'} ${c.faltaPuesto.map((p) => `un ${NOM_POS[p.pos]}`).join(' y ')}: van delante si suben parecido.` : '';
-      const tuTxt = `Los que más suben que te llegan: cláusulas hasta ${eur(c.saldo)} (tu saldo) y mercado hasta ${eur(c.pujaMax)} (tu margen de puja)${c.venta > 0 ? `, o vendiendo antes lo que te dice la app (unos ${eur(c.venta)})` : ''}.${c.plazas <= 2 ? ` ${c.plazas ? `Te ${c.plazas === 1 ? 'cabe 1 más' : `caben ${c.plazas} más`}` : 'Tienes la plantilla llena'} (${c.tengo} de ${PLANTILLA_MAX}).` : ''}${faltaP}`;
-      const ligaTxt = `Los 8 que más suben de toda la liga: ${c.llegan ? `te llega${c.llegan > 1 ? 'n' : ''} ${c.llegan}` : 'hoy no te llega ninguno'}. Los demás, vigila su cláusula o el mercado.`;
-      const bajaTxt = c.misBajan.length ? `Tienes ${c.misBajan.length === 1 ? 'uno' : c.misBajan.length}: si ${c.misBajan.length === 1 ? 'lo aguantas' : 'los aguantas'} hasta la vuelta, pierdes unos ${eur(c.pierdesBaja)}. ${c.misBajan.length === 1 ? 'Sale' : 'Salen'} también en «Vende en lo alto».` : 'No tienes ninguno de estos: que siga así.';
+      // (15 nov, Carlos) cortos y de una línea: en el ordenador las dos columnas quedaban descompensadas
+      const tuTxt = `Te llegan con tu saldo (${eur(c.saldo)}) o tu margen de puja (${eur(c.pujaMax)}).${c.plazas ? '' : ' Tienes la plantilla llena.'}`;
+      const ligaTxt = `Los 8 que más suben de toda la liga: ${c.llegan ? `te llega${c.llegan > 1 ? 'n' : ''} ${c.llegan}` : 'hoy no te llega ninguno'}.`;
+      const bajaTxt = c.misBajan.length ? `Tienes ${c.misBajan.length === 1 ? 'uno' : c.misBajan.length}: si ${c.misBajan.length === 1 ? 'lo aguantas' : 'los aguantas'} hasta la vuelta, pierdes unos ${eur(c.pierdesBaja)}.` : 'No tienes ninguno de estos: que siga así.';
       const sel = `<div class="pnz-mer-sel" role="tablist">
         <button data-accion="pnzLado" data-f="sube" role="tab" class="sube" aria-selected="${lado === 'sube'}"><small>Se revalorizan</small><b>${c.ligaSube.length ? `+${eur(sS)}` : '—'}</b><span>los ${c.ligaSube.length} que más suben</span></button>
         <button data-accion="pnzLado" data-f="baja" role="tab" class="baja" aria-selected="${lado === 'baja'}"><small>Se devalúan</small><b>${c.ligaBaja.length ? `−${eur(-sBj)}` : '—'}</b><span>los ${c.ligaBaja.length} que más bajan</span></button></div>`;
       mer = `<section class="pnz-mer lado-${lado}">${cab}${sel}<div class="pnz-mer-cols">
-        <div class="pnz-mer-l sube ver-${ver}"><h3><span>▲</span> Cómpralos</h3>
-          <div class="pnz-ver" role="tablist"><button data-accion="pnzVer" data-f="tu" role="tab" aria-selected="${ver === 'tu'}">Para ti</button><button data-accion="pnzVer" data-f="liga" role="tab" aria-selected="${ver === 'liga'}">Toda la liga</button></div>
+        <div class="pnz-mer-l sube ver-${ver}"><div class="pnz-mer-h"><h3><span>▲</span> Cómpralos</h3>
+          <div class="pnz-ver" role="tablist"><button data-accion="pnzVer" data-f="tu" role="tab" aria-selected="${ver === 'tu'}">Para ti</button><button data-accion="pnzVer" data-f="liga" role="tab" aria-selected="${ver === 'liga'}">Toda la liga</button></div></div>
           <p class="pnz-mer-p ver-tu">${tuTxt}</p><p class="pnz-mer-p ver-liga">${ligaTxt}</p>
           ${lista(c.ligaSubeTu, true, 'ver-tu')}${lista(c.ligaSube, true, 'ver-liga')}</div>
-        <div class="pnz-mer-l baja"><h3><span>▼</span> Ni los compres ni te los quedes</h3><p class="pnz-mer-p">${bajaTxt}</p>${lista(c.ligaBaja, false)}</div></div></section>`;
+        <div class="pnz-mer-l baja"><div class="pnz-mer-h"><h3><span>▼</span> Ni los compres ni te los quedes</h3></div><p class="pnz-mer-p">${bajaTxt}</p>${lista(c.ligaBaja, false)}</div></div></section>`;
     }
   }
 

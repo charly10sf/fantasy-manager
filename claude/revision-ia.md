@@ -305,11 +305,25 @@ nada que especular), sin descartes. Histórico de reventas: 633 de 700 bien, +1,
   es lo que se paga de más al pujar, así que el histórico mide si la regla funciona.
 - 13: mientras la IA piensa, si falla o sin cupo, se ve el último plan de la IA SI ES DE HOY, con «de hoy 10:32 (hace 2 h)»
   y una banda «puede que no esté al día» (también si tiene más de 3 h). Si no hay de hoy, el automático (ya era así).
-- 14: que la IA vuelva a buscar en Google. SIN HACER en esta sesión (sesión aparte): toca el Worker (`tools` con
-  `web_search_20250305`, `max_uses`, 0,01 $ por búsqueda más los tokens de los resultados; hay que tenerlo activado en la
-  consola de Anthropic), las instrucciones del plan corto, `planLimpio` (que deje pasar las fuentes) y `aplicarCorto`
-  (que una noticia con fuente de la búsqueda valga para quitar o meter). Medirlo en `pruebas-ia` antes de prometer nada:
-  hoy un plan cuesta ~0,0018 $; con 2 búsquedas, del orden de 0,02-0,03 $.
+- 14: que la IA vuelva a buscar en Google. HECHO Y PUBLICADO en la 0.7.11a (14 nov, tarde), con 1 búsqueda por plan.
+  - Worker: `llamarClaude` lleva `web_search_20250305` con `max_uses` = «planes.web» de limites.json (0-3; 0 apagado) y
+    `user_location` España; junta los bloques de texto (vienen partidos y con citas), sigue si vuelve a medias
+    (`pause_turn`, dos veces como mucho) y, si la consola no tiene la búsqueda activada (400/403), repite sin ella. El
+    gasto suma 0,01 $ por búsqueda (`costeDe`). Devuelve `tok.web` (las búsquedas hechas).
+  - Las fuentes nunca salen de la IA: `fuentesDe` (plan-sistema.js) deja en cada `fuente` de quita, mete y noticias solo
+    urls que salieron de verdad en la búsqueda y pone en `fuentes` las usadas y las citadas (6 como mucho); lo que la IA
+    escriba en su propio «fuentes» se tira. `planLimpio` deja pasar `fuente` y `fuentes` (https y título corto).
+  - Sistema: `webTxt(n)` se añade a `sistemaCorto` solo por el Worker (busca solo noticias de última hora de los del plan
+    y titulares dudosos; la fuente, la url tal cual; si no hay nada claro y reciente, no cambia nada).
+  - App (`aplicarCorto`): una noticia con fuente de la búsqueda vale para quitar o meter (como prensa, estado, nota o
+    partidazo); sin fuente, no. `P.web` (si buscó) y `P.fuentes` (sin webs de fantasy; para quitar sí valen). Casos
+    nuevos: corto-quita-por-busqueda, corto-busqueda-sin-fuente, corto-fuentes-fantasy. Worker: 16 casos nuevos en datos.mjs.
+  - La consola de Anthropic ya tenía activada la búsqueda web (org Toisón, Capacidades, sin restricciones).
+  - Medido en `pruebas-ia` con Haiku por el Worker (los 5 planes, 2 pasadas): con 1 como mucho, 0,0117 $ por plan (0,8
+    búsquedas, 21.000 tokens de entrada, 3.100 de salida, 16,5 s) y 4 noticias con fuente en 10 planes; con 2, 0,0163 $
+    (1,2 búsquedas, 17,8 s) y 5 noticias. Sin búsqueda, ~0,0022 $. Ninguno quitó ni metió pasos (la liga de ejemplo, en el
+    parón); las noticias, reales y con sentido (Raphinha sin lesión con Brasil, Baena convocado). Carlos eligió 1: ~0,70 $
+    por usuario al mes con 2 planes al día; el tope de 3 $ al día da para ~250 planes.
 
 Casos nuevos (`motor-…` en casos.mjs, escenas en banco.mjs): baja-sin-relevo-avisa, baja-con-relevo-a-la-venta,
 giro-titular-no-se-vende, reventa-se-aguanta, reventa-antes-de-la-proteccion, 24-no-puja-de-mas, blinda-al-arrancar y las
@@ -342,3 +356,106 @@ hecho que el motor vendía a Raphinha (ahora no: no baja todos los días).
 4. Si «Revisado por la app» sale a menudo con su liga, pedirle a la IA que reescriba la respuesta con las correcciones
    (una pregunta más de cupo) en vez de añadirlas debajo. Decidirlo con Carlos.
 5. Casos nuevos: cada fallo que avise Carlos o Domy entra primero en `casos.mjs` y después se arregla.
+
+## Segunda parte (17 nov)
+
+Rama `web-plan-2` (sale de `web-chat-haiku`, con lo último de main y de `web-chat-haiku` fundido antes de acabar). SIN
+PUBLICAR. La entrada de version.js va dentro de la 0.8 de la otra sesión, detrás de lo del chat (h '00:00': la hora se
+pone al publicar). Nada de Android: la huella nativa no cambia por esto (la 0.8 del chat sí la cambia, por el banner).
+
+### 1. «Plan rehecho al aplicar»
+
+Cuándo pasaba: `aplicarCorto` rehace con `planVueltas` cuando el plan del motor, sin que la IA toque nada, ya no cuadra
+con la liga que tiene delante. Medido en azar-plan: con el plan recién hecho no pasa nunca (0 de 1.950 por semilla,
+tampoco si la IA reordena los pasos ni con +20 min, +3 h o +26 h). Pasa cuando el plan es de otra liga o de otro momento:
+el que se recoge con el mismo `rid` al volver a la app (Android la cerró mientras la IA contestaba) y la liga ya ha
+cambiado. Por qué no cuadraba (60 vueltas, semilla 1): «la jornada empezaría en negativo» 89, «las cuentas no salen» 37,
+la app tacharía una venta («venderías perdiendo…») 14 o una subida de cláusula 16.
+
+Lo hecho:
+- Antes de rehacer, se ajusta: el mismo plan sin lo que ya no cabe (primero lo que la app tacharía, luego de uno en uno
+  y de dos en dos, como mucho 24 pruebas) y, si ni así, el mismo plan con lo que haga falta de más (`planMotor` con
+  `incluir`: esos pasos van dentro y el motor busca el resto con las mismas cuentas; hasta 8 variantes y 3 vueltas). Lo
+  que sale va a «Mirados y descartados» con «La app lo saca del plan: …». En el diagnóstico, `cambios.ajustado`.
+- `incluir` en plan.js va como bits obligados dentro de `elegir` (no como `fijos`: los fijos no se suman en las cuentas
+  de `elegir` y salían planes con tres cláusulas para el once y la jornada mal contada; lo cazó el árbitro).
+- Si al final se rehace: la situación es la de la app (la de la IA hablaba de otro saldo) y el titular no nombra a
+  quien ya no está en el plan. Antes pasaba (83 situaciones de otro plan y 107 titulares con alguien que ya no estaba).
+- La jornada se compara con la del plan de hoy de esta liga cuando el que llega iba en negativo. Antes, un plan viejo en
+  negativo pasaba tal cual aunque la liga de ahora llegara en positivo (−24 M con +8,5 M posibles: árbitro r10).
+- El plan recogido: `planPorApp` guarda con el `rid` lo que era cada paso (p1 → V-123…) y `traducirIds` pasa los ids
+  de aquella respuesta a los del plan de ahora. Antes las frases de la IA se pegaban por posición: en azar-plan, 5.493 /
+  5.547 / 5.698 frases a otro jugador (es el peor caso, cada vuelta es una liga muy distinta); ahora 0 y sin rehacer.
+
+| 150 vueltas × 13 escenas | Semilla 1 | 7 | 42 |
+|---|---|---|---|
+| Rehechos antes | 720 | 732 | 723 |
+| Rehechos ahora | 40 | 34 | 37 |
+| Ajustados ahora (el mismo plan, sin lo que ya no cabe o con algo de más) | 678 | 687 | 687 |
+| Fallos con la prueba nueva, código de antes | 3.142 | 3.203 | 3.184 |
+| Fallos ahora | 0 | 0 | 0 |
+
+Por escena (semilla 1, rehechos antes → ahora): martes 57→1, veda 65→12, enjuego 40→5, paron 78→4, m-cierre 60→7,
+m-reventa 49→0, parón con dinero 50→0, 25 jugadores 38→1, negativo 66→4, cláusula recién pagada 55→1, puja ya hecha 66→1,
+jornada empezada 30→2, rival que te clausula 66→2. Lo que queda son los de veda y cierre: con las cláusulas cerradas un
+plan de otro día no tiene arreglo (sus cláusulas ya no se pueden pagar y no hay cambio de mercado para vender).
+
+### 2. Casos nuevos en azar-plan.mjs
+
+Siete escenas con algo forzado sobre el azar, cada una con lo suyo que comprobar (en el plan de la app y en el de la IA
+al azar): parón con 60-150 M libres (modo parón, sin ventas «por caja» ni «hace falta»); plantilla de 25 (no ficha sin
+vender antes); negativo entre semana (modo negativo y, si no llega, lo avisa); cláusula recién pagada, 14 días
+protegido (ni blindar ni clausular); puja ya hecha por el mismo jugador (no puja otra vez, un solo paso); jornada empezada
+(modo en juego, sin once); rival que te acaba de clausular (no se le mueve ni va en el once). Además, para todas: los
+pasos en otro orden, el plan recogido de un pedido anterior y el árbitro sobre el plan ajustado. 150 vueltas con las
+semillas 1, 7 y 42: 1.950 ligas cada una, 0 fallos. En «Pruebas» sigue con 60 vueltas (13 escenas, ~1 min).
+
+### 3. La conexión (.github/ia/caso-conexion.mjs, en «Pruebas»)
+
+`localStorage['fm-worker']` no llega a /plan: `pedirWorker` (soporte.js, que comparte el chat) va siempre al servidor
+publicado. La prueba contesta en la propia página (Playwright), cambia `planesApp` al servir ia.js para que la demo vaya
+por la IA de la app y pide el plan con el botón. 11 casos: 503, tope del día, 502 en HTML, respuesta vacía, solo los
+espacios de mientras piensa, cortada a medias, sin formato, plan vacío, sin conexión, un corte y vuelve, no contesta
+nunca (con el reloj de la página adelantado), 503 con tu clave y el motor roto con y sin clave.
+
+Antes 17 MAL; ahora 0. Lo arreglado: «Tienes el plan de la app» y «Mientras, tienes el plan automático» a la vez (9
+casos); el tope del día decía «en un rato» (ahora el mensaje del servidor: mañana); una respuesta cortada decía «no está
+disponible» y soltaba el id, así que el reintento gastaba otro plan (ahora es un corte: se repite con el mismo id); sin
+contestar, 2 intentos de 120 s = 258 s (ahora cada intento con lo que queda de los 3 min: 186 s). Lo que no se tocó: el
+relevo y las pausas de `preguntar` (compartido con el chat) y `pedirWorker`.
+
+### 4. planLargo: quitado
+
+Quién lo usaba: con tu clave de Google, cuando el motor no montaba su plan (en 5.850 ligas al azar y 225 de a-fondo no
+pasa) o con `cfg-ia.planLargo`, que no tenía interruptor. Con la IA de la app ya se decía «la IA no tiene qué ordenar».
+Ahora, para todos igual. Fuera con él (−150 líneas de ia.js): `memoria`, `BUSCAR_PLAN`, `SIN_BUSCAR_PLAN`,
+`ESQUEMA_PLAN`, `ACCIONES_PLAN`, `sistemaIA`, `PULLITAS`, `reglasBloqueo` y el interruptor «Buscar en Google en el plan»
+de Ajustes (`webPlan`), que con el plan corto no hacía nada. Se queda `SISTEMA`: ya no se manda a ninguna IA, pero
+`seudonimos` (lo comparte el chat) no elige alias que choquen con sus palabras; quitarlo cambiaría los alias del chat.
+También se queda la opción `corto` de `contexto` (es código del chat). Los 17 casos de prueba-ia del contrato de antes
+siguen: banco.mjs pasa lo que «contesta» la IA directamente por `cuadrarPlan` (como los planes guardados de antes).
+
+### 5. M.acciones y el aviso de inercia, fuera del motor
+
+`acciones` (la lista «Ahora mismo» de Hoy) está en web/js/acciones.js, tal cual; motor.js calcula `M.paraEscudo` (lo
+usan el plan y la ficha) y sigue dejando `M.acciones` al final de `analizar`. `ventasInercia(M)`: a quién vender por la
+inercia, lo usan Hoy y fondo.js. Antes fondo.js avisaba a todos los que giraban, también al que Hoy manda esperar a que
+le paguen la cláusula y al lesionado que gira (dos avisos). Comparado con la liga de ejemplo, 8 escenas, las 6 pestañas
+con sus subpestañas, Ajustes y las 15 fichas de mis jugadores, antes y después: iguales (lo único distinto, un minuto del
+reloj, sale igual repitiendo la foto antes); `M.acciones`, el plan y `M.paraEscudo`, idénticos; los avisos con la app
+cerrada, los mismos en otro orden (de lo que más pierde a lo que menos). .github/ia/caso-fondo.mjs (en «Pruebas»).
+
+### Pruebas (con la 0.8 del chat ya fundida)
+
+azar-plan 150 × semillas 1, 7 y 42: 0 fallos. a-fondo 225/225. caso-pujas, caso-chat, caso-conexion, caso-fondo y
+prueba-intersticial: todo BIEN. prueba-ia sin red 106/106. prueba-web entera en Madrid y con TZ=UTC: 80 BIEN, 0 MAL en las dos.
+Sin red: todo BIEN menos relato-ejemplo y robustez-ejemplo (ya fallaban antes).
+
+### Lo que queda
+
+- Los rehechos de veda y cierre (12 y 7 de 150): un plan de otro día con las cláusulas cerradas no tiene arreglo; si se
+  quiere bajar, que el plan recogido de un pedido de antes del cierre no se aplique y se pida otro.
+- `seudonimos` debería mirar las palabras del sistema del chat (chat-sistema.js) y no `SISTEMA`; tocarlo cambia los
+  alias del chat: para la sesión del chat.
+- El texto de la inercia (`M.inercia(...).texto`) sigue en motor.js: lo usan casi todos los módulos; sacarlo es otra
+  sesión.

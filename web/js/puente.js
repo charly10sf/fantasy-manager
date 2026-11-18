@@ -276,6 +276,14 @@ export const nativo = {
     return N && typeof N.trabajandoCon === 'function' ? llamar('trabajandoCon', !!si, titulo, texto) : llamar('trabajando', !!si, texto);
   },
   aLaVista: () => (N && typeof N.aLaVista === 'function' ? !!llamar('aLaVista') : !document.hidden),
+  // (15 nov) el plan con la IA en marcha (su id y la sesión): si sales de la app, Android avisa y lo recoge (Recoger.java)
+  planEnMarcha: (rid, tk) => llamar('planEnMarcha', String(rid || ''), String(tk || '')),
+  planAcabado: () => llamar('planAcabado'),
+  // (16 nov) lo mismo con una pregunta a la IA de la app (desde la parte Android de la 0.8; antes no hacen nada):
+  // vuelta, los alias de los rivales a sus nombres para el aviso; al acabar, con la app fuera, el aviso lo pone Android
+  hayAvisoPregunta: () => !!(N && typeof N.preguntaAcabada === 'function'),
+  preguntaEnMarcha: (rid, tk, vuelta, texto) => llamar('preguntaEnMarcha', String(rid || ''), String(tk || ''), JSON.stringify(vuelta || {}), String(texto || '')),
+  preguntaAcabada: (ok, resumen) => llamar('preguntaAcabada', !!ok, String(resumen || '')),
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
   fondoTerminado: () => llamar('fondoTerminado'),
@@ -294,10 +302,16 @@ export const nativo = {
   webViva: () => llamar('webViva'),
   estadoWeb: () => { try { return JSON.parse(llamar('web') || 'null'); } catch (e) { return null; } },
   buscarWeb: () => { if (!N || typeof N.buscarWeb !== 'function') return false; llamar('buscarWeb'); return true; },
-  // los anuncios, solo en la versión de Google Play (Anuncios.java): si los lleva, el banner de abajo (si va en la
-  // pantalla de ahora), el bonificado para desbloquear algo (contesta con anuncioVisto) y el consentimiento
+  // los anuncios, solo en la versión de Google Play (Anuncios.java): si los lleva, si la pantalla de ahora los admite (tu
+  // liga ya cargada: hasta entonces Android no carga ninguno), el intersticial en una pausa (intersticial.js; contesta con
+  // intersticialVisto), el bonificado para desbloquear algo (contesta con anuncioVisto) y el consentimiento. Desde la 0.8
+  // no hay banner abajo: lo sustituyen los intersticiales
   hayAnuncios: () => !!(N && typeof N.hayAnuncios === 'function' && llamar('hayAnuncios')),
-  banner: (si) => llamar('banner', !!si),
+  zonaAnuncios: (si, bloque, inter) => llamar('zonaAnuncios', !!si, String(bloque || ''), !!inter),
+  hayIntersticial: () => !!(N && typeof N.intersticial === 'function' && llamar('hayAnuncios')),
+  intersticial: (bloque) => llamar('intersticial', String(bloque || '')),
+  // (17 nov) el de apertura: si a esta cuenta le toca hoy (Android lo enseña solo en los primeros segundos de abrir la app)
+  aperturaAnuncios: (toca, bloque) => (N && typeof N.aperturaAnuncios === 'function' ? llamar('aperturaAnuncios', !!toca, String(bloque || '')) : null),
   verAnuncio: (para) => llamar('verAnuncio', String(para || '')),
   cancelarAnuncio: () => llamar('cancelarAnuncio'),
   hayPrivacidadAnuncios: () => !!(N && typeof N.hayPrivacidadAnuncios === 'function' && llamar('hayPrivacidadAnuncios')),

@@ -39,13 +39,34 @@
  *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
  *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
  *
- *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra }: el plan del día con la IA de Carlos (Claude), con
+ *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra, rid }: el plan del día con la IA de Carlos (Claude), con
  *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
+ *
+ *   El dinero de los rivales, aprendido de lo que apunta la gente (0.7.13; Carlos, 15 nov: «el dinero que apuntan quiero que
+ *   se use para autoalimentarse y mejorarse la app e IA, da igual la liga que sea»):
+ *   POST /dinero              un apunte SIN NOMBRES NI IDS: { h, e, m, dl, dp, mov, sub, pago, val, pos, nr, est, r } (dineroDe).
+ *                             Con la sesión de LaLiga (solo para frenar a quien no juega), pero no se guarda de quién es.
+ *   GET  /dinero/cal          la corrección de todos (calDinero), rehecha como mucho cada 6 h. Sin sesión.
+ *
+ *   Lo que se paga por los libres en todas las ligas (0.7.13u; Carlos, 16 nov: «que se mejore solo, general y liga a liga»):
+ *   POST /pujas               { c: [{ k, d, s, v, r, top }] } las compras de una liga, SIN NOMBRES NI IDS (compraLimpia), con la
+ *                             sesión de LaLiga solo para frenar. Como mucho 80 por vez y 4 veces al día por cuenta.
+ *   GET  /pujas/cal           lo pagado sobre el valor por tramo de valor y de subida (calPujas), rehecho cada 6 h. Sin sesión.
+ *
+ *   El semáforo de LaLiga y la entrada paso a paso (0.7.13i; Carlos, 15 nov: con 27 clics en la campaña de X no se veía
+ *   a nadie entrar, y lo que pasa antes de entrar con la cuenta no llegaba al servidor):
+ *   GET  /estado              { nivel: verde | amarillo | rojo, t, login, api, cuenta, entradas }: cómo van los servidores de
+ *                             LaLiga (web/js/estado-laliga.js), mirado como mucho cada 2 minutos para todos. Sin sesión.
+ *   POST /embudo              { p, k, o }: un paso antes de entrar (p: EMB_PASOS), desde dónde (k: EMB_CANALES) y de qué
+ *                             campaña llegó a la web (o: utm_source). Sin sesión, sin ids ni nada de quién es: solo se suma
+ *                             al día. Lo ve el dueño en /hola/todos (embudo).
  *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
+import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
+import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta } from '../../web/js/chat-sistema.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -214,6 +235,14 @@ export const FRENOS = {
   fallos: { min: 30 }, falloNuevo: { min: 5, dia: 10 }, uso: { min: 6 }, hola: { min: 6 },
   // /plan, por cuenta: 3 al minuto (el cupo del día lo lleva aparte)
   plan: { min: 3 },
+  // (16 nov) /pregunta, por cuenta: 6 al minuto (el cupo del día va aparte)
+  pregunta: { min: 6 },
+  // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
+  dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
+  // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
+  pujas: { min: 6, dia: 30 }, pujasCal: { min: 20 },
+  // (0.7.13i) los pasos antes de entrar y el semáforo de LaLiga, sin sesión: por IP
+  embudo: { min: 20, dia: 120 }, estado: { min: 30 },
 };
 async function frenoIP(req, env, c, nombre) {
   const f = FRENOS[nombre], ip = ipDe(req);
@@ -299,21 +328,37 @@ async function usar(req, env, c) {
 const idQR = (x) => (typeof x === 'string' && /^[A-Za-z0-9_-]{22,64}$/.test(x) ? x : null);
 
 export class Emparejar {
-  constructor(estado) { this.estado = estado; }
+  constructor(estado) { this.estado = estado; this.memo = {}; }
   async fetch(req) {
     const st = this.estado.storage;
     // los frenos por día (cabeHoy): un objeto por clave y día, que se borra solo a las 30 h
     const ruta = new URL(req.url).pathname;
+    // (0.7.13i) el semáforo de LaLiga y la entrada paso a paso, en «embudo|todos»
+    if (ruta === '/embudo/sumar' || ruta === '/embudo/leer' || ruta === '/estado') return embudoObjeto(st, ruta, req, this.memo);
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
       const ya = (await st.get('plan')) || {};
-      const y = cupoCuenta(ya, b.op, { gratis: Number(b.gratis) || 0, max: Number(b.max) || 0, extra: !!b.extra });
-      if (y.u !== (Number(ya.u) || 0) || y.x !== (Number(ya.x) || 0)) {
-        await st.put('plan', { u: y.u, x: y.x });
+      const y = cupoCuenta(ya, b.op, { gratis: Number(b.gratis) || 0, max: Number(b.max) || 0, extra: !!b.extra, rid: b.rid, paso: Number(b.paso) || 1 });
+      if (y.u !== (Number(ya.u) || 0) || y.x !== (Number(ya.x) || 0) || (y.r || '') !== (ya.r || '')) {
+        await st.put('plan', { u: y.u, x: y.x, r: y.r || '' });
         if (!ya.u && !ya.x) await st.setAlarm(Date.now() + 30 * 3600e3);
       }
       return new Response(JSON.stringify(y), { status: 200 });
+    }
+    // (15 nov) el plan de un pedido (rid), para recogerlo si la app se fue a segundo plano y se cortó la conexión:
+    // { op: 'leer' | 'marcha' | 'poner' | 'borrar', rid, fin } → { marcha?, fin? }. Se borra con lo demás a las 30 h
+    if (ruta === '/plan/res') {
+      const b = await req.json().catch(() => ({}));
+      const rid = ridDe(b.rid);
+      if (!rid) return new Response('{}', { status: 200 });
+      const k = `res:${rid}`;
+      if (b.op === 'marcha') await st.put(k, { marcha: Date.now() });
+      else if (b.op === 'poner' && b.fin && typeof b.fin === 'object') await st.put(k, { fin: b.fin });
+      else if (b.op === 'borrar') await st.delete(k);
+      else return new Response(JSON.stringify((await st.get(k)) || {}), { status: 200 });
+      if (b.op !== 'borrar' && !(await st.getAlarm())) await st.setAlarm(Date.now() + 30 * 3600e3);
+      return new Response('{}', { status: 200 });
     }
     // lo gastado en planes entre todos en un día, en millonésimas de dólar: suma lo que llega y devuelve el total
     if (ruta === '/gasto') {
@@ -321,6 +366,44 @@ export class Emparejar {
       const n = (Number(await st.get('g')) || 0) + mas;
       if (mas) { await st.put('g', n); if (n === mas) await st.setAlarm(Date.now() + 30 * 3600e3); }
       return new Response(String(n), { status: 200 });
+    }
+    // (0.7.13) el dinero de los rivales: lo apuntado por todos, en un solo objeto («dinero|todos»), que nunca pone alarma
+    if (ruta === '/dinero/poner') {
+      const b = await req.json().catch(() => null);
+      if (!b || !b.k || !b.x) return new Response('mal', { status: 400 });
+      await st.put(b.k, b.x);
+      return new Response('ok', { status: 200 });
+    }
+    if (ruta === '/dinero/cal') {
+      const ya = await st.get('cal');
+      if (ya && Date.now() - ya.t < DINERO_CAL_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+      // lo de más de DINERO_DIAS días se borra (de 128 en 128, lo que deja delete)
+      const limite = `r|${diaHace(DINERO_DIAS)}`;
+      const viejos = [...(await st.list({ prefix: 'r|', end: limite, limit: 2000 })).keys()];
+      for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+      const regs = [...(await st.list({ prefix: 'r|', reverse: true, limit: DINERO_MAX })).values()];
+      const cal = { ...calDinero(regs), t: Date.now() };
+      await st.put('cal', cal);
+      return new Response(JSON.stringify(cal), { status: 200 });
+    }
+    // (0.7.13u) las compras de todas las ligas, en otro objeto («pujas|todos»): de una vez, como mucho 128
+    if (ruta === '/pujas/poner') {
+      const b = await req.json().catch(() => null);
+      if (!b || !b.xs || typeof b.xs !== 'object') return new Response('mal', { status: 400 });
+      const ks = Object.keys(b.xs).slice(0, 128);
+      if (ks.length) await st.put(Object.fromEntries(ks.map((k) => [k, b.xs[k]])));
+      return new Response('ok', { status: 200 });
+    }
+    if (ruta === '/pujas/cal') {
+      const ya = await st.get('cal');
+      if (ya && Date.now() - ya.t < PUJAS_CAL_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+      const limite = `c|${diaHace(PUJAS_DIAS)}`;
+      const viejos = [...(await st.list({ prefix: 'c|', end: limite, limit: 2000 })).keys()];
+      for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+      const regs = [...(await st.list({ prefix: 'c|', reverse: true, limit: PUJAS_MAX })).values()];
+      const cal = { ...calPujas(regs), t: Date.now() };
+      await st.put('cal', cal);
+      return new Response(JSON.stringify(cal), { status: 200 });
     }
     if (ruta === '/contar') {
       const max = Number(await req.text()) || 0;
@@ -592,84 +675,128 @@ async function uso(req, env, c) {
 
 /* ---------- el plan del día con la IA de Carlos (Claude), 2 al día por cuenta ---------- */
 /*
- * POST /plan { pedido, tono, bloq, anuncio, alias, extra }: el pedido del plan corto que arma la app (pedidoCorto de
+ * POST /plan { pedido, tono, bloq, anuncio, alias, extra, rid }: el pedido del plan corto que arma la app (pedidoCorto de
  * web/js/ia.js, ya con alias) se le manda a Claude con la clave de Carlos (el secreto CLAUDE_PLANES) y se devuelve el plan
  * ({ plan, cupo }). Las instrucciones las arma el Worker con piezas fijas (web/js/plan-sistema.js): la app solo elige el
  * tono, qué funciones tiene cerradas y si van alias. El tope de respuesta es fijo, el pedido tiene que tener la forma del
  * plan corto y de la respuesta solo sale el plan (planLimpio): la ruta no sirve como IA gratis para otra cosa.
  * Quién llama lo dice LaLiga (quienEs, con su sesión), no la app.
  * Cupo por cuenta y día de Madrid: `gratis` planes y, con `extra: true` (la app lo manda al acabar un anuncio bonificado),
- * uno más cada vez hasta `max`, pase lo que pase. Y entre todos, como mucho `topeUsdDia` dólares al día. Lo cuenta el Durable
+ * uno más cada vez hasta `max`, pase lo que pase. Con `rid` (id del pedido), un reintento de la app tras un corte no cuenta dos veces. Y entre todos, como mucho `topeUsdDia` dólares al día. Lo cuenta el Durable
  * Object (el de los frenos por día), no el KV: no gasta escrituras del KV. Los números, en «planes» de limites.json (con
  * los de PLANES_DEF si no se puede leer) y nunca por encima de PLAN_TOPE_USD de wrangler.toml.
  * Mientras Claude piensa (10-20 s) la respuesta va mandando espacios cada 5 s: la app de Android corta a los 30 s sin
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0 };
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
 export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
 // cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
 export const USD_BUSQUEDA = 10000;
 const LIMITES_URL = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
-let limitesW = { t: 0, p: null };
-/** «planes» de limites.json (10 minutos en memoria), con sus topes */
-export async function cfgPlanes(env) {
-  if (!limitesW.p || Date.now() - limitesW.t > 10 * 60e3) {
-    let p = null;
+let limitesW = { t: 0, j: null };
+/** limites.json (10 minutos en memoria) */
+async function limitesJson() {
+  if (!limitesW.j || Date.now() - limitesW.t > 10 * 60e3) {
+    let j = null;
     for (const u of LIMITES_URL) {
-      try { const r = await fetch(u, { cf: { cacheTtl: 300 } }); if (r.ok) { const j = await r.json(); p = (j && j.planes) || {}; break; } } catch (e) { /* el siguiente */ }
+      try { const r = await fetch(u, { cf: { cacheTtl: 300 } }); if (r.ok) { j = (await r.json()) || {}; break; } } catch (e) { /* el siguiente */ }
     }
     // (sin poder leerlo, lo último que se leyó; y si nunca, lo de por defecto)
-    limitesW = { t: Date.now(), p: p || limitesW.p || {} };
+    limitesW = { t: Date.now(), j: j || limitesW.j || {} };
   }
-  const p = { ...PLANES_DEF, ...limitesW.p };
+  return limitesW.j || {};
+}
+/** «planes» de limites.json, con sus topes */
+export async function cfgPlanes(env) {
+  const p = { ...PLANES_DEF, ...((await limitesJson()).planes || {}) };
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web) };
+  // (17 nov, Carlos, por Domy) gratisWeb: los planes gratis de quien usa la web o el iPhone, que no tienen anuncios para pedir más
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)) };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
-export function cupoCuenta(x, op, { gratis, max, extra = false }) {
-  const u = Number(x.u) || 0;
+/** rid: el id del pedido que pone la app; si la app lo repite (se cortó la conexión y lo reintenta), no cuenta otra vez */
+export const ridDe = (x) => (typeof x === 'string' && /^[a-z0-9]{8,24}$/.test(x) ? x : '');
+export function cupoCuenta(x, op, { gratis, max, extra = false, rid = '', paso = 1 }) {
+  const u = Number(x.u) || 0, r0 = String(x.r || ''), r = ridDe(rid);
   let e = Number(x.x) || 0;
-  if (op === 'devolver') return { ok: true, u: Math.max(0, u - 1), x: e };
-  if (op === 'mirar') return { ok: true, u, x: e };
+  if (op === 'devolver') return { ok: true, u: Math.max(0, u - 1), x: e, r: '' };
+  if (op === 'mirar') return { ok: true, u, x: e, r: r0 };
+  // el mismo pedido otra vez (reintento tras un corte): ya se contó
+  if (r && r === r0) return { ok: true, u, x: e, r: r0 };
   // un anuncio visto da un plan más, pero solo si ya no quedan de los gratis y sin pasar del máximo
-  if (extra && u >= gratis + e && gratis + e < max) e++;
+  // (las preguntas del chat: cada anuncio da `paso`, 3 desde el 16 nov)
+  if (extra && u >= gratis + e && gratis + e < max) e = Math.min(max - gratis, e + Math.max(1, Math.floor(Number(paso) || 1)));
   const cabe = u < Math.min(max, gratis + e);
-  return { ok: cabe, u: cabe ? u + 1 : u, x: e };
+  return { ok: cabe, u: cabe ? u + 1 : u, x: e, r: cabe ? r : r0 };
 }
-async function cupo(env, uid, op, c) {
+async function cupo(env, uid, op, c, tipo = 'plan') {
   const dia = hoyMadrid();
-  const cuerpo = JSON.stringify({ op, gratis: c.gratis, max: c.max, extra: !!c.extra });
+  const cuerpo = JSON.stringify({ op, gratis: c.gratis, max: c.max, extra: !!c.extra, rid: ridDe(c.rid), paso: c.porAnuncio || 1 });
   if (env.QR) {
     try {
-      const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|${uid}`)).fetch('https://freno/plan', { method: 'POST', body: cuerpo });
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan', { method: 'POST', body: cuerpo });
       if (r.status === 200) return await r.json();
     } catch (e) { /* a la memoria */ }
   }
-  const k = `${dia}|${uid}`, y = cupoCuenta(CUPO_MEM.get(k) || {}, op, c);
+  const k = `${tipo}|${dia}|${uid}`, y = cupoCuenta(CUPO_MEM.get(k) || {}, op, { ...c, paso: c.porAnuncio || 1 });
   if (CUPO_MEM.size > 20000) CUPO_MEM.clear();
-  CUPO_MEM.set(k, { u: y.u, x: y.x });
+  CUPO_MEM.set(k, { u: y.u, x: y.x, r: y.r || '' });
   return y;
 }
-/** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
-let GASTO_MEM = { dia: '', n: 0 };
-async function gastoHoy(env, mas = 0) {
+/** el plan guardado de un pedido (rid) en el Durable Object de la cuenta y el día; sin él, en la memoria del Worker */
+const RES_MEM = new Map();
+export const RES_MARCHA_MS = 100000;
+async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan') {
+  rid = ridDe(rid);
+  if (!rid) return {};
   const dia = hoyMadrid();
   if (env.QR) {
     try {
-      const r = await env.QR.get(env.QR.idFromName(`plan|${dia}|gasto`)).fetch('https://freno/gasto', { method: 'POST', body: String(Math.max(0, Math.round(mas))) });
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin }) });
+      if (r.status === 200) return await r.json();
+    } catch (e) { /* a la memoria */ }
+  }
+  const k = `${tipo}|${dia}|${uid}|${rid}`;
+  if (op === 'leer') return RES_MEM.get(k) || {};
+  if (RES_MEM.size > 2000) RES_MEM.clear();
+  if (op === 'marcha') RES_MEM.set(k, { marcha: Date.now() });
+  else if (op === 'poner') RES_MEM.set(k, { fin });
+  else if (op === 'borrar') RES_MEM.delete(k);
+  return {};
+}
+/** espera a que acabe el plan del mismo pedido que ya está en marcha (otra petición de la app, que se cortó): su resultado o null */
+async function esperarRes(env, uid, rid, desde, tipo = 'plan') {
+  while (Date.now() - desde < RES_MARCHA_MS) {
+    await new Promise((ok) => setTimeout(ok, 2000));
+    const x = await resPlan(env, uid, 'leer', rid, null, tipo);
+    if (x.fin) return x.fin;
+    if (!x.marcha || Date.now() - x.marcha > RES_MARCHA_MS) return null;
+  }
+  return null;
+}
+/** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
+const GASTO_MEM = {};
+async function gastoHoy(env, mas = 0, tipo = 'plan') {
+  const dia = hoyMadrid();
+  if (env.QR) {
+    try {
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|gasto`)).fetch('https://freno/gasto', { method: 'POST', body: String(Math.max(0, Math.round(mas))) });
       if (r.status === 200) return Number(await r.text()) || 0;
     } catch (e) { /* a la memoria */ }
   }
-  if (GASTO_MEM.dia !== dia) GASTO_MEM = { dia, n: 0 };
-  GASTO_MEM.n += Math.max(0, Math.round(mas));
-  return GASTO_MEM.n;
+  if (!GASTO_MEM[tipo] || GASTO_MEM[tipo].dia !== dia) GASTO_MEM[tipo] = { dia, n: 0 };
+  GASTO_MEM[tipo].n += Math.max(0, Math.round(mas));
+  return GASTO_MEM[tipo].n;
 }
+// (Carlos, 14 nov) el dueño (ADMINS) repite el plan cuantas veces quiera: sin cupo por cuenta (el tope de gasto del día
+// entre todos y el freno de 3 al minuto siguen valiendo también para él)
+const cupoLibre = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, quedan: 99, masConAnuncio: true, ilimitado: true });
 const cupoTxt = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: y.u < c.max });
 const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
 /**
@@ -695,8 +822,9 @@ export function bloquesDe(content) {
  * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
  * Google puede hacer (0, sin búsqueda). Si la cuenta de Anthropic no la tiene activada, se repite sin ella (sinWeb: true).
  */
-export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0 } = {}) {
-  const cuerpo = { model: modelo, max_tokens: PLAN_TOKENS, output_config: { effort: 'low' }, system: sistema, messages: [{ role: 'user', content: pedido }] };
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low' } = {}) {
+  // (16 nov) el chat manda la conversación entera (mensajes) y el sistema en bloques, con la parte fija en caché
+  const cuerpo = { model: modelo, max_tokens: tokens, output_config: { effort: esfuerzo }, system: sistema, messages: mensajes || [{ role: 'user', content: pedido }] };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
   const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false };
   let ult = '';
@@ -721,7 +849,8 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     }
     if (!x) break;
     const u = x.usage || {}, b = bloquesDe(x.content);
-    acc.texto += b.texto; acc.entra += u.input_tokens || 0; acc.sale += u.output_tokens || 0; acc.fin = x.stop_reason || '';
+    // (lo leído de la caché cuesta una décima parte y lo que se escribe en ella, un 25 % más: se cuenta así en `entra`)
+    acc.texto += b.texto; acc.entra += (u.input_tokens || 0) + Math.round((u.cache_read_input_tokens || 0) * 0.1 + (u.cache_creation_input_tokens || 0) * 1.25); acc.sale += u.output_tokens || 0; acc.fin = x.stop_reason || '';
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
     if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
@@ -733,7 +862,10 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
 /** lo que cuesta una llamada, en millonésimas de dólar: los tokens y las búsquedas */
 export const costeDe = (r, modelo) => { const [pe, ps] = PRECIOS[modelo] || PRECIOS[PLAN_MODELO]; return r.entra * pe + r.sale * ps + (r.busquedas || 0) * USD_BUSQUEDA; };
 async function planIA(req, env, c, ctx) {
-  const P = await cfgPlanes(env);
+  const P0 = await cfgPlanes(env);
+  // (17 nov) la web y el iPhone (el navegador manda Origin; la app de Android pide por su lado, sin él) no tienen anuncios con
+  // los que pedir más planes: de momento, todos sus planes gratis (planes.gratisWeb de limites.json)
+  const P = req.headers.get('Origin') && P0.gratisWeb > P0.gratis ? { ...P0, gratis: P0.gratisWeb, max: Math.max(P0.max, P0.gratisWeb) } : P0;
   if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
   if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de los planes (falta la clave CLAUDE_PLANES).', servicio: true, sinClave: true }, 503, c);
   const u = await quienEs(req);
@@ -752,9 +884,16 @@ async function planIA(req, env, c, ctx) {
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
   // (si se busca en Google lo decide el Worker, con «planes.web» de limites.json; la app no lo elige)
   const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, web: P.web });
+  // (15 nov) el mismo pedido otra vez (la app se fue a segundo plano y se cortó): si ya está hecho, se devuelve; si sigue
+  // en marcha, se espera a ese en vez de volver a pedírselo a Claude
+  const rid = ridDe(b.rid);
+  const previo = rid ? await resPlan(env, u.uid, 'leer', rid) : {};
+  if (previo.fin) return json(previo.fin, 200, c);
+  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
   // entre todos, el tope de gasto del día
-  if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
-  const y = await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
+  if (!enMarcha && (await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
+  const libre = adminsDe(env).includes(String(u.uid));
+  const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid });
   if (!y.ok) {
     const ct = cupoTxt(P, y);
     return json({ e: ct.masConAnuncio && b.extra !== true ? `Ya has hecho tus ${Math.min(P.max, P.gratis + y.x)} planes con la IA de hoy.` : `Ya has hecho los ${P.max} planes con la IA de hoy, el máximo. Mañana tienes otros ${P.gratis}.`, cupo: ct }, 429, c);
@@ -765,7 +904,13 @@ async function planIA(req, env, c, ctx) {
   const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
   const t0 = Date.now();
   const trabajo = (async () => {
-    let fin;
+    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now()).catch(() => null) : null;
+    if (fin) {
+      clearInterval(latido);
+      try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido */ }
+      return;
+    }
+    if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
     try {
       const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web });
       const gasto = costeDe(r, P.modelo);
@@ -774,13 +919,16 @@ async function planIA(req, env, c, ctx) {
       const j = jsonDe(r.texto);
       const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
       if (!plan) {
-        await cupo(env, u.uid, 'devolver', P);
+        if (!libre) await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
-      } else fin = { plan, cupo: cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+      } else fin = { plan, cupo: libre ? cupoLibre(P) : cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+      // (guardado antes de mandarlo: si la app ya no está, lo recoge al volver con el mismo rid)
+      if (rid) await resPlan(env, u.uid, fin.plan ? 'poner' : 'borrar', rid, fin.plan ? fin : null).catch(() => {});
     } catch (e) {
       // (lo que no ha llegado a dar un plan no cuenta)
-      await cupo(env, u.uid, 'devolver', P).catch(() => {});
+      if (!libre) await cupo(env, u.uid, 'devolver', P).catch(() => {});
       console.log('plan:', String((e && e.message) || e));
+      if (rid) await resPlan(env, u.uid, 'borrar', rid).catch(() => {});
       fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
     }
     clearInterval(latido);
@@ -788,6 +936,268 @@ async function planIA(req, env, c, ctx) {
   })();
   if (ctx && ctx.waitUntil) ctx.waitUntil(trabajo);
   return new Response(readable, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store, no-transform' } });
+}
+
+/* ---------- las preguntas del chat con la IA de la app (16 nov) ---------- */
+/*
+ * POST /pregunta { datos, pregunta, hist, fotos, tono, bloq, anuncio, alias, extra, rid }. Como /plan: quién pregunta lo
+ * dice LaLiga (quienEs); las instrucciones las arma el Worker con web/js/chat-sistema.js y la app solo manda los datos de su
+ * liga (tienen que empezar por la cabecera de la app: esDatosChat), la conversación (los últimos 12 mensajes, sin fotos)
+ * y la pregunta con sus capturas. Cupo por cuenta y día de Madrid («preguntas» de limites.json: 3 gratis y 3 más con
+ * un anuncio, 6 como mucho; Carlos, 17 nov; el dueño sin cupo) y tope de gasto del día aparte del de los planes. Con `rid`, si la app se va a
+ * segundo plano y se corta, al volver pide lo mismo y le llega la respuesta que ya estaba hecha, sin contar otra vez.
+ * La respuesta va mandando espacios cada 5 s mientras la IA piensa (Android corta a los 30 s sin recibir nada).
+ * Devuelve { texto, cupo, tok, ms } (el texto con los alias puestos: la app los quita) o { e, estado }.
+ */
+// (16 nov, prueba con Haiku de verdad: 40 respuestas) con 3000 tokens y esfuerzo «medium», 4 de 10 salían VACÍAS (lo que piensa
+// cuenta en los tokens de salida y se los comía todos); con «low» tarda un 10 % menos y contesta igual de bien
+export const PREGUNTAS_DEF = { on: true, gratis: 3, porAnuncio: 3, max: 6, topeUsdDia: 3, esfuerzo: 'low' };
+export const PREGUNTA_TOKENS = 8000;
+/** «preguntas» de limites.json, con sus topes */
+export async function cfgPreguntas(env) {
+  const p = { ...PREGUNTAS_DEF, ...((await limitesJson()).preguntas || {}) };
+  const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
+  const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
+  const gratis = Math.floor(n(p.gratis, 3, 0, 100));
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
+}
+const cupoTxtP = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, porAnuncio: c.porAnuncio, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: Math.min(c.max, c.gratis + y.x) < c.max });
+const cupoLibreP = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, porAnuncio: c.porAnuncio, quedan: 99, masConAnuncio: true, ilimitado: true });
+const FOTO_B64 = /^[A-Za-z0-9+/]+={0,2}$/;
+/**
+ * La conversación para Claude: los mensajes de antes (solo texto) y la pregunta con sus fotos, alternando usuario y
+ * asistente (dos seguidos del mismo se juntan) y empezando por el usuario. null si algo no vale.
+ */
+export function mensajesChat(hist, pregunta, fotos) {
+  const out = [];
+  const poner = (role, content) => {
+    const ult = out[out.length - 1];
+    if (ult && ult.role === role) { ult.content = [...(Array.isArray(ult.content) ? ult.content : [{ type: 'text', text: ult.content }]), ...(Array.isArray(content) ? content : [{ type: 'text', text: content }])]; return; }
+    out.push({ role, content });
+  };
+  for (const m of (Array.isArray(hist) ? hist : []).slice(-CHAT_MAX.hist)) {
+    if (!m || typeof m !== 'object' || typeof m.t !== 'string' || !m.t.trim()) continue;
+    if (m.t.length > CHAT_MAX.mensaje) return null;
+    const role = m.r === 'ia' ? 'assistant' : 'user';
+    if (!out.length && role === 'assistant') continue;
+    poner(role, m.t);
+  }
+  const fs = Array.isArray(fotos) ? fotos : [];
+  if (fs.length > CHAT_MAX.fotos || fs.some((f) => typeof f !== 'string' || f.length > CHAT_MAX.foto || !FOTO_B64.test(f))) return null;
+  const q = typeof pregunta === 'string' ? pregunta.trim() : '';
+  if (q.length > CHAT_MAX.pregunta || (!q && !fs.length)) return null;
+  poner('user', [...fs.map((d) => ({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: d } })), { type: 'text', text: q || (fs.length > 1 ? 'Mira estas capturas.' : 'Mira esta captura.') }]);
+  return out;
+}
+/**
+ * Lo que se le manda a Claude de una pregunta ya leída (b): { sistema, mensajes } o null si no vale. Lo usa también la
+ * prueba con Haiku de verdad (.github/ia/chat-haiku.mjs), para preguntar exactamente lo mismo que el Worker.
+ */
+export function armarChat(b) {
+  if (!b || typeof b !== 'object' || !esDatosChat(b.datos)) return null;
+  const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
+  if (!mensajes) return null;
+  const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
+  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
+  // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
+  return { sistema: [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, { type: 'text', text: b.datos }], mensajes };
+}
+async function preguntaIA(req, env, c, ctx) {
+  const P = await cfgPreguntas(env);
+  if (!P.on) return json({ e: 'Las preguntas con la IA de la app están apagadas ahora.', servicio: true }, 503, c);
+  if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de las preguntas.', servicio: true, sinClave: true }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'No se ha podido comprobar tu cuenta de LaLiga ahora mismo. Vuelve a probar en un rato.' }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `pregunta|${u.uid}`, FRENOS.pregunta.min))) return demasiadas(c);
+  const tope = CHAT_MAX.datos + CHAT_MAX.fotos * CHAT_MAX.foto + CHAT_MAX.hist * CHAT_MAX.mensaje + 20000;
+  if (Number(req.headers.get('content-length') || 0) > tope * 1.2) return json({ e: 'La pregunta es demasiado grande (prueba con menos fotos).' }, 413, c);
+  const txt = await req.text();
+  if (txt.length > tope * 1.2) return json({ e: 'La pregunta es demasiado grande (prueba con menos fotos).' }, 413, c);
+  let b = null;
+  try { b = JSON.parse(txt); } catch (e) { b = null; }
+  const armado = armarChat(b);
+  if (!armado) return json({ e: 'Pregunta no válida' }, 400, c);
+  const { sistema, mensajes } = armado;
+  const rid = ridDe(b.rid);
+  const previo = rid ? await resPlan(env, u.uid, 'leer', rid, null, 'preg') : {};
+  if (previo.fin) return json(previo.fin, 200, c);
+  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
+  if (!enMarcha && (await gastoHoy(env, 0, 'preg')) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de las preguntas ha llegado hoy a su tope. Mañana vuelve.', servicio: true, tope: true }, 503, c);
+  const libre = adminsDe(env).includes(String(u.uid));
+  const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid }, 'preg');
+  if (!y.ok) {
+    const ct = cupoTxtP(P, y);
+    return json({ e: ct.masConAnuncio ? `Ya has hecho tus ${Math.min(P.max, P.gratis + y.x)} preguntas de hoy.` : `Ya has hecho las ${P.max} preguntas de hoy, el máximo. Mañana tienes otras ${P.gratis}.`, cupo: ct }, 429, c);
+  }
+  const { readable, writable } = new TransformStream();
+  const w = writable.getWriter(), enc = new TextEncoder();
+  const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
+  const t0 = Date.now();
+  const trabajo = (async () => {
+    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now(), 'preg').catch(() => null) : null;
+    if (!fin) {
+      if (rid) await resPlan(env, u.uid, 'marcha', rid, null, 'preg').catch(() => {});
+      try {
+        const r = await llamarClaude(env, P.modelo, sistema, null, fetch, { mensajes, tokens: PREGUNTA_TOKENS, esfuerzo: P.esfuerzo });
+        const gasto = costeDe(r, P.modelo);
+        ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto, 'preg').catch(() => {})) : await gastoHoy(env, gasto, 'preg').catch(() => {});
+        const texto = String(r.texto || '').trim();
+        if (!texto) {
+          if (!libre) await cupo(env, u.uid, 'devolver', P, 'preg').catch(() => {});
+          fin = { e: 'La IA ha contestado vacío. Vuelve a preguntar (esta no cuenta).', estado: 502 };
+        } else fin = { texto, resumen: resumenRespuesta(texto), cupo: libre ? cupoLibreP(P) : cupoTxtP(P, y), tok: { entra: r.entra, sale: r.sale }, ms: Date.now() - t0, fin: r.fin };
+        if (rid) await resPlan(env, u.uid, fin.texto ? 'poner' : 'borrar', rid, fin.texto ? fin : null, 'preg').catch(() => {});
+      } catch (e) {
+        if (!libre) await cupo(env, u.uid, 'devolver', P, 'preg').catch(() => {});
+        console.log('pregunta:', String((e && e.message) || e));
+        if (rid) await resPlan(env, u.uid, 'borrar', rid, null, 'preg').catch(() => {});
+        fin = { e: 'La IA no contesta ahora mismo. Vuelve a preguntar en un rato (esta no cuenta).', estado: 503, servicio: true };
+      }
+    }
+    clearInterval(latido);
+    try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido: ya está guardado */ }
+  })();
+  if (ctx && ctx.waitUntil) ctx.waitUntil(trabajo);
+  return new Response(readable, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store, no-transform' } });
+}
+
+/* ---------- el dinero de los rivales: aprender de lo que apunta todo el mundo (0.7.13) ---------- */
+/*
+ * Cuando alguien apunta lo que le ha dicho un rival que tiene, la app manda cuánto fallaba su cuenta en ese momento y el
+ * contexto de la cuenta, SIN NOMBRES NI IDS de nadie: ni de quien lo manda, ni del rival, ni de la liga ni del equipo.
+ *   h    huella (SHA-256, 24 hex) de liga|rival|día, hecha en el móvil: solo sirve para no contar dos veces lo mismo el mismo
+ *        día (dos de la misma liga que apuntan al mismo rival). Cambia cada día, así que no une apuntes de días distintos.
+ *   e    lo apuntado menos lo que daba la cuenta (v - est); m el margen de la cuenta; r la mitad del rango apuntado
+ *   dl   días desde el principio de la liga; dp días de parón en medio (recompensa doble); mov y sub, movimientos y
+ *        subidas de cláusula del rival; pago, si la liga es de pago; val, pos y nr: valor del equipo del rival, su puesto
+ *        y cuántos equipos hay; est lo que daba la cuenta (Carlos, 15 nov: «eso y más para la IA», para afinarla después)
+ * Va en el Durable Object («dinero|todos»), no en el KV (unas mil escrituras al día entre todo). Se quedan DINERO_DIAS días.
+ * La sesión de LaLiga solo sirve para frenar (por cuenta y día, en el freno del día, que se borra a las 30 h): no se guarda
+ * con el apunte. La corrección (calDinero) se rehace como mucho cada 6 h y la app la lee con 6 h de caché.
+ */
+export const DINERO_DIAS = 180, DINERO_MAX = 20000, DINERO_CAL_CADA = 6 * 3600e3, DINERO_CUENTA_DIA = 30, DINERO_TODOS_DIA = 5000;
+const diaHace = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+const numEn = (x, lo, hi, ent = false) => { const v = Number(x); if (!Number.isFinite(v) || v < lo || v > hi) return null; return ent ? Math.round(v) : Math.round(v / 1e3) * 1e3; };
+/** un apunte limpio (lo que se guarda) o null si algo no cuadra */
+export function apunteDinero(b) {
+  if (!b || typeof b !== 'object' || !/^[0-9a-f]{24}$/.test(String(b.h || ''))) return null;
+  const x = {
+    e: numEn(b.e, -300e6, 300e6), m: numEn(b.m, 0, 200e6), r: numEn(b.r ?? 0, 0, 200e6), dl: numEn(b.dl, 0, 400, true), dp: numEn(b.dp ?? 0, 0, 400, true),
+    mov: numEn(b.mov ?? 0, 0, 5000, true), sub: numEn(b.sub ?? 0, 0, 500, true), pago: b.pago === true, val: numEn(b.val ?? 0, 0, 5e9), pos: numEn(b.pos ?? 0, 0, 60, true),
+    nr: numEn(b.nr ?? 0, 0, 60, true), est: numEn(b.est ?? 0, -1e9, 5e9),
+  };
+  if (Object.values(x).some((v) => v === null) || x.dp > x.dl + 1) return null;
+  return x;
+}
+const cuantilD = (o, q) => { if (!o.length) return 0; const i = (o.length - 1) * q, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
+const resumenE = (xs) => { const o = xs.map((x) => x.e).sort((a, b) => a - b); const r = (q) => Math.round(cuantilD(o, q) / 1e3) * 1e3; return { n: o.length, med: r(0.5), p10: r(0.1), p25: r(0.25), p75: r(0.75), p90: r(0.9) }; };
+// los tramos: por días de liga (lo que más pesa: la recompensa diaria que uno coge y otro no se va sumando), por subidas
+// de cláusula y por si ha habido parón en medio
+export const TRAMOS_DINERO = {
+  dias: [[0, 30], [30, 60], [60, 100], [100, 9999]],
+  sub: [[0, 1], [1, 3], [3, 9999]],
+  paron: [[0, 1], [1, 9999]],
+};
+/** la corrección de todos: la mediana y el reparto de lo que falla la cuenta, en total y por tramos */
+export function calDinero(regs) {
+  const l = (regs || []).filter((x) => x && Number.isFinite(x.e));
+  const tramos = (k, campo) => TRAMOS_DINERO[k].map(([desde, hasta]) => ({ desde, hasta, ...resumenE(l.filter((x) => x[campo] >= desde && x[campo] < hasta)) }));
+  return { ...resumenE(l), porDias: tramos('dias', 'dl'), porSub: tramos('sub', 'sub'), porParon: tramos('paron', 'dp') };
+}
+const objDinero = (env) => env.QR.get(env.QR.idFromName('dinero|todos'));
+async function dineroApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `dinero|${u.uid}`, 6))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  const x = apunteDinero(b);
+  if (!x) return json({ e: 'Apunte no válido' }, 400, c);
+  // por cuenta y entre todos, al día
+  if (!(await cabeHoy(env, `dinero|${u.uid}`, DINERO_CUENTA_DIA))) return demasiadas(c, 'mañana');
+  if (!(await cabeHoy(env, 'dinero|todos', DINERO_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
+  // uno por rival y día: el de la misma huella el mismo día se sustituye (lo último apuntado manda)
+  const r = await objDinero(env).fetch('https://dinero/dinero/poner', { method: 'POST', body: JSON.stringify({ k: `r|${hoyMadrid()}|${b.h}`, x }) });
+  return r.status === 200 ? json({ ok: true }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+}
+let CAL_MEM = { t: 0, cal: null };
+async function dineroCal(env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  if (!CAL_MEM.cal || Date.now() - CAL_MEM.t > 10 * 60e3) {
+    const r = await objDinero(env).fetch('https://dinero/dinero/cal', { method: 'POST' });
+    if (r.status !== 200) return json({ e: 'No se ha podido leer' }, 503, c);
+    CAL_MEM = { t: Date.now(), cal: await r.json() };
+  }
+  return json(CAL_MEM.cal, 200, c);
+}
+
+/* ---------- lo que se paga por los libres del mercado en todas las ligas (0.7.13u) ---------- */
+/*
+ * Carlos, 16 nov: «los top o los que suben mucho se pagan bastante por encima de la media… que se mejore solo, de forma
+ * general y liga a liga». La app manda una vez al día las compras a LaLiga de su liga que no ha mandado ya, SIN NOMBRES NI
+ * IDS de nadie (ni del jugador, ni de quien compró, ni de la liga):
+ *   k    huella (SHA-256, 24 hex) de liga|jugador|hora de la compra, hecha en el móvil: solo para que dos de la misma liga
+ *        no cuenten dos veces la misma compra
+ *   d    el día de la compra; s lo pagado sobre su valor (0,12 = un 12 % más); v su valor (redondeado a 10 mil);
+ *   r    lo que subía al día en los 3 días de antes (null si no se sabe); top, si era de los 30 que más valen
+ * Va en su Durable Object («pujas|todos») y se queda PUJAS_DIAS días desde el día de la compra. Con la sesión de LaLiga
+ * solo para frenar (por cuenta y día); no se guarda de quién es. La app lo lee con /pujas/cal (6 h de caché), por tramos
+ * de valor y de subida, y lo mezcla con lo de su liga cuando esta tiene pocas compras parecidas (M.pagaLiga).
+ */
+export const PUJAS_DIAS = 120, PUJAS_MAX = 30000, PUJAS_CAL_CADA = 6 * 3600e3, PUJAS_CUENTA_DIA = 4, PUJAS_TODOS_DIA = 4000, PUJAS_POR_VEZ = 80;
+// los tramos de valor (como TRAMOS_PUJA de motor.js) y de subida al día; van en la respuesta, así que la app usa estos
+export const TRAMOS_PUJAS = { v: [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, 1e12]], r: [[-1, 0.004], [0.004, 0.012], [0.012, 1]] };
+/** una compra limpia (lo que se guarda: { s, v, r, top }) o null si algo no cuadra */
+export function compraLimpia(b, hoy = Date.now()) {
+  if (!b || typeof b !== 'object' || !/^[0-9a-f]{24}$/.test(String(b.k || '')) || !/^\d{4}-\d{2}-\d{2}$/.test(String(b.d || ''))) return null;
+  const td = Date.parse(`${b.d}T12:00:00Z`);
+  if (!Number.isFinite(td) || td > hoy + 864e5 || hoy - td > 60 * 864e5) return null;
+  const s = Number(b.s), v = Number(b.v), r = b.r == null ? null : Number(b.r);
+  if (!Number.isFinite(s) || s < -0.1 || s > 5 || !Number.isFinite(v) || v < 1e5 || v > 400e6) return null;
+  if (r != null && (!Number.isFinite(r) || r < -0.2 || r > 0.3)) return null;
+  return { s: Math.round(s * 1000) / 1000, v: Math.round(v / 1e4) * 1e4, r: r == null ? null : Math.round(r * 1e4) / 1e4, top: b.top === true };
+}
+const resumenS = (xs) => { const o = xs.map((x) => x.s).sort((a, b) => a - b); const q = (p) => Math.round(cuantilD(o, p) * 1000) / 1000; return { n: o.length, p10: q(0.1), p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9) }; };
+/** lo que se paga en todas las ligas: por tramo de valor y de subida («i|j»), por valor («i|*») y los top por subida («top|j») */
+export function calPujas(regs) {
+  const l = (regs || []).filter((x) => x && Number.isFinite(x.s) && Number.isFinite(x.v));
+  const en = (tr, x) => tr.findIndex(([lo, hi]) => x >= lo && x < hi);
+  const celdas = [];
+  const poner = (k, xs) => { if (xs.length) celdas.push({ k, ...resumenS(xs) }); };
+  TRAMOS_PUJAS.v.forEach((_, i) => {
+    const deV = l.filter((x) => en(TRAMOS_PUJAS.v, x.v) === i);
+    poner(`${i}|*`, deV);
+    TRAMOS_PUJAS.r.forEach((__, j) => poner(`${i}|${j}`, deV.filter((x) => x.r != null && en(TRAMOS_PUJAS.r, x.r) === j)));
+  });
+  TRAMOS_PUJAS.r.forEach((_, j) => poner(`top|${j}`, l.filter((x) => x.top && x.r != null && en(TRAMOS_PUJAS.r, x.r) === j)));
+  return { n: l.length, tv: TRAMOS_PUJAS.v, tr: TRAMOS_PUJAS.r, celdas };
+}
+const objPujas = (env) => env.QR.get(env.QR.idFromName('pujas|todos'));
+async function pujasApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `pujas|${u.uid}`, 3))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  const lista = b && Array.isArray(b.c) ? b.c.slice(0, PUJAS_POR_VEZ) : null;
+  if (!lista || !lista.length) return json({ e: 'Nada que apuntar' }, 400, c);
+  const xs = {};
+  for (const y of lista) { const x = compraLimpia(y); if (x) xs[`c|${y.d}|${y.k}`] = x; }
+  if (!Object.keys(xs).length) return json({ e: 'Compras no válidas' }, 400, c);
+  if (!(await cabeHoy(env, `pujas|${u.uid}`, PUJAS_CUENTA_DIA))) return demasiadas(c, 'mañana');
+  if (!(await cabeHoy(env, 'pujas|todos', PUJAS_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
+  const r = await objPujas(env).fetch('https://pujas/pujas/poner', { method: 'POST', body: JSON.stringify({ xs }) });
+  return r.status === 200 ? json({ ok: true, n: Object.keys(xs).length }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+}
+let PUJAS_MEM = { t: 0, cal: null };
+async function pujasCal(env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  if (!PUJAS_MEM.cal || Date.now() - PUJAS_MEM.t > 10 * 60e3) {
+    const r = await objPujas(env).fetch('https://pujas/pujas/cal', { method: 'POST' });
+    if (r.status !== 200) return json({ e: 'No se ha podido leer' }, 503, c);
+    PUJAS_MEM = { t: Date.now(), cal: await r.json() };
+  }
+  return json(PUJAS_MEM.cal, 200, c);
 }
 
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
@@ -893,12 +1303,14 @@ async function hola(req, env, c, ruta) {
     const m = ya && ya.metadata ? ya.metadata : null;
     const ahora = Date.now();
     const nuevo = {
-      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20), v: corta(b.v, 12),
+      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20) || (m && m.liga) || '', v: corta(b.v, 12),
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
       foto: u.foto || '',
       // por qué no se le pone la web nueva (el último fallo de AlDia en su móvil, desde la 0.7.6)
       ...(b.ad ? { ad: corta(b.ad, 90) } : {}),
+      // por qué no le carga la liga (16 nov): el tipo de error y el principio del mensaje, solo con la versión acabada en « !»
+      ...(b.fc && / !$/.test(String(b.v || '')) ? { fc: corta(b.fc, 60) } : {}),
       // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
       ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
     };
@@ -907,13 +1319,16 @@ async function hola(req, env, c, ruta) {
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
     // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
     // total, C1. Con más, el cambio entra en la escritura de cada hora)
-    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || ''));
+    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
     // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
     const bvNueva = !!nuevo.bv && !(m && m.bv);
+    // (la liga, igual, una vez por cuenta: el primer aviso sale a veces antes de que la app tenga la liga, y sin esto se quedaba
+    // «sin liga» hasta la siguiente escritura de la hora; 17 nov)
+    const ligaNueva = !!nuevo.liga && !!m && !m.liga;
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
     const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
     if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || bvNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
+    if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
     return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);
@@ -959,7 +1374,7 @@ async function hola(req, env, c, ruta) {
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
       else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
     }
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias }, 200, c);
+    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo: await leerEmbudo(env) }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }
@@ -969,6 +1384,18 @@ async function hola(req, env, c, ruta) {
 // este repo con Actions: lectura y escritura, en el secreto BOT_DISPATCH_TOKEN (lo pone worker.yml). Sin él, no hace nada.
 // Si ya hay una ejecución en marcha, la nueva espera (concurrency bot-x en bot.yml): no se pisan.
 const BOT_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/bot.yml/dispatches';
+
+// El portal de datos de la web (16 nov): el cron de «Portal web» (portal-web.yml) tampoco ha disparado nunca, así que este
+// Worker lo lanza igual, con el mismo token: a las 00:47 (después del mercado de las 00:15) y a las 07:13 de Madrid. Los dos
+// crons van en UTC y cubren verano e invierno; `tocaPortal` descarta la franja que no toca. Si ya hay una ejecución
+// (concurrency portal-web), la nueva espera. portal-web.yml sigue con su schedule por si algún día funciona: entre las dos
+// no se pisan.
+const PORTAL_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/portal-web.yml/dispatches';
+export const CRON_PORTAL = ['47 22,23 * * *', '13 5,6 * * *'];
+export function tocaPortal(t) {
+  const [h, m] = HM.format(new Date(t)).split(':').map(Number);
+  return (h === 0 && m === 47) || (h === 7 && m === 13);
+}
 
 // El mercado de cada noche (3 nov, Carlos: «a las 0:16/0:17»): LaLiga actualiza los valores hacia las 00:15 de Madrid y Analítica
 // y FútbolFantasy lo publican a las 00:16-00:17. Con el cron de 5 min salía a las 00:20-00:25, así que de 00:13 a 00:30 se lanza
@@ -981,10 +1408,10 @@ export function tocaMercado(t) {
   return h === 0 && m >= 13 && m <= 30 && m % 5 !== 0;
 }
 
-export async function lanzarBot(env, pedir = fetch, inputs = null) {
+export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_FLUJO) {
   const token = env.BOT_DISPATCH_TOKEN;
   if (!token) return { ok: false, motivo: 'sin BOT_DISPATCH_TOKEN' };
-  const r = await pedir(BOT_FLUJO, {
+  const r = await pedir(flujo, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -998,16 +1425,127 @@ export async function lanzarBot(env, pedir = fetch, inputs = null) {
   if (r.status === 204) return { ok: true };
   // el error de GitHub sin el token (no lo lleva, pero por si acaso se corta y se limpia)
   const texto = (await r.text().catch(() => '')).replaceAll(token, '***').slice(0, 300);
-  throw new Error(`GitHub contestó ${r.status} al lanzar «Bot X»: ${texto}`);
+  throw new Error(`GitHub contestó ${r.status} al lanzar «${flujo === PORTAL_FLUJO ? 'Portal web' : 'Bot X'}»: ${texto}`);
 }
 
 // qué freno por IP lleva cada ruta (FRENOS)
+/* ---------- el semáforo de LaLiga y la entrada paso a paso (0.7.13i) ---------- */
+// Todo en un solo Durable Object («embudo|todos»): las cuentas de cada día (e|AAAA-MM-DD → { canal: { paso: n }, 'o:x': … }),
+// las entradas de cada hora para el semáforo (h|AAAA-MM-DDTHH → { ok, x }) y la última comprobación (est). Nunca pone alarma:
+// lo viejo se borra al leer.
+export const EMB_PASOS = new Set(['ver', 'demo', 'play', 'l', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
+export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
+const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
+const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
+const horaMadrid = (t = Date.now()) => `${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t))}T${horaMadridF.format(new Date(t)).padStart(2, '0')}`;
+const objEmbudo = (env) => env.QR.get(env.QR.idFromName('embudo|todos'));
+
+/** prueba cada cosa de PRUEBAS desde el Worker */
+export async function probarLaLiga(f = fetch) {
+  const vez = async (p) => {
+    const t0 = Date.now();
+    try {
+      const r = await f(p.url, { method: p.metodo, headers: p.cabeceras, body: p.cuerpo || undefined, signal: AbortSignal.timeout(ESTADO_TIEMPO), redirect: 'manual' });
+      const txt = await r.text();
+      return resultado(p, r.status, txt, Date.now() - t0);
+    } catch (e) { return resultado(p, 0, '', Date.now() - t0); }
+  };
+  // (la página de entrar de LaLiga da a veces un 503 suelto, como el «falla a la primera» al entrar: solo cuenta como caída
+  // si falla también la segunda; si la segunda va, cuenta lo que tardó)
+  const una = async (p) => { const a = await vez(p); return a.e === 'mal' ? vez(p) : a; };
+  const [login, api, cuenta] = await Promise.all([una(PRUEBAS.login), una(PRUEBAS.api), una(PRUEBAS.cuenta)]);
+  return { login, api, cuenta };
+}
+/** lo que hace el objeto: sumar un paso, leer los días y el estado */
+async function embudoObjeto(st, ruta, req, memo) {
+  if (ruta === '/embudo/sumar') {
+    const b = await req.json().catch(() => null);
+    if (!b || !EMB_PASOS.has(b.p) || !EMB_CANALES.has(b.k) || !/^\d{4}-\d\d-\d\d$/.test(b.d || '')) return new Response('mal', { status: 400 });
+    const kd = `e|${b.d}`, x = (await st.get(kd)) || {};
+    const sumar = (g) => { const o = x[g] || (x[g] = {}); o[b.p] = (o[b.p] || 0) + 1; };
+    sumar(b.k);
+    const o = typeof b.o === 'string' && /^[a-z0-9_-]{1,24}$/.test(b.o) ? b.o : '';
+    if (o && (x[`o:${o}`] || Object.keys(x).filter((k) => k.startsWith('o:')).length < EMB_ORIGENES)) sumar(`o:${o}`);
+    await st.put(kd, x);
+    if (b.p === 'ok' || b.p === 'x-laliga') {
+      const kh = `h|${b.h}`, y = (await st.get(kh)) || {};
+      y[b.p === 'ok' ? 'ok' : 'x'] = (y[b.p === 'ok' ? 'ok' : 'x'] || 0) + 1;
+      await st.put(kh, y);
+    }
+    return new Response('ok', { status: 200 });
+  }
+  if (ruta === '/embudo/leer') {
+    const viejos = [...(await st.list({ prefix: 'e|', end: `e|${diaHace(EMB_DIAS)}`, limit: 500 })).keys()];
+    for (let i = 0; i < viejos.length; i += 128) await st.delete(viejos.slice(i, i + 128));
+    const dias = {};
+    for (const [k, v] of await st.list({ prefix: 'e|', reverse: true, limit: EMB_VER })) dias[k.slice(2)] = v;
+    return new Response(JSON.stringify({ dias }), { status: 200 });
+  }
+  if (ruta === '/estado') {
+    const ya = memo.est || (await st.get('est'));
+    if (ya && Date.now() - ya.t < ESTADO_CADA) return new Response(JSON.stringify(ya), { status: 200 });
+    // (dos a la vez: la segunda espera a la primera)
+    if (!memo.mirando) {
+      memo.mirando = (async () => {
+        const p = await probarLaLiga();
+        const ahora = Date.now(), horas = [horaMadrid(ahora), horaMadrid(ahora - 3600e3)];
+        const entradas = { ok: 0, x: 0 };
+        for (const h of horas) { const y = await st.get(`h|${h}`); if (y) { entradas.ok += y.ok || 0; entradas.x += y.x || 0; } }
+        const viejas = [...(await st.list({ prefix: 'h|', end: `h|${horaMadrid(ahora - 48 * 3600e3)}`, limit: 200 })).keys()];
+        if (viejas.length) await st.delete(viejas.slice(0, 128));
+        const est = { nivel: nivelDe(p, entradas), t: ahora, ...p, entradas };
+        await st.put('est', est);
+        memo.est = est;
+        return est;
+      })().finally(() => { memo.mirando = null; });
+    }
+    return new Response(JSON.stringify(await memo.mirando), { status: 200 });
+  }
+  return null;
+}
+// sin el objeto (si Cloudflare no dejó crearlo): el estado en la memoria del Worker, sin las entradas
+let ESTADO_MEM = null;
+async function estadoLaLiga(env, c) {
+  const cab = { ...c, 'cache-control': 'no-store' };
+  if (env.QR) {
+    try {
+      const r = await objEmbudo(env).fetch('https://embudo/estado');
+      if (r.status === 200) return new Response(await r.text(), { status: 200, headers: { ...cab, 'content-type': 'application/json' } });
+    } catch (e) { /* a la memoria */ }
+  }
+  if (!ESTADO_MEM || Date.now() - ESTADO_MEM.t > ESTADO_CADA) { const p = await probarLaLiga(); ESTADO_MEM = { nivel: nivelDe(p), t: Date.now(), ...p, entradas: null }; }
+  return json(ESTADO_MEM, 200, cab);
+}
+async function embudoApunte(req, env, c) {
+  const txt = await req.text();
+  if (txt.length > 400) return json({ e: 'Demasiados datos' }, 413, c);
+  let b;
+  try { b = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
+  if (!b || !EMB_PASOS.has(b.p) || !EMB_CANALES.has(b.k)) return json({ e: 'Paso no válido' }, 400, c);
+  if (!env.QR) return json({ ok: false }, 200, c);
+  const r = await objEmbudo(env).fetch('https://embudo/embudo/sumar', { method: 'POST', body: JSON.stringify({ p: b.p, k: b.k, o: b.o || '', d: hoyMadrid(), h: horaMadrid() }) });
+  return json({ ok: r.status === 200 }, 200, c);
+}
+/** los 14 últimos días, para «Quién usa la app» (null si no se puede) */
+async function leerEmbudo(env) {
+  if (!env.QR) return null;
+  try { const r = await objEmbudo(env).fetch('https://embudo/embudo/leer'); return r.status === 200 ? await r.json() : null; } catch (e) { return null; }
+}
+
 const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
+  'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
+  'POST /pujas': 'pujas', 'GET /pujas/cal': 'pujasCal',
+  'POST /embudo': 'embudo', 'GET /estado': 'estado',
 };
 
 export default {
   async scheduled(evento, env, ctx) {
+    if (CRON_PORTAL.includes(evento.cron)) {
+      if (!tocaPortal(evento.scheduledTime)) return;
+      ctx.waitUntil(lanzarBot(env, fetch, null, PORTAL_FLUJO).then((r) => { if (!r.ok) console.log('Portal web no lanzado:', r.motivo); }));
+      return;
+    }
     let inputs = null;
     if (evento.cron === CRON_MERCADO) {
       if (!tocaMercado(evento.scheduledTime)) return;
@@ -1037,6 +1575,27 @@ export default {
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/borrar' && req.method === 'POST') return await borrarMios(req, env, c);
       if (url.pathname === '/plan' && req.method === 'POST') return await planIA(req, env, c, ctx);
+      if (url.pathname === '/pregunta' && req.method === 'POST') return await preguntaIA(req, env, c, ctx);
+      // (15 nov) el plan de un pedido, para el aviso del móvil con la app en segundo plano (Recoger.java): { fin } o { marcha }
+      if (url.pathname === '/plan/res' && req.method === 'GET') {
+        const u = await quienEs(req);
+        if (!u) return json({ e: 'Sin sesión' }, 401, c);
+        const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
+        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+      }
+      // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.8): { fin: { resumen } } o { marcha }
+      if (url.pathname === '/pregunta/res' && req.method === 'GET') {
+        const u = await quienEs(req);
+        if (!u) return json({ e: 'Sin sesión' }, 401, c);
+        const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '', null, 'preg');
+        return json(x.fin ? { fin: x.fin.texto ? { resumen: x.fin.resumen || resumenRespuesta(x.fin.texto) } : { e: x.fin.e || '' } } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+      }
+      if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
+      if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
+      if (url.pathname === '/pujas' && req.method === 'POST') return await pujasApunte(req, env, c);
+      if (url.pathname === '/pujas/cal' && req.method === 'GET') return await pujasCal(env, c);
+      if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
+      if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);

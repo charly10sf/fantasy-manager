@@ -73,29 +73,35 @@ function esDe(yo) {
 /* Las funciones top, bloqueadas.
    limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
    todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas.
-   En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados (desde la 0.6.3a; lo
-   decidió Carlos el 25 oct, tras decirle sus amigos que 1 anuncio por el dinero de los rivales era poco y que eso es
-   demasiado fuerte para tenerlo siempre):
-   - Las de los rivales (dineroRivales y quienPaga; ventasRivales y perfilRival se abrieron para todos el 8 nov, 0.7w, por
-     decisión de Carlos),
-     cada una por su lado: 2 anuncios seguidos por vez y
-     como mucho 2 veces por jornada (de una jornada a la siguiente), y cada vez abierta 1 hora. Se cambia en
-     limites.json con «top»: { "usos": 2, "minutos": 60 }.
+   En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados. Desde la 0.7.12 (Carlos,
+   15 nov, 02:08: «TODO un solo anuncio salvo ver el dinero del rival durante 5 minutos, que serán 2»):
+   - El dinero de un rival (dineroRivales), POR RIVAL: 2 anuncios seguidos lo abren 5 MINUTOS; como mucho 2 veces por
+     jornada. «top» en limites.json: { "rivales": 2, "anuncios": 2, "minutos": 5 }.
+   - Quién paga tu cláusula (quienPaga), de todos los rivales: 1 anuncio, 5 HORAS («horasQuien»: 5). Sin tope.
    - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
      hasta las 00:00 de Madrid.
-   Si no hay anuncio que enseñar, se abre igual media hora (y en las de los rivales cuenta como una vez). También en la
-   liga de ejemplo (así las ve quien revisa la app en Google). En la de la liga, que no lleva anuncios, siguen como
-   diga limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar
-   sin un servidor, y no compensa). */
+   Antes (0.6.3a-0.7.11f) las de los rivales iban por función: 2 anuncios, 2 veces por jornada y 1 hora, y a un amigo
+   de Carlos le salieron dos rondas seguidas para ver a un solo rival.
+   Si no hay anuncio que enseñar, se abre igual lo que pedías (un rival, que cuenta como una de las 2; quién paga y
+   cuándo gira, media hora), pero solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga
+   limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin
+   un servidor, y no compensa). */
 const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
-/** las que van por veces a la jornada, con 2 anuncios cada vez */
-export const POR_JORNADA = ['dineroRivales', 'quienPaga'];
+/** las que van por rival (y unas veces por jornada): solo el dinero */
+export const POR_JORNADA = ['dineroRivales'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
 const NUEVAS = [];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
-/** cuántos anuncios pide cada vez */
-export const anunciosPorVez = (clave) => (porJornada(clave) ? 2 : 1);
-const cfgTop = () => { const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {}; return { usos: Number(t.usos) > 0 ? Number(t.usos) : 2, minutos: Number(t.minutos) > 0 ? Number(t.minutos) : 60 }; };
+const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
+const cfgTop = () => {
+  const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {};
+  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5) };
+};
+/** cuántos anuncios pide cada vez (los del dinero de un rival, todos seguidos) */
+export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : 1);
+/** cuánto queda abierto el dinero de un rival (minutos) y quién paga (horas) */
+export const minutosRival = () => cfgTop().minutos;
+export const horasQuien = () => cfgTop().horasQuien;
 /** ¿se pueden abrir viendo un anuncio? (solo en la versión de Google Play) */
 export const topConAnuncio = () => enApp && nativo.hayAnuncios();
 let jornadaB = 0;
@@ -112,64 +118,78 @@ function hoyTop() {
 }
 // con «hasta: 1»: la web de la 0.6.3 y anteriores (la que va dentro del APK, si AlDia vuelve a ella) lo lee como cerrado
 const guardarHoy = (h) => LS.set('top-abierto', { dia: diaDe(), t: Date.now(), vistos: h.vistos, libreHasta: h.libreHasta || 0, hasta: 1 });
-/* lo de la jornada (para las de los rivales): por cada una, cuántas veces la has abierto, hasta cuándo está abierta y si
-   llevas visto el primero de los dos anuncios */
-function jornadaTop() {
-  const g = LS.get('top-jornada', null);
-  if (g && (g.j === jornadaB || !jornadaB)) return g;
-  // jornada nueva: las veces vuelven a 0, pero lo que estaba abierto sigue hasta su hora y el «1 de 2» se guarda
-  const f = {};
-  if (g && g.f) for (const [k, x] of Object.entries(g.f)) if ((x.hasta && x.hasta > Date.now()) || x.uno) f[k] = { usos: 0, hasta: x.hasta || 0, uno: !!x.uno };
-  return { j: jornadaB, f };
+/* el dinero de los rivales: { j, usos, abiertos: { tid: hasta }, uno: { tid, n } } (uno: los anuncios ya vistos del
+   rival que estás abriendo; se guarda aunque cambie la jornada, para no hacerle ver otra vez el que ya vio) */
+function rivalesTop() {
+  const g = LS.get('top-rivales', null);
+  const ab = g && g.abiertos && !Array.isArray(g.abiertos) ? g.abiertos : {};
+  if (g && (g.j === jornadaB || !jornadaB)) return { j: g.j, usos: g.usos || 0, abiertos: ab, uno: g.uno || null };
+  return { j: jornadaB, usos: 0, abiertos: ab, uno: (g && g.uno) || null };
 }
-/** la hora más cercana a la que se cierra algo de lo abierto por jornada (0 si nada) */
+const guardarRivales = (g) => LS.set('top-rivales', g);
+const abrirRival = (g, rid, min) => guardarRivales({ j: g.j, usos: g.usos + 1, abiertos: { ...g.abiertos, [String(rid)]: Date.now() + min * 60e3 }, uno: null });
+/** los rivales con el dinero abierto ahora (sus teamId, en texto) */
+export const rivalesAbiertos = () => { const ab = rivalesTop().abiertos, t = Date.now(); return Object.keys(ab).filter((k) => ab[k] > t); };
+const abiertoRival = (rid) => rid != null && rivalesAbiertos().includes(String(rid));
+/** hasta cuándo está abierto el dinero de ese rival (0 si no) */
+export const rivalAbiertoHasta = (rid) => (abiertoRival(rid) ? rivalesTop().abiertos[String(rid)] : 0);
+/* quién paga: { hasta } */
+const quienHasta = () => { const g = LS.get('top-quien', null); return g && g.hasta > Date.now() ? g.hasta : 0; };
+/** la hora más cercana a la que se cierra algo abierto por un rato (para volver a pintar), o 0 */
 export function proximoCierreTop() {
-  const ahora = Date.now();
-  const hs = Object.values(jornadaTop().f || {}).map((x) => x.hasta || 0).filter((h) => h > ahora);
+  const t = Date.now(), hs = [...Object.values(rivalesTop().abiertos), quienHasta(), hoyTop().libreHasta].filter((h) => h > t);
   return hs.length ? Math.min(...hs) : 0;
 }
-const deJornada = (clave) => jornadaTop().f[clave] || { usos: 0, hasta: 0, uno: false };
-function guardarJornada(clave, x) { const g = jornadaTop(); g.f = { ...g.f, [clave]: x }; LS.set('top-jornada', g); }
+/** hasta cuándo está abierta (las de un rato); 0 si no lo está o si va hasta medianoche */
+export function abiertaHasta(clave, rid = null) {
+  if (porJornada(clave)) return rivalAbiertoHasta(rid);
+  if (clave === 'quienPaga') return quienHasta();
+  return 0;
+}
 
-/** ¿está abierta ahora? */
-export function topAbierto(clave) {
-  if (porJornada(clave)) return Date.now() < deJornada(clave).hasta;
+/** ¿está abierta ahora? (el dinero, para ese rival) */
+export function topAbierto(clave, rid = null) {
+  if (porJornada(clave)) return abiertoRival(rid);
+  if (clave === 'quienPaga') return quienHasta() > 0;
   const h = hoyTop();
   return h.vistos > 0 || Date.now() < h.libreHasta;
 }
-/** cuántas veces te quedan esta jornada (las de los rivales) */
-export const usosQuedan = (clave) => (porJornada(clave) ? Math.max(0, cfgTop().usos - deJornada(clave).usos) : Infinity);
-export const usosPorJornada = () => cfgTop().usos;
-export const minutosPorVez = () => cfgTop().minutos;
-/** hasta cuándo está abierta (0 si no lo está) */
-export const abiertaHasta = (clave) => { const h = porJornada(clave) ? deJornada(clave).hasta : 0; return h > Date.now() ? h : 0; };
-/** cuántos anuncios te faltan para abrirla esta vez */
-export function faltanAnuncios(clave) {
-  if (topAbierto(clave)) return 0;
-  return porJornada(clave) ? (deJornada(clave).uno ? 1 : 2) : 1;
+/** cuántas veces te quedan para abrir el dinero de un rival esta jornada */
+export const usosQuedan = (clave) => (porJornada(clave) ? Math.max(0, cfgTop().rivales - rivalesTop().usos) : Infinity);
+export const usosPorJornada = () => cfgTop().rivales;
+/** cuántos anuncios te faltan para abrirla (el dinero, para ese rival) */
+export function faltanAnuncios(clave, rid = null) {
+  if (topAbierto(clave, rid)) return 0;
+  if (!porJornada(clave)) return 1;
+  const u = rivalesTop().uno, n = cfgTop().anuncios;
+  return u && rid != null && String(u.tid) === String(rid) ? Math.max(1, n - (u.n || 0)) : n;
 }
-/** un anuncio visto hasta el final, para esa función. Devuelve si ya se ha abierto */
-export function anuncioTopVisto(clave) {
+/** un anuncio visto hasta el final, para esa función (y ese rival). Devuelve si ya se ha abierto */
+export function anuncioTopVisto(clave, rid = null) {
   const h = hoyTop();
   guardarHoy({ ...h, vistos: h.vistos + 1 });
   contar('b');
+  if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + cfgTop().horasQuien * 3600e3 }); contar('t'); return true; }
   if (!porJornada(clave)) { contar('t'); return true; }
-  const x = deJornada(clave);
-  if (!x.uno) { guardarJornada(clave, { ...x, uno: true }); return false; }
-  guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + cfgTop().minutos * 60e3, uno: false });
+  if (rid == null) return false;
+  const g = rivalesTop(), c = cfgTop();
+  const vistos = (g.uno && String(g.uno.tid) === String(rid) ? g.uno.n || 0 : 0) + 1;
+  if (vistos < c.anuncios) { guardarRivales({ ...g, uno: { tid: String(rid), n: vistos } }); return false; }
+  abrirRival(g, rid, c.minutos);
   contar('t');
   return true;
 }
 /** sin anuncio que enseñar (sin consentimiento, sin relleno, un DNS que los bloquea…): gratis UNA vez al día por
     dispositivo, contando todas las funciones top juntas (Carlos, 14 nov). La segunda vez del día ya no se abre */
 export const puedeTopGratis = () => { const g = LS.get('top-sin-anuncio', null); return !g || g.dia !== diaDe(); };
-/** sin anuncio que enseñar: se abre igual lo que pedías, pero solo «min» minutos (y en las de los rivales cuenta como
-    una vez: así no se abren gratis tocando el candado antes de que AdMob arranque). Apunta el día (`puedeTopGratis`) */
-export function abrirTopGratis(clave, min = 30) {
+/** sin anuncio que enseñar: se abre igual lo que pedías (el dinero de un rival, sus minutos y cuenta como una de las
+    veces; quién paga y cuándo gira, «min» minutos). Apunta el día (`puedeTopGratis`) */
+export function abrirTopGratis(clave, min = 30, rid = null) {
   LS.set('top-sin-anuncio', { dia: diaDe() });
+  if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + min * 60e3 }); return; }
   if (!porJornada(clave)) { const h = hoyTop(); guardarHoy({ ...h, libreHasta: Date.now() + min * 60e3 }); return; }
-  const x = deJornada(clave);
-  guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + Math.min(min, cfgTop().minutos) * 60e3, uno: false });
+  if (rid == null) return;
+  abrirRival(rivalesTop(), rid, cfgTop().minutos);
 }
 /* «planes» en limites.json: los planes del día con la IA de Carlos (el Worker, /plan). on: si van por ahí (si no, como
    antes: con la clave de Google de cada uno); gratis y max: los de cada día y el tope con anuncios. Quien cuenta de verdad
@@ -178,16 +198,58 @@ export function planesCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
   // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
-  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
+  // (17 nov) en la web y el iPhone (sin anuncios para pedir más) valen los gratis de «gratisWeb», si los hay
+  const gratis = n(p && p.gratis, 2), gw = !enApp ? n(p && p.gratisWeb, 0) : 0;
+  return { on: !!(p && p.on), gratis: Math.max(gratis, gw), max: Math.max(n(p && p.max, 5), gw), web: Math.min(3, n(p && p.web, 0)) };
+}
+/** (16 nov) las preguntas del chat con la IA de la app (el Worker, /pregunta): «preguntas» de limites.json. porAnuncio: las que
+    da cada anuncio bonificado cuando se acaban las gratis */
+export function preguntasCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.preguntas) || null;
+  const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
+  const gratis = n(p && p.gratis, 3);
+  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 6)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
+}
+/** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
+    gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
+    reloj, como poco); maxDia: cuántos al día; trasBonificado: minutos sin intersticial después de un bonificado; bloque:
+    el id del bloque de AdMob (si la app no lo lleva puesto; Android solo acepta los de la cuenta de Carlos); suLiga: si
+    también a los de sus ligas («ligas»). Sin «intersticial» (o con «on»: false), ninguno */
+export function intersticialCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
+  const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
+  return {
+    on: !!(p && p.on), gracia: n(p && p.graciaMin, 10, 1, 60) * 60e3, cada: n(p && p.cadaMin, 10, 3, 240) * 60e3,
+    maxDia: Math.floor(n(p && p.maxDia, 5, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
+    bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
+    // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)
+    dueno: !!(p && p.dueno),
+  };
+}
+/** (17 nov, Carlos) el anuncio de apertura: uno al día como mucho al abrir la app (intersticial.js decide si toca hoy y
+    Android lo enseña solo en los primeros segundos). «apertura» de limites.json: on y bloque (si la app no lo lleva) */
+export function aperturaCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.apertura) || null;
+  return { on: !!(p && p.on), bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '' };
 }
 let yoB = null, demoB = false;
+/** ¿a esta cuenta se le enseñan intersticiales? Al dueño no (salvo «dueno», para probarlos); a los de sus ligas, solo con «suLiga» */
+export function intersticialParaMi() {
+  const g = LS.get('limites', null), cfg = g && g.cfg;
+  if (!cfg || !yoB || demoB) return false;
+  if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return intersticialCfg().dueno;
+  if (!intersticialCfg().suLiga && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return false;
+  return true;
+}
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
-export function bloqueada(clave) {
+/** ¿cerrada? Las de los rivales, con «rid», para ese rival (abierto con sus anuncios esta jornada); sin «rid», si
+    está cerrada en general (para lo que mezcla a todos los rivales) */
+export function bloqueada(clave, rid = null) {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
   if (!lista.includes(clave) && !(NUEVAS.includes(clave) && cfg && g.v !== VERSION)) return false;
-  if (topAbierto(clave)) return false;
+  if (topAbierto(clave, rid)) return false;
   if (demoB || !yoB || !cfg) return true;
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }
@@ -198,8 +260,9 @@ export function anunciosWebModo() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || cfg.anunciosWeb !== true || !yoB) return null;
   const dueno = [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
-  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad: nadie de la liga toca anuncios
-  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return null;
+  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad, salvo «intersticial.suLiga» (17 nov,
+  // Carlos: anuncios para todos, también los de su liga; el dueño sigue sin ellos)
+  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB) && !intersticialCfg().suLiga) return null;
   if (!dueno) return 'real';
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }
@@ -213,6 +276,15 @@ export function cierreApk() {
   const f = cfg.cierreApk === false ? 0 : Date.parse(cfg.cierreApk || CIERRE_APK) || Date.parse(CIERRE_APK);
   const dueno = !!yoB && [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
   return { hasta: f, cerrada: !!f && Date.now() > f && !dueno };
+}
+/* La app de Google Play está por debajo de «playMin» de limites.json (0.7.13w): ya hay otra en la tienda y esta, con la
+   parte del móvil de antes, deja de recibir la web nueva. «playMin» se sube al código nuevo solo cuando Google lo ha
+   aprobado (si no, la banda manda a una ficha que aún no la tiene). Sin «playMin», nada */
+export function playDesfasada() {
+  if (!enApp || nativo.canal() !== 'play') return false;
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const min = Math.round(Number(cfg.playMin) || 0), mia = Math.round(Number(nativo.version()) || 0);
+  return min > 0 && mia > 0 && mia < min;
 }
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo

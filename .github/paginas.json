@@ -1,12 +1,12 @@
 {
-  "_leeme": "Las páginas públicas de la web (HTML real, sin JavaScript). Las genera .github/paginas.py: cabecera, menú, pie, sitemap.xml y robots.txt. El texto de cada página va dentro de su archivo, entre <!-- contenido --> y <!-- /contenido -->, y se edita ahí. Una guía con \"borrador\": true no se indexa (noindex), no va al sitemap ni al índice de guías ni al menú; al tener el texto escrito, se quita \"borrador\" y se pone la fecha. \"titulo\" es el <title> (unos 60 caracteres como mucho) y \"descripcion\" la meta description (unos 150). En las guías, «grupo» es el apartado del índice (empezar, clausulas, mercado, once), «corto» el nombre en la línea «También: …» de la portada y «relacionadas» las tres rutas de «Sigue leyendo» (si falta, las tres siguientes).",
+  "_leeme": "Las páginas públicas de la web (HTML real, sin JavaScript). Las genera .github/paginas.py: cabecera, menú, pie, sitemap.xml y robots.txt. El texto de cada página va dentro de su archivo, entre <!-- contenido --> y <!-- /contenido -->, y se edita ahí. Una guía con \"borrador\": true no se indexa (noindex), no va al sitemap ni al índice de guías ni al menú; al tener el texto escrito, se quita \"borrador\" y se pone la fecha. \"titulo\" es el <title> (unos 60 caracteres como mucho) y \"descripcion\" la meta description (unos 150). En las guías, «grupo» es el apartado del índice (empezar, clausulas, mercado, once), «corto» el nombre en la línea «También: …» de la portada y «relacionadas» las tres rutas de «Sigue leyendo» (si falta, las tres siguientes). «indexar»: false deja la guía publicada y enlazada, pero con noindex y fuera del sitemap. «redirige»: ruta de la guía en la que se fundió; se escribe una página que lleva a ella y sale de todas las listas.",
   "paginas": [
     {
       "ruta": "privacidad.html",
       "tipo": "legal",
       "titulo": "Política de privacidad · Fantasy Manager",
       "descripcion": "Qué datos usa Fantasy Manager, quién es el responsable, dónde se guardan, qué hacen los anuncios de Google y cómo borrar tus datos.",
-      "fecha": "2026-11-08"
+      "fecha": "2026-11-16"
     },
     {
       "ruta": "aviso-legal.html",
@@ -27,7 +27,7 @@
       "tipo": "info",
       "titulo": "Quiénes somos · Fantasy Manager",
       "descripcion": "Quién hace Fantasy Manager, de dónde salen sus datos, cómo se financia y por qué no es una app oficial de LaLiga.",
-      "fecha": "2026-11-08"
+      "fecha": "2026-11-16"
     },
     {
       "ruta": "contacto.html",
@@ -37,12 +37,245 @@
       "fecha": "2026-11-08"
     },
     {
+      "ruta": "metodo.html",
+      "tipo": "info",
+      "titulo": "Cómo calculamos cada cifra · Fantasy Manager",
+      "descripcion": "De dónde salen los valores, puntos, rachas, medias por puesto y la dificultad de los rivales de Fantasy Manager, cómo se hacen las previas y qué no sabemos.",
+      "fecha": "2026-11-16"
+    },
+    {
       "ruta": "instalar.html",
       "tipo": "info",
       "h1": "Cómo instalar Fantasy Manager en Android y iPhone",
       "titulo": "Cómo instalar Fantasy Manager en Android y iPhone",
       "descripcion": "Cómo descargar e instalar Fantasy Manager en Android, usarla en iPhone y añadirla a la pantalla de inicio, y qué hacer en el ordenador.",
       "fecha": "2026-11-03"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-12.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 12,
+      "titulo": "Jornada 12 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 12",
+      "corto": "Resumen de la jornada 12",
+      "descripcion": "Resumen de la jornada 12 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-15",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "mercado/index.html",
+      "seccion": "mercado",
+      "titulo": "Mercado de LaLiga Fantasy hoy: quién sube y quién baja",
+      "h1": "Mercado de LaLiga Fantasy hoy",
+      "descripcion": "Los jugadores que más suben y bajan hoy en el mercado de LaLiga Fantasy, las rachas, los que están en su máximo y la semana, con el valor de cada uno. Se pone al día cada noche.",
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/index.html",
+      "seccion": "equipos",
+      "titulo": "Equipos de LaLiga Fantasy: valor de cada plantilla",
+      "h1": "Equipos de LaLiga Fantasy",
+      "descripcion": "Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.",
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/index.html",
+      "seccion": "jornada",
+      "titulo": "Jornadas de LaLiga Fantasy: previas y resúmenes",
+      "h1": "Jornadas de LaLiga Fantasy",
+      "descripcion": "La próxima jornada de LaLiga Fantasy con su cierre de cláusulas, y la previa y el resumen de cada jornada: mejores, peores, once ideal y MVP de cada partido.",
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "clausulas/index.html",
+      "seccion": "jornada",
+      "titulo": "Cierre de cláusulas en LaLiga Fantasy: calendario y horas",
+      "h1": "Calendario de cláusulas",
+      "descripcion": "Cuándo se cierran y se reabren las cláusulas en LaLiga Fantasy en las próximas jornadas, cuántos cambios de mercado quedan y hasta cuándo está protegido un fichaje. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Jornadas", "jornada/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/onces.html",
+      "seccion": "jornada",
+      "grupo": "onces",
+      "titulo": "Onces probables de la jornada 13 de LaLiga Fantasy",
+      "h1": "Onces probables de la jornada 13",
+      "corto": "Onces probables",
+      "descripcion": "Los onces probables de los 20 equipos para la jornada 13 de LaLiga Fantasy, con el % de cada jugador, las dudas y quién vuelve. Una hora antes de cada partido, el once confirmado.",
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "bajas/index.html",
+      "seccion": "jornada",
+      "titulo": "Lesionados y sancionados de LaLiga Fantasy, jornada 13",
+      "h1": "Bajas de la jornada 13",
+      "descripcion": "Las bajas de la jornada 13 de LaLiga Fantasy: lesionados con su parte y su vuelta, dudas, sancionados con el motivo, apercibidos y los que vuelven, con su valor y qué suele compensar hacer. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Jornadas", "jornada/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-1.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 1,
+      "titulo": "Jornada 1 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 1",
+      "corto": "Resumen de la jornada 1",
+      "descripcion": "Resumen de la jornada 1 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-2.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 2,
+      "titulo": "Jornada 2 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 2",
+      "corto": "Resumen de la jornada 2",
+      "descripcion": "Resumen de la jornada 2 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-3.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 3,
+      "titulo": "Jornada 3 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 3",
+      "corto": "Resumen de la jornada 3",
+      "descripcion": "Resumen de la jornada 3 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-4.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 4,
+      "titulo": "Jornada 4 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 4",
+      "corto": "Resumen de la jornada 4",
+      "descripcion": "Resumen de la jornada 4 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-5.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 5,
+      "titulo": "Jornada 5 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 5",
+      "corto": "Resumen de la jornada 5",
+      "descripcion": "Resumen de la jornada 5 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-6.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 6,
+      "titulo": "Jornada 6 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 6",
+      "corto": "Resumen de la jornada 6",
+      "descripcion": "Resumen de la jornada 6 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-7.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 7,
+      "titulo": "Jornada 7 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 7",
+      "corto": "Resumen de la jornada 7",
+      "descripcion": "Resumen de la jornada 7 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-9.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 9,
+      "titulo": "Jornada 9 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 9",
+      "corto": "Resumen de la jornada 9",
+      "descripcion": "Resumen de la jornada 9 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-10.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 10,
+      "titulo": "Jornada 10 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 10",
+      "corto": "Resumen de la jornada 10",
+      "descripcion": "Resumen de la jornada 10 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-11.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 11,
+      "titulo": "Jornada 11 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 11",
+      "corto": "Resumen de la jornada 11",
+      "descripcion": "Resumen de la jornada 11 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-16",
+      "publicada": "2026-11-16"
+    },
+    {
+      "ruta": "guias/jornada-13.html",
+      "tipo": "guia",
+      "grupo": "jornadas",
+      "jornada": 13,
+      "titulo": "Jornada 13 de LaLiga Fantasy: chollos, cláusulas, bajas y mercado",
+      "h1": "Jornada 13 de LaLiga Fantasy",
+      "corto": "Previa de la jornada 13",
+      "descripcion": "Previa de la jornada 13 de LaLiga Fantasy: los chollos baratos y titulares, a qué hora se cierran las cláusulas, onces probables, sancionados, apercibidos, lesionados y quién sube de valor.",
+      "fecha": "2026-11-17",
+      "publicada": "2026-11-15",
+      "relacionadas": ["guias/apercibidos-laliga.html", "guias/blindaje-laliga-fantasy.html", "guias/cuanto-pujar.html"]
     },
     {
       "ruta": "guias/empezar-liga.html",
@@ -60,7 +293,8 @@
       ],
       "grupo": "empezar",
       "corto": "Empezar una liga",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/clausulas-laliga-fantasy.html", "guias/cuanto-pujar.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/clausulas-laliga-fantasy.html", "guias/cuanto-pujar.html"],
+      "indexar": false
     },
     {
       "ruta": "guias/puntos-laliga-fantasy.html",
@@ -97,7 +331,8 @@
       ],
       "grupo": "empezar",
       "corto": "Glosario",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/puntos-laliga-fantasy.html", "guias/empezar-liga.html"]
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/puntos-laliga-fantasy.html", "guias/empezar-liga.html"],
+      "indexar": false
     },
     {
       "ruta": "guias/clausulas-laliga-fantasy.html",
@@ -122,11 +357,11 @@
     {
       "ruta": "guias/subir-clausula.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
-      "h1": "Cuánto subir la cláusula de un jugador en LaLiga Fantasy",
-      "titulo": "Subir la cláusula en LaLiga Fantasy: cuánto y cuándo vale",
-      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa, cuándo es tirar el dinero y cuándo basta con el blindaje gratis.",
-      "busqueda": "subir cláusula LaLiga Fantasy",
+      "fecha": "2026-11-15",
+      "h1": "Calculadora de cláusula: cuánto subirla en LaLiga Fantasy",
+      "titulo": "Calculadora de cláusula de LaLiga Fantasy: cuánto subirla",
+      "descripcion": "Calcula cuánto subir la cláusula de tu jugador para que no le llegue al rival más rico, lo que cuesta, si compensa o basta el blindaje, y si te compensa clausular.",
+      "busqueda": "calculadora cláusula LaLiga Fantasy",
       "esquema": [
         ["Subir la cláusula o blindar", "Pagar para subir la cláusula frente al blindaje gratis de 24 h."],
         ["Cuánto cuesta subirla", "La relación entre lo que pagas y lo que sube la cláusula, con el cálculo paso a paso. Comprobar la regla exacta del juego."],
@@ -135,9 +370,11 @@
         ["A quién subírsela primero", "Los que suben, los titulares fijos y los que tus rivales pueden pagar hoy con su saldo."],
         ["Ejemplo", "Un delantero de 20 M con cláusula de 24 M y dos rivales con 30 M en caja."]
       ],
-      "grupo": "clausulas",
-      "corto": "Subir la cláusula",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"]
+      "grupo": "calculadoras",
+      "corto": "Calculadora de cláusula",
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"],
+      "publicada": "2026-11-02",
+      "script": "calc.js"
     },
     {
       "ruta": "guias/blindaje-laliga-fantasy.html",
@@ -199,10 +436,10 @@
     {
       "ruta": "guias/valor-de-mercado.html",
       "tipo": "guia",
-      "fecha": "2026-11-03",
-      "h1": "Cómo sube y baja el valor de los jugadores en LaLiga Fantasy",
-      "titulo": "Valor de mercado en LaLiga Fantasy: por qué suben y bajan",
-      "descripcion": "Cuándo cambia el valor de los jugadores, qué lo mueve, cómo leer las rachas de subida y qué pasa con un lesionado.",
+      "fecha": "2026-11-15",
+      "h1": "Valor de mercado en LaLiga Fantasy: cómo sube, cómo baja y cómo ganar dinero",
+      "titulo": "Valor de mercado en LaLiga Fantasy y cómo ganar dinero",
+      "descripcion": "Cuándo cambia el valor, qué lo mueve, cuánto duran las rachas con datos de esta temporada y cómo ganar dinero con la compraventa sin perder puntos.",
       "busqueda": "cómo suben los jugadores LaLiga Fantasy",
       "esquema": [
         ["Cuándo cambia el valor", "La hora del cambio de mercado y cada cuánto se actualiza. Comprobar en el juego antes de escribirlo."],
@@ -213,16 +450,16 @@
       ],
       "grupo": "mercado",
       "corto": "Valor de mercado",
-      "relacionadas": ["guias/hora-mercado-laliga-fantasy.html", "guias/ganar-dinero.html", "guias/cuando-vender.html"]
+      "relacionadas": ["guias/hora-mercado-laliga-fantasy.html", "guias/cuando-vender.html", "guias/cuando-clausular.html"]
     },
     {
       "ruta": "guias/cuanto-pujar.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
-      "h1": "Cuánto pujar por un jugador en LaLiga Fantasy",
-      "titulo": "Cuánto pujar en el mercado de LaLiga Fantasy",
-      "descripcion": "Cómo funcionan las pujas, cuánto ponerte por encima del valor, hasta dónde llega el margen de deuda y cómo pujan tus rivales.",
-      "busqueda": "cuánto pujar LaLiga Fantasy",
+      "fecha": "2026-11-15",
+      "h1": "Calculadora de puja: cuánto pujar en LaLiga Fantasy",
+      "titulo": "Calculadora de puja de LaLiga Fantasy: cuánto pujar",
+      "descripcion": "Calcula cuánto pujar por un jugador de LaLiga Fantasy con lo que vale, lo que sube hasta la jornada, lo que se paga en tu liga y tu margen de deuda.",
+      "busqueda": "calculadora puja LaLiga Fantasy",
       "esquema": [
         ["Cómo funcionan las pujas", "Pujas a ciegas, quién se lo lleva y qué pasa con el dinero si pierdes."],
         ["Cuánto ponerte por encima del valor", "Un porcentaje según lo buscado que esté el jugador y lo que pueda subir antes de la jornada."],
@@ -230,17 +467,19 @@
         ["Cómo pujan tus rivales", "Cada mánager tiene sus costumbres: quién se pasa y quién no."],
         ["Ejemplo", "Un jugador de 8 M que sale al mercado con tres rivales con saldo."]
       ],
-      "grupo": "mercado",
-      "corto": "Cuánto pujar",
-      "relacionadas": ["guias/saldo-negativo.html", "guias/hora-mercado-laliga-fantasy.html", "guias/valor-de-mercado.html"]
+      "grupo": "calculadoras",
+      "corto": "Calculadora de puja",
+      "relacionadas": ["guias/saldo-negativo.html", "guias/hora-mercado-laliga-fantasy.html", "guias/valor-de-mercado.html"],
+      "publicada": "2026-11-02",
+      "script": "calc.js"
     },
     {
       "ruta": "guias/cuando-vender.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
+      "fecha": "2026-11-15",
       "h1": "Cuándo vender un jugador en LaLiga Fantasy",
-      "titulo": "Cuándo vender jugadores en LaLiga Fantasy (y cuándo esperar)",
-      "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y qué hacer con lesionados y sancionados.",
+      "titulo": "Cuándo vender en LaLiga Fantasy: bajadas y lesionados",
+      "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y si vender o no a un lesionado o un sancionado.",
       "busqueda": "cuándo vender jugadores LaLiga Fantasy",
       "esquema": [
         ["Vender a LaLiga o a un rival", "Cuánto da cada camino y cuándo esperar una oferta."],
@@ -251,7 +490,7 @@
       ],
       "grupo": "mercado",
       "corto": "Cuándo vender",
-      "relacionadas": ["guias/valor-de-mercado.html", "guias/lesionados-sancionados.html", "guias/ganar-dinero.html"]
+      "relacionadas": ["guias/valor-de-mercado.html", "guias/apercibidos-laliga.html", "guias/cuanto-pujar.html"]
     },
     {
       "ruta": "guias/saldo-negativo.html",
@@ -288,15 +527,16 @@
       ],
       "grupo": "mercado",
       "corto": "Ganar dinero",
-      "relacionadas": ["guias/valor-de-mercado.html", "guias/cuando-vender.html", "guias/cuanto-pujar.html"]
+      "relacionadas": ["guias/valor-de-mercado.html", "guias/cuando-vender.html", "guias/cuanto-pujar.html"],
+      "redirige": "guias/valor-de-mercado.html"
     },
     {
       "ruta": "guias/alineacion.html",
       "tipo": "guia",
-      "fecha": "2026-11-02",
+      "fecha": "2026-11-15",
       "h1": "Cómo hacer la alineación en LaLiga Fantasy",
       "titulo": "La mejor alineación en LaLiga Fantasy: cómo elegir el once",
-      "descripcion": "Formaciones, titulares probables, partidos del viernes frente a los del lunes y qué hacer con los cambios de última hora.",
+      "descripcion": "Formaciones, titulares probables, cuántos puntos pierde un suplente en cada puesto según los datos y qué hacer con los cambios de última hora.",
       "busqueda": "mejor alineación LaLiga Fantasy",
       "esquema": [
         ["Las formaciones", "Cuáles deja el juego y cuándo compensa cada una."],
@@ -307,15 +547,15 @@
       ],
       "grupo": "once",
       "corto": "Alineación",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/lesionados-sancionados.html", "guias/apercibidos-laliga.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/apercibidos-laliga.html", "guias/cuando-vender.html"]
     },
     {
       "ruta": "guias/puntos-porteros-laliga-fantasy.html",
       "tipo": "guia",
-      "fecha": "2026-11-03",
+      "fecha": "2026-11-15",
       "h1": "Cómo puntúan los porteros en LaLiga Fantasy",
       "titulo": "Puntos del portero en LaLiga Fantasy: tabla y ejemplos",
-      "descripcion": "Cuánto da la portería a cero, cómo restan los goles encajados, cuánto valen las paradas y dos partidos de ejemplo con los puntos de un portero.",
+      "descripcion": "Cómo puntúan los porteros en LaLiga Fantasy, lo que sacan según los goles que encajan y las paradas, y las porterías a cero de cada equipo esta temporada.",
       "busqueda": "puntos portero LaLiga Fantasy",
       "esquema": [
         ["La tabla del portero", "Minutos, portería a cero, encajados, paradas, penalti parado, despejes, recuperaciones, pérdidas, asistencia, tarjetas y DAZN."],
@@ -362,7 +602,8 @@
       ],
       "grupo": "once",
       "corto": "Lesionados",
-      "relacionadas": ["guias/apercibidos-laliga.html", "guias/cuando-vender.html", "guias/alineacion.html"]
+      "relacionadas": ["guias/apercibidos-laliga.html", "guias/cuando-vender.html", "guias/alineacion.html"],
+      "redirige": "guias/cuando-vender.html"
     },
     {
       "ruta": "guias/apercibidos-laliga.html",
@@ -381,7 +622,7 @@
       ],
       "grupo": "once",
       "corto": "Apercibidos",
-      "relacionadas": ["guias/lesionados-sancionados.html", "guias/alineacion.html", "guias/puntos-laliga-fantasy.html"]
+      "relacionadas": ["guias/cuando-vender.html", "guias/alineacion.html", "guias/puntos-laliga-fantasy.html"]
     },
     {
       "ruta": "guias/preguntas-frecuentes.html",

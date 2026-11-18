@@ -11,8 +11,8 @@ name: Worker
 on:
   push:
     branches: [main]
-    # (plan-sistema.js: las instrucciones del plan del día, que el Worker empaqueta de web/)
-    paths: ['worker/**', 'web/js/plan-sistema.js', '.github/workflows/worker.yml']
+    # (plan-sistema.js y chat-sistema.js: las instrucciones del plan del día y del chat, que el Worker empaqueta de web/)
+    paths: ['worker/**', 'web/js/plan-sistema.js', 'web/js/chat-sistema.js', 'web/js/estado-laliga.js', '.github/workflows/worker.yml']
   workflow_dispatch:
 
 permissions:

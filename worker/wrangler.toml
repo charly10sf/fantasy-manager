@@ -24,7 +24,20 @@ PLAN_TOPE_USD = "10"
 [triggers]
 # Y de 00:13 a 00:30 de Madrid, cada minuto, lo lanza solo con el mercado (el cron va en UTC: 22:13-22:30 en verano y
 # 23:13-23:30 en invierno; scheduled en src/index.js mira la hora de Madrid y descarta la franja que no toca).
-crons = ["*/5 * * * *", "13-30 22,23 * * *"]
+# Y dos más para «Portal web» (00:47 y 07:13 de Madrid; también en UTC, verano e invierno; scheduled descarta la que no toca).
+crons = ["*/5 * * * *", "13-30 22,23 * * *", "47 22,23 * * *", "13 5,6 * * *"]
+
+# Los registros del Worker (auditoría del 16 nov; Carlos, 17 nov: «añádelo»): sin esto no queda ni rastro de los 5xx, los 429
+# ni los console.log (p. ej. «Bot X no lanzado»). Workers Logs entra en el plan gratis: 200 000 eventos al día, 3 días de
+# historia; si se pasa, Cloudflare guarda solo una muestra el resto del día (no corta nada). Cada petición deja 1 evento + sus
+# console.log. Si un día se pasa de ~80 000 peticiones, bajar head_sampling_rate a 0.5. Se ven en Cloudflare → Workers →
+# fantasy-manager → Logs. Ojo: el registro de cada llamada guarda la dirección entera (también ?id= del QR, que dura 10 min).
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+invocation_logs = true
 
 # El QR para entrar en el ordenador (0.6.12): un objeto por QR, que ve al momento lo que deja la app (el KV puede
 # tardar hasta un minuto entre centros de Cloudflare). Si Cloudflare no deja crearlo, worker.yml lo quita y publica sin él.

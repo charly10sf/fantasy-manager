@@ -1,0 +1,111 @@
+# La previa de cada jornada en la web (guias/jornada-N.html; bot/previa-web.mjs). La lanza el bot (bot.yml) cuando toca: unas 76 h
+# antes del primer partido y otra vez unas 34 h antes, para tener las sanciones y los partes al día antes del cierre de cláusulas.
+# Si el validador y el revisor dan el texto por bueno (`ok`), se sube a main y se lanza «Web» (lo que sube el GITHUB_TOKEN no lanza
+# otras Actions solo); si no, se queda en una PR para que la mire Carlos. En los dos casos le llega un Telegram.
+name: Previa web
+
+on:
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: 'Rehacerla aunque no toque'
+        type: boolean
+        default: false
+      jornada:
+        description: 'Jornada (vacío: la que viene)'
+        type: string
+        default: ''
+      probar:
+        description: 'Solo generarla y enseñarla aquí, sin subir nada'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: previa-web
+  cancel-in-progress: false
+
+jobs:
+  previa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GH_TOKEN: ${{ github.token }}
+      FORZAR: ${{ inputs.forzar && '1' || '' }}
+      JORNADA: ${{ inputs.jornada }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Dependencias del bot (para leer las listas de bajas)
+        run: npm ci --prefix bot --no-audit --no-fund --omit=optional >/dev/null
+      - name: ¿Toca?
+        id: toca
+        run: |
+          if [ -n "$FORZAR" ] || [ -n "$JORNADA" ]; then echo "toca=a mano" >> "$GITHUB_OUTPUT"; else node bot/previa-web.mjs --toca; fi
+      - name: Generar
+        id: gen
+        if: steps.toca.outputs.toca != ''
+        run: node bot/previa-web.mjs ${FORZAR:+--forzar=1} ${JORNADA:+--jornada=$JORNADA}
+      - name: Lo que ha salido
+        if: steps.gen.outputs.jornada != ''
+        run: |
+          node -e "
+            const d = require('./.github/previas/${{ steps.gen.outputs.jornada }}.json');
+            const o = ['## Previa de la jornada ' + d.hechos.jornada, '', 'Publicable sola: **' + (d.ok ? 'sí' : 'no') + '** · ' + d.dolares + ' \$', ''];
+            for (const [k, t] of Object.entries(d.textos)) o.push('**' + k + '**' + (t ? '' : ' (sin análisis: ' + (d.fallos[k] || '') + ')'), '', t || '', '');
+            require('fs').appendFileSync(process.env.GITHUB_STEP_SUMMARY, o.join('\n'));"
+      - name: Subir
+        id: subir
+        if: steps.gen.outputs.jornada != '' && !inputs.probar
+        env:
+          J: ${{ steps.gen.outputs.jornada }}
+          OK: ${{ steps.gen.outputs.ok }}
+        run: |
+          git config user.name 'Fantasy Manager'
+          git config user.email 'fantasymanager.web.app@gmail.com'
+          git add -A web/guias web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/previas .github/paginas.json
+          if git diff --cached --quiet; then echo "Nada nuevo"; echo "como=nada" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -q -m "Previa de la jornada $J (automática)"
+          if [ "$OK" = "true" ]; then
+            for espera in 0 5 15 30; do
+              sleep $espera
+              git pull -q --rebase origin main && git push -q origin HEAD:main && break
+            done
+            gh workflow run web.yml --ref main
+            echo "como=main" >> "$GITHUB_OUTPUT"
+          else
+            RAMA="previa-jornada-$J"
+            git push -q -f origin HEAD:refs/heads/$RAMA
+            gh pr view "$RAMA" >/dev/null 2>&1 || gh pr create --base main --head "$RAMA" --title "Previa de la jornada $J (para revisar)" \
+              --body "El validador o el revisor han dejado apartados sin análisis: ${{ steps.gen.outputs.sin_analisis }}. Revisa el texto en .github/previas/$J.json y la página guias/jornada-$J.html; al fusionar, lanza «Web» a mano."
+            echo "como=pr" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Aviso (Telegram)
+        if: steps.subir.outputs.como == 'main' || steps.subir.outputs.como == 'pr' || failure()
+        env:
+          COMO: ${{ steps.subir.outputs.como }}
+          J: ${{ steps.gen.outputs.jornada }}
+          SIN: ${{ steps.gen.outputs.sin_analisis }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node --input-type=module -e "
+            import { enviar, telegramDelEntorno, esc } from './bot/lib/telegram.mjs';
+            const c = telegramDelEntorno();
+            if (c.faltan.length) process.exit(0);
+            const { COMO, J, SIN, RUN } = process.env;
+            const url = 'https://fantasymanagerapp.com/guias/jornada-' + J + '.html';
+            const t = COMO === 'main' ? '📋 Previa de la jornada ' + J + ' publicada en la web (en un par de minutos): ' + url + (SIN && SIN !== 'ninguno' ? '\nSin análisis: ' + esc(SIN) : '')
+              : COMO === 'pr' ? '📋 La previa de la jornada ' + J + ' no ha pasado la revisión (' + esc(SIN) + '): se queda en una PR para que la mires. ' + RUN
+              : '⚠️ La previa de la web ha fallado: ' + RUN;
+            await enviar(t, c);"

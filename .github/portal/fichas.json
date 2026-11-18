@@ -1,0 +1,4243 @@
+{
+  "_leeme": "Lo escribe bot/portal-web.mjs (bot/web/fichas.mjs): las páginas de cada equipo y de cada jugador. Lo lee .github/paginas.py junto a paginas.json. No se edita a mano.",
+  "paginas": [
+    {
+      "tipo": "portal",
+      "ruta": "equipos/alaves.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "21",
+      "titulo": "Alavés en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Alavés en LaLiga Fantasy",
+      "descripcion": "Deportivo Alavés en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Deportivo Alavés",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/athletic.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "3",
+      "titulo": "Athletic en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Athletic en LaLiga Fantasy",
+      "descripcion": "Athletic Club en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Athletic Club",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/atletico.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "2",
+      "titulo": "Atlético en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Atlético en LaLiga Fantasy",
+      "descripcion": "Atlético de Madrid en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Atlético de Madrid",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/barca.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "4",
+      "titulo": "Barça en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Barça en LaLiga Fantasy",
+      "descripcion": "FC Barcelona en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "FC Barcelona",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/betis.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "5",
+      "titulo": "Betis en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Betis en LaLiga Fantasy",
+      "descripcion": "Real Betis en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Real Betis",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/celta.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "6",
+      "titulo": "Celta en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Celta en LaLiga Fantasy",
+      "descripcion": "Celta en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Celta",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/deportivo.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "26",
+      "titulo": "Deportivo en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Deportivo en LaLiga Fantasy",
+      "descripcion": "RC Deportivo en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "RC Deportivo",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/elche.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "7",
+      "titulo": "Elche en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Elche en LaLiga Fantasy",
+      "descripcion": "Elche CF en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Elche CF",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/espanyol.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "8",
+      "titulo": "Espanyol en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Espanyol en LaLiga Fantasy",
+      "descripcion": "RCD Espanyol en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "RCD Espanyol",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/getafe.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "9",
+      "titulo": "Getafe en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Getafe en LaLiga Fantasy",
+      "descripcion": "Getafe CF en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Getafe CF",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/levante.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "11",
+      "titulo": "Levante en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Levante en LaLiga Fantasy",
+      "descripcion": "Levante UD en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Levante UD",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/malaga.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "12",
+      "titulo": "Málaga en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Málaga en LaLiga Fantasy",
+      "descripcion": "Málaga CF en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Málaga CF",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/osasuna.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "13",
+      "titulo": "Osasuna en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Osasuna en LaLiga Fantasy",
+      "descripcion": "C.A. Osasuna en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "C.A. Osasuna",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/racing.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "49",
+      "titulo": "Racing en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Racing en LaLiga Fantasy",
+      "descripcion": "R. Racing Club en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "R. Racing Club",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/rayo.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "14",
+      "titulo": "Rayo en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Rayo en LaLiga Fantasy",
+      "descripcion": "Rayo Vallecano en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Rayo Vallecano",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/real-madrid.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "15",
+      "titulo": "Real Madrid en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Real Madrid en LaLiga Fantasy",
+      "descripcion": "Real Madrid en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Real Madrid",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/real-sociedad.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "16",
+      "titulo": "Real Sociedad en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Real Sociedad en LaLiga Fantasy",
+      "descripcion": "Real Sociedad en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Real Sociedad",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/sevilla.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "17",
+      "titulo": "Sevilla en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Sevilla en LaLiga Fantasy",
+      "descripcion": "Sevilla FC en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Sevilla FC",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/valencia.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "18",
+      "titulo": "Valencia en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Valencia en LaLiga Fantasy",
+      "descripcion": "Valencia CF en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Valencia CF",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "equipos/villarreal.html",
+      "seccion": "equipos",
+      "grupo": "equipo",
+      "id": "20",
+      "titulo": "Villarreal en LaLiga Fantasy: plantilla, valor y puntos",
+      "h1": "Villarreal en LaLiga Fantasy",
+      "descripcion": "Villarreal CF en LaLiga Fantasy: lo que vale su plantilla, los puntos de cada jornada, sus próximos rivales, la portería y las bajas. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "sobre": {
+        "@type": "SportsTeam",
+        "name": "Villarreal CF",
+        "sport": "Fútbol"
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/adeyemi.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3209",
+      "titulo": "Adeyemi: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Adeyemi en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Karim Adeyemi (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Karim Adeyemi",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/agirrezabala.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1219",
+      "titulo": "Agirrezabala: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Agirrezabala en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Julen Agirrezabala (R. Racing Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["R. Racing Club", "equipos/racing.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Julen Agirrezabala",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "R. Racing Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/agoume.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2453",
+      "titulo": "Agoumé: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Agoumé en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Lucien Agoumé (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Lucien Agoumé",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/alex-baena.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2534",
+      "titulo": "Álex Baena: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Álex Baena en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Álex Baena (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Álex Baena",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/alfonso-herrero.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3040",
+      "titulo": "A. Herrero: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "A. Herrero en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alfonso Herrero (Málaga CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Málaga CF", "equipos/malaga.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alfonso Herrero",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Málaga CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/alvaro-valles.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2541",
+      "titulo": "Á. Valles: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Á. Valles en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Álvaro Vallés (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Álvaro Vallés",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/andres-castrin.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2680",
+      "titulo": "A. Castrín: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "A. Castrín en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Andrés Castrín (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Andrés Castrín",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/angel-perez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2932",
+      "titulo": "Ángel Pérez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ángel Pérez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ángel Pérez (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ángel Pérez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/antony.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2770",
+      "titulo": "Antony: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Antony en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Antony Matheus dos Santos (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Antony Matheus dos Santos",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/arda-guler.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1674",
+      "titulo": "Arda Güler: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Arda Güler en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Arda Güler (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Arda Güler",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/aubameyang.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3108",
+      "titulo": "Aubameyang: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Aubameyang en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pierre-Emerick Aubameyang (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pierre-Emerick Aubameyang",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ayoze.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2504",
+      "titulo": "Ayoze: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ayoze en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ayoze Pérez (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ayoze Pérez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/barrenetxea.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "701",
+      "titulo": "Barrenetxea: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Barrenetxea en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ander Barrenetxea Muguruza (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ander Barrenetxea Muguruza",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/barrios.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1565",
+      "titulo": "Barrios: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Barrios en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pablo Barrios (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pablo Barrios",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bartra.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "121",
+      "titulo": "Bartra: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bartra en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marc Bartra Aregall (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marc Bartra Aregall",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bellerin.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2414",
+      "titulo": "Bellerín: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bellerín en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Héctor Bellerín (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Héctor Bellerín",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bellingham.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3101",
+      "titulo": "Bellingham: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bellingham en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jude Bellingham (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jude Bellingham",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/berenguer.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "927",
+      "titulo": "Berenguer: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Berenguer en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alejandro Berenguer Remiro (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alejandro Berenguer Remiro",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bernardo-silva.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3116",
+      "titulo": "Bernardo Silva: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bernardo Silva en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Bernardo Mota Veiga de Carvalho e Silva (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Bernardo Mota Veiga de Carvalho e Silva",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bil-nsongo.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2973",
+      "titulo": "Bil Nsongo: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bil Nsongo en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Bil Nsongo (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Bil Nsongo",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/blanco.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3069",
+      "titulo": "Blanco: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Blanco en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Antonio Blanco (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Antonio Blanco",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/bryan.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3237",
+      "titulo": "Bryan: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Bryan en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Bryan Zaragoza (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Bryan Zaragoza",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/budimir.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3084",
+      "titulo": "Budimir: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Budimir en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ante Budimir (C.A. Osasuna) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["C.A. Osasuna", "equipos/osasuna.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ante Budimir",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "C.A. Osasuna"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cabrera.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3068",
+      "titulo": "Cabrera: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cabrera en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Leandro Cabrera (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Leandro Cabrera",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/camello.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2387",
+      "titulo": "Camello: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Camello en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Sergio Camello (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Sergio Camello",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/canales.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3125",
+      "titulo": "Canales: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Canales en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Sergio Canales (R. Racing Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["R. Racing Club", "equipos/racing.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Sergio Canales",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "R. Racing Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cancelo.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2906",
+      "titulo": "Cancelo: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cancelo en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de João Pedro Cavaco Cancelo (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "João Pedro Cavaco Cancelo",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/carlos-soler.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2772",
+      "titulo": "C. Soler: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "C. Soler en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Carlos Soler (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Carlos Soler",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/catena.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1033",
+      "titulo": "Catena: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Catena en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alejandro Catena (C.A. Osasuna) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["C.A. Osasuna", "equipos/osasuna.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alejandro Catena",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "C.A. Osasuna"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/courtois.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "230",
+      "titulo": "Courtois: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Courtois en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Thibaut Courtois (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Thibaut Courtois",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cubarsi.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1775",
+      "titulo": "Cubarsí: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cubarsí en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pau Cubarsí (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pau Cubarsí",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cucho.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2217",
+      "titulo": "Cucho: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cucho en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Cucho Hernández (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Cucho Hernández",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cucurella.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3106",
+      "titulo": "Cucurella: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cucurella en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marc Cucurella (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marc Cucurella",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/cuti-romero.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3197",
+      "titulo": "Cuti Romero: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Cuti Romero en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Cristian Romero (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Cristian Romero",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/david-soria.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "184",
+      "titulo": "David Soria: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "David Soria en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de David Soria Solís (Getafe CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Getafe CF", "equipos/getafe.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "David Soria Solís",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Getafe CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/de-frutos.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "886",
+      "titulo": "De Frutos: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "De Frutos en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jorge De Frutos (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jorge De Frutos",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/de-galarreta.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1070",
+      "titulo": "De Galarreta: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "De Galarreta en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Inigo Ruiz de Galarreta (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Inigo Ruiz de Galarreta",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/dela.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2300",
+      "titulo": "Dela: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Dela en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Adrián de la Fuente (Levante UD) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Levante UD", "equipos/levante.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Adrián de la Fuente",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Levante UD"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/deossa.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2626",
+      "titulo": "Deossa: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Deossa en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Nelson Deossa (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Nelson Deossa",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/dimitrievski.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2457",
+      "titulo": "Dimitrievski: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Dimitrievski en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Stole Dimitrievski (Valencia CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Valencia CF", "equipos/valencia.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Stole Dimitrievski",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Valencia CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/diomande.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3143",
+      "titulo": "Diomande: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Diomande en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Yan Diomande (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Yan Diomande",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/djene.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2661",
+      "titulo": "Djene: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Djene en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Djené Dakonam (Getafe CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Getafe CF", "equipos/getafe.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Djené Dakonam",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Getafe CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/dmitrovic.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2507",
+      "titulo": "Dmitrovic: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Dmitrovic en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marko Dmitrovic (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marko Dmitrovic",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/dumfries.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3080",
+      "titulo": "Dumfries: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Dumfries en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Denzel Dumfries (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Denzel Dumfries",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/edu-exposito.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3077",
+      "titulo": "Edu Expósito: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Edu Expósito en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Edu Expósito (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Edu Expósito",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/el-hilali.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1930",
+      "titulo": "El Hilali: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "El Hilali en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Omar El Hilali (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Omar El Hilali",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/eric.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2354",
+      "titulo": "Eric: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Eric en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Eric García (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Eric García",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ez-abde.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3089",
+      "titulo": "Ez Abde: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ez Abde en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Abde Ezzalzouli (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Abde Ezzalzouli",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/felix-correia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3262",
+      "titulo": "Félix Correia: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Félix Correia en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Félix Alexandre Andrade Sanches Correia (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Félix Alexandre Andrade Sanches Correia",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/fer-nino.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3147",
+      "titulo": "Fer Niño: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Fer Niño en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Fer Niño (Elche CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Elche CF", "equipos/elche.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Fer Niño",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Elche CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/fermin.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1715",
+      "titulo": "Fermín: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Fermín en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Fermín López (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Fermín López",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ferran-jutgla.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2603",
+      "titulo": "Ferran Jutglà: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ferran Jutglà en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ferran Jutglà (Celta) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Celta", "equipos/celta.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ferran Jutglà",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Celta"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/fofana.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3265",
+      "titulo": "Fofana: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Fofana en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Youssouf Fofana (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Youssouf Fofana",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/fornals.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3099",
+      "titulo": "Fornals: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Fornals en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pablo Fornals (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pablo Fornals",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/fran-garcia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2429",
+      "titulo": "Fran García: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Fran García en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Fran García (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Fran García",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/freeman.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2934",
+      "titulo": "Freeman: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Freeman en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alexander Freeman (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alexander Freeman",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/frenkie-de-jong.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2358",
+      "indexar": false,
+      "titulo": "F. De Jong: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "F. De Jong en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Frenkie de Jong (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Frenkie de Jong",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gabriel-jesus.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3258",
+      "titulo": "Gabriel Jesus: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gabriel Jesus en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Gabriel Fernando de Jesus (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Gabriel Fernando de Jesus",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gerard-martin.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2757",
+      "titulo": "Gerard Martín: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gerard Martín en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Gerard Martín (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Gerard Martín",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gerard.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "356",
+      "titulo": "Gerard: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gerard en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Gerard Moreno Balagueró (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Gerard Moreno Balagueró",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/german-valera.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3074",
+      "titulo": "Germán V.: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Germán V. en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Germán Valera (Elche CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Elche CF", "equipos/elche.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Germán Valera",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Elche CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gimenez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2324",
+      "titulo": "Giménez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Giménez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de José Giménez (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "José Giménez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/giuliano.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1210",
+      "titulo": "Giuliano: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Giuliano en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Giuliano Simeone (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Giuliano Simeone",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gordon.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3210",
+      "titulo": "Gordon: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gordon en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Anthony Gordon (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Anthony Gordon",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/grimaldo.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3155",
+      "titulo": "Grimaldo: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Grimaldo en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alejandro Grimaldo (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alejandro Grimaldo",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/guedes.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3085",
+      "titulo": "Guedes: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Guedes en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Gonçalo Manuel Ganchinho Guedes (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Gonçalo Manuel Ganchinho Guedes",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gueye.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2473",
+      "titulo": "Gueye: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gueye en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pape Gueye (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pape Gueye",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/guido-rodriguez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3128",
+      "titulo": "Guido Rodríguez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Guido Rodríguez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Guido Rodríguez (Valencia CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Valencia CF", "equipos/valencia.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Guido Rodríguez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Valencia CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/gulacsi.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3130",
+      "titulo": "Gulácsi: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Gulácsi en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Péter Gulácsi (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Péter Gulácsi",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/hancko.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2561",
+      "titulo": "Hancko: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Hancko en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Dávid Hancko (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Dávid Hancko",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/hjulmand.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3114",
+      "titulo": "Hjulmand: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Hjulmand en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Morten Hjulmand (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Morten Hjulmand",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/huijsen.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2530",
+      "titulo": "Huijsen: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Huijsen en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Dean Huijsen (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Dean Huijsen",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ibanez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2569",
+      "titulo": "Ibañez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ibañez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pablo Ibáñez (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pablo Ibáñez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ilaix-moriba.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2607",
+      "titulo": "Ilaix Moriba: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ilaix Moriba en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Moriba Kourouma Kourouma (Celta) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Celta", "equipos/celta.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Moriba Kourouma Kourouma",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Celta"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/inaki-williams.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "91",
+      "titulo": "Iñaki Williams: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Iñaki Williams en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Iñaki Williams Arthuer (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Iñaki Williams Arthuer",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/index.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "titulo": "Jugadores de LaLiga Fantasy: valor y puntos de cada uno",
+      "h1": "Jugadores de LaLiga Fantasy",
+      "descripcion": "Todos los jugadores de LaLiga Fantasy con su valor de mercado, lo que suben o bajan hoy, sus puntos y su media, con filtros por puesto y equipo. Se pone al día cada noche.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/inigo-vicente.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3002",
+      "titulo": "Iñigo Vicente: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Iñigo Vicente en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Iñigo Vicente (R. Racing Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["R. Racing Club", "equipos/racing.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Iñigo Vicente",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "R. Racing Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ionut-radu.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2713",
+      "titulo": "Ionut Radu: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ionut Radu en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ionut Radu (Celta) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Celta", "equipos/celta.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ionut Radu",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Celta"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/isco.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3090",
+      "titulo": "Isco: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Isco en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Francisco Román Alarcón Suárez (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Francisco Román Alarcón Suárez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/javi-guerra.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3075",
+      "titulo": "Javi Guerra: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Javi Guerra en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Javi Guerra (Valencia CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Valencia CF", "equipos/valencia.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Javi Guerra",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Valencia CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/javi-hernandez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3161",
+      "titulo": "Javi Hernández: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Javi Hernández en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Javi Hernández (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Javi Hernández",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/joan-garcia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2634",
+      "titulo": "Joan García: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Joan García en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Joan García (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Joan García",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/jon-martin.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2656",
+      "titulo": "Jon Martin: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Jon Martin en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jon Martín (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jon Martín",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/jonathan-david.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3255",
+      "titulo": "J. David: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "J. David en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jonathan David (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jonathan David",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/jonny-otto.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2552",
+      "titulo": "Jonny Otto: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Jonny Otto en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jonathan Castro Otto (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jonathan Castro Otto",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/juan-iglesias.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1147",
+      "titulo": "Juan Iglesias: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Juan Iglesias en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Juan Antonio Iglesias Sánchez (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Juan Antonio Iglesias Sánchez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/julian-alvarez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3088",
+      "titulo": "Julián Alvarez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Julián Alvarez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Julián Alvarez (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Julián Alvarez",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/kang-in-lee.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3193",
+      "titulo": "Kang-In Lee: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Kang-In Lee en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Kang-In Lee (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Kang-In Lee",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/kike-salas.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2479",
+      "titulo": "Kike Salas: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Kike Salas en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Kike Salas (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Kike Salas",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/konate.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3107",
+      "titulo": "Konaté: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Konaté en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ibrahima Konaté (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ibrahima Konaté",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/koski.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2938",
+      "titulo": "Koski: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Koski en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ville Koski (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ville Koski",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/kounde.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2355",
+      "titulo": "Kounde: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Kounde en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jules Koundé (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jules Koundé",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/lamine-yamal.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3104",
+      "titulo": "Lamine Yamal: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Lamine Yamal en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Lamine Yamal Nasraoui Ebana (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Lamine Yamal Nasraoui Ebana",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/laporte.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3065",
+      "titulo": "Laporte: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Laporte en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Aymeric Laporte (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Aymeric Laporte",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/larrubia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3072",
+      "titulo": "Larrubia: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Larrubia en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de David Larrubia (Málaga CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Málaga CF", "equipos/malaga.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "David Larrubia",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Málaga CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/lejeune.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3082",
+      "titulo": "Lejeune: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Lejeune en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Florian Lejeune (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Florian Lejeune",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/leo-roman.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3109",
+      "titulo": "Leo Román: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Leo Román en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Leo Román (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Leo Román",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/lookman.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3079",
+      "titulo": "Lookman: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Lookman en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ademola Lookman (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ademola Lookman",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/lucas-boye.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2768",
+      "titulo": "Lucas Boyé: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Lucas Boyé en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Lucas Boyé (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Lucas Boyé",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/luismi-cruz.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2962",
+      "titulo": "Luismi Cruz: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Luismi Cruz en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Luismi Cruz (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Luismi Cruz",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/marc-bernal.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2784",
+      "titulo": "Marc Bernal: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Marc Bernal en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marc Bernal (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marc Bernal",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/marc-pubill.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2562",
+      "titulo": "Marc Pubill: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Marc Pubill en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marc Pubill (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marc Pubill",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/marc-roca.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2418",
+      "titulo": "Marc Roca: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Marc Roca en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marc Roca (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marc Roca",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/marcos-alonso.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3123",
+      "titulo": "Marcos Alonso: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Marcos Alonso en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marcos Alonso (Celta) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Celta", "equipos/celta.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marcos Alonso",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Celta"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/marcos-llorente.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "67",
+      "titulo": "Marcos Llorente: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Marcos Llorente en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Marcos Llorente (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Marcos Llorente",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/mariano.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2600",
+      "titulo": "Mariano: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Mariano en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Mariano Díaz (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Mariano Díaz",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/mario-soriano.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2995",
+      "titulo": "Mario Soriano: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Mario Soriano en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Mario Soriano (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Mario Soriano",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/matias-dituro.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2613",
+      "titulo": "M. Dituro: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "M. Dituro en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Matías Dituro (Elche CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Elche CF", "equipos/elche.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Matías Dituro",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Elche CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/mbappe.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3103",
+      "titulo": "Mbappé: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Mbappé en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Kylian Mbappé (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Kylian Mbappé",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/mikautadze.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2771",
+      "titulo": "Mikautadze: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Mikautadze en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Georges Mikautadze (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Georges Mikautadze",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/moleiro.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3086",
+      "titulo": "Moleiro: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Moleiro en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alberto Moleiro (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alberto Moleiro",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/natan.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2543",
+      "titulo": "Natan: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Natan en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Natan Bernardo de Souza (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Natan Bernardo de Souza",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/navarro.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2549",
+      "titulo": "Navarro: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Navarro en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Robert Navarro (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Robert Navarro",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/nico-williams.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3083",
+      "titulo": "Nico Williams: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Nico Williams en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Nico Williams (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Nico Williams",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/oblak.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2322",
+      "titulo": "Oblak: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Oblak en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Jan Oblak (Atlético de Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Atlético de Madrid", "equipos/atletico.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Jan Oblak",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Atlético de Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/oihan-sancet.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2318",
+      "titulo": "O. Sancet: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "O. Sancet en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Oihan Sancet (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Oihan Sancet",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/olmo.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3092",
+      "titulo": "Olmo: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Olmo en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Dani Olmo (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Dani Olmo",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/oyarzabal.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3091",
+      "titulo": "Oyarzabal: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Oyarzabal en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Mikel Oyarzabal (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Mikel Oyarzabal",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pagina-2.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 2)",
+      "h1": "Jugadores de LaLiga Fantasy (página 2)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 151 al 300 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pagina-3.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 3)",
+      "h1": "Jugadores de LaLiga Fantasy (página 3)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 301 al 450 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pagina-4.html",
+      "seccion": "equipos",
+      "grupo": "jugadores",
+      "indexar": false,
+      "titulo": "Jugadores de LaLiga Fantasy por valor (página 4)",
+      "h1": "Jugadores de LaLiga Fantasy (página 4)",
+      "descripcion": "Los jugadores de LaLiga Fantasy del 451 al 600 por valor de mercado, con lo que suben o bajan hoy, sus puntos y su media.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Jugadores", "jugadores/"]
+      ],
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/paredes.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2315",
+      "titulo": "Paredes: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Paredes en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Aitor Paredes (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Aitor Paredes",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/parrott.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3231",
+      "titulo": "Parrott: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Parrott en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Troy Parrott (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Troy Parrott",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pathe-ciss.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2383",
+      "titulo": "Pathé I. Ciss: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Pathé I. Ciss en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pathé Ciss (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pathé Ciss",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pedri.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3100",
+      "titulo": "Pedri: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Pedri en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Pedro González López (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Pedro González López",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pepe.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3087",
+      "titulo": "Pepe: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Pepe en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Nicolas Pépé (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Nicolas Pépé",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/pepelu.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2464",
+      "titulo": "Pepelu: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Pepelu en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de José Luis García Vayá (Valencia CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Valencia CF", "equipos/valencia.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "José Luis García Vayá",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Valencia CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ramon-terrats.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2511",
+      "titulo": "R. Terrats: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "R. Terrats en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Ramon Terrats (Getafe CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Getafe CF", "equipos/getafe.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Ramon Terrats",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Getafe CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/raphinha.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2522",
+      "titulo": "Raphinha: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Raphinha en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Raphael Dias Belloli (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Raphael Dias Belloli",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ratiu.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3081",
+      "titulo": "Ratiu: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ratiu en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Andrei Ratiu (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Andrei Ratiu",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/remiro.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "274",
+      "titulo": "Remiro: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Remiro en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Alejandro Remiro Gargallo (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Alejandro Remiro Gargallo",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/renato-veiga.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2728",
+      "titulo": "Renato Veiga: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Renato Veiga en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Renato Palma Veiga (Villarreal CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Villarreal CF", "equipos/villarreal.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Renato Palma Veiga",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Villarreal CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/riquelme.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2548",
+      "titulo": "Riquelme: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Riquelme en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Rodrigo Riquelme (Real Betis) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Betis", "equipos/betis.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Rodrigo Riquelme",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Betis"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/roberto.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2520",
+      "titulo": "Roberto: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Roberto en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Roberto Fernández (RCD Espanyol) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RCD Espanyol", "equipos/espanyol.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Roberto Fernández",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RCD Espanyol"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/rodri.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3208",
+      "titulo": "Rodri: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Rodri en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Rodrigo Hernández Cascante (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Rodrigo Hernández Cascante",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ruben-garcia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "652",
+      "titulo": "Rubén García: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Rubén García en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Rubén García Santos (C.A. Osasuna) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["C.A. Osasuna", "equipos/osasuna.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Rubén García Santos",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "C.A. Osasuna"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/rudiger.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2428",
+      "indexar": false,
+      "titulo": "Rüdiger: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Rüdiger en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Antonio Rüdiger (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Antonio Rüdiger",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/ryan.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2755",
+      "titulo": "Ryan: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Ryan en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Mathew Ryan (Levante UD) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Levante UD", "equipos/levante.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Mathew Ryan",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Levante UD"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/satriano.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3137",
+      "titulo": "Satriano: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Satriano en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Martín Satriano (Getafe CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Getafe CF", "equipos/getafe.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Martín Satriano",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Getafe CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/sivera.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "988",
+      "titulo": "Sivera: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Sivera en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Antonio Sivera (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Antonio Sivera",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/sucic.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2444",
+      "titulo": "Sucic: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Sucic en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Luka Sucic (Real Sociedad) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Sociedad", "equipos/real-sociedad.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Luka Sucic",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Sociedad"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/tchouameni.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1480",
+      "titulo": "Tchouaméni: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Tchouaméni en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Aurélien Tchouaméni (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Aurélien Tchouaméni",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/tenaglia.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "1337",
+      "titulo": "Tenaglia: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Tenaglia en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Nahuel Tenaglia (Deportivo Alavés) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Deportivo Alavés", "equipos/alaves.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Nahuel Tenaglia",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Deportivo Alavés"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/unai-lopez.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2384",
+      "titulo": "Unai Lopez: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Unai Lopez en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Unai López (Rayo Vallecano) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Rayo Vallecano", "equipos/rayo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Unai López",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Rayo Vallecano"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/unai-simon.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "68",
+      "titulo": "Unai Simón: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Unai Simón en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Unai Simón Mendibil (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Unai Simón Mendibil",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/valverde.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2430",
+      "titulo": "Valverde: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Valverde en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Federico Valverde (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Federico Valverde",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/vini-jr.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3102",
+      "titulo": "Vini Jr.: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Vini Jr. en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Vinícius José Paixão de Oliveira Júnior (Real Madrid) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Real Madrid", "equipos/real-madrid.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Vinícius José Paixão de Oliveira Júnior",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Real Madrid"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/vlachodimos.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2759",
+      "titulo": "Vlachodimos: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Vlachodimos en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Odysseas Vlachodimos (Sevilla FC) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Sevilla FC", "equipos/sevilla.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Odysseas Vlachodimos",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Sevilla FC"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/xavi-espart.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2843",
+      "titulo": "Xavi Espart: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Xavi Espart en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Xavi Espart (FC Barcelona) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["FC Barcelona", "equipos/barca.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Xavi Espart",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "FC Barcelona"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/yassir-zabiri.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3152",
+      "titulo": "Y. Zabiri: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Y. Zabiri en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Yassir Zabiri (R. Racing Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["R. Racing Club", "equipos/racing.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Yassir Zabiri",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "R. Racing Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/yeremay.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "3076",
+      "titulo": "Yeremay: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Yeremay en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Yeremay Hernández (RC Deportivo) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["RC Deportivo", "equipos/deportivo.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Yeremay Hernández",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "RC Deportivo"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/yoel-lago.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2206",
+      "titulo": "Yoel Lago: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Yoel Lago en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Yoel Lago (Celta) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Celta", "equipos/celta.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Yoel Lago",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Celta"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/yuri.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "74",
+      "titulo": "Yuri: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Yuri en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Yuri Berchiche Izeta (Athletic Club) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Athletic Club", "equipos/athletic.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Yuri Berchiche Izeta",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Athletic Club"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jugadores/zaid-romero.html",
+      "seccion": "equipos",
+      "grupo": "jugador",
+      "id": "2924",
+      "titulo": "Zaid Romero: valor de mercado y puntos en LaLiga Fantasy",
+      "h1": "Zaid Romero en LaLiga Fantasy",
+      "descripcion": "Valor de mercado de Zaid Romero (Getafe CF) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.",
+      "migas": [
+        ["Inicio", ""],
+        ["Equipos", "equipos/"],
+        ["Getafe CF", "equipos/getafe.html"]
+      ],
+      "sobre": {
+        "@type": "Person",
+        "name": "Zaid Romero",
+        "memberOf": {
+          "@type": "SportsTeam",
+          "name": "Getafe CF"
+        }
+      },
+      "fecha": "2026-11-18",
+      "publicada": "2026-11-15"
+    }
+  ]
+}

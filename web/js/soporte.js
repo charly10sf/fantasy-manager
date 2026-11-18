@@ -13,7 +13,8 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
   if (enApp) {
     const r = await http(metodo, WORKER_PUBLICO + ruta, { cabeceras: cab, cuerpo: cuerpo ? JSON.stringify(cuerpo) : null, tiempo });
     s = r.s; b = r.b;
-    if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0 });
+    // (detalle: lo que dice el móvil del corte, para el Diagnóstico; al usuario, el texto de siempre)
+    if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: String(r.e || '').slice(0, 160) });
   } else {
     let r;
     // (con su tiempo también aquí: el plan de la IA tarda, pero no puede quedarse colgado)
@@ -22,7 +23,7 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
     if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', parar, { once: true }); }
     try { r = await fetch(WORKER_PUBLICO + ruta, { method: metodo, headers: cab, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: ctl.signal }); } catch (e) {
       if (signal && signal.aborted) throw Object.assign(new Error('Parado'), { name: 'AbortError' });
-      throw Object.assign(new Error(ctl.signal.aborted ? 'El servidor ha tardado demasiado: vuelve a probar en un rato' : 'Sin conexión: vuelve a probar en un rato'), { estado: 0 });
+      throw Object.assign(new Error(ctl.signal.aborted ? 'El servidor ha tardado demasiado: vuelve a probar en un rato' : 'Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: String((e && e.message) || e).slice(0, 160) });
     } finally { clearTimeout(reloj); if (signal) signal.removeEventListener('abort', parar); }
     s = r.status; b = await r.text();
   }
@@ -115,4 +116,53 @@ export async function responderAviso(id, respuesta) {
   const a = avisosGuardados();
   if (a.admin) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;
+}
+
+/* ---------- (0.7.13) el dinero de los rivales: aprender de lo que apunta todo el mundo ---------- */
+/** si el usuario deja mandar datos de su liga, sin nombres, para afinar la IA (Ajustes → Datos y privacidad; viene activado) */
+export const mejorarIA = () => LS.get('mejorar-ia', true) !== false;
+export const ponerMejorarIA = (on) => LS.set('mejorar-ia', !!on);
+/** la huella de liga|rival|día (24 hex): no lleva ni la liga ni el rival, y cambia cada día */
+export async function huellaDinero(liga, tid, dia) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-dinero|${liga}|${tid}|${dia}`));
+  return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+/** manda un apunte del dinero (sin nombres); si falla, no pasa nada */
+export async function mandarDinero(apunte) {
+  if (!mejorarIA()) return false;
+  try { await pedirWorker('POST', '/dinero', apunte, { tiempo: 15000 }); return true; } catch (e) { return false; }
+}
+/* ---------- (0.7.13u) lo que se paga por los libres del mercado: aprender de todas las ligas ---------- */
+/** la huella de una compra (liga|jugador|hora, 24 hex): no deja saber cuál es, solo sirve para no contarla dos veces */
+export async function huellaCompra(liga, pid, t) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-puja|${liga}|${pid}|${t}`));
+  return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top }] }; true si han entrado */
+export async function mandarCompras(c) {
+  if (!mejorarIA() || !c || !c.length) return false;
+  try { await pedirWorker('POST', '/pujas', { c }, { tiempo: 15000 }); return true; } catch (e) { return false; }
+}
+/** lo que se paga en todas las ligas por tramo de valor y de subida, con 6 h de caché: { t, cal } */
+export const calPujasGuardada = () => LS.get('pujas-cal', { t: 0, cal: null });
+export async function leerCalPujas() {
+  const ya = calPujasGuardada();
+  if (Date.now() - (ya.t || 0) < 6 * 3600e3) return null;
+  let cal = null;
+  try { cal = await pedirWorker('GET', '/pujas/cal', null, { tiempo: 15000 }); } catch (e) { LS.set('pujas-cal', { ...ya, t: Date.now() - 5 * 3600e3 }); return null; }
+  if (!cal || typeof cal.n !== 'number') return null;
+  LS.set('pujas-cal', { t: Date.now(), cal });
+  return cal;
+}
+
+/** la corrección de todos, con 6 h de caché: { t, cal } (cal null si no se ha podido leer nunca) */
+export const calDineroGuardada = () => LS.get('dinero-cal', { t: 0, cal: null });
+export async function leerCalDinero() {
+  const ya = calDineroGuardada();
+  if (Date.now() - (ya.t || 0) < 6 * 3600e3) return null;
+  let cal = null;
+  try { cal = await pedirWorker('GET', '/dinero/cal', null, { tiempo: 15000 }); } catch (e) { LS.set('dinero-cal', { ...ya, t: Date.now() - 5 * 3600e3 }); return null; }
+  if (!cal || typeof cal.n !== 'number') return null;
+  LS.set('dinero-cal', { t: Date.now(), cal });
+  return cal;
 }

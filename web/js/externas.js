@@ -8,7 +8,7 @@
 import { http, enWeb, hayDeno, httpPorDeno } from './puente.js';
 import { api, apuntarRegistro, registro } from './api.js';
 import { guardarMuestraVivo } from './vivo.js';
-import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol } from './util.js';
+import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol, medioFutbol, palabraFutbol } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 
@@ -256,13 +256,15 @@ async function buscarNoticias(q) {
  */
 export async function noticiasClub(D, eqId) {
   const g = LS.get('noticias-club', {});
-  if (g[eqId] && Date.now() - g[eqId].t < HORA) return g[eqId].lista.filter((n) => esDeFutbol({ ...n, equipos: [] }));
   const e = (D.equipos || {})[eqId];
+  // el club cuenta como «equipo» para el filtro solo si sale en el titular (y uno solo no basta: ver esDeFutbol)
+  const conClub = (n) => ({ ...n, equipos: e && e.nombre && aliasEquipo(e.nombre).some((x) => ` ${norm(n.titulo)} `.includes(` ${x} `)) ? [eqId] : [] });
+  if (g[eqId] && Date.now() - g[eqId].t < HORA) return g[eqId].lista.filter((n) => esDeFutbol(conClub(n)));
   if (!e || !e.nombre) return [];
   const a = aliasEquipo(e.nombre)[0];
   const l = await buscarNoticias(`"${a}" (LaLiga OR lesión OR baja OR convocatoria OR alineación OR "rueda de prensa" OR entrenador OR fichaje) when:3d`);
   // si Google no contesta, lo de la última vez (aunque tenga más de una hora) y sin guardar nada
-  if (!l) return g[eqId] ? g[eqId].lista.filter((n) => esDeFutbol({ ...n, equipos: [] })) : [];
+  if (!l) return g[eqId] ? g[eqId].lista.filter((n) => esDeFutbol(conClub(n))) : [];
   const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === eqId && j.nombre && j.nombre.length > 3);
   const vistos = new Set();
   const lista = [];
@@ -271,8 +273,7 @@ export async function noticiasClub(D, eqId) {
     if (vistos.has(k) || (n.t && Date.now() - n.t > 4 * DIA)) continue;
     vistos.add(k);
     const t = ` ${norm(n.titulo)} `;
-    // el club cuenta como «equipo» para el filtro solo si sale en el titular (y uno solo no basta: ver esDeFutbol)
-    if (!esDeFutbol({ ...n, equipos: [] })) continue;
+    if (!esDeFutbol(conClub(n))) continue;
     n.pids = suyos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
     n.equipos = [eqId];
     lista.push(n);
@@ -298,7 +299,7 @@ export function aliasEquipo(nombre) {
 
 /** titulares de los últimos días: tus jugadores, los candidatos, sus equipos y LaLiga Fantasy en general (se guardan 1 hora) */
 export async function noticias(D, M) {
-  const guardado = LS.get('noticias', null);
+  const guardado = LS.get('noticias2', null);
   if (guardado && Date.now() - guardado.t < HORA && guardado.lista && guardado.lista.length) return guardado;
   // si Google Noticias no contestó hace poco, no se vuelve a probar en media hora: desde la web (el Worker) da 503 a
   // todo y eran 14 búsquedas de 6 a 9 s cada vez, algunas colgadas más de un minuto. Mientras, lo de la última vez
@@ -352,14 +353,28 @@ export async function noticias(D, M) {
   // a qué jugadores se refiere cada titular
   const candidatos = Object.values(D.maestro).filter((j) => j.nombre && j.nombre.length > 3);
   const alias = Object.entries(D.equipos || {}).map(([id, e]) => ({ id, a: aliasEquipo(e.nombre || '') }));
+  const aliasDe = Object.fromEntries(alias.map((x) => [String(x.id), x.a]));
   for (const n of todas) {
     const t = ` ${norm(n.titulo)} `;
-    n.pids = candidatos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
+    // (16 nov, aviso de un usuario: «Ryan», del Levante, con un Ryan de la NFL) un nombre de una sola palabra solo cuenta
+    // si el titular nombra también a su equipo o viene de un medio de fútbol; con nombre y apellido, basta el nombre
+    // (16 nov, Carlos: «Pedrosa gana la carrera más loca de su vida», de AS y de motos) un medio de todos los deportes no
+    // basta: hace falta su equipo, una palabra de fútbol en el titular o un medio que solo cuente fútbol
+    const deFutbol = medioFutbol(n.fuente) || palabraFutbol(n.titulo);
+    let fuerte = false;
+    n.pids = candidatos.filter((j) => {
+      const nn = norm(j.nombre);
+      if (!t.includes(` ${nn} `)) return false;
+      const conEquipo = (aliasDe[String(j.equipoId)] || []).some((a) => t.includes(` ${a} `));
+      if (nn.includes(' ') || conEquipo) { fuerte = true; return true; }
+      return deFutbol;
+    }).map((j) => j.id).slice(0, 4);
+    n.fuerte = fuerte;
     n.equipos = alias.filter((x) => x.a.some((a) => t.includes(` ${a} `))).map((x) => x.id).slice(0, 3);
   }
   const lista = todas.filter((n) => esDeFutbol(n) && (!n.t || Date.now() - n.t < 4 * DIA)).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 140);
   const salida = { t: Date.now(), lista };
-  if (lista.length) LS.set('noticias', salida);
+  if (lista.length) LS.set('noticias2', salida);
   return salida;
 }
 

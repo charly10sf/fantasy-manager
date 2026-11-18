@@ -1,11 +1,11 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
-import { avisosGuardados } from './soporte.js';
+import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
-import { linea, barra, mini } from './graficos.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
+import { linea, barra, mini, barras } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
-import { hayClave, planesApp, cupoPlanes, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
+import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
 import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
@@ -15,9 +15,11 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
+import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
+import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
+import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
@@ -218,7 +220,7 @@ export function resumenEquipo(S) {
   const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
   h += `<div class="rejilla" style="margin-top:12px">
     <div class="dato"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'baja' : ''}">${eur(D.dinero)}</div></div>
-    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda${num(M.misPujas) ? ', ya sin lo pujado' : ''}</small></div></div>
+    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>${eur(D.dinero)} de saldo ${M.deuda - M.misPujas >= 0 ? '+' : '−'} ${eur(Math.abs(M.deuda - M.misPujas))} en negativo${num(M.misPujas) ? ' (ya sin lo pujado)' : ''}</small></div></div>
     <div class="dato"><div class="et">En pujas</div><div class="v">${eur(M.misPujas || 0)}</div></div>
     <div class="dato"><div class="et">En venta</div><div class="v">${eur(enVenta)}<small>${M.misVentas.length} jugador${M.misVentas.length === 1 ? '' : 'es'}</small></div></div>
     ${M.conCompra ? `<div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${eur(M.ganadoTotal, { signo: true })}</div></div>` : ''}
@@ -366,10 +368,11 @@ export function fichaJugador(S, pid) {
       } else {
         // (37) «Libre en el mercado»: a la vista, desde cuánto y lo que haría la app; dentro, la subasta y lo que se paga en tu liga
         const noPuja = cc && !cc.ok && !espX;
-        const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor) : null;
+        const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor, m.pid) : null;
         const lineaL = m.miPuja ? `Desde ${eur(m.precio)} · tu puja: ${eur(m.miPuja)}` : cc && !cc.ok && espX ? `Desde ${eur(m.precio)} · para revender, la app pujaría ${eur(espX)}` : noPuja ? `Desde ${eur(m.precio)} · con su calendario, la app no pujaría` : `Desde ${eur(m.precio)} · la app pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)})`;
         const cal = m.miPuja ? '' : cc && !cc.ok && espX ? 'Para revender da igual su calendario.' : noPuja ? `Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : '';
-        const liga = PV ? `Por los más parecidos que se han comprado en tu liga (de ${eur(PV.desde)} a ${eur(PV.hasta)}) se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
+        // (0.7.13u) por los que venían como él (su subida y si es de los top) y, si tu liga tiene pocos, con todas las ligas
+        const liga = PV ? `Por ${M.pagaTxt(PV)} se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.${m.pGana != null ? ` Con la puja de la app te lo llevarías más o menos ${Math.max(1, Math.round(m.pGana * 10))} de cada 10 veces.` : ''}` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
         const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
         h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
           d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
@@ -570,6 +573,17 @@ function subenBajanRival(r, per) {
   return { tot, h };
 }
 
+/** (0.8a, Carlos 17 nov) el apodo del rival, debajo de su nombre: el botón para ponerlo, la caja para escribirlo o el que tiene */
+function apodoRival(S, e) {
+  const tid = String(e.teamId), aps = apodosDe(tid);
+  if (S.apodoEdita === tid) {
+    const por = [e.manager, e.nombre].filter((x, i, a) => x && a.indexOf(x) === i).map((x) => `«${esc(x)}»`).join(' y ');
+    return `<div class="apodo-ed"><label for="apodoIn">¿Cómo lo llamáis en tu liga?</label><div class="apodo-fila"><input id="apodoIn" data-tid="${esc(tid)}" value="${esc(aps.join(', '))}" maxlength="120" autocomplete="off" enterkeyhint="done" placeholder="el Tito"><button class="btn chico" data-accion="apodoGuardar" data-tid="${esc(tid)}">Guardar</button></div><small>Puedes poner varios separados por comas (el Tito, Titón). La IA y la voz lo reconocerán así, además de por ${por}. Solo lo ves tú.</small></div>`;
+  }
+  if (aps.length) return `<div class="apodo-l">Lo llamas <b>${aps.map((x) => `«${esc(x)}»`).join(', ')}</b><button class="apodo-chip chico" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Cambiar</button></div>`;
+  return `<div class="apodo-l"><button class="apodo-chip" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Ponle un apodo</button><span>para la IA y la voz</span></div>`;
+}
+
 export function fichaRival(S, tid) {
   const { M } = S;
   const r = M.rivales.find((x) => x.e.teamId === tid);
@@ -583,9 +597,9 @@ export function fichaRival(S, tid) {
   const ir = (s, p) => `data-accion="segRival" data-tid="${esc(tid)}" data-s="${s}" data-p="${p}"`;
   const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
   const conDinero = r.dinero && r.dinero.v != null;
-  const tDinero = bloqueada('dineroRivales')
-    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
-    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'} ›</span></button>`;
+  const tDinero = bloqueada('dineroRivales', tid)
+    ? `<button class="eq2-t rival-bloq dorado" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}${selloTop()}</b><span>su dinero ›</span></button>`
+    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}${rivalAbiertoHasta(tid) ? ` · hasta las ${horaDe(rivalAbiertoHasta(tid))}` : ''} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
     tDinero,
@@ -595,6 +609,7 @@ export function fichaRival(S, tid) {
   ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2 rival-sub">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
+  ${apodoRival(S, e)}
   <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;
   // la jornada en directo: lo que lleva y su once, jugador a jugador (encima de las pestañas, solo con partidos)
@@ -634,13 +649,12 @@ export function fichaRival(S, tid) {
     h += r.fichas.length ? (ya.length || luego.length ? '' : `<p class="t2 peq">Con tu dinero de ahora no te llega ninguna de sus cláusulas.</p>`) + grupo('Abiertas y te llegan', ya) + grupo('Te llegan cuando se abran', luego) + grupo('No te llegan', resto) : nada('No se ha podido leer su plantilla.');
   } else if (seg === 'clausulas') {
     // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
-    if (bloqueada('dineroRivales')) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${bloqueada('dineroRivales') ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}</span></div>`}
-      <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</span></div></div>`;
-    if (!bloqueada('dineroRivales')) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
+    if (bloqueada('dineroRivales', tid)) cerradas.push('dineroRivales');
+    h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
+      <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado` : 'sin compras al mercado'}</span></div></div>`;
     // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
-    if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales')) {
-      const dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(tid) : null;
+    if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', tid)) {
+      const dc = r.dinero && r.dinero.dicho, cu = (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
       h += `<div class="dicho">`;
       if (dc) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''} <button class="enlace" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></p>`;
       h += `<details class="dicho-f"><summary>${icono('euro')}${dc ? 'Te ha dicho otra cifra' : '¿Te ha dicho cuánto tiene?'}</summary>
@@ -648,7 +662,7 @@ export function fichaRival(S, tid) {
         <p class="t2 peq">En millones. Si te dijo una cifra, ponla en los dos. A partir de ahora su dinero sale de esto más lo que mueva, y la app aprende cuánto fallaba la cuenta.</p>
       </details></div>`;
     }
-    if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga')) cerradas.push('quienPaga');
+    if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga', tid)) cerradas.push('quienPaga');
     else if (r.leLlegan && r.leLlegan.length) {
       h += `<div class="grupo"><span>Tus cláusulas a su alcance · ${r.leLlegan.length}</span><span>${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
       h += r.leLlegan.map((x) => filaJugador(x, {
@@ -691,14 +705,15 @@ export function fichaRival(S, tid) {
       h += acts.map((a) => filaActividad(a, { dentroDe: tid })).join('');
     } else h += nada('Sin movimientos en los últimos días.');
   }
-  return h + candadosJuntos(cerradas);
+  return h + candadosJuntos(cerradas, { rid: tid });
 }
 
 /* ================= ANUNCIO BONIFICADO ================= */
 /** antes de ver un anuncio para desbloquear algo (de momento, otro plan de la IA cuando ya llevas 3 hoy) */
 export function anuncioHTML(S, para) {
   const A = S.anuncio || {};
-  if (para === 'top') return anuncioTopHTML(A);
+  if (para === 'top') return anuncioTopHTML(A, S);
+  if (para === 'pregunta') return anuncioPreguntaHTML(A);
   // con la IA de la app (2 planes al día; Carlos, 14 nov): igual que las funciones top, un anuncio por cada plan de más
   if (planesApp(!!(S.D && S.D.demo))) return anuncioPlanHTML(A, cupoPlanes());
   let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
@@ -706,6 +721,21 @@ export function anuncioHTML(S, para) {
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-accion="verAnuncio" data-para="${esc(para)}"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button><button class="btn sec" data-accion="cerrarHoja">Ahora no</button></div>`;
   h += `<p class="t2 peq" style="margin-top:14px">Con los anuncios la app sigue siendo gratis. El plan automático, sin IA, no tiene límite.</p>`;
+  return h;
+}
+
+/** (16 nov) preguntas de más a la IA de la app: un anuncio entero, 3 más (hasta el tope del día) */
+function anuncioPreguntaHTML(A) {
+  const pc = preguntasCfg(), cu = A.cupo || {};
+  const g = cu.gratis ?? pc.gratis, max = cu.max ?? pc.max, por = cu.porAnuncio ?? pc.porAnuncio, usados = cu.usados ?? g;
+  const q = Math.max(0, max - usados);
+  let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+    <span class="bloq-grande">${icono('ia')}</span><h2>Más preguntas a la IA</h2><p>Hoy ya has hecho tus ${usados} preguntas. Cada día tienes ${g} y, viendo un anuncio corto, ${por} más cada vez, hasta ${max}.</p>`;
+  h += `<p>Mira el anuncio y la IA contesta tu pregunta. ${q ? `Hoy puedes hacer ${q === 1 ? '1 más' : `${Math.min(q, por)} más con este`}.` : ''}</p>`;
+  if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
+  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="pregunta"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button>
+    <button class="btn ancho sec" data-accion="cerrarHoja" style="margin-top:8px">Ahora no</button>
+    <p class="t2 peq" style="margin-top:14px">Tu pregunta sigue en la caja de abajo.</p></div>`;
   return h;
 }
 
@@ -722,23 +752,40 @@ function anuncioPlanHTML(A, cu) {
   return h;
 }
 
-/** las funciones top: las de los rivales, con 2 anuncios y unas veces por jornada; cuándo gira, con 1, hasta medianoche */
-function anuncioTopHTML(A) {
+/** las funciones top: el dinero de un rival, con sus anuncios seguidos, unos minutos y unas veces por jornada; quién
+    paga, con 1, unas horas; cuándo gira, con 1, hasta medianoche. El dinero sin rival (el candado de la lista): se elige */
+function anuncioTopHTML(A, S) {
   const [t, x] = BLOQUEO[A.como] || BLOQUEO[A.clave] || ['Funciones top', ''];
-  const rivales = POR_JORNADA.includes(A.clave), faltan = faltanAnuncios(A.clave), q = usosQuedan(A.clave), n = usosPorJornada();
-  const min = minutosPorVez(), dura = min % 60 === 0 ? `${min / 60} hora${min > 60 ? 's' : ''}` : `${min} minutos`;
+  const rivales = POR_JORNADA.includes(A.clave), q = usosQuedan(A.clave), n = usosPorJornada(), a = anunciosPorVez(A.clave), min = minutosRival();
+  const rid = A.rival != null ? String(A.rival) : null;
+  const M = S && S.M, nom = (tid) => { const r = M && M.rivales.find((y) => String(y.e.teamId) === String(tid)); return r ? r.e.nombre : 'este rival'; };
+  const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
+  const veces = (k) => (k === 1 ? '1 vez' : `${k} veces`);
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
-  if (rivales && !q) {
-    h += `<p><b>Ya la has abierto las ${n} veces de esta jornada.</b> Vuelve a estar disponible en la siguiente.</p>
+    <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+  const yaAb = rivales ? rivalesAbiertos() : [];
+  if (rivales && rid == null) {
+    const rs = M ? M.rivales : [];
+    h += `<p>Se abre <b>por rival</b>, ${min} minutos, con ${ads}. ${q ? `Te ${q === 1 ? 'queda 1 vez' : `quedan ${veces(q)}`} esta jornada.` : `Ya lo has abierto las ${veces(n)} de esta jornada.`}</p>`;
+    h += `<div class="lista-rival-top">${rs.map((r) => {
+      const ab = yaAb.includes(String(r.e.teamId));
+      return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('candado')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
+    }).join('')}</div>
+      <button class="btn ancho sec" data-accion="noTop" style="margin-top:10px">Ahora no</button></div>`;
+    return h;
+  }
+  if (rivales && !q && !yaAb.includes(rid)) {
+    h += `<p><b>Ya has visto el dinero de un rival las ${veces(n)} de esta jornada.</b> En la siguiente puedes volver a abrirlo.</p>
       <button class="btn ancho sec" data-accion="noTop">Entendido</button></div>`;
     return h;
   }
-  if (rivales && faltan >= 2) h += `<p>Se abre <b>${dura}</b> viendo <b>dos anuncios cortos</b>, uno detrás de otro. Puedes hacerlo ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
-  else if (rivales) h += `<p><b>Llevas 1 de 2.</b> Mira el segundo y se abre ${dura}. Te ${q === 1 ? 'queda 1 vez' : `quedan ${q} veces`} esta jornada.</p>`;
+  const faltan = faltanAnuncios(A.clave, rid);
+  if (rivales && faltan >= a) h += `<p>Mira el dinero de <b>${esc(nom(rid))}</b> durante ${min} minutos viendo ${ads}. Puedes hacerlo ${veces(n)} por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
+  else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y verás el dinero de ${esc(nom(rid))} ${min} minutos.</p>`;
+  else if (A.clave === 'quienPaga') h += `<p>Mira un anuncio corto y se abre <b>${horasQuien()} horas</b>.</p>`;
   else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
-  const txt = A.cargando ? 'Cargando el anuncio…' : rivales ? (faltan >= 2 ? 'Ver el primer anuncio (1 de 2)' : 'Ver el segundo anuncio (2 de 2)') : 'Ver el anuncio';
+  const txt = A.cargando ? 'Cargando el anuncio…' : rivales && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';
   h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${txt}</button>
     <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;
@@ -757,6 +804,37 @@ const enlA = (href, txt) => `<a class="btn chico sec" href="${href}">${txt}</a>`
 const fila = (t, s, der = '', q = '', cls = '') => `<div class="ajuste${cls ? ` ${cls}` : ''}" data-q="${esc(norm(`${t} ${s} ${q}`.replace(/<[^>]+>/g, ' ')))}"><div class="c"><b>${t}</b>${s ? `<span>${s}</span>` : ''}</div>${der}</div>`;
 const selA = (cambia, opts, val, nombre, extra = '') => `<select data-cambia="${cambia}" aria-label="${esc(nombre)}" ${extra}>${opts.map(([v, t]) => `<option value="${esc(v)}"${String(val) === String(v) ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
 const antesOpts = (k) => OPC_ANTES[k].map((m) => [m, antesTxt(m)]);
+
+/* (0.7.13l) los dos planes que salen solos y a qué hora: «Al refrescar el mercado» (10 min después) y «12 h después»,
+   o la que elija, de media en media hora */
+const OPC_HORA = Array.from({ length: 48 }, (_, i) => { const t = `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`; return [t, t]; });
+function filasHorasPlan(S, pApp) {
+  const c = cfgHoras(), hs = horasPlan(S.M), def = horasDefecto(S.M);
+  // (0.7.13n) la de cada liga: 10 minutos después de que se refresque SU mercado
+  const d1 = def ? `${def[0]}, 10 min después de que se refresque el mercado de tu liga` : '10 min después de que se refresque el mercado de tu liga';
+  const d2 = def ? `${def[1]}, 12 h después` : '12 h después del primero';
+  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después';
+  let h = fila('Planes que salen solos', sub, interr(c.on, 'planesHora', '', 'Planes que salen solos'), 'plan automatico hora horas');
+  if (c.on) {
+    h += fila('Primer plan', `Por defecto, ${d1}`, selA('planH1', [['', def ? `${def[0]} (mercado)` : 'Con el mercado'], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
+    h += fila('Segundo plan', `Por defecto, ${d2}`, selA('planH2', [['', def ? `${def[1]} (+12 h)` : '+12 h'], ...OPC_HORA], c.h2 || '', 'Hora del segundo plan'), 'plan hora');
+  }
+  return h;
+}
+/** los ajustes del plan, desde el plan: el tono, a qué horas sale solo y rehacerlo ya */
+export function planAjustesHTML(S) {
+  const ci = cfgIA(), pApp = planesApp(enDemo()), cu = pApp ? cupoPlanes() : null;
+  let h = `<div class="hoja-cab"><h2>Tu plan</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  h += `<div class="plan-aj">`;
+  h += fila('Pullitas', 'El tono del plan: bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'));
+  h += filasHorasPlan(S, pApp);
+  h += `</div>`;
+  if (cu && !cu.ilimitado) h += `<p class="t2 peq" style="margin:6px 2px 0">${cu.quedan > 0 ? (cu.quedan === 1 ? 'Hoy te queda 1 plan con la IA.' : `Hoy te quedan ${cu.quedan} planes con la IA.`) : 'Hoy ya no te quedan planes con la IA.'}</p>`;
+  h += `<button class="btn ancho" style="margin-top:14px" data-accion="planYa">${icono('ia')}Rehacer el plan ahora</button>`;
+  // (0.7.13n, Carlos 16 nov) sin imagen ni «Compartir»: en su lugar, cuántos planes hay gratis
+  if (pApp) h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>2 planes gratis</b> cada día. A partir del tercero, ${enApp && nativo.canal() === 'play' ? 'cada uno con un anuncio' : 'en la app de Google Play, cada uno con un anuncio'}.</span></p>`;
+  return h;
+}
 
 /** lo que busca: las filas que no casan se esconden y se abren las secciones que tienen alguna */
 export function filtrarAjustes(raiz, q) {
@@ -792,7 +870,7 @@ export function ajustes(S) {
     const pend = av.admin ? av.pendientes || 0 : 0;
     const n = sinLeer + pend;
     const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
-    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
+    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo o una idea'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
       + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
 
@@ -819,6 +897,20 @@ export function ajustes(S) {
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
+  /* ---- (0.8a) apodos de los rivales ---- */
+  if (S.D && Array.isArray(S.D.clasif)) {
+    const yo = S.D.yo && S.D.yo.teamId, ap = apodosLiga();
+    const rivs = S.D.clasif.filter((x) => x && x.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
+    if (rivs.length) {
+      const puestos = rivs.filter((x) => listaApodos(ap[String(x.teamId)]).length).length;
+      let c9 = '<p class="apo-nota">Ponle a cada rival el nombre con el que lo llamáis. Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.</p>';
+      for (const x of rivs) {
+        const v = listaApodos(ap[String(x.teamId)]).join(', ');
+        c9 += `<div class="ajuste apo-fila" data-q="${esc(norm(`apodo mote ${x.nombre} ${x.manager} ${v}`))}">${caraManager(x)}<div class="c"><b>${esc(x.nombre)}</b><span>${esc(x.manager && x.manager !== x.nombre ? `${x.manager} · ` : '')}${x.pos}º</span></div><input class="${v ? 'lleno' : ''}" data-cambia="apodo" data-tid="${esc(x.teamId)}" value="${esc(v)}" placeholder="Apodo" maxlength="120" autocomplete="off" enterkeyhint="done" aria-label="Apodo de ${esc(x.nombre)}"></div>`;
+      }
+      h += sec('apodos', 'rivales', 'Apodos de los rivales', `${puestos ? `${puestos} puesto${puestos === 1 ? '' : 's'}` : 'Ninguno puesto'} · para la IA y la voz`, c9, 'apodo mote nombre rival voz');
+    }
+  }
 
   /* ---- avisos y alarmas ---- */
   let c2 = '';
@@ -870,25 +962,28 @@ export function ajustes(S) {
   let c3 = '';
   // (14 nov) el plan del día, con la IA de la app: la clave queda para preguntar
   const pApp = planesApp(enDemo()), pc = planesCfg(), cuP = pApp ? cupoPlanes() : null;
-  if (pApp) c3 += fila('Planes del día con la IA', `${pc.gratis} al día, sin clave${topConAnuncio() ? `; más viendo un anuncio, hasta ${pc.max}` : ''}${cuP ? ` · ${cuP.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuP.quedan} hoy`}` : ''}`, '', 'plan planes ia app');
-  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  if (pApp) c3 += fila('Planes del día con la IA', `${pc.gratis} al día, sin clave${topConAnuncio() ? `; más viendo un anuncio, hasta ${pc.max}` : ''}${cuP ? ` · ${cuP.ilimitado ? 'sin límite' : cuP.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuP.quedan} hoy`}` : ''}`, '', 'plan planes ia app');
+  // (16 nov) las preguntas del chat, también con la IA de la app: la clave queda de reserva
+  const qApp = preguntasApp(enDemo()), qc = preguntasCfg(), cuQ = qApp ? cupoPreguntas() : null;
+  if (qApp) c3 += fila('Preguntas a la IA', `${qc.gratis} al día, sin clave${topConAnuncio() ? `; ${qc.porAnuncio} más por anuncio, hasta ${qc.max}` : ''}${cuQ ? ` · ${cuQ.ilimitado ? 'sin límite' : cuQ.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuQ.quedan} hoy`}` : ''}`, '', 'preguntas chat ia app');
+  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
-    c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h y al cambiar el mercado. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
+    c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h, al cambiar el mercado y a la hora de tus planes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
   }
   if (k || pApp) {
     const lista = ((LS.get('ia-modelos', {}) || {}).lista) || [];
     const fuera = LS.get('ia-agotados', {}) || {};
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).length;
-    c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
-    if (k) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
-    if (k && !pApp) c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
+    if (!pApp) c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
+    c3 += filasHorasPlan(S, pApp);
+    if (k && !qApp) c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
-  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
+  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
 
   /* ---- la app ---- */
   let c4 = '';
@@ -911,6 +1006,8 @@ export function ajustes(S) {
   /* ---- datos y privacidad ---- */
   let c5 = '';
   c5 += fila('Borrar los datos guardados', 'Histórico, fichas y planes', btnA('borrarDatos', 'Borrar'), 'limpiar cache');
+  // (0.7.13, Carlos 15 nov: viene activado) lo de tu liga que se manda, sin nombres, para que la IA y las cuentas afinen
+  c5 += fila('Ayudar a mejorar la IA', 'Compartir datos de tu liga, sin nombres, solo para afinar la IA, sus predicciones y sus planes', interr(mejorarIA(), 'mejorarIA', '', 'Ayudar a mejorar la IA'), 'compartir datos enviar mejorar ia predicciones dinero rivales pujas mercado privacidad');
   if (!enDemo() && ses) c5 += fila('Borrar mis datos del servidor', 'Uso de la app y avisos de fallo', btnA('borrarServidor', 'Borrar'), 'eliminar cuenta rgpd');
   // (en Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
   if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) c5 += fila('Privacidad de los anuncios', 'Si pueden usar tus datos', btnA('privAnuncios', 'Cambiar'), 'consentimiento');
@@ -976,7 +1073,7 @@ function detalleAviso(A, x) {
 }
 export function avisos(S) {
   const A = S.av || {};
-  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Reportar un fallo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Fallos e ideas'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (A.admin) h += bandejaAvisos(A);
   if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
   if (A.sinSesion) {
@@ -984,8 +1081,8 @@ export function avisos(S) {
       <button class="btn ancho" data-abrir="https://fantasymanagerapp.com/contacto.html">${icono('enviar')}Ir a contacto</button>
       <button class="btn sec ancho" data-accion="compartirDiag" style="margin-top:8px">${icono('copiar')}${enApp ? 'Mandar el diagnóstico' : 'Copiar el diagnóstico'}</button>`;
   } else {
-    h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
-      <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>
+    h += `<p class="t2 peq" style="margin-top:0">La app está en beta y se mejora con lo que me cuentas. Si algo falla, dime qué ha pasado y qué estabas haciendo; si se te ocurre algo que mejorar, cuéntamelo también. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
+      <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco, o me gustaría ver el historial de pujas">${esc(A.borrador || '')}</textarea>
       ${capturasHTML(A)}
       <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión, tu clave de la IA ni los nombres de los demás de tu liga.</span></label>
       <button class="btn ancho" data-accion="mandarAviso"${A.enviando ? ' disabled' : ''}>${A.enviando ? 'Mandando…' : `${icono('enviar')}Mandar el aviso`}</button>
@@ -1009,48 +1106,231 @@ function bandejaAvisos(A) {
 }
 
 /* ================= QUIÉN USA LA APP (el dueño) ================= */
+/* (0.7.13n, Carlos 16 nov: «más intuitivo, con mucho menos texto, y más gráficas») se abre tocando la etiqueta BETA del
+   logo (solo el dueño) o desde Ajustes. Dos pestañas: Resumen (cuatro cifras, lo que hay que mirar en chapitas y gráficas:
+   activos cada día, altas por semana, antes de entrar, desde dónde, tiempo de hoy y qué hacen) y Cuentas (tu liga y el
+   resto, con su versión de la web y de la app de Google Play y una chapita roja si algo va mal). Sin notas al pie */
+const QUIEN_TABS = [['resumen', 'Resumen'], ['cuentas', 'Cuentas']];
+const DENTRO_Q = 12 * 60e3;
+const webDe = (x) => String((x && x.v) || '').replace(/ !$/, '');
+/** el código de la app de Google Play a partir del cual llega la web de ahora: «playMin» de limites.json y, si no está,
+    el más bajo de los que ya tienen la web de ahora (esos tienen por fuerza la parte del móvil al día) */
+export function playMinimo(lista) {
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const conf = Math.round(Number(cfg.playMin) || 0);
+  if (conf) return conf;
+  const al = (lista || []).filter((x) => x.canal === 'play' && x.app > 0 && webDe(x) === VERSION).map((x) => x.app);
+  return al.length ? Math.min(...al) : 0;
+}
+/** lo que le pasa a una cuenta: { tipo, corto } o null (play: su app de Google Play no recibe la web nueva) */
+export function problemaDe(x, minPlay) {
+  if (!x) return null;
+  const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
+  if (x.canal === 'github') return { tipo: 'github', corto: 'APK de fuera', largo: 'con la app de fuera de Play' };
+  if (x.canal === 'play' && atras && minPlay && x.app > 0 && x.app < minPlay) return { tipo: 'play', corto: 'App de Play vieja', largo: 'con la app de Play vieja' };
+  if (/ !$/.test(x.v || '')) return { tipo: 'carga', corto: 'No le carga', largo: 'sin cargar la liga' };
+  if (atras && x.ad) return { tipo: 'web', corto: 'Web sin poner', largo: 'sin la web nueva' };
+  return null;
+}
+/** (16 nov, Carlos: «hay uno que pone que no le carga, ¿qué significa?») por qué le pasa y qué tiene que hacer, en
+    palabras de cualquiera. `fc` es el motivo que manda la app desde la 0.7.13t; `ad`, por qué no se le pone la web nueva */
+const POR_CARGA = {
+  red: ['Se le cortó la conexión al cargar su liga (la red del móvil, o la operadora cortando en día de partido).', 'Suele arreglarse solo. Si le sigue, que pruebe con wifi o con otra red.'],
+  lento: ['Su conexión iba tan lenta que la liga no llegó a cargar.', 'Que lo intente con mejor cobertura o con wifi.'],
+  laliga: ['LaLiga no le contestó bien al pedir su liga: es un fallo de LaLiga, no de la app.', 'Suele volver solo en un rato. Si dura más de un día, que mande un aviso desde la app.'],
+  sinLigas: ['Su cuenta de LaLiga no tiene ninguna liga de LaLiga Fantasy.', 'Que entre con la cuenta en la que tiene su liga, o que se una a una.'],
+  vacia: ['LaLiga le da su liga vacía (sin equipos o sin datos).', 'Si es una liga recién creada, es normal hasta que empiece. Si no, que mande un aviso desde la app.'],
+  cambio: ['LaLiga ha cambiado algo en lo que devuelve y la app no lo entiende.', 'Es de la app: hay que mirarlo y sacar un arreglo.'],
+  otro: ['Algo de la app ha fallado al cargar su liga.', 'Es de la app: que mande un aviso desde Ajustes con el diagnóstico para verlo.'],
+};
+function queLePasa(p, x, minPlay) {
+  if (!p) return null;
+  if (p.tipo === 'github') return ['Tiene la app instalada desde fuera de Google Play y ya solo ve el aviso para pasarse.', 'Que la desinstale y se baje la de Google Play.'];
+  if (p.tipo === 'play') return [`Tiene la app ${x.app} de Google Play y la web nueva solo llega desde la ${minPlay}: se ha quedado en la ${webDe(x)}.`, 'Que actualice en Google Play: Play Store → Fantasy Manager → Actualizar.'];
+  if (p.tipo === 'web') {
+    const ad = String(x.ad || '');
+    const por = /firma/.test(ad) ? 'la web nueva le llega con la firma mal (puede ser una red que la cambia por el camino)'
+      : /huella|cuadra/.test(ad) ? 'la web nueva le llega a medias o corrupta'
+      : /sitio|grande/.test(ad) ? 'no le queda sitio en el móvil para guardarla'
+      : /arrancaba/.test(ad) ? 'la web nueva no le arrancaba y su móvil volvió a la de antes'
+      : `su móvil dice «${ad}»`;
+    return [`No se le pone la web nueva: ${por}.`, /sitio/.test(ad) ? 'Que libere espacio en el móvil y abra la app otra vez.' : 'Que cierre la app del todo y la abra con wifi. Si sigue, que la actualice o reinstale desde Google Play.'];
+  }
+  if (p.tipo === 'carga') {
+    const m = String(x.fc || ''), tipo = m.split(/[ :]/)[0];
+    if (!m) return ['La última vez que abrió la app no le cargó la liga. Su versión no manda el motivo (desde la 0.7.13t, sí).', 'Si vuelve a pasarle, aquí saldrá por qué. Mientras, que mande un aviso desde la app.'];
+    const [por, hacer] = POR_CARGA[tipo] || POR_CARGA.otro;
+    return [`${por} (${m})`, hacer];
+  }
+  return null;
+}
+/** barras en horizontal: [[etiqueta, valor, texto del valor?]] */
+const barrasH = (filas, { max = null, clase = '' } = {}) => {
+  const tope = max || Math.max(1, ...filas.map((f) => f[1]));
+  return `<div class="qh ${clase}">${filas.map(([et, v, txt]) => `<div class="qh-f"><span>${esc(et)}</span><i style="--n:${Math.round((v / tope) * 100)}"></i><b>${txt != null ? txt : v}</b></div>`).join('')}</div>`;
+};
+const tarjetaQ = (titulo, cuerpo, pie = '') => `<section class="qc"><h3>${titulo}</h3>${cuerpo}${pie ? `<p class="qc-pie">${pie}</p>` : ''}</section>`;
+const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
+const diaEt = (d) => { const t = new Date(`${d}T12:00:00Z`); return ['D', 'L', 'M', 'X', 'J', 'V', 'S'][t.getUTCDay()]; };
+
 export function quienUsaHTML(S) {
   const Q = S.quien || {};
   let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
-  const lista = Q.lista || [], ahora = Q.ahora || Date.now();
+  const lista = Q.lista || [], ahora = Q.ahora || Date.now(), reg = Q.registro || [];
+  const minPlay = playMinimo(lista);
+  const hace = (d) => ahora - d * DIA;
+  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO_Q).length;
+  const hoyN = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length;
+  const base = reg.length ? reg : lista;
+  const sem = base.filter((x) => x.ultima >= hace(7)).length;
+  h += `<div class="q-kpi">
+    <div class="${dentro ? 'vivo' : ''}"><b>${dentro}</b><span>dentro ahora</span></div>
+    <div><b>${hoyN}</b><span>hoy</span></div>
+    <div><b>${sem}</b><span>7 días</span></div>
+    <div><b>${base.length}</b><span>total</span></div>
+  </div>`;
+  // lo que hay que mirar (de los de 30 días), en chapitas que llevan a Cuentas
+  const grupos = {};
+  for (const x of lista.filter((y) => y.ultima >= hace(30))) { const p = problemaDe(x, minPlay); if (p) (grupos[p.tipo] = grupos[p.tipo] || { p, n: 0 }).n++; }
+  const chapas = ['play', 'github', 'carga', 'web'].filter((k) => grupos[k]).map((k) => `<button class="q-chapa" data-accion="quienTab" data-t="cuentas">${icono('alerta')}<b>${grupos[k].n}</b> ${esc(grupos[k].p.largo)}</button>`);
+  h += chapas.length ? `<div class="q-chapas">${chapas.join('')}</div>` : `<p class="q-bien">${icono('ok')}Todos al día</p>`;
+  const tab = QUIEN_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'resumen';
+  h += `<div class="filtros q-tabs" role="tablist">${QUIEN_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'activo' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
+  h += tab === 'cuentas' ? cuentasQ(S, lista, ahora, minPlay) : resumenQ(Q, lista, reg, ahora);
+  return h;
+}
+
+function resumenQ(Q, lista, reg, ahora) {
+  const hace = (d) => ahora - d * DIA;
+  let h = '';
+  // activos cada día (los 7 últimos, por el tiempo de cada uno)
+  const ds = (Array.isArray(Q.dias) && Q.dias.length ? Q.dias : Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA))).slice(0, 7);
+  const act = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.filter((x) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) > 0).length, yo: i === 0 })).reverse();
+  if (act.some((x) => x.v)) h += tarjetaQ('Activos cada día', barras(act, { alto: 110 }));
+  // altas por semana (8)
+  if (reg.length) {
+    const semanas = Array.from({ length: 8 }, (_, i) => {
+      const hasta = hace(7 * i), desde = hace(7 * (i + 1));
+      return { et: i ? fechaCorta(desde).replace(/ de /, ' ') : 'Esta', v: reg.filter((x) => x.primera >= desde && x.primera < hasta).length, yo: i === 0 };
+    }).reverse();
+    const nuevosHoy = reg.filter((x) => diaDe(x.primera) === diaDe(ahora)).length;
+    h += tarjetaQ('Altas por semana', barras(semanas, { alto: 110 }), nuevosHoy ? `<b>${nuevosHoy}</b> nuevas hoy` : '');
+  }
+  // antes de entrar (7 días): el embudo
+  if (Q.embudo && Q.embudo.dias && Object.keys(Q.embudo.dias).length) h += embudoQ(Q.embudo, ahora);
+  // desde dónde (los de 30 días)
+  const act30 = lista.filter((x) => x.ultima >= hace(30));
+  const donde = [['Google Play', 'play'], ['Web', 'web'], ['APK de fuera', 'github']].map(([t, k]) => [t, act30.filter((x) => (x.canal || 'web') === k).length]).filter((f) => f[1]);
+  if (donde.length) h += tarjetaQ('Desde dónde · 30 días', barrasH(donde));
+  // tiempo de hoy, los que más
+  const tiempo = lista.map((x) => [x.nombre || x.equipo || 'Sin nombre', Number(((x.segDias || {})[ds[0]]) || x.segHoy || 0)]).filter((f) => f[1] > 0).sort((a, b) => b[1] - a[1]);
+  if (tiempo.length) {
+    const total = tiempo.reduce((t, f) => t + f[1], 0);
+    h += tarjetaQ('Tiempo hoy', barrasH(tiempo.slice(0, 8).map(([n, v]) => [n, v, corto(v)])), `Entre todos, <b>${corto(total)}</b>`);
+  }
+  // (16 nov, Carlos: «revisa el tema de las versiones de forma extensa») de los que han abierto la app en 30 días: cuántos
+  // tienen la versión de ahora, en qué versión se han quedado los demás y por qué
+  const v30 = lista.filter((x) => x.ultima >= hace(30) && webDe(x));
+  if (v30.length) {
+    const minP = playMinimo(lista);
+    const alDia = v30.filter((x) => cmpVer(webDe(x), VERSION) >= 0).length;
+    const porV = {};
+    for (const x of v30) if (cmpVer(webDe(x), VERSION) < 0) porV[webDe(x)] = (porV[webDe(x)] || 0) + 1;
+    const filasV = [[`${VERSION} (la de ahora)`, alDia], ...Object.entries(porV).sort((a, b) => cmpVer(b[0], a[0])).slice(0, 7)];
+    const motivos = {};
+    for (const x of v30) { const p = problemaDe(x, minP); if (p) motivos[p.corto] = (motivos[p.corto] || 0) + 1; }
+    const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, minP)).length;
+    const playC = {};
+    for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
+    const pie = [
+      Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
+      sinMotivo > 0 ? `Atrasados sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola la próxima vez que la abran)` : '',
+      Object.keys(playC).length ? `App de Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${minP && Number(c) < minP ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${minP ? `. La web nueva llega desde la ${minP}` : ''}` : '',
+    ].filter(Boolean).join('<br>');
+    h += tarjetaQ(`Versiones · ${alDia} de ${v30.length} al día`, barrasH(filasV), pie);
+  }
+  // qué hacen esta semana
+  const lunes = (() => { const t = new Date(`${diaDe(ahora)}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); })();
+  const semEv = {};
+  for (const x of reg) for (const [k, n] of Object.entries((x.ev || {})[lunes] || {})) semEv[k] = (semEv[k] || 0) + n;
+  const hace7 = [['Planes', 'p'], ['Preguntas al chat', 'q'], ['Anuncios vistos', 'b'], ['Funciones top', 't'], ['Invitaciones', 'n']].map(([t, k]) => [t, semEv[k] || 0]).filter((f) => f[1]);
+  if (hace7.length) {
+    const malas = (semEv.f || 0) + (semEv.F || 0), buenas = (semEv.a || 0) + (semEv.A || 0);
+    h += tarjetaQ('Qué hacen esta semana', barrasH(hace7), buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '');
+  }
+  return h || '<p class="quien-res">Aún no hay nada contado.</p>';
+}
+
+/** antes de entrar (7 días), sin saber de quién: cuántos ven la entrada, le dan a entrar, entran y fallan */
+const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
+function embudoQ(E, ahora) {
+  const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
+  const suma = (paso, solo = null) => Object.entries(E.dias || {}).filter(([d]) => ult7.has(d)).reduce((t, [, g]) => t
+    + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + (paso === 'x-otros' ? OTROS_FALLOS.reduce((v, k) => v + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0), 0), 0);
+  const ven = suma('ver');
+  const pc = (n) => (ven ? `${n} <small>${Math.round((n / ven) * 100)} %</small>` : String(n));
+  const filas = [['Ven la entrada', ven, String(ven)], ['Tocan Google Play', suma('play')], ['Miran el ejemplo', suma('demo')], ['Le dan a entrar', suma('l')], ['Entran', suma('ok')]]
+    .map(([t, v, txt]) => [t, v, txt || pc(v)]);
+  const fallos = [['Falla LaLiga', suma('x-laliga')], ['Cancelan', suma('x-cancel')], ['Otros fallos', suma('x-otros')]].filter((f) => f[1]);
+  const canales = [['Google Play', 'play'], ['Web Android', 'web-android'], ['Web iPhone', 'web-iphone'], ['Web ordenador', 'web-pc']].map(([t, k]) => [t, suma('ver', k), suma('ok', k)]).filter((f) => f[1] || f[2]);
+  let h = barrasH(filas, { max: Math.max(1, ven), clase: 'qh-emb' });
+  if (fallos.length) h += barrasH(fallos, { max: Math.max(1, ven), clase: 'qh-mal' });
+  const pie = canales.length ? canales.map(([t, v, o]) => `${t} <b>${v}</b>→<b>${o}</b>`).join(' · ') : '';
+  return tarjetaQ('Antes de entrar · 7 días', h, pie);
+}
+
+function cuentasQ(S, lista, ahora, minPlay) {
   const porUid = new Map(lista.map((x) => [String(x.uid), x]));
   const D = S.D;
   const tabla = D ? [...D.clasif].sort((a, b) => a.pos - b.pos) : [];
   const deLiga = new Set();
-  const DENTRO = 12 * 60e3;
-  const fila = (nombre, equipo, x) => {
-    const dentro = x && ahora - x.ultima < DENTRO;
-    const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
-    const fallo = x && / !$/.test(x.v || '');
-    const sub = !x ? 'Aún no ha entrado'
-      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.ad && x.v && cmpVer(String(x.v).replace(/ !$/, ''), VERSION) < 0 ? ` · <b class="rojo">no se actualiza: ${esc(x.ad)}</b>` : ''}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}`;
-    return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
-  };
-  let filas = '';
-  // por su número de cuenta; si no cuadra (LaLiga no siempre da el mismo id en la clasificación que en la cuenta),
-  // por el nombre de su equipo en esta liga o por su nombre de mánager
+  // por su número de cuenta; si no cuadra, por el nombre de su equipo en esta liga o por su nombre de mánager
   const ligaId = D && D.liga ? String(D.liga.id) : '';
   const buscar = (e) => porUid.get(String(e.managerId)) || porUid.get(String(e.userId))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && String(x.liga || '') === ligaId && norm(x.equipo) === norm(e.nombre))
     || lista.find((x) => !deLiga.has(String(x.uid)) && x.nombre && e.manager && norm(x.nombre) === norm(e.manager));
-  for (const e of tabla) {
-    const x = buscar(e);
-    if (x) deLiga.add(String(x.uid));
-    filas += fila(e.manager || e.nombre, e.manager ? e.nombre : '', x);
+  const liga = tabla.map((e) => { const x = buscar(e); if (x) deLiga.add(String(x.uid)); return { nombre: e.manager || e.nombre, equipo: e.manager ? e.nombre : '', x }; });
+  const fuera = lista.filter((x) => !deLiga.has(String(x.uid))).sort((a, b) => b.ultima - a.ultima);
+  let h = '';
+  if (tabla.length) {
+    const usan = liga.filter((f) => f.x).sort((a, b) => b.x.ultima - a.x.ultima), no = liga.filter((f) => !f.x);
+    h += `<div class="grupo"><span>Tu liga · ${usan.length} de ${tabla.length}</span></div>`;
+    h += `<div class="q-prog" role="img" aria-label="${usan.length} de ${tabla.length} la usan"><i style="--n:${Math.round((usan.length / Math.max(1, tabla.length)) * 100)}"></i></div>`;
+    if (usan.length) h += `<div class="quien-l">${usan.map((f) => filaQuien(f.nombre, f.equipo, f.x, ahora, minPlay)).join('')}</div>`;
+    if (no.length) h += `<p class="q-no">Sin la app: ${no.map((f) => esc(f.nombre)).join(', ')}</p>`;
   }
-  const conApp = deLiga.size;
-  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
-  if (Q.registro) h += registradosHTML(Q.registro, lista, ahora);
-  h += tiempoHTML(lista, Q.dias);
-  if (Q.registro) h += `<div class="grupo"><span>Tu liga</span></div>`;
-  h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
-  h += `<div class="quien-l">${filas}</div>`;
-  const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
-  if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
-  h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo, o tiene una versión anterior a la 0.4.4, no sale.</p>`;
-  return h;
+  if (fuera.length) {
+    // (0.7.13za, Carlos 16 nov: «¿de las que han entrado, hay alguna de la misma liga?») las de fuera, agrupadas por la liga que
+    // manda cada cuenta: las que comparten liga, juntas y primero; después, las que van solas en la suya; y al final, las que
+    // aún no han dicho la suya (la app no les cargó la liga). Si el equipo se llama igual que el mánager, no se repite.
+    const porLiga = new Map();
+    for (const x of fuera) { const k = String(x.liga || ''); if (!porLiga.has(k)) porLiga.set(k, []); porLiga.get(k).push(x); }
+    const juntas = [...porLiga].filter(([k, l]) => k && l.length > 1).sort((a, b) => b[1].length - a[1].length || b[1][0].ultima - a[1][0].ultima);
+    const solas = [...porLiga].filter(([k, l]) => k && l.length === 1).map(([, l]) => l[0]);
+    const sinLiga = porLiga.get('') || [];
+    const nLigas = juntas.length + solas.length;
+    const fila = (x) => filaQuien(x.nombre || 'Sin nombre', x.equipo && norm(x.equipo) !== norm(x.nombre || '') ? x.equipo : '', x, ahora, minPlay);
+    h += `<div class="grupo"><span>${tabla.length ? 'Otras ligas' : 'Cuentas'} · ${fuera.length}${nLigas ? ` · ${nLigas} liga${nLigas > 1 ? 's' : ''}${sinLiga.length ? ` y ${sinLiga.length} sin liga` : ''}` : ''}</span></div>`;
+    h += `<p class="q-no">${juntas.length ? `${juntas.length} liga${juntas.length > 1 ? 's' : ''} con más de una cuenta (${juntas.reduce((t, [, l]) => t + l.length, 0)} cuentas).` : 'Ninguna comparte liga: cada cuenta es de una liga distinta.'}</p>`;
+    for (const [k, l] of juntas) h += `<div class="grupo"><span>${k === ligaId ? 'Tu liga' : `Liga ${esc(k)}`} · ${l.length} cuentas</span></div><div class="quien-l">${l.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+    if (solas.length) h += `<div class="grupo"><span>Una cuenta por liga · ${solas.length}</span></div><div class="quien-l">${solas.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+    if (sinLiga.length) h += `<div class="grupo"><span>Sin liga todavía · ${sinLiga.length}</span></div><div class="quien-l">${sinLiga.sort((a, b) => b.ultima - a.ultima).map(fila).join('')}</div>`;
+  }
+  return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
+}
+const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK' };
+function filaQuien(nombre, equipo, x, ahora, minPlay) {
+  const esta = ahora - x.ultima < DENTRO_Q;
+  const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
+  const p = problemaDe(x, minPlay);
+  const chips = [
+    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
+    v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
+    p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
+  ].join('');
+  return `<div class="quien-f ${esta ? 'dentro' : 'si'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${corto(x.segHoy)}` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 
 /** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */
@@ -1059,96 +1339,6 @@ export function tiempoTxt(seg) {
   if (m < 1) return 'menos de 1 min';
   if (m < 60) return `${m} min`;
   return `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
-}
-/** (el dueño, 0.7t) cuánto tiempo pasa cada uno en la app al día: hoy, ayer, la media de los días que entra y los 7
-    últimos días en barras. Lo manda la app al Worker (/uso); /hola/todos trae los 7 días de los que han entrado esta
-    semana */
-function tiempoHTML(lista, dias) {
-  const ds = Array.isArray(dias) && dias.length ? dias : [diaDe()];
-  const hoy = ds[0], ayer = ds[1];
-  const filas = lista.map((x) => {
-    const sd = x.segDias || (x.segHoy ? { [hoy]: x.segHoy } : {});
-    const vals = ds.map((d) => Number(sd[d]) || 0);
-    const conUso = vals.filter((v) => v > 0);
-    const total = conUso.reduce((a, b) => a + b, 0);
-    return { x, vals, hoy: vals[0], ayer: ayer ? vals[1] : 0, media: conUso.length ? total / conUso.length : 0, nd: conUso.length, total };
-  }).filter((f) => f.total > 0).sort((a, b) => b.hoy - a.hoy || b.media - a.media);
-  let h = `<div class="grupo"><span>Tiempo en la app</span></div>`;
-  if (!filas.length) return `${h}<p class="quien-res">Aún no hay tiempo contado. Se cuenta para todos desde la 0.7t: sale cuando cada uno abra la app con esa versión.</p>`;
-  const max = Math.max(60, ...filas.flatMap((f) => f.vals));
-  const sumaHoy = filas.reduce((a, f) => a + f.hoy, 0), hoyN = filas.filter((f) => f.hoy > 0).length;
-  const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
-  const fd = (d) => fechaCorta(Date.parse(`${d}T12:00:00Z`));
-  const barritas = (f) => `<span class="uso-b" role="img" aria-label="${esc(ds.slice().reverse().map((d, i) => `${fd(d)}: ${corto(f.vals[ds.length - 1 - i])}`).join(', '))}">${f.vals.slice().reverse().map((v, i) => `<i title="${esc(fd(ds[ds.length - 1 - i]))}: ${esc(corto(v))}" style="height:${v ? Math.max(8, Math.round((v / max) * 100)) : 0}%"></i>`).join('')}</span>`;
-  h += `<p class="quien-res">Hoy han estado dentro <b>${hoyN}</b>, entre todos <b>${tiempoTxt(sumaHoy)}</b>.</p>`;
-  h += `<table class="tabla reg-ev uso-t"><tr><th></th><th>Hoy</th><th>Ayer</th><th>Media</th><th>7 días</th></tr>${filas.map((f) => `<tr><td><b>${esc(f.x.nombre || 'Sin nombre')}</b>${f.x.equipo ? `<small>${esc(f.x.equipo)}</small>` : ''}</td><td><b>${corto(f.hoy)}</b></td><td>${corto(f.ayer)}</td><td>${corto(f.media)}<small>${f.nd} ${f.nd === 1 ? 'día' : 'días'}</small></td><td>${barritas(f)}</td></tr>`).join('')}</table>`;
-  h += `<p class="peq apag">Solo cuenta el tiempo con la app a la vista, entre la app y la web, y el día va de 00:00 a 00:00 en Madrid. La media es de los días que ha entrado de los 7 últimos; las barras van del más antiguo (izquierda) a hoy. Desde la 0.7t se cuenta para todos (antes, solo a los que tienen límite de minutos) y lo de quien no la tiene a la vista puede tardar hasta 5 minutos en llegar.</p>`;
-  return h;
-}
-
-/** (el dueño) todas las cuentas que han entrado alguna vez: total, activas, altas y desde dónde */
-const CANAL_TXT = { github: 'Android (APK)', play: 'Google Play', web: 'Web' };
-/** qué hace la gente (eventos.js): esta semana, las 4 anteriores y el embudo de entrada; desde la 0.7a */
-function usoHTML(reg, activos) {
-  const lunes = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
-  const esta = lunes(diaDe());
-  const antes = new Date(`${esta}T12:00:00Z`); antes.setUTCDate(antes.getUTCDate() - 28);
-  const desde4 = antes.toISOString().slice(0, 10);
-  const suma = (filtro) => { const o = {}; for (const x of reg) for (const [l, cs] of Object.entries(x.ev || {})) if (filtro(l)) for (const [k, n] of Object.entries(cs)) o[k] = (o[k] || 0) + n; return o; };
-  const sem = suma((l) => l === esta), cuatro = suma((l) => l >= desde4 && l < esta);
-  const con = (k) => reg.filter((x) => x.tot && x.tot[k] > 0).length;
-  if (!reg.some((x) => x.tot)) return `<div class="grupo"><span>Qué hacen</span></div><p class="quien-res">Aún no hay nada contado: se cuenta desde la 0.7a (planes, preguntas, anuncios, funciones top y la entrada).</p>`;
-  const fila = (k) => `<tr><td>${EVENTOS[k]}</td><td><b>${sem[k] || 0}</b></td><td>${cuatro[k] || 0}</td></tr>`;
-  const porActivo = activos.d7 ? Math.round(((sem.p || 0) / activos.d7) * 10) / 10 : 0;
-  return `<div class="grupo"><span>Qué hacen</span></div>
-    <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c', 'n', 'i'].map(fila).join('')}</table>
-    <p class="quien-res">Planes por cuenta activa esta semana: <b>${String(porActivo).replace('.', ',')}</b>.</p>
-    ${(() => { const pc = (b, f) => (b + f ? `${Math.round((f / (b + f)) * 1000) / 10} %`.replace('.', ',') : '—'); return `<p class="quien-res">Cargas de la liga que fallan esta semana: <b>${pc(sem.a || 0, sem.f || 0)}</b> fuera de jornada · <b>${pc(sem.A || 0, sem.F || 0)}</b> con jornada en juego (${(sem.A || 0) + (sem.F || 0)} cargas).</p>`; })()}
-    <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
-    <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;
-}
-function registradosHTML(reg, lista, ahora) {
-  const hace = (d) => ahora - d * DIA;
-  const hoy = diaDe(ahora);
-  const cuenta = (f) => reg.filter(f).length;
-  const nuevos = { hoy: cuenta((x) => diaDe(x.primera) === hoy), d7: cuenta((x) => x.primera >= hace(7)), d30: cuenta((x) => x.primera >= hace(30)) };
-  const activos = { d1: cuenta((x) => x.ultima >= hace(1)), d7: cuenta((x) => x.ultima >= hace(7)), d30: cuenta((x) => x.ultima >= hace(30)) };
-  const porCanal = {};
-  for (const x of reg) for (const c of String(x.canales || '').split(',').filter(Boolean)) porCanal[c] = (porCanal[c] || 0) + 1;
-  // altas por semana (las 8 últimas, de 7 en 7 días hacia atrás desde hoy)
-  const semanas = Array.from({ length: 8 }, (_, i) => {
-    const hasta = hace(7 * i), desde = hace(7 * (i + 1));
-    return { desde, n: cuenta((x) => x.primera >= desde && x.primera < hasta) };
-  }).reverse();
-  const max = Math.max(1, ...semanas.map((x) => x.n));
-  const porUid = new Map(lista.map((x) => [String(x.uid), x]));
-  const ultimas = [...reg].sort((a, b) => b.primera - a.primera).slice(0, 8);
-  let h = `<div class="grupo"><span>Todas las cuentas</span></div>`;
-  h += `<div class="reg-cifras">
-    <div><b>${reg.length}</b><span>han entrado alguna vez</span></div>
-    <div><b>${activos.d7}</b><span>activas esta semana</span></div>
-    <div><b>${activos.d30}</b><span>activas en 30 días</span></div>
-  </div>`;
-  // ligas con varios que la usan (roadmap: la unidad de captación es la liga): por la liga de /hola, últimos 30 días
-  const porLiga = {};
-  for (const x of lista) if (x.liga && x.ultima >= hace(30)) porLiga[x.liga] = (porLiga[x.liga] || 0) + 1;
-  const nLigas = Object.keys(porLiga).length, de3 = Object.values(porLiga).filter((n) => n >= 3).length, de2 = Object.values(porLiga).filter((n) => n >= 2).length;
-  if (nLigas) h += `<p class="quien-res">Ligas (30 días): <b>${nLigas}</b> con alguien que la usa · <b>${de2}</b> con 2 o más · <b>${de3}</b> con 3 o más.</p>`;
-  h += `<p class="quien-res">Altas: <b>${nuevos.hoy}</b> hoy · <b>${nuevos.d7}</b> en 7 días · <b>${nuevos.d30}</b> en 30 días. Hoy han abierto la app <b>${activos.d1}</b>.</p>`;
-  const canales = Object.keys(CANAL_TXT).filter((c) => porCanal[c]);
-  if (canales.length) h += `<p class="quien-res">Desde dónde: ${canales.map((c) => `${CANAL_TXT[c]} <b>${porCanal[c]}</b>`).join(' · ')}</p>`;
-  h += `<div class="reg-sem" role="img" aria-label="Altas por semana, las 8 últimas: ${semanas.map((x) => x.n).join(', ')}">${semanas.map((x) => `<div class="reg-b"><span class="reg-n">${x.n || ''}</span><i style="height:${Math.round((x.n / max) * 100)}%"></i><small>${esc(fechaCorta(x.desde))}</small></div>`).join('')}</div>`;
-  if (ultimas.length) {
-    h += `<p class="t2 peq" style="margin:12px 0 2px">Últimas altas</p><div class="quien-l">${ultimas.map((x) => {
-      const p = porUid.get(String(x.uid));
-      const nombre = p ? p.nombre || 'Sin nombre' : `Cuenta ${x.uid}`;
-      const donde = String(x.canales || '').split(',').filter(Boolean).map((c) => CANAL_TXT[c] || c).join(', ');
-      return `<div class="quien-f si"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(donde || '¿?')} · última vez ${cuando(x.ultima)}${x.dias ? ` · ${x.dias} ${x.dias === 1 ? 'día' : 'días'} con la app` : ''}</span></div><small>alta ${esc(cuando(x.primera, { hora: false }))}</small></div>`;
-    }).join('')}</div>`;
-  }
-  h += usoHTML(reg, activos);
-  h += `<p class="peq apag" style="margin-top:10px">Cuenta todas las cuentas de LaLiga que han abierto la app con su sesión desde el 3 de noviembre, más las que la habían abierto en los 90 días anteriores. El nombre solo sale si la ha abierto en los últimos 90 días.</p>`;
-  return h;
 }
 
 /* ================= DIAGNÓSTICO ================= */
@@ -1207,12 +1397,12 @@ export function textoDiagnostico(S) {
         + `\n  tipos: ${Object.entries(M.histTipos || {}).map(([k, x]) => `${k}×${x.n}${x.conImporte && x.conImporte !== x.n ? ` (${x.conImporte} con importe)` : ''}`).join(' ')} · clausulazos detectados ${M.czDetectados || 0}`
         + M.rivales.filter((r) => !(r.dinero && r.dinero.exacto)).map((r) => {
           const f = (M.flujos || {})[r.e.teamId] || {}, sb = (M.subidas || {})[r.e.teamId] || {}, dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(r.e.teamId) : null;
-          return `\n  ${r.e.manager || r.e.nombre}: mov ${m1(f.v || 0)}M (gasta ${m1(f.gastado || 0)}, ingresa ${m1(f.ingresado || 0)}, premios ${m1(f.premios || 0)}${f.raros ? `, ${f.raros} raros` : ''}) · subidas −${m1(sb.v || 0)}M en ${sb.n || 0}${sb.vistas ? ` (${sb.vistas} vistas)` : ''}${sb.sinBase ? ` · ${sb.sinBase} sin base` : ''} · cuenta ${cu && cu.v != null ? `${m1(cu.v)}M ±${m1(cu.margen)}` : '?'}${dc ? ` · te dijo ${m1(dc.v)}M ${new Date(dc.t).toISOString().slice(5, 16)}${dc.est != null ? ` (la cuenta daba ${m1(dc.est)}M)` : ''}` : ''}`;
+          return `\n  ${r.e.manager || r.e.nombre}: mov ${m1(f.v || 0)}M (gasta ${m1(f.gastado || 0)}, ingresa ${m1(f.ingresado || 0)}, premios ${m1(f.premios || 0)}${f.raros ? `, ${f.raros} raros` : ''}) · subidas −${m1(sb.v || 0)}M en ${sb.n || 0}${sb.vistas ? ` (${sb.vistas} vistas)` : ''}${sb.sinBase ? ` · ${sb.sinBase} sin base` : ''} · cuenta ${cu && cu.v != null ? `${m1(cu.v)}M ±${m1(cu.margen)}${cu.partes ? ` (fija ${m1(cu.partes.fija)} + recompensas ${m1(cu.partes.rec)} + subidas dudosas ${m1(cu.partes.dudas)} + base ${m1(cu.partes.desvio)} + raros ${m1(cu.partes.raros)}${cu.centro ? `; centro ${cu.centro > 0 ? '+' : ''}${m1(cu.centro)}` : ''})` : ''}` : '?'}${dc ? ` · te dijo ${m1(dc.v)}M ${new Date(dc.t).toISOString().slice(5, 16)}${dc.est != null ? ` (la cuenta daba ${m1(dc.est)}M)` : ''}` : ''}`;
         }).join('');
     })(),
-    S.M ? `Clausulazos: ${S.M.clausulazos ? `${S.M.clausulazos.n}, mediana ${pct(S.M.clausulazos.med * 100)}, p90 ${pct(S.M.clausulazos.p90 * 100)}` : 'ninguno medible'} · Ofertas de LaLiga: ${S.M.ofertaLiga ? `${S.M.ofertaLiga.n} ventas, mediana ${pct(S.M.ofertaLiga.med * 100)}${S.M.ofertaLiga.poco ? ' (pocas)' : ''}` : 'sin ventas a LaLiga medibles'} · Pujas de la liga: ${S.M.pujasLiga ? `${S.M.pujasLiga.n} compras, mediana ${pct(S.M.pujasLiga.med * 100)}${S.M.pujasLiga.poco ? ' (pocas)' : `, p25 ${pct(S.M.pujasLiga.p25 * 100)}, p75 ${pct(S.M.pujasLiga.p75 * 100)}${(S.M.pujasLiga.tramos || []).map((x) => ` · ${x.desde === 0 ? '<' : ''}${eur(x.desde === 0 ? x.hasta : x.desde, { dec: 0 })}${x.desde && x.hasta !== Infinity ? `-${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? '+' : ''}: ${x.n}, med ${pct(x.med * 100)}, p90 ${pct(x.p90 * 100)}`).join('')}`}` : 'sin compras al mercado medibles'} · aprendizaje: ${S.M.aprende && S.M.aprende.prev ? (S.M.aprende.prev.poco ? `${S.M.aprende.prev.pares} pares (pocos)` : `${S.M.aprende.prev.pares} pares, error ${S.M.aprende.prev.mae.final}, peso desglose ${S.M.aprende.prev.w}, sesgo ${JSON.stringify(S.M.aprende.prev.sesgo)}`) : 'sin jornadas evaluadas'}${S.M.aprende && S.M.aprende.planes ? ` · planes ${S.M.aprende.planes.bien}/${S.M.aprende.planes.n}` : ''}` : '',
+    S.M ? `Clausulazos: ${S.M.clausulazos ? `${S.M.clausulazos.n}, mediana ${pct(S.M.clausulazos.med * 100)}, p90 ${pct(S.M.clausulazos.p90 * 100)}` : 'ninguno medible'} · Ofertas de LaLiga: ${S.M.ofertaLiga ? `${S.M.ofertaLiga.n} ventas, mediana ${pct(S.M.ofertaLiga.med * 100)}${S.M.ofertaLiga.poco ? ' (pocas)' : ''}` : 'sin ventas a LaLiga medibles'} · Pujas de la liga: ${S.M.pujasLiga ? `${S.M.pujasLiga.n} compras, mediana ${pct(S.M.pujasLiga.med * 100)}${S.M.pujasLiga.poco ? ' (pocas)' : `, p25 ${pct(S.M.pujasLiga.p25 * 100)}, p75 ${pct(S.M.pujasLiga.p75 * 100)}${(S.M.pujasLiga.tramos || []).map((x) => ` · ${x.desde === 0 ? '<' : ''}${eur(x.desde === 0 ? x.hasta : x.desde, { dec: 0 })}${x.desde && x.hasta !== Infinity ? `-${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? '+' : ''}: ${x.n}, med ${pct(x.med * 100)}, p90 ${pct(x.p90 * 100)}`).join('')}`}` : 'sin compras al mercado medibles'} · tus pujas: ${S.M.misPujasRes ? `${S.M.misPujasRes.ganadas} de ${S.M.misPujasRes.n} ganadas, ajuste ${pct(S.M.misPujasRes.ajuste * 100, 1)}` : 'ninguna vista'} · pujas de todas las ligas: ${S.M.calPujas ? S.M.calPujas.n : 'sin leer'} · aprendizaje: ${S.M.aprende && S.M.aprende.prev ? (S.M.aprende.prev.poco ? `${S.M.aprende.prev.pares} pares (pocos)` : `${S.M.aprende.prev.pares} pares, error ${S.M.aprende.prev.mae.final}, peso desglose ${S.M.aprende.prev.w}, sesgo ${JSON.stringify(S.M.aprende.prev.sesgo)}`) : 'sin jornadas evaluadas'}${S.M.aprende && S.M.aprende.planes ? ` · planes ${S.M.aprende.planes.bien}/${S.M.aprende.planes.n}` : ''}` : '',
     `IA: clave ${hayClave() ? 'sí' : 'no'} · modelos ${(((LS.get('ia-modelos', {}) || {}).lista) || []).map(ia.m).join(', ') || '¿?'}`,
-    ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p} entran, ${x.tok.th} pensando, ${x.tok.r} escritos)` : ''}` : `✗ ${x.s} ${ia.t(x.e)}`}${x.google ? ` «${ia.t(x.google)}»` : ''} ${x.ms}ms`),
+    ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p ?? x.tok.entra ?? '?'} entran, ${x.tok.th ?? 0} pensando, ${x.tok.r ?? x.tok.sale ?? '?'} escritos)` : ''}` : `✗ ${x.s} ${ia.t(x.e)}`}${x.google ? ` «${ia.t(x.google)}»` : ''} ${x.ms}ms`),
     (() => {
       const uf = ultimoFondo(), nf = nativo.estadoFondo() || {};
       return `Segundo plano: ${cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;

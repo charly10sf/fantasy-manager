@@ -100,7 +100,7 @@ No hace falta dar usuario y contraseña.
 
 ## Anuncios
 
-«¿Contiene anuncios?»: **Sí** (desde la 0.6: banner de AdMob y un bonificado para pedir más planes a la IA). Solo la versión de Google Play.
+«¿Contiene anuncios?»: **Sí**. Solo la versión de Google Play: desde la 0.8, un anuncio de apertura de AdMob como mucho una vez al día al abrir la app (nunca el primer día) e intersticiales en una pausa (al cambiar de pestaña o al cerrar una ficha, con sus tiempos en «intersticial» y «apertura» de limites.json) y bonificados para pedir más planes o preguntas a la IA y abrir funciones; de la 0.6 a la 0.7, un banner abajo, ya quitado.
 
 ## ID de publicidad
 
@@ -114,6 +114,8 @@ Lo que cambia frente al del 25 oct: se declara lo que va a la IA de Google. Con 
 
 PENDIENTE AL PUBLICAR LOS PLANES CON LA IA DE LA APP (rama `web-planes-claude`, 14 nov): cambiar en Play Console el texto de la ficha (arriba, «Inteligencia artificial») y, en este formulario, la fila de «Otras acciones» (pasa a obligatoria: el plan del día con la IA va solo, sin clave) y el nombre de mánager (al plan no va: el del usuario sí, como en el chat). Anthropic trata los datos por cuenta de Fantasy Manager (encargado del tratamiento), así que para Play es «recogido», no «compartido».
 
+PENDIENTE DESDE LA 0.7.13 (15 nov, el dinero de los rivales aprendido de lo que apunta la gente): en este formulario, en «Actividad en la app → Otras acciones», añadir la finalidad «Analítica» (además de «Funciones de la app») y dejarla como Opcional (se apaga en Ajustes → Ayudar a mejorar la IA). Va al Worker, que es nuestro: recogido, no compartido. No lleva nombres ni ids (ni de quien lo manda ni del rival, ni de la liga), así que no cambia nada en Nombre ni en ID de usuario.
+
 ### Lo que sale del móvil hoy (para no perderse)
 
 | Adónde | Qué | Cuánto dura |
@@ -124,6 +126,7 @@ PENDIENTE AL PUBLICAR LOS PLANES CON LA IA DE LA APP (rama `web-planes-claude`, 
 | Worker, `u:` | Segundos de uso de cada día | 9 días |
 | Worker, `r:<uid>` | Número de cuenta, primera y última vez, días de uso, canales y cuántas veces por semana usa algunas partes (planes, preguntas, bonificados, funciones top, pasos de la entrada) | 400 días sin abrir la app |
 | Worker, `f:` y `fc:` (/fallos) | Texto del aviso, hasta 3 capturas, mánager, equipo, liga, versión y, con la casilla, el diagnóstico (rivales como «Rival N», modelos de la IA como «IA 1, 2, 3») | 180 días |
+| Worker, Durable Object `dinero\|todos` (/dinero, desde la 0.7.13; con la casilla «Ayudar a mejorar la IA», activada por defecto) | Al apuntar el dinero de un rival, sin nombres ni ids: cuánto fallaba la cuenta, su margen, el rango apuntado, días de liga y de parón, movimientos y subidas de cláusula del rival, valor de su equipo, puesto, nº de equipos, si la liga es de pago y una huella de liga\|rival\|día que cambia cada día. El freno por cuenta (`freno\|día\|dinero\|uid`) solo cuenta cuántos | 180 días (el freno, 30 h) |
 | Worker, `v:` y `q:` (paso al ordenador) | Sesión, liga, clave de la IA y lo que han dicho los rivales, cifrado con una clave que el Worker no tiene | 10 minutos o al usarse |
 | AdMob (solo Play) | IP, ID de publicidad, ID de conjunto de apps, interacciones con anuncios, diagnóstico | Lo que diga Google |
 
@@ -149,7 +152,7 @@ El paso al ordenador desde la app de Play va siempre cifrado (es de la 0.7a en a
 | Mensajes → Otros mensajes en la app (el texto de un aviso de fallo y su respuesta) | Sí | No | No | Opcional | Funciones de la app, Comunicaciones del desarrollador |
 | Actividad en la app → Interacciones con la app (AdMob; minutos de uso; cuántos planes, preguntas, bonificados y funciones por semana) | Sí | Sí | No | Obligatorio | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude, seguridad y cumplimiento |
 | Actividad en la app → Otro contenido generado por el usuario (lo que escribe en el chat de la IA; va a Google) | Sí | Sí | No | Opcional | Funciones de la app |
-| Actividad en la app → Otras acciones (los datos de su liga que van a la IA: plantilla, saldo, ofertas, mercado; su equipo y su liga en el Worker) | Sí | Sí | No | Opcional | Funciones de la app |
+| Actividad en la app → Otras acciones (los datos de su liga que van a la IA: plantilla, saldo, ofertas, mercado; su equipo y su liga en el Worker; desde la 0.7.13, sin nombres, lo que apunta del dinero de los rivales, para afinar la IA) | Sí | Sí | No | Opcional | Funciones de la app, Analítica |
 | Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marca la casilla en un aviso de fallo) | Sí | Sí | No | Obligatorio | Analítica, Publicidad o marketing, Prevención del fraude, seguridad y cumplimiento |
 | Información y rendimiento de la app → Registros de fallos | No | No | | | (la app no manda informes de fallos sola: solo el aviso que escribe el usuario) |
 | Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | No | Obligatorio | Publicidad o marketing, Analítica, Prevención del fraude, seguridad y cumplimiento |

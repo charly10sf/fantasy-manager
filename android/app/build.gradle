@@ -62,15 +62,25 @@ android {
         github {
             dimension 'canal'
             if (rutaFirma && claveFirma) signingConfig signingConfigs.release
-            buildConfigField 'String', 'BANNER', '""'
             buildConfigField 'String', 'BONIFICADO', '""'
+            buildConfigField 'String', 'INTERSTICIAL', '""'
+            buildConfigField 'String', 'APERTURA', '""'
         }
         play {
             dimension 'canal'
             if (rutaSubida && claveSubida) signingConfig signingConfigs.subida
-            // Banner Inferior y Bonificado Desbloqueo (creados el 23 oct en AdMob); los de prueba, los de Google
-            buildConfigField 'String', 'BANNER', bloque('ca-app-pub-3175956326240112/5804998548', 'ca-app-pub-3940256099942544/9214589741')
+            // Bonificado Desbloqueo (creado el 23 oct en AdMob); los de prueba, los de Google. Desde la 0.8 no hay banner (el
+            // «Banner Inferior», ca-app-pub-3175956326240112/5804998548, ya no se usa): lo sustituye el intersticial.
             buildConfigField 'String', 'BONIFICADO', bloque('ca-app-pub-3175956326240112/4365466356', 'ca-app-pub-3940256099942544/5224354917')
+            // EL INTERSTICIAL. >>> ID REAL: cuando Carlos cree el bloque en AdMob (Bloques de anuncios → Intersticial), poner
+            // aquí su id ('ca-app-pub-3175956326240112/NNNNNNNNNN') en lugar de ''. Mientras esté vacío, la app usa el
+            // «bloque» de «intersticial» de limites.json (solo si es de esta cuenta) y, sin él, no enseña intersticiales.
+            // Con fm.anunciosReales=false, siempre el de prueba de Google.
+            buildConfigField 'String', 'INTERSTICIAL', bloque('ca-app-pub-3175956326240112/6553740872', 'ca-app-pub-3940256099942544/1033173712')
+            // EL DE APERTURA (17 nov, Carlos: uno al día al abrir la app). >>> ID REAL: cuando Carlos cree el bloque en AdMob
+            // (Bloques de anuncios → Anuncio de apertura de aplicación), poner aquí su id en lugar de ''. Mientras esté vacío,
+            // la app usa el «bloque» de «apertura» de limites.json (solo si es de esta cuenta) y, sin él, no enseña ninguno.
+            buildConfigField 'String', 'APERTURA', bloque('ca-app-pub-3175956326240112/8988332526', 'ca-app-pub-3940256099942544/9257395921')
         }
     }
 
@@ -127,4 +137,7 @@ dependencies {
     // AdMob trae Guava solo para ejecutarse y una ListenableFuture vacía para compilar; WorkManager (el trabajo en
     // segundo plano) necesita la de verdad al compilar: la misma Guava que trae AdMob
     playImplementation 'com.google.guava:guava:31.1-android'
+    // (16 nov, Carlos: «que sea fácil actualizar») la actualización dentro de la app de Google Play: si la tienda tiene
+    // una versión más nueva, la propia app la ofrece a pantalla completa y se pone con un toque (ActualizarPlay)
+    playImplementation 'com.google.android.play:app-update:2.1.0'
 }

@@ -45,7 +45,8 @@ export async function publicar(texto, claves, { base = process.env.X_API_BASE ||
  * (revisión total, A11). Devuelve lo de publicar() o { dudoso: true, que }.
  */
 export async function publicarSinRepetir(t, { registro, claves, mediaIds = [], encolar, pedir = publicar, tiempo } = {}) {
-  try { return await pedir(t.texto, claves, { mediaIds, ...(tiempo ? { tiempo } : {}) }); }
+  // (`enlace`: el de la previa de la web, tipos/previaweb.mjs; va aparte porque el validador no deja enlaces en el texto)
+  try { return await pedir(t.enlace ? `${t.texto}\n\n${t.enlace}` : t.texto, claves, { mediaIds, ...(tiempo ? { tiempo } : {}) }); }
   catch (e) {
     const que = e && e.name === 'TimeoutError' ? 'X no ha contestado a tiempo' : `error de red (${(e && e.message) || e})`;
     registro.marcar(t, null, { dudoso: true });

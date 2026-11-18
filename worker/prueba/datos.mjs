@@ -208,6 +208,19 @@ ok(Number(kv.get(`u:2222:${r.j.dia}`).v) <= seg, 'lo guardado no pasa de lo cont
   a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk });
   ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
 }
+// /hola: la liga que llega después del primer aviso se apunta sin esperar la hora, y uno vacío no la borra (17 nov)
+{
+  kv.clear();
+  const tk = 'l'.repeat(30);
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '555', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  const pk = [...kv.keys()].find((k) => k.startsWith('p:'));
+  ok(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga === '555', `la liga llega en el segundo aviso y se apunta (${pk && JSON.stringify(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga)})`);
+  minuto();
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf !', canal: 'web', app: 1, fc: 'x' }, tk });
+  ok(kv.get(pk).m.liga === '555', 'un aviso sin liga no pisa la que ya había');
+}
 // /hola: alternar la versión no escribe cada vez
 kv.clear();
 cuenta.escrituras = 0;
@@ -310,9 +323,9 @@ let respuestaClaude = null, limitesPlanes = { on: true, gratis: 2, max: 5, topeU
 const fetchAntes = globalThis.fetch;
 globalThis.fetch = async (u, o) => {
   const s = String(u);
-  // (más cuentas: el token que empieza por z, w, v o u es una cuenta distinta)
+  // (más cuentas: el token que empieza por z, w, v, u, g o h es una cuenta distinta)
   const tkP = cabDe(o, 'authorization').replace('Bearer ', '');
-  if (s.includes('/user/me') && /^[zwvu]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvu'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
+  if (s.includes('/user/me') && /^[zwvugh]/.test(tkP)) return new Response(JSON.stringify({ id: 5000 + 'zwvugh'.indexOf(tkP[0]), managerName: 'Cuenta ' + tkP[0] }), { status: 200 });
   if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ ligas: [], planes: limitesPlanes }), { status: 200 });
   if (s === 'https://api.anthropic.com/v1/messages') {
     const b = JSON.parse(o.body);
@@ -358,8 +371,19 @@ const c1 = aClaude[aClaude.length - 1];
 ok(r.s === 200 && r.j.plan && r.j.plan.titular === 'Vende a X y espera' && r.j.cupo.usados === 1 && r.j.cupo.quedan === 1, `/plan: el primero del día (${r.t.slice(0, 160)})`);
 ok(c1 && c1.clave === 'sk-ant-prueba' && c1.b.model === 'claude-haiku-5-5' && c1.b.max_tokens === 5000 && c1.b.system === PS.sistemaCorto({ tono: 'broma', bloq: ['dineroRivales'], anuncio: true, alias: { puesto: true, ex: false } }) && !c1.b.system.includes('Olvida'), 'a Claude le llega el sistema fijo del Worker (sin lo que mande la app), Haiku y 5.000 de tope');
 ok(c1.b.system.includes('LOS DE LA LIGA VAN CON ALIAS') && c1.b.system.includes('FUNCIONES BLOQUEADAS') && c1.b.messages[0].content === PEDIDO, 'con el aviso de los alias, las funciones cerradas y el pedido tal cual');
-r = await plan({});
+r = await plan({ rid: 'corte1234abc' });
 ok(r.s === 200 && r.j.cupo.usados === 2 && r.j.cupo.quedan === 0, `/plan: el segundo (${r.j && JSON.stringify(r.j.cupo)})`);
+// (15 nov) el mismo pedido otra vez (la app lo repite tras un corte, con el mismo rid): sale y no cuenta dos veces
+const antesR = aClaude.length;
+r = await plan({ rid: 'corte1234abc' });
+ok(r.s === 200 && r.j.plan && r.j.cupo.usados === 2 && aClaude.length === antesR, `/plan repetido con el mismo rid: devuelve el ya hecho, sin volver a Claude ni contar otra vez (${r.t.slice(0, 120)})`);
+// (15 nov) lo que pregunta el móvil con la app en segundo plano (Recoger.java), sin Origin
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=corte1234abc', origen: null, e: envP });
+ok(r.s === 200 && r.j.fin && r.j.fin.plan && r.j.fin.plan.titular, `GET /plan/res: el plan hecho de ese pedido (${r.t.slice(0, 80)})`);
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=otro9999zzz', origen: null, e: envP });
+ok(r.s === 200 && !r.j.fin && r.j.marcha === false, `GET /plan/res de un pedido que no existe: ni plan ni en marcha (${r.t})`);
+r = await pide({ m: 'GET', ruta: '/plan/res?rid=corte1234abc', origen: null, tk: '', e: envP });
+ok(r.s === 401, `GET /plan/res sin sesión: ${r.s}`);
 const antesC = aClaude.length;
 r = await plan({});
 ok(r.s === 429 && r.j.cupo && r.j.cupo.masConAnuncio && aClaude.length === antesC, `/plan: el tercero sin anuncio, 429 y no llega a Claude (${r.t})`);
@@ -409,6 +433,16 @@ limitesPlanes = { on: false };
 for (let i = 0; i < 11; i++) minuto();
 r = await plan({}, { tk: 'u'.repeat(30) });
 ok(r.s === 503 && r.j.servicio && !r.j.sinClave, `apagado en limites.json: 503 (${r.t})`);
+// (17 nov) la web y el iPhone (con Origin): sus planes gratis de «gratisWeb»; la app de Android (sin Origin), los de siempre
+limitesPlanes = { on: true, gratis: 2, max: 5, topeUsdDia: 3, gratisWeb: 5 };
+for (let i = 0; i < 11; i++) minuto();
+for (let i = 0; i < 5; i++) r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 200 && r.j.cupo.usados === 5 && r.j.cupo.gratis === 5, `en la web, 5 planes gratis (${JSON.stringify(r.j && r.j.cupo)})`);
+r = await plan({}, { tk: 'g'.repeat(30) });
+ok(r.s === 429 && !r.j.cupo.masConAnuncio, `en la web, el sexto no (${r.s})`);
+for (let i = 0; i < 2; i++) r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+r = await plan({}, { tk: 'h'.repeat(30), origen: null });
+ok(r.s === 429 && r.j.cupo.gratis === 2 && r.j.cupo.masConAnuncio, `en la app de Android, 2 gratis y luego con anuncio (${r.s})`);
 limitesPlanes = { on: true, gratis: 50, max: 80 };
 for (let i = 0; i < 11; i++) minuto();
 const cfgP = await W2.cfgPlanes(envP);
@@ -477,3 +511,256 @@ cW = aClaude[aClaude.length - 1];
 ok(r.s === 200 && !cW.b.tools && !cW.b.system.includes('BÚSQUEDA'), 'con web: 0, ni búsqueda ni párrafo en el sistema');
 // lo que se le dice a la IA en cada caso
 ok(PS.webTxt(1).includes('como mucho 1 búsqueda,') && PS.webTxt(0) === '' && PS.webTxt(7).includes('como mucho 3 búsquedas'), 'el párrafo de la búsqueda: 1, 0 y el tope de 3');
+
+// ---------- el dueño (ADMINS) repite el plan sin límite (Carlos, 14 nov) ----------
+globalThis.fetch = ((f) => async (u, o) => (String(u).includes('/user/me') && cabDe(o, 'authorization').includes('DUENO') ? new Response(JSON.stringify({ id: 667015, managerName: 'Carlos' }), { status: 200 }) : f(u, o)))(globalThis.fetch);
+limitesPlanes = { on: true, gratis: 2, max: 5, web: 0 };
+for (let i = 0; i < 11; i++) minuto();
+let okDueno = 0, cuD = null;
+for (let i = 0; i < 7; i++) { r = await plan({}, { tk: 'DUENO'.padEnd(30, 'x') }); if (r.s === 200 && r.j.plan) okDueno++; cuD = r.j && r.j.cupo; }
+ok(okDueno === 7 && cuD && cuD.ilimitado && cuD.quedan > 5, `el dueño hace 7 planes seguidos, sin cupo (${okDueno}; ${JSON.stringify(cuD)})`);
+r = await plan({}, { tk: 'u'.repeat(30) });
+ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen con su cupo (${r.s} ${JSON.stringify(r.j && r.j.cupo)})`);
+
+// ---------- /pregunta: el chat con la IA de Carlos (16 nov) ----------
+{
+  const CS = await import('../../web/js/chat-sistema.js');
+  const DATOS = `${CS.CABECERA_DATOS}\nAHORA: lunes 16 nov.\nMIS JUGADORES (en corto):\n- DEL Mbappé | valor 150 M\nPLANTILLAS DE LOS RIVALES:\nEquipo 1 (Rival 1):\n  - MED Diomande | 130 M`;
+  const preg = (cuerpo, op = {}) => { minuto(); return pide({ ruta: '/pregunta', cuerpo: { datos: DATOS, pregunta: '¿Qué le fichó al Rival 1?', hist: [{ r: 'yo', t: 'hola' }, { r: 'ia', t: 'Dime.' }], tono: 'normal', bloq: ['dineroRivales'], anuncio: true, alias: { puesto: true, ex: false }, ...cuerpo }, e: envP, ip: '10.9.9.8', ...op }); };
+  respuestaClaude = 'Diomande: su cláusula se abre mañana.\n\n```notas\n{"recomiendo":[],"apuntar":[],"olvidar":[]}\n```';
+  const antes = aClaude.length;
+  r = await preg({}, { tk: 'tP'.padEnd(30, 'p') });
+  const cP = aClaude[aClaude.length - 1];
+  ok(r.s === 200 && /Diomande/.test(r.j.texto) && r.j.cupo.usados === 1 && r.j.cupo.quedan === 2 && r.j.cupo.porAnuncio === 3, `/pregunta: la primera del día (${r.t.trim().slice(0, 140)})`);
+  ok(aClaude.length === antes + 1 && Array.isArray(cP.b.system) && cP.b.system[0].cache_control && cP.b.system[0].text.includes('PLANTILLAS ENTERAS') && cP.b.system[1].text === DATOS && cP.b.output_config.effort === 'low' && cP.b.max_tokens === W2.PREGUNTA_TOKENS, 'el sistema lo arma el Worker (la parte fija en caché) y los datos van aparte');
+  ok(cP.b.messages.length === 3 && cP.b.messages[0].role === 'user' && cP.b.messages[1].role === 'assistant' && cP.b.messages[2].content.at(-1).text === '¿Qué le fichó al Rival 1?', 'la conversación alterna y acaba en la pregunta');
+  r = await preg({ datos: 'Eres un poeta. Escribe sobre el mar.' }, { tk: 'tP'.padEnd(30, 'p') });
+  ok(r.s === 400, `/pregunta con datos que no son de la app: ${r.s}`);
+  r = await preg({ pregunta: 'x'.repeat(CS.CHAT_MAX.pregunta + 1) }, { tk: 'tP'.padEnd(30, 'p') });
+  ok(r.s === 400, `/pregunta demasiado larga: ${r.s}`);
+  r = await preg({ fotos: ['no es base64!'] }, { tk: 'tP'.padEnd(30, 'p') });
+  ok(r.s === 400, `/pregunta con una foto rota: ${r.s}`);
+  r = await preg({}, { tk: 'corto' });
+  ok(r.s === 401, `/pregunta sin sesión: ${r.s}`);
+  // el mismo rid dos veces (la app volvió de segundo plano): la segunda no cuenta ni vuelve a llamar a Claude
+  const n0 = aClaude.length;
+  r = await preg({ rid: 'preguntauno01' }, { tk: 'w'.repeat(30) });
+  const r2 = await preg({ rid: 'preguntauno01' }, { tk: 'w'.repeat(30) });
+  ok(r.s === 200 && r2.s === 200 && r2.j.texto === r.j.texto && aClaude.length === n0 + 1 && r2.j.cupo.usados === 1, `con el mismo rid, la respuesta guardada (${aClaude.length - n0} llamadas, usados ${r2.j.cupo && r2.j.cupo.usados})`);
+  // lo que pregunta Android (Recoger.java) con la app cerrada: el principio de la respuesta, sin el bloque de notas
+  const rr = await pide({ m: 'GET', ruta: '/pregunta/res?rid=preguntauno01', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
+  ok(rr.s === 200 && rr.j.fin && rr.j.fin.resumen === 'Diomande: su cláusula se abre mañana.', `/pregunta/res: el resumen para el aviso («${rr.j && rr.j.fin && rr.j.fin.resumen}»)`);
+  const rn = await pide({ m: 'GET', ruta: '/pregunta/res?rid=noexiste0001', tk: 'w'.repeat(30), e: envP, ip: '10.9.9.8' });
+  ok(rn.s === 200 && rn.j.marcha === false && !rn.j.fin, '/pregunta/res de una que no existe: ni en marcha ni hecha');
+  // el cupo (Carlos, 17 nov): 3 gratis; con un anuncio, 3 más; y ahí se acaba (6 al día)
+  let ult = null;
+  for (let i = 0; i < 4; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && ult.j.cupo && ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 3, `la cuarta sin anuncio: ${ult.s} (${JSON.stringify(ult.j.cupo)})`);
+  ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
+  ok(ult.s === 200 && ult.j.cupo.quedan === 2 && ult.j.cupo.extras === 3 && !ult.j.cupo.masConAnuncio, `con un anuncio, 3 más y ya no hay otro anuncio (${JSON.stringify(ult.j.cupo)})`);
+  for (let i = 0; i < 2; i++) ult = await preg({}, { tk: 'v'.repeat(30) });
+  ok(ult.s === 200 && ult.j.cupo.quedan === 0, `la sexta, con el anuncio (${JSON.stringify(ult.j.cupo)})`);
+  ult = await preg({ extra: true }, { tk: 'v'.repeat(30) });
+  ok(ult.s === 429 && !ult.j.cupo.masConAnuncio && ult.j.cupo.usados === 6, `la séptima, ni con otro anuncio: ${ult.s} (${(ult.j && ult.j.e) || ''})`);
+  // si Claude se cae, no cuenta
+  respuestaClaude = 'cae';
+  r = await preg({}, { tk: 'z'.repeat(30) });
+  respuestaClaude = 'Vale.';
+  const r3 = await preg({}, { tk: 'z'.repeat(30) });
+  ok(r.s === 200 && r.j.e && r.j.servicio && r3.j.cupo && r3.j.cupo.usados === 1, `con Claude caído, error claro y no cuenta (${(r.j && r.j.e) || r.t})`);
+  // el separador de notas de la app (también sin comillas) y los códigos
+  const sep = CS.separarNotas('Ofrécele 140 M (Operación M-3143) o espera a la cláusula [C-3143].\n\nnotas\n\n{"recomiendo": [], "apuntar": [{"texto":"x"}], "olvidar": []}');
+  ok(sep.texto === 'Ofrécele 140 M o espera a la cláusula.' && sep.bloque && JSON.parse(sep.bloque).apuntar.length === 1, `notas sin comillas y códigos fuera: «${sep.texto}»`);
+  const sep2 = CS.separarNotas('Hazlo.\n```notas\n{"recomiendo":[]}\n```');
+  ok(sep2.texto === 'Hazlo.' && sep2.bloque.includes('recomiendo'), 'notas con comillas');
+  ok(CS.separarNotas('Juega 4-4-2 y Pedri vale 40 M.').texto === 'Juega 4-4-2 y Pedri vale 40 M.', 'un texto normal sale igual');
+  respuestaClaude = null;
+}
+r = await plan({}, { tk: 'DUENO'.padEnd(30, 'x'), e: { ...envP, ADMINS: '1' } });
+ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMINS, con cupo como todos (${r.s})`);
+
+// ---------- (0.7.13) el dinero de los rivales: lo que apunta todo el mundo ----------
+{
+  // un Durable Object falso con list y delete (como el de SQLite de Cloudflare)
+  const objs = new Map();
+  const QRd = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objs.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, structuredClone(v)); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); }, deleteAll: async () => m.clear(), setAlarm: async () => {},
+          list: async ({ prefix = '', end, reverse, limit } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (end == null || k < end)).sort(); if (reverse) ks.reverse(); if (limit) ks = ks.slice(0, limit); return new Map(ks.map((k) => [k, m.get(k)])); },
+        };
+        objs.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objs.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eD = { VINCULOS: KV, ADMINS: '667015', QR: QRd };
+  const almacen = () => objs.get('dinero|todos').m;
+  const hx = (i) => i.toString(16).padStart(24, '0');
+  const ap = (i, o = {}) => ({ h: hx(i), e: -2e6, m: 3e6, r: 0, dl: 70, dp: 3, mov: 40, sub: 2, pago: false, val: 150e6, pos: 3, nr: 10, est: 20e6, ...o });
+  minuto();
+  // sin sesión, no; con ella, sí, y no se guarda de quién es
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1), tk: 'corto', e: eD });
+  ok(r.s === 401, `/dinero sin sesión: ${r.s}`);
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1), e: eD });
+  const guardados = [...almacen().entries()].filter(([k]) => k.startsWith('r|'));
+  ok(r.s === 200 && guardados.length === 1 && !JSON.stringify(guardados).includes('4242') && !('h' in guardados[0][1]) && guardados[0][1].e === -2e6, `/dinero guarda el apunte sin la cuenta: ${r.s} ${JSON.stringify(guardados)}`);
+  // lo raro no entra
+  r = await pide({ ruta: '/dinero', cuerpo: ap(2, { e: 9e9 }), e: eD });
+  const r2 = await pide({ ruta: '/dinero', cuerpo: { ...ap(3), h: 'NOESHEX' }, e: eD });
+  const r3 = await pide({ ruta: '/dinero', cuerpo: ap(4, { nombre: 'Pepe', liga: '77' }), e: eD });
+  ok(r.s === 400 && r2.s === 400 && r3.s === 200 && !JSON.stringify([...almacen().values()]).includes('Pepe'), `lo que no cuadra, 400; lo de más (nombres, liga) no se guarda (${r.s} ${r2.s} ${r3.s})`);
+  // el mismo rival el mismo día (misma huella): uno solo, el último
+  minuto();
+  r = await pide({ ruta: '/dinero', cuerpo: ap(1, { e: -5e6 }), e: eD });
+  const deUno = [...almacen().entries()].filter(([k]) => k.endsWith(hx(1)));
+  ok(r.s === 200 && deUno.length === 1 && deUno[0][1].e === -5e6, 'el mismo rival el mismo día cuenta una vez (lo último)');
+  // por cuenta: 6 al minuto y DINERO_CUENTA_DIA al día
+  let s429 = 0, s200 = 0;
+  for (let i = 0; i < 10; i++) { const x = await pide({ ruta: '/dinero', cuerpo: ap(100 + i), tk: 'y'.repeat(30), ip: `10.1.0.${i}`, e: eD }); if (x.s === 429) s429++; else if (x.s === 200) s200++; }
+  ok(s200 === 6 && s429 === 4, `por cuenta, 6 al minuto (${s200} bien, ${s429} frenados)`);
+  let dia = 0;
+  for (let k = 0; k < 8; k++) { minuto(); for (let i = 0; i < 6; i++) { const x = await pide({ ruta: '/dinero', cuerpo: ap(200 + k * 10 + i), tk: 'y'.repeat(30), ip: `10.2.${k}.${i}`, e: eD }); if (x.s === 200) dia++; } }
+  ok(dia + s200 === W2.DINERO_CUENTA_DIA, `por cuenta, ${W2.DINERO_CUENTA_DIA} al día (${dia + s200})`);
+  // la corrección: mediana y tramos
+  const cal0 = W2.calDinero([{ e: -1e6, dl: 10, sub: 0, dp: 0 }, { e: -3e6, dl: 80, sub: 2, dp: 4 }, { e: -5e6, dl: 120, sub: 5, dp: 6 }, { e: 1e6, dl: 20, sub: 0, dp: 0 }, { e: -4e6, dl: 90, sub: 1, dp: 3 }]);
+  const tr = (l, d) => l.find((x) => x.desde === d);
+  ok(cal0.n === 5 && cal0.med === -3e6 && tr(cal0.porDias, 0).n === 2 && tr(cal0.porDias, 0).med === 0 && tr(cal0.porDias, 60).n === 2 && tr(cal0.porSub, 3).n === 1 && tr(cal0.porParon, 1).n === 3 && cal0.p10 < cal0.p90, `calDinero: mediana y tramos ${JSON.stringify(cal0)}`);
+  // /dinero/cal: sin sesión vale, y se guarda 6 h
+  r = await pide({ m: 'GET', ruta: '/dinero/cal', tk: '', e: eD });
+  const n0 = r.j && r.j.n;
+  ok(r.s === 200 && n0 >= 30 && r.j.porDias.length === 4 && almacen().has('cal'), `/dinero/cal: ${r.s} n=${n0}`);
+  // con un apunte de hace 200 días: se borra al rehacer la corrección (pasadas las 6 h)
+  almacen().set(`r|${new Date(Date.now() - 200 * 864e5).toISOString().slice(0, 10)}|${hx(9)}`, { e: 0, dl: 1, sub: 0, dp: 0 });
+  desfase += 7 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/dinero/cal', tk: '', e: eD });
+  ok(r.s === 200 && ![...almacen().keys()].some((k) => k.endsWith(hx(9))), 'lo de más de 180 días se borra al rehacer la corrección');
+  // sin el objeto, 503 claro
+  r = await pide({ ruta: '/dinero', cuerpo: ap(5), e: { VINCULOS: KV } });
+  ok(r.s === 503, `/dinero sin objeto: ${r.s}`);
+}
+
+// ---------- (0.7.13u) lo que se paga por los libres en todas las ligas: /pujas y /pujas/cal ----------
+{
+  const objs = new Map();
+  const QRp = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objs.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, structuredClone(b)); else m.set(k, structuredClone(v)); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); }, deleteAll: async () => m.clear(), setAlarm: async () => { m.set('__alarma', 1); },
+          list: async ({ prefix = '', end, reverse, limit } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (end == null || k < end)).sort(); if (reverse) ks.reverse(); if (limit) ks = ks.slice(0, limit); return new Map(ks.map((k) => [k, m.get(k)])); },
+        };
+        objs.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objs.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eP = { VINCULOS: KV, ADMINS: '667015', QR: QRp };
+  const almacen = () => objs.get('pujas|todos').m;
+  const hx = (i) => i.toString(16).padStart(24, '0');
+  const hoyD = new Date(Date.now()).toISOString().slice(0, 10);
+  const cp = (i, o = {}) => ({ k: hx(i), d: hoyD, s: 0.08, v: 30e6, r: 0.015, top: false, ...o });
+  minuto();
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(1)] }, tk: 'corto', e: eP });
+  ok(r.s === 401, `/pujas sin sesión: ${r.s}`);
+  // de golpe, varias; lo raro (sin huella, valor imposible, de hace 3 meses) se queda fuera y lo de más no se guarda
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(1), cp(2, { s: 0.2, v: 86e6, r: 0.029, top: true }), cp(3, { k: 'NO' }), cp(4, { v: 9e9 }), cp(5, { d: '2026-01-01' }), cp(6, { nombre: 'Valverde', liga: '77', pid: 1234 })] }, e: eP });
+  const g = [...almacen().entries()].filter(([k]) => k.startsWith('c|'));
+  ok(r.s === 200 && r.j.n === 3 && g.length === 3 && !JSON.stringify(g).includes('Valverde') && !JSON.stringify(g).includes('1234') && !("k" in g[0][1]) && !almacen().has('__alarma'), `/pujas guarda 3 de 6, sin nombres ni ids ni alarma: ${r.s} ${JSON.stringify(g)}`);
+  // la misma compra mandada por otro de la liga (misma huella): una sola
+  minuto();
+  await pide({ ruta: '/pujas', cuerpo: { c: [cp(1, { s: 0.09 })] }, tk: 'z'.repeat(30), e: eP });
+  ok([...almacen().keys()].filter((k) => k.endsWith(hx(1))).length === 1, 'la misma compra desde dos móviles cuenta una vez');
+  // nada válido, 400; por cuenta, 4 al día
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(9, { s: 'x' })] }, e: eP });
+  ok(r.s === 400, `/pujas sin nada válido: ${r.s}`);
+  let dia = 0;
+  for (let k = 0; k < 6; k++) { minuto(); const x = await pide({ ruta: '/pujas', cuerpo: { c: [cp(50 + k)] }, tk: 'w'.repeat(30), ip: `10.5.0.${k}`, e: eP }); if (x.s === 200) dia++; }
+  ok(dia === W2.PUJAS_CUENTA_DIA, `por cuenta, ${W2.PUJAS_CUENTA_DIA} veces al día (${dia})`);
+  // los tramos: los que suben fuerte y los top aparte
+  const regs = [];
+  for (let i = 0; i < 10; i++) regs.push({ s: 0.03 + i * 0.002, v: 32e6, r: 0.002, top: false }, { s: 0.14 + i * 0.004, v: 32e6, r: 0.02, top: false }, { s: 0.18 + i * 0.004, v: 85e6, r: 0.025, top: true });
+  const cal = W2.calPujas(regs), cel = (k) => cal.celdas.find((x) => x.k === k);
+  ok(cal.n === 30 && cel('4|0').n === 10 && cel('4|2').n === 20 && cel('top|2').n === 10 && cel('4|2').med > cel('4|0').med + 0.1 && cel('top|2').med > cel('4|2').med && cel('4|*').n === 30 && cal.tv.length === 5 && cal.tr.length === 3, `calPujas por tramos: ${JSON.stringify(cal.celdas.map((x) => [x.k, x.n, x.med]))}`);
+  r = await pide({ m: 'GET', ruta: '/pujas/cal', tk: '', e: eP });
+  ok(r.s === 200 && r.j.n >= 3 && Array.isArray(r.j.celdas) && almacen().has('cal'), `/pujas/cal: ${r.s} n=${r.j && r.j.n}`);
+  // lo de más de 120 días se borra al rehacerlo (pasadas las 6 h)
+  almacen().set(`c|${new Date(Date.now() - 130 * 864e5).toISOString().slice(0, 10)}|${hx(99)}`, { s: 0, v: 1e6, r: null, top: false });
+  desfase += 7 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/pujas/cal', tk: '', e: eP });
+  ok(r.s === 200 && ![...almacen().keys()].some((k) => k.endsWith(hx(99))), 'lo de más de 120 días se borra al rehacer');
+  r = await pide({ ruta: '/pujas', cuerpo: { c: [cp(7)] }, e: { VINCULOS: KV } });
+  ok(r.s === 503, `/pujas sin objeto: ${r.s}`);
+}
+
+// (0.7.13i) el semáforo de LaLiga (/estado) y la entrada paso a paso (/embudo), con un objeto que también lista y borra
+{
+  const objE = new Map();
+  const QRE = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objE.has(id)) {
+        const m = new Map();
+        const storage = {
+          get: async (k) => m.get(k), put: async (k, v) => m.set(k, v), deleteAll: async () => m.clear(), setAlarm: async () => {}, getAlarm: async () => null,
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); },
+          list: async ({ prefix = '', end, reverse, limit = 1e9 } = {}) => { let ks = [...m.keys()].filter((k) => k.startsWith(prefix) && (!end || k < end)).sort(); if (reverse) ks.reverse(); return new Map(ks.slice(0, limit).map((k) => [k, m.get(k)])); },
+        };
+        objE.set(id, { o: new W2.Emparejar({ storage }), m });
+      }
+      const { o } = objE.get(id);
+      return { fetch: (u, op) => o.fetch(new Request(u, op)) };
+    },
+  };
+  const eE = { VINCULOS: KV, ADMINS: '667015', QR: QRE };
+  // LaLiga falsa: «vivo» contesta como ahora; «caido», 502 en todo
+  let laliga = 'vivo', probadas = 0;
+  const fAntes = globalThis.fetch;
+  globalThis.fetch = async (u, o) => {
+    const s = String(u);
+    if (s.includes('login.laliga.es') || s.includes('/teams-master') || (s.includes('/user/me') && !(o && o.headers && new Headers(o.headers).get('authorization')))) {
+      probadas++;
+      if (laliga === 'caido') return new Response('<h1>502</h1>', { status: 502 });
+      if (s.includes('login.laliga.es')) return new Response('{"error":"invalid_grant","error_description":"AADB2C90090: x"}', { status: 400 });
+      if (s.includes('/teams-master')) return new Response(JSON.stringify(Array.from({ length: 20 }, (_, i) => ({ id: i, name: `Equipo ${i}` }))), { status: 200 });
+      return new Response('{"message":"Unauthorized"}', { status: 401 });
+    }
+    return fAntes(u, o);
+  };
+  minuto();
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.s === 200 && r.j.nivel === 'verde' && r.j.login.e === 'ok' && r.j.api.e === 'ok' && r.j.cuenta.e === 'ok', `/estado con LaLiga bien: ${r.s} ${r.j && r.j.nivel}`);
+  const p0 = probadas;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE, ip: '10.0.0.7' });
+  ok(r.j.nivel === 'verde' && probadas === p0, 'el estado se guarda 2 minutos (no se vuelve a mirar)');
+  laliga = 'caido'; desfase += 3 * 60e3;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.nivel === 'rojo', `/estado con LaLiga caída: ${r.j && r.j.nivel}`);
+  // los pasos: sin sesión; uno raro, 400
+  laliga = 'vivo'; desfase += 3 * 60e3; minuto();
+  for (const p of ['ver', 'l', 'x-laliga', 'x-laliga', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
+  await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
+  r = await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'borrar', k: 'play' }), tk: '', e: eE });
+  ok(r.s === 400, `/embudo con un paso que no existe: ${r.s}`);
+  // con más fallos de LaLiga que entradas, amarillo aunque contesten
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.nivel === 'amarillo' && r.j.entradas.x === 3 && r.j.entradas.ok === 1, `/estado con 3 entradas fallidas y 1 buena: ${r.j && r.j.nivel}`);
+  const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
+  const hoy = Object.keys(dias)[0], d = dias[hoy];
+  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 3 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  // freno por IP: 20 al minuto
+  minuto();
+  const est = [];
+  for (let i = 0; i < 25; i++) est.push((await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-pc' }), tk: '', e: eE, ip: '9.9.9.9' })).s);
+  ok(est.filter((s) => s === 429).length === 5, `/embudo, 25 seguidas desde una IP: ${est.filter((s) => s === 429).length} con 429`);
+  globalThis.fetch = fAntes;
+}

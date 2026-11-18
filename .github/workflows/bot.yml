@@ -32,6 +32,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # para lanzar «Previa web» (previa-web.yml) cuando toca
 
 concurrency:
   group: bot-x
@@ -104,6 +105,26 @@ jobs:
         env:
           REGISTRO_NUEVO: ${{ inputs.registro_nuevo && steps.traer.outputs.nuevo == '1' && '1' || '' }}
         run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json ${TIPOS:+--tipos=$TIPOS} ${REGISTRO_NUEVO:+--registro-nuevo=1}
+      # la previa de la jornada en la web (bot/previa-web.mjs): unas 76 h y unas 34 h antes del primer partido. Lo ya lanzado se apunta en
+      # estado/previa-web.json (rama bot-estado) para no lanzarla dos veces si la Action no llega a subir nada
+      - name: Previa de la web (¿toca lanzarla?)
+        if: ${{ !cancelled() && !inputs.comprobar && !inputs.tipos && steps.traer.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          r=$(node bot/previa-web.mjs --toca --estado=estado/previa-web.json --apuntar=1 | tail -1)
+          if [ -n "$r" ]; then gh workflow run previa-web.yml -R "$GITHUB_REPOSITORY" --ref main && echo "Lanzada la previa de la web ($r)"; fi
+      # (sesión 3 de AdSense) los onces confirmados en jornada/onces.html: una vez por hora de saque, unos 65 min antes, lanza «Portal web»
+      # con «onces», que espera a que salgan los oficiales. Lo ya lanzado, en estado/onces-web.json (rama bot-estado)
+      - name: Onces confirmados de la web (¿toca?)
+        if: ${{ !cancelled() && !inputs.comprobar && !inputs.tipos && steps.traer.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          r=$(node bot/portal-web.mjs --onces-toca --estado=estado/onces-web.json --apuntar=1 | tail -1)
+          if [ -n "$r" ]; then gh workflow run portal-web.yml -R "$GITHUB_REPOSITORY" --ref main -f onces=true && echo "Lanzados los onces confirmados ($r)"; fi
       # Telegram corre aunque el paso de X falle, pero no si no se ha podido traer el registro (mandaría otra vez lo ya mandado)
       - name: Respuestas para los clubes (Telegram)
         if: ${{ !cancelled() && !inputs.comprobar && !inputs.tipos && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}

@@ -96,9 +96,11 @@ export const seleccion = (e) => ({ nombre: pais(e.codigo) || e.nombre, codigo: e
 
 /**
  * Las actas de los partidos de selecciones acabados de esos días: [{ id, fecha, liga, casa, fuera, jugadores }] (solo con algún jugador de
- * LaLiga). Los días anteriores a hoy, del registro si ya están (y se guardan si no).
+ * LaLiga). Los días anteriores a hoy, del registro si ya están (y se guardan si no). Con `enJuego`, también los que se están jugando
+ * (`vivo: true`; lib/lesion-seleccion.mjs: una lesión con la selección se tuitea a veces con el partido aún sin acabar). Un día con algún
+ * partido sin acabar no se guarda, así que lo de un partido en juego nunca se queda en la caché.
  */
-export async function actasDe(dias, { clubesLiga, pedir = json, registro = null, ahora = Date.now(), log = () => {} } = {}) {
+export async function actasDe(dias, { clubesLiga, pedir = json, registro = null, ahora = Date.now(), log = () => {}, enJuego = false } = {}) {
   const hoy = aaaammdd(ahora);
   const cache = (registro && registro.datos && registro.datos.actasSelecciones) || {};
   const faltan = dias.filter((d) => !(d < hoy && Array.isArray(cache[d])));
@@ -110,7 +112,11 @@ export async function actasDe(dias, { clubesLiga, pedir = json, registro = null,
     let todosAcabados = true;
     for (const l of r.leagues) for (const m of l.matches || []) {
       if (!deSelecciones(l, m) || (m.status && m.status.cancelled)) continue;
-      if (m.status && m.status.finished) ms.push({ id: m.id, fecha: faltan[i], liga: l.name, hora: (m.status && m.status.utcTime) || m.time || null }); else todosAcabados = false;
+      if (m.status && m.status.finished) ms.push({ id: m.id, fecha: faltan[i], liga: l.name, hora: (m.status && m.status.utcTime) || m.time || null });
+      else {
+        todosAcabados = false;
+        if (enJuego && m.status && (m.status.ongoing || m.status.started)) ms.push({ id: m.id, fecha: faltan[i], liga: l.name, hora: m.status.utcTime || m.time || null, vivo: true });
+      }
     }
     if (todosAcabados && faltan[i] < hoy) completos.add(faltan[i]);
   });
@@ -119,7 +125,7 @@ export async function actasDe(dias, { clubesLiga, pedir = json, registro = null,
   dets.forEach((d, i) => {
     const a = leerActa(d, clubesLiga);
     if (!d) completos.delete(ms[i].fecha);          // un detalle que no llega: ese día no se guarda, se vuelve a pedir
-    if (a && a.jugadores.length) (nuevas[ms[i].fecha] ||= []).push({ id: ms[i].id, fecha: ms[i].fecha, liga: ms[i].liga, hora: ms[i].hora || (d.header && d.header.status && d.header.status.utcTime) || null, ...a });
+    if (a && a.jugadores.length) (nuevas[ms[i].fecha] ||= []).push({ id: ms[i].id, fecha: ms[i].fecha, liga: ms[i].liga, hora: ms[i].hora || (d.header && d.header.status && d.header.status.utcTime) || null, ...(ms[i].vivo ? { vivo: true } : {}), ...a });
   });
   if (faltan.length) log(`  (actas) pedidos a FotMob ${faltan.length} días, ${ms.length} partidos de selecciones acabados; ${Object.values(nuevas).flat().length} con jugadores de LaLiga`);
   if (registro && registro.datos && completos.size) {
@@ -156,7 +162,7 @@ export function porJugador(actas, jugadores, equipos) {
     const r = por.get(k) || { j, sel: seleccion(yo), partidos: [], min: 0, jugados: 0 };
     const marcador = yo.goles != null && otro.goles != null ? `${yo.goles}-${otro.goles}` : null;
     const resultado = marcador ? (yo.goles > otro.goles ? 'ganó' : yo.goles < otro.goles ? 'perdió' : 'empató') : null;
-    r.partidos.push({ fecha: a.fecha, hora: a.hora || null, idPartido: a.id, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
+    r.partidos.push({ fecha: a.fecha, hora: a.hora || null, idPartido: a.id, vivo: !!a.vivo, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
     r.min += x.min; if (x.min > 0) r.jugados++;
     por.set(k, r);
   }

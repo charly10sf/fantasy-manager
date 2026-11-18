@@ -117,9 +117,20 @@ export function recsDe(ops, M) {
   });
 }
 
+/* (0.7.13o, Carlos 16 nov: Domy, en la web del iPhone, veía «Cómo van sus aciertos» y él, en Android, no) solo se
+   guardaban los 10 últimos planes, y con muchos al día ninguno tenía los 2 días que hacen falta para ver cómo salió. Ahora
+   lo que recomienda cada plan (solo eso, sin el plan entero) se guarda aparte 31 días */
+export function guardarRecs(P) {
+  if (!P || !Array.isArray(P.recs) || !P.recs.length) return;
+  const ahora = Date.now();
+  const h = LS.get(K('recs-hist'), []).filter((x) => x && x.t !== P.t && ahora - x.t < 31 * DIA);
+  h.unshift({ t: P.t, recs: P.recs });
+  LS.set(K('recs-hist'), h.slice(0, 120));
+}
 /** cómo salió lo que te recomendó (de planes de hace 2 a 30 días) */
 export function aciertosPlanes(D, M) {
-  const P = LS.get(K('planes'), []);
+  const vistosT = new Set();
+  const P = [...LS.get(K('planes'), []), ...LS.get(K('recs-hist'), [])].filter((p) => p && p.t && !vistosT.has(p.t) && vistosT.add(p.t)).sort((a, b) => b.t - a.t);
   const ahora = Date.now();
   const vistos = new Set();
   const lista = [];

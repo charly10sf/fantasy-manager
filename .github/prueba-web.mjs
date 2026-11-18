@@ -13,7 +13,7 @@
 //  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
-//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, sin cupo y con la ruta caída.
+//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, se repite tras un corte, sin cupo y con la ruta caída.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -234,7 +234,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await page.selectOption('select[data-cambia="avisoAntes"][data-k="rivales"]', '30').catch(() => {});
   await page.waitForTimeout(300);
   const a3 = await page.evaluate(async () => { const A = await import('./js/avisos.js'); return { antes: A.cfgAvisos().antes.rivales, sigueAbierta: !!document.querySelector('details.aj-sec[data-k="avisos"][open]') }; });
-  if (a0.n !== 5 || a0.abiertas || a0.botonEnSummary) mal(`Ajustes: secciones mal (${JSON.stringify(a0)})`);
+  // (0.8a) seis: con «Apodos de los rivales»
+  if (a0.n !== 6 || a0.abiertas || a0.botonEnSummary) mal(`Ajustes: secciones mal (${JSON.stringify(a0)})`);
   else if (!a1.abiertas.includes('avisos') || !a1.filas.includes('Poner el once') || a1.filas.length > 3) mal(`Ajustes: el buscador no encuentra «once» bien (${JSON.stringify(a1)})`);
   else if (!a2.nada || a2.visibles) mal(`Ajustes: buscando algo que no hay no sale el aviso (${JSON.stringify(a2)})`);
   else if (a3.antes !== 30 || !a3.sigueAbierta) mal(`Ajustes: la antelación de rivales no se guarda o se cierra la sección (${JSON.stringify(a3)})`);
@@ -486,7 +487,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   const casos = [
     ['misma parte Android, AlDia la baja', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva' }, 'recarga'],
     ['AlDia ya la descartó', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'igual' }, 'descargar'],
-    ['parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'apk'],
+    // (0.7.13j) el APK de GitHub ya no se publica: con la parte Android nueva no ofrece ninguna descarga
+    ['APK de GitHub con parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
     ['Google Play con parte Android nueva', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
     ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
     ['la publicada no es más nueva', { canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
@@ -514,7 +516,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
           if (espera === 'recarga') { if (cargas < 2) r = 'no recarga con la nueva'; }
           else {
             const b1 = await botones();
-            if (espera === 'descargar' && b1.join() !== 'Descargar la app,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
+            if (espera === 'descargar' && b1.join() !== 'Ir a Google Play,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
+            if (espera === 'descargar' && await page.$('#forzar [data-accion="bajarApp"]')) r = 'aún ofrece descargar la app de fuera de Google Play';
             if (espera === 'reintentar' && b1.join() !== 'Volver a intentarlo') r = `botones tras el error ${b1.join()}`;
             const txt = await page.$eval('#forzar p', (p) => p.textContent);
             if (espera === 'reintentar' && !/sin red/.test(txt)) r = `no dice el motivo: ${txt}`;
@@ -569,14 +572,19 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 {
   const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
   const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
-  let modo = 'bien', cuerpo = null;
+  let modo = 'bien', cuerpo = null, rids = [];
   await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
     const q = r.request();
     const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
     if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
     if (!q.url().endsWith('/plan')) return r.abort('blockedbyclient');
     cuerpo = JSON.parse(q.postData() || 'null');
+    rids.push(cuerpo && cuerpo.rid);
     if (modo === 'caido') return r.abort('connectionrefused');
+    // (15 nov) la conexión se corta la primera vez: la app lo repite sola con el mismo id
+    if (modo === 'corte' && rids.length === 1) return r.abort('connectionreset');
+    // (15 nov) la app se va a segundo plano y la petición se queda colgada: al volver (fm-vuelta) se repite con el mismo id
+    if (modo === 'colgado' && rids.length === 1) return new Promise((ok) => setTimeout(ok, 20000)).then(() => r.abort('timedout')).catch(() => {});
     const cupo = (u) => ({ usados: u, gratis: 2, max: 5, extras: 0, quedan: Math.max(0, 2 - u), masConAnuncio: true });
     if (modo === 'cupo') return r.fulfill({ status: 429, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ e: 'Ya has hecho tus 2 planes con la IA de hoy.', cupo: cupo(2) }) });
     if (modo === 'tarde') return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `     ${JSON.stringify({ e: 'La IA de los planes no contesta ahora mismo.', estado: 503, servicio: true })}` });
@@ -595,6 +603,20 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   if (!r.ok || !r.app || !r.corto || r.titular !== 'Titular de prueba de la IA de la app' || !r.frase || !r.cupo || r.cupo.quedan !== 1) mal(`IA de la app: el plan no llega bien: ${JSON.stringify(r)}`);
   else if (!cuerpo || !/^HOY: /.test(cuerpo.pedido) || 'sistema' in cuerpo || !['broma', 'serio'].includes(cuerpo.tono) || !Array.isArray(cuerpo.bloq) || cuerpo.extra !== false) mal(`IA de la app: lo que se manda al Worker: ${JSON.stringify(cuerpo).slice(0, 200)}`);
   else bien(`IA de la app: el plan llega por el Worker, sin clave y con el pedido corto (${cuerpo.pedido.length} caracteres, alias: ${JSON.stringify(cuerpo.alias)})`);
+  modo = 'corte'; rids = [];
+  r = await prueba('corte');
+  if (!r.ok || !r.app || rids.length !== 2 || !rids[0] || rids[0] !== rids[1]) mal(`IA de la app: con un corte, se repite una vez con el mismo id: ${JSON.stringify(r).slice(0, 160)} · ${JSON.stringify(rids)}`);
+  else bien('IA de la app: se corta la conexión y la app lo repite sola una vez, con el mismo id (no cuenta dos veces)');
+  modo = 'colgado'; rids = [];
+  const vuelta = page.evaluate(() => new Promise((ok) => setTimeout(() => { window.dispatchEvent(new Event('fm-vuelta')); ok(); }, 1500)));
+  const t0c = Date.now();
+  r = await prueba('colgado');
+  await vuelta;
+  const segC = Math.round((Date.now() - t0c) / 1000);
+  if (!r.ok || !r.app || rids.length !== 2 || rids[0] !== rids[1] || segC > 12) mal(`IA de la app: al volver de segundo plano con la petición colgada: ${JSON.stringify(r).slice(0, 160)} · ${JSON.stringify(rids)} · ${segC} s`);
+  else bien(`IA de la app: vuelve de segundo plano con el plan colgado y lo recoge con el mismo id (${segC} s)`);
+  const ridSuelto = await page.evaluate(() => localStorage.getItem('fm-plan-rid'));
+  if (ridSuelto) mal(`IA de la app: el id del pedido se queda guardado tras llegar el plan: ${ridSuelto}`);
   modo = 'cupo';
   r = await prueba('cupo');
   if (r.ok || !r.cupo || r.cupo.quedan !== 0 || !r.cache || r.auto) mal(`IA de la app: con el cupo gastado: ${JSON.stringify(r)}`);
@@ -623,6 +645,115 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 15b: (16 nov, 0.7.13l) los planes a su hora y «Rehacer el plan»: por defecto a las 00:25 y las 12:25 (10 min después del
+// mercado y 12 h después); un turno pasado sin plan de la IA hace que salga solo, y no si no quedan de hoy; en el plan, «Rehacer
+// el plan» en lugar de «Compartir», y sus ajustes con el tono y las dos horas
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  const r = await page.evaluate(async () => {
+    const H = await import('/js/planes-hora.js');
+    const ia = await import('/js/ia.js');
+    const { LS, diaDe } = await import('/js/util.js');
+    const S = window.S, M = { cierreMercado: S.M.cierreMercado };
+    const hs = H.horasPlan(M).map((x) => x.txt);
+    // (la hora del móvil: en Madrid, 00:25 y 12:25; en la Action, que va en UTC, 23:25 y 11:25)
+    const hm = (t) => { const d = new Date(t); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+    // (0.7.13n) la de su liga: 10 min después de su mercado; sin mercado conocido, la última que se vio, y si nunca, ninguna
+    const espera = M.cierreMercado ? [hm(M.cierreMercado + 10 * 60e3), hm(M.cierreMercado + 10 * 60e3 + 12 * 3600e3)] : [];
+    // otra liga con el mercado a las 20:00: sus planes, a las 20:10 y a las 08:10
+    const veinte = new Date(); veinte.setHours(20, 0, 0, 0); if (veinte.getTime() < Date.now()) veinte.setDate(veinte.getDate() + 1);
+    const otra = H.horasPlan({ cierreMercado: veinte.getTime() }).map((x) => x.txt).join(' y ');
+    H.horasPlan(M);
+    // un turno de hoy que ya ha pasado: las horas elegidas, una hace 20 minutos
+    const d = new Date(Date.now() - 20 * 60e3), hh = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    const mismoDia = diaDe(d.getTime()) === diaDe();
+    H.guardarCfgHoras({ h1: hh, h2: '' });
+    const pend = H.turnoPendiente(M, { t: Date.now() - 5 * 3600e3 });
+    const cubierto = H.turnoPendiente(M, { t: Date.now() - 10 * 60e3 });
+    LS.set('planes-cupo', { dia: diaDe(), quedan: 1, gratis: 2, max: 5, usados: 1 });
+    const conCupo = ia.planViejoAuto(S.M, false);
+    LS.set('planes-cupo', { dia: diaDe(), quedan: 0, gratis: 2, max: 5, usados: 2 });
+    const sinCupo = ia.planViejoAuto(S.M, false);
+    H.guardarCfgHoras({ h1: '', h2: '' });
+    localStorage.removeItem('fm-planes-cupo');
+    return { hs, espera, otra, mismoDia, pend: !!pend, cubierto: !!cubierto, conCupo, sinCupo };
+  });
+  const def = JSON.stringify(r.hs) === JSON.stringify(r.espera);
+  if (!def) mal(`planes a su hora: las horas por defecto no son las del mercado: ${JSON.stringify(r.hs)} y debían ser ${JSON.stringify(r.espera)}`);
+  else if (r.otra !== '20:10 y 08:10') mal(`planes a su hora: con el mercado de la liga a las 20:00 salen a las ${r.otra}`);
+  else if (r.mismoDia && (!r.pend || r.cubierto)) mal(`planes a su hora: el turno pasado sin plan: ${JSON.stringify(r)}`);
+  else if (r.mismoDia && (!r.conCupo || r.sinCupo)) mal(`planes a su hora: con y sin planes de hoy: ${JSON.stringify(r)}`);
+  else bien(`planes a su hora: los de su mercado (${r.hs.join(' y ')}; con el mercado a las 20:00, ${r.otra}); uno pasado sin plan sale solo y no si no quedan de hoy`);
+  const cab = await page.evaluate(() => { const c = document.querySelector('.plan-cab'); return { t: c ? c.innerText : '', rehacer: !!document.querySelector('.plan-cab [data-accion="planYa"]'), aj: !!document.querySelector('.plan-cab [data-accion="planAjustes"]'), comp: !!document.querySelector('.plan-cab [data-accion="tarjeta"]'), quien: (document.querySelector('.plan-quien') || {}).innerText || '' }; });
+  // (en la demo sin clave el plan es el de la app: el botón dice «Hacerlo con la IA» o no sale si no hay IA)
+  if (cab.comp || /Compartir/.test(cab.t)) mal(`plan: sigue el botón «Compartir»: ${cab.t}`);
+  else if (!cab.aj) mal(`plan: faltan los ajustes del plan en la cabecera: ${cab.t}`);
+  else bien(`plan: sin «Compartir»; ${cab.rehacer ? `«${cab.t.replace(/\s+/g, ' ').replace('Plan de hoy', '').trim()}» y ` : ''}sus ajustes en la cabecera`);
+  await page.evaluate(() => document.querySelector('.plan-cab [data-accion="planAjustes"]').click());
+  await page.waitForTimeout(500);
+  // (0.7.13n) sin imagen para el grupo ni «Compartir»
+  const aj = await page.evaluate(() => ({ h1: !!document.querySelector('select[data-cambia="planH1"]'), h2: !!document.querySelector('select[data-cambia="planH2"]'), tono: !!document.querySelector('select[data-cambia="pullitas"]'), rehacer: !!document.querySelector('[data-accion="planYa"]'), img: !!document.querySelector('[data-accion="tarjeta"]') || /Compartir|Imagen del plan/.test((document.querySelector('#hoja') || document.querySelector('.hoja') || {}).innerText || '') }));
+  if (!aj.h1 || !aj.h2 || !aj.tono || aj.img) mal(`plan: los ajustes del plan: ${JSON.stringify(aj)}`);
+  else {
+    await page.selectOption('select[data-cambia="planH2"]', '20:30');
+    await page.waitForTimeout(400);
+    const c = await page.evaluate(() => JSON.parse(localStorage.getItem('fm-cfg-planes-hora') || '{}'));
+    if (c.h2 !== '20:30') mal(`plan: elegir la hora del segundo plan no se guarda: ${JSON.stringify(c)}`);
+    else bien('plan: sus ajustes (tono, las dos horas y rehacer, sin imagen ni «Compartir») y la hora elegida se guarda');
+  }
+  if (errores.length) mal(`planes a su hora: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 15c: (16 nov, 0.7.13p, aviso de Domy) en el parón, un fichaje que la app ve subiendo hasta la vuelta no se descarta
+// aunque la IA lo ponga para el once (es dinero y llega a tiempo); uno que no sube, sí
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const I = await import('/js/ia.js');
+    const S = window.S, M = S.M, D = S.D, n = Date.now();
+    const antes = { paron: M.paron, enParon: M.enParon, ini: M.proxima && M.proxima.ini, esp: M.especular };
+    M.paron = { ini: n - 3 * 864e5, fin: n + 5 * 864e5 }; M.enParon = true;
+    if (M.proxima) M.proxima.ini = n + 5 * 864e5;
+    const m = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 5e6) || M.mercado[0];
+    const j = m.j, precio = Math.round(j.valor * 1.08);
+    const una = (esp) => { M.especular = esp; const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: j.nombre, pid: j.id, importe: precio, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(j.id)); return o ? !!o.descartada : null; };
+    const esp0 = (antes.esp || []).filter((x) => x.pid !== j.id);
+    // (sin saldo, para que no entre por estar a su valor)
+    const dOrig = D.dinero; D.dinero = 0;
+    const sube = una([...esp0, { j, pid: j.id, precio, valorFuturo: j.valor * 1.2, r: 0.025, beneficio: j.valor * 0.12 }]);
+    const quieto = una(esp0);
+    D.dinero = dOrig;
+    // (0.7.13p) uno a su valor, bueno y sin bajar, que se paga con el saldo: vale para el once aunque no sea chollo; si no
+    // te llega con el saldo, no
+    const m2 = M.mercado.find((x) => x.tipo !== 'manager' && x.j && x.j.valor > 3e6 && x.j.valor < 25e6 && x.pid !== j.id && x.precio <= x.j.valor * 1.02 && !(antes.esp || []).some((e) => String(e.pid) === String(x.j.id))) || null;
+    let aValor = null, sinSaldo = null;
+    if (m2) {
+      m2.interes = Math.max(m2.interes || 0, 60);
+      const imp = Math.round(m2.j.valor * 1.09);
+      const d0 = D.dinero, ine0 = M.inercia, tend0 = M.tend;
+      M.inercia = (pid) => (String(pid) === String(m2.j.id) ? { fase: 'plano' } : ine0(pid));
+      M.tend = (pid) => (String(pid) === String(m2.j.id) ? { ...tend0(pid), p1: 0, p7: 0 } : tend0(pid));
+      const prueba = () => { const cu = I.cuadrarPlan({ titular: 'x', resumen: 'x', operaciones: [{ accion: 'pujar', objetivo: 'titular', jugador: m2.j.nombre, pid: m2.j.id, importe: imp, motivo: 'para el once' }] }, D, M); const o = cu.ops.find((x) => String(x.pid) === String(m2.j.id)); return o ? !!o.descartada : null; };
+      D.dinero = imp * 2 + (M.misPujas || 0); aValor = prueba();
+      D.dinero = Math.round(imp / 2) + (M.misPujas || 0); sinSaldo = prueba();
+      D.dinero = d0; M.inercia = ine0; M.tend = tend0;
+    }
+    M.paron = antes.paron; M.enParon = antes.enParon; if (M.proxima) M.proxima.ini = antes.ini; M.especular = antes.esp;
+    return { sube, quieto, aValor, sinSaldo };
+  });
+  if (r.sube !== false || r.quieto !== true) mal(`parón: el fichaje que sube hasta la vuelta (descartado: ${r.sube}) o el que no (descartado: ${r.quieto})`);
+  else if (r.aValor !== null && (r.aValor !== false || r.sinSaldo !== true)) mal(`parón: el que sale a su valor con saldo de sobra (descartado: ${r.aValor}) o sin saldo (descartado: ${r.sinSaldo})`);
+  else bien(`parón: lo que sube hasta la vuelta y${r.aValor === null ? '' : ' lo que sale a su valor pagado con el saldo'} no se descarta aunque sea para el once; lo demás, sí`);
+  if (errores.length) mal(`parón y fichajes que suben: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 16: (14 nov) las funciones top sin anuncio (en Play, sin consentimiento o sin relleno): gratis UNA vez al día por
 // dispositivo, todas juntas; la segunda vez del día no se abren y la hoja dice que no hay anuncio; al día siguiente, otra vez
 {
@@ -634,12 +765,13 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const L = await import('/js/limite.js');
     const { LS } = await import('/js/util.js');
     const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
-    const cerrar = () => { LS.del ? (LS.del('top-abierto'), LS.del('top-jornada')) : (localStorage.removeItem('fm-top-abierto'), localStorage.removeItem('fm-top-jornada')); };
+    const cerrar = () => { for (const k of ['top-abierto', 'top-jornada', 'top-rivales']) localStorage.removeItem(`fm-${k}`); };
+    const rid = String(window.S.M.rivales[0].e.teamId);
     const vez = async (clave) => {
-      window.S.anuncio = { para: 'top', clave };
+      window.S.anuncio = { para: 'top', clave, rival: rid };
       window.anuncioVisto('top', false, 'sin anuncio');
       await espera(200);
-      return { abierta: L.topAbierto(clave), error: (window.S.anuncio && window.S.anuncio.error) || null };
+      return { abierta: L.topAbierto(clave, rid), error: (window.S.anuncio && window.S.anuncio.error) || null };
     };
     cerrar();
     const una = await vez('inercia');
@@ -660,6 +792,145 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 16b: (0.7.12, Carlos 15 nov) todo con 1 anuncio salvo el dinero de un rival: 2 anuncios seguidos, ese rival 5
+// minutos, 2 veces por jornada; quién paga, 1 anuncio y 5 horas (todos los rivales); jornada nueva, a cero
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const L = await import('/js/limite.js');
+    const H = await import('/js/hojas.js');
+    const { LS } = await import('/js/util.js');
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    for (const k of ['top-abierto', 'top-jornada', 'top-rivales', 'top-quien', 'top-sin-anuncio']) localStorage.removeItem(`fm-${k}`);
+    L.fijarJornada(13);
+    const ids = window.S.M.rivales.map((x) => String(x.e.teamId));
+    const ver = async (clave, rid) => { window.S.anuncio = { para: 'top', clave, rival: rid }; window.anuncioVisto('top', true, ''); await espera(150); };
+    const out = {};
+    await ver('dineroRivales', ids[0]);
+    out.unoDeDos = { abierto: L.topAbierto('dineroRivales', ids[0]), faltan: L.faltanAnuncios('dineroRivales', ids[0]) };
+    await ver('dineroRivales', ids[0]);
+    const hasta = L.rivalAbiertoHasta(ids[0]);
+    out.dos = { abierto: !L.bloqueada('dineroRivales', ids[0]), min: Math.round((hasta - Date.now()) / 60e3), otro: L.bloqueada('dineroRivales', ids[1]), quien: L.bloqueada('quienPaga'), quedan: L.usosQuedan('dineroRivales'), cierre: L.proximoCierreTop() === hasta };
+    // pasados los 5 minutos, cerrado
+    const g = LS.get('top-rivales', null); g.abiertos[ids[0]] = Date.now() - 1000; LS.set('top-rivales', g);
+    out.pasado = L.bloqueada('dineroRivales', ids[0]);
+    await ver('quienPaga', null);
+    out.quien = { abierta: !L.bloqueada('quienPaga'), conRival: !L.bloqueada('quienPaga', ids[2]), horas: Math.round((L.abiertaHasta('quienPaga') - Date.now()) / 3600e3), faltan: L.faltanAnuncios('dineroRivales', ids[1]) };
+    await ver('dineroRivales', ids[1]); await ver('dineroRivales', ids[1]);
+    out.tope = { quedan: L.usosQuedan('dineroRivales'), tercero: L.bloqueada('dineroRivales', ids[2]) };
+    out.hojaLlena = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales', rival: ids[2] }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    out.hojaQuien = H.anuncioHTML({ anuncio: { para: 'top', clave: 'quienPaga' }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    out.elegir = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales' }, M: window.S.M, D: { demo: false } }, 'top');
+    L.fijarJornada(14);
+    out.nueva = { quedan: L.usosQuedan('dineroRivales') };
+    return out;
+  });
+  if (r.unoDeDos.abierto || r.unoDeDos.faltan !== 1) mal(`dinero por rival: con 1 de 2 ya se abre o no cuenta: ${JSON.stringify(r.unoDeDos)}`);
+  else bien('dinero por rival: con el primero de los dos anuncios sigue cerrado y falta 1');
+  if (!r.dos.abierto || r.dos.min !== 5 || !r.dos.otro || !r.dos.quien || r.dos.quedan !== 1 || !r.dos.cierre) mal(`dinero por rival: con 2 anuncios: ${JSON.stringify(r.dos)}`);
+  else bien('dinero por rival: con 2 anuncios, ese rival 5 minutos (los demás y quién paga, cerrados); queda 1 vez');
+  if (!r.pasado) mal('dinero por rival: pasados los 5 minutos sigue abierto');
+  else bien('dinero por rival: pasados los 5 minutos se cierra');
+  if (!r.quien.abierta || !r.quien.conRival || r.quien.horas !== 5 || r.quien.faltan !== 2) mal(`quién paga: ${JSON.stringify(r.quien)}`);
+  else bien('quién paga: 1 anuncio, todos los rivales, 5 horas (y no gasta las veces del dinero)');
+  if (r.tope.quedan !== 0 || !r.tope.tercero || !/Ya has visto el dinero de un rival las 2 veces/.test(r.hojaLlena)) mal(`dinero por rival: el tope de 2: ${JSON.stringify(r.tope)} / ${r.hojaLlena.slice(0, 160)}`);
+  else bien('dinero por rival: 2 veces por jornada y la tercera ya no');
+  if (!/5 horas/.test(r.hojaQuien) || /dos anuncios/.test(r.hojaQuien)) mal(`quién paga: la hoja: ${r.hojaQuien.slice(0, 200)}`);
+  else bien('quién paga: la hoja dice un anuncio y 5 horas');
+  if ((r.elegir.match(/data-rival="/g) || []).length) mal('dinero por rival: con el tope gastado, la elección deja abrir otro');
+  else bien('dinero por rival: sin rival se elige de la lista (con el tope gastado, ninguno se puede abrir)');
+  if (r.nueva.quedan !== 2) mal(`dinero por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
+  else bien('dinero por rival: en la jornada siguiente se vuelve a poder 2 veces');
+  if (errores.length) mal(`dinero por rival: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16c: (0.7.12) la recompensa diaria: 100 mil al día y 200 mil en los días de parón (Carlos, 14 nov)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(() => {
+    const M = window.S.M, js = M.jornadas, DIA = 864e5;
+    let hueco = null;
+    for (let i = 1; i < js.length; i++) if (js[i].ini - js[i - 1].fin > 9 * DIA) { hueco = [js[i - 1].fin, js[i].ini]; break; }
+    if (!hueco) return { sinHueco: true };
+    const enP = hueco[0] + 2 * DIA, fuera = hueco[0] - 3 * DIA;
+    return { paron: M.recompensaDia(enP), normal: M.recompensaDia(fuera), tresDiasParon: Math.round(M.recompensas(enP, enP + 3 * DIA)), tresDias: Math.round(M.recompensas(fuera - 3 * DIA, fuera)) };
+  });
+  if (r.sinHueco || r.paron !== 200000 || r.normal !== 100000 || r.tresDiasParon !== 600000 || r.tresDias !== 300000) mal(`recompensa diaria del parón: ${JSON.stringify(r)}`);
+  else bien('recompensa diaria: 100 mil al día y 200 mil en el parón (3 días de parón, 600 mil)');
+  if (errores.length) mal(`recompensa del parón: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16d: (0.7.12) lo que te han dicho los rivales corrige la cuenta: el que te lo dijo hace tiempo, con su diferencia;
+// los demás, con la mediana de todos (a medias con 3 apuntes)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const antes = await page.evaluate(async () => {
+    const { LS } = await import('/js/util.js');
+    const { K } = await import('/js/datos.js');
+    const M = window.S.M, ids = M.rivalesTid.filter((t) => { const c = M.dineroCuentaBruta(t); return c && c.v != null; }).slice(0, 4);
+    const t = Date.now() - 60 * 864e5, d = {};
+    for (const tid of ids.slice(0, 3)) { const c = M.dineroCuentaBruta(tid); d[tid] = { v: Math.round(c.v + 3e6), r: 0, min: Math.round(c.v + 3e6), max: Math.round(c.v + 3e6), t, est: Math.round(c.v) }; }
+    LS.set(K('dinero-dicho'), d);
+    return { ids, bruta: ids.map((tid) => M.dineroCuentaBruta(tid).v) };
+  });
+  await page.reload();
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  // (en la liga de ejemplo el dinero viene exacto: se mira la cuenta, que es lo que se usa en una liga de verdad)
+  const r = await page.evaluate((ids) => { const M = window.S.M; return { corr: M.correccionDinero, propio: M.dineroCuenta(ids[0]), brutaP: M.dineroCuentaBruta(ids[0]), otro: M.dineroCuenta(ids[3]), brutaOtro: M.dineroCuentaBruta(ids[3]) }; }, antes.ids);
+  const dif = (a, b) => Math.abs(a - b) < 2e5;
+  if (antes.ids.length < 4 || !r.propio || !r.otro || r.corr.n !== 3 || !r.propio.correccion || !r.propio.correccion.propio || !dif(r.propio.v - r.brutaP.v, 3e6) || !r.otro.correccion || !dif(r.otro.v - r.brutaOtro.v, 1.5e6)) mal(`dinero corregido con lo apuntado: ${JSON.stringify({ antes, r })}`);
+  else bien(`dinero corregido con lo apuntado: el que lo dijo hace 60 días, +3 M (el suyo); otro rival, +1,5 M (mediana de 3, a medias)`);
+  if (errores.length) mal(`dinero corregido: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16e: (0.7.13) lo que apunta la gente en todas las ligas corrige la cuenta de los rivales sin nada apuntado (y su margen),
+// por debajo de lo de tu liga; el texto lo dice, y Ajustes trae la casilla para no mandar nada (activada por defecto)
+{
+  const cal = { n: 60, med: -2e6, p10: -6e6, p25: -4e6, p75: 0, p90: 2e6, porDias: [[0, 30], [30, 60], [60, 100], [100, 9999]].map(([desde, hasta]) => ({ desde, hasta, n: 0, med: 0, p10: 0, p25: 0, p75: 0, p90: 0 })), porSub: [], porParon: [], t: Date.now() };
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-dinero-cal', ${JSON.stringify(JSON.stringify({ t: Date.now(), cal }))});` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const { dineroLargo } = await import('/js/comunes.js');
+    const M = window.S.M, tid = M.rivalesTid.find((t) => { const c = M.dineroCuentaBruta(t); return c && c.v != null; });
+    const b = M.dineroCuentaBruta(tid), c = M.dineroCuenta(tid);
+    return { cal: M.calDinero, b, c, txt: dineroLargo(c) };
+  });
+  const ok16e = r.cal && r.cal.n === 60 && r.c && r.c.correccion && r.c.correccion.todos === 60 && Math.abs(r.c.v - r.b.v + 2e6) < 1e5 && r.c.margen === 4e6 && /apunta la gente/.test(r.txt);
+  if (!ok16e) mal(`dinero con lo de todas las ligas: ${JSON.stringify(r)}`);
+  else bien('dinero con lo de todas las ligas: -2 M (la mediana de 60 apuntes) y margen de 4 M (la mitad del p10-p90), y el texto lo dice');
+  // la casilla de Ajustes: activada, se apaga y se queda apagada
+  const k = await page.evaluate(async () => {
+    const s = await import('/js/soporte.js');
+    const antes = s.mejorarIA();
+    window.S.tipoHoja = null;
+    return { antes };
+  });
+  await page.evaluate(() => document.querySelector('[data-accion="ajustes"]') && document.querySelector('[data-accion="ajustes"]').click());
+  await page.waitForTimeout(500);
+  const hay = await page.$('[data-accion="mejorarIA"]');
+  if (hay) { await page.evaluate(() => document.querySelector('[data-accion="mejorarIA"]').click()); await page.waitForTimeout(300); }
+  const despues = await page.evaluate(async () => (await import('/js/soporte.js')).mejorarIA());
+  if (!k.antes || !hay || despues) mal(`casilla «Ayudar a mejorar la IA»: ${JSON.stringify({ antes: k.antes, hay: !!hay, despues })}`);
+  else bien('casilla «Ayudar a mejorar la IA» en Ajustes: viene activada y se apaga');
+  if (errores.length) mal(`dinero de todas las ligas: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 17: (14 nov) el APK de GitHub se despide: la ventana del paso a Google Play solo en esa app (ni en Play ni en la web),
 // con «Ahora no» antes del cierre y sin cerrar después; la banda de arriba también
 for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {
@@ -671,14 +942,39 @@ for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null,
   await page.waitForTimeout(1500);
   const r = await page.evaluate(() => {
     const d = document.getElementById('aviso-play');
-    return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: /ya no se actualiza/.test((document.getElementById('banda') || {}).innerText || '') };
+    return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: (() => { const b = document.querySelector('#banda .banda-play'); return !!b && /Esta app deja de funcionar (en \d+ días|mañana|hoy)/.test(b.innerText) && !/noviembre/.test(b.innerText) && !!b.querySelector('[data-abrir*="play.google.com"] img[src*="google-play"]'); })() };
   });
   const ok = espera === 'nada' ? !r.hay && !r.banda
     : espera === 'aviso' ? r.hay && r.ahoraNo && r.play && r.banda && /dejará de funcionar el sábado 21 de noviembre/.test(r.t) && /gracias/.test(r.t)
       : r.hay && !r.ahoraNo && r.play && /ya no funciona/.test(r.t);
   if (!ok) mal(`paso a Play, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
-  else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda' : 'la ventana sin cerrar'}`);
+  else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda fija (los días que quedan y la insignia de Google Play)' : 'la ventana sin cerrar'}`);
   if (errores.length) mal(`paso a Play, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 18: (16 nov, 0.7.13w) la app de Google Play por debajo de «playMin»: la banda «Hay una versión nueva de la app» con el
+// enlace a la ficha. Solo en Play, solo por debajo, nunca sin «playMin» ni en la liga de ejemplo (la prueba sale de ella a mano)
+for (const [nombre, canal, version, playMin, espera] of [['Play por debajo', 'play', '6171', 6181, true], ['Play al día', 'play', '6171', 6171, false], ['Play por encima', 'play', '6181', 6171, false], ['Play sin playMin', 'play', '6171', null, false], ['APK de GitHub', 'github', '5701', 9999, false], ['web', null, null, 9999, false]]) {
+  const lim = `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: ${JSON.stringify(playMin ? { playMin } : {})} }));`;
+  const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '${version}', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+  const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); ${lim}` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(1200);
+  const r = await page.evaluate(async () => {
+    const enDemo = !!document.querySelector('#banda .banda-actualizar');
+    window.S.D.demo = false;
+    const otra = [...document.querySelectorAll('.nav button[data-ir]')].find((b) => b.dataset.ir !== window.S.vista);
+    if (otra) otra.click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const b = document.querySelector('#banda .banda-actualizar');
+    return { enDemo, hay: !!b, t: b ? b.innerText.replace(/\s+/g, ' ') : '', play: !!(b && b.querySelector('[data-abrir="https://play.google.com/store/apps/details?id=es.fantasymanager.app"]')) };
+  });
+  const ok = !r.enDemo && (espera ? r.hay && r.play && /Hay una versión nueva de la app/.test(r.t) && /Actualizar en Google Play/.test(r.t) && !/limites|playMin|compilaci/i.test(r.t) : !r.hay);
+  if (!ok) mal(`app de Play atrás, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
+  else bien(`app de Play atrás, ${nombre}: ${espera ? 'la banda con «Actualizar en Google Play» (y nada en la liga de ejemplo)' : 'sin banda'}`);
+  if (errores.length) mal(`app de Play atrás, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

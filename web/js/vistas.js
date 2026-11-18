@@ -5,7 +5,8 @@ import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, 
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { linea, barra } from './graficos.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
+import { proximoTurno } from './planes-hora.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -51,22 +52,29 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-function marcador(S, { corto = false } = {}) {
+/** El marcador de Hoy (18 nov, Fran y Carlos: sencillo y sin información de más): saldo y equipo en grande; debajo del saldo, hasta
+    dónde puedes quedarte en negativo (el saldo más bajo al que puedes llegar pujando: el margen de deuda menos lo ya pujado); el puesto,
+    en pequeño en la línea de la jornada. */
+function marcador(S, { corto = false, tiempos = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
   const ahora = Date.now();
+  const puesto = M.yo ? ` · <b>${yo.pos}º</b> de ${D.clasif.length} · ${num(yo.puntos)} pts` : '';
   let fila = '';
-  if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón: «J13 en 11 días» decía otra
-  else if (M.enJuego) fila = `<span class="vivo">Jornada ${M.enJuego.n} en juego</span><span class="der">hasta ${cuando(M.enJuego.fin)}</span>`;
-  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${cuenta(M.proxima.ini)}</span>`;
-  else fila = `<span>${esc(D.liga.nombre)}</span>`;
+  if (M.enParon) fila = `<span>${icono('bandera')} Parón${puesto}</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón
+  else if (M.enJuego) fila = `<span><span class="vivo">J${M.enJuego.n} en juego</span>${puesto}</span><span class="der">hasta ${cuando(M.enJuego.fin, { hora: false })}</span>`;
+  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}${puesto}</span><span class="der">${cuando(M.proxima.ini, { hora: false })} · ${cuenta(M.proxima.ini)}</span>`;
+  else fila = `<span>${esc(D.liga.nombre)}${puesto}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
+  const margen = Math.max(0, M.deuda - M.misPujas);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
-    <div class="cols">
-      <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
-      <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
-      <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
+    <div class="m-cols">
+      <div class="m-c"><div class="et">Saldo</div><div class="v ${num(D.dinero) < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">${margen > 0 ? `puedes quedarte en <b class="neg">−${eur(margen)}</b>` : `gastas hasta ${eur(Math.max(0, M.pujaMax))}`}</div></div>
+      <div class="m-c"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
     </div>`;
+  // (0.7.13o, Carlos 16 nov) lo que va a pasar pronto (el mercado, las cláusulas, el parón), dentro del marcador y en
+  // pequeño, en vez de en chips sueltos debajo
+  if (tiempos) h += tiemposHTML(S, { dentro: true });
   if (M.negativo && M.proxima) h += `<div class="alerta-m">${icono('alerta')}En negativo: si la jornada empieza así, no puntúas.</div>`;
   if (M.vedaAhora) h += `<div class="alerta-m oro">${icono('candado')}<span>Cláusulas cerradas: nadie puede clausular hasta que empiece la jornada ${M.vedaAhora.n}, ${cuando(M.vedaAhora.fin)}.</span></div>`;
   else if (M.proxima && M.proxima.ini - M.VEDA_H * HORA - ahora < 12 * HORA) h += `<div class="alerta-m oro">${icono('reloj')}<span>Las cláusulas se cierran ${cuando(M.proxima.ini - M.VEDA_H * HORA)}, 24 h antes de la jornada, y se reabren ${cuando(M.proxima.ini)}.</span></div>`;
@@ -120,7 +128,7 @@ export function puntosUltimaJornada(S) {
 }
 
 /** lo que va a pasar pronto, en chips: el mercado, las cláusulas, tu protección, el parón */
-function tiemposHTML(S) {
+function tiemposHTML(S, { dentro = false } = {}) {
   const { M } = S;
   const ahora = Date.now();
   const c = [];
@@ -133,6 +141,7 @@ function tiemposHTML(S) {
   if (!c.length) return '';
   // cada chip lleva a lo que dice: el jugador, el mercado o lo que pasa en el parón
   const destino = (a) => (a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a.startsWith('accion:') ? `data-accion="${esc(a.slice(7))}"` : a ? `data-ir="${a}"` : '');
+  if (dentro) return `<div class="m-tiempos">${c.map(([ic, t, sub, a]) => `<button type="button" class="m-t" ${destino(a)}>${icono(ic)}<span>${esc(t)}</span><b>${sub.replace(/^en /, '')}</b></button>`).join('')}</div>`;
   return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${destino(a)}>${icono(ic)}<div><b>${esc(t)}</b><span>${sub}</span></div>${a ? icono('flecha', 'tiempo-ir') : ''}</button>`).join('')}</div>`;
 }
 
@@ -394,7 +403,6 @@ export function hechoEnLiga(S, P, o) {
   const desde = P.auto ? Date.parse(P.dia + 'T00:00:00') : P.t;
   const mio = (clases) => M.actividad.find((a) => a.esYo && a.pid === o.pid && a.t > desde && clases.includes(a.clase));
   const porImp = (a, verbo) => `${verbo}${a && a.importe ? ` por ${eur(a.importe)}` : ''}`;
-  const resuelve = M.cierreMercado ? ` · se resuelve ${cuando(M.cierreMercado)}` : '';
   switch (o.accion) {
     case 'vender': {
       const a = mio(['venta']);
@@ -409,7 +417,7 @@ export function hechoEnLiga(S, P, o) {
       if (a) return { estado: 'hecho', texto: porImp(a, a.clase === 'clausula' ? 'Clausulado' : 'Fichado') };
       if (o.accion !== 'clausular') {
         const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja);
-        if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}${resuelve}` };
+        if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}` };
       }
       return null;
     }
@@ -472,7 +480,7 @@ function pasoOp(S, P, o) {
       ${cara}
       <span class="pp-c">
         <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
-        <span class="pp-l2s">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
+        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
     </summary><div class="pp-d">${dentro}</div></details>`;
@@ -593,18 +601,19 @@ function planHTML(S) {
   // (sin el nombre ni la versión del modelo: Carlos, 3 nov)
   const demo = !!(S.D && S.D.demo), conIA = puedePlanIA(demo), cu = planesApp(demo) ? cupoPlanes() : null;
   // (con la IA de la app, lo que te queda hoy: 2 al día)
-  const queda = cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
+  const queda = cu && cu.ilimitado ? ' · sin límite' : cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
   // (Carlos, 14 nov) el de la IA dice de cuándo es: «de hoy 10:32 (hace 2 h)»
   const quien = P ? (esIA ? `Con la IA${P.web ? ' y Google' : ''} · de ${cuando(P.t)} (${rel(P.t)})${queda}` : 'Automático, sin IA') : '';
-  // pedir otro: un botón pequeño en la cabecera (antes, uno grande con su explicación entre el resumen y los pasos)
-  const otro = conIA && !E.cargando && P ? `<button class="plan-otro-b" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Otro plan' : 'Con la IA'}</button>` : '';
-  // compartir: el plan (lo hecho) y sus pullitas como imagen para el grupo de la liga (0.6.11)
-  // (Carlos, 1 nov) con texto: solo el icono no se veía. Quién y cuándo, en su línea: al lado de los botones se cortaba en el móvil
-  const compartir = P && !E.cargando ? `<button class="plan-otro-b plan-comp" data-accion="tarjeta" title="Una imagen de tu plan para el grupo de tu liga">${icono('enviar')}Compartir</button>` : '';
-  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${compartir}${otro}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}</span></div>` : ''}`;
-  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
+  // (0.7.13l, Carlos 16 nov) en lugar de «Compartir» y del «Otro plan» pequeño, «Rehacer el plan», más grande, y al lado sus
+  // ajustes (el tono, a qué horas sale solo; la imagen para el grupo está ahí dentro). Cuándo sale solo el siguiente, debajo
+  const rehacer = conIA && !E.cargando && P ? `<button class="plan-rehacer" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Rehacer el plan' : 'Hacerlo con la IA'}</button>` : '';
+  const ajB = P && (conIA || !E.cargando) ? `<button class="b-ico plan-aj-b" data-accion="planAjustes" aria-label="Ajustes del plan" title="Ajustes del plan">${icono('ajustes')}</button>` : '';
+  const pt = conIA ? proximoTurno(M) : null;
+  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
+  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
+  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2">${nativo.canal() === 'play' ? 'Tarda menos de un minuto. Si sales de la app, se sigue haciendo y al volver lo tienes aquí.' : 'Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.'}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
-  else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
+  else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto && !/plan de la app|plan automático/i.test(E.error) ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (E.cupo && !E.callado) h += cupoPlanHTML(E.cupo);
   if (!P) return h + '</div>';
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
@@ -792,10 +801,11 @@ export function hoy(S) {
   const { D, M } = S;
   let h = '';
   h += bandasHoy(S);
-  // (18, 9 nov) en el móvil, el marcador en una franja y el plan en la primera pantalla; sin saludo
-  h += marcador(S, { corto: true });
-  h += tiemposHTML(S);
+  // (0.7.13o, Carlos 16 nov) el aviso del parón arriba del todo, encima del marcador; lo que falta para el mercado y
+  // demás, dentro del marcador
   h += paronHTML(S);
+  // (18, 9 nov) en el móvil, el marcador en una franja y el plan en la primera pantalla; sin saludo
+  h += marcador(S, { corto: true, tiempos: true });
   h += ahoraHTML(S);
   h += planHTML(S);
   h += noticiasHTML(S, { plegar: true });
@@ -806,11 +816,11 @@ export function hoy(S) {
 /** Hoy en el ordenador: el plan en grande a la izquierda y la liga de un vistazo a la derecha */
 function hoyAncho(S) {
   const { M } = S;
-  let izq = saludoHTML(S) + paronHTML(S) + ahoraHTML(S) + planHTML(S);
+  let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
-  const der = marcador(S) + tiemposHTML(S) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
-  return bandasHoy(S) + cols(izq, der);
+  const der = marcador(S, { tiempos: true }) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
+  return bandasHoy(S) + paronHTML(S) + cols(izq, der);
 }
 function bandasHoy(S) {
   const { D } = S;
@@ -1092,12 +1102,12 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>${caraManager(e)}
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} en&nbsp;7&nbsp;días</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">${ptsJornadaTxt(M, e) || 'pts'}</div>`}</div></button>`;
     }).join('');
     // el dinero de cada uno cerrado: un solo candado arriba (antes, uno en cada fila)
-    const candDinero = bloqueada('dineroRivales') && M.rivales.some((r) => r.dinero && r.dinero.v != null) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
+    const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
     h += ancho() ? cols(candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : candDinero + tabla;
   } else {
@@ -1240,7 +1250,7 @@ export function mercado(S) {
     const v = M.ventanaEsp;
     if (!v || v.ciclos < 1) h += nada(M.enJuego ? 'Con la jornada en juego no se especula: espera a que acabe.' : 'No da tiempo a comprar y vender antes de la jornada.');
     else {
-      h += `<p class="t2 peq">Compra lo que sube y véndelo antes de la jornada: entre medias puedes bajar hasta <b>${eur(-M.deuda)}</b>, pero la jornada tiene que empezar en positivo. Ponlo a la venta <b>${cuando(v.ponerVenta)}</b> y acepta la oferta de <b>${cuando(v.ultimoMercado)}</b> (la del día de la jornada no cuenta). Sale de la tendencia de estos días, que puede cambiar.</p>`;
+      h += `<p class="t2 peq">Compra lo que sube y véndelo antes de la jornada: entre medias puedes bajar hasta <b>${eur(-M.deuda)}</b>, pero la jornada tiene que empezar en positivo. Lo que compres hoy, ponlo a la venta <b>${cuando(v.ponerVentaSeguro)}</b> y acepta la oferta de <b>${cuando(v.limite)}</b>.${v.justo ? ` Hay otro cambio ${esc(cuando(v.justo))}, pero con la jornada a punto de empezar no cuentes con él para salir del negativo.` : ''} Sale de la tendencia de estos días, que puede cambiar.</p>`;
       if (M.paraRevender.length) h += `<div class="grupo"><span>Ya tienes para revender</span></div>${M.paraRevender.map((x) => filaJugador(x, { sub: `Comprado a ${eur(x.rev.precio)} · vale ${eur(x.j.valor)}`, derecha: `<div class="v ${clase(x.beneficioYa)}">${eur(x.beneficioYa, { signo: true })}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
       h += M.especular.length ? lista2(`<div class="grupo"><span>Candidatos</span><span>${M.especular.length}</span></div>` + M.especular.slice(0, 30).map((e) => filaJugador({ j: e.j, tend: e.tend }, {
         sub: `${e.origen === 'mercado' ? `Mercado · puja ${eur(e.puja)}` : `Cláusula ${eur(e.precio)} a ${esc(e.rival.manager || e.rival.nombre)}`}`,
@@ -1377,7 +1387,7 @@ export function adjuntosHTML(S) {
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
 export function ia(S) {
-  if (!hayClave()) return guiaClave(planesApp(!!(S.D && S.D.demo)));
+  if (!puedeChat(!!(S.D && S.D.demo))) return guiaClave(planesApp(!!(S.D && S.D.demo)));
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>

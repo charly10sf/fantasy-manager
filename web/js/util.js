@@ -178,10 +178,23 @@ const PAL_FUTBOL = ['gol', 'goles', 'golazo', 'doblete', 'hat trick', 'fichaje',
   'partido', 'partidos', 'jornada', 'liga', 'laliga', 'champions', 'europa league', 'conference league', 'copa del rey', 'supercopa', 'derbi', 'clasico', 'estadio', 'penalti', 'penaltis',
   'arbitro', 'var', 'sancion', 'sancionado', 'expulsion', 'expulsado', 'tarjeta roja', 'amarilla', 'asistencia', 'remontada', 'empate', 'empata', 'marcador', 'en directo', 'previa', 'cronica',
   'fantasy', 'seleccion espanola', 'mundial', 'balon de oro', 'primera division', 'segunda division'];
-const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf'];
-const MEDIOS = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'defensa central', 'eldesmarque', 'el desmarque', 'futbolfantasy', 'jornada perfecta',
-  'comuniate', 'analitica fantasy', 'superdeporte', 'fichajes net', 'fichajes', 'besoccer', 'goal', 'goal com', 'sportyou', 'todofichajes', 'futbol emotion', 'cope deportes', 'tribuna deportiva'];
+const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf',
+  // (16 nov, un aviso: las noticias de Ryan, el portero del Levante, con las de un Ryan de la NFL)
+  'nfl', 'futbol americano', 'super bowl', 'superbowl', 'quarterback', 'mariscal de campo', 'touchdown', 'touchdowns', 'yardas', 'mlb', 'beisbol', 'nhl', 'hockey', 'ufc', 'boxeo', 'mma',
+  // (16 nov, Carlos: «Pedrosa gana la carrera más loca de su vida», de motos; un entrenador de tiro deportivo)
+  'moto2', 'moto3', 'superbike', 'motociclismo', 'gran premio', 'gp', 'piloto', 'pilotos', 'parrilla', 'pole', 'rally', 'dakar', 'tiro deportivo', 'tiro olimpico', 'atletismo',
+  'natacion', 'esqui', 'triatlon', 'maraton', 'judo', 'karate', 'taekwondo', 'gimnasia', 'esgrima', 'remo', 'piraguismo', 'vela', 'hipica', 'cricket', 'snooker', 'dardos', 'ajedrez'];
+// los medios que solo cuentan fútbol (basta con que la noticia venga de ahí) y los deportivos de todo (Marca, AS, Sport
+// también llevan motos, baloncesto o tenis: de ahí, solo si el titular dice algo de fútbol o nombra bien a un jugador)
+const MEDIOS = ['defensa central', 'futbolfantasy', 'jornada perfecta', 'comuniate', 'analitica fantasy', 'fichajes net', 'fichajes', 'besoccer', 'goal', 'goal com', 'todofichajes',
+  'futbol emotion', 'tribuna deportiva'];
+const MEDIOS_TODO = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'eldesmarque', 'el desmarque', 'superdeporte', 'sportyou', 'cope deportes'];
 const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
+/** el titular viene de un medio deportivo o de fútbol */
+export const medioFutbol = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS.includes(f) || / (futbol|fichaj)/.test(` ${f}`)); };
+const medioDeportes = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS_TODO.includes(f) || / deport/.test(` ${f}`)); };
+/** el titular lleva alguna palabra de fútbol */
+export const palabraFutbol = (titulo) => tiene(` ${norm(titulo)} `, PAL_FUTBOL);
 export function esDeFutbol(n) {
   if (!n || !n.titulo) return false;
   const t = ` ${norm(n.titulo)} `;
@@ -189,8 +202,10 @@ export function esDeFutbol(n) {
   // dos equipos en el titular es un partido; uno solo no basta (Valencia, Sevilla o Getafe también son ciudades)
   if (n.equipos && n.equipos.length > 1) return true;
   if (tiene(t, PAL_FUTBOL)) return true;
-  const f = norm(n.fuente);
-  return !!f && (MEDIOS.includes(f) || / (deport|futbol|fichaj)/.test(` ${f}`));
+  if (medioFutbol(n.fuente)) return true;
+  // de un medio de todos los deportes, solo si nombra bien a un jugador de LaLiga (nombre y apellido, o con su equipo)
+  // o a un equipo: «Pedrosa gana la carrera…» (AS, motos) ya no pasa
+  return medioDeportes(n.fuente) && (!!n.fuerte || !!(n.equipos && n.equipos.length));
 }
 
 // Las webs de fantasy de las que no se enseña el nombre como fuente (aviso de Domy, 25 oct: «te pueden acusar de plagio»).
@@ -227,7 +242,7 @@ export const estadoDe = (e) => ESTADO[e] || (e && e !== 'ok' ? { t: e, c: 'duda'
    3. solo para la sesión y la clave de la IA (puente.guardar), que van antes que nada: lo de la liga de ahora que se
       vuelve a bajar (la foto, las fichas, el directo).
    Si ni así cabe, se avisa (evento «fm-lleno»: la banda de app.js) en vez de perderlo sin decir nada. */
-const TIRABLES = ['muestra-vivo', 'noticias', 'noticias-club', 'sofa-h2h', 'sofa-cal', 'sofa-ronda', 'ruta-valor', 'avanzadas', 'onces', 'alineaciones', 'caras'];
+const TIRABLES = ['muestra-vivo', 'noticias', 'noticias2', 'noticias-club', 'sofa-h2h', 'sofa-cal', 'sofa-ronda', 'ruta-valor', 'avanzadas', 'onces', 'alineaciones', 'caras'];
 // lo de cada liga (datos.js, DE_LA_CUENTA) y el sufijo de la de ahora ('-demo', '' o '-l<id>'): lo pone datos.js
 let sitio = { sufijo: () => null, deLiga: [], importantes: ['datos', 'hist', 'chat', 'chats-viejos', 'planes', 'notas', 'notas-t', 'acthist', 'cfg'], rebajables: ['datos', 'det', 'vivo', 'hechos', 'previs', 'pts-jornadas'] };
 export function fijarSitio(o) { sitio = { ...sitio, ...o }; }
@@ -346,6 +361,8 @@ const I = {
   abajo: '<path d="M6.5 9.5l5.5 5.5 5.5-5.5"/>',
   foto: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 15.5l-4.8-4.8a1 1 0 0 0-1.4 0L5 20"/>',
   nota: '<path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M14.5 3.5V7.5h4M9 12h6M9 15.5h6"/>',
+  lapiz: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/>',
+  corona: '<path d="M3.5 8l4.2 3.6L12 5l4.3 6.6L20.5 8l-1.8 10H5.3z"/><path d="M5.6 20.5h12.8"/>',
   calendario: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   balon: '<circle cx="12" cy="12" r="8.8"/><path d="M12 8.2l3.2 2.3-1.2 3.8h-4l-1.2-3.8z"/><path d="M12 8.2V3.4M15.2 10.5l4.5-1.4M14 14.3l2.8 3.8M10 14.3l-2.8 3.8M8.8 10.5 4.3 9.1"/>',
   mas: '<path d="M12 5v14M5 12h14"/>',

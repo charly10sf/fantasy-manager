@@ -423,6 +423,53 @@ public class Puente {
         trabajandoCon(si, null, texto);
     }
 
+    /** (15 nov) el plan con la IA en marcha: su id y la sesión, para avisar y recogerlo si sales de la app (Recoger) */
+    @JavascriptInterface
+    public void planEnMarcha(String rid, String token) {
+        Recoger.rid = rid == null || rid.isEmpty() ? null : rid;
+        Recoger.token = token == null || token.isEmpty() ? null : token;
+    }
+
+    /**
+     * (16 nov) una pregunta a la IA de la app en marcha: su id, la sesión, la vuelta de los alias (JSON, «rival 2» →
+     * nombre) y lo que se ha preguntado, para avisar y saber cuándo contesta si sales de la app (Recoger)
+     */
+    @JavascriptInterface
+    public void preguntaEnMarcha(String rid, String token, String vuelta, String texto) {
+        Recoger.ridP = rid == null || rid.isEmpty() ? null : rid;
+        Recoger.tokenP = token == null || token.isEmpty() ? null : token;
+        Recoger.vueltaP = vuelta;
+        Recoger.textoP = texto;
+    }
+
+    /**
+     * la respuesta ha llegado a la web (o ha fallado): nada que recoger. Con la app fuera de la vista, el aviso de que ha
+     * contestado lo pone esta parte, con el principio de la respuesta (resumen) ya con los nombres
+     */
+    @JavascriptInterface
+    public void preguntaAcabada(boolean ok, String resumen) {
+        Recoger.ridP = null;
+        Recoger.tokenP = null;
+        Recoger.vueltaP = null;
+        Recoger.textoP = null;
+        try {
+            androidx.work.WorkManager.getInstance(ctx).cancelUniqueWork(Recoger.NOMBRE_P);
+        } catch (Exception e) {
+            // nada
+        }
+        if (act != null && act.aLaVista) { Recoger.parar(ctx); Recoger.quitarListo(ctx); }
+        else Recoger.contestado(ctx, resumen, ok);
+    }
+
+    /** el plan ya ha llegado (o ha fallado): nada que recoger */
+    @JavascriptInterface
+    public void planAcabado() {
+        Recoger.rid = null;
+        Recoger.token = null;
+        Recoger.parar(ctx);
+        if (act != null && act.aLaVista) Recoger.quitarListo(ctx);
+    }
+
     /** lo mismo, con el título de la notificación fija («Preparando tu plan», «Pensando la respuesta»…) */
     @JavascriptInterface
     public void trabajandoCon(boolean si, String titulo, String texto) {
@@ -449,10 +496,25 @@ public class Puente {
         return Anuncios.HAY;
     }
 
-    /** si en la pantalla de ahora va el banner de abajo */
+    /**
+     * (0.8) si la web tiene ya su liga cargada (hasta entonces, ningún anuncio), el bloque del intersticial de limites.json
+     * y si a esta cuenta le tocan intersticiales (al dueño y a los de su liga, no: ni se cargan)
+     */
     @JavascriptInterface
-    public void banner(boolean si) {
-        if (act != null) Anuncios.banner(si);
+    public void zonaAnuncios(boolean si, String bloque, boolean inter) {
+        if (act != null) Anuncios.zona(si, bloque, inter);
+    }
+
+    /** (0.8) un intersticial en una pausa natural (lo decide la web); contesta con intersticialVisto(visto, motivo) */
+    @JavascriptInterface
+    public void intersticial(String bloque) {
+        if (act != null) Anuncios.intersticial(bloque);
+    }
+
+    /** (0.8, 17 nov) si a esta cuenta le toca hoy el anuncio de apertura (lo decide la web); contesta con aperturaVista */
+    @JavascriptInterface
+    public void aperturaAnuncios(boolean toca, String bloque) {
+        if (act != null) Anuncios.apertura(toca, bloque);
     }
 
     /** el anuncio bonificado para desbloquear algo («plan»); contesta con anuncioVisto(para, visto, motivo) */

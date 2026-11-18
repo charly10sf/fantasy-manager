@@ -106,6 +106,11 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-nombre b { min-width: 0; }
 .sup-nombre .ic { width: 18px; height: 18px; flex: none; color: var(--rojo-l); }
 .sup-nombre:disabled { cursor: default; opacity: 1; }
+/* la etiqueta de beta: un sello en el borde de la camiseta del logo (no le quita sitio a la hora de actualización); abre «Fallos e ideas» */
+.sup-marca { position: relative; flex: none; display: block; width: 36px; height: 36px; }
+.sup-marca .logo { display: block; }
+.sup-beta { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); display: inline-flex; align-items: center; min-height: 15px; padding: 0 5px; border-radius: 8px; background: var(--oro); color: #1a1200; font: 700 9px/1 var(--cond); letter-spacing: 0.8px; box-shadow: 0 0 0 2px var(--fondo); }
+.sup-beta::after { content: ""; position: absolute; inset: -12px -10px; }
 .ligas-l { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 12px; }
 .ligas-l button { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: var(--r-tarj); background: var(--plano2); border: 1px solid var(--linea); text-align: left; font-size: var(--t-cuerpo); }
 .ligas-l button b { flex: 1; min-width: 0; }
@@ -137,6 +142,15 @@ b, strong { font-weight: 600; color: var(--texto); }
 /* un fallo al cargar, explicado */
 .banda.mal { background: var(--baja-s); }
 .banda.mal .ic { color: var(--baja); }
+/* el APK de GitHub se despide (14 nov): fija, en rojo y con el enlace a Google Play */
+.banda.banda-play { align-items: flex-start; background: var(--baja-s); border: 1px solid var(--baja); }
+.banda.banda-play > .ic { color: var(--baja); margin-top: 2px; }
+.banda-play-c { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.banda-play-c b { font-size: var(--t-sec); }
+.banda-play-b { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.banda .banda-play-b button { margin-left: 0; }
+.banda .banda-play-b .banda-play-ins { padding: 0; margin: 0; line-height: 0; }
+.banda-play-ins img { height: 44px; width: auto; display: block; }
 .fallo p { margin: 0 0 10px; font-size: var(--t-cuerpo); line-height: 1.5; color: var(--texto2); }
 .error-c .fallo-det { margin-top: 6px; font-size: var(--t-mini); color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
 .fallo p.fallo-det { font-size: var(--t-mini); color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
@@ -635,6 +649,7 @@ h1.titulo { font-weight: 700; }
 .aj-cuerpo .ajuste .c span { display: block; margin-top: 1px; font-size: 13px; line-height: 1.35; }
 .aj-cuerpo .ajuste select { max-width: 42%; padding: 7px 8px; font-size: 14px; }
 .aj-cuerpo .ajuste input[type=time] { padding: 6px 8px; }
+.plan-aj .ajuste select { max-width: 46%; }
 .aj-cuerpo .ajuste.sub { padding: 8px 0 10px 14px; border-left: 2px solid var(--plano3); margin-left: 2px; }
 .aj-cuerpo .ajuste.sub .c b { font-size: 14px; font-weight: 500; }
 .aj-quitar { flex: none; width: 34px; height: 34px; }
@@ -1147,7 +1162,8 @@ a.btn { text-decoration: none; }
   border-bottom: 0; border-right: 1px solid var(--linea);
   background: linear-gradient(180deg, #16070c 0, #0c0c0f 260px);
 }
-.escritorio .sup .logo { width: 42px; height: 42px; margin: 0 0 16px 8px; }
+.escritorio .sup-marca { width: 42px; height: 42px; margin: 0 0 20px 8px; }
+.escritorio .sup .logo { width: 42px; height: 42px; }
 .escritorio .sup-liga { flex: none; padding: 0 8px 20px; margin-bottom: 14px; border-bottom: 1px solid var(--linea); }
 .escritorio .sup-liga b { font-size: var(--t-cifra); line-height: 1; white-space: normal; }
 .escritorio .sup-liga span { margin-top: 8px; }
@@ -1355,6 +1371,23 @@ body.en-tour { overflow: hidden; }
 .reg-b i { display: block; width: 100%; max-width: 26px; min-height: 2px; border-radius: 5px 5px 2px 2px; background: var(--rojo-l); align-self: end; }
 .reg-n { font: 600 var(--t-mini) 'Barlow'; color: var(--texto2); min-height: 15px; }
 .reg-b small { font-size: var(--t-mini); color: var(--apagado); white-space: nowrap; }
+.q-cifras { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 440px) { .q-cifras { grid-template-columns: repeat(2, 1fr); } .q-tabs button { padding: 8px 10px; font-size: var(--t-sec2); } }
+.q-alerta { display: flex; gap: 10px; margin: 0 0 14px; padding: 11px 13px; border-radius: var(--r-ctl); background: var(--oro-s); border: 1px solid rgba(255, 197, 71, 0.4); }
+.q-alerta > .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--oro); }
+.q-alerta p { margin: 0 0 6px; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto); }
+.q-alerta p:last-child { margin-bottom: 0; }
+.q-ok { color: var(--sube); }
+.q-no { margin-top: 10px; }
+.q-tabs { margin-top: 4px; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.q-tabs button { padding: 8px 12px; white-space: nowrap; }
+.q-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.qf-c .qf-por { color: var(--texto2); line-height: 1.35; margin-top: 2px; }
+.qf-c .qf-por b { color: var(--texto); font-weight: 600; font-size: inherit; }
+.q-chip { font-style: normal; font-size: var(--t-mini); font-weight: 600; color: var(--texto2); padding: 2px 7px; border-radius: 999px; background: var(--plano2); }
+.q-chip.viejo { color: var(--oro); background: var(--oro-s); }
+.q-chip.mal { color: var(--texto); background: var(--rojo-s); box-shadow: inset 0 0 0 1px var(--rojo-l); }
+.qf-c .q-mal { margin-top: 3px; font-size: var(--t-sec2); line-height: 1.4; color: var(--rojo-texto); }
 /* las funciones top bloqueadas (hasta los anuncios) */
 .bloq { display: flex; align-items: center; gap: 12px; width: 100%; margin: 12px 0; padding: 13px 14px; border-radius: var(--r-tarj); text-align: left; color: var(--texto);
   background: repeating-linear-gradient(135deg, rgba(255, 197, 71, 0.07) 0 10px, rgba(255, 197, 71, 0.03) 10px 20px), var(--plano2); border: 1px dashed rgba(255, 197, 71, 0.45); }
@@ -1958,6 +1991,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .plan-cab { flex-wrap: nowrap; }
 .plan-otro-b { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--rojo3); background: var(--rojo-s); color: var(--rojo-l); font: 700 var(--t-sec2) 'Barlow'; white-space: nowrap; }
 .plan-otro-b .ic { width: 15px; height: 15px; }
+/* (0.7.13l) «Rehacer el plan», en el sitio de «Compartir» y más grande, con sus ajustes al lado */
+.plan-rehacer { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--rojo3); background: var(--rojo-s); color: var(--texto); font: 700 var(--t-cuerpo) 'Barlow'; white-space: nowrap; }
+.plan-rehacer .ic { width: 18px; height: 18px; color: var(--rojo-l); }
+.plan-aj-b { flex: none; }
 .plan-quien { margin-left: auto; }
 .plan-titular { font-size: var(--t-cifra); margin: 8px 0 6px; }
 .plan-sit { font-size: var(--t-cuerpo); line-height: 1.45; margin-bottom: 4px; }
@@ -2062,6 +2099,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-l2s { display: flex; align-items: baseline; gap: 5px; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); white-space: nowrap; overflow: hidden; }
 .pp-l2s i { font-style: normal; flex: none; }
 .pp-l2s .pp-cu, .pp-l2s .pp-est { flex: none; font-size: var(--t-sec2); max-width: 70%; }
+/* (0.7.13x) con un estado de LaLiga («Pujado 29,15 M · se resuelve a las 20:00») se ve entero, aunque baje a otra línea, y el porqué se queda para cuando se abre el paso */
+.pp-l2s.con-est { flex-wrap: wrap; white-space: normal; row-gap: 2px; }
+.pp-l2s.con-est .pp-est { display: block; flex: 0 1 auto; max-width: 100%; white-space: normal; overflow: visible; text-overflow: clip; }
+.pp-l2s.con-est i, .pp-l2s.con-est .pp-porque { display: none; }
 .pp-l2s .pp-porque { display: block; -webkit-line-clamp: unset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: var(--t-sec2); color: var(--apagado); }
 .paso3[open] .pp-l2s .pp-porque { display: none; } .paso3[open] .pp-l2s i { display: none; }
 .paso3 .pp-imp { font-size: var(--t-cuerpo); }
@@ -2195,6 +2236,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pnz-rk-bd .tray { margin: 6px 0 4px; }
 .pnz-rank { counter-reset: rk; } .pnz-rk { counter-increment: rk; } .pnz-rk .i::before { content: counter(rk); }
 .pnz-mer-l.ver-tu .ver-liga, .pnz-mer-l.ver-liga .ver-tu { display: none; }
+.pnz-mer-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .pnz-ver { display: inline-flex; margin: 12px 0 0; padding: 3px; border-radius: var(--r-ctl); background: rgba(0, 0, 0, 0.3); border: 1px solid var(--linea); }
 .pnz-ver button { padding: 6px 12px; border-radius: var(--r-pl); font: 600 var(--t-sec2) 'Barlow'; color: var(--texto2); }
 .pnz-ver button[aria-selected="true"] { background: var(--sube-s); color: var(--sube); }
@@ -2220,6 +2262,8 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
   .pnz-mer-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .pnz-mer.lado-sube .pnz-mer-l.baja, .pnz-mer.lado-baja .pnz-mer-l.sube { display: block; }
   .pnz-mer-l h3 { display: block; } .pnz-mer-p { margin-top: 2px; }
+  /* (15 nov) la cabecera de las dos columnas, del mismo alto: título y, en «Cómpralos», las pestañas al lado */
+  .pnz-mer-h { margin-top: 14px; min-height: 40px; } .pnz-mer-h h3 { margin: 0 2px; } .pnz-mer-h .pnz-ver { margin: 0; }
   .pnz-rk > summary { grid-template-columns: 16px 32px minmax(0, 1fr) 26% 58px 14px; }
   .pnz-mer, .pnz-mer.lado-baja { background: linear-gradient(90deg, rgba(47, 209, 143, 0.07), rgba(255, 111, 97, 0.07)), var(--plano); border-color: rgba(255, 197, 71, 0.35); }
 }
@@ -2599,6 +2643,7 @@ button.cr-p:active { background: var(--plano); }
 .escritorio .pg { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .pg-c { position: relative; display: flex; flex-direction: column; padding: 20px 20px 18px; border-radius: 20px; background: var(--plano); border: 1px solid var(--linea); color: var(--texto); text-decoration: none; transition: border-color 0.25s, transform 0.25s, background 0.25s; }
 .pg-c:hover { border-color: var(--rojo3); background: var(--plano2); transform: translateY(-3px); }
+.pg-c.pg-previa { border-color: var(--rojo3); }
 .pg-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--rojo-s); color: var(--rojo-l); }
 .pg-ic .ic { width: 22px; height: 22px; }
 .pg-n { position: absolute; top: 18px; right: 20px; font: 700 15px var(--cond); color: var(--apagado); }
@@ -3138,3 +3183,193 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* (12 nov) ficha del jugador: cuándo se abre la cláusula, en su línea; con 5 datos (Pagaste), el próximo partido a lo ancho */
 .dato .v small.cl-cuando { display: block; margin: 4px 0 0; }
 .rej-j > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* la portada: el bloque «Hoy» (mercado/hoy.json, que escribe bot/portal-web.mjs cada noche) */
+.pz-hoy { display: grid; gap: 14px; }
+.pz-hoy-d { display: grid; gap: 14px; }
+.escritorio .pz-hoy-d { grid-template-columns: 3fr 2fr; align-items: start; }
+.pz-hoy-m, .pz-hoy-j { background: var(--s1); border-radius: var(--r-tarj); padding: 16px 18px; }
+.pz-hoy-j { box-shadow: inset 0 2px 0 var(--rojo); }
+.pz-hoy-k { display: block; font: 700 var(--t-sec2)/1 var(--cond); text-transform: uppercase; letter-spacing: 1px; color: var(--rojo-texto); margin-bottom: 10px; }
+.pz-hoy ul { list-style: none; margin: 0; padding: 0; }
+.pz-hoy li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--linea); }
+.pz-hoy li:last-child { border-bottom: 0; }
+.pz-hoy-a { position: relative; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
+.pz-hoy-a .f { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 0; }
+.pz-hoy-a .e { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; }
+.pz-hoy-n { display: flex; flex-direction: column; min-width: 0; }
+.pz-hoy-n b { font-weight: 600; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pz-hoy-n small { font-size: var(--t-sec2); color: var(--texto-3); }
+.pz-hoy li .sube, .pz-hoy li .baja { font-weight: 700; white-space: nowrap; }
+.pz-hoy-c { margin: 8px 0 0; font-size: var(--t-sec2); color: var(--texto-2); }
+.pz-hoy-j p { margin: 0 0 10px; color: var(--texto-2); line-height: 1.5; }
+.pz-hoy-j b { color: var(--texto); }
+.pz-hoy-j a { display: inline-flex; align-items: center; gap: 6px; margin: 0 16px 6px 0; color: var(--rojo-texto); font-weight: 600; text-decoration: none; min-height: 32px; }
+.pz-hoy-j a svg { width: 16px; height: 16px; }
+.pz-hoy-b { display: flex; flex-wrap: wrap; gap: 10px; }
+.pz-hoy-b .btn svg { width: 18px; height: 18px; }
+
+/* (0.7.13i) el semáforo de LaLiga Fantasy: en la pantalla de entrar y en la de «no se ha podido cargar» (semaforo.js) */
+.estado-ll { display: flex; align-items: flex-start; gap: 10px; width: 100%; margin: 0 0 14px; padding: 10px 12px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--texto); font: inherit; font-size: var(--t-sec2); line-height: 1.35; text-align: left; cursor: pointer; flex-wrap: wrap; }
+.estado-ll .el-p { flex: none; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; background: var(--apagado); }
+.estado-ll .el-c { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.estado-ll .el-c span { color: var(--apagado); font-size: var(--t-mini); }
+.estado-ll small { flex: 1 0 100%; padding-left: 20px; color: var(--apagado); font-size: 11px; }
+.estado-ll small:empty { display: none; }
+.estado-ll[data-nivel="verde"] .el-p { background: var(--sube); box-shadow: 0 0 0 4px rgba(47, 209, 143, 0.18); }
+.estado-ll[data-nivel="amarillo"] { border-color: rgba(255, 197, 71, 0.45); }
+.estado-ll[data-nivel="amarillo"] .el-p { background: var(--oro); box-shadow: 0 0 0 4px var(--oro-s); }
+.estado-ll[data-nivel="rojo"] { border-color: var(--rojo); }
+.estado-ll[data-nivel="rojo"] .el-p { background: var(--rojo); box-shadow: 0 0 0 4px rgba(238, 28, 60, 0.2); }
+.estado-ll[data-nivel="mirando"] .el-p { animation: el-latido 1.1s ease-in-out infinite; }
+@keyframes el-latido { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .estado-ll[data-nivel="mirando"] .el-p { animation: none; } }
+.carga .estado-ll { margin-top: 14px; }
+/* (0.7.13i) «Antes de entrar», en Quién usa la app */
+.emb-t { width: 100%; margin: 4px 0 10px; border-collapse: collapse; font-size: var(--t-sec2); }
+.emb-t th { color: var(--apagado); font-weight: 600; font-size: var(--t-mini); text-align: right; padding: 4px 6px; }
+.emb-t td { padding: 6px; border-top: 1px solid var(--linea); text-align: right; font-variant-numeric: tabular-nums; }
+.emb-t td:first-child, .emb-t th:first-child { text-align: left; padding-left: 0; }
+
+/* (0.7.13m, Carlos 15 nov 23:51) la portada de la web con el portal a la vista: la barra de arriba siempre fija (ya no
+   sale al bajar), el portal con «Hoy» y sus secciones arriba (a la izquierda en el ordenador, lo primero en el móvil), lo de
+   entrar al lado y la presentación de la app en su apartado, «La app» */
+.pt-bar.pt-fija { transform: none; }
+.portada.web { padding-top: var(--pt-h, 100px); }
+.escritorio .portada.web { padding-top: var(--pt-h, 60px); }
+.portada.web [id] { scroll-margin-top: calc(var(--pt-h, 100px) + 10px); }
+.portada.web .pantalla { justify-content: flex-start; padding-top: 18px; }
+.escritorio .portada.web .pantalla { align-items: start; padding-top: 36px; }
+.po { display: block; min-width: 0; margin-bottom: 18px; }
+.po-top { display: flex; margin: 0 0 14px; }
+.po-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
+.portada .pantalla h1.po-h1 { font: 700 46px/0.95 var(--cond); text-transform: uppercase; margin: 0 0 10px; }
+.escritorio .portada .pantalla h1.po-h1 { font-size: 64px; }
+.portada .pantalla p.po-i { margin: 0 0 14px; }
+.po .pz-hoy { margin: 0 0 14px; }
+.escritorio .po .pz-hoy-d { grid-template-columns: 1fr; }
+.po-g { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.portada .pantalla a.po-c { display: grid; align-content: start; gap: 3px; padding: 12px 13px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--linea); color: var(--texto2); text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+.po-c b { display: flex; align-items: center; justify-content: space-between; gap: 6px; font: 700 19px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.po-c b .ic { flex: none; width: 16px; height: 16px; color: var(--rojo-l); }
+.po-c span { font-size: 13.5px; line-height: 1.35; }
+.portada .pantalla a.po-c:hover { border-color: var(--rojo3); background: var(--rojo-s); }
+.po-c:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.po-hero { max-width: 1120px; margin: 0 auto; padding: 34px 24px 6px; border-top: 1px solid var(--linea); }
+.escritorio .po-hero { padding: 52px 48px 6px; }
+.po-hero .hero-t { font: 700 54px/0.92 var(--cond); text-transform: uppercase; margin: 6px 0 12px; color: var(--texto); }
+.po-hero .hero-t span { color: var(--rojo-l); }
+.escritorio .po-hero .hero-t { font-size: 80px; }
+.po-hero > p { margin: 0 0 6px; max-width: 60ch; color: var(--texto2); font-size: 17px; }
+.po-hero .lista-ok { margin: 12px 0 0; }
+.escritorio .po-hero .lista-ok { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; }
+/* en la barra fija, el menú del portal y «Entrar» siempre a la vista */
+.pt-fija .pt-menu a { font-size: 16px; }
+.pt-fija .pt-web.btn { min-height: 38px; }
+@media (max-width: 380px) { .pt-fija .pt-cta .pt-largo { display: none; } }
+.pt-bar.pt-fija { background: var(--fondo); }
+.sj-barra { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin: -28px -20px 20px; padding: 12px 20px; background: var(--fondo); border-bottom: 1px solid var(--linea); font-size: 16px; }
+.sj-barra a { text-decoration: none; font-weight: 600; }
+.sj-barra b { color: var(--texto); }
+.sj-barra .sj-cta { margin-left: auto; padding: 6px 12px; border-radius: 999px; background: var(--rojo-btn); color: #fff; }
+
+/* (0.7.13n) en los ajustes del plan, cuántos hay gratis */
+.plan-cupo { display: flex; gap: 8px; align-items: flex-start; margin: 12px 2px 0; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto2); }
+.plan-cupo .ic { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--apagado); }
+
+/* (0.7.13n) Quién usa la app, más visual: cifras, chapitas de lo que hay que mirar y tarjetas con gráficas */
+.q-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 0 10px; }
+.q-kpi > div { padding: 10px 6px 8px; border-radius: var(--r-ctl); background: var(--plano); text-align: center; }
+.q-kpi b { display: block; font: 700 30px/1 var(--cond); color: var(--texto); }
+.q-kpi span { display: block; margin-top: 3px; font-size: var(--t-mini); color: var(--apagado); }
+.q-kpi .vivo b { color: var(--sube); }
+.q-chapas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.q-chapa { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 197, 71, 0.45); background: var(--oro-s); color: var(--texto); font: 500 var(--t-sec2) 'Barlow'; cursor: pointer; }
+.q-chapa .ic { width: 14px; height: 14px; color: var(--oro); }
+.q-chapa b { font-weight: 700; }
+.q-bien { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: var(--t-sec2); color: var(--sube); }
+.q-bien .ic { width: 15px; height: 15px; }
+.qc { margin: 12px 0 0; padding: 12px 13px; border-radius: var(--r-ctl); background: var(--plano); }
+.qc h3 { margin: 0 0 6px; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
+.qc .graf { margin: 2px 0 0; }
+.qc-pie { margin: 8px 0 0; font-size: var(--t-mini); color: var(--apagado); }
+.qc-pie b { color: var(--texto2); }
+.qh { display: grid; gap: 6px; }
+.qh + .qh { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--linea); }
+.qh-f { display: grid; grid-template-columns: minmax(84px, 36%) 1fr 72px; align-items: center; gap: 8px; font-size: var(--t-sec2); }
+.qh-f span { color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qh-f i { height: 10px; border-radius: 5px; background: var(--plano2); }
+.qh-f i::before { content: ''; display: block; width: calc(var(--n) * 1%); min-width: 3px; height: 100%; border-radius: 5px; background: var(--texto2); opacity: 0.75; }
+.qh-emb .qh-f:last-child i::before { background: var(--sube); opacity: 1; }
+.qh-mal .qh-f i::before { background: var(--rojo-l); opacity: 1; }
+.qh-f b { font-weight: 700; color: var(--texto); white-space: nowrap; text-align: right; }
+.qh-f b small { font-weight: 500; color: var(--apagado); font-size: var(--t-mini); }
+.q-prog { height: 8px; margin: 2px 0 8px; border-radius: 4px; background: var(--plano2); overflow: hidden; }
+.q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }
+
+/* (0.7.13o) lo que falta para el mercado y demás, dentro del marcador de Hoy y en pequeño */
+.m-tiempos { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
+.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
+.m-t .ic { width: 14px; height: 14px; color: var(--apagado); }
+.m-t b { font-weight: 700; color: var(--texto); }
+/* (0.7.13w) la app de Google Play se ha quedado atrás: fija, con el borde rojo, hasta que se actualice */
+.banda.banda-actualizar { border: 1px solid var(--rojo); }
+.banda.banda-actualizar > .ic { color: var(--rojo); }
+
+/* (0.8a) apodos de los rivales: en la ficha del rival y en Ajustes; el botón de Ajustes brillando tras actualizar */
+.apodo-l { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: -4px 0 14px; font-size: 14px; color: var(--texto2); }
+.apodo-l b { color: var(--texto); }
+.apodo-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--r-red); border: 1px dashed var(--linea); background: var(--plano2); color: var(--texto); font-size: var(--t-sec2); }
+.apodo-chip.chico { padding: 4px 9px; }
+.apodo-chip .ic { width: 14px; height: 14px; }
+.apodo-ed { background: var(--plano2); border: 1px solid var(--rojo); border-radius: var(--r-tarj); padding: 12px; margin: -4px 0 14px; }
+.apodo-ed label { display: block; font: 700 var(--t-mini) 'Barlow'; letter-spacing: .5px; text-transform: uppercase; color: var(--texto2); margin-bottom: 6px; }
+.apodo-fila { display: flex; gap: 8px; }
+.apodo-fila input { flex: 1; min-width: 0; background: var(--fondo); border: 1px solid var(--linea); border-radius: var(--r-ctl); padding: 10px 12px; color: var(--texto); font-size: 16px; }
+.apodo-ed small { display: block; margin-top: 8px; color: var(--texto2); font-size: var(--t-mini); line-height: 1.45; }
+.apo-nota { font-size: var(--t-sec2); color: var(--texto2); line-height: 1.45; margin: 2px 0 6px; }
+.ajuste.apo-fila { gap: 10px; }
+.ajuste.apo-fila .c { min-width: 0; }
+.ajuste.apo-fila .c b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ajuste.apo-fila input { width: 42%; flex: none; background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 8px 10px; color: var(--texto); font-size: 16px; }
+.ajuste.apo-fila input.lleno { border-color: var(--rojo-l); }
+#bAjustes.brilla { color: var(--rojo-l); border-radius: var(--r-ctl); background: rgba(238, 28, 60, .16); outline: 1px solid rgba(238, 28, 60, .7); animation: brillaAj 1.8s ease-out infinite; }
+#bAjustes.brilla .ic { animation: brillaIc 1.8s ease-in-out infinite; }
+@keyframes brillaAj { 0% { box-shadow: 0 0 0 0 rgba(238, 28, 60, .8), inset 0 0 14px rgba(238, 28, 60, .45); } 70% { box-shadow: 0 0 0 12px rgba(238, 28, 60, 0), inset 0 0 8px rgba(238, 28, 60, .2); } 100% { box-shadow: 0 0 0 0 rgba(238, 28, 60, 0), inset 0 0 0 rgba(238, 28, 60, 0); } }
+@keyframes brillaIc { 0%, 100% { filter: drop-shadow(0 0 0 rgba(238, 28, 60, 0)); } 50% { filter: drop-shadow(0 0 6px rgba(238, 28, 60, .95)); } }
+.aj-sec.resalta { animation: resaltaAj 2.4s ease-out 1; }
+@keyframes resaltaAj { 0%, 40% { box-shadow: 0 0 0 2px var(--rojo); } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { #bAjustes.brilla, #bAjustes.brilla .ic { animation: none; } #bAjustes.brilla { box-shadow: 0 0 0 2px var(--rojo); } .aj-sec.resalta { animation: none; } }
+
+/* (0.8a, Carlos 17 nov: «que las funciones top aparezcan más resaltadas, en dorado») el sello TOP y las cajas en dorado */
+.top-b { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 5px; border-radius: var(--r-red); background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; font: 800 10.5px/16px 'Barlow'; letter-spacing: .8px; font-style: normal; vertical-align: middle; box-shadow: 0 0 10px rgba(255, 197, 71, .35); flex: none; }
+.top-b .ic { width: 11px; height: 11px; stroke-width: 2.2; }
+/* (con el elemento delante: el tema de evento pone su filo con un :is() que pesa como dos clases) */
+button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; border: 1px solid rgba(255, 205, 90, .8); background: linear-gradient(135deg, rgba(255, 205, 90, .28), rgba(255, 205, 90, .08) 55%, rgba(255, 205, 90, .18)), var(--plano2); box-shadow: 0 0 0 1px rgba(255, 205, 90, .12), 0 6px 22px rgba(255, 180, 40, .14); }
+.bloq.dorado::after, .bloq-g.dorado::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 236, 175, .2), transparent); transform: skewX(-18deg); animation: brilloOro 5.5s ease-in-out infinite; pointer-events: none; }
+@keyframes brilloOro { 0%, 72% { left: -60%; } 100% { left: 130%; } }
+.dorado .bloq-ic { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 14px rgba(255, 197, 71, .45); }
+.dorado .bloq-c > b { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; color: #ffe7a6; }
+.bloq-g.dorado .bloq-i { border-top-color: rgba(255, 205, 90, .3); }
+.bloq-g.dorado .bloq-i b { color: #ffe7a6; }
+.pill.bloq-p.dorado { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; font-weight: 700; box-shadow: 0 0 12px rgba(255, 197, 71, .35); }
+.eq2-t.rival-bloq.dorado { border-color: rgba(255, 205, 90, .6); background: linear-gradient(135deg, rgba(255, 205, 90, .2), rgba(255, 205, 90, .05)), var(--plano); box-shadow: 0 0 18px rgba(255, 180, 40, .12); }
+.eq2-t.rival-bloq.dorado::before { background: linear-gradient(#ffe28a, #d48c0e); }
+.rival-tiles .rival-bloq.dorado b { display: flex; align-items: center; gap: 8px; color: var(--oro); }
+.rival-tiles .rival-bloq.dorado span { color: #ffe7a6; }
+.rival-tiles .rival-bloq.dorado b .top-b .ic { width: 11px; height: 11px; }
+@media (prefers-reduced-motion: reduce) { .bloq.dorado::after, .bloq-g.dorado::after { display: none; } }
+.bloq-hoja .bloq-grande { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 26px rgba(255, 197, 71, .45); }
+.top-sello { margin: -2px 0 8px; } .top-sello .top-b { font-size: 12px; line-height: 19px; padding: 1px 10px 1px 8px; } .top-sello .top-b .ic { width: 13px; height: 13px; }
+/* el marcador de Hoy (18 nov): saldo y equipo en grande, el negativo debajo del saldo y el puesto en la línea de la jornada */
+.marcador .m-cols { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; }
+.marcador .m-c { padding: 0 12px; border-left: 1px solid var(--linea); min-width: 0; }
+.marcador .m-c:first-child { padding-left: 0; border-left: 0; }
+.marcador .m-c .et { font: 600 var(--t-sec2)/1.2 'Barlow'; color: var(--texto-3); white-space: nowrap; }
+.marcador .m-c .v { font: 700 var(--t-cifra)/1.05 var(--cond); font-variant-numeric: tabular-nums; margin-top: 3px; white-space: nowrap; }
+.marcador .m-c .d { font: 600 var(--t-sec2) var(--cond); margin-top: 2px; white-space: nowrap; }
+.marcador .m-c .d b.neg { color: var(--baja); }
+.marcador .fila-j b { color: var(--texto); font-weight: 700; }
+.marcador .fila-j > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.marcador .fila-j .der { white-space: nowrap; }
+.marcador.corto .m-cols { margin-top: 8px; }

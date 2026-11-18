@@ -1,0 +1,95 @@
+# El portal de datos de la web (bot/portal-web.mjs): el mercado de hoy (/mercado/), los 20 equipos (/equipos/), las jornadas
+# (/jornada/) con el resumen de cada una al acabar y mercado/hoy.json para la portada. Cada noche, después del cambio de mercado
+# (hacia las 00:15 de Madrid), y por la mañana por si esa noche LaLiga se retrasó. Si cambia algo, se sube a main y se lanza «Web»
+# (lo que sube el GITHUB_TOKEN no lanza otras Actions solo). Las páginas no van en el paquete de la app (SOLO_WEB en paquete.py):
+# la app no se pone al día cada noche por esto.
+name: Portal web
+
+on:
+  schedule:
+    # en UTC: 23:47 es las 00:47 de Madrid en invierno (01:47 en verano); 06:13, la de la mañana
+    - cron: '47 23 * * *'
+    - cron: '13 6 * * *'
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: 'Rehacer el mercado aunque ya esté hecho (o con el último valor si aún no ha llegado el de hoy)'
+        type: boolean
+        default: false
+      resumen:
+        description: 'Rehacer el resumen de esta jornada o de un tramo, como 1-11 (vacío: la última acabada, si toca)'
+        type: string
+        default: ''
+      onces:
+        description: 'Solo los onces confirmados de los partidos de la próxima hora (lo lanza el bot)'
+        type: boolean
+        default: false
+      probar:
+        description: 'Solo generarlo, sin subir nada'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: portal-web
+  cancel-in-progress: false
+
+jobs:
+  portal:
+    runs-on: ubuntu-latest
+    # (sesión 3) con «onces», espera hasta 45 min a que salgan los onces oficiales
+    timeout-minutes: ${{ inputs.onces && 60 || 15 }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      FORZAR: ${{ inputs.forzar && '1' || '' }}
+      RESUMEN: ${{ inputs.resumen }}
+      ONCES: ${{ inputs.onces && '1' || '' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      # con las opcionales: la tarjeta del resumen se dibuja con resvg (y Pillow la pasa a WebP)
+      - name: Dependencias
+        run: |
+          npm ci --prefix bot --no-audit --no-fund >/dev/null || echo "::warning::Sin dependencias del bot: el resumen sale sin la tarjeta"
+          python3 -c "import PIL" 2>/dev/null || pip install --quiet pillow 2>/dev/null || pip install --quiet --break-system-packages pillow || echo "::warning::Sin Pillow: el resumen sale sin la tarjeta"
+      - name: Generar
+        id: gen
+        run: node bot/portal-web.mjs ${FORZAR:+--forzar=1} ${RESUMEN:+--resumen=$RESUMEN} ${ONCES:+--onces=1}
+      - name: Subir
+        if: steps.gen.outputs.cambios == 'true' && !inputs.probar
+        run: |
+          git config user.name 'Fantasy Manager'
+          git config user.email 'fantasymanager.web.app@gmail.com'
+          git add -A web/mercado web/jornada web/equipos web/jugadores web/clausulas web/bajas web/guias web/metodo.html web/quienes-somos.html web/privacidad.html web/aviso-legal.html web/condiciones.html web/contacto.html web/instalar.html web/sitemap*.xml web/robots.txt web/index.html web/js/portada.js .github/paginas.json .github/portal
+          if git diff --cached --quiet; then echo "Nada nuevo"; exit 0; fi
+          git commit -q -m "Portal: ${ONCES:+onces confirmados, }datos del $(TZ=Europe/Madrid date +%d/%m) (automático)"
+          # (16 nov) lo que la generación toca fuera de lo de arriba no se sube, pero frenaba el pull («You have unstaged
+          # changes») y la Action acababa en verde sin haber subido nada: ahora se aparta (--autostash), se dice qué era y,
+          # si no se ha podido subir, falla (y avisa por Telegram)
+          git status -s | head -20
+          subido=no
+          for espera in 0 5 15 30; do
+            sleep $espera
+            if git pull -q --rebase --autostash origin main && git push -q origin HEAD:main; then subido=si; break; fi
+          done
+          if [ "$subido" != si ]; then echo "::error::No se ha podido subir el portal a main"; exit 1; fi
+          gh workflow run web.yml --ref main
+      - name: Aviso si falla (Telegram)
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node --input-type=module -e "
+            import { enviar, telegramDelEntorno } from './bot/lib/telegram.mjs';
+            const c = telegramDelEntorno();
+            if (c.faltan.length) process.exit(0);
+            await enviar('⚠️ El portal de la web (mercado y jornadas) ha fallado esta noche: ' + process.env.RUN, c);"

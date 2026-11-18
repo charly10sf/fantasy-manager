@@ -1,6 +1,6 @@
 # Publica la web en el dominio de la app, https://fantasymanagerapp.com (Cloudflare Pages, proyecto «fantasy-manager»
-# de la cuenta de Cloudflare de Fantasy Manager, no la de GrowFolio): la carpeta web/ con su paquete.json, app.json,
-# el APK de GitHub en /descargas/fantasy-manager.apk (ads.txt y app-ads.txt van en web/).
+# de la cuenta de Cloudflare de Fantasy Manager, no la de GrowFolio): la carpeta web/ con su paquete.json y app.json
+# (ads.txt y app-ads.txt van en web/). Desde el 16 nov no lleva ningún APK: la app solo se descarga de Google Play.
 #
 # Siempre sube lo de main (lo publicado), venga de donde venga la ejecución. Se lanza sola al terminar «Web» y «App Android»
 # en main (es cuando cambian la web, el APK y app.json), a mano, y al cambiar este archivo en pendiente (para montar
@@ -69,24 +69,13 @@ jobs:
           python3 .github/paquete.py > /dev/null
           # la firma de paquete.json (revisión total, A5), la misma que en «Web»: sin el secreto, no se publica
           bash .github/firmar-paquete.sh web/paquete.json
-          mkdir -p sitio/descargas
+          mkdir -p sitio
           cp -r web/. sitio/
-          # el APK de GitHub (el de la liga), para bajarlo desde la web
-          if gh release download app -p fantasy-manager.apk -D sitio/descargas -R "${{ github.repository }}"; then
-            echo "APK: $(stat -c %s sitio/descargas/fantasy-manager.apk) bytes"
-          else
-            echo "::warning::No se ha podido bajar el APK de la release: la web va sin él"
-          fi
-          # app.json tal cual: su «apk» sigue en GitHub porque las apps de antes de la 0.6.0 solo se actualizan desde ahí
-          # (y la web nueva, dentro de una app vieja, lee este primero). Cuando nadie tenga una de antes, se cambia
-          # por https://fantasymanagerapp.com/descargas/fantasy-manager.apk (hace falta antes de poner el repo privado)
+          # app.json tal cual (las apps de antes lo comparan con su versión). Desde el 16 nov su «apk» ya no es un APK:
+          # es la ficha de Google Play, y la app no baja nada de fuera de la tienda
           cp app.json sitio/app.json
           # ads.txt (AdSense) y app-ads.txt (AdMob) van dentro de web/: así siguen en la raíz del dominio aunque cambie quién lo sirve
           cat > sitio/_headers <<'FIN'
-          /descargas/*
-            Content-Type: application/vnd.android.package-archive
-            Content-Disposition: attachment; filename="fantasy-manager.apk"
-            Cache-Control: no-cache
           /
             Cache-Control: no-cache
           /index.html
@@ -156,6 +145,6 @@ jobs:
             echo "::warning::El dominio está «$estado»: falta activarlo en Cloudflare > Workers & Pages > $PROYECTO > Custom domains"
           fi
           # lo que de verdad responde
-          for p in "" app.json paquete.json paquete.json.sig ads.txt app-ads.txt descargas/fantasy-manager.apk; do
+          for p in "" app.json paquete.json paquete.json.sig ads.txt app-ads.txt; do
             echo "::notice::https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
           done

@@ -232,26 +232,27 @@ const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'],
 // <guias>
 /** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */
 const TODAS_GUIAS = [
+  ["jornada-13.html", "Previa de la jornada 13"],
   ["empezar-liga.html", "Empezar una liga"],
   ["puntos-laliga-fantasy.html", "Puntos"],
   ["glosario.html", "Glosario"],
   ["clausulas-laliga-fantasy.html", "Cláusulas"],
-  ["subir-clausula.html", "Subir la cláusula"],
+  ["subir-clausula.html", "Calculadora de cláusula"],
   ["blindaje-laliga-fantasy.html", "Blindaje"],
   ["cuando-clausular.html", "Cuándo clausular"],
   ["hora-mercado-laliga-fantasy.html", "Hora del mercado"],
   ["valor-de-mercado.html", "Valor de mercado"],
-  ["cuanto-pujar.html", "Cuánto pujar"],
+  ["cuanto-pujar.html", "Calculadora de puja"],
   ["cuando-vender.html", "Cuándo vender"],
   ["saldo-negativo.html", "Saldo negativo"],
-  ["ganar-dinero.html", "Ganar dinero"],
   ["alineacion.html", "Alineación"],
   ["puntos-porteros-laliga-fantasy.html", "Puntos de los porteros"],
   ["puntos-dazn-laliga-fantasy.html", "Puntos DAZN"],
-  ["lesionados-sancionados.html", "Lesionados"],
   ["apercibidos-laliga.html", "Apercibidos"],
 ];
 const FAQ_GUIA = "preguntas-frecuentes.html";
+/** la previa de la jornada que viene: [archivo en guias/, jornada] */
+const PREVIA = ["jornada-13.html", 13];
 // </guias>
 
 /** las guías con tarjeta en la portada: [archivo en guias/, icono, título, de qué va]. El resto sale en «También:» */
@@ -277,7 +278,6 @@ function otrasGuias() {
 const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
   <header class="ps-c rv"><div><div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2></div>${intro ? `<p class="ps-i">${intro}</p>` : ''}</header>${cuerpo}</section>`;
 
-const MENU = [['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pGuias', 'Guías'], ['pFaq', 'Preguntas']];
 
 /** «Cómo funciona»: en el ordenador, el móvil se queda quieto a la derecha y cambia de pantalla según bajas; en el
     móvil, uno detrás de otro deslizando de lado */
@@ -292,18 +292,39 @@ function comoFunciona() {
     <div class="ph-fijo" aria-hidden="true"><div class="ph-marco">${pantallas}</div><div class="ph-puntos">${PIES.map((x, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div></div></div>`;
 }
 
-/** todo lo que va debajo de la entrada */
+/* (0.7.13m, Carlos 15 nov 23:51) la portada de la web con el portal a la vista: arriba, siempre fija, la barra con el portal
+   (mercado, jornada, equipos, jugadores y guías), «La app» (la presentación, que va en su apartado más abajo), entrar y
+   descargar de Google Play; debajo, el portal con el bloque «Hoy», al lado de lo de entrar */
+const PORTAL = [
+  ['mercado/', 'Mercado', 'Quién sube y quién baja hoy, las rachas y los máximos de la temporada'],
+  ['jornada/', 'Jornada', 'La previa con el cierre de cláusulas y el resumen con los mejores y el once ideal'],
+  ['equipos/', 'Equipos', 'Los 20: plantilla, valor, puntos y próximos rivales'],
+  ['jugadores/', 'Jugadores', 'Todos, con su valor día a día, sus puntos por jornada y si es titular'],
+  ['guias/', 'Guías', 'Cláusulas, mercado, puntos y calculadoras, explicado con números'],
+];
+export function barraPortal() {
+  return `<div class="pt-bar on pt-fija"><div class="pt-in">
+    <a class="pt-marca" href="#" data-arriba aria-label="Fantasy Manager: arriba">${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
+    <nav class="pt-menu" aria-label="Secciones"><a href="#pHoy" data-ir-a="pHoy" class="on">Hoy</a>${PORTAL.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="#pApp" data-ir-a="pApp">La app</a></nav>
+    <a class="btn sec pt-web" href="#entrar">Entrar</a>
+    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}<span>Descargar<span class="pt-largo"> en Google Play</span></span></a></div><i class="pt-prog"></i></div>`;
+}
+/** el portal, arriba a la izquierda (en el móvil, lo primero): la insignia de Google Play, el bloque «Hoy» y las secciones */
+export function portalHTML(insignia = '') {
+  return `<div class="po" id="pHoy">
+    ${insignia ? `<div class="po-top">${insignia}</div>` : ''}
+    <p class="po-k">Datos de cada día · gratis y sin entrar</p>
+    <h1 class="po-h1">LaLiga Fantasy, <span>hoy</span></h1>
+    <p class="po-i">El mercado, la jornada, los 20 equipos y todos los jugadores, con los datos de LaLiga Fantasy de esta noche.</p>
+    <div class="pz-hoy"><div class="pz-hoy-d" aria-live="polite"><p class="pz-hoy-c">Los que más suben en el mercado de hoy, la próxima jornada y su cierre de cláusulas.</p></div></div>
+    <nav class="po-g" aria-label="Datos de cada día">${PORTAL.map(([h, t, x]) => `<a class="po-c" href="${h}"><b>${t}${icono('flecha')}</b><span>${x}</span></a>`).join('')}</nav>
+  </div>`;
+}
+
+/** la presentación de la app: va en su apartado, «La app», debajo del portal y de lo de entrar */
 export function seccionMoviles() {
   return `<div class="portada-m">
-  <div class="pt-baja"><a class="pt-baja-a" href="#pAsi"><span>Mira cómo funciona</span>${icono('abajo')}</a><a class="pt-baja-g" href="#pGuias">${icono('nota')}<span>Guías del juego</span></a></div>
-  <a class="pt-pista" href="#pAsi" aria-hidden="true" tabindex="-1"><span>Baja: hay mucho más</span>${icono('abajo')}</a>
-  <div class="pt-bar" aria-hidden="true"><div class="pt-in">
-    <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
-    <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
-    <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
-    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
-
-  ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
+  ${seccion('pAsi', 'Paso a paso', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
   ${seccion('pOnce', 'Tu equipo', 'Tu once, de un vistazo', `<div class="pc"><div class="pc-campo-w rv">${campo()}</div><div class="pc-ficha rv" aria-live="polite">${fichaOnce(3103)}</div></div>`,
     'Toca un jugador: lo que vale, su cláusula, si va a jugar y qué te aconseja la app.')}
@@ -322,7 +343,7 @@ export function seccionMoviles() {
     <div class="pk rv" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 
-  ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
+  ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${PREVIA ? `<a class="pg-c pg-previa rv" href="guias/${PREVIA[0]}"><span class="pg-ic">${icono('reloj')}</span><span class="pg-n">J${PREVIA[1]}</span><h3>Previa de la jornada ${PREVIA[1]}</h3><p>A qué hora se cierran las cláusulas, quién no juega, quién está a una amarilla y quién sube esta semana.</p><span class="pg-ir">Ver la previa${icono('flecha')}</span></a>` : ''}${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
     <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las ${TODAS_GUIAS.length + (FAQ_GUIA ? 1 : 0)} guías</a><span>También: ${otrasGuias()}.</span></div>`,
     'Cómo funcionan las cláusulas, el mercado y el dinero de LaLiga Fantasy, explicado con números. Gratis y sin entrar.')}
 
@@ -332,7 +353,7 @@ export function seccionMoviles() {
 
   <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
-    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
@@ -372,6 +393,7 @@ export function activarPortada() {
   const raiz = document.querySelector('.portada-m');
   if (!raiz) return;
   const portada = raiz.closest('.portada');
+  ponerHoy(portada);
   const hayIO = typeof IntersectionObserver === 'function';
   if (hayIO && !sinMovimiento()) portada.classList.add('pr-js');
 
@@ -391,11 +413,14 @@ export function activarPortada() {
   } else raiz.querySelectorAll('.rv').forEach((el) => el.classList.add('vis'));
 
   // la barra de arriba: sale al pasar la entrada, marca la sección en la que estás y lo leído
-  const barra = raiz.querySelector('.pt-bar'), prog = raiz.querySelector('.pt-prog');
-  const entrada = portada.querySelector('.pantalla');
-  const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
+  // (0.7.13m) siempre a la vista: ya no sale al pasar la entrada; su alto deja sitio arriba (--pt-h)
+  const barra = portada.querySelector('.pt-bar'), prog = portada.querySelector('.pt-prog');
+  const secciones = ['pHoy', 'pApp'].map((id) => portada.querySelector(`#${id}`)).filter(Boolean);
   const menu = barra.querySelector('.pt-menu');
-  const pista = raiz.querySelector('.pt-pista'), baja = raiz.querySelector('.pt-baja');
+  const pista = null, baja = null;
+  const altoBarra = () => portada.style.setProperty('--pt-h', `${barra.offsetHeight}px`);
+  altoBarra();
+  escuchar(window, 'resize', altoBarra, { passive: true });
   // en el ordenador la pista va en la columna de la izquierda, debajo de los textos (fija abajo tapaba el panel de entrar)
   const col = document.documentElement.classList.contains('escritorio') ? portada.querySelector('.pant-i') : null;
   let pedido = false, ultimaSec = null;
@@ -404,16 +429,14 @@ export function activarPortada() {
     // (fuera de la portada, al entrar en la app, se deja de escuchar)
     if (!document.body.contains(raiz)) { quitar.forEach((f) => f()); quitar = []; relojes.forEach(clearInterval); relojes.length = 0; return; }
     const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
-    const fuera = entrada ? entrada.getBoundingClientRect().bottom < 40 : y > 300;
-    barra.classList.toggle('on', fuera);
+    const fuera = true;
     // la pista fija de abajo («Baja: hay mucho más»): solo arriba del todo y si los botones de «Mira cómo funciona»
     // no se ven ya en la primera pantalla (en una ventana baja o con zoom se quedan debajo y parece que no hay más)
     if (pista && !pista.classList.contains('en-col')) { const bj = baja ? baja.getBoundingClientRect().bottom : 0; pista.classList.toggle('on', y < 60 && bj > innerHeight - 8); }
-    barra.querySelectorAll('a').forEach((a) => (a.tabIndex = fuera ? 0 : -1));
-    barra.setAttribute('aria-hidden', String(!fuera));
     prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;
     let actual = '';
     for (const s of secciones) if (s.getBoundingClientRect().top < innerHeight * 0.4) actual = s.id;
+    if (fuera && !actual) actual = 'pHoy';
     barra.querySelectorAll('[data-ir-a]').forEach((a) => a.classList.toggle('on', a.dataset.irA === actual));
     if (actual !== ultimaSec) {
       ultimaSec = actual;
@@ -424,10 +447,10 @@ export function activarPortada() {
   escuchar(window, 'scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(alBajar); } }, { passive: true });
   alBajar();
   // los enlaces de dentro: suaves y sin dejar el # en la dirección (la app usa el hash para sus pestañas)
-  [...raiz.querySelectorAll('a[href^="#"]')].forEach((a) => escuchar(a, 'click', (ev) => {
+  [...portada.querySelectorAll('a[href^="#"]')].forEach((a) => escuchar(a, 'click', (ev) => {
     ev.preventDefault();
     const id = a.getAttribute('href').slice(1);
-    const el = id && raiz.querySelector(`#${id}`);
+    const el = id && portada.querySelector(`#${id}`);
     const top = el ? el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8 : 0;
     scrollTo({ top, behavior: sinMovimiento() ? 'auto' : 'smooth' });
   }));
@@ -581,4 +604,23 @@ export function ponerCarasPortada(g) {
     const u = g.escudos && g.escudos[el.dataset.eq];
     if (u && !el.querySelector('img.e')) el.insertAdjacentHTML('beforeend', img('e', u));
   });
+}
+
+/** el bloque «Hoy»: lo escribe cada noche bot/portal-web.mjs en mercado/hoy.json (solo en la web; si no llega, se quedan los enlaces) */
+async function ponerHoy(raiz) {
+  const caja = raiz.querySelector('.pz-hoy-d');
+  if (!caja || caja.dataset.hecho) return;
+  let h;
+  try {
+    const r = await fetch('mercado/hoy.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    h = await r.json();
+  } catch { return; }
+  if (!h || !Array.isArray(h.suben) || !h.suben.length) return;
+  caja.dataset.hecho = '1';
+  const img = (u, cls) => (/^https:\/\/assets-fantasy\.llt-services\.com\//.test(u || '') ? `<img class="${cls}" src="${esc(u)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : '');
+  const fila = (x) => `<li><span class="pz-hoy-a">${img(x.cara, 'f')}${img(x.escudo, 'e')}</span><span class="pz-hoy-n"><b>${esc(x.nombre)}</b><small>${esc(x.equipo)} · ${esc(x.valor)}</small></span><span class="${x.sube ? 'sube' : 'baja'}">${x.sube ? '▲' : '▼'} ${esc(x.dif)}</span></li>`;
+  const j = h.jornada;
+  const jor = j ? `<div class="pz-hoy-j"><span class="pz-hoy-k">Jornada ${esc(String(j.n))}</span>${j.enJuego ? '<p>Se está jugando.</p>' : `<p>Empieza el <b>${esc(j.primero)}</b> con el ${esc(j.partido)}. Las cláusulas se cierran el <b>${esc(j.cierre)}</b>.</p>`}${h.previa ? `<a href="${esc(h.previa)}">Ver la previa${icono('flecha')}</a>` : ''}${h.resumen ? `<a href="${esc(h.resumen.ruta)}">Resumen de la jornada ${esc(String(h.resumen.jornada))}${icono('flecha')}</a>` : ''}</div>` : '';
+  caja.innerHTML = `<div class="pz-hoy-m"><span class="pz-hoy-k">Suben hoy · ${esc(h.fecha)}</span><ul>${h.suben.map(fila).join('')}</ul><p class="pz-hoy-c">${esc(String(h.nSuben))} suben y ${esc(String(h.nBajan))} bajan.</p></div>${jor}`;
 }

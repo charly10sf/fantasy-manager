@@ -10,7 +10,8 @@ const CLIENTE = 'af88bcff-1157-40a0-b579-030728aacf0b';
 const VUELTA = 'authredirect://com.lfp.laligafantasy';
 
 export class ErrorSesion extends Error {
-  constructor(m) { super(m); this.sesion = true; }
+  // tipo (0.7.13i): para contar en qué falla la entrada (semaforo.js): cancel, caduca, laliga, redirect, perdido u otro
+  constructor(m, tipo = 'otro') { super(m); this.sesion = true; this.tipo = tipo; }
 }
 
 const b64url = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -73,19 +74,19 @@ export async function terminarLogin(url) {
   let u;
   try { u = new URL(url); } catch (e) { throw new ErrorSesion('La vuelta de LaLiga no se entiende'); }
   const q = u.searchParams;
-  if (q.get('error')) throw new ErrorSesion(textoError(q.get('error_description') || q.get('error')));
+  if (q.get('error')) { const x = q.get('error_description') || q.get('error'); throw new ErrorSesion(textoError(x), tipoDe(x)); }
   const codigo = q.get('code');
   const pk = leer('pkce', true);
   if (!codigo) throw new ErrorSesion('LaLiga no ha devuelto el código para entrar');
-  if (!pk) throw new ErrorSesion('Se ha perdido el inicio de sesión a medias. Vuelve a pulsar Entrar.');
-  if (pk.estado && q.get('state') && q.get('state') !== pk.estado) throw new ErrorSesion('La vuelta de LaLiga no es de este inicio de sesión. Vuelve a probar.');
+  if (!pk) throw new ErrorSesion('Se ha perdido el inicio de sesión a medias. Vuelve a pulsar Entrar.', 'perdido');
+  if (pk.estado && q.get('state') && q.get('state') !== pk.estado) throw new ErrorSesion('La vuelta de LaLiga no es de este inicio de sesión. Vuelve a probar.', 'perdido');
   const { r, j } = await pedirToken({
     grant_type: 'authorization_code', client_id: CLIENTE, code: codigo, redirect_uri: VUELTA,
     code_verifier: pk.verificador, scope: 'openid offline_access',
   });
   guardar('pkce', null);
-  if (r.s === 0) throw new Error(`Sin conexión con LaLiga (${r.e})`);
-  if (r.s >= 400 || !j) throw new ErrorSesion(textoError((j && (j.error_description || j.error)) || `error ${r.s}`));
+  if (r.s === 0) throw Object.assign(new Error(`Sin conexión con LaLiga (${r.e})`), { tipo: 'red' });
+  if (r.s >= 400 || !j) { const x = (j && (j.error_description || j.error)) || `error ${r.s}`; throw new ErrorSesion(textoError(x), r.s >= 500 ? 'laliga' : tipoDe(x)); }
   return guardarTokens(j);
 }
 
@@ -121,6 +122,15 @@ export async function token() {
   return s.token;
 }
 
+/** en qué ha fallado la entrada, para contarlo (lo mismo que mira textoError) */
+function tipoDe(m) {
+  const t = String(m || '');
+  if (/AADB2C90091|cancel/i.test(t)) return 'cancel';
+  if (/AADB2C90006|redirect/i.test(t)) return 'redirect';
+  if (/AADB2C90079|AADB2C90080|expired/i.test(t)) return 'caduca';
+  if (/AADB2C90075|InternalServerError|Internal Server Error|server_error|temporarily_unavailable/i.test(t)) return 'laliga';
+  return 'otro';
+}
 function textoError(m) {
   const t = String(m || '');
   if (/AADB2C90091|cancel/i.test(t)) return 'Has cancelado el inicio de sesión';

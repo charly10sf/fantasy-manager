@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.11';
+export const VERSION = '0.8b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,273 @@ export const VERSION = '0.7.11';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (17 nov, Carlos: Fornals subiendo 1,1 M al día y titular, con 16 M en positivo, y el plan mandaba aceptar un 6 %
+    // «para la liquidez»; y el buscador del Mercado sin caras). La hora, al publicar
+    v: '0.8b', f: '2026-11-18', h: '00:21', t: 'Ofertas con más cabeza y caras en el buscador',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no te manda vender al que sigue subiendo', x: 'Si no te hace falta el dinero y el jugador sube tan rápido que en pocos días vale lo que te ofrecen (o algo menos si es de tu once), el plan te dice que lo aguantes en vez de aceptar. Y la explicación de cada paso ya no se inventa motivos, como que una venta hace falta para el dinero cuando no es así.' },
+      { tipo: 'arreglo', d: 'ia', t: 'Cuánto ofrecer por el jugador de un rival, con su subida', x: 'Si preguntas cuánto ofrecerle a otro mánager por un jugador, la respuesta ya cuenta lo que sube ese jugador cada día y lo que suele dar LaLiga en tu liga, en vez de sumar siempre un 10 % a su valor. Y si sube fuerte, te avisa de que su dueño querrá más.' },
+      { tipo: 'arreglo', d: 'cara', t: 'El buscador del Mercado enseña las caras', x: 'Al buscar un jugador, cada resultado sale con su foto en vez de con sus iniciales.' },
+    ],
+  },
+  {
+    // (17 nov, Carlos: Soriano, «por 60 M ni de coñísima me lo llevo»; el negativo solo preocupa de miércoles en
+    // adelante; el cambio de mercado del día del partido). La hora, al publicar
+    v: '0.8a', f: '2026-11-17', h: '22:43', t: 'Apodos para tus rivales y pujas más realistas',
+    cosas: [
+      { tipo: 'nuevo', importante: true, d: 'cara', t: 'Ponle un apodo a cada rival', x: 'Llama a cada rival como lo llamáis en tu liga: en su ficha («Ponle un apodo») o en Ajustes, en «Apodos de los rivales». Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'corona', t: 'Las funciones top, en dorado', x: 'Lo que se abre viendo un anuncio (el dinero de cada rival, quién paga tus cláusulas, el radar de subidas…) ahora se ve de un vistazo, con su sello dorado.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'voz', t: 'La voz entiende mejor los nombres', x: 'Si el dictado escribe un nombre de tu liga un poco distinto («leao ere espabilado» por «Leao er Espabilao»), la IA sabe de quién hablas y te lo dice. Si puede ser más de uno, te pregunta cuál.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'especular', t: 'Pujas para revender con las dos cifras', x: 'Cuando la app te propone pujar por alguien para revenderlo, te dice lo que hace falta en tu liga para llevártelo y hasta dónde te sale a cuenta. Si con la puja que sale a cuenta lo normal es que se lo lleve otro, ya no te lo propone y te cuenta por qué, y si te conviene para quedártelo.' },
+      { tipo: 'mejora', d: 'balanza', t: 'El negativo, a su tiempo', x: 'Ir en negativo a mitad de semana para revender está bien: la app solo aprieta cuando quedan pocos cambios de mercado para vender antes de la jornada, y cuanto menos queda, menos te deja bajar.' },
+      { tipo: 'mejora', d: 'reloj', t: 'Hasta el último cambio de mercado', x: 'Si ya estás en positivo, lo que tienes para revender puede esperar al cambio de mercado del día del partido. Te dice cuánto margen tendrás para aceptar la oferta y, si no vas a poder, cuál aceptar antes.' },
+    ],
+  },
+  {
+    // (17 nov, Carlos) la 0.8 se presenta a todos al actualizar (todos: true), con dibujos nuevos. La hora, al publicar
+    v: '0.8', f: '2026-11-17', h: '13:41', t: 'La IA, al momento, y la pantalla entera', todos: true,
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'chat', t: 'Pregúntale a la IA, sin clave y al momento', x: 'Ya no hace falta tu clave de Google: contesta la IA de la app en unos segundos. Se sabe la plantilla entera de cada rival y las cifras de tu liga, y va al grano. Tienes 3 preguntas al día, y en la app de Google Play, 3 más viendo un anuncio corto.', ir: { v: 'ia' } },
+      { para: 'play', tipo: 'nuevo', d: 'aviso', t: 'Te avisa cuando la IA te contesta', x: 'Pregunta y sal de la app si quieres: arriba verás «Pensando tu respuesta» y, cuando conteste, un aviso con el principio. Tócalo y vas directo a la respuesta.' },
+      { tipo: 'mejora', d: 'ruta', t: 'El plan con la IA, más fiable', x: 'Si tu liga cambia mientras la IA prepara el plan, o lo recoges al volver a la app, se queda con los pasos que te explica y solo quita lo que ya no se puede hacer, diciéndote por qué. Y si la conexión falla, reintentar no te gasta otro plan.' },
+      { para: 'play', tipo: 'mejora', importante: true, d: 'pantalla', t: 'Más pantalla para lo que importa', x: 'Hemos rediseñado los anuncios para que estorben lo menos posible. La app se ve entera, con más espacio para tu equipo, el mercado y tus rivales, y todo es más cómodo de usar.' },
+      { tipo: 'mejora', d: 'peligro', t: 'Cuánto peligra cada cláusula, según tu liga', x: 'El riesgo de que te clausulen a uno se mide con lo que se paga de verdad en tu liga por un clausulazo. Una cláusula un 10 % por encima de su valor ya no sale «sin riesgo» si en tu liga se paga más.' },
+      { tipo: 'arreglo', d: 'ia', t: 'Respuestas sin restos raros', x: 'Debajo de algunas respuestas salía un bloque de texto técnico, y a veces la IA escribía códigos como «M-3143». Ya no.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Cuando el plan con la IA no sale, te dice la verdad', x: 'Si la IA ya ha hecho todos los de hoy, dice que hasta mañana, no «en un rato», y nunca se queda esperando más de 3 minutos. Mientras, tienes el plan de la app.' },
+      { tipo: 'arreglo', d: 'campana', t: 'Los avisos de vender, como en Hoy', x: 'Con la app cerrada ya no te avisa de vender a quien Hoy te dice que esperes, ni dos veces a un lesionado.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Una oferta buena, sin consejos contrarios', x: 'Con una oferta que conviene aceptar ya no te dice a la vez que la aceptes y que esperes.' },
+      { menor: true, tipo: 'arreglo', d: 'ajustes', t: 'Fuera un interruptor que no hacía nada', x: 'En Ajustes, «Buscar en Google en el plan» ya no hacía nada con el plan de ahora: se ha quitado.' },
+    ],
+  },
+  {
+    v: '0.7.13za', f: '2026-11-16', h: '23:49', t: 'Quién usa la app, por ligas',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Las cuentas de fuera, agrupadas por liga', x: 'En Quién usa la app, pestaña Cuentas, las de otras ligas salen agrupadas: primero las ligas con más de una cuenta, después las que van solas en su liga y al final las que aún no han dicho la suya. Arriba se dice cuántas ligas distintas hay, y el equipo ya no repite el nombre del mánager cuando se llaman igual.' },
+    ],
+  },
+  {
+    v: '0.7.13z', f: '2026-11-16', h: '21:11', t: 'El dinero de los rivales, en el punto medio',
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'Su dinero estimado, mejor centrado', x: 'La cifra del dinero de un rival que no se sabe exacto ya no da por hecho que ha cogido tantas recompensas diarias como tú: la pone en el punto medio entre ninguna y todas, y el ± es la mitad de ese hueco. En la ficha del rival queda solo la cifra, sin el párrafo de debajo ni el número de compras; en el Diagnóstico se ve de qué se compone cada margen.' },
+    ],
+  },
+  {
+    v: '0.7.13y', f: '2026-11-16', h: '19:41', t: 'La puja hecha, más corta en el plan',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'semaforo', t: 'Menos texto en lo que ya has pujado', x: 'En el plan, un paso ya pujado en LaLiga dice solo «Pujado 29,15 M», sin repetir cuándo se resuelve.' },
+    ],
+  },
+  {
+    v: '0.7.13x', f: '2026-11-16', h: '19:39', t: 'El estado de tu puja ya no se corta',
+    cosas: [
+      { menor: true, tipo: 'arreglo', d: 'semaforo', t: 'El estado de la puja se lee entero', x: 'En el plan, lo que ya has hecho en LaLiga («Pujado 29,15 M, se resuelve a las 20:00») salía cortado en la fila. Ahora se ve completo.' },
+    ],
+  },
+  {
+    v: '0.7.13w', f: '2026-11-16', h: '17:23', t: 'Aviso de versión nueva en Google Play',
+    cosas: [
+      { menor: true, para: 'play', tipo: 'mejora', d: 'versiones', t: 'Te avisa si hay una versión nueva', x: 'Si en Google Play hay una versión nueva de la app y la tuya se ha quedado atrás, arriba sale un aviso con el botón para actualizarla.' },
+    ],
+  },
+  {
+    v: '0.7.13v', f: '2026-11-16', h: '13:46', t: 'La IA explica el margen del dinero',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA explica el ± del dinero de un rival', x: 'Cuando la IA te dice cuánto dinero tiene un rival, ahora aclara que el ± es por la recompensa diaria: no sale en ningún sitio y la app no puede saber cuánto ha cogido cada uno.' },
+    ],
+  },
+  {
+    v: '0.7.13u', f: '2026-11-16', h: '11:45', t: 'Pujas que aprenden de tu liga',
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'balanza', t: 'Pujas que aprenden de tu liga', x: 'La puja que te propone la app por cada libre ya no mira solo su valor: mira también cómo viene (si sube fuerte o es de los top) y lo que se ha pagado en tu liga por los que venían igual. Aprende de tus pujas: si pierdes muchas, puja más alto; si las ganas todas, un poco menos. Si en tu liga hay pocas compras parecidas, tira de lo que se paga en todas las ligas, sin nombres (con «Ayudar a mejorar la IA» activado).' },
+      { tipo: 'mejora', d: 'especular', t: 'Con esa puja, ¿sale a cuenta?', x: 'Para los que suben, el plan te dice con cuánto te lo llevarías de verdad en tu liga y si, pagando eso, sale a cuenta revenderlo antes de la jornada o tenerlo (en cuántos días recuperas lo que pagas de más). Si no sale ninguna de las dos, lo verás en «Mirados» con las cuentas. Y en la ficha del jugador, cuántas veces de cada 10 ganarías con la puja de la app.' },
+    ],
+  },
+  {
+    v: '0.7.13t', f: '2026-11-16', h: '10:34', t: 'Quién usa la app: el porqué de cada problema',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'Por qué no le carga a alguien', x: 'En Quién usa la app, debajo de cada cuenta con problema sale qué le pasa (no le carga la liga, tiene la app vieja, no se le pone la web nueva) y qué tiene que hacer. Si a alguien no le carga, ahora se ve el motivo: la conexión, LaLiga o la propia app.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Las versiones de un vistazo', x: 'En el resumen, una tarjeta con cuántos tienen la versión de ahora, en cuál se han quedado los demás y por qué, y qué versión de la app de Google Play tiene cada uno.' },
+    ],
+  },
+  {
+    v: '0.7.13s', f: '2026-11-16', h: '10:02', t: 'Lo que sube, también en euros',
+    cosas: [
+      { tipo: 'mejora', importante: true, d: 'grafica', t: 'Lo que sube, también en euros', x: 'Que un jugador suba un 1 % al día no pesa igual si vale 90 M que si vale 10 M. Ahora la app mira también cuántos euros sube cada día: los caros que suben poco a poco ya salen como fichajes que suben y cuentan más en el interés del mercado.' },
+      { tipo: 'arreglo', d: 'periodico', t: 'Fuera las noticias de otros deportes', x: 'Se colaban titulares de motos o de tiro deportivo solo por coincidir con el apellido de un jugador o venir de un diario deportivo. Ahora, de los diarios que cuentan todos los deportes, solo entra la noticia si es de fútbol o nombra bien al jugador o a su equipo.' },
+    ],
+  },
+  {
+    v: '0.7.13r', f: '2026-11-16', h: '09:44', t: 'Noticias de cada jugador, sin colarse otros',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Las noticias, solo de tu jugador', x: 'Con jugadores de un solo nombre (como Ryan, el portero del Levante) se colaban noticias de otros deportes, como la NFL. Ahora un nombre suelto solo cuenta si la noticia nombra también a su equipo o viene de un medio de fútbol.' },
+      { menor: true, tipo: 'mejora', d: 'dinero', t: 'El dinero de un rival, mejor explicado', x: 'Al abrir el dinero de un rival, el ± se explica: es por la recompensa diaria, que no sale en ningún sitio, así que la app no puede saber cuánto ha cogido cada uno.' },
+    ],
+  },
+  {
+    v: '0.7.13q', f: '2026-11-16', h: '09:34', t: 'En el parón, lo que sube',
+    cosas: [
+      { tipo: 'arreglo', importante: true, d: 'plan', t: 'En el parón, lo que sube fuerte ya no se descarta', x: 'En el parón la app descartaba fichajes para tu once aunque subieran mucho cada día. Si sube hasta la vuelta y comprándolo ganas dinero, ahora se queda en el plan, con lo que valdría antes de la jornada: es dinero en el parón y llega a tiempo para tu once.' },
+      { tipo: 'arreglo', d: 'hucha', t: 'Con dinero de sobra, el parón no frena los buenos fichajes', x: 'Si un jugador bueno sale en el mercado a su valor, no está bajando y lo pagas con tu saldo sin quedarte en negativo, el plan ya te lo propone aunque sea parón: tener el dinero parado no te da nada.' },
+    ],
+  },
+  {
+    v: '0.7.13p', f: '2026-11-16', h: '06:40', t: 'El aviso de pruebas vuelve',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'campana', t: 'El aviso de arriba vuelve', x: 'La app sigue en pruebas: arriba vuelve a salir el aviso para mandar un fallo o una idea. Lo cierras con la × y vuelve a salir a los tres días.' },
+    ],
+  },
+  {
+    v: '0.7.13o', f: '2026-11-16', h: '05:50', t: 'Hoy, más ordenado',
+    cosas: [
+      { tipo: 'mejora', d: 'reloj', t: 'Hoy, más ordenado', x: 'El aviso del parón va arriba del todo, encima de tu saldo y tu equipo. Lo que falta para el mercado nuevo o para que se abra una cláusula va ahora dentro de ese mismo recuadro, en pequeño.' },
+      { tipo: 'arreglo', d: 'diana', t: '«Cómo van sus aciertos», para todos', x: 'Si pedías muchos planes, la app no guardaba los suficientemente viejos para ver cómo salieron y no te enseñaba sus aciertos. Ahora guarda lo que te recomendó cada plan durante un mes: los aciertos salen cuando tus planes cumplan 2 días.' },
+    ],
+  },
+  {
+    v: '0.7.13n', f: '2026-11-16', h: '05:41', t: 'Cada liga, a su hora',
+    cosas: [
+      { tipo: 'arreglo', importante: true, d: 'reloj', t: 'Los planes, con el mercado de tu liga', x: 'Cada liga tiene su hora de mercado. Los planes que salen solos van con la tuya: el primero, 10 minutos después de que se refresque el mercado de tu liga, y el segundo, 12 horas después.' },
+      { tipo: 'mejora', d: 'plan', t: 'Los ajustes del plan, más claros', x: 'Ya no está la imagen del plan para compartir. En su lugar se explica cuántos planes tienes: 2 gratis cada día y, a partir del tercero, cada uno con un anuncio.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, con gráficas', x: 'Menos texto y más gráficas: activos cada día, altas por semana, antes de entrar, desde dónde, el tiempo de hoy y qué hacen. Lo que hay que mirar, en chapitas arriba; las cuentas, en su pestaña.' },
+    ],
+  },
+  {
+    v: '0.7.13m', f: '2026-11-16', h: '01:29', t: 'Los datos del día, en la portada',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'periodico', t: 'La portada, con los datos del día', x: 'Al abrir la web, lo primero son los datos de LaLiga Fantasy de hoy: los que más suben, la próxima jornada y los accesos al mercado, las jornadas, los equipos, los jugadores y las guías. La barra de arriba se queda siempre fija, y lo que es la app está en su apartado, «La app».' },
+    ],
+  },
+  {
+    v: '0.7.13l', f: '2026-11-16', h: '01:17', t: 'Tu plan, a su hora',
+    cosas: [
+      { tipo: 'nuevo', importante: true, d: 'reloj', t: 'Los planes con la IA salen solos', x: 'Uno de tus dos planes del día sale solo 10 minutos después de que se actualice el mercado de tu liga y el otro 12 horas después. Si prefieres otras horas, elígelas en los ajustes del plan o en Ajustes → La IA. Los que salen solos cuentan como dos de los planes del día.' },
+      { tipo: 'mejora', d: 'plan', t: '«Rehacer el plan», a mano', x: 'Arriba del plan, en grande, «Rehacer el plan». Al lado, sus ajustes: el tono de las bromas y a qué horas sale solo.' },
+    ],
+  },
+  {
+    v: '0.7.13k', f: '2026-11-16', h: '00:45', t: 'Quién usa la app, más clara',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, rehecha', x: 'Se abre tocando la etiqueta BETA del logo. Arriba, las cifras de un vistazo y un aviso con quién tiene la app de Google Play vieja (y por eso no le llega la versión nueva), quién sigue con la app de fuera de Google Play y a quién no le carga la liga. Debajo, cuatro pestañas: Cuentas, con la versión que tiene cada uno; Tiempo; Antes de entrar, que antes no salía; y Altas.' },
+    ],
+  },
+  {
+    v: '0.7.13j', f: '2026-11-16', h: '00:34', t: 'Solo desde Google Play',
+    cosas: [
+      { para: 'app', tipo: 'mejora', d: 'movil', t: 'La app, solo desde Google Play', x: 'Fantasy Manager para Android solo se descarga e instala desde Google Play. Donde antes se ofrecía descargar la app otra vez, ahora te lleva a Google Play.' },
+    ],
+  },
+  {
+    v: '0.7.13i', f: '2026-11-15', h: '23:45', t: 'Cómo va LaLiga Fantasy, de un vistazo',
+    cosas: [
+      { tipo: 'nuevo', d: 'conexion', t: 'El semáforo de LaLiga Fantasy', x: 'En la pantalla de entrar, y si tu liga no carga, un punto verde, amarillo o rojo te dice si los servidores de LaLiga Fantasy funcionan, van lentos o no responden. Así sabes si es cosa de LaLiga o vale la pena volver a probar. Tócalo para mirarlo otra vez.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'grafica', t: 'Lo que pasa antes de entrar', x: 'En Quién usa la app, el bloque «Antes de entrar»: cuántos ven la pantalla de entrar, tocan Google Play en la web, miran la liga de ejemplo, le dan a entrar, entran o fallan (y si falla LaLiga), hoy, ayer y en 7 días; por dónde y, si llegan a la web desde un enlace con campaña, de cuál. Sin saber de quién.' },
+    ],
+  },
+  {
+    v: '0.7.13h', f: '2026-11-15', h: '18:30', t: '«Tus rivales», al día',
+    cosas: [
+      { tipo: 'arreglo', d: 'lupa', t: '«Tus rivales» contaba fichajes que ya no valían', x: 'En el plan con la IA, «Tus rivales» podía decir que un rival había fichado o tenía a un jugador que ya no era suyo, por ejemplo porque se lo habías quitado tú después. Ahora se comprueba con tu liga cada vez que se actualiza la app, y lo que ya no es verdad se quita.' },
+    ],
+  },
+  {
+    v: '0.7.13g', f: '2026-11-15', h: '17:31', t: 'El plan con la IA ya no se cae',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan con la IA fallaba con «no cuadra»', x: 'A veces, al pedir el plan con la IA, salía «lo que pide no cuadra con las cuentas de hoy» aunque la IA no hubiera pedido nada raro, y el plan no llegaba. Ahora sale siempre: si algo de lo que propone no encaja, eso no se aplica y el resto del plan se queda.' },
+      { tipo: 'arreglo', d: 'especular', t: 'Las cuentas con varios jugadores para revender', x: 'Con más jugadores comprados para revender de los que la app aconseja llevar a la vez, el plan decía que empezarías la jornada en negativo y descartaba fichajes por falta de saldo sin ser verdad. Ya hace las cuentas con el dinero que tienes.' },
+    ],
+  },
+  {
+    v: '0.7.13f', f: '2026-11-15', h: '15:39', t: 'Aviso del plan con la app cerrada',
+    cosas: [
+      { para: 'play', tipo: 'arreglo', d: 'conexion', t: 'Te avisa cuando tu plan está listo', x: 'Si sales de la app mientras la IA prepara el plan, arriba sale «Preparando tu plan» y, cuando está, «Tu plan de hoy está listo». Al entrar ya lo tienes.' },
+    ],
+  },
+  {
+    v: '0.7.13e', f: '2026-11-15', h: '15:25', t: 'Parón más limpio',
+    cosas: [
+      { tipo: 'arreglo', d: 'bandera', t: 'Quién se revaloriza, más limpio', x: 'En el ordenador, las dos columnas de «Quién se revaloriza y quién se hunde» empiezan a la misma altura y los textos de encima son de una línea.' },
+    ],
+  },
+  {
+    v: '0.7.13d', f: '2026-11-15', h: '14:56', t: 'Sal de la app mientras se hace el plan',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'El plan con la IA sigue aunque salgas de la app', x: 'Si salías de la app mientras la IA preparaba el plan, se cortaba y al volver salía un error. Ahora el plan se sigue haciendo y, al volver, lo tienes al momento, sin gastar otro plan del día.' },
+    ],
+  },
+  {
+    v: '0.7.13c', f: '2026-11-15', h: '14:31', t: 'El plan, más a prueba de cortes',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'El plan con la IA aguanta un corte de conexión', x: 'Si la conexión se cortaba justo mientras la IA preparaba el plan, salía un error de «Sin conexión». Ahora la app lo vuelve a pedir sola una vez, sin que te cuente como un plan más.' },
+    ],
+  },
+  {
+    v: '0.7.13b', f: '2026-11-15', h: '12:55', t: 'Previas y calculadoras',
+    cosas: [
+      { para: 'web', tipo: 'nuevo', d: 'calendario', t: 'La previa de cada jornada', x: 'En las guías de la web hay una página por jornada con la hora del cierre y la reapertura de cláusulas, los sancionados, los apercibidos, las bajas y los jugadores que más suben. Se pone al día sola antes del cierre.' },
+      { para: 'web', tipo: 'nuevo', d: 'balanza', t: 'Calculadoras de cláusula y de puja', x: 'Las guías de subir la cláusula y de cuánto pujar traen su calculadora: metes tus números y te dice cuánto subirla, si compensa clausular a un rival y cuánto pujar por un jugador.' },
+      { para: 'web', tipo: 'mejora', d: 'grafica', t: 'Guías con datos de esta temporada', x: 'Porteros, valor de mercado y alineación traen cifras de esta temporada: porterías a cero y paradas de cada equipo, cuánto suelen durar las rachas de subida y cuántos puntos pierde un suplente en cada puesto.' },
+    ],
+  },
+  {
+    v: '0.7.13a', f: '2026-11-15', h: '11:45', t: 'Guías más completas',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'periodico', t: 'Guías más completas', x: '«Valor de mercado» explica ahora también cómo ganar dinero con la compraventa, y «Cuándo vender», qué hacer con un lesionado o un sancionado. Las dos guías que lo contaban por separado llevan a ellas.' },
+    ],
+  },
+  {
+    v: '0.7.13', f: '2026-11-15', h: '03:25', t: 'El dinero, aprendido de todos',
+    cosas: [
+      { importante: true, tipo: 'nuevo', d: 'hucha', t: 'El dinero de los rivales aprende de todos', x: 'Cuando alguien apunta cuánto le ha dicho un rival que tiene, la app aprende cuánto fallaba su cuenta. Con lo de todas las ligas, sin nombres, el dinero de tus rivales sale más fino y con un margen más justo, aunque tú no hayas apuntado nada. Lo que apuntes de tu liga sigue pesando más.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'escudo', t: 'Ayudar a mejorar la IA', x: 'En Ajustes → Datos y privacidad eliges si compartes datos de tu liga, sin nombres, solo para afinar la IA, sus predicciones y sus planes. Viene activado y se apaga con un toque.' },
+      { tipo: 'mejora', d: 'ia', t: 'La IA duda lo justo', x: 'La IA sabe cuánto suele fallar la cuenta del dinero de los rivales y no da por buenas diferencias más pequeñas que eso.' },
+    ],
+  },
+  {
+    v: '0.7.12', f: '2026-11-15', h: '02:41', t: 'Menos anuncios',
+    cosas: [
+      { importante: true, para: 'play', tipo: 'mejora', d: 'candado', t: 'Menos anuncios para abrir funciones', x: 'Todo se abre con un solo anuncio menos el dinero de un rival, que pide dos y se ve 5 minutos (2 veces por jornada). Quién puede pagar tu cláusula queda abierto 5 horas y cuándo gira un jugador, hasta medianoche.', ir: { v: 'rivales' } },
+      { para: 'play', tipo: 'mejora', d: 'ia', t: 'Con tu clave de Google, sin anuncios', x: 'Si usas tu propia clave de la IA, puedes pedirle planes nuevos sin límite y sin ver ningún anuncio.' },
+      { tipo: 'mejora', d: 'hucha', t: 'El dinero de los rivales, más fino', x: 'En los parones cuenta la recompensa diaria doble, y lo que te dicen los rivales que tienen sirve para corregir la cuenta de los demás.', ir: { v: 'rivales' } },
+    ],
+  },
+  {
+    v: '0.7.11f', f: '2026-11-14', h: '19:17', t: 'Cabecera más limpia',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'ajustes', t: 'La etiqueta BETA, en el logo', x: 'La etiqueta «BETA» pasa a la camiseta del logo, arriba a la izquierda, y la hora de la última actualización se lee entera en cualquier pantalla. Sigue abriendo «Fallos e ideas».' },
+    ],
+  },
+  {
+    v: '0.7.11e', f: '2026-11-14', h: '18:48', t: 'Aviso al entrar, más claro',
+    cosas: [
+      { tipo: 'mejora', d: 'ajustes', t: 'Si LaLiga falla al entrar', x: 'Antes de entrar, un aviso bien visible: la página de LaLiga suele fallar a la primera y basta con cerrarla y volver a darle.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'plan', t: 'Otro plan, sin límite de verdad', x: 'Como creador, «Pedir otro plan» ya no te pide un anuncio aunque antes se te hubieran acabado los planes del día.' },
+    ],
+  },
+  {
+    v: '0.7.11d', f: '2026-11-14', h: '18:39', t: 'Aviso al entrar',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'ajustes', t: 'Si LaLiga falla al entrar', x: 'Debajo de «Entrar con mi cuenta de LaLiga» se avisa de que su página a menudo falla a la primera y de que basta con volver a darle.' },
+    ],
+  },
+  {
+    v: '0.7.11c', f: '2026-11-14', h: '18:16', t: 'La app sigue en beta',
+    cosas: [
+      { tipo: 'nuevo', d: 'ajustes', t: 'Fallos e ideas, a un toque', x: 'Arriba, junto al nombre de tu liga, hay una etiqueta «BETA»: la app se sigue mejorando. Tócala para contarme un fallo o una idea y te contesto ahí mismo.', ir: { v: 'hoy' } },
+    ],
+  },
+  {
+    v: '0.7.11b', f: '2026-11-14', h: '17:30', t: 'Otro plan, sin límite para el creador',
+    cosas: [
+      { para: 'dueño', menor: true, tipo: 'mejora', d: 'plan', t: 'Otro plan, sin límite', x: 'Como creador de la app, puedes pedir otro plan del día con la IA cuantas veces quieras. En Hoy sale «sin límite» en vez de los planes que te quedan.', ir: { v: 'hoy' } },
+    ],
+  },
+  {
+    v: '0.7.11a', f: '2026-11-14', h: '17:14', t: 'El plan lee las noticias de última hora',
+    cosas: [
+      { tipo: 'mejora', d: 'periodico', t: 'El plan lee las noticias de última hora', x: 'Antes de explicarte el plan del día, la IA busca en Google las últimas noticias de los jugadores del plan y de tus titulares dudosos: lesiones, convocatorias, onces y sanciones. Si una noticia lo cambia todo, puede quitar o meter un paso, y la noticia sale con su enlace en «Fuentes». Las cuentas siguen siendo las de la app.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.7.11', f: '2026-11-14', h: '16:01', t: 'El plan, más fino',
     cosas: [
