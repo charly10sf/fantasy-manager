@@ -2321,7 +2321,8 @@
    "SPORT|136566431": 1794990341000,
    "SPORT|136565913": 1794992270000,
    "AS|https://as.com/futbol/primera/vuelve-aubameyang-casado-y-gimenez-los-dilemas-f202611-n/": 1794995998000,
-   "SPORT|136568609": 1794993321000
+   "SPORT|136568609": 1794993321000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000
   },
   "hechos": [
    {
@@ -3075,11 +3076,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794997427000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos entrena al margen por unas molestias físicas",
+    "motivo": "molestias",
+    "plazo": "",
+    "nums": [
+     18,
+     30
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -8327,13 +8343,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3733,
+   "ok": 3734,
    "fallos": 0,
-   "ejecuciones": 3053,
+   "ejecuciones": 3054,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T10:26:28.774Z"
+   "ultima": "2026-11-18T10:31:19.317Z"
   }
  },
  "ptsDirecto": {},
@@ -8350,15 +8366,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:26:56.909Z"
+   "ultimaBien": "2026-11-18T10:31:52.993Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:26:56.909Z"
+   "ultimaBien": "2026-11-18T10:31:52.993Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:26:56.909Z"
+   "ultimaBien": "2026-11-18T10:31:52.993Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8366,11 +8382,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:26:56.909Z"
+   "ultimaBien": "2026-11-18T10:31:52.993Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:26:56.909Z"
+   "ultimaBien": "2026-11-18T10:31:52.993Z"
   }
  },
  "avisos": [
