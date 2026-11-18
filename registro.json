@@ -2351,7 +2351,8 @@
    "SPORT|136580084": 1795008872000,
    "SPORT|136558313": 1795010451000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/18/jonathan-viera-caro-es-el-mejor-portero-jugando-con-los-pies-con-el-que-he-entrenado-junto-con-alvaro-valles-ser-las-palmas/": 1795016233000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000,
+   "SPORT|136532843": 1795017998000
   },
   "hechos": [
    {
@@ -3212,7 +3213,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -8468,13 +8469,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3813,
+   "ok": 3814,
    "fallos": 0,
-   "ejecuciones": 3133,
+   "ejecuciones": 3134,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T17:06:17.954Z"
+   "ultima": "2026-11-18T17:11:14.212Z"
   }
  },
  "ptsDirecto": {},
@@ -8491,15 +8492,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:06:26.032Z"
+   "ultimaBien": "2026-11-18T17:11:41.490Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:06:26.032Z"
+   "ultimaBien": "2026-11-18T17:11:41.490Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:06:26.032Z"
+   "ultimaBien": "2026-11-18T17:11:41.490Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8507,11 +8508,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:06:26.032Z"
+   "ultimaBien": "2026-11-18T17:11:41.490Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:06:26.032Z"
+   "ultimaBien": "2026-11-18T17:11:41.490Z"
   }
  },
  "avisos": [
