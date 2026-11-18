@@ -2142,7 +2142,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html": 1794782131000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251424/nico-williams-le-coge-medida-inglaterra.html": 1794780779000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251401/francia.html": 1794780266000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251405/partido-completo-baena-espana-perdera-proximo.html": 1794779193000,
    "SPORT|136426028": 1794803462000,
    "SPORT|136480594": 1794801644000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261115/11684932/fuente-cubarsi-tenia-molestia-muscular.html": 1794782711000,
@@ -8555,13 +8554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3870,
+   "ok": 3871,
    "fallos": 0,
-   "ejecuciones": 3190,
+   "ejecuciones": 3191,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:46:12.643Z"
+   "ultima": "2026-11-18T21:51:13.966Z"
   }
  },
  "ptsDirecto": {},
@@ -8578,15 +8577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:46:44.560Z"
+   "ultimaBien": "2026-11-18T21:51:22.129Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:46:44.560Z"
+   "ultimaBien": "2026-11-18T21:51:22.129Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:46:44.560Z"
+   "ultimaBien": "2026-11-18T21:51:22.129Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8594,11 +8593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:46:44.560Z"
+   "ultimaBien": "2026-11-18T21:51:22.129Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:46:44.560Z"
+   "ultimaBien": "2026-11-18T21:51:22.129Z"
   }
  },
  "avisos": [
