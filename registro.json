@@ -2138,7 +2138,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136475632": 1794768134000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/15/compromiso-antony.html": 1794771985000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eldense-recupera-sonrisa-sabadell-jugo-55-minutos-diez-20261115_3475482.html": 1794772269000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/15/asi-sido-regreso-aimar-blazquez-valencia-cf-mestalla-vida-perdonada-la-nucia-136475635.html": 1794773131000,
@@ -2354,7 +2353,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
    "SPORT|136589952": 1795022314000,
-   "SPORT|136576189": 1795023205000
+   "SPORT|136576189": 1795023205000,
+   "SPORT|136592925": 1795023498000
   },
   "hechos": [
    {
@@ -3268,7 +3268,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -8500,13 +8500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3833,
+   "ok": 3834,
    "fallos": 0,
-   "ejecuciones": 3153,
+   "ejecuciones": 3154,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T18:41:12.437Z"
+   "ultima": "2026-11-18T18:46:13.881Z"
   }
  },
  "ptsDirecto": {},
@@ -8523,15 +8523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:41:19.445Z"
+   "ultimaBien": "2026-11-18T18:47:18.717Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:41:19.445Z"
+   "ultimaBien": "2026-11-18T18:47:18.717Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:41:19.445Z"
+   "ultimaBien": "2026-11-18T18:47:18.717Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8539,11 +8539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:41:19.445Z"
+   "ultimaBien": "2026-11-18T18:47:18.717Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:41:19.445Z"
+   "ultimaBien": "2026-11-18T18:47:18.717Z"
   }
  },
  "avisos": [
