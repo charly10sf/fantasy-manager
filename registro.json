@@ -4077,7 +4077,8 @@
    "SPORT|136566732": 1794991027000,
    "SPORT|136566149": 1794994576000,
    "SPORT|136569400": 1794994780000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010340000
   },
   "hechos": [
    {
@@ -4105,12 +4106,10 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 9,
+   "n": 10,
    "fallos": 1
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010493097
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-18",
@@ -8443,13 +8442,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3781,
+   "ok": 3782,
    "fallos": 0,
-   "ejecuciones": 3101,
+   "ejecuciones": 3102,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T14:26:12.798Z"
+   "ultima": "2026-11-18T14:31:13.565Z"
   }
  },
  "ptsDirecto": {},
@@ -8466,15 +8465,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:27:05.808Z"
+   "ultimaBien": "2026-11-18T14:32:11.927Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:27:05.808Z"
+   "ultimaBien": "2026-11-18T14:32:11.927Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:27:05.808Z"
+   "ultimaBien": "2026-11-18T14:32:11.927Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8482,11 +8481,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:27:05.808Z"
+   "ultimaBien": "2026-11-18T14:32:11.927Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:27:05.808Z"
+   "ultimaBien": "2026-11-18T14:32:11.927Z"
   }
  },
  "avisos": [
