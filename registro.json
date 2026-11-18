@@ -4182,12 +4182,14 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010340000,
    "SPORT|136593027": 1795023836000,
-   "SPORT|136595898": 1795028720000
+   "SPORT|136595898": 1795028720000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
+   "SPORT|136596702": 1795032528000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 12,
+   "n": 13,
    "fallos": 1
   },
   "espera": {}
@@ -8527,13 +8529,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3863,
+   "ok": 3864,
    "fallos": 0,
-   "ejecuciones": 3183,
+   "ejecuciones": 3184,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T21:11:14.420Z"
+   "ultima": "2026-11-18T21:16:12.324Z"
   }
  },
  "ptsDirecto": {},
@@ -8550,15 +8552,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:11:21.980Z"
+   "ultimaBien": "2026-11-18T21:16:21.017Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:11:21.980Z"
+   "ultimaBien": "2026-11-18T21:16:21.017Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:11:21.980Z"
+   "ultimaBien": "2026-11-18T21:16:21.017Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8566,11 +8568,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:11:21.980Z"
+   "ultimaBien": "2026-11-18T21:16:21.017Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:11:21.980Z"
+   "ultimaBien": "2026-11-18T21:16:21.017Z"
   }
  },
  "avisos": [
