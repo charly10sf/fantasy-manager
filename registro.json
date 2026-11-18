@@ -2335,7 +2335,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-gran-diferencia-alineacion_0_2008526265.html": 1794998631000,
    "AS|https://as.com/futbol/primera/es-la-hora-de-mikautadze-f202611-n/": 1795000732000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252548/vivir-ambiente-hostil.html": 1794999663000,
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000
   },
   "hechos": [
    {
@@ -3140,11 +3142,37 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795002632000,
+    "id": "2322",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Oblak vuelve a los entrenamientos con el grupo del Atlético",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     21
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795002221000,
+    "id": "2759",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Vlachodimos vuelve a entrenar tras su paso por la selección",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -8388,13 +8416,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3751,
+   "ok": 3752,
    "fallos": 0,
-   "ejecuciones": 3071,
+   "ejecuciones": 3072,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T11:56:14.066Z"
+   "ultima": "2026-11-18T12:01:16.846Z"
   }
  },
  "ptsDirecto": {},
@@ -8411,15 +8439,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:56:23.308Z"
+   "ultimaBien": "2026-11-18T12:01:27.341Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:56:23.308Z"
+   "ultimaBien": "2026-11-18T12:01:27.341Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:56:23.308Z"
+   "ultimaBien": "2026-11-18T12:01:27.341Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8427,11 +8455,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:56:23.308Z"
+   "ultimaBien": "2026-11-18T12:01:27.341Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:56:23.308Z"
+   "ultimaBien": "2026-11-18T12:01:27.341Z"
   }
  },
  "avisos": [
