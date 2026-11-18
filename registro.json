@@ -2354,7 +2354,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
    "SPORT|136589952": 1795022314000,
    "SPORT|136576189": 1795023205000,
-   "SPORT|136592925": 1795023498000
+   "SPORT|136592925": 1795023498000,
+   "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000
   },
   "hechos": [
    {
@@ -3264,11 +3265,23 @@
     "nums": [
      2
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/",
+    "medio": "AS",
+    "t": 1795025481000,
+    "id": "2924",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Zaid Romero entrena con normalidad y regresa este domingo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -8501,13 +8514,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3836,
+   "ok": 3837,
    "fallos": 0,
-   "ejecuciones": 3156,
+   "ejecuciones": 3157,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T18:56:20.074Z"
+   "ultima": "2026-11-18T19:01:11.469Z"
   }
  },
  "ptsDirecto": {},
@@ -8524,15 +8537,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:56:32.478Z"
+   "ultimaBien": "2026-11-18T19:01:45.947Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:56:32.478Z"
+   "ultimaBien": "2026-11-18T19:01:45.947Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:56:32.478Z"
+   "ultimaBien": "2026-11-18T19:01:45.947Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8540,11 +8553,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:56:32.478Z"
+   "ultimaBien": "2026-11-18T19:01:45.947Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:56:32.478Z"
+   "ultimaBien": "2026-11-18T19:01:45.947Z"
   }
  },
  "avisos": [
