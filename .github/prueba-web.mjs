@@ -336,7 +336,9 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
   const r = await page.evaluate(async () => {
-    const Mo = await import('./js/motor.js');
+    // (19 nov) con el plan del motor (plan.js), que es el que se ve sin IA desde el 14 nov: con planAuto, el de antes (solo
+    // de reserva si el motor se rompe), fallaba según el día (el 18-19 nov esperaba a Niño por las pujas puestas)
+    const Mo = await import('./js/motor.js'), Pm = await import('./js/plan.js');
     const { D, c } = window.S;
     const M = Object.create(window.S.M);
     // (14 nov) una que esté abierta de verdad: con una cerrada, cuadrarPlan la descarta por la fecha y no por la regla
@@ -348,7 +350,7 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     Object.assign(M, { sobrecoste: () => ({ indice: -100 }), tolerancia: () => 100, conSalida: () => true, compraCal: () => ({ ok: true }) });
     const caso = (interes, mejora) => {
       x.interes = interes; M.mejora = () => mejora;
-      return { plan: (Mo.planAuto(D, M, c).operaciones || []).some((o) => o.accion === 'clausular' && o.pid === x.pid), hoy: Mo.esClausulable(M, x) };
+      return { plan: (Pm.planMotor(D, M, c).operaciones || []).some((o) => o.accion === 'clausular' && o.pid === x.pid), hoy: Mo.esClausulable(M, x) };
     };
     const res = { bueno: caso(80, 1), sinMejora: caso(80, 0), interes52: caso(52, 1), interes45: caso(45, 1) };
     // y la IA: una cláusula para el once que Hoy no da por buena sale en descartes, con el motivo
