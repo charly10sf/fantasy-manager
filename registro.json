@@ -2353,7 +2353,9 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/18/jonathan-viera-caro-es-el-mejor-portero-jugando-con-los-pies-con-el-que-he-entrenado-junto-con-alvaro-valles-ser-las-palmas/": 1795016233000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000,
    "SPORT|136532843": 1795017998000,
-   "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000
+   "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000
   },
   "hechos": [
    {
@@ -3236,11 +3238,24 @@
     "motivo": "regreso de selección",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795022588000,
+    "id": "1480",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "Tchouaméni trabaja en el interior por molestias con su selección",
+    "motivo": "molestias con su selección",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -8496,13 +8511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3818,
+   "ok": 3819,
    "fallos": 0,
-   "ejecuciones": 3138,
+   "ejecuciones": 3139,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T17:28:15.528Z"
+   "ultima": "2026-11-18T17:31:12.770Z"
   }
  },
  "ptsDirecto": {},
@@ -8519,15 +8534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:28:23.285Z"
+   "ultimaBien": "2026-11-18T17:31:38.737Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:28:23.285Z"
+   "ultimaBien": "2026-11-18T17:31:38.737Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:28:23.285Z"
+   "ultimaBien": "2026-11-18T17:31:38.737Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8535,11 +8550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:28:23.285Z"
+   "ultimaBien": "2026-11-18T17:31:38.737Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:28:23.285Z"
+   "ultimaBien": "2026-11-18T17:31:38.737Z"
   }
  },
  "avisos": [
