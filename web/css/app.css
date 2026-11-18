@@ -3361,10 +3361,11 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 @media (prefers-reduced-motion: reduce) { .bloq.dorado::after, .bloq-g.dorado::after { display: none; } }
 .bloq-hoja .bloq-grande { background: linear-gradient(135deg, #ffe28a, #f5b82e 55%, #d48c0e); color: #2a1a00; box-shadow: 0 0 26px rgba(255, 197, 71, .45); }
 .top-sello { margin: -2px 0 8px; } .top-sello .top-b { font-size: 12px; line-height: 19px; padding: 1px 10px 1px 8px; } .top-sello .top-b .ic { width: 13px; height: 13px; }
-/* lo que puedes gastar partido en saldo y negativo (marcador de Hoy) */
-.marcador .gbarra { display: flex; gap: 2px; height: 5px; border-radius: 3px; overflow: hidden; margin: 6px 0 4px; max-width: 120px; }
+/* lo que puedes gastar, con el negativo a la vista (marcador de Hoy) */
+.marcador .gfila { display: flex; align-items: center; gap: 6px; margin: 5px 0 3px; }
+.marcador .gbarra { display: flex; gap: 2px; height: 6px; border-radius: 3px; overflow: hidden; flex: 1 1 auto; min-width: 36px; max-width: 64px; }
 .marcador .gbarra i { display: block; min-width: 4px; border-radius: 3px; }
 .marcador .gbarra .tuyo { background: var(--sube); }
 .marcador .gbarra .neg { background: var(--baja-s); box-shadow: inset 0 0 0 1px var(--baja); }
 .marcador .gbarra .usado { background: var(--baja); }
-.marcador .col .d.gneg { color: var(--baja); font-weight: 500; font-size: var(--t-mini); }
+.marcador .gneg { font: 600 var(--t-sec2) var(--cond); color: var(--baja); white-space: nowrap; }

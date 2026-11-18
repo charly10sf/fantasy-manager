@@ -52,19 +52,16 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-/** Lo que puedes gastar partido en dos: lo que tienes y lo que te puedes quedar en negativo (Fran, 18 nov). Barra fina con los dos
-    trozos y, debajo, el total y el negativo. Con el saldo ya en rojo, la barra es el negativo y se llena lo que ya usas. */
+/** Lo que puedes gastar, con el negativo a la vista (Fran, 18 nov): una barra fina y, al lado, hasta dónde puede bajar tu saldo.
+    Verde, lo que tienes; rojo, lo que te puedes quedar en negativo (macizo si ya lo estás usando). Debajo, el total. */
 function gastoSaldo(D, M) {
-  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), total = M.pujaMax;
-  if (!(margen > 0) && dinero >= 0) return `<div class="d apag">gastas hasta ${eur(total)}</div>`;
-  if (dinero >= 0) {
-    const ver = Math.max(12, Math.min(88, dinero / (dinero + margen) * 100)); // un trozo verde que se vea aunque el saldo sea pequeño
-    return `<div class="gbarra" aria-hidden="true"><i class="tuyo" style="flex:${ver}"></i><i class="neg" style="flex:${100 - ver}"></i></div>
-      <div class="d apag">gastas hasta ${eur(total)}</div><div class="d gneg">${eur(margen)} en negativo</div>`;
-  }
-  const usado = Math.min(100, margen ? -dinero / (-dinero + margen) * 100 : 100);
-  return `<div class="gbarra" aria-hidden="true"><i class="usado" style="flex:${usado}"></i><i class="neg" style="flex:${100 - usado}"></i></div>
-    <div class="d apag">gastas hasta ${eur(Math.max(0, total))}</div><div class="d gneg">${eur(-dinero)} ya en negativo</div>`;
+  const dinero = num(D.dinero), margen = Math.max(0, M.deuda - M.misPujas), total = Math.max(0, M.pujaMax);
+  const sin = `<div class="d apag">gastas hasta ${eur(total)}</div>`;
+  if (!(margen > 0)) return sin;
+  const trozos = dinero >= 0
+    ? (() => { const v = Math.max(12, Math.min(88, dinero / (dinero + margen) * 100)); return `<i class="tuyo" style="flex:${v}"></i><i class="neg" style="flex:${100 - v}"></i>`; })()
+    : (() => { const u = Math.min(100, -dinero / (-dinero + margen) * 100); return `<i class="usado" style="flex:${u}"></i><i class="neg" style="flex:${100 - u}"></i>`; })();
+  return `<div class="gfila" title="Te puedes quedar en negativo hasta ${eur(margen)}"><div class="gbarra" aria-hidden="true">${trozos}</div><span class="gneg">−${eur(margen)}</span></div>${sin}`;
 }
 
 function marcador(S, { corto = false, tiempos = false } = {}) {
