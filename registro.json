@@ -2317,7 +2317,8 @@
    "SPORT|136563343": 1794982609000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000,
    "SPORT|136563278": 1794988253000,
-   "SPORT|136565939": 1794989471000
+   "SPORT|136565939": 1794989471000,
+   "SPORT|136564504": 1794989867000
   },
   "hechos": [
    {
@@ -3050,7 +3051,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -8296,13 +8297,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3720,
+   "ok": 3721,
    "fallos": 0,
-   "ejecuciones": 3040,
+   "ejecuciones": 3041,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T09:21:21.265Z"
+   "ultima": "2026-11-18T09:26:12.134Z"
   }
  },
  "ptsDirecto": {},
@@ -8319,15 +8320,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:21:34.021Z"
+   "ultimaBien": "2026-11-18T09:26:47.410Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:21:34.021Z"
+   "ultimaBien": "2026-11-18T09:26:47.410Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:21:34.021Z"
+   "ultimaBien": "2026-11-18T09:26:47.410Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8335,11 +8336,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:21:34.021Z"
+   "ultimaBien": "2026-11-18T09:26:47.410Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T09:21:34.021Z"
+   "ultimaBien": "2026-11-18T09:26:47.410Z"
   }
  },
  "avisos": [
