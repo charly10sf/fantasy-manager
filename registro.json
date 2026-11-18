@@ -1228,6 +1228,13 @@
    "jornada": 13,
    "id": "2123002464270156081",
    "t": "2026-11-18T10:36:46.032Z"
+  },
+  {
+   "clave": "novedades|3079:lesion|2026-11-18",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123011313840377962",
+   "t": "2026-11-18T11:11:55.912Z"
   }
  ],
  "estados": {
@@ -1880,7 +1887,7 @@
   "3076": "ok",
   "3077": "ok",
   "3078": "ok",
-  "3079": "doubtful",
+  "3079": "injured",
   "3080": "ok",
   "3081": "ok",
   "3082": "ok",
@@ -2114,7 +2121,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3079",
+   "que": "lesion",
+   "antes": "doubtful",
+   "t": 1795000273290
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
@@ -3726,8 +3740,8 @@
     "t": 0
    },
    "3079": {
-    "e": "doubtful",
-    "t": 1794843074185
+    "e": "injured",
+    "t": 1795000273290
    },
    "3080": {
     "e": "ok",
@@ -3965,9 +3979,9 @@
  },
  "pulido": {
   "dia": "2026-11-18",
-  "n": 2,
+  "n": 3,
   "ok": 0,
-  "mal": 2
+  "mal": 3
  },
  "liga": {
   "vistas": {
@@ -4218,10 +4232,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-12T13:36:25.635Z",
-    "texto": "✅ Herrando vuelve a estar disponible: el defensa del Osasuna 🐂 supera la lesión en el aductor que arrastraba desde el 31 de agosto.\n\nEl Málaga 🐟, último de la tabla, visita El Sadar tras el parón, el domingo 22 de noviembre, y marca poquísimo, justo lo que le conviene a un defensa. Eso sí, con un 19 % de titularidad no parece que Herrando vaya a tener sitio fijo en el once, así que mejor no darlo por hecho."
-   },
-   {
     "t": "2026-11-13T14:01:39.028Z",
     "texto": "✅ Lamine Yamal vuelve a estar disponible: las molestias en la rodilla que arrastraba desde el 8 de noviembre ya no le frenan.\n\nEl delantero del Barça lleva 10 goles y 8 asistencias en la liga. Tras el parón, el domingo 22 de noviembre, recibe al Villarreal 🚢, que va 8º. Con un 58 % de titularidad, lo normal es que salga."
    },
@@ -4236,6 +4246,10 @@
    {
     "t": "2026-11-16T16:21:26.226Z",
     "texto": "✅ Villar vuelve a estar disponible: era duda y queda despejada.\n\nEl centrocampista del Elche 🌴 se encuentra con el Levante 🐸, que va 17º, el lunes 23 de noviembre en el Ciutat de València, tras el parón. Es un partido asequible para un medio, aunque con un 46 % de titularidad no tiene el puesto asegurado."
+   },
+   {
+    "t": "2026-11-18T11:11:55.915Z",
+    "texto": "🚨 Lesión de Lookman. Esguince de rodilla desde el 13 de noviembre. Estará fuera hasta principios de diciembre. El delantero del Atleti vale 15,9 M y ha perdido 12,4 M en el último mes.\n\nEl partido es tras el parón, el domingo 22 de noviembre."
    }
   ],
   "resumen": [
@@ -8370,13 +8384,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3741,
+   "ok": 3742,
    "fallos": 0,
-   "ejecuciones": 3061,
+   "ejecuciones": 3062,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T11:06:17.075Z"
+   "ultima": "2026-11-18T11:11:13.290Z"
   }
  },
  "ptsDirecto": {},
@@ -8393,15 +8407,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:06:49.932Z"
+   "ultimaBien": "2026-11-18T11:11:55.987Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:06:49.932Z"
+   "ultimaBien": "2026-11-18T11:11:55.987Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:06:49.932Z"
+   "ultimaBien": "2026-11-18T11:11:55.987Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8409,11 +8423,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:06:49.932Z"
+   "ultimaBien": "2026-11-18T11:11:55.987Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:06:49.932Z"
+   "ultimaBien": "2026-11-18T11:11:55.987Z"
   }
  },
  "avisos": [
