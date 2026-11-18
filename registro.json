@@ -2110,7 +2110,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html": 1794736898000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
@@ -2323,18 +2322,6 @@
    "SPORT|136565913": 1794992270000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/15/borja-iglesias-miguel-roman-llegan-partido-santiago-bernabeu.html",
-    "medio": "MARCA",
-    "t": 1794736898000,
-    "id": "2602",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Álvaro se pierde el próximo partido en el Bernabéu",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html",
     "medio": "Mundo Deportivo",
@@ -3950,7 +3937,8 @@
    "SPORT|136563322": 1794981625000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-retira-presentador-atrapame-si-puedes-monolo-sarria-denuncia-presunto-acoso-sexual-20261118093207.html": 1794990727000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
+   "SPORT|136566732": 1794991027000
   },
   "hechos": [
    {
@@ -3978,12 +3966,10 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136566732": 1794995181066
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-18",
@@ -8315,13 +8301,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3728,
+   "ok": 3729,
    "fallos": 0,
-   "ejecuciones": 3048,
+   "ejecuciones": 3049,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T10:01:14.269Z"
+   "ultima": "2026-11-18T10:06:28.236Z"
   }
  },
  "ptsDirecto": {},
@@ -8338,15 +8324,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:02:06.418Z"
+   "ultimaBien": "2026-11-18T10:07:06.109Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:02:06.418Z"
+   "ultimaBien": "2026-11-18T10:07:06.109Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:02:06.418Z"
+   "ultimaBien": "2026-11-18T10:07:06.109Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8354,11 +8340,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:02:06.418Z"
+   "ultimaBien": "2026-11-18T10:07:06.109Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:02:06.418Z"
+   "ultimaBien": "2026-11-18T10:07:06.109Z"
   }
  },
  "avisos": [
