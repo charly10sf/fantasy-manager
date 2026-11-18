@@ -2337,7 +2337,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
    "SPORT|136574114": 1794999432000,
    "SPORT|136568727": 1795001073000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000
   },
   "hechos": [
    {
@@ -3184,7 +3185,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -8429,13 +8430,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3759,
+   "ok": 3760,
    "fallos": 0,
-   "ejecuciones": 3079,
+   "ejecuciones": 3080,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T12:36:14.298Z"
+   "ultima": "2026-11-18T12:41:11.720Z"
   }
  },
  "ptsDirecto": {},
@@ -8452,15 +8453,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:36:24.795Z"
+   "ultimaBien": "2026-11-18T12:41:23.778Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:36:24.795Z"
+   "ultimaBien": "2026-11-18T12:41:23.778Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:36:24.795Z"
+   "ultimaBien": "2026-11-18T12:41:23.778Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8468,11 +8469,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:36:24.795Z"
+   "ultimaBien": "2026-11-18T12:41:23.778Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:36:24.795Z"
+   "ultimaBien": "2026-11-18T12:41:23.778Z"
   }
  },
  "avisos": [
