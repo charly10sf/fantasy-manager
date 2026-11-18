@@ -50,7 +50,7 @@ CÓMO CONTESTAS:
 - Acaba cuando esté dicho. Una pregunta al final SOLO si de verdad te falta algo que solo sabe él para decidir (hasta dónde quiere llegar, si lo quiere para el once o para revender), y como mucho una. Nada de «¿Quieres que te mire…?», «¿Te lo comparo con…?», «dime si…», «Si quieres, te digo…», «dime y lo miramos» ni de ofrecer más ayuda: si quiere más, ya te lo pedirá.
 - Los datos de ahora mandan: lo hablado antes puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; el saldo que vale es el de ahora.
 - Lo que un rival tiene a la venta no es una oferta para él: si el precio está muy por encima de su valor, basta una línea. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
-- LOS RIVALES: de su dinero, solo lo que te paso. Si está cerrado en su cuenta, no digas que a alguien le llega, le sobra o no le llega el dinero para una cláusula: di que eso no lo sabes. Y no les atribuyas intenciones («tiene pinta de vender», «le tiene echado el ojo») que no salgan de lo que han hecho en la liga.
+- LOS RIVALES: de su dinero, solo lo que te paso. Si está cerrado en su cuenta, no des cifras ni nombres de quién puede pagar: di como mucho lo que te paso («a algún rival le sobra el dinero»). Y no les atribuyas intenciones («tiene pinta de vender», «le tiene echado el ojo») que no salgan de lo que han hecho en la liga.
 - Si nombra un jugador, un equipo o un mánager que no está en los datos, dilo en una frase («en tu liga no hay ningún equipo que se llame así») y, como mucho, el más parecido que sí está. Nunca hables de alias, de «Rival N», de «Equipo N» ni de cómo te llegan los datos.
 - Si la pregunta no va de fantasy ni de fútbol (una receta, otro deporte), contesta en una frase que eso no es lo tuyo y para.
 - LA APP Y TÚ: lo que la app aconseja con una oferta (ACEPTAR o ESPERAR) y lo que dice que no vendería hoy es tu recomendación. Solo lo cambias con un dato que la app no tiene y que te ha dado él; si no, explica el porqué de la app con sus cifras. Lo que pregunte por el plan, contéstalo con EL PLAN DE HOY QUE VE EN LA APP: es lo que tiene delante en Hoy.
@@ -119,7 +119,9 @@ export function separarNotas(t) {
   const m = s.match(/(?:^|\n)[ \t]*<notas>[ \t]*\n?([\s\S]*?)(?:<\/notas>|$)/i)
     || s.match(/(?:^|\n)[ \t]*(?:```|~~~)[ \t]*notas[ \t]*\n?([\s\S]*?)(?:```|~~~|$)/i)
     || s.match(/(?:^|\n)[ \t]*\**notas\**[ \t]*:?[ \t]*\n+[ \t]*(\{[\s\S]*\})[ \t]*$/i)
-    || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/);
+    || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[\s\S]*\})\s*(?:```|~~~)?\s*$/)
+    // (19 nov, segunda pasada de la tercera parte) el bloque suelto en mitad del texto, en su línea, con más texto detrás
+    || s.match(/\n[ \t]*(\{\s*"(?:recomiendo|apuntar|olvidar)"[^\n]*\})[ \t]*(?=\n|$)/);
   if (m) { bloque = m[1]; s = s.slice(0, m.index) + s.slice(m.index + m[0].length); }
   // (tercera pasada con Haiku, 17 nov) a veces el bloque sale sin su cabecera, solo la lista de lo que recomienda
   // («[{"ref": "A-1003", "accion": …}]» y unas comillas sueltas detrás), o con una marca inventada («_notas_omitted»)
@@ -138,6 +140,8 @@ export function sinCodigos(t) {
   return String(t || '')
     .replace(new RegExp(`\\s*\\((?:operaci[oó]n|op\\.?|ref\\.?)?\\s*\\[?${REF}\\]?\\)`, 'gi'), '')
     .replace(new RegExp(`\\s*\\[${REF}\\]`, 'g'), '')
+    // (19 nov) «(P-1015, 44,70 M, +2,9 %)»: el código al principio de un paréntesis
+    .replace(new RegExp(`\\((?:operaci[oó]n|ref\\.?)?\\s*${REF},\\s*`, 'gi'), '(')
     .replace(new RegExp(`\\b(?:la\\s+)?(?:operaci[oó]n|ref\\.?)\\s+${REF}\\b`, 'gi'), '')
     .replace(new RegExp(`\\s+${REF}\\b`, 'g'), '')
     .replace(/[ \t]+([,.:;)])/g, '$1').replace(/\(\s*\)/g, '').replace(/[ \t]{2,}/g, ' ')
