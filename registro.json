@@ -2353,7 +2353,8 @@
    "SPORT|136532843": 1795017998000,
    "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
+   "SPORT|136589952": 1795022314000
   },
   "hechos": [
    {
@@ -3249,11 +3250,25 @@
     "motivo": "molestias con su selección",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136589952",
+    "medio": "SPORT",
+    "t": 1795022314000,
+    "id": "3079",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lookman sufre un esguince y se pierde el próximo partido",
+    "motivo": "esguince de rodilla de alto grado",
+    "plazo": "",
+    "nums": [
+     2
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -8485,13 +8500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3828,
+   "ok": 3829,
    "fallos": 0,
-   "ejecuciones": 3148,
+   "ejecuciones": 3149,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T18:16:12.328Z"
+   "ultima": "2026-11-18T18:21:13.942Z"
   }
  },
  "ptsDirecto": {},
@@ -8508,15 +8523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:16:22.260Z"
+   "ultimaBien": "2026-11-18T18:21:59.575Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:16:22.260Z"
+   "ultimaBien": "2026-11-18T18:21:59.575Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:16:22.260Z"
+   "ultimaBien": "2026-11-18T18:21:59.575Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8524,11 +8539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:16:22.260Z"
+   "ultimaBien": "2026-11-18T18:21:59.575Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T18:16:22.260Z"
+   "ultimaBien": "2026-11-18T18:21:59.575Z"
   }
  },
  "avisos": [
