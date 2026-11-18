@@ -2124,7 +2124,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/plaga-lesiones-obliga-real-madrid-repescar-eli-ndiaye-20261115_3475431.html": 1794745910000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251211/real-madrid-atento-virus-fifa.html": 1794747600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000,
    "AS|https://as.com/futbol/primera/los-lios-de-raphinha-y-frenkie-f202611-n/": 1794751663000,
@@ -2337,7 +2336,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
    "SPORT|136574114": 1794999432000,
-   "SPORT|136568727": 1795001073000
+   "SPORT|136568727": 1795001073000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000
   },
   "hechos": [
    {
@@ -3168,11 +3168,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795003292000,
+    "id": "3091",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Oyarzabal regresa a los entrenamientos con el grupo",
+    "motivo": "días libres con la selección española",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -8417,13 +8429,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3758,
+   "ok": 3759,
    "fallos": 0,
-   "ejecuciones": 3078,
+   "ejecuciones": 3079,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T12:31:14.745Z"
+   "ultima": "2026-11-18T12:36:14.298Z"
   }
  },
  "ptsDirecto": {},
@@ -8440,15 +8452,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:31:27.467Z"
+   "ultimaBien": "2026-11-18T12:36:24.795Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:31:27.467Z"
+   "ultimaBien": "2026-11-18T12:36:24.795Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:31:27.467Z"
+   "ultimaBien": "2026-11-18T12:36:24.795Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8456,11 +8468,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:31:27.467Z"
+   "ultimaBien": "2026-11-18T12:36:24.795Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:31:27.467Z"
+   "ultimaBien": "2026-11-18T12:36:24.795Z"
   }
  },
  "avisos": [
