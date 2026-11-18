@@ -1349,7 +1349,7 @@
   "2338": "ok",
   "2339": "ok",
   "2342": "ok",
-  "2346": "injured",
+  "2346": "ok",
   "2347": "ok",
   "2348": "injured",
   "2351": "out_of_league",
@@ -1538,7 +1538,7 @@
   "2650": "out_of_league",
   "2651": "ok",
   "2653": "out_of_league",
-  "2654": "injured",
+  "2654": "ok",
   "2656": "ok",
   "2658": "out_of_league",
   "2661": "ok",
@@ -1740,7 +1740,7 @@
   "2920": "out_of_league",
   "2922": "ok",
   "2923": "ok",
-  "2924": "injured",
+  "2924": "doubtful",
   "2925": "out_of_league",
   "2926": "ok",
   "2929": "out_of_league",
@@ -1788,7 +1788,7 @@
   "2977": "ok",
   "2978": "out_of_league",
   "2979": "out_of_league",
-  "2980": "injured",
+  "2980": "ok",
   "2981": "out_of_league",
   "2982": "out_of_league",
   "2983": "out_of_league",
@@ -2124,7 +2124,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000,
    "AS|https://as.com/futbol/primera/optimismo-con-rodri-f202611-n/": 1794743623000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261115/1004251209/parrott-topa-schlager-valles-vuelve-quedar-fuera.html": 1794743523000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261115/1004251220/paradoja-todavia-inedito-gorosabel.html": 1794745526000,
@@ -3634,8 +3633,8 @@
     "t": 0
    },
    "2924": {
-    "e": "injured",
-    "t": 1794079874618
+    "e": "doubtful",
+    "t": 1795002071700
    },
    "2929": {
     "e": "out_of_league",
@@ -8378,13 +8377,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3747,
+   "ok": 3748,
    "fallos": 0,
-   "ejecuciones": 3067,
+   "ejecuciones": 3068,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T11:36:11.244Z"
+   "ultima": "2026-11-18T11:41:11.700Z"
   }
  },
  "ptsDirecto": {},
@@ -8401,15 +8400,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:36:16.950Z"
+   "ultimaBien": "2026-11-18T11:41:20.049Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:36:16.950Z"
+   "ultimaBien": "2026-11-18T11:41:20.049Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:36:16.950Z"
+   "ultimaBien": "2026-11-18T11:41:20.049Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8417,11 +8416,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:36:16.950Z"
+   "ultimaBien": "2026-11-18T11:41:20.049Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T11:36:16.950Z"
+   "ultimaBien": "2026-11-18T11:41:20.049Z"
   }
  },
  "avisos": [
