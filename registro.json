@@ -4106,7 +4106,7 @@
   "gemini": {
    "dia": "2026-11-18",
    "n": 9,
-   "fallos": 0
+   "fallos": 1
   },
   "espera": {
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010493097
@@ -8443,13 +8443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3780,
+   "ok": 3781,
    "fallos": 0,
-   "ejecuciones": 3100,
+   "ejecuciones": 3101,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T14:21:12.324Z"
+   "ultima": "2026-11-18T14:26:12.798Z"
   }
  },
  "ptsDirecto": {},
@@ -8466,15 +8466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:21:36.362Z"
+   "ultimaBien": "2026-11-18T14:27:05.808Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:21:36.362Z"
+   "ultimaBien": "2026-11-18T14:27:05.808Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:21:36.362Z"
+   "ultimaBien": "2026-11-18T14:27:05.808Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8482,11 +8482,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:21:36.362Z"
+   "ultimaBien": "2026-11-18T14:27:05.808Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:21:36.362Z"
+   "ultimaBien": "2026-11-18T14:27:05.808Z"
   }
  },
  "avisos": [
