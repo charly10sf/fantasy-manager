@@ -4,7 +4,7 @@ name: Pruebas chat
 on:
   push:
     branches: [pruebas-chat-haiku]
-    paths-ignore: ['.github/ia/respuestas-chat.md', '.github/ia/respuestas-chat.json', '.github/ia/pasadas/**']
+    paths-ignore: ['.github/ia/respuestas-chat.md', '.github/ia/respuestas-chat.json', '.github/ia/respuestas-medium.md', '.github/ia/respuestas-medium.json']
 permissions:
   contents: write
 concurrency: { group: pruebas-chat, cancel-in-progress: true }
@@ -28,12 +28,24 @@ jobs:
           ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado' }}
           TOPE_USD: "0.75"
           SOLO: ${{ vars.CHAT_SOLO || '' }}
+      # (19 nov) las 10 más difíciles con esfuerzo medium, para comparar con las de low de arriba (solo para que decida Carlos)
+      - name: Las 10 más difíciles con medium
+        if: always()
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/chat-haiku.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ESFUERZOS: medium
+          ESCENAS: martes
+          SOLO: trueque,trato,cuanto-ofrezco,oferta-rival,quien-me-ataca,plan-por-que,que-hago-hoy,blindar,baja-vendo,apodo-dictado
+          TOPE_USD: "0.15"
+          SALIDA: .github/ia/respuestas-medium
       - name: Guardar las respuestas en la rama
         if: always()
         run: |
           [ -f .github/ia/respuestas-chat.md ] || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add .github/ia/respuestas-chat.md .github/ia/respuestas-chat.json .github/ia/respuestas-medium.md .github/ia/respuestas-medium.json 2>/dev/null || true
           git add .github/ia/respuestas-chat.md .github/ia/respuestas-chat.json
           git commit -q -m "Respuestas del chat con Haiku" || exit 0
           git push -q origin HEAD:pruebas-chat-haiku
