@@ -2125,7 +2125,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261115/1004251220/paradoja-todavia-inedito-gorosabel.html": 1794745526000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251218/hay-recuperar-julian-activo-atletico-madrid.html": 1794744587000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/plaga-lesiones-obliga-real-madrid-repescar-eli-ndiaye-20261115_3475431.html": 1794745910000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251211/real-madrid-atento-virus-fifa.html": 1794747600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251225/raphinha-capitan-crisis-brasil-ancelotti.html": 1794749010000,
@@ -8418,13 +8417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3753,
+   "ok": 3754,
    "fallos": 0,
-   "ejecuciones": 3073,
+   "ejecuciones": 3074,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T12:06:15.510Z"
+   "ultima": "2026-11-18T12:11:15.489Z"
   }
  },
  "ptsDirecto": {},
@@ -8441,15 +8440,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:06:50.369Z"
+   "ultimaBien": "2026-11-18T12:11:26.345Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:06:50.369Z"
+   "ultimaBien": "2026-11-18T12:11:26.345Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:06:50.369Z"
+   "ultimaBien": "2026-11-18T12:11:26.345Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8457,11 +8456,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:06:50.369Z"
+   "ultimaBien": "2026-11-18T12:11:26.345Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T12:06:50.369Z"
+   "ultimaBien": "2026-11-18T12:11:26.345Z"
   }
  },
  "avisos": [
