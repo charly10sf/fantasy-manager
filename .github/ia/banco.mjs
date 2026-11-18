@@ -26,6 +26,9 @@ export const ESCENAS = {
   veda: { hora: '2026-11-06T16:00:00+01:00' },
   // sábado por la tarde: la jornada en juego, el once cerrado
   enjuego: { hora: '2026-11-07T16:00:00+01:00' },
+  // (19 nov) sábado por la mañana, día del primer partido (14:00): cláusulas cerradas, el once aún se toca y el último
+  // cambio de mercado de antes de la jornada ya ha pasado (00:15)
+  sabado: { hora: '2026-11-07T10:30:00+01:00' },
   // parón de selecciones con la vuelta a más de 3 días
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
   // en negativo entre semana (ha tirado de deuda)
