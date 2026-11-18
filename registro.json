@@ -2352,7 +2352,8 @@
    "SPORT|136558313": 1795010451000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/18/jonathan-viera-caro-es-el-mejor-portero-jugando-con-los-pies-con-el-que-he-entrenado-junto-con-alvaro-valles-ser-las-palmas/": 1795016233000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000,
-   "SPORT|136532843": 1795017998000
+   "SPORT|136532843": 1795017998000,
+   "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000
   },
   "hechos": [
    {
@@ -3209,11 +3210,37 @@
     "nums": [
      39
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/",
+    "medio": "AS",
+    "t": 1795021156000,
+    "id": "3263",
+    "que": "vuelve",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "Revivo regresa disponible tras sus compromisos internacionales",
+    "motivo": "regreso de selección",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/",
+    "medio": "AS",
+    "t": 1795021156000,
+    "id": "2933",
+    "que": "vuelve",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "Cepeda regresa disponible tras sus compromisos internacionales",
+    "motivo": "regreso de selección",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -8469,13 +8496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3814,
+   "ok": 3815,
    "fallos": 0,
-   "ejecuciones": 3134,
+   "ejecuciones": 3135,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T17:11:14.212Z"
+   "ultima": "2026-11-18T17:16:13.423Z"
   }
  },
  "ptsDirecto": {},
@@ -8492,15 +8519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:11:41.490Z"
+   "ultimaBien": "2026-11-18T17:16:37.904Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:11:41.490Z"
+   "ultimaBien": "2026-11-18T17:16:37.904Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:11:41.490Z"
+   "ultimaBien": "2026-11-18T17:16:37.904Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8508,11 +8535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:11:41.490Z"
+   "ultimaBien": "2026-11-18T17:16:37.904Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T17:11:41.490Z"
+   "ultimaBien": "2026-11-18T17:16:37.904Z"
   }
  },
  "avisos": [
