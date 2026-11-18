@@ -2357,7 +2357,8 @@
    "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
    "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
    "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000,
-   "SPORT|136593985": 1795025545000
+   "SPORT|136593985": 1795025545000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261118/1004252708/satriano-vuelve-tirar-ataque-getafe.html": 1795029584000
   },
   "hechos": [
    {
@@ -3295,7 +3296,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -8528,13 +8529,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3842,
+   "ok": 3843,
    "fallos": 0,
-   "ejecuciones": 3162,
+   "ejecuciones": 3163,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T19:26:13.909Z"
+   "ultima": "2026-11-18T19:31:19.958Z"
   }
  },
  "ptsDirecto": {},
@@ -8551,15 +8552,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:26:23.730Z"
+   "ultimaBien": "2026-11-18T19:31:38.839Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:26:23.730Z"
+   "ultimaBien": "2026-11-18T19:31:38.839Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:26:23.730Z"
+   "ultimaBien": "2026-11-18T19:31:38.839Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8567,11 +8568,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:26:23.730Z"
+   "ultimaBien": "2026-11-18T19:31:38.839Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T19:26:23.730Z"
+   "ultimaBien": "2026-11-18T19:31:38.839Z"
   }
  },
  "avisos": [
