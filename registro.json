@@ -2308,7 +2308,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/kike-salas-bartra-duelo-killers-balon-parado-decidir-derbi-sevilla-fc-betis_0_2008529370.html": 1794979825000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-betis-frente-espejo_0_2008529420.html": 1794979825000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/duda-ceballos-doble-pivote-recurrente-betis_0_2008529376.html": 1794979520000,
-   "El Correo|https://www.elcorreo.com/athletic/lesiones-dan-tregua-athletic-20261117010326-nt.html": 1794960207000
+   "El Correo|https://www.elcorreo.com/athletic/lesiones-dan-tregua-athletic-20261117010326-nt.html": 1794960207000,
+   "SPORT|136563145": 1794981233000
   },
   "hechos": [
    {
@@ -3054,7 +3055,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3970,17 +3971,17 @@
  "ia": {
   "dia": "2026-11-18",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 24,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 421261,
-  "salida": 12743,
+  "entrada": 423419,
+  "salida": 12865,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.945884,
+  "dolares": 0.946161,
   "reservado": 0
  },
  "recientes": {
@@ -8302,13 +8303,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3690,
+   "ok": 3691,
    "fallos": 0,
-   "ejecuciones": 3010,
+   "ejecuciones": 3011,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T06:56:12.218Z"
+   "ultima": "2026-11-18T07:01:14.442Z"
   }
  },
  "ptsDirecto": {},
@@ -8325,15 +8326,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:56:19.005Z"
+   "ultimaBien": "2026-11-18T07:01:31.771Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:56:19.005Z"
+   "ultimaBien": "2026-11-18T07:01:31.771Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:56:19.005Z"
+   "ultimaBien": "2026-11-18T07:01:31.771Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8341,11 +8342,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:56:19.005Z"
+   "ultimaBien": "2026-11-18T07:01:31.771Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:56:19.005Z"
+   "ultimaBien": "2026-11-18T07:01:31.771Z"
   }
  },
  "avisos": [
