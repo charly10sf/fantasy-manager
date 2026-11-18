@@ -2103,9 +2103,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251148/chelsea-vez-kounde.html": 1794729651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261115/1004251162/bernardo-silva-le-da-mala-noticia-real-madrid.html": 1794732360000,
-   "SPORT|136450564": 1794729623000,
    "AS|https://as.com/futbol/internacional/bernardo-silva-tocado-vuelve-a-madrid-f202611-n/": 1794733539000,
    "AS|https://as.com/futbol/la-conversion-de-deossa-f202611-n/": 1794733920000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/vuelta-pesos-pesados-deja-jugar-nuevos-inglaterra-20261115_3475406.html": 1794735997000,
@@ -3940,7 +3938,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261118/1004252273/copa-pone-prueba-sabadell-mermado.html": 1794981600000,
    "SPORT|136562228": 1794974509000,
    "SPORT|136549199": 1794981626000,
-   "SPORT|136563322": 1794981625000
+   "SPORT|136563322": 1794981625000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000
   },
   "hechos": [
    {
@@ -3968,27 +3967,25 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987672050
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-18",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 24,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 431661,
-  "salida": 13384,
+  "entrada": 433385,
+  "salida": 13470,
   "cacheLee": 29030,
   "cacheEscribe": 5806,
-  "dolares": 0.947245,
+  "dolares": 0.94746,
   "reservado": 0
  },
  "recientes": {
@@ -8310,13 +8307,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3702,
+   "ok": 3703,
    "fallos": 0,
-   "ejecuciones": 3022,
+   "ejecuciones": 3023,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T07:56:12.816Z"
+   "ultima": "2026-11-18T08:01:12.762Z"
   }
  },
  "ptsDirecto": {},
@@ -8333,15 +8330,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:56:21.554Z"
+   "ultimaBien": "2026-11-18T08:01:21.457Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:56:21.554Z"
+   "ultimaBien": "2026-11-18T08:01:21.457Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:56:21.554Z"
+   "ultimaBien": "2026-11-18T08:01:21.457Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8349,11 +8346,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:56:21.554Z"
+   "ultimaBien": "2026-11-18T08:01:21.457Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T07:56:21.554Z"
+   "ultimaBien": "2026-11-18T08:01:21.457Z"
   }
  },
  "avisos": [
