@@ -1200,6 +1200,13 @@
     "clase": "mercado",
     "chollo": "2703"
    }
+  },
+  {
+   "clave": "caidas|13|1775-2562-1480-701-2588-2005",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2122934462828757411",
+   "t": "2026-11-18T06:06:33.307Z"
   }
  ],
  "estados": {
@@ -3957,16 +3964,16 @@
   "dia": "2026-11-18",
   "llamadas": {
    "clasificar": 2,
-   "redactar": 11,
-   "revisar": 5,
+   "redactar": 17,
+   "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 191495,
-  "salida": 7885,
-  "cacheLee": 11612,
+  "entrada": 306905,
+  "salida": 10905,
+  "cacheLee": 26127,
   "cacheEscribe": 2903,
-  "dolares": 0.428774,
+  "dolares": 0.691244,
   "reservado": 0
  },
  "recientes": {
@@ -4158,10 +4165,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-09T06:02:57.715Z",
-    "texto": "⁉️ Para la jornada 13 caen seis titulares, y el más gordo es Miguel Sierra: luxación acromioclavicular y hasta enero fuera. Si lo tienes en el Sevilla, es venta obligatoria.\n\nRodri, del Barça, y Álvaro García, del Rayo ⚡, no vuelven hasta principios de diciembre. Cucho, del Betis, hasta finales de noviembre. Gayá cumple sanción por la roja de la jornada 12.\n\nFoyth, del Villarreal 🚢, es la única duda: molestias musculares desde el 30 de octubre."
-   },
-   {
     "t": "2026-11-09T06:02:59.098Z",
     "texto": "⁉️ Dos titulares habituales llegan en duda a la jornada 13, los dos con problemas en los isquiotibiales.\n\nAimar, del Osasuna 🐂, arrastra la lesión desde el 10 de octubre y recibe al Málaga 🐟 en El Sadar. Manu Sánchez, del Levante 🐸, se lesionó el 31 de octubre y juega en casa contra el Elche 🌴, aunque su media es de 2,6. Con los dos, mejor esperar a ver si entran en la convocatoria."
    },
@@ -4176,6 +4179,10 @@
    {
     "t": "2026-11-09T06:06:48.775Z",
     "texto": "❌ Mantilla, defensa del Racing ⚓, lleva lesionado desde el 1 de noviembre por una rotura de ligamento cruzado anterior y no se le espera hasta junio.\n\nEra titular habitual, con 60 minutos o más en cuatro de sus cinco últimos partidos, y se pierde el Racing-Real Sociedad en El Sardinero. Si lo tienes, no hay nada que esperar: es venta obligatoria."
+   },
+   {
+    "t": "2026-11-18T06:06:33.309Z",
+    "texto": "⁉️ Seis titulares habituales llegan tocados a la jornada 13, que arranca el sábado 21. El más grave es Barrenetxea, de la Real Sociedad: rotura en los isquiotibiales y no se le espera hasta mayo. Si lo tienes, es venta obligatoria.\n\nAbel Bretones, del Osasuna 🐂, también es baja por una lesión en el sóleo.\n\nCubarsí y Danjuma tienen un 38 % de titularidad, y Tchouaméni un 44 %. Pubill, del Atlético, es duda por un esguince de tobillo."
    }
   ],
   "balance": [
@@ -4439,15 +4446,15 @@
    "t": "2026-11-17T08:16:35.735Z",
    "ultima": "2026-11-17T08:16:35.735Z"
   },
-  "caidas|13|1775-2562-1480-701-2588-2005": {
-   "n": 1,
-   "t": "2026-11-18T06:02:03.102Z",
-   "ultima": "2026-11-18T06:02:03.102Z"
-  },
   "previa|125": {
    "n": 1,
    "t": "2026-11-18T06:02:54.087Z",
    "ultima": "2026-11-18T06:02:54.087Z"
+  },
+  "previa|127": {
+   "n": 1,
+   "t": "2026-11-18T06:07:08.332Z",
+   "ultima": "2026-11-18T06:07:08.332Z"
   }
  },
  "rasgos": {
@@ -8288,13 +8295,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3679,
+   "ok": 3680,
    "fallos": 0,
-   "ejecuciones": 2999,
+   "ejecuciones": 3000,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T06:01:14.325Z"
+   "ultima": "2026-11-18T06:06:12.140Z"
   }
  },
  "ptsDirecto": {},
@@ -8311,15 +8318,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:03:05.424Z"
+   "ultimaBien": "2026-11-18T06:07:08.478Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:03:05.424Z"
+   "ultimaBien": "2026-11-18T06:07:08.478Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:03:05.424Z"
+   "ultimaBien": "2026-11-18T06:07:08.478Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8327,11 +8334,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:03:05.424Z"
+   "ultimaBien": "2026-11-18T06:07:08.478Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:03:05.424Z"
+   "ultimaBien": "2026-11-18T06:07:08.478Z"
   }
  },
  "avisos": [
