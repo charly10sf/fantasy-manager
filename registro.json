@@ -1207,6 +1207,13 @@
    "jornada": 13,
    "id": "2122934462828757411",
    "t": "2026-11-18T06:06:33.307Z"
+  },
+  {
+   "clave": "previa|129",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2122937069295263769",
+   "t": "2026-11-18T06:16:54.642Z"
   }
  ],
  "estados": {
@@ -3964,16 +3971,16 @@
   "dia": "2026-11-18",
   "llamadas": {
    "clasificar": 2,
-   "redactar": 21,
-   "revisar": 11,
+   "redactar": 24,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 373006,
-  "salida": 12093,
+  "entrada": 421261,
+  "salida": 12743,
   "cacheLee": 29030,
-  "cacheEscribe": 2903,
-  "dolares": 0.835616,
+  "cacheEscribe": 5806,
+  "dolares": 0.945884,
   "reservado": 0
  },
  "recientes": {
@@ -4067,10 +4074,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-07T08:02:53.809Z",
-    "texto": "🗓️ Posibles onces de Celta-Levante, mañana a las 18:30\n\nIonut Radu es el fijo del Celta: 97 % y 8,8 de media. No estarán M. Román, Álvaro Núñez y Starfelt, lesionados, e Iago Aspas, H. González y Carreira, entre el 27 y el 45 %, no lo tienen ganado.\n\nEn el Levante, el más en el aire es Etta Eyong, con un 34 %. Ryan sí es fijo: 97 % y 6,1 de media.\n\nSobre el papel, el Celta lo tiene más fácil: va 11º y el Levante, 18º."
-   },
-   {
     "t": "2026-11-07T08:02:56.905Z",
     "texto": "🗓️ Atlético-Barça, mañana a las 21:00 en el Metropolitano: el 2º contra el 1º, y un cruce poco amable para los dos por detrás.\n\nOblak y Grimaldo son fijos, pero el Barça mete mucho y eso les pesa. Lo mismo para la zaga del Barça con el Atlético marcando tanto. Arriba pasa al revés: los delanteros y medios del Barça se topan con un Atlético que casi no encaja, aunque Raphinha (14,3 de media) y Lamine Yamal son fijos igualmente.\n\nJulián Alvarez está en el aire, con un 53 % de titularidad, y AS recuerda que le ha marcado cuatro goles al Barça en nueve partidos."
    },
@@ -4085,6 +4088,10 @@
    {
     "t": "2026-11-17T12:31:41.737Z",
     "texto": "🗓️ Yassir Zabiri es el fijo del Racing ⚓ y llega con 6,5 de media.\n\nLa Real Sociedad marca mucho, así que Agirrezabala y la zaga cántabra lo tienen cuesta arriba. Sin Andrés Martín, lesionado, Iker Luque y Pedro Felipe tienen más papeletas de jugar que de quedarse fuera.\n\nA la Real le encaja un cruce bueno para delanteros y medios, porque el Racing encaja mucho. Guedes lo normal es que salga y Sucic está a medias, aunque Mundo Deportivo cuenta que ya se ha reincorporado al grupo tras la amigdalitis. Barrenetxea es baja."
+   },
+   {
+    "t": "2026-11-18T06:16:54.644Z",
+    "texto": "🗓️ Unai Simón es el fijo del Athletic 🦁 y, con un Espanyol que marca poco, el viernes le toca un partido cómodo en San Mamés.\n\nVivian es baja por lesión. Sancet, con un 55 % de titularidad, lo normal es que salga, y De Galarreta está a medias.\n\nPara los delanteros y medios del Espanyol el cruce es malo, porque el Athletic es de los que menos encajan. Javi Hernández lo normal es que juegue y Dolan puede quedarse fuera."
    }
   ],
   "noticias": [
@@ -4426,11 +4433,6 @@
   }
  ],
  "fallosRedaccion": {
-  "previa|129": {
-   "n": 1,
-   "t": "2026-11-17T08:01:44.434Z",
-   "ultima": "2026-11-17T08:01:44.434Z"
-  },
   "previa|130": {
    "n": 1,
    "t": "2026-11-17T08:06:37.624Z",
@@ -8300,13 +8302,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3681,
+   "ok": 3682,
    "fallos": 0,
-   "ejecuciones": 3001,
+   "ejecuciones": 3002,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T06:11:16.922Z"
+   "ultima": "2026-11-18T06:16:28.051Z"
   }
  },
  "ptsDirecto": {},
@@ -8323,15 +8325,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:11:40.124Z"
+   "ultimaBien": "2026-11-18T06:16:54.750Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:11:40.124Z"
+   "ultimaBien": "2026-11-18T06:16:54.750Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:11:40.124Z"
+   "ultimaBien": "2026-11-18T06:16:54.750Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8339,11 +8341,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:11:40.124Z"
+   "ultimaBien": "2026-11-18T06:16:54.750Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T06:11:40.124Z"
+   "ultimaBien": "2026-11-18T06:16:54.750Z"
   }
  },
  "avisos": [
