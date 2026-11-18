@@ -2342,7 +2342,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
-   "SPORT|136565152": 1795005249000
+   "SPORT|136565152": 1795005249000,
+   "SPORT|136581134": 1795007753000
   },
   "hechos": [
    {
@@ -3189,7 +3190,7 @@
   ],
   "gemini": {
    "dia": "2026-11-18",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -8442,13 +8443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3779,
+   "ok": 3780,
    "fallos": 0,
-   "ejecuciones": 3099,
+   "ejecuciones": 3100,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T14:16:11.147Z"
+   "ultima": "2026-11-18T14:21:12.324Z"
   }
  },
  "ptsDirecto": {},
@@ -8465,15 +8466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:16:19.306Z"
+   "ultimaBien": "2026-11-18T14:21:36.362Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:16:19.306Z"
+   "ultimaBien": "2026-11-18T14:21:36.362Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:16:19.306Z"
+   "ultimaBien": "2026-11-18T14:21:36.362Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8481,11 +8482,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:16:19.306Z"
+   "ultimaBien": "2026-11-18T14:21:36.362Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T14:16:19.306Z"
+   "ultimaBien": "2026-11-18T14:21:36.362Z"
   }
  },
  "avisos": [
