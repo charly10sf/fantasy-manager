@@ -2117,7 +2117,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/15/de-frutos-roberto-jacobo-ramon-y-alvaro-valles-los-descartes-de-luis-de-la-fuente-para-el-duelo-clave-ante-inglaterra-cadena-ser/": 1794739753000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/bernardo-silva-tocado-y-calificado-como-no-apto-para-el-partido-frente-a-gales-cadena-ser/": 1794740299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261115/1004251199/posible-alternativa-arnau-ortiz.html": 1794741513000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/15/vinicius-y-diomande-presentan-su-candidatura-para-la-banda-izquierda-de-mourinho-brillando-en-el-paron-de-selecciones-cadena-ser/": 1794742842000,
@@ -8373,13 +8372,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 3737,
+   "ok": 3738,
    "fallos": 0,
-   "ejecuciones": 3057,
+   "ejecuciones": 3058,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-18T10:46:11.138Z"
+   "ultima": "2026-11-18T10:51:12.594Z"
   }
  },
  "ptsDirecto": {},
@@ -8396,15 +8395,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:46:45.461Z"
+   "ultimaBien": "2026-11-18T10:51:21.020Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:46:45.461Z"
+   "ultimaBien": "2026-11-18T10:51:21.020Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:46:45.461Z"
+   "ultimaBien": "2026-11-18T10:51:21.020Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8412,11 +8411,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:46:45.461Z"
+   "ultimaBien": "2026-11-18T10:51:21.020Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T10:46:45.461Z"
+   "ultimaBien": "2026-11-18T10:51:21.020Z"
   }
  },
  "avisos": [
