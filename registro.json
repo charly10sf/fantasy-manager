@@ -2205,11 +2205,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251777/lesion-pubill-no-reviste-gravedad.html": 1794848176000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/buenas-noticias-pubill-descartada-lesion-grave-20261116_3476205.html": 1794848379000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
    "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
-   "SPORT|136506735": 1794848428000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
    "SPORT|136513344": 1794850973000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
@@ -2420,23 +2417,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004253021/ceballos-pocas-opciones-titular-derbi.html": 1795100855000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
    "SPORT|136625185": 1795099106000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136506735",
-    "medio": "SPORT",
-    "t": 1794848428000,
-    "id": "3092",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Olmo entrena con el grupo y espera la convocatoria",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     13
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html",
     "medio": "Mundo Deportivo",
@@ -3345,7 +3329,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -4245,17 +4229,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 539596,
-  "salida": 27581,
+  "entrada": 541623,
+  "salida": 28549,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.078213,
+  "dolares": 1.0789,
   "reservado": 0
  },
  "recientes": {
@@ -8584,13 +8568,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4139,
+   "ok": 4140,
    "fallos": 0,
-   "ejecuciones": 3422,
+   "ejecuciones": 3423,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T16:56:13.981Z"
+   "ultima": "2026-11-19T17:01:11.864Z"
   }
  },
  "ptsDirecto": {},
@@ -8607,15 +8591,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:56:29.133Z"
+   "ultimaBien": "2026-11-19T17:01:25.357Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:56:29.133Z"
+   "ultimaBien": "2026-11-19T17:01:25.357Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:56:29.133Z"
+   "ultimaBien": "2026-11-19T17:01:25.357Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8623,11 +8607,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:56:29.133Z"
+   "ultimaBien": "2026-11-19T17:01:25.357Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:56:29.133Z"
+   "ultimaBien": "2026-11-19T17:01:25.357Z"
   }
  },
  "avisos": [
