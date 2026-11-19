@@ -2414,7 +2414,8 @@
    "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004253021/ceballos-pocas-opciones-titular-derbi.html": 1795100855000,
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
+   "SPORT|136625185": 1795099106000
   },
   "hechos": [
    {
@@ -3351,7 +3352,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -4251,17 +4252,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 27,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 498093,
-  "salida": 26862,
+  "entrada": 500151,
+  "salida": 26954,
   "cacheLee": 20321,
   "cacheEscribe": 23224,
-  "dolares": 0.990392,
+  "dolares": 0.990644,
   "reservado": 0
  },
  "recientes": {
@@ -8590,13 +8591,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4124,
+   "ok": 4125,
    "fallos": 0,
-   "ejecuciones": 3407,
+   "ejecuciones": 3408,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T15:41:19.893Z"
+   "ultima": "2026-11-19T15:46:14.823Z"
   }
  },
  "ptsDirecto": {},
@@ -8613,15 +8614,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:41:30.702Z"
+   "ultimaBien": "2026-11-19T15:46:26.546Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:41:30.702Z"
+   "ultimaBien": "2026-11-19T15:46:26.546Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:41:30.702Z"
+   "ultimaBien": "2026-11-19T15:46:26.546Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8629,11 +8630,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:41:30.702Z"
+   "ultimaBien": "2026-11-19T15:46:26.546Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:41:30.702Z"
+   "ultimaBien": "2026-11-19T15:46:26.546Z"
   }
  },
  "avisos": [
