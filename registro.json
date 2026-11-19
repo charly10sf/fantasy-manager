@@ -2171,7 +2171,6 @@
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
    "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
@@ -2389,7 +2388,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html": 1795074856000,
    "SPORT|136595275": 1795073918000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000
   },
   "hechos": [
    {
@@ -3338,7 +3338,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -4241,17 +4241,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 286514,
-  "salida": 11484,
+  "entrada": 288537,
+  "salida": 11603,
   "cacheLee": 8709,
   "cacheEscribe": 14515,
-  "dolares": 0.620672,
+  "dolares": 0.620934,
   "reservado": 0
  },
  "recientes": {
@@ -8585,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4055,
+   "ok": 4056,
    "fallos": 0,
-   "ejecuciones": 3338,
+   "ejecuciones": 3339,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T10:01:17.253Z"
+   "ultima": "2026-11-19T10:06:15.045Z"
   }
  },
  "ptsDirecto": {},
@@ -8608,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:01:26.301Z"
+   "ultimaBien": "2026-11-19T10:06:23.769Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:01:26.301Z"
+   "ultimaBien": "2026-11-19T10:06:23.769Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:01:26.301Z"
+   "ultimaBien": "2026-11-19T10:06:23.769Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8624,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:01:26.301Z"
+   "ultimaBien": "2026-11-19T10:06:23.769Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:01:26.301Z"
+   "ultimaBien": "2026-11-19T10:06:23.769Z"
   }
  },
  "avisos": [
