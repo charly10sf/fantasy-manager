@@ -2411,7 +2411,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
    "SPORT|136614839": 1795088375000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
+   "SPORT|136607113": 1795090415000
   },
   "hechos": [
    {
@@ -3346,7 +3347,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -4242,23 +4243,24 @@
    "fallos": 0
   },
   "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080,
+   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795094173546
   }
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 445452,
-  "salida": 19703,
+  "entrada": 447506,
+  "salida": 19819,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.910545,
+  "dolares": 0.910808,
   "reservado": 0
  },
  "recientes": {
@@ -8587,13 +8589,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4093,
+   "ok": 4094,
    "fallos": 0,
-   "ejecuciones": 3376,
+   "ejecuciones": 3377,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:11:16.769Z"
+   "ultima": "2026-11-19T13:16:13.546Z"
   }
  },
  "ptsDirecto": {},
@@ -8610,15 +8612,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:11:24.990Z"
+   "ultimaBien": "2026-11-19T13:16:25.002Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:11:24.990Z"
+   "ultimaBien": "2026-11-19T13:16:25.002Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:11:24.990Z"
+   "ultimaBien": "2026-11-19T13:16:25.002Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8626,11 +8628,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:11:24.990Z"
+   "ultimaBien": "2026-11-19T13:16:25.002Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:11:24.990Z"
+   "ultimaBien": "2026-11-19T13:16:25.002Z"
   }
  },
  "avisos": [
