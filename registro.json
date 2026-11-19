@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html": 1794837009000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-per-jugar-contra-el-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
@@ -2411,23 +2410,11 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
    "SPORT|136614839": 1795088375000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
-   "SPORT|136607113": 1795090415000
+   "SPORT|136607113": 1795090415000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
+   "SPORT|136620865": 1795091009000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794835777000,
-    "id": "1775",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Cubarsí duda para el Villarreal por molestias en la cadera",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     19
-    ]
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html",
     "medio": "MARCA",
@@ -3346,7 +3333,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -4248,17 +4235,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 449328,
-  "salida": 19980,
+  "entrada": 451558,
+  "salida": 20951,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.911071,
+  "dolares": 0.91178,
   "reservado": 0
  },
  "recientes": {
@@ -8587,13 +8574,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4096,
+   "ok": 4097,
    "fallos": 0,
-   "ejecuciones": 3379,
+   "ejecuciones": 3380,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:26:13.073Z"
+   "ultima": "2026-11-19T13:31:13.937Z"
   }
  },
  "ptsDirecto": {},
@@ -8610,15 +8597,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:26:24.625Z"
+   "ultimaBien": "2026-11-19T13:31:32.547Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:26:24.625Z"
+   "ultimaBien": "2026-11-19T13:31:32.547Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:26:24.625Z"
+   "ultimaBien": "2026-11-19T13:31:32.547Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8626,11 +8613,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:26:24.625Z"
+   "ultimaBien": "2026-11-19T13:31:32.547Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:26:24.625Z"
+   "ultimaBien": "2026-11-19T13:31:32.547Z"
   }
  },
  "avisos": [
