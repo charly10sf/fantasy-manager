@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/16/cubarsi-algodones-partido-villarreal-136507663.html": 1794847474000,
    "AS|https://as.com/futbol/mikel-rodriguez-y-facundo-garces-van-recuperandose-de-sus-lesiones-f202611-n/": 1794848112000,
    "AS|https://as.com/futbol/aimar-oroz-empieza-a-ejercitarse-junto-a-sus-companeros-f202611-n/": 1794848022000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251777/lesion-pubill-no-reviste-gravedad.html": 1794848176000,
@@ -8599,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4136,
+   "ok": 4137,
    "fallos": 0,
-   "ejecuciones": 3419,
+   "ejecuciones": 3420,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T16:41:13.709Z"
+   "ultima": "2026-11-19T16:46:16.318Z"
   }
  },
  "ptsDirecto": {},
@@ -8622,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:41:43.409Z"
+   "ultimaBien": "2026-11-19T16:46:27.886Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:41:43.409Z"
+   "ultimaBien": "2026-11-19T16:46:27.886Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:41:43.409Z"
+   "ultimaBien": "2026-11-19T16:46:27.886Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8638,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:41:43.409Z"
+   "ultimaBien": "2026-11-19T16:46:27.886Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:41:43.409Z"
+   "ultimaBien": "2026-11-19T16:46:27.886Z"
   }
  },
  "avisos": [
