@@ -1046,7 +1046,7 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   const r = await page.evaluate(async () => {
     const { quienUsaHTML } = await import('./js/hojas.js');
     const ahora = Date.now(), u = ahora - 3600e3;
-    const x = (n, o) => ({ nombre: n, equipo: n, ultima: u, canal: 'play', app: 6581, v: '0.1', ...o });
+    const x = (n, o) => ({ nombre: n, equipo: n, ultima: u, canal: 'play', app: 99999, v: '0.1', ...o });
     const lista = [
       x('Bryan', { ad: 'failed to connect to fantasymanagerapp.com/185.199.109.153 (port 443) from /10.85.35.168 (port 41234)' }),
       x('Dos', { ad: 'sin conexión · dominio: no conecta (185.199.109.153) · respaldo: tarda' }),
