@@ -25,12 +25,12 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ESFUERZOS: low
-          ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado,trato-domy' }}
+          ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado' }}
           TOPE_USD: "0.75"
-          SOLO: ${{ vars.CHAT_SOLO || 'trueque-encadenado,trueque-sin-clausula,trueque-domy,trueque-domy-blinda' }}
+          SOLO: ${{ vars.CHAT_SOLO || '' }}
       # (19 nov) las 10 más difíciles con esfuerzo medium, para comparar con las de low de arriba (solo para que decida Carlos)
       - name: Las 10 más difíciles con medium
-        if: false
+        if: always()
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/chat-haiku.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
