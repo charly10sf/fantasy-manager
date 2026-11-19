@@ -4248,33 +4248,32 @@
    "SPORT|136604014": 1795073267000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099571147,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100473903
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 27,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 491858,
-  "salida": 24860,
+  "entrada": 493807,
+  "salida": 25392,
   "cacheLee": 20321,
   "cacheEscribe": 23224,
-  "dolares": 0.988767,
+  "dolares": 0.989228,
   "reservado": 0
  },
  "recientes": {
@@ -8603,13 +8602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4116,
+   "ok": 4117,
    "fallos": 0,
-   "ejecuciones": 3399,
+   "ejecuciones": 3400,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T15:01:13.903Z"
+   "ultima": "2026-11-19T15:06:12.808Z"
   }
  },
  "ptsDirecto": {},
@@ -8626,15 +8625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:01:24.297Z"
+   "ultimaBien": "2026-11-19T15:06:25.897Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:01:24.297Z"
+   "ultimaBien": "2026-11-19T15:06:25.897Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:01:24.297Z"
+   "ultimaBien": "2026-11-19T15:06:25.897Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8642,11 +8641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:01:24.297Z"
+   "ultimaBien": "2026-11-19T15:06:25.897Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:01:24.297Z"
+   "ultimaBien": "2026-11-19T15:06:25.897Z"
   }
  },
  "avisos": [
