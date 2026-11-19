@@ -2170,11 +2170,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
    "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000,
-   "SPORT|136489884": 1794822319000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
@@ -2415,18 +2413,6 @@
     "que": "lesion",
     "oficial": false,
     "hecho": "Lookman se lastimó durante el parón de selecciones",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136489884",
-    "medio": "SPORT",
-    "t": 1794822319000,
-    "id": "2355",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Kounde sigue sin entrenar con el grupo tras el parón",
     "motivo": "",
     "plazo": "",
     "nums": []
@@ -4198,7 +4184,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-sup-pide-fiscalia-paralizar-restricciones-marlaska-espray-policial-exige-instrucciones-claras-20261116104342.html": 1794822222000,
    "SPORT|136493729": 1794825978000,
    "SPORT|136499689": 1794831300000,
    "SPORT|136501552": 1794833131000,
@@ -8601,13 +8586,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4051,
+   "ok": 4052,
    "fallos": 0,
-   "ejecuciones": 3334,
+   "ejecuciones": 3335,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T09:41:13.602Z"
+   "ultima": "2026-11-19T09:46:22.383Z"
   }
  },
  "ptsDirecto": {},
@@ -8624,15 +8609,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:41:26.728Z"
+   "ultimaBien": "2026-11-19T09:46:34.410Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:41:26.728Z"
+   "ultimaBien": "2026-11-19T09:46:34.410Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:41:26.728Z"
+   "ultimaBien": "2026-11-19T09:46:34.410Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8640,11 +8625,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:41:26.728Z"
+   "ultimaBien": "2026-11-19T09:46:34.410Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:41:26.728Z"
+   "ultimaBien": "2026-11-19T09:46:34.410Z"
   }
  },
  "avisos": [
