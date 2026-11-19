@@ -2954,8 +2954,9 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
       const mv = mv0 && !/^\s*(?:m[aá]s|menos|de m[aá]s|extra|por encima|por debajo)\b/i.test(fr.slice(mv0.index + mv0[0].length)) ? mv0 : null;
       if (mv && j.valor && !casi(aEuros(mv[1], mv[2]), j.valor) && !(cl && casi(aEuros(mv[1], mv[2]), cl.clausula))) nota(`${N(j)}: vale ${eur(j.valor)} (no ${mv[1]} ${mv[2]}).`);
     }
-    // («te deja con 3,90 M de saldo», «tu saldo pasa de… a…»: lo que le quedaría, no su saldo de ahora; cuarta pasada, 17 nov)
-    const ms = saldo != null && !/\b(si|qued|tendr|tras|despues|acept|vend|dej|pasa|pasar|baj|subir|cost|seria|cambi)\w*/.test(k) ? fr.match(reSaldo) : null;
+    // («te deja con 3,90 M de saldo», «tu saldo pasa de… a…»: lo que le quedaría, no su saldo de ahora; cuarta pasada, 17 nov;
+    // «acabas con 2,40 M de saldo», «sales con 57,05 M de saldo»: el trueque de Carlos con Domy, 19 nov)
+    const ms = saldo != null && !/\b(si|qued|tendr|tras|despues|acept|vend|dej|pasa|pasar|baj|subir|cost|seria|cambi|acab|termin|sales|salir|saldr|propuest|trato|luego|final)\w*/.test(k) ? fr.match(reSaldo) : null;
     if (ms) { const v = aEuros(ms[1] || ms[3], ms[2] || ms[4]); if (!casi(v, saldo)) nota(`Tu saldo ahora es de ${eur(saldo)} (no de ${ms[1] || ms[3]} ${ms[2] || ms[4]}).`); }
   }
 
