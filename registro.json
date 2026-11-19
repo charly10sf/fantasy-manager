@@ -1281,6 +1281,13 @@
    "jornada": 13,
    "id": "2123329665234571322",
    "t": "2026-11-19T08:16:56.785Z"
+  },
+  {
+   "clave": "previa|130",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2123362254795997549",
+   "t": "2026-11-19T10:26:26.922Z"
   }
  ],
  "estados": {
@@ -4259,16 +4266,16 @@
   "dia": "2026-11-19",
   "llamadas": {
    "clasificar": 14,
-   "redactar": 21,
-   "revisar": 9,
+   "redactar": 22,
+   "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 355132,
-  "salida": 13263,
-  "cacheLee": 8709,
+  "entrada": 372465,
+  "salida": 13546,
+  "cacheLee": 11612,
   "cacheEscribe": 17418,
-  "dolares": 0.765235,
+  "dolares": 0.803021,
   "reservado": 0
  },
  "recientes": {
@@ -4362,10 +4369,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-18T06:16:54.644Z",
-    "texto": "🗓️ Unai Simón es el fijo del Athletic 🦁 y, con un Espanyol que marca poco, el viernes le toca un partido cómodo en San Mamés.\n\nVivian es baja por lesión. Sancet, con un 55 % de titularidad, lo normal es que salga, y De Galarreta está a medias.\n\nPara los delanteros y medios del Espanyol el cruce es malo, porque el Athletic es de los que menos encajan. Javi Hernández lo normal es que juegue y Dolan puede quedarse fuera."
-   },
-   {
     "t": "2026-11-18T08:31:28.988Z",
     "texto": "🗓️ Osasuna-Málaga (el domingo a las 18:30): así llegan los dos a la jornada 13\n\nEl Osasuna tiene en Budimir a su fijo: 92 % y 7,1 de media. Eso sí, no estarán Abel Bretones y Aitor Fdez, lesionados. Diego Rico, Raúl Moro y Torró, del 15 al 51 %, no tienen el sitio asegurado.\n\nAl otro lado, en el Málaga, C. Puga es quien más en el aire está, con un 39 %. No estarán Aznou, sancionado, ni Rafita y Haitam, lesionados. Donde no hay duda es con A. Herrero, al 97 %."
    },
@@ -4380,6 +4383,10 @@
    {
     "t": "2026-11-19T08:16:56.787Z",
     "texto": "🗓️ El Sevilla llega al Sánchez-Pizjuán sin Miguel Sierra, lesionado, y con Isaac y Kochorashvili sin sitio asegurado en el once.\n\nPara el Betis, 4º, el sábado a las 18:30 hay un Valles que con 9,2 de media es de los que más puntos dan. Bartra y Antony tienen más papeletas de jugar que de quedarse fuera.\n\nEl Sevilla encaja 1,6 por partido, así que los delanteros y medios del Betis pueden mirar el cruce con buenos ojos."
+   },
+   {
+    "t": "2026-11-19T10:26:26.924Z",
+    "texto": "🗓️ Alavés-Deportivo, el sábado a las 14:00 en Mendizorroza, se juega entre dos equipos de mitad de tabla: el Alavés va 12º y el Dépor 9º.\n\nEn el Alavés falta Mikel Rodriguez, lesionado, y Sivera es el fijo bajo palos, con un 94 % de titularidad. T. Martínez tiene más papeletas de jugar que de quedarse fuera, y Valentini anda justo por encima de la mitad.\n\nEl Deportivo llega con dos dudas arriba y atrás: Aubameyang y Loureiro lo normal es que salgan, aunque no hay nada cerrado. Mario Soriano es el seguro del centro del campo."
    }
   ],
   "noticias": [
@@ -4753,11 +4760,6 @@
   }
  ],
  "fallosRedaccion": {
-  "previa|130": {
-   "n": 3,
-   "t": "2026-11-17T08:06:37.624Z",
-   "ultima": "2026-11-19T06:06:47.605Z"
-  },
   "previa|126": {
    "n": 3,
    "t": "2026-11-18T06:11:39.992Z",
@@ -8602,13 +8604,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4059,
+   "ok": 4060,
    "fallos": 0,
-   "ejecuciones": 3342,
+   "ejecuciones": 3343,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T10:21:17.229Z"
+   "ultima": "2026-11-19T10:26:10.838Z"
   }
  },
  "ptsDirecto": {},
@@ -8625,15 +8627,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:21:45.382Z"
+   "ultimaBien": "2026-11-19T10:26:28.314Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:21:45.382Z"
+   "ultimaBien": "2026-11-19T10:26:28.314Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:21:45.382Z"
+   "ultimaBien": "2026-11-19T10:26:28.314Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8641,11 +8643,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:21:45.382Z"
+   "ultimaBien": "2026-11-19T10:26:28.314Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:21:45.382Z"
+   "ultimaBien": "2026-11-19T10:26:28.314Z"
   }
  },
  "avisos": [
