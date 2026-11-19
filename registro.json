@@ -2188,17 +2188,9 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3182",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795086670761
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
@@ -2422,21 +2414,11 @@
    "SPORT|136611452": 1795081579000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
+   "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
+   "AS|https://as.com/futbol/kounde-ya-esta-aqui-f202611-n/": 1795085771000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html",
-    "medio": "MARCA",
-    "t": 1794827611000,
-    "id": "2338",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aimar se incorpora al grupo de Osasuna tras sus lesiones",
-    "motivo": "dos lesiones musculares seguidas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html",
     "medio": "MARCA",
@@ -3403,7 +3385,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4306,17 +4288,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 430835,
-  "salida": 17366,
+  "entrada": 432931,
+  "salida": 17562,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.907914,
+  "dolares": 0.908222,
   "reservado": 0
  },
  "recientes": {
@@ -8645,13 +8627,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4069,
+   "ok": 4070,
    "fallos": 0,
-   "ejecuciones": 3352,
+   "ejecuciones": 3353,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:11:10.761Z"
+   "ultima": "2026-11-19T11:16:11.838Z"
   }
  },
  "ptsDirecto": {},
@@ -8668,15 +8650,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:11:34.828Z"
+   "ultimaBien": "2026-11-19T11:16:26.141Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:11:34.828Z"
+   "ultimaBien": "2026-11-19T11:16:26.141Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:11:34.828Z"
+   "ultimaBien": "2026-11-19T11:16:26.141Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8684,11 +8666,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:11:34.828Z"
+   "ultimaBien": "2026-11-19T11:16:26.141Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:11:34.828Z"
+   "ultimaBien": "2026-11-19T11:16:26.141Z"
   }
  },
  "avisos": [
