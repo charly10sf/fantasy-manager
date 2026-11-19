@@ -1843,9 +1843,13 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
   const buscar = (n) => {
     const k = norm(n);
     if (!k) return null;
+    // (19 nov, Carlos: «entra Morcillo y sale Morcillo… no es tuyo») con dos que se llaman igual se quedaba con el
+    // primero de LaLiga, que podía no ser el tuyo: en cada paso de la búsqueda, primero los tuyos y luego el resto
+    const mios = (M.mias || []).map((x) => x.j || D.maestro[x.pid]).filter(Boolean);
     const todos = Object.values(D.maestro);
-    return todos.find((j) => norm(j.nombre) === k) || todos.find((j) => norm(j.largo) === k)
-      || (k.length >= 3 ? todos.find((j) => { const n = norm(j.nombre); return n.length >= 3 && (n.includes(k) || k.includes(n)); }) : null) || null;
+    const en = (f) => mios.find(f) || todos.find(f);
+    return en((j) => norm(j.nombre) === k) || en((j) => norm(j.largo) === k)
+      || (k.length >= 3 ? en((j) => { const n = norm(j.nombre); return n.length >= 3 && (n.includes(k) || k.includes(n)); }) : null) || null;
   };
   // lo que ya tienes pujado se cobra al cambiar el mercado si lo ganas: para el saldo con el que empiezas la jornada, ya
   // está gastado (antes no se restaba y el plan podía dejarte en negativo sin avisar; revisión del 25 oct)
