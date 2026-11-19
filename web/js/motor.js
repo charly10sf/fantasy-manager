@@ -2270,6 +2270,18 @@ export function analizar(D, H, c, extra = {}) {
   }
   // lo que compraste para revender y sigue en tu equipo
   M.paraRevender = M.mias.filter((x) => M.reventa[x.pid]).map((x) => ({ ...x, rev: M.reventa[x.pid], beneficioYa: x.j.valor - (M.reventa[x.pid].precio || x.compra || x.j.valor) }));
+  /** (19 nov, Mario Soriano: el plan lo mandaba vender «para revender» perdiendo 6,89 M, con la cláusula cerrada 12 días
+   * más y aún subiendo) lo comprado para revender se aguanta mientras le queden más de 1,5 días de cláusula cerrada, no
+   * esté bajando y siga subiendo (también si la subida se frena pero aún sube) o valga menos de lo que se pagó: venderlo
+   * así es tirar dinero. Si hace falta el dinero para empezar la jornada en positivo, el plan lo sigue pudiendo vender por eso */
+  M.aguantaReventa = (x) => {
+    if (!x || !x.protegidoHasta || x.protegidoHasta - ahora <= 1.5 * DIA) return false;
+    const ine = M.inercia(x.pid), t = x.tend || {};
+    if ((t.p1 != null && t.p1 < -1) || (ine && ['giro', 'baja'].includes(ine.fase))) return false;
+    const sube = !!ine && (['sube', 'acelera', 'rebote'].includes(ine.fase) || (ine.fase === 'frena' && num(ine.ult) > 0));
+    const r = M.reventa[x.pid], pagado = (r && r.precio) || x.compra || 0;
+    return sube || (pagado > 0 && x.j.valor < pagado);
+  };
 
   /* ---------- cómo juega cada rival (función top «perfilRival», 0.6.5) ---------- */
   // con todo el historial de la liga (AH): sus clausulazos (a quién y con cuánto sobre el valor), lo que ficha y vende
@@ -2423,6 +2435,7 @@ export function analizar(D, H, c, extra = {}) {
     const saldo = num(D.dinero);
     const cobro = mios.reduce((s, x) => s + x.precio, 0), pago = suyos.reduce((s, x) => s + x.precio, 0);
     const vMios = mios.reduce((s, x) => s + x.valor, 0), vSuyos = suyos.reduce((s, x) => s + x.valor, 0);
+    // (Carlos, 19 nov: con deuda solo se puja en el mercado; todo lo demás, también comprarle a otro mánager, solo con saldo)
     // el dinero de él: seguro (le sobra con el margen de la estimación), quiza (le llega con el margen) o null si no se sabe
     const cap = M.capacidad(tid);
     const leLlega = (imp) => (!cap ? 'nose' : cap.seguro >= imp ? 'si' : cap.alto >= imp ? 'quiza' : 'no');
@@ -2753,7 +2766,7 @@ export function planAuto(D, M, c) {
   const ventana = M.ventanaEsp;
   for (const x of M.paraRevender.filter((y) => !vendidos.has(y.pid))) {
     const toca = !ventana || ahora >= ventana.ponerVenta - 6 * HORA || (x.tend.p1 != null && x.tend.p1 < -1);
-    if (!toca) continue;
+    if (!toca || (saldo >= 0 && M.aguantaReventa(x))) continue;
     op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? antesDe(inicio) : 'hoy',
       motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ` Toca venderlo para empezar la jornada en positivo.${ventana && ventana.apura ? ` ${ventana.avisoJusto}` : ''}`}`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);

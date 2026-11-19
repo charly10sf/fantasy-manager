@@ -66,7 +66,9 @@
 
 import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
-import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta } from '../../web/js/chat-sistema.js';
+import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta, partirDatos } from '../../web/js/chat-sistema.js';
+import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
+import { apodosObjeto, ligaOk } from './apodos.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -237,6 +239,10 @@ export const FRENOS = {
   plan: { min: 3 },
   // (16 nov) /pregunta, por cuenta: 6 al minuto (el cupo del día va aparte)
   pregunta: { min: 6 },
+  // (19 nov) invita a un amigo, por cuenta: mirar, 20 al minuto; canjear un código o elegir rivales, 5
+  invitar: { min: 20 }, canjear: { min: 5 },
+  // (19 nov) los apodos, por cuenta: 20 al minuto
+  apodos: { min: 20 },
   // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
   // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
@@ -335,6 +341,10 @@ export class Emparejar {
     const ruta = new URL(req.url).pathname;
     // (0.7.13i) el semáforo de LaLiga y la entrada paso a paso, en «embudo|todos»
     if (ruta === '/embudo/sumar' || ruta === '/embudo/leer' || ruta === '/estado') return embudoObjeto(st, ruta, req, this.memo);
+    // (19 nov) invita a un amigo, todo en «inv|todos» (worker/src/invitar.js); nunca pone alarma
+    if (ruta === '/inv') return new Response(JSON.stringify(await invObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (19 nov) los apodos de los rivales de una cuenta, en «apodos|uid» (worker/src/apodos.js); nunca pone alarma
+    if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -638,7 +648,7 @@ async function fallos(req, env, c, ruta) {
 
 /* ---------- el tiempo de uso de hoy, por cuenta (para el límite diario de minutos) ---------- */
 const FMT_DIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
-const hoyMadrid = () => FMT_DIA.format(new Date());
+const hoyMadrid = () => FMT_DIA.format(new Date(Date.now()));
 /** el día de Madrid (AAAA-MM-DD) de un instante */
 const diaMadrid = (t) => FMT_DIA.format(new Date(t));
 /** muchas claves de KV de golpe: de 100 en 100 con la lectura en bloque (una operación cada 100); si el KV no la tiene,
@@ -872,6 +882,8 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     const u = x.usage || {}, b = bloquesDe(x.content);
     // (lo leído de la caché cuesta una décima parte y lo que se escribe en ella, un 25 % más: se cuenta así en `entra`)
     acc.texto += b.texto; acc.entra += (u.input_tokens || 0) + Math.round((u.cache_read_input_tokens || 0) * 0.1 + (u.cache_creation_input_tokens || 0) * 1.25); acc.sale += u.output_tokens || 0; acc.fin = x.stop_reason || '';
+    // (19 nov) lo leído y escrito en la caché, aparte, para medir lo que ahorra
+    acc.cache = { lee: ((acc.cache && acc.cache.lee) || 0) + (u.cache_read_input_tokens || 0), escribe: ((acc.cache && acc.cache.escribe) || 0) + (u.cache_creation_input_tokens || 0), sin: ((acc.cache && acc.cache.sin) || 0) + (u.input_tokens || 0) };
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
     if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
@@ -886,7 +898,7 @@ async function planIA(req, env, c, ctx) {
   const P0 = await cfgPlanes(env);
   // (17 nov) la web y el iPhone (el navegador manda Origin; la app de Android pide por su lado, sin él) no tienen anuncios con
   // los que pedir más planes: de momento, todos sus planes gratis (planes.gratisWeb de limites.json)
-  const P = req.headers.get('Origin') && P0.gratisWeb > P0.gratis ? { ...P0, gratis: P0.gratisWeb, max: Math.max(P0.max, P0.gratisWeb) } : P0;
+  let P = req.headers.get('Origin') && P0.gratisWeb > P0.gratis ? { ...P0, gratis: P0.gratisWeb, max: Math.max(P0.max, P0.gratisWeb) } : P0;
   if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
   if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de los planes (falta la clave CLAUDE_PLANES).', servicio: true, sinClave: true }, 503, c);
   const u = await quienEs(req);
@@ -914,6 +926,8 @@ async function planIA(req, env, c, ctx) {
   // entre todos, el tope de gasto del día
   if (!enMarcha && (await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
+  // (19 nov) con la semana doble de invitar a amigos, el doble de planes gratis y de máximo
+  if (!libre) P = await cupoConPremio(env, u.uid, P);
   const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid });
   if (!y.ok) {
     const ct = cupoTxt(P, y);
@@ -980,7 +994,7 @@ export async function cfgPreguntas(env) {
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 3, 0, 100));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low', cacheLiga: ['siempre', 'segunda', 'no'].includes(p.cacheLiga) ? p.cacheLiga : 'siempre' };
 }
 const cupoTxtP = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, porAnuncio: c.porAnuncio, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: Math.min(c.max, c.gratis + y.x) < c.max });
 const cupoLibreP = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, porAnuncio: c.porAnuncio, quedan: 99, masConAnuncio: true, ilimitado: true });
@@ -1014,17 +1028,27 @@ export function mensajesChat(hist, pregunta, fotos) {
  * Lo que se le manda a Claude de una pregunta ya leída (b): { sistema, mensajes } o null si no vale. Lo usa también la
  * prueba con Haiku de verdad (.github/ia/chat-haiku.mjs), para preguntar exactamente lo mismo que el Worker.
  */
-export function armarChat(b) {
+export function armarChat(b, { cacheLiga = 'siempre' } = {}) {
   if (!b || typeof b !== 'object' || !esDatosChat(b.datos)) return null;
   const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
   if (!mensajes) return null;
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
   const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
   // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
-  return { sistema: [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, { type: 'text', text: b.datos }], mensajes };
+  // (19 nov) y los datos de la liga también: la app los manda en dos trozos (partirDatos), lo de la liga, que no cambia en la
+  // misma conversación, y lo de esta pregunta (los jugadores y rivales que nombra, el plan, la hora); lo primero, en la caché
+  // Escribir en la caché cuesta un 25 % más y leerla, una décima parte: compensa si 1 de cada 4 conversaciones sigue con otra
+  // pregunta en menos de 5 minutos. «preguntas.cacheLiga» de limites.json: 'siempre' (por defecto), 'segunda' (desde la
+  // segunda pregunta de la conversación) o 'no'. Con la batería de chat-casos.mjs (82 % de preguntas sueltas), en seco:
+  // 'siempre' +2 % en total y −53 % en las que siguen; 'segunda' −1 % y −6 %
+  const { liga, pregunta } = partirDatos(b.datos);
+  const enCache = !!pregunta && (cacheLiga === 'siempre' || (cacheLiga === 'segunda' && mensajes.length > 1));
+  const sistema = [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, enCache ? { type: 'text', text: liga, cache_control: { type: 'ephemeral' } } : { type: 'text', text: liga }];
+  if (pregunta) sistema.push({ type: 'text', text: pregunta });
+  return { sistema, mensajes };
 }
 async function preguntaIA(req, env, c, ctx) {
-  const P = await cfgPreguntas(env);
+  let P = await cfgPreguntas(env);
   if (!P.on) return json({ e: 'Las preguntas con la IA de la app están apagadas ahora.', servicio: true }, 503, c);
   if (!env.CLAUDE_PLANES) return json({ e: 'El servidor todavía no tiene la IA de las preguntas.', servicio: true, sinClave: true }, 503, c);
   const u = await quienEs(req);
@@ -1036,7 +1060,7 @@ async function preguntaIA(req, env, c, ctx) {
   if (txt.length > tope * 1.2) return json({ e: 'La pregunta es demasiado grande (prueba con menos fotos).' }, 413, c);
   let b = null;
   try { b = JSON.parse(txt); } catch (e) { b = null; }
-  const armado = armarChat(b);
+  const armado = armarChat(b, { cacheLiga: P.cacheLiga });
   if (!armado) return json({ e: 'Pregunta no válida' }, 400, c);
   const { sistema, mensajes } = armado;
   const rid = ridDe(b.rid);
@@ -1045,6 +1069,7 @@ async function preguntaIA(req, env, c, ctx) {
   const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
   if (!enMarcha && (await gastoHoy(env, 0, 'preg')) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de las preguntas ha llegado hoy a su tope. Mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
+  if (!libre) P = await cupoConPremio(env, u.uid, P);
   const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true, rid: b.rid }, 'preg');
   if (!y.ok) {
     const ct = cupoTxtP(P, y);
@@ -1249,8 +1274,114 @@ async function borrarMios(req, env, c) {
   }
   let fallidas = 0;
   for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
+  // (19 nov) tu código de invitar y tus premios (queda solo que la cuenta ya existía, para que no valga como nueva) y tus apodos
+  if (env.QR) {
+    try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
+    try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
+  }
   if (fallidas) return json({ e: `No se han podido borrar ${fallidas} de ${claves.length} cosas. Vuelve a probar en un rato.` }, 503, c);
   return json({ ok: true, avisos, claves: claves.length }, 200, c);
+}
+
+/* ---------- invita a un amigo (19 nov) ---------- */
+/*
+ * GET  /invitar            lo tuyo: tu código (si ya lo has pedido), los amigos que han entrado con él (sin quién), cuántos
+ *                          cuentan para los escalones, tus premios y, si te invitaron a ti, que te invitaron. Si eres un
+ *                          invitado y es otro día de Madrid que el que entraste, cuenta que has vuelto (los escalones).
+ * POST /invitar/codigo     saca tu código (una vez; luego es siempre el mismo) y devuelve lo mismo que GET.
+ * POST /invitar/canjear    { cod, liga }: entras con el código de otro. Solo cuentas nuevas en la app (primera vez hace
+ *                          como mucho «diasCodigo» días), que nadie haya invitado antes, que no sean la misma y que estén en
+ *                          esa liga (lo dice LaLiga con tu sesión).
+ * POST /invitar/rivales    { i, liga, tids }: los rivales que eliges con el amigo i (como mucho «rivales», dentro de su plazo).
+ * Todo en el Durable Object «inv|todos» (invitar.js); sin él, 503. Los números, en «invitar» de limites.json.
+ */
+const objInv = (env) => env.QR.get(env.QR.idFromName('inv|todos'));
+export async function cfgInv() { return cfgInvitar(await limitesJson()); }
+async function invPedir(env, b) {
+  const r = await objInv(env).fetch('https://freno/inv', { method: 'POST', body: JSON.stringify({ ...b, cfg: b.cfg || (await cfgInv()), ahora: Date.now(), dia: hoyMadrid() }) });
+  return r.json();
+}
+/** la primera vez que se vio la cuenta en la app (KV de /hola), o 0 si nunca */
+async function primeraVez(env, uid) {
+  let t = 0;
+  for (const k of [`r:${uid}`, `p:${uid}`]) {
+    try { const x = await env.VINCULOS.getWithMetadata(k); const p = Number(x && x.metadata && x.metadata.primera) || 0; if (p && (!t || p < t)) t = p; } catch (e) { /* nada */ }
+  }
+  return t;
+}
+// los premios de cada cuenta en la memoria del Worker (5 min), para que /plan y /pregunta no le pregunten al objeto cada vez
+const PREMIOS_MEM = new Map();
+export async function premiosDe(env, uid) {
+  const m = PREMIOS_MEM.get(uid);
+  if (m && Date.now() - m.t < 5 * 60e3) return m.p;
+  let p = {};
+  if (env.QR) { try { const r = await invPedir(env, { op: 'estado', uid }); if (r && r.ok) p = r.premios || {}; } catch (e) { /* sin premios */ } }
+  if (PREMIOS_MEM.size > 5000) PREMIOS_MEM.clear();
+  PREMIOS_MEM.set(uid, { t: Date.now(), p });
+  return p;
+}
+/** el cupo del día con la semana doble (si la tiene): gratis y máximo por dos */
+export async function cupoConPremio(env, uid, P) {
+  const p = await premiosDe(env, uid);
+  return premioActivo({ premios: p }, 'doble') ? { ...P, gratis: P.gratis * 2, max: P.max * 2, doble: true } : P;
+}
+async function invitar(req, env, c, ruta) {
+  if (!env.QR) return json({ e: 'Las invitaciones no están disponibles ahora.', servicio: true }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  const escribe = req.method === 'POST';
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `inv${escribe ? 'w' : 'r'}|${u.uid}`, escribe ? FRENOS.canjear.min : FRENOS.invitar.min))) return demasiadas(c);
+  const cfg = await cfgInv();
+  if (ruta === '/invitar' && req.method === 'GET') return json(await invPedir(env, { op: 'estado', uid: u.uid, cfg, primera: await primeraVez(env, u.uid) }), 200, c);
+  if (!escribe) return json({ e: 'No existe' }, 404, c);
+  const b = (await req.json().catch(() => ({}))) || {};
+  if (ruta === '/invitar/codigo') {
+    if (!cfg.on) return json({ e: 'Las invitaciones están paradas ahora.' }, 503, c);
+    const r = await invPedir(env, { op: 'codigo', uid: u.uid, cfg });
+    return json(r, r.ok ? 200 : 503, c);
+  }
+  if (ruta === '/invitar/canjear') {
+    const liga = String(b.liga || '');
+    if (!/^\d{1,20}$/.test(liga)) return json({ e: 'Entra antes en tu liga de LaLiga Fantasy y vuelve a probar.', motivo: 'liga' }, 400, c);
+    const ids = await miembros(req, liga);
+    const r = await invPedir(env, { op: 'canjear', uid: u.uid, cod: limpiarCod(b.cod), enLiga: !!(ids && ids.includes(String(u.uid))), primera: await primeraVez(env, u.uid), cfg });
+    if (r.ok) console.log('invitar: canjeado');
+    return json(r, r.ok ? 200 : 400, c);
+  }
+  if (ruta === '/invitar/rivales') {
+    const r = await invPedir(env, { op: 'rivales', uid: u.uid, i: Number(b.i), liga: String(b.liga || ''), tids: b.tids, cfg });
+    return json(r, r.ok ? 200 : 400, c);
+  }
+  return json({ e: 'No existe' }, 404, c);
+}
+
+/* ---------- los apodos de los rivales en todos tus dispositivos (19 nov) ---------- */
+/*
+ * GET  /apodos?liga=L          los apodos de esa liga guardados con tu cuenta: { a: { tid: { v, t } } } (v vacío: borrado).
+ * POST /apodos { liga, a }     junta lo que traes ({ tid: { v, t } }) con lo guardado, rival a rival (gana lo más reciente),
+ *                              y devuelve lo que queda. Con la sesión de LaLiga: es tu cuenta, la del móvil y la de la web.
+ * En el Durable Object de la cuenta («apodos|uid»); sin él, 503 (la app sigue con los suyos, como antes).
+ */
+async function apodos(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `apodos|${u.uid}`, FRENOS.apodos.min))) return demasiadas(c);
+  const obj = env.QR.get(env.QR.idFromName(`apodos|${u.uid}`));
+  const pedir = async (b) => (await obj.fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ ...b, ahora: Date.now() }) })).json();
+  if (req.method === 'GET') {
+    const liga = new URL(req.url).searchParams.get('liga') || '';
+    if (!ligaOk(liga)) return json({ e: 'Liga no válida' }, 400, c);
+    return json(await pedir({ op: 'leer', liga }), 200, c);
+  }
+  if (Number(req.headers.get('content-length') || 0) > 30000) return json({ e: 'Demasiado grande' }, 413, c);
+  const txt = await req.text();
+  if (txt.length > 30000) return json({ e: 'Demasiado grande' }, 413, c);
+  let b = null;
+  try { b = JSON.parse(txt); } catch (e) { b = null; }
+  if (!b || !ligaOk(b.liga)) return json({ e: 'Liga no válida' }, 400, c);
+  const r = await pedir({ op: 'juntar', liga: String(b.liga), a: b.a });
+  return json(r, r.ok ? 200 : 400, c);
 }
 
 /* ---------- quién usa la app ---------- */
@@ -1406,7 +1537,10 @@ async function hola(req, env, c, ruta) {
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
       else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
     }
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo: await leerEmbudo(env) }, 200, c);
+    // (19 nov) las invitaciones de cada cuenta: cuántos entran y cuántos vuelven otro día, para ver si alguien abusa
+    let invitar = null;
+    if (env.QR) { try { invitar = await invPedir(env, { op: 'todos' }); } catch (e) { invitar = null; } }
+    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo: await leerEmbudo(env), invitar }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }
@@ -1629,6 +1763,8 @@ export default {
       if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
       if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
+      if (url.pathname === '/invitar' || url.pathname.startsWith('/invitar/')) return await invitar(req, env, c, url.pathname);
+      if (url.pathname === '/apodos' && (req.method === 'GET' || req.method === 'POST')) return await apodos(req, env, c);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {

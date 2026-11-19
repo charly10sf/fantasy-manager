@@ -8,7 +8,7 @@ import { analizar, rematarAuto } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
-import { ponerApodo } from './apodos.js';
+import { ponerApodo, sincronizarApodos } from './apodos.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
@@ -27,7 +27,8 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod } from './invitar.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -983,6 +984,7 @@ function rehacer() {
   fijarMotor(S.M);
   // quién eres, para lo bloqueado (antes de pintar nada)
   fijarYo(yoReal(), enDemo());
+  fijarLiga(S.D.liga && S.D.liga.id);
   // el cierre del APK de GitHub no va con el dueño: sabido quién es, se quita la ventana si ya no toca
   if (enApkGithub() && !cierreApk().cerrada) { const v = document.getElementById('aviso-play'); if (v && !v.querySelector('[data-accion="cerrarAvisoPlay"]')) v.remove(); }
   fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n);
@@ -1126,6 +1128,17 @@ async function avisosDeFallos() {
   return out;
 }
 
+/** (19 nov) con la app cerrada: si ha entrado un amigo con tu código, que lo sepas (solo a quien ya ha sacado su código) */
+async function avisosInvitarFondo() {
+  const g = LS.get('invitar', null);
+  if (!g || !g.uid || !g.est || !g.est.cod) return [];
+  try {
+    const r = await leerInvitar(g.uid);
+    if (!r.nuevos) return [];
+    const c = cfgInv();
+    return [{ k: `inv:${r.est.entran}`, titulo: r.nuevos > 1 ? `${r.nuevos} amigos tuyos han entrado` : 'Tu amigo ya ha entrado', texto: `Elige ${c.rivales} rivales y mira su dinero: tienes ${c.horas} h. Está en Ajustes → Invita a un amigo`, hash: 'hoy' }];
+  } catch (e) { return []; }
+}
 /**
  * La pasada en segundo plano (Android abre la web sin pantalla con ?fondo=1): pone la liga al día, rehace el plan
  * con la IA si toca y avisa con notificaciones de lo nuevo. Al acabar se lo dice a la app, pase lo que pase.
@@ -1146,8 +1159,8 @@ async function trabajoFondo() {
     const turnoF = () => turnoPendiente(S.M || { cierreMercado: LS.get('fondo-cierre', 0) }, ultimoPlan());
     if (deNoche() && !(puedePlanIA(enDemo()) && turnoF())) { paso('de noche: nada'); return; }
     // (de madrugada no se miran: se darían por avisadas sin avisar)
-    const fallos = callado() ? [] : await avisosDeFallos();
-    if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo`);
+    const fallos = callado() ? [] : [...(await avisosDeFallos()), ...(await avisosInvitarFondo())];
+    if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo o de amigos`);
     const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
     if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre && !(puedePlanIA(enDemo()) && turnoF())) {
       const lista = [...fallos];
@@ -1382,7 +1395,48 @@ function saludarSiToca() {
   // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
   return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad })
-    .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
+    .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
+    .then(() => invitarSiToca())
+    // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
+    .then(() => sincronizarApodos(S.D && S.D.liga && S.D.liga.id))
+    .then((cambia) => { if (cambia && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); })
+    .catch(() => {});
+}
+/* (19 nov) invita a un amigo (invitar.js): el estado del servidor (como mucho cada 20 min), el código del enlace al entrar en
+   tu liga, «¿Te ha invitado alguien?» una vez a una cuenta nueva y el aviso cuando entra un amigo tuyo */
+const uidYo = () => (S.D && !S.D.demo && S.D.yo && S.D.yo.userId) || null;
+async function invitarSiToca({ ya = false } = {}) {
+  const uid = uidYo(), liga = S.D && S.D.liga && S.D.liga.id;
+  if (!uid || enDemo() || !haySesion()) return;
+  const antes = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
+  let r;
+  try { r = await leerInvitar(uid, { ya }); } catch (e) { return; }
+  const cod = codigoPendiente();
+  if (cod && liga && puedeCanjear(uid)) {
+    const x = await canjear(uid, cod, liga);
+    if (x.ok && !x.ya) tostada('Has entrado con la invitación de tu amigo', 5000);
+  } else if (cod && r.est && r.est.puedeCanjear === false) LS.del('inv-cod');
+  else if (!cod && puedeCanjear(uid) && !LS.get('inv-preguntado', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
+    // (sobre todo para quien la baja de Google Play, a quien no le llega el enlace; Carlos, 19 nov)
+    LS.set('inv-preguntado', Date.now());
+    S.inv = {};
+    hoja('invitar');
+  }
+  if (r.nuevos > 0) avisoAmigoInv(r.nuevos);
+  const despues = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
+  if (despues !== antes) {
+    window.dispatchEvent(new Event('limite-cambia'));
+    cerrarTopA();
+    if (S.M && !S.hoja) pintar(); else if (S.tipoHoja && ['invitar', 'ajustes'].includes(S.tipoHoja[0])) repintarHoja();
+  }
+}
+/** «Tu amigo ya ha entrado: elige 2 rivales, tienes 24 h» (en la app; con ella cerrada, la notificación) */
+function avisoAmigoInv(n) {
+  const c = cfgInv();
+  const t = n > 1 ? `${n} amigos tuyos han entrado` : 'Tu amigo ya ha entrado';
+  const x = `Elige ${c.rivales} rivales${n > 1 ? ' por cada uno' : ''} y mira su dinero: tienes ${c.horas} h`;
+  if (enApp && !nativo.aLaVista()) nativo.notificar(t, x, 'hoy');
+  else tostada(`${t}: ${x.charAt(0).toLowerCase()}${x.slice(1)}. Está en Ajustes → Invita a un amigo`, 8000);
 }
 setInterval(saludarSiToca, 10 * 60e3);
 /* (0.7.13) lo que falla la cuenta del dinero de los rivales en todas las ligas (de lo que apunta la gente), cada 6 h: si
@@ -1930,7 +1984,7 @@ async function abrirQuien() {
   S.quien = { cargando: true, tab };
   hoja('quien');
   // (0.7.13k) también «embudo» (Antes de entrar), que hasta ahora no se guardaba y no salía
-  try { const r = await quienUsa(); S.quien = { tab, lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null }; }
+  try { const r = await quienUsa(); S.quien = { tab, lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null, invitar: r.invitar || null }; }
   catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }
@@ -2327,7 +2381,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3165,7 +3219,8 @@ document.addEventListener('click', async (ev) => {
         <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>${esc(dondeTop().trim())}</p>
         ${enApp ? '' : botonPlay()}
-        <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
+        ${Hj.botonInvitarTop(d.clave)}
+        <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`);
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
@@ -3356,6 +3411,73 @@ document.addEventListener('click', async (ev) => {
       borrarMisDatos().then((r) => tostada(`Borrado${r.avisos ? ` (también ${r.avisos === 1 ? 'tu aviso' : `tus ${r.avisos} avisos`})` : ''}`, 6000)).catch((e) => tostada(e.message || 'No se ha podido borrar', 7000));
       break;
     case 'invitar': invitarALiga(); break;
+    // (19 nov) invita a un amigo
+    case 'invitarAmigo': {
+      const uid = uidYo();
+      S.inv = { ...(S.inv || {}), cargando: true, error: null };
+      cerrarHoja(true);
+      hoja('invitar');
+      if (!uid) break;
+      leerInvitar(uid, { ya: true }).then(() => { S.inv.cargando = false; S.inv.error = null; }, (e) => { S.inv.cargando = false; S.inv.error = e.message; })
+        .then(() => { if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja(); });
+      break;
+    }
+    case 'compartirInv': case 'copiarInv': {
+      const uid = uidYo();
+      if (!uid) break;
+      S.inv = { ...(S.inv || {}), compartiendo: true };
+      repintarHoja();
+      try {
+        const cod = await miCodigo(uid);
+        if (d.accion === 'copiarInv') copiarY(enlaceInv(cod), 'Enlace copiado');
+        else if (enApp) nativo.compartir(textoInv(cod));
+        else if (navigator.share) navigator.share({ text: textoInv(cod) }).catch(() => {});
+        else copiarY(textoInv(cod), 'Copiado: pégalo en WhatsApp');
+        S.inv.error = null;
+      } catch (e) { S.inv.error = e.message || 'No se ha podido sacar tu código ahora'; }
+      S.inv.compartiendo = false;
+      if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja();
+      break;
+    }
+    case 'canjearInv': {
+      const uid = uidYo(), liga = S.D && S.D.liga && S.D.liga.id, inp = $('#invCod');
+      const cod = limpiarCod(inp ? inp.value : '');
+      S.inv = { ...(S.inv || {}), cod, errorCod: null };
+      if (!uid) break;
+      if (cod.length !== 6) { S.inv.errorCod = 'Son 6 letras y números.'; repintarHoja(); break; }
+      S.inv.canjeando = true; repintarHoja();
+      const x = await canjear(uid, cod, liga);
+      S.inv.canjeando = false;
+      if (x.ok) { S.inv.cod = ''; tostada('Listo: has entrado con la invitación de tu amigo', 5000); } else S.inv.errorCod = x.e || 'No ha valido. Vuelve a probar en un rato.';
+      if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja();
+      break;
+    }
+    case 'invElegir': {
+      const i = Number(d.i), x = porElegir().find((y) => y.i === i);
+      if (!x) break;
+      S.inv = { ...(S.inv || {}), sel: { ...((S.inv && S.inv.sel) || {}) } };
+      const a = S.inv.sel[i] || [], t = String(d.tid);
+      S.inv.sel[i] = a.includes(t) ? a.filter((y) => y !== t) : a.length < x.quedan ? [...a, t] : [...a.slice(1), t];
+      repintarHoja();
+      break;
+    }
+    case 'invAbrir': {
+      const uid = uidYo(), liga = S.D && S.D.liga && S.D.liga.id, i = Number(d.i), sel = (S.inv && S.inv.sel && S.inv.sel[i]) || [];
+      if (!uid || !liga || !sel.length) break;
+      S.inv.abriendo = true; repintarHoja();
+      try {
+        await elegirRivales(uid, i, liga, sel);
+        delete S.inv.sel[i];
+        S.inv.error = null;
+        const x = ((estadoInv(uid) || {}).amigos || []).find((y) => y.i === i);
+        tostada(`Su dinero, abierto${x ? ` hasta ${cuandoT(x.hasta)}` : ''}`, 5000);
+        cerrarTopA();
+        pintar();
+      } catch (e) { S.inv.error = e.message; }
+      S.inv.abriendo = false;
+      if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja();
+      break;
+    }
     case 'borrarChat': borrarConversacion(); pintar(); break;
     case 'nuevoChat':
       if (S.charlando) { tostada('Espera a que conteste o para la respuesta'); break; }
@@ -3430,6 +3552,7 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'apodoIn') { ev.preventDefault(); const b = $('[data-accion="apodoGuardar"]'); if (b) b.click(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.matches && ev.target.matches('input[data-cambia="apodo"]')) { ev.preventDefault(); ev.target.blur(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'invCod') { ev.preventDefault(); const b = $('[data-accion="canjearInv"]'); if (b) b.click(); }
 });
 // el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)
 document.addEventListener('input', (ev) => {
@@ -3775,6 +3898,7 @@ async function arrancar() {
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
   leerInvitacion();
+  leerCodigoEnlace();
   leerOrigen();
   // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
   mirarWebNueva();

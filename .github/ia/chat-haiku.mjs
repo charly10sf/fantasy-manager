@@ -39,12 +39,25 @@ for (const escena of ESCENAS) {
         if (gastado > TOPE) { out.push('\n(Tope de gasto: paro aquí.)\n'); break; }
         if (!caso.sigue) hist = [];
         const prep = await P.page.evaluate(prepararEnPagina, { q: caso.q, hist });
-        const armado = W.armarChat(prep.cuerpo);
+        const armado = W.armarChat(prep.cuerpo, { cacheLiga: process.env.CACHE_LIGA || 'siempre' });
         if (!armado) { out.push(`\n### ${caso.id}\n\n**MAL: el Worker no acepta el pedido.**\n`); continue; }
         const largo = armado.sistema.reduce((s, b) => s + b.text.length, 0) + armado.mensajes.reduce((s, m) => s + (typeof m.content === 'string' ? m.content.length : m.content.reduce((t, b) => t + (b.text || '').length, 0)), 0);
         if (SECO) {
-          filas.push({ escena, id: caso.id, largo, datos: prep.cuerpo.datos.length });
-          console.log(`${escena}/${caso.id}: ${largo} caracteres (datos ${prep.cuerpo.datos.length})`);
+          // (19 nov) lo que va en la caché: lo fijo y, si se repite igual que en la pregunta de antes de la conversación, lo de
+          // la liga (bloques con cache_control). «Facturado»: lo de la caché que se lee cuenta 0,1; lo que se escribe, 1,25
+          const conCache = armado.sistema.filter((b) => b.cache_control).map((b) => b.text);
+          const prev = filas.length && caso.sigue ? filas[filas.length - 1].cacheados : [];
+          let fact = 0, factAntes = 0;
+          for (const b of armado.sistema) {
+            const lee = b.cache_control && prev.includes(b.text), escribe = b.cache_control && !lee;
+            fact += b.text.length * (lee ? 0.1 : escribe ? 1.25 : 1);
+          }
+          // (antes: solo lo fijo en la caché; los datos, siempre enteros)
+          const fijoAntes = armado.sistema[0].text, prevFijo = filas.length && caso.sigue ? filas[filas.length - 1].fijo : '';
+          factAntes = fijoAntes.length * (prevFijo === fijoAntes ? 0.1 : 1.25) + prep.cuerpo.datos.length;
+          const resto = largo - armado.sistema.reduce((t, b) => t + b.text.length, 0);
+          filas.push({ escena, id: caso.id, largo, datos: prep.cuerpo.datos.length, cacheados: conCache, fijo: fijoAntes, fact: Math.round(fact + resto), factAntes: Math.round(factAntes + resto), sigue: !!caso.sigue });
+          console.log(`${escena}/${caso.id}: ${largo} caracteres (datos ${prep.cuerpo.datos.length}) · facturado ${Math.round(fact + resto)} (antes ${Math.round(factAntes + resto)})`);
           hist = [...hist, { r: 'yo', t: prep.pre, ts: Date.now() }, { r: 'ia', t: 'Vale.', ts: Date.now() }];
           continue;
         }
@@ -76,10 +89,14 @@ await cerrar();
 const media = (l) => (l.length ? Math.round(l.reduce((s, x) => s + x, 0) / l.length) : 0);
 if (SECO) {
   console.log(`Media: ${media(filas.map((x) => x.largo))} caracteres por pregunta (datos ${media(filas.map((x) => x.datos))})`);
+  const fa = filas.reduce((t, x) => t + x.fact, 0), fb = filas.reduce((t, x) => t + x.factAntes, 0), seguidas = filas.filter((x) => x.sigue);
+  console.log(`Facturado (caracteres, con la caché): ${fa} frente a ${fb} antes (${Math.round((1 - fa / fb) * 100)} % menos); en las preguntas que siguen una conversación: ${Math.round((1 - seguidas.reduce((t, x) => t + x.fact, 0) / Math.max(1, seguidas.reduce((t, x) => t + x.factAntes, 0))) * 100)} % menos (${seguidas.length} de ${filas.length})`);
   for (const e of ESCENAS) console.log(`  ${e}: ${media(filas.filter((x) => x.escena === e).map((x) => x.largo))}`);
   process.exit(0);
 }
 const con = (f) => filas.filter(f).length;
+const lee = filas.reduce((t, x) => t + ((x.cache && x.cache.lee) || 0), 0), escribe = filas.reduce((t, x) => t + ((x.cache && x.cache.escribe) || 0), 0), sinC = filas.reduce((t, x) => t + ((x.cache && x.cache.sin) || 0), 0);
+out.splice(1, 0, `\n**Caché (19 nov):** ${lee} tokens leídos de la caché, ${escribe} escritos y ${sinC} sin caché; ${filas.filter((x) => x.cache && x.cache.lee > 0).length} de ${filas.length} respuestas leyeron algo de ella.\n`);
 out.splice(1, 0, `\n**Resumen:** ${filas.length} respuestas; ${con((x) => x.inventadas.length)} con algo que no sale de los datos, ${con((x) => x.marcas.length)} con marcas; ${(gastado / 1e4).toFixed(2)} céntimos en total (${filas.length ? (gastado / filas.length / 1e4).toFixed(3) : 0} por respuesta); tiempo medio ${media(filas.map((x) => x.ms))} ms; ${media(filas.map((x) => x.entra || 0))} tokens de entrada de media; largo medio ${media(filas.map((x) => x.palabras))} palabras.\n`);
 writeFileSync(`${SALIDA}.md`, out.join('\n'));
 writeFileSync(`${SALIDA}.json`, JSON.stringify(filas, null, 1));

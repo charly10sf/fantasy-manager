@@ -91,7 +91,7 @@ export function avisosNuevos(antes, D, M) {
     out.push({ k: `lesion-venta:${x.pid}:${x.j.estado}`, titulo: `Pon a ${x.j.nombre} en el mercado`, texto: `Está ${por}: no te va a puntuar y puede bajar de valor.`, hash: 'equipo' });
   }
   if (M.ventanaEsp && Date.now() >= M.ventanaEsp.ponerVenta) {
-    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid))) {
+    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid) && !(M.aguantaReventa && M.aguantaReventa(y)))) {
       out.push({ k: `revender:${x.pid}:${M.proxima ? M.proxima.n : diaDe()}`, titulo: `Hoy toca poner a ${x.j.nombre} a la venta`, texto: `Lo compraste para revender a ${eur(x.rev.precio)} y vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}). Ponlo ya para que llegue la oferta antes de la jornada.`, hash: 'equipo' });
     }
   }

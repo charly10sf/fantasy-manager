@@ -128,7 +128,7 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
   }
   // lo comprado para revender: el día que toca ponerlo a la venta
   if (c.mercado && M.ventanaEsp && (M.paraRevender || []).length) {
-    const xs = M.paraRevender.filter((x) => !(M.enVenta && M.enVenta.has(x.pid)));
+    const xs = M.paraRevender.filter((x) => !(M.enVenta && M.enVenta.has(x.pid)) && !(M.aguantaReventa && M.aguantaReventa(x)));
     if (xs.length) add(`revender-${M.proxima ? M.proxima.n : ''}`, M.ventanaEsp.ponerVenta, `Hoy toca poner a la venta ${xs.map((x) => x.j.nombre).join(', ')}`,
       'Es lo que compraste para revender: ponlo ya para que llegue la oferta antes de la jornada.', 'equipo');
   }

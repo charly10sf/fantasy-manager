@@ -1,10 +1,15 @@
 /* Apodos de los rivales (0.8a, Carlos 17 nov): el nombre con el que llamas a cada rival en tu liga, para que la IA y la
-   voz lo reconozcan. Se guardan solo en este móvil, por liga y por id del equipo (no por nombre: si cambia el nombre de
-   su equipo, el apodo sigue valiendo). Se pueden poner varios separados por comas.
+   voz lo reconozcan. Se guardan por liga y por id del equipo (no por nombre: si cambia el nombre de su equipo, el apodo
+   sigue valiendo). Se pueden poner varios separados por comas.
+   (19 nov, Carlos: los puso en el móvil y en el PC no salían) Además de en el dispositivo, van con tu cuenta al servidor
+   (Worker, /apodos): al entrar en la liga se juntan los de aquí con los de allí, rival a rival, y gana el cambio más
+   reciente (K('apodos-t'): cuándo cambiaste cada uno aquí). Al poner uno se guarda aquí al momento y se sube después;
+   sin red, todo sigue igual que antes y se sube la próxima vez. Nadie más los ve.
    Y el reconocimiento aproximado de nombres (lo que escribe el dictado: «leao ere espabilado» por «Leao er Espabilao»):
    `aproximar` lo usa ia.js (seudonimos) para la pregunta y el historial del chat, nunca para los datos. */
 import { LS } from './util.js';
-import { K } from './datos.js';
+import { K, enDemo } from './datos.js';
+import { pedirWorker } from './soporte.js';
 
 const MAX = 4, LARGO = 60;
 
@@ -14,12 +19,73 @@ export const apodosLiga = () => { const a = LS.get(K('apodos'), null); return a 
 export const listaApodos = (s) => [...new Set(String(s || '').split(/[,;\n]/).map((x) => x.replace(/\s+/g, ' ').trim()).filter((x) => x.length >= 3 && x.length <= LARGO && /\p{L}/u.test(x)))].slice(0, MAX);
 /** los de un rival */
 export const apodosDe = (tid) => listaApodos(apodosLiga()[String(tid)]);
-/** guarda (o borra, si va vacío) el apodo de un rival. Devuelve lo que queda guardado */
+/** cuándo cambiaste aquí cada uno: { tid: t } */
+const tiempos = () => { const t = LS.get(K('apodos-t'), null); return t && typeof t === 'object' ? t : {}; };
+/** guarda (o borra, si va vacío) el apodo de un rival. Devuelve lo que queda guardado. Se sube a tu cuenta después */
 export function ponerApodo(tid, txt) {
   const a = { ...apodosLiga() }, l = listaApodos(txt);
+  const antes = a[String(tid)] || '';
   if (l.length) a[String(tid)] = l.join(', '); else delete a[String(tid)];
   LS.set(K('apodos'), a);
+  if ((a[String(tid)] || '') !== antes && !enDemo()) {
+    LS.set(K('apodos-t'), { ...tiempos(), [String(tid)]: Date.now() });
+    LS.set(K('apodos-pend'), true);
+    subirLuego();
+  }
   return l;
+}
+
+/* ---------- (19 nov) con tu cuenta, en todos tus dispositivos ---------- */
+let ligaA = '', relojA = null, enCurso = null;
+const subirLuego = () => { clearTimeout(relojA); relojA = setTimeout(() => { sincronizarApodos(ligaA, { ya: true }).catch(() => {}); }, 1500); };
+/** lo de aquí, como lo junta el servidor: { tid: { v, t } } (lo de antes de esto, sin hora, va como lo más viejo) */
+export function paraSubir() {
+  const a = apodosLiga(), t = tiempos(), out = {};
+  for (const tid of new Set([...Object.keys(a), ...Object.keys(t)])) out[tid] = { v: a[tid] || '', t: Number(t[tid]) || 1 };
+  return out;
+}
+/** pone aquí lo que devuelve el servidor, sin pisar lo que se haya cambiado aquí mientras tanto. Devuelve si ha cambiado algo */
+export function ponerJuntos(junto, enviado) {
+  const a = { ...apodosLiga() }, t = { ...tiempos() };
+  let cambia = false;
+  for (const [tid, x] of Object.entries(junto || {})) {
+    if (!x || typeof x !== 'object') continue;
+    // (cambiado aquí después de mandarlo: se queda lo de aquí y se sube en la siguiente)
+    if ((Number(t[tid]) || 0) > ((enviado && enviado[tid] && enviado[tid].t) || 0)) continue;
+    const v = listaApodos(x.v).join(', ');
+    if ((a[tid] || '') !== v) { cambia = true; if (v) a[tid] = v; else delete a[tid]; }
+    t[tid] = Number(x.t) || 1;
+  }
+  LS.set(K('apodos'), a);
+  LS.set(K('apodos-t'), t);
+  return cambia;
+}
+/**
+ * Junta los de aquí con los de tu cuenta (al entrar en la liga y tras poner uno). Como mucho cada 10 min salvo `ya` o que
+ * haya algo sin subir. Sin red o sin servidor, no pasa nada: se queda lo de aquí. Devuelve si ha cambiado algo de aquí.
+ */
+export async function sincronizarApodos(liga, { ya = false } = {}) {
+  if (!liga || enDemo()) return false;
+  ligaA = String(liga);
+  const pend = !!LS.get(K('apodos-pend'), false), ult = Number(LS.get(K('apodos-sinc'), 0)) || 0;
+  if (!ya && !pend && Date.now() - ult < 10 * 60e3) return false;
+  if (enCurso) return enCurso;
+  enCurso = (async () => {
+    const enviado = paraSubir();
+    try {
+      // (sin nada aquí, solo se baja: no hace falta escribir en el servidor)
+      const r = Object.keys(enviado).length ? await pedirWorker('POST', '/apodos', { liga: ligaA, a: enviado }, { tiempo: 15000 }) : await pedirWorker('GET', `/apodos?liga=${encodeURIComponent(ligaA)}`, null, { tiempo: 15000 });
+      const cambia = ponerJuntos(r && r.a, enviado);
+      // (lo cambiado mientras iba, se sube en la siguiente)
+      const junto = (r && r.a) || {};
+      const otra = Object.entries(tiempos()).some(([tid, t]) => t > Math.max((enviado[tid] && enviado[tid].t) || 0, (junto[tid] && Number(junto[tid].t)) || 0));
+      LS.set(K('apodos-pend'), otra);
+      LS.set(K('apodos-sinc'), Date.now());
+      if (otra) subirLuego();
+      return cambia;
+    } catch (e) { return false; } finally { enCurso = null; }
+  })();
+  return enCurso;
 }
 
 /* ---------- nombres aproximados ---------- */

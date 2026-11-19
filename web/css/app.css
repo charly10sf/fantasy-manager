@@ -3391,3 +3391,18 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .cambio-once .co-hueco { font-size: var(--t-mini); color: var(--texto-3); }
 .co-ok { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; }
 .co-ok .ic { width: 14px; height: 14px; }
+
+/* (19 nov) invita a un amigo */
+.inv p{margin:8px 0}
+.inv-premios{margin:6px 0 10px;padding-left:18px}
+.inv-premios li{margin:4px 0}
+.inv-cod{display:flex;align-items:center;gap:8px;justify-content:center;font-size:15px}
+.inv-cod b{letter-spacing:2px;font-size:18px}
+.inv-cuenta{display:flex;flex-direction:column;gap:2px;margin:12px 0;padding:10px 12px;border-radius:12px;background:var(--e2)}
+.inv-cuenta span{color:var(--texto-2);font-size:13px}
+.inv-canjear,.inv-elegir{display:flex;flex-direction:column;gap:6px;margin:10px 0 14px;padding:12px;border-radius:12px;border:1px solid var(--linea)}
+.inv-canjear span,.inv-elegir>span{color:var(--texto-2);font-size:13px}
+.inv-rivales{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
+.inv-rivales .pill.on{background:var(--rojo);color:#fff;border-color:transparent}
+.inv-top{margin-top:12px;text-align:left}
+.inv-top span{display:block;color:var(--texto-2);font-size:13px}

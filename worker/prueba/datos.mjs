@@ -789,3 +789,175 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(est.filter((s) => s === 429).length === 5, `/embudo, 25 seguidas desde una IP: ${est.filter((s) => s === 429).length} con 429`);
   globalThis.fetch = fAntes;
 }
+
+// ---------- (19 nov) invita a un amigo: todo en el Durable Object «inv|todos» ----------
+{
+  const objs = new Map();
+  const almacen = () => {
+    const m = new Map();
+    return {
+      m,
+      get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, v); },
+      delete: async (k) => { if (Array.isArray(k)) k.forEach((x) => m.delete(x)); else m.delete(k); }, deleteAll: async () => m.clear(), setAlarm: async () => {}, getAlarm: async () => null,
+      list: async ({ prefix = '' } = {}) => new Map([...m.entries()].filter(([k]) => k.startsWith(prefix)).sort(([a], [b]) => (a < b ? -1 : 1))),
+    };
+  };
+  const QRi = { idFromName: (n) => n, get: (id) => { if (!objs.has(id)) objs.set(id, new W2.Emparejar({ storage: almacen() })); const o = objs.get(id); return { fetch: (u, op) => o.fetch(new Request(u, op)) }; } };
+  const eI = { VINCULOS: KV, ADMINS: '667015', QR: QRi };
+  // cuentas: el token «u<uid>…» es la cuenta uid; la liga 55 tiene a 501-520; la 66, a 600
+  const fAntes = globalThis.fetch;
+  let limI = {};
+  globalThis.fetch = async (u, o) => {
+    const s = String(u);
+    if (s.includes('limites.json')) return new Response(JSON.stringify(limI), { status: 200 });
+    if (s.includes('/user/me')) { const m = /Bearer u(\d+)/.exec(cabDe(o, 'authorization')); return new Response(JSON.stringify({ id: m ? Number(m[1]) : 4242, managerName: 'X' }), { status: 200 }); }
+    if (s.includes('/leagues/55/standing')) return new Response(JSON.stringify(Array.from({ length: 20 }, (_, i) => ({ team: { manager: { id: 501 + i } } }))), { status: 200 });
+    if (s.includes('/leagues/66/standing')) return new Response(JSON.stringify([{ team: { manager: { id: 600 } } }]), { status: 200 });
+    return fAntes(u, o);
+  };
+  const tk = (uid) => `u${uid}`.padEnd(40, 'z');
+  const inv = (uid, ruta, cuerpo, m = 'POST') => { minuto(); return pide({ m, ruta, cuerpo, tk: tk(uid), e: eI, ip: `7.7.${uid % 250}.1` }); };
+  let r = await inv(501, '/invitar', null, 'GET');
+  ok(r.s === 200 && r.j.ok && !r.j.cod && r.j.entran === 0, `/invitar sin código todavía: ${r.t}`);
+  ok(r.j.puedeCanjear === true, 'cuenta nueva: le sale «¿Te ha invitado alguien?»');
+  await KV.put('r:520', '1', { metadata: { uid: '520', primera: Date.now() - 9 * 864e5 } });
+  r = await inv(520, '/invitar', null, 'GET');
+  ok(r.j.puedeCanjear === false, 'a los 9 días ya no');
+  r = await inv(501, '/invitar/codigo', {});
+  const cod = r.j && r.j.cod;
+  ok(r.s === 200 && /^[A-HJ-NP-Z2-9]{6}$/.test(cod || ''), `código de la 501: ${cod}`);
+  r = await inv(501, '/invitar/codigo', {});
+  ok(r.j.cod === cod, 'pedirlo otra vez da el mismo');
+  // entra un amigo nuevo (nunca visto) en su liga
+  r = await inv(502, '/invitar/canjear', { cod: cod.toLowerCase(), liga: '55' });
+  ok(r.s === 200 && r.j.ok, `amigo nuevo canjea (en minúsculas): ${r.t}`);
+  r = await inv(502, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 200 && r.j.ya, 'el mismo otra vez: ya contado, no suma');
+  r = await inv(501, '/invitar', null, 'GET');
+  ok(r.j.entran === 1 && r.j.cuentan === 0 && r.j.amigos[0].hasta - r.j.amigos[0].t === 24 * 3600e3, `la 501 ve 1 amigo, 0 que cuentan, 24 h: ${JSON.stringify(r.j.amigos)}`);
+  ok(!JSON.stringify(r.j).includes('502'), 'sin el id del amigo');
+  // la misma, una cuenta vieja, una que ya invitó otro, una fuera de la liga, un código que no existe
+  r = await inv(501, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'misma', `la misma cuenta: ${r.j.motivo}`);
+  await KV.put('r:503', '1', { metadata: { uid: '503', primera: Date.now() - 30 * 864e5 } });
+  r = await inv(503, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'vieja', `cuenta de hace 30 días: ${r.j.motivo}`);
+  await KV.put('p:504', '1', { metadata: { uid: '504', primera: Date.now() - 3 * 864e5 } });
+  r = await inv(504, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 200 && r.j.ok, 'cuenta de hace 3 días (dentro de los 7 para meter el código): vale');
+  r = await inv(600, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'liga', `no está en esa liga: ${r.j.motivo}`);
+  r = await inv(505, '/invitar/canjear', { cod: 'ZZZZZZ', liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'codigo', `código que no existe: ${r.j.motivo}`);
+  r = await inv(506, '/invitar/codigo', {});
+  const cod2 = r.j.cod;
+  r = await inv(502, '/invitar/canjear', { cod: cod2, liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'ya', 'a la 502 ya la invitó otro');
+  // la que borró sus datos no vale como nueva
+  r = await inv(507, '/borrar', {});
+  r = await inv(507, '/invitar/canjear', { cod, liga: '55' });
+  ok(r.s === 400 && r.j.motivo === 'vieja', `la que borró sus datos: ${r.j.motivo}`);
+  // elegir rivales: 2 como mucho, sin cambiar los ya elegidos
+  r = await inv(501, '/invitar/rivales', { i: 0, liga: '55', tids: ['9001'] });
+  ok(r.s === 200 && r.j.amigos[0].r.join() === '9001', 'elige un rival');
+  r = await inv(501, '/invitar/rivales', { i: 0, liga: '55', tids: ['9002', '9003'] });
+  ok(r.s === 200 && r.j.amigos[0].r.join() === '9001,9002', `y otro (el tercero no cabe): ${r.j.amigos[0].r}`);
+  r = await inv(501, '/invitar/rivales', { i: 0, liga: '55', tids: ['9004'] });
+  ok(r.s === 400, 'ya tiene sus 2');
+  r = await inv(501, '/invitar/rivales', { i: 5, liga: '55', tids: ['9004'] });
+  ok(r.s === 400, 'una invitación que no tiene');
+  // tres amigos más, que vuelven otro día: los escalones
+  for (const u of [508, 509, 510]) await inv(u, '/invitar/canjear', { cod, liga: '55' });
+  r = await inv(501, '/invitar', null, 'GET');
+  ok(r.j.entran === 5 && r.j.cuentan === 0 && !Object.keys(r.j.premios).length, `5 entran, ninguno ha vuelto: sin premios (${r.j.entran}/${r.j.cuentan})`);
+  // el mismo día no cuenta como volver
+  r = await inv(502, '/invitar', null, 'GET');
+  ok(r.j.invitado && r.j.invitado.v === 0 && r.j.puedeCanjear === false, 'el invitado el mismo día: aún no ha vuelto (y ya no le sale meter código)');
+  desfase += 864e5 + 3600e3;
+  for (const u of [502, 504]) await inv(u, '/invitar', null, 'GET');
+  r = await inv(501, '/invitar', null, 'GET');
+  ok(r.j.cuentan === 2 && !r.j.premios.doble && r.j.sig.n === 3, `2 vuelven: aún sin la semana doble (${r.j.cuentan})`);
+  ok(r.j.amigos.every((a) => Date.now() >= a.hasta) , 'los plazos de 24 h ya se han acabado');
+  r = await inv(501, '/invitar/rivales', { i: 1, liga: '55', tids: ['9005'] });
+  ok(r.s === 400, 'fuera de plazo ya no se eligen');
+  await inv(508, '/invitar', null, 'GET');
+  r = await inv(501, '/invitar', null, 'GET');
+  const doble = r.j.premios.doble;
+  ok(r.j.cuentan === 3 && doble && Math.round((doble.hasta - doble.desde) / 864e5) === 7 && !r.j.premios.sinIntersticiales && r.j.sig.n === 5, `3 vuelven: semana doble (${JSON.stringify(r.j.premios)})`);
+  // la semana doble en /plan: 4 gratis en vez de 2 (sin Origin: la app)
+  const premios = await W2.premiosDe(eI, '501');
+  const Pd = await W2.cupoConPremio(eI, '501', { gratis: 2, max: 5 });
+  ok(premios.doble && Pd.gratis === 4 && Pd.max === 10, `cupo con la semana doble: ${Pd.gratis}/${Pd.max}`);
+  const Pn = await W2.cupoConPremio(eI, '506', { gratis: 2, max: 5 });
+  ok(Pn.gratis === 2 && Pn.max === 5, 'sin premio, el de siempre');
+  await inv(509, '/invitar', null, 'GET'); await inv(510, '/invitar', null, 'GET');
+  r = await inv(501, '/invitar', null, 'GET');
+  const sin = r.j.premios.sinIntersticiales;
+  ok(r.j.cuentan === 5 && sin && Math.round((sin.hasta - sin.desde) / 864e5) === 30 && r.j.sig === null && r.j.premios.doble.desde === doble.desde, `5 vuelven: 30 días sin intersticiales y la doble no se repite (${JSON.stringify(r.j.premios)})`);
+  // un amigo más da sus 2 rivales, pero ningún escalón nuevo
+  r = await inv(511, '/invitar/canjear', { cod, liga: '55' });
+  r = await inv(501, '/invitar/rivales', { i: 5, liga: '55', tids: ['9010', '9011'] });
+  ok(r.s === 200 && r.j.amigos[5].r.length === 2, 'el sexto amigo: sus 2 rivales');
+  // y todo caduca
+  desfase += 31 * 864e5;
+  {
+    const P2 = await W2.cupoConPremio(eI, '501', { gratis: 2, max: 5 });
+    r = await inv(501, '/invitar', null, 'GET');
+    ok(r.j.premios.doble.hasta < Date.now() && r.j.premios.sinIntersticiales.hasta < Date.now() && P2.gratis === 2, 'a los 31 días, los premios caducados y el cupo de siempre');
+  }
+  // los números de limites.json, con sus topes
+  const { cfgInvitar } = await import('../src/invitar.js');
+  const cI = cfgInvitar({ invitar: { on: false, rivales: 3, horas: 'x', escalones: [{ n: 9, premio: 'sinIntersticiales', dias: 10 }, { n: 2, premio: 'doble', dias: 3 }, { n: 4, premio: 'otro' }] } });
+  ok(!cI.on && cI.rivales === 3 && cI.horas === 24 && cI.escalones.map((e) => `${e.n}${e.premio}`).join() === '2doble,9sinIntersticiales', `invitar de limites.json: ${JSON.stringify(cI)}`);
+  // «Quién usa la app»: lo del dueño
+  r = await pide({ m: 'GET', ruta: '/hola/todos', tk: tk(667015), e: eI });
+  const li = r.j && r.j.invitar;
+  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 6 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  // sin el objeto, 503 y no rompe
+  r = await pide({ m: 'GET', ruta: '/invitar', tk: tk(512), e: env });
+  ok(r.s === 503, `sin Durable Object: ${r.s}`);
+
+  // ---------- (19 nov) los apodos en todos los dispositivos ----------
+  const t0 = Date.now();
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(r.s === 200 && r.j.ok && !Object.keys(r.j.a).length, 'apodos: nada guardado todavía');
+  // el móvil sube los suyos
+  r = await inv(530, '/apodos', { liga: '55', a: { 9001: { v: 'el Tito, Titón', t: t0 - 5000 }, 9002: { v: 'Maki', t: t0 - 5000 }, x: { v: 'raro', t: 1 } } });
+  ok(r.s === 200 && r.j.a['9001'].v === 'el Tito, Titón' && r.j.a['9002'].v === 'Maki' && !r.j.a.x, `subir: ${JSON.stringify(r.j.a)}`);
+  // el PC (la misma cuenta) baja y junta: un rival suyo más nuevo, uno más viejo y uno que no había
+  r = await inv(530, '/apodos', { liga: '55', a: { 9001: { v: 'Titi', t: t0 - 9000 }, 9002: { v: 'el Maki', t: t0 - 1000 }, 9003: { v: 'Pepón', t: t0 - 2000 } } });
+  ok(r.j.a['9001'].v === 'el Tito, Titón' && r.j.a['9002'].v === 'el Maki' && r.j.a['9003'].v === 'Pepón', `juntar: gana lo más reciente rival a rival (${JSON.stringify(r.j.a)})`);
+  // borrar en un dispositivo llega a los demás
+  r = await inv(530, '/apodos', { liga: '55', a: { 9003: { v: '', t: t0 } } });
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(r.j.a['9003'] && r.j.a['9003'].v === '' && r.j.a['9001'].v, 'borrar: queda como borrado para los demás');
+  // limpio y con topes: más de 4 apodos, largos, del futuro
+  r = await inv(530, '/apodos', { liga: '55', a: { 9004: { v: 'uno, dos, tres, cuatro, cinco, ' + 'x'.repeat(80), t: t0 + 864e5 } } });
+  ok(r.j.a['9004'].v === 'uno, dos, tres, cuatro' && r.j.a['9004'].t <= Date.now(), `limpio: ${r.j.a['9004'].v}`);
+  // otra cuenta no ve los de esta, y otra liga va aparte
+  r = await inv(531, '/apodos?liga=55', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'otra cuenta no los ve');
+  r = await inv(530, '/apodos?liga=66', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'otra liga, aparte');
+  r = await inv(530, '/apodos', { liga: 'abc', a: {} });
+  ok(r.s === 400, 'liga rara: 400');
+  r = await pide({ m: 'POST', ruta: '/apodos', cuerpo: { liga: '55', a: {} }, tk: 'corto', e: eI });
+  ok(r.s === 401, 'sin sesión: 401');
+  r = await pide({ m: 'GET', ruta: '/apodos?liga=55', tk: tk(530), e: env });
+  ok(r.s === 503, 'sin Durable Object: 503 (la app sigue con los suyos)');
+  // borrar mis datos los quita
+  await inv(530, '/borrar', {});
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'Borrar mis datos del servidor también borra los apodos');
+
+  // ---------- (19 nov) el chat: los datos de la liga, en la caché ----------
+  const CS = await import('../../web/js/chat-sistema.js');
+  const dLiga = `${CS.CABECERA_DATOS}\nMIS JUGADORES: …`, dPreg = 'JUGADORES QUE NOMBRA: …';
+  const ch = W2.armarChat({ datos: `${dLiga}${CS.MARCA_PREGUNTA}${dPreg}`, pregunta: '¿Vendo?', hist: [] });
+  ok(ch && ch.sistema.length === 3 && ch.sistema[1].text === dLiga && ch.sistema[1].cache_control && ch.sistema[2].text === dPreg && !ch.sistema[2].cache_control, 'chat: lo de la liga en la caché y lo de la pregunta detrás, sin ella');
+  const ch2 = W2.armarChat({ datos: `${dLiga}${CS.MARCA_PREGUNTA}${dPreg}`, pregunta: '¿Vendo?', hist: [] }, { cacheLiga: 'segunda' });
+  ok(ch2 && !ch2.sistema[1].cache_control, 'con cacheLiga «segunda», la primera pregunta no escribe en la caché');
+  const ch3 = W2.armarChat({ datos: dLiga, pregunta: '¿Vendo?', hist: [] });
+  ok(ch3 && ch3.sistema.length === 2 && ch3.sistema[1].text === dLiga, 'los datos de una versión de antes (sin la marca) van como antes');
+  globalThis.fetch = fAntes;
+}

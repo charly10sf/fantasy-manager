@@ -95,6 +95,14 @@ export const ESCENAS = {
   'm-reventa-aguanta': { hora: '2026-11-05T12:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
     const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 12 * 864e5;`,
     extra: `${SERIE} serie('Jon Martin', 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
+  // (19 nov, Mario Soriano) comprado para revender a un 11,5 % más de lo que vale (pierde), con la cláusula cerrada 12 días y
+  // subiendo cada vez menos (se frena, pero aún sube) y 58,10 M de saldo: no se vende
+  'm-reventa-perdiendo': { hora: '2026-11-06T09:00:00+01:00', prep: `S.D.dinero = 58100000; for (const m of S.D.mercado) m.miPuja = null;
+    const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 12 * 864e5 + 7 * 3600e3;`,
+    extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); const s = []; let v = j.valor;
+      for (let k = 1; k <= 30; k++) { v = v / (1 + (k <= 7 ? 0.009 + 0.003 * (k - 1) : 0.03)); s.unshift([new Date(Date.now() - k * 864e5 + 3600e3).toISOString().slice(0, 10), Math.round(v)]); }
+      S.H.v = S.H.v || {}; S.H.v[j.id] = s; if (S.det && S.det[j.id]) delete S.det[j.id].valores;
+      return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 1.115) } } };` },
   // lo mismo, pero se le acaba la protección mañana: toca venderlo
   'm-reventa-protege': { hora: '2026-11-05T12:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
     const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 20 * 3600e3;`,

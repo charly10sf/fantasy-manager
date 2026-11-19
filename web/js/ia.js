@@ -6,20 +6,20 @@
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
 import { token } from './auth.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
 import { K } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
-import { bloqueada, topConAnuncio, planesCfg, preguntasCfg } from './limite.js';
+import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo, ofertaDueno } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
-import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
+import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -1106,7 +1106,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const v = M.ventanaEsp;
     if (v.ciclos < 1) L.push(`\nNO ESPECULES AHORA: ${M.enJuego ? `la jornada ${M.enJuego.n} está en juego y antes de la siguiente no da tiempo` : 'antes de la jornada no queda ningún cambio de mercado que cuente para revender (el del mismo día en que empieza la jornada no da tiempo a vender)'}. Lo que compre ahora no lo puede vender a tiempo: nada de comprar «para revender». Esto es solo para revender: para FICHAR y alinear, lo que se gane en la subasta sí llega (mira EL MERCADO CAMBIA).`);
     else L.push(`\nESPECULAR: hasta la jornada quedan ${v.ciclos} cambio${v.ciclos === 1 ? '' : 's'} de mercado que cuentan (${v.cambios.map((t) => cuando(t)).join(', ')}); ${v.justo ? `el del mismo día que empieza la jornada (${cuando(v.justo)}) solo vale para vender lo que YA tienes para revender si estás en positivo: nunca para salir del negativo ni para lo que compres hoy` : 'el del mismo día que empieza la jornada NO cuenta'}. Lo que compres hoy para revender se pone a la venta ${cuando(v.ponerVentaSeguro)} para aceptar la oferta del cambio de ${cuando(v.limite)}.${v.apura ? ` Lo que ya tienes para revender puede esperar al de ${cuando(v.justo)} (${v.avisoJusto})` : ''} Una compra en el mercado llega en el siguiente cambio y luego hay que ponerla a la venta: necesita 2 cambios; una cláusula, 1. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.${M.enJuego ? ` La jornada ${M.enJuego.n} está en juego, pero se puede comprar YA para revender antes de la ${M.proxima ? M.proxima.n : 'siguiente'}: el valor sigue cambiando cada día (y con lo que haga en su partido si aún juega esta jornada); lo que no vale es vender en los cambios de mientras se juega.` : ''}`);
-    if (M.paraRevender && M.paraRevender.length) L.push(`COMPRADOS PARA REVENDER: ${M.paraRevender.map((x) => `${x.j.nombre} (comprado a ${eur(x.rev.precio)}, vale ${eur(x.j.valor)}, ${eur(x.beneficioYa, { signo: true })})`).join('; ')}.`);
+    if (M.paraRevender && M.paraRevender.length) L.push(`COMPRADOS PARA REVENDER: ${M.paraRevender.map((x) => `${x.j.nombre} (comprado a ${eur(x.rev.precio)}, vale ${eur(x.j.valor)}, ${eur(x.beneficioYa, { signo: true })}${M.aguantaReventa && M.aguantaReventa(x) ? `; LA APP LO AGUANTA: cláusula cerrada hasta ${cuandoF(x.protegidoHasta)}, no está bajando${x.beneficioYa < 0 ? ' y venderlo hoy es perder dinero' : ''}; solo se vende si hace falta para empezar la jornada en positivo` : ''})`).join('; ')}.`);
     if (M.especular && M.especular.length) {
       L.push('CANDIDATOS PARA REVENDER SEGÚN LA TENDENCIA (precio de compra | subida diaria | valor esperado el día de vender | beneficio):');
       for (const e of M.especular.slice(0, 10)) L.push(`- ${e.j.nombre} (${POS[e.j.pos]}, ${e.j.equipo}) | ${e.origen === 'mercado' ? `mercado, pujar ${eur(e.puja)}` : `cláusula ${eur(e.precio)} a ${e.rival.manager || e.rival.nombre}`} | ${pct(e.r * 100)}/día | ${eur(e.valorFuturo)} | ${eur(e.beneficio, { signo: true })}${e.vuelve ? ` | VUELVE: llegó a valer ${eur(e.vuelve.max)} esta temporada, juega otra vez y lleva ${e.vuelve.racha} días subiendo` : ''}`);
@@ -1430,6 +1430,9 @@ export function aplicarCorto(json, R, D, M, c) {
     if (refJ < 0) { try { const H = planDeHoy(D, M, c); if (H && H.motor && H.cuentas) refJ = Math.max(refJ, H.cuentas.jornada); } catch (e) { /* el de antes */ } }
     return refJ;
   };
+  // (19 nov, azar-plan martes/negativo) y si ni el del motor llega en positivo («sin salida»), lo que meta la IA no puede
+  // dejarlo más en negativo todavía: antes con la referencia en negativo valía todo, y la IA metía compras encima
+  const peorJornada = (P) => P.cuentas.jornada < 0 && (refJornada() >= 0 || P.cuentas.jornada < refJornada() - 1e4);
   let pasosBase = base;
   let porque = '';
   const intento = (q, m) => {
@@ -1438,7 +1441,7 @@ export function aplicarCorto(json, R, D, M, c) {
     try { P = planMotor(D, M, c, { fijar: new Set([...pasosBase.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set([...vet0, ...q.filter(esPost)]), prefer: orden }); } catch (e) { porque = `el motor falla: ${String((e && e.message) || e).slice(0, 110)}`; return null; }
     if (!P) { porque = 'las cuentas no salen'; return null; }
     // nunca peor para la jornada (si el del motor llegaba en positivo, este también) ni con algo que la app tacharía
-    if (P.cuentas.jornada < 0 && refJornada() >= 0) { porque = 'la jornada empezaría en negativo'; return null; }
+    if (peorJornada(P)) { porque = 'la jornada empezaría en negativo'; return null; }
     const t = tachado(P);
     if (t) { porque = `la app tacha ${t}`; return null; }
     return { P, quita: q, mete: m };
@@ -1485,7 +1488,7 @@ export function aplicarCorto(json, R, D, M, c) {
         let X = null;
         try { X = planMotor(D, M, c, { incluir: new Set(inc), vetados: vet, prefer: orden }); } catch (e) { break; }
         if (!X) break;
-        if (X.cuentas.jornada < 0 && refJornada() >= 0) break;
+        if (peorJornada(X)) break;
         if (!tachado(X)) { r = { P: X, quita: [], mete: [] }; break; }
         if (inc.includes(malo.k)) { inc = inc.filter((k) => k !== malo.k); fuera.push({ k: malo.k, motivo: motivoTxt('', malo) }); } else vet.add(malo.k);
       }
@@ -2898,7 +2901,7 @@ export function tratoTxt(D, M, T) {
   const riv = nombreTid(M, T.tid);
   const sobre = (x) => { const d = x.precio / x.valor - 1; return Math.abs(d) < 0.005 ? 'su valor' : `${d > 0 ? '+' : '−'}${pct(Math.abs(d) * 100, 1).replace(/^[+-]/, '')} sobre su valor, ${eur(x.valor)}`; };
   const lista = (l) => l.map((x) => `${x.j.nombre} por ${eur(x.precio)} (${sobre(x)})`).join(' y ');
-  const L = ['\nLA APP, EL TRATO (cuentas hechas por la app con el dinero de los dos; su veredicto es tu respuesta: empieza por él y explícalo con estas cifras):'];
+  const L = ['\nLA APP, EL TRATO (cuentas hechas por la app con el dinero de los dos, cada uno solo con su saldo: entre managers no se puede tirar de deuda, eso solo vale para pujar en el mercado; su veredicto es tu respuesta: empieza por él y explícalo con estas cifras):'];
   L.push(`- Lo que hablan: ${riv} me compra ${lista(T.mios)} y yo le compro ${lista(T.suyos)}.${T.igual ? ' Es uno por otro: los dos al mismo precio, así mi saldo no se mueve.' : T.supuesto ? ' (El que va sin precio, contado a su valor.)' : ''}`);
   const din = (imp) => { const s = !T.cap ? 'nose' : T.cap.seguro >= imp ? 'si' : T.cap.alto >= imp ? 'quiza' : 'no';
     if (s === 'nose') return 'no sé si le llega';
@@ -3293,7 +3296,21 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
   // (lo de lo que queda para pujar ya sale bien dicho de contexto, para el plan y el chat: 17 nov)
   const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta');
-  return `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
+  // (19 nov) lo de la liga primero y lo de esta pregunta detrás de MARCA_PREGUNTA: lo de la liga va en la caché de la IA entre
+  // una pregunta y la siguiente de la misma conversación (en el Worker, cuesta una décima parte). Para que la caché valga, en
+  // la misma conversación se repite tal cual (fotoChat) mientras no cambien la liga ni lo que tienes abierto, hasta 10 min;
+  // la hora de verdad va abajo
+  const liga = fotoChat(D, `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}`, hist);
+  const ahoraTxt = liga.t ? `AHORA: ${fechaLarga(Date.now())}, ${horaDe(Date.now())} (hora de España). Los datos de arriba son de las ${horaDe(liga.t)}: lo que pone «en N h» o «hace N min» cuenta desde esa hora.\n` : '';
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${rivales ? `${rivales}\n` : ''}${extra}${plan}`.replace(/\n+$/, '');
+}
+/** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
+let FOTO = null;
+export function fotoChat(D, texto, hist = [], ahora = Date.now()) {
+  const clave = `${D && D.t}|${D && D.liga && D.liga.id}|${Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)).join()}|${rivalesAbiertos().join()}`;
+  if (FOTO && (hist || []).length && FOTO.clave === clave && ahora - FOTO.t < 10 * 60e3 && diaDe(FOTO.t) === diaDe(ahora)) return { texto: FOTO.texto, t: FOTO.t };
+  FOTO = { clave, texto, t: ahora };
+  return { texto, t: 0 };
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
 export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });
