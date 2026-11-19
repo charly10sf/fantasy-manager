@@ -2411,7 +2411,8 @@
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
    "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
-   "AS|https://as.com/futbol/kounde-ya-esta-aqui-f202611-n/": 1795085771000
+   "AS|https://as.com/futbol/kounde-ya-esta-aqui-f202611-n/": 1795085771000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000
   },
   "hechos": [
    {
@@ -3356,7 +3357,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4259,17 +4260,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 432931,
-  "salida": 17562,
+  "entrada": 434854,
+  "salida": 18071,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.908222,
+  "dolares": 0.908669,
   "reservado": 0
  },
  "recientes": {
@@ -8598,13 +8599,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4072,
+   "ok": 4073,
    "fallos": 0,
-   "ejecuciones": 3355,
+   "ejecuciones": 3356,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:26:22.177Z"
+   "ultima": "2026-11-19T11:31:12.448Z"
   }
  },
  "ptsDirecto": {},
@@ -8621,15 +8622,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:26:39.131Z"
+   "ultimaBien": "2026-11-19T11:31:24.769Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:26:39.131Z"
+   "ultimaBien": "2026-11-19T11:31:24.769Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:26:39.131Z"
+   "ultimaBien": "2026-11-19T11:31:24.769Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8637,11 +8638,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:26:39.131Z"
+   "ultimaBien": "2026-11-19T11:31:24.769Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:26:39.131Z"
+   "ultimaBien": "2026-11-19T11:31:24.769Z"
   }
  },
  "avisos": [
