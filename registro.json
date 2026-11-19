@@ -2194,7 +2194,6 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
-   "SPORT|136505787": 1794839189000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/16/cubarsi-algodones-partido-villarreal-136507663.html": 1794847474000,
    "AS|https://as.com/futbol/mikel-rodriguez-y-facundo-garces-van-recuperandose-de-sus-lesiones-f202611-n/": 1794848112000,
@@ -8565,13 +8564,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4109,
+   "ok": 4110,
    "fallos": 0,
-   "ejecuciones": 3392,
+   "ejecuciones": 3393,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:26:17.529Z"
+   "ultima": "2026-11-19T14:31:11.032Z"
   }
  },
  "ptsDirecto": {},
@@ -8588,15 +8587,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:26:34.824Z"
+   "ultimaBien": "2026-11-19T14:31:17.392Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:26:34.824Z"
+   "ultimaBien": "2026-11-19T14:31:17.392Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:26:34.824Z"
+   "ultimaBien": "2026-11-19T14:31:17.392Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8604,11 +8603,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:26:34.824Z"
+   "ultimaBien": "2026-11-19T14:31:17.392Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:26:34.824Z"
+   "ultimaBien": "2026-11-19T14:31:17.392Z"
   }
  },
  "avisos": [
