@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8b';
+export const VERSION = '0.8c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,18 @@ export const VERSION = '0.8b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19 nov, tercera parte de la revisión de la IA: claude/revision-ia.md). La hora, al publicar
+    v: '0.8c', f: '2026-11-19', t: 'Una IA que acierta más con tu liga',
+    cosas: [
+      { tipo: 'mejora', d: 'chat', t: 'El chat sabe el plan que tienes delante', x: 'Si preguntas qué hacer hoy o por qué el plan te dice que vendas a alguien, la IA contesta con el plan que ves en Hoy y con su porqué, también cuando lo ha hecho la app. Y si el plan aguanta a un jugador que baja, ya no te dice que lo vendas.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'voz', t: 'Entiende mejor a quién te refieres', x: 'Si nombras a un rival por su apodo o el dictado escribe mal su nombre, la IA mira su plantilla entera, con quién es titular y su próximo partido. Y si le preguntas por un equipo o un jugador que no está en tu liga, te lo dice en una frase.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'dinero', t: 'Cifras y reglas de tu liga, sin inventar', x: 'Sabe lo que paga LaLiga por cada punto y la recompensa diaria, distingue la puja que ya tienes puesta de las que podrías hacer y no confunde a uno protegido con uno blindado. Lo que no sabe, lo dice.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Con las ofertas, lo mismo que la app', x: 'Si la app te aconseja esperar con una oferta, la IA ya no te dice que la aceptes sin un motivo nuevo.' },
+      { tipo: 'arreglo', d: 'chat', t: 'Respuestas más cortas y limpias', x: 'Más cortas, sin ofrecerte más ayuda al final y sin restos de notas ni códigos. Si le preguntas algo que no es de fantasy, te lo dice en una línea.' },
+      { tipo: 'arreglo', d: 'plan', t: 'El plan que se pidió antes del cierre', x: 'Si pides un plan a la IA, sales de la app y lo recoges cuando ya se han cerrado las cláusulas, ya no se aplica un plan que no vale: te quedas con el de la app, que cuenta con el cierre, y puedes pedir otro.' },
+    ],
+  },
   {
     // (17 nov, Carlos: Fornals subiendo 1,1 M al día y titular, con 16 M en positivo, y el plan mandaba aceptar un 6 %
     // «para la liquidez»; y el buscador del Mercado sin caras). La hora, al publicar

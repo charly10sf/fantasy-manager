@@ -301,7 +301,9 @@ function candidatos(X, vetados) {
     if (!ver || !ver.ok || !/^el once/.test(ver.para || '')) continue;
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
-    nuevo({ k: `P-${m.pid}`, clase: 'pujar', objetivo: 'titular', pid: m.pid, j: m.j, importe: m.puja, puja: m.puja, entra: m.j, incierta: true, euros: -(m.puja - m.j.valor), ref: `P-${m.pid}`, interes: m.interes,
+    // (19 nov) el bueno a su valor del parón va solo si se paga con el saldo: con el resto del plan, sin quedarse en negativo
+    const conSaldo = paron && !cholloParon(M, m.j, pujaReal(m)) && !subeHastaVuelta(M, m.j, pujaReal(m));
+    nuevo({ k: `P-${m.pid}`, clase: 'pujar', objetivo: 'titular', pid: m.pid, j: m.j, importe: m.puja, puja: m.puja, entra: m.j, incierta: true, euros: -(m.puja - m.j.valor), ref: `P-${m.pid}`, interes: m.interes, conSaldo,
       op: (cu) => ({ accion: 'pujar', ref: `P-${m.pid}`, objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
         motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. ${cu.gana >= 0.3 ? `Mejora tu once unos ${d1(cu.gana)} pts por jornada` : 'Refuerza tu plantilla'}${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}${pujaOnceTxt(M, m)} Es una subasta a ciegas: si no la ganas, no pagas nada.`,
         datos: { porque: cu.gana >= 0.3 ? `mejora tu once: +${d1(cu.gana)} pts por jornada` : 'refuerza tu plantilla', cuanto: `puja de ${eur(m.puja)} (sale a ${eur(m.precio)})`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: 'se lo lleva otro o vuelve a LaLiga' } }) });
@@ -373,6 +375,8 @@ function cuentas(X, lista) {
   if ((n > 25 && nC + nP + nE > 0) || nC > A.maxOnce || nP > A.maxOnce || (nE > 0 && nE + (X.revVivos || 0) > (X.paron ? 3 : 2) + revFuera(X, lista))) return null;
   const fin = margen - M.deuda;   // el saldo al acabar el día, contando como gastado todo lo pujado
   if (hayRev && fin < -M.deuda * X.topeDeuda) return null;
+  // (19 nov) el bueno a su valor del parón, solo pagado con saldo: con él, nada de quedarse en negativo
+  if (fin < 0 && lista.some((o) => o.conSaldo)) return null;
   // lo pujado se cobra en el cambio de mercado: si el próximo es después de que empiece la jornada (el mismo día del
   // partido, de madrugada ya ha pasado), para empezar ESTA jornada en positivo solo cuenta lo que hay en caja
   const jornada = X.pujasAntes ? fin + vuelve + ventas : caja + ventas;
@@ -388,8 +392,8 @@ function elegir(X, libres, fijos, oblig = 0) {
   const antes = onceDe(X.mias);
   const N = libres.length, T = 1 << N;
   // lo que cambia el once solo depende de quién sale y quién entra: se guarda por combinación de esos
-  let tocanM = 0, forzM = 0;
-  libres.forEach((o, i) => { if (o.sale || o.entra) tocanM |= 1 << i; if (o.forzada) forzM |= 1 << i; });
+  let tocanM = 0, forzM = 0, saldoM = 0;
+  libres.forEach((o, i) => { if (o.sale || o.entra) tocanM |= 1 << i; if (o.forzada) forzM |= 1 << i; if (o.conSaldo) saldoM |= 1 << i; });
   const fueraFijos = new Set(fijos.filter((o) => o.sale).map((o) => o.sale));
   const memo = new Map();
   const once = (mask) => {
@@ -450,6 +454,7 @@ function elegir(X, libres, fijos, oblig = 0) {
     if ((nC[mask] + nP[mask] + nE[mask] > 0 && n0 - nAcc[mask] + nC[mask] + nP[mask] + nE[mask] > 25) || nC[mask] > A.maxOnce || nP[mask] > A.maxOnce || nE[mask] > maxE) continue;
     const fin = margen - M.deuda;
     if (nE[mask] && fin < -M.deuda * X.topeDeuda) continue;
+    if ((mask & saldoM) && fin < 0) continue;
     const ventas = ciclos >= 1 ? (sVen[mask] + venFijas) * A.margenVenta : 0;
     const jornada = X.pujasAntes ? fin + sRev[mask] * A.margenRev + ventas : caja + ventas;
     cabe[mask] = 1; jor[mask] = jornada;
@@ -611,7 +616,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   /* lo que el motor dejó fuera y también vale (para que la IA pueda cambiar algo): cada una cabe añadida al plan */
   const dentro = new Set(lista.map((o) => o.k));
   const alternativas = todos.filter((o) => !o.forzada && !dentro.has(o.k) && !lista.some((l) => l.pid === o.pid))
-    .filter((o) => { const c2 = cuentas(X, [...lista, o]); return !!c2 && c2.jornada >= 0; })
+    .filter((o) => { const c2 = cuentas(X, [...lista, o]); return !!c2 && c2.jornada >= 0 && (!o.conSaldo || c2.fin >= 0); })
     .sort((a, b) => porValor(b) - porValor(a)).slice(0, 4)
     .map((o) => ({ ...o.op({ gana: o.entra ? Math.max(0, M.mejorOnce([...plantilla, o.entra]).nota - onceAhora.nota) : 0, caja: null, resto: '' }), _k: o.k }));
 

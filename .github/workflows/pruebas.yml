@@ -56,6 +56,12 @@ jobs:
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs
+      # (19 nov, tercera parte de la revisión de la IA) cada regla del árbitro con un plan que se la salta, y que Hoy, Equipo,
+      # el plan y lo que se le pasa al chat digan lo mismo de cada jugador
+      - name: El árbitro y la coherencia entre pantallas
+        run: |
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-arbitro.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-coherencia.mjs
 
   sin-red:
     runs-on: ubuntu-latest
