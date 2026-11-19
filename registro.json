@@ -4233,33 +4233,32 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000,
    "SPORT|136604014": 1795073267000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000
+   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000,
+   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080,
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795094173546
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 447506,
-  "salida": 19819,
+  "entrada": 449328,
+  "salida": 19980,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.910808,
+  "dolares": 0.911071,
   "reservado": 0
  },
  "recientes": {
@@ -8588,13 +8587,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4095,
+   "ok": 4096,
    "fallos": 0,
-   "ejecuciones": 3378,
+   "ejecuciones": 3379,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:21:11.361Z"
+   "ultima": "2026-11-19T13:26:13.073Z"
   }
  },
  "ptsDirecto": {},
@@ -8611,15 +8610,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:21:20.507Z"
+   "ultimaBien": "2026-11-19T13:26:24.625Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:21:20.507Z"
+   "ultimaBien": "2026-11-19T13:26:24.625Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:21:20.507Z"
+   "ultimaBien": "2026-11-19T13:26:24.625Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8627,11 +8626,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:21:20.507Z"
+   "ultimaBien": "2026-11-19T13:26:24.625Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:21:20.507Z"
+   "ultimaBien": "2026-11-19T13:26:24.625Z"
   }
  },
  "avisos": [
