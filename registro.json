@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
    "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
@@ -2409,7 +2408,10 @@
    "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
    "SPORT|136587188": 1795085599000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000,
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000,
+   "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000
   },
   "hechos": [
    {
@@ -3337,11 +3339,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795090022000,
+    "id": "2430",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Valverde no entrena con sus compañeros del Madrid",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4242,17 +4259,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 439126,
-  "salida": 18793,
+  "entrada": 441440,
+  "salida": 19086,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.909457,
+  "dolares": 0.909835,
   "reservado": 0
  },
  "recientes": {
@@ -8581,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4084,
+   "ok": 4085,
    "fallos": 0,
-   "ejecuciones": 3367,
+   "ejecuciones": 3368,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:26:14.884Z"
+   "ultima": "2026-11-19T12:31:17.367Z"
   }
  },
  "ptsDirecto": {},
@@ -8604,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:26:27.815Z"
+   "ultimaBien": "2026-11-19T12:31:30.933Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:26:27.815Z"
+   "ultimaBien": "2026-11-19T12:31:30.933Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:26:27.815Z"
+   "ultimaBien": "2026-11-19T12:31:30.933Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8620,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:26:27.815Z"
+   "ultimaBien": "2026-11-19T12:31:30.933Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:26:27.815Z"
+   "ultimaBien": "2026-11-19T12:31:30.933Z"
   }
  },
  "avisos": [
