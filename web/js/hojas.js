@@ -24,6 +24,7 @@ import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
+import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 
@@ -771,12 +772,12 @@ function anuncioTopHTML(A, S) {
       const ab = yaAb.includes(String(r.e.teamId));
       return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('candado')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
     }).join('')}</div>
-      <button class="btn ancho sec" data-accion="noTop" style="margin-top:10px">Ahora no</button></div>`;
+      ${botonInvitarTop(A.clave)}<button class="btn ancho sec" data-accion="noTop" style="margin-top:10px">Ahora no</button></div>`;
     return h;
   }
   if (rivales && !q && !yaAb.includes(rid)) {
     h += `<p><b>Ya has visto el dinero de un rival las ${veces(n)} de esta jornada.</b> En la siguiente puedes volver a abrirlo.</p>
-      <button class="btn ancho sec" data-accion="noTop">Entendido</button></div>`;
+      ${botonInvitarTop(A.clave)}<button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Entendido</button></div>`;
     return h;
   }
   const faltan = faltanAnuncios(A.clave, rid);
@@ -787,8 +788,69 @@ function anuncioTopHTML(A, S) {
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   const txt = A.cargando ? 'Cargando el anuncio…' : rivales && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';
   h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${txt}</button>
-    <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
+    ${rivales ? botonInvitarTop(A.clave) : ''}<button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;
+}
+
+/* ================= INVITA A UN AMIGO (19 nov) ================= */
+/** en la ventana del candado del dinero: invita a un amigo y elige 2 rivales (o, si ya tienes, que te quedan por elegir) */
+export function botonInvitarTop(clave) {
+  if (clave !== 'dineroRivales' || enDemo() || !sesion() || !invitarOn()) return '';
+  const pe = porElegir(), c = cfgInv();
+  return `<div class="inv-top">${pe.length ? `<b>Tienes rivales por elegir de tus invitaciones</b>` : `<span>O invita a un amigo: por cada uno que entre, el dinero de ${c.rivales} rivales que elijas, ${c.horas} h.</span>`}
+    <button class="btn ancho sec" data-accion="invitarAmigo" style="margin-top:6px">${icono('estrella')}${pe.length ? 'Elegir rivales' : 'Invita a un amigo'}</button></div>`;
+}
+/** lo que se gana, en una línea por premio (con los números del servidor) */
+function premiosInvTxt(c) {
+  const e = c.escalones.map((x) => `<li><b>Con ${x.n} amigos</b> que vuelvan otro día: ${esc((PREMIO_TXT[x.premio] || (() => ''))(x.dias))}.</li>`).join('');
+  return `<ul class="inv-premios"><li><b>Por cada amigo</b> que entre: el dinero de ${c.rivales} rivales que elijas, ${c.horas} h desde que entra.</li>${e}</ul>`;
+}
+/** la ventana de invitar: tu código y el botón de compartir, el contador, los rivales por elegir y «¿Te ha invitado alguien?» */
+export function invitarHTML(S) {
+  const I = S.inv || {}, uid = S.D && S.D.yo && S.D.yo.userId, e = estadoInv(uid), c = cfgInv();
+  const liga = S.D && S.D.liga && S.D.liga.id;
+  let h = `<div class="hoja-cab"><h2>Invita a un amigo</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="inv">`;
+  if (enDemo() || !uid) return `${h}<p>Entra con tu cuenta de LaLiga para invitar a tus amigos.</p></div>`;
+  if (!invitarOn()) return `${h}<p>Las invitaciones están paradas ahora. Vuelve a mirarlo en unos días.</p></div>`;
+  if (!e && I.cargando) return `${h}<p class="t2">Cargando…</p></div>`;
+  if (!e) return `${h}<p>No se ha podido cargar ahora.${I.error ? ` ${esc(I.error)}` : ''}</p><button class="btn ancho" data-accion="invitarAmigo">Volver a probar</button></div>`;
+  // ¿te ha invitado alguien? (cuenta nueva, sus primeros días)
+  if (puedeCanjear(uid)) {
+    h += `<div class="inv-canjear"><b>¿Te ha invitado alguien?</b><span>Mete el código de quien te ha pasado la app${e.canjearHasta ? ` (hasta el ${esc(cuando(e.canjearHasta, { hora: false }))})` : ''}.</span>
+      <div class="codigo-in"><input id="invCod" maxlength="8" placeholder="ABC234" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="canjearInv" value="${esc(I.cod || '')}" aria-label="Código de quien te invita"><button class="btn" data-accion="canjearInv"${I.canjeando ? ' disabled' : ''}>${I.canjeando ? 'Un momento…' : 'Listo'}</button></div>
+      ${I.errorCod ? `<p class="codigo-err" role="alert">${esc(I.errorCod)}</p>` : ''}</div>`;
+  }
+  h += `<p>Pásale la app a quien juegue a LaLiga Fantasy. Ganas tú:</p>${premiosInvTxt(c)}
+    <p class="t2 peq">Cuentan las cuentas que empiezan a usar la app con tu enlace o tu código.</p>`;
+  h += `<button class="btn ancho" data-accion="compartirInv"${I.compartiendo ? ' disabled' : ''}>${icono('enviar')}${I.compartiendo ? 'Un momento…' : 'Invita a un amigo'}</button>`;
+  if (e.cod) h += `<p class="inv-cod">Tu código: <b>${esc(e.cod)}</b> <button class="b-ico" data-accion="copiarInv" aria-label="Copiar el enlace">${icono('copiar')}</button></p>`;
+  // el contador y los premios que tienes
+  const ct = contadorTxt(e);
+  h += `<div class="inv-cuenta"><b>${e.entran === 1 ? '1 amigo ha entrado' : `${e.entran || 0} amigos han entrado`}</b>${e.entran ? `<span>${e.cuentan === 1 ? '1 ha vuelto otro día' : `${e.cuentan || 0} han vuelto otro día`}</span>` : ''}${ct ? `<span>${esc(ct)}</span>` : ''}</div>`;
+  for (const p of ['doble', 'sinIntersticiales']) {
+    const hasta = premioHasta(p);
+    if (hasta) h += `<div class="aviso-ficha oro">${icono('estrella')}<div><b>${p === 'doble' ? 'Semana doble' : 'Sin anuncios a pantalla completa'}</b> hasta el ${esc(cuando(hasta))}.</div></div>`;
+  }
+  // los rivales por elegir (en esta liga) y los ya abiertos
+  const rivs = ((S.D && S.D.clasif) || []).filter((x) => x && String(x.teamId) !== String(S.D.yo && S.D.yo.teamId)).sort((a, b) => (a.pos || 99) - (b.pos || 99));
+  const abiertos = rivalesInvitados(liga);
+  const pend = porElegir().filter((x) => !x.liga || String(x.liga) === String(liga));
+  for (const x of pend) {
+    const sel = (I.sel && I.sel[x.i]) || [];
+    h += `<div class="inv-elegir"><b>Tu amigo ya ha entrado: elige ${x.quedan === 1 ? '1 rival' : `${x.quedan} rivales`}</b><span>Verás su dinero hasta ${esc(cuando(x.hasta))} (${cuenta(x.hasta)}).</span>
+      <div class="inv-rivales">${rivs.map((r) => {
+        const t = String(r.teamId), ya = (abiertos[t] || 0) > Date.now(), on = sel.includes(t);
+        return `<button class="pill${on ? ' on' : ''}" ${ya ? 'disabled' : `data-accion="invElegir" data-i="${x.i}" data-tid="${esc(t)}"`} aria-pressed="${on}">${esc(r.nombre)}${ya ? ' · abierto' : ''}</button>`;
+      }).join('')}</div>
+      <button class="btn ancho" data-accion="invAbrir" data-i="${x.i}"${sel.length && !I.abriendo ? '' : ' disabled'}>${I.abriendo ? 'Abriendo…' : sel.length ? `Abrir su dinero (${sel.length})` : 'Elige rivales'}</button></div>`;
+  }
+  const ab = Object.entries(abiertos).filter(([, t]) => t > Date.now());
+  if (ab.length) {
+    const nom = (tid) => { const r = rivs.find((y) => String(y.teamId) === tid); return r ? r.nombre : 'Un rival'; };
+    h += `<div class="aj-sub">Abiertos por tus invitaciones</div>${ab.map(([t, hasta]) => `<div class="ajuste"><div class="c"><b>${esc(nom(t))}</b><span>Su dinero, hasta ${esc(cuando(hasta))}</span></div><button class="btn chico sec" data-r="${esc(t)}">Ver</button></div>`).join('')}`;
+  }
+  if (I.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(I.error)}</div></div>`;
+  return `${h}</div>`;
 }
 
 /* ================= AJUSTES ================= */
@@ -896,6 +958,12 @@ export function ajustes(S) {
   }
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
   if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
+  // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
+  if (!enDemo() && ses && invitarOn()) {
+    const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
+    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Mete el código de quien te pasó la app', btnA('invitarAmigo', 'Meter código', { sec: false }), 'codigo invitacion amigo');
+    c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
+  }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
   /* ---- (0.8a) apodos de los rivales ---- */
   if (S.D && Array.isArray(S.D.clasif)) {
@@ -1267,6 +1335,12 @@ function resumenQ(Q, lista, reg, ahora) {
   if (hace7.length) {
     const malas = (semEv.f || 0) + (semEv.F || 0), buenas = (semEv.a || 0) + (semEv.A || 0);
     h += tarjetaQ('Qué hacen esta semana', barrasH(hace7), buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '');
+  }
+  // (19 nov) invita a un amigo: quién invita, cuántos entran y cuántos vuelven otro día (para ver abusos)
+  if (Q.invitar && Q.invitar.lista && Q.invitar.lista.length) {
+    const I = Q.invitar, nom = new Map(lista.map((x) => [String(x.uid), x.equipo || x.nombre || `Cuenta ${x.uid}`]));
+    const filas = [...I.lista].sort((a, b) => b.entran - a.entran).slice(0, 12).map((x) => [nom.get(String(x.uid)) || `Cuenta ${x.uid}`, x.entran, `${x.entran} <small>${x.cuentan} vuelven${x.esc.length ? ` · ${x.esc.length === 2 ? 'los 2 premios' : x.esc[0] === 'doble' ? 'semana doble' : 'sin anuncios'}` : ''}</small>`]);
+    h += tarjetaQ('Invitaciones', barrasH(filas, { max: Math.max(1, ...I.lista.map((x) => x.entran)) }), `<b>${I.invitados}</b> han entrado invitados · <b>${I.vuelven}</b> han vuelto otro día`);
   }
   return h || '<p class="quien-res">Aún no hay nada contado.</p>';
 }

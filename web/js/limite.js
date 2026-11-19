@@ -10,6 +10,7 @@
    (y en cualquier dispositivo). Sin conexión, cuenta lo de este dispositivo. */
 import { LS, norm, diaDe, otroDia, esc, LOGO, dura } from './util.js';
 import { http, enApp, nativo } from './puente.js';
+import { rivalesInvitados, proximoCierreInv, semanaDoble, sinIntersticiales } from './invitar.js';
 import { pedirWorker } from './soporte.js';
 import { VERSION } from './version.js';
 import { contar } from './eventos.js';
@@ -128,16 +129,27 @@ function rivalesTop() {
 }
 const guardarRivales = (g) => LS.set('top-rivales', g);
 const abrirRival = (g, rid, min) => guardarRivales({ j: g.j, usos: g.usos + 1, abiertos: { ...g.abiertos, [String(rid)]: Date.now() + min * 60e3 }, uno: null });
+/* (19 nov) y los que se abren invitando a un amigo (invitar.js), en la liga que se ve: lo pone la app con fijarLiga */
+let ligaB = '';
+export function fijarLiga(l) { ligaB = String(l || ''); }
+/** los rivales abiertos: { tid: hasta }, los de los anuncios y los de las invitaciones (el plazo más largo) */
+function abiertosTodos() {
+  const ab = { ...rivalesTop().abiertos };
+  if (ligaB && !demoB) for (const [k, h] of Object.entries(rivalesInvitados(ligaB))) ab[k] = Math.max(ab[k] || 0, h);
+  return ab;
+}
 /** los rivales con el dinero abierto ahora (sus teamId, en texto) */
-export const rivalesAbiertos = () => { const ab = rivalesTop().abiertos, t = Date.now(); return Object.keys(ab).filter((k) => ab[k] > t); };
+export const rivalesAbiertos = () => { const ab = abiertosTodos(), t = Date.now(); return Object.keys(ab).filter((k) => ab[k] > t); };
 const abiertoRival = (rid) => rid != null && rivalesAbiertos().includes(String(rid));
 /** hasta cuándo está abierto el dinero de ese rival (0 si no) */
-export const rivalAbiertoHasta = (rid) => (abiertoRival(rid) ? rivalesTop().abiertos[String(rid)] : 0);
+export const rivalAbiertoHasta = (rid) => (abiertoRival(rid) ? abiertosTodos()[String(rid)] : 0);
+/** ¿lo tiene abierto por una invitación? (para decirlo en su ficha) */
+export const rivalPorInvitar = (rid) => rid != null && !!ligaB && !demoB && (rivalesInvitados(ligaB)[String(rid)] || 0) > Date.now();
 /* quién paga: { hasta } */
 const quienHasta = () => { const g = LS.get('top-quien', null); return g && g.hasta > Date.now() ? g.hasta : 0; };
 /** la hora más cercana a la que se cierra algo abierto por un rato (para volver a pintar), o 0 */
 export function proximoCierreTop() {
-  const t = Date.now(), hs = [...Object.values(rivalesTop().abiertos), quienHasta(), hoyTop().libreHasta].filter((h) => h > t);
+  const t = Date.now(), hs = [...Object.values(abiertosTodos()), quienHasta(), hoyTop().libreHasta, proximoCierreInv()].filter((h) => h > t);
   return hs.length ? Math.min(...hs) : 0;
 }
 /** hasta cuándo está abierta (las de un rato); 0 si no lo está o si va hasta medianoche */
@@ -200,15 +212,17 @@ export function planesCfg() {
   // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
   // (17 nov) en la web y el iPhone (sin anuncios para pedir más) valen los gratis de «gratisWeb», si los hay
   const gratis = n(p && p.gratis, 2), gw = !enApp ? n(p && p.gratisWeb, 0) : 0;
-  return { on: !!(p && p.on), gratis: Math.max(gratis, gw), max: Math.max(n(p && p.max, 5), gw), web: Math.min(3, n(p && p.web, 0)) };
+  // (19 nov) con la semana doble de invitar a amigos, el doble (lo cuenta el servidor; esto es para los textos)
+  const x = semanaDoble() ? 2 : 1;
+  return { on: !!(p && p.on), gratis: Math.max(gratis, gw) * x, max: Math.max(n(p && p.max, 5), gw) * x, web: Math.min(3, n(p && p.web, 0)), doble: x === 2 };
 }
 /** (16 nov) las preguntas del chat con la IA de la app (el Worker, /pregunta): «preguntas» de limites.json. porAnuncio: las que
     da cada anuncio bonificado cuando se acaban las gratis */
 export function preguntasCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.preguntas) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
-  const gratis = n(p && p.gratis, 3);
-  return { on: !!(p && p.on), gratis, max: Math.max(gratis, n(p && p.max, 6)), porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)) };
+  const gratis = n(p && p.gratis, 3), x = semanaDoble() ? 2 : 1;
+  return { on: !!(p && p.on), gratis: gratis * x, max: Math.max(gratis, n(p && p.max, 6)) * x, porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)), doble: x === 2 };
 }
 /** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
     gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
@@ -238,6 +252,8 @@ export function intersticialParaMi() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || !yoB || demoB) return false;
   if ([...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB))) return intersticialCfg().dueno;
+  // (19 nov) con 5 amigos invitados, 30 días sin intersticiales ni el de apertura (los bonificados siguen)
+  if (sinIntersticiales()) return false;
   if (!intersticialCfg().suLiga && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return false;
   return true;
 }
