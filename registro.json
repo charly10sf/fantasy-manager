@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html": 1794837009000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-per-jugar-contra-el-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cubarsi-duda-partido-villarreal-frenkie-jong-estara-disponible-20261116_3476037.html": 1794837167000,
@@ -8574,13 +8573,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4098,
+   "ok": 4099,
    "fallos": 0,
-   "ejecuciones": 3381,
+   "ejecuciones": 3382,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:36:14.280Z"
+   "ultima": "2026-11-19T13:41:13.447Z"
   }
  },
  "ptsDirecto": {},
@@ -8597,15 +8596,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:36:24.436Z"
+   "ultimaBien": "2026-11-19T13:41:21.481Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:36:24.436Z"
+   "ultimaBien": "2026-11-19T13:41:21.481Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:36:24.436Z"
+   "ultimaBien": "2026-11-19T13:41:21.481Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8613,11 +8612,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:36:24.436Z"
+   "ultimaBien": "2026-11-19T13:41:21.481Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:36:24.436Z"
+   "ultimaBien": "2026-11-19T13:41:21.481Z"
   }
  },
  "avisos": [
