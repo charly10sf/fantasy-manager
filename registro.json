@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000,
    "SPORT|136517232": 1794856951000,
    "SPORT|136497675": 1794859858000,
    "AS|https://as.com/futbol/primera/una-preparacion-entre-campeones-f202611-n/": 1794868590000,
@@ -2413,21 +2412,10 @@
    "SPORT|136632067": 1795106605000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
    "SPORT|136631224": 1795109681000,
-   "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000
+   "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html",
-    "medio": "MARCA",
-    "t": 1794855948000,
-    "id": "2314",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Vivian se pierde el partido ante el Espanyol por lesión",
-    "motivo": "lesión en el sóleo",
-    "plazo": "podría estar fuera hasta diciembre",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251858/oblak-vuelve-atletico-reconquistar-candado.html",
     "medio": "Mundo Deportivo",
@@ -3263,7 +3251,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -4164,17 +4152,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 553369,
-  "salida": 29999,
+  "entrada": 555322,
+  "salida": 30564,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.0808,
+  "dolares": 1.081278,
   "reservado": 0
  },
  "recientes": {
@@ -8503,13 +8491,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4164,
+   "ok": 4165,
    "fallos": 0,
-   "ejecuciones": 3447,
+   "ejecuciones": 3448,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T19:01:17.595Z"
+   "ultima": "2026-11-19T19:06:14.216Z"
   }
  },
  "ptsDirecto": {},
@@ -8526,15 +8514,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:01:30.107Z"
+   "ultimaBien": "2026-11-19T19:06:28.100Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:01:30.107Z"
+   "ultimaBien": "2026-11-19T19:06:28.100Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:01:30.107Z"
+   "ultimaBien": "2026-11-19T19:06:28.100Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8542,11 +8530,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:01:30.107Z"
+   "ultimaBien": "2026-11-19T19:06:28.100Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:01:30.107Z"
+   "ultimaBien": "2026-11-19T19:06:28.100Z"
   }
  },
  "avisos": [
