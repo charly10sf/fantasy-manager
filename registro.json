@@ -2373,7 +2373,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/alvaro-cervera-polemica-sobre-declaraciones-sobre-pique-no-opinion-no-pensamiento-20261118_3477901.html": 1795038674000,
    "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/horario-ver-derbi-sevilla-fc-real-betis-balompie_0_2008538061.html": 1795068082000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252755/laporte-queda-peligro.html": 1795071900000
   },
   "hechos": [
    {
@@ -3308,7 +3309,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4213,17 +4214,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 11,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 183690,
-  "salida": 6747,
+  "entrada": 185673,
+  "salida": 7277,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.404808,
+  "dolares": 0.405271,
   "reservado": 0
  },
  "recientes": {
@@ -8556,13 +8557,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4024,
+   "ok": 4025,
    "fallos": 0,
-   "ejecuciones": 3307,
+   "ejecuciones": 3308,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T07:26:12.799Z"
+   "ultima": "2026-11-19T07:31:12.835Z"
   }
  },
  "ptsDirecto": {},
@@ -8579,15 +8580,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:26:23.434Z"
+   "ultimaBien": "2026-11-19T07:31:26.791Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:26:23.434Z"
+   "ultimaBien": "2026-11-19T07:31:26.791Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:26:23.434Z"
+   "ultimaBien": "2026-11-19T07:31:26.791Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8595,11 +8596,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:26:23.434Z"
+   "ultimaBien": "2026-11-19T07:31:26.791Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:26:23.434Z"
+   "ultimaBien": "2026-11-19T07:31:26.791Z"
   }
  },
  "avisos": [
