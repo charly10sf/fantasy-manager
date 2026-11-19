@@ -5,6 +5,7 @@
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './operaciones.js';
 import { acciones } from './acciones.js';
 import { pTitularMinutos } from './titular.js';
+import { textoInercia } from './inercia-texto.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -335,17 +336,9 @@ export function analizar(D, H, c, extra = {}) {
       }
       return x;
     };
-    const fmt = (x) => eur(x, { signo: true });
     const subida = (subia >= 2 ? Rs.slice(Math.max(0, n - 1 - subia), n - 1) : antes.slice(-5)).filter((r) => r > quieto);
-    let texto = '';
-    if (fase === 'giro') texto = `Ha girado a la baja: venía subiendo (${subida.slice(-4).map(fmt).join(', ')} al día) y ${baja >= 2 ? `ya lleva ${baja} días bajando (hoy ${fmt(ult)})` : `hoy ${fmt(ult)}`}. Si sigue así, en ${hastaJ} día${hastaJ > 1 ? 's' : ''} pierde unos ${eur(-proy(hastaJ))}.`;
-    else if (fase === 'rebote') texto = `Viene de bajar un ${Math.round(rebote.caida * 100)} % en el último mes (de ${eur(rebote.max)} a ${eur(rebote.min)}) y estos días ha rebotado un poco (${subida.slice(-4).map(fmt).join(', ')}${Math.abs(ult) <= quieto ? `; hoy ${fmt(ult)}, se ha parado` : ', cada vez menos'}). Es un rebote pequeño después de mucho bajar, no una subida que se vaya a dar la vuelta: puede estar tocando fondo o seguir bajando, así que esto solo no es motivo para venderlo.`;
-    else if (fase === 'parado') texto = `Se ha estancado después de subir (${subida.slice(-4).map(fmt).join(', ')} y hoy ${fmt(ult)}): lo normal es que ahora empiece a bajar.`;
-    else if (fase === 'frena') texto = `Sube cada vez menos (${Rs.slice(-3).map(fmt).join(', ')} al día): a este ritmo deja de subir en unos ${Math.max(1, Math.round(giroEn))} día${Math.round(giroEn) > 1 ? 's' : ''} y luego bajará.`;
-    else if (fase === 'baja') texto = `Baja ${fmt(ult)} al día${baja >= 2 ? ` (${baja} días seguidos)` : ''}: en ${hastaJ} día${hastaJ > 1 ? 's' : ''} perdería unos ${eur(-proy(hastaJ))}.`;
-    else if (fase === 'acelera') texto = `Sube cada vez más (${Rs.slice(-3).map(fmt).join(', ')} al día).`;
-    else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
-    if (vu && (fase === 'sube' || fase === 'acelera')) texto = `${texto ? `${texto} ` : ''}Llegó a valer ${eur(vu.max)} esta temporada, vuelve a jugar y lleva ${vu.racha} días subiendo (un ${pct(vu.ritmo * 100, 1, false)} al día de media los 3 últimos)${frenaba ? '; hoy algo menos que ayer, pero le queda mucho para su valor de antes' : ''}.`;
+    // (19 nov, sesión larga) el texto, aparte (inercia-texto.js): aquí solo las cuentas
+    const texto = textoInercia({ fase, Rs, ult, subida, baja, giroEn, rebote, quieto, hastaJ, perdidaJ: proy(hastaJ), vu, frenaba });
     // (21) `proy(k)`: lo que se espera que cambie su valor en k días, con la misma cuenta (la pestaña Parón la usa hasta la
     // vuelta, que puede quedar a más de los 7 días de `proyJ`)
     return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, proy: (k) => proy(clamp(Math.round(k), 1, 14)), texto, quieto, rebote, vuelve: vu && (fase === 'sube' || fase === 'acelera') ? vu : null });
