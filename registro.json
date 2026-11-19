@@ -2205,8 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/mikel-rodriguez-y-facundo-garces-van-recuperandose-de-sus-lesiones-f202611-n/": 1794848112000,
-   "AS|https://as.com/futbol/aimar-oroz-empieza-a-ejercitarse-junto-a-sus-companeros-f202611-n/": 1794848022000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251777/lesion-pubill-no-reviste-gravedad.html": 1794848176000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/buenas-noticias-pubill-descartada-lesion-grave-20261116_3476205.html": 1794848379000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
@@ -2425,18 +2423,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/aimar-oroz-empieza-a-ejercitarse-junto-a-sus-companeros-f202611-n/",
-    "medio": "AS",
-    "t": 1794848022000,
-    "id": "2338",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aimar vuelve a entrenar con sus compañeros tras dos lesiones",
-    "motivo": "dos lesiones musculares consecutivas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136506735",
     "medio": "SPORT",
@@ -8598,13 +8584,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4138,
+   "ok": 4139,
    "fallos": 0,
-   "ejecuciones": 3421,
+   "ejecuciones": 3422,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T16:51:10.937Z"
+   "ultima": "2026-11-19T16:56:13.981Z"
   }
  },
  "ptsDirecto": {},
@@ -8621,15 +8607,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:51:19.410Z"
+   "ultimaBien": "2026-11-19T16:56:29.133Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:51:19.410Z"
+   "ultimaBien": "2026-11-19T16:56:29.133Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:51:19.410Z"
+   "ultimaBien": "2026-11-19T16:56:29.133Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8637,11 +8623,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:51:19.410Z"
+   "ultimaBien": "2026-11-19T16:56:29.133Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T16:51:19.410Z"
+   "ultimaBien": "2026-11-19T16:56:29.133Z"
   }
  },
  "avisos": [
