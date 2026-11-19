@@ -2397,7 +2397,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
    "SPORT|136609457": 1795079542000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
+   "SPORT|136608611": 1795080548000
   },
   "hechos": [
    {
@@ -3347,11 +3348,23 @@
      18,
      30
     ]
+   },
+   {
+    "guid": "SPORT|136608611",
+    "medio": "SPORT",
+    "t": 1795080548000,
+    "id": "2355",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Kounde vuelve a entrenarse parcialmente con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4256,17 +4269,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 22,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 374485,
-  "salida": 14086,
+  "entrada": 376500,
+  "salida": 14205,
   "cacheLee": 11612,
   "cacheEscribe": 17418,
-  "dolares": 0.803493,
+  "dolares": 0.803754,
   "reservado": 0
  },
  "recientes": {
@@ -8595,13 +8608,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4061,
+   "ok": 4062,
    "fallos": 0,
-   "ejecuciones": 3344,
+   "ejecuciones": 3345,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T10:31:10.531Z"
+   "ultima": "2026-11-19T10:36:12.568Z"
   }
  },
  "ptsDirecto": {},
@@ -8618,15 +8631,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:31:20.620Z"
+   "ultimaBien": "2026-11-19T10:36:22.307Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:31:20.620Z"
+   "ultimaBien": "2026-11-19T10:36:22.307Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:31:20.620Z"
+   "ultimaBien": "2026-11-19T10:36:22.307Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8634,11 +8647,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:31:20.620Z"
+   "ultimaBien": "2026-11-19T10:36:22.307Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:31:20.620Z"
+   "ultimaBien": "2026-11-19T10:36:22.307Z"
   }
  },
  "avisos": [
