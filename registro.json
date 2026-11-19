@@ -4254,32 +4254,31 @@
    "SPORT|136596702": 1795032528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000,
-   "SPORT|136604014": 1795073267000
+   "SPORT|136604014": 1795073267000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795083380541
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 22,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 376500,
-  "salida": 14205,
+  "entrada": 378230,
+  "salida": 14291,
   "cacheLee": 11612,
   "cacheEscribe": 17418,
-  "dolares": 0.803754,
+  "dolares": 0.80397,
   "reservado": 0
  },
  "recientes": {
@@ -8608,13 +8607,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4062,
+   "ok": 4063,
    "fallos": 0,
-   "ejecuciones": 3345,
+   "ejecuciones": 3346,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T10:36:12.568Z"
+   "ultima": "2026-11-19T10:41:25.417Z"
   }
  },
  "ptsDirecto": {},
@@ -8631,15 +8630,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:36:22.307Z"
+   "ultimaBien": "2026-11-19T10:41:38.093Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:36:22.307Z"
+   "ultimaBien": "2026-11-19T10:41:38.093Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:36:22.307Z"
+   "ultimaBien": "2026-11-19T10:41:38.093Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8647,11 +8646,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:36:22.307Z"
+   "ultimaBien": "2026-11-19T10:41:38.093Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:36:22.307Z"
+   "ultimaBien": "2026-11-19T10:41:38.093Z"
   }
  },
  "avisos": [
