@@ -84,6 +84,16 @@ await probar('martes', `${COMUN}
     ['vender hoy a uno que va en el once', 'r18', plan([op({ accion: 'vender', etiqueta: 'Aceptar oferta', pid: v.pid, j: jv, jugador: jv.nombre, importe: of.importe })], { alineacion: { titulares: [jv.nombre] } })],
   ];
 `, 'S.D.dinero = 30000000;');
+// (19 nov, sesión larga) con el mercado de verdad de un día (banco.mjs, 'mercado-real'): el plan de la app vale y las reglas
+// se siguen viendo con jugadores y precios reales
+await probar('mercado-real', `${COMUN}
+  return [
+    ['el plan de la app con el mercado de verdad', null, base],
+    ['comprar por debajo de lo que pide', 'r6', (() => { const v = M.mercado.find((m) => m.tipo === 'manager' && m.vendedorTeamId !== D.yo.teamId); return plan([op({ accion: 'comprar', pid: v.pid, j: v.j, jugador: v.j.nombre, importe: Math.round(v.precio * 0.8) })]); })()],
+    ['pujar por uno de verdad del mercado sin dinero para la jornada', 'r10', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio + 60e6 })])],
+    ['una cláusula de más del saldo', 'r5', (() => { const c = M.clausulas.find((x) => x.abierta && x.clausula > D.dinero + 1e6) || M.clausulas.find((x) => x.abierta); return plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: Math.max(c.clausula, D.dinero + 5e6) })]); })()],
+  ];
+`);
 await cerrar();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);
