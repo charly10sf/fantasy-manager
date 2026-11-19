@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/derbi-betis-sevilla-primer-antony-pizjuan_0_2008521466.html": 1794849565000,
    "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
    "SPORT|136513344": 1794850973000,
@@ -8568,13 +8567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4143,
+   "ok": 4144,
    "fallos": 0,
-   "ejecuciones": 3426,
+   "ejecuciones": 3427,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:16:13.359Z"
+   "ultima": "2026-11-19T17:21:13.922Z"
   }
  },
  "ptsDirecto": {},
@@ -8591,15 +8590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:16:23.463Z"
+   "ultimaBien": "2026-11-19T17:21:24.702Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:16:23.463Z"
+   "ultimaBien": "2026-11-19T17:21:24.702Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:16:23.463Z"
+   "ultimaBien": "2026-11-19T17:21:24.702Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8607,11 +8606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:16:23.463Z"
+   "ultimaBien": "2026-11-19T17:21:24.702Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:16:23.463Z"
+   "ultimaBien": "2026-11-19T17:21:24.702Z"
   }
  },
  "avisos": [
