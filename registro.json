@@ -1990,7 +1990,7 @@
   "3105": "injured",
   "3106": "ok",
   "3107": "ok",
-  "3108": "ok",
+  "3108": "doubtful",
   "3109": "ok",
   "3110": "out_of_league",
   "3111": "ok",
@@ -2198,7 +2198,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/16/cubarsi-algodones-partido-villarreal-136507663.html": 1794847474000,
    "AS|https://as.com/futbol/mikel-rodriguez-y-facundo-garces-van-recuperandose-de-sus-lesiones-f202611-n/": 1794848112000,
@@ -2416,18 +2415,6 @@
    "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794842359000,
-    "id": "2338",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aimar vuelve a entrenar con el grupo tras la lesión",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/aimar-oroz-empieza-a-ejercitarse-junto-a-sus-companeros-f202611-n/",
     "medio": "AS",
@@ -4050,8 +4037,8 @@
     "t": 0
    },
    "3108": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1795101672785
    },
    "3109": {
     "e": "ok",
@@ -8601,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4119,
+   "ok": 4120,
    "fallos": 0,
-   "ejecuciones": 3402,
+   "ejecuciones": 3403,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T15:16:13.827Z"
+   "ultima": "2026-11-19T15:21:12.785Z"
   }
  },
  "ptsDirecto": {},
@@ -8624,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:16:25.533Z"
+   "ultimaBien": "2026-11-19T15:21:20.525Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:16:25.533Z"
+   "ultimaBien": "2026-11-19T15:21:20.525Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:16:25.533Z"
+   "ultimaBien": "2026-11-19T15:21:20.525Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8640,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:16:25.533Z"
+   "ultimaBien": "2026-11-19T15:21:20.525Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:16:25.533Z"
+   "ultimaBien": "2026-11-19T15:21:20.525Z"
   }
  },
  "avisos": [
