@@ -4136,12 +4136,13 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
    "SPORT|136630245": 1795104774000,
    "SPORT|136635705": 1795110618000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
   "espera": {}
@@ -4149,17 +4150,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 58,
+   "clasificar": 59,
    "redactar": 35,
    "revisar": 20,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 655552,
-  "salida": 34961,
+  "entrada": 657308,
+  "salida": 35061,
   "cacheLee": 29030,
   "cacheEscribe": 29030,
-  "dolares": 1.290862,
+  "dolares": 1.291088,
   "reservado": 0
  },
  "recientes": {
@@ -8482,13 +8483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4206,
+   "ok": 4207,
    "fallos": 0,
-   "ejecuciones": 3489,
+   "ejecuciones": 3490,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T22:26:12.753Z"
+   "ultima": "2026-11-19T22:31:13.858Z"
   }
  },
  "ptsDirecto": {},
@@ -8505,15 +8506,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T22:26:17.832Z"
+   "ultimaBien": "2026-11-19T22:31:18.045Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T22:26:17.832Z"
+   "ultimaBien": "2026-11-19T22:31:18.045Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T22:26:17.832Z"
+   "ultimaBien": "2026-11-19T22:31:18.045Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8521,7 +8522,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T22:26:17.832Z"
+   "ultimaBien": "2026-11-19T22:31:18.045Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
