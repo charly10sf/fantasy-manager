@@ -819,10 +819,16 @@ function cambiosOnce(M, lineas, form, rec) {
   // lo que queda es cambio de formación: se empareja en orden
   while (salen.length && entran.length) pares.push({ sale: salen.shift(), entra: entran.shift(), otraForma: true });
   for (const e of entran) pares.push({ sale: null, entra: e });
+  // (19 nov, Carlos: «por 0,5 pts me cambia a uno con 74 % por uno con 47 %: tiene que haber un balance y premiar la
+  // titularidad») cada cambio se valora con lo que gana en puntos esperados (que ya cuentan el rival) y con lo que gana
+  // o pierde en ser titular: cada 10 puntos de titular valen 0,4 pts. Solo sale si así gana medio punto; uno que juega
+  // menos de la mitad de las veces no entra por uno que juega 6 de cada 10 salvo que gane 2 pts o más
   const vale = pares.filter(({ sale, entra }) => {
     if (!sale || MAL.has(sale.estado)) return true;
-    const ts = tp(sale), te = tp(entra);
-    return pp(entra) - pp(sale) >= 0.3 || (ts != null && te != null && te - ts >= 0.2);
+    const ts = tp(sale), te = tp(entra), dp = pp(entra) - pp(sale);
+    const dt = ts != null && te != null ? te - ts : 0;
+    if (te != null && ts != null && te < 0.5 && ts >= 0.6 && dp < 2) return false;
+    return dp + 4 * dt >= 0.5;
   });
   const gana = vale.reduce((t, x) => t + pp(x.entra) - pp(x.sale), 0);
   return { pares: vale, gana, forma: vale.some((x) => x.otraForma) && fr.join('-') !== f.join('-') ? rec.form : null, deIA: rec.deIA };
@@ -833,13 +839,15 @@ function cambiosOnceHTML(M, C) {
   const dato = (j) => {
     const T = M.titularidad ? M.titularidad(j) : null;
     const est = MAL.has(j.estado) ? (j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga') : null;
-    return est || `${d1(M.ppEsperado(j))} pts${T && T.p > 0 ? ` · titular ${Math.round(T.p * 100)} %` : T ? ' · no sale de titular' : ''}`;
+    const fr = M.factorRival ? M.factorRival(j) : null;
+    const rv = fr && fr.p && fr.p.rival ? ` · ${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}` : '';
+    return est || `${d1(M.ppEsperado(j))} pts${T && T.p > 0 ? ` · titular ${Math.round(T.p * 100)}\u00a0%` : T ? ' · no sale de titular' : ''}${rv}`;
   };
   const quien = C.deIA ? 'la IA' : 'la app';
   if (!C.pares.length) return `<p class="t2 peq co-ok">${icono('ok')} Es el once que pondría ${quien}.</p>`;
   const filas = C.pares.map(({ sale, entra }) => `<div class="co-f">${sale ? `<button class="co-j sale" data-j="${esc(sale.id)}">${ava(sale, 'm')}<span><b>${esc(sale.nombre)}</b><i>${esc(dato(sale))}</i></span></button><span class="co-fl" aria-hidden="true">→</span>` : '<span class="co-hueco">Hueco libre</span><span class="co-fl" aria-hidden="true">→</span>'}<button class="co-j entra" data-j="${esc(entra.id)}">${ava(entra, 'm')}<span><b>${esc(entra.nombre)}</b><i>${esc(dato(entra))}</i></span></button></div>`).join('');
   const gana = C.gana >= 0.1 ? ` · <b class="sube">+${d1(C.gana)} pts esperados</b>` : '';
-  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">Los puntos esperados ya cuentan lo que tiene de jugar. El once lo cambias tú en LaLiga Fantasy.</p></div>`;
+  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">Solo propone un cambio si compensa contando los puntos, el rival y lo que tiene de ser titular. El once lo cambias tú en LaLiga Fantasy.</p></div>`;
 }
 
 function notaJugador(S, nombre, texto, efecto) {
