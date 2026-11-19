@@ -42,8 +42,8 @@
   --plano: var(--s1);
   --plano2: var(--s2);
   --plano3: var(--s3);
-  --texto2: var(--texto2);
-  --apagado: var(--apagado);
+  --texto2: var(--texto-2);
+  --apagado: var(--texto-3);
   --rojo2: #b30f2c;
   --rojo3: #5a0b1a;
   --rojo-s: rgba(238, 28, 60, 0.13);
@@ -3025,7 +3025,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
    los cuatro (--r-…): están puestos regla a regla más arriba. Aquí, lo que iguala las piezas entre pestañas.
    ========================================================================================================= */
 /* etiqueta de un dato («Saldo», «Puntos», «Cláusula»): en minúscula y del mismo tamaño en el marcador, la ficha, Directo y el Parón */
-.dato .et, .dt-yo .et, .pnz-mer-sel small, .marcador .col .et, .marcador .fila-j { font: 600 var(--t-sec2)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--apagado); }
+.dato .et, .dt-yo .et, .pnz-mer-sel small, .marcador .col .et, .marcador .fila-j { font: 600 var(--t-sec2)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--texto-3); }
 /* antetítulo (lo pequeño en mayúsculas encima de un bloque): uno solo */
 .eti, .graf-cab > span, .banq-t, .pnz-top, .pnz-mer-et { font-size: var(--t-mini); font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
 /* la cifra: condensada 700 con números alineados; la grande a 28 y la de fila a 20 */
@@ -3037,11 +3037,11 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .fila-n, .pnz-c .n, .pnz-f .n, .pnz-rk .n { font-family: 'Barlow'; font-weight: 600; font-size: var(--t-cuerpo); letter-spacing: 0; text-transform: none; }
 .fila-s, .pnz-f .s, .pnz-c .s { font-size: var(--t-sec2); }
 /* cabecera de sección: título, una línea opcional y la acción a la derecha, igual en todas las pestañas y fichas */
-.sec .sub { font-size: var(--t-sec2); color: var(--apagado); }
+.sec .sub { font-size: var(--t-sec2); color: var(--texto-3); }
 .sec .mas { font: 600 var(--t-sec2) 'Barlow'; color: var(--rojo-texto); }
 /* el once: «43,9 pts» en una línea (otra regla .pp lo partía en dos) */
 .campo-cab .pp { display: block; }
-.pnz-kpis small { font: 600 var(--t-mini)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--apagado); }
+.pnz-kpis small { font: 600 var(--t-mini)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--texto-3); }
 
 /* =========================================================================================================
    OVERHAUL (0.7.7) · TANDA 0 (accesibilidad) Y TANDA 5 (fichas)
@@ -3068,7 +3068,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
    lleva el color de cada torneo.
    ========================================================================================================= */
 .pl, .pill, .accion-t, .pnz-t, .tit-b, .ll-tag, .nv-tipo, .cp-res-t, .amenaza {
-  --pl-c: var(--texto2); --pl-b: var(--s3); --pl-f: transparent;
+  --pl-c: var(--texto-2); --pl-b: var(--s3); --pl-f: transparent;
   font: 600 var(--t-mini)/1.25 'Barlow'; letter-spacing: 0.2px; text-transform: none; padding: 3px 9px; border: 0; border-radius: var(--r-red);
   color: var(--pl-c); background: var(--pl-f); box-shadow: inset 0 0 0 1px var(--pl-b);
 }
@@ -3116,7 +3116,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .fj-pleg > summary { list-style: none; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 14px; cursor: pointer; border-radius: var(--r-tarj); }
 .fj-pleg > summary::-webkit-details-marker { display: none; }
 .fj-pleg > summary .sec { flex: 1; min-width: 0; margin: 0; }
-.fj-pleg > summary::after { content: ''; flex: none; width: 8px; height: 8px; margin: 0 4px 4px 2px; border-right: 2px solid var(--apagado); border-bottom: 2px solid var(--apagado); transform: rotate(45deg); transition: transform var(--mov-1); }
+.fj-pleg > summary::after { content: ''; flex: none; width: 8px; height: 8px; margin: 0 4px 4px 2px; border-right: 2px solid var(--texto-3); border-bottom: 2px solid var(--texto-3); transform: rotate(45deg); transition: transform var(--mov-1); }
 .fj-pleg[open] > summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
 .fj-pleg[open] { padding: 0 14px 14px; }
 .fj-pleg[open] > summary { margin: 0 -14px 4px; }
@@ -3125,7 +3125,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 @media (prefers-reduced-motion: reduce) { .fj-pleg > summary::after { transition: none; } }
 /* esqueletos: mientras llegan la gráfica del valor y las jornadas, el hueco tiene ya su tamaño y su forma, así la ficha no
    da un salto al llegar. Quietos (nada se mueve solo); el texto de «Cargando…» sigue, pequeño, abajo */
-.graf-vacio.esq { display: flex; align-items: flex-end; justify-content: center; padding: 0 0 12px; border-radius: var(--r-tarj); font-size: var(--t-mini); color: var(--apagado); }
+.graf-vacio.esq { display: flex; align-items: flex-end; justify-content: center; padding: 0 0 12px; border-radius: var(--r-tarj); font-size: var(--t-mini); color: var(--texto-3); }
 .graf-vacio.esq-graf { min-height: 300px; background:
   linear-gradient(var(--s3), var(--s3)) 14px 262px / calc(100% - 28px) 1px no-repeat,
   linear-gradient(180deg, transparent 0 40%, rgba(255, 255, 255, 0.035) 40% 100%) 14px 60px / calc(100% - 28px) 200px no-repeat,
@@ -3150,15 +3150,15 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
    ========================================================================================================= */
 /* contraste: los minutos de cada jornada, los puntos en rojo sobre el césped, el texto apagado dentro de una píldora y la
    segunda línea de los botones del tutorial */
-.jt small { color: var(--texto2); }
+.jt small { color: var(--texto-2); }
 .cr-dato.vivo-p.baja { color: #120406; }
-.perfil-r .pill .apag { opacity: 1; color: var(--texto2); }
+.perfil-r .pill .apag { opacity: 1; color: var(--texto-2); }
 .tour-elegir .btn small { opacity: 1; }
-.tour-elegir .btn.sec small { color: var(--texto2); }
+.tour-elegir .btn.sec small { color: var(--texto-2); }
 /* un enlace dentro de un párrafo se distingue también por el subrayado, no solo por el color */
 #vista p > a, .hoja p > a, .gc p > a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 /* el detalle técnico de un error, pequeño y con la letra de la app: que no parezca que se ha roto algo más */
-.error-c .fallo-det, .fallo p.fallo-det, .carga .fallo-det { font-family: 'Barlow', system-ui, sans-serif; color: var(--apagado); }
+.error-c .fallo-det, .fallo p.fallo-det, .carga .fallo-det { font-family: 'Barlow', system-ui, sans-serif; color: var(--texto-3); }
 
 /* =========================================================================================================
    AJUSTES SE QUEDA COMO ESTABA (Carlos, 11 nov, 21:15: «publica, salvo la pestaña de ajustes que la quiero como
@@ -3199,10 +3199,10 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .pz-hoy-a .e { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; }
 .pz-hoy-n { display: flex; flex-direction: column; min-width: 0; }
 .pz-hoy-n b { font-weight: 600; color: var(--texto); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pz-hoy-n small { font-size: var(--t-sec2); color: var(--apagado); }
+.pz-hoy-n small { font-size: var(--t-sec2); color: var(--texto-3); }
 .pz-hoy li .sube, .pz-hoy li .baja { font-weight: 700; white-space: nowrap; }
-.pz-hoy-c { margin: 8px 0 0; font-size: var(--t-sec2); color: var(--texto2); }
-.pz-hoy-j p { margin: 0 0 10px; color: var(--texto2); line-height: 1.5; }
+.pz-hoy-c { margin: 8px 0 0; font-size: var(--t-sec2); color: var(--texto-2); }
+.pz-hoy-j p { margin: 0 0 10px; color: var(--texto-2); line-height: 1.5; }
 .pz-hoy-j b { color: var(--texto); }
 .pz-hoy-j a { display: inline-flex; align-items: center; gap: 6px; margin: 0 16px 6px 0; color: var(--rojo-texto); font-weight: 600; text-decoration: none; min-height: 32px; }
 .pz-hoy-j a svg { width: 16px; height: 16px; }
@@ -3365,7 +3365,7 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .marcador .m-cols { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; }
 .marcador .m-c { padding: 0 12px; border-left: 1px solid var(--linea); min-width: 0; }
 .marcador .m-c:first-child { padding-left: 0; border-left: 0; }
-.marcador .m-c .et { font: 600 var(--t-sec2)/1.2 'Barlow'; color: var(--apagado); white-space: nowrap; }
+.marcador .m-c .et { font: 600 var(--t-sec2)/1.2 'Barlow'; color: var(--texto-3); white-space: nowrap; }
 .marcador .m-c .v { font: 700 var(--t-cifra)/1.05 var(--cond); font-variant-numeric: tabular-nums; margin-top: 3px; white-space: nowrap; }
 .marcador .m-c .d { font: 600 var(--t-sec2) var(--cond); margin-top: 2px; white-space: nowrap; }
 .marcador .m-c .d b.neg { color: var(--baja); }
@@ -3384,10 +3384,10 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .cambio-once .co-j { display: flex; align-items: center; gap: 8px; min-width: 0; background: none; border: 0; padding: 0; color: inherit; text-align: left; font: inherit; cursor: pointer; }
 .cambio-once .co-j > span:last-child { display: flex; flex-direction: column; min-width: 0; }
 .cambio-once .co-j b { font-size: var(--t-sec2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cambio-once .co-j i { font-style: normal; font-size: var(--t-mini); color: var(--apagado); }
-.cambio-once .co-j.sale b { color: var(--texto2); }
+.cambio-once .co-j i { font-style: normal; font-size: var(--t-mini); color: var(--texto-3); }
+.cambio-once .co-j.sale b { color: var(--texto-2); }
 .cambio-once .co-j.entra b { color: var(--texto); }
-.cambio-once .co-fl { color: var(--apagado); font-weight: 700; }
-.cambio-once .co-hueco { font-size: var(--t-mini); color: var(--apagado); }
+.cambio-once .co-fl { color: var(--texto-3); font-weight: 700; }
+.cambio-once .co-hueco { font-size: var(--t-mini); color: var(--texto-3); }
 .co-ok { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; }
 .co-ok .ic { width: 14px; height: 14px; }

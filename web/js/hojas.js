@@ -1209,6 +1209,14 @@ function resumenQ(Q, lista, reg, ahora) {
   const ds = (Array.isArray(Q.dias) && Q.dias.length ? Q.dias : Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA))).slice(0, 7);
   const act = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.filter((x) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) > 0).length, yo: i === 0 })).reverse();
   if (act.some((x) => x.v)) h += tarjetaQ('Activos cada día', barras(act, { alto: 110 }));
+  // (19 nov, Carlos: «quiero ver al día cuántos nuevos hay y el tiempo que pasan dentro, sí o sí») las altas de cada día
+  // (de todas las cuentas que han entrado alguna vez) y el tiempo de cada día entre todos
+  if (reg.length) {
+    const altas = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: reg.filter((x) => x.primera && diaDe(x.primera) === d).length, yo: i === 0 })).reverse();
+    h += tarjetaQ('Altas cada día', barras(altas, { alto: 110 }), `<b>${altas.reduce((t, x) => t + x.v, 0)}</b> en 7 días`);
+  }
+  const tDia = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.reduce((t, x) => t + (Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) || 0), 0), yo: i === 0 })).reverse();
+  if (tDia.some((x) => x.v)) h += tarjetaQ('Tiempo cada día · entre todos', barras(tDia, { alto: 110, formato: (v) => (v >= 3600 ? `${String(Math.round(v / 360) / 10).replace('.', ',')} h` : `${Math.round(v / 60)} min`) }));
   // altas por semana (8)
   if (reg.length) {
     const semanas = Array.from({ length: 8 }, (_, i) => {

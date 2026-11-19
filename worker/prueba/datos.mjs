@@ -7,7 +7,8 @@ const kv = new Map();
 // (escrituras: cuántas van; lleno: el KV no deja escribir, como con el cupo gratis del día gastado)
 const cuenta = { escrituras: 0, lleno: false };
 const KV = {
-  async get(k) { const v = kv.get(k); return v ? v.v : null; },
+  // (como el de verdad: con una lista de claves, la lectura en bloque, que devuelve un Map)
+  async get(k) { if (Array.isArray(k)) return new Map(k.map((x) => [x, kv.get(x) ? kv.get(x).v : null])); const v = kv.get(k); return v ? v.v : null; },
   async getWithMetadata(k) { const v = kv.get(k); return v ? { value: v.v, metadata: v.m } : { value: null, metadata: null }; },
   async put(k, v, o = {}) { if (cuenta.lleno) throw new Error('KV put() limit exceeded for the day.'); cuenta.escrituras++; kv.set(k, { v, m: o.metadata || null, ttl: o.expirationTtl ?? null }); },
   async delete(k) { kv.delete(k); },
@@ -127,14 +128,19 @@ ok(Array.isArray(t2.dias) && t2.dias[0] === hoyM && t2.dias.length === 7, '/hola
   await KV.put('p:6000', '1', { metadata: { uid: '6000', ultima: ahoraT - 3 * 86400e3, primera: ahoraT - 6 * 86400e3 } });
   const dHace4 = W2.diasAtras(hoyM, 5)[4], dHace3 = W2.diasAtras(hoyM, 4)[3];
   await KV.put(`u:6000:${dHace4}`, '120'); await KV.put(`u:6000:${dHace3}`, '60');
-  const lecturas = [];
-  const KV2 = { ...KV, get: async (k) => { if (k.startsWith('u:')) lecturas.push(k); return KV.get(k); } };
+  const lecturas = [], ops = [];
+  const KV2 = { ...KV, get: async (k) => { const ks = Array.isArray(k) ? k : [k]; if (ks.some((x) => String(x).startsWith('u:'))) { ops.push(ks.length); lecturas.push(...ks); } return KV.get(k); } };
   r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, VINCULOS: KV2, ADMINS: '4242' }, {});
   const t3 = await r.json(), x6 = t3.lista.find((x) => String(x.uid) === '6000');
   ok(x6 && x6.segDias[dHace4] === 120 && x6.segDias[dHace3] === 60, `con 46 cuentas en la semana, la que entró hace 3 días tiene sus días (${JSON.stringify(x6 && x6.segDias)})`);
   const de6000 = lecturas.filter((k) => k.startsWith('u:6000:'));
   ok(de6000.length === 5, `de esa cuenta solo se leen hoy y los días hasta su última vez (${de6000.length}: ${de6000.join(' ')})`);
-  ok(lecturas.length <= 100 + W2.LECTURAS_SEMANA, `no pasa del tope de lecturas (${lecturas.length})`);
+  ok(ops.length <= Math.ceil(lecturas.length / 100) && ops.every((n) => n <= 100), `se lee en bloque, de 100 en 100 (${lecturas.length} claves en ${ops.length} lecturas)`);
+  // sin la lectura en bloque (un KV viejo), una a una
+  const KV3 = { ...KV, get: async (k) => { if (Array.isArray(k)) throw new Error('no'); return KV.get(k); } };
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, VINCULOS: KV3, ADMINS: '4242' }, {});
+  const t4 = await r.json(), y6 = t4.lista.find((x) => String(x.uid) === '6000');
+  ok(y6 && y6.segDias[dHace4] === 120, `sin la lectura en bloque, también (${JSON.stringify(y6 && y6.segDias)})`);
   for (let i = 0; i < 45; i++) kv.delete(`p:7${i}`);
   kv.delete('p:6000');
 }

@@ -29,6 +29,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'campo', t: 'El % de titular, rehecho', x: 'Sale de sus minutos en las últimas jornadas y en toda la temporada, de lo que vale frente a los de su puesto en su equipo y del once probable de su próximo partido. Comprobado con las jornadas ya jugadas: acierta bastante más que antes.' },
       { tipo: 'mejora', d: 'campo', t: 'Lo flojo de tu once', x: 'Debajo del campo, los de tu once con pocas opciones de jugar y a quién del mercado podrías fichar en su sitio. El banquillo ya no sale ahí: está en la plantilla.' },
       { tipo: 'arreglo', t: 'Titulares que salían como suplentes', x: 'Si no llegaba el once probable de un equipo, a todos sus jugadores les salía un % muy bajo y «SUP», aunque jugaran siempre.' },
+      { tipo: 'arreglo', t: 'Textos y gráficas apagados', x: 'Con la actualización de esta mañana, algunos textos y gráficas secundarios salían casi sin color. Ya se ven como antes.' },
     ],
   },
   {
