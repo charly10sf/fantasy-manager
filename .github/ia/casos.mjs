@@ -333,7 +333,8 @@ export const CASOS = [
   // Cada escenario lleva un caso «reglas» (el plan no se salta ninguna regla de LaLiga y la app no le descarta nada: el
   // motor no puede proponer lo que la app tacharía) y los suyos. Cómo juega Carlos: entre semana tira de deuda para comprar
   // lo que sube y lo vende antes de la jornada; no vende a un suplente solo por hacer caja; en el parón, dinero antes que once.
-  ...['martes', 'm-limpio', 'm-negativo', 'm-holgado', 'veda', 'm-cierre', 'm-cierre-negativo', 'enjuego', 'paron', 'm-25', 'm-hueco', 'm-clausula-mia', 'm-reventa'].map((escena) => ({
+  // (19 nov, sesión larga) y 'mercado-real': los valores y el mercado de verdad de un día (banco.mjs)
+  ...['martes', 'm-limpio', 'm-negativo', 'm-holgado', 'veda', 'm-cierre', 'm-cierre-negativo', 'enjuego', 'paron', 'm-25', 'm-hueco', 'm-clausula-mia', 'm-reventa', 'mercado-real'].map((escena) => ({
     id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md: dinero, deuda, 25, blindajes, cierre y empezar la jornada en positivo',
     debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
   { id: 'motor-martes-no-vende-de-mas', tipo: 'motor', escena: 'martes', de: 'Ibañez y Javi Guerra (Carlos, 3 nov) y «el plan vendía medio once» (25 oct): entre semana no se vende perdiendo ni se deja el once cojo',

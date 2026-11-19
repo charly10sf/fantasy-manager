@@ -5,7 +5,7 @@
 // Uso: PW_MODULO=… node .github/ia/caso-coherencia.mjs [escenas separadas por comas]   (sale con 1 si algo falla)
 import { pagina, cerrar } from './banco.mjs';
 
-const ESCENAS = (process.argv[2] || 'martes,veda,sabado,enjuego,paron,paron-final,m-negativo,holgado,hora-20,jueves-negativo,m-oferta-sube,m-oferta-sube-alta,m-baja-sin-relevo,m-reventa-protege').split(',');
+const ESCENAS = (process.argv[2] || 'martes,veda,sabado,enjuego,paron,paron-final,m-negativo,holgado,hora-20,jueves-negativo,m-oferta-sube,m-oferta-sube-alta,m-baja-sin-relevo,m-reventa-protege,mercado-real').split(',');
 let mal = 0, total = 0;
 for (const escena of ESCENAS) {
   const P = await pagina(escena);

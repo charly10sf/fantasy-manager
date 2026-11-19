@@ -6,6 +6,7 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 
 const pw = await import(process.env.PW_MODULO || 'playwright').catch(() => import('playwright-core'));
 export const WEB = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..', 'web');
@@ -16,6 +17,42 @@ const TIPOS = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
    a las 14:00», así que con la hora fija (martes 3 nov 2026) cae el sábado 7. */
 // (para las escenas: la serie de valores de un jugador, `sube` días subiendo un 1 % y `baja` días bajando un 1,5 %, que
 // acaba en su valor de hoy)
+/* (19 nov, sesión larga) el mercado de verdad de un día: los jugadores de LaLiga Fantasy del 19 nov como los dio la API
+   esa noche (mercado-real-19nov.json, de web/jugadores/todos.json que deja la Action «Portal web»). Los de la liga de
+   ejemplo pasan a valer lo que valían ese día, con su media y lo que se movieron (el último día y la semana), y los
+   libres del mercado son los que más se movieron ese día y no son de nadie en la liga */
+const REAL = JSON.parse(readFileSync(new URL('./mercado-real-19nov.json', import.meta.url), 'utf8')).jugadores;
+const MERCADO_REAL = `const R = ${JSON.stringify(REAL)};
+  const nn = (x) => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const CLUB = { barca: 'barcelona', atleticodemadrid: 'atletico', realbetis: 'betis', rayovallecano: 'rayo' };
+  const eqId = Object.fromEntries(Object.entries(S.D.equipos).map(([id, e]) => [nn(e.nombre), id]));
+  const clubDe = (c) => eqId[CLUB[nn(c)] || nn(c)];
+  const real = new Map(R.map((x) => [nn(x.n), x]));
+  const dia = (k) => new Date(Date.now() - k * 864e5 + 3600e3).toISOString().slice(0, 10);
+  // (la serie de los 8 últimos días: lo de la semana repartido y, el último, lo que se movió ese día)
+  const serie = (x) => { const s = []; for (let k = 8; k >= 1; k--) { const f = k === 1 ? x.v - x.d1 : x.v - x.d1 - (x.d2 - x.d1) * (k - 1) / 6; s.push([dia(k), Math.max(150000, Math.round(f))]); } return s; };
+  S.H.v = S.H.v || {};
+  for (const j of Object.values(S.D.maestro)) {
+    const x = real.get(nn(j.nombre));
+    if (!x || j.pos === 5) continue;
+    j.valor = x.v; j.media = Math.round(x.m * 10) / 10;
+    S.H.v[j.id] = serie(x);
+    if (S.det && S.det[j.id]) delete S.det[j.id].valores;
+  }
+  const deAlguien = new Set(Object.values(S.D.plantillas).flat().map((f) => nn((S.D.maestro[f.pid] || {}).nombre)));
+  const cierra = (S.D.mercado.find((m) => m.tipo === 'liga') || {}).cierra;
+  S.D.mercado = S.D.mercado.filter((m) => m.tipo !== 'liga');
+  const libres = R.filter((x) => !deAlguien.has(nn(x.n)) && clubDe(x.c) && x.v >= 300000).sort((a, b) => Math.abs(b.d1) - Math.abs(a.d1)).slice(0, 14);
+  libres.forEach((x, i) => {
+    let j = Object.values(S.D.maestro).find((y) => nn(y.nombre) === nn(x.n));
+    if (!j) {
+      const id = String(9000 + i), eq = clubDe(x.c), semanas = Array.from({ length: 9 }, (_, w) => ({ n: w + 1, pts: Math.round(x.m) }));
+      j = { id, nombre: x.n, largo: x.n, equipoId: eq, equipo: S.D.equipos[eq].nombre, pos: x.p, valor: x.v, puntos: semanas.reduce((t, w) => t + w.pts, 0), media: Math.round(x.m * 10) / 10, estado: 'ok', img: null, lid: '', temporadaPasada: Math.round(x.m * 34), semanas };
+      S.D.maestro[id] = j;
+    }
+    S.H.v[j.id] = serie(x);
+    S.D.mercado.push({ id: 'mr' + i, pid: j.id, tipo: 'liga', precio: x.v, cierra, pujas: i % 3, ofertas: 0, vendedorTeamId: '', vendedor: '', miPuja: null, clausula: null });
+  });`;
 const SERIE = `const serie = (nombre, sube, baja) => { const j = Object.values(S.D.maestro).find((x) => x.nombre === nombre); const s = [];
   for (let k = sube + baja; k >= 1; k--) { const v = k <= baja ? j.valor * Math.pow(1.015, k) : j.valor * Math.pow(1.015, baja) / Math.pow(1.01, k - baja); s.push([new Date(Date.now() - k * 864e5 + 3600e3).toISOString().slice(0, 10), Math.round(v)]); }
   S.H.v = S.H.v || {}; S.H.v[j.id] = s; if (S.det && S.det[j.id]) delete S.det[j.id].valores; };`;
@@ -44,6 +81,8 @@ export const ESCENAS = {
   'veda-recien': { hora: '2026-11-06T14:10:00+01:00' },
   // parón de selecciones con la vuelta a más de 3 días
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
+  // (19 nov, sesión larga) martes con los valores y el mercado de verdad del 19 nov (MERCADO_REAL)
+  'mercado-real': { hora: '2026-11-03T10:00:00+01:00', prep: MERCADO_REAL },
   // en negativo entre semana (ha tirado de deuda)
   negativo: { hora: '2026-11-03T10:00:00+01:00', prep: 'S.D.dinero = -4200000;' },
   // (19 nov, el trueque de Carlos con Domy) martes con 58,10 M; Fornals (58,95 M) es mío y Huijsen (57,42 M), del 2º, con
