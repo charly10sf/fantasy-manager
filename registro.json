@@ -2157,7 +2157,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251358/jauregizar-quiere-recuperar-lugar.html": 1794810600000,
-   "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000,
    "SPORT|136484016": 1794813943000,
    "SPORT|136485072": 1794815966000,
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
@@ -8558,13 +8557,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4010,
+   "ok": 4011,
    "fallos": 0,
-   "ejecuciones": 3293,
+   "ejecuciones": 3294,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T06:16:13.111Z"
+   "ultima": "2026-11-19T06:21:13.942Z"
   }
  },
  "ptsDirecto": {},
@@ -8581,15 +8580,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:16:23.710Z"
+   "ultimaBien": "2026-11-19T06:21:23.960Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:16:23.710Z"
+   "ultimaBien": "2026-11-19T06:21:23.960Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:16:23.710Z"
+   "ultimaBien": "2026-11-19T06:21:23.960Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8597,11 +8596,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:16:23.710Z"
+   "ultimaBien": "2026-11-19T06:21:23.960Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:16:23.710Z"
+   "ultimaBien": "2026-11-19T06:21:23.960Z"
   }
  },
  "avisos": [
