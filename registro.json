@@ -2194,7 +2194,6 @@
    "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
-   "SPORT|136501570": 1794833737000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html": 1794837009000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-per-jugar-contra-el-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cubarsi-duda-partido-villarreal-frenkie-jong-estara-disponible-20261116_3476037.html": 1794837167000,
@@ -2428,18 +2427,6 @@
     "nums": [
      19
     ]
-   },
-   {
-    "guid": "SPORT|136501570",
-    "medio": "SPORT",
-    "t": 1794833737000,
-    "id": "1775",
-    "que": "lesion",
-    "oficial": true,
-    "hecho": "Cubarsí tiene una sobrecarga y es duda ante el Villarreal",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html",
@@ -8598,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4089,
+   "ok": 4090,
    "fallos": 0,
-   "ejecuciones": 3372,
+   "ejecuciones": 3373,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:51:14.332Z"
+   "ultima": "2026-11-19T12:56:12.483Z"
   }
  },
  "ptsDirecto": {},
@@ -8621,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:51:26.621Z"
+   "ultimaBien": "2026-11-19T12:56:20.466Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:51:26.621Z"
+   "ultimaBien": "2026-11-19T12:56:20.466Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:51:26.621Z"
+   "ultimaBien": "2026-11-19T12:56:20.466Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8637,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:51:26.621Z"
+   "ultimaBien": "2026-11-19T12:56:20.466Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:51:26.621Z"
+   "ultimaBien": "2026-11-19T12:56:20.466Z"
   }
  },
  "avisos": [
