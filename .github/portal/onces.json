@@ -1,6 +1,6 @@
 {
  "J": 13,
- "generada": 1794959289061,
+ "generada": 1795045677165,
  "equipos": [
   {
    "id": "3",
@@ -227,24 +227,25 @@
       "p": 46
      },
      "pa": 51
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "3237",
-      "nombre": "Bryan",
-      "p": 70
-     },
-     "b": {
-      "id": "3105",
-      "nombre": "Cala",
-      "p": 58
-     },
-     "pa": 55
     }
    ],
-   "fuera": [],
-   "vuelven": [],
+   "fuera": [
+    {
+     "id": "3105",
+     "nombre": "Cala",
+     "estado": "lesionado"
+    }
+   ],
+   "vuelven": [
+    {
+     "id": "1950",
+     "nombre": "Jofre",
+     "dias": 65,
+     "lesion": "Molestias en el aductor",
+     "antes": 0,
+     "p": 0
+    }
+   ],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -295,7 +296,7 @@
       "id": "3105",
       "nombre": "Cala",
       "pos": 4,
-      "por": null
+      "por": "lesionado"
      }
     ]
    },
@@ -544,10 +545,18 @@
     {
      "id": "3149",
      "nombre": "Bright Ede",
-     "dias": 32,
+     "dias": 33,
      "lesion": "Lesión en el bíceps femoral",
      "antes": 56,
      "p": 58
+    },
+    {
+     "id": "2980",
+     "nombre": "Eddahchouri",
+     "dias": 55,
+     "lesion": "Fractura de muñeca",
+     "antes": 0,
+     "p": 0
     }
    ],
    "anterior": {
@@ -976,7 +985,7 @@
       "id": "3117",
       "nombre": "Vargas",
       "pos": 4,
-      "por": "duda"
+      "por": null
      }
     ]
    },
@@ -1320,11 +1329,11 @@
       "p": 56
      },
      "b": {
-      "id": "2074",
-      "nombre": "Javi Rodríguez",
-      "p": 53
+      "id": "2346",
+      "nombre": "Álvaro Núñez",
+      "p": 54
      },
-     "pa": 52
+     "pa": 51
     },
     {
      "linea": 3,
@@ -1339,6 +1348,20 @@
       "p": 35
      },
      "pa": 60
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "2397",
+      "nombre": "Pablo Durán",
+      "p": 54
+     },
+     "b": {
+      "id": "2654",
+      "nombre": "El Abdellaoui",
+      "p": 40
+     },
+     "pa": 58
     }
    ],
    "fuera": [
@@ -1346,16 +1369,18 @@
      "id": "2639",
      "nombre": "M. Román",
      "estado": "lesionado"
-    },
-    {
-     "id": "2346",
-     "nombre": "Álvaro Núñez",
-     "estado": "lesionado",
-     "lesion": "Rotura fibrilar en el aductor",
-     "hasta": "mediados de noviembre"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "2654",
+     "nombre": "El Abdellaoui",
+     "dias": 61,
+     "lesion": "Sometido a artroscopia en la rodilla",
+     "antes": 40,
+     "p": 40
+    }
+   ],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -1533,19 +1558,22 @@
      "hasta": "mediados de diciembre"
     },
     {
-     "id": "3092",
-     "nombre": "Olmo",
-     "estado": "lesionado",
-     "lesion": "Rotura fibrilar en el aductor"
-    },
-    {
      "id": "2355",
      "nombre": "Kounde",
      "estado": "lesionado",
      "lesion": "Esguince de tobillo"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "3092",
+     "nombre": "Olmo",
+     "dias": 29,
+     "lesion": "Rotura fibrilar en el aductor",
+     "antes": 33,
+     "p": 22
+    }
+   ],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -2198,7 +2226,7 @@
     {
      "id": "2336",
      "nombre": "Herrando",
-     "dias": 78,
+     "dias": 79,
      "lesion": "Lesión en el aductor",
      "antes": 33,
      "p": 33
@@ -2206,7 +2234,7 @@
     {
      "id": "2338",
      "nombre": "Aimar",
-     "dias": 38,
+     "dias": 39,
      "lesion": "Lesión en los isquiotibiales",
      "antes": 67,
      "p": 67
@@ -2524,21 +2552,39 @@
      "p": 61
     }
    ],
-   "dudas": [],
-   "fuera": [
+   "dudas": [
     {
-     "id": "2924",
-     "nombre": "Zaid Romero",
-     "estado": "lesionado",
-     "lesion": "Lesión en el cuádriceps"
-    },
+     "linea": 2,
+     "a": {
+      "id": "3135",
+      "nombre": "Andrés Garcia",
+      "p": 69
+     },
+     "b": {
+      "id": "2924",
+      "nombre": "Zaid Romero",
+      "p": 49
+     },
+     "pa": 58
+    }
+   ],
+   "fuera": [
     {
      "id": "2452",
      "nombre": "Gudelj",
      "estado": "sancionado"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "2924",
+     "nombre": "Zaid Romero",
+     "dias": 39,
+     "lesion": "Lesión en el cuádriceps",
+     "antes": 86,
+     "p": 49
+    }
+   ],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -2678,6 +2724,13 @@
      "id": "3197",
      "nombre": "Cuti Romero",
      "estado": "lesionado"
+    },
+    {
+     "id": "3079",
+     "nombre": "Lookman",
+     "estado": "lesionado",
+     "lesion": "Esguince de rodilla",
+     "hasta": "principios de diciembre"
     }
    ],
    "vuelven": [],
@@ -2842,7 +2895,7 @@
     {
      "id": "2624",
      "nombre": "Manu Sánchez",
-     "dias": 17,
+     "dias": 18,
      "lesion": "Lesión en los isquiotibiales",
      "antes": 100,
      "p": 95
