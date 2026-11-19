@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
    "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
@@ -8596,13 +8595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4076,
+   "ok": 4077,
    "fallos": 0,
-   "ejecuciones": 3359,
+   "ejecuciones": 3360,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:46:13.316Z"
+   "ultima": "2026-11-19T11:51:15.286Z"
   }
  },
  "ptsDirecto": {},
@@ -8619,15 +8618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:46:21.054Z"
+   "ultimaBien": "2026-11-19T11:51:24.283Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:46:21.054Z"
+   "ultimaBien": "2026-11-19T11:51:24.283Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:46:21.054Z"
+   "ultimaBien": "2026-11-19T11:51:24.283Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8635,11 +8634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:46:21.054Z"
+   "ultimaBien": "2026-11-19T11:51:24.283Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:46:21.054Z"
+   "ultimaBien": "2026-11-19T11:51:24.283Z"
   }
  },
  "avisos": [
