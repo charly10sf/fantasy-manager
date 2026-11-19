@@ -341,7 +341,9 @@ function candidatos(X, vetados) {
   // (los que más euros suben al día primero: +1 % de uno de 90 M pesa más que +3 % de uno de 10 M; Carlos, 16 nov)
   const interesDe = (pid) => ((M.mercado || []).find((m) => m.pid === pid) || {}).interes || 0;
   for (const nr of Object.values(M.noRevender || {}).filter((x) => x.r > 0.008 && x.j && !MALOS_PLAN.has(x.j.estado) && (interesDe(x.pid) >= 55 || x.j.valor * x.r >= 3e5))
-    .sort((a, b) => b.j.valor * b.r * (interesDe(b.pid) >= 55 ? 2 : 1) - a.j.valor * a.r * (interesDe(a.pid) >= 55 ? 2 : 1)).slice(0, 6)) {
+    // (19 nov) 8 como mucho: con 6, en la liga de ejemplo Pepe (interés 83, el caso de Carlos) se quedaba fuera por dos que suben
+    // poco más en euros (caso-pujas.mjs)
+    .sort((a, b) => b.j.valor * b.r * (interesDe(b.pid) >= 55 ? 2 : 1) - a.j.valor * a.r * (interesDe(a.pid) >= 55 ? 2 : 1)).slice(0, 8)) {
     X.avisos.push({ pid: nr.pid, jugador: nr.j.nombre, motivo: noRevenderTxt(M, nr) });
   }
   return { libres: out, fijos };
