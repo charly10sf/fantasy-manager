@@ -5,9 +5,13 @@
    natural, nunca por sorpresa en medio de algo, ni al abrir o al salir de la app. Aquí:
    - Solo en dos pausas: al cambiar de pestaña con la barra de abajo y al cerrar una ficha (jugador, rival, club,
      partido…) con la X o arrastrándola. Nunca con el «atrás» de Android (puede que quiera salir), ni yendo a Pregunta.
-   - Nunca en los primeros minutos de cada vez que se abre la app (o se vuelve a ella tras media hora fuera), como mucho
-     uno cada N minutos de uso (con la app a la vista; el rato fuera no cuenta), un máximo al día y no justo después de
-     un anuncio bonificado.
+   - (20 nov, Carlos) Uno cada N minutos de uso («cadaMin», 7) A CONTAR DESDE LA PRIMERA VEZ QUE SE ABRE LA APP EN EL
+     DÍA: el rato de uso se suma entre todas las visitas del día (con la app a la vista; el rato fuera no cuenta) y se
+     guarda, así que cerrar la app o volver horas después no lo pone a cero. Antes (17-19 nov) el reloj empezaba de
+     cero en cada visita y casi nadie llegaba al primero. Un máximo al día («maxDia», 5) y no justo después de un
+     anuncio bonificado.
+   - Nunca en el primer minuto de cada vez que se abre la app (o se vuelve a ella tras media hora fuera), aunque ya
+     toque («sesionMin», 1): Google no deja un intersticial al abrir.
    - Nunca con la IA pensando, en el tutorial, con una ficha o una ventana abierta, escribiendo, en la liga de ejemplo,
      en la pantalla del límite ni antes de entrar en tu liga. Nunca al dueño (sinLimite/todoAbierto). Con
      «suLiga» (true desde el 17 nov), también a los de sus ligas: anuncios para todos menos el dueño.
@@ -20,12 +24,12 @@ import { enApp, nativo } from './puente.js';
 import { intersticialCfg, intersticialParaMi } from './limite.js';
 
 const TICK = 10e3;
-// una vuelta a la app tras media hora o más fuera es otra sesión: vuelven los minutos de gracia
+// una vuelta a la app tras media hora o más fuera es otra visita: vuelve el minuto sin anuncio del principio
 const SESION_NUEVA = 30 * MIN;
-// usoDesde: minutos de uso desde el último intersticial de ESTA sesión; en una sesión nueva empieza «cumplido» (Carlos,
-// 17 nov: el primero a los 2 min de cada sesión y después uno cada 10), y si la app se abre de nuevo poco después de uno
-// (Android la cerró), cuenta desde cero para no repetirlo
-let ultimo = Date.now(), usoSesion = 0, usoDesde = Infinity, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
+// usoSesion: el rato de uso de ESTA visita (solo para no enseñar uno nada más abrir). El rato que cuenta para «cada N
+// minutos» es el del día, «uso» de hoy(): desde el último intersticial de hoy o, si no ha salido ninguno, desde la
+// primera vez que se abrió hoy; va guardado para que valga entre visitas y aunque Android cierre la app
+let ultimo = Date.now(), usoSesion = 0, enCurso = false, enCursoT = 0, arrancado = false, fueraDesde = 0;
 
 const aLaVista = () => !document.hidden && (!enApp || nativo.aLaVista());
 /** cuenta el rato de uso: solo con la app a la vista. Fuera de la app el reloj puede seguir (Android no siempre congela
@@ -34,21 +38,30 @@ function contar() {
   const ahora = Date.now(), dt = ahora - ultimo;
   ultimo = ahora;
   if (!aLaVista()) { if (!fueraDesde) fueraDesde = ahora - Math.min(dt, TICK); return; }
-  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; } return; }
-  if (dt >= SESION_NUEVA) { usoSesion = 0; usoDesde = Infinity; return; }
+  if (fueraDesde) { const fuera = ahora - fueraDesde; fueraDesde = 0; if (fuera >= SESION_NUEVA) usoSesion = 0; return; }
+  if (dt >= SESION_NUEVA) { usoSesion = 0; return; }
   if (dt > TICK * 3) return;
-  usoSesion += dt;
-  usoDesde += dt;
+  sumar(dt);
 }
-/** lo de hoy: cuántos han salido y a qué hora el último (en LS, para que valga aunque Android cierre la app) */
-const hoy = () => { const g = LS.get('inter', null); return g && g.dia === diaDe() ? g : { dia: diaDe(), n: 0, t: 0 }; };
+/** lo de hoy: cuántos han salido, a qué hora el último y el rato de uso desde ese (o desde la primera vez que se abrió
+    hoy, si aún no ha salido ninguno). En LS, para que valga entre visitas y aunque Android cierre la app; al cambiar
+    el día empieza de cero */
+const hoy = () => {
+  const g = LS.get('inter', null), d = diaDe();
+  return g && g.dia === d ? { dia: d, n: Number(g.n) || 0, t: Number(g.t) || 0, uso: Math.max(0, Number(g.uso) || 0) } : { dia: d, n: 0, t: 0, uso: 0 };
+};
+function sumar(ms) {
+  usoSesion += ms;
+  const h = hoy();
+  h.uso += ms;
+  LS.set('inter', h);
+}
 
 /** al arrancar la app: el reloj del rato de uso */
 export function arrancarIntersticiales() {
   if (arrancado || !enApp) return;
   arrancado = true;
   ultimo = Date.now();
-  { const h = hoy(); if (h.t && ultimo - h.t < SESION_NUEVA) usoDesde = 0; }
   setInterval(contar, TICK);
   document.addEventListener('visibilitychange', contar);
   window.addEventListener('fm-vuelta', contar);
@@ -71,8 +84,10 @@ export function quizaIntersticial(pantallaLibre) {
   contar();
   const h = hoy();
   if (h.n >= c.maxDia) return 'tope del día';
-  if (usoSesion < c.gracia) return 'gracia';
-  if (h.t && (usoDesde < c.cada || Date.now() - h.t < c.cada)) return 'muy seguido';
+  // (recién abierta la app, ninguno, aunque por el rato del día ya toque)
+  if (usoSesion < c.sesion) return 'gracia';
+  // el primero del día, a los «cada» minutos de uso desde que se abrió hoy por primera vez; los demás, cada «cada»
+  if (h.uso < c.cada) return 'muy seguido';
   if (Date.now() - (Number(LS.get('inter-bonif', 0)) || 0) < c.trasBonificado) return 'tras un bonificado';
   if (!pantallaLibre || !aLaVista()) return 'pantalla ocupada';
   enCurso = true;
@@ -86,8 +101,7 @@ window.intersticialVisto = (ok, motivo) => {
   enCurso = false;
   if (!ok) return;
   const h = hoy();
-  LS.set('inter', { dia: h.dia, n: h.n + 1, t: Date.now() });
-  usoDesde = 0;
+  LS.set('inter', { dia: h.dia, n: h.n + 1, t: Date.now(), uso: 0 });
   ultimo = Date.now();
   void motivo;
 };
@@ -108,6 +122,6 @@ window.aperturaVista = (ok, motivo) => {
 };
 
 /** para las pruebas: el rato de uso de esta sesión (ms) y lo de hoy */
-export const estadoIntersticial = () => ({ usoSesion, usoDesde, enCurso, ...hoy() });
+export const estadoIntersticial = () => ({ usoSesion, enCurso, ...hoy() });
 /** para las pruebas: hace como si llevara ms de uso */
-export const sumarUso = (ms) => { usoSesion += ms; usoDesde += ms; };
+export const sumarUso = (ms) => sumar(ms);

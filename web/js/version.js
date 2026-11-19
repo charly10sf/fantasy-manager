@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8h';
+export const VERSION = '0.8i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8h';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (20 nov, Carlos: «el de apertura, una vez al día nada más abrir la app; los intersticiales, uno cada 7 minutos a
+    // contar desde la primera apertura del día, 5 al día como mucho») El de apertura se pedía con la liga ya cargada y
+    // solo valía si llegaba en 12 s desde que se abría: al abrir en frío casi nunca salía (Anuncios.java, parte Android
+    // nueva: AAB para Play). Los intersticiales contaban el rato de cada visita desde cero: ahora, el del día
+    // (intersticial.js). Detalle en ESTADO.md. La hora, al publicar
+    v: '0.8i', f: '2026-11-20', h: '00:00', t: 'Los anuncios, a su hora',
+    cosas: [
+      { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'Los anuncios, a su hora', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
+    ],
+  },
   {
     // (19-20 nov, Carlos) invitar a un amigo, a todos (primero pidió web e iPhone y luego «a los de android también, así
     // invitan a más gente»). Con «aviso» no sale la presentación a pantalla completa sino una tarjeta en el centro con una

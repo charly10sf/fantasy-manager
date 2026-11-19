@@ -225,15 +225,16 @@ export function preguntasCfg() {
   return { on: !!(p && p.on), gratis: gratis * x, max: Math.max(gratis, n(p && p.max, 6)) * x, porAnuncio: Math.max(1, n(p && p.porAnuncio, 3)), doble: x === 2 };
 }
 /** (0.8) los intersticiales de la app de Google Play (intersticial.js): «intersticial» de limites.json. Los minutos van en ms.
-    gracia: minutos de uso antes del primero de cada vez que se abre la app; cada: minutos de uso entre uno y otro (y de
-    reloj, como poco); maxDia: cuántos al día; trasBonificado: minutos sin intersticial después de un bonificado; bloque:
+    cada: minutos de uso entre uno y otro, contando desde la primera vez que se abre la app en el día y sumando todas las
+    visitas (20 nov, Carlos); sesion: minutos sin ninguno cada vez que se abre la app, aunque ya toque («sesionMin», 1;
+    «graciaMin» ya solo lo leen las webs de antes del 20 nov); maxDia: cuántos al día; trasBonificado: minutos sin intersticial después de un bonificado; bloque:
     el id del bloque de AdMob (si la app no lo lleva puesto; Android solo acepta los de la cuenta de Carlos); suLiga: si
     también a los de sus ligas («ligas»). Sin «intersticial» (o con «on»: false), ninguno */
 export function intersticialCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
   const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
   return {
-    on: !!(p && p.on), gracia: n(p && p.graciaMin, 10, 1, 60) * 60e3, cada: n(p && p.cadaMin, 10, 3, 240) * 60e3,
+    on: !!(p && p.on), sesion: n(p && p.sesionMin, 1, 0, 30) * 60e3, cada: n(p && p.cadaMin, 7, 3, 240) * 60e3,
     maxDia: Math.floor(n(p && p.maxDia, 5, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
     bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
     // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)

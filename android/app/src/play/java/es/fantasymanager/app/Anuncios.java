@@ -1,5 +1,7 @@
 package es.fantasymanager.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -38,9 +40,15 @@ import org.json.JSONObject;
  *   pedido el usuario con un botón), sin dejar otro precargado.
  * - (17 nov, Carlos) Un anuncio de apertura (App Open, el formato que Google deja enseñar al abrir la app; un intersticial al
  *   abrir está prohibido) una vez al día como mucho: la web dice con apertura(toca, bloque) si a esta cuenta le toca hoy
- *   (nunca el primer día que usa la app, ni al dueño ni a los de su liga; intersticial.js) y aquí solo se enseña en los
- *   primeros segundos de abrir la app o de volver a ella tras media hora fuera. Si no está cargado a tiempo, ese día se
- *   espera a la próxima apertura: nunca en mitad del uso.
+ *   (nunca el primer día que usa la app, ni al dueño ni a los de su liga; intersticial.js) y aquí solo se enseña al abrir
+ *   la app (en cuanto su liga está cargada) o al volver a ella tras media hora fuera. Si no está cargado a tiempo, ese
+ *   día se espera a la próxima apertura: nunca en mitad del uso.
+ *   (20 nov, Carlos: «que salga nada más abrir») Antes se pedía a Google cuando la liga ya estaba cargada y solo valía
+ *   si llegaba en los 12 s siguientes a abrir la app: con lo que tarda LaLiga, al abrir en frío casi nunca llegaba. Ahora
+ *   (a) si a esta cuenta le tocó en los últimos días y hoy aún no lo ha visto (apuntado en las preferencias), se pide
+ *   en cuanto AdMob arranca, mientras carga la liga, y (b) se enseña en el momento en que la web dice que la liga está
+ *   cargada y que le toca (o hasta unos segundos después, si aún estaba llegando). Sigue sin enseñarse nada antes de
+ *   que la liga esté cargada (Carlos, 8 nov): pedirlo antes no enseña nada.
  * La versión de GitHub (src/github) no lleva nada de esto.
  */
 final class Anuncios {
@@ -79,10 +87,18 @@ final class Anuncios {
     /** el de apertura: Google dice que dura 4 horas cargado; solo en los primeros segundos al abrir o volver tras media hora */
     private static final long CADUCA_APERTURA = 4 * 60 * 60 * 1000L - 10 * 60 * 1000L;
     private static final long VENTANA_APERTURA = 12 * 1000L;
+    /** al abrir la app: lo que se espera a que la liga cargue (entrar con la cuenta incluido) y, cargada, a que llegue el anuncio */
+    private static final long ESPERA_LIGA = 2 * 60 * 1000L;
+    private static final long TRAS_LIGA = 5 * 1000L;
+    /** se pide por adelantado solo si la web dijo que a esta cuenta le tocaba en los últimos días */
+    private static final long PREVISTA_DIAS = 4 * 24 * 60 * 60 * 1000L;
+    private static final String P_TOCA = "ap_toca", P_VISTO = "ap_visto";
     private static final long OTRA_SESION = 30 * 60 * 1000L;
     private static AppOpenAd apertura;
     private static long aperturaT, momentoHasta, pausadoDesde, aperturaDia = -1, esperaAperturaHasta;
-    private static boolean cargandoApertura, ensenandoApertura, aperturaToca;
+    /** abriendo: la app se acaba de abrir y la web aún no ha dicho que la liga está cargada y que le toca;
+        aperturaPrevista: por lo apuntado de otros días, hoy le tocará (para pedirlo ya, sin enseñarlo) */
+    private static boolean cargandoApertura, ensenandoApertura, aperturaToca, abriendo, aperturaPrevista;
     private static int fallosApertura;
     private static String bloqueAperturaWeb = "";
 
@@ -94,12 +110,17 @@ final class Anuncios {
         // si Android ha vuelto a crear la pantalla, lo de la anterior no vale
         if (act != null && act != a) soltar();
         act = a;
-        // abrir la app: el momento del anuncio de apertura (si a esta cuenta le toca hoy y llega a tiempo)
-        momentoHasta = System.currentTimeMillis() + VENTANA_APERTURA;
+        // abrir la app: el momento del anuncio de apertura (si a esta cuenta le toca hoy), que dura hasta que la liga
+        // está cargada y unos segundos más; y si ya se sabe que le tocará, se pide en cuanto AdMob arranque
+        abriendo = true;
+        momentoHasta = System.currentTimeMillis() + ESPERA_LIGA;
+        aperturaPrevista = prevista(a);
         // pantalla nueva, web nueva: hasta que diga zona(true), nada (aunque AdMob ya estuviera arrancado)
         quiere = false;
         activado = false;
         pedirConsentimiento();
+        // (si AdMob ya estaba arrancado de otra pantalla de este mismo proceso, el de apertura por adelantado se pide ya)
+        cargarApertura();
     }
 
     private static void pedirConsentimiento() {
@@ -139,8 +160,9 @@ final class Anuncios {
                     if (activado) {
                         cargarIntersticial();
                         cargarBonificado();
-                        cargarApertura();
                     }
+                    // el de apertura, también por adelantado si hoy le va a tocar (no se enseña hasta que la web lo diga)
+                    cargarApertura();
                 }));
             } catch (Throwable t) {
                 iniciado = false;
@@ -188,7 +210,10 @@ final class Anuncios {
         // volver tras media hora fuera es como abrirla: otro momento para el de apertura (si hoy aún no ha salido)
         long ahora = System.currentTimeMillis();
         if (pausadoDesde > 0 && ahora - pausadoDesde >= OTRA_SESION) {
-            momentoHasta = ahora + VENTANA_APERTURA;
+            // (si se fue mientras la liga cargaba, sigue valiendo lo de abrir: lo que acabe más tarde)
+            momentoHasta = abriendo ? Math.max(momentoHasta, ahora + VENTANA_APERTURA) : ahora + VENTANA_APERTURA;
+            // (si al abrir no llegó ninguno, se pide ahora: antes solo se enseñaba el que ya estuviera cargado)
+            cargarApertura();
             quizaApertura();
         }
         pausadoDesde = 0;
@@ -213,6 +238,8 @@ final class Anuncios {
         apertura = null;
         aperturaToca = false;
         ensenandoApertura = false;
+        abriendo = false;
+        aperturaPrevista = false;
     }
 
     /* ---------------- el intersticial ---------------- */
@@ -337,12 +364,63 @@ final class Anuncios {
             if (bloque != null && bloque.startsWith(CUENTA) && bloque.matches("ca-app-pub-\\d{16}/\\d{10}")) bloqueAperturaWeb = bloque;
             aperturaToca = toca;
             if (!toca) {
+                // sin la liga cargada (o en la pantalla del límite) la web aún no sabe si le toca: el que se haya
+                // pedido por adelantado se guarda. Con la liga cargada es un «no» de verdad (ya lo ha visto hoy, es su
+                // primer día, es el dueño…): fuera, y si no es porque lo ha visto hoy, mañana no se pide por adelantado
+                if (!quiere) return;
                 apertura = null;
+                aperturaPrevista = false;
+                abriendo = false;
+                if (!vistoHoy(a)) apuntar(a, P_TOCA, 0);
                 return;
+            }
+            long ahora = System.currentTimeMillis();
+            apuntar(a, P_TOCA, ahora);
+            // recién abierta la app: la liga acaba de cargar y le toca. Es el momento: ahora si ya está cargado, o en
+            // los segundos siguientes si aún está llegando; más tarde ya no (estaría en mitad del uso)
+            if (abriendo) {
+                abriendo = false;
+                if (ahora <= momentoHasta) momentoHasta = ahora + TRAS_LIGA;
             }
             cargarApertura();
             quizaApertura();
         });
+    }
+
+    /* lo apuntado entre un día y otro (preferencias de la app): cuándo dijo la web por última vez que le tocaba y cuándo
+       se enseñó el último. Solo sirve para pedirlo por adelantado; si se enseña lo sigue decidiendo la web */
+    private static long diaLocal(long t) {
+        return (t + java.util.TimeZone.getDefault().getOffset(t)) / 86400000L;
+    }
+
+    private static boolean vistoHoy(Context c) {
+        try {
+            long visto = Puente.prefs(c).getLong(P_VISTO, 0);
+            return visto > 0 && diaLocal(visto) == diaLocal(System.currentTimeMillis());
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
+    private static boolean prevista(Context c) {
+        try {
+            long toca = Puente.prefs(c).getLong(P_TOCA, 0), ahora = System.currentTimeMillis();
+            return toca > 0 && ahora - toca < PREVISTA_DIAS && !vistoHoy(c);
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
+    private static void apuntar(Context c, String clave, long valor) {
+        try {
+            SharedPreferences p = Puente.prefs(c);
+            // (la web lo repite cada vez que pinta: no se escribe si ya está apuntado hace menos de una hora)
+            long antes = p.getLong(clave, 0);
+            if (valor == antes || (valor > 0 && antes > 0 && valor - antes < 60 * 60 * 1000L)) return;
+            p.edit().putLong(clave, valor).apply();
+        } catch (Throwable t) {
+            // sin apuntarlo, solo deja de pedirse por adelantado
+        }
     }
 
     private static String bloqueApertura() {
@@ -350,7 +428,9 @@ final class Anuncios {
     }
 
     private static void cargarApertura() {
-        if (act == null || !listo || !activado || !aperturaToca || cargandoApertura || ensenandoApertura) return;
+        if (act == null || !listo || cargandoApertura || ensenandoApertura) return;
+        // con la liga cargada y la web diciendo que le toca; o, antes de eso, por adelantado si se sabe que le tocará
+        if (!(activado && aperturaToca) && !aperturaPrevista) return;
         long ahora = System.currentTimeMillis();
         if (apertura != null && ahora - aperturaT < CADUCA_APERTURA) return;
         String id = bloqueApertura();
@@ -366,7 +446,8 @@ final class Anuncios {
                 apertura = ad;
                 aperturaT = System.currentTimeMillis();
                 fallosApertura = 0;
-                // si ha llegado dentro de los primeros segundos de abrir, ahora; si no, queda para la próxima apertura
+                // si ha llegado a tiempo (y la web ya ha dicho que le toca), ahora; si llega antes que la liga, espera a
+                // que la web lo diga; si llega tarde, queda para la próxima apertura
                 quizaApertura();
             }
 
@@ -380,7 +461,8 @@ final class Anuncios {
         });
     }
 
-    /** se enseña solo si toca, está cargado y estamos en los primeros segundos de abrir (o volver), con nada más encima */
+    /** se enseña solo si la web dice que toca (con la liga cargada), está cargado y estamos en el momento de abrir (o de
+        volver tras media hora), con nada más encima */
     private static void quizaApertura() {
         final Principal a = act;
         AppOpenAd ad = apertura;
@@ -400,6 +482,8 @@ final class Anuncios {
             @Override
             public void onAdShowedFullScreenContent() {
                 aperturaDia = dia;
+                aperturaPrevista = false;
+                apuntar(a, P_VISTO, System.currentTimeMillis());
                 // el intersticial espera como poco su suelo desde este (la web espera más: «graciaMin»)
                 ultimoIntersticial = System.currentTimeMillis();
             }
