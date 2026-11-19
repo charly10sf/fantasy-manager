@@ -11,15 +11,19 @@ import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ven
 import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { guardarFicha, prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
+import { pTitularMinutos } from '../../web/js/titular.js';
 
-export function baseTitular(playerStats, hasta) {
+// (19 nov) con `vrel` (lo que vale frente al que más vale de su puesto en su equipo, 0-1), `p` sale de la misma cuenta que la
+// app (web/js/titular.js: minutos de sus 3 últimas convocatorias y de la temporada, y su valor); sin él, la de antes
+export function baseTitular(playerStats, hasta, vrel = null) {
   const s = (playerStats || []).filter((x) => x.weekNumber <= hasta && x.stats && x.stats.mins_played).sort((a, b) => a.weekNumber - b.weekNumber);
   if (s.length < 3) return null;
   const min = (x) => Number(x.stats.mins_played[0]) || 0;
   const ult = s.slice(-5);
   const a = ult.filter((x) => min(x) >= 60).length / ult.length;
   const b = s.filter((x) => min(x) >= 60).length / s.length;
-  return { p: (0.3 * a + 0.2 * b) / 0.5, a, b, ult: ult.length, temporada: s.length };
+  const p = vrel != null ? pTitularMinutos(s.map(min), vrel) : (0.3 * a + 0.2 * b) / 0.5;
+  return { p, a, b, ult: ult.length, temporada: s.length };
 }
 
 export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, stats = [], semana = null, soloSeguras = false, registro = null, ahora = Date.now(), log = console.log }) {

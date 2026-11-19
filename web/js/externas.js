@@ -194,26 +194,53 @@ export function leerConfirmado(html, plantilla) {
   return { ids, sin, tits: base, al100: cien.length };
 }
 
-/** los onces probables de todos los equipos (se guardan 6 horas) */
+/**
+ * los onces probables de todos los equipos. (19 nov, Carlos: El Hilali y Morcillo, titulares de 90 minutos, salían al 47 %
+ * con «SUP») Cada página pesa ~2,7 MB y en el móvil alguna se queda por el camino; antes, con que llegara un solo equipo,
+ * a todos los jugadores de los que no llegaban se les daba por fuera del once (15 %). Ahora: cada jugador lleva su equipo
+ * (`eq`); un equipo solo vale si su página trae 10-12 titulares y casan 9 o más con LaLiga (como el bot, lib/ff.mjs); los
+ * que fallan se piden otra vez y, si siguen sin llegar, se aprovecha lo leído de ese equipo en las últimas 24 h. Con todo
+ * leído se guarda 6 horas; si falta alguno, se vuelve a mirar a los 45 minutos. `leidos`: los equipos con once probable.
+ */
 export async function oncesProbables(D) {
   const guardado = LS.get('onces', null);
-  if (guardado && Date.now() - guardado.t < 6 * HORA && guardado.n) return guardado;
+  if (guardado && guardado.n && Date.now() - guardado.t < (guardado.completo ? 6 * HORA : 45 * MIN)) return guardado;
   const slugs = slugsDe(D.equipos);
   const porEquipo = {};
   for (const j of Object.values(D.maestro)) (porEquipo[j.equipoId] ||= []).push(j);
-  const res = {};
-  let equiposOk = 0;
-  await enParalelo(Object.entries(slugs), 3, async ([eqId, slug]) => {
+  const res = {}, leidos = {};
+  const leer = async ([eqId, slug]) => {
     const t0 = Date.now();
     const r = await http('GET', `https://www.futbolfantasy.com/laliga/equipos/${slug}`, { cabeceras: { Accept: 'text/html', 'Accept-Language': 'es-ES,es;q=0.9', 'User-Agent': UA } });
     apuntarRegistro({ ruta: `futbolfantasy once ${slug}`, s: r.s, ms: Date.now() - t0, e: r.e });
-    if (r.s !== 200 || !r.b) return;
+    if (r.s !== 200 || !r.b) return false;
     const lista = parseOnce(r.b);
-    if (!lista.length) return;
-    equiposOk++;
-    Object.assign(res, unirOnce(lista, porEquipo[eqId] || []));
-  });
-  const salida = { t: Date.now(), n: Object.keys(res).length, equipos: equiposOk, de: Object.keys(slugs).length, jugadores: res };
+    const tits = lista.filter((x) => x.titular).length;
+    if (tits < 10 || tits > 12) { apuntarRegistro({ ruta: `futbolfantasy once ${slug}`, s: r.s, e: `${tits} titulares leídos: no vale` }); return false; }
+    const u = unirOnce(lista, porEquipo[eqId] || []);
+    const casados = Object.values(u).filter((x) => x.titular).length;
+    if (casados < 9) { apuntarRegistro({ ruta: `futbolfantasy once ${slug}`, s: r.s, e: `${casados} titulares casados: no vale` }); return false; }
+    const t = Date.now();
+    for (const [pid, x] of Object.entries(u)) res[pid] = { ...x, eq: String(eqId), t };
+    leidos[eqId] = t;
+    return true;
+  };
+  const todos = Object.entries(slugs);
+  await enParalelo(todos, 3, (e) => leer(e).catch(() => false));
+  // los que no han llegado, otra vez y de dos en dos (con tres páginas de 2,7 MB a la vez es donde más fallan)
+  const otra = todos.filter(([eqId]) => !leidos[eqId]);
+  if (otra.length && otra.length < todos.length) await enParalelo(otra, 2, (e) => leer(e).catch(() => false));
+  // y si siguen sin llegar, lo leído de ese equipo hace menos de 24 h
+  const viejos = {};
+  if (guardado && guardado.jugadores) {
+    for (const [pid, x] of Object.entries(guardado.jugadores)) {
+      if (!x || !x.eq || leidos[x.eq] || !x.t || Date.now() - x.t > 24 * HORA) continue;
+      res[pid] = x; viejos[x.eq] = Math.max(viejos[x.eq] || 0, x.t);
+    }
+  }
+  const equipos = Object.keys(leidos).length;
+  const salida = { t: Date.now(), n: Object.keys(res).length, equipos, de: todos.length, completo: equipos === todos.length,
+    leidos: [...Object.keys(leidos), ...Object.keys(viejos)], jugadores: res };
   if (salida.n) LS.set('onces', salida);
   return salida;
 }

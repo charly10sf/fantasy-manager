@@ -661,5 +661,5 @@ function onceDemo(D) {
   for (const l of Object.values(porEq)) {
     l.sort((a, b) => b.media - a.media).forEach((j, i) => { jugadores[j.id] = { titular: i < 4 && j.estado !== 'injured', alternativa: i >= 4, prob: i < 4 ? 90 - i * 8 : 25, estado: j.estado === 'injured' ? 'injured' : 'ok' }; });
   }
-  return { t: Date.now(), n: Object.keys(jugadores).length, equipos: Object.keys(porEq).length, de: Object.keys(porEq).length, jugadores };
+  return { t: Date.now(), n: Object.keys(jugadores).length, equipos: Object.keys(porEq).length, de: Object.keys(porEq).length, completo: true, leidos: Object.keys(porEq), jugadores };
 }

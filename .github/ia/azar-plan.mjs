@@ -147,6 +147,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         if (sinSalida) cuenta.sinSalida++;
         cuenta.pasos += (R.ops || []).filter((o) => o._k).length; cuenta.vetos += (R.vetos || []).length;
         /* --- lo de cada caso, sobre el plan de la app y luego sobre el de la IA al azar --- */
+        // (19 nov) en negativo sin salida, si la IA mete compras de más, el aviso que sale es el del límite de deuda: también vale
         const revisaCaso = (X, quien) => {
           const vv = vivas(X), de = (pid) => vv.filter((o) => o.pid === pid);
           const hoyEntra = vv.some((o) => o.hoy !== false && ((o.accion === 'vender' && o.etiqueta === 'Aceptar oferta') || o.retira));
@@ -163,7 +164,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
           }
           if (caso === 'negativo') {
             if (X.modo !== 'negativo') falla(`${quien}: en negativo entre semana el plan no va en modo negativo (${X.modo})`);
-            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas/.test(X.avisoSaldo || '')) falla(`${quien}: acaba en negativo y no lo avisa`);
+            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas|Te pasarías del límite de deuda/.test(X.avisoSaldo || '')) falla(`${quien}: acaba en negativo y no lo avisa`);
           }
           if (caso === 'clausula-pagada') {
             const b = de(C.pid).filter((o) => o.accion === 'blindar' || o.accion === 'clausular');
@@ -187,7 +188,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
           }
           if (caso === 'negativo-ultimo') {
             if (X.modo !== 'negativo') falla(`${quien}: en negativo con un solo cambio por delante el plan no va en modo negativo (${X.modo})`);
-            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas/.test(X.avisoSaldo || '')) falla(`${quien}: acaba en negativo y no lo avisa`);
+            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas|Te pasarías del límite de deuda/.test(X.avisoSaldo || '')) falla(`${quien}: acaba en negativo y no lo avisa`);
             if (vv.some((o) => o.accion === 'vender' && o.hoy === false)) falla(`${quien}: con un solo cambio por delante deja una venta para otro día: ${vv.filter((o) => o.accion === 'vender' && o.hoy === false).map((o) => o.jugador).join(', ')}`);
           }
           if (caso === 'lesionado') {
