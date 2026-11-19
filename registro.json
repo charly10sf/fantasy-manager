@@ -2177,7 +2177,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000,
    "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000,
@@ -2399,7 +2398,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
    "SPORT|136608611": 1795080548000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
-   "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000
+   "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000,
+   "SPORT|136611106": 1795081699000
   },
   "hechos": [
    {
@@ -3362,7 +3362,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4207,7 +4207,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136493729": 1794825978000,
    "SPORT|136499689": 1794831300000,
    "SPORT|136501552": 1794833131000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
@@ -4266,17 +4265,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 22,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 380272,
-  "salida": 14520,
+  "entrada": 382290,
+  "salida": 14645,
   "cacheLee": 11612,
   "cacheEscribe": 17418,
-  "dolares": 0.804289,
+  "dolares": 0.804553,
   "reservado": 0
  },
  "recientes": {
@@ -8605,13 +8604,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4064,
+   "ok": 4065,
    "fallos": 0,
-   "ejecuciones": 3347,
+   "ejecuciones": 3348,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T10:46:11.943Z"
+   "ultima": "2026-11-19T10:51:13.366Z"
   }
  },
  "ptsDirecto": {},
@@ -8628,15 +8627,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:46:21.134Z"
+   "ultimaBien": "2026-11-19T10:51:25.442Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:46:21.134Z"
+   "ultimaBien": "2026-11-19T10:51:25.442Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:46:21.134Z"
+   "ultimaBien": "2026-11-19T10:51:25.442Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8644,11 +8643,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:46:21.134Z"
+   "ultimaBien": "2026-11-19T10:51:25.442Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:46:21.134Z"
+   "ultimaBien": "2026-11-19T10:51:25.442Z"
   }
  },
  "avisos": [
