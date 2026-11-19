@@ -25,6 +25,13 @@ export const CASOS = [
   { id: 'vago', tipo: 'estrategia', q: 'Estoy perdido, ayúdame' },
   { id: 'mas-corto', tipo: 'conversacion', sigue: true, q: 'Dímelo más corto' },
   { id: 'trueque', tipo: 'ofertas', q: '{R2} me propone cambiarme {SUYO} por {MIO2}, uno por otro. ¿Me interesa?' },
+  // (19 nov, Carlos: Domy le compra a Fornals a su valor y él le compra a Huijsen por 60 M con ese dinero; la IA dijo que el
+  // dinero de la venta no entraba hasta el cambio de mercado, que «perdía 1,05 M» y que los 14 días «no compensan nada», y
+  // siguió con «clausúlalo a las 20:00» cuando él le dijo que el rival se lo iba a blindar)
+  { id: 'trueque-encadenado', tipo: 'ofertas', q: '{R2} me propone esto: él me compra a {MIO2} por su valor de mercado y, en cuanto me llega el dinero, yo le compro a {SUYO} por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?',
+    noDebe: /cambio de mercado|no compensa|iguales para los dos|pierdes \d/ },
+  { id: 'trueque-sin-clausula', tipo: 'ofertas', sigue: true, q: 'Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de {SUYO} se la sube o lo blinda, así que clausularlo no es opción.',
+    noDebe: /no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)/ },
   { id: 'portero', tipo: 'estrategia', q: '¿A quién pongo de portero esta jornada?' },
   { id: 'libre', tipo: 'mercado', q: '¿Qué te parece {LIBRE}?' },
   { id: 'cuanto-pujo', tipo: 'mercado', sigue: true, q: '¿Y cuánto pujo por él?' },
