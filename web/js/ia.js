@@ -6,20 +6,20 @@
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
 import { token } from './auth.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
 import { K } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt, guardarRecs } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
-import { bloqueada, topConAnuncio, planesCfg, preguntasCfg } from './limite.js';
+import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo, ofertaDueno } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
-import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
+import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -3296,7 +3296,21 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
   // (lo de lo que queda para pujar ya sale bien dicho de contexto, para el plan y el chat: 17 nov)
   const ctx = contexto(D, M, c, { chat: true }).replace(/funci[oó]n top cerrada/g, 'cerrado en su cuenta');
-  return `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}${rivales ? `\n${rivales}` : ''}${extra}${plan}`;
+  // (19 nov) lo de la liga primero y lo de esta pregunta detrás de MARCA_PREGUNTA: lo de la liga va en la caché de la IA entre
+  // una pregunta y la siguiente de la misma conversación (en el Worker, cuesta una décima parte). Para que la caché valga, en
+  // la misma conversación se repite tal cual (fotoChat) mientras no cambien la liga ni lo que tienes abierto, hasta 10 min;
+  // la hora de verdad va abajo
+  const liga = fotoChat(D, `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}`, hist);
+  const ahoraTxt = liga.t ? `AHORA: ${fechaLarga(Date.now())}, ${horaDe(Date.now())} (hora de España). Los datos de arriba son de las ${horaDe(liga.t)}: lo que pone «en N h» o «hace N min» cuenta desde esa hora.\n` : '';
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${rivales ? `${rivales}\n` : ''}${extra}${plan}`.replace(/\n+$/, '');
+}
+/** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
+let FOTO = null;
+export function fotoChat(D, texto, hist = [], ahora = Date.now()) {
+  const clave = `${D && D.t}|${D && D.liga && D.liga.id}|${Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)).join()}|${rivalesAbiertos().join()}`;
+  if (FOTO && (hist || []).length && FOTO.clave === clave && ahora - FOTO.t < 10 * 60e3 && diaDe(FOTO.t) === diaDe(ahora)) return { texto: FOTO.texto, t: FOTO.t };
+  FOTO = { clave, texto, t: ahora };
+  return { texto, t: 0 };
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
 export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });

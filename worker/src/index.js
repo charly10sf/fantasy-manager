@@ -66,7 +66,7 @@
 
 import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
-import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta } from '../../web/js/chat-sistema.js';
+import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta, partirDatos } from '../../web/js/chat-sistema.js';
 import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
 import { apodosObjeto, ligaOk } from './apodos.js';
 
@@ -882,6 +882,8 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     const u = x.usage || {}, b = bloquesDe(x.content);
     // (lo leído de la caché cuesta una décima parte y lo que se escribe en ella, un 25 % más: se cuenta así en `entra`)
     acc.texto += b.texto; acc.entra += (u.input_tokens || 0) + Math.round((u.cache_read_input_tokens || 0) * 0.1 + (u.cache_creation_input_tokens || 0) * 1.25); acc.sale += u.output_tokens || 0; acc.fin = x.stop_reason || '';
+    // (19 nov) lo leído y escrito en la caché, aparte, para medir lo que ahorra
+    acc.cache = { lee: ((acc.cache && acc.cache.lee) || 0) + (u.cache_read_input_tokens || 0), escribe: ((acc.cache && acc.cache.escribe) || 0) + (u.cache_creation_input_tokens || 0), sin: ((acc.cache && acc.cache.sin) || 0) + (u.input_tokens || 0) };
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
     if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
@@ -992,7 +994,7 @@ export async function cfgPreguntas(env) {
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 3, 0, 100));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low' };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 6, 0, 200))), porAnuncio: Math.max(1, Math.floor(n(p.porAnuncio, 3, 1, 50))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PREGUNTA_MODELO || env.PLAN_MODELO || PLAN_MODELO), esfuerzo: ['low', 'medium', 'high'].includes(p.esfuerzo) ? p.esfuerzo : 'low', cacheLiga: ['siempre', 'segunda', 'no'].includes(p.cacheLiga) ? p.cacheLiga : 'siempre' };
 }
 const cupoTxtP = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, porAnuncio: c.porAnuncio, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: Math.min(c.max, c.gratis + y.x) < c.max });
 const cupoLibreP = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, porAnuncio: c.porAnuncio, quedan: 99, masConAnuncio: true, ilimitado: true });
@@ -1026,14 +1028,24 @@ export function mensajesChat(hist, pregunta, fotos) {
  * Lo que se le manda a Claude de una pregunta ya leída (b): { sistema, mensajes } o null si no vale. Lo usa también la
  * prueba con Haiku de verdad (.github/ia/chat-haiku.mjs), para preguntar exactamente lo mismo que el Worker.
  */
-export function armarChat(b) {
+export function armarChat(b, { cacheLiga = 'siempre' } = {}) {
   if (!b || typeof b !== 'object' || !esDatosChat(b.datos)) return null;
   const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
   if (!mensajes) return null;
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
   const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
   // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
-  return { sistema: [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, { type: 'text', text: b.datos }], mensajes };
+  // (19 nov) y los datos de la liga también: la app los manda en dos trozos (partirDatos), lo de la liga, que no cambia en la
+  // misma conversación, y lo de esta pregunta (los jugadores y rivales que nombra, el plan, la hora); lo primero, en la caché
+  // Escribir en la caché cuesta un 25 % más y leerla, una décima parte: compensa si 1 de cada 4 conversaciones sigue con otra
+  // pregunta en menos de 5 minutos. «preguntas.cacheLiga» de limites.json: 'siempre' (por defecto), 'segunda' (desde la
+  // segunda pregunta de la conversación) o 'no'. Con la batería de chat-casos.mjs (82 % de preguntas sueltas), en seco:
+  // 'siempre' +2 % en total y −53 % en las que siguen; 'segunda' −1 % y −6 %
+  const { liga, pregunta } = partirDatos(b.datos);
+  const enCache = !!pregunta && (cacheLiga === 'siempre' || (cacheLiga === 'segunda' && mensajes.length > 1));
+  const sistema = [{ type: 'text', text: fijo, cache_control: { type: 'ephemeral' } }, enCache ? { type: 'text', text: liga, cache_control: { type: 'ephemeral' } } : { type: 'text', text: liga }];
+  if (pregunta) sistema.push({ type: 'text', text: pregunta });
+  return { sistema, mensajes };
 }
 async function preguntaIA(req, env, c, ctx) {
   let P = await cfgPreguntas(env);
@@ -1048,7 +1060,7 @@ async function preguntaIA(req, env, c, ctx) {
   if (txt.length > tope * 1.2) return json({ e: 'La pregunta es demasiado grande (prueba con menos fotos).' }, 413, c);
   let b = null;
   try { b = JSON.parse(txt); } catch (e) { b = null; }
-  const armado = armarChat(b);
+  const armado = armarChat(b, { cacheLiga: P.cacheLiga });
   if (!armado) return json({ e: 'Pregunta no válida' }, 400, c);
   const { sistema, mensajes } = armado;
   const rid = ridDe(b.rid);

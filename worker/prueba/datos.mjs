@@ -949,5 +949,15 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   await inv(530, '/borrar', {});
   r = await inv(530, '/apodos?liga=55', null, 'GET');
   ok(!Object.keys(r.j.a).length, 'Borrar mis datos del servidor también borra los apodos');
+
+  // ---------- (19 nov) el chat: los datos de la liga, en la caché ----------
+  const CS = await import('../../web/js/chat-sistema.js');
+  const dLiga = `${CS.CABECERA_DATOS}\nMIS JUGADORES: …`, dPreg = 'JUGADORES QUE NOMBRA: …';
+  const ch = W2.armarChat({ datos: `${dLiga}${CS.MARCA_PREGUNTA}${dPreg}`, pregunta: '¿Vendo?', hist: [] });
+  ok(ch && ch.sistema.length === 3 && ch.sistema[1].text === dLiga && ch.sistema[1].cache_control && ch.sistema[2].text === dPreg && !ch.sistema[2].cache_control, 'chat: lo de la liga en la caché y lo de la pregunta detrás, sin ella');
+  const ch2 = W2.armarChat({ datos: `${dLiga}${CS.MARCA_PREGUNTA}${dPreg}`, pregunta: '¿Vendo?', hist: [] }, { cacheLiga: 'segunda' });
+  ok(ch2 && !ch2.sistema[1].cache_control, 'con cacheLiga «segunda», la primera pregunta no escribe en la caché');
+  const ch3 = W2.armarChat({ datos: dLiga, pregunta: '¿Vendo?', hist: [] });
+  ok(ch3 && ch3.sistema.length === 2 && ch3.sistema[1].text === dLiga, 'los datos de una versión de antes (sin la marca) van como antes');
   globalThis.fetch = fAntes;
 }
