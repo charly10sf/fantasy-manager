@@ -1295,6 +1295,13 @@
    "jornada": 13,
    "id": "2123372363240579325",
    "t": "2026-11-19T11:06:36.782Z"
+  },
+  {
+   "clave": "novedades|3182:vuelve|2026-11-19",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123373606264557708",
+   "t": "2026-11-19T11:11:33.175Z"
   }
  ],
  "estados": {
@@ -1415,7 +1422,7 @@
   "2351": "out_of_league",
   "2353": "ok",
   "2354": "ok",
-  "2355": "injured",
+  "2355": "doubtful",
   "2356": "out_of_league",
   "2358": "ok",
   "2359": "out_of_league",
@@ -1622,7 +1629,7 @@
   "2682": "out_of_league",
   "2687": "ok",
   "2692": "out_of_league",
-  "2693": "injured",
+  "2693": "doubtful",
   "2696": "ok",
   "2698": "ok",
   "2699": "ok",
@@ -2050,7 +2057,7 @@
   "3179": "ok",
   "3180": "ok",
   "3181": "ok",
-  "3182": "doubtful",
+  "3182": "ok",
   "3183": "ok",
   "3184": "ok",
   "3185": "ok",
@@ -2183,10 +2190,10 @@
  },
  "novedadesPend": [
   {
-   "id": "3264",
+   "id": "3182",
    "que": "vuelve",
    "antes": "doubtful",
-   "t": 1795086377846
+   "t": 1795086670761
   }
  ],
  "noticias": {
@@ -3592,8 +3599,8 @@
     "t": 1793793972334
    },
    "2355": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1795086670761
    },
    "2358": {
     "e": "ok",
@@ -4160,8 +4167,8 @@
     "t": 1793970074314
    },
    "3182": {
-    "e": "doubtful",
-    "t": 1794844829435
+    "e": "ok",
+    "t": 1795086670761
    },
    "3193": {
     "e": "ok",
@@ -4300,16 +4307,16 @@
   "dia": "2026-11-19",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 23,
-   "revisar": 11,
+   "redactar": 25,
+   "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 401973,
-  "salida": 16635,
-  "cacheLee": 11612,
+  "entrada": 430835,
+  "salida": 17366,
+  "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.8423,
+  "dolares": 0.907914,
   "reservado": 0
  },
  "recientes": {
@@ -4469,10 +4476,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-14T19:26:26.207Z",
-    "texto": "✅ Se despeja lo de Mbappé: ya está disponible y llega sin problemas a la vuelta de la liga.\n\nEl Madrid ⚪ recibe al Celta en el Bernabéu el sábado 21, tras el parón. El Celta encaja poco, así que a un delantero no le pone la vida fácil, pero Kylian Mbappé lleva 13 goles y 2 asistencias en la liga y con un 97 % de titularidad es fijo."
-   },
-   {
     "t": "2026-11-15T20:21:29.749Z",
     "texto": "⁉️ Marc Pubill arrastra unas molestias sin determinar desde el 15 de noviembre y se pone en duda para la vuelta de la liga.\n\nEl defensa del Atleti llegaba lanzado: 19 puntos en las tres últimas jornadas. El Atlético visita al Getafe en el Coliseum el domingo 22 de noviembre, tras el parón, y de momento no hay plazo que diga si llega."
    },
@@ -4487,6 +4490,10 @@
    {
     "t": "2026-11-19T11:06:36.785Z",
     "texto": "✅ Ceballos ya no es duda y vuelve a estar disponible para el sábado.\n\nEl centrocampista del Betis llega en racha: 21 puntos en las tres últimas jornadas. Visita al Sevilla, que va 6º, en el Sánchez-Pizjuán a las 18:30, un partido de dificultad media. Con un 34 % de titularidad no tiene el puesto asegurado, así que ojo a los onces."
+   },
+   {
+    "t": "2026-11-19T11:11:33.176Z",
+    "texto": "✅ Lemar vuelve a estar disponible. Estaba en duda por una rotura fibrilar en el aductor que arrastraba desde el 1 de noviembre, y queda despejada.\n\nEl centrocampista suma 1,3 M en el último mes y ya vale 5,9 M. Su vuelta llega tras el parón, el lunes 23 de noviembre, con el Elche 🌴 visitando al Levante 🐸, que va 17º. Es un partido favorable para un medio, pero con un 42 % de titularidad todavía tiene que ganarse el sitio."
    }
   ],
   "resumen": [
@@ -8638,13 +8645,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4068,
+   "ok": 4069,
    "fallos": 0,
-   "ejecuciones": 3351,
+   "ejecuciones": 3352,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:06:17.846Z"
+   "ultima": "2026-11-19T11:11:10.761Z"
   }
  },
  "ptsDirecto": {},
@@ -8661,15 +8668,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:06:44.225Z"
+   "ultimaBien": "2026-11-19T11:11:34.828Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:06:44.225Z"
+   "ultimaBien": "2026-11-19T11:11:34.828Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:06:44.225Z"
+   "ultimaBien": "2026-11-19T11:11:34.828Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8677,11 +8684,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:06:44.225Z"
+   "ultimaBien": "2026-11-19T11:11:34.828Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:06:44.225Z"
+   "ultimaBien": "2026-11-19T11:11:34.828Z"
   }
  },
  "avisos": [
