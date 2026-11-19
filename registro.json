@@ -4230,32 +4230,31 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
    "SPORT|136596702": 1795032528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000,
+   "SPORT|136604014": 1795073267000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136604014": 1795077075389
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 280772,
-  "salida": 9603,
+  "entrada": 282553,
+  "salida": 9689,
   "cacheLee": 8709,
   "cacheEscribe": 14515,
-  "dolares": 0.619157,
+  "dolares": 0.619378,
   "reservado": 0
  },
  "recientes": {
@@ -8589,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4041,
+   "ok": 4042,
    "fallos": 0,
-   "ejecuciones": 3324,
+   "ejecuciones": 3325,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T08:51:12.247Z"
+   "ultima": "2026-11-19T08:56:11.515Z"
   }
  },
  "ptsDirecto": {},
@@ -8612,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T08:51:24.694Z"
+   "ultimaBien": "2026-11-19T08:56:22.745Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T08:51:24.694Z"
+   "ultimaBien": "2026-11-19T08:56:22.745Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T08:51:24.694Z"
+   "ultimaBien": "2026-11-19T08:56:22.745Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8628,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T08:51:24.694Z"
+   "ultimaBien": "2026-11-19T08:56:22.745Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T08:51:24.694Z"
+   "ultimaBien": "2026-11-19T08:56:22.745Z"
   }
  },
  "avisos": [
