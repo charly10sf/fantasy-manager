@@ -1323,6 +1323,17 @@
    "jornada": 13,
    "id": "2123508235533455713",
    "t": "2026-11-19T20:06:31.390Z"
+  },
+  {
+   "clave": "mercado|2026-11-20",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2123555844826570918",
+   "t": "2026-11-19T23:15:42.224Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2565"
+   }
   }
  ],
  "estados": {
@@ -4148,19 +4159,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-19",
+  "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 59,
-   "redactar": 35,
-   "revisar": 20,
-   "pulir": 1
+   "clasificar": 0,
+   "redactar": 4,
+   "revisar": 3,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 657308,
-  "salida": 35061,
-  "cacheLee": 29030,
-  "cacheEscribe": 29030,
-  "dolares": 1.291088,
+  "entrada": 63957,
+  "salida": 1946,
+  "cacheLee": 5806,
+  "cacheEscribe": 2903,
+  "dolares": 0.155212,
   "reservado": 0
  },
  "recientes": {
@@ -4232,10 +4243,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-14T23:15:26.758Z",
-    "texto": "📈 Valverde es el segundo que más sube esta noche: +2,3 M y se va a 83,7 M, con diez días seguidos al alza. Es parte de una noche redonda para el Real Madrid ⚪, cuyos jugadores suman 12,1 M entre todos.\n\nEn el Atlético, al revés: Grimaldo y Álex Baena caen y el Atleti se deja 6,4 M en total. Y Fortuño, del Espanyol, vale 3,5 M y suma 32 puntos en tres jornadas."
-   },
-   {
     "t": "2026-11-15T23:19:03.273Z",
     "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 16/11\n\n📈 Nadie sube más que Valverde: +2,4 M en un día (+2,9 %), y ya vale 86,1 M.\n\n📉 Rodri del Barcelona va en sentido contrario: cae 1,5 M, un 2,1 %, hasta los 68,1 M.\n\n🛒 Chollo Fantasy: Moi Gómez del Osasuna vale 6 M, suma 6 de media y hoy sube un 2,5 %"
    },
@@ -4250,6 +4257,10 @@
    {
     "t": "2026-11-18T23:15:34.916Z",
     "texto": "📈 El chollo de hoy es Niño, del Málaga 🐟: vale 5,5 M, trae una buena media de 6,4 y sube un 4,2 %. Para quien busque un fichaje barato, tiene pinta de opción.\n\nArriba del todo, Vinícius suma otros 2,4 M y se va a 74,6 M, con once días seguidos al alza. Eso sí, solo ha sumado 6 puntos en las tres últimas jornadas. Rodri, en cambio, no encuentra suelo: 23 días cayendo y 31,8 M menos desde el 27 de octubre.\n\nLos jugadores del Real Madrid ⚪ ganan 6,7 M entre todos; los del Atlético pierden 4,5 M."
+   },
+   {
+    "t": "2026-11-19T23:15:42.226Z",
+    "texto": "📈 Nico Williams lleva 26 días seguidos subiendo y 36 M ganados desde el 25 de octubre. Esta noche suma otros 1,3 M y se va a 74,9 M.\n\nVini Jr. es el que más sube hoy, 2,1 M, y repite tras ser también el primero ayer. Con Valverde al alza, el Real Madrid ⚪ es el que más gana sumando a sus jugadores, 5 M. En el Atlético, Marc Pubill cae 1,1 M y los suyos pierden 3,9 M.\n\nDe barato, Fortuño, del Espanyol, vale 4,2 M y suma 32 puntos en tres jornadas."
    }
   ],
   "previa": [
@@ -4641,6 +4652,22 @@
    "cacheLee": 37739,
    "cacheEscribe": 8709,
    "dolares": 1.300394,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-19",
+   "llamadas": {
+    "clasificar": 59,
+    "redactar": 35,
+    "revisar": 20,
+    "pulir": 1
+   },
+   "fallos": 0,
+   "entrada": 657308,
+   "salida": 35061,
+   "cacheLee": 29030,
+   "cacheEscribe": 29030,
+   "dolares": 1.291088,
    "reservado": 0
   }
  ],
@@ -8506,7 +8533,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T23:11:14.026Z"
+   "ultimaBien": "2026-11-19T23:15:42.229Z"
   },
   "FotMob": {
    "seguidas": 0,
