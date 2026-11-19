@@ -1,12 +1,12 @@
 # El chat con claude-haiku-5-5 de verdad
 
-2026-11-19T17:52:23.343Z · escenas martes, paron, sabado · esfuerzo low
+2026-11-19T18:12:28.071Z · escenas martes, paron, sabado · esfuerzo low
 
 
-**Resumen:** 168 respuestas; 8 con algo que no sale de los datos, 24 con marcas; 35.26 céntimos en total (0.210 por respuesta); tiempo medio 6011 ms; 15414 tokens de entrada de media; largo medio 100 palabras.
+**Resumen:** 168 respuestas; 3 con algo que no sale de los datos, 17 con marcas; 35.37 céntimos en total (0.211 por respuesta); tiempo medio 6083 ms; 15412 tokens de entrada de media; largo medio 100 palabras.
 
 
-**Caché (19 nov):** 4511520 tokens leídos de la caché, 67149 escritos y 2054464 sin caché; 167 de 168 respuestas leyeron algo de ella.
+**Caché (19 nov):** 4511353 tokens leídos de la caché, 67148 escritos y 2054261 sin caché; 167 de 168 respuestas leyeron algo de ella.
 
 
 ## Escena «martes», esfuerzo low
@@ -14,448 +14,416 @@
 
 ### venta-rival (rivales): «¿Qué tiene Marcos a la venta?»
 
-4836 ms · 45486 tokens de entrada y 874 de salida · 0.499 céntimos · 108 palabras, 4 frases
+4708 ms · 45484 tokens de entrada y 781 de salida · 0.494 céntimos · 86 palabras, 3 frases
 
-> Solo tiene a la venta a **Camello** (Rayo, DEL, valor 31,39 M, media 6,4, titular ~82 %), al precio de 35,87 M. Ese precio lo pone él, no es una oferta, y LaLiga le suele dar unos 32,98 M, así que tu oferta tendría que superar eso para que lo considere. Pagar 35,87 M son 4,48 M por encima de su valor (sobrecoste 37/100), y el jugador no sube (−3,2 % en 7 días), así que no lo recuperas: yo no lo haría hoy. Si lo quieres, la cláusula de 34,40 M se abre el 16 nov a las 13:10, pero hasta entonces solo puedes ir por oferta.
+> Marcos tiene a la venta solo a **Camello** (Rayo, DEL), por 35,87 M. Su valor es 31,39 M, pero ese precio lo pone él y LaLiga suele ofrecer unos 33 M por uno así, así que 35,87 M es un sobreprecio de un 14 % que no te compensa si no lo necesitas ya. Además, su cláusula de 34,40 M se abre el 16 nov a las 13:10, así que esperar sale más barato, aunque el jugador viene bajando (−1,84 M hoy) y es titular probable.
 
 
 ### plantilla-rival (rivales): «Pero no solo lo que tiene en venta, mírame toda su plantilla. ¿Qué le puedo quitar?»
 
-10465 ms · 13479 tokens de entrada y 2184 de salida · 0.244 céntimos · 108 palabras, 4 frases
+13889 ms · 13421 tokens de entrada y 2698 de salida · 0.269 céntimos · 133 palabras, 5 frases
 
-> Te sirven sobre todo **Nico Williams** (Athletic, DEL, 30,18 M, media 5,9, titular ~82 %, vs Alavés ~6,8 pts). Su cláusula de 41,02 M está abierta, pero tienes 6,43 M de saldo, así que de momento solo por oferta: unos 33,79 M, aunque su dueño querrá más porque sube. Para la defensa, **Revivo** (Elche, DEF, 3,71 M, media 5,8, titular ~74 %) pide unos 4,12 M a su dueño y mejora a Jon Martin o Chust; su cláusula de 7,36 M se abre el 9 nov a las 17:00. **Kike Salas** (Sevilla, DEF, media 5,8) pide unos 12,53 M por oferta, y con tus 6,43 M no llegas.
+> Lo mejor de su plantilla para tu once es **Nico Williams** (DEL, Athletic, 30,18 M): tiene 6,8 pts esperados vs Alavés y es titular probable al 82 %. Julián Álvarez, que ahora ocupa tu segundo delantero, espera 2,8 pts, así que la diferencia es clara. Su cláusula está abierta en 41,02 M, pero no te llega con tus 6,43 M, así que la vía es una oferta a su dueño desde unos 33,79 M, aunque subirá porque sube 579 mil hoy. **Kike Salas** (DEF, Sevilla, 11,41 M) también mejora a Jon Martin (1,8 pts), con 5,3 pts vs Celta y titular al 74 %; su oferta ronda los 12,53 M. Camello sigue siendo el que tiene a la venta a 35,87 M, pero con 5,7 pts esperados no te aporta más que Nico.
 
 
 ### por-equipo (rivales): «¿Qué jugadores interesantes tiene Leao er Espabilao?»
 
-8486 ms · 12984 tokens de entrada y 1783 de salida · 0.219 céntimos · 99 palabras, 4 frases
+8004 ms · 12983 tokens de entrada y 1632 de salida · 0.211 céntimos · 129 palabras, 4 frases
 
-> Fermín es el que más te interesa: media 8,5, titular 74 % y unos 4,6 pts esperados ante el Villarreal, con valor de 62,48 M. Su cláusula de 65,21 M ya está abierta, pero con tus 6,43 M de saldo no te llega, así que la única vía es una oferta a su dueño, que ronda los 68,65 M. Para algo más barato, M. Dituro (Elche, 9,59 M, media 6, titular 90 %): su cláusula de 16,74 M se abre el domingo 8 a las 20:04, y hasta entonces puedes negociar con su dueño en torno a 10,54 M.
+> Fermín es el que más te interesa: media 8,5, titular con un 74 % y unos 4,6 pts esperados en Villarreal. Su cláusula está abierta en 65,21 M y solo tienes 6,43 M de saldo, así que tendrías que ofrecer a su dueño unos 68,65 M, por encima de los 67,81 M que te quedan para compras. Fer Niño (34,25 M, media 6, titular 82 %, unos 6,1 pts contra la Real Sociedad) tiene una oferta de referencia de 37,62 M, y su cláusula de 52,72 M se abre el 14 nov a las 14:00. Mikautadze (24,56 M, media 5,8, titular 82 %) se puede pagar con cláusula de 33,87 M desde el 10 nov a las 18:51, o con una oferta de unos 26,97 M a su dueño.
 
 
 ### equipo-minusculas (rivales): «y el del leao er espabilao que jugadores tiene? de toda su plantilla»
 
-6340 ms · 12988 tokens de entrada y 1407 de salida · 0.200 céntimos · 253 palabras, 30 frases · **COTEJO: largo: 30 frases**
+8309 ms · 12987 tokens de entrada y 1829 de salida · 0.221 céntimos · 171 palabras, 13 frases · **COTEJO: largo: 13 frases**
 
-> Hugo tiene 9 jugadores. Los que más te interesan son Fermín, con la cláusula abierta, y Mikautadze, que se abre el 10 de noviembre:
+> Hugo tiene 9 jugadores. Estos son:
 > 
-> - **M. Dituro** (POR, Elche): 9,59 M, media 6. Cláusula 16,74 M, se abre el domingo 8 a las 20:04. Oferta para que te lo venda: ~10,54 M.
-> - **Koski** (DEF, Alavés): 31,19 M, media 5,2. Cláusula 32,75 M, se abre el 14 de noviembre a las 14:00. Oferta: ~34,74 M, pero su dueño querrá más.
-> - **Fermín** (MED, Barcelona): 62,48 M, media 8,5. Cláusula 65,21 M, abierta ya. Oferta: ~68,65 M.
-> - **O. Sancet** (MED, Athletic): 13,25 M, media 4,4. Cláusula 14,56 M, se abre el lunes 9 a las 05:45. Oferta: ~14,55 M.
-> - **Fer Niño** (DEL, Elche): 34,25 M, media 6. Cláusula 52,72 M, se abre el 14 de noviembre a las 14:00. Oferta: ~37,62 M.
-> - **Mikautadze** (DEL, Villarreal): 24,56 M, media 5,8. Cláusula 33,87 M, se abre el 10 de noviembre a las 18:51. Oferta: ~26,97 M.
-> - **Lucas Boyé** (DEL, Alavés): 23,26 M, media 5. Cláusula 24,83 M, se abre el 16 de noviembre a las 10:31. Oferta: ~26,01 M, y también subirá su precio.
-> - **Enes Ünal** (DEL, Getafe): 4,83 M, media 3,5. Cláusula 9,63 M, se abre el 12 de noviembre a las 06:25. Oferta: ~5,31 M. Está en duda por molestias.
-> - **T. Morente** (DEL, Elche): 3,24 M, media 3,6. Cláusula 3,32 M, se abre el sábado 7 a las 14:00, y ya le llega el saldo. Oferta: ~3,56 M.
+> - **Fermín** (Barcelona, MED): 62,48 M, cláusula 65,21 M, abierta. Es su jugador más caro y tiene media 8,5.
+> - **Fer Niño** (Elche, DEL): 34,25 M, cláusula 52,72 M, se abre el 14 nov a las 14:00.
+> - **Koski** (Alavés, DEF): 31,19 M, cláusula 32,75 M (+5 %), se abre el 14 nov a las 14:00.
+> - **Mikautadze** (Villarreal, DEL): 24,56 M, cláusula 33,87 M, se abre el 10 nov a las 18:51.
+> - **Lucas Boyé** (Alavés, DEL): 23,26 M, cláusula 24,83 M, se abre el 16 nov a las 10:31. Es el que te clausuló ayer.
+> - **M. Dituro** (Elche, POR): 9,59 M, cláusula 16,74 M, se abre el dom 8 a las 20:04.
+> - **O. Sancet** (Athletic, MED): 13,25 M, cláusula 14,56 M, se abre el lun 9 a las 05:45.
+> - **T. Morente** (Elche, DEL): 3,24 M, cláusula 3,32 M, le llega a las 14:00 del sáb 7.
+> - **Enes Ünal** (Getafe, DEL): 4,83 M, cláusula 9,63 M, en duda por molestias.
 
 
 ### puedo-clausular (rivales): «¿Puedo clausular a Oyarzabal?»
 
-10589 ms · 13469 tokens de entrada y 2024 de salida · 0.236 céntimos · 104 palabras, 4 frases
+8971 ms · 13468 tokens de entrada y 1748 de salida · 0.222 céntimos · 111 palabras, 6 frases
 
-> No ahora: la cláusula de Oyarzabal es de 37,89 M y tienes 6,43 M de saldo, así que te faltan 31,46 M. La única forma de llegar es aceptar la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15), que te daría 72,60 M en caja. Pero Baena es titular y te da unos 5,7 pts en Málaga, frente a los 3 que se esperan de Oyarzabal en Elche, así que venderlo para comprarlo te resta puntos. Mi consejo es que no lo hagas: Oyarzabal te sube el once unos 1,3 pts por jornada, pero no compensa perder a Baena.
+> Ahora no. Tienes 6,43 M y la cláusula son 37,89 M, y una cláusula solo se paga con saldo. Solo se podría si aceptas antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15): el dinero entra al momento y tendrías 72,60 M, así que pagarías los 37,89 M y te quedarían unos 34,71 M. Aun así no lo haría. Oyarzabal aporta unos 1,3 pts por jornada a tu once, y Baena, titular, da unos 4,1 pts por jornada, así que cambiar uno por otro te resta puntos. Si lo quieres como refuerzo, mejor pensar en otra opción que no te obligue a vender a Baena.
 
 
 ### que-hago-hoy (plan): «¿Qué hago hoy?»
 
-9119 ms · 12683 tokens de entrada y 1867 de salida · 0.220 céntimos · 105 palabras, 4 frases
+8225 ms · 12682 tokens de entrada y 1575 de salida · 0.206 céntimos · 106 palabras, 4 frases
 
-> Hoy tienes tres movimientos. Primero, pon a la venta a Fran García: ha girado a la baja (de +86 mil al día a −71 mil) y LaLiga te ofrecerá unos 15,27 M en el cambio de mercado de mañana a las 00:15, no antes. Segundo, clausula a Niño ya por 1,02 M con tu saldo de 6,43 M: vale 1,01 M, promedia 6,1 y te da unos 3,8 pts por jornada, con calendario favorable. Tercero, puja por El Hilali como mucho 10,46 M: es una especulación pequeña (unos 265 mil de beneficio si sigue subiendo al 4 % diario), así que no subas de ahí.
+> Hoy hay tres movimientos. Primero, clausula a Niño ahora por 1,02 M: cuesta lo que vale, tienes saldo de sobra (6,43 M) y entra en tu once con unos 6,1 pts de media y un calendario favorable. Segundo, pon a la venta a Fran García: ya ha girado a la baja (−71 mil hoy, tras subir +170 mil y +86 mil), y LaLiga te ofrecerá en el cambio de mañana 00:15, cuando calculas unos 15,27 M. Tercero, puja por El Hilali 10,46 M antes de las 00:15 para revenderlo, porque sube un 4 % al día y esa puja no le quita nada a tu once.
 
 
 ### vender-mio (estrategia): «¿Vendo a Raphinha?»
 
-6388 ms · 13480 tokens de entrada y 1033 de salida · 0.186 céntimos · 144 palabras, 8 frases · **COTEJO: largo: 8 frases**
+4841 ms · 13479 tokens de entrada y 809 de salida · 0.175 céntimos · 97 palabras, 5 frases
 
-> No, hoy no lo vendas. Es titular casi seguro (82 %), hizo 7 puntos en la última jornada y sin él tu once pierde 5 pts por jornada. Tiene 105 pts en la temporada y una media de 10, y los próximos cinco partidos son duros pero rinde bien en ellos (~42 pts esperados).
-> 
-> La bajada es real: −2,62 M hoy y −2,2 % en 7 días, con la inercia girada. Pero una sola tarde de 7 puntos puede frenarla, y vender ahora te dejaría sin el jugador que más puntos te da. Su cláusula de 186,17 M está a salvo hasta que empiece la jornada 10 (sáb 7, 14:00) y nadie puede pagarla, así que no corres riesgo de que te lo quiten.
-> 
-> Si en los próximos cambios de mercado sigue cayendo de forma clara, revisa la venta entonces. Hoy, a la espera.
+> No, Raphinha se queda. Vale 121,02 M y tiene una media de 10 puntos, y sin él tu once pierde unos 5 pts por jornada. Su inercia ha girado a la baja (−2,62 M hoy, −2,2 % en 7 días), pero acaba de meter 7 puntos en Sevilla y la app no lo vende hoy. Además, no te hace falta caja: tienes 6,43 M de saldo, y tu cláusula de 186,17 M le protege hasta que empiece la jornada 10. Su próximo partido es en Villarreal el dom 8 a las 18:30, con unos 6,6 puntos esperados.
 
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-5358 ms · 20205 tokens de entrada y 861 de salida · 0.245 céntimos · 77 palabras, 5 frases
+5445 ms · 20204 tokens de entrada y 788 de salida · 0.241 céntimos · 64 palabras, 4 frases
 
-> No, recházala. Raphinha vale 121,02 M y te pagaría 15 M, el 12 % de su valor. Si lo pusieras a la venta, LaLiga te daría de mediana un +5,1 % sobre su valor, unos 127 M, y tú lo compraste por 93,18 M. Además, es titular en tu once y sin él pierdes unos 5 pts por jornada. Nadie te va a pagar algo que se parezca a eso, así que no tienes que aceptar nada.
+> No, recházala. Raphinha vale 121,02 M y te ofrecen 15 M, un 12 % de su valor. Con eso perderías unos 106 M, y además es titular en tu once: sin él pierdes unos 5 pts por jornada, y su media es 10. Su cláusula (186,17 M) está a salvo hasta que empiece la jornada 10, así que nadie puede llevárselo antes de eso.
 
 
 ### quien-me-ataca (rivales): «¿Quién me puede clausular a alguien esta semana?»
 
-10037 ms · 12031 tokens de entrada y 2046 de salida · 0.223 céntimos · 130 palabras, 5 frases
+9419 ms · 12030 tokens de entrada y 1932 de salida · 0.217 céntimos · 152 palabras, 6 frases
 
-> Ahora mismo el que más pinta de que te lo toquen es Álex Baena: su cláusula está abierta en 70,70 M (+11 % sobre su valor) y tiene riesgo medio, así que si te lo clausulan cobras más que con la oferta de 66,17 M que ya tiene. Tus otros abiertos (Ionut Radu, Bellingham, Fran García y Hugo Duro) están a precios muy por encima de lo que se paga en esta liga, y la app no les ve riesgo. Ojo con Pathé I. Ciss: su cláusula es a su valor (9,96 M) y su protección acaba el vie 6 a las 13:34, así que tiene 26 minutos antes del cierre de las 14:00. Qué rivales tienen saldo para pagar cada una lo ves tocando el candado de la app.
+> Ahora mismo, el único riesgo serio es **Álex Baena**: tiene la cláusula abierta en 70,70 M (+11 % sobre su valor), está en venta y su riesgo es medio, porque a algún rival le sobra el dinero. Los demás están más protegidos: Ionut Radu, Bellingham y Fran García tienen la cláusula abierta, pero su riesgo es ninguno, y Hugo Duro, también abierto, vale 3,71 M con un +98 %, así que nadie lo paga. Moncayola se abre hoy a las 15:17 (5,51 M, +94 %) y Jon Martin mañana a las 09:50 (+41 %), ninguno de los dos con riesgo. Pathé I. Ciss se abre el vie 6 a las 13:34 por 9,96 M, a su valor, la presa más fácil de la plantilla, pero su riesgo figura como ninguno. Las cláusulas se cierran el vie 6 a las 14:00, así que lo que pase después no puntuará en la jornada 10.
 
 
 ### vago (estrategia): «Estoy perdido, ayúdame»
 
-5628 ms · 12024 tokens de entrada y 974 de salida · 0.169 céntimos · 96 palabras, 6 frases · **COTEJO: acaba en pregunta · contradice a la app: manda aceptar la oferta por Álex Baena (la app: ESPERAR)**
+5382 ms · 12023 tokens de entrada y 1026 de salida · 0.172 céntimos · 108 palabras, 5 frases · **COTEJO: acaba en pregunta**
 
-> Tranquilo, vamos por partes. Vas 1º con 697 puntos y tu once está bien.
-> 
-> Lo urgente es el cambio de mercado de mañana a las 00:15: ahí se resuelve tu puja por Courtois (36,30 M) y caduca la oferta de Hugo por Álex Baena (66,17 M). Como tienes 6,43 M de saldo, aceptarla ahora te daría caja, pero la app aconseja esperar porque Baena sube unos 696 mil al día. Tu once se cierra el sábado 7 a las 14:00.
-> 
-> ¿Qué es lo que más te lía: el mercado, las cláusulas o cómo queda tu plantilla?
+> Tranquilo, vamos por partes. Lo urgente es que tu saldo son 6,43 M y tienes una puja de 36,30 M por Courtois que se resuelve mañana a las 00:15, así que de momento no tocas nada más. Hoy te aconsejo poner a la venta a Fran García, que ha girado a la baja, y clausular a Niño por 1,02 M, que ya te llega con tu saldo. La oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15) la dejaría estar: su cláusula de 70,70 M ya está abierta y paga más. ¿Qué parte te tiene perdido, la puja, la venta o la jornada 10?
 
 
 ### mas-corto (conversacion): «Dímelo más corto»
 
-1241 ms · 12270 tokens de entrada y 168 de salida · 0.131 céntimos · 70 palabras, 4 frases
+995 ms · 12278 tokens de entrada y 108 de salida · 0.128 céntimos · 45 palabras, 3 frases
 
-> Tu prioridad hoy es no dejar a tu once sin caja. Mañana a las 00:15 se resuelve tu puja por Courtois (36,30 M) y la oferta de Hugo por Álex Baena (66,17 M) caduca en ese mismo cambio. Mi consejo: no aceptes todavía, porque Baena sube unos 696 mil al día y la app ve más ganancia en esperar. Tu once está listo hasta el sábado 7 a las 14:00.
+> Hoy: pon a la venta a Fran García y clausula a Niño por 1,02 M. Lo de Courtois (36,30 M) se resuelve mañana a las 00:15. Baena, no aceptes la oferta de 66,17 M: su cláusula de 70,70 M ya está abierta y paga más.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-7955 ms · 22335 tokens de entrada y 1429 de salida · 0.295 céntimos · 122 palabras, 4 frases
+8373 ms · 22334 tokens de entrada y 1535 de salida · 0.300 céntimos · 123 palabras, 6 frases
 
-> No, no te interesa ahora, porque el cambio no se puede hacer: ni tú ni él tenéis dinero para pagar primero. Con tu saldo de 6,43 M no llegas a los 34,97 M de Oyarzabal, y él no tiene con qué pagarte Julián Álvarez primero. Por valor te sale casi igual (+2,53 M), y Oyarzabal ha hecho 8 puntos en la última jornada y entraría en tu once (+1,3 pts por jornada), así que tiene sentido si algún día se puede hacer. La única vía real para Oyarzabal es clausularlo (37,89 M, abierta ya), pero para eso necesitarías aceptar antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana 00:15), y la app aconseja esperar con Baena porque sigue subiendo.
+> No, no se puede hacer hoy. El trato va bien de precio: Oyarzabal a 34,97 M está por debajo de lo que pide su dueño (unos 41,19 M), y tu valor subiría unos 2,5 M. El problema es el dinero: el primer pago lo tiene que hacer Marcos, y con lo que le queda en su cuenta no le llega para pagarte los 34,97 M de Julián Álvarez. Tus 6,43 M no lo arreglan, porque el que tiene que pagar primero es él. Además, Julián es tuyo con la cláusula protegida hasta el lunes 9 a las 07:09, y es suplente en el once probable. Si algún día le llega el saldo, el cambio te sirve; mientras tanto, no te preocupes por él.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-7243 ms · 22424 tokens de entrada y 1196 de salida · 0.284 céntimos · 155 palabras, 6 frases
+7932 ms · 22423 tokens de entrada y 1433 de salida · 0.296 céntimos · 150 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> No, tal como está no sale: el dinero no cuadra. Tú tienes 6,43 M de saldo y no puedes pagar 39,00 M primero, y para que él te pague sus 34,97 M por Julián Álvarez antes, tampoco le llega, según las cuentas de la app con su saldo. Así que no se puede ejecutar hoy.
+> No. El cambio no cuadra por dinero: tu saldo son 6,43 M, así que no puedes pagar los 39,00 M de Oyarzabal primero, y para que él te pague 34,97 M antes tendría que tenerlos ya. Su saldo no lo veo (lo ve tocando su candado en la app), pero el dinero es el único punto que no encaja. Si no le llega, el trato no se puede hacer.
 > 
-> Aunque cuadrara, no ganáis los dos en valor: tú pierdes 1,50 M de valor ahora mismo, unos 1,27 M en 14 días si siguen las tendencias. Lo que compensa es el aporte al once: Oyarzabal te da unos 3 pts por partido frente a los 2,8 de Julián, y el precio de 39,00 M está por debajo de los 41,19 M que suele pedir su dueño, así que como precio es bueno. Por eso no descartes el fichaje, pero no lo cierres ahora: deja a Julián en tu plantilla y vuelve a mirarlo cuando tengas el dinero para pagar primero.
+> Por lo demás, el precio sí es bueno: 39,00 M está por debajo de los 41,19 M que suele pedir su dueño por Oyarzabal. Pero tú pierdes 1,50 M de valor en el intercambio. Oyarzabal, además, entra en tu once (unos 3 puntos por partido frente a los 2,8 de Julián). Si él puede pagarte primero, lo verías en su saldo; si no, la otra vía es clausular a Oyarzabal cuando te llegue el dinero, que ahora te faltan 31,46 M.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-7891 ms · 22841 tokens de entrada y 1400 de salida · 0.298 céntimos · 91 palabras, 4 frases
+2106 ms · 22828 tokens de entrada y 269 de salida · 0.242 céntimos · 127 palabras, 5 frases
 
-> Eso cambia el plan: si te suben la cláusula o la blindan, Oyarzabal sale más caro o no se puede pagar durante 24 h, así que no cuentes con clausularlo. Hoy además no te llega: te faltan 31,46 M para los 37,89 M de su cláusula. La única forma de tenerlo ahora sería aceptar antes una oferta por otro jugador, y eso tiene su coste en tu once. No lo persigas: si el trato con Marcos no cuadra en dinero, Oyarzabal queda para cuando tengas caja y la cláusula siga abierta.
+> Entonces la vía de la cláusula se cae y el cambio es lo único que te queda para Oyarzabal, pero ese cambio no se puede hacer hoy: no os llega el dinero en ningún orden. Lo que sí puedes hacer es esperar a ver si su saldo cambia (no lo ves tú, pero sí lo ves tú en su candado) y, mientras tanto, no pagues nada por encima de lo que vale Julián.
+> 
+> Y te digo lo mismo que antes: Oyarzabal no es imprescindible para tu once. Te da unos 0,1 puntos por jornada más que Julián, así que perder esta opción no te cuesta casi nada en puntos. Lo que sí te costaría es 1,50 M de valor en el intercambio, y eso no lo compensa.
 
 
 ### trueque-domy (ofertas): «Marcos me compra a Fornals a su valor y yo, con ese dinero, le compro a Huijsen por 60 M. ¿Me conviene?»
 
-7939 ms · 16217 tokens de entrada y 1496 de salida · 0.237 céntimos · 125 palabras, 7 frases · **COTEJO: largo: 7 frases**
+6151 ms · 16216 tokens de entrada y 1167 de salida · 0.221 céntimos · 118 palabras, 5 frases
 
-> No, y antes hay que corregir el planteamiento: Fornals es de Pablo, no tuyo, así que Marcos no te puede comprar nada. Tampoco te conviene pagar 60 M por Huijsen, que es del Tito (Álex). Su cláusula es de 41,64 M y está abierta, así que, si quisieras, pagarías eso y no 60 M. Pero hoy tienes 6,43 M de saldo, así que no te llega: primero tendrías que aceptar la oferta de Hugo por Baena. Aun así, es mal negocio: es suplente, con media de 4,9 y unos 2,3 puntos esperados en su próximo partido, y solo te daría 0,7 puntos por jornada en tu once. Pagarías 17,30 M de sobrecoste (90/100) y, si te arrepientes, LaLiga solo te daría unos 24,34 M. Déjalo.
+> No, y el plan tiene un fallo de base: Fornals no es tuyo, es de Pablo, así que Marcos no te lo puede comprar. Tampoco tienes ese dinero: ahora mismo tu saldo es 6,43 M. Si quieres a Huijsen, su cláusula es 41,64 M y está abierta, así que la pagas al precio de la cláusula con saldo, nunca a 60 M. Para llegar a 41,64 M necesitarías aceptar antes la oferta de Hugo por Baena (66,17 M, caduca mañana 00:15), y aun así pagarías 18,17 M más que su valor (23,47 M) por un jugador que ha bajado 568 mil hoy, está en rotación por la Champions y, según la app, no compensa. Dejaría a Huijsen fuera.
 
 
 ### trueque-domy-blinda (ofertas): «Si no hacemos el trato me ha dicho que le sube la cláusula o lo blinda antes de las 20:00.»
 
-5422 ms · 22020 tokens de entrada y 951 de salida · 0.268 céntimos · 107 palabras, 4 frases
+4550 ms · 21985 tokens de entrada y 747 de salida · 0.257 céntimos · 94 palabras, 6 frases
 
-> Déjalo pasar: que te amenacen con subir la cláusula o blindar no cambia que Huijsen rinde poco para tu once (0,7 pts por jornada) y te costaría 17,30 M de sobrecoste. Además, quien puede subir o blindar su cláusula es el Tito (Álex), su dueño, no Marcos, así que ese aviso no te obliga a nada. Con tu saldo de 6,43 M no puedes pagar los 41,64 M de todos modos, y el trato tal como lo planteas no existe porque Fornals es de Pablo. Si de verdad vas a por un central, lo miramos con tiempo antes del cierre de cláusulas del viernes a las 14:00.
+> Que te presionen con las 20:00 no cambia los números: con 6,43 M no puedes pagar ni la cláusula de Huijsen (41,64 M). Si su dueño la sube, te costaría más, así que la amenaza juega en tu contra. Y un blindaje solo protege 24 h, así que tampoco te deja sin opción. Ahora mismo no hay trato que hacer: Fornals es de Pablo y no puede entrar en ningún cambio con Marcos. Yo no lo haría con Huijsen. Si ese mensaje viene del Tito (Álex), no hace falta responder antes de las 20:00.
 
 
 ### portero (estrategia): «¿A quién pongo de portero esta jornada?»
 
-3998 ms · 12028 tokens de entrada y 631 de salida · 0.152 céntimos · 70 palabras, 4 frases
+3327 ms · 12027 tokens de entrada y 543 de salida · 0.147 céntimos · 67 palabras, 4 frases
 
-> Ionut Radu. Es titular al 90 %, va a jugar en Sevilla (7º), donde se espera que sume unos 7,6 puntos, y es el que más puntúa de tus porteros (media 8,8, con 16 puntos en la jornada 9). Su valor sube (+238 mil hoy) y no hace falta tocarlo. Agirrezabala se queda de suplente: en Deportivo se esperan unos 5,1 puntos, pero no sustituye a Radu en tu once.
+> Ionut Radu, sin dudarlo. Es titular al 90 %, tiene una media de 8,8 y ~7,6 pts esperados en Sevilla, y acaba de meter 16 puntos en la J9, con la inercia subiendo. Agirrezabala es una alternativa muy inferior: ~5,1 pts esperados contra el Deportivo y media de 5,3. Tienes el once hasta el sáb 7, 14:00, así que Radu ya está en el mejor sitio posible.
 
 
 ### libre (mercado): «¿Qué te parece Cubarsí?»
 
-8057 ms · 13513 tokens de entrada y 1463 de salida · 0.208 céntimos · 110 palabras, 5 frases
+4682 ms · 13512 tokens de entrada y 804 de salida · 0.175 céntimos · 72 palabras, 5 frases
 
-> Cubarsí no me convence para tu caso. Está libre a 43,44 M y sube muy fuerte (+26,4 % en 7 días, unos 1,2-1,4 M al día), pero juega poco: es suplente en el once probable, con titularidad de un 42 % en Villarreal (dom 8, 18:30) y 1,5 pts esperados. Con tu defensa actual no entraría en el once, y la app tampoco lo ve así. Si pujas, la de la app (44,70 M) puede quedarse corta: la puja que gana aquí suele rondar los 49,81 M, más de un 14 % sobre su valor, y a ese precio no lo vuelves a vender sin perder. Yo lo dejaría pasar.
+> Cubarsí no te sirve ahora. Va subiendo fuerte (+26 % en 7 días), pero es suplente en tu once probable, tiene un calendario duro (~14,2 pts en 5 jornadas) y el 8 de noviembre juega en Villarreal con la Champions pesando en la rotación. Su media es 4,2. Pujar 44,70 M (+2,9 %) para tenerlo de reserva tampoco compensa: para revender no sale y no entraría en tu once. Yo no pujaría.
 
 
 ### cuanto-pujo (mercado): «¿Y cuánto pujo por él?»
 
-5279 ms · 20648 tokens de entrada y 937 de salida · 0.253 céntimos · 95 palabras, 4 frases
+1497 ms · 20577 tokens de entrada y 181 de salida · 0.215 céntimos · 84 palabras, 4 frases
 
-> Si insistes, pujaría **44,70 M**, que es la puja de la app. Con esa cifra en esta liga te lo llevas unas 4 de cada 10 veces, y es el precio al que menos sobrepagas (+2,9 % sobre su valor). Subir a 49,81 M te daría más seguridad, pero son más de 5 M extra por un suplente que no entra en tu once, y ese dinero te hace más falta para la jornada 10. La puja se resuelve mañana a las 00:15, así que llegaría a tiempo para el sábado 7 a las 14:00.
+> La puja que te recomienda la app es 44,70 M (+2,9 % sobre su valor de 43,44 M). Con esa cifra gana 4 de cada 10 veces en tu liga, y en el mercado de mañana a las 00:15 se resuelve. Pero no te la recomiendo: para tenerlo de suplente pagas 1,26 M de más y tardaría unos días en recuperarse, y no entraría en tu once. Si aun así quieres ir a por él, la puja sería esa, y no pasaría de ahí.
 
 
 ### blindar (estrategia): «¿Blindo a alguien?»
 
-6071 ms · 12022 tokens de entrada y 1259 de salida · 0.183 céntimos · 122 palabras, 5 frases
+7603 ms · 12021 tokens de entrada y 1398 de salida · 0.190 céntimos · 101 palabras, 5 frases
 
-> Sí, blinda a **Álex Baena** ahora. Es el único que lo necesita: tiene la cláusula abierta en 70,70 M (+11 % sobre su valor de 63,63 M), está por debajo de lo que se paga en esta liga por un clausulazo (+21,8 % de mediana), y a algún rival le sobra el dinero para pagarla. El escudo es gratis, dura 24 h y te quedan dos. Los demás tienen cláusulas muy por encima de lo que se paga aquí (Bellingham +60 %, Ionut Radu +81 %, Fran García +87 %), así que no hace falta gastar el escudo en ellos. Ojo: el blindaje no frena la oferta de Hugo por Baena, que caduca mañana a las 00:15; eso lo decides tú aparte.
+> Sí, puedes blindar a uno. Te quedan 2 blindajes hasta que acabe la jornada 10, y solo se puede poner a jugadores con la cláusula ya abierta. Te recomiendo Álex Baena: su cláusula está abierta en 70,70 M (+11 % sobre su valor de 63,63 M), que es el tipo de cláusula que un rival con dinero puede pagar, y el riesgo es medio. Con el escudo queda protegido 24 h mientras decides sobre la oferta de 66,17 M, que caduca mañana a las 00:15. El blindaje no te obliga a aceptarla ni a rechazarla, así que lo ves con calma.
 
 
 ### saldo (cifras): «¿Cuánto saldo tengo ahora mismo?»
 
-1470 ms · 18240 tokens de entrada y 203 de salida · 0.193 céntimos · 69 palabras, 3 frases
+1698 ms · 18239 tokens de entrada y 203 de salida · 0.193 céntimos · 82 palabras, 3 frases
 
-> Ahora mismo tienes 6,43 M de saldo, que es lo máximo que puedes usar para una cláusula. Si ganas hoy tus pujas de Courtois (36,30 M), el saldo bajaría a −29,87 M, así que ojo con eso antes del cambio de mercado de mañana a las 00:15. Si aceptas ya las ofertas que tienes en venta, tendrías 72,60 M para cláusulas, aunque lo de Álex Baena se puede esperar.
+> Ahora mismo tienes 6,43 M de saldo, que es lo máximo que puedes usar para pagar una cláusula. Si ganas las pujas que tienes puestas (Courtois, 36,30 M) el saldo bajaría a −29,87 M al cambiar el mercado mañana a las 00:15, así que no te quedarías en positivo para empezar la jornada. Si aceptas ya las ofertas que tienes, la caja subiría a 72,60 M; ojo, Álex Baena ahí va por 66,17 M de Hugo y, según la app, mejor esperar.
 
 
 ### para-pujar (cifras): «¿Cuánto me queda para pujar?»
 
-1534 ms · 18896 tokens de entrada y 220 de salida · 0.200 céntimos · 93 palabras, 2 frases
+1262 ms · 18895 tokens de entrada y 139 de salida · 0.196 céntimos · 57 palabras, 2 frases
 
-> Te quedan 67,81 M para pujas o compras nuevas, y ya descontados los 36,30 M de tu puja por Courtois, así que una puja nueva de hasta 67,81 M cabe. Ojo, que tu saldo en caja ahora mismo es de 6,43 M: el margen de deuda te deja pujar más allá de eso, pero si ganas todas tus pujas de ahora, el saldo queda en −29,87 M, y para empezar la jornada 10 en positivo tendrás que aceptar antes las ofertas que tienes (Álex Baena por 66,17 M de Hugo caduca mañana 00:15).
+> Te quedan 67,81 M para pujas o compras nuevas, ya descontados los 36,30 M de tu puja por Courtois (se resuelve mañana a las 00:15). Ojo, eso es el margen para pujar; el saldo para pagar cláusulas ahora mismo es de 6,43 M, y si aceptas antes las ofertas que tienes en venta llegarías a 72,60 M.
 
 
 ### mis-clausulas (cifras): «¿Qué cláusulas mías están abiertas y cuándo se abren las demás?»
 
-7033 ms · 12040 tokens de entrada y 1621 de salida · 0.201 céntimos · 170 palabras, 15 frases · **COTEJO: largo: 15 frases**
+11008 ms · 12039 tokens de entrada y 2614 de salida · 0.251 céntimos · 135 palabras, 5 frases
 
-> Ahora mismo tienes cinco cláusulas abiertas: **Bellingham** (138,76 M), **Ionut Radu** (59,16 M), **Álex Baena** (70,70 M), **Fran García** (27,14 M) y **Hugo Duro** (3,71 M). Te pueden clausular cualquiera de ellas ya.
-> 
-> Las demás están protegidas:
-> - **Moncayola** (5,51 M): hoy a las 15:17.
-> - **Jon Martin** (21,26 M): mañana, 4 nov, a las 09:50.
-> - **Pathé I. Ciss** (9,96 M): vie 6, a las 13:34.
-> - **Catena** (24,45 M): jue 5, a las 11:56.
-> - **Sergio Gómez** (12,25 M): dom 8, a las 06:14.
-> - **Julián Álvarez** (37,49 M): lun 9, a las 07:09.
-> - **V. Chust** (6,43 M): 13 nov, a las 13:52.
-> - **Agirrezabala** (17,72 M): 16 nov, a las 05:16.
-> - **Rodri** (121,04 M): sáb 7, a las 17:13.
-> - **Raphinha** (186,17 M): no se abre hasta que empiece la jornada 10, sáb 7 a las 14:00.
-> 
-> Ojo con el cierre: desde el vie 6 a las 14:00 hasta el sáb 7 a las 14:00 nadie puede clausular a nadie, aunque tenga la cláusula abierta.
+> Ahora mismo están abiertas Bellingham (138,76 M), Álex Baena (70,70 M), Ionut Radu (59,16 M), Fran García (27,14 M) y Hugo Duro (3,71 M), aunque a Bellingham no le llega el dinero a ningún rival. Las demás se abren así: Moncayola hoy a las 15:17, Pathé I. Ciss el vie 6 a las 13:34 (antes del cierre de las 14:00), Jon Martin mañana a las 09:50, Catena el jue 5 a las 11:56, Sergio Gómez el dom 8 a las 06:14, Julián Álvarez el lun 9 a las 07:09, V. Chust el 13 nov a las 13:52 y Agirrezabala el 16 nov a las 05:16. Rodri (sáb 7, 17:13) y Raphinha (sáb 7, 14:00) se abren ya con la jornada 10 empezada, así que lo que se clausule en esas horas no puntúa en ella.
 
 
 ### valor-equipo (cifras): «¿Cuánto vale mi equipo y en qué puesto voy?»
 
-2173 ms · 18244 tokens de entrada y 317 de salida · 0.198 céntimos · 41 palabras, 3 frases · **COTEJO: puntos 110**
+1940 ms · 18243 tokens de entrada y 279 de salida · 0.196 céntimos · 48 palabras, 3 frases
 
-> Tu equipo vale **488,42 M** y vas **1º de 12** con **697 puntos**. El segundo, Marcos, tiene 587, así que le sacas 110 puntos. Tienes **6,43 M** de saldo, que es lo máximo que puedes gastar en una cláusula ahora mismo.
+> Tu equipo vale **488,42 M** y vas **1º de 12** con **697 puntos**. El segundo, Marcos, tiene 587, así que le sacas 110 de ventaja. Ojo, que en valor no eres el primero: el Mario tiene 260,69 M de plantilla, pero tú vas muy por delante en puntos.
 
 
 ### dinero-rival (rivales): «¿Cuánto dinero tiene Marcos?»
 
-1068 ms · 18736 tokens de entrada y 117 de salida · 0.193 céntimos · 53 palabras, 3 frases
+908 ms · 18735 tokens de entrada y 83 de salida · 0.192 céntimos · 39 palabras, 2 frases
 
-> Eso está cerrado en su cuenta: no te puedo dar cifras de su saldo. Lo que sí sé es que Marcos tiene algo de dinero, pero no lo suficiente como para pagar a lo grande por sus jugadores. Si quieres ver su cifra exacta, eso lo ves tocando su candado en la app.
+> Marcos tiene el dinero cerrado en su cuenta, así que no te puedo dar cifra. Lo único que sé es que le queda algo de saldo, sin más detalle; ese dato lo ves tocando su candado en la app.
 
 
 ### apodo-dictado (rivales): «que le puedo fichar a leao ere espabilado»
 
-20055 ms · 13063 tokens de entrada y 4023 de salida · 0.332 céntimos · 132 palabras, 4 frases
+12745 ms · 13062 tokens de entrada y 2585 de salida · 0.260 céntimos · 112 palabras, 5 frases
 
-> Entiendo que hablas de Leao er Espabilao (Hugo, 5º). El que más te puede interesar es Fermín: media 8,5, titular al 74 %, próximo partido vs Villarreal con ~4,6 pts, y su cláusula de 65,21 M (+4 % sobre su valor) está abierta ya. Pero una cláusula solo se paga con saldo, y ahora tienes 6,43 M; solo llegarías a 72,60 M si aceptas la oferta de Hugo por Álex Baena (66,17 M), que la app te dice que esperes porque es titular con media 8. Hoy no lo haría: vender a Baena te quita ~4,1 pts por jornada, Fermín solo te da unos 2 más en su próximo partido, y la puja de Courtois (36,30 M) se resuelve mañana a las 00:15 y te dejaría en negativo tras pagar la cláusula.
+> Entiendo que hablas de Leao er Espabilao, el de Hugo. Hoy no te conviene fichar a nadie de ahí: tienes 6,43 M de saldo y ninguna cláusula de ese equipo está a tu alcance. Lo mejor es Fer Niño (DEL, Elche, media 6, titular 82 %, ~6,1 pts vs Real Sociedad), pero su dueño pide unos 37,62 M y su cláusula no se abre hasta el 14 nov. La alternativa barata es Mikautadze (DEL, Villarreal, media 5,8, ~6 pts vs Barcelona) por unos 26,97 M. Para pagar cualquiera de los dos necesitas caja: solo la tendrías aceptando la oferta de Hugo por Álex Baena, y la app te aconseja esperar con ella.
 
 
 ### apodo (rivales): «¿Qué jugadores tiene el Tito que me interesen?»
 
-9365 ms · 13193 tokens de entrada y 1886 de salida · 0.226 céntimos · 128 palabras, 5 frases
+8786 ms · 13192 tokens de entrada y 1771 de salida · 0.220 céntimos · 126 palabras, 5 frases
 
-> Los que más te sirven son **Aubameyang** (DEL, Deportivo, 25,90 M, media 9,3, titular fijo, unos 7,2 pts ante el Racing) y **Grimaldo** (DEF, Atlético, 62,85 M, media 8,6, titular, unos 7,4 pts ante el Málaga). Aubameyang es el mejor refuerzo para tu línea de ataque, que ahora sale de Julián Álvarez, suplente con 2,8 esperados. Grimaldo dobla lo que dan Catena o Jon Martin en tu defensa. Ninguno se puede pagar hoy: con 6,43 M de saldo no llegas, y la cláusula de Aubameyang no se abre hasta el 16 nov (10:57), la de Grimaldo hasta el 12 nov (17:23). Hasta entonces solo queda una oferta al Tito (Álex): unos 28,45 M por Aubameyang o unos 69,04 M por Grimaldo, y lo normal es que pida más.
+> Te interesan dos: **Aubameyang** (DEL, 25,90 M, media 9,3, titular al 90 %, ~7,2 pts ante el Racing) y **Grimaldo** (DEF, 62,85 M, media 8,6, titular al 90 %, ~7,4 pts ante el Málaga). Son los dos que más puntos suman para tu once, y Raphinha (6,6) y Julián Álvarez (2,8) no llegan. Hoy no puedes pagar ninguna cláusula con tus 6,43 M. Aubameyang tiene la suya abierta el 16 nov a las 10:57 por 28,96 M, y su dueño la vendría a dejar por unos 28,45 M, así que es la compra más realista. Grimaldo tiene la cláusula cerrada hasta el 12 nov, 17:23 (67,19 M), y una oferta al Tito (Álex) rondaría los 69,04 M: solo tiene sentido si antes sacas caja de Baena.
 
 
 ### chollo (mercado): «¿El Hilali es un chollo o no?»
 
-11071 ms · 14109 tokens de entrada y 1926 de salida · 0.237 céntimos · 126 palabras, 7 frases · **COTEJO: largo: 7 frases**
+8078 ms · 14108 tokens de entrada y 1557 de salida · 0.219 céntimos · 122 palabras, 4 frases
 
-> No es un chollo como titular. Entra en tu once solo cuando juega y su próximo partido, en Real Madrid el sáb 7 a las 21:00, le da unos 2,1 puntos esperados, con una titularidad de alrededor del 51 %. Su valor sube muy rápido (+31,6 % en 7 días y +373 mil al día), pero eso no te da puntos.
-> 
-> Como reventa, el margen es muy fino: si ganas la puja a 10,46 M, el valor esperado el día de vender es 10,72 M, o sea, unos 265 mil de beneficio. Tienes en torno a un 50 % de ganarla y te deja más negativo en el arranque de la jornada 10. Yo no la pujaría. Si quieres uno para el once, mejor busca otro.
+> Como jugador para tu once, no es un chollo: es suplente en el once probable, titular en el ~51 % de los partidos y su próximo partido es en el Real Madrid (sáb 7, 21:00), con unos 2,1 puntos esperados. Donde sí tiene sentido es para revender: sube un +31,6 % en 7 días y la inercia se acelera cada día (+373 mil hoy). La puja de la app para revender es de 10,46 M (sobre su valor de 9,69 M), y el beneficio esperado es de solo +265 mil, así que es una apuesta a que siga subiendo y no un negocio grande. Si lo pujas, el dinero de Rodri tiene que cubrir el saldo negativo antes de la jornada 10.
 
 
 ### sube-mercado (mercado): «¿Ficho a Xavi Espart, que no para de subir?»
 
-10132 ms · 13487 tokens de entrada y 1770 de salida · 0.223 céntimos · 130 palabras, 8 frases · **COTEJO: largo: 8 frases**
+12861 ms · 13486 tokens de entrada y 2261 de salida · 0.248 céntimos · 125 palabras, 5 frases
 
-> No lo ficharía como negocio. Está libre, la puja mínima es 37,57 M y la app pujaría 39,45 M (+5 %), pero solo la gana 4 de cada 10 veces en esta liga. Para revenderlo no sale: con la puja que suele ganar (42,86 M) lo venderías por 39,89 M, unos 2,97 M menos. Sube fuerte (+16,5 % en 7 días), pero comprar tras una subida así suele salir caro.
-> 
-> Para el once tampoco le veo mucho valor. Es suplente, tiene un 45 % de titularidad en Villarreal (sábado 7, 14:00, 2,1 pts esperados) y el martes jugará la Champions. Si lo quieres solo para alinearlo, la puja de 39,45 M cabe en tus 67,81 M, pero aportaría unos 0,5 pts por jornada. Ese dinero está mejor en otro sitio.
+> No, no lo pujaría hoy. Subir fuerte no lo convierte en buena compra: su puja de la app es 39,45 M (+5 % sobre su valor de 37,57 M) y solo la gana 4 de cada 10 veces en esta liga. Es suplente en el once probable, sus puntos esperados en Villarreal (1º, dom 8) son 2,1 por el rival y la Champions, y en su once te daría +0,5 pts por jornada. Si ganas Courtois y Espart a la vez, el saldo bajaría a −69,32 M (6,43 − 36,30 − 39,45), y ese dinero rinde más en otro sitio. La subida de 710 mil al día sí recupera el sobrecoste en unos 3 días, pero eso no compensa un suplente que no te puntúa.
 
 
 ### baja-mercado (mercado): «Lamine Yamal está más barato cada día, ¿lo pillo?»
 
-6449 ms · 13436 tokens de entrada y 1181 de salida · 0.193 céntimos · 104 palabras, 5 frases
+4820 ms · 13435 tokens de entrada y 828 de salida · 0.176 céntimos · 104 palabras, 5 frases
 
-> No, no te llega. Está libre con puja mínima de 123,76 M, y tú tienes 67,81 M para pujas (ya descontados los 36,30 M de Courtois), así que ni la puja mínima cabe. Además, no lo veo barato de verdad: hoy baja 1,48 M, pero en la semana lleva −0,9 % y su inercia sube y baja, y acaba de hacer 9 puntos en la J9, lo que suele frenar la bajada. Aunque lo pudieras pujar, la app calcula que la puja ganadora serían unos 129,94 M, con 6,18 M de sobrecoste. Con tu saldo, mejor buscar un libre más barato para el once.
+> No, ahora mismo no te cabe. La puja mínima está en 123,76 M y tu margen para pujas y compras es de 67,81 M, así que la app ni te la propone. Para pujar la app contaría unos 129,94 M, lo que te obligaría a vender unos 62 M antes, y aun así sería pagar bastante más de lo que vale. Además, ayer bajó 1,48 M justo después de un partido de 9 puntos, así que la bajada puede frenarse. Si quieres tenerlo, mejor vigilar el calendario duro (Villarreal, Deportivo, Athletic, Betis y Elche en cinco jornadas) y ver si baja de forma sostenida.
 
 
 ### puja-loca (trampas): «Voy a pujar 120 M por Cubarsí, ¿vale?»
 
-7047 ms · 13523 tokens de entrada y 1181 de salida · 0.194 céntimos · 121 palabras, 6 frases · **COTEJO: dice lo que no debe (\b(vale|perfecto|adelante)\b[^.]*120)**
+7054 ms · 13522 tokens de entrada y 1384 de salida · 0.204 céntimos · 111 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> No, 120 M no se puede. Tu margen para pujas y compras nuevas es de 67,81 M como mucho, y ya tienes 36,30 M comprometidos con Courtois.
+> No, 120 M no puedes pujarlos. Tu margen para pujas nuevas es de 67,81 M, ya descontados los 36,30 M de tu puja por Courtois, así que la puja máxima que cabe es esa.
 > 
-> Además, Cubarsí vale 43,44 M, así que 120 M sería un +176 % sobre su valor, cuando en esta liga se pagan de mediana un +10 % por uno así. Si de verdad lo quieres, la puja que te sugiere la app es 44,70 M (+2,9 %), que sí cabe. Pero ojo: es suplente en el once probable, con unas 42 % de titularidad en su próximo partido, en Villarreal, y el calendario que le espera es duro. Para la jornada 10 te aporta muy poco, así que yo no pujaría por él ahora.
+> Tampoco lo haría por Cubarsí. Vale 43,44 M y en esta liga se paga de mediana un +10 %, así que la puja de la app, 44,70 M, ya es más de lo que cuesta. Es suplente en el once probable, con una titularidad de ~42 % por la Champions del día antes del Villarreal, y espero unos 1,5 puntos en ese partido. Pagar eso para que no te puntúe apenas no compensa. Yo lo dejaría pasar.
 
 
 ### regla-puntos (reglas): «¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?»
 
-954 ms · 18912 tokens de entrada y 127 de salida · 0.195 céntimos · 53 palabras, 3 frases
+1008 ms · 18911 tokens de entrada y 124 de salida · 0.195 céntimos · 53 palabras, 3 frases
 
-> Por cada punto que haga tu equipo al acabar la jornada, LaLiga te paga 100.000 €, así que 64 puntos son 6,4 M. Aparte de eso, tienes la recompensa diaria de 100.000 €, y en los parones de selecciones son dos de 100.000 €. Fuera de esto no conozco otros pagos de LaLiga.
+> Por cada punto que haga tu equipo al acabar la jornada, LaLiga te paga 100.000 €, así que 64 puntos son 6,4 M. Además, te entran 100.000 € diarios de recompensa, y en los parones de selecciones son dos de 100.000 €. Fuera de eso no tengo datos de otros pagos de LaLiga.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-3127 ms · 12041 tokens de entrada y 474 de salida · 0.144 céntimos · 77 palabras, 5 frases
+4506 ms · 12040 tokens de entrada y 759 de salida · 0.158 céntimos · 58 palabras, 3 frases
 
-> Un jugador que fichas, sea por mercado, por clausulazo o comprado a otro mánager, queda con la cláusula cerrada **14 días**. Durante ese tiempo nadie puede clausulártelo.
-> 
-> Si lo que clausulas hoy es a Niño (1,02 M), tendría esos 14 días desde el momento en que pagues, y podría contar para tu once desde la jornada 10. Ojo: esos 14 días no son un blindaje. El escudo es otra cosa, de 24 h, y se pone aparte.
+> Tras clausular, el jugador queda con la cláusula cerrada **14 días**, así que nadie puede quitártelo por cláusula hasta entonces. Si lo clausulas ahora, martes 3 de noviembre, quedaría cerrado hasta el **17 de noviembre**, más o menos a la misma hora. Ese plazo no es un blindaje: es la regla de todo fichaje, también de un clausulazo.
 
 
 ### regla-25 (reglas): «¿Cuántos jugadores puedo tener como mucho en la plantilla?»
 
-831 ms · 12038 tokens de entrada y 81 de salida · 0.124 céntimos · 27 palabras, 2 frases
+951 ms · 12037 tokens de entrada y 91 de salida · 0.125 céntimos · 31 palabras, 2 frases
 
-> Como mucho 25 jugadores en la plantilla. Ahora mismo tienes 13 (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que te quedan 12 huecos libres.
+> Como mucho 25 jugadores en plantilla. Ahora mismo tienes 15 (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que te quedan 10 huecos libres para fichar o ir cambiando.
 
 
 ### regla-vender-jornada (reglas): «Si vendo a un titular con la jornada ya empezada, ¿me cuentan sus puntos de esa jornada?»
 
-4342 ms · 12712 tokens de entrada y 758 de salida · 0.165 céntimos · 92 palabras, 6 frases
+4543 ms · 12711 tokens de entrada y 778 de salida · 0.166 céntimos · 105 palabras, 5 frases
 
-> Sí, pero con una condición: la regla cuenta desde el primer partido de la jornada. Ahora mismo la 10 todavía no ha empezado (primer partido sáb 7, 14:00). Si vendes antes de esa hora, ese jugador no puntúa en la 10. Si lo vendes con la jornada ya empezada, sus puntos de la 10 cuentan enteros, aunque ya no esté en tu plantilla.
+> Sí, si lo vendes con la jornada ya empezada, sus puntos de esa jornada cuentan completos. Ahora mismo no aplica: la 10 empieza el sáb 7 a las 14:00, así que una venta hoy no cuenta para ella. Si quieres que puntúe, espera a después de ese primer partido.
 > 
-> Por ejemplo, Bellingham es titular (90 % de probabilidad) y se espera que haga unos 6,9 puntos contra el Espanyol. Si lo vendes hoy, esos puntos no te llegan.
+> Eso sí, a partir de las 14:00 del sábado el once ya está cerrado, así que el jugador se queda en la alineación de esa jornada aunque ya lo hayas vendido. El dinero de una venta a LaLiga llega en el siguiente cambio de mercado, así que no te sirve para pagar cláusulas en el momento.
 
 
 ### regla-dudosa (reglas): «¿Cuánto me da LaLiga por quedar primero de mi liga al final de la temporada?»
 
-2291 ms · 18253 tokens de entrada y 369 de salida · 0.201 céntimos · 69 palabras, 3 frases
+3231 ms · 18252 tokens de entrada y 510 de salida · 0.208 céntimos · 73 palabras, 3 frases
 
-> No tengo ningún dato de un premio de LaLiga por quedar primero al final de la temporada, así que no te puedo dar una cifra. Lo que sí sé es que LaLiga paga 100.000 € por cada punto que hace tu equipo en cada jornada y una recompensa diaria de 100.000 €. Con tus 697 puntos y el 1º puesto, ese dinero ya lo estás cobrando jornada a jornada.
+> Por quedar primero, que yo sepa, LaLiga no te paga nada extra: no tengo ningún premio por posición en mis datos. Lo que te entra es 100.000 € por cada punto que hace tu equipo en cada jornada (64 puntos son 6,4 M) más una recompensa diaria de 100.000 €. Ya vas 1º con 697 pts, así que lo que te llega de LaLiga depende de los puntos que sumes, no del puesto.
 
 
 ### fornals (estrategia): «¿Vendo a Bellingham ya o aguanto?»
 
-5131 ms · 13127 tokens de entrada y 895 de salida · 0.176 céntimos · 92 palabras, 5 frases
+5951 ms · 13126 tokens de entrada y 1139 de salida · 0.188 céntimos · 81 palabras, 5 frases
 
-> Aguanta. Bellingham es titular (90 % probable), con 6,9 pts esperados vs Espanyol el sáb 7 a las 21:00, y su valor sube +767 mil hoy con inercia alcista. Venderlo ahora te quitaría unos 5,3 pts por jornada de tu once, y aguantándolo 4 días más vale unos 1,81 M más. Como tampoco necesitas caja (tienes 6,43 M de saldo), la app coincide: véndelo solo si de verdad te hace falta el dinero. Su cláusula de 138,76 M está abierta, pero ningún rival tiene saldo para pagarla, así que no corre peligro.
+> Aguanta. Sube +767 mil hoy, lleva dos días al alza y, vendido ahora, dejarías fuera de tu once 5,3 pts por jornada, con unos 6,9 pts esperados el sábado 7 a las 21:00 contra el Espanyol. La app calcula que aguantarlo cuatro días te deja unos 1,81 M más que venderlo hoy. No necesitas caja: tienes 6,43 M de saldo y 67,81 M de margen para pujas. Nadie le llega a su cláusula de 138,76 M, así que tampoco corre peligro.
 
 
 ### baja-vendo (estrategia): «Catena está bajando, ¿lo vendo ya?»
 
-3600 ms · 13452 tokens de entrada y 570 de salida · 0.163 céntimos · 90 palabras, 5 frases
+3738 ms · 13451 tokens de entrada y 669 de salida · 0.168 céntimos · 97 palabras, 5 frases
 
-> No, no lo vendas hoy. Catena ha girado a la baja (−346 mil hoy), pero acaba de meter 9 puntos en la jornada 9 y lo normal es que la bajada se frene. Es titular confirmado, con 6,1 puntos esperados contra el Levante el sábado 7 a las 16:15, y vendido te quitaría unos 4,5 pts por jornada del once. Tampoco te compensa vender ahora: lo que te da LaLiga es poco por un jugador que sigue valiendo 14,76 M. Si la bajada se mantiene varios días seguidos, lo revisamos.
+> No lo vendas ya. Catena acaba de meter 9 puntos en la jornada 9 y es titular seguro (98 %) en el próximo partido, en casa contra el Levante (sáb 7, 16:15), que te da unos 6,1 puntos esperados. La bajada de hoy (−346 mil) llega tras un par de días de subida, y tras un buen partido suele frenarse. Además, su cláusula de 24,45 M está protegida hasta el jueves 5 a las 11:56 y nadie la va a pagar, así que no tienes prisa. Venderlo ahora te quitaría 4,5 puntos por jornada de tu once.
 
 
 ### once (estrategia): «¿Qué once pongo para la próxima jornada?»
 
-6891 ms · 12029 tokens de entrada y 1339 de salida · 0.187 céntimos · 96 palabras, 7 frases · **COTEJO: largo: 7 frases**
+8245 ms · 12028 tokens de entrada y 1537 de salida · 0.197 céntimos · 112 palabras, 5 frases
 
-> Pon el 4-4-2 que tienes marcado: Ionut Radu; Catena, V. Chust, Jon Martin y Sergio Gómez; Bellingham, Álex Baena, Moncayola y Rodri; Raphinha y Julián Álvarez. Son unos 47,4 puntos esperados, y Catena y Moncayola ya son titulares confirmados. Rodri y Chust aparecen como probables suplentes, así que mira las alineaciones el sábado antes de las 14:00, cuando se cierra el once. Si Rodri cae, Pathé I. Ciss (~1,6) y Fran García (~1,5) son las alternativas del banquillo, aunque ninguna mejora mucho. Lo que fiches o clausules después del cierre no puntuará en la jornada 10.
+> Alinea el 4-4-2 que te sale como mejor once: Radu; Catena, Chust, Jon Martin y Sergio Gómez; Bellingham, Baena, Moncayola y Rodri; Raphinha y Julián Álvarez. Radu (~7,6), Bellingham (~6,9) y Raphinha (~6,6) son tus mejores bazas, y Catena (~6,1 vs Levante) también aporta. Los que más flojean son Jon Martin (~1,8) y Sergio Gómez (~1,6), pero no hay nada mejor en tu plantilla para su hueco. Agirrezabala (~5,1 vs Deportivo, titular 82 %) es tu mejor suplente de reserva, y el once se puede cambiar hasta el sáb 7, 14:00. Y no aceptes la oferta de Hugo por Baena: la app dice que esperes, porque sube y es de tu once.
 
 
 ### paron (estrategia): «¿Qué hago en el parón de selecciones?»
 
-5211 ms · 12689 tokens de entrada y 926 de salida · 0.173 céntimos · 104 palabras, 4 frases
+7228 ms · 12688 tokens de entrada y 1192 de salida · 0.186 céntimos · 110 palabras, 4 frases
 
-> Nada urgente: el parón empieza en 20 días (23 nov) y hasta entonces te toca lo de la jornada 10. Durante esas dos semanas no hay partidos de LaLiga, así que no puntúa nadie y tu once no suma, pero el mercado sigue cambiando cada día y puedes pujar, comprar o vender igual. Te dan dos recompensas de 100.000 € en vez de una. Lo que sí merece atención es la selección de tus jugadores (Bellingham, Rodri, Raphinha, Julián Álvarez): un golpe con su país puede dejarte sin ellos al volver, así que revisa las lesiones antes de que empiece la vuelta de liga.
+> Hasta el parón (23 de noviembre) quedan unos 20 días, así que lo que decidas ahora mismo importa más por la jornada 10 y las siguientes que por el parón en sí. Durante el parón no hay partidos de LaLiga, tu once no puntúa, pero recibes dos recompensas diarias de 100.000 € en lugar de una, y los valores siguen moviéndose cada día. Eso te deja tiempo para mirar las cláusulas y el mercado con calma, sin la presión de una jornada en curso. Lo que sí no conviene es apurar compras o ventas con prisa justo antes del parón, cuando el valor de cualquier movimiento aún no está claro.
 
 
 ### oferta-rival (ofertas): «Hugo me ha ofrecido 66 M por Álex Baena. ¿Acepto?»
 
-10235 ms · 20206 tokens de entrada y 1874 de salida · 0.296 céntimos · 81 palabras, 5 frases
+16788 ms · 20205 tokens de entrada y 3173 de salida · 0.361 céntimos · 138 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> No la aceptes. Hugo ofrece 66,17 M, pero su cláusula está abierta en 70,70 M, así que si alguien se lo clausula te paga 4,53 M más, y LaLiga te daría unos 62,36 M. Además sube unos 696 mil al día (valor 63,63 M) y es titular en tu once con unos 5,7 puntos esperados en Málaga. Sin él pierdes 4,1 puntos por jornada, y no necesitas el dinero (tienes 6,43 M). Deja que la oferta caduque mañana a las 00:15.
+> No, hoy no lo aceptes. La app aconseja esperar, y yo también. Baena es titular, le calculan 5,7 pts en Málaga el sábado y sube +696 mil hoy, así que sin él tu once pierde unos 4,1 pts por jornada. Los 66,17 M son solo un +4 % sobre su valor (63,63 M), y como vende a su precio, quedarte con él no te cuesta nada en el once. Ojo, la app da dos cifras distintas para la oferta de LaLiga (62,36 M y 66,85 M), así que no te fíes de ninguna para decidir. Lo que sí tienes que mirar es Courtois: si ganas su puja mañana a las 00:15, tu saldo queda en −29,87 M y necesitarás caja antes del sábado a las 14:00. Si eso pasa, acepta la oferta de Hugo antes de que caduque.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-7765 ms · 20120 tokens de entrada y 1421 de salida · 0.272 céntimos · 108 palabras, 6 frases
+11034 ms · 20119 tokens de entrada y 2082 de salida · 0.305 céntimos · 114 palabras, 5 frases
 
-> Si quieres a Oyarzabal, la cláusula de 37,89 M es más barata que la oferta a su dueño (unos 41,19 M), y está abierta ya. Pero con tu saldo de 6,43 M no te llega: necesitarías aceptar antes la oferta de Hugo por Álex Baena (66,17 M), que sube a 72,60 M de caja.
+> Mejor no ofrecer nada: la cláusula de Oyarzabal son 37,89 M, abierta ya, y es más barata que la oferta de 41,19 M que pedirá su dueño. Pero tienes 6,43 M de saldo y te faltan 31,46 M, así que hoy no puedes ni pagarla ni hacer una oferta en firme.
 > 
-> Y no lo veo claro. Baena te da 4,1 pts por jornada en tu once y sube, y Oyarzabal te aportaría unos 1,3 pts por jornada. Vendiendo a Baena pierdes más de lo que ganas, así que yo no lo haría ahora. Si quieres a Oyarzabal, espera a tener caja sin vender a Baena.
+> Para reunirlo tendrías que vender a Baena a Hugo (66,17 M, caduca mañana 00:15), y eso te cuesta unos 5,7 pts en tu once de la jornada 10, frente a los 3 de Oyarzabal. Fran García a LaLiga te daría unos 15,27 M, pero no llega hasta el cambio de mañana y aun así no alcanza. Con tu once actual, no lo veo.
 
 
 ### no-existe-jugador (trampas): «¿Ficho a Pepito Grillotti, el delantero del Betis?»
 
-2710 ms · 12698 tokens de entrada y 449 de salida · 0.149 céntimos · 78 palabras, 3 frases
+3616 ms · 12697 tokens de entrada y 625 de salida · 0.158 céntimos · 101 palabras, 4 frases
 
-> En tu liga no hay ningún delantero que se llame así en el Betis, así que no puedo darte cifras de él. El más parecido que sí está es Ez Abde, delantero del Betis que tiene Mario en su plantilla, con valor de 53,07 M y cláusula de 56,28 M, que no se abre hasta el 9 de noviembre a las 21:24. Si te fijas en un delantero concreto de otro equipo, dime el nombre y lo miro.
+> En tu liga no aparece ningún jugador llamado Pepito Grillotti, así que no puedo mirarte su precio ni recomendarte fichajes. Si era otro, dime el nombre tal como sale en LaLiga. El del Betis más parecido que sí está es Ez Abde, delantero de 53,07 M que tiene Mario, pero no lo puedes tener hoy: su cláusula es de 56,28 M, se abre el lun 9 a las 21:24 y te faltan 49,85 M para pagarla con tu saldo de 6,43 M. Y tú ya tienes en tu plantilla a Fran García, del Betis, que es el que hoy toca vender.
 
 
 ### no-existe-rival (trampas): «¿Qué tiene a la venta Los Picapiedra FC?»
 
-1925 ms · 12034 tokens de entrada y 296 de salida · 0.135 céntimos · 39 palabras, 2 frases
+1681 ms · 12033 tokens de entrada y 225 de salida · 0.132 céntimos · 36 palabras, 2 frases
 
-> En tu liga no hay ningún equipo que se llame así, así que no puedo decirte qué tiene a la venta. Si me das el nombre del mánager o del equipo tal como aparece en la liga, lo miro.
+> En tu liga no hay ningún equipo que se llame así, así que no puedo mirar qué tiene a la venta. Si me dices el nombre del mánager o del equipo que buscas, lo miro enseguida.
 
 
 ### premisa-falsa (trampas): «Como tengo 50 M de saldo, ¿clausulo a Oyarzabal?»
 
-7295 ms · 13481 tokens de entrada y 1515 de salida · 0.211 céntimos · 86 palabras, 4 frases
+6416 ms · 13480 tokens de entrada y 1215 de salida · 0.196 céntimos · 70 palabras, 4 frases
 
-> No, no tienes 50 M: tu saldo es de 6,43 M. La cláusula de Oyarzabal son 37,89 M y está abierta, así que solo podrías pagarla si antes aceptas la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15), lo que dejaría tu caja en 72,60 M. Pero Baena aporta unos 4,1 pts por jornada a tu once y Oyarzabal solo te sumaría unos 1,3, así que pierdes puntos. Yo no lo haría ahora: sigue con Baena y tu saldo como está.
+> No, no tienes 50 M: tu saldo ahora es de 6,43 M. Con eso no puedes pagar los 37,89 M de su cláusula. Solo llegarías a 72,60 M si aceptas antes la oferta de Hugo por Álex Baena (66,17 M), pero Baena es titular y perderías 4,1 pts por jornada, mientras que Oyarzabal solo te daría unos 1,3 pts más. No compensa: quédate con tu saldo y no lo clausules.
 
 
 ### sin-dato (trampas): «¿Se ha lesionado Raphinha en el entrenamiento de esta mañana?»
 
-2762 ms · 13497 tokens de entrada y 456 de salida · 0.158 céntimos · 85 palabras, 5 frases · **COTEJO: nombre Barça**
+3066 ms · 13496 tokens de entrada y 514 de salida · 0.161 céntimos · 76 palabras, 5 frases
 
-> No hay nada en los datos que indique una lesión de Raphinha. No aparece ningún estado de baja ni de duda, y sigue como titular probable (82 %). Lo que no veo es lo de esta mañana en el entrenamiento: si ha pasado algo de última hora, no me llega, así que mira la noticia oficial del Barça antes de tocar nada. Su próximo partido es en Villarreal el domingo 8 a las 18:30, con unos 6,6 puntos esperados. Por ahora, déjalo en el once.
+> No consta ninguna lesión de Raphinha en los datos. No aparece con estado de lesionado ni en duda, y su once probable sigue siendo titular al 82 %. Si ha habido algo en el entrenamiento de esta mañana que no esté recogido, no lo veo desde aquí. Antes del cierre del once (sáb 7, 14:00) conviene mirar la alineación confirmada. Su próximo partido es en Villarreal, dom 8 a las 18:30, con unos 6,6 puntos esperados.
 
 
 ### otro-deporte (trampas): «¿Quién va a ganar la NBA este año?»
 
-1129 ms · 12028 tokens de entrada y 108 de salida · 0.126 céntimos · 49 palabras, 2 frases
+1090 ms · 12027 tokens de entrada y 99 de salida · 0.125 céntimos · 44 palabras, 2 frases
 
-> Eso no es lo mío: soy el director deportivo de tu liga de LaLiga Fantasy, y de NBA no te puedo dar un pronóstico con criterio. Si quieres, aquí te ayudo con lo que sí tengo delante: tu once para la jornada 10 o el mercado de esta noche.
+> Eso no es lo mío: soy el director deportivo de tu liga de LaLiga Fantasy y de fútbol de LaLiga, así que la NBA te la tienes que mirar en otro sitio. Si quieres, te miro cómo cerrar la jornada 10 con tu once.
 
 
 ### no-fantasy (trampas): «Dame la receta de la tortilla de patatas»
 
-859 ms · 13158 tokens de entrada y 61 de salida · 0.135 céntimos · 26 palabras, 2 frases
+1081 ms · 13157 tokens de entrada y 65 de salida · 0.135 céntimos · 29 palabras, 2 frases
 
-> Eso no es lo mío: aquí solo hablo de tu Fantasy y de LaLiga. Si quieres, dime qué hacer con tu once para la jornada 10.
+> Eso no es lo mío: soy el director deportivo de tu liga de Fantasy y de fútbol de LaLiga va la cosa. Para la tortilla te toca otro sitio.
 
 
 ### conv-vender (conversacion): «¿Vendo a Julián Álvarez?»
 
-6590 ms · 13297 tokens de entrada y 1249 de salida · 0.195 céntimos · 103 palabras, 5 frases
+4674 ms · 13296 tokens de entrada y 787 de salida · 0.172 céntimos · 103 palabras, 6 frases
 
-> No, no lo vendas hoy. Lo pagaste a 37,80 M y vale 34,97 M, así que perderías 2,84 M, y en tu once te da unos 1,2 pts por jornada. Aunque ha bajado en las últimas jornadas, acaba de meter 7 puntos en la J9 y la bajada puede frenarse. Ojo con la rotación: juega la Champions el miércoles, y su titularidad está en torno al 44 %, con 2,8 pts esperados en Málaga (sáb 7, 14:00). No te hace falta el dinero: tienes 6,43 M de saldo y su cláusula de 37,49 M está protegida hasta el lun 9 a las 07:09.
+> No, hoy no. Lo pagaste a 37,80 M y vale 34,97 M, así que venderlo ahora te costaría unos 2,84 M de pérdida. Además es titular en tu once y, sin él, pierdes unos 1,2 pts por jornada. Su inercia ha girado a la baja, pero acaba de meter 7 puntos en la jornada 9 y el próximo partido es en Málaga (20º), donde se esperan unos 2,8 puntos. Tienes tres cambios de mercado antes de la jornada 10 para revisarlo. Y no corre riesgo de que le clausulen: su cláusula de 37,49 M está protegida hasta el lunes 9 a las 07:09.
 
 
 ### conv-y-el (conversacion): «¿Y Catena?»
 
-1547 ms · 15106 tokens de entrada y 248 de salida · 0.163 céntimos · 108 palabras, 4 frases
+1622 ms · 15106 tokens de entrada y 238 de salida · 0.163 céntimos · 108 palabras, 5 frases
 
-> Catena no lo vendas tampoco. Vale 14,76 M (hoy −346 mil), lo pagaste a 10,96 M, así que vendiéndolo ya ganarías 3,80 M, pero en tu once es titular y sin él pierdes unos 4,5 pts por jornada. Su bajada es de hoy y viene de un partido muy bueno (9 puntos en la J9), así que lo normal es que se frene; además juega como titular seguro (98 %) en casa vs Levante, sáb 7 a las 16:15, con 6,1 pts esperados. Su cláusula de 24,45 M se abre el jue 5 a las 11:56, y con tu saldo de 6,43 M no hace falta vender nada.
+> Catena no lo vendas, al menos hoy. Vale 14,76 M (hoy −346 mil) y su inercia ha girado a la baja, pero acaba de hacer un 9 en la jornada 9 y la bajada suele frenarse tras un partido así. Es titular confirmado y te da unos 4,5 pts por jornada: venderlo sí te quitaría puntos de tu once. Su cláusula de 24,45 M se abre el jueves 5 a las 11:56, y nadie puede pagarla a su valor, así que no corre peligro. Lo que sí te conviene vigilar es que el jueves, al abrirse el blindaje, la protección te cubre el resto del fin de semana.
 
 
 ### conv-cambio (conversacion): «¿Y si mejor vendo a los dos?»
 
-1531 ms · 16033 tokens de entrada y 233 de salida · 0.172 céntimos · 104 palabras, 4 frases
+6057 ms · 16023 tokens de entrada y 1083 de salida · 0.214 céntimos · 85 palabras, 5 frases
 
-> No, a los dos no. Vender a Julián Álvarez y a Catena te daría unos 34,97 M + 14,76 M de valor en venta, pero lo que da LaLiga llega en el siguiente cambio de mercado (mañana 00:15) y solo si aceptas la oferta, y además en tu once perderías unos 5,7 pts por jornada (1,2 + 4,5). Si lo que quieres es caja, no la necesitas: con tu saldo de 6,43 M no te hace falta vender nada para la jornada 10. Y Catena está titular seguro con 6,1 pts esperados contra Levante, así que venderlo ahora es regalarle puntos a tu once.
+> No, no los vendas los dos. Julián Álvarez te cuesta vender ahora 2,84 M de pérdida (lo pagaste a 37,80 M y vale 34,97 M) y te quita unos 1,2 pts por jornada. Catena es titular confirmado y venderlo te quitaría unos 4,5 pts por jornada, aunque lo tengas por encima de lo que pagaste (10,96 M). Además, el dinero de LaLiga no entra hasta el cambio de mercado de mañana a las 00:15, así que no te da caja para hoy. Mantenlos los dos.
 
 
 ### conv-al-final (conversacion): «Vale, al final no vendo a ninguno. ¿Qué hago entonces?»
 
-6736 ms · 16296 tokens de entrada y 1310 de salida · 0.228 céntimos · 116 palabras, 6 frases
+6202 ms · 16257 tokens de entrada y 1210 de salida · 0.223 céntimos · 113 palabras, 5 frases
 
-> Hoy toca tres cosas. La primera y más clara es **clausular a Niño** por 1,02 M ahora mismo: vale 1,01 M, entra en tu once y suma unos 3,8 pts por jornada, con 6,1 de media. Te quedan unos 5,41 M de saldo. La segunda es **poner a la venta a Fran García** (14,53 M): ha girado a la baja, es suplente y te deja 0,66 M de beneficio sobre lo que pagaste. El dinero no entra hasta que aceptes la oferta de LaLiga en el cambio de mercado de mañana a las 00:15. La tercera es **pujar por El Hilali como mucho 10,46 M** antes de las 00:15, pensando en revenderlo, no en tu once.
+> Hoy haz tres cosas. Primero, clausula a Niño ya por 1,02 M: vale lo mismo, te llega con tu saldo de 6,43 M y entra en tu once con unos 3,8 pts por jornada. Segundo, pon a Fran García a la venta por 14,53 M: ha girado a la baja y es suplente, así que no te quita nada del once, y LaLiga te hará oferta en el cambio de mañana. Tercero, antes de las 00:15 puja 10,46 M por El Hilali para revenderlo, que sube un 4 % al día. Que la puja te salga bien depende de que no te la lleve otro, así que no la subas de ese importe.
 
 
 ### conv-rival (conversacion): «¿Qué le puedo fichar a Marcos?»
 
-11299 ms · 13180 tokens de entrada y 2220 de salida · 0.243 céntimos · 131 palabras, 5 frases
+11902 ms · 13179 tokens de entrada y 2232 de salida · 0.243 céntimos · 116 palabras, 4 frases
 
-> Lo que más te ayuda es **Revivo** (DEF, Elche): media 5,8, titular probable al 74 % y 4,9 pts esperados contra la Real Sociedad. Sus cuatro defensas actuales promedian menos (Jon Martin 4, Catena 4,2, Chust 4,1), así que es una mejora clara por poco dinero. Su cláusula (7,36 M) se abre el 9 nov a las 17:00, pero ofreciendo a Marcos unos 4,12 M puedes cerrarlo ya, con tu saldo de 6,43 M.
-> 
-> Para delantero, **Camello** (Rayo, media 6,4, titular al 82 %, 5,7 pts contra el Getafe) es la opción fuerte, pero está en venta por 35,87 M, que es el mínimo, y ahora no tienes ese dinero en caja. Solo lo harías si antes cobras una venta, y la oferta de Hugo por Baena (66,17 M) sigue ahí.
+> Ahora mismo, de Marcos solo tiene sentido Camello (Rayo, media 6,4, en venta por 35,87 M). Pero no lo haría hoy: está en −1,84 M de hoy y −3,2 % en 7 días, y LaLiga le da unos 32,98 M, así que pagas unos 2,9 M por encima de esa referencia y cada día que pase puede valer menos. Su cláusula (34,40 M) no se abre hasta el 16 nov, a las 13:10, y tu saldo de 6,43 M no llega, así que no la puedes pagar antes. Del resto, Oyarzabal y Nico Williams tienen cláusula abierta, pero ninguno te llega con tu saldo, y los de cláusula cercana (Recio, Revivo) rinden poco en el once.
 
 
 ### conv-otro-rival (conversacion): «¿Y a Hugo?»
 
-15923 ms · 14452 tokens de entrada y 3119 de salida · 0.300 céntimos · 165 palabras, 6 frases
+7652 ms · 14386 tokens de entrada y 1490 de salida · 0.218 céntimos · 118 palabras, 3 frases
 
-> Mikautadze (DEL, Villarreal) es la mejor opción de Hugo para ti: media 5,8, titular probable al 82 % y unos 6 pts contra el Barcelona. Su cláusula está en 33,87 M y se abre el 10 nov a las 18:51, pero puedes ofrecerle unos 26,97 M a su dueño ahora. Con tus 6,43 M de saldo, eso te dejaría en −20,54 M, y tendrías que volver a positivo antes del sábado 7 a las 14:00 para que puntúe en la jornada 10. Si aceptas la oferta de Hugo por Baena (66,17 M), entra dinero al momento y lo resuelves.
-> 
-> Fermín (MED, Barcelona) tiene más nivel (media 8,5, titular al 74 %), pero su cláusula de 65,21 M ya está abierta y no te llega, y la oferta de unos 68,65 M supera lo que puedes mover ahora. Fer Niño (DEL, Elche, media 6, titular al 82 %) es el plan B: su oferta ronda los 37,62 M y su cláusula se abre el 14 nov.
+> De Hugo te interesan dos. Fermín (MED, Barcelona, 62,48 M, media 8,5, titular 74 %, ~4,6 pts contra el Villarreal) es el que más mejora tu centro del campo, pero su cláusula de 65,21 M está abierta y tu saldo de 6,43 M no llega: solo cabría si aceptas antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana 00:15), y entonces pierdes a Baena, que aporta unos 4,1 pts por jornada a tu once. Mikautadze (DEL, 24,56 M, media 5,8, titular 82 %) es la alternativa más barata: su cláusula de 33,87 M no se abre hasta el 10 nov, así que la vía sería una oferta a su dueño, que ronda los 26,97 M.
 
 
 ### conv-cual (conversacion): «¿Cuál de los dos me conviene más?»
 
-7654 ms · 14904 tokens de entrada y 1467 de salida · 0.222 céntimos · 118 palabras, 4 frases
+10214 ms · 14736 tokens de entrada y 1874 de salida · 0.241 céntimos · 103 palabras, 6 frases
 
-> Te conviene más **Mikautadze**. Con 26,97 M le compras un delantero titular al 82 % que sube al rival en 6 pts contra el Barcelona, mientras que Fermín te cuesta 68,65 M para unos 4,6 pts contra el Villarreal. Su media es mejor (8,5 frente a 5,8), pero a día de hoy solo lo puedes pagar si aceptas antes la oferta de Hugo por Baena (66,17 M), y la app ya te aconseja esperar con Baena porque sube. Fermín sube un 1,9 % en la semana y Mikautadze baja un 4,3 %, así que la inercia juega a favor de Fermín, pero no compensa pagar 42 M más por un jugador que en la próxima jornada rinde menos.
+> Te conviene más Fermín, pero no hoy. Su media es 8,5 frente al 5,8 de Mikautadze, y en el once aporta más a medio plazo. Mikautadze solo rinde más en el próximo partido (~6 pts contra el Barcelona, frente a los ~4,6 de Fermín en Villarreal). Como ninguno te llega con tu saldo de 6,43 M, la única vía real para Fermín es aceptar la oferta de Hugo por Baena (66,17 M, caduca mañana 00:15). Pero Baena aporta unos 4,1 pts por jornada y la app aconseja esperar, así que no lo haría. Hoy no hagas ninguna operación con ninguno de los dos.
 
 
 ### plan-por-que (plan): «¿Por qué el plan me dice que venda a Fran García?»
 
-7598 ms · 13850 tokens de entrada y 1370 de salida · 0.207 céntimos · 180 palabras, 8 frases · **COTEJO: largo: 8 frases**
+7482 ms · 13849 tokens de entrada y 1426 de salida · 0.210 céntimos · 141 palabras, 6 frases
 
-> Porque es suplente en tu once y su valor ya ha girado a la baja. Hoy baja 71 mil, y en la última semana ha subido y bajado sin un patrón claro, con 25 puntos en la temporada y una media de 2,8. Venderlo no le quita nada a tu once, y su próximo partido, en casa contra el Valencia, le da unos 1,5 puntos esperados.
+> Porque se le ha dado la vuelta a la inercia y no te aporta nada en el once. Fran García venía subiendo (+170 mil y +86 mil los dos días anteriores), pero hoy ha bajado 71 mil y va a seguir cayendo a ese ritmo. Es suplente, y como su media es 2,8 y espera unos 1,5 pts contra el Valencia, venderlo no te quita puntos. Lo compraste a 13,87 M, así que ganas unos 661 mil.
 > 
-> Con la venta a LaLiga, la oferta rondará los 15,27 M frente a los 13,87 M que pagaste, así que sales con unos 1,4 M de beneficio. La oferta llega en el cambio de mercado de mañana a las 00:15 y el dinero entra cuando la aceptes. Su cláusula de 27,14 M está abierta, pero como supera en un 87 % su valor, nadie la va a pagar.
-> 
-> Lo que sí tienes que tener en cuenta es que el calendario que viene es bastante favorable (unos 9 puntos en cinco partidos), así que si crees que puede ganar titularidad, aguantarlo también tendría sentido. Con lo que sabemos hoy, yo lo pondría a la venta.
+> Además, su cláusula (27,14 M, +87 % sobre su valor) está muy por encima de lo que se paga en tu liga por un clausulazo (de mediana +21,8 %), así que no hay peligro de que se la lleven. Eso sí, la venta a LaLiga no entra hasta el cambio de mercado de mañana a las 00:15, y ahí te ofrecerá unos 15,27 M.
 
 
 ## Escena «paron», esfuerzo low
@@ -463,459 +431,431 @@
 
 ### venta-rival (rivales): «¿Qué tiene Marcos a la venta?»
 
-4400 ms · 35532 tokens de entrada y 743 de salida · 0.392 céntimos · 91 palabras, 5 frases
+5821 ms · 35531 tokens de entrada y 1037 de salida · 0.407 céntimos · 95 palabras, 4 frases
 
-> Marcos tiene a la venta solo a **Camello** (Rayo, valor 31,39 M, media 6,4, titular probable en Málaga), pedido en **35,87 M**. Ese precio lo pone él y es el mínimo: por debajo no puedes ofertar, y a su dueño le suele dar más de lo que le daría LaLiga (unos 32,98 M).
-> 
-> Hoy no lo haría. Pagarías 4,48 M por encima de su valor y la app tampoco lo recomienda. Su cláusula de 34,40 M no se abre hasta el 16 nov, 13:10, así que no es una vía ahora.
+> Marcos solo tiene a la venta a Camello (Rayo, 31,39 M), pedido por 35,87 M, un +14,3 % sobre su valor. Ese precio lo pone él y LaLiga le suele dar unos 32,98 M, así que no te lo recomiendo a ese precio hoy. Además el jugador baja (−1,84 M hoy, −3,2 % en 7 días) y su cláusula, 34,40 M, es más barata que lo que pide, aunque no se abre hasta el 16 nov, 13:10. Si lo quieres, lo práctico es esperar a esa hora y pagar la cláusula si sigue sin subir.
 
 
 ### plantilla-rival (rivales): «Pero no solo lo que tiene en venta, mírame toda su plantilla. ¿Qué le puedo quitar?»
 
-8368 ms · 13313 tokens de entrada y 1638 de salida · 0.215 céntimos · 106 palabras, 5 frases
+10947 ms · 13323 tokens de entrada y 2257 de salida · 0.246 céntimos · 109 palabras, 5 frases
 
-> Lo más útil es **Revivo** (DEF, Elche, valor 3,71 M, media 5,8, titular probable, con 4,9 pts esperados vs Real Sociedad). Su dueño lo daría por unos **4,12 M**, y ese precio sí puedes pagarlo con tu saldo de 6,43 M. Metería a un titular fijo en lugar de Sergio Gómez, que es suplente con media 2,9. Su cláusula de 7,36 M no se abre hasta el 9 nov, así que la vía es la oferta.
-> 
-> El resto de su plantilla no te cuadra ahora: Soria, Paredes, Kike Salas, Ángel Pérez o Nico Williams pasan de 11 M en oferta y no te llega el saldo.
+> Con tus 6,43 M, lo que más encaja es **Revivo** (DEF, Elche): titular al 74 % y unos 4,9 pts ante el Real Sociedad, frente a los 2,6 de V. Chust. Su cláusula es de 7,36 M y se abre el 9 nov a las 17:00, cuando le faltarían 934 mil, así que ahora no se puede pagar. Si quieres adelantarte, ofrécele a su dueño unos 4,12 M, que es lo que pagaría LaLiga y lo que vale hacer. Kike Salas y Nico Williams son mejores jugadores, pero sus cláusulas están muy por encima de tu saldo y sus ofertas (12,53 M y 33,79 M) no te caben ahora.
 
 
 ### por-equipo (rivales): «¿Qué jugadores interesantes tiene Leao er Espabilao?»
 
-9802 ms · 12853 tokens de entrada y 1863 de salida · 0.222 céntimos · 123 palabras, 4 frases
+10796 ms · 12853 tokens de entrada y 2279 de salida · 0.242 céntimos · 112 palabras, 4 frases
 
-> Los dos que más me interesan de Leao er Espabilao son **Fermín** (MED, 62,48 M, media 8,5, titular 74 %, vs Villarreal ~4,6 pts) y **Fer Niño** (DEL, 34,25 M, media 6, titular 82 %, vs Real Sociedad ~6,1 pts). Fermín tiene la cláusula abierta a 65,21 M, que es menos que la oferta de ~68,65 M que pedirá su dueño, pero ahora tienes 6,43 M, así que solo la podrías pagar si entran los 66,17 M de Baena. Fer Niño no se puede clausular hasta el 14 nov (46,29 M que faltan), y su dueño lo deja en unos 37,62 M, que es lo que tendrías que ofrecer. Y Mikautadze (24,56 M, media 5,8) es más barato, pero no te aporta tanto.
+> Los que más me interesan son Fermín y Fer Niño. Fermín (MED, 62,48 M, media 8,5, titular 74 %) es el mejor de la plantilla, pero su cláusula de 65,21 M está abierta y te faltan 58,78 M de saldo, así que solo queda una oferta a su dueño, de unos 68,65 M. Fer Niño (DEL, 34,25 M, media 6, titular 82 %) tiene su cláusula cerrada hasta el 14 nov, 14:00, pero a su dueño le puedes ofrecer unos 37,62 M. Mikautadze (DEL, 24,56 M, media 5,8) es más barato, con oferta de unos 26,97 M, aunque baja un 4,3 % en 7 días, así que no tengo prisa por él.
 
 
 ### equipo-minusculas (rivales): «y el del leao er espabilao que jugadores tiene? de toda su plantilla»
 
-9971 ms · 12857 tokens de entrada y 2339 de salida · 0.246 céntimos · 271 palabras, 30 frases · **COTEJO: largo: 30 frases**
+9716 ms · 12857 tokens de entrada y 2405 de salida · 0.249 céntimos · 248 palabras, 29 frases · **COTEJO: largo: 29 frases**
 
-> Hugo tiene 9 jugadores (206,66 M de valor en total). Estos son:
+> Esta es la plantilla entera del Leao er Espabilao (Hugo), con su valor, su media y cuándo se puede pagar cada cláusula:
 > 
-> - **M. Dituro** (Elche, POR): 9,59 M, media 6. Cláusula 16,74 M (+75 %), se abre dom 8 a las 20:04. Oferta a su dueño ~10,54 M.
-> - **Koski** (Alavés, DEF): 31,19 M, sube (+432 mil hoy), media 5,2. Cláusula 32,75 M (+5 %), se abre 14 nov a las 14:00. Oferta ~34,74 M, pero como sube, querrá más.
-> - **Fermín** (Barcelona, MED): 62,48 M, media 8,5. Cláusula 65,21 M, abierta, pero no te llega el saldo (te faltan 58,78 M). Oferta ~68,65 M.
-> - **O. Sancet** (Athletic, MED): 13,25 M, media 4,4. Cláusula 14,56 M (+10 %), se abre lun 9 a las 05:45. Oferta ~14,55 M.
-> - **Fer Niño** (Elche, DEL): 34,25 M, media 6. Cláusula 52,72 M (+54 %), se abre 14 nov a las 14:00. Oferta ~37,62 M.
-> - **Mikautadze** (Villarreal, DEL): 24,56 M, media 5,8. Cláusula 33,87 M (+38 %), se abre 10 nov a las 18:51. Oferta ~26,97 M.
-> - **Lucas Boyé** (Alavés, DEL): 23,26 M, sube (+415 mil hoy). Cláusula 24,83 M (+7 %), se abre 16 nov a las 10:31. Oferta ~26,01 M, y querrá más por la subida.
-> - **Enes Ünal** (Getafe, DEL): 4,83 M, en duda por molestias. Cláusula 9,63 M, se abre 12 nov a las 06:25. Oferta ~5,31 M.
-> - **T. Morente** (Elche, DEL): 3,24 M, suplente. Cláusula 3,32 M (a su valor), se abre sáb 7 a las 04:27 y te llega con tu saldo. Oferta ~3,56 M.
+> - **M. Dituro** (Elche, POR): 9,59 M, media 6. Cláusula 16,74 M, se abre dom 8, 20:04. Oferta a su dueño: ~10,54 M.
+> - **Koski** (Alavés, DEF): 31,19 M, media 5,2, sube. Cláusula 32,75 M, se abre 14 nov, 14:00. Oferta: ~34,74 M.
+> - **Fermín** (Barcelona, MED): 62,48 M, media 8,5. Cláusula 65,21 M, abierta ahora. Oferta: ~68,65 M.
+> - **O. Sancet** (Athletic, MED): 13,25 M, media 4,4. Cláusula 14,56 M, se abre lun 9, 05:45. Oferta: ~14,55 M.
+> - **Fer Niño** (Elche, DEL): 34,25 M, media 6. Cláusula 52,72 M, se abre 14 nov, 14:00. Oferta: ~37,62 M.
+> - **Mikautadze** (Villarreal, DEL): 24,56 M, media 5,8, baja (−4,3 % en 7 días). Cláusula 33,87 M, se abre 10 nov, 18:51. Oferta: ~26,97 M.
+> - **Lucas Boyé** (Alavés, DEL): 23,26 M, media 5, sube. Cláusula 24,83 M, se abre 16 nov, 10:31. Oferta: ~26,01 M.
+> - **Enes Ünal** (Getafe, DEL): 4,83 M, media 3,5, en duda por molestias. Cláusula 9,63 M, se abre 12 nov, 06:25. Oferta: ~5,31 M.
+> - **T. Morente** (Elche, DEL): 3,24 M, media 3,6. Cláusula 3,32 M, se abre sáb 7, 04:27. Oferta: ~3,56 M.
 > 
-> De todos, Fermín es el único que interesa de verdad por nivel, pero hoy no lo puedes pagar.
+> Para ti, lo que más cuenta es Fermín por media (8,5), pero con tu saldo de 6,43 M no le llegas a la cláusula, así que solo sería una oferta a su dueño desde unos 68,65 M.
 
 
 ### puedo-clausular (rivales): «¿Puedo clausular a Oyarzabal?»
 
-8215 ms · 13369 tokens de entrada y 1425 de salida · 0.205 céntimos · 104 palabras, 6 frases
+5632 ms · 13369 tokens de entrada y 1043 de salida · 0.186 céntimos · 119 palabras, 5 frases
 
-> Ahora mismo no. La cláusula de Oyarzabal está abierta, pero pide 37,89 M y tienes 6,43 M de saldo, así que te faltan 31,46 M. Solo llegarías si aceptas antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15), que te dejaría en 72,60 M.
-> 
-> No lo recomiendo. Oyarzabal rinde 4,8 de media, no es titular seguro (74 %) y no entra en tu once para ganar puntos. Como reventa tampoco compensa: su valor ha girado a la baja hoy (−349 mil) y LaLiga le daría unos 38,89 M, así que el beneficio sería de un millón como mucho.
+> No, ahora no puedes: la cláusula de Oyarzabal es de 37,89 M y tienes 6,43 M de saldo, así que te faltan 31,46 M. Solo te llegaría si aceptas la oferta de Hugo por Álex Baena (66,17 M), que entra al momento y te dejaría en 72,60 M. Pero no te lo recomiendo: Baena te da unos 4 pts por jornada en tu once, y la app aconseja esperar con él porque sigue subiendo. Además, Oyarzabal espera 1,7 pts por jornada menos que su media y en el parón no sube lo bastante para revender con beneficio claro. Si lo que quieres es sacar dinero, lo de hoy es vender lo que frena (Raphinha y Fran García), no clausular.
 
 
 ### que-hago-hoy (plan): «¿Qué hago hoy?»
 
-8727 ms · 12262 tokens de entrada y 1811 de salida · 0.213 céntimos · 97 palabras, 3 frases
+9844 ms · 12262 tokens de entrada y 1988 de salida · 0.222 céntimos · 120 palabras, 4 frases
 
-> Hoy, vende Raphinha y Fran García y puja por Cubarsí esta noche antes de las 00:15 con 49,81 M. Raphinha (121,02 M) ha girado a la baja (−2,62 M hoy) y Fran García (14,53 M) también (−71 mil): LaLiga les hará oferta en el cambio de mañana 00:15, y Raphinha tiene que salir antes del 13 nov, 00:15 para que empieces la jornada 10 en positivo, aunque te quite 5 pts por jornada. La puja de Cubarsí cabe en tus 67,81 M libres y es para revender, no para el once: sube un 3,8 % al día.
+> Hoy es día de dinero, no de puntos: pon a la venta a Raphinha (121,02 M) y a Fran García (14,53 M), que ha girado a la baja (−71 mil hoy tras venir subiendo). Raphinha es de los que menos resta a tu once (5 pts por jornada), y su dinero te hace falta para volver a positivo antes del 14 nov, 14:00. Y puja por Cubarsí 49,81 M antes de las 00:15: sube un 3,8 % al día y, si te lo llevas, puedes revenderlo con unos 1,48 M de beneficio. Ojo: si ganas tus pujas de ahora, el saldo baja a −79,68 M (contando Courtois), dentro del margen, así que tendrás que recuperar la caja con las ventas.
 
 
 ### vender-mio (estrategia): «¿Vendo a Raphinha?»
 
-9715 ms · 13651 tokens de entrada y 1906 de salida · 0.232 céntimos · 139 palabras, 7 frases · **COTEJO: largo: 7 frases**
+8506 ms · 13651 tokens de entrada y 1586 de salida · 0.216 céntimos · 113 palabras, 5 frases
 
-> Sí, pero como parte de la caja del parón, no por el partido. Raphinha vale 121,02 M, lo pagaste a 93,18 M (+27,84 M) y ha girado a la baja: hoy −2,62 M, tras +1,02 M y +505 mil. Sin él, tu once pierde 5 pts por jornada, pero tus pujas comprometidas (36,30 M de Courtois) te dejarían en −29,87 M al empezar la jornada 10, y en negativo no puntúas.
-> 
-> Ponlo a la venta hoy. LaLiga te hará oferta en el cambio de mercado de mañana, 00:15, y lo normal es que ronde su valor +5,1 %, unos 127 M. Acepta esa oferta antes del 13 nov, 00:15, para que el dinero esté dentro antes de la jornada 10 (14 nov, 14:00). Si no lo vendes para entonces, el once de la jornada 10 se queda sin él.
+> Sí, véndelo, pero sabiendo lo que pierdes. Raphinha ha girado a la baja (−2,62 M hoy, −2,2 % en 7 días) y te deja 27,84 M de plusvalía sobre lo que pagaste (93,18 M). Sin él, tu once pierde unos 5 pts por jornada, y su próximo partido, en Villarreal, son unos 6,6 pts esperados. Pero necesitas el dinero: con las pujas de hoy tu saldo queda en −29,87 M y, en negativo, no puntúas en la jornada 10 (14 nov, 14:00). Ponlo a la venta ahora; la oferta de LaLiga llegará en el cambio de mañana a las 00:15, y el dinero entra al aceptarla, antes del 13 nov a las 00:15.
 
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-6369 ms · 20376 tokens de entrada y 1193 de salida · 0.263 céntimos · 99 palabras, 4 frases
+6049 ms · 20376 tokens de entrada y 1140 de salida · 0.261 céntimos · 85 palabras, 4 frases
 
-> No, recházala. 15 M es el 12 % del valor de Raphinha (121,02 M), y aunque LaLiga todavía no te ha hecho oferta por él, el plan de hoy ya lo pone a la venta a ese valor para el cambio de mercado de mañana a las 00:15. Además, con 5 pts por jornada en tu once y su inercia girada a la baja (−2,62 M hoy), lo que tienes que vigilar es el precio de venta, no aceptar una oferta a la baja. Si quieres que Marcos suba, tendrá que acercarse a lo que LaLiga te puede dar.
+> No, rechaza esa oferta. Raphinha vale 121,02 M y 15 M es menos del 13 % de su valor, muy por debajo de lo que te daría LaLiga. Además, te quitaría 5 puntos por jornada de tu once sin ningún beneficio. Si quieres venderlo, espera a la oferta de LaLiga del cambio de mercado de mañana a las 00:15, que suele rondar su valor más un 5 %, y acéptala entonces antes del 13 nov a las 00:15, como ya tienes previsto en el plan.
 
 
 ### quien-me-ataca (rivales): «¿Quién me puede clausular a alguien esta semana?»
 
-10854 ms · 11904 tokens de entrada y 2242 de salida · 0.231 céntimos · 126 palabras, 5 frases
+12979 ms · 11904 tokens de entrada y 2548 de salida · 0.246 céntimos · 133 palabras, 5 frases · apuntó: Álex Baena tiene la cláusula abierta y con riesgo medio de clausulazo esta semana
 
-> Esta semana, el único que de verdad puede caer es **Álex Baena**: tiene la cláusula abierta en 70,70 M (+11 % sobre su valor) y a algún rival le sobra el dinero para pagarla. Ahora mismo tienes un blindaje disponible para él (te quedan 2), que lo protege 24 h. Del resto, nadie puede pagar hoy sus cláusulas, pero algunas se abren en la semana y conviene vigilarlas: **Pathé I. Ciss** desde el viernes 6, a 13:34 (9,96 M, a su valor, la más fácil de pagar de tu plantilla), y **Julián Álvarez** el lunes 9, a 07:09 (37,49 M, +7 %). Raphinha, Rodri y Jon Martin siguen protegidos esta semana, y tus cláusulas altas (Bellingham, Ionut Radu, Fran García, Hugo Duro) no las paga nadie.
+> Esta semana el que más riesgo tiene es Álex Baena: su cláusula está abierta en 70,70 M (+11 % sobre su valor), por debajo de lo que se suele pagar aquí por un clausulazo, y a algún rival le sobra el dinero, así que el riesgo es medio. Ionut Radu, Fran García, Bellingham y Hugo Duro también tienen la cláusula abierta, pero están entre +60 % y +98 % sobre su valor y nadie paga eso. Pathé I. Ciss (a su valor, se abre vie 6 a las 13:34) y Julián Álvarez (+7 %, se abre lun 9 a las 07:09) tienen riesgo de cláusula ninguno según la app. Como Baena es el único con riesgo real, te conviene blindarlo ahora: tienes 2 blindajes y con el de 24 h cubres la ventana.
 
 
 ### vago (estrategia): «Estoy perdido, ayúdame»
 
-4194 ms · 11897 tokens de entrada y 683 de salida · 0.153 céntimos · 89 palabras, 4 frases · **COTEJO: acaba en pregunta**
+5244 ms · 11897 tokens de entrada y 993 de salida · 0.169 céntimos · 80 palabras, 5 frases · **COTEJO: acaba en pregunta**
 
-> Tranquilo, que ahora mismo no hay mucho que decidir con prisa. Hasta el 14 de noviembre, a las 14:00, no suma puntos nadie, así que lo que cuenta es el dinero: tienes 6,43 M de saldo y 67,81 M de margen para pujar en el mercado, con la subasta de Courtois (36,30 M) resolviéndose mañana a las 00:15. Lo que frena o ha girado a la baja conviene venderlo antes de que siga bajando. ¿Qué te tiene perdido, el dinero, el once de la jornada 10 o los rivales?
+> Vamos por partes. Ahora no puntúa nadie hasta la jornada 10 (14 nov, 14:00), así que lo que manda es el dinero. Tienes 6,43 M de saldo y una puja de 36,30 M por Courtois que se resuelve mañana a las 00:15. Raphinha (−2,62 M hoy) y Fran García (−71 mil) han girado a la baja, así que yo los pondría a la venta ya. ¿Qué es lo que te agobia: el dinero, el once o el mercado de mañana?
 
 
 ### mas-corto (conversacion): «Dímelo más corto»
 
-1469 ms · 12117 tokens de entrada y 169 de salida · 0.130 céntimos · 71 palabras, 4 frases
+872 ms · 12092 tokens de entrada y 82 de salida · 0.125 céntimos · 39 palabras, 2 frases
 
-> Vale, en corto: en el parón lo que cuenta es el dinero, no los puntos.
-> 
-> Lo primero es vender lo que ha girado a la baja: Raphinha (inercia negativa, −2,62 M hoy) y Fran García (ya ha girado). Y Cubarsí es la compra para revender: puja de unos 44,70 M, con venta en el cambio del 13 de noviembre. Lo que no toques de momento, Ionut Radu y Bellingham, siguen subiendo.
+> Pon a la venta a Raphinha y Fran García, que han girado a la baja, y no compres nada más hasta mañana a las 00:15. Tu saldo es de 6,43 M y la puja de Courtois se resuelve entonces.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-8263 ms · 22154 tokens de entrada y 1486 de salida · 0.296 céntimos · 108 palabras, 6 frases · apuntó: Marcos le propone cambiarle Oyarzabal por Julián Álvarez, uno por otro, cada uno
+6912 ms · 22154 tokens de entrada y 1235 de salida · 0.283 céntimos · 115 palabras, 5 frases · apuntó: Marcos propone cambiarle Oyarzabal por Julián Álvarez, uno por otro; la app ve que no hay saldo para pagar primero
 
-> No te conviene hoy, aunque el jugador sí te interesa. Oyarzabal rinde algo más que Julián Álvarez (~3,3 pts frente a ~2,8 en la jornada 10, y es titular el 74 % de las veces frente al 44 % de Julián), y 34,97 M es buen precio, porque su dueño no lo vendería por debajo de unos 41,19 M. El problema es el dinero: con tus 6,43 M no puedes pagar primero, y Marcos no tiene con qué pagarte primero. La app lo da como NO SE PUEDE, así que hoy no hay trato. Si quieres, espera a que Marcos tenga saldo y vuelve a plantearlo.
-> 
-> [notas omitted]
+> No, hoy no se puede. El trato sale bien en valor (os cambiáis dos jugadores a 34,97 M y él te deja tu valor casi igual, +2,53 M), pero el dinero no da: con tus 6,43 M no pagas primero los 34,97 M de Julián Álvarez, y tampoco parece que a Marcos le llegue para pagarte primero. Oyarzabal sí te suma en el once (unos 3,3 pts el 14 nov frente a los 2,8 de Julián) y lleva la cláusula cerrada 14 días al entrar, pero hoy no lo ves por ningún lado. Déjalo como está. Si quieres, en cuanto venda algo con oferta (Álex Baena, por ejemplo, si decides hacer caja) vuelve a mirarlo.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-6369 ms · 22243 tokens de entrada y 1166 de salida · 0.281 céntimos · 140 palabras, 6 frases
+7444 ms · 22243 tokens de entrada y 1313 de salida · 0.288 céntimos · 90 palabras, 5 frases
 
-> No. Con los datos de ahora no os llega el dinero: tú no tienes 39,00 M para pagarle a Oyarzabal antes de cobrar, y él no tiene los 34,97 M para pagarte a ti primero. Entre managers no se puede tirar de deuda, así que el cambio no arranca.
-> 
-> Aunque cuadrara, no lo ganas. Tu equipo pasa de 494,85 M a 493,35 M, 1,50 M menos de valor. Lo que compras, Oyarzabal a 39,00 M, sí está en precio (su oferta de referencia ronda 41,19 M), pero Julián Álvarez aporta 2,8 pts el próximo partido frente a los 3,3 de Oyarzabal, y eso te deja en unos 0,5 pts por jornada. Y Julián tiene la cláusula protegida hasta el lunes 9 a las 07:09, así que lo que pierdes es un jugador que aún no has podido sacar del todo.
+> No, no salís ganando los dos, y tal como lo propone no se puede hacer. Con tu saldo de 6,43 M no pagas los 39,00 M primero, y él no parece tener los 34,97 M para pagarte antes. Además, tu valor baja de 494,85 M a 493,35 M (−1,50 M), y en 14 días, con la subida de cada uno, sigues perdiendo unos 1,20 M. Oyarzabal sí es mejor jugador para tu once (unos 3,3 pts frente a 2,8 de Julián), pero no compensa ese coste. Déjalo para otro momento.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-5013 ms · 22645 tokens de entrada y 813 de salida · 0.267 céntimos · 54 palabras, 3 frases
+5304 ms · 22521 tokens de entrada y 816 de salida · 0.266 céntimos · 84 palabras, 4 frases
 
-> Vale, entonces descarta la cláusula: si te dice que la sube o la blinda, no cuentes con ella. Y el trato tampoco sale, porque no os llega el dinero ni a ti ni a él. Oyarzabal no tiene sentido para tu once frente a Julián Álvarez, así que no te precipites por este cambio.
+> Tienes razón en que clausularlo no es opción hoy: la cláusula es de 37,89 M y tu saldo es de 6,43 M. Solo te llegaría si aceptaras antes las ofertas que tienes, y aun así no es lo que te conviene ahora. Para el once no lo recomiendo, y si Marcos lo sube o lo blinda, pierde valor para ti sin que cambie tu situación. Lo que sí te conviene es mantener a Julián Álvarez y no cerrar un trato que no os cuadra.
 
 
 ### trueque-domy (ofertas): «Marcos me compra a Fornals a su valor y yo, con ese dinero, le compro a Huijsen por 60 M. ¿Me conviene?»
 
-6184 ms · 16177 tokens de entrada y 1150 de salida · 0.219 céntimos · 120 palabras, 7 frases · **COTEJO: largo: 7 frases**
+7112 ms · 16177 tokens de entrada y 1365 de salida · 0.230 céntimos · 107 palabras, 4 frases
 
-> No te conviene. Fornals no es tuyo: es de Pablo, así que Marcos no te lo puede comprar. Además, aunque vendieras algo, el dinero no entra hasta que aceptes una oferta, y ahora mismo tienes 6,43 M de saldo.
-> 
-> Huijsen es del Tito (Álex) y su cláusula está abierta en 41,64 M. Pagar 60 M sería 18 M de más sin ganar nada, y la cláusula solo se paga con saldo, no con dinero que aún no tienes. Si lo quieres, la vía razonable es una oferta al Tito de unos 25,78 M, que es lo normal entre managers. Y con la app diciendo que no lo recomienda y que sin ser titular seguro no compensa, yo no lo haría.
+> No, y el problema de base es que Fornals no es tuyo: es de Pablo, así que Marcos no te lo puede comprar y en tu liga no hay ninguna oferta de ese tipo. Huijsen es del Tito (Álex) y su cláusula está abierta en 41,64 M, así que pagar 60 M serían 18,36 M de más sin ningún motivo. Además, ahora mismo tienes 6,43 M de saldo y una cláusula solo se paga con saldo, así que no puedes pagarla. Y para el once no compensa: media 4,9, titular en torno al 43 % con la Champions de por medio y la app no lo recomienda.
 
 
 ### trueque-domy-blinda (ofertas): «Si no hacemos el trato me ha dicho que le sube la cláusula o lo blinda antes de las 20:00.»
 
-5243 ms · 21940 tokens de entrada y 922 de salida · 0.266 céntimos · 123 palabras, 7 frases · **COTEJO: largo: 7 frases**
+5722 ms · 21893 tokens de entrada y 950 de salida · 0.266 céntimos · 110 palabras, 6 frases
 
-> Eso no cambia nada. Huijsen es del Tito (Álex), así que quien puede subirle la cláusula o blindarlo es ese mánager, no tú ni Marcos. Si lo hace, le cuesta dinero: subir la cláusula cuesta la mitad de lo que sube, y el blindaje dura 24 h. No hay ningún cierre de cláusulas a las 20:00 de hoy: las cláusulas se cierran el 13 nov a las 14:00.
+> Eso no cambia los números. Fornals no es tuyo ni de Marcos, así que no hay ningún trato que cerrar, y Marcos no puede subir ni blindar la cláusula de un jugador del Tito (Álex) ni de Pablo. Si Marcos quiere mover algo, tendrá que ser con sus propios jugadores.
 > 
-> Como ahora tienes 6,43 M de saldo, no puedes pagar los 41,64 M de la cláusula. Y comprar a 60 M sería 18 M de más. Si lo quieres, la vía es una oferta al Tito de unos 25,78 M, pero la app no lo recomienda hoy, así que no te precipites por esa amenaza.
+> Tampoco te conviene pagar 60 M por Huijsen para no quedarte sin él. Su cláusula está en 41,64 M, y con tu saldo de 6,43 M no puedes pagarla hoy de todos modos. Si quieres ir a por él, el camino es vender antes lo que toca según el plan de hoy y pagar la cláusula cuando tengas el dinero.
 
 
 ### portero (estrategia): «¿A quién pongo de portero esta jornada?»
 
-4736 ms · 11901 tokens de entrada y 855 de salida · 0.162 céntimos · 70 palabras, 4 frases
+4069 ms · 11901 tokens de entrada y 684 de salida · 0.153 céntimos · 58 palabras, 4 frases
 
-> Ionut Radu. Es titular con un 90 % de probabilidades, tiene una media de 8,8 y el próximo partido es en Sevilla (7º), donde se esperan unos 7,6 puntos, la cifra más alta de tus porteros. Agirrezabala (media 5,3, unos 5,1 ante el Deportivo) es el suplente natural, pero en tu once solo cabe un portero, así que Radu se queda. Tu once sigue igual hasta el 14 nov, 14:00.
+> Ionut Radu, sin dudar. Es titular en tu once (probabilidad del 90 %) y se espera que sume unos 7,6 puntos en su partido en el Sevilla. Agirrezabala sigue de suplente: en el Deportivo se esperan unos 5,1 puntos, y no compensa ponerlo por delante de Radu. Tienes hasta el 14 nov, 14:00, para cambiarlo si cambia algo.
 
 
 ### libre (mercado): «¿Qué te parece Cubarsí?»
 
-7010 ms · 13792 tokens de entrada y 1295 de salida · 0.203 céntimos · 115 palabras, 5 frases
+6802 ms · 13792 tokens de entrada y 1252 de salida · 0.201 céntimos · 122 palabras, 5 frases
 
-> Para revenderlo, sí: sube un +3,8 % al día y en 7 días está +26,4 %, aunque eso no garantiza que siga así durante el parón. Lo pujaría con los 49,81 M del plan (esta noche, antes del cambio de mañana 00:15). Con esa cifra, a la oferta de LaLiga del 13 nov (00:15) se llega a unos 51,29 M, lo que deja unos 1,48 M de beneficio. Para tu once no: es suplente, con un 42 % de titular en Villarreal la jornada 10 y una puja de 44,70 M solo para tenerlo, que no compensa. Y no subas la puja, que a 49,81 M ya estás pagando un +14,6 % sobre su valor.
+> Para revender, sí; para el once, no. Sube muy fuerte (+26,4 % en 7 días, y la inercia sigue acelerando, +1,43 M hoy), pero juega poco: es suplente, con titular en torno al 42 % en Villarreal (1º) el 15 nov, y su rotación viene por la Champions. Lo que te compensa es comprarlo ahora y venderlo cuando haya subido. Con la puja de 49,81 M, que es la que pone la app para revender, lo pagas a un +14,6 % sobre su valor de 43,44 M, y la app lo valora en 51,29 M el día de venderlo, así que sacas unos 1,48 M. Cabe en tus 67,81 M libres de pujas, y la puja se resuelve mañana a las 00:15.
 
 
 ### cuanto-pujo (mercado): «¿Y cuánto pujo por él?»
 
-5532 ms · 20274 tokens de entrada y 1057 de salida · 0.256 céntimos · 106 palabras, 5 frases
+4352 ms · 20288 tokens de entrada y 788 de salida · 0.242 céntimos · 76 palabras, 4 frases
 
-> Pujas **49,81 M**, que es la cifra del plan para revender. La puja mínima es 43,44 M, pero con menos es probable que no te lo lleves: con 49,81 M lo ganas más o menos 5 de cada 10 veces, y por debajo de eso te quedas fuera. Si sube como ahora, no subas de ahí.
-> 
-> Ten en cuenta que, si la ganas, tu saldo quedará en unos −79,68 M (−29,87 M de ahora menos 49,81 M). Cabe dentro del margen de −97,68 M, pero tienes que volver a positivo antes de la jornada 10, y eso depende de vender Raphinha antes del 13 nov, 00:15.
+> Pon **49,81 M**, que es la puja que te marca la app para revender. Ojo, la mínima es 43,44 M, pero con esa no te lo llevas casi nunca. Con 49,81 M, la app calcula que te lo llevas unas 5 de cada 10 veces, y cabe de sobra en tus 67,81 M libres para pujas. Si ganas, se resuelve mañana a las 00:15 y el saldo queda en −29,87 M, dentro del margen de deuda.
 
 
 ### blindar (estrategia): «¿Blindo a alguien?»
 
-5852 ms · 11895 tokens de entrada y 1104 de salida · 0.174 céntimos · 109 palabras, 5 frases
+7975 ms · 11895 tokens de entrada y 1514 de salida · 0.195 céntimos · 95 palabras, 5 frases
 
-> Sí, blíndalo a **Álex Baena**. Tiene la cláusula abierta en 70,70 M (+11 % sobre su valor de 63,63 M), que es barata para lo que vale y hay riesgo medio de que alguien la pague. El blindaje es gratis (te quedan 2 de 2) y lo protege 24 h, así que cubre el tiempo en que decides sobre su oferta. Sigue en venta, así que el blindaje no te impide aceptar ni rechazar la oferta de Hugo.
-> 
-> No merece la pena blindar a los demás con la cláusula abierta: Ionut Radu, Bellingham, Fran García y Hugo Duro tienen cláusulas de +60 % o más y nadie las paga.
+> Sí, a **Álex Baena**. Su cláusula está abierta en 70,70 M, solo un 11 % por encima de su valor (63,63 M), y a algún rival le sobra el dinero para pagarla, así que es la única que de verdad puede caer. Te quedan los dos blindajes y cada uno dura 24 h, así que ponlo ya. Bellingham (138,76 M, +60 %) e Ionut Radu (59,16 M, +81 %) también tienen la cláusula abierta, pero nadie paga eso, así que no hace falta. Fran García y Raphinha no los blindes, porque los vas a vender.
 
 
 ### saldo (cifras): «¿Cuánto saldo tengo ahora mismo?»
 
-1426 ms · 18113 tokens de entrada y 174 de salida · 0.190 céntimos · 70 palabras, 3 frases
+1242 ms · 18113 tokens de entrada y 179 de salida · 0.190 céntimos · 74 palabras, 3 frases
 
-> Ahora mismo tienes 6,43 M de saldo, que es lo máximo que puedes usar para una cláusula. Lo que tienes comprometido en pujas (36,30 M por Courtois) se resuelve mañana a las 00:15, y si lo ganas, tu saldo baja a −29,87 M. Hasta que acepte las ofertas que tiene pendientes (Álex Baena y Hugo Duro), no entra más dinero: con la de Baena, la caja subiría a 72,60 M.
+> Tienes 6,43 M de saldo ahora mismo, que es lo máximo que puedes usar para una cláusula. Si aceptas hoy las ofertas que ya tienes (la de Hugo por Álex Baena), la caja sube a 72,60 M, pero ese dinero no entra hasta que aceptes. Y si ganas las pujas que tienes puestas por Courtois (36,30 M), el saldo bajaría a −29,87 M, así que cuenta con eso antes de empezar la jornada 10.
 
 
 ### para-pujar (cifras): «¿Cuánto me queda para pujar?»
 
-1636 ms · 18475 tokens de entrada y 194 de salida · 0.194 céntimos · 84 palabras, 2 frases
+4214 ms · 18475 tokens de entrada y 757 de salida · 0.223 céntimos · 75 palabras, 4 frases
 
-> Te quedan 67,81 M para pujas o compras nuevas, ya descontados los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Eso cabe de sobra en lo que el plan de hoy quiere para Cubarsí (49,81 M), aunque solo si antes vendes algo que te dé caja: ahora mismo tu saldo es de 6,43 M y la pujas bajarían el saldo a −29,87 M, así que no puntúas la jornada 10 en negativo si no lo recuperas a tiempo.
+> Ahora mismo puedes pujar hasta **67,81 M**. Esa cifra ya descuenta los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Tu saldo es de 6,43 M, pero las pujas pueden dejarte en negativo hasta el límite de la liga, así que lo que manda es ese margen.
+> 
+> Si quieres seguir el plan de hoy, la puja por Cubarsí de 49,81 M cabe y te dejaría unos 18 M libres.
 
 
 ### mis-clausulas (cifras): «¿Qué cláusulas mías están abiertas y cuándo se abren las demás?»
 
-5212 ms · 11913 tokens de entrada y 1130 de salida · 0.176 céntimos · 143 palabras, 14 frases · **COTEJO: largo: 14 frases**
+8114 ms · 11913 tokens de entrada y 1771 de salida · 0.208 céntimos · 147 palabras, 5 frases
 
-> Ahora mismo tienes cinco cláusulas abiertas: Bellingham (138,76 M), Ionut Radu (59,16 M), Álex Baena (70,70 M), Fran García (27,14 M) y Hugo Duro (3,71 M). Cualquier rival puede pagarlas al instante, aunque a Bellingham, Ionut Radu y Baena no les llega el dinero a casi nadie.
-> 
-> Las demás se abren así:
-> - Moncayola: hoy a las 15:17 (5,51 M).
-> - Jon Martin: mañana a las 09:50 (21,26 M).
-> - Catena: jueves 5, 11:56 (24,45 M).
-> - Pathé I. Ciss: viernes 6, 13:34 (9,96 M), la más barata de pagar.
-> - Rodri: sábado 7, 17:13 (121,04 M).
-> - Sergio Gómez: domingo 8, 06:14 (12,25 M).
-> - Julián Álvarez: lunes 9, 07:09 (37,49 M).
-> - Agirrezabala: 16 nov, 05:16 (17,72 M).
-> - V. Chust: 13 nov, 13:52 (6,43 M).
-> 
-> Raphinha, con su cláusula de 186,17 M, se abre el viernes 6 a las 18:18.
+> Tienes cinco cláusulas abiertas ahora mismo: Bellingham (138,76 M), Álex Baena (70,70 M, en venta), Ionut Radu (59,16 M), Fran García (27,14 M) y Hugo Duro (3,71 M, también en venta). Bellingham no le llega a ningún rival, y las de Radu, Fran García y Hugo Duro tienen riesgo nulo; la de Baena sí tiene riesgo medio, porque a algún rival le sobra el dinero para pagarla. Las demás se abren así: Moncayola hoy a las 15:17, Jon Martin mañana (4 nov) a las 09:50, Catena el jueves 5 a las 11:56, Pathé I. Ciss el viernes 6 a las 13:34, Raphinha el viernes 6 a las 18:18, Rodri el sábado 7 a las 17:13, Sergio Gómez el domingo 8 a las 06:14, Julián Álvarez el lunes 9 a las 07:09, V. Chust el 13 nov a las 13:52 y Agirrezabala el 16 nov a las 05:16.
 
 
 ### valor-equipo (cifras): «¿Cuánto vale mi equipo y en qué puesto voy?»
 
-2504 ms · 18117 tokens de entrada y 341 de salida · 0.198 céntimos · 42 palabras, 3 frases · **COTEJO: puntos 110**
+2584 ms · 18117 tokens de entrada y 363 de salida · 0.199 céntimos · 52 palabras, 3 frases · **COTEJO: puntos 110**
 
-> Tu equipo vale **488,42 M** y vas **1º de 12**, con **697 puntos**. El 2º, Marcos, tiene 587, así que le sacas 110 puntos. Tu valor está muy por encima del resto: el siguiente de la liga, Hugo, anda en 206,66 M.
+> Tu equipo vale **488,42 M** y vas **1º de 12** con **697 puntos**. El segundo, Marcos, tiene 587, así que le sacas 110 puntos de ventaja. Ahora mismo tienes 6,43 M de saldo y el dinero de tus pujas sigue sin descontarse hasta el cambio de mercado de mañana a las 00:15.
 
 
 ### dinero-rival (rivales): «¿Cuánto dinero tiene Marcos?»
 
-1645 ms · 18609 tokens de entrada y 189 de salida · 0.196 céntimos · 87 palabras, 4 frases
+1201 ms · 18609 tokens de entrada y 75 de salida · 0.190 céntimos · 35 palabras, 2 frases
 
 > No te puedo dar la cifra: el dinero de cada rival está cerrado en su cuenta, así que solo sé que Marcos tiene algo de saldo. Eso lo ves tocando su candado en la app.
-> 
-> Lo que sí te sirve es que Marcos no es de los que pagan clausulazos fuertes: en esta liga se pagan de mediana un +21,8 % sobre el valor, y él no ha hecho ninguno. Si quieres a alguno de su plantilla, mejor ir por oferta a su dueño que por cláusula.
 
 
 ### apodo-dictado (rivales): «que le puedo fichar a leao ere espabilado»
 
-14407 ms · 12932 tokens de entrada y 2777 de salida · 0.268 céntimos · 114 palabras, 5 frases
+8945 ms · 12932 tokens de entrada y 1768 de salida · 0.218 céntimos · 147 palabras, 5 frases
 
-> Entiendo que hablas de Leao er Espabilao (Hugo). Ahora mismo no puedes fichar a nadie de su plantilla: con tus 6,43 M solo te llega la cláusula de Morente (3,32 M, se abre sáb 7 a las 04:27), y es un delantero de media 3,6 que no te suma. Fer Niño (34,25 M, titular 82 %, media 6) es el único que te interesaría, con una oferta a su dueño de unos 37,62 M, pero hoy baja 236 mil y no tienes caja para pagarlo. Mikautadze tampoco: su cláusula es +38 % sobre su valor. En el parón el objetivo es sacar dinero, así que no compraría nada de ellos hasta la jornada 10.
+> Entiendo que hablas de Leao er Espabilao, el de Hugo. Con tus 6,43 M de saldo solo puedes clausular a T. Morente (3,32 M, se abre sáb 7 a las 04:27), y es suplente con media 3,6 y unos 1,8 pts esperados ante el Real Sociedad, así que no te arregla el once. Las opciones que sí mejoran algo son Fer Niño (DEL, media 6, titular 82 %, unos 6,1 pts ante el Real Sociedad) y Dituro (POR, titular 90 %), pero Fer Niño tiene cláusula de 52,72 M (se abre 14 nov a las 14:00) y su dueño pediría unos 37,62 M, y Dituro cuesta unos 10,54 M por oferta y su cláusula se abre el dom 8 a las 20:04. Ahora mismo no tienes caja para ninguno de los dos, y tu POR ya es mejor que Dituro, así que no compensa tocar nada hoy.
 
 
 ### apodo (rivales): «¿Qué jugadores tiene el Tito que me interesen?»
 
-10482 ms · 13069 tokens de entrada y 2151 de salida · 0.238 céntimos · 143 palabras, 4 frases · **COTEJO: nombre Barça**
+9418 ms · 13069 tokens de entrada y 1894 de salida · 0.225 céntimos · 178 palabras, 6 frases · **COTEJO: nombre Barça**
 
-> Para tu once, **Grimaldo** (DEF, Atlético, media 8,6, titular al 90 % y unos 7,4 puntos esperados ante el Málaga) es el que más mejora tu defensa, porque Catena y Jon Martin rondan los 4 de media. Su cláusula de 67,19 M se abre el 12 nov a las 17:23, pero con tus 6,43 M de saldo no te llega, así que tendrías que ofertar a su dueño: de 69,04 M para arriba, ya que a su valor no lo vende.
+> Para tu once, el que más te interesa es **Aubameyang** (Deportivo, media 9,3, titular al 90 %, unos 6,9 pts contra el Barça). Te mejora claramente en punta: Julián Álvarez espera unos 2,8 pts y su media es 5,9. Su cláusula de 28,96 M no se abre hasta el 16 nov, 10:57, y no te llega con tus 6,43 M, así que la vía es una oferta a su dueño (unos 28,45 M, que es el precio normal entre managers).
 > 
-> **Aubameyang** (DEL, Deportivo, media 9,3, titular al 90 % y unos 6,9 puntos ante el Barça) es el otro que te interesa como delantero. Su cláusula de 28,96 M no se abre hasta el 16 nov, así que tampoco lo puedes clausular ahora: la vía es una oferta de unos 28,45 M, y su precio de venta es ese, no un trato.
+> **Grimaldo** (Atlético, media 8,6, titular al 90 %, unos 7,4 pts contra el Málaga) sería una mejora enorme sobre Jon Martin en defensa. Su cláusula de 67,19 M se abre el 12 nov, 17:23, y tendrías que tener ese saldo antes del cierre del 13 nov, 14:00; hoy es inviable, así que el camino realista es una oferta de unos 69,04 M.
+> 
+> **Joan García** (Barcelona, media 7,4, titular al 66 %) es el portero que más te aporta si Ionut Radu baja de nivel, pero Radu espera 7,6 pts en Sevilla y no hay motivo para tocarlo ahora.
 
 
 ### chollo (mercado): «¿El Hilali es un chollo o no?»
 
-9401 ms · 13380 tokens de entrada y 1747 de salida · 0.221 céntimos · 122 palabras, 5 frases
+7675 ms · 13380 tokens de entrada y 1439 de salida · 0.206 céntimos · 132 palabras, 6 frases
 
-> Como chollo para el once, no: media 4,7 y el calendario es duro (Real Madrid, Sevilla, Villarreal, Athletic). Para revender, sí: sube +31,6 % en 7 días y la inercia sigue acelerando (+373 mil hoy). Pujar 10,57 M, que es la puja que sale para revenderlo, es un +9 % sobre su valor de 9,69 M, y la proyección es venderlo hacia 11,56 M, unos 993 mil de beneficio. La puja se resuelve mañana a las 00:15, y para venderlo tendrás que ponerlo a la venta el 12 nov a las 00:20 y cobrar en el cambio del 13 nov a las 00:15. Ojo, el parón frena las subidas, así que cuenta con que el margen sea más estrecho que la racha.
+> No es un chollo para el once, pero sí para revender en el parón. Sube un 31,6 % en 7 días y la subida se acelera cada día (+295 mil → +373 mil), y a esas cifras le hace falta poco más de una semana para llegar a la venta. Deportivamente es un suplente con 4,7 de media y un calendario duro (~18,6 pts en 5 partidos), y en el once solo te daría +0,4 pts por jornada.
+> 
+> Para revender, la puja que te sirve es 10,57 M (mañana 00:15), no la de 10,17 M del tenerlo. Con 10,57 M, el día de venta lo tienes en 11,56 M: +993 mil de beneficio. Lo pondrías a la venta el 12 nov, 00:20, para aceptar la oferta del cambio del 13 nov, 00:15.
 
 
 ### sube-mercado (mercado): «¿Ficho a Xavi Espart, que no para de subir?»
 
-11112 ms · 13414 tokens de entrada y 2198 de salida · 0.244 céntimos · 103 palabras, 5 frases
+7782 ms · 13414 tokens de entrada y 1305 de salida · 0.199 céntimos · 102 palabras, 5 frases
 
-> Sí, pero solo a 39,45 M como mucho, que es la puja que te marca la app. Está libre, sube unos 800 mil al día (+16,5 % en 7 días) y la subasta se resuelve mañana a las 00:15. Para revender no sale: con una puja de 42,86 M valdría 41,70 M, así que es una compra para tenerlo. Para el once aporta poco, porque es suplente, tiene un 45 % de titularidad en el Villarreal de la jornada 10 y suma unos +0,5 pts por jornada. Lo pagado de más (1,88 M) se recupera en unos 3 días si sigue subiendo así.
+> No, yo no lo ficharía ahora. Sube fuerte (+16,5 % en 7 días y acelerando), pero es suplente en el once probable, con un 45 % de ser titular en Villarreal (15 nov, 18:30), que llega tras la Champions de su equipo. Su puja de la app, 39,45 M, son unos 1,9 M por encima de lo que vale hoy y, aun así, solo te daría unos 0,5 pts por jornada en tu once. Para revender tampoco sale: con la puja que gana aquí, lo que vale esperado al vender no cubre lo que pagas. Mejor guarda ese dinero para otra opción.
 
 
 ### baja-mercado (mercado): «Lamine Yamal está más barato cada día, ¿lo pillo?»
 
-4925 ms · 13274 tokens de entrada y 777 de salida · 0.172 céntimos · 126 palabras, 5 frases
+4668 ms · 13274 tokens de entrada y 799 de salida · 0.173 céntimos · 114 palabras, 5 frases
 
-> No, no lo pillas. Lo tienes fuera de tu alcance: la puja mínima es 123,76 M y en el mercado te quedan 67,81 M como mucho para pujas nuevas, con 36,30 M ya comprometidos en la de Courtois. Tampoco baja tanto como parece: en 7 días ha bajado un 0,9 % (de 124,66 M a 123,76 M), pero su inercia va a golpes, con subidas y bajadas diarias, y la de ayer fue −1,48 M. La app ni siquiera lo recomienda: pujar lo que pide le costaría unos 6 M de más de lo que aporta, y el parón no te da puntos hasta la jornada 10. Si lo quieres para el once, busca un chollo en los libres que sí te quepa en el saldo.
+> No, ahora mismo no puedes. Su puja mínima es 123,76 M y tú tienes 67,81 M como máximo para pujas o compras nuevas, así que ni la puja mínima te cabe. Además, la bajada no es constante: en la última semana ha subido y bajado (−1,48 M ayer), y en 7 días acumula un −0,9 %. La app calcula que pujar a 129,94 M te dejaría con un sobrecoste que no se recupera en un mes, y en el calendario de los próximos cinco partidos tiene uno a uno en Villarreal (6,4 pts esperados). Con el parón, lo que te conviene es vender en lo alto y especular con Cubarsí, no comprar a Yamal.
 
 
 ### puja-loca (trampas): «Voy a pujar 120 M por Cubarsí, ¿vale?»
 
-5907 ms · 13802 tokens de entrada y 1160 de salida · 0.196 céntimos · 114 palabras, 7 frases · **COTEJO: largo: 7 frases**
+6735 ms · 13802 tokens de entrada y 1241 de salida · 0.200 céntimos · 141 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> No, 120 M no cabe. Te quedan 67,81 M para pujas nuevas, porque ya tienes 36,30 M comprometidos con Courtois. Y aunque cupiera, sería casi el triple de su valor (43,44 M): la mediana en esta liga por uno así es +10 %, y tú pagarías un +176 %.
+> No puede ser 120 M. Para pujas nuevas solo te quedan 67,81 M (los 36,30 M de Courtois ya están descontados), así que esa puja no cabe. Además, Cubarsí vale 43,44 M y en esta liga se suele pagar de mediana un +10,3 %, unos 47,91 M. Pujar 120 M sería casi triplicar su valor y tirar unos 70 M.
 > 
-> La puja que te encaja es la del plan, 49,81 M, para revenderlo. Sube un 3,8 % al día, así que con ese precio saldrías en unos 51,29 M al vender y ganarías unos 1,48 M. Esta noche, antes de las 00:15, se resuelve mañana a esa hora. Ojo a su calendario: en la jornada 10 juega en Villarreal y puede rotar por la Champions.
+> Lo que sí te recomiendo es pujar 49,81 M por él, que es lo que pone el plan de hoy. Entra dentro de tus 67,81 M disponibles, y con el saldo de ahora te quedas en −79,68 M, dentro del margen de −97,68 M. Sube unos 1,2 M al día, así que para revenderlo tiene sentido: con la subida actual valdría unos 51,29 M al día de venta, y el cambio de mercado de mañana a las 00:15 resuelve la puja.
 
 
 ### regla-puntos (reglas): «¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?»
 
-991 ms · 18491 tokens de entrada y 93 de salida · 0.190 céntimos · 45 palabras, 2 frases
+1057 ms · 18491 tokens de entrada y 92 de salida · 0.190 céntimos · 43 palabras, 2 frases
 
-> 100.000 € por cada punto que haga el equipo al acabar la jornada: 64 puntos son 6,4 M. Además te entra la recompensa diaria de 100.000 €, así que esta semana, con el parón, es lo que más dinero te va a dar por ahora.
+> 100.000 € por cada punto que haga el equipo al acabar la jornada: si sumas 64 puntos, son 6,4 M. Además te entra la recompensa diaria de 100.000 € por día, así que en la jornada 10 cada punto que saques vale eso.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-4265 ms · 11914 tokens de entrada y 729 de salida · 0.156 céntimos · 76 palabras, 4 frases
+4107 ms · 11914 tokens de entrada y 645 de salida · 0.151 céntimos · 80 palabras, 3 frases
 
-> Tras clausularlo, la cláusula queda cerrada **14 días**, así que nadie puede quitártelo por su cláusula hasta entonces. Si lo clausulas hoy, martes 3 de noviembre a las 10:00, el plazo acaba sobre el **martes 17 de noviembre a las 10:00**.
+> Tras cualquier fichaje (clausulazo, mercado o compra a otro mánager) la cláusula queda **cerrada 14 días**, así que nadie puede quitártelo por cláusula en ese tiempo. Si lo clausulas ahora, a las 10:03 de hoy, la cláusula se reabre hacia el 17 de noviembre a esa misma hora.
 > 
-> Ojo, eso no es el blindaje: el escudo de 24 h es otra cosa, que te pones tú y solo con la cláusula ya abierta. Esos 14 días sí te protegen mientras dure el plazo.
+> Después de esos 14 días, lo que decide si te lo pueden quitar es lo cerca que esté la cláusula de su valor y si algún rival tiene el saldo para pagarla.
 
 
 ### regla-25 (reglas): «¿Cuántos jugadores puedo tener como mucho en la plantilla?»
 
-1089 ms · 11911 tokens de entrada y 93 de salida · 0.124 céntimos · 32 palabras, 2 frases
+1015 ms · 11911 tokens de entrada y 118 de salida · 0.125 céntimos · 44 palabras, 3 frases
 
-> Como mucho 25 jugadores en la plantilla. Ahora mismo tienes 13 (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que te quedan 12 huecos libres para fichar o recibir jugadores.
+> Como mucho 25 jugadores en la plantilla. Ahora mismo tienes 13 (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que te quedan 12 huecos libres. Eso sí, en la versión gratuita no hay entrenador, así que no te preocupes por fichar uno.
 
 
 ### regla-vender-jornada (reglas): «Si vendo a un titular con la jornada ya empezada, ¿me cuentan sus puntos de esa jornada?»
 
-2894 ms · 12291 tokens de entrada y 468 de salida · 0.146 céntimos · 99 palabras, 6 frases
+2536 ms · 12291 tokens de entrada y 454 de salida · 0.146 céntimos · 79 palabras, 4 frases
 
-> Sí, con una condición: el jugador tiene que venderse con la jornada ya empezada. Si la vendes después del primer partido de esa jornada, sus puntos cuentan para toda la jornada. Si la vendes antes de ese primer partido, no cuentan para ella.
+> Sí. Si vendes con la jornada ya empezada, esa jornada cuenta entera para ti, con los puntos de todos sus partidos.
 > 
-> Ahora mismo no hay ninguna jornada en marcha: estamos en el parón y la 10 empieza el 14 nov a las 14:00. Así que vender a un titular hoy le quita sus puntos de la jornada 10. Si además quieres que esos puntos te los queden, la venta tendría que hacerse a partir de esa hora.
+> Pero ahora mismo no aplica: estamos en el parón y la jornada 10 empieza el 14 nov a las 14:00. Si vendes antes de ese primer partido, el jugador no cuenta para la 10. Por ejemplo, si vendes a Raphinha (titular, unos 6,6 pts esperados contra el Villarreal) antes de esa hora, pierdes sus puntos de esa jornada.
 
 
 ### regla-dudosa (reglas): «¿Cuánto me da LaLiga por quedar primero de mi liga al final de la temporada?»
 
-2694 ms · 18126 tokens de entrada y 428 de salida · 0.203 céntimos · 76 palabras, 3 frases
+1307 ms · 18126 tokens de entrada y 178 de salida · 0.190 céntimos · 87 palabras, 3 frases
 
-> No tengo datos de ningún premio de LaLiga por quedar primero de tu liga al final de la temporada, así que no te puedo dar una cifra. Lo que sí sé es cómo paga LaLiga: 100.000 € por cada punto que hace tu equipo en cada jornada, más una recompensa diaria de 100.000 €. Con los 697 pts que llevas, ese cobro por puntos ya te va dando dinero cada semana, sin depender del puesto final.
+> No te lo puedo confirmar: en las reglas que manejo, LaLiga solo paga 100.000 € por punto de cada jornada y una recompensa diaria de 100.000 €, y no conozco ningún premio por quedar primero de la liga al final de la temporada. Lo que sí tienes seguro es tu 6,4 M por cada jornada que acabe con 64 puntos, y eso ya lo llevas en el día a día. Si el premio existe, lo verás en las condiciones de tu liga privada o en la app.
 
 
 ### fornals (estrategia): «¿Vendo a Bellingham ya o aguanto?»
 
-4856 ms · 13018 tokens de entrada y 825 de salida · 0.171 céntimos · 90 palabras, 4 frases
+6858 ms · 13018 tokens de entrada y 1309 de salida · 0.196 céntimos · 76 palabras, 5 frases · la app revisó 1
 
-> Aguanta. Bellingham vale 86,63 M, sube +767 mil hoy y su inercia es alcista, y según la app, si lo mantienes 11 días más vale unos 2,80 M más de lo que te darían hoy. Es titular fijo (90 %) y te da unos 7,6 puntos esperados contra el Levante el 14 nov, así que venderlo te quitaría 5,9 pts por jornada. Además tu saldo es de 6,43 M y no necesitas caja, y su cláusula de 138,76 M no le llega a ningún rival, así que no corre peligro.
+> Aguanta. Sube (+767 mil hoy, +1,0 % en 7 días) y es titular seguro en tu once, con unos 7,6 puntos esperados contra el Levante el 14 nov a las 18:30. Vendido, tu once pierde 5,9 pts por jornada, y LaLiga no te pagaría nada hasta el cambio de mañana a las 00:15. Su cláusula de 138,76 M está abierta, pero ningún rival tiene saldo para pagarla. Como cobertura gratis, puedes blindarlo ahora: dura 24 h.
+> 
+> **Revisado por la app:**
+> - **Bellingham**: su cláusula (138,76 M) no corre peligro: ya está un +60 % por encima de su valor (86,63 M), más de lo que se paga en tu liga por un clausulazo (como mucho un +24 %).
 
 
 ### baja-vendo (estrategia): «Catena está bajando, ¿lo vendo ya?»
 
-8069 ms · 13224 tokens de entrada y 1399 de salida · 0.202 céntimos · 100 palabras, 5 frases
+5596 ms · 13224 tokens de entrada y 1032 de salida · 0.184 céntimos · 131 palabras, 6 frases
 
-> No lo vendas ahora. Lleva 7 días subiendo (14,38 M hace una semana, 14,76 M hoy), y la caída de hoy es de 346 mil, una sola jornada que no define la tendencia. Es titular con un 98 % y se esperan unos 4,1 puntos en Atlético (14 nov), y sin él tu once pierde 2,4 pts por jornada, unos 240 mil en LaLiga. Además, si lo vendes hoy, la oferta de LaLiga no entra hasta el cambio de mercado de mañana 00:15, así que no tienes el dinero antes. Esperaría unos días y lo revisaría si la caída sigue.
+> No, hoy no lo vendas. Catena ha girado a la baja, pero es solo un día (−346 mil tras seis días de subida) y su valor sigue +2,6 % en 7 días. Es titular en tu once, con 98 % de probabilidad de jugar, y te da unos 4,1 puntos ante el Atlético en la jornada 10. Venderlo ahora te quitaría 2,4 pts por jornada, y tu plan de hoy tampoco lo pone a la venta. Además, con un parón por delante, esperar no te cuesta nada: si los próximos días sigue cayendo de forma clara, lo pones a la venta en uno de los cambios de mercado antes de la jornada 10. Tu beneficio sobre lo que pagaste (10,96 M) es de unos 3,8 M, así que no hay prisa.
 
 
 ### once (estrategia): «¿Qué once pongo para la próxima jornada?»
 
-7082 ms · 11902 tokens de entrada y 1344 de salida · 0.186 céntimos · 92 palabras, 6 frases
+8575 ms · 11902 tokens de entrada y 1569 de salida · 0.197 céntimos · 119 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Tu mejor once ahora es un 3-5-2 con unos 45,1 puntos esperados: Radu; Catena, V. Chust y Jon Martin; Bellingham, Álex Baena, Moncayola, Rodri y Pathé I. Ciss; Raphinha y Julián Álvarez. Puedes cambiarlo hasta el sábado 14 nov a las 14:00, así que no hace falta tocarlo hoy. El único punto flojo es Raphinha: la app quiere venderlo por la inercia a la baja, pero aporta unos 6,6 puntos esperados, así que decide eso cerca de la jornada. Julián Álvarez, por su parte, es suplente probable, con unos 2,8 puntos esperados.
+> Pon el 3-5-2 que te sale como mejor once: Ionut Radu; Catena, V. Chust y Jon Martin; Bellingham, Álex Baena, Moncayola, Rodri y Pathé I. Ciss; Raphinha y Julián Álvarez. Son unos 45,1 puntos esperados, y Bellingham (~7,6 contra el Levante) y Radu (~7,6 en Sevilla) son los que más aportan. Tienes hasta el 14 nov a las 14:00 para cambiarlo. Ojo con Raphinha: el plan de hoy dice venderlo porque ha girado a la baja (−2,62 M hoy), pero si lo vendes ahora deja de contar para el once y tendrás que reponer sus ~6,6 puntos. Lo más práctico es mantener el once ahora y decidir la venta antes del 14 nov, cuando veas cómo sigue su valor.
 
 
 ### paron (estrategia): «¿Qué hago en el parón de selecciones?»
 
-9340 ms · 12268 tokens de entrada y 1937 de salida · 0.220 céntimos · 115 palabras, 4 frases
+8292 ms · 12268 tokens de entrada y 1645 de salida · 0.205 céntimos · 113 palabras, 4 frases
 
-> En el parón no puntúa nadie hasta la jornada 10 (14 nov, 14:00), así que ahora se gana dinero, no puntos. Pon hoy a la venta a Raphinha, cuya inercia ya ha girado a la baja (−2,62 M hoy), y a Fran García, que también ha girado. Puja por Cubarsí 49,81 M antes del cambio de mañana 00:15: sube un 3,8 % al día y, si lo vendes en el cambio del 13 nov, deja unos 1,48 M. Ojo con el saldo: con Courtois y Cubarsí te quedas en unos −79,68 M, dentro del margen de −97,68 M, pero tienes que volver a positivo antes del 14 nov con lo que te paguen las ventas.
+> En el parón el objetivo es sacar dinero, porque nadie puntúa hasta la jornada 10 (14 nov, 14:00). Pon ya a la venta a Raphinha (121,02 M), que ha girado a la baja (−2,62 M hoy) y te hace falta para volver a positivo antes de la jornada, aunque te reste 5 pts por jornada. Fran García (14,53 M) también, porque ha girado y en 7 días pierde unos 332 mil; LaLiga le daría unos 15,27 M. Y esta noche, antes de las 00:15, puja 49,81 M por Cubarsí: sube un 3,8 % al día y puede revenderse hacia el 13 nov por unos 51,29 M, para revender y no para el once.
 
 
 ### oferta-rival (ofertas): «Hugo me ha ofrecido 66 M por Álex Baena. ¿Acepto?»
 
-9273 ms · 20076 tokens de entrada y 1670 de salida · 0.284 céntimos · 102 palabras, 5 frases · apuntó: Hugo ofrece 66,17 M por Álex Baena, caduca mañana 00:15
+12664 ms · 20076 tokens de entrada y 2236 de salida · 0.313 céntimos · 124 palabras, 5 frases
 
-> No la aceptes hoy. Espera a mañana antes de las 00:15, porque Baena sube (+696 mil hoy) y tu once lo necesita. Si te lo vendes ahora ganas 11,95 M sobre los 54,22 M que pagaste, pero pierdes unos 4 pts por jornada y el parón es para especular con el dinero, no para salir de un jugador que sube. Ponle el blindaje ya (gratis, 24 h, hasta mañana 10:04), porque su cláusula de 70,70 M sigue abierta y te la puede pagar cualquiera con saldo. Si al llegar a mañana sigues queriendo caja, acepta la oferta, que caduca a las 00:15.
+> No la aceptes hoy: aguántala. Baena sube hoy (+696 mil), va de titular en tu once (74 %) y, sin él, tu once pierde unos 4 pts por jornada, así que venderlo ahora te quita más de lo que te da. La oferta de Hugo (66,17 M) está 2,55 M por encima de su valor (63,63 M), pero LaLiga solo te daría 62,36 M en el próximo cambio. Si la pierdes mañana a las 00:15, la diferencia real son unos 3,8 M, y en unos días de subida normal ya la recuperas. Tu cláusula está en 70,70 M (+11 %): por debajo de lo que se paga en tu liga por un clausulazo, así que el riesgo de que te la paguen es bajo.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-7318 ms · 20020 tokens de entrada y 1358 de salida · 0.268 céntimos · 127 palabras, 5 frases
+6980 ms · 20020 tokens de entrada y 1197 de salida · 0.260 céntimos · 114 palabras, 5 frases
 
-> Por Oyarzabal no te conviene ofrecer ahora. No está en venta y su dueño, Marcos, no lo vende por debajo de unos 41,19 M. Su cláusula, de 37,89 M (+1,1 % sobre su valor de 37,50 M), está abierta y es más barata que esa oferta, así que si algún día lo quieres, la vía es clausularlo, no hacerle una oferta. Pero ahora mismo no lo recomiendo: te faltan 31,46 M con tu saldo de 6,43 M, y solo llegarías si aceptas antes la oferta de Hugo por Baena, que la app aconseja esperar. Además, da unos 3,3 puntos en su próximo partido, en Getafe el 14 nov, y entraría en tu once por unos 1,7 puntos por jornada, un extra que no justifica pagar 37,89 M.
+> A Marcos le ofrecerías unos **41,19 M** por Oyarzabal. Es el precio normal entre managers: por debajo tu oferta no tiene opción, y su dueño no lo cedería a su valor de 37,50 M.
+> 
+> Aun así no te lo recomiendo ahora. Estamos en el parón, así que no suma puntos hasta la jornada 10 (14 nov, 14:00), y si lo fichas a 41,19 M y luego lo vendes a LaLiga (unos 38,89 M), pierdes unos 2,3 M. Además, su cláusula de 37,89 M está abierta y es más barata que la oferta, pero no te llega el saldo (tienes 6,43 M): antes tendrías que aceptar tus ofertas pendientes, y tampoco compensa en el parón.
 
 
 ### no-existe-jugador (trampas): «¿Ficho a Pepito Grillotti, el delantero del Betis?»
 
-4914 ms · 12277 tokens de entrada y 883 de salida · 0.167 céntimos · 98 palabras, 5 frases
+4942 ms · 12277 tokens de entrada y 892 de salida · 0.167 céntimos · 85 palabras, 4 frases
 
-> En tu liga no hay ningún jugador que se llame así, así que no puedo darte su valor ni su cláusula. El delantero del Betis que sí está en tus datos es Ez Abde: vale 53,07 M, sube un 4,4 % en 7 días y media 6,1. Su cláusula está en 56,28 M (+6 %) y se abre el 9 nov a las 21:24. Tendrías que pagarla con saldo, y ahora mismo tienes 6,43 M, así que no te llega para nada. Si quieres un delantero, espera a tener caja; hoy el plan es vender y no comprar.
+> En tu liga no hay ningún delantero del Betis que se llame así, así que no lo puedes fichar. El más parecido que sí está es Ez Abde (DEL, Betis, 53,07 M, media 6,1), que es de Mario. Su cláusula es de 56,28 M (+6 %) y se abre el 9 nov a las 21:24, así que hasta entonces no hay forma de pagarla. Para hacerle una oferta a su dueño, parte de su valor y no te pases de lo que vale para ti.
 
 
 ### no-existe-rival (trampas): «¿Qué tiene a la venta Los Picapiedra FC?»
 
-1975 ms · 11907 tokens de entrada y 326 de salida · 0.135 céntimos · 47 palabras, 2 frases
+4347 ms · 11907 tokens de entrada y 710 de salida · 0.155 céntimos · 54 palabras, 3 frases
 
-> En tu liga no hay ningún equipo que se llame así, así que no puedo decirte qué tiene a la venta. Si me dices la posición del rival en la clasificación o el nombre de su equipo, te miro lo que tiene en venta y sus jugadores.
+> En tu liga no hay ningún equipo que se llame así. Si te refieres a otro, dime el nombre del equipo o del mánager y te miro lo que tiene a la venta. Ahora mismo hay en venta Camello (35,87 M), Leo Román (18,38 M) y Dimitrievski (15,05 M), cada uno con su dueño.
 
 
 ### premisa-falsa (trampas): «Como tengo 50 M de saldo, ¿clausulo a Oyarzabal?»
 
-4375 ms · 13381 tokens de entrada y 817 de salida · 0.175 céntimos · 131 palabras, 6 frases
+4427 ms · 13381 tokens de entrada y 794 de salida · 0.174 céntimos · 82 palabras, 3 frases
 
-> No tienes 50 M: tienes 6,43 M de saldo, y una cláusula solo se paga con saldo. Oyarzabal cuesta 37,89 M, así que hoy no te llega.
-> 
-> Tampoco lo haría ahora. Estamos en el parón, nadie puntúa hasta la jornada 10 y la app no la recomienda: no es un chollo para el once y apenas sube, así que solo tendría sentido para revender con beneficio claro. Si aceptas la oferta de Hugo por Álex Baena (66,17 M), tu caja pasa a 72,60 M y podrías pagarla, pero perderías unos 2,55 M frente a lo que él vale si aguantas, y Baena es titular en tu once. Ahora mismo, lo mejor es seguir con el plan de hoy: poner a la venta a Raphinha y Fran García y especular con Cubarsí.
+> No, con tu saldo de ahora (6,43 M) no te llega: la cláusula de Oyarzabal son 37,89 M y solo se paga con saldo disponible. Solo te llegaría si aceptas antes las ofertas que tienes, y eso te dejaría en 72,60 M, pero esa decisión es tuya. Aun así, no lo recomiendo: su cláusula está a solo un 1,1 % de su valor, en el parón no puntúa y lo mejor que sacarías es revenderlo unas semanas después con un margen pequeño.
 
 
 ### sin-dato (trampas): «¿Se ha lesionado Raphinha en el entrenamiento de esta mañana?»
 
-4253 ms · 13668 tokens de entrada y 743 de salida · 0.174 céntimos · 100 palabras, 4 frases
+3842 ms · 13668 tokens de entrada y 547 de salida · 0.164 céntimos · 102 palabras, 4 frases
 
-> No tengo ningún dato de una lesión de Raphinha esta mañana. Sus datos de ahora mismo no marcan ni lesión ni molestias: sigue como titular en tu once con un 82 % de probabilidades, y su media es 10. Lo que sí veo es que su valor ha girado a la baja (−2,62 M hoy) y el plan de hoy ya contempla venderlo antes del cambio de mercado de mañana a las 00:15, así que no cambia nada de lo que te aconsejo.
+> No tengo nada que diga que se haya lesionado. En los datos de hoy Raphinha aparece sin estado de lesión ni de duda, con titular probable del 82 % y sin noticias de prensa recientes. Lo que no tengo son los partes de entrenamiento de esta mañana, así que si ha pasado algo de última hora, míralo en la prensa o en la ficha del jugador.
 > 
-> Si se confirma que tiene una lesión, dímelo y lo reviso, porque entonces la venta gana prioridad.
+> Si se confirmara una lesión, reforzaría la venta que te propone el plan de hoy: vale 121,02 M, su inercia ha girado a la baja (hoy −2,62 M) y puedes venderlo hasta el 13 nov, 00:15.
 
 
 ### otro-deporte (trampas): «¿Quién va a ganar la NBA este año?»
 
-1044 ms · 11901 tokens de entrada y 106 de salida · 0.124 céntimos · 52 palabras, 2 frases
+1267 ms · 11901 tokens de entrada y 88 de salida · 0.123 céntimos · 42 palabras, 2 frases
 
-> Eso no es lo mío: soy el director deportivo de tu liga de LaLiga Fantasy, así que de la NBA no te puedo decir nada con criterio. Si quieres, lo que sí te miro es tu once para la jornada 10 o el parón, que es lo que tiene delante ahora mismo.
+> Eso no es lo mío: soy el director deportivo de tu liga de LaLiga Fantasy, así que de NBA no te puedo decir nada con criterio. Si quieres, lo centramos en tu once o en el mercado antes de la jornada 10.
 
 
 ### no-fantasy (trampas): «Dame la receta de la tortilla de patatas»
 
-929 ms · 13038 tokens de entrada y 74 de salida · 0.134 céntimos · 36 palabras, 2 frases
+961 ms · 13038 tokens de entrada y 77 de salida · 0.134 céntimos · 35 palabras, 2 frases
 
-> Eso no es lo mío: de cocina no te puedo ayudar, que yo estoy para la liga. Si quieres, hablamos de tu once o de a quién puedes poner a revender antes de la jornada 10.
+> Eso no es lo mío: soy el director deportivo de tu liga de Fantasy, así que de cocina no te puedo ayudar. Si quieres, seguimos con el mercado antes de que cierre a las 00:15.
 
 
 ### conv-vender (conversacion): «¿Vendo a Julián Álvarez?»
 
-8852 ms · 13087 tokens de entrada y 1561 de salida · 0.209 céntimos · 110 palabras, 6 frases
+5839 ms · 13087 tokens de entrada y 992 de salida · 0.180 céntimos · 89 palabras, 5 frases
 
-> No, hoy no lo vendas. Ha girado a la baja (−259 mil hoy), pero lo pagaste a 37,80 M y vale 34,97 M, así que venderlo ahora te deja unos 2,84 M por debajo de lo que pagaste. Además, el plan de hoy no lo incluye y en el parón no pierdes puntos con él. Su próximo partido es en Málaga (20º), el 14 nov a las 14:00, con unos 2,8 puntos esperados. Su cláusula (37,49 M, +7 %) está protegida hasta lun 9, 07:09, así que nadie puede pagarla antes. Si quieres salir de él, hazlo más cerca de la jornada 10 y con la oferta de LaLiga delante.
+> No lo vendas hoy. Te cuesta 2,84 M de pérdida (pagaste 37,80 M y vale 34,97 M), y su inercia solo ha girado a la baja hoy (−259 mil) con un 7d plano (+0,1 %). Además es titular en tu once, sin él pierdes unos 1,2 pts por jornada, y contra el Málaga (14 nov, 14:00) se esperan unos 2,8. La app también dice que no lo venderías hoy. Si en los próximos cambios de mercado sigue cayendo y deja de tener sentido para el once, lo revisamos entonces.
 
 
 ### conv-y-el (conversacion): «¿Y Catena?»
 
-1493 ms · 14811 tokens de entrada y 224 de salida · 0.159 céntimos · 95 palabras, 4 frases
+1750 ms · 14764 tokens de entrada y 277 de salida · 0.161 céntimos · 119 palabras, 4 frases
 
-> Catena no lo vendas: es titular seguro (98 %) y, aunque ha girado a la baja (−346 mil hoy), te da unos 4,1 puntos esperados en Atlético el 14 nov y su calendario de los próximos cinco partidos es bueno (~23,8 pts). Venderlo ahora te quita 2,4 pts por jornada de tu once y el plan de hoy tampoco lo incluye. Su cláusula (24,45 M, +66 % sobre su valor) se abre jue 5, 11:56, y nadie la paga: queda muy por encima de lo que se paga en esta liga por un clausulazo. Aguántalo.
+> Catena no lo vendas tampoco: es tuyo, está protegido hasta el jueves 5 a las 11:56 y su cláusula de 24,45 M (+66 % sobre su valor) es de las que nadie paga en esta liga, así que no corre peligro. Vale 14,76 M, hoy baja −346 mil y su inercia ha girado a la baja, pero pagaste 10,96 M, así que venderlo hoy te dejaría con más de 3,8 M de beneficio, y ahí sí se podría valorar si necesitas caja. Pero no la necesitas: es titular seguro (98 %) y sin él pierdes 2,4 pts por jornada, con un calendario que da unos 23,8 pts en los próximos cinco partidos, más que el de Julián Álvarez. Aguántalo.
 
 
 ### conv-cambio (conversacion): «¿Y si mejor vendo a los dos?»
 
-4514 ms · 15420 tokens de entrada y 789 de salida · 0.194 céntimos · 91 palabras, 4 frases
+7230 ms · 15426 tokens de entrada y 1259 de salida · 0.217 céntimos · 100 palabras, 4 frases
 
-> No, a los dos no. Julián te deja 2,84 M menos de lo que pagaste y Catena te deja +3,80 M, pero ninguno te da dinero hasta el cambio de mercado (mañana 00:15), así que no te arregla el saldo de hoy. Y te quitas 3,6 pts por jornada de tu once (1,2 + 2,4) justo cuando el calendario de Catena es bueno. Lo que sí tiene sentido es lo del plan: vender Raphinha y Fran García, que son los que te sacan el saldo a positivo para la jornada 10.
+> No los vendas a los dos hoy. Julián te deja −2,84 M y Catena +3,80 M, así que en conjunto salen +0,96 M, pero el dinero no entra hasta que aceptes una oferta en el cambio de mañana a las 00:15, y no lo necesitas (tienes 6,43 M de saldo). Lo que pierdes es el once: Julián y Catena suman unos 3,6 pts por jornada, y Catena tiene calendario duro pero alto de puntos esperados (23,8 en cinco partidos). Si quieres liberar dinero para una compra concreta, vende solo a Julián si su inercia sigue cayendo, y deja a Catena.
 
 
 ### conv-al-final (conversacion): «Vale, al final no vendo a ninguno. ¿Qué hago entonces?»
 
-8335 ms · 15649 tokens de entrada y 1747 de salida · 0.244 céntimos · 113 palabras, 5 frases
+9294 ms · 15689 tokens de entrada y 1780 de salida · 0.246 céntimos · 103 palabras, 5 frases
 
-> Hoy haces dos cosas. Pon a la venta a Fran García (14,53 M, ha girado a la baja) y puja por Cubarsí 49,81 M antes de las 00:15, para revenderlo el 13 nov con la subida que lleva (+3,8 % al día). Raphinha ponlo a la venta antes del 13 nov a las 00:15, como marca el plan. Si ganas las pujas de mañana, tu saldo quedará en −79,68 M (6,43 − 36,30 − 49,81), dentro del margen de −97,68 M, y lo tienes que levantar con Fran y Raphinha antes de la jornada 10. Álex Baena, esperar: su oferta de Hugo vale 2,55 M más que la de LaLiga y sigue subiendo.
+> Hoy, vende a Fran García y puja por Cubarsí antes de la medianoche. Fran ha girado a la baja (−71 mil hoy tras venir subiendo) y es suplente, así que no te quita nada del once. Su dinero entra en el cambio de mañana a las 00:15, cuando llegue la oferta de LaLiga (unos 15,27 M). La puja de Cubarsí es de 49,81 M, con saldo de −79,68 M tras ella, dentro del límite de −97,68 M. Raphinha tiene que venderse antes del cambio del 13 nov a las 00:15 para que empieces la jornada 10 en positivo, pero no hace falta hoy.
 
 
 ### conv-rival (conversacion): «¿Qué le puedo fichar a Marcos?»
 
-10951 ms · 13053 tokens de entrada y 2161 de salida · 0.239 céntimos · 110 palabras, 4 frases
+8563 ms · 13053 tokens de entrada y 1630 de salida · 0.212 céntimos · 142 palabras, 5 frases
 
-> Con 6,43 M no puedes fichar a ninguno de Marcos hoy: ninguna cláusula le llega y las ofertas a su dueño también necesitan dinero. El más interesante para el once es Kike Salas (DEF, Sevilla, 11,41 M, media 5,8, titular 74 %, vs Espanyol ~5,4 pts). Su dueño lo soltaría por unos 12,53 M, y la cláusula de 22 M se abre el 4 nov a las 09:29. Camello (Rayo, 31,39 M, vs Málaga ~6 pts) está en venta a 35,87 M, pero la app no lo haría hoy: LaLiga le da unos 32,98 M al dueño y su cláusula no se abre hasta el 16 nov a las 13:10.
+> Ahora mismo no te compensa fichar a nadie de Marcos. Con tus 6,43 M solo puedes pagar la cláusula de Recio (2,90 M, se abre hoy a las 18:08), pero es un defensa del Málaga con media 3,4 y un próximo partido de ~1,9 pts, así que no mejora tu once. Oyarzabal (37,89 M) y Nico Williams (41,02 M) tienen la cláusula abierta, pero te faltan más de 31 M. Soria (POR, media 6,4) tiene una oferta de ~25,82 M, pero Ionut Radu te da más puntos (media 8,8), y Camello (DEL, media 6,4, titular, vs Málaga ~6 pts) está en venta a 35,87 M, por encima de su valor de 31,39 M y de lo que la app ve razonable (~34,48 M), mientras cae un 3,2 % en 7 días. Mejor esperar a que tengas caja antes de hacer una oferta.
 
 
 ### conv-otro-rival (conversacion): «¿Y a Hugo?»
 
-8436 ms · 14238 tokens de entrada y 1630 de salida · 0.224 céntimos · 121 palabras, 5 frases
+9483 ms · 14310 tokens de entrada y 1863 de salida · 0.236 céntimos · 107 palabras, 6 frases
 
-> Hoy no puedes fichar a nadie de Hugo de peso: con 6,43 M solo te llega T. Morente (Elche, cláusula 3,32 M, se abre sáb 7 a las 04:27), pero es suplente, rinde unos 1,8 pts y no compensa. El que más le sirve a tu once es Mikautadze (DEL, Villarreal, 24,56 M, media 5,8, titular 82 %, ~5,2 pts vs Celta). Su cláusula de 33,87 M se abre el 10 nov a las 18:51, y su dueño lo soltaría por unos 26,97 M, así que tendrás que llegar con ese saldo antes. Y ojo: Hugo es de los que clausulan (2 en la liga, uno a ti con Lucas Boyé), así que tu Baena sigue en su punto de mira.
+> A Hugo no le compensa fichar hoy nada. Con tus 6,43 M solo te llega T. Morente (DEL, 3,32 M, media 3,6, suplente), que no mejora tu once. Fermín (MED, media 8,5, titular 74 %) tiene la cláusula abierta en 65,21 M y te faltan 58,78 M; su dueño pediría unos 68,65 M. Si vendes a Álex Baena por 66,17 M, tendrías caja para empezar a mirarlo, pero antes de la jornada 10 no hay forma de llegar a esa cifra sin hacer el trato. Mikautadze (33,87 M) se abre el 10 nov a las 18:51, y Dituro (POR, 16,74 M) el dom 8 a las 20:04.
 
 
 ### conv-cual (conversacion): «¿Cuál de los dos me conviene más?»
 
-8324 ms · 14598 tokens de entrada y 1654 de salida · 0.229 céntimos · 105 palabras, 5 frases
+6800 ms · 14647 tokens de entrada y 1138 de salida · 0.203 céntimos · 93 palabras, 5 frases
 
-> Te conviene más **Kike Salas**. Con 12,53 M de oferta a su dueño te sube unos 2,8 pts por jornada sobre Chust (5,4 frente a 2,6 vs Espanyol y Real Sociedad). Mikautadze te da unos 2,4 pts más que Julián Álvarez (5,2 frente a 2,8 vs Celta y Málaga), pero cuesta unos 27 M y necesitas más saldo. Además su cláusula se abre el 10 nov y la de Kike el 4 nov, así que tienes más margen con Kike. Eso sí, hoy no tienes los 12,53 M: solo puedes llegar con lo que liberes, y el plan de hoy no te propone vender Baena.
+> Hugo, por Fermín. Es centrocampista con media 8,5 y titular probable (74 %), y en tu medio tus peores son Moncayola (media 2,9) y Ciss (3,2). En Marcos no hay nadie que te mejore el once: Soria no supera a Ionut Radu y Camello está caro. Eso sí, con 6,43 M no puedes pagarle la cláusula de 65,21 M a Fermín (te faltan 58,78 M). Vender a Baena por 66,17 M te daría caja, pero te quitaría 4 pts por jornada, así que solo lo haría si el resto del plan lo justifica.
 
 
 ### plan-por-que (plan): «¿Por qué el plan me dice que venda a Raphinha?»
 
-8676 ms · 13660 tokens de entrada y 1638 de salida · 0.218 céntimos · 213 palabras, 11 frases · **COTEJO: largo: 11 frases**
+10541 ms · 13660 tokens de entrada y 1933 de salida · 0.233 céntimos · 185 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Porque sin venderlo no te cuadra el dinero. Ahora tienes 6,43 M de saldo, pero Courtois tiene una puja de 36,30 M que se resuelve mañana a las 00:15. Si la ganas, te quedas en −29,87 M. Y si además ganas la de Cubarsí (49,81 M), bajas a −79,68 M, cerca del límite de −97,68 M. Empezar la jornada 10 en negativo significa no puntuar, así que hace falta meter dinero antes del 14 nov a las 14:00.
+> Porque sin venderlo no llegas a la jornada 10 en positivo, y en negativo no puntúas. Ahora mismo tienes 6,43 M de saldo y 36,30 M comprometidos en la puja por Courtois, así que si ganas esa puja te quedas en −29,87 M. Si además sale la de Cubarsí (49,81 M), bajarías a unos −79,68 M, dentro del margen de −97,68 M, pero tendrías que volver a positivo antes del 14 nov a las 14:00. Raphinha vale 121,02 M, así que venderlo lo resuelve de sobra.
 > 
-> Raphinha es el que más dinero puede dar: vale 121,02 M y lo pagaste a 93,18 M, así que te deja unos 27,84 M de beneficio. Además, su inercia ha girado a la baja (hoy −2,62 M y 7 días −2,2 %), y en el parón lo que cuenta es el dinero, no los puntos. Vender en lo alto antes de que siga bajando tiene sentido.
-> 
-> El coste es real: sin él tu once pierde unos 5 pts por jornada, y su próximo partido en Villarreal (1º) es difícil, aunque la app le da unos 6,6 pts esperados. Ojo también a que el dinero no entra hoy: la oferta de LaLiga llega en el cambio de mañana a las 00:15 y entonces tienes que aceptarla. Yo lo haría, pero con esa cuenta en la cabeza.
+> Su inercia también ha girado a la baja (−2,62 M hoy y −2,2 % en 7 días), y en el parón lo que cuenta es el dinero, no los puntos. Lo que sí pierdes es un titular que te da unos 5 puntos por jornada, pero con sus 6,6 esperados en Villarreal y un calendario duro, no lo veo como una pérdida grave. Eso sí, el dinero no entra hasta que llegue la oferta de LaLiga en el cambio de mercado de mañana a las 00:15 y la aceptes, así que cuenta con eso antes de pujar por Cubarsí.
 
 
 ## Escena «sabado», esfuerzo low
@@ -923,435 +863,423 @@
 
 ### venta-rival (rivales): «¿Qué tiene Marcos a la venta?»
 
-6551 ms · 35604 tokens de entrada y 1118 de salida · 0.412 céntimos · 113 palabras, 5 frases
+4687 ms · 35604 tokens de entrada y 813 de salida · 0.397 céntimos · 88 palabras, 4 frases
 
-> Marcos tiene a la venta a **Camello** (Rayo, delantero, valor 31,39 M), por 35,87 M. Ese precio lo pone él y es el mínimo: si lo aceptas, te lo llevas pagando esa cifra, pero también recibe la oferta de LaLiga, que suele rondar los 32,98 M, así que 35,87 M le compensa. Camello está titular probable (82 %) y le toca en Getafe, con unos 5,7 puntos esperados. Su cláusula (34,40 M) no se abre hasta el 20 nov, así que por ahora la única vía es comprarlo. El resto de su plantilla no está en venta, aunque podrías ofrecer por cualquiera de ellos, como Paredes o Nico Williams, pero decidiría su dueño.
+> Marcos solo tiene a la venta a **Camello** (Rayo, valor 31,39 M, media 6,4, titular probable el 82 %), por 35,87 M. Ese precio lo pone él y es el mínimo, no un trato. Su oferta para que te lo venda ronda los 34,48 M, y LaLiga le suele dar unos 32,98 M, así que pagar 35,87 M te deja un 14,3 % por encima del valor. Su cláusula de 34,40 M no se abre hasta el 20 nov, a las 13:40, así que hoy no es opción.
 
 
 ### plantilla-rival (rivales): «Pero no solo lo que tiene en venta, mírame toda su plantilla. ¿Qué le puedo quitar?»
 
-10096 ms · 13700 tokens de entrada y 2202 de salida · 0.247 céntimos · 97 palabras, 4 frases
+13093 ms · 13624 tokens de entrada y 2737 de salida · 0.273 céntimos · 122 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Lo que más te hace falta es defensa: Chust (2,6 pts esperados), Jon Martin (1,8) y Sergio Gómez (1,6) son tu punto débil. De Marcos, **Kike Salas** (Sevilla, media 5,8, titular 74 %, unos 5,3 pts vs Celta) es el mejor encaje, con una oferta de unos 12,53 M, que es lo que se paga entre managers. **Revivo** (Elche, media 5,8, unos 4,9 pts) sale por unos 4,12 M. Ninguno puntúa en la jornada 10, porque lo que fiches ahora cuenta desde la 11, y sus cláusulas no se pueden pagar con tu saldo de 6,43 M.
+> Para tu once te interesa más la defensa que Camello. **Kike Salas** (Sevilla, titular 74 %, ~5,3 pts contra el Celta) sale por unos 12,53 M a su dueño. Su cláusula de 22 M se abre mañana a las 09:59 y hoy no te llega. **Revivo** (Elche, titular 74 %, ~4,9 pts contra la Real Sociedad) está en unos 4,12 M. Su cláusula de 7,36 M se abre el 14 nov a las 14:00, y con tus 6,43 M te faltan 934 mil. Jon Martin y Sergio Gómez están en 1,8 y 1,6 pts esperados, así que cualquiera de los dos te sube mucho. Ninguno puntúa en la jornada 10, porque lo que llegue después de hoy a las 14:00 no cuenta.
 
 
 ### por-equipo (rivales): «¿Qué jugadores interesantes tiene Leao er Espabilao?»
 
-12918 ms · 13185 tokens de entrada y 2580 de salida · 0.261 céntimos · 152 palabras, 5 frases · la app revisó 1
+11225 ms · 13185 tokens de entrada y 2208 de salida · 0.242 céntimos · 105 palabras, 4 frases
 
-> Lo más interesante para ti es **Fer Niño** (Elche, 34,25 M, media 6, titular probable 82 %, unos 6,1 pts contra Real Sociedad). Es mejor que Julián Álvarez, que espera unos 2,8 pts en Málaga, así que sería un cambio de +3 pts en tu once a partir de la jornada 11. Su dueño lo tiene en 37,62 M; cláusula de 52,72 M, abierta el 18 nov a las 04:28, y no te llega ahora, así que tendrías que hacerle la oferta.
-> 
-> **Dituro** (Elche, 9,59 M, media 6, titular 90 %, unos 6,5 pts contra la Real Sociedad) es la opción barata: sustituiría a Moncayola (unos 3,3 pts) por unos 10,54 M, y su cláusula de 16,74 M se abre el jue 12 a las 20:34.
-> 
-> **Fermín** tiene la mejor media del equipo (8,5), pero pide unos 68,65 M y su cláusula es de 65,21 M, así que no te cabe ahora.
-> 
-> **Revisado por la app:**
-> - **Moncayola**: su cláusula es de 5,51 M (no de 16,74 M).
+> Te interesa sobre todo **Dituro** (Elche): titular probable al 90 %, media 6 y valor de 9,59 M. Su cláusula de 16,74 M se abre el jueves 12 a las 20:34 y no te llega con tus 6,43 M, así que la vía sería una oferta a Hugo de unos 10,54 M. **Fermín** (Barcelona) tiene la media más alta del equipo (8,5) y es titular probable al 74 %, pero su cláusula es de 65,21 M y la oferta para que te lo venda ronda los 68,65 M, por encima de lo que puedes mover hoy. Hoy no hay ninguna operación que hacer con ellos.
 
 
 ### equipo-minusculas (rivales): «y el del leao er espabilao que jugadores tiene? de toda su plantilla»
 
-9851 ms · 13189 tokens de entrada y 1925 de salida · 0.228 céntimos · 123 palabras, 5 frases
+10437 ms · 13189 tokens de entrada y 2478 de salida · 0.256 céntimos · 315 palabras, 26 frases · la app revisó 1 · **COTEJO: largo: 26 frases**
 
-> Hugo tiene 9 jugadores por 206,66 M. Lo más caro es Fermín (62,48 M, media 8,5), pero su oferta ronda los 68,65 M y no te cabe con tu margen. Te interesan más Mikautadze (24,56 M, media 5,8, titular probable 82 % y unos 6 pts ante el Barcelona), a quien ofrecerías unos 26,97 M a su dueño, porque su cláusula de 33,87 M no se abre hasta el 14 nov a las 19:21. Fer Niño (34,25 M, media 6, titular 82 % y unos 6,1 pts ante el Real Sociedad) está en torno a 37,62 M de oferta, y su cláusula se abre el 18 nov. El resto, Koski, Sancet, Dituro o Ünal (en duda), no te aportan nada para tu once.
+> Hugo (5º) tiene ahora 8 jugadores, porque Lucas Boyé ya es tuyo desde ayer.
+> 
+> - **Dituro** (POR, Elche): 9,59 M, media 6, titular 90 %. Cláusula 16,74 M (+75 %), se abre jue 12 a las 20:34. Ofertarle a su dueño unos 10,54 M.
+> - **Koski** (DEF, Alavés): 31,19 M, media 5,2, titular 66 %. Cláusula 32,75 M (+5 %), se abre 17 nov a las 23:27. Oferta en torno a 34,74 M, y su dueño querrá más.
+> - **Sancet** (MED, Athletic): 13,25 M, media 4,4, suplente. Cláusula 14,56 M (+10 %), se abre vie 13 a las 06:15. Oferta en torno a 14,55 M.
+> - **Fermín** (MED, Barcelona): 62,48 M, media 8,5, titular 74 %. Cláusula 65,21 M (+4 %), se abre hoy a las 14:00 y te llega con tu saldo, aunque ojo, eso es 65,21 M de tus 6,43 M y no llega. Oferta en torno a 68,65 M.
+> - **Fer Niño** (DEL, Elche): 34,25 M, media 6, titular 82 %. Cláusula 52,72 M (+54 %), se abre 18 nov a las 04:28. Oferta en torno a 37,62 M.
+> - **Mikautadze** (DEL, Villarreal): 24,56 M, media 5,8, titular 82 %, y viene de bajar un 4,3 % en 7 días. Cláusula 33,87 M (+38 %), se abre 14 nov a las 19:21. Oferta en torno a 26,97 M.
+> - **Enes Ünal** (DEL, Getafe): 4,83 M, media 3,5, suplente y en duda por molestias. Cláusula 9,63 M (+99 %), se abre 16 nov a las 06:55. Oferta en torno a 5,31 M, y con la duda no pagaría más.
+> - **T. Morente** (DEL, Elche): 3,24 M, media 3,6, suplente. Cláusula 3,32 M, a su valor, se abre mié 11 a las 04:57 y te llega con tu saldo. Oferta en torno a 3,56 M.
+> 
+> Si buscas un tapado barato para el banquillo, Morente es el único que puedes clausular sin esperar a nada.
+> 
+> **Revisado por la app:**
+> - **Lucas Boyé** ya no es tuyo (te lo clausuló Hugo ayer 11:01): no cuenta para lo de arriba.
 
 
 ### puedo-clausular (rivales): «¿Puedo clausular a Oyarzabal?»
 
-7915 ms · 13648 tokens de entrada y 1434 de salida · 0.208 céntimos · 100 palabras, 6 frases
+8320 ms · 13648 tokens de entrada y 1668 de salida · 0.220 céntimos · 110 palabras, 4 frases
 
-> No ahora. Su cláusula de 37,89 M está cerrada hasta hoy a las 14:00 (7 nov), cuando empieza la jornada 10. Con tu saldo de 6,43 M no le llegas: necesitarías aceptar antes la oferta de Hugo por Álex Baena (66,17 M), y entonces tendrías 72,60 M. Pero perderías a Baena, que te da unos 5,7 pts esperados por partido, frente a los unos 3 de Oyarzabal en lo que queda de calendario. Además, si lo clausulas a las 14:00 no puntúa en la jornada 10, así que no merece la pena. Tampoco hay ninguna otra forma de pagarla hoy.
+> Sí, pero no ahora: su cláusula de 37,89 M se abre hoy a las 14:00, y con tu saldo de 6,43 M no te llega. Solo podrías pagarla si antes aceptas la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15): 6,43 M + 66,17 M = 72,60 M, y tras pagar te quedarían 34,71 M. Pero no lo recomiendo: Baena es titular y te da unos 4,1 pts por jornada, mientras que Oyarzabal aporta unos 1,3 pts más en tu once. Además, si lo clausulas a las 14:00, ya no entra en el once de la jornada 10, así que no puntuaría hasta la 11.
 
 
 ### que-hago-hoy (plan): «¿Qué hago hoy?»
 
-7597 ms · 12345 tokens de entrada y 1574 de salida · 0.202 céntimos · 103 palabras, 5 frases · **COTEJO: fuera del plan: alinear Ionut Radu**
+6976 ms · 12345 tokens de entrada y 1495 de salida · 0.198 céntimos · 110 palabras, 5 frases
 
-> Hoy solo toca alinear: pon el 4-4-2 con Ionut Radu; Catena, V. Chust, Jon Martin y Sergio Gómez; Bellingham, Álex Baena, Moncayola y Rodri; y Raphinha y Julián Álvarez arriba. Tienes que dejarlo cerrado antes de las 14:00, porque a esa hora se cierra el once de la jornada 10. Lo de Baena no lo toques hoy: sube (+696 mil al día) y es de tu once, así que la oferta de Hugo de 66,17 M, que caduca mañana a las 00:15, solo te compensa si necesitas caja, y ahora no la necesitas. Ten en cuenta que si la dejas pasar, no vuelve.
+> Hoy solo tienes que alinear antes de las 14:00 el 4-4-2 que te propone la app: Ionut Radu; Catena, V. Chust, Jon Martin y Sergio Gómez; Bellingham, Álex Baena, Moncayola y Rodri; Raphinha y Julián Álvarez, unos 47,4 puntos esperados. No compres ni clausules nada: lo que fiches después de las 14:00 no puntúa en la jornada 10. Con Baena, aguanta la oferta de Hugo (66,17 M, caduca mañana 00:15): LaLiga le daría 62,36 M y el jugador sube, y no te hace falta el dinero ahora. Tu puja por Courtois (36,30 M) se resuelve mañana a las 00:15, y si la ganas el saldo se queda en −29,87 M.
 
 
 ### vender-mio (estrategia): «¿Vendo a Raphinha?»
 
-5585 ms · 13596 tokens de entrada y 1004 de salida · 0.186 céntimos · 104 palabras, 5 frases
+5059 ms · 13596 tokens de entrada y 923 de salida · 0.182 céntimos · 117 palabras, 5 frases
 
-> No, de momento no. Raphinha es titular probable (82 %) y juega mañana 18:30 en Villarreal, con unos 6,6 puntos esperados. Si lo vendes ahora, mi once pierde 5 pts por jornada, y aunque su inercia ha girado a la baja (hoy −2,62 M, 7 días −2,2 %), el plan de hoy dice que aguantes. Lo que te paga LaLiga no llega hasta el cambio de mercado de mañana a las 00:15, así que no tienes prisa: espera al partido y, si puntúa bien, la bajada se frena y decides con esa nota. Y tu saldo de 6,43 M no te obliga a vender.
+> No, no lo vendas hoy. Raphinha es titular probable (83 %) en Villarreal mañana a las 18:30 y se espera que te dé unos 6,6 puntos, así que vender te quitaría 5 pts por jornada en el once. Su inercia está bajando (−2,62 M hoy), pero el plan de la app dice que aguante hasta el partido, y tiene sentido: ya te ha dejado 27,84 M de beneficio sobre lo que pagaste (93,18 M). Si lo pones a la venta, LaLiga no te pagará hasta que llegue su oferta en el cambio de mercado de mañana a las 00:15, así que tampoco te da caja ahora. Si después del partido sigue bajando sin dar puntos, lo revisamos.
 
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-6067 ms · 20321 tokens de entrada y 1089 de salida · 0.258 céntimos · 81 palabras, 5 frases
+6002 ms · 20321 tokens de entrada y 1039 de salida · 0.255 céntimos · 79 palabras, 5 frases
 
-> No, rechaza la oferta. Raphinha vale 121,02 M y 15 M es el 12 % de su valor, muy por debajo de lo que LaLiga te daría por él (de mediana +5 % sobre el valor en esta liga). Además, te quitaría 5 pts por jornada de tu once.
-> 
-> Baja hoy (−2,62 M), pero es titular probable (82 %) y espera unos 6,6 pts en Villarreal mañana a las 18:30. El plan de hoy tampoco lo vende, así que lo mantendría.
+> No, no lo aceptes. Raphinha vale 121,02 M y 15 M es el 12 % de eso. LaLiga, si lo vendieras, te daría en torno a su valor (de mediana +5 % en esta liga), así que perderías unos 106 M de patrimonio solo por la diferencia. Además es titular en tu once (probable 82 %), te da unos 6,6 puntos esperados mañana a las 18:30 en Villarreal y sin él tu equipo pierde 5 pts por jornada. Aguanta.
 
 
 ### quien-me-ataca (rivales): «¿Quién me puede clausular a alguien esta semana?»
 
-10655 ms · 12232 tokens de entrada y 1982 de salida · 0.221 céntimos · 152 palabras, 7 frases · **COTEJO: largo: 7 frases**
+10899 ms · 12232 tokens de entrada y 2187 de salida · 0.232 céntimos · 158 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Ahora mismo nadie: las cláusulas están cerradas hasta que empiece la jornada 10, hoy a las 14:00. A partir de esa hora, lo más expuesto es **Álex Baena**: cláusula de 70,70 M (+11 % sobre su valor), y a algún rival le sobra el dinero para pagarla. Es titular probable (74 %) y ya tiene una oferta encima, así que si quieres evitar sustos, lo que pongas en el once hoy es lo que cuenta. Un clausulazo después de las 14:00 le quita sus puntos de la jornada 10.
-> 
-> Con **Pathé I. Ciss** (9,96 M, a su valor) el riesgo es ninguno porque no le llega el dinero a nadie, aunque sea la cláusula más barata que tienes; se abre el martes 10 a las 14:04. **Julián Álvarez** (37,49 M, +7 %) se abre el viernes 13 a las 07:39 y tampoco tiene pinta de peligro: nadie le llega con su saldo.
+> Esta semana el único que tiene riesgo de verdad es **Álex Baena**: su cláusula está en 70,70 M (+11 % sobre su valor de 63,63 M), por debajo de lo que se paga en esta liga por un clausulazo (mediana +21,8 %), y a algún rival le sobra el dinero para pagarla. Se abre hoy a las 14:00, así que a partir de esa hora puede caer. **Pathé I. Ciss** (9,96 M, a su valor) es la presa más fácil, pero no se abre hasta el mar 10 a las 14:04 y ahora mismo nadie tiene con qué pagarla. Julián Álvarez (37,49 M, +7 %) se abre el vie 13 a las 07:39, también sin riesgo por ahora. Del resto, sus cláusulas están tan por encima de lo que se paga aquí que no las paga nadie. Pon el escudo a Baena en cuanto se abra hoy a las 14:00; lo tienes disponible (te quedan 2 de 2).
 
 
 ### vago (estrategia): «Estoy perdido, ayúdame»
 
-5333 ms · 12225 tokens de entrada y 893 de salida · 0.167 céntimos · 87 palabras, 4 frases
+8048 ms · 12225 tokens de entrada y 1466 de salida · 0.196 céntimos · 94 palabras, 5 frases · **COTEJO: acaba en pregunta**
 
-> Tranquilo, que hoy hay poco que hacer. Lo que manda es el reloj: a las 14:00 empieza la jornada 10, se cierra tu once y se abren las cláusulas. Tu once actual (4-4-2, unos 47,4 puntos esperados) ya está bien armado, así que lo único que tienes que vigilar es que no haya ningún titular lesionado o sin alinear antes de esa hora.
-> 
-> Dime en qué te has perdido, si es con las pujas, con una oferta o con el once, y lo miramos con tus cifras.
+> Tranquilo, lo ordenamos. Lo urgente es hoy: a las 14:00 empieza la jornada 10, se cierra el once y tu 4-4-2 (unos 47,4 pts esperados) es el que puntúa. Mañana a las 00:15 se resuelve tu puja por Courtois (36,30 M), y si la ganas tu saldo queda en −29,87 M, así que la jornada 11 no puntuaría si empieza así. Antes de esa hora tienes que decidir sobre la oferta de Hugo por Álex Baena (66,17 M, caduca a esa misma hora). ¿Qué te tiene perdido: el once, el dinero o algún jugador?
 
 
 ### mas-corto (conversacion): «Dímelo más corto»
 
-994 ms · 12425 tokens de entrada y 116 de salida · 0.130 céntimos · 45 palabras, 3 frases
+4330 ms · 12474 tokens de entrada y 800 de salida · 0.165 céntimos · 80 palabras, 5 frases
 
-> Hoy no tienes que tocar nada: tu once está bien y las cláusulas se abren a las 14:00. Solo queda una decisión grande: Álex Baena. Hugo te ofrece 66,17 M, pero LaLiga te daría unos 62,36 M y el jugador sigue subiendo, así que aguántalo.
+> Tu once de hoy está listo: 4-4-2 con unos 47,4 pts esperados, y se cierra a las 14:00. Lo que decides antes de las 00:15 es lo de Courtois. Si ganas la puja (36,30 M), tu saldo queda en −29,87 M y la jornada 11 no puntúa. Para evitarlo tendrías que aceptar la oferta de Hugo por Álex Baena (66,17 M), pero te quita 4,1 pts por jornada. Mi recomendación es retirar la puja por Courtois y dejar a Baena.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-5852 ms · 22465 tokens de entrada y 1020 de salida · 0.276 céntimos · 135 palabras, 6 frases
+9259 ms · 22465 tokens de entrada y 1624 de salida · 0.306 céntimos · 90 palabras, 4 frases · apuntó: Marcos propone cambiar Oyarzabal por Julián Álvarez, uno por otro, pero no se puede ejecutar por falta de dinero
 
-> No, por ahora no se puede hacer. Con tu saldo de 6,43 M no pagas primero los 34,97 M de Julián Álvarez, y por lo que veo tampoco le llega a él para pagarte primero. Un cambio entre managers son dos compras seguidas, así que si ninguno de los dos tiene el dinero para el primer paso, no se ejecuta.
-> 
-> Si algún día os llega, el trato es razonable para ti: Oyarzabal rinde algo más en el próximo partido (~3 pts frente a ~2,8 de Julián) y 34,97 M está por debajo de lo que pide su dueño, unos 41,19 M. Julián además es suplente en tu once y su titularidad anda por el 44 %, con la Champions de por medio. Mientras no tengas el dinero, no hay nada que hacer con esta oferta.
+> No, ahora mismo no se puede. Te mueve bien: Oyarzabal son 37,50 M y a ti te lo dejan por 34,97 M, y rinde más que Julián Álvarez (unos 3 pts del próximo partido frente a 2,8, y titular del 74 % frente a un 44 % por la rotación de la Champions). Pero no te llega el dinero: tienes 6,43 M y ni él ni tú podéis pagar primero los 34,97 M. Solo sería viable si él tuviera caja para pagarte antes, y no la tiene a la vista.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-8735 ms · 22554 tokens de entrada y 1685 de salida · 0.310 céntimos · 93 palabras, 4 frases
+7469 ms · 22554 tokens de entrada y 1273 de salida · 0.289 céntimos · 155 palabras, 8 frases · **COTEJO: largo: 8 frases**
 
-> No, no sale: el trato no se puede hacer tal como lo plantea. Tienes 6,43 M de saldo, así que no puedes pagar los 39,00 M por Oyarzabal hasta que te entren los 34,97 M de Julián, y Marcos no tiene dinero para pagarte primero. Aunque se hiciera, tu valor bajaría de 494,85 M a 493,35 M y la mejora deportiva es de 0,1 pts por jornada. La vía limpia es la cláusula de Oyarzabal (37,89 M), que se abre hoy a las 14:00, pero hoy no te llega: te faltan 31,46 M.
+> No, no sale bien, y además no te llega el dinero. Te entra 34,97 M de Julián Álvarez, pero le pagas 39,00 M a Marcos por Oyarzabal, y con tu saldo de 6,43 M no llegas al primer paso. Tampoco veo que a él le llegue para pagarte primero, así que el trato no se mueve.
+> 
+> Aunque cuadrara, tu valor bajaría de 494,85 M a 493,35 M, 1,50 M menos, por lo que pagas de más. Oyarzabal te da unos 3 puntos el próximo partido y Julián unos 2,8, así que la ganancia deportiva es casi nula. Contando los 14 días, pierdes unos 1,27 M.
+> 
+> Si quieres a Oyarzabal, su cláusula de 37,89 M se abre hoy a las 14:00, pero te faltan 31,46 M con tu saldo actual. Lo único viable sería una oferta a su dueño, de hasta unos 41,19 M, pero eso no se lo puedes pagar con el trueque de Julián.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-1826 ms · 22823 tokens de entrada y 267 de salida · 0.242 céntimos · 110 palabras, 5 frases
+4207 ms · 22967 tokens de entrada y 706 de salida · 0.265 céntimos · 94 palabras, 4 frases
 
-> Entonces la cláusula de Oyarzabal queda descartada, y el trato tampoco sale: no os llega el dinero a ninguno de los dos. Te quedan dos caminos reales. Uno es esperar a que Marcos acepte algo más equilibrado, por ejemplo que te mande a Julián Álvarez a cambio de dinero que sí te llegue ya, o que suba su oferta. El otro es no tocar nada: Oyarzabal aporta solo unos 1,3 pts por jornada a tu once, así que no pierdes casi nada por dejarlo. Y ojo, Julián Álvarez tampoco es tuyo para regalar: vale 34,97 M y su cláusula es de 37,49 M, protegida hasta el viernes a las 07:39.
+> Tiene razón en que puede hacerlo: al abrirse la cláusula a las 14:00 de hoy, Marcos puede subirla o blindarla antes de que tú puedas pagarla. Aun así, no te conviene el trato: pagas 1,50 M de más, la ganancia deportiva es casi nula y pierdes unos 1,27 M en 14 días. Lo que te queda es no mover a Julián Álvarez y dejar a Oyarzabal. Si lo quieres de verdad, la única vía es una oferta a Marcos hasta unos 41,19 M, y con tu saldo de 6,43 M no puedes pagarla ahora.
 
 
 ### trueque-domy (ofertas): «Marcos me compra a Fornals a su valor y yo, con ese dinero, le compro a Huijsen por 60 M. ¿Me conviene?»
 
-7001 ms · 16579 tokens de entrada y 1294 de salida · 0.230 céntimos · 103 palabras, 5 frases
+6724 ms · 16579 tokens de entrada y 1252 de salida · 0.228 céntimos · 134 palabras, 6 frases
 
-> No te conviene, y además la operación no existe tal como la planteas. Fornals es de Pablo, no tuyo, así que Marcos no te lo puede comprar. Huijsen es del Tito (Álex) y su cláusula es de 41,64 M, abierta hoy a las 14:00. No se paga 60 M, se paga la cláusula exacta, y solo con saldo: hoy tienes 6,43 M, y 72,60 M si aceptas antes la oferta de Hugo por Baena. Aun así, la app lo descarta: sobrecoste de 90/100, sin salida si se tuerce, suplente con rotación por la Champions, y no entraría en tu once de esta jornada.
+> No te conviene, y además la operación no existe tal como la planteas. Fornals es de Pablo y Huijsen del Tito (Álex), así que Marcos no puede comprarte a Fornals porque no es tuyo. Si quieres vender algo a Marcos, tiene que ser de los tuyos.
+> 
+> Con tu saldo de 6,43 M no puedes clausular a Huijsen, cuya cláusula es de 41,64 M y solo se abre hoy a las 14:00. Tampoco puedes pagarle 60 M a su dueño: por encima de su cláusula no tiene sentido, y su oferta de referencia es de unos 25,78 M. Además, vale 23,47 M, baja hoy −568 mil, es suplente y tiene rotación por la Champions, así que 60 M sería pagar casi 2,6 veces lo que vale por un jugador que te da 2,3 puntos esperados.
 
 
 ### trueque-domy-blinda (ofertas): «Si no hacemos el trato me ha dicho que le sube la cláusula o lo blinda antes de las 20:00.»
 
-6382 ms · 22308 tokens de entrada y 1109 de salida · 0.279 céntimos · 84 palabras, 6 frases
+4905 ms · 22381 tokens de entrada y 947 de salida · 0.271 céntimos · 101 palabras, 4 frases
 
-> Que te amenacen con subirla o blindarla no cambia los números. Huijsen sigue costando 41,64 M, y eso solo lo puedes pagar con saldo, que hoy tienes de 6,43 M. Además, no puede blindarlo hasta que se abra su cláusula a las 14:00. Si la sube, paga la mitad de lo que sube, y el precio para ti sube más que el suyo. Si le pagas 60 M por un suplente con rotación de Champions, pierdes dinero en el sobrecoste. No hagas el trato.
+> Eso no cambia nada: Huijsen es del Tito (Álex), y Marcos no puede subirle la cláusula ni blindarlo. Solo lo puede hacer su dueño, y lo de las 20:00 no sale de ningún dato de la liga. Pagar 60 M por un jugador que vale 23,47 M y te da unos 2,3 puntos por jornada sigue siendo un mal negocio, aunque te digan que se cierra la puerta. Si de verdad quieres a Huijsen, la única vía es su cláusula de 41,64 M, que se abre hoy a las 14:00 y que con tus 6,43 M de saldo no te llega.
 
 
 ### portero (estrategia): «¿A quién pongo de portero esta jornada?»
 
-3040 ms · 12229 tokens de entrada y 487 de salida · 0.147 céntimos · 61 palabras, 4 frases
+3536 ms · 12229 tokens de entrada y 572 de salida · 0.151 céntimos · 85 palabras, 4 frases
 
-> Ionut Radu. Es titular probable al 90 %, juega en Sevilla (7º) con unos 7,6 puntos esperados frente a los 5,1 de Agirrezabala, que además es suplente en tu once. Su valor va subiendo (+238 mil hoy) y su media es 8,8. Ya está alineado en el 4-4-2, así que solo tienes que confirmar que sigue así antes de las 14:00.
+> Pon a **Ionut Radu**, que ya es titular en tu 4-4-2. Tiene una media de 8,8 y se espera que puntúe unos 7,6 en Sevilla (7º), con una tendencia al alza en su valor (32,69 M, +238 mil hoy) y titularidad del 90 %. Agirrezabala, en cambio, es suplente con un 82 % de titularidad, su media es 5,3 y su partido en Deportivo (14º) le da unos 5,1 puntos esperados. Tienes el once abierto hasta hoy a las 14:00, así que déjalo como está.
 
 
 ### libre (mercado): «¿Qué te parece Cubarsí?»
 
-4550 ms · 13628 tokens de entrada y 763 de salida · 0.174 céntimos · 95 palabras, 6 frases · **COTEJO: nombre Barça**
+7213 ms · 13628 tokens de entrada y 1251 de salida · 0.199 céntimos · 122 palabras, 5 frases
 
-> Cubarsí va subiendo fuerte: 43,44 M, +26,4 % en 7 días, y cada día sube más. Pero no te sirve para tu once ahora. Juega mañana a las 18:30 en Villarreal (1º, difícil), con unos 1,5 pts esperados y titular solo en torno al 42 %, porque el Barça juega la Champions tres días antes. Su calendario de cinco partidos da unos 14 pts, y la puja de 44,70 M sale por encima de lo que él aporta. No pujaría. Si te interesa un central del Barça, mejor esperar a un partido con más minutos.
+> No lo pujaría. Sube muy fuerte (+26,4 % en 7 días y acelerando cada día), pero para tu once no te sirve ahora: es suplente y solo tiene un 42 % de titular en Villarreal mañana a las 18:30, con la Champions cerca y rotación. Su media es 4,2 y el calendario de los cinco próximos partidos es duro (~14,2 pts). La puja de la app es de 44,70 M (+2,9 %), se resuelve mañana a las 00:15 y, aunque la app dice que "vale para el once", tú no lo necesitas ahí. Si lo quieres solo para revender, te costaría 44,70 M por un jugador que aún no ha demostrado nada como titular, y tu saldo de pujas tiene mejores usos.
 
 
 ### cuanto-pujo (mercado): «¿Y cuánto pujo por él?»
 
-4274 ms · 20189 tokens de entrada y 686 de salida · 0.236 céntimos · 83 palabras, 3 frases · **COTEJO: nombre Barça**
+7152 ms · 20244 tokens de entrada y 1346 de salida · 0.270 céntimos · 116 palabras, 5 frases
 
-> La puja de la app sería 44,70 M (+2,9 % sobre su valor), con mínimo 43,44 M. Cabe en tu margen de pujas, pero no te lo recomiendo: mañana a las 18:30 juega fuera en Villarreal, con unos 1,5 pts esperados y titular en torno al 42 %, y la subasta se resuelve a las 00:15, así que ni siquiera puntuaría en la jornada 10. Si lo que quieres es un central del Barça para más adelante, esperaría a que tenga más minutos.
+> Si lo pujas, 44,70 M, ni un euro más. Es la puja de la app, por encima del mínimo de 43,44 M y ya por encima de lo que se paga aquí por uno así. Ojo a la caja: junto con Courtois (36,30 M) te quedarían comprometidos unos 81 M con un saldo de 6,43 M, así que si ganas las dos, tu saldo quedaría en unos −74,57 M al cambiar el mercado mañana a las 00:15. Eso sigue dentro del límite, pero empezarías la jornada 11 en negativo y no puntuarías, y tendrías que vender Álex Baena (oferta de 66,17 M) para salir. Con lo que tienes, mi consejo sigue siendo no pujar por Cubarsí.
 
 
 ### blindar (estrategia): «¿Blindo a alguien?»
 
-7559 ms · 12223 tokens de entrada y 1464 de salida · 0.195 céntimos · 91 palabras, 5 frases
+5500 ms · 12223 tokens de entrada y 1057 de salida · 0.175 céntimos · 96 palabras, 5 frases
 
-> No, ahora no puedes blindar a nadie. El escudo solo se pone con la cláusula ya abierta, y todas las de tu plantilla están cerradas o protegidas hasta más tarde. La jornada 10 empieza hoy a las 14:00 y se abren las cláusulas que están a salvo por el cierre, como Baena, Ionut Radu o Bellingham. Moncayola se abre hoy a las 15:47, pero su cláusula (5,51 M, +94 % sobre su valor) no la paga nadie, así que no hace falta. Tienes los 2 escudos disponibles para cuando haga falta.
+> No, ahora mismo no tiene sentido. El blindaje solo se puede poner con la cláusula abierta, y hasta que empiece la jornada 10 (hoy a las 14:00) nadie se puede clausular ni blindar. Además, casi todos sus jugadores están protegidos hasta más adelante. La única excepción es Moncayola, cuya protección acaba hoy a las 15:47: podrías ponerle el escudo a esa hora, pero tiene una cláusula un 94 % por encima de su valor y nadie en la liga se la puede pagar, así que no hace falta. Guarda los dos blindajes para la jornada 11.
 
 
 ### saldo (cifras): «¿Cuánto saldo tengo ahora mismo?»
 
-3859 ms · 18441 tokens de entrada y 717 de salida · 0.220 céntimos · 57 palabras, 3 frases
+1477 ms · 18441 tokens de entrada y 168 de salida · 0.193 céntimos · 64 palabras, 2 frases
 
-> Ahora mismo tienes **6,43 M** de saldo, que es lo máximo que puedes usar para pagar una cláusula. Si aceptas ya la oferta de Hugo por Álex Baena (66,17 M), tu caja sube a 72,60 M. Si ganas tus pujas de ahora (Courtois, 36,30 M, se resuelve mañana a las 00:15), el saldo baja a −29,87 M.
+> Tienes 6,43 M de saldo ahora mismo, que es lo máximo que puedes usar para una cláusula. Si aceptas hoy la oferta de Hugo por Álex Baena (66,17 M), entrarían 72,60 M en caja, pero esa venta no cambia tu saldo hasta que la aceptes, y ojo, si ganas tus pujas de ahora (Courtois, 36,30 M) acabarías la jornada en negativo, con −29,87 M.
 
 
 ### para-pujar (cifras): «¿Cuánto me queda para pujar?»
 
-4125 ms · 18558 tokens de entrada y 760 de salida · 0.224 céntimos · 85 palabras, 4 frases
+4963 ms · 18558 tokens de entrada y 988 de salida · 0.235 céntimos · 76 palabras, 5 frases
 
-> Puedes pujar hasta 67,81 M más. Eso ya descuenta los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Tu saldo real ahora es de 6,43 M, pero el mercado te deja quedarte en negativo hasta 97,68 M (el 20 % de tu valor de equipo), y si Courtois te sale, el saldo queda en −29,87 M.
+> Para pujas nuevas te quedan **67,81 M como mucho**. Ya descuenta los 36,30 M que tienes comprometidos en tu puja por Courtois, y tu saldo ahora mismo es de 6,43 M.
 > 
-> Ojo, eso no sirve para clausular: las cláusulas se pagan solo con saldo positivo, así que para ellas cuentas con los 6,43 M.
+> Ojo con Courtois: si la ganas, el saldo queda en **−29,87 M**. Eso no te deja clausular nada, y si empiezas una jornada en negativo no puntúa. La subasta se resuelve mañana a las 00:15, así que tenlo en cuenta antes de sumar más pujas.
 
 
 ### mis-clausulas (cifras): «¿Qué cláusulas mías están abiertas y cuándo se abren las demás?»
 
-8875 ms · 12241 tokens de entrada y 1918 de salida · 0.218 céntimos · 158 palabras, 17 frases · **COTEJO: largo: 17 frases**
+7412 ms · 12241 tokens de entrada y 1577 de salida · 0.201 céntimos · 129 palabras, 6 frases
 
-> Ahora mismo ninguna cláusula tuya está abierta: LaLiga tiene cerradas las de toda la liga hasta que empiece la jornada 10, hoy a las 14:00. Las de tus jugadores se abren así:
+> Ahora mismo no tienes ninguna cláusula abierta: LaLiga las tiene cerradas hasta que empiece la jornada 10, hoy a las 14:00. A esa hora se abren Ionut Radu (59,16 M), Fran García (27,14 M), Bellingham (138,76 M), Hugo Duro (3,71 M) y Álex Baena (70,70 M). Moncayola se abre hoy a las 15:47 (5,51 M).
 > 
-> - **Hoy 14:00:** Ionut Radu (59,16 M), Fran García (27,14 M), Bellingham (138,76 M), Álex Baena (70,70 M) y Hugo Duro (3,71 M).
-> - **Hoy 15:47:** Moncayola (5,51 M).
-> - **Mañana 10:20 (8 nov):** Jon Martin (21,26 M).
-> - **Lunes 9, 12:26:** Catena (24,45 M).
-> - **Martes 10, 14:04:** Pathé I. Ciss (9,96 M). Es la más barata de tu plantilla, y cuando se abra estará a su valor.
-> - **Martes 10, 18:48:** Raphinha (186,17 M).
-> - **Miércoles 11, 17:43:** Rodri (121,04 M).
-> - **Jueves 12, 06:44:** Sergio Gómez (12,25 M).
-> - **Viernes 13, 07:39:** Julián Álvarez (37,49 M).
-> - **17 nov, 14:22:** V. Chust (6,43 M).
-> - **20 nov, 05:46:** Agirrezabala (17,72 M).
-> 
-> Hasta que se abra cada una no se puede poner el blindaje.
+> Después van así: Jon Martin mañana (8 nov) a las 10:20; Sergio Gómez el jueves 12 a las 06:44; Catena el lunes 9 a las 12:26; Pathé I. Ciss el martes 10 a las 14:04; Raphinha el martes 10 a las 18:48; Rodri el miércoles 11 a las 17:43; Julián Álvarez el viernes 13 a las 07:39; V. Chust el 17 de noviembre a las 14:22; Agirrezabala el 20 de noviembre a las 05:46.
 
 
 ### valor-equipo (cifras): «¿Cuánto vale mi equipo y en qué puesto voy?»
 
-1802 ms · 18445 tokens de entrada y 229 de salida · 0.196 céntimos · 32 palabras, 3 frases · **COTEJO: puntos 110**
+2561 ms · 18445 tokens de entrada y 364 de salida · 0.203 céntimos · 52 palabras, 3 frases
 
-> Tu equipo vale 488,42 M y vas 1º de 12, con 697 puntos. El segundo, Marcos, tiene 587, así que le sacas 110 puntos de ventaja. Tienes 6,43 M de saldo disponible.
+> Tu equipo vale **488,42 M** y vas **1º de 12** con **697 puntos**. El segundo, Marcos, tiene 587, así que te saca 110 de ventaja. Tu saldo es de 6,43 M, y en el mercado te quedan 67,81 M para pujas nuevas, ya descontados los 36,30 M de tu puja por Courtois.
 
 
 ### dinero-rival (rivales): «¿Cuánto dinero tiene Marcos?»
 
-1330 ms · 18937 tokens de entrada y 160 de salida · 0.197 céntimos · 76 palabras, 3 frases
+1288 ms · 18937 tokens de entrada y 138 de salida · 0.196 céntimos · 64 palabras, 3 frases
 
-> Eso está cerrado en su cuenta: no puedo darte cifras de lo que tiene ni de lo que puede gastar. Lo que sí te digo es que tiene dinero algo, y te lo veo en su plantilla y en sus fichajes recientes (Gueye por 16,62 M ayer), que no ha sido de los que más han gastado. Si quieres saber si puede pagar alguna de tus cláusulas, eso lo ves tocando su candado en la app.
+> Eso está cerrado en su cuenta: no puedo darte cifras de lo que tiene Marcos ni de lo que puede gastar. Lo que sí te puedo decir es que tiene algo de margen, no mucho, así que si quieres algo de su plantilla no cuentes con que le sobre el dinero para pagar cláusulas grandes. Eso lo ves tocando su candado en la app.
 
 
 ### apodo-dictado (rivales): «que le puedo fichar a leao ere espabilado»
 
-14070 ms · 13264 tokens de entrada y 2822 de salida · 0.274 céntimos · 149 palabras, 7 frases · **COTEJO: largo: 7 frases**
+14130 ms · 13264 tokens de entrada y 2860 de salida · 0.276 céntimos · 118 palabras, 5 frases
 
-> Entiendo que hablas de Leao er Espabilao, el de Hugo. Hoy no puedes fichar a nadie de ese equipo: ninguno está entre las operaciones posibles y tu saldo es de 6,43 M. El mejor candidato es M. Dituro (Elche, POR): vale 9,59 M, media 6 y es titular probable (90 %), con unos 6,5 pts ante la Real Sociedad. Para tu portería es un salto claro sobre Agirrezabala (media 5,3, suplente). Su cláusula de 16,74 M se abre el jueves 12 a las 20:34, pero sin saldo no la puedes pagar, así que la vía real sería una oferta a Hugo por unos 10,54 M, que es un precio normal entre managers. Si quieres delantero, Mikautadze (media 5,8, titular 82 %, vs Barcelona ~6 pts) sale por una oferta de unos 26,97 M, pero no es de los que sube, así que no te compensaría pagar más de eso.
+> Entiendo que hablas de Leao er Espabilao (Hugo). Fermín (Barcelona, media 8,5, titular 74 %, ~4,6 pts en Villarreal) es el mejor, pero pide unos 68,65 M de oferta y tu margen es de 67,81 M, así que hoy no le llegas. Fer Niño (Elche, media 6, titular 82 %, ~6,1 pts ante Real Sociedad) sale por unos 37,62 M de oferta, un 10 % sobre su valor de 34,25 M, y es la opción más realista. Mikautadze (Villarreal, media 5,8, ~6 pts ante Barcelona) vale unos 26,97 M de oferta, y su cláusula de 33,87 M no se abre hasta el 14 nov. Lo que fiches hoy no puntúa en la jornada 10: cuenta desde la 11.
 
 
 ### apodo (rivales): «¿Qué jugadores tiene el Tito que me interesen?»
 
-9859 ms · 13394 tokens de entrada y 1914 de salida · 0.230 céntimos · 125 palabras, 7 frases · **COTEJO: largo: 7 frases**
+8862 ms · 13394 tokens de entrada y 1735 de salida · 0.221 céntimos · 146 palabras, 5 frases
 
-> Dos del Tito (Álex) te interesan. El primero es **Aubameyang** (Deportivo): media 9,3, titular probable al 90 % y 7,2 pts esperados en Racing. Sería un salto sobre Julián Álvarez (2,8 pts con el Málaga). Su cláusula, de 28,96 M, se abre el 20 nov a las 11:27, así que hasta entonces solo puedes llegar con una oferta a su dueño, que ronda los 28,45 M. El segundo es **Grimaldo** (Atlético): media 8,6, titular al 90 % y 7,4 pts ante el Málaga. Su cláusula es de 67,19 M y se abre el 16 nov a las 17:53, y hoy no te llega el saldo para eso. Para la defensa, Grimaldo es el mejor objetivo a medio plazo, pero requiere vender antes algo de peso.
+> Del Tito (Álex), el que más te conviene es **Aubameyang** (Deportivo, valor 25,90 M, media 9,3, titular probable 90 %, vs Racing ~7,2 pts). Tu punta de lanza ahora mismo es Julián Álvarez (media 5,9, ~2,8 pts vs Málaga), así que sería una mejora grande. Su cláusula de 28,96 M no se abre hasta el 20 nov, 11:27, así que la vía es una oferta a su dueño: hasta ~28,45 M es buen precio, y por encima ya no compensa. Ojo, con los 6,43 M de saldo no le puedes pagar nada hoy, así que tendrías que tener el dinero antes de ofrecer.
+> 
+> Si buscas un defensa de nivel, **Grimaldo** (Atlético, 62,85 M, media 8,6, titular 90 %, vs Málaga ~7,4) es muy buena opción, pero su oferta de ~69,04 M y su cláusula de 67,19 M (16 nov) le quedan muy lejos de tu caja.
 
 
 ### chollo (mercado): «¿El Hilali es un chollo o no?»
 
-8118 ms · 13595 tokens de entrada y 1474 de salida · 0.210 céntimos · 115 palabras, 5 frases
+7997 ms · 13595 tokens de entrada y 1462 de salida · 0.209 céntimos · 92 palabras, 4 frases
 
-> No es un chollo, pero tampoco está mal de precio. Lleva un 31,6 % de subida en 7 días y cada día sube más (de +295 mil a +373 mil), pero es suplente probable y tiene un 51 % de ser titular en Real Madrid, con un calendario duro (unos 18,6 pts en 5 partidos). Entraría en tu once por solo +0,4 pts por jornada. Si lo quieres para el once, puja los 10,17 M de la app (+4,9 % sobre su valor, en la misma línea de lo que se paga aquí por subidas así), sin subir más. Tu puja se resuelve mañana a las 00:15, así que no puntúa en la jornada 10.
+> Chollo no, pero buen precio sí. Tu puja de 10,17 M (+4,9 % sobre su valor) está por debajo de lo que se suele pagar aquí por un libre que sube (mediana +4,3 %), y lleva +31,6 % en 7 días con la inercia acelerando. Para tu once aporta poco: es suplente, te sumaría +0,4 pts por jornada y en Real Madrid (J10) tiene un 51 % de ser titular. Yo pujaría 10,17 M como mucho, como inversión para revender y no como refuerzo, sabiendo que no puntuará hasta la jornada 11.
 
 
 ### sube-mercado (mercado): «¿Ficho a Xavi Espart, que no para de subir?»
 
-11115 ms · 13639 tokens de entrada y 1975 de salida · 0.235 céntimos · 152 palabras, 4 frases
+15203 ms · 13639 tokens de entrada y 2965 de salida · 0.285 céntimos · 130 palabras, 5 frases
 
-> Sí, pero como jugador para la jornada 11 y siguientes, no para la 10. Está subiendo cada día más (+710 mil, +725 mil, +741 mil… en la última semana, +16,5 % en 7 días), pero en la 10 juega fuera en el Villarreal (1º, difícil) mañana a las 18:30, tiene la Champions entre medias y su titularidad probable es del 45 %, así que le calculo unos 2,1 puntos. Puja a 39,45 M (+5 % sobre su valor de 37,57 M), por debajo de lo que se paga aquí por jugadores de su valor (mediana +9,6 %), y se resuelve mañana a las 00:15. Con eso, tu saldo si ganas Courtois y Espart queda en unos −69,32 M (6,43 − 36,30 − 39,45), dentro del margen del 20 %, pero tendrás que vender algo antes de la jornada 11; la oferta de Hugo por Álex Baena (66,17 M) lo resolvería.
-> 
-> [
-> ]
+> Sí, pero subiría la puja a 41,16 M, no a los 39,45 M de la app. Espart está libre, sube unos 800 mil al día y lleva un +16,5 % en 7 días, y en esta liga por jugadores que suben así se paga de mediana un +9,6 % sobre el valor. Con 39,45 M te lo lleva otro 6 de cada 10 veces. La puja se resuelve mañana a las 00:15, cuando ya ha empezado la jornada 10, así que no puntúa en ella: para la 11 es buen fichaje, en Deportivo (fácil) se esperan unos 4,8 pts con titular ~78 %. Ojo, para empezar la 11 en positivo con las pujas de Courtois y Espart tendrás que cobrar algo antes, como la oferta de Hugo por Álex Baena.
 
 
 ### baja-mercado (mercado): «Lamine Yamal está más barato cada día, ¿lo pillo?»
 
-4656 ms · 13546 tokens de entrada y 798 de salida · 0.175 céntimos · 89 palabras, 4 frases
+4688 ms · 13546 tokens de entrada y 785 de salida · 0.175 céntimos · 107 palabras, 6 frases
 
-> No, no puedes pillarlo. Es libre y la puja mínima está en 123,76 M, y con tu margen en el mercado (67,81 M) no llegas ni a la mínima. Además, lo de que baje cada día no es así: en la última semana ha subido y bajado alternándose (−1,48 M ayer) y en 7 días cae un 0,9 %, así que no hay una tendencia clara que aproveche. Si quieres un extremo, mira la puja de Courtois, que ya tienes puesta en el mercado de mañana a las 00:15.
+> No, de momento no lo pillas. Lamine vale 123,76 M y la puja mínima es también 123,76 M, y tú solo puedes pujar hasta 67,81 M, que es lo que te queda en el mercado tras los 36,30 M de tu puja por Courtois. Ni con la puja mínima te llega.
+> 
+> Además, no es verdad que baje cada día: hace una semana valía 124,66 M, pero ayer bajó 1,48 M tras subir 1,92 M el día anterior. En 7 días ha caído un 0,9 %, así que va de lado, no en caída constante. Mientras no tengas dinero para pujarlo, no hay nada que hacer con él.
 
 
 ### puja-loca (trampas): «Voy a pujar 120 M por Cubarsí, ¿vale?»
 
-4540 ms · 13638 tokens de entrada y 732 de salida · 0.173 céntimos · 97 palabras, 4 frases
+5241 ms · 13638 tokens de entrada y 890 de salida · 0.181 céntimos · 85 palabras, 5 frases · **COTEJO: dice lo que no debe (\b(vale|perfecto|adelante)\b[^.]*120)**
 
-> No puedes pujar 120 M: ahora mismo el máximo que te deja la app son 67,81 M, porque ya tienes 36,30 M pujados por Courtois. Aunque te dejara, pagar 120 M por Cubarsí (valor 43,44 M, +176 %) sería tirar unos 75 M. En esta liga, las compras de libres se pagan de mediana un +10 % sobre el valor, y el 90 % no pasa de +32 %. Su puja justa está en torno a 44,70 M (+2,9 %), pero como titular es dudoso (42 %) y no entra en tu once, no te lo recomiendo.
+> No, 120 M no puedes pujarlos. Tu margen para pujas y compras es de 67,81 M como mucho, ya descontados los 36,30 M de tu puja por Courtois. Además, Cubarsí vale 43,44 M, así que 120 M serían casi tres veces su valor. La puja de la app es 44,70 M (+2,9 %), y ni con eso lo recomiendo: es suplente probable (titular ~42 %), tiene rotación por la Champions y en tu once no entraría. Si lo quieres, no pases de esos 44,70 M.
 
 
 ### regla-puntos (reglas): «¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?»
 
-884 ms · 18574 tokens de entrada y 108 de salida · 0.191 céntimos · 45 palabras, 3 frases
+1469 ms · 18574 tokens de entrada y 208 de salida · 0.196 céntimos · 46 palabras, 3 frases
 
-> Según las reglas, LaLiga paga 100.000 € por cada punto que hace tu equipo al acabar cada jornada, así que 64 puntos son 6,4 M. Además te entra la recompensa diaria de 100.000 €. Fuera de eso no tengo datos de otros pagos de LaLiga.
+> Por cada punto que haga tu equipo en la jornada, LaLiga te paga 100.000 €. Al acabar la jornada cobras el total: 64 puntos son 6,4 M. Aparte, hay una recompensa diaria de 100.000 €, y en los parones de selecciones son dos de 100.000 €.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-4078 ms · 12242 tokens de entrada y 685 de salida · 0.157 céntimos · 59 palabras, 4 frases
+6140 ms · 12242 tokens de entrada y 1120 de salida · 0.178 céntimos · 61 palabras, 3 frases
 
-> Catorce días. Tras cualquier fichaje (clausulazo, mercado o compra a otro mánager), la cláusula queda cerrada 14 días. Si clausulas hoy a las 14:00, cuando se abra la jornada 10, no podrá pagársela nadie hasta el 21 de noviembre a esa misma hora. Ojo: durante ese tiempo un rival aún puede hacerte una oferta por él, pero decides tú.
+> Catorce días. Tras cualquier fichaje (clausulazo, mercado o compra a otro mánager) la cláusula de ese jugador queda cerrada 14 días, y en ese tiempo nadie puede quitártelo por cláusula. Hoy las cláusulas se reabren a las 14:00, al empezar la jornada 10: si clausulas uno nada más abrirse, estaría a salvo hasta el 21 de noviembre a esa misma hora.
 
 
 ### regla-25 (reglas): «¿Cuántos jugadores puedo tener como mucho en la plantilla?»
 
-958 ms · 12239 tokens de entrada y 95 de salida · 0.127 céntimos · 37 palabras, 2 frases · **COTEJO: código o nombre interno («MIS JUGADORES»)**
+1184 ms · 12239 tokens de entrada y 148 de salida · 0.130 céntimos · 55 palabras, 3 frases
 
-> Como mucho 25 jugadores en la plantilla. Ahora mismo tienes 16 en MIS JUGADORES, así que te caben 9 más, aunque ojo: ese hueco solo te sirve si lo llenas con fichajes que te cuadren el saldo.
+> Como mucho 25 jugadores en la plantilla. Ahora mismo tienes 13 (2 porteros, 5 defensas, 5 centrocampistas y 3 delanteros), así que te quedan 12 huecos libres. Eso sí, ojo con el mercado: ahí se pueden fichar jugadores a tu ritmo, pero lo que compres mañana a las 00:15 no puntuará en la jornada 10.
 
 
 ### regla-vender-jornada (reglas): «Si vendo a un titular con la jornada ya empezada, ¿me cuentan sus puntos de esa jornada?»
 
-3460 ms · 12374 tokens de entrada y 686 de salida · 0.158 céntimos · 87 palabras, 5 frases
+4569 ms · 12374 tokens de entrada y 838 de salida · 0.166 céntimos · 85 palabras, 4 frases
 
-> Sí, si la vendes con la jornada ya empezada, sus puntos cuentan para toda la jornada. Pero la 10 empieza hoy a las 14:00 y ahora mismo son las 10:33, así que todavía no ha empezado. Si vendes antes de esa hora, no cuenta para la jornada 10.
-> 
-> Ten en cuenta que a LaLiga no le vendes hoy: su oferta llega en el cambio de mercado de mañana a las 00:15. Solo puedes cobrar al momento si vendes a otro mánager, aceptando una oferta que ya tengas.
+> Sí. Un jugador vendido con la jornada ya empezada cuenta para toda esa jornada, pero hoy no has llegado a ese punto: la 10 empieza a las 14:00 y ahora son las 10:33. Si vendes antes de esa hora, no puntúa en la 10. Si lo vendes después, sus puntos cuentan completos aunque ya no sea tuyo. Eso sí, el once se cierra a las 14:00, así que a partir de entonces no puedes sustituirlo para esa jornada, y lo que fiches después tampoco puntuará.
 
 
 ### regla-dudosa (reglas): «¿Cuánto me da LaLiga por quedar primero de mi liga al final de la temporada?»
 
-2813 ms · 18454 tokens de entrada y 460 de salida · 0.208 céntimos · 92 palabras, 4 frases
+2070 ms · 18454 tokens de entrada y 319 de salida · 0.200 céntimos · 67 palabras, 3 frases
 
-> No sé si LaLiga da algún premio por quedar primero de la liga al final de la temporada, y no quiero inventarte una cifra. Lo que sí sé es lo que paga LaLiga: 100.000 € por cada punto que hace tu equipo en cada jornada y una recompensa diaria de 100.000 €. Con tus 697 puntos y el primer puesto, eso es lo que ya tienes asegurado por cuenta de los puntos y las recompensas. Si quieres saber si hay premio final, tendrás que mirarlo en la propia app de LaLiga Fantasy.
+> No tengo ningún premio de LaLiga por quedar primero al final de la temporada, así que no te puedo dar una cifra. Lo que sí sé es que LaLiga paga 100.000 € por cada punto que hace tu equipo al acabar cada jornada, más una recompensa diaria de 100.000 €. Con tus 697 puntos vas muy por delante, pero eso no tiene premio final que yo conozca.
 
 
 ### fornals (estrategia): «¿Vendo a Bellingham ya o aguanto?»
 
-4405 ms · 13459 tokens de entrada y 820 de salida · 0.176 céntimos · 100 palabras, 5 frases
+4562 ms · 13459 tokens de entrada y 793 de salida · 0.174 céntimos · 97 palabras, 5 frases
 
-> Aguanta. Vender ahora te quita 5,3 pts por jornada de tu once, y Bellingham viene subiendo (+767 mil hoy, +1,0 % en 7 días) y es titular probable al 90 %. Esta noche juega en casa contra el Espanyol con unos 6,9 pts esperados, así que lo más sensato es no moverlo.
-> 
-> Además, vender a LaLiga no da dinero al momento: la oferta llega en el cambio de mercado de mañana a las 00:15 y solo entra si la aceptas. Y nadie puede clausularlo, porque su cláusula de 138,76 M está muy por encima de lo que se paga aquí.
+> Aguanta. Vender ahora te quita 5,3 pts por jornada: es titular probable (90 %) y espera unos 6,9 pts en el partido de hoy a las 21:00 contra el Espanyol. Además, si lo vendes antes del primer partido de la jornada 10 (hoy a las 14:00) no cuenta para ella, y LaLiga no pagaría hasta el cambio de mercado de mañana a las 00:15. Su valor sube (+767 mil hoy y de inercia subiendo), y su cláusula de 138,76 M está cerrada hasta las 14:00, así que nadie le puede tocar. Revísalo después del partido de hoy.
 
 
 ### baja-vendo (estrategia): «Catena está bajando, ¿lo vendo ya?»
 
-7006 ms · 13561 tokens de entrada y 1334 de salida · 0.202 céntimos · 105 palabras, 5 frases
+4269 ms · 13561 tokens de entrada y 738 de salida · 0.173 céntimos · 87 palabras, 5 frases
 
-> No lo vendas ahora. Juega hoy a las 16:15 contra el Levante, es titular con un 98 % y se esperan unos 6,1 puntos, así que venderlo antes de ese partido te quita esos puntos de tu once. Además, su inercia ha girado a la baja (−346 mil hoy), pero sigue en +2,6 % en 7 días y su media es 4,2, así que una caída de un día no justifica vender. La oferta de LaLiga llegaría en el cambio de mercado de mañana a las 00:15, no hay dinero hasta entonces. Espera al resultado y decide mañana con cómo le ha ido el partido.
+> No, no lo vendas ahora. Su inercia se ha girado a la baja, pero solo lleva un día bajando (−346 mil hoy) y en la semana sigue arriba (+2,6 %). Juega hoy a las 16:15 contra Levante, es titular casi seguro (98 %) y se esperan unos 6,1 puntos. Venderlo hoy te quitaría 4,5 pts por jornada de tu once, y el dinero no llegaría hasta el cambio de mercado de mañana a las 00:15. Espera al resultado de ese partido y, si puntúa mal, lo revisamos.
 
 
 ### once (estrategia): «¿Qué once pongo para la próxima jornada?»
 
-6433 ms · 12230 tokens de entrada y 1331 de salida · 0.189 céntimos · 71 palabras, 4 frases · **COTEJO: nombre Pathé Ciss**
+7209 ms · 12230 tokens de entrada y 1353 de salida · 0.190 céntimos · 81 palabras, 5 frases · **COTEJO: nombre Pathé Ciss**
 
-> Pon el 4-4-2 que tienes calculado: Ionut Radu; Catena, V. Chust, Jon Martin y Sergio Gómez; Bellingham, Álex Baena, Moncayola y Rodri; Raphinha y Julián Álvarez. Son unos 47,4 puntos esperados, y el once se cierra hoy a las 14:00 (en 3 h 29 min). Julián Álvarez y Jon Martin salen como suplentes probables, pero en tu banquillo no hay nada mejor: Fran García (~1,5) y Pathé Ciss (~1,6) rinden menos.
+> Pon el once que te marca la app, un 4-4-2 con unos 47,4 puntos esperados: Ionut Radu; Catena, V. Chust, Jon Martin y Sergio Gómez; Bellingham, Álex Baena, Moncayola y Rodri; Raphinha y Julián Álvarez. Radu (~7,6 contra el Sevilla), Bellingham (~6,9) y Raphinha (~6,6) son tus mejores bazas. Rodri (~2,3) y Julián Álvarez (~2,8) son flojos, pero en el banquillo no tienes nada mejor: Fran García da ~1,5 y Pathé Ciss ~1,6. Tienes hasta hoy a las 14:00 para cambiarlo.
 
 
 ### paron (estrategia): «¿Qué hago en el parón de selecciones?»
 
-5156 ms · 12351 tokens de entrada y 782 de salida · 0.163 céntimos · 100 palabras, 5 frases
+6138 ms · 12351 tokens de entrada y 1030 de salida · 0.175 céntimos · 101 palabras, 5 frases
 
-> Durante el parón no hay partidos de LaLiga, así que tu once no puntúa. Lo que sí tienes es la recompensa diaria, que en esos días son dos de 100.000 €. Úsalo para cuadrar tu plantilla antes de que vuelva la liga, no para comprar a lo loco.
-> 
-> Lo que de verdad importa ahora es lo de la próxima jornada: alinear hoy antes de las 14:00 y la subasta del mercado de mañana a las 00:15, donde se resuelve tu puja por Courtois. Ya tendrás tiempo de mover piezas cuando se acerque el parón, que empieza en unos 16 días.
+> El parón va del 23 de noviembre al 5 de diciembre, y en esas dos semanas no hay jornada, así que tu once no puntúa. Lo útil es vigilar el mercado cada día y las lesiones, porque los cambios de valor siguen y la plantilla se puede retocar sin prisas. Ojo con Courtois: si ganas la puja de mañana a las 00:15, tu saldo baja a −29,87 M. Eso está permitido dentro del margen, pero la jornada que sigue al parón tienes que empezarla en positivo, o no puntúa. Y en los parones LaLiga te paga dos recompensas de 100.000 €.
 
 
 ### oferta-rival (ofertas): «Hugo me ha ofrecido 66 M por Álex Baena. ¿Acepto?»
 
-11760 ms · 20538 tokens de entrada y 2234 de salida · 0.317 céntimos · 96 palabras, 4 frases
+9200 ms · 20538 tokens de entrada y 1742 de salida · 0.292 céntimos · 102 palabras, 5 frases · apuntó: Hugo le ofrece 66,17 M por Álex Baena; caduca mañana a las 00:15
 
-> No la aceptes ahora. Baena va subiendo (+696 mil hoy), juega hoy a las 14:00 en Málaga con unos 5,7 puntos esperados y es titular en tu once, así que venderlo te quita 4,1 pts por jornada. La oferta de Hugo (66,17 M) es 3,81 M más que lo que te daría LaLiga (62,36 M), pero ganas esa diferencia en unos 4 días subiendo y no te hace falta el dinero: tienes 6,43 M en caja. Su cláusula (70,70 M) está a salvo hasta que empiece la jornada, y la oferta caduca mañana a las 00:15.
+> No la aceptes hoy. Baena es titular probable (74 %) y en tu once aporta unos 4,1 pts por jornada; sube 696 mil al día y los 66,17 M te dan 2,55 M más que lo que te ofrece LaLiga (62,36 M). Tienes 6,43 M de saldo y no te hace falta el dinero ahora, así que esos 2,55 M los recuperas en unos 4 días con él en el once. El coste de esperar es que esta oferta caduca mañana a las 00:15, aunque LaLiga te hará otra en ese cambio de mercado. Si quieres caja, acéptala antes de esa hora.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-9009 ms · 20299 tokens de entrada y 1638 de salida · 0.285 céntimos · 103 palabras, 4 frases
+11829 ms · 20299 tokens de entrada y 2287 de salida · 0.317 céntimos · 116 palabras, 5 frases
 
-> Para Oyarzabal no le ofrecería nada hoy. La cláusula de 37,89 M es más barata que la oferta de 41,19 M que haría falta para que Marcos lo venda, y solo podría pagarla ahora vendiendo a Baena a Hugo por 66,17 M, que le quita 4,1 pts por jornada. Oyarzabal le daría solo unos 1,3 pts por jornada más, y como se paga hoy a las 14:00, cuando ya se cierra el once de la jornada 10, no puntuaría hasta la 11. Si cuando llegue el momento tiene el dinero sin vender a Baena, la cláusula seguirá ahí, pero por ahora no compensa.
+> Por Oyarzabal no te compensa pagar ahora. Su cláusula son 37,89 M y se abre hoy a las 14:00, pero con tus 6,43 M de saldo no te llega, y para tenerlos tendrías que aceptar antes la oferta de Hugo por Baena (66,17 M), que es titular en tu once y aporta unos 4,1 pts por jornada. Si entrase Oyarzabal (+1,3 pts por jornada), perderías más de lo que ganas. La oferta de precio normal a Marcos sería unos 41,19 M, pero su dueño querrá más, y como no es jugador que quiera vender, lo más probable es que no acepte. Si lo quieres de verdad, mira el mercado de la jornada 11 con dinero propio.
 
 
 ### no-existe-jugador (trampas): «¿Ficho a Pepito Grillotti, el delantero del Betis?»
 
-2765 ms · 12360 tokens de entrada y 486 de salida · 0.148 céntimos · 74 palabras, 3 frases
+4415 ms · 12360 tokens de entrada y 750 de salida · 0.161 céntimos · 82 palabras, 3 frases
 
-> No aparece ningún jugador que se llame así en tu liga, así que no puedo mirarlo. Si te refieres a Ez Abde, delantero del Betis, está en la plantilla de un rival: vale 53,07 M y su cláusula es de 56,28 M, que solo se podrá pagar el 14 de nov a las 14:00, cuando te faltarían 49,85 M de saldo. Ahora mismo no es fichable, así que no lo metas en el plan.
+> No aparece en tus datos: ni en la plantilla de ningún equipo de la liga ni en el mercado de hoy, así que no puedo darte precio ni cuenta. Si te refieres a un delantero del Betis que sí está, Ez Abde (Mario) vale 53,07 M y su cláusula es de 56,28 M, que se abre el 14 nov a las 14:00. Ahora mismo no te llega: tienes 6,43 M de saldo, así que de momento no puedes hacer nada con él.
 
 
 ### no-existe-rival (trampas): «¿Qué tiene a la venta Los Picapiedra FC?»
 
-2046 ms · 12235 tokens de entrada y 288 de salida · 0.137 céntimos · 51 palabras, 2 frases
+3395 ms · 12235 tokens de entrada y 636 de salida · 0.154 céntimos · 66 palabras, 3 frases
 
-> En tu liga no hay ningún equipo que se llame Los Picapiedra FC, así que no puedo decirte qué tiene a la venta. Si me das el nombre de otro mánager o de su equipo tal como aparece en la clasificación, te miro su plantilla y lo que tiene en venta.
+> En tu liga no hay ningún equipo que se llame Los Picapiedra FC, así que no puedo decirte qué tiene a la venta. Los jugadores de rivales que sí están en venta ahora son Camello (Marcos) por 35,87 M, Leo Román (el Tito (Álex)) por 18,38 M y Dimitrievski (Adri) por 15,05 M. Ese es el precio mínimo que pone su dueño, no un trato cerrado.
 
 
 ### premisa-falsa (trampas): «Como tengo 50 M de saldo, ¿clausulo a Oyarzabal?»
 
-6177 ms · 13660 tokens de entrada y 1148 de salida · 0.194 céntimos · 106 palabras, 6 frases
+6921 ms · 13660 tokens de entrada y 1276 de salida · 0.200 céntimos · 108 palabras, 4 frases
 
-> No, no tienes 50 M: tu saldo es de 6,43 M. Oyarzabal cuesta 37,89 M y su cláusula no se abre hasta hoy a las 14:00, así que hoy no puedes pagarla.
-> 
-> Solo te llegaría si aceptas antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15), y no lo recomiendo. Baena es titular en tu once con unos 5,7 puntos esperados en Málaga, y Oyarzabal, en Elche, unos 3. Además, fichado a las 14:00 no puntuaría en la jornada 10. Mantén a Baena y espera a la subasta de mañana a las 00:15 para ver si te compensa otra opción.
+> No, no tienes 50 M: tu saldo es de 6,43 M, y la cláusula de Oyarzabal son 37,89 M, así que no puedes pagarla. Para llegar necesitarías aceptar antes la oferta de Hugo por Álex Baena (66,17 M, caduca mañana a las 00:15), y eso te dejaría sin un titular que da unos 5,7 pts esperados en Málaga, frente a los 3 de Oyarzabal en Elche. No lo hagas: Oyarzabal aporta poco más de 1 pt por jornada a tu once y no compensa perder a Baena. Además, la cláusula se abre hoy a las 14:00, cuando ya empieza la jornada 10, así que tampoco puntuaría en esta.
 
 
 ### sin-dato (trampas): «¿Se ha lesionado Raphinha en el entrenamiento de esta mañana?»
 
-3285 ms · 13613 tokens de entrada y 538 de salida · 0.163 céntimos · 101 palabras, 4 frases
+3003 ms · 13613 tokens de entrada y 495 de salida · 0.161 céntimos · 112 palabras, 5 frases
 
-> No tengo ningún aviso de lesión para Raphinha de esta mañana: en sus datos no aparece ningún estado de lesión ni de duda, y sigue como titular probable (82 %) para el Villarreal de mañana a las 18:30. Lo que sí tengo es que hoy baja 2,62 M (121,02 M) y su inercia ha girado a la baja, pero eso no es una lesión. Si el entrenamiento te preocupa, mira la alineación en la app antes de mañana. Y de momento no lo vendas: la app dice que aguante hasta después del partido, con 5 pts por jornada en tu once.
+> En mis datos no aparece nada de una lesión de Raphinha en el entrenamiento de esta mañana. Su estado figura sin ninguna incidencia: titular probable del Barcelona en Villarreal mañana a las 18:30, con un 82 % de probabilidad de que salga de inicio. Si lo has visto en prensa o en el parte de lesiones oficial, eso aún no me llega, así que no lo des por hecho hasta que se confirme. Si hay baja, lo verás en su ficha antes del primer partido de la jornada 10, hoy a las 14:00, y el once se cierra entonces. Por ahora, no cambiaría nada: sigue dando 6,6 puntos esperados en ese partido.
 
 
 ### otro-deporte (trampas): «¿Quién va a ganar la NBA este año?»
 
-1010 ms · 12229 tokens de entrada y 90 de salida · 0.127 céntimos · 41 palabras, 2 frases
+943 ms · 12229 tokens de entrada y 95 de salida · 0.127 céntimos · 43 palabras, 2 frases
 
-> No es lo mío: soy el director deportivo de tu Fantasy de LaLiga, así que de la NBA no te puedo dar un pronóstico. Si quieres, lo miramos para tu once de la jornada 10, que empieza hoy a las 14:00.
+> Eso no es lo mío: soy el director deportivo de tu liga de LaLiga Fantasy, así que de la NBA no te puedo decir nada con criterio. Si quieres, centrémonos en tu once de la jornada 10, que empieza hoy a las 14:00.
 
 
 ### no-fantasy (trampas): «Dame la receta de la tortilla de patatas»
 
-807 ms · 13359 tokens de entrada y 51 de salida · 0.136 céntimos · 23 palabras, 2 frases
+950 ms · 13359 tokens de entrada y 89 de salida · 0.138 céntimos · 42 palabras, 2 frases
 
-> No es lo mío: de fantasy y de fútbol sí, de cocina no. Si quieres repasar tu once para la jornada 10, dime.
+> Eso no es lo mío: soy el director deportivo de tu liga de Fantasy, así que de cocina no te puedo ayudar. Si quieres, seguimos con tu once o con el mercado antes de que empiece la jornada 10 a las 14:00.
 
 
 ### conv-vender (conversacion): «¿Vendo a Julián Álvarez?»
 
-7591 ms · 13412 tokens de entrada y 1396 de salida · 0.204 céntimos · 114 palabras, 6 frases
+6891 ms · 13412 tokens de entrada y 1238 de salida · 0.196 céntimos · 126 palabras, 5 frases
 
-> No, hoy no. Julián Álvarez está en tu once, pero es suplente probable (titular ~44 %) y juega hoy a las 14:00 en Málaga, un rival fácil con unos 2,8 pts esperados. Si lo vendes antes de esa hora, no puntúa en la jornada 10, y tu once pierde unos 1,2 pts por jornada. Además, LaLiga no te ofrece nada hasta el cambio de mercado de mañana a las 00:15, así que no te da caja hoy. Su valor baja poco (−259 mil hoy, +0,1 % en 7 días), así que aguántalo hasta ver el partido. Si se confirma que sigue fuera del once o la inercia cae varios días seguidos, lo miramos entonces.
+> No lo vendas hoy. Su próximo partido es hoy a las 14:00 en Málaga (20º, rival fácil), con unos 2,8 puntos esperados, y en tu once aporta unos 1,2 puntos por jornada. Lo que pesa en contra es que su inercia ha girado a la baja (−259 mil hoy y 0,1 % en 7 días) y que vale 34,97 M, por debajo de los 37,80 M que pagaste. Si lo pones a la venta, LaLiga te haría su oferta en el cambio de mercado de mañana a las 00:15, y de media suele dar un +5 % sobre el valor. Lo sensato es esperar a ver cómo juega esta jornada, ya que su cláusula de 37,49 M está protegida hasta el viernes 13 a las 07:39.
 
 
 ### conv-y-el (conversacion): «¿Y Catena?»
 
-1733 ms · 15149 tokens de entrada y 267 de salida · 0.165 céntimos · 116 palabras, 5 frases
+1235 ms · 15167 tokens de entrada y 209 de salida · 0.162 céntimos · 88 palabras, 4 frases
 
-> Catena no lo vendas hoy. Es titular confirmado (98 %) y juega hoy a las 16:15 en casa contra el Levante, un rival fácil con unos 6,1 pts esperados; sin él tu once pierde unos 4,5 pts por jornada, de lo más caro de tu plantilla después de Bellingham y Raphinha. Su valor ha girado a la baja (−346 mil hoy, inercia negativa de varios días), pero el plan de hoy lo aguanta hasta el partido. Su cláusula de 24,45 M (+66 %) está protegida hasta el lunes 9 a las 12:26, y nadie suele pagar eso por un jugador, así que no corre peligro. Espera al resultado y, si puntúa bien, la bajada se frena.
+> Catena no lo vendas tampoco. Juega hoy a las 16:15 en casa contra el Levante (15º, rival fácil), es titular casi seguro (98 %) y se esperan unos 6,1 puntos, así que en tu once aporta unos 4,5 por jornada. Su inercia ha girado a la baja (−346 mil hoy), pero el plan de hoy tampoco lo vende: espera al partido y, si puntúa bien, la bajada se frena. Su cláusula de 24,45 M se abre el lunes 9 a las 12:26, y hasta entonces nadie puede pagarla.
 
 
 ### conv-cambio (conversacion): «¿Y si mejor vendo a los dos?»
 
-1858 ms · 15556 tokens de entrada y 299 de salida · 0.171 céntimos · 131 palabras, 5 frases
+1815 ms · 15516 tokens de entrada y 280 de salida · 0.169 céntimos · 129 palabras, 5 frases
 
-> No, vender a los dos hoy sería un error. Julián Álvarez vale 34,97 M y Catena 14,76 M: son 49,73 M que LaLiga no te paga hasta el cambio de mercado de mañana a las 00:15, así que hoy no te dan caja. Además, Catena es titular confirmado y juega a las 16:15, y sin él tu once pierde unos 4,5 pts por jornada, con Julián otros 1,2. Lo que sí tienes ya es Álex Baena: si aceptas la oferta de Hugo (66,17 M, caduca mañana a las 00:15) te entran 66,17 M al momento, pero como la app aconseja esperar, mantén la oferta de hoy en mente solo si quieres caja. Mi recomendación: mantén a los dos, mira el resultado de Catena esta tarde y decide con el partido delante.
+> No los vendas los dos a la vez. Julián Álvarez aporta unos 1,2 puntos por jornada y Catena unos 4,5, y Catena es titular casi seguro con 6,1 esperados hoy contra el Levante, así que venderlo ahora te quita más de lo que te da. Si los vendes, LaLiga te haría la oferta en el cambio de mercado de mañana a las 00:15, y el dinero no entra hasta que la aceptes, así que no te sirve para nada hoy. Lo que sí tiene sentido es vender a Julián después de su partido de hoy si sigue bajando, porque su cláusula no se abre hasta el viernes 13 a las 07:39 y no hay prisa. Catena, mejor espera al lunes 9, cuando se abre su cláusula de 24,45 M.
 
 
 ### conv-al-final (conversacion): «Vale, al final no vendo a ninguno. ¿Qué hago entonces?»
 
-5425 ms · 15885 tokens de entrada y 1046 de salida · 0.211 céntimos · 94 palabras, 5 frases
+5319 ms · 15826 tokens de entrada y 1008 de salida · 0.209 céntimos · 69 palabras, 4 frases
 
-> Lo que toca hoy es alinear. El 4-4-2 que te propone la app (Ionut Radu; Catena, V. Chust, Jon Martin, Sergio Gómez; Bellingham, Álex Baena, Moncayola, Rodri; Raphinha, Julián Álvarez) es tu mejor once, con unos 47,4 pts esperados, y lo tienes que dejar fijado antes de las 14:00. Después no hay nada urgente: las cláusulas siguen cerradas hasta la hora del primer partido y no necesitas blindar. Tu puja de Courtois (36,30 M) se resuelve mañana a las 00:15 y no entra en la jornada 10, así que no hace falta tocarla hoy.
+> Quédate con el once que ya tienes y alinea el 4-4-2 del plan antes de las 14:00: Ionut Radu; Catena, V. Chust, Jon Martin, Sergio Gómez; Bellingham, Álex Baena, Moncayola, Rodri; Raphinha, Julián Álvarez. Así Catena y Julián siguen puntuando, y Baena, que la app quiere esperar a vender, también. No tienes ninguna venta ni compra que hacer hoy, y las pujas de mañana no entran en esta jornada.
 
 
 ### conv-rival (conversacion): «¿Qué le puedo fichar a Marcos?»
 
-16158 ms · 13381 tokens de entrada y 3059 de salida · 0.287 céntimos · 106 palabras, 6 frases
+12141 ms · 13381 tokens de entrada y 2404 de salida · 0.254 céntimos · 125 palabras, 6 frases
 
-> Hoy solo puedes conseguir a Camello (Rayo, DEL, 31,39 M), que tiene en venta por 35,87 M. Es titular probable (82 %), con media 6,4 y unos 5,7 puntos esperados en Getafe, y el precio es aguantable. Pero no te llega: tienes 6,43 M de saldo y su valor baja hoy (−1,84 M). Solo tendría sentido si vendieras antes a Álex Baena, y la app te aconseja esperar con esa oferta. El resto de la plantilla de Marcos no se puede conseguir hoy, porque sus cláusulas están cerradas hasta las 14:00 y les faltan millones (Oyarzabal, por ejemplo, pide 37,89 M). Hoy no toca fichar nada.
+> Lo que mejor te encaja de Marcos es **Revivo** (Elche, 3,71 M, media 5,8, titular probable 74 %, próximo rival Real Sociedad con ~4,9 pts). Tu defensa más floja es V. Chust (media 4,1, ~2,6 pts esperados), así que te sube unos 2 pts por jornada. Su oferta de compra ronda los 4,12 M, que sí te cabe con tus 6,43 M de saldo, y su cláusula (7,36 M) no se abre hasta el 14 nov. Ojo: nada de esto puntúa en la jornada 10 (el once se cierra hoy a las 14:00), así que te servirá desde la 11. Paredes (5,6 de media) y Kike Salas (5,8) son mejores, pero cuestan 23 M y 12,5 M, y ahora mismo no tienes caja para ellos.
 
 
 ### conv-otro-rival (conversacion): «¿Y a Hugo?»
 
-8004 ms · 14715 tokens de entrada y 1598 de salida · 0.227 céntimos · 102 palabras, 3 frases
+8491 ms · 14750 tokens de entrada y 1679 de salida · 0.231 céntimos · 133 palabras, 5 frases
 
-> Hoy no puedes fichar a nadie de Hugo: ninguno de sus jugadores está abierto ni en venta, y Fermín (cláusula 65,21 M, abre hoy a las 14:00) te faltan 58,78 M. La opción con más sentido para más adelante es Mikautadze (Villarreal, DEL, 24,56 M, titular probable 82 %, unos 6 pts contra el Barcelona), con cláusula de 33,87 M que se abre el 14 nov a las 19:21. Si quieres ir antes, su dueño pide más de su valor, así que una oferta razonable ronda los 26,97 M, pero ojo: va bajando (−248 mil hoy y −4,3 % en 7 días).
+> Lo que más te sirve de Hugo es **M. Dituro** (Elche, portero, 9,59 M, media 6, titular probable 90 %, próximo rival Real Sociedad con ~6,5 pts). Su cláusula es de 16,74 M y no se abre hasta el jueves 12 a las 20:34, así que lo más práctico es una oferta a su dueño de unos 10,54 M, que es un buen precio entre managers. Fer Niño (34,25 M, media 6, titular 82 %) y Mikautadze (24,56 M, media 5,8, con 0 % de titularidad en duda) tendrían sentido en tu ataque, pero sus ofertas de ~37,62 M y ~26,97 M no te caben ahora con tu saldo. Y corrijo algo de antes: no tengo cifras de la oferta de Revivo a su dueño, así que no te la des por buena.
 
 
 ### conv-cual (conversacion): «¿Cuál de los dos me conviene más?»
 
-5863 ms · 14888 tokens de entrada y 1051 de salida · 0.201 céntimos · 115 palabras, 4 frases
+5939 ms · 14980 tokens de entrada y 1076 de salida · 0.204 céntimos · 126 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Te conviene más Mikautadze. Cuesta unos 26,97 M con la oferta razonable, frente a los 35,87 M que pide Camello, y da casi lo mismo: unos 6 pts contra el Barcelona por los 5,7 de Camello en Getafe. Además su cláusula se abre el 14 nov a las 19:21, unos días antes que la de Camello (20 nov, 13:40), así que tendrás la vía de la cláusula antes. Eso sí, baja más en la última semana (−4,3 % frente al −3,2 % de Camello), y hoy Camello cae más (−1,84 M frente a −248 mil), así que si quieres ir a por él, hazlo con la oferta de 26,97 M y no subas el precio.
+> Te conviene más **Revivo**. Sube tu once de forma real: su próximo rival da unos 4,9 pts esperados frente a los 2,6 de V. Chust, que es tu defensa más floja. Además cuesta unos 4,12 M, que te cabe en los 6,43 M de saldo, y su oferta de compra es mucho más barata.
+> 
+> Dituro, en cambio, entraría de suplente de Agirrezabala, porque Ionut Radu es tu titular bajo palos, así que no sumaría nada mientras Radu juegue. Solo tendría sentido si quieres cubrir un posible fallo de Radu, y por 10,54 M no compensa.
+> 
+> Dos correcciones a lo que te dije antes: la oferta de Revivo sí es de unos 4,12 M, y Mikautadze está como titular probable al 82 %, no al 0 %.
 
 
 ### plan-por-que (plan): «¿Por qué el plan me dice que venda a Raphinha?»
 
-4392 ms · 13727 tokens de entrada y 838 de salida · 0.179 céntimos · 117 palabras, 5 frases
+4527 ms · 13727 tokens de entrada y 786 de salida · 0.177 céntimos · 113 palabras, 5 frases
 
-> No te lo pide el plan. Lo que tienes en Hoy es alinear el 4-4-2 con Raphinha dentro, y en la ficha la app pone **NO VENDER AÚN**: juega mañana 18:30 contra el Villarreal, es titular probable (83 %) y te da unos 5 pts por jornada.
-> 
-> Sí ha girado a la baja (−2,62 M hoy, −2,2 % en 7 días), pero aún no baja todos los días, así que la recomendación es esperar al partido. Si puntúa bien, la bajada puede frenarse. Además, con tu saldo de 6,43 M no puedes pagar su cláusula de 186,17 M, y venderlo hoy a LaLiga no te daría dinero hasta el cambio de mercado de mañana a las 00:15.
+> El plan no te dice que vendas a Raphinha. Lo que te manda hoy es alinearlo en el 4-4-2 antes de las 14:00. Lo de venderlo aparece solo como "NO VENDER AÚN": tiene la inercia a la baja (−2,62 M hoy, tras varios días de bajadas), pero te da unos 5 pts por jornada, juega mañana 18:30 contra el Villarreal con un 83 % de titularidad y, sin él, tu once pierde esos 5 puntos. Lo sensato es esperar a ese partido y ver si puntúa bien antes de decidir. Además, su cláusula de 186,17 M está protegida hasta el martes 10 a las 18:48, así que hoy nadie puede quitártelo por ella.
