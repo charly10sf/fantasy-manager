@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
@@ -8555,13 +8554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4150,
+   "ok": 4151,
    "fallos": 0,
-   "ejecuciones": 3433,
+   "ejecuciones": 3434,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:51:14.824Z"
+   "ultima": "2026-11-19T17:56:17.318Z"
   }
  },
  "ptsDirecto": {},
@@ -8578,15 +8577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:51:27.593Z"
+   "ultimaBien": "2026-11-19T17:56:26.620Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:51:27.593Z"
+   "ultimaBien": "2026-11-19T17:56:26.620Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:51:27.593Z"
+   "ultimaBien": "2026-11-19T17:56:26.620Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8594,11 +8593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:51:27.593Z"
+   "ultimaBien": "2026-11-19T17:56:26.620Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:51:27.593Z"
+   "ultimaBien": "2026-11-19T17:56:26.620Z"
   }
  },
  "avisos": [
