@@ -2411,7 +2411,8 @@
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
-   "SPORT|136614839": 1795088375000
+   "SPORT|136614839": 1795088375000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000
   },
   "hechos": [
    {
@@ -3346,7 +3347,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -4241,22 +4242,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080
+  }
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 443453,
-  "salida": 19575,
+  "entrada": 445452,
+  "salida": 19703,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.910281,
+  "dolares": 0.910545,
   "reservado": 0
  },
  "recientes": {
@@ -8585,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4090,
+   "ok": 4091,
    "fallos": 0,
-   "ejecuciones": 3373,
+   "ejecuciones": 3374,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:56:12.483Z"
+   "ultima": "2026-11-19T13:01:13.080Z"
   }
  },
  "ptsDirecto": {},
@@ -8608,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:56:20.466Z"
+   "ultimaBien": "2026-11-19T13:01:27.081Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:56:20.466Z"
+   "ultimaBien": "2026-11-19T13:01:27.081Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:56:20.466Z"
+   "ultimaBien": "2026-11-19T13:01:27.081Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8624,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:56:20.466Z"
+   "ultimaBien": "2026-11-19T13:01:27.081Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:56:20.466Z"
+   "ultimaBien": "2026-11-19T13:01:27.081Z"
   }
  },
  "avisos": [
