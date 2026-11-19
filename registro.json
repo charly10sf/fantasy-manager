@@ -4148,12 +4148,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
    "SPORT|136630245": 1795104774000,
-   "SPORT|136635705": 1795110618000
+   "SPORT|136635705": 1795110618000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -4161,17 +4162,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 35,
    "revisar": 20,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 653800,
-  "salida": 34798,
+  "entrada": 655552,
+  "salida": 34961,
   "cacheLee": 29030,
   "cacheEscribe": 29030,
-  "dolares": 1.290605,
+  "dolares": 1.290862,
   "reservado": 0
  },
  "recientes": {
@@ -8494,13 +8495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4191,
+   "ok": 4192,
    "fallos": 0,
-   "ejecuciones": 3474,
+   "ejecuciones": 3475,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T21:16:12.763Z"
+   "ultima": "2026-11-19T21:21:11.621Z"
   }
  },
  "ptsDirecto": {},
@@ -8517,15 +8518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:16:18.404Z"
+   "ultimaBien": "2026-11-19T21:21:19.255Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:16:18.404Z"
+   "ultimaBien": "2026-11-19T21:21:19.255Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:16:18.404Z"
+   "ultimaBien": "2026-11-19T21:21:19.255Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8533,11 +8534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:16:18.404Z"
+   "ultimaBien": "2026-11-19T21:21:19.255Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:16:18.404Z"
+   "ultimaBien": "2026-11-19T21:21:19.255Z"
   }
  },
  "avisos": [
