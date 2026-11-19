@@ -1309,6 +1309,13 @@
    "jornada": 13,
    "id": "2123425208149188875",
    "t": "2026-11-19T14:36:36.029Z"
+  },
+  {
+   "clave": "caidas|13|2477",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2123445321661628767",
+   "t": "2026-11-19T15:56:31.380Z"
   }
  ],
  "estados": {
@@ -4253,16 +4260,16 @@
   "dia": "2026-11-19",
   "llamadas": {
    "clasificar": 42,
-   "redactar": 27,
-   "revisar": 15,
+   "redactar": 30,
+   "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 500151,
-  "salida": 26954,
+  "entrada": 537629,
+  "salida": 27464,
   "cacheLee": 20321,
-  "cacheEscribe": 23224,
-  "dolares": 0.990644,
+  "cacheEscribe": 26127,
+  "dolares": 1.077958,
   "reservado": 0
  },
  "recientes": {
@@ -4454,10 +4461,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-09T06:02:59.098Z",
-    "texto": "⁉️ Dos titulares habituales llegan en duda a la jornada 13, los dos con problemas en los isquiotibiales.\n\nAimar, del Osasuna 🐂, arrastra la lesión desde el 10 de octubre y recibe al Málaga 🐟 en El Sadar. Manu Sánchez, del Levante 🐸, se lesionó el 31 de octubre y juega en casa contra el Elche 🌴, aunque su media es de 2,6. Con los dos, mejor esperar a ver si entran en la convocatoria."
-   },
-   {
     "t": "2026-11-09T06:06:45.205Z",
     "texto": "⁉️ El Elche 🌴 visita al Levante 🐸 en el Ciutat de València con dos medios tocados.\n\nLemar es baja: rotura fibrilar en el aductor desde el 1 de noviembre y no se le espera hasta finales de mes. Con 5,5 de media, es el que más duele.\n\nVillar es duda y tiene un 46 % de titularidad en Fantasy Manager, así que puede quedarse fuera. Si lo tienes, mejor esperar a ver la convocatoria."
    },
@@ -4472,6 +4475,10 @@
    {
     "t": "2026-11-18T06:06:33.309Z",
     "texto": "⁉️ Seis titulares habituales llegan tocados a la jornada 13, que arranca el sábado 21. El más grave es Barrenetxea, de la Real Sociedad: rotura en los isquiotibiales y no se le espera hasta mayo. Si lo tienes, es venta obligatoria.\n\nAbel Bretones, del Osasuna 🐂, también es baja por una lesión en el sóleo.\n\nCubarsí y Danjuma tienen un 38 % de titularidad, y Tchouaméni un 44 %. Pubill, del Atlético, es duda por un esguince de tobillo."
+   },
+   {
+    "t": "2026-11-19T15:56:31.382Z",
+    "texto": "⁉️ Akhomach llega con pocas opciones al Barça-Villarreal del domingo a las 14:00: tiene un 27 % de titularidad y lo tiene difícil para salir de inicio.\n\nEl delantero del Villarreal 🚢 venía de jugar 60 minutos o más en sus cinco últimos partidos, así que esta duda pesa. Si lo tienes, mejor buscar otra opción para la visita al Barça."
    }
   ],
   "balance": [
@@ -8591,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4126,
+   "ok": 4127,
    "fallos": 0,
-   "ejecuciones": 3409,
+   "ejecuciones": 3410,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T15:51:19.568Z"
+   "ultima": "2026-11-19T15:56:13.809Z"
   }
  },
  "ptsDirecto": {},
@@ -8614,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:51:32.397Z"
+   "ultimaBien": "2026-11-19T15:56:37.141Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:51:32.397Z"
+   "ultimaBien": "2026-11-19T15:56:37.141Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:51:32.397Z"
+   "ultimaBien": "2026-11-19T15:56:37.141Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8630,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:51:32.397Z"
+   "ultimaBien": "2026-11-19T15:56:37.141Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:51:32.397Z"
+   "ultimaBien": "2026-11-19T15:56:37.141Z"
   }
  },
  "avisos": [
