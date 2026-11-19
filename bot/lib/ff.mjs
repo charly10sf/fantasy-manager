@@ -131,5 +131,5 @@ export function onceProbable(nombreEquipo, jugadoresEquipo, { log = () => {}, pe
   });
 }
 
-/** el % que da el once probable a un jugador (como la app): su % si lo trae; si no, titular 0,85, suplente 0,3 y el resto 0,15 */
-export const pOnce = (o) => (o && o.prob != null ? o.prob / 100 : o && o.titular ? 0.85 : o && o.alternativa ? 0.3 : 0.15);
+/** el % que da el once probable a un jugador (como la app): su % si lo trae; si no, titular 0,85, suplente 0,3 y el resto 0,08 */
+export const pOnce = (o) => (o && o.prob != null ? o.prob / 100 : o && o.titular ? 0.85 : o && o.alternativa ? 0.3 : 0.08);

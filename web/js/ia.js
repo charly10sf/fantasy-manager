@@ -697,7 +697,7 @@ function onceTxt(M, j) {
   if (!j || j.pos === 5) return null;
   const al = M.alineacion ? M.alineacion(j.id) : null;
   if (al) return `ALINEACIÓN CONFIRMADA: ${al.estado === 'titular' ? 'TITULAR' : al.estado === 'suplente' ? 'SUPLENTE' : al.estado === 'nosale' ? 'NO SALE DE TITULAR (puede estar en el banquillo o no ir convocado)' : al.estado === 'baja' ? 'BAJA' : 'NO CONVOCADO'}`;
-  if (!M.hayOnces) return null;
+  if (!(M.hayOnceDe ? M.hayOnceDe(j) : M.hayOnces)) return null;
   const o = M.onceProb(j.id);
   if (!o) return 'once probable: no sale';
   if (o.titular) return `once probable: TITULAR${o.prob != null ? ` ${o.prob} %` : ''}`;

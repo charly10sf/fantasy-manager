@@ -230,7 +230,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
     }
   }
   if (datoFijo) { dato = esc(datoFijo.txt); datoCls = datoFijo.cls ? ` ${datoFijo.cls}` : ''; }
-  const conOnce = !!(M && M.hayOnces && j.pos < 5);
+  const conOnce = !!(M && (M.hayOnceDe ? M.hayOnceDe(j) : M.hayOnces) && j.pos < 5);
   const o = conOnce ? M.onceProb(j.id) : null;
   const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
   let marca = '';
@@ -238,7 +238,9 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' || al.estado === 'nosale' ? `<span class="cr-est supl" title="${al.estado === 'nosale' ? 'No sale de titular en la alineación confirmada' : 'Suplente en la alineación confirmada'}">SUP</span>` : '<span class="cr-est mal no" title="No va convocado">NO</span>';
   else if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
-  else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est supl">SUP</span>';
+  // «SUP»: fuera del once probable de su equipo y con menos de la mitad de ser titular contando también sus minutos (19 nov:
+  // con un 70 % y «SUP» a la vez no se entendía)
+  else if (conOnce && (!o || !o.titular) && !((M.titularidad(j) || {}).p >= 0.5)) marca = `<span class="cr-est supl" title="${o ? 'Suplente en el once probable' : 'No sale en el once probable'}">SUP</span>`;
   if (marcaFija != null) marca = marcaFija;
   // arriba a la izquierda, su próximo rival con el color de lo difícil que es (sin la @ de fuera de casa desde la 0.6.10c:
   // Carlos, 30 oct, «que se entienda mejor»); abajo a la izquierda, frente a su escudo, lo que tiene de ser titular (lo
@@ -334,7 +336,7 @@ export function oncePill(M, j) {
   // el mismo % que sale en las listas (junta el once probable con sus minutos y la temporada)
   const T = M.titularidad && !['injured', 'suspended', 'out_of_league'].includes(j.estado) ? M.titularidad(j) : null;
   if (T && T.p != null) { const p = Math.round(T.p * 100); return `<span class="pill ${p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal'}">${p} % de ser titular</span>`; }
-  if (!M.hayOnces) return '';
+  if (!(M.hayOnceDe ? M.hayOnceDe(j) : M.hayOnces)) return '';
   const o = M.onceProb(j.id);
   if (!o) return '<span class="pill">Fuera del once</span>';
   if (o.titular) return `<span class="pill bien">Titular${o.prob != null ? ` ${o.prob} %` : ''}</span>`;

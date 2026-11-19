@@ -94,6 +94,10 @@ export async function hechosFichas(api, hm, { estado = {}, max = 150, ahora = Da
   const sinFicha = conPuntos.filter((f) => !fichaDe.get(f.id)).length;
   if (sinFicha > conPuntos.length * 0.2) { log(`  (fichas) ${sinFicha} fichas sin bajar: lo dejo para la próxima`); return null; }
 
+  // el que más vale de cada puesto en cada equipo, de los que pueden jugar (para el % de titular, como la app)
+  const topPuesto = {};
+  for (const f of filas) { if (f.pos >= 1 && f.pos <= 4 && !['injured', 'suspended', 'out_of_league'].includes(f.estado)) { const k = `${f.teamId}|${f.pos}`; topPuesto[k] = Math.max(topPuesto[k] || 0, num(f.valor)); } }
+  const vrelDe = (f) => { const t = topPuesto[`${f.teamId}|${f.pos}`]; return t ? Math.min(1, num(f.valor) / t) : null; };
   const J = [];
   for (const f of filas) {
     const j = lista0.get(f.id), fi = fichaDe.get(f.id) || null;
@@ -109,7 +113,7 @@ export async function hechosFichas(api, hm, { estado = {}, max = 150, ahora = Da
     });
     const jugados = jornadas.filter((x) => x.min > 0);
     const tit = jugados.filter((x) => x.min >= 60);
-    const b = fi ? baseTitular(fi.playerStats, ultimaJugada) : null;
+    const b = fi ? baseTitular(fi.playerStats, ultimaJugada, vrelDe(f)) : null;
     J.push({ ...f, nombreCompleto: (fi && fi.name) || f.nombre, club: nombre[f.teamId] || f.equipo, fi: !!fi, jornadas, jugados: jugados.length, titular: tit.length,
       minutos: jugados.reduce((s, x) => s + x.min, 0), goles: jugados.reduce((s, x) => s + x.g, 0), asist: jugados.reduce((s, x) => s + x.a, 0),
       amarillas: jugados.reduce((s, x) => s + x.am, 0), rojas: jugados.reduce((s, x) => s + x.roja, 0), paradas: jugados.reduce((s, x) => s + x.par, 0),

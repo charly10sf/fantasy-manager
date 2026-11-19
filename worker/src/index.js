@@ -637,7 +637,28 @@ async function fallos(req, env, c, ruta) {
 }
 
 /* ---------- el tiempo de uso de hoy, por cuenta (para el límite diario de minutos) ---------- */
-const hoyMadrid = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+const FMT_DIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+const hoyMadrid = () => FMT_DIA.format(new Date());
+/** el día de Madrid (AAAA-MM-DD) de un instante */
+const diaMadrid = (t) => FMT_DIA.format(new Date(t));
+/** muchas claves de KV de golpe: de 100 en 100 con la lectura en bloque (una operación cada 100); si el KV no la tiene,
+    una a una (hasta 700, para no pasar del tope de mil operaciones por petición). Devuelve un Map clave → valor */
+export async function leerEnBloque(env, claves) {
+  const out = new Map();
+  try {
+    for (let i = 0; i < claves.length; i += 100) {
+      const trozo = claves.slice(i, i + 100);
+      const m = await env.VINCULOS.get(trozo);
+      if (!(m instanceof Map)) throw new Error('sin lectura en bloque');
+      for (const [k, v] of m) if (v != null) out.set(k, v);
+    }
+    return out;
+  } catch (e) {
+    out.clear();
+    await Promise.all(claves.slice(0, 700).map((k) => env.VINCULOS.get(k).then((v) => { if (v != null) out.set(k, v); }).catch(() => {})));
+    return out;
+  }
+}
 export const MAX_USO = 600, VIVE_USO = 9 * 86400;
 /** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
 export function diasAtras(hoy, n) {
@@ -1351,24 +1372,35 @@ async function hola(req, env, c, ruta) {
   if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
     const dia = hoyMadrid();
-    const ks = (await listar(env, 'p:', 500)).filter((k) => k.metadata);
+    const ks = (await listar(env, 'p:', 20000)).filter((k) => k.metadata);
     ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
-    // hoy, de los 100 últimos; los 6 días de antes, solo de los 40 últimos que han entrado esta semana (cada lectura
-    // cuenta para el tope de operaciones por petición del plan gratis, que es de mil)
+    // (19 nov, Carlos: «quiero ver exactamente cuántos han entrado, al día, cuántos nuevos y el tiempo que pasan dentro, sí
+    // o sí») el tiempo de cada día, de TODAS las cuentas: hoy de todas y los 6 días de antes de las que han entrado esta
+    // semana, hasta el día de su última vez (después no pudo usarla). Se leen de 100 en 100 con la lectura en bloque de
+    // KV, que cuenta como UNA operación para el tope de mil por petición (antes, una a una y solo de las 40 últimas: con
+    // 50+ cuentas en la semana los días de atrás salían bajos, el lunes de 27 a 20)
     const dias = diasAtras(dia, 7), hace7 = Date.now() - 7 * 86400e3;
-    const segDe = (uid, d) => env.VINCULOS.get(`u:${uid}:${d}`).then((v) => Math.min(86400, (Number(v) || 0) + (PEND_USO.get(`u:${uid}:${d}`) || 0))).catch(() => 0);
-    const usos = await Promise.all(ks.map(async (k, i) => {
-      if (i >= 100) return {};
-      const semana = i < 40 && (k.metadata.ultima || 0) >= hace7;
-      const vals = await Promise.all((semana ? dias : [dia]).map((d) => segDe(k.metadata.uid, d)));
+    const aLeer = ks.map((k) => {
+      if ((k.metadata.ultima || 0) < hace7) return [dia];
+      const hasta = diaMadrid(k.metadata.ultima || Date.now());
+      return dias.filter((d) => d === dia || d <= hasta);
+    });
+    const claves = [];
+    ks.forEach((k, i) => aLeer[i].forEach((d) => claves.push(`u:${k.metadata.uid}:${d}`)));
+    const leido = await leerEnBloque(env, claves);
+    const usos = ks.map((k, i) => {
       const o = {};
-      (semana ? dias : [dia]).forEach((d, j) => { if (vals[j]) o[d] = vals[j]; });
+      for (const d of aLeer[i]) {
+        const kk = `u:${k.metadata.uid}:${d}`;
+        const v = Math.min(86400, (Number(leido.get(kk)) || 0) + (PEND_USO.get(kk) || 0));
+        if (v) o[d] = v;
+      }
       return o;
-    }));
+    });
     const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));
     // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
     // que existe), con lo de p:
-    const reg = new Map((await listar(env, 'r:', 5000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
+    const reg = new Map((await listar(env, 'r:', 50000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
     for (const x of lista) {
       const r = reg.get(String(x.uid));
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });

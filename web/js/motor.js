@@ -4,6 +4,7 @@
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './operaciones.js';
 import { acciones } from './acciones.js';
+import { pTitularMinutos } from './titular.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -1167,6 +1168,11 @@ export function analizar(D, H, c, extra = {}) {
   const onces = (extra.onces && extra.onces.jugadores) || {};
   M.hayOnces = Object.keys(onces).length > 0;
   M.onceProb = (pid) => onces[pid] || null;
+  // (19 nov) de qué equipos hay once probable: el que no está en el once de su equipo es suplente o no va, pero si la página
+  // de su equipo no ha llegado no se sabe nada (antes se le daba por fuera del once: El Hilali al 47 % y con «SUP»)
+  const ffEq = new Set(Array.isArray(extra.onces && extra.onces.leidos) ? extra.onces.leidos.map(String)
+    : Object.entries(onces).map(([pid, x]) => (x && x.eq) || (J(pid) || {}).equipoId).filter((x) => x != null).map(String));
+  M.hayOnceDe = (j) => !!(j && M.hayOnces && ffEq.has(String(j.equipoId)));
   // la jornada en directo (vivo.js): los puntos de cada uno, solo si su partido de esta jornada ya ha empezado
   // (M.vivo se cambia sin rehacer todo cuando llegan puntos nuevos: M.ponerVivo)
   M.ponerVivo = (v) => { M.vivo = v && M.enJuego && v.n === M.enJuego.n ? v : null; return M.vivo; };
@@ -1207,33 +1213,78 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   /* ---------- la titularidad de cada jugador, juntando fuentes ---------- */
-  // el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada
-  // (SofaScore o Understat); luego la duda, la lesión y el riesgo de rotación
+  // (rehecha el 19 nov, Carlos: «revisa a fondo los porcentajes de titularidad»). Dos fuentes:
+  // 1. Sus minutos en LaLiga (`pTitularMinutos`, abajo): los de sus 3 últimas convocatorias, los de la temporada y lo que
+  //    vale frente al que más vale de su puesto en su equipo. Ajustado con las 12 primeras jornadas de la 26/27 (4.082 casos
+  //    de jugador convocado y jornada): con lo de las jornadas 4-9 acierta en las 10-12 un 13 % mejor que la cuenta de
+  //    antes (Brier 0,137 frente a 0,158) y lo que dice se cumple (de los que da al 80-90 %, juegan de titular el 84 %).
+  // 2. El once probable de futbolfantasy, con el % que da para ese partido (también a los suplentes), solo si la página
+  //    de su equipo ha llegado (`M.hayOnceDe`). Pesa la mitad.
+  // La duda: ×0,6 a los minutos (el % del once probable ya la cuenta si la trae). La rotación por partidos de Europa o Copa,
+  // solo a los minutos (el once probable ya es el de ese partido).
   const CONF = { titular: 'titular', suplente: 'suplente', nosale: 'no sale de titular', fuera: 'no convocado', baja: 'baja' };
+  // el que más vale de cada puesto en cada equipo, de los que pueden jugar
+  let topPuesto = null;
+  const topDe = (j) => {
+    if (!topPuesto) {
+      topPuesto = {};
+      for (const x of Object.values(D.maestro || {})) {
+        if (!x || !x.pos || x.pos > 4 || MALOS.has(x.estado)) continue;
+        const k = `${x.equipoId}|${x.pos}`;
+        if ((x.valor || 0) > (topPuesto[k] || 0)) topPuesto[k] = x.valor || 0;
+      }
+    }
+    return topPuesto[`${j.equipoId}|${j.pos}`] || 0;
+  };
   M.titularidad = (j) => {
     if (!j || !j.pos || j.pos === 5) return null;
     const al = M.alineacion(j.id);
     if (al) { const p = al.estado === 'titular' ? 0.98 : 0; return { p, base: p, fuentes: [{ f: `alineación confirmada: ${CONF[al.estado] || al.estado}`, p, w: 1 }], rot: null, pRot: 0, confirmada: al.estado }; }
     if (MALOS.has(j.estado)) return { p: 0, base: 0, fuentes: [{ f: j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga', p: 0, w: 1 }], rot: null, pRot: 0 };
-    const fuentes = [];
-    const op = M.hayOnces ? onces[j.id] || null : null;
+    const conFF = M.hayOnceDe(j);
+    const op = conFF ? onces[j.id] || null : null;
     if (op && op.estado === 'injured') return { p: 0, base: 0, fuentes: [{ f: 'lesionado, según la prensa', p: 0, w: 1 }], rot: null, pRot: 0 };
-    if (M.hayOnces) fuentes.push({ f: 'once probable', p: op && op.titular ? (op.prob != null ? op.prob / 100 : 0.85) : op && op.alternativa ? 0.3 : 0.15, w: 0.5 });
-    const st = det[j.id] && det[j.id].stats ? det[j.id].stats.slice(-5) : [];
-    if (st.length >= 3 && st.some((s) => s.min != null)) fuentes.push({ f: `últimas ${st.length}`, p: st.filter((s) => s.min >= 60).length / st.length, w: 0.3 });
-    const a = M.avanzado(j.id), tE = tabla[j.equipoId];
-    if (a && a.s && a.s.pj && a.s.tit != null && tE && tE.pj >= 3) fuentes.push({ f: 'temporada', p: clamp(a.s.tit / tE.pj, 0, 1), w: 0.2 });
-    else if (a && a.u && a.u.min && tE && tE.pj >= 3) fuentes.push({ f: 'temporada', p: clamp((a.u.min / (tE.pj * 90)) * 1.08, 0, 1), w: 0.2 });
+    const duda = j.estado === 'doubtful' || !!(op && op.estado === 'doubtful');
+    const fuentes = [];
+    // sus minutos
+    const d = det[j.id];
+    const top = topDe(j);
+    const vrel = top ? clamp((j.valor || 0) / top, 0, 1) : 0.5;
+    let pm = d && !d.error && Array.isArray(d.stats) && d.stats.length ? pTitularMinutos(d.stats.map((x) => x.min), vrel) : null;
+    let fMin = 'sus minutos';
+    // sin su ficha de LaLiga (solo se pide la de los tuyos, el mercado y las cláusulas), sus minutos de la temporada de
+    // SofaScore o Understat, si los hay: la misma cuenta con su media en todas (sin saber cómo van las últimas)
+    if (pm == null) {
+      const a = M.avanzado(j.id), tE = tabla[j.equipoId];
+      const media = a && a.s && a.s.pj && a.s.tit != null && tE && tE.pj >= 3 ? clamp(a.s.tit / tE.pj, 0, 1)
+        : a && a.u && a.u.min && tE && tE.pj >= 3 ? clamp(a.u.min / (tE.pj * 90), 0, 1) : null;
+      if (media != null) { pm = pTitularMinutos(Array(Math.min(tE.pj, 10)).fill(media * 90), vrel); fMin = 'temporada'; }
+    }
+    if (pm != null) fuentes.push({ f: fMin, p: pm, w: 0.5 });
+    // el once probable de su equipo: su % si lo trae; si no, titular 85 %, suplente 30 % y, si no sale ni en la lista, 8 %
+    let pf = null;
+    if (conFF) {
+      pf = op && op.prob != null ? op.prob / 100 : op && op.titular ? 0.85 : op && op.alternativa ? 0.3 : 0.08;
+      fuentes.push({ f: op && op.titular ? 'once probable' : op ? 'suplente en el once probable' : 'fuera del once probable', p: pf, w: 0.5 });
+      if (duda && !(op && op.prob != null)) pf *= 0.6;
+    }
     if (!fuentes.length) return null;
     const W = fuentes.reduce((s, x) => s + x.w, 0);
-    let p = fuentes.reduce((s, x) => s + x.p * x.w, 0) / W;
-    const base = p;
-    if (j.estado === 'doubtful' || (op && op.estado === 'doubtful')) p *= 0.6;
+    const base = fuentes.reduce((s, x) => s + x.p * x.w, 0) / W;
     const rot = M.rotacion(j.equipoId);
-    // al indiscutible se le rota menos; al que está en el filo, más
-    const pRot = rot && rot.riesgo ? rot.riesgo * (p >= 0.9 ? 0.6 : p >= 0.5 ? 1.2 : 0.5) : 0;
-    p *= 1 - pRot;
-    return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot };
+    // al indiscutible se le rota menos; al que está en el filo, más (solo a la parte de los minutos)
+    let pmAj = pm;
+    let pRot = 0;
+    if (pm != null) {
+      if (duda) pmAj *= 0.6;
+      pRot = rot && rot.riesgo ? rot.riesgo * (pmAj >= 0.85 ? 0.6 : pmAj >= 0.5 ? 1.2 : 0.5) : 0;
+      pmAj *= 1 - pRot;
+    }
+    const p = pm != null && pf != null ? (pmAj + pf) / 2 : pm != null ? pmAj : pf;
+    // pRot: lo que quita la rotación al total (para el aviso de la ficha)
+    // pMin: lo de sus minutos con la duda y sin la rotación (para los partidos de después del próximo: el once probable es
+    // solo el del próximo)
+    return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot: pm != null && pf != null ? pRot / 2 : pRot, pMin: pm != null ? clamp(pm * (duda ? 0.6 : 1), 0, 0.98) : null };
   };
 
   /* ---------- ¿conviene esperar antes de mandar vender a uno tuyo que baja? (aviso de Domy, 2 nov) ---------- */
@@ -1360,7 +1411,7 @@ export function analizar(D, H, c, extra = {}) {
     if (cachePP[j.id]) return cachePP[j.id];
     const T = j.pos && j.pos !== 5 ? M.titularidad(j) : null;
     const al = T && T.confirmada;
-    const onceJ = al ? (al === 'titular' ? { titular: true, prob: 100 } : al === 'suplente' || al === 'nosale' ? { alternativa: true } : { estado: 'injured' }) : M.hayOnces ? (onces[j.id] || { fuera: true }) : null;
+    const onceJ = al ? (al === 'titular' ? { titular: true, prob: 100 } : al === 'suplente' || al === 'nosale' ? { alternativa: true } : { estado: 'injured' }) : M.hayOnceDe(j) ? (onces[j.id] || { fuera: true }) : null;
     let base = puntosEsperados(j, M.forma(j.id), onceJ) * M.factorRival(j).f;
     if (T && T.pRot) base *= 1 - T.pRot;
     const d = M.desglose(j);
@@ -1467,8 +1518,9 @@ export function analizar(D, H, c, extra = {}) {
       // la titularidad: la del próximo partido tal cual; para los siguientes, la de base con la rotación de ese día
       let pTit = p1, rot = null;
       if (T && i > 0) {
-        const ro = rotacionEn(j.equipoId, x.fecha, T.base);
-        pTit = clamp(T.base * (1 - ro.riesgo), 0, 0.98);
+        const b0 = T.pMin != null ? T.pMin : T.base;
+        const ro = rotacionEn(j.equipoId, x.fecha, b0);
+        pTit = clamp(b0 * (1 - ro.riesgo), 0, 0.98);
         rot = ro.cerca.length ? ro.cerca : null;
       } else if (T && T.rot && T.rot.cerca && T.rot.cerca.length) rot = T.rot.cerca.map((c) => c.comp);
       const ratio = p1 && pTit != null ? clamp(pTit / Math.max(0.05, p1), 0, 1.5) : 1;
@@ -1664,7 +1716,7 @@ export function analizar(D, H, c, extra = {}) {
     if (alj) { if (alj.estado === 'titular') partes.push('titular en la alineación confirmada'); else { fueraOnce = alj.estado === 'suplente' || alj.estado === 'nosale' ? 10 : 12; partes.push(alj.estado === 'suplente' ? 'suplente en la alineación confirmada' : alj.estado === 'nosale' ? 'no sale de titular en la alineación confirmada' : 'no va convocado'); } }
     else if (op && op.titular) partes.push(`titular probable${op.prob != null ? ` (${op.prob} %)` : ''}`);
     else if (op && op.alternativa) { fueraOnce = 10; partes.push('suplente en el once probable'); }
-    else if (M.hayOnces && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
+    else if (M.hayOnceDe(j) && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
     // el próximo rival: no es lo mismo el Barça que el colista
     const fr = M.factorRival(j);
     let rival = 0;
@@ -2769,3 +2821,4 @@ export function mejorOnce(lista, formaciones, pp) {
   }
   return mejor || { formacion: null, nombre: '', lineas: [[], [], [], []], entrenador: null, total: 0, huecos: 11, nota: 0 };
 }
+

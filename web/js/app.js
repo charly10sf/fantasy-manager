@@ -1034,7 +1034,15 @@ function onceSabido() {
   const v = LS.get(K('vivo'), null);
   return v && Array.isArray(v.once) && v.once.length >= 5 ? v.once : null;
 }
-const apuntarMiOnce = (ids) => { if (ids && ids.length >= 5) LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String) }); };
+const apuntarMiOnce = (ids, forma = null) => {
+  if (!ids || ids.length < 5) return;
+  // (19 nov) con la formación, para pintar en Hoy y en Equipo el once que tiene puesto en LaLiga
+  const g = LS.get(K('mi-once'), null);
+  const f = forma || (g && (g.ids || []).join() === ids.map(String).join() ? g.forma : null) || null;
+  LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String), forma: f });
+};
+/** «Actualizar» vuelve a pedir tu once a LaLiga aunque se mirara hace menos de 10 minutos */
+let forzarOnce = false;
 /** cuándo cierra LaLiga el once de la jornada del partido de un equipo que empieza hacia t: con el primer partido de esa jornada */
 function cierreOnce(D, t, eq) {
   const ps = (D && D.partidos) || [];
@@ -1853,13 +1861,15 @@ async function mirarMiOnce() {
   const D = S.D;
   if (!D || D.demo || enDemo() || !haySesion() || (S.M && S.M.enJuego) || !(D.yo && D.yo.teamId)) return;
   const g = LS.get(K('mi-once'), null);
-  if (g && Date.now() - g.t < 10 * MIN) return;
+  if (g && !forzarOnce && Date.now() - g.t < 10 * MIN) return;
+  forzarOnce = false;
   try {
-    const ids = idsOnce(await api.miOnce(D.yo.teamId)).map(String);
+    const r = await api.miOnce(D.yo.teamId);
+    const ids = idsOnce(r).map(String), forma = formaOnce(r);
     if (ids.length < 5 || S.D !== D) return;
-    const antes = ((g && g.ids) || []).join();
-    apuntarMiOnce(ids);
-    if (antes !== ids.join()) rehacerLuego();
+    const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join();
+    apuntarMiOnce(ids, forma);
+    if (antes !== ids.join() + '|' + (forma || []).join()) rehacerLuego();
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }
 async function despues() {
@@ -3117,7 +3127,7 @@ document.addEventListener('click', async (ev) => {
     case 'cerrarLleno': olvidarLleno(); el.closest('.banda')?.remove(); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
-    case 'recargar': sinErrorPlan(); cargar(); break;
+    case 'recargar': sinErrorPlan(); forzarOnce = true; cargar(); break;
     case 'usarGuardado': usarGuardado(); break;
     case 'ajustes': {
       S.ajBusca = '';

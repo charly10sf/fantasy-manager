@@ -459,3 +459,210 @@ Sin red: todo BIEN menos relato-ejemplo y robustez-ejemplo (ya fallaban antes).
   alias del chat: para la sesión del chat.
 - El texto de la inercia (`M.inercia(...).texto`) sigue en motor.js: lo usan casi todos los módulos; sacarlo es otra
   sesión.
+
+## Tercera parte (19 nov): las preguntas del chat y los planes
+
+Rama `revision-ia-3` (sale de main 0a1bdf6, con origin/main fundido antes de acabar). SIN PUBLICAR. Pedido en
+claude/prompt-noche-ia-19nov.md. Nada de Android: la huella nativa no cambia. Cambian web/js (ia.js, chat-sistema.js,
+plan-sistema.js, plan.js, version.js) y, como el Worker arma las instrucciones con chat-sistema.js y plan-sistema.js, al
+publicar sale también «Worker».
+
+### Fase 0: lo que fallaba de verdad
+
+- Avisos de Fallo: 48, 0 sin contestar. De la IA desde la revisión del 13-14 nov (los de antes están en «Catálogo de
+  fallos»): leao (17 nov, cuánto ofrecer: +10 % fijo) → arreglado en la 0.8b, ya cubierto por chat-tratos-precio de
+  casos.mjs y ahora también por `cuanto-ofrezco` de la batería; Domy (16 nov, el parón descarta un fichaje que sube
+  2,5 M al día) → 0.7.13q, ya cubierto por motor-paron-dinero y la escena parón con dinero de azar-plan; Domy (16 nov, al
+  acabar el parón, recomendar para la jornada siguiente) → caso nuevo: escena `paron-final` en azar-plan (a dos días de la
+  vuelta el plan no va en modo parón); Domy (15 nov, «Tus rivales» desactualizado) → 0.7.13h, ya cubierto por
+  corto-rivales-al-dia; Domy (8 nov, pullas y bromas) → es el tono, ya cubierto por TONO_CHAT.
+- Cloudflare → Workers → Logs: NO MIRADO. El Chrome de Carlos no respondía (la extensión no estaba conectada).
+
+### Fase 1: el chat
+
+Batería nueva (.github/ia/chat-casos.mjs): 52 preguntas por escena (las 16 de siempre y 36 nuevas: cifras de su liga,
+rivales por nombre, apodo y dictado, mercado, reglas, estrategia, ofertas, trampas, conversaciones de 3-4 mensajes y el
+plan) en tres escenas: martes, parón y el sábado de partido por la mañana (escena `sabado` de banco.mjs). Comprobador
+nuevo (.github/ia/cotejar-chat.mjs): cifras, porcentajes, horas, fechas, puntos y nombres que no salen de lo que se le
+mandó (ni de sumar o restar dos que sí), y forma, largo, pregunta al final y contradicciones con la app y el plan.
+
+Fallos por categoría, leídos a mano (156 respuestas por pasada; una respuesta puede tener varios):
+
+| Categoría | Antes | Pasada 2 | Pasada 3 (final) |
+|---|---|---|---|
+| (a) inventa o se equivoca en una cifra o un dato | 15 | 8 | 5 |
+| (b) contradice al motor o al plan | 12 | 5 | 3 |
+| (c) añade motivos que la app no da | 8 | 4 | 1 |
+| (d) recomienda algo que no se puede hacer hoy | 1 | 0 | 0 |
+| (e) no entiende a quién se refiere | 1 | 0 | 0 |
+| (f) suena a IA o a plantilla | 13 | 9 | 7 |
+| (g) más de 6 frases (el comprobador) | 84 | 65 | 66 |
+| (h) forma (notas, códigos, alias) | 6 | 3 | 0 |
+| Acaba en pregunta (el comprobador) | 3 | 5 | 0 |
+| Coste por respuesta | 0,410 céntimos | 0,378 | 0,382 (−7 %) |
+| Lo que lee (tokens de entrada, con la caché) | 34.095 | 31.796 | 31.992 |
+| Largo medio | 130 palabras, 7,3 frases | 122, 6,4 | 125, 6,5 |
+
+La nota a ciegas: un subagente que no había visto el código ni los cambios puntuó 30 preguntas (10 por escena), cada una
+con la respuesta de antes y la de la pasada final mezcladas al azar, con los datos de la liga de ejemplo delante y con
+grep para comprobar cifras. De 1 a 5:
+
+| | Correcta | Útil | Corta | Suena a persona |
+|---|---|---|---|---|
+| Antes | 3,77 | 3,73 | 4,00 | 3,90 |
+| Después | 4,53 | 4,33 | 4,27 | 3,93 |
+
+Gana la de después en 20 de 30, la de antes en 6 y empatan 4. Donde la de después pierde: una cuenta mal («pagar a Niño
+no cambia el saldo de mañana»: baja a −30,89 M), la última línea de «mis cláusulas» sin sentido, «Marcos no lo tiene a
+la venta, así que no hay oferta» (falso: se puede ofertar) y no ver que una cláusula pagada a las 14:00 del sábado ya no
+puntúa en esa jornada. En «suena a persona» casi no se mueve: las coletillas («Si quieres, seguimos…») siguen en las de
+otro deporte y cocina.
+
+Lo arreglado, por orden de lo que más pasaba:
+1. En el origen (`datosChat`/`contexto`, ia.js):
+   - El plan que ve en Hoy: antes el chat recibía el último plan de la IA aunque fuera de ayer y, sin plan de la IA,
+     ninguno. Ahora `planQueVe` (el de la IA si es de hoy; si no, el del motor) con el cuándo y el porqué de cada paso.
+     «¿Qué hago hoy?» y «¿por qué el plan me dice que venda a X?» cuadran con el plan en las tres escenas (antes, en
+     las tres recomendaba pujas que el plan no llevaba; en el sábado no sabía que el plan no vendía a Raphinha).
+   - «VENDER POR INERCIA» de uno que el plan aguanta (en Mirados: «se aguanta»): ahora «HA GIRADO A LA BAJA, PERO EL
+     PLAN DE HOY NO LO VENDE (su porqué)». caso-coherencia.mjs lo encontró en 49 jugadores de 14 escenas; ahora 0.
+   - Las pujas ya puestas, con nombre («MIS PUJAS YA PUESTAS: Courtois 36,30 M»): confundía una opción (R. Terrats) con
+     la puja que tenía.
+   - «EN MI ONCE: titular/suplente» en vez de «TITULAR» a secas junto a «once probable: suplente» (decía de Julián
+     Álvarez que era suplente en su once). «(hasta esa hora no se le puede poner el blindaje)» en vez de «(el blindaje,
+     no antes de esa hora)», que leía como «blindado». La hora a la que se cierra el once en el día del partido.
+   - El rival por su apodo o con el nombre mal dictado (`rivalesAprox`): ahora le llega su plantilla entera, con
+     titularidad y próximo partido.
+   - Recortado: de los rivales de los que no pregunta, sin lo de hoy y sin «oferta para que te lo venda» salvo que
+     pregunte por ofertas o nombre al jugador. Con lo añadido, lo que lee baja un 6 % y el coste un 7 %.
+2. En chat-sistema.js: reglas 11-13 (lo que paga LaLiga por punto y la recompensa diaria; vender con la jornada
+   empezada; cualquiera puede ofertar por cualquiera) — las tres comprobadas con Carlos (14 nov) y que el chat no tenía:
+   a «¿cuánto me da LaLiga por punto?» contestaba «no hay ninguna regla» en las tres escenas; ahora bien en las tres.
+   Como mucho 6 frases contando cada punto de una lista; nada de «Si quieres, te digo…»; con lo que no es fantasy, una
+   frase (antes en el martes dio la receta de la tortilla); un equipo o jugador que no existe, en una frase y sin hablar de
+   alias (antes: «en mis datos salen como «Rival N»»); con una oferta, lo que aconseja la app salvo un dato nuevo suyo
+   (antes «Sí, acéptala» a la oferta de Hugo por Baena en el martes y el parón, con la app diciendo ESPERAR). En
+   plan-sistema.js, que nunca le hable al mánager de los alias.
+3. En la revisión de la app: «de el Tito» → «del Tito» (`destapar`); el bloque de notas suelto en mitad del texto y el
+   código al principio de un paréntesis («(P-1015, 44,70 M…»), fuera (`separarNotas`, `sinCodigos`); `revisarChat` ya no
+   salta con una orden condicional para otro día («Si sigue cayendo…, véndelo entonces»).
+
+Tres respuestas que fallaban (liga de ejemplo):
+- «¿Cuánto dinero me da LaLiga por cada punto?» (martes). Antes: «No tengo ninguna regla que pague dinero por punto…
+  tienes una recompensa diaria, pero no sé cuánto da». Ahora: «Por cada punto que haga tu equipo al acabar la jornada,
+  LaLiga te paga 100.000 €. Así que 64 puntos son 6,4 M… sin contar la recompensa diaria de 100.000 €».
+- «¿Por qué el plan me dice que venda a Raphinha?» (sábado; el plan no lo vende). Antes: «La app lo marca como «vender
+  por inercia»… Yo no lo vendería hoy». Ahora: «El plan de hoy no te dice que vendas a Raphinha. Su único paso es alinear
+  el 4-4-2, y Raphinha va en ese once como titular».
+- «Hugo me ha ofrecido 66 M por Álex Baena. ¿Acepto?» (martes; la app: ESPERAR). Antes: «Sí, acéptala ahora… si ganas
+  tus pujas, tu saldo queda en −29,87 M». Ahora: «No la aceptaría todavía… Baena es titular en tu once… no necesitas
+  caja».
+
+Lo que queda flojo en la pasada final: el largo (66 de 156 pasan de 6 frases, muchas listas que se piden enteras);
+ofrecimientos al final en las de otro deporte y cocina; alguna posición o fecha mal leída (Dituro como medio,
+«titular ~70 %» de uno al 82 %); en el sábado, a la oferta por Baena dice «acéptala después del partido» (ver
+preguntas); en el parón, «cuánto pujo por Cubarsí» mezcla la puja de «tenerlo» (44,70 M) con la del plan para revender
+(49,81 M), que vienen así de los datos.
+
+Prueba aparte, solo para decidir (las 10 más difíciles, martes, `low` frente a `medium`): `medium` cuesta 0,49
+céntimos por respuesta frente a 0,38 (+29 %) y tarda más (hasta 35 s frente a 12 s); la calidad, parecida, y en la oferta
+por Baena `medium` volvió a decir «acéptala» contra la app. Se queda `low`.
+
+### Fase 2: los planes
+
+1. El árbitro (banco.mjs), con las reglas de Carlos y de este archivo. Comprobadas antes: r2 (cláusula abierta), r3
+   (tiempo para revender), r4 (tope de deuda con todas las pujas), r5 (cláusula con saldo), r7 (cierre de 24 h), r8 (once
+   con la jornada en juego), r9 (blindajes), r10 (empezar en negativo), r12 (25), la regla de Hoy y las alarmas para
+   clausular, lo que no es mío, vender por caja. Nuevas: r17 (con 25 no se puja, contado en el orden del plan), r6
+   (comprar por debajo de lo que pide), pujar por uno que no está en el mercado, rH (nada «para hoy» con el día de otro:
+   lo de Huijsen), rM (la hora de mercado de cada liga), rN (en negativo entre semana, con dos cambios o más por
+   delante, ni vender hoy «por caja» lo que no cae ni aceptar por debajo de su valor), rP (en el parón, para el once solo
+   lo que sube, un chollo o uno bueno a su valor con saldo), r18 (uno vendido hoy no va en el once) y el titular que
+   nombra a uno descartado. Lo de «solo de operaciones.js» va dentro: cada paso tiene que ser una operación real (su
+   cláusula, estar en el mercado, ser mío). «No vender lo que sube fuerte ni aceptar una oferta que gana subiendo» sigue
+   como VENDE_POR_CAJA. .github/ia/caso-arbitro.mjs: un plan hecho a mano que se salta cada regla sale MAL (16 casos).
+2. azar-plan.mjs, 8 escenas nuevas (21): el sábado del partido con el cambio de ese mismo día (`sabado-justo`, mercado a
+   las 12:00), una liga con el mercado a las 20:00, jueves en negativo con un solo cambio por delante, un titular
+   lesionado largo, una cuenta nueva (sin histórico ni lo pagado), una liga sin clausulazos, los dos últimos días del
+   parón y el sábado sin más. 150 vueltas × semillas 1, 7 y 42: 3.150 ligas por semilla. Lo que encontró: en el parón,
+   la IA podía meter de alternativa a uno «bueno a su valor» (Courtois, 39,95 M) cuando con el resto del plan ya no se
+   pagaba con saldo: arreglado en plan.js (`conSaldo` en el candidato, en `cuentas` y en `elegir`). Antes 3-4 fallos
+   por semilla; ahora 0. Sin hacer: el mercado real de hoy con una plantilla inventada.
+3. Coherencia entre pantallas (.github/ia/caso-coherencia.mjs, 14 escenas, 79 jugadores): Hoy (lo urgente fuera del
+   plan), Equipo (el consejo de cada uno en venta), el plan del motor, el plan con la IA sin cambios y lo que se le pasa
+   al chat. 49 contradicciones antes (la inercia, arriba); ahora 0. Lo que sigue saliendo en Hoy «aparte del plan» (no
+   es contradicción, va con «decide tú»): Niño (liga con el mercado a las 20:00) y Foyth y G. Villar (con 30-60 M): ver
+   preguntas.
+4. Planes con Haiku de verdad (.github/ia/planes-haiku.mjs, rama `pruebas-ia`, 14 escenas, con 1 búsqueda en Google por
+   plan como en producción): antes 0 rehechos, 0 ajustados, nada de la IA sin aplicar ni tachado, 1 con ONCE_BAJA (el
+   parón vende a Raphinha, del motor); 0,64 céntimos por plan. Después, igual (1,07 céntimos: hizo más búsquedas). Leídos
+   a mano: una frase con una cifra corregida a medias («once puntos… no, con 110 pts», holgado), una venta del parón
+   explicada como «imprescindible» cuando el motor la da por el giro y una frase repetida en la situación. Los planes
+   estaban bien: no se ha tocado SISTEMA_CORTO.
+5. Lo de (72): el plan recogido de un pedido de antes del cierre de cláusulas ya no se aplica (caso nuevo en
+   caso-conexion: lo dice y no gasta otro; el pedido ya con el cierre sí se aplica). `seudonimos` mira las palabras de
+   las instrucciones del chat y del plan; fuera `SISTEMA` (−44 líneas de ia.js; los alias, iguales con la liga de
+   ejemplo y con nombres que chocan). El texto de la inercia fuera de motor.js: SIN HACER (no daba tiempo a compararlo
+   pantalla a pantalla).
+6. Conexión y reloj: caso-conexion entero (13 casos) bien; prueba-web en Madrid y con TZ=UTC bien. prueba-web fallaba
+   (también en main) en «plan y Hoy se contradicen» porque comparaba con planAuto, el plan de antes, que según el día
+   esperaba a Niño por las pujas: ahora compara con el plan del motor, que es el que se ve.
+
+### Gasto en IA de la noche
+
+Chat: 3 pasadas × 156 respuestas (0,64 + 0,59 + 0,60 $) y las 10 con medium (0,05 $). Planes: 2 pasadas × 14 (0,09 +
+0,15 $). Total ≈ 2,12 $ (tope 3 $).
+
+### Pruebas
+
+prueba-web en Madrid y TZ=UTC: Todo BIEN. prueba-ia 111/111 (3 casos nuevos de chat). azar-plan 150 × 1, 7 y 42: 0
+fallos. a-fondo 225/225. caso-pujas, caso-chat, caso-fondo, caso-conexion, caso-apodos, caso-arbitro (nuevo),
+caso-coherencia (nuevo): Todo BIEN. worker/prueba/datos.mjs: BIEN. caso-arbitro y caso-coherencia van en «Pruebas».
+
+### Preguntas para Carlos
+
+1. EL PLAN RECOGIDO DE ANTES DEL CIERRE. Ahora no se aplica y la app dice «pide otro si quieres»: no se pide solo,
+   porque gastaría otro plan del día. Opciones: así; que se pida solo (gasta uno); o que el servidor no cuente ese
+   segundo. Por defecto, así.
+2. LA OFERTA EL DÍA DEL PARTIDO. Con una oferta por un titular el sábado por la mañana (Baena), la app dice ESPERAR (sube
+   y lo gana en 4 días) y la IA dice «acéptala después del partido»: vendido con la jornada empezada cuenta entera, así
+   que aceptar a partir de las 14:00 no pierde puntos. ¿Quieres que la app lo diga así ese día (si la oferta compensa,
+   aceptarla ya empezada la jornada)? Por defecto, no se ha tocado: la IA a veces lo dice por su cuenta.
+3. LO URGENTE DE HOY QUE EL PLAN DEJA FUERA. En 3 de 14 escenas Hoy enseña arriba una cláusula que el plan no lleva y
+   que cabría (Niño con el mercado a las 20:00; Foyth y G. Villar con 30-60 M), con «es un aviso aparte, decide tú».
+   Opciones: que el plan la meta; que vaya a «Mirados» con el porqué y no salga arriba; o como ahora. Por defecto, como
+   ahora.
+4. COSTE FRENTE A CALIDAD. Se queda `low` (medium: +29 % de coste, el doble de tiempo y la misma nota). Lo que lee el
+   chat ha bajado un 6 %. Se podría bajar bastante más en conversaciones de varios mensajes guardando los datos de la
+   liga en la caché entre una pregunta y la siguiente, pero hay que tocar el servidor y cómo se ordenan los datos: ¿lo
+   hago en otra sesión? Por defecto, no.
+5. LO LARGO. 66 de 156 respuestas siguen pasando de 6 frases, casi todas listas que se piden enteras (la plantilla de un
+   rival, todas tus cláusulas). Opciones: aceptarlo; o pedir listas de una línea y como mucho 8. Por defecto, aceptarlo.
+6. DOS PUJAS PARA EL MISMO JUGADOR. En el parón, con Cubarsí, la app da 44,70 M «para tenerlo» y el plan 49,81 M «para
+   revender»; el chat a veces dice «no pujes tanto» contra el plan. ¿Que en el chat la puja del plan mande cuando el
+   jugador está en el plan? Por defecto, sin tocar (es de los datos, no de la IA).
+
+### Respuestas de Carlos (19 nov, 05:2x)
+
+1. Plan recogido de antes del cierre: como está (avisa y lo pide él).
+2. Oferta el día del partido: 30 M por uno de 28 M que sube +1 M al día es malvenderlo; la app hace bien en decir ESPERAR.
+   Hecho: chat-sistema.js le prohíbe a la IA proponer «aceptarla después del partido» cuando la app dice ESPERAR.
+3. Lo urgente de Hoy que el plan no lleva: se queda como está.
+4. La caché de los datos de la liga entre preguntas: sí, en otra sesión (apuntado en ESTADO.md).
+5. Lo largo: preguntó si cuesta mucho. No: casi todo el coste es lo que lee la IA (~32.000 tokens por pregunta) y no
+   lo que escribe (~200-400); recortar listas apenas cambia el gasto. Se queda como está salvo que él diga otra cosa.
+6. Manda la puja del plan. Hecho: en la línea de cada P- va «PARA REVENDERLO la app puja X: si EL PLAN DE HOY lo lleva,
+   la puja que vale es la del plan» (Cubarsí en el parón, 49,81 M) y chat-sistema.js dice que la cifra del plan manda.
+   Probado: prueba-ia 111, caso-chat, caso-coherencia, worker datos, azar-plan 40 × semilla 7, 0 fallos.
+
+### Lo que tiene que probar Carlos con su liga y en el móvil
+
+- En Pregunta: «¿qué hago hoy?» y «¿por qué el plan me dice que venda a X?» con un plan que haya hecho la app (sin pedir
+  el de la IA): tiene que contestar con ese plan.
+- «¿Cuánto me da LaLiga por punto?», «¿qué le puedo fichar al <apodo>?» (con un apodo puesto) y por voz «leao ere
+  espabilado»: tiene que saber de quién hablas y darte su plantilla con titulares y próximo partido.
+- Uno tuyo que haya girado a la baja y el plan aguante: «¿lo vendo?» no tiene que decir «véndelo».
+- Una oferta que la app manda esperar: «¿la acepto?» tiene que decir que esperes (o darte un motivo nuevo).
+- Pedir un plan con la IA justo antes del cierre de cláusulas, salir de la app y volver ya cerradas: sale el de la app y
+  el aviso «se pidió antes de que se cerraran las cláusulas… pide otro».
+- Que no salgan notas, códigos ni «Rival N» en las respuestas, y que las de cosas que no son fantasy sean de una línea.

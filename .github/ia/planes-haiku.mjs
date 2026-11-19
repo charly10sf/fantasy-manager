@@ -55,7 +55,7 @@ for (const escena of ESCENAS) {
       return {
         titular: A.titular, situacion: A.situacion, cambios: A.cambios, tachados, reglas,
         pasos: (A.operaciones || []).map((o) => `${o.accion} ${o.jugador || ''}${o.importe ? ` ${U.eur(o.importe)}` : ''} (${o.cuando || ''}): ${o.motivo || ''}`),
-        rivales: (A.rivales || []).map((x) => `${x.nombre || x.rival || ''}: ${x.texto || ''}`), noticias: (A.noticias || []).map((x) => `${x.jugador || ''}: ${x.texto || ''}`),
+        rivales: (A.rivales || []).map((x) => `${x.manager || x.nombre || x.rival || ''}: ${x.texto || ''}`), noticias: (A.noticias || []).map((x) => `${x.jugador || ''}: ${x.texto || ''}`),
         json,
       };
     }, { plan });
