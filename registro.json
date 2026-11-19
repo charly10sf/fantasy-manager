@@ -2207,7 +2207,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/vivian-y-paredes-aparte-en-lezama-f202611-n/": 1794851564000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
-   "SPORT|136513344": 1794850973000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
@@ -2442,18 +2441,6 @@
     "oficial": false,
     "hecho": "Kounde sigue trabajando al margen del grupo",
     "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136513344",
-    "medio": "SPORT",
-    "t": 1794850973000,
-    "id": "2562",
-    "que": "lesion",
-    "oficial": true,
-    "hecho": "Marc Pubill sufre un esguince leve de tobillo",
-    "motivo": "esguince leve de tobillo",
     "plazo": "",
     "nums": []
    },
@@ -8567,13 +8554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4148,
+   "ok": 4149,
    "fallos": 0,
-   "ejecuciones": 3431,
+   "ejecuciones": 3432,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:41:10.522Z"
+   "ultima": "2026-11-19T17:46:10.551Z"
   }
  },
  "ptsDirecto": {},
@@ -8590,15 +8577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:41:20.246Z"
+   "ultimaBien": "2026-11-19T17:46:19.217Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:41:20.246Z"
+   "ultimaBien": "2026-11-19T17:46:19.217Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:41:20.246Z"
+   "ultimaBien": "2026-11-19T17:46:19.217Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8606,11 +8593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:41:20.246Z"
+   "ultimaBien": "2026-11-19T17:46:19.217Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:41:20.246Z"
+   "ultimaBien": "2026-11-19T17:46:19.217Z"
   }
  },
  "avisos": [
