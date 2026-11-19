@@ -2198,7 +2198,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/16/cubarsi-algodones-partido-villarreal-136507663.html": 1794847474000,
@@ -8602,13 +8601,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4117,
+   "ok": 4118,
    "fallos": 0,
-   "ejecuciones": 3400,
+   "ejecuciones": 3401,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T15:06:12.808Z"
+   "ultima": "2026-11-19T15:11:12.515Z"
   }
  },
  "ptsDirecto": {},
@@ -8625,15 +8624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:06:25.897Z"
+   "ultimaBien": "2026-11-19T15:11:22.710Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:06:25.897Z"
+   "ultimaBien": "2026-11-19T15:11:22.710Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:06:25.897Z"
+   "ultimaBien": "2026-11-19T15:11:22.710Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8641,11 +8640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:06:25.897Z"
+   "ultimaBien": "2026-11-19T15:11:22.710Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T15:06:25.897Z"
+   "ultimaBien": "2026-11-19T15:11:22.710Z"
   }
  },
  "avisos": [
