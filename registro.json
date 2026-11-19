@@ -2390,7 +2390,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252755/laporte-queda-peligro.html": 1795071900000,
    "MARCA|https://www.marca.com/radio/2026/11/19/roberto-gomez-esto-vender-vinicius-mercado-invierno-me-parece-alucinante.html": 1795073458000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html": 1795074856000,
-   "SPORT|136595275": 1795073918000
+   "SPORT|136595275": 1795073918000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000
   },
   "hechos": [
    {
@@ -3339,7 +3340,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4243,17 +4244,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 282553,
-  "salida": 9689,
+  "entrada": 284595,
+  "salida": 10774,
   "cacheLee": 8709,
   "cacheEscribe": 14515,
-  "dolares": 0.619378,
+  "dolares": 0.620125,
   "reservado": 0
  },
  "recientes": {
@@ -8587,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4048,
+   "ok": 4049,
    "fallos": 0,
-   "ejecuciones": 3331,
+   "ejecuciones": 3332,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T09:26:11.423Z"
+   "ultima": "2026-11-19T09:31:12.099Z"
   }
  },
  "ptsDirecto": {},
@@ -8610,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:26:19.369Z"
+   "ultimaBien": "2026-11-19T09:31:26.877Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:26:19.369Z"
+   "ultimaBien": "2026-11-19T09:31:26.877Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:26:19.369Z"
+   "ultimaBien": "2026-11-19T09:31:26.877Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8626,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:26:19.369Z"
+   "ultimaBien": "2026-11-19T09:31:26.877Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:26:19.369Z"
+   "ultimaBien": "2026-11-19T09:31:26.877Z"
   }
  },
  "avisos": [
