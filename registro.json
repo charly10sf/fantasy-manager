@@ -2195,7 +2195,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000,
-   "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/": 1794827987000,
    "AS|https://as.com/futbol/primera/giuliano-crecimiento-sostenido-f202611-n/": 1794829515000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
@@ -2428,18 +2427,6 @@
     "oficial": false,
     "hecho": "Bernardo Silva estará disponible para la vuelta de LaLiga",
     "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/luz-verde-a-bernardo-silva-y-cautela-con-tchouameni-f202611-n/",
-    "medio": "AS",
-    "t": 1794827987000,
-    "id": "3116",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Bernardo Silva podrá jugar contra el Celta",
-    "motivo": "posible lesión descartada",
     "plazo": "",
     "nums": []
    },
@@ -8627,13 +8614,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4070,
+   "ok": 4071,
    "fallos": 0,
-   "ejecuciones": 3353,
+   "ejecuciones": 3354,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:16:11.838Z"
+   "ultima": "2026-11-19T11:21:11.936Z"
   }
  },
  "ptsDirecto": {},
@@ -8650,15 +8637,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:16:26.141Z"
+   "ultimaBien": "2026-11-19T11:21:19.683Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:16:26.141Z"
+   "ultimaBien": "2026-11-19T11:21:19.683Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:16:26.141Z"
+   "ultimaBien": "2026-11-19T11:21:19.683Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8666,11 +8653,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:16:26.141Z"
+   "ultimaBien": "2026-11-19T11:21:19.683Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:16:26.141Z"
+   "ultimaBien": "2026-11-19T11:21:19.683Z"
   }
  },
  "avisos": [
