@@ -1267,6 +1267,13 @@
    "jornada": 13,
    "id": "2123298133681786959",
    "t": "2026-11-19T06:11:39.103Z"
+  },
+  {
+   "clave": "onceideal|13",
+   "tipo": "onceideal",
+   "jornada": 13,
+   "id": "2123325844592443426",
+   "t": "2026-11-19T08:01:45.971Z"
   }
  ],
  "estados": {
@@ -2156,7 +2163,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136485072": 1794815966000,
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251537/agridulce-regreso-pablo-barrios-absoluta-espana.html": 1794823370000,
@@ -2375,7 +2381,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/horario-ver-derbi-sevilla-fc-real-betis-balompie_0_2008538061.html": 1795068082000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252755/laporte-queda-peligro.html": 1795071900000,
-   "MARCA|https://www.marca.com/radio/2026/11/19/roberto-gomez-esto-vender-vinicius-mercado-invierno-me-parece-alucinante.html": 1795073458000
+   "MARCA|https://www.marca.com/radio/2026/11/19/roberto-gomez-esto-vender-vinicius-mercado-invierno-me-parece-alucinante.html": 1795073458000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html": 1795074856000
   },
   "hechos": [
    {
@@ -3306,11 +3313,25 @@
     "motivo": "lesión",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795074856000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cucho vuelve a entrenar con el grupo del Betis",
+    "motivo": "lesión sufrida ante el FC Barcelona",
+    "plazo": "",
+    "nums": [
+     17
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4215,17 +4236,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 6,
-   "redactar": 11,
-   "revisar": 4,
+   "clasificar": 7,
+   "redactar": 15,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187646,
-  "salida": 7369,
-  "cacheLee": 2903,
-  "cacheEscribe": 8709,
-  "dolares": 0.405514,
+  "entrada": 243199,
+  "salida": 8653,
+  "cacheLee": 5806,
+  "cacheEscribe": 11612,
+  "dolares": 0.531933,
   "reservado": 0
  },
  "recientes": {
@@ -4493,6 +4514,12 @@
    {
     "t": "2026-11-18T15:07:12.753Z",
     "texto": "🟨 Diez titulares habituales, a una amarilla de la sanción. Si ven una más en la jornada 13, se pierden la 14.\n\nOjo sobre todo con Y. Zabiri, que se perdería el Levante-Racing. Y Yoel Lago se quedaría sin el Celta-Villarreal."
+   }
+  ],
+  "onceideal": [
+   {
+    "t": "2026-11-19T08:01:45.973Z",
+    "texto": "⭐ El once ideal de la jornada 13 sale con un 3-4-3 y Mbappé como gran apuesta: recibe al Celta, un partido asequible, y es fijo con un 97 % de titularidad.\n\nBajo palos, Oblak visita al Getafe, que solo marca 0,7 goles por partido: el mejor cruce del once. El chollo es Revivo, del Elche 🌴, por 10,7 M ante un Levante 🐸 que va 17º.\n\nAubameyang se queda fuera: con un 50 %, es duda, y no compensa pagar 75 M por ella."
    }
   ]
  },
@@ -8558,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4030,
+   "ok": 4031,
    "fallos": 0,
-   "ejecuciones": 3313,
+   "ejecuciones": 3314,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T07:56:15.247Z"
+   "ultima": "2026-11-19T08:01:11.821Z"
   }
  },
  "ptsDirecto": {},
@@ -8581,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:56:29.392Z"
+   "ultimaBien": "2026-11-19T08:01:48.498Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:56:29.392Z"
+   "ultimaBien": "2026-11-19T08:01:48.498Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:56:29.392Z"
+   "ultimaBien": "2026-11-19T08:01:48.498Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8597,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:56:29.392Z"
+   "ultimaBien": "2026-11-19T08:01:48.498Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:56:29.392Z"
+   "ultimaBien": "2026-11-19T08:01:48.498Z"
   }
  },
  "avisos": [
