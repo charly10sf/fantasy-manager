@@ -2413,7 +2413,8 @@
    "SPORT|136631224": 1795109681000,
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000,
-   "SPORT|136636494": 1795111764000
+   "SPORT|136636494": 1795111764000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252987/barca-mueve-ficha-tres-centrales-punto-mira.html": 1795116792000
   },
   "hechos": [
    {
@@ -3251,7 +3252,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -4151,17 +4152,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 53,
-   "redactar": 30,
-   "revisar": 16,
+   "clasificar": 54,
+   "redactar": 34,
+   "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 559105,
-  "salida": 30979,
-  "cacheLee": 20321,
-  "cacheEscribe": 26127,
-  "dolares": 1.081863,
+  "entrada": 630389,
+  "salida": 33893,
+  "cacheLee": 26127,
+  "cacheEscribe": 29030,
+  "dolares": 1.25027,
   "reservado": 0
  },
  "recientes": {
@@ -4647,9 +4648,9 @@
  ],
  "fallosRedaccion": {
   "previa|126": {
-   "n": 3,
+   "n": 4,
    "t": "2026-11-18T06:11:39.992Z",
-   "ultima": "2026-11-19T10:21:41.599Z"
+   "ultima": "2026-11-19T20:01:58.448Z"
   }
  },
  "rasgos": {
@@ -8490,13 +8491,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4175,
+   "ok": 4176,
    "fallos": 0,
-   "ejecuciones": 3458,
+   "ejecuciones": 3459,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T19:56:11.964Z"
+   "ultima": "2026-11-19T20:01:26.430Z"
   }
  },
  "ptsDirecto": {},
@@ -8513,15 +8514,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:56:20.826Z"
+   "ultimaBien": "2026-11-19T20:02:04.649Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:56:20.826Z"
+   "ultimaBien": "2026-11-19T20:02:04.649Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:56:20.826Z"
+   "ultimaBien": "2026-11-19T20:02:04.649Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8529,11 +8530,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:56:20.826Z"
+   "ultimaBien": "2026-11-19T20:02:04.649Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:56:20.826Z"
+   "ultimaBien": "2026-11-19T20:02:04.649Z"
   }
  },
  "avisos": [
