@@ -51,7 +51,8 @@ for (const [t, como] of [
   ok(sep.texto === 'Acepta.' && (!/[\[{]/.test(t) || (sep.bloque && JSON.parse(sep.bloque).recomiendo.length === 1)), `notas ${como}: fuera del texto${/[\[{]/.test(t) ? ' y la app las lee' : ''}`);
 }
 const sis = CS.sistemaChat({ tono: c.tono, bloq: c.bloq, anuncio: c.anuncio, alias: c.alias });
-ok(sis.length < 16000 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `las instrucciones del chat, cortas (${sis.length} caracteres) y sin las del plan`);
+// (19 nov: 16.500 con lo de los tratos entre managers, el trueque de Carlos con Domy)
+ok(sis.length < 16500 && !/OPERACIONES POSIBLES HOY \(las ÚNICAS/.test(sis), `las instrucciones del chat, cortas (${sis.length} caracteres) y sin las del plan`);
 ok(!/es una función top/.test(CS.sistemaChat({ bloq: ['dineroRivales', 'quienPaga', 'inercia'], anuncio: true })) && /candado/.test(CS.sistemaChat({ bloq: ['quienPaga'], anuncio: true })), 'lo cerrado, con su candado y sin «función top»');
 ok(/SUS CLÁUSULAS, DE LA MÁS FÁCIL/.test(c.datos) && /EN EL MERCADO ME QUEDAN PARA PUJAS/.test(c.datos) && !/funci[oó]n top/.test(c.datos) && !/\bme faltan\b/.test(c.datos.slice(c.datos.indexOf('PLANTILLAS DE LOS RIVALES'))), 'los datos del chat: sus cláusulas ordenadas, lo que queda para pujar bien dicho, sin «función top» ni «me faltan» en los rivales');
 
