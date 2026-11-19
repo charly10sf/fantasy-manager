@@ -29,7 +29,7 @@ export const NOVEDADES = [
     // solo valía si llegaba en 12 s desde que se abría: al abrir en frío casi nunca salía (Anuncios.java, parte Android
     // nueva: AAB para Play). Los intersticiales contaban el rato de cada visita desde cero: ahora, el del día
     // (intersticial.js). Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8i', f: '2026-11-20', h: '00:00', t: 'Los anuncios, a su hora',
+    v: '0.8i', f: '2026-11-20', h: '00:48', t: 'Los anuncios, a su hora',
     cosas: [
       { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'Los anuncios, a su hora', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
     ],
