@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
@@ -8570,13 +8569,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4106,
+   "ok": 4107,
    "fallos": 0,
-   "ejecuciones": 3389,
+   "ejecuciones": 3390,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:11:12.104Z"
+   "ultima": "2026-11-19T14:16:14.409Z"
   }
  },
  "ptsDirecto": {},
@@ -8593,15 +8592,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:11:20.569Z"
+   "ultimaBien": "2026-11-19T14:16:24.951Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:11:20.569Z"
+   "ultimaBien": "2026-11-19T14:16:24.951Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:11:20.569Z"
+   "ultimaBien": "2026-11-19T14:16:24.951Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8609,11 +8608,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:11:20.569Z"
+   "ultimaBien": "2026-11-19T14:16:24.951Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:11:20.569Z"
+   "ultimaBien": "2026-11-19T14:16:24.951Z"
   }
  },
  "avisos": [
