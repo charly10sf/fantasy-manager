@@ -4202,7 +4202,6 @@
    "SPORT|136523846": 1794895219000,
    "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794900695000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-trenes-renfe-17-noviembre-consulta-cancelaciones-servicios-minimos-20261116102532.html": 1794821132000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000,
    "SPORT|136535420": 1794913964000,
    "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794929755000,
@@ -8588,13 +8587,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4047,
+   "ok": 4048,
    "fallos": 0,
-   "ejecuciones": 3330,
+   "ejecuciones": 3331,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T09:21:11.451Z"
+   "ultima": "2026-11-19T09:26:11.423Z"
   }
  },
  "ptsDirecto": {},
@@ -8611,15 +8610,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:21:20.685Z"
+   "ultimaBien": "2026-11-19T09:26:19.369Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:21:20.685Z"
+   "ultimaBien": "2026-11-19T09:26:19.369Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:21:20.685Z"
+   "ultimaBien": "2026-11-19T09:26:19.369Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8627,11 +8626,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:21:20.685Z"
+   "ultimaBien": "2026-11-19T09:26:19.369Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:21:20.685Z"
+   "ultimaBien": "2026-11-19T09:26:19.369Z"
   }
  },
  "avisos": [
