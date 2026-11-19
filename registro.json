@@ -2391,7 +2391,8 @@
    "MARCA|https://www.marca.com/radio/2026/11/19/roberto-gomez-esto-vender-vinicius-mercado-invierno-me-parece-alucinante.html": 1795073458000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html": 1795074856000,
    "SPORT|136595275": 1795073918000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000
   },
   "hechos": [
    {
@@ -3336,11 +3337,23 @@
     "nums": [
      17
     ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795080817000,
+    "id": "3264",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Ceballos vuelve a entrenar y busca llegar al derbi",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -4244,17 +4257,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 284595,
-  "salida": 10774,
+  "entrada": 286514,
+  "salida": 11484,
   "cacheLee": 8709,
   "cacheEscribe": 14515,
-  "dolares": 0.620125,
+  "dolares": 0.620672,
   "reservado": 0
  },
  "recientes": {
@@ -8588,13 +8601,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4050,
+   "ok": 4051,
    "fallos": 0,
-   "ejecuciones": 3333,
+   "ejecuciones": 3334,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T09:36:10.799Z"
+   "ultima": "2026-11-19T09:41:13.602Z"
   }
  },
  "ptsDirecto": {},
@@ -8611,15 +8624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:36:18.281Z"
+   "ultimaBien": "2026-11-19T09:41:26.728Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:36:18.281Z"
+   "ultimaBien": "2026-11-19T09:41:26.728Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:36:18.281Z"
+   "ultimaBien": "2026-11-19T09:41:26.728Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8627,11 +8640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:36:18.281Z"
+   "ultimaBien": "2026-11-19T09:41:26.728Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:36:18.281Z"
+   "ultimaBien": "2026-11-19T09:41:26.728Z"
   }
  },
  "avisos": [
