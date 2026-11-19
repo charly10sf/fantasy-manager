@@ -42,8 +42,8 @@
   },
   "intersticial": {
     "on": true,
-    "graciaMin": 10,
-    "cadaMin": 10,
+    "graciaMin": 4,
+    "cadaMin": 7,
     "maxDia": 5,
     "trasBonificadoMin": 3,
     "suLiga": true,
