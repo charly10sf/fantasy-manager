@@ -2411,7 +2411,8 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000,
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
+   "SPORT|136614839": 1795088375000
   },
   "hechos": [
    {
@@ -3358,7 +3359,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4203,7 +4204,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136501552": 1794833131000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
    "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000,
@@ -4259,17 +4259,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 441440,
-  "salida": 19086,
+  "entrada": 443453,
+  "salida": 19575,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.909835,
+  "dolares": 0.910281,
   "reservado": 0
  },
  "recientes": {
@@ -8598,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4087,
+   "ok": 4088,
    "fallos": 0,
-   "ejecuciones": 3370,
+   "ejecuciones": 3371,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:41:11.854Z"
+   "ultima": "2026-11-19T12:46:12.357Z"
   }
  },
  "ptsDirecto": {},
@@ -8621,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:41:20.176Z"
+   "ultimaBien": "2026-11-19T12:46:24.749Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:41:20.176Z"
+   "ultimaBien": "2026-11-19T12:46:24.749Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:41:20.176Z"
+   "ultimaBien": "2026-11-19T12:46:24.749Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8637,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:41:20.176Z"
+   "ultimaBien": "2026-11-19T12:46:24.749Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:41:20.176Z"
+   "ultimaBien": "2026-11-19T12:46:24.749Z"
   }
  },
  "avisos": [
