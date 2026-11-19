@@ -2417,7 +2417,8 @@
    "SPORT|136625185": 1795099106000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
+   "SPORT|136632067": 1795106605000
   },
   "hechos": [
    {
@@ -3316,7 +3317,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4215,17 +4216,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 545422,
-  "salida": 28745,
+  "entrada": 547466,
+  "salida": 29099,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.079378,
+  "dolares": 1.079759,
   "reservado": 0
  },
  "recientes": {
@@ -8554,13 +8555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4149,
+   "ok": 4150,
    "fallos": 0,
-   "ejecuciones": 3432,
+   "ejecuciones": 3433,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:46:10.551Z"
+   "ultima": "2026-11-19T17:51:14.824Z"
   }
  },
  "ptsDirecto": {},
@@ -8577,15 +8578,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:46:19.217Z"
+   "ultimaBien": "2026-11-19T17:51:27.593Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:46:19.217Z"
+   "ultimaBien": "2026-11-19T17:51:27.593Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:46:19.217Z"
+   "ultimaBien": "2026-11-19T17:51:27.593Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8593,11 +8594,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:46:19.217Z"
+   "ultimaBien": "2026-11-19T17:51:27.593Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:46:19.217Z"
+   "ultimaBien": "2026-11-19T17:51:27.593Z"
   }
  },
  "avisos": [
