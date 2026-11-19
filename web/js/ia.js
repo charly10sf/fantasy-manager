@@ -3052,7 +3052,9 @@ export function plantillasRivalesTxt(D, M, enteros = new Set(), { nombrados = ne
         det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
         cl,
         v ? `EN VENTA por ${eur(v.precio)}` : null,
-        of && (entero || ofertas) ? `oferta para que te lo venda ~${eur(of.v)}${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
+        // (19 nov, el trueque de Carlos con Domy: la IA tomaba el valor como precio justo y proponía «cambio a valores») lo que
+        // pide un dueño por él: pagar hasta ahí es un precio normal entre managers
+        of && (entero || ofertas) ? `oferta para que te lo venda ~${eur(of.v)} (precio normal entre managers: pagar hasta ahí es buen precio; a su valor su dueño no lo vende)${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,
         j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
       ].filter(Boolean).join(' | ')}`);
     }
