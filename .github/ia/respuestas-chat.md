@@ -1,9 +1,9 @@
 # El chat con claude-haiku-5-5 de verdad
 
-2026-11-19T10:00:10.631Z · escenas martes, paron, sabado · esfuerzo low
+2026-11-19T10:07:49.645Z · escenas martes, paron, sabado · esfuerzo low
 
 
-**Resumen:** 18 respuestas; 0 con algo que no sale de los datos, 10 con marcas; 8.80 céntimos en total (0.489 por respuesta); tiempo medio 10601 ms; 38827 tokens de entrada de media; largo medio 132 palabras.
+**Resumen:** 18 respuestas; 0 con algo que no sale de los datos, 11 con marcas; 8.80 céntimos en total (0.489 por respuesta); tiempo medio 10715 ms; 38770 tokens de entrada de media; largo medio 143 palabras.
 
 
 ## Escena «martes», esfuerzo low
@@ -11,58 +11,67 @@
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-4828 ms · 38881 tokens de entrada y 767 de salida · 0.427 céntimos · 118 palabras, 5 frases
+6201 ms · 47127 tokens de entrada y 1057 de salida · 0.524 céntimos · 82 palabras, 4 frases
 
-> No, no lo aceptes. Raphinha vale 121,02 M, así que te pagan el 12 % de su valor y pierdes unos 106 M. Además es titular en tu once (unos 6,6 puntos esperados en Villarreal) y sin él pierdes unos 5 puntos por jornada. Con esos 15 M tu saldo pasaría de 6,43 M a 21,43 M, y ni así le alcanzaría para recomprarlo, porque su cláusula está en 186,17 M y no se abre hasta el sábado 7 a las 14:00.
+> No, rechaza esa oferta. Raphinha vale 121,02 M y 15 M es el 12 % de su valor: es un regalo, y además sin él tu once pierde unos 5 pts por jornada.
 > 
-> Si quiere hacerte un trato de verdad, tendría que subir mucho, y aun así lo miraríamos con sus puntos y la inercia, que ahora mismo se está frenando tras su buen partido en la jornada 9.
+> Te aporta 10 de media, 7 puntos en la última jornada y el próximo partido en Villarreal (~6,6 pts). Su cláusula es de 186,17 M y está a salvo hasta que empiece la jornada 10 (sáb 7, 14:00), así que nadie puede llevárselo por ella antes de esa hora.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-15239 ms · 41391 tokens de entrada y 3108 de salida · 0.569 céntimos · 145 palabras, 6 frases
+11405 ms · 41394 tokens de entrada y 2238 de salida · 0.526 céntimos · 174 palabras, 8 frases · **COTEJO: largo: 8 frases**
 
-> Sí, te interesa. Oyarzabal rinde más en lo que queda: 3,6 puntos por partido de calendario frente a 3,3 de Julián (unos 17,8 pts en sus cinco próximos partidos frente a 16,5), y tiene un 74 % de titularidad en el próximo frente al 44 % de Julián, que juega la Champions tres días antes de Málaga. Además acaba de meter 8 puntos en la J9 y entraría en tu once, con unos +1,3 pts por jornada.
+> Sí, te interesa. Cada jugador se compra a su valor: tú le compras Oyarzabal por 37,50 M y él te compra Julián Álvarez por 34,97 M. Tu saldo baja de 6,43 M a 3,90 M, y el cambio te deja los dos con 14 días de cláusula cerrada.
 > 
-> El dinero: tú compras Oyarzabal a 37,50 M y él te compra Julián a 34,97 M, así que tu saldo pasa de 6,43 M a 3,90 M (−2,53 M). Nadie pierde valor en el cambio.
+> Oyarzabal entra en tu once como titular (unos 3 pts esperados en Elche el domingo, +1,3 pts por jornada para ti) y tiene un calendario favorable. Julián Álvarez es suplente en el once probable, con unos 2,8 pts esperados en Málaga y rotación por la Champions, así que sin él pierdes 1,2 pts por jornada.
 > 
-> Además, los dos quedan protegidos 14 días: Julián tenía la cláusula abierta desde el lun 9 a las 07:09, y Oyarzabal hoy no lo puedes clausular con tu saldo (le faltan 31,46 M).
+> Además, su cláusula de 37,49 M está abierta el lunes a las 07:09 y, al ser solo un +7 % sobre su valor, es tentadora para cualquiera con saldo. Con el cambio te quitas ese riesgo. Oyarzabal, en cambio, no te la pueden pagar ahora mismo porque su cláusula de 37,89 M te exige 31,46 M que no tienes, así que el cambio es la única forma de hacerte con él.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-14948 ms · 41480 tokens de entrada y 2894 de salida · 0.559 céntimos · 163 palabras, 7 frases · **COTEJO: largo: 7 frases · dice lo que no debe (cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores)**
+17061 ms · 41483 tokens de entrada y 3179 de salida · 0.574 céntimos · 195 palabras, 11 frases · la app revisó 1 · **COTEJO: largo: 11 frases** · apuntó: Marcos propone comprarle Julián Álvarez por 34,97 M y luego comprarle Oyarzabal por un 4 % más de su valor
 
-> No. Tu saldo acabaría en 2,40 M (6,43 + 34,97 − 39,00), es decir, pierdes 4,03 M. Con un cambio a valores pierdes 2,53 M, y tu saldo acabaría en 3,90 M.
+> No es el mejor camino. Te compensa más vender a Julián y **clausular a Oyarzabal**, porque su cláusula de 37,89 M es más barata que el 4 % (37,50 × 1,04 = 39,00 M) y no depende de que Marcos acepte.
 > 
-> Hay una opción mejor. Cuando te llegue el dinero de Julián Álvarez, la cláusula de Oyarzabal (37,89 M) está abierta y te sale 1,11 M más barata que su 4 % (39,00 M). Con 41,40 M de saldo, clausularlo te dejaría en 3,51 M: pierdes 2,92 M, algo menos que el cambio a valores y bastante menos que su propuesta. Además, Oyarzabal rinde más para tu once (unos 17,8 pts en sus próximos 5 partidos frente a los 16,5 de Julián, y con titular casi seguro), así que la operación merece la pena.
+> Con la venta a su valor entran 34,97 M al momento: 6,43 M + 34,97 M = 41,40 M. Clausulando pagas 37,89 M y te quedan 3,51 M. Con la compra directa a 39,00 M te quedarían 2,40 M, 1,11 M menos. Además, su oferta de referencia para Oyarzabal ronda 41,19 M, así que 39,00 M probablemente no lo convence. Julián, aunque va a la baja, es suplente en el once probable y da unos 2,8 puntos por partido contra los 3 de Oyarzabal, que es titular cerca del 74 % y tiene mejor calendario. Por eso el cambio te sube el once.
 > 
-> Si prefieres negociar con él, pide que te compre a Julián por 37,50 M en vez de 34,97 M: tu saldo quedaría en 4,93 M, con una pérdida de solo 1,50 M frente al 4 % que propone.
+> Sobre si salís ganando los dos: para ti sí, y para Marcos la venta le deja más efectivo, aunque pierde algo de valor. Lo que no puedo ver es si tiene saldo para pagar los 34,97 M, así que confírmalo antes. Si acepta, vende primero y clausula después, en ese orden.
+> 
+> **Revisado por la app:**
+> - **Oyarzabal**: no te llega. Su cláusula son 37,89 M y una cláusula solo se paga con saldo, sin deuda: tienes 6,43 M, faltan 31,46 M.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-13564 ms · 41944 tokens de entrada y 2386 de salida · 0.539 céntimos · 118 palabras, 5 frases · **COTEJO: dice lo que no debe (no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)|no pierdes nada por dejarle|a valores)**
+10684 ms · 43407 tokens de entrada y 1768 de salida · 0.522 céntimos · 182 palabras, 9 frases · **COTEJO: largo: 9 frases**
 
-> Su amenaza es creíble, pero la cláusula de Oyarzabal ya está abierta y el dinero solo te llegaría si él te compra a Julián. Por eso, si la cerráis, el orden importa: primero entra el dinero de Julián y después clausulas al instante. Lo que no puedes controlar es que en ese margen él blinde a Oyarzabal, y los datos no me dicen cuántos escudos le quedan.
+> Ojo con el matiz: la cláusula de Oyarzabal **ya está abierta**, no se abre más tarde. Eso significa que Marcos sí puede blindarla o subirla ahora mismo, como dueño, así que su amenaza es creíble. Subirla le cuesta la mitad de lo que sube, y el blindaje depende de los escudos que le queden, que no puedo ver.
 > 
-> Así que la opción segura es el cambio a valores: pierdes 2,53 M y tu saldo queda en 3,90 M. Su propuesta del 4 % te deja en 2,40 M, 1,50 M peor, y no evita el riesgo de que suba o blinde la cláusula antes de que llegue el dinero.
+> Para clausularla tienes que tener el dinero antes, y el único modo de tenerlo ahora es que te compre a Julián. Por eso la secuencia tiene que ser venta y clausulazo seguidos: aceptas su compra, entran 34,97 M al momento (41,40 M en total) y pagas 37,89 M de inmediato. Si lo dejas para después, te arriesgas a que lo blinde o suba la cláusula en medio.
+> 
+> Si no quieres depender de él, el plan B es esperar a que el blindaje o la subida no le sea rentable, pero no tengo forma de comprobarlo. Mi recomendación: si te ofrece comprarte a Julián por 34,97 M, acéptalo y clausula a Oyarzabal en el mismo rato. Si no hace la compra, no te quedes esperando.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-4219 ms · 30717 tokens de entrada y 771 de salida · 0.346 céntimos · 86 palabras, 4 frases
+4181 ms · 32128 tokens de entrada y 703 de salida · 0.356 céntimos · 90 palabras, 6 frases
 
-> Tu jugador queda con la cláusula cerrada **14 días** desde que lo fichas. Si lo clausulas hoy, a las 10:00, nadie puede pagarle la cláusula hasta el **17 nov a las 10:00** aprox.
+> Catorce días. Cuando clausulas a un jugador, su cláusula queda cerrada 14 días desde el fichaje, así que nadie puede pagársela hasta entonces. Pasado ese plazo, vuelve a estar abierta y cualquier rival con saldo suficiente podría clausulártelo.
 > 
-> Eso vale también para el lado rival: si tu clausulazo te deja un jugador que otro quería, esa protección le impide quitártelo por cláusula durante esas dos semanas. Y el blindaje (los 2 escudos de hoy) es otra cosa: solo protege 24 h y solo se puede poner con la cláusula ya abierta.
+> Eso sí, la protección no te salva si la cláusula queda por debajo de lo que un rival pagaría. Con la cláusula que pidieran a su valor o cerca, el riesgo sería real en cuanto se reabriera. Por encima de lo que se paga aquí por un clausulazo, nadie se lo plantea.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-10760 ms · 38796 tokens de entrada y 2064 de salida · 0.491 céntimos · 165 palabras, 7 frases · **COTEJO: largo: 7 frases**
+17673 ms · 40207 tokens de entrada y 3522 de salida · 0.578 céntimos · 150 palabras, 6 frases
 
-> Para Oyarzabal, el precio que sí puedes pagar a Marcos es hasta unos 41,19 M, que es lo que suele pedir su dueño por un jugador así. Pero la mejor opción es clausularlo: su cláusula es de 37,89 M, está abierta ya y es más barata que cualquier oferta. El problema es el saldo: ahora tienes 6,43 M y te faltan 31,46 M. Solo llegarías aceptando antes la oferta de Hugo por Álex Baena (66,17 M), que caduca mañana a las 00:15, y con eso tendrías 72,60 M en caja. Eso choca con lo que te recomienda la app (esperar con Baena), así que es tu decisión: vender a Baena para clausular a Oyarzabal te cuesta perder a un titular de tu once y su subida de 696 mil al día. Oyarzabal aporta unos 1,3 puntos por jornada más que lo que tienes ahora, y su calendario es bueno (unos 17,8 puntos en las próximas cinco jornadas). Si no vendes a Baena, no lo fichaes.
+> No le ofrezcas nada. Su cláusula está abierta en 37,89 M, que es menos que lo que te propone Marcos (39,00 M, un 4 % sobre su valor) y bastante menos que su precio normal entre managers (unos 41,19 M).
+> 
+> El problema es el saldo: tienes 6,43 M y te faltan 31,46 M. Si vendes a Julián Álvarez a Marcos por 34,97 M, el dinero entra al momento y te quedarían 41,40 M, suficiente para pagar los 37,89 M de la cláusula y quedarte con unos 3,5 M. Perderías unos 2,84 M sobre lo que pagaste por Julián, y en tus puntos esperados casi se compensan (Oyarzabal 3, Julián 2,8), así que la decisión depende de si quieres ese cambio.
+> 
+> La otra vía es vender a Álex Baena a Hugo (66,17 M), pero es titular con 5,7 pts esperados y la app aconseja esperar, así que no lo haría hoy.
 
 
 ## Escena «paron», esfuerzo low
@@ -70,62 +79,58 @@
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-6995 ms · 37936 tokens de entrada y 1351 de salida · 0.447 céntimos · 122 palabras, 6 frases · apuntó: Marcos le ofrece 15 M por Raphinha (valor 121,02 M)
+6473 ms · 37939 tokens de entrada y 1229 de salida · 0.441 céntimos · 102 palabras, 5 frases
 
-> No, recházalo. 15 M es el 12 % de lo que vale (121,02 M), y LaLiga suele dar de mediana un +5 % sobre el valor en esta liga, unos 127 M. Raphinha te da unos 5 pts por jornada en tu once, pero ya ha girado a la baja (−2,62 M hoy), así que lo que te interesa es venderlo bien, no regalarlo.
-> 
-> Lo que te toca es ponerlo a la venta en LaLiga y dejar que llegue su oferta en el próximo cambio de mercado (mañana a las 00:15). Hace falta ese dinero para empezar la jornada 10 en positivo. Que sepas que tu cláusula es de 186,17 M, así que ningún rival se lo va a quitar por ahí.
+> No, rechaza esa oferta. Son 15 M por un jugador que vale 121,02 M: te dejaría perdiendo unos 106 M y no llega ni a la mitad de lo que le pagaste (93,18 M). Lo que te conviene es ponerlo a la venta para LaLiga, que suele pagar alrededor de un +5 % sobre el valor, unos 127 M en el próximo cambio de mercado (mañana 00:15). Su inercia ya ha girado a la baja, así que no merece la pena esperar más. Antes del 13 nov a las 00:15 tiene que estar vendido para que empieces la jornada 10 en positivo.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-13672 ms · 41446 tokens de entrada y 2591 de salida · 0.544 céntimos · 177 palabras, 9 frases · **COTEJO: largo: 9 frases**
+14941 ms · 40095 tokens de entrada y 3020 de salida · 0.552 céntimos · 165 palabras, 7 frases · **COTEJO: largo: 7 frases**
 
-> Sí, me interesa, y te lo recomiendo si el cambio es como dices: tú recibes Oyarzabal y das Julián Álvarez.
+> Sí, te interesa. Sale casi igual de valor (37,50 M por Oyarzabal, 34,97 M por Julián Álvarez) y tu once gana en titularidad: Oyarzabal tiene unos 3,3 pts esperados por partido con ~79 % de titular, y Julián unos 2,8 en Málaga (14 nov, 14:00) con ~44 %, porque la Champions le roba el once. El calendario de los próximos cinco partidos es parecido (~15,8 pts él frente a ~16,4 Julián), así que la ventaja está en que juega más.
 > 
-> Cada uno entra a su valor: tú compras Oyarzabal a 37,50 M y él compra Julián a 34,97 M. Tu saldo pasa de 6,43 M a 3,90 M, así que pagas 2,53 M netos, mucho menos que los 31,46 M que te faltan para su cláusula de 37,89 M.
+> El cambio son dos compras: tu saldo pasa de 6,43 M a 3,90 M (6,43 − 37,50 + 34,97). Los dos quedan con la cláusula protegida 14 días, y eso importa: la de Julián (37,49 M) se abre el lunes 9 a las 07:09 y, sin el cambio, cualquiera con saldo puede llevárselo a un +7 %.
 > 
-> Además, Oyarzabal rinde más para tu once. Juega en Getafe (17º, ~3,3 pts esperados, titular ~79 %) y su calendario de cinco partidos es más favorable (~15,8 pts). Julián va a Málaga (~2,8 pts) y tiene rotación por la Champions tres días después. Oyarzabal entra en tu once y te da unos 1,7 pts por jornada más.
-> 
-> Y lo más importante: los dos quedan con la cláusula cerrada 14 días tras el cambio. Julián ya tenía la suya protegida hasta el lunes 9 a las 07:09, así que el cambio no te quita nada que no fuera a perder ya, y te asegura a Oyarzabal durante dos semanas.
+> Los dos están girando a la baja hoy (Oyarzabal −349 mil, Julián −259 mil), así que no hay ventaja de valor: decides por puntos y por seguridad. Acéptalo.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-12241 ms · 41535 tokens de entrada y 2477 de salida · 0.539 céntimos · 149 palabras, 6 frases · **COTEJO: dice lo que no debe (cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores)**
+11601 ms · 40184 tokens de entrada y 2189 de salida · 0.511 céntimos · 140 palabras, 8 frases · **COTEJO: largo: 8 frases · dice lo que no debe (cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores)**
 
-> No, solo gana él. Con su propuesta tu saldo pasa de 6,43 M a 2,40 M: 6,43 M + 34,97 M = 41,40 M, y luego 41,40 M − 39,00 M (37,50 M + 4 %) = 2,40 M. Con el cambio a valores te quedarían 3,90 M (6,43 M + 34,97 M − 37,50 M), así que el 4 % te cuesta 1,50 M de más sin darte nada a cambio. Deportivamente sí te conviene el cambio: Oyarzabal tiene 3,3 pts esperados el próximo partido frente a los 2,8 de Julián, y en tu once te suma unos 1,7 pts por jornada frente a los 1,2 que pierdes sin Julián. Y ambos quedáis con 14 días de cláusula cerrada. Yo le contestaría a valores (34,97 M por Julián, 37,50 M por Oyarzabal), que es lo que se paga entre managers sin que nadie pierda más de lo necesario.
+> No, sales perdiendo 1,50 M. Con su propuesta tu saldo pasa de 6,43 M a 41,40 M al cobrar JA (34,97 M), y luego pagas 39,00 M por Oyarzabal (37,50 M + 4 %), así que te quedan 2,40 M. Con el cambio a valores te quedarían 3,90 M (6,43 − 2,53). Él, en cambio, gana 1,50 M en valor, justo lo que tú pierdes.
+> 
+> Si quieres a Oyarzabal, lo más barato es su cláusula: 37,89 M, abierta ahora mismo y 1,11 M menos que su 4 %. Una vez te llegue el dinero del JA te quedarían 3,51 M, y los dos jugadores quedan con 14 días cerrados igual. Si Marcos acepta cambiar a valores, mejor todavía: 34,97 M por Oyarzabal a 37,50 M, sin pagarle la prima. Si solo acepta su versión del 4 %, no la aceptes.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-9534 ms · 41956 tokens de entrada y 1738 de salida · 0.506 céntimos · 136 palabras, 7 frases · **COTEJO: largo: 7 frases · dice lo que no debe (no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)|no pierdes nada por dejarle|a valores)**
+9573 ms · 40607 tokens de entrada y 1630 de salida · 0.488 céntimos · 154 palabras, 8 frases · **COTEJO: largo: 8 frases · dice lo que no debe (no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)|no pierdes nada por dejarle|a valores)**
 
-> Sí, la amenaza es creíble. La cláusula de Oyarzabal ya está abierta, así que Marcos puede ponerle el escudo ahora mismo, y no le cuesta nada. Subirla también la protegería, aunque le costaría dos euros por cada uno que suba.
+> Es una amenaza creíble, pero no cambia la cuenta. Marcos sí puede blindar a Oyarzabal ahora mismo (su cláusula ya está abierta) o subirla pagando la mitad de la subida. Si lo blinda, no pierdes al jugador: la cláusula queda protegida 24 h y luego vuelve a estar disponible a 37,89 M. Si la sube, te sale más cara, pero no has perdido nada hasta que pagues. Y para clausularla necesitas el dinero de su compra de Julián Álvarez, así que hoy no podrías pagarla de todos modos.
 > 
-> Clausularlo hoy tampoco es fácil: la cláusula son 37,89 M y tienes 6,43 M de saldo, así que te faltan 31,46 M. Solo llegarías vendiendo a Álex Baena a Hugo por 66,17 M, que caduca mañana a las 00:15, pero Baena es titular y pierdes unos 4 pts por jornada.
-> 
-> Por eso yo seguiría con el cambio a valores: tú acabas con Oyarzabal y 3,90 M de saldo, frente a los 2,40 M de su propuesta. Si no lo acepta, la alternativa real es el blindaje de Marcos, no una cláusula que hoy no puedes pagar.
+> Así que mi consejo sigue igual: no aceptes la versión del 4 %, que te cuesta 1,11 M más que la cláusula. Si quiere cambiar a valores (34,97 M por 37,50 M), es una pérdida de 2,53 M, pero te asegura a Oyarzabal con 14 días cerrados. Si no acepta ninguna de las dos y blinda la cláusula, espera a que se libere y compara entonces.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-3597 ms · 30828 tokens de entrada y 576 de salida · 0.337 céntimos · 61 palabras, 4 frases
+4479 ms · 29477 tokens de entrada y 776 de salida · 0.334 céntimos · 98 palabras, 5 frases
 
-> **14 días.** Tras cualquier fichaje (clausulazo, mercado o compra a otro manager) la cláusula queda cerrada esos 14 días. Si lo clausulas hoy, a las 10:00 de hoy, nadie podrá quitártelo hasta el 17 nov a esa misma hora.
+> **14 días.** Tras cualquier fichaje (clausulazo, mercado o compra a otro manager), la cláusula del jugador queda cerrada durante 14 días, así que nadie puede pagársela en ese tiempo. Si lo clausulas hoy, 3 nov a las 10:00, estaría a salvo hasta el 17 nov a esa misma hora.
 > 
-> Ojo con la jornada 10: si lo clausulas después del cierre de cláusulas del 13 nov, 14:00, no puntúa en esa jornada.
+> Eso sí, pasados los 14 días la cláusula vuelve a estar abierta. Si para entonces su valor ha subido por encima de ella, LaLiga la sube sola hasta su valor, y si tu jugador está cerca de su valor, es la presa más fácil para un rival con dinero.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-5824 ms · 38934 tokens de entrada y 1116 de salida · 0.445 céntimos · 152 palabras, 7 frases · **COTEJO: largo: 7 frases**
+7751 ms · 37583 tokens de entrada y 1268 de salida · 0.439 céntimos · 140 palabras, 8 frases · **COTEJO: largo: 8 frases**
 
-> No le ofrezcas nada hoy por Oyarzabal. Su oferta de referencia es unos 41,19 M, pero la cláusula está abierta en 37,89 M, que es más barata, y para pagarla necesitarías 72,60 M de caja, es decir, aceptar antes las ofertas que tienes (Baena y Duro), porque con tu saldo de 6,43 M te faltan 31,46 M.
+> Por Oyarzabal, la oferta de referencia son unos **41,19 M**. Su dueño no lo tiene a la venta, así que no te lo va a dar por menos de lo que le daría LaLiga, y es probable que pida más.
 > 
-> El problema es que no compensa para tu once. Espera unos 3,3 puntos en su próximo partido (en Getafe, el 14 nov, 21:00), y su inercia acaba de girar a la baja (−349 mil hoy). Pagar casi 38 M por un jugador que te aporta unos 1,7 puntos por jornada más que lo que tienes no sale a cuenta. Tampoco sube lo suficiente para revenderlo con beneficio en este parón.
+> Su cláusula está abierta en **37,89 M**, pero ahora mismo no te llega: tienes 6,43 M de saldo y necesitarías aceptar antes las ofertas que tienes (Álex Baena, 66,17 M) para tener caja. Si lo consigues por cláusula, pagas unos 3,30 M menos que con la oferta.
 > 
-> Si el dinero te sobra después de vender y quieres reforzar el ataque, mira antes las opciones que ya tienes en el plan de hoy.
+> No lo recomiendo para tu once. Va a 3,3 puntos esperados en Getafe, y su inercia acaba de girar a la baja (−349 mil hoy). Te aportaría 1,7 puntos por jornada, y pagar 41 M por eso no compensa. Solo tendría sentido para revender con beneficio claro, y ahora mismo no lo veo.
 
 
 ## Escena «sabado», esfuerzo low
@@ -133,62 +138,63 @@
 
 ### trato (ofertas): «Marcos me ofrece 15 M por Raphinha. ¿Lo acepto?»
 
-5027 ms · 37681 tokens de entrada y 880 de salida · 0.421 céntimos · 67 palabras, 4 frases · apuntó: Marcos ofrece 15 M por Raphinha (muy por debajo de su valor de 121,02 M)
+4518 ms · 37684 tokens de entrada y 716 de salida · 0.413 céntimos · 105 palabras, 6 frases
 
-> No la aceptes. Raphinha vale 121,02 M y te da unos 5 puntos por jornada en tu once, y 15 M es apenas el 12 % de su valor. LaLiga te daría más que eso por él, y un mánager que ofrezca tan poco no espera que aceptes. Además, juega mañana 18:30 en Villarreal con 6,6 puntos esperados, así que no es momento de desprenderte de él.
+> No, recházala. Raphinha vale 121,02 M y tiene una cláusula de 186,17 M, así que 15 M es menos de una octava parte de su valor. LaLiga le daría de mediana alrededor de un 5 % sobre su valor, unos 127 M, y ningún manager vende por debajo de eso.
+> 
+> Además, es de tu once titular (82 % de probabilidades de salir de inicio) y te da unos 5 puntos por jornada. Mañana juega en Villarreal y tiene 6,6 puntos esperados. Si lo vendieras, perderías 5 puntos por jornada a cambio de 15 M, y encima te quedarías sin el jugador que más te aporta.
 
 
 ### trueque (ofertas): «Marcos me propone cambiarme Oyarzabal por Julián Álvarez, uno por otro. ¿Me interesa?»
 
-16779 ms · 41574 tokens de entrada y 3274 de salida · 0.579 céntimos · 177 palabras, 8 frases · **COTEJO: largo: 8 frases**
+18622 ms · 40219 tokens de entrada y 3770 de salida · 0.591 céntimos · 218 palabras, 11 frases · **COTEJO: largo: 11 frases**
 
-> Sí, te interesa. Compras Oyarzabal a 37,50 M y él compra Julián Álvarez a 34,97 M, así que tu saldo baja de 6,43 M a 3,90 M (−2,53 M). Con los dos cambios tienes ahora a Oyarzabal con la cláusula protegida 14 días.
+> Sí, me interesa, y te conviene cerrarlo antes de las 14:00 de hoy. Oyarzabal tiene la cláusula de 37,89 M abierta desde las 14:00 y vale 37,50 M, así que es de los más fáciles de clausular de la liga. Si entra en tu equipo con la cláusula cerrada 14 días, te lo quitas de encima.
 > 
-> En el once ganas: Oyarzabal es titular probable (74 %) y suma unos 1,3 pts por jornada a tu once, mientras que Julián, suplente en el once probable con un 44 % de titularidad, te cuesta 1,2 pts. Su próximo partido, en Elche (12º), da unos 3 pts, y en sus cinco próximos partidos esperan unos 17,8 pts frente a los 16,5 de Julián.
+> En cuanto a puntos, están parejos. Julián hace 5,9 de media y tiene 44 pts, pero juega hoy 14:00 en Málaga y su titularidad es dudosa (44 %) por la Champions del miércoles. Oyarzabal hace 4,8, juega mañana en Elche y tiene titular un 74 %, con 17,8 pts esperados en sus próximos cinco partidos frente a los 16,5 de Julián. Además, tu once gana unos 1,3 pts por jornada con él.
 > 
-> Además, la cláusula de Julián se abre el vie 13 a las 07:39 y cualquiera con saldo se la puede llevar. Con el cambio eso desaparece, y tú no podrías pagar la de Oyarzabal (37,89 M) con tu saldo actual de todos modos.
+> El cambio cuesta 2,53 M (37,50 M − 34,97 M), de 6,43 M a 3,90 M. Es más caro que dejar que las cláusulas decidan (unos 0,39 M), pero las cláusulas dependen de que Marcos pague la tuya y de que tú llegues a tiempo a la de Oyarzabal, y no tienes el dinero para la de Oyarzabal sin vender antes a Baena. El cambio es lo seguro.
 > 
-> Ojo a la puja de Courtois (36,30 M, se resuelve mañana a las 00:15): si la ganas, tu saldo quedaría en −32,40 M, dentro del margen permitido.
+> Eso sí, Julián deja de contar para la jornada 10, así que el cambio tiene que estar cerrado antes de las 14:00.
 
 
 ### trueque-encadenado (ofertas): «Marcos me propone esto: él me compra a Julián Álvarez por su valor de mercado y, en cuanto me llega el dinero, yo le compro a Oyarzabal por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?»
 
-27486 ms · 41663 tokens de entrada y 5396 de salida · 0.686 céntimos · 171 palabras, 9 frases · **COTEJO: largo: 9 frases**
+23276 ms · 40308 tokens de entrada y 4972 de salida · 0.652 céntimos · 155 palabras, 7 frases · **COTEJO: largo: 7 frases · dice lo que no debe (cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores)**
 
-> Sí, te conviene, pero no porque ganes dinero. Pagas un 4 % sobre su valor y ese sobreprecio se lo lleva Marcos.
+> No, no salís ganando igual: él gana más que tú. Con el cambio a valores (37,50 M por Oyarzabal) acabarías con 3,90 M de saldo. Con su propuesta, 6,43 M + 34,97 M − 39,00 M = 2,40 M, así que pagas 1,50 M más por el mismo jugador.
 > 
-> Las cuentas: vendes a Julián por 34,97 M y tienes 41,40 M (6,43 + 34,97). Pagas 39,00 M por Oyarzabal (37,50 × 1,04) y te quedan 2,40 M.
+> Deportivamente sí te compensa algo: Oyarzabal entra en tu once (+1,3 pts por jornada) por los 1,2 que aporta Julián, y su calendario es mejor (unos 17,8 pts en 5 partidos frente a 16,5 de Julián, que además tiene la Champions entre medias).
 > 
-> Lo que te compensa es que Oyarzabal entra ya en tu once de la jornada 10, antes de las 14:00. Tiene un 79 % de titularidad y un calendario favorable (unos 3 pts en Elche), mientras que Julián es suplente probable y tiene un 44 % de titular. Julián sube 4 mil al día y Oyarzabal baja 349 mil hoy, pero el segundo rinde más en lo que queda de jornada.
-> 
-> La alternativa de clausularlo a 37,89 M a las 14:00 sale 1,11 M más barata, pero él no llegaría al once de esta jornada y su cláusula está tan cerca de su valor que cualquier rival con saldo podría llevárselo ese mismo minuto. Por eso yo cerraría la compra ahora.
+> Yo le propondría el cambio a valores. Si no lo acepta, 39 M sigue siendo buen precio, porque su oferta para que te lo venda ronda los 41,19 M. Antes de nada, asegúrate de que tiene el dinero para pagar Julián, porque todo arranca por su compra, y hazlo antes de las 14:00 de hoy para que Oyarzabal cuente en la jornada 10.
 
 
 ### trueque-sin-clausula (ofertas): «Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de Oyarzabal se la sube o lo blinda, así que clausularlo no es opción.»
 
-11636 ms · 42140 tokens de entrada y 2173 de salida · 0.530 céntimos · 151 palabras, 7 frases · **COTEJO: largo: 7 frases**
+8649 ms · 40743 tokens de entrada y 1522 de salida · 0.484 céntimos · 190 palabras, 7 frases · **COTEJO: largo: 7 frases · dice lo que no debe (no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)|no pierdes nada por dejarle|a valores)**
 
-> Lo de blindarla antes de que se abra no es posible: el blindaje solo se pone con la cláusula ya abierta, y la de Oyarzabal se abre hoy a las 14:00. Subirla sí puede hacerla en cualquier momento, pero cada euro que sube la cláusula le cuesta dos de su saldo. Para llevarla de 37,89 M a 39,00 M tendría que pagar 2,22 M, y para dejarla en 45 M, unos 14 M. Es un coste alto para un rival que solo la quiere retener.
+> Con el blindaje no te la puede poner: solo se pone con la cláusula ya abierta, y la de Oyarzabal se abre hoy a las 14:00, a la misma hora que la tuya. Subirla sí puede, pagando la mitad de lo que sube, pero le costaría dinero real y, aunque la suba, tu cláusula seguiría abierta a las 14:00. Lo que te está diciendo es que va a cobrarte caro cualquier intento de clausularlo, no que te lo quite.
 > 
-> Así que el cambio sigue siendo lo más seguro. Con el trato, saldo y plantilla quedan así: vendes Julián por 34,97 M y pasas de 6,43 M a 41,40 M; compras Oyarzabal por 39,00 M y te quedan 2,40 M, es decir, 4,03 M menos de saldo. Si hoy aceptas, la compra se hace ya y Oyarzabal puede entrar en tu once antes de las 14:00.
+> Aun así, clausularlo hoy tiene un problema: tienes 6,43 M y necesitas 37,89 M. Solo llegarías vendiendo a Álex Baena a Hugo (66,17 M, caduca mañana 00:15), y la app aconseja esperar con él porque es de tu once y sube.
+> 
+> Por eso, el cambio a valores (Oyarzabal por 37,50 M, Julián Álvarez por 34,97 M) sigue siendo lo más seguro: te deja con 3,90 M y ambos jugadores con la cláusula cerrada 14 días. Si quiere que el cambio se haga a su plan de 39 M por Oyarzabal, asegúrate antes de que Julián Álvarez se le compra de verdad y el dinero entra, porque sin eso no hay trato.
 
 
 ### regla-14 (reglas): «Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?»
 
-5065 ms · 30960 tokens de entrada y 854 de salida · 0.352 céntimos · 81 palabras, 5 frases
+4882 ms · 29605 tokens de entrada y 827 de salida · 0.337 céntimos · 91 palabras, 5 frases
 
-> **14 días.** Desde que lo fichas por cláusula, la suya queda cerrada 14 días, así que nadie puede volver a clausulártelo hasta entonces. Si lo clausulas hoy a las 14:00, estaría cerrado hasta el 21 de noviembre a esa misma hora.
+> Catorce días. Tras cualquier fichaje (clausulazo, mercado o compra a otro mánager) la cláusula queda cerrada 14 días, y nadie puede pagársela durante ese tiempo. Si lo clausulas hoy a las 14:00, cuando se abren las cláusulas con el inicio de la jornada 10, estaría protegido hasta el sábado 21 de noviembre a esa misma hora.
 > 
-> Durante esos 14 días solo te lo podría quitar alguien que te haga una oferta por él, y eso lo decides tú. Y recuerda que las cláusulas no se pagan hasta que empiece la jornada 10, hoy a las 14:00.
+> Pasado ese plazo, vuelve a estar abierta, así que tendrás que contar con que un rival con saldo suficiente la pague si sale barata respecto a su valor. Por eso importa de qué jugador hablamos.
 
 
 ### cuanto-ofrezco (ofertas): «¿Cuánto le ofrezco a Marcos por Oyarzabal?»
 
-9397 ms · 39017 tokens de entrada y 1793 de salida · 0.480 céntimos · 132 palabras, 5 frases · la app revisó 1
+10901 ms · 37662 tokens de entrada y 1962 de salida · 0.475 céntimos · 151 palabras, 8 frases · **COTEJO: largo: 8 frases**
 
-> Pagaría como mucho 41,19 M, que es la oferta de referencia para que Marcos te lo venda, pero ahora no le haría ninguna. Vale 37,50 M, va a la baja (−349 mil hoy) y no está en venta, así que su dueño pedirá más, y 41,19 M ya es un +9,8 % sobre su valor. Aporta poco: media 4,8, unos 3 puntos esperados en Elche y +1,3 pts por jornada en tu once, así que pagar de más tardaría mucho en recuperarse.
+> Hasta unos **41,19 M**, que es lo que se considera buen precio entre managers. Pero su dueño no lo vende por menos de lo que le daría LaLiga, que aquí ronda los 38,89 M, así que empieza más bajo y espera que subas.
 > 
-> La cláusula es de 37,89 M y se abre hoy a las 14:00, pero con tus 6,43 M de saldo no te llega sin aceptar antes la oferta de Hugo por Baena, y aun así te la llevarías para puntuar desde la jornada 11, no desde la 10. Déjalo pasar.
+> Lo más seguro es su cláusula: **37,89 M**, que se abre **hoy a las 14:00**, cuando empieza la jornada 10. Ahí tienes un problema: tienes 6,43 M de saldo y te faltan 31,46 M. Para llegar tendrías que aceptar antes la oferta de Hugo por Álex Baena (66,17 M, que caduca mañana a las 00:15), y eso te quitaría un jugador que te da 4,1 pts por jornada.
 > 
-> **Revisado por la app:**
-> - **Álex Baena**: su cláusula es de 70,70 M (no de 37,89 M).
+> Oyarzabal te daría unos 1,3 pts por jornada y, al clausularlo a las 14:00, no llegaría al once de la jornada 10, sino a partir de la 11. Pagar 37,89 M por eso no compensa ahora. Yo no lo compraría.
