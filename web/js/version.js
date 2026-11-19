@@ -25,7 +25,7 @@ export const NOVEDADES = [
     // (19 nov, el fallo de Bryan: con los datos de su operadora no llegaba al dominio y se quedaba en la 0.7.13za) AlDia
     // prueba el respaldo de Cloudflare Pages (Origenes.java, parte Android nueva: AAB para Play), la banda de no poder
     // descargar con esa conexión y los textos de Quién usa la app. Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8g', f: '2026-11-19', h: '21:00', t: 'Actualizaciones con cualquier conexión',
+    v: '0.8g', f: '2026-11-19', h: '21:52', t: 'Actualizaciones con cualquier conexión',
     cosas: [
       { tipo: 'arreglo', d: 'conexion', t: 'Actualizaciones con cualquier conexión', x: 'Si tu conexión no llegaba a donde se descargan las actualizaciones, la app se quedaba en una versión vieja sin decir nada. Con la versión nueva de Google Play lo intenta también por otro camino y, si en más de un día no lo consigue, te avisa para que la abras con wifi.' },
     ],
