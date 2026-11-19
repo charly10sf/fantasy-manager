@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136517232": 1794856951000,
    "SPORT|136497675": 1794859858000,
    "AS|https://as.com/futbol/primera/una-preparacion-entre-campeones-f202611-n/": 1794868590000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004251871/misteriosa-desaparicion-kounde.html": 1794895200000,
@@ -8491,13 +8490,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4168,
+   "ok": 4169,
    "fallos": 0,
-   "ejecuciones": 3451,
+   "ejecuciones": 3452,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T19:21:13.740Z"
+   "ultima": "2026-11-19T19:26:19.119Z"
   }
  },
  "ptsDirecto": {},
@@ -8514,15 +8513,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:21:23.440Z"
+   "ultimaBien": "2026-11-19T19:26:30.826Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:21:23.440Z"
+   "ultimaBien": "2026-11-19T19:26:30.826Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:21:23.440Z"
+   "ultimaBien": "2026-11-19T19:26:30.826Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8530,11 +8529,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:21:23.440Z"
+   "ultimaBien": "2026-11-19T19:26:30.826Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:21:23.440Z"
+   "ultimaBien": "2026-11-19T19:26:30.826Z"
   }
  },
  "avisos": [
