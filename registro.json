@@ -2216,7 +2216,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004251871/misteriosa-desaparicion-kounde.html": 1794895200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251812/hay-berenguer-athletic.html": 1794895200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004251773/lamine-yamal-tira-carro.html": 1794895200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251858/oblak-vuelve-atletico-reconquistar-candado.html": 1794865700000,
    "SPORT|136506179": 1794889841000,
    "SPORT|136517118": 1794889838000,
    "SPORT|136521770": 1794888632000,
@@ -2426,18 +2425,6 @@
    "SPORT|136638674": 1795116349000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251858/oblak-vuelve-atletico-reconquistar-candado.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794865700000,
-    "id": "2322",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Oblak regresa a la disciplina del Atlético tras el parón",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136506179",
     "medio": "SPORT",
@@ -8495,13 +8482,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4197,
+   "ok": 4198,
    "fallos": 0,
-   "ejecuciones": 3480,
+   "ejecuciones": 3481,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T21:46:12.541Z"
+   "ultima": "2026-11-19T21:51:11.375Z"
   }
  },
  "ptsDirecto": {},
@@ -8518,15 +8505,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:46:15.909Z"
+   "ultimaBien": "2026-11-19T21:51:19.461Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:46:15.909Z"
+   "ultimaBien": "2026-11-19T21:51:19.461Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:46:15.909Z"
+   "ultimaBien": "2026-11-19T21:51:19.461Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8534,11 +8521,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:46:15.909Z"
+   "ultimaBien": "2026-11-19T21:51:19.461Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:46:15.909Z"
+   "ultimaBien": "2026-11-19T21:51:19.461Z"
   }
  },
  "avisos": [
