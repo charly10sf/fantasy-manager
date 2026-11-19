@@ -2191,10 +2191,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html": 1794837009000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-per-jugar-contra-el-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cubarsi-duda-partido-villarreal-frenkie-jong-estara-disponible-20261116_3476037.html": 1794837167000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/juanma-castano-rinde-bellingham-cinco-mejores-jugadores-mundo-20261116_3475511.html": 1794836826000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-pel-barca-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
@@ -2415,18 +2413,6 @@
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html",
-    "medio": "MARCA",
-    "t": 1794837009000,
-    "id": "2626",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Deossa vuelve a la convocatoria para el Sevilla-Betis",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html",
     "medio": "Mundo Deportivo",
@@ -8586,13 +8572,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4100,
+   "ok": 4101,
    "fallos": 0,
-   "ejecuciones": 3383,
+   "ejecuciones": 3384,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:46:14.970Z"
+   "ultima": "2026-11-19T13:51:12.162Z"
   }
  },
  "ptsDirecto": {},
@@ -8609,15 +8595,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:46:31.844Z"
+   "ultimaBien": "2026-11-19T13:51:19.542Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:46:31.844Z"
+   "ultimaBien": "2026-11-19T13:51:19.542Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:46:31.844Z"
+   "ultimaBien": "2026-11-19T13:51:19.542Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8625,11 +8611,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:46:31.844Z"
+   "ultimaBien": "2026-11-19T13:51:19.542Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:46:31.844Z"
+   "ultimaBien": "2026-11-19T13:51:19.542Z"
   }
  },
  "avisos": [
