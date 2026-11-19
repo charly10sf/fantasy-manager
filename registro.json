@@ -2191,10 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251577/madrileno-respira-primera-victoria-dos-meses-notabamos-no-salian-cosas.html": 1794828266000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251555/gordon.html": 1794828101000,
    "AS|https://as.com/futbol/primera/giuliano-crecimiento-sostenido-f202611-n/": 1794829515000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
@@ -2418,18 +2414,6 @@
    "AS|https://as.com/futbol/kounde-ya-esta-aqui-f202611-n/": 1795085771000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html",
-    "medio": "MARCA",
-    "t": 1794828329000,
-    "id": "3116",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Bernardo Silva estará disponible para la vuelta de LaLiga",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html",
     "medio": "Superdeporte",
@@ -8614,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4071,
+   "ok": 4072,
    "fallos": 0,
-   "ejecuciones": 3354,
+   "ejecuciones": 3355,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:21:11.936Z"
+   "ultima": "2026-11-19T11:26:22.177Z"
   }
  },
  "ptsDirecto": {},
@@ -8637,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:21:19.683Z"
+   "ultimaBien": "2026-11-19T11:26:39.131Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:21:19.683Z"
+   "ultimaBien": "2026-11-19T11:26:39.131Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:21:19.683Z"
+   "ultimaBien": "2026-11-19T11:26:39.131Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8653,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:21:19.683Z"
+   "ultimaBien": "2026-11-19T11:26:39.131Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:21:19.683Z"
+   "ultimaBien": "2026-11-19T11:26:39.131Z"
   }
  },
  "avisos": [
