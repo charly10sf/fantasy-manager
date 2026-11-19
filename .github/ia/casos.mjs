@@ -370,7 +370,7 @@ export const CASOS = [
     debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
 
   /* -------------------- la segunda vuelta del motor: lo que contestó Carlos el 14 nov (claude/prompt-motor-2.md) -------------------- */
-  ...['m-baja-sin-relevo', 'm-baja-con-relevo', 'm-reventa-aguanta', 'm-reventa-protege', 'm-24-puja', 'm-blinda-arranque'].map((escena) => ({
+  ...['m-baja-sin-relevo', 'm-baja-con-relevo', 'm-reventa-aguanta', 'm-reventa-protege', 'm-reventa-perdiendo', 'm-24-puja', 'm-blinda-arranque'].map((escena) => ({
     id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md, en las escenas de la segunda vuelta',
     debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
   { id: 'motor-baja-sin-relevo-avisa', tipo: 'motor', escena: 'm-baja-sin-relevo', de: 'Carlos, 14 nov (punto 2, Pedrosa): un titular que baja todos los días y no tiene a otro en su puesto que puntúe no se vende: se avisa de que hace falta sustituto',
@@ -381,6 +381,8 @@ export const CASOS = [
     nunca: ['^OP: vender (Raphinha|Catena)'] },
   { id: 'motor-reventa-se-aguanta', tipo: 'motor', escena: 'm-reventa-aguanta', de: 'Carlos, 14 nov (punto 5): lo de revender se aguanta más de una jornada si sigue subiendo, empiezas en positivo sin venderlo y le quedan días de protección',
     nunca: ['^OP: vender Jon Martin'], debe: ['^MIRADO Jon Martin:[^\\n]*aguant'] },
+  { id: 'motor-reventa-perdiendo-se-aguanta', tipo: 'motor', escena: 'm-reventa-perdiendo', de: 'Carlos, 19 nov (Mario Soriano): comprado para revender, vale menos de lo que pagó, le quedan 12 días de cláusula cerrada y aún sube aunque se frene: no se vende perdiendo dinero',
+    nunca: ['^OP: vender Jon Martin', 'podrías empezar la jornada en negativo'], debe: ['^MIRADO Jon Martin:[^\\n]*aguant', '^REGLAS: ok'] },
   { id: 'motor-reventa-antes-de-la-proteccion', tipo: 'motor', escena: 'm-reventa-protege', de: 'Carlos, 14 nov (punto 5): se vende antes de que se le acaben los 14 días de protección',
     debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
   { id: 'motor-reventa-de-mas-cuentas', tipo: 'motor', escena: 'm-reventa-de-mas', de: 'Carlos, 15 nov: con 60 M y tres comprados para revender (uno más del tope) la app decía «sin vender empezarías la jornada con −1 €» y «no cabe hoy: el saldo del plan ya está gastado»: las cuentas, las de verdad',

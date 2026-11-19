@@ -30,6 +30,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'campo', t: 'Lo flojo de tu once', x: 'Debajo del campo, los de tu once con pocas opciones de jugar y a quién del mercado podrías fichar en su sitio. El banquillo ya no sale ahí: está en la plantilla.' },
       { tipo: 'arreglo', t: 'Titulares que salían como suplentes', x: 'Si no llegaba el once probable de un equipo, a todos sus jugadores les salía un % muy bajo y «SUP», aunque jugaran siempre.' },
       { tipo: 'mejora', d: 'ia', t: 'La IA y los cambios con otros managers', x: 'Cuéntale un trato con otro mánager (él te compra a uno y tú le compras otro, cada uno a su precio) y la app hace las cuentas con el dinero de los dos: quién tiene que pagar primero, con cuánto te quedas, si el precio es bueno, los puntos que ganas y los 14 días de cláusula cerrada. Con eso la IA te dice si te conviene.' },
+      { tipo: 'arreglo', t: 'Vender perdiendo lo comprado para revender', x: 'El plan mandaba vender a uno comprado para revender aunque valía menos de lo que pagaste, seguía subiendo y le quedaban días de cláusula cerrada. Ahora lo aguanta y solo lo vende si empieza a bajar, se le acaba la protección o hace falta el dinero para empezar la jornada en positivo.' },
       { tipo: 'arreglo', t: 'Textos y gráficas apagados', x: 'Con la actualización de esta mañana, algunos textos y gráficas secundarios salían casi sin color. Ya se ven como antes.' },
     ],
   },

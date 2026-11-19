@@ -130,6 +130,8 @@ const sinRelevo = (M, x) => { const p = M.perdida(x.pid); return p >= 1 && p >= 
  * (nadie te lo puede clausular). Si hace falta para empezar la jornada en positivo, se vende igual (lo decide la combinación) */
 function aguanta(X, x) {
   if (!x) return false;
+  // (19 nov, Mario Soriano) la regla está en el motor: también si se frena pero aún sube, o si vale menos de lo que pagaste
+  if (X.M.aguantaReventa) return X.M.aguantaReventa(x);
   const { ine, cae } = mueve(X, x.pid);
   if (!ine || cae || !['sube', 'acelera', 'rebote'].includes(ine.fase)) return false;
   return !!x.protegidoHasta && x.protegidoHasta - X.ahora > 1.5 * DIA;
@@ -210,7 +212,8 @@ function candidatos(X, vetados) {
     const sigue = revPids.has(x.pid) && aguanta(X, x);
     if (sigue && ventana && ahora >= (ventana.ponerVentaSeguro || ventana.ponerVenta) - 6 * HORA) {
       const r = M.paraRevender.find((y) => y.pid === x.pid);
-      X.avisos.push({ pid: x.pid, jugador: x.j.nombre, motivo: `Lo compraste para revender (${eur(r.beneficioYa, { signo: true })}) y sigue subiendo: si empiezas la jornada en positivo sin venderlo, puedes aguantarlo. Véndelo cuando deje de subir o antes del ${cuando(x.protegidoHasta - DIA, { hora: false })}, que se le acaba la protección.` });
+      const pierde = r.beneficioYa < 0, ineA = M.inercia(x.pid), subeA = !!ineA && num(ineA.ult) > 0;
+      X.avisos.push({ pid: x.pid, jugador: x.j.nombre, motivo: `Lo compraste para revender (${eur(r.beneficioYa, { signo: true })})${pierde ? `: venderlo hoy es perder ${eur(-r.beneficioYa)}` : ''}${subeA ? ' y sigue subiendo' : ''}. Tiene la cláusula cerrada hasta ${cuando(x.protegidoHasta)}: si empiezas la jornada en positivo sin venderlo, puedes aguantarlo. Véndelo cuando empiece a bajar o antes del ${cuando(x.protegidoHasta - DIA, { hora: false })}, que se le acaba la protección.` });
     }
     if (revPids.has(x.pid) && !sigue) {
       const r = M.paraRevender.find((y) => y.pid === x.pid);
@@ -220,7 +223,7 @@ function candidatos(X, vetados) {
         nuevo({ ...base, k: `V-${x.pid}`, fijo: true, motivo: 'revender', euros: Math.max(0, r.beneficioYa),
           op: () => op({ objetivo: 'revender', confianza: 'alta', cuando: inicio ? antesDe(inicio) : 'hoy',
             motivo: `Lo compraste para revender a ${eur(r.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })}).${baja ? ' Ha empezado a bajar: mejor salir ya.' : protege ? ` Se le acaba la protección ${cuando(x.protegidoHasta)}: después cualquiera te lo puede quitar por su cláusula.` : ' Ha dejado de subir: toca ponerlo a la venta para aceptar la oferta del último cambio de mercado y empezar la jornada en positivo.'}${ventana && ventana.apura && !baja && !protege ? ` ${ventana.avisoJusto}` : ''}`,
-            datos: { porque: 'lo compraste para revender y toca', cuanto: `${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })})`, cuando: inicio ? antesDe(inicio) : 'hoy', siNo: 'podrías empezar la jornada en negativo' } }) });
+            datos: { porque: 'lo compraste para revender y toca', cuanto: `${eur(x.j.valor)} (${eur(r.beneficioYa, { signo: true })})`, cuando: inicio ? antesDe(inicio) : 'hoy', siNo: baja ? 'sigue bajando y lo vendes más barato' : protege ? 'después cualquiera te lo puede quitar por su cláusula' : 'deja de subir y lo vendes más barato' } }) });
       }
       continue;
     }
