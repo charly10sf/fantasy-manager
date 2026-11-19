@@ -2191,9 +2191,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
-   "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000,
    "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
@@ -2413,19 +2411,6 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/",
-    "medio": "AS",
-    "t": 1794831194000,
-    "id": "2746",
-    "que": "descartado",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Miguel Sierra deja la selección suiza y no está para el derbi",
-    "motivo": "leves molestias físicas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html",
     "medio": "Mundo Deportivo",
@@ -4200,7 +4185,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136499689": 1794831300000,
    "SPORT|136501552": 1794833131000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
@@ -8596,13 +8580,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4081,
+   "ok": 4082,
    "fallos": 0,
-   "ejecuciones": 3364,
+   "ejecuciones": 3365,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:11:18.133Z"
+   "ultima": "2026-11-19T12:16:12.316Z"
   }
  },
  "ptsDirecto": {},
@@ -8619,15 +8603,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:11:27.902Z"
+   "ultimaBien": "2026-11-19T12:16:19.116Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:11:27.902Z"
+   "ultimaBien": "2026-11-19T12:16:19.116Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:11:27.902Z"
+   "ultimaBien": "2026-11-19T12:16:19.116Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8635,11 +8619,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:11:27.902Z"
+   "ultimaBien": "2026-11-19T12:16:19.116Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:11:27.902Z"
+   "ultimaBien": "2026-11-19T12:16:19.116Z"
   }
  },
  "avisos": [
