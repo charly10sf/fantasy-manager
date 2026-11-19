@@ -24,7 +24,7 @@ export const NOVEDADES = [
   {
     // (19 nov, sesión larga: referidos de Domy, apodos en todos los dispositivos, caché y respuestas más cortas del chat, el
     // plan «sin salida»). Detalle en ESTADO.md y claude/nota-sesion-larga-ia.md. La hora, al publicar
-    v: '0.8f', f: '2026-11-19', h: '20:00', t: 'Invita a tus amigos',
+    v: '0.8f', f: '2026-11-19', h: '20:45', t: 'Invita a tus amigos',
     cosas: [
       { tipo: 'nuevo', d: 'regalo', importante: true, t: 'Invita a un amigo', x: 'En Ajustes → Invita a un amigo, comparte tu enlace o tu código. Por cada amigo que empiece a usar la app con él, eliges 2 rivales y ves su dinero durante 24 horas. Con 3 amigos que vuelvan otro día, una semana con el doble de planes y preguntas gratis; con 5, un mes sin anuncios a pantalla completa.' },
       { tipo: 'mejora', d: 'movil', t: 'Tus apodos, en todos tus dispositivos', x: 'Los apodos que pones a los rivales van con tu cuenta: si los pones en el móvil, también te salen en el ordenador.' },
