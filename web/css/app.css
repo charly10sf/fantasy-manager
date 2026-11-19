@@ -3373,3 +3373,21 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .marcador .fila-j > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .marcador .fila-j .der { white-space: nowrap; }
 .marcador.corto .m-cols { margin-top: 8px; }
+/* tu once de LaLiga y los cambios que haría la app (19 nov) */
+.cromo.sale-c .cr-foto { opacity: .55; }
+.cromo.sale-c .cr-nom { text-decoration: line-through; text-decoration-color: var(--rojo-texto); }
+.cambio-once { margin: 10px 0 4px; padding: 10px 12px; border: 1px solid var(--linea); border-radius: var(--r-ctl); background: var(--plano2); }
+.cambio-once .co-t { font: 700 var(--t-sec2)/1.3 var(--cond); text-transform: uppercase; letter-spacing: .02em; margin-bottom: 6px; }
+.cambio-once .co-t .sube { color: var(--sube, #3ddc84); }
+.cambio-once .co-f { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; padding: 6px 0; border-top: 1px solid var(--linea); }
+.cambio-once .co-f:first-of-type { border-top: 0; }
+.cambio-once .co-j { display: flex; align-items: center; gap: 8px; min-width: 0; background: none; border: 0; padding: 0; color: inherit; text-align: left; font: inherit; cursor: pointer; }
+.cambio-once .co-j > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.cambio-once .co-j b { font-size: var(--t-sec2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cambio-once .co-j i { font-style: normal; font-size: var(--t-mini); color: var(--texto-3); }
+.cambio-once .co-j.sale b { color: var(--texto-2); }
+.cambio-once .co-j.entra b { color: var(--texto); }
+.cambio-once .co-fl { color: var(--texto-3); font-weight: 700; }
+.cambio-once .co-hueco { font-size: var(--t-mini); color: var(--texto-3); }
+.co-ok { display: flex; align-items: center; gap: 6px; margin: 8px 0 2px; }
+.co-ok .ic { width: 14px; height: 14px; }

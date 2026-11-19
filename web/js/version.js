@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8c';
+export const VERSION = '0.8d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,15 @@ export const VERSION = '0.8c';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19 nov, Carlos y el aviso de RIOYARAFC: «Tu once» enseñaba el mejor según la app y no el que tienes puesto en
+    // LaLiga; ahora, el tuyo y debajo los cambios que haría la app). La hora, al publicar
+    v: '0.8d', f: '2026-11-19', t: 'Tu once, el de verdad',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'Tu once es el que tienes puesto', x: 'En Hoy y en Equipo sale el once que tienes puesto en LaLiga Fantasy, no el que pondría la app. Si cambias a alguien, pulsa Actualizar y lo verás.' },
+      { tipo: 'mejora', d: 'campo', t: 'Los cambios que haría la app', x: 'Debajo del campo, a quién sacaría y a quién metería, con sus puntos esperados y lo que tiene de ser titular. Los que saldrían van tachados en el campo.' },
+    ],
+  },
   {
     // (19 nov, tercera parte de la revisión de la IA: claude/revision-ia.md). La hora, al publicar
     v: '0.8c', f: '2026-11-19', h: '06:04', t: 'Una IA que acierta más con tu liga',
