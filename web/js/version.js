@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8d';
+export const VERSION = '0.8e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,13 @@ export const VERSION = '0.8d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19 nov, Carlos: «entra Morcillo y sale Morcillo… que no es tuyo») dos jugadores con el mismo nombre
+    v: '0.8e', f: '2026-11-19', h: '19:18', t: 'Jugadores con el mismo nombre',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'Jugadores con el mismo nombre', x: 'Si en LaLiga había otro jugador que se llamaba igual que uno tuyo, el plan podía confundirlos y decirte «entra Morcillo y sale Morcillo» o que no era tuyo. Ahora se queda siempre con el tuyo.' },
+    ],
+  },
   {
     // (19 nov, Carlos: «revisa a fondo los porcentajes de titularidad» y «no veo el sentido a cómo pone banquillo»; eligió la
     // variante D sin la tira de fuera). Detalle en ESTADO.md. La hora, al publicar
