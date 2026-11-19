@@ -2149,16 +2149,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004250984/gerard-martin-no-perdido-minuto-lesion-barca.html": 1794808800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html": 1794782131000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261115/1004251424/nico-williams-le-coge-medida-inglaterra.html": 1794780779000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261115/1004251401/francia.html": 1794780266000,
-   "SPORT|136426028": 1794803462000,
-   "SPORT|136480594": 1794801644000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261115/11684932/fuente-cubarsi-tenia-molestia-muscular.html": 1794782711000,
-   "ABC|https://www.abc.es/deportes/futbol/francia-turquia-belgica-italia-20261115214719-nt.html": 1794788851000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/futbolgallego/2026/11/16/medio-siglo-banquillos/0003_202611V16C8994.htm": 1794801600000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-deja-agujero-sevilla_0_2008508110.html": 1794807040000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251358/jauregizar-quiere-recuperar-lugar.html": 1794810600000,
    "El Correo|https://www.elcorreo.com/athletic/noche-jugadores-athletic-roja-gol-nico-capitania-20261116072019-nt.html": 1794810053000,
    "SPORT|136484016": 1794813943000,
@@ -2369,36 +2359,17 @@
    "SPORT|136592622": 1795033687000,
    "SPORT|136597911": 1795033813000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000,
-   "SPORT|136598263": 1795035303000
+   "SPORT|136598263": 1795035303000,
+   "AS|https://as.com/futbol/primera/la-feliz-contrarreloj-de-parrott-f202611-n/": 1795040843000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252779/foco-kounde-cuenta-volver.html": 1795062900000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252782/portada-md-bizkaia-araba-hoy-jueves.html": 1795043100000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261118/1004252774/oportunidad-tsitaishvili-afianzarse-rayo.html": 1795040080000,
+   "SPORT|136571233": 1795064444000,
+   "SPORT|136601542": 1795060876000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/alvaro-cervera-polemica-sobre-declaraciones-sobre-pique-no-opinion-no-pensamiento-20261118_3477901.html": 1795038674000,
+   "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261115/1004251432/precaucion-cubarsi-pendiente-pruebas.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794782131000,
-    "id": "1775",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Pau Cubarsí sufre molestias en la cadera y pasa pruebas",
-    "motivo": "molestias en la cadera",
-    "plazo": "",
-    "nums": [
-     2,
-     3
-    ]
-   },
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-deja-agujero-sevilla_0_2008508110.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794807040000,
-    "id": "2746",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Miguel Sierra sufre una lesión en el Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/",
     "medio": "AS",
@@ -3330,8 +3301,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-18",
-   "n": 47
+   "dia": "2026-11-19",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4221,30 +4192,31 @@
    "SPORT|136593027": 1795023836000,
    "SPORT|136595898": 1795028720000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
-   "SPORT|136596702": 1795032528000
+   "SPORT|136596702": 1795032528000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-18",
-   "n": 13,
-   "fallos": 1
+   "dia": "2026-11-19",
+   "n": 1,
+   "fallos": 0
   },
   "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 2,
+   "redactar": 5,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 15980,
-  "salida": 285,
-  "cacheLee": 0,
-  "cacheEscribe": 2903,
-  "dolares": 0.042068,
+  "entrada": 86620,
+  "salida": 4880,
+  "cacheLee": 2903,
+  "cacheEscribe": 5806,
+  "dolares": 0.195567,
   "reservado": 0
  },
  "recientes": {
@@ -4739,9 +4711,9 @@
    "ultima": "2026-11-18T08:26:30.186Z"
   },
   "previa|126": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-18T06:11:39.992Z",
-   "ultima": "2026-11-18T06:11:39.992Z"
+   "ultima": "2026-11-19T06:01:53.350Z"
   }
  },
  "rasgos": {
@@ -8582,13 +8554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4006,
+   "ok": 4007,
    "fallos": 0,
-   "ejecuciones": 3289,
+   "ejecuciones": 3290,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T05:56:11.446Z"
+   "ultima": "2026-11-19T06:01:12.643Z"
   }
  },
  "ptsDirecto": {},
@@ -8605,15 +8577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T05:56:11.984Z"
+   "ultimaBien": "2026-11-19T06:02:11.706Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T05:56:11.984Z"
+   "ultimaBien": "2026-11-19T06:02:11.706Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T05:56:11.984Z"
+   "ultimaBien": "2026-11-19T06:02:11.706Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8621,11 +8593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T22:56:14.843Z"
+   "ultimaBien": "2026-11-19T06:02:11.706Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-18T21:56:48.761Z"
+   "ultimaBien": "2026-11-19T06:02:11.706Z"
   }
  },
  "avisos": [
