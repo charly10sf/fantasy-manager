@@ -637,7 +637,12 @@ async function fallos(req, env, c, ruta) {
 }
 
 /* ---------- el tiempo de uso de hoy, por cuenta (para el límite diario de minutos) ---------- */
-const hoyMadrid = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+const FMT_DIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+const hoyMadrid = () => FMT_DIA.format(new Date());
+/** el día de Madrid (AAAA-MM-DD) de un instante */
+const diaMadrid = (t) => FMT_DIA.format(new Date(t));
+/** las lecturas de los días de atrás en /hola/todos (el tope por petición es de mil y hay más lecturas en la misma) */
+export const LECTURAS_SEMANA = 600;
 export const MAX_USO = 600, VIVE_USO = 9 * 86400;
 /** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
 export function diasAtras(hoy, n) {
@@ -1353,16 +1358,27 @@ async function hola(req, env, c, ruta) {
     const dia = hoyMadrid();
     const ks = (await listar(env, 'p:', 500)).filter((k) => k.metadata);
     ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
-    // hoy, de los 100 últimos; los 6 días de antes, solo de los 40 últimos que han entrado esta semana (cada lectura
-    // cuenta para el tope de operaciones por petición del plan gratis, que es de mil)
+    // hoy, de los 100 últimos; los 6 días de antes, de todos los que han entrado esta semana, pero solo hasta el día de
+    // su última vez (después no pudo usarla) y con un tope de lecturas (cada lectura cuenta para el tope de operaciones por
+    // petición, que es de mil). (19 nov, Carlos: «esto se ha jodido»: antes, solo los 40 últimos; con 50+ cuentas en la
+    // semana, los días de atrás salían cada vez más bajos, el lunes de 27 a 20)
     const dias = diasAtras(dia, 7), hace7 = Date.now() - 7 * 86400e3;
     const segDe = (uid, d) => env.VINCULOS.get(`u:${uid}:${d}`).then((v) => Math.min(86400, (Number(v) || 0) + (PEND_USO.get(`u:${uid}:${d}`) || 0))).catch(() => 0);
+    let quedan = LECTURAS_SEMANA;
+    const aLeer = ks.map((k, i) => {
+      if (i >= 100 && (k.metadata.ultima || 0) < hace7) return [];
+      if ((k.metadata.ultima || 0) < hace7) return [dia];
+      const hasta = diaMadrid(k.metadata.ultima || Date.now());
+      const ds = dias.filter((d) => d === dia || d <= hasta).slice(0, Math.max(1, quedan));
+      quedan -= ds.length;
+      return ds.length ? ds : [dia];
+    });
     const usos = await Promise.all(ks.map(async (k, i) => {
-      if (i >= 100) return {};
-      const semana = i < 40 && (k.metadata.ultima || 0) >= hace7;
-      const vals = await Promise.all((semana ? dias : [dia]).map((d) => segDe(k.metadata.uid, d)));
+      const ds = aLeer[i];
+      if (!ds.length) return {};
+      const vals = await Promise.all(ds.map((d) => segDe(k.metadata.uid, d)));
       const o = {};
-      (semana ? dias : [dia]).forEach((d, j) => { if (vals[j]) o[d] = vals[j]; });
+      ds.forEach((d, j) => { if (vals[j]) o[d] = vals[j]; });
       return o;
     }));
     const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));

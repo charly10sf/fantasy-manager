@@ -119,6 +119,25 @@ r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: O
 const t2 = await r.json(), yo = t2.lista.find((x) => String(x.uid) === '4242');
 ok(yo && yo.segHoy === 900 && yo.segDias[hoyM] === 900 && yo.segDias[ayerM] === 2400 && !(antesM in yo.segDias), `/hola/todos con hoy, ayer y sin el de hace 8 días (${JSON.stringify(yo && yo.segDias)})`);
 ok(Array.isArray(t2.dias) && t2.dias[0] === hoyM && t2.dias.length === 7, '/hola/todos devuelve los 7 días');
+// (19 nov, Carlos: «esto se ha jodido») con más de 40 cuentas en la semana, los días de atrás también de las que entraron
+// hace días (antes solo de las 40 últimas: el lunes salía con 20 en vez de 27), y nada de leer días después de su última vez
+{
+  const ahoraT = Date.now();
+  for (let i = 0; i < 45; i++) await KV.put(`p:7${i}`, '1', { metadata: { uid: `7${i}`, ultima: ahoraT - i * 1000, primera: ahoraT - 5 * 86400e3 } });
+  await KV.put('p:6000', '1', { metadata: { uid: '6000', ultima: ahoraT - 3 * 86400e3, primera: ahoraT - 6 * 86400e3 } });
+  const dHace4 = W2.diasAtras(hoyM, 5)[4], dHace3 = W2.diasAtras(hoyM, 4)[3];
+  await KV.put(`u:6000:${dHace4}`, '120'); await KV.put(`u:6000:${dHace3}`, '60');
+  const lecturas = [];
+  const KV2 = { ...KV, get: async (k) => { if (k.startsWith('u:')) lecturas.push(k); return KV.get(k); } };
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, VINCULOS: KV2, ADMINS: '4242' }, {});
+  const t3 = await r.json(), x6 = t3.lista.find((x) => String(x.uid) === '6000');
+  ok(x6 && x6.segDias[dHace4] === 120 && x6.segDias[dHace3] === 60, `con 46 cuentas en la semana, la que entró hace 3 días tiene sus días (${JSON.stringify(x6 && x6.segDias)})`);
+  const de6000 = lecturas.filter((k) => k.startsWith('u:6000:'));
+  ok(de6000.length === 5, `de esa cuenta solo se leen hoy y los días hasta su última vez (${de6000.length}: ${de6000.join(' ')})`);
+  ok(lecturas.length <= 100 + W2.LECTURAS_SEMANA, `no pasa del tope de lecturas (${lecturas.length})`);
+  for (let i = 0; i < 45; i++) kv.delete(`p:7${i}`);
+  kv.delete('p:6000');
+}
 
 // ---------- revisión total, sesión 1: frenos del KV (C1), proxy cerrado (A4), /caras (C6) y r: con caducidad (M1) ----------
 const ahoraReal = Date.now.bind(Date);
