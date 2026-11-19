@@ -2194,7 +2194,6 @@
    "AS|https://as.com/futbol/primera/giuliano-crecimiento-sostenido-f202611-n/": 1794829515000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261116/1004251607/atletico-respira-ultima-decision-eslovaquia-hancko.html": 1794829752000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251601/ancelotti-raphinha-queria-equipo.html": 1794829402000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251598/olmo-entrena-grupo-apunta-villarreal.html": 1794828986000,
    "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
@@ -8599,13 +8598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4074,
+   "ok": 4075,
    "fallos": 0,
-   "ejecuciones": 3357,
+   "ejecuciones": 3358,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:36:14.306Z"
+   "ultima": "2026-11-19T11:41:13.147Z"
   }
  },
  "ptsDirecto": {},
@@ -8622,15 +8621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:36:22.902Z"
+   "ultimaBien": "2026-11-19T11:41:25.058Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:36:22.902Z"
+   "ultimaBien": "2026-11-19T11:41:25.058Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:36:22.902Z"
+   "ultimaBien": "2026-11-19T11:41:25.058Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8638,11 +8637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:36:22.902Z"
+   "ultimaBien": "2026-11-19T11:41:25.058Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:36:22.902Z"
+   "ultimaBien": "2026-11-19T11:41:25.058Z"
   }
  },
  "avisos": [
