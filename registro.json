@@ -2413,7 +2413,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
    "SPORT|136631224": 1795109681000,
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000,
+   "SPORT|136636494": 1795111764000
   },
   "hechos": [
    {
@@ -3251,7 +3252,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -4152,17 +4153,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 555322,
-  "salida": 30564,
+  "entrada": 557360,
+  "salida": 30677,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.081278,
+  "dolares": 1.081538,
   "reservado": 0
  },
  "recientes": {
@@ -8491,13 +8492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4165,
+   "ok": 4166,
    "fallos": 0,
-   "ejecuciones": 3448,
+   "ejecuciones": 3449,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T19:06:14.216Z"
+   "ultima": "2026-11-19T19:11:12.421Z"
   }
  },
  "ptsDirecto": {},
@@ -8514,15 +8515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:06:28.100Z"
+   "ultimaBien": "2026-11-19T19:11:24.715Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:06:28.100Z"
+   "ultimaBien": "2026-11-19T19:11:24.715Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:06:28.100Z"
+   "ultimaBien": "2026-11-19T19:11:24.715Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8530,11 +8531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:06:28.100Z"
+   "ultimaBien": "2026-11-19T19:11:24.715Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:06:28.100Z"
+   "ultimaBien": "2026-11-19T19:11:24.715Z"
   }
  },
  "avisos": [
