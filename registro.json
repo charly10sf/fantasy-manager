@@ -4257,7 +4257,8 @@
    "fallos": 0
   },
   "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099571147
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099571147,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100473903
   }
  },
  "ia": {
@@ -8602,13 +8603,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4115,
+   "ok": 4116,
    "fallos": 0,
-   "ejecuciones": 3398,
+   "ejecuciones": 3399,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:56:14.134Z"
+   "ultima": "2026-11-19T15:01:13.903Z"
   }
  },
  "ptsDirecto": {},
@@ -8625,15 +8626,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:56:26.150Z"
+   "ultimaBien": "2026-11-19T15:01:24.297Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:56:26.150Z"
+   "ultimaBien": "2026-11-19T15:01:24.297Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:56:26.150Z"
+   "ultimaBien": "2026-11-19T15:01:24.297Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8641,11 +8642,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:56:26.150Z"
+   "ultimaBien": "2026-11-19T15:01:24.297Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:56:26.150Z"
+   "ultimaBien": "2026-11-19T15:01:24.297Z"
   }
  },
  "avisos": [
