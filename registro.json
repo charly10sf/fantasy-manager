@@ -1302,6 +1302,13 @@
    "jornada": 13,
    "id": "2123373606264557708",
    "t": "2026-11-19T11:11:33.175Z"
+  },
+  {
+   "clave": "novedades|1480:vuelve|2026-11-19",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123425208149188875",
+   "t": "2026-11-19T14:36:36.029Z"
   }
  ],
  "estados": {
@@ -1354,7 +1361,7 @@
   "1300": "ok",
   "1337": "ok",
   "1356": "out_of_league",
-  "1480": "doubtful",
+  "1480": "ok",
   "1481": "out_of_league",
   "1484": "injured",
   "1529": "ok",
@@ -2188,10 +2195,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "1480",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795098972268
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251748/jesus-rodriguez-vuelve-betis-ver-entrenar-hermano.html": 1794843466000,
@@ -2406,7 +2419,8 @@
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
    "SPORT|136622620": 1795093044000,
-   "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000
+   "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000
   },
   "hechos": [
    {
@@ -3323,11 +3337,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/",
+    "medio": "Cadena SER",
+    "t": 1795098947000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang no se entrena por molestias en el tobillo",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": [
+     48
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3431,8 +3459,8 @@
     "t": 0
    },
    "1480": {
-    "e": "doubtful",
-    "t": 1794376873003
+    "e": "ok",
+    "t": 1795098972268
    },
    "1535": {
     "e": "out_of_league",
@@ -4225,17 +4253,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 36,
-   "redactar": 25,
-   "revisar": 13,
+   "clasificar": 37,
+   "redactar": 27,
+   "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 459389,
-  "salida": 23652,
-  "cacheLee": 17418,
-  "cacheEscribe": 20321,
-  "dolares": 0.913914,
+  "entrada": 489934,
+  "salida": 24735,
+  "cacheLee": 20321,
+  "cacheEscribe": 23224,
+  "dolares": 0.988512,
   "reservado": 0
  },
  "recientes": {
@@ -4395,10 +4423,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-15T20:21:29.749Z",
-    "texto": "⁉️ Marc Pubill arrastra unas molestias sin determinar desde el 15 de noviembre y se pone en duda para la vuelta de la liga.\n\nEl defensa del Atleti llegaba lanzado: 19 puntos en las tres últimas jornadas. El Atlético visita al Getafe en el Coliseum el domingo 22 de noviembre, tras el parón, y de momento no hay plazo que diga si llega."
-   },
-   {
     "t": "2026-11-16T16:21:26.226Z",
     "texto": "✅ Villar vuelve a estar disponible: era duda y queda despejada.\n\nEl centrocampista del Elche 🌴 se encuentra con el Levante 🐸, que va 17º, el lunes 23 de noviembre en el Ciutat de València, tras el parón. Es un partido asequible para un medio, aunque con un 46 % de titularidad no tiene el puesto asegurado."
    },
@@ -4413,6 +4437,10 @@
    {
     "t": "2026-11-19T11:11:33.176Z",
     "texto": "✅ Lemar vuelve a estar disponible. Estaba en duda por una rotura fibrilar en el aductor que arrastraba desde el 1 de noviembre, y queda despejada.\n\nEl centrocampista suma 1,3 M en el último mes y ya vale 5,9 M. Su vuelta llega tras el parón, el lunes 23 de noviembre, con el Elche 🌴 visitando al Levante 🐸, que va 17º. Es un partido favorable para un medio, pero con un 42 % de titularidad todavía tiene que ganarse el sitio."
+   },
+   {
+    "t": "2026-11-19T14:36:36.031Z",
+    "texto": "✅ Tchouaméni vuelve a estar disponible: la duda por la lesión en el aductor, que arrastraba desde el 10 de noviembre, queda despejada.\n\nEl Madrid ⚪ recibe al Celta el sábado a las 21:00 en el Bernabéu. Sobre el papel es un partido asequible, pero el Celta es de los que menos encajan, y para un centrocampista eso juega en contra.\n\nCon un 48 % de titularidad, no tiene el puesto asegurado. Eso sí, vale 34,2 M y ha subido 10,8 M en el último mes."
    }
   ],
   "resumen": [
@@ -8564,13 +8592,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4110,
+   "ok": 4111,
    "fallos": 0,
-   "ejecuciones": 3393,
+   "ejecuciones": 3394,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:31:11.032Z"
+   "ultima": "2026-11-19T14:36:12.268Z"
   }
  },
  "ptsDirecto": {},
@@ -8587,15 +8615,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:31:17.392Z"
+   "ultimaBien": "2026-11-19T14:36:39.483Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:31:17.392Z"
+   "ultimaBien": "2026-11-19T14:36:39.483Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:31:17.392Z"
+   "ultimaBien": "2026-11-19T14:36:39.483Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8603,11 +8631,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:31:17.392Z"
+   "ultimaBien": "2026-11-19T14:36:39.483Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:31:17.392Z"
+   "ultimaBien": "2026-11-19T14:36:39.483Z"
   }
  },
  "avisos": [
