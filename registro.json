@@ -2406,7 +2406,8 @@
    "SPORT|136620865": 1795091009000,
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
-   "SPORT|136622620": 1795093044000
+   "SPORT|136622620": 1795093044000,
+   "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000
   },
   "hechos": [
    {
@@ -3327,7 +3328,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -4172,9 +4173,7 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850659000,
-   "SPORT|136510996": 1794838920000,
    "SPORT|136513679": 1794849264000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261117/1004251859/siete-encuentros-suspendidos-jornada-9.html": 1794895200000,
    "SPORT|136517839": 1794889846000,
@@ -4227,17 +4226,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 457463,
-  "salida": 22653,
+  "entrada": 459389,
+  "salida": 23652,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.913222,
+  "dolares": 0.913914,
   "reservado": 0
  },
  "recientes": {
@@ -8566,13 +8565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4108,
+   "ok": 4109,
    "fallos": 0,
-   "ejecuciones": 3391,
+   "ejecuciones": 3392,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:21:11.645Z"
+   "ultima": "2026-11-19T14:26:17.529Z"
   }
  },
  "ptsDirecto": {},
@@ -8589,15 +8588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:21:20.875Z"
+   "ultimaBien": "2026-11-19T14:26:34.824Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:21:20.875Z"
+   "ultimaBien": "2026-11-19T14:26:34.824Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:21:20.875Z"
+   "ultimaBien": "2026-11-19T14:26:34.824Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8605,11 +8604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:21:20.875Z"
+   "ultimaBien": "2026-11-19T14:26:34.824Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:21:20.875Z"
+   "ultimaBien": "2026-11-19T14:26:34.824Z"
   }
  },
  "avisos": [
