@@ -971,7 +971,7 @@ export function ajustes(S) {
     const rivs = S.D.clasif.filter((x) => x && x.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
     if (rivs.length) {
       const puestos = rivs.filter((x) => listaApodos(ap[String(x.teamId)]).length).length;
-      let c9 = '<p class="apo-nota">Ponle a cada rival el nombre con el que lo llamáis. Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú.</p>';
+      let c9 = '<p class="apo-nota">Ponle a cada rival el nombre con el que lo llamáis. Al preguntar a la IA, por escrito o con la voz, vale su nombre de LaLiga, el de su equipo o el apodo. Solo los ves tú, en todos los dispositivos donde entres con tu cuenta.</p>';
       for (const x of rivs) {
         const v = listaApodos(ap[String(x.teamId)]).join(', ');
         c9 += `<div class="ajuste apo-fila" data-q="${esc(norm(`apodo mote ${x.nombre} ${x.manager} ${v}`))}">${caraManager(x)}<div class="c"><b>${esc(x.nombre)}</b><span>${esc(x.manager && x.manager !== x.nombre ? `${x.manager} · ` : '')}${x.pos}º</span></div><input class="${v ? 'lleno' : ''}" data-cambia="apodo" data-tid="${esc(x.teamId)}" value="${esc(v)}" placeholder="Apodo" maxlength="120" autocomplete="off" enterkeyhint="done" aria-label="Apodo de ${esc(x.nombre)}"></div>`;

@@ -68,6 +68,7 @@ import { PRUEBAS, resultado, nivelDe } from '../../web/js/estado-laliga.js';
 import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
 import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta } from '../../web/js/chat-sistema.js';
 import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
+import { apodosObjeto, ligaOk } from './apodos.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -240,6 +241,8 @@ export const FRENOS = {
   pregunta: { min: 6 },
   // (19 nov) invita a un amigo, por cuenta: mirar, 20 al minuto; canjear un código o elegir rivales, 5
   invitar: { min: 20 }, canjear: { min: 5 },
+  // (19 nov) los apodos, por cuenta: 20 al minuto
+  apodos: { min: 20 },
   // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
   // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
@@ -340,6 +343,8 @@ export class Emparejar {
     if (ruta === '/embudo/sumar' || ruta === '/embudo/leer' || ruta === '/estado') return embudoObjeto(st, ruta, req, this.memo);
     // (19 nov) invita a un amigo, todo en «inv|todos» (worker/src/invitar.js); nunca pone alarma
     if (ruta === '/inv') return new Response(JSON.stringify(await invObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (19 nov) los apodos de los rivales de una cuenta, en «apodos|uid» (worker/src/apodos.js); nunca pone alarma
+    if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -1260,6 +1265,7 @@ async function borrarMios(req, env, c) {
   // (19 nov) tu código de invitar y tus premios (queda solo que la cuenta ya existía, para que no valga como nueva) y tus apodos
   if (env.QR) {
     try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
+    try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
   }
   if (fallidas) return json({ e: `No se han podido borrar ${fallidas} de ${claves.length} cosas. Vuelve a probar en un rato.` }, 503, c);
   return json({ ok: true, avisos, claves: claves.length }, 200, c);
@@ -1335,6 +1341,35 @@ async function invitar(req, env, c, ruta) {
     return json(r, r.ok ? 200 : 400, c);
   }
   return json({ e: 'No existe' }, 404, c);
+}
+
+/* ---------- los apodos de los rivales en todos tus dispositivos (19 nov) ---------- */
+/*
+ * GET  /apodos?liga=L          los apodos de esa liga guardados con tu cuenta: { a: { tid: { v, t } } } (v vacío: borrado).
+ * POST /apodos { liga, a }     junta lo que traes ({ tid: { v, t } }) con lo guardado, rival a rival (gana lo más reciente),
+ *                              y devuelve lo que queda. Con la sesión de LaLiga: es tu cuenta, la del móvil y la de la web.
+ * En el Durable Object de la cuenta («apodos|uid»); sin él, 503 (la app sigue con los suyos, como antes).
+ */
+async function apodos(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `apodos|${u.uid}`, FRENOS.apodos.min))) return demasiadas(c);
+  const obj = env.QR.get(env.QR.idFromName(`apodos|${u.uid}`));
+  const pedir = async (b) => (await obj.fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ ...b, ahora: Date.now() }) })).json();
+  if (req.method === 'GET') {
+    const liga = new URL(req.url).searchParams.get('liga') || '';
+    if (!ligaOk(liga)) return json({ e: 'Liga no válida' }, 400, c);
+    return json(await pedir({ op: 'leer', liga }), 200, c);
+  }
+  if (Number(req.headers.get('content-length') || 0) > 30000) return json({ e: 'Demasiado grande' }, 413, c);
+  const txt = await req.text();
+  if (txt.length > 30000) return json({ e: 'Demasiado grande' }, 413, c);
+  let b = null;
+  try { b = JSON.parse(txt); } catch (e) { b = null; }
+  if (!b || !ligaOk(b.liga)) return json({ e: 'Liga no válida' }, 400, c);
+  const r = await pedir({ op: 'juntar', liga: String(b.liga), a: b.a });
+  return json(r, r.ok ? 200 : 400, c);
 }
 
 /* ---------- quién usa la app ---------- */
@@ -1717,6 +1752,7 @@ export default {
       if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/invitar' || url.pathname.startsWith('/invitar/')) return await invitar(req, env, c, url.pathname);
+      if (url.pathname === '/apodos' && (req.method === 'GET' || req.method === 'POST')) return await apodos(req, env, c);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {

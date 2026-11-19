@@ -8,7 +8,7 @@ import { analizar, rematarAuto } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
-import { ponerApodo } from './apodos.js';
+import { ponerApodo, sincronizarApodos } from './apodos.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
@@ -1396,7 +1396,11 @@ function saludarSiToca() {
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
   return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
-    .then(() => invitarSiToca());
+    .then(() => invitarSiToca())
+    // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
+    .then(() => sincronizarApodos(S.D && S.D.liga && S.D.liga.id))
+    .then((cambia) => { if (cambia && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); })
+    .catch(() => {});
 }
 /* (19 nov) invita a un amigo (invitar.js): el estado del servidor (como mucho cada 20 min), el código del enlace al entrar en
    tu liga, «¿Te ha invitado alguien?» una vez a una cuenta nueva y el aviso cuando entra un amigo tuyo */

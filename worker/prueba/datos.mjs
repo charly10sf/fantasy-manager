@@ -916,5 +916,38 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   // sin el objeto, 503 y no rompe
   r = await pide({ m: 'GET', ruta: '/invitar', tk: tk(512), e: env });
   ok(r.s === 503, `sin Durable Object: ${r.s}`);
+
+  // ---------- (19 nov) los apodos en todos los dispositivos ----------
+  const t0 = Date.now();
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(r.s === 200 && r.j.ok && !Object.keys(r.j.a).length, 'apodos: nada guardado todavía');
+  // el móvil sube los suyos
+  r = await inv(530, '/apodos', { liga: '55', a: { 9001: { v: 'el Tito, Titón', t: t0 - 5000 }, 9002: { v: 'Maki', t: t0 - 5000 }, x: { v: 'raro', t: 1 } } });
+  ok(r.s === 200 && r.j.a['9001'].v === 'el Tito, Titón' && r.j.a['9002'].v === 'Maki' && !r.j.a.x, `subir: ${JSON.stringify(r.j.a)}`);
+  // el PC (la misma cuenta) baja y junta: un rival suyo más nuevo, uno más viejo y uno que no había
+  r = await inv(530, '/apodos', { liga: '55', a: { 9001: { v: 'Titi', t: t0 - 9000 }, 9002: { v: 'el Maki', t: t0 - 1000 }, 9003: { v: 'Pepón', t: t0 - 2000 } } });
+  ok(r.j.a['9001'].v === 'el Tito, Titón' && r.j.a['9002'].v === 'el Maki' && r.j.a['9003'].v === 'Pepón', `juntar: gana lo más reciente rival a rival (${JSON.stringify(r.j.a)})`);
+  // borrar en un dispositivo llega a los demás
+  r = await inv(530, '/apodos', { liga: '55', a: { 9003: { v: '', t: t0 } } });
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(r.j.a['9003'] && r.j.a['9003'].v === '' && r.j.a['9001'].v, 'borrar: queda como borrado para los demás');
+  // limpio y con topes: más de 4 apodos, largos, del futuro
+  r = await inv(530, '/apodos', { liga: '55', a: { 9004: { v: 'uno, dos, tres, cuatro, cinco, ' + 'x'.repeat(80), t: t0 + 864e5 } } });
+  ok(r.j.a['9004'].v === 'uno, dos, tres, cuatro' && r.j.a['9004'].t <= Date.now(), `limpio: ${r.j.a['9004'].v}`);
+  // otra cuenta no ve los de esta, y otra liga va aparte
+  r = await inv(531, '/apodos?liga=55', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'otra cuenta no los ve');
+  r = await inv(530, '/apodos?liga=66', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'otra liga, aparte');
+  r = await inv(530, '/apodos', { liga: 'abc', a: {} });
+  ok(r.s === 400, 'liga rara: 400');
+  r = await pide({ m: 'POST', ruta: '/apodos', cuerpo: { liga: '55', a: {} }, tk: 'corto', e: eI });
+  ok(r.s === 401, 'sin sesión: 401');
+  r = await pide({ m: 'GET', ruta: '/apodos?liga=55', tk: tk(530), e: env });
+  ok(r.s === 503, 'sin Durable Object: 503 (la app sigue con los suyos)');
+  // borrar mis datos los quita
+  await inv(530, '/borrar', {});
+  r = await inv(530, '/apodos?liga=55', null, 'GET');
+  ok(!Object.keys(r.j.a).length, 'Borrar mis datos del servidor también borra los apodos');
   globalThis.fetch = fAntes;
 }
