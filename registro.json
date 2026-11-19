@@ -2191,8 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251622/valverde-ultimo-llegar-medio-campo-cuadro.html": 1794838800000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/vinicius-excusa-rendimiento-termina-retratado-136503034.html": 1794839593000,
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261116/1004251736/mejor-noticia-jagoba-arrasate.html": 1794842359000,
@@ -4174,7 +4172,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850659000,
    "SPORT|136510996": 1794838920000,
@@ -8569,13 +8566,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4107,
+   "ok": 4108,
    "fallos": 0,
-   "ejecuciones": 3390,
+   "ejecuciones": 3391,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:16:14.409Z"
+   "ultima": "2026-11-19T14:21:11.645Z"
   }
  },
  "ptsDirecto": {},
@@ -8592,15 +8589,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:16:24.951Z"
+   "ultimaBien": "2026-11-19T14:21:20.875Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:16:24.951Z"
+   "ultimaBien": "2026-11-19T14:21:20.875Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:16:24.951Z"
+   "ultimaBien": "2026-11-19T14:21:20.875Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8608,11 +8605,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:16:24.951Z"
+   "ultimaBien": "2026-11-19T14:21:20.875Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:16:24.951Z"
+   "ultimaBien": "2026-11-19T14:21:20.875Z"
   }
  },
  "avisos": [
