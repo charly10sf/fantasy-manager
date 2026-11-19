@@ -2156,7 +2156,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136484016": 1794813943000,
    "SPORT|136485072": 1794815966000,
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/16/espectacular-camiseta-retro-valencia-basket-136488900.html": 1794824365000,
@@ -8557,13 +8556,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4023,
+   "ok": 4024,
    "fallos": 0,
-   "ejecuciones": 3306,
+   "ejecuciones": 3307,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T07:21:11.580Z"
+   "ultima": "2026-11-19T07:26:12.799Z"
   }
  },
  "ptsDirecto": {},
@@ -8580,15 +8579,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:21:22.140Z"
+   "ultimaBien": "2026-11-19T07:26:23.434Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:21:22.140Z"
+   "ultimaBien": "2026-11-19T07:26:23.434Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:21:22.140Z"
+   "ultimaBien": "2026-11-19T07:26:23.434Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8596,11 +8595,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:21:22.140Z"
+   "ultimaBien": "2026-11-19T07:26:23.434Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T07:21:22.140Z"
+   "ultimaBien": "2026-11-19T07:26:23.434Z"
   }
  },
  "avisos": [
