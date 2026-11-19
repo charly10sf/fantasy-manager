@@ -4138,32 +4138,31 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
-   "SPORT|136630245": 1795104774000
+   "SPORT|136630245": 1795104774000,
+   "SPORT|136635705": 1795110618000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136635705": 1795114573907
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 557360,
-  "salida": 30677,
+  "entrada": 559105,
+  "salida": 30979,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.081538,
+  "dolares": 1.081863,
   "reservado": 0
  },
  "recientes": {
@@ -8492,13 +8491,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4166,
+   "ok": 4167,
    "fallos": 0,
-   "ejecuciones": 3449,
+   "ejecuciones": 3450,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T19:11:12.421Z"
+   "ultima": "2026-11-19T19:16:16.467Z"
   }
  },
  "ptsDirecto": {},
@@ -8515,15 +8514,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:11:24.715Z"
+   "ultimaBien": "2026-11-19T19:16:32.134Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:11:24.715Z"
+   "ultimaBien": "2026-11-19T19:16:32.134Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:11:24.715Z"
+   "ultimaBien": "2026-11-19T19:16:32.134Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8531,11 +8530,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:11:24.715Z"
+   "ultimaBien": "2026-11-19T19:16:32.134Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T19:11:24.715Z"
+   "ultimaBien": "2026-11-19T19:16:32.134Z"
   }
  },
  "avisos": [
