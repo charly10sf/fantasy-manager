@@ -4218,7 +4218,6 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/16/45-dias-intensos-para-el-cd-tenerife-antes-de-final-de-ano-los-blanquiazules-afrontaran-una-alta-carga-de-partidos-radio-club-tenerife/": 1794838791000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261116/1004251679/fiebre-txuri-urdin-ver-real-volver-sardinero.html": 1794839103000,
    "Superdeporte|https://www.superdeporte.es/carreras-populares/2026/11/16/runcancer-2026-recorrido-carrera-valencia-136499983.html": 1794837751000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-comunidad-llevara-tribunales-acoso-consejera-educacion-actos-parte-activistas-20261116130403.html": 1794830643000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-suspension-vuelos-eeuu-podria-causar-perdidas-mas-900-millones-aerolineas-20261116183739.html": 1794850659000,
    "SPORT|136510996": 1794838920000,
    "SPORT|136513679": 1794849264000,
@@ -8610,13 +8609,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4079,
+   "ok": 4080,
    "fallos": 0,
-   "ejecuciones": 3362,
+   "ejecuciones": 3363,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:01:13.531Z"
+   "ultima": "2026-11-19T12:06:13.594Z"
   }
  },
  "ptsDirecto": {},
@@ -8633,15 +8632,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:01:22.557Z"
+   "ultimaBien": "2026-11-19T12:06:23.522Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:01:22.557Z"
+   "ultimaBien": "2026-11-19T12:06:23.522Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:01:22.557Z"
+   "ultimaBien": "2026-11-19T12:06:23.522Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8649,11 +8648,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:01:22.557Z"
+   "ultimaBien": "2026-11-19T12:06:23.522Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:01:22.557Z"
+   "ultimaBien": "2026-11-19T12:06:23.522Z"
   }
  },
  "avisos": [
