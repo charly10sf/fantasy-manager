@@ -2408,7 +2408,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000,
    "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
    "SPORT|136587188": 1795085599000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000
   },
   "hechos": [
    {
@@ -3340,7 +3341,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4241,17 +4242,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 437189,
-  "salida": 18352,
+  "entrada": 439126,
+  "salida": 18793,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.909043,
+  "dolares": 0.909457,
   "reservado": 0
  },
  "recientes": {
@@ -8580,13 +8581,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4082,
+   "ok": 4083,
    "fallos": 0,
-   "ejecuciones": 3365,
+   "ejecuciones": 3366,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:16:12.316Z"
+   "ultima": "2026-11-19T12:21:11.587Z"
   }
  },
  "ptsDirecto": {},
@@ -8603,15 +8604,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:16:19.116Z"
+   "ultimaBien": "2026-11-19T12:21:23.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:16:19.116Z"
+   "ultimaBien": "2026-11-19T12:21:23.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:16:19.116Z"
+   "ultimaBien": "2026-11-19T12:21:23.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8619,11 +8620,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:16:19.116Z"
+   "ultimaBien": "2026-11-19T12:21:23.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:16:19.116Z"
+   "ultimaBien": "2026-11-19T12:21:23.245Z"
   }
  },
  "avisos": [
