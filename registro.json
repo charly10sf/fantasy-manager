@@ -2156,7 +2156,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251358/jauregizar-quiere-recuperar-lugar.html": 1794810600000,
    "SPORT|136484016": 1794813943000,
    "SPORT|136485072": 1794815966000,
    "AS|https://as.com/futbol/primera/la-real-vuelve-a-arrancar-en-zubieta-pendiente-de-sarr-y-sucic-f202611-n/": 1794822083000,
@@ -4201,12 +4200,13 @@
    "SPORT|136595898": 1795028720000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
    "SPORT|136596702": 1795032528000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -4214,17 +4214,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 11,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 181940,
-  "salida": 6603,
+  "entrada": 183690,
+  "salida": 6747,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.404561,
+  "dolares": 0.404808,
   "reservado": 0
  },
  "recientes": {
@@ -8557,13 +8557,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4012,
+   "ok": 4013,
    "fallos": 0,
-   "ejecuciones": 3295,
+   "ejecuciones": 3296,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T06:26:11.861Z"
+   "ultima": "2026-11-19T06:31:10.638Z"
   }
  },
  "ptsDirecto": {},
@@ -8580,15 +8580,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:26:23.440Z"
+   "ultimaBien": "2026-11-19T06:31:21.554Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:26:23.440Z"
+   "ultimaBien": "2026-11-19T06:31:21.554Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:26:23.440Z"
+   "ultimaBien": "2026-11-19T06:31:21.554Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8596,11 +8596,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:26:23.440Z"
+   "ultimaBien": "2026-11-19T06:31:21.554Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:26:23.440Z"
+   "ultimaBien": "2026-11-19T06:31:21.554Z"
   }
  },
  "avisos": [
