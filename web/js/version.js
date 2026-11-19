@@ -23,7 +23,7 @@ export const VERSION = '0.8c';
 export const NOVEDADES = [
   {
     // (19 nov, tercera parte de la revisión de la IA: claude/revision-ia.md). La hora, al publicar
-    v: '0.8c', f: '2026-11-19', t: 'Una IA que acierta más con tu liga',
+    v: '0.8c', f: '2026-11-19', h: '06:04', t: 'Una IA que acierta más con tu liga',
     cosas: [
       { tipo: 'mejora', d: 'chat', t: 'El chat sabe el plan que tienes delante', x: 'Si preguntas qué hacer hoy o por qué el plan te dice que vendas a alguien, la IA contesta con el plan que ves en Hoy y con su porqué, también cuando lo ha hecho la app. Y si el plan aguanta a un jugador que baja, ya no te dice que lo vendas.', ir: { v: 'ia' } },
       { tipo: 'mejora', d: 'voz', t: 'Entiende mejor a quién te refieres', x: 'Si nombras a un rival por su apodo o el dictado escribe mal su nombre, la IA mira su plantilla entera, con quién es titular y su próximo partido. Y si le preguntas por un equipo o un jugador que no está en tu liga, te lo dice en una frase.', ir: { v: 'ia' } },
