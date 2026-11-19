@@ -2417,7 +2417,8 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
    "SPORT|136625185": 1795099106000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000
   },
   "hechos": [
    {
@@ -3328,7 +3329,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4228,17 +4229,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 543375,
-  "salida": 28653,
+  "entrada": 545422,
+  "salida": 28745,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.079127,
+  "dolares": 1.079378,
   "reservado": 0
  },
  "recientes": {
@@ -8567,13 +8568,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4145,
+   "ok": 4146,
    "fallos": 0,
-   "ejecuciones": 3428,
+   "ejecuciones": 3429,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:26:11.694Z"
+   "ultima": "2026-11-19T17:31:16.839Z"
   }
  },
  "ptsDirecto": {},
@@ -8590,15 +8591,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:26:20.387Z"
+   "ultimaBien": "2026-11-19T17:31:29.887Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:26:20.387Z"
+   "ultimaBien": "2026-11-19T17:31:29.887Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:26:20.387Z"
+   "ultimaBien": "2026-11-19T17:31:29.887Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8606,11 +8607,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:26:20.387Z"
+   "ultimaBien": "2026-11-19T17:31:29.887Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:26:20.387Z"
+   "ultimaBien": "2026-11-19T17:31:29.887Z"
   }
  },
  "avisos": [
