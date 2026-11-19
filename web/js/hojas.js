@@ -1202,31 +1202,42 @@ export function problemaDe(x, minPlay) {
 }
 /** (16 nov, Carlos: «hay uno que pone que no le carga, ¿qué significa?») por qué le pasa y qué tiene que hacer, en
     palabras de cualquiera. `fc` es el motivo que manda la app desde la 0.7.13t; `ad`, por qué no se le pone la web nueva */
+/* (19 nov, Carlos: «no conozco a los usuarios y no puedo decirles nada») el segundo texto dice si se arregla solo o hace
+   falta un arreglo de la app, nunca lo que tendría que hacer el usuario */
 const POR_CARGA = {
-  red: ['Se le cortó la conexión al cargar su liga (la red del móvil, o la operadora cortando en día de partido).', 'Suele arreglarse solo. Si le sigue, que pruebe con wifi o con otra red.'],
-  lento: ['Su conexión iba tan lenta que la liga no llegó a cargar.', 'Que lo intente con mejor cobertura o con wifi.'],
-  laliga: ['LaLiga no le contestó bien al pedir su liga: es un fallo de LaLiga, no de la app.', 'Suele volver solo en un rato. Si dura más de un día, que mande un aviso desde la app.'],
-  sinLigas: ['Su cuenta de LaLiga no tiene ninguna liga de LaLiga Fantasy.', 'Que entre con la cuenta en la que tiene su liga, o que se una a una.'],
-  vacia: ['LaLiga le da su liga vacía (sin equipos o sin datos).', 'Si es una liga recién creada, es normal hasta que empiece. Si no, que mande un aviso desde la app.'],
+  red: ['Se le cortó la conexión al cargar su liga (la red del móvil, o la operadora cortando en día de partido).', 'Se arregla solo: la app lo vuelve a intentar en cuanto tiene conexión.'],
+  lento: ['Su conexión iba tan lenta que la liga no llegó a cargar.', 'Se arregla solo con mejor cobertura: la app lo vuelve a intentar al abrirla.'],
+  laliga: ['LaLiga no le contestó bien al pedir su liga: es un fallo de LaLiga, no de la app.', 'Suele volver solo en un rato: no depende de la app.'],
+  sinLigas: ['Su cuenta de LaLiga no tiene ninguna liga de LaLiga Fantasy.', 'No se arregla solo: hasta que se una a una liga (o entre con otra cuenta) no hay nada que enseñarle. La app ya se lo dice.'],
+  vacia: ['LaLiga le da su liga vacía (sin equipos o sin datos).', 'Si es una liga recién creada, se arregla sola cuando empiece. Si no, es de la app o de LaLiga y hay que mirarlo.'],
   cambio: ['LaLiga ha cambiado algo en lo que devuelve y la app no lo entiende.', 'Es de la app: hay que mirarlo y sacar un arreglo.'],
-  otro: ['Algo de la app ha fallado al cargar su liga.', 'Es de la app: que mande un aviso desde Ajustes con el diagnóstico para verlo.'],
+  otro: ['Algo de la app ha fallado al cargar su liga.', 'Es de la app: hay que mirarlo y sacar un arreglo.'],
 };
+/** ¿el motivo de AlDia (`ad`) es de la conexión? (los de antes del respaldo traen el mensaje de Android tal cual) */
+const AD_RED = /sin conexi[oó]n|no conecta|tarda|sin direcci[oó]n|https roto|failed to connect|timed? ?out|unable to resolve|resolve host|no address|connection (reset|refused|abort)|software caused|unreachable|network|ssl|handshake|\bEOF\b/i;
 function queLePasa(p, x, minPlay) {
   if (!p) return null;
-  if (p.tipo === 'github') return ['Tiene la app instalada desde fuera de Google Play y ya solo ve el aviso para pasarse.', 'Que la desinstale y se baje la de Google Play.'];
-  if (p.tipo === 'play') return [`Tiene la app ${x.app} de Google Play y la web nueva solo llega desde la ${minPlay}: se ha quedado en la ${webDe(x)}.`, 'Que actualice en Google Play: Play Store → Fantasy Manager → Actualizar.'];
+  if (p.tipo === 'github') return ['Tiene la app instalada desde fuera de Google Play y ya solo ve el aviso para pasarse.', 'No se arregla solo: esa app ya no se actualiza. La propia app le pide que se pase a la de Google Play.'];
+  if (p.tipo === 'play') {
+    const g = LS.get('limites', null), avisa = Number(((g && g.cfg) || {}).playMin) > 0;
+    return [`Tiene la app ${x.app} de Google Play y la web nueva solo llega desde la ${minPlay}: se ha quedado en la ${webDe(x)}.`, `Se arregla cuando Google Play le actualice la app, que suele hacerlo solo.${avisa ? ' La app ya le avisa de que hay una nueva.' : ''}`];
+  }
   if (p.tipo === 'web') {
     const ad = String(x.ad || '');
-    const por = /firma/.test(ad) ? 'la web nueva le llega con la firma mal (puede ser una red que la cambia por el camino)'
-      : /huella|cuadra/.test(ad) ? 'la web nueva le llega a medias o corrupta'
-      : /sitio|grande/.test(ad) ? 'no le queda sitio en el móvil para guardarla'
-      : /arrancaba/.test(ad) ? 'la web nueva no le arrancaba y su móvil volvió a la de antes'
-      : `su móvil dice «${ad}»`;
-    return [`No se le pone la web nueva: ${por}.`, /sitio/.test(ad) ? 'Que libere espacio en el móvil y abra la app otra vez.' : 'Que cierre la app del todo y la abra con wifi. Si sigue, que la actualice o reinstale desde Google Play.'];
+    // desde el respaldo (19 nov) la app prueba dos sitios y el motivo empieza por «sin conexión ·» si no llega a ninguno
+    const dos = /^sin conexi[oó]n ·/.test(ad);
+    const [por, solo] = /firma/.test(ad) ? ['la web nueva le llega con la firma mal (puede ser una red que la cambia por el camino)', 'Suele arreglarse solo con otra red: la app lo vuelve a intentar cada vez que se abre.']
+      : /huella|cuadra/.test(ad) ? ['la web nueva le llega a medias o corrupta', 'Suele arreglarse solo: la app lo vuelve a intentar cada vez que se abre.']
+      : /sitio|grande/.test(ad) ? ['no le queda sitio en el móvil para guardarla', 'No se arregla hasta que tenga sitio libre; la app lo vuelve a intentar cada vez que se abre.']
+      : /arrancaba/.test(ad) ? ['la web nueva no le arrancaba y su móvil volvió a la de antes', 'Es de la app: esa versión ya no la vuelve a probar, se arregla con la siguiente.']
+      : AD_RED.test(ad) && dos ? [`su conexión no llega a donde se descarga, ni al sitio principal ni al de respaldo («${ad}»)`, 'Se arregla solo cuando abra la app con otra red. Si dura más de un día, la propia app le enseña un aviso.']
+      : AD_RED.test(ad) ? [`su conexión no llega a donde se descarga («${ad}»)`, 'Se arregla solo cuando abra la app con otra red, o cuando Google Play le actualice la app, que ya lo intenta también por otro camino.']
+      : [`su móvil dice «${ad}»`, 'La app lo vuelve a intentar cada vez que se abre. Si no se va, es de la app y hay que mirarlo.'];
+    return [`No se le pone la web nueva: ${por}.`, solo];
   }
   if (p.tipo === 'carga') {
     const m = String(x.fc || ''), tipo = m.split(/[ :]/)[0];
-    if (!m) return ['La última vez que abrió la app no le cargó la liga. Su versión no manda el motivo (desde la 0.7.13t, sí).', 'Si vuelve a pasarle, aquí saldrá por qué. Mientras, que mande un aviso desde la app.'];
+    if (!m) return ['La última vez que abrió la app no le cargó la liga. Su versión no manda el motivo (desde la 0.7.13t, sí).', 'Si vuelve a pasarle con una versión más nueva, aquí saldrá por qué.'];
     const [por, hacer] = POR_CARGA[tipo] || POR_CARGA.otro;
     return [`${por} (${m})`, hacer];
   }
@@ -1447,7 +1458,7 @@ export function textoDiagnostico(S) {
   const L = [
     `Fantasy Manager ${VERSION} · compilación ${nativo.version()} · ${enApp ? `app (${nativo.canal()})` : enWeb ? 'web' : 'navegador sin servidor'}${enDemo() ? ' · DEMO' : ''}`,
     `Cuenta de LaLiga: ${(D && D.yo && D.yo.userId) || (avisosGuardados().yo) || '¿?'}`,
-    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; return `Web al día sola: APK con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : 'usa la del APK'} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte Android ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}`; })()] : []),
+    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; return `Web al día sola: APK con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : 'usa la del APK'} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte Android ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
     D ? `Datos: ${new Date(D.t).toISOString()} · liga ${D.liga && D.liga.id} · equipos ${D.clasif.length} · mío ${D.yo.teamId || '¿?'} · jugadores ${Object.keys(D.maestro).length} (con cara ${Object.values(D.maestro).filter((j) => j.img).length}) · mercado ${D.mercado.length} (${D.mercado.filter((m) => m.tipo === 'manager').length} de managers${S.M && S.M.mercadoFantasma && S.M.mercadoFantasma.length ? `, ${S.M.mercadoFantasma.length} ya con dueño quitados` : ''}) · actividad ${D.actividad.length} (con nombre ${D.actividad.filter((a) => a.quien).length}, con id ${D.actividad.filter((a) => a.quienId).length}) · partidos ${D.partidos.length} · tendencias ${Object.keys(D.tendencias || {}).length} · dinero ${D.dinero}` : 'Sin datos',
     D && D.avisos && D.avisos.length ? `Fallos: ${D.avisos.map((a) => `${a.paso}: ${a.e}`).join(' | ')}` : 'Sin fallos',

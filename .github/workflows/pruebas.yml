@@ -5,7 +5,8 @@
 #   sin-red: worker/prueba/datos.mjs y las bot/prueba/*-ejemplo.mjs con la red cortada (.github/pruebas-sin-red.sh).
 #   firma: Ed25519.java (el que comprueba paquete.json en el APK) contra los vectores del RFC 8032 y, con el secreto
 #     PAQUETE_FIRMA, firma el paquete.json de esta rama y lo verifica con la clave pública de AlDia.java, igual que
-#     «Web» antes de publicar (revisión total, A5). Sin el secreto, falla: así se ve antes de llegar a main.
+#     «Web» antes de publicar (revisión total, A5). Sin el secreto, falla: así se ve antes de llegar a main. Desde el
+#     19 nov, también Origenes.java (AlDia va al respaldo de Cloudflare Pages si no llega al dominio).
 # No publica nada.
 name: Pruebas
 
@@ -88,6 +89,12 @@ jobs:
         run: |
           javac -nowarn -d "$RUNNER_TEMP/firma" android/app/src/main/java/es/fantasymanager/app/Ed25519.java android/prueba/PruebaFirma.java
           java -cp "$RUNNER_TEMP/firma" es.fantasymanager.app.PruebaFirma
+      # (19 nov) de dónde baja AlDia la web: el dominio y, si no se llega a él, el respaldo (servidores https locales)
+      - name: AlDia con el dominio caído (Origenes.java)
+        run: |
+          A=android/app/src/main/java/es/fantasymanager/app
+          javac -nowarn -d "$RUNNER_TEMP/origenes" $A/Ed25519.java $A/Origenes.java android/prueba/PruebaOrigenes.java
+          java -cp "$RUNNER_TEMP/origenes" es.fantasymanager.app.PruebaOrigenes
       - name: Firmar y comprobar con la clave de verdad
         env:
           PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}

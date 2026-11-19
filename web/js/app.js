@@ -491,6 +491,27 @@ const bandaPlay = () => {
    Fija, sin cerrar, hasta que se actualice (al actualizarse ya no está por debajo). Ni en la liga de ejemplo */
 const bandaActualizarPlay = () => ((S.D && S.D.demo) || !playDesfasada() ? ''
   : `<div class="banda banda-actualizar">${icono('descargar')}<span><b>Hay una versión nueva de la app</b></span><button data-abrir="${PLAY_URL}">Actualizar en Google Play</button></div>`);
+/* (19 nov, el fallo de Bryan) el móvil no consigue descargar la web nueva con la conexión que tiene (su red no llega a
+   donde está publicada). Cada vez que la app mira si hay versión nueva (webBuscada) se apunta desde cuándo falla por la
+   conexión, y se borra en cuanto mira bien o llega una versión nueva. Con más de un día así, una banda pequeña que se
+   cierra hasta el día siguiente. Sirve sobre todo a las apps de Google Play de antes del respaldo (hasta la 6781), que
+   solo bajan la web del dominio; las de después prueban también el respaldo y solo fallan si no llegan a ninguno */
+const ALDIA_RED = /sin conexi[oó]n|no conecta|tarda|sin direcci[oó]n|https roto|failed to connect|timed? ?out|unable to resolve|resolve host|no address|connection (reset|refused|abort)|software caused|unreachable|network|ssl|handshake|\bEOF\b/i;
+const ALDIA_NO_RED = /firma|HTTP \d|huella|cuadra|sitio|grande|arrancaba|ruta rara|https$/i;
+function apuntarAlDia(estado) {
+  const e = String(estado || '');
+  if (e === 'ocupada') return;
+  const red = e.startsWith('error') && ALDIA_RED.test(e) && !ALDIA_NO_RED.test(e);
+  const g = LS.get('aldia-red', null);
+  if (!red) { if (g) LS.del('aldia-red'); return; }
+  if (!g || g.v !== VERSION) LS.set('aldia-red', { t: Date.now(), v: VERSION });
+}
+const bandaSinDescarga = () => {
+  if (!enApp || enApkGithub() || (S.D && S.D.demo) || playDesfasada()) return '';
+  const g = LS.get('aldia-red', null);
+  if (!g || g.v !== VERSION || Date.now() - g.t < DIA || LS.get('aldia-red-cerrada', '') === diaDe()) return '';
+  return `<div class="banda">${icono('alerta')}<span>No se ha podido descargar la actualización con esta conexión: abre la app con wifi.</span><button class="banda-x" data-accion="cerrarSinDescarga" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+};
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 /* el aviso de que la app sigue en pruebas, arriba en todas las pestañas (lo pidió Carlos el 2 nov, y otra vez el 16 nov): lleva a
    «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 72 h de cerrarlo (Carlos, 9 nov; antes 24 h y, antes, 7 días).
@@ -721,7 +742,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaActualizarPlay() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -2848,6 +2869,7 @@ function ponerWebNueva() {
   location.reload();
 }
 window.webBuscada = (estado) => {
+  apuntarAlDia(estado);
   const avisar = S.buscaAvisar && Date.now() - S.buscaAvisar < 120000;
   S.buscaAvisar = 0;
   if (estado === 'nueva') {
@@ -3202,6 +3224,7 @@ document.addEventListener('click', async (ev) => {
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
+    case 'cerrarSinDescarga': LS.set('aldia-red-cerrada', diaDe()); el.closest('.banda')?.remove(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
     case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;

@@ -980,6 +980,100 @@ for (const [nombre, canal, version, playMin, espera] of [['Play por debajo', 'pl
   await ctx.close();
 }
 
+// 19: (19 nov, el fallo de Bryan) la app no consigue descargar la actualización con su conexión: con más de un día así,
+// una banda pequeña que dice que la abra con wifi. Nada el primer día, nada si el fallo no es de la conexión (firma,
+// 404), se quita en cuanto mira bien, se cierra hasta mañana, y nunca en la web, el APK de GitHub ni la liga de ejemplo
+for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub', 'github']]) {
+  const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '6581', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+  const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: false } }));` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(1200);
+  const r = await page.evaluate(async () => {
+    const { VERSION } = await import('./js/version.js');
+    const { LS } = await import('./js/util.js');
+    const repintar = async () => {
+      const otra = [...document.querySelectorAll('.nav button[data-ir]')].find((b) => b.dataset.ir !== window.S.vista);
+      if (otra) otra.click();
+      await new Promise((ok) => setTimeout(ok, 300));
+      const b = [...document.querySelectorAll('#banda .banda')].find((x) => /actualización/.test(x.innerText));
+      return b ? b.innerText.replace(/\s+/g, ' ') : '';
+    };
+    const red = 'error: failed to connect to fantasymanagerapp.com/185.199.109.153 (port 443) from /10.85.35.168 (port 41234) after 15000ms';
+    const o = {};
+    window.webBuscada(red);
+    o.demo = (LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION }), await repintar());
+    window.S.D.demo = false;
+    LS.set('aldia-red', null); LS.del('aldia-red');
+    window.webBuscada(red);
+    o.primerDia = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    window.webBuscada(red);
+    o.masDeUnDia = await repintar();
+    o.cruz = !![...document.querySelectorAll('#banda .banda')].find((x) => /actualización/.test(x.innerText) && x.querySelector('[data-accion="cerrarSinDescarga"]'));
+    window.webBuscada('error: sin conexión · dominio: no conecta (185.199.109.153) · respaldo: tarda');
+    o.losDos = await repintar();
+    window.webBuscada('igual');
+    o.trasIgual = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    window.webBuscada('error: dominio: paquete con firma mala');
+    o.firma = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    o.deOtraVersion = (LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: '0.1' }), await repintar());
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    await repintar();
+    const x = [...document.querySelectorAll('#banda [data-accion="cerrarSinDescarga"]')][0];
+    if (x) x.click();
+    o.cerrada = await repintar();
+    return o;
+  });
+  const txt = 'No se ha podido descargar la actualización con esta conexión: abre la app con wifi.';
+  const ok = canal === 'play'
+    ? !r.demo && !r.primerDia && r.masDeUnDia === txt && r.cruz && r.losDos === txt && !r.trasIgual && !r.firma && !r.deOtraVersion && !r.cerrada
+    : !r.demo && !r.primerDia && !r.masDeUnDia && !r.losDos;
+  if (!ok) mal(`sin descargar la actualización, ${nombre}: ${JSON.stringify(r).slice(0, 400)}`);
+  else bien(`sin descargar la actualización, ${nombre}: ${canal === 'play' ? 'la banda solo con más de un día fallando por la conexión, y se quita al mirar bien o al cerrarla' : 'sin banda'}`);
+  if (errores.length) mal(`sin descargar la actualización, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 20: (19 nov, Carlos: «no conozco a los usuarios y no puedo decirles nada») en Quién usa la app, qué le pasa a cada uno y
+// si se arregla solo o con la app, nunca «Que cierre la app…», «Que actualice…» ni nada que haya que decirle
+{
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-demo', 'true');` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const { quienUsaHTML } = await import('./js/hojas.js');
+    const ahora = Date.now(), u = ahora - 3600e3;
+    const x = (n, o) => ({ nombre: n, equipo: n, ultima: u, canal: 'play', app: 6581, v: '0.1', ...o });
+    const lista = [
+      x('Bryan', { ad: 'failed to connect to fantasymanagerapp.com/185.199.109.153 (port 443) from /10.85.35.168 (port 41234)' }),
+      x('Dos', { ad: 'sin conexión · dominio: no conecta (185.199.109.153) · respaldo: tarda' }),
+      x('Firma', { ad: 'dominio: paquete con firma mala' }),
+      x('Sitio', { ad: 'sin sitio para guardarla' }),
+      x('Arranca', { ad: 'descartada la 0.8: no arrancaba' }),
+      x('Raro', { ad: 'algo raro' }),
+      x('Fuera', { canal: 'github', app: 5701 }),
+      x('Vieja', { app: 10, ad: '' }),
+      ...['red', 'lento', 'laliga', 'sinLigas', 'vacia', 'cambio', 'otro'].map((t) => x(`Carga ${t}`, { v: '9.9 !', fc: `${t}: x` })),
+      x('Carga sin motivo', { v: '9.9 !' }),
+    ];
+    const div = document.createElement('div');
+    div.innerHTML = quienUsaHTML({ quien: { lista, ahora, registro: [], tab: 'cuentas' } });
+    const por = [...div.querySelectorAll('.qf-por')].map((e) => e.innerText.replace(/\s+/g, ' '));
+    return { n: por.length, por, todo: div.innerText };
+  });
+  const malos = r.por.filter((t) => /(^|[.:] )Que [a-z]|que (cierre|abra|actualice|pruebe|mande|libere|reinstale|desinstale|lo intente)/.test(t));
+  const bryan = r.por.find((t) => /185\.199\.109\.153/.test(t) && !/respaldo/.test(t)) || '';
+  const dos = r.por.find((t) => /ni al sitio principal ni al de respaldo/.test(t)) || '';
+  const ok = r.n >= 16 && !malos.length && /su conexión no llega/.test(bryan) && /Se arregla solo/.test(bryan) && /Google Play/.test(bryan) && /Se arregla solo/.test(dos);
+  if (!ok) mal(`Quién usa la app, qué le pasa: ${JSON.stringify({ n: r.n, malos, bryan, dos }).slice(0, 500)}`);
+  else bien(`Quién usa la app, qué le pasa: ${r.n} casos con qué pasa y si se arregla solo, sin nada que decirle al usuario`);
+  if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

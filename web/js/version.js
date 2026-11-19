@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8f';
+export const VERSION = '0.8g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,15 @@ export const VERSION = '0.8f';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19 nov, el fallo de Bryan: con los datos de su operadora no llegaba al dominio y se quedaba en la 0.7.13za) AlDia
+    // prueba el respaldo de Cloudflare Pages (Origenes.java, parte Android nueva: AAB para Play), la banda de no poder
+    // descargar con esa conexión y los textos de Quién usa la app. Detalle en ESTADO.md. La hora, al publicar
+    v: '0.8g', f: '2026-11-19', h: '21:00', t: 'Actualizaciones con cualquier conexión',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Actualizaciones con cualquier conexión', x: 'Si tu conexión no llegaba a donde se descargan las actualizaciones, la app se quedaba en una versión vieja sin decir nada. Con la versión nueva de Google Play lo intenta también por otro camino y, si en más de un día no lo consigue, te avisa para que la abras con wifi.' },
+    ],
+  },
   {
     // (19 nov, sesión larga: referidos de Domy, apodos en todos los dispositivos, caché y respuestas más cortas del chat, el
     // plan «sin salida»). Detalle en ESTADO.md y claude/nota-sesion-larga-ia.md. La hora, al publicar

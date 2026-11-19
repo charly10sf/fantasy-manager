@@ -14,8 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -41,12 +39,11 @@ import java.util.Set;
  * hacer caso de «parar»). Sin firma o con firma mala no se baja nada y se sigue con la web que hay (la del APK o la
  * última buena); no cuenta como web mala, así que la siguiente búsqueda lo vuelve a intentar desde cero. Como las
  * huellas de cada archivo salen de ese paquete.json firmado, todo lo bajado queda cubierto por la firma.
+ *
+ * De dónde (19 nov): primero el dominio y, si no se llega a él por la conexión, el respaldo de Cloudflare Pages, con
+ * todo el paquete del mismo sitio (Origenes.java). Si se ha tenido que ir al respaldo, queda en «via» del estado.
  */
 final class AlDia {
-    /** la web publicada (Cloudflare Pages, en el dominio de la app; antes, GitHub Pages en charly10sf.github.io) */
-    static final String ORIGEN = "https://fantasymanagerapp.com/";
-    /** de dónde se baja (siempre ORIGEN; las pruebas lo cambian por un servidor local) */
-    static String origen = ORIGEN;
     /**
      * La clave pública Ed25519 (32 bytes, base64) que firma paquete.json. La generó Carlos (8 nov); la privada está
      * solo en el secreto de Actions PAQUETE_FIRMA. .github/firmar-paquete.sh lee esta línea para comprobar en cada
@@ -237,18 +234,26 @@ final class AlDia {
     static String buscar(Context c) {
         if (buscando) return "ocupada";
         buscando = true;
+        Origenes.Paquete de = null;
         try {
             JSONObject propio = propio(c);
             if (propio == null) return "igual";
-            long t = System.currentTimeMillis();
-            byte[] bytes = bajarBytes(origen + "paquete.json?t=" + t, 4L << 20);
-            // antes de leerlo siquiera: que lo haya firmado la Action (si no, fuera, y la web de ahora se queda)
-            comprobarFirma(bytes, bajarBytes(origen + "paquete.json.sig?t=" + t, 1024));
-            JSONObject remoto = new JSONObject(new String(bytes, StandardCharsets.UTF_8));
+            Origenes.agente = "FantasyManagerApp/" + BuildConfig.VERSION_CODE;
+            // del dominio o, si no se llega a él, del respaldo; antes de leerlo siquiera: que lo haya firmado la Action
+            // (si no, fuera, y la web de ahora se queda)
+            Origenes.Paquete pq = Origenes.paquete(java.util.Base64.getDecoder().decode(CLAVE_PAQUETE), System.currentTimeMillis());
+            de = pq;
+            SharedPreferences.Editor pe = prefs(c).edit();
+            if (pq.respaldo()) pe.putString("aldia_via", "respaldo (" + pq.fallo + ")");
+            else pe.remove("aldia_via");
+            pe.apply();
+            JSONObject remoto = new JSONObject(new String(pq.json, StandardCharsets.UTF_8));
             if (remoto.optBoolean("parar")) {
                 if (activa(c) != null) descartar(c, null);
                 return "parada";
             }
+            // se ha podido mirar: el fallo de la última vez ya no vale (salvo el de una web descartada, que sigue)
+            if (!remoto.optString("huella").equals(prefs(c).getString("aldia_mala", ""))) prefs(c).edit().remove("aldia_error").apply();
             if (!BuildConfig.NATIVO.equals(remoto.optString("nativo"))) return "apk";
             String huella = remoto.optString("huella");
             JSONObject ya = activa(c);
@@ -284,7 +289,7 @@ final class AlDia {
                 // lo que no ha cambiado desde la última que se bajó, se copia de ahí
                 File viejo = yaArch != null && h.equals(yaArch.optString(k, "")) && yaDir != null ? new File(yaDir, k) : null;
                 if (viejo != null && viejo.isFile()) copiar(viejo, dest);
-                else total += bajarArchivo(origen + k + "?v=" + h.substring(0, 12), dest);
+                else total += Origenes.bajarArchivo(pq.base, k + "?v=" + h.substring(0, 12), dest);
                 if (total > MAX_TOTAL) throw new IOException("demasiado grande");
                 if (!h.equals(sha256(dest))) throw new IOException("no cuadra la huella de " + k);
             }
@@ -312,24 +317,13 @@ final class AlDia {
             return "nueva";
         } catch (Exception e) {
             String m = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+            // lo que falla después de elegir sitio, con el sitio delante si ha sido el respaldo
+            if (de != null && de.respaldo()) m = "respaldo: " + (Origenes.deRed(e) ? Origenes.motivo((IOException) e) : m);
             prefs(c).edit().putString("aldia_error", m).apply();
             return "error: " + m;
         } finally {
             ultimaBusqueda = System.currentTimeMillis();
             buscando = false;
-        }
-    }
-
-    /** la firma de paquete.json: base64 de 64 bytes, válida con CLAVE_PAQUETE; si no, IOException (no se baja nada) */
-    static void comprobarFirma(byte[] paquete, byte[] sig) throws IOException {
-        byte[] firma;
-        try {
-            firma = java.util.Base64.getDecoder().decode(new String(sig, StandardCharsets.US_ASCII).trim());
-        } catch (IllegalArgumentException e) {
-            throw new IOException("paquete con firma ilegible");
-        }
-        if (!Ed25519.verificar(java.util.Base64.getDecoder().decode(CLAVE_PAQUETE), paquete, firma)) {
-            throw new IOException("paquete con firma mala");
         }
     }
 
@@ -345,6 +339,8 @@ final class AlDia {
             r.put("archivos", a != null && a.optJSONObject("archivos") != null ? a.getJSONObject("archivos").length() : 0);
             r.put("mirada", ultimaBusqueda);
             r.put("error", prefs(c).getString("aldia_error", null));
+            // (19 nov) si la última vez se bajó del respaldo porque el dominio no contestaba: «respaldo (dominio: …)»
+            r.put("via", prefs(c).getString("aldia_via", null));
         } catch (Exception e) {
             // no puede fallar
         }
@@ -387,60 +383,6 @@ final class AlDia {
         StringBuilder s = new StringBuilder();
         for (byte x : md.digest()) s.append(String.format(Locale.ROOT, "%02x", x));
         return s.toString();
-    }
-
-    private static HttpURLConnection abrir(String url) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        con.setReadTimeout(30000);
-        con.setUseCaches(false);
-        con.setRequestProperty("User-Agent", "FantasyManagerApp/" + BuildConfig.VERSION_CODE);
-        con.setRequestProperty("Cache-Control", "no-cache");
-        int s = con.getResponseCode();
-        if (s != 200) {
-            con.disconnect();
-            throw new IOException("HTTP " + s + " en " + url.replace(origen, "").replaceAll("\\?.*", ""));
-        }
-        if (!"https".equals(con.getURL().getProtocol())) {
-            con.disconnect();
-            throw new IOException("sin https");
-        }
-        return con;
-    }
-
-    private static byte[] bajarBytes(String url, long max) throws IOException {
-        HttpURLConnection con = abrir(url);
-        try (InputStream in = con.getInputStream()) {
-            ByteArrayOutputStream o = new ByteArrayOutputStream();
-            byte[] b = new byte[16384];
-            int r;
-            long n = 0;
-            while ((r = in.read(b)) > 0) {
-                n += r;
-                if (n > max) throw new IOException("demasiado grande");
-                o.write(b, 0, r);
-            }
-            return o.toByteArray();
-        } finally {
-            con.disconnect();
-        }
-    }
-
-    private static long bajarArchivo(String url, File dest) throws IOException {
-        HttpURLConnection con = abrir(url);
-        long n = 0;
-        try (InputStream in = con.getInputStream(); OutputStream out = new FileOutputStream(dest)) {
-            byte[] b = new byte[65536];
-            int r;
-            while ((r = in.read(b)) > 0) {
-                n += r;
-                if (n > MAX_ARCHIVO) throw new IOException("archivo demasiado grande");
-                out.write(b, 0, r);
-            }
-        } finally {
-            con.disconnect();
-        }
-        return n;
     }
 
     private static String leer(InputStream in, long max) throws IOException {
