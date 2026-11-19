@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8d';
+export const VERSION = '0.8e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,17 @@ export const VERSION = '0.8d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19 nov, sesión larga: referidos de Domy, apodos en todos los dispositivos, caché y respuestas más cortas del chat, el
+    // plan «sin salida»). Detalle en ESTADO.md y claude/nota-sesion-larga-ia.md. La hora, al publicar
+    v: '0.8e', f: '2026-11-19', h: '20:00', t: 'Invita a tus amigos',
+    cosas: [
+      { tipo: 'nuevo', d: 'regalo', importante: true, t: 'Invita a un amigo', x: 'En Ajustes → Invita a un amigo, comparte tu enlace o tu código. Por cada amigo que empiece a usar la app con él, eliges 2 rivales y ves su dinero durante 24 horas. Con 3 amigos que vuelvan otro día, una semana con el doble de planes y preguntas gratis; con 5, un mes sin anuncios a pantalla completa.' },
+      { tipo: 'mejora', d: 'movil', t: 'Tus apodos, en todos tus dispositivos', x: 'Los apodos que pones a los rivales van con tu cuenta: si los pones en el móvil, también te salen en el ordenador.' },
+      { tipo: 'mejora', d: 'chat', t: 'Respuestas más cortas', x: 'La IA va más al grano: unas pocas frases con las cifras que deciden, también cuando le preguntas por un trato o por un rival.' },
+      { tipo: 'arreglo', d: 'plan', t: 'El plan cuando no llegas en positivo', x: 'Si con tu saldo y tus pujas no llegabas en positivo a la jornada, el plan ya cuenta también con retirar las pujas por jugadores de otros mánagers, y la IA no puede meterte fichajes encima.' },
+    ],
+  },
   {
     // (19 nov, Carlos: «revisa a fondo los porcentajes de titularidad» y «no veo el sentido a cómo pone banquillo»; eligió la
     // variante D sin la tira de fuera). Detalle en ESTADO.md. La hora, al publicar
