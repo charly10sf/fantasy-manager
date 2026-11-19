@@ -1249,8 +1249,18 @@ export function analizar(D, H, c, extra = {}) {
     // sus minutos
     const d = det[j.id];
     const top = topDe(j);
-    const pm = d && !d.error && Array.isArray(d.stats) ? pTitularMinutos(d.stats.map((x) => x.min), top ? clamp((j.valor || 0) / top, 0, 1) : 0.5) : null;
-    if (pm != null) fuentes.push({ f: 'sus minutos', p: pm, w: 0.5 });
+    const vrel = top ? clamp((j.valor || 0) / top, 0, 1) : 0.5;
+    let pm = d && !d.error && Array.isArray(d.stats) && d.stats.length ? pTitularMinutos(d.stats.map((x) => x.min), vrel) : null;
+    let fMin = 'sus minutos';
+    // sin su ficha de LaLiga (solo se pide la de los tuyos, el mercado y las cláusulas), sus minutos de la temporada de
+    // SofaScore o Understat, si los hay: la misma cuenta con su media en todas (sin saber cómo van las últimas)
+    if (pm == null) {
+      const a = M.avanzado(j.id), tE = tabla[j.equipoId];
+      const media = a && a.s && a.s.pj && a.s.tit != null && tE && tE.pj >= 3 ? clamp(a.s.tit / tE.pj, 0, 1)
+        : a && a.u && a.u.min && tE && tE.pj >= 3 ? clamp(a.u.min / (tE.pj * 90), 0, 1) : null;
+      if (media != null) { pm = pTitularMinutos(Array(Math.min(tE.pj, 10)).fill(media * 90), vrel); fMin = 'temporada'; }
+    }
+    if (pm != null) fuentes.push({ f: fMin, p: pm, w: 0.5 });
     // el once probable de su equipo: su % si lo trae; si no, titular 85 %, suplente 30 % y, si no sale ni en la lista, 8 %
     let pf = null;
     if (conFF) {
@@ -1272,7 +1282,9 @@ export function analizar(D, H, c, extra = {}) {
     }
     const p = pm != null && pf != null ? (pmAj + pf) / 2 : pm != null ? pmAj : pf;
     // pRot: lo que quita la rotación al total (para el aviso de la ficha)
-    return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot: pm != null && pf != null ? pRot / 2 : pRot };
+    // pMin: lo de sus minutos con la duda y sin la rotación (para los partidos de después del próximo: el once probable es
+    // solo el del próximo)
+    return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot: pm != null && pf != null ? pRot / 2 : pRot, pMin: pm != null ? clamp(pm * (duda ? 0.6 : 1), 0, 0.98) : null };
   };
 
   /* ---------- ¿conviene esperar antes de mandar vender a uno tuyo que baja? (aviso de Domy, 2 nov) ---------- */
@@ -1506,8 +1518,9 @@ export function analizar(D, H, c, extra = {}) {
       // la titularidad: la del próximo partido tal cual; para los siguientes, la de base con la rotación de ese día
       let pTit = p1, rot = null;
       if (T && i > 0) {
-        const ro = rotacionEn(j.equipoId, x.fecha, T.base);
-        pTit = clamp(T.base * (1 - ro.riesgo), 0, 0.98);
+        const b0 = T.pMin != null ? T.pMin : T.base;
+        const ro = rotacionEn(j.equipoId, x.fecha, b0);
+        pTit = clamp(b0 * (1 - ro.riesgo), 0, 0.98);
         rot = ro.cerca.length ? ro.cerca : null;
       } else if (T && T.rot && T.rot.cerca && T.rot.cerca.length) rot = T.rot.cerca.map((c) => c.comp);
       const ratio = p1 && pTit != null ? clamp(pTit / Math.max(0.05, p1), 0, 1.5) : 1;
