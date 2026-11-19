@@ -2417,7 +2417,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
-   "SPORT|136632067": 1795106605000
+   "SPORT|136632067": 1795106605000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000
   },
   "hechos": [
    {
@@ -3312,11 +3313,23 @@
     "nums": [
      48
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795110892000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang entrena al margen del grupo por molestias en el tobillo",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -4215,17 +4228,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 30,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 547466,
-  "salida": 29099,
+  "entrada": 549396,
+  "salida": 29228,
   "cacheLee": 20321,
   "cacheEscribe": 26127,
-  "dolares": 1.079759,
+  "dolares": 1.080017,
   "reservado": 0
  },
  "recientes": {
@@ -8554,13 +8567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4151,
+   "ok": 4152,
    "fallos": 0,
-   "ejecuciones": 3434,
+   "ejecuciones": 3435,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T17:56:17.318Z"
+   "ultima": "2026-11-19T18:01:12.379Z"
   }
  },
  "ptsDirecto": {},
@@ -8577,15 +8590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:56:26.620Z"
+   "ultimaBien": "2026-11-19T18:01:21.421Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:56:26.620Z"
+   "ultimaBien": "2026-11-19T18:01:21.421Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:56:26.620Z"
+   "ultimaBien": "2026-11-19T18:01:21.421Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8593,11 +8606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:56:26.620Z"
+   "ultimaBien": "2026-11-19T18:01:21.421Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T17:56:26.620Z"
+   "ultimaBien": "2026-11-19T18:01:21.421Z"
   }
  },
  "avisos": [
