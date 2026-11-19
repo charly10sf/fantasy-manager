@@ -1288,6 +1288,13 @@
    "jornada": 13,
    "id": "2123362254795997549",
    "t": "2026-11-19T10:26:26.922Z"
+  },
+  {
+   "clave": "novedades|3264:vuelve|2026-11-19",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123372363240579325",
+   "t": "2026-11-19T11:06:36.782Z"
   }
  ],
  "estados": {
@@ -2125,7 +2132,7 @@
   "3261": "ok",
   "3262": "ok",
   "3263": "ok",
-  "3264": "doubtful",
+  "3264": "ok",
   "3265": "ok",
   "3266": "ok",
   "3267": "ok",
@@ -2174,7 +2181,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3264",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795086377846
+  }
+ ],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000,
@@ -2399,7 +2413,9 @@
    "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000,
    "SPORT|136611106": 1795081699000,
    "SPORT|136611452": 1795081579000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000
   },
   "hechos": [
    {
@@ -3380,7 +3396,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -4200,8 +4216,8 @@
     "t": 0
    },
    "3264": {
-    "e": "doubtful",
-    "t": 1794912972225
+    "e": "ok",
+    "t": 1795086377846
    },
    "3265": {
     "e": "ok",
@@ -4283,17 +4299,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 21,
-   "redactar": 22,
-   "revisar": 10,
+   "clasificar": 22,
+   "redactar": 23,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 386288,
-  "salida": 15301,
+  "entrada": 401973,
+  "salida": 16635,
   "cacheLee": 11612,
-  "cacheEscribe": 17418,
-  "dolares": 0.805281,
+  "cacheEscribe": 20321,
+  "dolares": 0.8423,
   "reservado": 0
  },
  "recientes": {
@@ -4453,10 +4469,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-13T14:01:39.028Z",
-    "texto": "✅ Lamine Yamal vuelve a estar disponible: las molestias en la rodilla que arrastraba desde el 8 de noviembre ya no le frenan.\n\nEl delantero del Barça lleva 10 goles y 8 asistencias en la liga. Tras el parón, el domingo 22 de noviembre, recibe al Villarreal 🚢, que va 8º. Con un 58 % de titularidad, lo normal es que salga."
-   },
-   {
     "t": "2026-11-14T19:26:26.207Z",
     "texto": "✅ Se despeja lo de Mbappé: ya está disponible y llega sin problemas a la vuelta de la liga.\n\nEl Madrid ⚪ recibe al Celta en el Bernabéu el sábado 21, tras el parón. El Celta encaja poco, así que a un delantero no le pone la vida fácil, pero Kylian Mbappé lleva 13 goles y 2 asistencias en la liga y con un 97 % de titularidad es fijo."
    },
@@ -4471,6 +4483,10 @@
    {
     "t": "2026-11-18T11:11:55.915Z",
     "texto": "🚨 Lesión de Lookman. Esguince de rodilla desde el 13 de noviembre. Estará fuera hasta principios de diciembre. El delantero del Atleti vale 15,9 M y ha perdido 12,4 M en el último mes.\n\nEl partido es tras el parón, el domingo 22 de noviembre."
+   },
+   {
+    "t": "2026-11-19T11:06:36.785Z",
+    "texto": "✅ Ceballos ya no es duda y vuelve a estar disponible para el sábado.\n\nEl centrocampista del Betis llega en racha: 21 puntos en las tres últimas jornadas. Visita al Sevilla, que va 6º, en el Sánchez-Pizjuán a las 18:30, un partido de dificultad media. Con un 34 % de titularidad no tiene el puesto asegurado, así que ojo a los onces."
    }
   ],
   "resumen": [
@@ -8622,13 +8638,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4067,
+   "ok": 4068,
    "fallos": 0,
-   "ejecuciones": 3350,
+   "ejecuciones": 3351,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:01:16.083Z"
+   "ultima": "2026-11-19T11:06:17.846Z"
   }
  },
  "ptsDirecto": {},
@@ -8645,15 +8661,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:01:29.604Z"
+   "ultimaBien": "2026-11-19T11:06:44.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:01:29.604Z"
+   "ultimaBien": "2026-11-19T11:06:44.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:01:29.604Z"
+   "ultimaBien": "2026-11-19T11:06:44.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8661,11 +8677,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:01:29.604Z"
+   "ultimaBien": "2026-11-19T11:06:44.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:01:29.604Z"
+   "ultimaBien": "2026-11-19T11:06:44.225Z"
   }
  },
  "avisos": [
