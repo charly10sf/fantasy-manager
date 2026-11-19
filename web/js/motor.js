@@ -2423,6 +2423,7 @@ export function analizar(D, H, c, extra = {}) {
     const saldo = num(D.dinero);
     const cobro = mios.reduce((s, x) => s + x.precio, 0), pago = suyos.reduce((s, x) => s + x.precio, 0);
     const vMios = mios.reduce((s, x) => s + x.valor, 0), vSuyos = suyos.reduce((s, x) => s + x.valor, 0);
+    // (Carlos, 19 nov: con deuda solo se puja en el mercado; todo lo demás, también comprarle a otro mánager, solo con saldo)
     // el dinero de él: seguro (le sobra con el margen de la estimación), quiza (le llega con el margen) o null si no se sabe
     const cap = M.capacidad(tid);
     const leLlega = (imp) => (!cap ? 'nose' : cap.seguro >= imp ? 'si' : cap.alto >= imp ? 'quiza' : 'no');

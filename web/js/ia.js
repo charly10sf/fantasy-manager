@@ -2898,7 +2898,7 @@ export function tratoTxt(D, M, T) {
   const riv = nombreTid(M, T.tid);
   const sobre = (x) => { const d = x.precio / x.valor - 1; return Math.abs(d) < 0.005 ? 'su valor' : `${d > 0 ? '+' : '−'}${pct(Math.abs(d) * 100, 1).replace(/^[+-]/, '')} sobre su valor, ${eur(x.valor)}`; };
   const lista = (l) => l.map((x) => `${x.j.nombre} por ${eur(x.precio)} (${sobre(x)})`).join(' y ');
-  const L = ['\nLA APP, EL TRATO (cuentas hechas por la app con el dinero de los dos; su veredicto es tu respuesta: empieza por él y explícalo con estas cifras):'];
+  const L = ['\nLA APP, EL TRATO (cuentas hechas por la app con el dinero de los dos, cada uno solo con su saldo: entre managers no se puede tirar de deuda, eso solo vale para pujar en el mercado; su veredicto es tu respuesta: empieza por él y explícalo con estas cifras):'];
   L.push(`- Lo que hablan: ${riv} me compra ${lista(T.mios)} y yo le compro ${lista(T.suyos)}.${T.igual ? ' Es uno por otro: los dos al mismo precio, así mi saldo no se mueve.' : T.supuesto ? ' (El que va sin precio, contado a su valor.)' : ''}`);
   const din = (imp) => { const s = !T.cap ? 'nose' : T.cap.seguro >= imp ? 'si' : T.cap.alto >= imp ? 'quiza' : 'no';
     if (s === 'nose') return 'no sé si le llega';
