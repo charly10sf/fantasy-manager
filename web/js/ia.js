@@ -16,7 +16,7 @@ import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg, preguntasCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
-import { rematarAuto, prisaNegativo } from './motor.js';
+import { rematarAuto, prisaNegativo, ofertaDueno } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS } from './chat-sistema.js';
@@ -2758,7 +2758,7 @@ async function contenidosChat(hist, nuevas) {
  * El 7 nov la IA dio «Berenguer + 33-35 M» y luego «+ 26 M», y sumó «107 + 35 = 75»: si las cifras le llegan hechas,
  * no se las inventa.
  */
-export function cuentasTxt(D, M, js, { web = true } = {}) {
+export function cuentasTxt(D, M, js, { web = true, trato = null } = {}) {
   if (!js || js.length < 2) return '';
   const yo = D.yo && D.yo.teamId;
   const info = js.map((j) => {
@@ -2771,7 +2771,11 @@ export function cuentasTxt(D, M, js, { web = true } = {}) {
   const L = ['\nCUENTAS HECHAS (las cifras de estos jugadores salen de aquí; no las cambies de un mensaje a otro sin un dato nuevo):'];
   for (const x of info) L.push(`- ${x.j.nombre}: vale ${eur(x.j.valor)}${x.d1 != null ? ` (hoy ${eur(x.d1, { signo: true })})` : ''}${x.cl && x.cl.clausula ? `, cláusula ${eur(x.cl.clausula)}${x.cl.abierta ? ' abierta' : x.cl.protegidoHasta ? `, se abre ${cuandoF(x.cl.protegidoHasta)}` : ''}` : ''}; ${x.mia ? 'es mío' : x.tid ? `es de ${nombreTid(M, x.tid)}` : 'libre'}`);
   const mios = info.filter((x) => x.mia), suyos = info.filter((x) => !x.mia && x.tid);
+  // (19 nov) con un trato con precios, las cuentas del cambio las hace M.trato (van en «LA APP, EL TRATO»): las de aquí,
+  // a sus valores, le hacían proponer «cambio a valores»
+  const enTrato = (j) => !!trato && [...trato.mios, ...trato.suyos].some((x) => x.pid === j.id);
   for (const a of mios) for (const b of suyos) {
+    if (enTrato(a.j) && enTrato(b.j)) continue;
     const dif = a.j.valor - b.j.valor;
     // un cambio entre managers son DOS COMPRAS, cada una a su valor (Carlos, 8 nov: «yo compro una cosa que vale 28 M por
     // 28 M y él una que vale 55 M por 55 M; nos quedamos igual, nadie pierde valor»). La IA lo contaba como un cambio sin
@@ -2804,6 +2808,117 @@ export function cuentasTxt(D, M, js, { web = true } = {}) {
     }
     if (b.cl && b.cl.clausula) L.push(`- La cláusula de ${b.j.nombre} (${eur(b.cl.clausula)}) ${b.cl.clausula <= num(D.dinero) ? `SÍ me llega con mi saldo (${eur(num(D.dinero))})` : `no me llega con mi saldo (${eur(num(D.dinero))}; faltan ${eur(b.cl.clausula - num(D.dinero))})`}${b.cl.abierta ? ': está abierta' : b.cl.protegidoHasta ? `: se abre ${cuandoF(b.cl.protegidoHasta)}` : ''}.`);
   }
+  return L.join('\n');
+}
+
+/* ---------------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------------
+   Se saca de la pregunta (o de sus últimos mensajes, o de un trato apuntado) qué jugadores entran y a qué precio («a su
+   valor», «por 60 M», «un 4 % más»), lo calcula el motor (M.trato) y la IA lo recibe hecho, con su veredicto. */
+const liso = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ');
+const PALABRAS_TRATO = /\b(cambi\w*|trueque|truec\w*|intercambi\w*|me compra\w*|le compr\w*|le vend\w*|me vend\w*|a cambio|me ofrece\w*|me propone\w*|trato)\b/;
+const IGUAL_TRATO = /\b(uno por otro|sin dinero|sin poner dinero|a pelo|cambio directo|sin pagar nada)\b/;
+/** ¿dice que la cláusula del suyo no es una vía? («si no, me lo blinda», «se la sube») */
+export const sinClausulaEn = (t) => /\b(blind\w*|se la sub\w*|la sub\w* la clausula|le sub\w* la clausula|sube la clausula|no es opcion|no puedo clausul\w*|clausular\w* no\b)/.test(liso(t));
+/**
+ * El trato que cuenta en un texto: { mios: [{ pid, precio }], suyos: [{ pid, precio }], igual, supuesto } o null.
+ * Cada precio se le pone al jugador más cerca de él en la frase; sin precio, a su valor (supuesto: true).
+ */
+export function tratoEn(texto, D, M) {
+  const l = ` ${liso(texto)} `;
+  if (!PALABRAS_TRATO.test(l) && !IGUAL_TRATO.test(l)) return null;
+  const yo = D.yo && D.yo.teamId;
+  const js = jugadoresEn(texto, D).filter((j) => M.dueno[j.id]);
+  const mios = js.filter((j) => M.dueno[j.id] === yo), otros = js.filter((j) => M.dueno[j.id] !== yo);
+  if (!mios.length || !otros.length) return null;
+  // los del rival que más sale (todos tienen que ser del mismo)
+  const cuenta = {};
+  for (const j of otros) cuenta[M.dueno[j.id]] = (cuenta[M.dueno[j.id]] || 0) + 1;
+  const tid = Object.entries(cuenta).sort((a, b) => b[1] - a[1])[0][0];
+  const suyos = otros.filter((j) => M.dueno[j.id] === tid);
+  const todos = [...mios.slice(0, 2), ...suyos.slice(0, 2)];
+  // dónde sale cada uno en el texto (por el nombre entero o por el apellido)
+  const sitios = [];
+  for (const j of todos) {
+    const n = liso(j.nombre).replace(/[^a-z0-9 ]+/g, ' ').trim().split(/\s+/);
+    for (const pat of [n.join('\\W+'), n.length > 1 && n[n.length - 1].length >= 4 ? n[n.length - 1] : null].filter(Boolean)) {
+      const re = new RegExp(`(?<![a-z0-9])${pat}(?![a-z0-9])`, 'g');
+      let m; while ((m = re.exec(l))) sitios.push({ j, i: m.index, f: m.index + m[0].length });
+    }
+  }
+  // las cifras: «a su valor», «un 4 % más», «60 M» (fuera las del saldo, las cláusulas y lo que vale)
+  const precios = [];
+  const RE_VALOR = /\b(?:a|por|en)\s+(?:su|el)\s+valor(?:\s+de\s+mercado)?\b|\ba\s+valor(?:es)?(?:\s+de\s+mercado)?\b|\bpor\s+lo\s+que\s+vale\b|\b(?:a|al|por\s+el)\s+precio\s+de\s+mercado\b/g;
+  const RE_PCT = /(?:un\s+)?(\d+(?:[.,]\d+)?)\s*%\s*(mas|menos|por encima|por debajo)/g;
+  const RE_EUR = /(\d{1,3}(?:[.,]\d{1,3})?)\s*(?:m\b|millones\b|mill\b|kilos\b|kk\b|€)/g;
+  let m;
+  while ((m = RE_VALOR.exec(l))) precios.push({ i: m.index, f: m.index + m[0].length, tipo: 'valor' });
+  while ((m = RE_PCT.exec(l))) precios.push({ i: m.index, f: m.index + m[0].length, tipo: 'pct', x: parseFloat(m[1].replace(',', '.')) / 100 * (/menos|debajo/.test(m[2]) ? -1 : 1) });
+  while ((m = RE_EUR.exec(l))) {
+    const antes = l.slice(Math.max(0, m.index - 28), m.index), despues = l.slice(m.index + m[0].length, m.index + m[0].length + 14);
+    if (/^\s*(?:de\s+)?saldo/.test(despues) || /(saldo|tengo|clausula|vale|valor|valia|cuesta|tiene|me quedan?|ahorrad\w*)\s*(?:de|en|a|es|son)?\s*(?:unos?\s*)?$/.test(antes)) continue;
+    if (precios.some((p) => m.index >= p.i && m.index < p.f)) continue;
+    precios.push({ i: m.index, f: m.index + m[0].length, tipo: 'eur', x: parseFloat(m[1].replace(/\.(?=\d{3}\b)/, '').replace(',', '.')) * 1e6 });
+  }
+  const precio = new Map();
+  for (const p of precios.sort((a, b) => a.i - b.i)) {
+    let mejor = null, dm = Infinity;
+    for (const s of sitios) {
+      // detrás del nombre cuenta un poco más («a Huijsen por 60 M») que delante («le pago 60 M por Huijsen»)
+      const d = p.i >= s.f ? p.i - s.f : (s.i - p.f) * 1.4;
+      if (d >= 0 && d < dm && d <= 70 && !precio.has(s.j.id)) { dm = d; mejor = s; }
+    }
+    if (!mejor) continue;
+    const j = mejor.j;
+    precio.set(j.id, p.tipo === 'valor' ? j.valor : p.tipo === 'pct' ? Math.round(j.valor * (1 + p.x) / 1e4) * 1e4 : p.x);
+  }
+  const igual = IGUAL_TRATO.test(l) && !precio.size;
+  let supuesto = false;
+  const conPrecio = (j) => { if (precio.has(j.id)) return precio.get(j.id); supuesto = true; return j.valor; };
+  const sm = mios.slice(0, 2).map((j) => ({ pid: j.id, precio: conPrecio(j) })), ss = suyos.slice(0, 2).map((j) => ({ pid: j.id, precio: conPrecio(j) }));
+  // uno por otro: los dos al mismo precio (el más bajo), así el saldo no se mueve
+  if (igual) { const x = Math.min(...[...sm, ...ss].map((y) => y.precio)); if (sm.length === 1 && ss.length === 1) { sm[0].precio = x; ss[0].precio = x; } }
+  return { mios: sm, suyos: ss, igual, supuesto: supuesto && !igual };
+}
+/** el trato de la conversación: el de la pregunta, si no el de sus últimos mensajes y si no el último trato apuntado */
+export function tratoDeChat(pregunta, D, M, antes = []) {
+  const fuentes = [pregunta, ...[...antes].reverse()];
+  try { for (const n of notas().filter((x) => x.tipo === 'trato' && (!x.caduca || x.caduca > Date.now())).reverse()) fuentes.push(n.texto); } catch (e) { /* sin notas */ }
+  for (const f of fuentes) {
+    const spec = f && tratoEn(f, D, M);
+    if (!spec) continue;
+    const T = M.trato ? M.trato({ ...spec, sinClausula: sinClausulaEn([pregunta, ...antes].join(' \n ')) }) : null;
+    if (T) return { ...T, igual: spec.igual, supuesto: spec.supuesto };
+  }
+  return null;
+}
+/** el trato hecho cuentas, para los datos del chat («LA APP, EL TRATO») */
+export function tratoTxt(D, M, T) {
+  if (!T) return '';
+  const oculto = bloqueada('dineroRivales');
+  const riv = nombreTid(M, T.tid);
+  const sobre = (x) => { const d = x.precio / x.valor - 1; return Math.abs(d) < 0.005 ? 'su valor' : `${d > 0 ? '+' : '−'}${pct(Math.abs(d) * 100, 1).replace(/^[+-]/, '')} sobre su valor, ${eur(x.valor)}`; };
+  const lista = (l) => l.map((x) => `${x.j.nombre} por ${eur(x.precio)} (${sobre(x)})`).join(' y ');
+  const L = ['\nLA APP, EL TRATO (cuentas hechas por la app con el dinero de los dos; su veredicto es tu respuesta: empieza por él y explícalo con estas cifras):'];
+  L.push(`- Lo que hablan: ${riv} me compra ${lista(T.mios)} y yo le compro ${lista(T.suyos)}.${T.igual ? ' Es uno por otro: los dos al mismo precio, así mi saldo no se mueve.' : T.supuesto ? ' (El que va sin precio, contado a su valor.)' : ''}`);
+  const din = (imp) => { const s = !T.cap ? 'nose' : T.cap.seguro >= imp ? 'si' : T.cap.alto >= imp ? 'quiza' : 'no';
+    if (s === 'nose') return 'no sé si le llega';
+    if (oculto) return s === 'si' ? 'parece que le llega' : s === 'quiza' ? 'parece que le llega justo' : 'no parece que le llegue';
+    return `${s === 'si' ? 'le llega' : s === 'quiza' ? 'le llega justo' : 'no le llega'}: tiene ${T.cap.exacto ? '' : '≈ '}${eur(T.cap.v)}`; };
+  if (!T.orden) L.push(`- EL DINERO NO DA: con mi saldo (${eur(T.saldo)}) no pago ${eur(T.pago)} primero, y él para pagarme ${eur(T.cobro)} primero ${din(T.cobro)}.`);
+  else if (T.orden === 'el') L.push(`- El orden: ${T.yoPrimero ? 'da igual quién empiece, pero mejor que pague él primero' : `con mi saldo (${eur(T.saldo)}) no puedo pagar primero`}; él me compra primero (${din(T.cobro)}), me entran ${eur(T.cobro)} AL MOMENTO (tengo ${eur(T.saldo + T.cobro)}) y luego le pago ${eur(T.pago)}: acabo con ${eur(T.saldoFin)} de saldo.`);
+  else L.push(`- El orden: a él no le llega para pagar primero, así que pago yo ${eur(T.pago)} con mi saldo (me quedan ${eur(T.saldo - T.pago)}) y con ese dinero me compra él lo mío: me entran ${eur(T.cobro)} al momento y acabo con ${eur(T.saldoFin)} de saldo.`);
+  L.push(`- Mi valor (saldo + jugadores): de ${eur(T.valorAntes)} a ${eur(T.valorDespues)} (${eur(T.dValor, { signo: true })})${T.dValor < 0 ? `: es lo que pago por encima de lo que valen (${[T.deMas > 0 ? `${eur(T.deMas)} de más por lo suyo` : null, T.cedo > 0 ? `${eur(T.cedo)} menos de lo que vale lo mío` : null].filter(Boolean).join(' y ')})` : ''}.`);
+  L.push(`- El precio: lo normal entre managers por ${T.suyos.map((x) => x.j.nombre).join(' y ')} es hasta ~${eur(T.normal)} (su «oferta para que te lo venda»; a su valor su dueño no vende): ${eur(T.pago)} está ${eur(Math.abs(T.normal - T.pago))} ${T.barato ? 'por debajo: BUEN PRECIO' : 'por encima: CARO'}.${T.mios.some((x) => x.precio <= x.valor) ? ` Lo mío va a su valor o menos: a LaLiga le sacaría algo más, pero no al momento (en el siguiente cambio de mercado).` : ''}`);
+  const pts = (x) => `${x.j.nombre} ~${d1(x.pp)}`;
+  const rit = (x) => `${x.j.nombre} ${x.ritmo >= 0 ? 'sube' : 'baja'} ${eur(Math.abs(x.ritmo))} al día`;
+  L.push(`- Lo que gano: puntos del próximo partido ${[...T.suyos, ...T.mios].map(pts).join(', ')}; mi once ${Math.abs(T.dPts) < 0.05 ? 'se queda igual' : `${T.dPts > 0 ? 'gana' : 'pierde'} ~${d1(Math.abs(T.dPts))} pts por jornada`}. ${[...T.suyos, ...T.mios].map(rit).join('; ')} (en 14 días, con el cambio ${T.dRitmo >= 0 ? 'gano' : 'pierdo'} ${eur(Math.abs(T.dRitmo * 14))} si siguen así). ${T.suyos.map((x) => x.j.nombre).join(' y ')} llega${T.suyos.length > 1 ? 'n' : ''} con la cláusula cerrada 14 días: nadie me ${T.suyos.length > 1 ? 'los' : 'lo'} puede quitar en ese tiempo.${T.enRiesgo.length ? ` ${T.enRiesgo.map((x) => x.j.nombre).join(' y ')} tenía${T.enRiesgo.length > 1 ? 'n' : ''} riesgo de cláusula ${T.enRiesgo[0].riesgo}: con el trato me lo quito.` : ''}`);
+  L.push(`- Cuenta de 14 días: ${eur(T.dValor, { signo: true })} de valor ahora ${T.gana14 >= 0 ? '+' : '−'} ${eur(Math.abs(T.gana14))} entre lo que sube de más y los puntos (100 mil cada uno, ${T.jornadas14} jornada${T.jornadas14 > 1 ? 's' : ''}) = ${eur(T.neto, { signo: true })}.`);
+  if (T.via) {
+    const v = T.via, s = T.suyos[0];
+    if (v.fuera) L.push(`- La otra vía, su cláusula (${eur(v.clausula)}), NO CUENTA: me ha dicho que ${riv} la blinda o la sube si no hay trato. No la propongas.`);
+    else L.push(`- La otra vía: la cláusula de ${s.j.nombre} (${eur(v.clausula)}) ${v.abierta ? 'está abierta' : `se abre ${cuandoF(v.abre)}`}${v.meLlega ? ' y me llega' : `, pero no me llega (faltan ${eur(v.clausula - T.saldo)})`}${v.antesJornada ? '' : ', después de que empiece la jornada'}. ${v.vale ? `Por ahí me ahorro ${eur(T.pago - v.clausula)} y me quedo también lo mío, pero no es seguro: él puede blindarla o subirla antes y en ese minuto compito con quien quiera pagarla.` : 'No es mejor camino.'}`);
+  }
+  L.push(`- VEREDICTO DE LA APP: ${T.veredicto}${T.si ? ` ${T.si}` : ''}: ${T.motivo}.`);
   return L.join('\n');
 }
 
@@ -2970,6 +3085,14 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     if (!mal && Math.abs(suma - total) > Math.max(Math.abs(suma) * 0.004, 25000)) nota(`La cuenta «${m[1].replace(/\s+/g, ' ').trim()}» da ${eur(suma)}, no ${m[m.length - 2]} ${m[m.length - 1]}.`);
   }
 
+  /* 3b. (19 nov, el trueque de Carlos con Domy) «cambio a valores», «a su valor», «sin el 4 %»: ningún dueño vende a su
+     valor porque LaLiga le da más; se dice cuánto es lo normal que pide su dueño por el jugador del rival del que habla */
+  if (/\b(cambio|cambiar|intercambio|cerrar|cerrarlo|contraofert\w*|propon\w*)\b[^.]{0,30}\ba (sus )?valores\b|\ba valor(es)? exactos?\b|\bsin (el|la) (\d+ ?%|prima|sobreprecio)\b/i.test(norm(t))) {
+    const rival = todos.find((j) => j && !mia(j.id) && M.dueno && M.dueno[j.id]);
+    const of = rival ? ofertaDueno(M, rival) : null;
+    nota(of && of.v ? `A su valor no lo vende ningún dueño, porque LaLiga le da más: lo normal entre managers es pagar por ${N(rival)} hasta unos ${eur(of.v)}, y por debajo de eso es buen precio.` : 'A su valor no lo vende ningún dueño, porque LaLiga le da más: pagar algo por encima entre managers es lo normal.');
+  }
+
   /* 4. lo que no puede decir */
   const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
@@ -3008,22 +3131,8 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
  * su plantilla y le pedía la lista. Cada jugador en una línea corta; los rivales de los que habla, con algo más.
  * enteros: los teamId de los rivales que nombra en la pregunta (o en sus últimos mensajes).
  */
-/**
- * cuánto hay que ofrecerle a un rival para que te venda a j (aviso de leao, 17 nov: el chat ofrecía un 10 % fijo, sin
- * mirar si sube): lo que le daría LaLiga en el próximo cambio de mercado (la parte alta de lo que da en tu liga) sobre lo
- * que valdrá para entonces con lo que sube al día. Si sube fuerte (más de un 1 % al día o un 8 % en 7 días), lo normal es
- * que su dueño pida más. null si no hay valor
- */
-export function ofertaDueno(M, j, t = {}) {
-  if (!j || !j.valor) return null;
-  const ine = M.inercia ? M.inercia(j.id) : null;
-  const dia = ine && ['sube', 'acelera', 'frena'].includes(ine.fase) ? num(ine.ult) : num(t.d1);
-  const OL = M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
-  const alta = OL && !OL.sinDatos && OL.max ? OL.max / j.valor - 1 : 0.1;
-  const v = Math.ceil(((j.valor + Math.max(0, dia)) * (1 + Math.max(0.02, alta))) / 1e4) * 1e4;
-  const sube = dia > j.valor * 0.01 || (t.p7 != null && t.p7 > 8);
-  return { v, sube };
-}
+/* ofertaDueno (cuánto ofrecerle a un rival para que te venda a uno) vive en motor.js desde el 19 nov: la usa M.trato */
+export { ofertaDueno };
 
 /* (19 nov, tercera parte) recortado para el chat: de los rivales de los que no pregunta, sin lo de hoy (va lo de 7 días) y sin
    «oferta para que te lo venda» salvo que pregunte por ofertas o nombre al jugador (~20 % menos de lo que lee el chat) */
@@ -3150,7 +3259,11 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   const deAhora = nombrados.length;
   const antes = (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '').join(' \n ');
   if (antes) for (const j of jugadoresEn(antes, D)) meter(j);
-  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados, { web })}` : '';
+  // (19 nov) un trato entre managers con sus precios: lo calcula la app y la IA lo explica (como las ofertas)
+  let trato = null;
+  try { trato = tratoDeChat(pregunta, D, M, (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '')); } catch (e) { trato = null; }
+  for (const x of trato ? [...trato.mios, ...trato.suyos] : []) meter(x.j);
+  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados, { web, trato })}${trato ? tratoTxt(D, M, trato) : ''}` : '';
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
   let enteros = rivalesEn(pregunta, D, M);
   if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);

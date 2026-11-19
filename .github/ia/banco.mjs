@@ -46,6 +46,19 @@ export const ESCENAS = {
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
   // en negativo entre semana (ha tirado de deuda)
   negativo: { hora: '2026-11-03T10:00:00+01:00', prep: 'S.D.dinero = -4200000;' },
+  // (19 nov, el trueque de Carlos con Domy) martes con 58,10 M; Fornals (58,95 M) es mío y Huijsen (57,42 M), del 2º, con
+  // la cláusula a su valor abriéndose hoy a las 20:00: él me compra a Fornals a su valor y yo le compro a Huijsen por 60 M
+  'trato-domy': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 58100000;
+    const pid = (n) => Object.values(S.D.maestro).find((x) => x.nombre === n).id, fo = pid('Fornals'), hu = pid('Huijsen');
+    const r2 = S.D.clasif.find((e) => e.pos === 2).teamId, yo = S.D.yo.teamId;
+    for (const t of Object.keys(S.D.plantillas)) S.D.plantillas[t] = S.D.plantillas[t].filter((f) => f.pid !== fo && f.pid !== hu);
+    S.D.mercado = S.D.mercado.filter((m) => m.pid !== fo && m.pid !== hu);
+    // (su histórico de valores, a la misma escala: si no, «sube 4,7 M al día»)
+    for (const [id, v] of [[fo, 58950000], [hu, 57420000]]) { const k = v / S.D.maestro[id].valor; S.D.maestro[id].valor = v;
+      if (S.H.v && S.H.v[id]) S.H.v[id] = S.H.v[id].map((x) => [x[0], Math.round(x[1] * k)]); if (S.det && S.det[id]) delete S.det[id].valores; }
+    S.D.dineros = { ...(S.D.dineros || {}), [r2]: { v: 64300000, fuente: 'LaLiga' } };
+    S.D.plantillas[yo].push({ pid: fo, ptId: 'pt' + fo, clausula: 66000000, protegidoHasta: Date.now() + 3 * 864e5, compra: 52000000 });
+    S.D.plantillas[r2].push({ pid: hu, ptId: 'pt' + hu, clausula: 57420000, protegidoHasta: Date.parse('2026-11-03T20:00:00+01:00') });` },
   // con dinero de sobra (60 M): vender no hace falta ni contando las pujas que ya tiene puestas
   holgado: { hora: '2026-11-03T10:00:00+01:00', prep: 'S.D.dinero = 60000000;' },
 

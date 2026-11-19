@@ -2391,6 +2391,82 @@ export function analizar(D, H, c, extra = {}) {
     const ES = M.escudosMios || { quedan: 0 };
     M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
   }
+  /* ---------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------
+     Uno o dos jugadores míos y del mismo rival, cada uno con su precio. Son dos compras, una detrás de otra, y el dinero
+     de la primera entra al momento: aquí se mira quién puede pagar primero (yo con mi saldo o él con el suyo), el saldo de
+     cada paso, mi valor antes y después, el precio frente a lo que pide un dueño por él (ofertaDueno), los puntos, lo que
+     sube cada uno, los 14 días de cláusula cerrada y la otra vía (su cláusula). Antes la IA hacía estas cuentas sola y
+     salían mal (el dinero «no entraba hasta el cambio de mercado», «cambio a valores»...): ahora las hace la app y la IA
+     las explica, como con las ofertas.
+     spec: { mios: [{ pid, precio }], suyos: [{ pid, precio }], sinClausula } → null si no es un trato válido */
+  M.trato = (spec) => {
+    if (!spec) return null;
+    const lado = (l) => (l || []).map((x) => ({ ...x, j: J(x.pid) })).filter((x) => x.j && x.j.valor);
+    const mios = lado(spec.mios).filter((x) => M.dueno[x.pid] === yoTid), suyos = lado(spec.suyos).filter((x) => M.dueno[x.pid] && M.dueno[x.pid] !== yoTid);
+    if (!mios.length || !suyos.length || mios.length > 2 || suyos.length > 2) return null;
+    const tid = M.dueno[suyos[0].pid];
+    if (suyos.some((x) => M.dueno[x.pid] !== tid)) return null;
+    const ritmo = (j) => { const t = M.tend(j.id) || {}; return t.diaE != null ? t.diaE : t.d7 != null ? t.d7 / 7 : num(t.d1); };
+    for (const x of [...mios, ...suyos]) {
+      x.valor = x.j.valor;
+      x.precio = Math.round(num(x.precio) || x.valor);
+      x.ritmo = ritmo(x.j);
+      x.pp = M.ppEsperado ? M.ppEsperado(x.j) : 0;
+      x.ine = M.inercia(x.pid);
+    }
+    for (const x of mios) { const m = (M.mias || []).find((y) => y.pid === x.pid) || {}; x.riesgo = m.riesgo || 'ninguno'; x.abierta = !!m.abierta; x.protegidoHasta = m.protegidoHasta || null; x.clausula = m.clausula || null; x.compra = m.compra || null; }
+    for (const x of suyos) {
+      x.of = ofertaDueno(M, x.j, M.tend(x.pid) || {});
+      const c = (M.clausulas || []).find((y) => y.pid === x.pid);
+      x.cl = c ? { clausula: c.clausula, abierta: !!c.abierta, abre: c.abierta ? null : c.protegidoHasta, veda: c.veda || null } : null;
+    }
+    const saldo = num(D.dinero);
+    const cobro = mios.reduce((s, x) => s + x.precio, 0), pago = suyos.reduce((s, x) => s + x.precio, 0);
+    const vMios = mios.reduce((s, x) => s + x.valor, 0), vSuyos = suyos.reduce((s, x) => s + x.valor, 0);
+    // el dinero de él: seguro (le sobra con el margen de la estimación), quiza (le llega con el margen) o null si no se sabe
+    const cap = M.capacidad(tid);
+    const leLlega = (imp) => (!cap ? 'nose' : cap.seguro >= imp ? 'si' : cap.alto >= imp ? 'quiza' : 'no');
+    // él primero: me compra lo mío con su saldo, me entra al momento y luego pago yo
+    const suyo1 = leLlega(cobro), elPrimero = suyo1 !== 'no' && saldo + cobro >= pago;
+    // con su dinero estimado (no el de LaLiga), «no le llega» puede fallar: el trato vale si le llega (dudaEl)
+    const dudaEl = suyo1 === 'no' && cap && !cap.exacto && saldo + cobro >= pago;
+    // yo primero: pago con mi saldo y él me paga con lo suyo más lo que le acabo de dar
+    const yoPrimero = saldo >= pago && (!cap || leLlega(Math.max(0, cobro - pago)) !== 'no');
+    const orden = elPrimero ? 'el' : yoPrimero ? 'yo' : dudaEl ? 'el' : null;
+    const saldoFin = saldo + cobro - pago;
+    const valorAntes = saldo + (M.mias || []).reduce((s, x) => s + num(x.j && x.j.valor), 0);
+    const dValor = cobro - pago + vSuyos - vMios;
+    const normal = suyos.reduce((s, x) => s + (x.of ? x.of.v : x.valor), 0);
+    const deMas = pago - vSuyos, cedo = vMios - cobro;
+    // los puntos de mi once por jornada, con el cambio hecho
+    let dPts = 0;
+    try { const base = (M.mias || []).map((x) => x.j).filter((j) => !mios.some((m) => m.pid === j.id)); dPts = M.mejorOnce([...base, ...suyos.map((x) => x.j)]).total - M.once.total; } catch (e) { dPts = 0; }
+    // lo que suben de más los que recibo en los 14 días que los tengo seguros, y lo que valen esos puntos (100 mil cada uno)
+    const dRitmo = suyos.reduce((s, x) => s + x.ritmo, 0) - mios.reduce((s, x) => s + x.ritmo, 0);
+    const jornadas14 = Math.max(1, jornadas.filter((jo) => jo.ini > ahora && jo.ini < ahora + 14 * DIA).length);
+    const gana14 = dRitmo * 14 + dPts * jornadas14 * 1e5;
+    const neto = gana14 + dValor;
+    // la otra vía: su cláusula (si él no dice que se la blindan o la suben), con mi saldo de ahora y quedándome lo mío
+    let via = null;
+    if (suyos.length === 1 && suyos[0].cl) {
+      const c = suyos[0].cl;
+      via = { ...c, meLlega: c.clausula <= saldo, ahorro: pago - c.clausula - cobro + vMios, fuera: !!spec.sinClausula, antesJornada: !M.proxima || c.abierta || (c.abre && c.abre < M.proxima.ini) };
+      via.vale = !via.fuera && via.meLlega && via.antesJornada && c.clausula < pago;
+    }
+    const enRiesgo = mios.filter((x) => x.riesgo === 'medio' || x.riesgo === 'alto');
+    let veredicto, motivo, si = '';
+    const caro = pago > normal * 1.03;
+    if (!orden) { veredicto = 'NO SE PUEDE'; motivo = 'no os llega el dinero ni pagando tú primero ni él'; }
+    else if (caro && neto < 0) { veredicto = 'NO CONVIENE'; motivo = 'pagas por encima de lo normal entre managers y no lo recuperas con puntos ni con lo que sube'; }
+    else if (neto >= 0 && dPts >= -0.3) { veredicto = 'CONVIENE'; motivo = dPts > 0.3 ? 'ganas puntos en el once y lo que pagas de más lo recuperas' : 'lo que pagas de más lo recuperas con lo que sube y sus 14 días protegido'; }
+    else if (dPts > 0.3) { veredicto = 'CONVIENE SI'; si = 'lo quieres para el once'; motivo = 'te da más puntos, pero pierdes algo de valor'; }
+    else if (neto > -Math.max(1e6, vSuyos * 0.03) && enRiesgo.length) { veredicto = 'CONVIENE SI'; si = 'temes que te clausulen lo tuyo'; motivo = 'casi te quedas igual y te quitas el riesgo de cláusula'; }
+    else { veredicto = 'NO CONVIENE'; motivo = dPts < -0.3 ? 'pierdes puntos en el once y valor' : 'pierdes valor y no lo recuperas con lo que sube'; }
+    if ((veredicto === 'CONVIENE' || veredicto === 'CONVIENE SI') && orden === 'el' && !elPrimero) { veredicto = 'CONVIENE SI'; si = `le llega el dinero para pagarte primero${si ? ` y ${si}` : ''}`; }
+    if ((veredicto === 'CONVIENE' || veredicto === 'CONVIENE SI') && via && via.vale) { veredicto = 'CONVIENE SI'; si = `no te da tiempo a pagar su cláusula${si ? ` y ${si}` : ''}`; motivo = `por su cláusula te sale ${eur(Math.abs(via.ahorro))} ${via.ahorro >= 0 ? 'mejor' : 'peor'} y te quedas lo tuyo, pero no es seguro`; }
+    return { tid, mios, suyos, saldo, cobro, pago, orden, suyo1, dudaEl, yoPrimero, elPrimero, cap, saldoFin, valorAntes, valorDespues: valorAntes + dValor, dValor, normal, deMas, cedo, barato: pago <= normal, dPts, dRitmo, jornadas14, gana14, neto, via, enRiesgo, veredicto, motivo, si };
+  };
+
   // la lista de «lo que toca» de Hoy: sus textos, en acciones.js (aquí, solo cálculos)
   M.acciones = acciones(D, M, c);
   // el próximo momento en que algo cambia solo por la hora (se abre una cláusula, cierra el mercado, empieza o acaba un
@@ -2439,6 +2515,23 @@ function compras(D, M, yoTid, historial = []) {
    que además pide que te llegue con el saldo de ahora) y el plan sin IA (planAuto, que mira el dinero con lo que vende
    antes). Antes planAuto llevaba su propio filtro (interés 55, sin `mejora` ni el calendario) y podía mandar clausular a
    uno que Hoy no enseñaba, o al revés. */
+/**
+ * cuánto hay que ofrecerle a un rival para que te venda a j (aviso de leao, 17 nov: el chat ofrecía un 10 % fijo, sin
+ * mirar si sube): lo que le daría LaLiga en el próximo cambio de mercado (la parte alta de lo que da en tu liga) sobre lo
+ * que valdrá para entonces con lo que sube al día. Si sube fuerte (más de un 1 % al día o un 8 % en 7 días), lo normal es
+ * que su dueño pida más. null si no hay valor
+ */
+export function ofertaDueno(M, j, t = {}) {
+  if (!j || !j.valor) return null;
+  const ine = M.inercia ? M.inercia(j.id) : null;
+  const dia = ine && ['sube', 'acelera', 'frena'].includes(ine.fase) ? num(ine.ult) : num(t.d1);
+  const OL = M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
+  const alta = OL && !OL.sinDatos && OL.max ? OL.max / j.valor - 1 : 0.1;
+  const v = Math.ceil(((j.valor + Math.max(0, dia)) * (1 + Math.max(0.02, alta))) / 1e4) * 1e4;
+  const sube = dia > j.valor * 0.01 || (t.p7 != null && t.p7 > 8);
+  return { v, sube };
+}
+
 export function mereceClausula(M, x, ahora = Date.now()) {
   return !!(x && x.j && x.interes >= 50 && !MALOS.has(x.j.estado)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
