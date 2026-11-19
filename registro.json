@@ -2191,7 +2191,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251658/cubarsi-sobrecarga-duda-partido-villarreal.html": 1794835777000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/16/mikautadze-se-deja-querer-por-el-barca-es-mi-club-de-toda-la-vida-radio-castellon/": 1794836466000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/16/derbi-aviones.html": 1794837009000,
@@ -8589,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4094,
+   "ok": 4095,
    "fallos": 0,
-   "ejecuciones": 3377,
+   "ejecuciones": 3378,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:16:13.546Z"
+   "ultima": "2026-11-19T13:21:11.361Z"
   }
  },
  "ptsDirecto": {},
@@ -8612,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:16:25.002Z"
+   "ultimaBien": "2026-11-19T13:21:20.507Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:16:25.002Z"
+   "ultimaBien": "2026-11-19T13:21:20.507Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:16:25.002Z"
+   "ultimaBien": "2026-11-19T13:21:20.507Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8628,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:16:25.002Z"
+   "ultimaBien": "2026-11-19T13:21:20.507Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:16:25.002Z"
+   "ultimaBien": "2026-11-19T13:21:20.507Z"
   }
  },
  "avisos": [
