@@ -2206,7 +2206,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000,
    "SPORT|136517232": 1794856951000,
@@ -2419,18 +2418,6 @@
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/",
-    "medio": "Cadena SER",
-    "t": 1794855373000,
-    "id": "2314",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "problema en el sóleo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html",
     "medio": "MARCA",
@@ -4172,7 +4159,9 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136635705": 1795114573907
+  }
  },
  "ia": {
   "dia": "2026-11-19",
@@ -8516,13 +8505,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4162,
+   "ok": 4163,
    "fallos": 0,
-   "ejecuciones": 3445,
+   "ejecuciones": 3446,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T18:51:11.937Z"
+   "ultima": "2026-11-19T18:56:13.907Z"
   }
  },
  "ptsDirecto": {},
@@ -8539,15 +8528,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:51:20.960Z"
+   "ultimaBien": "2026-11-19T18:56:26.318Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:51:20.960Z"
+   "ultimaBien": "2026-11-19T18:56:26.318Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:51:20.960Z"
+   "ultimaBien": "2026-11-19T18:56:26.318Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8555,11 +8544,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:51:20.960Z"
+   "ultimaBien": "2026-11-19T18:56:26.318Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:51:20.960Z"
+   "ultimaBien": "2026-11-19T18:56:26.318Z"
   }
  },
  "avisos": [
