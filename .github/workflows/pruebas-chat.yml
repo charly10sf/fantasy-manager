@@ -27,7 +27,7 @@ jobs:
           ESFUERZOS: low
           ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado' }}
           TOPE_USD: "0.75"
-          SOLO: ${{ vars.CHAT_SOLO || '' }}
+          SOLO: ${{ vars.CHAT_SOLO || 'trueque-encadenado,trueque-sin-clausula,trueque,trato,regla-14,cuanto-ofrezco' }}
       # (19 nov) las 10 más difíciles con esfuerzo medium, para comparar con las de low de arriba (solo para que decida Carlos)
       - name: Las 10 más difíciles con medium
         if: always()
