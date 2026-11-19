@@ -4243,7 +4243,8 @@
    "fallos": 0
   },
   "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080,
+   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093572808
   }
  },
  "ia": {
@@ -8588,13 +8589,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4091,
+   "ok": 4092,
    "fallos": 0,
-   "ejecuciones": 3374,
+   "ejecuciones": 3375,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:01:13.080Z"
+   "ultima": "2026-11-19T13:06:12.808Z"
   }
  },
  "ptsDirecto": {},
@@ -8611,15 +8612,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:01:27.081Z"
+   "ultimaBien": "2026-11-19T13:06:21.351Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:01:27.081Z"
+   "ultimaBien": "2026-11-19T13:06:21.351Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:01:27.081Z"
+   "ultimaBien": "2026-11-19T13:06:21.351Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8627,11 +8628,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:01:27.081Z"
+   "ultimaBien": "2026-11-19T13:06:21.351Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:01:27.081Z"
+   "ultimaBien": "2026-11-19T13:06:21.351Z"
   }
  },
  "avisos": [
