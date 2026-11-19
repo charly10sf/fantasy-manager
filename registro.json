@@ -2177,7 +2177,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/": 1794824898000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261116/1004251546/bellingham-vuelve-hey-jude.html": 1794826200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
@@ -2397,33 +2396,10 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
-   "SPORT|136609457": 1795079542000
+   "SPORT|136609457": 1795079542000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/",
-    "medio": "AS",
-    "t": 1794824898000,
-    "id": "3197",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Cuti Romero está lesionado tras el parón de selecciones",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/en-vilo-por-las-pruebas-a-pubill-f202611-n/",
-    "medio": "AS",
-    "t": 1794824898000,
-    "id": "3079",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lookman se lastimó durante el parón de selecciones",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html",
     "medio": "Mundo Deportivo",
@@ -3356,11 +3332,26 @@
     "nums": [
      19
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795083276000,
+    "id": "3264",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Ceballos vuelve a entrenar con el grupo",
+    "motivo": "molestias sin lesión confirmada",
+    "plazo": "",
+    "nums": [
+     18,
+     30
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -4265,17 +4256,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 22,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 372465,
-  "salida": 13546,
+  "entrada": 374485,
+  "salida": 14086,
   "cacheLee": 11612,
   "cacheEscribe": 17418,
-  "dolares": 0.803021,
+  "dolares": 0.803493,
   "reservado": 0
  },
  "recientes": {
@@ -8604,13 +8595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4060,
+   "ok": 4061,
    "fallos": 0,
-   "ejecuciones": 3343,
+   "ejecuciones": 3344,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T10:26:10.838Z"
+   "ultima": "2026-11-19T10:31:10.531Z"
   }
  },
  "ptsDirecto": {},
@@ -8627,15 +8618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:26:28.314Z"
+   "ultimaBien": "2026-11-19T10:31:20.620Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:26:28.314Z"
+   "ultimaBien": "2026-11-19T10:31:20.620Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:26:28.314Z"
+   "ultimaBien": "2026-11-19T10:31:20.620Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8643,11 +8634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:26:28.314Z"
+   "ultimaBien": "2026-11-19T10:31:20.620Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:26:28.314Z"
+   "ultimaBien": "2026-11-19T10:31:20.620Z"
   }
  },
  "avisos": [
