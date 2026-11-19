@@ -180,7 +180,11 @@ export function textoOp(o, M = null) {
       const ganaTxt = o.pGana != null ? `; con la puja de la app, ${Math.round(o.pGana * 10) <= 0 ? 'casi nunca se gana' : `se gana ${Math.round(o.pGana * 10)} de cada 10 veces`} en esta liga` : '';
       const nr = M && M.noRevender && M.noRevender[o.pid], te = M && M.tener && j ? M.tener(j, null, o.puja) : null;
       const cuentaTxt = `${nr ? `; PARA REVENDER NO SALE con la puja que gana aquí (${eur(nr.puja)}: valdría ${eur(nr.valorFuturo)}, ${eur(nr.beneficio, { signo: true })})` : ''}${te && te.deMas > 2e5 ? `; TENERLO: lo pagado de más (${eur(te.deMas)}) ${te.dias ? `se recupera en ${te.dias} días si sigue subiendo así` : 'no se recupera en un mes al ritmo de ahora'}` : ''}`;
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}${cuentaTxt}`;
+      // (19 nov, Carlos: «manda la del plan») si para revenderlo la puja es otra, se dice aquí: el plan va con esa y el chat
+      // no puede decir «no pujes tanto» contra el plan (Cubarsí en el parón: 44,70 M para tenerlo, 49,81 M para revender)
+      const espP = !nr && (M && M.especular || []).find((e) => e.pid === o.pid && e.origen === 'mercado');
+      const revTxt = espP && espP.puja && Math.abs(espP.puja - o.puja) > 1e5 ? `; PARA REVENDERLO la app puja ${eur(espP.puja)}: si EL PLAN DE HOY lo lleva, la puja que vale es la del plan` : '';
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}${cuentaTxt}${revTxt}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);

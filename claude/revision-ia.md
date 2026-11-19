@@ -642,6 +642,19 @@ caso-coherencia (nuevo): Todo BIEN. worker/prueba/datos.mjs: BIEN. caso-arbitro 
    revender»; el chat a veces dice «no pujes tanto» contra el plan. ¿Que en el chat la puja del plan mande cuando el
    jugador está en el plan? Por defecto, sin tocar (es de los datos, no de la IA).
 
+### Respuestas de Carlos (19 nov, 05:2x)
+
+1. Plan recogido de antes del cierre: como está (avisa y lo pide él).
+2. Oferta el día del partido: 30 M por uno de 28 M que sube +1 M al día es malvenderlo; la app hace bien en decir ESPERAR.
+   Hecho: chat-sistema.js le prohíbe a la IA proponer «aceptarla después del partido» cuando la app dice ESPERAR.
+3. Lo urgente de Hoy que el plan no lleva: se queda como está.
+4. La caché de los datos de la liga entre preguntas: sí, en otra sesión (apuntado en ESTADO.md).
+5. Lo largo: preguntó si cuesta mucho. No: casi todo el coste es lo que lee la IA (~32.000 tokens por pregunta) y no
+   lo que escribe (~200-400); recortar listas apenas cambia el gasto. Se queda como está salvo que él diga otra cosa.
+6. Manda la puja del plan. Hecho: en la línea de cada P- va «PARA REVENDERLO la app puja X: si EL PLAN DE HOY lo lleva,
+   la puja que vale es la del plan» (Cubarsí en el parón, 49,81 M) y chat-sistema.js dice que la cifra del plan manda.
+   Probado: prueba-ia 111, caso-chat, caso-coherencia, worker datos, azar-plan 40 × semilla 7, 0 fallos.
+
 ### Lo que tiene que probar Carlos con su liga y en el móvil
 
 - En Pregunta: «¿qué hago hoy?» y «¿por qué el plan me dice que venda a X?» con un plan que haya hecho la app (sin pedir
