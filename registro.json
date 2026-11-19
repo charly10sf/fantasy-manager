@@ -2177,7 +2177,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261116/1004251560/cucho-vuelve-entrenarse-betis-derbi.html": 1794825869000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/16/paso-adelante-cucho-derbi-trabaja-grupo.html": 1794826739000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/espana-roza-el-empate-ante-inglaterra-en-un-partido-que-se-inventa-lamine-es-muy-injusto-que-se-le-exija-ser-messi-cadena-ser/": 1794826559000,
-   "SPORT|136489634": 1794823200000,
    "MARCA|https://www.marca.com/futbol/osasuna/2026/11/16/aimar-mira-duelo-malaga.html": 1794827611000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/madrid-desactiva-alerta-bernardo-silva.html": 1794828329000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251561/inquietud-barca-raphinha.html": 1794828268000,
@@ -8586,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4054,
+   "ok": 4055,
    "fallos": 0,
-   "ejecuciones": 3337,
+   "ejecuciones": 3338,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T09:56:19.040Z"
+   "ultima": "2026-11-19T10:01:17.253Z"
   }
  },
  "ptsDirecto": {},
@@ -8609,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:56:30.418Z"
+   "ultimaBien": "2026-11-19T10:01:26.301Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:56:30.418Z"
+   "ultimaBien": "2026-11-19T10:01:26.301Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:56:30.418Z"
+   "ultimaBien": "2026-11-19T10:01:26.301Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8625,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:56:30.418Z"
+   "ultimaBien": "2026-11-19T10:01:26.301Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T09:56:30.418Z"
+   "ultimaBien": "2026-11-19T10:01:26.301Z"
   }
  },
  "avisos": [
