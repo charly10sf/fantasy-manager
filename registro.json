@@ -1260,6 +1260,13 @@
     "clase": "mercado",
     "chollo": "3045"
    }
+  },
+  {
+   "clave": "previa|123",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2123298133681786959",
+   "t": "2026-11-19T06:11:39.103Z"
   }
  ],
  "estados": {
@@ -2367,7 +2374,9 @@
    "SPORT|136571233": 1795064444000,
    "SPORT|136601542": 1795060876000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/alvaro-cervera-polemica-sobre-declaraciones-sobre-pique-no-opinion-no-pensamiento-20261118_3477901.html": 1795038674000,
-   "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000
+   "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/horario-ver-derbi-sevilla-fc-real-betis-balompie_0_2008538061.html": 1795068082000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000
   },
   "hechos": [
    {
@@ -3302,7 +3311,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4206,17 +4215,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 2,
-   "redactar": 9,
-   "revisar": 3,
+   "clasificar": 3,
+   "redactar": 11,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 146466,
-  "salida": 5847,
+  "entrada": 181940,
+  "salida": 6603,
   "cacheLee": 2903,
-  "cacheEscribe": 5806,
-  "dolares": 0.324929,
+  "cacheEscribe": 8709,
+  "dolares": 0.404561,
   "reservado": 0
  },
  "recientes": {
@@ -4310,10 +4319,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-17T10:26:36.321Z",
-    "texto": "🗓️ El Barça, líder y con 4 goles por partido, recibe el domingo al Villarreal, que llega 8º y con un cruce incómodo atrás.\n\nEn el Barça faltan Xavi Espart y Rodri, lesionados, pero Mundo Deportivo cuenta que Dani Olmo está en la recta final de su lesión y apunta a llegar. Adeyemi está a medias, con un 44 % de titularidad, y Gerard Martín tiene más papeletas de jugar que de quedarse fuera. Lamine Yamal es fijo.\n\nEl Villarreal 🚢 pierde a Akhomach por lesión. Mikautadze y Romero pueden salir, sin nada cerrado, y a Gulácsi le toca un Barça que marca mucho."
-   },
-   {
     "t": "2026-11-17T12:31:41.737Z",
     "texto": "🗓️ Yassir Zabiri es el fijo del Racing ⚓ y llega con 6,5 de media.\n\nLa Real Sociedad marca mucho, así que Agirrezabala y la zaga cántabra lo tienen cuesta arriba. Sin Andrés Martín, lesionado, Iker Luque y Pedro Felipe tienen más papeletas de jugar que de quedarse fuera.\n\nA la Real le encaja un cruce bueno para delanteros y medios, porque el Racing encaja mucho. Guedes lo normal es que salga y Sucic está a medias, aunque Mundo Deportivo cuenta que ya se ha reincorporado al grupo tras la amigdalitis. Barrenetxea es baja."
    },
@@ -4328,6 +4333,10 @@
    {
     "t": "2026-11-18T10:36:46.034Z",
     "texto": "🗓️ Getafe-Atlético, el domingo a las 21:00: posibles onces para la jornada 13\n\nLo que menos claro está es Le Normand en el Atleti, con un 38 %. También con dudas: Julián Alvarez y Barrios en el Atlético, y Francho y Boselli en el Getafe.\n\nBajas en los dos lados: en el Atleti no estarán Cuti Romero, lesionado, y en el Getafe, Gudelj, sancionado, ni Zaid Romero y Juanmi, lesionados. Sin discusión, Grimaldo (81 %, 7,9 de media) y David Soria (97 %).\n\nEl Atlético, 3º, parte como favorito frente al Getafe, que es 15º. Pocos goles a la vista: el Atleti encaja solo 0,8 por partido y el Getafe marca 0,7."
+   },
+   {
+    "t": "2026-11-19T06:11:39.105Z",
+    "texto": "🗓️ Vallecas recibe al Valencia con un cruce de los que gustan atrás: el Rayo ⚡ se mide a un rival que marca poco.\n\nA Audero y a la zaga les pinta bien, y el partido es el sábado a las 16:15. Batalla es baja por lesión, y Pedro Díaz tiene más papeletas de jugar que de quedarse fuera. Tsitaishvili está a medias.\n\nEl Valencia 🦇, 19º, tiene el cruce a favor para delanteros y medios, porque el Rayo encaja mucho. Gayá se pierde el partido sancionado, Rioja lo normal es que salga y Sadiq no tiene el puesto asegurado."
    }
   ],
   "noticias": [
@@ -4699,11 +4708,6 @@
    "n": 3,
    "t": "2026-11-17T08:06:37.624Z",
    "ultima": "2026-11-19T06:06:47.605Z"
-  },
-  "previa|123": {
-   "n": 2,
-   "t": "2026-11-17T08:11:52.131Z",
-   "ultima": "2026-11-18T08:21:59.843Z"
   },
   "previa|121": {
    "n": 2,
@@ -8554,13 +8558,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4008,
+   "ok": 4009,
    "fallos": 0,
-   "ejecuciones": 3291,
+   "ejecuciones": 3292,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 437,
-   "ultima": "2026-11-19T06:06:22.420Z"
+   "ultima": "2026-11-19T06:11:14.098Z"
   }
  },
  "ptsDirecto": {},
@@ -8577,15 +8581,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:06:50.274Z"
+   "ultimaBien": "2026-11-19T06:11:43.212Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:06:50.274Z"
+   "ultimaBien": "2026-11-19T06:11:43.212Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:06:50.274Z"
+   "ultimaBien": "2026-11-19T06:11:43.212Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8593,11 +8597,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:06:50.274Z"
+   "ultimaBien": "2026-11-19T06:11:43.212Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T06:06:50.274Z"
+   "ultimaBien": "2026-11-19T06:11:43.212Z"
   }
  },
  "avisos": [
