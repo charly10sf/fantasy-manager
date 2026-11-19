@@ -2389,7 +2389,8 @@
    "SPORT|136595275": 1795073918000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000
   },
   "hechos": [
    {
@@ -3338,7 +3339,7 @@
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4236,22 +4237,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795083380541
+  }
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 288537,
-  "salida": 11603,
+  "entrada": 290515,
+  "salida": 12007,
   "cacheLee": 8709,
   "cacheEscribe": 14515,
-  "dolares": 0.620934,
+  "dolares": 0.621334,
   "reservado": 0
  },
  "recientes": {
@@ -8585,13 +8588,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4057,
+   "ok": 4058,
    "fallos": 0,
-   "ejecuciones": 3340,
+   "ejecuciones": 3341,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 437,
-   "ultima": "2026-11-19T10:11:11.442Z"
+   "mediaMs": 438,
+   "ultima": "2026-11-19T10:16:20.541Z"
   }
  },
  "ptsDirecto": {},
@@ -8608,15 +8611,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:11:20.062Z"
+   "ultimaBien": "2026-11-19T10:16:38.715Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:11:20.062Z"
+   "ultimaBien": "2026-11-19T10:16:38.715Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:11:20.062Z"
+   "ultimaBien": "2026-11-19T10:16:38.715Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8624,11 +8627,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:11:20.062Z"
+   "ultimaBien": "2026-11-19T10:16:38.715Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T10:11:20.062Z"
+   "ultimaBien": "2026-11-19T10:16:38.715Z"
   }
  },
  "avisos": [
