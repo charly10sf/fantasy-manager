@@ -24,7 +24,7 @@ export const NOVEDADES = [
   {
     // (19 nov, Carlos: «revisa a fondo los porcentajes de titularidad» y «no veo el sentido a cómo pone banquillo»; eligió la
     // variante D sin la tira de fuera). Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8d', f: '2026-11-19', t: 'Titularidad más fiable',
+    v: '0.8d', f: '2026-11-19', h: '09:19', t: 'Titularidad más fiable',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'El % de titular, rehecho', x: 'Sale de sus minutos en las últimas jornadas y en toda la temporada, de lo que vale frente a los de su puesto en su equipo y del once probable de su próximo partido. Comprobado con las jornadas ya jugadas: acierta bastante más que antes.' },
       { tipo: 'mejora', d: 'campo', t: 'Lo flojo de tu once', x: 'Debajo del campo, los de tu once con pocas opciones de jugar y a quién del mercado podrías fichar en su sitio. El banquillo ya no sale ahí: está en la plantilla.' },
