@@ -2198,7 +2198,6 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-per-jugar-contra-el-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cubarsi-duda-partido-villarreal-frenkie-jong-estara-disponible-20261116_3476037.html": 1794837167000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/juanma-castano-rinde-bellingham-cinco-mejores-jugadores-mundo-20261116_3475511.html": 1794836826000,
-   "SPORT|136499877": 1794834381000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/16/pau-cubarsi-es-dubte-pel-barca-villarreal-i-frenkie-de-jong-estara-disponible-sercat/": 1794837678000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/16/pau-cubarsi-es-duda-para-el-barca-villarreal-y-de-jong-estara-disponible-cadena-ser/": 1794838494000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/16/milan-quiere-llevarse-real-madrid-136502765.html": 1794838856000,
@@ -4243,8 +4242,7 @@
    "fallos": 0
   },
   "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080,
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093572808
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093273080
   }
  },
  "ia": {
@@ -8589,13 +8587,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4092,
+   "ok": 4093,
    "fallos": 0,
-   "ejecuciones": 3375,
+   "ejecuciones": 3376,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T13:06:12.808Z"
+   "ultima": "2026-11-19T13:11:16.769Z"
   }
  },
  "ptsDirecto": {},
@@ -8612,15 +8610,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:06:21.351Z"
+   "ultimaBien": "2026-11-19T13:11:24.990Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:06:21.351Z"
+   "ultimaBien": "2026-11-19T13:11:24.990Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:06:21.351Z"
+   "ultimaBien": "2026-11-19T13:11:24.990Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8628,11 +8626,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:06:21.351Z"
+   "ultimaBien": "2026-11-19T13:11:24.990Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T13:06:21.351Z"
+   "ultimaBien": "2026-11-19T13:11:24.990Z"
   }
  },
  "avisos": [
