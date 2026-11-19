@@ -1341,7 +1341,7 @@
   "886": "ok",
   "927": "ok",
   "988": "ok",
-  "1029": "injured",
+  "1029": "doubtful",
   "1031": "ok",
   "1033": "ok",
   "1056": "ok",
@@ -1503,7 +1503,7 @@
   "2471": "out_of_league",
   "2473": "ok",
   "2474": "ok",
-  "2477": "injured",
+  "2477": "doubtful",
   "2479": "ok",
   "2480": "ok",
   "2488": "ok",
@@ -2413,7 +2413,8 @@
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
    "SPORT|136622620": 1795093044000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000,
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
+   "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000
   },
   "hechos": [
    {
@@ -3344,11 +3345,25 @@
     "nums": [
      48
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/",
+    "medio": "AS",
+    "t": 1795098300000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang no se entrenó por molestias en el tobillo",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": [
+     48
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3624,8 +3639,8 @@
     "t": 0
    },
    "2477": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1795099571147
    },
    "2479": {
     "e": "ok",
@@ -4241,22 +4256,24 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099571147
+  }
  },
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 27,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 489934,
-  "salida": 24735,
+  "entrada": 491858,
+  "salida": 24860,
   "cacheLee": 20321,
   "cacheEscribe": 23224,
-  "dolares": 0.988512,
+  "dolares": 0.988767,
   "reservado": 0
  },
  "recientes": {
@@ -8585,13 +8602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4112,
+   "ok": 4113,
    "fallos": 0,
-   "ejecuciones": 3395,
+   "ejecuciones": 3396,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:41:12.438Z"
+   "ultima": "2026-11-19T14:46:11.147Z"
   }
  },
  "ptsDirecto": {},
@@ -8608,15 +8625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:41:21.743Z"
+   "ultimaBien": "2026-11-19T14:46:21.927Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:41:21.743Z"
+   "ultimaBien": "2026-11-19T14:46:21.927Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:41:21.743Z"
+   "ultimaBien": "2026-11-19T14:46:21.927Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8624,11 +8641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:41:21.743Z"
+   "ultimaBien": "2026-11-19T14:46:21.927Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:41:21.743Z"
+   "ultimaBien": "2026-11-19T14:46:21.927Z"
   }
  },
  "avisos": [
