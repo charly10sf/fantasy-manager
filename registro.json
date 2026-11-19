@@ -2195,14 +2195,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "1480",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795098972268
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/navarra/2026/11/16/tertulia-hala-rojillos-tras-el-paron-de-selecciones-radio-pamplona/": 1794841651000,
@@ -8592,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4111,
+   "ok": 4112,
    "fallos": 0,
-   "ejecuciones": 3394,
+   "ejecuciones": 3395,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T14:36:12.268Z"
+   "ultima": "2026-11-19T14:41:12.438Z"
   }
  },
  "ptsDirecto": {},
@@ -8615,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:36:39.483Z"
+   "ultimaBien": "2026-11-19T14:41:21.743Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:36:39.483Z"
+   "ultimaBien": "2026-11-19T14:41:21.743Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:36:39.483Z"
+   "ultimaBien": "2026-11-19T14:41:21.743Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8631,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:36:39.483Z"
+   "ultimaBien": "2026-11-19T14:41:21.743Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T14:36:39.483Z"
+   "ultimaBien": "2026-11-19T14:41:21.743Z"
   }
  },
  "avisos": [
