@@ -2192,7 +2192,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/asi-sera-el-regreso-de-los-internacionales-del-depor-gimenez-sobre-la-campana-f202611-n/": 1794831124000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html": 1794830956000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html": 1794832194000,
    "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/": 1794831194000,
    "AS|https://as.com/futbol/primera/cucho-apura-para-el-derbi-f202611-n/": 1794835207000,
@@ -2414,18 +2413,6 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000
   },
   "hechos": [
-   {
-    "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/16/ultima-hora-arnaut-danjuma-rayo-vallecano-laliga-136494319.html",
-    "medio": "Superdeporte",
-    "t": 1794830956000,
-    "id": "2617",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Umar Sadiq regresa a los entrenamientos del Valencia",
-    "motivo": "vendaje en la rodilla derecha",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/vargas-duda-para-el-derbi-f202611-n/",
     "medio": "AS",
@@ -8609,13 +8596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4080,
+   "ok": 4081,
    "fallos": 0,
-   "ejecuciones": 3363,
+   "ejecuciones": 3364,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T12:06:13.594Z"
+   "ultima": "2026-11-19T12:11:18.133Z"
   }
  },
  "ptsDirecto": {},
@@ -8632,15 +8619,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:06:23.522Z"
+   "ultimaBien": "2026-11-19T12:11:27.902Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:06:23.522Z"
+   "ultimaBien": "2026-11-19T12:11:27.902Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:06:23.522Z"
+   "ultimaBien": "2026-11-19T12:11:27.902Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8648,11 +8635,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:06:23.522Z"
+   "ultimaBien": "2026-11-19T12:11:27.902Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T12:06:23.522Z"
+   "ultimaBien": "2026-11-19T12:11:27.902Z"
   }
  },
  "avisos": [
