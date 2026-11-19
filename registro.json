@@ -1316,6 +1316,13 @@
    "jornada": 13,
    "id": "2123445321661628767",
    "t": "2026-11-19T15:56:31.380Z"
+  },
+  {
+   "clave": "previa|126",
+   "tipo": "previa",
+   "jornada": 13,
+   "id": "2123508235533455713",
+   "t": "2026-11-19T20:06:31.390Z"
   }
  ],
  "estados": {
@@ -4090,10 +4097,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-18",
-  "n": 5,
-  "ok": 0,
-  "mal": 5
+  "dia": "2026-11-19",
+  "n": 1,
+  "ok": 1,
+  "mal": 0
  },
  "liga": {
   "vistas": {
@@ -4153,16 +4160,16 @@
   "dia": "2026-11-19",
   "llamadas": {
    "clasificar": 54,
-   "redactar": 34,
-   "revisar": 19,
-   "pulir": 0
+   "redactar": 35,
+   "revisar": 20,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 630389,
-  "salida": 33893,
-  "cacheLee": 26127,
+  "entrada": 647700,
+  "salida": 34352,
+  "cacheLee": 29030,
   "cacheEscribe": 29030,
-  "dolares": 1.25027,
+  "dolares": 1.289772,
   "reservado": 0
  },
  "recientes": {
@@ -4256,10 +4263,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-18T08:31:28.988Z",
-    "texto": "🗓️ Osasuna-Málaga (el domingo a las 18:30): así llegan los dos a la jornada 13\n\nEl Osasuna tiene en Budimir a su fijo: 92 % y 7,1 de media. Eso sí, no estarán Abel Bretones y Aitor Fdez, lesionados. Diego Rico, Raúl Moro y Torró, del 15 al 51 %, no tienen el sitio asegurado.\n\nAl otro lado, en el Málaga, C. Puga es quien más en el aire está, con un 39 %. No estarán Aznou, sancionado, ni Rafita y Haitam, lesionados. Donde no hay duda es con A. Herrero, al 97 %."
-   },
-   {
     "t": "2026-11-18T10:36:46.034Z",
     "texto": "🗓️ Getafe-Atlético, el domingo a las 21:00: posibles onces para la jornada 13\n\nLo que menos claro está es Le Normand en el Atleti, con un 38 %. También con dudas: Julián Alvarez y Barrios en el Atlético, y Francho y Boselli en el Getafe.\n\nBajas en los dos lados: en el Atleti no estarán Cuti Romero, lesionado, y en el Getafe, Gudelj, sancionado, ni Zaid Romero y Juanmi, lesionados. Sin discusión, Grimaldo (81 %, 7,9 de media) y David Soria (97 %).\n\nEl Atlético, 3º, parte como favorito frente al Getafe, que es 15º. Pocos goles a la vista: el Atleti encaja solo 0,8 por partido y el Getafe marca 0,7."
    },
@@ -4274,6 +4277,10 @@
    {
     "t": "2026-11-19T10:26:26.924Z",
     "texto": "🗓️ Alavés-Deportivo, el sábado a las 14:00 en Mendizorroza, se juega entre dos equipos de mitad de tabla: el Alavés va 12º y el Dépor 9º.\n\nEn el Alavés falta Mikel Rodriguez, lesionado, y Sivera es el fijo bajo palos, con un 94 % de titularidad. T. Martínez tiene más papeletas de jugar que de quedarse fuera, y Valentini anda justo por encima de la mitad.\n\nEl Deportivo llega con dos dudas arriba y atrás: Aubameyang y Loureiro lo normal es que salgan, aunque no hay nada cerrado. Mario Soriano es el seguro del centro del campo."
+   },
+   {
+    "t": "2026-11-19T20:06:31.392Z",
+    "texto": "🗓️ Posibles onces de Levante-Elche, el lunes a las 21:00\n\nLo que no está claro: Lemar (42 %), B. Sangare (47 %) y Cepeda en el Elche 🌴, y Manu Sánchez, Ifeanyi Ndukwe y Etta Eyong en el Levante 🐸. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y M. Dituro (92 %).\n\nEn la tabla hay poco que separar al Levante (17º) del Elche (18º)."
    }
   ],
   "noticias": [
@@ -4646,13 +4653,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "previa|126": {
-   "n": 4,
-   "t": "2026-11-18T06:11:39.992Z",
-   "ultima": "2026-11-19T20:01:58.448Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -8491,13 +8492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4176,
+   "ok": 4177,
    "fallos": 0,
-   "ejecuciones": 3459,
+   "ejecuciones": 3460,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T20:01:26.430Z"
+   "ultima": "2026-11-19T20:06:13.316Z"
   }
  },
  "ptsDirecto": {},
@@ -8514,15 +8515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T20:02:04.649Z"
+   "ultimaBien": "2026-11-19T20:06:33.148Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T20:02:04.649Z"
+   "ultimaBien": "2026-11-19T20:06:33.148Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T20:02:04.649Z"
+   "ultimaBien": "2026-11-19T20:06:33.148Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8530,11 +8531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T20:02:04.649Z"
+   "ultimaBien": "2026-11-19T20:06:33.148Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T20:02:04.649Z"
+   "ultimaBien": "2026-11-19T20:06:33.148Z"
   }
  },
  "avisos": [
