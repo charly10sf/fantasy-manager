@@ -2408,7 +2408,10 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
    "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
    "AS|https://as.com/futbol/kounde-ya-esta-aqui-f202611-n/": 1795085771000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000,
+   "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
+   "SPORT|136587188": 1795085599000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000
   },
   "hechos": [
    {
@@ -3349,11 +3352,23 @@
      27,
      17
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/",
+    "medio": "AS",
+    "t": 1795088734000,
+    "id": "3182",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Lemar trabaja con normalidad y deja atrás su lesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-19",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -4256,17 +4271,17 @@
  "ia": {
   "dia": "2026-11-19",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 25,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 434854,
-  "salida": 18071,
+  "entrada": 437189,
+  "salida": 18352,
   "cacheLee": 17418,
   "cacheEscribe": 20321,
-  "dolares": 0.908669,
+  "dolares": 0.909043,
   "reservado": 0
  },
  "recientes": {
@@ -8595,13 +8610,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4078,
+   "ok": 4079,
    "fallos": 0,
-   "ejecuciones": 3361,
+   "ejecuciones": 3362,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T11:56:14.167Z"
+   "ultima": "2026-11-19T12:01:13.531Z"
   }
  },
  "ptsDirecto": {},
@@ -8618,15 +8633,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:56:24.366Z"
+   "ultimaBien": "2026-11-19T12:01:22.557Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:56:24.366Z"
+   "ultimaBien": "2026-11-19T12:01:22.557Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:56:24.366Z"
+   "ultimaBien": "2026-11-19T12:01:22.557Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8634,11 +8649,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:56:24.366Z"
+   "ultimaBien": "2026-11-19T12:01:22.557Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T11:56:24.366Z"
+   "ultimaBien": "2026-11-19T12:01:22.557Z"
   }
  },
  "avisos": [
