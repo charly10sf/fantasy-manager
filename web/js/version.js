@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8d';
+export const VERSION = '0.8c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -22,18 +22,12 @@ export const VERSION = '0.8d';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    // (19 nov, Carlos y el aviso de RIOYARAFC: «Tu once» enseñaba el mejor según la app y no el que tienes puesto en
-    // LaLiga; ahora, el tuyo y debajo los cambios que haría la app). La hora, al publicar
-    v: '0.8d', f: '2026-11-19', t: 'Tu once, el de verdad',
+    // (19 nov, tercera parte de la revisión de la IA: claude/revision-ia.md; y tu once de LaLiga en Hoy y Equipo, por el
+    // aviso de RIOYARAFC y Carlos). La hora, al publicar
+    v: '0.8c', f: '2026-11-19', h: '06:32', t: 'Tu once de verdad y una IA que acierta más',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Tu once es el que tienes puesto', x: 'En Hoy y en Equipo sale el once que tienes puesto en LaLiga Fantasy, no el que pondría la app. Si cambias a alguien, pulsa Actualizar y lo verás.' },
       { tipo: 'mejora', d: 'campo', t: 'Los cambios que haría la app', x: 'Debajo del campo, a quién sacaría y a quién metería, con sus puntos esperados y lo que tiene de ser titular. Los que saldrían van tachados en el campo.' },
-    ],
-  },
-  {
-    // (19 nov, tercera parte de la revisión de la IA: claude/revision-ia.md). La hora, al publicar
-    v: '0.8c', f: '2026-11-19', h: '06:04', t: 'Una IA que acierta más con tu liga',
-    cosas: [
       { tipo: 'mejora', d: 'chat', t: 'El chat sabe el plan que tienes delante', x: 'Si preguntas qué hacer hoy o por qué el plan te dice que vendas a alguien, la IA contesta con el plan que ves en Hoy y con su porqué, también cuando lo ha hecho la app. Y si el plan aguanta a un jugador que baja, ya no te dice que lo vendas.', ir: { v: 'ia' } },
       { tipo: 'mejora', d: 'voz', t: 'Entiende mejor a quién te refieres', x: 'Si nombras a un rival por su apodo o el dictado escribe mal su nombre, la IA mira su plantilla entera, con quién es titular y su próximo partido. Y si le preguntas por un equipo o un jugador que no está en tu liga, te lo dice en una frase.', ir: { v: 'ia' } },
       { tipo: 'arreglo', d: 'dinero', t: 'Cifras y reglas de tu liga, sin inventar', x: 'Sabe lo que paga LaLiga por cada punto y la recompensa diaria, distingue la puja que ya tienes puesta de las que podrías hacer y no confunde a uno protegido con uno blindado. Lo que no sabe, lo dice.' },
