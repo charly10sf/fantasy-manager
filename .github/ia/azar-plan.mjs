@@ -31,16 +31,22 @@ const ESCENAS_AZAR = [['martes'], ['veda'], ['enjuego'], ['paron'], ['m-cierre']
   // (19 nov, tercera parte) el sábado del partido con el cambio de ese mismo día, una liga con el mercado a otra hora, en
   // negativo con un solo cambio por delante, un titular lesionado largo, una cuenta nueva, una liga sin clausulazos y los
   // dos últimos días del parón
-  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado']];
+  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado'],
+  // (19 nov, sesión larga) sin salida de verdad: el día antes de la jornada (sin cambios de mercado que sirvan para vender),
+  // muy en negativo y sin ofertas que aceptar: el plan lo avisa y la IA no puede meter compras encima
+  ['veda', 'sin-salida']];
 let mal = 0, total = 0;
 const resumen = {};
 const sum = { rehechos: 0, ajustados: 0, viejos: 0, cruzadas: 0, recogidos: 0 };
+// (19 nov) AZAR_SOLO=martes/negativo,veda: solo esas escenas (para mirar una deprisa)
+const SOLO_AZAR = process.env.AZAR_SOLO ? new Set(process.env.AZAR_SOLO.split(',')) : null;
 for (const [escena, caso] of ESCENAS_AZAR) {
   const nombre = caso ? `${escena}/${caso}` : escena;
+  if (SOLO_AZAR && !SOLO_AZAR.has(nombre)) continue;
   const P = await pagina(escena);
   try {
     await P.page.evaluate(`window.__arbitro = ${arbitro.toString()}`);
-    const r = await P.page.evaluate(async ({ N, SEMILLA, escena, caso }) => {
+    const r = await P.page.evaluate(async ({ N, SEMILLA, escena, caso, DEPURA }) => {
       const U = await import('./js/util.js');
       const lineas = (X, D, M) => window.__arbitro(X, D, M, U.eur);
       const reglas = (X, D, M) => lineas(X, D, M).filter((x) => /^REGLAS:/.test(x) && !/^REGLAS: ok/.test(x)).join(' | ');
@@ -49,6 +55,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
       for (let i = 0; i < 40 && !S.fuentes; i++) await new Promise((ok) => setTimeout(ok, 50));
       const f = S.fuentes || {};
       const D0 = JSON.stringify(S.D), H0 = JSON.stringify(S.H);
+      const sinSalidaDet = [];
       const fallos = [], cuenta = { planes: 0, pasos: 0, vetos: 0, rehechos: 0, viejos: 0, ajustados: 0, cruzadas: 0, recogidos: 0, quita: 0, mete: 0, sinSalida: 0, caso: 0 };
       const avisos = [];
       const warn = console.warn; console.warn = (...a) => { avisos.push(a.map((x) => (x && x.stack) || String(x)).join(' ').slice(0, 400)); };
@@ -65,7 +72,10 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         const yo = D.yo.teamId, mios = D.plantillas[yo];
         const cambios = [];
         D.dinero = Math.round((az() < 0.25 ? -30 + az() * 30 : az() * 150) * 1e6); cambios.push(`saldo ${D.dinero}`);
-        for (const m of D.mercado) { if (az() < 0.5) m.miPuja = null; else if (az() < 0.15 && m.precio) { m.miPuja = Math.round(m.precio * (1 + az() * 0.2)); cambios.push(`puja ${m.pid}`); } }
+        // (19 nov) nunca una puja por uno tuyo que tienes en venta: LaLiga no deja, y era lo que daba los «sin salida» de veda,
+        // m-cierre y sabado-justo (1 o 2 de cada 60: ni retirando las pujas de verdad ni vendiendo salía en positivo)
+        const mioEnVenta = (m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(D.yo.teamId);
+        for (const m of D.mercado) { if (az() < 0.5 || mioEnVenta(m)) m.miPuja = null; else if (az() < 0.15 && m.precio) { m.miPuja = Math.round(m.precio * (1 + az() * 0.2)); cambios.push(`puja ${m.pid}`); } }
         const prot = () => uno([null, ahora0 + 3600e3, ahora0 + 20 * 3600e3, ahora0 + 30 * 3600e3, ahora0 + 5 * 864e5, ahora0 + 12 * 864e5]);
         for (const [tid, fs] of Object.entries(D.plantillas)) for (const x of fs) {
           const j = D.maestro[x.pid];
@@ -123,6 +133,12 @@ for (const [escena, caso] of ESCENAS_AZAR) {
           // el primer día con la app: sin histórico, sin movimientos de la liga y sin saber lo que pagó por cada uno
           D.actividad = []; H.v = {}; for (const x of mios) x.compra = null; cambios.push('cuenta nueva');
         }
+        if (caso === 'sin-salida') {
+          D.dinero = -Math.round((15 + az() * 40) * 1e6);
+          for (const m of D.mercado) m.miPuja = null;
+          D.misVentas = [];
+          cambios.push(`sin salida: saldo ${D.dinero}, sin ofertas`);
+        }
         if (caso === 'sin-clausulazos') { D.actividad = (D.actividad || []).filter((a) => a.clase !== 'clausula'); cambios.push('sin clausulazos'); }
         void yoC;
         const donde = `${caso ? `${escena}/${caso}` : escena} · semilla ${SEMILLA} · vuelta ${v} (${cambios.join(', ')})`;
@@ -145,6 +161,7 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         const rR = reglas(R, D, M), sinSalida = /^REGLAS: MAL r10:[^|]*$/.test(rR) && /Ni con este plan llegas en positivo/.test(R.avisoSaldo || '');
         if (rR && !sinSalida) falla(`el árbitro no da por bueno el plan de la app: ${rR.slice(0, 260)}`);
         if (sinSalida) cuenta.sinSalida++;
+        if (sinSalida && DEPURA) sinSalidaDet.push(`SIN SALIDA ${donde}: saldo ${D.dinero}, deuda ${M.deuda}, cuentas ${JSON.stringify(R.cuentas)}, ciclos ${M.ventanaEsp && M.ventanaEsp.ciclos}, ops ${(R.ops || []).filter((o) => o._k).map((o) => `${o.accion}:${o.jugador}:${o.importe}:${o.hoy}`).join(' | ')} · vetos ${(R.vetos || []).map((v) => v.k).join(',')} · pujas ${(M.misPujasL || []).length || M.misPujas} · pujadas ${(D.mercado || []).filter((m) => m.miPuja).map((m) => `${m.pid}:${m.tipo}:${m.vendedorTeamId || ''}:${m.miPuja}:${Object.values(D.plantillas).some((pl) => pl.some((z) => z.pid === m.pid)) ? 'de alguien' : 'libre'}`).join(' ')} · yo ${D.yo.teamId}`);
         cuenta.pasos += (R.ops || []).filter((o) => o._k).length; cuenta.vetos += (R.vetos || []).length;
         /* --- lo de cada caso, sobre el plan de la app y luego sobre el de la IA al azar --- */
         // (19 nov) en negativo sin salida, si la IA mete compras de más, el aviso que sale es el del límite de deuda: también vale
@@ -195,6 +212,11 @@ for (const [escena, caso] of ESCENAS_AZAR) {
             if (X.alineacion && (X.alineacion.titulares || []).includes(C.nombre)) falla(`${quien}: ${C.nombre} está lesionado y va en el once`);
             if (de(C.pid).some((o) => o.accion === 'blindar')) falla(`${quien}: blinda o sube la cláusula a ${C.nombre}, lesionado largo`);
           }
+          if (caso === 'sin-salida') {
+            if (X.cuentas && X.cuentas.jornada < 0 && !/Ni con este plan llegas|Acabarías en negativo/.test(X.avisoSaldo || '')) falla(`${quien}: sin salida y no lo avisa (${X.avisoSaldo || 'sin aviso'})`);
+            const compra = vv.filter((o) => ['pujar', 'comprar', 'clausular'].includes(o.accion) && o.hoy !== false);
+            if (compra.length) falla(`${quien}: sin salida y aun así ficha a ${compra.map((o) => o.jugador).join(', ')}`);
+          }
           if (caso === 'paron-final') {
             if (X.modo === 'paron') falla(`${quien}: a dos días de la vuelta el plan sigue en modo parón`);
           }
@@ -238,6 +260,8 @@ for (const [escena, caso] of ESCENAS_AZAR) {
           const cu = I.cuadrarPlan(B, D, M);
           if (tach(cu).length) falla(`el plan con cambios al azar lleva algo tachado: ${tach(cu).join('; ')}`);
           if (R.cuentas && R.cuentas.jornada >= 0 && B.cuentas && B.cuentas.jornada < 0) falla('con los cambios de la IA la jornada empezaría en negativo');
+          // (19 nov) y si el de la app ya no llegaba en positivo, la IA no lo deja aún más en negativo (antes metía compras encima)
+          if (R.cuentas && R.cuentas.jornada < 0 && B.cuentas && B.cuentas.jornada < R.cuentas.jornada - 1e4) falla(`con los cambios de la IA, aún más en negativo para la jornada (${R.cuentas.jornada} → ${B.cuentas.jornada})`);
           // 7 (el de la IA): si el de la app pasaba, este también
           const rB = reglas(cu, D, M);
           if (rB && !rR) falla(`el árbitro no da por bueno el plan con los cambios de la IA: ${rB.slice(0, 260)}`);
@@ -292,11 +316,12 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         Rantes = R;
       }
       console.warn = warn;
-      return { fallos, cuenta };
-    }, { N, SEMILLA, escena, caso: caso || null });
+      return { fallos, cuenta, sinSalidaDet };
+    }, { N, SEMILLA, escena, caso: caso || null, DEPURA: !!process.env.DEPURA });
     total += r.cuenta.planes; mal += r.fallos.length; resumen[nombre] = r.cuenta;
     for (const k of Object.keys(sum)) sum[k] += r.cuenta[k] || 0;
     for (const f of r.fallos.slice(0, 12)) console.log(`MAL  ${f}`);
+    for (const f of r.sinSalidaDet || []) console.log(f);
     if (r.fallos.length > 12) console.log(`     … y ${r.fallos.length - 12} más en ${nombre}`);
     const k = r.cuenta;
     console.log(`${r.fallos.length ? 'MAL ' : 'BIEN'} ${nombre}: ${k.planes} ligas, ${k.pasos} pasos, ${k.vetos} vetos, ${k.quita}/${k.mete} quitados/metidos por la «IA»; con un plan de otra liga ${k.ajustados} ajustados y ${k.viejos} rehechos (${k.rehechos} por el paso del tiempo); recogidos ${k.recogidos} (sin traducir, ${k.cruzadas} frases a otro jugador); ${k.sinSalida} sin salida (avisado)${P.errores.length ? ` · errores de la página: ${P.errores.slice(0, 2).join(' | ')}` : ''}`);

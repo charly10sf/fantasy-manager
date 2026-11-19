@@ -1430,6 +1430,9 @@ export function aplicarCorto(json, R, D, M, c) {
     if (refJ < 0) { try { const H = planDeHoy(D, M, c); if (H && H.motor && H.cuentas) refJ = Math.max(refJ, H.cuentas.jornada); } catch (e) { /* el de antes */ } }
     return refJ;
   };
+  // (19 nov, azar-plan martes/negativo) y si ni el del motor llega en positivo («sin salida»), lo que meta la IA no puede
+  // dejarlo más en negativo todavía: antes con la referencia en negativo valía todo, y la IA metía compras encima
+  const peorJornada = (P) => P.cuentas.jornada < 0 && (refJornada() >= 0 || P.cuentas.jornada < refJornada() - 1e4);
   let pasosBase = base;
   let porque = '';
   const intento = (q, m) => {
@@ -1438,7 +1441,7 @@ export function aplicarCorto(json, R, D, M, c) {
     try { P = planMotor(D, M, c, { fijar: new Set([...pasosBase.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set([...vet0, ...q.filter(esPost)]), prefer: orden }); } catch (e) { porque = `el motor falla: ${String((e && e.message) || e).slice(0, 110)}`; return null; }
     if (!P) { porque = 'las cuentas no salen'; return null; }
     // nunca peor para la jornada (si el del motor llegaba en positivo, este también) ni con algo que la app tacharía
-    if (P.cuentas.jornada < 0 && refJornada() >= 0) { porque = 'la jornada empezaría en negativo'; return null; }
+    if (peorJornada(P)) { porque = 'la jornada empezaría en negativo'; return null; }
     const t = tachado(P);
     if (t) { porque = `la app tacha ${t}`; return null; }
     return { P, quita: q, mete: m };
@@ -1485,7 +1488,7 @@ export function aplicarCorto(json, R, D, M, c) {
         let X = null;
         try { X = planMotor(D, M, c, { incluir: new Set(inc), vetados: vet, prefer: orden }); } catch (e) { break; }
         if (!X) break;
-        if (X.cuentas.jornada < 0 && refJornada() >= 0) break;
+        if (peorJornada(X)) break;
         if (!tachado(X)) { r = { P: X, quita: [], mete: [] }; break; }
         if (inc.includes(malo.k)) { inc = inc.filter((k) => k !== malo.k); fuera.push({ k: malo.k, motivo: motivoTxt('', malo) }); } else vet.add(malo.k);
       }

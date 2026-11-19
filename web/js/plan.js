@@ -266,7 +266,9 @@ function candidatos(X, vetados) {
 
   /* R. retirar una puja ya puesta (se puede en cualquier momento): solo si con ella se empezaría la jornada en negativo.
      Cuesta lo que se esperaba ganar con ese fichaje, que suele ser menos que soltar a uno tuyo */
-  for (const m of M.mercado.filter((y) => y.miPuja && y.j && y.tipo === 'liga')) {
+  // (19 nov, azar-plan) también la puja por uno que vende otro mánager (no la tuya: en lo tuyo no se puja): antes solo las de
+  // los libres, y con lo pujado por los de otros no había forma de llegar en positivo («sin salida»)
+  for (const m of M.mercado.filter((y) => y.miPuja && y.j && (y.tipo === 'liga' || (y.tipo === 'manager' && String(y.vendedorTeamId || '') !== String((X.D.yo || {}).teamId || ''))))) {
     const gana = Math.max(0, M.mejora(m.j));
     nuevo({ k: `FR-${m.pid}`, clase: 'retirar', forzada: true, motivo: 'jornada', pid: m.pid, j: m.j, importe: m.miPuja, euros: -(X.punto * gana * X.A.ganaPuja) - 1,
       op: (cu) => ({ accion: 'esperar', retira: m.miPuja, objetivo: 'caja', pid: m.pid, jugador: m.j.nombre, donde: 'retira tu puja en el mercado', importe: null, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', confianza: 'alta',
@@ -522,7 +524,10 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     // lo que menos cuesta soltar (en euros y en puntos); con las cláusulas cerradas y sin cambios de mercado, solo vale
     // el dinero que entra hoy (las ofertas que ya tienes) o retirar una puja
     const forz = todos.filter((o) => o.forzada && (ciclos >= 1 || o.clase === 'aceptar' || o.clase === 'retirar') && !libres.some((l) => l.pid === o.pid && l.clase === o.clase));
-    libres = [...libres, ...mejores(forz, 13 - libres.length, porValor)];
+    // (19 nov, azar-plan) retirar una puja va primero: no cuesta nada y libera de golpe lo pujado. Antes competía con las
+    // ventas «por si hace falta» y, con muchas, se quedaba fuera de las 13 y el plan salía «sin salida»
+    const ret = mejores(forz.filter((o) => o.clase === 'retirar'), 13 - libres.length, porValor);
+    libres = [...libres, ...ret, ...mejores(forz.filter((o) => o.clase !== 'retirar'), 13 - libres.length - ret.length, porValor)];
   }
   // en apuros y sin cambios de mercado antes de la jornada, lo que se ponga a la venta no llega a tiempo: hoy solo cuenta
   // el dinero que entra ya. Lo demás se deja para cuando empiece la jornada (y así la app, al cuadrar, no da por cobrado
