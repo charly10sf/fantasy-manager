@@ -2210,7 +2210,6 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/16/entrenador-pide-arbitro-anule-penalti-favor-partido-futbol-cadete-puerto-vega/00031794850955481279165.htm": 1794855480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261116/1004251807/vivian-vuelve-causar-baja-athletic.html": 1794854713000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251804/alternativas-flick-sustituir-cubarsi-no-llega-villarreal.html": 1794854009000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/16/vivian-baja-segura-espanyol.html": 1794855948000,
    "SPORT|136517232": 1794856951000,
    "SPORT|136497675": 1794859858000,
@@ -8542,13 +8541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4158,
+   "ok": 4159,
    "fallos": 0,
-   "ejecuciones": 3441,
+   "ejecuciones": 3442,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T18:31:12.008Z"
+   "ultima": "2026-11-19T18:36:11.674Z"
   }
  },
  "ptsDirecto": {},
@@ -8565,15 +8564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:31:19.380Z"
+   "ultimaBien": "2026-11-19T18:36:21.047Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:31:19.380Z"
+   "ultimaBien": "2026-11-19T18:36:21.047Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:31:19.380Z"
+   "ultimaBien": "2026-11-19T18:36:21.047Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8581,11 +8580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:31:19.380Z"
+   "ultimaBien": "2026-11-19T18:36:21.047Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:31:19.380Z"
+   "ultimaBien": "2026-11-19T18:36:21.047Z"
   }
  },
  "avisos": [
