@@ -1074,6 +1074,42 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   await ctx.close();
 }
 
+// 21: (19 nov, Carlos) una versión con todos: 'web' se presenta sola a los de la web y el iPhone, no en la app de Android;
+// su botón con ir.accion abre lo mismo que ese data-accion (la 0.8h: «Invitar a un amigo» abre la hoja de invitar). Con
+// «aviso» (20 nov) sale una tarjeta en el centro en vez de la pantalla entera, y se cierra al tocar el botón
+{
+  const { NOVEDADES } = await import(new URL('../web/js/version.js', import.meta.url));
+  const nw = NOVEDADES.find((n) => n.todos && n.aviso) || NOVEDADES.find((n) => n.todos === 'web');
+  if (!nw) bien('novedades solo para la web: ninguna versión con todos: \'web\' ahora mismo');
+  else {
+    const i = NOVEDADES.indexOf(nw), antes = (NOVEDADES[i + 1] || {}).v;
+    for (const app of [false, true]) {
+      const fa = app ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+      const { ctx, page, errores } = await pagina({ init: `${fa} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-version-vista2', JSON.stringify('${antes}'));` });
+      await page.goto(`${BASE}/index.html`);
+      await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+      await page.waitForTimeout(3500);
+      // con «aviso», la tarjeta en el centro (no la pantalla entera); sin él, la presentación
+      const r = await page.evaluate(async (corta) => {
+        document.querySelectorAll('.tour').forEach((e) => e.remove());
+        const abierta = !!document.querySelector(corta ? '.nvt' : '.nv-cap');
+        const entera = !!document.querySelector('.nv-cap');
+        const boton = document.querySelector(corta ? '[data-nvt="ir"]' : '[data-nv-ir]');
+        if (boton) { boton.click(); await new Promise((ok) => setTimeout(ok, 1200)); }
+        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, sigue: !!document.querySelector('.nvt') };
+      }, !!nw.aviso);
+      const accion = nw.aviso ? nw.aviso.ir : (nw.cosas.find((c) => c.ir && c.ir.accion) || {}).ir;
+      if (nw.aviso && (r.entera || r.sigue)) r.abierta = false;
+      const sale = nw.todos === true || nw.todos === (app ? 'app' : 'web');
+      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && r.hoja));
+      if (!ok) mal(`novedades de una versión (${nw.v}), ${app ? 'app' : 'web'}: ${JSON.stringify(r)}`);
+      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja}` : 'no se abre'}`);
+      if (errores.length) mal(`novedades solo para la web: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+      await ctx.close();
+    }
+  }
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

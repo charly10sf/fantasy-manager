@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8g';
+export const VERSION = '0.8h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,9 +18,21 @@ export const VERSION = '0.8g';
 // importante: true (11 nov, Carlos) la pone en «Novedades» de Ajustes para todos: solo lo gordo, lo que cambia cómo se
 // usa la app (un menú nuevo, la ficha rehecha). Pocas: un par por versión como mucho. Debajo, en pequeño, los arreglos
 // de esas mismas versiones (sin los `menor` ni los de 'dueño').
+// todos: 'web' o 'app' (19 nov): solo a los de esa versión de la app. aviso: { d, t, x, mas, ir } (20 nov): en vez de la
+// presentación a pantalla completa, una tarjeta en el centro con una línea y un botón (presentacion.js, tarjetaNovedad).
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (19-20 nov, Carlos) invitar a un amigo, a todos (primero pidió web e iPhone y luego «a los de android también, así
+    // invitan a más gente»). Con «aviso» no sale la presentación a pantalla completa sino una tarjeta en el centro con una
+    // línea (la variante B que eligió Carlos), que dice que está en Ajustes. La hora, al publicar
+    v: '0.8h', f: '2026-11-20', h: '00:19', t: 'Invita a tus amigos', todos: true,
+    aviso: { d: 'regalo', t: 'Invita a un amigo', x: 'Por cada amigo que entre con tu enlace, ves el dinero de 2 rivales durante 24 horas. Lo tienes en Ajustes → Invita a un amigo.', mas: 'Y más premios si invitas a 3 y a 5', ir: { accion: 'invitarAmigo', txt: 'Invitar a un amigo' } },
+    cosas: [
+      { tipo: 'nuevo', d: 'regalo', t: 'Invita a un amigo', x: 'Comparte tu enlace o tu código. Por cada amigo que empiece a usar la app con él, eliges 2 rivales y ves su dinero durante 24 horas. Con 3 amigos que vuelvan otro día, una semana con el doble de planes y preguntas gratis.', ir: { accion: 'invitarAmigo', txt: 'Invitar a un amigo' } },
+    ],
+  },
   {
     // (19 nov, el fallo de Bryan: con los datos de su operadora no llegaba al dominio y se quedaba en la 0.7.13za) AlDia
     // prueba el respaldo de Cloudflare Pages (Origenes.java, parte Android nueva: AAB para Play), la banda de no poder

@@ -33,7 +33,7 @@ import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, a
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
-import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
+import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
@@ -3684,13 +3684,16 @@ const paraMi = (c) => {
   return true;
 };
 fijarFiltroNovedades((c) => paraMi(c) && (avisosGuardados().admin || !c.menor), paraMi);
+/* (19 nov, Carlos) «todos» también puede ser de una sola versión de la app: 'web' (iPhone y ordenador) o 'app' (Android).
+   Así una versión se presenta sola a los de la web sin abrirse en el móvil (invitar a un amigo, 0.8h) */
+const todosMi = (n) => n.todos === true || (n.todos === 'web' && !enApp) || (n.todos === 'app' && enApp);
 /** al estrenar versión, las novedades contadas bajando; la primera vez que se instala, nada */
 function novedades() {
   // (9 nov, 23:42, Carlos) la presentación al actualizar ya no se abre sola a nadie, tampoco al dueño: se marca como vista
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
-  if (!vista || !NOVEDADES.some((n) => n.todos && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
+  if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
@@ -3700,7 +3703,7 @@ function novedades() {
   // así que no haya visto (sin las viejas, que eran solo para el dueño)
   let desde = vista;
   if (!avisosGuardados().admin) {
-    const paraTodos = NOVEDADES.filter((n) => n.todos && cmpVer(n.v, vista) > 0);
+    const paraTodos = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
     if (paraTodos.length) {
       const i = NOVEDADES.indexOf(paraTodos[paraTodos.length - 1]);
       if (NOVEDADES[i + 1] && cmpVer(NOVEDADES[i + 1].v, vista) > 0) desde = NOVEDADES[i + 1].v;
@@ -3715,11 +3718,24 @@ function novedades() {
   // cuenta al final, numerados
   if (!hayNovedadesDesde(desde)) return;
   LS.set('version-vista2', VERSION);
+  // (20 nov) si todo lo que se presenta solo a ti trae «aviso», en vez de la presentación entera, la tarjeta de la más nueva
+  const suyas = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
+  if (suyas.length && suyas.every((n) => n.aviso)) { verAviso(suyas[0].aviso); return; }
   verNovedades(desde);
+}
+function verAviso(a) {
+  tarjetaNovedad(a, { alIr: irNovedad, alCerrar: () => quizaTutorial(700) });
+}
+// a donde lleva el botón de una novedad: una pestaña (v, seg) o lo mismo que un botón con ese data-accion (accion)
+function irNovedad(a) {
+  if (!a || !S.D) return;
+  if (a.accion) { const b = document.createElement('button'); b.dataset.accion = a.accion; b.hidden = true; document.body.append(b); b.click(); b.remove(); return; }
+  if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; }
+  ir(a.v);
 }
 function verNovedades(desde) {
   presentarNovedades(desde, {
-    alIr: (a) => { if (!a || !S.D) return; if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; } ir(a.v); },
+    alIr: irNovedad,
     // (0.7.1) la lista de todas las versiones, solo a quien puede verla (el dueño o con «novedadesTodos»): a los demás,
     // con una versión «para todos», solo esa
     alLista: avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true ? () => listaVersiones() : null,

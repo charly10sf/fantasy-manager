@@ -3406,3 +3406,17 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .inv-rivales .pill.on{background:var(--rojo);color:#fff;border-color:transparent}
 .inv-top{margin-top:12px;text-align:left}
 .inv-top span{display:block;color:var(--texto-2);font-size:13px}
+
+/* (20 nov) la novedad corta: una tarjeta en el centro, encima de la app (presentacion.js, tarjetaNovedad) */
+.nvt-capa { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 24px; }
+.nvt-velo { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); animation: nvt-velo 0.25s ease both; }
+.nvt { position: relative; width: 100%; max-width: 360px; padding: 22px 20px 14px; border-radius: 24px; background: #1a1420; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6); text-align: center; --acc: var(--rojo); --dl: #f4f2f3; animation: nvt-sube 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.nvt .dib { display: block; width: 120px; height: 90px; margin: 0 auto 6px; }
+.nvt-eti { display: block; font: 700 12px 'Barlow'; letter-spacing: 1.5px; text-transform: uppercase; color: #ff4fa3; }
+.nvt h2 { margin: 4px 0 0; font: 700 24px var(--cond); text-transform: uppercase; line-height: 1.05; color: var(--texto); }
+.nvt p { margin: 8px 0 14px; font: 400 15px 'Barlow'; line-height: 1.35; color: var(--texto-2); }
+.nvt-mas { display: inline-block; margin: 0 0 16px; padding: 3px 10px; border-radius: 99px; background: rgba(255, 197, 71, 0.12); color: #ffc547; font: 600 13px 'Barlow'; }
+.nvt-no { display: block; margin: 6px auto 0; padding: 10px 16px; min-height: 40px; background: none; border: 0; color: var(--texto-2); font: 600 14px 'Barlow'; }
+@keyframes nvt-velo { from { opacity: 0; } }
+@keyframes nvt-sube { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
+@media (prefers-reduced-motion: reduce) { .nvt, .nvt-velo { animation: none; } }
