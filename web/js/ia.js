@@ -2970,6 +2970,14 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     if (!mal && Math.abs(suma - total) > Math.max(Math.abs(suma) * 0.004, 25000)) nota(`La cuenta «${m[1].replace(/\s+/g, ' ').trim()}» da ${eur(suma)}, no ${m[m.length - 2]} ${m[m.length - 1]}.`);
   }
 
+  /* 3b. (19 nov, el trueque de Carlos con Domy) «cambio a valores», «a su valor», «sin el 4 %»: ningún dueño vende a su
+     valor porque LaLiga le da más; se dice cuánto es lo normal que pide su dueño por el jugador del rival del que habla */
+  if (/\b(cambio|cambiar|intercambio|cerrar|cerrarlo|contraofert\w*|propon\w*)\b[^.]{0,30}\ba (sus )?valores\b|\ba valor(es)? exactos?\b|\bsin (el|la) (\d+ ?%|prima|sobreprecio)\b/i.test(norm(t))) {
+    const rival = todos.find((j) => j && !mia(j.id) && M.dueno && M.dueno[j.id]);
+    const of = rival ? ofertaDueno(M, rival) : null;
+    nota(of && of.v ? `A su valor no lo vende ningún dueño, porque LaLiga le da más: lo normal entre managers es pagar por ${N(rival)} hasta unos ${eur(of.v)}, y por debajo de eso es buen precio.` : 'A su valor no lo vende ningún dueño, porque LaLiga le da más: pagar algo por encima entre managers es lo normal.');
+  }
+
   /* 4. lo que no puede decir */
   const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
