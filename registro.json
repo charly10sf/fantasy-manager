@@ -2205,7 +2205,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html": 1794852250000,
    "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html": 1794854516000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/16/bernardo-silva-vuelve-madrid-polemica.html": 1794855401000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/16/otro-lesionado-en-el-athletic-dani-vivian-sufre-un-problema-en-el-soleo-radio-bilbao/": 1794855373000,
@@ -2421,30 +2420,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794852250000,
-    "id": "3092",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Olmo vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261116/1004251798/olmo-vuelve-grupo-alivio-jong-dudas-cubarsi-kounde.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794852250000,
-    "id": "2355",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Kounde sigue trabajando al margen del grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "El Correo|https://www.elcorreo.com/athletic/vivian-vuelve-lesionar-sufre-lesion-moderada-soleo-20261116193505-nt.html",
     "medio": "El Correo",
@@ -8567,13 +8542,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4152,
+   "ok": 4153,
    "fallos": 0,
-   "ejecuciones": 3435,
+   "ejecuciones": 3436,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-19T18:01:12.379Z"
+   "ultima": "2026-11-19T18:06:14.354Z"
   }
  },
  "ptsDirecto": {},
@@ -8590,15 +8565,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:01:21.421Z"
+   "ultimaBien": "2026-11-19T18:06:25.026Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:01:21.421Z"
+   "ultimaBien": "2026-11-19T18:06:25.026Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:01:21.421Z"
+   "ultimaBien": "2026-11-19T18:06:25.026Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8606,11 +8581,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:01:21.421Z"
+   "ultimaBien": "2026-11-19T18:06:25.026Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T18:01:21.421Z"
+   "ultimaBien": "2026-11-19T18:06:25.026Z"
   }
  },
  "avisos": [
