@@ -2207,8 +2207,9 @@ export function analizar(D, H, c, extra = {}) {
   // lo rico que es cada rival frente a los demás de la liga: su saldo y una cuarta parte de su equipo (lo que podría sacar
   // vendiendo). Carlos (20 nov): «¿cómo puede ser peligro medio gente con un patrimonio de 600 M igual que otro con 90 M?»
   const riqDe = {};
-  for (const e of D.clasif) if (e.teamId !== yoTid) { const c = M.capacidad(e.teamId); riqDe[e.teamId] = c ? c.v + 0.25 * num(e.valor) : null; }
-  const riqMax = Math.max(0, ...Object.values(riqDe).filter((v) => v != null));
+  // (sin saber su dinero, solo la cuarta parte de su equipo)
+  for (const e of D.clasif) if (e.teamId !== yoTid) { const c = M.capacidad(e.teamId); riqDe[e.teamId] = Math.max(0, (c ? num(c.v) : 0) + 0.25 * num(e.valor)); }
+  const riqMax = Math.max(0, ...Object.values(riqDe));
   // (20 nov, 18:39, Carlos: «haz otra escala con muy alto») cuatro escalones: muy alto desde 70, alto desde 50, medio
   // desde 30 y bajo por debajo
   const nivelPel = (n) => (n >= 70 ? 'muyalta' : n >= 50 ? 'alta' : n >= 30 ? 'media' : 'baja');
@@ -2268,18 +2269,17 @@ export function analizar(D, H, c, extra = {}) {
       const compras7 = sem.filter((a) => suyo(a) && a.clase === 'compra').length;
       const act = Math.min(1, compras7 * 0.15 + gastado / 40e6);
       const suele = 100 * (1 - Math.exp(-(0.25 + 0.8 * hist + 0.4 * act)));
-      // el que clausula mucho no baja de medio, pero solo si le llega (con lo que tiene o vendiendo) para alguna cláusula
-      // tuya que se paga en esta liga y se abre en 3 días: si no le llega para ninguna, hoy no te puede hacer nada (antes el
-      // historial dejaba en «medio» a uno con 40 M igual que a uno con 160 M)
+      // si le llega (con lo que tiene o vendiendo) para alguna cláusula tuya que se paga en esta liga y se abre en 3 días
       const aTiro = M.mias.some((x) => x.clausula && x.ratio != null && apetito(x, suyoMax) > 0 && (x.abierta || x.veda || (x.abreEn || 0) < 3 * DIA) && alcance(x.clausula) >= 0.25 && duele(x) >= 0.3);
-      const suelo = aTiro ? Math.min(50, 50 * (1 - Math.exp(-0.8 * hist))) : 0;
       // quien te pelea el puesto gana más quitándote a un titular
       const cerca = yoClasif ? clamp(1 - Math.abs(num(e.puntos) - num(yoClasif.puntos)) / Math.max(60, 0.15 * num(yoClasif.puntos)), 0, 1) : 0;
-      // el que suele clausular sube hasta un 20 % por encima de lo que puede (antes, como mucho, se quedaba en lo que puede:
-      // en su liga, cuatro empatados); el más rico de la liga, otro 20 %, y el más pobre, un 20 % menos (sin saber su
-      // dinero, ni sube ni baja)
-      const riq = riqDe[e.teamId] != null && riqMax > 0 ? riqDe[e.teamId] / riqMax : 0.5;
-      const nivelDe = (p) => Math.min(100, Math.max(p * (0.6 + 0.6 * suele / 100) * (0.8 + 0.4 * riq) * (1 + 0.2 * cerca), suelo));
+      // EL NIVEL (20 nov, 20:19, Carlos, tercera vez: «hazlo bien»): antes mandaba lo que puede quitarte esta semana, y con
+      // una sola cláusula tuya a tiro (Gulácsi) salían siete de ocho igual y el 1º, con 534 M de equipo y cuatro
+      // clausulazos a ti, «bajo» por tener poco saldo hoy. Ahora, como lo ve él: PUEDE PAGAR (lo rico que es frente al más
+      // rico de la liga: su saldo y la cuarta parte de su equipo) × SUELE CLAUSULAR, y lo que tiene a tiro ahora lo mueve
+      // de ×0,85 (nada) a ×1,35 (todo). Con 25 jugadores, ×0,7 (tiene que vender antes); quien te pelea el puesto, hasta un 10 % más
+      const riq = riqMax > 0 ? riqDe[e.teamId] / riqMax : 0.5;
+      const nivelDe = (p) => Math.min(100, 100 * Math.pow(riq, 0.6) * (lleno ? 0.7 : 1) * (0.4 + 0.6 * suele / 100) * (0.85 + 0.5 * (p / 100) ** 2) * (1 + 0.1 * cerca));
       const ah = calc(false);
       let n = nivelDe(ah.puede);
       // lo mismo que dice el riesgo de tus cláusulas: si uno tuyo está en riesgo alto y este rival lo paga, no es «bajo»
@@ -3140,22 +3140,29 @@ export function motivoPeligro(r, { quien = true } = {}) {
   };
   const ll = llegaTxt(p.llegan);
   if (ll) partes.push(ll);
+  // el dinero, sin cifras (20 nov, 20:19: el nivel sale sobre todo de lo rico que es y de lo que suele clausular)
+  const pobreSin = p.riq < 0.3 && p.sinDinero && quien && !ll && !p.lleno && !p.caras;
+  const riqueza = p.riq == null || pobreSin ? null : p.riq >= 0.75 ? 'es de los que más dinero tienen de la liga' : p.riq < 0.3 ? 'tiene poco dinero frente al resto de la liga' : p.sinDinero && quien && !ll ? 'tiene poco saldo, pero un equipo que puede vender' : null;
+  const ricoPobre = riqueza && (p.riq >= 0.75 || p.riq < 0.3);
+  if (ricoPobre && !ll) partes.push(riqueza);
   if (p.czAMi >= 2) partes.push(`te ha clausulado a ${p.czAMi}`);
   else if (p.ultAMi) partes.push(p.ultAMi.nombre ? `ya te clausuló a ${p.ultAMi.nombre}` : 'ya te ha clausulado a uno');
   else if (p.czTotal >= 2) partes.push(`ha clausulado ${p.czTotal} esta temporada`);
   else if (p.czTotal === 1 && p.hist >= 0.3) partes.push('ya ha clausulado a uno hace poco');
+  else if (!p.czTotal && ll) partes.push('~no ha clausulado en toda la temporada');
+  if (riqueza && (!ricoPobre || ll)) partes.push(riqueza);
   if (p.cerca >= 0.5) partes.push('te pelea el puesto');
   if (p.lleno) partes.push('con 25 jugadores no puede clausular sin vender antes');
   if (!ll && !p.lleno && quien) {
     if (p.caras) partes.push('las cláusulas tuyas que puede pagar están caras para esta liga');
-    else if (p.sinDinero) partes.unshift(p.czTotal ? 'suele clausular, pero no le llega para ninguna cláusula tuya que se abre pronto' : 'no le llega para tus cláusulas que se abren pronto');
+    else if (pobreSin || (p.sinDinero && p.riq == null)) partes.unshift(p.czTotal ? 'suele clausular, pero no le llega para ninguna cláusula tuya que se abre pronto' : 'no le llega para tus cláusulas que se abren pronto');
   }
   if (ll && p.vendiendo && quien) partes[0] += ' (vendiendo antes)';
   // sin dinero para ninguna, lo de que suele clausular ya va en esa frase
-  if (!ll && p.sinDinero && p.czTotal && quien) for (let i = partes.length - 1; i > 0; i--) if (/^(ha clausulado|ya ha clausulado)/.test(partes[i])) partes.splice(i, 1);
+  if ((pobreSin || (p.sinDinero && p.riq == null && !ll && quien)) && p.czTotal) for (let i = partes.length - 1; i > 0; i--) if (/^(ha clausulado|ya ha clausulado)/.test(partes[i])) partes.splice(i, 1);
   // con «quién paga» cerrado, lo de tus cláusulas sin decir si le llega el dinero
   if (!quien && p.llegan.some((x) => x.w >= 0.25)) partes.unshift('tienes cláusulas a precio de esta liga abiertas o a punto');
-  let t = partes.slice(0, 2).join(' y ');
+  let t = partes.slice(0, 2).join(' y ').replace(/ y ~/, ', pero ').replace(/^~/, '');
   if (!t) t = !quien ? (p.czTotal ? 'no destaca por nada ahora mismo' : 'no ha clausulado en toda la temporada') : p.czTotal ? 'ahora no tiene a tiro ninguna cláusula tuya' : 'no clausula y ahora no tiene a tiro ninguna cláusula tuya';
   if (p.veda) return `Cláusulas cerradas hasta ${cuando(p.veda.hasta)}; al reabrirse, ${t}.`;
   return `${t.charAt(0).toUpperCase()}${t.slice(1)}.`;

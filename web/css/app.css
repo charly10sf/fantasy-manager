@@ -3085,7 +3085,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .pill[class], .accion-t[class], .pnz-t[class], .tit-b[class], .ll-tag[class], .nv-tipo[class], .cp-res-t[class], .amenaza[class] { color: var(--pl-c); background: var(--pl-f); }
 .pl.chica, .tit-b, .cp-res-t { padding: 2px 7px; }
 /* los tonos */
-.pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
+.pl.sube, .pill.bien, .pill.chollo, .amenaza.baja, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
 .pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D { --pl-c: var(--baja); --pl-b: rgba(255, 111, 97, 0.4); }
 .pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
 .pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .amenaza.muyalta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
