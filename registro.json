@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
@@ -2494,18 +2493,6 @@
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html",
-    "medio": "MARCA",
-    "t": 1794924372000,
-    "id": "2444",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Sucic vuelve a entrenar como uno más con el grupo",
-    "motivo": "amigdalitis ya superada",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html",
     "medio": "Mundo Deportivo",
@@ -4263,12 +4250,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795176335000,
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
-   "SPORT|136666090": 1795176736000
+   "SPORT|136666090": 1795176736000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -4276,17 +4264,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 380282,
-  "salida": 27300,
+  "entrada": 382021,
+  "salida": 27386,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.733155,
+  "dolares": 0.733372,
   "reservado": 0
  },
  "recientes": {
@@ -8631,13 +8619,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4432,
+   "ok": 4433,
    "fallos": 0,
-   "ejecuciones": 3679,
+   "ejecuciones": 3680,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T14:06:11.471Z"
+   "ultima": "2026-11-20T14:11:15.466Z"
   }
  },
  "ptsDirecto": {},
@@ -8654,15 +8642,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:06:19.960Z"
+   "ultimaBien": "2026-11-20T14:11:29.789Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:06:19.960Z"
+   "ultimaBien": "2026-11-20T14:11:29.789Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:06:19.960Z"
+   "ultimaBien": "2026-11-20T14:11:29.789Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8670,11 +8658,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:06:19.960Z"
+   "ultimaBien": "2026-11-20T14:11:29.789Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:06:19.960Z"
+   "ultimaBien": "2026-11-20T14:11:29.789Z"
   }
  },
  "avisos": [
