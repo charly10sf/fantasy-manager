@@ -2232,7 +2232,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000,
    "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
-   "SPORT|136528409": 1794910106000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000,
@@ -8486,13 +8485,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4383,
+   "ok": 4384,
    "fallos": 0,
-   "ejecuciones": 3630,
+   "ejecuciones": 3631,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:06:24.627Z"
+   "ultima": "2026-11-20T10:11:18.109Z"
   }
  },
  "ptsDirecto": {},
@@ -8509,15 +8508,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:06:34.835Z"
+   "ultimaBien": "2026-11-20T10:11:30.385Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:06:34.835Z"
+   "ultimaBien": "2026-11-20T10:11:30.385Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:06:34.835Z"
+   "ultimaBien": "2026-11-20T10:11:30.385Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8525,11 +8524,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:06:34.835Z"
+   "ultimaBien": "2026-11-20T10:11:30.385Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:06:34.835Z"
+   "ultimaBien": "2026-11-20T10:11:30.385Z"
   }
  },
  "avisos": [
