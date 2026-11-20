@@ -2273,7 +2273,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252268/pepe-mel-abandona-uci-pasa-planta.html": 1794936518000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252204/actualidad-barca-video-psg-juventus-interesados-balde.html": 1794936274000,
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
@@ -8579,13 +8578,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4471,
+   "ok": 4472,
    "fallos": 0,
-   "ejecuciones": 3718,
+   "ejecuciones": 3719,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:21:19.564Z"
+   "ultima": "2026-11-20T17:26:11.722Z"
   }
  },
  "ptsDirecto": {},
@@ -8602,15 +8601,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:21:25.991Z"
+   "ultimaBien": "2026-11-20T17:26:21.197Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:21:25.991Z"
+   "ultimaBien": "2026-11-20T17:26:21.197Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:21:25.991Z"
+   "ultimaBien": "2026-11-20T17:26:21.197Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8618,11 +8617,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:21:25.991Z"
+   "ultimaBien": "2026-11-20T17:26:21.197Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:21:25.991Z"
+   "ultimaBien": "2026-11-20T17:26:21.197Z"
   }
  },
  "avisos": [
