@@ -1348,6 +1348,13 @@
    "jornada": 13,
    "id": "2123741042331541740",
    "t": "2026-11-20T11:31:36.654Z"
+  },
+  {
+   "clave": "novedades|3092:vuelve,1775:vuelve,2355:vuelve|2026-11-20",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123748614753144991",
+   "t": "2026-11-20T12:01:42.158Z"
   }
  ],
  "estados": {
@@ -2013,7 +2020,7 @@
   "3089": "ok",
   "3090": "ok",
   "3091": "ok",
-  "3092": "doubtful",
+  "3092": "ok",
   "3093": "ok",
   "3094": "ok",
   "3095": "out_of_league",
@@ -2246,6 +2253,12 @@
    "que": "vuelve",
    "antes": "doubtful",
    "t": 1795175773335
+  },
+  {
+   "id": "3092",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795176078128
   }
  ],
  "noticias": {
@@ -2449,7 +2462,9 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
-   "SPORT|136657810": 1795170582000
+   "SPORT|136657810": 1795170582000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000
   },
   "hechos": [
    {
@@ -3214,11 +3229,23 @@
      18,
      30
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795175996000,
+    "id": "2430",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3870,8 +3897,8 @@
     "t": 1794204073390
    },
    "3092": {
-    "e": "doubtful",
-    "t": 1795000571423
+    "e": "ok",
+    "t": 1795176078128
    },
    "3099": {
     "e": "ok",
@@ -4114,17 +4141,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 25,
-   "redactar": 10,
-   "revisar": 9,
+   "clasificar": 26,
+   "redactar": 12,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 200244,
-  "salida": 14679,
-  "cacheLee": 14515,
+  "entrada": 231266,
+  "salida": 15543,
+  "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.378536,
+  "dolares": 0.443627,
   "reservado": 0
  },
  "recientes": {
@@ -4284,10 +4311,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-18T11:11:55.915Z",
-    "texto": "🚨 Lesión de Lookman. Esguince de rodilla desde el 13 de noviembre. Estará fuera hasta principios de diciembre. El delantero del Atleti vale 15,9 M y ha perdido 12,4 M en el último mes.\n\nEl partido es tras el parón, el domingo 22 de noviembre."
-   },
-   {
     "t": "2026-11-19T11:06:36.785Z",
     "texto": "✅ Ceballos ya no es duda y vuelve a estar disponible para el sábado.\n\nEl centrocampista del Betis llega en racha: 21 puntos en las tres últimas jornadas. Visita al Sevilla, que va 6º, en el Sánchez-Pizjuán a las 18:30, un partido de dificultad media. Con un 34 % de titularidad no tiene el puesto asegurado, así que ojo a los onces."
    },
@@ -4302,6 +4325,10 @@
    {
     "t": "2026-11-20T11:31:36.656Z",
     "texto": "🚨 Edu Expósito está lesionado por unas molestias sin determinar, y de momento no se sabe más. El centrocampista del Espanyol vale 51 M y ha ganado 20,1 M en el último mes, así que su caso hay que seguirlo de cerca de cara al Athletic 🦁.\n\nCeballos, en el Betis, es duda por molestias musculares. Llega en racha, con 21 puntos en las tres últimas jornadas, y hasta que se sepa si juega contra el Sevilla mejor no darlo por hecho."
+   },
+   {
+    "t": "2026-11-20T12:01:42.160Z",
+    "texto": "✅ Olmo, Cubarsí y Kounde, los tres del Barça, están disponibles para la jornada 13 ante el Villarreal 🚢.\n\nOlmo lleva un gol y tres asistencias en la liga. Kounde tuvo su mejor jornada en la 8, con 18 puntos."
    }
   ],
   "resumen": [
@@ -8469,13 +8496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4405,
+   "ok": 4406,
    "fallos": 0,
-   "ejecuciones": 3652,
+   "ejecuciones": 3653,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:56:13.335Z"
+   "ultima": "2026-11-20T12:01:18.128Z"
   }
  },
  "ptsDirecto": {},
@@ -8492,15 +8519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:56:46.000Z"
+   "ultimaBien": "2026-11-20T12:01:45.543Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:56:46.000Z"
+   "ultimaBien": "2026-11-20T12:01:45.543Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:56:46.000Z"
+   "ultimaBien": "2026-11-20T12:01:45.543Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8508,11 +8535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:56:46.000Z"
+   "ultimaBien": "2026-11-20T12:01:45.543Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:56:46.000Z"
+   "ultimaBien": "2026-11-20T12:01:45.543Z"
   }
  },
  "avisos": [
