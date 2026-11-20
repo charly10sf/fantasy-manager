@@ -2201,6 +2201,11 @@ export function analizar(D, H, c, extra = {}) {
   };
   // si le llega: con el dinero exacto, sí o no; estimado, de 0 a 1 a lo largo del margen (sin saltos de un día a otro)
   const llega = (c, cl) => (!c ? 0 : c.exacto ? (c.v >= cl ? 1 : 0) : clamp((c.v + c.margen - cl) / (2 * Math.max(c.margen, 1e5)), 0, 1));
+  // lo rico que es cada rival frente a los demás de la liga: su saldo y una cuarta parte de su equipo (lo que podría sacar
+  // vendiendo). Carlos (20 nov): «¿cómo puede ser peligro medio gente con un patrimonio de 600 M igual que otro con 90 M?»
+  const riqDe = {};
+  for (const e of D.clasif) if (e.teamId !== yoTid) { const c = M.capacidad(e.teamId); riqDe[e.teamId] = c ? c.v + 0.25 * num(e.valor) : null; }
+  const riqMax = Math.max(0, ...Object.values(riqDe).filter((v) => v != null));
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
     const serie = (H.eq && H.eq[e.teamId]) || [];
     const hace7 = serie.filter(([d]) => d <= otroDia(diaDe(ahora), -7)).pop();
@@ -2264,7 +2269,11 @@ export function analizar(D, H, c, extra = {}) {
       const suelo = aTiro ? Math.min(50, 50 * (1 - Math.exp(-0.8 * hist))) : 0;
       // quien te pelea el puesto gana más quitándote a un titular
       const cerca = yoClasif ? clamp(1 - Math.abs(num(e.puntos) - num(yoClasif.puntos)) / Math.max(60, 0.15 * num(yoClasif.puntos)), 0, 1) : 0;
-      const nivelDe = (p) => Math.min(100, Math.max(p * (0.6 + 0.4 * suele / 100) * (1 + 0.2 * cerca), suelo));
+      // el que suele clausular sube hasta un 20 % por encima de lo que puede (antes, como mucho, se quedaba en lo que puede:
+      // en su liga, cuatro empatados); el más rico de la liga, otro 20 %, y el más pobre, un 20 % menos (sin saber su
+      // dinero, ni sube ni baja)
+      const riq = riqDe[e.teamId] != null && riqMax > 0 ? riqDe[e.teamId] / riqMax : 0.5;
+      const nivelDe = (p) => Math.min(100, Math.max(p * (0.6 + 0.6 * suele / 100) * (0.8 + 0.4 * riq) * (1 + 0.2 * cerca), suelo));
       const ah = calc(false);
       let n = nivelDe(ah.puede);
       // lo mismo que dice el riesgo de tus cláusulas: si uno tuyo está en riesgo alto y este rival lo paga, no es «bajo»
@@ -2282,7 +2291,7 @@ export function analizar(D, H, c, extra = {}) {
       }
       const ult = czs.filter((z) => z.aMi).sort((a, b) => b.t - a.t)[0] || null;
       return {
-        n, puede: Math.round(puede), suele: Math.round(suele), hist: Math.round(hist * 100) / 100, cerca: Math.round(cerca * 100) / 100,
+        n, puede: Math.round(puede), suele: Math.round(suele), riq: Math.round(riq * 100) / 100, hist: Math.round(hist * 100) / 100, cerca: Math.round(cerca * 100) / 100,
         llegan: lista, aTiro, vendiendo: lista.some((x) => x.w >= 0.25 && x.vendiendo), czTotal: czs.length, czAMi: czs.filter((z) => z.aMi).length, ultAMi: ult ? { pid: ult.pid, nombre: ult.pid && D.maestro[ult.pid] ? D.maestro[ult.pid].nombre : null, t: ult.t } : null,
         lleno, veda, enAlto: enAlto.map((x) => x.pid),
         // tiene dinero (se sabe) pero tus cláusulas que se abren pronto están por encima de lo que se paga aquí
