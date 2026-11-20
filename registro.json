@@ -2237,8 +2237,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html": 1794911315000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/17/kounde-supera-les-molesties-i-apunta-al-villarreal-sercat/": 1794911275000,
    "AS|https://as.com/futbol/primera/terzic-debe-hacer-equilibrismos-en-el-eje-central-f202611-n/": 1794911893000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-lesionado-cuatro-dias-derbi-betis-sevilla_0_2008524681.html": 1794911808000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/video-entrenamiento-sevilla-fc-17-noviembre-2026_8_2008525335.html": 1794911542000,
@@ -2444,18 +2442,6 @@
    "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html",
-    "medio": "MARCA",
-    "t": 1794911315000,
-    "id": "2315",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Paredes sigue sin entrenar al ritmo del grupo",
-    "motivo": "secuelas de una lesión previa",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html",
     "medio": "Diario de Sevilla",
@@ -8497,13 +8483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4387,
+   "ok": 4388,
    "fallos": 0,
-   "ejecuciones": 3634,
+   "ejecuciones": 3635,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:26:10.562Z"
+   "ultima": "2026-11-20T10:31:11.846Z"
   }
  },
  "ptsDirecto": {},
@@ -8520,15 +8506,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:26:18.469Z"
+   "ultimaBien": "2026-11-20T10:31:24.633Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:26:18.469Z"
+   "ultimaBien": "2026-11-20T10:31:24.633Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:26:18.469Z"
+   "ultimaBien": "2026-11-20T10:31:24.633Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8536,11 +8522,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:26:18.469Z"
+   "ultimaBien": "2026-11-20T10:31:24.633Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:26:18.469Z"
+   "ultimaBien": "2026-11-20T10:31:24.633Z"
   }
  },
  "avisos": [
