@@ -2251,7 +2251,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
    "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
@@ -2456,18 +2455,6 @@
    "SPORT|136660186": 1795173167000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794918051000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos tiene molestias y es duda para el derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html",
     "medio": "Diario de Sevilla",
@@ -8483,13 +8470,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4410,
+   "ok": 4411,
    "fallos": 0,
-   "ejecuciones": 3657,
+   "ejecuciones": 3658,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:16:11.394Z"
+   "ultima": "2026-11-20T12:21:17.618Z"
   }
  },
  "ptsDirecto": {},
@@ -8506,15 +8493,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:16:23.485Z"
+   "ultimaBien": "2026-11-20T12:21:28.050Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:16:23.485Z"
+   "ultimaBien": "2026-11-20T12:21:28.050Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:16:23.485Z"
+   "ultimaBien": "2026-11-20T12:21:28.050Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8522,11 +8509,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:16:23.485Z"
+   "ultimaBien": "2026-11-20T12:21:28.050Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:16:23.485Z"
+   "ultimaBien": "2026-11-20T12:21:28.050Z"
   }
  },
  "avisos": [
