@@ -2273,7 +2273,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/kounde-supera-las-molestias-y-apunta-al-villarreal-cadena-ser/": 1794933877000,
-   "Diario Sur|https://www.diariosur.es/malagacf/osasuna-sigue-acumulando-lesionados-problemas-bretones-20261117173106-nt.html": 1794933066000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261117/1004252259/frutos-vuelta-vallecas-recibir-valencia.html": 1794934483000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/17/madrid-sigue-minimos-vuelta-trabajo.html": 1794935215000,
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/17/rodri-podria-regresar-frente-depor.html": 1794935356000,
@@ -2488,7 +2487,8 @@
    "SPORT|136670471": 1795181611000,
    "SPORT|136672088": 1795184079000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
-   "SPORT|136643204": 1795184677000
+   "SPORT|136643204": 1795184677000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000
   },
   "hechos": [
    {
@@ -3358,7 +3358,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4259,17 +4259,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 396052,
-  "salida": 30487,
+  "entrada": 398039,
+  "salida": 30605,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.736326,
+  "dolares": 0.736584,
   "reservado": 0
  },
  "recientes": {
@@ -8614,13 +8614,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4460,
+   "ok": 4461,
    "fallos": 0,
-   "ejecuciones": 3707,
+   "ejecuciones": 3708,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T16:26:13.269Z"
+   "ultima": "2026-11-20T16:31:16.708Z"
   }
  },
  "ptsDirecto": {},
@@ -8637,15 +8637,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T16:26:24.132Z"
+   "ultimaBien": "2026-11-20T16:31:27.701Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T16:26:24.132Z"
+   "ultimaBien": "2026-11-20T16:31:27.701Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T16:26:24.132Z"
+   "ultimaBien": "2026-11-20T16:31:27.701Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8653,11 +8653,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T16:26:24.132Z"
+   "ultimaBien": "2026-11-20T16:31:27.701Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T16:26:24.132Z"
+   "ultimaBien": "2026-11-20T16:31:27.701Z"
   }
  },
  "avisos": [
