@@ -2279,7 +2279,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261117/1004252309/bright-ede-zakaria-eddahchouri-novedades-vuelta-trabajo-deportivo.html": 1794944997000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252313/canales-juega-69-minutos-seleccion-sub-21.html": 1794945645000,
    "SPORT|136533552": 1794945937000,
    "SPORT|136558895": 1794946522000,
@@ -8577,13 +8576,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4500,
+   "ok": 4501,
    "fallos": 0,
-   "ejecuciones": 3747,
+   "ejecuciones": 3748,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T19:46:12.005Z"
+   "ultima": "2026-11-20T19:51:13.277Z"
   }
  },
  "ptsDirecto": {},
@@ -8600,15 +8599,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:46:18.801Z"
+   "ultimaBien": "2026-11-20T19:51:22.385Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:46:18.801Z"
+   "ultimaBien": "2026-11-20T19:51:22.385Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:46:18.801Z"
+   "ultimaBien": "2026-11-20T19:51:22.385Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8616,11 +8615,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:46:18.801Z"
+   "ultimaBien": "2026-11-20T19:51:22.385Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:46:18.801Z"
+   "ultimaBien": "2026-11-20T19:51:22.385Z"
   }
  },
  "avisos": [
