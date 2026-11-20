@@ -1376,6 +1376,13 @@
    "jornada": 13,
    "id": "2123756184591274068",
    "t": "2026-11-20T12:31:46.890Z"
+  },
+  {
+   "clave": "novedades|3152:vuelve|2026-11-20",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123759926636069344",
+   "t": "2026-11-20T12:46:39.081Z"
   }
  ],
  "estados": {
@@ -1703,7 +1710,7 @@
   "2682": "out_of_league",
   "2687": "ok",
   "2692": "out_of_league",
-  "2693": "doubtful",
+  "2693": "ok",
   "2696": "ok",
   "2698": "ok",
   "2699": "ok",
@@ -2101,7 +2108,7 @@
   "3149": "doubtful",
   "3150": "ok",
   "3151": "ok",
-  "3152": "doubtful",
+  "3152": "ok",
   "3153": "ok",
   "3154": "ok",
   "3155": "ok",
@@ -2262,10 +2269,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3152",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795178777974
+  }
+ ],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
    "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
@@ -4042,8 +4055,8 @@
     "t": 0
    },
    "3152": {
-    "e": "doubtful",
-    "t": 1795175171411
+    "e": "ok",
+    "t": 1795178777974
    },
    "3155": {
     "e": "ok",
@@ -4186,23 +4199,24 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795178777974
   }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 30,
-   "redactar": 19,
-   "revisar": 16,
+   "redactar": 21,
+   "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 336957,
-  "salida": 21057,
+  "entrada": 363503,
+  "salida": 21386,
   "cacheLee": 31933,
-  "cacheEscribe": 14515,
-  "dolares": 0.66488,
+  "cacheEscribe": 17418,
+  "dolares": 0.72852,
   "reservado": 0
  },
  "recientes": {
@@ -4362,10 +4376,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T11:31:36.656Z",
-    "texto": "🚨 Edu Expósito está lesionado por unas molestias sin determinar, y de momento no se sabe más. El centrocampista del Espanyol vale 51 M y ha ganado 20,1 M en el último mes, así que su caso hay que seguirlo de cerca de cara al Athletic 🦁.\n\nCeballos, en el Betis, es duda por molestias musculares. Llega en racha, con 21 puntos en las tres últimas jornadas, y hasta que se sepa si juega contra el Sevilla mejor no darlo por hecho."
-   },
-   {
     "t": "2026-11-20T12:01:42.160Z",
     "texto": "✅ Olmo, Cubarsí y Kounde, los tres del Barça, están disponibles para la jornada 13 ante el Villarreal 🚢.\n\nOlmo lleva un gol y tres asistencias en la liga. Kounde tuvo su mejor jornada en la 8, con 18 puntos."
    },
@@ -4380,6 +4390,10 @@
    {
     "t": "2026-11-20T12:31:46.892Z",
     "texto": "✅ Cucho ya está disponible: la duda que arrastraba queda despejada.\n\nEl Betis visita mañana al Sevilla a las 18:30 en el Sánchez-Pizjuán, un rival que va 6º. Con un 52 % de titularidad, el delantero tiene más papeletas de jugar que de quedarse fuera, aunque conviene esperar a los onces.\n\nLo que no acompaña es su valor: vale 20,1 M tras perder 21,5 M en el último mes."
+   },
+   {
+    "t": "2026-11-20T12:46:39.083Z",
+    "texto": "✅ Zabiri vuelve a estar disponible: la duda queda despejada y el delantero del Racing ⚓ puede estar el domingo.\n\nLleva 9 goles en la liga, y con un 57 % de titularidad tiene más papeletas de jugar que de quedarse fuera. El partido no ayuda: recibe en El Sardinero a la Real Sociedad, que va 5º, un cruce difícil para un delantero."
    }
   ],
   "resumen": [
@@ -8547,13 +8561,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4415,
+   "ok": 4416,
    "fallos": 0,
-   "ejecuciones": 3662,
+   "ejecuciones": 3663,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:41:11.433Z"
+   "ultima": "2026-11-20T12:46:17.974Z"
   }
  },
  "ptsDirecto": {},
@@ -8570,15 +8584,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:41:22.395Z"
+   "ultimaBien": "2026-11-20T12:46:40.842Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:41:22.395Z"
+   "ultimaBien": "2026-11-20T12:46:40.842Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:41:22.395Z"
+   "ultimaBien": "2026-11-20T12:46:40.842Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8586,11 +8600,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:41:22.395Z"
+   "ultimaBien": "2026-11-20T12:46:40.842Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:41:22.395Z"
+   "ultimaBien": "2026-11-20T12:46:40.842Z"
   }
  },
  "avisos": [
