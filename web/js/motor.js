@@ -1865,8 +1865,11 @@ export function analizar(D, H, c, extra = {}) {
         const techo = hasta(x.j.valor * (1 + czP + 0.05));
         const T0 = hasta(caps[0].c.alto), T = Math.min(T0, techo);
         const coste = (t) => Math.ceil((t - x.clausula) / 2 / 1e4) * 1e4;
-        // y no compensa gastar en blindarlo más de una cuarta parte de lo que vale
-        const tope = x.j.valor / 4;
+        // (20 nov, Carlos: «las cláusulas en el fantasy no se suben casi nunca; gastarte 10 millones en subir la cláusula
+        // a un tío no es nada real») pagar por subirla solo compensa si cuesta muy poco: un 5 % de lo que vale como mucho
+        // (antes, un 25 %: con Berenguer salían 10,91 M), y nunca a uno que ya se frena o baja (se vende pronto)
+        const ineB = M.inercia ? M.inercia(x.pid) : null;
+        const tope = ineB && ['frena', 'giro', 'baja', 'parado'].includes(ineB.fase) ? 0 : x.j.valor * 0.05;
         const aSalvo = x.ratio != null && x.ratio >= 1 + czP + 0.05;
         x.blindaje = T > x.clausula && !aSalvo ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope, porTecho: T < T0, techoPct: czP } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
         // si dejarlo fuera del alcance de todos no compensa: la subida más barata que deja fuera a casi todos
@@ -2714,15 +2717,26 @@ function compras(D, M, yoTid, historial = []) {
  * que valdrá para entonces con lo que sube al día. Si sube fuerte (más de un 1 % al día o un 8 % en 7 días), lo normal es
  * que su dueño pida más. null si no hay valor
  */
-export function ofertaDueno(M, j, t = {}) {
+export function ofertaDueno(M, j, t = {}, ahora = Date.now()) {
   if (!j || !j.valor) return null;
   const ine = M.inercia ? M.inercia(j.id) : null;
-  const dia = ine && ['sube', 'acelera', 'frena'].includes(ine.fase) ? num(ine.ult) : num(t.d1);
+  const subiendo = !!ine && ['sube', 'acelera', 'frena'].includes(ine.fase);
+  const dia = subiendo ? num(ine.ult) : num(t.d1);
   const OL = M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
   const alta = OL && !OL.sinDatos && OL.max ? OL.max / j.valor - 1 : 0.1;
-  const v = Math.ceil(((j.valor + Math.max(0, dia)) * (1 + Math.max(0.02, alta))) / 1e4) * 1e4;
+  let v = (j.valor + Math.max(0, dia)) * (1 + Math.max(0.02, alta));
   const sube = dia > j.valor * 0.01 || (t.p7 != null && t.p7 > 8);
-  return { v, sube };
+  // (20 nov, Carlos con Revivo, defensa titular que sube un 20 % en la semana, a dos horas de la jornada: «por solo un
+  // millón más evidentemente no me lo va a aceptar») si sube, su dueño no lo suelta por menos de lo que ganaría
+  // quedándoselo una semana; y si la jornada empieza en menos de dos días y lo tiene para puntuar, por los puntos que
+  // perdería (cada uno, 100 mil)
+  if (sube) {
+    const p7 = subiendo ? Math.max(0, ine.proy(7)) : t.p7 != null && t.p7 > 0 ? (j.valor * t.p7) / 100 : 0;
+    v = Math.max(v, (j.valor + p7) * 1.03);
+  }
+  const pp = M.proxima && M.proxima.ini - ahora < 2 * DIA && M.ppEsperado ? num(M.ppEsperado(j)) : 0;
+  if (pp >= 2) v += pp * 1e5;
+  return { v: Math.ceil(v / 1e4) * 1e4, sube, conPuntos: pp >= 2 };
 }
 
 export function mereceClausula(M, x, ahora = Date.now()) {

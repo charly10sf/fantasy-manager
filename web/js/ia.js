@@ -3509,6 +3509,23 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
 
+/* (20 nov, Carlos: «lo de Huijsen está desfasado: se lo compré ayer a Domy») la conversación guardada iba entera a la IA,
+   aunque fuera de antes del último cambio de mercado: lo que se habló ayer de clausular a Huijsen (de Domy entonces)
+   seguía pesando hoy, con Huijsen ya tuyo. Ahora solo lo de después del último cambio de mercado (12 h como mucho), y
+   lo de hace más de una hora, con cuándo se dijo */
+export function histVigente(hist, M, ahora = Date.now()) {
+  const sig = M && M.cierreMercado;
+  const ultCambio = sig && sig > ahora ? sig - DIA : sig && sig <= ahora ? sig : 0;
+  const corte = Math.max(ahora - 12 * HORA, ultCambio || 0);
+  const out = [];
+  for (const m of hist || []) {
+    // (los que no llevan hora se quedan: todos los de la app la llevan desde que existe el chat)
+    if (!m || (m.ts && m.ts < corte)) continue;
+    const h = m.ts ? (ahora - m.ts) / HORA : 0;
+    out.push(h >= 1 && m.r === 'ia' ? { ...m, t: `[dicho hace ${Math.round(h)} h: si los datos de ahora dicen otra cosa, mandan los de ahora] ${m.t || ''}` } : m);
+  }
+  return out;
+}
 /** con la IA de la app: la conversación de antes (sin la pregunta de ahora), con alias y sin fotos */
 function histParaApp(hist, seudo) {
   const tap = (t, aprox) => (seudo && seudo.n ? seudo.tapar(t, { aprox }) : t);
@@ -3525,7 +3542,7 @@ export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid 
   const fs = (fotos || []).map((f) => f && f.b64).filter((b) => typeof b === 'string' && b.length < 880000).slice(0, 3);
   const o = opcionesChat();
   const cuerpo = {
-    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? (({ t, nota }) => `${t.slice(0, 3000 - nota.length)}${nota}`)(seudo.taparPregunta(pregunta || '')) : (pregunta || ''), hist: histParaApp(hist, seudo), fotos: fs,
+    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? (({ t, nota }) => `${t.slice(0, 3000 - nota.length)}${nota}`)(seudo.taparPregunta(pregunta || '')) : (pregunta || ''), hist: histParaApp([...histVigente(hist.slice(0, -1), M), ...hist.slice(-1)], seudo), fotos: fs,
     conFotos: hist.some((m) => m.fotos && m.fotos.length), ...o, alias: seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null, extra: !!extra, rid,
   };
   return cuerpo;
@@ -3539,7 +3556,7 @@ async function charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extr
 
 /** con tu clave de Google (la reserva, o si la app no tiene la IA de las preguntas encendida) */
 async function charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso) {
-  const contents = await contenidosChat(hist, nuevas);
+  const contents = await contenidosChat([...histVigente(hist.slice(0, -1), M), ...hist.slice(-1)], nuevas);
   const web = cfgIA().web, conFotos = !!(fotos && fotos.length) || hist.some((m) => m.fotos);
   const seudo = seudonimos(D);
   const alias = seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null;

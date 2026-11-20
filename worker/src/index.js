@@ -733,7 +733,8 @@ async function limitesJson() {
   if (!limitesW.j || Date.now() - limitesW.t > 10 * 60e3) {
     let j = null;
     for (const u of LIMITES_URL) {
-      try { const r = await fetch(u, { cf: { cacheTtl: 300 } }); if (r.ok) { j = (await r.json()) || {}; break; } } catch (e) { /* el siguiente */ }
+      // (20 nov: sin tiempo máximo, si el dominio tardaba se quedaba esperando; Quién usa la app tardó 112 s) 4 s cada uno
+      try { const r = await fetch(u, { cf: { cacheTtl: 300 }, signal: AbortSignal.timeout(4000) }); if (r.ok) { j = (await r.json()) || {}; break; } } catch (e) { /* el siguiente */ }
     }
     // (sin poder leerlo, lo último que se leyó; y si nunca, lo de por defecto)
     limitesW = { t: Date.now(), j: j || limitesW.j || {} };
@@ -1297,6 +1298,8 @@ async function borrarMios(req, env, c) {
  */
 const objInv = (env) => env.QR.get(env.QR.idFromName('inv|todos'));
 export async function cfgInv() { return cfgInvitar(await limitesJson()); }
+/** espera una promesa como mucho `ms`; si no llega, `def` (para que nada de fuera deje colgada una respuesta) */
+export const conTope = (p, ms, def = null) => Promise.race([Promise.resolve(p).catch(() => def), new Promise((r) => setTimeout(() => r(def), ms))]);
 async function invPedir(env, b) {
   const r = await objInv(env).fetch('https://freno/inv', { method: 'POST', body: JSON.stringify({ ...b, cfg: b.cfg || (await cfgInv()), ahora: Date.now(), dia: hoyMadrid() }) });
   return r.json();
@@ -1502,8 +1505,13 @@ async function hola(req, env, c, ruta) {
   }
   if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
+    // (20 nov, Carlos: «de repente no me funciona esta pestaña»: tardaba 112 s con 74 cuentas y la app corta a los 20) lo
+    // de fuera, con tiempo máximo, y cuánto tarda cada parte en `tiempos` (ms) para saber cuál se atasca
+    const t0 = Date.now(), tiempos = {};
+    const marca = (k) => { tiempos[k] = Date.now() - t0; };
     const dia = hoyMadrid();
     const ks = (await listar(env, 'p:', 20000)).filter((k) => k.metadata);
+    marca('cuentas');
     ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
     // (19 nov, Carlos: «quiero ver exactamente cuántos han entrado, al día, cuántos nuevos y el tiempo que pasan dentro, sí
     // o sí») el tiempo de cada día, de TODAS las cuentas: hoy de todas y los 6 días de antes de las que han entrado esta
@@ -1518,7 +1526,8 @@ async function hola(req, env, c, ruta) {
     });
     const claves = [];
     ks.forEach((k, i) => aLeer[i].forEach((d) => claves.push(`u:${k.metadata.uid}:${d}`)));
-    const leido = await leerEnBloque(env, claves);
+    const leido = await conTope(leerEnBloque(env, claves), 8000, new Map());
+    marca('usos');
     const usos = ks.map((k, i) => {
       const o = {};
       for (const d of aLeer[i]) {
@@ -1532,6 +1541,7 @@ async function hola(req, env, c, ruta) {
     // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
     // que existe), con lo de p:
     const reg = new Map((await listar(env, 'r:', 50000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
+    marca('registro');
     for (const x of lista) {
       const r = reg.get(String(x.uid));
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
@@ -1539,8 +1549,10 @@ async function hola(req, env, c, ruta) {
     }
     // (19 nov) las invitaciones de cada cuenta: cuántos entran y cuántos vuelven otro día, para ver si alguien abusa
     let invitar = null;
-    if (env.QR) { try { invitar = await invPedir(env, { op: 'todos' }); } catch (e) { invitar = null; } }
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo: await leerEmbudo(env), invitar }, 200, c);
+    const [inv, embudo] = await Promise.all([env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null, conTope(leerEmbudo(env), 6000)]);
+    invitar = inv;
+    marca('fin');
+    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo, invitar, tiempos }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }
