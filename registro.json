@@ -2223,7 +2223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
    "SPORT|136526095": 1794901531000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
@@ -2436,18 +2435,6 @@
    "MARCA|https://www.marca.com/radio/2026/11/20/roberto-gomez-senala-mourinho-unico-poner-titular-vinicius.html": 1795159506000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794900600000,
-    "id": "2314",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Vivian se lesiona del músculo y entra en enfermería",
-    "motivo": "lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html",
     "medio": "Mundo Deportivo",
@@ -8495,13 +8482,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4351,
+   "ok": 4352,
    "fallos": 0,
-   "ejecuciones": 3598,
+   "ejecuciones": 3599,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T07:26:12.394Z"
+   "ultima": "2026-11-20T07:31:13.393Z"
   }
  },
  "ptsDirecto": {},
@@ -8518,15 +8505,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:26:26.096Z"
+   "ultimaBien": "2026-11-20T07:31:23.977Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:26:26.096Z"
+   "ultimaBien": "2026-11-20T07:31:23.977Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:26:26.096Z"
+   "ultimaBien": "2026-11-20T07:31:23.977Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8534,11 +8521,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:26:26.096Z"
+   "ultimaBien": "2026-11-20T07:31:23.977Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:26:26.096Z"
+   "ultimaBien": "2026-11-20T07:31:23.977Z"
   }
  },
  "avisos": [
