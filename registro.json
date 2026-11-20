@@ -1405,6 +1405,20 @@
     "extra": 0,
     "jugador": "Roberto Fernández"
    }
+  },
+  {
+   "clave": "final|129",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2123909589699576247",
+   "t": "2026-11-20T22:41:21.583Z"
+  },
+  {
+   "clave": "mvp|129",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2123909657517322288",
+   "t": "2026-11-20T22:41:37.725Z"
   }
  ],
  "estados": {
@@ -4224,16 +4238,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 66,
-   "redactar": 42,
-   "revisar": 26,
+   "redactar": 48,
+   "revisar": 29,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 725398,
-  "salida": 41145,
-  "cacheLee": 49351,
+  "entrada": 805386,
+  "salida": 42515,
+  "cacheLee": 58060,
   "cacheEscribe": 26127,
-  "dolares": 1.40194,
+  "dolares": 1.576486,
   "reservado": 0
  },
  "recientes": {
@@ -4261,10 +4275,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-08T15:16:39.030Z",
-    "texto": "🏁 El Betis gana 0-2 al Elche 🌴 en el Martínez Valero con dos goles en los últimos diez minutos: Riquelme en el 81' y Bartra en el 89'.\n\nBartra cierra con 17 puntos, más del triple de lo que suele dar, y es el que más suma de los dos equipos. Ceballos pone 11, más del doble de su media, y Valles otros 11: gran noche para quien tenga bético.\n\nEn el Elche, Revivo se lleva 10 puntos aunque pierde, y R.P. Bigas se queda en -1, lo peor del partido."
-   },
-   {
     "t": "2026-11-08T17:51:31.938Z",
     "texto": "🏁 La Real Sociedad gana 1-0 al Rayo ⚡ en Anoeta y lo decide Oskarsson en el 67'.\n\nOskarsson se va a 13 puntos, más del triple de su media, y Barrenetxea llega a los mismos con más del doble de lo que suele dar. Remiro suma 12 bajo palos y Sucic 9: noche redonda para quien tenga realista.\n\nDel Rayo se salva Camello, que puntúa 6 aunque pierde, justo en su media."
    },
@@ -4279,13 +4289,13 @@
    {
     "t": "2026-11-08T22:37:22.093Z",
     "texto": "🏁 Atlético 1-2 Barça. Remontada del Barcelona con gol de Fermín en el 66'. El goleador es el mejor fantasy: 17 puntos tras él, Lamine Yamal con 11 y Julián Alvarez con 8.\n\nGiuliano marcó y suma 8 aunque el Atlético pierde.\n\n✅ Premio para quien confió en Fermín"
+   },
+   {
+    "t": "2026-11-20T22:41:21.585Z",
+    "texto": "🏁 El Espanyol gana 0-1 en San Mamés con un único gol, el de Roberto en el 66'.\n\nFortuño es el que más puntos ha sacado de los dos equipos: 14, y ya van tres jornadas seguidas con 8 o más. Roberto llega a 11, más del doble de lo que suele dar, así que noche gorda para quien tenga espanyolistas.\n\nEn el Athletic 🦁 se salva Nico Williams con 10 pese a perder, muy por encima de su media."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-08T15:16:48.038Z",
-    "texto": "⭐ Bartra se lleva el partido en el Martínez Valero: 17 puntos para el central del Betis, más del triple de su media de 5,6.\n\nSu gol en el 89' puso el 0-2 en el Elche 🌴, después de que Riquelme abriera el marcador en el 81'. Cuesta 21,7 M y el Betis visita al Sevilla en la jornada 13: si lo tienes, no se vende."
-   },
    {
     "t": "2026-11-08T17:46:51.211Z",
     "texto": "⭐ Barrenetxea y Oskarsson comparten el MVP del 1-0 de la Real Sociedad al Rayo ⚡: 13 puntos para cada uno.\n\nOskarsson, delantero, marcó el único gol en el 67' y se va a más del triple de su media. Vale 3,8 M. Barrenetxea, centrocampista, hace más del doble de su media de 4,8 y cuesta 26,7 M.\n\nLos dos visitan al Racing ⚓ en la jornada 13: si tienes a uno u otro, ahí siguen."
@@ -4301,6 +4311,10 @@
    {
     "t": "2026-11-08T22:37:27.685Z",
     "texto": "⭐ Fermín brilla como MVP fantasy en el Atleti 1-2 Barça y se va a 17 puntos. El centrocampista del Barça suma 111 puntos esta temporada con una media de 9,3.\n\n💸 Vale 112,8 M en el mercado y vuelve a jugar en la jornada 13, contra el Villarreal"
+   },
+   {
+    "t": "2026-11-20T22:41:37.728Z",
+    "texto": "⭐ Fortuño es el mejor del Athletic 🦁-Espanyol, que acabó 0-1 en San Mamés: 14 puntos para el portero del Espanyol, más del doble de su media.\n\nEl gol de Roberto en el 66' fue el único del partido y Fortuño mantuvo la portería a cero. Vale 4,2 M y en la jornada 14 el Espanyol recibe al Getafe."
    }
   ],
   "mercado": [
@@ -4744,16 +4758,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "final|129": {
-   "n": 2,
-   "t": "2026-11-20T22:16:40.923Z",
-   "ultima": "2026-11-20T22:36:31.827Z"
-  },
-  "mvp|129": {
-   "n": 2,
-   "t": "2026-11-20T22:16:53.476Z",
-   "ultima": "2026-11-20T22:36:48.222Z"
   }
  },
  "rasgos": {
@@ -8618,13 +8622,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4559,
+   "ok": 4560,
    "fallos": 0,
-   "ejecuciones": 3782,
+   "ejecuciones": 3783,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T22:36:10.761Z"
+   "ultima": "2026-11-20T22:41:10.799Z"
   }
  },
  "ptsDirecto": {
@@ -8654,15 +8658,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:36:52.645Z"
+   "ultimaBien": "2026-11-20T22:41:40.876Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:36:52.645Z"
+   "ultimaBien": "2026-11-20T22:41:40.876Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:36:52.645Z"
+   "ultimaBien": "2026-11-20T22:41:40.876Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8670,7 +8674,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:36:52.645Z"
+   "ultimaBien": "2026-11-20T22:41:40.876Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
