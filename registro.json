@@ -4209,32 +4209,31 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
+   "SPORT|136684390": 1795197900000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136684390": 1795210272336
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 64,
+   "clasificar": 65,
    "redactar": 26,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 504686,
-  "salida": 36112,
+  "entrada": 506439,
+  "salida": 36198,
   "cacheLee": 34836,
   "cacheEscribe": 20321,
-  "dolares": 0.903038,
+  "dolares": 0.903256,
   "reservado": 0
  },
  "recientes": {
@@ -8602,13 +8601,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4547,
+   "ok": 4549,
    "fallos": 0,
-   "ejecuciones": 3772,
+   "ejecuciones": 3773,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T21:46:16.231Z"
+   "ultima": "2026-11-20T21:51:17.932Z"
   }
  },
  "ptsDirecto": {
@@ -8638,27 +8637,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:46:21.632Z"
+   "ultimaBien": "2026-11-20T21:51:25.151Z"
   }
  },
  "avisos": [
