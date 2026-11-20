@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
    "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
@@ -2482,21 +2481,14 @@
    "SPORT|136657525": 1795174239000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000,
+   "AS|https://as.com/futbol/primera/olmo-importa-cuando-juega-y-cuando-no-f202611-n/": 1795178474000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253394/convocatoria-real-madrid-celta.html": 1795178280000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794920367000,
-    "id": "3265",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
     "medio": "AS",
@@ -3322,11 +3314,52 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253394/convocatoria-real-madrid-celta.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795178280000,
+    "id": "2430",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Valverde regresa a la lista ante el Celta",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     21,
+     30
+    ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795178965000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cucho regresa a la convocatoria del Betis tras su lesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795178795000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos se queda fuera del derbi ante el Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     15
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -4218,22 +4251,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795179671110
+  }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 367232,
-  "salida": 22477,
+  "entrada": 370025,
+  "salida": 24786,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.729438,
+  "dolares": 0.730872,
   "reservado": 0
  },
  "recientes": {
@@ -8578,13 +8613,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4418,
+   "ok": 4419,
    "fallos": 0,
-   "ejecuciones": 3665,
+   "ejecuciones": 3666,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:56:10.831Z"
+   "ultima": "2026-11-20T13:01:11.110Z"
   }
  },
  "ptsDirecto": {},
@@ -8601,15 +8636,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:56:21.237Z"
+   "ultimaBien": "2026-11-20T13:01:32.017Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:56:21.237Z"
+   "ultimaBien": "2026-11-20T13:01:32.017Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:56:21.237Z"
+   "ultimaBien": "2026-11-20T13:01:32.017Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8617,11 +8652,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:56:21.237Z"
+   "ultimaBien": "2026-11-20T13:01:32.017Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:56:21.237Z"
+   "ultimaBien": "2026-11-20T13:01:32.017Z"
   }
  },
  "avisos": [
