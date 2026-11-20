@@ -2223,7 +2223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
@@ -8495,13 +8494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4368,
+   "ok": 4369,
    "fallos": 0,
-   "ejecuciones": 3615,
+   "ejecuciones": 3616,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T08:51:15.862Z"
+   "ultima": "2026-11-20T08:56:21.515Z"
   }
  },
  "ptsDirecto": {},
@@ -8518,15 +8517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:51:29.032Z"
+   "ultimaBien": "2026-11-20T08:56:33.970Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:51:29.032Z"
+   "ultimaBien": "2026-11-20T08:56:33.970Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:51:29.032Z"
+   "ultimaBien": "2026-11-20T08:56:33.970Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8534,11 +8533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:51:29.032Z"
+   "ultimaBien": "2026-11-20T08:56:33.970Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:51:29.032Z"
+   "ultimaBien": "2026-11-20T08:56:33.970Z"
   }
  },
  "avisos": [
