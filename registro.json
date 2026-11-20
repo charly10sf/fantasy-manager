@@ -1640,7 +1640,7 @@
   "2585": "out_of_league",
   "2586": "out_of_league",
   "2587": "ok",
-  "2588": "doubtful",
+  "2588": "ok",
   "2596": "ok",
   "2597": "out_of_league",
   "2600": "ok",
@@ -2488,7 +2488,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "AS|https://as.com/futbol/primera/jose-alberto-tranquiliza-con-zabiri-y-pierde-a-maguette-entre-4-y-6-semanas-f202611-n/": 1795179575000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000,
+   "AS|https://as.com/futbol/cubarsi-se-sube-al-carro-f202611-n/": 1795180432000
   },
   "hechos": [
    {
@@ -3349,7 +3350,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -4249,17 +4250,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 376283,
-  "salida": 26505,
+  "entrada": 378176,
+  "salida": 27061,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.732358,
+  "dolares": 0.732825,
   "reservado": 0
  },
  "recientes": {
@@ -8604,13 +8605,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4424,
+   "ok": 4425,
    "fallos": 0,
-   "ejecuciones": 3671,
+   "ejecuciones": 3672,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T13:26:15.015Z"
+   "ultima": "2026-11-20T13:31:13.318Z"
   }
  },
  "ptsDirecto": {},
@@ -8627,15 +8628,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:26:23.893Z"
+   "ultimaBien": "2026-11-20T13:31:28.065Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:26:23.893Z"
+   "ultimaBien": "2026-11-20T13:31:28.065Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:26:23.893Z"
+   "ultimaBien": "2026-11-20T13:31:28.065Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8643,11 +8644,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:26:23.893Z"
+   "ultimaBien": "2026-11-20T13:31:28.065Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:26:23.893Z"
+   "ultimaBien": "2026-11-20T13:31:28.065Z"
   }
  },
  "avisos": [
