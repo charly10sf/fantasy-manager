@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000,
@@ -2493,21 +2492,6 @@
    "SPORT|136670471": 1795181611000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794927512000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos supera las pruebas y podría jugar el derbi",
-    "motivo": "molestias en un muslo",
-    "plazo": "",
-    "nums": [
-     18,
-     30
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261117/1004252259/frutos-vuelta-vallecas-recibir-valencia.html",
     "medio": "Mundo Deportivo",
@@ -8619,13 +8603,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4442,
+   "ok": 4443,
    "fallos": 0,
-   "ejecuciones": 3689,
+   "ejecuciones": 3690,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T14:56:24.322Z"
+   "ultima": "2026-11-20T15:01:11.675Z"
   }
  },
  "ptsDirecto": {},
@@ -8642,15 +8626,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:56:38.769Z"
+   "ultimaBien": "2026-11-20T15:01:20.232Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:56:38.769Z"
+   "ultimaBien": "2026-11-20T15:01:20.232Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:56:38.769Z"
+   "ultimaBien": "2026-11-20T15:01:20.232Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8658,11 +8642,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:56:38.769Z"
+   "ultimaBien": "2026-11-20T15:01:20.232Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:56:38.769Z"
+   "ultimaBien": "2026-11-20T15:01:20.232Z"
   }
  },
  "avisos": [
