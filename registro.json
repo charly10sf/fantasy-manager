@@ -2262,14 +2262,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2217",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795177873183
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
@@ -2478,7 +2471,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html": 1795177015000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html": 1795176766000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253372/sonia-bermudez-avisa-sobre-revolucionaria-convocatoria-no-puntual.html": 1795176363000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253372/sonia-bermudez-avisa-sobre-revolucionaria-convocatoria-no-puntual.html": 1795176363000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
+   "SPORT|136657525": 1795174239000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000
   },
   "hechos": [
    {
@@ -3298,7 +3294,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -4190,23 +4186,24 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795178172833
   }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 19,
    "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 334558,
-  "salida": 20783,
+  "entrada": 336957,
+  "salida": 21057,
   "cacheLee": 31933,
   "cacheEscribe": 14515,
-  "dolares": 0.664503,
+  "dolares": 0.66488,
   "reservado": 0
  },
  "recientes": {
@@ -8551,13 +8548,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4413,
+   "ok": 4414,
    "fallos": 0,
-   "ejecuciones": 3660,
+   "ejecuciones": 3661,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:31:13.183Z"
+   "ultima": "2026-11-20T12:36:12.833Z"
   }
  },
  "ptsDirecto": {},
@@ -8574,15 +8571,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:32:02.411Z"
+   "ultimaBien": "2026-11-20T12:36:24.698Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:32:02.411Z"
+   "ultimaBien": "2026-11-20T12:36:24.698Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:32:02.411Z"
+   "ultimaBien": "2026-11-20T12:36:24.698Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8590,11 +8587,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:32:02.411Z"
+   "ultimaBien": "2026-11-20T12:36:24.698Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:32:02.411Z"
+   "ultimaBien": "2026-11-20T12:36:24.698Z"
   }
  },
  "avisos": [
