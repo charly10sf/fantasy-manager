@@ -2223,7 +2223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html": 1794908010000,
@@ -2436,22 +2435,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794906894000,
-    "id": "2338",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aimar Oroz vuelve a contar con Osasuna este fin de semana",
-    "motivo": "lesión superada",
-    "plazo": "",
-    "nums": [
-     2,
-     732,
-     2019
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004251997/lio-portugal-bernardo-silva.html",
     "medio": "Mundo Deportivo",
@@ -8495,13 +8478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4372,
+   "ok": 4373,
    "fallos": 0,
-   "ejecuciones": 3619,
+   "ejecuciones": 3620,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T09:11:11.803Z"
+   "ultima": "2026-11-20T09:16:10.734Z"
   }
  },
  "ptsDirecto": {},
@@ -8518,15 +8501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:11:22.693Z"
+   "ultimaBien": "2026-11-20T09:16:18.295Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:11:22.693Z"
+   "ultimaBien": "2026-11-20T09:16:18.295Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:11:22.693Z"
+   "ultimaBien": "2026-11-20T09:16:18.295Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8534,11 +8517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:11:22.693Z"
+   "ultimaBien": "2026-11-20T09:16:18.295Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:11:22.693Z"
+   "ultimaBien": "2026-11-20T09:16:18.295Z"
   }
  },
  "avisos": [
