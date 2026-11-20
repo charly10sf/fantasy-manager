@@ -2243,7 +2243,6 @@
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
@@ -2443,21 +2442,10 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/",
-    "medio": "AS",
-    "t": 1794913294000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos no se entrena con el grupo y su presencia ante el Sevilla está en duda",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html",
     "medio": "Mundo Deportivo",
@@ -3233,7 +3221,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -4129,17 +4117,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 5,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 116984,
-  "salida": 10004,
+  "entrada": 118881,
+  "salida": 10123,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.198662,
+  "dolares": 0.198911,
   "reservado": 0
  },
  "recientes": {
@@ -8478,13 +8466,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4394,
+   "ok": 4395,
    "fallos": 0,
-   "ejecuciones": 3641,
+   "ejecuciones": 3642,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:01:12.721Z"
+   "ultima": "2026-11-20T11:06:26.294Z"
   }
  },
  "ptsDirecto": {},
@@ -8501,15 +8489,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:01:32.887Z"
+   "ultimaBien": "2026-11-20T11:06:39.530Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:01:32.887Z"
+   "ultimaBien": "2026-11-20T11:06:39.530Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:01:32.887Z"
+   "ultimaBien": "2026-11-20T11:06:39.530Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8517,11 +8505,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:01:32.887Z"
+   "ultimaBien": "2026-11-20T11:06:39.530Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:01:32.887Z"
+   "ultimaBien": "2026-11-20T11:06:39.530Z"
   }
  },
  "avisos": [
