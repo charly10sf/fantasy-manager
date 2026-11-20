@@ -2486,7 +2486,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253394/convocatoria-real-madrid-celta.html": 1795178280000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
+   "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000
   },
   "hechos": [
    {
@@ -3359,7 +3360,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -4252,23 +4253,24 @@
    "fallos": 0
   },
   "espera": {
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795179671110
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795179671110,
+   "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179975197
   }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 370025,
-  "salida": 24786,
+  "entrada": 372052,
+  "salida": 24878,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.730872,
+  "dolares": 0.731121,
   "reservado": 0
  },
  "recientes": {
@@ -8613,13 +8615,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4419,
+   "ok": 4420,
    "fallos": 0,
-   "ejecuciones": 3666,
+   "ejecuciones": 3667,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T13:01:11.110Z"
+   "ultima": "2026-11-20T13:06:15.197Z"
   }
  },
  "ptsDirecto": {},
@@ -8636,15 +8638,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:01:32.017Z"
+   "ultimaBien": "2026-11-20T13:06:30.352Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:01:32.017Z"
+   "ultimaBien": "2026-11-20T13:06:30.352Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:01:32.017Z"
+   "ultimaBien": "2026-11-20T13:06:30.352Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8652,11 +8654,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:01:32.017Z"
+   "ultimaBien": "2026-11-20T13:06:30.352Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:01:32.017Z"
+   "ultimaBien": "2026-11-20T13:06:30.352Z"
   }
  },
  "avisos": [
