@@ -1817,6 +1817,7 @@ body.limitado .tostada { z-index: 120; }
    un nombre de una sola palabra que no quepa ni así acaba en puntos suspensivos (los nombres no se parten) */
 .rival-sub { margin: 0 0 var(--e3); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
 .rival-sub .amenaza { flex: none; }
+.peligro-por { margin: calc(-1 * var(--e2)) 0 var(--e3); font: 500 var(--t-mini)/1.35 'Barlow'; color: var(--apagado); }
 .rival-tiles .eq2-t small { font: 600 var(--t-mini)/1.2 'Barlow'; }
 .rival-tiles .rival-bloq b { color: var(--texto2); }
 .rival-tiles .rival-bloq b .ic { width: var(--t-cifra); height: var(--t-cifra); }

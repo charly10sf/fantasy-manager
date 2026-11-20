@@ -21,6 +21,7 @@ import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.j
 import { hayImportantes, ultimaImportante } from './presentacion.js';
 import { estadoLimite, novedadesPara, importantesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
+import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
@@ -610,6 +611,7 @@ export function fichaRival(S, tid) {
   ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2></div>
   <p class="t2 rival-sub"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></p>
+  <p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid) }))}</p>
   ${apodoRival(S, e)}
   <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;

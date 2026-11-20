@@ -2097,6 +2097,40 @@ export function analizar(D, H, c, extra = {}) {
     for (const f of fichas) { const t = M.tend(f.pid); if (t && t[k] != null) { n++; suma += num(t[k]); } }
     return n ? suma : null;
   };
+  // (20 nov, Carlos: «todos los rivales me pone peligro bajo») el peligro de un rival sale de dos preguntas: qué PUEDE
+  // hacerte ahora (sus cuentas frente a tus cláusulas que se pagan en esta liga) y qué SUELE hacer (sus clausulazos de toda
+  // la temporada, más los hechos a ti, y lo que se mueve esta semana). Antes solo contaba lo de 7-14 días y cualquier
+  // cláusula a la que le llegara el dinero, aunque a ese precio no la pague nadie
+  const czDe = {};
+  for (const a of AH.lista) {
+    if (a.clase !== 'clausula' || !a.t) continue;
+    const q = tidDe(a.quienId, a.quien);
+    if (!q || q === yoTid) continue;
+    const v = a.pid ? valorEn(a.pid, a.t - 3 * HORA) : null, imp = Math.abs(num(a.importe));
+    (czDe[q] ||= []).push({ t: a.t, pid: a.pid, aMi: !!yoTid && tidDe(a.otroId, a.otro) === yoTid, s: v && imp ? imp / v - 1 : null });
+  }
+  const yoClasif = D.clasif.find((e) => e.teamId === yoTid) || null;
+  const MIN_PUESTO = { 1: 1, 2: 3, 3: 3, 4: 1 };
+  const CZp = M.clausulazos;
+  /** cuánto apetece una cláusula tuya: hasta la mediana de lo que se paga en tu liga, 1; hasta el p90 (o lo más que ha
+   * pagado ese rival), 0,6; 5 puntos más, 0,25; por encima, nada. Sin 3 clausulazos en la liga, el 30 % de siempre */
+  const apetito = (x, suyoMax) => {
+    const s = x.ratio - 1;
+    if (CZp && CZp.n >= 3) { const p90 = Math.max(CZp.p90, suyoMax != null ? suyoMax : -1); return s <= CZp.med ? 1 : s <= p90 ? 0.6 : s <= p90 + 0.05 ? 0.25 : 0; }
+    return clamp(1 - s / 0.3, 0, 1);
+  };
+  // cuándo se puede pagar: abierta, en menos de un día, en 3 o en 7. En veda, `reabre` la cuenta como abierta si se abre
+  // al acabar la veda (para decir cómo queda al reabrirse)
+  const cuandoPaga = (x, reabre) => {
+    if (x.abierta) return 1;
+    if (reabre && M.vedaAhora && x.veda && x.protegidoHasta <= M.vedaAhora.fin + MIN) return 1;
+    const h = (x.abreEn || 0) / HORA;
+    return h < 24 ? 0.7 : h < 72 ? 0.4 : h < 168 ? 0.2 : 0;
+  };
+  // lo que te duele perderlo: los puntos que pierde tu once sin él (3 o más, todo)
+  const duele = (x) => (x.importa ? clamp(0.4 + 0.6 * num(x.pierde) / 3, 0.4, 1) : num(x.pierde) < 0.3 ? 0.15 : 0.35);
+  // si le llega: con el dinero exacto, sí o no; estimado, de 0 a 1 a lo largo del margen (sin saltos de un día a otro)
+  const llega = (c, cl) => (!c ? 0 : c.exacto ? (c.v >= cl ? 1 : 0) : clamp((c.v + c.margen - cl) / (2 * Math.max(c.margen, 1e5)), 0, 1));
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
     const serie = (H.eq && H.eq[e.teamId]) || [];
     const hace7 = serie.filter(([d]) => d <= otroDia(diaDe(ahora), -7)).pop();
@@ -2115,7 +2149,69 @@ export function analizar(D, H, c, extra = {}) {
     const dinero = M.dineroDe(e.teamId), cap = M.capacidad(e.teamId);
     const leLlegan = M.mias.filter((x) => x.clausula && (x.abierta || x.abreEn < 3 * DIA) && x.pagan && [...x.pagan.seguro, ...x.pagan.quiza].some((y) => y.tid === e.teamId));
     const leLleganYa = leLlegan.filter((x) => x.abierta);
-    const amenaza = clamp(clausulazos * 22 + contraMi * 25 + sem.filter((a) => suyo(a) && a.clase === 'compra').length * 6 + gastado / 2e6 + leLleganYa.length * 10, 0, 100);
+    const peligro = (() => {
+      const czs = czDe[e.teamId] || [];
+      const sS = czs.map((z) => z.s).filter((s) => s != null && s > -0.1 && s < 3);
+      const suyoMax = sS.length ? Math.max(...sS) : null;
+      // los puestos en los que no tiene bastantes sanos (ahí un clausulazo le arregla más)
+      const js = fichas.map((x) => x.j).filter(Boolean);
+      const falta = {};
+      for (const p of [1, 2, 3, 4]) falta[p] = js.filter((j) => j.pos === p && !MALOS.has(j.estado)).length < MIN_PUESTO[p];
+      // con 25 no puede clausular: tendría que vender antes (Carlos, 20 nov)
+      const lleno = js.length >= 25;
+      // PUEDE: cada cláusula tuya pesa apetito × cuándo × lo que te duele × si le llega; juntas, como probabilidades
+      const calc = (reabre) => {
+        let no = 1;
+        const l = [];
+        for (const x of M.mias) {
+          if (!x.clausula || x.ratio == null) continue;
+          const ap = apetito(x, suyoMax), cu = cuandoPaga(x, reabre);
+          if (!ap || !cu) continue;
+          const w = Math.min(1, ap * (falta[x.j.pos] ? 1.25 : 1)) * cu * duele(x) * llega(cap, x.clausula) * (lleno ? 0.3 : 1);
+          if (w < 0.02) continue;
+          no *= 1 - 0.6 * w;
+          l.push({ pid: x.pid, nombre: x.j.nombre, w, abierta: x.abierta, riesgo: x.riesgo });
+        }
+        return { puede: 100 * (1 - no), l: l.sort((a, b) => b.w - a.w) };
+      };
+      // SUELE: sus clausulazos de toda la temporada (uno de hace un mes pesa 0,37; los hechos a ti, el doble) y lo que se
+      // mueve esta semana (poco: fichar en el mercado no es clausular)
+      let hist = 0;
+      for (const z of czs) hist += Math.exp(-(ahora - z.t) / (30 * DIA)) * (z.aMi ? 2 : 1);
+      const compras7 = sem.filter((a) => suyo(a) && a.clase === 'compra').length;
+      const act = Math.min(1, compras7 * 0.15 + gastado / 40e6);
+      const suele = 100 * (1 - Math.exp(-(0.25 + 0.8 * hist + 0.4 * act)));
+      // el que clausula mucho no baja de medio aunque ahora no pueda; sin poder, tampoco sube a alto
+      const suelo = Math.min(50, 50 * (1 - Math.exp(-0.8 * hist)));
+      // quien te pelea el puesto gana más quitándote a un titular
+      const cerca = yoClasif ? clamp(1 - Math.abs(num(e.puntos) - num(yoClasif.puntos)) / Math.max(60, 0.15 * num(yoClasif.puntos)), 0, 1) : 0;
+      const nivelDe = (p) => Math.min(100, Math.max(p * (0.6 + 0.4 * suele / 100) * (1 + 0.2 * cerca), suelo));
+      const ah = calc(false);
+      let n = nivelDe(ah.puede);
+      // lo mismo que dice el riesgo de tus cláusulas: si uno tuyo está en riesgo alto y este rival lo paga, no es «bajo»
+      const enAlto = M.mias.filter((x) => x.riesgo === 'alto' && x.pagan && [...x.pagan.seguro, ...x.pagan.quiza].some((y) => y.tid === e.teamId));
+      if (enAlto.length) n = Math.max(n, 30);
+      // en la veda nadie clausula: un escalón menos, y cómo queda al reabrirse
+      let veda = null;
+      if (M.vedaAhora) {
+        const re = calc(true);
+        let nr = Math.max(nivelDe(re.puede), enAlto.length ? 30 : 0);
+        nr = Math.max(nr, n);
+        veda = { hasta: M.vedaAhora.fin, nivel: nr >= 60 ? 'alta' : nr >= 30 ? 'media' : 'baja', l: re.l };
+        n = nr >= 60 ? Math.min(nr, 59) : nr >= 30 ? Math.min(nr, 29) : nr;
+        if (enAlto.length) n = Math.max(n, 30);
+      }
+      const ult = czs.filter((z) => z.aMi).sort((a, b) => b.t - a.t)[0] || null;
+      return {
+        n, puede: Math.round(ah.puede), suele: Math.round(suele), hist: Math.round(hist * 100) / 100, cerca: Math.round(cerca * 100) / 100,
+        llegan: ah.l, czTotal: czs.length, czAMi: czs.filter((z) => z.aMi).length, ultAMi: ult ? { pid: ult.pid, nombre: ult.pid && D.maestro[ult.pid] ? D.maestro[ult.pid].nombre : null, t: ult.t } : null,
+        lleno, veda, enAlto: enAlto.map((x) => x.pid),
+        // tiene dinero (se sabe) pero tus cláusulas que se abren pronto están por encima de lo que se paga aquí
+        caras: !!cap && !ah.l.some((x) => x.w >= 0.25) && M.mias.some((x) => x.clausula && (x.abierta || x.abreEn < 3 * DIA) && llega(cap, x.clausula) > 0.5),
+        sinDinero: !!cap && !ah.l.some((x) => x.w >= 0.25) && !M.mias.some((x) => x.clausula && (x.abierta || x.abreEn < 3 * DIA) && llega(cap, x.clausula) > 0.5),
+      };
+    })();
+    const amenaza = peligro.n;
     const paga = M.pujasLiga && M.pujasLiga.porEquipo ? M.pujasLiga.porEquipo[e.teamId] || null : null;
     return {
       e, serie, fichas, dinero, cap, leLlegan, leLleganYa, paga, flujo: flujos[e.teamId] || null,
@@ -2127,7 +2223,7 @@ export function analizar(D, H, c, extra = {}) {
       movs: sem.length, gastado, ingresado, clausulazos, contraMi,
       abiertas: fichas.filter((x) => x.abierta && x.clausula).length,
       meLlegan: fichas.filter((x) => x.abierta && x.meLlega).length,
-      amenaza: Math.round(amenaza), nivel: amenaza >= 60 ? 'alta' : amenaza >= 30 ? 'media' : 'baja',
+      amenaza: Math.round(amenaza), nivel: amenaza >= 60 ? 'alta' : amenaza >= 30 ? 'media' : 'baja', peligro,
       ultima: acts[0] || null,
       cambios: M.cambios.filter((m) => m.teamId === e.teamId),
     };
@@ -2921,3 +3017,40 @@ export function mejorOnce(lista, formaciones, pp) {
   return mejor || { formacion: null, nombre: '', lineas: [[], [], [], []], entrenador: null, total: 0, huecos: 11, nota: 0 };
 }
 
+
+/**
+ * el porqué del peligro de un rival, en una línea corta (ficha del rival y la IA). Sin cifras de su dinero: vale aunque
+ * tengas cerrado el dinero de ese rival. Con «quién paga» cerrado (`quien: false`) no dice qué cláusulas tuyas le llegan
+ */
+export function motivoPeligro(r, { quien = true } = {}) {
+  const p = r && r.peligro;
+  if (!p) return '';
+  const NIV = { alta: 'alto', media: 'medio', baja: 'bajo' };
+  const partes = [];
+  const llegaTxt = (l) => {
+    const de = l.filter((x) => x.w >= 0.25);
+    if (!quien || !de.length) return null;
+    return de.length === 1 ? `le llega la cláusula de ${de[0].nombre}` : `le llegan ${de.length} cláusulas tuyas (${de.slice(0, 2).map((x) => x.nombre).join(', ')}${de.length > 2 ? '…' : ''})`;
+  };
+  const ll = llegaTxt(p.llegan);
+  if (ll) partes.push(ll);
+  if (p.czAMi >= 2) partes.push(`te ha clausulado a ${p.czAMi}`);
+  else if (p.ultAMi) partes.push(p.ultAMi.nombre ? `ya te clausuló a ${p.ultAMi.nombre}` : 'ya te ha clausulado a uno');
+  else if (p.czTotal >= 2) partes.push(`ha clausulado ${p.czTotal} esta temporada`);
+  else if (p.czTotal === 1 && p.hist >= 0.3) partes.push('ya ha clausulado a uno hace poco');
+  if (p.cerca >= 0.5) partes.push('te pelea el puesto');
+  if (p.lleno) partes.push('con 25 jugadores no puede clausular sin vender antes');
+  if (!ll && !p.lleno && quien) {
+    if (p.caras) partes.push('las cláusulas tuyas que puede pagar están caras para esta liga');
+    else if (p.sinDinero) partes.push('no le llega para tus cláusulas que se abren pronto');
+  }
+  // con «quién paga» cerrado, lo de tus cláusulas sin decir si le llega el dinero
+  if (!quien && p.llegan.some((x) => x.w >= 0.25)) partes.unshift('tienes cláusulas a precio de esta liga abiertas o a punto');
+  let t = partes.slice(0, 2).join(' y ');
+  if (!t) t = !quien ? (p.czTotal ? 'no destaca por nada ahora mismo' : 'no ha clausulado en toda la temporada') : p.czTotal ? 'ahora no tiene a tiro ninguna cláusula tuya' : 'no clausula y ahora no tiene a tiro ninguna cláusula tuya';
+  if (p.veda) {
+    const lr = llegaTxt(p.veda.l);
+    return `Cláusulas cerradas hasta ${cuando(p.veda.hasta)}: al reabrirse, peligro ${NIV[p.veda.nivel]}${lr && p.veda.nivel !== 'baja' ? `: ${lr}` : ''}.`;
+  }
+  return `${t.charAt(0).toUpperCase()}${t.slice(1)}.`;
+}

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8i';
+export const VERSION = '0.8j';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,16 @@ export const VERSION = '0.8i';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (20 nov, Carlos: «todos los rivales me pone peligro bajo») El peligro de cada rival sale de lo que puede hacerte
+    // (su dinero frente a tus cláusulas que se pagan en tu liga, abiertas o a punto, y lo que te duele perderlas) y de lo
+    // que suele hacer (sus clausulazos de toda la temporada, los hechos a ti el doble), con el porqué en la ficha. `menor`
+    // y sin `todos`: a los demás no les sale (Carlos). Detalle en ESTADO.md. La hora, al publicar
+    v: '0.8j', f: '2026-11-20', h: '14:18', t: 'El peligro de cada rival, con su porqué',
+    cosas: [
+      { tipo: 'mejora', menor: true, d: 'peligro', t: 'El peligro de cada rival, con su porqué', x: 'El peligro de un rival ya no depende solo de lo que ha movido esta semana. Cuenta si le llega el dinero para tus cláusulas que se pagan en tu liga (las abiertas y las que se abren pronto) y cuánto te dolería perder a esos jugadores, sus clausulazos de toda la temporada (los que te ha hecho a ti, el doble) y si te pelea el puesto. Una cláusula muy por encima de lo que se paga en tu liga no cuenta. En la ficha del rival sale el porqué en una línea, y en las 24 horas antes de la jornada, cuando nadie puede clausular, baja un escalón y te dice cómo queda al reabrirse.' },
+    ],
+  },
   {
     // (20 nov, Carlos: «el de apertura, una vez al día nada más abrir la app; los intersticiales, uno cada 7 minutos a
     // contar desde la primera apertura del día, 5 al día como mucho») El de apertura se pedía con la liga ya cargada y

@@ -21,7 +21,9 @@ const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a',
 const VERBO_TU = { compra: 'fichaste a', clausula: 'clausulaste a', venta: 'vendiste a', blindaje: 'blindaste a', premio: 'cobraste por la jornada', alineacion: 'no puntuaste por alineación incorrecta', entra: 'entraste en la liga', otro: 'moviste a' };
 export const PELIGRO = { alta: 'alto', media: 'medio', baja: 'bajo' };
 /** qué es el peligro de un rival (en el title de su etiqueta) */
-export const PELIGRO_TXT = 'Lo peligroso que es para ti: cuenta sus clausulazos de los últimos 15 días (más los que te ha hecho a ti), lo que ha fichado y gastado esta semana y cuántas cláusulas tuyas le llegan ya.';
+export const PELIGRO_TXT = 'Lo que te puede hacer ahora y lo que suele hacer: si le llega el dinero para tus cláusulas que se pagan en esta liga (abiertas o que se abren pronto) y te dolería perder, sus clausulazos de toda la temporada (los hechos a ti, el doble) y si te pelea el puesto. En la veda baja un escalón.';
+/** cuántas cláusulas tuyas abiertas le llegan y se pagan en tu liga (las de a precio de locos no cuentan, como en el peligro) */
+const quitaYa = (r) => (r.peligro ? r.peligro.llegan.filter((x) => x.abierta && x.w >= 0.25).length : (r.leLleganYa || []).length);
 /** la jornada de los puntos de jornada que da LaLiga en la clasificación: la que se juega o la última jugada */
 const jornadaPts = (M) => (M.enJuego && M.enJuego.n) || (M.ultimaJornada && M.ultimaJornada.n) || null;
 const ptsJornadaTxt = (M, e) => (num(e.puntosJornada) > 0 ? (jornadaPts(M) ? `${e.puntosJornada} en la J${jornadaPts(M)}` : `${e.puntosJornada} en la última`) : '');
@@ -1203,7 +1205,7 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>${caraManager(e)}
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} en&nbsp;7&nbsp;días</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">${ptsJornadaTxt(M, e) || 'pts'}</div>`}</div></button>`;
     }).join('');
