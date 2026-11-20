@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252268/pepe-mel-abandona-uci-pasa-planta.html": 1794936518000,
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
@@ -2484,7 +2483,9 @@
    "SPORT|136676022": 1795189674000,
    "SPORT|136668682": 1795190209000,
    "SPORT|136676862": 1795190919000,
-   "SPORT|136676667": 1795190614000
+   "SPORT|136676667": 1795190614000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html": 1795195312000,
+   "SPORT|136677426": 1795191686000
   },
   "hechos": [
    {
@@ -3320,11 +3321,27 @@
     "motivo": "control de cargas",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795195312000,
+    "id": "3077",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Edu Expósito no entra en la convocatoria del Espanyol",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     24,
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -4223,17 +4240,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 406531,
-  "salida": 31167,
+  "entrada": 408793,
+  "salida": 31365,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.737714,
+  "dolares": 0.738039,
   "reservado": 0
  },
  "recientes": {
@@ -8578,13 +8595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4472,
+   "ok": 4473,
    "fallos": 0,
-   "ejecuciones": 3719,
+   "ejecuciones": 3720,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:26:11.722Z"
+   "ultima": "2026-11-20T17:31:14.122Z"
   }
  },
  "ptsDirecto": {},
@@ -8601,15 +8618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:26:21.197Z"
+   "ultimaBien": "2026-11-20T17:31:28.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:26:21.197Z"
+   "ultimaBien": "2026-11-20T17:31:28.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:26:21.197Z"
+   "ultimaBien": "2026-11-20T17:31:28.832Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8617,11 +8634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:26:21.197Z"
+   "ultimaBien": "2026-11-20T17:31:28.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:26:21.197Z"
+   "ultimaBien": "2026-11-20T17:31:28.832Z"
   }
  },
  "avisos": [
