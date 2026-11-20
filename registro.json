@@ -2295,7 +2295,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/de-la-fatalidad-al-once-de-gala-en-el-derbi-f202611-n/": 1794955695000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252319/sustos-finales-ultimos-internacionales-barca.html": 1794952389000,
    "SPORT|136520259": 1794976224000,
    "SPORT|136556602": 1794976223000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261118/11686717/frenkie-de-jong-llama-puerta-asi-recuperado-confianza-flick-ganarse-sitio-barca.html": 1794978000000,
@@ -4510,7 +4509,13 @@
    }
   ]
  },
- "puntosPartido": {},
+ "puntosPartido": {
+  "13|129": {
+   "h": "7d96480ab17a",
+   "desde": 1795211774471,
+   "fin": 1795211774471
+  }
+ },
  "iaDias": [
   {
    "dia": "2026-11-06",
@@ -4896,7 +4901,8 @@
    "6386084",
    "6386083",
    "6386067",
-   "6386080"
+   "6386080",
+   "5868132"
   ],
   "equipos": [
    "9866",
@@ -7166,7 +7172,7 @@
     "e": "Espanyol",
     "g": {
      "liga": [
-      6,
+      7,
       0,
       0,
       0,
@@ -8601,13 +8607,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4549,
+   "ok": 4551,
    "fallos": 0,
-   "ejecuciones": 3773,
+   "ejecuciones": 3774,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T21:51:17.932Z"
+   "ultima": "2026-11-20T21:56:13.759Z"
   }
  },
  "ptsDirecto": {
@@ -8637,27 +8643,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:51:25.151Z"
+   "ultimaBien": "2026-11-20T21:56:17.255Z"
   }
  },
  "avisos": [
