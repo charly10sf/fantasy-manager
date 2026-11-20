@@ -2241,26 +2241,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "1775",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795175773335
-  },
-  {
-   "id": "2355",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795175773335
-  },
-  {
-   "id": "3092",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795176078128
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
@@ -2464,7 +2445,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
    "SPORT|136657810": 1795170582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000
   },
   "hechos": [
    {
@@ -3245,7 +3227,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4141,17 +4123,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 12,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 231266,
-  "salida": 15543,
+  "entrada": 233206,
+  "salida": 15635,
   "cacheLee": 20321,
   "cacheEscribe": 11612,
-  "dolares": 0.443627,
+  "dolares": 0.443867,
   "reservado": 0
  },
  "recientes": {
@@ -8496,13 +8478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4406,
+   "ok": 4407,
    "fallos": 0,
-   "ejecuciones": 3653,
+   "ejecuciones": 3654,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:01:18.128Z"
+   "ultima": "2026-11-20T12:02:14.597Z"
   }
  },
  "ptsDirecto": {},
@@ -8519,15 +8501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:01:45.543Z"
+   "ultimaBien": "2026-11-20T12:02:21.080Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:01:45.543Z"
+   "ultimaBien": "2026-11-20T12:02:21.080Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:01:45.543Z"
+   "ultimaBien": "2026-11-20T12:02:21.080Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8535,11 +8517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:01:45.543Z"
+   "ultimaBien": "2026-11-20T12:02:21.080Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:01:45.543Z"
+   "ultimaBien": "2026-11-20T12:02:21.080Z"
   }
  },
  "avisos": [
