@@ -2279,7 +2279,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000,
    "AS|https://as.com/futbol/de-la-fatalidad-al-once-de-gala-en-el-derbi-f202611-n/": 1794955695000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252319/sustos-finales-ultimos-internacionales-barca.html": 1794952389000,
@@ -8576,13 +8575,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4535,
+   "ok": 4537,
    "fallos": 0,
-   "ejecuciones": 3766,
+   "ejecuciones": 3767,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T21:16:12.708Z"
+   "ultima": "2026-11-20T21:21:16.203Z"
   }
  },
  "ptsDirecto": {},
@@ -8599,27 +8598,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:16:19.365Z"
+   "ultimaBien": "2026-11-20T21:21:21.796Z"
   }
  },
  "avisos": [
