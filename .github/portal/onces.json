@@ -1,6 +1,6 @@
 {
  "J": 13,
- "generada": 1795132089772,
+ "generada": 1795218485273,
  "equipos": [
   {
    "id": "3",
@@ -657,10 +657,10 @@
      "p": 67
     },
     {
-     "id": "3149",
-     "nombre": "Bright Ede",
+     "id": "2965",
+     "nombre": "M. Loureiro",
      "pos": 2,
-     "p": 65
+     "p": 64
     },
     {
      "id": "2995",
@@ -699,22 +699,7 @@
      "p": 74
     }
    ],
-   "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "3149",
-      "nombre": "Bright Ede",
-      "p": 65
-     },
-     "b": {
-      "id": "2965",
-      "nombre": "M. Loureiro",
-      "p": 64
-     },
-     "pa": 50
-    }
-   ],
+   "dudas": [],
    "fuera": [],
    "vuelven": [],
    "anterior": {
@@ -724,23 +709,12 @@
    "cambios": {
     "entran": [
      {
-      "id": "3149",
-      "nombre": "Bright Ede",
-      "pos": 2
-     },
-     {
       "id": "3076",
       "nombre": "Yeremay",
       "pos": 4
      }
     ],
     "salen": [
-     {
-      "id": "2965",
-      "nombre": "M. Loureiro",
-      "pos": 2,
-      "por": null
-     },
      {
       "id": "3108",
       "nombre": "Aubameyang",
@@ -778,7 +752,7 @@
      "id": "3082",
      "nombre": "Lejeune",
      "pos": 2,
-     "p": 93
+     "p": 92
     },
     {
      "id": "3260",
@@ -790,7 +764,7 @@
      "id": "1056",
      "nombre": "Pedrosa",
      "pos": 2,
-     "p": 64
+     "p": 63
     },
     {
      "id": "2384",
@@ -898,13 +872,13 @@
      "id": "3206",
      "nombre": "Maffeo",
      "pos": 2,
-     "p": 73
+     "p": 72
     },
     {
      "id": "3120",
      "nombre": "De Haas",
      "pos": 2,
-     "p": 66
+     "p": 65
     },
     {
      "id": "3236",
@@ -937,17 +911,16 @@
      "p": 56
     },
     {
+     "id": "2588",
+     "nombre": "Danjuma",
+     "pos": 4,
+     "p": 93
+    },
+    {
      "id": "2617",
      "nombre": "Sadiq",
      "pos": 4,
      "p": 61
-    },
-    {
-     "id": "2588",
-     "nombre": "Danjuma",
-     "pos": 4,
-     "p": 56,
-     "duda": true
     }
    ],
    "dudas": [
@@ -1083,7 +1056,7 @@
      "id": "2454",
      "nombre": "Ejuke",
      "pos": 4,
-     "p": 56
+     "p": 55
     }
    ],
    "dudas": [
@@ -1092,7 +1065,7 @@
      "a": {
       "id": "2454",
       "nombre": "Ejuke",
-      "p": 56
+      "p": 55
      },
      "b": {
       "id": "2456",
@@ -1184,7 +1157,7 @@
      "id": "121",
      "nombre": "Bartra",
      "pos": 2,
-     "p": 76
+     "p": 77
     },
     {
      "id": "2429",
@@ -1229,10 +1202,10 @@
      "p": 92
     },
     {
-     "id": "2770",
-     "nombre": "Antony",
+     "id": "2217",
+     "nombre": "Cucho",
      "pos": 4,
-     "p": 70
+     "p": 73
     }
    ],
    "dudas": [
@@ -1253,19 +1226,26 @@
     {
      "linea": 4,
      "a": {
+      "id": "2217",
+      "nombre": "Cucho",
+      "p": 73
+     },
+     "b": {
       "id": "2770",
       "nombre": "Antony",
       "p": 70
      },
-     "b": {
-      "id": "3231",
-      "nombre": "Parrott",
-      "p": 53
-     },
-     "pa": 57
+     "pa": 51
     }
    ],
-   "fuera": [],
+   "fuera": [
+    {
+     "id": "3264",
+     "nombre": "Ceballos",
+     "estado": "lesionado",
+     "lesion": "Molestias musculares"
+    }
+   ],
    "vuelven": [],
    "anterior": {
     "J": 12,
@@ -1277,12 +1257,23 @@
       "id": "2548",
       "nombre": "Riquelme",
       "pos": 3
+     },
+     {
+      "id": "2217",
+      "nombre": "Cucho",
+      "pos": 4
      }
     ],
     "salen": [
      {
       "id": "3231",
       "nombre": "Parrott",
+      "pos": 4,
+      "por": null
+     },
+     {
+      "id": "2770",
+      "nombre": "Antony",
       "pos": 4,
       "por": null
      }
@@ -1353,7 +1344,7 @@
      "id": "3116",
      "nombre": "Bernardo Silva",
      "pos": 3,
-     "p": 66
+     "p": 67
     },
     {
      "id": "3103",
@@ -1510,16 +1501,7 @@
      "estado": "lesionado"
     }
    ],
-   "vuelven": [
-    {
-     "id": "2654",
-     "nombre": "El Abdellaoui",
-     "dias": 62,
-     "lesion": "Sometido a artroscopia en la rodilla",
-     "antes": 40,
-     "p": 28
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -1605,22 +1587,22 @@
      "p": 93
     },
     {
+     "id": "1775",
+     "nombre": "Cubarsí",
+     "pos": 2,
+     "p": 92
+    },
+    {
      "id": "2354",
      "nombre": "Eric",
      "pos": 2,
-     "p": 77
+     "p": 78
     },
     {
      "id": "2906",
      "nombre": "Cancelo",
      "pos": 2,
      "p": 77
-    },
-    {
-     "id": "2757",
-     "nombre": "Gerard Martín",
-     "pos": 2,
-     "p": 76
     },
     {
      "id": "1715",
@@ -1641,10 +1623,10 @@
      "p": 44
     },
     {
-     "id": "2784",
-     "nombre": "Marc Bernal",
+     "id": "3092",
+     "nombre": "Olmo",
      "pos": 3,
-     "p": 39
+     "p": 41
     },
     {
      "id": "3104",
@@ -1662,23 +1644,37 @@
      "id": "3210",
      "nombre": "Gordon",
      "pos": 4,
-     "p": 66
+     "p": 65
     }
    ],
    "dudas": [
     {
+     "linea": 2,
+     "a": {
+      "id": "2906",
+      "nombre": "Cancelo",
+      "p": 77
+     },
+     "b": {
+      "id": "2757",
+      "nombre": "Gerard Martín",
+      "p": 76
+     },
+     "pa": 50
+    },
+    {
      "linea": 3,
      "a": {
+      "id": "3092",
+      "nombre": "Olmo",
+      "p": 41
+     },
+     "b": {
       "id": "2784",
       "nombre": "Marc Bernal",
       "p": 39
      },
-     "b": {
-      "id": "3224",
-      "nombre": "Brian Fariñas",
-      "p": 35
-     },
-     "pa": 53
+     "pa": 51
     }
    ],
    "fuera": [
@@ -1701,18 +1697,18 @@
     {
      "id": "2355",
      "nombre": "Kounde",
-     "dias": 33,
+     "dias": 34,
      "lesion": "Esguince de tobillo",
      "antes": 44,
-     "p": 33
+     "p": 56
     },
     {
      "id": "3092",
      "nombre": "Olmo",
-     "dias": 30,
+     "dias": 31,
      "lesion": "Rotura fibrilar en el aductor",
      "antes": 33,
-     "p": 25
+     "p": 41
     }
    ],
    "anterior": {
@@ -1725,14 +1721,25 @@
       "id": "2354",
       "nombre": "Eric",
       "pos": 2
+     },
+     {
+      "id": "3092",
+      "nombre": "Olmo",
+      "pos": 3
      }
     ],
     "salen": [
      {
-      "id": "1775",
-      "nombre": "Cubarsí",
+      "id": "2757",
+      "nombre": "Gerard Martín",
       "pos": 2,
-      "por": "duda"
+      "por": null
+     },
+     {
+      "id": "2784",
+      "nombre": "Marc Bernal",
+      "pos": 3,
+      "por": null
      }
     ]
    },
@@ -1777,7 +1784,7 @@
      "id": "2614",
      "nombre": "C. Romero",
      "pos": 2,
-     "p": 55
+     "p": 56
     },
     {
      "id": "3086",
@@ -1795,7 +1802,7 @@
      "id": "2473",
      "nombre": "Gueye",
      "pos": 3,
-     "p": 67
+     "p": 68
     },
     {
      "id": "2868",
@@ -1922,7 +1929,7 @@
      "id": "3026",
      "nombre": "Pablo Ramón",
      "pos": 2,
-     "p": 86
+     "p": 87
     },
     {
      "id": "3261",
@@ -1974,20 +1981,6 @@
     }
    ],
    "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "3139",
-      "nombre": "Pedro Felipe",
-      "p": 53
-     },
-     "b": {
-      "id": "3253",
-      "nombre": "Aaron",
-      "p": 43
-     },
-     "pa": 55
-    },
     {
      "linea": 4,
      "a": {
@@ -2316,7 +2309,7 @@
     {
      "id": "2336",
      "nombre": "Herrando",
-     "dias": 80,
+     "dias": 81,
      "lesion": "Lesión en el aductor",
      "antes": 33,
      "p": 53
@@ -2324,10 +2317,18 @@
     {
      "id": "2338",
      "nombre": "Aimar",
-     "dias": 40,
+     "dias": 41,
      "lesion": "Lesión en los isquiotibiales",
      "antes": 67,
      "p": 48
+    },
+    {
+     "id": "3252",
+     "nombre": "Del Castillo",
+     "dias": 43,
+     "lesion": "Lesión en el aductor",
+     "antes": 0,
+     "p": 20
     }
    ],
    "anterior": {
@@ -2419,20 +2420,20 @@
      "id": "2398",
      "nombre": "F. Calero",
      "pos": 2,
-     "p": 61
+     "p": 62
     },
     {
      "id": "3037",
      "nombre": "C. Puga",
      "pos": 2,
-     "p": 39,
+     "p": 40,
      "duda": true
     },
     {
      "id": "3059",
      "nombre": "Pastor",
      "pos": 2,
-     "p": 35
+     "p": 36
     },
     {
      "id": "3072",
@@ -2471,12 +2472,12 @@
      "a": {
       "id": "3059",
       "nombre": "Pastor",
-      "p": 35
+      "p": 36
      },
      "b": {
       "id": "2525",
       "nombre": "Salinas",
-      "p": 33
+      "p": 34
      },
      "pa": 51
     },
@@ -2504,9 +2505,9 @@
      "b": {
       "id": "3070",
       "nombre": "Chupe",
-      "p": 82
+      "p": 81
      },
-     "pa": 52
+     "pa": 53
     }
    ],
    "fuera": [
@@ -2525,10 +2526,10 @@
     {
      "id": "3140",
      "nombre": "Juan Cruz",
-     "dias": 38,
+     "dias": 39,
      "lesion": "Molestias en el bíceps femoral",
      "antes": 0,
-     "p": 20
+     "p": 19
     }
    ],
    "anterior": {
@@ -2594,6 +2595,12 @@
      "p": 94
     },
     {
+     "id": "2924",
+     "nombre": "Zaid Romero",
+     "pos": 2,
+     "p": 90
+    },
+    {
      "id": "2661",
      "nombre": "Djene",
      "pos": 2,
@@ -2616,13 +2623,6 @@
      "nombre": "Andrés Garcia",
      "pos": 2,
      "p": 79
-    },
-    {
-     "id": "2924",
-     "nombre": "Zaid Romero",
-     "pos": 2,
-     "p": 54,
-     "duda": true
     },
     {
      "id": "2511",
@@ -2657,20 +2657,6 @@
    ],
    "dudas": [
     {
-     "linea": 2,
-     "a": {
-      "id": "2924",
-      "nombre": "Zaid Romero",
-      "p": 54
-     },
-     "b": {
-      "id": "2926",
-      "nombre": "Boselli",
-      "p": 46
-     },
-     "pa": 54
-    },
-    {
      "linea": 3,
      "a": {
       "id": "2640",
@@ -2692,16 +2678,7 @@
      "estado": "sancionado"
     }
    ],
-   "vuelven": [
-    {
-     "id": "2924",
-     "nombre": "Zaid Romero",
-     "dias": 40,
-     "lesion": "Lesión en el cuádriceps",
-     "antes": 86,
-     "p": 54
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -2850,7 +2827,16 @@
      "hasta": "principios de diciembre"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "3201",
+     "nombre": "Castillo",
+     "dias": 43,
+     "lesion": "Lesión en el aductor",
+     "antes": 0,
+     "p": 5
+    }
+   ],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -2913,7 +2899,7 @@
      "id": "2742",
      "nombre": "Nacho Perez",
      "pos": 2,
-     "p": 66
+     "p": 67
     },
     {
      "id": "3227",
@@ -2943,7 +2929,7 @@
      "id": "3164",
      "nombre": "Bardeli",
      "pos": 3,
-     "p": 47
+     "p": 46
     },
     {
      "id": "2302",
@@ -2972,7 +2958,7 @@
      "a": {
       "id": "3164",
       "nombre": "Bardeli",
-      "p": 47
+      "p": 46
      },
      "b": {
       "id": "2628",
@@ -2991,22 +2977,13 @@
      "b": {
       "id": "2303",
       "nombre": "I. Romero",
-      "p": 83
+      "p": 82
      },
      "pa": 52
     }
    ],
    "fuera": [],
-   "vuelven": [
-    {
-     "id": "2624",
-     "nombre": "Manu Sánchez",
-     "dias": 19,
-     "lesion": "Lesión en los isquiotibiales",
-     "antes": 100,
-     "p": 76
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -3086,7 +3063,7 @@
      "id": "2939",
      "nombre": "G. Villar",
      "pos": 3,
-     "p": 75
+     "p": 76
     },
     {
      "id": "2703",
