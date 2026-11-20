@@ -2431,7 +2431,8 @@
    "AS|https://as.com/futbol/primera/christensen-y-gerard-martin-la-pareja-mas-probable-por-si-falta-cubarsi-f202611-n/": 1795163445000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000,
    "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
+   "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000
   },
   "hechos": [
    {
@@ -3238,11 +3239,23 @@
      21,
      13
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/",
+    "medio": "AS",
+    "t": 1795166861000,
+    "id": "2315",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Paredes vuelve a la lista ante el Espanyol",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -4139,17 +4152,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 95166,
-  "salida": 7143,
+  "entrada": 97106,
+  "salida": 7654,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.160933,
+  "dolares": 0.161382,
   "reservado": 0
  },
  "recientes": {
@@ -8488,13 +8501,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4378,
+   "ok": 4379,
    "fallos": 0,
-   "ejecuciones": 3625,
+   "ejecuciones": 3626,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T09:41:11.306Z"
+   "ultima": "2026-11-20T09:46:10.432Z"
   }
  },
  "ptsDirecto": {},
@@ -8511,15 +8524,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:41:21.564Z"
+   "ultimaBien": "2026-11-20T09:46:22.803Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:41:21.564Z"
+   "ultimaBien": "2026-11-20T09:46:22.803Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:41:21.564Z"
+   "ultimaBien": "2026-11-20T09:46:22.803Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8527,11 +8540,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:41:21.564Z"
+   "ultimaBien": "2026-11-20T09:46:22.803Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:41:21.564Z"
+   "ultimaBien": "2026-11-20T09:46:22.803Z"
   }
  },
  "avisos": [
