@@ -34,8 +34,9 @@ const visibles = () => NOVEDADES.map((n) => {
 export const hayNovedadesDesde = (desde) => visibles().some((n) => (!desde || cmpVer(n.v, desde) > 0) && n.cosas.length);
 
 /** las versiones que no has visto (si no hay ninguna, la última con algo para ti) */
-export function versionesDesde(desde) {
-  const V = visibles();
+export function versionesDesde(desde, solo = null) {
+  // solo: (20 nov) nada más que esas versiones (a quien no es el dueño, las que Carlos ha dicho que se presenten)
+  const V = solo ? visibles().filter((n) => solo.includes(n.v)) : visibles();
   const l = V.filter((n) => desde && cmpVer(n.v, desde) > 0);
   return l.length ? l : V.slice(0, 1);
 }
@@ -52,10 +53,10 @@ export function cerrarPresentacion() {
  * Abre la presentación. desde: la última versión que viste (salen las posteriores).
  * alIr(ir) lleva a donde está una novedad; alLista() abre la lista entera; alCerrar(), al terminar.
  */
-export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alCerrar = () => {} } = {}) {
+export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alCerrar = () => {}, solo = null } = {}) {
   if (abierta) abierta(true);
   const quieta = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nuevas = versionesDesde(desde);
+  const nuevas = versionesDesde(desde, solo);
   if (!nuevas.length) { alCerrar(); return; }
   const todas = [], arreglos = [];
   for (const n of nuevas) { for (const c of n.cosas || []) todas.push({ ...c, v: n.v }); for (const c of n.arreglos || []) arreglos.push({ ...c, v: n.v }); }

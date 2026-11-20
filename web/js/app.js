@@ -28,7 +28,7 @@ import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -3304,7 +3304,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
-    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (hayImportantes()) listaImportantesHoja(); break;
+    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (importantesPara() && hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
@@ -3723,8 +3723,14 @@ function novedades() {
   LS.set('version-vista2', VERSION);
   // (20 nov) si todo lo que se presenta solo a ti trae «aviso», en vez de la presentación entera, la tarjeta de la más nueva
   const suyas = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
-  if (suyas.length && suyas.every((n) => n.aviso)) { novAvisoPedir(suyas[0].v); return; }
-  verNovedades(desde);
+  // (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo te lo estipule; ahora, solo la de
+  // invitar a un amigo») A quien no es el dueño, solo lo de las versiones que él ha dicho que salgan (`todos`): la tarjeta
+  // de la más nueva si lleva «aviso», y nada más; si no la lleva, la presentación de esas versiones, sin las de en medio.
+  // Antes, a quien venía de antes de la 0.8 le salía la presentación de todo lo de después, con el título de la última
+  // versión (un arreglo) encima de «Invita a un amigo» (aviso de Domy, 20 nov)
+  const todo = avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true;
+  if (suyas.length && (suyas.every((n) => n.aviso) || (!todo && suyas[0].aviso))) { novAvisoPedir(suyas[0].v); return; }
+  verNovedades(desde, todo ? null : suyas.map((n) => n.v));
 }
 /* La tarjeta de una novedad con «aviso» (invitar a un amigo, 0.8h).
    (20 nov, Carlos: «he abierto la app y no me ha salido nada») Salía al arrancar, antes de que cargara la liga (el botón
@@ -3787,8 +3793,9 @@ function irNovedad(a) {
   if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; }
   ir(a.v);
 }
-function verNovedades(desde) {
+function verNovedades(desde, solo = null) {
   presentarNovedades(desde, {
+    solo,
     alIr: irNovedad,
     // (0.7.1) la lista de todas las versiones, solo a quien puede verla (el dueño o con «novedadesTodos»): a los demás,
     // con una versión «para todos», solo esa

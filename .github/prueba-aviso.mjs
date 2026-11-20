@@ -37,7 +37,7 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
   const hay = () => page.evaluate(() => !!document.querySelector('.nvt'));
   const r = [];
   for (const p of pasos) {
-    if (p === 'mira') r.push(await hay() ? 'TARJETA' : 'nada');
+    if (p === 'mira') r.push(await hay() ? 'TARJETA' : (await page.evaluate(() => !!document.querySelector('.nv'))) ? 'PRESENTACIÓN' : 'nada');
     if (p === 'recarga-app') { await Promise.all([page.waitForNavigation({ timeout: 15000 }).catch(() => r.push('(no recargó)')), page.evaluate(() => window.webBuscada('nueva'))]); await lista(); }
     if (p === 'reabre') { await page.reload(); await lista(); }
     if (p === 'ahora-no') { if (!(await hay())) { r.push('(sin tarjeta que cerrar)'); continue; } await page.click('.nvt [data-nvt="no"]'); await page.waitForTimeout(400); }
@@ -55,6 +55,8 @@ await caso('quien ya tenía esta versión en la app sin haberla cerrado (la reca
 await caso('quien ya tenía esta versión en la web: nada', 'nada', { app: false, vista: 'ACTUAL', pasos: ['mira'] });
 await caso('instalación nueva en la app: nada', 'nada → nada', { vista: '', pasos: ['mira', 'reabre', 'mira'] });
 await caso('en la web, al venir de la 0.8f: sale, el botón abre invitar y no vuelve', 'TARJETA → hoja:invitar → nada', { app: false, pasos: ['mira', 'invitar', 'reabre', 'mira'] });
+// (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo lo estipule; ahora, solo la de invitar»)
+await caso('quien viene de antes de la 0.8 (no es el dueño): solo la tarjeta, sin la presentación de todo lo de después', 'TARJETA → nada', { app: false, vista: '0.7.13za', pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 await nav.close(); srv.close();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

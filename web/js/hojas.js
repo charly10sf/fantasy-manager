@@ -19,7 +19,7 @@ import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
+import { estadoLimite, novedadesPara, importantesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
@@ -1061,7 +1061,8 @@ export function ajustes(S) {
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
   if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
   // (11 nov, Carlos) a todos los demás, lo importante de cada versión (importante: true en version.js), sin arreglos
-  else if (hayImportantes()) {
+  // (20 nov, Carlos) solo si él lo enciende («novedadesImportantes» en limites.json): si no, a los demás, nada
+  else if (importantesPara() && hayImportantes()) {
     const u = ultimaImportante();
     c4 += fila('Novedades', LS.get('importante-vista', null) === u ? 'Lo más importante de cada versión' : `Nuevo en la ${u}`, btnA('novedades', 'Ver'), 'cambios version');
   }

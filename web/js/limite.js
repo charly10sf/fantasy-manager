@@ -327,6 +327,14 @@ export function novedadesPara(yo) {
   return g.cfg.novedadesTodos === true;
 }
 
+/** (20 nov, Carlos: «no quiero que les salga nada de las novedades a ninguno, a no ser que yo te lo estipule») La lista
+    «Novedades» de Ajustes con lo importante de cada versión (la del 11 nov), a quien no es el dueño: solo si limites.json
+    lleva «novedadesImportantes»: true. Sin eso, a los demás no les sale nada de las versiones en Ajustes */
+export function importantesPara() {
+  const g = LS.get('limites', null);
+  return !!(g && g.cfg && g.cfg.novedadesImportantes === true);
+}
+
 /** los minutos de un equipo (null: sin límite) */
 export function minutosDe(cfg, yo) {
   if (!cfg || !yo) return null;

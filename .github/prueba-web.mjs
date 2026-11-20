@@ -264,10 +264,19 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 // 8: Novedades para todos (11 nov): en Ajustes → La app, a quien no es el dueño solo lo importante (importante: true),
 // sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app (y nunca más de los que llevan importante:
 // antes era un tope fijo de 8, que saltó al añadir la ficha del rival en la 0.7.8e)
-for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');"]]) {
-  const { ctx, page, errores } = await pagina({ init });
+// (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo te lo estipule») esa lista solo sale con
+// «novedadesImportantes» en limites.json; sin eso, a quien no es el dueño no le sale la fila de Novedades en Ajustes
+// (la página lee limites.json del servidor de la prueba: se le sirve el de verdad con esa clave puesta o sin ella)
+const LIMITES_DE_VERDAD = JSON.parse((await import('node:fs')).readFileSync(new URL('../web/limites.json', import.meta.url), 'utf8'));
+for (const [nombre, init, conLista] of [['web', '', true], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');", true], ['web, sin encender', '', false]]) {
+  // (la app lo lee de fuera, que aquí está cortado, y tira de lo guardado; la web, del servidor de la prueba: las dos cosas)
+  const lim = conLista ? { ...LIMITES_DE_VERDAD, novedadesImportantes: true } : LIMITES_DE_VERDAD;
+  const { ctx, page, errores } = await pagina({ init: `${init} localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: ${JSON.stringify(lim)} }));` });
+  await page.route('**/limites.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify(lim) }));
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  // (a que la página haya leído limites.json)
+  await page.waitForFunction(() => { try { return !!JSON.parse(localStorage.getItem('fm-limites') || 'null'); } catch (e) { return false; } }, null, { timeout: 10000 }).catch(() => {});
   const r = await page.evaluate(async () => {
     const { NOVEDADES } = await import('./js/version.js');
     document.querySelector('#bAjustes').click();
@@ -282,7 +291,8 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const arr = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.tipo === 'arreglo')); const li = [...document.querySelectorAll('.hoja .nvl-arreglos li')].map((x) => x.textContent);
     return { nuevo: /Nuevo en la/.test(sub), t, nImp: imp.length, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !(li.length && li.every((x) => arr.some((c) => c.t === x))), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
   });
-  if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
+  if (!conLista) { if (r.sinFila) bien('Novedades (sin «novedadesImportantes»): a quien no es el dueño no le sale la fila en Ajustes'); else mal(`Novedades (${nombre}): sale la fila sin haberla encendido: ${JSON.stringify(r).slice(0, 200)}`); }
+  else if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
   else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > r.nImp) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
   else bien(`Novedades (${nombre}): solo lo importante (${r.t.length}) y los arreglos en pequeño${nombre === 'web' ? ', sin lo de la app' : ''}`);
   if (errores.length) mal(`Novedades: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
