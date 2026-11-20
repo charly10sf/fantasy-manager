@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
@@ -2487,33 +2486,11 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
-   "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000
+   "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
+   "AS|https://as.com/futbol/primera/jose-alberto-tranquiliza-con-zabiri-y-pierde-a-maguette-entre-4-y-6-semanas-f202611-n/": 1795179575000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
-    "medio": "AS",
-    "t": 1794921256000,
-    "id": "1565",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Barrios vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
-    "medio": "AS",
-    "t": 1794921256000,
-    "id": "2561",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Hancko vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html",
     "medio": "MARCA",
@@ -3356,11 +3333,23 @@
     "nums": [
      15
     ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html",
+    "medio": "MARCA",
+    "t": 1795180296000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos queda fuera de la lista para el derbi",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -4260,17 +4249,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 372052,
-  "salida": 24878,
+  "entrada": 374145,
+  "salida": 26259,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.731121,
+  "dolares": 0.732021,
   "reservado": 0
  },
  "recientes": {
@@ -8615,13 +8604,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4421,
+   "ok": 4422,
    "fallos": 0,
-   "ejecuciones": 3668,
+   "ejecuciones": 3669,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T13:11:10.980Z"
+   "ultima": "2026-11-20T13:16:13.196Z"
   }
  },
  "ptsDirecto": {},
@@ -8638,15 +8627,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:11:20.031Z"
+   "ultimaBien": "2026-11-20T13:16:30.824Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:11:20.031Z"
+   "ultimaBien": "2026-11-20T13:16:30.824Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:11:20.031Z"
+   "ultimaBien": "2026-11-20T13:16:30.824Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8654,11 +8643,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:11:20.031Z"
+   "ultimaBien": "2026-11-20T13:16:30.824Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T13:11:20.031Z"
+   "ultimaBien": "2026-11-20T13:16:30.824Z"
   }
  },
  "avisos": [
