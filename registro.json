@@ -4207,7 +4207,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794929755000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/coruna/coruna/2026/11/17/oar-visita-san-pablo-burgos-volver-senda-victoria/00031794938102625457236.htm": 1794939060000,
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261117/11686779/cervera-responde-pique-sancion-owono-deberia-volver-ver-accion-lol.html": 1794938628000,
@@ -8619,13 +8618,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4449,
+   "ok": 4450,
    "fallos": 0,
-   "ejecuciones": 3696,
+   "ejecuciones": 3697,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:31:14.997Z"
+   "ultima": "2026-11-20T15:36:14.729Z"
   }
  },
  "ptsDirecto": {},
@@ -8642,15 +8641,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:31:28.905Z"
+   "ultimaBien": "2026-11-20T15:36:21.971Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:31:28.905Z"
+   "ultimaBien": "2026-11-20T15:36:21.971Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:31:28.905Z"
+   "ultimaBien": "2026-11-20T15:36:21.971Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8658,11 +8657,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:31:28.905Z"
+   "ultimaBien": "2026-11-20T15:36:21.971Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:31:28.905Z"
+   "ultimaBien": "2026-11-20T15:36:21.971Z"
   }
  },
  "avisos": [
