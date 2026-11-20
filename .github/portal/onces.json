@@ -137,7 +137,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "68",
+     "nombre": "Unai Simón",
+     "pos": 1
+    },
+    {
+     "id": "3065",
+     "nombre": "Laporte",
+     "pos": 2
+    },
+    {
+     "id": "77",
+     "nombre": "Yeray",
+     "pos": 2
+    },
+    {
+     "id": "74",
+     "nombre": "Yuri",
+     "pos": 2
+    },
+    {
+     "id": "3184",
+     "nombre": "H. Rincón",
+     "pos": 2
+    },
+    {
+     "id": "2318",
+     "nombre": "O. Sancet",
+     "pos": 3
+    },
+    {
+     "id": "1787",
+     "nombre": "Prados",
+     "pos": 3
+    },
+    {
+     "id": "3023",
+     "nombre": "Peio Canales",
+     "pos": 3
+    },
+    {
+     "id": "91",
+     "nombre": "Iñaki Williams",
+     "pos": 4
+    },
+    {
+     "id": "3083",
+     "nombre": "Nico Williams",
+     "pos": 4
+    },
+    {
+     "id": "927",
+     "nombre": "Berenguer",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "68",
+    "3065",
+    "74",
+    "3184",
+    "2315",
+    "2549",
+    "3023",
+    "3185",
+    "3083",
+    "927",
+    "91"
+   ]
   },
   {
    "id": "8",
@@ -312,7 +381,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2565",
+     "nombre": "A. Fortuño",
+     "pos": 1
+    },
+    {
+     "id": "3068",
+     "nombre": "Cabrera",
+     "pos": 2
+    },
+    {
+     "id": "3098",
+     "nombre": "Q. Hartman",
+     "pos": 2
+    },
+    {
+     "id": "2785",
+     "nombre": "Riedel",
+     "pos": 2
+    },
+    {
+     "id": "3162",
+     "nombre": "Hinojo",
+     "pos": 2
+    },
+    {
+     "id": "1930",
+     "nombre": "El Hilali",
+     "pos": 2
+    },
+    {
+     "id": "3169",
+     "nombre": "Bauza",
+     "pos": 3
+    },
+    {
+     "id": "1938",
+     "nombre": "Pol Lozano",
+     "pos": 3
+    },
+    {
+     "id": "3305",
+     "nombre": "A. Santiago",
+     "pos": 3
+    },
+    {
+     "id": "2400",
+     "nombre": "Pere Milla",
+     "pos": 4
+    },
+    {
+     "id": "2520",
+     "nombre": "Roberto",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2565",
+    "1930",
+    "3068",
+    "3162",
+    "3177",
+    "3098",
+    "3077",
+    "3161",
+    "1938",
+    "2520",
+    "3237"
+   ]
   },
   {
    "id": "21",
