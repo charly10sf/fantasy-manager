@@ -2237,7 +2237,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000,
    "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
@@ -2436,21 +2435,11 @@
    "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
    "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
-   "SPORT|136656499": 1795167406000
+   "SPORT|136656499": 1795167406000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794912475000,
-    "id": "3265",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/",
     "medio": "AS",
@@ -3232,11 +3221,25 @@
      14,
      0
     ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795171027000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos no entrena con el grupo antes del derbi",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     24
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4132,17 +4135,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 5,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 112364,
-  "salida": 7969,
+  "entrada": 114633,
+  "salida": 8741,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.197182,
+  "dolares": 0.197795,
   "reservado": 0
  },
  "recientes": {
@@ -8481,13 +8484,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4391,
+   "ok": 4392,
    "fallos": 0,
-   "ejecuciones": 3638,
+   "ejecuciones": 3639,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:46:10.719Z"
+   "ultima": "2026-11-20T10:51:13.942Z"
   }
  },
  "ptsDirecto": {},
@@ -8504,15 +8507,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:46:21.641Z"
+   "ultimaBien": "2026-11-20T10:51:28.026Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:46:21.641Z"
+   "ultimaBien": "2026-11-20T10:51:28.026Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:46:21.641Z"
+   "ultimaBien": "2026-11-20T10:51:28.026Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8520,11 +8523,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:46:21.641Z"
+   "ultimaBien": "2026-11-20T10:51:28.026Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:46:21.641Z"
+   "ultimaBien": "2026-11-20T10:51:28.026Z"
   }
  },
  "avisos": [
