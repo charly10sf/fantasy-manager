@@ -2272,8 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/17/madrid-sigue-minimos-vuelta-trabajo.html": 1794935215000,
-   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/17/rodri-podria-regresar-frente-depor.html": 1794935356000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252268/pepe-mel-abandona-uci-pasa-planta.html": 1794936518000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252204/actualidad-barca-video-psg-juventus-interesados-balde.html": 1794936274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000,
@@ -2486,7 +2484,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
    "SPORT|136671288": 1795189326000,
    "SPORT|136676022": 1795189674000,
-   "SPORT|136668682": 1795190209000
+   "SPORT|136668682": 1795190209000,
+   "SPORT|136676862": 1795190919000,
+   "SPORT|136676667": 1795190614000
   },
   "hechos": [
    {
@@ -3326,7 +3326,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -4226,17 +4226,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 404229,
-  "salida": 30955,
+  "entrada": 406531,
+  "salida": 31167,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.737378,
+  "dolares": 0.737714,
   "reservado": 0
  },
  "recientes": {
@@ -8581,13 +8581,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4468,
+   "ok": 4469,
    "fallos": 0,
-   "ejecuciones": 3715,
+   "ejecuciones": 3716,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:06:23.990Z"
+   "ultima": "2026-11-20T17:11:13.681Z"
   }
  },
  "ptsDirecto": {},
@@ -8604,15 +8604,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:06:30.486Z"
+   "ultimaBien": "2026-11-20T17:11:26.421Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:06:30.486Z"
+   "ultimaBien": "2026-11-20T17:11:26.421Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:06:30.486Z"
+   "ultimaBien": "2026-11-20T17:11:26.421Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8620,11 +8620,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:06:30.486Z"
+   "ultimaBien": "2026-11-20T17:11:26.421Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:06:30.486Z"
+   "ultimaBien": "2026-11-20T17:11:26.421Z"
   }
  },
  "avisos": [
