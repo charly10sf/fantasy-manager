@@ -1,7 +1,8 @@
 // Coherencia entre pantallas (19 nov, tercera parte de la revisión de la IA): en cada escena, lo que dicen de cada jugador
 // Hoy (lo urgente de «Ahora mismo» que no está en el plan), Equipo (el consejo de cada uno en venta), el plan del motor,
 // el plan con la IA (el mismo, aplicado sin cambios) y lo que se le pasa al chat para «¿vendo a X?» y «¿acepto?». Si dos
-// sitios dicen cosas distintas del mismo jugador, es un fallo.
+// sitios dicen cosas distintas del mismo jugador, es un fallo. Desde el 21 nov, también el peligro de cada rival (Rivales y
+// lo que lee el chat) y lo que se le ofrece a un rival por uno suyo (lo que lee el chat y lo que mira el árbitro).
 // Uso: PW_MODULO=… node .github/ia/caso-coherencia.mjs [escenas separadas por comas]   (sale con 1 si algo falla)
 import { pagina, cerrar } from './banco.mjs';
 
@@ -11,7 +12,8 @@ for (const escena of ESCENAS) {
   const P = await pagina(escena);
   try {
     const r = await P.page.evaluate(async () => {
-      const Pm = await import('./js/plan.js'), Dt = await import('./js/datos.js'), I = await import('./js/ia.js');
+      const Pm = await import('./js/plan.js'), Dt = await import('./js/datos.js'), I = await import('./js/ia.js'), U = await import('./js/util.js');
+      window.__eur = U.eur;
       const { D, M } = window.S;
       const c = Dt.cfg();
       const R = Pm.planDeHoy(D, M, c);
@@ -59,17 +61,37 @@ for (const escena of ESCENAS) {
         if (ch && !new RegExp(con, 'i').test(ch) && !(con === 'esperar' && /NO VENDER|ESPERAR/.test(ch)) && !(con === 'aceptar' && /ACEPTAR/.test(ch))) mal.push(`${n}: en Equipo pone ${con} y al chat se le dice «${ch}»`);
         if (con === 'esperar' && (plan[pid] || []).includes('aceptar')) mal.push(`${n}: Equipo dice esperar y el plan acepta`);
       }
+      // (21 nov) el peligro de cada rival: lo que se le pasa al chat = lo de la pestaña Rivales
+      const NIV = { 'muy alto': 'muyalta', alto: 'alta', medio: 'media', bajo: 'baja' };
+      const rivTxt = datos.split('\nRIVALES (')[1] || '';
+      let pelVistos = 0;
+      for (const m of rivTxt.matchAll(/^- \d+º \| ([^|]+?) \| .*? \| (muy alto|alto|medio|bajo) \(/gm)) {
+        pelVistos++;
+        const r = (M.rivales || []).find((y) => y.e.nombre === m[1].trim());
+        if (r && r.nivel !== NIV[m[2]]) mal.push(`${m[1]}: en Rivales el peligro es ${r.nivel} y al chat se le dice «${m[2]}»`);
+      }
+      // (21 nov) lo que se le ofrece a un rival por uno suyo: lo que se le pasa al chat = lo que mira el árbitro (ofertaDueno)
+      const datosOf = I.datosChat('¿Cuánto les ofrezco a los rivales por sus jugadores? Dame ofertas', D, M, c, {});
+      let ofertas = 0;
+      for (const m of datosOf.matchAll(/^  - \w+ \| ([^|]+?) \| .*?oferta para que te lo venda ~([^ (|]+ ?[MK]?)/gm)) {
+        const j = Object.values(D.maestro).find((y) => y.nombre === m[1].trim() && M.dueno[y.id] && M.dueno[y.id] !== D.yo.teamId);
+        const od = j && M.ofertaDuenoDe ? M.ofertaDuenoDe(j) : null;
+        ofertas++;
+        if (od && window.__eur(od.v) !== m[2].trim()) mal.push(`${m[1]}: al chat se le dice que le ofrezca ~${m[2].trim()} y la app pediría ${window.__eur(od.v)}`);
+      }
+      if (!ofertas) mal.push('al chat no le llega ninguna «oferta para que te lo venda» cuando pregunta por ofertas');
+      if (pelVistos < (M.rivales || []).length) mal.push(`al chat le llega el peligro de ${pelVistos} de ${(M.rivales || []).length} rivales`);
       for (const a of urg) {
         const n = nombre(a.pid);
         if (a.tipo === 'vender' && noVende.has(n)) mal.push(`${n}: Hoy dice «${a.titulo}» y al chat se le dice «NO LO VENDERÍA HOY»`);
         if (a.tipo === 'vender' && equipo[a.pid] === 'esperar') mal.push(`${n}: Hoy dice «${a.titulo}» y Equipo, esperar`);
         if (a.tipo === 'clausular') { const x = M.clausulas.find((y) => String(y.pid) === a.pid); if (x && M.mereceClausula && !M.mereceClausula(x)) mal.push(`${n}: Hoy dice «${a.titulo}» y la cláusula no pasa la regla de las alarmas`); }
       }
-      return { mal, urg: urg.length, jugadores: new Set([...Object.keys(plan), ...Object.keys(equipo), ...urg.map((a) => a.pid)]).size, avisosAparte: urg.map((a) => `${a.tipo} ${nombre(a.pid)}`) };
+      return { mal, pelVistos, ofertas, urg: urg.length, jugadores: new Set([...Object.keys(plan), ...Object.keys(equipo), ...urg.map((a) => a.pid)]).size, avisosAparte: urg.map((a) => `${a.tipo} ${nombre(a.pid)}`) };
     });
     total += r.jugadores;
     for (const m of r.mal) { mal++; console.log(`MAL  ${escena}: ${m}`); }
-    console.log(`${r.mal.length ? 'MAL ' : 'BIEN'} ${escena}: ${r.jugadores} jugadores mirados${r.avisosAparte.length ? `; en Hoy, aparte del plan: ${r.avisosAparte.join(', ')}` : ''}`);
+    console.log(`${r.mal.length ? 'MAL ' : 'BIEN'} ${escena}: ${r.jugadores} jugadores mirados, el peligro de ${r.pelVistos} rivales y ${r.ofertas} ofertas${r.avisosAparte.length ? `; en Hoy, aparte del plan: ${r.avisosAparte.join(', ')}` : ''}`);
     if (P.errores.length) { mal++; console.log(`MAL  ${escena}: errores de la página: ${P.errores[0]}`); }
   } finally { await P.cerrar(); }
 }

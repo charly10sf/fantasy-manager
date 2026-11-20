@@ -47,6 +47,13 @@ await probar('martes', `${COMUN}
     ['pujar «hoy» con el día de otra semana', 'rH', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, cuando: 'el dom 8' })])],
     ['una cláusula de más del saldo', 'r5', (() => { const c = M.clausulas.find((x) => x.abierta && x.clausula > D.dinero + 1e6) || M.clausulas.find((x) => x.abierta); return plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: Math.max(c.clausula, D.dinero + 5e6) })]); })()],
     ['comprar por debajo de lo que pide', 'r6', (() => { const v = M.mercado.find((m) => m.tipo === 'manager' && m.vendedorTeamId !== D.yo.teamId); return plan([op({ accion: 'comprar', pid: v.pid, j: v.j, jugador: v.j.nombre, importe: Math.round(v.precio * 0.8) })]); })()],
+    // (20 nov, Carlos) las cláusulas casi nunca se suben: como mucho un 5 % de su valor y nunca a uno que se frena o baja
+    ['subir la cláusula por más de un 5 % de su valor', 'rC: subir la cláusula de [^·]+ cuesta', plan([op({ accion: 'blindar', pid: mio.pid, j: mio.j, jugador: mio.j.nombre, importe: Math.round(mio.j.valor * 0.2) })])],
+    ...(() => { const b = M.mias.find((x) => ['giro', 'baja', 'frena', 'parado'].includes((M.inercia(x.pid) || {}).fase) && x.j.pos !== 5); return b ? [['subir la cláusula a uno que se frena o baja, aunque sea barato', 'rC: subir la cláusula de [^·]+, que', plan([op({ accion: 'blindar', pid: b.pid, j: b.j, jugador: b.j.nombre, importe: Math.round(b.j.valor * 0.01) })])]] : []; })(),
+    // (20 nov, Carlos con Revivo) a un rival, por uno suyo que sube, no menos de lo que pediría
+    ...(() => { const r = M.clausulas.find((x) => x.j.pos !== 5 && !M.mercado.some((m) => m.pid === x.pid) && (M.ofertaDuenoDe(x.j) || {}).sube); return r ? [['ofrecer a su dueño por uno que sube menos de lo que pediría', 'rO', plan([op({ accion: 'comprar', pid: r.pid, j: r.j, jugador: r.j.nombre, importe: Math.round(M.ofertaDuenoDe(r.j).v * 0.9) })])]] : []; })(),
+    // (20 nov, Carlos) la IA, al momento: el plan con la liga de hace dos horas no vale
+    ['el plan con la liga de hace dos horas', 'rD', { ...base, t: D.t + 2 * 3600e3 }],
     ['el titular nombra a uno descartado', 'titular', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio, descartada: true })], { titular: 'Hoy, puja por ' + libre.j.nombre })],
   ].map((c) => (c[1] === 'r17' ? null : c)).filter(Boolean);
 `);
@@ -55,6 +62,8 @@ await probar('m-25', `${COMUN}
   return [
     ['el plan de la app con 25', null, base],
     ['pujar con 25 jugadores', 'r17', plan([op({ accion: 'pujar', pid: libre.pid, j: libre.j, jugador: libre.j.nombre, importe: libre.precio })])],
+    // (20 nov, Carlos: «con 25 jugadores tampoco se puede clausular, ya te lo dije»)
+    ...(() => { const c = M.clausulas.find((x) => x.abierta && x.clausula <= D.dinero) || M.clausulas.find((x) => x.abierta); return c ? [['clausular con 25 jugadores', 'r17', plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: c.clausula })])]] : []; })(),
   ];
 `);
 // en negativo entre semana, con tres cambios de mercado por delante: no se malvende
