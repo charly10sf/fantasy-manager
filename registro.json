@@ -2248,17 +2248,9 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2924",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795176375968
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
@@ -8477,13 +8469,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4408,
+   "ok": 4409,
    "fallos": 0,
-   "ejecuciones": 3655,
+   "ejecuciones": 3656,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:06:15.968Z"
+   "ultima": "2026-11-20T12:11:11.673Z"
   }
  },
  "ptsDirecto": {},
@@ -8500,15 +8492,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:06:34.078Z"
+   "ultimaBien": "2026-11-20T12:11:21.489Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:06:34.078Z"
+   "ultimaBien": "2026-11-20T12:11:21.489Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:06:34.078Z"
+   "ultimaBien": "2026-11-20T12:11:21.489Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8516,11 +8508,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:06:34.078Z"
+   "ultimaBien": "2026-11-20T12:11:21.489Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:06:34.078Z"
+   "ultimaBien": "2026-11-20T12:11:21.489Z"
   }
  },
  "avisos": [
