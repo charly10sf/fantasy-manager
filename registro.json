@@ -4209,12 +4209,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
-   "SPORT|136684390": 1795197900000
+   "SPORT|136684390": 1795197900000,
+   "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
   "espera": {}
@@ -4222,17 +4223,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 65,
+   "clasificar": 66,
    "redactar": 26,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 506439,
-  "salida": 36198,
+  "entrada": 508187,
+  "salida": 36340,
   "cacheLee": 34836,
   "cacheEscribe": 20321,
-  "dolares": 0.903256,
+  "dolares": 0.903502,
   "reservado": 0
  },
  "recientes": {
@@ -4511,8 +4512,8 @@
  },
  "puntosPartido": {
   "13|129": {
-   "h": "7d96480ab17a",
-   "desde": 1795211774471,
+   "h": "2d319e700488",
+   "desde": 1795212375628,
    "fin": 1795211774471
   }
  },
@@ -8607,13 +8608,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4552,
+   "ok": 4553,
    "fallos": 0,
-   "ejecuciones": 3775,
+   "ejecuciones": 3776,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T22:01:20.130Z"
+   "ultima": "2026-11-20T22:06:15.015Z"
   }
  },
  "ptsDirecto": {
@@ -8643,23 +8644,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:01:23.906Z"
+   "ultimaBien": "2026-11-20T22:06:19.238Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:01:23.906Z"
+   "ultimaBien": "2026-11-20T22:06:19.238Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:01:23.906Z"
+   "ultimaBien": "2026-11-20T22:06:19.238Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:01:23.906Z"
+   "ultimaBien": "2026-11-20T22:06:19.238Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:01:23.906Z"
+   "ultimaBien": "2026-11-20T22:06:19.238Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
