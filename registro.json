@@ -2489,7 +2489,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
-   "SPORT|136670471": 1795181611000
+   "SPORT|136670471": 1795181611000,
+   "SPORT|136672088": 1795184079000
   },
   "hechos": [
    {
@@ -3347,7 +3348,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -4250,17 +4251,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 388296,
-  "salida": 29244,
+  "entrada": 390357,
+  "salida": 29362,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.734929,
+  "dolares": 0.735194,
   "reservado": 0
  },
  "recientes": {
@@ -8605,13 +8606,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4445,
+   "ok": 4446,
    "fallos": 0,
-   "ejecuciones": 3692,
+   "ejecuciones": 3693,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:11:11.183Z"
+   "ultima": "2026-11-20T15:16:13.652Z"
   }
  },
  "ptsDirecto": {},
@@ -8628,15 +8629,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:11:20.006Z"
+   "ultimaBien": "2026-11-20T15:16:26.743Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:11:20.006Z"
+   "ultimaBien": "2026-11-20T15:16:26.743Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:11:20.006Z"
+   "ultimaBien": "2026-11-20T15:16:26.743Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8644,11 +8645,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:11:20.006Z"
+   "ultimaBien": "2026-11-20T15:16:26.743Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:11:20.006Z"
+   "ultimaBien": "2026-11-20T15:16:26.743Z"
   }
  },
  "avisos": [
