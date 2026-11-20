@@ -4224,16 +4224,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 66,
-   "redactar": 34,
-   "revisar": 21,
+   "redactar": 42,
+   "revisar": 26,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 615523,
-  "salida": 38331,
-  "cacheLee": 37739,
-  "cacheEscribe": 23224,
-  "dolares": 1.145632,
+  "entrada": 725398,
+  "salida": 41145,
+  "cacheLee": 49351,
+  "cacheEscribe": 26127,
+  "dolares": 1.40194,
   "reservado": 0
  },
  "recientes": {
@@ -4746,14 +4746,14 @@
    "ultima": "2026-11-20T11:56:43.549Z"
   },
   "final|129": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-20T22:16:40.923Z",
-   "ultima": "2026-11-20T22:16:40.923Z"
+   "ultima": "2026-11-20T22:36:31.827Z"
   },
   "mvp|129": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-20T22:16:53.476Z",
-   "ultima": "2026-11-20T22:16:53.476Z"
+   "ultima": "2026-11-20T22:36:48.222Z"
   }
  },
  "rasgos": {
@@ -8618,13 +8618,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4558,
+   "ok": 4559,
    "fallos": 0,
-   "ejecuciones": 3781,
+   "ejecuciones": 3782,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T22:31:13.266Z"
+   "ultima": "2026-11-20T22:36:10.761Z"
   }
  },
  "ptsDirecto": {
@@ -8654,15 +8654,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:31:16.182Z"
+   "ultimaBien": "2026-11-20T22:36:52.645Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:31:16.182Z"
+   "ultimaBien": "2026-11-20T22:36:52.645Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:31:16.182Z"
+   "ultimaBien": "2026-11-20T22:36:52.645Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8670,7 +8670,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:31:16.182Z"
+   "ultimaBien": "2026-11-20T22:36:52.645Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
