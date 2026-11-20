@@ -2279,7 +2279,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/": 1794944314000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261117/1004252309/bright-ede-zakaria-eddahchouri-novedades-vuelta-trabajo-deportivo.html": 1794944997000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252313/canales-juega-69-minutos-seleccion-sub-21.html": 1794945645000,
@@ -2502,20 +2501,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html",
-    "medio": "COPE",
-    "t": 1794944028000,
-    "id": "3079",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "estará un periodo de baja sin fecha concreta",
-    "nums": [
-     13
-    ]
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/",
     "medio": "Cadena SER",
@@ -8606,13 +8591,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4497,
+   "ok": 4498,
    "fallos": 0,
-   "ejecuciones": 3744,
+   "ejecuciones": 3745,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T19:31:24.345Z"
+   "ultima": "2026-11-20T19:36:11.743Z"
   }
  },
  "ptsDirecto": {},
@@ -8629,15 +8614,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:31:35.020Z"
+   "ultimaBien": "2026-11-20T19:36:19.005Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:31:35.020Z"
+   "ultimaBien": "2026-11-20T19:36:19.005Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:31:35.020Z"
+   "ultimaBien": "2026-11-20T19:36:19.005Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8645,11 +8630,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:31:35.020Z"
+   "ultimaBien": "2026-11-20T19:36:19.005Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:31:35.020Z"
+   "ultimaBien": "2026-11-20T19:36:19.005Z"
   }
  },
  "avisos": [
