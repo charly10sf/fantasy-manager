@@ -2489,7 +2489,9 @@
    "SPORT|136676656": 1795193226000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253441/barca-dia-espart-kounde-masia-can-planes.html": 1795196569000,
    "SPORT|136678460": 1795193621000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000,
+   "SPORT|136612587": 1795195383000,
+   "SPORT|136679253": 1795195203000
   },
   "hechos": [
    {
@@ -3329,11 +3331,25 @@
      21,
      0
     ]
+   },
+   {
+    "guid": "SPORT|136679253",
+    "medio": "SPORT",
+    "t": 1795195203000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang tiene molestias en el tobillo y es duda",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": [
+     13
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -4229,17 +4245,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 419363,
-  "salida": 33218,
+  "entrada": 421671,
+  "salida": 33453,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.740023,
+  "dolares": 0.740371,
   "reservado": 0
  },
  "recientes": {
@@ -8584,13 +8600,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4483,
+   "ok": 4484,
    "fallos": 0,
-   "ejecuciones": 3730,
+   "ejecuciones": 3731,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:21:11.915Z"
+   "ultima": "2026-11-20T18:26:11.601Z"
   }
  },
  "ptsDirecto": {},
@@ -8607,15 +8623,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:21:23.731Z"
+   "ultimaBien": "2026-11-20T18:26:21.147Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:21:23.731Z"
+   "ultimaBien": "2026-11-20T18:26:21.147Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:21:23.731Z"
+   "ultimaBien": "2026-11-20T18:26:21.147Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8623,11 +8639,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:21:23.731Z"
+   "ultimaBien": "2026-11-20T18:26:21.147Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:21:23.731Z"
+   "ultimaBien": "2026-11-20T18:26:21.147Z"
   }
  },
  "avisos": [
