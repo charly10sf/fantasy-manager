@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000,
@@ -2489,7 +2488,9 @@
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000,
    "AS|https://as.com/futbol/cubarsi-se-sube-al-carro-f202611-n/": 1795180432000,
    "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/": 1795182680000,
-   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000
+   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000
   },
   "hechos": [
    {
@@ -3362,7 +3363,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -4263,17 +4264,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 40,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 382021,
-  "salida": 27386,
+  "entrada": 384284,
+  "salida": 28760,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.733372,
+  "dolares": 0.734285,
   "reservado": 0
  },
  "recientes": {
@@ -8618,13 +8619,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4436,
+   "ok": 4437,
    "fallos": 0,
-   "ejecuciones": 3683,
+   "ejecuciones": 3684,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T14:26:13.816Z"
+   "ultima": "2026-11-20T14:31:13.357Z"
   }
  },
  "ptsDirecto": {},
@@ -8641,15 +8642,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:26:25.664Z"
+   "ultimaBien": "2026-11-20T14:31:29.128Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:26:25.664Z"
+   "ultimaBien": "2026-11-20T14:31:29.128Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:26:25.664Z"
+   "ultimaBien": "2026-11-20T14:31:29.128Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8657,11 +8658,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:26:25.664Z"
+   "ultimaBien": "2026-11-20T14:31:29.128Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:26:25.664Z"
+   "ultimaBien": "2026-11-20T14:31:29.128Z"
   }
  },
  "avisos": [
