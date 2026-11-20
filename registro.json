@@ -2495,7 +2495,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253501/aaaa.html": 1795200837000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/20/en-directo-alaves-deportivo-de-a-coruna-jornada-13-laliga-ea-sports-carrusel-deportivo-coruna-radio-coruna/": 1795203184000,
-   "SPORT|136682778": 1795202245000
+   "SPORT|136682778": 1795202245000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000
   },
   "hechos": [
    {
@@ -3322,7 +3323,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 54
+   "n": 55
   },
   "desde": {
    "67": {
@@ -4221,17 +4222,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 62,
+   "clasificar": 63,
    "redactar": 24,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 475991,
-  "salida": 35577,
+  "entrada": 477930,
+  "salida": 35669,
   "cacheLee": 34836,
   "cacheEscribe": 20321,
-  "dolares": 0.850444,
+  "dolares": 0.850684,
   "reservado": 0
  },
  "recientes": {
@@ -8576,13 +8577,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4521,
+   "ok": 4523,
    "fallos": 0,
-   "ejecuciones": 3759,
+   "ejecuciones": 3760,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T20:41:16.716Z"
+   "ultima": "2026-11-20T20:46:20.567Z"
   }
  },
  "ptsDirecto": {},
@@ -8599,27 +8600,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:41:21.280Z"
+   "ultimaBien": "2026-11-20T20:46:26.601Z"
   }
  },
  "avisos": [
