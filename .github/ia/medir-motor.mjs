@@ -176,17 +176,29 @@ export function pasado(P, T, opc = {}) {
   for (const [pid, x] of Object.entries(det)) detT[pid] = { ...x, stats: (x.stats || []).filter((s) => s.n <= nHecha), valores: (x.valores || []).filter(([t]) => U.diaDe(t) <= dT) };
   const dichos = Object.fromEntries(Object.entries(P.extra0.dichos || {}).filter(([, dc]) => dc && dc.t && dc.t <= T));
   const pujasMias = Object.fromEntries(Object.entries(P.extra0.pujasMias || {}).filter(([, p]) => p && p.t && p.t <= T));
+  // (opc.vivo) los puntos de los partidos de la jornada en juego que ya han acabado, como los da el directo
+  let vivo = null;
+  if (opc.vivo) {
+    const jo = P.jor.find((j) => j.ini <= T && T <= j.fin);
+    if (jo) {
+      const acabados = new Set();
+      for (const p of P.fixtures) if (p.jornada === jo.n && p.fecha && p.fecha + 2 * HORA <= T) { acabados.add(String(p.localId)); acabados.add(String(p.visitanteId)); }
+      const puntos = {};
+      for (const j of Object.values(D0.maestro || {})) { if (!acabados.has(String(j.equipoId))) continue; const sm = (j.semanas || []).find((x) => x.n === jo.n); if (sm) puntos[j.id] = num(sm.pts); }
+      vivo = { n: jo.n, t: T, puntos };
+    }
+  }
   const extra = {
     det: detT, actHist: { ...AH, lista: AH.lista.filter((a) => a.t && a.t <= T) }, calib: opc.calib === undefined ? null : opc.calib,
     dichos, calDinero: P.extra0.calDinero, calPujas: P.extra0.calPujas, pujasMias, avanzadas: opc.avanzadas ? P.X.avanzadas : null,
-    reventa: {}, notas: [], onces: null, alineaciones: null, vivo: null, noticias: null,
+    reventa: {}, notas: [], onces: null, alineaciones: null, vivo, noticias: null,
   };
   return { D, H, extra, nHecha, nProx };
 }
 
 /** el motor como habría salido en T (con el reloj puesto en T) */
 export function motorEn(P, T, opc = {}) {
-  const k = `${T}|${opc.calib === undefined ? '' : 'c'}|${opc.avanzadas ? 'a' : ''}`;
+  const k = `${T}|${opc.calib === undefined ? '' : 'c'}|${opc.avanzadas ? 'a' : ''}|${opc.vivo ? 'v' : ''}`;
   P.cache ||= new Map();
   if (P.cache.has(k)) return P.cache.get(k);
   const { D, H, extra, nHecha, nProx } = pasado(P, T, opc);
@@ -209,11 +221,11 @@ function dias(P, desde, hasta) {
 }
 
 /* ===================== 1. la inercia ===================== */
-function medirInercia(P, T0, T1) {
+function medirInercia(P, T0, T1, o = {}) {
   const { U } = P.ctx;
   const pares = [];
   for (const T of dias(P, T0, T1)) {
-    const { M } = motorEn(P, T);
+    const { M } = motorEn(P, T, o);
     const d = U.diaDe(T), d7 = U.otroDia(d, 7), d3 = U.otroDia(d, 3);
     for (const pid of Object.keys(P.serie)) {
       const v = P.vDia(pid, d), v7 = P.vDia(pid, d7), v3 = P.vDia(pid, d3);
@@ -319,10 +331,11 @@ function medirPujas(P, T0) {
     if (!v || j._sinValor) continue;
     const PV = M.pagaLiga(v, a.pid);
     if (!PV) continue;
+    // (el cuantil con el que el motor dice que se gana; si es un motor de antes, el de 6 de cada 10 y el ajuste de tus pujas)
     const aj = M.misPujasRes ? M.misPujasRes.ajuste : 0;
-    const qL = Math.min(0.85, Math.max(0.5, 0.6 + aj));
+    const qL = M.qPujaGana ? M.qPujaGana(a.pid) : Math.min(0.85, Math.max(0.5, 0.6 + aj));
     const pred = Math.ceil((v * (1 + Math.max(0, PV.q(qL)))) / 1e4) * 1e4;
-    out.push({ v, imp: a.imp, pred, qL, s: a.imp / v - 1, sPred: pred / v - 1, q: [0.25, 0.5, 0.6, 0.75, 0.9].map((p) => a.imp <= v * (1 + PV.q(p))), mio: a.q === P.yo, nombre: j.nombre, t: a.t, wL: PV.wL });
+    out.push({ v, imp: a.imp, pred, qL, top: !!(M.perfilPuja && M.perfilPuja(a.pid).top), s: a.imp / v - 1, sPred: pred / v - 1, q: [0.25, 0.5, 0.6, 0.75, 0.9].map((p) => a.imp <= v * (1 + PV.q(p))), mio: a.q === P.yo, nombre: j.nombre, t: a.t, wL: PV.wL });
   }
   const gana = out.filter((x) => x.pred >= x.imp), pierde = out.filter((x) => x.pred < x.imp);
   const res = (l) => (l.length ? {
@@ -333,7 +346,7 @@ function medirPujas(P, T0) {
     calibracion: Object.fromEntries([0.25, 0.5, 0.6, 0.75, 0.9].map((p, i) => [p, r2(l.filter((x) => x.q[i]).length / l.length)])),
     pagadoSobreValorMedianaPct: r1(q(l.map((x) => x.s), 0.5) * 100), previstoSobreValorMedianaPct: r1(q(l.map((x) => x.sPred), 0.5) * 100),
   } : { n: 0 });
-  return { total: res(out), porPrecio: porGrupo(out, (x) => tramo(x.v), res), mias: res(out.filter((x) => x.mio)),
+  return { total: res(out), porPrecio: porGrupo(out, (x) => tramo(x.v), res), top: res(out.filter((x) => x.top)), noTop: res(out.filter((x) => !x.top)), mias: res(out.filter((x) => x.mio)),
     peoresFaltas: pierde.sort((a, b) => (b.imp - b.pred) / b.v - (a.imp - a.pred) / a.v).slice(0, 5).map((x) => ({ nombre: x.nombre, valorM: r2(x.v / 1e6), pagadoM: r2(x.imp / 1e6), previstoM: r2(x.pred / 1e6) })),
     _l: out };
 }
@@ -391,10 +404,10 @@ function medirDinero(P, T0) {
 }
 
 /* ===================== 6. el peligro ===================== */
-function medirPeligro(P, T0, T1) {
+function medirPeligro(P, T0, T1, opc = {}) {
   const filas = [];
   for (const T of dias(P, T0, T1)) {
-    const { M } = motorEn(P, T);
+    const { M } = motorEn(P, T, opc.vivo ? { vivo: true } : {});
     for (const r of M.rivales) {
       const tid = r.e.teamId, p = r.peligro;
       const y = P.czs.some((z) => z.q === tid && z.t > T && z.t <= T + 7 * DIA);
@@ -422,11 +435,11 @@ export function ajustarPeligro(filas) {
 }
 
 /* ===================== 7. lo que manda vender, y lo que se ofrece a un rival ===================== */
-function medirVentas(P, T0, T1) {
+function medirVentas(P, T0, T1, o = {}) {
   const { U } = P.ctx;
   const sen = [];
   for (const T of dias(P, T0, T1)) {
-    const { M } = motorEn(P, T);
+    const { M } = motorEn(P, T, o);
     const d = U.diaDe(T);
     const vi = new Set((P.ctx.ventasInercia ? reloj(T, () => P.ctx.ventasInercia(M)) : []).map((x) => x.pid));
     for (const x of M.mias) {
@@ -491,14 +504,33 @@ function medirDirecto(P, nDesde, nHasta) {
       l.push({ n: jo.n, pid: j.id, f, pts: num(sem.pts), v0, s1: v1 / v0 - 1, s3: v3 / v0 - 1, antes: v0 / vm3 - 1, nombre: j.nombre });
     }
   }
-  // lo que esperaba la inercia (con el reloj una hora antes del partido)
+  // lo que esperaba la inercia: una hora antes del partido; al acabar (con sus puntos en el directo, el mismo día, antes
+  // del cambio de valor de la noche); y al día siguiente, con el primer cambio ya hecho (lo que queda hasta el día 3 y el 7)
   for (const x of l) {
     const { M } = motorEn(P, Math.floor((x.f - HORA) / HORA) * HORA);
     const ine = M.inercia(x.pid);
     x.p3 = ine ? ine.proy(3) / x.v0 : null;
+    x.p7 = ine ? ine.proy(7) / x.v0 : null;
     x.fase = ine ? ine.fase : null;
+    const fin = Math.min(Math.ceil((x.f + 2.25 * HORA) / (15 * 60e3)) * 15 * 60e3, U.mediodia(U.diaDe(x.f)) + 11.9 * HORA);
+    if (fin > x.f + 2 * HORA) {
+      const M1 = motorEn(P, fin, { vivo: true }).M, i1 = M1.inercia(x.pid);
+      x.a3 = i1 ? i1.proy(3) / x.v0 : null; x.a7 = i1 ? i1.proy(7) / x.v0 : null;
+      x.vivo = M1.puntosVivo ? M1.puntosVivo(x.pid) : null;
+    }
+    const d1 = U.otroDia(U.diaDe(x.f), 1), v7 = P.vDia(x.pid, U.otroDia(U.diaDe(x.f), 7));
+    x.s7 = v7 ? v7 / x.v0 - 1 : null;
+    const T2 = U.mediodia(d1) + 9 * HORA;
+    if (T2 < Date.now()) {
+      const M2 = motorEn(P, T2, { vivo: true }).M, i2 = M2.inercia(x.pid), v1 = P.vDia(x.pid, d1);
+      if (i2 && v1) { x.b2 = i2.proy(2) / v1; x.b6 = i2.proy(6) / v1; x.r2b = P.vDia(x.pid, U.otroDia(d1, 2)) / v1 - 1; const v7b = P.vDia(x.pid, U.otroDia(d1, 6)); x.r6b = v7b ? v7b / v1 - 1 : null; }
+    }
   }
-  const bloque = (y) => (y.length ? { n: y.length, real1pct: r1(media(y.map((x) => x.s1)) * 100), real3pct: r1(media(y.map((x) => x.s3)) * 100), inercia3pct: r1(media(y.filter((x) => x.p3 != null).map((x) => x.p3)) * 100), bajan3: r2(y.filter((x) => x.s3 < 0).length / y.length) } : { n: 0 });
+  const mm = (y, f) => { const z = y.map(f).filter((v) => v != null && Number.isFinite(v)); return z.length ? r1(media(z) * 100) : null; };
+  const bloque = (y) => (y.length ? { n: y.length, real1pct: mm(y, (x) => x.s1), real3pct: mm(y, (x) => x.s3), inercia3pct: mm(y, (x) => x.p3), bajan3: r2(y.filter((x) => x.s3 < 0).length / y.length),
+    deMas3: mm(y, (x) => (x.p3 != null ? x.s3 - x.p3 : null)), deMas7: mm(y, (x) => (x.p7 != null && x.s7 != null ? x.s7 - x.p7 : null)),
+    deMas3alAcabar: mm(y, (x) => (x.a3 != null ? x.s3 - x.a3 : null)), deMas7alAcabar: mm(y, (x) => (x.a7 != null && x.s7 != null ? x.s7 - x.a7 : null)),
+    deMasDiaSig2: mm(y, (x) => (x.b2 != null && Number.isFinite(x.r2b) ? x.r2b - x.b2 : null)), deMasDiaSig6: mm(y, (x) => (x.b6 != null && x.r6b != null ? x.r6b - x.b6 : null)) } : { n: 0 });
   const como = (x) => (x.antes > 0.03 ? 'subía' : x.antes < -0.03 ? 'bajaba' : 'plano');
   const pts = (x) => (x.pts <= 1 ? '≤1' : x.pts <= 4 ? '2-4' : x.pts <= 7 ? '5-7' : x.pts <= 9 ? '8-9' : '10+');
   return {
@@ -540,14 +572,16 @@ export async function medir(X, ctx, opc = {}) {
   const out = { desde, hasta: hasta7, jornadas: P.jor.filter((j) => j.fin < Date.now()).map((j) => j.n), hechaAhora: hechaAntes(P, Date.now()) };
   const paso = async (k, f) => { if (!piezas.includes(k)) return; const a = Date.now(); out[k] = f(); out[k + 'Ms'] = Date.now() - a; await new Promise((r) => setTimeout(r, 0)); };
   await paso('comprobar', () => comprobar(P));
-  await paso('inercia', () => medirInercia(P, desde, hasta7));
+  // (opc.vivo: con los puntos de los partidos ya acabados de la jornada en juego, como en la app)
+  const conVivo = opc.vivo ? { vivo: true } : {};
+  await paso('inercia', () => medirInercia(P, desde, hasta7, conVivo));
   await paso('puntos', () => medirPuntos(P, opc.nDesde || 4, opc.nHasta || out.hechaAhora, { calib: opc.calib, avanzadas: opc.avanzadas }));
   await paso('previs', () => medirPrevis(P));
   await paso('pujas', () => medirPujas(P, T0));
   await paso('ofertaLiga', () => medirOfertaLiga(P, T0));
   await paso('dinero', () => medirDinero(P, T0));
-  await paso('peligro', () => medirPeligro(P, desde, hasta7));
-  await paso('ventas', () => medirVentas(P, desde, hasta7));
+  await paso('peligro', () => medirPeligro(P, desde, hasta7, conVivo));
+  await paso('ventas', () => medirVentas(P, desde, hasta7, conVivo));
   await paso('directo', () => medirDirecto(P, opc.nDesde || 4, opc.nHasta || out.hechaAhora));
   out.ms = Date.now() - t0;
   out._P = P;

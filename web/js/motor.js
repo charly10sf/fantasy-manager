@@ -18,6 +18,25 @@ const TRAMOS_PUJA = [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, Inf
 // (0.7.13) lo que apunta la gente del dinero de los rivales (calDinero del servidor): desde cuántos apuntes cuenta, en total o en un tramo
 const CAL_MIN = 8;
 
+const EFECTO_PARTIDO = {
+  sube: { b1: [-0.032, -0.101, -0.023, -0.08], b4: [-0.01, -0.026, -0.002, -0.005], b7: [0.027, 0.091, 0.027, 0.09], b9: [0.038, 0.114, 0.034, 0.104], b10: [0.072, 0.203, 0.052, 0.156] },
+  plano: { b1: [-0.01, -0.028, -0.007, -0.022], b4: [-0.012, -0.026, -0.006, -0.013], b7: [0.01, 0.038, 0.014, 0.046], b9: [0.031, 0.092, 0.03, 0.092], b10: [0.045, 0.128, 0.034, 0.106] },
+  baja: { b1: [-0.014, -0.041, -0.007, -0.029], b4: [-0.008, -0.02, -0.002, -0.01], b7: [0.008, 0.022, 0.011, 0.027], b9: [0.027, 0.083, 0.028, 0.086], b10: [0.053, 0.145, 0.047, 0.134] },
+};
+/** cómo venía antes del partido, por lo que subió su valor los 3 días de antes (en tanto por uno) */
+export const comoVenia = (antes) => (antes > 0.03 ? 'sube' : antes < -0.03 ? 'baja' : 'plano');
+/** lo que se espera de más (o de menos) en su valor por el partido que acaba de jugar, por encima de la inercia: { e3, e7 }
+ *  (etapa 0, el día del partido: a 3 y 7 días; etapa 1, el día siguiente: lo que queda a 2 y 6), en tanto por uno */
+export function efectoTras(pts, como, valor, etapa = 0) {
+  const b = pts <= 1 ? 'b1' : pts <= 4 ? 'b4' : pts <= 7 ? 'b7' : pts <= 9 ? 'b9' : 'b10';
+  const e = (EFECTO_PARTIDO[como] || EFECTO_PARTIDO.plano)[b];
+  // y por lo que vale: en porcentaje, al barato le mueve más un buen partido (tras 10 o más, +8,7 % en 3 días con menos
+  // de 3 M y +3,5 % con más de 30 M) y menos uno malo (−0,9 frente a −1,9/−2,5)
+  const fp = valor < 3e6 ? [1.6, 0.55] : valor < 10e6 ? [1.45, 1.4] : valor < 30e6 ? [1.07, 1.4] : [0.63, 1.2];
+  const pv = (x) => x * (x > 0 ? fp[0] : fp[1]);
+  return etapa === 0 ? { e3: pv(e[0]), e7: pv(e[1]) } : { e3: pv(e[2]), e7: pv(e[3]) };
+}
+
 // la tendencia de 7 días para decidir: con 2 o más días subiendo seguidos, la de esos días (`p7e` de M.tend, 0.7n)
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
 
@@ -167,6 +186,27 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- tendencias de valor ---------- */
   const cacheT = {}, hoyM = diaDe(ahora);
+  /* (21 nov, 00:14, con la liga de Carlos) el valor de ahora es el del último cambio de LaLiga (a las 00:16): con la liga
+     bajada antes de medianoche, o entre las 00:00 y el cambio, aún es el de ayer. Contarlo como el de hoy les daba a todos
+     un día «a 0» y ponía «estancados» a todos los que suben (Hoy mandaba vender a Berenguer, Giuliano y Huijsen «antes de que
+     gire»). Si casi todos los que valen algo valen hoy justo lo mismo que ayer (con la liga bajada a las 23:59, los 882;
+     un día normal, un 32 % de todos y menos de los de 2 M o más), los valores son los de ayer: `hoyV` */
+  const hoyV = (() => {
+    const ayer = otroDia(hoyM, -1);
+    let n = 0, igual = 0;
+    for (const j of Object.values(D.maestro || {})) {
+      if (!(j && j.valor >= 2e6)) continue;
+      const s = H.v && H.v[j.id];
+      if (!s || !s.length) continue;
+      let va = null;
+      for (let i = s.length - 1; i >= 0; i--) { if (s[i][0] === ayer) { va = s[i][1]; break; } if (s[i][0] < ayer) break; }
+      if (va == null) continue;
+      n++;
+      if (va === j.valor) igual++;
+    }
+    return n >= 30 && igual / n >= 0.8 ? ayer : hoyM;
+  })();
+  M.valoresDe = hoyV;
   M.tend = (pid) => {
     if (cacheT[pid]) return cacheT[pid];
     // el histórico de la app (un valor por cada día que se abrió) y el de LaLiga (el de la ficha, sin huecos) juntos,
@@ -184,7 +224,7 @@ export function analizar(D, H, c, extra = {}) {
     // el valor de hace n días, solo si hay un dato de esos días (con margen): con un histórico que acaba en agosto (uno
     // que se fue de LaLiga), «hace 1 día» era el de agosto y salía subiendo 1,2 M hoy (Arriaga, aviso de Domy, 8 nov)
     const hace = (dias, margen) => {
-      const objetivo = otroDia(hoyM, -dias), minimo = otroDia(hoyM, -dias - margen);
+      const objetivo = otroDia(hoyV, -dias), minimo = otroDia(hoyV, -dias - margen);
       let mejor = null;
       for (const [d, v] of s) if (d <= objetivo) mejor = d >= minimo ? v : null;
       return mejor;
@@ -221,8 +261,8 @@ export function analizar(D, H, c, extra = {}) {
     let enOrden = true;
     for (let i = 1; i < L.length && enOrden; i++) if (!(L[i - 1][0] < L[i][0])) enOrden = false;
     const porDia = new Map();
-    for (const [d, x] of enOrden && L.length > 20 ? L.slice(-20) : L) if (x) porDia.set(d, x);
-    porDia.set(hoyM, valor);
+    for (const [d, x] of enOrden && L.length > 20 ? L.slice(-20) : L) if (x && d <= hoyV) porDia.set(d, x);
+    porDia.set(hoyV, valor);
     return [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-9);
   }
   function subidasDe(ult9) {
@@ -255,6 +295,46 @@ export function analizar(D, H, c, extra = {}) {
     return (cacheV[pid] = { max, racha: t.racha, ritmo, techo: max / j.valor });
   };
 
+  /* ---------- el partido que acaba de jugar ---------- */
+  // Lo que cambia su valor los días siguientes por los puntos que ha hecho, por encima de lo que diga la inercia. Medido
+  // con la liga de Carlos (1.672 jugador-jornadas de la J4 a la J12, claude/medida-ia-2026-11-20.md): tras 10 puntos o más,
+  // +5,5 puntos porcentuales en 3 días; tras 1 o menos, −1,6; y más si venía subiendo (el que sube y hace 1, −3,2 en 3 días
+  // y −10 en 7; el que sube y hace 10, +7,2 y +20). El día del partido (con sus puntos del directo o de la jornada, ya
+  // acabado) y el día siguiente, con lo que queda (el primer cambio de valor no se lo lleva todo). Por cómo venía (lo que
+  // subió los 3 días antes del partido: más de un 3 %, sube; menos de −3 %, baja) y sus puntos: [3 días, 7 días] el día del
+  // partido y [2, 6] el siguiente, en tanto por uno
+  const cachePart = {};
+  function efectoPartido(pid, j, t) {
+    if (pid in cachePart) return cachePart[pid];
+    if (!j || !j.pos || j.pos > 4 || !j.valor) return (cachePart[pid] = null);
+    const ayer = otroDia(hoyV, -1);
+    const partidoDe = (n) => (D.partidos || []).find((p) => Number(p.jornada) === Number(n) && p.fecha && (p.localId === j.equipoId || p.visitanteId === j.equipoId)) || null;
+    let pts = null, p = null;
+    // el del directo, si su partido ya ha acabado (con un partido ya acabado salen sus puntos)
+    const vivo = M.vivo && M.vivo.puntos ? M.vivo.puntos[pid] : null;
+    if (vivo != null && M.vivo.n != null) { const q = partidoDe(M.vivo.n); if (q && q.fecha + 2 * HORA <= ahora) { pts = num(vivo); p = q; } }
+    if (pts == null) {
+      const s = [...(j.semanas || [])].filter((w) => w.pts != null).sort((a, b) => b.n - a.n)[0];
+      const q = s ? partidoDe(s.n) : null;
+      if (q && q.fecha + 2 * HORA <= ahora) { pts = num(s.pts); p = q; }
+    }
+    if (!p) return (cachePart[pid] = null);
+    const dP = diaDe(p.fecha);
+    const etapa = dP === hoyV ? 0 : dP === ayer ? 1 : null;
+    if (etapa == null) return (cachePart[pid] = null);
+    // cómo venía: su valor el día del partido frente al de 3 días antes
+    const porDia = new Map(t.dias || []);
+    const vP = etapa === 0 ? j.valor : porDia.get(dP), v3 = porDia.get(otroDia(dP, -3));
+    if (!vP || !v3) return (cachePart[pid] = null);
+    const como = comoVenia(vP / v3 - 1);
+    const { e3: c, e7: l } = efectoTras(pts, como, j.valor, etapa), kc = etapa === 0 ? 3 : 2, kl = etapa === 0 ? 7 : 6;
+    const f = (k) => (k <= kc ? (c * k) / kc : k <= kl ? c + ((l - c) * (k - kc)) / (kl - kc) : l);
+    return (cachePart[pid] = { pts, n: Number(p.jornada), fecha: p.fecha, como, etapa, e3: c, e7: l, f, vivo: vivo != null && pts === num(vivo) });
+  }
+  M.efectoPartido = (pid) => efectoPartido(pid, J(pid), M.tend(pid));
+  /** lo que hay que ofrecerle a su dueño para que te venda a uno (ofertaDueno), para el árbitro y el chat */
+  M.ofertaDuenoDe = (j) => (j ? ofertaDueno(M, j, M.tend(j.id) || {}) : null);
+
   /* ---------- la inercia del valor: si sube cada vez menos va a girar, y si ya ha girado hay que vender ---------- */
   // Con lo que ha cambiado su valor cada día (hasta los últimos 7). Si sube 1 M, luego 800 mil y luego 500 mil, se
   // está frenando: con lo que se frena cada día se calcula cuándo deja de subir. Si después de varios días subiendo
@@ -274,7 +354,7 @@ export function analizar(D, H, c, extra = {}) {
     }
     // si hoy aún no se ha guardado el cambio y futbolfantasy lo da, se usa
     const ff = (D.tendencias || {})[pid];
-    if (ff && ff.d1 != null && F[F.length - 1] !== hoyM) { R.push(ff.d1); F.push(hoyM); }
+    if (ff && ff.d1 != null && hoyV === hoyM && F[F.length - 1] !== hoyM) { R.push(ff.d1); F.push(hoyM); }
     if (R.length < 3) return (cacheI[pid] = null);
     const Rs = R.slice(-7), v = j.valor;
     const n = Rs.length, ult = Rs[n - 1], pen = Rs[n - 2];
@@ -323,25 +403,37 @@ export function analizar(D, H, c, extra = {}) {
     if (vu && ult > quieto && ['frena', 'parado', 'rebote'].includes(fase)) { frenaba = fase === 'frena'; fase = 'sube'; giroEn = null; frenazo = null; }
     // lo que se espera los próximos días: el frenazo sigue al mismo ritmo, la bajada se suaviza poco a poco
     const hastaJ = M.proxima ? clamp(Math.ceil((M.proxima.ini - ahora) / DIA), 1, 7) : 3;
+    // (21 nov, medido con la liga de Carlos en 20.718 jugador-días: claude/medida-ia-2026-11-20.md) lo que se pierde de
+    // ritmo cada día, ajustado a la vez a 3, 7 y 14 días: el que sube pierde un 5 % (antes un 20 %: se esperaba la mitad de
+    // lo que subía), el que acelera un 4 % y el que ha girado un 6 %; el que baja, el 10 % de siempre. El que «se frena» no
+    // gira: sigue subiendo, cada vez menos (un 14 % al día); con el giro a ese ritmo se esperaban −140 mil en 7 días y
+    // fueron +1,5 M
+    const RITMO = { sube: 0.95, acelera: 0.96, frena: 0.86, giro: 0.94, baja: 0.9 };
     const proy = (k) => {
       let x = 0, r = ult;
       for (let i = 1; i <= k; i++) {
         // (cada día baja un poco más, pero no sin fin: con el ruido de los datos la pendiente salía disparada y un
         // −23 mil de hoy se proyectaba en −929 mil hasta la jornada)
-        if (fase === 'frena' || fase === 'parado') r = Math.max(r + Math.min(frenazo != null ? frenazo : pend, -quieto * 0.6), -Math.max(quieto, v * 0.006));
-        else if (fase === 'giro' || fase === 'baja') r = r * 0.9;
+        if (fase === 'parado') r = Math.max(r + Math.min(frenazo != null ? frenazo : pend, -quieto * 0.6), -Math.max(quieto, v * 0.006));
         // (el que vuelve se frena más despacio, como en Especular)
-        else r = r * (vu ? 0.92 : 0.8);
+        else r = r * (RITMO[fase] || (vu ? 0.92 : 0.8));
         x += r;
       }
       return x;
     };
+    // (21 nov, Carlos: «Berenguer venía de subir una barbaridad y ha hecho un punto: se va a estancar», y «si uno hace
+    // muchísimos puntos… que te salga cláusulalo ya») el partido que acaba de jugar: lo que se espera de más (o de menos)
+    // por sus puntos, por encima de la inercia
+    const ef = efectoPartido(pid, j, t);
+    // (un mal partido frena al que sube, pero no le da la vuelta: el que venía subiendo y hace 1 punto sube de media un
+    // 40-55 % de lo que esperaba la inercia, no baja; así que lo de menos no pasa del 60 % de lo que se esperaba que subiera)
+    const proyP = ef ? (k) => { const p0 = proy(k), e = v * ef.f(k); return p0 + (e < 0 && p0 > 0 ? Math.max(e, -0.6 * p0) : e); } : proy;
     const subida = (subia >= 2 ? Rs.slice(Math.max(0, n - 1 - subia), n - 1) : antes.slice(-5)).filter((r) => r > quieto);
     // (19 nov, sesión larga) el texto, aparte (inercia-texto.js): aquí solo las cuentas
-    const texto = textoInercia({ fase, Rs, ult, subida, baja, giroEn, rebote, quieto, hastaJ, perdidaJ: proy(hastaJ), vu, frenaba });
+    const texto = textoInercia({ fase, Rs, ult, subida, baja, giroEn, rebote, quieto, hastaJ, perdidaJ: proyP(hastaJ), vu, frenaba });
     // (21) `proy(k)`: lo que se espera que cambie su valor en k días, con la misma cuenta (la pestaña Parón la usa hasta la
     // vuelta, que puede quedar a más de los 7 días de `proyJ`)
-    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, proy: (k) => proy(clamp(Math.round(k), 1, 14)), texto, quieto, rebote, vuelve: vu && (fase === 'sube' || fase === 'acelera') ? vu : null });
+    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proyP(3), proyJ: proyP(hastaJ), hastaJ, proy: (k) => proyP(clamp(Math.round(k), 1, 14)), texto, quieto, rebote, vuelve: vu && (fase === 'sube' || fase === 'acelera') ? vu : null, partido: ef });
   };
   // la hora del partido de cada equipo en cada jornada, hecha una vez (M.partidazo se llama con cientos de jugadores
   // desde M.interes)
@@ -403,7 +495,9 @@ export function analizar(D, H, c, extra = {}) {
     if (nivel >= 3 && ['giro', 'baja', 'parado', 'frena'].includes(x.fase)) return null;
     const j = J(pid), perder = -x.proyJ;
     if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: nivel >= 2 ? 'antes del giro' : 'ya', ...x, perder };
-    if (x.fase === 'parado' || (x.fase === 'frena' && x.giroEn != null && x.giroEn <= 2.5)) return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
+    // (21 nov, medido: el que se frena y «gira» en 2 días o menos subió +265 mil de media en los 3 días siguientes y se
+    // quedó igual a los 7: venderlo ese día es venderlo antes de tiempo. Se vende cuando gira de verdad)
+    if (x.fase === 'parado') return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
     return null;
   };
 
@@ -433,6 +527,8 @@ export function analizar(D, H, c, extra = {}) {
   // si dos se solapan (una jornada entre semana pegada a otra), manda la última que ha empezado
   M.enJuego = [...jornadas].reverse().find((j) => j.ini <= ahora && ahora <= j.fin) || null;
   M.proxima = jornadas.find((j) => j.ini > ahora) || null;
+  // (los puntos del directo, ya aquí: la inercia los usa para el partido que acaba de jugar; abajo, M.ponerVivo)
+  M.vivo = extra.vivo && M.enJuego && extra.vivo.n === M.enJuego.n ? extra.vivo : null;
   // el cierre de cláusulas: LaLiga no deja clausular a nadie en las 24 h antes del primer partido de cada jornada; se
   // reabren justo a la hora de ese primer partido
   M.VEDA_H = 24;
@@ -1064,6 +1160,11 @@ export function analizar(D, H, c, extra = {}) {
       M.misPujasRes = n ? { n, ganadas: n - perdidas.length, perdidas: perdidas.length, ajuste, falta: faltas.length ? cuantil(faltas, 0.5) : null, ult: ult.slice(0, 8) } : null;
     }
   }
+  /* el cuantil de las compras parecidas con el que se gana la puja: el de 6 de cada 10, más lo que diga cómo te va con tus
+     pujas. (21 nov, medido con la liga de Carlos: 222 compras, claude/medida-ia-2026-11-20.md) con los top se queda corto:
+     el de 6 de cada 10 ganaba 4 de cada 10 (los de más de 30 M se pagan cada vez más por encima de las compras de antes),
+     y hace falta el de 7 de cada 10 y pico; con los demás, 6 de cada 10 ganaba ~6 */
+  M.qPujaGana = (pid) => clamp(0.6 + (M.perfilPuja(pid).top ? 0.12 : 0) + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.5, 0.85);
   // lo que es normal pagar de más, en porcentaje, por uno de ese valor en tu liga: lo que pagan 3 de cada 4 por los de
   // su valor, y como poco un 10 % (lo de antes para todos). A partir de ahí el porcentaje empieza a contar como sobrecoste
   M.sobreNormal = (v) => { const P = M.pagaLiga(v); return P ? Math.max(0.1, P.p75) : 0.1; };
@@ -2006,7 +2107,7 @@ export function analizar(D, H, c, extra = {}) {
     if (ofertaMin) puja = i.n >= 70 ? ofertaAlta : ofertaMin;
     // la que hace falta en tu liga para llevárselo de verdad (la de 6 de cada 10 compras parecidas, o más si la app ya pujaba
     // más), antes de los recortes por lo que aporta a tu once: para revender cuenta esta
-    const pujaGana = m.tipo === 'manager' ? null : PV && j.valor ? Math.max(puja, Math.ceil(j.valor * (1 + Math.max(0, PV.q(clamp(0.6 + (M.misPujasRes ? M.misPujasRes.ajuste : 0), 0.5, 0.85)))) / 10000) * 10000) : puja;
+    const pujaGana = m.tipo === 'manager' ? null : PV && j.valor ? Math.max(puja, Math.ceil(j.valor * (1 + Math.max(0, PV.q(M.qPujaGana(m.pid)))) / 10000) * 10000) : puja;
     // sin pasar de lo que se aguanta pagar por lo que aporta a tu once
     let recortada = false;
     if (m.tipo !== 'manager') {

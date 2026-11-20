@@ -16,7 +16,7 @@ export function textoInercia(x) {
   if (fase === 'giro') texto = `Ha girado a la baja: venía subiendo (${subida.slice(-4).map(fmt).join(', ')} al día) y ${baja >= 2 ? `ya lleva ${baja} días bajando (hoy ${fmt(ult)})` : `hoy ${fmt(ult)}`}. Si sigue así, en ${dias(hastaJ)} pierde unos ${eur(-perdidaJ)}.`;
   else if (fase === 'rebote') texto = `Viene de bajar un ${Math.round(rebote.caida * 100)} % en el último mes (de ${eur(rebote.max)} a ${eur(rebote.min)}) y estos días ha rebotado un poco (${subida.slice(-4).map(fmt).join(', ')}${Math.abs(ult) <= quieto ? `; hoy ${fmt(ult)}, se ha parado` : ', cada vez menos'}). Es un rebote pequeño después de mucho bajar, no una subida que se vaya a dar la vuelta: puede estar tocando fondo o seguir bajando, así que esto solo no es motivo para venderlo.`;
   else if (fase === 'parado') texto = `Se ha estancado después de subir (${subida.slice(-4).map(fmt).join(', ')} y hoy ${fmt(ult)}): lo normal es que ahora empiece a bajar.`;
-  else if (fase === 'frena') texto = `Sube cada vez menos (${Rs.slice(-3).map(fmt).join(', ')} al día): a este ritmo deja de subir en unos ${Math.max(1, Math.round(giroEn))} día${Math.round(giroEn) > 1 ? 's' : ''} y luego bajará.`;
+  else if (fase === 'frena') texto = `Sube cada vez menos (${Rs.slice(-3).map(fmt).join(', ')} al día): a este ritmo se para en unos ${Math.max(1, Math.round(giroEn))} día${Math.round(giroEn) > 1 ? 's' : ''}.`;
   else if (fase === 'baja') texto = `Baja ${fmt(ult)} al día${baja >= 2 ? ` (${baja} días seguidos)` : ''}: en ${dias(hastaJ)} perdería unos ${eur(-perdidaJ)}.`;
   else if (fase === 'acelera') texto = `Sube cada vez más (${Rs.slice(-3).map(fmt).join(', ')} al día).`;
   else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;

@@ -85,7 +85,7 @@ export function inerciaPlanHTML(S, pid, { mio = false, op = null, mia = null } =
   else if (x.fase === 'giro') cadaDia = `Venía subiendo (${subida.map(fmt).join(', ')} al día). ${x.baja >= 2 ? `Lleva ${dias(x.baja)} bajando.` : 'Hoy ya baja.'}`;
   else if (x.fase === 'baja') cadaDia = x.baja >= 2 ? `Lleva ${dias(x.baja)} seguidos bajando.` : '';
   else if (x.fase === 'parado') cadaDia = `Venía subiendo (${subida.map(fmt).join(', ')} al día) y hoy se ha parado. Lo normal es que ahora baje.`;
-  else if (x.fase === 'frena') cadaDia = `Sube cada vez menos: ${u3} al día. A este ritmo deja de subir en ~${dias(Math.max(1, Math.round(x.giroEn)))} y luego baja.`;
+  else if (x.fase === 'frena') cadaDia = `Sube cada vez menos: ${u3} al día. A este ritmo se para en ~${dias(Math.max(1, Math.round(x.giroEn)))}.`;
   else if (x.fase === 'acelera') cadaDia = `Últimos días: ${u3} al día.`;
   else if (x.fase === 'rebote') cadaDia = `Es un rebote pequeño tras mucho bajar (${subida.map(fmt).join(', ')} al día). Puede estar tocando fondo o seguir bajando: solo con esto no hay motivo para venderlo.`;
 
