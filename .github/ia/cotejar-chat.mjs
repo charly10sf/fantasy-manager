@@ -144,7 +144,10 @@ export function cotejar(r) {
   for (const x of porcentajes(principal)) if (!pctValido(x, I, propias)) inventadas.push(`porcentaje ${x.txt}`);
   for (const h of horas(principal)) if (!I.hs.has(h)) inventadas.push(`hora ${h}`);
   for (const f of fechas(principal)) if (!I.fs.some((g) => g.d === f.d && (!f.wd || !g.wd || g.wd === f.wd) && (!f.mes || !g.mes || g.mes === f.mes))) inventadas.push(`fecha ${f.wd || ''} ${f.d}${f.mes ? ` ${f.mes}` : ''}`.replace(/\s+/g, ' '));
-  for (const p of puntosDe(principal)) if (!I.pts.has(p) && !I.pts.has(Math.round(p)) && ![...I.pts].some((q) => Math.abs(q - p) < 0.06 || Math.round(q) === p)) inventadas.push(`puntos ${String(p).replace('.', ',')}`);
+  // (21 nov) también la diferencia de dos que sí están («le sacas 110 puntos»: 697 − 587), como con el dinero
+  const ptsL = [...I.pts].filter((q) => q >= 10);
+  const resta = (p) => p >= 2 && ptsL.some((a) => ptsL.some((b) => a !== b && Math.abs(a - b - p) < 0.06));
+  for (const p of puntosDe(principal)) if (!I.pts.has(p) && !I.pts.has(Math.round(p)) && ![...I.pts].some((q) => Math.abs(q - p) < 0.06 || Math.round(q) === p) && !resta(p)) inventadas.push(`puntos ${String(p).replace('.', ',')}`);
   // jugadores de LaLiga que nombra y no le hemos pasado; nombres que no son de nadie
   const conocidos = [...(r.nombres || []), ...(r.clubes || []), ...(r.equipos || []), ...(r.apodos || [])].map(sinT).filter((x) => x.length >= 3);
   const tp = sinT(principal);

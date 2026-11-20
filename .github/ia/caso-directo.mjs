@@ -5,6 +5,7 @@
 //      hace 1, menos (Berenguer, 20 nov); el día siguiente queda una parte; antes de acabar el partido, nada
 //  (c) `efectoTras`: más puntos, más subida, y en porcentaje más en los baratos
 //  (d) en Hoy, «Clausula a X» de uno que acaba de hacer un partidazo lo dice
+//  (f) la revisión del chat no deja mandar aceptar una oferta en la que la app aconseja esperar
 //  (e) pasada la medianoche y antes del cambio de valor (00:16), los valores son los de ayer: nadie sale «estancado» por un
 //      día a 0 (21 nov, 00:14: Hoy mandaba vender a Berenguer, Giuliano y Huijsen «antes de que gire»)
 // Uso: PW_MODULO=… node .github/ia/caso-directo.mjs   (sale con 1 si algo falla)
@@ -81,6 +82,17 @@ const r = await P.page.evaluate(async () => {
     const M4 = Mo.analizar(D4, H4, S.c, {}), i4 = M4.inercia(pid);
     out.noche = { de: M4.valoresDe, ayer, fase: i4 && i4.fase, vende: !!M4.ventaPorInercia(pid) };
   }
+  // (f) con una oferta en la que la app aconseja esperar, la revisión del chat corrige «si quieres caja, acéptala», pero no
+  //     «si se para, acéptala» (21 nov, la batería con la IA de verdad)
+  {
+    const I = await import('./js/ia.js');
+    const v = (S.M.misVentas || []).find((y) => y.consejo === 'esperar' && y.mejor);
+    out.esperar = v ? {
+      j: v.j.nombre,
+      mal: I.revisarChat(`Con ${v.j.nombre}, la app aconseja esperar; si quieres caja ya, acéptala.`, `¿Acepto la oferta por ${v.j.nombre}?`, S.D, S.M, { rec: [], hist: [] }).notas,
+      bien: I.revisarChat(`Con ${v.j.nombre}, la app aconseja esperar: si antes de que caduque su valor se para o cae, acéptala.`, `¿Acepto la oferta por ${v.j.nombre}?`, S.D, S.M, { rec: [], hist: [] }).notas,
+    } : null;
+  }
   // (d) el primero de los «Clausula a» de Hoy, con un partidazo hoy
   const c = (S.M.acciones || []).find((a) => a.tipo === 'clausular');
   out.hayClausular = !!c;
@@ -106,6 +118,7 @@ ok(r.ayer.ef && r.ayer.ef.etapa === 1 && r.ayer.ef.e3 > 0 && r.ayer.ef.e3 < r.do
 ok(r.tabla.b1 < 0 && r.tabla.b1 < r.tabla.b7 && r.tabla.b7 < r.tabla.b10 && r.tabla.barato > r.tabla.caro, `más puntos, más subida, y más en los baratos (${Object.entries(r.tabla).map(([k, v]) => `${k} ${(v * 100).toFixed(1)}`).join(', ')})`);
 ok(r.normal.de === r.normal.hoy, `en la liga de ejemplo de siempre, los valores son los de hoy (${r.normal.de})`);
 ok(r.noche.de === r.noche.ayer && ['sube', 'acelera'].includes(r.noche.fase) && !r.noche.vende, `antes del cambio de valor de la noche, los valores son los de ayer (${r.noche.de}) y el que sube sigue subiendo (fase ${r.noche.fase}, vender ${r.noche.vende})`);
+ok(!r.esperar || (r.esperar.mal.some((n) => /aconseja esperar/.test(n)) && !r.esperar.bien.some((n) => /aconseja esperar/.test(n))), r.esperar ? `la oferta por ${r.esperar.j} con la app en «esperar»: «si quieres caja, acéptala» se corrige y «si se para, acéptala» no (${JSON.stringify(r.esperar.mal).slice(0, 160)})` : 'la liga de ejemplo no trae ninguna oferta en «esperar»');
 ok(!r.hayClausular || (r.clausular && /Acaba de hacer 14 puntos/.test(r.clausular.texto) && r.clausular.primero), r.hayClausular ? `Hoy: «${r.clausular ? r.clausular.texto : 'no sale'}»` : 'Hoy: la liga de ejemplo no trae ningún «Clausula a»');
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

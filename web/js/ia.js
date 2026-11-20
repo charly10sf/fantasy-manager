@@ -3206,6 +3206,23 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     if (cifras.length && Math.max(...cifras) < od.v * 0.98) nota(`${N(js[0])} sube: por menos de unos ${eur(od.v)} su dueño no lo va a soltar (lo que ganaría quedándoselo esta semana${od.conPuntos ? ' y sus puntos de la jornada' : ''}).`);
   }
 
+  /* 3d. (21 nov, la batería con la IA de verdad: «la app aconseja esperar…; si quieres caja ya, acéptala») con una oferta por
+     uno tuyo en la que la app aconseja ESPERAR, la respuesta no manda aceptarla, ni como «si quieres…» */
+  for (const v of M.misVentas || []) {
+    if (v.consejo !== 'esperar' || !v.mejor || !v.j) continue;
+    // (por frases enteras, con lo que va detrás de un «;»: «…la app aconseja esperar; si quieres caja ya, acéptala»)
+    const suyas = t.split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ])[.!?]\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+    const ofertas = (M.misVentas || []).filter((y) => y.mejor).length;
+    const manda = suyas.some((fr) => {
+      const k = norm(fr);
+      const delJ = enFrase(fr).some((j) => j.id === v.pid) || (ofertas === 1 && /\boferta\b/.test(k));
+      // (si es por si deja de subir, vale: es lo mismo que haría la app)
+      return delJ && /\b(aceptala|acepta (ya|la oferta)|aceptala ya)\b/.test(k) && !/\b(no|nunca|ni)\b[^,]{0,12}\bacepta/.test(k)
+        && !/\bsi\b[^.]{0,90}\b(se para|para de subir|cae|baja|gira|deja de subir|empieza a bajar|se frena|se estanca)\b/.test(k);
+    });
+    if (manda) nota(`Con la oferta por ${N(v.j)} la app aconseja esperar, así que mejor no aceptarla todavía${v.porque ? `: ${cortar(v.porque, 150).replace(/[.\s]+$/, '')}` : ''}${v.porque && /…$/.test(cortar(v.porque, 150)) ? '' : '.'}`);
+  }
+
   /* 4. lo que no puede decir */
   const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
