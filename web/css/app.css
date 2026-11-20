@@ -1813,7 +1813,10 @@ body.limitado .tostada { z-index: 120; }
 .tabs.rival-tabs button { padding: 0 var(--e2); font-size: var(--t-sec2); }
 .escritorio .tabs.rival-tabs button { padding: 0 var(--e3); font-size: var(--t-cuerpo); }
 @media (max-width: 380px) { .tabs.rival-tabs button { padding: 0 var(--e1); font-size: var(--t-mini); } }
-.rival-sub { margin: 0 0 var(--e3); }
+/* (20 nov) la chapa del peligro, en la línea de debajo: al lado del nombre lo pisaba cuando era largo («DELLAFUENTE.FC»);
+   un nombre de una sola palabra que no quepa ni así acaba en puntos suspensivos (los nombres no se parten) */
+.rival-sub { margin: 0 0 var(--e3); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.rival-sub .amenaza { flex: none; }
 .rival-tiles .eq2-t small { font: 600 var(--t-mini)/1.2 'Barlow'; }
 .rival-tiles .rival-bloq b { color: var(--texto2); }
 .rival-tiles .rival-bloq b .ic { width: var(--t-cifra); height: var(--t-cifra); }
@@ -2280,7 +2283,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .cara-m img.escudo { object-fit: contain; padding: 4px; background: var(--plano2); }
 .cara-m.g { width: 56px; height: 56px; } .cara-m.g .ini { font-size: var(--t-sec); }
 .fila > .cara-m { margin-right: 2px; }
-.rival-cab h2 { min-width: 0; }
+.rival-cab h2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 4px 0; }
 
 /* ---------- Equipo (rediseño del 30 oct: «todo más claro y más visual») ---------- */
 /* arriba: tu cara, el nombre y cuatro números en una tira */
