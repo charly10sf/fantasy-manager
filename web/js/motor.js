@@ -2206,6 +2206,9 @@ export function analizar(D, H, c, extra = {}) {
   const riqDe = {};
   for (const e of D.clasif) if (e.teamId !== yoTid) { const c = M.capacidad(e.teamId); riqDe[e.teamId] = c ? c.v + 0.25 * num(e.valor) : null; }
   const riqMax = Math.max(0, ...Object.values(riqDe).filter((v) => v != null));
+  // (20 nov, 18:39, Carlos: «haz otra escala con muy alto») cuatro escalones: muy alto desde 70, alto desde 50, medio
+  // desde 30 y bajo por debajo
+  const nivelPel = (n) => (n >= 70 ? 'muyalta' : n >= 50 ? 'alta' : n >= 30 ? 'media' : 'baja');
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
     const serie = (H.eq && H.eq[e.teamId]) || [];
     const hace7 = serie.filter(([d]) => d <= otroDia(diaDe(ahora), -7)).pop();
@@ -2286,7 +2289,7 @@ export function analizar(D, H, c, extra = {}) {
       if (M.vedaAhora) {
         const re = calc(true);
         n = Math.max(nivelDe(re.puede), n, enAlto.length ? 30 : 0);
-        veda = { hasta: M.vedaAhora.fin, nivel: n >= 60 ? 'alta' : n >= 30 ? 'media' : 'baja', l: re.l };
+        veda = { hasta: M.vedaAhora.fin, nivel: nivelPel(n), l: re.l };
         lista = re.l; puede = re.puede;
       }
       const ult = czs.filter((z) => z.aMi).sort((a, b) => b.t - a.t)[0] || null;
@@ -2311,7 +2314,7 @@ export function analizar(D, H, c, extra = {}) {
       movs: sem.length, gastado, ingresado, clausulazos, contraMi,
       abiertas: fichas.filter((x) => x.abierta && x.clausula).length,
       meLlegan: fichas.filter((x) => x.abierta && x.meLlega).length,
-      amenaza: Math.round(amenaza), nivel: amenaza >= 60 ? 'alta' : amenaza >= 30 ? 'media' : 'baja', peligro,
+      amenaza: Math.round(amenaza), nivel: nivelPel(amenaza), peligro,
       ultima: acts[0] || null,
       cambios: M.cambios.filter((m) => m.teamId === e.teamId),
     };

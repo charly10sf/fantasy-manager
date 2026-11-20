@@ -7,6 +7,7 @@
 //      no tiene dinero para ninguna cláusula tuya)
 //  (c) en la veda: el peligro de cuando se reabran (ya no un escalón menos: en la veda salían todos «medio»), y lo dice
 //  (f) el mismo rival que más clausula, con mucho dinero: por encima de como sale sin dinero
+//  (g) cuatro escalones (muy alto desde 70, alto desde 50, medio desde 30): el rico de (a) sale «muy alto»
 //  (d) tras un parón sin movimientos (nada en 15 días): el de (a) sigue sin salir «bajo»
 //  (e) el porqué no lleva cifras de dinero (vale con el dinero del rival cerrado) ni, con «quién paga» cerrado, qué le llega
 // y además: en la liga tal cual no salen todos en «alto», y ningún rival que paga una cláusula tuya en riesgo alto sale
@@ -41,13 +42,13 @@ const forzar = async (P, { veda = false, sinMov = false, activoRico = false } = 
 }, { sinMov, activoRico });
 
 const tal = async (P) => P.page.evaluate(() => window.S.M.rivales.map((r) => r.nivel));
-const ESC = ['alta', 'media', 'baja'];
+const ESC = ['muyalta', 'alta', 'media', 'baja'];
 
 // la liga tal cual: no todos en alto
 for (const e of ['martes', 'veda', 'enjuego', 'paron']) {
   const P = await pagina(e);
   const n = await tal(P);
-  ok(n.filter((x) => x === 'alta').length <= n.length / 2, `${e}: no salen todos en «alto» (${['alta', 'media', 'baja'].map((k) => `${n.filter((x) => x === k).length} ${k}`).join(', ')})`);
+  ok(n.filter((x) => x === 'alta' || x === 'muyalta').length <= n.length / 2, `${e}: no salen todos en «alto» o «muy alto» (${ESC.map((k) => `${n.filter((x) => x === k).length} ${k}`).join(', ')})`);
   if (P.errores.length) ok(false, `${e}: errores en la página: ${P.errores.join(' | ')}`);
   await P.cerrar();
 }
@@ -60,6 +61,7 @@ for (const e of ['martes', 'veda', 'enjuego', 'paron']) {
   ok(r.activo.nivel === 'baja', `(b) sin dinero y el que más clausula: ${r.activo.nivel} (${r.activo.a}; ${r.activo.motivo})`);
   ok(/no le llega/i.test(r.activo.motivo), `(b) el porqué dice que no le llega: «${r.activo.motivo}»`);
   ok(/le llega/i.test(r.rico.motivo), '(a) el porqué dice qué cláusulas le llegan');
+  ok(r.rico.nivel === 'muyalta', `(g) el rico con cuatro cláusulas tuyas baratas abiertas: «muy alto» (${r.rico.nivel}, ${r.rico.a})`);
   ok(r.motivos.every((m) => m && !/\d\s?(M|mil)\b|€/.test(m)), '(e) ningún porqué lleva cifras de dinero');
   ok(r.sinQuien.every((m) => !/le llega/i.test(m)), '(e) con «quién paga» cerrado no dice qué cláusulas le llegan');
   ok(r.enAlto.every((x) => x.nivel !== 'baja'), `quien paga una cláusula tuya en riesgo alto no sale «bajo» (${r.enAlto.length} casos${r.enAlto.filter((x) => x.nivel === 'baja').map((x) => `: ${x.j} → ${x.rival}`).join('')})`);

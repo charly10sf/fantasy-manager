@@ -19,9 +19,9 @@ import { paronLejos } from './operaciones.js';
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
 const VERBO_TU = { compra: 'fichaste a', clausula: 'clausulaste a', venta: 'vendiste a', blindaje: 'blindaste a', premio: 'cobraste por la jornada', alineacion: 'no puntuaste por alineación incorrecta', entra: 'entraste en la liga', otro: 'moviste a' };
-export const PELIGRO = { alta: 'alto', media: 'medio', baja: 'bajo' };
+export const PELIGRO = { muyalta: 'muy alto', alta: 'alto', media: 'medio', baja: 'bajo' };
 /** qué es el peligro de un rival (en el title de su etiqueta) */
-export const PELIGRO_TXT = 'Lo que te puede hacer ahora y lo que suele hacer: si le llega el dinero para tus cláusulas que se pagan en esta liga (abiertas o que se abren pronto) y te dolería perder, sus clausulazos de toda la temporada (los hechos a ti, el doble) y si te pelea el puesto. En la veda baja un escalón.';
+export const PELIGRO_TXT = 'Lo que te puede hacer ahora y lo que suele hacer: si le llega el dinero para tus cláusulas que se pagan en esta liga (abiertas o que se abren pronto) y te dolería perder, sus clausulazos de toda la temporada (los hechos a ti, el doble) y si te pelea el puesto, y cuánto dinero tiene frente a los demás. Muy alto, alto, medio o bajo; en la veda, el de cuando se reabran las cláusulas.';
 /** cuántas cláusulas tuyas abiertas le llegan y se pagan en tu liga (las de a precio de locos no cuentan, como en el peligro) */
 const quitaYa = (r) => (r.peligro ? r.peligro.llegan.filter((x) => x.abierta && x.w >= 0.25).length : (r.leLleganYa || []).length);
 /** la jornada de los puntos de jornada que da LaLiga en la clasificación: la que se juega o la última jugada */
@@ -361,7 +361,7 @@ function ligaHTML(S) {
     const dif = e.puntos - mios;
     h += `<button class="liga-f ${esYo ? 'yo' : ''}" ${esYo ? 'data-ir="equipo"' : `data-r="${esc(e.teamId)}"`}><span class="posn ${esYo ? 'yo' : ''}">${e.pos}</span>
       <span class="liga-n"><b>${esc(e.nombre)}</b><span>${esc(e.manager && e.manager !== e.nombre ? `${e.manager} · ` : '')}${ptsJornadaTxt(M, e)}${r && r.dinero && r.dinero.v != null ? ` · ${r.dinero.exacto ? '' : '≈ '}${eur(r.dinero.v, { dec: 1 })}` : ''}</span></span>
-      ${r && r.nivel === 'alta' ? `<span class="amenaza alta" title="${esc(PELIGRO_TXT)}">Peligro</span>` : ''}
+      ${r && (r.nivel === 'alta' || r.nivel === 'muyalta') ? `<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro${r.nivel === 'muyalta' ? ' muy alto' : ''}</span>` : ''}
       <span class="liga-p"><b>${e.puntos}</b><span class="${esYo ? 'apag' : dif > 0 ? 'baja' : 'sube'}">${esYo ? 'tú' : dif > 0 ? `+${dif}` : dif < 0 ? `${dif}` : '='}</span></span></button>`;
   }
   return h + '</div>';
