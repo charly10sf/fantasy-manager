@@ -2490,7 +2490,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "SPORT|136670471": 1795181611000,
-   "SPORT|136672088": 1795184079000
+   "SPORT|136672088": 1795184079000,
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000
   },
   "hechos": [
    {
@@ -3344,11 +3345,23 @@
     "motivo": "problema en el tobillo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/",
+    "medio": "Cadena SER",
+    "t": 1795187902000,
+    "id": "3152",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "control de cargas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -4251,17 +4264,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 390357,
-  "salida": 29362,
+  "entrada": 392286,
+  "salida": 30309,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.735194,
+  "dolares": 0.73586,
   "reservado": 0
  },
  "recientes": {
@@ -8606,13 +8619,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4446,
+   "ok": 4447,
    "fallos": 0,
-   "ejecuciones": 3693,
+   "ejecuciones": 3694,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:16:13.652Z"
+   "ultima": "2026-11-20T15:21:15.679Z"
   }
  },
  "ptsDirecto": {},
@@ -8629,15 +8642,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:16:26.743Z"
+   "ultimaBien": "2026-11-20T15:21:33.756Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:16:26.743Z"
+   "ultimaBien": "2026-11-20T15:21:33.756Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:16:26.743Z"
+   "ultimaBien": "2026-11-20T15:21:33.756Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8645,11 +8658,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:16:26.743Z"
+   "ultimaBien": "2026-11-20T15:21:33.756Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:16:26.743Z"
+   "ultimaBien": "2026-11-20T15:21:33.756Z"
   }
  },
  "avisos": [
