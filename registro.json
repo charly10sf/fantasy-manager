@@ -2279,7 +2279,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252313/canales-juega-69-minutos-seleccion-sub-21.html": 1794945645000,
    "SPORT|136533552": 1794945937000,
    "SPORT|136558895": 1794946522000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000,
@@ -8576,13 +8575,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4502,
+   "ok": 4503,
    "fallos": 0,
-   "ejecuciones": 3749,
+   "ejecuciones": 3750,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T19:56:24.910Z"
+   "ultima": "2026-11-20T20:01:15.556Z"
   }
  },
  "ptsDirecto": {},
@@ -8599,27 +8598,29 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:56:32.168Z"
+   "ultimaBien": "2026-11-20T20:01:18.278Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:56:32.168Z"
+   "ultimaBien": "2026-11-20T20:01:18.278Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:56:32.168Z"
+   "ultimaBien": "2026-11-20T20:01:18.278Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:26:28.382Z"
+   "seguidas": 1,
+   "ultimaBien": "2026-11-08T22:26:28.382Z",
+   "desde": "2026-11-20T20:01:18.278Z",
+   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:56:32.168Z"
+   "ultimaBien": "2026-11-20T20:01:18.278Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T19:56:32.168Z"
+   "ultimaBien": "2026-11-20T20:01:18.278Z"
   }
  },
  "avisos": [
