@@ -2189,8 +2189,16 @@ export function analizar(D, H, c, extra = {}) {
     const h = (x.abreEn || 0) / HORA;
     return h < 24 ? 0.7 : h < 72 ? 0.4 : h < 168 ? 0.2 : 0;
   };
-  // lo que te duele perderlo: los puntos que pierde tu once sin él (3 o más, todo)
-  const duele = (x) => (x.importa ? clamp(0.4 + 0.6 * num(x.pierde) / 3, 0.4, 1) : num(x.pierde) < 0.3 ? 0.15 : 0.35);
+  // lo que te duele perderlo (20 nov, tarde, con la liga de Carlos: a los 8 rivales les llegaban Thiago, Morcillo o Macià,
+  // de 1-2 M, y por los puntos que dan salían todos «alto»): sobre todo el dinero en juego, su valor frente a los tuyos
+  // que más valen (p75, mínimo 10 M); los puntos pesan menos y solo del todo en los que no se reponen con 5 M
+  const valMios = M.mias.map((x) => num(x.j && x.j.valor)).sort((a, b) => a - b);
+  const REF_DUELE = Math.max(10e6, valMios.length ? valMios[Math.floor(valMios.length * 0.75)] : 0);
+  const duele = (x) => {
+    const v = num(x.j && x.j.valor), din = clamp(v / REF_DUELE, 0, 1);
+    const pts = clamp(num(x.pierde) / 3, 0, 1) * clamp(v / 5e6, 0, 1);
+    return clamp(0.1 + 0.9 * (0.6 * din + 0.4 * pts), 0.1, 1);
+  };
   // si le llega: con el dinero exacto, sí o no; estimado, de 0 a 1 a lo largo del margen (sin saltos de un día a otro)
   const llega = (c, cl) => (!c ? 0 : c.exacto ? (c.v >= cl ? 1 : 0) : clamp((c.v + c.margen - cl) / (2 * Math.max(c.margen, 1e5)), 0, 1));
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
@@ -2252,7 +2260,7 @@ export function analizar(D, H, c, extra = {}) {
       // el que clausula mucho no baja de medio, pero solo si le llega (con lo que tiene o vendiendo) para alguna cláusula
       // tuya que se paga en esta liga y se abre en 3 días: si no le llega para ninguna, hoy no te puede hacer nada (antes el
       // historial dejaba en «medio» a uno con 40 M igual que a uno con 160 M)
-      const aTiro = M.mias.some((x) => x.clausula && x.ratio != null && apetito(x, suyoMax) > 0 && (x.abierta || x.veda || (x.abreEn || 0) < 3 * DIA) && alcance(x.clausula) >= 0.25);
+      const aTiro = M.mias.some((x) => x.clausula && x.ratio != null && apetito(x, suyoMax) > 0 && (x.abierta || x.veda || (x.abreEn || 0) < 3 * DIA) && alcance(x.clausula) >= 0.25 && duele(x) >= 0.3);
       const suelo = aTiro ? Math.min(50, 50 * (1 - Math.exp(-0.8 * hist))) : 0;
       // quien te pelea el puesto gana más quitándote a un titular
       const cerca = yoClasif ? clamp(1 - Math.abs(num(e.puntos) - num(yoClasif.puntos)) / Math.max(60, 0.15 * num(yoClasif.puntos)), 0, 1) : 0;
