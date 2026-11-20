@@ -2274,7 +2274,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252268/pepe-mel-abandona-uci-pasa-planta.html": 1794936518000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252204/actualidad-barca-video-psg-juventus-interesados-balde.html": 1794936274000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000,
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
@@ -4174,7 +4173,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/coruna/coruna/2026/11/17/oar-visita-san-pablo-burgos-volver-senda-victoria/00031794938102625457236.htm": 1794939060000,
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261117/11686779/cervera-responde-pique-sancion-owono-deberia-volver-ver-accion-lol.html": 1794938628000,
-   "SPORT|136554388": 1794935954000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252335/maldita-fila-12.html": 1794981600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261118/1004252321/reus-medirse-barakaldo.html": 1794981600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261118/1004252273/copa-pone-prueba-sabadell-mermado.html": 1794981600000,
@@ -8581,13 +8579,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4470,
+   "ok": 4471,
    "fallos": 0,
-   "ejecuciones": 3717,
+   "ejecuciones": 3718,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:16:25.815Z"
+   "ultima": "2026-11-20T17:21:19.564Z"
   }
  },
  "ptsDirecto": {},
@@ -8604,15 +8602,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:16:37.955Z"
+   "ultimaBien": "2026-11-20T17:21:25.991Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:16:37.955Z"
+   "ultimaBien": "2026-11-20T17:21:25.991Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:16:37.955Z"
+   "ultimaBien": "2026-11-20T17:21:25.991Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8620,11 +8618,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:16:37.955Z"
+   "ultimaBien": "2026-11-20T17:21:25.991Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:16:37.955Z"
+   "ultimaBien": "2026-11-20T17:21:25.991Z"
   }
  },
  "avisos": [
