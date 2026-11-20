@@ -4152,7 +4152,9 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795156871193
+  }
  },
  "ia": {
   "dia": "2026-11-20",
@@ -8506,13 +8508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4341,
+   "ok": 4342,
    "fallos": 0,
-   "ejecuciones": 3588,
+   "ejecuciones": 3589,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T06:36:12.024Z"
+   "ultima": "2026-11-20T06:41:11.193Z"
   }
  },
  "ptsDirecto": {},
@@ -8529,15 +8531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:36:20.996Z"
+   "ultimaBien": "2026-11-20T06:41:21.077Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:36:20.996Z"
+   "ultimaBien": "2026-11-20T06:41:21.077Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:36:20.996Z"
+   "ultimaBien": "2026-11-20T06:41:21.077Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8545,11 +8547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:36:20.996Z"
+   "ultimaBien": "2026-11-20T06:41:21.077Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:36:20.996Z"
+   "ultimaBien": "2026-11-20T06:41:21.077Z"
   }
  },
  "avisos": [
