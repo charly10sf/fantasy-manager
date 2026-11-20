@@ -1510,7 +1510,7 @@
   "2362": "ok",
   "2363": "ok",
   "2366": "ok",
-  "2372": "ok",
+  "2372": "injured",
   "2378": "ok",
   "2379": "out_of_league",
   "2380": "out_of_league",
@@ -1585,7 +1585,7 @@
   "2492": "ok",
   "2496": "out_of_league",
   "2499": "out_of_league",
-  "2501": "doubtful",
+  "2501": "ok",
   "2504": "ok",
   "2507": "ok",
   "2509": "doubtful",
@@ -4240,7 +4240,9 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795199773334
+  }
  },
  "ia": {
   "dia": "2026-11-20",
@@ -8600,13 +8602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4485,
+   "ok": 4486,
    "fallos": 0,
-   "ejecuciones": 3732,
+   "ejecuciones": 3733,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:31:12.501Z"
+   "ultima": "2026-11-20T18:36:13.334Z"
   }
  },
  "ptsDirecto": {},
@@ -8623,15 +8625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:31:20.279Z"
+   "ultimaBien": "2026-11-20T18:36:23.188Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:31:20.279Z"
+   "ultimaBien": "2026-11-20T18:36:23.188Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:31:20.279Z"
+   "ultimaBien": "2026-11-20T18:36:23.188Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8639,11 +8641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:31:20.279Z"
+   "ultimaBien": "2026-11-20T18:36:23.188Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:31:20.279Z"
+   "ultimaBien": "2026-11-20T18:36:23.188Z"
   }
  },
  "avisos": [
