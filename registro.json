@@ -1369,6 +1369,13 @@
    "jornada": 13,
    "id": "2123754870490460539",
    "t": "2026-11-20T12:26:33.651Z"
+  },
+  {
+   "clave": "novedades|2217:vuelve|2026-11-20",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123756184591274068",
+   "t": "2026-11-20T12:31:46.890Z"
   }
  ],
  "estados": {
@@ -1454,7 +1461,7 @@
   "2146": "injured",
   "2178": "injured",
   "2206": "ok",
-  "2217": "doubtful",
+  "2217": "ok",
   "2293": "out_of_league",
   "2294": "ok",
   "2295": "ok",
@@ -2257,10 +2264,10 @@
  },
  "novedadesPend": [
   {
-   "id": "2315",
+   "id": "2217",
    "que": "vuelve",
    "antes": "doubtful",
-   "t": 1795177574544
+   "t": 1795177873183
   }
  ],
  "noticias": {
@@ -2268,7 +2275,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
    "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
-   "SPORT|136540647": 1794918504000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
@@ -2466,7 +2472,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
    "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
-   "SPORT|136660186": 1795173167000
+   "SPORT|136660186": 1795173167000,
+   "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html": 1795177015000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html": 1795176766000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253372/sonia-bermudez-avisa-sobre-revolucionaria-convocatoria-no-puntual.html": 1795176363000
   },
   "hechos": [
    {
@@ -3229,11 +3241,64 @@
     "motivo": "molestias",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/",
+    "medio": "AS",
+    "t": 1795177062000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos queda descartado para el derbi ante el Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     15
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795177760000,
+    "id": "2473",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Gueye se lesiona y no estará ante la Real Sociedad",
+    "motivo": "",
+    "plazo": "la recuperación dependerá de su evolución",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795177015000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos se pierde el derbi ante el Sevilla del sábado",
+    "motivo": "molestias sentidas el lunes",
+    "plazo": "",
+    "nums": [
+     18,
+     30
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795176766000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang tiene una lesión de tobillo que no parece grave",
+    "motivo": "lesión de tobillo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3377,8 +3442,8 @@
     "t": 0
    },
    "2217": {
-    "e": "doubtful",
-    "t": 1794844829435
+    "e": "ok",
+    "t": 1795177873183
    },
    "2300": {
     "e": "ok",
@@ -4124,22 +4189,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
+  }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 28,
-   "redactar": 15,
-   "revisar": 13,
+   "clasificar": 29,
+   "redactar": 19,
+   "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 276202,
-  "salida": 16425,
-  "cacheLee": 23224,
+  "entrada": 334558,
+  "salida": 20783,
+  "cacheLee": 31933,
   "cacheEscribe": 14515,
-  "dolares": 0.539012,
+  "dolares": 0.664503,
   "reservado": 0
  },
  "recientes": {
@@ -4299,10 +4366,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-19T14:36:36.031Z",
-    "texto": "✅ Tchouaméni vuelve a estar disponible: la duda por la lesión en el aductor, que arrastraba desde el 10 de noviembre, queda despejada.\n\nEl Madrid ⚪ recibe al Celta el sábado a las 21:00 en el Bernabéu. Sobre el papel es un partido asequible, pero el Celta es de los que menos encajan, y para un centrocampista eso juega en contra.\n\nCon un 48 % de titularidad, no tiene el puesto asegurado. Eso sí, vale 34,2 M y ha subido 10,8 M en el último mes."
-   },
-   {
     "t": "2026-11-20T11:31:36.656Z",
     "texto": "🚨 Edu Expósito está lesionado por unas molestias sin determinar, y de momento no se sabe más. El centrocampista del Espanyol vale 51 M y ha ganado 20,1 M en el último mes, así que su caso hay que seguirlo de cerca de cara al Athletic 🦁.\n\nCeballos, en el Betis, es duda por molestias musculares. Llega en racha, con 21 puntos en las tres últimas jornadas, y hasta que se sepa si juega contra el Sevilla mejor no darlo por hecho."
    },
@@ -4317,6 +4380,10 @@
    {
     "t": "2026-11-20T12:26:33.653Z",
     "texto": "✅ Paredes vuelve a estar disponible: las molestias que arrastraba desde el 4 de noviembre quedan atrás.\n\nEl defensa del Athletic 🦁 llega en racha: 24 puntos en las tres últimas jornadas. Hoy a las 21:00 recibe en San Mamés al Espanyol, que va 13º, un partido asequible. Con un 48 % de titularidad, no tiene el puesto asegurado, así que ojo a los onces."
+   },
+   {
+    "t": "2026-11-20T12:31:46.892Z",
+    "texto": "✅ Cucho ya está disponible: la duda que arrastraba queda despejada.\n\nEl Betis visita mañana al Sevilla a las 18:30 en el Sánchez-Pizjuán, un rival que va 6º. Con un 52 % de titularidad, el delantero tiene más papeletas de jugar que de quedarse fuera, aunque conviene esperar a los onces.\n\nLo que no acompaña es su valor: vale 20,1 M tras perder 21,5 M en el último mes."
    }
   ],
   "resumen": [
@@ -8484,13 +8551,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4412,
+   "ok": 4413,
    "fallos": 0,
-   "ejecuciones": 3659,
+   "ejecuciones": 3660,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:26:14.544Z"
+   "ultima": "2026-11-20T12:31:13.183Z"
   }
  },
  "ptsDirecto": {},
@@ -8507,15 +8574,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:26:35.243Z"
+   "ultimaBien": "2026-11-20T12:32:02.411Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:26:35.243Z"
+   "ultimaBien": "2026-11-20T12:32:02.411Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:26:35.243Z"
+   "ultimaBien": "2026-11-20T12:32:02.411Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8523,11 +8590,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:26:35.243Z"
+   "ultimaBien": "2026-11-20T12:32:02.411Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:26:35.243Z"
+   "ultimaBien": "2026-11-20T12:32:02.411Z"
   }
  },
  "avisos": [
