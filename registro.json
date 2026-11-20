@@ -2432,7 +2432,8 @@
    "SPORT|136637651": 1795156260000,
    "MARCA|https://www.marca.com/radio/2026/11/20/pepe-brasin-alerta-problema-vinicius-puedes-estrella-rol-secundario.html": 1795160965000,
    "AS|https://as.com/futbol/primera/quisimos-fichar-a-diomande-f202611-n/": 1795161675000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000,
+   "AS|https://as.com/futbol/primera/christensen-y-gerard-martin-la-pareja-mas-probable-por-si-falta-cubarsi-f202611-n/": 1795163445000
   },
   "hechos": [
    {
@@ -3248,7 +3249,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4145,17 +4146,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 87156,
-  "salida": 4639,
+  "entrada": 89132,
+  "salida": 5324,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.15888,
+  "dolares": 0.15942,
   "reservado": 0
  },
  "recientes": {
@@ -8494,13 +8495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4366,
+   "ok": 4367,
    "fallos": 0,
-   "ejecuciones": 3613,
+   "ejecuciones": 3614,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T08:41:12.859Z"
+   "ultima": "2026-11-20T08:46:11.539Z"
   }
  },
  "ptsDirecto": {},
@@ -8517,15 +8518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:41:23.987Z"
+   "ultimaBien": "2026-11-20T08:46:25.433Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:41:23.987Z"
+   "ultimaBien": "2026-11-20T08:46:25.433Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:41:23.987Z"
+   "ultimaBien": "2026-11-20T08:46:25.433Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8533,11 +8534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:41:23.987Z"
+   "ultimaBien": "2026-11-20T08:46:25.433Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:41:23.987Z"
+   "ultimaBien": "2026-11-20T08:46:25.433Z"
   }
  },
  "avisos": [
