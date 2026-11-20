@@ -97,6 +97,14 @@ export const CASOS = [
     debe: /sube|baja|tendencia/, noDebe: /no le sacas mas que (su|la) clausula|los puntos (mandan|son lo que)/ },
   { id: 'fran-ventas', tipo: 'estrategia', q: '¿Qué jugadores míos van a bajar de precio? ¿A quién vendo y por cuánto?', debe: /laliga|rival/ },
   { id: 'fran-tendencia', tipo: 'mercado', q: '¿Qué tendencia lleva {MIOSUBE}? ¿Lo vendo ya o espero a que suba más?', debe: /sube|baja|tendencia/ },
+  // (21 nov) lo que preguntó Carlos el 20 nov: subirle la cláusula (Berenguer), el precio para que un rival te venda a uno que
+  // sube (Revivo), clausular hoy lo que no se puede hasta dentro de días (Huijsen), el peligro de cada rival y el partido de hoy
+  { id: 'subir-clausula', tipo: 'estrategia', q: '¿Le subo la cláusula a {MIOSUBE} para que no me lo quiten?', noDebe: /\bs[ií],? (s[uú]bele|s[uú]bela|paga)\b/i },
+  { id: 'ofrecer-sube', tipo: 'ofertas', q: '{SUYO} está subiendo. ¿Cuánto le ofrezco a {R2} para que me lo venda?' },
+  { id: 'clausula-hoy', tipo: 'rivales', q: '¿Clausulo hoy a {SUYO}?' },
+  { id: 'peligro-rivales', tipo: 'rivales', q: '¿Qué rival es el más peligroso para mí ahora mismo y por qué?' },
+  { id: 'peligro-uno', tipo: 'rivales', sigue: true, q: '¿Y {R2}? ¿Me puede quitar a alguien?' },
+  { id: 'tras-partido', tipo: 'estrategia', q: '{MIOSUBE} ha hecho 1 punto en la jornada, ¿lo vendo ya?' },
 ];
 
 /* lo que se cambia en la liga de ejemplo antes de preguntar (lo mismo en todas las escenas): un rival con el nombre de un

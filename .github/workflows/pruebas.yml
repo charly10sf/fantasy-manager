@@ -59,6 +59,10 @@ jobs:
       # (20 nov) el peligro de cada rival: lo que puede hacerte y lo que suele hacer, con rivales forzados
       - name: Peligro de los rivales
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-peligro.mjs
+      # (21 nov) lo medido con la liga de Carlos: el que se frena no se vende antes de girar y el partido que acaba de jugar
+      # mueve lo que se espera de su valor (y Hoy lo dice al proponer clausularlo)
+      - name: La inercia medida y el partido de la jornada
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-directo.mjs
       # (20 nov) vender o quedárselo: las cuentas y el veredicto que le llegan al chat, con jugadores forzados
       - name: Vender o quedárselo
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-ventas.mjs

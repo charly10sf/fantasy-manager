@@ -602,9 +602,12 @@ function inerciaTxt(M, j) {
   const pz = M.partidazo ? M.partidazo(j.id) : null;
   const QUE = pz ? ['', 'un buen partido', 'un partido muy bueno', 'un partidazo'][pz.nivel] : '';
   const EFECTO = pz ? ['', 'puede suavizar la bajada', 'lo normal es que la bajada se frene', 'lo normal es que suba los próximos días'][pz.nivel] : '';
-  const ojo = !pz ? '' : x && ['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; OJO: ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO}; tenlo en cuenta antes de decir que siga bajando, que lo venda o que no lo fiches o clausules por la bajada` : `; ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): lo normal es que siga subiendo`;
-  if (!x || x.fase === 'plano') return pz ? `ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO.replace('la bajada', 'su valor')}` : null;
-  return inerciaLinea(M, j, x) + ojo;
+  // (21 nov, medido con la liga de Carlos) el partido que acaba de jugar ya va en lo que espera la app: se dice con sus cifras
+  const pa = x && x.partido;
+  const part = !pa ? '' : bloqueada('inercia') ? `; ACABA DE HACER ${pa.pts} PTS (J${pa.n}): ${pa.e3 > 0 ? 'lo normal es que su valor suba más de lo que venía' : 'lo normal es que su valor vaya peor de lo que venía'}` : pa ? `; ${pa.etapa === 0 ? 'SU PARTIDO DE HOY YA HA ACABADO' : 'JUGÓ AYER'}: ${pa.pts} PTS (J${pa.n}). Tras un partido así, a los de su precio que venían ${pa.como === 'sube' ? 'subiendo' : pa.como === 'baja' ? 'bajando' : 'planos'} su valor les va de media ${pct(pa.e3 * 100, 1)} en ${pa.etapa === 0 ? 3 : 2} días y ${pct(pa.e7 * 100, 1)} en ${pa.etapa === 0 ? 7 : 6} respecto a lo que marcaba su inercia${pa.e3 < 0 && ['sube', 'acelera', 'frena'].includes(x.fase) ? ' (se le frena la subida, no se da la vuelta)' : ''}: la app ya lo cuenta y espera ${eur(x.proy(7), { signo: true })} en 7 días. Usa esto, no lo rehagas` : '';
+  const ojo = !pz || pa ? '' : x && ['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; OJO: ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO}; tenlo en cuenta antes de decir que siga bajando, que lo venda o que no lo fiches o clausules por la bajada` : `; ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): lo normal es que siga subiendo`;
+  if (!x || x.fase === 'plano') return pa ? `INERCIA plana${part}` : pz ? `ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO.replace('la bajada', 'su valor')}` : null;
+  return inerciaLinea(M, j, x) + part + ojo;
 }
 function inerciaLinea(M, j, x) {
   const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo', rebote: `REBOTE PEQUEÑO TRAS CAER UN ${x.rebote ? Math.round(x.rebote.caida * 100) : '?'} % EN UN MES (cerca de su mínimo; pararse aquí NO es girar ni motivo para vender)` }[x.fase] || x.fase;
@@ -3184,6 +3187,23 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     const rival = todos.find((j) => j && !mia(j.id) && M.dueno && M.dueno[j.id]);
     const of = rival ? ofertaDueno(M, rival) : null;
     nota(of && of.v ? `A su valor no lo vende ningún dueño, porque LaLiga le da más: lo normal entre managers es pagar por ${N(rival)} hasta unos ${eur(of.v)}, y por debajo de eso es buen precio.` : 'A su valor no lo vende ningún dueño, porque LaLiga le da más: pagar algo por encima entre managers es lo normal.');
+  }
+
+  /* 3c. (20 nov, Carlos con Revivo: «por solo un millón más evidentemente no me lo va a aceptar») ofrecerle a un rival por
+     uno suyo que sube menos de lo que pediría su dueño (ofertaDueno): se dice cuánto */
+  // (si el precio lo ha puesto el rival en la pregunta, ya lo acepta: eso lo cuenta la calculadora de tratos)
+  const precioEnPregunta = new RegExp(NUM_M, 'i').test(pregunta || '');
+  // (sin partir «J. David» por el punto de la inicial)
+  const frasesO = precioEnPregunta ? [] : t.split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ])[.!?;]\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+  for (const fr of frasesO) {
+    const k = norm(fr);
+    if (!/\b(ofrec\w*|ofert\w*|propon\w*|pagale|pagarle|dale|darle)\b/.test(k) || /\b(clausul\w*|laliga|liga te)\b/.test(k)) continue;
+    const js = enFrase(fr).filter((j) => !mia(j.id) && M.dueno && M.dueno[j.id] && M.dueno[j.id] !== (D.yo && D.yo.teamId));
+    if (js.length !== 1) continue;
+    const od = ofertaDueno(M, js[0], M.tend ? M.tend(js[0].id) || {} : {});
+    if (!od || !od.sube) continue;
+    const cifras = [...fr.matchAll(new RegExp(NUM_M, 'gi'))].map((m) => aEuros(m[1], m[2])).filter((x) => Number.isFinite(x) && x > js[0].valor * 0.5);
+    if (cifras.length && Math.max(...cifras) < od.v * 0.98) nota(`${N(js[0])} sube: por menos de unos ${eur(od.v)} su dueño no lo va a soltar (lo que ganaría quedándoselo esta semana${od.conPuntos ? ' y sus puntos de la jornada' : ''}).`);
   }
 
   /* 4. lo que no puede decir */
