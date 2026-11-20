@@ -2451,7 +2451,9 @@
    "SPORT|136657810": 1795170582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
+   "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
+   "SPORT|136660186": 1795173167000
   },
   "hechos": [
    {
@@ -3214,11 +3216,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136660186",
+    "medio": "SPORT",
+    "t": 1795173167000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Dani Ceballos será baja en el derbi ante el Sevilla",
+    "motivo": "molestias",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -4114,17 +4128,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 13,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 247244,
-  "salida": 15834,
+  "entrada": 249437,
+  "salida": 16058,
   "cacheLee": 23224,
   "cacheEscribe": 11612,
-  "dolares": 0.474223,
+  "dolares": 0.474554,
   "reservado": 0
  },
  "recientes": {
@@ -8469,13 +8483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4409,
+   "ok": 4410,
    "fallos": 0,
-   "ejecuciones": 3656,
+   "ejecuciones": 3657,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:11:11.673Z"
+   "ultima": "2026-11-20T12:16:11.394Z"
   }
  },
  "ptsDirecto": {},
@@ -8492,15 +8506,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:11:21.489Z"
+   "ultimaBien": "2026-11-20T12:16:23.485Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:11:21.489Z"
+   "ultimaBien": "2026-11-20T12:16:23.485Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:11:21.489Z"
+   "ultimaBien": "2026-11-20T12:16:23.485Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8508,11 +8522,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:11:21.489Z"
+   "ultimaBien": "2026-11-20T12:16:23.485Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:11:21.489Z"
+   "ultimaBien": "2026-11-20T12:16:23.485Z"
   }
  },
  "avisos": [
