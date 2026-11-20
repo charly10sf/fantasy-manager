@@ -57,6 +57,7 @@
   },
   "invitar": {
     "on": true,
+    "recordarDias": 5,
     "rivales": 2,
     "horas": 24,
     "diasCodigo": 7,

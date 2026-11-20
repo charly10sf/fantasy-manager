@@ -27,7 +27,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod } from './invitar.js';
+import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
@@ -3745,7 +3745,9 @@ function novedades() {
 const novAvisos = () => { const g = LS.get('avisos-nov', null); return g && Array.isArray(g.visto) ? g : null; };
 function novAvisoAlArrancar(vista) {
   const g = novAvisos();
-  if (g) { if (g.pend) novAvisoEsperar(); return; }
+  // (se mira siempre: aunque no haya tarjeta pendiente, puede tocar el recordatorio de invitar)
+  novAvisoEsperar();
+  if (g) return;
   const todos = NOVEDADES.filter((n) => n.aviso).map((n) => n.v);
   if (!vista) { LS.set('avisos-nov', { visto: todos, pend: null }); return; }
   // (a quien aún no ha pasado el tutorial se le mira en el próximo arranque)
@@ -3765,6 +3767,34 @@ function novAvisoVisto(v) {
   const g = novAvisos() || { visto: [], pend: null };
   if (!g.visto.includes(v)) g.visto.push(v);
   if (g.pend === v) g.pend = null;
+  // (la de invitar cuenta también como la última vez que se le recordó)
+  g.invT = Date.now();
+  LS.set('avisos-nov', g);
+}
+/* (20 nov, Carlos: «que el pop-up de invitar amigos aparezca una vez cada 5 días para quien no ha invitado a ningún amigo;
+   si ha invitado a un amigo, que no le salga nunca más») La misma tarjeta de invitar, de recordatorio: a quien no tiene
+   ningún amigo que haya entrado con su enlace o su código (`entran` del servidor), cada «recordarDias» de «invitar» en
+   limites.json (5; 0 lo apaga) desde la última vez que la cerró (`invT`). Sin saber aún su estado, espera; con la
+   primera vez sin fecha (instalación nueva o quien venía de antes), la cuenta empieza ese día. Devuelve la tarjeta,
+   'espera' o null */
+function novInvRecordar() {
+  const g = novAvisos();
+  if (!g || !tourVisto() || !invitarOn()) return null;
+  const dias = Number(((((LS.get('limites', null) || {}).cfg || {}).invitar) || {}).recordarDias ?? 5);
+  if (!(dias > 0)) return null;
+  const uid = S.D && S.D.yo && S.D.yo.userId;
+  if (!uid) return null;
+  const e = estadoInv(uid);
+  if (!e) return 'espera';
+  if ((e.entran || 0) > 0) return null;
+  if (!g.invT) { g.invT = Date.now(); LS.set('avisos-nov', g); return null; }
+  if (Date.now() - g.invT < dias * 86400e3) return null;
+  const n = NOVEDADES.find((x) => x.aviso && x.aviso.ir && x.aviso.ir.accion === 'invitarAmigo');
+  return n ? { ...n.aviso, eti: 'Premios por invitar' } : null;
+}
+function novInvRecordado() {
+  const g = novAvisos() || { visto: [], pend: null };
+  g.invT = Date.now();
   LS.set('avisos-nov', g);
 }
 let novAvisoEsperando = false;
@@ -3773,16 +3803,21 @@ function novAvisoEsperar() {
   novAvisoEsperando = true;
   const hasta = Date.now() + 10 * 60e3;
   const mirar = () => {
+    // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
+    if (Date.now() > hasta) { novAvisoEsperando = false; return; }
+    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa'))) { setTimeout(mirar, 1000); return; }
     const g = novAvisos();
     const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
-    // (pasado un rato sin hueco, se deja: sigue pendiente y sale la próxima vez que se abra)
-    if (!n || Date.now() > hasta) { novAvisoEsperando = false; return; }
-    if (S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa')) {
+    if (n) {
       novAvisoEsperando = false;
       tarjetaNovedad(n.aviso, { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
       return;
     }
-    setTimeout(mirar, 1000);
+    // sin tarjeta de versión pendiente: el recordatorio de invitar, si toca
+    const rec = novInvRecordar();
+    if (rec === 'espera') { setTimeout(mirar, 3000); return; }
+    novAvisoEsperando = false;
+    if (rec) tarjetaNovedad(rec, { alIr: (a) => { novInvRecordado(); irNovedad(a); }, alCerrar: () => { novInvRecordado(); } });
   };
   setTimeout(mirar, 500);
 }
