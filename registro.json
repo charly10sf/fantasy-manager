@@ -2279,7 +2279,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136533552": 1794945937000,
    "SPORT|136558895": 1794946522000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/isco-derbi-resto-mundo-deberia-conocer.html": 1794950417000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000,
@@ -8575,13 +8574,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4503,
+   "ok": 4505,
    "fallos": 0,
-   "ejecuciones": 3750,
+   "ejecuciones": 3751,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T20:01:15.556Z"
+   "ultima": "2026-11-20T20:06:19.463Z"
   }
  },
  "ptsDirecto": {},
@@ -8598,29 +8597,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:01:18.278Z"
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:01:18.278Z"
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:01:18.278Z"
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 1,
-   "ultimaBien": "2026-11-08T22:26:28.382Z",
-   "desde": "2026-11-20T20:01:18.278Z",
-   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
+   "seguidas": 0,
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:01:18.278Z"
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:01:18.278Z"
+   "ultimaBien": "2026-11-20T20:06:23.050Z"
   }
  },
  "avisos": [
