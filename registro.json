@@ -2225,7 +2225,6 @@
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004251976/jonathan-david-vuelve-racha-manda-mensaje-simeone.html": 1794905501000,
-   "SPORT|136526952": 1794902430000,
    "SPORT|136495052": 1794903326000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004251985/arrasate-aimar-oroz-reencuentro-2-732-dias.html": 1794906894000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
@@ -8496,13 +8495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4357,
+   "ok": 4358,
    "fallos": 0,
-   "ejecuciones": 3604,
+   "ejecuciones": 3605,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T07:56:12.244Z"
+   "ultima": "2026-11-20T08:01:11.063Z"
   }
  },
  "ptsDirecto": {},
@@ -8519,15 +8518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:56:25.906Z"
+   "ultimaBien": "2026-11-20T08:01:20.453Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:56:25.906Z"
+   "ultimaBien": "2026-11-20T08:01:20.453Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:56:25.906Z"
+   "ultimaBien": "2026-11-20T08:01:20.453Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8535,11 +8534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:56:25.906Z"
+   "ultimaBien": "2026-11-20T08:01:20.453Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:56:25.906Z"
+   "ultimaBien": "2026-11-20T08:01:20.453Z"
   }
  },
  "avisos": [
