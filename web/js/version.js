@@ -29,11 +29,14 @@ export const NOVEDADES = [
     // solo valía si llegaba en 12 s desde que se abría: al abrir en frío casi nunca salía (Anuncios.java, parte Android
     // nueva: AAB para Play). Los intersticiales contaban el rato de cada visita desde cero: ahora, el del día
     // (intersticial.js). Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8i', f: '2026-11-20', h: '00:48', t: 'Los anuncios, a su hora',
+    // (20 nov, aviso de Domy: «el título de las actualizaciones tiene que ser lo más relevante de la actualización, no un
+    // invento») El título dice lo que trae, tal cual, y lo primero de la lista es lo que ve todo el mundo (si lo primero es
+    // solo de una plataforma, a los demás les sale de título lo siguiente: `visibles` en presentacion.js)
+    v: '0.8i', f: '2026-11-20', h: '00:48', t: 'Arreglos: el aviso de invitar a un amigo y la pestaña Hoy',
     cosas: [
-      { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'Los anuncios, a su hora', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
-      { tipo: 'arreglo', menor: true, d: 'plan', t: 'Hoy, sin huecos de más', x: 'En Hoy, «Lo que llevas hoy» ocupaba el doble cuando aún no habías hecho nada, y los tiempos del marcador quedaban muy separados cuando no cabían en una línea. Ya van a su tamaño.' },
       { tipo: 'arreglo', menor: true, d: 'regalo', t: 'El aviso de «Invita a un amigo» ya no se pierde', x: 'Al actualizar la app desde Google Play, el aviso salía un momento y desaparecía sin volver. Ahora sale con tu liga ya cargada y se queda hasta que lo cierras.' },
+      { tipo: 'arreglo', menor: true, d: 'plan', t: 'En Hoy, «Lo que llevas hoy» y los tiempos del marcador a su tamaño', x: 'En Hoy, «Lo que llevas hoy» ocupaba el doble cuando aún no habías hecho nada, y los tiempos del marcador quedaban muy separados cuando no cabían en una línea. Ya van a su tamaño.' },
+      { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'El anuncio de apertura sale al abrir la app y los demás, cada 7 minutos', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
     ],
   },
   {
