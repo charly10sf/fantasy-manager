@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/": 1794944314000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261117/1004252309/bright-ede-zakaria-eddahchouri-novedades-vuelta-trabajo-deportivo.html": 1794944997000,
@@ -2493,21 +2492,6 @@
    "SPORT|136679253": 1795195203000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/",
-    "medio": "AS",
-    "t": 1794941438000,
-    "id": "3079",
-    "que": "lesion",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     2026
-    ]
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html",
     "medio": "COPE",
@@ -8601,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4488,
+   "ok": 4489,
    "fallos": 0,
-   "ejecuciones": 3735,
+   "ejecuciones": 3736,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:46:12.566Z"
+   "ultima": "2026-11-20T18:51:11.107Z"
   }
  },
  "ptsDirecto": {},
@@ -8624,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:46:19.724Z"
+   "ultimaBien": "2026-11-20T18:51:18.764Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:46:19.724Z"
+   "ultimaBien": "2026-11-20T18:51:18.764Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:46:19.724Z"
+   "ultimaBien": "2026-11-20T18:51:18.764Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8640,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:46:19.724Z"
+   "ultimaBien": "2026-11-20T18:51:18.764Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:46:19.724Z"
+   "ultimaBien": "2026-11-20T18:51:18.764Z"
   }
  },
  "avisos": [
