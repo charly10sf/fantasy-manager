@@ -1414,7 +1414,7 @@
   "1715": "ok",
   "1730": "ok",
   "1754": "out_of_league",
-  "1775": "doubtful",
+  "1775": "ok",
   "1787": "ok",
   "1849": "ok",
   "1851": "ok",
@@ -1468,7 +1468,7 @@
   "2351": "out_of_league",
   "2353": "ok",
   "2354": "ok",
-  "2355": "doubtful",
+  "2355": "ok",
   "2356": "out_of_league",
   "2358": "ok",
   "2359": "out_of_league",
@@ -1933,7 +1933,7 @@
   "3009": "out_of_league",
   "3010": "out_of_league",
   "3011": "ok",
-  "3012": "ok",
+  "3012": "injured",
   "3013": "out_of_league",
   "3014": "out_of_league",
   "3015": "ok",
@@ -2234,10 +2234,22 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "1775",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795175773335
+  },
+  {
+   "id": "2355",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795175773335
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
@@ -3330,8 +3342,8 @@
     "t": 0
    },
    "1775": {
-    "e": "doubtful",
-    "t": 1794841573171
+    "e": "ok",
+    "t": 1795175773335
    },
    "1930": {
     "e": "ok",
@@ -3402,8 +3414,8 @@
     "t": 1793793972334
    },
    "2355": {
-    "e": "doubtful",
-    "t": 1795086670761
+    "e": "ok",
+    "t": 1795175773335
    },
    "2358": {
     "e": "ok",
@@ -4103,16 +4115,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 25,
-   "redactar": 7,
-   "revisar": 6,
+   "redactar": 10,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 157431,
-  "salida": 13422,
-  "cacheLee": 8709,
-  "cacheEscribe": 8709,
-  "dolares": 0.272502,
+  "entrada": 200244,
+  "salida": 14679,
+  "cacheLee": 14515,
+  "cacheEscribe": 11612,
+  "dolares": 0.378536,
   "reservado": 0
  },
  "recientes": {
@@ -4612,7 +4624,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "novedades|1775:vuelve,2355:vuelve|2026-11-20": {
+   "n": 1,
+   "t": "2026-11-20T11:56:43.549Z",
+   "ultima": "2026-11-20T11:56:43.549Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -8451,13 +8469,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4404,
+   "ok": 4405,
    "fallos": 0,
-   "ejecuciones": 3651,
+   "ejecuciones": 3652,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:51:13.138Z"
+   "ultima": "2026-11-20T11:56:13.335Z"
   }
  },
  "ptsDirecto": {},
@@ -8474,15 +8492,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:51:26.914Z"
+   "ultimaBien": "2026-11-20T11:56:46.000Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:51:26.914Z"
+   "ultimaBien": "2026-11-20T11:56:46.000Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:51:26.914Z"
+   "ultimaBien": "2026-11-20T11:56:46.000Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8490,11 +8508,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:51:26.914Z"
+   "ultimaBien": "2026-11-20T11:56:46.000Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:51:26.914Z"
+   "ultimaBien": "2026-11-20T11:56:46.000Z"
   }
  },
  "avisos": [
