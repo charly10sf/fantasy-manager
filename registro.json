@@ -4214,9 +4214,7 @@
    "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206673517
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
@@ -8576,13 +8574,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4517,
+   "ok": 4519,
    "fallos": 0,
-   "ejecuciones": 3757,
+   "ejecuciones": 3758,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T20:31:13.517Z"
+   "ultima": "2026-11-20T20:36:24.093Z"
   }
  },
  "ptsDirecto": {},
@@ -8599,27 +8597,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:31:17.897Z"
+   "ultimaBien": "2026-11-20T20:36:27.431Z"
   }
  },
  "avisos": [
