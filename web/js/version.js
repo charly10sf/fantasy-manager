@@ -32,6 +32,7 @@ export const NOVEDADES = [
     v: '0.8i', f: '2026-11-20', h: '00:48', t: 'Los anuncios, a su hora',
     cosas: [
       { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'Los anuncios, a su hora', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
+      { tipo: 'arreglo', menor: true, d: 'plan', t: 'Hoy, sin huecos de más', x: 'En Hoy, «Lo que llevas hoy» ocupaba el doble cuando aún no habías hecho nada, y los tiempos del marcador quedaban muy separados cuando no cabían en una línea. Ya van a su tamaño.' },
     ],
   },
   {

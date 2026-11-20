@@ -2037,6 +2037,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .llevas { margin: 12px 0 6px; }
 .llevas > summary { min-height: 46px; padding: 10px 14px; }
 .llevas-t { font-size: var(--t-cuerpo); }
+/* (20 nov, Carlos: «¿por qué el cuadro se ha hecho más grande?») Sin nada que enseñar, «Lo que llevas hoy» lleva también
+   la clase `vacio` (para que su texto de relleno no cuente como contenido: `vistaConContenido`), y la regla general de
+   `.vacio` (centrado, con 24 px arriba y abajo) le doblaba el alto: 96 px en vez de 48. Aquí esa regla no pinta nada */
+.llevas.vacio { padding: 0; text-align: start; color: inherit; font-size: inherit; }
 .paso2 .op-pie { flex-wrap: wrap; row-gap: 6px; }
 .paso2 .op-pie .conf, .paso2 .op-pie .saldo { white-space: nowrap; }
 
@@ -3308,8 +3312,10 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }
 
 /* (0.7.13o) lo que falta para el mercado y demás, dentro del marcador de Hoy y en pequeño */
-.m-tiempos { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
-.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
+/* (20 nov, Carlos) cuando los tiempos no caben en una línea (un nombre largo: «Cláusula de Juan Iglesias») quedaban a 32 px
+   uno de otro; ahora a 26 (24 de alto, lo mínimo cómodo para tocarlos, y 2 entre líneas) */
+.m-tiempos { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
+.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
 .m-t .ic { width: 14px; height: 14px; color: var(--apagado); }
 .m-t b { font-weight: 700; color: var(--texto); }
 /* (0.7.13w) la app de Google Play se ha quedado atrás: fija, con el borde rojo, hasta que se actualice */
