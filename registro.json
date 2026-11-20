@@ -2491,7 +2491,8 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "SPORT|136670471": 1795181611000,
    "SPORT|136672088": 1795184079000,
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
+   "SPORT|136643204": 1795184677000
   },
   "hechos": [
    {
@@ -3361,7 +3362,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4249,32 +4250,31 @@
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
    "SPORT|136666090": 1795176736000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795187187429
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 46,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 392286,
-  "salida": 30309,
+  "entrada": 396052,
+  "salida": 30487,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.73586,
+  "dolares": 0.736326,
   "reservado": 0
  },
  "recientes": {
@@ -8619,13 +8619,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4448,
+   "ok": 4449,
    "fallos": 0,
-   "ejecuciones": 3695,
+   "ejecuciones": 3696,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:26:11.857Z"
+   "ultima": "2026-11-20T15:31:14.997Z"
   }
  },
  "ptsDirecto": {},
@@ -8642,15 +8642,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:26:19.803Z"
+   "ultimaBien": "2026-11-20T15:31:28.905Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:26:19.803Z"
+   "ultimaBien": "2026-11-20T15:31:28.905Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:26:19.803Z"
+   "ultimaBien": "2026-11-20T15:31:28.905Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8658,11 +8658,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:26:19.803Z"
+   "ultimaBien": "2026-11-20T15:31:28.905Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:26:19.803Z"
+   "ultimaBien": "2026-11-20T15:31:28.905Z"
   }
  },
  "avisos": [
