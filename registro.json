@@ -4093,7 +4093,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000,
    "SPORT|136535420": 1794913964000,
    "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794929755000,
@@ -8495,13 +8494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4359,
+   "ok": 4360,
    "fallos": 0,
-   "ejecuciones": 3606,
+   "ejecuciones": 3607,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T08:06:11.396Z"
+   "ultima": "2026-11-20T08:11:17.516Z"
   }
  },
  "ptsDirecto": {},
@@ -8518,15 +8517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:06:19.898Z"
+   "ultimaBien": "2026-11-20T08:11:27.042Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:06:19.898Z"
+   "ultimaBien": "2026-11-20T08:11:27.042Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:06:19.898Z"
+   "ultimaBien": "2026-11-20T08:11:27.042Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8534,11 +8533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:06:19.898Z"
+   "ultimaBien": "2026-11-20T08:11:27.042Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T08:06:19.898Z"
+   "ultimaBien": "2026-11-20T08:11:27.042Z"
   }
  },
  "avisos": [
