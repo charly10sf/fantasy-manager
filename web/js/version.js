@@ -28,7 +28,7 @@ export const NOVEDADES = [
     // (su dinero frente a tus cláusulas que se pagan en tu liga, abiertas o a punto, y lo que te duele perderlas) y de lo
     // que suele hacer (sus clausulazos de toda la temporada, los hechos a ti el doble), con el porqué en la ficha. `menor`
     // y sin `todos`: a los demás no les sale (Carlos). Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8j', f: '2026-11-20', h: '14:18', t: 'El peligro de cada rival, con su porqué',
+    v: '0.8j', f: '2026-11-20', h: '15:42', t: 'El peligro de cada rival, con su porqué',
     cosas: [
       { tipo: 'mejora', menor: true, d: 'peligro', t: 'El peligro de cada rival, con su porqué', x: 'El peligro de un rival ya no depende solo de lo que ha movido esta semana. Cuenta si le llega el dinero para tus cláusulas que se pagan en tu liga (las abiertas y las que se abren pronto) y cuánto te dolería perder a esos jugadores, sus clausulazos de toda la temporada (los que te ha hecho a ti, el doble) y si te pelea el puesto. Una cláusula muy por encima de lo que se paga en tu liga no cuenta. En la ficha del rival sale el porqué en una línea, y en las 24 horas antes de la jornada, cuando nadie puede clausular, baja un escalón y te dice cómo queda al reabrirse.' },
       // (20 nov, el chat de Carlos y la queja de Fran: «la IA es pésima con ventas y tendencias») M.ventaMia (motor.js) y
