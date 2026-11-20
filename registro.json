@@ -2239,7 +2239,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/terzic-debe-hacer-equilibrismos-en-el-eje-central-f202611-n/": 1794911893000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-lesionado-cuatro-dias-derbi-betis-sevilla_0_2008524681.html": 1794911808000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/video-entrenamiento-sevilla-fc-17-noviembre-2026_8_2008525335.html": 1794911542000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000,
    "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
@@ -8483,13 +8482,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4388,
+   "ok": 4389,
    "fallos": 0,
-   "ejecuciones": 3635,
+   "ejecuciones": 3636,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:31:11.846Z"
+   "ultima": "2026-11-20T10:36:11.735Z"
   }
  },
  "ptsDirecto": {},
@@ -8506,15 +8505,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:31:24.633Z"
+   "ultimaBien": "2026-11-20T10:36:19.733Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:31:24.633Z"
+   "ultimaBien": "2026-11-20T10:36:19.733Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:31:24.633Z"
+   "ultimaBien": "2026-11-20T10:36:19.733Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8522,11 +8521,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:31:24.633Z"
+   "ultimaBien": "2026-11-20T10:36:19.733Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:31:24.633Z"
+   "ultimaBien": "2026-11-20T10:36:19.733Z"
   }
  },
  "avisos": [
