@@ -46,8 +46,10 @@ const todos = async (P) => P.page.evaluate(async () => {
   const txt = I.ventasMiasTxt(D, M, js, Dt.cfg());
   const R = Pl.planDeHoy(D, M, Dt.cfg());
   const vende = (R.ops || []).filter((o) => !o.descartada && !o.sugerencia && o.accion === 'vender').map((o) => (o.j && o.j.nombre) || o.jugador);
-  const V = I.veredictos(D, M);
-  const acepta = M.mias.filter((x) => V[`A-${x.pid}`] && V[`A-${x.pid}`].ok && M.misVentas.some((v) => v.pid === x.pid && v.ofertas && v.ofertas[0])).map((x) => x.j.nombre);
+  // lo que aconseja la app con cada oferta (Equipo → en venta) y lo que dice de ella en MIS JUGADORES
+  const conOferta = M.misVentas.filter((v) => v.mejor && ['aceptar', 'esperar'].includes(v.consejo)).map((v) => ({ n: v.j.nombre, consejo: v.consejo }));
+  const ctx = I.contexto(D, M, Dt.cfg(), { chat: true });
+  const enMias = conOferta.map((o) => ({ ...o, linea: (ctx.split('\n').find((l) => l.startsWith('- ') && l.includes(`| ${o.n} |`) && l.includes('EN MI ONCE')) || '') }));
   const datos = (q, hist = []) => I.datosChat(q, D, M, Dt.cfg(), { hist });
   const mio = [...M.mias].filter((x) => x.j.pos !== 5).sort((a, b) => b.j.valor - a.j.valor).slice(0, 4).map((x) => x.j.nombre);
   const rival = M.rivales[0].e.manager || M.rivales[0].e.nombre;
@@ -55,7 +57,7 @@ const todos = async (P) => P.page.evaluate(async () => {
   const tiene = (t) => t.includes('VENDER O QUEDÁRTELO');
   return {
     ys: ys.map((y) => ({ n: y.j.nombre, liga: y.liga, rival: y.rival, clausula: y.clausula })),
-    txt, vende, acepta,
+    txt, vende, conOferta, enMias,
     det: {
       carlos: tiene(datos(carlos)),
       general: tiene(datos('¿A quién vendo y por cuánto?')),
@@ -88,8 +90,10 @@ for (const escena of ['martes', 'paron', 'sabado']) {
   const linea = (n) => lineas.find((l) => l.startsWith(`- ${n} (`)) || '';
   const noVende = r.vende.filter((n) => linea(n) && !/VEREDICTO DE LA APP: VENDER/.test(linea(n)));
   ok(!noVende.length, `(d) ${escena}: lo que vende el plan de hoy sale como VENDER (${r.vende.join(', ') || 'no vende a nadie'})`);
-  const noAcepta = r.acepta.filter((n) => !/VEREDICTO DE LA APP: ACEPTAR LA OFERTA/.test(linea(n)));
-  ok(!noAcepta.length, `(d) ${escena}: con una oferta que la app aceptaría, ACEPTAR (${r.acepta.join(', ') || 'ninguna'})`);
+  const malOf = r.conOferta.filter((o) => (o.consejo === 'aceptar' ? !/VEREDICTO DE LA APP: ACEPTAR LA OFERTA/.test(linea(o.n)) : !/VEREDICTO DE LA APP: (NO ACEPTAR AÚN LA OFERTA|VENDER)/.test(linea(o.n))));
+  ok(!malOf.length, `(d) ${escena}: con una oferta, lo mismo que aconseja la app en Equipo (${r.conOferta.map((o) => `${o.n} ${o.consejo}`).join(', ') || 'ninguna'})`);
+  const malMias = r.enMias.filter((o) => !o.linea.includes(`CON LA OFERTA QUE TIENE: ${o.consejo.toUpperCase()}`) || /aceptaría hoy la oferta/.test(o.linea));
+  ok(!malMias.length, `(d) ${escena}: en MIS JUGADORES, la oferta con el mismo consejo y sin «aceptaría» suelto${malMias.length ? `: ${malMias.map((o) => o.n).join(', ')}` : ''}`);
   ok(r.det.carlos && r.det.general && r.det.sigue && !r.det.rival && !r.det.clausular, `(e) ${escena}: sale con la pregunta de Carlos, «¿a quién vendo?» y siguiendo la conversación, y no con la venta de un rival ni con clausular (${JSON.stringify(r.det)})`);
   await P.cerrar();
 }
