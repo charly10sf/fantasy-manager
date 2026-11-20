@@ -1362,6 +1362,13 @@
    "jornada": 13,
    "id": "2123749831428497415",
    "t": "2026-11-20T12:06:32.276Z"
+  },
+  {
+   "clave": "novedades|2315:vuelve|2026-11-20",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123754870490460539",
+   "t": "2026-11-20T12:26:33.651Z"
   }
  ],
  "estados": {
@@ -1455,7 +1462,7 @@
   "2302": "ok",
   "2303": "ok",
   "2314": "injured",
-  "2315": "doubtful",
+  "2315": "ok",
   "2316": "ok",
   "2317": "out_of_league",
   "2318": "ok",
@@ -2248,7 +2255,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2315",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795177574544
+  }
+ ],
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
@@ -3383,8 +3397,8 @@
     "t": 1794855673586
    },
    "2315": {
-    "e": "doubtful",
-    "t": 1795099876078
+    "e": "ok",
+    "t": 1795177574544
    },
    "2318": {
     "e": "ok",
@@ -4116,16 +4130,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 28,
-   "redactar": 13,
-   "revisar": 12,
+   "redactar": 15,
+   "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 249437,
-  "salida": 16058,
+  "entrada": 276202,
+  "salida": 16425,
   "cacheLee": 23224,
-  "cacheEscribe": 11612,
-  "dolares": 0.474554,
+  "cacheEscribe": 14515,
+  "dolares": 0.539012,
   "reservado": 0
  },
  "recientes": {
@@ -4285,10 +4299,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-19T11:11:33.176Z",
-    "texto": "✅ Lemar vuelve a estar disponible. Estaba en duda por una rotura fibrilar en el aductor que arrastraba desde el 1 de noviembre, y queda despejada.\n\nEl centrocampista suma 1,3 M en el último mes y ya vale 5,9 M. Su vuelta llega tras el parón, el lunes 23 de noviembre, con el Elche 🌴 visitando al Levante 🐸, que va 17º. Es un partido favorable para un medio, pero con un 42 % de titularidad todavía tiene que ganarse el sitio."
-   },
-   {
     "t": "2026-11-19T14:36:36.031Z",
     "texto": "✅ Tchouaméni vuelve a estar disponible: la duda por la lesión en el aductor, que arrastraba desde el 10 de noviembre, queda despejada.\n\nEl Madrid ⚪ recibe al Celta el sábado a las 21:00 en el Bernabéu. Sobre el papel es un partido asequible, pero el Celta es de los que menos encajan, y para un centrocampista eso juega en contra.\n\nCon un 48 % de titularidad, no tiene el puesto asegurado. Eso sí, vale 34,2 M y ha subido 10,8 M en el último mes."
    },
@@ -4303,6 +4313,10 @@
    {
     "t": "2026-11-20T12:06:32.278Z",
     "texto": "✅ Zaid Romero vuelve a estar disponible: la duda queda despejada y el defensa del Getafe llega con un 70 % de titularidad, así que lo normal es verlo en el once.\n\nLo malo es el partido. El domingo a las 21:00 en el Coliseum recibe al Atlético, que va 3º y es de los que más marcan, algo que a un defensa le viene mal.\n\nOjo también a lo que vale: 14,8 M, tras perder 15,2 M en el último mes."
+   },
+   {
+    "t": "2026-11-20T12:26:33.653Z",
+    "texto": "✅ Paredes vuelve a estar disponible: las molestias que arrastraba desde el 4 de noviembre quedan atrás.\n\nEl defensa del Athletic 🦁 llega en racha: 24 puntos en las tres últimas jornadas. Hoy a las 21:00 recibe en San Mamés al Espanyol, que va 13º, un partido asequible. Con un 48 % de titularidad, no tiene el puesto asegurado, así que ojo a los onces."
    }
   ],
   "resumen": [
@@ -8470,13 +8484,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4411,
+   "ok": 4412,
    "fallos": 0,
-   "ejecuciones": 3658,
+   "ejecuciones": 3659,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:21:17.618Z"
+   "ultima": "2026-11-20T12:26:14.544Z"
   }
  },
  "ptsDirecto": {},
@@ -8493,15 +8507,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:21:28.050Z"
+   "ultimaBien": "2026-11-20T12:26:35.243Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:21:28.050Z"
+   "ultimaBien": "2026-11-20T12:26:35.243Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:21:28.050Z"
+   "ultimaBien": "2026-11-20T12:26:35.243Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8509,11 +8523,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:21:28.050Z"
+   "ultimaBien": "2026-11-20T12:26:35.243Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:21:28.050Z"
+   "ultimaBien": "2026-11-20T12:26:35.243Z"
   }
  },
  "avisos": [
