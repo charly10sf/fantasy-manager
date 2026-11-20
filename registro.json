@@ -4143,32 +4143,31 @@
    "SPORT|136630245": 1795104774000,
    "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795154481316
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 69659,
-  "salida": 2934,
+  "entrada": 71380,
+  "salida": 3020,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.156277,
+  "dolares": 0.156492,
   "reservado": 0
  },
  "recientes": {
@@ -8507,13 +8506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4338,
+   "ok": 4339,
    "fallos": 0,
-   "ejecuciones": 3585,
+   "ejecuciones": 3586,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T06:21:15.615Z"
+   "ultima": "2026-11-20T06:26:16.010Z"
   }
  },
  "ptsDirecto": {},
@@ -8530,15 +8529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:21:28.349Z"
+   "ultimaBien": "2026-11-20T06:26:30.138Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:21:28.349Z"
+   "ultimaBien": "2026-11-20T06:26:30.138Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:21:28.349Z"
+   "ultimaBien": "2026-11-20T06:26:30.138Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8546,11 +8545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:21:28.349Z"
+   "ultimaBien": "2026-11-20T06:26:30.138Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:21:28.349Z"
+   "ultimaBien": "2026-11-20T06:26:30.138Z"
   }
  },
  "avisos": [
