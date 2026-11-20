@@ -2237,8 +2237,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
@@ -2442,30 +2440,6 @@
    "SPORT|136657810": 1795170582000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html",
-    "medio": "MARCA",
-    "t": 1794916205000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "molestias musculares",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794916007000,
-    "id": "2444",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Sucic se reincorpora al grupo tras la amigdalitis",
-    "motivo": "amigdalitis",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html",
     "medio": "Diario de Sevilla",
@@ -8477,13 +8451,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4403,
+   "ok": 4404,
    "fallos": 0,
-   "ejecuciones": 3650,
+   "ejecuciones": 3651,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:46:11.411Z"
+   "ultima": "2026-11-20T11:51:13.138Z"
   }
  },
  "ptsDirecto": {},
@@ -8500,15 +8474,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:46:21.359Z"
+   "ultimaBien": "2026-11-20T11:51:26.914Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:46:21.359Z"
+   "ultimaBien": "2026-11-20T11:51:26.914Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:46:21.359Z"
+   "ultimaBien": "2026-11-20T11:51:26.914Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8516,11 +8490,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:46:21.359Z"
+   "ultimaBien": "2026-11-20T11:51:26.914Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:46:21.359Z"
+   "ultimaBien": "2026-11-20T11:51:26.914Z"
   }
  },
  "avisos": [
