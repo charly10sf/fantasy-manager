@@ -2443,7 +2443,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000,
+   "SPORT|136657501": 1795169223000
   },
   "hechos": [
    {
@@ -3221,7 +3222,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4066,7 +4067,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136535420": 1794913964000,
    "Europa Press|https://www.europapress.es/internacional/noticia-bruselas-insiste-veto-atletas-rusos-deporte-nunca-debe-ser-propaganda-guerra-20261117163555.html": 1794929755000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/coruna/coruna/2026/11/17/oar-visita-san-pablo-burgos-volver-senda-victoria/00031794938102625457236.htm": 1794939060000,
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
@@ -4117,17 +4117,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 5,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118881,
-  "salida": 10123,
+  "entrada": 120916,
+  "salida": 10251,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.198911,
+  "dolares": 0.199179,
   "reservado": 0
  },
  "recientes": {
@@ -8466,13 +8466,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4396,
+   "ok": 4397,
    "fallos": 0,
-   "ejecuciones": 3643,
+   "ejecuciones": 3644,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:11:20.900Z"
+   "ultima": "2026-11-20T11:16:13.262Z"
   }
  },
  "ptsDirecto": {},
@@ -8489,15 +8489,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:11:34.341Z"
+   "ultimaBien": "2026-11-20T11:16:26.355Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:11:34.341Z"
+   "ultimaBien": "2026-11-20T11:16:26.355Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:11:34.341Z"
+   "ultimaBien": "2026-11-20T11:16:26.355Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8505,11 +8505,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:11:34.341Z"
+   "ultimaBien": "2026-11-20T11:16:26.355Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:11:34.341Z"
+   "ultimaBien": "2026-11-20T11:16:26.355Z"
   }
  },
  "avisos": [
