@@ -2285,7 +2285,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252319/sustos-finales-ultimos-internacionales-barca.html": 1794952389000,
    "SPORT|136520259": 1794976224000,
    "SPORT|136556602": 1794976223000,
-   "SPORT|136558035": 1794949100000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261118/11686717/frenkie-de-jong-llama-puerta-asi-recuperado-confianza-flick-ganarse-sitio-barca.html": 1794978000000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/kike-salas-bartra-duelo-killers-balon-parado-decidir-derbi-sevilla-fc-betis_0_2008529370.html": 1794979825000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-betis-frente-espejo_0_2008529420.html": 1794979825000,
@@ -4207,32 +4206,32 @@
    "SPORT|136666090": 1795176736000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795207276716
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 63,
+   "clasificar": 64,
    "redactar": 24,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 477930,
-  "salida": 35669,
+  "entrada": 479871,
+  "salida": 35869,
   "cacheLee": 34836,
   "cacheEscribe": 20321,
-  "dolares": 0.850684,
+  "dolares": 0.850978,
   "reservado": 0
  },
  "recientes": {
@@ -8577,13 +8576,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4527,
+   "ok": 4529,
    "fallos": 0,
-   "ejecuciones": 3762,
+   "ejecuciones": 3763,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T20:56:22.526Z"
+   "ultima": "2026-11-20T21:01:16.323Z"
   }
  },
  "ptsDirecto": {},
@@ -8600,27 +8599,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T20:56:26.735Z"
+   "ultimaBien": "2026-11-20T21:01:22.629Z"
   }
  },
  "avisos": [
