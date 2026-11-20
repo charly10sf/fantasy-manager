@@ -264,10 +264,19 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 // 8: Novedades para todos (11 nov): en Ajustes → La app, a quien no es el dueño solo lo importante (importante: true),
 // sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app (y nunca más de los que llevan importante:
 // antes era un tope fijo de 8, que saltó al añadir la ficha del rival en la 0.7.8e)
-for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');"]]) {
-  const { ctx, page, errores } = await pagina({ init });
+// (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo te lo estipule») esa lista solo sale con
+// «novedadesImportantes» en limites.json; sin eso, a quien no es el dueño no le sale la fila de Novedades en Ajustes
+// (la página lee limites.json del servidor de la prueba: se le sirve el de verdad con esa clave puesta o sin ella)
+const LIMITES_DE_VERDAD = JSON.parse((await import('node:fs')).readFileSync(new URL('../web/limites.json', import.meta.url), 'utf8'));
+for (const [nombre, init, conLista] of [['web', '', true], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');", true], ['web, sin encender', '', false]]) {
+  // (la app lo lee de fuera, que aquí está cortado, y tira de lo guardado; la web, del servidor de la prueba: las dos cosas)
+  const lim = conLista ? { ...LIMITES_DE_VERDAD, novedadesImportantes: true } : LIMITES_DE_VERDAD;
+  const { ctx, page, errores } = await pagina({ init: `${init} localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: ${JSON.stringify(lim)} }));` });
+  await page.route('**/limites.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify(lim) }));
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  // (a que la página haya leído limites.json)
+  await page.waitForFunction(() => { try { return !!JSON.parse(localStorage.getItem('fm-limites') || 'null'); } catch (e) { return false; } }, null, { timeout: 10000 }).catch(() => {});
   const r = await page.evaluate(async () => {
     const { NOVEDADES } = await import('./js/version.js');
     document.querySelector('#bAjustes').click();
@@ -282,7 +291,8 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const arr = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.tipo === 'arreglo')); const li = [...document.querySelectorAll('.hoja .nvl-arreglos li')].map((x) => x.textContent);
     return { nuevo: /Nuevo en la/.test(sub), t, nImp: imp.length, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !(li.length && li.every((x) => arr.some((c) => c.t === x))), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
   });
-  if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
+  if (!conLista) { if (r.sinFila) bien('Novedades (sin «novedadesImportantes»): a quien no es el dueño no le sale la fila en Ajustes'); else mal(`Novedades (${nombre}): sale la fila sin haberla encendido: ${JSON.stringify(r).slice(0, 200)}`); }
+  else if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
   else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > r.nImp) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
   else bien(`Novedades (${nombre}): solo lo importante (${r.t.length}) y los arreglos en pequeño${nombre === 'web' ? ', sin lo de la app' : ''}`);
   if (errores.length) mal(`Novedades: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
@@ -978,6 +988,136 @@ for (const [nombre, canal, version, playMin, espera] of [['Play por debajo', 'pl
   else bien(`app de Play atrás, ${nombre}: ${espera ? 'la banda con «Actualizar en Google Play» (y nada en la liga de ejemplo)' : 'sin banda'}`);
   if (errores.length) mal(`app de Play atrás, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
+}
+
+// 19: (19 nov, el fallo de Bryan) la app no consigue descargar la actualización con su conexión: con más de un día así,
+// una banda pequeña que dice que la abra con wifi. Nada el primer día, nada si el fallo no es de la conexión (firma,
+// 404), se quita en cuanto mira bien, se cierra hasta mañana, y nunca en la web, el APK de GitHub ni la liga de ejemplo
+for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub', 'github']]) {
+  const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '6581', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+  const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: false } }));` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(1200);
+  const r = await page.evaluate(async () => {
+    const { VERSION } = await import('./js/version.js');
+    const { LS } = await import('./js/util.js');
+    const repintar = async () => {
+      const otra = [...document.querySelectorAll('.nav button[data-ir]')].find((b) => b.dataset.ir !== window.S.vista);
+      if (otra) otra.click();
+      await new Promise((ok) => setTimeout(ok, 300));
+      const b = [...document.querySelectorAll('#banda .banda')].find((x) => /actualización/.test(x.innerText));
+      return b ? b.innerText.replace(/\s+/g, ' ') : '';
+    };
+    const red = 'error: failed to connect to fantasymanagerapp.com/185.199.109.153 (port 443) from /10.85.35.168 (port 41234) after 15000ms';
+    const o = {};
+    window.webBuscada(red);
+    o.demo = (LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION }), await repintar());
+    window.S.D.demo = false;
+    LS.set('aldia-red', null); LS.del('aldia-red');
+    window.webBuscada(red);
+    o.primerDia = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    window.webBuscada(red);
+    o.masDeUnDia = await repintar();
+    o.cruz = !![...document.querySelectorAll('#banda .banda')].find((x) => /actualización/.test(x.innerText) && x.querySelector('[data-accion="cerrarSinDescarga"]'));
+    window.webBuscada('error: sin conexión · dominio: no conecta (185.199.109.153) · respaldo: tarda');
+    o.losDos = await repintar();
+    window.webBuscada('igual');
+    o.trasIgual = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    window.webBuscada('error: dominio: paquete con firma mala');
+    o.firma = await repintar();
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    o.deOtraVersion = (LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: '0.1' }), await repintar());
+    LS.set('aldia-red', { t: Date.now() - 26 * 3600e3, v: VERSION });
+    await repintar();
+    const x = [...document.querySelectorAll('#banda [data-accion="cerrarSinDescarga"]')][0];
+    if (x) x.click();
+    o.cerrada = await repintar();
+    return o;
+  });
+  const txt = 'No se ha podido descargar la actualización con esta conexión: abre la app con wifi.';
+  const ok = canal === 'play'
+    ? !r.demo && !r.primerDia && r.masDeUnDia === txt && r.cruz && r.losDos === txt && !r.trasIgual && !r.firma && !r.deOtraVersion && !r.cerrada
+    : !r.demo && !r.primerDia && !r.masDeUnDia && !r.losDos;
+  if (!ok) mal(`sin descargar la actualización, ${nombre}: ${JSON.stringify(r).slice(0, 400)}`);
+  else bien(`sin descargar la actualización, ${nombre}: ${canal === 'play' ? 'la banda solo con más de un día fallando por la conexión, y se quita al mirar bien o al cerrarla' : 'sin banda'}`);
+  if (errores.length) mal(`sin descargar la actualización, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 20: (19 nov, Carlos: «no conozco a los usuarios y no puedo decirles nada») en Quién usa la app, qué le pasa a cada uno y
+// si se arregla solo o con la app, nunca «Que cierre la app…», «Que actualice…» ni nada que haya que decirle
+{
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-demo', 'true');` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const { quienUsaHTML } = await import('./js/hojas.js');
+    const ahora = Date.now(), u = ahora - 3600e3;
+    const x = (n, o) => ({ nombre: n, equipo: n, ultima: u, canal: 'play', app: 99999, v: '0.1', ...o });
+    const lista = [
+      x('Bryan', { ad: 'failed to connect to fantasymanagerapp.com/185.199.109.153 (port 443) from /10.85.35.168 (port 41234)' }),
+      x('Dos', { ad: 'sin conexión · dominio: no conecta (185.199.109.153) · respaldo: tarda' }),
+      x('Firma', { ad: 'dominio: paquete con firma mala' }),
+      x('Sitio', { ad: 'sin sitio para guardarla' }),
+      x('Arranca', { ad: 'descartada la 0.8: no arrancaba' }),
+      x('Raro', { ad: 'algo raro' }),
+      x('Fuera', { canal: 'github', app: 5701 }),
+      x('Vieja', { app: 10, ad: '' }),
+      ...['red', 'lento', 'laliga', 'sinLigas', 'vacia', 'cambio', 'otro'].map((t) => x(`Carga ${t}`, { v: '9.9 !', fc: `${t}: x` })),
+      x('Carga sin motivo', { v: '9.9 !' }),
+    ];
+    const div = document.createElement('div');
+    div.innerHTML = quienUsaHTML({ quien: { lista, ahora, registro: [], tab: 'cuentas' } });
+    const por = [...div.querySelectorAll('.qf-por')].map((e) => e.innerText.replace(/\s+/g, ' '));
+    return { n: por.length, por, todo: div.innerText };
+  });
+  const malos = r.por.filter((t) => /(^|[.:] )Que [a-z]|que (cierre|abra|actualice|pruebe|mande|libere|reinstale|desinstale|lo intente)/.test(t));
+  const bryan = r.por.find((t) => /185\.199\.109\.153/.test(t) && !/respaldo/.test(t)) || '';
+  const dos = r.por.find((t) => /ni al sitio principal ni al de respaldo/.test(t)) || '';
+  const ok = r.n >= 16 && !malos.length && /su conexión no llega/.test(bryan) && /Se arregla solo/.test(bryan) && /Google Play/.test(bryan) && /Se arregla solo/.test(dos);
+  if (!ok) mal(`Quién usa la app, qué le pasa: ${JSON.stringify({ n: r.n, malos, bryan, dos }).slice(0, 500)}`);
+  else bien(`Quién usa la app, qué le pasa: ${r.n} casos con qué pasa y si se arregla solo, sin nada que decirle al usuario`);
+  if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 21: (19 nov, Carlos) una versión con todos: 'web' se presenta sola a los de la web y el iPhone, no en la app de Android;
+// su botón con ir.accion abre lo mismo que ese data-accion (la 0.8h: «Invitar a un amigo» abre la hoja de invitar). Con
+// «aviso» (20 nov) sale una tarjeta en el centro en vez de la pantalla entera, y se cierra al tocar el botón
+{
+  const { NOVEDADES } = await import(new URL('../web/js/version.js', import.meta.url));
+  const nw = NOVEDADES.find((n) => n.todos && n.aviso) || NOVEDADES.find((n) => n.todos === 'web');
+  if (!nw) bien('novedades solo para la web: ninguna versión con todos: \'web\' ahora mismo');
+  else {
+    const i = NOVEDADES.indexOf(nw), antes = (NOVEDADES[i + 1] || {}).v;
+    for (const app of [false, true]) {
+      const fa = app ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
+      const { ctx, page, errores } = await pagina({ init: `${fa} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-version-vista2', JSON.stringify('${antes}'));` });
+      await page.goto(`${BASE}/index.html`);
+      await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+      await page.waitForTimeout(3500);
+      // con «aviso», la tarjeta en el centro (no la pantalla entera); sin él, la presentación
+      const r = await page.evaluate(async (corta) => {
+        document.querySelectorAll('.tour').forEach((e) => e.remove());
+        const abierta = !!document.querySelector(corta ? '.nvt' : '.nv-cap');
+        const entera = !!document.querySelector('.nv-cap');
+        const boton = document.querySelector(corta ? '[data-nvt="ir"]' : '[data-nv-ir]');
+        if (boton) { boton.click(); await new Promise((ok) => setTimeout(ok, 1200)); }
+        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, sigue: !!document.querySelector('.nvt') };
+      }, !!nw.aviso);
+      const accion = nw.aviso ? nw.aviso.ir : (nw.cosas.find((c) => c.ir && c.ir.accion) || {}).ir;
+      if (nw.aviso && (r.entera || r.sigue)) r.abierta = false;
+      const sale = nw.todos === true || nw.todos === (app ? 'app' : 'web');
+      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && r.hoja));
+      if (!ok) mal(`novedades de una versión (${nw.v}), ${app ? 'app' : 'web'}: ${JSON.stringify(r)}`);
+      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja}` : 'no se abre'}`);
+      if (errores.length) mal(`novedades solo para la web: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+      await ctx.close();
+    }
+  }
 }
 
 await nav.close();

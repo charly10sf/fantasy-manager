@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8e';
+export const VERSION = '0.8j';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,18 +18,75 @@ export const VERSION = '0.8e';
 // importante: true (11 nov, Carlos) la pone en «Novedades» de Ajustes para todos: solo lo gordo, lo que cambia cómo se
 // usa la app (un menú nuevo, la ficha rehecha). Pocas: un par por versión como mucho. Debajo, en pequeño, los arreglos
 // de esas mismas versiones (sin los `menor` ni los de 'dueño').
+// todos: 'web' o 'app' (19 nov): solo a los de esa versión de la app. aviso: { d, t, x, mas, ir } (20 nov): en vez de la
+// presentación a pantalla completa, una tarjeta en el centro con una línea y un botón (presentacion.js, tarjetaNovedad).
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (20 nov, Carlos: «todos los rivales me pone peligro bajo») El peligro de cada rival sale de lo que puede hacerte
+    // (su dinero frente a tus cláusulas que se pagan en tu liga, abiertas o a punto, y lo que te duele perderlas) y de lo
+    // que suele hacer (sus clausulazos de toda la temporada, los hechos a ti el doble), con el porqué en la ficha. `menor`
+    // y sin `todos`: a los demás no les sale (Carlos). Detalle en ESTADO.md. La hora, al publicar
+    v: '0.8j', f: '2026-11-20', h: '14:18', t: 'El peligro de cada rival, con su porqué',
+    cosas: [
+      { tipo: 'mejora', menor: true, d: 'peligro', t: 'El peligro de cada rival, con su porqué', x: 'El peligro de un rival ya no depende solo de lo que ha movido esta semana. Cuenta si le llega el dinero para tus cláusulas que se pagan en tu liga (las abiertas y las que se abren pronto) y cuánto te dolería perder a esos jugadores, sus clausulazos de toda la temporada (los que te ha hecho a ti, el doble) y si te pelea el puesto. Una cláusula muy por encima de lo que se paga en tu liga no cuenta. En la ficha del rival sale el porqué en una línea, y en las 24 horas antes de la jornada, cuando nadie puede clausular, baja un escalón y te dice cómo queda al reabrirse.' },
+      // (20 nov, el chat de Carlos y la queja de Fran: «la IA es pésima con ventas y tendencias») M.ventaMia (motor.js) y
+      // ventasMiasTxt (ia.js): las cuentas de vender o quedarse a los suyos, con su veredicto, al chat. Detalle en ESTADO.md
+      { tipo: 'mejora', menor: true, d: 'balanza', t: 'Pregunta: vender o quedártelo, con sus cuentas', x: 'Cuando preguntas si vender a alguno de los tuyos, la respuesta mira primero su tendencia: lo que sube o baja cada día y lo que puede cambiar en una semana. Separa lo que te daría LaLiga en el próximo cambio de mercado (con lo que sube o baja según la suerte) de su cláusula, que es lo que cobras si un rival te lo quita, y te dice cuánto pedirle a un rival para cobrarlo al momento. Si baja, venderlo antes de perder más; si sube y su cláusula está cerca de su valor, protegerlo para que nadie se lleve a precio de mercado lo que va a subir. Y dice lo mismo que el plan de Hoy y que lo que la app haría con las ofertas que ya tienes.' },
+    ],
+  },
+  {
+    // (20 nov, Carlos: «el de apertura, una vez al día nada más abrir la app; los intersticiales, uno cada 7 minutos a
+    // contar desde la primera apertura del día, 5 al día como mucho») El de apertura se pedía con la liga ya cargada y
+    // solo valía si llegaba en 12 s desde que se abría: al abrir en frío casi nunca salía (Anuncios.java, parte Android
+    // nueva: AAB para Play). Los intersticiales contaban el rato de cada visita desde cero: ahora, el del día
+    // (intersticial.js). Detalle en ESTADO.md. La hora, al publicar
+    // (20 nov, aviso de Domy: «el título de las actualizaciones tiene que ser lo más relevante de la actualización, no un
+    // invento») El título dice lo que trae, tal cual, y lo primero de la lista es lo que ve todo el mundo (si lo primero es
+    // solo de una plataforma, a los demás les sale de título lo siguiente: `visibles` en presentacion.js)
+    v: '0.8i', f: '2026-11-20', h: '00:48', t: 'Arreglos: el aviso de invitar a un amigo y la pestaña Hoy',
+    cosas: [
+      { tipo: 'arreglo', menor: true, d: 'regalo', t: 'El aviso de «Invita a un amigo» ya no se pierde', x: 'Al actualizar la app desde Google Play, el aviso salía un momento y desaparecía sin volver. Ahora sale con tu liga ya cargada y se queda hasta que lo cierras.' },
+      { tipo: 'arreglo', menor: true, d: 'plan', t: 'En Hoy, «Lo que llevas hoy» y los tiempos del marcador a su tamaño', x: 'En Hoy, «Lo que llevas hoy» ocupaba el doble cuando aún no habías hecho nada, y los tiempos del marcador quedaban muy separados cuando no cabían en una línea. Ya van a su tamaño.' },
+      { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'El anuncio de apertura sale al abrir la app y los demás, cada 7 minutos', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
+    ],
+  },
+  {
+    // (19-20 nov, Carlos) invitar a un amigo, a todos (primero pidió web e iPhone y luego «a los de android también, así
+    // invitan a más gente»). Con «aviso» no sale la presentación a pantalla completa sino una tarjeta en el centro con una
+    // línea (la variante B que eligió Carlos), que dice que está en Ajustes. La hora, al publicar
+    v: '0.8h', f: '2026-11-20', h: '00:19', t: 'Invita a tus amigos', todos: true,
+    aviso: { d: 'regalo', t: 'Invita a un amigo', x: 'Por cada amigo que entre con tu enlace, ves el dinero de 2 rivales durante 24 horas. Lo tienes en Ajustes → Invita a un amigo.', mas: 'Y más premios si invitas a 3 y a 5', ir: { accion: 'invitarAmigo', txt: 'Invitar a un amigo' } },
+    cosas: [
+      { tipo: 'nuevo', d: 'regalo', t: 'Invita a un amigo', x: 'Comparte tu enlace o tu código. Por cada amigo que empiece a usar la app con él, eliges 2 rivales y ves su dinero durante 24 horas. Con 3 amigos que vuelvan otro día, una semana con el doble de planes y preguntas gratis.', ir: { accion: 'invitarAmigo', txt: 'Invitar a un amigo' } },
+    ],
+  },
+  {
+    // (19 nov, el fallo de Bryan: con los datos de su operadora no llegaba al dominio y se quedaba en la 0.7.13za) AlDia
+    // prueba el respaldo de Cloudflare Pages (Origenes.java, parte Android nueva: AAB para Play), la banda de no poder
+    // descargar con esa conexión y los textos de Quién usa la app. Detalle en ESTADO.md. La hora, al publicar
+    v: '0.8g', f: '2026-11-19', h: '21:52', t: 'Actualizaciones con cualquier conexión',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Actualizaciones con cualquier conexión', x: 'Si tu conexión no llegaba a donde se descargan las actualizaciones, la app se quedaba en una versión vieja sin decir nada. Con la versión nueva de Google Play lo intenta también por otro camino y, si en más de un día no lo consigue, te avisa para que la abras con wifi.' },
+    ],
+  },
+  {
     // (19 nov, sesión larga: referidos de Domy, apodos en todos los dispositivos, caché y respuestas más cortas del chat, el
     // plan «sin salida»). Detalle en ESTADO.md y claude/nota-sesion-larga-ia.md. La hora, al publicar
-    v: '0.8e', f: '2026-11-19', h: '20:00', t: 'Invita a tus amigos',
+    v: '0.8f', f: '2026-11-19', h: '20:45', t: 'Invita a tus amigos',
     cosas: [
       { tipo: 'nuevo', d: 'regalo', importante: true, t: 'Invita a un amigo', x: 'En Ajustes → Invita a un amigo, comparte tu enlace o tu código. Por cada amigo que empiece a usar la app con él, eliges 2 rivales y ves su dinero durante 24 horas. Con 3 amigos que vuelvan otro día, una semana con el doble de planes y preguntas gratis; con 5, un mes sin anuncios a pantalla completa.' },
       { tipo: 'mejora', d: 'movil', t: 'Tus apodos, en todos tus dispositivos', x: 'Los apodos que pones a los rivales van con tu cuenta: si los pones en el móvil, también te salen en el ordenador.' },
       { tipo: 'mejora', d: 'chat', t: 'Respuestas más cortas', x: 'La IA va más al grano: unas pocas frases con las cifras que deciden, también cuando le preguntas por un trato o por un rival.' },
       { tipo: 'arreglo', d: 'plan', t: 'El plan cuando no llegas en positivo', x: 'Si con tu saldo y tus pujas no llegabas en positivo a la jornada, el plan ya cuenta también con retirar las pujas por jugadores de otros mánagers, y la IA no puede meterte fichajes encima.' },
+    ],
+  },
+  {
+    // (19 nov, Carlos: «entra Morcillo y sale Morcillo… que no es tuyo») dos jugadores con el mismo nombre
+    v: '0.8e', f: '2026-11-19', h: '19:18', t: 'Jugadores con el mismo nombre',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'Jugadores con el mismo nombre', x: 'Si en LaLiga había otro jugador que se llamaba igual que uno tuyo, el plan podía confundirlos y decirte «entra Morcillo y sale Morcillo» o que no era tuyo. Ahora se queda siempre con el tuyo.' },
     ],
   },
   {

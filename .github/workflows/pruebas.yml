@@ -5,7 +5,8 @@
 #   sin-red: worker/prueba/datos.mjs y las bot/prueba/*-ejemplo.mjs con la red cortada (.github/pruebas-sin-red.sh).
 #   firma: Ed25519.java (el que comprueba paquete.json en el APK) contra los vectores del RFC 8032 y, con el secreto
 #     PAQUETE_FIRMA, firma el paquete.json de esta rama y lo verifica con la clave pública de AlDia.java, igual que
-#     «Web» antes de publicar (revisión total, A5). Sin el secreto, falla: así se ve antes de llegar a main.
+#     «Web» antes de publicar (revisión total, A5). Sin el secreto, falla: así se ve antes de llegar a main. Desde el
+#     19 nov, también Origenes.java (AlDia va al respaldo de Cloudflare Pages si no llega al dominio).
 # No publica nada.
 name: Pruebas
 
@@ -47,12 +48,20 @@ jobs:
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-chat.mjs
       - name: Probar los intersticiales
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-intersticial.mjs
+      - name: La tarjeta de una novedad no se pierde (invitar a un amigo)
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-aviso.mjs
       # el plan con la IA de la app cuando la conexión falla a medias: siempre queda el de la app, con un aviso que dice la verdad
       - name: Probar el plan cuando falla la conexión
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-conexion.mjs
       # Hoy y los avisos con la app cerrada dicen lo mismo de a quién vender por la inercia
       - name: Probar los avisos de vender por la inercia
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-fondo.mjs
+      # (20 nov) el peligro de cada rival: lo que puede hacerte y lo que suele hacer, con rivales forzados
+      - name: Peligro de los rivales
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-peligro.mjs
+      # (20 nov) vender o quedárselo: las cuentas y el veredicto que le llegan al chat, con jugadores forzados
+      - name: Vender o quedárselo
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-ventas.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs
@@ -62,6 +71,7 @@ jobs:
         run: |
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-arbitro.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-coherencia.mjs
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-homonimos.mjs
           PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-trato.mjs
 
   sin-red:
@@ -87,6 +97,12 @@ jobs:
         run: |
           javac -nowarn -d "$RUNNER_TEMP/firma" android/app/src/main/java/es/fantasymanager/app/Ed25519.java android/prueba/PruebaFirma.java
           java -cp "$RUNNER_TEMP/firma" es.fantasymanager.app.PruebaFirma
+      # (19 nov) de dónde baja AlDia la web: el dominio y, si no se llega a él, el respaldo (servidores https locales)
+      - name: AlDia con el dominio caído (Origenes.java)
+        run: |
+          A=android/app/src/main/java/es/fantasymanager/app
+          javac -nowarn -d "$RUNNER_TEMP/origenes" $A/Ed25519.java $A/Origenes.java android/prueba/PruebaOrigenes.java
+          java -cp "$RUNNER_TEMP/origenes" es.fantasymanager.app.PruebaOrigenes
       - name: Firmar y comprobar con la clave de verdad
         env:
           PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}

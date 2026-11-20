@@ -16,7 +16,7 @@ import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
-import { rematarAuto, prisaNegativo, ofertaDueno } from './motor.js';
+import { rematarAuto, prisaNegativo, ofertaDueno, motivoPeligro } from './motor.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
@@ -1112,8 +1112,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
       for (const e of M.especular.slice(0, 10)) L.push(`- ${e.j.nombre} (${POS[e.j.pos]}, ${e.j.equipo}) | ${e.origen === 'mercado' ? `mercado, pujar ${eur(e.puja)}` : `cláusula ${eur(e.precio)} a ${e.rival.manager || e.rival.nombre}`} | ${pct(e.r * 100)}/día | ${eur(e.valorFuturo)} | ${eur(e.beneficio, { signo: true })}${e.vuelve ? ` | VUELVE: llegó a valer ${eur(e.vuelve.max)} esta temporada, juega otra vez y lleva ${e.vuelve.racha} días subiendo` : ''}`);
     }
   }
-  L.push(`\nRIVALES (pos | equipo | manager | puntos | valor | lo que han subido de valor sus jugadores en 7d (sin contar fichajes ni ventas) | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro | su dinero | lo que suele pagar en el mercado | mis cláusulas que le llegan)${M.dineroExacto ? '' : `. Su dinero, si no es exacto, sale de todos vuestros movimientos desde el principio de la liga (empezasteis con lo mismo); el margen (±) es por la recompensa diaria, que no sale en los movimientos ni en ningún otro sitio: la app no puede saber cuánto ha cogido cada uno. Si le das a alguien el dinero de un rival con su ±, di también que el ± es por eso${M.calDinero && !bloqueada('dineroRivales') ? `. En todas las ligas, con ${M.calDinero.n} casos apuntados por la gente, esta cuenta suele fallar ± ${eur(M.calDinero.margen)}: ya va corregida, pero no te fíes de diferencias más pequeñas que eso` : M.calDinero ? '. Esta cuenta va corregida con lo que apunta la gente en todas las ligas, pero sigue siendo una estimación' : ''}`}:`);
-  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel} | ${dineroDe(r.dinero, r.e.valor)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
+  L.push(`\nRIVALES (pos | equipo | manager | puntos | valor | lo que han subido de valor sus jugadores en 7d (sin contar fichajes ni ventas) | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro (y por qué) | su dinero | lo que suele pagar en el mercado | mis cláusulas que le llegan)${M.dineroExacto ? '' : `. Su dinero, si no es exacto, sale de todos vuestros movimientos desde el principio de la liga (empezasteis con lo mismo); el margen (±) es por la recompensa diaria, que no sale en los movimientos ni en ningún otro sitio: la app no puede saber cuánto ha cogido cada uno. Si le das a alguien el dinero de un rival con su ±, di también que el ± es por eso${M.calDinero && !bloqueada('dineroRivales') ? `. En todas las ligas, con ${M.calDinero.n} casos apuntados por la gente, esta cuenta suele fallar ± ${eur(M.calDinero.margen)}: ya va corregida, pero no te fíes de diferencias más pequeñas que eso` : M.calDinero ? '. Esta cuenta va corregida con lo que apunta la gente en todas las ligas, pero sigue siendo una estimación' : ''}`}:`);
+  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel} (${motivoPeligro(r, { quien: !bloqueada('quienPaga') }).replace(/\.$/, '')}) | ${dineroDe(r.dinero, r.e.valor)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
   // cómo juega cada uno, con todo el historial (función top «perfilRival»: si está cerrada, la usa sin contarla)
   if (M.perfil) {
     const yoT = D.yo && D.yo.teamId;
@@ -1843,9 +1843,13 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
   const buscar = (n) => {
     const k = norm(n);
     if (!k) return null;
+    // (19 nov, Carlos: «entra Morcillo y sale Morcillo… no es tuyo») con dos que se llaman igual se quedaba con el
+    // primero de LaLiga, que podía no ser el tuyo: en cada paso de la búsqueda, primero los tuyos y luego el resto
+    const mios = (M.mias || []).map((x) => x.j || D.maestro[x.pid]).filter(Boolean);
     const todos = Object.values(D.maestro);
-    return todos.find((j) => norm(j.nombre) === k) || todos.find((j) => norm(j.largo) === k)
-      || (k.length >= 3 ? todos.find((j) => { const n = norm(j.nombre); return n.length >= 3 && (n.includes(k) || k.includes(n)); }) : null) || null;
+    const en = (f) => mios.find(f) || todos.find(f);
+    return en((j) => norm(j.nombre) === k) || en((j) => norm(j.largo) === k)
+      || (k.length >= 3 ? en((j) => { const n = norm(j.nombre); return n.length >= 3 && (n.includes(k) || k.includes(n)); }) : null) || null;
   };
   // lo que ya tienes pujado se cobra al cambiar el mercado si lo ganas: para el saldo con el que empiezas la jornada, ya
   // está gastado (antes no se restaba y el plan podía dejarte en negativo sin avisar; revisión del 25 oct)
@@ -2814,6 +2818,85 @@ export function cuentasTxt(D, M, js, { web = true, trato = null } = {}) {
   return L.join('\n');
 }
 
+/* ---------------- ¿lo vendo o me lo quedo? (20 nov, el chat de Carlos y la queja de Fran) ----------------
+   A «¿me renta vender a Valverde, Natan, Nico y Zabiri si me dan más que su cláusula, o me los quedo y sigo especulando?
+   ¿A LaLiga o a un rival, y por cuánto?» la IA contestó «a LaLiga no le sacas más que su cláusula» (mezclaba la oferta de
+   LaLiga con la cláusula), sin la tendencia de ninguno ni el precio para un rival. Las cuentas las hace M.ventaMia y aquí
+   van con su veredicto, como las ofertas y los tratos. */
+const VENDE_RE = /\b(vend\w*|vendo|quedo|quedarme\w*|quedar\w*|especul\w*|renta\w*|traspas\w*|me dan|me ofrec\w*|me pagan|cuanto pido|cuanto le pido|deshac\w*|liquid\w*|sacar dinero|hacer caja|clausul\w* a su valor|me lo clausul\w*)\b/;
+/** ¿la pregunta (o la conversación) va de vender jugadores suyos? */
+export const vaDeVender = (t) => VENDE_RE.test(norm(t || ''));
+/** los suyos que mirar si no nombra a nadie: los que la app vendería o protegería primero (como mucho 4) */
+export function vendiblesMios(M, n = 4) {
+  const orden = { vender: 0, proteger: 1, 'da-igual': 2, quedar: 3 };
+  return (M.mias || []).map((x) => M.ventaMia && M.ventaMia(x)).filter(Boolean)
+    .filter((y) => y.veredicto !== 'quedar' || y.presa)
+    .sort((a, b) => orden[a.veredicto] - orden[b.veredicto] || b.v - a.v).slice(0, n).map((y) => y.j);
+}
+export function ventasMiasTxt(D, M, js, c = null) {
+  const yo = D.yo && D.yo.teamId;
+  const L = [];
+  const V = (() => { try { return veredictos(D, M); } catch (e) { return {}; } })();
+  // lo que hace con cada uno el plan que ve en Hoy (venderlo, o mirarlo y aguantarlo): manda, para que no digan cosas distintas
+  let opsPlan = [], mirados = new Map();
+  try {
+    const Rp = planQueVe(D, M, c);
+    opsPlan = Rp ? (Rp.motorHoy ? Rp.ops : cuadrarPlan(Rp, D, M).ops) || [] : [];
+    const Rm = planDeHoy(D, M, c);
+    mirados = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.motivo || '')]));
+  } catch (e) { opsPlan = []; }
+  const sinDias = bloqueada('inercia');
+  const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
+  for (const j of js || []) {
+    if (!j || M.dueno[j.id] !== yo) continue;
+    const x = (M.mias || []).find((y) => y.pid === j.id);
+    const y = x && M.ventaMia ? M.ventaMia(x) : null;
+    if (!y) continue;
+    const t = M.tend(j.id) || {};
+    const pz = M.partidazo ? M.partidazo(j.id) : null;
+    // la tendencia: lo de hoy y lo que se espera en 7 días (sin la inercia abierta, solo lo de la última semana)
+    const futuro = !sinDias && y.p7 != null ? `si sigue la tendencia, en 7 días ${eur(y.p7, { signo: true })}` : '';
+    const tend = [y.hoy != null ? `hoy ${eur(y.hoy, { signo: true })}` : '', t.d7 != null ? `última semana ${eur(t.d7, { signo: true })}` : '', futuro].filter(Boolean).join('; ') || 'sin datos de los últimos días';
+    const ojoPz = pz && pz.nivel && y.baja ? `; OJO: acaba de hacer ${pz.pts} pts (J${pz.n}), puede frenar la bajada` : '';
+    const opV = opsPlan.find((o) => !o.descartada && !o.sugerencia && o.accion === 'vender' && String(o.pid || (o.j && o.j.id)) === String(j.id));
+    const venV = V[`V-${j.id}`] || null, ofV = V[`A-${j.id}`] || null;
+    const noHoy = venV && !venV.ok && venV.aviso ? cortar(venV.aviso, 160) : y.espera && ['juega', 'sube'].includes(y.espera.tipo) ? cortar(y.espera.texto, 160) : '';
+    let ver = y.veredicto, motivo;
+    const sube7 = futuro ? ` (${futuro.replace('si sigue la tendencia, ', '')})` : '';
+    if (opV) { ver = 'vender'; motivo = `está en el plan de hoy: ${cortar(opV.motivo || '', 170)}${opV.cuando ? ` (${opV.cuando})` : ''}`; }
+    else if (ver === 'vender') motivo = `está bajando${sube7}: cada día que pasa pierdes dinero, y subirle la cláusula sería pagar por uno que pierde valor${y.pts >= 3 ? `. En tu once pesa (${d1(y.pts)} pts por jornada sin él): mira con qué lo repones` : ''}`;
+    else if (ver === 'proteger') motivo = `sube${sube7} y su cláusula ${y.abierta ? 'está abierta' : `se abre ${cuandoF(y.abre)}`} cerca de su valor, con rivales a los que les llega: si te lo clausulan, se llevan a precio de mercado lo que iba a subir`;
+    else if (ver === 'quedar' && y.sube) motivo = `sube${sube7}${y.clausula && !y.presa ? ' y su cláusula está lejos de lo que se paga aquí' : y.clausula && !y.pronto ? ` y nadie te lo puede quitar hasta ${cuandoF(y.abre)}` : ''}: venderlo ahora es regalar lo que sube`;
+    else if (ver === 'quedar') motivo = `ni sube ni baja de verdad y te da puntos (sin él, tu once pierde ${d1(y.pts)} por jornada)`;
+    else motivo = 'ni sube ni baja de verdad y apenas te da puntos: venderlo solo vale si te pagan bien y el dinero va a uno que suba';
+    // si baja pero el plan de hoy lo ha mirado y lo aguanta (le da puntos, aún no baja todos los días), manda el plan: lo
+    // mismo que dice Hoy
+    if (!opV && ver === 'vender' && mirados.has(String(j.id))) { ver = 'aguantar'; motivo = `está bajando${sube7}, pero el plan de hoy lo ha mirado y lo aguanta: ${cortar(mirados.get(String(j.id)), 170)}`; }
+    // con una oferta que la app aceptaría, esa es la respuesta (como en MIS JUGADORES EN VENTA)
+    const venta = (M.misVentas || []).find((v) => v.pid === j.id);
+    const mejor = venta && venta.ofertas && venta.ofertas[0];
+    if (ofV && ofV.ok && mejor) { ver = 'aceptar'; motivo = `ya tiene una oferta de ${mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')} por ${eur(mejor.importe)} y la app la aceptaría${ofV.aviso ? ` (${cortar(ofV.aviso, 150)})` : ''}`; }
+    const VER = { vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
+    const P = y.proteger;
+    const como = ver === 'vender'
+      ? ` Al momento, a un rival que te pague ${eur(y.rival.piso)} o más; si no, a la venta para la oferta de LaLiga.${noHoy && !opV ? ` Cuándo: ${noHoy}` : ''}`
+      : ver === 'proteger' && P
+        ? ` ${P.como === 'ya' ? 'Ya lo tienes blindado.' : P.como === 'escudo' ? 'Blíndalo ya con el escudo (gratis, 24 h).' : P.como === 'escudo-al-abrir' ? `Blíndalo con el escudo en cuanto se abra (${cuandoF(y.abre)}): antes no se puede.` : P.como === 'subir' ? `Súbele la cláusula a ${eur(P.objetivo)} (cuesta ${eur(P.coste)}, menos de lo que va a subir).` : `Protegerlo pagando no compensa${P.coste ? ` (subirle la cláusula cuesta ${eur(P.coste)}, más de lo que va a subir)` : ''}.`} Si no, véndeselo antes a un rival por ${eur(y.rival.techo)} o cerca.`
+        : '';
+    const liga = `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
+    const cl = !y.clausula ? 'CLÁUSULA: no la sé' : `CLÁUSULA ${eur(y.clausula)} (${y.sobre != null && y.sobre <= 0.03 ? 'A SU VALOR' : y.sobre != null ? `${pct(y.sobre * 100, 0)} sobre su valor` : '?'}), ${y.abierta ? 'ABIERTA' : y.veda ? `cerrada hasta que empiece la jornada (${cuandoF(y.abre)})` : `se abre ${cuandoF(y.abre)}`}; ${paganTxt(x.pagan) || 'no se sabe a quién le llega'}. Es lo que cobras si un rival te lo quita, no lo que da LaLiga`;
+    const riv = y.rival.corto
+      ? `A UN RIVAL (cobras al momento): no le saques más que lo de LaLiga, ≈ ${eur(y.rival.piso)}`
+      : `A UN RIVAL (cobras al momento): pídele entre ${eur(y.rival.piso)} y ${eur(y.rival.techo)}${y.clausula && y.rival.techo >= y.clausula * 0.995 ? '; más que su cláusula no te paga quien se la puede pagar' : ''}`;
+    // la oferta que ya tiene, con su cifra (la de un rival o la de LaLiga)
+    const ya = mejor && ver !== 'aceptar' ? ` | YA TIENE UNA OFERTA: ${mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')} ${eur(mejor.importe)}${ofV ? `; la app ${ofV.ok ? 'la aceptaría' : 'no la aceptaría hoy'}` : ''}` : '';
+    const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver === 'quedar' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
+    L.push(`- ${j.nombre} (vale ${eur(y.v)}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | TENDENCIA: ${tend}${ojoPz} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
+  }
+  if (!L.length) return '';
+  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta: empieza por él y explícalo con su tendencia y a quién y por cuánto venderlo, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
+}
+
 /* ---------------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------------
    Se saca de la pregunta (o de sus últimos mensajes, o de un trato apuntado) qué jugadores entran y a qué precio («a su
    valor», «por 60 M», «un 4 % más»), lo calcula el motor (M.trato) y la IA lo recibe hecho, con su veredicto. */
@@ -3267,6 +3350,15 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   try { trato = tratoDeChat(pregunta, D, M, (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '')); } catch (e) { trato = null; }
   for (const x of trato ? [...trato.mios, ...trato.suyos] : []) meter(x.j);
   const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados, { web, trato })}${trato ? tratoTxt(D, M, trato) : ''}` : '';
+  // (20 nov) vender o quedarse a los suyos: los que nombra o, si pregunta en general («¿a quién vendo?»), los que la app
+  // vendería o protegería primero
+  let ventas = '';
+  try {
+    const yo = D.yo && D.yo.teamId;
+    const mios = nombrados.filter((j) => M.dueno[j.id] === yo);
+    if (!trato && mios.length && vaDeVender(`${pregunta} ${antes}`)) ventas = ventasMiasTxt(D, M, mios, c);
+    else if (!trato && !nombrados.length && /\b(vendo|vender|vendemos|me quedo|quedarme\w*|hago caja|hacer caja|especulo)\b/.test(norm(pregunta)) && !/\b(clausul|fich|compr|puj)\w*/.test(norm(pregunta))) ventas = ventasMiasTxt(D, M, vendiblesMios(M), c);
+  } catch (e) { ventas = ''; }
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
   let enteros = rivalesEn(pregunta, D, M);
   if (!enteros.size && antes) enteros = rivalesEn(antes, D, M);
@@ -3302,7 +3394,7 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // la hora de verdad va abajo
   const liga = fotoChat(D, `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}`, hist);
   const ahoraTxt = liga.t ? `AHORA: ${fechaLarga(Date.now())}, ${horaDe(Date.now())} (hora de España). Los datos de arriba son de las ${horaDe(liga.t)}: lo que pone «en N h» o «hace N min» cuenta desde esa hora.\n` : '';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${rivales ? `${rivales}\n` : ''}${extra}${plan}`.replace(/\n+$/, '');
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '');
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;

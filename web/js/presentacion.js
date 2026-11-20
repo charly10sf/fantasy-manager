@@ -34,8 +34,9 @@ const visibles = () => NOVEDADES.map((n) => {
 export const hayNovedadesDesde = (desde) => visibles().some((n) => (!desde || cmpVer(n.v, desde) > 0) && n.cosas.length);
 
 /** las versiones que no has visto (si no hay ninguna, la última con algo para ti) */
-export function versionesDesde(desde) {
-  const V = visibles();
+export function versionesDesde(desde, solo = null) {
+  // solo: (20 nov) nada más que esas versiones (a quien no es el dueño, las que Carlos ha dicho que se presenten)
+  const V = solo ? visibles().filter((n) => solo.includes(n.v)) : visibles();
   const l = V.filter((n) => desde && cmpVer(n.v, desde) > 0);
   return l.length ? l : V.slice(0, 1);
 }
@@ -52,10 +53,10 @@ export function cerrarPresentacion() {
  * Abre la presentación. desde: la última versión que viste (salen las posteriores).
  * alIr(ir) lleva a donde está una novedad; alLista() abre la lista entera; alCerrar(), al terminar.
  */
-export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alCerrar = () => {} } = {}) {
+export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alCerrar = () => {}, solo = null } = {}) {
   if (abierta) abierta(true);
   const quieta = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nuevas = versionesDesde(desde);
+  const nuevas = versionesDesde(desde, solo);
   if (!nuevas.length) { alCerrar(); return; }
   const todas = [], arreglos = [];
   for (const n of nuevas) { for (const c of n.cosas || []) todas.push({ ...c, v: n.v }); for (const c of n.arreglos || []) arreglos.push({ ...c, v: n.v }); }
@@ -91,7 +92,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
           <span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span>
           <h2 aria-label="${esc(c.t)}">${c.t.split(' ').map((w) => `<span aria-hidden="true">${esc(w)}</span>`).join(' ')}</h2>
           <p>${esc(c.x || '')}</p>
-          ${c.ir ? `<button type="button" class="btn chico" data-nv-ir="${k}">Verlo</button>` : ''}
+          ${c.ir ? `<button type="button" class="btn chico" data-nv-ir="${k}">${esc(c.ir.txt || 'Verlo')}</button>` : ''}
         </div>
       </section>`).join('')}
       ${arreglos.length ? `<section class="nv-notas">
@@ -176,6 +177,40 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
   pinta();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redim);
   setTimeout(() => sc.focus({ preventScroll: true }), 60);
+}
+
+/* (20 nov, Carlos: «que aparezca en la pantalla pero no ocupe toda, y que no diga mucho texto») una novedad corta: una
+   tarjeta en el centro, encima de la app, con su dibujo, el título, una línea, una chapita (mas) y un botón. Se cierra con
+   «Ahora no», tocando fuera o con el atrás de Android (cerrarPresentacion). a: el «aviso» de una versión de version.js */
+export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
+  if (abierta) abierta(true);
+  const capa = document.createElement('div');
+  capa.className = 'nvt-capa';
+  capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
+    <div class="nvt" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+      <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
+      <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
+      <h2 id="nvt-t">${esc(a.t)}</h2>
+      ${a.x ? `<p>${esc(a.x)}</p>` : ''}
+      ${a.mas ? `<span class="nvt-mas">${esc(a.mas)}</span>` : ''}
+      ${a.ir ? `<button type="button" class="btn ancho" data-nvt="ir">${esc(a.ir.txt || 'Verlo')}</button>` : ''}
+      <button type="button" class="nvt-no" data-nvt="no">${a.ir ? 'Ahora no' : 'Vale'}</button>
+    </div>`;
+  const cerrar = (sinAviso) => {
+    capa.remove();
+    abierta = null;
+    if (!sinAviso) alCerrar();
+  };
+  capa.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-nvt]');
+    if (!b) return;
+    e.stopPropagation();
+    if (b.dataset.nvt === 'ir') { cerrar(true); alIr(a.ir); } else cerrar();
+  });
+  document.body.append(capa);
+  abierta = cerrar;
+  const bt = capa.querySelector('[data-nvt="ir"]') || capa.querySelector('.nvt-no');
+  if (bt) bt.focus({ preventScroll: true });
 }
 
 /** la lista entera, versión a versión, para la hoja de Novedades de Ajustes */

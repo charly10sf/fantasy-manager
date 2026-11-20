@@ -1,6 +1,7 @@
 // Los intersticiales de la app de Google Play (0.8), sin red: la web (intersticial.js y las pausas de app.js) con un
 // Android de mentira que apunta lo que le piden. Comprueba que solo salen en una pausa natural (cambiar de pestaña con la
-// barra o cerrar una ficha con la X), con los minutos de gracia, el tiempo entre uno y otro, el tope del día y la espera
+// barra o cerrar una ficha con la X), uno cada N minutos de uso contando desde la primera apertura del día y sumando
+// todas las visitas (20 nov, Carlos), nunca en el primer minuto de cada visita, con el tope del día y la espera
 // tras un bonificado, y nunca al dueño, a los de su liga, en la demo, con la IA pensando, escribiendo, con la pantalla del
 // límite, yendo a Pregunta ni con el «atrás» de Android. Y que ya no se pide el banner.
 // Uso: PW_MODULO=… node .github/prueba-intersticial.mjs   (sale con 1 si algo falla)
@@ -51,32 +52,42 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
   await page.clock.install({ time: new Date('2026-11-03T10:00:00+01:00') });
   await page.addInitScript(ANDROID);
   await page.goto(`${BASE}/index.html`);
+  const configurar = async () => {
   await page.waitForFunction(() => window.S && window.S.D && window.S.M && document.querySelector('.nav'), null, { timeout: 30000 });
   await page.evaluate(async ({ dueno, suLiga, enSuLiga, demo }) => {
     const U = await import('./js/util.js'), L = await import('./js/limite.js');
     const g = U.LS.get('limites', null) || { t: Date.now(), cfg: {} };
     g.t = Date.now();
-    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' }, apertura: { on: true, bloque: 'ca-app-pub-3175956326240112/9876543210' } };
+    g.cfg = { ...(g.cfg || {}), sinLimite: ['667015'], todoAbierto: ['667015'], ligas: enSuLiga ? [window.S.D.liga.nombre] : ['Otra liga'], intersticial: { on: true, graciaMin: 3, sesionMin: 1, cadaMin: 5, maxDia: 6, trasBonificadoMin: 3, suLiga, bloque: 'ca-app-pub-3175956326240112/1234567890' }, apertura: { on: true, bloque: 'ca-app-pub-3175956326240112/9876543210' } };
     U.LS.set('limites', g);
     if (!demo) { U.LS.del('demo'); window.S.D.demo = false; }
     const yo = { nombre: 'Unión Clausulera', teamId: window.S.D.yo.teamId, userId: dueno ? '667015' : '123456', ligas: [{ nombre: window.S.D.liga.nombre }] };
     L.fijarYo(yo, demo);
   }, { dueno, suLiga, enSuLiga, demo });
+  };
+  await configurar();
+  // cerrar la app y abrirla de nuevo (lo guardado sigue; lo que estaba en memoria, no)
+  const reabrir = async () => { await page.reload(); await configurar(); };
   const pedidos = () => page.evaluate(() => window.__pedidos.filter((p) => p[0] === 'intersticial').length);
   // un cambio de pestaña con la barra de abajo (a una distinta de la de ahora)
   const pestana = async (v) => { await page.click(`.nav button[data-ir="${v}"]`); await page.clock.runFor(800); };
   const uso = (min) => page.clock.runFor(min * 60e3);
-  return { page, errores, pedidos, pestana, uso, cerrar: () => ctx.close() };
+  return { page, errores, pedidos, pestana, uso, reabrir, cerrar: () => ctx.close() };
 }
 
 {
   const A = await abrir();
   await A.uso(1);
   await A.pestana('equipo');
-  ok(await A.pedidos() === 0, 'en el primer minuto de uso, ninguno (gracia)');
-  await A.uso(2.5);
+  ok(await A.pedidos() === 0, 'al minuto de abrirla por primera vez hoy, ninguno');
+  await A.uso(3);
   await A.pestana('rivales');
-  ok(await A.pedidos() === 1, 'pasados 3 minutos de uso, al cambiar de pestaña con la barra: uno');
+  ok(await A.pedidos() === 0, 'a los 4 minutos de uso del día, todavía ninguno (uno cada 5)');
+  await A.uso(1.5);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 1, 'a los 5 minutos de uso desde la primera apertura del día, al cambiar de pestaña con la barra: el primero');
+  const e1 = await A.page.evaluate(async () => (await import('./js/util.js')).LS.get('inter', null));
+  ok(e1 && e1.n === 1 && e1.uso < 30e3, 'y el rato de uso vuelve a contar desde ese');
   const b = await A.page.evaluate(() => window.__pedidos.find((p) => p[0] === 'intersticial')[1]);
   ok(b === 'ca-app-pub-3175956326240112/1234567890', 'con el bloque de limites.json');
   await A.uso(1);
@@ -141,26 +152,34 @@ async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = f
   await A.uso(6);
   await A.pestana('hoy');
   ok(await A.pedidos() === 4, 'con 6 hoy (el tope): ninguno');
-  // otra sesión: tras media hora fuera vuelven los minutos de gracia
-  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('inter', { dia: U.diaDe(), n: 1, t: Date.now() - 60 * 60e3 }); window.__vista = false; });
+  // (20 nov) otra visita (media hora fuera): el rato de uso de antes sigue contando, pero nunca nada más volver
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('inter', { dia: U.diaDe(), n: 1, t: Date.now() - 60 * 60e3, uso: 4.6 * 60e3 }); window.__vista = false; });
   await A.uso(31);
   await A.page.evaluate(() => { window.__vista = true; window.dispatchEvent(new Event('fm-vuelta')); });
-  await A.uso(1);
+  await A.uso(0.5);
   await A.pestana('equipo');
-  ok(await A.pedidos() === 4, 'al volver tras media hora fuera, otra vez los minutos de gracia');
-  await A.uso(2.5);
+  ok(await A.pedidos() === 4, 'recién vuelta a la app (medio minuto), ninguno aunque por el rato del día ya toque');
+  await A.uso(1);
   await A.pestana('rivales');
-  ok(await A.pedidos() === 5, 'y pasados, el siguiente');
-  // (17 nov) en una sesión nueva no hace falta esperar «cada» minutos desde el último de la sesión anterior: basta la gracia
+  ok(await A.pedidos() === 5, 'pasado el primer minuto de la visita, sale: el rato de uso se suma entre visitas');
+  // y en la visita siguiente no sale antes de sus «cada» minutos de uso desde ese
   await A.page.evaluate(() => { window.__vista = false; });
   await A.uso(31);
   await A.page.evaluate(() => { window.__vista = true; window.dispatchEvent(new Event('fm-vuelta')); });
   await A.uso(3.5);
   await A.pestana('hoy');
-  ok(await A.pedidos() === 6, 'otra sesión: pasada la gracia sale uno, aunque en uso no hayan pasado «cada» minutos desde el anterior');
+  ok(await A.pedidos() === 5, 'otra visita: a los 3,5 minutos de uso desde el anterior, ninguno');
   await A.uso(2);
   await A.pestana('equipo');
-  ok(await A.pedidos() === 6, 'y dentro de esa sesión, el siguiente espera sus «cada» minutos');
+  ok(await A.pedidos() === 6, 'y a los 5 y pico, el siguiente');
+  // al cambiar el día, todo de cero: el primero, a los «cada» minutos de uso desde la primera apertura de ese día
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); U.LS.set('inter', { dia: '2026-11-02', n: 6, t: Date.now() - 20 * 3600e3, uso: 90 * 60e3 }); });
+  await A.uso(2);
+  await A.pestana('hoy');
+  ok(await A.pedidos() === 6, 'lo de ayer no cuenta: a los 2 minutos de uso de hoy, ninguno');
+  await A.uso(3.5);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 7, 'y a los 5 y pico de hoy, el primero del día (el tope de ayer tampoco cuenta)');
   const p = await A.page.evaluate(() => window.__pedidos);
   ok(!p.some((x) => x[0] === 'banner'), 'ya no se pide nunca el banner de abajo');
   ok(p.some((x) => x[0] === 'zona' && x[1] === true && x[2] === 'ca-app-pub-3175956326240112/1234567890' && x[3] === true), 'Android sabe que la liga está cargada, el bloque y que a esta cuenta le tocan (para precargar)');
@@ -212,14 +231,14 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   // el dueño, con «dueno» (su móvil es de prueba en AdMob): para que pueda verlos
   const A = await abrir({ dueno: true });
   await A.page.evaluate(async () => { const U = await import('./js/util.js'); const g = U.LS.get('limites', null); g.cfg.intersticial.dueno = true; U.LS.set('limites', g); });
-  await A.uso(4);
+  await A.uso(6);
   await A.pestana('equipo');
   ok(await A.pedidos() === 1, 'al dueño con «dueno» (para probarlos en su móvil de prueba): sí');
   await A.cerrar();
 }
 {
   const A = await abrir({ enSuLiga: true, suLiga: true });
-  await A.uso(4);
+  await A.uso(6);
   await A.pestana('equipo');
   ok(await A.pedidos() === 1, 'a los de su liga con «suLiga»: sí');
   await A.cerrar();
@@ -265,6 +284,35 @@ for (const [t, o] of [['al dueño', { dueno: true }], ['a los de su liga', { enS
   ok(em.length === 2 && em.every((x) => /^[a-z0-9]{8,24}$/.test(x[1])) && /^\{.*"rival 2"/.test(em[0][2]) && em[0][3] === '¿Qué le ficho al segundo?', 'Android sabe de cada pregunta en marcha (id, la vuelta de los alias y el texto)');
   ok(ac.length === 2 && ac[0][1] === false && ac[1][1] === true && /^Con el anuncio: mira a /.test(ac[1][2]) && !/Rival 2/.test(ac[1][2]), 'y de cuándo acaba (la primera sin cupo, la segunda con el principio de la respuesta y los nombres)');
   ok(p.some((x) => x[0] === 'trabajando' && x[1] === true) && p.filter((x) => x[0] === 'trabajando').pop()[1] === false, 'la app se marca ocupada mientras piensa y libre al acabar');
+  ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
+  await A.cerrar();
+}
+{
+  // (20 nov) cerrar la app y abrirla otra vez no pone el reloj a cero: 3 minutos, cerrar, y 2 y pico más
+  const A = await abrir();
+  await A.uso(3);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 0, 'tres minutos de uso en la primera visita del día: ninguno');
+  await A.reabrir();
+  const g = await A.page.evaluate(async () => (await import('./js/util.js')).LS.get('inter', null));
+  ok(g && g.uso >= 2.8 * 60e3 && g.n === 0, `al abrirla de nuevo, el rato de uso del día sigue guardado (${g ? Math.round(g.uso / 1e3) : '?'} s)`);
+  await A.uso(0.4);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 0, 'nada más abrirla de nuevo: ninguno');
+  await A.uso(2.2);
+  await A.pestana('rivales');
+  ok(await A.pedidos() === 1, 'a los 5 minutos de uso entre las dos visitas: el primero del día');
+  // con el máximo de 5 al día de verdad (maxDia 5): el quinto sale y el sexto no
+  await A.page.evaluate(async () => { const U = await import('./js/util.js'); const g2 = U.LS.get('limites', null); g2.cfg.intersticial.maxDia = 5; g2.cfg.intersticial.cadaMin = 7; U.LS.set('limites', g2); U.LS.set('inter', { dia: U.diaDe(), n: 4, t: Date.now() - 30 * 60e3, uso: 0 }); });
+  await A.uso(6.5);
+  await A.pestana('hoy');
+  ok(await A.pedidos() === 1, 'con «cadaMin» 7: a los 6,5 minutos de uso desde el anterior, ninguno');
+  await A.uso(1);
+  await A.pestana('equipo');
+  ok(await A.pedidos() === 2, 'a los 7 y pico, el quinto del día');
+  await A.uso(8);
+  await A.pestana('rivales');
+  ok(await A.pedidos() === 2, 'y el sexto ya no sale (5 al día como mucho)');
   ok(!A.errores.length, `sin errores en la página${A.errores.length ? `: ${A.errores.join(' | ')}` : ''}`);
   await A.cerrar();
 }

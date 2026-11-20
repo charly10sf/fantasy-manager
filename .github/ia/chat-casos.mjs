@@ -5,7 +5,7 @@
 // Marcas (las rellena `prepararEnPagina` con la liga de ejemplo de cada escena):
 //   {R2} {E2} el mánager y el equipo del 2º · {R3} el del 3º (en la escena lleva el apodo «el Tito») · {R5} {E5} {e5} el 5º
 //   (su equipo se llama «Leao er Espabilao») · {MIO} mi jugador más caro · {MIO2} el mío de valor más parecido a {SUYO} ·
-//   {SUYO} el más caro del 2º · {LIBRE} el libre más caro de menos de 50 M · {SUBE} {BAJA} el libre que más sube y el que
+//   {SUYO} el más caro del 2º · {MIOS4} mis cuatro más caros · {LIBRE} el libre más caro de menos de 50 M · {SUBE} {BAJA} el libre que más sube y el que
 //   más baja hoy · {CHOLLO} el libre más barato con su precio cerca de su valor · {MIOSUBE} el mío que más sube · {MIOBAJA}
 //   el mío que ha girado a la baja · {PLANV} uno que el plan del motor manda vender (o {MIO} si no hay) · {OFERTA} {OFJ}
 //   la oferta de un rival que tengo (importe redondeado y el jugador)
@@ -87,6 +87,16 @@ export const CASOS = [
   { id: 'conv-cual', tipo: 'conversacion', sigue: true, q: '¿Cuál de los dos me conviene más?' },
   // el plan
   { id: 'plan-por-que', tipo: 'plan', q: '¿Por qué el plan me dice que venda a {PLANV}?' },
+  // (20 nov) vender o quedárselos: el chat de Carlos tal cual (con cuatro de los suyos) y sus dos correcciones, y lo que le
+  // preguntó Fran (ventas y tendencias). La IA mezclaba la oferta de LaLiga con la cláusula y no miraba la tendencia
+  { id: 'vender-cuatro', tipo: 'estrategia', q: '¿Me renta vender a {MIOS4} si me dan más que su cláusula, o me los quedo y sigo especulando? Si los vendo, ¿a LaLiga o a un rival, y por cuánto?',
+    debe: /laliga[\s\S]*rival|rival[\s\S]*laliga/, noDebe: /no le sacas mas que (su|la) clausula|a laliga no le sacas/ },
+  { id: 'vender-cuatro-dinero', tipo: 'estrategia', sigue: true, q: 'Suele ganar el que más dinero genera, con puntos o comprando y vendiendo. Con dinero compras a los que más puntos van a hacer y les subes la cláusula: si te los quitan, cobras mucho y puedes comprar más. Por eso te pregunto si venderlos a LaLiga o a un rival y por cuánto. LaLiga da más o menos un 10 % arriba o abajo de su valor y es suerte; a un rival se le puede pedir algo más si su cláusula está a punto de abrirse.',
+    noDebe: /no le sacas mas que (su|la) clausula|a laliga no le sacas/ },
+  { id: 'vender-cuatro-tendencia', tipo: 'estrategia', sigue: true, q: 'Sigues sin entenderlo. Los jugadores suben o bajan cada día y siguen una tendencia; los puntos nunca se saben. Lo único que controlo es el dinero y no quiero perderlo, ni que me los clausulen a precio de mercado y se lleven la revalorización. Revisa los precios.',
+    debe: /sube|baja|tendencia/, noDebe: /no le sacas mas que (su|la) clausula|los puntos (mandan|son lo que)/ },
+  { id: 'fran-ventas', tipo: 'estrategia', q: '¿Qué jugadores míos van a bajar de precio? ¿A quién vendo y por cuánto?', debe: /laliga|rival/ },
+  { id: 'fran-tendencia', tipo: 'mercado', q: '¿Qué tendencia lleva {MIOSUBE}? ¿Lo vendo ya o espero a que suba más?', debe: /sube|baja|tendencia/ },
 ];
 
 /* lo que se cambia en la liga de ejemplo antes de preguntar (lo mismo en todas las escenas): un rival con el nombre de un
@@ -130,6 +140,7 @@ export async function prepararEnPagina({ q, hist }) {
       R2: rv(2).e.manager, E2: rv(2).e.nombre, R3: rv(3).e.manager, R5: rv(5).e.manager, E5: rv(5).e.nombre, e5: rv(5).e.nombre.toLowerCase(),
       MIO: mio.j.nombre, MIO2: mio2.j.nombre, SUYO: suyo.j.nombre, LIBRE: libre ? libre.j.nombre : 'Cubarsí', SUBE: sube ? sube.j.nombre : 'Cubarsí',
       BAJA: baja ? baja.j.nombre : 'Cubarsí', CHOLLO: chollo ? chollo.j.nombre : 'Cubarsí', MIOSUBE: mioSube.j.nombre, MIOBAJA: mioBaja.j.nombre,
+      MIOS4: (() => { const l = [...mias].sort((a, b) => b.j.valor - a.j.valor).slice(0, 4).map((x) => x.j.nombre); return `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}`; })(),
       PLANV: planv || mio.j.nombre, OFERTA: of ? eurM(of.o.importe) : '20 M', OFJ: of ? M.J(of.v.pid).nombre : mio2.j.nombre,
       OFR: ofR ? ofR.e.manager : (of && of.o.de) || rv(5).e.manager,
       SALDO: sinM(D.dinero), VALOR: sinM(M.yo ? M.yo.valor || M.yo.valorEquipo || 0 : 0), PUJAMAX: M.pujaMax != null ? sinM(M.pujaMax) : '',

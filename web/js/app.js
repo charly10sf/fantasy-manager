@@ -27,13 +27,13 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
-import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
+import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
@@ -491,6 +491,27 @@ const bandaPlay = () => {
    Fija, sin cerrar, hasta que se actualice (al actualizarse ya no está por debajo). Ni en la liga de ejemplo */
 const bandaActualizarPlay = () => ((S.D && S.D.demo) || !playDesfasada() ? ''
   : `<div class="banda banda-actualizar">${icono('descargar')}<span><b>Hay una versión nueva de la app</b></span><button data-abrir="${PLAY_URL}">Actualizar en Google Play</button></div>`);
+/* (19 nov, el fallo de Bryan) el móvil no consigue descargar la web nueva con la conexión que tiene (su red no llega a
+   donde está publicada). Cada vez que la app mira si hay versión nueva (webBuscada) se apunta desde cuándo falla por la
+   conexión, y se borra en cuanto mira bien o llega una versión nueva. Con más de un día así, una banda pequeña que se
+   cierra hasta el día siguiente. Sirve sobre todo a las apps de Google Play de antes del respaldo (hasta la 6781), que
+   solo bajan la web del dominio; las de después prueban también el respaldo y solo fallan si no llegan a ninguno */
+const ALDIA_RED = /sin conexi[oó]n|no conecta|tarda|sin direcci[oó]n|https roto|failed to connect|timed? ?out|unable to resolve|resolve host|no address|connection (reset|refused|abort)|software caused|unreachable|network|ssl|handshake|\bEOF\b/i;
+const ALDIA_NO_RED = /firma|HTTP \d|huella|cuadra|sitio|grande|arrancaba|ruta rara|https$/i;
+function apuntarAlDia(estado) {
+  const e = String(estado || '');
+  if (e === 'ocupada') return;
+  const red = e.startsWith('error') && ALDIA_RED.test(e) && !ALDIA_NO_RED.test(e);
+  const g = LS.get('aldia-red', null);
+  if (!red) { if (g) LS.del('aldia-red'); return; }
+  if (!g || g.v !== VERSION) LS.set('aldia-red', { t: Date.now(), v: VERSION });
+}
+const bandaSinDescarga = () => {
+  if (!enApp || enApkGithub() || (S.D && S.D.demo) || playDesfasada()) return '';
+  const g = LS.get('aldia-red', null);
+  if (!g || g.v !== VERSION || Date.now() - g.t < DIA || LS.get('aldia-red-cerrada', '') === diaDe()) return '';
+  return `<div class="banda">${icono('alerta')}<span>No se ha podido descargar la actualización con esta conexión: abre la app con wifi.</span><button class="banda-x" data-accion="cerrarSinDescarga" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+};
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 /* el aviso de que la app sigue en pruebas, arriba en todas las pestañas (lo pidió Carlos el 2 nov, y otra vez el 16 nov): lleva a
    «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 72 h de cerrarlo (Carlos, 9 nov; antes 24 h y, antes, 7 días).
@@ -721,7 +742,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaActualizarPlay() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -2838,6 +2859,8 @@ const arranqueT = Date.now();
 let fueraT = 0;
 function sePuedeRecargar(alVolver = false) {
   if ($('#limite') || $('#forzar')) return true;
+  // (20 nov) con una novedad en pantalla (la tarjeta o la presentación) no se recarga: se la llevaba por delante
+  if ($('.nvt-capa') || $('.nv')) return false;
   if (S.cargando || (S.planEstado || {}).cargando || S.chatCtl || tourAbierto()) return false;
   if ([...document.querySelectorAll('textarea, input[type="text"], input:not([type])')].some((e) => e.value && e.value.trim())) return false;
   if (!S.D) return true;
@@ -2848,6 +2871,7 @@ function ponerWebNueva() {
   location.reload();
 }
 window.webBuscada = (estado) => {
+  apuntarAlDia(estado);
   const avisar = S.buscaAvisar && Date.now() - S.buscaAvisar < 120000;
   S.buscaAvisar = 0;
   if (estado === 'nueva') {
@@ -3202,6 +3226,7 @@ document.addEventListener('click', async (ev) => {
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
+    case 'cerrarSinDescarga': LS.set('aldia-red-cerrada', diaDe()); el.closest('.banda')?.remove(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
     case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;
@@ -3279,7 +3304,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
-    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (hayImportantes()) listaImportantesHoja(); break;
+    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (importantesPara() && hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
@@ -3661,13 +3686,17 @@ const paraMi = (c) => {
   return true;
 };
 fijarFiltroNovedades((c) => paraMi(c) && (avisosGuardados().admin || !c.menor), paraMi);
+/* (19 nov, Carlos) «todos» también puede ser de una sola versión de la app: 'web' (iPhone y ordenador) o 'app' (Android).
+   Así una versión se presenta sola a los de la web sin abrirse en el móvil (invitar a un amigo, 0.8h) */
+const todosMi = (n) => n.todos === true || (n.todos === 'web' && !enApp) || (n.todos === 'app' && enApp);
 /** al estrenar versión, las novedades contadas bajando; la primera vez que se instala, nada */
 function novedades() {
   // (9 nov, 23:42, Carlos) la presentación al actualizar ya no se abre sola a nadie, tampoco al dueño: se marca como vista
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
-  if (!vista || !NOVEDADES.some((n) => n.todos && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
+  novAvisoAlArrancar(vista);
+  if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
@@ -3677,7 +3706,7 @@ function novedades() {
   // así que no haya visto (sin las viejas, que eran solo para el dueño)
   let desde = vista;
   if (!avisosGuardados().admin) {
-    const paraTodos = NOVEDADES.filter((n) => n.todos && cmpVer(n.v, vista) > 0);
+    const paraTodos = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
     if (paraTodos.length) {
       const i = NOVEDADES.indexOf(paraTodos[paraTodos.length - 1]);
       if (NOVEDADES[i + 1] && cmpVer(NOVEDADES[i + 1].v, vista) > 0) desde = NOVEDADES[i + 1].v;
@@ -3692,11 +3721,121 @@ function novedades() {
   // cuenta al final, numerados
   if (!hayNovedadesDesde(desde)) return;
   LS.set('version-vista2', VERSION);
-  verNovedades(desde);
+  // (20 nov) si todo lo que se presenta solo a ti trae «aviso», en vez de la presentación entera, la tarjeta de la más nueva
+  const suyas = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
+  // (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo te lo estipule; ahora, solo la de
+  // invitar a un amigo») A quien no es el dueño, solo lo de las versiones que él ha dicho que salgan (`todos`): la tarjeta
+  // de la más nueva si lleva «aviso», y nada más; si no la lleva, la presentación de esas versiones, sin las de en medio.
+  // Antes, a quien venía de antes de la 0.8 le salía la presentación de todo lo de después, con el título de la última
+  // versión (un arreglo) encima de «Invita a un amigo» (aviso de Domy, 20 nov)
+  const todo = avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true;
+  if (suyas.length && (suyas.every((n) => n.aviso) || (!todo && suyas[0].aviso))) { novAvisoPedir(suyas[0].v); return; }
+  verNovedades(desde, todo ? null : suyas.map((n) => n.v));
 }
-function verNovedades(desde) {
+/* La tarjeta de una novedad con «aviso» (invitar a un amigo, 0.8h).
+   (20 nov, Carlos: «he abierto la app y no me ha salido nada») Salía al arrancar, antes de que cargara la liga (el botón
+   aún no hacía nada), y se daba por vista en ese momento. En la app eso la perdía justo al actualizar desde Google Play:
+   la web de dentro de la app la enseñaba, a los pocos segundos la app bajaba la web publicada después y recargaba
+   (`ponerWebNueva`), y como ya constaba como vista no volvía a salir. Ahora:
+   - queda apuntada como pendiente (LS `avisos-nov`: { visto: [versiones], pend }) y solo se da por vista cuando se cierra
+     o se pulsa su botón; si la app recarga o se cierra antes, vuelve a salir;
+   - se enseña con la liga cargada y la pantalla libre, no al arrancar;
+   - quien ya tenía esta versión en la app sin que conste que la cerró (lo de arriba) la ve una vez. En una instalación
+     nueva, nada, como siempre */
+const novAvisos = () => { const g = LS.get('avisos-nov', null); return g && Array.isArray(g.visto) ? g : null; };
+function novAvisoAlArrancar(vista) {
+  const g = novAvisos();
+  // (se mira siempre: aunque no haya tarjeta pendiente, puede tocar el recordatorio de invitar)
+  novAvisoEsperar();
+  if (g) return;
+  const todos = NOVEDADES.filter((n) => n.aviso).map((n) => n.v);
+  if (!vista) { LS.set('avisos-nov', { visto: todos, pend: null }); return; }
+  // (a quien aún no ha pasado el tutorial se le mira en el próximo arranque)
+  if (!tourVisto()) return;
+  const n = NOVEDADES.find((x) => x.aviso && todosMi(x));
+  if (enApp && n && cmpVer(vista, n.v) >= 0) { LS.set('avisos-nov', { visto: todos.filter((v) => v !== n.v && cmpVer(vista, v) >= 0), pend: n.v }); novAvisoEsperar(); return; }
+  LS.set('avisos-nov', { visto: todos.filter((v) => cmpVer(vista, v) >= 0), pend: null });
+}
+function novAvisoPedir(v) {
+  const g = novAvisos() || { visto: [], pend: null };
+  if (g.visto.includes(v)) return;
+  g.pend = v;
+  LS.set('avisos-nov', g);
+  novAvisoEsperar();
+}
+function novAvisoVisto(v) {
+  const g = novAvisos() || { visto: [], pend: null };
+  if (!g.visto.includes(v)) g.visto.push(v);
+  if (g.pend === v) g.pend = null;
+  // (la de invitar cuenta también como la última vez que se le recordó)
+  g.invT = Date.now();
+  LS.set('avisos-nov', g);
+}
+/* (20 nov, Carlos: «que el pop-up de invitar amigos aparezca una vez cada 5 días para quien no ha invitado a ningún amigo;
+   si ha invitado a un amigo, que no le salga nunca más») La misma tarjeta de invitar, de recordatorio: a quien no tiene
+   ningún amigo que haya entrado con su enlace o su código (`entran` del servidor), cada «recordarDias» de «invitar» en
+   limites.json (5; 0 lo apaga) desde la última vez que la cerró (`invT`). Sin saber aún su estado, espera; con la
+   primera vez sin fecha (instalación nueva o quien venía de antes), la cuenta empieza ese día. Devuelve la tarjeta,
+   'espera' o null */
+function novInvRecordar() {
+  const g = novAvisos();
+  if (!g || !tourVisto() || !invitarOn()) return null;
+  const dias = Number(((((LS.get('limites', null) || {}).cfg || {}).invitar) || {}).recordarDias ?? 5);
+  if (!(dias > 0)) return null;
+  const uid = S.D && S.D.yo && S.D.yo.userId;
+  if (!uid) return null;
+  const e = estadoInv(uid);
+  if (!e) return 'espera';
+  if ((e.entran || 0) > 0) return null;
+  // (lo guardado puede ser de hace días y haber entrado un amigo desde entonces: no se decide hasta tener el estado de ahora,
+  //  el que pide `invitarSiToca` al arrancar; si el servidor no contesta, no sale)
+  const ig = LS.get('invitar', null);
+  if (!ig || Date.now() - (Number(ig.t) || 0) > 20 * 60e3) return 'espera';
+  if (!g.invT) { g.invT = Date.now(); LS.set('avisos-nov', g); return null; }
+  if (Date.now() - g.invT < dias * 86400e3) return null;
+  const n = NOVEDADES.find((x) => x.aviso && x.aviso.ir && x.aviso.ir.accion === 'invitarAmigo');
+  return n ? { ...n.aviso, eti: 'Premios por invitar' } : null;
+}
+function novInvRecordado() {
+  const g = novAvisos() || { visto: [], pend: null };
+  g.invT = Date.now();
+  LS.set('avisos-nov', g);
+}
+let novAvisoEsperando = false;
+function novAvisoEsperar() {
+  if (novAvisoEsperando) return;
+  novAvisoEsperando = true;
+  const hasta = Date.now() + 10 * 60e3;
+  const mirar = () => {
+    // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
+    if (Date.now() > hasta) { novAvisoEsperando = false; return; }
+    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa'))) { setTimeout(mirar, 1000); return; }
+    const g = novAvisos();
+    const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
+    if (n) {
+      novAvisoEsperando = false;
+      tarjetaNovedad(n.aviso, { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
+      return;
+    }
+    // sin tarjeta de versión pendiente: el recordatorio de invitar, si toca
+    const rec = novInvRecordar();
+    if (rec === 'espera') { setTimeout(mirar, 3000); return; }
+    novAvisoEsperando = false;
+    if (rec) tarjetaNovedad(rec, { alIr: (a) => { novInvRecordado(); irNovedad(a); }, alCerrar: () => { novInvRecordado(); } });
+  };
+  setTimeout(mirar, 500);
+}
+// a donde lleva el botón de una novedad: una pestaña (v, seg) o lo mismo que un botón con ese data-accion (accion)
+function irNovedad(a) {
+  if (!a || !S.D) return;
+  if (a.accion) { const b = document.createElement('button'); b.dataset.accion = a.accion; b.hidden = true; document.body.append(b); b.click(); b.remove(); return; }
+  if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; }
+  ir(a.v);
+}
+function verNovedades(desde, solo = null) {
   presentarNovedades(desde, {
-    alIr: (a) => { if (!a || !S.D) return; if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; } ir(a.v); },
+    solo,
+    alIr: irNovedad,
     // (0.7.1) la lista de todas las versiones, solo a quien puede verla (el dueño o con «novedadesTodos»): a los demás,
     // con una versión «para todos», solo esa
     alLista: avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true ? () => listaVersiones() : null,

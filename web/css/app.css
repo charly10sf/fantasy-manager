@@ -1813,7 +1813,11 @@ body.limitado .tostada { z-index: 120; }
 .tabs.rival-tabs button { padding: 0 var(--e2); font-size: var(--t-sec2); }
 .escritorio .tabs.rival-tabs button { padding: 0 var(--e3); font-size: var(--t-cuerpo); }
 @media (max-width: 380px) { .tabs.rival-tabs button { padding: 0 var(--e1); font-size: var(--t-mini); } }
-.rival-sub { margin: 0 0 var(--e3); }
+/* (20 nov) la chapa del peligro, en la línea de debajo: al lado del nombre lo pisaba cuando era largo («DELLAFUENTE.FC»);
+   un nombre de una sola palabra que no quepa ni así acaba en puntos suspensivos (los nombres no se parten) */
+.rival-sub { margin: 0 0 var(--e3); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.rival-sub .amenaza { flex: none; }
+.peligro-por { margin: calc(-1 * var(--e2)) 0 var(--e3); font: 500 var(--t-mini)/1.35 'Barlow'; color: var(--apagado); }
 .rival-tiles .eq2-t small { font: 600 var(--t-mini)/1.2 'Barlow'; }
 .rival-tiles .rival-bloq b { color: var(--texto2); }
 .rival-tiles .rival-bloq b .ic { width: var(--t-cifra); height: var(--t-cifra); }
@@ -2037,6 +2041,10 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .llevas { margin: 12px 0 6px; }
 .llevas > summary { min-height: 46px; padding: 10px 14px; }
 .llevas-t { font-size: var(--t-cuerpo); }
+/* (20 nov, Carlos: «¿por qué el cuadro se ha hecho más grande?») Sin nada que enseñar, «Lo que llevas hoy» lleva también
+   la clase `vacio` (para que su texto de relleno no cuente como contenido: `vistaConContenido`), y la regla general de
+   `.vacio` (centrado, con 24 px arriba y abajo) le doblaba el alto: 96 px en vez de 48. Aquí esa regla no pinta nada */
+.llevas.vacio { padding: 0; text-align: start; color: inherit; font-size: inherit; }
 .paso2 .op-pie { flex-wrap: wrap; row-gap: 6px; }
 .paso2 .op-pie .conf, .paso2 .op-pie .saldo { white-space: nowrap; }
 
@@ -2276,7 +2284,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .cara-m img.escudo { object-fit: contain; padding: 4px; background: var(--plano2); }
 .cara-m.g { width: 56px; height: 56px; } .cara-m.g .ini { font-size: var(--t-sec); }
 .fila > .cara-m { margin-right: 2px; }
-.rival-cab h2 { min-width: 0; }
+.rival-cab h2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 4px 0; }
 
 /* ---------- Equipo (rediseño del 30 oct: «todo más claro y más visual») ---------- */
 /* arriba: tu cara, el nombre y cuatro números en una tira */
@@ -3308,8 +3316,10 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }
 
 /* (0.7.13o) lo que falta para el mercado y demás, dentro del marcador de Hoy y en pequeño */
-.m-tiempos { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
-.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
+/* (20 nov, Carlos) cuando los tiempos no caben en una línea (un nombre largo: «Cláusula de Juan Iglesias») quedaban a 32 px
+   uno de otro; ahora a 26 (24 de alto, lo mínimo cómodo para tocarlos, y 2 entre líneas) */
+.m-tiempos { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--linea); }
+.m-t { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; padding: 0; border: 0; background: none; color: var(--texto2); font: 500 var(--t-mini) 'Barlow'; cursor: pointer; }
 .m-t .ic { width: 14px; height: 14px; color: var(--apagado); }
 .m-t b { font-weight: 700; color: var(--texto); }
 /* (0.7.13w) la app de Google Play se ha quedado atrás: fija, con el borde rojo, hasta que se actualice */
@@ -3406,3 +3416,17 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .inv-rivales .pill.on{background:var(--rojo);color:#fff;border-color:transparent}
 .inv-top{margin-top:12px;text-align:left}
 .inv-top span{display:block;color:var(--texto-2);font-size:13px}
+
+/* (20 nov) la novedad corta: una tarjeta en el centro, encima de la app (presentacion.js, tarjetaNovedad) */
+.nvt-capa { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 24px; }
+.nvt-velo { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); animation: nvt-velo 0.25s ease both; }
+.nvt { position: relative; width: 100%; max-width: 360px; padding: 22px 20px 14px; border-radius: 24px; background: #1a1420; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 50px rgba(0, 0, 0, 0.6); text-align: center; --acc: var(--rojo); --dl: #f4f2f3; animation: nvt-sube 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.nvt .dib { display: block; width: 120px; height: 90px; margin: 0 auto 6px; }
+.nvt-eti { display: block; font: 700 12px 'Barlow'; letter-spacing: 1.5px; text-transform: uppercase; color: #ff4fa3; }
+.nvt h2 { margin: 4px 0 0; font: 700 24px var(--cond); text-transform: uppercase; line-height: 1.05; color: var(--texto); }
+.nvt p { margin: 8px 0 14px; font: 400 15px 'Barlow'; line-height: 1.35; color: var(--texto-2); }
+.nvt-mas { display: inline-block; margin: 0 0 16px; padding: 3px 10px; border-radius: 99px; background: rgba(255, 197, 71, 0.12); color: #ffc547; font: 600 13px 'Barlow'; }
+.nvt-no { display: block; margin: 6px auto 0; padding: 10px 16px; min-height: 40px; background: none; border: 0; color: var(--texto-2); font: 600 14px 'Barlow'; }
+@keyframes nvt-velo { from { opacity: 0; } }
+@keyframes nvt-sube { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
+@media (prefers-reduced-motion: reduce) { .nvt, .nvt-velo { animation: none; } }
