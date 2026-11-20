@@ -2859,6 +2859,8 @@ const arranqueT = Date.now();
 let fueraT = 0;
 function sePuedeRecargar(alVolver = false) {
   if ($('#limite') || $('#forzar')) return true;
+  // (20 nov) con una novedad en pantalla (la tarjeta o la presentación) no se recarga: se la llevaba por delante
+  if ($('.nvt-capa') || $('.nv')) return false;
   if (S.cargando || (S.planEstado || {}).cargando || S.chatCtl || tourAbierto()) return false;
   if ([...document.querySelectorAll('textarea, input[type="text"], input:not([type])')].some((e) => e.value && e.value.trim())) return false;
   if (!S.D) return true;
@@ -3693,6 +3695,7 @@ function novedades() {
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
+  novAvisoAlArrancar(vista);
   if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
@@ -3720,11 +3723,62 @@ function novedades() {
   LS.set('version-vista2', VERSION);
   // (20 nov) si todo lo que se presenta solo a ti trae «aviso», en vez de la presentación entera, la tarjeta de la más nueva
   const suyas = NOVEDADES.filter((n) => todosMi(n) && cmpVer(n.v, vista) > 0);
-  if (suyas.length && suyas.every((n) => n.aviso)) { verAviso(suyas[0].aviso); return; }
+  if (suyas.length && suyas.every((n) => n.aviso)) { novAvisoPedir(suyas[0].v); return; }
   verNovedades(desde);
 }
-function verAviso(a) {
-  tarjetaNovedad(a, { alIr: irNovedad, alCerrar: () => quizaTutorial(700) });
+/* La tarjeta de una novedad con «aviso» (invitar a un amigo, 0.8h).
+   (20 nov, Carlos: «he abierto la app y no me ha salido nada») Salía al arrancar, antes de que cargara la liga (el botón
+   aún no hacía nada), y se daba por vista en ese momento. En la app eso la perdía justo al actualizar desde Google Play:
+   la web de dentro de la app la enseñaba, a los pocos segundos la app bajaba la web publicada después y recargaba
+   (`ponerWebNueva`), y como ya constaba como vista no volvía a salir. Ahora:
+   - queda apuntada como pendiente (LS `avisos-nov`: { visto: [versiones], pend }) y solo se da por vista cuando se cierra
+     o se pulsa su botón; si la app recarga o se cierra antes, vuelve a salir;
+   - se enseña con la liga cargada y la pantalla libre, no al arrancar;
+   - quien ya tenía esta versión en la app sin que conste que la cerró (lo de arriba) la ve una vez. En una instalación
+     nueva, nada, como siempre */
+const novAvisos = () => { const g = LS.get('avisos-nov', null); return g && Array.isArray(g.visto) ? g : null; };
+function novAvisoAlArrancar(vista) {
+  const g = novAvisos();
+  if (g) { if (g.pend) novAvisoEsperar(); return; }
+  const todos = NOVEDADES.filter((n) => n.aviso).map((n) => n.v);
+  if (!vista) { LS.set('avisos-nov', { visto: todos, pend: null }); return; }
+  // (a quien aún no ha pasado el tutorial se le mira en el próximo arranque)
+  if (!tourVisto()) return;
+  const n = NOVEDADES.find((x) => x.aviso && todosMi(x));
+  if (enApp && n && cmpVer(vista, n.v) >= 0) { LS.set('avisos-nov', { visto: todos.filter((v) => v !== n.v && cmpVer(vista, v) >= 0), pend: n.v }); novAvisoEsperar(); return; }
+  LS.set('avisos-nov', { visto: todos.filter((v) => cmpVer(vista, v) >= 0), pend: null });
+}
+function novAvisoPedir(v) {
+  const g = novAvisos() || { visto: [], pend: null };
+  if (g.visto.includes(v)) return;
+  g.pend = v;
+  LS.set('avisos-nov', g);
+  novAvisoEsperar();
+}
+function novAvisoVisto(v) {
+  const g = novAvisos() || { visto: [], pend: null };
+  if (!g.visto.includes(v)) g.visto.push(v);
+  if (g.pend === v) g.pend = null;
+  LS.set('avisos-nov', g);
+}
+let novAvisoEsperando = false;
+function novAvisoEsperar() {
+  if (novAvisoEsperando) return;
+  novAvisoEsperando = true;
+  const hasta = Date.now() + 10 * 60e3;
+  const mirar = () => {
+    const g = novAvisos();
+    const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
+    // (pasado un rato sin hueco, se deja: sigue pendiente y sale la próxima vez que se abra)
+    if (!n || Date.now() > hasta) { novAvisoEsperando = false; return; }
+    if (S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa')) {
+      novAvisoEsperando = false;
+      tarjetaNovedad(n.aviso, { alIr: (a) => { novAvisoVisto(n.v); irNovedad(a); }, alCerrar: () => { novAvisoVisto(n.v); quizaTutorial(700); } });
+      return;
+    }
+    setTimeout(mirar, 1000);
+  };
+  setTimeout(mirar, 500);
 }
 // a donde lleva el botón de una novedad: una pestaña (v, seg) o lo mismo que un botón con ese data-accion (accion)
 function irNovedad(a) {

@@ -33,6 +33,7 @@ export const NOVEDADES = [
     cosas: [
       { para: 'play', tipo: 'arreglo', menor: true, d: 'pantalla', t: 'Los anuncios, a su hora', x: 'El anuncio de apertura sale al abrir la app, una vez al día como mucho, y no un rato después. Los de pantalla completa van uno cada 7 minutos de uso contando todo el día, 5 al día como mucho, y nunca nada más abrirla.' },
       { tipo: 'arreglo', menor: true, d: 'plan', t: 'Hoy, sin huecos de más', x: 'En Hoy, «Lo que llevas hoy» ocupaba el doble cuando aún no habías hecho nada, y los tiempos del marcador quedaban muy separados cuando no cabían en una línea. Ya van a su tamaño.' },
+      { tipo: 'arreglo', menor: true, d: 'regalo', t: 'El aviso de «Invita a un amigo» ya no se pierde', x: 'Al actualizar la app desde Google Play, el aviso salía un momento y desaparecía sin volver. Ahora sale con tu liga ya cargada y se queda hasta que lo cierras.' },
     ],
   },
   {
