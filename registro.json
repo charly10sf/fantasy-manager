@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252146/cuti-romero-aun-duda-partido-getafe.html": 1794925019000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/17/alvaro-cervera-pone-sitio-pique-136542867.html": 1794925614000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
@@ -8619,13 +8618,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4434,
+   "ok": 4435,
    "fallos": 0,
-   "ejecuciones": 3681,
+   "ejecuciones": 3682,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T14:16:19.768Z"
+   "ultima": "2026-11-20T14:21:13.132Z"
   }
  },
  "ptsDirecto": {},
@@ -8642,15 +8641,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:16:29.483Z"
+   "ultimaBien": "2026-11-20T14:21:22.447Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:16:29.483Z"
+   "ultimaBien": "2026-11-20T14:21:22.447Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:16:29.483Z"
+   "ultimaBien": "2026-11-20T14:21:22.447Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8658,11 +8657,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:16:29.483Z"
+   "ultimaBien": "2026-11-20T14:21:22.447Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:16:29.483Z"
+   "ultimaBien": "2026-11-20T14:21:22.447Z"
   }
  },
  "avisos": [
