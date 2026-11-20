@@ -2484,7 +2484,8 @@
    "SPORT|136676667": 1795190614000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html": 1795195312000,
    "SPORT|136677426": 1795191686000,
-   "SPORT|136662146": 1795192532000
+   "SPORT|136662146": 1795192532000,
+   "SPORT|136676372": 1795193063000
   },
   "hechos": [
    {
@@ -3328,7 +3329,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -4227,17 +4228,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 410908,
-  "salida": 31457,
+  "entrada": 413011,
+  "salida": 31573,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.738297,
+  "dolares": 0.738565,
   "reservado": 0
  },
  "recientes": {
@@ -8582,13 +8583,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4475,
+   "ok": 4476,
    "fallos": 0,
-   "ejecuciones": 3722,
+   "ejecuciones": 3723,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:41:12.472Z"
+   "ultima": "2026-11-20T17:46:49.807Z"
   }
  },
  "ptsDirecto": {},
@@ -8605,15 +8606,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:41:24.515Z"
+   "ultimaBien": "2026-11-20T17:47:08.335Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:41:24.515Z"
+   "ultimaBien": "2026-11-20T17:47:08.335Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:41:24.515Z"
+   "ultimaBien": "2026-11-20T17:47:08.335Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8621,11 +8622,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:41:24.515Z"
+   "ultimaBien": "2026-11-20T17:47:08.335Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:41:24.515Z"
+   "ultimaBien": "2026-11-20T17:47:08.335Z"
   }
  },
  "avisos": [
