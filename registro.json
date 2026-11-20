@@ -2171,7 +2171,7 @@
   "3261": "ok",
   "3262": "ok",
   "3263": "ok",
-  "3264": "ok",
+  "3264": "doubtful",
   "3265": "ok",
   "3266": "ok",
   "3267": "ok",
@@ -2223,18 +2223,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/una-preparacion-entre-campeones-f202611-n/": 1794868590000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004251871/misteriosa-desaparicion-kounde.html": 1794895200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251812/hay-berenguer-athletic.html": 1794895200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004251773/lamine-yamal-tira-carro.html": 1794895200000,
-   "SPORT|136506179": 1794889841000,
-   "SPORT|136517118": 1794889838000,
-   "SPORT|136521770": 1794888632000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/opinion/2026/11/17/vuelve-vinicius-mou.html": 1794895154000,
    "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/": 1794898416000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251820/berenguer-recupera-galones-penaltis.html": 1794898800000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
-   "SPORT|136469900": 1794895217000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
    "SPORT|136526095": 1794901531000,
@@ -2433,21 +2424,17 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252987/barca-mueve-ficha-tres-centrales-punto-mira.html": 1795116792000,
    "SPORT|136638097": 1795114837000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/idea-real-madrid-recuperar-nico-paz-proximo-verano-20261119_3478703.html": 1795119011000,
-   "SPORT|136638674": 1795116349000
+   "SPORT|136638674": 1795116349000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253088/lamine-yamal-no-le-basta-ganar-mundial.html": 1795153500000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253087/bastoni-lento-verano-tampoco-sera-bolt-enero.html": 1795147200000,
+   "SPORT|136636730": 1795149636000,
+   "SPORT|136508538": 1795149008000,
+   "SPORT|136647690": 1795147253000,
+   "SPORT|136647686": 1795147235000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136506179",
-    "medio": "SPORT",
-    "t": 1794889841000,
-    "id": "1775",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/",
     "medio": "AS",
@@ -3255,11 +3242,23 @@
     "motivo": "molestias en el tobillo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/",
+    "medio": "AS",
+    "t": 1795129906000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Vivian está lesionado y no jugará ante el Espanyol",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-19",
-   "n": 49
+   "dia": "2026-11-20",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4079,8 +4078,8 @@
     "t": 0
    },
    "3264": {
-    "e": "ok",
-    "t": 1795086377846
+    "e": "doubtful",
+    "t": 1795154481316
    },
    "3265": {
     "e": "ok",
@@ -4104,11 +4103,7 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261117/1004251859/siete-encuentros-suspendidos-jornada-9.html": 1794895200000,
-   "SPORT|136517839": 1794889846000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/vanessa-ares-agradece-apoyo-foz-arenka-fight-night-span-langglunha-loucuraspan/0003_202611X17C6991.htm": 1794888000000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-rodalies-avisa-maquinistas-no-cumplen-servicios-minimos-huelga-martes-20261117071907.html": 1794896347000,
-   "SPORT|136523846": 1794895219000,
    "Europa Press|https://www.europapress.es/madrid/noticia-cercanias-denuncia-incumplimiento-servicios-minimos-huelga-recomienda-buscar-medios-alternativos-20261117083135.html": 1794900695000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-varias-horas-huelga-recomienda-usar-medios-alternativos-transporte-20261117090747.html": 1794902867000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-12-seguimiento-huelga-cercanias-madrid-paralizado-supresiones-12-ave-20261117112453.html": 1794911093000,
@@ -4152,26 +4147,28 @@
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-19",
-   "n": 10,
+   "dia": "2026-11-20",
+   "n": 0,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795154481316
+  }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 63957,
-  "salida": 1946,
+  "entrada": 67717,
+  "salida": 2633,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.155212,
+  "dolares": 0.155932,
   "reservado": 0
  },
  "recientes": {
@@ -8510,13 +8507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4333,
+   "ok": 4334,
    "fallos": 0,
-   "ejecuciones": 3580,
+   "ejecuciones": 3581,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T05:56:11.211Z"
+   "ultima": "2026-11-20T06:01:21.316Z"
   }
  },
  "ptsDirecto": {},
@@ -8533,15 +8530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T05:56:11.951Z"
+   "ultimaBien": "2026-11-20T06:01:37.022Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T05:56:11.951Z"
+   "ultimaBien": "2026-11-20T06:01:37.022Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T05:56:11.951Z"
+   "ultimaBien": "2026-11-20T06:01:37.022Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8549,11 +8546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T22:56:16.311Z"
+   "ultimaBien": "2026-11-20T06:01:37.022Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-19T21:56:18.096Z"
+   "ultimaBien": "2026-11-20T06:01:37.022Z"
   }
  },
  "avisos": [
