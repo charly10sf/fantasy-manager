@@ -2294,7 +2294,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html": 1794951400000,
    "AS|https://as.com/futbol/de-la-fatalidad-al-once-de-gala-en-el-derbi-f202611-n/": 1794955695000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252319/sustos-finales-ultimos-internacionales-barca.html": 1794952389000,
    "SPORT|136520259": 1794976224000,
@@ -2512,18 +2511,6 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/isco-derbi-ambiente-sera-hostil_0_2008530236.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794951400000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos es duda seria para el derbi en Nervión",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136556602",
     "medio": "SPORT",
@@ -8615,13 +8602,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4543,
+   "ok": 4545,
    "fallos": 0,
-   "ejecuciones": 3770,
+   "ejecuciones": 3771,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T21:36:14.214Z"
+   "ultima": "2026-11-20T21:41:14.576Z"
   }
  },
  "ptsDirecto": {
@@ -8651,27 +8638,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:36:18.326Z"
+   "ultimaBien": "2026-11-20T21:41:19.331Z"
   }
  },
  "avisos": [
