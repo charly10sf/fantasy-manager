@@ -2432,7 +2432,8 @@
    "SPORT|136508538": 1795149008000,
    "SPORT|136647690": 1795147253000,
    "SPORT|136647686": 1795147235000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000
   },
   "hechos": [
    {
@@ -3258,7 +3259,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4158,17 +4159,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 67717,
-  "salida": 2633,
+  "entrada": 69659,
+  "salida": 2934,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.155932,
+  "dolares": 0.156277,
   "reservado": 0
  },
  "recientes": {
@@ -8507,13 +8508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4335,
+   "ok": 4336,
    "fallos": 0,
-   "ejecuciones": 3582,
+   "ejecuciones": 3583,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T06:06:19.422Z"
+   "ultima": "2026-11-20T06:11:11.751Z"
   }
  },
  "ptsDirecto": {},
@@ -8530,15 +8531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:06:30.756Z"
+   "ultimaBien": "2026-11-20T06:11:26.126Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:06:30.756Z"
+   "ultimaBien": "2026-11-20T06:11:26.126Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:06:30.756Z"
+   "ultimaBien": "2026-11-20T06:11:26.126Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8546,11 +8547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:06:30.756Z"
+   "ultimaBien": "2026-11-20T06:11:26.126Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:06:30.756Z"
+   "ultimaBien": "2026-11-20T06:11:26.126Z"
   }
  },
  "avisos": [
