@@ -2540,6 +2540,10 @@ export function veredictos(D, M) {
 /** lo que la app haría con uno de tus jugadores si lo vendes hoy, en una frase (para su línea en los datos de la IA) */
 function ventaAppTxt(D, M, pid) {
   const V = veredictos(D, M), a = V[`A-${pid}`], v = V[`V-${pid}`];
+  // (20 nov) con una oferta, lo que aconseja la app es su consejo (ACEPTAR o ESPERAR, el de Equipo → en venta): «aceptaría»
+  // solo decía que la operación se puede hacer, y con la de Hugo por Baena salían a la vez «aceptaría» y «ESPERAR»
+  const mv = (M.misVentas || []).find((x) => x.pid === pid && x.mejor);
+  if (a && mv && ['aceptar', 'esperar'].includes(mv.consejo)) return `LA APP, CON LA OFERTA QUE TIENE: ${mv.consejo.toUpperCase()}${mv.porque ? ` (${cortar(mv.porque, 170)})` : ''}`;
   if (a) return a.ok ? `LA APP: aceptaría hoy la oferta que tiene${a.aviso ? ` (${cortar(a.aviso, 140)})` : ''}` : `LA APP: NO aceptaría hoy la oferta${a.sinPrisa ? ' (sin prisa)' : ''}: ${cortar(a.aviso, 200)}`;
   if (!v) return '';
   if (v.ok) return v.aviso ? `LA APP: venderlo se puede, con este aviso: ${cortar(v.aviso, 170)}` : '';
@@ -2859,7 +2863,7 @@ export function ventasMiasTxt(D, M, js, c = null) {
     const tend = [y.hoy != null ? `hoy ${eur(y.hoy, { signo: true })}` : '', t.d7 != null ? `última semana ${eur(t.d7, { signo: true })}` : '', futuro].filter(Boolean).join('; ') || 'sin datos de los últimos días';
     const ojoPz = pz && pz.nivel && y.baja ? `; OJO: acaba de hacer ${pz.pts} pts (J${pz.n}), puede frenar la bajada` : '';
     const opV = opsPlan.find((o) => !o.descartada && !o.sugerencia && o.accion === 'vender' && String(o.pid || (o.j && o.j.id)) === String(j.id));
-    const venV = V[`V-${j.id}`] || null, ofV = V[`A-${j.id}`] || null;
+    const venV = V[`V-${j.id}`] || null;
     const noHoy = venV && !venV.ok && venV.aviso ? cortar(venV.aviso, 160) : y.espera && ['juega', 'sube'].includes(y.espera.tipo) ? cortar(y.espera.texto, 160) : '';
     let ver = y.veredicto, motivo;
     const sube7 = futuro ? ` (${futuro.replace('si sigue la tendencia, ', '')})` : '';
@@ -2875,8 +2879,11 @@ export function ventasMiasTxt(D, M, js, c = null) {
     // con una oferta que la app aceptaría, esa es la respuesta (como en MIS JUGADORES EN VENTA)
     const venta = (M.misVentas || []).find((v) => v.pid === j.id);
     const mejor = venta && venta.ofertas && venta.ofertas[0];
-    if (ofV && ofV.ok && mejor) { ver = 'aceptar'; motivo = `ya tiene una oferta de ${mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')} por ${eur(mejor.importe)} y la app la aceptaría${ofV.aviso ? ` (${cortar(ofV.aviso, 150)})` : ''}`; }
-    const VER = { vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
+    // (lo que aconseja con ella es el consejo de Equipo → en venta, el mismo de MIS JUGADORES EN VENTA)
+    const quien = mejor ? (mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')) : '';
+    if (mejor && venta.consejo === 'aceptar') { ver = 'aceptar'; motivo = `ya tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja aceptarla${venta.porque ? ` (${cortar(venta.porque, 150)})` : ''}`; }
+    else if (mejor && venta.consejo === 'esperar' && ver !== 'vender') { ver = 'esperar'; motivo = `tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja ESPERAR: ${cortar(venta.porque || '', 170)}`; }
+    const VER = { vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, esperar: `NO ACEPTAR AÚN LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
     const P = y.proteger;
     const como = ver === 'vender'
       ? ` Al momento, a un rival que te pague ${eur(y.rival.piso)} o más; si no, a la venta para la oferta de LaLiga.${noHoy && !opV ? ` Cuándo: ${noHoy}` : ''}`
@@ -2889,12 +2896,12 @@ export function ventasMiasTxt(D, M, js, c = null) {
       ? `A UN RIVAL (cobras al momento): no le saques más que lo de LaLiga, ≈ ${eur(y.rival.piso)}`
       : `A UN RIVAL (cobras al momento): pídele entre ${eur(y.rival.piso)} y ${eur(y.rival.techo)}${y.clausula && y.rival.techo >= y.clausula * 0.995 ? '; más que su cláusula no te paga quien se la puede pagar' : ''}`;
     // la oferta que ya tiene, con su cifra (la de un rival o la de LaLiga)
-    const ya = mejor && ver !== 'aceptar' ? ` | YA TIENE UNA OFERTA: ${mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')} ${eur(mejor.importe)}${ofV ? `; la app ${ofV.ok ? 'la aceptaría' : 'no la aceptaría hoy'}` : ''}` : '';
+    const ya = mejor && !['aceptar', 'esperar'].includes(ver) ? ` | YA TIENE UNA OFERTA: ${quien} ${eur(mejor.importe)}${['aceptar', 'esperar'].includes(venta.consejo) ? `; la app aconseja ${venta.consejo.toUpperCase()}` : ''}` : '';
     const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver === 'quedar' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
     L.push(`- ${j.nombre} (vale ${eur(y.v)}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | TENDENCIA: ${tend}${ojoPz} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
   }
   if (!L.length) return '';
-  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta: empieza por él y explícalo con su tendencia y a quién y por cuánto venderlo, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
+  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta. De cada jugador, una o dos frases: el veredicto, su tendencia y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
 }
 
 /* ---------------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------------
