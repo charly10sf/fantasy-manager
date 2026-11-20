@@ -2431,7 +2431,8 @@
    "SPORT|136647686": 1795147235000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/19/centenar-demandas-socios-abonados-real-madrid-136643193.html": 1795127693000
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/19/centenar-demandas-socios-abonados-real-madrid-136643193.html": 1795127693000,
+   "SPORT|135487411": 1795154400000
   },
   "hechos": [
    {
@@ -3245,7 +3246,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4144,17 +4145,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 75183,
-  "salida": 3266,
+  "entrada": 77276,
+  "salida": 3358,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.156996,
+  "dolares": 0.157251,
   "reservado": 0
  },
  "recientes": {
@@ -8493,13 +8494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4346,
+   "ok": 4347,
    "fallos": 0,
-   "ejecuciones": 3593,
+   "ejecuciones": 3594,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T07:01:24.806Z"
+   "ultima": "2026-11-20T07:06:11.633Z"
   }
  },
  "ptsDirecto": {},
@@ -8516,15 +8517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:01:39.528Z"
+   "ultimaBien": "2026-11-20T07:06:22.182Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:01:39.528Z"
+   "ultimaBien": "2026-11-20T07:06:22.182Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:01:39.528Z"
+   "ultimaBien": "2026-11-20T07:06:22.182Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8532,11 +8533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:01:39.528Z"
+   "ultimaBien": "2026-11-20T07:06:22.182Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T07:01:39.528Z"
+   "ultimaBien": "2026-11-20T07:06:22.182Z"
   }
  },
  "avisos": [
