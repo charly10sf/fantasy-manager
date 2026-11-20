@@ -1901,7 +1901,7 @@
   "2977": "ok",
   "2978": "out_of_league",
   "2979": "out_of_league",
-  "2980": "ok",
+  "2980": "doubtful",
   "2981": "out_of_league",
   "2982": "out_of_league",
   "2983": "out_of_league",
@@ -2070,7 +2070,7 @@
   "3146": "injured",
   "3147": "ok",
   "3148": "ok",
-  "3149": "ok",
+  "3149": "doubtful",
   "3150": "ok",
   "3151": "ok",
   "3152": "ok",
@@ -2174,7 +2174,7 @@
   "3250": "ok",
   "3251": "ok",
   "3252": "injured",
-  "3253": "ok",
+  "3253": "doubtful",
   "3254": "ok",
   "3255": "ok",
   "3256": "ok",
@@ -2234,20 +2234,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3077",
-   "que": "lesion",
-   "antes": "ok",
-   "t": 1795169770990
-  },
-  {
-   "id": "3264",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1795172472721
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
@@ -2451,7 +2438,8 @@
    "SPORT|136657501": 1795169223000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
+   "SPORT|136657810": 1795170582000
   },
   "hechos": [
    {
@@ -3244,7 +3232,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4126,12 +4114,13 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -4139,17 +4128,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 25,
    "redactar": 7,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 153736,
-  "salida": 12813,
+  "entrada": 157431,
+  "salida": 13422,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.271828,
+  "dolares": 0.272502,
   "reservado": 0
  },
  "recientes": {
@@ -8488,13 +8477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4400,
+   "ok": 4401,
    "fallos": 0,
-   "ejecuciones": 3647,
+   "ejecuciones": 3648,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:31:13.189Z"
+   "ultima": "2026-11-20T11:36:16.019Z"
   }
  },
  "ptsDirecto": {},
@@ -8511,15 +8500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:31:44.260Z"
+   "ultimaBien": "2026-11-20T11:36:34.775Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:31:44.260Z"
+   "ultimaBien": "2026-11-20T11:36:34.775Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:31:44.260Z"
+   "ultimaBien": "2026-11-20T11:36:34.775Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8527,11 +8516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:31:44.260Z"
+   "ultimaBien": "2026-11-20T11:36:34.775Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:31:44.260Z"
+   "ultimaBien": "2026-11-20T11:36:34.775Z"
   }
  },
  "avisos": [
