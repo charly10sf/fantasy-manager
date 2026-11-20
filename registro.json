@@ -2279,7 +2279,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252261/juan-iglesias-calienta-derbi-mejores-jugadores-no-disponibles-mejor.html": 1794935906000,
    "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
-   "SPORT|136552874": 1794935174000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000,
@@ -2501,20 +2500,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136552874",
-    "medio": "SPORT",
-    "t": 1794935174000,
-    "id": "3079",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     2
-    ]
    },
    {
     "guid": "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/",
@@ -8596,13 +8581,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4467,
+   "ok": 4468,
    "fallos": 0,
-   "ejecuciones": 3714,
+   "ejecuciones": 3715,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:01:14.731Z"
+   "ultima": "2026-11-20T17:06:23.990Z"
   }
  },
  "ptsDirecto": {},
@@ -8619,15 +8604,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:01:29.209Z"
+   "ultimaBien": "2026-11-20T17:06:30.486Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:01:29.209Z"
+   "ultimaBien": "2026-11-20T17:06:30.486Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:01:29.209Z"
+   "ultimaBien": "2026-11-20T17:06:30.486Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8635,11 +8620,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:01:29.209Z"
+   "ultimaBien": "2026-11-20T17:06:30.486Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:01:29.209Z"
+   "ultimaBien": "2026-11-20T17:06:30.486Z"
   }
  },
  "avisos": [
