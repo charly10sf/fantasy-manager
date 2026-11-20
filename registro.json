@@ -4179,7 +4179,6 @@
   "vistas": {
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/coruna/coruna/2026/11/17/oar-visita-san-pablo-burgos-volver-senda-victoria/00031794938102625457236.htm": 1794939060000,
    "Europa Press|https://www.europapress.es/internacional/noticia-cientos-miles-personas-salen-calle-francia-huelga-general-convocada-funcionarios-20261117190845.html": 1794938925000,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261117/11686779/cervera-responde-pique-sancion-owono-deberia-volver-ver-accion-lol.html": 1794938628000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252335/maldita-fila-12.html": 1794981600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261118/1004252321/reus-medirse-barakaldo.html": 1794981600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261118/1004252273/copa-pone-prueba-sabadell-mermado.html": 1794981600000,
@@ -8586,13 +8585,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4479,
+   "ok": 4480,
    "fallos": 0,
-   "ejecuciones": 3726,
+   "ejecuciones": 3727,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:01:16.144Z"
+   "ultima": "2026-11-20T18:06:20.782Z"
   }
  },
  "ptsDirecto": {},
@@ -8609,15 +8608,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:01:27.625Z"
+   "ultimaBien": "2026-11-20T18:06:30.940Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:01:27.625Z"
+   "ultimaBien": "2026-11-20T18:06:30.940Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:01:27.625Z"
+   "ultimaBien": "2026-11-20T18:06:30.940Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8625,11 +8624,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:01:27.625Z"
+   "ultimaBien": "2026-11-20T18:06:30.940Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:01:27.625Z"
+   "ultimaBien": "2026-11-20T18:06:30.940Z"
   }
  },
  "avisos": [
