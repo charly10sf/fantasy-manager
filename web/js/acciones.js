@@ -40,10 +40,14 @@ export function acciones(D, M, c) {
   const clausulable = (x) => esClausulable(M, x, ahora);
   const abiertas = M.clausulas.filter((x) => x.abierta && clausulable(x))
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
+  // (21 nov, Carlos: «si un jugador hace muchísimos puntos… y tiene la cláusula abierta, que te salga clausúlalo ya») el que
+  // acaba de hacer un partidazo sube los días siguientes bastante más de lo que dice la inercia (medido con su liga: tras
+  // 10 o más, +5,5 puntos porcentuales en 3 días): va el primero y lo dice
+  const tras = (x) => { const e = M.efectoPartido ? M.efectoPartido(x.pid) : null; return e && e.etapa === 0 && e.e3 >= 0.03 ? e : null; };
   abiertas.slice(0, 3).forEach((x, k) => add({
-    tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20, icono: 'diana', pid: x.pid, cuando: 'Ya',
+    tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20 + (tras(x) ? 6 : 0), icono: 'diana', pid: x.pid, cuando: 'Ya',
     titulo: `Clausula a ${x.j.nombre}`,
-    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}${(() => { const s = M.salida(x.j, x.clausula, x.tend); return s && s.pierde > 0 ? ` ${s.txt[0].toUpperCase()}${s.txt.slice(1)}.` : ''; })()}`,
+    texto: `${tras(x) ? `Acaba de hacer ${tras(x).pts} puntos: tras un partido así, los de su precio suben de media un ${pct(tras(x).e3 * 100, 1, false)} en 3 días. ` : ''}De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}${(() => { const s = M.salida(x.j, x.clausula, x.tend); return s && s.pierde > 0 ? ` ${s.txt[0].toUpperCase()}${s.txt.slice(1)}.` : ''; })()}`,
   }));
 
   const pronto = M.clausulas.filter((x) => !x.abierta && x.abreEn < 30 * HORA && clausulable(x));

@@ -386,6 +386,12 @@ export function arbitro(R, D, M, eur) {
       const enM = (M.mercado || []).find((m) => m.pid === o.pid);
       if (o.accion === 'pujar' && !enM) mal.push(`${q} no está en el mercado`);
       if (o.accion === 'comprar' && enM && enM.tipo === 'manager' && enM.precio && imp && imp < enM.precio - 1) mal.push(`r6: ${eur(imp)} por ${q}, por debajo de lo que pide (${eur(enM.precio)})`);
+      // (Carlos, 20 nov, con Revivo: «por solo un millón más no me lo va a aceptar») a un rival no se le ofrece por uno suyo
+      // que sube menos de lo que pediría (ofertaDueno)
+      if (o.accion === 'comprar' && !enM && M.dueno[o.pid] && M.dueno[o.pid] !== (D.yo && D.yo.teamId) && M.ofertaDuenoDe && o.j) {
+        const od = M.ofertaDuenoDe(o.j);
+        if (od && od.sube && imp && imp < od.v - 1) mal.push(`rO: ${eur(imp)} a su dueño por ${q}, que sube, por debajo de lo que pediría (${eur(od.v)})`);
+      }
       if (hoy && n >= 25) mal.push(`r17: ${o.accion} por ${q} con ${n} jugadores`);
       if (hoy) { pujado += imp; n++; entran.push(o.j); }
       if (rev(o)) { if (ciclos < 2) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
@@ -403,6 +409,10 @@ export function arbitro(R, D, M, eur) {
     if (o.accion === 'blindar') {
       const x = M.mias.find((y) => y.pid === o.pid);
       if (!x) { mal.push(`${q} no es mío`); continue; }
+      // (Carlos, 20 nov: «en el fantasy las cláusulas casi nunca se suben») pagar por subirla, solo si cuesta un 5 % de su
+      // valor como mucho y nunca a uno que se frena, gira, baja o se ha parado
+      if (imp && x.j && x.j.valor && imp > x.j.valor * 0.05 + 1) mal.push(`rC: subir la cláusula de ${q} cuesta ${eur(imp)}, más de un 5 % de su valor (${eur(x.j.valor)})`);
+      if (imp && ['frena', 'giro', 'baja', 'parado'].includes(fase(o.pid))) mal.push(`rC: subir la cláusula de ${q}, que ${fase(o.pid) === 'frena' ? 'se frena' : fase(o.pid) === 'parado' ? 'se ha parado' : 'baja'}`);
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
       else { escudos++; if (hoy && !x.abierta) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
     } else if (o.retira) pujado -= +o.retira;   // una puja retirada deja de contar (se puede retirar cuando se quiera)
@@ -412,6 +422,9 @@ export function arbitro(R, D, M, eur) {
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)
   if (caja - pujado < -M.deuda - 1 && caja - pujado < +D.dinero - (+M.misPujas || 0) - 1) mal.push(`r4: ${eur(caja - pujado)} pasa el tope de deuda (${eur(-M.deuda)})`);
   if (n > 25) mal.push(`r12: la plantilla se iría a ${n}`);
+  // (Carlos, 20 nov: «si le preguntas una cosa a la IA, debe estar actualizada al momento») el plan, con la liga recién
+  // pedida: no con la de hace más de media hora
+  if (R.t && D.t && R.t - D.t > 30 * 60e3) mal.push(`rD: el plan va con la liga de hace ${Math.round((R.t - D.t) / 60e3)} min`);
   // lo pujado se cobra en el cambio de mercado: si el próximo llega con la jornada ya empezada, para esta no cuenta
   const pujasAntes = !M.cierreMercado || !M.proxima || M.cierreMercado < M.proxima.ini;
   const jornada = pujasAntes ? caja - pujado + vuelve + ventas : caja + ventas;

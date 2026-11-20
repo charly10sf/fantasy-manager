@@ -26,8 +26,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ESFUERZOS: low
           ESCENAS: ${{ vars.CHAT_ESCENAS || 'martes,paron,sabado' }}
-          TOPE_USD: "0.75"
-          SOLO: vender-cuatro,vender-cuatro-dinero,vender-cuatro-tendencia,fran-ventas,fran-tendencia,vender-mio,baja-vendo,trato,oferta-rival
+          TOPE_USD: "1.0"
+          SOLO: ${{ vars.CHAT_SOLO || '' }}
       # (19 nov) las 10 más difíciles con esfuerzo medium, para comparar con las de low de arriba (solo para que decida Carlos)
       - name: Las 10 más difíciles con medium
         # (19 nov, sesión larga: apagado para no gastar de más; se mide lo de low)

@@ -4,7 +4,7 @@ import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, 
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
-import { analizar, rematarAuto } from './motor.js';
+import { analizar, rematarAuto, efectoTras, comoVenia } from './motor.js';
 import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
@@ -1560,8 +1560,32 @@ async function vigilarClausulables(antes) {
   const sano = (j) => !['injured', 'suspended', 'out_of_league'].includes(j.estado);
   const cand = M.clausulas.filter((x) => x.meLlega && (x.abierta || x.abreEn < 12 * 60 * MIN) && x.interes >= 50 && sano(x.j)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.compraCal(x.j, x.clausula).ok && (!M.conSalida || M.conSalida(x.j, x.clausula, x.tend)));
-  if (!cand.length) return;
   const vistos = LS.get(K('vivo-avisados'), {});
+  // (21 nov, Carlos: «si un jugador hace muchísimos puntos… y tiene justo la cláusula abierta, que te salga clausúlalo
+  // ya») el que acaba de hacer 8 puntos o más, con su partido ya acabado, la cláusula abierta y que te llega: los días
+  // siguientes sube bastante más de lo que dice la inercia (medido con su liga, `efectoTras`). Si lo que se espera que
+  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con 25 jugadores no, que no se puede clausular
+  if ((M.mias || []).length < 25) {
+    const acabado = (j) => { const p = (S.D.partidos || []).find((q) => q.jornada === V.n && (q.localId === j.equipoId || q.visitanteId === j.equipoId)); return !!(p && p.fecha && p.fecha + 2 * HORA <= Date.now()); };
+    for (const x of M.clausulas || []) {
+      const pts = V.puntos[x.pid];
+      if (pts == null || pts < 8 || !x.meLlega || !x.abierta || !sano(x.j) || !x.j.valor || !acabado(x.j)) continue;
+      const p0 = vistos[x.pid] && vistos[x.pid].n === V.n ? vistos[x.pid] : { n: V.n, g: 0, as: 0 };
+      if (p0.pz) continue;
+      const t = M.tend(x.pid) || {}, sub = (t.sub || []).slice(-3), ine = M.inercia(x.pid);
+      const e = efectoTras(pts, comoVenia(sub.reduce((a, r) => a * (1 + r), 1) - 1), x.j.valor);
+      // (si el motor ya lo ha rehecho con sus puntos, la inercia ya lo lleva dentro)
+      const en3 = x.j.valor + (ine && ine.partido ? ine.proy3 : x.j.valor * e.e3 + Math.max(0, ine ? ine.proy3 : 0));
+      if (e.e3 < 0.03 || x.clausula > en3) continue;
+      vistos[x.pid] = { ...p0, pz: pts };
+      const tit = `${x.j.nombre}: ${pts} puntos y su cláusula abierta`;
+      const cuerpo = `Es de ${x.rival.manager || x.rival.nombre}. Tras un partido así, los de su precio suben de media un ${String(Math.round(e.e3 * 1000) / 10).replace('.', ',')} % en 3 días: en 3 días valdría unos ${eur(en3)} y su cláusula es ${eur(x.clausula)}. Te llega: te quedarías con ${eur(x.teQueda)}. Si lo quieres, clausúlalo ya.`;
+      if (nativo.aLaVista()) tostada(`⚡ ${tit}. ${cuerpo}`, 12000);
+      else nativo.notificar(`⚡ ${tit}`, cuerpo, 'rivales');
+      apuntarRegistro({ ruta: `aviso en directo: ${x.j.nombre} ${pts} pts con la cláusula abierta`, s: 200, ms: 0 });
+    }
+  }
+  if (!cand.length) { LS.set(K('vivo-avisados'), vistos); return; }
   const ya = (pid) => (vistos[pid] && vistos[pid].n === V.n ? vistos[pid] : { n: V.n, g: 0, as: 0 });
   const mirar = cand.filter((x) => {
     const b = V.puntos[x.pid], a = antes && antes.puntos ? antes.puntos[x.pid] : null;
@@ -1573,7 +1597,7 @@ async function vigilarClausulables(antes) {
     try { h = hechosSemana(await api.jugador(x.pid, S.D.liga.id), V.n); } catch (e) { if (e.sesion) return; }
     if (!h) continue;
     const g = h.ev.gol ? h.ev.gol[0] : 0, as = h.ev.asis ? h.ev.asis[0] : 0, p0 = ya(x.pid);
-    vistos[x.pid] = { n: V.n, g: Math.max(g, p0.g), as: Math.max(as, p0.as) };
+    vistos[x.pid] = { ...p0, n: V.n, g: Math.max(g, p0.g), as: Math.max(as, p0.as) };
     if (g <= p0.g && as <= p0.as) continue;
     const que = g > p0.g ? (g - p0.g > 1 ? `ha marcado ${g - p0.g} goles` : 'ha marcado') : as - p0.as > 1 ? `ha dado ${as - p0.as} asistencias` : 'ha dado una asistencia';
     const pts = V.puntos[x.pid];
@@ -2648,6 +2672,19 @@ function preguntaJ(j) {
   if ((M.mercado || []).some((m) => String(m.pid) === String(j.id) && m.tipo === 'liga')) return `¿Qué hago con ${j.nombre}, que está libre en el mercado? Dime si pujar por él, cuánto como mucho y por qué.`;
   return `¿Qué hago con ${j.nombre}? Dime si me interesa, cómo conseguirlo, cuánto pagar como mucho y por qué.`;
 }
+/* (20 nov, Carlos: «la IA debe estar actualizada siempre: si le preguntas una cosa, debe estar actualizada al momento»)
+   antes de preguntar, la liga al día: si lo que hay tiene más de 2 minutos, se vuelve a pedir a LaLiga (o se espera a la
+   carga que ya va), como mucho 25 s; si LaLiga no contesta, se pregunta con lo que hay */
+async function ligaAlDiaParaPreguntar() {
+  if (!S.D || enDemo() || !haySesion()) return;
+  if (!S.cargando && Date.now() - S.D.t < 2 * MIN) return;
+  S.pasoChat = 'Poniendo tu liga al día…'; pintar();
+  const carga = S.cargando
+    ? new Promise((ok) => { const mira = () => (S.cargando ? setTimeout(mira, 300) : ok()); mira(); })
+    : cargar({ silencio: true }).catch(() => {});
+  await Promise.race([carga, new Promise((ok) => setTimeout(ok, 25000))]);
+  S.pasoChat = '';
+}
 async function enviarPregunta(texto, { extra = false } = {}) {
   const t = (texto || '').trim();
   if (S.charlando || S.preparandoFotos) return;
@@ -2664,6 +2701,7 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   const ctl = new AbortController();
   S.chatCtl = ctl;
   try {
+    await ligaAlDiaParaPreguntar();
     const r = await charlar(t, S.D, S.M, S.c, (parcial) => {
       S.parcial = parcial;
       const ahora = Date.now();

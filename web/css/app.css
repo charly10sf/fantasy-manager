@@ -455,7 +455,7 @@ h1.titulo { font-weight: 700; }
 .act-t .quien { font-weight: 700; }
 .act-t .quien.yo { color: var(--rojo-l); }
 .amenaza { font: 700 var(--t-mini) 'Barlow'; letter-spacing: 0.6px; text-transform: uppercase; padding: 3px 7px; border-radius: var(--r-pl); }
-.amenaza.alta { background: var(--rojo-s); color: var(--rojo-l); }
+.amenaza.alta, .amenaza.muyalta { background: var(--rojo-s); color: var(--rojo-l); }
 .amenaza.media { background: var(--oro-s); color: var(--oro); }
 .amenaza.baja { background: var(--plano2); color: var(--apagado); }
 .posn { font: 700 var(--t-sec) var(--cond); width: 28px; text-align: center; flex: none; color: var(--texto2); }
@@ -3085,10 +3085,10 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .pill[class], .accion-t[class], .pnz-t[class], .tit-b[class], .ll-tag[class], .nv-tipo[class], .cp-res-t[class], .amenaza[class] { color: var(--pl-c); background: var(--pl-f); }
 .pl.chica, .tit-b, .cp-res-t { padding: 2px 7px; }
 /* los tonos */
-.pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
+.pl.sube, .pill.bien, .pill.chollo, .amenaza.baja, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
 .pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D { --pl-c: var(--baja); --pl-b: rgba(255, 111, 97, 0.4); }
 .pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
-.pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
+.pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .amenaza.muyalta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
 .pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora { --pl-c: var(--azul); --pl-b: rgba(88, 166, 255, 0.4); }
 .pill.estim { box-shadow: none; border: 1px dashed var(--s3); }
 /* con fondo suave: la acción de cada paso del plan, que es lo primero que se lee en la fila */
@@ -3430,3 +3430,5 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 @keyframes nvt-velo { from { opacity: 0; } }
 @keyframes nvt-sube { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
 @media (prefers-reduced-motion: reduce) { .nvt, .nvt-velo { animation: none; } }
+/* (20 nov) peligro muy alto: el mismo rojo que alto, con el borde entero y un halo (sin relleno: un solo rojo relleno por pantalla) */
+.amenaza.muyalta[class] { --pl-b: rgba(238, 28, 60, 1); box-shadow: inset 0 0 0 1.5px var(--pl-b), 0 0 10px rgba(238, 28, 60, 0.35); }

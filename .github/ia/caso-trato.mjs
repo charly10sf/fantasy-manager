@@ -28,9 +28,17 @@ const r = await P.page.evaluate(async () => {
   // una respuesta buena, con las cifras del trato, no la toca la revisión de la app
   const buena = 'Sí, si lo quieres para el once. Primero te compra él a Fornals por 58,95 M y te entra al momento: tienes 117,05 M, le pagas 60 M por Huijsen y acabas con 57,05 M. Pagas 2,58 M sobre su valor, por debajo de los ~63,07 M que es lo normal entre managers, y Huijsen llega con 14 días de cláusula cerrada.';
   let rev = null; try { rev = I.revisarChat(buena, q1, D, M, { rec: [], hist: [{ r: 'yo', t: q1 }] }); } catch (e) { rev = { notas: [String(e)] }; }
+  // (21 nov) ofrecerle a un rival por uno suyo que sube menos de lo que pediría: la revisión lo corrige; lo que pediría, no
+  const sube = Object.values(D.maestro).find((j) => M.dueno[j.id] && M.dueno[j.id] !== D.yo.teamId && j.pos !== 5 && (M.ofertaDuenoDe(j) || {}).sube);
+  let bajo = null, justo = null;
+  if (sube) {
+    const od = M.ofertaDuenoDe(sube), q = `¿Cuánto le ofrezco a su dueño por ${sube.nombre}?`, m = (x) => `${String(Math.round(x / 1e4) / 100).replace('.', ',')} M`;
+    bajo = { j: sube.nombre, od: od.v, notas: I.revisarChat(`Ofrécele ${m(od.v * 0.85)} por ${sube.nombre} y a ver si cuela.`, q, D, M, { rec: [], hist: [{ r: 'yo', t: q }] }).notas };
+    justo = { notas: I.revisarChat(`Ofrécele ${m(od.v * 1.02)} por ${sube.nombre}: es lo que pediría su dueño.`, q, D, M, { rec: [], hist: [{ r: 'yo', t: q }] }).notas };
+  }
   const lim = (T) => T && { orden: T.orden, saldoFin: T.saldoFin, dValor: T.dValor, normal: T.normal, barato: T.barato, veredicto: T.veredicto, si: T.si, via: T.via && { fuera: T.via.fuera, vale: T.via.vale, meLlega: T.via.meLlega } };
   return { sp1, sp2, sp4, sp5, T1: lim(T1), T3: lim(T3), T5: lim(T5), bloque1: (d1.match(/\nLA APP, EL TRATO[^]*?VEREDICTO DE LA APP[^\n]*/) || [''])[0], bloque3: (d3.match(/\nLA APP, EL TRATO[^]*?VEREDICTO DE LA APP[^\n]*/) || [''])[0],
-    cambioValores: /CAMBIO DE FORNALS POR HUIJSEN/.test(d1), sinTrato: !/LA APP, EL TRATO/.test(dNo), sis: C.sistemaChat({}).length, rev: rev.notas };
+    cambioValores: /CAMBIO DE FORNALS POR HUIJSEN/.test(d1), sinTrato: !/LA APP, EL TRATO/.test(dNo), sis: C.sistemaChat({}).length, rev: rev.notas, bajo, justo };
 });
 await P.cerrar(); await cerrar();
 const M_ = (x) => Math.round(x / 1e4) / 100;
@@ -50,5 +58,7 @@ ok(!r.cambioValores, 'sin las cuentas «a sus valores» del mismo cambio');
 ok(r.sinTrato, 'sin trato en la pregunta, no va el bloque');
 ok(r.sis < 16500, `las instrucciones del chat siguen por debajo de 16.500 caracteres (${r.sis})`);
 ok(!r.rev.length, `la revisión de la app no corrige una respuesta buena del trato${r.rev.length ? `: ${JSON.stringify(r.rev)}` : ''}`);
+ok(r.bajo && r.bajo.notas.some((n) => /sube: por menos de unos/.test(n)), `ofrecer por ${r.bajo && r.bajo.j}, que sube, un 15 % menos de lo que pediría su dueño (${r.bajo && M_(r.bajo.od)} M): la revisión lo dice${r.bajo ? ` (${JSON.stringify(r.bajo.notas)})` : ' (no hay ninguno que suba)'}`);
+ok(r.justo && !r.justo.notas.some((n) => /sube: por menos de unos/.test(n)), 'y ofreciendo lo que pediría, no');
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

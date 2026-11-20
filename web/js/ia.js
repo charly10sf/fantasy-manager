@@ -602,9 +602,12 @@ function inerciaTxt(M, j) {
   const pz = M.partidazo ? M.partidazo(j.id) : null;
   const QUE = pz ? ['', 'un buen partido', 'un partido muy bueno', 'un partidazo'][pz.nivel] : '';
   const EFECTO = pz ? ['', 'puede suavizar la bajada', 'lo normal es que la bajada se frene', 'lo normal es que suba los próximos días'][pz.nivel] : '';
-  const ojo = !pz ? '' : x && ['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; OJO: ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO}; tenlo en cuenta antes de decir que siga bajando, que lo venda o que no lo fiches o clausules por la bajada` : `; ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): lo normal es que siga subiendo`;
-  if (!x || x.fase === 'plano') return pz ? `ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO.replace('la bajada', 'su valor')}` : null;
-  return inerciaLinea(M, j, x) + ojo;
+  // (21 nov, medido con la liga de Carlos) el partido que acaba de jugar ya va en lo que espera la app: se dice con sus cifras
+  const pa = x && x.partido;
+  const part = !pa ? '' : bloqueada('inercia') ? `; ACABA DE HACER ${pa.pts} PTS (J${pa.n}): ${pa.e3 > 0 ? 'lo normal es que su valor suba más de lo que venía' : 'lo normal es que su valor vaya peor de lo que venía'}` : pa ? `; ${pa.etapa === 0 ? 'SU PARTIDO DE HOY YA HA ACABADO' : 'JUGÓ AYER'}: ${pa.pts} PTS (J${pa.n}). Tras un partido así, a los de su precio que venían ${pa.como === 'sube' ? 'subiendo' : pa.como === 'baja' ? 'bajando' : 'planos'} su valor les va de media ${pct(pa.e3 * 100, 1)} en ${pa.etapa === 0 ? 3 : 2} días y ${pct(pa.e7 * 100, 1)} en ${pa.etapa === 0 ? 7 : 6} respecto a lo que marcaba su inercia${pa.e3 < 0 && ['sube', 'acelera', 'frena'].includes(x.fase) ? ' (se le frena la subida, no se da la vuelta)' : ''}: la app ya lo cuenta y espera ${eur(x.proy(7), { signo: true })} en 7 días. Usa esto, no lo rehagas` : '';
+  const ojo = !pz || pa ? '' : x && ['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; OJO: ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO}; tenlo en cuenta antes de decir que siga bajando, que lo venda o que no lo fiches o clausules por la bajada` : `; ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): lo normal es que siga subiendo`;
+  if (!x || x.fase === 'plano') return pa ? `INERCIA plana${part}` : pz ? `ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO.replace('la bajada', 'su valor')}` : null;
+  return inerciaLinea(M, j, x) + part + ojo;
 }
 function inerciaLinea(M, j, x) {
   const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo', rebote: `REBOTE PEQUEÑO TRAS CAER UN ${x.rebote ? Math.round(x.rebote.caida * 100) : '?'} % EN UN MES (cerca de su mínimo; pararse aquí NO es girar ni motivo para vender)` }[x.fase] || x.fase;
@@ -1113,7 +1116,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     }
   }
   L.push(`\nRIVALES (pos | equipo | manager | puntos | valor | lo que han subido de valor sus jugadores en 7d (sin contar fichajes ni ventas) | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro (y por qué) | su dinero | lo que suele pagar en el mercado | mis cláusulas que le llegan)${M.dineroExacto ? '' : `. Su dinero, si no es exacto, sale de todos vuestros movimientos desde el principio de la liga (empezasteis con lo mismo); el margen (±) es por la recompensa diaria, que no sale en los movimientos ni en ningún otro sitio: la app no puede saber cuánto ha cogido cada uno. Si le das a alguien el dinero de un rival con su ±, di también que el ± es por eso${M.calDinero && !bloqueada('dineroRivales') ? `. En todas las ligas, con ${M.calDinero.n} casos apuntados por la gente, esta cuenta suele fallar ± ${eur(M.calDinero.margen)}: ya va corregida, pero no te fíes de diferencias más pequeñas que eso` : M.calDinero ? '. Esta cuenta va corregida con lo que apunta la gente en todas las ligas, pero sigue siendo una estimación' : ''}`}:`);
-  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel} (${motivoPeligro(r, { quien: !bloqueada('quienPaga') }).replace(/\.$/, '')}) | ${dineroDe(r.dinero, r.e.valor)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
+  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${({ muyalta: 'muy alto', alta: 'alto', media: 'medio', baja: 'bajo' })[r.nivel] || r.nivel} (${motivoPeligro(r, { quien: !bloqueada('quienPaga') }).replace(/\.$/, '')}) | ${dineroDe(r.dinero, r.e.valor)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
   // cómo juega cada uno, con todo el historial (función top «perfilRival»: si está cerrada, la usa sin contarla)
   if (M.perfil) {
     const yoT = D.yo && D.yo.teamId;
@@ -3186,6 +3189,23 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     nota(of && of.v ? `A su valor no lo vende ningún dueño, porque LaLiga le da más: lo normal entre managers es pagar por ${N(rival)} hasta unos ${eur(of.v)}, y por debajo de eso es buen precio.` : 'A su valor no lo vende ningún dueño, porque LaLiga le da más: pagar algo por encima entre managers es lo normal.');
   }
 
+  /* 3c. (20 nov, Carlos con Revivo: «por solo un millón más evidentemente no me lo va a aceptar») ofrecerle a un rival por
+     uno suyo que sube menos de lo que pediría su dueño (ofertaDueno): se dice cuánto */
+  // (si el precio lo ha puesto el rival en la pregunta, ya lo acepta: eso lo cuenta la calculadora de tratos)
+  const precioEnPregunta = new RegExp(NUM_M, 'i').test(pregunta || '');
+  // (sin partir «J. David» por el punto de la inicial)
+  const frasesO = precioEnPregunta ? [] : t.split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ])[.!?;]\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+  for (const fr of frasesO) {
+    const k = norm(fr);
+    if (!/\b(ofrec\w*|ofert\w*|propon\w*|pagale|pagarle|dale|darle)\b/.test(k) || /\b(clausul\w*|laliga|liga te)\b/.test(k)) continue;
+    const js = enFrase(fr).filter((j) => !mia(j.id) && M.dueno && M.dueno[j.id] && M.dueno[j.id] !== (D.yo && D.yo.teamId));
+    if (js.length !== 1) continue;
+    const od = ofertaDueno(M, js[0], M.tend ? M.tend(js[0].id) || {} : {});
+    if (!od || !od.sube) continue;
+    const cifras = [...fr.matchAll(new RegExp(NUM_M, 'gi'))].map((m) => aEuros(m[1], m[2])).filter((x) => Number.isFinite(x) && x > js[0].valor * 0.5);
+    if (cifras.length && Math.max(...cifras) < od.v * 0.98) nota(`${N(js[0])} sube: por menos de unos ${eur(od.v)} su dueño no lo va a soltar (lo que ganaría quedándoselo esta semana${od.conPuntos ? ' y sus puntos de la jornada' : ''}).`);
+  }
+
   /* 4. lo que no puede decir */
   const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
@@ -3509,6 +3529,25 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
 
+/* (20 nov, Carlos: «lo de Huijsen está desfasado: se lo compré ayer a Domy») la conversación guardada iba entera a la IA,
+   aunque fuera de antes del último cambio de mercado: lo que se habló ayer de clausular a Huijsen (de Domy entonces)
+   seguía pesando hoy, con Huijsen ya tuyo. Ahora solo lo de después del último cambio de mercado (12 h como mucho), y
+   lo de la IA de hace más de 10 minutos, marcado con cuándo se dijo */
+export function histVigente(hist, M, ahora = Date.now()) {
+  const sig = M && M.cierreMercado;
+  const ultCambio = sig && sig > ahora ? sig - DIA : sig && sig <= ahora ? sig : 0;
+  const corte = Math.max(ahora - 12 * HORA, ultCambio || 0);
+  const out = [];
+  for (const m of hist || []) {
+    // (los que no llevan hora se quedan: todos los de la app la llevan desde que existe el chat)
+    if (!m || (m.ts && m.ts < corte)) continue;
+    // (Carlos: «la IA debe estar actualizada al momento») lo que contestó hace más de 10 minutos va marcado: manda lo de ahora
+    const min = m.ts ? (ahora - m.ts) / 60000 : 0;
+    const hace = min >= 90 ? `${Math.round(min / 60)} h` : `${Math.round(min)} min`;
+    out.push(min >= 10 && m.r === 'ia' ? { ...m, t: `[dicho hace ${hace}: puede estar desfasado; si los datos de ahora dicen otra cosa, mandan los de ahora] ${m.t || ''}` } : m);
+  }
+  return out;
+}
 /** con la IA de la app: la conversación de antes (sin la pregunta de ahora), con alias y sin fotos */
 function histParaApp(hist, seudo) {
   const tap = (t, aprox) => (seudo && seudo.n ? seudo.tapar(t, { aprox }) : t);
@@ -3525,7 +3564,7 @@ export function pedidoChat(pregunta, D, M, c, hist, fotos, { extra = false, rid 
   const fs = (fotos || []).map((f) => f && f.b64).filter((b) => typeof b === 'string' && b.length < 880000).slice(0, 3);
   const o = opcionesChat();
   const cuerpo = {
-    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? (({ t, nota }) => `${t.slice(0, 3000 - nota.length)}${nota}`)(seudo.taparPregunta(pregunta || '')) : (pregunta || ''), hist: histParaApp(hist, seudo), fotos: fs,
+    datos: seudo.n ? seudo.tapar(datos) : datos, pregunta: seudo.n ? (({ t, nota }) => `${t.slice(0, 3000 - nota.length)}${nota}`)(seudo.taparPregunta(pregunta || '')) : (pregunta || ''), hist: histParaApp([...histVigente(hist.slice(0, -1), M), ...hist.slice(-1)], seudo), fotos: fs,
     conFotos: hist.some((m) => m.fotos && m.fotos.length), ...o, alias: seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null, extra: !!extra, rid,
   };
   return cuerpo;
@@ -3539,7 +3578,7 @@ async function charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extr
 
 /** con tu clave de Google (la reserva, o si la app no tiene la IA de las preguntas encendida) */
 async function charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso) {
-  const contents = await contenidosChat(hist, nuevas);
+  const contents = await contenidosChat([...histVigente(hist.slice(0, -1), M), ...hist.slice(-1)], nuevas);
   const web = cfgIA().web, conFotos = !!(fotos && fotos.length) || hist.some((m) => m.fotos);
   const seudo = seudonimos(D);
   const alias = seudo.n ? { puesto: !!seudo.porPuesto, ex: !!seudo.ex } : null;

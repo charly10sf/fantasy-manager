@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8j';
+export const VERSION = '0.8k';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -24,13 +24,25 @@ export const VERSION = '0.8j';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (21 nov, Carlos: «mejorar toda la IA con todos los datos que tienes») el motor medido con su liga día a día
+    // (claude/medida-ia-2026-11-20.md): la inercia con el ritmo medido y sin vender al que se frena, el partido que acaba de
+    // jugar (y el aviso en directo de clausular tras un partidazo, idea suya del 20 nov a las 23:33) y la puja de los top.
+    // `menor` y sin `todos`: a los demás no les sale (Carlos). La hora, al publicar
+    v: '0.8k', f: '2026-11-21', h: '00:00', t: 'Lo que espera la app de cada jugador, comprobado con lo que pasó',
+    cosas: [
+      { tipo: 'mejora', menor: true, d: 'grafica', t: 'Lo que espera la app de cada jugador, comprobado con lo que pasó', x: 'Lo que la app espera que suba o baje cada jugador se ha comprobado día a día con lo que pasó de verdad estas semanas, y se ha corregido: a los que suben se les esperaba bastante menos de lo que subían, y los que suben cada vez menos casi nunca bajan enseguida. Ya no te manda vender a uno solo porque se frena: espera a que gire de verdad.' },
+      { tipo: 'nuevo', menor: true, d: 'rayo', t: 'El partido que acaba de jugar cuenta', x: 'Cuando un jugador acaba su partido, la app tiene en cuenta los puntos que ha hecho para lo que espera de su valor los días siguientes: tras un partidazo suele subir bastante más de lo que venía, y tras uno malo se le frena la subida. Si uno de un rival acaba de hacer muchos puntos, su cláusula está abierta y te llega, te avisa para que lo clausules antes de que suba.' },
+      { tipo: 'mejora', menor: true, d: 'oferta', t: 'La puja por los más caros del mercado', x: 'La puja que te propone la app por los jugadores más caros se quedaba corta y ganaba 4 de cada 10 veces. Ahora gana tanto como la de los demás.' },
+    ],
+  },
+  {
     // (20 nov, Carlos: «todos los rivales me pone peligro bajo») El peligro de cada rival sale de lo que puede hacerte
     // (su dinero frente a tus cláusulas que se pagan en tu liga, abiertas o a punto, y lo que te duele perderlas) y de lo
     // que suele hacer (sus clausulazos de toda la temporada, los hechos a ti el doble), con el porqué en la ficha. `menor`
     // y sin `todos`: a los demás no les sale (Carlos). Detalle en ESTADO.md. La hora, al publicar
-    v: '0.8j', f: '2026-11-20', h: '14:18', t: 'El peligro de cada rival, con su porqué',
+    v: '0.8j', f: '2026-11-20', h: '19:56', t: 'El peligro de cada rival, con su porqué',
     cosas: [
-      { tipo: 'mejora', menor: true, d: 'peligro', t: 'El peligro de cada rival, con su porqué', x: 'El peligro de un rival ya no depende solo de lo que ha movido esta semana. Cuenta si le llega el dinero para tus cláusulas que se pagan en tu liga (las abiertas y las que se abren pronto) y cuánto te dolería perder a esos jugadores, sus clausulazos de toda la temporada (los que te ha hecho a ti, el doble) y si te pelea el puesto. Una cláusula muy por encima de lo que se paga en tu liga no cuenta. En la ficha del rival sale el porqué en una línea, y en las 24 horas antes de la jornada, cuando nadie puede clausular, baja un escalón y te dice cómo queda al reabrirse.' },
+      { tipo: 'mejora', menor: true, d: 'peligro', t: 'El peligro de cada rival, con su porqué', x: 'El peligro de un rival ya no depende solo de lo que ha movido esta semana. Cuenta si le llega el dinero para tus cláusulas que se pagan en tu liga (las abiertas y las que se abren pronto), con lo que tiene o vendiendo a sus suplentes, y cuánto te dolería perder a esos jugadores, sus clausulazos de toda la temporada (los que te ha hecho a ti, el doble) y si te pelea el puesto. El que suele clausular pero no tiene dinero para ninguna tuya sale bajo. Una cláusula muy por encima de lo que se paga en tu liga no cuenta. En la ficha del rival sale el porqué en una línea; en las 24 horas antes de la jornada, cuando nadie puede clausular, te enseña el peligro de cuando se reabran.' },
       // (20 nov, el chat de Carlos y la queja de Fran: «la IA es pésima con ventas y tendencias») M.ventaMia (motor.js) y
       // ventasMiasTxt (ia.js): las cuentas de vender o quedarse a los suyos, con su veredicto, al chat. Detalle en ESTADO.md
       { tipo: 'mejora', menor: true, d: 'balanza', t: 'Pregunta: vender o quedártelo, con sus cuentas', x: 'Cuando preguntas si vender a alguno de los tuyos, la respuesta mira primero su tendencia: lo que sube o baja cada día y lo que puede cambiar en una semana. Separa lo que te daría LaLiga en el próximo cambio de mercado (con lo que sube o baja según la suerte) de su cláusula, que es lo que cobras si un rival te lo quita, y te dice cuánto pedirle a un rival para cobrarlo al momento. Si baja, venderlo antes de perder más; si sube y su cláusula está cerca de su valor, protegerlo para que nadie se lleve a precio de mercado lo que va a subir. Y dice lo mismo que el plan de Hoy y que lo que la app haría con las ofertas que ya tienes.' },
