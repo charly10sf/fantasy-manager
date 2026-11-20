@@ -1355,6 +1355,13 @@
    "jornada": 13,
    "id": "2123748614753144991",
    "t": "2026-11-20T12:01:42.158Z"
+  },
+  {
+   "clave": "novedades|2924:vuelve|2026-11-20",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2123749831428497415",
+   "t": "2026-11-20T12:06:32.276Z"
   }
  ],
  "estados": {
@@ -1860,7 +1867,7 @@
   "2920": "out_of_league",
   "2922": "ok",
   "2923": "ok",
-  "2924": "doubtful",
+  "2924": "ok",
   "2925": "out_of_league",
   "2926": "ok",
   "2929": "out_of_league",
@@ -2241,14 +2248,20 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2924",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795176375968
+  }
+ ],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/alvaro-cervera-responde-a-la-queja-de-pique-por-la-sancion-a-owono-la-accion-se-podria-haber-evitado-cadena-ser/": 1794917388000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-abren-operacion-retorno-betis_0_2008525895.html": 1794918051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/cervera-responde-pique-declaraciones-sancion-owono-accion-haber-evitado-20261117_3476732.html": 1794919499000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
-   "SPORT|136539151": 1794917080000,
    "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/": 1794921256000,
    "SPORT|136540647": 1794918504000,
    "MARCA|https://www.marca.com/futbol/real-sociedad/2026/11/17/sucic-entrena.html": 1794924372000,
@@ -2472,20 +2485,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136539151",
-    "medio": "SPORT",
-    "t": 1794917080000,
-    "id": "3265",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Fofana vuelve a entrenar con el grupo del Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21
-    ]
    },
    {
     "guid": "AS|https://as.com/futbol/primera/simeone-vuelve-al-frente-y-con-buenas-noticias-f202611-n/",
@@ -3727,8 +3726,8 @@
     "t": 0
    },
    "2924": {
-    "e": "doubtful",
-    "t": 1795002071700
+    "e": "ok",
+    "t": 1795176375968
    },
    "2929": {
     "e": "out_of_league",
@@ -4124,16 +4123,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 27,
-   "redactar": 12,
-   "revisar": 11,
+   "redactar": 13,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 233206,
-  "salida": 15635,
-  "cacheLee": 20321,
+  "entrada": 247244,
+  "salida": 15834,
+  "cacheLee": 23224,
   "cacheEscribe": 11612,
-  "dolares": 0.443867,
+  "dolares": 0.474223,
   "reservado": 0
  },
  "recientes": {
@@ -4293,10 +4292,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-19T11:06:36.785Z",
-    "texto": "✅ Ceballos ya no es duda y vuelve a estar disponible para el sábado.\n\nEl centrocampista del Betis llega en racha: 21 puntos en las tres últimas jornadas. Visita al Sevilla, que va 6º, en el Sánchez-Pizjuán a las 18:30, un partido de dificultad media. Con un 34 % de titularidad no tiene el puesto asegurado, así que ojo a los onces."
-   },
-   {
     "t": "2026-11-19T11:11:33.176Z",
     "texto": "✅ Lemar vuelve a estar disponible. Estaba en duda por una rotura fibrilar en el aductor que arrastraba desde el 1 de noviembre, y queda despejada.\n\nEl centrocampista suma 1,3 M en el último mes y ya vale 5,9 M. Su vuelta llega tras el parón, el lunes 23 de noviembre, con el Elche 🌴 visitando al Levante 🐸, que va 17º. Es un partido favorable para un medio, pero con un 42 % de titularidad todavía tiene que ganarse el sitio."
    },
@@ -4311,6 +4306,10 @@
    {
     "t": "2026-11-20T12:01:42.160Z",
     "texto": "✅ Olmo, Cubarsí y Kounde, los tres del Barça, están disponibles para la jornada 13 ante el Villarreal 🚢.\n\nOlmo lleva un gol y tres asistencias en la liga. Kounde tuvo su mejor jornada en la 8, con 18 puntos."
+   },
+   {
+    "t": "2026-11-20T12:06:32.278Z",
+    "texto": "✅ Zaid Romero vuelve a estar disponible: la duda queda despejada y el defensa del Getafe llega con un 70 % de titularidad, así que lo normal es verlo en el once.\n\nLo malo es el partido. El domingo a las 21:00 en el Coliseum recibe al Atlético, que va 3º y es de los que más marcan, algo que a un defensa le viene mal.\n\nOjo también a lo que vale: 14,8 M, tras perder 15,2 M en el último mes."
    }
   ],
   "resumen": [
@@ -8478,13 +8477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4407,
+   "ok": 4408,
    "fallos": 0,
-   "ejecuciones": 3654,
+   "ejecuciones": 3655,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:02:14.597Z"
+   "ultima": "2026-11-20T12:06:15.968Z"
   }
  },
  "ptsDirecto": {},
@@ -8501,15 +8500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:02:21.080Z"
+   "ultimaBien": "2026-11-20T12:06:34.078Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:02:21.080Z"
+   "ultimaBien": "2026-11-20T12:06:34.078Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:02:21.080Z"
+   "ultimaBien": "2026-11-20T12:06:34.078Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8517,11 +8516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:02:21.080Z"
+   "ultimaBien": "2026-11-20T12:06:34.078Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:02:21.080Z"
+   "ultimaBien": "2026-11-20T12:06:34.078Z"
   }
  },
  "avisos": [
