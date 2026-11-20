@@ -4186,8 +4186,7 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795178172833
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
   }
  },
  "ia": {
@@ -8548,13 +8547,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4414,
+   "ok": 4415,
    "fallos": 0,
-   "ejecuciones": 3661,
+   "ejecuciones": 3662,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:36:12.833Z"
+   "ultima": "2026-11-20T12:41:11.433Z"
   }
  },
  "ptsDirecto": {},
@@ -8571,15 +8570,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:36:24.698Z"
+   "ultimaBien": "2026-11-20T12:41:22.395Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:36:24.698Z"
+   "ultimaBien": "2026-11-20T12:41:22.395Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:36:24.698Z"
+   "ultimaBien": "2026-11-20T12:41:22.395Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8587,11 +8586,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:36:24.698Z"
+   "ultimaBien": "2026-11-20T12:41:22.395Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:36:24.698Z"
+   "ultimaBien": "2026-11-20T12:41:22.395Z"
   }
  },
  "avisos": [
