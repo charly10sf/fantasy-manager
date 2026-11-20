@@ -1456,7 +1456,7 @@
   "1890": "ok",
   "1930": "ok",
   "1938": "ok",
-  "1950": "doubtful",
+  "1950": "ok",
   "1959": "ok",
   "1976": "ok",
   "1989": "ok",
@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/kounde-supera-las-molestias-y-apunta-al-villarreal-cadena-ser/": 1794933877000,
@@ -8618,13 +8617,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4451,
+   "ok": 4452,
    "fallos": 0,
-   "ejecuciones": 3698,
+   "ejecuciones": 3699,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:41:12.105Z"
+   "ultima": "2026-11-20T15:46:14.388Z"
   }
  },
  "ptsDirecto": {},
@@ -8641,15 +8640,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:41:21.300Z"
+   "ultimaBien": "2026-11-20T15:46:27.805Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:41:21.300Z"
+   "ultimaBien": "2026-11-20T15:46:27.805Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:41:21.300Z"
+   "ultimaBien": "2026-11-20T15:46:27.805Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8657,11 +8656,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:41:21.300Z"
+   "ultimaBien": "2026-11-20T15:46:27.805Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:41:21.300Z"
+   "ultimaBien": "2026-11-20T15:46:27.805Z"
   }
  },
  "avisos": [
