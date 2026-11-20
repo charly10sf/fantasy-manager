@@ -1334,6 +1334,13 @@
     "clase": "mercado",
     "chollo": "2565"
    }
+  },
+  {
+   "clave": "caidas|13|3077",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2123722112540012640",
+   "t": "2026-11-20T10:16:23.547Z"
   }
  ],
  "estados": {
@@ -1984,7 +1991,7 @@
   "3074": "ok",
   "3075": "ok",
   "3076": "ok",
-  "3077": "ok",
+  "3077": "injured",
   "3078": "ok",
   "3079": "injured",
   "3080": "ok",
@@ -2220,10 +2227,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3077",
+   "que": "lesion",
+   "antes": "ok",
+   "t": 1795169770990
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html": 1794911315000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/17/kounde-supera-les-molesties-i-apunta-al-villarreal-sercat/": 1794911275000,
    "AS|https://as.com/futbol/primera/terzic-debe-hacer-equilibrismos-en-el-eje-central-f202611-n/": 1794911893000,
@@ -3835,8 +3848,8 @@
     "t": 0
    },
    "3077": {
-    "e": "ok",
-    "t": 0
+    "e": "injured",
+    "t": 1795169770990
    },
    "3079": {
     "e": "injured",
@@ -4137,16 +4150,16 @@
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 16,
-   "redactar": 4,
-   "revisar": 3,
+   "redactar": 5,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 97106,
-  "salida": 7654,
+  "entrada": 110322,
+  "salida": 7838,
   "cacheLee": 5806,
-  "cacheEscribe": 2903,
-  "dolares": 0.161382,
+  "cacheEscribe": 5806,
+  "dolares": 0.196912,
   "reservado": 0
  },
  "recientes": {
@@ -4338,10 +4351,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-09T06:06:45.205Z",
-    "texto": "⁉️ El Elche 🌴 visita al Levante 🐸 en el Ciutat de València con dos medios tocados.\n\nLemar es baja: rotura fibrilar en el aductor desde el 1 de noviembre y no se le espera hasta finales de mes. Con 5,5 de media, es el que más duele.\n\nVillar es duda y tiene un 46 % de titularidad en Fantasy Manager, así que puede quedarse fuera. Si lo tienes, mejor esperar a ver la convocatoria."
-   },
-   {
     "t": "2026-11-09T06:06:47.113Z",
     "texto": "⁉️ El Málaga 🐟 viaja a El Sadar con una duda en defensa: Puga, que ha jugado 60 minutos o más en tres de sus cinco últimos partidos.\n\nCon un 39 % de titularidad en Fantasy Manager, tiene el puesto en el aire para visitar al Osasuna 🐂. Su media de 2,3 tampoco da para hacer ruido, así que la duda pesa poco."
    },
@@ -4356,6 +4365,10 @@
    {
     "t": "2026-11-19T15:56:31.382Z",
     "texto": "⁉️ Akhomach llega con pocas opciones al Barça-Villarreal del domingo a las 14:00: tiene un 27 % de titularidad y lo tiene difícil para salir de inicio.\n\nEl delantero del Villarreal 🚢 venía de jugar 60 minutos o más en sus cinco últimos partidos, así que esta duda pesa. Si lo tienes, mejor buscar otra opción para la visita al Barça."
+   },
+   {
+    "t": "2026-11-20T10:16:23.550Z",
+    "texto": "❌ Edu Expósito está lesionado desde el 18 de noviembre por unas molestias que aún no se han determinado, y el Espanyol juega hoy a las 21:00 en San Mamés ante el Athletic 🦁.\n\nEra fijo en el centro del campo, con 60 minutos o más en sus cinco últimos partidos, y es el 9º centrocampista con más puntos de la temporada. Si lo tienes, hoy no cuentes con él."
    }
   ],
   "balance": [
@@ -8485,13 +8498,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4384,
+   "ok": 4385,
    "fallos": 0,
-   "ejecuciones": 3631,
+   "ejecuciones": 3632,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:11:18.109Z"
+   "ultima": "2026-11-20T10:16:10.990Z"
   }
  },
  "ptsDirecto": {},
@@ -8508,15 +8521,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:11:30.385Z"
+   "ultimaBien": "2026-11-20T10:16:27.207Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:11:30.385Z"
+   "ultimaBien": "2026-11-20T10:16:27.207Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:11:30.385Z"
+   "ultimaBien": "2026-11-20T10:16:27.207Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8524,11 +8537,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:11:30.385Z"
+   "ultimaBien": "2026-11-20T10:16:27.207Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:11:30.385Z"
+   "ultimaBien": "2026-11-20T10:16:27.207Z"
   }
  },
  "avisos": [
