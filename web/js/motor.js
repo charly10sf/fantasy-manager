@@ -2731,7 +2731,9 @@ export function ofertaDueno(M, j, t = {}, ahora = Date.now()) {
   // quedándoselo una semana; y si la jornada empieza en menos de dos días y lo tiene para puntuar, por los puntos que
   // perdería (cada uno, 100 mil)
   if (sube) {
-    const p7 = subiendo ? Math.max(0, ine.proy(7)) : t.p7 != null && t.p7 > 0 ? (j.valor * t.p7) / 100 : 0;
+    // (lo que se espera que suba, o tres cuartos de lo que subió la última semana: su dueño mira lo que ha subido)
+    const visto = t.p7 != null && t.p7 > 0 ? (0.75 * j.valor * t.p7) / 100 : 0;
+    const p7 = Math.max(subiendo ? Math.max(0, ine.proy(7)) : 0, visto);
     v = Math.max(v, (j.valor + p7) * 1.03);
   }
   const pp = M.proxima && M.proxima.ini - ahora < 2 * DIA && M.ppEsperado ? num(M.ppEsperado(j)) : 0;
