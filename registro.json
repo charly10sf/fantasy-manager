@@ -2244,7 +2244,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
@@ -2444,7 +2443,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000,
-   "SPORT|136657501": 1795169223000
+   "SPORT|136657501": 1795169223000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000
   },
   "hechos": [
    {
@@ -3218,11 +3218,23 @@
     "nums": [
      24
     ]
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/",
+    "medio": "Cadena SER",
+    "t": 1795173216000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang sin lesión grave, viaje a Vitoria por decidir",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4117,17 +4129,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 5,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 120916,
-  "salida": 10251,
+  "entrada": 122824,
+  "salida": 11083,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.199179,
+  "dolares": 0.199786,
   "reservado": 0
  },
  "recientes": {
@@ -8466,13 +8478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4398,
+   "ok": 4399,
    "fallos": 0,
-   "ejecuciones": 3645,
+   "ejecuciones": 3646,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T11:21:12.809Z"
+   "ultima": "2026-11-20T11:26:10.914Z"
   }
  },
  "ptsDirecto": {},
@@ -8489,15 +8501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:21:20.615Z"
+   "ultimaBien": "2026-11-20T11:26:24.354Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:21:20.615Z"
+   "ultimaBien": "2026-11-20T11:26:24.354Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:21:20.615Z"
+   "ultimaBien": "2026-11-20T11:26:24.354Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8505,11 +8517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:21:20.615Z"
+   "ultimaBien": "2026-11-20T11:26:24.354Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T11:21:20.615Z"
+   "ultimaBien": "2026-11-20T11:26:24.354Z"
   }
  },
  "avisos": [
