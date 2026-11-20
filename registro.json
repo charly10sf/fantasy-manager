@@ -2273,7 +2273,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/kounde-supera-las-molestias-y-apunta-al-villarreal-cadena-ser/": 1794933877000,
    "SPORT|136549807": 1794930837000,
    "Diario Sur|https://www.diariosur.es/malagacf/osasuna-sigue-acumulando-lesionados-problemas-bretones-20261117173106-nt.html": 1794933066000,
@@ -8617,13 +8616,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4452,
+   "ok": 4453,
    "fallos": 0,
-   "ejecuciones": 3699,
+   "ejecuciones": 3700,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T15:46:14.388Z"
+   "ultima": "2026-11-20T15:51:13.632Z"
   }
  },
  "ptsDirecto": {},
@@ -8640,15 +8639,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:46:27.805Z"
+   "ultimaBien": "2026-11-20T15:51:23.392Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:46:27.805Z"
+   "ultimaBien": "2026-11-20T15:51:23.392Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:46:27.805Z"
+   "ultimaBien": "2026-11-20T15:51:23.392Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8656,11 +8655,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:46:27.805Z"
+   "ultimaBien": "2026-11-20T15:51:23.392Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T15:46:27.805Z"
+   "ultimaBien": "2026-11-20T15:51:23.392Z"
   }
  },
  "avisos": [
