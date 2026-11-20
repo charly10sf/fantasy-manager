@@ -4209,32 +4209,31 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795176335000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 365505,
-  "salida": 22338,
+  "entrada": 367232,
+  "salida": 22477,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.729196,
+  "dolares": 0.729438,
   "reservado": 0
  },
  "recientes": {
@@ -8579,13 +8578,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4417,
+   "ok": 4418,
    "fallos": 0,
-   "ejecuciones": 3664,
+   "ejecuciones": 3665,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:51:11.312Z"
+   "ultima": "2026-11-20T12:56:10.831Z"
   }
  },
  "ptsDirecto": {},
@@ -8602,15 +8601,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:51:23.088Z"
+   "ultimaBien": "2026-11-20T12:56:21.237Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:51:23.088Z"
+   "ultimaBien": "2026-11-20T12:56:21.237Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:51:23.088Z"
+   "ultimaBien": "2026-11-20T12:56:21.237Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8618,11 +8617,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:51:23.088Z"
+   "ultimaBien": "2026-11-20T12:56:21.237Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:51:23.088Z"
+   "ultimaBien": "2026-11-20T12:56:21.237Z"
   }
  },
  "avisos": [
