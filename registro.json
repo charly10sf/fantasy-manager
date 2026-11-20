@@ -1390,6 +1390,21 @@
    "jornada": 13,
    "id": "2123854362619568461",
    "t": "2026-11-20T19:01:54.375Z"
+  },
+  {
+   "clave": "directo|129|Roberto Fernández|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2123891970980401632",
+   "t": "2026-11-20T21:31:21.008Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "129",
+    "equipo": "88",
+    "min": 66,
+    "extra": 0,
+    "jugador": "Roberto Fernández"
+   }
   }
  ],
  "estados": {
@@ -4215,22 +4230,24 @@
    "n": 9,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136684390": 1795210272336
+  }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
    "clasificar": 64,
-   "redactar": 24,
+   "redactar": 26,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 479871,
-  "salida": 35869,
+  "entrada": 504686,
+  "salida": 36112,
   "cacheLee": 34836,
   "cacheEscribe": 20321,
-  "dolares": 0.850978,
+  "dolares": 0.903038,
   "reservado": 0
  },
  "recientes": {
@@ -4368,10 +4385,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T19:11:18.542Z",
-    "texto": "⚽ Buchanan la empalma de volea en el 80' y el Villarreal 🚢 rompe el 0-0 en La Cerámica: 1-0 al Getafe.\n\nEl canadiense ya suma 6 puntos, más del doble de su media. Es su primer gol en Liga, Champions o Copa. El pase es de Pepe, que se lleva 4."
-   },
-   {
     "t": "2026-11-08T19:21:20.685Z",
     "texto": "⚽ Romero hace el 2-0 en el 90+1' y el Villarreal 🚢 cierra el partido en La Cerámica contra el Getafe.\n\nEl defensa se va a 8 puntos con su primer gol en Liga, Champions o Copa del Rey. El pase es de Ayoze, que se lleva 4."
    },
@@ -4386,6 +4399,10 @@
    {
     "t": "2026-11-08T21:31:14.791Z",
     "texto": "⚽⚽ Doblete de Fermín en el 66'. Atlético 1-2 Barça: el Barça le da la vuelta. Asistencia de Lamine Yamal, con 5 puntos fantasy. Fermín ya suma 11 puntos."
+   },
+   {
+    "t": "2026-11-20T21:31:21.010Z",
+    "texto": "⚽ Roberto la mete de pícaro dentro del área y el Espanyol se adelanta en San Mamés: 0-1 al Athletic 🦁 en el 66'.\n\nYa suma 5 puntos y corta una racha floja de tres jornadas. El pase es de Dolan, que de momento se lleva 4."
    }
   ],
   "novedades": [
@@ -8578,20 +8595,49 @@
    "f": "2026-11-20T21:26:12.123Z",
    "rf": "66:09",
    "avisado": true
+  },
+  "fm|129|1252373|66": {
+   "j": "Roberto Fernández",
+   "m": "66'",
+   "f": "2026-11-20T21:31:12.336Z",
+   "rf": "71:09",
+   "casado": true
+  },
+  "directo|129|Roberto Fernández|gol1": {
+   "j": "Roberto Fernández",
+   "m": "66'",
+   "e": "2026-11-20T21:31:12.336Z",
+   "re": "71'",
+   "w": "2026-11-20T21:25:48Z",
+   "f": "2026-11-20T21:31:12.336Z",
+   "rf": "71:09"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4539,
+   "ok": 4541,
    "fallos": 0,
-   "ejecuciones": 3768,
+   "ejecuciones": 3769,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T21:26:12.123Z"
+   "ultima": "2026-11-20T21:31:12.336Z"
   }
  },
- "ptsDirecto": {},
+ "ptsDirecto": {
+  "13|129|2520": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795210272336
+  },
+  "13|129|2623": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795210272336
+  }
+ },
  "golesAnulados": {
   "directo|119|Pablo Durán|gol1": "2026-11-08T18:06:11.103Z"
  },
@@ -8605,27 +8651,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:26:14.563Z"
+   "ultimaBien": "2026-11-20T21:31:25.352Z"
   }
  },
  "avisos": [
