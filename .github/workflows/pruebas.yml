@@ -59,6 +59,9 @@ jobs:
       # (20 nov) el peligro de cada rival: lo que puede hacerte y lo que suele hacer, con rivales forzados
       - name: Peligro de los rivales
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-peligro.mjs
+      # (20 nov) vender o quedárselo: las cuentas y el veredicto que le llegan al chat, con jugadores forzados
+      - name: Vender o quedárselo
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-ventas.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs

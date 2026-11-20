@@ -1327,6 +1327,68 @@ export function analizar(D, H, c, extra = {}) {
     return { tipo: null, nota: notaClausula, texto: '' };
   };
 
+  /* ---------- ¿lo vendo o me lo quedo? (Carlos y Fran, 20 nov) ----------
+     «Lo único que controlo es el dinero»: el valor cambia una vez al día y sigue una tendencia; los puntos nunca se saben.
+     Lo que hace perder es vender tarde uno que baja (o pagar por subirle la cláusula, como con Diomande) y dejar que un
+     rival se lleve a su valor uno que sube. A LaLiga se le vende en el siguiente cambio de mercado, con su ± y algo de
+     suerte; a un rival, al momento, y se le puede pedir más que a LaLiga cuando la cláusula se abre pronto y le llega
+     (se ahorra pelearla en el minuto en que se abre y lo estrena con 14 días protegido). Por encima de la cláusula, si se
+     la puede pagar, no paga nadie. La IA mezclaba la oferta de LaLiga con la cláusula y no miraba la tendencia: aquí van
+     las cuentas hechas y un veredicto, como con las ofertas. */
+  M.ventaMia = (x) => {
+    if (!x || !x.j || !x.j.valor || x.j.pos === 5) return null;
+    const v = x.j.valor, ine = x.inercia || M.inercia(x.pid), t = x.tend || M.tend(x.pid) || {};
+    const r10 = (y) => Math.round(y / 1e4) * 1e4;
+    const hoy = ine ? ine.ult : t.d1 != null ? t.d1 : null;
+    const p7 = ine ? ine.proy(7) : t.d7 != null ? t.d7 : null, p14 = ine ? ine.proy(14) : p7 != null ? p7 * 2 : null;
+    // LaLiga: lo que suele dar en esta liga (sin datos, ±10 % de su valor, lo que ha visto Carlos)
+    const OL = M.ofertaLigaDe(x.j) || {};
+    const liga = { v: OL.v || v, min: OL.min != null ? OL.min : r10(v * 0.9), max: OL.max != null ? OL.max : r10(v * 1.1), sinDatos: !!OL.sinDatos, cuando: M.cierreMercado || null };
+    const fase = ine ? ine.fase : null;
+    const baja = ['giro', 'baja'].includes(fase) || !!x.ventaInercia || (p7 != null && p7 < -Math.max(300000, v * 0.015));
+    const sube = !baja && ['sube', 'acelera', 'frena'].includes(fase) && p7 != null && p7 > Math.max(300000, v * 0.015);
+    // la cláusula: cuándo se puede pagar y si está cerca de su valor (o lo estará cuando se abra: si el valor la pasa,
+    // LaLiga la sube sola hasta el valor)
+    const abreEn = x.abierta ? 0 : Math.max(0, x.abreEn || 0);
+    const pronto = !!x.clausula && (x.abierta || abreEn < 3 * DIA);
+    const diasAbre = abreEn / DIA;
+    const valorAbre = v + (ine && diasAbre >= 1 ? ine.proy(diasAbre) : 0);
+    const cz = M.clausulazos && M.clausulazos.n >= 3 ? M.clausulazos : null, med = cz ? cz.med : 0.2;
+    const sobreAbre = x.clausula ? Math.max(x.clausula, valorAbre) / Math.max(1, valorAbre) - 1 : null;
+    const presa = sobreAbre != null && sobreAbre <= med;
+    const pg = x.pagan || (x.clausula ? M.quienPaga(x.clausula) : null);
+    const pagan = pg ? pg.seguro.map((y) => y.nombre) : [], quiza = pg ? pg.quiza.map((y) => y.nombre) : [];
+    const leLlega = pagan.length > 0 || quiza.length > 0;
+    // a un rival: como poco lo que daría LaLiga en una buena oferta (si no, mejor LaLiga); como mucho, la cláusula si se
+    // la puede pagar pronto, o su valor más lo que suba en los 14 días que lo estrena protegido
+    // a un rival: desde lo que daría LaLiga de normal (es lo mismo, pero al momento y sin suerte) hasta una oferta alta de
+    // LaLiga o, si sube, su valor más lo que suba en los 14 días que lo estrena protegido
+    const piso = Math.max(liga.v, v);
+    let techo = Math.max(liga.max, piso, sube && p14 > 0 ? v + p14 : 0);
+    // si un rival puede pagar la cláusula ya o en unos días, por encima de ella no paga: es su otra vía (y se le puede
+    // pedir hasta ella: se ahorra pelearla en el minuto en que se abre), sin pasar de lo que se paga aquí por un clausulazo
+    if (x.clausula && leLlega && (pronto || techo > x.clausula)) techo = Math.min(x.clausula, Math.max(techo, v * (1 + (cz ? cz.p90 : 0.3))));
+    const rival = { piso: r10(Math.min(piso, techo)), techo: r10(techo), corto: techo <= piso * 1.005 };
+    // lo que le aporta al once (puntos por jornada que pierde sin él)
+    const pts = M.perdida ? M.perdida(x.pid) : 0;
+    const espera = M.esperarVenta ? M.esperarVenta(x) : { tipo: null, texto: '' };
+    const veredicto = baja ? 'vender' : sube && pronto && presa && leLlega ? 'proteger' : sube ? 'quedar' : pts >= 1 ? 'quedar' : 'da-igual';
+    // protegerlo: el escudo si está abierta y quedan (gratis); subir la cláusula solo si cuesta menos de lo que va a subir
+    let proteger = null;
+    if (veredicto === 'proteger') {
+      const ES = M.escudosMios || { quedan: 0 };
+      if (x.escudo) proteger = { como: 'ya' };
+      else if (ES.quedan && x.abierta) proteger = { como: 'escudo' };
+      else if (x.blindaje && !x.blindaje.yaVale && x.blindaje.coste > 0 && x.blindaje.coste <= Math.max(0, p14 || 0) / 2) proteger = { como: 'subir', objetivo: x.blindaje.objetivo, coste: x.blindaje.coste };
+      else if (ES.quedan && !x.abierta) proteger = { como: 'escudo-al-abrir' };
+      else proteger = { como: 'caro', coste: x.blindaje && x.blindaje.coste ? x.blindaje.coste : null };
+    }
+    // una oferta por encima de su cláusula: es más de lo que cobras si te lo clausulan. Solo no compensa si sube tanto
+    // que en 14 días valdrá más (y LaLiga le subirá la cláusula sola hasta su valor)
+    const aceptarDesde = x.clausula ? r10(Math.max(x.clausula, sube && p14 > 0 ? v + p14 : 0, piso)) : rival.piso;
+    return { pid: x.pid, j: x.j, v, hoy, p7, p14, fase, liga, clausula: x.clausula || null, abierta: !!x.abierta, abre: x.abierta ? null : x.protegidoHasta || null, veda: !!x.veda, sobre: x.ratio != null ? x.ratio - 1 : null, presa, pagan, quiza, sinSaber: !pg || !pg.hayDatos, rival, pts, veredicto, proteger, sube, baja, pronto, espera: espera && espera.tipo ? espera : null, aceptarDesde, blindaje: x.blindaje || null, escudo: !!x.escudo };
+  };
+
   /* ---------- los puntos esperados por partes, como puntúa LaLiga Fantasy ---------- */
   // minutos (2 si juega 60', 1 si menos), gol (6 portero y defensa, 5 medio, 4 delantero) con su xG, asistencia (3)
   // con su xA, portería a cero (4 portero, 3 defensa, 2 medio, 1 delantero, solo con 60' o más) con lo que marca el rival,
