@@ -2243,7 +2243,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004252052/paredes-sigue-entrenar-grupo-tres-dias-recibir-espanyol.html": 1794913259000,
-   "SPORT|136534901": 1794912353000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html": 1794916205000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261117/1004252079/sucic-reincorpora-grupo-zubieta-asi-quinteto-euskal-selekzioa.html": 1794916007000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-betis-entrenador-sevilla-fc-contra-verdiblancos_0_2008525864.html": 1794916363000,
@@ -2436,7 +2435,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000,
    "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
-   "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000
+   "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
+   "SPORT|136656499": 1795167406000
   },
   "hechos": [
    {
@@ -2486,20 +2486,6 @@
     "motivo": "pequeña lesión muscular",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136534901",
-    "medio": "SPORT",
-    "t": 1794912353000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos no entrena por molestias musculares",
-    "motivo": "molestias musculares",
-    "plazo": "",
-    "nums": [
-     21
-    ]
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/17/dani-ceballos-duda-derbi.html",
@@ -3231,11 +3217,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136656499",
+    "medio": "SPORT",
+    "t": 1795167406000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang tiene molestias en el tobillo y no entrena con el grupo",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": [
+     14,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4131,17 +4132,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 5,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 110322,
-  "salida": 7838,
+  "entrada": 112364,
+  "salida": 7969,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.196912,
+  "dolares": 0.197182,
   "reservado": 0
  },
  "recientes": {
@@ -8480,13 +8481,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4390,
+   "ok": 4391,
    "fallos": 0,
-   "ejecuciones": 3637,
+   "ejecuciones": 3638,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:41:14.148Z"
+   "ultima": "2026-11-20T10:46:10.719Z"
   }
  },
  "ptsDirecto": {},
@@ -8503,15 +8504,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:41:25.730Z"
+   "ultimaBien": "2026-11-20T10:46:21.641Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:41:25.730Z"
+   "ultimaBien": "2026-11-20T10:46:21.641Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:41:25.730Z"
+   "ultimaBien": "2026-11-20T10:46:21.641Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8519,11 +8520,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:41:25.730Z"
+   "ultimaBien": "2026-11-20T10:46:21.641Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:41:25.730Z"
+   "ultimaBien": "2026-11-20T10:46:21.641Z"
   }
  },
  "avisos": [
