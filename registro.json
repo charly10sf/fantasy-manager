@@ -2273,7 +2273,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lookman-sufre-esguince-rodilla-grado-alto-20261117_3477066.html": 1794944028000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/17/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-y-es-duda-para-llegar-al-barca-atletico-del-2-de-diciembre-cadena-ser/": 1794944314000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261117/1004252309/bright-ede-zakaria-eddahchouri-novedades-vuelta-trabajo-deportivo.html": 1794944997000,
@@ -8602,13 +8601,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4487,
+   "ok": 4488,
    "fallos": 0,
-   "ejecuciones": 3734,
+   "ejecuciones": 3735,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:41:21.074Z"
+   "ultima": "2026-11-20T18:46:12.566Z"
   }
  },
  "ptsDirecto": {},
@@ -8625,15 +8624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:41:28.750Z"
+   "ultimaBien": "2026-11-20T18:46:19.724Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:41:28.750Z"
+   "ultimaBien": "2026-11-20T18:46:19.724Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:41:28.750Z"
+   "ultimaBien": "2026-11-20T18:46:19.724Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8641,11 +8640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:41:28.750Z"
+   "ultimaBien": "2026-11-20T18:46:19.724Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:41:28.750Z"
+   "ultimaBien": "2026-11-20T18:46:19.724Z"
   }
  },
  "avisos": [
