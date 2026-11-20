@@ -3787,6 +3787,10 @@ function novInvRecordar() {
   const e = estadoInv(uid);
   if (!e) return 'espera';
   if ((e.entran || 0) > 0) return null;
+  // (lo guardado puede ser de hace días y haber entrado un amigo desde entonces: no se decide hasta tener el estado de ahora,
+  //  el que pide `invitarSiToca` al arrancar; si el servidor no contesta, no sale)
+  const ig = LS.get('invitar', null);
+  if (!ig || Date.now() - (Number(ig.t) || 0) > 20 * 60e3) return 'espera';
   if (!g.invT) { g.invT = Date.now(); LS.set('avisos-nov', g); return null; }
   if (Date.now() - g.invT < dias * 86400e3) return null;
   const n = NOVEDADES.find((x) => x.aviso && x.aviso.ir && x.aviso.ir.accion === 'invitarAmigo');

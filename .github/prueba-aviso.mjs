@@ -41,7 +41,7 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
     if (p === 'recarga-app') { await Promise.all([page.waitForNavigation({ timeout: 15000 }).catch(() => r.push('(no recargó)')), page.evaluate(() => window.webBuscada('nueva'))]); await lista(); }
     if (p === 'reabre') { await page.reload(); await lista(); }
     // lo que dice el servidor de sus amigos y cuándo cerró la tarjeta por última vez (para el recordatorio de invitar)
-    if (p && p.amigos != null) await page.evaluate(({ amigos, hace }) => { const uid = window.S.D.yo.userId; localStorage.setItem('fm-invitar', JSON.stringify({ uid: String(uid), t: Date.now(), est: { ok: true, on: true, entran: amigos, cuentan: 0, amigos: [] } })); const g = JSON.parse(localStorage.getItem('fm-avisos-nov') || '{"visto":[],"pend":null}'); if (hace == null) delete g.invT; else g.invT = Date.now() - hace * 86400e3; localStorage.setItem('fm-avisos-nov', JSON.stringify(g)); }, p);
+    if (p && p.amigos != null) await page.evaluate(({ amigos, hace, viejo }) => { const uid = window.S.D.yo.userId; localStorage.setItem('fm-invitar', JSON.stringify({ uid: String(uid), t: Date.now() - (viejo || 0) * 3600e3, est: { ok: true, on: true, entran: amigos, cuentan: 0, amigos: [] } })); const g = JSON.parse(localStorage.getItem('fm-avisos-nov') || '{"visto":[],"pend":null}'); if (hace == null) delete g.invT; else g.invT = Date.now() - hace * 86400e3; localStorage.setItem('fm-avisos-nov', JSON.stringify(g)); }, p);
     if (p === 'ahora-no') { if (!(await hay())) { r.push('(sin tarjeta que cerrar)'); continue; } await page.click('.nvt [data-nvt="no"]'); await page.waitForTimeout(400); }
     if (p === 'invitar') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } await page.click('.nvt [data-nvt="ir"]'); await page.waitForTimeout(900); r.push('hoja:' + await page.evaluate(() => (window.S.tipoHoja || [])[0] || (document.querySelector('.hoja') ? 'sí' : 'no'))); }
   }
@@ -64,6 +64,7 @@ await caso('recordatorio: sin amigos y cerrada hace 6 días, vuelve a salir; al 
 await caso('recordatorio: sin amigos y cerrada hace 2 días: nada', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: 2 }, 'reabre', 'mira'] });
 await caso('recordatorio: con un amigo dentro, nunca más', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 1, hace: 30 }, 'reabre', 'mira'] });
 await caso('recordatorio: la primera vez sin fecha no sale (empieza a contar ese día)', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: null }, 'reabre', 'mira'] });
+await caso('recordatorio: con el estado de hace dos días (puede haber entrado un amigo desde entonces), no sale hasta tener el de ahora', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: 9, viejo: 48 }, 'reabre', 'mira'] });
 await caso('recordatorio: su botón abre invitar y cuenta como recordado', 'nada → TARJETA → hoja:invitar → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: 9 }, 'reabre', 'mira', 'invitar', 'reabre', 'mira'] });
 await nav.close(); srv.close();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
