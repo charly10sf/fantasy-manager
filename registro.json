@@ -2269,14 +2269,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3152",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795178777974
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jose-angel-carmona-dice-adios-temporada-fractura-tibia-sevilla_0_2008526586.html": 1794920367000,
@@ -2487,7 +2480,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253372/sonia-bermudez-avisa-sobre-revolucionaria-convocatoria-no-puntual.html": 1795176363000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
    "SPORT|136657525": 1795174239000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000,
+   "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000
   },
   "hechos": [
    {
@@ -3303,11 +3298,35 @@
     "motivo": "lesión de tobillo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html",
+    "medio": "MARCA",
+    "t": 1795178565000,
+    "id": "2602",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Álvaro recibe el alta y viaja con el equipo a Madrid",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795178170000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos se pierde el derbi y no estará disponible",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -4199,24 +4218,23 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795178777974
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795177873183
   }
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 363503,
-  "salida": 21386,
+  "entrada": 365505,
+  "salida": 22338,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.72852,
+  "dolares": 0.729196,
   "reservado": 0
  },
  "recientes": {
@@ -8561,13 +8579,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4416,
+   "ok": 4417,
    "fallos": 0,
-   "ejecuciones": 3663,
+   "ejecuciones": 3664,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T12:46:17.974Z"
+   "ultima": "2026-11-20T12:51:11.312Z"
   }
  },
  "ptsDirecto": {},
@@ -8584,15 +8602,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:46:40.842Z"
+   "ultimaBien": "2026-11-20T12:51:23.088Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:46:40.842Z"
+   "ultimaBien": "2026-11-20T12:51:23.088Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:46:40.842Z"
+   "ultimaBien": "2026-11-20T12:51:23.088Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8600,11 +8618,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:46:40.842Z"
+   "ultimaBien": "2026-11-20T12:51:23.088Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T12:46:40.842Z"
+   "ultimaBien": "2026-11-20T12:51:23.088Z"
   }
  },
  "avisos": [
