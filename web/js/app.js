@@ -2648,6 +2648,19 @@ function preguntaJ(j) {
   if ((M.mercado || []).some((m) => String(m.pid) === String(j.id) && m.tipo === 'liga')) return `¿Qué hago con ${j.nombre}, que está libre en el mercado? Dime si pujar por él, cuánto como mucho y por qué.`;
   return `¿Qué hago con ${j.nombre}? Dime si me interesa, cómo conseguirlo, cuánto pagar como mucho y por qué.`;
 }
+/* (20 nov, Carlos: «la IA debe estar actualizada siempre: si le preguntas una cosa, debe estar actualizada al momento»)
+   antes de preguntar, la liga al día: si lo que hay tiene más de 2 minutos, se vuelve a pedir a LaLiga (o se espera a la
+   carga que ya va), como mucho 25 s; si LaLiga no contesta, se pregunta con lo que hay */
+async function ligaAlDiaParaPreguntar() {
+  if (!S.D || enDemo() || !haySesion()) return;
+  if (!S.cargando && Date.now() - S.D.t < 2 * MIN) return;
+  S.pasoChat = 'Poniendo tu liga al día…'; pintar();
+  const carga = S.cargando
+    ? new Promise((ok) => { const mira = () => (S.cargando ? setTimeout(mira, 300) : ok()); mira(); })
+    : cargar({ silencio: true }).catch(() => {});
+  await Promise.race([carga, new Promise((ok) => setTimeout(ok, 25000))]);
+  S.pasoChat = '';
+}
 async function enviarPregunta(texto, { extra = false } = {}) {
   const t = (texto || '').trim();
   if (S.charlando || S.preparandoFotos) return;
@@ -2664,6 +2677,7 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   const ctl = new AbortController();
   S.chatCtl = ctl;
   try {
+    await ligaAlDiaParaPreguntar();
     const r = await charlar(t, S.D, S.M, S.c, (parcial) => {
       S.parcial = parcial;
       const ahora = Date.now();

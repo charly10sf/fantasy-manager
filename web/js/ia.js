@@ -3512,7 +3512,7 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
 /* (20 nov, Carlos: «lo de Huijsen está desfasado: se lo compré ayer a Domy») la conversación guardada iba entera a la IA,
    aunque fuera de antes del último cambio de mercado: lo que se habló ayer de clausular a Huijsen (de Domy entonces)
    seguía pesando hoy, con Huijsen ya tuyo. Ahora solo lo de después del último cambio de mercado (12 h como mucho), y
-   lo de hace más de una hora, con cuándo se dijo */
+   lo de la IA de hace más de 10 minutos, marcado con cuándo se dijo */
 export function histVigente(hist, M, ahora = Date.now()) {
   const sig = M && M.cierreMercado;
   const ultCambio = sig && sig > ahora ? sig - DIA : sig && sig <= ahora ? sig : 0;
@@ -3521,8 +3521,10 @@ export function histVigente(hist, M, ahora = Date.now()) {
   for (const m of hist || []) {
     // (los que no llevan hora se quedan: todos los de la app la llevan desde que existe el chat)
     if (!m || (m.ts && m.ts < corte)) continue;
-    const h = m.ts ? (ahora - m.ts) / HORA : 0;
-    out.push(h >= 1 && m.r === 'ia' ? { ...m, t: `[dicho hace ${Math.round(h)} h: si los datos de ahora dicen otra cosa, mandan los de ahora] ${m.t || ''}` } : m);
+    // (Carlos: «la IA debe estar actualizada al momento») lo que contestó hace más de 10 minutos va marcado: manda lo de ahora
+    const min = m.ts ? (ahora - m.ts) / 60000 : 0;
+    const hace = min >= 90 ? `${Math.round(min / 60)} h` : `${Math.round(min)} min`;
+    out.push(min >= 10 && m.r === 'ia' ? { ...m, t: `[dicho hace ${hace}: puede estar desfasado; si los datos de ahora dicen otra cosa, mandan los de ahora] ${m.t || ''}` } : m);
   }
   return out;
 }
