@@ -2224,12 +2224,10 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252014/tchouameni-algodones.html": 1794909600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261117/1004252004/dani-olmo-mejor-jugador-lineas-mundo.html": 1794908254000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/grecia-cambio-portero-recibir-7-0-paises-bajos-elegido-vlachodimos-sevilla-fc_0_2008525079.html": 1794910432000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/17/paredes-entrena-hay-dudas-convocatoria-padilla.html": 1794911315000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/17/kounde-supera-les-molesties-i-apunta-al-villarreal-sercat/": 1794911275000,
    "AS|https://as.com/futbol/primera/terzic-debe-hacer-equilibrismos-en-el-eje-central-f202611-n/": 1794911893000,
-   "SPORT|136531054": 1794908320000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-lesionado-cuatro-dias-derbi-betis-sevilla_0_2008524681.html": 1794911808000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/video-entrenamiento-sevilla-fc-17-noviembre-2026_8_2008525335.html": 1794911542000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html": 1794912475000,
@@ -2447,20 +2445,6 @@
     "motivo": "secuelas de una lesión previa",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136531054",
-    "medio": "SPORT",
-    "t": 1794908320000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Dani Ceballos sufre molestias y duda para el derbi",
-    "motivo": "molestias de última hora",
-    "plazo": "",
-    "nums": [
-     100
-    ]
    },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/youssouf-fofana-vuelve-entrenar-sevilla-apunta-derbi_0_2008525369.html",
@@ -8504,13 +8488,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4377,
+   "ok": 4378,
    "fallos": 0,
-   "ejecuciones": 3624,
+   "ejecuciones": 3625,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T09:36:10.470Z"
+   "ultima": "2026-11-20T09:41:11.306Z"
   }
  },
  "ptsDirecto": {},
@@ -8527,15 +8511,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:36:21.109Z"
+   "ultimaBien": "2026-11-20T09:41:21.564Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:36:21.109Z"
+   "ultimaBien": "2026-11-20T09:41:21.564Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:36:21.109Z"
+   "ultimaBien": "2026-11-20T09:41:21.564Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8543,11 +8527,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:36:21.109Z"
+   "ultimaBien": "2026-11-20T09:41:21.564Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T09:36:21.109Z"
+   "ultimaBien": "2026-11-20T09:41:21.564Z"
   }
  },
  "avisos": [
