@@ -2237,7 +2237,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/17/ander-herrera-se-rinde-a-dani-olmo-y-le-califica-como-el-mejor-jugador-entre-lineas-del-mundo-cadena-ser/": 1794912765000,
    "AS|https://as.com/futbol/ceballos-enciende-las-alarmas-para-el-derbi-f202611-n/": 1794913294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261117/1004252069/fofana-disipa-dudas-derbi.html": 1794914958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252065/ceballos-seria-duda-derbi-riquelme-tampoco-entreno.html": 1794914625000,
@@ -8484,13 +8483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4392,
+   "ok": 4393,
    "fallos": 0,
-   "ejecuciones": 3639,
+   "ejecuciones": 3640,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T10:51:13.942Z"
+   "ultima": "2026-11-20T10:56:12.579Z"
   }
  },
  "ptsDirecto": {},
@@ -8507,15 +8506,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:51:28.026Z"
+   "ultimaBien": "2026-11-20T10:56:21.356Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:51:28.026Z"
+   "ultimaBien": "2026-11-20T10:56:21.356Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:51:28.026Z"
+   "ultimaBien": "2026-11-20T10:56:21.356Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8523,11 +8522,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:51:28.026Z"
+   "ultimaBien": "2026-11-20T10:56:21.356Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T10:51:28.026Z"
+   "ultimaBien": "2026-11-20T10:56:21.356Z"
   }
  },
  "avisos": [
