@@ -1383,6 +1383,13 @@
    "jornada": 13,
    "id": "2123759926636069344",
    "t": "2026-11-20T12:46:39.081Z"
+  },
+  {
+   "clave": "onces|129",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2123854362619568461",
+   "t": "2026-11-20T19:01:54.375Z"
   }
  ],
  "estados": {
@@ -2489,7 +2496,10 @@
    "SPORT|136678460": 1795193621000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000,
    "SPORT|136612587": 1795195383000,
-   "SPORT|136679253": 1795195203000
+   "SPORT|136679253": 1795195203000,
+   "AS|https://as.com/futbol/militao-no-quiere-esperar-f202611-n/": 1795196779000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253501/aaaa.html": 1795200837000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000
   },
   "hechos": [
    {
@@ -3328,11 +3338,23 @@
     "nums": [
      13
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795200383000,
+    "id": "3197",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Cuti Romero sufre una lesión que preocupa al Atlético",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 51
+   "n": 52
   },
   "desde": {
    "67": {
@@ -4215,40 +4237,35 @@
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
    "SPORT|136666090": 1795176736000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795199773334
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 58,
-   "redactar": 21,
-   "revisar": 17,
+   "clasificar": 60,
+   "redactar": 24,
+   "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 421671,
-  "salida": 33453,
-  "cacheLee": 31933,
-  "cacheEscribe": 17418,
-  "dolares": 0.740371,
+  "entrada": 471932,
+  "salida": 35339,
+  "cacheLee": 34836,
+  "cacheEscribe": 20321,
+  "dolares": 0.849919,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-08T12:16:30.959Z",
-    "texto": "👀 Cuatro atrás y tres delanteros para los dos: el Elche 🌴 y el Betis salen con un 4-3-3 en el Martínez Valero, y no hay sorpresas.\n\nEn las porterías juegan Dituro, por el Elche, y Valles, por el Betis, que lleva 9 de media y es de los que más puntos dan. Quien los tenga puede estar tranquilo."
-   },
    {
     "t": "2026-11-08T14:16:27.237Z",
     "texto": "👀 Tranquilidad en el Real Sociedad-Rayo: los dos onces vienen sin sorpresas, así que quien tenga jugadores de este partido puede dejarlo como estaba.\n\nCarlos Soler está de titular en la Real, con un 4-4-2, y Camello sale de inicio en el Rayo ⚡, que juega con un 4-3-3."
@@ -4264,6 +4281,10 @@
    {
     "t": "2026-11-08T19:01:52.272Z",
     "texto": "ℹ️ Ya hay onces confirmados del Atlético-Barça. Todo apunta a que no hay sorpresas y salen los onces que se esperaban, con 4-4-2 para el Atleti y 4-3-3 para el Barça. Empieza hoy a las 21:00."
+   },
+   {
+    "t": "2026-11-20T19:01:54.377Z",
+    "texto": "👀 Ni rotaciones ni sorpresas en el Athletic-Espanyol: los dos onces están confirmados y salen los que se esperaban.\n\nUnai Simón está bajo palos en el Athletic 🦁, que sale en un 4-2-3-1, y es el que más puntos da de su equipo. El Espanyol se planta con cinco atrás, en un 5-4-1, y Cabrera también es titular: nadie del Espanyol puntúa más que él.\n\nQuien tenga a alguno de los dos ya sabe que cuenta."
    }
   ],
   "final": [
@@ -8585,13 +8606,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4490,
+   "ok": 4491,
    "fallos": 0,
-   "ejecuciones": 3737,
+   "ejecuciones": 3738,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:56:13.329Z"
+   "ultima": "2026-11-20T19:01:24.479Z"
   }
  },
  "ptsDirecto": {},
@@ -8608,15 +8629,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:56:25.298Z"
+   "ultimaBien": "2026-11-20T19:01:59.535Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:56:25.298Z"
+   "ultimaBien": "2026-11-20T19:01:59.535Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:56:25.298Z"
+   "ultimaBien": "2026-11-20T19:01:59.535Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8624,11 +8645,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:56:25.298Z"
+   "ultimaBien": "2026-11-20T19:01:59.535Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:56:25.298Z"
+   "ultimaBien": "2026-11-20T19:01:59.535Z"
   }
  },
  "avisos": [
