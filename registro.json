@@ -2488,7 +2488,8 @@
    "SPORT|136676372": 1795193063000,
    "SPORT|136676656": 1795193226000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253441/barca-dia-espart-kounde-masia-can-planes.html": 1795196569000,
-   "SPORT|136678460": 1795193621000
+   "SPORT|136678460": 1795193621000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000
   },
   "hechos": [
    {
@@ -3332,7 +3333,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -4228,17 +4229,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 21,
    "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 417424,
-  "salida": 32739,
+  "entrada": 419363,
+  "salida": 33218,
   "cacheLee": 31933,
   "cacheEscribe": 17418,
-  "dolares": 0.73959,
+  "dolares": 0.740023,
   "reservado": 0
  },
  "recientes": {
@@ -8583,13 +8584,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4482,
+   "ok": 4483,
    "fallos": 0,
-   "ejecuciones": 3729,
+   "ejecuciones": 3730,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-20T18:16:14.213Z"
+   "ultima": "2026-11-20T18:21:11.915Z"
   }
  },
  "ptsDirecto": {},
@@ -8606,15 +8607,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:16:20.508Z"
+   "ultimaBien": "2026-11-20T18:21:23.731Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:16:20.508Z"
+   "ultimaBien": "2026-11-20T18:21:23.731Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:16:20.508Z"
+   "ultimaBien": "2026-11-20T18:21:23.731Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8622,11 +8623,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:16:20.508Z"
+   "ultimaBien": "2026-11-20T18:21:23.731Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T18:16:20.508Z"
+   "ultimaBien": "2026-11-20T18:21:23.731Z"
   }
  },
  "avisos": [
