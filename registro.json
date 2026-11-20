@@ -2223,8 +2223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251820/berenguer-recupera-galones-penaltis.html": 1794898800000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/17/dimitrievski-vuelve-valencia-goleado-136525422.html": 1794903957000,
    "SPORT|136526095": 1794901531000,
@@ -4132,32 +4130,31 @@
    "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000
+   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795156871193
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 73415,
-  "salida": 3112,
+  "entrada": 75183,
+  "salida": 3266,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.156742,
+  "dolares": 0.156996,
   "reservado": 0
  },
  "recientes": {
@@ -8496,13 +8493,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4345,
+   "ok": 4346,
    "fallos": 0,
-   "ejecuciones": 3592,
+   "ejecuciones": 3593,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T06:56:17.783Z"
+   "ultima": "2026-11-20T07:01:24.806Z"
   }
  },
  "ptsDirecto": {},
@@ -8519,15 +8516,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:56:33.284Z"
+   "ultimaBien": "2026-11-20T07:01:39.528Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:56:33.284Z"
+   "ultimaBien": "2026-11-20T07:01:39.528Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:56:33.284Z"
+   "ultimaBien": "2026-11-20T07:01:39.528Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8535,11 +8532,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:56:33.284Z"
+   "ultimaBien": "2026-11-20T07:01:39.528Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:56:33.284Z"
+   "ultimaBien": "2026-11-20T07:01:39.528Z"
   }
  },
  "avisos": [
