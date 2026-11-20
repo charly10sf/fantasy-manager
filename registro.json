@@ -2223,7 +2223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/": 1794898416000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251820/berenguer-recupera-galones-penaltis.html": 1794898800000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/17/gerard-pique-sancion-owono-culpabiliza-consecuencias-culpa/00031794898362563388832.htm": 1794898740000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html": 1794900600000,
@@ -2433,21 +2432,10 @@
    "SPORT|136647690": 1795147253000,
    "SPORT|136647686": 1795147235000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/19/centenar-demandas-socios-abonados-real-madrid-136643193.html": 1795127693000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/kounde-una-recuperacion-gripada-f202611-n/",
-    "medio": "AS",
-    "t": 1794898416000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde recibe el alta para enfrentar al Villarreal",
-    "motivo": "recuperación de una lesión ralentizada",
-    "plazo": "su regreso se retrasa más de un mes",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261117/1004251946/problemas-eje-central-defensa-athletic.html",
     "medio": "Mundo Deportivo",
@@ -3259,7 +3247,7 @@
   ],
   "gemini": {
    "dia": "2026-11-20",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4159,17 +4147,17 @@
  "ia": {
   "dia": "2026-11-20",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 71380,
-  "salida": 3020,
+  "entrada": 73415,
+  "salida": 3112,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.156492,
+  "dolares": 0.156742,
   "reservado": 0
  },
  "recientes": {
@@ -8508,13 +8496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4344,
+   "ok": 4345,
    "fallos": 0,
-   "ejecuciones": 3591,
+   "ejecuciones": 3592,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T06:51:10.725Z"
+   "ultima": "2026-11-20T06:56:17.783Z"
   }
  },
  "ptsDirecto": {},
@@ -8531,15 +8519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:51:18.510Z"
+   "ultimaBien": "2026-11-20T06:56:33.284Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:51:18.510Z"
+   "ultimaBien": "2026-11-20T06:56:33.284Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:51:18.510Z"
+   "ultimaBien": "2026-11-20T06:56:33.284Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8547,11 +8535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:51:18.510Z"
+   "ultimaBien": "2026-11-20T06:56:33.284Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T06:51:18.510Z"
+   "ultimaBien": "2026-11-20T06:56:33.284Z"
   }
  },
  "avisos": [
