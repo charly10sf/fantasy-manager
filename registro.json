@@ -2272,7 +2272,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/": 1794936943000,
    "AS|https://as.com/futbol/primera/arnau-ortiz-del-apagon-al-resquicio-f202611-n/": 1794937138000,
    "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/": 1794941438000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261117/1004252296/malas-noticias-lookman-pasar-pruebas-medicas-madrid.html": 1794941170000,
@@ -2488,18 +2487,6 @@
    "SPORT|136677426": 1795191686000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/el-celta-recupera-efectivos-para-la-visita-al-real-madrid-f202611-n/",
-    "medio": "AS",
-    "t": 1794936943000,
-    "id": "2602",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Álvaro vuelve a entrenar con sus compañeros del Elche",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/lookman-sufre-un-esguince-de-rodilla-de-alto-grado-f202611-n/",
     "medio": "AS",
@@ -8595,13 +8582,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4473,
+   "ok": 4474,
    "fallos": 0,
-   "ejecuciones": 3720,
+   "ejecuciones": 3721,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T17:31:14.122Z"
+   "ultima": "2026-11-20T17:36:14.077Z"
   }
  },
  "ptsDirecto": {},
@@ -8618,15 +8605,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:31:28.832Z"
+   "ultimaBien": "2026-11-20T17:36:23.744Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:31:28.832Z"
+   "ultimaBien": "2026-11-20T17:36:23.744Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:31:28.832Z"
+   "ultimaBien": "2026-11-20T17:36:23.744Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8634,11 +8621,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:31:28.832Z"
+   "ultimaBien": "2026-11-20T17:36:23.744Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T17:31:28.832Z"
+   "ultimaBien": "2026-11-20T17:36:23.744Z"
   }
  },
  "avisos": [
