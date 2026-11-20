@@ -2274,7 +2274,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261117/1004252173/pruebas-descartan-lesion-ceballos-probara-derbi.html": 1794927512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/osasuna/20261117/1004252167/cal-arena-arrasate.html": 1794927148000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261117/1004252168/silvia-cristobal-llevamos-toda-semana-pensando-partido.html": 1794926940000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-abandona-uci-sube-planta_0_2008527994.html": 1794930189000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/17/quien-es-oscar-bazaga-principal-novedad-en-la-convocatoria-del-cd-tenerife-radio-club-tenerife/": 1794931160000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maldini-analiza-futuro-vinicius-festival-goleador-brasileno-seleccion-dificil-vuelva-mejor-nivel-podra-jugador-importante-20261117_3476994.html": 1794930537000,
@@ -8621,13 +8620,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4440,
+   "ok": 4441,
    "fallos": 0,
-   "ejecuciones": 3687,
+   "ejecuciones": 3688,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 438,
-   "ultima": "2026-11-20T14:46:14.998Z"
+   "ultima": "2026-11-20T14:51:11.330Z"
   }
  },
  "ptsDirecto": {},
@@ -8644,15 +8643,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:46:22.680Z"
+   "ultimaBien": "2026-11-20T14:51:20.015Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:46:22.680Z"
+   "ultimaBien": "2026-11-20T14:51:20.015Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:46:22.680Z"
+   "ultimaBien": "2026-11-20T14:51:20.015Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8660,11 +8659,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:46:22.680Z"
+   "ultimaBien": "2026-11-20T14:51:20.015Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T14:46:22.680Z"
+   "ultimaBien": "2026-11-20T14:51:20.015Z"
   }
  },
  "avisos": [
