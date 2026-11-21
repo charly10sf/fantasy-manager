@@ -2508,7 +2508,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000,
    "SPORT|136598263": 1795035303000,
    "AS|https://as.com/futbol/primera/la-feliz-contrarreloj-de-parrott-f202611-n/": 1795040843000,
@@ -9057,13 +9056,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4944,
+   "ok": 4946,
    "fallos": 0,
-   "ejecuciones": 4051,
+   "ejecuciones": 4052,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T20:46:17.089Z"
+   "ultima": "2026-11-21T20:51:11.343Z"
   }
  },
  "ptsDirecto": {
@@ -9165,27 +9164,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:46:21.214Z"
+   "ultimaBien": "2026-11-21T20:51:18.325Z"
   }
  },
  "avisos": [
