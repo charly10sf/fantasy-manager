@@ -2655,7 +2655,9 @@
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
+   "SPORT|136701065": 1795280023000,
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000
   },
   "hechos": [
    {
@@ -3483,7 +3485,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -8912,13 +8914,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4881,
+   "ok": 4883,
    "fallos": 0,
-   "ejecuciones": 4016,
+   "ejecuciones": 4017,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:51:10.805Z"
+   "ultima": "2026-11-21T17:56:10.873Z"
   }
  },
  "ptsDirecto": {
@@ -8984,27 +8986,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:51:16.308Z"
+   "ultimaBien": "2026-11-21T17:56:44.498Z"
   }
  },
  "avisos": [
