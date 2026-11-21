@@ -2531,7 +2531,8 @@
    "SPORT|135959939": 1795244400000,
    "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
-   "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000
+   "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000
   },
   "hechos": [
    {
@@ -3407,7 +3408,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -4304,17 +4305,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 31366,
-  "salida": 5841,
+  "entrada": 33377,
+  "salida": 5933,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.046802,
+  "dolares": 0.047049,
   "reservado": 0
  },
  "recientes": {
@@ -8705,13 +8706,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4728,
+   "ok": 4729,
    "fallos": 0,
-   "ejecuciones": 3914,
+   "ejecuciones": 3915,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T09:26:13.569Z"
+   "ultima": "2026-11-21T09:31:11.400Z"
   }
  },
  "ptsDirecto": {
@@ -8741,15 +8742,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:26:18.413Z"
+   "ultimaBien": "2026-11-21T09:31:15.905Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:26:18.413Z"
+   "ultimaBien": "2026-11-21T09:31:15.905Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:26:18.413Z"
+   "ultimaBien": "2026-11-21T09:31:15.905Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8757,11 +8758,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:26:18.413Z"
+   "ultimaBien": "2026-11-21T09:31:15.905Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:26:18.413Z"
+   "ultimaBien": "2026-11-21T09:31:15.905Z"
   }
  },
  "avisos": [
