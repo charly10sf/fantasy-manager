@@ -220,7 +220,7 @@ export async function pagina(escena, contesta = () => 'vale') {
   const errores = [];
   page.on('pageerror', (e) => errores.push(e.message));
   await page.clock.install({ time: new Date(E.hora) });
-  await page.addInitScript("localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-tema-aviso', '1');");
+  await page.addInitScript("localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-tema-aviso', '1');");
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.D && window.S.M, null, { timeout: 30000 });
   // una clave de mentira (la llamada no sale de la máquina) y, si el escenario toca los datos, el motor otra vez

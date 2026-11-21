@@ -41,8 +41,30 @@ const bien = (m) => console.log(`BIEN ${m}`);
 const mal = (m) => { fallos++; console.log(`MAL  ${m}`); };
 const texto = async (page) => ((await page.textContent('#app').catch(() => '')) || '').replace(/\s+/g, ' ').trim().slice(0, 140);
 
-/** una página nueva: lo de fuera, cortado; `colgar` deja sin respuesta lo que vaya a esos hosts (el agujero negro) */
-async function pagina({ init = '', ancho = 390, alto = 844, colgar = [] } = {}) {
+/* (21 nov) El reloj fijo. La liga de ejemplo se monta alrededor de «ahora» (demo.js: la jornada 10 empieza el próximo
+   sábado a las 14:00), así que dos comprobaciones, la 10 (plan y Hoy) y la del fichaje en el parón, salían mal según la
+   hora a la que se pasara la prueba: todo el lunes (jornada en juego), el sábado de 13:00 a 14:00 (la jornada ya jugada
+   queda como «próxima» con las cláusulas cerradas) y ratos sueltos del domingo y el martes. El 21 nov eso paró una
+   publicación a las 13:00. Esas dos se pasan ahora con el reloj de la página puesto en el miércoles a las 12:00 de Madrid
+   (el de esta semana o el siguiente): simulada la semana entera cada 3 h, de miércoles a viernes no falla nunca, y el
+   miércoles a las 12:00 tampoco en seis semanas distintas, con horario de invierno y de verano. No se saltan: se pasan
+   siempre a la misma hora. `RELOJ=2026-11-28T13:30:00+01:00` las pasa a otra hora, para volver a ver el fallo. */
+function miercolesAlas12() {
+  const f = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', timeZoneName: 'shortOffset' });
+  for (let k = 0; k < 8; k++) {
+    const p = Object.fromEntries(f.formatToParts(new Date(Date.now() + k * 864e5)).map((x) => [x.type, x.value]));
+    if (p.weekday !== 'Wed') continue;
+    const m = String(p.timeZoneName || '').match(/GMT([+-]\d+)(?::(\d+))?/);
+    const off = m ? `${m[1].startsWith('-') ? '-' : '+'}${String(Math.abs(+m[1])).padStart(2, '0')}:${m[2] || '00'}` : '+01:00';
+    return Date.parse(`${p.year}-${p.month}-${p.day}T12:00:00${off}`);
+  }
+  return Date.now();
+}
+const RELOJ = process.env.RELOJ ? Date.parse(process.env.RELOJ) : miercolesAlas12();
+
+/** una página nueva: lo de fuera, cortado; `colgar` deja sin respuesta lo que vaya a esos hosts (el agujero negro);
+    `reloj`: la hora (ms) en la que arranca el reloj de la página, que luego corre normal */
+async function pagina({ init = '', ancho = 390, alto = 844, colgar = [], reloj = 0 } = {}) {
   const ctx = await nav.newContext({ viewport: { width: ancho, height: alto } });
   await ctx.route('**/*', (r) => {
     const u = new URL(r.request().url());
@@ -56,7 +78,8 @@ async function pagina({ init = '', ancho = 390, alto = 844, colgar = [] } = {}) 
   const page = await ctx.newPage();
   const errores = [];
   page.on('pageerror', (e) => errores.push(e.message));
-  await page.addInitScript(`localStorage.setItem('fm-tour', '1'); ${init}`);
+  await page.addInitScript(`localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); ${init}`);
+  if (reloj) await page.clock.install({ time: reloj });
   return { ctx, page, errores };
 }
 
@@ -342,7 +365,7 @@ for (const [nombre, init, conLista] of [['web', '', true], ['app', "window.Fanta
 // hueco en su puesto y el dinero de sobra, el plan la manda si y solo si Hoy la da por clausulable (antes, con interés 52
 // Hoy sí y el plan no; sin `mejora` y a 2 veces su valor, el plan sí y Hoy no)
 {
-  const { ctx, page, errores } = await pagina();
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
   const r = await page.evaluate(async () => {
@@ -723,7 +746,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 // 15c: (16 nov, 0.7.13p, aviso de Domy) en el parón, un fichaje que la app ve subiendo hasta la vuelta no se descarta
 // aunque la IA lo ponga para el once (es dinero y llega a tiempo); uno que no sube, sí
 {
-  const { ctx, page, errores } = await pagina();
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
   const r = await page.evaluate(async () => {
@@ -1095,7 +1118,7 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
     const i = NOVEDADES.indexOf(nw), antes = (NOVEDADES[i + 1] || {}).v;
     for (const app of [false, true]) {
       const fa = app ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
-      const { ctx, page, errores } = await pagina({ init: `${fa} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-version-vista2', JSON.stringify('${antes}'));` });
+      const { ctx, page, errores } = await pagina({ init: `${fa} localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-version-vista2', JSON.stringify('${antes}'));` });
       await page.goto(`${BASE}/index.html`);
       await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
       await page.waitForTimeout(3500);

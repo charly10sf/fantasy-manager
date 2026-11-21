@@ -13,6 +13,8 @@ import { hash } from '../lib/texto.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const DOMINIO = 'https://fantasymanagerapp.com/';
+// (21 nov) para saber en «Antes de entrar» quién llega desde los tuits del bot (web/portal/portal.js lo guarda)
+const ORIGEN = '?utm_source=x-bot';
 const HORA = 36e5;
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const cuando = (t) => { const d = enMadrid(t); return { txt: `el ${DIAS[d.sem]} a las ${d.hora}`, numeros: d.hora.split(':').map(Number) }; };
@@ -63,5 +65,5 @@ export async function generar({ jornada, semana = null, config = {}, registro = 
   const hechos = { tipo: 'previaweb', noticia: `la previa de la jornada ${J} ya está en la web de Fantasy Manager: cierre y reapertura de cláusulas, sancionados, apercibidos, bajas y los que más suben`,
     cierre: ci.txt, reapertura: re.txt, sancionados: san, apercibidos: ap, ...(s ? { queMasSube: `${s.nombre} (${s.equipo}), ${dif(s.dif7)} en 7 días hasta ${dinero(s.valor)}` } : {}),
     aviso: 'el enlace a la página va aparte, al final del tuit: no lo escribas' };
-  return [{ tipo: 'previaweb', clave, jornada: J, texto, hechos, numeros, enlace: `${DOMINIO}${ruta}`, partido: null }];
+  return [{ tipo: 'previaweb', clave, jornada: J, texto, hechos, numeros, enlace: `${DOMINIO}${ruta}${ORIGEN}`, partido: null }];
 }

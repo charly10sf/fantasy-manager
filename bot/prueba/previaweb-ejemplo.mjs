@@ -100,7 +100,7 @@ assert.match(contenido(h, r.textos, { onces: on }), /Sancet o Galarreta del Athl
 const P = { hechos: { ...h, generada: primero - 70 * H }, textos: r.textos };
 const ts = await generar({ jornada: 13, ventanas: false, leer: () => P, pedir: async () => ({ ok: true, status: 200, text: async () => 'Jornada 13 de LaLiga Fantasy' }), config: { tweetMax: 280 } });
 assert.equal(ts.length, 1);
-assert.equal(ts[0].enlace, 'https://fantasymanagerapp.com/guias/jornada-13.html');
+assert.equal(ts[0].enlace, 'https://fantasymanagerapp.com/guias/jornada-13.html?utm_source=x-bot');
 assert.ok(validarTuit(ts[0].texto, { numeros: ts[0].numeros, max: 280 }).ok, ts[0].texto);
 assert.equal((await generar({ jornada: 13, ventanas: false, leer: () => P, pedir: async () => ({ ok: false, status: 404, text: async () => '' }) })).length, 0, 'sin la página publicada, nada');
 assert.equal((await generar({ jornada: 13, ventanas: false, leer: () => P, registro: { claves: new Set(['previaweb|13']) }, pedir: async () => ({ ok: true, text: async () => 'Jornada 13 de' }) })).length, 0, 'una vez por jornada');

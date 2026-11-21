@@ -97,23 +97,37 @@ export function leerOrigen() {
   try {
     const p = new URLSearchParams(location.search);
     const o = String(p.get('utm_source') || p.get('ref') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
-    if (!o) return;
-    LS.set('origen', { o, t: Date.now() });
-    for (const k of [...p.keys()]) if (/^utm_|^ref$/.test(k)) p.delete(k);
+    // (21 nov) la marca de las pruebas: ?prueba=1 se queda guardada en este navegador (?prueba=0 la quita) y sus pasos no
+    // se cuentan. Para probar contra la web publicada o una vista previa sin ensuciar «Antes de entrar»
+    const pr = p.get('prueba');
+    if (pr != null) { if (pr === '0') LS.del('prueba'); else LS.set('prueba', true); }
+    if (!o && pr == null) return;
+    if (o) LS.set('origen', { o, t: Date.now() });
+    for (const k of [...p.keys()]) if (/^utm_|^ref$|^prueba$/.test(k)) p.delete(k);
     history.replaceState(null, '', location.pathname + (p.toString() ? `?${p}` : '') + location.hash);
   } catch (e) { /* nada */ }
 }
 const origen = () => { const x = LS.get('origen', null); return x && Date.now() - x.t < ORIGEN_DIAS * 864e5 ? x.o : ''; };
 /** el dueño no cuenta (sus pruebas lo llenarían todo) */
 const esDueno = () => { const a = LS.get('avisos', null); return !!(a && a.admin); };
+/** (21 nov) ¿es una prueba? Con la marca guardada (?prueba=1) o con un navegador manejado por un programa (Playwright y
+    compañía ponen navigator.webdriver; también algunos rastreadores, que tampoco son visitas). El 21 nov las pruebas
+    contra la web publicada sumaron 9 «ver» y 3 «le dan» que no eran de nadie */
+export const esPrueba = () => { try { return !!LS.get('prueba', false) || navigator.webdriver === true; } catch (e) { return false; } };
+/** el Worker de una prueba en local (localStorage «fm-worker» apuntando a esta máquina): ahí se manda todo, que no ensucia nada */
+const workerLocal = () => /^https?:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(BASE);
 
 /**
- * apunta un paso: 'ver' (la pantalla de entrar), 'demo', 'play' (el botón de Google Play en la web), 'l' (le da a entrar),
- * 'p' (en la web: vuelve y pega el enlace), 'ok' (ha entrado) o un fallo 'x-…'. Con una: true, solo una vez al día en este dispositivo
+ * apunta un paso: 'llega' (la web: llega sin sesión), 'ver' (en la app, la pantalla de entrar; en la web, el bloque de entrar
+ * a la vista), 'demo', 'play' (el botón de Google Play en la web), 'l' (abre LaLiga), 'v' (la web: vuelve de la pestaña de
+ * LaLiga), 'p' (la web: pega el enlace), 'ok' (ha entrado), 'x-vuelve' (la app: vuelve de LaLiga sin el código) o un fallo
+ * 'x-…'. Con una: true, solo una vez al día en este dispositivo
  */
 export function marcarPaso(p, { una = false } = {}) {
   try {
     if (!BASE || esDueno()) return;
+    // las pruebas no cuentan (solo se mandan a un Worker de mentira en local, que es donde se comprueban los pasos)
+    if (esPrueba() && !(workerLocal() && !enApp)) { pasosPrueba.push(p); return; }
     if (una) {
       const d = diaDe(Date.now()), ya = LS.get('pasos-hoy', {}) || {};
       if (ya.d === d && ya[p]) return;
@@ -122,5 +136,8 @@ export function marcarPaso(p, { una = false } = {}) {
     alWorker('POST', '/embudo', JSON.stringify({ p, k: canalPaso(), o: origen() }), 10000).catch(() => {});
   } catch (e) { /* contar nunca puede romper nada */ }
 }
+/** lo que se habría apuntado si no fuera una prueba (para comprobarlo en las pruebas de .github) */
+const pasosPrueba = [];
+if (typeof window !== 'undefined') window.__pasosPrueba = pasosPrueba;
 /** el paso de un fallo al entrar, por su tipo (auth.js) */
 export const pasoDeFallo = (e) => `x-${(e && e.tipo) || (e && e.sesion ? 'otro' : 'red')}`;

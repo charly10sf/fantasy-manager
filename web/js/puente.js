@@ -229,6 +229,9 @@ const llamar = (f, ...a) => { try { return N && typeof N[f] === 'function' ? N[f
 export const nativo = {
   abrirLogin: (url) => (N ? llamar('abrirLogin', url) : window.open(url, '_blank')),
   loginPendiente: () => llamar('loginPendiente') || null,
+  // (parte Android del 21 nov) la entrada va por Auth Tab: la vuelta llega a la app sin que Android pregunte «Abrir con».
+  // Las apps de antes no tienen el método: false
+  authTab: () => !!(N && typeof N.authTab === 'function' && llamar('authTab')),
   programarAvisos: (lista) => llamar('programarAvisos', JSON.stringify(lista || [])),
   avisosPermitidos: () => (N ? !!llamar('avisosPermitidos') : false),
   pedirPermisoAvisos: () => llamar('pedirPermisoAvisos'),

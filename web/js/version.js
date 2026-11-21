@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8l';
+export const VERSION = '0.8m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,20 @@ export const VERSION = '0.8l';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (21 nov, Carlos: «arregla la entrada en Android y en iPhone») En la app de Android se perdía un 36 % de los toques a
+    // «Entrar» sin dejar rastro: con LaLiga Fantasy instalada, Android pregunta «Abrir con» al volver y quien elige la otra
+    // app se queda fuera. Ahora se avisa justo antes, con un dibujo, y si se vuelve sin haber entrado se explica qué ha
+    // pasado y se repite con un toque. En la web, el iPhone y el ordenador tienen «Entrar» lo primero. Sin `todos`: a los
+    // demás no les sale salvo que Carlos lo diga. La hora, al publicar
+    v: '0.8m', f: '2026-11-21', h: '19:30', t: 'Entrar a la primera',
+    cosas: [
+      { tipo: 'mejora', d: 'movil', t: 'En Android: elige Fantasy Manager al volver', x: 'Si tienes también la app de LaLiga Fantasy, al terminar de entrar Android pregunta con qué app abrir. Ahora te lo avisa justo antes, con un dibujo: elige Fantasy Manager y «Solo una vez». Solo es un paso más la primera vez.', para: 'app' },
+      { tipo: 'mejora', d: 'aviso', t: '¿No has vuelto solo? Te dice por qué', x: 'Si vuelves a la app sin haber entrado, ya no te quedas en la pantalla de antes sin saber qué ha pasado: te explica las dos causas (se abrió la otra app o LaLiga dio error), cómo quitar el «Siempre» si lo marcaste y lo repites con un toque.', para: 'app' },
+      { tipo: 'mejora', d: 'movil', t: 'En el iPhone, entrar es lo primero', x: 'Al abrir la web desde un iPhone, lo primero que se ve es cómo entrar, y el botón rojo de arriba es «Entrar». Lo de Google Play, que en un iPhone no sirve, ya no está arriba.', para: 'web' },
+      { tipo: 'mejora', d: 'pantalla', t: 'En el ordenador, entrar va antes', x: 'En el ordenador, el bloque para entrar aquí mismo va el primero y el de Android, debajo. En la barra, «Entrar» en rojo.', para: 'web', menor: true },
+    ],
+  },
   {
     // (21 nov, Carlos: «los inicios de sesión mejores, sin fallos y más intuitivos; desde iPhone no entra ni el 10 %») En la
     // web, al entrar con tu cuenta, LaLiga ya te devuelve a una página normal (no a la app del móvil), así que la dirección

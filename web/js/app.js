@@ -39,7 +39,7 @@ import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
-import { dibCopiar } from './guiadib.js';
+import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
@@ -90,27 +90,128 @@ function pantallaEntrar(error = '') {
   // con el portal y Google Play; a la izquierda (en el móvil, lo primero) el portal con «Hoy»; a la derecha, lo de entrar, sin
   // tocar; y debajo, en su apartado «La app», lo que es la app y los móviles
   const mudanza = enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : '';
-  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(botonPlay('hero'))}`;
-  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}">${enApp ? '' : barraPortal()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
+  // (21 nov) en el iPhone, lo de entrar es lo primero de la página y no sale nada de Google Play arriba (ni el botón rojo
+  // ni la insignia); en el ordenador, «Entrar» en rojo en la barra. En la web de un Android, como estaba
+  const plat = enApp ? '' : (movilDe() || 'pc');
+  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' ? '' : botonPlay('hero'))}`;
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}`}">${enApp ? '' : barraPortal(plat)}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
+    ${abrirConVisto() && !nativo.authTab() ? avisoAbrirCon() : ''}
     <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
+    <p class="peq apag" style="margin-top:12px">Se abre la página de LaLiga: entra como siempre (con Google, si es como lo haces). Al terminar vuelves aquí.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${PIE_ENTRAR}
   </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles()}</section>`}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
   // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta
   pintarEstado();
-  marcarPaso('ver', { una: true });
+  // (21 nov) en la app, «ver» es ver esta pantalla. En la web la portada se le pinta a cualquiera sin sesión (también a
+  // quien viene a leer el mercado): eso es «llega», y «ver» solo cuenta cuando lo de entrar aparece en pantalla
+  if (enApp) marcarPaso('ver', { una: true });
+  else { marcarPaso('llega', { una: true }); vigilarVer(); }
   // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12) va plegado en el bloque de Android: se
   // pide y se espera al móvil solo mientras está desplegado (el «toggle» de más abajo)
   pararQR();
   // (0.8l) en la web, el enlace a LaLiga en su botón y, si ya se abrió, el paso de pegar por delante
   if (!enApp) prepararEntrada();
 }
+/** (21 nov) apunta «ver» cuando el botón de entrar de esta pantalla (o, si va plegado, su bloque) está a la vista */
+let verObs = null;
+function vigilarVer() {
+  if (verObs) { verObs.disconnect(); verObs = null; }
+  const b = $('#edAbrir');
+  // (en la web de un Android el botón va dentro de un desplegable cerrado: ahí vale su bloque)
+  const el = b && !b.closest('details:not([open])') ? b : $('#entrar .plat') || $('#entrar');
+  if (!el) return;
+  if (typeof IntersectionObserver !== 'function') { marcarPaso('ver', { una: true }); return; }
+  verObs = new IntersectionObserver((es) => {
+    if (!es.some((e) => e.isIntersecting && e.intersectionRatio >= 0.5)) return;
+    verObs.disconnect(); verObs = null;
+    marcarPaso('ver', { una: true });
+  }, { threshold: [0.5] });
+  verObs.observe(el);
+}
+/* ---------------- la app de Android: «Abrir con» y la vuelta sin código (21 nov) ----------------
+   Con LaLiga Fantasy instalada, las dos apps recogen la misma vuelta (authredirect://com.lfp.laligafantasy) y Android
+   pregunta «Abrir con». Quien elige la otra se queda fuera y aquí no llegaba nada: de 102 toques a «Entrar» salían 62
+   entradas y 3 fallos apuntados (análisis del 21 nov). Dos cosas, solo con la web:
+   1. el aviso de «elige Fantasy Manager», grande y con el dibujo del cuadro, justo antes de abrir LaLiga. La primera vez
+      en este móvil es un paso propio (un toque más, una sola vez); después va encima del botón, sin toques de más;
+   2. si se vuelve a la app y a los 3 s no ha llegado la vuelta, la pantalla «¿No has vuelto solo?» con las dos salidas
+      y un botón para repetir, y el paso «x-vuelve» en el embudo.
+   Con Auth Tab (la parte nativa de esta sesión, `nativo.authTab()`), Android no pregunta: sin aviso, y la pantalla solo
+   habla del error de LaLiga. */
+const abrirConVisto = () => !!LS.get('abrir-con', false);
+const avisoAbrirCon = (grande = false) => `<div class="abrir-con${grande ? ' grande' : ''}">
+    <figure>${dibAbrirCon()}</figure>
+    <p><b>Al terminar, Android puede preguntarte con qué app abrir.</b> Elige <b>Fantasy Manager</b> y <b>Solo una vez</b>. Si eliges LaLiga Fantasy, te quedas fuera.</p></div>`;
+/** el paso propio de la primera vez: el aviso y, debajo, el botón que ya abre LaLiga */
+function pantallaAbrirCon() {
+  ponerBanner(false);
+  raiz().innerHTML = `<div class="portada"><div class="pantalla pant-aviso" id="pantAbrirCon">
+    <h1 class="av-t" tabindex="-1">Antes de abrir LaLiga</h1>
+    ${avisoAbrirCon(true)}
+    <button class="btn ancho" data-accion="entrarYa">${icono('usuario')}Entendido: abrir LaLiga</button>
+    <button class="btn ancho sec" data-accion="volverEntrar" style="margin-top:10px">Volver</button>
+  </div></div>`;
+  const t = $('.av-t'); if (t) { try { t.focus({ preventScroll: true }); } catch (e) { /* nada */ } }
+  window.scrollTo(0, 0);
+}
+/** abre LaLiga desde la app y deja apuntado que se ha salido a entrar (aguanta que Android cierre la app mientras) */
+async function abrirLaLigaApp() {
+  LS.set('abrir-con', true);
+  contar('l'); marcarPaso('l');
+  S.loginFuera = Date.now();
+  LS.set('login-fuera', S.loginFuera);
+  try { await empezarLogin(); } catch (e) { S.loginFuera = 0; LS.del('login-fuera'); pantallaEntrar(e.message); }
+}
+const loginFuera = () => { const t = S.loginFuera || Number(LS.get('login-fuera', 0)) || 0; return t && Date.now() - t < 20 * MIN ? t : 0; };
+function sinLoginFuera() { S.loginFuera = 0; LS.del('login-fuera'); if (S.relojVuelve) { S.relojVuelve(); S.relojVuelve = null; } }
+/** de vuelta en la app tras abrir LaLiga: si en 3 s no llega la vuelta con el código, se pregunta qué ha pasado.
+    `cerrada`: la parte nativa sabe que la pestaña se cerró sin terminar (Auth Tab): no hace falta esperar */
+function mirarSinCodigo({ cerrada = false } = {}) {
+  if (!enApp || !loginFuera() || haySesion() || S.relojVuelve) return;
+  S.relojVuelve = relojFijo(cerrada ? 300 : 3000, () => {
+    S.relojVuelve = null;
+    if (!loginFuera() || haySesion() || S.entrandoApp) return;
+    sinLoginFuera();
+    marcarPaso('x-vuelve');
+    pantallaNoVuelto();
+  });
+}
+window.loginCerrado = () => mirarSinCodigo({ cerrada: true });
+function pantallaNoVuelto() {
+  ponerBanner(false);
+  const auth = nativo.authTab();
+  const otraApp = auth ? '' : `<section class="nv-c" aria-labelledby="nvA">
+      <h2 id="nvA">${icono('alerta')}Se abrió LaLiga Fantasy en vez de esta app</h2>
+      <p>Android preguntó con qué app abrir y se fue a la otra. Repite y, cuando pregunte, elige <b>Fantasy Manager</b> y <b>Solo una vez</b>.</p>
+      <figure>${dibAbrirCon()}</figure>
+      <details class="nv-d"><summary>No me ha preguntado: se abre LaLiga Fantasy directamente</summary>
+        <p>Es que alguna vez elegiste «Siempre». Se quita en los ajustes del móvil:</p>
+        <ol><li>Abre <b>Ajustes</b> y entra en <b>Aplicaciones</b>.</li>
+        <li>Toca <b>LaLiga Fantasy</b> (si no sale, <b>Ver todas las aplicaciones</b>).</li>
+        <li>Toca <b>Abrir de forma predeterminada</b> y luego <b>Borrar preferencias predeterminadas</b>.</li></ol>
+        <p>En algunos móviles (Samsung) ese apartado se llama <b>Establecer como predeterminada</b> y el botón, <b>Borrar valores predeterminados</b>. No se borra nada de LaLiga Fantasy: solo vuelve a preguntar.</p></details>
+    </section>`;
+  raiz().innerHTML = `<div class="portada"><div class="pantalla pant-aviso" id="pantNoVuelto">
+    <h1 class="av-t" tabindex="-1">¿No has vuelto solo?</h1>
+    <p class="nv-i">Al terminar en la página de LaLiga, esta app se abre sola con tu liga. Si no ha pasado, ${auth ? 'lo más normal es esto' : 'ha sido una de estas dos cosas'}:</p>
+    ${otraApp}
+    <section class="nv-c" aria-labelledby="nvB">
+      <h2 id="nvB">${icono('alerta')}LaLiga dio un error</h2>
+      <p>«Lo sentimos, tenemos problemas para iniciar su sesión». Es un fallo de su página, no de tu cuenta ni de la app. Repite: a la segunda suele ir.</p>
+    </section>
+    <button class="btn ancho" data-accion="entrarYa">${icono('usuario')}Repetir: abrir LaLiga</button>
+    <button class="btn ancho sec" data-accion="volverEntrar" style="margin-top:10px">Ahora no</button>
+  </div></div>`;
+  const t = $('.av-t'); if (t) { try { t.focus({ preventScroll: true }); } catch (e) { /* nada */ } }
+  window.scrollTo(0, 0);
+}
+
 /* ---------------- invitar a tu liga (fase 0 del roadmap) ----------------
    Un enlace a la web con el número de tu liga (?l=…). Quien lo abre ve que viene invitado y, al entrar con su cuenta, se
    abre esa liga si es suya. Sin nombres en el enlace: solo el número de la liga, que ya ven todos sus miembros. */
@@ -269,12 +370,15 @@ async function prepararEntrada() {
     if (!b) return;
     b.setAttribute('href', url);
     const m = $('#edAMano'); if (m) m.setAttribute('href', urlAMano);
-    if (abierto && Date.now() - abierto < 30 * MIN) entradaAbierta({ alVolver: true });
+    // (si Safari ha recargado esta pestaña al volver, también cuenta como vuelta)
+    if (abierto && Date.now() - abierto < 30 * MIN) { if (!S.laLigaFuera) marcarVuelve(); entradaAbierta({ alVolver: true }); }
   } catch (e) {
     // sin https (o un navegador muy viejo) no hay con qué preparar la entrada: se dice, con la salida que queda
     errorVuelta('Este navegador no deja preparar la entrada desde aquí. Abre la web en https://fantasymanagerapp.com con Safari, Chrome o Edge, o entra con un código.');
   }
 }
+/** el paso «v» del embudo: ha vuelto de la pestaña de LaLiga (una vez por cada vez que la abre; aguanta una recarga) */
+function marcarVuelve() { if (!LS.get('ll-abierta', 0)) return; LS.del('ll-abierta'); marcarPaso('v'); }
 /** el paso 3 por delante: ya se ha abierto LaLiga. Con alVolver, además se lleva ahí el foco y se dice qué toca */
 function entradaAbierta({ alVolver = false } = {}) {
   const c = $('#entrarDirecto');
@@ -400,7 +504,8 @@ function entrarWebHTML() {
     ${botonDemo('sec')}
     <details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
   }
-  return `${bloqueAndroid('pc')}${bloqueApple('pc')}
+  // (21 nov) en el ordenador, primero entrar aquí («iPhone y ordenador») y debajo lo de Android
+  return `${bloqueApple('pc')}${bloqueAndroid('pc')}
     <section class="ent-paso" aria-labelledby="entVerT"><div class="ent-ca"><h2 id="entVerT">¿Solo quieres verla?</h2></div>
       <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
       <button class="btn ancho sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>`;
@@ -2724,6 +2829,7 @@ function repintarHoja() {
 }
 
 window.atras = () => {
+  if ($('.pant-aviso')) { pantallaEntrar(); return true; }
   const visor = $('.visor');
   if (visor) { visor.remove(); return true; }
   if (cerrarPresentacion()) return true;
@@ -2734,6 +2840,8 @@ window.atras = () => {
   return false;
 };
 window.alVolver = () => {
+  // (21 nov) de vuelta de la página de LaLiga sin el código: «¿No has vuelto solo?»
+  mirarSinCodigo();
   // (15 nov) el plan con la IA que se cortó al salir de la app se recoge al volver (ia.js, planPorApp)
   window.dispatchEvent(new Event('fm-vuelta'));
   comprobarAvisos();
@@ -3012,6 +3120,8 @@ document.addEventListener('input', (ev) => {
 async function alVolverEntrada() {
   if (enApp || !S.laLigaFuera || !S.laLigaIda || S.entrandoWeb || document.hidden || !$('#entrarDirecto')) return;
   S.laLigaIda = false;
+  // (21 nov) cada gesto por separado: ha vuelto de la pestaña de LaLiga (una vez por cada vez que la abre)
+  marcarVuelve();
   entradaAbierta({ alVolver: true });
   try {
     if (!hayPegar() || !navigator.permissions || !document.hasFocus()) return;
@@ -3166,9 +3276,13 @@ window.permisoAvisos = (ok) => {
 window.vueltaLogin = async () => {
   const url = nativo.loginPendiente();
   if (!url) return;
+  // ha vuelto con la dirección de LaLiga: ya no hay que preguntar «¿No has vuelto solo?»
+  sinLoginFuera();
+  S.entrandoApp = true;
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   // (0.7.13i) si entra o en qué falla, sin cuenta (semaforo.js): los fallos de la carga de después no cuentan aquí
-  try { await terminarLogin(url); } catch (e) { marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); return; }
+  try { await terminarLogin(url); } catch (e) { S.entrandoApp = false; marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); return; }
+  S.entrandoApp = false;
   marcarPaso('ok');
   try {
     contar('e');
@@ -3391,7 +3505,15 @@ document.addEventListener('click', async (ev) => {
       pintarVivo({ forzar: true });
       break;
     }
-    case 'entrar': try { contar('l'); marcarPaso('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    // (21 nov) la app de Android: la primera vez en este móvil, antes de abrir LaLiga, el aviso de «Abrir con» como paso
+    // propio (con Auth Tab Android no pregunta: directo). «Le da a entrar» se apunta cuando de verdad se abre LaLiga
+    case 'entrar':
+      if (enApp && !abrirConVisto() && !nativo.authTab()) { pantallaAbrirCon(); break; }
+      if (enApp) { await abrirLaLigaApp(); break; }
+      try { contar('l'); marcarPaso('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); }
+      break;
+    case 'entrarYa': await abrirLaLigaApp(); if ($('.pant-aviso')) pantallaEntrar(); break;
+    case 'volverEntrar': pantallaEntrar(); break;
     // (0.8l) en la web «Abrir LaLiga» es un enlace de verdad: lo abre el navegador y aquí solo se apunta. Si el enlace aún
     // no estuviera puesto (se rellena en milisegundos), se abre como antes
     case 'abrirLaLiga': case 'abrirAMano': {
@@ -3400,6 +3522,7 @@ document.addEventListener('click', async (ev) => {
       contar('l'); marcarPaso('l');
       sinErrorVuelta();
       S.laLigaFuera = true;
+      LS.set('ll-abierta', Date.now());
       if (!listo) { try { await empezarLogin(); } catch (e) { errorVuelta('No se ha podido abrir la página de LaLiga. Recarga esta página y vuelve a probar.'); break; } }
       marcarAbierto();
       entradaAbierta();
@@ -4323,6 +4446,8 @@ async function arrancar() {
   }
   // por si la vuelta del inicio de sesión llegó antes de que la web estuviera lista
   if (enApp) setTimeout(() => window.vueltaLogin(), 300);
+  // (21 nov) si Android cerró la app mientras se entraba en LaLiga y se vuelve sin el código
+  if (enApp && !haySesion()) setTimeout(() => mirarSinCodigo(), 600);
   // el límite de uso diario (web/limites.json): cuenta el tiempo con la app a la vista
   // (tu equipo de verdad, el de tu cuenta de LaLiga: no el que se elige a mano en Ajustes)
   iniciarLimite(() => {

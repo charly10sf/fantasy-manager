@@ -8,6 +8,24 @@
   var plano = function (s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
   var POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
+  // ---------------------------------------------------------------- de dónde viene (21 nov): si se llega a una página
+  // pública con ?utm_source=… (los tuits del bot enlazan a las guías, no a la portada), se guarda 7 días igual que hace la
+  // app (semaforo.js, `leerOrigen`: la misma clave y el mismo formato) y se quita de la dirección. Aquí no se cuenta nada:
+  // solo sirve para que, si luego va a entrar, «Antes de entrar» sepa de qué campaña venía. ?prueba=1 marca las pruebas
+  try {
+    var qs = new URLSearchParams(location.search);
+    var og = String(qs.get('utm_source') || qs.get('ref') || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
+    var pr = qs.get('prueba');
+    if (og) localStorage.setItem('fm-origen', JSON.stringify({ o: og, t: Date.now() }));
+    if (pr != null) { if (pr === '0') localStorage.removeItem('fm-prueba'); else localStorage.setItem('fm-prueba', 'true'); }
+    if (og || pr != null) {
+      var fuera = [];
+      qs.forEach(function (v, k) { if (/^utm_|^ref$|^prueba$/.test(k)) fuera.push(k); });
+      fuera.forEach(function (k) { qs.delete(k); });
+      history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash);
+    }
+  } catch (e) { /* sin almacenamiento: nada */ }
+
   // ---------------------------------------------------------------- la cabecera fija (16 nov): los saltos de la página van
   // justo debajo (sin JS, con el alto de siempre del CSS)
   var cab = document.querySelector('.cab');

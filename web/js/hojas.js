@@ -1359,24 +1359,57 @@ function resumenQ(Q, lista, reg, ahora) {
   return h || '<p class="quien-res">Aún no hay nada contado.</p>';
 }
 
-/** antes de entrar (7 días), sin saber de quién: cuántos ven la entrada, le dan a entrar, entran y fallan */
+/**
+ * Antes de entrar (7 días), sin saber de quién. (21 nov, tras el análisis del 21: «entra el 30 %» salía de dividir todas
+ * las entradas entre todo el que veía la portada, mezclando la app con la web.) Ya no hay porcentaje global: cada canal va
+ * por su lado con «entran / le dan» (de los que abren LaLiga, cuántos acaban dentro) y sus pasos uno a uno. En la web,
+ * «llegan» es llegar sin sesión y «ven entrar», tener el botón de entrar en pantalla (antes del 21 nov solo había «ver»,
+ * que era llegar). Debajo, lo mismo por campaña (?utm_source=…).
+ */
 const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
-function embudoQ(E, ahora) {
+const EMB_CANALES = [['App de Android', 'play'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
+export function embudoDatos(E, ahora) {
   const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
-  const suma = (paso, solo = null) => Object.entries(E.dias || {}).filter(([d]) => ult7.has(d)).reduce((t, [, g]) => t
-    + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + (paso === 'x-otros' ? OTROS_FALLOS.reduce((v, k) => v + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0), 0), 0);
-  const ven = suma('ver');
-  const pc = (n) => (ven ? `${n} <small>${Math.round((n / ven) * 100)} %</small>` : String(n));
-  const filas = [['Ven la entrada', ven, String(ven)], ['Tocan Google Play', suma('play')], ['Miran el ejemplo', suma('demo')], ['Le dan a entrar', suma('l')], ['Pegan el enlace (web)', suma('p')], ['Entran', suma('ok')]]
-    .map(([t, v, txt]) => [t, v, txt || pc(v)]);
-  const fallos = [['Falla LaLiga', suma('x-laliga')], ['Cancelan', suma('x-cancel')], ['Otros fallos', suma('x-otros')]].filter((f) => f[1]);
-  // por canal: ven la entrada → le dan a entrar → (en la web, pegan el enlace) → entran. Para ver dónde se cae cada uno, sobre
-  // todo el iPhone: si le dan y no pegan, se pierden en LaLiga o al copiar; si pegan y no entran, falla el enlace
-  const canales = [['Google Play', 'play'], ['Web Android', 'web-android'], ['Web iPhone', 'web-iphone'], ['Web ordenador', 'web-pc']].map(([t, k]) => [t, suma('ver', k), suma('l', k), suma('ok', k), k.startsWith('web') ? suma('p', k) : null]).filter((f) => f[1] || f[2] || f[3]);
-  let h = barrasH(filas, { max: Math.max(1, ven), clase: 'qh-emb' });
-  if (fallos.length) h += barrasH(fallos, { max: Math.max(1, ven), clase: 'qh-mal' });
-  const pie = canales.length ? canales.map(([t, v, l, o, pg]) => `${t} <b>${v}</b>→<b>${l}</b>→${pg == null ? '' : `<b>${pg}</b>→`}<b>${o}</b>`).join(' · ') : '';
-  return tarjetaQ('Antes de entrar · 7 días', h, pie);
+  const dias = Object.entries((E && E.dias) || {}).filter(([d]) => ult7.has(d)).map(([, g]) => g || {});
+  const de = (g) => {
+    const n = (p) => dias.reduce((t, d) => t + (Number((d[g] || {})[p]) || 0), 0);
+    // «llegan»: los días de antes del 21 nov no traen «llega» y su «ver» era llegar
+    const llegan = dias.reduce((t, d) => { const x = d[g] || {}; return t + Math.max(Number(x.llega) || 0, Number(x.ver) || 0); }, 0);
+    const ven = dias.reduce((t, d) => { const x = d[g] || {}; return t + (x.llega ? Number(x.ver) || 0 : 0); }, 0);
+    const hayVen = dias.some((d) => (d[g] || {}).llega);
+    return { llegan, ven: hayVen ? ven : null, ver: n('ver'), play: n('play'), demo: n('demo'), l: n('l'), v: n('v'), p: n('p'), ok: n('ok'), inicio: n('inicio'),
+      vuelve: n('x-vuelve'), laliga: n('x-laliga'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0) };
+  };
+  const canales = EMB_CANALES.map(([t, k]) => ({ t, k, web: k.startsWith('web'), ...de(k) })).filter((c) => c.llegan || c.l || c.ok);
+  const origenes = [...new Set(dias.flatMap((d) => Object.keys(d).filter((k) => k.startsWith('o:'))))].map((k) => ({ t: k.slice(2), k, web: true, ...de(k) })).sort((x, y) => y.llegan - x.llegan);
+  return { canales, origenes };
+}
+const pctQ = (a, b) => (b > 0 ? `${Math.round((a / b) * 100)} %` : '—');
+function embudoFila(c, { origen = false } = {}) {
+  const paso = (n, t) => `<span><b>${n == null ? '—' : n}</b>${t}</span>`;
+  const pasos = c.web
+    ? [paso(c.llegan, 'llegan'), paso(c.ven, 'ven entrar'), paso(c.l, 'abren LaLiga'), paso(c.v, 'vuelven'), paso(c.p, 'pegan'), paso(c.ok, 'entran')]
+    : [paso(c.ver, 'ven entrar'), paso(c.l, 'le dan'), paso(c.ok, 'entran')];
+  const notas = [
+    !c.web && c.vuelve ? `Vuelven sin el código: <b>${c.vuelve}</b>` : '',
+    c.web && c.play ? `Tocan Google Play: <b>${c.play}</b>` : '',
+    c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
+    c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
+    c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
+  ].filter(Boolean).join(' · ');
+  const sinRastro = !c.web && c.l ? Math.max(0, c.l - c.ok - c.vuelve - c.laliga - c.cancel - c.otros) : 0;
+  return `<div class="qe${origen ? ' qe-o' : ''}" data-canal="${esc(c.k)}">
+    <div class="qe-c"><b>${esc(c.t)}</b><span class="qe-r" title="entran / le dan"><b>${c.ok}</b> / ${c.l}<small>${pctQ(c.ok, c.l)}</small></span></div>
+    <div class="qe-p">${pasos.join('<i aria-hidden="true">›</i>')}</div>
+    ${notas || sinRastro ? `<p class="qe-x">${notas}${sinRastro ? `${notas ? ' · ' : ''}Sin rastro: <b>${sinRastro}</b>` : ''}</p>` : ''}
+  </div>`;
+}
+function embudoQ(E, ahora) {
+  const { canales, origenes } = embudoDatos(E, ahora);
+  if (!canales.length) return '';
+  let h = `<p class="qe-l">A la derecha, <b>entran / le dan</b>: de los que abren LaLiga, cuántos acaban dentro.</p>${canales.map((c) => embudoFila(c)).join('')}`;
+  if (origenes.length) h += `<h4 class="qe-h">Por campaña</h4>${origenes.map((c) => embudoFila(c, { origen: true })).join('')}`;
+  return tarjetaQ('Antes de entrar · 7 días', h);
 }
 
 function cuentasQ(S, lista, ahora, minPlay) {

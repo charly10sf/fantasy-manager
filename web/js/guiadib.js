@@ -39,3 +39,21 @@ const pc = (mac) => marco(
 
 /** el dibujo de «copia la dirección de la página final» para 'iphone', 'android' o 'pc' (mac: con la tecla ⌘ en vez de Ctrl) */
 export const dibCopiar = (plat, mac = false) => (plat === 'iphone' ? IPHONE : plat === 'android' ? ANDROID : pc(mac));
+
+/* (21 nov) El cuadro «Abrir con» que saca Android al volver de LaLiga cuando en el móvil están las dos apps (las dos
+   recogen la misma vuelta). Es un esquema, no una captura: Fantasy Manager marcada con el aro rojo y «Solo una vez».
+   Sin logos de nadie: el de LaLiga Fantasy es un cuadro gris con sus iniciales. */
+export const dibAbrirCon = () => `<svg class="dib dib-ac" viewBox="0 0 320 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="El cuadro «Abrir con» de Android, con dos apps en la lista: Fantasy Manager, que es la que hay que tocar, y LaLiga Fantasy. Debajo, los botones «Solo una vez», que es el que hay que pulsar, y «Siempre»." font-family="Barlow, system-ui, sans-serif">
+  <rect x="0.5" y="0.5" width="319" height="213" rx="18" fill="#17171c" stroke="#34343c"/>
+  <rect x="136" y="10" width="48" height="4" rx="2" fill="#4a4a55"/>
+  <text x="22" y="42" font-size="16" font-weight="700" fill="#f4f2f3">Abrir con</text>
+  <rect x="12" y="56" width="296" height="48" rx="12" fill="#26262d"/>
+  <rect x="24" y="64" width="32" height="32" rx="8" fill="#ee1c3c"/><text x="40" y="85.500" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">FM</text>
+  <text x="68" y="85.500" font-size="15" font-weight="700" fill="#f4f2f3">Fantasy Manager</text>
+  <circle cx="284" cy="80" r="10" fill="#ee1c3c"/><path d="M279.500 80.500l3.200 3.200 6-6.400" fill="none" stroke="#fff" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="pulso" x="9" y="53" width="302" height="54" rx="15" fill="none" stroke="#ee1c3c" stroke-width="3"/>
+  <rect x="24" y="118" width="32" height="32" rx="8" fill="#33333b"/><text x="40" y="139.500" font-size="12" font-weight="700" fill="#8f8a93" text-anchor="middle">LF</text>
+  <text x="68" y="139.500" font-size="15" font-weight="500" fill="#8f8a93">LaLiga Fantasy</text>
+  <rect x="22" y="166" width="132" height="34" rx="17" fill="#ee1c3c"/><text x="88" y="188" font-size="13.500" font-weight="700" fill="#fff" text-anchor="middle">Solo una vez</text>
+  <rect x="166" y="166" width="132" height="34" rx="17" fill="none" stroke="#4a4a55"/><text x="232" y="188" font-size="13.500" font-weight="600" fill="#8f8a93" text-anchor="middle">Siempre</text>
+</svg>`;

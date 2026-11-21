@@ -3518,3 +3518,55 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .plat .sin-app { margin: 0; }
 .plat .sin-app .entrar-qr, .plat .sin-app .entrar-codigo { background: none; border: 0; padding: 0; margin: 0 0 12px; }
 .plat .sin-app[open] > .entrar-codigo:last-child { margin-bottom: 0; }
+
+/* (21 nov) la app de Android: el aviso de «Abrir con» antes de abrir LaLiga y la pantalla «¿No has vuelto solo?» */
+.dib-ac .pulso { animation: gd-pulso 1.7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .dib-ac .pulso { animation: none; } }
+.abrir-con { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 12px; align-items: center; margin: 0 0 14px; padding: 10px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--rojo); text-align: left; }
+.abrir-con figure { margin: 0; }
+.abrir-con .dib { display: block; width: 100%; height: auto; }
+.pantalla .abrir-con p { margin: 0; font-size: 15px; line-height: 1.4; color: var(--texto); }
+.abrir-con.grande { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px; margin: 0 0 18px; }
+.abrir-con.grande figure { max-width: 340px; margin: 0 auto; width: 100%; }
+.pantalla .abrir-con.grande p { font-size: 18px; line-height: 1.42; }
+.pantalla.pant-aviso { justify-content: flex-start; padding-top: calc(28px + env(safe-area-inset-top)); }
+.pantalla.pant-aviso h1.av-t { font-size: 40px; margin: 0 0 14px; outline: none; }
+.pantalla .nv-i { font-size: 16.5px; }
+.nv-c { margin: 0 0 12px; padding: 12px 14px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--linea); text-align: left; }
+.nv-c h2 { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 6px; font-size: 18px; font-weight: 700; line-height: 1.25; color: var(--texto); text-transform: none; letter-spacing: 0; }
+.nv-c h2 .ic { flex: none; width: 20px; height: 20px; color: var(--rojo-l); margin-top: 2px; }
+.pantalla .nv-c p { margin: 0 0 8px; font-size: 15.5px; line-height: 1.42; }
+.nv-c figure { margin: 10px auto; max-width: 300px; }
+.nv-c figure .dib { display: block; width: 100%; height: auto; }
+.nv-d { margin-top: 6px; border-top: 1px solid var(--linea); padding-top: 4px; }
+.nv-d summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--texto); font-weight: 600; font-size: 15px; }
+.nv-d ol { margin: 0 0 8px; padding-left: 22px; color: var(--texto2); font-size: 15.5px; line-height: 1.5; }
+.pant-aviso .btn.ancho { min-height: 54px; }
+
+/* (21 nov) la barra de la portada según desde dónde se mira: en el iPhone y en el ordenador el botón rojo es «Entrar» */
+.pt-in .pt-entrar.btn { margin-left: auto; }
+.escritorio .pt-in .pt-entrar.btn { margin-left: 0; }
+.pt-in .pt-entrar.btn + .pt-play.btn { margin-left: 0; }
+.pt-play .ic { width: 17px; height: 17px; }
+/* en el iPhone, lo de entrar va lo primero de la página, por encima del portal */
+.portada.web.p-iphone .pant-d { order: -1; }
+
+/* (21 nov) «Antes de entrar» por canal: entran / le dan y los pasos uno a uno */
+.qe-l { margin: 0 0 8px; font-size: var(--t-mini); color: var(--apagado); }
+.qe-l b { color: var(--texto2); }
+.qe { padding: 9px 0; border-top: 1px solid var(--linea); }
+.qe-l + .qe { border-top: 0; padding-top: 0; }
+.qe-c { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.qe-c > b { font-size: var(--t-cuerpo); color: var(--texto); }
+.qe-r { font-size: var(--t-sec2); color: var(--texto2); white-space: nowrap; }
+.qe-r b { font: 700 22px/1 var(--cond); color: var(--texto); }
+.qe-r small { margin-left: 8px; padding: 2px 7px; border-radius: 999px; background: var(--plano2); color: var(--texto); font-weight: 700; font-size: var(--t-mini); }
+.qe-p { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 6px; margin-top: 6px; }
+.qe-p span { display: grid; justify-items: center; min-width: 44px; font-size: 11.5px; line-height: 1.2; color: var(--apagado); }
+.qe-p span b { font: 700 18px/1.1 var(--cond); color: var(--texto2); }
+.qe-p span:last-child b { color: var(--sube); }
+.qe-p i { align-self: center; font-style: normal; color: var(--apagado); opacity: 0.6; }
+.qe-x { margin: 6px 0 0; font-size: var(--t-mini); color: var(--apagado); }
+.qe-x b { color: var(--texto2); }
+.qe-h { margin: 12px 0 0; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--apagado); }
+.qe-o .qe-c > b { font-weight: 600; font-size: var(--t-sec2); }

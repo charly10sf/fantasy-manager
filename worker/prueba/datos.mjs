@@ -774,6 +774,8 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   laliga = 'vivo'; desfase += 3 * 60e3; minuto();
   for (const p of ['ver', 'l', 'x-laliga', 'x-laliga', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
   await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
+  // (21 nov) los pasos nuevos: la app vuelve sin código, y en la web llega, vuelve de LaLiga y pasa a la pantalla de inicio
+  for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
   r = await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'borrar', k: 'play' }), tk: '', e: eE });
   ok(r.s === 400, `/embudo con un paso que no existe: ${r.s}`);
   // con más fallos de LaLiga que entradas, amarillo aunque contesten
@@ -782,6 +784,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
   const hoy = Object.keys(dias)[0], d = dias[hoy];
   ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 3 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  ok(d.play['x-vuelve'] === 2 && d['web-iphone'].llega === 1 && d['web-iphone'].v === 1 && d['web-iphone'].inicio === 1 && d['o:x-ios'].llega === 1 && d['o:x-ios'].v === 1, `/embudo con los pasos nuevos (x-vuelve, llega, v, inicio) y la campaña con guion: ${JSON.stringify(d['o:x-ios'])}`);
   // freno por IP: 20 al minuto
   minuto();
   const est = [];

@@ -24,7 +24,7 @@ const BASE = `http://127.0.0.1:${srv.address().port}`;
 const nav = await pw.chromium.launch({ executablePath: process.env.CHROME || undefined, args: ['--disable-dev-shm-usage'] });
 const APP = `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '7261', canal: () => 'play', hayQR: () => false, programarAvisos: () => {}, hayAnuncios: () => true, aLaVista: () => true,
   guardar: (k, v) => { localStorage.setItem('fm-n-' + k, v); }, borrar: (k) => { localStorage.removeItem('fm-n-' + k); }, leer: (k) => localStorage.getItem('fm-n-' + k) }, { get: (o, k) => (k in o ? o[k] : () => null) });`;
-const BASE_LS = `if (!sessionStorage.getItem('puesto')) { sessionStorage.setItem('puesto', '1'); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1'); __EXTRA__ }`;
+const BASE_LS = `if (!sessionStorage.getItem('puesto')) { sessionStorage.setItem('puesto', '1'); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1'); __EXTRA__ }`;
 async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
   const ctx = await nav.newContext({ viewport: { width: 396, height: 859 }, timezoneId: 'Europe/Madrid', locale: 'es-ES' });
   await ctx.route('**/*', (r) => (new URL(r.request().url()).hostname === '127.0.0.1' ? r.continue() : r.abort('blockedbyclient')));

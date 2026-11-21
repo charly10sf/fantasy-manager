@@ -41,7 +41,7 @@ window.FantasyApp = new Proxy({
   http: (id, metodo, url, cab, cuerpo) => { fetch(url, { method: metodo, headers: JSON.parse(cab || '{}'), body: cuerpo || undefined }).then(async (r) => ({ s: r.status, b: await r.text() }), (e) => ({ s: 0, e: String(e) })).then((r) => { (window.__resp ||= {})[id] = JSON.stringify(r); window.__http(id); }); },
   respuesta: (id) => { const r = (window.__resp || {})[id]; if (window.__resp) delete window.__resp[id]; return r || null; },
 }, { get: (o, k) => { if (k === 'banner') window.__pedidos.push(['banner']); return k in o ? o[k] : undefined; } });
-localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1');`;
+localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-tema-aviso', '1'); localStorage.setItem('fm-beta-aviso', '1');`;
 
 async function abrir({ dueno = false, suLiga = false, enSuLiga = false, demo = false } = {}) {
   const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Europe/Madrid', locale: 'es-ES' });

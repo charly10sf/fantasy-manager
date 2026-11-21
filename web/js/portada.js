@@ -302,12 +302,19 @@ const PORTAL = [
   ['jugadores/', 'Jugadores', 'Todos, con su valor día a día, sus puntos por jornada y si es titular'],
   ['guias/', 'Guías', 'Cláusulas, mercado, puntos y calculadoras, explicado con números'],
 ];
-export function barraPortal() {
+/* (21 nov) plat: desde dónde se mira. En el iPhone no hay nada que descargar: el botón rojo es «Entrar» (baja a #entrar) y
+   Google Play no sale (9 de 53 visitas lo pulsaban y no les llevaba a nada). En el ordenador, «Entrar» en rojo y Google
+   Play en secundario. En la web de un Android, como estaba: «Entrar» y, en rojo, «Descargar». */
+export function barraPortal(plat = 'android') {
+  const entrarRojo = `<a class="btn pt-cta pt-entrar" href="#entrar">${icono('usuario')}<span>Entrar</span></a>`;
+  const botones = plat === 'iphone' ? entrarRojo
+    : plat === 'pc' ? `${entrarRojo}<a class="btn sec pt-web pt-play" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}<span>Google Play</span></a>`
+      : `<a class="btn sec pt-web" href="#entrar">Entrar</a>
+    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}<span>Descargar<span class="pt-largo"> en Google Play</span></span></a>`;
   return `<div class="pt-bar on pt-fija"><div class="pt-in">
     <a class="pt-marca" href="#" data-arriba aria-label="Fantasy Manager: arriba">${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
     <nav class="pt-menu" aria-label="Secciones"><a href="#pHoy" data-ir-a="pHoy" class="on">Hoy</a>${PORTAL.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="#pApp" data-ir-a="pApp">La app</a></nav>
-    <a class="btn sec pt-web" href="#entrar">Entrar</a>
-    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}<span>Descargar<span class="pt-largo"> en Google Play</span></span></a></div><i class="pt-prog"></i></div>`;
+    ${botones}</div><i class="pt-prog"></i></div>`;
 }
 /** el portal, arriba a la izquierda (en el móvil, lo primero): la insignia de Google Play, el bloque «Hoy» y las secciones */
 export function portalHTML(insignia = '') {
