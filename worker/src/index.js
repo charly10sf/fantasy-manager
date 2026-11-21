@@ -1613,8 +1613,8 @@ export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_F
 // lo viejo se borra al leer.
 // (21 nov) pasos nuevos: «llega» (la web: llega sin sesión; «ver» pasa a ser «el bloque de entrar a la vista»), «v» (la web:
 // vuelve de la pestaña de LaLiga), «x-vuelve» (la app de Android: vuelve de LaLiga sin el código, porque eligió la otra app en
-// «Abrir con», LaLiga dio error o cerró la pestaña) e «inicio» (el iPhone: pasa la sesión a la pantalla de inicio)
-export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
+// «Abrir con», LaLiga dio error o cerró la pestaña) «inicio» (el iPhone: pasa la sesión a la pantalla de inicio) y «saf» (el iPhone dentro de X o Instagram: toca «Abrir en Safari»)
+export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
 export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
 const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
 const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
