@@ -1003,7 +1003,9 @@ function marco() {
   // a) un botón más en la barra, con el borde dorado; b) el mismo botón relleno en dorado y con «+2» (los rivales que se ganan);
   // c) una tira fina debajo de la barra, en todas las pestañas; d) como a, pero sin el botón «Actualizar»: se actualiza
   // tocando el estado («Al día ↻») o tirando hacia abajo, y el nombre de la liga no se corta
-  const vInv = LS.get('var-inv', '');
+  // (Carlos, 21 nov 20:57) elegida la d: «Invitar», «Pregunta» y «Ajustes» a la derecha, y actualizar, en pequeño debajo
+  // del nombre de la liga. Con las invitaciones paradas, la barra de antes
+  const vInv = invitarOn() ? LS.get('var-inv', 'd') : '';
   const invBoton = vInv === 'a' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
     : vInv === 'd' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
     : vInv === 'b' ? `<button class="b-ico b-inv lleno" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo: por cada uno que entra, el dinero de 2 rivales" data-et="Invitar">${icono('estrella')}<span class="inv-mas" aria-hidden="true">+2</span></button>` : '';
@@ -1073,6 +1075,7 @@ function pintarSup() {
       : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : corto ? `Hace ${hace}` : `Actualizado ${hace}`) : ''}`;
   $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
   $('#bRefrescar').classList.toggle('gira', S.cargando);
+  { const st = $('#supEstado'); if (st) st.classList.toggle('girando', !!S.cargando); }
   pintarNumAvisos();
   const pend = S.plan ? V.cuentaPasos(S, S.plan).pend : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
@@ -4420,7 +4423,7 @@ function pasosTour() {
     conIA
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: planesApp(demo) ? `La IA hace el plan sola al empezar el día y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien: tienes ${planesCfg().gratis} al día con la IA${topConAnuncio() ? ' y, viendo un anuncio corto, alguno más' : ''}. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.` : 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
-    { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
+    { v: 'hoy', sel: '#bRefrescar:not([hidden]), #supEstado.sup-toca', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },

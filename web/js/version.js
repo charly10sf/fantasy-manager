@@ -29,10 +29,11 @@ export const NOVEDADES = [
     // app se queda fuera. Ahora se avisa justo antes, con un dibujo, y si se vuelve sin haber entrado se explica qué ha
     // pasado y se repite con un toque. En la web, el iPhone y el ordenador tienen «Entrar» lo primero. Sin `todos`: a los
     // demás no les sale salvo que Carlos lo diga. La hora, al publicar
-    v: '0.8m', f: '2026-11-21', h: '20:44', t: 'Entrar a la primera',
+    v: '0.8m', f: '2026-11-21', h: '20:57', t: 'Entrar a la primera',
     cosas: [
       { tipo: 'mejora', d: 'movil', t: 'En Android: elige Fantasy Manager al volver', x: 'Si tienes también la app de LaLiga Fantasy, al terminar de entrar Android pregunta con qué app abrir. Ahora te lo avisa justo antes, con un dibujo: elige Fantasy Manager y «Solo una vez». Solo es un paso más la primera vez.', para: 'app' },
       { tipo: 'mejora', d: 'aviso', t: '¿No has vuelto solo? Te dice por qué', x: 'Si vuelves a la app sin haber entrado, ya no te quedas en la pantalla de antes sin saber qué ha pasado: te explica las dos causas (se abrió la otra app o LaLiga dio error), cómo quitar el «Siempre» si lo marcaste y lo repites con un toque.', para: 'app' },
+      { tipo: 'mejora', d: 'estrella', t: 'Invitar a un amigo, siempre a mano', x: 'Arriba, junto a Pregunta y Ajustes, hay un botón para invitar a un amigo. Actualizar la liga pasa a estar debajo de su nombre: toca «Al día» o tira de la pantalla hacia abajo.' },
       { tipo: 'mejora', d: 'movil', t: 'En el iPhone, entrar es lo primero', x: 'Al abrir la web desde un iPhone, lo primero que se ve es cómo entrar, y el botón rojo de arriba es «Entrar». Lo de Google Play, que en un iPhone no sirve, ya no está arriba.', para: 'web' },
       { tipo: 'mejora', d: 'pantalla', t: 'En el ordenador, entrar va antes', x: 'En el ordenador, el bloque para entrar aquí mismo va el primero y el de Android, debajo. En la barra, «Entrar» en rojo.', para: 'web', menor: true },
     ],
