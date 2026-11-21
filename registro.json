@@ -1553,6 +1553,21 @@
    "jornada": 13,
    "id": "2124196538993799341",
    "t": "2026-11-21T17:41:35.609Z"
+  },
+  {
+   "clave": "directo|121|Antony|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124212833789391102",
+   "t": "2026-11-21T18:46:20.580Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "121",
+    "equipo": "244",
+    "min": 50,
+    "extra": 0,
+    "jugador": "Antony"
+   }
   }
  ],
  "estados": {
@@ -2660,7 +2675,8 @@
    "SPORT|136704189": 1795281115000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
+   "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000
   },
   "hechos": [
    {
@@ -3488,7 +3504,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -4395,16 +4411,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 49,
+   "redactar": 51,
    "revisar": 25,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 781279,
-  "salida": 29391,
+  "entrada": 806085,
+  "salida": 29659,
   "cacheLee": 52254,
   "cacheEscribe": 20321,
-  "dolares": 1.630634,
+  "dolares": 1.682926,
   "reservado": 0
  },
  "recientes": {
@@ -4542,10 +4558,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T13:06:18.021Z",
-    "texto": "⚽ Ángel Pérez marca en el 2' y el Alavés se adelanta en Mendizorroza: 1-0 al Deportivo.\n\nEs su primer gol en Liga, Champions o Copa del Rey y ya suma 5 puntos. El pase es de Blanco, que de momento se lleva 4."
-   },
-   {
     "t": "2026-11-21T14:16:19.899Z",
     "texto": "🧤 Leo Román le para un penalti a Lucas Boyé en el 55'. Alavés 1-1 Deportivo. Habría adelantado al Alavés."
    },
@@ -4560,6 +4572,10 @@
    {
     "t": "2026-11-21T16:01:27.924Z",
     "texto": "⚽ Copete, un defensa, la mete de cabeza en el 41' y el Valencia 🦇 se adelanta en Vallecas: 0-1 al Rayo ⚡.\n\nEs su primer gol en Liga, Champions o Copa y ya lleva 6 puntos, más del doble de su media. Javi Guerra pone el pase y suma 4."
+   },
+   {
+    "t": "2026-11-21T18:46:20.582Z",
+    "texto": "⚽ Antony la mete en el 50' y el Betis pasa por delante en el Sánchez-Pizjuán: 0-1 contra el Sevilla.\n\nEl brasileño estrena su cuenta en Liga, Champions o Copa del Rey y ya suma 6 puntos. Isco, con la asistencia, lleva 4 por ahora."
    }
   ],
   "novedades": [
@@ -8913,17 +8929,33 @@
    "w": "2026-11-21T15:57:38Z",
    "f": "2026-11-21T16:01:13.446Z",
    "rf": "43:54"
+  },
+  "fm|121|967622|50": {
+   "j": "Antony",
+   "m": "50'",
+   "f": "2026-11-21T18:46:11.459Z",
+   "rf": "52:56",
+   "casado": true
+  },
+  "directo|121|Antony|gol1": {
+   "j": "Antony",
+   "m": "50'",
+   "e": "2026-11-21T18:46:11.459Z",
+   "re": "53'",
+   "w": "2026-11-21T18:42:34Z",
+   "f": "2026-11-21T18:46:11.459Z",
+   "rf": "52:56"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4901,
+   "ok": 4903,
    "fallos": 0,
-   "ejecuciones": 4026,
+   "ejecuciones": 4027,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:41:13.733Z"
+   "ultima": "2026-11-21T18:46:11.459Z"
   }
  },
  "ptsDirecto": {
@@ -8974,6 +9006,18 @@
    "g": 0,
    "a": 1,
    "t": 1795276873446
+  },
+  "13|121|2770": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795286771459
+  },
+  "13|121|3090": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795286771459
   }
  },
  "golesAnulados": {
@@ -8989,27 +9033,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:41:23.194Z"
+   "ultimaBien": "2026-11-21T18:46:51.862Z"
   }
  },
  "avisos": [
