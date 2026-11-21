@@ -2510,8 +2510,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
-   "SPORT|136592622": 1795033687000,
-   "SPORT|136597911": 1795033813000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000,
    "SPORT|136598263": 1795035303000,
    "AS|https://as.com/futbol/primera/la-feliz-contrarreloj-de-parrott-f202611-n/": 1795040843000,
@@ -2734,21 +2732,10 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000,
    "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000,
-   "SPORT|136707103": 1795288603000
+   "SPORT|136707103": 1795288603000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136597911",
-    "medio": "SPORT",
-    "t": 1795033813000,
-    "id": "2217",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cucho Hernández regresa a los entrenamientos y apunta al derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html",
     "medio": "MARCA",
@@ -3574,7 +3561,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -9071,13 +9058,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4936,
+   "ok": 4938,
    "fallos": 0,
-   "ejecuciones": 4047,
+   "ejecuciones": 4048,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T20:26:17.905Z"
+   "ultima": "2026-11-21T20:31:16.167Z"
   }
  },
  "ptsDirecto": {
@@ -9179,27 +9166,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:26:27.324Z"
+   "ultimaBien": "2026-11-21T20:31:48.194Z"
   }
  },
  "avisos": [
