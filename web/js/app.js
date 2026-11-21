@@ -722,6 +722,8 @@ async function codigoDeSesion() {
   if (r.s !== 200 || !j || !j.codigo) throw new Error((j && j.e) || `el servidor responde ${r.s}`);
   return j;
 }
+/** (21 nov) la variante c de invitar: una tira fina debajo de la barra, en todas las pestañas */
+const bandaInvita = () => (LS.get('var-inv', '') === 'c' ? `<div class="banda banda-inv">${icono('estrella')}<span><b>Invita a un amigo</b> y ve el dinero de 2 rivales por cada uno que entre.</span><button data-accion="invitarAmigo">Invitar</button></div>` : '');
 const enIPhoneWeb = () => !enApp && movilDe() === 'iphone';
 const bandaInicio = () => {
   if (!enIPhoneWeb() || enInicio() || !haySesion() || enDemo()) return '';
@@ -996,10 +998,19 @@ function marco() {
   // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
   // (en el ordenador, Pregunta va arriba del todo de la columna, encima de las pestañas)
   const preg = `<button class="b-ico b-preg" id="bPregunta" data-ir="ia" aria-label="Pregunta" data-et="Pregunta">${icono('ia')}</button>`;
-  const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
+  // (21 nov, Carlos: «que lo del referido de amigo fuera más vistoso, fuera de su apartado, en la barra de arriba»)
+  // tres variantes para que elija (localStorage «fm-var-inv»: a, b o c; sin elegir, como estaba):
+  // a) un botón más en la barra, con el borde dorado; b) el mismo botón relleno en dorado y con «+2» (los rivales que se ganan);
+  // c) una tira fina debajo de la barra, en todas las pestañas; d) como a, pero sin el botón «Actualizar»: se actualiza
+  // tocando el estado («Al día ↻») o tirando hacia abajo, y el nombre de la liga no se corta
+  const vInv = LS.get('var-inv', '');
+  const invBoton = vInv === 'a' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
+    : vInv === 'd' ? `<button class="b-ico b-inv" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo" data-et="Invitar">${icono('estrella')}</button>`
+    : vInv === 'b' ? `<button class="b-ico b-inv lleno" id="bInvitar" data-accion="invitarAmigo" aria-label="Invita a un amigo: por cada uno que entra, el dinero de 2 rivales" data-et="Invitar">${icono('estrella')}<span class="inv-mas" aria-hidden="true">+2</span></button>` : '';
+  const botones = `<div class="sup-btns">${invBoton}<button class="b-ico" id="bRefrescar"${vInv === 'd' ? ' hidden' : ''} data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="beta" aria-label="${avisosGuardados().admin ? 'Versión beta: quién usa la app' : 'Versión beta: reportar un fallo o proponer una idea'}">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="beta" aria-label="${avisosGuardados().admin ? 'Versión beta: quién usa la app' : 'Versión beta: reportar un fallo o proponer una idea'}">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"${vInv === 'd' ? ' class="sup-toca" data-accion="recargar" role="button" tabindex="0" title="Actualizar la liga"' : ''}></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -1103,7 +1114,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
