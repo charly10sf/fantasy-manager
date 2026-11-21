@@ -2555,7 +2555,8 @@
    "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
    "SPORT|136695544": 1795261280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
+   "SPORT|136695915": 1795263607000
   },
   "hechos": [
    {
@@ -3426,7 +3427,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4310,32 +4311,32 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260406000,
    "SPORT|136694022": 1795257482000,
-   "SPORT|136695535": 1795260962000
+   "SPORT|136695535": 1795260962000,
+   "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266371450
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 19,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152753,
-  "salida": 12039,
+  "entrada": 156804,
+  "salida": 12872,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.282275,
+  "dolares": 0.283097,
   "reservado": 0
  },
  "recientes": {
@@ -8742,13 +8743,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4779,
+   "ok": 4781,
    "fallos": 0,
-   "ejecuciones": 3961,
+   "ejecuciones": 3962,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T13:21:13.250Z"
+   "ultima": "2026-11-21T13:26:11.354Z"
   }
  },
  "ptsDirecto": {
@@ -8790,27 +8791,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:21:19.526Z"
+   "ultimaBien": "2026-11-21T13:26:20.604Z"
   }
  },
  "avisos": [
