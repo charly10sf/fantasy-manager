@@ -2327,7 +2327,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
-   "SPORT|136565152": 1795005249000,
    "SPORT|136581134": 1795007753000,
    "SPORT|136580084": 1795008872000,
    "SPORT|136558313": 1795010451000,
@@ -8640,13 +8639,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4765,
+   "ok": 4766,
    "fallos": 0,
-   "ejecuciones": 3951,
+   "ejecuciones": 3952,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T12:31:14.140Z"
+   "ultima": "2026-11-21T12:36:17.850Z"
   }
  },
  "ptsDirecto": {
@@ -8676,15 +8675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:31:27.129Z"
+   "ultimaBien": "2026-11-21T12:36:19.850Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:31:27.129Z"
+   "ultimaBien": "2026-11-21T12:36:19.850Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:31:27.129Z"
+   "ultimaBien": "2026-11-21T12:36:19.850Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8692,11 +8691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:31:27.129Z"
+   "ultimaBien": "2026-11-21T12:36:19.850Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:31:27.129Z"
+   "ultimaBien": "2026-11-21T12:36:19.850Z"
   }
  },
  "avisos": [
