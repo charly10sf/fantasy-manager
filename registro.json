@@ -2125,7 +2125,7 @@
   "3119": "ok",
   "3120": "ok",
   "3121": "ok",
-  "3122": "doubtful",
+  "3122": "ok",
   "3123": "ok",
   "3124": "out_of_league",
   "3125": "ok",
@@ -2319,20 +2319,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/de-la-fatalidad-al-once-de-gala-en-el-derbi-f202611-n/": 1794955695000,
-   "SPORT|136520259": 1794976224000,
-   "SPORT|136556602": 1794976223000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261118/11686717/frenkie-de-jong-llama-puerta-asi-recuperado-confianza-flick-ganarse-sitio-barca.html": 1794978000000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/kike-salas-bartra-duelo-killers-balon-parado-decidir-derbi-sevilla-fc-betis_0_2008529370.html": 1794979825000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-betis-frente-espejo_0_2008529420.html": 1794979825000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/duda-ceballos-doble-pivote-recurrente-betis_0_2008529376.html": 1794979520000,
-   "El Correo|https://www.elcorreo.com/athletic/lesiones-dan-tregua-athletic-20261117010326-nt.html": 1794960207000,
-   "SPORT|136563145": 1794981233000,
-   "SPORT|136513147": 1794981628000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/18/programada-dilema-mourinho-diomande-o-136563277.html": 1794985510000,
-   "SPORT|136563343": 1794982609000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000,
-   "SPORT|136563278": 1794988253000,
    "SPORT|136565939": 1794989471000,
    "SPORT|136564504": 1794989867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252482/fifa-tendra-indemnizar-atletico-lookman-11-diciembre.html": 1794993019000,
@@ -2532,21 +2519,25 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/20/en-directo-alaves-deportivo-de-a-coruna-jornada-13-laliga-ea-sports-carrusel-deportivo-coruna-radio-coruna/": 1795203184000,
    "SPORT|136682778": 1795202245000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000,
+   "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/": 1795217931000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-celta-ante-el-real-madrid-en-laliga-ea-sports-f202611-n/": 1795218102000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-deportivo-ante-el-alaves-en-laliga-ea-sports-f202611-n/": 1795217639000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1795217293000,
+   "AS|https://as.com/futbol/nico-williams-tengo-que-empezar-a-simplificar-las-jugadas-f202611-n/": 1795216484000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253460/alaves-busca-primer-triunfo-septiembre-depor-pendiente-aubameyang.html": 1795240800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253606/amargo-regreso-titularidad.html": 1795244400000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253434/real-madrid-celta-incognita-vinicius.html": 1795242768000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253605/no-hay-dos-tres-athletic.html": 1795240800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261121/1004253572/fortuno-serio.html": 1795215747000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253520/athletic-partido.html": 1795212233000,
+   "SPORT|136613296": 1795240876000,
+   "SPORT|136686729": 1795226464000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/la-curiosa-imagen-del-castilla-murcia-jose-mourinho-se-reencuentra-con-pedro-leon-cadena-ser/": 1795213478000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/derbi-nervion-semanas-visperas_0_2008552736.html": 1795237826000,
+   "El Correo|https://www.elcorreo.com/athletic/agridulce-regreso-prados-titularidad-20261120234822-nt.html": 1795214902000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136556602",
-    "medio": "SPORT",
-    "t": 1794976223000,
-    "id": "3104",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Lamine Yamal acaba el partido con molestias en la rodilla",
-    "motivo": "molestias en la rodilla derecha",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252482/fifa-tendra-indemnizar-atletico-lookman-11-diciembre.html",
     "medio": "Mundo Deportivo",
@@ -3343,11 +3334,109 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/",
+    "medio": "AS",
+    "t": 1795217931000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang es seria duda para el Alavés",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-deportivo-ante-el-alaves-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795217639000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang tiene molestias en el tobillo",
+    "motivo": "molestias en el tobillo",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-sevilla-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795217293000,
+    "id": "3264",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Ceballos no cuenta para el Betis ante el Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253460/alaves-busca-primer-triunfo-septiembre-depor-pendiente-aubameyang.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795240800000,
+    "id": "3108",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aubameyang tiene la duda para el Alavés",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253605/no-hay-dos-tres-athletic.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795240800000,
+    "id": "2318",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136613296",
+    "medio": "SPORT",
+    "t": 1795240876000,
+    "id": "1775",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cubarsí vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136613296",
+    "medio": "SPORT",
+    "t": 1795240876000,
+    "id": "2355",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Kounde vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/deportes/derbi-nervion-semanas-visperas_0_2008552736.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795237826000,
+    "id": "2217",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cucho Hernández vuelve a la convocatoria del Betis",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     8
+    ]
    }
   ],
   "gemini": {
-   "dia": "2026-11-20",
-   "n": 55
+   "dia": "2026-11-21",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4181,6 +4270,10 @@
    "3284": {
     "e": "ok",
     "t": 0
+   },
+   "3305": {
+    "e": "ok",
+    "t": 0
    }
   }
  },
@@ -4243,17 +4336,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 18284,
-  "salida": 438,
+  "entrada": 23319,
+  "salida": 4683,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.042793,
+  "dolares": 0.045419,
   "reservado": 0
  },
  "recientes": {
@@ -8644,13 +8737,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4709,
+   "ok": 4710,
    "fallos": 0,
-   "ejecuciones": 3895,
+   "ejecuciones": 3896,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T07:56:10.412Z"
+   "ultima": "2026-11-21T08:01:11.242Z"
   }
  },
  "ptsDirecto": {
@@ -8680,15 +8773,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:56:15.732Z"
+   "ultimaBien": "2026-11-21T08:01:35.664Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:56:15.732Z"
+   "ultimaBien": "2026-11-21T08:01:35.664Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:56:15.732Z"
+   "ultimaBien": "2026-11-21T08:01:35.664Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8696,11 +8789,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:56:15.732Z"
+   "ultimaBien": "2026-11-21T08:01:35.664Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T21:56:17.255Z"
+   "ultimaBien": "2026-11-21T08:01:35.664Z"
   }
  },
  "avisos": [
