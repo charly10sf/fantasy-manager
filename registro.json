@@ -2442,10 +2442,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
    "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
    "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000,
-   "SPORT|136593985": 1795025545000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261118/1004252708/satriano-vuelve-tirar-ataque-getafe.html": 1795029584000,
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
@@ -2658,21 +2656,10 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
    "SPORT|136701065": 1795280023000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
+   "SPORT|136704189": 1795281115000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/",
-    "medio": "AS",
-    "t": 1795025481000,
-    "id": "2924",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Zaid Romero entrena con normalidad y regresa este domingo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/",
     "medio": "AS",
@@ -3486,7 +3473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -8915,13 +8902,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4889,
+   "ok": 4891,
    "fallos": 0,
-   "ejecuciones": 4020,
+   "ejecuciones": 4021,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:11:12.185Z"
+   "ultima": "2026-11-21T18:16:12.075Z"
   }
  },
  "ptsDirecto": {
@@ -8987,27 +8974,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:11:20.482Z"
+   "ultimaBien": "2026-11-21T18:16:48.009Z"
   }
  },
  "avisos": [
