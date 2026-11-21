@@ -3,6 +3,7 @@ package es.fantasymanager.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -11,7 +12,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.browser.auth.AuthTabColorSchemeParams;
 import androidx.browser.auth.AuthTabIntent;
 import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsService;
 import androidx.core.app.ActivityOptionsCompat;
+
+import java.util.List;
 
 /**
  * La entrada de LaLiga por Auth Tab (21 nov; androidx.browser 1.9.0, Chrome 137 o más).
@@ -30,7 +34,7 @@ import androidx.core.app.ActivityOptionsCompat;
  * startActivityForResult con ese intent. El resultado llega a Principal.onActivityResult con RESULT_OK y la dirección
  * de vuelta en los datos del intent, o con otro código si se cerró sin terminar.
  *
- * Si el navegador por defecto no lleva Auth Tab (otro navegador, o un Chrome anterior al 137), `abrir` devuelve false y
+ * Si ningún navegador del móvil lleva Auth Tab (sin Chrome, o con uno anterior al 137), `abrir` devuelve false y
  * Principal abre la pestaña de siempre: la vuelta llega entonces por el intent-filter del manifiesto, como hasta ahora.
  */
 final class AuthTab {
@@ -42,14 +46,30 @@ final class AuthTab {
     private AuthTab() {
     }
 
+    /** Chrome, el primero entre los que no son el navegador por defecto: es el que trae Auth Tab desde la 137 */
+    private static final String CHROME = "com.android.chrome";
+
     /**
-     * El navegador en el que se abriría la pestaña (el de por defecto, si lleva Custom Tabs) cuando además lleva Auth
-     * Tab; null si no. Es el mismo que usa CustomTabsIntent.launchUrl sin paquete, lo de hasta ahora.
+     * El navegador en el que abrir la entrada con Auth Tab, o null si no hay ninguno que lo lleve.
+     * Primero el de por defecto (el mismo que usa CustomTabsIntent.launchUrl sin paquete, lo de hasta ahora). Si ese no
+     * lleva Auth Tab (21 nov, el móvil de Carlos: un Samsung con Samsung Internet por defecto, y Android seguía
+     * preguntando «Abrir con»), cualquier otro instalado que sí: Chrome antes que los demás. Así basta con tener Chrome
+     * 137 o más en el móvil, sea o no el navegador por defecto.
      */
     static String navegador(Context c) {
         try {
             String p = CustomTabsClient.getPackageName(c, null);
-            return p != null && CustomTabsClient.isAuthTabSupported(c, p) ? p : null;
+            if (p != null && CustomTabsClient.isAuthTabSupported(c, p)) return p;
+            String otro = null;
+            List<ResolveInfo> servicios = c.getPackageManager()
+                    .queryIntentServices(new Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION), 0);
+            for (ResolveInfo r : servicios) {
+                String q = r.serviceInfo == null ? null : r.serviceInfo.packageName;
+                if (q == null || !CustomTabsClient.isAuthTabSupported(c, q)) continue;
+                if (CHROME.equals(q)) return q;
+                if (otro == null) otro = q;
+            }
+            return otro;
         } catch (Exception e) {
             return null;
         }
