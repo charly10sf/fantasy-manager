@@ -1459,6 +1459,13 @@
     "extra": 0,
     "jugador": "Ángel Pérez"
    }
+  },
+  {
+   "clave": "directo|130|Lucas Boyé|penalti parado",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124144883187237075",
+   "t": "2026-11-21T14:16:19.897Z"
   }
  ],
  "estados": {
@@ -4352,16 +4359,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 8,
-   "revisar": 5,
+   "redactar": 14,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 162965,
-  "salida": 14906,
-  "cacheLee": 5806,
-  "cacheEscribe": 8709,
-  "dolares": 0.28473,
+  "entrada": 247811,
+  "salida": 16328,
+  "cacheLee": 8709,
+  "cacheEscribe": 11612,
+  "dolares": 0.47619,
   "reservado": 0
  },
  "recientes": {
@@ -4499,10 +4506,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T20:16:19.888Z",
-    "texto": "⚽ Giuliano abre el marcador en el 10'. Atlético 1-0 Barça. Asistencia de Julián Alvarez, con 5 puntos fantasy. Giuliano ya suma 8 puntos."
-   },
-   {
     "t": "2026-11-08T20:51:17.362Z",
     "texto": "⚽ Fermín empata para el Barça en el 45'. Atlético 1-1 Barça. Ya suma 10 puntos."
    },
@@ -4517,6 +4520,10 @@
    {
     "t": "2026-11-21T13:06:18.021Z",
     "texto": "⚽ Ángel Pérez marca en el 2' y el Alavés se adelanta en Mendizorroza: 1-0 al Deportivo.\n\nEs su primer gol en Liga, Champions o Copa del Rey y ya suma 5 puntos. El pase es de Blanco, que de momento se lleva 4."
+   },
+   {
+    "t": "2026-11-21T14:16:19.899Z",
+    "texto": "🧤 Leo Román le para un penalti a Lucas Boyé en el 55'. Alavés 1-1 Deportivo. Habría adelantado al Alavés."
    }
   ],
   "novedades": [
@@ -4888,6 +4895,11 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
+  },
+  "onces|123": {
+   "n": 1,
+   "t": "2026-11-21T14:16:38.412Z",
+   "ultima": "2026-11-21T14:16:38.412Z"
   }
  },
  "rasgos": {
@@ -8775,13 +8787,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4799,
+   "ok": 4801,
    "fallos": 0,
-   "ejecuciones": 3971,
+   "ejecuciones": 3972,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:11:20.845Z"
+   "ultima": "2026-11-21T14:16:11.443Z"
   }
  },
  "ptsDirecto": {
@@ -8823,27 +8835,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:11:26.234Z"
+   "ultimaBien": "2026-11-21T14:16:39.170Z"
   }
  },
  "avisos": [
