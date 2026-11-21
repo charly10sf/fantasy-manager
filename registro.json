@@ -2641,7 +2641,8 @@
    "SPORT|136694477": 1795273212000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
-   "SPORT|136701406": 1795275671000
+   "SPORT|136701406": 1795275671000,
+   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000
   },
   "hechos": [
    {
@@ -3522,7 +3523,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -4425,17 +4426,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 37,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 592006,
-  "salida": 23180,
+  "entrada": 593940,
+  "salida": 23738,
   "cacheLee": 26127,
   "cacheEscribe": 17418,
-  "dolares": 1.203403,
+  "dolares": 1.203875,
   "reservado": 0
  },
  "recientes": {
@@ -8929,13 +8930,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4859,
+   "ok": 4861,
    "fallos": 0,
-   "ejecuciones": 4003,
+   "ejecuciones": 4004,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:46:10.323Z"
+   "ultima": "2026-11-21T16:51:12.694Z"
   }
  },
  "ptsDirecto": {
@@ -9001,27 +9002,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:46:19.331Z"
+   "ultimaBien": "2026-11-21T16:51:24.034Z"
   }
  },
  "avisos": [
