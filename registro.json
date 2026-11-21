@@ -2319,7 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
@@ -2526,18 +2525,6 @@
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/",
-    "medio": "Cadena SER",
-    "t": 1795002741000,
-    "id": "3152",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Y. Zabiri todavía no se entrena con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html",
     "medio": "Mundo Deportivo",
@@ -8632,13 +8619,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4757,
+   "ok": 4758,
    "fallos": 0,
-   "ejecuciones": 3943,
+   "ejecuciones": 3944,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:51:12.694Z"
+   "ultima": "2026-11-21T11:56:13.689Z"
   }
  },
  "ptsDirecto": {
@@ -8668,15 +8655,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:51:17.653Z"
+   "ultimaBien": "2026-11-21T11:56:19.469Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:51:17.653Z"
+   "ultimaBien": "2026-11-21T11:56:19.469Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:51:17.653Z"
+   "ultimaBien": "2026-11-21T11:56:19.469Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8684,11 +8671,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:51:17.653Z"
+   "ultimaBien": "2026-11-21T11:56:19.469Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:51:17.653Z"
+   "ultimaBien": "2026-11-21T11:56:19.469Z"
   }
  },
  "avisos": [
