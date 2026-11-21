@@ -405,6 +405,7 @@ def pagina(p, contenido, hay_guias):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#08080a">
+  <meta name="color-scheme" content="dark">
   <title>{e(p['titulo'])}</title>
   <meta name="description" content="{e(p['descripcion'])}">{robots}
   <link rel="canonical" href="{url}">

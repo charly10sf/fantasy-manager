@@ -11,6 +11,7 @@
 @font-face { font-family: 'Barlow'; src: url('../fonts/barlow-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
 @font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 :root {
+  color-scheme: dark;
   --fondo: #08080a; --plano: #121215; --s1: #111114; --s2: #19191e; --s3: #24242b; --linea: #26262b;
   --texto: #f4f2f3; --texto2: #b9b5b8; --apagado: #948f9b;
   --rojo: #ee1c3c; --rojo-btn: #e0193a; --rojo-l: #ff5269;
@@ -240,14 +241,13 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .mini .a, .graf .a { opacity: 0.16; } .mini.sube .a, .graf.sube .a { fill: var(--sube); } .mini.baja .a, .graf.baja .a { fill: var(--baja); } .mini.igual .a { fill: none; }
 .graf { width: 100%; height: auto; } .graf text { fill: var(--apagado); font: 12px 'Barlow', sans-serif; }
 .graf .eje { stroke: var(--linea); stroke-width: 1; stroke-dasharray: 3 4; fill: none; }
-.graf text, .barras text { paint-order: stroke; stroke: var(--fondo); stroke-width: 3px; stroke-linejoin: round; }
 .bq > .graf, .bq > .barras { display: block; max-width: 760px; }
 .barras { width: 100%; height: auto; } .barras text { fill: var(--apagado); font: 11px 'Barlow', sans-serif; }
 .barras rect.p10 { fill: #3ddc8f; } .barras rect.p6 { fill: var(--sube); } .barras rect.p2 { fill: var(--oro); } .barras rect.p1 { fill: var(--baja); }
 .barras text.nj { opacity: 0.5; }
 .bq > .barras-eq { max-width: 600px; }
 .barras-eq text { font-size: 10px; }
-.barras-eq .g-et { fill: var(--texto); font: 700 12px var(--cond); }
+.barras-eq .g-et { fill: var(--texto); font: 700 13px var(--cond); }
 .barras-eq .g-res { font-size: 9.5px; } .barras-eq .r-G { fill: var(--sube); } .barras-eq .r-E { fill: var(--oro); } .barras-eq .r-P { fill: var(--baja); }
 .barras-eq .media { fill: none; stroke: var(--texto2); stroke-width: 1.5; stroke-dasharray: 4 3; opacity: 0.8; }
 
@@ -364,6 +364,22 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .tarjeta-bot { margin: 0 0 16px; }
 .tarjeta-bot img { display: block; width: 100%; max-width: 540px; height: auto; border-radius: 14px; }
 .tarjeta-bot figcaption { font-size: 14px; color: var(--apagado); margin-top: 6px; }
+/* el once probable en su campo: delanteros arriba, portero abajo; con la cara (ficha de equipo) o con el % en un círculo (los 20) */
+.campo-o { position: relative; gap: 12px; padding: 16px 4px 14px; margin: 0 0 12px; max-width: 560px; overflow: hidden;
+  background: repeating-linear-gradient(180deg, #0e3823 0 56px, #0c311f 56px 112px); }
+.campo-o::before { content: ''; position: absolute; left: 50%; top: 50%; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.07); pointer-events: none; }
+.campo-o::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: rgba(255, 255, 255, 0.07); pointer-events: none; }
+.campo-o .cl { position: relative; z-index: 1; }
+.oj b a { color: var(--texto); text-decoration: none; }
+.oj b a:hover { text-decoration: underline; }
+.oj-c { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #0a1f14; border: 2px solid var(--s3); color: var(--texto); font: 700 19px/1 var(--cond); font-style: normal; }
+.oj-c small { font-size: 10px; font-weight: 700; color: var(--texto2); margin-top: -3px; }
+.oj-c.p1 { border-color: var(--por); } .oj-c.p2 { border-color: var(--def); } .oj-c.p3 { border-color: var(--med); } .oj-c.p4 { border-color: var(--rojo-l); }
+.oj-p { font: 700 14px/1 var(--cond); color: var(--texto); background: rgba(0, 0, 0, 0.35); border-radius: 6px; padding: 3px 5px 2px; }
+.oj-d { font: 700 11px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: #000; background: var(--oro); border-radius: 5px; padding: 3px 4px 2px; }
+.oj-duda .oj-c { border-style: dashed; }
+.campo-o + p { margin-top: 0; }
+@media (min-width: 900px) { .bq > .campo-o { margin-left: 0; } }
 table.once { width: 100%; border-collapse: collapse; }
 table.once th { text-align: left; white-space: nowrap; padding: 6px 12px 6px 0; vertical-align: top; color: var(--apagado); font-weight: 600; font-size: .92em; }
 table.once td { padding: 6px 0; line-height: 1.55; border-bottom: 1px solid var(--linea); }

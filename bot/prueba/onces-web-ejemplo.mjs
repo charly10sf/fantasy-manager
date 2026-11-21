@@ -61,7 +61,22 @@ const html = contenidoOnces(o, {});
 assert.ok(!/<script/i.test(html));
 assert.match(html, /<h1>Onces probables de la jornada 13/);
 assert.match(html, /id="osasuna"/);
-assert.match(html, /95 %/);
+assert.match(html, /95<small> %<\/small>/);
+// (rework de la web, 21 nov) el once va en su campo, no en una tabla: cuatro líneas con los delanteros arriba y el portero abajo, once
+// jugadores con su % y el aro de su puesto, y leído de corrido en la etiqueta del campo
+{
+  const campo = html.match(/<div class="campo campo-o"[^>]*>(.*?)<\/div><\/div><\/div>/s);
+  assert.ok(campo, 'el once, en su campo');
+  assert.doesNotMatch(html, /<table class="once"/, 'ya no es una tabla por líneas');
+  const lineas = campo[1].split('<div class="cl">').slice(1);
+  assert.equal(lineas.length, 4, 'cuatro líneas');
+  assert.equal((campo[0].match(/class="cj oj/g) || []).length, 11, 'once jugadores');
+  assert.match(lineas[0], /oj-c p4/, 'arriba, los delanteros');
+  assert.match(lineas[3], /oj-c p1/, 'abajo, el portero');
+  assert.equal((lineas[3].match(/class="cj oj/g) || []).length, 1);
+  assert.match(html, /role="group" aria-label="Once 4-3-3, portero: [^"]+; defensas: [^"]+; centrocampistas: [^"]+; delanteros: [^"]+"/);
+  assert.doesNotMatch(campo[0], /<img/, 'en la página de los 20, sin fotos (serían 220)');
+}
 assert.match(html, /metodo\.html#onces/);
 assert.match(bloqueFicha(y, 13), /El once probable para la jornada 13/);
 assert.match(apartadoPrevia(o, 13), /id="onces"/);

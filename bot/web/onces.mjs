@@ -6,7 +6,7 @@
 // sustituye al probable, y tras la jornada se cuenta el acierto. El texto, con reglas y varias formas de decir cada cosa, sin IA.
 // Se guarda en .github/portal/onces.json (lo rehace «Portal web» cada noche; con --onces=1, solo los confirmados).
 import { fechaHora, diaCorto, hora } from './vista.mjs';
-import { e, escudo, bloque, slug as slugDe } from './portal.mjs';
+import { e, escudo, bloque, cara, slug as slugDe } from './portal.mjs';
 import { parteDe } from '../lib/partes.mjs';
 import { el, del } from '../lib/texto.mjs';
 
@@ -204,22 +204,33 @@ export function textoEquipo(y, J) {
   return f.map((x) => x.replace(/\.\.$/, '.').replace(/\s{2,}/g, ' ').replace(/ ([,.:)])/g, '$1'));
 }
 
-/** el once en filas por línea: «Portero: X 95 %» … */
-function filasOnce(xs, { ruta = null, conP = true } = {}) {
-  return [1, 2, 3, 4].map((p) => {
-    const ys = xs.filter((x) => x.pos === p);
-    return ys.length ? `<tr><th scope="row">${LINEA_TXT[p]}</th><td>${ys.map((x) => `${nombreDe(x, ruta)}${conP && x.p != null ? ` <small class="pp">${x.p} %</small>` : ''}${x.duda ? ' <small class="w">duda</small>' : ''}`).join(', ')}</td></tr>` : '';
-  }).join('');
+/**
+ * El once en su campo (rework de la web; Carlos, 21 nov: «que salga en alineación, no en una lista con letras»): los delanteros
+ * arriba y el portero abajo, cada uno con su nombre (enlazado a su ficha) y su % de titular; el que LaLiga da en duda, marcado.
+ * Con `jug(id)` (la ficha de un equipo, que ya trae las caras de su plantilla) va la foto de cada uno; sin él (jornada/onces.html,
+ * con los 20 equipos: 220 fotos serían 16 MB sin JS), un círculo con el % dentro y el aro del color de su puesto.
+ */
+function campoOnce(xs, { ruta = null, conP = true, jug = null, formacion = '' } = {}) {
+  const uno = (x) => {
+    const p = conP && x.p != null ? x.p : null;
+    const j = jug ? jug(x.id) : null;
+    const arriba = j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'm') : `<i class="oj-c p${x.pos}">${p != null ? `${p}<small> %</small>` : e(String(x.nombre || '?').trim().charAt(0).toUpperCase())}</i>`;
+    const abajo = [j && p != null ? `<span class="oj-p">${p} %</span>` : '', x.duda ? '<span class="oj-d">duda</span>' : ''].join('');
+    return `<div class="cj oj${x.duda ? ' oj-duda' : ''}">${arriba}<b>${nombreDe(x, ruta)}</b>${abajo ? `<span>${abajo}</span>` : ''}</div>`;
+  };
+  const lineas = [4, 3, 2, 1].map((p) => xs.filter((x) => x.pos === p)).filter((l) => l.length);
+  const leer = [1, 2, 3, 4].map((p) => { const ys = xs.filter((x) => x.pos === p); return ys.length ? `${LINEA_TXT[p].toLowerCase()}: ${ys.map((x) => x.nombre).join(', ')}` : ''; }).filter(Boolean).join('; ');
+  return `  <div class="campo campo-o" role="group" aria-label="${e(`Once${formacion ? ` ${formacion}` : ''}, ${leer}`)}">${lineas.map((l) => `<div class="cl">${l.map(uno).join('')}</div>`).join('')}</div>`;
 }
 
-/** el once de un equipo en HTML: la tabla por líneas, el texto y quién no está */
+/** el once de un equipo en HTML: el campo, el texto y quién no está */
 function bloqueEquipo(y, J, { ruta = null, rutaEquipo = null, nivel = 'h3' } = {}) {
   const o = [];
   const tit = `${escudo(y.escudoUrl, y.nombre, 28)} ${rutaEquipo && rutaEquipo(y.id) ? `<a href="${e(rutaEquipo(y.id))}">${e(y.nombre)}</a>` : e(y.nombre)}`;
   o.push(`  <${nivel} id="${e(y.slug)}">${tit}</${nivel}>`);
   const conf = y.confirmado;
   o.push(`  <p class="peq">${conf ? 'Once confirmado' : `Probable, ${e(y.formacion)}`} · ${y.casa ? 'en casa contra' : 'fuera, contra'} ${e(el(y.rival))}</p>`);
-  o.push(`  <div class="tabla-scroll"><table class="once"><tbody>${conf ? filasOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false }) : filasOnce(y.once, { ruta })}</tbody></table></div>`);
+  o.push(conf ? campoOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false }) : campoOnce(y.once, { ruta, formacion: y.formacion }));
   const t = textoEquipo(y, J);
   if (t.length) o.push(`  <p>${e(t.join(' '))}</p>`);
   if (!conf && y.fuera.length) o.push(`  <p class="peq">No juegan: ${y.fuera.map((x) => `${nombreDe(x, ruta)} (${e(x.estado)}${x.lesion ? `, ${e(x.lesion.toLowerCase())}` : ''})`).join(', ')}.</p>`);
@@ -265,11 +276,11 @@ export const metasOnces = (J) => ({ ruta: 'jornada/onces.html', seccion: 'jornad
   titulo: `Onces probables de la jornada ${J} de LaLiga Fantasy`, h1: `Onces probables de la jornada ${J}`, corto: 'Onces probables',
   descripcion: `Los onces probables de los 20 equipos para la jornada ${J} de LaLiga Fantasy, con el % de cada jugador, las dudas y quién vuelve. Una hora antes de cada partido, el once confirmado.` });
 
-/** el bloque de la ficha de un equipo (bot/web/fichas.mjs): el once en una tabla, las dudas y el enlace a todos */
-export function bloqueFicha(y, J, { ruta = null } = {}) {
+/** el bloque de la ficha de un equipo (bot/web/fichas.mjs): el once en su campo con las caras, las dudas y el enlace a todos */
+export function bloqueFicha(y, J, { ruta = null, jug = null } = {}) {
   if (!y) return '';
   const t = textoEquipo(y, J);
-  const cuerpo = `  <div class="tabla-scroll"><table class="once"><tbody>${y.confirmado ? filasOnce(y.confirmado, { ruta, conP: false }) : filasOnce(y.once, { ruta })}</tbody></table></div>${t.length ? `\n  <p>${e(t.join(' '))}</p>` : ''}`;
+  const cuerpo = `${y.confirmado ? campoOnce(y.confirmado, { ruta, conP: false, jug }) : campoOnce(y.once, { ruta, jug, formacion: y.formacion })}${t.length ? `\n  <p>${e(t.join(' '))}</p>` : ''}`;
   return bloque(y.confirmado ? `El once confirmado de la jornada ${J}` : `El once probable para la jornada ${J}`, cuerpo,
     { id: 'once', linea: `${y.confirmado ? '' : `${e(y.formacion)}, con el % de cada uno. `}<a href="../jornada/onces.html#${e(y.slug)}">Los onces de los 20 equipos</a> · <a href="../metodo.html#onces">cómo lo calculamos</a>.` });
 }

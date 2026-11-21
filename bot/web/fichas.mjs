@@ -907,7 +907,7 @@ export function contenidoEquipo(q, H) {
 
   // (sesión 3, idea 12) el once probable de la próxima jornada (jornada/onces.html tiene los 20)
   const yOnce = H.onces && H.onces.equipos.find((y) => y.id === q.id);
-  if (yOnce) o.push(bloqueFicha(yOnce, H.onces.J, { ruta: (id) => rj({ id }) }));
+  if (yOnce) o.push(bloqueFicha(yOnce, H.onces.J, { ruta: (id) => rj({ id }), jug: (id) => q.jugadores.find((x) => String(x.id) === String(id)) || null }));
 
   if (q.proximos.length) o.push(bloque('Próximos rivales', proximosTabla(q),
     { id: 'calendario', linea: (q.puestoCal ? e(elige(`e${q.id}|lcal`, [`El ${ordinal(q.puestoCal)} calendario más fácil de los ${H.nCalendario}. `, `Por dificultad, ${ordinal(q.puestoCal)} de ${H.nCalendario} (1.º, el más fácil). `])) : '') + `<a href="${raiz}metodo.html#rivales">Cómo medimos la dificultad</a>.` }));
