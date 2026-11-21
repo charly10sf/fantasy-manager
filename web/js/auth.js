@@ -149,7 +149,11 @@ export async function terminarLogin(url) {
   const pk = leer('pkce', true);
   if (!codigo) throw new ErrorSesion('LaLiga no ha devuelto el código para entrar');
   if (!pk) throw new ErrorSesion(enApp ? 'Se ha perdido el inicio de sesión a medias. Vuelve a pulsar Entrar.' : 'Ese enlace no se ha sacado desde aquí (por ejemplo, empezaste en Safari y ahora estás en el icono de la pantalla de inicio, o al revés). Pulsa aquí «Abrir LaLiga» y copia la dirección nueva.', 'perdido');
-  if (pk.estado && q.get('state') && q.get('state') !== pk.estado) throw new ErrorSesion(enApp ? 'La vuelta de LaLiga no es de este inicio de sesión. Vuelve a probar.' : 'Ese enlace es de otro intento o de otro navegador. Pulsa aquí «Abrir LaLiga» y copia la dirección nueva.', 'perdido');
+  // El state que no cuadra. En la app, como siempre: no se sigue. En la web no se corta aquí: lo que ata el código a este
+  // inicio es PKCE (LaLiga solo lo canjea con el verificador de aquí), así que se prueba el canje y, si LaLiga lo rechaza, se
+  // dice que es de otro intento. Así la entrada no depende de que el state vuelva idéntico letra a letra.
+  const otro = !!(pk.estado && q.get('state') && q.get('state') !== pk.estado);
+  if (otro && enApp) throw new ErrorSesion('La vuelta de LaLiga no es de este inicio de sesión. Vuelve a probar.', 'perdido');
   // la vuelta del canje, la misma del authorize: la del esquema de la app si lo pegado viene del método a mano; si no, la guardada
   const vuelta = /^authredirect:$/i.test(u.protocol) ? VUELTA : (pk.vuelta || VUELTA);
   const { r, j } = await pedirToken({
@@ -160,7 +164,11 @@ export async function terminarLogin(url) {
   if (r.s === 0) throw Object.assign(new Error(`Sin conexión con LaLiga (${r.e}). Mira que tengas internet y vuelve a pulsar: el enlace que has pegado sigue valiendo unos minutos.`), { tipo: 'red' });
   // en la web el inicio a medias sigue valiendo para otro enlace (el código caducó o ya se usó): solo se borra al entrar
   if (enApp) guardar('pkce', null);
-  if (r.s >= 400 || !j) { const x = (j && (j.error_description || j.error)) || `error ${r.s}`; throw new ErrorSesion(textoError(x), r.s >= 500 ? 'laliga' : tipoDe(x)); }
+  if (r.s >= 400 || !j) {
+    const x = (j && (j.error_description || j.error)) || `error ${r.s}`;
+    if (otro && r.s < 500) throw new ErrorSesion('Ese enlace es de otro intento o de otro navegador. Pulsa aquí «Abrir LaLiga» y copia la dirección nueva.', 'perdido');
+    throw new ErrorSesion(textoError(x), r.s >= 500 ? 'laliga' : tipoDe(x));
+  }
   const ses = guardarTokens(j);
   guardar('pkce', null);
   return ses;

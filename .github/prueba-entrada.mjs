@@ -153,8 +153,11 @@ async function probar(motor, disp) {
     if (otra) await otra.close();
 
     /* ---- un enlace de otro intento, uno caducado y un corte ---- */
+    // un enlace de otro intento: LaLiga no lo canjea con el verificador de aquí (PKCE) y se dice que es de otro intento
+    reg.canje = () => ({ s: 400, cuerpo: { error: 'invalid_grant', error_description: 'AADB2C90183: The provided code_verifier is invalid.' } });
     await pegar(p, '#vueltaWeb', vuelta(`${PISTA}otro-intento`));
-    mira(/otro intento/.test(await errorVisto(p).catch(() => '')) && reg.canjes.length === 0 && (await pkce(p)).estado === pk.estado, `${T} un enlace de otro intento se explica y no gasta el inicio`);
+    mira(/otro intento/.test(await errorVisto(p).catch(() => '')) && (await pkce(p)).estado === pk.estado, `${T} un enlace de otro intento se explica y no gasta el inicio`);
+    reg.canjes.length = 0;
     reg.canje = () => ({ s: 400, cuerpo: { error: 'invalid_grant', error_description: 'AADB2C90080: The provided grant has expired.' } });
     await pegar(p, '#vueltaWeb', vuelta(pk.estado));
     mira(/ya no vale/.test(await errorVisto(p).catch(() => '')) && await p.inputValue('#vueltaWeb') === '', `${T} un enlace caducado dice que se abra LaLiga otra vez y vacía el cuadro`);
@@ -182,6 +185,14 @@ async function probar(motor, disp) {
     let k = await pkce(p);
     await pegar(p, '#vueltaWeb', `mira, es esta:\n${vuelta(k.estado)}\ngracias`);
     mira(await dentro(p) && (reg.canjes[0] || {}).code === CODIGO, `${T} pegar en el cuadro (con texto de más alrededor) entra solo`);
+    await ctx.close();
+
+    /* ---- 2b'. si el state volviera cambiado (mayúsculas, un trozo de menos) pero el código es de este inicio, entra igual ---- */
+    ({ ctx, p, reg } = await abrir(nav, para(motor, disp)));
+    await p.waitForSelector('#entrarDirecto', { state: 'attached' }); await abrirDetalles(p); await enlace(p);
+    k = await pkce(p);
+    await pegar(p, '#vueltaWeb', vuelta(k.estado.toLowerCase().slice(0, 40)));
+    mira(await dentro(p) && (reg.canjes[0] || {}).code_verifier === k.verificador, `${T} la entrada no depende de que el state vuelva idéntico: con el código de este inicio, entra`);
     await ctx.close();
 
     /* ---- 2c. el botón «Pegar y entrar» (lo copiado lo da el navegador tras el toque) ---- */

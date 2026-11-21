@@ -30,8 +30,8 @@ export const NOVEDADES = [
     // código. Y la entrada rehecha de arriba abajo (misma mañana, segunda pasada): Android (Google Play) y Apple (entrar
     // aquí) en dos bloques separados con su logo, tres pasos a la vista en iPhone y ordenador, «Pegar y entrar» de un toque (o pegando en el cuadro, que entra solo), los errores debajo del cuadro diciendo
     // qué hacer, y accesible con teclado y lector de pantalla. `para: 'web'` (no cambia nada en Android) y sin `todos`: a los
-    // demás no les sale salvo que Carlos lo diga. La hora, al publicar
-    v: '0.8l', f: '2026-11-21', h: '10:59', t: 'Entrar en iPhone y ordenador, sin líos', para: 'web',
+    // demás no les sale salvo que Carlos lo diga
+    v: '0.8l', f: '2026-11-21', h: '12:51', t: 'Entrar en iPhone y ordenador, sin líos', para: 'web',
     cosas: [
       { tipo: 'nuevo', d: 'movil', t: 'Entrar desde el iPhone, directo', x: 'Hasta ahora, desde el iPhone casi no se podía entrar: LaLiga devolvía la sesión a su propia app y la web se quedaba fuera. Ahora son tres pasos: abres LaLiga y entras como siempre, copias la dirección de la página en la que acabas y vuelves a pegarla. Sin ordenador, sin código y sin instalar nada. Solo se hace una vez; después la sesión se renueva sola.' },
       { tipo: 'mejora', d: 'nota', t: 'Pegar y entrar, de un toque', x: 'Al volver de LaLiga hay un botón «Pegar y entrar» que lo hace todo. Si prefieres pegar tú la dirección en el cuadro, entra sola, sin pulsar nada más, aunque la copies con texto de más alrededor. Y si pegas otra cosa o el enlace ya no vale, te lo dice ahí mismo, con lo que tienes que hacer.' },
