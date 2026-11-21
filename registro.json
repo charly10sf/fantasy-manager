@@ -4252,7 +4252,9 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260970399
+  }
  },
  "ia": {
   "dia": "2026-11-21",
@@ -8658,13 +8660,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4753,
+   "ok": 4754,
    "fallos": 0,
-   "ejecuciones": 3939,
+   "ejecuciones": 3940,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:31:14.510Z"
+   "ultima": "2026-11-21T11:36:10.399Z"
   }
  },
  "ptsDirecto": {
@@ -8694,15 +8696,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:31:18.708Z"
+   "ultimaBien": "2026-11-21T11:36:14.499Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:31:18.708Z"
+   "ultimaBien": "2026-11-21T11:36:14.499Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:31:18.708Z"
+   "ultimaBien": "2026-11-21T11:36:14.499Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8710,11 +8712,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:31:18.708Z"
+   "ultimaBien": "2026-11-21T11:36:14.499Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:31:18.708Z"
+   "ultimaBien": "2026-11-21T11:36:14.499Z"
   }
  },
  "avisos": [
