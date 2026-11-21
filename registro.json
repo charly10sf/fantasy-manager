@@ -2730,7 +2730,8 @@
    "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000,
    "SPORT|136707103": 1795288603000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000,
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000
   },
   "hechos": [
    {
@@ -3558,7 +3559,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -9054,13 +9055,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4956,
+   "ok": 4958,
    "fallos": 0,
-   "ejecuciones": 4057,
+   "ejecuciones": 4058,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T21:16:10.790Z"
+   "ultima": "2026-11-21T21:21:11.296Z"
   }
  },
  "ptsDirecto": {
@@ -9162,27 +9163,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:16:14.997Z"
+   "ultimaBien": "2026-11-21T21:21:47.822Z"
   }
  },
  "avisos": [
