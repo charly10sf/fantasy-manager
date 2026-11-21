@@ -2421,7 +2421,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html": 1795017925000,
    "SPORT|136532843": 1795017998000,
    "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
@@ -2636,20 +2635,6 @@
    "SPORT|136694477": 1795273212000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antonio-adan-retira-emotivo-mensaje-betis_0_2008535380.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795017925000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     39
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/",
     "medio": "AS",
@@ -8932,13 +8917,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4839,
+   "ok": 4841,
    "fallos": 0,
-   "ejecuciones": 3993,
+   "ejecuciones": 3994,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:01:13.446Z"
+   "ultima": "2026-11-21T16:06:10.564Z"
   }
  },
  "ptsDirecto": {
@@ -9004,27 +8989,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:01:38.365Z"
+   "ultimaBien": "2026-11-21T16:06:15.651Z"
   }
  },
  "avisos": [
