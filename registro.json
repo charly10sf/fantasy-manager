@@ -2523,7 +2523,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html": 1795038113000,
    "AS|https://as.com/futbol/primera/la-feliz-contrarreloj-de-parrott-f202611-n/": 1795040843000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252779/foco-kounde-cuenta-volver.html": 1795062900000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252782/portada-md-bizkaia-araba-hoy-jueves.html": 1795043100000,
@@ -2749,18 +2748,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/18/cucho-apunta-me-dicen-vaya-calma.html",
-    "medio": "MARCA",
-    "t": 1795038113000,
-    "id": "2217",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cucho se recupera de su lesión y está disponible",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html",
     "medio": "Mundo Deportivo",
@@ -9086,13 +9073,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4966,
+   "ok": 4968,
    "fallos": 0,
-   "ejecuciones": 4062,
+   "ejecuciones": 4063,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T21:41:13.145Z"
+   "ultima": "2026-11-21T21:46:15.101Z"
   }
  },
  "ptsDirecto": {
@@ -9206,27 +9193,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:41:22.735Z"
+   "ultimaBien": "2026-11-21T21:46:28.316Z"
   }
  },
  "avisos": [
