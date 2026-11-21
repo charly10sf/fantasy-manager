@@ -2320,7 +2320,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000,
-   "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/": 1794998089000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-gran-diferencia-alineacion_0_2008526265.html": 1794998631000,
    "AS|https://as.com/futbol/primera/es-la-hora-de-mikautadze-f202611-n/": 1795000732000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252548/vivir-ambiente-hostil.html": 1794999663000,
@@ -2533,30 +2532,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/",
-    "medio": "AS",
-    "t": 1794998089000,
-    "id": "2314",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Vivian es baja para el partido contra el Espanyol",
-    "motivo": "baja por motivos no especificados",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/",
-    "medio": "AS",
-    "t": 1794998089000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes es baja para el partido contra el Espanyol",
-    "motivo": "baja por motivos no especificados",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/",
     "medio": "Cadena SER",
@@ -8687,13 +8662,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4741,
+   "ok": 4742,
    "fallos": 0,
-   "ejecuciones": 3927,
+   "ejecuciones": 3928,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T10:31:12.304Z"
+   "ultima": "2026-11-21T10:36:10.854Z"
   }
  },
  "ptsDirecto": {
@@ -8723,15 +8698,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:31:18.083Z"
+   "ultimaBien": "2026-11-21T10:36:13.583Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:31:18.083Z"
+   "ultimaBien": "2026-11-21T10:36:13.583Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:31:18.083Z"
+   "ultimaBien": "2026-11-21T10:36:13.583Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8739,11 +8714,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:31:18.083Z"
+   "ultimaBien": "2026-11-21T10:36:13.583Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:31:18.083Z"
+   "ultimaBien": "2026-11-21T10:36:13.583Z"
   }
  },
  "avisos": [
