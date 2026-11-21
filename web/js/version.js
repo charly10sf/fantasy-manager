@@ -27,7 +27,7 @@ export const NOVEDADES = [
     // (21 nov, Carlos: «el logo de recargar se bugea cuando sale actualizando») la flecha de actualizar, debajo del nombre de
     // la liga, era un carácter que al girar se salía de su sitio y se cortaba; ahora es un icono que gira sobre sí mismo.
     // Arreglo pequeño: sin `todos`. La hora, al publicar
-    v: '0.8o', f: '2026-11-21', h: '00:00', t: 'La flecha de actualizar',
+    v: '0.8o', f: '2026-11-21', h: '23:09', t: 'La flecha de actualizar',
     cosas: [
       { tipo: 'arreglo', d: 'pantalla', t: 'La flecha de actualizar, en su sitio', x: 'Mientras se actualiza la liga, la flecha que hay al lado de «Actualizando…» gira en su sitio en vez de salirse y verse cortada.', menor: true },
     ],
