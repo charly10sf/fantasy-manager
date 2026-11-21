@@ -4383,12 +4383,14 @@
    "SPORT|136694022": 1795257482000,
    "SPORT|136695535": 1795260962000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
+   "SPORT|136574933": 1795269960000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -4396,17 +4398,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 19,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 316724,
-  "salida": 17177,
+  "entrada": 318581,
+  "salida": 17593,
   "cacheLee": 11612,
   "cacheEscribe": 11612,
-  "dolares": 0.618147,
+  "dolares": 0.618541,
   "reservado": 0
  },
  "recientes": {
@@ -8884,13 +8886,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4819,
+   "ok": 4820,
    "fallos": 0,
-   "ejecuciones": 3982,
+   "ejecuciones": 3983,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T15:06:13.386Z"
+   "ultima": "2026-11-21T15:11:21.229Z"
   }
  },
  "ptsDirecto": {
@@ -8944,27 +8946,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:06:16.595Z"
+   "ultimaBien": "2026-11-21T15:11:28.921Z"
   }
  },
  "avisos": [
