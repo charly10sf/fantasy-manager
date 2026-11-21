@@ -4192,7 +4192,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-retira-presentador-atrapame-si-puedes-monolo-sarria-denuncia-presunto-acoso-sexual-20261118093207.html": 1794990727000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
    "SPORT|136566732": 1794991027000,
@@ -8645,13 +8644,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4704,
+   "ok": 4705,
    "fallos": 0,
-   "ejecuciones": 3890,
+   "ejecuciones": 3891,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T07:31:16.018Z"
+   "ultima": "2026-11-21T07:36:13.799Z"
   }
  },
  "ptsDirecto": {
@@ -8681,15 +8680,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:31:24.015Z"
+   "ultimaBien": "2026-11-21T07:36:19.508Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:31:24.015Z"
+   "ultimaBien": "2026-11-21T07:36:19.508Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:31:24.015Z"
+   "ultimaBien": "2026-11-21T07:36:19.508Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8697,7 +8696,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T07:31:24.015Z"
+   "ultimaBien": "2026-11-21T07:36:19.508Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
