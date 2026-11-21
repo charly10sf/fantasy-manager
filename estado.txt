@@ -1,0 +1,22 @@
+run 766.1 código 7661 firma buena 2026-11-21T12:13:44Z
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/github/release/:
+total 4064
+drwxr-xr-x 3 runner runner    4096 Nov 21 12:12 .
+drwxr-xr-x 3 runner runner    4096 Nov 21 12:12 ..
+-rw-r--r-- 1 runner runner 4142490 Nov 21 12:12 app-github-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov 21 12:12 baselineProfiles
+-rw-r--r-- 1 runner runner     740 Nov 21 12:12 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/play/release/:
+total 5996
+drwxr-xr-x 3 runner runner    4096 Nov 21 12:13 .
+drwxr-xr-x 3 runner runner    4096 Nov 21 12:13 ..
+-rw-r--r-- 1 runner runner 6121401 Nov 21 12:13 app-play-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov 21 12:13 baselineProfiles
+-rw-r--r-- 1 runner runner     732 Nov 21 12:13 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/bundle/playRelease/:
+total 8528
+drwxr-xr-x 2 runner runner    4096 Nov 21 12:13 .
+drwxr-xr-x 3 runner runner    4096 Nov 21 12:13 ..
+-rw-r--r-- 1 runner runner 8722262 Nov 21 12:13 app-play-release.aab
