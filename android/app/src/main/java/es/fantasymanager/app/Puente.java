@@ -31,7 +31,8 @@ import java.util.concurrent.Executors;
  * Lo que la web puede pedirle a la app. Todo lo que no puede hacer un navegador normal:
  * - http(): peticiones a la API de LaLiga Fantasy, a su inicio de sesión y a futbolfantasy.com (sin CORS).
  *   Solo a esas direcciones, nunca a otras.
- * - abrirLogin(): la página de LaLiga para entrar, en una pestaña de Chrome.
+ * - abrirLogin(): la página de LaLiga para entrar, en una pestaña de Chrome (por Auth Tab si el navegador lo lleva;
+ *   authTab() dice si es así).
  * - guardar()/leer(): la sesión de LaLiga y la clave de Gemini, en el almacenamiento privado de la app.
  * - avisos, versión nueva, copiar y compartir.
  */
@@ -232,6 +233,21 @@ public class Puente {
     @JavascriptInterface
     public void abrirLogin(String url) {
         enPantalla(() -> act.abrirLogin(url));
+    }
+
+    /**
+     * (21 nov) ¿La entrada va a ir por Auth Tab? (el navegador por defecto lo lleva). La web lo pregunta para no avisar
+     * de «Abrir con», que con Auth Tab no sale.
+     */
+    @JavascriptInterface
+    public boolean authTab() {
+        return act != null && AuthTab.navegador(act) != null;
+    }
+
+    /** Por dónde llegó la última vuelta del inicio de sesión: «authtab», «intent» o vacío (para el diagnóstico) */
+    @JavascriptInterface
+    public String loginVia() {
+        return act == null ? "" : act.loginVia;
     }
 
     /** La dirección de vuelta del inicio de sesión, si ha llegado (y se olvida) */

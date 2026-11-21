@@ -52,6 +52,8 @@ public class Principal extends Activity {
     static volatile boolean abierta;
     /** la dirección authredirect://... con el código de LaLiga, hasta que la web la recoge */
     volatile String loginPendiente;
+    /** por dónde llegó la última vuelta del inicio de sesión: «authtab» o «intent» (para el diagnóstico de la web) */
+    volatile String loginVia = "";
 
     /**
      * (33) La pantalla a la frecuencia más alta que da con su resolución de ahora (120 Hz en el S25 Edge de Carlos).
@@ -149,6 +151,7 @@ public class Principal extends Activity {
         web.setWebChromeClient(new WebChromeClient());
 
         loginPendiente = loginDe(getIntent());
+        if (loginPendiente != null) loginVia = "intent";
         // si la web bajada no arrancó las dos últimas veces, se vuelve a la del APK
         AlDia.alAbrir(this);
         if (guardado != null) web.restoreState(guardado);
@@ -192,6 +195,7 @@ public class Principal extends Activity {
         String l = loginDe(i);
         if (l != null) {
             loginPendiente = l;
+            loginVia = "intent";
             entregarLogin();
             return;
         }
@@ -199,9 +203,15 @@ public class Principal extends Activity {
         if (h != null && !h.isEmpty()) js("location.hash = " + JSONObject.quote(h.replaceAll("[^a-z0-9/_-]", "")));
     }
 
-    /** La página de LaLiga para entrar, en una pestaña de Chrome: ahí sí deja Google iniciar sesión */
+    /**
+     * La página de LaLiga para entrar, en una pestaña de Chrome: ahí sí deja Google iniciar sesión.
+     * (21 nov) Si el navegador lleva Auth Tab (Chrome 137 o más), por ahí: la vuelta llega a onActivityResult y Android
+     * no pregunta «Abrir con» entre esta app y la de LaLiga Fantasy (AuthTab.java). Si no, la pestaña de siempre, y la
+     * vuelta llega por el intent-filter del manifiesto (onNewIntent).
+     */
     void abrirLogin(String url) {
         Uri u = Uri.parse(url);
+        if (AuthTab.abrir(this, u, 0xFF0A0A0B)) return;
         try {
             CustomTabsIntent pestana = new CustomTabsIntent.Builder()
                     .setDefaultColorSchemeParams(new CustomTabColorSchemeParams.Builder()
@@ -417,6 +427,19 @@ public class Principal extends Activity {
         }
         if (pedido == FOTOS) {
             fotosElegidas(resultado, datos);
+            return;
+        }
+        // (21 nov) la vuelta del Auth Tab: con la dirección de LaLiga se entrega a la web igual que la que llega por
+        // onNewIntent; si se cerró sin terminar, la web pregunta «¿No has vuelto solo?» (window.loginCerrado)
+        if (pedido == AuthTab.PEDIDO) {
+            String l = AuthTab.vuelta(resultado, datos);
+            if (l != null) {
+                loginPendiente = l;
+                loginVia = "authtab";
+                entregarLogin();
+            } else if (loginPendiente == null) {
+                js("window.loginCerrado && loginCerrado()");
+            }
             return;
         }
         if (Canal.resultado(this, pedido)) return;

@@ -259,6 +259,11 @@ jobs:
           cp "$RUNNER_TEMP/compilado/apk/github/release/app-github-release.apk" fantasy-manager-prueba.apk
           gh release view prueba >/dev/null 2>&1 || gh release create prueba --prerelease --target pendiente --title "Prueba" --notes "APK de prueba de la rama pendiente, sin publicar. No es la app de la liga (esa es la release «app»): no la instales si Carlos no te lo ha pedido."
           gh release upload prueba fantasy-manager-prueba.apk --clobber
+          # (21 nov) y el de Google Play, para probar lo que necesita estar sin sesión (la entrada): el de GitHub se cierra
+          # a quien no es el dueño desde el 16 nov (cierreApk) y sin sesión no sabe quién es. No se instala encima de la de
+          # la tienda (otra firma): hay que desinstalarla antes
+          cp "$RUNNER_TEMP/compilado/apk/play/release/app-play-release.apk" fantasy-manager-prueba-play.apk
+          gh release upload prueba fantasy-manager-prueba-play.apk --clobber
           gh release edit prueba --prerelease --title "Prueba $VERSION_NAME (código $VERSION_CODE), sin publicar" || true
 
       # (Carlos, 14 nov) DESDE LA 0.7.10b EL APK DE GITHUB YA NO SE PUBLICA: todo va por Google Play y la web le avisa a quien

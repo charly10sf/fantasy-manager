@@ -118,7 +118,12 @@ android {
 
 dependencies {
     // la página de LaLiga para entrar (con Google) se abre en una pestaña de Chrome dentro de la app
-    implementation 'androidx.browser:browser:1.8.0'
+    // (21 nov) 1.9.0: trae Auth Tab (androidx.browser.auth), para que la vuelta de LaLiga llegue a la app sin que Android
+    // pregunte «Abrir con» (AuthTab.java)
+    implementation 'androidx.browser:browser:1.9.0'
+    // lo que AuthTabIntent.launch pide para lanzarse (ActivityResultLauncher). Ya viene con browser 1.9.0, pero solo para
+    // ejecutarse: aquí se declara para poder compilar contra ello (la misma versión que trae)
+    implementation 'androidx.activity:activity:1.9.0'
     // sirve la web de los assets con https, para que funcionen el cifrado y el almacenamiento del navegador
     implementation 'androidx.webkit:webkit:1.12.1'
     // si el DNS del móvil no encuentra una dirección (bloqueadores, DNS privado), se pregunta por https a Cloudflare o Google
