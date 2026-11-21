@@ -2428,7 +2428,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
    "SPORT|136589952": 1795022314000,
@@ -2645,32 +2644,6 @@
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/",
-    "medio": "AS",
-    "t": 1795021156000,
-    "id": "3263",
-    "que": "vuelve",
-    "oficial": false,
-    "seleccion": "sigue",
-    "hecho": "Revivo regresa disponible tras sus compromisos internacionales",
-    "motivo": "regreso de selección",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/",
-    "medio": "AS",
-    "t": 1795021156000,
-    "id": "2933",
-    "que": "vuelve",
-    "oficial": false,
-    "seleccion": "sigue",
-    "hecho": "Cepeda regresa disponible tras sus compromisos internacionales",
-    "motivo": "regreso de selección",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html",
     "medio": "Mundo Deportivo",
@@ -8930,13 +8903,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4863,
+   "ok": 4865,
    "fallos": 0,
-   "ejecuciones": 4005,
+   "ejecuciones": 4006,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:56:12.938Z"
+   "ultima": "2026-11-21T17:01:18.890Z"
   }
  },
  "ptsDirecto": {
@@ -9002,27 +8975,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:56:21.008Z"
+   "ultimaBien": "2026-11-21T17:01:27.827Z"
   }
  },
  "avisos": [
