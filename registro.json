@@ -1488,6 +1488,21 @@
     "extra": 0,
     "jugador": "Lucas Boyé"
    }
+  },
+  {
+   "clave": "directo|130|Denis Suárez|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124153689354969164",
+   "t": "2026-11-21T14:51:19.531Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "130",
+    "equipo": "96",
+    "min": 90,
+    "extra": 0,
+    "jugador": "Denis Suárez"
+   }
   }
  ],
  "estados": {
@@ -4382,16 +4397,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 23,
-   "redactar": 17,
+   "redactar": 19,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 292004,
-  "salida": 16913,
+  "entrada": 316724,
+  "salida": 17177,
   "cacheLee": 11612,
   "cacheEscribe": 11612,
-  "dolares": 0.566067,
+  "dolares": 0.618147,
   "reservado": 0
  },
  "recientes": {
@@ -4529,10 +4544,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T21:31:14.791Z",
-    "texto": "⚽⚽ Doblete de Fermín en el 66'. Atlético 1-2 Barça: el Barça le da la vuelta. Asistencia de Lamine Yamal, con 5 puntos fantasy. Fermín ya suma 11 puntos."
-   },
-   {
     "t": "2026-11-20T21:31:21.010Z",
     "texto": "⚽ Roberto la mete de pícaro dentro del área y el Espanyol se adelanta en San Mamés: 0-1 al Athletic 🦁 en el 66'.\n\nYa suma 5 puntos y corta una racha floja de tres jornadas. El pase es de Dolan, que de momento se lleva 4."
    },
@@ -4547,6 +4558,10 @@
    {
     "t": "2026-11-21T14:26:21.314Z",
     "texto": "⚽ Lucas Boyé remata de cabeza en el 62' y el Alavés se pone por delante en Mendizorroza: 2-1 al Deportivo.\n\nEl argentino ya suma 3 puntos tras tres jornadas flojas. El pase es de Ángel Pérez, que de momento se lleva 8."
+   },
+   {
+    "t": "2026-11-21T14:51:19.533Z",
+    "texto": "⚽ Otro gol del Alavés, de Denis Suárez, en el 90'. Alavés 3-1 Deportivo. Asistencia de Lucas Boyé, con 8 puntos de momento. Denis Suárez ya suma 6 puntos."
    }
   ],
   "novedades": [
@@ -8817,17 +8832,33 @@
    "w": "2026-11-21T14:21:01Z",
    "f": "2026-11-21T14:26:15.914Z",
    "rf": "67:01"
+  },
+  "fm|130|282281|90": {
+   "j": "Denis Suárez",
+   "m": "90'",
+   "f": "2026-11-21T14:51:10.383Z",
+   "rf": "91:56",
+   "casado": true
+  },
+  "directo|130|Denis Suárez|gol1": {
+   "j": "Denis Suárez",
+   "m": "90'",
+   "e": "2026-11-21T14:51:10.383Z",
+   "re": "90'+2'",
+   "w": "2026-11-21T14:48:49Z",
+   "f": "2026-11-21T14:51:10.383Z",
+   "rf": "91:56"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4813,
+   "ok": 4815,
    "fallos": 0,
-   "ejecuciones": 3978,
+   "ejecuciones": 3979,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:46:11.410Z"
+   "ultima": "2026-11-21T14:51:10.383Z"
   }
  },
  "ptsDirecto": {
@@ -8856,10 +8887,16 @@
    "t": 1795266371450
   },
   "13|130|2768": {
-   "p": 3,
+   "p": 8,
+   "g": 1,
+   "a": 1,
+   "t": 1795272670383
+  },
+  "13|130|2474": {
+   "p": 6,
    "g": 1,
    "a": 0,
-   "t": 1795271175914
+   "t": 1795272670383
   }
  },
  "golesAnulados": {
@@ -8875,27 +8912,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:46:14.856Z"
+   "ultimaBien": "2026-11-21T14:51:25.194Z"
   }
  },
  "avisos": [
