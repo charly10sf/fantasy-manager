@@ -4336,7 +4336,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136593027": 1795023836000,
    "SPORT|136595898": 1795028720000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
    "SPORT|136596702": 1795032528000,
@@ -8913,13 +8912,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4877,
+   "ok": 4879,
    "fallos": 0,
-   "ejecuciones": 4014,
+   "ejecuciones": 4015,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:41:09.877Z"
+   "ultima": "2026-11-21T17:46:19.363Z"
   }
  },
  "ptsDirecto": {
@@ -8985,27 +8984,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:42:04.055Z"
+   "ultimaBien": "2026-11-21T17:46:28.036Z"
   }
  },
  "avisos": [
