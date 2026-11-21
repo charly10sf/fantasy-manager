@@ -1430,6 +1430,13 @@
     "clase": "mercado",
     "chollo": "3182"
    }
+  },
+  {
+   "clave": "onces|130",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124111066267296085",
+   "t": "2026-11-21T12:01:57.445Z"
   }
  ],
  "estados": {
@@ -4170,7 +4177,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-rechaza-recurso-vox-contra-decision-permitir-voto-hijos-ley-nietos-20261118145900.html": 1795010340000,
    "SPORT|136593027": 1795023836000,
    "SPORT|136595898": 1795028720000,
@@ -4219,24 +4225,20 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 10,
-   "redactar": 1,
-   "revisar": 1,
+   "redactar": 3,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 39414,
-  "salida": 6631,
-  "cacheLee": 0,
-  "cacheEscribe": 2903,
-  "dolares": 0.048001,
+  "entrada": 72980,
+  "salida": 7362,
+  "cacheLee": 2903,
+  "cacheEscribe": 5806,
+  "dolares": 0.129991,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-08T14:16:27.237Z",
-    "texto": "👀 Tranquilidad en el Real Sociedad-Rayo: los dos onces vienen sin sorpresas, así que quien tenga jugadores de este partido puede dejarlo como estaba.\n\nCarlos Soler está de titular en la Real, con un 4-4-2, y Camello sale de inicio en el Rayo ⚡, que juega con un 4-3-3."
-   },
    {
     "t": "2026-11-08T16:37:00.513Z",
     "texto": "👀 Moleiro está en el once del Villarreal 🚢, y es el que más puntos da de su equipo, con 7 de media. El Villarreal sale con un 4-4-2 en La Cerámica.\n\nEn el Getafe también juega David Soria, el portero, que es el que más puntos da de los suyos, con 6,4. Los dos onces no traen sorpresas y el partido empieza en menos de una hora."
@@ -4252,6 +4254,10 @@
    {
     "t": "2026-11-20T19:01:54.377Z",
     "texto": "👀 Ni rotaciones ni sorpresas en el Athletic-Espanyol: los dos onces están confirmados y salen los que se esperaban.\n\nUnai Simón está bajo palos en el Athletic 🦁, que sale en un 4-2-3-1, y es el que más puntos da de su equipo. El Espanyol se planta con cinco atrás, en un 5-4-1, y Cabrera también es titular: nadie del Espanyol puntúa más que él.\n\nQuien tenga a alguno de los dos ya sabe que cuenta."
+   },
+   {
+    "t": "2026-11-21T12:01:57.446Z",
+    "texto": "👀 Sorpresa en el once del Deportivo en Mendizorroza: Giménez, Amatucci y Bil Nsongo, titulares habituales, se quedan fuera, y Riki, que no suele serlo, sale de inicio.\n\nEl Alavés va con un 4-4-2 y Sivera bajo palos, y el Dépor también con 4-4-2, con Aubameyang arriba. En una hora o así rueda el balón."
    }
   ],
   "final": [
@@ -8619,13 +8625,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4758,
+   "ok": 4759,
    "fallos": 0,
-   "ejecuciones": 3944,
+   "ejecuciones": 3945,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:56:13.689Z"
+   "ultima": "2026-11-21T12:01:15.341Z"
   }
  },
  "ptsDirecto": {
@@ -8655,15 +8661,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:56:19.469Z"
+   "ultimaBien": "2026-11-21T12:01:58.133Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:56:19.469Z"
+   "ultimaBien": "2026-11-21T12:01:58.133Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:56:19.469Z"
+   "ultimaBien": "2026-11-21T12:01:58.133Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8671,11 +8677,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:56:19.469Z"
+   "ultimaBien": "2026-11-21T12:01:58.133Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:56:19.469Z"
+   "ultimaBien": "2026-11-21T12:01:58.133Z"
   }
  },
  "avisos": [
