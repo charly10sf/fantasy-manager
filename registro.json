@@ -2322,7 +2322,6 @@
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
-   "SPORT|136568727": 1795001073000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
@@ -8659,13 +8658,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4751,
+   "ok": 4752,
    "fallos": 0,
-   "ejecuciones": 3937,
+   "ejecuciones": 3938,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:21:14.383Z"
+   "ultima": "2026-11-21T11:26:18.423Z"
   }
  },
  "ptsDirecto": {
@@ -8695,15 +8694,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:21:17.396Z"
+   "ultimaBien": "2026-11-21T11:26:23.572Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:21:17.396Z"
+   "ultimaBien": "2026-11-21T11:26:23.572Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:21:17.396Z"
+   "ultimaBien": "2026-11-21T11:26:23.572Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8711,11 +8710,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:21:17.396Z"
+   "ultimaBien": "2026-11-21T11:26:23.572Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:21:17.396Z"
+   "ultimaBien": "2026-11-21T11:26:23.572Z"
   }
  },
  "avisos": [
