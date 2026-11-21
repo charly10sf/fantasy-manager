@@ -1590,6 +1590,13 @@
     "extra": 1,
     "jugador": "Enrique Salas"
    }
+  },
+  {
+   "clave": "mvp|121",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124229303730897003",
+   "t": "2026-11-21T19:51:47.284Z"
   }
  ],
  "estados": {
@@ -4438,16 +4445,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 53,
-   "revisar": 25,
+   "redactar": 59,
+   "revisar": 26,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 830719,
-  "salida": 29953,
+  "entrada": 913491,
+  "salida": 31137,
   "cacheLee": 52254,
-  "cacheEscribe": 20321,
-  "dolares": 1.735134,
+  "cacheEscribe": 23224,
+  "dolares": 1.919775,
   "reservado": 0
  },
  "recientes": {
@@ -4497,10 +4504,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-08T20:02:04.347Z",
-    "texto": "⭐ C. Romero firma el MVP en el Submarino Amarillo 2-0 Getafe y se va a 16 puntos, alcanzando los 31 puntos en la temporada.\n\n💸 Vale 6,5 M en el mercado y vuelve a jugar en la jornada 13, contra el Barcelona"
-   },
-   {
     "t": "2026-11-08T22:37:27.685Z",
     "texto": "⭐ Fermín brilla como MVP fantasy en el Atleti 1-2 Barça y se va a 17 puntos. El centrocampista del Barça suma 111 puntos esta temporada con una media de 9,3.\n\n💸 Vale 112,8 M en el mercado y vuelve a jugar en la jornada 13, contra el Villarreal"
    },
@@ -4515,6 +4518,10 @@
    {
     "t": "2026-11-21T17:32:02.023Z",
     "texto": "⭐ Copete es el mejor del Rayo ⚡-Valencia 🦇 con 15 puntos: el defensa marcó de cabeza el único gol, el 0-1 en el 41', y el Valencia se lleva los tres puntos de Vallecas.\n\nHace más del doble de su media y vale solo 689 K. En la jornada 14 el Valencia recibe al Osasuna 🐂: para un defensa tan barato, es de los que apetece fichar."
+   },
+   {
+    "t": "2026-11-21T19:51:47.286Z",
+    "texto": "⭐ Antony se lleva el MVP del derbi: 14 puntos, más del doble de lo que suele hacer, tras abrir el marcador en el 50'. Kike Salas lo empató en el descuento y el Sánchez-Pizjuán se quedó en 1-1.\n\nVale 34,9 M y la jornada 14 la juega en casa contra el Rayo ⚡. Si lo tienes, no hay motivo para soltarlo."
    }
   ],
   "mercado": [
@@ -4989,6 +4996,11 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
+  },
+  "final|121": {
+   "n": 1,
+   "t": "2026-11-21T19:51:37.120Z",
+   "ultima": "2026-11-21T19:51:37.120Z"
   }
  },
  "rasgos": {
@@ -9010,13 +9022,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4924,
+   "ok": 4925,
    "fallos": 0,
-   "ejecuciones": 4039,
+   "ejecuciones": 4040,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:46:11.400Z"
+   "ultima": "2026-11-21T19:51:13.898Z"
   }
  },
  "ptsDirecto": {
@@ -9106,27 +9118,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:46:17.903Z"
+   "ultimaBien": "2026-11-21T19:51:48.281Z"
   }
  },
  "avisos": [
