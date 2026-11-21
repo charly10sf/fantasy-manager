@@ -2319,8 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261118/1004252460/desgracia-no-cargarnos-segunda-persona.html": 1794990069000,
-   "SPORT|136564504": 1794989867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252482/fifa-tendra-indemnizar-atletico-lookman-11-diciembre.html": 1794993019000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252476/julian-coge-fuerza-costa-rica-vuelve-enchufado-atletico.html": 1794992694000,
    "SPORT|136566431": 1794990341000,
@@ -8738,13 +8736,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4713,
+   "ok": 4714,
    "fallos": 0,
-   "ejecuciones": 3899,
+   "ejecuciones": 3900,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T08:16:20.681Z"
+   "ultima": "2026-11-21T08:21:12.960Z"
   }
  },
  "ptsDirecto": {
@@ -8774,15 +8772,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:16:29.038Z"
+   "ultimaBien": "2026-11-21T08:21:21.461Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:16:29.038Z"
+   "ultimaBien": "2026-11-21T08:21:21.461Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:16:29.038Z"
+   "ultimaBien": "2026-11-21T08:21:21.461Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8790,11 +8788,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:16:29.038Z"
+   "ultimaBien": "2026-11-21T08:21:21.461Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:16:29.038Z"
+   "ultimaBien": "2026-11-21T08:21:21.461Z"
   }
  },
  "avisos": [
