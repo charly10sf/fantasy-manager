@@ -2535,7 +2535,8 @@
    "SPORT|136686729": 1795226464000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/20/la-curiosa-imagen-del-castilla-murcia-jose-mourinho-se-reencuentra-con-pedro-leon-cadena-ser/": 1795213478000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/derbi-nervion-semanas-visperas_0_2008552736.html": 1795237826000,
-   "El Correo|https://www.elcorreo.com/athletic/agridulce-regreso-prados-titularidad-20261120234822-nt.html": 1795214902000
+   "El Correo|https://www.elcorreo.com/athletic/agridulce-regreso-prados-titularidad-20261120234822-nt.html": 1795214902000,
+   "SPORT|135959939": 1795244400000
   },
   "hechos": [
    {
@@ -3436,7 +3437,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4336,17 +4337,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 23319,
-  "salida": 4683,
+  "entrada": 25328,
+  "salida": 4804,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.045419,
+  "dolares": 0.04568,
   "reservado": 0
  },
  "recientes": {
@@ -8737,13 +8738,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4710,
+   "ok": 4711,
    "fallos": 0,
-   "ejecuciones": 3896,
+   "ejecuciones": 3897,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T08:01:11.242Z"
+   "ultima": "2026-11-21T08:06:13.867Z"
   }
  },
  "ptsDirecto": {
@@ -8773,15 +8774,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:01:35.664Z"
+   "ultimaBien": "2026-11-21T08:06:21.399Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:01:35.664Z"
+   "ultimaBien": "2026-11-21T08:06:21.399Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:01:35.664Z"
+   "ultimaBien": "2026-11-21T08:06:21.399Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8789,11 +8790,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:01:35.664Z"
+   "ultimaBien": "2026-11-21T08:06:21.399Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:01:35.664Z"
+   "ultimaBien": "2026-11-21T08:06:21.399Z"
   }
  },
  "avisos": [
