@@ -2321,7 +2321,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252573/simeone-recupera-oblak.html": 1795002632000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html": 1795002221000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html": 1795003292000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
@@ -2553,18 +2552,6 @@
     "nums": [
      21
     ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261118/1004252568/buenas-noticias-cara-derbi-sevillano.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795002221000,
-    "id": "2759",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Vlachodimos vuelve a entrenar tras su paso por la selección",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252581/matarazzo-oyarzabal-ordenes-sube-dani-diaz.html",
@@ -8660,13 +8647,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4755,
+   "ok": 4756,
    "fallos": 0,
-   "ejecuciones": 3941,
+   "ejecuciones": 3942,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:41:12.954Z"
+   "ultima": "2026-11-21T11:46:12.125Z"
   }
  },
  "ptsDirecto": {
@@ -8696,15 +8683,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:41:20.435Z"
+   "ultimaBien": "2026-11-21T11:46:15.801Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:41:20.435Z"
+   "ultimaBien": "2026-11-21T11:46:15.801Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:41:20.435Z"
+   "ultimaBien": "2026-11-21T11:46:15.801Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8712,11 +8699,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:41:20.435Z"
+   "ultimaBien": "2026-11-21T11:46:15.801Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:41:20.435Z"
+   "ultimaBien": "2026-11-21T11:46:15.801Z"
   }
  },
  "avisos": [
