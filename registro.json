@@ -1473,6 +1473,21 @@
    "jornada": 13,
    "id": "2124146179780788578",
    "t": "2026-11-21T14:21:29.060Z"
+  },
+  {
+   "clave": "directo|130|Lucas Boyé|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124147404941165017",
+   "t": "2026-11-21T14:26:21.312Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "130",
+    "equipo": "96",
+    "min": 62,
+    "extra": 0,
+    "jugador": "Lucas Boyé"
+   }
   }
  ],
  "estados": {
@@ -4366,16 +4381,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 16,
+   "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 277760,
-  "salida": 16700,
+  "entrada": 290017,
+  "salida": 16821,
   "cacheLee": 11612,
   "cacheEscribe": 11612,
-  "dolares": 0.540098,
+  "dolares": 0.565822,
   "reservado": 0
  },
  "recientes": {
@@ -4513,10 +4528,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T20:51:17.362Z",
-    "texto": "⚽ Fermín empata para el Barça en el 45'. Atlético 1-1 Barça. Ya suma 10 puntos."
-   },
-   {
     "t": "2026-11-08T21:31:14.791Z",
     "texto": "⚽⚽ Doblete de Fermín en el 66'. Atlético 1-2 Barça: el Barça le da la vuelta. Asistencia de Lamine Yamal, con 5 puntos fantasy. Fermín ya suma 11 puntos."
    },
@@ -4531,6 +4542,10 @@
    {
     "t": "2026-11-21T14:16:19.899Z",
     "texto": "🧤 Leo Román le para un penalti a Lucas Boyé en el 55'. Alavés 1-1 Deportivo. Habría adelantado al Alavés."
+   },
+   {
+    "t": "2026-11-21T14:26:21.314Z",
+    "texto": "⚽ Lucas Boyé remata de cabeza en el 62' y el Alavés se pone por delante en Mendizorroza: 2-1 al Deportivo.\n\nEl argentino ya suma 3 puntos tras tres jornadas flojas. El pase es de Ángel Pérez, que de momento se lleva 8."
    }
   ],
   "novedades": [
@@ -8785,17 +8800,33 @@
    "f": "2026-11-21T13:41:10.528Z",
    "rf": "40:33",
    "avisado": true
+  },
+  "fm|130|561164|62": {
+   "j": "Lucas Boyé",
+   "m": "62'",
+   "f": "2026-11-21T14:26:15.914Z",
+   "rf": "67:01",
+   "casado": true
+  },
+  "directo|130|Lucas Boyé|gol1": {
+   "j": "Lucas Boyé",
+   "m": "62'",
+   "e": "2026-11-21T14:26:15.914Z",
+   "re": "67'",
+   "w": "2026-11-21T14:21:01Z",
+   "f": "2026-11-21T14:26:15.914Z",
+   "rf": "67:01"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4803,
+   "ok": 4805,
    "fallos": 0,
-   "ejecuciones": 3973,
+   "ejecuciones": 3974,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:21:11.117Z"
+   "ultima": "2026-11-21T14:26:15.914Z"
   }
  },
  "ptsDirecto": {
@@ -8812,16 +8843,22 @@
    "t": 1795210272336
   },
   "13|130|2932": {
-   "p": 5,
+   "p": 8,
    "g": 1,
-   "a": 0,
-   "t": 1795266371450
+   "a": 1,
+   "t": 1795271175914
   },
   "13|130|3069": {
    "p": 4,
    "g": 0,
    "a": 1,
    "t": 1795266371450
+  },
+  "13|130|2768": {
+   "p": 3,
+   "g": 1,
+   "a": 0,
+   "t": 1795271175914
   }
  },
  "golesAnulados": {
@@ -8837,27 +8874,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:21:29.836Z"
+   "ultimaBien": "2026-11-21T14:26:24.941Z"
   }
  },
  "avisos": [
