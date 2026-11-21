@@ -1619,6 +1619,21 @@
     "extra": 0,
     "jugador": "Pablo Durán"
    }
+  },
+  {
+   "clave": "directo|122|Jude Bellingham|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124255615837237556",
+   "t": "2026-11-21T21:36:20.583Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "122",
+    "equipo": "86",
+    "min": 66,
+    "extra": 0,
+    "jugador": "Jude Bellingham"
+   }
   }
  ],
  "estados": {
@@ -4614,10 +4629,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T14:51:19.533Z",
-    "texto": "⚽ Otro gol del Alavés, de Denis Suárez, en el 90'. Alavés 3-1 Deportivo. Asistencia de Lucas Boyé, con 8 puntos de momento. Denis Suárez ya suma 6 puntos."
-   },
-   {
     "t": "2026-11-21T16:01:27.924Z",
     "texto": "⚽ Copete, un defensa, la mete de cabeza en el 41' y el Valencia 🦇 se adelanta en Vallecas: 0-1 al Rayo ⚡.\n\nEs su primer gol en Liga, Champions o Copa y ya lleva 6 puntos, más del doble de su media. Javi Guerra pone el pase y suma 4."
    },
@@ -4632,6 +4643,10 @@
    {
     "t": "2026-11-21T20:16:18.181Z",
     "texto": "⚽ Gol de Pablo Durán y el Celta se adelanta en el 6'. Real Madrid 0-1 Celta. Apenas habían pasado unos minutos. Asistencia de Williot, con 4 puntos de momento. Pablo Durán ya suma 4 puntos."
+   },
+   {
+    "t": "2026-11-21T21:36:20.585Z",
+    "texto": "⚽ Gol de Bellingham y empate en el 66'. Real Madrid 1-1 Celta. Asistencia de Mbappé, con 4 puntos de momento. Bellingham ya suma 7 puntos."
    }
   ],
   "novedades": [
@@ -9051,17 +9066,33 @@
    "w": "2026-11-21T20:13:27Z",
    "f": "2026-11-21T20:16:12.149Z",
    "rf": "8:04"
+  },
+  "fm|122|1077894|66": {
+   "j": "Jude Bellingham",
+   "m": "66'",
+   "f": "2026-11-21T21:36:16.362Z",
+   "rf": "69:00",
+   "casado": true
+  },
+  "directo|122|Jude Bellingham|gol1": {
+   "j": "Jude Bellingham",
+   "m": "66'",
+   "e": "2026-11-21T21:36:16.362Z",
+   "re": "69'",
+   "w": "2026-11-21T21:32:44Z",
+   "f": "2026-11-21T21:36:16.362Z",
+   "rf": "69:00"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4962,
+   "ok": 4964,
    "fallos": 0,
-   "ejecuciones": 4060,
+   "ejecuciones": 4061,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T21:31:12.926Z"
+   "ultima": "2026-11-21T21:36:16.362Z"
   }
  },
  "ptsDirecto": {
@@ -9148,6 +9179,18 @@
    "g": 0,
    "a": 1,
    "t": 1795292172149
+  },
+  "13|122|3101": {
+   "p": 7,
+   "g": 1,
+   "a": 0,
+   "t": 1795296976362
+  },
+  "13|122|3103": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795296976362
   }
  },
  "golesAnulados": {
@@ -9163,27 +9206,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:31:23.703Z"
+   "ultimaBien": "2026-11-21T21:36:29.945Z"
   }
  },
  "avisos": [
