@@ -174,7 +174,7 @@ function sinLoginFuera() { S.loginFuera = 0; LS.del('login-fuera'); if (S.relojV
     `cerrada`: la parte nativa sabe que la pestaña se cerró sin terminar (Auth Tab): no hace falta esperar */
 function mirarSinCodigo({ cerrada = false } = {}) {
   if (!enApp || !loginFuera() || haySesion() || S.relojVuelve) return;
-  S.relojVuelve = relojFijo(cerrada ? 300 : 3000, () => {
+  S.relojVuelve = relojFijo(cerrada ? 800 : 3000, () => {
     S.relojVuelve = null;
     if (!loginFuera() || haySesion() || S.entrandoApp) return;
     sinLoginFuera();
@@ -3278,6 +3278,8 @@ window.vueltaLogin = async () => {
   if (!url) return;
   // ha vuelto con la dirección de LaLiga: ya no hay que preguntar «¿No has vuelto solo?»
   sinLoginFuera();
+  // por dónde ha llegado (Auth Tab o el intent de siempre), para el diagnóstico
+  LS.set('login-via', { via: nativo.loginVia(), t: Date.now() });
   S.entrandoApp = true;
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   // (0.7.13i) si entra o en qué falla, sin cuenta (semaforo.js): los fallos de la carga de después no cuentan aquí

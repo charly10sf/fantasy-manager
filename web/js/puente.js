@@ -232,6 +232,8 @@ export const nativo = {
   // (parte Android del 21 nov) la entrada va por Auth Tab: la vuelta llega a la app sin que Android pregunte «Abrir con».
   // Las apps de antes no tienen el método: false
   authTab: () => !!(N && typeof N.authTab === 'function' && llamar('authTab')),
+  // por dónde llegó la última vuelta de LaLiga: 'authtab', 'intent' o '' (las apps de antes no lo dicen)
+  loginVia: () => (N && typeof N.loginVia === 'function' ? llamar('loginVia') || '' : ''),
   programarAvisos: (lista) => llamar('programarAvisos', JSON.stringify(lista || [])),
   avisosPermitidos: () => (N ? !!llamar('avisosPermitidos') : false),
   pedirPermisoAvisos: () => llamar('pedirPermisoAvisos'),
