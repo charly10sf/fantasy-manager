@@ -6,7 +6,7 @@ import { corto } from '../lib/texto.mjs';
 import { equiposDe } from '../lib/laliga.mjs';
 import { chollo } from '../tipos/mercado.mjs';
 import { fechaHora, fecha, diaCorto, hora } from './vista.mjs';
-import { e, coma, dinero, dif, pct, cara, escudo, cambio, minigrafica, bloque, diaMadrid, fechaCorta, POS, celdaJug, tabla, kpis, subnav, pestanas } from './portal.mjs';
+import { e, coma, dinero, dif, pct, cara, escudo, cambio, minigrafica, bloque, diaMadrid, fechaCorta, POS, celdaJug, tabla, kpis, subnav, pestanas, tarjetasJug } from './portal.mjs';
 
 const HORA = 36e5, DIA = 24 * HORA;
 const num = (x) => Number(x) || 0;
@@ -156,7 +156,8 @@ function bloqueManana(h, cj, { prev, aciertos = [] }) {
   const n1 = h.todas.filter((f) => f.racha >= 3 && f.pos >= 1 && f.pos <= 4).length, n2 = h.todas.filter((f) => f.racha <= -3 && f.pos >= 1 && f.pos <= 4).length;
   const nAc = prev.suben.filter((x) => x.por === 'acelera').length, nFr = prev.suben.filter((x) => x.por === 'frena').length;
   const lead = `${n1} jugadores llevan tres días o más subiendo y ${n2} bajando. Con lo que ha pasado esta temporada en rachas así, esta es la probabilidad de que mañana sigan igual${nAc || nFr ? `: entre los ${prev.suben.length} de arriba, ${nAc} han acelerado hoy y ${nFr} han frenado` : ''}. La previsión guarda los ${N_PREV} más probables de cada lado.`;
-  return bloque('Mañana: quién sube y quién baja', `  <p>${e(lead)}</p>\n${pestanas('manana', [['Suben', t(prev.suben)], ['Bajan', t(prev.bajan)]])}\n  <p>${e(fr.join(' '))}</p>`,
+  // (rework) primero las tablas y debajo lo que cuentan: las cifras, arriba
+  return bloque('Mañana: quién sube y quién baja', `${pestanas('manana', [['Suben', t(prev.suben)], ['Bajan', t(prev.bajan)]])}\n  <p>${e(fr.join(' '))}</p>\n  <p>${e(lead)}</p>`,
     { id: 'manana', linea: `«Frena»: hoy subió menos de la mitad que ayer; «acelera»: más que ayer. De dónde sale cada porcentaje, en <a href="../guias/valor-de-mercado.html">valor de mercado</a>. Es una tendencia, no una garantía.` });
 }
 
@@ -171,16 +172,19 @@ export function contenidoMercado(h, { previa = null, resumen = null, rutas = SIN
     { v: String(h.nRachaSube), l: 'En racha', s: '3 días o más subiendo' },
     { v: String(h.nMaximos), l: 'En máximos', s: 'de la temporada' },
   ], 'k4'));
-  if (h.proxima) o.push(proximaCaja(h.proxima, { previa, resumen }));
   const ch = h.chollo;
-  if (prev && (prev.suben.length || prev.bajan.length)) o.push(bloqueManana(h, cj, { prev, aciertos }));
-  o.push(subnav([prev && ['manana', 'Mañana'], ['hoy', 'Hoy'], ['semana', '7 días'], ['rachas', 'Rachas'], h.maximos.length && ['maximos', 'Máximos'], ch && ['chollo', 'Chollo'], ['equipos', 'Equipos'], ['analisis', 'Análisis']]));
+  // (rework de la web) el orden: las cifras, los saltos, los cinco que más suben en tarjetas y sus tablas; después la jornada y mañana
+  o.push(subnav([['hoy', 'Hoy'], prev && ['manana', 'Mañana'], ['semana', '7 días'], ['rachas', 'Rachas'], h.maximos.length && ['maximos', 'Máximos'], ch && ['chollo', 'Chollo'], ['equipos', 'Equipos'], ['analisis', 'Análisis']]));
 
   // hoy: los diez que más suben y bajan, con su minigráfica de 30 días
   const tHoy = (xs) => (xs.length ? tabla([{ t: '#', c: 'n m' }, { t: 'Jugador', c: 'j' }, { t: 'Hoy', c: 'n' }, { t: '30 días', c: 'd' }], xs.map((f, i) => `<td class="n m">${i + 1}</td>${cj(f)}`
     + `<td class="n">${dosL(cambio(f.dif, dif(f.dif)), `${e(pct(f.pct))} · ${e(dinero(f.nuevo))}`)}</td><td class="d">${minigrafica(f.serie, { ancho: 72, alto: 26, etiqueta: `${f.nombre}, valor en los últimos ${f.serie.length} días: de ${dinero(f.serie[0])} a ${dinero(f.nuevo)}` })}</td>`), { clase: 'td-merc' }) : '');
-  o.push(bloque('Los que más suben y bajan hoy', pestanas('hoy', [['Suben', tHoy(h.suben)], ['Bajan', tHoy(h.bajan)]]),
+  const top = tarjetasJug(h.suben.slice(0, 5).map((f) => ({ x: f, enlace: en(rutas.jugador(f.id)), valor: dinero(f.nuevo), mueve: [f.dif, dif(f.dif)] })));
+  o.push(bloque('Los que más suben y bajan hoy', `${top}\n${pestanas('hoy', [['Suben', tHoy(h.suben)], ['Bajan', tHoy(h.bajan)]])}`,
     { id: 'hoy', linea: 'Lo ganado o perdido en el último cambio de mercado, en millones y en porcentaje, el valor de hoy y la línea de los últimos 30 días.' }));
+
+  if (h.proxima) o.push(proximaCaja(h.proxima, { previa, resumen }));
+  if (prev && (prev.suben.length || prev.bajan.length)) o.push(bloqueManana(h, cj, { prev, aciertos }));
 
   const t7 = (xs) => (xs.length ? tabla([{ t: '#', c: 'n m' }, { t: 'Jugador', c: 'j' }, { t: '7 días', c: 'n' }, { t: 'Valor', c: 'n m' }], xs.map((f, i) => `<td class="n m">${i + 1}</td>${cj(f)}`
     + `<td class="n">${dosL(cambio(f.dif7, dif(f.dif7)), e(pct(f.pct7)))}</td><td class="n m">${e(dinero(f.nuevo))}</td>`)) : '');
@@ -250,14 +254,15 @@ export function contenidoEquipos(h, { rutas = SIN, jugadores = null } = {}) {
   o.push(bloque('Valor de cada plantilla', tabla([{ t: '#', c: 'n m' }, { t: 'Equipo', c: 'j' }, { t: 'Plantilla', c: 'n' }, { t: 'Hoy', c: 'n m' }, { t: '7 días', c: 'n' }, { t: 'El que más vale', c: 'm' }, { t: 'Mejor media', c: 'm' }], filas, { clase: 'td-eqs' }),
     { id: 'valor', linea: '«Mejor media»: el de más puntos de media entre los que llevan 20 puntos o más en la temporada.' }));
   o.push(bloque('Las plantillas en LaLiga Fantasy', `  <p>${e(`Lo que vale la plantilla de cada equipo en el mercado de LaLiga Fantasy, sumando a todos sus jugadores. La más cara es la del ${caro.nombre}, ${dinero(caro.valor)}; la más barata, la del ${barato.nombre}, ${dinero(barato.valor)}. En la última semana, la que más ha ganado es la del ${masGana.nombre}: ${dif(masGana.dif7)}.`)}</p>`
-    + (jugadores ? `\n  <p>Cada equipo tiene su página con la plantilla, los puntos de cada jornada y los próximos rivales, y los jugadores que más pesan en el juego, la suya: <a href="../jugadores/">todos los jugadores</a>, con los ${jugadores} que tienen ficha enlazados.</p>` : ''), { id: 'analisis', linea: `La plantilla suma a todos los que tiene cada club en el juego, jueguen o no. <a href="../metodo.html#valor">Cómo leemos el valor</a>.` }));
+    + (jugadores ? `\n  <p>Cada equipo tiene su página con la plantilla, los puntos de cada jornada y los próximos rivales, y cada jugador, la suya: <a href="../jugadores/">los ${jugadores} jugadores</a>, con su valor día a día y sus puntos.</p>` : ''), { id: 'analisis', linea: `La plantilla suma a todos los que tiene cada club en el juego, jueguen o no. <a href="../metodo.html#valor">Cómo leemos el valor</a>.` }));
   // (sesión 3) el párrafo de «De dónde salen los datos», en metodo.html#valor
   return o.join('\n');
 }
 
 /** lo que lee la portada de la app (web/js/portada.js) para su bloque de «Hoy» */
-export function hoyJson(h, { previa = null, resumen = null } = {}) {
-  const f = (x) => ({ nombre: x.nombre, equipo: x.equipo, pos: x.pos, cara: x.caraUrl, escudo: x.escudoUrl, dif: dif(x.dif), pct: pct(x.pct), valor: dinero(x.nuevo), sube: x.dif > 0 });
+export function hoyJson(h, { previa = null, resumen = null, rutas = SIN } = {}) {
+  // (rework) `ruta`: la ficha de cada uno, para que la portada los enlace
+  const f = (x) => ({ nombre: x.nombre, equipo: x.equipo, pos: x.pos, cara: x.caraUrl, escudo: x.escudoUrl, dif: dif(x.dif), pct: pct(x.pct), valor: dinero(x.nuevo), sube: x.dif > 0, ...(rutas.jugador(x.id) ? { ruta: rutas.jugador(x.id) } : {}) });
   const p = h.proxima;
   return { dia: h.dia, fecha: fechaDia(h.dia), nSuben: h.nSuben, nBajan: h.nBajan, suben: h.suben.slice(0, 5).map(f), bajan: h.bajan.slice(0, 3).map(f),
     jornada: p ? { n: p.jornada, enJuego: p.enJuego, primero: fechaHora(p.primero), cierre: fechaHora(p.cierre), cierreT: p.cierre, partido: `${p.partidos[0].local}-${p.partidos[0].visitante}` } : null,

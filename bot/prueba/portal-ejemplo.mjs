@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson } from '../web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas } from '../web/resumen.mjs';
 import { cara, minigrafica, chipPuntos, clasePuntos, slug, graficaValor, barrasPuntos } from '../web/portal.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, jugadoresJson, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie, analisisJugador, hechosJugador } from '../web/fichas.mjs';
-import { pestanas, tabla, kpis } from '../web/portal.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, jugadoresJson, metasEquipo, metasJugador, cuando, indiceBuscador, escudosPie, analisisJugador, hechosJugador, admitirIndexables, fichasQueCambian, huellaJugador, CUPO_INDEXABLES, FICHAS_FINAS } from '../web/fichas.mjs';
+import { pestanas, tabla, kpis, tarjetasJug, chip } from '../web/portal.mjs';
 
 const DIA = 864e5;
 const hoy = Date.parse('2026-11-15T10:00:00Z');
@@ -129,7 +129,75 @@ assert.equal(H.jugadores.length, 20, 'como mucho max');
 assert.ok(H.jugadores.some((x) => x.id === '9'), 'el que ya tenía página se queda');
 assert.equal(H.slugs.jugadores['9'], 'jugador-9', 'y su URL no cambia');
 assert.equal(new Set(Object.values(H.slugs.jugadores)).size, Object.keys(H.slugs.jugadores).length, 'URL sin repetir');
-assert.ok(H.jugadores.every((x) => x.pesa || x.id === '9'));
+// (rework de la web, 21 nov) ficha para TODOS: sin tope, cada jugador tiene la suya, pese o no y haya jugado o no
+{
+  const hm2 = await hechosMercado(api, { ahora: hoy });
+  const HT = await hechosFichas(api, hm2, { estado: { jugadores: { 9: 'jugador-9' } }, ahora: hoy });
+  assert.equal(HT.jugadores.length, HT.todos.length, 'todos con ficha');
+  assert.ok(HT.jugadores.some((x) => !x.pesa), 'también los que no pesan');
+  assert.equal(new Set(HT.jugadores.map((x) => x.slug)).size, HT.jugadores.length, 'URL sin repetir entre todos');
+  for (const x of HT.jugadores) { const c = contenidoJugador(x, HT); assert.match(c, /<h1>/); assert.doesNotMatch(c, /undefined|NaN|null/, `${x.nombre}: ficha limpia aunque no haya jugado`); }
+  // el sitemap crece por tandas: la primera vez entran las que ya eran indexables; después, como mucho el cupo por noche, por minutos
+  const an = (x) => analisisJugador(x, HT, HT.equipos.find((q) => q.id === x.teamId) || null).indexar;
+  const buenas = HT.jugadores.filter(an);
+  assert.ok(buenas.length > 6, 'el ejemplo tiene fichas con chicha');
+  const ya = buenas.slice(0, 2), viejas = new Map(ya.map((x) => [`jugadores/${x.slug}.html`, { ruta: `jugadores/${x.slug}.html` }]));
+  viejas.set(`jugadores/${HT.jugadores.find((x) => !an(x)).slug}.html`, { indexar: false });
+  const r1 = admitirIndexables(HT, viejas, { cupo: 3 });
+  assert.equal(r1.nuevas, 3, 'tres nuevas por noche con cupo 3');
+  assert.equal(r1.total, 5, 'las dos de antes y las tres nuevas');
+  assert.equal(r1.espera, buenas.length - 5);
+  assert.ok(ya.every((x) => HT.indexable(x)) && ya.every((x) => HT.slugs.indexables[x.id] === 'antes'));
+  const nuevas = buenas.filter((x) => HT.slugs.indexables[x.id] === HT.dia);
+  const fuera = buenas.filter((x) => !HT.slugs.indexables[x.id]);
+  assert.ok(Math.min(...nuevas.map((x) => x.minutos)) >= Math.max(...fuera.map((x) => x.minutos)), 'entran primero las de más minutos');
+  for (const x of HT.jugadores) assert.equal('indexar' in metasJugador(x, HT), !HT.indexable(x), 'noindex a las flojas y a las que esperan turno');
+  assert.ok(HT.jugadores.filter((x) => !an(x)).every((x) => !HT.indexable(x)), 'una floja no se indexa nunca');
+  assert.equal(admitirIndexables(HT, viejas, { cupo: 3 }).nuevas, 0, 'el mismo día no entran más');
+  assert.ok(CUPO_INDEXABLES >= 20 && CUPO_INDEXABLES <= 30, 'entre 20 y 30 por noche (Carlos)');
+  // solo se reescribe la ficha a la que le cambia lo suyo
+  const q0 = fichasQueCambian(HT, {}, {});
+  assert.equal(q0.escribir.length, HT.jugadores.length, 'la primera vez, todas');
+  assert.equal(fichasQueCambian(HT, q0.huellas, {}).escribir.length, 0, 'sin cambios, ninguna');
+  assert.equal(fichasQueCambian(HT, q0.huellas, { forzar: true }).escribir.length, HT.jugadores.length);
+  assert.equal(fichasQueCambian(HT, q0.huellas, { existe: () => false }).escribir.length, HT.jugadores.length, 'si falta la página, se escribe');
+  const porValor = [...HT.jugadores].sort((a, b) => b.valor - a.valor);
+  const cola = porValor.length > FICHAS_FINAS ? porValor[porValor.length - 1] : null;
+  const top = porValor[0], vTop = top.valor;
+  top.valor = vTop + 1000;
+  assert.deepEqual(fichasQueCambian(HT, q0.huellas, {}).escribir.map((x) => x.id), [top.id], 'de las que más valen, cualquier cambio de valor');
+  top.valor = vTop;
+  if (cola) {
+    const v = cola.valor;
+    cola.valor = v * 1.004;
+    assert.equal(fichasQueCambian(HT, q0.huellas, {}).escribir.length, 0, 'en la cola, un movimiento pequeño no reescribe');
+    cola.valor = v * 1.2;
+    assert.deepEqual(fichasQueCambian(HT, q0.huellas, {}).escribir.map((x) => x.id), [cola.id], 'uno grande, sí');
+    cola.valor = v;
+  }
+  const uno = porValor[porValor.length - 1], est = uno.estado, ok = uno.ok;
+  uno.estado = 'injured'; uno.ok = false;
+  assert.deepEqual(fichasQueCambian(HT, q0.huellas, {}).escribir.map((x) => x.id), [uno.id], 'una lesión reescribe la ficha');
+  uno.estado = est; uno.ok = ok;
+  assert.equal(huellaJugador(uno, HT).h, q0.huellas[uno.id].h, 'la huella no depende del día');
+}
+// la gráfica de valor, estable de una noche a otra: el punto de hoy se añade y los de antes no se mueven
+{
+  const s = Array.from({ length: 40 }, (_, i) => ({ t: Date.parse('2026-09-01') + i * 864e5, v: 5e6 + 37000 * i + (i % 5) * 9000 }));
+  const a = graficaValor(s.slice(0, 39)), b = graficaValor(s);
+  const camino = (g) => g.match(/<path class="l" d="([^"]+)"/)[1];
+  assert.ok(camino(b).startsWith(camino(a)), 'el camino de ayer es el principio del de hoy');
+  assert.match(b, /role="img" aria-label="Valor de mercado: de /);
+}
+// las tarjetas de jugador y la chapita: subida y bajada con flecha, nunca solo color
+assert.match(chip(5, '+5 mil'), /class="chip sube">▲ \+5 mil</);
+assert.match(chip(-5, '-5 mil'), /class="chip baja">▼ -5 mil</);
+{
+  const tj = tarjetasJug([{ x: H.jugadores[0], enlace: '../jugadores/a.html', valor: '1,0 M', mueve: [1, '+1 mil'] }, { x: H.jugadores[1], valor: '2,0 M' }]);
+  assert.match(tj, /^  <div class="jcs"><a class="jc" href="\.\.\/jugadores\/a\.html">/);
+  assert.match(tj, /loading="lazy"/);
+  assert.equal((tj.match(/class="jc-n"/g) || []).length, 2);
+}
 for (const q of H.equipos) {
   assert.equal(q.resultados.length, 12, `${q.nombre}: un partido por jornada`);
   assert.deepEqual(q.resultados.map((r) => r.J), [...q.resultados.map((r) => r.J)].sort((a, b) => a - b), 'por jornada');

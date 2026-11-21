@@ -15,13 +15,13 @@ import path from 'node:path';
 import * as LL from './lib/laliga.mjs';
 import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJornada, prevision, acierto } from './web/mercado.mjs';
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen, resumenCorto, semanaMercado } from './web/resumen.mjs';
-import { RAIZ, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
+import { RAIZ, FICHAS, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
 import { hechosBajas, contenidoBajas, metasBajas } from './web/bajas.mjs';
 import { hechosOnces, contenidoOnces, metasOnces, confirmar, aciertoDe, lineaResumen } from './web/onces.mjs';
 import { confirmadosDe, pendientes, tocaOnces } from './web/confirmados.mjs';
 import { lesionados } from './lib/partes.mjs';
-import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, metasPaginaJugadores, nPaginasJugadores, jugadoresJson, indiceBuscador, escudosPie } from './web/fichas.mjs';
+import { hechosFichas, contenidoEquipo, contenidoJugador, contenidoJugadores, metasEquipo, metasJugador, metasJugadores, metasPaginaJugadores, nPaginasJugadores, jugadoresJson, indiceBuscador, escudosPie, admitirIndexables, fichasQueCambian } from './web/fichas.mjs';
 
 const arg = (k) => { const a = process.argv.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : (process.argv.includes(`--${k}`) ? '1' : null); };
 const salida = (k, v) => { if (process.env.GITHUB_OUTPUT) writeFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`, { flag: 'a' }); };
@@ -48,7 +48,7 @@ mkdirSync(DIR, { recursive: true });
 const fEstado = path.join(DIR, 'estado.json');
 const estado = existsSync(fEstado) ? JSON.parse(readFileSync(fEstado, 'utf8')) : { mercado: null, resumenes: {} };
 let cambios = false;
-const maxFichas = arg('fichas') != null ? Number(arg('fichas')) : 150;
+const maxFichas = arg('fichas') != null ? Number(arg('fichas')) : 2000;  // (rework, 21 nov) ficha para todos; antes, las 150 que más pesaban
 
 // las rutas de las fichas que ya existen (para enlazar desde el resumen antes de rehacerlas; luego, las de hoy)
 const rutasDe = (f) => ({ jugador: (id) => (f && f.jugadores && f.jugadores[String(id)] ? `jugadores/${f.jugadores[String(id)]}.html` : null),
@@ -202,9 +202,16 @@ if (tocaMercado) {
             }
           } catch (err) { log(`::warning::Onces sin hacer: ${err.stack || err.message}`); }
         }
+        // (rework de la web, 21 nov) ficha para todos: qué fichas entran hoy en el sitemap (unas pocas por noche) y cuáles hay que
+        // reescribir (las que más valen, cada noche; las demás, cuando cambia lo suyo), para que el repo no crezca sin control
+        const viejas = new Map((existsSync(FICHAS) ? JSON.parse(readFileSync(FICHAS, 'utf8')).paginas : []).map((p) => [p.ruta, p]));
+        const adm = admitirIndexables(H, viejas);
+        const qc = fichasQueCambian(H, estado.huellas || {}, { forzar: !!arg('todas'), existe: (r) => existsSync(path.join(RAIZ, 'web', r)) && viejas.has(r) });
+        estado.huellas = qc.huellas;
+        log(`Fichas de jugador: ${H.jugadores.length}, ${adm.total} indexables (${adm.nuevas} nuevas hoy, ${adm.espera} en espera), ${qc.escribir.length} para reescribir`);
         const pags = [
           ...H.equipos.map((q) => ({ entrada: metasEquipo(q), html: contenidoEquipo(q, H) })),
-          ...H.jugadores.map((x) => ({ entrada: metasJugador(x, H), html: contenidoJugador(x, H) })),
+          ...qc.escribir.map((x) => ({ entrada: metasJugador(x, H), html: contenidoJugador(x, H) })),
           { entrada: metasJugadores(), html: contenidoJugadores(H) },
           ...Array.from({ length: nPaginasJugadores(H) - 1 }, (_, i) => ({ entrada: metasPaginaJugadores(i + 2), html: contenidoJugadores(H, i + 2) })),
         ];
@@ -240,7 +247,7 @@ if (tocaMercado) {
     escribirPagina({ ruta: 'equipos/index.html', seccion: 'equipos', titulo: 'Equipos de LaLiga Fantasy: valor de cada plantilla',
       h1: 'Equipos de LaLiga Fantasy', descripcion: 'Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.' },
     contenidoEquipos(hm, { rutas, jugadores: hm.nFichas || null }));
-    writeFileSync(path.join(RAIZ, 'web', 'mercado', 'hoy.json'), JSON.stringify(hoyJson(hm, { previa: pv ? pv.ruta : null, resumen: rs })) + '\n');
+    writeFileSync(path.join(RAIZ, 'web', 'mercado', 'hoy.json'), JSON.stringify(hoyJson(hm, { previa: pv ? pv.ruta : null, resumen: rs, rutas })) + '\n');
     estado.mercado = { dia: hm.dia, hecho: Date.now() };
     cambios = true;
     log(`Mercado del ${hm.dia}: ${hm.nSuben} suben, ${hm.nBajan} bajan; el que más sube, ${hm.suben[0].nombre}`);

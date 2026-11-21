@@ -3631,3 +3631,23 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .sup-toca.girando::after { animation: sup-gira 0.9s linear infinite; }
 @keyframes sup-gira { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .sup-toca.girando::after { animation: none; } }
+
+/* (rework de la web, 21 nov) los 20 escudos en la portada de la web: debajo de la barra fija con JS (.tira-p) y arriba del todo
+   sin JS (.sj-tira); cada uno lleva a la ficha de su equipo. Como la tira de las páginas públicas (css/paginas.css, .tira) */
+.tira-p, .sj-tira { background: #0c0c0f; border-bottom: 1px solid var(--linea); }
+.sj-tira { margin: -28px -20px 0; }
+.tira-p-in { display: flex; gap: 2px; max-width: 1120px; margin: 0 auto; padding: 5px 8px 4px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent); mask-image: linear-gradient(90deg, #000 86%, transparent); }
+.tira-p-in::-webkit-scrollbar { display: none; }
+.tira-p a, .sj-tira a { flex: none; display: grid; justify-items: center; gap: 2px; width: 46px; padding: 4px 0 3px; border-radius: 10px; text-decoration: none; }
+.tira-p img, .sj-tira img { display: block; width: 28px; height: 28px; object-fit: contain; transition: transform 0.16s ease-out; }
+.tira-p a::after, .sj-tira a::after { content: attr(data-a); font: 700 10.5px/1 var(--cond); letter-spacing: 0.6px; color: var(--apagado); }
+.tira-p a:hover, .sj-tira a:hover { background: var(--plano); }
+.tira-p a:hover img { transform: translateY(-2px) scale(1.06); }
+.tira-p a:hover::after { color: var(--texto); }
+.escritorio .tira-p-in { justify-content: center; gap: 6px; -webkit-mask-image: none; mask-image: none; }
+html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
+@media (prefers-reduced-motion: reduce) { .tira-p img { transition: none; } }
+.sin-js .sj-tira + .sj-barra { margin-top: 0; }
+.sj-acc { list-style: none; padding: 0; display: grid; gap: 8px; }
+.sj-acc li { margin: 0; padding: 12px 14px; border: 1px solid var(--linea); border-radius: 12px; background: var(--plano); }
+.sj-acc a { font: 700 19px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; text-decoration: none; color: var(--texto); }

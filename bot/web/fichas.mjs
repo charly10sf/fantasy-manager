@@ -50,8 +50,8 @@ function asignar(mapa, id, base, extra) {
  * `equipos`); estado: { jugadores: {id: slug}, equipos: {id: slug} } (lo que ya tiene página; se amplía aquí). max: cuántos
  * jugadores con ficha como mucho (los que ya tienen página se quedan siempre, mientras sigan en LaLiga).
  */
-export async function hechosFichas(api, hm, { estado = {}, max = 150, ahora = Date.now(), log = () => {} } = {}) {
-  const slugs = { jugadores: { ...(estado.jugadores || {}) }, equipos: { ...(estado.equipos || {}) } };
+export async function hechosFichas(api, hm, { estado = {}, max = 2000, ahora = Date.now(), log = () => {} } = {}) {
+  const slugs = { jugadores: { ...(estado.jugadores || {}) }, equipos: { ...(estado.equipos || {}) }, ...(estado.indexables ? { indexables: { ...estado.indexables } } : {}) };
   const sem = await api.semanaActual();
   const W = sem.weekNumber;
   const nums = Array.from({ length: Math.min(38, W + 5) }, (_, i) => i + 1);
@@ -156,9 +156,10 @@ export async function hechosFichas(api, hm, { estado = {}, max = 150, ahora = Da
   [...J].filter((x) => x.dif > 0).sort((a, b) => b.dif - a.dif).forEach((x, i) => { rangoDif[x.id] = i + 1; });
   [...J].filter((x) => x.dif < 0).sort((a, b) => a.dif - b.dif).forEach((x, i) => { rangoDif[x.id] = i + 1; });
 
-  // quién tiene página: los que ya la tenían (si siguen en LaLiga) y, hasta `max`, los que más pesan por valor
+  // quién tiene página: los que ya la tenían (si siguen en LaLiga) y, hasta `max`, todos los demás por valor
+  // (rework de la web, 21 nov) ficha para TODOS los jugadores, pesen o no y hayan jugado o no: las flojas van sin indexar (`admitirIndexables`)
   const ya = J.filter((x) => slugs.jugadores[x.id]);
-  const nuevos = J.filter((x) => !slugs.jugadores[x.id] && x.pesa && x.fi).sort((a, b) => b.valor - a.valor).slice(0, Math.max(0, max - ya.length));
+  const nuevos = J.filter((x) => !slugs.jugadores[x.id]).sort((a, b) => b.valor - a.valor).slice(0, Math.max(0, max - ya.length));
   const conPagina = [...ya, ...nuevos].sort((a, b) => b.valor - a.valor);
   // con una inicial en el nombre del juego («F. de Jong», «Germán V.»), la URL va con el nombre completo: es lo que se busca
   const base = (x) => (/(^|\s)\p{L}\.(\s|$)/u.test(x.nombre) && x.nombreCompleto.split(/\s+/).length <= 4 ? x.nombreCompleto : x.nombre);
@@ -1030,6 +1031,76 @@ export function contenidoJugador(x, H) {
   return o.join('\n');
 }
 
+// ---------------------------------------------------------------- ficha para todos (rework de la web, 21 nov)
+
+/** cuántas fichas nuevas entran en el sitemap cada noche como mucho (Carlos: «nada de cientos de páginas de golpe») */
+export const CUPO_INDEXABLES = 25;
+
+/**
+ * Qué fichas de jugador se indexan. Todas se ven y se enlazan; al sitemap (y sin noindex) solo van las que tienen qué contar
+ * (5 partidos o más y 3 hechos propios, como siempre) Y ya están admitidas. La primera vez se admiten las que ya eran indexables;
+ * después, cada noche, hasta `cupo` nuevas por minutos jugados (y, a igualdad, por valor). Las admitidas se apuntan con su día en
+ * `H.slugs.indexables` (va a estado.json, `fichas.indexables`) y no se sacan: si una deja de tener qué contar (menos de 5 partidos
+ * o dos hechos propios menos de los que hacen falta para entrar), pasa a noindex ella sola.
+ * `viejas`: Map ruta → entrada de .github/portal/fichas.json antes de esta pasada. Devuelve { nuevas, total, espera }.
+ */
+export function admitirIndexables(H, viejas = new Map(), { cupo = CUPO_INDEXABLES } = {}) {
+  const eqDe = (x) => H.equipos.find((q) => q.id === x.teamId) || null;
+  const an = new Map(H.jugadores.map((x) => [x.id, analisisJugador(x, H, eqDe(x))]));
+  const vale = { get: (id) => an.get(id).indexar };
+  // una ficha ya admitida (Google la tiene) no sale del sitemap porque una noche se quede con un hecho propio de menos: para
+  // seguir le basta con los 5 partidos y un hecho menos que para entrar (así no entra y sale según el día)
+  const sigue = (x) => x.jugados >= MIN_PARTIDOS && an.get(x.id).propios >= MIN_PROPIOS - 1;
+  const ad = { ...(H.slugs.indexables || {}) };
+  if (!H.slugs.indexables) {
+    for (const x of H.jugadores) { const v = viejas.get(`jugadores/${x.slug}.html`); if (v && v.indexar !== false) ad[x.id] = 'antes'; }
+  }
+  const deHoy = Object.values(ad).filter((d) => d === H.dia).length;
+  const nuevas = H.jugadores.filter((x) => vale.get(x.id) && !ad[x.id]).sort((a, b) => b.minutos - a.minutos || b.valor - a.valor).slice(0, Math.max(0, cupo - deHoy));
+  for (const x of nuevas) ad[x.id] = H.dia;
+  H.slugs.indexables = ad;
+  H.indexable = (x) => !!ad[x.id] && (vale.get(x.id) || sigue(x));
+  return { nuevas: nuevas.length, total: H.jugadores.filter((x) => H.indexable(x)).length, espera: H.jugadores.filter((x) => vale.get(x.id) && !ad[x.id]).length };
+}
+
+/** al cambiar cómo se pinta una ficha de jugador se sube, y la noche siguiente se reescriben todas */
+const VERSION_FICHA = 2;
+/** las fichas de los que más valen se rehacen cada noche, como hasta ahora (su valor de hoy es lo que se busca) */
+export const FICHAS_FINAS = 150;
+/** cuánto tiene que moverse el valor de las demás para rehacerlas: [parte de su valor, mínimo en €] si se indexa o si no */
+const TOLERANCIA = { indexable: [0.02, 20000], resto: [0.05, 50000] };
+
+/**
+ * Lo propio de un jugador que hace que su ficha tenga que rehacerse: quién es, dónde juega, si está disponible, cada jornada de su
+ * equipo (minutos, puntos, goles…), el próximo rival y si se indexa. El valor va aparte (`v`): cambia casi cada noche en casi todos.
+ */
+export function huellaJugador(x, H) {
+  const eq = H.equipos.find((q) => q.id === x.teamId) || null;
+  const px = eq && eq.proximos[0];
+  return { h: String(huella([VERSION_FICHA, x.nombre, x.club, x.pos, x.estado, x.ok ? 1 : 0, x.motivo ? x.motivo.txt : '', H.indexable ? Number(H.indexable(x)) : '',
+    px ? `${px.J}.${px.rivalId}` : '', x.jornadas.map((r) => [r.J, r.min, r.pts, r.g, r.a, r.am, r.roja, r.par, r.enc].join('.')).join('|')].join('~'))), v: Math.round(x.valor) };
+}
+
+/**
+ * Qué fichas de jugador se reescriben esta noche (para que el repo no crezca con 576 páginas cada noche: ESTADO, punto 70). Las
+ * `FICHAS_FINAS` que más valen, siempre que cambie su valor (como hasta ahora). Las demás, solo si cambia lo suyo (`huellaJugador`:
+ * su equipo ha jugado, se lesiona, cambia de club, entra en el sitemap…) o si su valor se ha movido desde la última vez más de un
+ * 2 % (las que se indexan) o de un 5 % (las que no). Así cada ficha se rehace como poco tras cada partido de su equipo, y en la
+ * página pone de qué día son los datos. `huellas`: { id: { h, v, d } } de la vez anterior (estado.json, `huellas`); `existe(ruta)`:
+ * si la página está en el disco. Devuelve { escribir: [jugadores], huellas: las de después }.
+ */
+export function fichasQueCambian(H, huellas = {}, { forzar = false, existe = () => true } = {}) {
+  const finas = new Set([...H.jugadores].sort((a, b) => b.valor - a.valor).slice(0, FICHAS_FINAS).map((x) => x.id));
+  const despues = {}, escribir = [];
+  for (const x of H.jugadores) {
+    const n = huellaJugador(x, H), v = huellas[x.id];
+    const [parte, minimo] = TOLERANCIA[H.indexable && H.indexable(x) ? 'indexable' : 'resto'];
+    const seMueve = v && (finas.has(x.id) ? n.v !== v.v : Math.abs(n.v - v.v) > Math.max(v.v * parte, minimo));
+    if (forzar || !v || v.h !== n.h || seMueve || !existe(`jugadores/${x.slug}.html`)) { escribir.push(x); despues[x.id] = { ...n, d: H.dia }; } else despues[x.id] = v;
+  }
+  return { escribir, huellas: despues };
+}
+
 /** para el buscador y los filtros: el nombre sin tildes ni mayúsculas */
 const plano = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -1043,7 +1114,7 @@ const celdaLigera = (x, enlace, sub) => `<td class="c-j"><span class="tjug-t"><b
 const subJug = (x) => `${POS[x.pos]} · ${x.equipo}${!x.ok && ESTADOS[x.estado] ? ` · ${ESTADOS[x.estado]}` : ''}`;
 
 /**
- * jugadores/ (y jugadores/pagina-N.html): TODOS los jugadores de LaLiga, por valor, de 150 en 150 (los que tienen ficha, enlazados).
+ * jugadores/ (y jugadores/pagina-N.html): TODOS los jugadores de LaLiga, por valor, de 150 en 150, cada uno enlazado a su ficha.
  * Con JavaScript (web/portal/portal.js) la tabla se rehace con los 576 de jugadores/todos.json, con sus caras, y se filtra por puesto,
  * equipo y nombre y se ordena por valor, puntos, media o subida; sin él se lee por páginas. Las páginas 2 en adelante, sin indexar.
  */
@@ -1080,7 +1151,7 @@ export function contenidoJugadores(H, pag = 1) {
     o.push(`  <nav class="paginas" id="paginas" aria-label="Páginas">${pag > 1 ? `<a href="${rutaPagina(pag - 1)}">‹ Anteriores</a> ` : ''}${enl}${pag < np ? ` <a href="${rutaPagina(pag + 1)}">Siguientes ›</a>` : ''}</nav>`);
   }
   if (pag === 1) {
-    o.push(bloque('Quién vale más y quién puntúa más', `  <p>${e(`Aquí están los ${todos.length} jugadores que siguen en LaLiga Fantasy, de ${POR_PAGINA} en ${POR_PAGINA} y del más caro al más barato, con su valor de mercado de hoy, lo que han ganado o perdido en el último cambio y en siete días, sus puntos de la temporada y su media por partido jugado. El que más vale hoy es ${caro.nombre} (${caro.equipo}), con ${dinero(caro.valor)}${mejor ? `; el de mejor media entre los que llevan cinco partidos o más, ${mejor.nombre}, con ${coma(mejor.media)}` : ''}${sube && sube.dif > 0 ? `, y el que más ha subido hoy, ${sube.nombre} (${dif(sube.dif)})` : ''}.`)}</p>\n  <p>${e(`Los ${n} que más pesan en el juego (titulares habituales, los de buena media y los más caros) tienen ficha propia, con su valor día a día, sus puntos de cada jornada, los minutos, la titularidad y sus próximos rivales: van enlazados en la tabla.`)} Cómo se calcula cada cifra, en <a href="../metodo.html">cómo calculamos</a>.</p>`, { id: 'analisis' }));
+    o.push(bloque('Quién vale más y quién puntúa más', `  <p>${e(`Aquí están los ${todos.length} jugadores que siguen en LaLiga Fantasy, de ${POR_PAGINA} en ${POR_PAGINA} y del más caro al más barato, con su valor de mercado de hoy, lo que han ganado o perdido en el último cambio y en siete días, sus puntos de la temporada y su media por partido jugado. El que más vale hoy es ${caro.nombre} (${caro.equipo}), con ${dinero(caro.valor)}${mejor ? `; el de mejor media entre los que llevan cinco partidos o más, ${mejor.nombre}, con ${coma(mejor.media)}` : ''}${sube && sube.dif > 0 ? `, y el que más ha subido hoy, ${sube.nombre} (${dif(sube.dif)})` : ''}.`)}</p>\n  <p>${e(`Todos tienen ficha propia, con su valor día a día, sus puntos de cada jornada, los minutos, la titularidad y sus próximos rivales: van enlazados en la tabla.`)} Cómo se calcula cada cifra, en <a href="../metodo.html">cómo calculamos</a>.</p>`, { id: 'analisis' }));
   }
   return o.join('\n');
 }
@@ -1120,7 +1191,8 @@ export function metasEquipo(q) {
 }
 export function metasJugador(x, H = null) {
   // (16 nov) con menos de 5 partidos o menos de 3 cosas propias que contar, la ficha sigue abierta pero sin indexar y fuera del sitemap
-  const ix = H ? analisisJugador(x, H, H.equipos.find((q) => q.id === x.teamId) || null).indexar : true;
+  // (rework, 21 nov) y, de las que sí tienen qué contar, solo las ya admitidas en el sitemap (`admitirIndexables`: unas pocas nuevas por noche)
+  const ix = H ? (H.indexable ? H.indexable(x) : analisisJugador(x, H, H.equipos.find((q) => q.id === x.teamId) || null).indexar) : true;
   return { ruta: `jugadores/${x.slug}.html`, seccion: 'equipos', grupo: 'jugador', id: x.id, ...(ix ? {} : { indexar: false }),
     titulo: `${x.nombre}: valor de mercado y puntos en LaLiga Fantasy`, h1: `${x.nombre} en LaLiga Fantasy`,
     descripcion: `Valor de mercado de ${x.nombreCompleto} (${x.club}) en LaLiga Fantasy día a día, sus puntos de cada jornada, media, minutos, titularidad y próximos rivales.`,

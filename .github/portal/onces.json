@@ -1,6 +1,6 @@
 {
  "J": 13,
- "generada": 1795218485273,
+ "generada": 1795298690434,
  "equipos": [
   {
    "id": "3",
@@ -2249,7 +2249,7 @@
     {
      "id": "2355",
      "nombre": "Kounde",
-     "dias": 34,
+     "dias": 35,
      "lesion": "Esguince de tobillo",
      "antes": 44,
      "p": 56
@@ -2257,7 +2257,7 @@
     {
      "id": "3092",
      "nombre": "Olmo",
-     "dias": 31,
+     "dias": 32,
      "lesion": "Rotura fibrilar en el aductor",
      "antes": 33,
      "p": 41
@@ -2857,32 +2857,7 @@
      "estado": "lesionado"
     }
    ],
-   "vuelven": [
-    {
-     "id": "2336",
-     "nombre": "Herrando",
-     "dias": 81,
-     "lesion": "Lesión en el aductor",
-     "antes": 33,
-     "p": 53
-    },
-    {
-     "id": "2338",
-     "nombre": "Aimar",
-     "dias": 41,
-     "lesion": "Lesión en los isquiotibiales",
-     "antes": 67,
-     "p": 48
-    },
-    {
-     "id": "3252",
-     "nombre": "Del Castillo",
-     "dias": 43,
-     "lesion": "Lesión en el aductor",
-     "antes": 0,
-     "p": 20
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"
@@ -3078,7 +3053,7 @@
     {
      "id": "3140",
      "nombre": "Juan Cruz",
-     "dias": 39,
+     "dias": 40,
      "lesion": "Molestias en el bíceps femoral",
      "antes": 0,
      "p": 19
@@ -3379,16 +3354,7 @@
      "hasta": "principios de diciembre"
     }
    ],
-   "vuelven": [
-    {
-     "id": "3201",
-     "nombre": "Castillo",
-     "dias": 43,
-     "lesion": "Lesión en el aductor",
-     "antes": 0,
-     "p": 5
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 12,
     "fuente": "minutos"

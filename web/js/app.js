@@ -38,7 +38,7 @@ import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './t
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
-import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
+import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML, tiraPortada } from './portada.js';
 import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
@@ -99,7 +99,7 @@ function pantallaEntrar(error = '') {
   const llegada = plat === 'iphone' && !!origenActual();
   const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' ? '' : botonPlay('hero'))}`;
   const queEs = llegada ? `<div class="lleg"><h1 class="lleg-t">Tu director deportivo para <span>LaLiga Fantasy</span></h1><p>Cada día te dice a quién vender, a quién fichar, cuánto pujar y a quién clausular en tu liga. Es gratis y entras con tu cuenta de LaLiga.</p></div>` : '';
-  raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat)}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat) + tiraPortada()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${queEs}
     ${llegada ? '' : estadoHTML()}

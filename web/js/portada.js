@@ -302,6 +302,37 @@ const PORTAL = [
   ['jugadores/', 'Jugadores', 'Todos, con su valor día a día, sus puntos por jornada y si es titular'],
   ['guias/', 'Guías', 'Cláusulas, mercado, puntos y calculadoras, explicado con números'],
 ];
+// <escudos>
+/** los 20 equipos de la tira: [ficha, nombre, tres letras, escudo] (los escribe .github/paginas.py) */
+const ESCUDOS = [
+  ["equipos/alaves.html", "Alavés", "ALA", "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png"],
+  ["equipos/athletic.html", "Athletic", "ATH", "https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png"],
+  ["equipos/atletico.html", "Atlético", "ATM", "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png"],
+  ["equipos/barca.html", "Barça", "BAR", "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png"],
+  ["equipos/betis.html", "Betis", "BET", "https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png"],
+  ["equipos/celta.html", "Celta", "CEL", "https://assets-fantasy.llt-services.com/teambadge/t176/color/t176_rc-celta.png"],
+  ["equipos/deportivo.html", "Deportivo", "DEP", "https://assets-fantasy.llt-services.com/teambadge/t180/color/t180_rc-deportivo.png"],
+  ["equipos/elche.html", "Elche", "ELC", "https://assets-fantasy.llt-services.com/teambadge/t954/color/t954_elche-c-f.png"],
+  ["equipos/espanyol.html", "Espanyol", "ESP", "https://assets-fantasy.llt-services.com/teambadge/t177/color/t177_rcd-espanyol.png"],
+  ["equipos/getafe.html", "Getafe", "GET", "https://assets-fantasy.llt-services.com/teambadge/t1450/color/t1450_getafe-cf.png"],
+  ["equipos/levante.html", "Levante", "LEV", "https://assets-fantasy.llt-services.com/teambadge/t855/color/t855_levante-ud.png"],
+  ["equipos/malaga.html", "Málaga", "MLG", "https://assets-fantasy.llt-services.com/teambadge/t182/color/t182_malaga-cf.png"],
+  ["equipos/osasuna.html", "Osasuna", "OSA", "https://assets-fantasy.llt-services.com/teambadge/t450/color/t450_c-a-osasuna.png"],
+  ["equipos/racing.html", "Racing", "RAC", "https://assets-fantasy.llt-services.com/teambadge/t189/color/t189_r-racing-club.png"],
+  ["equipos/rayo.html", "Rayo", "RAY", "https://assets-fantasy.llt-services.com/teambadge/t184/color/t184_rayo-vallecano.png"],
+  ["equipos/real-madrid.html", "Real Madrid", "RMA", "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png"],
+  ["equipos/real-sociedad.html", "Real Sociedad", "RSO", "https://assets-fantasy.llt-services.com/teambadge/t188/color/t188_real-sociedad.png"],
+  ["equipos/sevilla.html", "Sevilla", "SEV", "https://assets-fantasy.llt-services.com/teambadge/t179/color/t179_sevilla-fc.png"],
+  ["equipos/valencia.html", "Valencia", "VAL", "https://assets-fantasy.llt-services.com/teambadge/t191/color/t191_valencia-cf.png"],
+  ["equipos/villarreal.html", "Villarreal", "VIL", "https://assets-fantasy.llt-services.com/teambadge/t449/color/t449_villarreal-cf.png"],
+];
+// </escudos>
+/** (rework de la web, 21 nov) debajo de la barra, los 20 equipos con su escudo: cada uno lleva a su ficha (como en el resto de
+    páginas públicas, que la llevan arriba del todo). Las tres letras las pone el CSS (data-a) */
+export function tiraPortada() {
+  if (!ESCUDOS.length) return '';
+  return `<nav class="tira-p" aria-label="Los 20 equipos"><div class="tira-p-in">${ESCUDOS.map(([r, n, a, u]) => `<a href="${esc(r)}" title="${esc(n)}" data-a="${esc(a)}"><img src="${esc(u)}" alt="${esc(n)}" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>`).join('')}</div></nav>`;
+}
 /* (21 nov) plat: desde dónde se mira. En el iPhone no hay nada que descargar: el botón rojo es «Entrar» (baja a #entrar) y
    Google Play no sale (9 de 53 visitas lo pulsaban y no les llevaba a nada). En el ordenador, «Entrar» en rojo y Google
    Play en secundario. En la web de un Android, como estaba: «Entrar» y, en rojo, «Descargar». */
@@ -626,7 +657,7 @@ async function ponerHoy(raiz) {
   if (!h || !Array.isArray(h.suben) || !h.suben.length) return;
   caja.dataset.hecho = '1';
   const img = (u, cls) => (/^https:\/\/assets-fantasy\.llt-services\.com\//.test(u || '') ? `<img class="${cls}" src="${esc(u)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : '');
-  const fila = (x) => `<li><span class="pz-hoy-a">${img(x.cara, 'f')}${img(x.escudo, 'e')}</span><span class="pz-hoy-n"><b>${esc(x.nombre)}</b><small>${esc(x.equipo)} · ${esc(x.valor)}</small></span><span class="${x.sube ? 'sube' : 'baja'}">${x.sube ? '▲' : '▼'} ${esc(x.dif)}</span></li>`;
+  const fila = (x) => `<li><span class="pz-hoy-a">${img(x.cara, 'f')}${img(x.escudo, 'e')}</span><span class="pz-hoy-n"><b>${/^jugadores\/[\w-]+\.html$/.test(x.ruta || '') ? `<a href="${esc(x.ruta)}">${esc(x.nombre)}</a>` : esc(x.nombre)}</b><small>${esc(x.equipo)} · ${esc(x.valor)}</small></span><span class="${x.sube ? 'sube' : 'baja'}">${x.sube ? '▲' : '▼'} ${esc(x.dif)}</span></li>`;
   const j = h.jornada;
   const jor = j ? `<div class="pz-hoy-j"><span class="pz-hoy-k">Jornada ${esc(String(j.n))}</span>${j.enJuego ? '<p>Se está jugando.</p>' : `<p>Empieza el <b>${esc(j.primero)}</b> con el ${esc(j.partido)}. Las cláusulas se cierran el <b>${esc(j.cierre)}</b>.</p>`}${h.previa ? `<a href="${esc(h.previa)}">Ver la previa${icono('flecha')}</a>` : ''}${h.resumen ? `<a href="${esc(h.resumen.ruta)}">Resumen de la jornada ${esc(String(h.resumen.jornada))}${icono('flecha')}</a>` : ''}</div>` : '';
   caja.innerHTML = `<div class="pz-hoy-m"><span class="pz-hoy-k">Suben hoy · ${esc(h.fecha)}</span><ul>${h.suben.map(fila).join('')}</ul><p class="pz-hoy-c">${esc(String(h.nSuben))} suben y ${esc(String(h.nBajan))} bajan.</p></div>${jor}`;

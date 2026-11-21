@@ -26,15 +26,24 @@
     }
   } catch (e) { /* sin almacenamiento: nada */ }
 
-  // ---------------------------------------------------------------- la cabecera fija (16 nov): los saltos de la página van
-  // justo debajo (sin JS, con el alto de siempre del CSS)
+  // ---------------------------------------------------------------- la cabecera fija: en el móvil la fila del logo se va al
+  // bajar y queda fijo el menú (y el buscador, si está abierto); en el ordenador, la barra entera. Los saltos de la página van
+  // justo debajo (sin JS, con el alto del CSS)
   var cab = document.querySelector('.cab');
   if (cab) {
-    var alto = function () { document.documentElement.style.setProperty('--cab-h', (cab.offsetHeight - 1) + 'px'); };
+    var marca = cab.querySelector('.marca');
+    var ancho = window.matchMedia ? window.matchMedia('(min-width: 900px)') : { matches: false };
+    var alto = function () {
+      var h = cab.offsetHeight - (ancho.matches || !marca ? 0 : marca.offsetHeight);
+      document.documentElement.style.setProperty('--cab-h', (h - 1) + 'px');
+    };
     alto();
     window.addEventListener('resize', alto, { passive: true });
     if (window.ResizeObserver) new ResizeObserver(alto).observe(cab);
   }
+  // en la tira de escudos, el equipo de la página a la vista (en el móvil la tira se desliza)
+  var suyo = document.querySelector('.tira a[aria-current]');
+  if (suyo && suyo.parentNode) suyo.parentNode.scrollLeft = Math.max(0, suyo.offsetLeft - suyo.parentNode.clientWidth / 2 + suyo.offsetWidth / 2);
 
   // ---------------------------------------------------------------- el buscador
   var form = document.querySelector('form.busca');

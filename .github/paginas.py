@@ -109,9 +109,18 @@ def redireccion(p):
 '''
 
 
-# (16 nov) «Jugadores» también en el menú: las páginas del portal, todas a la vista desde cualquier página
+# (rework de la web, 21 nov) el menú, corto: cinco secciones. Las calculadoras van dentro de «Guías» (en sus pastillas)
 SECCIONES = [('mercado', 'mercado/', 'Mercado'), ('jornada', 'jornada/', 'Jornada'), ('equipos', 'equipos/', 'Equipos'),
-             ('jugadores', 'jugadores/', 'Jugadores'), ('aprende', 'guias/', 'Aprende'), ('calculadoras', 'guias/#calculadoras', 'Calculadoras')]
+             ('jugadores', 'jugadores/', 'Jugadores'), ('guias', 'guias/', 'Guías')]
+# las tres letras de cada equipo en la tira de arriba (por la dirección de su ficha); si llega uno nuevo, las tres primeras del nombre
+SIGLAS = {'alaves': 'ALA', 'athletic': 'ATH', 'atletico': 'ATM', 'barca': 'BAR', 'betis': 'BET', 'celta': 'CEL', 'deportivo': 'DEP',
+          'elche': 'ELC', 'espanyol': 'ESP', 'getafe': 'GET', 'levante': 'LEV', 'malaga': 'MLG', 'osasuna': 'OSA', 'racing': 'RAC',
+          'rayo': 'RAY', 'real-madrid': 'RMA', 'real-sociedad': 'RSO', 'sevilla': 'SEV', 'valencia': 'VAL', 'villarreal': 'VIL'}
+
+
+def sigla(x):
+    s = os.path.basename(x['r'])[:-len('.html')]
+    return SIGLAS.get(s) or re.sub(r'[^A-Z]', '', s.upper())[:3]
 
 
 def seccion_de(p):
@@ -128,27 +137,40 @@ def seccion_de(p):
 
 
 def menu(raiz, hay_guias, actual=''):
-    """la cabecera del portal: el logo, las cinco secciones (en el móvil, una fila que se desliza), el buscador y la app.
+    """la barra del portal: el logo, el buscador y «Descargar»; debajo (en el ordenador, en la misma fila), las cinco secciones.
     El buscador es un formulario normal (sin JS lleva a jugadores/?q=, con la tabla entera); con JS (portal.js) sugiere fichas.
     En el móvil se abre con la lupa (una casilla y CSS, sin JS)."""
+    if actual in ('aprende', 'calculadoras'):
+        actual = 'guias'
     enlaces = ''.join(f'<a href="{raiz}{h}"{" aria-current=\"page\"" if c == actual else ""}>{t}</a>'
                       for c, h, t in SECCIONES if hay_guias or not h.startswith('guias/'))
     lupa = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
             f'<input type="checkbox" id="busca-t" class="busca-t" aria-label="Abrir el buscador">'
-            f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> en Google Play</span></a></div>'
+            f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> la app</span></a></div>'
             f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
             f'<form class="busca" role="search" action="{raiz}jugadores/" method="get" data-raiz="{raiz}"><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar">{lupa}</button><ul class="busca-r" hidden></ul></form>'
             f'</div></header>')
 
 
-def escudos(raiz):
-    """encima del pie, los 20 equipos con su escudo: para ir de cualquier página a cualquier equipo"""
+def tira(raiz, p=None):
+    """arriba del todo, los 20 equipos con su escudo: de cualquier página a cualquier equipo. En la ficha de un equipo o de uno de
+    sus jugadores, el suyo va marcado. Las tres letras las pone el CSS (data-a): así no son texto repetido en todas las páginas.
+    Con loading="lazy": los que se ven se piden al momento y ninguno retrasa el «load» de la página (medido: con los primeros
+    sin lazy, el load de una ficha de equipo en un móvil lento pasaba de 1,6 s a 10,7 s porque arrastraba las caras de la tabla)."""
     if not ESCUDOS:
         return ''
-    filas = ''.join(f'<a href="{raiz}{x["r"]}" title="{e(x["n"])}"><img src="{e(x["u"])}" alt="{e(x["n"])}" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>' for x in ESCUDOS)
-    return f'<nav class="escudos" aria-label="Los 20 equipos"><div class="escudos-in">{filas}</div></nav>\n'
+    suyo = ''
+    if p and p.get('grupo') == 'equipo':
+        suyo = p['ruta']
+    elif p and p.get('grupo') == 'jugador' and len(p.get('migas') or []) > 2:
+        suyo = p['migas'][2][1]
+    filas = ''.join(
+        f'<a href="{raiz}{x["r"]}" title="{e(x["n"])}" data-a="{sigla(x)}"{" aria-current=\"true\"" if x["r"] == suyo else ""}>'
+        f'<img src="{e(x["u"])}" alt="{e(x["n"])}" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>'
+        for x in ESCUDOS)
+    return f'<nav class="tira" aria-label="Los 20 equipos"><div class="tira-in">{filas}</div></nav>\n'
 
 
 # (sesión 4 de AdSense) la frase de la llamada corta cambia de una ficha a otra (siempre la misma para la misma página): con una sola,
@@ -182,14 +204,60 @@ def cta(raiz, p=None):
 
 
 def pie(raiz, hay_guias):
-    guias = f'<a href="{raiz}guias/">Guías</a>' if hay_guias else ''
+    """el pie, por columnas: los datos de cada día, la jornada, las guías y lo de la app"""
+    def col(titulo, enlaces):
+        # el título de cada columna lo pinta el CSS (aria-label): así no es texto repetido en las 600 páginas
+        return f'<div role="group" aria-label="{titulo}">' + ''.join(f'<a href="{raiz}{h}">{t}</a>' for h, t in enlaces if h is not None) + '</div>'
+    datos = col('Datos', [('mercado/', 'Mercado'), ('equipos/', 'Equipos'), ('jugadores/', 'Jugadores')])
+    jornada = col('Jornada', [('jornada/', 'Jornadas'), ('jornada/onces.html', 'Onces probables') if existe('jornada/onces.html') else (None, ''),
+                              ('bajas/', 'Bajas') if existe('bajas/index.html') else (None, ''), ('clausulas/', 'Cláusulas') if existe('clausulas/index.html') else (None, '')])
+    guias = col('Aprende', [('guias/', 'Guías') if hay_guias else (None, ''), ('guias/#calculadoras', 'Calculadoras') if hay_guias else (None, ''), ('metodo.html', 'Cómo calculamos')])
+    app = col('Fantasy Manager', [('', 'Abrir la app'), ('instalar.html', 'Instalar'), ('quienes-somos.html', 'Quiénes somos'), ('contacto.html', 'Contacto')])
     return (f'<footer class="pie"><div class="pie-in">'
-            f'<nav aria-label="Pie"><a href="{raiz or "./"}">Abrir la app</a><a href="{raiz}mercado/">Mercado</a><a href="{raiz}jornada/">Jornadas</a><a href="{raiz}equipos/">Equipos</a>{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}metodo.html">Cómo calculamos</a><a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}condiciones.html">Condiciones</a>'
-            f'<a href="{raiz}aviso-legal.html">Aviso legal</a><a href="{raiz}instalar.html">Instalar</a></nav>'
+            f'<nav class="pie-c" aria-label="Pie">{datos}{jornada}{guias}{app}</nav>'
+            f'<p><a href="{raiz}privacidad.html">Privacidad</a> · <a href="{raiz}condiciones.html">Condiciones</a> · <a href="{raiz}aviso-legal.html">Aviso legal</a></p>'
             f'<p>Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores.</p>'
             f'<p>© 2026 Fantasy Manager · <a href="mailto:fantasymanager.web.app@gmail.com">fantasymanager.web.app@gmail.com</a></p>'
             f'</div></footer>')
+
+
+RUTAS = set()  # las rutas publicadas (la rellena main): para no enlazar desde el pie o las pastillas lo que no existe
+
+
+def existe(ruta):
+    return ruta in RUTAS
+
+
+def secnav(raiz, p):
+    """debajo de las migas, las páginas de la sección en pastillas (lo que antes había que encontrar entre el texto): en Mercado,
+    las cláusulas y las calculadoras; en Jornada, los onces, la previa, las bajas y el cierre de cláusulas; en Guías, las
+    calculadoras y el método. Las fichas de jugador y de equipo no las llevan (tienen sus saltos y la tira de escudos)."""
+    if p.get('grupo') in ('jugador', 'equipo') or not publicada(p):
+        return ''
+    s = seccion_de(p)
+    previa = PREVIAS[0] if PREVIAS else None
+    if s == 'mercado':
+        xs = [('mercado/index.html', 'Mercado hoy'), ('clausulas/index.html', 'Cláusulas'), ('guias/cuanto-pujar.html', 'Cuánto pujar'),
+              ('guias/valor-de-mercado.html', 'Cómo se mueve el valor')]
+    elif s == 'jornada':
+        xs = [('jornada/index.html', 'Jornadas'), ('jornada/onces.html', 'Onces probables')]
+        if previa:
+            xs.append((previa['ruta'], f'Previa J{previa["jornada"]}'))
+        xs += [('bajas/index.html', 'Bajas'), ('clausulas/index.html', 'Cláusulas')]
+    elif s in ('aprende', 'calculadoras'):
+        xs = [('guias/index.html', 'Todas las guías'), ('guias/subir-clausula.html', 'Calculadora de cláusula'),
+              ('guias/cuanto-pujar.html', 'Calculadora de puja'), ('metodo.html', 'Cómo calculamos'), ('guias/preguntas-frecuentes.html', 'Preguntas')]
+    elif s in ('equipos', 'jugadores'):
+        xs = [('equipos/index.html', 'Los 20 equipos'), ('jugadores/index.html', 'Todos los jugadores'), ('bajas/index.html', 'Bajas')]
+    else:
+        return ''
+    xs = [(r, n) for r, n in xs if existe(r)]
+    if len(xs) < 2:
+        return ''
+    def href(r):
+        return raiz + (r[:-len('index.html')] if r.endswith('index.html') else r)
+    return '<nav class="secnav" aria-label="En esta sección">' + ''.join(
+        f'<a href="{href(r)}"{" aria-current=\"page\"" if r == p["ruta"] else ""}>{e(n)}</a>' for r, n in xs) + '</nav>'
 
 
 def en_guias(p):
@@ -324,7 +392,8 @@ def pagina(p, contenido, hay_guias):
     fecha = ''
     pie_guia = f'\n  {cta(raiz, p)}' if p['tipo'] in ('guia', 'portal') or en_guias(p) else ''
     m = migas(raiz, p, hay_guias)
-    migas_linea = (f'\n  {m}' if m else '') + aviso_previa(p)
+    sn = secnav(raiz, p)
+    migas_linea = (f'\n  {m}' if m else '') + (f'\n  {sn}' if sn else '') + aviso_previa(p)
     contenido = poner_firma(poner_previa(contenido, p), p, raiz)
     script = f'\n  <script src="{p["script"]}" defer></script>' if p.get('script') else ''
     if VERSION_JS:
@@ -355,13 +424,14 @@ def pagina(p, contenido, hay_guias):
   <link rel="stylesheet" href="{raiz}css/paginas.css?v={VERSION_CSS}">{script}{datos_estructurados(p, url)}
 </head>
 <body class="{'portal' if p['tipo'] == 'portal' else 'texto'}">
-{menu(raiz, hay_guias, seccion_de(p))}
-<main>{migas_linea}
+<a class="salto" href="#contenido">Saltar al contenido</a>
+{tira(raiz, p)}{menu(raiz, hay_guias, seccion_de(p))}
+<main id="contenido">{migas_linea}
 {INICIO}
 {contenido}
 {FIN}{fecha}{mas_guias(p)}{pie_guia}
 </main>
-{escudos(raiz)}{pie(raiz, hay_guias)}
+{pie(raiz, hay_guias)}
 </body>
 </html>
 '''
@@ -436,6 +506,13 @@ def portada(guias, faq):
     faq_js = f'\nconst FAQ_GUIA = {json.dumps(faq["ruta"].split("/", 1)[1]) if faq else "null"};\n'
     previa = json.dumps([PREVIAS[0]['ruta'].split('/', 1)[1], PREVIAS[0]['jornada']]) if PREVIAS else 'null'
     faq_js += f'/** la previa de la jornada que viene: [archivo en guias/, jornada] */\nconst PREVIA = {previa};\n'
+    # (rework de la web, 21 nov) los 20 escudos también en la portada: sin JS, arriba del bloque de texto; con JS, debajo de la barra
+    filas = ''.join(f'<a href="{x["r"]}" title="{e(x["n"])}" data-a="{sigla(x)}"><img src="{e(x["u"])}" alt="{e(x["n"])}" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer"></a>' for x in ESCUDOS)
+    poner_entre(os.path.join(WEB, 'index.html'), '<!-- tira -->', '<!-- /tira -->',
+                f'<nav class="sj-tira" aria-label="Los 20 equipos"><div class="tira-p-in">{filas}</div></nav>' if ESCUDOS else '')
+    lista_e = ',\n'.join('  ' + json.dumps([x['r'], x['n'], sigla(x), x['u']], ensure_ascii=False) for x in ESCUDOS)
+    poner_entre(os.path.join(WEB, 'js', 'portada.js'), '// <escudos>', '// </escudos>',
+                f'\n/** los 20 equipos de la tira: [ficha, nombre, tres letras, escudo] (los escribe .github/paginas.py) */\nconst ESCUDOS = [\n{lista_e},\n];\n')
     poner_entre(os.path.join(WEB, 'js', 'portada.js'), '// <guias>', '// </guias>',
                 f'\n/** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */\nconst TODAS_GUIAS = [\n{lista},\n];{faq_js}')
 
@@ -455,6 +532,10 @@ def main():
     RESUMENES.update({p['jornada']: p for p in paginas if p.get('grupo') == 'resumenes' and p.get('jornada') is not None and publicada(p)})
     faq = next((p for p in paginas if p['ruta'] == 'guias/preguntas-frecuentes.html' and publicada(p)), None)
     hay_guias = bool(guias)
+    RUTAS.clear()
+    RUTAS.update(p['ruta'] for p in paginas if publicada(p))
+    if hay_guias:
+        RUTAS.add('guias/index.html')
     hoy = max((p['fecha'] for p in guias), default='2026-11-02')
     indice = {'ruta': 'guias/index.html', 'tipo': 'guia', 'h1': 'Guías de LaLiga Fantasy',
               'titulo': 'Guías de LaLiga Fantasy: cláusulas, mercado y pujas',

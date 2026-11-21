@@ -58,6 +58,22 @@ export const chipPuntos = (p, titulo = '') => `<span class="pts ${clasePuntos(p)
 /** subida o bajada escrita con su signo y una flecha (nunca solo con color) */
 export const cambio = (x, txt) => `<span class="${x > 0 ? 'sube' : x < 0 ? 'baja' : 'igual'}">${x > 0 ? '▲' : x < 0 ? '▼' : '='} ${e(txt)}</span>`;
 
+/** lo mismo en una chapita (tarjetas de jugador y cabeceras) */
+export const chip = (x, txt) => `<span class="chip ${x > 0 ? 'sube' : x < 0 ? 'baja' : 'igual'}">${x > 0 ? '▲' : x < 0 ? '▼' : '='} ${e(txt)}</span>`;
+
+/**
+ * Las tarjetas de jugador (rework de la web): foto con su aro y el escudo, nombre, puesto y club, el valor y lo que sube o baja.
+ * En el móvil van en una fila que se desliza; en el ordenador, cinco por fila. xs: [{ x (la fila del jugador), enlace, valor (texto),
+ * mueve: [número, texto], sub }]. Con enlace, la tarjeta entera lleva a su ficha.
+ */
+export function tarjetasJug(xs, { numeros = true } = {}) {
+  return `  <div class="jcs">${xs.map(({ x, enlace = null, valor = '', mueve = null, sub = null }, i) => {
+    const dentro = `${numeros ? `<span class="jc-n">${i + 1}</span>` : ''}${cara(x, 'm')}<b>${e(x.nombre)}</b><small>${e(sub ?? `${POS[x.pos] || ''} · ${x.equipo || ''}`)}</small>`
+      + `${valor ? `<span class="jc-v">${e(valor)}</span>` : ''}${mueve ? chip(mueve[0], mueve[1]) : ''}`;
+    return enlace ? `<a class="jc" href="${e(enlace)}">${dentro}</a>` : `<div class="jc">${dentro}</div>`;
+  }).join('')}</div>`;
+}
+
 /**
  * La minigráfica de valor: [{t, v}] o [v]. Una línea con su área, de 96 × 28 (o lo que se pida). Sin texto dentro: la cifra va al lado.
  * Con `etiqueta` se pone un título accesible («Valor en los últimos 30 días: de 12,1 M a 14,3 M»).
@@ -74,21 +90,35 @@ export function minigrafica(serie, { ancho = 96, alto = 28, etiqueta = '' } = {}
   return `<svg class="mini ${clase}" viewBox="0 0 ${ancho} ${alto}" width="${ancho}" height="${alto}" role="img" aria-label="${e(t)}"><path class="a" d="${area}"/><path class="l" d="${linea}"/></svg>`;
 }
 
-/** la gráfica grande de valor de la temporada (fase 2: ficha de jugador). Ejes con el máximo, el mínimo y las fechas de los extremos */
+/** un paso «redondo» (1, 2 o 5 por una potencia de diez) para los límites de una gráfica */
+const pasoRedondo = (x) => { const p = 10 ** Math.floor(Math.log10(x)), m = x / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; };
+
+/**
+ * La gráfica grande de valor de la temporada (ficha de jugador y de equipo). (Rework de la web, 21 nov) Pintada para que de una noche
+ * a otra el SVG casi no cambie: era el 90 % de lo que cambiaba cada noche en una ficha (el camino entero se recalculaba) y lo que hacía
+ * crecer el repo. Cada día ocupa un hueco fijo, con el ancho pensado para un múltiplo de 14 días (el punto de hoy se añade al final y
+ * los de antes no se mueven; cada dos semanas se recoloca), y arriba y abajo van límites redondos, que solo cambian cuando el valor
+ * los cruza. El máximo y el mínimo exactos, con su fecha, van en las cifras de al lado y en la etiqueta accesible.
+ */
 export function graficaValor(serie, { ancho = 640, alto = 180, fecha = (t) => new Date(t).toISOString().slice(0, 10) } = {}) {
   const s = (serie || []).filter((x) => x && Number.isFinite(x.v));
   if (s.length < 2) return '';
-  const min = Math.min(...s.map((x) => x.v)), max = Math.max(...s.map((x) => x.v)), r = max - min || 1;
-  // a la izquierda, un hueco para el máximo y el mínimo (así no pisan la línea)
+  const min = Math.min(...s.map((x) => x.v)), max = Math.max(...s.map((x) => x.v));
+  const paso = pasoRedondo((max - min) / 4 || max * 0.02 || 1);
+  const abajo = Math.floor(min / paso) * paso, arriba = Math.max(Math.ceil(max / paso) * paso, abajo + paso), r = arriba - abajo;
+  // a la izquierda, un hueco para los dos límites (así no pisan la línea)
   const izq = 50, der = 4, arr = 8, aba = 20, w = ancho - izq - der, h = alto - arr - aba;
-  const P = s.map((x, i) => [izq + (i * w) / (s.length - 1), arr + h - ((x.v - min) * h) / r]);
+  const dias = Math.max(14, Math.ceil(s.length / 14) * 14) - 1;
+  const P = s.map((x, i) => [izq + (i * w) / dias, arr + h - ((x.v - abajo) * h) / r]);
   const d = P.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join('');
   const clase = s[s.length - 1].v >= s[0].v ? 'sube' : 'baja';
+  const fin = P[P.length - 1][0];
   return `<svg class="graf ${clase}" viewBox="0 0 ${ancho} ${alto}" role="img" aria-label="${e(`Valor de mercado: de ${dinero(s[0].v)} el ${fecha(s[0].t)} a ${dinero(s[s.length - 1].v)} el ${fecha(s[s.length - 1].t)}; máximo ${dinero(max)} y mínimo ${dinero(min)}`)}">`
-    + `<path class="a" d="${d}L${P[P.length - 1][0].toFixed(1)} ${arr + h}L${P[0][0].toFixed(1)} ${arr + h}Z"/><path class="l" d="${d}"/>`
     + `<path class="eje" d="M${izq} ${arr}H${ancho - der}M${izq} ${arr + h}H${ancho - der}"/>`
-    + `<text x="${izq - 6}" y="${arr + 4}" text-anchor="end">${e(dinero(max))}</text><text x="${izq - 6}" y="${arr + h + 4}" text-anchor="end">${e(dinero(min))}</text>`
-    + `<text x="${izq}" y="${alto - 3}">${e(fecha(s[0].t))}</text><text x="${ancho - der}" y="${alto - 4}" text-anchor="end">${e(fecha(s[s.length - 1].t))}</text></svg>`;
+    + `<text x="${izq - 6}" y="${arr + 4}" text-anchor="end">${e(dinero(arriba))}</text><text x="${izq - 6}" y="${arr + h + 4}" text-anchor="end">${e(dinero(abajo))}</text>`
+    + `<text x="${izq}" y="${alto - 3}">${e(fecha(s[0].t))}</text>`
+    + `<path class="a" d="${d}V${arr + h}H${izq}Z"/><path class="l" d="${d}"/>`
+    + `<text x="${fin.toFixed(1)}" y="${alto - 3}" text-anchor="end">${e(fecha(s[s.length - 1].t))}</text></svg>`;
 }
 
 /** barras de puntos por jornada (fase 2: ficha de jugador y de equipo): [[jornada, puntos], …] */
