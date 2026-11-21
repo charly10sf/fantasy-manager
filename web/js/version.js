@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8o';
+export const VERSION = '0.8p';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,14 @@ export const VERSION = '0.8o';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (21 nov, Carlos: «quiero que aparezca cuántas personas hay en cada versión, y la última, la de ahora; y las altas
+    // semanales, como salían antes») Solo el dueño. La hora, al publicar
+    v: '0.8p', f: '2026-11-21', h: '23:21', t: 'Versiones y altas por semana',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Versiones y altas por semana', x: 'En Quién usa la app, pestaña Uso, una gráfica con cuánta gente tiene cada versión, la de ahora la última, y por qué se han quedado atrás los demás. En Hoy, las altas de las 8 últimas semanas.' },
+    ],
+  },
   {
     // (21 nov, Carlos: «el logo de recargar se bugea cuando sale actualizando») la flecha de actualizar, debajo del nombre de
     // la liga, era un carácter que al girar se salía de su sitio y se cortaba; ahora es un icono que gira sobre sí mismo.

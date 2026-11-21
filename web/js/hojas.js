@@ -1328,8 +1328,14 @@ function hoyQ(C) {
   const d = C.dias;
   if (d.some((x) => x.activos)) h += tarjetaQ('Activos cada día', columnasSem(d.map((x) => ({ et: x.et, v: x.activos, hoy: x.hoy }))));
   if (C.reg.length) {
-    const sem = Array.from({ length: 4 }, (_, i) => C.reg.filter((x) => x.primera >= C.ahora - 7 * (i + 1) * DIA && x.primera < C.ahora - 7 * i * DIA).length);
-    h += tarjetaQ('Altas nuevas', columnasSem(d.map((x) => ({ et: x.et, v: x.altas, hoy: x.hoy })), { alto: 170 }), { cifra: `<b>${d.reduce((t, x) => t + x.altas, 0)}</b> en 7 días`, pie: `Por semanas, de esta hacia atrás: ${sem.map((n) => `<b>${n}</b>`).join(' · ')}` });
+    h += tarjetaQ('Altas nuevas', columnasSem(d.map((x) => ({ et: x.et, v: x.altas, hoy: x.hoy })), { alto: 170 }), { cifra: `<b>${d.reduce((t, x) => t + x.altas, 0)}</b> en 7 días` });
+    // (21 nov, Carlos: «las altas semanales, como salían antes») las 8 últimas semanas, cada una de 7 días hacia atrás desde
+    // ahora; la etiqueta es el día en que empieza
+    const sem = Array.from({ length: 8 }, (_, i) => {
+      const hasta = C.ahora - 7 * i * DIA, desde = hasta - 7 * DIA;
+      return { et: i ? fechaCorta(desde) : 'Esta', v: C.reg.filter((x) => x.primera >= desde && x.primera < hasta).length, hoy: i === 0 };
+    }).reverse();
+    h += tarjetaQ('Altas por semana', columnasSem(sem, { alto: 170 }), { cifra: `<b>${sem.reduce((t, x) => t + x.v, 0)}</b> en 8 semanas` });
   }
   // desde dónde: los de 7 días por canal, en una barra
   const partes = [['Google Play', 'play', 'var(--rojo)'], ['Web', 'web', 'var(--azul)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => (x.canal || 'web') === k).length })).filter((p) => p.v);
@@ -1343,7 +1349,7 @@ function hoyQ(C) {
 /* (Carlos, 21 nov: «en tiempo de uso, las gráficas de la C me gustan») */
 function usoQ(C) {
   const d = C.dias;
-  if (!d.some((x) => x.seg)) return '<p class="q-no">Nadie ha abierto la app esta semana.</p>';
+  if (!d.some((x) => x.seg)) return `<p class="q-no">Nadie ha abierto la app esta semana.</p>${versionesQ(C)}`;
   let h = kpiQ([[minQ(C.mediaHoy), 'por persona hoy'], [minQ(C.mediaSem), 'media 7 días'], [minQ(C.segHoy), 'entre todos hoy']]);
   h += tarjetaQ('Por persona, cada día', areaSem(d.map((x) => ({ et: x.et, v: Math.round(x.media / 60), hoy: x.hoy })), { formato: (v) => `${v}′` }));
   h += tarjetaQ('Entre todos, cada día', columnasSem(d.map((x) => ({ et: x.et, v: Math.round(x.seg / 60), hoy: x.hoy })), { alto: 170, formato: (v) => (v >= 60 ? `${String(Math.round(v / 6) / 10).replace('.', ',')}h` : `${Math.round(v)}′`) }));
@@ -1360,7 +1366,32 @@ function usoQ(C) {
     const malas = (ev.f || 0) + (ev.F || 0), buenas = (ev.a || 0) + (ev.A || 0);
     h += tarjetaQ('Qué hacen esta semana', kpiQ(cosas.map(([t, k]) => [ev[k], t])), { pie: buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '' });
   }
-  return h;
+  return h + versionesQ(C);
+}
+
+/* (21 nov, Carlos: «cuántas personas hay en cada versión, y la última, la de ahora») de los que han abierto la app en 30
+   días, cuántos tienen cada versión de la web: de la más vieja a la de ahora, que va la última y en rojo. Debajo, por qué
+   se han quedado atrás y qué app de Google Play tienen */
+function versionesQ(C) {
+  const v30 = C.lista.filter((x) => x.ultima >= C.ahora - 30 * DIA && webDe(x));
+  if (!v30.length) return '';
+  const porV = {};
+  for (const x of v30) { const v = cmpVer(webDe(x), VERSION) >= 0 ? VERSION : webDe(x); porV[v] = (porV[v] || 0) + 1; }
+  const viejas = Object.keys(porV).filter((v) => v !== VERSION).sort((a, b) => cmpVer(b, a));
+  // como mucho 7 columnas: la de ahora y las 6 más nuevas de las de antes; lo más viejo, junto en «antes»
+  const resto = viejas.slice(6).reduce((t, v) => t + porV[v], 0);
+  const cols = [...(resto ? [{ et: 'antes', v: resto }] : []), ...viejas.slice(0, 6).reverse().map((v) => ({ et: v, v: porV[v] })), { et: VERSION, v: porV[VERSION] || 0, hoy: true }];
+  const motivos = {};
+  for (const x of v30) { const p = problemaDe(x, C.minPlay); if (p) motivos[p.corto] = (motivos[p.corto] || 0) + 1; }
+  const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, C.minPlay)).length;
+  const playC = {};
+  for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
+  const pie = [
+    Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
+    sinMotivo ? `Atrás sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola al abrir la app)` : '',
+    Object.keys(playC).length ? `App de Google Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${C.minPlay && Number(c) < C.minPlay ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${C.minPlay ? `. La web de ahora llega desde la ${C.minPlay}` : ''}` : '',
+  ].filter(Boolean).join('<br>');
+  return tarjetaQ('Versiones', columnasSem(cols, { alto: 170, media: false }), { cifra: `<b>${porV[VERSION] || 0}</b> de ${v30.length} con la ${esc(VERSION)}`, pie });
 }
 
 /** el embudo de un canal: barras que encogen, con el % que pasa de un paso al siguiente */
