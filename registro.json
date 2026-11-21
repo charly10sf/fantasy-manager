@@ -2657,7 +2657,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
    "SPORT|136701065": 1795280023000,
-   "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000
   },
   "hechos": [
    {
@@ -3485,7 +3486,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -8914,13 +8915,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4883,
+   "ok": 4885,
    "fallos": 0,
-   "ejecuciones": 4017,
+   "ejecuciones": 4018,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:56:10.873Z"
+   "ultima": "2026-11-21T18:01:14.302Z"
   }
  },
  "ptsDirecto": {
@@ -8986,27 +8987,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:56:44.498Z"
+   "ultimaBien": "2026-11-21T18:02:18.588Z"
   }
  },
  "avisos": [
