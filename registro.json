@@ -1539,6 +1539,13 @@
    "jornada": 13,
    "id": "2124181227368284402",
    "t": "2026-11-21T16:40:45.133Z"
+  },
+  {
+   "clave": "mvp|123",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124194133371973977",
+   "t": "2026-11-21T17:32:02.021Z"
   }
  ],
  "estados": {
@@ -4377,16 +4384,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 37,
-   "revisar": 15,
+   "redactar": 43,
+   "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 599945,
-  "salida": 24044,
-  "cacheLee": 26127,
-  "cacheEscribe": 17418,
-  "dolares": 1.204629,
+  "entrada": 688629,
+  "salida": 26309,
+  "cacheLee": 31933,
+  "cacheEscribe": 20321,
+  "dolares": 1.412484,
   "reservado": 0
  },
  "recientes": {
@@ -4436,10 +4443,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-08T19:57:35.588Z",
-    "texto": "⭐ Ryan es el mejor del Celta-Levante 🐸, que acabó 0-0: 14 puntos para el portero, más del doble de su media de 6,8.\n\nCuesta 18,4 M y en la jornada 13 el Levante recibe al Elche 🌴. Si lo tienes, no se toca."
-   },
-   {
     "t": "2026-11-08T20:02:04.347Z",
     "texto": "⭐ C. Romero firma el MVP en el Submarino Amarillo 2-0 Getafe y se va a 16 puntos, alcanzando los 31 puntos en la temporada.\n\n💸 Vale 6,5 M en el mercado y vuelve a jugar en la jornada 13, contra el Barcelona"
    },
@@ -4454,6 +4457,10 @@
    {
     "t": "2026-11-21T15:21:43.210Z",
     "texto": "⭐ Ángel Pérez es el mejor del Alavés-Deportivo con 14 puntos: abrió el marcador en el 2' y el Alavés acabó ganando 3-1 en Mendizorroza.\n\nEl centrocampista hace más del doble de su media de 6,4 y vale 29,8 M. En la jornada 14 visita al Real Madrid ⚪."
+   },
+   {
+    "t": "2026-11-21T17:32:02.023Z",
+    "texto": "⭐ Copete es el mejor del Rayo ⚡-Valencia 🦇 con 15 puntos: el defensa marcó de cabeza el único gol, el 0-1 en el 41', y el Valencia se lleva los tres puntos de Vallecas.\n\nHace más del doble de su media y vale solo 689 K. En la jornada 14 el Valencia recibe al Osasuna 🐂: para un defensa tan barato, es de los que apetece fichar."
    }
   ],
   "mercado": [
@@ -4923,6 +4930,11 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
+  },
+  "final|123": {
+   "n": 1,
+   "t": "2026-11-21T17:31:52.201Z",
+   "ultima": "2026-11-21T17:31:52.201Z"
   }
  },
  "rasgos": {
@@ -8899,13 +8911,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4872,
+   "ok": 4873,
    "fallos": 0,
-   "ejecuciones": 4011,
+   "ejecuciones": 4012,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:26:20.744Z"
+   "ultima": "2026-11-21T17:31:22.176Z"
   }
  },
  "ptsDirecto": {
@@ -8971,27 +8983,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:26:31.648Z"
+   "ultimaBien": "2026-11-21T17:32:03.081Z"
   }
  },
  "avisos": [
