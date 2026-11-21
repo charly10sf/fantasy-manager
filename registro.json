@@ -2319,7 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/vuelve-aubameyang-casado-y-gimenez-los-dilemas-f202611-n/": 1794995998000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000,
    "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000,
    "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/": 1794998089000,
@@ -8704,13 +8703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4734,
+   "ok": 4735,
    "fallos": 0,
-   "ejecuciones": 3920,
+   "ejecuciones": 3921,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T09:56:12.804Z"
+   "ultima": "2026-11-21T10:01:11.099Z"
   }
  },
  "ptsDirecto": {
@@ -8740,15 +8739,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:56:18.835Z"
+   "ultimaBien": "2026-11-21T10:01:15.043Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:56:18.835Z"
+   "ultimaBien": "2026-11-21T10:01:15.043Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:56:18.835Z"
+   "ultimaBien": "2026-11-21T10:01:15.043Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8756,11 +8755,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:56:18.835Z"
+   "ultimaBien": "2026-11-21T10:01:15.043Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:56:18.835Z"
+   "ultimaBien": "2026-11-21T10:01:15.043Z"
   }
  },
  "avisos": [
