@@ -1466,6 +1466,13 @@
    "jornada": 13,
    "id": "2124144883187237075",
    "t": "2026-11-21T14:16:19.897Z"
+  },
+  {
+   "clave": "onces|123",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124146179780788578",
+   "t": "2026-11-21T14:21:29.060Z"
   }
  ],
  "estados": {
@@ -4359,24 +4366,20 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 14,
-   "revisar": 7,
+   "redactar": 16,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 247811,
-  "salida": 16328,
-  "cacheLee": 8709,
+  "entrada": 277760,
+  "salida": 16700,
+  "cacheLee": 11612,
   "cacheEscribe": 11612,
-  "dolares": 0.47619,
+  "dolares": 0.540098,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-08T16:37:00.513Z",
-    "texto": "👀 Moleiro está en el once del Villarreal 🚢, y es el que más puntos da de su equipo, con 7 de media. El Villarreal sale con un 4-4-2 en La Cerámica.\n\nEn el Getafe también juega David Soria, el portero, que es el que más puntos da de los suyos, con 6,4. Los dos onces no traen sorpresas y el partido empieza en menos de una hora."
-   },
    {
     "t": "2026-11-08T16:41:35.816Z",
     "texto": "👀 El Levante 🐸 sale con un 4-3-3 en Balaídos y el Celta con tres centrales y tres arriba, en un 3-4-3. Los dos onces vienen sin sorpresas.\n\nIonut Radu está en la portería del Celta y, con 8,8 de media, es de los que más puntos dan: quien lo tenga, tranquilo.\n\nRyan también es titular en el Levante, aunque su media es de 6,1."
@@ -4392,6 +4395,10 @@
    {
     "t": "2026-11-21T12:01:57.446Z",
     "texto": "👀 Sorpresa en el once del Deportivo en Mendizorroza: Giménez, Amatucci y Bil Nsongo, titulares habituales, se quedan fuera, y Riki, que no suele serlo, sale de inicio.\n\nEl Alavés va con un 4-4-2 y Sivera bajo palos, y el Dépor también con 4-4-2, con Aubameyang arriba. En una hora o así rueda el balón."
+   },
+   {
+    "t": "2026-11-21T14:21:29.062Z",
+    "texto": "👀 El Rayo ⚡ sale con tres arriba, en un 4-3-3, y el Valencia 🦇 se planta en Vallecas con dos delanteros, en un 4-4-2. Ningún once trae novedades respecto a lo esperado.\n\nCamello está de titular en el Rayo y es de los que más puntos da en su equipo. Dimitrievski también está bajo palos en el Valencia.\n\nQuien tenga jugadores de este partido puede seguir tranquilo."
    }
   ],
   "final": [
@@ -4895,11 +4902,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "onces|123": {
-   "n": 1,
-   "t": "2026-11-21T14:16:38.412Z",
-   "ultima": "2026-11-21T14:16:38.412Z"
   }
  },
  "rasgos": {
@@ -8787,13 +8789,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4801,
+   "ok": 4803,
    "fallos": 0,
-   "ejecuciones": 3972,
+   "ejecuciones": 3973,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:16:11.443Z"
+   "ultima": "2026-11-21T14:21:11.117Z"
   }
  },
  "ptsDirecto": {
@@ -8835,27 +8837,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:16:39.170Z"
+   "ultimaBien": "2026-11-21T14:21:29.836Z"
   }
  },
  "avisos": [
