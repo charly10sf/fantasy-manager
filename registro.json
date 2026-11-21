@@ -1546,6 +1546,13 @@
    "jornada": 13,
    "id": "2124194133371973977",
    "t": "2026-11-21T17:32:02.021Z"
+  },
+  {
+   "clave": "final|123",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124196538993799341",
+   "t": "2026-11-21T17:41:35.609Z"
   }
  ],
  "estados": {
@@ -2435,7 +2442,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136592925": 1795023498000,
    "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
    "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
    "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000,
@@ -2648,7 +2654,8 @@
    "SPORT|136702543": 1795276838000,
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000
   },
   "hechos": [
    {
@@ -3476,7 +3483,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -4322,7 +4329,7 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-19",
+  "dia": "2026-11-21",
   "n": 1,
   "ok": 1,
   "mal": 0
@@ -4384,16 +4391,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 46,
-   "revisar": 21,
-   "pulir": 0
+   "redactar": 49,
+   "revisar": 25,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 733927,
-  "salida": 27912,
-  "cacheLee": 40642,
+  "entrada": 781279,
+  "salida": 29391,
+  "cacheLee": 52254,
   "cacheEscribe": 20321,
-  "dolares": 1.51998,
+  "dolares": 1.630634,
   "reservado": 0
  },
  "recientes": {
@@ -4421,10 +4428,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-08T19:57:04.351Z",
-    "texto": "🏁 El Villarreal 🚢 se lleva el partido con dos goles en la recta final: Buchanan abrió en el 80' y C. Romero cerró en el 90+1'. 2-0 ante el Getafe en La Cerámica.\n\nRomero es el que más puntos ha sacado de los dos equipos: 16, más del triple de su media. Costa, con 13, también triplica la suya. Buchanan llega a esos mismos 13 con el gol del 1-0.\n\nDel Getafe se salva David Soria, 7 puntos pese a perder, en su media."
-   },
-   {
     "t": "2026-11-08T20:01:30.080Z",
     "texto": "🏁 Celta 0-0 Levante. Sin goles y un punto para cada uno. Ryan se va a 14 puntos fantasy, más del doble de su media de 6,8. Detrás, Carreira y Cáceres, con 10 cada uno.\n\n✅ Noche redonda para quien tenga a Ryan"
    },
@@ -4439,6 +4442,10 @@
    {
     "t": "2026-11-21T15:26:40.258Z",
     "texto": "🏁 El Alavés gana 3-1 al Deportivo en Mendizorroza: Ángel Pérez abrió en el 2', Lucas Boyé hizo el 2-1 en el 62' y Denis Suárez cerró en el 90'.\n\nPérez es el que más puntos ha sacado de los dos equipos: 14, más del doble de su media. Boyé suma 12 aunque antes, en el 55', le paró un penalti Leo Román. Blanco se lleva 11 sin marcar.\n\nDel Deportivo se salva Román con 9 puntos pese a perder, muy por encima de lo que suele dar. Su equipo empató con un gol en propia puerta de Tenaglia en el 41'."
+   },
+   {
+    "t": "2026-11-21T17:41:35.611Z",
+    "texto": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima y Copete se va a 15 puntos fantasy. Tárrega y Dimitrievski le siguen con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Premio para quien confió en Copete"
    }
   ],
   "mvp": [
@@ -4930,11 +4937,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "final|123": {
-   "n": 2,
-   "t": "2026-11-21T17:31:52.201Z",
-   "ultima": "2026-11-21T17:36:35.904Z"
   }
  },
  "rasgos": {
@@ -8911,13 +8913,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4875,
+   "ok": 4877,
    "fallos": 0,
-   "ejecuciones": 4013,
+   "ejecuciones": 4014,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:36:12.966Z"
+   "ultima": "2026-11-21T17:41:09.877Z"
   }
  },
  "ptsDirecto": {
@@ -8983,27 +8985,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:37:10.589Z"
+   "ultimaBien": "2026-11-21T17:42:04.055Z"
   }
  },
  "avisos": [
