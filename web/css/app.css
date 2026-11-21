@@ -1107,6 +1107,24 @@ a.btn { text-decoration: none; }
 .sin-app .gd-aparte a { color: var(--texto2); text-decoration: underline; text-underline-offset: 3px; }
 .sin-app textarea { display: block; width: 100%; margin: 10px 0 8px; background: var(--plano2); border: 1px solid var(--linea); border-radius: var(--r-tarj); padding: 10px; font: var(--t-sec2) ui-monospace, monospace; color: var(--texto); resize: vertical; }
 .sin-app .btn { margin-bottom: 12px; }
+/* los pasos cortos de entrar en la web (iPhone y ordenador, 0.8l): mismos estilos dentro de .sin-app o de .entrar-movil */
+.gd-entrar { list-style: none; padding: 0; margin: 10px 0 6px; text-align: left; }
+.gd-entrar > li { margin: 0; padding: 14px 0; border-top: 1px solid var(--linea); }
+.gd-entrar > li:first-child { border-top: 0; padding-top: 4px; }
+.gd-entrar .gd-t { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; color: var(--texto); font-size: var(--t-sec2); line-height: 1.4; }
+.gd-entrar .gd-t b { color: var(--texto); }
+.gd-entrar .gd-n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--rojo-btn); color: #fff; font: 700 var(--t-sec2)/24px 'Barlow'; text-align: center; }
+.gd-entrar figure { margin: 0; max-width: 440px; }
+.gd-entrar .dib { display: block; width: 100%; height: auto; }
+.gd-entrar .dib .pulso { animation: gd-pulso 1.7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .gd-entrar .dib .pulso { animation: none; } }
+.gd-entrar > li > .btn { margin: 0 0 10px; }
+.gd-entrar textarea { display: block; width: 100%; margin: 10px 0 8px; background: var(--plano2); border: 1px solid var(--linea); border-radius: var(--r-tarj); padding: 10px; font: var(--t-sec2) ui-monospace, monospace; color: var(--texto); resize: vertical; }
+.pega-fila { display: flex; gap: 8px; }
+.pega-fila .btn { margin: 0; flex: 1; }
+.em-aviso { display: flex; gap: 8px; align-items: flex-start; background: var(--plano); border: 1px solid var(--linea); border-radius: var(--r-ctl); padding: 10px 12px; margin: 10px 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.4; text-align: left; }
+.em-aviso .ic { flex: none; width: 17px; height: 17px; color: var(--rojo-l); margin-top: 1px; }
+.sin-app.vieja { margin-top: 12px; border-style: solid; }
 .pantalla a { color: var(--rojo-l); }
 /* el código en la app, para escribirlo en el ordenador */
 .pasos-web { color: var(--texto2); padding-left: 20px; margin: 4px 0 8px; }

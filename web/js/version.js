@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8k';
+export const VERSION = '0.8l';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,18 @@ export const VERSION = '0.8k';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (21 nov, Carlos: «los inicios de sesión mejores, sin fallos y más intuitivos; desde iPhone no entra ni el 10 %») En la
+    // web, al entrar con tu cuenta, LaLiga ya te devuelve a una página normal (no a la app del móvil), así que el código de
+    // entrada queda a la vista y se copia y se pega: por fin se puede entrar directo desde el iPhone, sin ordenador ni código.
+    // Pantalla nueva de 3 pasos con dibujos, botón «Pegar», y el enlace se recorta aunque venga con texto alrededor. `para:
+    // 'web'` (no cambia nada en Android) y sin `todos`: a los demás no les sale salvo que Carlos lo diga. La hora, al publicar
+    v: '0.8l', f: '2026-11-21', h: '10:59', t: 'Entrar en iPhone y ordenador, sin líos', para: 'web',
+    cosas: [
+      { tipo: 'nuevo', d: 'movil', t: 'Entrar desde el iPhone, directo', x: 'Hasta ahora, desde el iPhone casi no se podía entrar: LaLiga devolvía la sesión a su propia app y la web se quedaba fuera. Ahora, al entrar con tu cuenta, acabas en una página normal con el enlace a la vista: lo copias y lo pegas, y ya estás dentro. Sin ordenador, sin código y sin instalar nada. Son 3 pasos con dibujos y solo se hace una vez; después la sesión se renueva sola.' },
+      { tipo: 'mejora', d: 'nota', t: 'Pegar el enlace, más fácil', x: 'La pantalla de entrar tiene un botón «Pegar» y acepta el enlace aunque lo copies con texto de más alrededor: coge solo lo que hace falta. En el ordenador, si tu navegador no te deja copiar la dirección, sigue estando el método con las herramientas, ahora plegado.' },
+    ],
+  },
   {
     // (21 nov, Carlos: «mejorar toda la IA con todos los datos que tienes») el motor medido con su liga día a día
     // (claude/medida-ia-2026-11-20.md): la inercia con el ritmo medido y sin vender al que se frena, el partido que acaba de

@@ -2,12 +2,20 @@
    Es OAuth2 con PKCE contra el B2C de LaLiga: la página de entrar se abre en una pestaña de Chrome, LaLiga
    vuelve a la app con un código (authredirect://com.lfp.laligafantasy?code=...) y ese código se cambia aquí
    por la sesión. La sesión (el token y el de renovarlo) se guarda en el almacenamiento privado de la app. */
-import { http, guardar, leer, nativo } from './puente.js';
+import { http, guardar, leer, nativo, enApp } from './puente.js';
 
 const B2C = 'https://login.laliga.es/laligadspprob2c.onmicrosoft.com/oauth2/v2.0';
 const POLITICA = 'B2C_1A_5ULAIP_PARAMETRIZED_SIGNIN';
 const CLIENTE = 'af88bcff-1157-40a0-b579-030728aacf0b';
+// La vuelta de LaLiga, según dónde estamos. En Android la app oficial caza el esquema propio, así que ahí seguimos igual.
+// En la web ese esquema no abre nada (en iPhone es donde se moría la entrada); usamos una redirect https que LaLiga ya tiene
+// registrada en este client_id (jwt.ms, una página de Microsoft que solo enseña el token en el propio navegador). Al volver
+// a ella, el ?code=… queda a la vista en la barra, también en iPhone, y se copia a mano. Con PKCE el code no sirve sin el
+// verificador, que se queda aquí. GOTCHA: la redirect tiene que ser LA MISMA en authorize y en el canje del token; por eso
+// se guarda en `pkce` y terminarLogin usa la de ahí.
 const VUELTA = 'authredirect://com.lfp.laligafantasy';
+const VUELTA_WEB = 'https://jwt.ms';
+const vueltaDe = () => (enApp ? VUELTA : VUELTA_WEB);
 
 export class ErrorSesion extends Error {
   // tipo (0.7.13i): para contar en qué falla la entrada (semaforo.js): cancel, caduca, laliga, redirect, perdido u otro
@@ -40,9 +48,10 @@ export async function empezarLogin() {
   const verificador = azar(48);
   const reto = b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verificador)));
   const estado = azar(16);
-  guardar('pkce', { verificador, estado, t: Date.now() });
+  const vuelta = vueltaDe();
+  guardar('pkce', { verificador, estado, vuelta, t: Date.now() });
   const q = new URLSearchParams({
-    p: POLITICA, client_id: CLIENTE, response_type: 'code', redirect_uri: VUELTA,
+    p: POLITICA, client_id: CLIENTE, response_type: 'code', redirect_uri: vuelta,
     scope: 'openid offline_access', code_challenge: reto, code_challenge_method: 'S256', state: estado, nonce: estado,
   });
   nativo.abrirLogin(`${B2C}/authorize?${q}`);
@@ -69,10 +78,22 @@ async function pedirToken(datos) {
   return { r, j };
 }
 
+/** saca la dirección de vuelta de lo que pega el usuario, aunque venga con texto alrededor o solo la parte de ?state=…&code=… */
+export function extraerVuelta(txt) {
+  const s = String(txt || '').trim();
+  // solo si TODO el texto es ya una URL con un esquema esperado (si no, «mira: …» colaría «mira» como esquema y arrastraría basura)
+  try { const u = new URL(s); if (/^(https?|authredirect|msauth):/i.test(u.protocol) && (u.searchParams.get('code') || u.searchParams.get('error'))) return s; } catch (e) { /* se busca dentro del texto */ }
+  const url = s.match(/(?:https?|authredirect|msauth[\w.]*):\/\/[^\s"'<>]*[?#&][^\s"'<>]*code=[^\s"'<>]+/i);
+  if (url) return url[0];
+  const suelto = s.match(/(?:state=[^\s"'<>&]+&)?(?:error=[^\s"'<>&]+&[^\s"'<>]*|code=[^\s"'<>&]+)(?:&state=[^\s"'<>&]+)?/i);
+  if (suelto) return `https://jwt.ms/?${suelto[0]}`;
+  return s;
+}
+
 /** la vuelta de LaLiga con el código: lo cambia por la sesión */
 export async function terminarLogin(url) {
   let u;
-  try { u = new URL(url); } catch (e) { throw new ErrorSesion('La vuelta de LaLiga no se entiende'); }
+  try { u = new URL(extraerVuelta(url)); } catch (e) { throw new ErrorSesion('La vuelta de LaLiga no se entiende. Copia la dirección entera de la página de LaLiga.'); }
   const q = u.searchParams;
   if (q.get('error')) { const x = q.get('error_description') || q.get('error'); throw new ErrorSesion(textoError(x), tipoDe(x)); }
   const codigo = q.get('code');
@@ -81,7 +102,7 @@ export async function terminarLogin(url) {
   if (!pk) throw new ErrorSesion('Se ha perdido el inicio de sesión a medias. Vuelve a pulsar Entrar.', 'perdido');
   if (pk.estado && q.get('state') && q.get('state') !== pk.estado) throw new ErrorSesion('La vuelta de LaLiga no es de este inicio de sesión. Vuelve a probar.', 'perdido');
   const { r, j } = await pedirToken({
-    grant_type: 'authorization_code', client_id: CLIENTE, code: codigo, redirect_uri: VUELTA,
+    grant_type: 'authorization_code', client_id: CLIENTE, code: codigo, redirect_uri: pk.vuelta || VUELTA,
     code_verifier: pk.verificador, scope: 'openid offline_access',
   });
   guardar('pkce', null);
@@ -134,7 +155,7 @@ function tipoDe(m) {
 function textoError(m) {
   const t = String(m || '');
   if (/AADB2C90091|cancel/i.test(t)) return 'Has cancelado el inicio de sesión';
-  if (/AADB2C90006|redirect/i.test(t)) return 'LaLiga no acepta la vuelta a esta app. Avísame con este mensaje: ' + t.slice(0, 160);
+  if (/AADB2C90006|redirect/i.test(t)) return 'LaLiga no ha aceptado la vuelta. Vuelve a probar; si sigue, usa el desplegable «¿No te sale? Hacerlo a mano». Avísame con esto: ' + t.slice(0, 140);
   if (/AADB2C90079|AADB2C90080|expired/i.test(t)) return 'El inicio de sesión ha caducado. Vuelve a probar.';
   // (14 nov, Carlos) la primera vez con Google, los servidores de LaLiga a veces fallan al dar de alta la cuenta (AADB2C90075,
   // «InternalServerError»): es cosa suya y a la segunda entra

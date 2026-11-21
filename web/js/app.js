@@ -39,7 +39,7 @@ import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
-import { PASOS_SIN_APP } from './guiadib.js';
+import { PASOS_ENTRAR_WEB } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
@@ -179,6 +179,20 @@ const qrEntrarHTML = (tit = true) => `<div class="entrar-qr">
  * ya la tiene, el QR y el código; los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada,
  * van plegados en «No tengo la app en el móvil» (el texto del iPhone lo nombra así).
  */
+/**
+ * Los pasos cortos de entrar en la web (iPhone y ordenador), sin F12 (0.8l): botón de abrir LaLiga, 3 pasos con dibujo y la
+ * caja de pegar con su botón «Pegar». El enlace se recorta aunque venga con texto alrededor (extraerVuelta en auth.js). El
+ * método viejo con las herramientas del navegador queda plegado por si la redirect nueva fallara. Una sola caja #vueltaWeb.
+ */
+function entrarDirectoHTML() {
+  const ult = PASOS_ENTRAR_WEB.length - 1;
+  const pasos = PASOS_ENTRAR_WEB.map(([t, s], k) => `<li><div class="gd-t"><span class="gd-n">${k + 1}</span><span>${t}</span></div>${k === 0 ? '<button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>' : ''}<figure>${s}</figure>${k === ult ? `<textarea id="vueltaWeb" rows="2" placeholder="https://jwt.ms/?state=…&amp;code=…" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Pega aquí la dirección de la página de LaLiga"></textarea><div class="pega-fila"><button class="btn chico sec" data-accion="pegarPortapapeles">${icono('nota')}Pegar</button><button class="btn chico" data-accion="pegarVuelta">Entrar</button></div>` : ''}</li>`).join('');
+  // por si la página no te deja copiar la barra (solo ordenador): sacar la dirección con las herramientas del navegador y
+  // pegarla en la MISMA caja de arriba
+  const aMano = `<details class="sin-app vieja"><summary>¿No puedes copiar la dirección? (ordenador)</summary>
+    <p>En el ordenador, con Chrome o Edge: pulsa <b>F12</b> (en Mac, <b>Cmd + Opción + I</b>) y entra en la pestaña <b>Red</b> (Network) con <b>Conservar registro</b> marcado. Entra con tu cuenta y, en la lista, busca la fila cuyo nombre lleva <b>code=</b>: clic derecho → <b>Copiar</b> → <b>Copiar dirección del enlace</b>. Pégala en el cuadro de arriba y pulsa <b>Entrar</b>.</p></details>`;
+  return `<ol class="gd-lista gd-entrar">${pasos}</ol>${aMano}`;
+}
 function entrarWebHTML() {
   const movil = movilDe();
   if (movil === 'android') {
@@ -188,20 +202,16 @@ function entrarWebHTML() {
     <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
   }
   if (movil === 'iphone') {
-    // dentro del icono de la pantalla de inicio ya no hace falta decir cómo ponerla; si no, el orden importa: la web del
-    // icono guarda su sesión aparte de la de Safari, así que hay que ponerla ANTES de escribir el código
+    // (0.8l) LaLiga ya devuelve la sesión a una web normal (auth.js), así que el iPhone entra directo: abrir LaLiga, copiar la
+    // barra y pegar, sin necesidad de un ordenador. Si la web está en la pantalla de inicio, su sesión va aparte de Safari, así
+    // que todo el flujo (abrir y pegar) ha de hacerse en el mismo sitio: por eso el aviso de añadirla antes de empezar.
     const icono_ = enInicio();
-    const pasos = [
-      ['Saca un código en un ordenador', 'Abre <b>fantasymanagerapp.com</b>, pulsa «No tengo la app en el móvil» y entra con tu cuenta de LaLiga. Luego, <b>Ajustes → Abrir en otro dispositivo</b>: te da un código de 8 letras y números (dura 10 minutos). Si alguien tiene la app en un Android: <b>Ajustes → Abrir en el ordenador → Código</b>.'],
-      ...(icono_ ? [] : [['Ponla en tu pantalla de inicio', 'En <b>Safari</b>, toca <b>Compartir</b> (el cuadrado con la flecha hacia arriba) → <b>Añadir a pantalla de inicio</b> → <b>Añadir</b>. Hazlo antes de entrar: la app del icono guarda su sesión aparte de Safari. <a href="instalar.html#anadir">Cómo se hace, con detalle</a>']]),
-      [icono_ ? 'Escribe el código aquí' : 'Ábrela desde el icono y escribe el código', 'Pon el código en el cuadro de más abajo y toca <b>Entrar</b>. Solo se hace una vez: después la sesión se renueva sola.'],
-    ];
-    return `<div class="entrar-movil"><b>${APPLE}Cómo usarla en iPhone</b>
-      <span class="em-intro">No hay app en la App Store: Fantasy Manager se usa desde la web y puedes dejarla en tu pantalla de inicio como una app más. LaLiga no deja entrar con tu cuenta desde el iPhone, así que la <b>primera vez</b> hace falta un código.</span>
-      <ol class="em-pasos">${pasos.map(([t, x], n) => `<li><span class="em-n">${n + 1}</span><span><b class="em-t">${t}</b>${x}</span></li>`).join('')}</ol>
-      <a class="btn sec ancho em-guia" href="instalar.html#iphone">${icono('nota')}Guía completa para iPhone</a></div>
-    ${botonDemo('')}
-    ${codigoWebHTML()}`;
+    return `<div class="entrar-movil"><b>${APPLE}Entrar en iPhone</b>
+      <span class="em-intro">No hay app en la App Store: Fantasy Manager se usa desde la web y puedes dejarla en tu pantalla de inicio como una app más. Entras con tu cuenta de LaLiga en 3 pasos, sin ordenador.</span>
+      ${icono_ ? '' : `<p class="em-aviso">${icono('nota')} <span>Si la quieres en tu pantalla de inicio, añádela <b>antes de empezar</b> (<b>Compartir → Añadir a pantalla de inicio</b>) y haz los pasos desde el icono. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}
+      ${entrarDirectoHTML()}</div>
+    ${botonDemo('sec')}
+    <details class="sin-app"><summary>O entra con un código desde la app de un amigo</summary><p>Si alguien de tu liga tiene la app en Android: <b>Ajustes → Abrir en el ordenador → Código</b>, y escríbelo aquí (dura 10 minutos).</p>${codigoWebHTML(false)}</details>`;
   }
   // en el ordenador, dos pestañas: «Soy nuevo» (probarla con la liga de ejemplo y descargar la app) y «Ya tengo la app»
   // (el QR y el código de siempre); cada una en pasos numerados con la misma tarjeta. Los pasos para copiar la vuelta a
@@ -230,9 +240,9 @@ function entrarWebHTML() {
         <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
       </div>
       </div>
-      <details class="sin-app"><summary>No tengo la app en el móvil<span class="en-dib-tag">con dibujos</span></summary>
-      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR. Si la página de LaLiga da error («tenemos problemas para iniciar su sesión»), ciérrala y vuelve a abrirla: a menudo falla a la primera.</p>
-      <ol class="gd-lista">${PASOS_SIN_APP.map(([t, s], k) => `<li><div class="gd-t"><span class="gd-n">${k + 1}</span><span>${t}</span></div>${k === 0 ? '<button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>' : ''}<figure>${s}</figure>${k === 4 ? '<textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea><button class="btn chico" data-accion="pegarVuelta">Entrar</button>' : ''}</li>`).join('')}</ol>
+      <details class="sin-app"><summary>Entrar aquí sin la app<span class="en-dib-tag">con dibujos</span></summary>
+      <p>Entra con tu cuenta de LaLiga en el propio navegador, sin instalar nada. Vale para iPhone y ordenador. Si tienes la app en un Android, no hace falta esto: usa su QR. Si la página de LaLiga da error («tenemos problemas para iniciar su sesión»), ciérrala y vuelve a abrirla: a menudo falla a la primera.</p>
+      ${entrarDirectoHTML()}
       <p class="gd-aparte"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Verlo en una página aparte</a></p>
     </details>
     </section>
@@ -3204,9 +3214,19 @@ document.addEventListener('click', async (ev) => {
       } catch (e) { errorCodigo(e.name === 'TypeError' ? 'No hay conexión con el servidor de la web. Mira que tengas internet y vuelve a probar.' : e.message || String(e), el); }
       break;
     }
+    case 'pegarPortapapeles': {
+      // el clic del usuario da el permiso para leer el portapapeles; si el navegador no deja, se pega a mano
+      try {
+        const t = (await navigator.clipboard.readText()).trim();
+        const ta = $('#vueltaWeb');
+        if (!t) { tostada('No hay nada copiado: copia primero la dirección de la página de LaLiga'); break; }
+        if (ta) { ta.value = t; ta.focus(); }
+      } catch (e) { tostada('No he podido leer lo copiado. Pégalo a mano en el cuadro (mantén pulsado → Pegar).'); }
+      break;
+    }
     case 'pegarVuelta': {
       const url = (($('#vueltaWeb') || {}).value || '').trim();
-      if (!/[?&]code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
+      if (!/code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
       el.disabled = true;
       try { await terminarLogin(url); } catch (e) { marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); break; }
       marcarPaso('ok');
