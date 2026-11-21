@@ -2400,7 +2400,7 @@ function repintarAvisos() {
 }
 /** (el dueño) quién de la liga tiene la app, cuándo entró y quién está dentro ahora */
 async function abrirQuien() {
-  const tab = (S.quien && S.quien.tab) || 'cuentas';
+  const tab = (S.quien && S.quien.tab) || 'hoy';
   S.quien = { cargando: true, tab };
   hoja('quien');
   // (0.7.13k) también «embudo» (Antes de entrar), que hasta ahora no se guardaba y no salía
@@ -3751,12 +3751,21 @@ document.addEventListener('click', async (ev) => {
     // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
     case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;
     // (21 nov) la lista de cuentas de «Quién usa la app»: los filtros (y las chapas de arriba, que además bajan a la lista)
+    // (21 nov, noche) las pestañas de «Quién usa la app»: Hoy, Uso, Entrada, Invitar y Cuentas
+    case 'quienTab': {
+      if (!S.quien || S.quien.tab === d.t) break;
+      S.quien.tab = d.t;
+      repintarHoja(); if (S.hoja) S.hoja.scrollTop = 0;
+      filtrarQuien();
+      break;
+    }
     case 'quienFiltro': {
       if (S.quien) S.quien.filtro = d.f || '';
+      // el aviso de problemas de Hoy: a Cuentas, ya filtrada
+      if (d.irCuentas && S.quien && S.quien.tab !== 'cuentas') { S.quien.tab = 'cuentas'; repintarHoja(); if (S.hoja) S.hoja.scrollTop = 0; filtrarQuien(); break; }
       const l = $('#qLista'); if (l) l.dataset.filtro = d.f || '';
       document.querySelectorAll('.q-filtros button').forEach((b) => { const on = (b.dataset.f || '') === (d.f || ''); b.classList.toggle('activo', on); b.setAttribute('aria-pressed', String(on)); });
       filtrarQuien();
-      if (d.irCuentas) { const c = $('#qCuentas'); if (c) c.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
       break;
     }
     case 'bloqueada': {

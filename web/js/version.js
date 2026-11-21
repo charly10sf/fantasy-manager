@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8m';
+export const VERSION = '0.8n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,15 @@ export const VERSION = '0.8m';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (21 nov, noche, Carlos: «muchísimo más sencillo, mejor compartimentado, con mejores gráficas y el tiempo de uso a la
+    // vista») «Quién usa la app» rehecha: se le enseñaron tres variantes y quedan las pestañas con las gráficas de tiempo del
+    // panel de detalle. Solo web y solo el dueño. La hora, al publicar
+    v: '0.8n', f: '2026-11-21', h: '22:17', t: 'Quién usa la app, por apartados',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, por apartados', x: 'Cinco pestañas: Hoy (los de ahora, hoy y la semana, activos, altas y desde dónde), Uso (el tiempo por persona y entre todos cada día, y quién más hoy), Entrada (cuántos entran por cada camino, paso a paso), Invitar y Cuentas. Las gráficas, grandes y a todo el ancho; si alguna cuenta tiene un problema, un aviso arriba te lleva a ella.' },
+    ],
+  },
   {
     // (21 nov, Carlos: «arregla la entrada en Android y en iPhone») En la app de Android se perdía un 36 % de los toques a
     // «Entrar» sin dejar rastro: con LaLiga Fantasy instalada, Android pregunta «Abrir con» al volver y quien elige la otra

@@ -1358,16 +1358,7 @@ body.en-tour { overflow: hidden; }
 .reg-b i { display: block; width: 100%; max-width: 26px; min-height: 2px; border-radius: 5px 5px 2px 2px; background: var(--rojo-l); align-self: end; }
 .reg-n { font: 600 var(--t-mini) 'Barlow'; color: var(--texto2); min-height: 15px; }
 .reg-b small { font-size: var(--t-mini); color: var(--apagado); white-space: nowrap; }
-.q-cifras { grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 440px) { .q-cifras { grid-template-columns: repeat(2, 1fr); } .q-tabs button { padding: 8px 10px; font-size: var(--t-sec2); } }
-.q-alerta { display: flex; gap: 10px; margin: 0 0 14px; padding: 11px 13px; border-radius: var(--r-ctl); background: var(--oro-s); border: 1px solid rgba(255, 197, 71, 0.4); }
-.q-alerta > .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--oro); }
-.q-alerta p { margin: 0 0 6px; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto); }
-.q-alerta p:last-child { margin-bottom: 0; }
-.q-ok { color: var(--sube); }
 .q-no { margin-top: 10px; }
-.q-tabs { margin-top: 4px; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
-.q-tabs button { padding: 8px 12px; white-space: nowrap; }
 .q-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
 .qf-c .qf-por { color: var(--texto2); line-height: 1.35; margin-top: 2px; }
 .qf-c .qf-por b { color: var(--texto); font-weight: 600; font-size: inherit; }
@@ -3269,32 +3260,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .plan-cupo .ic { flex: none; width: 16px; height: 16px; margin-top: 2px; color: var(--apagado); }
 
 /* (0.7.13n) Quién usa la app, más visual: cifras, chapitas de lo que hay que mirar y tarjetas con gráficas */
-.q-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 0 10px; }
-.q-kpi > div { padding: 10px 6px 8px; border-radius: var(--r-ctl); background: var(--plano); text-align: center; }
-.q-kpi b { display: block; font: 700 30px/1 var(--cond); color: var(--texto); }
-.q-kpi span { display: block; margin-top: 3px; font-size: var(--t-mini); color: var(--apagado); }
-.q-kpi .vivo b { color: var(--sube); }
-.q-chapas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
-.q-chapa { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255, 197, 71, 0.45); background: var(--oro-s); color: var(--texto); font: 500 var(--t-sec2) 'Barlow'; cursor: pointer; }
-.q-chapa .ic { width: 14px; height: 14px; color: var(--oro); }
-.q-chapa b { font-weight: 700; }
 .q-bien { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: var(--t-sec2); color: var(--sube); }
 .q-bien .ic { width: 15px; height: 15px; }
-.qc { margin: 12px 0 0; padding: 12px 13px; border-radius: var(--r-ctl); background: var(--plano); }
-.qc h3 { margin: 0 0 6px; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
-.qc .graf { margin: 2px 0 0; }
-.qc-pie { margin: 8px 0 0; font-size: var(--t-mini); color: var(--apagado); }
-.qc-pie b { color: var(--texto2); }
-.qh { display: grid; gap: 6px; }
-.qh + .qh { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--linea); }
-.qh-f { display: grid; grid-template-columns: minmax(84px, 36%) 1fr 72px; align-items: center; gap: 8px; font-size: var(--t-sec2); }
-.qh-f span { color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.qh-f i { height: 10px; border-radius: 5px; background: var(--plano2); }
-.qh-f i::before { content: ''; display: block; width: calc(var(--n) * 1%); min-width: 3px; height: 100%; border-radius: 5px; background: var(--texto2); opacity: 0.75; }
-.qh-emb .qh-f:last-child i::before { background: var(--sube); opacity: 1; }
-.qh-mal .qh-f i::before { background: var(--rojo-l); opacity: 1; }
-.qh-f b { font-weight: 700; color: var(--texto); white-space: nowrap; text-align: right; }
-.qh-f b small { font-weight: 500; color: var(--apagado); font-size: var(--t-mini); }
 .q-prog { height: 8px; margin: 2px 0 8px; border-radius: 4px; background: var(--plano2); overflow: hidden; }
 .q-prog i { display: block; width: calc(var(--n) * 1%); height: 100%; background: var(--sube); }
 
@@ -3552,24 +3519,6 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .portada.web.p-iphone .pant-d { order: -1; }
 
 /* (21 nov) «Antes de entrar» por canal: entran / le dan y los pasos uno a uno */
-.qe-l { margin: 0 0 8px; font-size: var(--t-mini); color: var(--apagado); }
-.qe-l b { color: var(--texto2); }
-.qe { padding: 9px 0; border-top: 1px solid var(--linea); }
-.qe-l + .qe { border-top: 0; padding-top: 0; }
-.qe-c { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.qe-c > b { font-size: var(--t-cuerpo); color: var(--texto); }
-.qe-r { font-size: var(--t-sec2); color: var(--texto2); white-space: nowrap; }
-.qe-r b { font: 700 22px/1 var(--cond); color: var(--texto); }
-.qe-r small { margin-left: 8px; padding: 2px 7px; border-radius: 999px; background: var(--plano2); color: var(--texto); font-weight: 700; font-size: var(--t-mini); }
-.qe-p { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 6px; margin-top: 6px; }
-.qe-p span { display: grid; justify-items: center; min-width: 44px; font-size: 11.5px; line-height: 1.2; color: var(--apagado); }
-.qe-p span b { font: 700 18px/1.1 var(--cond); color: var(--texto2); }
-.qe-p span:last-child b { color: var(--sube); }
-.qe-p i { align-self: center; font-style: normal; color: var(--apagado); opacity: 0.6; }
-.qe-x { margin: 6px 0 0; font-size: var(--t-mini); color: var(--apagado); }
-.qe-x b { color: var(--texto2); }
-.qe-h { margin: 12px 0 0; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--apagado); }
-.qe-o .qe-c > b { font-weight: 600; font-size: var(--t-sec2); }
 
 /* (21 nov) la llegada desde un anuncio en el iPhone: dos frases y el botón, sin el menú del portal por encima */
 .portada.p-llegada .pt-menu { display: none; }
@@ -3598,24 +3547,84 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .banda-inicio .ic { color: var(--rojo-l); }
 .banda-inicio .banda-x { background: none; border: 0; padding: 6px; min-width: 44px; min-height: 44px; color: var(--apagado); }
 
-/* (21 nov) «Quién usa la app» en una sola página: lo de cada día, invitaciones, y las cuentas con buscador y filtros */
-.q-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.q-dos .qc { margin-top: 12px; min-width: 0; }
-.q-inv-t { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 2px 0 6px; }
-.q-inv-t > div { text-align: center; }
-.q-inv-t b { display: block; font: 700 24px/1 var(--cond); color: var(--texto); }
-.q-inv-t span { display: block; margin-top: 3px; font-size: 11.5px; line-height: 1.2; color: var(--apagado); }
-.q-inv-f { display: grid; gap: 2px; padding: 8px 0; border-top: 1px solid var(--linea); }
-.q-inv-f b { font-size: var(--t-sec2); color: var(--texto); }
-.q-inv-f span { font-size: var(--t-mini); color: var(--apagado); }
-.q-inv-f i { font-style: normal; }
-.q-inv-f i.si { color: var(--sube); font-weight: 700; }
+/* (21 nov, noche) «Quién usa la app» con cinco pestañas y gráficas a todo el ancho (hojas.js, quienUsaHTML) */
+.q-sub { display: flex; align-items: center; gap: 8px; margin: -4px 0 12px; font-size: var(--t-sec2); color: var(--texto-3); }
+.q-vivo { width: 8px; height: 8px; border-radius: 50%; background: var(--s3); }
+.q-vivo.on { background: var(--sube); box-shadow: 0 0 0 4px var(--sube-s); }
+.q-tabs { display: flex; gap: 3px; padding: 4px; margin: 0 0 14px; border-radius: var(--r-ctl); background: var(--s2); position: sticky; top: -8px; z-index: 2; }
+.q-tabs button { flex: 1; min-height: 40px; padding: 0 2px; border-radius: 9px; background: none; color: var(--texto-3); font: 600 var(--t-sec2) 'Barlow'; white-space: nowrap; }
+.q-tabs button.on { background: var(--s3); color: var(--texto); box-shadow: inset 0 -2px 0 var(--rojo); }
+.q-lead { margin: 0 0 12px; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto-2); }
+.q-lead b { color: var(--texto); }
+.q-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+.q-kpi > div { padding: 14px 4px 12px; border-radius: var(--r-ctl); background: var(--s2); text-align: center; min-width: 0; }
+.q-kpi b { display: block; font: 700 36px/1 var(--cond); color: var(--texto); white-space: nowrap; }
+.q-kpi span { display: block; margin-top: 5px; font-size: var(--t-mini); line-height: 1.25; color: var(--texto-3); }
+.q-kpi .vivo b { color: var(--sube); }
+.qc .q-kpi { margin: 0; }
+.qc .q-kpi > div { background: rgba(255, 255, 255, 0.04); }
+.qc .q-kpi b { font-size: 28px; }
+.q-aviso { display: flex; align-items: center; gap: 10px; width: 100%; margin: 0 0 12px; padding: 11px 12px; border-radius: var(--r-ctl); border: 1px solid rgba(255, 197, 71, 0.4); background: var(--oro-s); color: var(--texto); text-align: left; font: inherit; cursor: pointer; }
+.q-aviso > .ic:first-child { flex: none; width: 20px; height: 20px; color: var(--oro); }
+.q-aviso > .ic:last-child { flex: none; width: 18px; height: 18px; color: var(--texto-3); }
+.q-aviso span { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.q-aviso b { font-size: var(--t-sec2); }
+.q-aviso small { font-size: var(--t-mini); color: var(--texto-2); }
+.qc { margin: 0 0 12px; padding: 14px 14px 12px; border-radius: var(--r-tarj); background: var(--s2); }
+.qc-cab { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 8px; }
+.qc h3 { margin: 0; font: 700 17px var(--cond); letter-spacing: 0.5px; text-transform: uppercase; color: var(--texto); }
+.qc-cab > span:not(.q-pct) { font-size: var(--t-mini); color: var(--texto-3); white-space: nowrap; }
+.qc-cab > span > b { font: 700 18px var(--cond); color: var(--texto); }
+.qc-pie { margin: 10px 0 0; font-size: var(--t-mini); line-height: 1.45; color: var(--texto-3); }
+.qc-pie b { color: var(--texto); }
+/* las gráficas de la semana (graficos.js, columnasSem y areaSem) */
+.vg { display: block; width: 100%; height: auto; overflow: visible; }
+.vg-r { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1; }
+.vg-b { fill: #3a3a45; } .vg-hoy { fill: var(--rojo); }
+.vg-v { font: 700 15px var(--cond); fill: var(--texto-2); paint-order: stroke; stroke: var(--s2); stroke-width: 4px; stroke-linejoin: round; } .vg-v.hoy { fill: var(--texto); }
+.vg-e { font: 500 12.5px 'Barlow'; fill: var(--texto-3); } .vg-e.hoy { fill: var(--texto); font-weight: 700; }
+.vg-m { stroke: var(--oro); stroke-width: 1.3; stroke-dasharray: 4 4; opacity: 0.8; }
+.vg-mt { font: 600 11.5px 'Barlow'; fill: var(--oro); }
+.vg-l { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linejoin: round; stroke-linecap: round; }
+.vg-pt { fill: var(--s2); stroke: var(--c); stroke-width: 2; } .vg-pt.hoy { fill: var(--rojo); stroke: var(--texto); }
+.q-pila { display: flex; gap: 3px; height: 16px; border-radius: 8px; overflow: hidden; }
+.q-ley { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: var(--t-sec2); color: var(--texto-2); }
+.q-ley span { display: flex; align-items: center; gap: 6px; }
+.q-ley i { width: 10px; height: 10px; border-radius: 3px; }
+.q-ley b { color: var(--texto); } .q-ley small { color: var(--texto-3); }
+.q-rank { display: grid; gap: 10px; }
+.q-rank > div { display: grid; grid-template-columns: minmax(70px, 30%) 1fr 64px; align-items: center; gap: 10px; font-size: var(--t-sec2); }
+.q-rank b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-rank i { position: relative; height: 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); }
+.q-rank i::before { content: ''; position: absolute; inset: 0 auto 0 0; width: max(4px, calc(var(--n) * 1%)); border-radius: 6px; background: var(--azul); }
+.q-rank span { text-align: right; color: var(--texto-2); white-space: nowrap; }
+.q-rank small { grid-column: 1 / -1; margin-top: -6px; font-size: var(--t-mini); color: var(--texto-3); }
+.q-rank small:empty { display: none; }
+.q-inv > div { padding-bottom: 8px; border-bottom: 1px solid var(--linea); }
+.q-inv > div:last-child { border-bottom: 0; padding-bottom: 0; }
+/* el embudo de cada canal */
+.q-pct { font: 700 30px/1 var(--cond); text-align: right; color: var(--oro); }
+.q-pct.bien { color: var(--sube); } .q-pct.mal { color: var(--rojo-texto); }
+.q-pct small { display: block; margin-top: 2px; font: 500 var(--t-mini) 'Barlow'; color: var(--texto-3); }
+.q-emb { display: grid; }
+.q-emb-f { position: relative; display: flex; align-items: center; justify-content: space-between; height: 34px; padding: 0 10px; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, 0.03); }
+.q-emb-f i { position: absolute; inset: 0 auto 0 0; background: #3a3a45; border-radius: 8px; }
+.q-emb-f.fin i { background: var(--sube); opacity: 0.85; }
+.q-emb-f span, .q-emb-f b { position: relative; font-size: var(--t-sec2); color: var(--texto); }
+.q-emb-f b { font: 700 17px var(--cond); }
+.q-emb-p { display: flex; align-items: center; gap: 4px; height: 20px; padding-left: 10px; font-size: var(--t-mini); color: var(--texto-3); }
+.q-emb-p .ic { width: 12px; height: 12px; }
+.q-camp { display: grid; }
+.q-camp > div { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 10px; padding: 9px 0; border-top: 1px solid var(--linea); }
+.q-camp > div:first-child { border-top: 0; padding-top: 2px; }
+.q-camp b { font-size: var(--t-cuerpo); }
+.q-camp span:not(.q-pct) { grid-column: 1; font-size: var(--t-mini); color: var(--texto-3); }
+.q-camp .q-pct { grid-column: 2; grid-row: 1 / 3; font-size: 24px; }
+.q-cuenta { margin: 2px 0 0; font-size: var(--t-mini); color: var(--texto-3); }
 .q-buscar { width: 100%; min-height: 44px; margin: 4px 0 8px; padding: 0 12px; border-radius: var(--r-ctl); border: 1px solid var(--linea); background: var(--plano2); color: var(--texto); font: 500 16px 'Barlow', system-ui, sans-serif; }
 .q-filtros { flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 6px; }
 .q-filtros button { padding: 8px 12px; white-space: nowrap; }
 .q-cuentas [hidden] { display: none !important; }
-.q-mas { margin-top: 12px; }
-.q-mas > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
 
 /* (21 nov) invitar a un amigo, a la vista: las tres variantes para elegir (fm-var-inv) */
 .sup .b-inv { color: var(--oro); box-shadow: inset 0 0 0 1.5px rgba(255, 197, 71, 0.55); margin: 0 2px; }

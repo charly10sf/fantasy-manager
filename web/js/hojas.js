@@ -3,7 +3,7 @@ import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
-import { linea, barra, mini, barras } from './graficos.js';
+import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
@@ -1190,10 +1190,7 @@ function bandejaAvisos(A) {
 }
 
 /* ================= QUIÉN USA LA APP (el dueño) ================= */
-/* (0.7.13n, Carlos 16 nov: «más intuitivo, con mucho menos texto, y más gráficas») se abre tocando la etiqueta BETA del
-   logo (solo el dueño) o desde Ajustes. Dos pestañas: Resumen (cuatro cifras, lo que hay que mirar en chapitas y gráficas:
-   activos cada día, altas por semana, antes de entrar, desde dónde, tiempo de hoy y qué hacen) y Cuentas (tu liga y el
-   resto, con su versión de la web y de la app de Google Play y una chapita roja si algo va mal). Sin notas al pie */
+/* se abre tocando la etiqueta BETA del logo (solo el dueño) o desde Ajustes. Cómo va, más abajo (quienUsaHTML) */
 const DENTRO_Q = 12 * 60e3;
 const webDe = (x) => String((x && x.v) || '').replace(/ !$/, '');
 /** el código de la app de Google Play a partir del cual llega la web de ahora: «playMin» de limites.json y, si no está,
@@ -1258,127 +1255,168 @@ function queLePasa(p, x, minPlay) {
   }
   return null;
 }
-/** barras en horizontal: [[etiqueta, valor, texto del valor?]] */
-const barrasH = (filas, { max = null, clase = '' } = {}) => {
-  const tope = max || Math.max(1, ...filas.map((f) => f[1]));
-  return `<div class="qh ${clase}">${filas.map(([et, v, txt]) => `<div class="qh-f"><span>${esc(et)}</span><i style="--n:${Math.round((v / tope) * 100)}"></i><b>${txt != null ? txt : v}</b></div>`).join('')}</div>`;
-};
-const tarjetaQ = (titulo, cuerpo, pie = '') => `<section class="qc"><h3>${titulo}</h3>${cuerpo}${pie ? `<p class="qc-pie">${pie}</p>` : ''}</section>`;
-const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
-const diaEt = (d) => { const t = new Date(`${d}T12:00:00Z`); return ['D', 'L', 'M', 'X', 'J', 'V', 'S'][t.getUTCDay()]; };
+/* (21 nov, noche) Rehecha otra vez. Carlos: «muchísimo más sencillo, mejor compartimentado, con mejores gráficas y el
+   tiempo de uso diario a la vista». Se le enseñaron tres variantes y eligió las pestañas, con las gráficas de tiempo del
+   panel de detalle. Cinco pestañas, cada una con lo suyo y sus gráficas a todo el ancho:
+   Hoy (tres cifras, el aviso de problemas, activos, altas y desde dónde) · Uso (tiempo por persona, entre todos, quién más
+   y qué hacen) · Entrada (el embudo de cada canal y las campañas) · Invitar · Cuentas (la lista con buscador y filtros).
+   La pestaña va en S.quien.tab (acción quienTab); el aviso de problemas lleva a Cuentas con el filtro «Con problema». */
+const Q_TABS = [['hoy', 'Hoy'], ['uso', 'Uso'], ['entrada', 'Entrada'], ['invitar', 'Invitar'], ['cuentas', 'Cuentas']];
+const DSEM_Q = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const etQ = (d, i) => (i === 0 ? 'Hoy' : DSEM_Q[new Date(`${d}T12:00:00Z`).getUTCDay()]);
+const pctN = (a, b) => (b > 0 ? Math.round((a / b) * 100) : 0);
+/** minutos para leer: «15 min», «6 h 45» */
+const minQ = (seg) => { const m = Math.round((Number(seg) || 0) / 60); return m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}` : `${m} min`; };
+const tarjetaQ = (titulo, cuerpo, { cifra = '', pie = '' } = {}) => `<section class="qc"><div class="qc-cab"><h3>${titulo}</h3>${cifra ? `<span>${cifra}</span>` : ''}</div>${cuerpo}${pie ? `<p class="qc-pie">${pie}</p>` : ''}</section>`;
+const kpiQ = (cifras) => `<div class="q-kpi">${cifras.map(([v, t, cls]) => `<div class="${cls || ''}"><b>${v}</b><span>${t}</span></div>`).join('')}</div>`;
 
-/* (21 nov, Carlos: «arriba, lo que miro cada día en 10 segundos; después Antes de entrar por canal; después invitaciones;
-   y al final la lista de cuentas, con filtro o búsqueda») La hoja va en una sola página, sin pestañas:
-   1. las cuatro cifras (dentro ahora, hoy, 7 días, total) y lo que hay que mirar, que filtra la lista de abajo;
-   2. activos y altas de cada día y desde dónde entran;
-   3. «Antes de entrar» por canal;
-   4. invitaciones: el total y cada persona;
-   5. las cuentas, con buscador y filtros;
-   6. plegado en «Más números», lo que no se mira a diario (tiempos, altas por semana, versiones, qué hacen). */
-const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['web', 'Web']];
 export function quienUsaHTML(S) {
   const Q = S.quien || {};
   let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
-  const lista = Q.lista || [], ahora = Q.ahora || Date.now(), reg = Q.registro || [];
-  const minPlay = playMinimo(lista);
-  const hace = (d) => ahora - d * DIA;
-  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO_Q).length;
-  const hoyN = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length;
-  const base = reg.length ? reg : lista;
-  const sem = base.filter((x) => x.ultima >= hace(7)).length;
-  h += `<div class="q-kpi">
-    <div class="${dentro ? 'vivo' : ''}"><b>${dentro}</b><span>dentro ahora</span></div>
-    <div><b>${hoyN}</b><span>hoy</span></div>
-    <div><b>${sem}</b><span>7 días</span></div>
-    <div><b>${base.length}</b><span>total</span></div>
-  </div>`;
-  // lo que hay que mirar (de los de 30 días): cada chapa filtra la lista de cuentas de abajo
-  const grupos = {};
-  for (const x of lista.filter((y) => y.ultima >= hace(30))) { const p = problemaDe(x, minPlay); if (p) (grupos[p.tipo] = grupos[p.tipo] || { p, n: 0 }).n++; }
-  const chapas = ['play', 'github', 'carga', 'web'].filter((k) => grupos[k]).map((k) => `<button class="q-chapa" data-accion="quienFiltro" data-f="prob" data-ir-cuentas="1">${icono('alerta')}<b>${grupos[k].n}</b> ${esc(grupos[k].p.largo)}</button>`);
-  h += chapas.length ? `<div class="q-chapas">${chapas.join('')}</div>` : `<p class="q-bien">${icono('ok')}Todos al día</p>`;
-  const R = resumenQ(Q, lista, reg, ahora);
-  h += R.diario;
-  if (Q.embudo && Q.embudo.dias && Object.keys(Q.embudo.dias).length) h += embudoQ(Q.embudo, ahora);
-  h += invitacionesQ(Q, lista, reg, ahora);
-  const f = Q_FILTROS.some(([k]) => k === Q.filtro) ? Q.filtro : '';
-  h += `<section class="qc q-cuentas" id="qCuentas"><h3>Cuentas · <span id="qCuenta">${lista.length}</span></h3>
-    <input id="qBuscar" class="q-buscar" type="search" inputmode="search" enterkeyhint="search" placeholder="Buscar por nombre o equipo" aria-label="Buscar una cuenta por nombre o equipo" autocomplete="off" spellcheck="false">
-    <div class="filtros q-filtros" role="group" aria-label="Filtrar las cuentas">${Q_FILTROS.map(([k, t]) => `<button class="${k === f ? 'activo' : ''}" aria-pressed="${k === f}" data-accion="quienFiltro" data-f="${k}">${t}</button>`).join('')}</div>
-    <div id="qLista" data-filtro="${f}">${cuentasQ(S, lista, ahora, minPlay)}</div>
-    <p class="q-no" id="qNada" hidden>Ninguna cuenta con eso.</p></section>`;
-  if (R.mas) h += `<details class="q-mas"><summary>Más números</summary>${R.mas}</details>`;
+  const C = numerosQ(Q);
+  const tab = Q_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'hoy';
+  h += `<p class="q-sub"><span class="q-vivo${C.dentro ? ' on' : ''}" aria-hidden="true"></span>${C.dentro} dentro ahora · ${C.total} cuentas en total</p>`;
+  h += `<div class="q-tabs" role="tablist" aria-label="Apartados">${Q_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'on' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
+  if (tab === 'hoy') h += hoyQ(C);
+  else if (tab === 'uso') h += usoQ(C);
+  else if (tab === 'entrada') h += entradaQ(C);
+  else if (tab === 'invitar') h += invitarQ(C, Q);
+  else h += cuentasTabQ(S, Q, C);
   return h;
 }
 
-/** { diario: lo de cada día (activos, altas, desde dónde), mas: lo que va plegado } */
-function resumenQ(Q, lista, reg, ahora) {
-  const hace = (d) => ahora - d * DIA;
-  let h = '', mas = '';
-  // activos cada día (los 7 últimos, por el tiempo de cada uno)
+/** todos los números de la hoja, una vez */
+function numerosQ(Q) {
+  const lista = Q.lista || [], reg = Q.registro || [], ahora = Q.ahora || Date.now();
   const ds = (Array.isArray(Q.dias) && Q.dias.length ? Q.dias : Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA))).slice(0, 7);
-  const act = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.filter((x) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) > 0).length, yo: i === 0 })).reverse();
-  let dos = '';
-  if (act.some((x) => x.v)) dos += tarjetaQ('Activos cada día', barras(act, { alto: 96 }));
-  // (19 nov, Carlos: «quiero ver al día cuántos nuevos hay y el tiempo que pasan dentro, sí o sí») las altas de cada día
-  if (reg.length) {
-    const altas = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: reg.filter((x) => x.primera && diaDe(x.primera) === d).length, yo: i === 0 })).reverse();
-    dos += tarjetaQ('Altas cada día', barras(altas, { alto: 96 }), `<b>${altas.reduce((t, x) => t + x.v, 0)}</b> en 7 días`);
+  const segDe = (x, d, i) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) || 0;
+  // cada día, del más viejo a hoy: cuántos abren la app, el tiempo entre todos y por persona, y las altas
+  const dias = ds.map((d, i) => {
+    const act = lista.filter((x) => segDe(x, d, i) > 0), seg = act.reduce((t, x) => t + segDe(x, d, i), 0);
+    return { et: etQ(d, i), hoy: i === 0, activos: act.length, seg, media: act.length ? seg / act.length : 0, altas: reg.filter((x) => x.primera && diaDe(x.primera) === d).length };
+  }).reverse();
+  const minPlay = playMinimo(lista);
+  const problemas = {};
+  for (const x of lista.filter((y) => y.ultima >= ahora - 30 * DIA)) { const p = problemaDe(x, minPlay); if (p) (problemas[p.tipo] ||= { p, n: 0 }).n++; }
+  const semL = lista.filter((x) => x.ultima >= ahora - 7 * DIA);
+  const hoyD = dias[dias.length - 1] || { seg: 0, media: 0 };
+  const act7 = dias.reduce((t, x) => t + x.activos, 0), seg7 = dias.reduce((t, x) => t + x.seg, 0);
+  return {
+    Q, lista, reg, ahora, ds, dias, minPlay, problemas, semL,
+    dentro: lista.filter((x) => ahora - x.ultima < DENTRO_Q).length,
+    hoy: lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length,
+    sem: (reg.length ? reg : lista).filter((x) => x.ultima >= ahora - 7 * DIA).length,
+    total: (reg.length ? reg : lista).length,
+    segHoy: hoyD.seg, mediaHoy: hoyD.media, mediaSem: act7 ? seg7 / act7 : 0,
+    topHoy: lista.map((x) => [x.nombre || x.equipo || 'Sin nombre', segDe(x, ds[0], 0)]).filter((f) => f[1] > 0).sort((a, b) => b[1] - a[1]),
+  };
+}
+
+/** el aviso de problemas: una línea que lleva a Cuentas con el filtro «Con problema» */
+function avisoQ(C) {
+  const ks = ['play', 'github', 'carga', 'web'].filter((k) => C.problemas[k]);
+  if (!ks.length) return `<p class="q-bien">${icono('ok')}Todos al día</p>`;
+  const n = ks.reduce((t, k) => t + C.problemas[k].n, 0);
+  return `<button class="q-aviso" data-accion="quienFiltro" data-f="prob" data-ir-cuentas="1">${icono('alerta')}<span><b>${n} ${n === 1 ? 'cuenta' : 'cuentas'} con algún problema</b><small>${ks.map((k) => `${C.problemas[k].n} ${esc(C.problemas[k].p.largo)}`).join(' · ')}</small></span>${icono('flecha')}</button>`;
+}
+
+function hoyQ(C) {
+  let h = kpiQ([[C.dentro, 'dentro ahora', C.dentro ? 'vivo' : ''], [C.hoy, 'hoy'], [C.sem, '7 días']]);
+  h += avisoQ(C);
+  const d = C.dias;
+  if (d.some((x) => x.activos)) h += tarjetaQ('Activos cada día', columnasSem(d.map((x) => ({ et: x.et, v: x.activos, hoy: x.hoy }))));
+  if (C.reg.length) {
+    const sem = Array.from({ length: 4 }, (_, i) => C.reg.filter((x) => x.primera >= C.ahora - 7 * (i + 1) * DIA && x.primera < C.ahora - 7 * i * DIA).length);
+    h += tarjetaQ('Altas nuevas', columnasSem(d.map((x) => ({ et: x.et, v: x.altas, hoy: x.hoy })), { alto: 170 }), { cifra: `<b>${d.reduce((t, x) => t + x.altas, 0)}</b> en 7 días`, pie: `Por semanas, de esta hacia atrás: ${sem.map((n) => `<b>${n}</b>`).join(' · ')}` });
   }
-  if (dos) h += `<div class="q-dos">${dos}</div>`;
-  // desde dónde: los de hoy y los de 7 días, por canal
-  const canalDe = (x) => x.canal || 'web';
-  const hoy = lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)), sem = lista.filter((x) => x.ultima >= hace(7));
-  const donde = [['Google Play', 'play'], ['Web', 'web'], ['APK de fuera', 'github']].map(([t, k]) => [t, sem.filter((x) => canalDe(x) === k).length, hoy.filter((x) => canalDe(x) === k).length]).filter((f) => f[1]);
-  if (donde.length) h += tarjetaQ('Desde dónde · 7 días', barrasH(donde.map(([t, s, hy]) => [t, s, `${s} <small>${hy} hoy</small>`])));
-  // ---- plegado: lo que no se mira cada día ----
-  const tDia = ds.map((d, i) => ({ et: i ? diaEt(d) : 'Hoy', v: lista.reduce((t, x) => t + (Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) || 0), 0), yo: i === 0 })).reverse();
-  if (tDia.some((x) => x.v)) mas += tarjetaQ('Tiempo cada día · entre todos', barras(tDia, { alto: 110, formato: (v) => (v >= 3600 ? `${String(Math.round(v / 360) / 10).replace('.', ',')} h` : `${Math.round(v / 60)} min`) }));
-  if (reg.length) {
-    const semanas = Array.from({ length: 8 }, (_, i) => {
-      const hasta = hace(7 * i), desde = hace(7 * (i + 1));
-      return { et: i ? fechaCorta(desde).replace(/ de /, ' ') : 'Esta', v: reg.filter((x) => x.primera >= desde && x.primera < hasta).length, yo: i === 0 };
-    }).reverse();
-    mas += tarjetaQ('Altas por semana', barras(semanas, { alto: 110 }));
+  // desde dónde: los de 7 días por canal, en una barra
+  const partes = [['Google Play', 'play', 'var(--rojo)'], ['Web', 'web', 'var(--azul)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => (x.canal || 'web') === k).length })).filter((p) => p.v);
+  if (partes.length) {
+    const tot = partes.reduce((t, p) => t + p.v, 0);
+    h += tarjetaQ('Desde dónde', `<div class="q-pila" role="img" aria-label="${esc(partes.map((p) => `${p.t}: ${p.v}`).join(', '))}">${partes.map((p) => `<i style="flex:${p.v};background:${p.c}"></i>`).join('')}</div><div class="q-ley">${partes.map((p) => `<span><i style="background:${p.c}"></i>${esc(p.t)} <b>${p.v}</b> <small>${pctN(p.v, tot)} %</small></span>`).join('')}</div>`, { cifra: '7 días' });
   }
-  const tiempo = lista.map((x) => [x.nombre || x.equipo || 'Sin nombre', Number(((x.segDias || {})[ds[0]]) || x.segHoy || 0)]).filter((f) => f[1] > 0).sort((a, b) => b[1] - a[1]);
-  if (tiempo.length) {
-    const total = tiempo.reduce((t, f) => t + f[1], 0);
-    mas += tarjetaQ('Tiempo hoy', barrasH(tiempo.slice(0, 8).map(([n, v]) => [n, v, corto(v)])), `Entre todos, <b>${corto(total)}</b>`);
+  return h;
+}
+
+/* (Carlos, 21 nov: «en tiempo de uso, las gráficas de la C me gustan») */
+function usoQ(C) {
+  const d = C.dias;
+  if (!d.some((x) => x.seg)) return '<p class="q-no">Nadie ha abierto la app esta semana.</p>';
+  let h = kpiQ([[minQ(C.mediaHoy), 'por persona hoy'], [minQ(C.mediaSem), 'media 7 días'], [minQ(C.segHoy), 'entre todos hoy']]);
+  h += tarjetaQ('Por persona, cada día', areaSem(d.map((x) => ({ et: x.et, v: Math.round(x.media / 60), hoy: x.hoy })), { formato: (v) => `${v}′` }));
+  h += tarjetaQ('Entre todos, cada día', columnasSem(d.map((x) => ({ et: x.et, v: Math.round(x.seg / 60), hoy: x.hoy })), { alto: 170, formato: (v) => (v >= 60 ? `${String(Math.round(v / 6) / 10).replace('.', ',')}h` : `${Math.round(v)}′`) }));
+  if (C.topHoy.length) {
+    const max = C.topHoy[0][1];
+    h += tarjetaQ('Quién más hoy', `<div class="q-rank">${C.topHoy.slice(0, 8).map(([n, s]) => `<div><b>${esc(n)}</b><i style="--n:${pctN(s, max)}"></i><span>${minQ(s)}</span></div>`).join('')}</div>`);
   }
-  // (16 nov, Carlos: «revisa el tema de las versiones de forma extensa») de los que han abierto la app en 30 días: cuántos
-  // tienen la versión de ahora, en qué versión se han quedado los demás y por qué
-  const v30 = lista.filter((x) => x.ultima >= hace(30) && webDe(x));
-  if (v30.length) {
-    const minP = playMinimo(lista);
-    const alDia = v30.filter((x) => cmpVer(webDe(x), VERSION) >= 0).length;
-    const porV = {};
-    for (const x of v30) if (cmpVer(webDe(x), VERSION) < 0) porV[webDe(x)] = (porV[webDe(x)] || 0) + 1;
-    const filasV = [[`${VERSION} (la de ahora)`, alDia], ...Object.entries(porV).sort((a, b) => cmpVer(b[0], a[0])).slice(0, 7)];
-    const motivos = {};
-    for (const x of v30) { const p = problemaDe(x, minP); if (p) motivos[p.corto] = (motivos[p.corto] || 0) + 1; }
-    const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, minP)).length;
-    const playC = {};
-    for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
-    const pie = [
-      Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
-      sinMotivo > 0 ? `Atrasados sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola la próxima vez que la abran)` : '',
-      Object.keys(playC).length ? `App de Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${minP && Number(c) < minP ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${minP ? `. La web nueva llega desde la ${minP}` : ''}` : '',
-    ].filter(Boolean).join('<br>');
-    mas += tarjetaQ(`Versiones · ${alDia} de ${v30.length} al día`, barrasH(filasV), pie);
+  // qué hacen esta semana (de lunes a hoy)
+  const lunes = (() => { const t = new Date(`${diaDe(C.ahora)}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); })();
+  const ev = {};
+  for (const x of C.reg) for (const [k, n] of Object.entries((x.ev || {})[lunes] || {})) ev[k] = (ev[k] || 0) + (Number(n) || 0);
+  const cosas = [['planes', 'p'], ['preguntas', 'q'], ['anuncios', 'b'], ['funciones top', 't']].filter(([, k]) => ev[k]);
+  if (cosas.length) {
+    const malas = (ev.f || 0) + (ev.F || 0), buenas = (ev.a || 0) + (ev.A || 0);
+    h += tarjetaQ('Qué hacen esta semana', kpiQ(cosas.map(([t, k]) => [ev[k], t])), { pie: buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '' });
   }
-  // qué hacen esta semana
-  const lunes = (() => { const t = new Date(`${diaDe(ahora)}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); })();
-  const semEv = {};
-  for (const x of reg) for (const [k, n] of Object.entries((x.ev || {})[lunes] || {})) semEv[k] = (semEv[k] || 0) + n;
-  const hace7 = [['Planes', 'p'], ['Preguntas al chat', 'q'], ['Anuncios vistos', 'b'], ['Funciones top', 't']].map(([t, k]) => [t, semEv[k] || 0]).filter((f) => f[1]);
-  if (hace7.length) {
-    const malas = (semEv.f || 0) + (semEv.F || 0), buenas = (semEv.a || 0) + (semEv.A || 0);
-    mas += tarjetaQ('Qué hacen esta semana', barrasH(hace7), buenas + malas ? `Cargas de la liga que fallan: <b>${String(Math.round((malas / (buenas + malas)) * 1000) / 10).replace('.', ',')} %</b>` : '');
-  }
-  return { diario: h, mas };
+  return h;
+}
+
+/** el embudo de un canal: barras que encogen, con el % que pasa de un paso al siguiente */
+function embudoQ(c) {
+  const pasos = (c.web ? [['Llegan a la web', c.llegan], ['Ven el botón de entrar', c.ven], ['Abren LaLiga', c.l], ['Vuelven de LaLiga', c.v], ['Pegan la dirección', c.p], ['Entran', c.ok]] : [['Ven el botón de entrar', c.ver], ['Abren LaLiga', c.l], ['Entran', c.ok]]).filter((p) => p[1] != null);
+  const base = Math.max(1, ...pasos.map((p) => p[1]));
+  return `<div class="q-emb">${pasos.map(([t, v], i) => `${i ? `<div class="q-emb-p">${icono('abajo')}${pctN(v, pasos[i - 1][1])} %</div>` : ''}<div class="q-emb-f${i === pasos.length - 1 ? ' fin' : ''}"><i style="width:${Math.max(3, (v / base) * 100)}%"></i><span>${esc(t)}</span><b>${v}</b></div>`).join('')}</div>`;
+}
+const notasCanal = (c) => [
+  !c.web && c.vuelve ? `Vuelven sin el código: <b>${c.vuelve}</b>` : '',
+  c.web && c.play ? `Tocan Google Play: <b>${c.play}</b>` : '',
+  c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
+  c.saf ? `Tocan «Abrir en Safari»: <b>${c.saf}</b>` : '',
+  c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
+  c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
+  c.ok > c.l ? `Entran más de los que abren LaLiga: <b>${c.ok - c.l}</b> con un código o por otro camino` : '',
+].filter(Boolean).join(' · ');
+const pctCanal = (c) => { const p = pctN(c.ok, c.l); return `<span class="q-pct${!c.l || c.ok > c.l ? '' : p >= 50 ? ' bien' : p < 30 ? ' mal' : ''}">${c.l && c.ok <= c.l ? `${p} %` : '—'}<small>${c.ok} de ${c.l} entran</small></span>`; };
+function entradaQ(C) {
+  const { canales, origenes } = embudoDatos(C.Q.embudo, C.ahora);
+  if (!canales.length) return '<p class="q-no">Nadie ha intentado entrar en los últimos 7 días.</p>';
+  let h = '<p class="q-lead">De los que abren LaLiga para entrar, cuántos acaban dentro. Últimos 7 días.</p>';
+  h += canales.map((c) => { const n = notasCanal(c); return `<section class="qc" data-canal="${esc(c.k)}"><div class="qc-cab"><h3>${esc(c.t)}</h3>${pctCanal(c)}</div>${embudoQ(c)}${n ? `<p class="qc-pie">${n}</p>` : ''}</section>`; }).join('');
+  if (origenes.length) h += tarjetaQ('Por campaña', `<div class="q-camp">${origenes.map((c) => `<div><b>${esc(c.t)}</b><span>${c.llegan} llegan · ${c.l} abren LaLiga</span>${pctCanal(c)}</div>`).join('')}</div>`, { cifra: '?utm_source=' });
+  return h;
+}
+
+function invitarQ(C, Q) {
+  if (!Q.invitar && !C.reg.length) return '<p class="q-no">Sin datos de invitaciones.</p>';
+  const { filas, total: T } = invitacionesDatos(Q, C.lista, C.reg, C.ahora);
+  let h = kpiQ([[T.comparten, `han invitado${T.veces ? ` · ${T.veces} veces` : ''}`], [T.entran, 'amigos dentro'], [T.siguen != null ? T.siguen : T.vuelven, T.siguen != null ? 'siguen (7 días)' : 'volvieron otro día']]);
+  if (!filas.length) return `${h}<p class="q-no">Nadie ha compartido la app ni ha sacado su código todavía.</p>`;
+  const max = Math.max(1, ...filas.map((x) => x.entran));
+  h += tarjetaQ('Quién invita', `<div class="q-rank q-inv">${filas.slice(0, 20).map((x) => `<div><b>${esc(x.nombre)}</b><i style="--n:${pctN(x.entran, max)}"></i><span>${x.entran} ${x.entran === 1 ? 'amigo' : 'amigos'}</span><small>${[
+    x.comparte ? `compartió ${x.comparte} ${x.comparte === 1 ? 'vez' : 'veces'}` : x.codigo ? 'sacó su código' : '',
+    x.entran ? `${x.vuelven} ${x.vuelven === 1 ? 'volvió' : 'volvieron'} otro día` : '',
+    x.entran && x.siguen != null ? `${x.siguen} ${x.siguen === 1 ? 'sigue' : 'siguen'}` : '',
+    x.premios.length ? (x.premios.length === 2 ? 'los 2 premios' : x.premios[0] === 'doble' ? 'semana doble' : 'sin anuncios') : '',
+  ].filter(Boolean).join(' · ')}</small></div>`).join('')}</div>`,
+  { pie: T.entran ? '' : 'Han invitado, pero ningún amigo ha entrado todavía con un código. Quien instala desde Google Play tiene que escribirlo a mano cuando la app se lo pregunta.' });
+  return h;
+}
+
+const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['web', 'Web']];
+function cuentasTabQ(S, Q, C) {
+  const f = Q_FILTROS.some(([k]) => k === Q.filtro) ? Q.filtro : '';
+  // las versiones, en una línea: de los que han abierto la app en 30 días, cuántos tienen la de ahora
+  const v30 = C.lista.filter((x) => x.ultima >= C.ahora - 30 * DIA && webDe(x));
+  const alDia = v30.filter((x) => cmpVer(webDe(x), VERSION) >= 0).length;
+  return `<section class="q-cuentas" id="qCuentas">
+    ${v30.length ? `<p class="q-lead">Con la ${esc(VERSION)}: <b>${alDia} de ${v30.length}</b> de los que han entrado en 30 días.${C.minPlay ? ` En Google Play llega desde la ${C.minPlay}.` : ''}</p>` : ''}
+    <input id="qBuscar" class="q-buscar" type="search" inputmode="search" enterkeyhint="search" placeholder="Buscar por nombre o equipo" aria-label="Buscar una cuenta por nombre o equipo" autocomplete="off" spellcheck="false">
+    <div class="filtros q-filtros" role="group" aria-label="Filtrar las cuentas">${Q_FILTROS.map(([k, t]) => `<button class="${k === f ? 'activo' : ''}" aria-pressed="${k === f}" data-accion="quienFiltro" data-f="${k}">${t}</button>`).join('')}</div>
+    <p class="q-cuenta"><span id="qCuenta">${C.lista.length}</span> cuentas</p>
+    <div id="qLista" data-filtro="${f}">${cuentasQ(S, C.lista, C.ahora, C.minPlay)}</div>
+    <p class="q-no" id="qNada" hidden>Ninguna cuenta con eso.</p></section>`;
 }
 
 /**
@@ -1406,26 +1444,6 @@ export function invitacionesDatos(Q, lista, reg, ahora) {
   const conSiguen = l.some((x) => x.siguen != null);
   return { filas: l, total: { codigos: I.codigos != null ? I.codigos : l.filter((x) => x.codigo).length, comparten: l.filter((x) => x.comparte).length, veces: l.reduce((t, x) => t + x.comparte, 0), entran: I.invitados != null ? I.invitados : l.reduce((t, x) => t + x.entran, 0), vuelven: I.vuelven != null ? I.vuelven : l.reduce((t, x) => t + x.vuelven, 0), siguen: conSiguen ? l.reduce((t, x) => t + (x.siguen || 0), 0) : null } };
 }
-function invitacionesQ(Q, lista, reg, ahora) {
-  if (!Q.invitar && !reg.length) return '';
-  const { filas, total: T } = invitacionesDatos(Q, lista, reg, ahora);
-  const kpi = `<div class="q-inv-t">
-    <div><b>${T.comparten}</b><span>han compartido${T.veces ? ` · ${T.veces} veces` : ''}</span></div>
-    <div><b>${T.codigos}</b><span>con código sacado</span></div>
-    <div><b>${T.entran}</b><span>amigos han entrado</span></div>
-    <div><b>${T.siguen != null ? T.siguen : T.vuelven}</b><span>${T.siguen != null ? 'siguen (7 días)' : 'han vuelto otro día'}</span></div>
-  </div>`;
-  const filasH = filas.slice(0, 20).map((x) => `<div class="q-inv-f"><b>${esc(x.nombre)}</b><span>${[
-    x.comparte ? `compartió ${x.comparte} ${x.comparte === 1 ? 'vez' : 'veces'}` : x.codigo ? 'sacó su código' : '',
-    `<i class="${x.entran ? 'si' : ''}">${x.entran} ${x.entran === 1 ? 'ha entrado' : 'han entrado'}</i>`,
-    x.entran ? `${x.vuelven} ${x.vuelven === 1 ? 'volvió' : 'volvieron'} otro día` : '',
-    x.entran && x.siguen != null ? `${x.siguen} ${x.siguen === 1 ? 'sigue' : 'siguen'}` : '',
-    x.premios.length ? (x.premios.length === 2 ? 'los 2 premios' : x.premios[0] === 'doble' ? 'semana doble' : 'sin anuncios') : '',
-  ].filter(Boolean).join(' · ')}</span></div>`).join('');
-  const lectura = !filas.length ? 'Nadie ha compartido la app ni ha sacado su código todavía.'
-    : !T.entran ? 'Han invitado, pero ningún amigo ha entrado todavía con un código. Quien instala desde Google Play tiene que escribirlo a mano cuando la app se lo pregunta.' : '';
-  return tarjetaQ('Invitaciones', `${kpi}${filasH ? `<div class="q-inv-l">${filasH}</div>` : ''}`, lectura);
-}
 
 /**
  * Antes de entrar (7 días), sin saber de quién. (21 nov, tras el análisis del 21: «entra el 30 %» salía de dividir todas
@@ -1451,35 +1469,6 @@ export function embudoDatos(E, ahora) {
   const canales = EMB_CANALES.map(([t, k]) => ({ t, k, web: k.startsWith('web'), ...de(k) })).filter((c) => c.llegan || c.l || c.ok);
   const origenes = [...new Set(dias.flatMap((d) => Object.keys(d).filter((k) => k.startsWith('o:'))))].map((k) => ({ t: k.slice(2), k, web: true, ...de(k) })).sort((x, y) => y.llegan - x.llegan);
   return { canales, origenes };
-}
-const pctQ = (a, b) => (b > 0 ? `${Math.round((a / b) * 100)} %` : '—');
-function embudoFila(c, { origen = false } = {}) {
-  const paso = (n, t) => `<span><b>${n == null ? '—' : n}</b>${t}</span>`;
-  const pasos = c.web
-    ? [paso(c.llegan, 'llegan'), paso(c.ven, 'ven entrar'), paso(c.l, 'abren LaLiga'), paso(c.v, 'vuelven'), paso(c.p, 'pegan'), paso(c.ok, 'entran')]
-    : [paso(c.ver, 'ven entrar'), paso(c.l, 'le dan'), paso(c.ok, 'entran')];
-  const notas = [
-    !c.web && c.vuelve ? `Vuelven sin el código: <b>${c.vuelve}</b>` : '',
-    c.web && c.play ? `Tocan Google Play: <b>${c.play}</b>` : '',
-    c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
-    c.ok > c.l ? `Entran más de los que le dan: <b>${c.ok - c.l}</b> con un código o por otro camino` : '',
-    c.saf ? `Tocan «Abrir en Safari»: <b>${c.saf}</b>` : '',
-    c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
-    c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
-  ].filter(Boolean).join(' · ');
-  const sinRastro = !c.web && c.l ? Math.max(0, c.l - c.ok - c.vuelve - c.laliga - c.cancel - c.otros) : 0;
-  return `<div class="qe${origen ? ' qe-o' : ''}" data-canal="${esc(c.k)}">
-    <div class="qe-c"><b>${esc(c.t)}</b><span class="qe-r" title="entran / le dan"><b>${c.ok}</b> / ${c.l}<small>${c.ok > c.l ? '—' : pctQ(c.ok, c.l)}</small></span></div>
-    <div class="qe-p">${pasos.join('<i aria-hidden="true">›</i>')}</div>
-    ${notas || sinRastro ? `<p class="qe-x">${notas}${sinRastro ? `${notas ? ' · ' : ''}Sin rastro: <b>${sinRastro}</b>` : ''}</p>` : ''}
-  </div>`;
-}
-function embudoQ(E, ahora) {
-  const { canales, origenes } = embudoDatos(E, ahora);
-  if (!canales.length) return '';
-  let h = `<p class="qe-l">A la derecha, <b>entran / le dan</b>: de los que abren LaLiga, cuántos acaban dentro.</p>${canales.map((c) => embudoFila(c)).join('')}`;
-  if (origenes.length) h += `<h4 class="qe-h">Por campaña</h4>${origenes.map((c) => embudoFila(c, { origen: true })).join('')}`;
-  return tarjetaQ('Antes de entrar · 7 días', h);
 }
 
 function cuentasQ(S, lista, ahora, minPlay) {
@@ -1532,7 +1521,7 @@ function filaQuien(nombre, equipo, x, ahora, minPlay) {
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
   const marcas = [diaDe(x.ultima) === diaDe(ahora) ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
-  return `<div class="quien-f ${esta ? 'dentro' : 'si'}" data-b="${esc(norm(`${nombre} ${equipo || ''} ${x.equipo || ''} ${x.nombre || ''}`))}" data-f="${marcas}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${corto(x.segHoy)}` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
+  return `<div class="quien-f ${esta ? 'dentro' : 'si'}" data-b="${esc(norm(`${nombre} ${equipo || ''} ${x.equipo || ''} ${x.nombre || ''}`))}" data-f="${marcas}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${minQ(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 
 /** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */
