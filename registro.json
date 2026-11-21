@@ -2429,8 +2429,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
-   "SPORT|136589952": 1795022314000,
    "SPORT|136576189": 1795023205000,
    "SPORT|136592925": 1795023498000,
    "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
@@ -2658,20 +2656,6 @@
     "motivo": "molestias con su selección",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136589952",
-    "medio": "SPORT",
-    "t": 1795022314000,
-    "id": "3079",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lookman sufre un esguince y se pierde el próximo partido",
-    "motivo": "esguince de rodilla de alto grado",
-    "plazo": "",
-    "nums": [
-     2
-    ]
    },
    {
     "guid": "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/",
@@ -4704,8 +4688,8 @@
    "fin": 1795272973873
   },
   "13|123": {
-   "h": "000d7b575265",
-   "desde": 1795281373469,
+   "h": "f6da482fb065",
+   "desde": 1795281673222,
    "fin": 1795281071838
   }
  },
@@ -8928,13 +8912,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4870,
+   "ok": 4871,
    "fallos": 0,
-   "ejecuciones": 4009,
+   "ejecuciones": 4010,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:16:12.547Z"
+   "ultima": "2026-11-21T17:21:12.618Z"
   }
  },
  "ptsDirecto": {
@@ -9000,27 +8984,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:16:21.343Z"
+   "ultimaBien": "2026-11-21T17:21:19.353Z"
   }
  },
  "avisos": [
