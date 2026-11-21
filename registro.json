@@ -2319,7 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-gran-diferencia-alineacion_0_2008526265.html": 1794998631000,
    "AS|https://as.com/futbol/primera/es-la-hora-de-mikautadze-f202611-n/": 1795000732000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252548/vivir-ambiente-hostil.html": 1794999663000,
@@ -8662,13 +8661,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4742,
+   "ok": 4743,
    "fallos": 0,
-   "ejecuciones": 3928,
+   "ejecuciones": 3929,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T10:36:10.854Z"
+   "ultima": "2026-11-21T10:41:18.121Z"
   }
  },
  "ptsDirecto": {
@@ -8698,15 +8697,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:36:13.583Z"
+   "ultimaBien": "2026-11-21T10:41:22.476Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:36:13.583Z"
+   "ultimaBien": "2026-11-21T10:41:22.476Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:36:13.583Z"
+   "ultimaBien": "2026-11-21T10:41:22.476Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8714,11 +8713,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:36:13.583Z"
+   "ultimaBien": "2026-11-21T10:41:22.476Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:36:13.583Z"
+   "ultimaBien": "2026-11-21T10:41:22.476Z"
   }
  },
  "avisos": [
