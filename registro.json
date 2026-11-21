@@ -4408,7 +4408,8 @@
    "fallos": 0
   },
   "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277474630
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277474630,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277776022
   }
  },
  "ia": {
@@ -8918,13 +8919,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4843,
+   "ok": 4845,
    "fallos": 0,
-   "ejecuciones": 3995,
+   "ejecuciones": 3996,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:11:14.630Z"
+   "ultima": "2026-11-21T16:16:16.022Z"
   }
  },
  "ptsDirecto": {
@@ -8990,27 +8991,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:11:20.453Z"
+   "ultimaBien": "2026-11-21T16:16:23.993Z"
   }
  },
  "avisos": [
