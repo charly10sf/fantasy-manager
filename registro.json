@@ -2321,7 +2321,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252482/fifa-tendra-indemnizar-atletico-lookman-11-diciembre.html": 1794993019000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261118/1004252476/julian-coge-fuerza-costa-rica-vuelve-enchufado-atletico.html": 1794992694000,
-   "SPORT|136565913": 1794992270000,
    "AS|https://as.com/futbol/primera/vuelve-aubameyang-casado-y-gimenez-los-dilemas-f202611-n/": 1794995998000,
    "SPORT|136568609": 1794993321000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000,
@@ -8733,13 +8732,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4722,
+   "ok": 4723,
    "fallos": 0,
-   "ejecuciones": 3908,
+   "ejecuciones": 3909,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T08:56:13.617Z"
+   "ultima": "2026-11-21T09:01:23.348Z"
   }
  },
  "ptsDirecto": {
@@ -8769,15 +8768,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:56:19.036Z"
+   "ultimaBien": "2026-11-21T09:01:28.348Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:56:19.036Z"
+   "ultimaBien": "2026-11-21T09:01:28.348Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:56:19.036Z"
+   "ultimaBien": "2026-11-21T09:01:28.348Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8785,11 +8784,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:56:19.036Z"
+   "ultimaBien": "2026-11-21T09:01:28.348Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:56:19.036Z"
+   "ultimaBien": "2026-11-21T09:01:28.348Z"
   }
  },
  "avisos": [
