@@ -3636,7 +3636,8 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .banda-inv .ic { color: var(--oro); }
 .sup-btns [hidden] { display: none !important; }
 .sup-toca { cursor: pointer; }
-.sup-toca::after { content: '↻'; display: inline-block; margin-left: 6px; color: var(--texto2); font-weight: 700; }
-.sup-toca.girando::after { animation: sup-gira 0.9s linear infinite; }
+.sup-gir { display: inline-flex; flex: none; margin-left: 2px; color: var(--texto2); }
+.sup-gir .ic { width: 15px; height: 15px; stroke-width: 2.2; transform-origin: 50% 50%; }
+.sup-toca.girando .sup-gir .ic { animation: sup-gira 0.9s linear infinite; }
 @keyframes sup-gira { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .sup-toca.girando::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sup-toca.girando .sup-gir .ic { animation: none; } }

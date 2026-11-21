@@ -1073,6 +1073,9 @@ function pintarSup() {
     ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin conexión' : 'Sin actualizar'} · ${diaDe(D.t) === diaDe() ? horaDe(D.t) : hace}`
     : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${hace}`
       : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : corto ? `Hace ${hace}` : `Actualizado ${hace}`) : ''}`;
+  // (21 nov, Carlos: «el logo de recargar se bugea cuando sale actualizando») la flecha de actualizar es un icono de verdad:
+  // el carácter ↻ girando se salía de su sitio y se cortaba, porque la letra no gira sobre su centro
+  { const st = $('#supEstado'); if (st && st.classList.contains('sup-toca')) st.insertAdjacentHTML('beforeend', `<i class="sup-gir" aria-hidden="true">${icono('refrescar')}</i>`); }
   $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   { const st = $('#supEstado'); if (st) st.classList.toggle('girando', !!S.cargando); }
