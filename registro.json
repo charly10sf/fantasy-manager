@@ -2716,7 +2716,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000,
+   "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000
   },
   "hechos": [
    {
@@ -3556,7 +3558,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -9038,13 +9040,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4926,
+   "ok": 4927,
    "fallos": 0,
-   "ejecuciones": 4041,
+   "ejecuciones": 4042,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:56:16.186Z"
+   "ultima": "2026-11-21T20:01:13.813Z"
   }
  },
  "ptsDirecto": {
@@ -9134,27 +9136,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:56:39.217Z"
+   "ultimaBien": "2026-11-21T20:01:46.317Z"
   }
  },
  "avisos": [
