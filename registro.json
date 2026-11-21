@@ -2464,7 +2464,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261118/1004252708/satriano-vuelve-tirar-ataque-getafe.html": 1795029584000,
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261118/1004252746/gimenez-tendra-entrenamiento-depor-visitar-alaves.html": 1795034253000,
@@ -8945,13 +8944,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4913,
+   "ok": 4915,
    "fallos": 0,
-   "ejecuciones": 4032,
+   "ejecuciones": 4033,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:11:11.987Z"
+   "ultima": "2026-11-21T19:16:13.418Z"
   }
  },
  "ptsDirecto": {
@@ -9029,27 +9028,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:11:21.163Z"
+   "ultimaBien": "2026-11-21T19:16:23.743Z"
   }
  },
  "avisos": [
