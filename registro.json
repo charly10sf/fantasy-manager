@@ -2435,7 +2435,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136576189": 1795023205000,
    "SPORT|136592925": 1795023498000,
    "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
    "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
@@ -2648,7 +2647,8 @@
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000,
    "SPORT|136702543": 1795276838000,
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000
   },
   "hechos": [
    {
@@ -3476,7 +3476,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -4384,16 +4384,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 43,
-   "revisar": 18,
+   "redactar": 46,
+   "revisar": 21,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 688629,
-  "salida": 26309,
-  "cacheLee": 31933,
+  "entrada": 733927,
+  "salida": 27912,
+  "cacheLee": 40642,
   "cacheEscribe": 20321,
-  "dolares": 1.412484,
+  "dolares": 1.51998,
   "reservado": 0
  },
  "recientes": {
@@ -4932,9 +4932,9 @@
    "ultima": "2026-11-20T11:56:43.549Z"
   },
   "final|123": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-21T17:31:52.201Z",
-   "ultima": "2026-11-21T17:31:52.201Z"
+   "ultima": "2026-11-21T17:36:35.904Z"
   }
  },
  "rasgos": {
@@ -8911,13 +8911,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4873,
+   "ok": 4875,
    "fallos": 0,
-   "ejecuciones": 4012,
+   "ejecuciones": 4013,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:31:22.176Z"
+   "ultima": "2026-11-21T17:36:12.966Z"
   }
  },
  "ptsDirecto": {
@@ -8983,27 +8983,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:32:03.081Z"
+   "ultimaBien": "2026-11-21T17:37:10.589Z"
   }
  },
  "avisos": [
