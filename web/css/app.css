@@ -2851,10 +2851,6 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .qj-bien { color: var(--sube); } .qj-duda { color: var(--oro); } .qj-mal { color: var(--apagado); }
 
 /* panel de entrar de la web en el ordenador: pestañas «Soy nuevo» / «Ya tengo la app» y pasos numerados con la misma tarjeta */
-.ent-tabs { display: flex; gap: 4px; padding: 4px; margin: 0 0 18px; border-radius: var(--r-tarj); background: var(--fondo); border: 1px solid var(--linea); }
-.ent-tabs button { flex: 1; min-height: 46px; text-align: center; border: 0; border-radius: var(--r-ctl); background: transparent; color: var(--texto2); font: 700 var(--t-sec) var(--cond); text-transform: uppercase; letter-spacing: 0.6px; cursor: pointer; transition: background 0.2s, color 0.2s; }
-.ent-tabs button:hover { color: var(--texto); }
-.ent-tabs button[aria-selected="true"] { background: var(--rojo-btn); color: #fff; }
 .ent-pan { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; text-align: left; }
 .ent-pan[hidden] { display: none; }
 .ent-paso { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; padding: 16px; border-radius: var(--r-tarj); border: 1px solid var(--linea); background: rgba(255, 255, 255, 0.03); }
@@ -3472,14 +3468,13 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .ed .ed-mano ol { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 6px; }
 .ed .ed-mano li { color: var(--texto2); font-size: var(--t-sec2); line-height: 1.5; }
 .ed a:not(.btn) { color: var(--rojo-l); text-decoration: underline; text-underline-offset: 3px; }
-.entrar-movil .ed a:not(.btn), .entrar-movil .em-aviso a { color: #9cc8ff; text-decoration: underline; text-underline-offset: 3px; }
-.entrar-movil .em-aviso { margin: 0; font-size: var(--t-sec2); }
-.entrar-movil .em-aviso .ic { color: #9cc8ff; }
+.plat-ios .ed a:not(.btn), .plat-ios .em-aviso a, .plat-ios .plat-guia { color: #9cc8ff; text-decoration: underline; text-underline-offset: 3px; }
+.plat-ios .em-aviso { margin: 0; font-size: var(--t-sec2); }
+.plat-ios .em-aviso .ic { color: #9cc8ff; }
 /* el foco del teclado en todo lo de entrar (en el móvil no había aro: solo lo llevaba el escritorio) */
 .pant-d :focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .pant-d input:focus-visible { outline: none; }
 .pant-d .sin-app > summary { min-height: 48px; padding: 0; }
-.pant-d .ent-tabs button { min-height: 48px; }
 /* la flecha de lo que se despliega en la entrada (el marcador de serie está quitado) */
 .pant-d .sin-app > summary::after, .ed .ed-ayuda > summary::after, .ed .ed-mano > summary::after { content: ''; flex: none; width: 8px; height: 8px; margin-left: auto; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); transition: transform 0.15s; }
 .pant-d .sin-app[open] > summary::after, .ed .ed-ayuda[open] > summary::after, .ed .ed-mano[open] > summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
@@ -3491,3 +3486,35 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .pant-d .peq a, .pant-d .em-aviso a { text-decoration: underline; text-underline-offset: 3px; }
 .pant-d .sin-app[open] { padding-bottom: 12px; }
 .pant-d .sin-app[open] > .ed { padding-bottom: 2px; }
+
+/* ---------------- Android y Apple, cada uno en su bloque (Carlos, 21 nov) ----------------
+   Dos recuadros con su logo y su color: verde de Android, con la insignia de Google Play para descargar la app; azul de
+   Apple, con los tres pasos para entrar desde la web. Que nadie tenga que adivinar cuál es el suyo. */
+.plat { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; margin: 0 0 12px; padding: 16px; border-radius: var(--r-tarj); text-align: left; }
+.plat-and { background: rgba(61, 220, 132, 0.07); border: 1px solid rgba(61, 220, 132, 0.5); }
+.plat-ios { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.55); }
+.plat .plat-c { display: flex; align-items: center; gap: 12px; }
+.plat .ent-logo { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--r-ctl); background: var(--plano3); }
+.plat .ent-logo svg { width: 28px; height: 28px; display: block; }
+.plat-and .ent-logo { color: #3ddc84; }
+.plat-ios .ent-logo { color: #fff; }
+.plat .plat-n { margin: 0; font: 700 var(--t-cifra)/1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.plat .plat-s { margin: 4px 0 0; font-size: var(--t-sec2); line-height: 1.4; color: var(--texto2); }
+.plat .plat-s b, .plat .plat-fila-t b { color: var(--texto); }
+.plat.chico { gap: 12px; padding: 14px; }
+.plat.chico .plat-n { font-size: var(--t-sec); }
+.plat .play-badge { margin: 0; }
+.plat .play-badge img { width: 170px; }
+.plat .play-badge.grande { margin: 0 auto; }
+.plat .play-badge.grande img { width: min(250px, 72vw); }
+.plat .play-badge:focus-visible { outline: 2px solid #fff; }
+.plat .plat-fila { display: flex; align-items: center; gap: 14px; }
+.plat .plat-fila .en-apk-qr { width: 104px; height: 104px; }
+.plat .plat-fila .en-apk-qr svg.qr { width: 104px; height: 104px; }
+.plat .plat-fila-t { display: grid; gap: 8px; min-width: 0; }
+.plat .plat-fila-t p { margin: 0; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto2); }
+.plat .plat-movil { padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.plat .plat-guia { display: inline-flex; align-items: center; min-height: 44px; margin: -10px 0; font: 600 var(--t-sec2) 'Barlow', sans-serif; text-decoration: underline; text-underline-offset: 3px; }
+.plat .sin-app { margin: 0; }
+.plat .sin-app .entrar-qr, .plat .sin-app .entrar-codigo { background: none; border: 0; padding: 0; margin: 0 0 12px; }
+.plat .sin-app[open] > .entrar-codigo:last-child { margin-bottom: 0; }

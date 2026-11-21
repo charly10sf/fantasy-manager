@@ -105,10 +105,9 @@ function pantallaEntrar(error = '') {
   // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta
   pintarEstado();
   marcarPaso('ver', { una: true });
-  // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12)
-  if (!enApp && !movilDe()) iniciarQR(); else pararQR();
-  // en el ordenador, con la pestaña de la app elegida, el cursor directamente en el código; en el móvil no (sacaría el teclado)
-  if (!enApp && !movilDe() && LS.get('entTab') === 'app') setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus({ preventScroll: true }); }, 50);
+  // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12) va plegado en el bloque de Android: se
+  // pide y se espera al móvil solo mientras está desplegado (el «toggle» de más abajo)
+  pararQR();
   // (0.8l) en la web, el enlace a LaLiga en su botón y, si ya se abrió, el paso de pegar por delante
   if (!enApp) prepararEntrada();
 }
@@ -195,7 +194,7 @@ const hayPegar = () => !!(navigator.clipboard && typeof navigator.clipboard.read
  * #vueltaWeb por pantalla. El enlace de «Abrir LaLiga» es un <a target="_blank"> de verdad (lo rellena prepararEntrada): no
  * depende de window.open, que Safari puede parar. El cuadro de pegar está siempre a la vista: vale sin portapapeles.
  */
-function entrarDirectoHTML(plat, { intro = '' } = {}) {
+function entrarDirectoHTML(plat, { cab = '' } = {}) {
   const tecla = (t) => `<kbd>${t}</kbd>`;
   const copiar = esMac() ? `${tecla('⌘')} + ${tecla('C')}` : `${tecla('Ctrl')} + ${tecla('C')}`;
   const pegar = esMac() ? `${tecla('⌘')} + ${tecla('V')}` : `${tecla('Ctrl')} + ${tecla('V')}`;
@@ -221,8 +220,8 @@ function entrarDirectoHTML(plat, { intro = '' } = {}) {
         </details>`
     : `<p>Mientras tanto puedes entrar con un código: ${plat === 'iphone' ? 'mira «Entrar con un código», más abajo' : 'mira «Ya tengo la app y quiero usar la web», justo encima'}. O entra desde un ordenador, que tiene un método a mano.</p>`;
   return `<section class="ed" id="entrarDirecto" data-plat="${plat}" aria-labelledby="edT">
-    <h2 class="ed-t" id="edT">${plat === 'iphone' ? APPLE : icono('usuario')}Entra con tu cuenta de LaLiga</h2>
-    <p class="ed-i">${intro}Son tres pasos y solo se hace una vez. La contraseña la escribes en la página de LaLiga, nunca aquí.</p>
+    ${cab || `<h2 class="ed-t" id="edT">${icono('usuario')}Entra con tu cuenta de LaLiga</h2>`}
+    <p class="ed-i">Son tres pasos y solo se hace una vez. La contraseña la escribes en la página de LaLiga, nunca aquí.</p>
     ${avisoAjena}
     <ol class="ed-pasos" role="list">
       <li><span class="ed-n" aria-hidden="true">1</span><div class="ed-c">
@@ -287,7 +286,6 @@ function entradaAbierta({ alVolver = false } = {}) {
   if (!alVolver || S.entrandoWeb) return;
   // que se vea: si está dentro de un desplegable o en la otra pestaña, se abre
   const d = c.closest('details'); if (d) d.open = true;
-  const pan = c.closest('.ent-pan'); if (pan && pan.hidden) elegirEntTab('nuevo');
   const err = $('#vueltaErr');
   if (!err || err.hidden) estadoVuelta(p ? '¿Ya has copiado la dirección? Pulsa «Pegar y entrar».' : '¿Ya has copiado la dirección? Pégala en el cuadro.');
   const foco = p || $('#vueltaWeb');
@@ -341,67 +339,71 @@ async function entrarConVuelta(txt) {
   marcarPaso('ok');
   try { contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); } finally { S.entrandoWeb = false; }
 }
-/** las dos pestañas de la entrada del ordenador */
-function elegirEntTab(t, { foco = false } = {}) {
-  LS.set('entTab', t);
-  document.querySelectorAll('.ent-tabs [data-tab]').forEach((b) => { const on = b.dataset.tab === t; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on && foco) b.focus(); });
-  const pn = $('#entPanNuevo'), pa = $('#entPanApp');
-  if (pn) pn.hidden = t !== 'nuevo';
-  if (pa) pa.hidden = t !== 'app';
+/**
+ * (Carlos, 21 nov: «claramente separado»: lo de Android para descargar, con el logo de Google Play, y lo de Apple con el
+ * logo de Apple para que entren desde ahí.) Dos bloques con su logo y su color en las tres pantallas de la web, cada uno
+ * con una sola cosa que hacer: Android → la app de Google Play; Apple → entrar aquí, en la web. El de tu dispositivo va
+ * entero y el otro, en corto.
+ */
+const cabPlat = (logo, nombre, sub, id = '') => `<div class="plat-c"><span class="ent-logo">${logo}</span><div><h2 class="plat-n"${id ? ` id="${id}"` : ''}>${nombre}</h2><p class="plat-s">${sub}</p></div></div>`;
+/** el bloque de Android. plat: desde dónde se mira ('android' | 'iphone' | 'pc') */
+function bloqueAndroid(plat) {
+  if (plat === 'android') {
+    return `<section class="plat plat-and" aria-labelledby="platAndT">
+      ${cabPlat(ANDROID, 'Android', 'Descarga la app. Es gratis, se instala en un minuto y entras con tu cuenta de LaLiga, sin copiar nada.', 'platAndT')}
+      ${botonPlay('grande')}
+      <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>
+      <details class="sin-app"><summary>Entrar aquí, sin instalar la app</summary>${entrarDirectoHTML('android')}</details>
+    </section>`;
+  }
+  if (plat === 'iphone') {
+    return `<section class="plat plat-and chico" aria-labelledby="platAndT">
+      ${cabPlat(ANDROID, 'Android', 'Para Android hay app, en Google Play.', 'platAndT')}
+      ${botonPlay()}
+    </section>`;
+  }
+  // en el ordenador: el QR de la tienda para la cámara del móvil, la insignia y, plegado, entrar aquí con la app que ya se tiene
+  return `<section class="plat plat-and" aria-labelledby="platAndT">
+    ${cabPlat(ANDROID, 'Android', 'Descarga la app en Google Play. Es gratis.', 'platAndT')}
+    <div class="plat-fila">
+      <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a Fantasy Manager en Google Play">${qrSVG(PLAY_URL)}</div>
+      <div class="plat-fila-t"><p>Escanea el QR con la cámara del móvil, o pulsa:</p>${botonPlay()}</div>
+    </div>
+    <details class="sin-app" id="detApp"><summary>Ya tengo la app: abrirla también en este ordenador</summary>
+      ${qrEntrarHTML()}${codigoWebHTML()}</details>
+  </section>`;
+}
+/** el bloque de Apple: en el iPhone y en el ordenador, los tres pasos para entrar aquí; en un Android, dos líneas */
+function bloqueApple(plat) {
+  if (plat === 'android') {
+    return `<section class="plat plat-ios chico" aria-labelledby="platIosT">
+      ${cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: en el iPhone se abre <b>fantasymanagerapp.com</b> en Safari y se entra desde allí.', 'platIosT')}
+    </section>`;
+  }
+  if (plat === 'iphone') {
+    // Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari: todo (abrir y pegar) se hace en el
+    // mismo sitio, y por eso se avisa de añadirla antes; el aviso va debajo, sin estorbar
+    return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}
+      ${enInicio() ? '' : `<p class="em-aviso">${icono('nota')} <span><b>¿La quieres como una app?</b> Añádela a la pantalla de inicio <b>antes de entrar</b> (Compartir → Añadir a pantalla de inicio) y entra desde el icono; si no, luego te tocará entrar otra vez. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}</div>`;
+  }
+  return `<div class="plat plat-ios">${entrarDirectoHTML('pc', { cab: cabPlat(APPLE, 'iPhone y ordenador', 'No hay app en la App Store: se entra desde la web, aquí mismo, con tu cuenta de LaLiga.', 'edT') })}
+    <div class="plat-fila plat-movil">
+      <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(DOMINIO)}</div>
+      <div class="plat-fila-t"><p><b>¿La quieres en el iPhone?</b> Escanea el QR con su cámara (o abre <b>fantasymanagerapp.com</b> en Safari) y entra allí con los mismos tres pasos.</p><a class="plat-guia" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
+    </div></div>`;
 }
 function entrarWebHTML() {
   const movil = movilDe();
-  if (movil === 'android') {
-    return `<a class="btn ancho cta-grande" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a>
-    <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin copiar nada.</p>
-    ${botonDemo('sec')}
-    <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>
-    <details class="sin-app"><summary>Entrar aquí, sin instalar la app</summary>${entrarDirectoHTML('android')}</details>`;
-  }
+  if (movil === 'android') return `${bloqueAndroid('android')}${bloqueApple('android')}${botonDemo('sec')}`;
   if (movil === 'iphone') {
-    // El iPhone entra directo, sin ordenador. Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari:
-    // todo (abrir y pegar) se hace en el mismo sitio, y por eso se avisa de añadirla antes; el aviso va debajo, sin estorbar
-    return `<div class="entrar-movil">${entrarDirectoHTML('iphone', { intro: 'No hay app en la App Store: Fantasy Manager se usa desde Safari. ' })}
-      ${enInicio() ? '' : `<p class="em-aviso">${icono('nota')} <span><b>¿La quieres como una app?</b> Añádela a la pantalla de inicio <b>antes de entrar</b> (Compartir → Añadir a pantalla de inicio) y entra desde el icono; si no, luego te tocará entrar otra vez. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}</div>
+    return `${bloqueApple('iphone')}${bloqueAndroid('iphone')}
     ${botonDemo('sec')}
     <details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
   }
-  // En el ordenador, dos pestañas: «Entrar aquí» (lo primero, los tres pasos; debajo, la liga de ejemplo y la app para el
-  // móvil) y «Con la app del móvil» (el QR y el código de siempre, la alternativa para quien ya tiene la app)
-  const tabApp = LS.get('entTab') === 'app';
-  return `<div class="ent-tabs" role="tablist" aria-label="Cómo quieres entrar">
-    <button type="button" role="tab" id="entTabNuevo" aria-selected="${!tabApp}" tabindex="${tabApp ? -1 : 0}" aria-controls="entPanNuevo" data-accion="entTab" data-tab="nuevo">Entrar aquí</button>
-    <button type="button" role="tab" id="entTabApp" aria-selected="${tabApp}" tabindex="${tabApp ? 0 : -1}" aria-controls="entPanApp" data-accion="entTab" data-tab="app">Con la app del móvil</button></div>
-  <div class="ent-pan" id="entPanNuevo" role="tabpanel" aria-labelledby="entTabNuevo"${tabApp ? ' hidden' : ''}>
-    <div class="ent-paso">${entrarDirectoHTML('pc')}</div>
+  return `${bloqueAndroid('pc')}${bloqueApple('pc')}
     <section class="ent-paso" aria-labelledby="entVerT"><div class="ent-ca"><h2 id="entVerT">¿Solo quieres verla?</h2></div>
       <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
-      <button class="btn ancho sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>
-    <section class="ent-paso" aria-labelledby="entMovT"><div class="ent-ca"><h2 id="entMovT">Llévala en el móvil</h2></div>
-      <div class="ent-dos">
-      <div class="ent-op ent-and">
-        <div class="ent-oc"><span class="ent-logo">${ANDROID}</span><div><b class="ent-ot">Android</b><span class="ent-os">Está en Google Play. Es gratis.</span></div></div>
-        <div class="en-apk">
-          <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a Fantasy Manager en Google Play">${qrSVG(PLAY_URL)}</div>
-          <ol class="ent-pasos"><li><span class="ent-sn" aria-hidden="true">1</span><span>Escanea el QR con la cámara del móvil, o pulsa el botón.</span></li><li><span class="ent-sn" aria-hidden="true">2</span><span>Se abre Google Play: pulsa <b>Instalar</b>.</span></li></ol>
-        </div>
-        ${botonPlay()}
-      </div>
-      <div class="ent-op en-ios">
-        <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari.</span></div></div>
-        <div class="en-apk">
-          <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(DOMINIO)}</div>
-          <ol class="ent-pasos"><li><span class="ent-sn" aria-hidden="true">1</span><span>Escanea el QR con la cámara del iPhone (o abre <b>fantasymanagerapp.com</b> en Safari).</span></li><li><span class="ent-sn" aria-hidden="true">2</span><span>Entra allí con tu cuenta de LaLiga: son los mismos tres pasos.</span></li></ol>
-        </div>
-        <div class="en-ios-b"><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
-      </div>
-      </div>
-    </section>
-  </div>
-  <div class="ent-pan" id="entPanApp" role="tabpanel" aria-labelledby="entTabApp"${tabApp ? '' : ' hidden'}>
-    <section class="ent-paso" aria-labelledby="entQrT"><div class="ent-ca"><h2 id="entQrT">Escanea con la app</h2></div>${qrEntrarHTML(false)}</section>
-    <section class="ent-paso" aria-labelledby="entCodT"><div class="ent-ca"><h2 id="entCodT">O con el código</h2></div>${codigoWebHTML(false)}</section>
-  </div>`;
+      <button class="btn ancho sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>`;
 }
 /**
  * El QR del ordenador (0.6.12): un id al azar de 128 bits en un enlace a la web (si alguien lo escanea con la cámara
@@ -2975,6 +2977,11 @@ window.fotosApp = (lista, error) => {
   if (Array.isArray(lista) && lista.length) anadirFotos(lista, prepararB64);
 };
 /* ---------------- la entrada de la web: pegar y volver (0.8l) ---------------- */
+// «Ya tengo la app» del ordenador: el QR se pide al desplegarlo y se deja de esperar al móvil al plegarlo
+document.addEventListener('toggle', (ev) => {
+  if (!ev.target || ev.target.id !== 'detApp') return;
+  if (ev.target.open) iniciarQR(); else pararQR();
+}, true);
 // Pegar en el cuadro o en cualquier parte de la pantalla de entrar (Ctrl+V sin apuntar a nada) entra directamente, sin
 // pulsar «Entrar». En otro cuadro (el del código de la app) no se toca nada.
 document.addEventListener('paste', (ev) => {
@@ -3400,12 +3407,6 @@ document.addEventListener('click', async (ev) => {
     }
     case 'copiarWeb': copiarY(DOMINIO, 'Copiada: pégala en tu navegador'); break;
     case 'mirarEstado': pintarEstado(true); break;
-    case 'entTab': {
-      const t = d.tab === 'app' ? 'app' : 'nuevo';
-      elegirEntTab(t);
-      if (t === 'app') { const c = $('#codigoWeb'); if (c) c.focus({ preventScroll: true }); }
-      break;
-    }
     case 'entrarDemo': { if (!haySesion()) marcarPaso('demo', { una: true }); const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -3837,12 +3838,6 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && ev.target && ev.target.matches && ev.target.matches('input[data-cambia="apodo"]')) { ev.preventDefault(); ev.target.blur(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'vueltaWeb') { ev.preventDefault(); entrarConVuelta(ev.target.value); return; }
-  // las pestañas de la entrada del ordenador, con las flechas (y Inicio y Fin), como manda el patrón de pestañas
-  if (ev.target && ev.target.matches && ev.target.matches('.ent-tabs [role="tab"]') && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) {
-    ev.preventDefault();
-    const a = ev.key === 'Home' ? 'nuevo' : ev.key === 'End' ? 'app' : ev.target.dataset.tab === 'app' ? 'nuevo' : 'app';
-    elegirEntTab(a, { foco: true });
-  }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'invCod') { ev.preventDefault(); const b = $('[data-accion="canjearInv"]'); if (b) b.click(); }
 });
 // el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)

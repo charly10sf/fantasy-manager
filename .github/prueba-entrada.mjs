@@ -270,15 +270,34 @@ async function probar(motor, disp) {
     mira(a11y.letra >= 16, `${T} la letra del cuadro es de ${a11y.letra} px (con menos de 16, el iPhone amplía la página)`);
     mira(a11y.lista && a11y.titulo && a11y.dibs === 0 && a11y.svgSueltos === 0, `${T} los pasos son una lista con título y el dibujo tiene su texto alternativo`);
     mira(!a11y.oficial, `${T} los tres pasos no llaman «oficial» a nada`);
+    // Android y Apple, cada uno en su bloque, con su logo; el del dispositivo desde el que se mira va primero (en el ordenador, Android)
+    const bloques = await p.evaluate(() => {
+      const and = document.querySelector('#entrar .plat-and'), ios = document.querySelector('#entrar .plat-ios');
+      if (!and || !ios) return null;
+      return {
+        andAntes: !!(and.compareDocumentPosition(ios) & Node.DOCUMENT_POSITION_FOLLOWING),
+        play: !!and.querySelector('a.play-badge[href*="play.google.com/store/apps/details"] img[alt*="Google Play"]'),
+        logoAnd: !!and.querySelector('.plat-c .ent-logo svg.an'), logoIos: !!ios.querySelector('.plat-c .ent-logo svg.ap'),
+        nombres: [and.querySelector('h2').textContent, ios.querySelector('h2').textContent],
+        playEnApple: !!ios.querySelector('a[href*="play.google.com"]'),
+        pasosEnApple: !!ios.querySelector('#entrarDirecto'),
+      };
+    });
+    mira(bloques && bloques.play && bloques.logoAnd && bloques.nombres[0] === 'Android' && !bloques.playEnApple, `${T} el bloque de Android lleva su logo y la insignia de Google Play, y solo él`);
+    mira(bloques && bloques.logoIos && /^iPhone/.test(bloques.nombres[1]) && bloques.pasosEnApple === (disp !== 'android'), `${T} el bloque de Apple lleva su logo${disp === 'android' ? ' y dice que se entra desde Safari' : ' y dentro, los tres pasos para entrar'}`);
+    mira(bloques && bloques.andAntes === (disp !== 'iphone'), `${T} ${disp === 'iphone' ? 'primero el de Apple y debajo el de Android' : 'primero el de Android y debajo el de Apple'}`);
     if (disp === 'pc') {
-      // el tabulador: las pestañas (una sola parada), abrir, pegar, el cuadro, entrar y la ayuda, en ese orden
-      await p.focus('#entTabNuevo');
+      // el tabulador dentro de los tres pasos: abrir, pegar, el cuadro, entrar y la ayuda, en ese orden
+      await p.focus('#edAbrir');
       const orden = [];
-      for (let i = 0; i < 5; i++) { await p.keyboard.press('Tab'); orden.push(await p.evaluate(() => (document.activeElement.id || document.activeElement.tagName))); }
-      mira(orden.join(' ') === `edAbrir ${await p.locator('#edPegar').count() ? 'edPegar ' : ''}vueltaWeb edEntrar SUMMARY${await p.locator('#edPegar').count() ? '' : ' BUTTON'}`, `${T} el tabulador va en orden: ${orden.join(' → ')}`);
-      await p.focus('#entTabNuevo'); await p.keyboard.press('ArrowRight');
-      mira(await p.evaluate(() => document.activeElement.id === 'entTabApp' && !document.getElementById('entPanApp').hidden && document.getElementById('entPanNuevo').hidden && document.getElementById('entTabNuevo').tabIndex === -1), `${T} las pestañas se cambian con las flechas`);
-      await p.keyboard.press('Home');
+      for (let i = 0; i < 4; i++) { await p.keyboard.press('Tab'); orden.push(await p.evaluate(() => (document.activeElement.id || document.activeElement.tagName))); }
+      mira(orden.join(' ') === 'edPegar vueltaWeb edEntrar SUMMARY', `${T} el tabulador va en orden: ${orden.join(' → ')}`);
+      // «Ya tengo la app»: plegado no pide nada; al desplegarlo sale el QR para la app y el cuadro del código
+      mira(await p.evaluate(() => !document.getElementById('detApp').open && !document.querySelector('#eqQR svg')), `${T} el QR de la app va plegado y sin pedir nada`);
+      await p.click('#detApp > summary');
+      await p.waitForSelector('#eqQR svg', { timeout: 5000 }).catch(() => {});
+      mira(await p.evaluate(() => !!document.querySelector('#eqQR svg')) && await p.isVisible('#codigoWeb'), `${T} al desplegar «Ya tengo la app» salen el QR y el cuadro del código`);
+      await p.click('#detApp > summary');
       // pegar en cualquier parte de la pantalla (Ctrl + V sin apuntar a nada)
       k = await pkce(p);
       await pegar(p, null, 'una frase cualquiera');

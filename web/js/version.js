@@ -27,15 +27,15 @@ export const NOVEDADES = [
     // (21 nov, Carlos: «los inicios de sesión mejores, sin fallos y más intuitivos; desde iPhone no entra ni el 10 %») En la
     // web, al entrar con tu cuenta, LaLiga ya te devuelve a una página normal (no a la app del móvil), así que la dirección
     // con el código queda a la vista y se copia y se pega: por fin se puede entrar directo desde el iPhone, sin ordenador ni
-    // código. Y la entrada rehecha de arriba abajo (misma mañana, segunda pasada): tres pasos a la vista en iPhone y
-    // ordenador, «Pegar y entrar» de un toque (o pegando en el cuadro, que entra solo), los errores debajo del cuadro diciendo
+    // código. Y la entrada rehecha de arriba abajo (misma mañana, segunda pasada): Android (Google Play) y Apple (entrar
+    // aquí) en dos bloques separados con su logo, tres pasos a la vista en iPhone y ordenador, «Pegar y entrar» de un toque (o pegando en el cuadro, que entra solo), los errores debajo del cuadro diciendo
     // qué hacer, y accesible con teclado y lector de pantalla. `para: 'web'` (no cambia nada en Android) y sin `todos`: a los
     // demás no les sale salvo que Carlos lo diga. La hora, al publicar
     v: '0.8l', f: '2026-11-21', h: '10:59', t: 'Entrar en iPhone y ordenador, sin líos', para: 'web',
     cosas: [
       { tipo: 'nuevo', d: 'movil', t: 'Entrar desde el iPhone, directo', x: 'Hasta ahora, desde el iPhone casi no se podía entrar: LaLiga devolvía la sesión a su propia app y la web se quedaba fuera. Ahora son tres pasos: abres LaLiga y entras como siempre, copias la dirección de la página en la que acabas y vuelves a pegarla. Sin ordenador, sin código y sin instalar nada. Solo se hace una vez; después la sesión se renueva sola.' },
       { tipo: 'mejora', d: 'nota', t: 'Pegar y entrar, de un toque', x: 'Al volver de LaLiga hay un botón «Pegar y entrar» que lo hace todo. Si prefieres pegar tú la dirección en el cuadro, entra sola, sin pulsar nada más, aunque la copies con texto de más alrededor. Y si pegas otra cosa o el enlace ya no vale, te lo dice ahí mismo, con lo que tienes que hacer.' },
-      { tipo: 'mejora', d: 'movil', t: 'En el ordenador, entrar es lo primero', x: 'La pantalla de entrar del ordenador empieza por los tres pasos con tu cuenta de LaLiga; el QR y el código de la app del móvil siguen en su pestaña, «Con la app del móvil». Con la dirección copiada, basta volver a la web y pulsar Ctrl + V.' },
+      { tipo: 'mejora', d: 'movil', t: 'Android y iPhone, cada uno en su sitio', x: 'La pantalla de entrar de la web tiene dos bloques bien separados, cada uno con su logo: el de Android, con el botón de Google Play para descargar la app, y el de iPhone, con los tres pasos para entrar desde la web. En el ordenador se entra también desde el de iPhone; si ya tienes la app en Android, en su bloque está cómo abrirla en el ordenador con el QR o el código.' },
       { tipo: 'mejora', d: 'nota', t: 'Entrar con teclado y con lector de pantalla', x: 'Toda la pantalla de entrar se puede recorrer con el teclado, los botones son más grandes, los avisos se leen solos con el lector de pantalla y el dibujo de cada paso tiene su descripción.', menor: true },
     ],
   },
