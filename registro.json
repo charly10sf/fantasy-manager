@@ -1510,6 +1510,13 @@
    "jornada": 13,
    "id": "2124161338549186994",
    "t": "2026-11-21T15:21:43.208Z"
+  },
+  {
+   "clave": "final|130",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124162584299352193",
+   "t": "2026-11-21T15:26:40.255Z"
   }
  ],
  "estados": {
@@ -2610,7 +2617,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "SPORT|136697201": 1795264706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000
   },
   "hechos": [
    {
@@ -3505,7 +3513,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4405,17 +4413,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 24,
-   "redactar": 26,
-   "revisar": 10,
+   "clasificar": 25,
+   "redactar": 30,
+   "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 419192,
-  "salida": 19387,
-  "cacheLee": 14515,
+  "entrada": 481060,
+  "salida": 20923,
+  "cacheLee": 23224,
   "cacheEscribe": 14515,
-  "dolares": 0.845251,
+  "dolares": 0.980097,
   "reservado": 0
  },
  "recientes": {
@@ -4443,10 +4451,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-08T17:51:31.938Z",
-    "texto": "🏁 La Real Sociedad gana 1-0 al Rayo ⚡ en Anoeta y lo decide Oskarsson en el 67'.\n\nOskarsson se va a 13 puntos, más del triple de su media, y Barrenetxea llega a los mismos con más del doble de lo que suele dar. Remiro suma 12 bajo palos y Sucic 9: noche redonda para quien tenga realista.\n\nDel Rayo se salva Camello, que puntúa 6 aunque pierde, justo en su media."
-   },
-   {
     "t": "2026-11-08T19:57:04.351Z",
     "texto": "🏁 El Villarreal 🚢 se lleva el partido con dos goles en la recta final: Buchanan abrió en el 80' y C. Romero cerró en el 90+1'. 2-0 ante el Getafe en La Cerámica.\n\nRomero es el que más puntos ha sacado de los dos equipos: 16, más del triple de su media. Costa, con 13, también triplica la suya. Buchanan llega a esos mismos 13 con el gol del 1-0.\n\nDel Getafe se salva David Soria, 7 puntos pese a perder, en su media."
    },
@@ -4461,6 +4465,10 @@
    {
     "t": "2026-11-20T22:41:21.585Z",
     "texto": "🏁 El Espanyol gana 0-1 en San Mamés con un único gol, el de Roberto en el 66'.\n\nFortuño es el que más puntos ha sacado de los dos equipos: 14, y ya van tres jornadas seguidas con 8 o más. Roberto llega a 11, más del doble de lo que suele dar, así que noche gorda para quien tenga espanyolistas.\n\nEn el Athletic 🦁 se salva Nico Williams con 10 pese a perder, muy por encima de su media."
+   },
+   {
+    "t": "2026-11-21T15:26:40.258Z",
+    "texto": "🏁 El Alavés gana 3-1 al Deportivo en Mendizorroza: Ángel Pérez abrió en el 2', Lucas Boyé hizo el 2-1 en el 62' y Denis Suárez cerró en el 90'.\n\nPérez es el que más puntos ha sacado de los dos equipos: 14, más del doble de su media. Boyé suma 12 aunque antes, en el 55', le paró un penalti Leo Román. Blanco se lleva 11 sin marcar.\n\nDel Deportivo se salva Román con 9 puntos pese a perder, muy por encima de lo que suele dar. Su equipo empató con un gol en propia puerta de Tenaglia en el 41'."
    }
   ],
   "mvp": [
@@ -4947,11 +4955,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "final|130": {
-   "n": 1,
-   "t": "2026-11-21T15:21:27.154Z",
-   "ultima": "2026-11-21T15:21:27.154Z"
   }
  },
  "rasgos": {
@@ -8898,13 +8901,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4823,
+   "ok": 4825,
    "fallos": 0,
-   "ejecuciones": 3985,
+   "ejecuciones": 3986,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T15:21:10.953Z"
+   "ultima": "2026-11-21T15:26:11.915Z"
   }
  },
  "ptsDirecto": {
@@ -8958,27 +8961,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:21:44.150Z"
+   "ultimaBien": "2026-11-21T15:26:46.619Z"
   }
  },
  "avisos": [
