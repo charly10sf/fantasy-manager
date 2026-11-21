@@ -2733,7 +2733,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000,
    "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000,
+   "SPORT|136707103": 1795288603000
   },
   "hechos": [
    {
@@ -3573,7 +3574,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -9070,13 +9071,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4932,
+   "ok": 4934,
    "fallos": 0,
-   "ejecuciones": 4045,
+   "ejecuciones": 4046,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T20:16:12.149Z"
+   "ultima": "2026-11-21T20:21:16.702Z"
   }
  },
  "ptsDirecto": {
@@ -9178,27 +9179,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:16:25.814Z"
+   "ultimaBien": "2026-11-21T20:21:57.140Z"
   }
  },
  "avisos": [
