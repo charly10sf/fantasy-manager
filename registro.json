@@ -2658,7 +2658,9 @@
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
    "SPORT|136704189": 1795281115000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000
   },
   "hechos": [
    {
@@ -3470,11 +3472,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795284623000,
+    "id": "2403",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Copete regresa a los terrenos de juego",
+    "motivo": "lesion de menisco",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -8903,13 +8917,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4895,
+   "ok": 4897,
    "fallos": 0,
-   "ejecuciones": 4023,
+   "ejecuciones": 4024,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:26:11.909Z"
+   "ultima": "2026-11-21T18:31:14.475Z"
   }
  },
  "ptsDirecto": {
@@ -8975,27 +8989,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:26:21.598Z"
+   "ultimaBien": "2026-11-21T18:31:47.038Z"
   }
  },
  "avisos": [
