@@ -1649,6 +1649,20 @@
     "extra": 0,
     "jugador": "Carlos Espí"
    }
+  },
+  {
+   "clave": "final|122",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124268232462778462",
+   "t": "2026-11-21T22:26:28.675Z"
+  },
+  {
+   "clave": "mvp|122",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124268260103204949",
+   "t": "2026-11-21T22:26:35.202Z"
   }
  ],
  "estados": {
@@ -4426,9 +4440,9 @@
  },
  "pulido": {
   "dia": "2026-11-21",
-  "n": 2,
-  "ok": 1,
-  "mal": 1
+  "n": 4,
+  "ok": 2,
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -4484,15 +4498,15 @@
   "llamadas": {
    "clasificar": 34,
    "redactar": 61,
-   "revisar": 27,
-   "pulir": 1
+   "revisar": 28,
+   "pulir": 3
   },
   "fallos": 0,
-  "entrada": 941519,
-  "salida": 31570,
+  "entrada": 945745,
+  "salida": 31981,
   "cacheLee": 55157,
-  "cacheEscribe": 23224,
-  "dolares": 1.980451,
+  "cacheEscribe": 26127,
+  "dolares": 2.000271,
   "reservado": 0
  },
  "recientes": {
@@ -4520,10 +4534,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-08T22:37:22.093Z",
-    "texto": "🏁 Atlético 1-2 Barça. Remontada del Barcelona con gol de Fermín en el 66'. El goleador es el mejor fantasy: 17 puntos tras él, Lamine Yamal con 11 y Julián Alvarez con 8.\n\nGiuliano marcó y suma 8 aunque el Atlético pierde.\n\n✅ Premio para quien confió en Fermín"
-   },
-   {
     "t": "2026-11-20T22:41:21.585Z",
     "texto": "🏁 El Espanyol gana 0-1 en San Mamés con un único gol, el de Roberto en el 66'.\n\nFortuño es el que más puntos ha sacado de los dos equipos: 14, y ya van tres jornadas seguidas con 8 o más. Roberto llega a 11, más del doble de lo que suele dar, así que noche gorda para quien tenga espanyolistas.\n\nEn el Athletic 🦁 se salva Nico Williams con 10 pese a perder, muy por encima de su media."
    },
@@ -4538,13 +4548,13 @@
    {
     "t": "2026-11-21T19:56:33.010Z",
     "texto": "🏁 El Sevilla rescata un empate ante el Betis en el Sánchez-Pizjuán: 1-1, con gol de Kike Salas ya en el 90+1'.\n\nAntony había puesto por delante al Betis en el 50' y acaba como el mejor de los dos equipos, con 14 puntos y muy lejos de lo que suele dar. Kike Salas cierra con 13 y casi dobla su media de 6,6. Isco, el Mago, también cumple con 9.\n\nLa parte mala es para quien tenga a Cucho o a Junior: los dos restan 1."
+   },
+   {
+    "t": "2026-11-21T22:26:28.677Z",
+    "texto": "🏁 Real Madrid 2-1 Celta. El Real Madrid remonta y lo cierra Carlos Espí en el 85'. Bellingham se va a 13 puntos fantasy. Lleva 3 jornadas seguidas con 8 o más: 17, 8 y 13.\n\nLo peor se lo lleva Javi Rodríguez: -1 punto. Pablo Durán marcó y suma 10 aunque el Celta pierde. Cumple el favorito: el Madrid, 2º, gana al Celta, 13º.\n\n✅ Si tienes a Bellingham, hoy sonríes"
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-08T22:37:27.685Z",
-    "texto": "⭐ Fermín brilla como MVP fantasy en el Atleti 1-2 Barça y se va a 17 puntos. El centrocampista del Barça suma 111 puntos esta temporada con una media de 9,3.\n\n💸 Vale 112,8 M en el mercado y vuelve a jugar en la jornada 13, contra el Villarreal"
-   },
    {
     "t": "2026-11-20T22:41:37.728Z",
     "texto": "⭐ Fortuño es el mejor del Athletic 🦁-Espanyol, que acabó 0-1 en San Mamés: 14 puntos para el portero del Espanyol, más del doble de su media.\n\nEl gol de Roberto en el 66' fue el único del partido y Fortuño mantuvo la portería a cero. Vale 4,2 M y en la jornada 14 el Espanyol recibe al Getafe."
@@ -4560,6 +4570,10 @@
    {
     "t": "2026-11-21T19:51:47.286Z",
     "texto": "⭐ Antony se lleva el MVP del derbi: 14 puntos, más del doble de lo que suele hacer, tras abrir el marcador en el 50'. Kike Salas lo empató en el descuento y el Sánchez-Pizjuán se quedó en 1-1.\n\nVale 34,9 M y la jornada 14 la juega en casa contra el Rayo ⚡. Si lo tienes, no hay motivo para soltarlo."
+   },
+   {
+    "t": "2026-11-21T22:26:35.204Z",
+    "texto": "⭐ Bellingham es el MVP fantasy del Real Madrid 2-1 Celta, con 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 154,8 M en el mercado y vuelve a jugar en la jornada 14, contra el Alavés"
    }
   ],
   "mercado": [
@@ -9109,13 +9123,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4981,
+   "ok": 4982,
    "fallos": 0,
-   "ejecuciones": 4071,
+   "ejecuciones": 4072,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T22:21:16.550Z"
+   "ultima": "2026-11-21T22:26:11.641Z"
   }
  },
  "ptsDirecto": {
@@ -9235,23 +9249,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:21:23.418Z"
+   "ultimaBien": "2026-11-21T22:26:35.315Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:21:23.418Z"
+   "ultimaBien": "2026-11-21T22:26:35.315Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:21:23.418Z"
+   "ultimaBien": "2026-11-21T22:26:35.315Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:21:23.418Z"
+   "ultimaBien": "2026-11-21T22:26:35.315Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:21:23.418Z"
+   "ultimaBien": "2026-11-21T22:26:35.315Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
