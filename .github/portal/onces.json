@@ -1404,7 +1404,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2759",
+     "nombre": "Vlachodimos",
+     "pos": 1
+    },
+    {
+     "id": "2479",
+     "nombre": "Kike Salas",
+     "pos": 2
+    },
+    {
+     "id": "2680",
+     "nombre": "A. Castrín",
+     "pos": 2
+    },
+    {
+     "id": "2753",
+     "nombre": "Suazo",
+     "pos": 2
+    },
+    {
+     "id": "1147",
+     "nombre": "Juan Iglesias",
+     "pos": 2
+    },
+    {
+     "id": "856",
+     "nombre": "Guridi",
+     "pos": 3
+    },
+    {
+     "id": "2453",
+     "nombre": "Agoumé",
+     "pos": 3
+    },
+    {
+     "id": "3265",
+     "nombre": "Fofana",
+     "pos": 3
+    },
+    {
+     "id": "3266",
+     "nombre": "Stassin",
+     "pos": 4
+    },
+    {
+     "id": "3262",
+     "nombre": "Félix Correia",
+     "pos": 4
+    },
+    {
+     "id": "3117",
+     "nombre": "Vargas",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2759",
+    "2479",
+    "1147",
+    "2753",
+    "2680",
+    "3265",
+    "2453",
+    "2687",
+    "3262",
+    "3266",
+    "2454"
+   ]
   },
   {
    "id": "5",
@@ -1555,7 +1624,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2541",
+     "nombre": "Á. Valles",
+     "pos": 1
+    },
+    {
+     "id": "2543",
+     "nombre": "Natan",
+     "pos": 2
+    },
+    {
+     "id": "121",
+     "nombre": "Bartra",
+     "pos": 2
+    },
+    {
+     "id": "2429",
+     "nombre": "Fran García",
+     "pos": 2
+    },
+    {
+     "id": "2414",
+     "nombre": "Bellerín",
+     "pos": 2
+    },
+    {
+     "id": "2770",
+     "nombre": "Antony",
+     "pos": 4
+    },
+    {
+     "id": "2418",
+     "nombre": "Marc Roca",
+     "pos": 3
+    },
+    {
+     "id": "3099",
+     "nombre": "Fornals",
+     "pos": 3
+    },
+    {
+     "id": "2419",
+     "nombre": "Aitor Ruibal",
+     "pos": 2
+    },
+    {
+     "id": null,
+     "nombre": "Abde Ezzalzouli",
+     "pos": 3
+    },
+    {
+     "id": "3090",
+     "nombre": "Isco",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "2541",
+    "2543",
+    "121",
+    "2429",
+    "2414",
+    "3090",
+    "2418",
+    "3099",
+    "2548",
+    "3089",
+    "2217"
+   ]
   },
   {
    "id": "15",
