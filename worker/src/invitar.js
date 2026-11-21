@@ -88,7 +88,10 @@ export async function invObjeto(st, b) {
   if (b.op === 'todos') {
     const ks = [...(await st.list({ prefix: 'k|' })).entries()];
     const as = [...(await st.list({ prefix: 'a|' })).values()];
-    return { ok: true, lista: ks.map(([kk, k]) => ({ uid: kk.slice(2), cod: k.cod, entran: (k.inv || []).length, cuentan: (k.inv || []).filter((x) => x.v).length, esc: Object.keys(k.esc || {}), ultima: Math.max(0, ...(k.inv || []).map((x) => x.t)) })).filter((x) => x.entran), invitados: as.length, vuelven: as.filter((x) => x.v).length };
+    // (21 nov) para la hoja del dueño: también quien ha sacado su código y aún no tiene a nadie dentro (antes solo salían los
+    // que tenían algún amigo: con todo a cero no se sabía si es que nadie invitaba o que no entraba nadie), cuándo lo sacó
+    // y quiénes son sus amigos (`inv`: cuenta, cuándo entró y si ha vuelto otro día), para ver cuántos siguen usando la app
+    return { ok: true, lista: ks.map(([kk, k]) => ({ uid: kk.slice(2), cod: k.cod, t: k.t || 0, entran: (k.inv || []).length, cuentan: (k.inv || []).filter((x) => x.v).length, esc: Object.keys(k.esc || {}), ultima: Math.max(0, ...(k.inv || []).map((x) => x.t)), inv: (k.inv || []).map((x) => ({ u: String(x.u), t: x.t, v: x.v ? 1 : 0 })) })).filter((x) => x.cod || x.entran), codigos: ks.filter(([, k]) => k.cod).length, invitados: as.length, vuelven: as.filter((x) => x.v).length };
   }
   if (!uidOk(uid)) return { ok: false, e: 'Cuenta no válida' };
   const kK = `k|${uid}`, kA = `a|${uid}`;

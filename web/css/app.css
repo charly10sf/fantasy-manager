@@ -3597,3 +3597,22 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 /* la banda de después de entrar en el iPhone */
 .banda-inicio .ic { color: var(--rojo-l); }
 .banda-inicio .banda-x { background: none; border: 0; padding: 6px; min-width: 44px; min-height: 44px; color: var(--apagado); }
+
+/* (21 nov) «Quién usa la app» en una sola página: lo de cada día, invitaciones, y las cuentas con buscador y filtros */
+.q-dos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.q-dos .qc { margin-top: 12px; min-width: 0; }
+.q-inv-t { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 2px 0 6px; }
+.q-inv-t > div { text-align: center; }
+.q-inv-t b { display: block; font: 700 24px/1 var(--cond); color: var(--texto); }
+.q-inv-t span { display: block; margin-top: 3px; font-size: 11.5px; line-height: 1.2; color: var(--apagado); }
+.q-inv-f { display: grid; gap: 2px; padding: 8px 0; border-top: 1px solid var(--linea); }
+.q-inv-f b { font-size: var(--t-sec2); color: var(--texto); }
+.q-inv-f span { font-size: var(--t-mini); color: var(--apagado); }
+.q-inv-f i { font-style: normal; }
+.q-inv-f i.si { color: var(--sube); font-weight: 700; }
+.q-buscar { width: 100%; min-height: 44px; margin: 4px 0 8px; padding: 0 12px; border-radius: var(--r-ctl); border: 1px solid var(--linea); background: var(--plano2); color: var(--texto); font: 500 16px 'Barlow', system-ui, sans-serif; }
+.q-filtros { flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 6px; }
+.q-filtros button { padding: 8px 12px; white-space: nowrap; }
+.q-cuentas [hidden] { display: none !important; }
+.q-mas { margin-top: 12px; }
+.q-mas > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }

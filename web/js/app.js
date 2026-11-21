@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
+import { esc, norm, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -2390,9 +2390,9 @@ async function abrirQuien() {
   S.quien = { cargando: true, tab };
   hoja('quien');
   // (0.7.13k) también «embudo» (Antes de entrar), que hasta ahora no se guardaba y no salía
-  try { const r = await quienUsa(); S.quien = { tab, lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null, invitar: r.invitar || null }; }
+  try { const r = await quienUsa(); S.quien = { tab, filtro: '', lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null, invitar: r.invitar || null }; }
   catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
-  if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
+  if (S.tipoHoja && S.tipoHoja[0] === 'quien') { repintarHoja(); filtrarQuien(); }
 }
 async function abrirAvisos() {
   S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '', cache: (S.av && S.av.cache) || {} };
@@ -3365,6 +3365,21 @@ window.permisoAvisos = (ok) => {
   mirarLimite();
 };
 
+/* ---------------- «Quién usa la app»: buscar y filtrar las cuentas (21 nov) ---------------- */
+function filtrarQuien() {
+  const l = $('#qLista');
+  if (!l) return;
+  const q = norm((($('#qBuscar') || {}).value || '').trim()), f = l.dataset.filtro || '';
+  let n = 0;
+  l.querySelectorAll('.quien-f').forEach((r) => { const ok = (!q || (r.dataset.b || '').includes(q)) && (!f || (r.dataset.f || '').split(' ').includes(f)); r.hidden = !ok; if (ok) n++; });
+  // los títulos de cada grupo, solo si les queda alguna fila a la vista; con filtro o búsqueda, fuera lo que no son filas
+  l.querySelectorAll('.quien-l').forEach((g) => { const vacio = !g.querySelector('.quien-f:not([hidden])'); g.hidden = vacio; const t = g.previousElementSibling; if (t && t.classList.contains('grupo')) t.hidden = vacio; });
+  l.querySelectorAll('.q-no, .q-prog').forEach((e) => { e.hidden = !!(q || f); });
+  const c = $('#qCuenta'); if (c) c.textContent = String(n);
+  const nada = $('#qNada'); if (nada) nada.hidden = n > 0;
+}
+document.addEventListener('input', (ev) => { if (ev.target && ev.target.id === 'qBuscar') filtrarQuien(); });
+
 /* ---------------- la vuelta del inicio de sesión ---------------- */
 window.vueltaLogin = async () => {
   const url = nativo.loginPendiente();
@@ -3721,7 +3736,15 @@ document.addEventListener('click', async (ev) => {
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
     case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;
-    case 'quienTab': if (S.quien) { S.quien.tab = d.t; repintarHoja(); } break;
+    // (21 nov) la lista de cuentas de «Quién usa la app»: los filtros (y las chapas de arriba, que además bajan a la lista)
+    case 'quienFiltro': {
+      if (S.quien) S.quien.filtro = d.f || '';
+      const l = $('#qLista'); if (l) l.dataset.filtro = d.f || '';
+      document.querySelectorAll('.q-filtros button').forEach((b) => { const on = (b.dataset.f || '') === (d.f || ''); b.classList.toggle('activo', on); b.setAttribute('aria-pressed', String(on)); });
+      filtrarQuien();
+      if (d.irCuentas) { const c = $('#qCuentas'); if (c) c.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+      break;
+    }
     case 'bloqueada': {
       // en la de Google Play se abren viendo un anuncio
       if (topConAnuncio()) {
