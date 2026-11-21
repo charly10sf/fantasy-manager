@@ -1532,6 +1532,13 @@
     "extra": 0,
     "jugador": "Copete"
    }
+  },
+  {
+   "clave": "onces|121",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124181227368284402",
+   "t": "2026-11-21T16:40:45.133Z"
   }
  ],
  "estados": {
@@ -4418,24 +4425,20 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 29,
-   "redactar": 35,
-   "revisar": 14,
+   "redactar": 37,
+   "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 559958,
-  "salida": 22742,
-  "cacheLee": 23224,
+  "entrada": 589921,
+  "salida": 23066,
+  "cacheLee": 26127,
   "cacheEscribe": 17418,
-  "dolares": 1.139681,
+  "dolares": 1.203137,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-08T16:41:35.816Z",
-    "texto": "👀 El Levante 🐸 sale con un 4-3-3 en Balaídos y el Celta con tres centrales y tres arriba, en un 3-4-3. Los dos onces vienen sin sorpresas.\n\nIonut Radu está en la portería del Celta y, con 8,8 de media, es de los que más puntos dan: quien lo tenga, tranquilo.\n\nRyan también es titular en el Levante, aunque su media es de 6,1."
-   },
    {
     "t": "2026-11-08T19:01:52.272Z",
     "texto": "ℹ️ Ya hay onces confirmados del Atlético-Barça. Todo apunta a que no hay sorpresas y salen los onces que se esperaban, con 4-4-2 para el Atleti y 4-3-3 para el Barça. Empieza hoy a las 21:00."
@@ -4451,6 +4454,10 @@
    {
     "t": "2026-11-21T14:21:29.062Z",
     "texto": "👀 El Rayo ⚡ sale con tres arriba, en un 4-3-3, y el Valencia 🦇 se planta en Vallecas con dos delanteros, en un 4-4-2. Ningún once trae novedades respecto a lo esperado.\n\nCamello está de titular en el Rayo y es de los que más puntos da en su equipo. Dimitrievski también está bajo palos en el Valencia.\n\nQuien tenga jugadores de este partido puede seguir tranquilo."
+   },
+   {
+    "t": "2026-11-21T16:40:45.136Z",
+    "texto": "👀 Valles es titular en la portería del Betis, y eso es una buena noticia para quien lo tenga: es el que más puntos da de su equipo.\n\nEn el Sánchez-Pizjuán, el Sevilla y el Betis salen con el mismo 4-2-3-1 y sin ninguna novedad. Fofana, el que más puntúa del Sevilla, también está en el once, en el centro del campo."
    }
   ],
   "final": [
@@ -4959,11 +4966,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "onces|121": {
-   "n": 1,
-   "t": "2026-11-21T16:36:34.233Z",
-   "ultima": "2026-11-21T16:36:34.233Z"
   }
  },
  "rasgos": {
@@ -8926,13 +8928,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4853,
+   "ok": 4855,
    "fallos": 0,
-   "ejecuciones": 4000,
+   "ejecuciones": 4001,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:36:11.571Z"
+   "ultima": "2026-11-21T16:40:24.726Z"
   }
  },
  "ptsDirecto": {
@@ -8998,27 +9000,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:36:35.074Z"
+   "ultimaBien": "2026-11-21T16:40:45.854Z"
   }
  },
  "avisos": [
