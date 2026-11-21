@@ -2632,7 +2632,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
    "SPORT|136694477": 1795273212000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000
   },
   "hechos": [
    {
@@ -3513,7 +3514,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4400,33 +4401,33 @@
    "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
-   "SPORT|136574933": 1795269960000
+   "SPORT|136574933": 1795269960000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277474630,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277776022
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 29,
    "redactar": 31,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 497434,
-  "salida": 21260,
+  "entrada": 501456,
+  "salida": 21918,
   "cacheLee": 23224,
   "cacheEscribe": 14515,
-  "dolares": 1.006449,
+  "dolares": 1.00718,
   "reservado": 0
  },
  "recientes": {
@@ -8920,13 +8921,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4849,
+   "ok": 4851,
    "fallos": 0,
-   "ejecuciones": 3998,
+   "ejecuciones": 3999,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:26:10.967Z"
+   "ultima": "2026-11-21T16:31:12.137Z"
   }
  },
  "ptsDirecto": {
@@ -8992,27 +8993,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:26:20.179Z"
+   "ultimaBien": "2026-11-21T16:31:25.312Z"
   }
  },
  "avisos": [
