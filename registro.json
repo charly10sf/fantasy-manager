@@ -1604,6 +1604,21 @@
    "jornada": 13,
    "id": "2124230502034907514",
    "t": "2026-11-21T19:56:33.008Z"
+  },
+  {
+   "clave": "directo|122|Pablo Durán|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124235472218005583",
+   "t": "2026-11-21T20:16:18.178Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "122",
+    "equipo": "85",
+    "min": 6,
+    "extra": 0,
+    "jugador": "Pablo Durán"
+   }
   }
  ],
  "estados": {
@@ -4614,10 +4629,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T14:26:21.314Z",
-    "texto": "⚽ Lucas Boyé remata de cabeza en el 62' y el Alavés se pone por delante en Mendizorroza: 2-1 al Deportivo.\n\nEl argentino ya suma 3 puntos tras tres jornadas flojas. El pase es de Ángel Pérez, que de momento se lleva 8."
-   },
-   {
     "t": "2026-11-21T14:51:19.533Z",
     "texto": "⚽ Otro gol del Alavés, de Denis Suárez, en el 90'. Alavés 3-1 Deportivo. Asistencia de Lucas Boyé, con 8 puntos de momento. Denis Suárez ya suma 6 puntos."
    },
@@ -4632,6 +4643,10 @@
    {
     "t": "2026-11-21T19:26:23.293Z",
     "texto": "⚽ ¡EN EL 90+1! Kike Salas la cuelga desde unos 22 metros y el Sevilla empata en el Sánchez-Pizjuán: 1-1 contra el Betis.\n\nEl central ya suma 7 puntos y llega en racha tras tres jornadas seguidas puntuando fuerte. Isaac pone el pase y se lleva 3 por ahora."
+   },
+   {
+    "t": "2026-11-21T20:16:18.181Z",
+    "texto": "⚽ Gol de Pablo Durán y el Celta se adelanta en el 6'. Real Madrid 0-1 Celta. Apenas habían pasado unos minutos. Asistencia de Williot, con 4 puntos de momento. Pablo Durán ya suma 4 puntos."
    }
   ],
   "novedades": [
@@ -9035,17 +9050,33 @@
    "re": "90'+3'",
    "f": "2026-11-21T19:26:14.064Z",
    "rf": "92:58"
+  },
+  "fm|122|1322858|6": {
+   "j": "Pablo Durán",
+   "m": "6'",
+   "f": "2026-11-21T20:16:12.149Z",
+   "rf": "8:04",
+   "casado": true
+  },
+  "directo|122|Pablo Durán|gol1": {
+   "j": "Pablo Durán",
+   "m": "6'",
+   "e": "2026-11-21T20:16:12.149Z",
+   "re": "8'",
+   "w": "2026-11-21T20:13:27Z",
+   "f": "2026-11-21T20:16:12.149Z",
+   "rf": "8:04"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4930,
+   "ok": 4932,
    "fallos": 0,
-   "ejecuciones": 4044,
+   "ejecuciones": 4045,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T20:11:11.379Z"
+   "ultima": "2026-11-21T20:16:12.149Z"
   }
  },
  "ptsDirecto": {
@@ -9120,6 +9151,18 @@
    "g": 0,
    "a": 1,
    "t": 1795289174064
+  },
+  "13|122|2397": {
+   "p": 4,
+   "g": 1,
+   "a": 0,
+   "t": 1795292172149
+  },
+  "13|122|2394": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795292172149
   }
  },
  "golesAnulados": {
@@ -9135,27 +9178,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T20:11:22.699Z"
+   "ultimaBien": "2026-11-21T20:16:25.814Z"
   }
  },
  "avisos": [
