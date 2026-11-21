@@ -31,12 +31,16 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
-      - name: Playwright y Chromium
+      # WebKit es el motor de Safari: la entrada del iPhone no la puede probar nadie en un móvil de verdad, así que se prueba aquí
+      - name: Playwright, Chromium y WebKit
         run: |
           npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
-          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium webkit
       - name: Probar la web
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-web.mjs
+      # (0.8l) la entrada de la web de punta a punta (abrir LaLiga, copiar, pegar) en iPhone, ordenador y Android, sin tocar LaLiga
+      - name: Probar la entrada de la web
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-entrada.mjs
       # los fallos reales de la IA (plan y chat), con Google de mentira: la app tiene que pararlos (.github/ia/casos.mjs)
       - name: Probar la IA sin red
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ia.mjs
