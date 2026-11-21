@@ -2556,7 +2556,9 @@
    "SPORT|136695544": 1795261280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
-   "SPORT|136695915": 1795263607000
+   "SPORT|136695915": 1795263607000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html": 1795264209000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000
   },
   "hechos": [
    {
@@ -3423,11 +3425,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795264209000,
+    "id": "2932",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Ángel Pérez se retira lesionado en el Alavés-Deportivo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795267197000,
+    "id": "1775",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cubarsí no jugará contra el Villarreal según Flick",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4326,17 +4352,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 156804,
-  "salida": 12872,
+  "entrada": 158822,
+  "salida": 14091,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.283097,
+  "dolares": 0.283908,
   "reservado": 0
  },
  "recientes": {
@@ -8743,13 +8769,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4781,
+   "ok": 4783,
    "fallos": 0,
-   "ejecuciones": 3962,
+   "ejecuciones": 3963,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T13:26:11.354Z"
+   "ultima": "2026-11-21T13:31:14.940Z"
   }
  },
  "ptsDirecto": {
@@ -8791,27 +8817,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:26:20.604Z"
+   "ultimaBien": "2026-11-21T13:31:26.199Z"
   }
  },
  "avisos": [
