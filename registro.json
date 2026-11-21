@@ -1568,6 +1568,13 @@
     "extra": 0,
     "jugador": "Antony"
    }
+  },
+  {
+   "clave": "onces|122",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124216658021470522",
+   "t": "2026-11-21T19:01:32.480Z"
   }
  ],
  "estados": {
@@ -2457,7 +2464,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/": 1795028243000,
    "Superdeporte|https://www.superdeporte.es/baloncesto/2026/11/18/pedro-martinez-vuelve-patinar-euroliga-136592626.html": 1795029117000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261118/1004252708/satriano-vuelve-tirar-ataque-getafe.html": 1795029584000,
    "AS|https://as.com/futbol/primera/el-madrid-golpea-primero-f202611-n/": 1795035056000,
@@ -2678,21 +2684,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
    "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
    "SPORT|136699578": 1795283136000,
-   "SPORT|136703359": 1795283457000
+   "SPORT|136703359": 1795283457000,
+   "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/tan-solo-koski-ha-regresado-de-la-concentracion-con-su-seleccion-f202611-n/",
-    "medio": "AS",
-    "t": 1795028243000,
-    "id": "2938",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136597911",
     "medio": "SPORT",
@@ -3506,7 +3501,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4353,9 +4348,9 @@
  },
  "pulido": {
   "dia": "2026-11-21",
-  "n": 1,
+  "n": 2,
   "ok": 1,
-  "mal": 0
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -4428,10 +4423,6 @@
  "recientes": {
   "onces": [
    {
-    "t": "2026-11-08T19:01:52.272Z",
-    "texto": "ℹ️ Ya hay onces confirmados del Atlético-Barça. Todo apunta a que no hay sorpresas y salen los onces que se esperaban, con 4-4-2 para el Atleti y 4-3-3 para el Barça. Empieza hoy a las 21:00."
-   },
-   {
     "t": "2026-11-20T19:01:54.377Z",
     "texto": "👀 Ni rotaciones ni sorpresas en el Athletic-Espanyol: los dos onces están confirmados y salen los que se esperaban.\n\nUnai Simón está bajo palos en el Athletic 🦁, que sale en un 4-2-3-1, y es el que más puntos da de su equipo. El Espanyol se planta con cinco atrás, en un 5-4-1, y Cabrera también es titular: nadie del Espanyol puntúa más que él.\n\nQuien tenga a alguno de los dos ya sabe que cuenta."
    },
@@ -4446,6 +4437,10 @@
    {
     "t": "2026-11-21T16:40:45.136Z",
     "texto": "👀 Valles es titular en la portería del Betis, y eso es una buena noticia para quien lo tenga: es el que más puntos da de su equipo.\n\nEn el Sánchez-Pizjuán, el Sevilla y el Betis salen con el mismo 4-2-3-1 y sin ninguna novedad. Fofana, el que más puntúa del Sevilla, también está en el once, en el centro del campo."
+   },
+   {
+    "t": "2026-11-21T19:01:32.482Z",
+    "texto": "ℹ️ Onces confirmados del Real Madrid-Celta. Sin sorpresas: salen los onces que se esperaban. El Madrid ⚪ sale con 4-4-2 y el Celta con 3-4-3. Empieza hoy a las 21:00."
    }
   ],
   "final": [
@@ -8951,13 +8946,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4907,
+   "ok": 4909,
    "fallos": 0,
-   "ejecuciones": 4029,
+   "ejecuciones": 4030,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:56:11.226Z"
+   "ultima": "2026-11-21T19:01:11.987Z"
   }
  },
  "ptsDirecto": {
@@ -9035,27 +9030,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:56:47.165Z"
+   "ultimaBien": "2026-11-21T19:01:37.404Z"
   }
  },
  "avisos": [
