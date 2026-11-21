@@ -1663,6 +1663,17 @@
    "jornada": 13,
    "id": "2124268260103204949",
    "t": "2026-11-21T22:26:35.202Z"
+  },
+  {
+   "clave": "mercado|2026-11-22",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2124280552400572635",
+   "t": "2026-11-21T23:15:26.009Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "680"
+   }
   }
  ],
  "estados": {
@@ -4494,19 +4505,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-21",
+  "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 34,
-   "redactar": 61,
-   "revisar": 28,
-   "pulir": 3
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 945745,
-  "salida": 31981,
-  "cacheLee": 55157,
-  "cacheEscribe": 26127,
-  "dolares": 2.000271,
+  "entrada": 16492,
+  "salida": 246,
+  "cacheLee": 0,
+  "cacheEscribe": 2903,
+  "dolares": 0.042702,
   "reservado": 0
  },
  "recientes": {
@@ -4578,10 +4589,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-16T23:15:32.628Z",
-    "texto": "📈 Fermín sube 2,3 M esta noche y ya vale 136,8 M con el Barça. Lleva 27 días seguidos al alza, 46,7 M desde el 21 de octubre.\n\nValverde, que también fue el que más subió ayer, suma 12 días seguidos subiendo. Entre todos los jugadores del Real Madrid ⚪ ganan 10,3 M, y los del Atlético pierden 6,2 M.\n\nDe barato, Oskarsson, de la Real Sociedad, vale 5,3 M y suma 23 puntos en sus tres últimas jornadas."
-   },
-   {
     "t": "2026-11-18T06:02:24.925Z",
     "texto": "📈 Vinícius no se baja del ascensor: +2,4 M esta noche y ya vale 72,2 M. Van diez días seguidos subiendo y 17,5 M ganados desde el 8 de noviembre.\n\nRodri, por su parte, repite como el que más baja: 1,4 M menos y 22 días seguidos cayendo. En el Atlético, Grimaldo y Pubill se dejan dinero y los jugadores del Atleti pierden 5,6 M entre todos. El Real Madrid ⚪ suma 8,3 M."
    },
@@ -4596,6 +4603,10 @@
    {
     "t": "2026-11-20T23:15:27.779Z",
     "texto": "📉 Diomande vuelve a ser el que más cae: 1,3 M menos y ya lleva cinco días de bajada, 4,4 M desde el 16 de noviembre. Aun así, es el 5º delantero con más puntos de la temporada.\n\nVini Jr. sigue en lo más alto, con trece días seguidos subiendo, aunque solo ha sumado 6 puntos en las tres últimas jornadas. Entre todos sus jugadores, el Real Madrid ⚪ gana 3,4 M y el Atlético pierde 2,6 M.\n\nBarato: Lemar, del Elche 🌴, vale 6 M y hoy sube un 1,9 %."
+   },
+   {
+    "t": "2026-11-21T23:15:26.011Z",
+    "texto": "📈 El Real Madrid ⚪ se lleva la noche: sus jugadores ganan 7 M entre todos, mientras que los del Villarreal 🚢 pierden 2,6 M.\n\nNico Williams es el caso que más llama la atención: otros 1,9 M y 28 días seguidos al alza, 39,1 M desde el 25 de octubre. Vini Jr. también repite arriba, con 14 días subiendo, aunque solo ha sumado 6 puntos en las tres últimas jornadas.\n\nEn el otro lado, Rodri no encuentra suelo: 26 días cayendo y 35,3 M menos."
    }
   ],
   "previa": [
@@ -5045,6 +5056,22 @@
    "cacheLee": 58060,
    "cacheEscribe": 26127,
    "dolares": 1.576486,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-21",
+   "llamadas": {
+    "clasificar": 34,
+    "redactar": 61,
+    "revisar": 28,
+    "pulir": 3
+   },
+   "fallos": 0,
+   "entrada": 945745,
+   "salida": 31981,
+   "cacheLee": 55157,
+   "cacheEscribe": 26127,
+   "dolares": 2.000271,
    "reservado": 0
   }
  ],
@@ -9249,7 +9276,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T23:11:29.913Z"
+   "ultimaBien": "2026-11-21T23:15:26.013Z"
   },
   "FotMob": {
    "seguidas": 0,
