@@ -1575,6 +1575,21 @@
    "jornada": 13,
    "id": "2124216658021470522",
    "t": "2026-11-21T19:01:32.480Z"
+  },
+  {
+   "clave": "directo|121|Enrique Salas|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124222911422791823",
+   "t": "2026-11-21T19:26:23.275Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "121",
+    "equipo": "243",
+    "min": 90,
+    "extra": 1,
+    "jugador": "Enrique Salas"
+   }
   }
  ],
  "estados": {
@@ -4405,16 +4420,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 51,
+   "redactar": 53,
    "revisar": 25,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 806085,
-  "salida": 29659,
+  "entrada": 830719,
+  "salida": 29953,
   "cacheLee": 52254,
   "cacheEscribe": 20321,
-  "dolares": 1.682926,
+  "dolares": 1.735134,
   "reservado": 0
  },
  "recientes": {
@@ -4552,10 +4567,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T14:16:19.899Z",
-    "texto": "🧤 Leo Román le para un penalti a Lucas Boyé en el 55'. Alavés 1-1 Deportivo. Habría adelantado al Alavés."
-   },
-   {
     "t": "2026-11-21T14:26:21.314Z",
     "texto": "⚽ Lucas Boyé remata de cabeza en el 62' y el Alavés se pone por delante en Mendizorroza: 2-1 al Deportivo.\n\nEl argentino ya suma 3 puntos tras tres jornadas flojas. El pase es de Ángel Pérez, que de momento se lleva 8."
    },
@@ -4570,6 +4581,10 @@
    {
     "t": "2026-11-21T18:46:20.582Z",
     "texto": "⚽ Antony la mete en el 50' y el Betis pasa por delante en el Sánchez-Pizjuán: 0-1 contra el Sevilla.\n\nEl brasileño estrena su cuenta en Liga, Champions o Copa del Rey y ya suma 6 puntos. Isco, con la asistencia, lleva 4 por ahora."
+   },
+   {
+    "t": "2026-11-21T19:26:23.293Z",
+    "texto": "⚽ ¡EN EL 90+1! Kike Salas la cuelga desde unos 22 metros y el Sevilla empata en el Sánchez-Pizjuán: 1-1 contra el Betis.\n\nEl central ya suma 7 puntos y llega en racha tras tres jornadas seguidas puntuando fuerte. Isaac pone el pase y se lleva 3 por ahora."
    }
   ],
   "novedades": [
@@ -8939,17 +8954,32 @@
    "w": "2026-11-21T18:42:34Z",
    "f": "2026-11-21T18:46:11.459Z",
    "rf": "52:56"
+  },
+  "fm|121|1327489|90": {
+   "j": "Kike Salas",
+   "m": "90'",
+   "f": "2026-11-21T19:26:14.064Z",
+   "rf": "92:58",
+   "casado": true
+  },
+  "directo|121|Enrique Salas|gol1": {
+   "j": "Enrique Salas",
+   "m": "90'+1'",
+   "e": "2026-11-21T19:26:14.064Z",
+   "re": "90'+3'",
+   "f": "2026-11-21T19:26:14.064Z",
+   "rf": "92:58"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4917,
+   "ok": 4919,
    "fallos": 0,
-   "ejecuciones": 4034,
+   "ejecuciones": 4035,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:21:20.563Z"
+   "ultima": "2026-11-21T19:26:14.064Z"
   }
  },
  "ptsDirecto": {
@@ -9012,6 +9042,18 @@
    "g": 0,
    "a": 1,
    "t": 1795286771459
+  },
+  "13|121|2479": {
+   "p": 7,
+   "g": 1,
+   "a": 0,
+   "t": 1795289174064
+  },
+  "13|121|2456": {
+   "p": 3,
+   "g": 0,
+   "a": 1,
+   "t": 1795289174064
   }
  },
  "golesAnulados": {
@@ -9027,27 +9069,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:21:27.328Z"
+   "ultimaBien": "2026-11-21T19:26:33.507Z"
   }
  },
  "avisos": [
