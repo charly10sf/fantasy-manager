@@ -1597,6 +1597,13 @@
    "jornada": 13,
    "id": "2124229303730897003",
    "t": "2026-11-21T19:51:47.284Z"
+  },
+  {
+   "clave": "final|121",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124230502034907514",
+   "t": "2026-11-21T19:56:33.008Z"
   }
  ],
  "estados": {
@@ -2707,7 +2714,9 @@
    "SPORT|136703359": 1795283457000,
    "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000
   },
   "hechos": [
    {
@@ -3531,11 +3540,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795290372000,
+    "id": "2770",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Antony se retira lesionado del derbi",
+    "motivo": "lesión en el derbi",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -4445,16 +4466,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 34,
-   "redactar": 59,
-   "revisar": 26,
+   "redactar": 61,
+   "revisar": 27,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 913491,
-  "salida": 31137,
-  "cacheLee": 52254,
+  "entrada": 941519,
+  "salida": 31570,
+  "cacheLee": 55157,
   "cacheEscribe": 23224,
-  "dolares": 1.919775,
+  "dolares": 1.980451,
   "reservado": 0
  },
  "recientes": {
@@ -4482,10 +4503,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-08T20:01:30.080Z",
-    "texto": "🏁 Celta 0-0 Levante. Sin goles y un punto para cada uno. Ryan se va a 14 puntos fantasy, más del doble de su media de 6,8. Detrás, Carreira y Cáceres, con 10 cada uno.\n\n✅ Noche redonda para quien tenga a Ryan"
-   },
-   {
     "t": "2026-11-08T22:37:22.093Z",
     "texto": "🏁 Atlético 1-2 Barça. Remontada del Barcelona con gol de Fermín en el 66'. El goleador es el mejor fantasy: 17 puntos tras él, Lamine Yamal con 11 y Julián Alvarez con 8.\n\nGiuliano marcó y suma 8 aunque el Atlético pierde.\n\n✅ Premio para quien confió en Fermín"
    },
@@ -4500,6 +4517,10 @@
    {
     "t": "2026-11-21T17:41:35.611Z",
     "texto": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima y Copete se va a 15 puntos fantasy. Tárrega y Dimitrievski le siguen con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Premio para quien confió en Copete"
+   },
+   {
+    "t": "2026-11-21T19:56:33.010Z",
+    "texto": "🏁 El Sevilla rescata un empate ante el Betis en el Sánchez-Pizjuán: 1-1, con gol de Kike Salas ya en el 90+1'.\n\nAntony había puesto por delante al Betis en el 50' y acaba como el mejor de los dos equipos, con 14 puntos y muy lejos de lo que suele dar. Kike Salas cierra con 13 y casi dobla su media de 6,6. Isco, el Mago, también cumple con 9.\n\nLa parte mala es para quien tenga a Cucho o a Junior: los dos restan 1."
    }
   ],
   "mvp": [
@@ -4996,11 +5017,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "final|121": {
-   "n": 1,
-   "t": "2026-11-21T19:51:37.120Z",
-   "ultima": "2026-11-21T19:51:37.120Z"
   }
  },
  "rasgos": {
@@ -9022,13 +9038,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4925,
+   "ok": 4926,
    "fallos": 0,
-   "ejecuciones": 4040,
+   "ejecuciones": 4041,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:51:13.898Z"
+   "ultima": "2026-11-21T19:56:16.186Z"
   }
  },
  "ptsDirecto": {
@@ -9118,27 +9134,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:51:48.281Z"
+   "ultimaBien": "2026-11-21T19:56:39.217Z"
   }
  },
  "avisos": [
