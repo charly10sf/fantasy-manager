@@ -3570,3 +3570,30 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .qe-x b { color: var(--texto2); }
 .qe-h { margin: 12px 0 0; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--apagado); }
 .qe-o .qe-c > b { font-weight: 600; font-size: var(--t-sec2); }
+
+/* (21 nov) la llegada desde un anuncio en el iPhone: dos frases y el botón, sin el menú del portal por encima */
+.portada.p-llegada .pt-menu { display: none; }
+.portada.p-llegada .pt-in { flex-wrap: nowrap; }
+.lleg { margin: 0 0 14px; }
+.portada .pantalla h1.lleg-t { font-size: 34px; line-height: 0.98; margin: 0 0 8px; }
+.portada .pantalla .lleg p { margin: 0; font-size: 16px; line-height: 1.4; color: var(--texto2); }
+.portada.p-llegada .plat-ios .plat-c { display: none; }
+.portada.p-llegada .ed .ed-i { margin-top: 0; }
+.portada.p-llegada .pant-d .estado-ll { margin-top: 14px; }
+/* dentro del navegador de otra app: «Abrir en Safari», lo primero */
+.ed .ed-ajena.con-boton .ed-safari { margin-top: 10px; min-height: 54px; text-decoration: none; color: #fff; }
+.ed .ed-ajena.con-boton .ed-safari .ic { color: #fff; }
+.ed .ed-safari-no { margin: 8px 0 0; font-size: var(--t-sec2); color: var(--texto); }
+.ed .ed-safari-no:empty { display: none; }
+.ed .ed-safari-mas { margin-top: 6px; }
+.ed .ed-safari-mas summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.ed .ed-safari-mas p { margin: 6px 0; }
+/* de vuelta de LaLiga en el iPhone: «Pegar y entrar», fijo abajo */
+.ed.ed-vuelto .ed-pegar { position: fixed; left: 16px; right: 16px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 60; width: auto; min-height: 58px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.6); }
+.ed.ed-vuelto { padding-bottom: 84px; }
+/* la app de la pantalla de inicio sin sesión: traer la cuenta con un código, lo primero */
+.plat-cod { background: var(--plano); border: 1px solid var(--linea); }
+.plat-cod .plat-n { margin: 0 0 4px; }
+/* la banda de después de entrar en el iPhone */
+.banda-inicio .ic { color: var(--rojo-l); }
+.banda-inicio .banda-x { background: none; border: 0; padding: 6px; min-width: 44px; min-height: 44px; color: var(--apagado); }

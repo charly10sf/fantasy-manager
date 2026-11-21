@@ -428,6 +428,41 @@ async function probar(motor, disp) {
       await ctx.close();
     }
 
+    /* ---- 11. (21 nov) el iPhone que llega de un anuncio, dentro de X, y la app de la pantalla de inicio ---- */
+    if (disp === 'iphone') {
+      const o = para(motor, disp);
+      // en Safari, con la dirección del anuncio: dos frases y el botón en la primera pantalla, sin nada de Google Play
+      ({ ctx, p, reg } = await abrir(nav, o, { ruta: '/index.html?utm_source=x-ios' }));
+      await p.waitForSelector('#entrarDirecto'); await p.waitForTimeout(300);
+      let L = await p.evaluate(() => { const b = document.getElementById('edAbrir').getBoundingClientRect(); const e = document.getElementById('entrar'); const est = document.getElementById('estadoLL');
+        return { frases: (document.querySelector('.lleg p') || {}).textContent || '', y: Math.round(b.top), alto: innerHeight, play: e.querySelectorAll('a[href*="play.google.com"], img[src*="google-play"]').length, playArriba: document.querySelectorAll('.pt-bar a[href*="play.google.com"], .po-top .play-badge').length,
+          menu: getComputedStyle(document.querySelector('.pt-menu')).display, semaforoDebajo: !!(est && (document.getElementById('edAbrir').compareDocumentPosition(est) & Node.DOCUMENT_POSITION_FOLLOWING)), aviso: document.querySelectorAll('.em-aviso').length }; });
+      mira(/a quién vender/.test(L.frases) && L.y > 0 && L.y < L.alto - 60, `${T} llegando del anuncio: qué es la app en dos frases y «Abrir LaLiga y entrar» en la primera pantalla (y=${L.y} de ${L.alto})`);
+      mira(L.play === 0 && L.playArriba === 0 && L.menu === 'none' && L.semaforoDebajo, `${T} sin nada de Google Play, sin el menú del portal por encima y con el semáforo debajo`);
+      mira(L.aviso === 0, `${T} el aviso de la pantalla de inicio ya no sale antes de entrar`);
+      mira(reg.pasos.includes('llega') && reg.pasos.includes('ver'), `${T} y se apuntan «llega» y «ver» con su campaña`);
+      await ctx.close();
+      // lo mismo dentro de X: «Abrir en Safari» lo primero, con la campaña marcada, y los pasos de aquí como salida
+      ({ ctx, p, reg } = await abrir(nav, { ...o, userAgent: `${o.userAgent} Twitter for iPhone/11.40` }, { ruta: '/index.html?utm_source=x-ios' }));
+      await p.waitForSelector('#edSafari');
+      const hs = await p.getAttribute('#edSafari', 'href');
+      mira(/^x-safari-https:\/\/127\.0\.0\.1:\d+\/index\.html\?utm_source=x-ios-safari$/.test(hs), `${T} dentro de X, «Abrir en Safari» es un enlace x-safari-https:// con la campaña «x-ios-safari»`);
+      mira(await p.evaluate(() => { const a = document.getElementById('edSafari').getBoundingClientRect(), b = document.getElementById('edAbrir').getBoundingClientRect(); return a.top < b.top && a.height >= 44; }), `${T} va antes que los tres pasos y mide 44 px o más`);
+      await p.evaluate(() => document.getElementById('edSafari').addEventListener('click', (e) => e.preventDefault()));
+      await p.click('#edSafari');
+      await p.waitForFunction(() => (document.getElementById('edSafariNo') || {}).textContent, null, { timeout: 4000 }).catch(() => {});
+      mira(reg.pasos.includes('saf') && /Si Safari no se ha abierto/.test(await p.textContent('#edSafariNo')) && await p.evaluate(() => document.querySelector('.ed-safari-mas').open) && await p.isVisible('#edAbrir'), `${T} si Safari no se abre, a los 2 s lo dice, despliega las otras salidas y los tres pasos siguen ahí (paso «saf» apuntado)`);
+      await ctx.close();
+      // abierta desde el icono de la pantalla de inicio, sin sesión: traer la cuenta con un código, lo primero
+      ({ ctx, p, reg } = await abrir(nav, o, { antes: () => { try { Object.defineProperty(Navigator.prototype, 'standalone', { get: () => true, configurable: true }); } catch (e) { /* nada */ } } }));
+      await p.waitForSelector('#entrarDirecto');
+      mira(await p.evaluate(() => { const c = document.querySelector('.plat-cod'), i = document.querySelector('.plat-ios'); return !!(c && i && (c.compareDocumentPosition(i) & Node.DOCUMENT_POSITION_FOLLOWING) && c.querySelector('#codigoWeb')); }), `${T} desde el icono de la pantalla de inicio, «¿Ya has entrado en Safari?» con el cuadro del código va lo primero`);
+      // un código viejo en la dirección del icono no molesta: ni aviso ni error
+      await p.goto(`${BASE}/index.html#codigo=ABCD2345`); await p.reload(); await p.waitForSelector('#entrar'); await p.waitForTimeout(2200);
+      mira(await p.locator('.tostada').count() === 0 && !(await p.evaluate(() => location.hash)), `${T} y un código caducado en la dirección del icono no saca ningún aviso`);
+      await ctx.close();
+    }
+
     /* ---- dentro del navegador de otra app (X, Instagram…) se avisa ---- */
     if (disp === 'iphone') {
       const o = para(motor, disp);

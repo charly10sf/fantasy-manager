@@ -1096,6 +1096,19 @@ export function vinculoWeb(S) {
   const v = S.vinculo;
   if (!v) return nada('No hay código.');
   const cod = String(v.codigo || '');
+  // (21 nov) en el iPhone, para llevarla a la pantalla de inicio ya con la cuenta (pasarAInicio, en app.js)
+  if (v.inicio) {
+    return `<div class="hoja-cab"><h2>En la pantalla de inicio</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+  <ol class="pasos-web">
+    <li>Toca <b>Compartir</b> (el cuadrado con la flecha hacia arriba, en la barra de Safari).</li>
+    <li>Elige <b>Añadir a pantalla de inicio</b> y pulsa <b>Añadir</b>.</li>
+    <li>Ábrela desde su icono: entra sola con tu cuenta.</li>
+  </ol>
+  <p class="t2 peq" style="text-align:center">Hazlo ahora: vale durante 10 minutos. Si al abrirla te pidiera entrar, escribe este código:</p>
+  <div class="codigo-grande">${esc(cod.slice(0, 4))}<span>${esc(cod.slice(4))}</span></div>
+  <p class="t2 peq" style="text-align:center">Desde el icono se abre a pantalla completa y no se cierra la sesión por pasar días sin usarla. <a href="instalar.html#anadir">Guía con dibujos</a></p>
+  <button class="btn sec ancho" data-accion="cerrarInicio">Ya está</button>`;
+  }
   return `<div class="hoja-cab"><h2>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
   <ol class="pasos-web">
     <li>En ${enApp ? 'el ordenador' : 'el otro dispositivo (el iPhone o el otro ordenador)'}, abre <b>fantasymanagerapp.com</b></li>
@@ -1377,7 +1390,7 @@ export function embudoDatos(E, ahora) {
     const llegan = dias.reduce((t, d) => { const x = d[g] || {}; return t + Math.max(Number(x.llega) || 0, Number(x.ver) || 0); }, 0);
     const ven = dias.reduce((t, d) => { const x = d[g] || {}; return t + (x.llega ? Number(x.ver) || 0 : 0); }, 0);
     const hayVen = dias.some((d) => (d[g] || {}).llega);
-    return { llegan, ven: hayVen ? ven : null, ver: n('ver'), play: n('play'), demo: n('demo'), l: n('l'), v: n('v'), p: n('p'), ok: n('ok'), inicio: n('inicio'),
+    return { llegan, ven: hayVen ? ven : null, ver: n('ver'), play: n('play'), demo: n('demo'), l: n('l'), v: n('v'), p: n('p'), ok: n('ok'), inicio: n('inicio'), saf: n('saf'),
       vuelve: n('x-vuelve'), laliga: n('x-laliga'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0) };
   };
   const canales = EMB_CANALES.map(([t, k]) => ({ t, k, web: k.startsWith('web'), ...de(k) })).filter((c) => c.llegan || c.l || c.ok);
@@ -1394,6 +1407,7 @@ function embudoFila(c, { origen = false } = {}) {
     !c.web && c.vuelve ? `Vuelven sin el código: <b>${c.vuelve}</b>` : '',
     c.web && c.play ? `Tocan Google Play: <b>${c.play}</b>` : '',
     c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
+    c.saf ? `Tocan «Abrir en Safari»: <b>${c.saf}</b>` : '',
     c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
     c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
   ].filter(Boolean).join(' · ');

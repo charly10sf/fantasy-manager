@@ -107,7 +107,9 @@ export function leerOrigen() {
     history.replaceState(null, '', location.pathname + (p.toString() ? `?${p}` : '') + location.hash);
   } catch (e) { /* nada */ }
 }
-const origen = () => { const x = LS.get('origen', null); return x && Date.now() - x.t < ORIGEN_DIAS * 864e5 ? x.o : ''; };
+/** la campaña con la que se llegó en los últimos 7 días ('' si ninguna) */
+export const origenActual = () => origen();
+function origen() { const x = LS.get('origen', null); return x && Date.now() - x.t < ORIGEN_DIAS * 864e5 ? x.o : ''; }
 /** el dueño no cuenta (sus pruebas lo llenarían todo) */
 const esDueno = () => { const a = LS.get('avisos', null); return !!(a && a.admin); };
 /** (21 nov) ¿es una prueba? Con la marca guardada (?prueba=1) o con un navegador manejado por un programa (Playwright y

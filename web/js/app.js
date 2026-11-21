@@ -43,7 +43,7 @@ import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
-import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen } from './semaforo.js';
+import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenActual } from './semaforo.js';
 import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
@@ -93,15 +93,22 @@ function pantallaEntrar(error = '') {
   // (21 nov) en el iPhone, lo de entrar es lo primero de la página y no sale nada de Google Play arriba (ni el botón rojo
   // ni la insignia); en el ordenador, «Entrar» en rojo en la barra. En la web de un Android, como estaba
   const plat = enApp ? '' : (movilDe() || 'pc');
+  // (21 nov) la llegada desde un anuncio en el iPhone (?utm_source=…, que se guarda 7 días): dos frases de qué es la app y
+  // el botón de entrar en la primera pantalla, sin el menú del portal por encima, sin nada de Google Play y con el
+  // semáforo de LaLiga debajo
+  const llegada = plat === 'iphone' && !!origenActual();
   const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' ? '' : botonPlay('hero'))}`;
-  raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}`}">${enApp ? '' : barraPortal(plat)}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
+  const queEs = llegada ? `<div class="lleg"><h1 class="lleg-t">Tu director deportivo para <span>LaLiga Fantasy</span></h1><p>Cada día te dice a quién vender, a quién fichar, cuánto pujar y a quién clausular en tu liga. Es gratis y entras con tu cuenta de LaLiga.</p></div>` : '';
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat)}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
-    ${estadoHTML()}
+    ${queEs}
+    ${llegada ? '' : estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
     ${abrirConVisto() && !nativo.authTab() ? avisoAbrirCon() : ''}
     <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página de LaLiga: entra como siempre (con Google, si es como lo haces). Al terminar vuelves aquí.</p>${botonDemo('sec')}` : entrarWebHTML()}
+    <p class="peq apag" style="margin-top:12px">Se abre la página de LaLiga: entra como siempre (con Google, si es como lo haces). Al terminar vuelves aquí.</p>${botonDemo('sec')}` : entrarWebHTML(llegada)}
+    ${llegada ? estadoHTML() : ''}
     ${PIE_ENTRAR}
   </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles()}</section>`}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
@@ -287,6 +294,16 @@ function appAjena() {
   const k = m[0].toLowerCase();
   return /insta/.test(k) ? 'Instagram' : /^fb/.test(k) ? 'Facebook' : /twitter/.test(k) ? 'X' : /tiktok|musical|byte/.test(k) ? 'TikTok' : /linkedin/.test(k) ? 'LinkedIn' : /snap/.test(k) ? 'Snapchat' : 'LINE';
 }
+/** la dirección de esta web para abrirla en Safari desde el navegador de otra app, con la campaña marcada como «…-safari»
+    (así «Antes de entrar» enseña por separado los que llegan dentro de X y los que ya han saltado a Safari); con `codigo`,
+    lleva la sesión detrás de # (no llega a ningún servidor) */
+function enlaceSafari(codigo = '') {
+  // (en las pruebas en local la página va por http: ahí se arma igual, para poder comprobarlo)
+  if (location.protocol !== 'https:' && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)) return '';
+  const o = origenActual();
+  const marca = o ? `?utm_source=${encodeURIComponent(`${o.replace(/-safari$/, '').slice(0, 17)}-safari`)}` : '';
+  return `x-safari-https://${location.host}${location.pathname}${marca}${codigo ? `#codigo=${encodeURIComponent(codigo)}` : ''}`;
+}
 const esMac = () => /Mac/i.test(navigator.platform || '') && !(navigator.maxTouchPoints > 1);
 /** hay botón de pegar si el navegador deja leer lo copiado tras un toque (si no, se pega a mano en el cuadro) */
 const hayPegar = () => !!(navigator.clipboard && typeof navigator.clipboard.readText === 'function');
@@ -305,8 +322,19 @@ function entrarDirectoHTML(plat, { cab = '' } = {}) {
   const comoPegar = plat === 'pc' ? `haz clic en el cuadro y pulsa ${pegar}` : 'mantén pulsado el cuadro y elige <b>Pegar</b>';
   const ajena = appAjena();
   const navegador = plat === 'iphone' ? 'Safari' : 'tu navegador';
-  const avisoAjena = ajena ? `<div class="ed-ajena" role="note">${icono('alerta')}<div><b>Estás dentro de la app de ${ajena}.</b> Desde aquí la entrada suele fallar: Google no deja iniciar sesión dentro de otras apps. Abre esta web en ${navegador}: en el menú de arriba o de abajo (<b>···</b> o Compartir) elige <b>Abrir en ${plat === 'iphone' ? 'Safari' : 'el navegador'}</b>.
-      <button type="button" class="btn chico sec" data-accion="copiarWeb">${icono('copiar')}Copiar la dirección de esta web</button></div></div>` : '';
+  // (21 nov) En el iPhone, dentro de X, Instagram o TikTok: un toque la saca a Safari (el esquema x-safari-https://, que no
+  // está documentado por Apple pero funciona desde esos navegadores en iOS 15 y 17 o más; en iOS 16 no). Dentro, Google no
+  // deja iniciar sesión (son vistas web incrustadas) y lo que se guarde no lo ve Safari. Si Safari no se abre, queda el
+  // menú de la propia app, copiar la dirección y entrar aquí mismo
+  const aSafari = ajena && plat === 'iphone' ? enlaceSafari() : '';
+  const avisoAjena = !ajena ? '' : aSafari ? `<div class="ed-ajena con-boton" role="note">${icono('alerta')}<div><b>Estás dentro de la app de ${ajena}.</b> Ábrela en Safari: ahí se entra con Google sin problema y tu cuenta se queda guardada.
+      <a class="btn ancho ed-safari" id="edSafari" href="${esc(aSafari)}" data-accion="aSafari">${icono('flecha')}Abrir en Safari</a>
+      <p class="ed-safari-no" id="edSafariNo" role="status" aria-live="polite"></p>
+      <details class="ed-safari-mas"><summary>No se abre Safari</summary><p>En el menú de ${ajena} (<b>···</b> o el botón de compartir, arriba o abajo) elige <b>Abrir en Safari</b>. O copia la dirección y pégala en Safari:</p>
+      <button type="button" class="btn chico sec" data-accion="copiarWeb">${icono('copiar')}Copiar la dirección de esta web</button>
+      <p>También puedes entrar aquí dentro con los tres pasos de abajo, si entras en LaLiga con tu correo.</p></details></div></div>`
+    : `<div class="ed-ajena" role="note">${icono('alerta')}<div><b>Estás dentro de la app de ${ajena}.</b> Desde aquí la entrada suele fallar: Google no deja iniciar sesión dentro de otras apps. Abre esta web en ${navegador}: en el menú de arriba o de abajo (<b>···</b> o Compartir) elige <b>Abrir en ${plat === 'iphone' ? 'Safari' : 'el navegador'}</b>.
+      <button type="button" class="btn chico sec" data-accion="copiarWeb">${icono('copiar')}Copiar la dirección de esta web</button></div></div>`;
   const conPegar = hayPegar();
   // si LaLiga dejara de aceptar la vuelta https: en el ordenador, el método a mano de antes (con su propio enlace, que
   // vuelve al esquema de la app); en el móvil no hay herramientas del navegador, así que queda el código
@@ -384,6 +412,8 @@ function entradaAbierta({ alVolver = false } = {}) {
   const c = $('#entrarDirecto');
   if (!c) return;
   c.dataset.abierto = '1';
+  // (21 nov) en el iPhone, de vuelta de LaLiga, «Pegar y entrar» queda fijo abajo: sin buscarlo ni bajar
+  if (alVolver && c.dataset.plat === 'iphone') c.classList.add('ed-vuelto');
   const t = $('#edAbrirT'); if (t) t.textContent = 'Abrir LaLiga otra vez';
   const a = $('#edAbrir'); if (a) a.classList.add('sec');
   const p = $('#edPegar'); if (p) p.classList.remove('sec');
@@ -487,8 +517,9 @@ function bloqueApple(plat) {
   if (plat === 'iphone') {
     // Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari: todo (abrir y pegar) se hace en el
     // mismo sitio, y por eso se avisa de añadirla antes; el aviso va debajo, sin estorbar
-    return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}
-      ${enInicio() ? '' : `<p class="em-aviso">${icono('nota')} <span><b>¿La quieres como una app?</b> Añádela a la pantalla de inicio <b>antes de entrar</b> (Compartir → Añadir a pantalla de inicio) y entra desde el icono; si no, luego te tocará entrar otra vez. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}</div>`;
+    // (21 nov) el aviso de «añádela a la pantalla de inicio antes de entrar» ya no va aquí: estorbaba antes de entrar. Se
+    // ofrece después, ya dentro, pasando la sesión (bandaInicio)
+    return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}</div>`;
   }
   return `<div class="plat plat-ios">${entrarDirectoHTML('pc', { cab: cabPlat(APPLE, 'iPhone y ordenador', 'No hay app en la App Store: se entra desde la web, aquí mismo, con tu cuenta de LaLiga.', 'edT') })}
     <div class="plat-fila plat-movil">
@@ -496,13 +527,19 @@ function bloqueApple(plat) {
       <div class="plat-fila-t"><p><b>¿La quieres en el iPhone?</b> Escanea el QR con su cámara (o abre <b>fantasymanagerapp.com</b> en Safari) y entra allí con los mismos tres pasos.</p><a class="plat-guia" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
     </div></div>`;
 }
-function entrarWebHTML() {
+function entrarWebHTML(llegada = false) {
   const movil = movilDe();
   if (movil === 'android') return `${bloqueAndroid('android')}${bloqueApple('android')}${botonDemo('sec')}`;
   if (movil === 'iphone') {
-    return `${bloqueApple('iphone')}${bloqueAndroid('iphone')}
+    // abierta desde el icono de la pantalla de inicio (guarda su sesión aparte de la de Safari): si ya se entró en Safari,
+    // lo más corto es traer la sesión con un código, así que va lo primero
+    const codigo = enInicio()
+      ? `<section class="plat plat-cod" aria-labelledby="platCodT"><h2 class="plat-n" id="platCodT">¿Ya has entrado en Safari?</h2><p class="plat-s">Trae tu cuenta con un código: en Safari, <b>Ajustes → Abrir en otro dispositivo</b>, y escríbelo aquí.</p>${codigoWebHTML(false)}</section>`
+      : `<details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
+    // llegando de un anuncio: nada de Google Play en la pantalla
+    return `${enInicio() ? codigo : ''}${bloqueApple('iphone')}${llegada ? '' : bloqueAndroid('iphone')}
     ${botonDemo('sec')}
-    <details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
+    ${enInicio() ? '' : codigo}`;
   }
   // (21 nov) en el ordenador, primero entrar aquí («iPhone y ordenador») y debajo lo de Android
   return `${bloqueApple('pc')}${bloqueAndroid('pc')}
@@ -666,6 +703,58 @@ async function mudarse(el) {
     if (el) { el.disabled = false; el.textContent = 'Llevarme'; }
   }
 }
+/* ---------------- (21 nov) el iPhone después de entrar: la sesión, a Safari o a la pantalla de inicio ----------------
+   Lo que se guarda al entrar se queda donde se entró: el navegador de dentro de X o de Instagram no lo comparte con Safari,
+   y la web puesta en la pantalla de inicio tampoco lo comparte con Safari. Con el código de «Abrir en otro dispositivo»
+   (una vez, 10 minutos) la sesión viaja detrás de # en la dirección:
+   - dentro de otra app: una banda con «Abrir en Safari», que abre Safari ya con la cuenta (x-safari-https://…#codigo=…);
+   - en Safari: una banda que ofrece ponerla en la pantalla de inicio. Al pedirlo, la dirección de la página pasa a llevar
+     el código y se quita el manifiesto (con él, iOS guarda su «start_url» y no esta dirección), para que el icono se cree
+     con el código y entre solo. Nadie ha podido probarlo en un iPhone: por si iOS no guarda esa dirección, el código
+     también se enseña para escribirlo, y la app de la pantalla de inicio lo pide lo primero. */
+async function codigoDeSesion() {
+  const c = cfg();
+  const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}), tour: LS.get('tour', null), vista: versionVista() };
+  const mandar = (cuerpo) => fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) }).then(async (x) => ({ s: x.status, b: await x.text() }));
+  const r = await dejarConCodigo(datos, mandar);
+  let j = null;
+  try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
+  if (r.s !== 200 || !j || !j.codigo) throw new Error((j && j.e) || `el servidor responde ${r.s}`);
+  return j;
+}
+const enIPhoneWeb = () => !enApp && movilDe() === 'iphone';
+const bandaInicio = () => {
+  if (!enIPhoneWeb() || enInicio() || !haySesion() || enDemo()) return '';
+  const ajena = appAjena();
+  if (ajena) return `<div class="banda banda-inicio">${icono('alerta')}<span><b>Estás dentro de ${esc(ajena)}.</b> Sigue en Safari con tu cuenta: aquí no se queda guardada.</span><button data-accion="sesionASafari">Abrir en Safari</button></div>`;
+  if (LS.get('inicio-visto', false)) return '';
+  return `<div class="banda banda-inicio">${icono('movil')}<span><b>¿La quieres como una app?</b> Ponla en la pantalla de inicio, ya con tu cuenta.</span><button data-accion="pasarAInicio">Cómo</button><button class="banda-x" data-accion="cerrarInicio" aria-label="Ahora no">${icono('cerrar')}</button></div>`;
+};
+async function sesionASafari(el) {
+  if (el) el.disabled = true;
+  try {
+    const j = await codigoDeSesion();
+    S.vinculo = j;
+    marcarPaso('saf');
+    const u = enlaceSafari(j.codigo);
+    if (u) location.href = u;
+    // si Safari no se abre (iOS 16, o la app no deja), a los 2 s sigue esta página a la vista: el código, para escribirlo
+    relojFijo(2000, () => { if (!document.hidden) hoja('vinculo'); });
+  } catch (e) { tostada(`No se ha podido preparar el paso a Safari: ${e.message}`, 6000); } finally { if (el) el.disabled = false; }
+}
+async function pasarAInicio(el) {
+  if (el) el.disabled = true;
+  try {
+    const j = await codigoDeSesion();
+    S.vinculo = { ...j, inicio: true };
+    // la dirección que iOS guarda con el icono: esta, con el código detrás de #; sin manifiesto, para que no use su start_url
+    try { history.replaceState(null, '', `${location.pathname}#codigo=${encodeURIComponent(j.codigo)}`); } catch (e2) { /* nada */ }
+    document.querySelectorAll('link[rel="manifest"]').forEach((l) => l.remove());
+    marcarPaso('inicio');
+    hoja('vinculo');
+  } catch (e) { tostada(`No se ha podido preparar: ${e.message}. Puedes hacerlo luego en Ajustes → Abrir en otro dispositivo.`, 7000); } finally { if (el) el.disabled = false; }
+}
+
 /** en la web nueva: si viene de la de antes con un código, entra con él sin volver a hacer nada */
 async function codigoDeMudanza() {
   // el QR del ordenador escaneado con la cámara normal: se escanea desde la app (0.6.12)
@@ -676,7 +765,11 @@ async function codigoDeMudanza() {
   }
   const m = !enApp && location.hash.match(/^#codigo=([A-Za-z0-9]{8})$/);
   if (!m) return false;
+  // (21 nov) la app de la pantalla de inicio puede llevar en su dirección el código con el que se pasó la sesión
+  // (pasarAInicio): vale una vez y 10 minutos. Si ya hay sesión, ni se mira; y si ya no vale, se entra normal, sin avisos
+  const deInicio = enInicio();
   history.replaceState(null, '', location.pathname + location.search);
+  if (deInicio && haySesion()) return false;
   try {
     const { r, j } = await traerConCodigo(m[1].toUpperCase());
     if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
@@ -685,7 +778,7 @@ async function codigoDeMudanza() {
     if (typeof j.vista === 'string' && !LS.get('version-vista2', null)) LS.set('version-vista2', j.vista);
     return true;
   } catch (e) {
-    setTimeout(() => tostada(`No se ha podido traer tu cuenta (${e.message}). Saca otro código: en la app, Ajustes → Abrir en el ordenador; en la web, Ajustes → Abrir en otro dispositivo.`, 9000), 1500);
+    if (!deInicio) setTimeout(() => tostada(`No se ha podido traer tu cuenta (${e.message}). Saca otro código: en la app, Ajustes → Abrir en el ordenador; en la web, Ajustes → Abrir en otro dispositivo.`, 9000), 1500);
     return false;
   }
 }
@@ -1010,7 +1103,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -3516,6 +3609,19 @@ document.addEventListener('click', async (ev) => {
       break;
     case 'entrarYa': await abrirLaLigaApp(); if ($('.pant-aviso')) pantallaEntrar(); break;
     case 'volverEntrar': pantallaEntrar(); break;
+    // (21 nov) el iPhone dentro del navegador de otra app: el enlace x-safari-https:// lo abre el sistema; aquí se apunta
+    // y, si a los 2 s la página sigue a la vista (Safari no se ha abierto), se dice qué hacer y se dejan los pasos de aquí
+    case 'aSafari':
+      marcarPaso('saf');
+      relojFijo(2000, () => {
+        if (document.hidden) return;
+        const n = $('#edSafariNo'); if (n) n.textContent = 'Si Safari no se ha abierto, usa el menú de la app o entra aquí mismo con los pasos de abajo.';
+        const d = $('.ed-safari-mas'); if (d) d.open = true;
+      });
+      break;
+    case 'sesionASafari': await sesionASafari(el); break;
+    case 'pasarAInicio': await pasarAInicio(el); break;
+    case 'cerrarInicio': { LS.set('inicio-visto', true); const b = $('.banda-inicio'); if (b) b.remove(); if (S.tipoHoja && S.tipoHoja[0] === 'vinculo') cerrarHoja(true); break; }
     // (0.8l) en la web «Abrir LaLiga» es un enlace de verdad: lo abre el navegador y aquí solo se apunta. Si el enlace aún
     // no estuviera puesto (se rellena en milisegundos), se abre como antes
     case 'abrirLaLiga': case 'abrirAMano': {
