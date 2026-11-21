@@ -3616,3 +3616,15 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .q-cuentas [hidden] { display: none !important; }
 .q-mas { margin-top: 12px; }
 .q-mas > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
+
+/* (21 nov) invitar a un amigo, a la vista: las tres variantes para elegir (fm-var-inv) */
+.sup .b-inv { color: var(--oro); box-shadow: inset 0 0 0 1.5px rgba(255, 197, 71, 0.55); margin: 0 2px; }
+.sup .b-inv .ic { color: var(--oro); }
+.sup .b-inv.lleno { position: relative; background: var(--oro); color: #1a1205; box-shadow: none; }
+.sup .b-inv.lleno .ic { color: #1a1205; }
+.sup .b-inv .inv-mas { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--rojo); color: #fff; font: 700 11px/18px 'Barlow', system-ui, sans-serif; text-align: center; }
+.banda.banda-inv { background: var(--oro-s); border: 1px solid rgba(255, 197, 71, 0.45); }
+.banda-inv .ic { color: var(--oro); }
+.sup-btns [hidden] { display: none !important; }
+.sup-toca { cursor: pointer; }
+.sup-toca::after { content: ' ↻'; color: var(--texto2); font-weight: 700; }
