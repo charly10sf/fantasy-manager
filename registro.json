@@ -2326,7 +2326,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-betis-reivindican-unidad-antesala-derbi_0_2008532882.html": 1795004694000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
    "SPORT|136565152": 1795005249000,
    "SPORT|136581134": 1795007753000,
@@ -2529,7 +2528,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000,
    "SPORT|136691896": 1795253836000,
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
-   "SPORT|136694864": 1795259508000
+   "SPORT|136694864": 1795259508000,
+   "SPORT|136695150": 1795260075000
   },
   "hechos": [
    {
@@ -3316,7 +3316,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4212,17 +4212,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 3,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 74995,
-  "salida": 7698,
+  "entrada": 77023,
+  "salida": 8342,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.130361,
+  "dolares": 0.130886,
   "reservado": 0
  },
  "recientes": {
@@ -8613,13 +8613,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4763,
+   "ok": 4764,
    "fallos": 0,
-   "ejecuciones": 3949,
+   "ejecuciones": 3950,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T12:21:13.635Z"
+   "ultima": "2026-11-21T12:26:12.793Z"
   }
  },
  "ptsDirecto": {
@@ -8649,15 +8649,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:21:19.569Z"
+   "ultimaBien": "2026-11-21T12:26:23.249Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:21:19.569Z"
+   "ultimaBien": "2026-11-21T12:26:23.249Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:21:19.569Z"
+   "ultimaBien": "2026-11-21T12:26:23.249Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8665,11 +8665,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:21:19.569Z"
+   "ultimaBien": "2026-11-21T12:26:23.249Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:21:19.569Z"
+   "ultimaBien": "2026-11-21T12:26:23.249Z"
   }
  },
  "avisos": [
