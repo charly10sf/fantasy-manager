@@ -2631,7 +2631,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
-   "SPORT|136694477": 1795273212000
+   "SPORT|136694477": 1795273212000,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000
   },
   "hechos": [
    {
@@ -3512,7 +3513,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4415,17 +4416,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 31,
    "revisar": 13,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 495401,
-  "salida": 21168,
+  "entrada": 497434,
+  "salida": 21260,
   "cacheLee": 23224,
   "cacheEscribe": 14515,
-  "dolares": 1.0062,
+  "dolares": 1.006449,
   "reservado": 0
  },
  "recientes": {
@@ -8919,13 +8920,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4847,
+   "ok": 4849,
    "fallos": 0,
-   "ejecuciones": 3997,
+   "ejecuciones": 3998,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:21:10.686Z"
+   "ultima": "2026-11-21T16:26:10.967Z"
   }
  },
  "ptsDirecto": {
@@ -8991,27 +8992,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:21:29.426Z"
+   "ultimaBien": "2026-11-21T16:26:20.179Z"
   }
  },
  "avisos": [
