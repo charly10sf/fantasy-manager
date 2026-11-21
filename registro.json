@@ -2330,14 +2330,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3108",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1795265772354
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "SPORT|136581134": 1795007753000,
@@ -2546,7 +2539,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html": 1795263592000,
    "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
-   "SPORT|136695544": 1795261280000
+   "SPORT|136695544": 1795261280000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000
   },
   "hechos": [
    {
@@ -3389,11 +3383,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795265273000,
+    "id": "1775",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cubarsí no jugará contra el Villarreal y viajará a Bakú",
+    "motivo": "problemas físicos leves",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4276,32 +4282,31 @@
    "SPORT|136687529": 1795240799000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260406000,
-   "SPORT|136694022": 1795257482000
+   "SPORT|136694022": 1795257482000,
+   "SPORT|136695535": 1795260962000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136695535": 1795264870469
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 16,
    "redactar": 7,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 134853,
-  "salida": 11212,
+  "entrada": 138637,
+  "salida": 11427,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.255761,
+  "dolares": 0.256247,
   "reservado": 0
  },
  "recientes": {
@@ -8692,13 +8697,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4770,
+   "ok": 4771,
    "fallos": 0,
-   "ejecuciones": 3956,
+   "ejecuciones": 3957,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T12:56:12.354Z"
+   "ultima": "2026-11-21T13:01:11.877Z"
   }
  },
  "ptsDirecto": {
@@ -8728,27 +8733,29 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:56:37.041Z"
+   "ultimaBien": "2026-11-21T13:01:18.873Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:56:37.041Z"
+   "ultimaBien": "2026-11-21T13:01:18.873Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:56:37.041Z"
+   "ultimaBien": "2026-11-21T13:01:18.873Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:26:28.422Z"
+   "seguidas": 1,
+   "ultimaBien": "2026-11-20T22:26:28.422Z",
+   "desde": "2026-11-21T13:01:18.873Z",
+   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:56:37.041Z"
+   "ultimaBien": "2026-11-21T13:01:18.873Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:56:37.041Z"
+   "ultimaBien": "2026-11-21T13:01:18.873Z"
   }
  },
  "avisos": [
