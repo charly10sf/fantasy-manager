@@ -2529,7 +2529,10 @@
    "SPORT|136691896": 1795253836000,
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
    "SPORT|136694864": 1795259508000,
-   "SPORT|136695150": 1795260075000
+   "SPORT|136695150": 1795260075000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261121/1004253714/cuti-importante-aun-jugar.html": 1795263520000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html": 1795263592000
   },
   "hechos": [
    {
@@ -3312,11 +3315,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm",
+    "medio": "La Voz de Galicia",
+    "t": 1795263780000,
+    "id": "3069",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Blanco regresa a la convocatoria para el derbi",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795263592000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos no podrá jugar el sábado por molestias",
+    "motivo": "molestias",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -4212,17 +4239,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 3,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 77023,
-  "salida": 8342,
+  "entrada": 79251,
+  "salida": 9948,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.130886,
+  "dolares": 0.131912,
   "reservado": 0
  },
  "recientes": {
@@ -8613,13 +8640,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4764,
+   "ok": 4765,
    "fallos": 0,
-   "ejecuciones": 3950,
+   "ejecuciones": 3951,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T12:26:12.793Z"
+   "ultima": "2026-11-21T12:31:14.140Z"
   }
  },
  "ptsDirecto": {
@@ -8649,15 +8676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:26:23.249Z"
+   "ultimaBien": "2026-11-21T12:31:27.129Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:26:23.249Z"
+   "ultimaBien": "2026-11-21T12:31:27.129Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:26:23.249Z"
+   "ultimaBien": "2026-11-21T12:31:27.129Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8665,11 +8692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:26:23.249Z"
+   "ultimaBien": "2026-11-21T12:31:27.129Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:26:23.249Z"
+   "ultimaBien": "2026-11-21T12:31:27.129Z"
   }
  },
  "avisos": [
