@@ -4415,7 +4415,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/18/oar-reacciona-tras-descanso-rescata-empate-burgos/00031795035770862255466.htm": 1795036261000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000,
    "SPORT|136604014": 1795073267000,
@@ -9055,13 +9054,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4952,
+   "ok": 4954,
    "fallos": 0,
-   "ejecuciones": 4055,
+   "ejecuciones": 4056,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T21:06:12.908Z"
+   "ultima": "2026-11-21T21:11:11.007Z"
   }
  },
  "ptsDirecto": {
@@ -9163,27 +9162,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:06:21.954Z"
+   "ultimaBien": "2026-11-21T21:11:19.094Z"
   }
  },
  "avisos": [
