@@ -981,7 +981,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "3267",
+     "nombre": "Emil Audero",
+     "pos": 1
+    },
+    {
+     "id": "3260",
+     "nombre": "Mujaid Sadick",
+     "pos": 2
+    },
+    {
+     "id": "3082",
+     "nombre": "Lejeune",
+     "pos": 2
+    },
+    {
+     "id": "3198",
+     "nombre": "Tsitaishvili",
+     "pos": 4
+    },
+    {
+     "id": "3081",
+     "nombre": "Ratiu",
+     "pos": 2
+    },
+    {
+     "id": "2384",
+     "nombre": "Unai Lopez",
+     "pos": 3
+    },
+    {
+     "id": "2386",
+     "nombre": "Nteka",
+     "pos": 4
+    },
+    {
+     "id": "2383",
+     "nombre": "Pathé I. Ciss",
+     "pos": 3
+    },
+    {
+     "id": "2387",
+     "nombre": "Camello",
+     "pos": 4
+    },
+    {
+     "id": "886",
+     "nombre": "De Frutos",
+     "pos": 4
+    },
+    {
+     "id": "2382",
+     "nombre": "Isi",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "3267",
+    "3081",
+    "3082",
+    "3260",
+    "1056",
+    "2384",
+    "2383",
+    "2385",
+    "1029",
+    "2387",
+    "886"
+   ]
   },
   {
    "id": "18",
@@ -1117,7 +1186,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2457",
+     "nombre": "Dimitrievski",
+     "pos": 1
+    },
+    {
+     "id": "1991",
+     "nombre": "Tárrega",
+     "pos": 2
+    },
+    {
+     "id": "3236",
+     "nombre": "Arnau",
+     "pos": 2
+    },
+    {
+     "id": "2403",
+     "nombre": "Copete",
+     "pos": 2
+    },
+    {
+     "id": "3206",
+     "nombre": "Maffeo",
+     "pos": 2
+    },
+    {
+     "id": "3128",
+     "nombre": "Guido Rodríguez",
+     "pos": 3
+    },
+    {
+     "id": "2464",
+     "nombre": "Pepelu",
+     "pos": 3
+    },
+    {
+     "id": "581",
+     "nombre": "Rioja",
+     "pos": 3
+    },
+    {
+     "id": "2560",
+     "nombre": "Raba",
+     "pos": 4
+    },
+    {
+     "id": "3075",
+     "nombre": "Javi Guerra",
+     "pos": 3
+    },
+    {
+     "id": "2617",
+     "nombre": "Sadiq",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2457",
+    "1991",
+    "3206",
+    "3120",
+    "3236",
+    "2464",
+    "3075",
+    "3128",
+    "581",
+    "2588",
+    "2617"
+   ]
   },
   {
    "id": "17",
