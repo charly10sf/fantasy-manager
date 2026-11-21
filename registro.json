@@ -2587,7 +2587,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html": 1795264209000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "SPORT|136697201": 1795264706000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000
   },
   "hechos": [
    {
@@ -3482,7 +3483,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4380,17 +4381,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 17,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 290017,
-  "salida": 16821,
+  "entrada": 292004,
+  "salida": 16913,
   "cacheLee": 11612,
   "cacheEscribe": 11612,
-  "dolares": 0.565822,
+  "dolares": 0.566067,
   "reservado": 0
  },
  "recientes": {
@@ -8820,13 +8821,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4807,
+   "ok": 4809,
    "fallos": 0,
-   "ejecuciones": 3975,
+   "ejecuciones": 3976,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:31:12.247Z"
+   "ultima": "2026-11-21T14:36:15.004Z"
   }
  },
  "ptsDirecto": {
@@ -8874,27 +8875,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:31:17.252Z"
+   "ultimaBien": "2026-11-21T14:36:19.693Z"
   }
  },
  "avisos": [
