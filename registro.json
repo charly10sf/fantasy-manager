@@ -2320,7 +2320,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/vuelve-aubameyang-casado-y-gimenez-los-dilemas-f202611-n/": 1794995998000,
-   "SPORT|136568609": 1794993321000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000,
    "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000,
    "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/": 1794998089000,
@@ -2531,33 +2530,10 @@
    "El Correo|https://www.elcorreo.com/athletic/agridulce-regreso-prados-titularidad-20261120234822-nt.html": 1795214902000,
    "SPORT|135959939": 1795244400000,
    "SPORT|136689006": 1795244766000,
-   "SPORT|136555358": 1795248019000
+   "SPORT|136555358": 1795248019000,
+   "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136568609",
-    "medio": "SPORT",
-    "t": 1794993321000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Dani Ceballos se ausenta del entrenamiento por molestias musculares",
-    "motivo": "molestias musculares en el isquiotibial",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136568609",
-    "medio": "SPORT",
-    "t": 1794993321000,
-    "id": "2548",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Rodrigo Riquelme sigue ausente de los entrenamientos",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html",
     "medio": "Mundo Deportivo",
@@ -3415,11 +3391,23 @@
     "nums": [
      8
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/",
+    "medio": "AS",
+    "t": 1795251912000,
+    "id": "701",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Barrenetxea se pierde el partido contra el Racing",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4317,17 +4305,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 29430,
-  "salida": 5364,
+  "entrada": 31366,
+  "salida": 5841,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.04637,
+  "dolares": 0.046802,
   "reservado": 0
  },
  "recientes": {
@@ -8718,13 +8706,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4725,
+   "ok": 4726,
    "fallos": 0,
-   "ejecuciones": 3911,
+   "ejecuciones": 3912,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T09:11:10.989Z"
+   "ultima": "2026-11-21T09:16:13.186Z"
   }
  },
  "ptsDirecto": {
@@ -8754,15 +8742,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:11:15.107Z"
+   "ultimaBien": "2026-11-21T09:16:21.923Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:11:15.107Z"
+   "ultimaBien": "2026-11-21T09:16:21.923Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:11:15.107Z"
+   "ultimaBien": "2026-11-21T09:16:21.923Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8770,11 +8758,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:11:15.107Z"
+   "ultimaBien": "2026-11-21T09:16:21.923Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T09:11:15.107Z"
+   "ultimaBien": "2026-11-21T09:16:21.923Z"
   }
  },
  "avisos": [
