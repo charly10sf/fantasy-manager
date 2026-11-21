@@ -2698,7 +2698,9 @@
    "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
    "SPORT|136699578": 1795283136000,
    "SPORT|136703359": 1795283457000,
-   "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000
+   "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000
   },
   "hechos": [
    {
@@ -3510,11 +3512,23 @@
     "motivo": "lesion de menisco",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795288619000,
+    "id": "2770",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Antony se retira lesionado durante el derbi sevillano",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4721,6 +4735,11 @@
    "h": "f6da482fb065",
    "desde": 1795281673222,
    "fin": 1795281071838
+  },
+  "13|121": {
+   "h": "bac2fb3a329b",
+   "desde": 1795289472667,
+   "fin": 1795289472667
   }
  },
  "iaDias": [
@@ -5127,7 +5146,8 @@
    "6386080",
    "5868132",
    "5868131",
-   "5868138"
+   "5868138",
+   "5868140"
   ],
   "equipos": [
    "9866",
@@ -6600,6 +6620,19 @@
      ]
     }
    },
+   "967622": {
+    "n": "Antony",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "967871": {
     "n": "Iván Martin",
     "e": "Racing Santander",
@@ -7593,8 +7626,8 @@
     "e": "Sevilla",
     "g": {
      "liga": [
+      2,
       1,
-      0,
       0,
       0,
       1
@@ -8973,13 +9006,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4919,
+   "ok": 4921,
    "fallos": 0,
-   "ejecuciones": 4035,
+   "ejecuciones": 4036,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T19:26:14.064Z"
+   "ultima": "2026-11-21T19:31:11.423Z"
   }
  },
  "ptsDirecto": {
@@ -9069,27 +9102,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T19:26:33.507Z"
+   "ultimaBien": "2026-11-21T19:31:44.218Z"
   }
  },
  "avisos": [
