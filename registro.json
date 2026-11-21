@@ -2640,7 +2640,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
    "SPORT|136694477": 1795273212000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
+   "SPORT|136701406": 1795275671000
   },
   "hechos": [
    {
@@ -3521,7 +3522,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4424,17 +4425,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 37,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 589921,
-  "salida": 23066,
+  "entrada": 592006,
+  "salida": 23180,
   "cacheLee": 26127,
   "cacheEscribe": 17418,
-  "dolares": 1.203137,
+  "dolares": 1.203403,
   "reservado": 0
  },
  "recientes": {
@@ -8928,13 +8929,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4857,
+   "ok": 4859,
    "fallos": 0,
-   "ejecuciones": 4002,
+   "ejecuciones": 4003,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:41:10.928Z"
+   "ultima": "2026-11-21T16:46:10.323Z"
   }
  },
  "ptsDirecto": {
@@ -9000,27 +9001,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:41:16.699Z"
+   "ultimaBien": "2026-11-21T16:46:19.331Z"
   }
  },
  "avisos": [
