@@ -4789,6 +4789,11 @@
    "h": "df510dface7f",
    "desde": 1795290073039,
    "fin": 1795289472667
+  },
+  "13|122": {
+   "h": "b70f901f77be",
+   "desde": 1795298772710,
+   "fin": 1795298772710
   }
  },
  "iaDias": [
@@ -5196,7 +5201,8 @@
    "5868132",
    "5868131",
    "5868138",
-   "5868140"
+   "5868140",
+   "5868139"
   ],
   "equipos": [
    "9866",
@@ -6936,7 +6942,7 @@
     "e": "Real Madrid",
     "g": {
      "liga": [
-      4,
+      5,
       0,
       0,
       0,
@@ -7636,7 +7642,7 @@
     "e": "Celta Vigo",
     "g": {
      "liga": [
-      2,
+      3,
       0,
       0,
       0,
@@ -8302,7 +8308,7 @@
     "e": "Real Madrid",
     "g": {
      "liga": [
-      2,
+      3,
       0,
       0,
       0,
@@ -9103,13 +9109,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4976,
+   "ok": 4978,
    "fallos": 0,
-   "ejecuciones": 4067,
+   "ejecuciones": 4068,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T22:01:10.254Z"
+   "ultima": "2026-11-21T22:06:11.736Z"
   }
  },
  "ptsDirecto": {
@@ -9229,23 +9235,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:01:18.724Z"
+   "ultimaBien": "2026-11-21T22:06:20.085Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:01:18.724Z"
+   "ultimaBien": "2026-11-21T22:06:20.085Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:01:18.724Z"
+   "ultimaBien": "2026-11-21T22:06:20.085Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:01:18.724Z"
+   "ultimaBien": "2026-11-21T22:06:20.085Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:01:18.724Z"
+   "ultimaBien": "2026-11-21T22:06:20.085Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
