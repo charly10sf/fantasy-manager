@@ -4244,32 +4244,32 @@
    "SPORT|136684390": 1795197900000,
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000,
    "SPORT|136687529": 1795240799000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260406000,
+   "SPORT|136694022": 1795257482000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260970399
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 37457,
-  "salida": 6468,
+  "entrada": 39414,
+  "salida": 6631,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.047724,
+  "dolares": 0.048001,
   "reservado": 0
  },
  "recientes": {
@@ -8660,13 +8660,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4754,
+   "ok": 4755,
    "fallos": 0,
-   "ejecuciones": 3940,
+   "ejecuciones": 3941,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T11:36:10.399Z"
+   "ultima": "2026-11-21T11:41:12.954Z"
   }
  },
  "ptsDirecto": {
@@ -8696,15 +8696,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:36:14.499Z"
+   "ultimaBien": "2026-11-21T11:41:20.435Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:36:14.499Z"
+   "ultimaBien": "2026-11-21T11:41:20.435Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:36:14.499Z"
+   "ultimaBien": "2026-11-21T11:41:20.435Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8712,11 +8712,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:36:14.499Z"
+   "ultimaBien": "2026-11-21T11:41:20.435Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T11:36:14.499Z"
+   "ultimaBien": "2026-11-21T11:41:20.435Z"
   }
  },
  "avisos": [
