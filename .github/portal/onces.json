@@ -1784,7 +1784,76 @@
     "entran": [],
     "salen": []
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "230",
+     "nombre": "Courtois",
+     "pos": 1
+    },
+    {
+     "id": "2530",
+     "nombre": "Huijsen",
+     "pos": 2
+    },
+    {
+     "id": "3107",
+     "nombre": "Konaté",
+     "pos": 2
+    },
+    {
+     "id": "2533",
+     "nombre": "Á. Carreras",
+     "pos": 2
+    },
+    {
+     "id": "2531",
+     "nombre": "Trent",
+     "pos": 2
+    },
+    {
+     "id": "1674",
+     "nombre": "Arda Güler",
+     "pos": 3
+    },
+    {
+     "id": "1300",
+     "nombre": "Camavinga",
+     "pos": 3
+    },
+    {
+     "id": "3116",
+     "nombre": "Bernardo Silva",
+     "pos": 3
+    },
+    {
+     "id": "3101",
+     "nombre": "Bellingham",
+     "pos": 3
+    },
+    {
+     "id": "3143",
+     "nombre": "Diomande",
+     "pos": 4
+    },
+    {
+     "id": "3103",
+     "nombre": "Mbappé",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "230",
+    "2530",
+    "3106",
+    "3107",
+    "3101",
+    "1674",
+    "2430",
+    "1480",
+    "3116",
+    "3103",
+    "3143"
+   ]
   },
   {
    "id": "6",
@@ -1981,7 +2050,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2713",
+     "nombre": "Ionut Radu",
+     "pos": 1
+    },
+    {
+     "id": "3123",
+     "nombre": "Marcos Alonso",
+     "pos": 2
+    },
+    {
+     "id": "2206",
+     "nombre": "Yoel Lago",
+     "pos": 2
+    },
+    {
+     "id": "2074",
+     "nombre": "Javi Rodríguez",
+     "pos": 2
+    },
+    {
+     "id": "2607",
+     "nombre": "Ilaix Moriba",
+     "pos": 3
+    },
+    {
+     "id": "2604",
+     "nombre": "Carreira",
+     "pos": 2
+    },
+    {
+     "id": "2913",
+     "nombre": "Burcio",
+     "pos": 3
+    },
+    {
+     "id": "2329",
+     "nombre": "Javi Galán",
+     "pos": 2
+    },
+    {
+     "id": "2397",
+     "nombre": "Pablo Durán",
+     "pos": 4
+    },
+    {
+     "id": "2394",
+     "nombre": "Williot",
+     "pos": 3
+    },
+    {
+     "id": "2078",
+     "nombre": "Hugo Alvarez",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "2713",
+    "2206",
+    "3123",
+    "2074",
+    "2714",
+    "2329",
+    "2607",
+    "2078",
+    "2295",
+    "2603",
+    "2397"
+   ]
   },
   {
    "id": "4",
