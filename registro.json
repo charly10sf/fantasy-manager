@@ -4192,12 +4192,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252335/maldita-fila-12.html": 1794981600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261118/1004252321/reus-medirse-barakaldo.html": 1794981600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261118/1004252273/copa-pone-prueba-sabadell-mermado.html": 1794981600000,
-   "SPORT|136562228": 1794974509000,
-   "SPORT|136549199": 1794981626000,
-   "SPORT|136563322": 1794981625000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-directo-elecciones-generales-29n-actualidad-politica-sanchez-feijoo-dia-debate-20261118083337.html": 1794987217000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-retira-presentador-atrapame-si-puedes-monolo-sarria-denuncia-presunto-acoso-sexual-20261118093207.html": 1794990727000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
@@ -4235,12 +4229,14 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
    "SPORT|136684390": 1795197900000,
-   "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000
+   "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000,
+   "SPORT|136687529": 1795240799000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-20",
-   "n": 11,
+   "dia": "2026-11-21",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
@@ -4248,17 +4244,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 16320,
-  "salida": 261,
+  "entrada": 18284,
+  "salida": 438,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.042508,
+  "dolares": 0.042793,
   "reservado": 0
  },
  "recientes": {
@@ -8649,13 +8645,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4697,
+   "ok": 4698,
    "fallos": 0,
-   "ejecuciones": 3883,
+   "ejecuciones": 3884,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T06:56:25.576Z"
+   "ultima": "2026-11-21T07:01:13.010Z"
   }
  },
  "ptsDirecto": {
@@ -8685,15 +8681,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T06:56:26.347Z"
+   "ultimaBien": "2026-11-21T07:01:23.057Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T06:56:26.347Z"
+   "ultimaBien": "2026-11-21T07:01:23.057Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T06:56:26.347Z"
+   "ultimaBien": "2026-11-21T07:01:23.057Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8701,7 +8697,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-20T22:56:15.840Z"
+   "ultimaBien": "2026-11-21T07:01:23.057Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
