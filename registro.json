@@ -2428,7 +2428,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
    "SPORT|136576189": 1795023205000,
    "SPORT|136592925": 1795023498000,
    "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/": 1795025481000,
@@ -2641,22 +2640,10 @@
    "SPORT|136701406": 1795275671000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000,
    "SPORT|136702543": 1795276838000,
-   "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000
+   "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795022588000,
-    "id": "1480",
-    "que": "molestias",
-    "oficial": false,
-    "seleccion": "sigue",
-    "hecho": "Tchouaméni trabaja en el interior por molestias con su selección",
-    "motivo": "molestias con su selección",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/zaid-romero-listo-para-volver-f202611-n/",
     "medio": "AS",
@@ -3482,7 +3469,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -4389,17 +4376,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 37,
    "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 597955,
-  "salida": 23952,
+  "entrada": 599945,
+  "salida": 24044,
   "cacheLee": 26127,
   "cacheEscribe": 17418,
-  "dolares": 1.204384,
+  "dolares": 1.204629,
   "reservado": 0
  },
  "recientes": {
@@ -8912,13 +8899,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4871,
+   "ok": 4872,
    "fallos": 0,
-   "ejecuciones": 4010,
+   "ejecuciones": 4011,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T17:21:12.618Z"
+   "ultima": "2026-11-21T17:26:20.744Z"
   }
  },
  "ptsDirecto": {
@@ -8984,27 +8971,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T17:21:19.353Z"
+   "ultimaBien": "2026-11-21T17:26:31.648Z"
   }
  },
  "avisos": [
