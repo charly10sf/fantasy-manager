@@ -4284,7 +4284,6 @@
  "liga": {
   "vistas": {
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/laliga-logra-duodecima-sentencia-racismo_0_2008532323.html": 1794993412000,
-   "SPORT|136566732": 1794991027000,
    "SPORT|136566149": 1794994576000,
    "SPORT|136569400": 1794994780000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/ola-violencia-futbol-obliga-ceuta-cerrar-campos-20261118_3477416.html": 1795003041000,
@@ -8734,13 +8733,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4717,
+   "ok": 4718,
    "fallos": 0,
-   "ejecuciones": 3903,
+   "ejecuciones": 3904,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T08:36:18.876Z"
+   "ultima": "2026-11-21T08:41:19.205Z"
   }
  },
  "ptsDirecto": {
@@ -8770,15 +8769,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:36:26.336Z"
+   "ultimaBien": "2026-11-21T08:41:27.477Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:36:26.336Z"
+   "ultimaBien": "2026-11-21T08:41:27.477Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:36:26.336Z"
+   "ultimaBien": "2026-11-21T08:41:27.477Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8786,11 +8785,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:36:26.336Z"
+   "ultimaBien": "2026-11-21T08:41:27.477Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T08:36:26.336Z"
+   "ultimaBien": "2026-11-21T08:41:27.477Z"
   }
  },
  "avisos": [
