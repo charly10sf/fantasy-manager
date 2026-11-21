@@ -1437,6 +1437,13 @@
    "jornada": 13,
    "id": "2124111066267296085",
    "t": "2026-11-21T12:01:57.445Z"
+  },
+  {
+   "clave": "novedades|3108:vuelve|2026-11-21",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2124124821994844378",
+   "t": "2026-11-21T12:56:36.952Z"
   }
  ],
  "estados": {
@@ -1469,7 +1476,7 @@
   "886": "ok",
   "927": "ok",
   "988": "ok",
-  "1029": "doubtful",
+  "1029": "ok",
   "1031": "ok",
   "1033": "ok",
   "1056": "ok",
@@ -2118,7 +2125,7 @@
   "3105": "injured",
   "3106": "ok",
   "3107": "ok",
-  "3108": "doubtful",
+  "3108": "ok",
   "3109": "ok",
   "3110": "out_of_league",
   "3111": "ok",
@@ -2323,10 +2330,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3108",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1795265772354
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261118/1004252602/lamine-yamal-elegido-mejor-jugador-laliga-2025-26.html": 1795006544000,
    "SPORT|136581134": 1795007753000,
    "SPORT|136580084": 1795008872000,
    "SPORT|136558313": 1795010451000,
@@ -4068,8 +4081,8 @@
     "t": 0
    },
    "3108": {
-    "e": "doubtful",
-    "t": 1795101672785
+    "e": "ok",
+    "t": 1795265772354
    },
    "3109": {
     "e": "ok",
@@ -4279,16 +4292,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 14,
-   "redactar": 3,
-   "revisar": 3,
+   "redactar": 7,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 81441,
-  "salida": 10304,
-  "cacheLee": 2903,
-  "cacheEscribe": 5806,
-  "dolares": 0.132309,
+  "entrada": 134853,
+  "salida": 11212,
+  "cacheLee": 5806,
+  "cacheEscribe": 8709,
+  "dolares": 0.255761,
   "reservado": 0
  },
  "recientes": {
@@ -4448,10 +4461,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T12:01:42.160Z",
-    "texto": "✅ Olmo, Cubarsí y Kounde, los tres del Barça, están disponibles para la jornada 13 ante el Villarreal 🚢.\n\nOlmo lleva un gol y tres asistencias en la liga. Kounde tuvo su mejor jornada en la 8, con 18 puntos."
-   },
-   {
     "t": "2026-11-20T12:06:32.278Z",
     "texto": "✅ Zaid Romero vuelve a estar disponible: la duda queda despejada y el defensa del Getafe llega con un 70 % de titularidad, así que lo normal es verlo en el once.\n\nLo malo es el partido. El domingo a las 21:00 en el Coliseum recibe al Atlético, que va 3º y es de los que más marcan, algo que a un defensa le viene mal.\n\nOjo también a lo que vale: 14,8 M, tras perder 15,2 M en el último mes."
    },
@@ -4466,6 +4475,10 @@
    {
     "t": "2026-11-20T12:46:39.083Z",
     "texto": "✅ Zabiri vuelve a estar disponible: la duda queda despejada y el delantero del Racing ⚓ puede estar el domingo.\n\nLleva 9 goles en la liga, y con un 57 % de titularidad tiene más papeletas de jugar que de quedarse fuera. El partido no ayuda: recibe en El Sardinero a la Real Sociedad, que va 5º, un cruce difícil para un delantero."
+   },
+   {
+    "t": "2026-11-21T12:56:36.954Z",
+    "texto": "✅ Aubameyang llega a tiempo: la duda se despeja y el delantero del Dépor puede jugar hoy a las 14:00.\n\nCon un 88 % de titularidad, lo normal es verlo en el once. Visita Mendizorroza, donde el Alavés, que va 13º, pone un partido asequible para un delantero. Y si lo tienes, ya sabes de lo que es capaz: en la jornada 4 se fue hasta los 17 puntos."
    }
   ],
   "resumen": [
@@ -8679,13 +8692,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4769,
+   "ok": 4770,
    "fallos": 0,
-   "ejecuciones": 3955,
+   "ejecuciones": 3956,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T12:51:12.650Z"
+   "ultima": "2026-11-21T12:56:12.354Z"
   }
  },
  "ptsDirecto": {
@@ -8715,15 +8728,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:51:16.234Z"
+   "ultimaBien": "2026-11-21T12:56:37.041Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:51:16.234Z"
+   "ultimaBien": "2026-11-21T12:56:37.041Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:51:16.234Z"
+   "ultimaBien": "2026-11-21T12:56:37.041Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8731,11 +8744,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:51:16.234Z"
+   "ultimaBien": "2026-11-21T12:56:37.041Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T12:51:16.234Z"
+   "ultimaBien": "2026-11-21T12:56:37.041Z"
   }
  },
  "avisos": [
