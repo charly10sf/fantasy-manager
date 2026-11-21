@@ -1503,6 +1503,13 @@
     "extra": 0,
     "jugador": "Denis Suárez"
    }
+  },
+  {
+   "clave": "mvp|130",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124161338549186994",
+   "t": "2026-11-21T15:21:43.208Z"
   }
  ],
  "estados": {
@@ -4399,16 +4406,16 @@
   "dia": "2026-11-21",
   "llamadas": {
    "clasificar": 24,
-   "redactar": 19,
-   "revisar": 8,
+   "redactar": 26,
+   "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 318581,
-  "salida": 17593,
-  "cacheLee": 11612,
-  "cacheEscribe": 11612,
-  "dolares": 0.618541,
+  "entrada": 419192,
+  "salida": 19387,
+  "cacheLee": 14515,
+  "cacheEscribe": 14515,
+  "dolares": 0.845251,
   "reservado": 0
  },
  "recientes": {
@@ -4458,10 +4465,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-08T17:46:51.211Z",
-    "texto": "⭐ Barrenetxea y Oskarsson comparten el MVP del 1-0 de la Real Sociedad al Rayo ⚡: 13 puntos para cada uno.\n\nOskarsson, delantero, marcó el único gol en el 67' y se va a más del triple de su media. Vale 3,8 M. Barrenetxea, centrocampista, hace más del doble de su media de 4,8 y cuesta 26,7 M.\n\nLos dos visitan al Racing ⚓ en la jornada 13: si tienes a uno u otro, ahí siguen."
-   },
-   {
     "t": "2026-11-08T19:57:35.588Z",
     "texto": "⭐ Ryan es el mejor del Celta-Levante 🐸, que acabó 0-0: 14 puntos para el portero, más del doble de su media de 6,8.\n\nCuesta 18,4 M y en la jornada 13 el Levante recibe al Elche 🌴. Si lo tienes, no se toca."
    },
@@ -4476,6 +4479,10 @@
    {
     "t": "2026-11-20T22:41:37.728Z",
     "texto": "⭐ Fortuño es el mejor del Athletic 🦁-Espanyol, que acabó 0-1 en San Mamés: 14 puntos para el portero del Espanyol, más del doble de su media.\n\nEl gol de Roberto en el 66' fue el único del partido y Fortuño mantuvo la portería a cero. Vale 4,2 M y en la jornada 14 el Espanyol recibe al Getafe."
+   },
+   {
+    "t": "2026-11-21T15:21:43.210Z",
+    "texto": "⭐ Ángel Pérez es el mejor del Alavés-Deportivo con 14 puntos: abrió el marcador en el 2' y el Alavés acabó ganando 3-1 en Mendizorroza.\n\nEl centrocampista hace más del doble de su media de 6,4 y vale 29,8 M. En la jornada 14 visita al Real Madrid ⚪."
    }
   ],
   "mercado": [
@@ -4940,6 +4947,11 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
+  },
+  "final|130": {
+   "n": 1,
+   "t": "2026-11-21T15:21:27.154Z",
+   "ultima": "2026-11-21T15:21:27.154Z"
   }
  },
  "rasgos": {
@@ -8886,13 +8898,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4821,
+   "ok": 4823,
    "fallos": 0,
-   "ejecuciones": 3984,
+   "ejecuciones": 3985,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T15:16:12.018Z"
+   "ultima": "2026-11-21T15:21:10.953Z"
   }
  },
  "ptsDirecto": {
@@ -8946,27 +8958,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T15:16:16.156Z"
+   "ultimaBien": "2026-11-21T15:21:44.150Z"
   }
  },
  "avisos": [
