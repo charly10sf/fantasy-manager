@@ -2421,7 +2421,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136532843": 1795017998000,
    "AS|https://as.com/futbol/primera/cepeda-y-revivo-vuelven-sanos-pero-sin-victorias-f202611-n/": 1795021156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261118/1004252692/madrid-sigue-esperando-internacionales-tchouameni-bernardo-trabajo-solitario.html": 1795022588000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261118/1004252684/oyarzabal-rey-gol-roja-tres-anos-pichichi-altura-raul.html": 1795022300000,
@@ -4408,7 +4407,9 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277474630
+  }
  },
  "ia": {
   "dia": "2026-11-21",
@@ -8917,13 +8918,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4841,
+   "ok": 4843,
    "fallos": 0,
-   "ejecuciones": 3994,
+   "ejecuciones": 3995,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T16:06:10.564Z"
+   "ultima": "2026-11-21T16:11:14.630Z"
   }
  },
  "ptsDirecto": {
@@ -8989,27 +8990,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T16:06:15.651Z"
+   "ultimaBien": "2026-11-21T16:11:20.453Z"
   }
  },
  "avisos": [
