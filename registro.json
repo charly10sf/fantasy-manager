@@ -2319,7 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-gran-diferencia-alineacion_0_2008526265.html": 1794998631000,
    "AS|https://as.com/futbol/primera/es-la-hora-de-mikautadze-f202611-n/": 1795000732000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252548/vivir-ambiente-hostil.html": 1794999663000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/18/belocian-el-unico-internacional-ya-de-regreso-al-racing-radio-santander/": 1795002741000,
@@ -2528,7 +2527,8 @@
    "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
    "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000,
+   "SPORT|136691896": 1795253836000
   },
   "hechos": [
    {
@@ -3365,7 +3365,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4260,17 +4260,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 33377,
-  "salida": 5933,
+  "entrada": 35477,
+  "salida": 6047,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.047049,
+  "dolares": 0.047316,
   "reservado": 0
  },
  "recientes": {
@@ -8661,13 +8661,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4743,
+   "ok": 4744,
    "fallos": 0,
-   "ejecuciones": 3929,
+   "ejecuciones": 3930,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T10:41:18.121Z"
+   "ultima": "2026-11-21T10:46:11.895Z"
   }
  },
  "ptsDirecto": {
@@ -8697,15 +8697,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:41:22.476Z"
+   "ultimaBien": "2026-11-21T10:46:17.838Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:41:22.476Z"
+   "ultimaBien": "2026-11-21T10:46:17.838Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:41:22.476Z"
+   "ultimaBien": "2026-11-21T10:46:17.838Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8713,11 +8713,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:41:22.476Z"
+   "ultimaBien": "2026-11-21T10:46:17.838Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:41:22.476Z"
+   "ultimaBien": "2026-11-21T10:46:17.838Z"
   }
  },
  "avisos": [
