@@ -1634,6 +1634,21 @@
     "extra": 0,
     "jugador": "Jude Bellingham"
    }
+  },
+  {
+   "clave": "directo|122|Carlos Espí|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124260296076202259",
+   "t": "2026-11-21T21:54:56.490Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "122",
+    "equipo": "86",
+    "min": 85,
+    "extra": 0,
+    "jugador": "Carlos Espí"
+   }
   }
  ],
  "estados": {
@@ -2529,7 +2544,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261118/1004252774/oportunidad-tsitaishvili-afianzarse-rayo.html": 1795040080000,
    "SPORT|136571233": 1795064444000,
    "SPORT|136601542": 1795060876000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/alvaro-cervera-polemica-sobre-declaraciones-sobre-pique-no-opinion-no-pensamiento-20261118_3477901.html": 1795038674000,
    "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/horario-ver-derbi-sevilla-fc-real-betis-balompie_0_2008538061.html": 1795068082000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000,
@@ -4616,10 +4630,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T16:01:27.924Z",
-    "texto": "⚽ Copete, un defensa, la mete de cabeza en el 41' y el Valencia 🦇 se adelanta en Vallecas: 0-1 al Rayo ⚡.\n\nEs su primer gol en Liga, Champions o Copa y ya lleva 6 puntos, más del doble de su media. Javi Guerra pone el pase y suma 4."
-   },
-   {
     "t": "2026-11-21T18:46:20.582Z",
     "texto": "⚽ Antony la mete en el 50' y el Betis pasa por delante en el Sánchez-Pizjuán: 0-1 contra el Sevilla.\n\nEl brasileño estrena su cuenta en Liga, Champions o Copa del Rey y ya suma 6 puntos. Isco, con la asistencia, lleva 4 por ahora."
    },
@@ -4634,6 +4644,10 @@
    {
     "t": "2026-11-21T21:36:20.585Z",
     "texto": "⚽ Gol de Bellingham y empate en el 66'. Real Madrid 1-1 Celta. Asistencia de Mbappé, con 4 puntos de momento. Bellingham ya suma 7 puntos."
+   },
+   {
+    "t": "2026-11-21T21:54:56.492Z",
+    "texto": "⚽ Gol de Carlos Espí y el Real Madrid le da la vuelta en el 85'. Real Madrid 2-1 Celta. Ya en el tramo final. El delantero ya va por 5 puntos."
    }
   ],
   "novedades": [
@@ -9069,17 +9083,33 @@
    "w": "2026-11-21T21:32:44Z",
    "f": "2026-11-21T21:36:16.362Z",
    "rf": "69:00"
+  },
+  "fm|122|1610744|85": {
+   "j": "Carlos Espí",
+   "m": "85'",
+   "f": "2026-11-21T21:54:52.438Z",
+   "rf": "87:39",
+   "casado": true
+  },
+  "directo|122|Carlos Espí|gol1": {
+   "j": "Carlos Espí",
+   "m": "85'",
+   "e": "2026-11-21T21:54:52.438Z",
+   "re": "88'",
+   "w": "2026-11-21T21:52:09Z",
+   "f": "2026-11-21T21:54:52.438Z",
+   "rf": "87:39"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4970,
+   "ok": 4972,
    "fallos": 0,
-   "ejecuciones": 4064,
+   "ejecuciones": 4065,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T21:51:11.134Z"
+   "ultima": "2026-11-21T21:54:52.438Z"
   }
  },
  "ptsDirecto": {
@@ -9178,6 +9208,12 @@
    "g": 0,
    "a": 1,
    "t": 1795296976362
+  },
+  "13|122|3129": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795298092438
   }
  },
  "golesAnulados": {
@@ -9193,27 +9229,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:51:18.844Z"
+   "ultimaBien": "2026-11-21T21:55:06.982Z"
   }
  },
  "avisos": [
