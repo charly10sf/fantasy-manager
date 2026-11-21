@@ -2657,7 +2657,8 @@
    "SPORT|136701065": 1795280023000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
-   "SPORT|136704189": 1795281115000
+   "SPORT|136704189": 1795281115000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000
   },
   "hechos": [
    {
@@ -3473,7 +3474,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -8902,13 +8903,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4891,
+   "ok": 4893,
    "fallos": 0,
-   "ejecuciones": 4021,
+   "ejecuciones": 4022,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:16:12.075Z"
+   "ultima": "2026-11-21T18:21:10.790Z"
   }
  },
  "ptsDirecto": {
@@ -8974,27 +8975,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:16:48.009Z"
+   "ultimaBien": "2026-11-21T18:21:21.377Z"
   }
  },
  "avisos": [
