@@ -2319,7 +2319,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html": 1794997427000,
    "Cadena SER|https://cadenaser.com/murcia/2026/11/18/oscar-gil-trabaja-con-normalidad-para-llegar-a-la-proxima-jornada-del-real-murcia-radio-murcia/": 1794998357000,
    "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/": 1794998089000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-gran-diferencia-alineacion_0_2008526265.html": 1794998631000,
@@ -2534,21 +2533,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261118/1004252533/ceballos-sigue-margen-cucho-gana-rodaje-derbi.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794997427000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos entrena al margen por unas molestias físicas",
-    "motivo": "molestias",
-    "plazo": "",
-    "nums": [
-     18,
-     30
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/yeray-dosifica-ante-las-bajas-de-vivian-y-paredes-ante-el-espanyol-f202611-n/",
     "medio": "AS",
@@ -8703,13 +8687,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4739,
+   "ok": 4740,
    "fallos": 0,
-   "ejecuciones": 3925,
+   "ejecuciones": 3926,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T10:21:23.115Z"
+   "ultima": "2026-11-21T10:26:14.000Z"
   }
  },
  "ptsDirecto": {
@@ -8739,15 +8723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:21:29.531Z"
+   "ultimaBien": "2026-11-21T10:26:17.686Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:21:29.531Z"
+   "ultimaBien": "2026-11-21T10:26:17.686Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:21:29.531Z"
+   "ultimaBien": "2026-11-21T10:26:17.686Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -8755,11 +8739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:21:29.531Z"
+   "ultimaBien": "2026-11-21T10:26:17.686Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T10:21:29.531Z"
+   "ultimaBien": "2026-11-21T10:26:17.686Z"
   }
  },
  "avisos": [
