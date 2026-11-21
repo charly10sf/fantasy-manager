@@ -4688,6 +4688,11 @@
    "h": "c89f81136464",
    "desde": 1795213275580,
    "fin": 1795211774471
+  },
+  "13|130": {
+   "h": "cb412e4bdce4",
+   "desde": 1795272973873,
+   "fin": 1795272973873
   }
  },
  "iaDias": [
@@ -5092,7 +5097,8 @@
    "6386083",
    "6386067",
    "6386080",
-   "5868132"
+   "5868132",
+   "5868131"
   ],
   "equipos": [
    "9866",
@@ -5287,6 +5293,19 @@
       1
      ],
      "champions": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "282281": {
+    "n": "Denis Suárez",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
       1,
       0,
       0,
@@ -5522,11 +5541,11 @@
     "e": "Deportivo Alavés",
     "g": {
      "liga": [
-      5,
+      6,
       2,
       0,
       1,
-      1
+      2
      ]
     }
    },
@@ -8076,6 +8095,19 @@
      ]
     }
    },
+   "1563022": {
+    "n": "Ángel Pérez",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1574189": {
     "n": "Senny Mayulu",
     "e": "Paris Saint-Germain",
@@ -8852,13 +8884,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4815,
+   "ok": 4817,
    "fallos": 0,
-   "ejecuciones": 3979,
+   "ejecuciones": 3980,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T14:51:10.383Z"
+   "ultima": "2026-11-21T14:56:12.309Z"
   }
  },
  "ptsDirecto": {
@@ -8912,27 +8944,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T14:51:25.194Z"
+   "ultimaBien": "2026-11-21T14:56:16.572Z"
   }
  },
  "avisos": [
