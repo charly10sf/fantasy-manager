@@ -1,7 +1,7 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
-import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
+import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, rematarAuto, efectoTras, comoVenia } from './motor.js';
@@ -39,7 +39,7 @@ import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML } from './portada.js';
-import { PASOS_ENTRAR_WEB } from './guiadib.js';
+import { dibCopiar } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
@@ -92,7 +92,7 @@ function pantallaEntrar(error = '') {
   const mudanza = enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : '';
   const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(botonPlay('hero'))}`;
   raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}">${enApp ? '' : barraPortal()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
-    ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
+    ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
@@ -107,8 +107,10 @@ function pantallaEntrar(error = '') {
   marcarPaso('ver', { una: true });
   // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12)
   if (!enApp && !movilDe()) iniciarQR(); else pararQR();
-  // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
-  if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus({ preventScroll: true }); }, 50);
+  // en el ordenador, con la pestaña de la app elegida, el cursor directamente en el código; en el móvil no (sacaría el teclado)
+  if (!enApp && !movilDe() && LS.get('entTab') === 'app') setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus({ preventScroll: true }); }, 50);
+  // (0.8l) en la web, el enlace a LaLiga en su botón y, si ya se abrió, el paso de pegar por delante
+  if (!enApp) prepararEntrada();
 }
 /* ---------------- invitar a tu liga (fase 0 del roadmap) ----------------
    Un enlace a la web con el número de tu liga (?l=…). Quien lo abre ve que viene invitado y, al entrar con su cuenta, se
@@ -149,10 +151,10 @@ const ANDROID = '<svg class="an" viewBox="0 0 24 24" aria-hidden="true" fill="cu
 /** el logo de Apple (Simple Icons, CC0), para señalar lo de iPhone */
 const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
-/** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
+/** en el navegador, la alternativa a los tres pasos: entrar con un código de la app (o de otra web donde ya se ha entrado) */
 const codigoWebHTML = (tit = true) => `<div class="entrar-codigo">
       ${tit ? `<b>${icono('usuario')}${!enApp && !movilDe() ? 'O con el código de la app' : 'Entra con el código de la app'}</b>` : ''}
-      <span>${!enApp && !movilDe() ? 'Si no puedes escanear: en la app, <b>Ajustes → Abrir en el ordenador → Código</b>; en otra web donde ya has entrado, <b>Ajustes → Abrir en otro dispositivo</b>. Dura 10 minutos.' : 'En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.'}</span>
+      <span>${!enApp && !movilDe() ? 'Si no puedes escanear: en la app, <b>Ajustes → Abrir en el ordenador → Código</b>; en otra web donde ya has entrado, <b>Ajustes → Abrir en otro dispositivo</b>. Dura 10 minutos.' : 'Si tienes la app en un Android: <b>Ajustes → Abrir en el ordenador</b>. Si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.'}</span>
       <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo" aria-label="Código de la app" aria-describedby="codigoErr"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
       <p class="codigo-err" id="codigoErr" role="alert" hidden></p>
     </div>`;
@@ -172,84 +174,233 @@ const qrEntrarHTML = (tit = true) => `<div class="entrar-qr">
       <span class="eq-est" id="eqEst">Esperando al móvil…</span></div>
     </div>`;
 /**
- * lo de entrar en la web, según desde dónde se abra. En un Android lo suyo es la app, sin códigos (era lo que más lía a
- * quien abre la web desde el enlace): el botón de bajarla es lo primero y el código queda plegado, para quien ya la
- * tiene. En el iPhone, cómo se entra la primera vez, y la liga de ejemplo para ver qué es antes de ese paso. En el
- * ordenador, primero lo de quien llega nuevo (qué es, la liga de ejemplo y descargar la app, con su QR) y debajo, para quien
- * ya la tiene, el QR y el código; los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada,
- * van plegados en «No tengo la app en el móvil» (el texto del iPhone lo nombra así).
+ * Lo de entrar en la web, según desde dónde se abra (0.8l: la entrada rehecha de arriba abajo).
+ * LaLiga devuelve la sesión a una página https (auth.js), así que en la web se entra con tres gestos: abrir LaLiga, copiar la
+ * dirección de la página final y volver a pegarla. Es lo primero en el iPhone y en el ordenador; en la web de un Android lo
+ * primero sigue siendo la app (Google Play) y esto queda plegado. El QR y el código de la app son la alternativa.
  */
+/** si la web se ve dentro del navegador de otra app (X, Instagram…): ahí Google no deja entrar y «otra pestaña» no existe */
+function appAjena() {
+  const ua = navigator.userAgent || '';
+  const m = ua.match(/Instagram|FBAN|FBAV|FB_IAB|Twitter|TikTok|musical_ly|Bytedance|LinkedInApp|Snapchat|Line\//i);
+  if (!m) return '';
+  const k = m[0].toLowerCase();
+  return /insta/.test(k) ? 'Instagram' : /^fb/.test(k) ? 'Facebook' : /twitter/.test(k) ? 'X' : /tiktok|musical|byte/.test(k) ? 'TikTok' : /linkedin/.test(k) ? 'LinkedIn' : /snap/.test(k) ? 'Snapchat' : 'LINE';
+}
+const esMac = () => /Mac/i.test(navigator.platform || '') && !(navigator.maxTouchPoints > 1);
+/** hay botón de pegar si el navegador deja leer lo copiado tras un toque (si no, se pega a mano en el cuadro) */
+const hayPegar = () => !!(navigator.clipboard && typeof navigator.clipboard.readText === 'function');
 /**
- * Los pasos cortos de entrar en la web (iPhone y ordenador), sin F12 (0.8l): botón de abrir LaLiga, 3 pasos con dibujo y la
- * caja de pegar con su botón «Pegar». El enlace se recorta aunque venga con texto alrededor (extraerVuelta en auth.js). El
- * método viejo con las herramientas del navegador queda plegado por si la redirect nueva fallara. Una sola caja #vueltaWeb.
+ * Los tres pasos de entrar en la web. plat: 'iphone' | 'pc' | 'android' (cómo se copia y se pega en cada uno). Un solo
+ * #vueltaWeb por pantalla. El enlace de «Abrir LaLiga» es un <a target="_blank"> de verdad (lo rellena prepararEntrada): no
+ * depende de window.open, que Safari puede parar. El cuadro de pegar está siempre a la vista: vale sin portapapeles.
  */
-function entrarDirectoHTML() {
-  const ult = PASOS_ENTRAR_WEB.length - 1;
-  const pasos = PASOS_ENTRAR_WEB.map(([t, s], k) => `<li><div class="gd-t"><span class="gd-n">${k + 1}</span><span>${t}</span></div>${k === 0 ? '<button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>' : ''}<figure>${s}</figure>${k === ult ? `<textarea id="vueltaWeb" rows="2" placeholder="https://jwt.ms/?state=…&amp;code=…" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Pega aquí la dirección de la página de LaLiga"></textarea><div class="pega-fila"><button class="btn chico sec" data-accion="pegarPortapapeles">${icono('nota')}Pegar</button><button class="btn chico" data-accion="pegarVuelta">Entrar</button></div>` : ''}</li>`).join('');
-  // por si la página no te deja copiar la barra (solo ordenador): sacar la dirección con las herramientas del navegador y
-  // pegarla en la MISMA caja de arriba
-  const aMano = `<details class="sin-app vieja"><summary>¿No puedes copiar la dirección? (ordenador)</summary>
-    <p>En el ordenador, con Chrome o Edge: pulsa <b>F12</b> (en Mac, <b>Cmd + Opción + I</b>) y entra en la pestaña <b>Red</b> (Network) con <b>Conservar registro</b> marcado. Entra con tu cuenta y, en la lista, busca la fila cuyo nombre lleva <b>code=</b>: clic derecho → <b>Copiar</b> → <b>Copiar dirección del enlace</b>. Pégala en el cuadro de arriba y pulsa <b>Entrar</b>.</p></details>`;
-  return `<ol class="gd-lista gd-entrar">${pasos}</ol>${aMano}`;
+function entrarDirectoHTML(plat, { intro = '' } = {}) {
+  const tecla = (t) => `<kbd>${t}</kbd>`;
+  const copiar = esMac() ? `${tecla('⌘')} + ${tecla('C')}` : `${tecla('Ctrl')} + ${tecla('C')}`;
+  const pegar = esMac() ? `${tecla('⌘')} + ${tecla('V')}` : `${tecla('Ctrl')} + ${tecla('V')}`;
+  const comoCopiar = plat === 'iphone' ? 'Mantén pulsada la barra de direcciones (donde pone <b>jwt.ms</b>) y elige <b>Copiar</b> (o <b>Copiar enlace</b>).'
+    : plat === 'android' ? 'Toca la barra de direcciones (donde pone <b>jwt.ms</b>) y pulsa el icono de <b>copiar</b>.'
+      : `Haz clic en la barra de direcciones (empieza por <b>jwt.ms</b>) y pulsa ${copiar}.`;
+  const comoPegar = plat === 'pc' ? `haz clic en el cuadro y pulsa ${pegar}` : 'mantén pulsado el cuadro y elige <b>Pegar</b>';
+  const ajena = appAjena();
+  const navegador = plat === 'iphone' ? 'Safari' : 'tu navegador';
+  const avisoAjena = ajena ? `<div class="ed-ajena" role="note">${icono('alerta')}<div><b>Estás dentro de la app de ${ajena}.</b> Desde aquí la entrada suele fallar: Google no deja iniciar sesión dentro de otras apps. Abre esta web en ${navegador}: en el menú de arriba o de abajo (<b>···</b> o Compartir) elige <b>Abrir en ${plat === 'iphone' ? 'Safari' : 'el navegador'}</b>.
+      <button type="button" class="btn chico sec" data-accion="copiarWeb">${icono('copiar')}Copiar la dirección de esta web</button></div></div>` : '';
+  const conPegar = hayPegar();
+  // si LaLiga dejara de aceptar la vuelta https: en el ordenador, el método a mano de antes (con su propio enlace, que
+  // vuelve al esquema de la app); en el móvil no hay herramientas del navegador, así que queda el código
+  const aMano = plat === 'pc' ? `<details class="ed-mano"><summary>Entrar con el método a mano (solo ordenador, Chrome o Edge)</summary>
+        <ol>
+          <li>Pulsa <a id="edAMano" data-accion="abrirAMano" target="_blank" rel="noopener">Abrir LaLiga para el método a mano</a>. Se abre en otra pestaña.</li>
+          <li>En esa pestaña, <b>antes de entrar</b>, pulsa <b>F12</b> (en Mac, <b>Cmd + Opción + I</b>), entra en <b>Red</b> (Network) y marca <b>Conservar registro</b> (Preserve log).</li>
+          <li>Entra con tu cuenta. La página se queda en blanco: es lo normal.</li>
+          <li>En la lista de Red, busca la última fila, la que lleva <b>code=</b>: clic derecho → <b>Copiar</b> → <b>Copiar dirección del enlace</b>.</li>
+          <li>Vuelve aquí y pégala en el cuadro del paso 3.</li>
+        </ol>
+        </details>`
+    : `<p>Mientras tanto puedes entrar con un código: ${plat === 'iphone' ? 'mira «Entrar con un código», más abajo' : 'mira «Ya tengo la app y quiero usar la web», justo encima'}. O entra desde un ordenador, que tiene un método a mano.</p>`;
+  return `<section class="ed" id="entrarDirecto" data-plat="${plat}" aria-labelledby="edT">
+    <h2 class="ed-t" id="edT">${plat === 'iphone' ? APPLE : icono('usuario')}Entra con tu cuenta de LaLiga</h2>
+    <p class="ed-i">${intro}Son tres pasos y solo se hace una vez. La contraseña la escribes en la página de LaLiga, nunca aquí.</p>
+    ${avisoAjena}
+    <ol class="ed-pasos" role="list">
+      <li><span class="ed-n" aria-hidden="true">1</span><div class="ed-c">
+        <a class="btn ancho ed-abrir" id="edAbrir" data-accion="abrirLaLiga" target="_blank" rel="noopener" aria-describedby="edAbrirD">${icono('usuario')}<span id="edAbrirT">Abrir LaLiga y entrar</span></a>
+        <p id="edAbrirD">Se abre en otra pestaña. Entra como siempre: con Google, Apple o tu correo. Si LaLiga da error, ciérrala y pulsa otra vez: a veces falla a la primera.</p>
+      </div></li>
+      <li><span class="ed-n" aria-hidden="true">2</span><div class="ed-c">
+        <h3>Copia la dirección de la página final</h3>
+        <p>Al terminar acabas en una página casi vacía, de Microsoft: es lo normal y no hay que tocar nada en ella. ${comoCopiar}</p>
+        <figure class="ed-fig">${dibCopiar(plat, esMac())}</figure>
+      </div></li>
+      <li><span class="ed-n" aria-hidden="true">3</span><div class="ed-c">
+        <h3>Vuelve aquí y pégala</h3>
+        ${conPegar ? `<button type="button" class="btn ancho sec ed-pegar" id="edPegar" data-accion="pegarYEntrar">${icono('nota')}Pegar y entrar</button>` : ''}
+        <label class="ed-l" for="vueltaWeb">${conPegar ? `O pégala tú aquí (${comoPegar}):` : `Pégala aquí (${comoPegar}):`}</label>
+        <div class="ed-campo"><input id="vueltaWeb" type="text" inputmode="url" enterkeyhint="go" placeholder="https://jwt.ms/?state=…&amp;code=…" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" aria-describedby="vueltaErr vueltaEst"><button type="button" class="btn chico sec" id="edEntrar" data-accion="pegarVuelta">Entrar</button></div>
+        <p class="ed-est" id="vueltaEst" role="status" aria-live="polite"></p>
+        <p class="ed-err" id="vueltaErr" role="alert" hidden></p>
+      </div></li>
+    </ol>
+    <details class="ed-ayuda" id="edAyuda"><summary>¿Algo no va?</summary>
+      <dl>
+        <dt>LaLiga dice «Lo sentimos, tenemos problemas para iniciar su sesión»</dt>
+        <dd>Es un fallo de su página y pasa a menudo. Cierra esa pestaña y pulsa <b>Abrir LaLiga</b> otra vez.</dd>
+        <dt>No encuentro la barra de direcciones o no me deja copiar</dt>
+        <dd>${plat === 'pc' ? 'Está arriba del todo de la ventana. Haz clic encima: se selecciona entera y ya puedes copiarla.' : 'Está arriba o abajo de la pantalla, según tu móvil: es donde pone <b>jwt.ms</b>. Si no sale, desliza un poco la página hacia abajo. También vale <b>Compartir → Copiar</b>.'}</dd>
+        <dt>He pegado y me dice que el enlace no vale</dt>
+        <dd>Cada enlace sirve una sola vez y caduca en pocos minutos. Pulsa <b>Abrir LaLiga</b> otra vez y copia la dirección nueva.</dd>
+        <dt id="edRedir">Al terminar no acabo en jwt.ms, o sale un error con «AADB2C90006»</dt>
+        <dd>Entonces LaLiga ha cambiado algo y esta forma de entrar ha dejado de valer. No es cosa tuya. ${aMano}</dd>
+      </dl>
+    </details>
+  </section>`;
+}
+/**
+ * Después de pintar la pantalla de entrar: pone el enlace a LaLiga en el botón (y en el del método a mano) y, si la página
+ * de LaLiga ya se abrió hace poco (también si Safari ha recargado esta pestaña al volver), deja el paso 3 por delante.
+ */
+async function prepararEntrada() {
+  const a = $('#edAbrir');
+  if (!a) return;
+  try {
+    const { url, urlAMano, abierto } = await prepararLogin();
+    const b = $('#edAbrir');
+    if (!b) return;
+    b.setAttribute('href', url);
+    const m = $('#edAMano'); if (m) m.setAttribute('href', urlAMano);
+    if (abierto && Date.now() - abierto < 30 * MIN) entradaAbierta({ alVolver: true });
+  } catch (e) {
+    // sin https (o un navegador muy viejo) no hay con qué preparar la entrada: se dice, con la salida que queda
+    errorVuelta('Este navegador no deja preparar la entrada desde aquí. Abre la web en https://fantasymanagerapp.com con Safari, Chrome o Edge, o entra con un código.');
+  }
+}
+/** el paso 3 por delante: ya se ha abierto LaLiga. Con alVolver, además se lleva ahí el foco y se dice qué toca */
+function entradaAbierta({ alVolver = false } = {}) {
+  const c = $('#entrarDirecto');
+  if (!c) return;
+  c.dataset.abierto = '1';
+  const t = $('#edAbrirT'); if (t) t.textContent = 'Abrir LaLiga otra vez';
+  const a = $('#edAbrir'); if (a) a.classList.add('sec');
+  const p = $('#edPegar'); if (p) p.classList.remove('sec');
+  if (!alVolver || S.entrandoWeb) return;
+  // que se vea: si está dentro de un desplegable o en la otra pestaña, se abre
+  const d = c.closest('details'); if (d) d.open = true;
+  const pan = c.closest('.ent-pan'); if (pan && pan.hidden) elegirEntTab('nuevo');
+  const err = $('#vueltaErr');
+  if (!err || err.hidden) estadoVuelta(p ? '¿Ya has copiado la dirección? Pulsa «Pegar y entrar».' : '¿Ya has copiado la dirección? Pégala en el cuadro.');
+  const foco = p || $('#vueltaWeb');
+  if (foco && document.activeElement !== $('#vueltaWeb')) { try { foco.focus({ preventScroll: true }); } catch (e) { /* nada */ } }
+  const paso = (foco && foco.closest('li')) || c;
+  try { paso.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); } catch (e) { /* nada */ }
+}
+const estadoVuelta = (t) => { const e = $('#vueltaEst'); if (e) e.textContent = t || ''; };
+/** el error de lo pegado, debajo del cuadro y sin repintar nada (no se pierde el sitio ni lo escrito) */
+function errorVuelta(t, { ayuda = false } = {}) {
+  const p = $('#vueltaErr'), inp = $('#vueltaWeb');
+  estadoVuelta('');
+  if (!p) { tostada(t, 7000); return; }
+  p.textContent = t; p.hidden = false;
+  if (inp) inp.setAttribute('aria-invalid', 'true');
+  const d = p.closest('details'); if (d) d.open = true;
+  if (ayuda) { const y = $('#edAyuda'); if (y) y.open = true; const m = $('.ed-mano'); if (m) m.open = true; }
+  try { p.scrollIntoView({ block: 'nearest' }); } catch (e) { /* nada */ }
+}
+function sinErrorVuelta() {
+  const p = $('#vueltaErr'), inp = $('#vueltaWeb');
+  if (p) { p.hidden = true; p.textContent = ''; }
+  if (inp) inp.removeAttribute('aria-invalid');
+}
+/**
+ * Entrar con lo pegado (el botón «Pegar y entrar», pegar en el cuadro o en cualquier parte de la pantalla, o «Entrar»).
+ * Primero se mira lo pegado sin llamar a nadie (mirarVuelta dice qué se ha pegado en su lugar); el error sale debajo del
+ * cuadro. Sin conexión no se pierde nada: se vuelve a pulsar con lo mismo.
+ */
+async function entrarConVuelta(txt) {
+  if (S.entrandoWeb) return;
+  const m = mirarVuelta(txt);
+  if (m.error) { errorVuelta(m.error); return; }
+  sinErrorVuelta();
+  const campo = $('#vueltaWeb');
+  if (campo && !campo.value.trim()) campo.value = m.url;
+  const botones = [$('#edPegar'), $('#edEntrar')].filter(Boolean);
+  S.entrandoWeb = true;
+  botones.forEach((b) => { b.disabled = true; });
+  estadoVuelta('Entrando…');
+  marcarPaso('p');
+  try { await terminarLogin(m.url); } catch (e) {
+    S.entrandoWeb = false;
+    botones.forEach((b) => { b.disabled = false; });
+    marcarPaso(pasoDeFallo(e));
+    errorVuelta(e.message || String(e), { ayuda: e.tipo === 'redirect' });
+    // el enlace gastado no vale para otro intento: fuera del cuadro (sin conexión se queda, para volver a pulsar)
+    if (campo && e.tipo !== 'red') campo.value = '';
+    return;
+  }
+  marcarPaso('ok');
+  try { contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); } finally { S.entrandoWeb = false; }
+}
+/** las dos pestañas de la entrada del ordenador */
+function elegirEntTab(t, { foco = false } = {}) {
+  LS.set('entTab', t);
+  document.querySelectorAll('.ent-tabs [data-tab]').forEach((b) => { const on = b.dataset.tab === t; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on && foco) b.focus(); });
+  const pn = $('#entPanNuevo'), pa = $('#entPanApp');
+  if (pn) pn.hidden = t !== 'nuevo';
+  if (pa) pa.hidden = t !== 'app';
 }
 function entrarWebHTML() {
   const movil = movilDe();
   if (movil === 'android') {
     return `<a class="btn ancho cta-grande" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a>
-    <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
+    <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin copiar nada.</p>
     ${botonDemo('sec')}
-    <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
+    <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>
+    <details class="sin-app"><summary>Entrar aquí, sin instalar la app</summary>${entrarDirectoHTML('android')}</details>`;
   }
   if (movil === 'iphone') {
-    // (0.8l) LaLiga ya devuelve la sesión a una web normal (auth.js), así que el iPhone entra directo: abrir LaLiga, copiar la
-    // barra y pegar, sin necesidad de un ordenador. Si la web está en la pantalla de inicio, su sesión va aparte de Safari, así
-    // que todo el flujo (abrir y pegar) ha de hacerse en el mismo sitio: por eso el aviso de añadirla antes de empezar.
-    const icono_ = enInicio();
-    return `<div class="entrar-movil"><b>${APPLE}Entrar en iPhone</b>
-      <span class="em-intro">No hay app en la App Store: Fantasy Manager se usa desde la web y puedes dejarla en tu pantalla de inicio como una app más. Entras con tu cuenta de LaLiga en 3 pasos, sin ordenador.</span>
-      ${icono_ ? '' : `<p class="em-aviso">${icono('nota')} <span>Si la quieres en tu pantalla de inicio, añádela <b>antes de empezar</b> (<b>Compartir → Añadir a pantalla de inicio</b>) y haz los pasos desde el icono. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}
-      ${entrarDirectoHTML()}</div>
+    // El iPhone entra directo, sin ordenador. Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari:
+    // todo (abrir y pegar) se hace en el mismo sitio, y por eso se avisa de añadirla antes; el aviso va debajo, sin estorbar
+    return `<div class="entrar-movil">${entrarDirectoHTML('iphone', { intro: 'No hay app en la App Store: Fantasy Manager se usa desde Safari. ' })}
+      ${enInicio() ? '' : `<p class="em-aviso">${icono('nota')} <span><b>¿La quieres como una app?</b> Añádela a la pantalla de inicio <b>antes de entrar</b> (Compartir → Añadir a pantalla de inicio) y entra desde el icono; si no, luego te tocará entrar otra vez. <a href="instalar.html#anadir">Cómo se hace</a></span></p>`}</div>
     ${botonDemo('sec')}
-    <details class="sin-app"><summary>O entra con un código desde la app de un amigo</summary><p>Si alguien de tu liga tiene la app en Android: <b>Ajustes → Abrir en el ordenador → Código</b>, y escríbelo aquí (dura 10 minutos).</p>${codigoWebHTML(false)}</details>`;
+    <details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
   }
-  // en el ordenador, dos pestañas: «Soy nuevo» (probarla con la liga de ejemplo y descargar la app) y «Ya tengo la app»
-  // (el QR y el código de siempre); cada una en pasos numerados con la misma tarjeta. Los pasos para copiar la vuelta a
-  // mano (con F12) siguen plegados en «No tengo la app en el móvil», dentro de «Soy nuevo»
+  // En el ordenador, dos pestañas: «Entrar aquí» (lo primero, los tres pasos; debajo, la liga de ejemplo y la app para el
+  // móvil) y «Con la app del móvil» (el QR y el código de siempre, la alternativa para quien ya tiene la app)
   const tabApp = LS.get('entTab') === 'app';
-  return `<div class="ent-tabs" role="tablist" aria-label="Cómo quieres empezar">
-    <button type="button" role="tab" id="entTabNuevo" aria-selected="${!tabApp}" aria-controls="entPanNuevo" data-accion="entTab" data-tab="nuevo">Soy nuevo</button>
-    <button type="button" role="tab" id="entTabApp" aria-selected="${tabApp}" aria-controls="entPanApp" data-accion="entTab" data-tab="app">Ya tengo la app</button></div>
+  return `<div class="ent-tabs" role="tablist" aria-label="Cómo quieres entrar">
+    <button type="button" role="tab" id="entTabNuevo" aria-selected="${!tabApp}" tabindex="${tabApp ? -1 : 0}" aria-controls="entPanNuevo" data-accion="entTab" data-tab="nuevo">Entrar aquí</button>
+    <button type="button" role="tab" id="entTabApp" aria-selected="${tabApp}" tabindex="${tabApp ? 0 : -1}" aria-controls="entPanApp" data-accion="entTab" data-tab="app">Con la app del móvil</button></div>
   <div class="ent-pan" id="entPanNuevo" role="tabpanel" aria-labelledby="entTabNuevo"${tabApp ? ' hidden' : ''}>
-    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">1</span><h2>Pruébala</h2></div>
+    <div class="ent-paso">${entrarDirectoHTML('pc')}</div>
+    <section class="ent-paso" aria-labelledby="entVerT"><div class="ent-ca"><h2 id="entVerT">¿Solo quieres verla?</h2></div>
       <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
-      <button class="btn ancho" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>
-    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>Descárgala</h2></div>
+      <button class="btn ancho sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>
+    <section class="ent-paso" aria-labelledby="entMovT"><div class="ent-ca"><h2 id="entMovT">Llévala en el móvil</h2></div>
       <div class="ent-dos">
       <div class="ent-op ent-and">
         <div class="ent-oc"><span class="ent-logo">${ANDROID}</span><div><b class="ent-ot">Android</b><span class="ent-os">Está en Google Play. Es gratis.</span></div></div>
         <div class="en-apk">
-          <div class="en-apk-qr" title="Escanéalo con la cámara del móvil">${qrSVG(PLAY_URL)}</div>
-          <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Escanea el QR con la cámara del móvil, o pulsa el botón.</span></li><li><span class="ent-sn">2</span><span>Se abre Google Play: pulsa <b>Instalar</b>.</span></li></ol>
+          <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a Fantasy Manager en Google Play">${qrSVG(PLAY_URL)}</div>
+          <ol class="ent-pasos"><li><span class="ent-sn" aria-hidden="true">1</span><span>Escanea el QR con la cámara del móvil, o pulsa el botón.</span></li><li><span class="ent-sn" aria-hidden="true">2</span><span>Se abre Google Play: pulsa <b>Instalar</b>.</span></li></ol>
         </div>
         ${botonPlay()}
       </div>
       <div class="ent-op en-ios">
-        <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari y se deja en la pantalla de inicio.</span></div></div>
-        <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Entra aquí, en el ordenador, con tu cuenta de LaLiga.</span></li><li><span class="ent-sn">2</span><span>Ve a <b>Ajustes → Abrir en otro dispositivo</b>: te sale un QR.</span></li><li><span class="ent-sn">3</span><span>Escanéalo con la cámara del iPhone.</span></li></ol>
-        <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
+        <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari.</span></div></div>
+        <div class="en-apk">
+          <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(DOMINIO)}</div>
+          <ol class="ent-pasos"><li><span class="ent-sn" aria-hidden="true">1</span><span>Escanea el QR con la cámara del iPhone (o abre <b>fantasymanagerapp.com</b> en Safari).</span></li><li><span class="ent-sn" aria-hidden="true">2</span><span>Entra allí con tu cuenta de LaLiga: son los mismos tres pasos.</span></li></ol>
+        </div>
+        <div class="en-ios-b"><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
       </div>
       </div>
-      <details class="sin-app"><summary>Entrar aquí sin la app<span class="en-dib-tag">con dibujos</span></summary>
-      <p>Entra con tu cuenta de LaLiga en el propio navegador, sin instalar nada. Vale para iPhone y ordenador. Si tienes la app en un Android, no hace falta esto: usa su QR. Si la página de LaLiga da error («tenemos problemas para iniciar su sesión»), ciérrala y vuelve a abrirla: a menudo falla a la primera.</p>
-      ${entrarDirectoHTML()}
-      <p class="gd-aparte"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Verlo en una página aparte</a></p>
-    </details>
     </section>
   </div>
   <div class="ent-pan" id="entPanApp" role="tabpanel" aria-labelledby="entTabApp"${tabApp ? '' : ' hidden'}>
-    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">1</span><h2>Escanea con la app</h2></div>${qrEntrarHTML(false)}</section>
-    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>O con el código</h2></div>${codigoWebHTML(false)}</section>
+    <section class="ent-paso" aria-labelledby="entQrT"><div class="ent-ca"><h2 id="entQrT">Escanea con la app</h2></div>${qrEntrarHTML(false)}</section>
+    <section class="ent-paso" aria-labelledby="entCodT"><div class="ent-ca"><h2 id="entCodT">O con el código</h2></div>${codigoWebHTML(false)}</section>
   </div>`;
 }
 /**
@@ -2823,6 +2974,51 @@ window.fotosApp = (lista, error) => {
   if (S.fotosPara === 'aviso') { anadirCapturas(Array.isArray(lista) ? lista : [], capturaB64); return; }
   if (Array.isArray(lista) && lista.length) anadirFotos(lista, prepararB64);
 };
+/* ---------------- la entrada de la web: pegar y volver (0.8l) ---------------- */
+// Pegar en el cuadro o en cualquier parte de la pantalla de entrar (Ctrl+V sin apuntar a nada) entra directamente, sin
+// pulsar «Entrar». En otro cuadro (el del código de la app) no se toca nada.
+document.addEventListener('paste', (ev) => {
+  const campo = $('#vueltaWeb');
+  if (!campo || enApp) return;
+  const t = ev.clipboardData && ev.clipboardData.getData('text');
+  if (!t || !t.trim()) return;
+  const cuadro = ev.target && ev.target.closest && ev.target.closest('input, textarea, [contenteditable="true"]');
+  if (cuadro && cuadro !== campo) return;
+  // fuera del cuadro solo cuenta lo que parece la dirección; dentro, todo (si no vale, se dice por qué)
+  if (!cuadro && !/code=|error=|jwt\.ms/i.test(t)) return;
+  if (!cuadro && (campo.offsetParent === null)) { const d = campo.closest('details'); if (d) d.open = true; }
+  ev.preventDefault();
+  campo.value = t.trim();
+  entrarConVuelta(t);
+});
+// lo que llega al cuadro sin pasar por «pegar» (soltar el enlace arrastrado, el dictado, un teclado que pega a su manera):
+// si ya lleva el código, se entra solo; al escribir, se quita el error de antes
+document.addEventListener('input', (ev) => {
+  if (!ev.target || ev.target.id !== 'vueltaWeb') return;
+  const v = ev.target.value;
+  if (!v.trim()) { sinErrorVuelta(); return; }
+  if (/^(insertFromPaste|insertFromDrop|insertFromYank)$/.test(ev.inputType || '') && mirarVuelta(v).url) entrarConVuelta(v);
+  else if ($('#vueltaErr') && !$('#vueltaErr').hidden && mirarVuelta(v).url) sinErrorVuelta();
+});
+// al volver de la pestaña de LaLiga: el paso de pegar por delante, con el foco en su botón. Si el navegador ya tiene dado el
+// permiso de leer lo copiado (Chrome y Edge, de una vez anterior), se mira solo y, si es la dirección, se entra sin tocar nada
+async function alVolverEntrada() {
+  if (enApp || !S.laLigaFuera || !S.laLigaIda || S.entrandoWeb || document.hidden || !$('#entrarDirecto')) return;
+  S.laLigaIda = false;
+  entradaAbierta({ alVolver: true });
+  try {
+    if (!hayPegar() || !navigator.permissions || !document.hasFocus()) return;
+    const p = await navigator.permissions.query({ name: 'clipboard-read' });
+    if (p.state !== 'granted') return;
+    const t = await navigator.clipboard.readText();
+    if (mirarVuelta(t).url) entrarConVuelta(t);
+  } catch (e) { /* sin permiso o sin esa pregunta (Safari, Firefox): se pega con el botón */ }
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.laLigaFuera) S.laLigaIda = true; } else alVolverEntrada(); });
+window.addEventListener('blur', () => { if (S.laLigaFuera) S.laLigaIda = true; });
+window.addEventListener('focus', () => { setTimeout(alVolverEntrada, 60); });
+window.addEventListener('pageshow', () => { alVolverEntrada(); });
+
 // pegar una captura (Ctrl+V) o arrastrarla encima del chat
 document.addEventListener('paste', (ev) => {
   if (S.vista !== 'ia' || !puedeChat(enDemo()) || S.charlando) return;
@@ -3189,18 +3385,27 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'entrar': try { contar('l'); marcarPaso('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    // (0.8l) en la web «Abrir LaLiga» es un enlace de verdad: lo abre el navegador y aquí solo se apunta. Si el enlace aún
+    // no estuviera puesto (se rellena en milisegundos), se abre como antes
+    case 'abrirLaLiga': case 'abrirAMano': {
+      const listo = !!el.getAttribute('href');
+      if (!listo) ev.preventDefault();
+      contar('l'); marcarPaso('l');
+      sinErrorVuelta();
+      S.laLigaFuera = true;
+      if (!listo) { try { await empezarLogin(); } catch (e) { errorVuelta('No se ha podido abrir la página de LaLiga. Recarga esta página y vuelve a probar.'); break; } }
+      marcarAbierto();
+      entradaAbierta();
+      break;
+    }
+    case 'copiarWeb': copiarY(DOMINIO, 'Copiada: pégala en tu navegador'); break;
     case 'mirarEstado': pintarEstado(true); break;
     case 'entTab': {
       const t = d.tab === 'app' ? 'app' : 'nuevo';
-      LS.set('entTab', t);
-      document.querySelectorAll('.ent-tabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
-      const pn = $('#entPanNuevo'), pa = $('#entPanApp');
-      if (pn) pn.hidden = t !== 'nuevo';
-      if (pa) pa.hidden = t !== 'app';
+      elegirEntTab(t);
       if (t === 'app') { const c = $('#codigoWeb'); if (c) c.focus({ preventScroll: true }); }
       break;
     }
-    case 'abrirSinApp': { const x = document.querySelector('#entPanNuevo details.sin-app'); if (x) { x.open = true; x.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break; }
     case 'entrarDemo': { if (!haySesion()) marcarPaso('demo', { una: true }); const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -3214,25 +3419,21 @@ document.addEventListener('click', async (ev) => {
       } catch (e) { errorCodigo(e.name === 'TypeError' ? 'No hay conexión con el servidor de la web. Mira que tengas internet y vuelve a probar.' : e.message || String(e), el); }
       break;
     }
-    case 'pegarPortapapeles': {
-      // el clic del usuario da el permiso para leer el portapapeles; si el navegador no deja, se pega a mano
-      try {
-        const t = (await navigator.clipboard.readText()).trim();
-        const ta = $('#vueltaWeb');
-        if (!t) { tostada('No hay nada copiado: copia primero la dirección de la página de LaLiga'); break; }
-        if (ta) { ta.value = t; ta.focus(); }
-      } catch (e) { tostada('No he podido leer lo copiado. Pégalo a mano en el cuadro (mantén pulsado → Pegar).'); }
+    case 'pegarYEntrar': {
+      // el toque da permiso para leer lo copiado (en el iPhone sale el globo «Pegar»: se toca y ya); si el navegador no deja
+      // o se dice que no, se pega a mano en el cuadro. readText va lo primero, dentro del toque
+      let t = null;
+      try { t = await navigator.clipboard.readText(); } catch (e) { t = null; }
+      if (t == null) {
+        errorVuelta(movilDe() ? 'No he podido leer lo copiado. Pégalo tú: mantén pulsado el cuadro de aquí arriba y elige Pegar.' : 'No he podido leer lo copiado. Pégalo tú: haz clic en el cuadro de aquí arriba y pulsa Ctrl + V (en Mac, Cmd + V).');
+        const c = $('#vueltaWeb'); if (c) c.focus();
+        break;
+      }
+      if (!t.trim()) { errorVuelta('No tienes nada copiado. Copia primero la dirección de la página en la que acabas al entrar en LaLiga (paso 2).'); break; }
+      await entrarConVuelta(t);
       break;
     }
-    case 'pegarVuelta': {
-      const url = (($('#vueltaWeb') || {}).value || '').trim();
-      if (!/code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
-      el.disabled = true;
-      try { await terminarLogin(url); } catch (e) { marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); break; }
-      marcarPaso('ok');
-      try { contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
-      break;
-    }
+    case 'pegarVuelta': await entrarConVuelta((($('#vueltaWeb') || {}).value || '')); break;
     case 'vincularWeb': {
       // la app deja la sesión en el Worker y enseña el código para escribirlo en la web
       el.disabled = true;
@@ -3635,6 +3836,13 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'apodoIn') { ev.preventDefault(); const b = $('[data-accion="apodoGuardar"]'); if (b) b.click(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.matches && ev.target.matches('input[data-cambia="apodo"]')) { ev.preventDefault(); ev.target.blur(); return; }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'vueltaWeb') { ev.preventDefault(); entrarConVuelta(ev.target.value); return; }
+  // las pestañas de la entrada del ordenador, con las flechas (y Inicio y Fin), como manda el patrón de pestañas
+  if (ev.target && ev.target.matches && ev.target.matches('.ent-tabs [role="tab"]') && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) {
+    ev.preventDefault();
+    const a = ev.key === 'Home' ? 'nuevo' : ev.key === 'End' ? 'app' : ev.target.dataset.tab === 'app' ? 'nuevo' : 'app';
+    elegirEntTab(a, { foco: true });
+  }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'invCod') { ev.preventDefault(); const b = $('[data-accion="canjearInv"]'); if (b) b.click(); }
 });
 // el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)

@@ -1367,14 +1367,15 @@ function embudoQ(E, ahora) {
     + Object.entries(g).filter(([k]) => (solo ? k === solo : !k.startsWith('o:'))).reduce((u, [, x]) => u + (paso === 'x-otros' ? OTROS_FALLOS.reduce((v, k) => v + ((x && x[k]) || 0), 0) : (x && x[paso]) || 0), 0), 0);
   const ven = suma('ver');
   const pc = (n) => (ven ? `${n} <small>${Math.round((n / ven) * 100)} %</small>` : String(n));
-  const filas = [['Ven la entrada', ven, String(ven)], ['Tocan Google Play', suma('play')], ['Miran el ejemplo', suma('demo')], ['Le dan a entrar', suma('l')], ['Entran', suma('ok')]]
+  const filas = [['Ven la entrada', ven, String(ven)], ['Tocan Google Play', suma('play')], ['Miran el ejemplo', suma('demo')], ['Le dan a entrar', suma('l')], ['Pegan el enlace (web)', suma('p')], ['Entran', suma('ok')]]
     .map(([t, v, txt]) => [t, v, txt || pc(v)]);
   const fallos = [['Falla LaLiga', suma('x-laliga')], ['Cancelan', suma('x-cancel')], ['Otros fallos', suma('x-otros')]].filter((f) => f[1]);
-  // por canal: ven la entrada → le dan a entrar → entran (0.8l, para ver dónde se cae cada uno, sobre todo iPhone)
-  const canales = [['Google Play', 'play'], ['Web Android', 'web-android'], ['Web iPhone', 'web-iphone'], ['Web ordenador', 'web-pc']].map(([t, k]) => [t, suma('ver', k), suma('l', k), suma('ok', k)]).filter((f) => f[1] || f[2] || f[3]);
+  // por canal: ven la entrada → le dan a entrar → (en la web, pegan el enlace) → entran. Para ver dónde se cae cada uno, sobre
+  // todo el iPhone: si le dan y no pegan, se pierden en LaLiga o al copiar; si pegan y no entran, falla el enlace
+  const canales = [['Google Play', 'play'], ['Web Android', 'web-android'], ['Web iPhone', 'web-iphone'], ['Web ordenador', 'web-pc']].map(([t, k]) => [t, suma('ver', k), suma('l', k), suma('ok', k), k.startsWith('web') ? suma('p', k) : null]).filter((f) => f[1] || f[2] || f[3]);
   let h = barrasH(filas, { max: Math.max(1, ven), clase: 'qh-emb' });
   if (fallos.length) h += barrasH(fallos, { max: Math.max(1, ven), clase: 'qh-mal' });
-  const pie = canales.length ? canales.map(([t, v, l, o]) => `${t} <b>${v}</b>→<b>${l}</b>→<b>${o}</b>`).join(' · ') : '';
+  const pie = canales.length ? canales.map(([t, v, l, o, pg]) => `${t} <b>${v}</b>→<b>${l}</b>→${pg == null ? '' : `<b>${pg}</b>→`}<b>${o}</b>`).join(' · ') : '';
   return tarjetaQ('Antes de entrar · 7 días', h, pie);
 }
 

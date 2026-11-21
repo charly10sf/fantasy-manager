@@ -1611,7 +1611,7 @@ export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_F
 // Todo en un solo Durable Object («embudo|todos»): las cuentas de cada día (e|AAAA-MM-DD → { canal: { paso: n }, 'o:x': … }),
 // las entradas de cada hora para el semáforo (h|AAAA-MM-DDTHH → { ok, x }) y la última comprobación (est). Nunca pone alarma:
 // lo viejo se borra al leer.
-export const EMB_PASOS = new Set(['ver', 'demo', 'play', 'l', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
+export const EMB_PASOS = new Set(['ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
 export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
 const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
 const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });

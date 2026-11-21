@@ -109,7 +109,7 @@ const esDueno = () => { const a = LS.get('avisos', null); return !!(a && a.admin
 
 /**
  * apunta un paso: 'ver' (la pantalla de entrar), 'demo', 'play' (el botón de Google Play en la web), 'l' (le da a entrar),
- * 'ok' (ha entrado) o un fallo 'x-…'. Con una: true, solo una vez al día en este dispositivo
+ * 'p' (en la web: vuelve y pega el enlace), 'ok' (ha entrado) o un fallo 'x-…'. Con una: true, solo una vez al día en este dispositivo
  */
 export function marcarPaso(p, { una = false } = {}) {
   try {
