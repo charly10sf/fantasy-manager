@@ -619,7 +619,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "988",
+     "nombre": "Sivera",
+     "pos": 1
+    },
+    {
+     "id": "1337",
+     "nombre": "Tenaglia",
+     "pos": 2
+    },
+    {
+     "id": "2552",
+     "nombre": "Jonny Otto",
+     "pos": 2
+    },
+    {
+     "id": "2577",
+     "nombre": "A. Rebbach",
+     "pos": 3
+    },
+    {
+     "id": "2938",
+     "nombre": "Koski",
+     "pos": 2
+    },
+    {
+     "id": "2569",
+     "nombre": "Ibañez",
+     "pos": 3
+    },
+    {
+     "id": "2932",
+     "nombre": "Ángel Pérez",
+     "pos": 3
+    },
+    {
+     "id": "3069",
+     "nombre": "Blanco",
+     "pos": 3
+    },
+    {
+     "id": "2474",
+     "nombre": "Denis Suárez",
+     "pos": 3
+    },
+    {
+     "id": "2768",
+     "nombre": "Lucas Boyé",
+     "pos": 4
+    },
+    {
+     "id": "3078",
+     "nombre": "T. Martínez",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "988",
+    "2938",
+    "1337",
+    "2568",
+    "2552",
+    "2932",
+    "2569",
+    "3069",
+    "2577",
+    "2768",
+    "2600"
+   ]
   },
   {
    "id": "26",
@@ -723,7 +792,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "3109",
+     "nombre": "Leo Román",
+     "pos": 1
+    },
+    {
+     "id": "2965",
+     "nombre": "M. Loureiro",
+     "pos": 2
+    },
+    {
+     "id": "2985",
+     "nombre": "Noubi",
+     "pos": 2
+    },
+    {
+     "id": "2990",
+     "nombre": "Ximo Navarro",
+     "pos": 2
+    },
+    {
+     "id": "2963",
+     "nombre": "Quagliata",
+     "pos": 2
+    },
+    {
+     "id": "2995",
+     "nombre": "Mario Soriano",
+     "pos": 3
+    },
+    {
+     "id": "2977",
+     "nombre": "Riki",
+     "pos": 3
+    },
+    {
+     "id": "2362",
+     "nombre": "M. Casadó",
+     "pos": 3
+    },
+    {
+     "id": "2962",
+     "nombre": "Luismi Cruz",
+     "pos": 4
+    },
+    {
+     "id": "3076",
+     "nombre": "Yeremay",
+     "pos": 4
+    },
+    {
+     "id": "3108",
+     "nombre": "Aubameyang",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "3109",
+    "2324",
+    "2963",
+    "2976",
+    "2965",
+    "2995",
+    "3119",
+    "2994",
+    "2991",
+    "3076",
+    "2973"
+   ]
   },
   {
    "id": "14",
