@@ -28,7 +28,7 @@ export const NOVEDADES = [
     // (claude/medida-ia-2026-11-20.md): la inercia con el ritmo medido y sin vender al que se frena, el partido que acaba de
     // jugar (y el aviso en directo de clausular tras un partidazo, idea suya del 20 nov a las 23:33) y la puja de los top.
     // `menor` y sin `todos`: a los demás no les sale (Carlos). La hora, al publicar
-    v: '0.8k', f: '2026-11-21', h: '00:00', t: 'Lo que espera la app de cada jugador, comprobado con lo que pasó',
+    v: '0.8k', f: '2026-11-21', h: '01:20', t: 'Lo que espera la app de cada jugador, comprobado con lo que pasó',
     cosas: [
       { tipo: 'mejora', menor: true, d: 'grafica', t: 'Lo que espera la app de cada jugador, comprobado con lo que pasó', x: 'Lo que la app espera que suba o baje cada jugador se ha comprobado día a día con lo que pasó de verdad estas semanas, y se ha corregido: a los que suben se les esperaba bastante menos de lo que subían, y los que suben cada vez menos casi nunca bajan enseguida. Ya no te manda vender a uno solo porque se frena: espera a que gire de verdad.' },
       { tipo: 'nuevo', menor: true, d: 'rayo', t: 'El partido que acaba de jugar cuenta', x: 'Cuando un jugador acaba su partido, la app tiene en cuenta los puntos que ha hecho para lo que espera de su valor los días siguientes: tras un partidazo suele subir bastante más de lo que venía, y tras uno malo se le frena la subida. Si uno de un rival acaba de hacer muchos puntos, su cláusula está abierta y te llega, te avisa para que lo clausules antes de que suba.' },
