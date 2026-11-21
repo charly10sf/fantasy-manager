@@ -2677,7 +2677,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
    "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
-   "SPORT|136699578": 1795283136000
+   "SPORT|136699578": 1795283136000,
+   "SPORT|136703359": 1795283457000
   },
   "hechos": [
    {
@@ -3505,7 +3506,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -8950,13 +8951,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4905,
+   "ok": 4907,
    "fallos": 0,
-   "ejecuciones": 4028,
+   "ejecuciones": 4029,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T18:51:15.890Z"
+   "ultima": "2026-11-21T18:56:11.226Z"
   }
  },
  "ptsDirecto": {
@@ -9034,27 +9035,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T18:51:25.431Z"
+   "ultimaBien": "2026-11-21T18:56:47.165Z"
   }
  },
  "avisos": [
