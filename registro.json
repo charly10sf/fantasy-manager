@@ -2557,7 +2557,8 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
    "SPORT|136695915": 1795263607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html": 1795264209000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
+   "SPORT|136697201": 1795264706000
   },
   "hechos": [
    {
@@ -3452,7 +3453,7 @@
   ],
   "gemini": {
    "dia": "2026-11-21",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -4351,17 +4352,17 @@
  "ia": {
   "dia": "2026-11-21",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 158822,
-  "salida": 14091,
+  "entrada": 160904,
+  "salida": 14183,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.283908,
+  "dolares": 0.284162,
   "reservado": 0
  },
  "recientes": {
@@ -8764,17 +8765,24 @@
    "w": "2026-11-21T13:01:59Z",
    "f": "2026-11-21T13:06:11.450Z",
    "rf": "5:34"
+  },
+  "fm|130|0|41": {
+   "j": "<TBD>",
+   "m": "41'",
+   "f": "2026-11-21T13:41:10.528Z",
+   "rf": "40:33",
+   "avisado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 4785,
+   "ok": 4787,
    "fallos": 0,
-   "ejecuciones": 3964,
+   "ejecuciones": 3965,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-21T13:36:12.218Z"
+   "ultima": "2026-11-21T13:41:10.528Z"
   }
  },
  "ptsDirecto": {
@@ -8816,27 +8824,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T13:36:15.502Z"
+   "ultimaBien": "2026-11-21T13:41:17.118Z"
   }
  },
  "avisos": [
