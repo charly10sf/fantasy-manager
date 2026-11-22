@@ -16,20 +16,23 @@ const N = Number(arg('n', '26')), TOPE = Number(arg('tope', '2.6'));
 const config = JSON.parse(readFileSync(new URL('../config.json', import.meta.url), 'utf8'));
 // el gasto de la prueba no es el del bot: un tope propio por versión y sin reserva para partidos
 config.ia = { ...config.ia, topeDolaresDia: TOPE / 2, reservaPartidos: 0, porDia: { clasificar: 999, redactar: 999, revisar: 999, pulir: 999 } };
-config.redactar = { ...config.redactar, activo: true, cacheSiempre: false };
+config.redactar = { ...config.redactar, activo: true, cacheSiempre: false, segundosEjecucion: 1e9 };
+// --solo=ahora: solo la versión nueva; --tipos=mvp,final: solo esos tipos (con su cupo)
+const SOLO = arg('solo'), TIPOS = arg('tipos') ? new Set(arg('tipos').split(',')) : null;
 
 // --- qué tuits: los tipos de la auditoría, en su proporción ---
-const CUPO = { directo: 8, final: 4, mvp: 4, noticias: 3, novedades: 2, caidas: 2, previa: 2, onces: 1, sancionados: 1, mercado: 1, lloros: 1, resumen: 1 };
+const CUPO = JSON.parse(arg('cupo', '0') || '0') || { directo: 8, final: 4, mvp: 4, noticias: 3, novedades: 2, caidas: 2, previa: 2, onces: 1, sancionados: 1, mercado: 1, lloros: 1, resumen: 1 };
 const deTipo = (t) => (t.hechos && t.hechos.tipo) || t.tipo;
 const vistos = new Set();
-const candidatos = tuits.filter((t) => t.hechos && (config.redactar.tipos || []).includes(t.modulo || t.tipo) && !vistos.has(t.clave) && vistos.add(t.clave));
+const candidatos = tuits.filter((t) => t.hechos && (config.redactar.tipos || []).includes(t.modulo || t.tipo) && (!TIPOS || TIPOS.has(deTipo(t))) && !vistos.has(t.clave) && vistos.add(t.clave));
 const elegidos = [];
 // los finales y MVP, de los mismos partidos (para ver si cuentan lo mismo)
 const partidoDe = (t) => (t.hechos.partido || {}).partido || '';
-const finales = candidatos.filter((t) => deTipo(t) === 'final').slice(-CUPO.final);
+const finales = candidatos.filter((t) => deTipo(t) === 'final').slice(-(CUPO.final || 0));
 elegidos.push(...finales);
 const mvps = candidatos.filter((t) => deTipo(t) === 'mvp');
 elegidos.push(...finales.map((f) => mvps.find((m) => partidoDe(m) === partidoDe(f))).filter(Boolean));
+for (const m of mvps) if (elegidos.filter((t) => deTipo(t) === 'mvp').length < (CUPO.mvp || 0) && !elegidos.includes(m)) elegidos.push(m);
 // los directos, repartidos entre partidos y en orden
 const dir = candidatos.filter((t) => deTipo(t) === 'directo');
 const porPartido = new Map();
@@ -41,7 +44,7 @@ for (const [tipo, n] of Object.entries(CUPO)) {
   if (['final', 'mvp', 'directo'].includes(tipo)) continue;
   elegidos.push(...candidatos.filter((t) => deTipo(t) === tipo && !elegidos.includes(t)).slice(0, n));
 }
-for (const t of candidatos) if (elegidos.length < N && !elegidos.includes(t)) elegidos.push(t);
+if (!arg('cupo')) for (const t of candidatos) if (elegidos.length < N && !elegidos.includes(t)) elegidos.push(t);
 const lista = elegidos.slice(0, N);
 console.log(`# ${lista.length} tuits de ${candidatos.length}: ${[...new Set(lista.map(deTipo))].map((x) => `${x} ${lista.filter((t) => deTipo(t) === x).length}`).join(', ')}`);
 
@@ -57,7 +60,7 @@ async function version(base, nombre) {
   const pulir = await import(`${base}lib/pulir.mjs`);
   return { nombre, red, tx, ia, em, pulir };
 }
-const V = [await version(antesDir, 'antes'), await version(ahoraDir, 'ahora')];
+const V = SOLO === 'ahora' ? [await version(ahoraDir, 'ahora')] : [await version(antesDir, 'antes'), await version(ahoraDir, 'ahora')];
 const reg = () => ({ datos: { recientes: JSON.parse(JSON.stringify(registroReal.recientes || {})), enviados: [], fallosRedaccion: {} }, fichero: null, guardar() {} });
 const gasto = (r) => ((r.datos.ia || {}).dolares || 0);
 // el orden en que salen en el bot: los finales antes que los MVP
@@ -87,7 +90,9 @@ for (const v of V) {
     if (v.tx.conTitularidad && !t.redactado && /"titularidad":/.test(JSON.stringify(t.hechos))) texto = v.tx.conTitularidad(texto);
     if (t.redactado) v.red.apuntarReciente(r, t.tipo, texto);
     filas[i][v.nombre] = { texto, estado: t.redactado ? 'redactado' : `plantilla (${t.redaccion || '?'})`, llamadas, dolares: Math.round((gasto(r) - antesGasto) * 1e4) / 1e4, segundos: Math.round((Date.now() - t0) / 100) / 10,
-      fallos: log.filter((s) => /intento \d|no lo publicaría|no ha pasado/.test(s)).map((s) => s.replace(/\s+«[\s\S]*$/, '').slice(0, 300)) };
+      fallos: log.filter((s) => /intento \d|no lo publicaría|no ha pasado|último intento/.test(s)).map((s) => s.replace(/\n\s+«[\s\S]*$/, '').slice(0, 900)),
+      borradores: log.filter((s) => /intento \d/.test(s)).map((s) => (s.match(/\n\s+«([\s\S]*)»\s*$/) || [])[1]).filter(Boolean) };
+    for (const s of log) console.log(`   ${s.replace(/\n/g, ' ')}`);
     console.log(`${v.nombre} ${i + 1}/${lista.length} ${filas[i].tipo} ${filas[i][v.nombre].estado} ${filas[i][v.nombre].dolares} $`);
   }
   total += gasto(r);
@@ -115,6 +120,7 @@ const EMOJI = /\p{Extended_Pictographic}/gu;
 const textos = (n) => filas.map((f) => f[n] && f[n].texto).filter(Boolean);
 const empiezaEmoji = (s) => /^\p{Extended_Pictographic}/u.test(s);
 const resumen = Object.fromEntries(V.map((v) => {
+  v.gasto = v.gasto || 0;
   const xs = textos(v.nombre), fs = filas.map((f) => f[v.nombre]).filter((x) => x && x.estado !== 'sin probar (tope)');
   return [v.nombre, {
     tuits: fs.length, redactados: fs.filter((x) => x.estado === 'redactado').length, llamadas: fs.reduce((a, x) => a + (x.llamadas || 0), 0),
@@ -132,14 +138,14 @@ const sistema = Object.fromEntries(V.map((v) => [v.nombre, v.red.sistemaDe ? v.r
 const out = [];
 out.push(`# Redacción con la guía de antes y con la nueva (${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC)`, '');
 out.push(`${lista.length} tuits reales de ahora (los hechos de \`ejecutar.mjs --volcar\`), redactados con Sonnet cada uno con su segunda lectura, como en el bot, y con los últimos tuits de cada tipo del registro de bot-estado. Antes: el código de f8df132 (\`pendiente\` del 22 nov). Ahora: \`bot-redaccion\`.`, '');
-out.push('| | antes | ahora |', '|---|---|---|');
-const fila = (k, f) => out.push(`| ${k} | ${f(resumen.antes)} | ${f(resumen.ahora)} |`);
+out.push(`| | ${V.map((v) => v.nombre).join(' | ')} |`, `|---|${V.map(() => '---').join('|')}|`);
+const fila = (k, f) => out.push(`| ${k} | ${V.map((v) => f(resumen[v.nombre])).join(' | ')} |`);
 fila('redactados', (x) => `${x.redactados} de ${x.tuits}`);
 fila('llamadas a la IA', (x) => x.llamadas);
 fila('gasto', (x) => `${x.dolares} $`);
 fila('por tuit', (x) => `${x.porTuit} $`);
 fila('por tuit redactado', (x) => `${x.porRedactado} $`);
-out.push(`| instrucciones fijas (final) | ${sistema.antes} car. | ${sistema.ahora} car. |`);
+out.push(`| instrucciones fijas (final) | ${V.map((v) => `${sistema[v.nombre]} car.`).join(' | ')} |`);
 fila('palabras por tuit', (x) => x.palabras);
 fila('emojis por tuit', (x) => x.emojis);
 fila('sin emoji arriba', (x) => x.sinEmojiArriba);
@@ -147,13 +153,13 @@ for (const k of Object.keys(TICS)) fila(k, (x) => x.tics[k]);
 out.push('');
 filas.forEach((f, i) => {
   out.push(`## ${i + 1}. ${f.tipo} · \`${f.clave}\``, '');
-  for (const n of ['antes', 'ahora']) {
+  for (const n of V.map((v) => v.nombre)) {
     const x = f[n] || {};
     out.push(`**${n === 'antes' ? 'Antes' : 'Ahora'}** (${x.estado || '?'}${x.llamadas != null ? `, ${x.llamadas} llamada${x.llamadas === 1 ? '' : 's'}, ${x.dolares} $` : ''})`, '');
     if (x.texto) out.push(x.texto.split('\n').map((l) => `> ${l}`).join('\n'), '');
-    if (x.fallos && x.fallos.length) out.push(`<details><summary>lo que tiró el validador o el editor</summary>\n\n${x.fallos.map((s) => `- ${s}`).join('\n')}\n</details>`, '');
+    if (x.fallos && x.fallos.length) out.push(`<details><summary>lo que tiró el validador o el editor</summary>\n\n${x.fallos.map((s) => `- ${s}`).join('\n')}${(x.borradores || []).length ? `\n\nBorradores:\n${x.borradores.map((b) => `- «${b}»`).join('\n')}` : ''}\n</details>`, '');
   }
 });
 writeFileSync(`${arg('salida', 'ab-redaccion')}.md`, out.join('\n'));
 writeFileSync(`${arg('salida', 'ab-redaccion')}.json`, JSON.stringify({ resumen, sistema, filas }, null, 1));
-console.log(`\nGastado: ${Math.round(total * 1e4) / 1e4} $ (antes ${resumen.antes.dolares}, ahora ${resumen.ahora.dolares})`);
+console.log(`\nGastado: ${Math.round(total * 1e4) / 1e4} $ (${V.map((v) => `${v.nombre} ${resumen[v.nombre].dolares}`).join(', ')})`);
