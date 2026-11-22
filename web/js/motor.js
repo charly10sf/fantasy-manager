@@ -2089,6 +2089,15 @@ export function analizar(D, H, c, extra = {}) {
         ofertaAlta = Math.max(ofertaMin, r10(j.valor * 1.1));
       }
     }
+    /* (22 nov, Fran: «si pones en el mercado un jugador por 200 kilos y le preguntas por cuánto comprárselo, te dice que al
+       menos 200 kilos, aunque valga un millón») un precio irreal no es una referencia: muchos lo ponen así para ver la oferta
+       de LaLiga o para que nadie lo compre. Irreal: más de un 50 % sobre su valor y más de un 30 % sobre lo más que se
+       pagaría por él entre managers. Entonces lo que vale la pena pagar va aparte (`ofertaReal`) y la IA contesta con eso */
+    let irreal = false, ofertaReal = null;
+    if (ofertaMin && j.valor) {
+      const alta = ofertaLiga && !ofertaLiga.sinDatos ? r10(Math.max(ofertaLiga.max, j.valor) * 1.01) : r10(j.valor * 1.1);
+      if (m.precio > Math.max(alta * 1.3, j.valor * 1.5)) { irreal = true; ofertaReal = alta; }
+    }
     const precioReal = ofertaMin || m.precio;
     const i = M.interes(j, precioReal, t);
     const noVende = m.tipo === 'manager' ? sinRelevo(m.vendedorTeamId, j) : null;
@@ -2151,7 +2160,7 @@ export function analizar(D, H, c, extra = {}) {
     }
     // con cuánto se gana: la parte de las compras parecidas que se pagaron por lo mismo o menos
     const ganaCon = (p) => (PV && j.valor ? PV.f(p / j.valor - 1) : null);
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, noVende, veredicto, meLlega: precioReal - num(m.miPuja) <= M.pujaMax, puja, pujaLiga, recortada, topeCal, pujaGana, pGana: ganaCon(puja), pGanaLiga: pujaGana ? ganaCon(pujaGana) : null, ofertaLiga, ofertaMin, ofertaAlta, sobrePide: j.valor ? m.precio / j.valor - 1 : 0, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    return { ...m, irreal, ofertaReal, j, tend: t, sobre, interes: i.n, por: i.por, noVende, veredicto, meLlega: precioReal - num(m.miPuja) <= M.pujaMax, puja, pujaLiga, recortada, topeCal, pujaGana, pGana: ganaCon(puja), pGanaLiga: pujaGana ? ganaCon(pujaGana) : null, ofertaLiga, ofertaMin, ofertaAlta, sobrePide: j.valor ? m.precio / j.valor - 1 : 0, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   {
     // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager

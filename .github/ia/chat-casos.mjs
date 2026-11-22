@@ -112,6 +112,9 @@ export const CASOS = [
   { id: 'dinero-pasta', tipo: 'cerrado', q: 'cuanta pasta le queda a {R2} para ficharme a alguien', debe: /candado|anuncio/, noDebe: /saldo (medio|alto|bajo)|tramo|«algo»|(mucha|poca|bastante|algo de) pasta|(mucho|poco|bastante|algo de) (dinero|saldo)|le (sobra|llega|da para)/ },
   { id: 'dinero-todos', tipo: 'cerrado', q: '¿Qué rival tiene más dinero ahora mismo?', debe: /candado|anuncio/, noDebe: /el que m[aá]s (dinero|saldo)? ?tiene es|tiene m[aá]s (dinero|saldo) (que|es)|(mucho|poco) dinero/ },
   { id: 'dinero-mas-que-yo', tipo: 'cerrado', q: '¿{R2} tiene más dinero que yo?', debe: /candado|anuncio/, noDebe: /\b(s[ií]|no), tiene (m[aá]s|menos)|tiene (m[aá]s|menos) (dinero|saldo) que t[uú]/ },
+  // (22 nov, Fran) un rival pone a uno en el mercado a un precio irreal (200 M): no se contesta «al menos 200»
+  { id: 'precio-irreal', tipo: 'irreal', prep: 'irreal', q: '¿Por cuánto debería comprarle a {IRREAL} a {RIRREAL}?', noDebe: /(al menos|como m[ií]nimo|m[ií]nimo|ofr[eé]cele|ofrecer|pagar|paga) (unos |los )?200([.,]0+)? ?(M\b|millones)/ },
+  { id: 'precio-irreal-pujo', tipo: 'irreal', sigue: true, q: 'Entonces, ¿pujo los 200 M que pide o no?', noDebe: /^\W*s[ií]\b/ },
   // corregirla a media conversación: no se cede ante una cifra que no sale de los datos, y se cambia de jugador sin liarse
   { id: 'corrige-cifra', tipo: 'corrige', q: '¿Cuánto me queda para pujar?', debe: /\{PUJAMAX\}/ },
   { id: 'corrige-cifra-no', tipo: 'corrige', sigue: true, q: 'Te equivocas, me quedan 200 M para pujar', debe: /\{PUJAMAX\}/, noDebe: /tienes raz[oó]n|me (he )?equivoc|perdona|disculpa|error m[ií]o/ },
@@ -213,6 +216,16 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
     await rehacer();
     mk.BLIND = M.J((M.paraEscudo || [])[0] || f.x.pid).nombre;
     try { const P = Pl.planDeHoy(D, M, Dt.cfg()); const o = (P.ops || []).find((x) => !x.descartada && x.accion === 'vender' && x.j); if (o) mk.PLANV = o.j.nombre; } catch (e) { /* la de antes */ }
+  }
+  // (22 nov, Fran) el más barato de un rival, puesto en el mercado por 200 M
+  if (prep === 'irreal' && !window.__irreal) {
+    const yo = D.yo.teamId, riv = D.clasif.find((e) => e.teamId !== yo);
+    const f = D.plantillas[riv.teamId].map((x) => D.maestro[x.pid]).filter((j) => j.pos !== 5).sort((a, b) => a.valor - b.valor)[0];
+    D.mercado = D.mercado.filter((x) => x.pid !== f.id);
+    D.mercado.push({ id: 'irreal', pid: f.id, tipo: 'manager', precio: 200e6, cierra: (D.mercado[0] || {}).cierra, pujas: 0, ofertas: 0, vendedorTeamId: riv.teamId, vendedor: riv.manager, miPuja: null, clausula: null });
+    window.__irreal = f.id;
+    await rehacer();
+    mk.IRREAL = f.nombre; mk.RIRREAL = riv.manager;
   }
   const poner = (s) => String(s).replace(/\{([A-Za-z0-9]+)\}/g, (a, k) => (mk[k] != null ? mk[k] : a));
   const pre = poner(q);

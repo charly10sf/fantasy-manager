@@ -3482,6 +3482,13 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     if (!v.j || notas.some((x) => x.includes(`**${v.j.nombre}**`))) continue;
     if (cuentaConVendido(t, v.j.nombre, !!(M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT))) nota(`${N(v.j)} ya no es tuyo (${v.como} ${cuando(v.t)}): no cuenta para lo de arriba.`);
   }
+  // (22 nov, Fran) el precio irreal que pide un rival en el mercado, dado como lo que hay que pagar («al menos 200 M»)
+  for (const m of (M.mercado || []).filter((x) => x.irreal && x.ofertaReal && x.j && todos.some((j) => j.id === x.j.id))) {
+    const ent = String(Math.floor(m.precio / 1e6));
+    const cifra = new RegExp(`(^|[^0-9,.])${ent}(?:[.,]\\d{1,2})?\\s?(M\\b|millones|kilos)`, 'i');
+    const malas = frases.filter((f) => { const n = norm(f); return cifra.test(f) && /\b(al menos|como minimo|minimo|ofrece|ofrecele|ofrecer|oferta de|paga|pagar|pagale|puja|pujar|comprarselo por|compralo por|por lo menos)\b/.test(n) && !/\b(no|irreal|absurd\w*|inflad\w*|disparatad\w*|ni de broma|nadie)\b/.test(n); });
+    if (malas.length) nota(`${N(m.j)} vale ${eur(m.j.valor)}: los ${eur(m.precio)} que pide ${m.vendedor || 'su dueño'} no son un precio de verdad. Lo que vale la pena pagar por él es hasta ~${eur(m.ofertaReal)}.`);
+  }
   if (apuntado === 0 && prometeApuntar(t)) nota('De esto no se ha apuntado nada: el plan sale de los datos de tu liga. Si es un hecho, dímelo tal cual («no me quedan blindajes», «a Pedri no lo vendo», «ya he pujado por él») y el plan lo contará.');
   // (texto.js no pinta citas: un título en negrita y una lista)
   if (notas.length) t += `\n\n**Revisado por la app:**\n${notas.slice(0, 6).map((x) => `- ${x}`).join('\n')}`;
