@@ -2790,7 +2790,8 @@
    "SPORT|136710095": 1795298512000,
    "Superdeporte|https://www.superdeporte.es/futbol/futbol-valenciano/cd-castellon/2026/11/21/cd-castelllon-pablo-hernandez-lleva-136709318.html": 1795299715000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254001/oportunidad-raphinha-ampliar-ventaja-lucha-primer-pichichi.html": 1795335516000,
-   "SPORT|136713918": 1795332440000
+   "SPORT|136713918": 1795332440000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000
   },
   "hechos": [
    {
@@ -3621,7 +3622,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4513,32 +4514,32 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000,
-   "SPORT|136700224": 1795327253000
+   "SPORT|136700224": 1795327253000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336873046
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 5,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 66535,
-  "salida": 4885,
+  "entrada": 70385,
+  "salida": 5138,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.143802,
+  "dolares": 0.144314,
   "reservado": 0
  },
  "recientes": {
@@ -9171,13 +9172,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5146,
+   "ok": 5147,
    "fallos": 0,
-   "ejecuciones": 4199,
+   "ejecuciones": 4200,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T08:56:12.629Z"
+   "ultima": "2026-11-22T09:01:25.618Z"
   }
  },
  "ptsDirecto": {
@@ -9297,15 +9298,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:56:18.384Z"
+   "ultimaBien": "2026-11-22T09:01:33.809Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:56:18.384Z"
+   "ultimaBien": "2026-11-22T09:01:33.809Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:56:18.384Z"
+   "ultimaBien": "2026-11-22T09:01:33.809Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9313,11 +9314,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:56:18.384Z"
+   "ultimaBien": "2026-11-22T09:01:33.809Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:56:18.384Z"
+   "ultimaBien": "2026-11-22T09:01:33.809Z"
   }
  },
  "avisos": [
