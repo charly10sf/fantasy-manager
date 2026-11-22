@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
@@ -2791,18 +2790,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795080817000,
-    "id": "3264",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Ceballos vuelve a entrenar y busca llegar al derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html",
     "medio": "Mundo Deportivo",
@@ -9143,13 +9130,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5153,
+   "ok": 5154,
    "fallos": 0,
-   "ejecuciones": 4206,
+   "ejecuciones": 4207,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:31:13.882Z"
+   "ultima": "2026-11-22T09:36:20.157Z"
   }
  },
  "ptsDirecto": {
@@ -9269,15 +9256,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:31:19.187Z"
+   "ultimaBien": "2026-11-22T09:36:23.224Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:31:19.187Z"
+   "ultimaBien": "2026-11-22T09:36:23.224Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:31:19.187Z"
+   "ultimaBien": "2026-11-22T09:36:23.224Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9285,11 +9272,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:31:19.187Z"
+   "ultimaBien": "2026-11-22T09:36:23.224Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:31:19.187Z"
+   "ultimaBien": "2026-11-22T09:36:23.224Z"
   }
  },
  "avisos": [
