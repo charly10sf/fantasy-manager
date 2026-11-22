@@ -15,7 +15,7 @@ const registroReal = JSON.parse(readFileSync(arg('registro'), 'utf8'));
 const N = Number(arg('n', '26')), TOPE = Number(arg('tope', '2.6'));
 const config = JSON.parse(readFileSync(new URL('../config.json', import.meta.url), 'utf8'));
 // el gasto de la prueba no es el del bot: un tope propio por versión y sin reserva para partidos
-config.ia = { ...config.ia, topeDolaresDia: TOPE / 2, reservaPartidos: 0, porDia: { clasificar: 999, redactar: 999, revisar: 999, pulir: 999 } };
+config.ia = { ...config.ia, topeDolaresDia: arg('solo') ? TOPE : TOPE / 2, reservaPartidos: 0, porDia: { clasificar: 999, redactar: 999, revisar: 999, pulir: 999 } };
 config.redactar = { ...config.redactar, activo: true, cacheSiempre: false, segundosEjecucion: 1e9 };
 // --solo=ahora: solo la versión nueva; --tipos=mvp,final: solo esos tipos (con su cupo)
 const SOLO = arg('solo'), TIPOS = arg('tipos') ? new Set(arg('tipos').split(',')) : null;
