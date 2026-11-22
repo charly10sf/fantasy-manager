@@ -2607,7 +2607,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
    "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000,
@@ -9114,13 +9113,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5212,
+   "ok": 5214,
    "fallos": 0,
-   "ejecuciones": 4257,
+   "ejecuciones": 4258,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T13:41:13.158Z"
+   "ultima": "2026-11-22T13:46:13.753Z"
   }
  },
  "ptsDirecto": {
@@ -9258,27 +9257,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:41:20.506Z"
+   "ultimaBien": "2026-11-22T13:46:17.198Z"
   }
  },
  "avisos": [
