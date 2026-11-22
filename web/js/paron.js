@@ -77,7 +77,8 @@ export function cuentasParon(S) {
   const evita = altos.reduce((s, a) => s - a.pierde, 0);
   // (24) el hueco en la plantilla (contando lo que tienes pujado, que puede entrar) y lo que sacarías vendiendo lo que la
   // app te dice que vendas (lo que ha tocado techo y lo comprado para revender), a su valor: lo que LaLiga suele ofrecer
-  const tengo = M.mias.length + (S.D.mercado || []).filter((m) => m.miPuja).length;
+  // (22 nov) y las pujas que ha dicho en Pregunta que ya ha hecho, aunque LaLiga aún no las traiga
+  const tengo = M.mias.length + (S.D.mercado || []).filter((m) => m.miPuja).length + (M.mercado || []).filter((m) => m.pujaDicha).length;
   const plazas = Math.max(0, PLANTILLA_MAX - tengo);
   const ventas = [...new Map([...altos.map((a) => a.x), ...yaRevender.map((r) => r.x)].map((x) => [x.pid, x])).values()];
   const venta = ventas.reduce((t, x) => t + num(x.j.valor), 0);

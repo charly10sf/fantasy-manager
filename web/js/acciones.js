@@ -114,7 +114,7 @@ export function acciones(D, M, c) {
     hash: 'equipo',
   }));
 
-  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -3 && !M.vendeBaja(x) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => !x.ventaInercia && !(M.noVender && M.noVender.has(x.pid)) && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -3 && !M.vendeBaja(x) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,

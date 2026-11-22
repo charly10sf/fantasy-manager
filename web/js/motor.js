@@ -6,6 +6,7 @@ import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './opera
 import { acciones } from './acciones.js';
 import { pTitularMinutos } from './titular.js';
 import { textoInercia } from './inercia-texto.js';
+import { correcciones, dichoTxt } from './dicho.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -44,6 +45,22 @@ export function analizar(D, H, c, extra = {}) {
   const M = { t: Date.now() };
   if (!D) return M;
   const ahora = Date.now();
+  /* (22 nov, Carlos) lo que el mánager ha contado en Pregunta y es un hecho claro corrige lo que llega de LaLiga (dicho.js):
+     los blindajes que le quedan, a quién ha blindado ya, a quién no vende y por quién ha pujado ya. Lo aplicado se apunta
+     en M.dicho para que Hoy lo enseñe dentro del plan («Lo que me has dicho») y la IA lo lea igual que la app */
+  const DICHO = correcciones(extra.notas, ahora);
+  M.dicho = [];
+  M.noVender = new Map();
+  // una puja que dice que ya ha hecho y que LaLiga aún no trae: se da por hecha (con su importe, o el que proponía la app)
+  const pujasDichas = [];
+  if (DICHO.pujas.size && Array.isArray(D.mercado) && D.mercado.some((m) => DICHO.pujas.has(m.pid) && !m.miPuja)) {
+    D = { ...D, mercado: D.mercado.map((m) => {
+      const n = DICHO.pujas.get(m.pid);
+      if (!n || m.miPuja || !(Number(n.importe) > 0)) return m;
+      pujasDichas.push(n);
+      return { ...m, miPuja: Number(n.importe), pujaDicha: n.id };
+    }) };
+  }
   const J = (pid) => D.maestro[pid] || { id: pid, nombre: 'Jugador', valor: 0, media: 0, puntos: 0, pos: 0, estado: 'ok' };
   M.J = J;
   const yoTid = D.yo && D.yo.teamId;
@@ -53,6 +70,9 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- quién es de quién ---------- */
   M.dueno = {};
   for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) M.dueno[f.pid] = tid;
+  // (22 nov) lo dicho en Pregunta: a quién no vende (mientras siga siendo suyo) y las pujas que se dan por hechas
+  for (const [pid, n] of DICHO.noVender) if (yoTid && M.dueno[pid] === yoTid) { M.noVender.set(pid, n); M.dicho.push({ ...n, txt: dichoTxt(n, J(pid).nombre), hasta: n.caduca || null }); }
+  for (const n of pujasDichas) M.dicho.push({ ...n, txt: `${dichoTxt(n, J(n.pid).nombre)} (${eur(n.importe)})`, hasta: n.caduca || null });
   M.equipo = Object.fromEntries(D.clasif.map((e) => [e.teamId, e]));
   const porManager = {};
   // (un nombre solo con emojis o en otro alfabeto se queda vacío al normalizar: esos no se buscan por nombre, o todos
@@ -487,6 +507,8 @@ export function analizar(D, H, c, extra = {}) {
     return dias >= 3 ? { dias, p7: t.p7, ...(M.rango(pid) || {}) } : null;
   };
   M.ventaPorInercia = (pid) => {
+    // (22 nov) «a este no lo vendo», dicho en Pregunta: ni por la inercia
+    if (M.noVender.has(pid)) return null;
     const x = M.inercia(pid);
     if (!x) return null;
     // tras un partidazo (10 o más) no se manda vender por la bajada: lo normal es que mañana suba; tras uno muy bueno
@@ -618,7 +640,7 @@ export function analizar(D, H, c, extra = {}) {
    * se aguanta. Lo demás que hace vender (la inercia, asegurar un beneficio, una buena oferta) va por su lado, como con
    * cualquier otro
    */
-  M.vendeBaja = (x) => !!x && !!x.j && (M.deBaja(x.j) || (M.sancionCorta(x.j) && !!x.tend && ((P7(x.tend) != null && P7(x.tend) < -5) || (x.tend.p1 != null && x.tend.p1 < -2))));
+  M.vendeBaja = (x) => !!x && !!x.j && !M.noVender.has(x.j.id) && (M.deBaja(x.j) || (M.sancionCorta(x.j) && !!x.tend && ((P7(x.tend) != null && P7(x.tend) < -5) || (x.tend.p1 != null && x.tend.p1 < -2))));
   /** el porqué de venderlo por la baja, para empezar la frase: «Lesionado», «Sancionado más de un partido»… */
   M.bajaTxt = (j) => {
     if (j.estado === 'injured') return 'Lesionado';
@@ -1235,6 +1257,12 @@ export function analizar(D, H, c, extra = {}) {
     if (a.clase !== 'blindaje' || !a.pid || !a.t || ahora - a.t >= ESCUDO) continue;
     if ((D.actividad || []).some((b) => b.pid === a.pid && b.t > a.t && ['compra', 'clausula', 'venta'].includes(b.clase))) continue;
     escudos[a.pid] = Math.max(escudos[a.pid] || 0, a.t + ESCUDO);
+  }
+  // (22 nov) «ya he blindado a X», dicho en Pregunta: protegido desde que lo dijo, si sigue siendo suyo y LaLiga no lo trae aún
+  for (const [pid, n] of DICHO.blindados) {
+    if (M.dueno[pid] !== yoTid || ahora - n.t >= ESCUDO || escudos[pid]) continue;
+    if ((D.actividad || []).some((b) => b.pid === pid && b.t > n.t && ['compra', 'clausula', 'venta'].includes(b.clase))) continue;
+    escudos[pid] = n.t + ESCUDO;
   }
   M.escudoHasta = (pid) => (escudos[pid] && escudos[pid] > ahora ? escudos[pid] : null);
 
@@ -2242,9 +2270,30 @@ export function analizar(D, H, c, extra = {}) {
   {
     const acabadas = jornadas.filter((jo) => jo.fin <= ahora);
     const desde = acabadas.length ? Math.max(...acabadas.map((jo) => jo.fin)) : 0;
-    const usados = M.actividad.filter((a) => a.clase === 'blindaje' && a.esYo && a.t > desde).length;
+    /* (22 nov, Carlos: sin blindajes y el plan mandaba blindar) Antes solo se contaban los de D.actividad, que es lo que se
+       ha bajado en ESTA actualización: lo de los últimos 2 días y poco más (datos.js deja de pedir páginas al llegar a lo
+       que ya tenía). Un blindaje de hace 4 días, en un parón de dos semanas, no estaba ahí y la app creía que quedaban 2.
+       Ahora se cuentan también los del historial guardado (extra.actHist, todo lo visto desde el principio) */
+    const vistos = new Set(), mios = [];
+    const idB = (a) => a.id || `${a.t}|${a.pid}|${a.quienId}`;
+    for (const a of [...(D.actividad || []), ...((extra.actHist && extra.actHist.lista) || [])]) {
+      if (a.clase !== 'blindaje' || !a.t || a.t <= desde || vistos.has(idB(a))) continue;
+      vistos.add(idB(a));
+      if (yoTid && M.teamDeUsuario(a.quienId, a.quien) === yoTid) mios.push(a);
+    }
+    // «ya he blindado a X» cuenta como uno gastado si LaLiga no lo trae (el mismo jugador, desde 3 h antes de decirlo)
+    const dichos = [...DICHO.blindados.values()].filter((n) => n.t > desde && !mios.some((a) => a.pid === n.pid && a.t > n.t - 3 * HORA));
+    let usados = Math.min(2, mios.length + dichos.length);
     const sig = M.enJuego || M.proxima;
-    M.escudosMios = { usados, quedan: Math.max(0, 2 - usados), desde, hasta: sig ? sig.fin : null, horas: M.ESCUDO_H };
+    // y lo que dice que le queda manda sobre la cuenta, hasta que se recarguen: de ahí se restan los que gaste después
+    const nb = DICHO.blindajes && DICHO.blindajes.t > desde ? DICHO.blindajes : null;
+    if (nb) {
+      const despues = mios.filter((a) => a.t > nb.t).length + dichos.filter((n) => n.t > nb.t).length;
+      usados = Math.min(2, 2 - Math.max(0, nb.n - despues));
+    }
+    M.escudosMios = { usados, quedan: Math.max(0, 2 - usados), desde, hasta: sig ? sig.fin : null, horas: M.ESCUDO_H, vistos: mios.length, ...(nb ? { dicho: nb.id } : {}) };
+    if (nb) M.dicho.push({ ...nb, txt: dichoTxt(nb), hasta: nb.caduca || (sig ? sig.fin : null) });
+    for (const n of dichos) if (M.dueno[n.pid] === yoTid) M.dicho.push({ ...n, txt: dichoTxt(n, J(n.pid).nombre), hasta: n.t + ESCUDO });
   }
   /** cuándo y por cuánto fichó su dueño actual a un jugador (compra o cláusula), si está en la actividad */
   M.fichadoPor = (pid) => {

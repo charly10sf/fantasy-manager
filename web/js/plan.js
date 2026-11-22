@@ -140,7 +140,9 @@ function aguanta(X, x) {
 function candidatos(X, vetados) {
   const { D, M, V, ahora, paron, ciclos, inicio, ventana } = X;
   const out = [], fijos = [];
-  const nuevo = (o) => { if (!vetados.has(o.k)) (o.fijo ? fijos : out).push(o); };
+  // (22 nov) «a este no lo vendo», dicho en Pregunta: ni para hacer caja; lo que sale de su equipo con él no entra
+  const noVende = M.noVender || new Map();
+  const nuevo = (o) => { if (vetados.has(o.k) || (o.sale && noVende.has(o.sale))) return; (o.fijo ? fijos : out).push(o); };
   const enVenta = M.enVenta || new Set();
   const revPids = new Set((M.paraRevender || []).map((x) => x.pid));
   const pierdeTxt = (pid) => { const p = M.perdida(pid); return p >= 0.3 ? ` Es titular en tu once (${d1(p)} pts por jornada).${X.enJuego ? ' Con la jornada ya empezada, lo que haga en esta te cuenta aunque lo vendas ahora.' : ''}` : ' No entra en tu once: no pierdes puntos.'; };

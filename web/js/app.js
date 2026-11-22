@@ -14,7 +14,7 @@ import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -1677,8 +1677,10 @@ function apuntarReventa() {
 /** el plan que se enseña: el de la IA si es de hoy; si no (no hay, es de otro día, la IA aún piensa o ha fallado), el del
  * motor de hoy (plan.js), que ya viene cuadrado. Antes, mientras llegaba el nuevo o si fallaba, se veía el de ayer */
 function montarPlan() {
-  const P = ultimoPlan();
-  if (P && P.dia === diaDe()) {
+  // (22 nov) si después de ese plan le has contado a la IA algo que manda (sin blindajes, a quién no vendes…), ya no vale:
+  // sale el de la app con eso contado, hasta que lo rehagas
+  const P = planGuardadoHoy(S.M);
+  if (P) {
     S.plan = rematarAuto(cuadrarPlan(P, S.D, S.M));
     // el plan corto de la IA sale del motor: mientras no cambie el saldo, sus cuentas para la jornada siguen valiendo
     if (P.motor && P.cuentas && P.foto && P.foto.dinero === S.D.dinero) S.plan = rematarMotor(S.plan, S.M, { titular: false });
@@ -3083,12 +3085,18 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   S.chatCtl = ctl;
   try {
     await ligaAlDiaParaPreguntar();
+    // (22 nov, Carlos) lo que cuenta como un hecho («no me quedan blindajes», «a este no lo vendo», «ya he pujado») se
+    // apunta antes de preguntar y se rehace el análisis: la IA ya lee los datos corregidos y Hoy dice lo mismo
+    let dicho = [];
+    try { dicho = apuntarDicho(t, S.D, S.M, S.plan); if (dicho.length) rehacer(); } catch (e) { dicho = []; }
     const r = await charlar(t, S.D, S.M, S.c, (parcial) => {
       S.parcial = parcial;
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
-    }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra });
+    }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; }, { extra, dicho });
     if (!enDemo()) contar('q');
+    // lo que apunta u olvida la IA en su respuesta también puede mandar en el motor (el jugador de «a ese no lo vendo»)
+    if (r && ((r.apuntadas || []).some((x) => x.corr && !dicho.includes(x)) || r.olvidadas)) { try { rehacer(); } catch (e) { /* se rehace en la siguiente pasada */ } }
     // (16 nov) si mientras pensaba te has ido a otra pestaña de la app, que sepas que ya está
     if (S.vista !== 'ia' && nativo.aLaVista()) tostada('Ya tienes la respuesta en Pregunta', 4000);
     // (con la IA de la app y la parte Android de la 0.8, el aviso lo pone Android: ia.js, preguntaAcabada)
@@ -3846,7 +3854,7 @@ document.addEventListener('click', async (ev) => {
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
     case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (importantesPara() && hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
-    case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
+    case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.D) rehacer(); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
       // lo que te ha dicho un rival que tiene (en millones; si escribe en euros, se entiende igual)
       const leer = (id) => { const x = parseFloat(String(($(id) || {}).value || '').replace(/\s/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.')); return Number.isFinite(x) ? (Math.abs(x) >= 10000 ? x : x * 1e6) : null; };

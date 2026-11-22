@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8r';
+export const VERSION = '0.8s';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,20 @@ export const VERSION = '0.8r';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (22 nov, Carlos, 11:04: «le dije a la IA que no me quedan blindajes, contestó que lo quitaba del plan y el plan rehecho
+    // salió con "Hoy toca blindar a Thiago gratis"»; «que lo que le digo en las preguntas se tenga en cuenta en los planes y
+    // SE VEA en el plan») Lo que se le cuenta a la IA manda en el plan: los hechos claros (sin blindajes, a quién no vende,
+    // una puja ya hecha, a quién ha blindado) corrigen las cuentas de la app, no solo lo que lee la IA. Y la cuenta de los
+    // blindajes, que solo miraba los movimientos de los últimos días. El detalle, en claude/ del proyecto. La hora, al publicar
+    v: '0.8s', f: '2026-11-22', h: '12:00', t: 'Lo que le cuentas a la IA manda en el plan',
+    cosas: [
+      { tipo: 'nuevo', d: 'chat', t: 'Lo que le dices cuenta en el plan', x: 'Si en Pregunta le cuentas que no te quedan blindajes, que a un jugador no lo vendes o que ya has hecho una puja, la app lo tiene en cuenta desde ese momento: el plan no te manda blindar, no te propone venderlo y no te repite la puja. Hoy, Equipo, las alarmas y la IA dicen lo mismo.', ir: { v: 'ia' } },
+      { tipo: 'nuevo', d: 'nota', t: '«Lo que me has dicho», dentro del plan', x: 'En Hoy, dentro del plan, sale lo que le has contado y cuenta ese día, con hasta cuándo vale. Cada cosa se quita con su ×.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'escudo', t: 'Los blindajes que te quedan', x: 'La app solo contaba los blindajes que habías puesto en los últimos días: si los dos eran de antes, creía que te quedaban y el plan te mandaba blindar.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'chat', t: 'La IA no promete lo que no apunta', x: 'Si contesta que lo apunta o que lo tendrá en cuenta y no se ha guardado nada, la app te lo dice debajo de la respuesta.', ir: { v: 'ia' } },
+    ],
+  },
   {
     // (22 nov, Carlos, al ver Clubes en el móvil: «quita todo lo de debajo de la tabla, ya se entiende», «el resultado 2-1
     // sale mal» y «en la barra de abajo sale un circulito que sobra») Tres retoques pequeños

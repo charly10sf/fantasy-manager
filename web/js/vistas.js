@@ -6,7 +6,7 @@ import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -592,6 +592,21 @@ function cupoPlanHTML(cu) {
   return `<div class="caja plan-cupo" style="margin-top:10px"><b>${esc(t)}</b><p class="t2" style="margin:4px 0 ${mas ? '10px' : '0'}">${esc(x)}</p>${mas ? `<button class="btn chico" data-accion="planYa">${icono('ia')}Ver el anuncio</button>` : ''}</div>`;
 }
 
+/* (22 nov, Carlos: «que lo que le digo a la IA se tenga en cuenta en los planes y SE VEA en el plan») Dentro del plan,
+   lo que le ha contado en Pregunta y cuenta hoy: primero lo que manda en el motor (M.dicho: sin blindajes, a quién no vende,
+   pujas ya hechas), después los tratos y lo que le contó de un jugador que sale en el plan. Cada cosa se quita con su × */
+function dichoHTML(S, P) {
+  const M = S.M || {};
+  const mandan = M.dicho || [];
+  const ids = new Set(mandan.map((n) => n.id));
+  const enPlan = new Set(((P && P.ops) || []).filter((o) => !o.descartada).map((o) => o.pid).filter(Boolean));
+  const otras = notasVigentes().filter((n) => !n.corr && !ids.has(n.id) && (n.tipo === 'trato' || (n.pid && enPlan.has(n.pid)))).slice(-3);
+  if (!mandan.length && !otras.length) return '';
+  const corto = (t) => { const x = String(t || '').trim(); return x.length > 64 ? `${x.slice(0, 61)}…` : x; };
+  const fila = (n, txt, hasta) => `<span class="pd-c"><span>${esc(txt)}${hasta ? `<small> · hasta ${esc(cuando(hasta, { hora: false }))}</small>` : ''}</span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Quitar: ${esc(txt)}">${icono('cerrar')}</button></span>`;
+  return `<div class="plan-dicho"><div class="pd-t">${icono('nota')}Lo que me has dicho</div><div class="pd-l">${mandan.map((n) => fila(n, n.txt, n.hasta)).join('')}${otras.map((n) => fila(n, corto(n.texto), n.caduca)).join('')}</div></div>`;
+}
+
 function planHTML(S) {
   const { M } = S;
   const P = S.plan;
@@ -624,7 +639,11 @@ function planHTML(S) {
   // diciendo de cuándo es y que puede no estar al día
   else if (esIA && !cambios && (E.cargando || E.error || E.cupo || Date.now() - P.t > 3 * 3600e3)) h += `<div class="banda plan-cambio">${icono('reloj')}<span>Es el último plan de la IA, de ${cuando(P.t)}: puede que no esté al día.${E.cargando ? ' El nuevo llega en un momento.' : ''}</span></div>`;
   else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${conIA ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
+  // (22 nov) le has contado algo que manda después del último plan de la IA: ese ya no vale y sale el de la app con eso contado
+  const UP = ultimoPlan();
+  if (!esIA && !E.cargando && UP && !UP.auto && UP.dia === diaDe() && (M.dicho || []).some((n) => n.t > UP.t)) h += `<div class="banda plan-cambio">${icono('nota')}<span>Este plan ya cuenta lo que me has dicho. El de la IA era de antes.</span>${conIA ? '<button data-accion="planYa">Rehacerlo con la IA</button>' : ''}</div>`;
   h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? (ancho() ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : `<details class="plan-sit-d"><summary class="plan-sit">${conEnlaces(S, P.situacion)}</summary></details>`) : ''}`;
+  h += dichoHTML(S, P);
   h += fasesHTML(S, P);
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
   // lo que el plan te deja: las pujas que ya tienes hechas cuentan como gastadas, el once tras las ventas y si la

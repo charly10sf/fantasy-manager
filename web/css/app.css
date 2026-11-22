@@ -263,6 +263,16 @@ h1.titulo { font-weight: 700; }
 .plan-cab .der { margin-left: auto; }
 .plan-titular { font: 700 var(--t-cifra)/1.08 var(--cond); margin: 10px 0 8px; }
 .plan-sit { color: var(--texto2); font-size: var(--t-cuerpo); margin: 0 0 6px; }
+/* (22 nov) «Lo que me has dicho», dentro del plan: lo que ha contado en Pregunta y cuenta hoy, cada cosa con su × */
+.plan-dicho { margin: 8px 0 2px; padding: 9px 11px; border-radius: var(--r-ctl); background: var(--oro-s); }
+.pd-t { display: flex; align-items: center; gap: 6px; font: 700 var(--t-sec2) 'Barlow'; color: var(--oro); text-transform: uppercase; letter-spacing: .03em; }
+.pd-t .ic { width: 15px; height: 15px; flex: none; }
+.pd-l { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.pd-c { display: inline-flex; align-items: center; gap: 2px; max-width: 100%; padding: 1px 1px 1px 11px; border-radius: 17px; background: var(--plano); border: 1px solid var(--linea); color: var(--texto); font-size: var(--t-sec2); line-height: 1.25; }
+.pd-c > span { min-width: 0; padding: 4px 0; }
+.pd-c small { color: var(--apagado); font-size: inherit; }
+.pd-c button { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; color: var(--apagado); }
+.pd-c button .ic { width: 14px; height: 14px; }
 .pasos { position: relative; margin: 18px 0 6px; }
 .paso-op { position: relative; display: flex; gap: 14px; padding-bottom: 18px; }
 .paso-op::before { content: ''; position: absolute; left: 17px; top: 38px; bottom: 0; width: 2px; background: var(--linea); }

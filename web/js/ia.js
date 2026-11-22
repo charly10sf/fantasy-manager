@@ -20,6 +20,7 @@ import { rematarAuto, prisaNegativo, ofertaDueno, motivoPeligro } from './motor.
 import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
+import { leerDicho, dichoTxt, DURA_DICHO } from './dicho.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -740,6 +741,84 @@ export const notasVigentes = () => notas().filter((n) => !n.caduca || n.caduca >
 export const borrarNota = (id) => guardarNotas(notas().filter((n) => n.id !== id));
 export const notasDe = (pid) => notasVigentes().filter((n) => n.pid === pid);
 
+/* ---------------- lo dicho que MANDA en el motor (22 nov, Carlos) ----------------
+   «No me quedan blindajes», «a Pedri no lo vendo», «ya he pujado por Pepe», «ya he blindado a Thiago»: hechos claros que
+   el motor entiende (dicho.js). Se apuntan ANTES de preguntar a la IA, leyendo lo que escribe él, y la app rehace el
+   análisis: así los datos que lee la IA ya van corregidos y Hoy, Equipo, las alarmas y el plan dicen lo mismo. Si no
+   nombra al jugador («a ese no lo vendo»), queda pendiente: lo puede poner la IA en su nota (aplicarNotas). */
+let PENDIENTE = { t: 0, lista: [] };
+const DICHO_PENDIENTE_MS = 5 * MIN;
+/** el texto de la nota para la IA (tercera persona) */
+const dichoIA = (n, M) => {
+  const j = n.pid && M.J(n.pid), quien = (j && j.nombre) || n.jugador || 'ese jugador';
+  const jn = (M.enJuego || M.proxima || {}).n;
+  if (n.corr === 'blindajes') return `${n.n === 0 ? 'No le quedan blindajes gratis' : n.n === 1 ? 'Le queda 1 blindaje gratis' : 'Le quedan los 2 blindajes gratis'}${jn ? ` hasta que acabe la jornada ${jn}` : ''}`;
+  if (n.corr === 'blindado') return `Ya ha blindado a ${quien}`;
+  if (n.corr === 'no-vender') return `No vende a ${quien}`;
+  if (n.corr === 'puja') return `Ya ha pujado por ${quien}${n.importe ? ` (${eur(n.importe)})` : ''}`;
+  return n.texto || '';
+};
+/** ¿a quién se le puede aplicar cada cosa? (lo suyo, o lo que hay en el mercado sin puja suya) */
+function valeDicho(corr, pid, D, M) {
+  const yo = D.yo && D.yo.teamId;
+  if (!pid) return false;
+  if (corr === 'no-vender' || corr === 'blindado') return !!yo && M.dueno[pid] === yo;
+  if (corr === 'puja') return (M.mercado || []).some((m) => m.pid === pid && !m.miPuja && String(m.vendedorTeamId || '') !== String(yo || ''));
+  return false;
+}
+function notaDicho(corr, pid, D, M, { importe = null, n = null, plan = null, ahora = Date.now() } = {}) {
+  const o = { corr, pid: pid || null, jugador: pid ? (M.J(pid) || {}).nombre || null : null, tipo: 'hecho', importe: null };
+  if (corr === 'blindajes') { o.n = n; o.caduca = M.escudosMios && M.escudosMios.hasta > ahora ? M.escudosMios.hasta : ahora + DURA_DICHO.blindajes; }
+  else if (corr === 'blindado') o.caduca = ahora + (M.ESCUDO_H || 24) * HORA;
+  else if (corr === 'no-vender') { o.tipo = 'preferencia'; o.caduca = ahora + DURA_DICHO['no-vender']; }
+  else if (corr === 'puja') {
+    const m = (M.mercado || []).find((y) => y.pid === pid) || {};
+    const op = plan && (plan.ops || []).find((y) => y.pid === pid && ['pujar', 'comprar'].includes(y.accion) && y.importe);
+    o.importe = num(importe) || (op && num(op.importe)) || num(m.puja) || num(m.precio) || null;
+    o.caduca = M.cierreMercado && M.cierreMercado > ahora ? M.cierreMercado + 30 * MIN : ahora + DURA_DICHO.puja;
+  }
+  o.texto = dichoIA(o, M);
+  return o;
+}
+/**
+ * Lee el mensaje del mánager y apunta lo que manda en el motor. Devuelve las notas nuevas (para rehacer el análisis antes
+ * de preguntar). `plan`: el plan que ve en Hoy, para «ya he hecho esa puja» sin nombre.
+ */
+export function apuntarDicho(pregunta, D, M, plan = null) {
+  PENDIENTE = { t: 0, lista: [] };
+  if (!pregunta || !D || !M || !D.yo) return [];
+  let leido = [];
+  try { leido = leerDicho(pregunta, (t) => jugadoresEn(t, D)); } catch (e) { return []; }
+  if (!leido.length) return [];
+  const ahora = Date.now(), nuevas = [], pend = [];
+  const opsPlan = ((plan && plan.ops) || []).filter((o) => o.hoy !== false && !o.descartada && !o.ya);
+  for (const x of leido) {
+    if (x.corr === 'blindajes') {
+      // (aunque la app ya lo cuente así, se apunta: lo ve en el plan y sabe que se le ha hecho caso)
+      nuevas.push(notaDicho('blindajes', null, D, M, { n: x.n, ahora }));
+      continue;
+    }
+    let pids = x.pids.filter((pid) => valeDicho(x.corr, pid, D, M));
+    // sin nombre: si en el plan de hoy solo hay un paso de eso, es ese («ya he hecho esa puja», «ya lo he blindado»)
+    if (!x.pids.length && (x.corr === 'puja' || x.corr === 'blindado')) {
+      const del = opsPlan.filter((o) => (x.corr === 'puja' ? o.accion === 'pujar' : o.accion === 'blindar' && !o.importe) && valeDicho(x.corr, o.pid, D, M));
+      if (del.length === 1) pids = [del[0].pid];
+    }
+    if (!pids.length) { if (!x.pids.length) pend.push({ corr: x.corr, importe: x.importe || null }); continue; }
+    for (const pid of pids) nuevas.push(notaDicho(x.corr, pid, D, M, { importe: pids.length === 1 ? x.importe : null, plan, ahora }));
+  }
+  if (pend.length) PENDIENTE = { t: ahora, lista: pend };
+  return guardarDicho(nuevas, ahora);
+}
+/** guarda las notas que corrigen al motor: de cada cosa (y de cada jugador) manda la última */
+function guardarDicho(nuevas, ahora = Date.now()) {
+  if (!nuevas.length) return [];
+  const pisa = (n) => n.corr && nuevas.some((x) => x.corr === n.corr && (x.pid || null) === (n.pid || null));
+  const con = nuevas.map((o, i) => ({ id: `d${ahora.toString(36)}${i}`, t: ahora, ...o }));
+  guardarNotas([...notas().filter((n) => !pisa(n)), ...con]);
+  return con;
+}
+
 /** el jugador con ese nombre (exacto, o el único que lo contiene) */
 export function pidDe(nombre, D) {
   const k = norm(nombre);
@@ -969,7 +1048,9 @@ function notasTxt(D, M) {
   const L = ['\nLO QUE ME HAS CONTADO TÚ (no sale en los datos de LaLiga; cuenta para todas las recomendaciones, sobre todo los tratos y ofertas con otros managers):'];
   const fuera = new Set((M.vendidos || []).map((v) => v.pid));
   for (const n of ns) {
-    L.push(`- [${n.id}] ${cuando(n.t)}: ${n.texto}${n.caduca ? ` (vale hasta ${cuando(n.caduca, { hora: false })})` : ''}${n.pid && fuera.has(n.pid) ? ' [YA NO ES SUYO: esta nota está superada]' : ''}`);
+    const manda = n.corr && (M.dicho || []).some((x) => x.id === n.id);
+    L.push(`- [${n.id}] ${cuando(n.t)}: ${n.texto}${n.caduca ? ` (vale hasta ${cuando(n.caduca, { hora: false })})` : ''}${n.pid && fuera.has(n.pid) ? ' [YA NO ES SUYO: esta nota está superada]' : ''}${manda ? ' [LA APP YA LO CUENTA ASÍ en el plan, en Hoy y en los avisos: no lo contradigas]' : ''}`);
+    if (n.corr === 'blindajes') continue;
     const j = n.pid && M.J(n.pid);
     if (j) L.push(`  datos de ${j.nombre}: ${lineaCompleta(D, M, j)}`);
   }
@@ -1025,7 +1106,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // (19 nov, tercera parte) las pujas que ya tiene puestas, con nombre: antes solo salían dentro de las operaciones y el chat
   // confundía una puja posible (R. Terrats) con la que ya tenía (Courtois)
   if (chat) {
-    const pu = (D.mercado || []).filter((m) => m.miPuja).map((m) => `${(M.J(m.pid) || {}).nombre || '?'} ${eur(m.miPuja)}`);
+    const pu = (M.mercado || D.mercado || []).filter((m) => m.miPuja).map((m) => `${(M.J(m.pid) || {}).nombre || '?'} ${eur(m.miPuja)}${m.pujaDicha ? ' (me ha dicho él que ya la ha hecho)' : ''}`);
     if (pu.length) L.push(`MIS PUJAS YA PUESTAS (se resuelven en el cambio de mercado${M.cierreMercado ? `, ${cuando(M.cierreMercado)}` : ''}): ${pu.join('; ')}. Ninguna otra: lo que sale en PUJAR más abajo son opciones, no pujas mías.`);
   }
   {
@@ -1081,7 +1162,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     if (vendeP && !vendeP.has(String(x.pid))) { const mo = miradoP && miradoP.get(String(x.pid)); return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE${mo ? ` (${mo.split(/(?<=\.)\s/)[0]})` : ''} | `; }
     return `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
   };
-  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
+  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''}${M.noVender && M.noVender.has(x.pid) ? ' | NO LO VENDE (me lo ha dicho él): no propongas venderlo ni aceptar ofertas por él' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -1093,7 +1174,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     };
     L.push(`MI ONCE EN LALIGA PARA LA JORNADA ${M.enJuego.n} (EN JUEGO): ${M.vivo.once.map(est).filter(Boolean).join(', ')}. Ya no se puede cambiar (LaLiga cierra el once con el primer partido): no me propongas alineación ni el paso de alinear.`);
   }
-  if (M.escudosMios) L.push(`BLINDAJES (el escudo de LaLiga, gratis viendo un anuncio): me quedan ${M.escudosMios.quedan} de 2 hasta que acabe la jornada ${(M.enJuego || M.proxima || {}).n || 'siguiente'}; cada uno protege la cláusula ${M.escudosMios.horas} h desde que se pone y SOLO se puede poner a un jugador con la cláusula ya abierta: a uno con la cláusula protegida o cerrada no se le puede poner hasta la hora en que se abre (te la paso con cada uno). No hay otra protección gratis ni otra forma de alargarla: no te inventes horas ni plazos distintos de los que te paso.`);
+  if (M.escudosMios) L.push(`BLINDAJES (el escudo de LaLiga, gratis viendo un anuncio): me quedan ${M.escudosMios.quedan} de 2${M.escudosMios.dicho ? ' (me lo ha dicho él: manda sobre lo que se ve en LaLiga)' : ''} hasta que acabe la jornada ${(M.enJuego || M.proxima || {}).n || 'siguiente'}; cada uno protege la cláusula ${M.escudosMios.horas} h desde que se pone y SOLO se puede poner a un jugador con la cláusula ya abierta: a uno con la cláusula protegida o cerrada no se le puede poner hasta la hora en que se abre (te la paso con cada uno). No hay otra protección gratis ni otra forma de alargarla: no te inventes horas ni plazos distintos de los que te paso.`);
   if (M.vendidos && M.vendidos.length) {
     L.push('\nYA NO SON MÍOS (vendidos o clausulados estos días; NO cuentes con ellos para nada: ni para vender, ni para el once, ni para el dinero):');
     for (const v of M.vendidos) L.push(`- ${v.j.nombre}: ${v.como} ${cuando(v.t)}${v.importe ? ` por ${eur(v.importe)}` : ''}`);
@@ -2108,6 +2189,8 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       descartada = true;
       aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: con lo que pagas de más por su cláusula, su calendario o lo poco que mejora tu once, no es una cláusula que la app recomiende (por eso no sale en Hoy ni en las alarmas).`;
     }
+    // (22 nov) «a este no lo vendo», dicho en Pregunta: una venta suya no entra en ningún plan
+    if (!ya && accion === 'vender' && M.noVender && M.noVender.has(pid)) { descartada = true; aviso = 'Me dijiste que no lo vendes: fuera del plan. Si has cambiado de idea, quítalo en «Lo que me has dicho».'; }
     // (A6) subir la cláusula pagando: como mucho la subida justa de la app; si ya vale o no compensa, no se paga
     if (!ya && !descartada && accion === 'blindar' && importe) {
       const x = (M.mias || []).find((y) => y.pid === pid);
@@ -2704,7 +2787,7 @@ export function notaValida(a, pregunta) {
 }
 
 /** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
-export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
+export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = null) {
   // (16 nov) el bloque también sin sus comillas («notas» y el JSON debajo: se quedaba a la vista) y sin los códigos de
   // operación que la IA copia de los datos («Operación M-3143»)
   const sep = separarNotas(texto);
@@ -2723,8 +2806,17 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
   // de un precio «que pactasteis») una cifra solo se apunta si él la ha dicho o la manda en una captura; que un rival
   // tenga a alguien a la venta, sin precio para él, no es un trato
   const sinCifra = pregunta != null && !conFotos && !/\d/.test(String(pregunta));
+  // (22 nov) lo que acaba de decir y ya ha apuntado la app (apuntarDicho): la IA no lo apunta otra vez. Y lo que dijo sin
+  // nombrar al jugador («a ese no lo vendo»): si la nota de la IA dice a quién, y a ese se le puede aplicar, manda
+  const recientes = notas().filter((n) => n.corr && Date.now() - n.t < DICHO_PENDIENTE_MS);
+  const pend = M && Date.now() - PENDIENTE.t < DICHO_PENDIENTE_MS ? PENDIENTE.lista : [];
+  const dichas = [];
   for (const a of j.apuntar || []) {
     if (!a || !a.texto) continue;
+    const pidA = a.jugador ? pidDe(a.jugador, D) : null;
+    const k = pend.findIndex((x) => valeDicho(x.corr, pidA, D, M));
+    if (k >= 0) { const x = pend.splice(k, 1)[0]; dichas.push(notaDicho(x.corr, pidA, D, M, { importe: x.importe })); continue; }
+    if (recientes.some((n) => (n.pid ? n.pid === pidA : /blind|escud/i.test(a.texto)))) continue;
     if (pregunta != null && !notaValida(a, pregunta)) continue;
     const dias = num(a.dias);
     let tipo = String(a.tipo || 'otro');
@@ -2742,6 +2834,7 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
     });
   }
   if (apuntadas.length || olvidadas) guardarNotas([...lista, ...apuntadas]);
+  if (dichas.length) apuntadas.push(...guardarDicho(dichas));
   return { texto: limpio, apuntadas, olvidadas, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
 }
 
@@ -2886,7 +2979,10 @@ export function ventasMiasTxt(D, M, js, c = null) {
     const quien = mejor ? (mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')) : '';
     if (mejor && venta.consejo === 'aceptar') { ver = 'aceptar'; motivo = `ya tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja aceptarla${venta.porque ? ` (${cortar(venta.porque, 150)})` : ''}`; }
     else if (mejor && venta.consejo === 'esperar' && ver !== 'vender') { ver = 'esperar'; motivo = `tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja ESPERAR: ${cortar(venta.porque || '', 170)}`; }
-    const VER = { vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, esperar: `NO ACEPTAR AÚN LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
+    // (22 nov) «a este no lo vendo», dicho en Pregunta: manda sobre todo lo demás
+    const nv = M.noVender && M.noVender.get(j.id);
+    if (nv) { ver = 'dicho'; motivo = `me dijo él que no lo vende (${cuando(nv.t)}${nv.caduca ? `; vale hasta ${cuando(nv.caduca, { hora: false })}` : ''}) y la app no lo pone en ningún plan ni aviso de venta. No le propongas venderlo; si ahora pregunta por venderlo, dale las cifras y dile que eso lo quita él en Hoy, en «Lo que me has dicho»`; }
+    const VER = { dicho: 'NO SE VENDE (LO HA DICHO ÉL)', vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, esperar: `NO ACEPTAR AÚN LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
     const P = y.proteger;
     const como = ver === 'vender'
       ? ` Al momento, a un rival que te pague ${eur(y.rival.piso)} o más; si no, a la venta para la oferta de LaLiga.${noHoy && !opV ? ` Cuándo: ${noHoy}` : ''}`
@@ -3065,7 +3161,11 @@ const ORDENES = [
   ['blindar', /\b(blindalo|blindala|blinda (?:ya |hoy |ahora )?a|ponle el escudo)\b/],
 ];
 
-export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {}) {
+// (22 nov, Carlos: «Entendido, lo quito del plan… para la próxima vez el plan no debe depender de un blindaje», y el plan
+// rehecho mandó blindar) la IA no puede prometer que apunta, quita o tendrá en cuenta algo si no se ha guardado nada
+const PROMETE = /\b(lo|la|los|las|te lo|me lo) (apunto|anoto|quito|saco|elimino|tendre en cuenta|recordare|dejo apuntado)\b|\b(queda|quedan|lo dejo|ya esta) (apuntad|anotad)[oa]s?\b|\b(apuntado|anotado|tomo nota)\b|\b(lo|la|los) (quito|saco) del plan\b|\bfuera del plan\b|\bpara la proxima vez\b|\bla proxima vez que (rehagas|hagas|pidas)\b|\bel (proximo )?plan (ya )?no (debe|debera|va a|contara|dependera)\b/;
+export const prometeApuntar = (t) => PROMETE.test(norm(t || ''));
+export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apuntado = null } = {}) {
   let t = sinWebsChat(sinModelos(texto));
   const notas = [];
   const nota = (x) => { if (x && !notas.includes(x)) notas.push(x); };
@@ -3250,6 +3350,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     if (!v.j || notas.some((x) => x.includes(`**${v.j.nombre}**`))) continue;
     if (cuentaConVendido(t, v.j.nombre, !!(M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT))) nota(`${N(v.j)} ya no es tuyo (${v.como} ${cuando(v.t)}): no cuenta para lo de arriba.`);
   }
+  if (apuntado === 0 && prometeApuntar(t)) nota('De esto no se ha apuntado nada: el plan sale de los datos de tu liga. Si es un hecho, dímelo tal cual («no me quedan blindajes», «a Pedri no lo vendo», «ya he pujado por él») y el plan lo contará.');
   // (texto.js no pinta citas: un título en negrita y una lista)
   if (notas.length) t += `\n\n**Revisado por la app:**\n${notas.slice(0, 6).map((x) => `- ${x}`).join('\n')}`;
   return { texto: t, notas };
@@ -3355,14 +3456,19 @@ export function rivalesEn(texto, D, M) {
 }
 
 /** el plan que se ve en Hoy ahora: el de la IA si es de hoy; si no, el del motor de hoy (marcado con motorHoy) */
-function planQueVe(D, M, c) {
+/** el plan de hoy guardado, si sigue valiendo: no, si después le ha contado a la IA algo que manda en el motor (22 nov) */
+export function planGuardadoHoy(M) {
   const p = ultimoPlan();
-  if (p && p.dia === diaDe()) return p;
+  return p && p.dia === diaDe() && !((M && M.dicho) || []).some((n) => n.t > p.t) ? p : null;
+}
+function planQueVe(D, M, c) {
+  const p = planGuardadoHoy(M);
+  if (p) return p;
   try {
     const R = planDeHoy(D, M, c);
     if (R && Array.isArray(R.ops) && R.ops.some((o) => !o.descartada)) return { motorHoy: true, t: Date.now(), titular: R.titular || '', operaciones: R.ops.filter((o) => !o.descartada).map((o) => ({ accion: o.accion, jugador: (o.j && o.j.nombre) || o.jugador || '' })), ops: R.ops };
   } catch (e) { /* sin motor: el de antes, si lo hay */ }
-  return p;
+  return ultimoPlan();
 }
 /**
  * Los datos de su liga para el chat: lo de siempre (contexto), los jugadores que nombra con todo, las plantillas de los
@@ -3438,12 +3544,20 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // la hora de verdad va abajo
   const liga = fotoChat(D, `${CABECERA_DATOS}\n${ctx}${mias ? `\n${mias}` : ''}`, hist);
   const ahoraTxt = liga.t ? `AHORA: ${fechaLarga(Date.now())}, ${horaDe(Date.now())} (hora de España). Los datos de arriba son de las ${horaDe(liga.t)}: lo que pone «en N h» o «hace N min» cuenta desde esa hora.\n` : '';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '');
+  // (22 nov) lo que acaba de contar en este mensaje y la app ya ha apuntado, o lo que ha dicho sin decir de quién
+  let dichoAhora = '';
+  try {
+    const rec = notasVigentes().filter((n) => n.corr && Date.now() - n.t < DICHO_PENDIENTE_MS);
+    const pend = Date.now() - PENDIENTE.t < DICHO_PENDIENTE_MS ? PENDIENTE.lista : [];
+    if (rec.length) dichoAhora += `\nLO QUE ACABA DE CONTARTE Y LA APP YA HA APUNTADO (los datos de arriba ya van así; desde ahora el plan, Hoy y los avisos lo cuentan): ${rec.map((n) => n.texto).join('; ')}. Dile en media frase que queda apuntado y que el plan ya lo tiene en cuenta (lo ve en Hoy, en «Lo que me has dicho», y ahí lo puede quitar). No digas que lo quitas tú del plan ni «la próxima vez»: ya está hecho.\n`;
+    if (pend.length) dichoAhora += `\nHA DICHO ${pend.map((x) => (x.corr === 'no-vender' ? 'que no vende a un jugador' : x.corr === 'puja' ? 'que ya ha hecho una puja' : 'que ya ha blindado a uno')).join(' y ')} SIN DECIR A QUIÉN: si por la conversación está claro, pon su nombre exacto en «jugador» al apuntarlo; si no, pregúntale a cuál se refiere.\n`;
+  } catch (e) { dichoAhora = ''; }
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '');
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;
 export function fotoChat(D, texto, hist = [], ahora = Date.now()) {
-  const clave = `${D && D.t}|${D && D.liga && D.liga.id}|${Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)).join()}|${rivalesAbiertos().join()}`;
+  const clave = `${D && D.t}|${D && D.liga && D.liga.id}|${Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)).join()}|${rivalesAbiertos().join()}|${LS.get(K('notas-t'), 0)}`;
   if (FOTO && (hist || []).length && FOTO.clave === clave && ahora - FOTO.t < 10 * 60e3 && diaDe(FOTO.t) === diaDe(ahora)) return { texto: FOTO.texto, t: FOTO.t };
   FOTO = { clave, texto, t: ahora };
   return { texto, t: 0 };
@@ -3533,15 +3647,17 @@ async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ = '' } = {
 }
 
 /** lo que se hace con una respuesta (de la app o de tu clave): notas, revisión y guardarla en el chat */
-function rematarRespuesta(r, pregunta, D, M, fotos, hist) {
-  const n = aplicarNotas(sinWebsChat(sinModelos(r.texto)), D, pregunta, !!(fotos && fotos.length));
+function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
+  const n = aplicarNotas(sinWebsChat(sinModelos(r.texto)), D, pregunta, !!(fotos && fotos.length), M);
+  // (22 nov) lo que apuntó la app al leer su mensaje va con lo apuntado, para que lo vea debajo de la respuesta
+  n.apuntadas = [...(dicho || []), ...n.apuntadas];
   // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
   // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
   let rev = { texto: n.texto, notas: [] };
-  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
+  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
   n.texto = rev.texto;
   const h2 = conversacion();
-  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
+  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   LS.set(K('chat'), h2.slice(-40));
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
@@ -3612,7 +3728,7 @@ export const resumenAviso = (t) => String(t || '').replace(/\n\n\*\*Revisado por
 /** a Android: la pregunta ha acabado (el aviso, si la app no está a la vista) */
 const acabadaApp = (ok, t) => { if (enApp) nativo.preguntaAcabada(ok, ok ? resumenAviso(t) : String(t || '')); };
 
-export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false } = {}) {
+export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false, dicho = [] } = {}) {
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
   // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
@@ -3631,7 +3747,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
     try {
       r = await charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra, rid });
       LS.del('preg-rid');
-      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist);
+      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho);
       acabadaApp(true, fin.texto);
       return fin;
     } catch (e) {
@@ -3640,12 +3756,12 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
       // el servicio no está y tienes tu clave: con ella (el aviso de Android, al acabar esa)
       if (!(e.servicio && hayClave() && e.name !== 'AbortError')) { acabadaApp(false, e.name === 'AbortError' ? '' : e.message); throw e; }
       try { r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso); } catch (e2) { acabadaApp(false, e2.name === 'AbortError' ? '' : e2.message); throw e2; }
-      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist);
+      const fin = rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho);
       acabadaApp(true, fin.texto);
       return fin;
     }
   } else r = await charlarClave(pregunta, D, M, c, hist, nuevas, fotos, alTexto, signal, alPaso);
-  return rematarRespuesta(r, pregunta, D, M, fotos, hist);
+  return rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho);
 }
 
 /**
