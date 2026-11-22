@@ -1953,6 +1953,21 @@
     "extra": 0,
     "jugador": "Álex Baena"
    }
+  },
+  {
+   "clave": "directo|127|Johnny Cardoso|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124601640082661798",
+   "t": "2026-11-22T20:31:19.302Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "127",
+    "equipo": "1068",
+    "min": 30,
+    "extra": 0,
+    "jugador": "Johnny Cardoso"
+   }
   }
  ],
  "estados": {
@@ -4635,16 +4650,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 57,
+   "redactar": 59,
    "revisar": 22,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 710206,
-  "salida": 22639,
+  "entrada": 734803,
+  "salida": 22894,
   "cacheLee": 133427,
   "cacheEscribe": 58023,
-  "dolares": 1.600458,
+  "dolares": 1.652202,
   "reservado": 0
  },
  "recientes": {
@@ -4782,10 +4797,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T16:36:31.507Z",
-    "texto": "⚽ Guedes empata para la Real Sociedad en el 60'. Racing 2-2 Real Sociedad. Asistencia de Gorrotxa, con 4 puntos de momento. Guedes ya suma 5 puntos."
-   },
-   {
     "t": "2026-11-22T16:46:19.681Z",
     "texto": "⚽ Canales mete el penalti en el 68' y el Racing ⚓ vuelve a ponerse por delante: 3-2 a la Real Sociedad en El Sardinero.\n\nYa suma 4 puntos por ahora y llega enchufado: lleva tres jornadas seguidas puntuando fuerte."
    },
@@ -4800,6 +4811,10 @@
    {
     "t": "2026-11-22T20:16:24.784Z",
     "texto": "⚽ Álex Baena abre el marcador en el 10'. Getafe 0-1 Atlético. Asistencia de Julián Alvarez, con 3 puntos de momento. Álex Baena ya suma 6 puntos."
+   },
+   {
+    "t": "2026-11-22T20:31:19.305Z",
+    "texto": "⚽ El Atlético se va 0-2 en el Coliseum: Johnny la mete en el 30' y silencia al Getafe.\n\nEs su primer gol en Liga, Champions o Copa, y ya suma 6 puntos. Pone el pase Julián Alvarez, que de momento se lleva 4 y llega en racha."
    }
   ],
   "novedades": [
@@ -9495,17 +9510,33 @@
    "w": "2026-11-22T20:10:10Z",
    "f": "2026-11-22T20:11:11.668Z",
    "rf": "10:27"
+  },
+  "fm|127|1173678|30": {
+   "j": "Johnny Cardoso",
+   "m": "30'",
+   "f": "2026-11-22T20:31:10.645Z",
+   "rf": "30:16",
+   "casado": true
+  },
+  "directo|127|Johnny Cardoso|gol1": {
+   "j": "Johnny Cardoso",
+   "m": "30'",
+   "e": "2026-11-22T20:31:10.645Z",
+   "re": "30'",
+   "w": "2026-11-22T20:29:53Z",
+   "f": "2026-11-22T20:31:10.645Z",
+   "rf": "30:16"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5362,
+   "ok": 5364,
    "fallos": 0,
-   "ejecuciones": 4339,
+   "ejecuciones": 4340,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T20:26:12.987Z"
+   "ultima": "2026-11-22T20:31:10.645Z"
   }
  },
  "ptsDirecto": {
@@ -9714,10 +9745,16 @@
    "t": 1795378574249
   },
   "13|127|3088": {
-   "p": 3,
+   "p": 4,
    "g": 0,
    "a": 1,
-   "t": 1795378574249
+   "t": 1795379470645
+  },
+  "13|127|2480": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795379470645
   }
  },
  "golesAnulados": {
@@ -9733,27 +9770,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:26:24.290Z"
+   "ultimaBien": "2026-11-22T20:31:25.191Z"
   }
  },
  "avisos": [
