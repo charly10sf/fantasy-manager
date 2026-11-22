@@ -2644,7 +2644,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004253021/ceballos-pocas-opciones-titular-derbi.html": 1795100855000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
@@ -2849,20 +2848,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/",
-    "medio": "Cadena SER",
-    "t": 1795098947000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang no se entrena por molestias en el tobillo",
-    "motivo": "molestias en el tobillo",
-    "plazo": "",
-    "nums": [
-     48
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html",
     "medio": "Mundo Deportivo",
@@ -9174,13 +9159,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5232,
+   "ok": 5234,
    "fallos": 0,
-   "ejecuciones": 4267,
+   "ejecuciones": 4268,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:31:20.507Z"
+   "ultima": "2026-11-22T14:36:18.897Z"
   }
  },
  "ptsDirecto": {
@@ -9342,27 +9327,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:31:30.562Z"
+   "ultimaBien": "2026-11-22T14:36:22.133Z"
   }
  },
  "avisos": [
