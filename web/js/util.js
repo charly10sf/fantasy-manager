@@ -176,7 +176,7 @@ const PAL_FUTBOL = ['gol', 'goles', 'golazo', 'doblete', 'hat trick', 'fichaje',
   'lesion', 'lesiones', 'lesionado', 'lesionados', 'molestias', 'parte medico', 'convocatoria', 'convocado', 'convocados', 'alineacion', 'alineaciones', 'titular', 'titulares', 'suplente',
   'entrenador', 'entrenamiento', 'entrena', 'mister', 'rueda de prensa', 'vestuario', 'futbol', 'futbolista', 'delantero', 'centrocampista', 'mediocentro', 'extremo', 'portero', 'defensa central',
   'partido', 'partidos', 'jornada', 'liga', 'laliga', 'champions', 'europa league', 'conference league', 'copa del rey', 'supercopa', 'derbi', 'clasico', 'estadio', 'penalti', 'penaltis',
-  'arbitro', 'var', 'sancion', 'sancionado', 'expulsion', 'expulsado', 'tarjeta roja', 'amarilla', 'asistencia', 'remontada', 'empate', 'empata', 'marcador', 'en directo', 'previa', 'cronica',
+  'arbitro', 'var', 'sancion', 'sancionado', 'expulsion', 'expulsado', 'tarjeta roja', 'amarilla', 'asistencia', 'remontada', 'empate', 'empata', 'marcador', 'previa', 'cronica',
   'fantasy', 'seleccion espanola', 'mundial', 'balon de oro', 'primera division', 'segunda division'];
 const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf',
   // (16 nov, un aviso: las noticias de Ryan, el portero del Levante, con las de un Ryan de la NFL)
@@ -189,7 +189,13 @@ const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'eurol
 const MEDIOS = ['defensa central', 'futbolfantasy', 'jornada perfecta', 'comuniate', 'analitica fantasy', 'fichajes net', 'fichajes', 'besoccer', 'goal', 'goal com', 'todofichajes',
   'futbol emotion', 'tribuna deportiva'];
 const MEDIOS_TODO = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'eldesmarque', 'el desmarque', 'superdeporte', 'sportyou', 'cope deportes'];
+// (22 nov, Carlos: «las 3 últimas no son noticias») lo que no es una noticia: un partido en directo o minuto a minuto,
+// las páginas para verlo (DAZN: «Watch … Live Stream Online») y las de a qué hora y dónde se ve
+const NO_NOTICIA = ['en directo', 'en vivo', 'minuto a minuto', 'live', 'stream', 'streaming', 'watch', 'donde ver', 'como ver', 'a que hora',
+  'horario y donde', 'horario y tv', 'por television', 'por tv', 'en que canal', 'que canal'];
 const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
+/** el titular no es una noticia (un directo, dónde verlo) */
+export const noEsNoticia = (titulo) => { const t = ` ${norm(titulo)} `; return tiene(t, NO_NOTICIA) || /^ directo | directo $/.test(t); };
 /** el titular viene de un medio deportivo o de fútbol */
 export const medioFutbol = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS.includes(f) || / (futbol|fichaj)/.test(` ${f}`)); };
 const medioDeportes = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS_TODO.includes(f) || / deport/.test(` ${f}`)); };
@@ -198,7 +204,7 @@ export const palabraFutbol = (titulo) => tiene(` ${norm(titulo)} `, PAL_FUTBOL);
 export function esDeFutbol(n) {
   if (!n || !n.titulo) return false;
   const t = ` ${norm(n.titulo)} `;
-  if (tiene(t, PAL_FUERA)) return false;
+  if (tiene(t, PAL_FUERA) || noEsNoticia(n.titulo)) return false;
   // dos equipos en el titular es un partido; uno solo no basta (Valencia, Sevilla o Getafe también son ciudades)
   if (n.equipos && n.equipos.length > 1) return true;
   if (tiene(t, PAL_FUTBOL)) return true;

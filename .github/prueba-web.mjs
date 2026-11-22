@@ -1131,6 +1131,19 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   await ctx.close();
 }
 
+// 20b: (22 nov, Carlos: «las 3 últimas no son noticias») ni un directo ni las páginas para ver el partido salen como noticia
+{
+  const { esDeFutbol } = await import(new URL('../web/js/util.js', import.meta.url));
+  const fuera = ['Watch CA Osasuna - Málaga CF Live Stream Online | DAZN ES', 'Osasuna - Málaga, en directo: Budimir y Barja acarician el segundo',
+    'Atlético - Getafe | Minuto a minuto', 'Dónde ver el Betis - Sevilla: horario y TV', 'DIRECTO | Real Sociedad - Celta'];
+  const dentro = ['Gulácsi evita el gol de Dani Olmo con una parada felina', 'El Barça remonta al Villarreal con la vuelta de Olmo y Koundé y la expulsión de Fermín',
+    'El Villarreal ficha a un delantero directo desde el Ajax'];
+  const n = (titulo) => ({ titulo, fuente: 'Marca', equipos: ['1', '2'] });
+  const malos = [...fuera.filter((t) => esDeFutbol(n(t))), ...dentro.filter((t) => !esDeFutbol(n(t)))];
+  if (malos.length) mal(`noticias: lo que no es noticia: ${malos.join(' / ')}`);
+  else bien(`noticias: fuera ${fuera.length} que no son noticia (directos, DAZN, dónde verlo) y se quedan ${dentro.length} de verdad`);
+}
+
 // 21:(19 nov, Carlos) una versión con todos: 'web' se presenta sola a los de la web y el iPhone, no en la app de Android;
 // su botón con ir.accion abre lo mismo que ese data-accion (la 0.8h: «Invitar a un amigo» abre la hoja de invitar). Con
 // «aviso» (20 nov) sale una tarjeta en el centro en vez de la pantalla entera, y se cierra al tocar el botón

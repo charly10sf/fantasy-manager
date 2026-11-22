@@ -327,6 +327,8 @@ export function aliasEquipo(nombre) {
 /** titulares de los últimos días: tus jugadores, los candidatos, sus equipos y LaLiga Fantasy en general (se guardan 1 hora) */
 export async function noticias(D, M) {
   const guardado = LS.get('noticias2', null);
+  // (lo guardado pasa otra vez el filtro: así lo que se quita deja de salir sin esperar a la hora)
+  if (guardado && Array.isArray(guardado.lista)) guardado.lista = guardado.lista.filter((n) => esDeFutbol(n));
   if (guardado && Date.now() - guardado.t < HORA && guardado.lista && guardado.lista.length) return guardado;
   // si Google Noticias no contestó hace poco, no se vuelve a probar en media hora: desde la web (el Worker) da 503 a
   // todo y eran 14 búsquedas de 6 a 9 s cada vez, algunas colgadas más de un minuto. Mientras, lo de la última vez

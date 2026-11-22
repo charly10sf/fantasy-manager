@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8u';
+export const VERSION = '0.8v';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,14 @@ export const VERSION = '0.8u';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (22 nov, 19:44, Carlos: «las 3 últimas no son noticias») fuera de las noticias los directos, las páginas para ver el
+    // partido (DAZN) y las de a qué hora y dónde se ve (`noEsNoticia` en util.js). La hora, al publicar
+    v: '0.8v', f: '2026-11-22', h: '', t: 'Solo noticias de verdad',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Solo noticias de verdad', x: 'Entre las noticias se colaban los partidos en directo y las páginas para verlos en la tele. Ahora solo salen noticias.' },
+    ],
+  },
   {
     // (22 nov, el repaso de la 0.8s: claude/prompt-bajas-y-repaso-0.8s.md, paso 2) Arreglos: Directo con el once de la jornada
     // (aviso de Domy), lo cambiado a la vez en dos dispositivos, la oferta de LaLiga contada y el dinero cerrado de refilón.
