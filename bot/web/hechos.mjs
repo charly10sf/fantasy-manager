@@ -121,6 +121,21 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     if (!pesa(j, b)) continue;
     (j.playerStatus === 'injured' ? bajas : dudas).push({ ...base(j), ...conParte(j), titularPct: pct(b), ...(completo ? { parte: partesDe.get(String(j.id)) || null } : {}) });
   }
+  // (22 nov) para la app (bajas/partes.json): el parte de TODOS los lesionados, dudas y sancionados de LaLiga, pesen o no, y los
+  // partidos de sanción que les quedan cuando se saben (quinta amarilla, uno; una sanción de varios, los que faltan)
+  const partesApp = [];
+  if (completo) {
+    for (const j of enLiga.filter((x) => ['injured', 'doubtful', 'suspended'].includes(x.playerStatus))) {
+      const p = partesDe.get(String(j.id)) || null;
+      let quedan = null;
+      if (j.playerStatus === 'suspended') {
+        const w = webSan.find((x) => casar(x, [j], equipos)) || null;
+        if (w && w.motivo === 'amarillas') quedan = 1;
+        else if (w && w.motivo === 'disciplinaria' && Number(w.de) > 0) quedan = Math.max(1, Number(w.de) - (Number(w.partido) || 1) + 1);
+      }
+      partesApp.push({ id: String(j.id), estado: j.playerStatus, parte: p, quedan });
+    }
+  }
   // vuelven: el parte los da disponibles para esta jornada tras 10 días o más fuera y LaLiga ya no los tiene de baja
   const vuelven = [];
   for (const j of enLiga) {
@@ -184,7 +199,7 @@ export async function hechosJornada({ jornada = null, ahora = Date.now(), log = 
     diasDesdeAnterior: finAnterior ? Math.round((primero - finAnterior) / DIA) : null,
     sancionados: sancionados.sort(porValor), apercibidos: apercibidos.sort(porValor),
     bajas: bajas.sort(porValor).slice(0, completo ? 99 : 10), dudas: dudas.sort(porValor).slice(0, completo ? 99 : 8), vuelven: vuelven.sort(porValor).slice(0, completo ? 99 : 8),
-    suben, bajan, fechaValor, jugadoresMirados: filas.length, chollos,
+    suben, bajan, fechaValor, jugadoresMirados: filas.length, chollos, ...(completo ? { partesApp } : {}),
   };
 }
 

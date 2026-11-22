@@ -77,7 +77,8 @@ export async function hechosBajas(api, hm, { ahora = Date.now(), log = () => {},
   for (const x of [...bajas, ...dudas, ...sancionados]) (porEq[x.equipo] ||= []).push(x);
   const equipos = Object.entries(porEq).filter(([, xs]) => xs.length >= 3 || (xs.length >= 2 && xs.reduce((s, x) => s + (x.valor || 0), 0) >= 30e6)).map(([equipo, xs]) => ({ equipo, xs, valor: xs.reduce((s, x) => s + (x.valor || 0), 0),
     ap: apercibidos.filter((a) => a.equipo === equipo), vuelven: vuelven.filter((v) => v.equipo === equipo) })).sort((a, b) => b.xs.length - a.xs.length || b.valor - a.valor);
-  return { jornada: h.jornada, ahora, dia: diaMadrid(ahora), primero: h.primero, partido: h.primerPartido, cierre: h.cierre, bajas, dudas, sancionados, apercibidos, vuelven, equipos };
+  return { jornada: h.jornada, ahora, dia: diaMadrid(ahora), primero: h.primero, partido: h.primerPartido, cierre: h.cierre, bajas, dudas, sancionados, apercibidos, vuelven, equipos,
+    partesApp: h.partesApp || [] };
 }
 
 // ---------------------------------------------------------------- el texto
@@ -177,3 +178,32 @@ export const metasBajas = (b) => ({ ruta: 'bajas/index.html', seccion: 'jornada'
   descripcion: `Las bajas de la jornada ${b.jornada} de LaLiga Fantasy: lesionados con su parte y su vuelta, dudas, sancionados con el motivo, apercibidos y los que vuelven, con su valor y qué suele compensar hacer. Se pone al día cada noche.`,
   migas: [['Inicio', ''], ['Jornadas', 'jornada/']] });
 
+/**
+ * bajas/partes.json (22 nov): lo que la app no tiene de cada baja y le da el portal, con el id de LaLiga, aparte de los archivos que
+ * ya hay. La app lo lee una vez cada pocas horas para la hoja de las bajas de Clubes (web/js/bajas.js). Por jugador, solo lo que
+ * sabe: e, lo que dice el parte (b: baja, d: duda, v: disponible); l, la lesión en pocas palabras; d, los días hasta la vuelta
+ * contados desde `t`; j, la jornada para la que está en duda o vuelve; s, los partidos de sanción que le quedan; a, las
+ * amarillas de un titular a una de la sanción. Sin nombres
+ * (la app ya los tiene) ni nada de otras webs.
+ */
+export function partesJson(hb) {
+  const j = {};
+  for (const x of hb.partesApp || []) {
+    const p = x.parte, o = {};
+    if (p) {
+      const e = { baja: 'b', duda: 'd', disponible: 'v' }[p.estado];
+      if (e) o.e = e;
+      const l = lesionTxt(p);
+      if (l) o.l = l.length > 60 ? `${l.slice(0, 59).replace(/\s+\S*$/, '')}…` : l;
+      const d = p.estado === 'baja' ? diasHastaVuelta(p, hb.ahora) : null;
+      // (más de 250 días es un «hasta noviembre» dicho en noviembre, que diasHastaVuelta lleva al año que viene: mejor sin fecha)
+      if (d != null && d >= 0 && d <= 250) o.d = d;
+      if (p.jornada && p.estado !== 'baja') o.j = p.jornada;
+    }
+    if (x.quedan) o.s = x.quedan;
+    if (Object.keys(o).length) j[x.id] = o;
+  }
+  // los apercibidos titulares (4, 9, 14… amarillas): a, las amarillas
+  for (const x of hb.apercibidos || []) if (x.amarillas) j[x.id] = { ...(j[x.id] || {}), a: x.amarillas };
+  return { v: 1, t: hb.ahora, jornada: hb.jornada, j };
+}

@@ -14,6 +14,7 @@
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
 //  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, se repite tras un corte, sin cupo y con la ruta caída.
+//  16. (22 nov) las bajas de la jornada: la cruz de Clubes, «pueden jugar» de Equipo, las pestañas, la ficha con «‹ Bajas» y la vuelta.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -1146,6 +1147,81 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
       await ctx.close();
     }
   }
+}
+
+// 16 (22 nov): las bajas de la jornada (bajas.js). La cruz de Clubes abre la hoja en «Todas», por club; «pueden jugar» de
+// Equipo, en «Tu liga» con los tuyos primero; las pestañas cambian sin cerrarla; tocar a uno abre su ficha con «‹ Bajas»
+// y se vuelve; bajas/partes.json (interceptado, con los ids de la demo) pone la lesión y la vuelta; sin él (404), sale igual.
+// En la demo se fuerzan tres bajas: dos tuyas (lesionado y sancionado) y una duda de un rival.
+for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
+  const nombre = `bajas (${ancho === 390 ? 'móvil' : 'ordenador'}, ${conPartes ? 'con partes' : 'sin partes'})`;
+  const { ctx, page, errores } = await pagina({ ancho, alto: ancho === 390 ? 844 : 800 });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForSelector('#vista', { timeout: 25000 });
+    const ids = await page.evaluate(() => {
+      const D = JSON.parse(localStorage.getItem('fm-datos-demo'));
+      const yo = String(D.yo.teamId);
+      const mios = (D.plantillas[yo] || []).map((f) => String(f.pid)).filter((pid) => D.maestro[pid] && D.maestro[pid].pos < 5);
+      const otro = Object.keys(D.plantillas).find((t) => t !== yo);
+      const riv = (D.plantillas[otro] || []).map((f) => String(f.pid)).find((pid) => D.maestro[pid] && D.maestro[pid].pos < 5 && D.maestro[pid].estado === 'ok');
+      D.maestro[mios[0]].estado = 'injured'; D.maestro[mios[1]].estado = 'suspended'; D.maestro[riv].estado = 'doubtful';
+      D.t = Date.now();
+      localStorage.setItem('fm-datos-demo', JSON.stringify(D));
+      return { les: mios[0], san: mios[1], riv };
+    });
+    await page.route('**/bajas/partes.json', (r) => (conPartes
+      ? r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ v: 1, t: Date.now() - 3600e3, jornada: 10, j: { [ids.les]: { e: 'b', l: 'rotura de prueba en el sóleo', d: 22 }, [ids.san]: { s: 1 }, [ids.riv]: { e: 'd', l: 'golpe de prueba', j: 10 } } }) })
+      : r.fulfill({ status: 404, body: 'no' })));
+    await page.reload();
+    await page.waitForSelector('#vista', { timeout: 25000 });
+    await page.evaluate(() => localStorage.removeItem('fm-bajas-partes'));
+    await page.click('[data-ir="clubes"] >> visible=true').catch(async () => page.evaluate(() => document.querySelector('[data-ir="clubes"]').click()));
+    await page.waitForTimeout(600);
+    const cruz = await page.evaluate(() => { const b = document.querySelector('#vista .tit-fila .cz'); if (!b) return null; const r = b.getBoundingClientRect(); return { n: (b.querySelector('.cz-n') || {}).textContent || '', l: b.querySelector('.cz-l').textContent.trim(), visible: r.width > 30 && r.right <= innerWidth + 1 && r.top >= 0 }; });
+    if (!cruz || !cruz.visible || !(Number(cruz.n) >= 3) || !/^BajasJ\d+$/i.test(cruz.l.replace(/\s+/g, ''))) mal(`${nombre}: la cruz de Clubes: ${JSON.stringify(cruz)}`);
+    else bien(`${nombre}: la cruz junto al título de Clubes, con «${cruz.l}» y ${cruz.n} bajas en tu liga`);
+    await page.click('#vista .cz');
+    await page.waitForTimeout(conPartes ? 900 : 600);
+    const todas = await page.evaluate(() => ({ tipo: window.S.tipoHoja, clubes: document.querySelectorAll('.hoja .bj-club').length, filas: document.querySelectorAll('.hoja .bj .fila').length, on: (document.querySelector('.hoja .bj-tab.on') || {}).textContent || '', titulo: (document.querySelector('.hoja h2') || {}).textContent || '', err: !!document.querySelector('.hoja .error-c') }));
+    if (todas.err || !todas.tipo || todas.tipo[0] !== 'bajas' || todas.tipo[1] !== 'todas' || todas.clubes < 1 || todas.filas < 3 || !/Todas/.test(todas.on) || todas.titulo !== 'Bajas') mal(`${nombre}: la hoja desde la cruz: ${JSON.stringify(todas)}`);
+    else bien(`${nombre}: la cruz abre la hoja en «Todas», ${todas.filas} bajas en ${todas.clubes} clubes`);
+    await page.evaluate(() => [...document.querySelectorAll('.hoja .bj-tab')].find((b) => /Tu liga/.test(b.textContent)).click());
+    await page.waitForTimeout(500);
+    const liga = await page.evaluate((ids) => {
+      const f = (pid) => document.querySelector(`.hoja .bj .fila[data-j="${pid}"]`);
+      const d = (pid) => (f(pid) ? [...f(pid).querySelectorAll('.fila-d .v, .fila-d .d')].map((e) => e.textContent.trim()).join(' ') : null);
+      const secs = [...document.querySelectorAll('.hoja .bj .sec h2')].map((e) => e.textContent.trim());
+      const primera = document.querySelector('.hoja .bj .fila');
+      return { tipo: window.S.tipoHoja, secs, primera: primera ? primera.dataset.j : null, sub: primera ? primera.querySelector('.fila-s').textContent : '', les: d(ids.les), lesT: f(ids.les) ? (f(ids.les).querySelector('.bj-les') || {}).textContent || '' : null, san: d(ids.san), riv: f(ids.riv) ? (f(ids.riv).querySelector('.bj-les') || {}).textContent || '' : null, pie: (document.querySelector('.hoja .bj-pie') || {}).textContent || '', rel: document.querySelectorAll('.hoja .bj-rel').length };
+    }, ids);
+    const okLiga = liga.tipo[1] === 'liga' && liga.secs[0] === 'Tuyas' && liga.secs.includes('De tus rivales') && [ids.les, ids.san].includes(liga.primera) && /Tuyo/.test(liga.sub);
+    const okPartes = conPartes ? /~3 sem\. vuelve/.test(liga.les || '') && liga.lesT === 'Rotura de prueba en el sóleo' && /^J\d+ vuelve$/.test(liga.san || '') && liga.riv === 'Golpe de prueba' && /^Partes de /.test(liga.pie)
+      : !liga.lesT && !liga.pie && !/vuelve/.test(`${liga.les} ${liga.san}`);
+    if (!okLiga || !okPartes) mal(`${nombre}: «Tu liga»: ${JSON.stringify(liga)}`);
+    else bien(`${nombre}: «Tu liga» con los tuyos primero (${liga.secs.join(', ')})${conPartes ? `, la vuelta («${liga.les}», «${liga.san}») y la lesión` : ', sin vuelta ni lesión'}; relevos: ${liga.rel}`);
+    await page.click(`.hoja .bj .fila[data-j="${ids.les}"]`);
+    await page.waitForTimeout(700);
+    const ficha = await page.evaluate(() => ({ tipo: window.S.tipoHoja, volver: (document.querySelector('.hoja .volver-h') || {}).textContent || '' }));
+    await page.click('.hoja .volver-h').catch(() => {});
+    await page.waitForTimeout(500);
+    const vuelta = await page.evaluate(() => window.S.tipoHoja);
+    if (ficha.tipo[0] !== 'j' || String(ficha.tipo[1]) !== ids.les || !/Bajas/.test(ficha.volver) || !vuelta || vuelta[0] !== 'bajas' || vuelta[1] !== 'liga') mal(`${nombre}: tocar a uno: ${JSON.stringify({ ficha, vuelta })}`);
+    else bien(`${nombre}: tocar a uno abre su ficha con «‹ Bajas» y se vuelve a «Tu liga»`);
+    await page.evaluate(() => document.querySelector('.hoja [data-accion="cerrarHoja"]').click());
+    await page.waitForTimeout(500);
+    await page.click('[data-ir="equipo"] >> visible=true').catch(async () => page.evaluate(() => document.querySelector('[data-ir="equipo"]').click()));
+    await page.waitForTimeout(700);
+    await page.evaluate(() => { const b = document.querySelector('#vista [data-seg="equipo:plantilla"]'); if (b) b.click(); });
+    await page.waitForTimeout(600);
+    const tile = await page.evaluate(() => { const b = document.querySelector('#vista .eq2-bajas'); return b ? b.textContent.replace(/\s+/g, ' ').trim() : null; });
+    if (tile) { await page.click('#vista .eq2-bajas'); await page.waitForTimeout(600); }
+    const eq = await page.evaluate(() => ({ tipo: window.S.tipoHoja, primera: (document.querySelector('.hoja .bj .sec h2') || {}).textContent || '' }));
+    if (!tile || !/pueden jugar/.test(tile) || !eq.tipo || eq.tipo[0] !== 'bajas' || eq.tipo[1] !== 'liga' || eq.primera !== 'Tuyas') mal(`${nombre}: «pueden jugar» de Equipo: ${JSON.stringify({ tile, eq })}`);
+    else bien(`${nombre}: «${tile}» de Equipo abre la misma hoja en «Tu liga»`);
+    if (errores.length) mal(`${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`${nombre}: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
 }
 
 await nav.close();

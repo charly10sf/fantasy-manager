@@ -313,6 +313,19 @@ console.log('cláusulas: bien');
   assert.match(cb, /cons-vende/);
   assert.match(cb, /guias\/cuando-vender\.html/, 'enlaza a la guía que explica el consejo');
   assert.ok(metasBajas(hb).titulo.length <= 60, 'título corto');
+  // (22 nov) bajas/partes.json, lo que lee la app: el 3 con su parte y los días hasta enero, con el id de LaLiga y sin nombres
+  const { partesJson } = await import('../web/bajas.mjs');
+  const pj = partesJson(hb);
+  assert.equal(pj.v, 1);
+  assert.equal(pj.jornada, 13);
+  assert.ok(pj.j['3'], 'el lesionado de ejemplo, por su id');
+  assert.equal(pj.j['3'].e, 'b');
+  assert.equal(pj.j['3'].l, 'rotura fibrilar en el aductor');
+  assert.ok(pj.j['3'].d > 30 && pj.j['3'].d < 90, `hasta enero: ${pj.j['3'].d} días`);
+  assert.doesNotMatch(JSON.stringify(pj), /Jugador 3|futbolfantasy|undefined|NaN/);
+  assert.ok(JSON.stringify(pj).length < 20000, 'pequeño');
+  const pa = partesJson({ ahora: hoy, jornada: 13, partesApp: [{ id: '8', estado: 'suspended', parte: null, quedan: 1 }], apercibidos: [{ id: '9', amarillas: 4 }] });
+  assert.deepEqual(pa.j, { 8: { s: 1 }, 9: { a: 4 } }, 'sancionado con lo que le queda y apercibido con sus amarillas');
 }
 console.log('bajas: bien');
 
