@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
@@ -9114,13 +9113,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5158,
+   "ok": 5159,
    "fallos": 0,
-   "ejecuciones": 4211,
+   "ejecuciones": 4212,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:51:17.745Z"
+   "ultima": "2026-11-22T09:56:15.187Z"
   }
  },
  "ptsDirecto": {
@@ -9240,15 +9239,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:51:21.475Z"
+   "ultimaBien": "2026-11-22T09:56:17.009Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:51:21.475Z"
+   "ultimaBien": "2026-11-22T09:56:17.009Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:51:21.475Z"
+   "ultimaBien": "2026-11-22T09:56:17.009Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9256,11 +9255,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:51:21.475Z"
+   "ultimaBien": "2026-11-22T09:56:17.009Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:51:21.475Z"
+   "ultimaBien": "2026-11-22T09:56:17.009Z"
   }
  },
  "avisos": [
