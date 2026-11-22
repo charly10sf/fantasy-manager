@@ -2570,8 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
@@ -2787,21 +2785,6 @@
    "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795083276000,
-    "id": "3264",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Ceballos vuelve a entrenar con el grupo",
-    "motivo": "molestias sin lesión confirmada",
-    "plazo": "",
-    "nums": [
-     18,
-     30
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/",
     "medio": "AS",
@@ -9111,13 +9094,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5162,
+   "ok": 5163,
    "fallos": 0,
-   "ejecuciones": 4215,
+   "ejecuciones": 4216,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T10:11:12.601Z"
+   "ultima": "2026-11-22T10:16:10.806Z"
   }
  },
  "ptsDirecto": {
@@ -9237,15 +9220,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:11:17.143Z"
+   "ultimaBien": "2026-11-22T10:16:14.388Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:11:17.143Z"
+   "ultimaBien": "2026-11-22T10:16:14.388Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:11:17.143Z"
+   "ultimaBien": "2026-11-22T10:16:14.388Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9253,11 +9236,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:11:17.143Z"
+   "ultimaBien": "2026-11-22T10:16:14.388Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:11:17.143Z"
+   "ultimaBien": "2026-11-22T10:16:14.388Z"
   }
  },
  "avisos": [
