@@ -2856,7 +2856,7 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
 const OFERTA_DICHA = /\bme (ofrece|ofrecen|ha ofrecido|han ofrecido|ofrecio|ofrecieron|da|dan|daria|darian|paga|pagan|pagaria|propone|proponen|ha propuesto|han propuesto|quiere dar|quieren dar|quiere comprar|quieren comprar|compra|compran)\b|\b(tengo|me ha llegado|me llega|me ha hecho|me han hecho|me hace) (una |la )?(oferta|propuesta)\b|\bme ha dicho que me (da|paga|ofrece|compra)\b/;
 /** ¿su mensaje cuenta una oferta o un trato que le han hecho? (no vale preguntar «¿qué me ofrecen?») */
 export const cuentaOferta = (pregunta) => { const q = norm(pregunta || ''); return OFERTA_DICHA.test(q) && !/^(que|cuanto|quien) me (ofrece|ofrecen|da|dan)\b/.test(q); };
-const NO_LA_VEO = /\bno (la |lo |me |te |se )?(veo|aparece|consta|sale|figura|tengo|encuentro)\b[^.!?]{0,90}\b(oferta|trato|propuesta)\b|\b(oferta|trato|propuesta)\b[^.!?]{0,70}\bno (la )?(veo|aparece|consta|sale|figura|esta)\b|\bno (veo|aparece|consta|figura)\b[^.!?]{0,60}\b(en los datos|en la app|en la aplicacion|en laliga|en tu cuenta)\b/;
+const NO_LA_VEO = /\bno (la |lo |me |te |se )?(veo|aparece|consta|sale|figura|tengo|encuentro)\b[^.!?]{0,90}\b(oferta|trato|propuesta)\b|\b(oferta|trato|propuesta)\b[^.!?]{0,70}\bno (la )?(veo|aparece|consta|sale|figura|esta)\b|\bno (veo|aparece|consta|figura)\b[^.!?]{0,60}\b(en los datos|en la app|en la aplicacion|en laliga|en tu cuenta)\b|\bno hay (ninguna|esa|tal) oferta\b|\bno cuenta como (una )?oferta\b/;
 /** quita de la respuesta las frases que dicen que no ve esa oferta. Devuelve { texto, quitadas } */
 export function sinNoLaVeo(texto) {
   const [cuerpo, ...resto] = String(texto || '').split(/\n\n(?=\*\*Revisado por la app:\*\*)/);
