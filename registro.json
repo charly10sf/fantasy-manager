@@ -1762,6 +1762,65 @@
    "jornada": 13,
    "id": "2124518645321581053",
    "t": "2026-11-22T15:01:31.744Z"
+  },
+  {
+   "clave": "directo|124|Yassir Zabiri|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124524926610588113",
+   "t": "2026-11-22T15:26:29.400Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "124",
+    "equipo": "87",
+    "min": 6,
+    "extra": 0,
+    "jugador": "Yassir Zabiri"
+   }
+  },
+  {
+   "clave": "directo|124|Yassir Zabiri|gol2",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124524934311387244",
+   "t": "2026-11-22T15:26:31.209Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "124",
+    "equipo": "87",
+    "min": 8,
+    "extra": 0,
+    "jugador": "Yassir Zabiri"
+   }
+  },
+  {
+   "clave": "directo|128|Pau Navarro|roja",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124524943127839079",
+   "t": "2026-11-22T15:26:33.289Z",
+   "huella": {
+    "clase": "roja",
+    "partido": "128",
+    "equipo": "102",
+    "min": 90,
+    "extra": 3,
+    "jugador": "Pau Navarro"
+   }
+  },
+  {
+   "clave": "final|128",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124525013810253999",
+   "t": "2026-11-22T15:26:50.091Z"
+  },
+  {
+   "clave": "mvp|128",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124525040439804069",
+   "t": "2026-11-22T15:26:56.453Z"
   }
  ],
  "estados": {
@@ -4449,16 +4508,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 20,
-   "redactar": 16,
-   "revisar": 6,
+   "redactar": 24,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187076,
-  "salida": 11365,
-  "cacheLee": 56063,
-  "cacheEscribe": 35779,
-  "dolares": 0.419906,
+  "entrada": 241970,
+  "salida": 12760,
+  "cacheLee": 101494,
+  "cacheEscribe": 49314,
+  "dolares": 0.582024,
   "reservado": 0
  },
  "recientes": {
@@ -4486,10 +4545,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-20T22:41:21.585Z",
-    "texto": "🏁 El Espanyol gana 0-1 en San Mamés con un único gol, el de Roberto en el 66'.\n\nFortuño es el que más puntos ha sacado de los dos equipos: 14, y ya van tres jornadas seguidas con 8 o más. Roberto llega a 11, más del doble de lo que suele dar, así que noche gorda para quien tenga espanyolistas.\n\nEn el Athletic 🦁 se salva Nico Williams con 10 pese a perder, muy por encima de su media."
-   },
-   {
     "t": "2026-11-21T15:26:40.258Z",
     "texto": "🏁 El Alavés gana 3-1 al Deportivo en Mendizorroza: Ángel Pérez abrió en el 2', Lucas Boyé hizo el 2-1 en el 62' y Denis Suárez cerró en el 90'.\n\nPérez es el que más puntos ha sacado de los dos equipos: 14, más del doble de su media. Boyé suma 12 aunque antes, en el 55', le paró un penalti Leo Román. Blanco se lleva 11 sin marcar.\n\nDel Deportivo se salva Román con 9 puntos pese a perder, muy por encima de lo que suele dar. Su equipo empató con un gol en propia puerta de Tenaglia en el 41'."
    },
@@ -4504,13 +4559,13 @@
    {
     "t": "2026-11-21T22:26:28.677Z",
     "texto": "🏁 Real Madrid 2-1 Celta. El Real Madrid remonta y lo cierra Carlos Espí en el 85'. Bellingham se va a 13 puntos fantasy. Lleva 3 jornadas seguidas con 8 o más: 17, 8 y 13.\n\nLo peor se lo lleva Javi Rodríguez: -1 punto. Pablo Durán marcó y suma 10 aunque el Celta pierde. Cumple el favorito: el Madrid, 2º, gana al Celta, 13º.\n\n✅ Si tienes a Bellingham, hoy sonríes"
+   },
+   {
+    "t": "2026-11-22T15:26:50.093Z",
+    "texto": "🏁 El Barça remonta un 0-2 en diez minutos y gana 3-2 al Villarreal 🚢, que se había puesto por delante con goles de Buchanan en el 5' y de Oluwaseyi en el 7'.\n\nGerard Martín recortó en el 57', Fermín empató en el 61' y el 3-2 fue en propia puerta de Pau Navarro en el 67'. Pedri es el que más puntos ha sacado de los dos equipos, 11, casi el doble de su media. Gerard Martín suma 10 y Fermín 9.\n\nLa nota mala es para Pau Navarro, con -3 y expulsado en el 90+3'. Buchanan se lleva 8 aunque el Villarreal pierde."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-20T22:41:37.728Z",
-    "texto": "⭐ Fortuño es el mejor del Athletic 🦁-Espanyol, que acabó 0-1 en San Mamés: 14 puntos para el portero del Espanyol, más del doble de su media.\n\nEl gol de Roberto en el 66' fue el único del partido y Fortuño mantuvo la portería a cero. Vale 4,2 M y en la jornada 14 el Espanyol recibe al Getafe."
-   },
    {
     "t": "2026-11-21T15:21:43.210Z",
     "texto": "⭐ Ángel Pérez es el mejor del Alavés-Deportivo con 14 puntos: abrió el marcador en el 2' y el Alavés acabó ganando 3-1 en Mendizorroza.\n\nEl centrocampista hace más del doble de su media de 6,4 y vale 29,8 M. En la jornada 14 visita al Real Madrid ⚪."
@@ -4526,6 +4581,10 @@
    {
     "t": "2026-11-21T22:26:35.204Z",
     "texto": "⭐ Bellingham es el MVP fantasy del Real Madrid 2-1 Celta, con 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 154,8 M en el mercado y vuelve a jugar en la jornada 14, contra el Alavés"
+   },
+   {
+    "t": "2026-11-22T15:26:56.455Z",
+    "texto": "⭐ Pedri es el mejor del Barça-Villarreal 🚢: 11 puntos, casi el doble de su media de 6,1. El Barça le dio la vuelta al 0-2 con tres goles entre el 57' y el 67' y acabó ganando 3-2.\n\nVale 80,5 M y en la jornada 14 visita al Deportivo. Con el partido que ha hecho, es de los que se quedan en el once sin discusión."
    }
   ],
   "mercado": [
@@ -4596,24 +4655,24 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T21:54:56.492Z",
-    "texto": "⚽ Gol de Carlos Espí y el Real Madrid le da la vuelta en el 85'. Real Madrid 2-1 Celta. Ya en el tramo final. El delantero ya va por 5 puntos."
-   },
-   {
-    "t": "2026-11-22T13:11:23.702Z",
-    "texto": "⚽ ¡GOLAZO DE LEJOS! Buchanan la cuelga desde unos 25 metros y el Villarreal 🚢 se adelanta en el 5' en el campo del Barça: 0-1.\n\nEl canadiense ya suma 5 puntos por ahora y llega en racha, con tres jornadas seguidas puntuando fuerte."
-   },
-   {
-    "t": "2026-11-22T13:11:26.656Z",
-    "texto": "⚽ Oluwaseyi la mete en el 7' y el Villarreal 🚢 se pone 0-2 en el campo del Barça.\n\nEl canadiense ya suma 5 puntos y es su cuarto gol entre Liga, Champions y Copa del Rey. El pase es de Moleiro, con 4 por ahora."
-   },
-   {
     "t": "2026-11-22T14:26:23.586Z",
     "texto": "⚽ Gerard Martín la manda dentro de cabeza en el 57' y el Barça recorta ante el Villarreal 🚢: 1-2.\n\nEs su primer gol entre Liga, Champions y Copa del Rey. Gerard Martín ya suma 4 puntos y Pedri, que da el pase, lleva 5 de momento."
    },
    {
     "t": "2026-11-22T14:26:26.935Z",
     "texto": "⚽ Fermín la manda dentro en el 61' y el Barça empata con el Villarreal 🚢: 2-2.\n\nEl centrocampista ya suma 6 puntos y llega en racha, con tres jornadas seguidas puntuando fuerte. El pase es de Lamine Yamal, que se lleva 4 de momento."
+   },
+   {
+    "t": "2026-11-22T15:26:29.403Z",
+    "texto": "⚽ Yassir Zabiri la manda dentro en el 6' y el Racing ⚓ se adelanta 1-0 ante la Real Sociedad en El Sardinero.\n\nEl marroquí ya suma 9 puntos por ahora y va por su gol 10 entre Liga, Champions y Copa del Rey. El pase es de Iker Luque, que de momento se lleva 5."
+   },
+   {
+    "t": "2026-11-22T15:26:31.212Z",
+    "texto": "⚽⚽ Doblete de Y. Zabiri en el 8'. Racing 2-0 Real Sociedad: el Racing amplía la ventaja. Ya suma 9 puntos."
+   },
+   {
+    "t": "2026-11-22T15:26:33.291Z",
+    "texto": "🟥 Roja a Pau Navarro en el 90+3' y el Villarreal 🚢 se queda con diez cuando ya perdía 3-2 en el campo del Barça.\n\nEl defensa se va con -3 puntos. Si lo tenías, se te suma un palo gordo en el último suspiro."
    }
   ],
   "novedades": [
@@ -9184,17 +9243,49 @@
    "f": "2026-11-22T14:31:20.507Z",
    "rf": "66:27",
    "avisado": true
+  },
+  "fm|124|1640985|8": {
+   "j": "Yassir Zabiri",
+   "m": "8'",
+   "f": "2026-11-22T15:26:12.175Z",
+   "rf": "10:09",
+   "casado": true
+  },
+  "fm|124|1640985|6": {
+   "j": "Yassir Zabiri",
+   "m": "6'",
+   "f": "2026-11-22T15:26:12.175Z",
+   "rf": "10:09",
+   "casado": true
+  },
+  "directo|124|Yassir Zabiri|gol1": {
+   "j": "Yassir Zabiri",
+   "m": "6'",
+   "e": "2026-11-22T15:26:12.175Z",
+   "re": "11'",
+   "w": "2026-11-22T15:21:14Z",
+   "f": "2026-11-22T15:26:12.175Z",
+   "rf": "10:09"
+  },
+  "directo|124|Yassir Zabiri|gol2": {
+   "j": "Yassir Zabiri",
+   "m": "8'",
+   "e": "2026-11-22T15:26:12.175Z",
+   "re": "11'",
+   "w": "2026-11-22T15:23:05Z",
+   "f": "2026-11-22T15:26:12.175Z",
+   "rf": "10:09"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5249,
+   "ok": 5251,
    "fallos": 0,
-   "ejecuciones": 4277,
+   "ejecuciones": 4278,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T15:21:16.508Z"
+   "ultima": "2026-11-22T15:26:12.175Z"
   }
  },
  "ptsDirecto": {
@@ -9341,6 +9432,18 @@
    "g": 0,
    "a": 1,
    "t": 1795357571651
+  },
+  "13|124|3152": {
+   "p": 9,
+   "g": 2,
+   "a": 0,
+   "t": 1795361172175
+  },
+  "13|124|3247": {
+   "p": 5,
+   "g": 0,
+   "a": 1,
+   "t": 1795361172175
   }
  },
  "golesAnulados": {
@@ -9356,27 +9459,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:21:24.250Z"
+   "ultimaBien": "2026-11-22T15:26:57.511Z"
   }
  },
  "avisos": [
