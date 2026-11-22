@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
@@ -2782,21 +2781,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254001/oportunidad-raphinha-ampliar-ventaja-lucha-primer-pichichi.html": 1795335516000,
    "SPORT|136713918": 1795332440000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000,
-   "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000
+   "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000,
+   "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/",
-    "medio": "AS",
-    "t": 1795084086000,
-    "id": "3264",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Ceballos vuelve a entrenar con el grupo para el derbi",
-    "motivo": "molestias previas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html",
     "medio": "Mundo Deportivo",
@@ -3545,7 +3533,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4451,17 +4439,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 72428,
-  "salida": 5230,
+  "entrada": 74349,
+  "salida": 5572,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.144564,
+  "dolares": 0.144927,
   "reservado": 0
  },
  "recientes": {
@@ -9094,13 +9082,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5165,
+   "ok": 5166,
    "fallos": 0,
-   "ejecuciones": 4218,
+   "ejecuciones": 4219,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T10:26:10.744Z"
+   "ultima": "2026-11-22T10:31:20.727Z"
   }
  },
  "ptsDirecto": {
@@ -9220,15 +9208,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:26:14.537Z"
+   "ultimaBien": "2026-11-22T10:31:29.726Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:26:14.537Z"
+   "ultimaBien": "2026-11-22T10:31:29.726Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:26:14.537Z"
+   "ultimaBien": "2026-11-22T10:31:29.726Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9236,11 +9224,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:26:14.537Z"
+   "ultimaBien": "2026-11-22T10:31:29.726Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:26:14.537Z"
+   "ultimaBien": "2026-11-22T10:31:29.726Z"
   }
  },
  "avisos": [
