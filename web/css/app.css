@@ -732,6 +732,11 @@ body.soltando::after { content: 'Suelta la imagen para mandársela a la IA'; pos
 .nota { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0 2px; border-top: 1px solid rgba(255, 197, 71, 0.15); margin-top: 8px; font-size: var(--t-sec2); }
 .nota span { flex: 1; } .nota small { display: block; color: var(--apagado); font-size: var(--t-sec2); margin-top: 2px; }
 .nota button { color: var(--apagado); } .nota button .ic { width: 18px; height: 18px; }
+/* (22 nov) una respuesta larga, plegada: «Seguir leyendo» */
+.resp-mas { margin-top: 2px; }
+.resp-mas > summary { display: inline-block; padding: 6px 0; color: var(--rojo-l); font: 600 var(--t-sec2) 'Barlow'; cursor: pointer; list-style: none; }
+.resp-mas > summary::-webkit-details-marker { display: none; }
+.resp-mas[open] > summary { display: none; }
 .apuntado { display: flex; gap: 8px; margin-top: 10px; padding: 9px 11px; border-radius: var(--r-ctl); background: var(--oro-s); color: var(--texto); font-size: var(--t-sec2); }
 .apuntado > .ic { width: 18px; height: 18px; color: var(--oro); flex: none; margin-top: 1px; }
 .apuntado b { color: var(--oro); }

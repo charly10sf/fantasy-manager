@@ -548,7 +548,9 @@ const dineroCat = (d, valor) => {
   const c = v < 0 ? 'en negativo' : !base ? (v > 0 ? 'tiene algo' : 'a cero') : v < base * 0.05 ? 'poco' : v < base * 0.2 ? 'algo' : 'mucho';
   return `dinero: ${c} (función top cerrada: sin cifra)`;
 };
-const dineroDe = (d, valor) => (bloqueada('dineroRivales') ? dineroCat(d, valor) : dineroTxt(d));
+// (22 nov, Carlos) rival a rival: el dinero se abre para UN rival viendo sus anuncios; ese va con su cifra (y se le puede
+// decir) y los demás siguen sin ella
+const dineroDe = (d, valor, tid = null) => (bloqueada('dineroRivales', tid) ? dineroCat(d, valor) : `${dineroTxt(d)}${tid != null && bloqueada('dineroRivales') ? ' (el de este rival lo tiene ABIERTO: su cifra sí se la puedes decir)' : ''}`);
 const dineroTxt = (d) => (!d || d.v == null ? `dinero: no se sabe${d && d.motivo ? ` (${d.motivo})` : ''}` : d.exacto ? `dinero ${eur(d.v)} (exacto)` : d.dicho ? `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (me dijo lo que tenía ${cuando(d.dicho.t)}, más lo que ha movido desde entonces)` : `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (estimado con todos sus movimientos y sus subidas de cláusula${d.correccion ? `; corregido con ${d.correccion.propio ? 'lo que me dijo él' : [d.correccion.n ? 'lo que me han dicho otros rivales' : '', d.correccion.todos ? 'lo que apunta la gente en todas las ligas' : ''].filter(Boolean).join(' y ')}` : ''})`);
 /** quién puede pagar una cláusula tuya */
 const paganTxt = (p) => {
@@ -1217,7 +1219,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     }
   }
   L.push(`\nRIVALES (pos | equipo | manager | puntos | valor | lo que han subido de valor sus jugadores en 7d (sin contar fichajes ni ventas) | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro (y por qué) | su dinero | lo que suele pagar en el mercado | mis cláusulas que le llegan)${M.dineroExacto ? '' : `. Su dinero, si no es exacto, sale de todos vuestros movimientos desde el principio de la liga (empezasteis con lo mismo); el margen (±) es por la recompensa diaria, que no sale en los movimientos ni en ningún otro sitio: la app no puede saber cuánto ha cogido cada uno. Si le das a alguien el dinero de un rival con su ±, di también que el ± es por eso${M.calDinero && !bloqueada('dineroRivales') ? `. En todas las ligas, con ${M.calDinero.n} casos apuntados por la gente, esta cuenta suele fallar ± ${eur(M.calDinero.margen)}: ya va corregida, pero no te fíes de diferencias más pequeñas que eso` : M.calDinero ? '. Esta cuenta va corregida con lo que apunta la gente en todas las ligas, pero sigue siendo una estimación' : ''}`}:`);
-  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${({ muyalta: 'muy alto', alta: 'alto', media: 'medio', baja: 'bajo' })[r.nivel] || r.nivel} (${motivoPeligro(r, { quien: !bloqueada('quienPaga') }).replace(/\.$/, '')}) | ${dineroDe(r.dinero, r.e.valor)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
+  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${({ muyalta: 'muy alto', alta: 'alto', media: 'medio', baja: 'bajo' })[r.nivel] || r.nivel} (${motivoPeligro(r, { quien: !bloqueada('quienPaga') }).replace(/\.$/, '')}) | ${dineroDe(r.dinero, r.e.valor, r.e.teamId)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${bloqueada('quienPaga') ? 'no lo sabes (función top cerrada)' : r.leLlegan.length ? `${r.leLlegan.filter((x) => x.abierta).length} abiertas y ${r.leLlegan.filter((x) => !x.abierta).length} que se abren pronto (la más cara, ${(() => { const x = [...r.leLlegan].sort((a, b) => b.clausula - a.clausula)[0]; return `${x.j.nombre} ${eur(x.clausula)}`; })()})` : 'ninguna'}`);
   // cómo juega cada uno, con todo el historial (función top «perfilRival»: si está cerrada, la usa sin contarla)
   if (M.perfil) {
     const yoT = D.yo && D.yo.teamId;
@@ -2785,6 +2787,51 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
   return false;
 }
 
+/* ---------------- el dinero de un rival, cerrado (22 nov, Carlos) ----------------
+   «Si alguien pregunta cuánto dinero tiene X rival y no lo ha desbloqueado viendo el anuncio, que no se lo diga.» La cifra
+   ya no le llegaba a la IA (solo «mucho», «algo», «poco»), pero a la pregunta directa contestaba con eso mismo («tiene un
+   saldo medio», «está en el tramo de algo»): es decirlo a medias. Ahora, si pregunta por el dinero de un rival que tiene
+   cerrado, a la IA se le dice que no dé ni la categoría, y la app quita de la respuesta lo que hable de ese dinero. */
+const DINERO_RE = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco|caja|millones tiene|cuanto (dinero )?(tiene|tienen|le queda|les queda|maneja|manejan)|cuanto puede(n)? gastar|rico|ricos|pobre|pobres|forrad[oa]s?|tieso|tiesos)\b/;
+/** los rivales por cuyo dinero pregunta y que tiene cerrado: [{ tid, nombre }] (vacío si no pregunta por eso) */
+export function dineroCerradoDe(pregunta, D, M, antes = '') {
+  const q = norm(pregunta || '');
+  if (!q || !DINERO_RE.test(q) || !bloqueada('dineroRivales')) return [];
+  const yo = D.yo && D.yo.teamId;
+  let tids = [...rivalesEn(pregunta, D, M)];
+  if (!tids.length) tids = [...rivalesAprox(pregunta, D, M)];
+  // «¿y cuánto dinero tiene?»: el rival del que venía hablando
+  if (!tids.length && /\b(tiene|le queda|maneja|su)\b/.test(q) && !/\b(tengo|me queda|mi saldo|mi dinero)\b/.test(q) && antes) tids = [...rivalesEn(antes, D, M)];
+  // «el dinero de los rivales», «quién tiene más dinero»: todos
+  if (!tids.length && /\b(rival|rivales|los demas|cada uno|todos|la liga|quien)\b/.test(q)) tids = (M.rivales || []).map((r) => String(r.e.teamId));
+  return tids.filter((t) => String(t) !== String(yo) && bloqueada('dineroRivales', t)).map((t) => ({ tid: String(t), nombre: nombreTid(M, t) }));
+}
+const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : 'se abre viendo un anuncio en la app de Google Play');
+const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
+const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
+const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;
+/**
+ * Quita de una respuesta las frases que cuentan el dinero de un rival que tiene cerrado (cifra o «mucho/algo/poco»), cuando
+ * preguntaba por eso. Devuelve { texto, quitadas }. Si no queda nada que diga cómo se abre, lo añade.
+ */
+export function sinDineroCerrado(texto, cerrados) {
+  if (!cerrados || !cerrados.length || !texto) return { texto, quitadas: 0 };
+  const [cuerpo, ...resto] = String(texto).split(/\n\n(?=\*\*Revisado por la app:\*\*)/);
+  let quitadas = 0;
+  const parrafos = cuerpo.split(/\n{2,}/).map((p) => p.split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡«*-])/).filter((f) => {
+    // (una frase que lo cuenta y además habla del candado se va entera: lo del candado se repone abajo, limpio)
+    const n = norm(f);
+    const fuera = HABLA_DINERO.test(n) && CUANTO_DINERO.test(n) && !MIO_DINERO.test(n);
+    if (fuera) quitadas++;
+    return !fuera;
+  }).join(' ')).filter((p) => p.trim());
+  let t = parrafos.join('\n\n');
+  const quien = cerrados.length === 1 ? `El dinero de ${cerrados[0].nombre}` : 'El dinero de esos rivales';
+  // (si ya dice que está cerrado, solo falta cómo se abre; si no, la frase entera, lo primero)
+  if (!/candado|anuncio/.test(norm(t))) t = /cerrad|bloquead/.test(norm(t)) ? `${t}\n\nEso ${comoSeAbre()}.` : `${quien} está cerrado en tu cuenta: ${comoSeAbre()}.${t ? `\n\n${t}` : ''}`;
+  return { texto: [t, ...resto].join('\n\n'), quitadas };
+}
+
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
 // Lo que se apunta, SOLO lo que él cuenta como hecho o como decidido. El 7 nov apuntó dos veces «rechazó el trueque»
 // cuando Carlos solo preguntaba y luego estaba negociando: además de decírselo, aplicarNotas lo comprueba.
@@ -2911,7 +2958,7 @@ export function cuentasTxt(D, M, js, { web = true, trato = null } = {}) {
     if (a.cl && a.cl.clausula) {
       const r = (M.rivales || []).find((y) => y.e.teamId === b.tid);
       const din = r && r.dinero && r.dinero.v != null ? r.dinero.v : null;
-      if (din != null) L.push(`- La cláusula de ${a.j.nombre} (${eur(a.cl.clausula)}) ${din >= a.cl.clausula ? `SÍ le llega a ${nombreTid(M, b.tid)} (${bloqueada('dineroRivales') ? (din >= a.cl.clausula * 1.2 ? 'le sobra' : 'justo') : `tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)}`}): ${a.cl.abierta ? 'se lo puede llevar ya' : `se lo puede llevar ${cuandoF(a.cl.protegidoHasta)}, en el mismo minuto en que se abra, sin negociar nada y quizá antes de que me dé tiempo a blindarlo. Eso pesa en cualquier negociación con él: no va a pagar mucho más que la cláusula. Si se lo lleva así, cobro yo los ${eur(a.cl.clausula)}${a.cl.clausula > b.j.valor ? ` (más de lo que vale ${b.j.nombre})` : ""}`}` : `no le llega a ${nombreTid(M, b.tid)}${bloqueada('dineroRivales') ? '' : ` (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)})`}`}.`);
+      if (din != null) L.push(`- La cláusula de ${a.j.nombre} (${eur(a.cl.clausula)}) ${din >= a.cl.clausula ? `SÍ le llega a ${nombreTid(M, b.tid)} (${bloqueada('dineroRivales', b.tid) ? (din >= a.cl.clausula * 1.2 ? 'le sobra' : 'justo') : `tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)}`}): ${a.cl.abierta ? 'se lo puede llevar ya' : `se lo puede llevar ${cuandoF(a.cl.protegidoHasta)}, en el mismo minuto en que se abra, sin negociar nada y quizá antes de que me dé tiempo a blindarlo. Eso pesa en cualquier negociación con él: no va a pagar mucho más que la cláusula. Si se lo lleva así, cobro yo los ${eur(a.cl.clausula)}${a.cl.clausula > b.j.valor ? ` (más de lo que vale ${b.j.nombre})` : ""}`}` : `no le llega a ${nombreTid(M, b.tid)}${bloqueada('dineroRivales') ? '' : ` (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)})`}`}.`);
     }
     // y la razón de fondo de un cambio cuando las dos cláusulas se van a abrir: al comprarse entre managers, cada uno vuelve
     // a tener la cláusula protegida 14 días, así que los dos se aseguran a un jugador que sube sin que nadie se lo quite
@@ -3017,10 +3064,10 @@ export function ventasMiasTxt(D, M, js, c = null) {
     // la oferta que ya tiene, con su cifra (la de un rival o la de LaLiga)
     const ya = mejor && !['aceptar', 'esperar'].includes(ver) ? ` | YA TIENE UNA OFERTA: ${quien} ${eur(mejor.importe)}${['aceptar', 'esperar'].includes(venta.consejo) ? `; la app aconseja ${venta.consejo.toUpperCase()}` : ''}` : '';
     const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver === 'quedar' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
-    L.push(`- ${j.nombre} (vale ${eur(y.v)}; TENDENCIA: ${tend}${ojoPz}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
+    L.push(`- ${j.nombre} (vale ${eur(y.v)}; TENDENCIA: ${y.baja ? 'BAJA' : y.sube ? 'SUBE' : 'NI SUBE NI BAJA de verdad'}; ${tend}${ojoPz}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
   }
   if (!L.length) return '';
-  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta. De cada jugador, una o dos frases: el veredicto, su tendencia y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
+  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta. De cada jugador, una o dos frases: el veredicto, su tendencia dicha con su palabra («sube», «baja» o «ni sube ni baja») y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
 }
 
 /* ---------------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------------
@@ -3106,7 +3153,7 @@ export function tratoDeChat(pregunta, D, M, antes = []) {
 /** el trato hecho cuentas, para los datos del chat («LA APP, EL TRATO») */
 export function tratoTxt(D, M, T) {
   if (!T) return '';
-  const oculto = bloqueada('dineroRivales');
+  const oculto = bloqueada('dineroRivales', T.tid);
   const riv = nombreTid(M, T.tid);
   const sobre = (x) => { const d = x.precio / x.valor - 1; return Math.abs(d) < 0.005 ? 'su valor' : `${d > 0 ? '+' : '−'}${pct(Math.abs(d) * 100, 1).replace(/^[+-]/, '')} sobre su valor, ${eur(x.valor)}`; };
   const lista = (l) => l.map((x) => `${x.j.nombre} por ${eur(x.precio)} (${sobre(x)})`).join(' y ');
@@ -3116,7 +3163,7 @@ export function tratoTxt(D, M, T) {
     if (s === 'nose') return 'no sé si le llega';
     if (oculto) return s === 'si' ? 'parece que le llega' : s === 'quiza' ? 'parece que le llega justo' : 'no parece que le llegue';
     return `${s === 'si' ? 'le llega' : s === 'quiza' ? 'le llega justo' : 'no le llega'}: tiene ${T.cap.exacto ? '' : '≈ '}${eur(T.cap.v)}`; };
-  if (!T.orden) L.push(`- EL DINERO NO DA: con mi saldo (${eur(T.saldo)}) no pago ${eur(T.pago)} primero, y él para pagarme ${eur(T.cobro)} primero ${din(T.cobro)}.`);
+  if (!T.orden) L.push(`- EL DINERO NO DA: con mi saldo (${eur(T.saldo)}) no pago ${eur(T.pago)} primero, y él para pagarme ${eur(T.cobro)} primero ${din(T.cobro)}. PARA QUE SALGA, uno de los dos tiene que hacer caja antes: a mí me faltan ${eur(Math.max(0, T.pago - T.saldo))} (aceptando una oferta que ya tenga, entran al momento; poniendo a alguien a la venta, con la oferta de LaLiga del siguiente cambio de mercado${M.cierreMercado ? `, ${cuandoF(M.cierreMercado)}` : ''}). Dile eso, con la cifra que le falta; el trato en sí se cobra al momento: no le digas sin más que «espere al cambio de mercado».`);
   else if (T.orden === 'el') L.push(`- El orden: ${T.yoPrimero ? 'da igual quién empiece, pero mejor que pague él primero' : `con mi saldo (${eur(T.saldo)}) no puedo pagar primero`}; él me compra primero (${din(T.cobro)}), me entran ${eur(T.cobro)} AL MOMENTO (tengo ${eur(T.saldo + T.cobro)}) y luego le pago ${eur(T.pago)}: acabo con ${eur(T.saldoFin)} de saldo.`);
   else L.push(`- El orden: a él no le llega para pagar primero, así que pago yo ${eur(T.pago)} con mi saldo (me quedan ${eur(T.saldo - T.pago)}) y con ese dinero me compra él lo mío: me entran ${eur(T.cobro)} al momento y acabo con ${eur(T.saldoFin)} de saldo.`);
   L.push(`- Mi valor (saldo + jugadores): de ${eur(T.valorAntes)} a ${eur(T.valorDespues)} (${eur(T.dValor, { signo: true })})${T.dValor < 0 ? `: es lo que pago por encima de lo que valen (${[T.deMas > 0 ? `${eur(T.deMas)} de más por lo suyo` : null, T.cedo > 0 ? `${eur(T.cedo)} menos de lo que vale lo mío` : null].filter(Boolean).join(' y ')})` : ''}.`);
@@ -3573,8 +3620,13 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
     if (rec.length) dichoAhora += `\nLO QUE ACABA DE CONTARTE EN ESTE MENSAJE Y LA APP YA HA APUNTADO (los datos de arriba ya van así; desde ahora el plan, Hoy y los avisos lo cuentan): ${rec.map((n) => n.texto).join('; ')}${tot}. Dile en media frase que queda apuntado y que el plan ya lo tiene en cuenta (lo ve en Hoy, en «Lo que me has dicho», y ahí lo puede quitar). No digas que lo quitas tú del plan ni «la próxima vez»: ya está hecho.\n`;
     if (pend.length) dichoAhora += `\nHA DICHO ${pend.map((x) => (x.corr === 'no-vender' ? 'que no vende a un jugador' : x.corr === 'puja' ? 'que ya ha hecho una puja' : 'que ya ha blindado a uno')).join(' y ')} SIN DECIR A QUIÉN: si por la conversación está claro, pon su nombre exacto en «jugador» al apuntarlo; si no, pregúntale a cuál se refiere.\n`;
   } catch (e) { dichoAhora = ''; }
+  let dineroTxtQ = '';
+  try {
+    const cer = dineroCerradoDe(pregunta, D, M, antes);
+    if (cer.length) dineroTxtQ = `\nPREGUNTA POR EL DINERO DE ${cer.length === 1 ? cer[0].nombre.toUpperCase() : 'RIVALES'} Y LO TIENE CERRADO: no se lo digas de ninguna forma. Ni una cifra, ni «mucho», «algo», «poco», «saldo medio», ni si tiene más o menos que otro o que él, ni si le llega para algo: la categoría que ves arriba es solo para que tú decidas, no para contarla. Dile en una frase que eso ${comoSeAbre()}, y si quieres añade algo útil que NO sea su dinero (lo que ha gastado esta semana, sus movimientos).\n`;
+  } catch (e) { dineroTxtQ = ''; }
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;
@@ -3678,6 +3730,12 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
   let rev = { texto: n.texto, notas: [] };
   try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
   n.texto = rev.texto;
+  // (22 nov) preguntaba por el dinero de un rival que tiene cerrado: de la respuesta se quita lo que lo cuente
+  try {
+    const antesQ = (hist || []).filter((m) => m.r === 'yo').slice(-3, -1).map((m) => m.t || '').join(' ');
+    const sd = sinDineroCerrado(n.texto, dineroCerradoDe(pregunta, D, M, antesQ));
+    if (sd.quitadas || sd.texto !== n.texto) n.texto = sd.texto;
+  } catch (e) { /* como llegó */ }
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   LS.set(K('chat'), h2.slice(-40));

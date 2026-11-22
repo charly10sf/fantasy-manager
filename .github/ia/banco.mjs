@@ -159,6 +159,18 @@ export const ESCENAS = {
   // jueves, un titular mío (Ionut Radu) con la cláusula a su valor y sin protección: la jornada empieza el sábado
   'm-blinda-arranque': { hora: '2026-11-05T12:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
+  // (22 nov) lo dicho en Pregunta manda: un titular suyo a tiro de un rival (la app lo blindaría) y él ha dicho que no le
+  // quedan blindajes
+  'm-dicho-blindajes': { hora: '2026-11-03T10:00:00+01:00', prep: `const yo = S.D.yo.teamId;
+    const f = S.D.plantillas[yo].map((x) => ({ x, j: S.D.maestro[x.pid] })).filter((y) => y.j.pos !== 5 && y.j.pos !== 1 && y.j.estado === 'ok').sort((a, b) => b.j.media - a.j.media)[0];
+    f.x.clausula = Math.round(f.j.valor * 1.02); f.x.protegidoHasta = null; S.D.misVentas = [];
+    S.D.actividad = (S.D.actividad || []).filter((a) => a.clase !== 'blindaje');
+    const rival = S.D.clasif.find((e) => e.teamId !== yo).teamId;
+    S.D.dineros = { ...(S.D.dineros || {}), [rival]: { v: 500e6, fuente: 'LaLiga' } };
+    window.__notas = [{ id: 'd1', t: Date.now() - 60e3, corr: 'blindajes', n: 0, tipo: 'hecho', texto: 'No le quedan blindajes gratis', caduca: Date.now() + 5 * 864e5 }];` },
+  // y ha dicho que no vende al que el plan de ese martes pone a la venta (Fran García)
+  'm-dicho-novender': { hora: '2026-11-03T10:00:00+01:00', prep: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Fran García');
+    window.__notas = [{ id: 'd2', t: Date.now() - 60e3, corr: 'no-vender', pid: j.id, jugador: j.nombre, tipo: 'preferencia', texto: 'No vende a Fran García', caduca: Date.now() + 14 * 864e5 }];` },
   // martes, con 60 M y TRES comprados para revender que se aguantan (suben y les quedan 12 días de protección): uno más
   // del tope de «2 a la vez» de entre semana (se compraron en el parón, que deja 3, o por tu cuenta). El 15 nov, con eso,
   // no cuadraba ninguna combinación: el plan de la app salía con las cuentas a medias y el de la IA fallaba siempre
@@ -232,7 +244,14 @@ export async function pagina(escena, contesta = () => 'vale') {
       // eslint-disable-next-line no-new-func
       new Function('S', prep)(S);
       const Mo = await import('./js/motor.js');
-      S.M = Mo.analizar(S.D, S.H, S.c, {});
+      // (22 nov) lo que el mánager ha contado en Pregunta y manda en el motor: la escena lo deja en window.__notas
+      let notas = [];
+      if (window.__notas) {
+        const U = await import('./js/util.js'), Dt = await import('./js/datos.js'), I = await import('./js/ia.js');
+        U.LS.set(Dt.K('notas'), window.__notas); U.LS.set(Dt.K('notas-t'), Date.now());
+        notas = I.notasVigentes();
+      }
+      S.M = Mo.analizar(S.D, S.H, S.c, notas.length ? { notas } : {});
     }
   }, E.prep || null);
   return { page, pedidos, errores, cerrar: () => ctx.close() };
@@ -419,6 +438,8 @@ export function arbitro(R, D, M, eur) {
     else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
   }
   if (M.escudosMios && escudos > M.escudosMios.quedan) mal.push(`r9: ${escudos} blindajes y quedan ${M.escudosMios.quedan}`);
+  // (22 nov) lo que ha dicho en Pregunta: a quien no vende no se le vende
+  for (const o of R.ops.filter((x) => !x.descartada && x.accion === 'vender' && M.noVender && M.noVender.has(x.pid))) mal.push(`rD: vende a ${(o.j && o.j.nombre) || o.jugador}, y ha dicho que no lo vende`);
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)
   if (caja - pujado < -M.deuda - 1 && caja - pujado < +D.dinero - (+M.misPujas || 0) - 1) mal.push(`r4: ${eur(caja - pujado)} pasa el tope de deuda (${eur(-M.deuda)})`);
   if (n > 25) mal.push(`r12: la plantilla se iría a ${n}`);

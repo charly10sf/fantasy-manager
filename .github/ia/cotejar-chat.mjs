@@ -100,7 +100,7 @@ const COMUNES = new Set(sinT(`sí no la el los las un una ojo vale pero y o si m
   hoy mañana ayer laliga fantasy premium m mil var tu tus su sus mi yo te él ella ellos nada todo esto eso este esa ese
   lunes martes miércoles jueves viernes sábado domingo enero febrero marzo abril mayo junio julio agosto septiembre octubre
   noviembre diciembre por def med del pos portero defensa medio delantero jornada parón app ia nba nfl liga real club fc cf
-  ud cd sd rcd ca atlético barcelona madrid primera segunda champions europa conference copa rey`).split(/\s+/));
+  ud cd sd rcd ca atlético barcelona madrid primera segunda champions europa conference copa rey barça barca atleti`).split(/\s+/));
 
 /** los nombres con mayúscula de la respuesta que no están en ninguna parte (ni en los datos, ni en la liga entera) */
 function nombresRaros(texto, I, conocidos) {
@@ -165,7 +165,9 @@ export function cotejar(r) {
   if (ASISTENTE.test(principal)) marcas.push(`frase de asistente («${principal.match(ASISTENTE)[0]}»)`);
   if (/<\/?[a-z]+[^>]*>/i.test(principal)) marcas.push('etiquetas HTML');
   const fr = frases(principal), palabras = principal.split(/\s+/).filter(Boolean).length;
-  if (fr.length > 6) marcas.push(`largo: ${fr.length} frases`);
+  // (22 nov) si pide una lista entera (toda una plantilla, todas sus cláusulas), una línea por jugador no es irse de largo
+  const pideLista = /toda su plantilla|todos sus jugadores|todas (mis|sus|las) cl[aá]usulas|qu[eé] cl[aá]usulas|lista entera|uno por uno/i.test(r.pregunta || '') && /^\s*[-•]/m.test(principal);
+  if (fr.length > 6 && !pideLista) marcas.push(`largo: ${fr.length} frases`);
   if (/\?\s*$/.test(principal.trim())) marcas.push('acaba en pregunta');
   if (!principal.trim()) marcas.push('VACÍA');
   if (/no (tengo|veo) (acceso|la plantilla|el listado)|p[áa]same (la lista|sus jugadores)/i.test(principal)) marcas.push('dice que no ve los datos');
@@ -184,7 +186,8 @@ export function cotejar(r) {
   }
   // contra el plan: lo que le dice que haga hoy (sus notas) y no está en el plan de la app
   if (r.plan && r.plan.length && r.recomiendo && r.recomiendo.length && r.planCuenta) {
-    for (const x of r.recomiendo) if (!r.plan.some((o) => sinT(o.jugador) === sinT(x.jugador) && (o.accion === x.accion || (o.accion === 'vender' && x.accion === 'aceptar_oferta')))) marcas.push(`fuera del plan: ${x.accion} ${x.jugador}`);
+    // (22 nov) alinear no es un paso del plan: el once va aparte
+    for (const x of r.recomiendo.filter((y) => y.accion !== 'alinear')) if (!r.plan.some((o) => sinT(o.jugador) === sinT(x.jugador) && (o.accion === x.accion || (o.accion === 'vender' && x.accion === 'aceptar_oferta')))) marcas.push(`fuera del plan: ${x.accion} ${x.jugador}`);
   }
   // lo que tiene que decir (o no) ese caso
   if (r.debe && !new RegExp(r.debe.source || r.debe, 'i').test(sinT(principal)) && !new RegExp(r.debe.source || r.debe, 'i').test(principal)) marcas.push(`no dice lo que debe (${r.debe.source || r.debe})`);

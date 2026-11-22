@@ -11,7 +11,7 @@ import { sistemaCorto, jsonDe, planLimpio, fuentesDe } from '../../web/js/plan-s
 const W = await import('../../worker/src/index.js');
 const KEY = process.env.ANTHROPIC_API_KEY;
 if (!KEY) { console.log('Falta ANTHROPIC_API_KEY'); process.exit(1); }
-const ESCENAS = (process.env.ESCENAS || 'martes,veda,sabado,sabado-justo,enjuego,paron,paron-final,m-negativo,jueves-negativo,holgado,hora-20,m-oferta-sube,m-25,m-clausula-mia').split(',');
+const ESCENAS = (process.env.ESCENAS || 'martes,veda,sabado,sabado-justo,enjuego,paron,paron-final,m-negativo,jueves-negativo,holgado,hora-20,m-oferta-sube,m-25,m-clausula-mia,m-dicho-blindajes,m-dicho-novender').split(',');
 const TOPE = Number(process.env.TOPE_USD || 0.4) * 1e6;
 const WEB = Number(process.env.WEB ?? 1);
 let gastado = 0;

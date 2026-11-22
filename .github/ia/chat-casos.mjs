@@ -29,7 +29,7 @@ export const CASOS = [
   // dinero de la venta no entraba hasta el cambio de mercado, que «perdía 1,05 M» y que los 14 días «no compensan nada», y
   // siguió con «clausúlalo a las 20:00» cuando él le dijo que el rival se lo iba a blindar)
   { id: 'trueque-encadenado', tipo: 'ofertas', q: '{R2} me propone esto: él me compra a {MIO2} por su valor de mercado y, en cuanto me llega el dinero, yo le compro a {SUYO} por un 4 % más de lo que vale. Sin vender antes no me llega el saldo. Los dos nos quedamos los jugadores con la cláusula cerrada 14 días. ¿Salimos ganando los dos?',
-    noDebe: /cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores/ },
+    noDebe: /esperar? al cambio de mercado|no (te )?(entra|llega)[^.]{0,30}hasta el cambio de mercado|no compensan? nada|iguales para los dos|solo sales? ganando (el|tu)\b|a valores/ },
   { id: 'trueque-sin-clausula', tipo: 'ofertas', sigue: true, q: 'Me ha dicho que si no hacemos el cambio, antes de que se abra la cláusula de {SUYO} se la sube o lo blinda, así que clausularlo no es opción.',
     noDebe: /no cambia (la decision|nada)|clausul[aá]rlo (hoy|cuando|en cuanto)|no pierdes nada por dejarle|a valores/ },
   // (19 nov, la calculadora de tratos) el caso de Carlos tal cual, para la escena «trato-domy» (Fornals mío, Huijsen del 2º)
@@ -48,7 +48,8 @@ export const CASOS = [
   { id: 'mis-clausulas', tipo: 'cifras', q: '¿Qué cláusulas mías están abiertas y cuándo se abren las demás?' },
   { id: 'valor-equipo', tipo: 'cifras', q: '¿Cuánto vale mi equipo y en qué puesto voy?', debe: /\{VALOR\}/ },
   // rivales
-  { id: 'dinero-rival', tipo: 'rivales', q: '¿Cuánto dinero tiene {R2}?' },
+  // (22 nov, Carlos) con el dinero de los rivales cerrado (en la liga de ejemplo lo está), ni la cifra ni «mucho/algo/poco»
+  { id: 'dinero-rival', tipo: 'rivales', q: '¿Cuánto dinero tiene {R2}?', debe: /candado|anuncio/, noDebe: /saldo (medio|alto|bajo)|tramo|«algo»|(mucho|poco|bastante|algo de) (dinero|saldo)|dinero (de sobra|justo)|\d[\d.,]* ?M\b[^.]{0,25}(de saldo|de dinero|en caja)/ },
   { id: 'apodo-dictado', tipo: 'rivales', q: 'que le puedo fichar a leao ere espabilado' },
   { id: 'apodo', tipo: 'rivales', q: '¿Qué jugadores tiene el Tito que me interesen?' },
   // mercado
@@ -94,9 +95,9 @@ export const CASOS = [
   { id: 'vender-cuatro-dinero', tipo: 'estrategia', sigue: true, q: 'Suele ganar el que más dinero genera, con puntos o comprando y vendiendo. Con dinero compras a los que más puntos van a hacer y les subes la cláusula: si te los quitan, cobras mucho y puedes comprar más. Por eso te pregunto si venderlos a LaLiga o a un rival y por cuánto. LaLiga da más o menos un 10 % arriba o abajo de su valor y es suerte; a un rival se le puede pedir algo más si su cláusula está a punto de abrirse.',
     noDebe: /no le sacas mas que (su|la) clausula|a laliga no le sacas/ },
   { id: 'vender-cuatro-tendencia', tipo: 'estrategia', sigue: true, q: 'Sigues sin entenderlo. Los jugadores suben o bajan cada día y siguen una tendencia; los puntos nunca se saben. Lo único que controlo es el dinero y no quiero perderlo, ni que me los clausulen a precio de mercado y se lleven la revalorización. Revisa los precios.',
-    debe: /sube|baja|tendencia/, noDebe: /no le sacas mas que (su|la) clausula|los puntos (mandan|son lo que)/ },
+    debe: /sub[ei]|baj[ae]|al alza|a la baja|tendencia/, noDebe: /no le sacas mas que (su|la) clausula|los puntos (mandan|son lo que)/ },
   { id: 'fran-ventas', tipo: 'estrategia', q: '¿Qué jugadores míos van a bajar de precio? ¿A quién vendo y por cuánto?', debe: /laliga|rival/ },
-  { id: 'fran-tendencia', tipo: 'mercado', q: '¿Qué tendencia lleva {MIOSUBE}? ¿Lo vendo ya o espero a que suba más?', debe: /sube|baja|tendencia/ },
+  { id: 'fran-tendencia', tipo: 'mercado', q: '¿Qué tendencia lleva {MIOSUBE}? ¿Lo vendo ya o espero a que suba más?', debe: /sub[ei]|baj[ae]|al alza|a la baja|tendencia/ },
   // (21 nov) lo que preguntó Carlos el 20 nov: subirle la cláusula (Berenguer), el precio para que un rival te venda a uno que
   // sube (Revivo), clausular hoy lo que no se puede hasta dentro de días (Huijsen), el peligro de cada rival y el partido de hoy
   { id: 'subir-clausula', tipo: 'estrategia', q: '¿Le subo la cláusula a {MIOSUBE} para que no me lo quiten?', noDebe: /\bs[ií],? (s[uú]bele|s[uú]bela|paga)\b/i },
@@ -107,6 +108,10 @@ export const CASOS = [
   { id: 'tras-partido', tipo: 'estrategia', q: '{MIOSUBE} ha hecho 1 punto en la jornada, ¿lo vendo ya?' },
   // --- (22 nov, parte 2 de «lo que se le cuenta manda») corregirla, preguntas vagas, con trampa, largas, mal escritas o
   // dictadas, y contarle un hecho y preguntar después. Van al final: las de «contado» tocan la liga (prep) y dejan notas ---
+  // (22 nov, Carlos) el dinero de un rival que tiene cerrado, preguntado de otras formas
+  { id: 'dinero-pasta', tipo: 'cerrado', q: 'cuanta pasta le queda a {R2} para ficharme a alguien', debe: /candado|anuncio/, noDebe: /saldo (medio|alto|bajo)|tramo|«algo»|(mucha|poca|bastante|algo de) pasta|(mucho|poco|bastante|algo de) (dinero|saldo)|le (sobra|llega|da para)/ },
+  { id: 'dinero-todos', tipo: 'cerrado', q: '¿Qué rival tiene más dinero ahora mismo?', debe: /candado|anuncio/, noDebe: /el que m[aá]s (dinero|saldo)? ?tiene es|tiene m[aá]s (dinero|saldo) (que|es)|(mucho|poco) dinero/ },
+  { id: 'dinero-mas-que-yo', tipo: 'cerrado', q: '¿{R2} tiene más dinero que yo?', debe: /candado|anuncio/, noDebe: /\b(s[ií]|no), tiene (m[aá]s|menos)|tiene (m[aá]s|menos) (dinero|saldo) que t[uú]/ },
   // corregirla a media conversación: no se cede ante una cifra que no sale de los datos, y se cambia de jugador sin liarse
   { id: 'corrige-cifra', tipo: 'corrige', q: '¿Cuánto me queda para pujar?', debe: /\{PUJAMAX\}/ },
   { id: 'corrige-cifra-no', tipo: 'corrige', sigue: true, q: 'Te equivocas, me quedan 200 M para pujar', debe: /\{PUJAMAX\}/, noDebe: /tienes raz[oó]n|me (he )?equivoc|perdona|disculpa|error m[ií]o/ },

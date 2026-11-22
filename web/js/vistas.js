@@ -592,6 +592,22 @@ function cupoPlanHTML(cu) {
   return `<div class="caja plan-cupo" style="margin-top:10px"><b>${esc(t)}</b><p class="t2" style="margin:4px 0 ${mas ? '10px' : '0'}">${esc(x)}</p>${mas ? `<button class="btn chico" data-accion="planYa">${icono('ia')}Ver el anuncio</button>` : ''}</div>`;
 }
 
+/* (22 nov) una respuesta de la IA que se va de largo (7 frases o más, sin lista) se pliega: las 5 primeras a la vista y el
+   resto detrás de «Seguir leyendo». Medido con la IA de verdad: un 3 % de las respuestas, casi todas con cuatro jugadores.
+   Lo de «Revisado por la app» va siempre a la vista */
+export function respuestaHTML(t) {
+  const txt = String(t || '');
+  const i = txt.indexOf('\n\n**Revisado por la app:**');
+  const cuerpo = i >= 0 ? txt.slice(0, i) : txt, rev = i >= 0 ? txt.slice(i) : '';
+  if (/^\s*(?:[-•*]|\d+[.)])\s/m.test(cuerpo)) return md(txt);
+  const partes = cuerpo.split(/(?<=[.!?…])(\s+)(?=[\p{Lu}¿¡«"(*])/u);
+  if ((partes.length + 1) / 2 < 7) return md(txt);
+  const visto = partes.slice(0, 9).join(''), resto = partes.slice(10).join('');
+  // (una negrita a medias entre lo visto y el resto se vería con sus asteriscos: entonces, entera)
+  if ((visto.match(/\*\*/g) || []).length % 2) return md(txt);
+  return `${md(visto)}<details class="resp-mas"><summary>Seguir leyendo</summary>${md(resto)}</details>${rev ? md(rev) : ''}`;
+}
+
 /* (22 nov, Carlos: «que lo que le digo a la IA se tenga en cuenta en los planes y SE VEA en el plan») Dentro del plan,
    lo que le ha contado en Pregunta y cuenta hoy: primero lo que manda en el motor (M.dicho: sin blindajes, a quién no vende,
    pujas ya hechas), después los tratos y lo que le contó de un jugador que sale en el plan. Cada cosa se quita con su × */
@@ -1524,7 +1540,7 @@ export function ia(S) {
   const hora = (ts) => (ts ? cuando(ts) : '');
   h += msgs.map((m, i) => (m.r === 'yo'
     ? `<div class="msg yo${m.fotos && m.fotos.length ? ' con-fotos' : ''}">${fotosMsg(m.fotos, i)}${m.t ? `<div>${esc(m.t)}</div>` : ''}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
-    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${md(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   // para seguir la conversación sin escribir
   if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat
