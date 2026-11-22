@@ -144,10 +144,10 @@ function relevo(S, x) {
   return `<button class="bj-rel" data-j="${esc(m.j.id)}"><span class="fl">Relevo</span><span><b>${esc(m.j.nombre)}</b> · ${m.tipo === 'manager' ? `lo vende ${esc(m.vendedor || 'un mánager')}` : 'libre'}, ${eur(m.precio)}</span><i>Ver ›</i></button>`;
 }
 
-/** la cruz: en Clubes, con «Bajas · J14» al lado y el número de bajas de tu liga; en la hoja, sola */
-export function cruzHTML(S, { boton = true } = {}) {
+/** la cruz junto al título de Clubes, con «Bajas · J14» al lado y el número de bajas de tu liga. En la hoja que abre no
+    va (Carlos, 22 nov, 18:39: «no tiene sentido tan a la derecha»): allí no hace nada */
+export function cruzHTML(S) {
   const J = jornadaDe(S.M);
-  if (!boton) return `<span class="cz-t" aria-hidden="true">${icono('cruz')}</span>`;
   const n = bajasEnTuLiga(S);
   return `<button class="cz" data-accion="bajas" data-v="todas" aria-label="Bajas${J ? ` de la jornada ${J.n}` : ''}${n ? `: ${n} en tu liga` : ''}">
     <span class="cz-l" aria-hidden="true">Bajas${J ? `<b>J${J.n}</b>` : ''}</span><span class="cz-t" aria-hidden="true">${icono('cruz')}${n ? `<span class="cz-n">${n}</span>` : ''}</span></button>`;
@@ -163,7 +163,7 @@ export function hojaBajas(S, ver = 'todas') {
   if (ver === 'aper' && !aper.length) ver = 'todas';
   const pest = [['liga', 'Tu liga', mias.length + riv.length], ['libres', 'Libres', lib.length], ...(aper.length ? [['aper', 'Apercibidos', aper.length]] : []), ['todas', 'Todas', bajas.length]];
   const cierre = J && !M.enJuego && J.ini ? ` · cierra ${cuando(J.ini - (M.VEDA_H || 24) * HORA)}` : '';
-  let h = `<div class="bj"><div class="bj-cab"><div><div class="eti">${J ? `Jornada ${J.n}${M.enJuego ? ' en juego' : cierre}` : 'LaLiga'}</div><h2 class="titulo">Bajas</h2></div>${cruzHTML(S, { boton: false })}</div>
+  let h = `<div class="bj"><div class="bj-cab"><div><div class="eti">${J ? `Jornada ${J.n}${M.enJuego ? ' en juego' : cierre}` : 'LaLiga'}</div><h2 class="titulo">Bajas</h2></div></div>
     <div class="bj-tabs" role="tablist" aria-label="Qué bajas ver">${pest.map(([k, t, n]) => `<button class="bj-tab${k === ver ? ' on' : ''}" role="tab" aria-selected="${k === ver}" data-accion="bajas" data-v="${k}"><b>${n}</b><span>${t}</span></button>`).join('')}</div>`;
   const sec = (t, n, sub = '') => `<div class="sec"><h2>${t}</h2><span class="sub">${n}${sub ? ` · ${sub}` : ''}</span></div>`;
   if (ver === 'liga') {
