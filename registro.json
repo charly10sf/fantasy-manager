@@ -2577,7 +2577,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
@@ -2781,7 +2780,9 @@
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
    "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000
   },
   "hechos": [
    {
@@ -3498,11 +3499,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795349568000,
+    "id": "2562",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Marc Pubill no estará disponible ante el Getafe",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     21
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -4409,17 +4424,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118052,
-  "salida": 7814,
+  "entrada": 120345,
+  "salida": 8116,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.217413,
+  "dolares": 0.217793,
   "reservado": 0
  },
  "recientes": {
@@ -9052,13 +9067,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5189,
+   "ok": 5190,
    "fallos": 0,
-   "ejecuciones": 4242,
+   "ejecuciones": 4243,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:26:11.670Z"
+   "ultima": "2026-11-22T12:31:12.756Z"
   }
  },
  "ptsDirecto": {
@@ -9178,15 +9193,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:26:14.480Z"
+   "ultimaBien": "2026-11-22T12:31:19.019Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:26:14.480Z"
+   "ultimaBien": "2026-11-22T12:31:19.019Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:26:14.480Z"
+   "ultimaBien": "2026-11-22T12:31:19.019Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9194,11 +9209,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:26:14.480Z"
+   "ultimaBien": "2026-11-22T12:31:19.019Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:26:14.480Z"
+   "ultimaBien": "2026-11-22T12:31:19.019Z"
   }
  },
  "avisos": [
