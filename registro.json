@@ -4492,32 +4492,31 @@
    "SPORT|136574933": 1795269960000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000,
+   "SPORT|136700224": 1795327253000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136700224": 1795331170390
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 1,
    "redactar": 1,
    "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 16492,
-  "salida": 246,
+  "entrada": 18312,
+  "salida": 332,
   "cacheLee": 0,
   "cacheEscribe": 2903,
-  "dolares": 0.042702,
+  "dolares": 0.042927,
   "reservado": 0
  },
  "recientes": {
@@ -9150,13 +9149,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5127,
+   "ok": 5128,
    "fallos": 0,
-   "ejecuciones": 4180,
+   "ejecuciones": 4181,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T07:21:21.751Z"
+   "ultima": "2026-11-22T07:26:13.211Z"
   }
  },
  "ptsDirecto": {
@@ -9276,15 +9275,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:21:26.487Z"
+   "ultimaBien": "2026-11-22T07:26:20.178Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:21:26.487Z"
+   "ultimaBien": "2026-11-22T07:26:20.178Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:21:26.487Z"
+   "ultimaBien": "2026-11-22T07:26:20.178Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9292,7 +9291,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:21:26.487Z"
+   "ultimaBien": "2026-11-22T07:26:20.178Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
