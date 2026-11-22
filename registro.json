@@ -2202,7 +2202,7 @@
   "2692": "out_of_league",
   "2693": "ok",
   "2696": "ok",
-  "2698": "ok",
+  "2698": "suspended",
   "2699": "ok",
   "2700": "ok",
   "2701": "out_of_league",
@@ -2963,7 +2963,8 @@
    "SPORT|136725148": 1795359222000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
+   "SPORT|136726389": 1795364350000
   },
   "hechos": [
    {
@@ -3658,7 +3659,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4560,17 +4561,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 31,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 342125,
-  "salida": 15538,
+  "entrada": 344183,
+  "salida": 15630,
   "cacheLee": 101494,
   "cacheEscribe": 52217,
-  "dolares": 0.780364,
+  "dolares": 0.780616,
   "reservado": 0
  },
  "recientes": {
@@ -4879,8 +4880,8 @@
    "fin": 1795359673818
   },
   "13|124": {
-   "h": "c70d1983ae6a",
-   "desde": 1795368073779,
+   "h": "5ea15a4ee70c",
+   "desde": 1795368293447,
    "fin": 1795367473875
   }
  },
@@ -9386,13 +9387,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5295,
+   "ok": 5296,
    "fallos": 0,
-   "ejecuciones": 4301,
+   "ejecuciones": 4302,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:21:13.216Z"
+   "ultima": "2026-11-22T17:24:52.676Z"
   }
  },
  "ptsDirecto": {
@@ -9596,27 +9597,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:21:18.992Z"
+   "ultimaBien": "2026-11-22T17:25:00.192Z"
   }
  },
  "avisos": [
