@@ -1755,6 +1755,13 @@
    "jornada": 13,
    "id": "2124509881851851231",
    "t": "2026-11-22T14:26:42.403Z"
+  },
+  {
+   "clave": "novedades|1715:sancion|2026-11-22",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2124518645321581053",
+   "t": "2026-11-22T15:01:31.744Z"
   }
  ],
  "estados": {
@@ -1818,7 +1825,7 @@
   "1674": "ok",
   "1682": "out_of_league",
   "1694": "out_of_league",
-  "1715": "ok",
+  "1715": "suspended",
   "1730": "ok",
   "1754": "out_of_league",
   "1775": "ok",
@@ -2641,7 +2648,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "1715",
+   "que": "sancion",
+   "antes": "ok",
+   "t": 1795359672637
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
@@ -3659,8 +3673,8 @@
     "t": 0
    },
    "1715": {
-    "e": "ok",
-    "t": 0
+    "e": "suspended",
+    "t": 1795359672637
    },
    "1775": {
     "e": "ok",
@@ -4443,16 +4457,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 19,
-   "redactar": 15,
-   "revisar": 5,
+   "redactar": 16,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 170757,
-  "salida": 11115,
+  "entrada": 185027,
+  "salida": 11273,
   "cacheLee": 56063,
-  "cacheEscribe": 32876,
-  "dolares": 0.382278,
+  "cacheEscribe": 35779,
+  "dolares": 0.419655,
   "reservado": 0
  },
  "recientes": {
@@ -4612,10 +4626,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T12:26:33.653Z",
-    "texto": "✅ Paredes vuelve a estar disponible: las molestias que arrastraba desde el 4 de noviembre quedan atrás.\n\nEl defensa del Athletic 🦁 llega en racha: 24 puntos en las tres últimas jornadas. Hoy a las 21:00 recibe en San Mamés al Espanyol, que va 13º, un partido asequible. Con un 48 % de titularidad, no tiene el puesto asegurado, así que ojo a los onces."
-   },
-   {
     "t": "2026-11-20T12:31:46.892Z",
     "texto": "✅ Cucho ya está disponible: la duda que arrastraba queda despejada.\n\nEl Betis visita mañana al Sevilla a las 18:30 en el Sánchez-Pizjuán, un rival que va 6º. Con un 52 % de titularidad, el delantero tiene más papeletas de jugar que de quedarse fuera, aunque conviene esperar a los onces.\n\nLo que no acompaña es su valor: vale 20,1 M tras perder 21,5 M en el último mes."
    },
@@ -4630,6 +4640,10 @@
    {
     "t": "2026-11-22T08:02:02.084Z",
     "texto": "❌ Yoel Lago no estará en el Celta-Villarreal 🚢 del domingo 29 de noviembre: llegó a 5 amarillas en la jornada 13 y se queda sancionado.\n\nEl central llevaba 5 porterías a cero en 11 partidos, así que quien lo tenga se queda sin esa opción de puntos en la zaga. Queda tiempo de sobra para buscar recambio."
+   },
+   {
+    "t": "2026-11-22T15:01:31.747Z",
+    "texto": "❌ Fermín se queda sin jugar en Riazor: está sancionado y se pierde el Deportivo-Barça del domingo 29 de noviembre.\n\nEl centrocampista lleva 7 goles y 5 asistencias en la liga, así que quien lo tenga pierde a un jugador que daba puntos de verdad. Hay una semana por delante para buscarle sustituto."
    }
   ],
   "resumen": [
@@ -4754,6 +4768,11 @@
    "h": "7ad02c29d896",
    "desde": 1795299081834,
    "fin": 1795298772710
+  },
+  "13|128": {
+   "h": "ba8f03e43318",
+   "desde": 1795359673818,
+   "fin": 1795359673818
   }
  },
  "iaDias": [
@@ -5178,7 +5197,8 @@
    "5868131",
    "5868138",
    "5868140",
-   "5868139"
+   "5868139",
+   "5868133"
   ],
   "equipos": [
    "9866",
@@ -6787,8 +6807,8 @@
     "e": "Villarreal",
     "g": {
      "liga": [
+      2,
       1,
-      0,
       0,
       0,
       0
@@ -7760,6 +7780,13 @@
       0,
       0,
       0
+     ],
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
      ]
     }
    },
@@ -7931,7 +7958,7 @@
     "e": "Barcelona",
     "g": {
      "liga": [
-      7,
+      8,
       0,
       0,
       0,
@@ -8263,6 +8290,19 @@
       0,
       0,
       0
+     ]
+    }
+   },
+   "1598982": {
+    "n": "Gerard Martín",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
      ]
     }
    },
@@ -9156,13 +9196,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5242,
+   "ok": 5244,
    "fallos": 0,
-   "ejecuciones": 4272,
+   "ejecuciones": 4273,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:56:11.889Z"
+   "ultima": "2026-11-22T15:01:12.637Z"
   }
  },
  "ptsDirecto": {
@@ -9324,27 +9364,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:56:17.437Z"
+   "ultimaBien": "2026-11-22T15:01:31.832Z"
   }
  },
  "avisos": [
