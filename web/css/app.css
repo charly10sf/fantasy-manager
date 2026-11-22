@@ -3694,10 +3694,7 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .cz-t.cz-mini { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 10px; }
 .cz-t.cz-mini .ic { width: 16px; height: 16px; }
 .bj { padding: 2px 0 20px; }
-.bj-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-right: 44px; }
 .bj-cab .titulo { margin: 4px 0 0; }
-.bj-cab .cz-t { width: 42px; height: 42px; border-radius: 13px; margin-bottom: 4px; }
-.bj-cab .cz-t .ic { width: 21px; height: 21px; }
 .bj-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin: 16px 0 4px; }
 .bj-tab { padding: 10px 4px 9px; border-radius: 14px; background: var(--plano2); border: 1px solid var(--linea); text-align: center; color: var(--texto2); cursor: pointer; min-width: 0; }
 .bj-tab b { display: block; font: 700 26px/1 var(--cond); color: var(--texto); }
