@@ -746,8 +746,12 @@ export const notasDe = (pid) => notasVigentes().filter((n) => n.pid === pid);
    el motor entiende (dicho.js). Se apuntan ANTES de preguntar a la IA, leyendo lo que escribe él, y la app rehace el
    análisis: así los datos que lee la IA ya van corregidos y Hoy, Equipo, las alarmas y el plan dicen lo mismo. Si no
    nombra al jugador («a ese no lo vendo»), queda pendiente: lo puede poner la IA en su nota (aplicarNotas). */
-let PENDIENTE = { t: 0, lista: [] };
+// (lo apuntado y lo pendiente van atados al mensaje en que lo dijo: medido el 22 nov con la IA de verdad, con una ventana de
+// minutos la IA daba por dicho en la pregunta siguiente lo de la anterior: «Julián Álvarez se queda contigo» por un «no me fío»)
+let PENDIENTE = { t: 0, q: '', lista: [] };
+let DICHO_AHORA = { t: 0, q: '', ids: [] };
 const DICHO_PENDIENTE_MS = 5 * MIN;
+const deEstaPregunta = (X, pregunta) => !!X.t && Date.now() - X.t < DICHO_PENDIENTE_MS && X.q === String(pregunta || '');
 /** el texto de la nota para la IA (tercera persona) */
 const dichoIA = (n, M) => {
   const j = n.pid && M.J(n.pid), quien = (j && j.nombre) || n.jugador || 'ese jugador';
@@ -786,8 +790,9 @@ function notaDicho(corr, pid, D, M, { importe = null, n = null, plan = null, aho
  * Lee el mensaje del mánager y apunta lo que manda en el motor. Devuelve las notas nuevas (para rehacer el análisis antes
  * de preguntar). `plan`: el plan que ve en Hoy, para «ya he hecho esa puja» sin nombre.
  */
-export function apuntarDicho(pregunta, D, M, plan = null) {
-  PENDIENTE = { t: 0, lista: [] };
+export function apuntarDicho(pregunta, D, M, plan = null, hist = null) {
+  PENDIENTE = { t: 0, q: '', lista: [] };
+  DICHO_AHORA = { t: 0, q: '', ids: [] };
   if (!pregunta || !D || !M || !D.yo) return [];
   let leido = [];
   try { leido = leerDicho(pregunta, (t) => jugadoresEn(t, D)); } catch (e) { return []; }
@@ -806,11 +811,24 @@ export function apuntarDicho(pregunta, D, M, plan = null) {
       const del = opsPlan.filter((o) => (x.corr === 'puja' ? o.accion === 'pujar' : o.accion === 'blindar' && !o.importe) && valeDicho(x.corr, o.pid, D, M));
       if (del.length === 1) pids = [del[0].pid];
     }
+    // «a ese no lo vendo», sin nombre: el único al que se le puede aplicar de su mensaje de antes («¿Vendo a X?») o, si en
+    // ese no hay ninguno, de la última respuesta. Con dos o más no se adivina
+    if (!x.pids.length && !pids.length) {
+      const conv = (hist || conversacion()).filter((m) => m && m.t && (!m.ts || ahora - m.ts < 30 * MIN));
+      for (const quien of ['yo', 'ia']) {
+        const ult = [...conv].reverse().find((m) => m.r === quien);
+        const cs = ult ? jugadoresEn(ult.t, D).map((j) => j.id).filter((pid) => valeDicho(x.corr, pid, D, M)) : [];
+        if (cs.length === 1) { pids = cs; break; }
+        if (cs.length > 1) break;
+      }
+    }
     if (!pids.length) { if (!x.pids.length) pend.push({ corr: x.corr, importe: x.importe || null }); continue; }
     for (const pid of pids) nuevas.push(notaDicho(x.corr, pid, D, M, { importe: pids.length === 1 ? x.importe : null, plan, ahora }));
   }
-  if (pend.length) PENDIENTE = { t: ahora, lista: pend };
-  return guardarDicho(nuevas, ahora);
+  if (pend.length) PENDIENTE = { t: ahora, q: String(pregunta), lista: pend };
+  const con = guardarDicho(nuevas, ahora);
+  DICHO_AHORA = { t: ahora, q: String(pregunta), ids: con.map((n) => n.id) };
+  return con;
 }
 /** guarda las notas que corrigen al motor: de cada cosa (y de cada jugador) manda la última */
 function guardarDicho(nuevas, ahora = Date.now()) {
@@ -2810,8 +2828,8 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = nu
   const sinCifra = pregunta != null && !conFotos && !/\d/.test(String(pregunta));
   // (22 nov) lo que acaba de decir y ya ha apuntado la app (apuntarDicho): la IA no lo apunta otra vez. Y lo que dijo sin
   // nombrar al jugador («a ese no lo vendo»): si la nota de la IA dice a quién, y a ese se le puede aplicar, manda
-  const recientes = notas().filter((n) => n.corr && Date.now() - n.t < DICHO_PENDIENTE_MS);
-  const pend = M && Date.now() - PENDIENTE.t < DICHO_PENDIENTE_MS ? PENDIENTE.lista : [];
+  const recientes = deEstaPregunta(DICHO_AHORA, pregunta) ? notas().filter((n) => DICHO_AHORA.ids.includes(n.id)) : [];
+  const pend = M && deEstaPregunta(PENDIENTE, pregunta) ? PENDIENTE.lista : [];
   const dichas = [];
   for (const a of j.apuntar || []) {
     if (!a || !a.texto) continue;
@@ -2999,7 +3017,7 @@ export function ventasMiasTxt(D, M, js, c = null) {
     // la oferta que ya tiene, con su cifra (la de un rival o la de LaLiga)
     const ya = mejor && !['aceptar', 'esperar'].includes(ver) ? ` | YA TIENE UNA OFERTA: ${quien} ${eur(mejor.importe)}${['aceptar', 'esperar'].includes(venta.consejo) ? `; la app aconseja ${venta.consejo.toUpperCase()}` : ''}` : '';
     const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver === 'quedar' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
-    L.push(`- ${j.nombre} (vale ${eur(y.v)}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | TENDENCIA: ${tend}${ojoPz} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
+    L.push(`- ${j.nombre} (vale ${eur(y.v)}; TENDENCIA: ${tend}${ojoPz}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
   }
   if (!L.length) return '';
   return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta. De cada jugador, una o dos frases: el veredicto, su tendencia y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
@@ -3549,9 +3567,10 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // (22 nov) lo que acaba de contar en este mensaje y la app ya ha apuntado, o lo que ha dicho sin decir de quién
   let dichoAhora = '';
   try {
-    const rec = notasVigentes().filter((n) => n.corr && Date.now() - n.t < DICHO_PENDIENTE_MS);
-    const pend = Date.now() - PENDIENTE.t < DICHO_PENDIENTE_MS ? PENDIENTE.lista : [];
-    if (rec.length) dichoAhora += `\nLO QUE ACABA DE CONTARTE Y LA APP YA HA APUNTADO (los datos de arriba ya van así; desde ahora el plan, Hoy y los avisos lo cuentan): ${rec.map((n) => n.texto).join('; ')}. Dile en media frase que queda apuntado y que el plan ya lo tiene en cuenta (lo ve en Hoy, en «Lo que me has dicho», y ahí lo puede quitar). No digas que lo quitas tú del plan ni «la próxima vez»: ya está hecho.\n`;
+    const rec = deEstaPregunta(DICHO_AHORA, pregunta) ? notasVigentes().filter((n) => DICHO_AHORA.ids.includes(n.id)) : [];
+    const pend = deEstaPregunta(PENDIENTE, pregunta) ? PENDIENTE.lista : [];
+    const tot = rec.some((n) => n.corr === 'puja') ? ` (con ella tiene pujados ${eur(M.misPujas)} EN TOTAL: no le sumes nada)` : '';
+    if (rec.length) dichoAhora += `\nLO QUE ACABA DE CONTARTE EN ESTE MENSAJE Y LA APP YA HA APUNTADO (los datos de arriba ya van así; desde ahora el plan, Hoy y los avisos lo cuentan): ${rec.map((n) => n.texto).join('; ')}${tot}. Dile en media frase que queda apuntado y que el plan ya lo tiene en cuenta (lo ve en Hoy, en «Lo que me has dicho», y ahí lo puede quitar). No digas que lo quitas tú del plan ni «la próxima vez»: ya está hecho.\n`;
     if (pend.length) dichoAhora += `\nHA DICHO ${pend.map((x) => (x.corr === 'no-vender' ? 'que no vende a un jugador' : x.corr === 'puja' ? 'que ya ha hecho una puja' : 'que ya ha blindado a uno')).join(' y ')} SIN DECIR A QUIÉN: si por la conversación está claro, pon su nombre exacto en «jugador» al apuntarlo; si no, pregúntale a cuál se refiere.\n`;
   } catch (e) { dichoAhora = ''; }
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';

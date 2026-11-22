@@ -89,7 +89,7 @@ const PREP = `const yo = S.D.yo.teamId;
   ok(tras.quedan === 0 && tras.pe === 0 && tras.notas.join() === 'blindajes:0:true', `se apunta al leer su mensaje y el motor lo cuenta: quedan ${tras.quedan}, hasta que se recarguen (${tras.notas.join()})`);
   ok(tras.planB === 0 && !/blind|proteg/i.test(tras.tit), `el plan de Hoy ya no manda blindar: «${tras.tit}»`);
   ok(/Apuntado:.*No te quedan blindajes/s.test(tras.msg) && !/no se ha apuntado nada/i.test(tras.msg), 'debajo de la respuesta sale «Apuntado: No te quedan blindajes…» y la app no la desmiente');
-  ok(dicho.length === 1 && /LO QUE ACABA DE CONTARTE Y LA APP YA HA APUNTADO[^"]*No le quedan blindajes/.test(dicho[0]) && /me quedan 0 de 2 \(me lo ha dicho él/.test(dicho[0]) && !/CONVIENE BLINDARLO HOY/.test(dicho[0]), 'la IA lee los datos ya corregidos (0 de 2, nadie por blindar) y que la app ya lo ha apuntado');
+  ok(dicho.length === 1 && /LO QUE ACABA DE CONTARTE EN ESTE MENSAJE Y LA APP YA HA APUNTADO[^"]*No le quedan blindajes/.test(dicho[0]) && /me quedan 0 de 2 \(me lo ha dicho él/.test(dicho[0]) && !/CONVIENE BLINDARLO HOY/.test(dicho[0]), 'la IA lee los datos ya corregidos (0 de 2, nadie por blindar) y que la app ya lo ha apuntado');
   ok(/me quedan 0 de 2 \(me lo ha dicho él/.test(tras.ctx), 'el chat y el plan leen lo mismo que la app: 0 de 2, dicho por él');
   // Hoy: el bloque dentro del plan, y quitarlo con su ×
   await P.page.evaluate(() => document.querySelector('[data-ir="hoy"], [data-v="hoy"], .tabs [data-vista="hoy"]')?.click());
@@ -133,7 +133,7 @@ const PREP = `const yo = S.D.yo.teamId;
     const cat = Op.catalogo(D, M, I.notasVigentes());
     out.noVender = { nota: n1.map((n) => `${n.corr}:${n.pid === jv.id}:${Math.round((n.caduca - Date.now()) / 864e5)}`).join(), motor: M.noVender.has(jv.id), plan: R1.ops.filter((o) => !o.descartada && o.accion === 'vender' && o.pid === jv.id).length,
       cat: cat.lista.filter((o) => o.pid === jv.id && ['vender', 'aceptar'].includes(o.tipo)).length, inercia: Ac.ventasInercia(M).some((x) => x.pid === jv.id), hoy: (M.acciones || []).filter((a) => a.tipo === 'vender' && a.pid === jv.id).length,
-      chat: (I.ventasMiasTxt(D, M, [jv], c).split('\n').find((l) => l.includes(jv.nombre)) || '').slice(0, 200), linea: /NO LO VENDE \(me lo ha dicho él\)/.test(I.contexto(D, M, c, { chat: true })), bloque: (M.dicho || []).map((n) => n.txt).join(' | ') };
+      chat: (I.ventasMiasTxt(D, M, [jv], c).split('\n').find((l) => l.includes(jv.nombre)) || '').slice(0, 600), linea: /NO LO VENDE \(me lo ha dicho él\)/.test(I.contexto(D, M, c, { chat: true })), bloque: (M.dicho || []).map((n) => n.txt).join(' | ') };
     // un plan de la IA guardado que lo vendía: cuadrarPlan lo descarta
     const viejo = I.cuadrarPlan({ titular: 'x', situacion: '', operaciones: [{ accion: 'vender', pid: jv.id, jugador: jv.nombre, donde: 'ponlo en venta', importe: jv.valor, cuando: 'hoy', motivo: 'baja' }] }, D, M);
     out.noVender.cuadra = (viejo.ops || []).filter((o) => o.pid === jv.id).map((o) => `${o.descartada ? 'descartada' : 'viva'}:${/no lo vendes/.test(o.aviso || '') || String(o.aviso || '').slice(0, 90)}`).join();
@@ -170,15 +170,29 @@ const PREP = `const yo = S.D.yo.teamId;
     const D = S.D, c = Dt.cfg();
     const an = () => Mo.analizar(D, S.H, S.c, { notas: I.notasVigentes() });
     let M = an();
+    // con su pregunta de antes («¿Vendo a X?») se sabe quién es «ese»; con dos nombres, o con uno que no es suyo, no
+    const suyo = M.mias.find((x) => x.j.pos !== 5 && !M.noVender.has(x.pid) && x.j.nombre !== window.__mio), ajeno = M.clausulas[0].j;
+    const h = (t) => [{ r: 'yo', t, ts: Date.now() - 60e3 }, { r: 'ia', t: 'Yo lo aguantaría.', ts: Date.now() - 30e3 }];
+    const conv = { dos: I.apuntarDicho('a ese no lo vendo', D, M, null, h(`¿Vendo a ${suyo.j.nombre} o a ${window.__mio}?`)).length, ajeno: I.apuntarDicho('a ese no lo vendo', D, M, null, h(`¿Qué tal ${ajeno.nombre}?`)).length,
+      uno: I.apuntarDicho('Pues a ese no lo vendo ni loco', D, M, null, h(`¿Vendo a ${suyo.j.nombre}?`)).map((n) => `${n.corr}:${n.pid === suyo.pid}`).join() };
+    for (const n of I.notasVigentes().filter((x) => x.pid === suyo.pid)) I.borrarNota(n.id);
+    M = an();
     const pre = I.apuntarDicho('a ese no lo vendo', D, M, null);
     const datos = I.datosChat('a ese no lo vendo', D, M, c, {});
+    // lo de «acaba de contarte» es solo de ese mensaje: en la pregunta siguiente ya no va
+    I.apuntarDicho('No me quedan blindajes', D, M, null);
+    const fuga = { suya: /LO QUE ACABA DE CONTARTE EN ESTE MENSAJE/.test(I.datosChat('No me quedan blindajes', D, M, c, {})), otra: /LO QUE ACABA DE CONTARTE/.test(I.datosChat('¿Qué hago hoy?', D, M, c, {})) };
+    for (const n of I.notasVigentes().filter((x) => x.corr === 'blindajes')) I.borrarNota(n.id);
+    I.apuntarDicho('a ese no lo vendo', D, M, null);
     const x = await I.charlar('a ese no lo vendo', D, M, c, null, null, [], null, { dicho: pre });
     M = an();
     const prometida = await I.charlar('De Kang-In Lee no me fio mucho, la verdad', D, M, c, null, null, [], null, { dicho: [] });
     // (f) preguntas y condiciones: nada
     const nada = ['¿Me quedan blindajes?', `¿Vendo a ${window.__mio}?`, `No vendo a ${window.__mio} por menos de 30 M`, '¿Qué hago hoy?', 'voy a pujar por alguno'].map((q) => I.apuntarDicho(q, D, M, null).length);
-    return { pre: pre.length, pide: /SIN DECIR A QUIÉN/.test(datos), ap: (x.apuntadas || []).map((n) => `${n.corr}:${n.jugador}`).join(), motor: [...M.noVender.keys()].length, texto: prometida.texto, nada: nada.join('') };
+    return { conv, fuga, pre: pre.length, pide: /SIN DECIR A QUIÉN/.test(datos), ap: (x.apuntadas || []).map((n) => `${n.corr}:${n.jugador}`).join(), motor: [...M.noVender.keys()].length, texto: prometida.texto, nada: nada.join('') };
   });
+  ok(d.conv.uno === 'no-vender:true' && d.conv.dos === 0 && d.conv.ajeno === 0, `«¿Vendo a X?» y después «a ese no lo vendo»: es X (${d.conv.uno}); con dos nombres o con uno de otro, no se adivina`);
+  ok(d.fuga.suya && !d.fuga.otra, 'a la IA se le dice que está apuntado solo en ese mensaje, no en la pregunta siguiente');
   ok(d.pre === 0 && d.pide, '«a ese no lo vendo»: sin nombre no se apunta nada a ciegas y a la IA se le dice que pregunte o ponga el nombre');
   ok(d.ap === `no-vender:${r.otro}` && d.motor === 2, `con el jugador que apunta la IA (${r.otro}, suyo), manda: ${d.ap}`);
   ok(/De esto no se ha apuntado nada/.test(d.texto), 'la IA dice «Apuntado, lo tendré en cuenta» sin que se guarde nada: la app lo dice debajo');

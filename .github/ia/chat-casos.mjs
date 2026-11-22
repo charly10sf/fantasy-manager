@@ -55,7 +55,7 @@ export const CASOS = [
   { id: 'chollo', tipo: 'mercado', q: '¿{CHOLLO} es un chollo o no?' },
   { id: 'sube-mercado', tipo: 'mercado', q: '¿Ficho a {SUBE}, que no para de subir?' },
   { id: 'baja-mercado', tipo: 'mercado', q: '{BAJA} está más barato cada día, ¿lo pillo?' },
-  { id: 'puja-loca', tipo: 'trampas', q: 'Voy a pujar 120 M por {LIBRE}, ¿vale?', noDebe: /\b(vale|perfecto|adelante)\b[^.]*120/ },
+  { id: 'puja-loca', tipo: 'trampas', q: 'Voy a pujar 120 M por {LIBRE}, ¿vale?', noDebe: /^\W*(vale|perfecto|adelante|s[ií])\b[^.]*120/ },
   // reglas de LaLiga
   { id: 'regla-puntos', tipo: 'reglas', q: '¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?' },
   { id: 'regla-14', tipo: 'reglas', q: 'Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?', debe: /14 d[ií]as/ },
@@ -118,7 +118,7 @@ export const CASOS = [
   { id: 'vaga-mejorar', tipo: 'vagas', q: 'cómo mejoro el equipo' },
   // con trampa: un jugador que no es suyo, una regla que no existe y una cifra falsa
   { id: 'trampa-no-es-mio', tipo: 'trampas', q: '¿Vendo ya a {SUYO} o lo aguanto?', debe: /no es tuyo|no lo tienes|es de |lo tiene |no est[aá] en tu/ },
-  { id: 'trampa-regla', tipo: 'trampas', q: '¿Cuándo puedo usar el comodín de la jornada para cambiar el once con los partidos empezados?', debe: /no (hay|existe|tiene|tienes|conozco|me consta|lo veo)|ning[uú]n comod[ií]n/ },
+  { id: 'trampa-regla', tipo: 'trampas', q: '¿Cuándo puedo usar el comodín de la jornada para cambiar el once con los partidos empezados?', debe: /no (hay|existe|tiene|tienes|tengo|conozco|me consta|lo veo|aparece)|ning[uú]n comod[ií]n/ },
   { id: 'trampa-ultimo', tipo: 'trampas', q: 'Como voy último, ¿me la juego y vendo a medio equipo?', noDebe: /como vas [uú]ltimo|al ir [uú]ltimo|yendo [uú]ltimo/ },
   // largas, con varios jugadores y varias preguntas
   { id: 'larga', tipo: 'largas', q: 'Tengo dudas con varios: {MIOS4}. ¿A cuáles vendo y a cuáles me quedo? ¿Blindo a alguno? Y con lo que saque, ¿pujo por {LIBRE} o por {CHOLLO}, o mejor clausulo a {SUYO}?' },
@@ -216,7 +216,7 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
   if (I.apuntarDicho) {
     let planHoy = null;
     try { planHoy = Pl.planDeHoy(D, M, Dt.cfg()); } catch (e) { planHoy = null; }
-    window.__dicho = I.apuntarDicho(pre, D, M, planHoy);
+    window.__dicho = I.apuntarDicho(pre, D, M, planHoy, hist);
     if (window.__dicho.length) await rehacer();
   }
   U.LS.set(Dt.K('chat'), [...hist, { r: 'yo', t: pre, ts: Date.now() }]);
