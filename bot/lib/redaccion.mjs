@@ -170,6 +170,8 @@ export const GASTADAS = [
   { re: /\b60 minutos o más en\b/i, que: '«60 minutos o más en N de sus cinco últimos partidos»', ventana: 2 },
   { re: /\bvale \d+(?:,\d+)? M\b[^.\n]{0,40}\bjornada \d+/i, que: '«vale N M y en la jornada N…»', ventana: 2 },
 ];
+/** ¿es un error solo de variedad (no de datos ni de reglas de Carlos)? Esos no tiran el tuit en el último intento */
+export const esDeVariedad = (m) => /ya sale en los últimos tuits|empiezan por el nombre de un jugador|se parece demasiado|repite una muletilla|empieza igual que un tuit reciente|ya daba la media de puntos/.test(String(m));
 /** las de GASTADAS que ya salen en los últimos del tipo (o en el del mismo partido): [{ que, re }] */
 export function gastadasEn(recientes = [], delPartido = []) {
   return GASTADAS.filter((g) => recientes.slice(-g.ventana).some((r) => g.re.test(String(r))) || (g.partido && delPartido.some((r) => g.re.test(String(r)))));
@@ -615,6 +617,7 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
     // lo que más tumbaba los borradores en la prueba del 7 nov (19 previas): se recuerda justo antes de escribir
     (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); si un jugador trae «datoDestacado», ese es SU dato: cuéntalo con tus palabras y no le pongas además la media; ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
+    recientes.length && MEDIA.test(String(recientes[recientes.length - 1] || '')) ? 'EL ÚLTIMO YA DABA LA MEDIA DE PUNTOS: en este, ninguna cifra de media (ni «su media de 6,1»); si quieres comparar con lo que suele, las palabras de «hoyFrenteASuMedia» sin número.' : '',
     delPartido.length ? `EL TUIT DEL MISMO PARTIDO QUE YA HA SALIDO (no repitas lo que cuenta ni cómo lo cuenta):\n${delPartido.map((r) => `"""${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en los últimos tuits; no las uses): ${gastadas.map((g) => (g.txt ? `«${g.txt}»` : g.que)).join(', ')}` : '',
     // (la regla, la misma que lee el revisor: lib/prensa.mjs, reglaPrensa; M12)
@@ -724,7 +727,12 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = ajustarArriba(String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(), t.hechos);
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
-      const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora, delPartido });
+      let malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora, delPartido });
+      // en el último intento, lo que solo es de variedad (una frase gastada, la misma entrada, la media otra vez) no tira el tuit: un
+      // redactado con un tic es mejor que la plantilla (22 nov, pasada con la IA de verdad: el directo, con dos intentos, acababa en ella)
+      const sinOtro = (cfg.reintentoSegundos && cfg.reintentoSegundos[tipo] != null && Date.now() - inicioTuit > cfg.reintentoSegundos[tipo] * 1000) || process.uptime() > (cfg.segundosEjecucion ?? 330);
+      const ultimo = sinOtro || intento + 1 >= Math.min(intentos + 1, (cfg.intentosPorTipo || {})[tipo] ?? Infinity) || rechazos + 1 >= intentos;
+      if (ultimo && malos.length && malos.every(esDeVariedad)) { log(`  (redactar) ${t.clave}: último intento, paso por alto lo de variedad (${malos.slice(0, 2).join('; ')})`); malos = []; }
       // final y MVP: lo que sale de la prensa tiene que decirlo al menos dos medios distintos (Carlos, 7 nov); sin dos, no vale como fuente
       if (PRENSA_SIN_MEDIO.has(tipo) && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
