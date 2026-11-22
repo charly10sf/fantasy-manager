@@ -151,12 +151,17 @@ def menu(raiz, hay_guias, actual=''):
             f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> la app</span></a></div>'
             f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
             f'<form class="busca" role="search" action="{raiz}jugadores/" method="get" data-raiz="{raiz}"><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar">{lupa}</button><ul class="busca-r" hidden></ul></form>'
-            f'</div></header>'
-            f'<a class="app-l" href="{PLAY}" target="_blank" rel="noopener" aria-label="Descargar Fantasy Manager: la app analiza tu equipo y tu liga" data-t="La app analiza TU equipo y TU liga: a quién fichar, vender y clausular" data-b="Descargar"></a>')
+            f'</div></header>')
+
+
+def linea_app():
+    """debajo de la barra y de los escudos, una línea que dice qué hace la app (Carlos, 22 nov). El texto lo pone el CSS desde
+    data-t, como las siglas de la tira: no es texto repetido en cada página."""
+    return (f'<a class="app-l" href="{PLAY}" target="_blank" rel="noopener" aria-label="Descargar Fantasy Manager: la app analiza tu equipo y tu liga" data-t="La app analiza TU equipo y TU liga: a quién fichar, vender y clausular" data-b="Descargar"></a>')
 
 
 def tira(raiz, p=None):
-    """arriba del todo, los 20 equipos con su escudo: de cualquier página a cualquier equipo. En la ficha de un equipo o de uno de
+    """debajo de la barra (Carlos, 22 nov: «los equipos, que vayan debajo de la otra barra»), los 20 equipos con su escudo: de cualquier página a cualquier equipo. En la ficha de un equipo o de uno de
     sus jugadores, el suyo va marcado. Las tres letras las pone el CSS (data-a): así no son texto repetido en todas las páginas.
     Con loading="lazy": los que se ven se piden al momento y ninguno retrasa el «load» de la página (medido: con los primeros
     sin lazy, el load de una ficha de equipo en un móvil lento pasaba de 1,6 s a 10,7 s porque arrastraba las caras de la tabla)."""
@@ -427,7 +432,7 @@ def pagina(p, contenido, hay_guias):
 </head>
 <body class="{'portal' if p['tipo'] == 'portal' else 'texto'}">
 <a class="salto" href="#contenido">Saltar al contenido</a>
-{tira(raiz, p)}{menu(raiz, hay_guias, seccion_de(p))}
+{menu(raiz, hay_guias, seccion_de(p))}{tira(raiz, p)}{linea_app()}
 <main id="contenido">{migas_linea}
 {INICIO}
 {contenido}

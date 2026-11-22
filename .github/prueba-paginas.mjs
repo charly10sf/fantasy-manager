@@ -42,7 +42,7 @@ for (const movil of [true, false]) {
       const enlaces = tira ? [...tira.querySelectorAll('a')] : [];
       return { escudos: enlaces.length, conFicha: enlaces.filter((a) => /equipos\/[\w-]+\.html$/.test(a.getAttribute('href'))).length, siglas: enlaces.filter((a) => /^[A-Z]{3}$/.test(a.dataset.a || '')).length,
         alt: enlaces.filter((a) => a.querySelector('img[alt][width][height][loading=lazy]') && a.title).length,
-        orden: tira && cab ? tira.getBoundingClientRect().top < cab.getBoundingClientRect().top : false, arriba: tira ? tira.getBoundingClientRect().top : -1,
+        orden: tira && cab ? tira.getBoundingClientRect().top >= cab.getBoundingClientRect().bottom - 1 : false, arriba: cab ? cab.getBoundingClientRect().top : -1,
         menu: menu.map((a) => a.textContent).join('|'), marcada: menu.filter((a) => a.getAttribute('aria-current') === 'page').map((a) => a.textContent).join('|'),
         suyo: (tira && tira.querySelector('a[aria-current]') || {}).title || '', desborda: document.documentElement.scrollWidth - window.innerWidth,
         h1: document.querySelectorAll('main h1').length, salto: !!document.querySelector('a.salto[href="#contenido"]') && !!document.getElementById('contenido'),
@@ -51,7 +51,7 @@ for (const movil of [true, false]) {
     });
     const donde = `[${movil ? 'móvil' : 'ordenador'}] ${r}`;
     bien(d.escudos === 20 && d.conFicha === 20 && d.siglas === 20 && d.alt === 20, `${donde}: 20 escudos, cada uno a su ficha, con nombre y tres letras`, JSON.stringify(d));
-    bien(d.orden && d.arriba === 0, `${donde}: la tira, arriba del todo y encima de la barra`, JSON.stringify([d.orden, d.arriba]));
+    bien(d.orden && d.arriba === 0, `${donde}: la barra, arriba del todo, y la tira de escudos debajo`, JSON.stringify([d.orden, d.arriba]));
     bien(d.menu === 'Mercado|Jornada|Equipos|Jugadores|Guías', `${donde}: el menú, cinco secciones`, d.menu);
     const espera = /^mercado/.test(r) ? 'Mercado' : /^(jornada|clausulas|bajas)/.test(r) ? 'Jornada' : /^equipos\/$/.test(r) ? 'Equipos' : /^equipos\//.test(r) ? 'Equipos' : /^jugadores/.test(r) ? 'Jugadores' : /^guias/.test(r) ? 'Guías' : '';
     bien(d.marcada === espera, `${donde}: marcada «${espera || 'ninguna'}»`, d.marcada);
