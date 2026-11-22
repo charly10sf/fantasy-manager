@@ -119,7 +119,8 @@ export function erroresEmojis(texto, hechos = {}) {
  */
 export function aplicarEmojis(texto, t = {}) {
   let s = String(texto || '');
-  if (!s.trim()) return s;
+  // (un tipo fuera de la política, como las respuestas, tal cual)
+  if (!s.trim() || !((t.tipo || (t.hechos && t.hechos.tipo) || '') in ARRIBA)) return s;
   const d = decidirEmojis({ ...t, texto: s });
   const ps = s.split(/\n\s*\n/);
   const ult = ps.length > 1 ? ps[ps.length - 1] : null;

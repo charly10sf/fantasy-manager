@@ -87,12 +87,13 @@ export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, 
 export const esEtiquetaFinal = (s) => /^(✅|❌|⁉️|👀|💸|🟨|💔) .*(para la (jornada|próxima jornada)|de la jornada \d|Venta obligatoria|Novedades para la|Pendientes de la decisión|Atentos a cómo lo aplica)/u.test(String(s || ''));
 
 // Todos llevan «Fantasy» (Carlos, 2 nov 15:52) y ninguno lleva enlace: la dirección va en el campo «Sitio web» del perfil.
+// (22 nov, política de emojis) sin el 📲 ni el 👉: el cierre era otro párrafo con emoji delante
 export const CIERRES = [
   'Fantasy Manager · enlace en la bio',
-  '📲 Fantasy Manager (enlace en la bio)',
+  'Fantasy Manager (enlace en la bio)',
   'Fantasy Manager: la app, enlace en la bio',
   'Más en Fantasy Manager · enlace en la bio',
-  '👉 Fantasy Manager, enlace en la bio',
+  'Fantasy Manager, enlace en la bio',
   'Tu Fantasy con Fantasy Manager · enlace en la bio',
   'Fantasy Manager · todo en el enlace de la bio',
   'Fantasy Manager · app en la bio',
