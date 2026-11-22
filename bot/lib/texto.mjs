@@ -6,12 +6,32 @@
 let LIMITE = 280;
 
 // Lo que la IA (o una plantilla) escribe mal y se puede arreglar sin pedir otra versión. Pasa por todos los tuits justo antes de
-// publicar (ejecutar.mjs). Un marcador «se pone», no «se va» (Carlos, 22 nov: «se va 0-2» cuando es «se pone 0-2»); «se va 0-2 al
-// descanso», «se va 0-2 de Mestalla» y «se va a 11 puntos» están bien y no se tocan.
-const SE_VA = /\b([Ss])e (va|iba|fue) (\d{1,2}\s?-\s?\d{1,2})(?!\d|\s?-|\s+(?:al?\s+(?:descanso|intermedio|vestuarios?|casa)|de\b|del\b|sin\b|con\b))/g;
-const PONE = { va: 'pone', iba: 'ponía', fue: 'puso' };
+// publicar (ejecutar.mjs). Un marcador nunca «se va» (Carlos, 22 nov: «se va 0-2» cuando es «se pone 0-2»; y tampoco «se va 0-2 al
+// descanso» ni «se va 0-2 de Mestalla»). «Se va a 11 puntos» o «se va a 74 M» no hablan del marcador y se quedan.
+// SE_VA_MARCADOR es lo que mira el validador (lib/redaccion.mjs y lib/pulir.mjs) para que la IA lo reescriba; `retocar`, la última red.
+const VA = '(va|iba|fue|van|iban|fueron|marcha|marchaba|marchó)(?![\\p{L}])';
+const MARC = '(\\d{1,2}\\s?-\\s?\\d{1,2})(?![\\d-])';
+export const SE_VA_MARCADOR = new RegExp(`(?<![\\p{L}])se\\s+${VA}(?!\\s+a\\s+(?:\\d|m[aá]s\\b|menos\\b))[^.,;:!?\\n]{0,30}?\\d{1,2}\\s?-\\s?\\d{1,2}(?![\\d-])`, 'iu');
+const DESCANSO = '(?:al\\s+descanso|al\\s+intermedio|a\\s+(?:los\\s+)?vestuarios?)';
+const CON = '(?:ganando|perdiendo|empatando|con(?:\\s+(?:un|el))?)';
+const TIEMPO = (v, vs) => vs[{ va: 0, marcha: 0, iba: 1, marchaba: 1, fue: 2, 'marchó': 2, van: 3, iban: 4, fueron: 5 }[v.toLowerCase()] ?? 0];
+const LLEGA = ['llega', 'llegaba', 'llegó', 'llegan', 'llegaban', 'llegaron'], SALE = ['sale', 'salía', 'salió', 'salen', 'salían', 'salieron'];
+const PONE = ['pone', 'ponía', 'puso', 'ponen', 'ponían', 'pusieron'];
+const mayus = (S, s) => (S === 'S' ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+const RETOQUES = [
+  // «se va 0-2 al descanso», «se va ganando 0-2 al descanso» → «llega al descanso 0-2», «llega al descanso ganando 0-2»
+  [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+(?:(${CON})\\s+)?${MARC}\\s+${DESCANSO}`, 'gu'), (_, S, v, c, m) => mayus(S, `${TIEMPO(v, LLEGA)} al descanso ${c ? `${c} ` : ''}${m}`)],
+  // «se va al descanso 0-2», «se va al descanso con un 0-2» → «llega al descanso 0-2», «llega al descanso con un 0-2»
+  [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${DESCANSO}(?:\\s+(${CON}))?\\s+${MARC}`, 'gu'), (_, S, v, c, m) => mayus(S, `${TIEMPO(v, LLEGA)} al descanso ${c ? `${c} ` : ''}${m}`)],
+  // «se va 0-2 de Mestalla» → «sale de Mestalla con un 0-2» (sin saber quién gana: «gana 0-2 en Mestalla» lo escribe la IA, que lo sabe)
+  [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${MARC}\\s+(de|del)\\s+((?:la\\s+|el\\s+|los\\s+)?\\p{Lu}[\\p{L}'’-]*(?:\\s+(?:de\\s+)?\\p{Lu}[\\p{L}'’-]*)*)`, 'gu'), (_, S, v, m, de, lugar) => mayus(S, `${TIEMPO(v, SALE)} ${de} ${lugar} con un ${m}`)],
+  // «se va 0-2» → «se pone 0-2»
+  [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${MARC}`, 'gu'), (_, S, v, m) => `${S}e ${TIEMPO(v, PONE)} ${m}`],
+];
 export function retocar(s) {
-  return String(s ?? '').replace(SE_VA, (_, S, v, m) => `${S}e ${PONE[v]} ${m}`);
+  let t = String(s ?? '');
+  for (const [re, f] of RETOQUES) t = t.replace(re, f);
+  return t;
 }
 export const limite = () => LIMITE;
 /** ¿se escriben tweets largos (X Premium)? */

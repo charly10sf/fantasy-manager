@@ -8,7 +8,7 @@
 //   - solo emojis de la plantilla o de la guía de estilo, un emoji al principio de cada línea y nada de @, # ni primera persona.
 // Una pregunta a Gemini por tipo y ejecución, con todos los tweets de ese tipo que van a salir. Tope diario propio (`pulir.porDia`).
 import { banderasEn } from './nacionalidad.mjs';
-import { norm, corto, peso, limite, largo, esEtiquetaFinal } from './texto.mjs';
+import { norm, corto, peso, limite, largo, esEtiquetaFinal, SE_VA_MARCADOR } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
 import { preguntar, conClaude } from './ia.mjs';
@@ -131,6 +131,8 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
   if (dentro(ln) > dentro(lo)) e.push('emoji dentro de la frase');
   if (PROHIBIDO.test(nuevo.replace(/#LaLigaFantasy/g, '')) && !PROHIBIDO.test(orig.replace(/#LaLigaFantasy/g, ''))) e.push('@, #, enlace, primera persona o adjetivo de anuncio');
   if (/#LaLigaFantasy/.test(orig) !== /#LaLigaFantasy/.test(nuevo)) e.push('cambia el hashtag');
+  // un marcador nunca «se va» (Carlos, 22 nov)
+  if (SE_VA_MARCADOR.test(nuevo)) e.push('un marcador no «se va»: «se pone 0-2», «llega al descanso 0-2»');
   return [...new Set(e)];
 }
 
@@ -147,7 +149,7 @@ export const maxDe = (texto) => (largo()
 export function prompt(textos) {
   return `Eres el redactor de una cuenta de X de LaLiga Fantasy. Te paso tweets escritos con plantilla. Reescríbelos para que suenen a periodista que sabe de fantasy y no a máquina, cambiando SOLO la forma.
 Cómo se escribe en la cuenta:
-- Frases cortas: sujeto, verbo y dato («Budimir marca y se va a 11 puntos», no «El mejor fantasy del partido, Budimir, con 11 puntos»).
+- Frases cortas: sujeto, verbo y dato («Budimir marca y suma 11 puntos», no «El mejor fantasy del partido, Budimir, con 11 puntos»).
 - Texto corrido, como lo escribiría una persona: dentro de cada párrafo puedes unir frases con «y», «pero», «aunque» o una coma, y quitar repeticiones. Deja el emoji que ya lleva el principio de cada párrafo y no pongas más.
 - La segunda vez que sale un jugador, por su puesto («el delantero», «el central») solo si el texto ya lo dice; si no, por su nombre.
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).

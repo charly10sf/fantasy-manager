@@ -62,7 +62,7 @@ SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían 
 - PARÓN y partidos lejanos (Carlos, 9 nov: con la J13 a 11 días salió «lo normal es que salga contra el Villarreal» y «mejor esperar a los onces»): si el partido trae «sinLigaHastaEntonces», no hay liga hasta esa fecha. El partido o el rival, solo con su fecha («el sábado 21») o «tras el parón». Nada de esperar o mirar los onces, de «este fin de semana» ni de qué hacer antes de la jornada. Si el jugador trae «seleccion», cuéntalo («se pierde los partidos con su selección») y, si el plazo lo deja claro, si llega a esa jornada; si no hay plazo, no lo adivines. Y que no hay plazo no hace falta decirlo en todos: «sin plazo no se sabe si llega bien» salió en tres noticias del 12 nov.
 - Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
 - Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
-- Un marcador «se pone», no «se va»: «el Madrid se pone 0-2», «se pone por delante». «Se va» solo al descanso o a casa («se va 0-2 al descanso») o con puntos («se va a 11 puntos»).
+- Un marcador nunca «se va» (Carlos, 22 nov), en ningún tuit: «el Atlético se pone 0-2», «pone el 0-2 en el marcador», «0-2 en el marcador»; al descanso, «llega al descanso 0-2» o «al descanso, 0-2», nunca «se va 0-2 al descanso»; al acabar, «gana 0-2 en Mestalla», nunca «se va 0-2 de Mestalla». Cambia la forma de un tuit a otro. «Se va a 11 puntos» habla de puntos y vale, pero no en todos: «suma», «acaba con», «se lleva».
 - Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
 
 LO QUE DELATA A UNA IA (y no se escribe)
@@ -148,7 +148,7 @@ En el Mallorca, Dani Roig es quien más en el aire está, con un 55 %. Lo fijo e
 La gran duda está en el Girona: Hugo Pérez, con un 38 % de titularidad, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
   { tipo: 'final', bien: true, texto: `🏁 El Osasuna remonta en Riazor: 1-2 con gol de Iker Saldaña en el 87'.
 
-Saldaña se va a 14 puntos, más del doble de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
+Saldaña acaba con 14 puntos, más del doble de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
   { tipo: 'final', bien: false, texto: `🏁 Deportivo 1-2 Osasuna. El Osasuna remonta y lo cierra Iker Saldaña en el 87'. 14 puntos fantasy para el goleador. Va a 6 por partido y hoy ha hecho más del doble.
 
 Detrás, Marc Vidal con 8 y Jon Arrieta con 5.`, nota: 'Ficha técnica, no tuit: «para el goleador», «va a 6 por partido», «Detrás,».' },
@@ -249,7 +249,7 @@ Sin sorpresas en ninguno de los dos onces, así que quien tenga jugadores del Os
 No hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing.`, nota: 'Cita una fuente para un hecho, el consejo se alarga y el cierre repite los dos equipos (Carlos lo recortó a mano el 7 nov).' },
   { tipo: 'mercado', bien: true, texto: `📉 Marc Vidal no frena: otros 600.000 € menos esta noche y ya lleva cinco días seguidos cayendo, 2,8 M desde el lunes.
 
-Al otro lado, Iker Saldaña sube casi 1 M y se va a 31 M. Quien lo tenga, a esperar: todavía no ha tocado techo.`, nota: 'Abre por la racha, que es lo que interesa, y cuenta solo dos cosas. Sin chollo y sin «en la imagen…».' },
+Al otro lado, Iker Saldaña sube casi 1 M y ya vale 31 M. Quien lo tenga, a esperar: todavía no ha tocado techo.`, nota: 'Abre por la racha, que es lo que interesa, y cuenta solo dos cosas. Sin chollo y sin «en la imagen…».' },
   { tipo: 'mercado', bien: true, texto: `📈 El chollo de hoy es Pol Sanz: vale 4 M, sube un 3 % y ya lleva dos jornadas en el once. Quien necesite un defensa barato tiene aquí una opción.
 
 La subida grande de la noche es para Iker Saldaña, casi 1 M más.`, nota: 'Otro día, otra entrada: abre por el chollo y la subida va después, en corto.' },
@@ -266,10 +266,14 @@ Ya suma 7 puntos, la mitad de lo que hizo en toda la jornada pasada. Pase de Mar
 El portero del Getafe ya suma 5 puntos y está a una portería a cero de llevarse la jornada.`, nota: 'El suceso como hecho, con el minuto y lo que vale para el mánager.' },
   { tipo: 'directo', bien: true, subtipo: 'gol (momentoParaCelebrar: gol en el descuento que le da la vuelta al partido)', texto: `⚽ ¡EN EL 93! Iker Saldaña la clava de cabeza y el Osasuna le da la vuelta al Deportivo: 2-1.
 
-Se va a 11 puntos en una tarde para enmarcar si lo tenías. El centro es de Marc Vidal, que suma 4.`, nota: 'Con momentoParaCelebrar: la exclamación corta en mayúsculas arriba y el resto normal, con lo que dicen los hechos.' },
+Ya suma 11 puntos de momento. El centro es de Marc Vidal, que se lleva 4.`, nota: 'Con momentoParaCelebrar: la exclamación corta en mayúsculas arriba y el resto normal, con lo que dicen los hechos.' },
   { tipo: 'directo', bien: true, subtipo: 'gol (momentoParaCelebrar: golazo de lejos, distanciaDelDisparo: a unos 23 metros)', texto: `⚽ ¡GOLAZO DE LEJOS! Aitor Beltrán la cuelga desde unos 23 metros y el Getafe se adelanta en el 61': 1-0.
 
 Ya suma 9 puntos, casi el doble de su media. Es su segundo gol de lejos en Liga, Champions y Copa.`, nota: 'La distancia y el contador salen de los hechos; la exclamación corta arriba solo porque momentoParaCelebrar lo trae.' },
+  { tipo: 'directo', bien: false, subtipo: 'gol', texto: `⚽ Aitor Beltrán la mete en el 30' y el Getafe se va 0-2 en Riazor.
+
+Ya suma 6 puntos.`, nota: 'Un marcador no «se va»: «el Getafe se pone 0-2», «pone el 0-2 en el marcador» (Carlos, 22 nov).' },
+  { tipo: 'final', bien: false, texto: `🏁 El Getafe se va 0-2 al descanso y acaba ganando 1-3 en Riazor. Aitor Beltrán se va a 12 puntos.`, nota: '«Se va 0-2 al descanso»: es «llega al descanso 0-2» o «al descanso, 0-2». Al acabar, «gana 1-3 en Riazor», nunca «se va 1-3 de Riazor».' },
   { tipo: 'directo', bien: false, subtipo: 'gol', texto: `⚽ ¡¡GOLAZO!! Saldaña marca para el Osasuna, gran jugada y remate espectacular. Cuenta Marca que ya suma 7 puntos.`, nota: 'Sin momentoParaCelebrar no hay mayúsculas; además, adjetivos de anuncio, un medio delante de un gol y una «gran jugada» que no está en los hechos.' },
 ];
 

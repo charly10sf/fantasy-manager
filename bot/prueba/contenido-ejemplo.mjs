@@ -5,9 +5,9 @@
 import { revisar, decimalesSinHechos, cifrasCambiadas, conMayuscula, prompt as pedido } from '../lib/redaccion.mjs';
 import { revisarConIA, prompt as pedidoRevisor, SISTEMA } from '../lib/revisor.mjs';
 import { reglaPrensa, PRENSA_SIN_MEDIO } from '../lib/prensa.mjs';
-import { nombresDe } from '../lib/pulir.mjs';
+import { nombresDe, revisar as pulirRevisar } from '../lib/pulir.mjs';
 import { clubes, jugador } from '../lib/hechos.mjs';
-import { esPersonal, motivoPersonal, fijarLimite, retocar } from '../lib/texto.mjs';
+import { esPersonal, motivoPersonal, fijarLimite, retocar, SE_VA_MARCADOR } from '../lib/texto.mjs';
 import { lesionTxt } from '../lib/partes.mjs';
 import { sinFotos, sinFotosDe } from '../lib/con-tarjetas.mjs';
 import { GUIA } from '../lib/voz.mjs';
@@ -172,11 +172,29 @@ console.log('--- M13 ---');
 const apodos = readFileSync(new URL('../lib/apodos-jugadores.mjs', import.meta.url), 'utf8');
 ok(!/pendiente del OK de Carlos/.test(apodos), 'apodos-jugadores.mjs ya no dice «pendiente del OK de Carlos»');
 
-// un marcador «se pone», no «se va» (Carlos, 22 nov); al descanso, de un estadio o con puntos, «se va» se queda
-ok(retocar('⚽ Gol de Mbappé y el Madrid se va 0-2 en Mestalla.') === '⚽ Gol de Mbappé y el Madrid se pone 0-2 en Mestalla.', '«se va 0-2» pasa a «se pone 0-2»');
-ok(retocar('El Betis se iba 2-1 cuando llegó el empate') === 'El Betis se ponía 2-1 cuando llegó el empate', '«se iba 2-1» pasa a «se ponía 2-1»');
-ok(['El Madrid se va 0-2 al descanso.', 'El Madrid se va 0-2 de Mestalla.', 'Mbappé se va a 16 puntos.', 'El Atleti se va 1-0 a vestuarios'].every((x) => retocar(x) === x), '«se va» al descanso, de un estadio o con puntos no se toca');
-ok(/se pone 0-2/.test(GUIA), 'la guía dice que un marcador «se pone»');
+// un marcador nunca «se va» (Carlos, 22 nov), tampoco al descanso ni «de Mestalla»; «se va a 16 puntos» se queda
+const rt = [
+  ['⚽ Gol de Mbappé y el Madrid se va 0-2 en Mestalla.', '⚽ Gol de Mbappé y el Madrid se pone 0-2 en Mestalla.'],
+  ['El Betis se iba 2-1 cuando llegó el empate', 'El Betis se ponía 2-1 cuando llegó el empate'],
+  ['El Madrid se va 0-2 al descanso.', 'El Madrid llega al descanso 0-2.'],
+  ['El Atleti se va 1-0 a vestuarios', 'El Atleti llega al descanso 1-0'],
+  ['El Atleti se va al descanso con un 0-1 en el marcador.', 'El Atleti llega al descanso con un 0-1 en el marcador.'],
+  ['Se va ganando 0-2 al descanso el Atlético.', 'Llega al descanso ganando 0-2 el Atlético.'],
+  ['El Madrid se va 0-2 de Mestalla.', 'El Madrid sale de Mestalla con un 0-2.'],
+  ['El Atlético se fue 0-2 del Sánchez-Pizjuán.', 'El Atlético salió del Sánchez-Pizjuán con un 0-2.'],
+];
+for (const [a, b] of rt) ok(retocar(a) === b, `retocar: «${a}» → «${retocar(a)}»`);
+ok(['Mbappé se va a 16 puntos.', 'Bellingham se va a 13 puntos en el 2-1.', 'Vinícius se va a 74,6 M.', 'El Madrid se va al descanso por delante.'].every((x) => retocar(x) === x), '«se va» con puntos, dinero o sin marcador no se toca');
+for (const [a] of rt) ok(!retocar(a).match(SE_VA_MARCADOR), `después de retocar, «${a}» ya no lleva un marcador que «se va»`);
+// el validador lo rechaza para que la IA lo reescriba (también el pulido)
+for (const x of ['El Madrid se va 0-3 de Mestalla con doblete de Mbappé, que suma 16 puntos.', 'El Madrid se va 0-2 al descanso con doblete de Mbappé, que suma 16 puntos.', 'El Madrid se va al descanso con un 0-2 y Mbappé suma 16 puntos.']) {
+  e = rf(x); ok(e.some((y) => /no «se va»/.test(y)), `el validador tira «${x.slice(0, 40)}…» (${e.join(' | ')})`);
+}
+ok(!rf(base).some((y) => /se va/.test(y)), '«se va a 16 puntos» pasa el validador');
+e = revisar(base, { hechos: hFinal, todos, numeros: [], recientes: ['🏁 Otro final. Bellingham se va a 13 puntos fantasy.'] });
+ok(e.some((y) => /se va a N/.test(y)), `«se va a N» si el último del tipo ya lo decía, no (${e.join(' | ')})`);
+ok(pulirRevisar('El Madrid gana 0-2.', 'El Madrid se va 0-2.', { numeros: [0, 2] }).some((y) => /se va/.test(y)), 'pulir: un pulido con «se va 0-2» no vale');
+ok(/se pone 0-2/.test(GUIA) && /llega al descanso 0-2/.test(GUIA), 'la guía dice que un marcador «se pone» y que al descanso «llega»');
 
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

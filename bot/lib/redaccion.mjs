@@ -5,7 +5,7 @@
 // (ni líneas, ni orden): comprueba que lo que dice cuadra con los hechos. Lo que no pasa se pregunta otra vez con los errores; si
 // tampoco, sale la plantilla. Con Claude (lib/ia.mjs, uso «redactar»); sin Claude, no hace nada.
 import { limitarDatos, apuntarTexto, MEDIA } from './datos-jugador.mjs';
-import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
+import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES, SE_VA_MARCADOR } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
@@ -23,6 +23,7 @@ const CIRCULOS = /[🔴🟠🟡🟢🔵🟣🟤⚫]/u;
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, mercado: { pct: 4, media: 1 }, otro: { pct: 2, media: 1 } };
 const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna']);
+const SE_VA_PUNTOS = /(?<![\p{L}])se\s+(?:va|iba|fue)\s+a\s+(?:\d|m[aá]s\b)/iu;
 const frases = (s) => String(s).split(/(?<=[.!?:;])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
 
 export const TIPOS_SELECCIONES = new Set(['selecciones', 'selecciones-dia']);
@@ -459,6 +460,10 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   }
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
+  // un marcador nunca «se va» (Carlos, 22 nov): ni «se va 0-2», ni «se va 0-2 al descanso», ni «se va 0-2 de Mestalla»
+  { const m = t.match(SE_VA_MARCADOR); if (m) e.push(`un marcador no «se va» («${m[0]}»): «se pone 0-2», «pone el 0-2 en el marcador», «llega al descanso 0-2», «gana 0-2 en Mestalla»`); }
+  // «se va a 16 puntos» sí vale, pero no en todos (Carlos, 22 nov): si uno de los dos últimos del tipo ya lo decía, otra forma
+  if (SE_VA_PUNTOS.test(t) && recientes.slice(-2).some((r) => SE_VA_PUNTOS.test(r))) e.push('«se va a N» ya va en uno de los dos últimos tuits de este tipo: dilo de otra forma («suma», «acaba con», «se lleva», «hace»)');
   // «según X» pegado a una cifra nuestra (la media, el %, la hora, el puesto): el trozo de frase justo antes del «según» (desde la última
   // coma, dos puntos o punto) no puede llevar una cifra de los hechos que no esté también en la prensa (el «0-6 ante el PSG, según la
   // SER» es del medio y vale)
