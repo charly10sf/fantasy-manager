@@ -8,6 +8,7 @@
 //  (d) los pasos marcados como hechos
 //  (e) gana lo más reciente; lo de otra liga no se mezcla; sin red se sigue igual y se sube al volver
 //  (f) las miniaturas de las capturas no viajan
+//  (g) los dos cambian a la vez sin ver lo del otro: se junta (lo dicho, las preguntas y lo quitado)
 // Uso: node .github/ia/caso-sinc.mjs   (PW_MODULO como en prueba-web.mjs). Sale con 1 si algo falla.
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -158,6 +159,32 @@ try {
   await espera(1800);
   const guardado = JSON.stringify(m.get('s|4455|chat'));
   ok(/"id":"f1"/.test(guardado) && guardado.length < 600, `(f) de una captura sube solo su referencia, no la imagen (${guardado.length} caracteres)`);
+  /* (g) (repaso de la 0.8s, 22 nov) los dos cambian algo a la vez, sin haber visto lo del otro (el móvil abierto mientras
+     se usa la web): antes ganaba entero el último en subir y lo del otro se perdía. Ahora se junta: lo dicho en los dos,
+     las preguntas de los dos y, si en uno se quita algo mientras el otro añade, se quita en los dos y lo añadido se queda */
+  await sinc(A); await sinc(B); await sinc(A);
+  const viejos0 = [(await estado(A)).viejos, (await estado(B)).viejos];
+  sinRed = true;
+  const nombreA = await en(A, async () => { const I = await import('./js/ia.js'); const x = window.S.M.mias.filter((y) => y.j.pos > 1 && y.j.pos < 5)[0]; I.apuntarDicho(`A ${x.j.nombre} no lo vendo`, window.S.D, window.S.M, null); return x.j.nombre; });
+  await en(B, async () => { const I = await import('./js/ia.js'); I.apuntarDicho('No me quedan blindajes', window.S.D, window.S.M, null); });
+  const pregunta = (P, txt) => en(P, async (q) => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [...I.conversacion(), { r: 'yo', t: q, ts: t }, { r: 'ia', t: `Sobre «${q}»: vale.`, ts: t + 1 }]); U.LS.set(Dt.K('chat-t'), t + 1); I.cambioLocal('chat'); }, txt);
+  await pregunta(A, 'Pregunta del móvil'); await espera(20); await pregunta(B, 'Pregunta de la web');
+  await espera(1500);
+  sinRed = false;
+  await sinc(A); await sinc(B); await sinc(A);
+  a = await estado(A); b = await estado(B);
+  const tiene = (x) => x.notas.includes('no-vender') && x.notas.includes('blindajes') && x.chat.includes('yo:Pregunta del móvil') && x.chat.includes('yo:Pregunta de la web');
+  ok(tiene(a) && tiene(b) && a.chat.join('|') === b.chat.join('|') && a.viejos === viejos0[0] && b.viejos === viejos0[1], `(g) a la vez en los dos: lo dicho en los dos («${nombreA}» y blindajes) y las dos preguntas, en los dos y en el mismo orden (móvil: ${a.notas.join(', ')} · ${a.chat.join(' | ')} · ${a.viejos} anteriores; web: ${b.notas.join(', ')} · ${b.chat.join(' | ')} · ${b.viejos})`);
+  // quitar en uno mientras el otro añade
+  sinRed = true;
+  await en(A, async () => { const I = await import('./js/ia.js'); for (const n of I.notasVigentes().filter((x) => x.corr === 'no-vender')) I.borrarNota(n.id); });
+  await en(B, async () => { const I = await import('./js/ia.js'); const x = window.S.M.mias.filter((y) => y.j.pos > 1 && y.j.pos < 5)[1]; I.apuntarDicho(`Ya he pujado por ${x.j.nombre}`, window.S.D, window.S.M, null); I.apuntarDicho(`A ${x.j.nombre} no lo vendo`, window.S.D, window.S.M, null); });
+  await espera(1500);
+  sinRed = false;
+  await sinc(B); await sinc(A); await sinc(B);
+  a = await estado(A); b = await estado(B);
+  const n1 = (x) => x.notas.filter((k) => k === 'no-vender').length;
+  ok(n1(a) === 1 && n1(b) === 1 && a.notas.includes('blindajes') && b.notas.includes('blindajes') && a.notas.join() === b.notas.join(), `(g) lo quitado en el móvil no vuelve y lo nuevo de la web se queda, en los dos (móvil: ${a.notas.join(', ')}; web: ${b.notas.join(', ')})`);
   ok(!A.errores.length && !B.errores.length, `sin errores en las páginas${A.errores.length || B.errores.length ? `: ${[...A.errores, ...B.errores][0]}` : ''}`);
 } finally {
   await A.ctx.close(); await B.ctx.close(); await nav.close(); srv.close();

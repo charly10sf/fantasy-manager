@@ -40,30 +40,47 @@ function subirLuego() {
  * Sube lo de aquí que el servidor no tiene y baja lo que tiene más nuevo. Devuelve las claves que han cambiado aquí
  * (plan, chat, notas, hechos). Como mucho cada 20 s salvo `ya`. Nunca lanza.
  */
-export async function sincronizar({ ya = false } = {}) {
+export async function sincronizar({ ya = false, conChat = false } = {}) {
   if (!ligaS || enDemo()) return [];
   if (!ya && Date.now() - ult < ESPERA) return [];
   // (con una en marcha, lo cambiado mientras tanto se sube al acabar)
   if (enCurso) { if (ya) otra = true; return enCurso; }
   enCurso = (async () => {
     try {
-      const loc = paraSinc(), sub = subido(), pon = {}, tengo = {};
+      const charlando = !conChat && !!ocupado();
+      const sub = { ...subido() }, llegadas = new Set();
+      const poner = (trae) => {
+        for (const [k, d] of Object.entries(trae && typeof trae === 'object' ? trae : {})) {
+          try { if (ponerRemoto(k, d, { charlando, desde: Number(sub[k]) || 0 })) { llegadas.add(k); sub[k] = Math.max(Number(sub[k]) || 0, Number(d.t) || 0); } } catch (e) { /* esa, la próxima vez */ }
+        }
+      };
+      /* (repaso de la 0.8s, 22 nov) con cambios de aquí sin subir, primero se mira si otro dispositivo cambió lo mismo desde
+         la última vez (tengo = lo último visto): si es así, se junta aquí y luego se sube lo juntado. Antes se subía sin
+         mirar y, con el móvil abierto mientras se usaba la web, ganaba entero el último y lo del otro se perdía */
+      const loc0 = paraSinc();
+      if (Object.entries(loc0).some(([k, d]) => d && d.t && d.t > (Number(sub[k]) || 0))) {
+        const visto = {};
+        for (const k of Object.keys(loc0)) visto[k] = Number(sub[k]) || 0;
+        const r0 = await pedirWorker('POST', '/sinc', { liga: ligaS, pon: {}, tengo: visto }, { tiempo: 12000 });
+        if (!r0 || !r0.ok) return [];
+        poner(r0.trae);
+      }
+      const loc = paraSinc(), pon = {}, tengo = {};
       for (const [k, d] of Object.entries(loc)) {
         if (!d || !d.t) continue;
         tengo[k] = d.t;
-        if (d.t > (Number(sub[k]) || 0)) pon[k] = d;
+        // (con una pregunta en marcha, la conversación se sube al acabarla, ya juntada)
+        if (d.t > (Number(sub[k]) || 0) && !(k === 'chat' && charlando)) pon[k] = d;
       }
       const r = await pedirWorker('POST', '/sinc', { liga: ligaS, pon, tengo }, { tiempo: 12000 });
-      if (!r || !r.ok) return [];
-      const trae = r.trae && typeof r.trae === 'object' ? r.trae : {}, llegadas = [];
-      for (const [k, d] of Object.entries(trae)) { try { if (ponerRemoto(k, d, { charlando: !!ocupado() })) llegadas.push(k); } catch (e) { /* esa, la próxima vez */ } }
-      const nuevo = { ...sub };
-      for (const k of Object.keys(tengo)) nuevo[k] = Math.max(Number(nuevo[k]) || 0, tengo[k]);
-      for (const k of llegadas) nuevo[k] = Math.max(Number(nuevo[k]) || 0, Number(trae[k].t) || 0);
-      LS.set(K('sinc-subido'), nuevo);
+      if (!r || !r.ok) return [...llegadas];
+      poner(r.trae);
+      for (const k of Object.keys(pon)) sub[k] = Math.max(Number(sub[k]) || 0, tengo[k]);
+      LS.set(K('sinc-subido'), sub);
       ult = Date.now();
-      if (llegadas.length) { try { alLlegar(llegadas); } catch (e) { /* se verá al repintar */ } }
-      return llegadas;
+      const l = [...llegadas];
+      if (l.length) { try { alLlegar(l); } catch (e) { /* se verá al repintar */ } }
+      return l;
     } catch (e) { return []; } finally {
       enCurso = null;
       if (otra) { otra = false; subirLuego(); }
@@ -73,6 +90,6 @@ export async function sincronizar({ ya = false } = {}) {
 }
 
 /** antes de pedir un plan solo: mira si otro dispositivo ya lo tiene (como mucho `ms` de espera) */
-export function sincAntes(ms = 5000) {
-  return Promise.race([sincronizar({ ya: true }), new Promise((ok) => setTimeout(() => ok([]), ms))]);
+export function sincAntes(ms = 5000, { conChat = false } = {}) {
+  return Promise.race([sincronizar({ ya: true, conChat }), new Promise((ok) => setTimeout(() => ok([]), ms))]);
 }

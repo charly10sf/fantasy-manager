@@ -1357,6 +1357,9 @@ function ir(vista, { arriba = true } = {}) {
   S.vista = vista;
   if (location.hash !== '#' + vista) history.replaceState(null, '', '#' + vista);
   pintar({ arriba });
+  // (repaso de la 0.8s) al ir a Hoy o a Pregunta, lo último de los otros dispositivos (como mucho cada 20 s): con la app
+  // abierta en el móvil mientras se usa la web, antes no llegaba nada hasta salir de la app y volver
+  if ((vista === 'hoy' || vista === 'ia') && S.D && !enDemo()) sincronizar();
 }
 const bajarChat = () => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 30);
 
@@ -3111,6 +3114,9 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   const ctl = new AbortController();
   S.chatCtl = ctl;
   try {
+    // (repaso de la 0.8s) antes de preguntar, lo último de los otros dispositivos: la pregunta va detrás de la conversación de
+    // verdad y no pisa lo que se haya preguntado en el otro (como mucho 2,5 s)
+    if (S.D && !enDemo()) { try { await sincAntes(2500, { conChat: true }); } catch (e) { /* como antes */ } }
     await ligaAlDiaParaPreguntar();
     // (22 nov, Carlos) lo que cuenta como un hecho («no me quedan blindajes», «a este no lo vendo», «ya he pujado») se
     // apunta antes de preguntar y se rehace el análisis: la IA ya lee los datos corregidos y Hoy dice lo mismo
@@ -4252,6 +4258,8 @@ document.addEventListener('visibilitychange', () => {
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D) mirarWebNueva(); });
 // (22 nov) al volver a la app: lo que hayas hecho en otro dispositivo (un plan nuevo, una pregunta, algo que le has contado)
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D && !enDemo()) sincronizar(); });
+// (y al volver a la ventana en el ordenador, que no siempre cambia la visibilidad)
+window.addEventListener('focus', () => { if (S.D && !enDemo()) sincronizar(); });
 setInterval(() => { if (!document.hidden && S.D) mirarWebNueva(); }, 10 * MIN);
 
 /* ---------------- lo nuevo de esta versión ---------------- */

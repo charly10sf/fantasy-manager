@@ -42,8 +42,10 @@ const r = await P.page.evaluate(async () => {
     `Eso está cerrado en su cuenta, así que no te puedo dar una cifra de lo que tiene ${r2.e.manager}. Lo que sí sé es que su dinero está en el tramo de «algo», por debajo de los que más saldo manejan en la liga; eso lo ves tocando su candado en la app.`,
     `${r2.e.manager} tiene unos 45 M de saldo, más que tú.`,
     `Ese dato se abre tocando su candado y viendo un anuncio corto. Esta semana ha fichado a dos jugadores.`,
+    // (repaso de la 0.8s, batería del 22 nov) sin decir «dinero»: lo que ha gastado y, de ahí, que no le sobra
+    `Eso lo tienes cerrado en tu cuenta. Lo que sí te digo: ha gastado 34,61 M esta semana, así que no le sobra tanto como para pujar fuerte por los libres de hoy.`,
   ];
-  const FUGA = /saldo medio|tramo|«algo»|45 M|más que tú|margen para|apretarse|por debajo de los que/;
+  const FUGA = /saldo medio|tramo|«algo»|45 M|más que tú|margen para|apretarse|por debajo de los que|no le sobra/;
   out.b = casos.map((t) => { const x = I.sinDineroCerrado(t, cer); return { fuga: FUGA.test(x.texto), candado: /candado|anuncio/.test(x.texto), q: x.quitadas, t: x.texto }; });
   // (e) lo que no es eso
   out.e = { mio: I.dineroCerradoDe('¿Cuánto saldo tengo?', D, M).length, peligro: I.dineroCerradoDe('¿Qué rival es el más peligroso?', D, M).length, jug: I.dineroCerradoDe(`¿Cuánto vale ${M.mias[0].j.nombre}?`, D, M).length };

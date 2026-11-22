@@ -738,7 +738,22 @@ const rivalTxt = (M, j) => {
 // Cosas que no salen en la API (un amigo te ofrece un jugador, lo que piensas hacer, a quién no quieres vender):
 // las apunta la IA desde el chat y cuentan en el plan, en el chat y en segundo plano hasta que caducan.
 export const notas = () => LS.get(K('notas'), []);
-const guardarNotas = (l) => { LS.set(K('notas'), l.slice(-40)); LS.set(K('notas-t'), Date.now()); cambioLocal('notas'); };
+/* (repaso de la 0.8s, 22 nov) lo quitado de aquí (con su ×, o porque algo nuevo lo pisa) se recuerda 45 días, { id: t }, para
+   que al juntarse con lo de otro dispositivo no vuelva. Viaja dentro de la lista de notas como { id, b: t }, sin texto: las
+   versiones de antes lo ignoran (solo leen las que llevan texto) */
+const BORRADAS_DIAS = 45 * DIA;
+const borradas = () => { const b = LS.get(K('notas-borradas'), {}); return b && typeof b === 'object' && !Array.isArray(b) ? b : {}; };
+const guardarBorradas = (b) => {
+  const ahora = Date.now();
+  const l = Object.entries(b).filter(([, t]) => ahora - (Number(t) || 0) < BORRADAS_DIAS).sort((x, y) => y[1] - x[1]).slice(0, 200);
+  LS.set(K('notas-borradas'), Object.fromEntries(l));
+};
+const guardarNotas = (l) => {
+  const quedan = new Set(l.slice(-40).map((n) => n && n.id)), b = borradas(), ahora = Date.now();
+  for (const n of notas()) if (n && n.id && !quedan.has(n.id)) b[n.id] = ahora;
+  guardarBorradas(b);
+  LS.set(K('notas'), l.slice(-40)); LS.set(K('notas-t'), ahora); cambioLocal('notas');
+};
 export const notasVigentes = () => notas().filter((n) => !n.caduca || n.caduca > Date.now());
 export const borrarNota = (id) => guardarNotas(notas().filter((n) => n.id !== id));
 export const notasDe = (pid) => notasVigentes().filter((n) => n.pid === pid);
@@ -2730,7 +2745,7 @@ export function paraSinc() {
   return {
     plan: p && p.t && !p.auto ? { t: p.t, v: p } : null,
     chat: tc ? { t: tc, v: chat } : null,
-    notas: tn ? { t: tn, v: notas() } : null,
+    notas: tn ? { t: tn, v: [...notas(), ...Object.entries(borradas()).map(([id, b]) => ({ id, b }))] } : null,
     hechos: th ? { t: th, v: LS.get(K('hechos'), {}) } : null,
   };
 }
@@ -2738,7 +2753,12 @@ export function paraSinc() {
  * Pone aquí lo que llega de otro dispositivo, si es más nuevo. Devuelve si ha cambiado algo. `charlando`: hay una pregunta
  * en marcha; la conversación no se toca hasta que acabe.
  */
-export function ponerRemoto(clave, d, { charlando = false } = {}) {
+/* (repaso de la 0.8s, 22 nov) Si aquí hay cambios que aún no se han subido (`desde`: lo último que este dispositivo subió o
+   recibió de esa cosa) y llega algo más nuevo de otro, ya no gana entero lo último: se junta. Antes, con el móvil abierto
+   mientras se usaba la web, lo que se contaba o se preguntaba en uno se perdía al subir el otro. De las notas, las de los
+   dos menos las quitadas en cualquiera; de la conversación, los mensajes de los dos en orden; de los pasos hechos, por
+   plan, el que se marcó más tarde. Lo juntado queda con la hora de ahora para que se suba (sinc.js). */
+export function ponerRemoto(clave, d, { charlando = false, desde = null } = {}) {
   if (!d || !d.t || d.v == null) return false;
   if (clave === 'plan') {
     const P = d.v;
@@ -2750,22 +2770,52 @@ export function ponerRemoto(clave, d, { charlando = false } = {}) {
   }
   if (clave === 'chat') {
     if (charlando || !Array.isArray(d.v)) return false;
-    if (d.t <= (Number(LS.get(K('chat-t'), 0)) || 0)) return false;
+    const tLoc = Number(LS.get(K('chat-t'), 0)) || 0;
+    // (con cambios de aquí sin subir, lo de allí cuenta si es de después de la última vez que se miró, aunque sea de antes
+    // que lo de aquí: se junta)
+    const junta = desde != null && tLoc > desde && d.t > desde;
+    if (!junta && d.t <= tLoc) return false;
     const loc = conversacion(), llega = d.v.filter((m) => m && (m.r === 'yo' || m.r === 'ia')).slice(-40);
     // otra conversación (en el otro dispositivo empezó un chat nuevo): la de aquí pasa a «Anteriores», como allí
     const misma = loc.length && llega.length && (loc[0].ts || 0) === (llega[0].ts || 0);
+    // la misma conversación seguida en los dos a la vez: los mensajes de los dos, en orden
+    if (misma && junta) {
+      const id = (m) => `${m.ts}|${m.r}`, ya = new Set(llega.map(id));
+      const mios = loc.filter((m) => m && (Number(m.ts) || 0) > desde && !ya.has(id(m)));
+      LS.set(K('chat'), [...llega, ...mios].sort((x, y) => (Number(x.ts) || 0) - (Number(y.ts) || 0)).slice(-40)); LS.set(K('chat-t'), Date.now());
+      return true;
+    }
+    if (d.t <= tLoc) return false;
     if (loc.length && !misma) archivar();
     LS.set(K('chat'), llega); LS.set(K('chat-t'), d.t);
     return true;
   }
   if (clave === 'notas') {
-    if (!Array.isArray(d.v) || d.t <= (Number(LS.get(K('notas-t'), 0)) || 0)) return false;
-    LS.set(K('notas'), d.v.filter((n) => n && n.id && n.texto).slice(-40)); LS.set(K('notas-t'), d.t);
+    const tLoc = Number(LS.get(K('notas-t'), 0)) || 0;
+    const junta = desde != null && tLoc > desde && d.t > desde;
+    if (!Array.isArray(d.v) || (!junta && d.t <= tLoc)) return false;
+    const b = borradas();
+    for (const x of d.v) if (x && x.id && x.b && !x.texto) b[x.id] = Math.max(Number(b[x.id]) || 0, Number(x.b) || 0);
+    let lista = d.v.filter((n) => n && n.id && n.texto && !b[n.id]);
+    if (junta) {
+      const ids = new Set(lista.map((n) => n.id));
+      lista = [...lista, ...notas().filter((n) => n && n.id && !ids.has(n.id) && !b[n.id] && (Number(n.t) || 0) > desde)];
+      // de lo que corrige al motor, de cada cosa (y de cada jugador) la última, como al apuntarlo
+      const ult = new Map();
+      for (const n of lista) if (n.corr) { const k = `${n.corr}|${n.pid || ''}`; if (!ult.has(k) || (Number(n.t) || 0) > (Number(ult.get(k).t) || 0)) ult.set(k, n); }
+      lista = lista.filter((n) => !n.corr || ult.get(`${n.corr}|${n.pid || ''}`) === n).sort((x, y) => (Number(x.t) || 0) - (Number(y.t) || 0));
+    }
+    guardarBorradas(b);
+    LS.set(K('notas'), lista.slice(-40)); LS.set(K('notas-t'), junta ? Date.now() : d.t);
     return true;
   }
   if (clave === 'hechos') {
-    if (typeof d.v !== 'object' || Array.isArray(d.v) || d.t <= (Number(LS.get(K('hechos-t'), 0)) || 0)) return false;
-    LS.set(K('hechos'), d.v); LS.set(K('hechos-t'), d.t);
+    const tLoc = Number(LS.get(K('hechos-t'), 0)) || 0;
+    const junta = desde != null && tLoc > desde && d.t > desde;
+    if (typeof d.v !== 'object' || Array.isArray(d.v) || (!junta && d.t <= tLoc)) return false;
+    let v = d.v;
+    if (junta) { v = { ...d.v }; for (const [k, x] of Object.entries(LS.get(K('hechos'), {}) || {})) if (x && (!v[k] || (Number(x.t) || 0) > (Number(v[k].t) || 0))) v[k] = x; }
+    LS.set(K('hechos'), v); LS.set(K('hechos-t'), junta ? Date.now() : d.t);
     return true;
   }
   return false;
@@ -2901,6 +2951,8 @@ const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su cand
 const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
 const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
 const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;
+// (repaso de la 0.8s) lo que lo cuenta sin decir «dinero»: «ha gastado 34 M, así que no le sobra tanto como para pujar fuerte»
+const SOBRA_DINERO = /\b(no )?le (sobra|sobran|alcanza|da para|queda (poco|mucho|bastante))\b|\b(anda|va|esta|ira) (justo|justito|apretado|corto|tieso|sobrado|forrado|pelado)\b|\b(no )?puede (pujar|gastar|pagar|fichar) (fuerte|mucho|poco|lo que quiera)\b/;
 /**
  * Quita de una respuesta las frases que cuentan el dinero de un rival que tiene cerrado (cifra o «mucho/algo/poco»), cuando
  * preguntaba por eso. Devuelve { texto, quitadas }. Si no queda nada que diga cómo se abre, lo añade.
@@ -2912,7 +2964,7 @@ export function sinDineroCerrado(texto, cerrados) {
   const parrafos = cuerpo.split(/\n{2,}/).map((p) => p.split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡«*-])/).filter((f) => {
     // (una frase que lo cuenta y además habla del candado se va entera: lo del candado se repone abajo, limpio)
     const n = norm(f);
-    const fuera = HABLA_DINERO.test(n) && CUANTO_DINERO.test(n) && !MIO_DINERO.test(n);
+    const fuera = ((HABLA_DINERO.test(n) && CUANTO_DINERO.test(n)) || SOBRA_DINERO.test(n)) && !MIO_DINERO.test(n);
     if (fuera) quitadas++;
     return !fuera;
   }).join(' ')).filter((p) => p.trim());
