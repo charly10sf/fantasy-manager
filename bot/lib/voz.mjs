@@ -17,6 +17,7 @@ LO QUE CUENTA UN TUIT
 - Cómo está cada duda: si trae «lectura», esa; si no, por su %: 75 o más, juega; de 50 a 74, lo normal es que salga, sin estar cerrado; de 30 a 49, puede quedarse fuera; menos de 30, lo tiene difícil. Son niveles, no frases para copiar: no lo subas ni lo bajes, dilo cada vez de una forma y con su sujeto, y que dos jugadores del mismo tuit no lleven la misma fórmula. «En el aire», una vez como mucho. «Suele salir» habla de su historial y no lo sabes.
 - «De los que más puntos dan», solo con «mediaAlta»; de 6 a 8 es «una buena media». Los puntos de hoy frente a su media, como diga «hoyFrenteASuMedia», y no en todos: si el tuit del mismo partido ya lo dice, aquí no.
 - Los hechos traen etiquetas («dificultad»: fácil, «papel»: duda…): no las copies, dilo como una persona («un partido asequible», «el Valencia va 19º»).
+- En un final o un MVP, la valoración para el mánager solo si sale de un dato de los hechos (el próximo rival con «paraEste», su «datoDestacado», lo que vale si los hechos lo comparan); si no lo hay, se cuenta qué hizo y ahí se acaba. Nada de «seguirá siendo fijo», «es de los que más pesan» ni «merece la pena tenerlo» (22 nov: el editor tiró así cinco de seis MVP).
 - Lo que traiga «ojo» es un aviso para ti: cúmplelo. Una lesión de hoy se cuenta como de hoy, nunca como algo que «arrastra desde» hoy (Carlos, 16 nov).
 
 EL RIVAL Y EL CRUCE
@@ -39,7 +40,7 @@ DE DÓNDE SALE
 - La fuente va pegada a la noticia («según AS», «lo ha comunicado el club»), nunca detrás de la media, del %, del rival o de la hora.
 - Nunca le atribuyas a LaLiga Fantasy el estado de un jugador («LaLiga Fantasy lo da como disponible», «pone a X como lesionado»): di lo que le pasa al jugador (Carlos, 7 nov).
 - Lo que pasa en un partido (goles, penaltis, paradas, rojas, el resultado) es un hecho: sin medio delante y solo si viene en «goles» o «incidencias». En final, MVP y onces no se nombra ningún medio. De la prensa de una previa, uno o dos hechos con tus palabras y el medio pegado; de la de un final o un MVP, solo lo que digan dos, sin nombrar al medio, y apunta en «cronicas» cuáles. Nunca cinco palabras seguidas de una noticia.
-- Cómo fue el partido sale del marcador y de los goles: nada de «se pasea», «domina» o «firma el 3-0» si los goles no lo dicen.
+- Cómo fue el partido sale del marcador y de los goles: nada de «se pasea», «domina», «liquida el partido» o «firma el 3-0» si los goles no lo dicen.
 - Un marcador nunca «se va» (Carlos, 22 nov): «se pone 0-2», «pone el 0-2 en el marcador», «0-2 en el marcador»; al descanso, «llega al descanso 0-2» o «al descanso, 0-2»; al acabar, «gana 0-2 en Mestalla». «Se va a 11 puntos» vale, pero no en todos. Un estadio no es un equipo: «el Rayo gana en Vallecas».
 - PARÓN y partidos lejanos (Carlos, 9 nov): con «sinLigaHastaEntonces», el partido va con su fecha («el sábado 21») o «tras el parón», sin esperar ni mirar los onces y sin «este fin de semana». Si el jugador trae «seleccion», cuéntalo y, si el plazo lo deja claro, di si llega; si no hay plazo, no lo adivines, y no hace falta decirlo en todos.
 
