@@ -2815,7 +2815,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252987/barca-mueve-ficha-tres-centrales-punto-mira.html": 1795116792000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/idea-real-madrid-recuperar-nico-paz-proximo-verano-20261119_3478703.html": 1795119011000,
-   "SPORT|136638674": 1795116349000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253088/lamine-yamal-no-le-basta-ganar-mundial.html": 1795153500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253087/bastoni-lento-verano-tampoco-sera-bolt-enero.html": 1795147200000,
@@ -4921,6 +4920,11 @@
    "h": "5ea15a4ee70c",
    "desde": 1795368293447,
    "fin": 1795367473875
+  },
+  "13|125": {
+   "h": "1eba9ae899fa",
+   "desde": 1795375574061,
+   "fin": 1795375574061
   }
  },
  "iaDias": [
@@ -5347,7 +5351,8 @@
    "5868140",
    "5868139",
    "5868133",
-   "5868137"
+   "5868137",
+   "5868136"
   ],
   "equipos": [
    "9866",
@@ -5522,11 +5527,11 @@
     "e": "Osasuna",
     "g": {
      "liga": [
-      8,
+      9,
       0,
       0,
       4,
-      1
+      2
      ]
     }
    },
@@ -9441,13 +9446,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5343,
+   "ok": 5345,
    "fallos": 0,
-   "ejecuciones": 4326,
+   "ejecuciones": 4327,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T19:21:14.120Z"
+   "ultima": "2026-11-22T19:26:13.118Z"
   }
  },
  "ptsDirecto": {
@@ -9663,27 +9668,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:21:30.814Z"
+   "ultimaBien": "2026-11-22T19:26:21.063Z"
   }
  },
  "avisos": [
