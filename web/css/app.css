@@ -2837,7 +2837,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .cp-res-t { margin-left: 4px; padding: 1px 6px; border-radius: var(--r-pl); font: 700 var(--t-sec2) 'Barlow'; background: var(--plano3); color: var(--texto2); }
 .cp-res-t.r-V { background: var(--sube-s); color: var(--sube); } .cp-res-t.r-E { background: var(--oro-s); color: var(--oro); } .cp-res-t.r-D { background: var(--baja-s); color: var(--baja); }
 .banquillo .club-ent { padding-left: 6px; padding-right: 6px; }
-.jor-cab .cp-res-t { display: inline; font: 700 var(--t-sec2) 'Barlow'; text-transform: none; }
+/* (22 nov, Carlos) con un rival de nombre largo el «2-1» se partía en dos líneas: el resultado no encoge ni se corta */
+.jor-cab .cp-res-t { display: inline; flex: none; white-space: nowrap; font: 700 var(--t-sec2) 'Barlow'; text-transform: none; }
 .jor-cab .lado { display: inline-flex; margin: 0; gap: 0; }
 .qj-bien { color: var(--sube); } .qj-duda { color: var(--oro); } .qj-mal { color: var(--apagado); }
 
@@ -2951,9 +2952,9 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* cabecera y barra de abajo */
 .sup { border-bottom-color: transparent; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04); }
 .nav { background: var(--negro); border-top-color: rgba(255, 255, 255, 0.05); }
-.nav button.activo::before { left: 44%; right: 44%; height: 3px; border-radius: 3px; top: auto; bottom: 6px; }
-/* en el menú lateral del ordenador, la pestaña elegida ya va con su fondo: el puntito sobra (Carlos, 14 nov) */
-.escritorio .nav button.activo::before { display: none; }
+/* la pestaña elegida ya se resalta (icono en rojo y texto en negrita): la marca de debajo sobra, también en el móvil
+   (Carlos, 22 nov; en el menú lateral del ordenador ya se quitó el 14 nov) */
+.nav button.activo::before { display: none; }
 
 /* títulos: el de pestaña y el de cualquier ficha, iguales; delante del de pestaña, la franja */
 .titulo, .ficha-top h2, .hoja-cab h2, .club-hero h2, .bloq-hoja h2 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }

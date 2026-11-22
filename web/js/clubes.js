@@ -111,9 +111,9 @@ export function clubes(S) {
     </button>`;
   }).join('');
   const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-gol">Goles</span><span class="cf-dg">DG</span><span class="cf-pts">Pts</span></div>';
-  const hayEu = ids.some((id) => europaDe(D.equipos[id].nombre));
-  const ley = hayEu || (hayTabla && n >= 18) ? `<div class="cf-ley">${hayEu ? `<span class="eu-ucl">Champions</span><span class="eu-uel">Europa League</span><span class="eu-uecl">Conference</span>` : ''}${hayTabla && n >= 18 ? '<span class="z-desc">Descenso</span>' : ''}${hayEu ? `<small>El color dice qué competición europea juega cada club esta temporada (${EUROPA.temporada}): esos juegan también entre semana y rotan más.</small>` : ''}</div>` : '';
-  return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>${ley}`;
+  // (22 nov, Carlos: «quita todo lo de debajo de la tabla, ya se entiende») Sin leyenda de colores ni su frase: cada fila
+  // ya dice «Champions», «Europa League», «Conference» o «Descenso» en su línea de abajo.
+  return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>`;
 }
 
 /* ================= LA FICHA DE UN CLUB ================= */

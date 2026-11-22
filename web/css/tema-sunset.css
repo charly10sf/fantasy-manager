@@ -139,7 +139,6 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]) .nav button.activo { color: #fff; text-shadow: 0 0 10px rgba(255, 46, 151, 0.9); }
 :where(html[data-tema="sunset"]) .nav button.activo .ic { color: #FF7CC0; }
 /* el punto bajo la pestaña, un neón */
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button.activo)::after { box-shadow: 0 0 10px rgba(255, 46, 151, 0.9); }
 
 /* el brillo de fondo de la carga, el error y la cuenta atrás, y el de la camiseta (no la camiseta) */
 :where(html[data-tema="sunset"]) .carga { background: radial-gradient(120% 60% at 50% 18%, rgba(224, 43, 214, 0.2), transparent 62%), var(--negro); }
@@ -467,17 +466,7 @@ html[data-tema="sunset"] {
 /* ---------- la barra de abajo: un punto con el degradado bajo la pestaña activa, que se desliza de una a otra (seis pestañas) ---------- */
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in { position: relative; }
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav button.activo::before { background: transparent; }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button.activo)::after {
-  content: ''; position: absolute; left: 0; bottom: 5px; width: calc(100% / 6); height: 8px; pointer-events: none;
-  background: var(--atardecer-degradado) center / 8px 8px no-repeat;
-  -webkit-mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px); mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px);
-  transition: transform 320ms var(--curva);
-}
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(2).activo)::after { transform: translateX(100%); }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(3).activo)::after { transform: translateX(200%); }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(4).activo)::after { transform: translateX(300%); }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(5).activo)::after { transform: translateX(400%); }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(6).activo)::after { transform: translateX(500%); }
+/* (22 nov, Carlos) sin el circulito bajo la pestaña elegida: ya se resalta sola */
 
 /* ---------- en el ordenador: las tarjetas sacan un borde fino con el degradado al pasar el ratón ---------- */
 @media (hover: hover) {

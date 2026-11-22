@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8q';
+export const VERSION = '0.8r';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,16 @@ export const VERSION = '0.8q';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (22 nov, Carlos, al ver Clubes en el móvil: «quita todo lo de debajo de la tabla, ya se entiende», «el resultado 2-1
+    // sale mal» y «en la barra de abajo sale un circulito que sobra») Tres retoques pequeños. La hora, al publicar
+    v: '0.8r', f: '2026-11-22', h: '10:30', t: 'Clubes, más limpio',
+    cosas: [
+      { tipo: 'mejora', menor: true, d: 'escudo', t: 'La clasificación, sin leyenda', x: 'En Clubes, debajo de la clasificación ya no sale la leyenda de colores: cada club lleva escrito si juega Champions, Europa League o Conference, o si está en descenso.', ir: { v: 'clubes' } },
+      { tipo: 'mejora', menor: true, d: 'escudo', t: 'La barra de abajo, sin la marca', x: 'La pestaña en la que estás ya se resalta: se quita la marca que salía debajo.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'El resultado, en una línea', x: 'En la ficha de un club, en «Jornada a jornada», el resultado se partía en dos líneas cuando el rival tenía el nombre largo.', ir: { v: 'clubes' } },
+    ],
+  },
   {
     // (21-22 nov, Carlos: «haz el prompt rework web»; y al verla: «el once probable que salga en alineación», «pon los suplentes
     // y su porcentaje», «la cara siempre encima del porcentaje») El rework de la web pública: los 20 escudos arriba, el menú de
