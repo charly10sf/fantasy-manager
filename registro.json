@@ -4620,7 +4620,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000,
@@ -9564,13 +9563,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5400,
+   "ok": 5402,
    "fallos": 0,
-   "ejecuciones": 4358,
+   "ejecuciones": 4359,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T22:01:19.634Z"
+   "ultima": "2026-11-22T22:06:13.026Z"
   }
  },
  "ptsDirecto": {
@@ -9804,23 +9803,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:01:32.141Z"
+   "ultimaBien": "2026-11-22T22:06:23.534Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:01:32.141Z"
+   "ultimaBien": "2026-11-22T22:06:23.534Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:01:32.141Z"
+   "ultimaBien": "2026-11-22T22:06:23.534Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:01:32.141Z"
+   "ultimaBien": "2026-11-22T22:06:23.534Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:01:32.141Z"
+   "ultimaBien": "2026-11-22T22:06:23.534Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
