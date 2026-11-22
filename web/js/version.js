@@ -25,8 +25,8 @@ export const VERSION = '0.8r';
 export const NOVEDADES = [
   {
     // (22 nov, Carlos, al ver Clubes en el móvil: «quita todo lo de debajo de la tabla, ya se entiende», «el resultado 2-1
-    // sale mal» y «en la barra de abajo sale un circulito que sobra») Tres retoques pequeños. La hora, al publicar
-    v: '0.8r', f: '2026-11-22', h: '10:30', t: 'Clubes, más limpio',
+    // sale mal» y «en la barra de abajo sale un circulito que sobra») Tres retoques pequeños
+    v: '0.8r', f: '2026-11-22', h: '11:02', t: 'Clubes, más limpio',
     cosas: [
       { tipo: 'mejora', menor: true, d: 'escudo', t: 'La clasificación, sin leyenda', x: 'En Clubes, debajo de la clasificación ya no sale la leyenda de colores: cada club lleva escrito si juega Champions, Europa League o Conference, o si está en descenso.', ir: { v: 'clubes' } },
       { tipo: 'mejora', menor: true, d: 'escudo', t: 'La barra de abajo, sin la marca', x: 'La pestaña en la que estás ya se resalta: se quita la marca que salía debajo.' },
