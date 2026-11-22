@@ -190,12 +190,14 @@ const MEDIOS = ['defensa central', 'futbolfantasy', 'jornada perfecta', 'comunia
   'futbol emotion', 'tribuna deportiva'];
 const MEDIOS_TODO = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'eldesmarque', 'el desmarque', 'superdeporte', 'sportyou', 'cope deportes'];
 // (22 nov, Carlos: «las 3 últimas no son noticias») lo que no es una noticia: un partido en directo o minuto a minuto,
-// las páginas para verlo (DAZN: «Watch … Live Stream Online») y las de a qué hora y dónde se ve
+// las páginas para verlo (DAZN: «Watch … Live Stream Online» o solo «Alavés - Deportivo LALIGA EA SPORTS»), las de a qué
+// hora y dónde se ve y las de apuestas
 const NO_NOTICIA = ['en directo', 'en vivo', 'minuto a minuto', 'live', 'stream', 'streaming', 'watch', 'donde ver', 'como ver', 'a que hora',
-  'horario y donde', 'horario y tv', 'por television', 'por tv', 'en que canal', 'que canal'];
+  'horario y donde', 'horario y tv', 'por television', 'por tv', 'en que canal', 'que canal', 'cuotas', 'apuestas'];
 const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
 /** el titular no es una noticia (un directo, dónde verlo) */
-export const noEsNoticia = (titulo) => { const t = ` ${norm(titulo)} `; return tiene(t, NO_NOTICIA) || /^ directo | directo $/.test(t); };
+export const noEsNoticia = (titulo) => { const t = ` ${norm(titulo)} `; return tiene(t, NO_NOTICIA) || /^ directo | directo $/.test(t)
+  || /^[^:|,.!?¿¡]+ - [^:|,.!?¿¡]+ LALIGA EA SPORTS$/.test(String(titulo || '').trim()); };
 /** el titular viene de un medio deportivo o de fútbol */
 export const medioFutbol = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS.includes(f) || / (futbol|fichaj)/.test(` ${f}`)); };
 const medioDeportes = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS_TODO.includes(f) || / deport/.test(` ${f}`)); };
