@@ -1902,6 +1902,13 @@
     "extra": 0,
     "jugador": "Ante Budimir"
    }
+  },
+  {
+   "clave": "onces|127",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124581580845052262",
+   "t": "2026-11-22T19:11:36.746Z"
   }
  ],
  "estados": {
@@ -2987,7 +2994,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
-   "SPORT|136726389": 1795364350000
+   "SPORT|136726389": 1795364350000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000
   },
   "hechos": [
    {
@@ -3670,7 +3678,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4225,6 +4233,10 @@
     "e": "out_of_league",
     "t": 0
    },
+   "3039": {
+    "e": "ok",
+    "t": 0
+   },
    "3040": {
     "e": "ok",
     "t": 0
@@ -4520,10 +4532,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-21",
-  "n": 4,
-  "ok": 2,
-  "mal": 2
+  "dia": "2026-11-22",
+  "n": 1,
+  "ok": 0,
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -4588,10 +4600,6 @@
  "recientes": {
   "onces": [
    {
-    "t": "2026-11-21T16:40:45.136Z",
-    "texto": "👀 Valles es titular en la portería del Betis, y eso es una buena noticia para quien lo tenga: es el que más puntos da de su equipo.\n\nEn el Sánchez-Pizjuán, el Sevilla y el Betis salen con el mismo 4-2-3-1 y sin ninguna novedad. Fofana, el que más puntúa del Sevilla, también está en el once, en el centro del campo."
-   },
-   {
     "t": "2026-11-21T19:01:32.482Z",
     "texto": "ℹ️ Onces confirmados del Real Madrid-Celta. Sin sorpresas: salen los onces que se esperaban. El Madrid ⚪ sale con 4-4-2 y el Celta con 3-4-3. Empieza hoy a las 21:00."
    },
@@ -4606,6 +4614,10 @@
    {
     "t": "2026-11-22T16:31:24.563Z",
     "texto": "👀 Sin sorpresas en El Sadar: Budimir, el cisne de los Balcanes, sale de titular en el Osasuna 🐂 y Niño hace lo propio en el Málaga 🐟, así que quien los tenga ya puede relajarse.\n\nEl Osasuna sale con un 4-2-3-1 y el Málaga, con un 3-5-2. Falta una hora o así para el partido."
+   },
+   {
+    "t": "2026-11-22T19:11:36.749Z",
+    "texto": "ℹ️ Onces confirmados del Getafe-Atlético. Ni un cambio raro en los dos onces. El Getafe sale con 4-4-2 y el Atleti con 4-2-3-1. Empieza hoy a las 21:00."
    }
   ],
   "final": [
@@ -9414,13 +9426,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5337,
+   "ok": 5339,
    "fallos": 0,
-   "ejecuciones": 4323,
+   "ejecuciones": 4324,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T19:06:13.329Z"
+   "ultima": "2026-11-22T19:11:16.447Z"
   }
  },
  "ptsDirecto": {
@@ -9636,27 +9648,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:06:20.782Z"
+   "ultimaBien": "2026-11-22T19:11:43.374Z"
   }
  },
  "avisos": [
