@@ -1688,6 +1688,36 @@
    "jornada": 13,
    "id": "2124473412961866069",
    "t": "2026-11-22T12:01:47.528Z"
+  },
+  {
+   "clave": "directo|128|Tajon Buchanan|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124490929213952226",
+   "t": "2026-11-22T13:11:23.700Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "128",
+    "equipo": "102",
+    "min": 5,
+    "extra": 0,
+    "jugador": "Tajon Buchanan"
+   }
+  },
+  {
+   "clave": "directo|128|Tani Oluwaseyi|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124490941260030411",
+   "t": "2026-11-22T13:11:26.654Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "128",
+    "equipo": "102",
+    "min": 7,
+    "extra": 0,
+    "jugador": "Tani Oluwaseyi"
+   }
   }
  ],
  "estados": {
@@ -4423,16 +4453,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 17,
-   "redactar": 6,
+   "redactar": 9,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 124275,
-  "salida": 8656,
-  "cacheLee": 2903,
-  "cacheEscribe": 8709,
-  "dolares": 0.218456,
+  "entrada": 129241,
+  "salida": 9041,
+  "cacheLee": 24167,
+  "cacheEscribe": 19341,
+  "dolares": 0.260944,
   "reservado": 0
  },
  "recientes": {
@@ -4570,14 +4600,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T18:46:20.582Z",
-    "texto": "⚽ Antony la mete en el 50' y el Betis pasa por delante en el Sánchez-Pizjuán: 0-1 contra el Sevilla.\n\nEl brasileño estrena su cuenta en Liga, Champions o Copa del Rey y ya suma 6 puntos. Isco, con la asistencia, lleva 4 por ahora."
-   },
-   {
-    "t": "2026-11-21T19:26:23.293Z",
-    "texto": "⚽ ¡EN EL 90+1! Kike Salas la cuelga desde unos 22 metros y el Sevilla empata en el Sánchez-Pizjuán: 1-1 contra el Betis.\n\nEl central ya suma 7 puntos y llega en racha tras tres jornadas seguidas puntuando fuerte. Isaac pone el pase y se lleva 3 por ahora."
-   },
-   {
     "t": "2026-11-21T20:16:18.181Z",
     "texto": "⚽ Gol de Pablo Durán y el Celta se adelanta en el 6'. Real Madrid 0-1 Celta. Apenas habían pasado unos minutos. Asistencia de Williot, con 4 puntos de momento. Pablo Durán ya suma 4 puntos."
    },
@@ -4588,6 +4610,14 @@
    {
     "t": "2026-11-21T21:54:56.492Z",
     "texto": "⚽ Gol de Carlos Espí y el Real Madrid le da la vuelta en el 85'. Real Madrid 2-1 Celta. Ya en el tramo final. El delantero ya va por 5 puntos."
+   },
+   {
+    "t": "2026-11-22T13:11:23.702Z",
+    "texto": "⚽ ¡GOLAZO DE LEJOS! Buchanan la cuelga desde unos 25 metros y el Villarreal 🚢 se adelanta en el 5' en el campo del Barça: 0-1.\n\nEl canadiense ya suma 5 puntos por ahora y llega en racha, con tres jornadas seguidas puntuando fuerte."
+   },
+   {
+    "t": "2026-11-22T13:11:26.656Z",
+    "texto": "⚽ Oluwaseyi la mete en el 7' y el Villarreal 🚢 se pone 0-2 en el campo del Barça.\n\nEl canadiense ya suma 5 puntos y es su cuarto gol entre Liga, Champions y Copa del Rey. El pase es de Moleiro, con 4 por ahora."
    }
   ],
   "novedades": [
@@ -9061,17 +9091,49 @@
    "w": "2026-11-21T21:52:09Z",
    "f": "2026-11-21T21:54:52.438Z",
    "rf": "87:39"
+  },
+  "fm|128|1338740|7": {
+   "j": "Tani Oluwaseyi",
+   "m": "7'",
+   "f": "2026-11-22T13:11:12.379Z",
+   "rf": "8:01",
+   "casado": true
+  },
+  "fm|128|1026135|5": {
+   "j": "Tajon Buchanan",
+   "m": "5'",
+   "f": "2026-11-22T13:11:12.379Z",
+   "rf": "8:01",
+   "casado": true
+  },
+  "directo|128|Tajon Buchanan|gol1": {
+   "j": "Tajon Buchanan",
+   "m": "5'",
+   "e": "2026-11-22T13:11:12.379Z",
+   "re": "8'",
+   "w": "2026-11-22T13:07:20Z",
+   "f": "2026-11-22T13:11:12.379Z",
+   "rf": "8:01"
+  },
+  "directo|128|Tani Oluwaseyi|gol1": {
+   "j": "Tani Oluwaseyi",
+   "m": "7'",
+   "e": "2026-11-22T13:11:12.379Z",
+   "re": "8'",
+   "w": "2026-11-22T13:09:27Z",
+   "f": "2026-11-22T13:11:12.379Z",
+   "rf": "8:01"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5198,
+   "ok": 5200,
    "fallos": 0,
-   "ejecuciones": 4250,
+   "ejecuciones": 4251,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T13:06:18.297Z"
+   "ultima": "2026-11-22T13:11:12.379Z"
   }
  },
  "ptsDirecto": {
@@ -9176,6 +9238,24 @@
    "g": 1,
    "a": 0,
    "t": 1795298092438
+  },
+  "13|128|2556": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795353072379
+  },
+  "13|128|2761": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795353072379
+  },
+  "13|128|3086": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795353072379
   }
  },
  "golesAnulados": {
@@ -9191,27 +9271,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:06:23.692Z"
+   "ultimaBien": "2026-11-22T13:11:31.915Z"
   }
  },
  "avisos": [
