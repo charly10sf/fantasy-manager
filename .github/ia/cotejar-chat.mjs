@@ -178,7 +178,8 @@ export function cotejar(r) {
   // (la primera frase, si la pregunta va de ese jugador: «Sí, acéptala ahora.» no lo nombra)
   const enPregunta = (n) => sinT(r.pregunta || '').includes(sinT(n).split(' ').pop());
   for (const a of aconseja) for (const f of [...new Set([...frasesDe(a.j), ...(enPregunta(a.j) && fr[0] ? [fr[0]] : [])])]) {
-    if (/ESPERAR|NO/.test(a.v) && /(ac[eé]ptal[ao]|acepta (ya|la oferta)|aceptar[ií]a|aceptarla)/i.test(f) && !/\bno\b/i.test(f.split(/[,;]/)[0])) marcas.push(`contradice a la app: manda aceptar la oferta por ${a.j} (la app: ${a.v})`);
+    // (22 nov) «si aceptas la oferta, tendrías…» cuenta lo que pasaría, no manda aceptarla
+    if (/ESPERAR|NO/.test(a.v) && /(ac[eé]ptal[ao]|acepta (ya|la oferta)|aceptar[ií]a|aceptarla)/i.test(f) && !/\bno\b/i.test(f.split(/[,;]/)[0]) && !/\b(si|aunque|cuando) (la |lo |no )?(acept|quier)/i.test(f)) marcas.push(`contradice a la app: manda aceptar la oferta por ${a.j} (la app: ${a.v})`);
     if (/ACEPTAR/.test(a.v) && /\b(no (la )?aceptes|rech[aá]zal[ao]|espera)\b/i.test(f)) marcas.push(`contradice a la app: no acepta la oferta por ${a.j} (la app: ${a.v})`);
   }
   // contra el plan: lo que le dice que haga hoy (sus notas) y no está en el plan de la app

@@ -775,6 +775,8 @@ function notaDicho(corr, pid, D, M, { importe = null, n = null, plan = null, aho
     const m = (M.mercado || []).find((y) => y.pid === pid) || {};
     const op = plan && (plan.ops || []).find((y) => y.pid === pid && ['pujar', 'comprar'].includes(y.accion) && y.importe);
     o.importe = num(importe) || (op && num(op.importe)) || num(m.puja) || num(m.precio) || null;
+    // (LaLiga no deja pujar por debajo del precio de salida: si dice menos, es que redondea)
+    if (o.importe && num(m.precio) > o.importe) o.importe = num(m.precio);
     o.caduca = M.cierreMercado && M.cierreMercado > ahora ? M.cierreMercado + 30 * MIN : ahora + DURA_DICHO.puja;
   }
   o.texto = dichoIA(o, M);
@@ -3163,7 +3165,7 @@ const ORDENES = [
 
 // (22 nov, Carlos: «Entendido, lo quito del plan… para la próxima vez el plan no debe depender de un blindaje», y el plan
 // rehecho mandó blindar) la IA no puede prometer que apunta, quita o tendrá en cuenta algo si no se ha guardado nada
-const PROMETE = /\b(lo|la|los|las|te lo|me lo) (apunto|anoto|quito|saco|elimino|tendre en cuenta|recordare|dejo apuntado)\b|\b(queda|quedan|lo dejo|ya esta) (apuntad|anotad)[oa]s?\b|\b(apuntado|anotado|tomo nota)\b|\b(lo|la|los) (quito|saco) del plan\b|\bfuera del plan\b|\bpara la proxima vez\b|\bla proxima vez que (rehagas|hagas|pidas)\b|\bel (proximo )?plan (ya )?no (debe|debera|va a|contara|dependera)\b/;
+const PROMETE = /\b(lo|la|los|las|te lo|me lo) (apunto|anoto|quito|saco|elimino|tendre en cuenta|tengo en cuenta|recordare|dejo apuntado)\b|\b(queda|quedan|lo dejo|ya esta) (apuntad|anotad)[oa]s?\b|\b(apuntado|anotado|tomo nota)\b|\b(quito|saco|elimino|fuera)\b[^.]{0,60}\bdel plan\b|\bpara la proxima vez\b|\bla proxima vez que (rehagas|hagas|pidas)\b|\bel (proximo )?plan (ya )?no (debe|debera|va a|contara|dependera)\b/;
 export const prometeApuntar = (t) => PROMETE.test(norm(t || ''));
 export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apuntado = null } = {}) {
   let t = sinWebsChat(sinModelos(texto));
@@ -3552,7 +3554,8 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
     if (rec.length) dichoAhora += `\nLO QUE ACABA DE CONTARTE Y LA APP YA HA APUNTADO (los datos de arriba ya van así; desde ahora el plan, Hoy y los avisos lo cuentan): ${rec.map((n) => n.texto).join('; ')}. Dile en media frase que queda apuntado y que el plan ya lo tiene en cuenta (lo ve en Hoy, en «Lo que me has dicho», y ahí lo puede quitar). No digas que lo quitas tú del plan ni «la próxima vez»: ya está hecho.\n`;
     if (pend.length) dichoAhora += `\nHA DICHO ${pend.map((x) => (x.corr === 'no-vender' ? 'que no vende a un jugador' : x.corr === 'puja' ? 'que ya ha hecho una puja' : 'que ya ha blindado a uno')).join(' y ')} SIN DECIR A QUIÉN: si por la conversación está claro, pon su nombre exacto en «jugador» al apuntarlo; si no, pregúntale a cuál se refiere.\n`;
   } catch (e) { dichoAhora = ''; }
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '');
+  const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;

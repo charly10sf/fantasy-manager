@@ -140,11 +140,14 @@ const PREP = `const yo = S.D.yo.teamId;
     // (c2) «ya he pujado por Y (12,5 M)»: uno libre del mercado sin puja suya
     const libre = M.mercado.find((m) => m.tipo === 'liga' && !m.miPuja && !M.dueno[m.pid]);
     const pujas0 = M.misPujas;
-    const n2 = I.apuntarDicho(`Ya he pujado 12,5 M por ${libre.j.nombre}`, D, M, R1);
+    // (una cifra por debajo de su precio de salida no puede ser: se deja en el precio de salida)
+    const bajo = I.apuntarDicho(`Ya he pujado 0,1 M por ${libre.j.nombre}`, D, M, R1);
+    const imp = Math.ceil(libre.precio / 1e6) + 2;
+    const n2 = I.apuntarDicho(`Ya he pujado ${imp} M por ${libre.j.nombre}`, D, M, R1);
     M = an();
     const R2 = Pm.planDeHoy(D, M, c);
     const m2 = M.mercado.find((m) => m.pid === libre.pid);
-    out.puja = { nota: n2.map((n) => `${n.corr}:${n.importe}`).join(), motor: m2.miPuja, dicha: !!m2.pujaDicha, suma: M.misPujas - pujas0, plan: R2.ops.filter((o) => !o.descartada && o.accion === 'pujar' && o.pid === libre.pid && !o.ya).length,
+    out.puja = { imp: imp * 1e6, bajo: bajo.length === 1 && bajo[0].importe === libre.precio, nota: n2.map((n) => `${n.corr}:${n.importe}`).join(), motor: m2.miPuja, dicha: !!m2.pujaDicha, suma: M.misPujas - pujas0, plan: R2.ops.filter((o) => !o.descartada && o.accion === 'pujar' && o.pid === libre.pid && !o.ya).length,
       ctx: /MIS PUJAS YA PUESTAS[^\n]*\(me ha dicho él que ya la ha hecho\)/.test(I.contexto(D, M, c, { chat: true })), intacto: !D.mercado.find((m) => m.pid === libre.pid).miPuja, bloque: (M.dicho || []).map((n) => n.txt).join(' | ') };
     // (d) «a ese no lo vendo», sin nombre: manda el jugador que apunta la IA si es suyo
     const otro = M.mias.find((x) => x.pid !== jv.id && x.j.pos !== 5);
@@ -155,9 +158,10 @@ const PREP = `const yo = S.D.yo.teamId;
   ok(r.noVender.plan === 0 && r.noVender.cat === 0 && !r.noVender.inercia && r.noVender.hoy === 0, `ni el plan, ni el catálogo de la IA, ni Hoy, ni los avisos lo venden${r.habiaVenta ? ' (antes el plan lo vendía)' : ''}`);
   ok(/NO SE VENDE \(LO HA DICHO ÉL\)/.test(r.noVender.chat) && r.noVender.linea, 'el chat lo lee: «NO SE VENDE (LO HA DICHO ÉL)» y en su línea de la plantilla');
   ok(r.noVender.cuadra === 'descartada:true', `un plan guardado que lo vendía: la venta sale descartada con su porqué (${r.noVender.cuadra})`);
-  ok(r.puja.nota === 'puja:12500000' && r.puja.motor === 12500000 && r.puja.dicha && r.puja.suma === 12500000 && r.puja.plan === 0 && r.puja.ctx, `«Ya he pujado 12,5 M por…»: se da por hecha (${r.puja.motor}), cuenta en lo comprometido y no se vuelve a mandar`);
+  ok(r.puja.nota === `puja:${r.puja.imp}` && r.puja.motor === r.puja.imp && r.puja.dicha && r.puja.suma === r.puja.imp && r.puja.plan === 0 && r.puja.ctx, `«Ya he pujado N M por…»: se da por hecha (${r.puja.motor}), cuenta en lo comprometido y no se vuelve a mandar`);
+  ok(r.puja.bajo, 'una puja dicha por debajo del precio de salida se deja en el precio de salida');
   ok(r.puja.intacto, 'lo que llegó de LaLiga no se toca: la puja dicha solo vive en el análisis');
-  ok(/no lo vendes/.test(r.noVender.bloque) && /Ya has pujado por .* \(12,5/.test(r.puja.bloque), `el bloque de Hoy: «${r.puja.bloque}»`);
+  ok(/no lo vendes/.test(r.noVender.bloque) && /Ya has pujado por .* \(\d/.test(r.puja.bloque), `el bloque de Hoy: «${r.puja.bloque}»`);
 
   // (d) por el chat de verdad (con la IA de mentira, que apunta al jugador)
   MIO = r.otro;
