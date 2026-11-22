@@ -4396,7 +4396,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
    "SPORT|136630245": 1795104774000,
    "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
@@ -9157,13 +9156,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5240,
+   "ok": 5242,
    "fallos": 0,
-   "ejecuciones": 4271,
+   "ejecuciones": 4272,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:51:10.953Z"
+   "ultima": "2026-11-22T14:56:11.889Z"
   }
  },
  "ptsDirecto": {
@@ -9325,27 +9324,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:51:15.229Z"
+   "ultimaBien": "2026-11-22T14:56:17.437Z"
   }
  },
  "avisos": [
