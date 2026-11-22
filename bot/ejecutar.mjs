@@ -157,6 +157,8 @@ const enHorarioCaidas = !ventanas || forzar || (horaMadrid >= hDesde && horaMadr
 let abortar = false, subidaRota = false;   // si X rechaza una subida de imagen, no se intenta más en esta ejecución
 // (rechazados: los que no pasan el validador; no son un fallo de la ejecución ni gastan los avisos de fallo de Telegram: M15)
 let generados = 0, fallos = 0, publicados = 0, previstos = 0, rechazados = 0;
+const volcados = [];
+if (arg('volcar')) process.on('exit', () => { try { writeFileSync(arg('volcar'), JSON.stringify({ tuits: volcados, jugadores: (jugadores || []).map((j) => ({ nickname: j.nickname })), equipos }, null, 1)); } catch (e) { console.log(`(volcar) ${e.message}`); } });
 
 for (const q of quienes) {
   if (abortar) break;
@@ -180,6 +182,9 @@ for (const q of quienes) {
   // los equipos con otro nombre cada vez y con su emoji (Carlos, 6 nov 09:19: «el Madrid, los blancos…, menos robótico»); lo que ya
   // no cabe con ellos sale como estaba (lib/texto.mjs, variarEquipos). Los tweets del directo, tal cual: llevan prisa.
   if (q !== 'directo' && config.apodos !== false) for (const t of tweets) if (t && t.texto) t.texto = variarEquipos(t.texto, { semilla: String(t.clave || q) });
+  // (22 nov) --volcar=archivo.json: los tuits con sus hechos tal como salen de cada tipo, antes de la IA (para las pruebas de redacción
+  // con la guía de antes y la nueva: .github/workflows en la rama de pruebas y bot/prueba/ab-redaccion.mjs)
+  if (arg('volcar')) volcados.push(...tweets.filter((t) => t && t.hechos).map((t) => JSON.parse(JSON.stringify({ tipo: t.tipo || q, modulo: q, clave: t.clave, jornada: t.jornada, texto: t.texto, hechos: t.hechos, numeros: t.numeros || [] }))));
   // la IA redacta desde los hechos los que van a salir en esta ejecución (lib/redaccion.mjs; solo con Claude y `redactar.activo` o
   // BOT_REDACTAR=1); lo que no pasa su validador sale con la plantilla
   const vanASalir = (t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok';
