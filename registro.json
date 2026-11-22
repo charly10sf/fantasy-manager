@@ -2827,7 +2827,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/idea-real-madrid-recuperar-nico-paz-proximo-verano-20261119_3478703.html": 1795119011000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253088/lamine-yamal-no-le-basta-ganar-mundial.html": 1795153500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253087/bastoni-lento-verano-tampoco-sera-bolt-enero.html": 1795147200000,
@@ -9464,17 +9463,24 @@
    "w": "2026-11-22T17:49:52Z",
    "f": "2026-11-22T17:51:12.307Z",
    "rf": "20:56"
+  },
+  "fm|127|942372|10": {
+   "j": "Álex Baena",
+   "m": "10'",
+   "f": "2026-11-22T20:11:11.668Z",
+   "rf": "10:27",
+   "avisado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5354,
+   "ok": 5356,
    "fallos": 0,
-   "ejecuciones": 4335,
+   "ejecuciones": 4336,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T20:06:11.633Z"
+   "ultima": "2026-11-22T20:11:11.668Z"
   }
  },
  "ptsDirecto": {
@@ -9690,27 +9696,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:06:17.955Z"
+   "ultimaBien": "2026-11-22T20:11:19.054Z"
   }
  },
  "avisos": [
