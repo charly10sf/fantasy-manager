@@ -2262,7 +2262,7 @@
   "2923": "ok",
   "2924": "ok",
   "2925": "out_of_league",
-  "2926": "ok",
+  "2926": "injured",
   "2929": "out_of_league",
   "2930": "ok",
   "2932": "ok",
@@ -4397,7 +4397,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
    "SPORT|136630245": 1795104774000,
    "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
@@ -9158,13 +9157,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5238,
+   "ok": 5240,
    "fallos": 0,
-   "ejecuciones": 4270,
+   "ejecuciones": 4271,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:46:17.221Z"
+   "ultima": "2026-11-22T14:51:10.953Z"
   }
  },
  "ptsDirecto": {
@@ -9326,27 +9325,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:46:22.576Z"
+   "ultimaBien": "2026-11-22T14:51:15.229Z"
   }
  },
  "avisos": [
