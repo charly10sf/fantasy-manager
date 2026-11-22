@@ -4562,12 +4562,13 @@
    "SPORT|136700224": 1795327253000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000,
-   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000
+   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
   "espera": {}
@@ -9417,13 +9418,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5309,
+   "ok": 5311,
    "fallos": 0,
-   "ejecuciones": 4309,
+   "ejecuciones": 4310,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:56:11.441Z"
+   "ultima": "2026-11-22T18:01:11.812Z"
   }
  },
  "ptsDirecto": {
@@ -9639,27 +9640,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:56:20.193Z"
+   "ultimaBien": "2026-11-22T18:01:24.781Z"
   }
  },
  "avisos": [
