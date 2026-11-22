@@ -34,6 +34,7 @@ export const NOVEDADES = [
       { tipo: 'nuevo', d: 'chat', t: 'Lo que le dices cuenta en el plan', x: 'Si en Pregunta le cuentas que no te quedan blindajes, que a un jugador no lo vendes o que ya has hecho una puja, la app lo tiene en cuenta desde ese momento: el plan no te manda blindar, no te propone venderlo y no te repite la puja. Hoy, Equipo, las alarmas y la IA dicen lo mismo.', ir: { v: 'ia' } },
       { tipo: 'nuevo', d: 'nota', t: '«Lo que me has dicho», dentro del plan', x: 'En Hoy, dentro del plan, sale lo que le has contado y cuenta ese día, con hasta cuándo vale. Cada cosa se quita con su ×.', ir: { v: 'hoy' } },
       { tipo: 'arreglo', d: 'escudo', t: 'Los blindajes que te quedan', x: 'La app solo contaba los blindajes que habías puesto en los últimos días: si los dos eran de antes, creía que te quedaban y el plan te mandaba blindar.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', menor: true, d: 'chat', t: 'Respuestas más cortas', x: 'En Pregunta, la IA se va menos por las ramas: casi todas las respuestas caben ya en cinco frases, también cuando preguntas por varios jugadores a la vez.', ir: { v: 'ia' } },
       { tipo: 'arreglo', d: 'chat', t: 'La IA no promete lo que no apunta', x: 'Si contesta que lo apunta o que lo tendrá en cuenta y no se ha guardado nada, la app te lo dice debajo de la respuesta.', ir: { v: 'ia' } },
     ],
   },
