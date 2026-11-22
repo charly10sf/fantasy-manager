@@ -1294,8 +1294,11 @@ function numerosQ(Q) {
   const segDe = (x, d, i) => Number(((x.segDias || {})[d]) || (i === 0 ? x.segHoy : 0)) || 0;
   // cada día, del más viejo a hoy: cuántos abren la app, el tiempo entre todos y por persona, y las altas
   const dias = ds.map((d, i) => {
+    // activos: los que tienen tiempo ese día y los que abrieron ese día por última vez aunque su tiempo no llegara
+    // (Carlos, 22 nov: la cifra «hoy» decía 49 y la barra 47; eran dos altas nuevas que salieron antes de mandar el tiempo)
     const act = lista.filter((x) => segDe(x, d, i) > 0), seg = act.reduce((t, x) => t + segDe(x, d, i), 0);
-    return { et: etQ(d, i), hoy: i === 0, activos: act.length, seg, media: act.length ? seg / act.length : 0, altas: reg.filter((x) => x.primera && diaDe(x.primera) === d).length };
+    const abren = act.length + lista.filter((x) => !(segDe(x, d, i) > 0) && diaDe(x.ultima) === d).length;
+    return { et: etQ(d, i), hoy: i === 0, activos: abren, seg, media: act.length ? seg / act.length : 0, altas: reg.filter((x) => x.primera && diaDe(x.primera) === d).length };
   }).reverse();
   const minPlay = playMinimo(lista);
   const problemas = {};

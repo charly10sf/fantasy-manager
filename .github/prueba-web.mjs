@@ -1110,11 +1110,28 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   const ok = r.n >= 16 && !malos.length && /su conexión no llega/.test(bryan) && /Se arregla solo/.test(bryan) && /Google Play/.test(bryan) && /Se arregla solo/.test(dos);
   if (!ok) mal(`Quién usa la app, qué le pasa: ${JSON.stringify({ n: r.n, malos, bryan, dos }).slice(0, 500)}`);
   else bien(`Quién usa la app, qué le pasa: ${r.n} casos con qué pasa y si se arregla solo, sin nada que decirle al usuario`);
+  // (22 nov, Carlos: «hoy» 49 y la barra de hoy 47) la barra de hoy cuenta también al que abrió y se fue sin mandar su tiempo
+  const h = await page.evaluate(async () => {
+    const { quienUsaHTML } = await import('./js/hojas.js');
+    const { diaDe } = await import('./js/util.js');
+    const ahora = Date.now(), hoy = diaDe(ahora);
+    const lista = [
+      { nombre: 'Con tiempo', ultima: ahora - 3600e3, primera: ahora - 9 * 86400e3, segHoy: 600, segDias: { [hoy]: 600 } },
+      { nombre: 'Alta sin tiempo', ultima: ahora - 3000e3, primera: ahora - 3000e3, segHoy: 0, segDias: {} },
+    ];
+    const div = document.createElement('div');
+    div.innerHTML = quienUsaHTML({ quien: { lista, ahora, registro: [], tab: 'hoy' } });
+    const kpi = [...div.querySelectorAll('.q-kpi > div')].find((e) => e.querySelector('span')?.textContent === 'hoy')?.querySelector('b')?.textContent;
+    const barra = div.querySelector('.vg-v.hoy')?.textContent;
+    return { kpi, barra };
+  });
+  if (h.kpi !== '2' || h.barra !== '2') mal(`Quién usa la app: «hoy» y la barra de hoy no cuadran: ${JSON.stringify(h)}`);
+  else bien('Quién usa la app: la cifra «hoy» y la barra de hoy dicen lo mismo (2), también con un alta que no mandó su tiempo');
   if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 
-// 21: (19 nov, Carlos) una versión con todos: 'web' se presenta sola a los de la web y el iPhone, no en la app de Android;
+// 21:(19 nov, Carlos) una versión con todos: 'web' se presenta sola a los de la web y el iPhone, no en la app de Android;
 // su botón con ir.accion abre lo mismo que ese data-accion (la 0.8h: «Invitar a un amigo» abre la hoja de invitar). Con
 // «aviso» (20 nov) sale una tarjeta en el centro en vez de la pantalla entera, y se cierra al tocar el botón
 {
