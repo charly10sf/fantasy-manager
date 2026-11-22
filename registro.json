@@ -2651,7 +2651,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
@@ -9188,13 +9187,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5246,
+   "ok": 5247,
    "fallos": 0,
-   "ejecuciones": 4275,
+   "ejecuciones": 4276,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T15:11:16.558Z"
+   "ultima": "2026-11-22T15:16:14.850Z"
   }
  },
  "ptsDirecto": {
@@ -9356,27 +9355,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:11:22.773Z"
+   "ultimaBien": "2026-11-22T15:16:18.550Z"
   }
  },
  "avisos": [
