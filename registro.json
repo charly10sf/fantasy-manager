@@ -1924,6 +1924,20 @@
     "extra": 2,
     "jugador": "Alejandro Catena"
    }
+  },
+  {
+   "clave": "final|125",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124590351583166596",
+   "t": "2026-11-22T19:46:27.878Z"
+  },
+  {
+   "clave": "mvp|125",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124590402606919795",
+   "t": "2026-11-22T19:46:39.961Z"
   }
  ],
  "estados": {
@@ -3011,7 +3025,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261122/1004254231/comunicado-villarreal-desmintiendo-operacion-pepe-culpa-eclipse.html": 1795375479000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254128/rodri-dio-instrucciones-eric-acerco-grada-hablar.html": 1795373560000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000,
+   "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000
   },
   "hechos": [
    {
@@ -3694,7 +3709,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -4605,16 +4620,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 51,
-   "revisar": 19,
+   "redactar": 55,
+   "revisar": 22,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 626352,
-  "salida": 21212,
-  "cacheLee": 127621,
-  "cacheEscribe": 55120,
-  "dolares": 1.410642,
+  "entrada": 685201,
+  "salida": 22335,
+  "cacheLee": 133427,
+  "cacheEscribe": 58023,
+  "dolares": 1.547408,
   "reservado": 0
  },
  "recientes": {
@@ -4642,10 +4657,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-21T17:41:35.611Z",
-    "texto": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima y Copete se va a 15 puntos fantasy. Tárrega y Dimitrievski le siguen con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Premio para quien confió en Copete"
-   },
-   {
     "t": "2026-11-21T19:56:33.010Z",
     "texto": "🏁 El Sevilla rescata un empate ante el Betis en el Sánchez-Pizjuán: 1-1, con gol de Kike Salas ya en el 90+1'.\n\nAntony había puesto por delante al Betis en el 50' y acaba como el mejor de los dos equipos, con 14 puntos y muy lejos de lo que suele dar. Kike Salas cierra con 13 y casi dobla su media de 6,6. Isco, el Mago, también cumple con 9.\n\nLa parte mala es para quien tenga a Cucho o a Junior: los dos restan 1."
    },
@@ -4660,13 +4671,13 @@
    {
     "t": "2026-11-22T17:41:31.567Z",
     "texto": "🏁 El Racing ⚓ le gana 3-2 a la Real Sociedad en El Sardinero, con dos goles de Zabiri en los primeros ocho minutos.\n\nYassir Zabiri se va a 16 puntos, más del doble de su media de 7,2, y es el mejor de los dos equipos. La Real se levantó del 2-0: Oyarzabal recortó en el 45+1' y Guedes empató en el 60'. Guedes suma 11 y Oyarzabal 10.\n\nEl Racing lo ganó de penalti: Canales, en el 68'."
+   },
+   {
+    "t": "2026-11-22T19:46:27.881Z",
+    "texto": "🏁 Budimir la mete en el 20' y el Osasuna 🐂 gana 1-0 al Málaga 🐟 en El Sadar. Para los rojillos, que eran 16º, es una victoria que no llegaba desde hacía semanas.\n\nRosier es el mejor de los dos equipos, con 15 puntos: más del triple de lo que suele dar. Budimir se queda en 12 y Boyomo en 11, que también triplica su media. Del Málaga, 20º antes de jugar, solo puntúa Puga, con 7 aunque pierde.\n\nCatena vio la roja en el 90+2'."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-21T17:32:02.023Z",
-    "texto": "⭐ Copete es el mejor del Rayo ⚡-Valencia 🦇 con 15 puntos: el defensa marcó de cabeza el único gol, el 0-1 en el 41', y el Valencia se lleva los tres puntos de Vallecas.\n\nHace más del doble de su media y vale solo 689 K. En la jornada 14 el Valencia recibe al Osasuna 🐂: para un defensa tan barato, es de los que apetece fichar."
-   },
    {
     "t": "2026-11-21T19:51:47.286Z",
     "texto": "⭐ Antony se lleva el MVP del derbi: 14 puntos, más del doble de lo que suele hacer, tras abrir el marcador en el 50'. Kike Salas lo empató en el descuento y el Sánchez-Pizjuán se quedó en 1-1.\n\nVale 34,9 M y la jornada 14 la juega en casa contra el Rayo ⚡. Si lo tienes, no hay motivo para soltarlo."
@@ -4682,6 +4693,10 @@
    {
     "t": "2026-11-22T17:46:40.697Z",
     "texto": "⭐ Yassir Zabiri es el MVP del Racing ⚓ 3-2 Real Sociedad: marcó el 1-0 en el 6' y el 2-0 en el 8', y se va a 16 puntos.\n\nPuntúa más del doble de lo que suele y vale 61,7 M. El viernes a las 21:00 visita al Levante 🐸, y con este partido, si lo tienes, no se toca."
+   },
+   {
+    "t": "2026-11-22T19:46:39.964Z",
+    "texto": "⭐ Rosier sale como el mejor del Osasuna 🐂-Málaga 🐟: 15 puntos, más del triple de lo que suele sacar. El Osasuna ganó 1-0 en El Sadar con gol de Budimir en el 20'.\n\nEl defensa vale 1,2 M y en la jornada 14 visita al Valencia 🦇. Una sola buena tarde no cambia su temporada, pero a ese precio da para pensar si necesitas defensa barato."
    }
   ],
   "mercado": [
@@ -9452,13 +9467,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5348,
+   "ok": 5349,
    "fallos": 0,
-   "ejecuciones": 4330,
+   "ejecuciones": 4331,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T19:41:11.035Z"
+   "ultima": "2026-11-22T19:46:11.576Z"
   }
  },
  "ptsDirecto": {
@@ -9674,27 +9689,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:41:17.242Z"
+   "ultimaBien": "2026-11-22T19:47:06.675Z"
   }
  },
  "avisos": [
