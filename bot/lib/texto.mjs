@@ -30,7 +30,9 @@ const RETOQUES = [
   [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${MARC}`, 'gu'), (_, S, v, m) => `${S}e ${TIEMPO(v, PONE)} ${m}`],
 ];
 // los nombres con la inicial con punto que deja la ficha de LaLiga («Y. Zabiri»), sin ella (Carlos, 7 nov: «no siempre C. Romero»)
-RETOQUES.push([/(?<![\p{L}.])\p{Lu}{1,2}\.\s(?:(?:[Dd]e|[Dd]el|[Vv]an|[Dd]i)\s)?\p{Lu}\p{Ll}[\p{L}'’-]*/gu, (m) => sinInicial(m)]);
+// (no un «80,5 M. Su próximo partido…»: la M de millones al final de una frase; la pasada con la IA del 22 nov lo vio)
+const NO_APELLIDO = new Set(['su', 'sus', 'el', 'la', 'los', 'las', 'lo', 'un', 'una', 'en', 'de', 'del', 'ya', 'es', 'se', 'le', 'al', 'no', 'si', 'con', 'por', 'para', 'pero', 'mas', 'más', 'hoy', 'y', 'tras', 'era', 'fue', 'va', 'vale', 'suma', 'lleva', 'cae', 'sube', 'baja']);
+RETOQUES.push([/(?<![\p{L}\p{N}.,])(?<!\d\s)\p{Lu}{1,2}\.\s(?:(?:[Dd]e|[Dd]el|[Vv]an|[Dd]i)\s)?\p{Lu}\p{Ll}[\p{L}'’-]*/gu, (m) => (NO_APELLIDO.has(m.split(/\s+/).pop().toLowerCase()) ? m : sinInicial(m))]);
 // el % a secas, sin «en Fantasy Manager» detrás (Carlos, 9 nov: «suena raro»)
 RETOQUES.push([/(\d\s?% de titularidad),? (?:en|según|de) Fantasy Manager\b/gu, '$1']);
 /** el primer % de un tuit de titularidad con «de titularidad» (Carlos, 6 nov: «un 97 % suelto: falta DE TITULARIDAD»), para lo que

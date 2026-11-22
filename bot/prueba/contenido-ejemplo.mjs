@@ -188,6 +188,8 @@ const rt = [
   ['El Atlético se fue 0-2 del Sánchez-Pizjuán.', 'El Atlético salió del Sánchez-Pizjuán con un 0-2.'],
 ];
 for (const [a, b] of rt) ok(retocar(a) === b, `retocar: «${a}» → «${retocar(a)}»`);
+ok(retocar('Vale 80,5 M. Su próximo partido, el domingo.') === 'Vale 80,5 M. Su próximo partido, el domingo.' && retocar('Vale 716 K. Y. Zabiri marca.') === 'Vale 716 K. Yassir Zabiri marca.', 'la M de millones al final de una frase no es una inicial');
+ok(retocar('Doblete de Y. Zabiri y gol de M. Dituro; C. Romero sigue igual.') === 'Doblete de Yassir Zabiri y gol de Dituro; C. Romero sigue igual.', 'las iniciales fuera, menos en los apellidos que se repiten');
 ok(['Mbappé se va a 16 puntos.', 'Bellingham se va a 13 puntos en el 2-1.', 'Vinícius se va a 74,6 M.', 'El Madrid se va al descanso por delante.'].every((x) => retocar(x) === x), '«se va» con puntos, dinero o sin marcador no se toca');
 for (const [a] of rt) ok(!retocar(a).match(SE_VA_MARCADOR), `después de retocar, «${a}» ya no lleva un marcador que «se va»`);
 // el validador lo rechaza para que la IA lo reescriba (también el pulido)
