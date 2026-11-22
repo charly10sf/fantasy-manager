@@ -197,7 +197,11 @@ const NO_NOTICIA = ['en directo', 'en vivo', 'minuto a minuto', 'live', 'stream'
 const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
 /** el titular no es una noticia (un directo, dónde verlo) */
 export const noEsNoticia = (titulo) => { const t = ` ${norm(titulo)} `; return tiene(t, NO_NOTICIA) || /^ directo | directo $/.test(t)
-  || /^[^:|,.!?¿¡]+ - [^:|,.!?¿¡]+ LALIGA EA SPORTS$/.test(String(titulo || '').trim()); };
+  || /^[^:|,.!?¿¡]+ - [^:|,.!?¿¡]+ LALIGA EA SPORTS$/.test(String(titulo || '').trim())
+  // (22 nov, 20:26, Carlos: «ni ruedas de prensa en directo») la rueda de prensa sin nada contado: «Rueda de prensa de
+  // Simeone: Getafe vs Atlético» es el vídeo; «Rueda de prensa de Flick: confirma la baja de X» sí es noticia
+  || /^rueda de prensa[^:]*(:\s*[^:]+ (vs\.?|-) [^:]+)?$/i.test(String(titulo || '').trim())
+  || /^[^:]+:\s*rueda de prensa (de |del )?[^:,.;!?¿¡«»"]+$/i.test(String(titulo || '').trim()); };
 /** el titular viene de un medio deportivo o de fútbol */
 export const medioFutbol = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS.includes(f) || / (futbol|fichaj)/.test(` ${f}`)); };
 const medioDeportes = (fuente) => { const f = norm(fuente); return !!f && (MEDIOS_TODO.includes(f) || / deport/.test(` ${f}`)); };

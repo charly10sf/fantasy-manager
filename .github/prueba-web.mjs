@@ -1136,10 +1136,14 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
   const { esDeFutbol } = await import(new URL('../web/js/util.js', import.meta.url));
   const fuera = ['Watch CA Osasuna - Málaga CF Live Stream Online | DAZN ES', 'Osasuna - Málaga, en directo: Budimir y Barja acarician el segundo',
     'Atlético - Getafe | Minuto a minuto', 'Dónde ver el Betis - Sevilla: horario y TV', 'DIRECTO | Real Sociedad - Celta',
-    'Deportivo Alavés - RC Deportivo LALIGA EA SPORTS', 'Getafe vs Atlético de Madrid: pronóstico, consejos y cuotas | LaLiga'];
+    'Deportivo Alavés - RC Deportivo LALIGA EA SPORTS', 'Getafe vs Atlético de Madrid: pronóstico, consejos y cuotas | LaLiga',
+    'Getafe CF-Atlético de Madrid: sigue en directo la rueda de prensa de Diego Pablo Simeone previa al partido de LaLiga',
+    'Rueda de prensa de Simeone: Getafe vs Atlético de Madrid', 'Rueda de prensa Hansi Flick: FC Barcelona vs Villareal CF',
+    'Real Madrid - Celta: rueda de prensa de Mourinho'];
   const dentro = ['Gulácsi evita el gol de Dani Olmo con una parada felina', 'El Barça remonta al Villarreal con la vuelta de Olmo y Koundé y la expulsión de Fermín',
     'El Villarreal ficha a un delantero directo desde el Ajax', 'Budimir, el máximo goleador nacional de LaLiga EA Sports',
-    'Alineaciones Real Madrid vs Celta de Vigo hoy: once inicial y banquillo de suplentes'];
+    'Alineaciones Real Madrid vs Celta de Vigo hoy: once inicial y banquillo de suplentes',
+    'Rueda de prensa de Flick: confirma la baja de Lewandowski', 'Simeone, en rueda de prensa: «Griezmann está bien»'];
   const n = (titulo) => ({ titulo, fuente: 'Marca', equipos: ['1', '2'] });
   const malos = [...fuera.filter((t) => esDeFutbol(n(t))), ...dentro.filter((t) => !esDeFutbol(n(t)))];
   if (malos.length) mal(`noticias: lo que no es noticia: ${malos.join(' / ')}`);
