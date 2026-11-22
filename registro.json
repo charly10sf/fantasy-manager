@@ -2762,7 +2762,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
    "SPORT|136631224": 1795109681000,
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
@@ -9380,13 +9379,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5287,
+   "ok": 5289,
    "fallos": 0,
-   "ejecuciones": 4296,
+   "ejecuciones": 4297,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:56:12.834Z"
+   "ultima": "2026-11-22T17:01:20.608Z"
   }
  },
  "ptsDirecto": {
@@ -9590,27 +9589,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:56:19.946Z"
+   "ultimaBien": "2026-11-22T17:01:26.244Z"
   }
  },
  "avisos": [
