@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000,
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
@@ -9065,13 +9064,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5182,
+   "ok": 5183,
    "fallos": 0,
-   "ejecuciones": 4235,
+   "ejecuciones": 4236,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:51:11.362Z"
+   "ultima": "2026-11-22T11:56:17.126Z"
   }
  },
  "ptsDirecto": {
@@ -9191,15 +9190,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:51:15.029Z"
+   "ultimaBien": "2026-11-22T11:56:21.401Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:51:15.029Z"
+   "ultimaBien": "2026-11-22T11:56:21.401Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:51:15.029Z"
+   "ultimaBien": "2026-11-22T11:56:21.401Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9207,11 +9206,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:51:15.029Z"
+   "ultimaBien": "2026-11-22T11:56:21.401Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:51:15.029Z"
+   "ultimaBien": "2026-11-22T11:56:21.401Z"
   }
  },
  "avisos": [
