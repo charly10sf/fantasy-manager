@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
    "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
@@ -2785,21 +2784,6 @@
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795084940000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde vuelve a entrenar con el grupo tras su esguince",
-    "motivo": "esguince de tobillo en el pie izquierdo",
-    "plazo": "",
-    "nums": [
-     27,
-     17
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/",
     "medio": "AS",
@@ -9082,13 +9066,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5168,
+   "ok": 5169,
    "fallos": 0,
-   "ejecuciones": 4221,
+   "ejecuciones": 4222,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T10:41:09.659Z"
+   "ultima": "2026-11-22T10:46:38.650Z"
   }
  },
  "ptsDirecto": {
@@ -9208,15 +9192,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:41:14.365Z"
+   "ultimaBien": "2026-11-22T10:46:43.594Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:41:14.365Z"
+   "ultimaBien": "2026-11-22T10:46:43.594Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:41:14.365Z"
+   "ultimaBien": "2026-11-22T10:46:43.594Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9224,11 +9208,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:41:14.365Z"
+   "ultimaBien": "2026-11-22T10:46:43.594Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:41:14.365Z"
+   "ultimaBien": "2026-11-22T10:46:43.594Z"
   }
  },
  "avisos": [
