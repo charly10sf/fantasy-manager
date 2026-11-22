@@ -50,6 +50,8 @@ import { plegarAviso } from './avisos-ficha.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
+// (22 nov) para las pruebas: el análisis otra vez, como tras apuntar algo que le cuentas a la IA
+window.__fmRehacer = () => { if (S.D) rehacer(); };
 // la app ha arrancado: el aviso de index.html («no ha podido abrirse») ya no sale, y si ya había salido se quita
 window.__fmArranco = true;
 try { const f = document.querySelector('.arranque-fallo'); if (f) f.remove(); } catch (e) { /* nada */ }

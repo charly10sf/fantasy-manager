@@ -188,6 +188,10 @@ export function cotejar(r) {
   // lo que tiene que decir (o no) ese caso
   if (r.debe && !new RegExp(r.debe.source || r.debe, 'i').test(sinT(principal)) && !new RegExp(r.debe.source || r.debe, 'i').test(principal)) marcas.push(`no dice lo que debe (${r.debe.source || r.debe})`);
   if (r.noDebe && (new RegExp(r.noDebe.source || r.noDebe, 'i').test(principal))) marcas.push(`dice lo que no debe (${r.noDebe.source || r.noDebe})`);
+  // (22 nov) lo que le cuenta el mánager: un hecho claro tiene que quedar apuntado de forma que mande en el plan, y no se
+  // promete apuntar, quitar del plan o «tenerlo en cuenta» si no se ha guardado nada
+  if (r.contado && !(r.corr || []).includes(r.contado)) marcas.push(`lo contado no manda en el plan (${r.contado})`);
+  if (r.promete) marcas.push('promete apuntar o tenerlo en cuenta y no se guarda nada');
   return { inventadas: [...new Set(inventadas)], marcas: [...new Set(marcas)], frases: fr.length, palabras };
 }
 

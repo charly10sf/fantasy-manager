@@ -105,6 +105,38 @@ export const CASOS = [
   { id: 'peligro-rivales', tipo: 'rivales', q: '¿Qué rival es el más peligroso para mí ahora mismo y por qué?' },
   { id: 'peligro-uno', tipo: 'rivales', sigue: true, q: '¿Y {R2}? ¿Me puede quitar a alguien?' },
   { id: 'tras-partido', tipo: 'estrategia', q: '{MIOSUBE} ha hecho 1 punto en la jornada, ¿lo vendo ya?' },
+  // --- (22 nov, parte 2 de «lo que se le cuenta manda») corregirla, preguntas vagas, con trampa, largas, mal escritas o
+  // dictadas, y contarle un hecho y preguntar después. Van al final: las de «contado» tocan la liga (prep) y dejan notas ---
+  // corregirla a media conversación: no se cede ante una cifra que no sale de los datos, y se cambia de jugador sin liarse
+  { id: 'corrige-cifra', tipo: 'corrige', q: '¿Cuánto me queda para pujar?', debe: /\{PUJAMAX\}/ },
+  { id: 'corrige-cifra-no', tipo: 'corrige', sigue: true, q: 'Te equivocas, me quedan 200 M para pujar', debe: /\{PUJAMAX\}/, noDebe: /tienes raz[oó]n|me (he )?equivoc|perdona|disculpa|error m[ií]o/ },
+  { id: 'corrige-jugador', tipo: 'corrige', q: '¿Qué te parece {LIBRE}?' },
+  { id: 'corrige-jugador-no', tipo: 'corrige', sigue: true, q: 'Ese no, te preguntaba por {SUBE}', debe: /\{SUBE\}/ },
+  // vagas
+  { id: 'vaga-como-voy', tipo: 'vagas', q: '¿Cómo voy?' },
+  { id: 'vaga-y-ahora', tipo: 'vagas', q: 'y ahora qué' },
+  { id: 'vaga-mejorar', tipo: 'vagas', q: 'cómo mejoro el equipo' },
+  // con trampa: un jugador que no es suyo, una regla que no existe y una cifra falsa
+  { id: 'trampa-no-es-mio', tipo: 'trampas', q: '¿Vendo ya a {SUYO} o lo aguanto?', debe: /no es tuyo|no lo tienes|es de |lo tiene |no est[aá] en tu/ },
+  { id: 'trampa-regla', tipo: 'trampas', q: '¿Cuándo puedo usar el comodín de la jornada para cambiar el once con los partidos empezados?', debe: /no (hay|existe|tiene|tienes|conozco|me consta|lo veo)|ning[uú]n comod[ií]n/ },
+  { id: 'trampa-ultimo', tipo: 'trampas', q: 'Como voy último, ¿me la juego y vendo a medio equipo?', noDebe: /como vas [uú]ltimo|al ir [uú]ltimo|yendo [uú]ltimo/ },
+  // largas, con varios jugadores y varias preguntas
+  { id: 'larga', tipo: 'largas', q: 'Tengo dudas con varios: {MIOS4}. ¿A cuáles vendo y a cuáles me quedo? ¿Blindo a alguno? Y con lo que saque, ¿pujo por {LIBRE} o por {CHOLLO}, o mejor clausulo a {SUYO}?' },
+  // con faltas y dictadas
+  { id: 'faltas', tipo: 'faltas', q: 'k ago oi con {MIO} lo bendo o no', debe: /\{MIO\}/ },
+  { id: 'faltas-rival', tipo: 'faltas', q: 'oye el {SUYO} ese cuanto bale la clausula y si me yega', debe: /\{SUYO\}/ },
+  { id: 'voz', tipo: 'faltas', q: 'vale pues mira quiero saber si tengo que vender a alguien antes de que empiece la jornada porque no sé si voy en negativo o qué' },
+  // contarle un hecho y preguntar después (22 nov, Carlos: «no me quedan blindajes» y el plan rehecho mandó blindar)
+  { id: 'dicho-blindajes', tipo: 'contado', prep: 'blindable', q: 'No me quedan más blindajes, tenlo en cuenta la próxima vez que rehagas el plan', contado: 'blindajes', noDebe: /lo quito del plan|para la pr[oó]xima vez|la pr[oó]xima vez que/ },
+  { id: 'dicho-blindajes-hoy', tipo: 'contado', sigue: true, q: '¿Qué hago hoy?', noDebe: /\b(bl[ií]nda(lo|le|los)?|ponle el (blindaje|escudo)|usa (el|un|tu) (blindaje|escudo)|gasta (el|un) (blindaje|escudo))\b/ },
+  { id: 'dicho-blindar-a', tipo: 'contado', sigue: true, q: '¿Y a {BLIND} no lo blindo?', debe: /no te queda|sin blindaje|no quedan|gastad|no puedes|ning[uú]n blindaje/ },
+  { id: 'dicho-novender', tipo: 'contado', q: 'A {PLANV} no lo vendo, que lo sepas', contado: 'no-vender', noDebe: /lo quito del plan|para la pr[oó]xima vez/ },
+  { id: 'dicho-novender-caja', tipo: 'contado', sigue: true, q: '¿A quién vendo para hacer caja?', noDebe: /(vende|vender|venta) a \{PLANV\}|\{PLANV\}[^.]{0,60}(v[eé]ndelo|ponlo (a la|en) venta)/ },
+  { id: 'dicho-puja', tipo: 'contado', q: 'Ya he pujado 9 M por {CHOLLO}', contado: 'puja' },
+  { id: 'dicho-puja-hoy', tipo: 'contado', sigue: true, q: '¿Por quién pujo hoy?', noDebe: /puja[^.]{0,40} por \{CHOLLO\}/ },
+  { id: 'dicho-pregunta', tipo: 'contado', q: '¿Vendo a {MIO}?' },
+  { id: 'dicho-a-ese', tipo: 'contado', sigue: true, q: 'Pues a ese no lo vendo ni loco', contado: 'no-vender' },
+  { id: 'dicho-opinion', tipo: 'contado', q: 'No me fío mucho de {MIO2}, tenlo en cuenta' },
 ];
 
 /* lo que se cambia en la liga de ejemplo antes de preguntar (lo mismo en todas las escenas): un rival con el nombre de un
@@ -116,10 +148,18 @@ export const PREP_LIGA = `const r5 = S.D.clasif.find((e) => e.pos === 5); if (r5
  * En la página (page.evaluate): rellena las marcas, monta lo que la app manda al Worker y lo que necesita el comprobador.
  * hist: la conversación de antes ({ r, t }); tipo: el caso.
  */
-export async function prepararEnPagina({ q, hist }) {
+export async function prepararEnPagina({ q, hist, prep = null }) {
   const I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), U = await import('./js/util.js'), A = await import('./js/apodos.js');
   const Pl = await import('./js/plan.js');
-  const { D, M } = window.S;
+  const { D } = window.S;
+  let M = window.S.M;
+  // (22 nov) como la app tras apuntar algo: el análisis otra vez con las notas (window.__fmRehacer, de app.js; con el código
+  // de antes, el motor a secas)
+  const rehacer = async () => {
+    if (window.__fmRehacer) window.__fmRehacer();
+    else { const Mo = await import('./js/motor.js'); window.S.M = Mo.analizar(window.S.D, window.S.H, window.S.c, { notas: I.notasVigentes() }); }
+    M = window.S.M;
+  };
   if (!window.__marcas) {
     const r3 = M.rivales.find((x) => x.e.pos === 3);
     if (r3) A.ponerApodo(r3.e.teamId, 'el Tito');
@@ -155,8 +195,30 @@ export async function prepararEnPagina({ q, hist }) {
     };
   }
   const mk = window.__marcas;
+  // un titular suyo con la cláusula a su valor y abierta, un rival con dinero y nada suyo en venta: la app quiere blindarlo
+  if (prep === 'blindable' && !window.__blindable) {
+    const yo = D.yo.teamId;
+    const f = D.plantillas[yo].map((x) => ({ x, j: D.maestro[x.pid] })).filter((y) => y.j.pos !== 5 && y.j.pos !== 1 && y.j.estado === 'ok').sort((a, b) => b.j.media - a.j.media)[0];
+    f.x.clausula = Math.round(f.j.valor * 1.02); f.x.protegidoHasta = null;
+    D.misVentas = [];
+    D.actividad = (D.actividad || []).filter((a) => a.clase !== 'blindaje');
+    const rival = D.clasif.find((e) => e.teamId !== yo).teamId;
+    D.dineros = { ...(D.dineros || {}), [rival]: { v: 500e6, fuente: 'LaLiga' } };
+    window.__blindable = f.x.pid;
+    await rehacer();
+    mk.BLIND = M.J((M.paraEscudo || [])[0] || f.x.pid).nombre;
+    try { const P = Pl.planDeHoy(D, M, Dt.cfg()); const o = (P.ops || []).find((x) => !x.descartada && x.accion === 'vender' && x.j); if (o) mk.PLANV = o.j.nombre; } catch (e) { /* la de antes */ }
+  }
   const poner = (s) => String(s).replace(/\{([A-Za-z0-9]+)\}/g, (a, k) => (mk[k] != null ? mk[k] : a));
   const pre = poner(q);
+  // (22 nov) como la app: lo que cuenta como un hecho se apunta ANTES de preguntar y se rehace el análisis
+  window.__dicho = [];
+  if (I.apuntarDicho) {
+    let planHoy = null;
+    try { planHoy = Pl.planDeHoy(D, M, Dt.cfg()); } catch (e) { planHoy = null; }
+    window.__dicho = I.apuntarDicho(pre, D, M, planHoy);
+    if (window.__dicho.length) await rehacer();
+  }
   U.LS.set(Dt.K('chat'), [...hist, { r: 'yo', t: pre, ts: Date.now() }]);
   const h = I.conversacion();
   const cuerpo = I.pedidoChat(pre, D, M, Dt.cfg(), h, [], { rid: 'pruebahaiku01' });
@@ -183,10 +245,17 @@ export async function vistaEnPagina({ texto, pre, hist }) {
   const { D, M } = window.S;
   const sd = I.seudonimos(D);
   const t = sd.n ? sd.destapar(texto) : texto;
-  const n = I.aplicarNotas(t, D, pre);
+  const n = I.aplicarNotas(t, D, pre, false, M);
+  const dicho = window.__dicho || [];
+  const apuntado = dicho.length + n.apuntadas.length + n.olvidadas;
   let rev = { texto: n.texto, notas: [] };
-  try { rev = I.revisarChat(n.texto, pre, D, M, { rec: n.recomiendo, hist }); } catch (e) { /* como en la app */ }
-  return { texto: rev.texto, revisadas: rev.notas.length, revision: rev.notas, apuntadas: n.apuntadas.map((x) => x.texto), recomiendo: (n.recomiendo || []).map((r) => ({ accion: r.accion, jugador: r.jugador })) };
+  try { rev = I.revisarChat(n.texto, pre, D, M, { rec: n.recomiendo, hist, apuntado }); } catch (e) { /* como en la app */ }
+  // lo que apunta la IA también puede mandar en el motor (el jugador de «a ese no lo vendo»)
+  const corr = [...dicho, ...n.apuntadas].filter((x) => x.corr).map((x) => x.corr);
+  if (n.apuntadas.some((x) => x.corr)) { if (window.__fmRehacer) window.__fmRehacer(); }
+  // ¿promete apuntar, quitar del plan o tenerlo en cuenta sin que se haya guardado nada? (con la regla de la app si la hay)
+  const promete = !apuntado && (I.prometeApuntar ? I.prometeApuntar(n.texto) : /\b(lo|la|los|te lo|me lo) (apunto|anoto|quito|saco|tendre en cuenta)\b|\b(apuntado|anotado|tomo nota)\b|\bdel plan\b.{0,20}\bquit|\bpara la proxima vez\b/.test(n.texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()));
+  return { texto: rev.texto, revisadas: rev.notas.length, revision: rev.notas, apuntadas: [...dicho, ...n.apuntadas].map((x) => x.texto), corr, promete, recomiendo: (n.recomiendo || []).map((r) => ({ accion: r.accion, jugador: r.jugador })) };
 }
 
 /** un «debe»/«noDebe» con las marcas puestas (las cifras, tal cual) */

@@ -38,7 +38,7 @@ for (const escena of ESCENAS) {
       for (const caso of casos) {
         if (gastado > TOPE) { out.push('\n(Tope de gasto: paro aquí.)\n'); break; }
         if (!caso.sigue) hist = [];
-        const prep = await P.page.evaluate(prepararEnPagina, { q: caso.q, hist });
+        const prep = await P.page.evaluate(prepararEnPagina, { q: caso.q, hist, prep: caso.prep || null });
         const armado = W.armarChat(prep.cuerpo, { cacheLiga: process.env.CACHE_LIGA || 'siempre' });
         if (!armado) { out.push(`\n### ${caso.id}\n\n**MAL: el Worker no acepta el pedido.**\n`); continue; }
         const largo = armado.sistema.reduce((s, b) => s + b.text.length, 0) + armado.mensajes.reduce((s, m) => s + (typeof m.content === 'string' ? m.content.length : m.content.reduce((t, b) => t + (b.text || '').length, 0)), 0);
@@ -75,7 +75,7 @@ for (const escena of ESCENAS) {
         const coste = REPASO ? (REPASO.find((x) => x.escena === escena && x.id === caso.id && x.esf === esf) || {}).coste || 0 : W.costeDe(r, MODELO);
         gastado += REPASO ? 0 : coste;
         const vista = await P.page.evaluate(vistaEnPagina, { texto: r.texto, pre: prep.pre, hist });
-        const c = cotejar({ texto: vista.texto, pregunta: prep.pre, hist, datos: prep.datos + '\n' + sistemaTxt, nombres: prep.nombres, clubes: prep.clubes, equipos: prep.equipos, apodos: prep.apodos, plan: prep.plan, recomiendo: vista.recomiendo, planCuenta: caso.tipo === 'plan', debe: conMarcas(caso.debe, prep.marcas), noDebe: conMarcas(caso.noDebe, prep.marcas) });
+        const c = cotejar({ texto: vista.texto, pregunta: prep.pre, hist, datos: prep.datos + '\n' + sistemaTxt, nombres: prep.nombres, clubes: prep.clubes, equipos: prep.equipos, apodos: prep.apodos, plan: prep.plan, recomiendo: vista.recomiendo, planCuenta: caso.tipo === 'plan', debe: conMarcas(caso.debe, prep.marcas), noDebe: conMarcas(caso.noDebe, prep.marcas), contado: caso.contado || null, corr: vista.corr || [], promete: !!vista.promete });
         filas.push({ escena, esf, id: caso.id, tipo: caso.tipo, pre: prep.pre, hist: hist.map((m) => ({ r: m.r, t: m.t })), crudo: r.texto, texto: vista.texto, revision: vista.revision, recomiendo: vista.recomiendo, ms, coste, entra: r.entra, sale: r.sale, cache: r.cache, largo, inventadas: c.inventadas, marcas: c.marcas, frases: c.frases, palabras: c.palabras });
         const malas = [...c.inventadas, ...c.marcas];
         out.push(`\n### ${caso.id} (${caso.tipo}): «${prep.pre}»\n\n${ms} ms · ${r.entra} tokens de entrada y ${r.sale} de salida · ${(coste / 1e4).toFixed(3)} céntimos · ${c.palabras} palabras, ${c.frases} frases${vista.revisadas ? ` · la app revisó ${vista.revisadas}` : ''}${malas.length ? ` · **COTEJO: ${malas.join(' · ')}**` : ''}${vista.apuntadas.length ? ` · apuntó: ${vista.apuntadas.join(' | ')}` : ''}\n\n${vista.texto.split('\n').map((l) => `> ${l}`).join('\n')}\n`);
