@@ -2573,7 +2573,6 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
-   "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
@@ -9113,13 +9112,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5159,
+   "ok": 5160,
    "fallos": 0,
-   "ejecuciones": 4212,
+   "ejecuciones": 4213,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:56:15.187Z"
+   "ultima": "2026-11-22T10:01:11.800Z"
   }
  },
  "ptsDirecto": {
@@ -9239,15 +9238,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:56:17.009Z"
+   "ultimaBien": "2026-11-22T10:01:16.869Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:56:17.009Z"
+   "ultimaBien": "2026-11-22T10:01:16.869Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:56:17.009Z"
+   "ultimaBien": "2026-11-22T10:01:16.869Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9255,11 +9254,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:56:17.009Z"
+   "ultimaBien": "2026-11-22T10:01:16.869Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:56:17.009Z"
+   "ultimaBien": "2026-11-22T10:01:16.869Z"
   }
  },
  "avisos": [
