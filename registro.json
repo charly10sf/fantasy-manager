@@ -2579,7 +2579,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000,
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
    "SPORT|136607113": 1795090415000,
@@ -2789,21 +2788,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795090022000,
-    "id": "2430",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Valverde no entrena con sus compañeros del Madrid",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21,
-     0
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/",
     "medio": "AS",
@@ -9072,13 +9056,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5185,
+   "ok": 5186,
    "fallos": 0,
-   "ejecuciones": 4238,
+   "ejecuciones": 4239,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:06:12.913Z"
+   "ultima": "2026-11-22T12:11:14.547Z"
   }
  },
  "ptsDirecto": {
@@ -9198,15 +9182,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:06:16.637Z"
+   "ultimaBien": "2026-11-22T12:11:19.979Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:06:16.637Z"
+   "ultimaBien": "2026-11-22T12:11:19.979Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:06:16.637Z"
+   "ultimaBien": "2026-11-22T12:11:19.979Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9214,11 +9198,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:06:16.637Z"
+   "ultimaBien": "2026-11-22T12:11:19.979Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:06:16.637Z"
+   "ultimaBien": "2026-11-22T12:11:19.979Z"
   }
  },
  "avisos": [
