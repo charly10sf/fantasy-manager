@@ -17,8 +17,9 @@
   --rojo: #ee1c3c; --rojo-btn: #e0193a; --rojo-l: #ff5269;
   --sube: #2fd18f; --baja: #ff6f61; --oro: #ffc547; --por: #ffc547; --def: #58a6ff; --med: #2fd18f; --del: #ee1c3c;
   --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --fila: 50px;   /* la fila del logo: en el móvil se va al bajar y queda fijo solo el menú */
-  --pin: 45px;    /* lo que queda fijo arriba en el móvil (el menú); portal.js lo afina como --cab-h */
+  --fila: 50px;   /* la fila del logo, el buscador y «Descargar» */
+  --pin: 96px;    /* lo que queda fijo arriba en el móvil (esa fila y el menú; Carlos, 22 nov: «que arriba salga todo el rato el
+                     botón de descargar»); portal.js lo afina como --cab-h */
   --ancho: 1080px;
 }
 * { box-sizing: border-box; }
@@ -49,14 +50,15 @@ img { max-width: 100%; }
 @media (min-width: 1000px) { .tira-in { justify-content: center; gap: 6px; -webkit-mask-image: none; mask-image: none; } }
 
 /* la barra: logo, buscador y descargar; debajo (en el ordenador, en la misma fila), el menú de cinco secciones */
-.cab { position: sticky; top: calc(-1 * var(--fila)); z-index: 4; background: var(--fondo); border-bottom: 1px solid var(--linea); }
+.cab { position: sticky; top: 0; z-index: 4; background: var(--fondo); border-bottom: 1px solid var(--linea); }
 .cab-in { max-width: 1280px; margin: 0 auto; padding: 0 12px; display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; }
 .marca { display: inline-flex; align-items: center; gap: 9px; color: var(--texto); text-decoration: none; font: 700 21px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; min-height: var(--fila); }
 .marca b { color: var(--rojo); font-weight: 700; }
 .cab-app { display: flex; align-items: center; gap: 6px; font-size: 15px; }
 .cab-app a { text-decoration: none; font-weight: 600; border-radius: 10px; padding: 7px 12px; white-space: nowrap; }
-.menu-cta { color: var(--texto); border: 1.5px solid var(--rojo); }
-.menu-cta:hover { background: rgba(238, 28, 60, 0.14); }
+/* «Descargar» es el único rojo relleno de la pantalla y va siempre a la vista, también en el móvil (Carlos, 22 nov) */
+.menu-cta { background: var(--rojo-btn); border: 1.5px solid var(--rojo-btn); color: #fff; }
+.menu-cta:hover { background: var(--rojo); }
 .menu-web { color: var(--texto); border: 1px solid rgba(255, 255, 255, 0.18); display: none; }
 .menu-web:hover { border-color: var(--rojo); }
 .menu-cta .largo { display: none; }
@@ -85,13 +87,10 @@ img { max-width: 100%; }
 .busca-r .nada { padding: 10px; font-size: 14px; color: var(--apagado); }
 @media (min-width: 420px) { .menu-cta .largo { display: inline; } }
 @media (min-width: 900px) {
-  .cab { top: 0; }
   .cab-in { grid-template-columns: auto 1fr auto; padding: 0 20px; column-gap: 18px; }
   .marca { min-height: 60px; font-size: 22px; }
   .menu { grid-column: 2; grid-row: 1; display: flex; justify-content: center; gap: 2px; margin: 0; border-top: 0; }
   .menu a { padding: 23px 13px 20px; font-size: 17px; }
-  .menu-cta { background: var(--rojo-btn); border-color: var(--rojo-btn); color: #fff; }
-  .menu-cta:hover { background: var(--rojo); }
 }
 @media (min-width: 1120px) {
   .cab-in { grid-template-columns: auto 1fr auto auto; }
@@ -165,8 +164,15 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .btn:active { transform: scale(0.97); }
 .btn.sec { background: var(--plano); border: 1px solid var(--linea); color: var(--texto); }
 .btn.sec:hover { border-color: rgba(255, 255, 255, 0.3); }
-/* en el ordenador el rojo relleno es «Descargar», siempre a la vista en la barra: los botones de la página van en claro */
-@media (min-width: 900px) { .btn:not(.sec) { background: var(--texto); color: #0a0a0c; } }
+/* el rojo relleno es «Descargar», siempre a la vista en la barra: los botones de la página van en claro */
+.btn:not(.sec) { background: var(--texto); color: #0a0a0c; }
+/* debajo de la barra, una línea que dice qué hace la app (Carlos, 22 nov: «que te indique que la aplicación te analiza tu
+   equipo en concreto»). El texto lo pone el CSS desde data-t, como las siglas de la tira: no es texto repetido en cada página */
+.app-l { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 6px 12px; background: linear-gradient(90deg, rgba(238, 28, 60, 0.2), rgba(238, 28, 60, 0.06)); border-bottom: 1px solid var(--linea); color: var(--texto); text-decoration: none; font-size: 14px; line-height: 1.25; text-align: center; }
+.app-l::before { content: attr(data-t); }
+.app-l::after { content: attr(data-b) ' ›'; flex: none; font: 700 15px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--rojo-l); }
+.app-l:hover { background: linear-gradient(90deg, rgba(238, 28, 60, 0.28), rgba(238, 28, 60, 0.1)); }
+@media (min-width: 900px) { .app-l { font-size: 15px; } }
 .cta { margin: 40px 0 0; border: 1px solid var(--linea); border-radius: 16px; padding: 18px 16px; background: radial-gradient(120% 80% at 0% 0%, rgba(238, 28, 60, 0.16), transparent 70%), var(--plano); }
 .cta-t { font: 700 22px/1.15 var(--cond); text-transform: uppercase; color: var(--texto); }
 .cta-b { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 12px; }

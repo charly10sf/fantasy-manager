@@ -26,15 +26,12 @@
     }
   } catch (e) { /* sin almacenamiento: nada */ }
 
-  // ---------------------------------------------------------------- la cabecera fija: en el móvil la fila del logo se va al
-  // bajar y queda fijo el menú (y el buscador, si está abierto); en el ordenador, la barra entera. Los saltos de la página van
-  // justo debajo (sin JS, con el alto del CSS)
+  // ---------------------------------------------------------------- la cabecera fija: la barra entera (logo, buscador,
+  // «Descargar» y el menú), también en el móvil. Los saltos de la página van justo debajo (sin JS, con el alto del CSS)
   var cab = document.querySelector('.cab');
   if (cab) {
-    var marca = cab.querySelector('.marca');
-    var ancho = window.matchMedia ? window.matchMedia('(min-width: 900px)') : { matches: false };
     var alto = function () {
-      var h = cab.offsetHeight - (ancho.matches || !marca ? 0 : marca.offsetHeight);
+      var h = cab.offsetHeight;
       document.documentElement.style.setProperty('--cab-h', (h - 1) + 'px');
     };
     alto();

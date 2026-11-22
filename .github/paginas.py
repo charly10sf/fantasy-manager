@@ -151,7 +151,8 @@ def menu(raiz, hay_guias, actual=''):
             f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> la app</span></a></div>'
             f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
             f'<form class="busca" role="search" action="{raiz}jugadores/" method="get" data-raiz="{raiz}"><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar">{lupa}</button><ul class="busca-r" hidden></ul></form>'
-            f'</div></header>')
+            f'</div></header>'
+            f'<a class="app-l" href="{PLAY}" target="_blank" rel="noopener" aria-label="Descargar Fantasy Manager: la app analiza tu equipo y tu liga" data-t="La app analiza TU equipo y TU liga: a quién fichar, vender y clausular" data-b="Descargar"></a>')
 
 
 def tira(raiz, p=None):

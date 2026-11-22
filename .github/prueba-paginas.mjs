@@ -65,14 +65,16 @@ for (const movil of [true, false]) {
   await p.context().close();
 }
 
-// 2. en el móvil, al bajar se va la fila del logo y queda fijo el menú; los saltos de la ficha, justo debajo
+// 2. en el móvil, al bajar queda fija la barra entera, con «Descargar» a la vista (Carlos, 22 nov); los saltos de la ficha, justo debajo
 {
   const p = await pagina();
   await p.goto(`${BASE}/jugadores/mbappe.html`, { waitUntil: 'load' });
   await p.evaluate(() => window.scrollTo(0, 1400));
   await p.waitForTimeout(700);
-  const d = await p.evaluate(() => { const r = (s) => document.querySelector(s).getBoundingClientRect(); return { menu: r('.menu').top, marca: r('.marca').bottom, sub: r('.subnav').top, menuB: r('.menu').bottom }; });
-  bien(d.menu >= 0 && d.menu <= 1 && d.marca <= 1, '[móvil] al bajar, el menú queda fijo arriba y el logo se va', JSON.stringify(d));
+  const d = await p.evaluate(() => { const r = (s) => document.querySelector(s).getBoundingClientRect(); const c = document.querySelector('.menu-cta'); return { cab: r('.cab').top, menu: r('.menu').top, marca: r('.marca').top, cta: r('.menu-cta').top, ctaB: r('.menu-cta').bottom, rojo: getComputedStyle(c).backgroundColor, sub: r('.subnav').top, menuB: r('.menu').bottom, linea: !!document.querySelector('a.app-l[data-t]') }; });
+  bien(Math.abs(d.cab) <= 1 && d.marca >= 0 && d.cta >= 0 && d.ctaB <= d.menu + 1 && d.menuB <= 110, '[móvil] al bajar, la barra queda fija arriba con «Descargar» a la vista y el menú debajo', JSON.stringify(d));
+  bien(/rgb\(22[0-9], 2[0-9], 5[0-9]\)/.test(d.rojo), '[móvil] «Descargar» es el rojo relleno', d.rojo);
+  bien(d.linea, 'debajo de la barra, la línea de qué hace la app');
   bien(Math.abs(d.sub - d.menuB) <= 2, '[móvil] los saltos de la ficha, pegados debajo del menú', JSON.stringify(d));
   // el buscador: la lupa lo abre y sugiere fichas de jugador y de equipo
   await p.evaluate(() => window.scrollTo(0, 0));

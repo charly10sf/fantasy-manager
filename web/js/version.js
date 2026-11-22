@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8m';
+export const VERSION = '0.8q';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,44 @@ export const VERSION = '0.8m';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (21-22 nov, Carlos: «haz el prompt rework web»; y al verla: «el once probable que salga en alineación», «pon los suplentes
+    // y su porcentaje», «la cara siempre encima del porcentaje») El rework de la web pública: los 20 escudos arriba, el menú de
+    // cinco, ficha para todos los jugadores y el once en su campo. Son las páginas de fuera de la app: `para: 'web'` y sin
+    // `todos`. El detalle, en claude/rework-web.md del proyecto. La hora, al publicar
+    v: '0.8q', f: '2026-11-22', h: '02:10', t: 'La web, más fácil de mirar',
+    cosas: [
+      { para: 'web', tipo: 'nuevo', d: 'escudo', t: 'Los 20 equipos, arriba del todo', x: 'En la web, una fila con los 20 escudos arriba de cada página: toca uno y vas a la ficha de ese equipo. El menú se queda en cinco: Mercado, Jornada, Equipos, Jugadores y Guías.' },
+      { para: 'web', tipo: 'nuevo', d: 'cara', t: 'Ficha para todos los jugadores', x: 'Todos los jugadores de LaLiga Fantasy tienen ya su página, con su valor día a día, sus puntos de cada jornada y sus próximos rivales. El buscador de arriba los encuentra a todos.' },
+      { para: 'web', tipo: 'mejora', d: 'campo', t: 'El once probable, en su campo', x: 'El once probable de cada equipo sale colocado en el campo, con la cara de cada jugador y debajo sus opciones de ser titular, en verde, oro o rojo. Debajo del campo, los suplentes con las suyas.' },
+    ],
+  },
+  {
+    // (21 nov, Carlos: «quiero que aparezca cuántas personas hay en cada versión, y la última, la de ahora; y las altas
+    // semanales, como salían antes») Solo el dueño. La hora, al publicar
+    v: '0.8p', f: '2026-11-21', h: '23:21', t: 'Versiones y altas por semana',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Versiones y altas por semana', x: 'En Quién usa la app, pestaña Uso, una gráfica con cuánta gente tiene cada versión, la de ahora la última, y por qué se han quedado atrás los demás. En Hoy, las altas de las 8 últimas semanas.' },
+    ],
+  },
+  {
+    // (21 nov, Carlos: «el logo de recargar se bugea cuando sale actualizando») la flecha de actualizar, debajo del nombre de
+    // la liga, era un carácter que al girar se salía de su sitio y se cortaba; ahora es un icono que gira sobre sí mismo.
+    // Arreglo pequeño: sin `todos`. La hora, al publicar
+    v: '0.8o', f: '2026-11-21', h: '23:09', t: 'La flecha de actualizar',
+    cosas: [
+      { tipo: 'arreglo', d: 'pantalla', t: 'La flecha de actualizar, en su sitio', x: 'Mientras se actualiza la liga, la flecha que hay al lado de «Actualizando…» gira en su sitio en vez de salirse y verse cortada.', menor: true },
+    ],
+  },
+  {
+    // (21 nov, noche, Carlos: «muchísimo más sencillo, mejor compartimentado, con mejores gráficas y el tiempo de uso a la
+    // vista») «Quién usa la app» rehecha: se le enseñaron tres variantes y quedan las pestañas con las gráficas de tiempo del
+    // panel de detalle. Solo web y solo el dueño. La hora, al publicar
+    v: '0.8n', f: '2026-11-21', h: '22:17', t: 'Quién usa la app, por apartados',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, por apartados', x: 'Cinco pestañas: Hoy (los de ahora, hoy y la semana, activos, altas y desde dónde), Uso (el tiempo por persona y entre todos cada día, y quién más hoy), Entrada (cuántos entran por cada camino, paso a paso), Invitar y Cuentas. Las gráficas, grandes y a todo el ancho; si alguna cuenta tiene un problema, un aviso arriba te lleva a ella.' },
+    ],
+  },
   {
     // (21 nov, Carlos: «arregla la entrada en Android y en iPhone») En la app de Android se perdía un 36 % de los toques a
     // «Entrar» sin dejar rastro: con LaLiga Fantasy instalada, Android pregunta «Abrir con» al volver y quien elige la otra

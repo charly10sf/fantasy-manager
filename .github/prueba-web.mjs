@@ -528,8 +528,11 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
     ['la publicada no es más nueva', { canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
   ];
+  // (22 nov) el APK de GitHub cerró el 21 nov y, pasada esa fecha, la pantalla del cierre tapaba la ventana que miran estas
+  // comprobaciones (la «Web» de main dejó de publicar): aquí el cierre va apagado, que se mira aparte (17)
+  const sinCierre = `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: false } }));`;
   for (const [nombre, cfg, espera] of casos) {
-    const { ctx, page, errores } = await pagina({ init: puente(cfg) });
+    const { ctx, page, errores } = await pagina({ init: puente(cfg) + sinCierre });
     await page.goto(`${BASE}/index.html`);
     await page.waitForTimeout(2500);
     const hay = await page.$('#forzar');
@@ -968,7 +971,9 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 
 // 17: (14 nov) el APK de GitHub se despide: la ventana del paso a Google Play solo en esa app (ni en Play ni en la web),
 // con «Ahora no» antes del cierre y sin cerrar después; la banda de arriba también
-for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {
+// (22 nov) el aviso de antes del cierre se mira con un cierre a 3 días vista: con la fecha de verdad (21 nov) dejó de pasar el 22
+const EN_3_DIAS = new Date(Date.now() + 3 * 864e5).toISOString();
+for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', EN_3_DIAS, 'aviso'], ['APK de GitHub ya cerrado', 'github', '2020-01-01T00:00:00+01:00', 'cerrada'], ['Google Play', 'play', '2020-01-01T00:00:00+01:00', 'nada'], ['web', null, '2020-01-01T00:00:00+01:00', 'nada']]) {
   const lim = cierre ? `localStorage.setItem('fm-limites', JSON.stringify({ t: Date.now(), cfg: { cierreApk: ${JSON.stringify(cierre)} } }));` : '';
   const app = canal ? `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '5701', canal: () => '${canal}', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) });` : '';
   const { ctx, page, errores } = await pagina({ init: `${app} localStorage.setItem('fm-demo', 'true'); ${lim}` });
@@ -980,7 +985,7 @@ for (const [nombre, canal, cierre, espera] of [['APK de GitHub', 'github', null,
     return { hay: !!d, t: d ? d.innerText.replace(/\s+/g, ' ') : '', ahoraNo: !!(d && d.querySelector('[data-accion="cerrarAvisoPlay"]')), play: !!(d && d.querySelector('[data-abrir*="play.google.com"]')), banda: (() => { const b = document.querySelector('#banda .banda-play'); return !!b && /Esta app deja de funcionar (en \d+ días|mañana|hoy)/.test(b.innerText) && !/noviembre/.test(b.innerText) && !!b.querySelector('[data-abrir*="play.google.com"] img[src*="google-play"]'); })() };
   });
   const ok = espera === 'nada' ? !r.hay && !r.banda
-    : espera === 'aviso' ? r.hay && r.ahoraNo && r.play && r.banda && /dejará de funcionar el sábado 21 de noviembre/.test(r.t) && /gracias/.test(r.t)
+    : espera === 'aviso' ? r.hay && r.ahoraNo && r.play && r.banda && /dejará de funcionar el (lunes|martes|miércoles|jueves|viernes|sábado|domingo) \d+ de [a-z]+/.test(r.t) && /gracias/.test(r.t)
       : r.hay && !r.ahoraNo && r.play && /ya no funciona/.test(r.t);
   if (!ok) mal(`paso a Play, ${nombre}: ${JSON.stringify(r).slice(0, 300)}`);
   else bien(`paso a Play, ${nombre}: ${espera === 'nada' ? 'sin aviso' : espera === 'aviso' ? 'la ventana con «Ahora no» y la banda fija (los días que quedan y la insignia de Google Play)' : 'la ventana sin cerrar'}`);

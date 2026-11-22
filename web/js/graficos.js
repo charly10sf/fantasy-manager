@@ -122,3 +122,40 @@ export function trayecto(pas, fut, { sube = true, alto = 92, fin = '' } = {}) {
     <text x="${W - mx}" y="${H - 4}" text-anchor="end" class="g-eje">${esc(fin || fechaCorta(ult[0]))}</text>
   </svg>`;
 }
+
+/* (21 nov, «Quién usa la app» rehecha: Carlos quería gráficas más grandes y mejores) Dos gráficas de una semana, a todo
+   el ancho de la hoja: columnas (hoy en rojo y la media de la semana en raya) y línea con área (el tiempo por persona).
+   datos = [{ et, v, hoy }], del día más viejo a hoy. El tope va un 8 % por encima del máximo para que se lean las cifras. */
+const topeSem = (datos) => Math.max(4, Math.max(...datos.map((d) => d.v)) * 1.08);
+const ariaSem = (datos, fmt) => esc(datos.map((d) => `${d.et}: ${fmt(d.v)}`).join(', '));
+export function columnasSem(datos, { alto = 190, formato = (v) => String(v), media = true } = {}) {
+  if (!datos || !datos.length) return '';
+  const W = 360, H = alto, iz = 4, ab = 26, ar = 40, n = datos.length, max = topeSem(datos);
+  const y = (v) => H - ab - (v / max) * (H - ab - ar), paso = (W - iz * 2) / n;
+  const m = datos.reduce((t, d) => t + d.v, 0) / n;
+  let s = `<svg class="vg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${ariaSem(datos, formato)}"><line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" class="vg-r"/>`;
+  datos.forEach((d, i) => {
+    const w = paso * 0.58, x = iz + i * paso + (paso - w) / 2, h = Math.max(2, (d.v / max) * (H - ab - ar)), cx = (x + w / 2).toFixed(1);
+    s += `<rect x="${x.toFixed(1)}" y="${(H - ab - h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="5" class="${d.hoy ? 'vg-hoy' : 'vg-b'}"/>`
+      + `<text x="${cx}" y="${(H - ab - h - 6).toFixed(1)}" text-anchor="middle" class="vg-v${d.hoy ? ' hoy' : ''}">${esc(formato(d.v))}</text>`
+      + `<text x="${cx}" y="${H - 6}" text-anchor="middle" class="vg-e${d.hoy ? ' hoy' : ''}">${esc(d.et)}</text>`;
+  });
+  // la media: la raya cruza las columnas y su rótulo va arriba a la izquierda, donde no pisa ninguna cifra
+  if (media && m > 0) s += `<line x1="0" x2="${W}" y1="${y(m).toFixed(1)}" y2="${y(m).toFixed(1)}" class="vg-m"/><line x1="2" x2="20" y1="7" y2="7" class="vg-m"/><text x="26" y="11" class="vg-mt">media ${esc(formato(Math.round(m * 10) / 10)).replace('.', ',')}</text>`;
+  return `${s}</svg>`;
+}
+export function areaSem(datos, { alto = 180, formato = (v) => String(v), color = 'var(--azul)' } = {}) {
+  if (!datos || datos.length < 2) return '';
+  const W = 360, H = alto, iz = 22, ab = 26, ar = 24, n = datos.length, max = topeSem(datos), id = `vga${++uid}`;
+  const x = (i) => iz + (i * (W - iz * 2)) / (n - 1), y = (v) => H - ab - (v / max) * (H - ab - ar);
+  const pts = datos.map((d, i) => [x(i).toFixed(1), y(d.v).toFixed(1)]);
+  const ln = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0]} ${p[1]}`).join(' ');
+  let s = `<svg class="vg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${ariaSem(datos, formato)}" style="--c:${color}"><defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".32"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>`
+    + `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" class="vg-r"/><path d="${ln} L${pts[n - 1][0]} ${H - ab} L${pts[0][0]} ${H - ab} Z" fill="url(#${id})"/><path d="${ln}" class="vg-l"/>`;
+  datos.forEach((d, i) => {
+    s += `<circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="${d.hoy ? 5.5 : 3.5}" class="vg-pt${d.hoy ? ' hoy' : ''}"/>`
+      + `<text x="${pts[i][0]}" y="${(pts[i][1] - 10).toFixed(1)}" text-anchor="middle" class="vg-v${d.hoy ? ' hoy' : ''}">${esc(formato(d.v))}</text>`
+      + `<text x="${pts[i][0]}" y="${H - 6}" text-anchor="middle" class="vg-e${d.hoy ? ' hoy' : ''}">${esc(d.et)}</text>`;
+  });
+  return `${s}</svg>`;
+}
