@@ -2962,7 +2962,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254136/pedri-mvp-autocritico-hay-trabajar-no-repitan-inicios-asi.html": 1795361622000,
    "SPORT|136725148": 1795359222000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000
   },
   "hechos": [
    {
@@ -3657,7 +3658,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4559,17 +4560,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 31,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 340088,
-  "salida": 15423,
+  "entrada": 342125,
+  "salida": 15538,
   "cacheLee": 101494,
   "cacheEscribe": 52217,
-  "dolares": 0.780103,
+  "dolares": 0.780364,
   "reservado": 0
  },
  "recientes": {
@@ -9379,13 +9380,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5289,
+   "ok": 5291,
    "fallos": 0,
-   "ejecuciones": 4297,
+   "ejecuciones": 4298,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:01:20.608Z"
+   "ultima": "2026-11-22T17:06:17.610Z"
   }
  },
  "ptsDirecto": {
@@ -9589,27 +9590,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:01:26.244Z"
+   "ultimaBien": "2026-11-22T17:06:22.625Z"
   }
  },
  "avisos": [
