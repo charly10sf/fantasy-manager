@@ -3390,7 +3390,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     const opC = x.ref ? cat.ref[x.ref] : null;
     if (x.descartada) { nota(`${N(j)}: ${sinApp(x.aviso).replace(/^./, (c) => c.toUpperCase()).slice(0, 420)}`); continue; }
     if (x.sugerencia && x.aviso) { nota(`${N(j)}: ${sinApp(x.aviso).slice(0, 420)}`); continue; }
-    if (opC && opC.ref[0] === 'M' && p.importe && p.importe < opC.precio) nota(`${N(j)}: ${opC.vendedor} lo tiene a la venta por ${eur(opC.precio)} y por debajo de ese precio LaLiga no deja ofertar${opC.ofertaMin && opC.ofertaMin > opC.precio ? `; para tener opciones, como poco ${eur(opC.ofertaMin)}` : ''}. Y decide él: también tiene la oferta de LaLiga.`);
+    if (opC && opC.ref[0] === 'M' && p.importe && p.importe < opC.precio) nota(`${N(j)} vale ${eur(opC.precio)} y a otro mánager no se le puede ofertar por debajo del valor de mercado${opC.ofertaMin && opC.ofertaMin > opC.precio ? `; para tener opciones, como poco ${eur(opC.ofertaMin)}` : ''}. Y decide él: también tiene la oferta de LaLiga.`);
     else if (opC && opC.ref[0] === 'C' && !opC.abierta && !yaDice(opC.abre)) nota(`${N(j)}: ${opC.veda ? `las cláusulas están cerradas hasta que empiece la jornada ${opC.veda.n}; la suya se puede pagar ${cuandoF(opC.abre)}, no antes` : `su cláusula no se abre hasta ${cuandoF(opC.abre)}: hasta entonces no se puede pagar`}.`);
     else if (opC && opC.ref[0] === 'B' && !x.importe && !opC.abierta && !yaDice(opC.abre)) nota(`${N(j)}: el escudo solo se puede poner con la cláusula ya abierta, y la suya está protegida hasta ${cuandoF(opC.abre)}.`);
     else if (p.accion === 'vender' && /sube [^.]*al día/.test(x.aviso || '') && !/aguant|no lo vend|no vend|esper/.test(norm(t))) nota(`${N(j)}: ${sinApp(x.aviso).split(/(?<=\.)\s/).slice(0, 2).join(' ')}`);
@@ -3492,7 +3492,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     const suyo = [pregunta, ...(hist || []).filter((m) => m.r === 'yo').slice(-4).map((m) => m.t || '')].join(' ');
     if (!/\d/.test(suyo)) for (const j of todos) {
       const m = (M.mercado || []).find((x) => x.pid === j.id && x.tipo === 'manager' && x.vendedorTeamId !== yoT);
-      if (m && !notasDe(j.id).some((n) => n.importe)) nota(`${N(j)}: ${m.vendedor || nombreTid(M, m.vendedorTeamId)} lo tiene puesto a la venta por ${eur(m.precio)}. Ese precio lo ha puesto él en el mercado (muchas veces solo para ver la oferta de LaLiga): no es un trato contigo ni algo que te pida a ti. Por debajo no se puede ofertar.`);
+      if (m && !notasDe(j.id).some((n) => n.importe)) nota(`${N(j)}: ${m.vendedor || nombreTid(M, m.vendedorTeamId)} lo tiene puesto a la venta. El precio que le pone en el mercado no cuenta: no es un trato contigo ni algo que te pida a ti. Se le puede ofertar desde su valor, ${eur(j.valor)}.`);
     }
   }
   // uno que ya no es suyo, tratado como suyo
@@ -3500,12 +3500,13 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     if (!v.j || notas.some((x) => x.includes(`**${v.j.nombre}**`))) continue;
     if (cuentaConVendido(t, v.j.nombre, !!(M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT))) nota(`${N(v.j)} ya no es tuyo (${v.como} ${cuando(v.t)}): no cuenta para lo de arriba.`);
   }
-  // (22 nov, Fran) el precio irreal que pide un rival en el mercado, dado como lo que hay que pagar («al menos 200 M»)
-  for (const m of (M.mercado || []).filter((x) => x.irreal && x.ofertaReal && x.j && todos.some((j) => j.id === x.j.id))) {
-    const ent = String(Math.floor(m.precio / 1e6));
+  // (22 nov, Fran y Carlos) el precio que un rival le pone a uno suyo en el mercado no cuenta para nada: si la respuesta lo
+  // da como lo que hay que pagar («al menos 200 M»), se corrige con su valor y con lo que haría falta ofrecerle
+  for (const m of (M.mercado || []).filter((x) => x.tipo === 'manager' && x.pide && x.j && x.j.valor && x.pide > Math.max(x.ofertaAlta || 0, x.j.valor) * 1.15 && todos.some((j) => j.id === x.j.id))) {
+    const ent = String(Math.floor(m.pide / 1e6));
     const cifra = new RegExp(`(^|[^0-9,.])${ent}(?:[.,]\\d{1,2})?\\s?(M\\b|millones|kilos)`, 'i');
     const malas = frases.filter((f) => { const n = norm(f); return cifra.test(f) && /\b(al menos|como minimo|minimo|ofrece|ofrecele|ofrecer|oferta de|paga|pagar|pagale|puja|pujar|comprarselo por|compralo por|por lo menos)\b/.test(n) && !/\b(no|irreal|absurd\w*|inflad\w*|disparatad\w*|ni de broma|nadie)\b/.test(n); });
-    if (malas.length) nota(`${N(m.j)} vale ${eur(m.j.valor)}: los ${eur(m.precio)} que pide ${m.vendedor || 'su dueño'} no son un precio de verdad. Lo que vale la pena pagar por él es hasta ~${eur(m.ofertaReal)}.`);
+    if (malas.length) nota(`${N(m.j)} vale ${eur(m.j.valor)}: el precio que le ha puesto ${m.vendedor || 'su dueño'} en el mercado no cuenta. Se le puede ofertar desde su valor${m.ofertaMin ? `; para que te lo venda, unos ${eur(m.puja || m.ofertaMin)}` : ''}.`);
   }
   if (apuntado === 0 && prometeApuntar(t)) nota('De esto no se ha apuntado nada: el plan sale de los datos de tu liga. Si es un hecho, dímelo tal cual («no me quedan blindajes», «a Pedri no lo vendo», «ya he pujado por él») y el plan lo contará.');
   // (texto.js no pinta citas: un título en negrita y una lista)
@@ -3548,7 +3549,7 @@ export function plantillasRivalesTxt(D, M, enteros = new Set(), { nombrados = ne
         det ? (onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null)) : null,
         det && j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts` : null,
         cl,
-        v ? `EN VENTA por ${eur(v.precio)}` : null,
+        v ? 'LO TIENE EN VENTA (el precio que le pone no cuenta: se le oferta desde su valor)' : null,
         // (19 nov, el trueque de Carlos con Domy: la IA tomaba el valor como precio justo y proponía «cambio a valores») lo que
         // pide un dueño por él: pagar hasta ahí es un precio normal entre managers
         of && (entero || ofertas) ? `oferta para que te lo venda ~${eur(of.v)} (precio normal entre managers: pagar hasta ahí es buen precio; a su valor su dueño no lo vende)${of.sube ? ' (sube: su dueño querrá más)' : ''}` : null,

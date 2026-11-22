@@ -404,7 +404,7 @@ export function arbitro(R, D, M, eur) {
       if (M.dueno[o.pid] && o.accion === 'pujar') mal.push(`${q} tiene dueño: no se puja`);
       const enM = (M.mercado || []).find((m) => m.pid === o.pid);
       if (o.accion === 'pujar' && !enM) mal.push(`${q} no está en el mercado`);
-      if (o.accion === 'comprar' && enM && enM.tipo === 'manager' && enM.precio && imp && imp < enM.precio - 1) mal.push(`r6: ${eur(imp)} por ${q}, por debajo de lo que pide (${eur(enM.precio)})`);
+      if (o.accion === 'comprar' && enM && enM.tipo === 'manager' && enM.precio && imp && imp < enM.precio - 1) mal.push(`r6: ${eur(imp)} por ${q}, por debajo de su valor (${eur(enM.precio)}): a un mánager no se le oferta menos`);
       // (Carlos, 20 nov, con Revivo: «por solo un millón más no me lo va a aceptar») a un rival no se le ofrece por uno suyo
       // que sube menos de lo que pediría (ofertaDueno)
       if (o.accion === 'comprar' && !enM && M.dueno[o.pid] && M.dueno[o.pid] !== (D.yo && D.yo.teamId) && M.ofertaDuenoDe && o.j) {

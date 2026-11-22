@@ -124,7 +124,7 @@ export function catalogo(D, M, notas = []) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
     // si al venderlo se queda sin poder alinear (su único portero…), no lo va a vender: ni se propone
     if (m.noVende) continue;
-    add({ ref: `M-${m.pid}`, tipo: 'comprar', pid: m.pid, j: m.j, precio: m.precio, vendedor: m.vendedor || nombreDe(M, m.vendedorTeamId), vendedorTeamId: m.vendedorTeamId, miPuja: m.miPuja, interes: m.interes, sobre: m.sobre, puja: m.puja, ofertaMin: m.ofertaMin, ofertaAlta: m.ofertaAlta, ofertaLiga: m.ofertaLiga, irreal: !!m.irreal, ofertaReal: m.ofertaReal || null });
+    add({ ref: `M-${m.pid}`, tipo: 'comprar', pid: m.pid, j: m.j, precio: m.precio, vendedor: m.vendedor || nombreDe(M, m.vendedorTeamId), vendedorTeamId: m.vendedorTeamId, miPuja: m.miPuja, interes: m.interes, sobre: m.sobre, puja: m.puja, ofertaMin: m.ofertaMin, ofertaAlta: m.ofertaAlta, ofertaLiga: m.ofertaLiga });
   }
   // T: tratos que le has contado (jugador de otro manager con precio)
   for (const n of notas) {
@@ -189,18 +189,15 @@ export function textoOp(o, M = null) {
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
-      const pide = j && j.valor ? ` (${pct((o.precio / j.valor - 1) * 100)} sobre su valor de ${eur(j.valor)})` : '';
       const laliga = ol && !ol.sinDatos
-        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): por lo vendido a LaLiga en esta liga (${ol.n} ventas) suele rondar ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}, y él se queda con la mejor${o.precio >= ol.max ? ': pide más de lo que le suele dar LaLiga, así que con lo que pide le compensa' : ', así que lo que pide es solo el suelo: por debajo de lo que suele darle LaLiga lo normal es que NO TE LO VENDA'}`
-        : '; LaLiga TAMBIÉN le hace su oferta por él (aún no sé cuánto suele dar en esta liga) y él se queda con la mejor, así que ofrecer solo lo que pide no basta';
+        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): por lo vendido a LaLiga en esta liga (${ol.n} ventas) suele rondar ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}, y él se queda con la mejor: por debajo de lo que suele darle LaLiga lo normal es que NO TE LO VENDA`
+        : '; LaLiga TAMBIÉN le hace su oferta por él (aún no sé cuánto suele dar en esta liga) y él se queda con la mejor, así que ofrecerle solo su valor puede no bastar';
       const min = o.ofertaMin ? `; OFERTA MÍNIMA CON OPCIONES ${eur(o.ofertaMin)}${o.ofertaAlta && o.ofertaAlta > o.ofertaMin ? `, con muchas opciones (sin garantía: puede tener otras ofertas) ${eur(o.ofertaAlta)}` : ''}; la app ofrecería ${eur(o.puja || o.ofertaMin)}` : '';
       const sc = M && M.sobrecoste && j && o.puja ? M.sobrecoste(j, o.puja) : null;
       const scTxt = sc && j.valor && o.puja > j.valor * 1.02 ? ` (${pct((o.puja / j.valor - 1) * 100)} sobre su valor: ÍNDICE DE SOBRECOSTE ${sc.indice}/100, aguantable hasta ~${M.tolerancia(j)})` : '';
-      // (22 nov, Fran) a un precio irreal no se contesta «al menos lo que pide»: se contesta con lo que vale la pena pagar
-      if (o.irreal && o.ofertaReal) {
-        return `COMPRAR ${j.nombre} a ${o.vendedor}, que lo tiene en el mercado por ${eur(o.precio)}${pide}: PRECIO IRREAL (lo pone así para ver la oferta de LaLiga o para que nadie lo compre). ESE PRECIO NO ES LO QUE HAY QUE PAGAR NI UNA REFERENCIA: a ${eur(o.precio)} la app no lo compra. Si pregunta por cuánto comprárselo o cuánto ofrecerle, la respuesta es lo que vale la pena pagar por él: hasta ~${eur(o.ofertaReal)}${ol && !ol.sinDatos ? ` (LaLiga le suele dar unos ${eur(ol.v)} y él se queda con la mejor oferta)` : ''}; por encima de eso se paga de más. Mientras lo tenga a ese precio, lo que toca es hablarlo con ${o.vendedor} (que lo ponga a un precio de verdad) o ir por su cláusula si compensa. NUNCA le digas «al menos ${eur(o.precio)}» ni «como mínimo lo que pide»${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}` : ''}`;
-      }
-      return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA por ${eur(o.precio)}${pide} (ese precio lo pone él a su gusto, muchas veces absurdo para ver la oferta de LaLiga: no es una oferta ni un trato con el mánager, pero por debajo no se puede ofertar; si está muy por encima de su valor, a ese precio no compensa y basta decirlo en una línea); es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
+      // (22 nov, Carlos) el precio que le pone un mánager en el mercado no cuenta para nada: a la IA ni se le pasa. Se le
+      // oferta desde el valor de mercado, nunca menos
+      return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA (vale ${eur(j.valor)}; EL PRECIO QUE ÉL LE HAYA PUESTO EN EL MERCADO NO CUENTA PARA NADA, ni de mínimo ni de referencia: la gente pone cualquier cifra, y si el mánager te dice que «lo tiene por tanto» o «pide tanto», NO uses esa cifra. Se le puede ofertar desde su valor de mercado, ${eur(j.valor)}, nunca menos); es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${noMerece(M, o) ? '; LA APP NO LA RECOMIENDA (Hoy y las alarmas no la enseñan): para el once NO la propongas; solo para revender con beneficio claro' : ''}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;

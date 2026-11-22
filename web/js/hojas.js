@@ -353,16 +353,15 @@ export function fichaJugador(S, pid) {
       const espE = (M.especular || []).find((e) => e.pid === m.pid);
       const espX = m.tipo === 'manager' ? 0 : op && op.objetivo === 'revender' ? op.importe || m.puja : espE ? espE.precio || m.puja : 0;
       if (m.tipo === 'manager') {
-        // (37) «Lo vende…»: a la vista, lo que pide y lo que hay que ofrecerle; dentro, cómo funciona la venta
-        const sobre = `${pct((m.sobrePide || 0) * 100)} sobre su valor`;
-        // (22 nov, Fran) a un precio irreal (200 M por uno de 1 M) no se le dice «ofrécele eso»
-        const ofrece = m.ofertaMin && !m.noVende && !vb && !m.irreal;
+        // (37) «Lo vende…»: a la vista, lo que hay que ofrecerle; dentro, cómo funciona la venta
+        // (22 nov, Carlos) el precio que le pone su dueño no cuenta para nada y no se enseña: se le oferta desde su valor
+        const ofrece = m.ofertaMin && !m.noVende && !vb;
         const oL = m.ofertaLiga;
-        const liga = !oL ? '' : oL.sinDatos || vb ? 'LaLiga también le hace su oferta y se queda con la mejor: lo que pide no basta.'
-          : `LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(oL.v)}</b> (de mediana un ${pct(oL.med * 100)} sobre el valor, en ${oL.n} ventas). Se queda con la mejor${m.precio >= oL.v ? ': aquí pide más que eso, así que manda su precio' : ': por menos lo normal es que no te lo venda'}.`;
+        const liga = !oL ? '' : oL.sinDatos || vb ? 'LaLiga también le hace su oferta y se queda con la mejor: con ofrecerle su valor puede no bastar.'
+          : `LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(oL.v)}</b> (de mediana un ${pct(oL.med * 100)} sobre el valor, en ${oL.n} ventas). Se queda con la mejor: por menos lo normal es que no te lo venda.`;
         h += aviso(S, { k: 'vende', pid, cls: 'oro', ico: 'usuario', t: `Lo vende ${esc(m.vendedor || 'otro manager')}`,
-          l: m.noVende ? `Pide ${eur(m.precio)}, pero lo normal es que no te lo venda` : m.irreal ? `Pide ${eur(m.precio)} (${sobre}): no es un precio de verdad${vb ? '' : ` · vale la pena hasta ~${eur(m.ofertaReal)}`}` : ofrece ? (eur(m.puja || m.ofertaMin) === eur(m.precio) ? `Pide ${eur(m.precio)} (${sobre}): ofrécele eso` : `Pide ${eur(m.precio)} (${sobre}) · ofrécele ${eur(m.puja || m.ofertaMin)}`) : `Pide ${eur(m.precio)} (${sobre})`,
-          d: parrafos(`Sigue siendo suyo: solo es tuyo si acepta tu oferta. No es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}`,
+          l: m.noVende ? 'Lo normal es que no te lo venda' : ofrece ? `Vale ${eur(j.valor)} · ofrécele ${eur(m.puja || m.ofertaMin)}` : `Se le oferta desde su valor, ${eur(j.valor)}`,
+          d: parrafos(`Sigue siendo suyo: solo es tuyo si acepta tu oferta. No es un jugador libre de la liga. El precio que él le haya puesto en el mercado da igual: puedes ofrecerle desde su valor.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}`,
             liga,
             m.noVende ? `<b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : '',
             ofrece && m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? `Esa oferta es la más probable: con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más.` : `Con ${eur(m.ofertaAlta)} es muy probable que te lo venda.`) : '',
@@ -684,13 +683,13 @@ export function fichaRival(S, tid) {
     const vs = ventasDe(M, tid);
     if (vs.length && bloqueada('ventasRivales')) cerradas.push('ventasRivales');
     else if (vs.length) {
-      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que pide y lo que suele dar LaLiga por uno así (una estimación con lo vendido en tu liga: lo de hoy solo lo ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
+      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que suele dar LaLiga por uno así (una estimación con lo vendido en tu liga: lo de hoy solo lo ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
       h += vs.map((m) => {
         const ol = m.ofertaLiga, conLiga = ol && !ol.sinDatos && ol.v;
         return filaJugador(m, {
-          sub: `${esc(m.j.equipo)} · vale ${eur(m.j.valor)} · pide ${eur(m.precio)}${m.ofertas ? ` · ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}` : ''}`,
+          sub: `${esc(m.j.equipo)} · vale ${eur(m.j.valor)}${m.ofertas ? ` · ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}` : ''}`,
           pills: [m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá</span>` : '', m.miPuja ? `<span class="pill abierta">Tu oferta ${eur(m.miPuja)}</span>` : '', estadoPill(m.j)],
-          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'suele dar LaLiga' : 'sin datos'}</div>${m.irreal ? '<div class="d apag">precio irreal</div>' : m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
+          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'suele dar LaLiga' : 'sin datos'}</div>${m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
         });
       }).join('');
     } else h += nada('No tiene a nadie en venta.');

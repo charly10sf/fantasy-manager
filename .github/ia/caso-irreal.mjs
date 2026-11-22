@@ -1,3 +1,5 @@
+// (22 nov, Carlos: «lo que ponga un mánager de precio de venta, que no se tenga en cuenta para nada») Desde entonces el precio
+// que pide no cuenta en ningún sitio: se le oferta desde el valor. Lo de abajo es como empezó.
 // El precio irreal que un rival pone en el mercado (22 nov, Fran: «si pones en el mercado un jugador por 200 kilos y le
 // preguntas por cuánto deberías comprárselo, te dice que al menos 200 kilos, aunque valga un millón; no entiende que a
 // veces pones precios irreales»). A la IA le llegaba «OFERTA MÍNIMA CON OPCIONES 200 M; la app ofrecería 200 M». Sin red:
@@ -13,7 +15,7 @@ import { pagina, cerrar } from './banco.mjs';
 let mal = 0;
 const ok = (c, t) => { if (!c) mal++; console.log(`${c ? 'BIEN' : 'MAL '} ${t}`); };
 let turno = 0;
-const P = await pagina('martes', () => (turno++ === 0 ? 'Para que te lo venda tienes que ofrecerle al menos 200,00 M, que es lo que pide.' : 'Ese precio es irreal: a 200 M no se compra. Lo que vale la pena pagar por él ronda los 3 M.'));
+const P = await pagina('martes', () => (turno++ === 0 ? 'Para que te lo venda tienes que ofrecerle al menos 200,00 M, que es lo que pide.' : 'Lo que pide no cuenta: ofrécele algo por encima de su valor, que es lo que le daría LaLiga.'));
 const r = await P.page.evaluate(async () => {
   const S = window.S, Mo = await import('./js/motor.js'), I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), Pm = await import('./js/plan.js'), U = await import('./js/util.js');
   const D = S.D, yo = D.yo.teamId, c = Dt.cfg();
@@ -42,15 +44,27 @@ const r = await P.page.evaluate(async () => {
   const oferta = { cuenta: [qo, 'Fran me ha dicho por WhatsApp que me da 20 M por Rodri', 'LaLiga me da 12 M por él, ¿lo vendo?', 'tengo una oferta de 9 M'].map((q) => I.cuentaOferta(q)).join(), noCuenta: ['¿Qué me ofrecen por Rodri?', '¿Cuánto me dan por él?', '¿Vendo a Rodri?', 'Voy a ofrecer 10 M por Pepe'].map((q) => I.cuentaOferta(q)).join(),
     orden: /TE CUENTA UNA OFERTA O UN TRATO QUE LE HAN HECHO: es un HECHO/.test(I.datosChat(qo, D, M, c, {})), sinOrden: !/TE CUENTA UNA OFERTA/.test(I.datosChat('¿Vendo a Rodri?', D, M, c, {})),
     limpia: I.sinNoLaVeo(noVe), intacta: I.sinNoLaVeo('Acéptala: te pagan 4 M más de lo que vale.').quitadas, sola: I.sinNoLaVeo('No veo esa oferta en la app.').quitadas };
-  return { oferta, j: barato.nombre, valor: barato.valor, irreal: mi.irreal, real: mi.ofertaReal, normalIrreal: mn.irreal, linea: linea.slice(0, 700), lineaN: /OFERTA MÍNIMA CON OPCIONES/.test(lineaN) && !/PRECIO IRREAL/.test(lineaN),
-    t1: x1.texto, t2: x2.texto, plan: R.ops.some((o) => !o.descartada && o.pid === barato.id), hoy: (M.acciones || []).some((a) => a.pid === barato.id && /compr|fich/i.test(`${a.tipo} ${a.titulo}`)) };
+  // (22 nov, Carlos) la ficha y la lista del mercado: ni rastro de los 200 M
+  window.__fmRehacer();
+  await new Promise((r) => setTimeout(r, 400));
+  const b = document.createElement('button'); b.dataset.j = barato.id; document.body.appendChild(b); b.click();
+  await new Promise((r) => setTimeout(r, 600));
+  const hoja = (document.querySelector('.hoja') || document.body).innerText;
+  b.remove();
+  const opB = R.ops.filter((o) => !o.descartada && o.pid === barato.id);
+  const txt = JSON.stringify([R.ops.filter((o) => o.pid === barato.id), (M.acciones || []).filter((a) => a.pid === barato.id), M.mercado.filter((x) => x.pid === barato.id).map((x) => ({ ...x, pide: 0, j: 0 }))]);
+  return { oferta, j: barato.nombre, valor: barato.valor, precio: mi.precio, puja: mi.puja, min: mi.ofertaMin, pide: mi.pide, sobre: mi.sobre, nPrecio: mn.precio, nValor: normal.valor, nPuja: mn.puja, linea: linea.slice(0, 900), lineaN: lineaN.slice(0, 900),
+    t1: x1.texto, t2: x2.texto, caro: opB.some((o) => o.importe > barato.valor * 1.4), txt200: /200[.,]00 M|200000000/.test(txt), hoja: hoja.slice(0, 1500) };
 });
-ok(r.irreal === true && r.real > r.valor && r.real < r.valor * 1.4 && r.normalIrreal === false, `(a) ${r.j} (vale ${Math.round(r.valor / 1e4) / 100} M) a 200 M: irreal, y lo que vale la pena pagar son ~${Math.round(r.real / 1e4) / 100} M; uno a un +8 % no lo es`);
-ok(/PRECIO IRREAL/.test(r.linea) && /NO ES LO QUE HAY QUE PAGAR/.test(r.linea) && !/OFERTA MÍNIMA CON OPCIONES 200|la app ofrecería 200/.test(r.linea), '(b) la IA lee «PRECIO IRREAL» y lo que vale la pena pagar, no «oferta mínima 200 M»');
-ok(r.lineaN, '(b) el de precio normal se le cuenta como siempre');
-ok(/Revisado por la app/.test(r.t1) && /no son un precio de verdad/.test(r.t1), '(c) si la IA dice «ofrécele al menos 200 M», la app lo corrige debajo');
-ok(!/no son un precio de verdad/.test(r.t2), '(c) si ya dice que es irreal, la app no añade nada');
-ok(!r.plan && !r.hoy, '(d) ni el plan ni Hoy proponen comprarlo');
+const m2 = (x) => `${Math.round(x / 1e4) / 100} M`;
+ok(r.precio === r.valor && r.pide === 200e6 && r.min >= r.valor && r.puja >= r.valor && r.puja < r.valor * 1.4 && r.sobre < 0.4, `(a) ${r.j} (vale ${m2(r.valor)}) puesto a 200 M: lo que pide no cuenta; se le oferta desde su valor y la app ofrecería ${m2(r.puja)}`);
+ok(r.nPrecio === r.nValor && r.nPuja >= r.nValor && r.nPuja < r.nValor * 1.4, `(a) el que estaba a un +8 %, igual: desde su valor (${m2(r.nValor)}), la app ofrecería ${m2(r.nPuja)}`);
+ok(/NO CUENTA PARA NADA/.test(r.linea) && /OFERTA MÍNIMA CON OPCIONES/.test(r.linea) && !/200[.,]00 M|200 M/.test(r.linea), '(b) a la IA no le llega lo que pide: lee que no cuenta, su valor y la oferta con opciones');
+ok(/NO CUENTA PARA NADA/.test(r.lineaN) && /OFERTA MÍNIMA CON OPCIONES/.test(r.lineaN), '(b) y con el otro, lo mismo');
+ok(/Revisado por la app/.test(r.t1) && /en el mercado no cuenta/.test(r.t1), '(c) si la IA dice «ofrécele al menos 200 M», la app lo corrige debajo');
+ok(!/en el mercado no cuenta/.test(r.t2), '(c) si contesta bien, la app no añade nada');
+ok(!r.caro && !r.txt200, '(d) ni el plan, ni Hoy, ni la lista del mercado llevan los 200 M en ningún sitio');
+ok(/Lo vende/.test(r.hoja) && !/200[.,]00\s?M|Pide/.test(r.hoja) && /ofrécele|desde su valor|no te lo venda/.test(r.hoja), `(d) su ficha: «Lo vende…», sin lo que pide${/Lo vende/.test(r.hoja) ? '' : ` — ${r.hoja.slice(0, 200).replace(/\n/g, ' ')}`}`);
 ok(r.oferta.cuenta === 'true,true,true,true' && r.oferta.noCuenta === 'false,false,false,false' && r.oferta.orden && r.oferta.sinOrden, '(e) «me ofrecen…», «me ha dicho que me da…», «LaLiga me da…»: a la IA se le dice que es un hecho; una pregunta no lo es');
 ok(r.oferta.limpia.quitadas === 1 && !/No veo esa oferta/.test(r.oferta.limpia.texto) && /yo aceptaría/.test(r.oferta.limpia.texto) && r.oferta.intacta === 0 && r.oferta.sola === 0, '(e) si contesta «no veo esa oferta en la app», esa frase se quita y el resto se queda (y nunca se deja la respuesta vacía)');
 ok(!P.errores.length, `sin errores en la página${P.errores.length ? `: ${P.errores[0]}` : ''}`);
