@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000,
    "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000,
@@ -9067,13 +9066,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5173,
+   "ok": 5174,
    "fallos": 0,
-   "ejecuciones": 4226,
+   "ejecuciones": 4227,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:06:21.563Z"
+   "ultima": "2026-11-22T11:11:11.129Z"
   }
  },
  "ptsDirecto": {
@@ -9193,15 +9192,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:06:26.425Z"
+   "ultimaBien": "2026-11-22T11:11:16.047Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:06:26.425Z"
+   "ultimaBien": "2026-11-22T11:11:16.047Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:06:26.425Z"
+   "ultimaBien": "2026-11-22T11:11:16.047Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9209,11 +9208,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:06:26.425Z"
+   "ultimaBien": "2026-11-22T11:11:16.047Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:06:26.425Z"
+   "ultimaBien": "2026-11-22T11:11:16.047Z"
   }
  },
  "avisos": [
