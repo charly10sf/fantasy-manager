@@ -2810,7 +2810,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
    "SPORT|136715788": 1795347290000,
-   "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000
+   "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000
   },
   "hechos": [
    {
@@ -3533,7 +3534,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4438,17 +4439,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 9,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 129241,
-  "salida": 9041,
+  "entrada": 131183,
+  "salida": 9342,
   "cacheLee": 24167,
   "cacheEscribe": 19341,
-  "dolares": 0.260944,
+  "dolares": 0.261289,
   "reservado": 0
  },
  "recientes": {
@@ -9113,13 +9114,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5210,
+   "ok": 5212,
    "fallos": 0,
-   "ejecuciones": 4256,
+   "ejecuciones": 4257,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T13:36:14.885Z"
+   "ultima": "2026-11-22T13:41:13.158Z"
   }
  },
  "ptsDirecto": {
@@ -9257,27 +9258,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:36:19.806Z"
+   "ultimaBien": "2026-11-22T13:41:20.506Z"
   }
  },
  "avisos": [
