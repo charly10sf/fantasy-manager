@@ -1843,6 +1843,21 @@
    "jornada": 13,
    "id": "2124541263806386316",
    "t": "2026-11-22T16:31:24.561Z"
+  },
+  {
+   "clave": "directo|124|Gonçalo Guedes|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124542551873159208",
+   "t": "2026-11-22T16:36:31.505Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "124",
+    "equipo": "89",
+    "min": 60,
+    "extra": 0,
+    "jugador": "Gonçalo Guedes"
+   }
   }
  ],
  "estados": {
@@ -4532,16 +4547,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 23,
-   "redactar": 27,
+   "redactar": 29,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 288976,
-  "salida": 14426,
+  "entrada": 313760,
+  "salida": 14740,
   "cacheLee": 101494,
   "cacheEscribe": 52217,
-  "dolares": 0.675802,
+  "dolares": 0.72851,
   "reservado": 0
  },
  "recientes": {
@@ -4679,10 +4694,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T14:26:26.935Z",
-    "texto": "⚽ Fermín la manda dentro en el 61' y el Barça empata con el Villarreal 🚢: 2-2.\n\nEl centrocampista ya suma 6 puntos y llega en racha, con tres jornadas seguidas puntuando fuerte. El pase es de Lamine Yamal, que se lleva 4 de momento."
-   },
-   {
     "t": "2026-11-22T15:26:29.403Z",
     "texto": "⚽ Yassir Zabiri la manda dentro en el 6' y el Racing ⚓ se adelanta 1-0 ante la Real Sociedad en El Sardinero.\n\nEl marroquí ya suma 9 puntos por ahora y va por su gol 10 entre Liga, Champions y Copa del Rey. El pase es de Iker Luque, que de momento se lleva 5."
    },
@@ -4697,6 +4708,10 @@
    {
     "t": "2026-11-22T16:06:18.466Z",
     "texto": "⚽ Oyarzabal recorta para la Real Sociedad en el 45+1'. Racing 2-1 Real Sociedad. Asistencia de Sergio Gómez, con 1 puntos de momento. Oyarzabal ya suma 4 puntos."
+   },
+   {
+    "t": "2026-11-22T16:36:31.507Z",
+    "texto": "⚽ Guedes empata para la Real Sociedad en el 60'. Racing 2-2 Real Sociedad. Asistencia de Gorrotxa, con 4 puntos de momento. Guedes ya suma 5 puntos."
    }
   ],
   "novedades": [
@@ -9315,17 +9330,33 @@
    "w": "2026-11-22T16:01:25Z",
    "f": "2026-11-22T16:06:10.164Z",
    "rf": "Half-Time"
+  },
+  "fm|124|536455|60": {
+   "j": "Gonçalo Guedes",
+   "m": "60'",
+   "f": "2026-11-22T16:36:22.977Z",
+   "rf": "61:29",
+   "casado": true
+  },
+  "directo|124|Gonçalo Guedes|gol1": {
+   "j": "Gonçalo Guedes",
+   "m": "60'",
+   "e": "2026-11-22T16:36:22.977Z",
+   "re": "62'",
+   "w": "2026-11-22T16:34:00Z",
+   "f": "2026-11-22T16:36:22.977Z",
+   "rf": "61:29"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5277,
+   "ok": 5279,
    "fallos": 0,
-   "ejecuciones": 4291,
+   "ejecuciones": 4292,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:31:11.202Z"
+   "ultima": "2026-11-22T16:36:22.977Z"
   }
  },
  "ptsDirecto": {
@@ -9496,6 +9527,18 @@
    "g": 0,
    "a": 1,
    "t": 1795363570164
+  },
+  "13|124|3085": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795365382977
+  },
+  "13|124|2621": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795365382977
   }
  },
  "golesAnulados": {
@@ -9511,27 +9554,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:31:25.237Z"
+   "ultimaBien": "2026-11-22T16:36:36.975Z"
   }
  },
  "avisos": [
