@@ -2747,7 +2747,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
    "SPORT|136632067": 1795106605000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
@@ -9350,13 +9349,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5279,
+   "ok": 5281,
    "fallos": 0,
-   "ejecuciones": 4292,
+   "ejecuciones": 4293,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:36:22.977Z"
+   "ultima": "2026-11-22T16:41:12.208Z"
   }
  },
  "ptsDirecto": {
@@ -9554,27 +9553,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:36:36.975Z"
+   "ultimaBien": "2026-11-22T16:41:18.329Z"
   }
  },
  "avisos": [
