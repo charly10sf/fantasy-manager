@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 45
     env:
       BOT_IA: claude
-      TOPE_USD: '0.4'
+      TOPE_USD: '0.22'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with: { fetch-depth: 0 }
@@ -47,7 +47,7 @@ jobs:
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
           # segunda pasada (22 nov, 00:20): solo la versión nueva, en los tipos que más fallaban, con los motivos enteros (lo que queda del tope de 3 $)
-          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion-2 --solo=ahora --tipos=final,mvp,previa --cupo='{"final":1,"mvp":2,"previa":1}' --tope="$TOPE_USD"
+          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion-3 --solo=ahora --tipos=mvp --cupo='{"mvp":3}' --tope="$TOPE_USD"
       - name: Guardar en la rama
         if: always()
         run: |
