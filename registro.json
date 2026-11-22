@@ -4457,8 +4457,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261119/1004252798/juega-partido-lliga-elit-dos-encuentros-primera-catalana.html": 1795043308000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/america/20261119/1004252808/ocho-anos-machacar-cara-arbitro-pedradas.html": 1795068590000,
    "SPORT|136604014": 1795073267000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
@@ -9150,13 +9148,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5122,
+   "ok": 5123,
    "fallos": 0,
-   "ejecuciones": 4175,
+   "ejecuciones": 4176,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T06:56:12.125Z"
+   "ultima": "2026-11-22T07:01:13.243Z"
   }
  },
  "ptsDirecto": {
@@ -9276,15 +9274,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T06:56:12.666Z"
+   "ultimaBien": "2026-11-22T07:01:20.491Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T06:56:12.666Z"
+   "ultimaBien": "2026-11-22T07:01:20.491Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T06:56:12.666Z"
+   "ultimaBien": "2026-11-22T07:01:20.491Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9292,7 +9290,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:56:24.841Z"
+   "ultimaBien": "2026-11-22T07:01:20.491Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
