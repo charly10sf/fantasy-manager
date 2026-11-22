@@ -1,6 +1,6 @@
 {
  "J": 13,
- "generada": 1795301321156,
+ "generada": 1795306120414,
  "equipos": [
   {
    "id": "3",
@@ -2166,7 +2166,7 @@
      "id": "3100",
      "nombre": "Pedri",
      "pos": 3,
-     "p": 80
+     "p": 81
     },
     {
      "id": "2358",
@@ -2197,6 +2197,57 @@
      "nombre": "Gordon",
      "pos": 4,
      "p": 65
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2757",
+     "nombre": "Gerard Martín",
+     "pos": 2,
+     "p": 76
+    },
+    {
+     "id": "2355",
+     "nombre": "Kounde",
+     "pos": 2,
+     "p": 56
+    },
+    {
+     "id": "3209",
+     "nombre": "Adeyemi",
+     "pos": 4,
+     "p": 40
+    },
+    {
+     "id": "2784",
+     "nombre": "Marc Bernal",
+     "pos": 3,
+     "p": 39
+    },
+    {
+     "id": "3224",
+     "nombre": "Brian Fariñas",
+     "pos": 3,
+     "p": 35
+    },
+    {
+     "id": "2353",
+     "nombre": "Christensen",
+     "pos": 2,
+     "p": 31,
+     "duda": true
+    },
+    {
+     "id": "1218",
+     "nombre": "Álex Balde",
+     "pos": 2,
+     "p": 28
+    },
+    {
+     "id": "3258",
+     "nombre": "Gabriel Jesus",
+     "pos": 4,
+     "p": 24
     }
    ],
    "dudas": [
@@ -2249,7 +2300,7 @@
     {
      "id": "2355",
      "nombre": "Kounde",
-     "dias": 35,
+     "dias": 36,
      "lesion": "Esguince de tobillo",
      "antes": 44,
      "p": 56
@@ -2257,7 +2308,7 @@
     {
      "id": "3092",
      "nombre": "Olmo",
-     "dias": 32,
+     "dias": 33,
      "lesion": "Rotura fibrilar en el aductor",
      "antes": 33,
      "p": 41
@@ -2373,6 +2424,57 @@
      "nombre": "Ayoze",
      "pos": 4,
      "p": 66
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3087",
+     "nombre": "Pepe",
+     "pos": 4,
+     "p": 64
+    },
+    {
+     "id": "1031",
+     "nombre": "Comesaña",
+     "pos": 3,
+     "p": 42
+    },
+    {
+     "id": "2477",
+     "nombre": "I. Akhomach",
+     "pos": 4,
+     "p": 36,
+     "duda": true
+    },
+    {
+     "id": "1614",
+     "nombre": "Cardona",
+     "pos": 2,
+     "p": 35
+    },
+    {
+     "id": "2698",
+     "nombre": "Pau Navarro",
+     "pos": 2,
+     "p": 33
+    },
+    {
+     "id": "3242",
+     "nombre": "Saliba",
+     "pos": 3,
+     "p": 30
+    },
+    {
+     "id": "2469",
+     "nombre": "Costa",
+     "pos": 2,
+     "p": 29
+    },
+    {
+     "id": "2761",
+     "nombre": "Oluwaseyi",
+     "pos": 4,
+     "p": 27
     }
    ],
    "dudas": [
@@ -2532,6 +2634,57 @@
      "p": 51
     }
    ],
+   "suplentes": [
+    {
+     "id": "2712",
+     "nombre": "Pablo García",
+     "pos": 4,
+     "p": 33
+    },
+    {
+     "id": "3253",
+     "nombre": "Aaron",
+     "pos": 2,
+     "p": 26,
+     "duda": true
+    },
+    {
+     "id": "3008",
+     "nombre": "Manu Hernando",
+     "pos": 2,
+     "p": 25
+    },
+    {
+     "id": "1529",
+     "nombre": "Almeida",
+     "pos": 3,
+     "p": 22
+    },
+    {
+     "id": "3027",
+     "nombre": "Facu",
+     "pos": 2,
+     "p": 21
+    },
+    {
+     "id": "3000",
+     "nombre": "Iñigo",
+     "pos": 3,
+     "p": 21
+    },
+    {
+     "id": "3017",
+     "nombre": "Guliashvili",
+     "pos": 4,
+     "p": 18
+    },
+    {
+     "id": "3022",
+     "nombre": "Villalibre",
+     "pos": 4,
+     "p": 14
+    }
+   ],
    "dudas": [
     {
      "linea": 4,
@@ -2592,6 +2745,12 @@
      "p": 93
     },
     {
+     "id": "3238",
+     "nombre": "M. Sarr",
+     "pos": 2,
+     "p": 71
+    },
+    {
      "id": "1989",
      "nombre": "Sergio Gómez",
      "pos": 2,
@@ -2602,12 +2761,6 @@
      "nombre": "Aramburu",
      "pos": 2,
      "p": 64
-    },
-    {
-     "id": "265",
-     "nombre": "Zubeldia",
-     "pos": 2,
-     "p": 39
     },
     {
      "id": "2444",
@@ -2637,7 +2790,7 @@
      "id": "1197",
      "nombre": "Kubo",
      "pos": 3,
-     "p": 34
+     "p": 33
     },
     {
      "id": "3091",
@@ -2646,21 +2799,57 @@
      "p": 93
     }
    ],
-   "dudas": [
+   "suplentes": [
     {
-     "linea": 2,
-     "a": {
-      "id": "265",
-      "nombre": "Zubeldia",
-      "p": 39
-     },
-     "b": {
-      "id": "2834",
-      "nombre": "Beitia",
-      "p": 31
-     },
-     "pa": 56
+     "id": "3085",
+     "nombre": "Guedes",
+     "pos": 4,
+     "p": 75
     },
+    {
+     "id": "2448",
+     "nombre": "Oskarsson",
+     "pos": 4,
+     "p": 60
+    },
+    {
+     "id": "265",
+     "nombre": "Zubeldia",
+     "pos": 2,
+     "p": 39
+    },
+    {
+     "id": "2834",
+     "nombre": "Beitia",
+     "pos": 2,
+     "p": 31
+    },
+    {
+     "id": "2818",
+     "nombre": "Hector Fort",
+     "pos": 2,
+     "p": 30
+    },
+    {
+     "id": "2955",
+     "nombre": "Ochieng",
+     "pos": 4,
+     "p": 20
+    },
+    {
+     "id": "2862",
+     "nombre": "Marchal",
+     "pos": 3,
+     "p": 19
+    },
+    {
+     "id": "2446",
+     "nombre": "Zakharyan",
+     "pos": 3,
+     "p": 16
+    }
+   ],
+   "dudas": [
     {
      "linea": 4,
      "a": {
@@ -2683,11 +2872,6 @@
      "estado": "lesionado",
      "lesion": "Rotura en los isquiotibiales",
      "hasta": "mayo"
-    },
-    {
-     "id": "3238",
-     "nombre": "M. Sarr",
-     "estado": "lesionado"
     }
    ],
    "vuelven": [],
@@ -2697,6 +2881,11 @@
    },
    "cambios": {
     "entran": [
+     {
+      "id": "3238",
+      "nombre": "M. Sarr",
+      "pos": 2
+     },
      {
       "id": "1989",
       "nombre": "Sergio Gómez",
@@ -2714,6 +2903,12 @@
      }
     ],
     "salen": [
+     {
+      "id": "265",
+      "nombre": "Zubeldia",
+      "pos": 2,
+      "por": null
+     },
      {
       "id": "2448",
       "nombre": "Oskarsson",
@@ -2763,7 +2958,7 @@
      "id": "1890",
      "nombre": "Boyomo",
      "pos": 2,
-     "p": 74
+     "p": 73
     },
     {
      "id": "2559",
@@ -2808,10 +3003,60 @@
      "p": 92
     },
     {
+     "id": "2923",
+     "nombre": "Raúl Moro",
+     "pos": 4,
+     "p": 43
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "873",
+     "nombre": "Torró",
+     "pos": 3,
+     "p": 47
+    },
+    {
      "id": "3183",
      "nombre": "Dubasin",
      "pos": 4,
      "p": 43
+    },
+    {
+     "id": "1730",
+     "nombre": "Iker Muñoz",
+     "pos": 3,
+     "p": 38
+    },
+    {
+     "id": "2721",
+     "nombre": "A. Osambela",
+     "pos": 3,
+     "p": 26
+    },
+    {
+     "id": "2339",
+     "nombre": "Raúl",
+     "pos": 4,
+     "p": 25
+    },
+    {
+     "id": "2846",
+     "nombre": "Arguibide",
+     "pos": 2,
+     "p": 25
+    },
+    {
+     "id": "3252",
+     "nombre": "Del Castillo",
+     "pos": 4,
+     "p": 20
+    },
+    {
+     "id": "2337",
+     "nombre": "Kike Barja",
+     "pos": 4,
+     "p": 19
     }
    ],
    "dudas": [
@@ -2832,13 +3077,13 @@
     {
      "linea": 4,
      "a": {
-      "id": "3183",
-      "nombre": "Dubasin",
+      "id": "2923",
+      "nombre": "Raúl Moro",
       "p": 43
      },
      "b": {
-      "id": "2923",
-      "nombre": "Raúl Moro",
+      "id": "3183",
+      "nombre": "Dubasin",
       "p": 43
      },
      "pa": 50
@@ -2878,11 +3123,6 @@
       "id": "2338",
       "nombre": "Aimar",
       "pos": 3
-     },
-     {
-      "id": "3183",
-      "nombre": "Dubasin",
-      "pos": 4
      }
     ],
     "salen": [
@@ -2902,12 +3142,6 @@
       "id": "873",
       "nombre": "Torró",
       "pos": 3,
-      "por": null
-     },
-     {
-      "id": "2923",
-      "nombre": "Raúl Moro",
-      "pos": 4,
       "por": null
      }
     ]
@@ -2941,7 +3175,7 @@
      "id": "3042",
      "nombre": "Einar",
      "pos": 2,
-     "p": 86
+     "p": 87
     },
     {
      "id": "2398",
@@ -2972,7 +3206,7 @@
      "id": "3036",
      "nombre": "Dani Lorenzo",
      "pos": 3,
-     "p": 88
+     "p": 87
     },
     {
      "id": "3044",
@@ -2991,6 +3225,57 @@
      "nombre": "Niño",
      "pos": 4,
      "p": 91
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3070",
+     "nombre": "Chupe",
+     "pos": 4,
+     "p": 80
+    },
+    {
+     "id": "3048",
+     "nombre": "Ramon",
+     "pos": 3,
+     "p": 51
+    },
+    {
+     "id": "3034",
+     "nombre": "Joaquín",
+     "pos": 4,
+     "p": 41
+    },
+    {
+     "id": "2525",
+     "nombre": "Salinas",
+     "pos": 2,
+     "p": 34
+    },
+    {
+     "id": "3038",
+     "nombre": "Rafa Rodríguez",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "3132",
+     "nombre": "J. Berrocal",
+     "pos": 2,
+     "p": 25
+    },
+    {
+     "id": "3140",
+     "nombre": "Juan Cruz",
+     "pos": 3,
+     "p": 19,
+     "duda": true
+    },
+    {
+     "id": "3274",
+     "nombre": "Cajuste",
+     "pos": 3,
+     "p": 19
     }
    ],
    "dudas": [
@@ -3032,7 +3317,7 @@
      "b": {
       "id": "3070",
       "nombre": "Chupe",
-      "p": 81
+      "p": 80
      },
      "pa": 53
     }
@@ -3053,7 +3338,7 @@
     {
      "id": "3140",
      "nombre": "Juan Cruz",
-     "dias": 40,
+     "dias": 41,
      "lesion": "Molestias en el bíceps femoral",
      "antes": 0,
      "p": 19
@@ -3182,6 +3467,56 @@
      "p": 66
     }
    ],
+   "suplentes": [
+    {
+     "id": "2926",
+     "nombre": "Boselli",
+     "pos": 2,
+     "p": 46
+    },
+    {
+     "id": "3200",
+     "nombre": "Francho",
+     "pos": 3,
+     "p": 38
+    },
+    {
+     "id": "3254",
+     "nombre": "Iván Azón",
+     "pos": 4,
+     "p": 37
+    },
+    {
+     "id": "2699",
+     "nombre": "J. Ives Valou",
+     "pos": 2,
+     "p": 37
+    },
+    {
+     "id": "2774",
+     "nombre": "Kiko F.",
+     "pos": 2,
+     "p": 29
+    },
+    {
+     "id": "2736",
+     "nombre": "Davinchi",
+     "pos": 2,
+     "p": 25
+    },
+    {
+     "id": "3134",
+     "nombre": "Saba Sazonov",
+     "pos": 2,
+     "p": 22
+    },
+    {
+     "id": "2488",
+     "nombre": "B. Mayoral",
+     "pos": 4,
+     "p": 18
+    }
+   ],
    "dudas": [
     {
      "linea": 3,
@@ -3193,7 +3528,7 @@
      "b": {
       "id": "3200",
       "nombre": "Francho",
-      "p": 37
+      "p": 38
      },
      "pa": 59
     }
@@ -3273,7 +3608,7 @@
      "id": "67",
      "nombre": "Marcos Llorente",
      "pos": 2,
-     "p": 86
+     "p": 87
     },
     {
      "id": "255",
@@ -3316,6 +3651,56 @@
      "nombre": "Giuliano",
      "pos": 4,
      "p": 88
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3114",
+     "nombre": "Hjulmand",
+     "pos": 3,
+     "p": 58
+    },
+    {
+     "id": "2480",
+     "nombre": "Johnny",
+     "pos": 3,
+     "p": 51
+    },
+    {
+     "id": "3255",
+     "nombre": "J. David",
+     "pos": 4,
+     "p": 43
+    },
+    {
+     "id": "2332",
+     "nombre": "Sorloth",
+     "pos": 4,
+     "p": 27
+    },
+    {
+     "id": "2717",
+     "nombre": "R. Mendoza",
+     "pos": 3,
+     "p": 17
+    },
+    {
+     "id": "3194",
+     "nombre": "Arnau Ortiz",
+     "pos": 4,
+     "p": 13
+    },
+    {
+     "id": "2881",
+     "nombre": "D. Martínez",
+     "pos": 2,
+     "p": 13
+    },
+    {
+     "id": "2321",
+     "nombre": "J. Musso",
+     "pos": 1,
+     "p": 5
     }
    ],
    "dudas": [
@@ -3405,7 +3790,7 @@
      "id": "3174",
      "nombre": "Mandi",
      "pos": 2,
-     "p": 83
+     "p": 84
     },
     {
      "id": "2624",
@@ -3456,6 +3841,56 @@
      "p": 91
     }
    ],
+   "suplentes": [
+    {
+     "id": "2303",
+     "nombre": "I. Romero",
+     "pos": 4,
+     "p": 82
+    },
+    {
+     "id": "2700",
+     "nombre": "Etta Eyong",
+     "pos": 4,
+     "p": 53
+    },
+    {
+     "id": "2671",
+     "nombre": "Jeremy Toljan",
+     "pos": 2,
+     "p": 48
+    },
+    {
+     "id": "2628",
+     "nombre": "O. Rey",
+     "pos": 3,
+     "p": 37
+    },
+    {
+     "id": "2670",
+     "nombre": "Víctor G.",
+     "pos": 2,
+     "p": 34
+    },
+    {
+     "id": "3256",
+     "nombre": "Ratkov",
+     "pos": 4,
+     "p": 31
+    },
+    {
+     "id": "2395",
+     "nombre": "Hugo Sotelo",
+     "pos": 3,
+     "p": 25
+    },
+    {
+     "id": "3246",
+     "nombre": "Axel Tape",
+     "pos": 2,
+     "p": 20
+    }
+   ],
    "dudas": [
     {
      "linea": 2,
@@ -3497,7 +3932,7 @@
       "nombre": "I. Romero",
       "p": 82
      },
-     "pa": 52
+     "pa": 53
     }
    ],
    "fuera": [],
@@ -3581,7 +4016,7 @@
      "id": "2939",
      "nombre": "G. Villar",
      "pos": 3,
-     "p": 76
+     "p": 75
     },
     {
      "id": "2703",
@@ -3612,6 +4047,56 @@
      "nombre": "Cepeda",
      "pos": 4,
      "p": 57
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3151",
+     "nombre": "Buonanotte",
+     "pos": 3,
+     "p": 38
+    },
+    {
+     "id": "2529",
+     "nombre": "Rubén S.",
+     "pos": 2,
+     "p": 35
+    },
+    {
+     "id": "2601",
+     "nombre": "Martim Neto",
+     "pos": 3,
+     "p": 32
+    },
+    {
+     "id": "2941",
+     "nombre": "T. Morente",
+     "pos": 4,
+     "p": 30
+    },
+    {
+     "id": "2922",
+     "nombre": "Osorio",
+     "pos": 4,
+     "p": 28
+    },
+    {
+     "id": "2780",
+     "nombre": "Grady Diangana",
+     "pos": 4,
+     "p": 22
+    },
+    {
+     "id": "2294",
+     "nombre": "R.P. Bigas",
+     "pos": 2,
+     "p": 20
+    },
+    {
+     "id": "3189",
+     "nombre": "Barzic",
+     "pos": 2,
+     "p": 13
     }
    ],
    "dudas": [

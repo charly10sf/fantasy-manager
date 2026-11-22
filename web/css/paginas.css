@@ -372,12 +372,30 @@ h3 + .tabla-scroll { margin-top: 4px; }
 .campo-o .cl { position: relative; z-index: 1; }
 .oj b a { color: var(--texto); text-decoration: none; }
 .oj b a:hover { text-decoration: underline; }
+.campo-f { position: absolute; left: 10px; top: 8px; z-index: 1; font: 700 13px/1 var(--cond); letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.62); }
+/* el % de titular, con los colores de la app (tit-b): 75 o más, verde; 45 o más, oro; menos, rojo */
+.tp { display: inline-block; font: 700 13.5px/1 var(--cond); letter-spacing: 0.2px; padding: 3px 6px 2px; border-radius: 999px; border: 1px solid; white-space: nowrap; background: rgba(0, 0, 0, 0.42); }
+.tp.bien, .oj-c.bien { color: var(--sube); border-color: rgba(47, 209, 143, 0.55); }
+.tp.duda, .oj-c.duda { color: var(--oro); border-color: rgba(255, 197, 71, 0.55); }
+.tp.mal, .oj-c.mal { color: var(--baja); border-color: rgba(255, 111, 97, 0.55); }
 .oj-c { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #0a1f14; border: 2px solid var(--s3); color: var(--texto); font: 700 19px/1 var(--cond); font-style: normal; }
-.oj-c small { font-size: 10px; font-weight: 700; color: var(--texto2); margin-top: -3px; }
-.oj-c.p1 { border-color: var(--por); } .oj-c.p2 { border-color: var(--def); } .oj-c.p3 { border-color: var(--med); } .oj-c.p4 { border-color: var(--rojo-l); }
-.oj-p { font: 700 14px/1 var(--cond); color: var(--texto); background: rgba(0, 0, 0, 0.35); border-radius: 6px; padding: 3px 5px 2px; }
+.oj-c small { font-size: 10px; font-weight: 700; opacity: 0.8; margin-top: -3px; }
 .oj-d { font: 700 11px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: #000; background: var(--oro); border-radius: 5px; padding: 3px 4px 2px; }
 .oj-duda .oj-c { border-style: dashed; }
+/* debajo del campo, los suplentes con su %: pegados al campo, como el banquillo */
+.campo-o:has(+ .banq) { margin-bottom: 0; border-radius: 18px 18px 0 0; }
+.banq { max-width: 560px; margin: 0 0 12px; padding: 10px 10px 12px; background: var(--s1); border-radius: 0 0 18px 18px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.06); }
+.banq-t { font: 700 12.5px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.8px; color: var(--apagado); margin: 0 0 8px; }
+.banq-l { display: flex; flex-wrap: wrap; gap: 6px; }
+.bj { display: inline-flex; align-items: center; gap: 6px; padding: 5px 7px 5px 9px; border-radius: 999px; background: var(--s2); min-width: 0; }
+.bj b { font-size: 13.5px; font-weight: 600; white-space: nowrap; }
+.bj b a { color: var(--texto); text-decoration: none; }
+.bj b a:hover { text-decoration: underline; }
+.bj .tp { background: none; }
+.banq-c .banq-l { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 4px; }
+.banq-c .bj { display: grid; justify-items: center; gap: 4px; padding: 0; background: none; border-radius: 0; text-align: center; }
+.banq-c .bj b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+.banq + p { margin-top: 0; }
 .campo-o + p { margin-top: 0; }
 @media (min-width: 900px) { .bq > .campo-o { margin-left: 0; } }
 table.once { width: 100%; border-collapse: collapse; }

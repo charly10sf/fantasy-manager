@@ -71,11 +71,37 @@ assert.match(html, /95<small> %<\/small>/);
   const lineas = campo[1].split('<div class="cl">').slice(1);
   assert.equal(lineas.length, 4, 'cuatro líneas');
   assert.equal((campo[0].match(/class="cj oj/g) || []).length, 11, 'once jugadores');
-  assert.match(lineas[0], /oj-c p4/, 'arriba, los delanteros');
-  assert.match(lineas[3], /oj-c p1/, 'abajo, el portero');
+  assert.match(lineas[0], /<b>Delantero /, 'arriba, los delanteros');
+  assert.match(lineas[3], /<b>Portero /, 'abajo, el portero');
   assert.equal((lineas[3].match(/class="cj oj/g) || []).length, 1);
   assert.match(html, /role="group" aria-label="Once 4-3-3, portero: [^"]+; defensas: [^"]+; centrocampistas: [^"]+; delanteros: [^"]+"/);
   assert.doesNotMatch(campo[0], /<img/, 'en la página de los 20, sin fotos (serían 220)');
+  // (22 nov) el % con los colores de la app: 75 o más, verde; 45 o más, oro; menos, rojo
+  assert.match(campo[0], /class="oj-c bien">95</);
+  assert.match(campo[0], /class="oj-c duda">60</);
+  assert.match(campo[0], /<span class="campo-f">4-3-3<\/span>/, 'la formación, en una esquina del campo');
+  // debajo, los suplentes con su %: los que se quedan fuera del once, del más probable al menos
+  const yy = o.equipos[0];
+  assert.ok(yy.suplentes.length >= 1 && yy.suplentes.length <= 8, 'hay suplentes');
+  assert.ok(yy.suplentes.every((s) => !yy.once.some((x) => x.id === s.id)), 'ninguno del once');
+  assert.ok(yy.suplentes.every((s, i) => !i || yy.suplentes[i - 1].p >= s.p), 'por % de titular');
+  assert.ok(yy.suplentes.every((s) => s.p >= 3));
+  const banq = html.match(/<div class="banq" role="group" aria-label="Suplentes">.*?<\/div><\/div>/s);
+  assert.ok(banq, 'los suplentes, debajo del campo');
+  assert.equal((banq[0].match(/class="bj"/g) || []).length, yy.suplentes.length);
+  for (const s of yy.suplentes) assert.ok(banq[0].includes(`<span class="tp ${s.p >= 75 ? 'bien' : s.p >= 45 ? 'duda' : 'mal'}">${s.p} %</span>`), `${s.nombre}: su % con su color`);
+  // en la ficha de un equipo: el campo con las caras y los suplentes, y NADA de texto debajo (Carlos, 22 nov)
+  const jug = (id) => ({ id, nombre: 'N', pos: 2, caraUrl: 'https://assets-fantasy.llt-services.com/players/t1/p1/256x256/p1_t1_1_001_000.png' });
+  const bf = bloqueFicha(yy, 13, { jug });
+  assert.match(bf, /<h2>El once probable para la jornada 13<\/h2>/);
+  assert.doesNotMatch(bf, /<p(?! class="banq-t")/, 'sin párrafos: solo el campo y los suplentes');
+  assert.equal((bf.match(/<img /g) || []).length, 11 + yy.suplentes.length, 'una cara por jugador, también los suplentes');
+  assert.equal((bf.match(/class="tp (bien|duda|mal)"/g) || []).length, 11 + yy.suplentes.length);
+  assert.match(bf, /class="banq banq-c"/);
+  // con el once confirmado no hay % ni suplentes
+  const bc = bloqueFicha({ ...yy, confirmado: yy.once.map(({ id, nombre, pos }) => ({ id, nombre, pos })) }, 13, { jug });
+  assert.match(bc, /El once confirmado/);
+  assert.doesNotMatch(bc, /class="tp |Suplentes/);
 }
 assert.match(html, /metodo\.html#onces/);
 assert.match(bloqueFicha(y, 13), /El once probable para la jornada 13/);

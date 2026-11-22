@@ -12,6 +12,10 @@ import { el, del } from '../lib/texto.mjs';
 
 const LINEA = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 const LINEA_TXT = { 1: 'Portero', 2: 'Defensas', 3: 'Centrocampistas', 4: 'Delanteros' };
+/** los suplentes que se enseñan debajo del campo: como mucho `n`, con un `min` % de titular */
+const SUPLENTES = { n: 8, min: 3 };
+/** el color del % de titular, el de la app (`tit-b` en web/js/comunes.js): 75 o más, verde; 45 o más, oro; menos, rojo */
+const nivelP = (p) => (p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal');
 const EN_LINEA = { 1: 'en la portería', 2: 'en la defensa', 3: 'en el centro del campo', 4: 'arriba' };
 // las formaciones que se prueban (las mismas que el once posible del bot): se queda la que más % suma
 export const FORMACIONES = [[4, 3, 3], [4, 4, 2], [4, 5, 1], [3, 5, 2], [3, 4, 3], [5, 3, 2], [5, 4, 1]];
@@ -94,6 +98,7 @@ export function hechosOnces(H, { J, jugadores = [], partes = [], previo = null, 
     const dibujo = top ? top[0].split('-').map(Number) : null;
     const m = mejorOnce(cands, dibujo);
     if (!m) continue;
+    const enOnce = new Set(m.once.map((x) => x.id));
     // las dudas: en cada línea, el último que entra frente al primero que se queda fuera
     const dudas = [];
     for (const p of [1, 2, 3, 4]) {
@@ -120,6 +125,8 @@ export function hechosOnces(H, { J, jugadores = [], partes = [], previo = null, 
     } : null;
     equipos.push({ id: q.id, nombre: q.nombre, slug: q.slug || slugDe(q.nombre), escudoUrl: q.escudoUrl || null, rival: px.rival, rivalId: px.rivalId, casa: px.casa, t: px.t,
       formacion: m.formacion, once: m.once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, p: Math.round(x.p * 100), ...(x.duda ? { duda: true } : {}) })),
+      // (22 nov, Carlos: «en su lugar pon los suplentes y su porcentaje») los que se quedan fuera del once, por % de titular
+      suplentes: cands.filter((x) => !enOnce.has(x.id) && Math.round(x.p * 100) >= SUPLENTES.min).slice(0, SUPLENTES.n).map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, p: Math.round(x.p * 100), ...(x.duda ? { duda: true } : {}) })),
       dudas: dudas.map((d) => ({ ...d, a: { ...d.a, p: Math.round(d.a.p * 100) }, b: { ...d.b, p: Math.round(d.b.p * 100) } })),
       fuera: fuera.slice(0, 6), vuelven: vuelven.map((v) => ({ ...v, p: v.p != null ? Math.round(v.p * 100) : null })),
       anterior: antIds.length ? { J: ultJ, fuente: eqAnt ? 'confirmado' : 'minutos' } : null, cambios, confirmado: null });
@@ -214,13 +221,27 @@ function campoOnce(xs, { ruta = null, conP = true, jug = null, formacion = '' } 
   const uno = (x) => {
     const p = conP && x.p != null ? x.p : null;
     const j = jug ? jug(x.id) : null;
-    const arriba = j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'm') : `<i class="oj-c p${x.pos}">${p != null ? `${p}<small> %</small>` : e(String(x.nombre || '?').trim().charAt(0).toUpperCase())}</i>`;
-    const abajo = [j && p != null ? `<span class="oj-p">${p} %</span>` : '', x.duda ? '<span class="oj-d">duda</span>' : ''].join('');
+    const arriba = j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'm') : `<i class="oj-c${p != null ? ` ${nivelP(p)}` : ''}">${p != null ? `${p}<small> %</small>` : e(String(x.nombre || '?').trim().charAt(0).toUpperCase())}</i>`;
+    const abajo = [j && p != null ? `<span class="tp ${nivelP(p)}">${p} %</span>` : '', x.duda ? '<span class="oj-d">duda</span>' : ''].join('');
     return `<div class="cj oj${x.duda ? ' oj-duda' : ''}">${arriba}<b>${nombreDe(x, ruta)}</b>${abajo ? `<span>${abajo}</span>` : ''}</div>`;
   };
   const lineas = [4, 3, 2, 1].map((p) => xs.filter((x) => x.pos === p)).filter((l) => l.length);
   const leer = [1, 2, 3, 4].map((p) => { const ys = xs.filter((x) => x.pos === p); return ys.length ? `${LINEA_TXT[p].toLowerCase()}: ${ys.map((x) => x.nombre).join(', ')}` : ''; }).filter(Boolean).join('; ');
-  return `  <div class="campo campo-o" role="group" aria-label="${e(`Once${formacion ? ` ${formacion}` : ''}, ${leer}`)}">${lineas.map((l) => `<div class="cl">${l.map(uno).join('')}</div>`).join('')}</div>`;
+  return `  <div class="campo campo-o" role="group" aria-label="${e(`Once${formacion ? ` ${formacion}` : ''}, ${leer}`)}">${formacion ? `<span class="campo-f">${e(formacion)}</span>` : ''}${lineas.map((l) => `<div class="cl">${l.map(uno).join('')}</div>`).join('')}</div>`;
+}
+
+/**
+ * Debajo del campo, los suplentes con su % de titular (Carlos, 22 nov), del más probable al menos y con el color de la app. Con
+ * `jug(id)` (ficha de equipo), con su cara; sin él (los 20 equipos), solo el nombre y el %. Con el once confirmado no salen: el
+ * % era el de antes de saberse.
+ */
+function banquillo(xs, { ruta = null, jug = null } = {}) {
+  if (!xs || !xs.length) return '';
+  const uno = (x) => {
+    const j = jug ? jug(x.id) : null;
+    return `<div class="bj">${j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'p') : ''}<b>${nombreDe(x, ruta)}</b><span class="tp ${nivelP(x.p)}">${x.p} %</span></div>`;
+  };
+  return `\n  <div class="banq${jug ? ' banq-c' : ''}" role="group" aria-label="Suplentes"><p class="banq-t">Suplentes</p><div class="banq-l">${xs.map(uno).join('')}</div></div>`;
 }
 
 /** el once de un equipo en HTML: el campo, el texto y quién no está */
@@ -230,7 +251,7 @@ function bloqueEquipo(y, J, { ruta = null, rutaEquipo = null, nivel = 'h3' } = {
   o.push(`  <${nivel} id="${e(y.slug)}">${tit}</${nivel}>`);
   const conf = y.confirmado;
   o.push(`  <p class="peq">${conf ? 'Once confirmado' : `Probable, ${e(y.formacion)}`} · ${y.casa ? 'en casa contra' : 'fuera, contra'} ${e(el(y.rival))}</p>`);
-  o.push(conf ? campoOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false }) : campoOnce(y.once, { ruta, formacion: y.formacion }));
+  o.push(conf ? campoOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false }) : campoOnce(y.once, { ruta, formacion: y.formacion }) + banquillo(y.suplentes, { ruta }));
   const t = textoEquipo(y, J);
   if (t.length) o.push(`  <p>${e(t.join(' '))}</p>`);
   if (!conf && y.fuera.length) o.push(`  <p class="peq">No juegan: ${y.fuera.map((x) => `${nombreDe(x, ruta)} (${e(x.estado)}${x.lesion ? `, ${e(x.lesion.toLowerCase())}` : ''})`).join(', ')}.</p>`);
@@ -276,13 +297,15 @@ export const metasOnces = (J) => ({ ruta: 'jornada/onces.html', seccion: 'jornad
   titulo: `Onces probables de la jornada ${J} de LaLiga Fantasy`, h1: `Onces probables de la jornada ${J}`, corto: 'Onces probables',
   descripcion: `Los onces probables de los 20 equipos para la jornada ${J} de LaLiga Fantasy, con el % de cada jugador, las dudas y quién vuelve. Una hora antes de cada partido, el once confirmado.` });
 
-/** el bloque de la ficha de un equipo (bot/web/fichas.mjs): el once en su campo con las caras, las dudas y el enlace a todos */
+/**
+ * El bloque de la ficha de un equipo (bot/web/fichas.mjs): el once en su campo con las caras y, debajo, los suplentes con su %.
+ * Sin texto (Carlos, 22 nov: «me sobra TODO ese texto de abajo. En su lugar pon los suplentes y su porcentaje»): las dudas, los
+ * cambios y quién vuelve se siguen contando en jornada/onces.html.
+ */
 export function bloqueFicha(y, J, { ruta = null, jug = null } = {}) {
   if (!y) return '';
-  const t = textoEquipo(y, J);
-  const cuerpo = `${y.confirmado ? campoOnce(y.confirmado, { ruta, conP: false, jug }) : campoOnce(y.once, { ruta, jug, formacion: y.formacion })}${t.length ? `\n  <p>${e(t.join(' '))}</p>` : ''}`;
-  return bloque(y.confirmado ? `El once confirmado de la jornada ${J}` : `El once probable para la jornada ${J}`, cuerpo,
-    { id: 'once', linea: `${y.confirmado ? '' : `${e(y.formacion)}, con el % de cada uno. `}<a href="../jornada/onces.html#${e(y.slug)}">Los onces de los 20 equipos</a> · <a href="../metodo.html#onces">cómo lo calculamos</a>.` });
+  const cuerpo = y.confirmado ? campoOnce(y.confirmado, { ruta, conP: false, jug }) : campoOnce(y.once, { ruta, jug, formacion: y.formacion }) + banquillo(y.suplentes, { ruta, jug });
+  return bloque(y.confirmado ? `El once confirmado de la jornada ${J}` : `El once probable para la jornada ${J}`, cuerpo, { id: 'once' });
 }
 
 /** lo que va en la previa: el enlace y las dudas que más pesan (por valor) */
