@@ -1,0 +1,746 @@
+{
+ "resumen": {
+  "antes": {
+   "tuits": 26,
+   "redactados": 11,
+   "llamadas": 52,
+   "dolares": 1.2806,
+   "porTuit": 0.0493,
+   "porRedactado": 0.1164,
+   "palabras": 66,
+   "emojis": 2.1,
+   "sinEmojiArriba": 0,
+   "tics": {
+    "«si lo tienes» / «quien lo tenga»": 4,
+    "«ya suma»": 3,
+    "«de momento» / «por ahora»": 0,
+    "«el pase es de»": 2,
+    "«la mete» / «la manda dentro»": 2,
+    "«más del doble» / «de lo que suele»": 8,
+    "«Liga, Champions…» / «primer gol»": 3,
+    "«en racha» / «jornadas seguidas»": 1,
+    "«el mejor de los dos equipos»": 0,
+    "«se va» con marcador": 0,
+    "«se va a N»": 4,
+    "«sin sorpresas»": 0,
+    "la hora del reloj": 11,
+    "inicial con punto («Y. Zabiri»)": 9
+   }
+  },
+  "ahora": {
+   "tuits": 26,
+   "redactados": 8,
+   "llamadas": 51,
+   "dolares": 1.1832,
+   "porTuit": 0.0455,
+   "porRedactado": 0.1479,
+   "palabras": 61,
+   "emojis": 0.9,
+   "sinEmojiArriba": 8,
+   "tics": {
+    "«si lo tienes» / «quien lo tenga»": 0,
+    "«ya suma»": 0,
+    "«de momento» / «por ahora»": 3,
+    "«el pase es de»": 1,
+    "«la mete» / «la manda dentro»": 1,
+    "«más del doble» / «de lo que suele»": 4,
+    "«Liga, Champions…» / «primer gol»": 0,
+    "«en racha» / «jornadas seguidas»": 1,
+    "«el mejor de los dos equipos»": 0,
+    "«se va» con marcador": 0,
+    "«se va a N»": 0,
+    "«sin sorpresas»": 0,
+    "la hora del reloj": 12,
+    "inicial con punto («Y. Zabiri»)": 0
+   }
+  }
+ },
+ "sistema": {
+  "antes": 24186,
+  "ahora": 14885
+ },
+ "filas": [
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Tajon Buchanan|gol1",
+   "plantilla": "⚽ Gol de Buchanan y el Villarreal se adelanta en el 5': Barça 0-1 Villarreal. Ya suma 8 puntos, con una media de 3,9.",
+   "antes": {
+    "texto": "⚽ ¡GOLAZO DE LEJOS! Buchanan la cuelga desde unos 25 metros en el 5' y el Villarreal 🚢 se adelanta en el campo del Barça: 0-1.\n\nEl canadiense ya suma 8 puntos, más del doble de su media.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0252,
+    "segundos": 3.7,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "⚽ ¡GOLAZO DE LEJOS! Buchanan arma la pierna desde unos 25 metros y el Villarreal se adelanta en el 5': 0-1 al Barça.\n\nEl canadiense lleva 8 puntos de momento, más del doble de su media.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0183,
+    "segundos": 1.8,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Tani Oluwaseyi|gol1",
+   "plantilla": "⚽ Otro gol del Villarreal, de Oluwaseyi, en el 7': Barça 0-2 Villarreal. 7 puntos para Oluwaseyi y 5 para Moleiro, que le da el pase.",
+   "antes": {
+    "texto": "⚽ Oluwaseyi la mete en el 7' y el Villarreal 🚢 amplía: 0-2 en el campo del Barça.\n\nYa lleva 7 puntos, y es su cuarto gol entre Liga, Champions y Copa. Moleiro da el pase y suma 5.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0255,
+    "segundos": 2,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "⚽ Oluwaseyi pone el 0-2 en el marcador en el 7' y el Villarreal amplía su ventaja en el Barça.\n\nEl delantero canadiense se mete en 7 puntos de momento. Moleiro, autor del pase, va por 5.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0186,
+    "segundos": 1.4,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Gerard Martín|gol1",
+   "plantilla": "⚽ Gol de Gerard Martín y el Barça se mete en el partido: Barça 1-2 Villarreal. Gerard Martín suma 10 puntos y Pedri, que da el pase, 11.",
+   "antes": {
+    "texto": "⚽ Gerard Martín recorta para el Barça de cabeza en el 57': 1-2 contra el Villarreal 🚢.\n\nEs su primer gol entre Liga, Champions y Copa, y el defensa ya suma 10 puntos, casi el doble de su media. El pase es de Pedri, que se lleva 11.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0255,
+    "segundos": 2.2,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "⚽ Gol de Gerard Martín y el Barça se mete en el partido: Barça 1-2 Villarreal. Gerard Martín suma 10 puntos y Pedri, que da el pase, 11.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 2,
+    "dolares": 0.038,
+    "segundos": 3.3,
+    "fallos": [
+     "  (redactar) directo|128|Gerard Martín|gol1, intento 1:",
+     "  (redactar) directo|128|Gerard Martín|gol1, intento 2: palabras con mayúscula que no están en los hechos: Camp, Nou; los puntos frente a su media («más del doble»,",
+     "  (redactar) directo|128|Gerard Martín|gol1: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Fermín López|gol1",
+   "plantilla": "⚽ Fermín empata para el Barça en el 61': Barça 2-2 Villarreal. Fermín suma 6 puntos y Lamine Yamal, que da el pase, 9.",
+   "antes": {
+    "texto": "⚽ Fermín llega desde segunda línea y la mete en el 61': el Barça empata 2-2 contra el Villarreal 🚢.\n\nYa suma 6 puntos y es su noveno gol entre Liga, Champions y Copa. El pase es de Lamine Yamal, que se lleva 9.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0257,
+    "segundos": 1.9,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "⚽ El Barça empata en el 61': Fermín se planta en el área desde segunda línea y la manda dentro para el 2-2 ante el Villarreal.\n\nLleva 6 puntos de momento. El pase es de Lamine Yamal, que va por 9.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0186,
+    "segundos": 2.1,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Fermín López|roja",
+   "plantilla": "🟥 Roja para Fermín en el 75': Barça 3-2 Villarreal. El Barça se queda con diez, aunque va ganando. Ya suma 6 puntos.",
+   "antes": {
+    "texto": "🟥 Roja a Fermín en el 75': el Barça se queda con diez, aunque va ganando 3-2 al Villarreal 🚢.\n\nEl centrocampista se queda en 6 puntos. Si lo tienes, ahí se corta.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0251,
+    "segundos": 2,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "🟥 Roja a Fermín en el 75' y el Barça se queda con diez, con el 3-2 al Villarreal todavía en el marcador.\n\nEl centrocampista se va con 6 puntos. Los azulgranas tendrán que aguantar el resultado con un jugador menos.",
+    "estado": "redactado",
+    "llamadas": 2,
+    "dolares": 0.0365,
+    "segundos": 4.2,
+    "fallos": [
+     "  (redactar) directo|128|Fermín López|roja, intento 1: dice"
+    ]
+   }
+  },
+  {
+   "tipo": "directo",
+   "clave": "directo|128|Pau Navarro|roja",
+   "plantilla": "🟥 Roja para Pau Navarro en el 90+3': Barça 3-2 Villarreal. El Villarreal se queda con diez y encima va perdiendo. Se queda en -3 puntos.",
+   "antes": {
+    "texto": "🟥 Roja a Pau Navarro en el 90+3': el Villarreal 🚢 se queda con diez cuando el partido ya está perdido, 3-2 para el Barça.\n\nEl defensa se queda en -3 puntos. Si lo tienes, jornada para olvidar.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0252,
+    "segundos": 1.6,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "🟥 Roja para Pau Navarro en el 90+3': Barça 3-2 Villarreal. El Villarreal se queda con diez y encima va perdiendo. Se queda en -3 puntos.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 2,
+    "dolares": 0.0365,
+    "segundos": 3.5,
+    "fallos": [
+     "  (redactar) directo|128|Pau Navarro|roja, intento 1: los dos últimos tuits de este tipo ya empiezan por el nombre de un jugador: empieza por otra cosa (el equipo, el minuto, lo que supone)",
+     "  (redactar) directo|128|Pau Navarro|roja, intento 2: en directo solo van las cifras del tuit de partida: 1 no sale en él",
+     "  (redactar) directo|128|Pau Navarro|roja: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|123",
+   "plantilla": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima. Copete acaba con 15 puntos. Detrás, Tárrega y Dimitrievski, con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Tarde redonda de Copete\n\nFantasy Manager · enlace en la bio",
+   "antes": {
+    "texto": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima. Copete acaba con 15 puntos. Detrás, Tárrega y Dimitrievski, con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Tarde redonda de Copete\n\nFantasy Manager · enlace en la bio",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.1369,
+    "segundos": 18.1,
+    "fallos": [
+     "  (redactar) final|123, intento 1: el revisor no lo publicaría:",
+     "  (redactar) final|123, intento 2: nombra un club o un jugador con una palabra vaga («el equipo»); copia un ejemplo de la guía («puntos mas del doble de su media y…»): dilo con tus palabras",
+     "  (redactar) final|123, intento 3: el revisor no lo publicaría:",
+     "  (redactar) final|123, intento 4: copia un ejemplo de la guía («puntos mas del doble de su media y…»): dilo con tus palabras",
+     "  (redactar) final|123: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "Rayo 0-1 Valencia. El Valencia gana por la mínima. Copete acaba con 15 puntos. Detrás, Tárrega y Dimitrievski, con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\nTarde redonda de Copete\n\nFantasy Manager · enlace en la bio",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0998,
+    "segundos": 17.6,
+    "fallos": [
+     "  (redactar) final|123, intento 1: el revisor no lo publicaría:",
+     "  (redactar) final|123, intento 2: el revisor no lo publicaría:",
+     "  (redactar) final|123, intento 3: los puntos frente a su media («más del doble»,",
+     "  (redactar) final|123, intento 4: habla de",
+     "  (redactar) final|123: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|121",
+   "plantilla": "🏁 Sevilla 1-1 Betis. Empate en el 90+1' y un punto para cada uno. Antony es el que más puntúa: 14 puntos. Su media es de 5,5, así que hoy ha sacado más del doble.\n\nLe siguen Kike Salas, con 13, y Isco, con 9. Cucho y Junior se quedan en -1 punto.\n\n✅ Premio para quien confió en Antony\n\n📲 Fantasy Manager (enlace en la bio)",
+   "antes": {
+    "texto": "🏁 1-1 en el Sánchez-Pizjuán entre el Sevilla y el Betis, con el empate sevillista en el 90+1' de Kike Salas. Antony había puesto por delante a los béticos en el 50'.\n\nAntony es el que más puntos saca de los dos equipos: 14, más del doble de su media de 5,5. Kike Salas se va a 13, casi el doble de lo que suele dar, e Isco pone 9: buena noche para quien tenga bético o a Salas.\n\nLo malo, también en el Betis: Cucho y Junior se quedan en -1, lo peor del partido.\n\n📲 Fantasy Manager (enlace en la bio)",
+    "estado": "redactado",
+    "llamadas": 3,
+    "dolares": 0.0903,
+    "segundos": 11,
+    "fallos": [
+     "  (redactar) final|121, intento 1: copia un ejemplo de la guía («se va a 14 puntos mas del doble…»): dilo con tus palabras",
+     "  (redactar) final|121, intento 2:"
+    ]
+   },
+   "ahora": {
+    "texto": "Empate 1-1 entre el Sevilla y el Betis en el Sánchez-Pizjuán, con el gol del empate en el último suspiro. Antony adelantó a los béticos en el 50' y Kike Salas igualó en el 90+1'.\n\nAntony acaba con 14 puntos y es quien más saca de los dos equipos. Kike Salas se queda a uno, con 13, y Isco, el Mago, aporta 9.\n\nLo peor, para Cucho y Junior, con -1 cada uno.\n\n📲 Fantasy Manager (enlace en la bio)",
+    "estado": "redactado",
+    "llamadas": 3,
+    "dolares": 0.0735,
+    "segundos": 10.8,
+    "fallos": [
+     "  (redactar) final|121, intento 1: el revisor no lo publicaría:",
+     "  (redactar) final|121, intento 2:"
+    ]
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|122",
+   "plantilla": "🏁 Real Madrid 2-1 Celta. El Real Madrid remonta y lo cierra Carlos Espí en el 85'. Bellingham acaba con 13 puntos. Lleva 3 jornadas seguidas con 8 o más: 17, 8 y 13.\n\nLo peor se lo lleva Javi Rodríguez: -1 punto. Pablo Durán marcó y suma 10 aunque el Celta pierde. Cumple el favorito: el Madrid, 3º, gana al Celta, 14º.\n\n✅ Acertó quien alineó a Bellingham\n\nFantasy Manager: la app, enlace en la bio",
+   "antes": {
+    "texto": "🏁 Remontada del Madrid ⚪ en el Bernabéu: 2-1 al Celta con gol de Carlos Espí en el 85'. Pablo Durán había adelantado a los celestes en el 6'.\n\nBellingham empató en el 66' y se va a 13 puntos, el que más saca de los dos equipos y su tercera jornada seguida con 8 o más. Mbappé falló un penalti en el 39' y se queda en 9, por debajo de lo que suele dar.\n\nDel Celta se salva Durán, con 10 puntos pese a perder, más del doble de su media. Lo peor de la noche, Javi Rodríguez, con -1.\n\nFantasy Manager: la app, enlace en la bio",
+    "estado": "redactado",
+    "llamadas": 2,
+    "dolares": 0.0632,
+    "segundos": 7,
+    "fallos": [
+     "  (redactar) final|122, intento 1: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de"
+    ]
+   },
+   "ahora": {
+    "texto": "🏁 El Madrid le da la vuelta al Celta en el Bernabéu: 2-1 con goles de Bellingham en el 66' y Carlos Espí en el 85', después de que Mbappé fallara un penalti en el 39' y Pablo Durán adelantara a los celestes en el 6'.\n\nBellingham acaba con 13 puntos, el que más saca de los dos equipos, y ya van tres jornadas seguidas con 8 o más. Durán se lleva 10 con su gol, más del doble de su media. Mbappé se queda en 9, por debajo de lo suyo.\n\nLo peor, para Javi Rodríguez, con -1.\n\nFantasy Manager: la app, enlace en la bio",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0259,
+    "segundos": 4.3,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|128",
+   "plantilla": "🏁 Barça 3-2 Villarreal. Remontada del Barcelona, que se pone por delante en el 67'. 11 puntos para Pedri. Gerard Martín y Lamine Yamal completan el podio con 10 y 9.\n\nBuchanan saca 8 puntos, con gol incluido, pese a la derrota del Villarreal. A Pau Navarro se le atraganta el partido: -3 puntos en un partido en el que su equipo encajó 3.\n\n👀 Lo normal en la tabla: el Barça (1º) se impone al Submarino Amarillo, que iba 10º\n\n👉 Fantasy Manager, enlace en la bio",
+   "antes": {
+    "texto": "🏁 El Barça remonta un 0-2 y le gana 3-2 al Villarreal 🚢. Gerard Martín, Fermín y un gol en propia de Pau Navarro dieron la vuelta en apenas diez minutos, entre el 57' y el 67'.\n\nPedri es el que más puntos ha sacado de los dos equipos: 11, casi el doble de su media. Gerard Martín se va a 10 y Lamine Yamal se queda en 9, por debajo de lo que suele dar, con un penalti fallado en el 23'.\n\nDel Villarreal se salva Buchanan, 8 puntos pese a perder. Lo peor, Pau Navarro: -3 por el gol en propia y la roja en el descuento.\n\n👉 Fantasy Manager, enlace en la bio",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0351,
+    "segundos": 4.2,
+    "fallos": []
+   },
+   "ahora": {
+    "texto": "🏁 El Barça remonta un 0-2 en veinte minutos y gana 3-2 al Villarreal, con goles de Gerard Martín, Fermín y uno en propia de Pau Navarro en el 67'.\n\nPedri es el que más saca de los dos equipos, con 11 puntos. Gerard Martín se lleva 10 y Lamine, 9 aunque falló un penalti en el 23'.\n\nPau Navarro cierra el partido con -3, y además vio la roja en el 90+3'. Buchanan suma 8 pese a perder.\n\n👉 Fantasy Manager, enlace en la bio",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0266,
+    "segundos": 3.8,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|129",
+   "plantilla": "🏁 Athletic 0-1 Espanyol. Victoria por la mínima del Espanyol. A. Fortuño es el que más puntúa: 14 puntos. Más del doble de lo que suele: 4,8 de media.\n\nTercera jornada seguida con 8 o más: 13, 11 y 14 tras él, Roberto con 11 y El Hilali con 10. En el Athletic se salva Nico Williams: 10 puntos.\n\nSorpresa: el Espanyol, que iba 14º, gana al Athletic Club, 8º.\n\n✅ A. Fortuño pagó la confianza\n\nFantasy Manager · todo en el enlace de la bio",
+   "antes": {
+    "texto": "🏁 El Espanyol gana 0-1 en San Mamés con un gol de Roberto en el 66'. Los pericos venían 14º y se llevan los tres puntos ante un Athletic que era 8º.\n\nFortuño es el que más puntos saca de los dos equipos: 14, y ya son tres jornadas seguidas con 8 o más. Roberto, el del gol, se va a 11, más del doble de su media.\n\nNico Williams, del Athletic 🦁, suma 10 pese a perder.\n\nFantasy Manager · todo en el enlace de la bio",
+    "estado": "redactado",
+    "llamadas": 3,
+    "dolares": 0.097,
+    "segundos": 11.9,
+    "fallos": [
+     "  (redactar) final|129, intento 1: el emoji 🦁 va justo detrás del nombre de su club, no suelto",
+     "  (redactar) final|129, intento 2: el revisor no lo publicaría:"
+    ]
+   },
+   "ahora": {
+    "texto": "🏁 Athletic 0-1 Espanyol. Victoria por la mínima del Espanyol. Fortuño es el que más puntúa: 14 puntos. Más del doble de lo que suele: 4,8 de media.\n\nTercera jornada seguida con 8 o más: 13, 11 y 14 tras él, Roberto con 11 y El Hilali con 10. En el Athletic se salva Nico Williams: 10 puntos.\n\nSorpresa: el Espanyol, que iba 14º, gana al Athletic Club, 8º.\n\nFortuño pagó la confianza\n\nFantasy Manager · todo en el enlace de la bio",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 3,
+    "dolares": 0.0805,
+    "segundos": 14.9,
+    "fallos": [
+     "  (redactar) final|129, intento 1: el revisor no lo publicaría:",
+     "  (redactar) final|129, intento 2: el revisor no lo publicaría:",
+     "  (redactar) final|129, intento 3: el revisor no lo publicaría:",
+     "  (redactar) final|129: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "final",
+   "clave": "final|130",
+   "plantilla": "🏁 Alavés 3-1 Deportivo. Victoria del Alavés sin muchos apuros. 14 puntos para Ángel Pérez. El centrocampista suele sacar 6,4 de media: hoy, más del doble.\n\nLe siguen Lucas Boyé, con 12, y Blanco, con 11. Leo Román saca 9 puntos pese a la derrota del Deportivo.\n\n✅ Buena jornada para el que alineó a Ángel Pérez\n\nFantasy Manager · app en la bio",
+   "antes": {
+    "texto": "🏁 Alavés 3-1 Deportivo. Victoria del Alavés sin muchos apuros. 14 puntos para Ángel Pérez. El centrocampista suele sacar 6,4 de media: hoy, más del doble.\n\nLe siguen Lucas Boyé, con 12, y Blanco, con 11. Leo Román saca 9 puntos pese a la derrota del Deportivo.\n\n✅ Buena jornada para el que alineó a Ángel Pérez\n\nFantasy Manager · app en la bio",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.1204,
+    "segundos": 11.6,
+    "fallos": [
+     "  (redactar) final|130, intento 1:",
+     "  (redactar) final|130, intento 2:",
+     "  (redactar) final|130, intento 3:",
+     "  (redactar) final|130, intento 4:",
+     "  (redactar) final|130: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "🏁 Alavés 3-1 Deportivo. Victoria del Alavés sin muchos apuros. 14 puntos para Ángel Pérez. El centrocampista suele sacar 6,4 de media: hoy, más del doble.\n\nLe siguen Lucas Boyé, con 12, y Blanco, con 11. Leo Román saca 9 puntos pese a la derrota del Deportivo.\n\nBuena jornada para el que alineó a Ángel Pérez\n\nFantasy Manager · app en la bio",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 3,
+    "dolares": 0.0953,
+    "segundos": 20.6,
+    "fallos": [
+     "  (redactar) final|130, intento 1: el revisor no lo publicaría:",
+     "  (redactar) final|130, intento 2: el revisor no lo publicaría:",
+     "  (redactar) final|130, intento 3: el revisor no lo publicaría:",
+     "  (redactar) final|130: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|123",
+   "plantilla": "⭐ MVP fantasy del Rayo Vallecano ⚡ 0-1 Valencia. 15 puntos para Copete. En lo que va de temporada suma 15 puntos, a 7,5 por partido.\n\n💸 Vale 694 K en el mercado y vuelve a jugar el domingo a las 14:00, contra el Osasuna 🐂",
+   "antes": {
+    "texto": "⭐ MVP fantasy del Rayo Vallecano ⚡ 0-1 Valencia. 15 puntos para Copete. En lo que va de temporada suma 15 puntos, a 7,5 por partido.\n\n💸 Vale 694 K en el mercado y vuelve a jugar el domingo a las 14:00, contra el Osasuna 🐂",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.1117,
+    "segundos": 11.6,
+    "fallos": [
+     "  (redactar) mvp|123, intento 1: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|123, intento 2: el revisor no lo publicaría:",
+     "  (redactar) mvp|123, intento 3: palabras con mayúscula que no están en los hechos: Marcó; el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|123, intento 4: habla de",
+     "  (redactar) mvp|123: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "MVP fantasy del Rayo Vallecano 0-1 Valencia. 15 puntos para Copete. En lo que va de temporada suma 15 puntos, a 7,5 por partido.\n\nVale 694 K en el mercado y vuelve a jugar el domingo a las 14:00, contra el Osasuna",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0883,
+    "segundos": 16.4,
+    "fallos": [
+     "  (redactar) mvp|123, intento 1: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|123, intento 2: el revisor no lo publicaría:",
+     "  (redactar) mvp|123, intento 3: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|123, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|123: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|121",
+   "plantilla": "⭐ MVP fantasy del Sevilla 1-1 Betis. Antony se lleva el partido con 14 puntos. El delantero del Betis lleva 71 puntos en la temporada.\n\nEl siguiente, el sábado a las 14:00 contra el Rayo. Ahora mismo vale 35,1 M.",
+   "antes": {
+    "texto": "⭐ MVP fantasy del Sevilla 1-1 Betis. Antony se lleva el partido con 14 puntos. El delantero del Betis lleva 71 puntos en la temporada.\n\nEl siguiente, el sábado a las 14:00 contra el Rayo. Ahora mismo vale 35,1 M.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.1126,
+    "segundos": 11.1,
+    "fallos": [
+     "  (redactar) mvp|121, intento 1: copia un ejemplo de la guía («14 puntos mas del doble de su media…»): dilo con tus palabras",
+     "  (redactar) mvp|121, intento 2: habla de",
+     "  (redactar) mvp|121, intento 3: palabras con mayúscula que no están en los hechos: Marcó",
+     "  (redactar) mvp|121, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|121: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "⭐ MVP fantasy del Sevilla 1-1 Betis. Antony se lleva el partido con 14 puntos. El delantero del Betis lleva 71 puntos en la temporada.\n\nEl siguiente, el sábado a las 14:00 contra el Rayo. Ahora mismo vale 35,1 M.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0879,
+    "segundos": 12.1,
+    "fallos": [
+     "  (redactar) mvp|121, intento 1: el revisor no lo publicaría:",
+     "  (redactar) mvp|121, intento 2: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|121, intento 3: el revisor no lo publicaría:",
+     "  (redactar) mvp|121, intento 4: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|121: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|122",
+   "plantilla": "⭐ MVP fantasy del Real Madrid 2-1 Celta. Nadie saca más que Bellingham: 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 155 M en el mercado y vuelve a jugar el sábado a las 21:00, contra el Alavés",
+   "antes": {
+    "texto": "⭐ MVP fantasy del Real Madrid 2-1 Celta. Nadie saca más que Bellingham: 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 155 M en el mercado y vuelve a jugar el sábado a las 21:00, contra el Alavés",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.1235,
+    "segundos": 15.3,
+    "fallos": [
+     "  (redactar) mvp|122, intento 1: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|122, intento 2: palabras con mayúscula que no están en los hechos: Marcó",
+     "  (redactar) mvp|122, intento 3: el revisor no lo publicaría:",
+     "  (redactar) mvp|122, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|122: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "MVP fantasy del Real Madrid 2-1 Celta. Nadie saca más que Bellingham: 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\nVale 155 M en el mercado y vuelve a jugar el sábado a las 21:00, contra el Alavés",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0929,
+    "segundos": 17.7,
+    "fallos": [
+     "  (redactar) mvp|122, intento 1: el revisor no lo publicaría:",
+     "  (redactar) mvp|122, intento 2: palabras con mayúscula que no están en los hechos: Marcó",
+     "  (redactar) mvp|122, intento 3: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|122, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|122: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|128",
+   "plantilla": "⭐ MVP fantasy del Barça 3-2 Villarreal. Pedri se lleva el partido con 11 puntos. Con esto llega a 79 puntos en la temporada y una media de 6,1.\n\n💸 En el mercado está a 80,5 M. Su próximo partido, el domingo a las 16:15 ante el Dépor",
+   "antes": {
+    "texto": "⭐ Pedri es el mejor del Barça-Villarreal: 11 puntos, casi el doble de lo que suele sacar, y nadie de los dos equipos hizo más.\n\nEl Barça le dio la vuelta al 0-2 con tres goles entre el 57' y el 67'. Pedri vale 80,5 M y el domingo visita al Deportivo: si lo tienes, no se toca.",
+    "estado": "redactado",
+    "llamadas": 2,
+    "dolares": 0.0587,
+    "segundos": 5.8,
+    "fallos": [
+     "  (redactar) mvp|128, intento 1: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de"
+    ]
+   },
+   "ahora": {
+    "texto": "⭐ MVP fantasy del Barça 3-2 Villarreal. Pedri se lleva el partido con 11 puntos. Con esto llega a 79 puntos en la temporada y una media de 6,1.\n\nEn el mercado está a 80,5 Su próximo partido, el domingo a las 16:15 ante el Dépor",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0926,
+    "segundos": 14.4,
+    "fallos": [
+     "  (redactar) mvp|128, intento 1: el revisor no lo publicaría:",
+     "  (redactar) mvp|128, intento 2: palabras con mayúscula que no están en los hechos: Riazor; el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|128, intento 3: habla de",
+     "  (redactar) mvp|128, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|128: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|129",
+   "plantilla": "⭐ MVP fantasy del Athletic Club 0-1 Espanyol. A. Fortuño se lleva el partido con 14 puntos. Con esto llega a 63 puntos en la temporada.\n\nEl siguiente, en la jornada 14 contra el Getafe. Ahora mismo vale 4,5 M.",
+   "antes": {
+    "texto": "⭐ MVP fantasy del Athletic Club 0-1 Espanyol. A. Fortuño se lleva el partido con 14 puntos. Con esto llega a 63 puntos en la temporada.\n\nEl siguiente, en la jornada 14 contra el Getafe. Ahora mismo vale 4,5 M.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.12,
+    "segundos": 15.8,
+    "fallos": [
+     "  (redactar) mvp|129, intento 1: copia un ejemplo de la guía («14 puntos mas del doble de su media…»): dilo con tus palabras",
+     "  (redactar) mvp|129, intento 2: el revisor no lo publicaría:",
+     "  (redactar) mvp|129, intento 3: copia un ejemplo de la guía («14 puntos mas del doble de su media…»): dilo con tus palabras",
+     "  (redactar) mvp|129, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|129: no ha pasado la redacción (rechazada)"
+    ]
+   },
+   "ahora": {
+    "texto": "MVP fantasy del Athletic Club 0-1 Espanyol. Fortuño se lleva el partido con 14 puntos. Con esto llega a 63 puntos en la temporada.\n\nEl siguiente, en la jornada 14 contra el Getafe. Ahora mismo vale 4,5 M.",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0937,
+    "segundos": 19.4,
+    "fallos": [
+     "  (redactar) mvp|129, intento 1: el revisor no lo publicaría:",
+     "  (redactar) mvp|129, intento 2: el revisor no lo publicaría:",
+     "  (redactar) mvp|129, intento 3: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|129, intento 4: el revisor no lo publicaría:",
+     "  (redactar) mvp|129: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|130",
+   "plantilla": "⭐ MVP fantasy del Alavés 3-1 Deportivo. Nadie saca más que Ángel Pérez: 14 puntos. El centrocampista del Alavés lleva 77 puntos en la temporada.\n\n💸 En el mercado está a 30,1 M. Su próximo partido, el sábado a las 21:00 ante el Real Madrid",
+   "antes": {
+    "texto": "⭐ MVP fantasy del Alavés 3-1 Deportivo. Nadie saca más que Ángel Pérez: 14 puntos. El centrocampista del Alavés lleva 77 puntos en la temporada.\n\n💸 En el mercado está a 30,1 M. Su próximo partido, el sábado a las 21:00 ante el Real Madrid",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 3,
+    "dolares": 0.059,
+    "segundos": 6.5,
+    "fallos": [
+     "  (redactar) mvp|130, intento 1: palabras con mayúscula que no están en los hechos: Marcó; nombra un club o un jugador con una palabra vaga («el rival»); copia un ejemplo de la guía («14 puntos mas del doble de su media…»): dilo con tus palabras",
+     "  (redactar) mvp|130, intento 2: el revisor no lo publicaría:",
+     "  (redactar) mvp|130: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "⭐ MVP fantasy del Alavés 3-1 Deportivo. Nadie saca más que Ángel Pérez: 14 puntos. El centrocampista del Alavés lleva 77 puntos en la temporada.\n\nEn el mercado está a 30,1 Su próximo partido, el sábado a las 21:00 ante el Real Madrid",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 4,
+    "dolares": 0.0777,
+    "segundos": 9.4,
+    "fallos": [
+     "  (redactar) mvp|130, intento 1: nombra un club o un jugador con una palabra vaga («el rival»)",
+     "  (redactar) mvp|130, intento 2: habla de",
+     "  (redactar) mvp|130, intento 3: nombra un club o un jugador con una palabra vaga («ese rival»)",
+     "  (redactar) mvp|130, intento 4: el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) mvp|130: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "mercado",
+   "clave": "mercado|2026-11-23",
+   "plantilla": "💸 Subidas y bajadas del mercado fantasy de hoy, 22/11\n\n📈 Nadie sube más que Vini Jr.: +2,4 M en un día (+3 %), y ya vale 80,8 M.\n\n📉 Diomande del Madrid ⚪ va en sentido contrario: cae 1,1 M, un 0,9 %, hasta los 124,5 M.\n\n🛒 Chollo Fantasy: Redondo del Elche 🌴 vale 3,1 M, suma 4,5 de media y hoy sube un 2,2 %\n\nTu Fantasy con Fantasy Manager · enlace en la bio",
+   "antes": {
+    "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 22/11\n\n📈 Nadie sube más que Vini Jr.: +2,4 M en un día (+3 %), y ya vale 80,8 M.\n\n📉 Diomande del Madrid ⚪ va en sentido contrario: cae 1,1 M, un 0,9 %, hasta los 124,5 M.\n\n🛒 Chollo Fantasy: Redondo del Elche 🌴 vale 3,1 M, suma 4,5 de media y hoy sube un 2,2 %\n\nTu Fantasy con Fantasy Manager · enlace en la bio",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) mercado|2026-11-23: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "📈 El Real Madrid manda en el mercado de esta noche: los blancos ganan 7 M sumando a todos sus jugadores, mientras que el Villarreal cede 2,6 M.\n\nVini Jr. repite como el que más sube, +2,4 M hasta los 80,8 M, y encadena 14 días al alza. Diomande, también del Madrid, repite como el que más baja: 1,1 M menos y seis días seguidos bajando.\n\nDe barato, Redondo, del Elche, vale 3,1 M y sube un 2,2 %.\n\nTu Fantasy con Fantasy Manager · enlace en la bio",
+    "estado": "redactado",
+    "llamadas": 2,
+    "dolares": 0.0572,
+    "segundos": 7.9,
+    "fallos": [
+     "  (redactar) mercado|2026-11-23, intento 1: el revisor no lo publicaría:"
+    ]
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|126",
+   "plantilla": "🗓️ Posibles onces de Levante-Elche, hoy a las 21:00\n\nLo que no está claro: Ifeanyi Ndukwe, Etta Eyong y Nacho Perez en el Levante 🐸; Cepeda (53 %) y Lemar (54 %) en el Elche 🌴. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y Revivo (81 %).\n\nEn la tabla hay poco que separe al Levante (18º) y al Elche (19º).",
+   "antes": {
+    "texto": "🗓️ Posibles onces de Levante-Elche, hoy a las 21:00\n\nLo que no está claro: Ifeanyi Ndukwe, Etta Eyong y Nacho Perez en el Levante 🐸; Cepeda (53 %) y Lemar (54 %) en el Elche 🌴. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y Revivo (81 %).\n\nEn la tabla hay poco que separe al Levante (18º) y al Elche (19º).",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|126: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "🗓️ Posibles onces de Levante-Elche, hoy a las 21:00\n\nLo que no está claro: Ifeanyi Ndukwe, Etta Eyong y Nacho Perez en el Levante; Cepeda (53 % de titularidad) y Lemar (54 %) en el Elche. Al Elche le falta Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y Revivo (81 %).\n\nEn la tabla hay poco que separe al Levante (18º) y al Elche (19º).",
+    "estado": "plantilla (rechazada)",
+    "llamadas": 1,
+    "dolares": 0.0246,
+    "segundos": 3.1,
+    "fallos": [
+     "  (redactar) previa|126, intento 1: número 50 que no está en los datos; el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de",
+     "  (redactar) previa|126: no ha pasado la redacción (rechazada)"
+    ]
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|135",
+   "plantilla": "🗓️ Levante-Racing (el viernes a las 21:00): así llegan los dos a la jornada 14\n\nEn el Racing hay una fija: Y. Zabiri, con 7,2 de media y un 93 % de titularidad. No estarán Andrés Martín, Maguette y Mantilla, lesionados.\n\nEn el Levante, Ifeanyi Ndukwe, Etta Eyong y Nacho Perez, con entre un 56 y un 58 %, tienen papeletas, pero nada asegurado. Con Ryan no hay discusión: 94 %.\n\nSobre el papel, el Racing lo tiene más fácil: va 7º y el Levante, 18º.",
+   "antes": {
+    "texto": "🗓️ Levante-Racing (el viernes a las 21:00): así llegan los dos a la jornada 14\n\nEn el Racing hay una fija: Y. Zabiri, con 7,2 de media y un 93 % de titularidad. No estarán Andrés Martín, Maguette y Mantilla, lesionados.\n\nEn el Levante, Ifeanyi Ndukwe, Etta Eyong y Nacho Perez, con entre un 56 y un 58 %, tienen papeletas, pero nada asegurado. Con Ryan no hay discusión: 94 %.\n\nSobre el papel, el Racing lo tiene más fácil: va 7º y el Levante, 18º.",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|135: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "Levante-Racing (el viernes a las 21:00): así llegan los dos a la jornada 14\n\nEn el Racing hay una fija: Yassir Zabiri, con 7,2 de media y un 93 % de titularidad. No estarán Andrés Martín, Maguette y Mantilla, lesionados.\n\nEn el Levante, Ifeanyi Ndukwe, Etta Eyong y Nacho Perez, con entre un 56 y un 58 %, tienen papeletas, pero nada asegurado. Con Ryan no hay discusión: 94 %.\n\nSobre el papel, el Racing lo tiene más fácil: va 7º y el Levante, 18º.",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|140",
+   "plantilla": "🗓️ Betis-Rayo, el sábado a las 14:00: posibles onces para la jornada 14\n\nCucho, en el Betis, es quien más en el aire está: 54 %. Detrás vienen Isi, Álvaro García y Pedrosa en el Rayo Vallecano.\n\nEl Rayo no tendrá a A. Batalla, Luiz Felipe y Kumbulla, lesionados. Los que no fallan: Á. Valles (94 %, 9,1 de media) y Camello (85 %).\n\nEl partido pinta mejor para el Betis (4º) que para el Rayo Vallecano (15º).",
+   "antes": {
+    "texto": "🗓️ Betis-Rayo, el sábado a las 14:00: posibles onces para la jornada 14\n\nCucho, en el Betis, es quien más en el aire está: 54 %. Detrás vienen Isi, Álvaro García y Pedrosa en el Rayo Vallecano.\n\nEl Rayo no tendrá a A. Batalla, Luiz Felipe y Kumbulla, lesionados. Los que no fallan: Á. Valles (94 %, 9,1 de media) y Camello (85 %).\n\nEl partido pinta mejor para el Betis (4º) que para el Rayo Vallecano (15º).",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|140: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "🗓️ Betis-Rayo, el sábado a las 14:00: posibles onces para la jornada 14\n\nCucho, en el Betis, es quien más en el aire está: 54 % de titularidad. Detrás vienen Isi, Álvaro García y Pedrosa en el Rayo Vallecano.\n\nEl Rayo no tendrá a Batalla, Luiz Felipe y Kumbulla, lesionados. Los que no fallan: Valles (94 %, 9,1 de media) y Camello (85 %).\n\nEl partido pinta mejor para el Betis (4º) que para el Rayo Vallecano (15º).",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|134",
+   "plantilla": "🗓️ El sábado a las 16:15 juegan el Málaga 🐟 y el Athletic 🦁: posibles onces de la jornada 14\n\nAl Athletic Club le faltan Vivian, Guruzeta y Egiluz, lesionados. Al Málaga, Aznou, sancionado, y Rafita y F. Calero, lesionados. Lo seguro: Unai Simón (94 %, 7,4 de media) y Niño (81 %).\n\nLo que no está claro: Yeray (42 %), De Galarreta (45 %) y Gerenabarrena en el Athletic, y Joaquín, C. Puga y Ramon en el Málaga.\n\nEl Athletic Club, 8º, parte como favorito frente al Málaga, que es 20º. Pocos goles a la vista: el Athletic encaja solo 1 por partido y el Málaga marca 0,7.",
+   "antes": {
+    "texto": "🗓️ El sábado a las 16:15 juegan el Málaga 🐟 y el Athletic 🦁: posibles onces de la jornada 14\n\nAl Athletic Club le faltan Vivian, Guruzeta y Egiluz, lesionados. Al Málaga, Aznou, sancionado, y Rafita y F. Calero, lesionados. Lo seguro: Unai Simón (94 %, 7,4 de media) y Niño (81 %).\n\nLo que no está claro: Yeray (42 %), De Galarreta (45 %) y Gerenabarrena en el Athletic, y Joaquín, C. Puga y Ramon en el Málaga.\n\nEl Athletic Club, 8º, parte como favorito frente al Málaga, que es 20º. Pocos goles a la vista: el Athletic encaja solo 1 por partido y el Málaga marca 0,7.",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|134: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "El sábado a las 16:15 juegan el Málaga 🐟 y el Athletic 🦁: posibles onces de la jornada 14\n\nAl Athletic Club le faltan Vivian, Guruzeta y Egiluz, lesionados. Al Málaga, Aznou, sancionado, y Rafita y Calero, lesionados. Lo seguro: Unai Simón (94 % de titularidad, 7,4 de media) y Niño (81 %).\n\nLo que no está claro: Yeray (42 %), De Galarreta (45 %) y Gerenabarrena en el Athletic, y Joaquín, Puga y Ramon en el Málaga.\n\nEl Athletic Club, 8º, parte como favorito frente al Málaga, que es 20º. Pocos goles a la vista: el Athletic encaja solo 1 por partido y el Málaga marca 0,7.",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|137",
+   "plantilla": "🗓️ Posibles onces de Elche-Atlético, el sábado a las 18:30\n\nSin discusión, Grimaldo (87 %, 8,5 de media) y Revivo (81 %). Dudas: Le Normand (42 %) y Johnny (46 %) en el Atleti; Cepeda y Lemar en el Elche.\n\nLos dos llegan con bajas. El Atlético no tendrá a Cuti Romero y Lookman, lesionados, y el Elche tampoco a M. Aguado, lesionado.\n\nEl partido pinta mejor para el Atleti (3º) que para el Elche (19º).",
+   "antes": {
+    "texto": "🗓️ Posibles onces de Elche-Atlético, el sábado a las 18:30\n\nSin discusión, Grimaldo (87 %, 8,5 de media) y Revivo (81 %). Dudas: Le Normand (42 %) y Johnny (46 %) en el Atleti; Cepeda y Lemar en el Elche.\n\nLos dos llegan con bajas. El Atlético no tendrá a Cuti Romero y Lookman, lesionados, y el Elche tampoco a M. Aguado, lesionado.\n\nEl partido pinta mejor para el Atleti (3º) que para el Elche (19º).",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|137: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "🗓️ Posibles onces de Elche-Atlético, el sábado a las 18:30\n\nSin discusión, Grimaldo (87 % de titularidad, 8,5 de media) y Revivo (81 %). Dudas: Le Normand (42 %) y Johnny (46 %) en el Atleti; Cepeda y Lemar en el Elche.\n\nLos dos llegan con bajas. El Atlético no tendrá a Cuti Romero y Lookman, lesionados, y el Elche tampoco a Aguado, lesionado.\n\nEl partido pinta mejor para el Atleti (3º) que para el Elche (19º).",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|133",
+   "plantilla": "🗓️ Jornada 14: Real Madrid-Alavés, el sábado a las 21:00\n\nDonde hay más duda: Guevara (46 %) y A. Rebbach (61 %) en el Alavés. Bajas en los dos lados: en el Real Madrid no estarán Asencio y Rodrygo, lesionados, y en el Alavés, Mikel Rodriguez y F. Garcés, lesionados.\n\nLo seguro: Mbappé (94 %, 12 de media) y Sivera (94 %).\n\nSobre el papel, el Madrid lo tiene más fácil: va 2º y el Alavés, 9º.",
+   "antes": {
+    "texto": "🗓️ Jornada 14: Real Madrid-Alavés, el sábado a las 21:00\n\nDonde hay más duda: Guevara (46 %) y A. Rebbach (61 %) en el Alavés. Bajas en los dos lados: en el Real Madrid no estarán Asencio y Rodrygo, lesionados, y en el Alavés, Mikel Rodriguez y F. Garcés, lesionados.\n\nLo seguro: Mbappé (94 %, 12 de media) y Sivera (94 %).\n\nSobre el papel, el Madrid lo tiene más fácil: va 2º y el Alavés, 9º.",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|133: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "🗓️ Jornada 14: Real Madrid-Alavés, el sábado a las 21:00\n\nDonde hay más duda: Guevara (46 % de titularidad) y Rebbach (61 %) en el Alavés. Bajas en los dos lados: en el Real Madrid no estarán Asencio y Rodrygo, lesionados, y en el Alavés, Mikel Rodriguez y Garcés, lesionados.\n\nLo seguro: Mbappé (94 %, 12 de media) y Sivera (94 %).\n\nSobre el papel, el Madrid lo tiene más fácil: va 2º y el Alavés, 9º.",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  },
+  {
+   "tipo": "previa",
+   "clave": "previa|131",
+   "plantilla": "🗓️ Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez, lesionado. Al Valencia 🦇, J. Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 %, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nPartido igualado: el Valencia va 16º y el Osasuna, 13º. El que más suele dar de los dos es Copete, con 7,5 de media.",
+   "antes": {
+    "texto": "🗓️ Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez, lesionado. Al Valencia 🦇, J. Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 %, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nPartido igualado: el Valencia va 16º y el Osasuna, 13º. El que más suele dar de los dos es Copete, con 7,5 de media.",
+    "estado": "plantilla (sin-ia)",
+    "llamadas": 1,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": [
+     "  (redactar) previa|131: no ha pasado la redacción (sin-ia)"
+    ]
+   },
+   "ahora": {
+    "texto": "Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez, lesionado. Al Valencia 🦇, Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 % de titularidad, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nPartido igualado: el Valencia va 16º y el Osasuna, 13º. El que más suele dar de los dos es Copete, con 7,5 de media.",
+    "estado": "plantilla (sin-tiempo)",
+    "llamadas": 0,
+    "dolares": 0,
+    "segundos": 0,
+    "fallos": []
+   }
+  }
+ ]
+}
