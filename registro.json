@@ -2787,7 +2787,8 @@
    "Superdeporte|https://www.superdeporte.es/futbol/futbol-valenciano/cd-castellon/2026/11/21/cd-castelllon-pablo-hernandez-lleva-136709318.html": 1795299715000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254001/oportunidad-raphinha-ampliar-ventaja-lucha-primer-pichichi.html": 1795335516000,
    "SPORT|136713918": 1795332440000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000,
+   "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000
   },
   "hechos": [
    {
@@ -3580,7 +3581,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4487,17 +4488,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 70385,
-  "salida": 5138,
+  "entrada": 72428,
+  "salida": 5230,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.144314,
+  "dolares": 0.144564,
   "reservado": 0
  },
  "recientes": {
@@ -9130,13 +9131,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5156,
+   "ok": 5157,
    "fallos": 0,
-   "ejecuciones": 4209,
+   "ejecuciones": 4210,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:41:15.343Z"
+   "ultima": "2026-11-22T09:46:13.762Z"
   }
  },
  "ptsDirecto": {
@@ -9256,15 +9257,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:41:18.501Z"
+   "ultimaBien": "2026-11-22T09:46:20.529Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:41:18.501Z"
+   "ultimaBien": "2026-11-22T09:46:20.529Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:41:18.501Z"
+   "ultimaBien": "2026-11-22T09:46:20.529Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9272,11 +9273,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:41:18.501Z"
+   "ultimaBien": "2026-11-22T09:46:20.529Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:41:18.501Z"
+   "ultimaBien": "2026-11-22T09:46:20.529Z"
   }
  },
  "avisos": [
