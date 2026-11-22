@@ -1836,6 +1836,13 @@
     "extra": 1,
     "jugador": "Mikel Oyarzabal"
    }
+  },
+  {
+   "clave": "onces|125",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124541263806386316",
+   "t": "2026-11-22T16:31:24.561Z"
   }
  ],
  "estados": {
@@ -4525,24 +4532,20 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 23,
-   "redactar": 26,
-   "revisar": 8,
+   "redactar": 27,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 273198,
-  "salida": 14258,
+  "entrada": 288976,
+  "salida": 14426,
   "cacheLee": 101494,
-  "cacheEscribe": 49314,
-  "dolares": 0.635308,
+  "cacheEscribe": 52217,
+  "dolares": 0.675802,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-21T14:21:29.062Z",
-    "texto": "👀 El Rayo ⚡ sale con tres arriba, en un 4-3-3, y el Valencia 🦇 se planta en Vallecas con dos delanteros, en un 4-4-2. Ningún once trae novedades respecto a lo esperado.\n\nCamello está de titular en el Rayo y es de los que más puntos da en su equipo. Dimitrievski también está bajo palos en el Valencia.\n\nQuien tenga jugadores de este partido puede seguir tranquilo."
-   },
    {
     "t": "2026-11-21T16:40:45.136Z",
     "texto": "👀 Valles es titular en la portería del Betis, y eso es una buena noticia para quien lo tenga: es el que más puntos da de su equipo.\n\nEn el Sánchez-Pizjuán, el Sevilla y el Betis salen con el mismo 4-2-3-1 y sin ninguna novedad. Fofana, el que más puntúa del Sevilla, también está en el once, en el centro del campo."
@@ -4558,6 +4561,10 @@
    {
     "t": "2026-11-22T14:26:42.406Z",
     "texto": "👀 El Racing ⚓ juega en El Sardinero con un 4-2-3-1 y Yassir Zabiri, el que más puntos da de su equipo, va de delantero.\n\nLa Real Sociedad responde con un 4-4-2 y Carlos Soler arranca en el medio. Ninguno ha dado un giro raro al once, así que quien tenga a gente de este partido ya sabe a qué atenerse."
+   },
+   {
+    "t": "2026-11-22T16:31:24.563Z",
+    "texto": "👀 Sin sorpresas en El Sadar: Budimir, el cisne de los Balcanes, sale de titular en el Osasuna 🐂 y Niño hace lo propio en el Málaga 🐟, así que quien los tenga ya puede relajarse.\n\nEl Osasuna sale con un 4-2-3-1 y el Málaga, con un 3-5-2. Falta una hora o así para el partido."
    }
   ],
   "final": [
@@ -9312,13 +9319,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5275,
+   "ok": 5277,
    "fallos": 0,
-   "ejecuciones": 4290,
+   "ejecuciones": 4291,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:26:11.236Z"
+   "ultima": "2026-11-22T16:31:11.202Z"
   }
  },
  "ptsDirecto": {
@@ -9504,27 +9511,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:26:19.109Z"
+   "ultimaBien": "2026-11-22T16:31:25.237Z"
   }
  },
  "avisos": [
