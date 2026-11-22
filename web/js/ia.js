@@ -2849,6 +2849,24 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
   return false;
 }
 
+/* ---------------- la oferta que le cuentan (22 nov, Domy, por audio) ----------------
+   «Le doy los datos de una oferta y siempre dice que no, que no la ve dentro de la aplicación. ¡Pero te estoy diciendo
+   que me ofrece esto!» Lo que se habla por WhatsApp o de palabra no sale en LaLiga: si el mánager cuenta que le ofrecen
+   algo, es un hecho. A la IA se le dice que la valore con sus cifras, y si aun así contesta que no la ve, esa frase se quita. */
+const OFERTA_DICHA = /\bme (ofrece|ofrecen|ha ofrecido|han ofrecido|ofrecio|ofrecieron|da|dan|daria|darian|paga|pagan|pagaria|propone|proponen|ha propuesto|han propuesto|quiere dar|quieren dar|quiere comprar|quieren comprar|compra|compran)\b|\b(tengo|me ha llegado|me llega|me ha hecho|me han hecho|me hace) (una |la )?(oferta|propuesta)\b|\bme ha dicho que me (da|paga|ofrece|compra)\b/;
+/** ¿su mensaje cuenta una oferta o un trato que le han hecho? (no vale preguntar «¿qué me ofrecen?») */
+export const cuentaOferta = (pregunta) => { const q = norm(pregunta || ''); return OFERTA_DICHA.test(q) && !/^(que|cuanto|quien) me (ofrece|ofrecen|da|dan)\b/.test(q); };
+const NO_LA_VEO = /\bno (la |lo |me |te |se )?(veo|aparece|consta|sale|figura|tengo|encuentro)\b[^.!?]{0,90}\b(oferta|trato|propuesta)\b|\b(oferta|trato|propuesta)\b[^.!?]{0,70}\bno (la )?(veo|aparece|consta|sale|figura|esta)\b|\bno (veo|aparece|consta|figura)\b[^.!?]{0,60}\b(en los datos|en la app|en la aplicacion|en laliga|en tu cuenta)\b/;
+/** quita de la respuesta las frases que dicen que no ve esa oferta. Devuelve { texto, quitadas } */
+export function sinNoLaVeo(texto) {
+  const [cuerpo, ...resto] = String(texto || '').split(/\n\n(?=\*\*Revisado por la app:\*\*)/);
+  let quitadas = 0;
+  const t = cuerpo.split(/\n{2,}/).map((p) => p.split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡«*-])/).filter((f) => { const fuera = NO_LA_VEO.test(norm(f)); if (fuera) quitadas++; return !fuera; }).join(' ')).filter((p) => p.trim()).join('\n\n');
+  // (si se quedaba sin nada que decir, se deja como llegó: mejor eso que una respuesta vacía)
+  if (!quitadas || t.replace(/\s+/g, ' ').trim().length < 60) return { texto, quitadas: 0 };
+  return { texto: [t, ...resto].join('\n\n'), quitadas };
+}
+
 /* ---------------- el dinero de un rival, cerrado (22 nov, Carlos) ----------------
    «Si alguien pregunta cuánto dinero tiene X rival y no lo ha desbloqueado viendo el anuncio, que no se lo diga.» La cifra
    ya no le llegaba a la IA (solo «mucho», «algo», «poco»), pero a la pregunta directa contestaba con eso mismo («tiene un
@@ -3699,8 +3717,10 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
     if (abi.length) dineroTxtQ += `\nPREGUNTA POR EL DINERO DE ${abi.map((x) => x.nombre).join(' y ')}, QUE LO TIENE ABIERTO (ha visto sus anuncios): díselo con la cifra y su ± tal cual van arriba en RIVALES. Lo de «cerrado en su cuenta» no va con ${abi.length === 1 ? 'este rival' : 'estos rivales'}.\n`;
     if (cer.length) dineroTxtQ += `\nPREGUNTA POR EL DINERO DE ${cer.length === 1 ? cer[0].nombre.toUpperCase() : 'RIVALES'} Y LO TIENE CERRADO: no se lo digas de ninguna forma. Ni una cifra, ni «mucho», «algo», «poco», «saldo medio», ni si tiene más o menos que otro o que él, ni si le llega para algo: la categoría que ves arriba es solo para que tú decidas, no para contarla. Dile en una frase, de tú («lo tienes cerrado en tu cuenta»), que eso ${comoSeAbre()}, y si quieres añade algo útil que NO sea su dinero (lo que ha gastado esta semana, sus movimientos). No uses las palabras «categoría» ni «desbloquear».\n`;
   } catch (e) { dineroTxtQ = ''; }
+  // (22 nov, Domy) le cuenta una oferta que le han hecho: es un hecho aunque no salga en los datos
+  const ofertaTxtQ = cuentaOferta(pregunta) ? '\nTE CUENTA UNA OFERTA O UN TRATO QUE LE HAN HECHO: es un HECHO, aunque no salga en los datos (lo que se habla por WhatsApp o de palabra, y a veces lo último de LaLiga, no llega a la app). NO le digas que no la ves, que no aparece o que la compruebe: dala por buena y valórala con sus cifras y las de los datos (lo que vale el jugador, su tendencia, lo que ha hecho en la jornada, lo que le daría LaLiga, lo que pagaría un rival y lo que pierde su once), y dile si la acepta, si pide más (cuánto) o si no.\n' : '';
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;
@@ -3810,6 +3830,8 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
     const sd = sinDineroCerrado(n.texto, dineroCerradoDe(pregunta, D, M, antesQ));
     if (sd.quitadas || sd.texto !== n.texto) n.texto = sd.texto;
   } catch (e) { /* como llegó */ }
+  // (22 nov, Domy) le contaba una oferta: «no la veo en la app» no es una respuesta
+  try { if (cuentaOferta(pregunta)) n.texto = sinNoLaVeo(n.texto).texto; } catch (e) { /* como llegó */ }
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   guardarChat(h2.slice(-40));
