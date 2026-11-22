@@ -2567,14 +2567,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2206",
-   "que": "sancion",
-   "antes": "ok",
-   "t": 1795334473576
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
@@ -9174,13 +9167,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5135,
+   "ok": 5136,
    "fallos": 0,
-   "ejecuciones": 4188,
+   "ejecuciones": 4189,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T08:01:13.576Z"
+   "ultima": "2026-11-22T08:06:11.987Z"
   }
  },
  "ptsDirecto": {
@@ -9300,15 +9293,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:02:17.248Z"
+   "ultimaBien": "2026-11-22T08:06:17.104Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:02:17.248Z"
+   "ultimaBien": "2026-11-22T08:06:17.104Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:02:17.248Z"
+   "ultimaBien": "2026-11-22T08:06:17.104Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9316,11 +9309,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:02:17.248Z"
+   "ultimaBien": "2026-11-22T08:06:17.104Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T08:02:17.248Z"
+   "ultimaBien": "2026-11-22T08:06:17.104Z"
   }
  },
  "avisos": [
