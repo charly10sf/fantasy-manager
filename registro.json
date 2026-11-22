@@ -2782,7 +2782,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
-   "SPORT|136715788": 1795347290000
+   "SPORT|136715788": 1795347290000,
+   "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000
   },
   "hechos": [
    {
@@ -3517,7 +3518,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -4424,17 +4425,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 122383,
-  "salida": 8233,
+  "entrada": 124275,
+  "salida": 8656,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.218055,
+  "dolares": 0.218456,
   "reservado": 0
  },
  "recientes": {
@@ -9067,13 +9068,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5193,
+   "ok": 5194,
    "fallos": 0,
-   "ejecuciones": 4246,
+   "ejecuciones": 4247,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:46:12.875Z"
+   "ultima": "2026-11-22T12:51:10.116Z"
   }
  },
  "ptsDirecto": {
@@ -9193,15 +9194,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:46:16.657Z"
+   "ultimaBien": "2026-11-22T12:51:17.055Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:46:16.657Z"
+   "ultimaBien": "2026-11-22T12:51:17.055Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:46:16.657Z"
+   "ultimaBien": "2026-11-22T12:51:17.055Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9209,11 +9210,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:46:16.657Z"
+   "ultimaBien": "2026-11-22T12:51:17.055Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:46:16.657Z"
+   "ultimaBien": "2026-11-22T12:51:17.055Z"
   }
  },
  "avisos": [
