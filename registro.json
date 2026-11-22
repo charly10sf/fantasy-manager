@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "AS|https://as.com/futbol/primera/simeone-todavia-sin-el-cuti-y-con-jonathan-david-f202611-n/": 1795086494000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252932/atletico-contrarreloj-preparar-derbi-coliseum.html": 1795087684000,
    "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
@@ -2780,7 +2779,8 @@
    "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000,
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
    "SPORT|136717129": 1795341237000,
-   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000
+   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
+   "SPORT|136598447": 1795341606000
   },
   "hechos": [
    {
@@ -3516,7 +3516,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -4424,17 +4424,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 78330,
-  "salida": 5780,
+  "entrada": 80440,
+  "salida": 5896,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.145429,
+  "dolares": 0.145698,
   "reservado": 0
  },
  "recientes": {
@@ -9067,13 +9067,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5172,
+   "ok": 5173,
    "fallos": 0,
-   "ejecuciones": 4225,
+   "ejecuciones": 4226,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:01:11.883Z"
+   "ultima": "2026-11-22T11:06:21.563Z"
   }
  },
  "ptsDirecto": {
@@ -9193,15 +9193,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:01:19.748Z"
+   "ultimaBien": "2026-11-22T11:06:26.425Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:01:19.748Z"
+   "ultimaBien": "2026-11-22T11:06:26.425Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:01:19.748Z"
+   "ultimaBien": "2026-11-22T11:06:26.425Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9209,11 +9209,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:01:19.748Z"
+   "ultimaBien": "2026-11-22T11:06:26.425Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:01:19.748Z"
+   "ultimaBien": "2026-11-22T11:06:26.425Z"
   }
  },
  "avisos": [
