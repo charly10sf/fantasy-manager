@@ -2574,7 +2574,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
-   "SPORT|136608611": 1795080548000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
    "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000,
    "SPORT|136611106": 1795081699000,
@@ -2818,18 +2817,6 @@
      18,
      30
     ]
-   },
-   {
-    "guid": "SPORT|136608611",
-    "medio": "SPORT",
-    "t": 1795080548000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde vuelve a entrenarse parcialmente con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/",
@@ -9156,13 +9143,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5152,
+   "ok": 5153,
    "fallos": 0,
-   "ejecuciones": 4205,
+   "ejecuciones": 4206,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:26:12.637Z"
+   "ultima": "2026-11-22T09:31:13.882Z"
   }
  },
  "ptsDirecto": {
@@ -9282,15 +9269,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:26:16.148Z"
+   "ultimaBien": "2026-11-22T09:31:19.187Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:26:16.148Z"
+   "ultimaBien": "2026-11-22T09:31:19.187Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:26:16.148Z"
+   "ultimaBien": "2026-11-22T09:31:19.187Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9298,11 +9285,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:26:16.148Z"
+   "ultimaBien": "2026-11-22T09:31:19.187Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:26:16.148Z"
+   "ultimaBien": "2026-11-22T09:31:19.187Z"
   }
  },
  "avisos": [
