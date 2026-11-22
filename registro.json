@@ -2019,6 +2019,17 @@
    "jornada": 13,
    "id": "2124630760225157200",
    "t": "2026-11-22T22:27:02.117Z"
+  },
+  {
+   "clave": "mercado|2026-11-23",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2124643155903439030",
+   "t": "2026-11-22T23:16:17.452Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "581"
+   }
   }
  ],
  "estados": {
@@ -4707,16 +4718,16 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 0,
-   "redactar": 4,
-   "revisar": 1,
+   "redactar": 8,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 58735,
-  "salida": 1460,
-  "cacheLee": 0,
+  "entrada": 123435,
+  "salida": 2892,
+  "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.139328,
+  "dolares": 0.283918,
   "reservado": 0
  },
  "recientes": {
@@ -4788,10 +4799,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-18T06:02:24.925Z",
-    "texto": "📈 Vinícius no se baja del ascensor: +2,4 M esta noche y ya vale 72,2 M. Van diez días seguidos subiendo y 17,5 M ganados desde el 8 de noviembre.\n\nRodri, por su parte, repite como el que más baja: 1,4 M menos y 22 días seguidos cayendo. En el Atlético, Grimaldo y Pubill se dejan dinero y los jugadores del Atleti pierden 5,6 M entre todos. El Real Madrid ⚪ suma 8,3 M."
-   },
-   {
     "t": "2026-11-18T23:15:34.916Z",
     "texto": "📈 El chollo de hoy es Niño, del Málaga 🐟: vale 5,5 M, trae una buena media de 6,4 y sube un 4,2 %. Para quien busque un fichaje barato, tiene pinta de opción.\n\nArriba del todo, Vinícius suma otros 2,4 M y se va a 74,6 M, con once días seguidos al alza. Eso sí, solo ha sumado 6 puntos en las tres últimas jornadas. Rodri, en cambio, no encuentra suelo: 23 días cayendo y 31,8 M menos desde el 27 de octubre.\n\nLos jugadores del Real Madrid ⚪ ganan 6,7 M entre todos; los del Atlético pierden 4,5 M."
    },
@@ -4806,6 +4813,10 @@
    {
     "t": "2026-11-21T23:15:26.011Z",
     "texto": "📈 El Real Madrid ⚪ se lleva la noche: sus jugadores ganan 7 M entre todos, mientras que los del Villarreal 🚢 pierden 2,6 M.\n\nNico Williams es el caso que más llama la atención: otros 1,9 M y 28 días seguidos al alza, 39,1 M desde el 25 de octubre. Vini Jr. también repite arriba, con 14 días subiendo, aunque solo ha sumado 6 puntos en las tres últimas jornadas.\n\nEn el otro lado, Rodri no encuentra suelo: 26 días cayendo y 35,3 M menos."
+   },
+   {
+    "t": "2026-11-22T23:16:17.455Z",
+    "texto": "📈 Rioja, del Valencia 🦇, es el chollo de hoy: vale 3,1 M, sube un 1,8 % y trae una media de 4,6. Para tapar un hueco barato, merece un vistazo.\n\nArriba del todo repite Vini Jr., con quince días seguidos subiendo y 28,8 M ganados desde el 8 de noviembre.\n\nAbajo repite Diomande: siete días cayendo y 7,1 M menos desde el 16 de noviembre, aunque sigue siendo el 5º delantero con más puntos de la temporada."
    }
   ],
   "previa": [
@@ -5315,11 +5326,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "mercado|2026-11-23": {
-   "n": 1,
-   "t": "2026-11-22T23:15:37.240Z",
-   "ultima": "2026-11-22T23:15:37.240Z"
   }
  },
  "rasgos": {
@@ -9887,7 +9893,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T23:15:37.271Z"
+   "ultimaBien": "2026-11-22T23:16:17.457Z"
   },
   "FotMob": {
    "seguidas": 0,
