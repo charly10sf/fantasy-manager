@@ -26,7 +26,7 @@ export const NOVEDADES = [
   {
     // (22 nov, 19:44, Carlos: «las 3 últimas no son noticias») fuera de las noticias los directos, las páginas para ver el
     // partido (DAZN) y las de a qué hora y dónde se ve (`noEsNoticia` en util.js). La hora, al publicar
-    v: '0.8v', f: '2026-11-22', h: '', t: 'Solo noticias de verdad',
+    v: '0.8v', f: '2026-11-22', h: '20:35', t: 'Solo noticias de verdad',
     cosas: [
       { tipo: 'arreglo', d: 'periodico', t: 'Solo noticias de verdad', x: 'Entre las noticias se colaban los partidos y las ruedas de prensa en directo, las páginas para verlos en la tele y las de apuestas. Ahora solo salen noticias.' },
     ],
