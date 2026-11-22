@@ -2791,7 +2791,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000,
    "SPORT|136636494": 1795111764000,
@@ -2995,18 +2994,6 @@
    "SPORT|136726389": 1795364350000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795110892000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang entrena al margen del grupo por molestias en el tobillo",
-    "motivo": "molestias en el tobillo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/",
     "medio": "AS",
@@ -9430,13 +9417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5307,
+   "ok": 5309,
    "fallos": 0,
-   "ejecuciones": 4308,
+   "ejecuciones": 4309,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:51:12.307Z"
+   "ultima": "2026-11-22T17:56:11.441Z"
   }
  },
  "ptsDirecto": {
@@ -9652,27 +9639,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:51:26.871Z"
+   "ultimaBien": "2026-11-22T17:56:20.193Z"
   }
  },
  "avisos": [
