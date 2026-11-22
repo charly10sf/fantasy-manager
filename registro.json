@@ -1821,6 +1821,21 @@
    "jornada": 13,
    "id": "2124525040439804069",
    "t": "2026-11-22T15:26:56.453Z"
+  },
+  {
+   "clave": "directo|124|Mikel Oyarzabal|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124534947272614238",
+   "t": "2026-11-22T16:06:18.464Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "124",
+    "equipo": "89",
+    "min": 45,
+    "extra": 1,
+    "jugador": "Mikel Oyarzabal"
+   }
   }
  ],
  "estados": {
@@ -4510,16 +4525,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 24,
+   "redactar": 26,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 246586,
-  "salida": 13172,
+  "entrada": 271247,
+  "salida": 13441,
   "cacheLee": 101494,
   "cacheEscribe": 49314,
-  "dolares": 0.582692,
+  "dolares": 0.634704,
   "reservado": 0
  },
  "recientes": {
@@ -4657,10 +4672,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T14:26:23.586Z",
-    "texto": "⚽ Gerard Martín la manda dentro de cabeza en el 57' y el Barça recorta ante el Villarreal 🚢: 1-2.\n\nEs su primer gol entre Liga, Champions y Copa del Rey. Gerard Martín ya suma 4 puntos y Pedri, que da el pase, lleva 5 de momento."
-   },
-   {
     "t": "2026-11-22T14:26:26.935Z",
     "texto": "⚽ Fermín la manda dentro en el 61' y el Barça empata con el Villarreal 🚢: 2-2.\n\nEl centrocampista ya suma 6 puntos y llega en racha, con tres jornadas seguidas puntuando fuerte. El pase es de Lamine Yamal, que se lleva 4 de momento."
    },
@@ -4675,6 +4686,10 @@
    {
     "t": "2026-11-22T15:26:33.291Z",
     "texto": "🟥 Roja a Pau Navarro en el 90+3' y el Villarreal 🚢 se queda con diez cuando ya perdía 3-2 en el campo del Barça.\n\nEl defensa se va con -3 puntos. Si lo tenías, se te suma un palo gordo en el último suspiro."
+   },
+   {
+    "t": "2026-11-22T16:06:18.466Z",
+    "texto": "⚽ Oyarzabal recorta para la Real Sociedad en el 45+1'. Racing 2-1 Real Sociedad. Asistencia de Sergio Gómez, con 1 puntos de momento. Oyarzabal ya suma 4 puntos."
    }
   ],
   "novedades": [
@@ -9277,17 +9292,33 @@
    "w": "2026-11-22T15:23:05Z",
    "f": "2026-11-22T15:26:12.175Z",
    "rf": "10:09"
+  },
+  "fm|124|678234|45": {
+   "j": "Mikel Oyarzabal",
+   "m": "45'",
+   "f": "2026-11-22T16:06:10.164Z",
+   "rf": "Half-Time",
+   "casado": true
+  },
+  "directo|124|Mikel Oyarzabal|gol1": {
+   "j": "Mikel Oyarzabal",
+   "m": "45'+1'",
+   "e": "2026-11-22T16:06:10.164Z",
+   "re": "45'+3'",
+   "w": "2026-11-22T16:01:25Z",
+   "f": "2026-11-22T16:06:10.164Z",
+   "rf": "Half-Time"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5265,
+   "ok": 5267,
    "fallos": 0,
-   "ejecuciones": 4285,
+   "ejecuciones": 4286,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:01:12.059Z"
+   "ultima": "2026-11-22T16:06:10.164Z"
   }
  },
  "ptsDirecto": {
@@ -9446,6 +9477,18 @@
    "g": 0,
    "a": 1,
    "t": 1795361172175
+  },
+  "13|124|3091": {
+   "p": 4,
+   "g": 1,
+   "a": 0,
+   "t": 1795363570164
+  },
+  "13|124|1989": {
+   "p": 1,
+   "g": 0,
+   "a": 1,
+   "t": 1795363570164
   }
  },
  "golesAnulados": {
@@ -9461,27 +9504,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:01:19.101Z"
+   "ultimaBien": "2026-11-22T16:06:23.103Z"
   }
  },
  "avisos": [
