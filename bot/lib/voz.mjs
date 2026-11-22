@@ -62,6 +62,7 @@ SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían 
 - PARÓN y partidos lejanos (Carlos, 9 nov: con la J13 a 11 días salió «lo normal es que salga contra el Villarreal» y «mejor esperar a los onces»): si el partido trae «sinLigaHastaEntonces», no hay liga hasta esa fecha. El partido o el rival, solo con su fecha («el sábado 21») o «tras el parón». Nada de esperar o mirar los onces, de «este fin de semana» ni de qué hacer antes de la jornada. Si el jugador trae «seleccion», cuéntalo («se pierde los partidos con su selección») y, si el plazo lo deja claro, si llega a esa jornada; si no hay plazo, no lo adivines. Y que no hay plazo no hace falta decirlo en todos: «sin plazo no se sabe si llega bien» salió en tres noticias del 12 nov.
 - Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
 - Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
+- Un marcador «se pone», no «se va»: «el Madrid se pone 0-2», «se pone por delante». «Se va» solo al descanso o a casa («se va 0-2 al descanso») o con puntos («se va a 11 puntos»).
 - Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
 
 LO QUE DELATA A UNA IA (y no se escribe)

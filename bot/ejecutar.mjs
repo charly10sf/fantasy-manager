@@ -18,7 +18,7 @@ import { aplicaRedaccion, decidirRespaldo, olvidarFallos, porFallos } from './li
 import { crearCronicas } from './lib/cronicas.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicarSinRepetir, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
-import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
+import { fijarLimite, limite, largo, retocar, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 import { esperaParon, paronActual } from './lib/paron.mjs';
@@ -208,6 +208,8 @@ for (const q of quienes) {
     try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
     catch (e) { console.log(`  (pulir) ERROR ${e.message || e}: salen con la plantilla`); }
   }
+  // lo que se arregla sin IA, en todos (redactados, pulidos y de plantilla): «se va 0-2» → «se pone 0-2» (lib/texto.mjs, retocar)
+  for (const t of tweets) if (t && t.texto) t.texto = retocar(t.texto);
   for (const t of tweets) {
     if (abortar) break;
     generados++;

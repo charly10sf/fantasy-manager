@@ -7,7 +7,7 @@ import { revisarConIA, prompt as pedidoRevisor, SISTEMA } from '../lib/revisor.m
 import { reglaPrensa, PRENSA_SIN_MEDIO } from '../lib/prensa.mjs';
 import { nombresDe } from '../lib/pulir.mjs';
 import { clubes, jugador } from '../lib/hechos.mjs';
-import { esPersonal, motivoPersonal, fijarLimite } from '../lib/texto.mjs';
+import { esPersonal, motivoPersonal, fijarLimite, retocar } from '../lib/texto.mjs';
 import { lesionTxt } from '../lib/partes.mjs';
 import { sinFotos, sinFotosDe } from '../lib/con-tarjetas.mjs';
 import { GUIA } from '../lib/voz.mjs';
@@ -171,6 +171,12 @@ ok(!revisar('Pepelu no estará por motivos personales, según ha comunicado el c
 console.log('--- M13 ---');
 const apodos = readFileSync(new URL('../lib/apodos-jugadores.mjs', import.meta.url), 'utf8');
 ok(!/pendiente del OK de Carlos/.test(apodos), 'apodos-jugadores.mjs ya no dice «pendiente del OK de Carlos»');
+
+// un marcador «se pone», no «se va» (Carlos, 22 nov); al descanso, de un estadio o con puntos, «se va» se queda
+ok(retocar('⚽ Gol de Mbappé y el Madrid se va 0-2 en Mestalla.') === '⚽ Gol de Mbappé y el Madrid se pone 0-2 en Mestalla.', '«se va 0-2» pasa a «se pone 0-2»');
+ok(retocar('El Betis se iba 2-1 cuando llegó el empate') === 'El Betis se ponía 2-1 cuando llegó el empate', '«se iba 2-1» pasa a «se ponía 2-1»');
+ok(['El Madrid se va 0-2 al descanso.', 'El Madrid se va 0-2 de Mestalla.', 'Mbappé se va a 16 puntos.', 'El Atleti se va 1-0 a vestuarios'].every((x) => retocar(x) === x), '«se va» al descanso, de un estadio o con puntos no se toca');
+ok(/se pone 0-2/.test(GUIA), 'la guía dice que un marcador «se pone»');
 
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

@@ -4,6 +4,15 @@
 // humanos»). Lo fija ejecutar.mjs al arrancar: 280 sin Premium y config.largo.max con él (ver `decidirLargo` en ejecutar.mjs).
 // Las plantillas dejan para el final, con la prio más baja, lo que solo cabe en un tweet largo: con 280 salen igual que antes.
 let LIMITE = 280;
+
+// Lo que la IA (o una plantilla) escribe mal y se puede arreglar sin pedir otra versión. Pasa por todos los tuits justo antes de
+// publicar (ejecutar.mjs). Un marcador «se pone», no «se va» (Carlos, 22 nov: «se va 0-2» cuando es «se pone 0-2»); «se va 0-2 al
+// descanso», «se va 0-2 de Mestalla» y «se va a 11 puntos» están bien y no se tocan.
+const SE_VA = /\b([Ss])e (va|iba|fue) (\d{1,2}\s?-\s?\d{1,2})(?!\d|\s?-|\s+(?:al?\s+(?:descanso|intermedio|vestuarios?|casa)|de\b|del\b|sin\b|con\b))/g;
+const PONE = { va: 'pone', iba: 'ponía', fue: 'puso' };
+export function retocar(s) {
+  return String(s ?? '').replace(SE_VA, (_, S, v, m) => `${S}e ${PONE[v]} ${m}`);
+}
 export const limite = () => LIMITE;
 /** ¿se escriben tweets largos (X Premium)? */
 export const largo = () => LIMITE > 280;
