@@ -2346,7 +2346,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2634",
+     "nombre": "Joan García",
+     "pos": 1
+    },
+    {
+     "id": "2757",
+     "nombre": "Gerard Martín",
+     "pos": 2
+    },
+    {
+     "id": "2358",
+     "nombre": "F. De Jong",
+     "pos": 3
+    },
+    {
+     "id": "2906",
+     "nombre": "Cancelo",
+     "pos": 2
+    },
+    {
+     "id": "2354",
+     "nombre": "Eric",
+     "pos": 2
+    },
+    {
+     "id": "2784",
+     "nombre": "Marc Bernal",
+     "pos": 3
+    },
+    {
+     "id": "3100",
+     "nombre": "Pedri",
+     "pos": 3
+    },
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "pos": 3
+    },
+    {
+     "id": "2522",
+     "nombre": "Raphinha",
+     "pos": 4
+    },
+    {
+     "id": "3209",
+     "nombre": "Adeyemi",
+     "pos": 4
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2634",
+    "1775",
+    "2354",
+    "2906",
+    "1715",
+    "3100",
+    "2358",
+    "3092",
+    "3104",
+    "2522",
+    "3210"
+   ]
   },
   {
    "id": "20",
@@ -2554,7 +2623,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "3130",
+     "nombre": "Gulácsi",
+     "pos": 1
+    },
+    {
+     "id": "2728",
+     "nombre": "Renato Veiga",
+     "pos": 2
+    },
+    {
+     "id": "2698",
+     "nombre": "Pau Navarro",
+     "pos": 2
+    },
+    {
+     "id": "2614",
+     "nombre": "C. Romero",
+     "pos": 2
+    },
+    {
+     "id": "2934",
+     "nombre": "Freeman",
+     "pos": 2
+    },
+    {
+     "id": "2473",
+     "nombre": "Gueye",
+     "pos": 3
+    },
+    {
+     "id": "1031",
+     "nombre": "Comesaña",
+     "pos": 3
+    },
+    {
+     "id": "3086",
+     "nombre": "Moleiro",
+     "pos": 3
+    },
+    {
+     "id": "2556",
+     "nombre": "Buchanan",
+     "pos": 3
+    },
+    {
+     "id": "2771",
+     "nombre": "Mikautadze",
+     "pos": 4
+    },
+    {
+     "id": "2761",
+     "nombre": "Oluwaseyi",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "3130",
+    "2728",
+    "1959",
+    "2934",
+    "2614",
+    "3086",
+    "2556",
+    "2473",
+    "2868",
+    "2771",
+    "2504"
+   ]
   },
   {
    "id": "49",
@@ -2719,7 +2857,76 @@
     "entran": [],
     "salen": []
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "1219",
+     "nombre": "Agirrezabala",
+     "pos": 1
+    },
+    {
+     "id": "3139",
+     "nombre": "Pedro Felipe",
+     "pos": 2
+    },
+    {
+     "id": "3026",
+     "nombre": "Pablo Ramón",
+     "pos": 2
+    },
+    {
+     "id": "3011",
+     "nombre": "Jorge Salinas",
+     "pos": 2
+    },
+    {
+     "id": "3261",
+     "nombre": "Belocian",
+     "pos": 2
+    },
+    {
+     "id": "3234",
+     "nombre": "Matteo Prati",
+     "pos": 3
+    },
+    {
+     "id": "3002",
+     "nombre": "Iñigo Vicente",
+     "pos": 4
+    },
+    {
+     "id": "3247",
+     "nombre": "Iker Luque",
+     "pos": 4
+    },
+    {
+     "id": "3125",
+     "nombre": "Canales",
+     "pos": 3
+    },
+    {
+     "id": "3205",
+     "nombre": "Iván Martín",
+     "pos": 3
+    },
+    {
+     "id": "3152",
+     "nombre": "Y. Zabiri",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "1219",
+    "3011",
+    "3026",
+    "3261",
+    "3139",
+    "3125",
+    "3205",
+    "3234",
+    "3152",
+    "3002",
+    "3247"
+   ]
   },
   {
    "id": "16",
@@ -2929,7 +3136,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "274",
+     "nombre": "Remiro",
+     "pos": 1
+    },
+    {
+     "id": "1989",
+     "nombre": "Sergio Gómez",
+     "pos": 2
+    },
+    {
+     "id": "2818",
+     "nombre": "Hector Fort",
+     "pos": 2
+    },
+    {
+     "id": "265",
+     "nombre": "Zubeldia",
+     "pos": 2
+    },
+    {
+     "id": "3238",
+     "nombre": "M. Sarr",
+     "pos": 2
+    },
+    {
+     "id": "2444",
+     "nombre": "Sucic",
+     "pos": 3
+    },
+    {
+     "id": "3085",
+     "nombre": "Guedes",
+     "pos": 4
+    },
+    {
+     "id": "2621",
+     "nombre": "Gorrotxa",
+     "pos": 3
+    },
+    {
+     "id": "2772",
+     "nombre": "C. Soler",
+     "pos": 3
+    },
+    {
+     "id": "2448",
+     "nombre": "Oskarsson",
+     "pos": 4
+    },
+    {
+     "id": "3091",
+     "nombre": "Oyarzabal",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "274",
+    "2656",
+    "3238",
+    "1989",
+    "2443",
+    "2444",
+    "2772",
+    "2621",
+    "1215",
+    "1197",
+    "3091"
+   ]
   },
   {
    "id": "13",
