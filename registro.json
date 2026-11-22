@@ -2792,7 +2792,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252987/barca-mueve-ficha-tres-centrales-punto-mira.html": 1795116792000,
-   "SPORT|136638097": 1795114837000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/idea-real-madrid-recuperar-nico-paz-proximo-verano-20261119_3478703.html": 1795119011000,
    "SPORT|136638674": 1795116349000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
@@ -9415,13 +9414,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5333,
+   "ok": 5335,
    "fallos": 0,
-   "ejecuciones": 4321,
+   "ejecuciones": 4322,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T18:56:10.574Z"
+   "ultima": "2026-11-22T19:01:10.916Z"
   }
  },
  "ptsDirecto": {
@@ -9637,27 +9636,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:56:17.794Z"
+   "ultimaBien": "2026-11-22T19:01:20.197Z"
   }
  },
  "avisos": [
