@@ -14,6 +14,7 @@
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
 //  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, se repite tras un corte, sin cupo y con la ruta caída.
+//  17. (22 nov, Domy) en Directo, los de tu once de la jornada cuentan como tuyos aunque ya los hayas vendido.
 //  16. (22 nov) las bajas de la jornada: la cruz de Clubes, «pueden jugar» de Equipo, las pestañas, la ficha con «‹ Bajas» y la vuelta.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
@@ -1221,6 +1222,41 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
     else bien(`${nombre}: «${tile}» de Equipo abre la misma hoja en «Tu liga»`);
     if (errores.length) mal(`${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   } catch (e) { mal(`${nombre}: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+
+// 17 (22 nov, Domy): en Directo cuentan los de tu once de la jornada, aunque ya no los tengas. Con el reloj en el domingo de la
+// jornada en juego de la demo, se pone un directo con tu once y uno de un rival dentro (como si lo hubieras vendido con la
+// jornada empezada): tiene que salir en su partido con sus puntos y, en la ficha del partido, como tuyo.
+{
+  const domingo = RELOJ + 4 * 864e5 + 6 * 3600e3;
+  const { ctx, page, errores } = await pagina({ reloj: domingo });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForSelector('#vista', { timeout: 25000 });
+    const r = await page.evaluate(async () => {
+      const S = window.S, M = S.M;
+      if (!M.enJuego) return { sinJornada: true };
+      const mios = M.mias.filter((x) => x.j.pos < 5).map((x) => String(x.j.id));
+      const yo = String(M.yo.teamId);
+      const ajeno = Object.entries(M.dueno).find(([pid, t]) => String(t) !== yo && S.D.maestro[pid] && S.D.maestro[pid].pos < 5);
+      const pid = ajeno[0];
+      const once = [...mios.slice(0, 10), pid];
+      M.ponerVivo({ t: Date.now(), n: M.enJuego.n, puntos: { [pid]: 7 }, once, equipos: {}, enJuego: [], acabados: [] });
+      document.querySelector('[data-ir="directo"]').click();
+      await new Promise((ok) => setTimeout(ok, 900));
+      const j = S.D.maestro[pid];
+      const chips = [...document.querySelectorAll('#vista .pt-chip')].map((c) => c.textContent);
+      const partido = [...document.querySelectorAll('#vista [data-accion="verPartido"]')].find((b) => b.textContent.includes(S.D.equipos[j.equipoId].nombre));
+      let tuyo = null;
+      if (partido) { partido.click(); await new Promise((ok) => setTimeout(ok, 900)); const f = document.querySelector(`.hoja [data-j="${pid}"]`); tuyo = f ? f.textContent.includes('Tuyo') : null; }
+      return { nombre: j.nombre, chip: chips.some((c) => c.includes(j.nombre.split(' ').pop())), hayPartido: !!partido, tuyo };
+    });
+    if (r.sinJornada) bien('directo con el once de la jornada: sin jornada en juego a esa hora en la demo (no se mira)');
+    else if (!r.chip || (r.hayPartido && r.tuyo !== true)) mal(`directo con el once de la jornada: ${JSON.stringify(r)}`);
+    else bien(`directo con el once de la jornada: el que ya no es tuyo sale en su partido y en la ficha como tuyo`);
+    if (errores.length) mal(`directo con el once de la jornada: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`directo con el once de la jornada: ${e.message.split('\n')[0]}`); }
   await ctx.close();
 }
 

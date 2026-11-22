@@ -135,11 +135,38 @@ function equipoConfirmado(S, tid) {
   return n >= 10;
 }
 /** quiénes de tu liga juegan con cada equipo: los tuyos (jugadores) y cuántos de los rivales */
-function contexto(S) {
+/* (22 nov, Domy: «en Directo tiene que tener en cuenta los jugadores que tenías al empezar la jornada para mostrarte los
+   puntos que tienen») Los que puntúan para ti en una jornada son los de tu once de esa jornada (/lineup/week/n, M.vivo.once),
+   aunque hayas vendido a alguno con la jornada empezada (vendido así, cuenta entera). En Directo, ese once manda: sale en
+   cada partido con sus puntos y, en la ficha del partido, como tuyo. `onceDt` es el de la jornada que se está pintando (lo
+   ponen `contexto` y `fichaPartido`); fuera de Directo no se usa. */
+let onceDt = null;
+function ponerOnceDt(S, n) {
+  const V = S.M && S.M.vivo;
+  onceDt = n != null && V && V.n === n && Array.isArray(V.once) ? new Set(V.once.map(String)) : null;
+}
+/** de quién es en la jornada que se está pintando: los de tu once de esa jornada, tuyos aunque ya no lo sean */
+function duenoJ(S, pid) {
+  if (onceDt && onceDt.has(String(pid)) && S.M.yo) return { yo: true, tid: S.M.yo.teamId, txt: 'Tuyo' };
+  return duenoDe(S, pid);
+}
+function tagJ(S, pid) {
+  const d = duenoJ(S, pid);
+  if (!d) return { txt: '' };
+  if (d.yo) return { txt: 'TUYO', cls: 'tuyo' };
+  return { txt: String(d.txt).split(' ')[0].slice(0, 8).toUpperCase(), cls: 'suyo' };
+}
+function contexto(S, n = null) {
   const { M, D } = S;
   const yo = M.yo ? String(M.yo.teamId) : '';
   const mios = {}, deRivales = {};
   for (const x of M.mias) if (x.j.pos && x.j.pos < 5) (mios[x.j.equipoId] ||= []).push(x.j);
+  // los de tu once de la jornada que ya no tienes (vendidos con la jornada empezada): también puntúan para ti
+  ponerOnceDt(S, n);
+  if (onceDt) {
+    const tengo = new Set(M.mias.map((x) => String(x.j.id)));
+    for (const pid of onceDt) { const j = D.maestro[pid]; if (j && j.pos && j.pos < 5 && !tengo.has(String(pid))) (mios[j.equipoId] ||= []).push(j); }
+  }
   for (const [pid, t] of Object.entries(M.dueno || {})) {
     if (String(t) === yo) continue;
     const j = D.maestro[pid];
@@ -149,7 +176,7 @@ function contexto(S) {
   return { mios, deRivales };
 }
 function listaPartidos(S, n, ps, { dias = true } = {}) {
-  const ctx = { ...contexto(S), dias };
+  const ctx = { ...contexto(S, n), dias };
   const vivos = ps.filter((p) => estadoP(p).cls === 'vivo'), prox = ps.filter((p) => estadoP(p).cls === 'prox'), fin = ps.filter((p) => estadoP(p).cls === 'fin').reverse();
   let h = '';
   if (vivos.length) h += `<div class="grupo"><span>Jugándose</span><span>${vivos.length}</span></div>${vivos.map((p) => filaPartido(S, p, n, ctx)).join('')}`;
@@ -396,7 +423,7 @@ function jugadaHTML(S, p, i) {
 function filaPt(S, x, ju) {
   const j = S.D.maestro[x.id] || null;
   const nom = j ? j.nombre : x.nom;
-  const d = j ? duenoDe(S, j.id) : null;
+  const d = j ? duenoJ(S, j.id) : null;
   const hechos = hechosDe(x, j, ju);
   const sub = [d ? (d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`) : '<span class="apag">sin dueño</span>', esc(hechos)].filter(Boolean).join(' · ');
   const tag = j ? `button class="fila${d && d.yo ? ' yo-fila' : ''}" data-j="${esc(j.id)}"` : 'div class="fila"';
@@ -432,7 +459,7 @@ function eventosHTML(S, p) {
       : c.startsWith('pen') ? `<span class="jg-ic">${icono('diana')}</span>` : `<span class="jg-ic">${icono('balon')}</span>`);
   const fila = (it) => {
     const j = D.maestro[it.x.id];
-    const d = j ? duenoDe(S, j.id) : null;
+    const d = j ? duenoJ(S, j.id) : null;
     const quien = d ? (d.yo ? ' <b class="rojo">· tuyo</b>' : ` <span class="apag">· de ${esc(d.txt)}</span>`) : '';
     const pts = it.pts == null ? '' : `<span class="ev-pts ${it.pts > 0 ? 'sube' : it.pts < 0 ? 'baja' : 'cero'}">${it.pts > 0 ? '+' : ''}${it.pts}</span>`;
     return `<${j ? `button class="jg ev-f" data-j="${esc(j.id)}"` : 'div class="jg ev-f"'}>${escudo(D, it.x.l ? p.lid : p.vid, 'chico')}${ic(it.c)}<span class="jg-t"><b>${esc(j ? j.nombre : it.x.nom)}</b> ${esc(it.txt)}${quien}</span>${pts}</${j ? 'button' : 'div'}>`;
@@ -450,7 +477,7 @@ function desgloseHTML(S, p) {
     .sort((a, b) => b.pts - a.pts || String(a.nom).localeCompare(String(b.nom)));
   const fila = (x) => {
     const j = D.maestro[x.id] || null;
-    const d = j ? duenoDe(S, j.id) : null;
+    const d = j ? duenoJ(S, j.id) : null;
     const quien = d ? (d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`) : '<span class="apag">sin dueño</span>';
     const mot = (x.mot || []).slice().sort((a, b) => ordenMotivo(a[0]) - ordenMotivo(b[0]));
     const suma = mot.reduce((t, m) => t + m[2], 0);
@@ -558,10 +585,10 @@ function equipoJugado(S, p, l, ju) {
     } else if (os.length > 11) nota = `Todos los que han jugado (${os.length}): LaLiga no dice quién salió de titular.`;
   }
   if (!tit.length) return '';
-  const crom = (o) => cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } });
+  const crom = (o) => cromo(M, o.j, { tag: tagJ(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } });
   let h = `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${tot} pts entre todos</span></div>`;
   h += canchaHTML(tit, crom);
-  if (banq.length) h += `<div class="banquillo"><div class="banq-t">${banqT} <span>${banq.length}</span></div><div class="banq-l">${banq.map((o) => cromo(M, o.j, { chico: true, tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } })).join('')}</div></div>`;
+  if (banq.length) h += `<div class="banquillo"><div class="banq-t">${banqT} <span>${banq.length}</span></div><div class="banq-l">${banq.map((o) => cromo(M, o.j, { chico: true, tag: tagJ(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } })).join('')}</div></div>`;
   if (nota) h += `<p class="t2 peq">${nota}</p>`;
   return h;
 }
@@ -615,6 +642,7 @@ export function fichaPartido(S, clave) {
   const { D, M } = S;
   const [nS, id] = String(clave).split(':');
   const n = Number(nS);
+  ponerOnceDt(S, n);
   const p0 = partidosJornada(S, n).find((x) => String(x.id) === String(id));
   if (!p0) return `<div class="hoja-cab"><h2>Jornada ${n || ''}</h2></div>${nada('No encuentro este partido.')}`;
   const p = conHechos(S, n, p0);
@@ -653,12 +681,12 @@ export function fichaPartido(S, clave) {
     if (campos) return h + campos + `<p class="t2 peq">${pie} Arriba de cada uno, de quién es en tu liga${nConf === 2 ? '' : '; debajo, lo probable que es que salga de titular'}. Toca a uno para ver su ficha.</p>`;
   }
   // (sin once probable o sin puntos): quién juega de tu liga
-  const delLiga = Object.values(D.maestro).filter((j) => (j.equipoId === p.lid || j.equipoId === p.vid) && j.pos < 5 && M.dueno[j.id]);
-  const yo = M.yo ? String(M.yo.teamId) : '';
-  delLiga.sort((a, b) => (String(M.dueno[b.id]) === yo) - (String(M.dueno[a.id]) === yo) || a.pos - b.pos || b.valor - a.valor);
+  const delLiga = Object.values(D.maestro).filter((j) => (j.equipoId === p.lid || j.equipoId === p.vid) && j.pos < 5 && duenoJ(S, j.id));
+  const esMio = (j) => !!(duenoJ(S, j.id) || {}).yo;
+  delLiga.sort((a, b) => esMio(b) - esMio(a) || a.pos - b.pos || b.valor - a.valor);
   if (delLiga.length) {
     h += `<div class="sec"><h2>De tu liga</h2><span class="sub">${delLiga.length} en este partido</span></div>`;
-    h += delLiga.map((j) => { const d = duenoDe(S, j.id); return filaJugador({ j }, { sub: `${esc(j.equipo || '')} · ${d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`}`, derecha: '' }); }).join('');
+    h += delLiga.map((j) => { const d = duenoJ(S, j.id); return filaJugador({ j }, { sub: `${esc(j.equipo || '')} · ${d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`}`, derecha: '' }); }).join('');
   } else h += nada('Nadie de tu liga juega en este partido.');
   return h;
 }
