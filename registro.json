@@ -2575,8 +2575,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252893/baza-pellegrini-derbi.html": 1795083276000,
    "AS|https://as.com/futbol/ceballos-se-prueba-para-el-derbi-f202611-n/": 1795084086000,
    "AS|https://as.com/futbol/gulacsi-rebaja-casi-en-un-gol-la-media-de-goles-f202611-n/": 1795082274000,
-   "SPORT|136611106": 1795081699000,
-   "SPORT|136611452": 1795081579000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html": 1795084940000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/19/dani-ceballos-prueba-podria-entrar-lista-derbi.html": 1795086113000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/19/kounde-i-la-resta-dinternacionals-ja-sentrenen-amb-el-barca-sercat/": 1795085936000,
@@ -2817,21 +2815,6 @@
     "motivo": "molestias previas",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136611452",
-    "medio": "SPORT",
-    "t": 1795081579000,
-    "id": "3182",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Lemar se alista para el derbi tras superar su lesión",
-    "motivo": "lesión en los aductores",
-    "plazo": "",
-    "nums": [
-     21,
-     15
-    ]
    },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252904/kounde-acelera-villarreal-baku.html",
@@ -9131,13 +9114,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5157,
+   "ok": 5158,
    "fallos": 0,
-   "ejecuciones": 4210,
+   "ejecuciones": 4211,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:46:13.762Z"
+   "ultima": "2026-11-22T09:51:17.745Z"
   }
  },
  "ptsDirecto": {
@@ -9257,15 +9240,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:46:20.529Z"
+   "ultimaBien": "2026-11-22T09:51:21.475Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:46:20.529Z"
+   "ultimaBien": "2026-11-22T09:51:21.475Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:46:20.529Z"
+   "ultimaBien": "2026-11-22T09:51:21.475Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9273,11 +9256,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:46:20.529Z"
+   "ultimaBien": "2026-11-22T09:51:21.475Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:46:20.529Z"
+   "ultimaBien": "2026-11-22T09:51:21.475Z"
   }
  },
  "avisos": [
