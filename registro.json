@@ -3056,7 +3056,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254128/rodri-dio-instrucciones-eric-acerco-grada-hablar.html": 1795373560000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000,
    "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
+   "SPORT|136730837": 1795377616000
   },
   "hechos": [
    {
@@ -3739,7 +3740,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -9530,13 +9531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5376,
+   "ok": 5378,
    "fallos": 0,
-   "ejecuciones": 4346,
+   "ejecuciones": 4347,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T21:01:12.522Z"
+   "ultima": "2026-11-22T21:06:10.798Z"
   }
  },
  "ptsDirecto": {
@@ -9770,27 +9771,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:01:21.711Z"
+   "ultimaBien": "2026-11-22T21:06:19.971Z"
   }
  },
  "avisos": [
