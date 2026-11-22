@@ -4419,7 +4419,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesorado-huelga-irrumpe-dat-comunidad-exigir-compromiso-reunion-zarzalejo-20261119110607.html": 1795082767000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
@@ -9112,13 +9111,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5160,
+   "ok": 5161,
    "fallos": 0,
-   "ejecuciones": 4213,
+   "ejecuciones": 4214,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T10:01:11.800Z"
+   "ultima": "2026-11-22T10:06:11.362Z"
   }
  },
  "ptsDirecto": {
@@ -9238,15 +9237,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:01:16.869Z"
+   "ultimaBien": "2026-11-22T10:06:14.041Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:01:16.869Z"
+   "ultimaBien": "2026-11-22T10:06:14.041Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:01:16.869Z"
+   "ultimaBien": "2026-11-22T10:06:14.041Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9254,11 +9253,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:01:16.869Z"
+   "ultimaBien": "2026-11-22T10:06:14.041Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T10:01:16.869Z"
+   "ultimaBien": "2026-11-22T10:06:14.041Z"
   }
  },
  "avisos": [
