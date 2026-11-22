@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8s';
+export const VERSION = '0.8t';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,15 @@ export const VERSION = '0.8s';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (22 nov, Carlos, 09:40-10:01, el diseño A; a las 16:36 preguntó por qué no salía) Las bajas de la jornada detrás de una cruz
+    // de enfermería en Clubes, y en Equipo el recuadro «pueden jugar» abre la misma hoja. La lesión y la vuelta, de un archivo
+    // del portal aparte (bajas/partes.json). El detalle, en ESTADO.md del proyecto. La hora, al publicar
+    v: '0.8t', f: '2026-11-22', h: '', t: 'Las bajas de la jornada, en un toque',
+    cosas: [
+      { tipo: 'nuevo', d: 'botiquin', t: 'Las bajas de la jornada', x: 'En Clubes, junto al título, una cruz abre todas las bajas de la jornada: lesionados, sancionados y dudas de los 20 equipos, con la cara, la lesión y, si se sabe, cuándo vuelve. Arriba, las de tu liga: las tuyas primero y las de tus rivales. En Equipo, el recuadro «pueden jugar» abre la misma lista. A tus lesionados les sale el mejor relevo de tu mercado.', ir: { v: 'clubes' } },
+    ],
+  },
   {
     // (22 nov, Carlos, 11:04: «le dije a la IA que no me quedan blindajes, contestó que lo quitaba del plan y el plan rehecho
     // salió con "Hoy toca blindar a Thiago gratis"»; «que lo que le digo en las preguntas se tenga en cuenta en los planes y

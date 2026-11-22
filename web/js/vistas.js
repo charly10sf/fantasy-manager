@@ -1078,7 +1078,8 @@ function eqEstadoHTML(S) {
   const abiertas = M.mias.filter((x) => x.abierta && x.clausula).length, riesgo = M.mias.filter((x) => x.riesgo === 'alto').length;
   const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
   const tiles = [
-    `<button class="eq2-t ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="ver" data-sel="#eq-once"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span></button>`,
+    // (22 nov) abre la hoja de las bajas de la jornada en «Tu liga», con los tuyos primero (bajas.js; Carlos: sin botón nuevo en Equipo)
+    `<button class="eq2-t eq2-bajas ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="bajas" data-v="liga" aria-label="${pueden} de ${xs.length} pueden jugar: ver las bajas"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span><span class="cz-t cz-mini" aria-hidden="true">${icono('cruz')}</span></button>`,
     `<button class="eq2-t" data-accion="ordenEq" data-o="sube" data-ver="1"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy ›</span></button>`,
     vender != null ? (vender ? `<button class="eq2-t duda" data-accion="ver" data-sel="#eq-atencion"><b>${vender}</b><span>para vender ›</span></button>` : '<div class="eq2-t"><b>0</b><span>para vender</span></div>') : '',
     `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'} ›</span></button>`,

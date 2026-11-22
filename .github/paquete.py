@@ -24,7 +24,7 @@ NATIVA_COMPILACION = ('android/build.gradle', 'android/settings.gradle', 'androi
                       'android/app/build.gradle', 'android/app/reglas-r8.pro')
 FIRMA = 'paquete.json.sig'
 # lo que solo sirve la web pública (guías, portal de datos), no la app: fuera del paquete, así no baja cada noche
-SOLO_WEB = ('guias/', 'mercado/', 'jornada/', 'equipos/', 'jugadores/', 'clausulas/', 'portal/', 'sitemap', 'google', 'metodo.html')
+SOLO_WEB = ('guias/', 'mercado/', 'jornada/', 'equipos/', 'jugadores/', 'clausulas/', 'bajas/', 'portal/', 'sitemap', 'google', 'metodo.html')
 
 
 def sha(ruta):

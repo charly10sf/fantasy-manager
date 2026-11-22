@@ -13,6 +13,7 @@ import { iniciarSinc, sincronizar, sincAntes } from './sinc.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
+import * as Bj from './bajas.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
 import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
@@ -2831,12 +2832,12 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
  */
-const CON_PILA = new Set(['c', 'j', 'p', 'sust']);
+const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -2846,6 +2847,7 @@ function nombreHoja([tipo, arg]) {
   if (tipo === 'c') return Cl.nombreClub(S, arg);
   if (tipo === 'j') { const j = S.M && S.M.J(arg); return (j && j.nombre) || 'el jugador'; }
   if (tipo === 'sust') return 'Sustitutos';
+  if (tipo === 'bajas') return 'Bajas';
   return 'el partido';
 }
 function cuerpoHoja(tipo, arg, pila = S.pila) {
@@ -3620,6 +3622,15 @@ document.addEventListener('click', async (ev) => {
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
+    // (22 nov) las bajas de la jornada: la cruz de Clubes, «pueden jugar» de Equipo y las pestañas de la hoja. Al cambiar de
+    // pestaña se queda la pila; la lesión y la vuelta (bajas/partes.json) se piden al abrirla y, si llegan nuevas, se repinta
+    case 'bajas': {
+      if (!S.M) break;
+      const yaAbierta = S.tipoHoja && S.tipoHoja[0] === 'bajas' && el.closest('.hoja');
+      if (yaAbierta) { S.tipoHoja = ['bajas', d.v]; repintarHoja(); S.hoja.scrollTop = 0; } else hoja('bajas', d.v || 'todas', pilaDesde(el, 'bajas', d.v));
+      Bj.cargarPartes().then((nuevo) => { if (nuevo && S.tipoHoja && S.tipoHoja[0] === 'bajas') repintarHoja(); }).catch(() => {});
+      break;
+    }
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); if (d.ver) { const o = $('#vista .eq2-orden'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
     case 'jorClub': (S.jorClub ||= {})[d.id] = Number(d.n); repintarHoja(); break;

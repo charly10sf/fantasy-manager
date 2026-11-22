@@ -96,4 +96,7 @@ export const DIBUJOS = {
     <rect x="76" y="26" width="52" height="74" rx="7" fill="#cf2537" transform="rotate(9 102 63)"/><rect class="d-l" x="76" y="26" width="52" height="74" rx="7" transform="rotate(9 102 63)"/>`,
   hucha: `<ellipse class="d-s" cx="78" cy="70" rx="46" ry="34"/><ellipse class="d-l" cx="78" cy="70" rx="46" ry="34"/><path class="d-l" d="M54 98v12h14V100M88 100v10h14V96M124 62h10l4-8M100 38l4-14 14 12"/>
     <path class="d-l" d="M64 54h22"/><circle class="d-l" cx="106" cy="62" r="2"/><path class="d-l" d="M32 66c-10-4-16 4-10 12"/><circle class="d-a" cx="76" cy="14" r="11"/>`,
+  // (22 nov) las bajas de la jornada: el botiquín con su cruz
+  botiquin: `<path class="d-l" d="M64 30v-8a6 6 0 0 1 6-6h20a6 6 0 0 1 6 6v8"/><rect class="d-s" x="26" y="30" width="108" height="78" rx="14"/><rect class="d-l" x="26" y="30" width="108" height="78" rx="14"/>
+    <path class="d-a" d="M72 46h16v15h15v16H88v15H72V77H57V61h15z"/>`,
 };

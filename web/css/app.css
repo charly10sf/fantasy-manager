@@ -3677,3 +3677,46 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .sj-acc { list-style: none; padding: 0; display: grid; gap: 8px; }
 .sj-acc li { margin: 0; padding: 12px 14px; border: 1px solid var(--linea); border-radius: 12px; background: var(--plano); }
 .sj-acc a { font: 700 19px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; text-decoration: none; color: var(--texto); }
+
+/* las bajas de la jornada (22 nov, diseño A): la cruz junto al título de Clubes y la hoja que abre (bajas.js). La cruz va
+   rellena en rojo claro sobre oscuro y el número en blanco: no es un rojo relleno (ese sigue siendo uno por pantalla) */
+.tit-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tit-fila .titulo { min-width: 0; }
+.cz { display: flex; align-items: center; gap: 10px; flex: none; padding: 4px 0; background: none; border: 0; color: inherit; cursor: pointer; }
+.cz-l { text-align: right; font: 700 13px/1.15 var(--cond); letter-spacing: 1.2px; text-transform: uppercase; color: var(--texto2); }
+.cz-l b { display: block; color: var(--texto); font-size: 15px; letter-spacing: 0.8px; }
+.cz-t { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: none; width: 48px; height: 48px; border-radius: 15px; color: var(--rojo-l);
+  background: radial-gradient(120% 120% at 28% 18%, rgba(255, 82, 105, 0.26), rgba(238, 28, 60, 0.07) 62%), var(--plano2); border: 1px solid rgba(255, 82, 105, 0.42); }
+.cz-t .ic { width: 24px; height: 24px; }
+.cz-n { position: absolute; top: -7px; right: -7px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--texto); color: var(--negro); font: 700 14px/22px var(--cond); text-align: center; box-shadow: 0 0 0 3px var(--fondo); }
+.cz:active .cz-t { transform: scale(0.96); }
+.eq2-bajas { padding-right: 48px; }
+.cz-t.cz-mini { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 10px; }
+.cz-t.cz-mini .ic { width: 16px; height: 16px; }
+.bj { padding: 2px 0 20px; }
+.bj-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-right: 44px; }
+.bj-cab .titulo { margin: 4px 0 0; }
+.bj-cab .cz-t { width: 42px; height: 42px; border-radius: 13px; margin-bottom: 4px; }
+.bj-cab .cz-t .ic { width: 21px; height: 21px; }
+.bj-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; margin: 16px 0 4px; }
+.bj-tab { padding: 10px 4px 9px; border-radius: 14px; background: var(--plano2); border: 1px solid var(--linea); text-align: center; color: var(--texto2); cursor: pointer; min-width: 0; }
+.bj-tab b { display: block; font: 700 26px/1 var(--cond); color: var(--texto); }
+.bj-tab span { display: block; margin-top: 5px; font: 600 12px/1.1 'Barlow', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bj-tab.on { background: linear-gradient(180deg, rgba(238, 28, 60, 0.2), rgba(238, 28, 60, 0.06)); border-color: rgba(255, 82, 105, 0.55); color: var(--texto); }
+.bj-tab.on b { color: var(--rojo-l); }
+.bj .fila { align-items: flex-start; }
+.bj .fila-d { min-width: 70px; }
+.bj .fila-d .v { font: 700 21px/1 var(--cond); white-space: nowrap; }
+.bj .fila-d .d { margin-top: 4px; font: 500 12.5px/1.1 'Barlow', sans-serif; color: var(--apagado); }
+.bj-les { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; font-size: var(--t-mini); color: var(--texto2); }
+.bj-rel { display: flex; align-items: center; gap: 10px; width: calc(100% - 58px); margin: 2px 0 10px 58px; padding: 9px 12px; border-radius: 12px; background: var(--plano2); border: 1px solid var(--linea); font-size: 14px; color: var(--texto2); text-align: left; cursor: pointer; }
+.bj-rel b { color: var(--texto); font-weight: 600; }
+.bj-rel i { margin-left: auto; flex: none; font: 700 15px/1 var(--cond); font-style: normal; color: var(--rojo-l); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.bj-rel .fl { flex: none; font: 700 12px/1 var(--cond); letter-spacing: 1px; text-transform: uppercase; color: var(--apagado); }
+.bj-club { display: flex; align-items: center; gap: 10px; width: 100%; margin: 22px 0 2px; padding: 0 0 8px; background: none; border: 0; border-bottom: 1px solid var(--linea); color: var(--texto); font: 700 var(--t-sec)/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; text-align: left; cursor: pointer; }
+.bj-club span { flex: 1; min-width: 0; }
+.bj-club b { font: 700 15px/1 var(--cond); color: var(--texto2); }
+.bj-club .pt-esc { width: 22px; height: 22px; }
+.bj-ok { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
+.bj-ok .ic { color: var(--sube); width: 18px; height: 18px; }
+.bj-pie { margin: 18px 0 0; font-size: var(--t-mini); color: var(--apagado); text-align: center; }

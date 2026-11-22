@@ -379,6 +379,8 @@ const I = {
   hucha: '<path d="M4.5 11.5c0-3.3 3.4-5.8 7.6-5.8 1.6 0 3 .3 4.2.9l2.7-1.4-.6 3.1c.9.9 1.5 2 1.6 3.2h1.5v3.2h-1.9a6.7 6.7 0 0 1-2.6 2.6V20h-3v-1.2a9.7 9.7 0 0 1-3.3 0V20h-3v-2.3c-2-1.3-3.2-3.5-3.2-6.2z"/><path d="M9.5 5.9V5a2.5 2.5 0 0 1 5 0"/>',
   bandera: '<path d="M5 21V4M5 4.5c4-2 6.5 2 11 0v8.5c-4.5 2-7-2-11 0"/>',
   lesion: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M12 8v8M8 12h8"/>',
+  // la cruz de enfermería de las bajas (22 nov), rellena
+  cruz: '<rect x="9.1" y="3" width="5.8" height="18" rx="1.7" fill="currentColor" stroke="none"/><rect x="3" y="9.1" width="18" height="5.8" rx="1.7" fill="currentColor" stroke="none"/>',
   rayo: '<path d="M13 2.8 5 13.2h6l-1 8 8-10.4h-6z"/>',
   directo: '<circle cx="12" cy="12" r="2.3"/><path d="M8 8a5.7 5.7 0 0 0 0 8M16 8a5.7 5.7 0 0 1 0 8M5.2 5.2a9.6 9.6 0 0 0 0 13.6M18.8 5.2a9.6 9.6 0 0 1 0 13.6"/>',
   casa: '<path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M6 9.4V20h12V9.4"/><path d="M10 20v-5.2h4V20"/>',

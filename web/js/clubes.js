@@ -5,6 +5,7 @@
 import { esc, eur, icono, cuando, dura, cuenta, num, POS_PLURAL, norm, horaDe, pct, clase } from './util.js';
 import { ava, posTag, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
+import { cruzHTML } from './bajas.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas' };
 // los que están fuera de LaLiga (cedidos fuera, filiales, vendidos…) no salen en la ficha del club: ni en las bajas ni en la plantilla
@@ -86,7 +87,8 @@ export function clubes(S) {
   // las caras de los tuyos en cada club
   const mios = {};
   for (const x of M.mias || []) if (x.j && x.j.equipoId) (mios[x.j.equipoId] ||= []).push(x.j);
-  let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><h1 class="titulo">Clubes</h1>`;
+  // (22 nov) a la derecha del título, la cruz de las bajas de la jornada (bajas.js)
+  let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><div class="tit-fila"><h1 class="titulo">Clubes</h1>${cruzHTML(S)}</div>`;
   if (!n) return h + nada('Aún no tengo los equipos de LaLiga. Dale a Actualizar.');
   h += tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {

@@ -17,7 +17,7 @@ import { hechosMercado, contenidoMercado, contenidoEquipos, hoyJson, proximaJorn
 import { hechosResumen, contenidoResumen, contenidoJornadas, metasResumen, resumenCorto, semanaMercado } from './web/resumen.mjs';
 import { RAIZ, FICHAS, escribirPagina, escribirFichas, paginas, diaMadrid, cargarEncuadres } from './web/portal.mjs';
 import { hechosClausulas, contenidoClausulas, metasClausulas } from './web/clausulas.mjs';
-import { hechosBajas, contenidoBajas, metasBajas } from './web/bajas.mjs';
+import { hechosBajas, contenidoBajas, metasBajas, partesJson } from './web/bajas.mjs';
 import { hechosOnces, contenidoOnces, metasOnces, confirmar, aciertoDe, lineaResumen } from './web/onces.mjs';
 import { confirmadosDe, pendientes, tocaOnces } from './web/confirmados.mjs';
 import { lesionados } from './lib/partes.mjs';
@@ -284,8 +284,11 @@ if (hm) {
     if (hb) {
       const pvB = previas().find((p) => p.jornada === hb.jornada) || null;
       escribirPagina(metasBajas(hb), contenidoBajas(hb, { previa: pvB }));
+      // (22 nov) lo que lee la app para la hoja de las bajas: aparte, con el id de LaLiga (bajas/ va en SOLO_WEB: no entra en el paquete)
+      const pp = partesJson(hb);
+      writeFileSync(path.join(RAIZ, 'web', 'bajas', 'partes.json'), JSON.stringify(pp) + '\n');
       cambios = true;
-      log(`Bajas: jornada ${hb.jornada}, ${hb.bajas.length} lesionados, ${hb.dudas.length} dudas, ${hb.sancionados.length} sancionados, ${hb.apercibidos.length} apercibidos`);
+      log(`Bajas: jornada ${hb.jornada}, ${hb.bajas.length} lesionados, ${hb.dudas.length} dudas, ${hb.sancionados.length} sancionados, ${hb.apercibidos.length} apercibidos; partes.json con ${Object.keys(pp.j).length} de ${hb.partesApp.length}`);
     }
   } catch (err) { log(`::warning::Bajas sin hacer: ${err.stack || err.message}`); }
 }
