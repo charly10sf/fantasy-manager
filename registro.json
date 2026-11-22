@@ -1938,6 +1938,21 @@
    "jornada": 13,
    "id": "2124590402606919795",
    "t": "2026-11-22T19:46:39.961Z"
+  },
+  {
+   "clave": "directo|127|Álex Baena|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124597888068075917",
+   "t": "2026-11-22T20:16:24.781Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "127",
+    "equipo": "1068",
+    "min": 10,
+    "extra": 0,
+    "jugador": "Álex Baena"
+   }
   }
  ],
  "estados": {
@@ -4620,16 +4635,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 55,
+   "redactar": 57,
    "revisar": 22,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 685201,
-  "salida": 22335,
+  "entrada": 710206,
+  "salida": 22639,
   "cacheLee": 133427,
   "cacheEscribe": 58023,
-  "dolares": 1.547408,
+  "dolares": 1.600458,
   "reservado": 0
  },
  "recientes": {
@@ -4767,10 +4782,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T16:06:18.466Z",
-    "texto": "⚽ Oyarzabal recorta para la Real Sociedad en el 45+1'. Racing 2-1 Real Sociedad. Asistencia de Sergio Gómez, con 1 puntos de momento. Oyarzabal ya suma 4 puntos."
-   },
-   {
     "t": "2026-11-22T16:36:31.507Z",
     "texto": "⚽ Guedes empata para la Real Sociedad en el 60'. Racing 2-2 Real Sociedad. Asistencia de Gorrotxa, con 4 puntos de momento. Guedes ya suma 5 puntos."
    },
@@ -4785,6 +4796,10 @@
    {
     "t": "2026-11-22T19:21:23.944Z",
     "texto": "🟥 Expulsan a Catena en el 90+2' y el Osasuna 🐂 acaba con diez en El Sadar, aunque va ganando 1-0 al Málaga 🐟.\n\nEl defensa se queda en -1 punto de momento. Si lo tienes, es un golpe, pero con el partido casi cerrado no debería ir a más."
+   },
+   {
+    "t": "2026-11-22T20:16:24.784Z",
+    "texto": "⚽ Álex Baena abre el marcador en el 10'. Getafe 0-1 Atlético. Asistencia de Julián Alvarez, con 3 puntos de momento. Álex Baena ya suma 6 puntos."
    }
   ],
   "novedades": [
@@ -9469,18 +9484,28 @@
    "m": "10'",
    "f": "2026-11-22T20:11:11.668Z",
    "rf": "10:27",
-   "avisado": true
+   "avisado": true,
+   "casado": true
+  },
+  "directo|127|Álex Baena|gol1": {
+   "j": "Álex Baena",
+   "m": "10'",
+   "e": "2026-11-22T20:16:14.249Z",
+   "re": "16'",
+   "w": "2026-11-22T20:10:10Z",
+   "f": "2026-11-22T20:11:11.668Z",
+   "rf": "10:27"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5356,
+   "ok": 5358,
    "fallos": 0,
-   "ejecuciones": 4336,
+   "ejecuciones": 4337,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T20:11:11.668Z"
+   "ultima": "2026-11-22T20:16:14.249Z"
   }
  },
  "ptsDirecto": {
@@ -9681,6 +9706,18 @@
    "g": 0,
    "a": 1,
    "t": 1795369872307
+  },
+  "13|127|2534": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795378574249
+  },
+  "13|127|3088": {
+   "p": 3,
+   "g": 0,
+   "a": 1,
+   "t": 1795378574249
   }
  },
  "golesAnulados": {
@@ -9696,27 +9733,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T20:11:19.054Z"
+   "ultimaBien": "2026-11-22T20:16:33.832Z"
   }
  },
  "avisos": [
