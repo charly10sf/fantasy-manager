@@ -1718,6 +1718,43 @@
     "extra": 0,
     "jugador": "Tani Oluwaseyi"
    }
+  },
+  {
+   "clave": "directo|128|Gerard Martín|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124509802436964455",
+   "t": "2026-11-22T14:26:23.583Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "128",
+    "equipo": "83",
+    "min": 57,
+    "extra": 0,
+    "jugador": "Gerard Martín"
+   }
+  },
+  {
+   "clave": "directo|128|Fermín López|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124509816831746245",
+   "t": "2026-11-22T14:26:26.933Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "128",
+    "equipo": "83",
+    "min": 61,
+    "extra": 0,
+    "jugador": "Fermín López"
+   }
+  },
+  {
+   "clave": "onces|124",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124509881851851231",
+   "t": "2026-11-22T14:26:42.403Z"
   }
  ],
  "estados": {
@@ -2608,7 +2645,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
-   "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004253021/ceballos-pocas-opciones-titular-derbi.html": 1795100855000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
@@ -2820,20 +2856,6 @@
     "que": "molestias",
     "oficial": false,
     "hecho": "Aubameyang no se entrena por molestias en el tobillo",
-    "motivo": "molestias en el tobillo",
-    "plazo": "",
-    "nums": [
-     48
-    ]
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/",
-    "medio": "AS",
-    "t": 1795098300000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang no se entrenó por molestias en el tobillo",
     "motivo": "molestias en el tobillo",
     "plazo": "",
     "nums": [
@@ -4438,24 +4460,20 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 18,
-   "redactar": 9,
-   "revisar": 4,
+   "redactar": 15,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 131183,
-  "salida": 9342,
-  "cacheLee": 24167,
-  "cacheEscribe": 19341,
-  "dolares": 0.261289,
+  "entrada": 168719,
+  "salida": 10163,
+  "cacheLee": 56063,
+  "cacheEscribe": 32876,
+  "dolares": 0.381598,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-21T12:01:57.446Z",
-    "texto": "👀 Sorpresa en el once del Deportivo en Mendizorroza: Giménez, Amatucci y Bil Nsongo, titulares habituales, se quedan fuera, y Riki, que no suele serlo, sale de inicio.\n\nEl Alavés va con un 4-4-2 y Sivera bajo palos, y el Dépor también con 4-4-2, con Aubameyang arriba. En una hora o así rueda el balón."
-   },
    {
     "t": "2026-11-21T14:21:29.062Z",
     "texto": "👀 El Rayo ⚡ sale con tres arriba, en un 4-3-3, y el Valencia 🦇 se planta en Vallecas con dos delanteros, en un 4-4-2. Ningún once trae novedades respecto a lo esperado.\n\nCamello está de titular en el Rayo y es de los que más puntos da en su equipo. Dimitrievski también está bajo palos en el Valencia.\n\nQuien tenga jugadores de este partido puede seguir tranquilo."
@@ -4471,6 +4489,10 @@
    {
     "t": "2026-11-22T12:01:47.531Z",
     "texto": "👀 Raphinha juega, y con él Moleiro: los dos referentes de sus equipos están en el once, así que quien los tenga puede estar tranquilo.\n\nEl Barça se estira con tres arriba y el Villarreal 🚢 se coloca con dos líneas de cuatro. No hay ninguna sorpresa, y en una hora o así rueda el balón."
+   },
+   {
+    "t": "2026-11-22T14:26:42.406Z",
+    "texto": "👀 El Racing ⚓ juega en El Sardinero con un 4-2-3-1 y Yassir Zabiri, el que más puntos da de su equipo, va de delantero.\n\nLa Real Sociedad responde con un 4-4-2 y Carlos Soler arranca en el medio. Ninguno ha dado un giro raro al once, así que quien tenga a gente de este partido ya sabe a qué atenerse."
    }
   ],
   "final": [
@@ -4585,14 +4607,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-21T20:16:18.181Z",
-    "texto": "⚽ Gol de Pablo Durán y el Celta se adelanta en el 6'. Real Madrid 0-1 Celta. Apenas habían pasado unos minutos. Asistencia de Williot, con 4 puntos de momento. Pablo Durán ya suma 4 puntos."
-   },
-   {
-    "t": "2026-11-21T21:36:20.585Z",
-    "texto": "⚽ Gol de Bellingham y empate en el 66'. Real Madrid 1-1 Celta. Asistencia de Mbappé, con 4 puntos de momento. Bellingham ya suma 7 puntos."
-   },
-   {
     "t": "2026-11-21T21:54:56.492Z",
     "texto": "⚽ Gol de Carlos Espí y el Real Madrid le da la vuelta en el 85'. Real Madrid 2-1 Celta. Ya en el tramo final. El delantero ya va por 5 puntos."
    },
@@ -4603,6 +4617,14 @@
    {
     "t": "2026-11-22T13:11:26.656Z",
     "texto": "⚽ Oluwaseyi la mete en el 7' y el Villarreal 🚢 se pone 0-2 en el campo del Barça.\n\nEl canadiense ya suma 5 puntos y es su cuarto gol entre Liga, Champions y Copa del Rey. El pase es de Moleiro, con 4 por ahora."
+   },
+   {
+    "t": "2026-11-22T14:26:23.586Z",
+    "texto": "⚽ Gerard Martín la manda dentro de cabeza en el 57' y el Barça recorta ante el Villarreal 🚢: 1-2.\n\nEs su primer gol entre Liga, Champions y Copa del Rey. Gerard Martín ya suma 4 puntos y Pedri, que da el pase, lleva 5 de momento."
+   },
+   {
+    "t": "2026-11-22T14:26:26.935Z",
+    "texto": "⚽ Fermín la manda dentro en el 61' y el Barça empata con el Villarreal 🚢: 2-2.\n\nEl centrocampista ya suma 6 puntos y llega en racha, con tres jornadas seguidas puntuando fuerte. El pase es de Lamine Yamal, que se lleva 4 de momento."
    }
   ],
   "novedades": [
@@ -9108,17 +9130,49 @@
    "w": "2026-11-22T13:09:27Z",
    "f": "2026-11-22T13:11:12.379Z",
    "rf": "8:01"
+  },
+  "fm|128|1404415|61": {
+   "j": "Fermín López",
+   "m": "61'",
+   "f": "2026-11-22T14:26:11.651Z",
+   "rf": "61:18",
+   "casado": true
+  },
+  "fm|128|1598982|57": {
+   "j": "Gerard Martín",
+   "m": "57'",
+   "f": "2026-11-22T14:26:11.651Z",
+   "rf": "61:18",
+   "casado": true
+  },
+  "directo|128|Gerard Martín|gol1": {
+   "j": "Gerard Martín",
+   "m": "57'",
+   "e": "2026-11-22T14:26:11.651Z",
+   "re": "61'",
+   "w": "2026-11-22T14:21:21Z",
+   "f": "2026-11-22T14:26:11.651Z",
+   "rf": "61:18"
+  },
+  "directo|128|Fermín López|gol1": {
+   "j": "Fermín López",
+   "m": "61'",
+   "e": "2026-11-22T14:26:11.651Z",
+   "re": "61'",
+   "w": "2026-11-22T14:25:07Z",
+   "f": "2026-11-22T14:26:11.651Z",
+   "rf": "61:18"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5228,
+   "ok": 5230,
    "fallos": 0,
-   "ejecuciones": 4265,
+   "ejecuciones": 4266,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:21:13.419Z"
+   "ultima": "2026-11-22T14:26:11.651Z"
   }
  },
  "ptsDirecto": {
@@ -9241,6 +9295,30 @@
    "g": 0,
    "a": 1,
    "t": 1795353072379
+  },
+  "13|128|2757": {
+   "p": 4,
+   "g": 1,
+   "a": 0,
+   "t": 1795357571651
+  },
+  "13|128|3100": {
+   "p": 5,
+   "g": 0,
+   "a": 1,
+   "t": 1795357571651
+  },
+  "13|128|1715": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795357571651
+  },
+  "13|128|3104": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795357571651
   }
  },
  "golesAnulados": {
@@ -9256,27 +9334,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:21:19.382Z"
+   "ultimaBien": "2026-11-22T14:26:42.979Z"
   }
  },
  "avisos": [
