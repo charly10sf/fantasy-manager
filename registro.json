@@ -2607,8 +2607,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
-   "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
@@ -2815,18 +2813,6 @@
    "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/",
-    "medio": "AS",
-    "t": 1795094766000,
-    "id": "2314",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Vivian es una de las bajas del Athletic",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/",
     "medio": "Cadena SER",
@@ -9127,13 +9113,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5204,
+   "ok": 5206,
    "fallos": 0,
-   "ejecuciones": 4253,
+   "ejecuciones": 4254,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T13:21:17.153Z"
+   "ultima": "2026-11-22T13:26:13.418Z"
   }
  },
  "ptsDirecto": {
@@ -9271,27 +9257,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:21:21.992Z"
+   "ultimaBien": "2026-11-22T13:26:16.781Z"
   }
  },
  "avisos": [
