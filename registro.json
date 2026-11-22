@@ -1887,6 +1887,21 @@
    "jornada": 13,
    "id": "2124560206860562623",
    "t": "2026-11-22T17:46:40.694Z"
+  },
+  {
+   "clave": "directo|125|Ante Budimir|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124561383539011944",
+   "t": "2026-11-22T17:51:21.381Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "125",
+    "equipo": "97",
+    "min": 20,
+    "extra": 0,
+    "jugador": "Ante Budimir"
+   }
   }
  ],
  "estados": {
@@ -4529,7 +4544,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
@@ -4575,16 +4589,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 48,
+   "redactar": 49,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 589849,
-  "salida": 20841,
+  "entrada": 602228,
+  "salida": 20954,
   "cacheLee": 127621,
   "cacheEscribe": 55120,
-  "dolares": 1.333926,
+  "dolares": 1.359814,
   "reservado": 0
  },
  "recientes": {
@@ -4722,10 +4736,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T15:26:31.212Z",
-    "texto": "⚽⚽ Doblete de Y. Zabiri en el 8'. Racing 2-0 Real Sociedad: el Racing amplía la ventaja. Ya suma 9 puntos."
-   },
-   {
     "t": "2026-11-22T15:26:33.291Z",
     "texto": "🟥 Roja a Pau Navarro en el 90+3' y el Villarreal 🚢 se queda con diez cuando ya perdía 3-2 en el campo del Barça.\n\nEl defensa se va con -3 puntos. Si lo tenías, se te suma un palo gordo en el último suspiro."
    },
@@ -4740,6 +4750,10 @@
    {
     "t": "2026-11-22T16:46:19.681Z",
     "texto": "⚽ Canales mete el penalti en el 68' y el Racing ⚓ vuelve a ponerse por delante: 3-2 a la Real Sociedad en El Sardinero.\n\nYa suma 4 puntos por ahora y llega enchufado: lleva tres jornadas seguidas puntuando fuerte."
+   },
+   {
+    "t": "2026-11-22T17:51:21.384Z",
+    "texto": "⚽ Budimir la mete de cabeza en el 20' y el Osasuna 🐂 se adelanta al Málaga 🐟 en El Sadar: 1-0.\n\nEl croata ya suma 5 puntos. El pase es de Rosier, que se lleva 4."
    }
   ],
   "novedades": [
@@ -9396,17 +9410,33 @@
    "w": "2026-11-22T16:41:36Z",
    "f": "2026-11-22T16:46:12.339Z",
    "rf": "71:18"
+  },
+  "fm|125|251269|20": {
+   "j": "Ante Budimir",
+   "m": "20'",
+   "f": "2026-11-22T17:51:12.307Z",
+   "rf": "20:56",
+   "casado": true
+  },
+  "directo|125|Ante Budimir|gol1": {
+   "j": "Ante Budimir",
+   "m": "20'",
+   "e": "2026-11-22T17:51:12.307Z",
+   "re": "21'",
+   "w": "2026-11-22T17:49:52Z",
+   "f": "2026-11-22T17:51:12.307Z",
+   "rf": "20:56"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5305,
+   "ok": 5307,
    "fallos": 0,
-   "ejecuciones": 4307,
+   "ejecuciones": 4308,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:46:14.351Z"
+   "ultima": "2026-11-22T17:51:12.307Z"
   }
  },
  "ptsDirecto": {
@@ -9595,6 +9625,18 @@
    "g": 1,
    "a": 0,
    "t": 1795365972339
+  },
+  "13|125|3084": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1795369872307
+  },
+  "13|125|2559": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1795369872307
   }
  },
  "golesAnulados": {
@@ -9610,27 +9652,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:46:43.264Z"
+   "ultimaBien": "2026-11-22T17:51:26.871Z"
   }
  },
  "avisos": [
