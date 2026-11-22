@@ -4877,6 +4877,11 @@
    "h": "947b475adc92",
    "desde": 1795363872266,
    "fin": 1795359673818
+  },
+  "13|124": {
+   "h": "bb3fd8e4d4d0",
+   "desde": 1795367473875,
+   "fin": 1795367473875
   }
  },
  "iaDias": [
@@ -5302,7 +5307,8 @@
    "5868138",
    "5868140",
    "5868139",
-   "5868133"
+   "5868133",
+   "5868137"
   ],
   "equipos": [
    "9866",
@@ -5372,10 +5378,10 @@
     "e": "Racing Santander",
     "g": {
      "liga": [
+      2,
       1,
       1,
       1,
-      0,
       0
      ]
     }
@@ -5719,8 +5725,8 @@
     "e": "Real Sociedad",
     "g": {
      "liga": [
-      2,
-      0,
+      3,
+      1,
       0,
       0,
       0
@@ -6059,7 +6065,7 @@
     "e": "Real Sociedad",
     "g": {
      "liga": [
-      2,
+      3,
       1,
       0,
       0,
@@ -8461,8 +8467,8 @@
     "e": "Racing Santander",
     "g": {
      "liga": [
-      9,
-      0,
+      11,
+      1,
       0,
       0,
       0
@@ -9380,13 +9386,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5291,
+   "ok": 5293,
    "fallos": 0,
-   "ejecuciones": 4298,
+   "ejecuciones": 4299,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:06:17.610Z"
+   "ultima": "2026-11-22T17:11:11.944Z"
   }
  },
  "ptsDirecto": {
@@ -9590,27 +9596,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:06:22.625Z"
+   "ultimaBien": "2026-11-22T17:11:21.412Z"
   }
  },
  "avisos": [
