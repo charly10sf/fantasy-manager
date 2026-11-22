@@ -29,7 +29,7 @@ export const NOVEDADES = [
     // SE VEA en el plan») Lo que se le cuenta a la IA manda en el plan: los hechos claros (sin blindajes, a quién no vende,
     // una puja ya hecha, a quién ha blindado) corrigen las cuentas de la app, no solo lo que lee la IA. Y la cuenta de los
     // blindajes, que solo miraba los movimientos de los últimos días. El detalle, en claude/ del proyecto. La hora, al publicar
-    v: '0.8s', f: '2026-11-22', h: '12:00', t: 'Lo que le cuentas a la IA manda en el plan',
+    v: '0.8s', f: '2026-11-22', h: '16:03', t: 'Lo que le cuentas a la IA manda en el plan',
     cosas: [
       { tipo: 'nuevo', d: 'movil', t: 'El mismo plan en el móvil y en la web', x: 'El plan del día, tus preguntas a la IA, lo que le has contado y los pasos que marcas como hechos son ya los mismos en todos los dispositivos donde entras con tu cuenta. Antes cada uno pedía su plan y guardaba lo suyo.', ir: { v: 'hoy' } },
       { tipo: 'nuevo', d: 'chat', t: 'Lo que le dices cuenta en el plan', x: 'Si en Pregunta le cuentas que no te quedan blindajes, que a un jugador no lo vendes o que ya has hecho una puja, la app lo tiene en cuenta desde ese momento: el plan no te manda blindar, no te propone venderlo y no te repite la puja. Hoy, Equipo, las alarmas y la IA dicen lo mismo.', ir: { v: 'ia' } },
