@@ -1968,6 +1968,13 @@
     "extra": 0,
     "jugador": "Johnny Cardoso"
    }
+  },
+  {
+   "clave": "novedades|1033:sancion|2026-11-22",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2124623195529515131",
+   "t": "2026-11-22T21:56:58.461Z"
   }
  ],
  "estados": {
@@ -2002,7 +2009,7 @@
   "988": "ok",
   "1029": "ok",
   "1031": "ok",
-  "1033": "ok",
+  "1033": "suspended",
   "1056": "ok",
   "1070": "ok",
   "1103": "injured",
@@ -2854,7 +2861,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "1033",
+   "que": "sancion",
+   "antes": "ok",
+   "t": 1795384572761
+  }
+ ],
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
@@ -3817,8 +3831,8 @@
     "t": 1793793972334
    },
    "1033": {
-    "e": "ok",
-    "t": 0
+    "e": "suspended",
+    "t": 1795384572761
    },
    "1070": {
     "e": "ok",
@@ -4600,9 +4614,9 @@
  },
  "pulido": {
   "dia": "2026-11-22",
-  "n": 1,
+  "n": 2,
   "ok": 0,
-  "mal": 1
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -4820,10 +4834,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T12:31:46.892Z",
-    "texto": "✅ Cucho ya está disponible: la duda que arrastraba queda despejada.\n\nEl Betis visita mañana al Sevilla a las 18:30 en el Sánchez-Pizjuán, un rival que va 6º. Con un 52 % de titularidad, el delantero tiene más papeletas de jugar que de quedarse fuera, aunque conviene esperar a los onces.\n\nLo que no acompaña es su valor: vale 20,1 M tras perder 21,5 M en el último mes."
-   },
-   {
     "t": "2026-11-20T12:46:39.083Z",
     "texto": "✅ Zabiri vuelve a estar disponible: la duda queda despejada y el delantero del Racing ⚓ puede estar el domingo.\n\nLleva 9 goles en la liga, y con un 57 % de titularidad tiene más papeletas de jugar que de quedarse fuera. El partido no ayuda: recibe en El Sardinero a la Real Sociedad, que va 5º, un cruce difícil para un delantero."
    },
@@ -4838,6 +4848,10 @@
    {
     "t": "2026-11-22T15:01:31.747Z",
     "texto": "❌ Fermín se queda sin jugar en Riazor: está sancionado y se pierde el Deportivo-Barça del domingo 29 de noviembre.\n\nEl centrocampista lleva 7 goles y 5 asistencias en la liga, así que quien lo tenga pierde a un jugador que daba puntos de verdad. Hay una semana por delante para buscarle sustituto."
+   },
+   {
+    "t": "2026-11-22T21:56:58.464Z",
+    "texto": "🟥 Catena no podrá jugar por sanción. Vio la roja en la jornada 13. Se pierde el partido contra el Valencia 🦇. El defensa del Osasuna 🐂 lleva 3 porterías a cero en 11 partidos.\n\nEl partido es el domingo 29 de noviembre."
    }
   ],
   "resumen": [
@@ -4977,6 +4991,11 @@
    "h": "1a1aaa767ed4",
    "desde": 1795375872362,
    "fin": 1795375574061
+  },
+  "13|127": {
+   "h": "809e20ec03c1",
+   "desde": 1795384573990,
+   "fin": 1795384573990
   }
  },
  "iaDias": [
@@ -5404,7 +5423,8 @@
    "5868139",
    "5868133",
    "5868137",
-   "5868136"
+   "5868136",
+   "5868134"
   ],
   "equipos": [
    "9866",
@@ -5625,10 +5645,10 @@
     "e": "Atlético Madrid",
     "g": {
      "liga": [
-      4,
+      5,
       0,
       0,
-      2,
+      3,
       0
      ]
     }
@@ -6738,8 +6758,8 @@
     "e": "Atlético Madrid",
     "g": {
      "liga": [
-      5,
-      2,
+      6,
+      3,
       1,
       0,
       0
@@ -7361,6 +7381,19 @@
     "e": "Liverpool",
     "g": {
      "champions": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1173678": {
+    "n": "Johnny Cardoso",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
       1,
       0,
       0,
@@ -9531,13 +9564,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5396,
+   "ok": 5398,
    "fallos": 0,
-   "ejecuciones": 4356,
+   "ejecuciones": 4357,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T21:51:09.733Z"
+   "ultima": "2026-11-22T21:56:12.761Z"
   }
  },
  "ptsDirecto": {
@@ -9771,27 +9804,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:51:19.252Z"
+   "ultimaBien": "2026-11-22T21:56:58.543Z"
   }
  },
  "avisos": [
