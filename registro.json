@@ -2793,7 +2793,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253102/alvaro-nunez-estara-real-madrid.html": 1795113290000,
-   "SPORT|136636494": 1795111764000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252987/barca-mueve-ficha-tres-centrales-punto-mira.html": 1795116792000,
    "SPORT|136638097": 1795114837000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/idea-real-madrid-recuperar-nico-paz-proximo-verano-20261119_3478703.html": 1795119011000,
@@ -9418,13 +9417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5313,
+   "ok": 5315,
    "fallos": 0,
-   "ejecuciones": 4311,
+   "ejecuciones": 4312,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T18:06:12.112Z"
+   "ultima": "2026-11-22T18:11:17.420Z"
   }
  },
  "ptsDirecto": {
@@ -9640,27 +9639,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T18:06:18.909Z"
+   "ultimaBien": "2026-11-22T18:11:26.936Z"
   }
  },
  "avisos": [
