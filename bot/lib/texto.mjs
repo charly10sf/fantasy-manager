@@ -1,3 +1,4 @@
+import { sinInicial } from './apodos-jugadores.mjs';
 // Formato de los tweets: peso de X (los emojis cuentan 2), cierres rotados y normalización de nombres.
 
 // El límite de cada tweet (Carlos, 4 nov 22:39: X Premium en @Fantasyman_app, «que los tweets sean más largos y se noten más
@@ -28,6 +29,21 @@ const RETOQUES = [
   // «se va 0-2» → «se pone 0-2»
   [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${MARC}`, 'gu'), (_, S, v, m) => `${S}e ${TIEMPO(v, PONE)} ${m}`],
 ];
+// los nombres con la inicial con punto que deja la ficha de LaLiga («Y. Zabiri»), sin ella (Carlos, 7 nov: «no siempre C. Romero»)
+RETOQUES.push([/(?<![\p{L}.])\p{Lu}{1,2}\.\s(?:(?:[Dd]e|[Dd]el|[Vv]an|[Dd]i)\s)?\p{Lu}\p{Ll}[\p{L}'’-]*/gu, (m) => sinInicial(m)]);
+// el % a secas, sin «en Fantasy Manager» detrás (Carlos, 9 nov: «suena raro»)
+RETOQUES.push([/(\d\s?% de titularidad),? (?:en|según|de) Fantasy Manager\b/gu, '$1']);
+/** el primer % de un tuit de titularidad con «de titularidad» (Carlos, 6 nov: «un 97 % suelto: falta DE TITULARIDAD»), para lo que
+    sale de plantilla; los siguientes, el número solo */
+export function conTitularidad(s) {
+  const t = String(s ?? '');
+  const m = t.match(/\d\s?%/);
+  if (!m) return t;
+  const frase = t.slice(m.index).split(/(?<=[.!?])\s|\n/)[0];
+  if (/titularidad/i.test(frase)) return t;
+  const fin = m.index + m[0].length;
+  return `${t.slice(0, fin)} de titularidad${t.slice(fin)}`;
+}
 export function retocar(s) {
   let t = String(s ?? '');
   for (const [re, f] of RETOQUES) t = t.replace(re, f);
@@ -170,30 +186,32 @@ export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Socie
 // (6 nov, tarde) Fuera los «el conjunto + gentilicio» y los nombres oficiales largos («el Málaga CF», «el Celta de Vigo»): salían hasta tres
 // por tuit y era lo que más sonaba a máquina (diagnóstico de los 20 últimos tuits). Quedan el nombre corto y, si lo hay, el otro nombre
 // con el que se le llama de verdad («el Atleti», «la Real», «el Dépor»), siempre en singular.
+// (22 nov) `p`: los apodos en plural («los blancos», «los rojillos»; Carlos: «el Madrid, los blancos…») solo para la IA, que concuerda
+// el verbo; las plantillas siguen con `a`, en singular.
 export const APODOS = {
-  'Real Madrid': { e: ['⚪'], a: ['el Real Madrid', 'el Madrid'] },
-  'Barça': { e: [], a: ['el Barça', 'el Barcelona'] },
-  'Atlético': { e: [], a: ['el Atlético', 'el Atleti'] },
-  'Athletic': { e: ['🦁'], a: ['el Athletic', 'el Athletic Club'] },
-  'Valencia': { e: ['🦇'], a: ['el Valencia'] },
-  'Sevilla': { e: [], a: ['el Sevilla'] },
-  'Betis': { e: [], a: ['el Betis'] },
-  'Real Sociedad': { e: [], a: ['la Real Sociedad', 'la Real'] },
-  'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo'] },
-  'Celta': { e: [], a: ['el Celta'] },
-  'Osasuna': { e: ['🐂'], a: ['el Osasuna'] },
-  'Getafe': { e: [], a: ['el Getafe'] },
-  'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano'] },
-  'Espanyol': { e: [], a: ['el Espanyol'] },
-  'Levante': { e: ['🐸'], a: ['el Levante'] },
-  'Elche': { e: ['🌴'], a: ['el Elche'] },
-  'Alavés': { e: [], a: ['el Alavés'] },
-  'Mallorca': { e: ['🏝️'], a: ['el Mallorca'] },
-  'Girona': { e: [], a: ['el Girona'] },
-  'Oviedo': { e: [], a: ['el Oviedo', 'el Real Oviedo'] },
-  'Racing': { e: ['⚓'], a: ['el Racing'] },
-  'Deportivo': { e: [], a: ['el Deportivo', 'el Dépor'] },
-  'Málaga': { e: ['🐟'], a: ['el Málaga'] },
+  'Real Madrid': { e: ['⚪'], a: ['el Real Madrid', 'el Madrid'], p: ['los blancos', 'los merengues'] },
+  'Barça': { e: [], a: ['el Barça', 'el Barcelona'], p: ['los azulgranas', 'los culés'] },
+  'Atlético': { e: [], a: ['el Atlético', 'el Atleti'], p: ['los rojiblancos', 'los colchoneros'] },
+  'Athletic': { e: ['🦁'], a: ['el Athletic', 'el Athletic Club'], p: ['los leones'] },
+  'Valencia': { e: ['🦇'], a: ['el Valencia'], p: ['los valencianistas'] },
+  'Sevilla': { e: [], a: ['el Sevilla'], p: ['los sevillistas'] },
+  'Betis': { e: [], a: ['el Betis'], p: ['los béticos', 'los verdiblancos'] },
+  'Real Sociedad': { e: [], a: ['la Real Sociedad', 'la Real'], p: ['los txuri-urdin'] },
+  'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo'], p: ['los amarillos'] },
+  'Celta': { e: [], a: ['el Celta'], p: ['los celestes'] },
+  'Osasuna': { e: ['🐂'], a: ['el Osasuna'], p: ['los rojillos'] },
+  'Getafe': { e: [], a: ['el Getafe'], p: ['los azulones'] },
+  'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano'], p: ['los franjirrojos', 'los vallecanos'] },
+  'Espanyol': { e: [], a: ['el Espanyol'], p: ['los pericos'] },
+  'Levante': { e: ['🐸'], a: ['el Levante'], p: ['los granotas'] },
+  'Elche': { e: ['🌴'], a: ['el Elche'], p: ['los franjiverdes', 'los ilicitanos'] },
+  'Alavés': { e: [], a: ['el Alavés'], p: ['los babazorros'] },
+  'Mallorca': { e: ['🏝️'], a: ['el Mallorca'], p: ['los bermellones'] },
+  'Girona': { e: [], a: ['el Girona'], p: ['los gironistas'] },
+  'Oviedo': { e: [], a: ['el Oviedo', 'el Real Oviedo'], p: ['los carbayones'] },
+  'Racing': { e: ['⚓'], a: ['el Racing'], p: ['los racinguistas'] },
+  'Deportivo': { e: [], a: ['el Deportivo', 'el Dépor'], p: ['los deportivistas'] },
+  'Málaga': { e: ['🐟'], a: ['el Málaga'], p: ['los boquerones', 'los malaguistas'] },
 };
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const ART = '(?:el|del|al|la|de la|a la)';
@@ -236,7 +254,11 @@ export function variarEquipos(texto, { semilla = '', max = limite(), emojis = tr
       return s;
     });
   };
-  for (const conEmoji of emojis ? [true, false] : [false]) {
+  // (22 nov, política de emojis: lib/emojis.mjs) solo si en el texto salen exactamente dos clubes y los dos tienen emoji: con el Barça o
+  // el Atleti, que no tienen, ni el del otro; con tres o más, ninguno
+  const salen = new Set([...String(texto).matchAll(RE_EQ)].map((m) => Object.keys(APODOS).find((k) => k.toLowerCase() === m[2].toLowerCase())));
+  const dos = salen.size === 2 && [...salen].every((c) => APODOS[c].e.length);
+  for (const conEmoji of emojis && dos ? [true, false] : [false]) {
     const t = paso(conEmoji);
     if (peso(t) <= max) return t;
   }

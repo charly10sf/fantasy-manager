@@ -90,7 +90,11 @@ const hDir = { tipo: 'directo', subtipo: 'gol', jornada: 12, minuto: "36'",
   jugadores: [{ nombre: 'Arda Güler', club: 'Madrid', mediaPuntos: '4,7', queLePasa: 'marca', puntosFantasyAhora: 7, principal: true }],
   clubes: clubes('Valencia', 'Madrid'), etiqueta: '' };
 const rd = (t, h = hDir) => revisar(t, { hechos: h, todos, numeros: [36, 0, 1, 7] });
-ok(!rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\'. Ya suma 7 puntos.').length, `un gol en directo con sus cifras, vale (${rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\'. Ya suma 7 puntos.').join(' | ')})`);
+ok(!rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\': 0-1. Ya suma 7 puntos.').length, `un gol en directo con sus cifras, vale (${rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\': 0-1. Ya suma 7 puntos.').join(' | ')})`);
+// el marcador después del gol y los puntos de quien marca, siempre (Carlos, 7 nov)
+ok(rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\'. Ya suma 7 puntos.').some((x) => /marcador después del gol/.test(x)), 'un gol sin el marcador no vale');
+ok(rd('⚽ Arda Güler adelanta al Madrid en Mestalla en el 36\': 0-1, y ya celebra.').some((x) => /faltan los puntos/.test(x)), 'un gol sin los puntos del goleador no vale');
+ok(!rd('⚽ Minuto 36 y el Madrid se adelanta en Mestalla: Arda Güler pone el 0-1 y va por 7 puntos.').length, `«va por 7 puntos» también dice que son de momento (${rd('⚽ Minuto 36 y el Madrid se adelanta en Mestalla: Arda Güler pone el 0-1 y va por 7 puntos.').join(' | ')})`);
 e = rd('⚽ Arda Güler adelanta al Madrid en el 36\'. Con una media de 4,7, se va a 7 puntos de momento.');
 ok(e.some((x) => /tuit de partida/.test(x)), `en directo, una cifra que la plantilla no tiene (la media), fuera (${e.join(' | ')})`);
 e = rd('⚽ Doblete de Arda Güler en el 36\'. El Madrid gana 0-1 y él ya suma 7 puntos.');
@@ -131,7 +135,7 @@ ok(motivoPersonal('ingresado en el hospital por una arritmia') === 'motivos de s
 ok(lesionTxt({ lesion: 'Fallecimiento de un familiar' }) === 'motivos personales' && lesionTxt({ lesion: 'Rotura fibrilar' }) === 'rotura fibrilar', 'el parte de lesionados no cuenta el detalle personal');
 const jP = jugador({ nickname: 'Pepelu', positionId: 3, teamId: 1 }, { equipos, estado: 'baja', motivo: 'motivos personales', datos: false });
 ok(/sin consejo/.test(jP.trato || ''), 'un jugador fuera por motivos personales lleva «trato» para la IA');
-ok(/Respeto a las personas/.test(GUIA) && /trato/.test(GUIA), 'la guía de voz pide respeto y el trato');
+ok(/Respeto/.test(GUIA) && /trato/.test(GUIA), 'la guía de voz pide respeto y el trato');
 const hSob = { tipo: 'noticias', noticia: 'Pepelu no estará por motivos personales', sobrio: true, fuente: 'lo ha comunicado el club', jugadores: [{ ...jP, principal: true }], clubes: clubes('Valencia'), etiqueta: '❌ Baja para la jornada 13' };
 ok(revisar('🚨 Pepelu no estará por motivos personales, según ha comunicado el club.', { hechos: hSob, todos }).some((x) => /sobrio/.test(x)), 'sobrio: sin emojis');
 ok(!revisar('Pepelu no estará por motivos personales, según ha comunicado el club.', { hechos: hSob, todos }).length, `sobrio y sin detalles, vale (${revisar('Pepelu no estará por motivos personales, según ha comunicado el club.', { hechos: hSob, todos }).join(' | ')})`);
@@ -195,6 +199,57 @@ e = revisar(base, { hechos: hFinal, todos, numeros: [], recientes: ['🏁 Otro f
 ok(e.some((y) => /se va a N/.test(y)), `«se va a N» si el último del tipo ya lo decía, no (${e.join(' | ')})`);
 ok(pulirRevisar('El Madrid gana 0-2.', 'El Madrid se va 0-2.', { numeros: [0, 2] }).some((y) => /se va/.test(y)), 'pulir: un pulido con «se va 0-2» no vale');
 ok(/se pone 0-2/.test(GUIA) && /llega al descanso 0-2/.test(GUIA), 'la guía dice que un marcador «se pone» y que al descanso «llega»');
+
+// --- la política de emojis (22 nov, lib/emojis.mjs) ---
+{
+  const { decidirEmojis, aplicarEmojis, erroresEmojis, conEmojis, ajustarArriba } = await import('../lib/emojis.mjs');
+  const { GASTADAS, gastadasEn, mismoPartido } = await import('../lib/redaccion.mjs');
+  // el directo siempre lleva el de arriba
+  ok(Array.from({ length: 20 }, (_, i) => decidirEmojis({ tipo: 'directo', clave: `d${i}`, texto: '⚽ Gol de X', hechos: { tipo: 'directo', clubes: clubes('Osasuna', 'Málaga') } }).arriba).every((x) => x === '⚽'), 'en el directo, el balón siempre');
+  ok(decidirEmojis({ tipo: 'directo', clave: 'r', texto: '🟥 Roja para X', hechos: { tipo: 'directo', clubes: {} } }).arriba === '🟥', 'en una roja, la tarjeta roja');
+  // en el resto, más o menos la mitad sin él
+  const arr = Array.from({ length: 60 }, (_, i) => decidirEmojis({ tipo: 'final', clave: `f${i}`, texto: '🏁 X', hechos: { tipo: 'final', clubes: clubes('Betis', 'Celta') } }).arriba);
+  const con = arr.filter(Boolean).length;
+  ok(con > 15 && con < 45, `en los finales, más o menos la mitad sin emoji arriba (${con} de 60 con él)`);
+  // nunca el mismo arriba y en la etiqueta
+  ok(Array.from({ length: 20 }, (_, i) => decidirEmojis({ tipo: 'noticias', clave: `n${i}`, texto: '⁉️ X es duda', hechos: { tipo: 'noticias', clubes: {}, etiqueta: '⁉️ Duda para la jornada 13' } }).arriba).every((x) => x === ''), 'con ⁉️ en la etiqueta, nada de ⁉️ arriba');
+  // de club: dos y los dos con emoji; con el Barça o con tres, ninguno
+  ok(Array.from({ length: 20 }, (_, i) => decidirEmojis({ tipo: 'directo', clave: `c${i}`, texto: '⚽ X', hechos: { tipo: 'directo', clubes: clubes('Barça', 'Villarreal') } }).clubes).every((x) => !x), 'Barça-Villarreal: el Barça no tiene, así que ninguno');
+  ok(Array.from({ length: 20 }, (_, i) => decidirEmojis({ tipo: 'mvp', clave: `m${i}`, texto: '⭐ X', hechos: { tipo: 'mvp', clubes: clubes('Osasuna', 'Málaga', 'Valencia') } }).clubes).every((x) => !x), 'con tres clubes, ninguno');
+  const dos = Array.from({ length: 40 }, (_, i) => decidirEmojis({ tipo: 'directo', clave: `o${i}`, texto: '⚽ X', hechos: { tipo: 'directo', clubes: clubes('Osasuna', 'Málaga') } }).clubes);
+  ok(dos.some(Boolean) && dos.some((x) => !x), 'Osasuna-Málaga: a veces con los dos y a veces sin ninguno');
+  // el tope: con la etiqueta, los de club y el de arriba no caben los cuatro
+  ok(Array.from({ length: 30 }, (_, i) => { const d = decidirEmojis({ tipo: 'noticias', clave: `t${i}`, texto: '🚨 X', hechos: { tipo: 'noticias', clubes: clubes('Osasuna', 'Málaga'), etiqueta: '❌ Baja para la jornada 13' } }); return (d.arriba ? 1 : 0) + (d.clubes ? 2 : 0) + 1; }).every((n) => n <= 3), 'nunca más de 3 contando la etiqueta');
+  // lo que sale de plantilla
+  ok(aplicarEmojis('⚽ Fermín la manda dentro en el 61\' y el Barça empata con el Villarreal 🚢: 2-2.', { tipo: 'directo', clave: 'x', hechos: { tipo: 'directo', clubes: clubes('Barça', 'Villarreal') } }) === '⚽ Fermín la manda dentro en el 61\' y el Barça empata con el Villarreal: 2-2.', 'plantilla: fuera el 🚢 si el Barça no tiene');
+  ok(/^👀 Onces confirmados/.test(aplicarEmojis('ℹ️ Onces confirmados del Real Madrid-Celta.', { tipo: 'onces', clave: 'o2', hechos: { tipo: 'onces', clubes: clubes('Real Madrid', 'Celta') } })) || /^Onces confirmados/.test(aplicarEmojis('ℹ️ Onces confirmados del Real Madrid-Celta.', { tipo: 'onces', clave: 'o2', hechos: { tipo: 'onces', clubes: clubes('Real Madrid', 'Celta') } })), 'plantilla: el ℹ️ de los onces pasa a 👀 o se va');
+  const conLista = aplicarEmojis('🏁 Real Madrid 2-1 Celta.\n\n✅ Si tienes a Bellingham, hoy sonríes\n\nFantasy Manager · enlace en la bio', { tipo: 'final', clave: 'f', hechos: { tipo: 'final', clubes: {}, etiqueta: 'Fantasy Manager · enlace en la bio' } });
+  ok(!/\n\n✅/.test(conLista) && /Fantasy Manager · enlace en la bio$/.test(conLista), `plantilla: ningún párrafo de en medio con emoji delante, y la etiqueta igual (${conLista.replace(/\n/g, ' / ')})`);
+  // el validador
+  const hE = { tipo: 'noticias', emojiArriba: '', clubes: { Osasuna: { nombres: ['el Osasuna'], emoji: null } }, etiqueta: '❌ Baja para la jornada 13' };
+  ok(erroresEmojis('🚨 Aimar se lesiona.', hE).some((x) => /sin emoji arriba/.test(x)), 'sin emoji arriba: un 🚨 no vale');
+  ok(erroresEmojis('Aimar se lesiona.\n\n🚨 Ojo.', hE).some((x) => /primer párrafo/.test(x)), 'otro párrafo con emoji delante, no');
+  ok(erroresEmojis('Aimar, del Osasuna 🐂, se lesiona.', hE).some((x) => /de club que no van/.test(x)), 'un emoji de club que no toca, no');
+  ok(!erroresEmojis('Aimar se lesiona en el entrenamiento.', hE).length, 'sin emojis y con la etiqueta, vale');
+  ok(ajustarArriba('🚨 Aimar se lesiona.', hE) === 'Aimar se lesiona.' && ajustarArriba('Gol de X.', { emojiArriba: '⚽' }) === '⚽ Gol de X.', 'el de arriba se arregla solo: se quita el que sobra y se pone el que falta');
+  const tC = { tipo: 'directo', clave: 'cc', texto: '⚽ X', hechos: { tipo: 'directo', clubes: clubes('Barça', 'Villarreal') } };
+  const h0 = tC.hechos; conEmojis(tC);
+  ok(h0.clubes.Villarreal.emoji === '🚢' && tC.hechos.clubes.Villarreal.emoji === null && tC.hechos.emojiArriba === '⚽', 'conEmojis no toca los hechos de partida (una copia) y le pasa a la IA la decisión');
+  // lo gastado: «si lo tienes» en uno de los tres últimos, no
+  const rec = ['Algo. Si lo tienes, aguanta.', 'Otro tuit sin nada.', 'Otro más.'];
+  ok(gastadasEn(rec).some((g) => /si lo tienes/.test(g.que)), '«si lo tienes» en uno de los tres últimos: gastada');
+  ok(!gastadasEn(['Algo. Si lo tienes, aguanta.', 'a', 'b', 'c']).some((g) => /si lo tienes/.test(g.que)), 'cuatro tuits después, ya vale otra vez');
+  e = revisar(`${base} Si lo tienes, al once.`, { hechos: hFinal, todos, numeros: [], recientes: rec });
+  ok(e.some((x) => /si lo tienes/.test(x)), `el validador tira «si lo tienes» gastado (${e.join(' | ')})`);
+  // el final y el MVP del mismo partido
+  const regM = { datos: { recientes: { final: [{ t: new Date(Date.now() - 600e3).toISOString(), texto: 'El Madrid gana 0-3 en Mestalla y Mbappé hace más del doble de su media.' }] } } };
+  const dp = mismoPartido(regM, 'mvp', hFinal);
+  ok(dp.length === 1, 'el MVP ve el final del mismo partido');
+  ok(!mismoPartido(regM, 'mvp', { ...hFinal, partido: { ...hFinal.partido, local: 'Getafe', visitante: 'Elche' }, clubes: clubes('Getafe', 'Elche') }).length, 'y no el de otro partido');
+  e = revisar('⭐ Mbappé, el mejor del Valencia-Madrid: 16 puntos, más del doble de su media.', { hechos: { ...hFinal, tipo: 'mvp' }, todos, numeros: [], delPartido: dp });
+  ok(e.some((x) => /mismo partido/.test(x)), `el MVP no repite «más del doble» si ya lo dijo el final (${e.join(' | ')})`);
+  ok(GASTADAS.length >= 15, `${GASTADAS.length} frases y datos gastados vigilados`);
+}
 
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

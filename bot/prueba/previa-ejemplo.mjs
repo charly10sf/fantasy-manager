@@ -76,7 +76,7 @@ ok(!s3 && !s4, 'empate o poca diferencia: nada que valorar');
   }
   ok(nombresAth.size >= 2, `el Athletic se llama de ${nombresAth.size} formas: ${[...nombresAth].join(', ')}`);
   // el emoji va a veces, no siempre; cuando va, es el del club (⚪ el Madrid, 🦇 el Valencia) y nunca un círculo de semáforo
-  const base2 = '🗓️ Posibles onces\n\nEl Real Madrid no tendrá a Vini Jr. y el Valencia tampoco a Elliott. El Real Madrid parte como favorito frente al Valencia.\n\nLa Real Sociedad visita al Real Madrid y viene del Valencia.';
+  const base2 = '🗓️ Posibles onces\n\nEl Real Madrid no tendrá a Vini Jr. y el Valencia tampoco a Elliott. El Real Madrid parte como favorito frente al Valencia.\n\nEl Valencia visita al Real Madrid tras perder.';
   let conMad = 0, sinMad = 0, conVal = 0, sinVal = 0;
   for (let i = 0; i < 40; i++) {
     const vm = variarEquipos(base2, { semilla: `s${i}`, max: 1000 });
@@ -86,6 +86,9 @@ ok(!s3 && !s4, 'empate o poca diferencia: nada que valorar');
     if (/⚪/.test(vm)) { conMad++; ok(/(Madrid|conjunto (blanco|merengue)) ⚪/.test(vm), `s${i} el ⚪ va detrás del Madrid`); } else sinMad++;
     if (/🦇/.test(vm)) { conVal++; ok(/(Valencia( CF)?|conjunto valencianista) 🦇/.test(vm), `s${i} el 🦇 va detrás del Valencia`); } else sinVal++;
   }
+  // (22 nov, política de emojis) con un tercer club, o con uno que no tiene emoji (el Barça), ninguno
+  ok([...Array(20).keys()].every((i) => !/[⚪🦇]/u.test(variarEquipos('El Real Madrid recibe al Valencia y luego visita a la Real Sociedad.', { semilla: `t${i}`, max: 1000 }))), 'con tres clubes, ningún emoji de club');
+  ok([...Array(20).keys()].every((i) => !/🦇/u.test(variarEquipos('El Barça recibe al Valencia el sábado.', { semilla: `b${i}`, max: 1000 }))), 'el Barça no tiene emoji, así que el Valencia tampoco');
   ok(conMad > 0 && sinMad > 0 && conVal > 0 && sinVal > 0, `el emoji va a veces y a veces no (Madrid ${conMad}/${sinMad}, Valencia ${conVal}/${sinVal})`);
   console.log(`\n${variarEquipos(base2, { semilla: 's3', max: 1000 })}`);
   const vm = variarEquipos(base2, { semilla: 'a', max: 1000 });

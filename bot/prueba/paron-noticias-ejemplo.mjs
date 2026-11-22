@@ -77,7 +77,7 @@ ok(t && t.hechos.jugadores[0].seleccion === 'se pierde los partidos con su selec
 
 // 3) el validador: el texto de anoche no pasa; uno bueno, sí
 const anoche = '⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha, según La Voz de Galicia y SPORT.\n\nTiene 10 goles y 8 asistencias en la liga, así que merece la pena seguirle de cerca. Con un 58 % de titularidad en Fantasy Manager, lo normal es que salga contra el Villarreal 🚢, que va 8º. Si lo tienes, mejor esperar a los onces.';
-const bueno = '⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha y se pierde los partidos con su selección, según La Voz de Galicia y SPORT.\n\nCon un 58 % de titularidad, lo normal es que llegue al partido contra el Villarreal 🚢 tras el parón, el viernes 20 de noviembre.';
+const bueno = '⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha y se pierde los partidos con su selección, según La Voz de Galicia y SPORT.\n\nCon un 58 % de titularidad, lo normal es que llegue al partido contra el Villarreal tras el parón, el viernes 20 de noviembre.';
 const errA = revisar(anoche, { hechos: t.hechos, numeros: [...t.numeros, 10, 8], ahora });
 ok(errA.some((x) => /esperar a los onces/.test(x)), 'tira «mejor esperar a los onces» con la J13 a 11 días');
 ok(errA.some((x) => /rival de la jornada 13 sin decir cuándo/.test(x)), 'tira «salga contra el Villarreal» sin fecha');
@@ -94,13 +94,15 @@ ok(!erroresLejos('Si lo tienes, mejor esperar a los onces. Juega contra el Villa
 const tw = { ...t, texto: t.texto };
 const resp = [anoche, bueno];
 let preguntas = [];
-const pedir = async (op) => { preguntas.push(op); return { ok: true, datos: { texto: resp.shift(), cronicas: [] }, modelo: SONNET }; };
+// la IA de mentira hace caso del emoji de arriba que le pide el código (lib/emojis.mjs)
+const sigueEmoji = (txt, op) => (/"emojiArriba": ""/.test(String(op && op.prompt)) ? String(txt).replace(/^\p{Extended_Pictographic}\uFE0F?\s*/u, '') : txt);
+const pedir = async (op) => { preguntas.push(op); return { ok: true, datos: { texto: sigueEmoji(resp.shift(), op), cronicas: [] }, modelo: SONNET }; };
 const regR = { datos: { enviados: [] }, fichero: 'prueba.json', guardar() {} };
 process.env.BOT_IA = 'claude'; process.env.ANTHROPIC_API_KEY = 'falsa';
 const n = await redactar([tw], { tipo: 'noticias', registro: regR, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores: [lamine], equipos, log: () => {}, ahora, pedir,
   revisor: async () => ({ ok: true, problemas: [], revisado: true, modelo: SONNET }) });
 console.log(`--- redactado\n${tw.texto}`);
-ok(n === 1 && preguntas.length === 2 && tw.texto.startsWith('⁉️ Lamine Yamal se recupera') && /tras el parón/.test(tw.texto), 'el redactado de anoche se tira y sale el bueno');
+ok(n === 1 && preguntas.length === 2 && /^(⁉️ )?Lamine Yamal se recupera/.test(tw.texto) && /tras el parón/.test(tw.texto), 'el redactado de anoche se tira y sale el bueno');
 ok(preguntas[1] && /esperar a los onces/.test(preguntas[1].prompt), 'la segunda pregunta lleva el error de los onces');
 ok(/sinLigaHastaEntonces/.test(preguntas[0].prompt), 'la pregunta a la IA lleva lo del parón');
 

@@ -87,6 +87,16 @@ export function comoLeLlaman(nickname) {
   return [...new Set(out)].filter((x) => x !== n);
 }
 
+/** el nombre sin la inicial con punto, para lo que sale de plantilla (22 nov: «Doblete de Y. Zabiri», «M. Dituro»…): el completo si se
+    sabe («Yassir Zabiri») o el apellido solo si no se repite («Dituro»); si no, el de LaLiga tal cual («C. Romero») */
+export function sinInicial(nickname) {
+  const n = String(nickname || '').trim();
+  const a = APODOS_JUGADORES[n];
+  if (a && a.completo) return a.completo;
+  const m = n.match(/^\p{L}{1,2}\.\s+(.+)$/u);
+  return m && !AMBIGUOS.has(m[1].toLowerCase()) ? m[1] : n;
+}
+
 /** los rasgos a mano de un jugador (por su nickname de LaLiga), o [] */
 export const rasgosDe = (nickname) => ((APODOS_JUGADORES[String(nickname || '').trim()] || {}).rasgos || []).slice();
 

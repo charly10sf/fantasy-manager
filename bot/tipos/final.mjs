@@ -187,15 +187,16 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     ideas.push({ t: r.linea, prio: 8 }); num.push(...r.num);
     const nombrado = !!r.nombra && r.nombra === String(top.id);
     // 2) el mejor (o los dos, si empatan). El partido ya está arriba: sin el equipo entre paréntesis.
-    if (empate) ideas.push({ t: `⭐ ${top.nombre} y ${empate.nombre}, los mejores fantasy: ${top.pts} puntos cada uno`, prio: 9 });
-    else if (gl !== gv && String(top.ladoId) === String(gl > gv ? m.visitor.id : m.local.id)) ideas.push({ t: `⭐ ${top.nombre}, el mejor fantasy aunque ${el(gl > gv ? V : L)} pierde: ${top.pts} puntos`, prio: 9 });
+    if (empate) ideas.push({ t: `⭐ ${top.nombre} y ${empate.nombre}, los que más puntúan: ${top.pts} puntos cada uno`, prio: 9 });
+    else if (gl !== gv && String(top.ladoId) === String(gl > gv ? m.visitor.id : m.local.id)) ideas.push({ t: `⭐ ${top.nombre} es el que más puntúa aunque ${el(gl > gv ? V : L)} pierde: ${top.pts} puntos`, prio: 9 });
     else {
       // si el relato ya lo nombra («Satriano marca el bueno en el 73'»), aquí sin nombre: «Se va a 14 puntos fantasy». La forma es la
       // misma que mira tipos/mvp.mjs (`formaMejor`) para no repetirla en el tweet del MVP, que sale justo después
       const n = top.nombre;
       // («el goleador», no sin sujeto: «Remontada del Getafe con gol de Satriano. Se va a 14…» parecía que hablaba del Getafe)
-      ideas.push({ t: (nombrado ? [`⭐ El goleador es el mejor fantasy: ${top.pts} puntos`, `⭐ El goleador se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para el goleador`]
-        : [`⭐ ${n}, el mejor fantasy: ${top.pts} puntos`, `⭐ ${n} se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para ${n}`])[formaMejor(jornada, k)], prio: 9 });
+      // (22 nov) sin «fantasy» de relleno detrás de los puntos y con «se va a» solo en una de las tres
+      ideas.push({ t: (nombrado ? [`⭐ El goleador es el que más puntúa: ${top.pts} puntos`, `⭐ El goleador se va a ${top.pts} puntos`, `⭐ ${top.pts} puntos para el goleador`]
+        : [`⭐ ${n} es el que más puntúa: ${top.pts} puntos`, `⭐ ${n} acaba con ${top.pts} puntos`, `⭐ ${top.pts} puntos para ${n}`])[formaMejor(jornada, k)], prio: 9 });
     }
     num.push(top.pts);
     // 3) un dato con miga del mejor, ya por su puesto: el doble de su media o una racha
@@ -265,8 +266,9 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     // 6) la lectura para el mánager, solo en un partido grande (y no en todos: depende del partido). Cinco formas, siempre en el mismo
     // orden; si el peor ya dice «Noche/Tarde para olvidar», la de «Noche/Tarde redonda» se cambia por otra, sin recortar la lista
     const yaFranja = ideas.some((x) => x.t.includes(`${Franja} para olvidar`));
-    const lects = [`✅ Si tienes a ${top.nombre}, hoy sonríes`, `✅ Acertó quien alineó a ${top.nombre}`, `✅ Premio para quien confió en ${top.nombre}`,
-      yaFranja ? `✅ Partido redondo para quien tenga a ${top.nombre}` : `✅ ${Franja} redonda para quien tenga a ${top.nombre}`, `✅ Quien lleve a ${top.nombre}, de celebración`];
+    // (22 nov: «Si tienes a Bellingham, hoy sonríes» era el «si lo tienes» de siempre; sin hablarle al lector)
+    const lects = [`✅ Acertó quien alineó a ${top.nombre}`, `✅ Premio para quien confió en ${top.nombre}`,
+      yaFranja ? `✅ Partido redondo de ${top.nombre}` : `✅ ${Franja} redonda de ${top.nombre}`, `✅ ${top.nombre} pagó la confianza`, `✅ Buena jornada para el que alineó a ${top.nombre}`];
     if (!empate && top.pts >= 12) ideas.push({ t: R(lects, 'lect'), prio: 2, ultima: true });
     // con tweets largos: la valoración del resultado contra la tabla de antes del partido (una sorpresa, o que cumple el favorito)
     if (LG && info && info.tablaSin) {

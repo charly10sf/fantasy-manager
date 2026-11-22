@@ -468,19 +468,22 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const jugH = []; let extraH = {};
         const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra, sinDatos: ['total', 'goles', 'minutos', 'porterias'] });   // (en juego, lo que se cuenta hasta la jornada anterior: nada que cambie con este partido)
         const marcador = `📍 ${mar}`;
+        // (22 nov, auditoría de la redacción: el marcador suelto, «Getafe 0-1 Atlético.», era lo que más sonaba a telegrama) va pegado
+        // al titular, y «1 punto» en singular («con 1 puntos de momento» salió el 22 nov)
+        const conMarcador = (c) => `${c}: ${mar}`;
+        const P = (n) => `${n} ${Math.abs(Number(n)) === 1 ? 'punto' : 'puntos'}`;
         const puntos = (valor, conMedia, conNombre = false) => {
           num.push(valor);
           const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
           if (sobre) num.push(...partes(media));
           // (en juego, de momento: «se queda en -5» con una roja se leía como definitivo y acabó en -3; revisión total, M12)
-          if (valor <= 0) return { t: st.state === 'in' ? `📉 De momento se queda en ${valor} puntos fantasy` : `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
+          if (valor <= 0) return { t: st.state === 'in' ? `📉 De momento se queda en ${P(valor)}` : `📉 Se queda en ${P(valor)}`, prio: 8 };
           // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
-          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos` : elegir([`📊 Ya suma ${valor} puntos`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos`, `📊 Lleva ${valor} puntos de momento`], sem + 'p');
+          const base = conNombre ? `📊 ${nombre} ya suma ${P(valor)}` : elegir([`📊 Ya suma ${P(valor)}`, `📊 ${cap(segunda(pos, nombre))} ya va por ${P(valor)}`, `📊 Lleva ${P(valor)} de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
-          cab = `🟥 Roja para ${nombre} en el ${minTxt}`;
-          ideas.push({ t: marcador, prio: 9 });
+          cab = conMarcador(`🟥 Roja para ${nombre} en el ${minTxt}`);
           const rojas = (mom && mom.rojas) || 1;
           const quedan = rojas === 1 ? 'diez' : rojas === 2 ? 'nueve' : null;
           const estado = propio < rival ? ' y encima va perdiendo' : propio > rival ? ', aunque va ganando' : ' con el empate en el marcador';
@@ -497,17 +500,15 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           const ptsP = pPor && pPor.weekPoints != null && Number(pPor.weekPoints) > 0 ? Number(pPor.weekPoints) : null;
           const mediaP = pPor && porId.get(String(pPor.id)) ? Number(porId.get(String(pPor.id)).averagePoints) || 0 : 0;
           const equipoP = corto(ladoP.mainName);
-          cab = nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`;
-          ideas.push({ t: marcador, prio: 9 });
+          cab = conMarcador(nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`);
           ideas.push({ t: `⚠️ ${pudoTxt(propio, rival, equipo)}`, prio: 6 });
-          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos`, prio: 8 }); }
+          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${P(ptsP)}`, prio: 8 }); }
           if (pPor) tarjetas.push({ jugadorId: pPor.id, motivo: 'parada' });
           if (nomP) jugH.push(jH(nomP, 1, mediaP, { queLePasa: `le para un penalti a ${nombre}`, ...(ptsP != null ? { puntosFantasyAhora: ptsP } : {}) }, equipoP));
           jugH.push(jH(nombre, pos, media, { queLePasa: 'lanza el penalti y se lo paran' }));
           extraH = { quePudoSerElPenalti: pudoTxt(propio, rival, equipo) };
         } else if (dsp.clase === 'penalti fallado') {
-          cab = `❌ ${nombre} falla un penalti en el ${minTxt}`;
-          ideas.push({ t: marcador, prio: 9 });
+          cab = conMarcador(`❌ ${nombre} falla un penalti en el ${minTxt}`);
           const pudo = pudoTxt(propio, rival, equipo);
           ideas.push({ t: `⚠️ ${pudo}`, prio: 6 });
           jugH.push(jH(nombre, pos, media, { queLePasa: 'falla un penalti', ...(pts != null ? { puntosFantasyAhora: pts } : {}) }));
@@ -518,17 +519,16 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           const sit = mom ? situacion(propio, rival, iba_perdiendo(rel, dsp.ref, esCasa)) : null;
           const goles = '⚽'.repeat(Math.min(dsp.n, 3));
           // titular: con un gol normal, la frase entera; con doblete, triplete o penalti, eso arriba y lo que supone junto al marcador
-          if (dsp.clase === 'gol' && !dsp.penalti && sit) { cab = titularGol(sit, nombre, equipo, minTxt, sem); ideas.push({ t: marcador, prio: 9 }); }
+          if (dsp.clase === 'gol' && !dsp.penalti && sit) cab = conMarcador(titularGol(sit, nombre, equipo, minTxt, sem));
           else {
             const que = dsp.clase === 'doblete' ? 'Doblete' : dsp.clase === 'triplete' ? 'Triplete' : 'Gol';
-            cab = dsp.penalti ? `${goles} ${que} de penalti de ${nombre} en el ${minTxt}` : `${goles} ${que} de ${nombre} en el ${minTxt}`;
-            ideas.push({ t: sit ? `${marcador}: ${el(equipo)} ${VERBO[sit]}` : marcador, prio: 9 });
+            cab = conMarcador(`${goles} ${que}${dsp.penalti ? ' de penalti' : ''} de ${nombre} en el ${minTxt}${sit ? ` y ${el(equipo)} ${VERBO[sit]}` : ''}`);
           }
-          if (sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85) ideas.push({ t: mn.min >= 88 ? '⏱️ Casi sobre la bocina' : '⏱️ Ya en el tramo final', prio: 4 });
-          else if (sit === 'abre' && mn.min <= 6) ideas.push({ t: '⏱️ Apenas habían pasado unos minutos', prio: 3 });
+          // (22 nov: «Ya en el tramo final.» y «Apenas habían pasado unos minutos.» sueltas eran de plantilla; el minuto ya lo dice y la IA
+          // tiene el `tramo` en los hechos)
           if (p) tarjetas.push({ jugadorId: p.id, motivo: dsp.clase === 'doblete' ? 'doblete' : dsp.clase === 'triplete' ? 'triplete' : 'gol', ...(pts != null ? { pts } : {}) });
           const an = dsp.asistente || asis[`${dsp.jugador}|${dsp.min}`] || null;
-          let ptsA = null;
+          let ptsA = null, asistenteYa = false;
           if (an) {
             const pa = casarJugador(an, lado);
             const na = pa ? pa.nickname || pa.name : an;
@@ -539,10 +539,16 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
               ptsA = conSuelo(tablaPts, `${jornada}|${m.id}|${pa.id}`, puntosConGol(pa.weekPoints, posA, { goles: golesA, asis: asisA, accion: 'asistencia', cuenta: cuentaA }).pts, { goles: golesA, asis: asisA, pos: posA, ahora, apuntar: !yaSalio(dsp) });
             }
             if (ptsA != null) num.push(ptsA);
-            ideas.push({ t: ptsA != null ? (st.state === 'in' ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos de momento` : `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy`) : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
+            // los dos con sus puntos, en una frase (22 nov: «Asistencia de X, con 3 puntos de momento. Y ya suma 6 puntos.» repetía el nombre)
+            if (ptsA != null && pts != null && pts > 0) {
+              num.push(pts); asistenteYa = true;
+              const ya = st.state === 'in';
+              ideas.push({ t: elegir(ya ? [`📊 ${nombre} va por ${P(pts)} de momento y ${na}, que da el pase, por ${ptsA}`, `📊 De momento, ${P(pts)} para ${nombre} y ${ptsA} para ${na}, que le da el pase`, `📊 ${nombre} lleva ${P(pts)}; el pase es de ${na}, que suma ${ptsA}`]
+                : [`📊 ${nombre} suma ${P(pts)} y ${na}, que da el pase, ${ptsA}`, `📊 ${P(pts)} para ${nombre} y ${ptsA} para ${na}, que le da el pase`], sem + 'pa'), prio: 8 });
+            } else ideas.push({ t: ptsA != null ? (st.state === 'in' ? `🅰️ Asistencia de ${na}, con ${P(ptsA)} de momento` : `🅰️ Asistencia de ${na}, con ${P(ptsA)}`) : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia', ...(ptsA != null ? { pts: ptsA } : {}) });
           }
-          if (pts != null) ideas.push(puntos(pts, true, !!an));
+          if (pts != null && !asistenteYa) ideas.push(puntos(pts, true, !!an));
           const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
           // golazo (7 nov, 22:43): falta directa o disparo de 22 m o más sin penalti con FotMob; sin FotMob, la regla C con el texto de ESPN
           const gFm = golFm.get(dsp) || null;

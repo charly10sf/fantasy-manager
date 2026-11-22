@@ -14,11 +14,12 @@ import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
 import { pulir } from './lib/pulir.mjs';
 import { redactar, apuntarReciente } from './lib/redaccion.mjs';
+import { aplicarEmojis } from './lib/emojis.mjs';
 import { aplicaRedaccion, decidirRespaldo, olvidarFallos, porFallos } from './lib/respaldo.mjs';
 import { crearCronicas } from './lib/cronicas.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicarSinRepetir, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
-import { fijarLimite, limite, largo, retocar, variarEquipos } from './lib/texto.mjs';
+import { fijarLimite, limite, largo, retocar, variarEquipos, conTitularidad } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 import { esperaParon, paronActual } from './lib/paron.mjs';
@@ -208,8 +209,13 @@ for (const q of quienes) {
     try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
     catch (e) { console.log(`  (pulir) ERROR ${e.message || e}: salen con la plantilla`); }
   }
+  // la política de emojis en todos (lib/emojis.mjs, 22 nov): el de arriba que toca o ninguno, los de club solo con dos clubes que los
+  // tengan los dos y ningún otro párrafo con emoji delante; a lo redactado ya se le pidió así y no cambia
+  if (config.emojis !== false) for (const t of tweets) if (t && t.texto) t.texto = aplicarEmojis(t.texto, t);
   // lo que se arregla sin IA, en todos (redactados, pulidos y de plantilla): «se va 0-2» → «se pone 0-2» (lib/texto.mjs, retocar)
   for (const t of tweets) if (t && t.texto) t.texto = retocar(t.texto);
+  // y en lo que sale de plantilla con % de titularidad, el primero dice de qué es (a la IA ya se lo mira su validador)
+  for (const t of tweets) if (t && t.texto && !t.redactado && t.hechos && /"titularidad":/.test(JSON.stringify(t.hechos))) t.texto = conTitularidad(t.texto);
   for (const t of tweets) {
     if (abortar) break;
     generados++;

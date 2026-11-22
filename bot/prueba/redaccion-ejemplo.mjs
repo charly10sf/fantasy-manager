@@ -158,9 +158,11 @@ process.env.BOT_IA = 'claude';
 const t1 = { tipo: 'noticias', clave: 'n1', texto: '✅ plantilla\n\n✅ Disponible para la jornada 12 contra el Atlético', numeros: [12], hechos };
 const respuestas = ['El Atleti va 2º y recibe al equipo. Eric vuelve.', bueno];
 let preguntas = [];
-const pedirF = async (op) => { preguntas.push(op); return { ok: true, datos: { texto: respuestas.shift(), cronicas: [] }, modelo: SONNET }; };
+// la IA de mentira hace caso del emoji de arriba que le pide el código (lib/emojis.mjs)
+const sigueEmoji = (txt, op) => (/"emojiArriba": ""/.test(String(op && op.prompt)) ? String(txt).replace(/^\p{Extended_Pictographic}\uFE0F?\s*/u, '') : txt);
+const pedirF = async (op) => { preguntas.push(op); return { ok: true, datos: { texto: sigueEmoji(respuestas.shift(), op), cronicas: [] }, modelo: SONNET }; };
 let hechosN = await redactar([t1], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF, revisor: revisorOk });
-ok(hechosN === 1 && t1.texto.startsWith('✅ El Barça recupera') && t1.texto.endsWith(hechos.etiqueta), 'el primero no vale, se pregunta otra vez y sale el bueno con la etiqueta debajo');
+ok(hechosN === 1 && /^(✅ )?El Barça recupera/.test(t1.texto) && t1.texto.endsWith(hechos.etiqueta), `el primero no vale, se pregunta otra vez y sale el bueno con la etiqueta debajo (${t1.texto.slice(0, 40)})`);
 ok(preguntas.length === 2 && /no vale/.test(preguntas[1].prompt) && /vaga/.test(preguntas[1].prompt), 'la segunda pregunta lleva los errores de la primera');
 ok(/Algo de antes/.test(preguntas[0].prompt) && !/"fecha"/.test(preguntas[0].prompt) && preguntas[0].uso === 'redactar', 'la pregunta lleva los recientes y no la fecha cruda');
 ok(t1.plantilla.startsWith('✅ plantilla') && t1.redactado === SONNET, 'la plantilla queda guardada');
@@ -186,7 +188,7 @@ ok(hechosN === 0, 'con redactar.activo a false no hace nada');
 hechosN = await redactar([{ ...t2 }], { tipo: 'mercado', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF, revisor: revisorOk });
 ok(hechosN === 0, 'el mercado no se redacta');
 apuntarReciente(reg2, 'noticias', t1.texto);
-ok(recientesDe(reg2, 'noticias').slice(-1)[0] === bueno, 'al publicar, el cuerpo queda entre los recientes del tipo (sin la etiqueta)');
+ok(recientesDe(reg2, 'noticias').slice(-1)[0].replace(/^✅ /, '') === bueno.replace(/^✅ /, ''), 'al publicar, el cuerpo queda entre los recientes del tipo (sin la etiqueta)');
 for (let i = 0; i < 7; i++) apuntarReciente(reg2, 'noticias', `t${i}`);
 ok(reg2.datos.recientes.noticias.length === 5, 'solo se guardan los 5 últimos');
 
@@ -307,7 +309,7 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   const revisorF = async ({ texto }) => { lecturas++; return /mejor han rentado/.test(texto) ? { ok: false, problemas: ['«Es de los defensas que mejor han rentado esta jornada»: los hechos no traen nada de la jornada'], revisado: true, modelo: SONNET } : { ok: true, problemas: [], revisado: true, modelo: SONNET }; };
   const ta = { tipo: 'noticias', clave: 'rv1', texto: '✅ plantilla', numeros: [12], hechos };
   const n1 = await redactar([ta], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {}, pedir: pedirR, revisor: revisorF });
-  ok(n1 === 1 && ta.texto.startsWith(bueno.split('\n')[0]) && ta.revisado === SONNET && lecturas === 2, 'revisor: tira la versión con una comparación sin base y sale la segunda, revisada');
+  ok(n1 === 1 && ta.texto.replace(/^✅ /, '').startsWith(bueno.split('\n')[0].replace(/^✅ /, '')) && ta.revisado === SONNET && lecturas === 2, 'revisor: tira la versión con una comparación sin base y sale la segunda, revisada');
   ok(preg.length === 2 && /editor/.test(preg[1].prompt) && /mejor han rentado/.test(preg[1].prompt), 'revisor: la segunda pregunta lleva lo que dijo el editor');
   // 2. si el revisor tira las tres, sale la plantilla
   const tb = { tipo: 'noticias', clave: 'rv2', texto: '✅ plantilla tres', numeros: [12], hechos };
@@ -362,7 +364,7 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
 // la guía trae lo del 7 nov
 {
   const { GUIA } = await import('../lib/voz.mjs');
-  ok(/SOLO LO QUE SABES/.test(GUIA) && /DELATA A UNA IA/.test(GUIA), 'la guía trae «solo lo que sabes» y «lo que delata a una IA»');
+  ok(/DE DÓNDE SALE/.test(GUIA) && /de los mejores de la jornada/.test(GUIA) && /relleno/.test(GUIA), 'la guía trae «solo lo que sabes» (de dónde sale) y lo que delata a una IA (el relleno)');
   ok(EJEMPLOS.some((x) => !x.bien && /rentado esta jornada/.test(x.texto)), 'la guía trae como MAL la comparación con la jornada');
 }
 

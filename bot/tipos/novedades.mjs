@@ -121,11 +121,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
         mediaT, { t: venta ? '💸 Venta obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
       // (la cabecera y «se pierde» van atadas: «no podrá jugar por sanción. No estará contra…» decía lo mismo dos veces)
+      // (22 nov: «Catena no podrá jugar por sanción. Vio la roja en la jornada 13. Se pierde el partido contra el Valencia.» eran tres
+      // frases para una idea) el partido que se pierde y por qué, en una
       const fS = turno(2, `novcabS${dia}`, k);
-      cab = [`🟥 ${e.nombre}, sancionado`, `🟥 ${e.nombre} no podrá jugar por sanción`][fS];
-      ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,
-        { t: e.pp ? (fS === 1 ? `❌ Se pierde el partido contra ${el(e.pp.rival)}` : `❌ No estará contra ${el(e.pp.rival)}`) : '❌ Se pierde el próximo partido', prio: 8 },
-        mediaT, { t: `❌ Baja ${paraLa(e.pp, null)}`, prio: 9 }];
+      const contra = e.pp ? [`se pierde el partido contra ${el(e.pp.rival)}`, `no podrá jugar contra ${el(e.pp.rival)}`][fS] : 'se pierde el próximo partido';
+      const porque = e.motivoSan ? `: ${e.motivoSan.txt.charAt(0).toLowerCase()}${e.motivoSan.txt.slice(1)}` : ' por sanción';
+      cab = `🟥 ${e.nombre} ${contra}${porque}`;
+      ideas = [mediaT, { t: `❌ Baja ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
       // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)
       // solo si es una lesión de verdad («trabajo al margen» o «descanso» no se dejan atrás)

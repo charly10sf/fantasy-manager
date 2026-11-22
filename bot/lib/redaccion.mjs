@@ -9,7 +9,8 @@ import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal
 import { validar } from './validar.mjs';
 import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
-import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
+import { ARRANQUES, VAGAS, PROHIBIDO, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
+import { EMOJIS_ARRIBA as EMOJIS_GUIA, conEmojis, erroresEmojis, ajustarArriba } from './emojis.mjs';
 import { NOMBRES_MEDIOS, PRENSA_SIN_MEDIO, reglaPrensa } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
 import { revisarConIA, SISTEMA as SISTEMA_REVISOR } from './revisor.mjs';
@@ -61,7 +62,7 @@ export function erroresBanderas(t, hechos = {}) {
 export function nombresClub(eq) {
   const c = corto(eq);
   const ap = APODOS[c];
-  return ap ? { nombres: ap.a, emoji: ap.e[0] || null } : { nombres: [`el ${c}`], emoji: null };
+  return ap ? { nombres: ap.a, ...(ap.p && ap.p.length ? { apodos: ap.p } : {}), emoji: ap.e[0] || null } : { nombres: [`el ${c}`], emoji: null };
 }
 
 // --- el validador ---------------------------------------------------------------------------------------------------------
@@ -143,6 +144,36 @@ export function muletillas(recientes, nombres = []) {
   return [...cuenta].filter(([, n]) => n >= 3).map(([esq]) => ({ esq, txt: esq.replace(/\bX\b/g, '…').replace(/\bA\b/g, 'el').replace(/\bN\b/g, 'n') }));
 }
 const entrada = (t, nombres) => esqueleto(t, nombres).split(' ').slice(0, 3).join(' ');
+const empiezaPorNombre = (t, nombres) => esqueleto(String(t).replace(/^[^\p{L}¡]+/u, ''), nombres).split(' ')[0] === 'X';
+// Lo que delataba una plantilla porque salía en casi todos (auditoría del 22 nov, claude/auditoria-redaccion-bot.md del proyecto): cada
+// cosa, como mucho una vez en los `ventana` últimos tuits del tipo; con `partido`, tampoco si ya la dice el tuit del mismo partido
+// (el final y el MVP salen a la vez y contaban lo mismo). Se le avisa antes, en «FRASES YA GASTADAS», y el validador lo comprueba.
+export const GASTADAS = [
+  { re: /\bsi l[oa]s? (?:tienes|tenías)\b|\bquien(?:es)? l[oa]s? tenga\b|\bquien tenga\b|\bsi tienes a\b/i, que: '«si lo tienes» o «quien lo tenga»', ventana: 3 },
+  { re: SE_VA_PUNTOS, que: '«se va a N»', ventana: 2 },
+  { re: /\bLiga, Champions (?:y|o) Copa\b|\bprimer gol\b/i, que: 'el contador de la temporada («su primer gol», «entre Liga, Champions y Copa»)', ventana: 3 },
+  { re: /\ben racha\b|\bjornadas seguidas puntuando\b|\benchufad[oa]\b/i, que: 'la racha («llega en racha», «tres jornadas seguidas puntuando fuerte»)', ventana: 3 },
+  { re: /\b(?:más del|casi el|el) (?:doble|triple)\b|\b(?:dobla|triplica)\b|\blo que suele\b/i, que: 'los puntos frente a su media («más del doble», «el triple de lo que suele»)', ventana: 2, partido: true },
+  { re: /\bya suma\b/i, que: '«ya suma»', ventana: 2 },
+  { re: /\bel pase es de\b|\bpone el pase\b|\bda el pase\b/i, que: '«el pase es de…» o «pone el pase»', ventana: 2 },
+  { re: /\bla manda dentro\b/i, que: '«la manda dentro»', ventana: 4 },
+  { re: /\bla mete\b/i, que: '«la mete»', ventana: 2 },
+  { re: /\bsin sorpresas?\b|\bninguna sorpresa\b|\bcambio raro\b|\bgiro raro\b/i, que: '«sin sorpresas» o «ni un cambio raro»', ventana: 2 },
+  { re: /\btranquil[oa]s?\b|\brelajarse\b|\brespirar\b|\ba qué atenerse\b/i, que: '«puede estar tranquilo», «respirar» o «relajarse»', ventana: 3 },
+  { re: /\bmás papeletas de jugar que de quedarse fuera\b/i, que: '«más papeletas de jugar que de quedarse fuera»', ventana: 4 },
+  { re: /\blo normal es que (?:salga|salgan)\b/i, que: '«lo normal es que salga»', ventana: 2 },
+  { re: /\bel mejor de los dos equipos\b/i, que: '«el mejor de los dos equipos»', ventana: 3 },
+  { re: /\bla (?:nota|parte) mala\b|\blo peor se lo lleva\b/i, que: '«la nota mala» o «lo peor se lo lleva»', ventana: 2 },
+  { re: /\baunque (?:el \S+ )?(?:pierde|perdió|perdiera)\b|\bpese a perder\b/i, que: '«aunque pierde» o «pese a perder»', ventana: 2 },
+  { re: /\bentre todos\b/i, que: 'los clubes «entre todos»', ventana: 2 },
+  { re: /\bno encuentra suelo\b/i, que: '«no encuentra suelo»', ventana: 4 },
+  { re: /\b60 minutos o más en\b/i, que: '«60 minutos o más en N de sus cinco últimos partidos»', ventana: 2 },
+  { re: /\bvale \d+(?:,\d+)? M\b[^.\n]{0,40}\bjornada \d+/i, que: '«vale N M y en la jornada N…»', ventana: 2 },
+];
+/** las de GASTADAS que ya salen en los últimos del tipo (o en el del mismo partido): [{ que, re }] */
+export function gastadasEn(recientes = [], delPartido = []) {
+  return GASTADAS.filter((g) => recientes.slice(-g.ventana).some((r) => g.re.test(String(r))) || (g.partido && delPartido.some((r) => g.re.test(String(r)))));
+}
 
 /**
  * ¿vale el texto redactado? [] si sí; si no, los motivos (se le devuelven a la IA para que lo arregle).
@@ -276,7 +307,8 @@ const SIN_RESPETO = /\b(?:criminal(?:es)?|asesin[oa]s?|carnicer[oa]s?|mat[oó]n(
 // los puntos de un partido en juego son de momento (M12: «Roja para Gayá… se queda en -5 puntos» y en el final fueron -3)
 // un % de titularidad atribuido a la app: «58 % de titularidad en Fantasy Manager», «según Fantasy Manager», «Fantasy Manager le da un 72 %»
 export const FM_PCT = /\d\s?%[^.\n]{0,40}?\b(?:en|seg[uú]n|de)\s+Fantasy Manager\b|\bFantasy Manager\s+(?:solo\s+)?(?:le|lo|la)\s+(?:da|daba|otorga|concede|pone)\b[^.\n]{0,25}?\d\s?%/iu;
-const PROVISIONAL = /\b(?:de momento|por ahora|hasta ahora|ya suma|ya va por|ya lleva|lleva -?\d|provisional(?:es)?|a falta de|mientras tanto)\b/iu;
+// (22 nov: más formas, para que no tenga que ser siempre «ya suma» o «de momento»: salía en 19 de 24 directos)
+const PROVISIONAL = /\b(?:de momento|por ahora|por el momento|hasta ahora|ya suma|suma ya|ya va por|va por -?\d|ya lleva|lleva -?\d|ya tiene|ya son -?\d|provisional(?:es)?|a falta de|mientras tanto)\b/iu;
 
 // «hoy», «esta tarde», «esta noche» de un partido que ya ha empezado (8 nov, Barrenetxea: «llega con dudas al partido de esta tarde» a las
 // 18:06 de un partido de las 16:15). Y si el equipo ya jugó hoy (`partido.yaJugoHoy`), nada de «esta tarde», «esta noche» ni «hoy a las».
@@ -318,7 +350,7 @@ export function erroresLejos(t, hechos, ahora = Date.now()) {
 // lo de la selección («se pierde los partidos con su selección»): no es una baja para LaLiga (9 nov)
 const DE_SELECCION = /\b(?:se\s+pierde|se\s+perder[aá]|no\s+estar[aá]|no\s+jugar[aá]|se\s+cae\s+de|baja\s+(?:con|en|para))\s+[^.\n]{0,30}?\b(?:selecci[oó]n|concentraci[oó]n|par[oó]n)\b/giu;
 
-export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [], ahora = Date.now() } = {}) {
+export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [], ahora = Date.now(), delPartido = [] } = {}) {
   const e = [];
   const t = String(texto || '').trim();
   if (!t) return ['texto vacío'];
@@ -341,7 +373,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // nombres: solo los de los hechos (jugadores y clubes, con los nombres permitidos de cada club)
   const permitidos = new Set();
   for (const j of hechos.jugadores || []) { permitidos.add(norm(j.nombre)); for (const w of norm(j.nombre).split(' ')) if (w.length >= 4) permitidos.add(w); }
-  for (const c of Object.values(hechos.clubes || {})) for (const n of c.nombres || []) { const x = norm(n).replace(/^(el|la) /, ''); permitidos.add(x); }
+  for (const c of Object.values(hechos.clubes || {})) for (const n of [...(c.nombres || []), ...(c.apodos || [])]) { const x = norm(n).replace(/^(el|la|los|las) /, ''); permitidos.add(x); }
   for (const c of Object.keys(hechos.clubes || {})) permitidos.add(norm(c));
   for (const c of cronicas) for (const w of norm(`${c.titulo} ${c.entradilla}`).split(' ')) permitidos.add(w);
   // (de los demás textos de los hechos, las palabras de 4 letras o más: con las de 3, cualquier «Gil» o «Rui» pasaba; A10)
@@ -462,8 +494,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
   // un marcador nunca «se va» (Carlos, 22 nov): ni «se va 0-2», ni «se va 0-2 al descanso», ni «se va 0-2 de Mestalla»
   { const m = t.match(SE_VA_MARCADOR); if (m) e.push(`un marcador no «se va» («${m[0]}»): «se pone 0-2», «pone el 0-2 en el marcador», «llega al descanso 0-2», «gana 0-2 en Mestalla»`); }
-  // «se va a 16 puntos» sí vale, pero no en todos (Carlos, 22 nov): si uno de los dos últimos del tipo ya lo decía, otra forma
-  if (SE_VA_PUNTOS.test(t) && recientes.slice(-2).some((r) => SE_VA_PUNTOS.test(r))) e.push('«se va a N» ya va en uno de los dos últimos tuits de este tipo: dilo de otra forma («suma», «acaba con», «se lleva», «hace»)');
+  // («se va a 16 puntos» sí vale, pero no en todos: va en GASTADAS, con los dos últimos del tipo)
   // «según X» pegado a una cifra nuestra (la media, el %, la hora, el puesto): el trozo de frase justo antes del «según» (desde la última
   // coma, dos puntos o punto) no puede llevar una cifra de los hechos que no esté también en la prensa (el «0-6 ante el PSG, según la
   // SER» es del medio y vale)
@@ -506,6 +537,14 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (SIN_RESPETO.test(t)) e.push(`falta al respeto a una persona («${t.match(SIN_RESPETO)[0]}»): cuenta lo que pasa sin insultar ni descalificar a nadie`);
   // una lesión, solo si los hechos la traen (en final, MVP y directo lo mira sucesosSinHechos, más abajo)
   if (!['final', 'mvp', 'directo'].includes(hechos.tipo) && LESION_DICE.test(tn) && !LESION_HAY.test(hn)) e.push('habla de una lesión y los hechos no traen ninguna');
+  // en un gol, el marcador después del gol y los puntos de quien marca, siempre (Carlos, 7 nov)
+  if (hechos.tipo === 'directo' && /^(gol|doblete|triplete)$/.test(String(hechos.subtipo || 'gol'))) {
+    const mar = String((hechos.partido || {}).marcadorEnEseMomento || '');
+    const [a, b] = mar.split('-');
+    if (a != null && b != null && !new RegExp(`(?<!\\d)${a}\\s?-\\s?${b}(?!\\d)`).test(t)) e.push(`falta el marcador después del gol (${mar})`);
+    const gol = (hechos.jugadores || []).find((j) => /^marca/.test(String(j.queLePasa || '')) && j.puntosFantasyAhora != null);
+    if (gol && !new RegExp(`(?<![\\d,])${Math.abs(Number(gol.puntosFantasyAhora))}(?![\\d,])`).test(t)) e.push(`faltan los puntos de ${gol.nombre} (${gol.puntosFantasyAhora}): en un gol van siempre`);
+  }
   // en juego, los puntos son de momento (M12)
   if (hechos.tipo === 'directo' && (hechos.partido || {}).estadoDelPartido === 'en juego' && /-?\d+\s*(?:puntos|pts)\b/i.test(t) && !PROVISIONAL.test(t)) e.push('con el partido en juego los puntos son de momento: dilo («de momento», «ya suma», «por ahora»)');
   // banderas (Carlos, 9 nov 10:13): solo en los tuits de selecciones, la de una selección de los hechos, justo detrás de su nombre y una
@@ -540,6 +579,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     }
   }
   if (em.filter((x) => EMOJIS_GUIA.has(x)).length > 1) e.push('más de un emoji de la guía (solo uno, al principio)');
+  // la política de emojis (22 nov, lib/emojis.mjs): el de arriba que toca o ninguno, ningún párrafo más con emoji delante y el tope
+  e.push(...erroresEmojis(t, hechos));
   if (hechos.sobrio && em.length) e.push('tono sobrio: sin emojis');
   // nada copiado: ni de las crónicas (6 palabras seguidas, como en tipos/noticias.mjs) ni de los ejemplos de la guía (8)
   for (const c of cronicas) { const g = trozoCopiado(t, `${c.titulo} ${c.entradilla}`, 6); if (g) e.push(`copia 6 palabras seguidas de ${c.medio} («${g}»): cuéntalo con tus palabras`); }
@@ -550,6 +591,10 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // 4 palabras (sin nombres ni cifras, con al menos dos palabras de verdad) que se repite en 2 o más de los recientes
   const mul = muletillas(recientes, nom).find((g) => gramas(esqueleto(t, nom), 5).has(g.esq));
   if (mul) e.push(`repite una muletilla que ya va en varios tuits recientes («${mul.txt}»): dilo de otra forma`);
+  for (const g of gastadasEn(recientes, delPartido)) if (g.re.test(t)) e.push(`${g.que} ya sale en los últimos tuits${g.partido ? ' o en el del mismo partido' : ''}: dilo de otra forma o quítalo`);
+  // no siempre por el nombre del jugador (22 nov: 13 de 14 goles empezaban por él)
+  if (recientes.length >= 2 && empiezaPorNombre(t, nom) && recientes.slice(-2).every((r) => empiezaPorNombre(r, nom))) e.push('los dos últimos tuits de este tipo ya empiezan por el nombre de un jugador: empieza por otra cosa (el equipo, el minuto, lo que supone)');
+  for (const r of delPartido) { const p = parecido(t, r, nom); if (p >= 0.3) { e.push(`se parece demasiado al tuit del mismo partido que ya ha salido (${Math.round(p * 100)} %): cuenta otra cosa`); break; } }
   for (const r of recientes) {
     if (entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
     const p = parecido(t, r, nom);
@@ -564,13 +609,14 @@ const ESQUEMA = { type: 'OBJECT', required: ['texto'], properties: { texto: { ty
 
 export const sistemaDe = (tipo) => `${GUIA}\n\nEJEMPLOS (jugadores inventados: sirven por la forma; no copies frases ni datos):\n\n${ejemplosPara(tipo)}`;
 
-export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '', gastadas = [] }) {
+export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '', gastadas = [], delPartido = [] }) {
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     // lo que más tumbaba los borradores en la prueba del 7 nov (19 previas): se recuerda justo antes de escribir
     (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); si un jugador trae «datoDestacado», ese es SU dato: cuéntalo con tus palabras y no le pongas además la media; ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
-    gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
+    delPartido.length ? `EL TUIT DEL MISMO PARTIDO QUE YA HA SALIDO (no repitas lo que cuenta ni cómo lo cuenta):\n${delPartido.map((r) => `"""${r}"""`).join('\n')}` : '',
+    gastadas.length ? `FRASES YA GASTADAS (salen en los últimos tuits; no las uses): ${gastadas.map((g) => (g.txt ? `«${g.txt}»` : g.que)).join(', ')}` : '',
     // (la regla, la misma que lee el revisor: lib/prensa.mjs, reglaPrensa; M12)
     cronicas.length ? `PRENSA DE ESTE PARTIDO (opcional). ${reglaPrensa(hechos.tipo)} Si usas algo, apunta en «cronicas» los números de las noticias que lo dicen${PRENSA_SIN_MEDIO.has(hechos.tipo) ? ' (mínimo dos)' : ''}:\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
     // los puntos del directo, de momento (M12)
@@ -580,6 +626,18 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
 }
 
 const nombresHechos = (h) => [...(h.jugadores || []).map((j) => norm(j.nombre)), ...Object.keys(h.clubes || {}).map(norm)];
+// el final y el MVP de un partido salen casi a la vez: cada uno ve el otro para no contar lo mismo (auditoría del 22 nov)
+const HERMANO = { final: 'mvp', mvp: 'final' };
+/** el tuit del otro tipo (final o MVP) del mismo partido publicado en las últimas 4 h, si lo hay: [texto] */
+export function mismoPartido(registro, tipo, hechos = {}, ahora = Date.now()) {
+  const h = HERMANO[tipo], p = hechos.partido || {};
+  if (!h || !p.local || !p.visitante) return [];
+  const nombres = (c) => [c, ...(((hechos.clubes || {})[c] || {}).nombres || [])].map((x) => norm(x).replace(/^(el|la) /, ''));
+  const sale = (txt, c) => nombres(c).some((n) => ` ${norm(txt)} `.includes(` ${n} `));
+  const r = ((registro && registro.datos && registro.datos.recientes) || {})[h] || [];
+  // (con uno de los dos clubes basta: un club no juega dos partidos en 4 h, y el final a veces solo dice «en Mestalla»)
+  return r.filter((x) => ahora - Date.parse(x.t) < 4 * 3600e3 && (sale(x.texto, p.local) || sale(x.texto, p.visitante))).map((x) => x.texto).slice(-1);
+}
 /** los últimos textos publicados de un tipo (registro.datos.recientes, sin la etiqueta) y los de esta misma ejecución */
 export function recientesDe(registro, tipo, n = 5) {
   const r = ((registro && registro.datos && registro.datos.recientes) || {})[tipo] || [];
@@ -623,6 +681,9 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   let hechos = 0;
   for (const t of xs) {
     conApodos(t.hechos);
+    // los emojis los decide el código (lib/emojis.mjs): el de arriba o ninguno, y los de club solo si van
+    conEmojis(t);
+    const delPartido = mismoPartido(registro, tipo, t.hechos, ahora);
     // un dato del jugador por tuit (dos en los largos), sin repetir el tipo de los últimos; la media, solo si no hay otro (9 nov)
     const datos = limitarDatos(t.hechos, { n: limite() > 280 ? 2 : 1 });
     if (datos.length) log(`  (datos) ${t.clave}: ${datos.map((d) => `${d.nombre}, ${d.que}`).join('; ')}`);
@@ -659,11 +720,11 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       // otro intento solo si el primero fue rápido (7 nov, el «baja» de Iker Luque: un fallo del validador en el directo tiraba el tuit a la plantilla)
       if (intento > 0 && cfg.reintentoSegundos && cfg.reintentoSegundos[tipo] != null && Date.now() - inicioTuit > cfg.reintentoSegundos[tipo] * 1000) { log(`  (redactar) ${t.clave}: el primer intento tardó demasiado para otro`); break; }
       const r = await pedir({ uso: 'redactar', tipo, registro, config, sistema, cache, esquema: ESQUEMA, log,
-        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (((cfg.segundosPorTipo || {})[tipo]) ?? cfg.segundos ?? 60) * 1000 });
+        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, delPartido, gastadas: [...muletillas(recientes, nombresHechos(t.hechos)), ...gastadasEn(recientes, delPartido)] }), tiempo: 40000, hasta: Date.now() + (((cfg.segundosPorTipo || {})[tipo]) ?? cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
-      const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+      const texto = ajustarArriba(String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(), t.hechos);
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
-      const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora });
+      const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora, delPartido });
       // final y MVP: lo que sale de la prensa tiene que decirlo al menos dos medios distintos (Carlos, 7 nov); sin dos, no vale como fuente
       if (PRENSA_SIN_MEDIO.has(tipo) && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado

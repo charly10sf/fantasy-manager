@@ -141,7 +141,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             conf[k] = { once, formacion: lin ? lin.formacion : `${cuenta('DEF')}-${cuenta('MED')}-${cuenta('DEL')}`, fuera, sorpresa };
           }
           // como los cuenta @JoseCarrasco_98 (guía de estilo del 3 nov): el partido arriba y una línea por cada sorpresa
-          const cab = `ℹ️ Onces confirmados del ${L}-${V}`;
+          const cab = `👀 Onces confirmados del ${L}-${V}`;
           const ideas = [];
           const nombres = (xs) => { const n = xs.slice(0, largo() ? 5 : 3).map((x) => x.nombre); return n.length > 1 ? `${n.slice(0, -1).join(', ')} y ${n[n.length - 1]}` : n[0]; };
           for (const [k, eq] of [['L', L], ['V', V]]) {
@@ -149,13 +149,15 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             if (c.fuera.length) ideas.push({ t: `❌ ${nombres(c.fuera)} ${c.fuera.length > 1 ? 'se quedan' : 'se queda'} fuera del once en ${el(eq)}`, prio: 9 });
             if (c.sorpresa.length) ideas.push({ t: `‼️ ${nombres(c.sorpresa)} ${c.sorpresa.length > 1 ? 'son titulares' : 'es titular'} en ${el(eq)}`, prio: 8 });
           }
-          if (!ideas.length) ideas.push(elegir(['✅ Sin sorpresas: salen los onces que se esperaban', '✅ Ni un cambio raro en los dos onces'], sem));
+          if (!ideas.length) ideas.push(elegir(['✅ Sin sorpresas: salen los onces que se esperaban', '✅ Ni un cambio raro en los dos onces', '✅ Los dos salen con lo previsto', '✅ Todo según lo esperado en los dos onces'], sem));
           // con tweets largos (X Premium): con qué dibujo sale cada uno y cuándo empieza
           const numConf = [];
           if (largo()) {
-            const c = cuando(m.date, ahora);
-            ideas.push({ t: `📋 ${mayus(el(L))} sale con ${conf.L.formacion} y ${el(V)} con ${conf.V.formacion}${c ? `. Empieza ${c.t}` : ''}`, prio: 2 });
-            numConf.push(...(conf.L.formacion.match(/\d/g) || []), ...(conf.V.formacion.match(/\d/g) || []), ...(c ? c.numeros : []));
+            // (22 nov) nunca la hora del reloj en los onces (Carlos, 7 nov: «en 1 h o así», y no siempre): «Empieza hoy a las 21:00» salió
+            // en las plantillas del Madrid-Celta y del Getafe-Atlético
+            const falta = Rp([faltaEnPalabras(Date.parse(m.date) - ahora), null], 'horaOncesP');
+            ideas.push({ t: `📋 ${mayus(el(L))} sale con un ${conf.L.formacion} y ${el(V)} con un ${conf.V.formacion}${falta ? `, y ${falta} echa a rodar el balón` : ''}`, prio: 2 });
+            numConf.push(...(conf.L.formacion.match(/\d/g) || []), ...(conf.V.formacion.match(/\d/g) || []));
           }
           const { usadas, texto } = tweet(cab, ideas);
           const fm = (f) => (f || '').match(/\d/g) || [];
