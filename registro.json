@@ -2577,7 +2577,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
@@ -9067,13 +9066,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5190,
+   "ok": 5191,
    "fallos": 0,
-   "ejecuciones": 4243,
+   "ejecuciones": 4244,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:31:12.756Z"
+   "ultima": "2026-11-22T12:36:11.458Z"
   }
  },
  "ptsDirecto": {
@@ -9193,15 +9192,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:31:19.019Z"
+   "ultimaBien": "2026-11-22T12:36:15.253Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:31:19.019Z"
+   "ultimaBien": "2026-11-22T12:36:15.253Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:31:19.019Z"
+   "ultimaBien": "2026-11-22T12:36:15.253Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9209,11 +9208,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:31:19.019Z"
+   "ultimaBien": "2026-11-22T12:36:15.253Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:31:19.019Z"
+   "ultimaBien": "2026-11-22T12:36:15.253Z"
   }
  },
  "avisos": [
