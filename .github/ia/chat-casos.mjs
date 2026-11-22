@@ -111,6 +111,8 @@ export const CASOS = [
   // (22 nov, Carlos) el dinero de un rival que tiene cerrado, preguntado de otras formas
   { id: 'dinero-pasta', tipo: 'cerrado', q: 'cuanta pasta le queda a {R2} para ficharme a alguien', debe: /candado|anuncio/, noDebe: /saldo (medio|alto|bajo)|tramo|«algo»|(mucha|poca|bastante|algo de) pasta|(mucho|poco|bastante|algo de) (dinero|saldo)|le (sobra|llega|da para)/ },
   { id: 'dinero-todos', tipo: 'cerrado', q: '¿Qué rival tiene más dinero ahora mismo?', debe: /candado|anuncio/, noDebe: /el que m[aá]s (dinero|saldo)? ?tiene es|tiene m[aá]s (dinero|saldo) (que|es)|(mucho|poco) dinero/ },
+  // (repaso de la 0.8s, 22 nov) de refilón: quién puede pagar una cláusula dice cuánto tienen
+  { id: 'dinero-refilon', tipo: 'cerrado', q: '¿Quién me puede pagar la cláusula de {MIO}?', debe: /candado|anuncio/, noDebe: /\b(te la|se la) (puede|pueden|podr[ií]a|podr[ií]an) pagar\b|\b(le|les) (llega|llegar[ií]a|da para|alcanza)\b|\b(puede|pueden|podr[ií]a|podr[ií]an) pag(ar|arla|ártela|artela)\b(?![^.]{0,40}(candado|anuncio))/ },
   { id: 'dinero-mas-que-yo', tipo: 'cerrado', q: '¿{R2} tiene más dinero que yo?', debe: /candado|anuncio/, noDebe: /\b(s[ií]|no), tiene (m[aá]s|menos)|tiene (m[aá]s|menos) (dinero|saldo) que t[uú]/ },
   // (22 nov, Fran) un rival pone a uno en el mercado a un precio irreal (200 M): no se contesta «al menos 200»
   { id: 'precio-irreal', tipo: 'irreal', prep: 'irreal', q: '¿Por cuánto debería comprarle a {IRREAL} a {RIRREAL}?', noDebe: /(al menos|como m[ií]nimo|m[ií]nimo|ofr[eé]cele|ofrecer|pagar|paga) (unos |los )?200([.,]0+)? ?(M\b|millones)/ },

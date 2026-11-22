@@ -2930,13 +2930,15 @@ export function sinNoLaVeo(texto, re = NO_LA_VEO) {
    ya no le llegaba a la IA (solo «mucho», «algo», «poco»), pero a la pregunta directa contestaba con eso mismo («tiene un
    saldo medio», «está en el tramo de algo»): es decirlo a medias. Ahora, si pregunta por el dinero de un rival que tiene
    cerrado, a la IA se le dice que no dé ni la categoría, y la app quita de la respuesta lo que hable de ese dinero. */
-const DINERO_RE = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco|caja|millones tiene|cuanto (dinero )?(tiene|tienen|le queda|les queda|maneja|manejan)|cuanto puede(n)? gastar|rico|ricos|pobre|pobres|forrad[oa]s?|tieso|tiesos)\b/;
+const DINERO_RE = /\bquien(es)? (me |te |le )?(puede|pueden|podria|podrian) (pagar|clausular)\w*|\b(dinero|saldo|pasta|presupuesto|liquidez|banco|caja|millones tiene|cuanto (dinero )?(tiene|tienen|le queda|les queda|maneja|manejan)|cuanto puede(n)? gastar|rico|ricos|pobre|pobres|forrad[oa]s?|tieso|tiesos)\b/;
 /** los rivales por cuyo dinero pregunta y que tiene cerrado: [{ tid, nombre }] (vacío si no pregunta por eso) */
 export const dineroCerradoDe = (pregunta, D, M, antes = '') => dineroPreguntado(pregunta, D, M, antes).cerrados;
 /** { cerrados, abiertos }: los rivales por cuyo dinero pregunta, según lo tenga cerrado o abierto (viendo sus anuncios) */
 export function dineroPreguntado(pregunta, D, M, antes = '') {
   const q = norm(pregunta || '');
   if (!q || !DINERO_RE.test(q) || !bloqueada('dineroRivales')) return { cerrados: [], abiertos: [] };
+  // (repaso de la 0.8s) «¿quién me puede pagar la cláusula de X?» es preguntar por su dinero, salvo que tenga abierto quién paga
+  if (/\bquien(es)? (me |te |le )?(puede|pueden|podria|podrian) (pagar|clausular)/.test(q) && !/\b(dinero|saldo|pasta)\b/.test(q) && !bloqueada('quienPaga')) return { cerrados: [], abiertos: [] };
   const yo = D.yo && D.yo.teamId;
   let tids = [...rivalesEn(pregunta, D, M)];
   if (!tids.length) tids = [...rivalesAprox(pregunta, D, M)];
@@ -2952,7 +2954,7 @@ const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
 const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
 const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;
 // (repaso de la 0.8s) lo que lo cuenta sin decir «dinero»: «ha gastado 34 M, así que no le sobra tanto como para pujar fuerte»
-const SOBRA_DINERO = /\b(no )?le (sobra|sobran|alcanza|da para|queda (poco|mucho|bastante))\b|\b(anda|va|esta|ira) (justo|justito|apretado|corto|tieso|sobrado|forrado|pelado)\b|\b(no )?puede (pujar|gastar|pagar|fichar) (fuerte|mucho|poco|lo que quiera)\b/;
+const SOBRA_DINERO = /\btienen? (el )?(dinero|saldo|pasta) (para|suficiente)\b|\b(nadie|ningun rival|ninguno)\b[^.]{0,40}\b(dinero|saldo|pasta)\b|\b(no )?le (sobra|sobran|alcanza|da para|queda (poco|mucho|bastante))\b|\b(anda|va|esta|ira) (justo|justito|apretado|corto|tieso|sobrado|forrado|pelado)\b|\b(no )?puede (pujar|gastar|pagar|fichar) (fuerte|mucho|poco|lo que quiera)\b/;
 /**
  * Quita de una respuesta las frases que cuentan el dinero de un rival que tiene cerrado (cifra o «mucho/algo/poco»), cuando
  * preguntaba por eso. Devuelve { texto, quitadas }. Si no queda nada que diga cómo se abre, lo añade.

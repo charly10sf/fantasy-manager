@@ -34,7 +34,9 @@ const r = await P.page.evaluate(async () => {
   const lineas = datos.split('\n').filter((l) => /^- \d+º \| /.test(l));
   out.a = { rivales: lineas.length, sinCifra: lineas.every((l) => /dinero: [^|]*sin cifra\)|dinero: no se sabe/.test(l) && !/dinero (≈ )?\d/.test(l)), orden: /PREGUNTA POR EL DINERO DE [^\n]* Y LO TIENE CERRADO/.test(datos),
     de: I.dineroCerradoDe(q, D, M).map((x) => x.nombre).join(), todos: I.dineroCerradoDe('¿Qué rival tiene más dinero?', D, M).length, pasta: I.dineroCerradoDe(`cuanta pasta le queda a ${r2.e.manager.toLowerCase()}`, D, M).length,
-    sigue: I.dineroCerradoDe('¿Y cuánto dinero tiene?', D, M, `¿Qué le ficho a ${r2.e.manager}?`).length };
+    sigue: I.dineroCerradoDe('¿Y cuánto dinero tiene?', D, M, `¿Qué le ficho a ${r2.e.manager}?`).length,
+    // (repaso de la 0.8s) de refilón: quién puede pagar una cláusula es preguntar por el dinero de todos
+    refilon: I.dineroCerradoDe(`¿Quién me puede pagar la cláusula de ${M.mias[0].j.nombre}?`, D, M).length, nadaMio: I.dineroCerradoDe('¿Cuánto dinero tengo?', D, M).length };
   // (b) las respuestas de verdad
   const cer = I.dineroCerradoDe(q, D, M);
   const casos = [
@@ -44,8 +46,9 @@ const r = await P.page.evaluate(async () => {
     `Ese dato se abre tocando su candado y viendo un anuncio corto. Esta semana ha fichado a dos jugadores.`,
     // (repaso de la 0.8s, batería del 22 nov) sin decir «dinero»: lo que ha gastado y, de ahí, que no le sobra
     `Eso lo tienes cerrado en tu cuenta. Lo que sí te digo: ha gastado 34,61 M esta semana, así que no le sobra tanto como para pujar fuerte por los libres de hoy.`,
+    `Ahora mismo nadie: está protegida hasta el viernes. Después tampoco corre peligro, porque está un 54 % por encima de su valor; ningún rival tiene dinero para pagar algo así.`,
   ];
-  const FUGA = /saldo medio|tramo|«algo»|45 M|más que tú|margen para|apretarse|por debajo de los que|no le sobra/;
+  const FUGA = /saldo medio|tramo|«algo»|45 M|más que tú|margen para|apretarse|por debajo de los que|no le sobra|tiene dinero para/;
   out.b = casos.map((t) => { const x = I.sinDineroCerrado(t, cer); return { fuga: FUGA.test(x.texto), candado: /candado|anuncio/.test(x.texto), q: x.quitadas, t: x.texto }; });
   // (e) lo que no es eso
   out.e = { mio: I.dineroCerradoDe('¿Cuánto saldo tengo?', D, M).length, peligro: I.dineroCerradoDe('¿Qué rival es el más peligroso?', D, M).length, jug: I.dineroCerradoDe(`¿Cuánto vale ${M.mias[0].j.nombre}?`, D, M).length };
@@ -71,6 +74,7 @@ R2 = r.r2;
 ok(r.cerrado, 'la escena: el dinero de los rivales está cerrado en la liga de ejemplo');
 ok(r.a.rivales >= 5 && r.a.sinCifra, `(a) a la IA no le llega ninguna cifra del dinero de los ${r.a.rivales} rivales`);
 ok(r.a.orden && r.a.de === r.r2 && r.a.todos >= 5 && r.a.pasta === 1 && r.a.sigue === 1, `(a) «¿Cuánto dinero tiene ${r.r2}?», «cuánta pasta le queda», «¿y cuánto dinero tiene?» y «¿qué rival tiene más?»: a la IA se le dice que no cuente ni la categoría`);
+ok(r.a.refilon === r.a.todos && r.a.refilon > 0 && r.a.nadaMio === 0, `(a) «¿quién me puede pagar la cláusula de X?» cuenta como preguntar por el dinero de todos (${r.a.refilon}); «¿cuánto dinero tengo?», no`);
 ok(r.b.every((x) => !x.fuga && x.candado), `(b) de las respuestas de verdad se quita lo que cuenta su dinero y queda cómo se abre (${r.b.map((x) => x.q).join(', ')} frases quitadas)`);
 ok(r.b[3].q === 0, '(b) una respuesta que ya lo hace bien no se toca');
 ok(!r.c.fuga && r.c.candado && r.c.resto, `(c) por el chat, con una IA que lo suelta: «${r.c.t}»`);
