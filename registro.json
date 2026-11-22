@@ -4478,7 +4478,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136630245": 1795104774000,
    "SPORT|136635705": 1795110618000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
@@ -9312,13 +9311,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5269,
+   "ok": 5271,
    "fallos": 0,
-   "ejecuciones": 4287,
+   "ejecuciones": 4288,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:11:11.498Z"
+   "ultima": "2026-11-22T16:16:11.579Z"
   }
  },
  "ptsDirecto": {
@@ -9504,27 +9503,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:11:16.575Z"
+   "ultimaBien": "2026-11-22T16:16:14.791Z"
   }
  },
  "avisos": [
