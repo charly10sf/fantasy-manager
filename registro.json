@@ -1674,6 +1674,13 @@
     "clase": "mercado",
     "chollo": "680"
    }
+  },
+  {
+   "clave": "novedades|2206:sancion|2026-11-22",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2124413076325965922",
+   "t": "2026-11-22T08:02:02.081Z"
   }
  ],
  "estados": {
@@ -1758,7 +1765,7 @@
   "2078": "ok",
   "2146": "injured",
   "2178": "injured",
-  "2206": "ok",
+  "2206": "suspended",
   "2217": "ok",
   "2293": "out_of_league",
   "2294": "ok",
@@ -2485,12 +2492,12 @@
   "3235": "ok",
   "3236": "ok",
   "3237": "ok",
-  "3238": "injured",
+  "3238": "ok",
   "3239": "ok",
   "3240": "ok",
   "3241": "out_of_league",
   "3242": "ok",
-  "3243": "ok",
+  "3243": "injured",
   "3244": "ok",
   "3245": "out_of_league",
   "3246": "ok",
@@ -2560,22 +2567,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2206",
+   "que": "sancion",
+   "antes": "ok",
+   "t": 1795334473576
+  }
+ ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/la-feliz-contrarreloj-de-parrott-f202611-n/": 1795040843000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261119/1004252779/foco-kounde-cuenta-volver.html": 1795062900000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252782/portada-md-bizkaia-araba-hoy-jueves.html": 1795043100000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261118/1004252774/oportunidad-tsitaishvili-afianzarse-rayo.html": 1795040080000,
-   "SPORT|136571233": 1795064444000,
-   "SPORT|136601542": 1795060876000,
-   "El Correo|https://www.elcorreo.com/athletic/sancet-busca-recuperar-terreno-perdido-tras-ultima-20261118003750-nt.html": 1795045071000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/horario-ver-derbi-sevilla-fc-real-betis-balompie_0_2008538061.html": 1795068082000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-sevilla-derbi_0_2008537705.html": 1795067993000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252755/laporte-queda-peligro.html": 1795071900000,
-   "MARCA|https://www.marca.com/radio/2026/11/19/roberto-gomez-esto-vender-vinicius-mercado-invierno-me-parece-alucinante.html": 1795073458000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html": 1795074856000,
-   "SPORT|136595275": 1795073918000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
@@ -2784,23 +2785,19 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000,
    "SPORT|136707103": 1795288603000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000,
-   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000,
+   "AS|https://as.com/futbol/primera/vivian-entre-el-cielo-y-el-infierno-f202611-n/": 1795306668000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253882/autoinculpacion.html": 1795327200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253750/dani-olmo-vuelve-magia-rotacion-perfecta.html": 1795325400000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261122/1004253973/titular-previas-primera-federacion-g2.html": 1795307700000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253851/cambios-medita-flick-villarreal-once.html": 1795302300000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253893/espi-acude-vez-rescate-madrid.html": 1795298896000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261121/1004253880/luis-garcia-alguien-merecido-ganar-sido-sevilla.html": 1795296957000,
+   "SPORT|136710483": 1795299986000,
+   "SPORT|136710095": 1795298512000,
+   "Superdeporte|https://www.superdeporte.es/futbol/futbol-valenciano/cd-castellon/2026/11/21/cd-castelllon-pablo-hernandez-lleva-136709318.html": 1795299715000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004252824/cucho-apunta-derbi-deja-decision-manos-pellegrini.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795074856000,
-    "id": "2217",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cucho vuelve a entrenar con el grupo del Betis",
-    "motivo": "lesión sufrida ante el FC Barcelona",
-    "plazo": "",
-    "nums": [
-     17
-    ]
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html",
     "medio": "Diario de Sevilla",
@@ -3596,11 +3593,40 @@
     "motivo": "lesión en el derbi",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253750/dani-olmo-vuelve-magia-rotacion-perfecta.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795325400000,
+    "id": "3092",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Olmo vuelve tras su lesión en el aductor izquierdo",
+    "motivo": "lesión en el aductor izquierdo",
+    "plazo": "",
+    "nums": [
+     4,
+     2,
+     20,
+     28
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253851/cambios-medita-flick-villarreal-once.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795302300000,
+    "id": "2355",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Kounde se recupera y vuelve para recibir al Villarreal",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-21",
-   "n": 45
+   "dia": "2026-11-22",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3740,8 +3766,8 @@
     "t": 0
    },
    "2206": {
-    "e": "ok",
-    "t": 0
+    "e": "suspended",
+    "t": 1795334473576
    },
    "2217": {
     "e": "ok",
@@ -4505,17 +4531,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 1,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 2,
+   "redactar": 4,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 18312,
-  "salida": 332,
-  "cacheLee": 0,
-  "cacheEscribe": 2903,
-  "dolares": 0.042927,
+  "entrada": 64242,
+  "salida": 4689,
+  "cacheLee": 2903,
+  "cacheEscribe": 5806,
+  "dolares": 0.143475,
   "reservado": 0
  },
  "recientes": {
@@ -4675,10 +4701,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T12:06:32.278Z",
-    "texto": "✅ Zaid Romero vuelve a estar disponible: la duda queda despejada y el defensa del Getafe llega con un 70 % de titularidad, así que lo normal es verlo en el once.\n\nLo malo es el partido. El domingo a las 21:00 en el Coliseum recibe al Atlético, que va 3º y es de los que más marcan, algo que a un defensa le viene mal.\n\nOjo también a lo que vale: 14,8 M, tras perder 15,2 M en el último mes."
-   },
-   {
     "t": "2026-11-20T12:26:33.653Z",
     "texto": "✅ Paredes vuelve a estar disponible: las molestias que arrastraba desde el 4 de noviembre quedan atrás.\n\nEl defensa del Athletic 🦁 llega en racha: 24 puntos en las tres últimas jornadas. Hoy a las 21:00 recibe en San Mamés al Espanyol, que va 13º, un partido asequible. Con un 48 % de titularidad, no tiene el puesto asegurado, así que ojo a los onces."
    },
@@ -4693,6 +4715,10 @@
    {
     "t": "2026-11-21T12:56:36.954Z",
     "texto": "✅ Aubameyang llega a tiempo: la duda se despeja y el delantero del Dépor puede jugar hoy a las 14:00.\n\nCon un 88 % de titularidad, lo normal es verlo en el once. Visita Mendizorroza, donde el Alavés, que va 13º, pone un partido asequible para un delantero. Y si lo tienes, ya sabes de lo que es capaz: en la jornada 4 se fue hasta los 17 puntos."
+   },
+   {
+    "t": "2026-11-22T08:02:02.084Z",
+    "texto": "❌ Yoel Lago no estará en el Celta-Villarreal 🚢 del domingo 29 de noviembre: llegó a 5 amarillas en la jornada 13 y se queda sancionado.\n\nEl central llevaba 5 porterías a cero en 11 partidos, así que quien lo tenga se queda sin esa opción de puntos en la zaga. Queda tiempo de sobra para buscar recambio."
    }
   ],
   "resumen": [
@@ -9148,13 +9174,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5134,
+   "ok": 5135,
    "fallos": 0,
-   "ejecuciones": 4187,
+   "ejecuciones": 4188,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T07:56:16.674Z"
+   "ultima": "2026-11-22T08:01:13.576Z"
   }
  },
  "ptsDirecto": {
@@ -9274,15 +9300,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:56:24.501Z"
+   "ultimaBien": "2026-11-22T08:02:17.248Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:56:24.501Z"
+   "ultimaBien": "2026-11-22T08:02:17.248Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:56:24.501Z"
+   "ultimaBien": "2026-11-22T08:02:17.248Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9290,11 +9316,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T07:56:24.501Z"
+   "ultimaBien": "2026-11-22T08:02:17.248Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-21T21:56:22.113Z"
+   "ultimaBien": "2026-11-22T08:02:17.248Z"
   }
  },
  "avisos": [
