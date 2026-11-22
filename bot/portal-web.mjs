@@ -94,7 +94,7 @@ if (arg('onces') === '1') {
     if (a) { estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [o.J]: a }; log(`Acierto de la J${o.J} hasta ahora: ${a.ok} de ${a.n}`); }
     guardarOnces(o);
     const pv = paginas().find((p) => p.grupo === 'jornadas' && p.jornada === o.J);
-    escribirPagina(metasOnces(o.J), contenidoOnces(o, { rutas: rutasDe(estado.fichas), previa: pv ? pv.ruta : null, aciertos: estado.oncesAcierto || {} }));
+    escribirPagina(metasOnces(o.J), contenidoOnces(o, { rutas: rutasDe(estado.fichas), previa: pv ? pv.ruta : null, aciertos: estado.oncesAcierto || {}, jugadores }));
     writeFileSync(fEstado, JSON.stringify(estado, null, 1) + '\n');
     execFileSync('python3', [path.join(RAIZ, '.github', 'paginas.py')], { stdio: 'inherit' });
   }
@@ -197,7 +197,7 @@ if (tocaMercado) {
             if (H.onces.equipos.length) {
               guardarOnces(H.onces);
               if (oncesPrevio && oncesPrevio.J === hm.proxima.jornada - 1) { const a = aciertoDe(oncesPrevio); if (a) estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [oncesPrevio.J]: a }; }
-              escribirPagina(metasOnces(H.onces.J), contenidoOnces(H.onces, { rutas: H.rutas, previa: H.previa && H.previa.jornada === H.onces.J ? H.previa.ruta : null, aciertos: estado.oncesAcierto || {} }));
+              escribirPagina(metasOnces(H.onces.J), contenidoOnces(H.onces, { rutas: H.rutas, previa: H.previa && H.previa.jornada === H.onces.J ? H.previa.ruta : null, aciertos: estado.oncesAcierto || {}, jugadores }));
               log(`Onces: ${H.onces.equipos.length} equipos de la J${H.onces.J}, ${H.onces.equipos.reduce((s2, y) => s2 + y.dudas.length, 0)} dudas`);
             }
           } catch (err) { log(`::warning::Onces sin hacer: ${err.stack || err.message}`); }

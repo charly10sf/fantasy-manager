@@ -98,6 +98,16 @@ assert.match(html, /95<small> %<\/small>/);
   assert.equal((bf.match(/<img /g) || []).length, 11 + yy.suplentes.length, 'una cara por jugador, también los suplentes');
   assert.equal((bf.match(/class="tp (bien|duda|mal)"/g) || []).length, 11 + yy.suplentes.length);
   assert.match(bf, /class="banq banq-c"/);
+  // en la página de los 20, con la lista de jugadores de LaLiga: la cara encima del % también ahí (Carlos, 22 nov)
+  const ids = [...yy.once, ...yy.suplentes].map((x) => x.id);
+  const hc = contenidoOnces(o, { jugadores: ids.map((id) => ({ id, image: 'https://assets-fantasy.llt-services.com/players/t1/p1/256x256/p1_t1_1_001_000.png' })) });
+  const cc = hc.match(/<div class="campo campo-o".*?<\/div><\/div><\/div>/s)[0];
+  assert.equal((cc.match(/<img /g) || []).length, 11, 'los once, con su cara');
+  assert.equal((cc.match(/class="tp (bien|duda|mal)"/g) || []).length, 11, 'y el % debajo de cada cara');
+  assert.doesNotMatch(cc, /oj-c/, 'sin círculos cuando hay cara');
+  assert.ok(cc.indexOf('<img ') < cc.indexOf('class="tp '), 'la cara, encima del %');
+  assert.match(hc, /class="banq banq-c"/);
+  assert.ok(/loading="lazy"/.test(cc), 'las caras no se piden hasta que se ven');
   // con el once confirmado no hay % ni suplentes
   const bc = bloqueFicha({ ...yy, confirmado: yy.once.map(({ id, nombre, pos }) => ({ id, nombre, pos })) }, 13, { jug });
   assert.match(bc, /El once confirmado/);

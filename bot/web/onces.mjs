@@ -214,15 +214,16 @@ export function textoEquipo(y, J) {
 /**
  * El once en su campo (rework de la web; Carlos, 21 nov: «que salga en alineación, no en una lista con letras»): los delanteros
  * arriba y el portero abajo, cada uno con su nombre (enlazado a su ficha) y su % de titular; el que LaLiga da en duda, marcado.
- * Con `jug(id)` (la ficha de un equipo, que ya trae las caras de su plantilla) va la foto de cada uno; sin él (jornada/onces.html,
- * con los 20 equipos: 220 fotos serían 16 MB sin JS), un círculo con el % dentro y el aro del color de su puesto.
+ * Con `jug(id)` va la cara de cada uno y el % debajo (Carlos, 22 nov: «la cara de los jugadores siempre encima del porcentaje»):
+ * en la ficha de un equipo y, desde entonces, también en jornada/onces.html (las fotos son `loading="lazy"`: con JS solo se piden
+ * las que se ven). De quien no hay cara (o sin `jug`), un círculo con el % dentro.
  */
 function campoOnce(xs, { ruta = null, conP = true, jug = null, formacion = '' } = {}) {
   const uno = (x) => {
     const p = conP && x.p != null ? x.p : null;
     const j = jug ? jug(x.id) : null;
-    const arriba = j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'm') : `<i class="oj-c${p != null ? ` ${nivelP(p)}` : ''}">${p != null ? `${p}<small> %</small>` : e(String(x.nombre || '?').trim().charAt(0).toUpperCase())}</i>`;
-    const abajo = [j && p != null ? `<span class="tp ${nivelP(p)}">${p} %</span>` : '', x.duda ? '<span class="oj-d">duda</span>' : ''].join('');
+    const arriba = j && j.caraUrl ? cara({ nombre: x.nombre, ...j, escudoUrl: null, pos: x.pos }, 'm') : `<i class="oj-c${p != null ? ` ${nivelP(p)}` : ''}">${p != null ? `${p}<small> %</small>` : e(String(x.nombre || '?').trim().charAt(0).toUpperCase())}</i>`;
+    const abajo = [j && j.caraUrl && p != null ? `<span class="tp ${nivelP(p)}">${p} %</span>` : '', x.duda ? '<span class="oj-d">duda</span>' : ''].join('');
     return `<div class="cj oj${x.duda ? ' oj-duda' : ''}">${arriba}<b>${nombreDe(x, ruta)}</b>${abajo ? `<span>${abajo}</span>` : ''}</div>`;
   };
   const lineas = [4, 3, 2, 1].map((p) => xs.filter((x) => x.pos === p)).filter((l) => l.length);
@@ -232,26 +233,25 @@ function campoOnce(xs, { ruta = null, conP = true, jug = null, formacion = '' } 
 
 /**
  * Debajo del campo, los suplentes con su % de titular (Carlos, 22 nov), del más probable al menos y con el color de la app. Con
- * `jug(id)` (ficha de equipo), con su cara; sin él (los 20 equipos), solo el nombre y el %. Con el once confirmado no salen: el
- * % era el de antes de saberse.
+ * `jug(id)`, con su cara encima; sin él, solo el nombre y el %. Con el once confirmado no salen: el % era el de antes de saberse.
  */
 function banquillo(xs, { ruta = null, jug = null } = {}) {
   if (!xs || !xs.length) return '';
   const uno = (x) => {
     const j = jug ? jug(x.id) : null;
-    return `<div class="bj">${j ? cara({ ...j, escudoUrl: null, pos: x.pos }, 'p') : ''}<b>${nombreDe(x, ruta)}</b><span class="tp ${nivelP(x.p)}">${x.p} %</span></div>`;
+    return `<div class="bj">${j && j.caraUrl ? cara({ nombre: x.nombre, ...j, escudoUrl: null, pos: x.pos }, 'p') : ''}<b>${nombreDe(x, ruta)}</b><span class="tp ${nivelP(x.p)}">${x.p} %</span></div>`;
   };
   return `\n  <div class="banq${jug ? ' banq-c' : ''}" role="group" aria-label="Suplentes"><p class="banq-t">Suplentes</p><div class="banq-l">${xs.map(uno).join('')}</div></div>`;
 }
 
 /** el once de un equipo en HTML: el campo, el texto y quién no está */
-function bloqueEquipo(y, J, { ruta = null, rutaEquipo = null, nivel = 'h3' } = {}) {
+function bloqueEquipo(y, J, { ruta = null, rutaEquipo = null, nivel = 'h3', jug = null } = {}) {
   const o = [];
   const tit = `${escudo(y.escudoUrl, y.nombre, 28)} ${rutaEquipo && rutaEquipo(y.id) ? `<a href="${e(rutaEquipo(y.id))}">${e(y.nombre)}</a>` : e(y.nombre)}`;
   o.push(`  <${nivel} id="${e(y.slug)}">${tit}</${nivel}>`);
   const conf = y.confirmado;
   o.push(`  <p class="peq">${conf ? 'Once confirmado' : `Probable, ${e(y.formacion)}`} · ${y.casa ? 'en casa contra' : 'fuera, contra'} ${e(el(y.rival))}</p>`);
-  o.push(conf ? campoOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false }) : campoOnce(y.once, { ruta, formacion: y.formacion }) + banquillo(y.suplentes, { ruta }));
+  o.push(conf ? campoOnce(conf.map((z) => ({ ...z, p: null })), { ruta, conP: false, jug }) : campoOnce(y.once, { ruta, jug, formacion: y.formacion }) + banquillo(y.suplentes, { ruta, jug }));
   const t = textoEquipo(y, J);
   if (t.length) o.push(`  <p>${e(t.join(' '))}</p>`);
   if (!conf && y.fuera.length) o.push(`  <p class="peq">No juegan: ${y.fuera.map((x) => `${nombreDe(x, ruta)} (${e(x.estado)}${x.lesion ? `, ${e(x.lesion.toLowerCase())}` : ''})`).join(', ')}.</p>`);
@@ -259,7 +259,10 @@ function bloqueEquipo(y, J, { ruta = null, rutaEquipo = null, nivel = 'h3' } = {
 }
 
 /** jornada/onces.html */
-export function contenidoOnces(o, { rutas = null, previa = null, aciertos = {} } = {}) {
+export function contenidoOnces(o, { rutas = null, previa = null, aciertos = {}, jugadores = null } = {}) {
+  // las caras: de la lista de jugadores de LaLiga (la misma `image` que usan las fichas)
+  const caras = jugadores ? new Map(jugadores.map((j) => [String(j.id), j.image || null])) : null;
+  const jug = caras ? (id) => (caras.get(String(id)) ? { caraUrl: caras.get(String(id)) } : null) : null;
   const J = o.J;
   const ruta = rutas ? (id) => (rutas.jugador(id) ? `../${rutas.jugador(id)}` : null) : null;
   const rutaEquipo = rutas ? (id) => (rutas.equipo(id) ? `../${rutas.equipo(id)}` : null) : null;
@@ -286,7 +289,7 @@ export function contenidoOnces(o, { rutas = null, previa = null, aciertos = {} }
     const z = o.equipos.find((w) => w.id === y.rivalId);
     const [L, V] = y.casa || !z ? [y, z] : [z, y];
     vistos.add(y.id); if (z) vistos.add(z.id);
-    const cuerpo = [L, V].filter(Boolean).map((q) => bloqueEquipo(q, J, { ruta, rutaEquipo })).join('\n');
+    const cuerpo = [L, V].filter(Boolean).map((q) => bloqueEquipo(q, J, { ruta, rutaEquipo, jug })).join('\n');
     out.push(bloque(`${L.nombre}-${V ? V.nombre : L.rival}`, `  <p class="peq">${e(diaCorto(y.t))}, ${e(hora(y.t))}</p>\n${cuerpo}`, { id: `p-${L.slug}` }));
   }
   out.push(`\n  <p class="peq">El porcentaje y cómo elegimos la formación, en <a href="../metodo.html#onces">el método</a>. ${previa ? `Cláusulas, chollos y bajas de esta jornada, en <a href="../${e(previa)}">la previa</a>; ` : ''}las bajas de todos, con su parte, en <a href="../bajas/">las bajas de la jornada</a>.</p>`);
