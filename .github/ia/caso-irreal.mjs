@@ -43,7 +43,12 @@ const r = await P.page.evaluate(async () => {
   const noVe = `No veo esa oferta en los datos de la app, así que no te la puedo confirmar. ${mio.nombre} vale ${U.eur(mio.valor)} y sube; con 30 M te pagan de más y yo aceptaría si no lo necesitas en el once.`;
   const oferta = { cuenta: [qo, 'Fran me ha dicho por WhatsApp que me da 20 M por Rodri', 'LaLiga me da 12 M por él, ¿lo vendo?', 'tengo una oferta de 9 M'].map((q) => I.cuentaOferta(q)).join(), noCuenta: ['¿Qué me ofrecen por Rodri?', '¿Cuánto me dan por él?', '¿Vendo a Rodri?', 'Voy a ofrecer 10 M por Pepe'].map((q) => I.cuentaOferta(q)).join(),
     orden: /TE CUENTA UNA OFERTA O UN TRATO QUE LE HAN HECHO: es un HECHO/.test(I.datosChat(qo, D, M, c, {})), sinOrden: !/TE CUENTA UNA OFERTA/.test(I.datosChat('¿Vendo a Rodri?', D, M, c, {})),
-    limpia: I.sinNoLaVeo(noVe), intacta: I.sinNoLaVeo('Acéptala: te pagan 4 M más de lo que vale.').quitadas, sola: I.sinNoLaVeo('No veo esa oferta en la app.').quitadas };
+    limpia: I.sinNoLaVeo(noVe), intacta: I.sinNoLaVeo('Acéptala: te pagan 4 M más de lo que vale.').quitadas, sola: I.sinNoLaVeo('No veo esa oferta en la app.').quitadas,
+    // (repaso de la 0.8s) «LaLiga me da 12 M por X»: los datos dicen que ya la tiene, y «llega mañana» se quita
+    ql: `LaLiga me da 12 M por ${mio.nombre}, ¿lo vendo o aguanto?`,
+    yaL: I.laligaYaDa(`LaLiga me da 12 M por ${mio.nombre}, ¿lo vendo o aguanto?`) && !I.laligaYaDa(`¿Qué me da LaLiga por ${mio.nombre}?`) && !I.laligaYaDa(`Fran me da 20 M por ${mio.nombre}`),
+    datosL: I.datosChat(`LaLiga me da 12 M por ${mio.nombre}, ¿lo vendo o aguanto?`, D, M, c, {}),
+    manana: I.sinLlegaManana(`Aguántalo por ahora. Los 12 M que te ofrece LaLiga aún no son dinero: su oferta real llega en el cambio de mercado de mañana. Si no la coges, mañana te hará otra parecida.`) };
   // (22 nov, Carlos) la ficha y la lista del mercado: ni rastro de los 200 M
   window.__fmRehacer();
   await new Promise((r) => setTimeout(r, 400));
@@ -67,6 +72,8 @@ ok(!r.caro && !r.txt200, '(d) ni el plan, ni Hoy, ni la lista del mercado llevan
 ok(/Lo vende/.test(r.hoja) && !/200[.,]00\s?M|Pide/.test(r.hoja) && /ofrécele|desde su valor|no te lo venda/.test(r.hoja), `(d) su ficha: «Lo vende…», sin lo que pide${/Lo vende/.test(r.hoja) ? '' : ` — ${r.hoja.slice(0, 200).replace(/\n/g, ' ')}`}`);
 ok(r.oferta.cuenta === 'true,true,true,true' && r.oferta.noCuenta === 'false,false,false,false' && r.oferta.orden && r.oferta.sinOrden, '(e) «me ofrecen…», «me ha dicho que me da…», «LaLiga me da…»: a la IA se le dice que es un hecho; una pregunta no lo es');
 ok(r.oferta.limpia.quitadas === 1 && !/No veo esa oferta/.test(r.oferta.limpia.texto) && /yo aceptaría/.test(r.oferta.limpia.texto) && r.oferta.intacta === 0 && r.oferta.sola === 0, '(e) si contesta «no veo esa oferta en la app», esa frase se quita y el resto se queda (y nunca se deja la respuesta vacía)');
+ok(r.oferta.yaL && /ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE/.test(r.oferta.datosL) && !/su oferta llega en el siguiente cambio/.test(r.oferta.datosL.split('ÉL DICE QUE YA LE OFRECE')[1] ? r.oferta.datosL.slice(r.oferta.datosL.indexOf('ÉL DICE'), r.oferta.datosL.indexOf('ÉL DICE') + 300) : 'su oferta llega en el siguiente cambio'), '(f) «LaLiga me da 12 M por X»: los datos le dicen a la IA que la oferta ya está hecha, no que llega mañana');
+ok(r.oferta.manana.quitadas === 1 && /Si no la coges, mañana te hará otra/.test(r.oferta.manana.texto) && !/llega en el cambio/.test(r.oferta.manana.texto), `(f) si contesta que la oferta de LaLiga llega mañana, esa frase se quita y «mañana te hará otra» se queda: ${r.oferta.manana.texto}`);
 ok(!P.errores.length, `sin errores en la página${P.errores.length ? `: ${P.errores[0]}` : ''}`);
 await P.cerrar();
 await cerrar();

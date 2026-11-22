@@ -2854,14 +2854,22 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
    que me ofrece esto!» Lo que se habla por WhatsApp o de palabra no sale en LaLiga: si el mánager cuenta que le ofrecen
    algo, es un hecho. A la IA se le dice que la valore con sus cifras, y si aun así contesta que no la ve, esa frase se quita. */
 const OFERTA_DICHA = /\bme (ofrece|ofrecen|ha ofrecido|han ofrecido|ofrecio|ofrecieron|da|dan|daria|darian|paga|pagan|pagaria|propone|proponen|ha propuesto|han propuesto|quiere dar|quieren dar|quiere comprar|quieren comprar|compra|compran)\b|\b(tengo|me ha llegado|me llega|me ha hecho|me han hecho|me hace) (una |la )?(oferta|propuesta)\b|\bme ha dicho que me (da|paga|ofrece|compra)\b/;
+/* (repaso de la 0.8s, 22 nov) «LaLiga me da 15 M por X»: si LaLiga YA le da una cifra, el jugador ya está en venta aunque los
+   datos aún no lo traigan, y esa oferta está hecha. Los datos de vender o quedárselo decían «su oferta llega en el siguiente
+   cambio de mercado» y en 1 o 2 de cada 4 respuestas la IA contestaba que la oferta llegaba mañana o que la pusiera a la
+   venta. Ahora esa línea dice que ya la tiene (`ventasMiasTxt`, `laligaYa`) y la app quita de la respuesta lo que lo niegue. */
+export const laligaYaDa = (pregunta) => { const q = norm(pregunta || ''); return /\b(laliga|la liga)\b/.test(q) && /\b(me|le) (da|dan|ofrece|ofrecen|paga|pagan|ha ofrecido|ofrecio|esta dando|esta ofreciendo)\b/.test(q) && /\d/.test(q) && !/^(que|cuanto) me (da|ofrece)\b/.test(q); };
+const LLEGA_MANANA = /\b(aun|todavia) no (es|son) (dinero|una oferta|real)\b|\b(su|la|esa) oferta (real |de laliga |buena )?(llega|llegara|te llega|te llegara|no llega|vendra|sale)\b|\bponlo (ya |hoy )?(a|en) (la )?venta\b|\b(si|cuando) (lo )?pones? (ya |hoy )?(a|en) (la )?venta\b|\bsi (esos|esa|los|las|estos|esta) [^.!?]{0,40}\b(ya )?(son|es) (una )?oferta\b|\bpara que (la oferta|laliga) (te )?(llegue|haga|ofrezca)\b/;
+/** quita de la respuesta lo que dice que la oferta de LaLiga aún no está o llega mañana, cuando él dice que ya se la dan */
+export const sinLlegaManana = (texto) => sinNoLaVeo(texto, LLEGA_MANANA);
 /** ¿su mensaje cuenta una oferta o un trato que le han hecho? (no vale preguntar «¿qué me ofrecen?») */
 export const cuentaOferta = (pregunta) => { const q = norm(pregunta || ''); return OFERTA_DICHA.test(q) && !/^(que|cuanto|quien) me (ofrece|ofrecen|da|dan)\b/.test(q); };
 const NO_LA_VEO = /\bno (la |lo |me |te |se )?(veo|aparece|consta|sale|figura|tengo|encuentro)\b[^.!?]{0,90}\b(oferta|trato|propuesta)\b|\b(oferta|trato|propuesta)\b[^.!?]{0,70}\bno (la )?(veo|aparece|consta|sale|figura|esta)\b|\bno (veo|aparece|consta|figura)\b[^.!?]{0,60}\b(en los datos|en la app|en la aplicacion|en laliga|en tu cuenta)\b|\bno hay (ninguna|esa|tal) oferta\b|\bno cuenta como (una )?oferta\b/;
 /** quita de la respuesta las frases que dicen que no ve esa oferta. Devuelve { texto, quitadas } */
-export function sinNoLaVeo(texto) {
+export function sinNoLaVeo(texto, re = NO_LA_VEO) {
   const [cuerpo, ...resto] = String(texto || '').split(/\n\n(?=\*\*Revisado por la app:\*\*)/);
   let quitadas = 0;
-  const t = cuerpo.split(/\n{2,}/).map((p) => p.split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡«*-])/).filter((f) => { const fuera = NO_LA_VEO.test(norm(f)); if (fuera) quitadas++; return !fuera; }).join(' ')).filter((p) => p.trim()).join('\n\n');
+  const t = cuerpo.split(/\n{2,}/).map((p) => p.split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ¿¡«*-])/).filter((f) => { const fuera = re.test(norm(f)); if (fuera) quitadas++; return !fuera; }).join(' ')).filter((p) => p.trim()).join('\n\n');
   // (si se quedaba sin nada que decir, se deja como llegó: mejor eso que una respuesta vacía)
   if (!quitadas || t.replace(/\s+/g, ' ').trim().length < 60) return { texto, quitadas: 0 };
   return { texto: [t, ...resto].join('\n\n'), quitadas };
@@ -3083,7 +3091,7 @@ export function vendiblesMios(M, n = 4) {
     .filter((y) => y.veredicto !== 'quedar' || y.presa)
     .sort((a, b) => orden[a.veredicto] - orden[b.veredicto] || b.v - a.v).slice(0, n).map((y) => y.j);
 }
-export function ventasMiasTxt(D, M, js, c = null) {
+export function ventasMiasTxt(D, M, js, c = null, { laligaYa = false } = {}) {
   const yo = D.yo && D.yo.teamId;
   const L = [];
   const V = (() => { try { return veredictos(D, M); } catch (e) { return {}; } })();
@@ -3139,7 +3147,8 @@ export function ventasMiasTxt(D, M, js, c = null) {
       : ver === 'proteger' && P
         ? ` ${P.como === 'ya' ? 'Ya lo tienes blindado.' : P.como === 'escudo' ? 'Blíndalo ya con el escudo (gratis, 24 h).' : P.como === 'escudo-al-abrir' ? `Blíndalo con el escudo en cuanto se abra (${cuandoF(y.abre)}): antes no se puede.` : P.como === 'subir' ? `Súbele la cláusula a ${eur(P.objetivo)} (cuesta ${eur(P.coste)}, menos de lo que va a subir).` : `Protegerlo pagando no compensa${P.coste ? ` (subirle la cláusula cuesta ${eur(P.coste)}, más de lo que va a subir)` : ''}.`} Si no, véndeselo antes a un rival por ${eur(y.rival.techo)} o cerca.`
         : '';
-    const liga = `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
+    // (repaso de la 0.8s) si dice que LaLiga YA le da una cifra, la oferta está hecha: lo que esperaría la app es la de mañana
+    const liga = laligaYa && !mejor ? `LALIGA: ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE: lo tiene en venta (los datos van por detrás) y esa oferta está hecha y se cobra al aceptarla, hoy. Compárala con su valor (${eur(y.v)}) y su tendencia. Si no la acepta, LaLiga le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(y.liga.v)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte). NO le digas que la oferta llega mañana, que aún no es dinero ni que lo ponga a la venta` : `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
     const cl = !y.clausula ? 'CLÁUSULA: no la sé' : `CLÁUSULA ${eur(y.clausula)} (${y.sobre != null && y.sobre <= 0.03 ? 'A SU VALOR' : y.sobre != null ? `${pct(y.sobre * 100, 0)} sobre su valor` : '?'}), ${y.abierta ? 'ABIERTA' : y.veda ? `cerrada hasta que empiece la jornada (${cuandoF(y.abre)})` : `se abre ${cuandoF(y.abre)}`}; ${paganTxt(x.pagan) || 'no se sabe a quién le llega'}. Es lo que cobras si un rival te lo quita, no lo que da LaLiga`;
     const riv = y.rival.corto
       ? `A UN RIVAL (cobras al momento): no le saques más que lo de LaLiga, ≈ ${eur(y.rival.piso)}`
@@ -3664,7 +3673,7 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   try {
     const yo = D.yo && D.yo.teamId;
     const mios = nombrados.filter((j) => M.dueno[j.id] === yo);
-    if (!trato && mios.length && vaDeVender(`${pregunta} ${antes}`)) ventas = ventasMiasTxt(D, M, mios, c);
+    if (!trato && mios.length && (vaDeVender(`${pregunta} ${antes}`) || laligaYaDa(pregunta))) ventas = ventasMiasTxt(D, M, mios, c, { laligaYa: laligaYaDa(pregunta) });
     else if (!trato && !nombrados.length && /\b(vendo|vender|vendemos|me quedo|quedarme\w*|hago caja|hacer caja|especulo)\b/.test(norm(pregunta)) && !/\b(clausul|fich|compr|puj)\w*/.test(norm(pregunta))) ventas = ventasMiasTxt(D, M, vendiblesMios(M), c);
   } catch (e) { ventas = ''; }
   // los rivales de los que habla (ahora o en sus últimos mensajes: «¿y de toda su plantilla?»)
@@ -3833,6 +3842,8 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
   } catch (e) { /* como llegó */ }
   // (22 nov, Domy) le contaba una oferta: «no la veo en la app» no es una respuesta
   try { if (cuentaOferta(pregunta)) n.texto = sinNoLaVeo(n.texto).texto; } catch (e) { /* como llegó */ }
+  // (repaso de la 0.8s) «LaLiga me da X»: la oferta ya está; «llega mañana» o «ponlo a la venta» no es una respuesta
+  try { if (laligaYaDa(pregunta)) n.texto = sinLlegaManana(n.texto).texto; } catch (e) { /* como llegó */ }
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   guardarChat(h2.slice(-40));
