@@ -2576,7 +2576,6 @@
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html": 1795090022000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
-   "SPORT|136614839": 1795088375000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
    "SPORT|136607113": 1795090415000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
@@ -9066,13 +9065,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5179,
+   "ok": 5180,
    "fallos": 0,
-   "ejecuciones": 4232,
+   "ejecuciones": 4233,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:36:11.998Z"
+   "ultima": "2026-11-22T11:41:10.887Z"
   }
  },
  "ptsDirecto": {
@@ -9192,15 +9191,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:36:15.669Z"
+   "ultimaBien": "2026-11-22T11:41:14.895Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:36:15.669Z"
+   "ultimaBien": "2026-11-22T11:41:14.895Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:36:15.669Z"
+   "ultimaBien": "2026-11-22T11:41:14.895Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9208,11 +9207,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:36:15.669Z"
+   "ultimaBien": "2026-11-22T11:41:14.895Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:36:15.669Z"
+   "ultimaBien": "2026-11-22T11:41:14.895Z"
   }
  },
  "avisos": [
