@@ -2845,7 +2845,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
    "SPORT|136715788": 1795347290000,
    "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000
   },
   "hechos": [
    {
@@ -3554,7 +3555,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4459,17 +4460,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 15,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 168719,
-  "salida": 10163,
+  "entrada": 170757,
+  "salida": 11115,
   "cacheLee": 56063,
   "cacheEscribe": 32876,
-  "dolares": 0.381598,
+  "dolares": 0.382278,
   "reservado": 0
  },
  "recientes": {
@@ -9162,17 +9163,24 @@
    "w": "2026-11-22T14:25:07Z",
    "f": "2026-11-22T14:26:11.651Z",
    "rf": "61:18"
+  },
+  "fm|128|0|67": {
+   "j": "<TBD>",
+   "m": "67'",
+   "f": "2026-11-22T14:31:20.507Z",
+   "rf": "66:27",
+   "avisado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5230,
+   "ok": 5232,
    "fallos": 0,
-   "ejecuciones": 4266,
+   "ejecuciones": 4267,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:26:11.651Z"
+   "ultima": "2026-11-22T14:31:20.507Z"
   }
  },
  "ptsDirecto": {
@@ -9334,27 +9342,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:26:42.979Z"
+   "ultimaBien": "2026-11-22T14:31:30.562Z"
   }
  },
  "avisos": [
