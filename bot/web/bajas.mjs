@@ -182,7 +182,8 @@ export const metasBajas = (b) => ({ ruta: 'bajas/index.html', seccion: 'jornada'
  * bajas/partes.json (22 nov): lo que la app no tiene de cada baja y le da el portal, con el id de LaLiga, aparte de los archivos que
  * ya hay. La app lo lee una vez cada pocas horas para la hoja de las bajas de Clubes (web/js/bajas.js). Por jugador, solo lo que
  * sabe: e, lo que dice el parte (b: baja, d: duda, v: disponible); l, la lesión en pocas palabras; d, los días hasta la vuelta
- * contados desde `t`; j, la jornada para la que está en duda o vuelve; s, los partidos de sanción que le quedan. Sin nombres
+ * contados desde `t`; j, la jornada para la que está en duda o vuelve; s, los partidos de sanción que le quedan; a, las
+ * amarillas de un titular a una de la sanción. Sin nombres
  * (la app ya los tiene) ni nada de otras webs.
  */
 export function partesJson(hb) {
@@ -202,5 +203,7 @@ export function partesJson(hb) {
     if (x.quedan) o.s = x.quedan;
     if (Object.keys(o).length) j[x.id] = o;
   }
+  // los apercibidos titulares (4, 9, 14… amarillas): a, las amarillas
+  for (const x of hb.apercibidos || []) if (x.amarillas) j[x.id] = { ...(j[x.id] || {}), a: x.amarillas };
   return { v: 1, t: hb.ahora, jornada: hb.jornada, j };
 }

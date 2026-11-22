@@ -2,7 +2,7 @@
    La cruz junto al título de Clubes abre la hoja 'bajas' con los lesionados, sancionados y dudas de los 20 clubes; en
    Equipo no hay botón nuevo: el recuadro «pueden jugar» abre la misma hoja en «Tu liga», con los tuyos primero.
    Cuatro pestañas con su número: Tu liga (los tuyos y los de tus rivales), Libres, Apercibidos (a una amarilla de la
-   sanción; solo si hay) y Todas (por club, en el orden de la clasificación). De cada uno, la cara, el estado, la
+   sanción, de Understat o del portal; solo si hay) y Todas (por club, en el orden de la clasificación). De cada uno, la cara, el estado, la
    lesión en pocas palabras y, si se sabe, cuándo vuelve; a los tuyos lesionados, el mejor relevo de tu mercado que te
    llega. El estado lo tiene ya la app (LaLiga y el once probable); la lesión y la vuelta las da el portal cada noche
    en bajas/partes.json (bot/web/bajas.mjs, `partesJson`), con el id de LaLiga y aparte de los demás archivos. Se lee
@@ -37,6 +37,7 @@ const jornadaDe = (M) => M.enJuego || M.proxima || null;
  */
 export function listaBajas(S) {
   const { D, M } = S;
+  const P = partes();
   const enCal = new Set();
   for (const p of D.partidos || []) { enCal.add(String(p.localId)); enCal.add(String(p.visitanteId)); }
   const bajas = [], aper = [];
@@ -45,8 +46,9 @@ export function listaBajas(S) {
     if (enCal.size >= 10 && !enCal.has(String(j.equipoId))) continue;
     const k = estadoBaja(M, j);
     if (k) { bajas.push({ j, k, d: duenoDe(S, j.id) }); continue; }
+    // las amarillas: las de Understat y, si no las hay, las del portal (titulares habituales)
     const a = M.avanzado ? M.avanzado(j.id) : null;
-    const am = a && a.u ? num(a.u.am) : 0;
+    const am = a && a.u && a.u.am != null ? num(a.u.am) : num(P && P.j[j.id] && P.j[j.id].a);
     if (am && am % 5 === 4) aper.push({ j, k: 'aper', am, d: duenoDe(S, j.id) });
   }
   bajas.sort((a, b) => ORDEN[a.k] - ORDEN[b.k] || b.j.valor - a.j.valor);
@@ -101,10 +103,12 @@ export function cargarPartes({ forzar = false } = {}) {
 function vuelta(M, x, p, P, J) {
   if (x.k === 'aper') return J ? { v: `J${J.n + 1}`, d: 'si ve una' } : null;
   if (x.k === 'suspended') return p && p.s && J ? { v: `J${J.n + p.s}`, d: 'vuelve' } : null;
-  // una duda no tiene vuelta: lo probable que es que juegue ya sale junto al nombre (el % de titular)
-  if (x.k === 'doubtful') return null;
-  if (!p) return null;
+  // una duda no tiene vuelta (lo probable que es que juegue ya sale junto al nombre, el % de titular), salvo que el parte
+  // la dé de baja con fecha
+  if (!p || (x.k === 'doubtful' && p.e !== 'b')) return null;
   if (p.e === 'v' && p.j && J && p.j >= J.n) return { v: `J${p.j}`, d: 'vuelve' };
+  // LaLiga lo tiene lesionado y el parte, en duda para la jornada
+  if (p.e === 'd' && p.j && J && p.j >= J.n) return { v: `J${p.j}`, d: 'en duda' };
   if (p.e !== 'b' || p.d == null) return null;
   const dias = num(p.d) - (Date.now() - num(P.t)) / DIA;
   if (dias >= 180) return { v: 'Temporada', d: 'fuera' };
