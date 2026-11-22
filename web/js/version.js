@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8t';
+export const VERSION = '0.8u';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,18 @@ export const VERSION = '0.8t';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (22 nov, el repaso de la 0.8s: claude/prompt-bajas-y-repaso-0.8s.md, paso 2) Arreglos: Directo con el once de la jornada
+    // (aviso de Domy), lo cambiado a la vez en dos dispositivos, la oferta de LaLiga contada y el dinero cerrado de refilón.
+    // El detalle, en ESTADO.md del proyecto. La hora, al publicar
+    v: '0.8u', f: '2026-11-22', h: '', t: 'Arreglos de la sincronización y de Directo',
+    cosas: [
+      { tipo: 'arreglo', d: 'directo', t: 'Directo cuenta tu once de la jornada', x: 'Si vendes a uno de tu once con la jornada ya empezada, sus puntos te siguen contando: ahora también sale en sus partidos con lo que lleva y, en la ficha del partido, como tuyo.', ir: { v: 'directo' } },
+      { tipo: 'arreglo', d: 'movil', t: 'Nada se pierde entre dispositivos', x: 'Si tenías la app abierta en el móvil mientras usabas la web, lo último que preguntabas o le contabas a la IA en uno podía borrar lo del otro. Ahora se juntan las dos cosas, y la app mira lo de tus otros dispositivos antes de preguntar y al volver a Hoy o a Pregunta.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'oferta', t: 'La oferta de LaLiga que le cuentas', x: 'Si le dices a la IA que LaLiga ya te da una cifra por uno tuyo, la da por hecha: ya no te contesta que la oferta llega mañana ni que lo pongas a la venta.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', menor: true, d: 'candado', t: 'El dinero de un rival, también de refilón', x: 'Si preguntas quién te puede pagar una cláusula y tienes cerrado el dinero de tus rivales, la IA ya no lo cuenta de pasada.', ir: { v: 'ia' } },
+    ],
+  },
   {
     // (22 nov, Carlos, 09:40-10:01, el diseño A; a las 16:36 preguntó por qué no salía) Las bajas de la jornada detrás de una cruz
     // de enfermería en Clubes, y en Equipo el recuadro «pueden jugar» abre la misma hoja. La lesión y la vuelta, de un archivo
