@@ -3057,7 +3057,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000,
    "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
-   "SPORT|136730837": 1795377616000
+   "SPORT|136730837": 1795377616000,
+   "SPORT|136730813": 1795380014000
   },
   "hechos": [
    {
@@ -3740,7 +3741,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -9530,13 +9531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5392,
+   "ok": 5394,
    "fallos": 0,
-   "ejecuciones": 4354,
+   "ejecuciones": 4355,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T21:41:10.651Z"
+   "ultima": "2026-11-22T21:46:10.367Z"
   }
  },
  "ptsDirecto": {
@@ -9770,27 +9771,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:41:19.418Z"
+   "ultimaBien": "2026-11-22T21:46:28.469Z"
   }
  },
  "avisos": [
