@@ -9,12 +9,13 @@ import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { ponerApodo, sincronizarApodos } from './apodos.js';
+import { iniciarSinc, sincronizar, sincAntes } from './sinc.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -1383,6 +1384,8 @@ function rehacer() {
   ponerEquipos(S.D.equipos);
   S.M = analizar(S.D, S.H, S.c, extraM());
   fijarMotor(S.M);
+  // (22 nov) el plan, las preguntas, lo que le cuentas y los pasos hechos, los mismos en todos tus dispositivos (sinc.js)
+  iniciarSinc({ liga: S.D && !S.D.demo && S.D.liga ? S.D.liga.id : '', llega: llegaSinc, charlando: () => !!S.charlando });
   // quién eres, para lo bloqueado (antes de pintar nada)
   fijarYo(yoReal(), enDemo());
   fijarLiga(S.D.liga && S.D.liga.id);
@@ -1592,6 +1595,8 @@ async function trabajoFondo() {
       if (o.length) { lista.unshift(...o); paso('once confirmado: alguno de los tuyos no es titular'); }
     } catch (e) { if (e.sesion) throw e; paso(`once confirmado: ${e.message}`); }
     LS.set('fondo-completo', Date.now()); LS.set('fondo-cierre', (S.M && S.M.cierreMercado) || 0);
+    // (22 nov) antes de pedir el plan con la app cerrada: puede que otro dispositivo tuyo ya lo tenga
+    try { await sincAntes(); } catch (e) { /* como antes */ }
     if (planViejo(S.M) || turnoF()) {
       let conIA = false;
       // (con la IA de la app, 2 al día: solos, a sus horas, y cuentan en los del día; planViejoAuto y planes-hora.js)
@@ -1678,6 +1683,13 @@ function apuntarReventa() {
 
 /** el plan que se enseña: el de la IA si es de hoy; si no (no hay, es de otro día, la IA aún piensa o ha fallado), el del
  * motor de hoy (plan.js), que ya viene cuadrado. Antes, mientras llegaba el nuevo o si fallaba, se veía el de ayer */
+/** (22 nov) ha llegado algo de otro dispositivo tuyo: lo que te ha contado cambia el análisis; lo demás, el plan y lo pintado */
+function llegaSinc(claves) {
+  if (!S.D) return;
+  if (claves.includes('notas')) rehacer(); else { montarPlan(); programar(S.D, S.M, planAvisos()); }
+  if (S.hoja || S.cargando || tourAbierto()) return;
+  if (S.vista === 'ia' ? !S.charlando : true) { const y = window.scrollY; pintar(); if (S.vista !== 'ia') window.scrollTo(0, y); }
+}
 function montarPlan() {
   // (22 nov) si después de ese plan le has contado a la IA algo que manda (sin blindajes, a quién no vendes…), ya no vale:
   // sale el de la app con eso contado, hasta que lo rehagas
@@ -1802,6 +1814,8 @@ function saludarSiToca() {
     .then(() => invitarSiToca())
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
     .then(() => sincronizarApodos(S.D && S.D.liga && S.D.liga.id))
+    // (22 nov) y el plan, las preguntas y lo que le has contado
+    .then((x) => sincronizar({ ya: true }).then(() => x, () => x))
     .then((cambia) => { if (cambia && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); })
     .catch(() => {});
 }
@@ -2378,14 +2392,23 @@ async function despues() {
 }
 /** (0.7.13l) el plan que sale solo a su hora (planes-hora.js): al abrir la app y, con ella abierta, cada 10 minutos. Con
     la IA de la app manda la hora elegida; con la clave de cada uno, además «Plan automático al abrir» (ci.auto) */
-function planAHora(alAbrir = false) {
-  if (!S.D || !S.M || enDemo() || !puedePlanIA(enDemo())) return;
-  const E = S.planEstado || {};
-  if (E.cargando || E.error || E.cupo) return;
-  const turno = turnoPendiente(S.M, ultimoPlan());
-  if (!turno && !(alAbrir && !planesApp(enDemo()))) return;
-  if (!planViejoAuto(S.M, enDemo())) return;
-  intentarTurno(turno);
+let planAHoraEnCurso = false;
+async function planAHora(alAbrir = false) {
+  if (!S.D || !S.M || enDemo() || !puedePlanIA(enDemo()) || planAHoraEnCurso) return;
+  const toca = () => {
+    const E = S.planEstado || {};
+    if (E.cargando || E.error || E.cupo) return null;
+    const turno = turnoPendiente(S.M, ultimoPlan());
+    if (!turno && !(alAbrir && !planesApp(enDemo()))) return null;
+    return planViejoAuto(S.M, enDemo()) ? { turno } : null;
+  };
+  if (!toca()) return;
+  // (22 nov) antes de pedirlo, se mira si otro dispositivo tuyo ya lo tiene: el móvil y la web, con el mismo plan
+  planAHoraEnCurso = true;
+  try { await sincAntes(); } finally { planAHoraEnCurso = false; }
+  const t = toca();
+  if (!t || !S.D || enDemo()) return;
+  intentarTurno(t.turno);
   generarPlan({ auto: true });
 }
 
@@ -3895,6 +3918,8 @@ document.addEventListener('click', async (ev) => {
       // solo los de la última semana
       for (const k of Object.keys(todos)) if (!todos[k] || Date.now() - (todos[k].t || 0) > 7 * 86400e3) delete todos[k];
       LS.set(K('hechos'), todos);
+      // (22 nov) los pasos hechos, también en tus otros dispositivos
+      LS.set(K('hechos-t'), Date.now()); cambioLocal('hechos');
       if (apuntarReventa()) rehacer();
       else if (S.D) programar(S.D, S.M, planAvisos());
       pintar();
@@ -4214,6 +4239,8 @@ document.addEventListener('visibilitychange', () => {
 });
 // la web nueva: al volver a la pestaña y cada 10 minutos con ella a la vista (como mucho cada 5)
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D) mirarWebNueva(); });
+// (22 nov) al volver a la app: lo que hayas hecho en otro dispositivo (un plan nuevo, una pregunta, algo que le has contado)
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D && !enDemo()) sincronizar(); });
 setInterval(() => { if (!document.hidden && S.D) mirarWebNueva(); }, 10 * MIN);
 
 /* ---------------- lo nuevo de esta versión ---------------- */

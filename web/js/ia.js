@@ -738,7 +738,7 @@ const rivalTxt = (M, j) => {
 // Cosas que no salen en la API (un amigo te ofrece un jugador, lo que piensas hacer, a quién no quieres vender):
 // las apunta la IA desde el chat y cuentan en el plan, en el chat y en segundo plano hasta que caducan.
 export const notas = () => LS.get(K('notas'), []);
-const guardarNotas = (l) => { LS.set(K('notas'), l.slice(-40)); LS.set(K('notas-t'), Date.now()); };
+const guardarNotas = (l) => { LS.set(K('notas'), l.slice(-40)); LS.set(K('notas-t'), Date.now()); cambioLocal('notas'); };
 export const notasVigentes = () => notas().filter((n) => !n.caduca || n.caduca > Date.now());
 export const borrarNota = (id) => guardarNotas(notas().filter((n) => n.id !== id));
 export const notasDe = (pid) => notasVigentes().filter((n) => n.pid === pid);
@@ -1865,6 +1865,7 @@ export async function planDelDia(D, M, c, op = {}) {
   const lista = planes();
   lista.unshift(P);
   LS.set(K('planes'), lista.slice(0, 10));
+  cambioLocal('plan');
   return P;
 }
 
@@ -2708,18 +2709,79 @@ export function repararJSON(t) {
 
 /* ---------------- el chat ---------------- */
 export const conversacion = () => LS.get(K('chat'), []);
+
+/* ---------------- lo mismo en todos tus dispositivos (22 nov, Carlos) ----------------
+   «En la web me sale un plan distinto al de la app móvil; tienen que ser iguales, y las preguntas que hagas en un sitio
+   tienen que aparecer en el otro.» El plan de la IA, la conversación, lo que le has contado y los pasos marcados como
+   hechos se guardaban solo en cada dispositivo, y cada uno pedía su plan. Ahora van también con la cuenta (sinc.js y
+   /sinc del servidor): de cada cosa gana la que se cambió más tarde. Aquí, lo que se sube y cómo se pone lo que llega. */
+let alCambiar = () => {};
+/** sinc.js se apunta aquí para subir lo que cambie */
+export const escucharCambios = (f) => { alCambiar = typeof f === 'function' ? f : () => {}; };
+export const cambioLocal = (clave) => { try { alCambiar(clave); } catch (e) { /* sin sincronizar, como antes */ } };
+const guardarChat = (l) => { LS.set(K('chat'), l); LS.set(K('chat-t'), Date.now()); cambioLocal('chat'); };
+/** lo de este dispositivo, cada cosa con cuándo se cambió: { plan, chat, notas, hechos } (null lo que no hay) */
+export function paraSinc() {
+  const p = ultimoPlan();
+  // (las miniaturas de las capturas no viajan: se quedan en el dispositivo que las mandó)
+  const chat = conversacion().map((m) => (Array.isArray(m.fotos) ? { ...m, fotos: m.fotos.map((f) => ({ id: f.id })) } : m));
+  const tc = Number(LS.get(K('chat-t'), 0)) || (chat.length ? Number(chat[chat.length - 1].ts) || 0 : 0);
+  const tn = Number(LS.get(K('notas-t'), 0)) || 0, th = Number(LS.get(K('hechos-t'), 0)) || 0;
+  return {
+    plan: p && p.t && !p.auto ? { t: p.t, v: p } : null,
+    chat: tc ? { t: tc, v: chat } : null,
+    notas: tn ? { t: tn, v: notas() } : null,
+    hechos: th ? { t: th, v: LS.get(K('hechos'), {}) } : null,
+  };
+}
+/**
+ * Pone aquí lo que llega de otro dispositivo, si es más nuevo. Devuelve si ha cambiado algo. `charlando`: hay una pregunta
+ * en marcha; la conversación no se toca hasta que acabe.
+ */
+export function ponerRemoto(clave, d, { charlando = false } = {}) {
+  if (!d || !d.t || d.v == null) return false;
+  if (clave === 'plan') {
+    const P = d.v;
+    if (typeof P !== 'object' || !P.t || P.auto || typeof P.titular !== 'string') return false;
+    const l = planes();
+    if (l.some((x) => x.t === P.t)) return false;
+    LS.set(K('planes'), [P, ...l].sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 10));
+    return true;
+  }
+  if (clave === 'chat') {
+    if (charlando || !Array.isArray(d.v)) return false;
+    if (d.t <= (Number(LS.get(K('chat-t'), 0)) || 0)) return false;
+    const loc = conversacion(), llega = d.v.filter((m) => m && (m.r === 'yo' || m.r === 'ia')).slice(-40);
+    // otra conversación (en el otro dispositivo empezó un chat nuevo): la de aquí pasa a «Anteriores», como allí
+    const misma = loc.length && llega.length && (loc[0].ts || 0) === (llega[0].ts || 0);
+    if (loc.length && !misma) archivar();
+    LS.set(K('chat'), llega); LS.set(K('chat-t'), d.t);
+    return true;
+  }
+  if (clave === 'notas') {
+    if (!Array.isArray(d.v) || d.t <= (Number(LS.get(K('notas-t'), 0)) || 0)) return false;
+    LS.set(K('notas'), d.v.filter((n) => n && n.id && n.texto).slice(-40)); LS.set(K('notas-t'), d.t);
+    return true;
+  }
+  if (clave === 'hechos') {
+    if (typeof d.v !== 'object' || Array.isArray(d.v) || d.t <= (Number(LS.get(K('hechos-t'), 0)) || 0)) return false;
+    LS.set(K('hechos'), d.v); LS.set(K('hechos-t'), d.t);
+    return true;
+  }
+  return false;
+}
 /** al parar una pregunta, se quita del chat (para poder hacerla otra vez o cambiarla) */
 export function quitarUltimaPregunta(t) {
   const h = conversacion();
-  if (h.length && h[h.length - 1].r === 'yo' && h[h.length - 1].t === t) { h.pop(); LS.set(K('chat'), h); }
+  if (h.length && h[h.length - 1].r === 'yo' && h[h.length - 1].t === t) { h.pop(); guardarChat(h); }
 }
-export const borrarConversacion = () => LS.set(K('chat'), []);
+export const borrarConversacion = () => guardarChat([]);
 /** sin IndexedDB, la miniatura vuelve dentro del mensaje del chat (como antes de la 0.7z) */
 function reponerMini(id, mini) {
   const h = conversacion();
   let cambia = false;
   for (const m of h) for (const f of m.fotos || []) if (f.id === id && !f.mini) { f.mini = mini; cambia = true; }
-  if (cambia) LS.set(K('chat'), h);
+  if (cambia) guardarChat(h);
 }
 /** las miniaturas que iban dentro del chat (antes de la 0.7z) pasan a IndexedDB: el chat guardado ocupa mucho menos */
 export async function migrarMinis() {
@@ -2732,7 +2794,7 @@ export async function migrarMinis() {
     return n;
   };
   const h = conversacion();
-  if (await pasar(h)) LS.set(K('chat'), h);
+  if (await pasar(h)) guardarChat(h);
   const l = chatsAnteriores();
   let n = 0;
   for (const c of l) n += await pasar(c.msgs);
@@ -2754,7 +2816,7 @@ function archivar() {
   return true;
 }
 /** empieza un chat nuevo; el de ahora queda en «anteriores» */
-export function nuevoChat() { const ok = archivar(); LS.set(K('chat'), []); return ok; }
+export function nuevoChat() { const ok = archivar(); guardarChat([]); return ok; }
 /** vuelve a un chat anterior (el de ahora se guarda) */
 export function recuperarChat(i) {
   const l = chatsAnteriores();
@@ -2763,7 +2825,7 @@ export function recuperarChat(i) {
   l.splice(i, 1);
   guardarAnteriores(l);
   archivar();
-  LS.set(K('chat'), c.msgs || []);
+  guardarChat(c.msgs || []);
   return true;
 }
 export function borrarChatAnterior(i) { const l = chatsAnteriores(); l.splice(i, 1); guardarAnteriores(l); }
@@ -3743,7 +3805,7 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
   } catch (e) { /* como llegó */ }
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
-  LS.set(K('chat'), h2.slice(-40));
+  guardarChat(h2.slice(-40));
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
 
@@ -3818,7 +3880,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
   // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
   hist.push({ r: 'yo', t: pregunta, ts: Date.now(), ...(fotos && fotos.length ? { fotos: fotos.map((f) => ({ id: f.id })) } : {}) });
-  LS.set(K('chat'), hist.slice(-40));
+  guardarChat(hist.slice(-40));
   for (const f of fotos || []) {
     guardarFoto(f).catch(() => {});
     guardarMini(f.id, f.mini).then((ok) => { if (!ok) reponerMini(f.id, f.mini); }).catch(() => reponerMini(f.id, f.mini));

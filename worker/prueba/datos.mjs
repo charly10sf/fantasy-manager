@@ -946,6 +946,40 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.s === 400, 'liga rara: 400');
   r = await pide({ m: 'POST', ruta: '/apodos', cuerpo: { liga: '55', a: {} }, tk: 'corto', e: eI });
   ok(r.s === 401, 'sin sesión: 401');
+
+  // ---------- (22 nov) lo mismo en todos los dispositivos: plan, chat, lo contado y los pasos hechos ----------
+  const ts = Date.now();
+  r = await inv(540, '/sinc', { liga: '55', pon: {}, tengo: {} });
+  ok(r.s === 200 && r.j.ok && !Object.keys(r.j.trae).length, 'sinc: nada guardado todavía');
+  // el móvil sube su plan y su chat
+  r = await inv(540, '/sinc', { liga: '55', pon: { plan: { t: ts - 9000, v: { titular: 'Plan del móvil', t: ts - 9000 } }, chat: { t: ts - 8000, v: [{ r: 'yo', t: 'Hola', ts: ts - 8000 }] }, raro: { t: ts, v: 1 } }, tengo: {} });
+  ok(r.s === 200 && !Object.keys(r.j.trae).length, `sinc, subir: no devuelve lo que acaba de recibir (${JSON.stringify(Object.keys(r.j.trae))})`);
+  // la web (la misma cuenta) no tiene nada: le llega todo
+  r = await inv(540, '/sinc', { liga: '55', pon: {}, tengo: {} });
+  ok(r.j.trae.plan && r.j.trae.plan.v.titular === 'Plan del móvil' && r.j.trae.chat.v.length === 1 && !r.j.trae.raro, `sinc, bajar: plan y chat (${JSON.stringify(Object.keys(r.j.trae))})`);
+  // la web ya lo tiene: nada que traer; pregunta algo y lo sube; al móvil le llega solo el chat
+  r = await inv(540, '/sinc', { liga: '55', pon: { chat: { t: ts - 2000, v: [{ r: 'yo', t: 'Hola' }, { r: 'ia', t: 'Buenas' }] } }, tengo: { plan: ts - 9000, chat: ts - 8000 } });
+  ok(!Object.keys(r.j.trae).length, 'sinc: con lo mismo, nada que traer');
+  r = await inv(540, '/sinc', { liga: '55', pon: {}, tengo: { plan: ts - 9000, chat: ts - 8000 } });
+  ok(Object.keys(r.j.trae).join() === 'chat' && r.j.trae.chat.v.length === 2, `sinc: al móvil le llega solo lo nuevo (${Object.keys(r.j.trae).join()})`);
+  // lo más viejo no pisa a lo nuevo, y a quien lo manda le llega lo nuevo
+  r = await inv(540, '/sinc', { liga: '55', pon: { chat: { t: ts - 7000, v: [{ r: 'yo', t: 'viejo' }] } }, tengo: { chat: ts - 7000 } });
+  ok(r.j.trae.chat && r.j.trae.chat.v.length === 2, 'sinc: lo más viejo no pisa a lo nuevo');
+  // del futuro, se deja en ahora; demasiado grande, no se guarda
+  r = await inv(540, '/sinc', { liga: '55', pon: { notas: { t: ts + 864e5, v: [{ id: 'n1', texto: 'x' }] }, hechos: { t: ts, v: 'x'.repeat(13000) } }, tengo: {} });
+  r = await inv(540, '/sinc', { liga: '55', pon: {}, tengo: {} });
+  ok(r.j.trae.notas && r.j.trae.notas.t <= Date.now() && !r.j.trae.hechos, `sinc, limpio: la hora nunca en el futuro y lo que no cabe no se guarda (${Object.keys(r.j.trae).join()})`);
+  // otra cuenta no lo ve, otra liga va aparte, y sin sesión o con una liga rara, nada
+  r = await inv(541, '/sinc', { liga: '55', pon: {}, tengo: {} });
+  ok(!Object.keys(r.j.trae).length, 'sinc: otra cuenta no lo ve');
+  r = await inv(540, '/sinc', { liga: '66', pon: {}, tengo: {} });
+  ok(!Object.keys(r.j.trae).length, 'sinc: otra liga, aparte');
+  r = await inv(540, '/sinc', { liga: 'abc', pon: {}, tengo: {} });
+  ok(r.s === 400, 'sinc, liga rara: 400');
+  r = await pide({ m: 'POST', ruta: '/sinc', cuerpo: { liga: '55', pon: {}, tengo: {} }, tk: 'corto', e: eI });
+  ok(r.s === 401, 'sinc, sin sesión: 401');
+  r = await pide({ m: 'POST', ruta: '/sinc', cuerpo: { liga: '55', pon: {}, tengo: {} }, tk: tk(540), e: env });
+  ok(r.s === 503, `sinc, sin Durable Object: ${r.s}`);
   r = await pide({ m: 'GET', ruta: '/apodos?liga=55', tk: tk(530), e: env });
   ok(r.s === 503, 'sin Durable Object: 503 (la app sigue con los suyos)');
   // borrar mis datos los quita

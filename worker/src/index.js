@@ -69,6 +69,7 @@ import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLim
 import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta, partirDatos } from '../../web/js/chat-sistema.js';
 import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
 import { apodosObjeto, ligaOk } from './apodos.js';
+import { sincObjeto } from './sinc.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -243,6 +244,8 @@ export const FRENOS = {
   invitar: { min: 20 }, canjear: { min: 5 },
   // (19 nov) los apodos, por cuenta: 20 al minuto
   apodos: { min: 20 },
+  // (22 nov) lo mismo en todos tus dispositivos (plan, chat, lo contado y los pasos hechos), por cuenta: 30 al minuto
+  sinc: { min: 30 },
   // (0.7.13) los apuntes del dinero: por IP; por cuenta van aparte (dinero)
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
   // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
@@ -345,6 +348,8 @@ export class Emparejar {
     if (ruta === '/inv') return new Response(JSON.stringify(await invObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // (19 nov) los apodos de los rivales de una cuenta, en «apodos|uid» (worker/src/apodos.js); nunca pone alarma
     if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (22 nov) el plan, el chat, lo contado y los pasos hechos de una cuenta, en «sinc|uid» (worker/src/sinc.js); nunca pone alarma
+    if (ruta === '/sinc') return new Response(JSON.stringify(await sincObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -1279,6 +1284,8 @@ async function borrarMios(req, env, c) {
   if (env.QR) {
     try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
     try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
+    // (22 nov) y lo guardado para tener lo mismo en todos tus dispositivos (plan, chat, lo contado)
+    try { await env.QR.get(env.QR.idFromName(`sinc|${u.uid}`)).fetch('https://freno/sinc', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
   }
   if (fallidas) return json({ e: `No se han podido borrar ${fallidas} de ${claves.length} cosas. Vuelve a probar en un rato.` }, 503, c);
   return json({ ok: true, avisos, claves: claves.length }, 200, c);
@@ -1356,6 +1363,29 @@ async function invitar(req, env, c, ruta) {
     return json(r, r.ok ? 200 : 400, c);
   }
   return json({ e: 'No existe' }, 404, c);
+}
+
+/* ---------- lo mismo en todos tus dispositivos: plan, chat, lo contado y los pasos hechos (22 nov) ---------- */
+/*
+ * POST /sinc { liga, pon: { clave: { t, v } }, tengo: { clave: t } }
+ *   Guarda lo que traes si es más nuevo que lo guardado con tu cuenta y te devuelve lo guardado que es más nuevo que lo
+ *   tuyo: { ok, trae: { clave: { t, v } } }. Claves: plan, chat, notas, hechos (worker/src/sinc.js). Con la sesión de
+ *   LaLiga: es tu cuenta, la del móvil y la de la web. Sin el Durable Object, 503 (la app sigue con lo suyo, como antes).
+ */
+async function sinc(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `sinc|${u.uid}`, FRENOS.sinc.min))) return demasiadas(c);
+  if (Number(req.headers.get('content-length') || 0) > 330000) return json({ e: 'Demasiado grande' }, 413, c);
+  const txt = await req.text();
+  if (txt.length > 330000) return json({ e: 'Demasiado grande' }, 413, c);
+  let b = null;
+  try { b = JSON.parse(txt); } catch (e) { b = null; }
+  if (!b || !ligaOk(b.liga)) return json({ e: 'Liga no válida' }, 400, c);
+  const obj = env.QR.get(env.QR.idFromName(`sinc|${u.uid}`));
+  const r = await (await obj.fetch('https://freno/sinc', { method: 'POST', body: JSON.stringify({ op: 'sinc', liga: String(b.liga), pon: b.pon, tengo: b.tengo, ahora: Date.now() }) })).json();
+  return json(r, r.ok ? 200 : 400, c);
 }
 
 /* ---------- los apodos de los rivales en todos tus dispositivos (19 nov) ---------- */
@@ -1780,6 +1810,7 @@ export default {
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/invitar' || url.pathname.startsWith('/invitar/')) return await invitar(req, env, c, url.pathname);
       if (url.pathname === '/apodos' && (req.method === 'GET' || req.method === 'POST')) return await apodos(req, env, c);
+      if (url.pathname === '/sinc' && req.method === 'POST') return await sinc(req, env, c);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {
