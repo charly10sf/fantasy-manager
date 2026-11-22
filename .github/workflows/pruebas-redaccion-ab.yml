@@ -7,7 +7,7 @@ name: Pruebas redaccion A/B
 on:
   push:
     branches: [pruebas-redaccion-ab]
-    paths-ignore: ['.github/ia/ab-redaccion.md', '.github/ia/ab-redaccion.json']
+    paths-ignore: ['.github/ia/ab-redaccion*.md', '.github/ia/ab-redaccion*.json']
 permissions:
   contents: write
 concurrency: { group: pruebas-redaccion-ab, cancel-in-progress: true }
@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 45
     env:
       BOT_IA: claude
-      TOPE_USD: '2.6'
+      TOPE_USD: '0.4'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with: { fetch-depth: 0 }
@@ -46,13 +46,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion --n=26 --tope="$TOPE_USD"
+          # segunda pasada (22 nov, 00:20): solo la versión nueva, en los tipos que más fallaban, con los motivos enteros (lo que queda del tope de 3 $)
+          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion-2 --solo=ahora --tipos=final,mvp,previa --cupo='{"final":1,"mvp":2,"previa":1}' --tope="$TOPE_USD"
       - name: Guardar en la rama
         if: always()
         run: |
           [ -f .github/ia/ab-redaccion.md ] || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
-          git add .github/ia/ab-redaccion.md .github/ia/ab-redaccion.json
+          git add .github/ia/ab-redaccion*.md .github/ia/ab-redaccion*.json
           git commit -q -m "A/B de la redacción del bot" || exit 0
           git push -q origin HEAD:pruebas-redaccion-ab
