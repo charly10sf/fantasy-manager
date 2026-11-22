@@ -2648,14 +2648,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "1715",
-   "que": "sancion",
-   "antes": "ok",
-   "t": 1795359672637
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
@@ -4770,8 +4763,8 @@
    "fin": 1795298772710
   },
   "13|128": {
-   "h": "ba8f03e43318",
-   "desde": 1795359673818,
+   "h": "b2cf193ee06f",
+   "desde": 1795359972060,
    "fin": 1795359673818
   }
  },
@@ -9196,13 +9189,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5244,
+   "ok": 5245,
    "fallos": 0,
-   "ejecuciones": 4273,
+   "ejecuciones": 4274,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T15:01:12.637Z"
+   "ultima": "2026-11-22T15:06:11.430Z"
   }
  },
  "ptsDirecto": {
@@ -9364,27 +9357,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T15:01:31.832Z"
+   "ultimaBien": "2026-11-22T15:06:16.284Z"
   }
  },
  "avisos": [
