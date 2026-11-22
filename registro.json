@@ -4374,7 +4374,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
    "SPORT|136630245": 1795104774000,
@@ -9066,13 +9065,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5196,
+   "ok": 5198,
    "fallos": 0,
-   "ejecuciones": 4249,
+   "ejecuciones": 4250,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T13:01:13.387Z"
+   "ultima": "2026-11-22T13:06:18.297Z"
   }
  },
  "ptsDirecto": {
@@ -9192,29 +9191,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:01:20.072Z"
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:01:20.072Z"
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:01:20.072Z"
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 1,
-   "ultimaBien": "2026-11-21T22:26:35.315Z",
-   "desde": "2026-11-22T13:01:20.072Z",
-   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
+   "seguidas": 0,
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:01:20.072Z"
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T13:01:20.072Z"
+   "ultimaBien": "2026-11-22T13:06:23.692Z"
   }
  },
  "avisos": [
