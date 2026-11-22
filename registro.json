@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/": 1795088734000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/19/diego-fuentes-chino-descarta-salir-del-real-jaen-y-llama-a-la-calma-tras-el-ultimo-tropiezo-vamos-a-seguir-luchando-radio-jaen/": 1795089078000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/luismi-cruz-el-alaves-es-rival-directo-hay-que-ir-a-por-los-tres-puntos-radio-coruna/": 1795090465000,
    "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
@@ -2779,21 +2778,10 @@
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "SPORT|136598447": 1795341606000,
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
+   "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/anselmi-recupera-su-faro-lemar-esta-de-vuelta-f202611-n/",
-    "medio": "AS",
-    "t": 1795088734000,
-    "id": "3182",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Lemar trabaja con normalidad y deja atrás su lesión",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261119/1004252949/internacionales-real-madrid-entrenan-valdebebas.html",
     "medio": "Mundo Deportivo",
@@ -3511,11 +3499,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/",
+    "medio": "AS",
+    "t": 1795347337000,
+    "id": "2770",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Antony sale lesionado tras marcar al Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4422,17 +4422,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 84187,
-  "salida": 6208,
+  "entrada": 86096,
+  "salida": 6859,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.146229,
+  "dolares": 0.146745,
   "reservado": 0
  },
  "recientes": {
@@ -9065,13 +9065,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5180,
+   "ok": 5181,
    "fallos": 0,
-   "ejecuciones": 4233,
+   "ejecuciones": 4234,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:41:10.887Z"
+   "ultima": "2026-11-22T11:46:11.657Z"
   }
  },
  "ptsDirecto": {
@@ -9191,15 +9191,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:41:14.895Z"
+   "ultimaBien": "2026-11-22T11:46:20.638Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:41:14.895Z"
+   "ultimaBien": "2026-11-22T11:46:20.638Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:41:14.895Z"
+   "ultimaBien": "2026-11-22T11:46:20.638Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9207,11 +9207,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:41:14.895Z"
+   "ultimaBien": "2026-11-22T11:46:20.638Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:41:14.895Z"
+   "ultimaBien": "2026-11-22T11:46:20.638Z"
   }
  },
  "avisos": [
