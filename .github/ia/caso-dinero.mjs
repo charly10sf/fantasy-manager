@@ -56,7 +56,7 @@ const r = await P.page.evaluate(async () => {
   const datos2 = I.datosChat(q, D, M, c, {});
   const l2 = (n) => datos2.split('\n').find((l) => /^- \d+º \| /.test(l) && l.includes(`| ${n} |`)) || '';
   out.d = { abierto: !L.bloqueada('dineroRivales', r2.e.teamId), cifra: /dinero (≈ )?\d[^|]*ABIERTO/.test(l2(r2.e.manager)), otro: /sin cifra\)|no se sabe/.test(l2(r3.e.manager)) && !/dinero (≈ )?\d/.test(l2(r3.e.manager)),
-    orden: /PREGUNTA POR EL DINERO/.test(datos2), deOtro: I.dineroCerradoDe(`¿Cuánto dinero tiene ${r3.e.manager}?`, D, M).length, conoce: !!(r2.dinero && r2.dinero.v != null) };
+    orden: /PREGUNTA POR EL DINERO DE [^\n]*CERRADO/.test(datos2), dilo: /QUE LO TIENE ABIERTO \(ha visto sus anuncios\): díselo/.test(datos2), deOtro: I.dineroCerradoDe(`¿Cuánto dinero tiene ${r3.e.manager}?`, D, M).length, conoce: !!(r2.dinero && r2.dinero.v != null) };
   U.LS.del('top-rivales');
   // (f) plegar lo largo
   const larga = Array.from({ length: 9 }, (_, i) => `Esta es la frase ${i + 1} de la respuesta.`).join(' ');
@@ -74,7 +74,7 @@ ok(r.b[3].q === 0, '(b) una respuesta que ya lo hace bien no se toca');
 ok(!r.c.fuga && r.c.candado && r.c.resto, `(c) por el chat, con una IA que lo suelta: «${r.c.t}»`);
 ok(r.c.otra, '(e) en otra pregunta (el peligro de los rivales), lo que dice la app de quién tiene dinero no se quita');
 ok(r.e.mio === 0 && r.e.peligro === 0 && r.e.jug === 0, '(e) su propio saldo, el peligro o el valor de un jugador no son preguntar por el dinero de un rival');
-ok(r.d.abierto && (!r.d.conoce || r.d.cifra) && r.d.otro && !r.d.orden && r.d.deOtro === 1, '(d) con un rival abierto, de ese va la cifra y se le puede decir; de los demás, no');
+ok(r.d.abierto && (!r.d.conoce || r.d.cifra) && r.d.otro && !r.d.orden && r.d.dilo && r.d.deOtro === 1, '(d) con un rival abierto, de ese va la cifra y se le puede decir; de los demás, no');
 ok(r.f.plegada && r.f.vistas === 5 && r.f.todas === 9 && r.f.rev && r.f.corta && r.f.lista, `(f) una respuesta de 9 frases: ${r.f.vistas} a la vista y el resto en «Seguir leyendo»; lo revisado, siempre a la vista; las cortas y las listas, enteras`);
 ok(!P.errores.length, `sin errores en la página${P.errores.length ? `: ${P.errores[0]}` : ''}`);
 await P.cerrar();

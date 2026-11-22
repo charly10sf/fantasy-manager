@@ -2794,9 +2794,11 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
    cerrado, a la IA se le dice que no dé ni la categoría, y la app quita de la respuesta lo que hable de ese dinero. */
 const DINERO_RE = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco|caja|millones tiene|cuanto (dinero )?(tiene|tienen|le queda|les queda|maneja|manejan)|cuanto puede(n)? gastar|rico|ricos|pobre|pobres|forrad[oa]s?|tieso|tiesos)\b/;
 /** los rivales por cuyo dinero pregunta y que tiene cerrado: [{ tid, nombre }] (vacío si no pregunta por eso) */
-export function dineroCerradoDe(pregunta, D, M, antes = '') {
+export const dineroCerradoDe = (pregunta, D, M, antes = '') => dineroPreguntado(pregunta, D, M, antes).cerrados;
+/** { cerrados, abiertos }: los rivales por cuyo dinero pregunta, según lo tenga cerrado o abierto (viendo sus anuncios) */
+export function dineroPreguntado(pregunta, D, M, antes = '') {
   const q = norm(pregunta || '');
-  if (!q || !DINERO_RE.test(q) || !bloqueada('dineroRivales')) return [];
+  if (!q || !DINERO_RE.test(q) || !bloqueada('dineroRivales')) return { cerrados: [], abiertos: [] };
   const yo = D.yo && D.yo.teamId;
   let tids = [...rivalesEn(pregunta, D, M)];
   if (!tids.length) tids = [...rivalesAprox(pregunta, D, M)];
@@ -2804,7 +2806,8 @@ export function dineroCerradoDe(pregunta, D, M, antes = '') {
   if (!tids.length && /\b(tiene|le queda|maneja|su)\b/.test(q) && !/\b(tengo|me queda|mi saldo|mi dinero)\b/.test(q) && antes) tids = [...rivalesEn(antes, D, M)];
   // «el dinero de los rivales», «quién tiene más dinero»: todos
   if (!tids.length && /\b(rival|rivales|los demas|cada uno|todos|la liga|quien)\b/.test(q)) tids = (M.rivales || []).map((r) => String(r.e.teamId));
-  return tids.filter((t) => String(t) !== String(yo) && bloqueada('dineroRivales', t)).map((t) => ({ tid: String(t), nombre: nombreTid(M, t) }));
+  const de = (cerrado) => tids.filter((t) => String(t) !== String(yo) && bloqueada('dineroRivales', t) === cerrado).map((t) => ({ tid: String(t), nombre: nombreTid(M, t) }));
+  return { cerrados: de(true), abiertos: de(false) };
 }
 const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : 'se abre viendo un anuncio en la app de Google Play');
 const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
@@ -3622,8 +3625,10 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   } catch (e) { dichoAhora = ''; }
   let dineroTxtQ = '';
   try {
-    const cer = dineroCerradoDe(pregunta, D, M, antes);
-    if (cer.length) dineroTxtQ = `\nPREGUNTA POR EL DINERO DE ${cer.length === 1 ? cer[0].nombre.toUpperCase() : 'RIVALES'} Y LO TIENE CERRADO: no se lo digas de ninguna forma. Ni una cifra, ni «mucho», «algo», «poco», «saldo medio», ni si tiene más o menos que otro o que él, ni si le llega para algo: la categoría que ves arriba es solo para que tú decidas, no para contarla. Dile en una frase que eso ${comoSeAbre()}, y si quieres añade algo útil que NO sea su dinero (lo que ha gastado esta semana, sus movimientos).\n`;
+    const { cerrados: cer, abiertos: abi } = dineroPreguntado(pregunta, D, M, antes);
+    // (el que ha abierto viendo sus anuncios: las instrucciones dicen «cerrado» en general y la IA se lo negaba también de ese)
+    if (abi.length) dineroTxtQ += `\nPREGUNTA POR EL DINERO DE ${abi.map((x) => x.nombre).join(' y ')}, QUE LO TIENE ABIERTO (ha visto sus anuncios): díselo con la cifra y su ± tal cual van arriba en RIVALES. Lo de «cerrado en su cuenta» no va con ${abi.length === 1 ? 'este rival' : 'estos rivales'}.\n`;
+    if (cer.length) dineroTxtQ += `\nPREGUNTA POR EL DINERO DE ${cer.length === 1 ? cer[0].nombre.toUpperCase() : 'RIVALES'} Y LO TIENE CERRADO: no se lo digas de ninguna forma. Ni una cifra, ni «mucho», «algo», «poco», «saldo medio», ni si tiene más o menos que otro o que él, ni si le llega para algo: la categoría que ves arriba es solo para que tú decidas, no para contarla. Dile en una frase que eso ${comoSeAbre()}, y si quieres añade algo útil que NO sea su dinero (lo que ha gastado esta semana, sus movimientos).\n`;
   } catch (e) { dineroTxtQ = ''; }
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
   return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
