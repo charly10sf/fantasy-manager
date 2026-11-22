@@ -2577,11 +2577,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/un-centro-del-campo-pletorico-f202611-n/": 1795091110000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/kounde-y-el-resto-de-internacionales-ya-entrenan-con-el-barca-cadena-ser/": 1795091461000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261119/1004252952/zaid-romero-regreso-muro.html": 1795091629000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
-   "SPORT|136620865": 1795091009000,
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
    "SPORT|136622620": 1795093044000,
@@ -9054,13 +9052,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5188,
+   "ok": 5189,
    "fallos": 0,
-   "ejecuciones": 4241,
+   "ejecuciones": 4242,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:21:10.913Z"
+   "ultima": "2026-11-22T12:26:11.670Z"
   }
  },
  "ptsDirecto": {
@@ -9180,15 +9178,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:21:15.453Z"
+   "ultimaBien": "2026-11-22T12:26:14.480Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:21:15.453Z"
+   "ultimaBien": "2026-11-22T12:26:14.480Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:21:15.453Z"
+   "ultimaBien": "2026-11-22T12:26:14.480Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9196,11 +9194,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:21:15.453Z"
+   "ultimaBien": "2026-11-22T12:26:14.480Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:21:15.453Z"
+   "ultimaBien": "2026-11-22T12:26:14.480Z"
   }
  },
  "avisos": [
