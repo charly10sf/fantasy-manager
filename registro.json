@@ -1975,6 +1975,50 @@
    "jornada": 13,
    "id": "2124623195529515131",
    "t": "2026-11-22T21:56:58.461Z"
+  },
+  {
+   "clave": "directo|127|Djené|roja",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124630624971399286",
+   "t": "2026-11-22T22:26:29.776Z",
+   "huella": {
+    "clase": "roja",
+    "partido": "127",
+    "equipo": "2922",
+    "min": 90,
+    "extra": 0,
+    "jugador": "Djené"
+   }
+  },
+  {
+   "clave": "directo|127|Alejandro Grimaldo|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124630633360031967",
+   "t": "2026-11-22T22:26:31.801Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "127",
+    "equipo": "1068",
+    "min": 90,
+    "extra": 2,
+    "jugador": "Alejandro Grimaldo"
+   }
+  },
+  {
+   "clave": "final|127",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124630704566817128",
+   "t": "2026-11-22T22:26:48.796Z"
+  },
+  {
+   "clave": "mvp|127",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124630760225157200",
+   "t": "2026-11-22T22:27:02.117Z"
   }
  ],
  "estados": {
@@ -4664,16 +4708,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 59,
-   "revisar": 22,
+   "redactar": 65,
+   "revisar": 25,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 734803,
-  "salida": 22894,
-  "cacheLee": 133427,
-  "cacheEscribe": 58023,
-  "dolares": 1.652202,
+  "entrada": 789521,
+  "salida": 24321,
+  "cacheLee": 160497,
+  "cacheEscribe": 71558,
+  "dolares": 1.812452,
   "reservado": 0
  },
  "recientes": {
@@ -4701,10 +4745,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-21T19:56:33.010Z",
-    "texto": "🏁 El Sevilla rescata un empate ante el Betis en el Sánchez-Pizjuán: 1-1, con gol de Kike Salas ya en el 90+1'.\n\nAntony había puesto por delante al Betis en el 50' y acaba como el mejor de los dos equipos, con 14 puntos y muy lejos de lo que suele dar. Kike Salas cierra con 13 y casi dobla su media de 6,6. Isco, el Mago, también cumple con 9.\n\nLa parte mala es para quien tenga a Cucho o a Junior: los dos restan 1."
-   },
-   {
     "t": "2026-11-21T22:26:28.677Z",
     "texto": "🏁 Real Madrid 2-1 Celta. El Real Madrid remonta y lo cierra Carlos Espí en el 85'. Bellingham se va a 13 puntos fantasy. Lleva 3 jornadas seguidas con 8 o más: 17, 8 y 13.\n\nLo peor se lo lleva Javi Rodríguez: -1 punto. Pablo Durán marcó y suma 10 aunque el Celta pierde. Cumple el favorito: el Madrid, 2º, gana al Celta, 13º.\n\n✅ Si tienes a Bellingham, hoy sonríes"
    },
@@ -4719,13 +4759,13 @@
    {
     "t": "2026-11-22T19:46:27.881Z",
     "texto": "🏁 Budimir la mete en el 20' y el Osasuna 🐂 gana 1-0 al Málaga 🐟 en El Sadar. Para los rojillos, que eran 16º, es una victoria que no llegaba desde hacía semanas.\n\nRosier es el mejor de los dos equipos, con 15 puntos: más del triple de lo que suele dar. Budimir se queda en 12 y Boyomo en 11, que también triplica su media. Del Málaga, 20º antes de jugar, solo puntúa Puga, con 7 aunque pierde.\n\nCatena vio la roja en el 90+2'."
+   },
+   {
+    "t": "2026-11-22T22:26:48.798Z",
+    "texto": "🏁 El Atlético golea 0-3 al Getafe en el Coliseum y sigue pegado a la pelea por el título.\n\nJulián Álvarez y Grimaldo se van a 15 puntos, más del doble de la media del primero. Baena abrió el marcador en el 10' y suma 14. Johnny hizo el 0-2 en el 30' y Grimaldo cerró de penalti en el 90+2'. Oblak se lleva 10 con la portería a cero.\n\nPara el Getafe, que venía 16º, noche negra: Djene vio la roja en el 90' y se queda en -6."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-21T19:51:47.286Z",
-    "texto": "⭐ Antony se lleva el MVP del derbi: 14 puntos, más del doble de lo que suele hacer, tras abrir el marcador en el 50'. Kike Salas lo empató en el descuento y el Sánchez-Pizjuán se quedó en 1-1.\n\nVale 34,9 M y la jornada 14 la juega en casa contra el Rayo ⚡. Si lo tienes, no hay motivo para soltarlo."
-   },
    {
     "t": "2026-11-21T22:26:35.204Z",
     "texto": "⭐ Bellingham es el MVP fantasy del Real Madrid 2-1 Celta, con 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 154,8 M en el mercado y vuelve a jugar en la jornada 14, contra el Alavés"
@@ -4741,6 +4781,10 @@
    {
     "t": "2026-11-22T19:46:39.964Z",
     "texto": "⭐ Rosier sale como el mejor del Osasuna 🐂-Málaga 🐟: 15 puntos, más del triple de lo que suele sacar. El Osasuna ganó 1-0 en El Sadar con gol de Budimir en el 20'.\n\nEl defensa vale 1,2 M y en la jornada 14 visita al Valencia 🦇. Una sola buena tarde no cambia su temporada, pero a ese precio da para pensar si necesitas defensa barato."
+   },
+   {
+    "t": "2026-11-22T22:27:02.119Z",
+    "texto": "⭐ Julián Álvarez y Grimaldo se reparten el MVP del Getafe-Atlético con 15 puntos cada uno. Grimaldo cerró el 0-3 de penalti en el 90+2'.\n\nJulián saca más del doble de su media y vale 77,4 M; Grimaldo, casi el doble de la suya y 85,2 M. El sábado a las 18:30 los dos visitan al Elche 🌴: si tienes a uno, no hay motivo para tocarlo."
    }
   ],
   "mercado": [
@@ -4811,14 +4855,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T16:46:19.681Z",
-    "texto": "⚽ Canales mete el penalti en el 68' y el Racing ⚓ vuelve a ponerse por delante: 3-2 a la Real Sociedad en El Sardinero.\n\nYa suma 4 puntos por ahora y llega enchufado: lleva tres jornadas seguidas puntuando fuerte."
-   },
-   {
-    "t": "2026-11-22T17:51:21.384Z",
-    "texto": "⚽ Budimir la mete de cabeza en el 20' y el Osasuna 🐂 se adelanta al Málaga 🐟 en El Sadar: 1-0.\n\nEl croata ya suma 5 puntos. El pase es de Rosier, que se lleva 4."
-   },
-   {
     "t": "2026-11-22T19:21:23.944Z",
     "texto": "🟥 Expulsan a Catena en el 90+2' y el Osasuna 🐂 acaba con diez en El Sadar, aunque va ganando 1-0 al Málaga 🐟.\n\nEl defensa se queda en -1 punto de momento. Si lo tienes, es un golpe, pero con el partido casi cerrado no debería ir a más."
    },
@@ -4829,6 +4865,14 @@
    {
     "t": "2026-11-22T20:31:19.305Z",
     "texto": "⚽ El Atlético se va 0-2 en el Coliseum: Johnny la mete en el 30' y silencia al Getafe.\n\nEs su primer gol en Liga, Champions o Copa, y ya suma 6 puntos. Pone el pase Julián Alvarez, que de momento se lleva 4 y llega en racha."
+   },
+   {
+    "t": "2026-11-22T22:26:29.778Z",
+    "texto": "🟥 Roja para Djene en el 90': el Getafe termina con diez en el Coliseum y pierde 0-2 con el Atlético.\n\nEl defensa se queda en -6 puntos. Si lo tenías, la jornada se le ha torcido del todo."
+   },
+   {
+    "t": "2026-11-22T22:26:31.803Z",
+    "texto": "⚽ Grimaldo marca de penalti en el 90+2' y el Atlético cierra el 0-3 en el Coliseum.\n\nEl lateral se va a 15 puntos, casi el doble de su media, y es el defensa que más puntos lleva esta temporada. Con el partido ya acabado, es jornada redonda si lo tenías."
    }
   ],
   "novedades": [
@@ -9559,17 +9603,31 @@
    "w": "2026-11-22T20:29:53Z",
    "f": "2026-11-22T20:31:10.645Z",
    "rf": "30:16"
+  },
+  "fm|127|288406|90": {
+   "j": "Alejandro Grimaldo",
+   "m": "90'",
+   "f": "2026-11-22T22:26:18.610Z",
+   "casado": true
+  },
+  "directo|127|Alejandro Grimaldo|gol1": {
+   "j": "Alejandro Grimaldo",
+   "m": "90'+2'",
+   "e": "2026-11-22T22:26:18.610Z",
+   "re": "90'+5'",
+   "w": "2026-11-22T21:51:29Z",
+   "f": "2026-11-22T22:26:18.610Z"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5408,
+   "ok": 5410,
    "fallos": 0,
-   "ejecuciones": 4362,
+   "ejecuciones": 4363,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T22:21:09.575Z"
+   "ultima": "2026-11-22T22:26:18.610Z"
   }
  },
  "ptsDirecto": {
@@ -9788,6 +9846,12 @@
    "g": 1,
    "a": 0,
    "t": 1795379470645
+  },
+  "13|127|3155": {
+   "p": 15,
+   "g": 1,
+   "a": 0,
+   "t": 1795386378610
   }
  },
  "golesAnulados": {
@@ -9803,23 +9867,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:21:18.996Z"
+   "ultimaBien": "2026-11-22T22:27:02.433Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:21:18.996Z"
+   "ultimaBien": "2026-11-22T22:27:02.433Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:21:18.996Z"
+   "ultimaBien": "2026-11-22T22:27:02.433Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:21:18.996Z"
+   "ultimaBien": "2026-11-22T22:27:02.433Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:21:18.996Z"
+   "ultimaBien": "2026-11-22T22:27:02.433Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
