@@ -1873,6 +1873,13 @@
     "extra": 0,
     "jugador": "Sergio Canales"
    }
+  },
+  {
+   "clave": "final|124",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124558909734326488",
+   "t": "2026-11-22T17:41:31.565Z"
   }
  ],
  "estados": {
@@ -4561,16 +4568,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 38,
-   "revisar": 13,
+   "redactar": 44,
+   "revisar": 16,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 450800,
-  "salida": 18116,
-  "cacheLee": 110203,
+  "entrada": 533760,
+  "salida": 19610,
+  "cacheLee": 118912,
   "cacheEscribe": 55120,
-  "dolares": 1.026838,
+  "dolares": 1.208568,
   "reservado": 0
  },
  "recientes": {
@@ -4598,10 +4605,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-21T15:26:40.258Z",
-    "texto": "🏁 El Alavés gana 3-1 al Deportivo en Mendizorroza: Ángel Pérez abrió en el 2', Lucas Boyé hizo el 2-1 en el 62' y Denis Suárez cerró en el 90'.\n\nPérez es el que más puntos ha sacado de los dos equipos: 14, más del doble de su media. Boyé suma 12 aunque antes, en el 55', le paró un penalti Leo Román. Blanco se lleva 11 sin marcar.\n\nDel Deportivo se salva Román con 9 puntos pese a perder, muy por encima de lo que suele dar. Su equipo empató con un gol en propia puerta de Tenaglia en el 41'."
-   },
-   {
     "t": "2026-11-21T17:41:35.611Z",
     "texto": "🏁 Rayo 0-1 Valencia. El Valencia gana por la mínima y Copete se va a 15 puntos fantasy. Tárrega y Dimitrievski le siguen con 13 cada uno. De Frutos suma 6 aunque el Rayo Vallecano pierde.\n\n✅ Premio para quien confió en Copete"
    },
@@ -4616,6 +4619,10 @@
    {
     "t": "2026-11-22T15:26:50.093Z",
     "texto": "🏁 El Barça remonta un 0-2 en diez minutos y gana 3-2 al Villarreal 🚢, que se había puesto por delante con goles de Buchanan en el 5' y de Oluwaseyi en el 7'.\n\nGerard Martín recortó en el 57', Fermín empató en el 61' y el 3-2 fue en propia puerta de Pau Navarro en el 67'. Pedri es el que más puntos ha sacado de los dos equipos, 11, casi el doble de su media. Gerard Martín suma 10 y Fermín 9.\n\nLa nota mala es para Pau Navarro, con -3 y expulsado en el 90+3'. Buchanan se lleva 8 aunque el Villarreal pierde."
+   },
+   {
+    "t": "2026-11-22T17:41:31.567Z",
+    "texto": "🏁 El Racing ⚓ le gana 3-2 a la Real Sociedad en El Sardinero, con dos goles de Zabiri en los primeros ocho minutos.\n\nYassir Zabiri se va a 16 puntos, más del doble de su media de 7,2, y es el mejor de los dos equipos. La Real se levantó del 2-0: Oyarzabal recortó en el 45+1' y Guedes empató en el 60'. Guedes suma 11 y Oyarzabal 10.\n\nEl Racing lo ganó de penalti: Canales, en el 68'."
    }
   ],
   "mvp": [
@@ -5144,15 +5151,10 @@
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
   },
-  "final|124": {
-   "n": 1,
-   "t": "2026-11-22T17:36:32.805Z",
-   "ultima": "2026-11-22T17:36:32.805Z"
-  },
   "mvp|124": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-22T17:36:47.284Z",
-   "ultima": "2026-11-22T17:36:47.284Z"
+   "ultima": "2026-11-22T17:41:46.874Z"
   }
  },
  "rasgos": {
@@ -9396,13 +9398,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5301,
+   "ok": 5303,
    "fallos": 0,
-   "ejecuciones": 4305,
+   "ejecuciones": 4306,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:36:11.946Z"
+   "ultima": "2026-11-22T17:41:12.755Z"
   }
  },
  "ptsDirecto": {
@@ -9606,27 +9608,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:36:48.176Z"
+   "ultimaBien": "2026-11-22T17:41:50.691Z"
   }
  },
  "avisos": [
