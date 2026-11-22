@@ -1909,6 +1909,21 @@
    "jornada": 13,
    "id": "2124581580845052262",
    "t": "2026-11-22T19:11:36.746Z"
+  },
+  {
+   "clave": "directo|125|Alejandro Catena|roja",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124584043727495542",
+   "t": "2026-11-22T19:21:23.942Z",
+   "huella": {
+    "clase": "roja",
+    "partido": "125",
+    "equipo": "97",
+    "min": 90,
+    "extra": 2,
+    "jugador": "Alejandro Catena"
+   }
   }
  ],
  "estados": {
@@ -2622,7 +2637,7 @@
   "3137": "ok",
   "3138": "ok",
   "3139": "ok",
-  "3140": "doubtful",
+  "3140": "ok",
   "3141": "out_of_league",
   "3142": "ok",
   "3143": "ok",
@@ -4585,16 +4600,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 49,
+   "redactar": 51,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 602228,
-  "salida": 20954,
+  "entrada": 626352,
+  "salida": 21212,
   "cacheLee": 127621,
   "cacheEscribe": 55120,
-  "dolares": 1.359814,
+  "dolares": 1.410642,
   "reservado": 0
  },
  "recientes": {
@@ -4732,10 +4747,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T15:26:33.291Z",
-    "texto": "🟥 Roja a Pau Navarro en el 90+3' y el Villarreal 🚢 se queda con diez cuando ya perdía 3-2 en el campo del Barça.\n\nEl defensa se va con -3 puntos. Si lo tenías, se te suma un palo gordo en el último suspiro."
-   },
-   {
     "t": "2026-11-22T16:06:18.466Z",
     "texto": "⚽ Oyarzabal recorta para la Real Sociedad en el 45+1'. Racing 2-1 Real Sociedad. Asistencia de Sergio Gómez, con 1 puntos de momento. Oyarzabal ya suma 4 puntos."
    },
@@ -4750,6 +4761,10 @@
    {
     "t": "2026-11-22T17:51:21.384Z",
     "texto": "⚽ Budimir la mete de cabeza en el 20' y el Osasuna 🐂 se adelanta al Málaga 🐟 en El Sadar: 1-0.\n\nEl croata ya suma 5 puntos. El pase es de Rosier, que se lleva 4."
+   },
+   {
+    "t": "2026-11-22T19:21:23.944Z",
+    "texto": "🟥 Expulsan a Catena en el 90+2' y el Osasuna 🐂 acaba con diez en El Sadar, aunque va ganando 1-0 al Málaga 🐟.\n\nEl defensa se queda en -1 punto de momento. Si lo tienes, es un golpe, pero con el partido casi cerrado no debería ir a más."
    }
   ],
   "novedades": [
@@ -9426,13 +9441,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5341,
+   "ok": 5343,
    "fallos": 0,
-   "ejecuciones": 4325,
+   "ejecuciones": 4326,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T19:16:13.292Z"
+   "ultima": "2026-11-22T19:21:14.120Z"
   }
  },
  "ptsDirecto": {
@@ -9648,27 +9663,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T19:16:20.513Z"
+   "ultimaBien": "2026-11-22T19:21:30.814Z"
   }
  },
  "avisos": [
