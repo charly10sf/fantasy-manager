@@ -4605,7 +4605,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castigo-uefa-inglaterra-multa-aviso-cierre-grada-visitante-20261119_3478713.html": 1795123096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004253131/arsenal-ol-lyonnes.html": 1795125735000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-exclama-dan-ganas-hacer-otra-huelga-general-escuchar-sanchez-feijoo-20261119234949.html": 1795128589000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000,
@@ -9531,13 +9530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5382,
+   "ok": 5384,
    "fallos": 0,
-   "ejecuciones": 4349,
+   "ejecuciones": 4350,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T21:16:11.576Z"
+   "ultima": "2026-11-22T21:21:12.084Z"
   }
  },
  "ptsDirecto": {
@@ -9771,27 +9770,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:16:15.882Z"
+   "ultimaBien": "2026-11-22T21:21:27.166Z"
   }
  },
  "avisos": [
