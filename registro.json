@@ -1880,6 +1880,13 @@
    "jornada": 13,
    "id": "2124558909734326488",
    "t": "2026-11-22T17:41:31.565Z"
+  },
+  {
+   "clave": "mvp|124",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124560206860562623",
+   "t": "2026-11-22T17:46:40.694Z"
   }
  ],
  "estados": {
@@ -4568,16 +4575,16 @@
   "dia": "2026-11-22",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 44,
-   "revisar": 16,
+   "redactar": 48,
+   "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 533760,
-  "salida": 19610,
-  "cacheLee": 118912,
+  "entrada": 589849,
+  "salida": 20841,
+  "cacheLee": 127621,
   "cacheEscribe": 55120,
-  "dolares": 1.208568,
+  "dolares": 1.333926,
   "reservado": 0
  },
  "recientes": {
@@ -4627,10 +4634,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-21T15:21:43.210Z",
-    "texto": "⭐ Ángel Pérez es el mejor del Alavés-Deportivo con 14 puntos: abrió el marcador en el 2' y el Alavés acabó ganando 3-1 en Mendizorroza.\n\nEl centrocampista hace más del doble de su media de 6,4 y vale 29,8 M. En la jornada 14 visita al Real Madrid ⚪."
-   },
-   {
     "t": "2026-11-21T17:32:02.023Z",
     "texto": "⭐ Copete es el mejor del Rayo ⚡-Valencia 🦇 con 15 puntos: el defensa marcó de cabeza el único gol, el 0-1 en el 41', y el Valencia se lleva los tres puntos de Vallecas.\n\nHace más del doble de su media y vale solo 689 K. En la jornada 14 el Valencia recibe al Osasuna 🐂: para un defensa tan barato, es de los que apetece fichar."
    },
@@ -4645,6 +4648,10 @@
    {
     "t": "2026-11-22T15:26:56.455Z",
     "texto": "⭐ Pedri es el mejor del Barça-Villarreal 🚢: 11 puntos, casi el doble de su media de 6,1. El Barça le dio la vuelta al 0-2 con tres goles entre el 57' y el 67' y acabó ganando 3-2.\n\nVale 80,5 M y en la jornada 14 visita al Deportivo. Con el partido que ha hecho, es de los que se quedan en el once sin discusión."
+   },
+   {
+    "t": "2026-11-22T17:46:40.697Z",
+    "texto": "⭐ Yassir Zabiri es el MVP del Racing ⚓ 3-2 Real Sociedad: marcó el 1-0 en el 6' y el 2-0 en el 8', y se va a 16 puntos.\n\nPuntúa más del doble de lo que suele y vale 61,7 M. El viernes a las 21:00 visita al Levante 🐸, y con este partido, si lo tienes, no se toca."
    }
   ],
   "mercado": [
@@ -5150,11 +5157,6 @@
    "n": 1,
    "t": "2026-11-20T11:56:43.549Z",
    "ultima": "2026-11-20T11:56:43.549Z"
-  },
-  "mvp|124": {
-   "n": 2,
-   "t": "2026-11-22T17:36:47.284Z",
-   "ultima": "2026-11-22T17:41:46.874Z"
   }
  },
  "rasgos": {
@@ -9398,13 +9400,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5303,
+   "ok": 5305,
    "fallos": 0,
-   "ejecuciones": 4306,
+   "ejecuciones": 4307,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T17:41:12.755Z"
+   "ultima": "2026-11-22T17:46:14.351Z"
   }
  },
  "ptsDirecto": {
@@ -9608,27 +9610,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T17:41:50.691Z"
+   "ultimaBien": "2026-11-22T17:46:43.264Z"
   }
  },
  "avisos": [
