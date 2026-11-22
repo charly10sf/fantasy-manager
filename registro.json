@@ -1858,6 +1858,21 @@
     "extra": 0,
     "jugador": "Gonçalo Guedes"
    }
+  },
+  {
+   "clave": "directo|124|Sergio Canales|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124545018874458541",
+   "t": "2026-11-22T16:46:19.678Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "124",
+    "equipo": "87",
+    "min": 68,
+    "extra": 0,
+    "jugador": "Sergio Canales"
+   }
   }
  ],
  "estados": {
@@ -2748,7 +2763,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
-   "SPORT|136632067": 1795106605000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261119/1004253091/alerta-deportivo-aubameyang-somete-pruebas.html": 1795110892000,
    "SPORT|136631224": 1795109681000,
    "AS|https://as.com/futbol/primera/mou-tiene-la-vacuna-f202611-n/": 1795113361000,
@@ -2948,7 +2962,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dudas-pedro-martin-1-2-barcelona-corner-protestado-villarreal-creo-toca-gulacsi-hernandez-hernandez-tendria-haber-mandado-parar-revisarlo-20261122_3479822.html": 1795361860000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254136/pedri-mvp-autocritico-hay-trabajar-no-repitan-inicios-asi.html": 1795361622000,
    "SPORT|136725148": 1795359222000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000
   },
   "hechos": [
    {
@@ -3643,7 +3658,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -4545,17 +4560,17 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 23,
-   "redactar": 29,
+   "clasificar": 24,
+   "redactar": 31,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 313760,
-  "salida": 14740,
+  "entrada": 340088,
+  "salida": 15423,
   "cacheLee": 101494,
   "cacheEscribe": 52217,
-  "dolares": 0.72851,
+  "dolares": 0.780103,
   "reservado": 0
  },
  "recientes": {
@@ -4693,10 +4708,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T15:26:29.403Z",
-    "texto": "⚽ Yassir Zabiri la manda dentro en el 6' y el Racing ⚓ se adelanta 1-0 ante la Real Sociedad en El Sardinero.\n\nEl marroquí ya suma 9 puntos por ahora y va por su gol 10 entre Liga, Champions y Copa del Rey. El pase es de Iker Luque, que de momento se lleva 5."
-   },
-   {
     "t": "2026-11-22T15:26:31.212Z",
     "texto": "⚽⚽ Doblete de Y. Zabiri en el 8'. Racing 2-0 Real Sociedad: el Racing amplía la ventaja. Ya suma 9 puntos."
    },
@@ -4711,6 +4722,10 @@
    {
     "t": "2026-11-22T16:36:31.507Z",
     "texto": "⚽ Guedes empata para la Real Sociedad en el 60'. Racing 2-2 Real Sociedad. Asistencia de Gorrotxa, con 4 puntos de momento. Guedes ya suma 5 puntos."
+   },
+   {
+    "t": "2026-11-22T16:46:19.681Z",
+    "texto": "⚽ Canales mete el penalti en el 68' y el Racing ⚓ vuelve a ponerse por delante: 3-2 a la Real Sociedad en El Sardinero.\n\nYa suma 4 puntos por ahora y llega enchufado: lleva tres jornadas seguidas puntuando fuerte."
    }
   ],
   "novedades": [
@@ -9345,17 +9360,33 @@
    "w": "2026-11-22T16:34:00Z",
    "f": "2026-11-22T16:36:22.977Z",
    "rf": "61:29"
+  },
+  "fm|124|150649|68": {
+   "j": "Sergio Canales",
+   "m": "68'",
+   "f": "2026-11-22T16:46:12.339Z",
+   "rf": "71:18",
+   "casado": true
+  },
+  "directo|124|Sergio Canales|gol1": {
+   "j": "Sergio Canales",
+   "m": "68'",
+   "e": "2026-11-22T16:46:12.339Z",
+   "re": "72'",
+   "w": "2026-11-22T16:41:36Z",
+   "f": "2026-11-22T16:46:12.339Z",
+   "rf": "71:18"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5281,
+   "ok": 5283,
    "fallos": 0,
-   "ejecuciones": 4293,
+   "ejecuciones": 4294,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T16:41:12.208Z"
+   "ultima": "2026-11-22T16:46:12.339Z"
   }
  },
  "ptsDirecto": {
@@ -9538,6 +9569,12 @@
    "g": 0,
    "a": 1,
    "t": 1795365382977
+  },
+  "13|124|3125": {
+   "p": 4,
+   "g": 1,
+   "a": 0,
+   "t": 1795365972339
   }
  },
  "golesAnulados": {
@@ -9553,27 +9590,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T16:41:18.329Z"
+   "ultimaBien": "2026-11-22T16:46:29.539Z"
   }
  },
  "avisos": [
