@@ -2647,7 +2647,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261119/1004253024/oscar-valentin-baja-segura-frente-valencia-alvaro-garcia-jozhua-dudas.html": 1795101280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261119/1004253021/ceballos-pocas-opciones-titular-derbi.html": 1795100855000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/quagliata-reivindica-al-deportivo-podemos-competir-contra-cualquier-equipo-y-sin-miedo-radio-coruna/": 1795102857000,
-   "SPORT|136625185": 1795099106000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/19/ariedo-braida-si-pudiera-fichar-a-un-solo-jugador-en-el-mundo-elegiria-a-lamine-yamal-cadena-ser/": 1795103972000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004253058/terzic-bueno-sancet.html": 1795106274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/celta-vigo/20261119/1004253070/ultimo-bernabeu-aspas-pilla-celta-plena-sequia-fuera-balaidos.html": 1795107633000,
@@ -9159,13 +9158,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5234,
+   "ok": 5236,
    "fallos": 0,
-   "ejecuciones": 4268,
+   "ejecuciones": 4269,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T14:36:18.897Z"
+   "ultima": "2026-11-22T14:41:12.026Z"
   }
  },
  "ptsDirecto": {
@@ -9327,27 +9326,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T14:36:22.133Z"
+   "ultimaBien": "2026-11-22T14:41:17.520Z"
   }
  },
  "avisos": [
