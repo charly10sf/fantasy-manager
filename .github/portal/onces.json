@@ -3987,7 +3987,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "184",
+     "nombre": "David Soria",
+     "pos": 1
+    },
+    {
+     "id": "3150",
+     "nombre": "Mojica",
+     "pos": 2
+    },
+    {
+     "id": "2699",
+     "nombre": "J. Ives Valou",
+     "pos": 2
+    },
+    {
+     "id": "2661",
+     "nombre": "Djene",
+     "pos": 2
+    },
+    {
+     "id": "2924",
+     "nombre": "Zaid Romero",
+     "pos": 2
+    },
+    {
+     "id": "3135",
+     "nombre": "Andrés Garcia",
+     "pos": 2
+    },
+    {
+     "id": "3200",
+     "nombre": "Francho",
+     "pos": 3
+    },
+    {
+     "id": "2511",
+     "nombre": "R. Terrats",
+     "pos": 3
+    },
+    {
+     "id": "3133",
+     "nombre": "Mangala",
+     "pos": 3
+    },
+    {
+     "id": "3254",
+     "nombre": "Iván Azón",
+     "pos": 4
+    },
+    {
+     "id": "3154",
+     "nombre": "Enes Ünal",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "184",
+    "2924",
+    "2661",
+    "3284",
+    "3150",
+    "3135",
+    "2511",
+    "3133",
+    "2640",
+    "3137",
+    "3154"
+   ]
   },
   {
    "id": "2",
@@ -4175,7 +4244,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2322",
+     "nombre": "Oblak",
+     "pos": 1
+    },
+    {
+     "id": "2534",
+     "nombre": "Álex Baena",
+     "pos": 3
+    },
+    {
+     "id": "2561",
+     "nombre": "Hancko",
+     "pos": 2
+    },
+    {
+     "id": "3155",
+     "nombre": "Grimaldo",
+     "pos": 2
+    },
+    {
+     "id": "255",
+     "nombre": "Le Normand",
+     "pos": 2
+    },
+    {
+     "id": "2480",
+     "nombre": "Johnny",
+     "pos": 3
+    },
+    {
+     "id": "1210",
+     "nombre": "Giuliano",
+     "pos": 4
+    },
+    {
+     "id": "67",
+     "nombre": "Marcos Llorente",
+     "pos": 2
+    },
+    {
+     "id": "1565",
+     "nombre": "Barrios",
+     "pos": 3
+    },
+    {
+     "id": "3088",
+     "nombre": "Julián Alvarez",
+     "pos": 4
+    },
+    {
+     "id": "2326",
+     "nombre": "Koke",
+     "pos": 3
+    }
+   ],
+   "probable": [
+    "2322",
+    "3155",
+    "2561",
+    "67",
+    "255",
+    "2534",
+    "3193",
+    "1565",
+    "2326",
+    "3088",
+    "1210"
+   ]
   },
   {
    "id": "11",
