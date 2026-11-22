@@ -27,7 +27,7 @@ export const NOVEDADES = [
     // (22 nov, el repaso de la 0.8s: claude/prompt-bajas-y-repaso-0.8s.md, paso 2) Arreglos: Directo con el once de la jornada
     // (aviso de Domy), lo cambiado a la vez en dos dispositivos, la oferta de LaLiga contada y el dinero cerrado de refilón.
     // El detalle, en ESTADO.md del proyecto. La hora, al publicar
-    v: '0.8u', f: '2026-11-22', h: '', t: 'Arreglos de la sincronización y de Directo',
+    v: '0.8u', f: '2026-11-22', h: '19:27', t: 'Arreglos de la sincronización y de Directo',
     cosas: [
       { tipo: 'arreglo', d: 'directo', t: 'Directo cuenta tu once de la jornada', x: 'Si vendes a uno de tu once con la jornada ya empezada, sus puntos te siguen contando: ahora también sale en sus partidos con lo que lleva y, en la ficha del partido, como tuyo.', ir: { v: 'directo' } },
       { tipo: 'arreglo', d: 'movil', t: 'Nada se pierde entre dispositivos', x: 'Si tenías la app abierta en el móvil mientras usabas la web, lo último que preguntabas o le contabas a la IA en uno podía borrar lo del otro. Ahora se juntan las dos cosas, y la app mira lo de tus otros dispositivos antes de preguntar y al volver a Hoy o a Pregunta.', ir: { v: 'ia' } },
