@@ -1681,6 +1681,13 @@
    "jornada": 13,
    "id": "2124413076325965922",
    "t": "2026-11-22T08:02:02.081Z"
+  },
+  {
+   "clave": "onces|128",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124473412961866069",
+   "t": "2026-11-22T12:01:47.528Z"
   }
  ],
  "estados": {
@@ -2778,7 +2785,8 @@
    "SPORT|136598447": 1795341606000,
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
-   "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000
+   "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000
   },
   "hechos": [
    {
@@ -3514,7 +3522,7 @@
   ],
   "gemini": {
    "dia": "2026-11-22",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -4421,25 +4429,21 @@
  "ia": {
   "dia": "2026-11-22",
   "llamadas": {
-   "clasificar": 13,
-   "redactar": 4,
-   "revisar": 3,
+   "clasificar": 14,
+   "redactar": 6,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 86096,
-  "salida": 6859,
+  "entrada": 118052,
+  "salida": 7814,
   "cacheLee": 2903,
-  "cacheEscribe": 5806,
-  "dolares": 0.146745,
+  "cacheEscribe": 8709,
+  "dolares": 0.217413,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-20T19:01:54.377Z",
-    "texto": "👀 Ni rotaciones ni sorpresas en el Athletic-Espanyol: los dos onces están confirmados y salen los que se esperaban.\n\nUnai Simón está bajo palos en el Athletic 🦁, que sale en un 4-2-3-1, y es el que más puntos da de su equipo. El Espanyol se planta con cinco atrás, en un 5-4-1, y Cabrera también es titular: nadie del Espanyol puntúa más que él.\n\nQuien tenga a alguno de los dos ya sabe que cuenta."
-   },
    {
     "t": "2026-11-21T12:01:57.446Z",
     "texto": "👀 Sorpresa en el once del Deportivo en Mendizorroza: Giménez, Amatucci y Bil Nsongo, titulares habituales, se quedan fuera, y Riki, que no suele serlo, sale de inicio.\n\nEl Alavés va con un 4-4-2 y Sivera bajo palos, y el Dépor también con 4-4-2, con Aubameyang arriba. En una hora o así rueda el balón."
@@ -4455,6 +4459,10 @@
    {
     "t": "2026-11-21T19:01:32.482Z",
     "texto": "ℹ️ Onces confirmados del Real Madrid-Celta. Sin sorpresas: salen los onces que se esperaban. El Madrid ⚪ sale con 4-4-2 y el Celta con 3-4-3. Empieza hoy a las 21:00."
+   },
+   {
+    "t": "2026-11-22T12:01:47.531Z",
+    "texto": "👀 Raphinha juega, y con él Moleiro: los dos referentes de sus equipos están en el once, así que quien los tenga puede estar tranquilo.\n\nEl Barça se estira con tres arriba y el Villarreal 🚢 se coloca con dos líneas de cuatro. No hay ninguna sorpresa, y en una hora o así rueda el balón."
    }
   ],
   "final": [
@@ -9064,13 +9072,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5183,
+   "ok": 5184,
    "fallos": 0,
-   "ejecuciones": 4236,
+   "ejecuciones": 4237,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T11:56:17.126Z"
+   "ultima": "2026-11-22T12:01:17.538Z"
   }
  },
  "ptsDirecto": {
@@ -9190,15 +9198,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:56:21.401Z"
+   "ultimaBien": "2026-11-22T12:01:52.106Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:56:21.401Z"
+   "ultimaBien": "2026-11-22T12:01:52.106Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:56:21.401Z"
+   "ultimaBien": "2026-11-22T12:01:52.106Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9206,11 +9214,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:56:21.401Z"
+   "ultimaBien": "2026-11-22T12:01:52.106Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T11:56:21.401Z"
+   "ultimaBien": "2026-11-22T12:01:52.106Z"
   }
  },
  "avisos": [
