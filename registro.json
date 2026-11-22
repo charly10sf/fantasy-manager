@@ -2570,7 +2570,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261119/1004252853/getafe-oportunidad-le-normand-cambie-suerte.html": 1795078912000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-fuerza-maquinaria-entrena_0_2008539959.html": 1795080817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261119/1004252841/sergio-canales-cita-pasado-txuri-urdin-161-partidos-cruzado.html": 1795082174000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/19/el-mensaje-de-unai-marrero-a-remiro-en-pleno-pulso-por-su-renovacion-radio-san-sebastian/": 1795083181000,
@@ -9172,13 +9171,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5147,
+   "ok": 5148,
    "fallos": 0,
-   "ejecuciones": 4200,
+   "ejecuciones": 4201,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T09:01:25.618Z"
+   "ultima": "2026-11-22T09:06:20.386Z"
   }
  },
  "ptsDirecto": {
@@ -9298,15 +9297,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:01:33.809Z"
+   "ultimaBien": "2026-11-22T09:06:22.723Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:01:33.809Z"
+   "ultimaBien": "2026-11-22T09:06:22.723Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:01:33.809Z"
+   "ultimaBien": "2026-11-22T09:06:22.723Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9314,11 +9313,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:01:33.809Z"
+   "ultimaBien": "2026-11-22T09:06:22.723Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T09:01:33.809Z"
+   "ultimaBien": "2026-11-22T09:06:22.723Z"
   }
  },
  "avisos": [
