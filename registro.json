@@ -2580,7 +2580,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261119/1004252980/buen-momento-lammens-belgica-pone-duda-titularidad-courtois.html": 1795094656000,
    "AS|https://as.com/futbol/terzic-estamos-preparados-para-continuar-donde-lo-dejamos-f202611-n/": 1795094766000,
    "AS|https://as.com/futbol/esperando-a-valverde-f202611-n/": 1795095731000,
-   "SPORT|136622620": 1795093044000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-ante-visita-espanyol-preparados-continuar-dejamos-20261119150908-nt.html": 1795097767000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/19/aubameyang-con-molestias-en-el-tobillo-a-48-horas-del-partido-radio-coruna/": 1795098947000,
    "AS|https://as.com/futbol/primera/preocupacion-aubameyang-en-el-depor-f202611-n/": 1795098300000,
@@ -4376,7 +4375,6 @@
  "liga": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/19/levante-elche-horario-ver-partido-lalaiga-136618414.html": 1795093486000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/19/alcaraz-suspende-entrenamiento-turin-molestias/00031795092508211813165.htm": 1795093260000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261119/1004252955/rueda-terzic.html": 1795100117000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/polemica-copa-rey-balonmano-cuela-emparejamiento-presentacion-sorteo-luego-sale-bolas-20261119_3478556.html": 1795099820000,
    "SPORT|136630245": 1795104774000,
@@ -9068,13 +9066,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5195,
+   "ok": 5196,
    "fallos": 0,
-   "ejecuciones": 4248,
+   "ejecuciones": 4249,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-22T12:56:10.513Z"
+   "ultima": "2026-11-22T13:01:13.387Z"
   }
  },
  "ptsDirecto": {
@@ -9194,27 +9192,29 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:56:14.465Z"
+   "ultimaBien": "2026-11-22T13:01:20.072Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:56:14.465Z"
+   "ultimaBien": "2026-11-22T13:01:20.072Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:56:14.465Z"
+   "ultimaBien": "2026-11-22T13:01:20.072Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 0,
-   "ultimaBien": "2026-11-21T22:26:35.315Z"
+   "seguidas": 1,
+   "ultimaBien": "2026-11-21T22:26:35.315Z",
+   "desde": "2026-11-22T13:01:20.072Z",
+   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:56:14.465Z"
+   "ultimaBien": "2026-11-22T13:01:20.072Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T12:56:14.465Z"
+   "ultimaBien": "2026-11-22T13:01:20.072Z"
   }
  },
  "avisos": [
