@@ -1,0 +1,84 @@
+{
+ "resumen": {
+  "ahora": {
+   "tuits": 3,
+   "redactados": 3,
+   "llamadas": 5,
+   "dolares": 0.1204,
+   "porTuit": 0.0401,
+   "porRedactado": 0.0401,
+   "palabras": 55,
+   "emojis": 0.3,
+   "sinEmojiArriba": 2,
+   "tics": {
+    "«si lo tienes» / «quien lo tenga»": 0,
+    "«ya suma»": 0,
+    "«de momento» / «por ahora»": 0,
+    "«el pase es de»": 0,
+    "«la mete» / «la manda dentro»": 0,
+    "«más del doble» / «de lo que suele»": 1,
+    "«Liga, Champions…» / «primer gol»": 0,
+    "«en racha» / «jornadas seguidas»": 0,
+    "«el mejor de los dos equipos»": 0,
+    "«se va» con marcador": 0,
+    "«se va a N»": 0,
+    "«sin sorpresas»": 0,
+    "la hora del reloj": 2,
+    "inicial con punto («Y. Zabiri»)": 0
+   }
+  }
+ },
+ "sistema": {
+  "ahora": 15275
+ },
+ "filas": [
+  {
+   "tipo": "mvp",
+   "clave": "mvp|129",
+   "plantilla": "⭐ MVP fantasy del Athletic Club 0-1 Espanyol. A. Fortuño se lleva el partido con 14 puntos. Con esto llega a 63 puntos en la temporada.\n\nEl siguiente, en la jornada 14 contra el Getafe. Ahora mismo vale 4,7 M.",
+   "ahora": {
+    "texto": "Fortuño, el mejor del Athletic-Espanyol con 14 puntos: más del doble de lo que suele sacar.\n\nEl portero de los pericos mantuvo la portería a cero en San Mamés, donde Roberto marcó el 0-1 en el 66'. Cuesta 4,7 M y la jornada 14 la juega en casa contra el Getafe, así que es un portero barato al que mirar.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0222,
+    "segundos": 3.9,
+    "fallos": [],
+    "borradores": []
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|130",
+   "plantilla": "⭐ MVP fantasy del Alavés 3-1 Deportivo. Nadie saca más que Ángel Pérez: 14 puntos. El centrocampista del Alavés lleva 77 puntos en la temporada.\n\n💸 En el mercado está a 31,1 M. Su próximo partido, el sábado a las 21:00 ante el Real Madrid",
+   "ahora": {
+    "texto": "⭐ Ángel Pérez fue el mejor del Alavés-Deportivo con 14 puntos. El centrocampista marcó el 1-0 en el 2' en Mendizorroza, en un 3-1 final.\n\nCuesta 31,1 M y el sábado a las 21:00 visita al Real Madrid: fuera de casa y ante los blancos, mejor no dar por hecho que repita.",
+    "estado": "redactado",
+    "llamadas": 3,
+    "dolares": 0.0764,
+    "segundos": 14.8,
+    "fallos": [
+     "  (redactar) mvp|130, intento 1: el revisor no lo publicaría: «mejor mirar otras opciones»: Consejo sin base: los datos no traen dificultad del cruce ni nada que diga que el partido contra el Madrid sea malo; es una predicción presentada como valoración.; «lo próximo es complicado»: Calificar el partido ante el Madrid de complicado no sale de los datos (no hay clasificación ni dificultad), es una afirmación sin respaldo.; «Tiene un 31,1 M de valor»: Formulación rara y calcada («tiene un 31,1 M de valor»); un aficionado diría «cuesta 31,1 M» o «vale 31,1 M».; «el 3-1 acabó llegando en Mendizorroza»: Frase confusa y sin sujeto claro: sugiere que el 3-1 es mérito del jugador cuando lo marcó Denis Suárez, y el estadio no aporta nada.",
+     "  (redactar) mvp|130, intento 2: el revisor no lo publicaría: «un partido en el que tendrá que repetir sin que nadie le asegure nada»: Frase de relleno que no sale de los datos y suena a IA; no dice nada concreto para el mánager (ni cifra ni valoración basada en los datos).; «puso a los babazorros por delante desde el principio»: Redundante con 'abrió el marcador en el 2''; relleno narrativo que repite lo ya dicho y suena a plantilla."
+    ],
+    "borradores": [
+     "⭐ Ángel Pérez manda en el Alavés-Deportivo con 14 puntos. El centrocampista marcó el 1-0 en el 2' y el 3-1 acabó llegando en Mendizorroza. / Tiene un 31,1 M de valor y lo próximo es complicado: el sábado a las 21:00 visita al Real Madrid. Para ese partido, mejor mirar otras opciones.",
+     "⭐ Ángel Pérez es el MVP del Alavés-Deportivo: 14 puntos para el centrocampista, que abrió el marcador en el 2' y puso a los babazorros por delante desde el principio. / Cuesta 31,1 M y el sábado a las 21:00 visita al Real Madrid, un partido en el que tendrá que repetir sin que nadie le asegure nada."
+    ]
+   }
+  },
+  {
+   "tipo": "mvp",
+   "clave": "mvp|123",
+   "plantilla": "⭐ MVP fantasy del Rayo Vallecano ⚡ 0-1 Valencia. 15 puntos para Copete. En lo que va de temporada suma 15 puntos, a 7,5 por partido.\n\n💸 Vale 716 K en el mercado y vuelve a jugar el domingo a las 14:00, contra el Osasuna 🐂",
+   "ahora": {
+    "texto": "Copete, el defensa del Valencia, se lleva el MVP del Rayo-Valencia: marcó en el 41' el único gol de la tarde en Vallecas y se queda con 15 puntos.\n\nCuesta 716 K y el domingo, a las 14:00, el Valencia recibe al Osasuna: un defensa barato que ya ha demostrado que puede puntuar fuerte.",
+    "estado": "redactado",
+    "llamadas": 1,
+    "dolares": 0.0217,
+    "segundos": 3.7,
+    "fallos": [],
+    "borradores": []
+   }
+  }
+ ]
+}
