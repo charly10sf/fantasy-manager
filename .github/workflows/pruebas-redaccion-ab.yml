@@ -1,0 +1,58 @@
+# SOLO EN LA RAMA pruebas-redaccion-ab (no se fusiona): la redacción del bot con la guía de antes (f8df132, `pendiente` del 22 nov) y
+# con la nueva (`bot-redaccion`), con la IA de verdad y lado a lado (fase 4 de claude/auditoria-redaccion-bot.md del proyecto).
+# Los hechos salen de un simulacro de ahora (`ejecutar.mjs --volcar`, sin redactar ni publicar: sin las claves de X) y los últimos tuits
+# de cada tipo, del registro de bot-estado de antes de la jornada 13 (para que no estén ya los de estos mismos partidos). Deja
+# .github/ia/ab-redaccion.md y .json en la misma rama. Tope de gasto: TOPE_USD entre las dos versiones.
+name: Pruebas redaccion A/B
+on:
+  push:
+    branches: [pruebas-redaccion-ab]
+    paths-ignore: ['.github/ia/ab-redaccion.md', '.github/ia/ab-redaccion.json']
+permissions:
+  contents: write
+concurrency: { group: pruebas-redaccion-ab, cancel-in-progress: true }
+jobs:
+  ab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BOT_IA: claude
+      TOPE_USD: '2.6'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: La redacción de antes (f8df132)
+        run: |
+          git worktree add -q /tmp/antes f8df13216cbb873b454444b3b146dbf95c5d86d9
+          npm ci --prefix /tmp/antes/bot --no-audit --no-fund
+      - name: Registro de antes de la jornada 13 (copia, solo lectura)
+        run: |
+          git fetch -q origin bot-estado --shallow-since="2026-11-18"
+          C=$(git rev-list -1 --before="2026-11-20T19:30:00Z" FETCH_HEAD)
+          git show "$C:registro.json" > /tmp/registro.json
+          echo "Registro de $(git show -s --format=%ci "$C")"
+      - name: Los tuits de ahora con sus hechos (simulacro, sin redactar ni publicar)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=directo,final,mvp,caidas,mercado,previa,novedades,noticias,sancionados,lloros --volcar=/tmp/tuits.json > /tmp/simulacro.txt 2>&1 || true
+          grep -E "^## |^# " /tmp/simulacro.txt | head -40
+          node -e "const d=require('/tmp/tuits.json'); console.log(d.tuits.length, 'tuits con hechos')"
+      - name: Antes y ahora con la IA de verdad
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
+          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion --n=26 --tope="$TOPE_USD"
+      - name: Guardar en la rama
+        if: always()
+        run: |
+          [ -f .github/ia/ab-redaccion.md ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add .github/ia/ab-redaccion.md .github/ia/ab-redaccion.json
+          git commit -q -m "A/B de la redacción del bot" || exit 0
+          git push -q origin HEAD:pruebas-redaccion-ab
