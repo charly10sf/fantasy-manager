@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html": 1795195312000,
-   "SPORT|136676372": 1795193063000,
    "SPORT|136676656": 1795193226000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253441/barca-dia-espart-kounde-masia-can-planes.html": 1795196569000,
    "SPORT|136678460": 1795193621000,
@@ -9372,13 +9371,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5668,
+   "ok": 5669,
    "fallos": 0,
-   "ejecuciones": 4585,
+   "ejecuciones": 4586,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T16:41:13.081Z"
+   "ultima": "2026-11-23T16:46:13.845Z"
   }
  },
  "ptsDirecto": {
@@ -9618,15 +9617,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:41:17.832Z"
+   "ultimaBien": "2026-11-23T16:46:17.385Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:41:17.832Z"
+   "ultimaBien": "2026-11-23T16:46:17.385Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:41:17.832Z"
+   "ultimaBien": "2026-11-23T16:46:17.385Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9634,11 +9633,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:41:17.832Z"
+   "ultimaBien": "2026-11-23T16:46:17.385Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:41:17.832Z"
+   "ultimaBien": "2026-11-23T16:46:17.385Z"
   }
  },
  "avisos": [
