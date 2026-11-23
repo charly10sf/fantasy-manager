@@ -2037,6 +2037,13 @@
    "jornada": 13,
    "id": "2124799238760530183",
    "t": "2026-11-23T09:36:30.633Z"
+  },
+  {
+   "clave": "onces|126",
+   "tipo": "onces",
+   "jornada": 13,
+   "id": "2124942733701976361",
+   "t": "2026-11-23T19:06:42.254Z"
   }
  ],
  "estados": {
@@ -4391,24 +4398,20 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 40,
-   "redactar": 12,
-   "revisar": 6,
+   "redactar": 16,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 232683,
-  "salida": 17830,
-  "cacheLee": 11612,
-  "cacheEscribe": 5806,
-  "dolares": 0.37319,
+  "entrada": 282490,
+  "salida": 19269,
+  "cacheLee": 17418,
+  "cacheEscribe": 8709,
+  "dolares": 0.495032,
   "reservado": 0
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-21T19:01:32.482Z",
-    "texto": "ℹ️ Onces confirmados del Real Madrid-Celta. Sin sorpresas: salen los onces que se esperaban. El Madrid ⚪ sale con 4-4-2 y el Celta con 3-4-3. Empieza hoy a las 21:00."
-   },
    {
     "t": "2026-11-22T12:01:47.531Z",
     "texto": "👀 Raphinha juega, y con él Moleiro: los dos referentes de sus equipos están en el once, así que quien los tenga puede estar tranquilo.\n\nEl Barça se estira con tres arriba y el Villarreal 🚢 se coloca con dos líneas de cuatro. No hay ninguna sorpresa, y en una hora o así rueda el balón."
@@ -4424,6 +4427,10 @@
    {
     "t": "2026-11-22T19:11:36.749Z",
     "texto": "ℹ️ Onces confirmados del Getafe-Atlético. Ni un cambio raro en los dos onces. El Getafe sale con 4-4-2 y el Atleti con 4-2-3-1. Empieza hoy a las 21:00."
+   },
+   {
+    "t": "2026-11-23T19:06:42.256Z",
+    "texto": "👀 O. Rey es la sorpresa del once del Levante en el Ciutat de València: el centrocampista juega de inicio aunque no suele hacerlo, y los granotas se ponen en un 4-2-3-1.\n\nEn el Elche no hay ningún titular inesperado; sale en un 4-3-3. Ryan bajo palos en el Levante, con una media de 6,8, y Revivo en la defensa del Elche son quienes más puntos dan de cada equipo, y los dos están en el once."
    }
   ],
   "final": [
@@ -5000,13 +5007,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "novedades|1775:vuelve,2355:vuelve|2026-11-20": {
-   "n": 1,
-   "t": "2026-11-20T11:56:43.549Z",
-   "ultima": "2026-11-20T11:56:43.549Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9326,13 +9327,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5696,
+   "ok": 5697,
    "fallos": 0,
-   "ejecuciones": 4613,
+   "ejecuciones": 4614,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T19:01:11.635Z"
+   "ultima": "2026-11-23T19:06:13.076Z"
   }
  },
  "ptsDirecto": {
@@ -9572,15 +9573,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:01:15.965Z"
+   "ultimaBien": "2026-11-23T19:06:44.061Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:01:15.965Z"
+   "ultimaBien": "2026-11-23T19:06:44.061Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:01:15.965Z"
+   "ultimaBien": "2026-11-23T19:06:44.061Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9588,11 +9589,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:01:15.965Z"
+   "ultimaBien": "2026-11-23T19:06:44.061Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:01:15.965Z"
+   "ultimaBien": "2026-11-23T19:06:44.061Z"
   }
  },
  "avisos": [
