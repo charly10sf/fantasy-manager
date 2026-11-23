@@ -2935,7 +2935,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
    "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
    "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
@@ -9542,13 +9541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5605,
+   "ok": 5606,
    "fallos": 0,
-   "ejecuciones": 4522,
+   "ejecuciones": 4523,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:31:16.670Z"
+   "ultima": "2026-11-23T11:36:15.103Z"
   }
  },
  "ptsDirecto": {
@@ -9788,15 +9787,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:31:29.568Z"
+   "ultimaBien": "2026-11-23T11:36:19.271Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:31:29.568Z"
+   "ultimaBien": "2026-11-23T11:36:19.271Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:31:29.568Z"
+   "ultimaBien": "2026-11-23T11:36:19.271Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9804,11 +9803,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:31:29.568Z"
+   "ultimaBien": "2026-11-23T11:36:19.271Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:31:29.568Z"
+   "ultimaBien": "2026-11-23T11:36:19.271Z"
   }
  },
  "avisos": [
