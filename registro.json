@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
@@ -3116,18 +3115,6 @@
    "SPORT|136746976": 1795431027000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html",
-    "medio": "MARCA",
-    "t": 1795178565000,
-    "id": "2602",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Álvaro recibe el alta y viaja con el equipo a Madrid",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html",
     "medio": "Diario de Sevilla",
@@ -4478,7 +4465,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
+   "SPORT|136750461": 1795433046000
   },
   "hechos": [
    {
@@ -4507,28 +4496,25 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436477420,
-   "SPORT|136750461": 1795437083278
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 203139,
-  "salida": 13960,
+  "entrada": 205002,
+  "salida": 14233,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.368299,
+  "dolares": 0.368622,
   "reservado": 0
  },
  "recientes": {
@@ -9454,13 +9440,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5619,
+   "ok": 5620,
    "fallos": 0,
-   "ejecuciones": 4536,
+   "ejecuciones": 4537,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:41:17.187Z"
+   "ultima": "2026-11-23T12:46:20.664Z"
   }
  },
  "ptsDirecto": {
@@ -9700,15 +9686,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:41:22.164Z"
+   "ultimaBien": "2026-11-23T12:46:29.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:41:22.164Z"
+   "ultimaBien": "2026-11-23T12:46:29.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:41:22.164Z"
+   "ultimaBien": "2026-11-23T12:46:29.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9716,11 +9702,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:41:22.164Z"
+   "ultimaBien": "2026-11-23T12:46:29.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:41:22.164Z"
+   "ultimaBien": "2026-11-23T12:46:29.245Z"
   }
  },
  "avisos": [
