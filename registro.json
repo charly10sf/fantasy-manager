@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "SPORT|136656499": 1795167406000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
@@ -3124,24 +3123,10 @@
    "SPORT|136739601": 1795421298000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000,
-   "SPORT|136740352": 1795422809000
+   "SPORT|136740352": 1795422809000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136656499",
-    "medio": "SPORT",
-    "t": 1795167406000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang tiene molestias en el tobillo y no entrena con el grupo",
-    "motivo": "molestias en el tobillo",
-    "plazo": "",
-    "nums": [
-     14,
-     0
-    ]
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html",
     "medio": "Diario de Sevilla",
@@ -3739,7 +3724,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4673,17 +4658,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 170798,
-  "salida": 6573,
+  "entrada": 172840,
+  "salida": 7174,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.36137,
+  "dolares": 0.361875,
   "reservado": 0
  },
  "recientes": {
@@ -9609,13 +9594,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5582,
+   "ok": 5583,
    "fallos": 0,
-   "ejecuciones": 4499,
+   "ejecuciones": 4500,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:36:11.976Z"
+   "ultima": "2026-11-23T09:41:12.236Z"
   }
  },
  "ptsDirecto": {
@@ -9855,15 +9840,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:36:35.241Z"
+   "ultimaBien": "2026-11-23T09:41:20.610Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:36:35.241Z"
+   "ultimaBien": "2026-11-23T09:41:20.610Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:36:35.241Z"
+   "ultimaBien": "2026-11-23T09:41:20.610Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9871,11 +9856,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:36:35.241Z"
+   "ultimaBien": "2026-11-23T09:41:20.610Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:36:35.241Z"
+   "ultimaBien": "2026-11-23T09:41:20.610Z"
   }
  },
  "avisos": [
