@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "SPORT|136672088": 1795184079000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
@@ -4363,7 +4362,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
@@ -9395,13 +9393,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5636,
+   "ok": 5637,
    "fallos": 0,
-   "ejecuciones": 4553,
+   "ejecuciones": 4554,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T14:01:16.173Z"
+   "ultima": "2026-11-23T14:06:16.819Z"
   }
  },
  "ptsDirecto": {
@@ -9641,15 +9639,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:01:22.180Z"
+   "ultimaBien": "2026-11-23T14:06:20.479Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:01:22.180Z"
+   "ultimaBien": "2026-11-23T14:06:20.479Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:01:22.180Z"
+   "ultimaBien": "2026-11-23T14:06:20.479Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9657,11 +9655,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:01:22.180Z"
+   "ultimaBien": "2026-11-23T14:06:20.479Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:01:22.180Z"
+   "ultimaBien": "2026-11-23T14:06:20.479Z"
   }
  },
  "avisos": [
