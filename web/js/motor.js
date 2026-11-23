@@ -2170,7 +2170,12 @@ export function analizar(D, H, c, extra = {}) {
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
 
   /* ---------- tus jugadores en venta y sus ofertas ---------- */
-  M.misVentas = (D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
+  // (23 nov) sin relevo: el que lo sustituiría en tu once puntúa mucho menos (la misma regla que plan.js, sinRelevo)
+  const sinRelevoV = (pid, j) => { const p = M.perdida(pid); return p >= 1 && p >= 0.5 * (M.ppEsperado(j) || 0); };
+  const PUESTO_V = { 1: 'portero', 2: 'defensa', 3: 'centrocampista', 4: 'delantero' };
+  // la jornada empieza antes de la siguiente oferta (el cambio de mercado del mismo día que empieza no da tiempo)
+  const jornadaAntesV = !!M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini));
+  M.misVentas =(D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
     const j = J(v.pid), t = M.tend(v.pid);
     const mia = (D.plantillas[yoTid] || []).find((f) => f.pid === v.pid);
     const compra = mia && (mia.compra || null);
@@ -2220,6 +2225,24 @@ export function analizar(D, H, c, extra = {}) {
       const r = ine ? num(ine.ult) : num(t.d1), prima = mejor.importe - j.valor, dias = Math.max(1, Math.round(prima / r)), once = M.perdida(v.pid) >= 0.3;
       consejo = 'esperar';
       porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero (tienes ${eur(D.dinero)}): los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
+    }
+    // (23 nov, Carlos: Gulácsi, portero titular al 92 %, con buenos puntos, partido fácil y que hoy deja de bajar, y la app
+    // mandaba aceptar un 7 % «porque te pagan más de lo que vale») aceptar una oferta es venderlo. A uno de tu once, lo
+    // mismo que para ponerlo a la venta (14 nov): solo si baja todos los días y tiene relevo, si está de baja o si te hace
+    // falta el dinero (eso lo decide el plan, FA-). Lo que LaLiga paga de más es un ±10 % y es suerte: no compensa quedarse
+    // sin él, salvo que paguen un 10 % o más (lo más alto que suele dar LaLiga; Carlos, 17 nov: «la de un 12 % por encima,
+    // aunque suba un 1 % al día, sí»). En negativo entre semana tampoco (no se malvende); sí si la jornada empieza antes de
+    // la siguiente oferta
+    else if (!(num(D.dinero) < 0 && jornadaAntesV) && M.perdida(v.pid) >= 0.3 && !M.vendeBaja({ j, tend: t }) && !(extra.reventa || {})[v.pid]
+      && mejor.sobre < 0.1 && !(M.bajaSeguido(v.pid) && !sinRelevoV(v.pid, j))) {
+      const pierde = String(Math.round(M.perdida(v.pid) * 10) / 10).replace('.', ','), bs = M.bajaSeguido(v.pid);
+      // (con lo pujado acabarías en negativo: el plan la acepta si no hay otra forma de llegar en positivo a la jornada)
+      const conPujas = num(D.dinero) - num(M.misPujas);
+      const luego = `${mejor.deLiga ? 'LaLiga te hará otra en el siguiente cambio de mercado: acéptala' : 'Acéptala'} solo si te hace falta el dinero${conPujas < 0 ? ` (con lo que tienes pujado te quedarías en ${eur(conPujas)})` : ''}.`;
+      consejo = 'esperar';
+      porque = bs
+        ? `Baja todos los días (${bs.dias} seguidos), pero es titular en tu once y no tienes otro ${PUESTO_V[j.pos] || 'en su puesto'} que puntúe como él (sin él pierdes unos ${pierde} pts por jornada): antes hace falta un sustituto. ${luego}`
+        : `Es titular en tu once (sin él pierdes unos ${pierde} pts por jornada) y no baja todos los días: ${mejor.sobre > 0 ? `por un ${Math.max(1, Math.round(mejor.sobre * 100))} % más` : 'por lo que te ofrecen'} no compensa quedarte sin él. ${luego}`;
     }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta

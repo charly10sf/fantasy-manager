@@ -32,6 +32,7 @@ export const NOVEDADES = [
     v: '0.8w', f: '2026-11-23', h: '', t: 'El plan sigue aunque salgas de la app',
     cosas: [
       { tipo: 'arreglo', d: 'ia', t: 'El plan sigue aunque salgas de la app', x: 'Si salías de la app mientras la IA preparaba tu plan y el móvil cortaba la conexión, a veces el plan se perdía a medias. Ahora se termina igual y lo tienes al volver, sin gastar otro.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'No vende a tus titulares por poco', x: 'Con una oferta un poco por encima de su valor, la app ya no te dice que vendas a un titular de tu once que no baja todos los días: por un 7 % no compensa quedarte sin él. Lo dice si te pagan un 10 % o más, si está de baja o si necesitas el dinero.' },
       { tipo: 'mejora', d: 'campana', t: 'Te avisa si no puede avisarte', x: 'Mientras se prepara tu plan, si tienes las notificaciones apagadas, la app te lo dice y te deja activarlas desde ahí mismo. Con ellas, al salir ves que lo está haciendo y te avisa cuando esté.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, al momento', x: 'Sale enseguida con lo de la última vez mientras se actualiza, y lo nuevo llega antes.' },
     ],

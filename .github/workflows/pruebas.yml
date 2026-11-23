@@ -70,6 +70,10 @@ jobs:
       # (20 nov) vender o quedárselo: las cuentas y el veredicto que le llegan al chat, con jugadores forzados
       - name: Vender o quedárselo
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-ventas.mjs
+      # (23 nov, Gulácsi) una oferta por un titular de tu once que no baja todos los días: esperar, salvo un 10 % o más,
+      # que esté de baja o que haga falta el dinero
+      - name: La oferta por un titular
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-oferta-titular.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs

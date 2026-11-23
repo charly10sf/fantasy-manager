@@ -20,6 +20,9 @@ for (const escena of ESCENAS) {
       const vivos = (R.ops || []).filter((o) => !o.descartada && !o.sugerencia && o.pid);
       const plan = {};
       for (const o of vivos) (plan[o.pid] ||= []).push(o.etiqueta === 'Aceptar oferta' ? 'aceptar' : o.accion + (o.hoy === false ? ' (otro día)' : ''));
+      // (23 nov) la oferta que el plan acepta porque hace falta el dinero (FA-): en Equipo puede poner esperar si lo que dice es
+      // «acéptala solo si te hace falta el dinero» (un titular de tu once que no baja todos los días)
+      const porDinero = new Set(vivos.filter((o) => o.etiqueta === 'Aceptar oferta' && o.hace_falta).map((o) => String(o.pid)));
       const descartes = new Map((R.descartes || []).map((d) => [String(d.pid), d.motivo || '']));
       // el plan con la IA, sin que la IA cambie nada
       const { lista } = I.idsCorto(R);
@@ -33,6 +36,7 @@ for (const escena of ESCENAS) {
       // Equipo: el consejo de cada uno en venta
       const equipo = {};
       for (const v of M.misVentas || []) if (v.consejo) equipo[v.pid] = v.consejo;
+      const siHaceFalta = (pid) => porDinero.has(String(pid)) && /solo si te hace falta el dinero/.test(((M.misVentas || []).find((v) => String(v.pid) === String(pid)) || {}).porque || '');
       // lo que se le pasa al chat
       const datos = I.datosChat('¿Qué hago con mis jugadores?', D, M, c, {});
       const noVende = new Set([...datos.matchAll(/^- \w{3} \| ([^|]+?) \|[^\n]*LA APP: NO LO VENDER[ÍI]A HOY/gm)].map((m) => m[1].trim()));
@@ -46,7 +50,7 @@ for (const escena of ESCENAS) {
       for (const [pid, l] of Object.entries(plan)) {
         const n = nombre(pid);
         if (l.some((x) => x === 'vender') && noVende.has(n)) mal.push(`${n}: el plan lo vende hoy y al chat se le dice «NO LO VENDERÍA HOY»`);
-        if (l.includes('aceptar') && equipo[pid] === 'esperar') mal.push(`${n}: el plan acepta la oferta y en Equipo pone esperar`);
+        if (l.includes('aceptar') && equipo[pid] === 'esperar' && !siHaceFalta(pid)) mal.push(`${n}: el plan acepta la oferta y en Equipo pone esperar`);
       }
       for (const n of porInercia) {
         const x = (M.mias || []).find((y) => y.j.nombre === n);
@@ -59,7 +63,7 @@ for (const escena of ESCENAS) {
       for (const [pid, con] of Object.entries(equipo)) {
         const n = nombre(pid), ch = chatOferta[n];
         if (ch && !new RegExp(con, 'i').test(ch) && !(con === 'esperar' && /NO VENDER|ESPERAR/.test(ch)) && !(con === 'aceptar' && /ACEPTAR/.test(ch))) mal.push(`${n}: en Equipo pone ${con} y al chat se le dice «${ch}»`);
-        if (con === 'esperar' && (plan[pid] || []).includes('aceptar')) mal.push(`${n}: Equipo dice esperar y el plan acepta`);
+        if (con === 'esperar' && (plan[pid] || []).includes('aceptar') && !siHaceFalta(pid)) mal.push(`${n}: Equipo dice esperar y el plan acepta`);
       }
       // (21 nov) el peligro de cada rival: lo que se le pasa al chat = lo de la pestaña Rivales
       const NIV = { 'muy alto': 'muyalta', alto: 'alta', medio: 'media', bajo: 'baja' };
