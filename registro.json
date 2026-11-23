@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000,
    "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
    "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
@@ -9625,13 +9624,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5570,
+   "ok": 5571,
    "fallos": 0,
-   "ejecuciones": 4487,
+   "ejecuciones": 4488,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T08:36:14.776Z"
+   "ultima": "2026-11-23T08:41:12.781Z"
   }
  },
  "ptsDirecto": {
@@ -9871,15 +9870,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:36:22.734Z"
+   "ultimaBien": "2026-11-23T08:41:20.955Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:36:22.734Z"
+   "ultimaBien": "2026-11-23T08:41:20.955Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:36:22.734Z"
+   "ultimaBien": "2026-11-23T08:41:20.955Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9887,11 +9886,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:36:22.734Z"
+   "ultimaBien": "2026-11-23T08:41:20.955Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:36:22.734Z"
+   "ultimaBien": "2026-11-23T08:41:20.955Z"
   }
  },
  "avisos": [
