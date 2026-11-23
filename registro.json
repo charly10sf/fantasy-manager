@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000,
    "MARCA|https://www.marca.com/radio/2026/11/20/roberto-gomez-senala-mourinho-unico-poner-titular-vinicius.html": 1795159506000,
    "SPORT|136637651": 1795156260000,
    "MARCA|https://www.marca.com/radio/2026/11/20/pepe-brasin-alerta-problema-vinicius-puedes-estrella-rol-secundario.html": 1795160965000,
@@ -9644,13 +9643,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5540,
+   "ok": 5541,
    "fallos": 0,
-   "ejecuciones": 4457,
+   "ejecuciones": 4458,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T06:06:12.096Z"
+   "ultima": "2026-11-23T06:11:18.798Z"
   }
  },
  "ptsDirecto": {
@@ -9890,15 +9889,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:06:18.900Z"
+   "ultimaBien": "2026-11-23T06:11:25.940Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:06:18.900Z"
+   "ultimaBien": "2026-11-23T06:11:25.940Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:06:18.900Z"
+   "ultimaBien": "2026-11-23T06:11:25.940Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9906,11 +9905,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:06:18.900Z"
+   "ultimaBien": "2026-11-23T06:11:25.940Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:06:18.900Z"
+   "ultimaBien": "2026-11-23T06:11:25.940Z"
   }
  },
  "avisos": [
