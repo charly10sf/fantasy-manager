@@ -2941,7 +2941,6 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
-   "SPORT|136657810": 1795170582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
@@ -9597,13 +9596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5592,
+   "ok": 5593,
    "fallos": 0,
-   "ejecuciones": 4509,
+   "ejecuciones": 4510,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T10:26:13.360Z"
+   "ultima": "2026-11-23T10:31:14.488Z"
   }
  },
  "ptsDirecto": {
@@ -9843,15 +9842,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:26:17.506Z"
+   "ultimaBien": "2026-11-23T10:31:19.665Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:26:17.506Z"
+   "ultimaBien": "2026-11-23T10:31:19.665Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:26:17.506Z"
+   "ultimaBien": "2026-11-23T10:31:19.665Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9859,11 +9858,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:26:17.506Z"
+   "ultimaBien": "2026-11-23T10:31:19.665Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:26:17.506Z"
+   "ultimaBien": "2026-11-23T10:31:19.665Z"
   }
  },
  "avisos": [
