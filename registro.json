@@ -2933,8 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000,
@@ -2950,7 +2948,6 @@
    "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/": 1795182680000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "SPORT|136670471": 1795181611000,
    "SPORT|136672088": 1795184079000,
@@ -3123,18 +3120,6 @@
    "SPORT|136746976": 1795431027000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795177760000,
-    "id": "2473",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Gueye se lesiona y no estará ante la Real Sociedad",
-    "motivo": "",
-    "plazo": "la recuperación dependerá de su evolución",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html",
     "medio": "MARCA",
@@ -4492,7 +4477,6 @@
  "liga": {
   "vistas": {
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
@@ -4558,7 +4542,8 @@
    "fallos": 0
   },
   "espera": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436477420
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436477420,
+   "SPORT|136750461": 1795437083278
   }
  },
  "ia": {
@@ -9500,13 +9485,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5616,
+   "ok": 5617,
    "fallos": 0,
-   "ejecuciones": 4533,
+   "ejecuciones": 4534,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:26:22.284Z"
+   "ultima": "2026-11-23T12:31:23.278Z"
   }
  },
  "ptsDirecto": {
@@ -9746,15 +9731,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:26:29.401Z"
+   "ultimaBien": "2026-11-23T12:31:27.604Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:26:29.401Z"
+   "ultimaBien": "2026-11-23T12:31:27.604Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:26:29.401Z"
+   "ultimaBien": "2026-11-23T12:31:27.604Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9762,11 +9747,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:26:29.401Z"
+   "ultimaBien": "2026-11-23T12:31:27.604Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:26:29.401Z"
+   "ultimaBien": "2026-11-23T12:31:27.604Z"
   }
  },
  "avisos": [
