@@ -29,7 +29,7 @@ export const NOVEDADES = [
     // no se acepta tampoco la oferta por uno que hoy sube o se queda igual (titular o no), y la protegida (`protege`) no se
     // acepta «porque hace falta el dinero» mientras queden cambios de mercado antes de la jornada (plan.js FA- y cuadrarPlan).
     // La hora, al publicar
-    v: '0.8x', f: '2026-11-23', h: '', t: 'No vende al que ha dejado de bajar',
+    v: '0.8x', f: '2026-11-23', h: '21:24', t: 'No vende al que ha dejado de bajar',
     cosas: [
       { tipo: 'arreglo', d: 'oferta', t: 'No vende al que ha dejado de bajar', x: 'Si un jugador tuyo venía bajando y hoy sube, la app ya no te dice que aceptes una oferta un poco por encima de su valor: lo normal es que siga subiendo. Y si vas en negativo entre semana, no te manda vender a tus titulares por poco: hay tiempo de hacer caja con otra cosa antes de la jornada.' },
     ],
