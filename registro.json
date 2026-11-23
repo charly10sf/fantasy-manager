@@ -2933,8 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
@@ -3127,7 +3125,10 @@
    "AS|https://as.com/futbol/primera/aubameyang-lo-es-todo-para-el-depor-f202611-n/": 1795428299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254402/alternativas-flick-suplir-lamine-sabah.html": 1795428401000,
    "SPORT|136743099": 1795426988000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000,
+   "SPORT|136739543": 1795427080000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000
   },
   "hechos": [
    {
@@ -3713,7 +3714,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4647,17 +4648,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 183301,
-  "salida": 9436,
+  "entrada": 185777,
+  "salida": 9692,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.364052,
+  "dolares": 0.364428,
   "reservado": 0
  },
  "recientes": {
@@ -9583,13 +9584,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5596,
+   "ok": 5597,
    "fallos": 0,
-   "ejecuciones": 4513,
+   "ejecuciones": 4514,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T10:46:12.161Z"
+   "ultima": "2026-11-23T10:51:15.066Z"
   }
  },
  "ptsDirecto": {
@@ -9829,15 +9830,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:46:17.396Z"
+   "ultimaBien": "2026-11-23T10:51:22.310Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:46:17.396Z"
+   "ultimaBien": "2026-11-23T10:51:22.310Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:46:17.396Z"
+   "ultimaBien": "2026-11-23T10:51:22.310Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9845,11 +9846,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:46:17.396Z"
+   "ultimaBien": "2026-11-23T10:51:22.310Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:46:17.396Z"
+   "ultimaBien": "2026-11-23T10:51:22.310Z"
   }
  },
  "avisos": [
