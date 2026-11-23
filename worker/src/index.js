@@ -337,7 +337,8 @@ async function usar(req, env, c) {
 const idQR = (x) => (typeof x === 'string' && /^[A-Za-z0-9_-]{22,64}$/.test(x) ? x : null);
 
 export class Emparejar {
-  constructor(estado) { this.estado = estado; this.memo = {}; }
+  // (23 nov) con env: la alarma hace los planes encargados (hacerPlan) y necesita la clave de Claude y los demás objetos
+  constructor(estado, env) { this.estado = estado; this.env = env; this.memo = {}; }
   async fetch(req) {
     const st = this.estado.storage;
     // los frenos por día (cabeHoy): un objeto por clave y día, que se borra solo a las 30 h
@@ -361,6 +362,8 @@ export class Emparejar {
       }
       return new Response(JSON.stringify(y), { status: 200 });
     }
+    // (23 nov) el plan que se encarga al objeto para que lo haga en su alarma (encargarPlan): { rid, trabajo } → { ok }
+    if (ruta === '/plan/encargar') return new Response(JSON.stringify(await encargoObjeto(st, this.env, await req.json().catch(() => ({})))), { status: 200 });
     // (15 nov) el plan de un pedido (rid), para recogerlo si la app se fue a segundo plano y se cortó la conexión:
     // { op: 'leer' | 'marcha' | 'poner' | 'borrar', rid, fin } → { marcha?, fin? }. Se borra con lo demás a las 30 h
     if (ruta === '/plan/res') {
@@ -441,7 +444,7 @@ export class Emparejar {
     if (Date.now() - t > DURA * 1000) return new Response(null, { status: 204 });
     return new Response(d, { status: 200 });
   }
-  async alarm() { await this.estado.storage.deleteAll(); }
+  async alarm() { await alarmaObjeto(this.estado.storage, this.env); }
 }
 
 async function qrDejar(req, env, c) {
@@ -661,9 +664,11 @@ const diaMadrid = (t) => FMT_DIA.format(new Date(t));
 export async function leerEnBloque(env, claves) {
   const out = new Map();
   try {
-    for (let i = 0; i < claves.length; i += 100) {
-      const trozo = claves.slice(i, i + 100);
-      const m = await env.VINCULOS.get(trozo);
+    // (23 nov, Carlos: «Quién usa la app suele tardar bastante en cargar») los trozos a la vez, no uno detrás de otro
+    const trozos = [];
+    for (let i = 0; i < claves.length; i += 100) trozos.push(claves.slice(i, i + 100));
+    const ms = await Promise.all(trozos.map((t) => env.VINCULOS.get(t)));
+    for (const m of ms) {
       if (!(m instanceof Map)) throw new Error('sin lectura en bloque');
       for (const [k, v] of m) if (v != null) out.set(k, v);
     }
@@ -789,6 +794,11 @@ async function cupo(env, uid, op, c, tipo = 'plan') {
 /** el plan guardado de un pedido (rid) en el Durable Object de la cuenta y el día; sin él, en la memoria del Worker */
 const RES_MEM = new Map();
 export const RES_MARCHA_MS = 100000;
+// (23 nov) el plan con id lo hace el objeto de la cuenta y el día en su alarma (encargarPlan, hacerPlan): Claude tiene
+// como mucho 150 s en total (PLAN_HASTA_S lo cambia, para las pruebas) y el pedido se da por en marcha 170 s desde que
+// empieza. Las preguntas del chat siguen con RES_MARCHA_MS
+export const PLAN_HASTA_MS = 150000, RES_PLAN_MS = 170000;
+const hastaPlan = (env) => { const s = Number(env && env.PLAN_HASTA_S); return s > 0 ? s * 1000 : PLAN_HASTA_MS; };
 async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan') {
   rid = ridDe(rid);
   if (!rid) return {};
@@ -808,14 +818,92 @@ async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan') {
   return {};
 }
 /** espera a que acabe el plan del mismo pedido que ya está en marcha (otra petición de la app, que se cortó): su resultado o null */
-async function esperarRes(env, uid, rid, desde, tipo = 'plan') {
-  while (Date.now() - desde < RES_MARCHA_MS) {
-    await new Promise((ok) => setTimeout(ok, 2000));
+async function esperarRes(env, uid, rid, desde, tipo = 'plan', dura = RES_MARCHA_MS, cada = 2000) {
+  while (Date.now() - desde < dura) {
+    await new Promise((ok) => setTimeout(ok, cada));
     const x = await resPlan(env, uid, 'leer', rid, null, tipo);
     if (x.fin) return x.fin;
-    if (!x.marcha || Date.now() - x.marcha > RES_MARCHA_MS) return null;
+    if (!x.marcha || Date.now() - x.marcha > dura) return null;
   }
   return null;
+}
+/**
+ * (23 nov, Carlos: «cuando me salgo de la aplicación no sale ninguna notificación… tardaba 3 o 4 minutos y no sé si
+ * terminó saliendo el plan») Cuando quien pide se va (Android congela o cierra la app y se corta la conexión), Cloudflare
+ * solo le da al Worker 30 s más, aunque esté en waitUntil: un plan lento se perdía a medias, sin guardarse ni devolver el
+ * cupo. Con id, el plan se le pasa al objeto de la cuenta y el día, que lo hace en su alarma (hasta 15 min, no depende de
+ * ninguna conexión) y lo deja en res:<rid>, donde lo recogen el Worker, el móvil (Recoger.java, /plan/res) y la app al
+ * volver. true si el objeto lo ha cogido; si no (sin objeto o sin la clave), el Worker lo hace como antes
+ */
+async function encargarPlan(env, uid, rid, trabajo) {
+  if (!env.QR || !rid) return false;
+  try {
+    const r = await env.QR.get(env.QR.idFromName(`plan|${hoyMadrid()}|${uid}`)).fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid, trabajo }) });
+    return r.status === 200 && !!(await r.json()).ok;
+  } catch (e) { return false; }
+}
+/** (en el objeto) apunta el encargo y pone la alarma ya; la de limpiar a las 30 h se guarda para ponerla otra vez al acabar */
+async function encargoObjeto(st, env, b) {
+  const rid = ridDe(b && b.rid), tr = b && b.trabajo;
+  if (!rid || !tr || typeof tr !== 'object' || typeof tr.pedido !== 'string' || !tr.pedido || !tr.modelo || !env || !env.CLAUDE_PLANES || !st.list || !st.getAlarm) return { ok: false };
+  const antes = await st.getAlarm();
+  if (antes && antes > Date.now() + 60e3 && !(await st.get('job-limpia'))) await st.put('job-limpia', antes);
+  await st.put(`job:${rid}`, { ...tr, rid, t: Date.now() });
+  await st.put(`res:${rid}`, { marcha: Date.now() });
+  await st.setAlarm(Date.now());
+  return { ok: true };
+}
+/** (en el objeto, en la alarma) un plan encargado: lo pide a Claude y deja el resultado en res:<rid>; si falla, devuelve el cupo */
+async function hacerPlan(st, env, k, tr) {
+  const rid = tr.rid, t0 = Number(tr.t0) || tr.t || Date.now(), libre = !!tr.libre;
+  const devolver = async () => {
+    if (libre) return;
+    const ya = (await st.get('plan')) || {};
+    const y = cupoCuenta(ya, 'devolver', { gratis: 0, max: 0 });
+    await st.put('plan', { u: y.u, x: y.x, r: y.r || '' });
+  };
+  // una alarma que se cortó a medias y Cloudflare repite: si ya pasó su tiempo, no se vuelve a pedir
+  const emp = await st.get(`jobe:${rid}`);
+  let fin;
+  if (emp && Date.now() - emp > (Number(tr.hasta) || PLAN_HASTA_MS)) {
+    await devolver();
+    fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
+  } else {
+    const ini = Date.now();
+    await st.put(`jobe:${rid}`, ini);
+    await st.put(`res:${rid}`, { marcha: ini });
+    try {
+      const r = await llamarClaude(env, tr.modelo, tr.sistema, tr.pedido, fetch, { web: tr.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS) });
+      await gastoHoy(env, costeDe(r, tr.modelo)).catch(() => {});
+      // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
+      const j = jsonDe(r.texto);
+      const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
+      if (!plan) {
+        await devolver();
+        fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
+      } else fin = { plan, cupo: tr.cupoFin || null, tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+    } catch (e) {
+      await devolver().catch(() => {});
+      console.log('plan:', String((e && e.message) || e));
+      fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
+    }
+  }
+  // (para ver en los registros de Cloudflare cuánto tarda cada plan)
+  console.log(`plan ${rid}: ${fin.plan ? 'bien' : `mal (${fin.estado})`} en ${Math.round((Date.now() - t0) / 100) / 10} s${fin.tok ? `, ${fin.tok.web || 0} búsquedas, ${fin.tok.entra}/${fin.tok.sale} tokens` : ''}`);
+  // (también el error: si la app vuelve con el mismo id, lo recibe en vez de esperar otro)
+  await st.put(`res:${rid}`, { fin });
+  await st.delete([k, `jobe:${rid}`]);
+}
+/** (en el objeto) la alarma: los planes encargados, a la vez; sin ninguno, la limpieza de siempre (lo borra todo) */
+async function alarmaObjeto(st, env) {
+  const jobs = st.list ? await st.list({ prefix: 'job:' }) : new Map();
+  if (!jobs.size) { await st.deleteAll(); return; }
+  await Promise.all([...jobs].map(([k, tr]) => hacerPlan(st, env, k, tr).catch((e) => console.log('plan (alarma):', String((e && e.message) || e)))));
+  // lo que se haya encargado mientras, otra vuelta; si no, la alarma de limpiar que había
+  if ((await st.list({ prefix: 'job:' })).size) { await st.setAlarm(Date.now()); return; }
+  const l = await st.get('job-limpia');
+  await st.delete('job-limpia');
+  await st.setAlarm(l && l > Date.now() ? l : Date.now() + 30 * 3600e3);
 }
 /** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
 const GASTO_MEM = {};
@@ -859,7 +947,10 @@ export function bloquesDe(content) {
  * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
  * Google puede hacer (0, sin búsqueda). Si la cuenta de Anthropic no la tiene activada, se repite sin ella (sinWeb: true).
  */
-export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low' } = {}) {
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low', hasta = 0 } = {}) {
+  // (23 nov) hasta: la hora tope de todo (reintentos y «pause_turn» incluidos); 0, sin tope (cada intento, 100 s como mucho).
+  // Antes, con Claude saturado, podían ser 3 vueltas × 3 intentos × 100 s
+  const queda = () => (hasta ? hasta - Date.now() : 100000);
   // (16 nov) el chat manda la conversación entera (mensajes) y el sistema en bloques, con la parte fija en caché
   const cuerpo = { model: modelo, max_tokens: tokens, output_config: { effort: esfuerzo }, system: sistema, messages: mensajes || [{ role: 'user', content: pedido }] };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
@@ -869,9 +960,10 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
   for (let vuelta = 0; vuelta < 3; vuelta++) {
     let x = null;
     for (let n = 0; n < 3; n++) {
+      if (queda() < 1000) { ult = ult || 'sin tiempo'; break; }
       let r;
       try {
-        r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(100000) });
+        r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(Math.min(100000, Math.max(1000, queda()))) });
         x = await r.json().catch(() => ({}));
       } catch (e) { ult = String((e && e.message) || e); x = null; continue; }
       if (r.ok && Array.isArray(x.content)) break;
@@ -882,7 +974,9 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
       // (la búsqueda sin activar en la consola de Anthropic, o una versión que no conoce: sin ella, como siempre)
       if ((r.status === 400 || r.status === 403) && cuerpo.tools && /web.?search|tool/i.test(ult)) { console.log('plan: sin búsqueda:', ult); delete cuerpo.tools; acc.sinWeb = true; n--; continue; }
       if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
-      await new Promise((ok) => setTimeout(ok, r.status === 429 ? 4000 : 1500));
+      const pausa = r.status === 429 ? 4000 : 1500;
+      if (queda() < pausa + 1000) break;
+      await new Promise((ok) => setTimeout(ok, pausa));
     }
     if (!x) break;
     const u = x.usage || {}, b = bloquesDe(x.content);
@@ -892,7 +986,7 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     acc.cache = { lee: ((acc.cache && acc.cache.lee) || 0) + (u.cache_read_input_tokens || 0), escribe: ((acc.cache && acc.cache.escribe) || 0) + (u.cache_creation_input_tokens || 0), sin: ((acc.cache && acc.cache.sin) || 0) + (u.input_tokens || 0) };
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
-    if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
+    if (x.stop_reason === 'pause_turn' && vuelta < 2 && queda() >= 5000) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
     return acc;
   }
   if (acc.texto) return acc;
@@ -928,7 +1022,7 @@ async function planIA(req, env, c, ctx) {
   const rid = ridDe(b.rid);
   const previo = rid ? await resPlan(env, u.uid, 'leer', rid) : {};
   if (previo.fin) return json(previo.fin, 200, c);
-  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
+  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_PLAN_MS);
   // entre todos, el tope de gasto del día
   if (!enMarcha && (await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
@@ -945,7 +1039,13 @@ async function planIA(req, env, c, ctx) {
   const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
   const t0 = Date.now();
   const trabajo = (async () => {
-    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now()).catch(() => null) : null;
+    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS).catch(() => null) : null;
+    // (23 nov) con id, lo hace el objeto en su alarma (encargarPlan): aquí solo se espera a que lo deje hecho, mirando
+    // cada 1,5 s. Si quien pide se va, el plan sigue y se recoge con el mismo id
+    if (!fin && rid && (await encargarPlan(env, u.uid, rid, { modelo: P.modelo, sistema, pedido: b.pedido, web: P.web, libre, cupoFin: libre ? cupoLibre(P) : cupoTxt(P, y), t0, hasta: hastaPlan(env) }))) {
+      fin = await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS, 1500).catch(() => null);
+      if (!fin) fin = { e: 'La IA de los planes está tardando demasiado. Tienes el plan de la app; vuelve a probar en un rato.', estado: 503, servicio: true };
+    }
     if (fin) {
       clearInterval(latido);
       try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido */ }
@@ -953,7 +1053,7 @@ async function planIA(req, env, c, ctx) {
     }
     if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
     try {
-      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web });
+      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web, hasta: t0 + hastaPlan(env) });
       const gasto = costeDe(r, P.modelo);
       ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
       // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
@@ -1540,6 +1640,11 @@ async function hola(req, env, c, ruta) {
     const t0 = Date.now(), tiempos = {};
     const marca = (k) => { tiempos[k] = Date.now() - t0; };
     const dia = hoyMadrid();
+    // (23 nov, Carlos: «suele tardar bastante en cargar») lo que no depende de las cuentas va a la vez que ellas: el
+    // registro, las invitaciones y el embudo (antes, uno detrás de otro). Un fallo del registro se lanza donde se usa
+    const pReg = listar(env, 'r:', 50000).then((l) => { marca('registro'); return { l }; }, (e) => ({ e }));
+    const pInv = env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null;
+    const pEmb = conTope(leerEmbudo(env), 6000);
     const ks = (await listar(env, 'p:', 20000)).filter((k) => k.metadata);
     marca('cuentas');
     ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
@@ -1570,18 +1675,18 @@ async function hola(req, env, c, ruta) {
     const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));
     // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
     // que existe), con lo de p:
-    const reg = new Map((await listar(env, 'r:', 50000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
-    marca('registro');
+    const rr = await pReg;
+    if (rr.e) throw rr.e;
+    const reg = new Map(rr.l.filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
     for (const x of lista) {
       const r = reg.get(String(x.uid));
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
       else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
     }
     // (19 nov) las invitaciones de cada cuenta: cuántos entran y cuántos vuelven otro día, para ver si alguien abusa
-    let invitar = null;
-    const [inv, embudo] = await Promise.all([env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null, conTope(leerEmbudo(env), 6000)]);
-    invitar = inv;
+    const [invitar, embudo] = await Promise.all([pInv, pEmb]);
     marca('fin');
+    console.log(`hola/todos: ${tiempos.fin} ms (${ks.length} cuentas, ${claves.length} días leídos; cuentas ${tiempos.cuentas}, usos ${tiempos.usos}, registro ${tiempos.registro})`);
     return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo, invitar, tiempos }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
@@ -1792,7 +1897,7 @@ export default {
         const u = await quienEs(req);
         if (!u) return json({ e: 'Sin sesión' }, 401, c);
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
-        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_PLAN_MS) }, 200, c);
       }
       // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.8): { fin: { resumen } } o { marcha }
       if (url.pathname === '/pregunta/res' && req.method === 'GET') {

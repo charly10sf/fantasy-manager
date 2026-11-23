@@ -473,6 +473,100 @@ for (let i = 0; i < 11; i++) minuto();
 const cfgP = await W2.cfgPlanes(envP);
 ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json no puede pasar de 10 al día (${JSON.stringify(cfgP)})`);
 
+// ---------- (23 nov) el plan con id lo hace el objeto en su alarma: sigue aunque la app se vaya ----------
+{
+  limitesPlanes = { on: true, gratis: 2, max: 5, topeUsdDia: 3 };
+  for (let i = 0; i < 11; i++) minuto();
+  // un objeto falso como el de verdad: con list, getAlarm y la alarma, que salta enseguida si es para ya
+  const objsJ = new Map();
+  let alarmasJ = 0, envJ = null;
+  const QRJ = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objsJ.has(id)) {
+        const m = new Map();
+        let alarma = null, reloj = null, o = null;
+        const storage = {
+          get: async (k) => m.get(k),
+          put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, v); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); },
+          deleteAll: async () => m.clear(),
+          list: async ({ prefix }) => new Map([...m].filter(([k]) => k.startsWith(prefix))),
+          getAlarm: async () => alarma,
+          setAlarm: async (t) => {
+            alarma = t; clearTimeout(reloj);
+            if (t - Date.now() < 1000) reloj = setTimeout(() => { alarma = null; alarmasJ++; o.alarm().catch((e) => console.log('alarma de prueba:', e.message)); }, 0);
+          },
+        };
+        o = new W2.Emparejar({ storage }, envJ);
+        objsJ.set(id, { o, m, alarmaDe: () => alarma });
+      }
+      const x = objsJ.get(id);
+      return { fetch: (u, op) => x.o.fetch(new Request(u, op)) };
+    },
+  };
+  envJ = { VINCULOS: KV, ADMINS: '667015', QR: QRJ, CLAUDE_PLANES: 'sk-ant-prueba' };
+  const diaJ = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(Date.now()));
+  const tkJ = 'z'.repeat(30), nomJ = `plan|${diaJ}|5000`;
+  const planJ = (cuerpo, e = envJ) => { minuto(); return pide({ ruta: '/plan', cuerpo: { pedido: PEDIDO, ...cuerpo }, tk: tkJ, e, ip: '10.9.9.7' }); };
+  const resJ = (rid) => pide({ m: 'GET', ruta: `/plan/res?rid=${rid}`, origen: null, tk: tkJ, e: envJ });
+  const espera = (ms) => new Promise((ok2) => setTimeout(ok2, ms));
+  // 1. el plan sale de la alarma del objeto, y el encargo se recoge
+  let antesJ = aClaude.length;
+  r = await planJ({ rid: 'trabajo1abcd' });
+  const oJ = objsJ.get(nomJ);
+  ok(r.s === 200 && r.j.plan && r.j.plan.titular === 'Vende a X y espera' && r.j.cupo.usados === 1 && aClaude.length === antesJ + 1 && alarmasJ === 1, `con el objeto, el plan sale de su alarma (${r.t.trim().slice(0, 90)})`);
+  ok(oJ && !oJ.m.has('job:trabajo1abcd') && !oJ.m.has('jobe:trabajo1abcd') && oJ.m.get('res:trabajo1abcd').fin.plan && oJ.alarmaDe() > Date.now() + 29 * 3600e3, `el encargo se borra, el plan queda guardado y vuelve la alarma de limpiar (${Math.round(((oJ && oJ.alarmaDe()) - Date.now()) / 3600e3)} h)`);
+  // 2. nadie esperando (la app cerrada del todo, el Worker ya no está): el objeto lo hace igual y se recoge después
+  await QRJ.get(nomJ).fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid: 'solo1234abcd', trabajo: { modelo: 'claude-haiku-5-5', sistema: 'S', pedido: PEDIDO, web: 0, libre: false, cupoFin: { usados: 1 }, t0: Date.now() } }) });
+  await espera(100);
+  r = await resJ('solo1234abcd');
+  ok(r.s === 200 && r.j.fin && r.j.fin.plan && r.j.fin.cupo.usados === 1, `sin ninguna petición esperando, el objeto hace el plan y queda para recogerlo (${r.t.slice(0, 80)})`);
+  // 3. la app se va con Claude lento: se corta la respuesta y el plan llega igual a /plan/res (lo que mira el móvil)
+  lentoClaude = 1500;
+  const rq = await W.fetch(new Request('https://w.dev/plan', { method: 'POST', headers: { 'content-type': 'application/json', Authorization: `Bearer ${tkJ}`, 'cf-connecting-ip': '10.9.9.7', Origin: ORI }, body: JSON.stringify({ pedido: PEDIDO, rid: 'trabajo2abcd' }) }), envJ, { waitUntil() {} });
+  await rq.body.cancel();
+  await espera(300);
+  r = await resJ('trabajo2abcd');
+  const enMarchaJ = r.j && r.j.marcha === true && !r.j.fin;
+  await espera(1700);
+  lentoClaude = 0;
+  r = await resJ('trabajo2abcd');
+  ok(enMarchaJ && r.s === 200 && r.j.fin && r.j.fin.plan && r.j.fin.cupo.usados === 2, `cortada la respuesta, /plan/res dice «en marcha» y después da el plan (${r.t.slice(0, 80)})`);
+  // 4. el mismo pedido dos veces a la vez (la app vuelve y lo repite): una sola vez a Claude
+  lentoClaude = 1200;
+  antesJ = aClaude.length;
+  const pA = planJ({ rid: 'trabajo4abcd', extra: true });
+  await espera(300);
+  const rB = await pide({ ruta: '/plan', cuerpo: { pedido: PEDIDO, rid: 'trabajo4abcd', extra: true }, tk: tkJ, e: envJ, ip: '10.9.9.7' });
+  const rA = await pA;
+  lentoClaude = 0;
+  ok(rA.j && rA.j.plan && rB.j && rB.j.plan && aClaude.length === antesJ + 1 && rB.j.cupo.usados === 3, `el mismo id repetido mientras se hace: los dos reciben el plan y Claude va una vez (${aClaude.length - antesJ})`);
+  // 5. Claude caído: el error queda guardado (la app lo recibe al volver) y el plan no cuenta
+  respuestaClaude = 'cae';
+  r = await planJ({ rid: 'trabajo5abcd', extra: true });
+  respuestaClaude = null;
+  ok(r.s === 200 && r.j.e && r.j.servicio && r.j.estado === 503 && oJ.m.get('plan').u === 3, `Claude caído: error y el plan no cuenta (${r.t.trim().slice(0, 90)}; usados ${oJ.m.get('plan').u})`);
+  r = await resJ('trabajo5abcd');
+  ok(r.s === 200 && r.j.fin && r.j.fin.e && !r.j.fin.plan && !r.j.marcha, `/plan/res de uno fallado: el error, sin plan ni «en marcha» (el móvil avisa de que no ha salido): ${r.t.slice(0, 60)}`);
+  r = await planJ({ rid: 'trabajo5abcd', extra: true });
+  ok(r.s === 200 && r.j.e && !r.j.plan, 'repetido con el mismo id, recibe el error guardado sin volver a Claude');
+  // 6. el tope de tiempo de todo: con Claude saturado no pasa del tope (aquí, 2 s con PLAN_HASTA_S)
+  respuestaClaude = 'cae';
+  antesJ = aClaude.length;
+  const t0J = performance.now();
+  r = await planJ({ rid: 'trabajo6abcd', extra: true }, { ...envJ, PLAN_HASTA_S: '2' });
+  const msJ = performance.now() - t0J;
+  respuestaClaude = null;
+  ok(r.j && r.j.e && msJ < 4000 && aClaude.length - antesJ <= 2, `con el tope, deja de reintentar a tiempo (${Math.round(msJ)} ms, ${aClaude.length - antesJ} intentos; sin tope serían hasta 9)`);
+  // 7. un encargo sin pedido, o un objeto sin la clave de Claude: no se coge (el Worker lo hace como antes)
+  const sinClave = await (await QRJ.get('plan|x|sinclave').fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid: 'nada1234abcd', trabajo: {} }) })).json();
+  ok(sinClave.ok === false && !objsJ.get('plan|x|sinclave').m.size, 'un encargo sin pedido no se coge ni se guarda');
+  const QRviejo = { idFromName: (n) => n, get: () => { const o = new W2.Emparejar({ storage: { get: async () => null, put: async () => {}, setAlarm: async () => {}, deleteAll: async () => {} } }); return { fetch: (u, op) => o.fetch(new Request(u, op)) }; } };
+  const nv = await (await QRviejo.get('x').fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid: 'nada1234abcd', trabajo: { pedido: 'x' } }) })).json();
+  ok(nv.ok === false, 'un objeto sin la clave de Claude no coge el encargo');
+}
+
 // ---------- /plan con la búsqueda en Google (punto 14 del motor, 14 nov) ----------
 const gastoYa = async () => Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date())}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
 limitesPlanes = { on: true, gratis: 10, max: 10, web: 9 };

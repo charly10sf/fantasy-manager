@@ -572,6 +572,7 @@ h1.titulo { font-weight: 700; }
 .cr-ley { margin: 8px 0 0; font-size: var(--t-sec2); line-height: 1.4; color: var(--apagado); }
 .cr-consejo { margin: 10px 0 0; font-size: var(--t-sec2); line-height: 1.4; font-weight: 600; }
 .cargando-ia .p2 { margin-top: 10px; font-size: var(--t-sec2); color: var(--apagado); }
+.cargando-ia .p2 .btn { display: flex; width: fit-content; margin-top: 8px; }
 
 /* ---------- hojas que suben ---------- */
 .velo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: 50; opacity: 0; transition: opacity 0.2s; }

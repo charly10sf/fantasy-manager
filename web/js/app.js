@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, norm, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
+import { esc, norm, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, guardarTexto, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -2435,11 +2435,25 @@ function repintarAvisos() {
 /** (el dueño) quién de la liga tiene la app, cuándo entró y quién está dentro ahora */
 async function abrirQuien() {
   const tab = (S.quien && S.quien.tab) || 'hoy';
-  S.quien = { cargando: true, tab };
+  // (23 nov, Carlos: «suele tardar bastante en cargar») sale al momento lo de la última vez, con «Actualizando…», y se
+  // cambia por lo nuevo cuando llega. Se guarda solo en este dispositivo y sin hacer sitio (no echa nada para caber)
+  const ult = LS.get('quien-ult', null);
+  const datosDe = (r) => ({ lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null, invitar: r.invitar || null });
+  S.quien = ult && ult.d && Array.isArray(ult.d.lista) ? { ...ult.d, tab, filtro: '', viejo: true } : { cargando: true, tab };
   hoja('quien');
+  if (S.quien.viejo) filtrarQuien();
   // (0.7.13k) también «embudo» (Antes de entrar), que hasta ahora no se guardaba y no salía
-  try { const r = await quienUsa(); S.quien = { tab, filtro: '', lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null, embudo: r.embudo || null, invitar: r.invitar || null }; }
-  catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
+  try {
+    const d = datosDe(await quienUsa());
+    guardarTexto('fm-quien-ult', JSON.stringify({ d }), -1);
+    // (lo que hayas tocado mientras salía lo de antes se queda: el apartado y el filtro)
+    const Q = S.quien || {};
+    S.quien = { ...d, tab: Q.tab || tab, filtro: Q.filtro || '' };
+  } catch (e) {
+    if (e.estado === 403) LS.del('quien-ult');
+    if (S.quien && S.quien.viejo && e.estado !== 403) S.quien = { ...S.quien, viejo: false, sinActualizar: true };
+    else S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) };
+  }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') { repintarHoja(); filtrarQuien(); }
 }
 async function abrirAvisos() {
@@ -3416,9 +3430,15 @@ window.progresoApp = (pct, estado) => {
   else if (estado === 'instalar') tostada('Instalando…');
   else tostada(`Descargando la versión nueva… ${pct} %`, 1500);
 };
+// (23 nov) de vuelta de los ajustes del móvil (las notificaciones se activan ahí): lo de debajo de «Preparando tu plan», al día
+window.addEventListener('fm-vuelta', () => { const pn = $('#plan-notif'); if (pn) pn.innerHTML = V.notifPlanHTML(); });
 window.permisoAvisos = (ok) => {
-  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada', 5000);
+  // (23 nov) si Android ya no enseña la pregunta (dicho que no dos veces), contesta que no al momento: se dice dónde se activan
+  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada. Actívalas en los ajustes del móvil: Aplicaciones → Fantasy Manager → Notificaciones', 7000);
   else { if (S.D) programar(S.D, S.M, planAvisos()); tostada('Notificaciones activadas'); }
+  // lo de debajo de «Preparando tu plan», con el permiso nuevo
+  const pn = $('#plan-notif');
+  if (pn) pn.innerHTML = V.notifPlanHTML();
   repintarHoja();
   mirarLimite();
 };
@@ -3848,6 +3868,8 @@ document.addEventListener('click', async (ev) => {
     }
     case 'tutorial': lanzarTutorial(); break;
     case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;
+    // (23 nov) desde «Preparando tu plan»: solo el permiso, sin encender las alarmas del móvil
+    case 'permisoPlan': nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
     case 'copiarAvisos': copiarAvisosClaude(); break;

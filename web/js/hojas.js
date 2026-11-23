@@ -1277,7 +1277,9 @@ export function quienUsaHTML(S) {
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
   const C = numerosQ(Q);
   const tab = Q_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'hoy';
-  h += `<p class="q-sub"><span class="q-vivo${C.dentro ? ' on' : ''}" aria-hidden="true"></span>${C.dentro} dentro ahora · ${C.total} cuentas en total</p>`;
+  // (23 nov) mientras llega lo nuevo sale lo de la última vez: «dentro ahora» no vale hasta que se actualiza
+  const estadoQ = Q.viejo ? `Actualizando… (lo de las ${horaDe(Q.ahora)})` : Q.sinActualizar ? `No se ha podido actualizar: es de las ${horaDe(Q.ahora)}` : `${C.dentro} dentro ahora`;
+  h += `<p class="q-sub"><span class="q-vivo${C.dentro && !Q.viejo && !Q.sinActualizar ? ' on' : ''}" aria-hidden="true"></span>${estadoQ} · ${C.total} cuentas en total</p>`;
   h += `<div class="q-tabs" role="tablist" aria-label="Apartados">${Q_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'on' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
   if (tab === 'hoy') h += hoyQ(C);
   else if (tab === 'uso') h += usoQ(C);

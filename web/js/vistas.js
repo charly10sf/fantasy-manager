@@ -644,7 +644,7 @@ function planHTML(S) {
   const pt = conIA ? proximoTurno(M) : null;
   const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
-  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2">${nativo.canal() === 'play' ? 'Tarda menos de un minuto. Si sales de la app, se sigue haciendo y al volver lo tienes aquí.' : 'Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.'}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
+  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2" id="plan-notif">${notifPlanHTML()}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto && !/plan de la app|plan automático/i.test(E.error) ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (E.cupo && !E.callado) h += cupoPlanHTML(E.cupo);
@@ -934,6 +934,15 @@ function saludoHTML(S) {
   const fecha = new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' });
   return `<div class="saludo"><span class="eti">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span><span class="t2">${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span></div>`;
 }
+/** (23 nov, Carlos: «cuando me salgo de la aplicación no me sale ninguna notificación… no sé si es porque he quitado las
+    notificaciones») debajo de «Preparando tu plan», en la app: si sale de la app, se sigue haciendo; con las notificaciones
+    apagadas, se le dice que así no le puede avisar y se le ofrece activarlas (app.js lo cambia al volver del permiso) */
+export function notifPlanHTML() {
+  const t = nativo.canal() === 'play' ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
+  if (nativo.avisosPermitidos()) return `${t}. Puedes salir de la app: se sigue haciendo y te aviso cuando esté.`;
+  return `${t}. Si sales de la app se sigue haciendo, pero con las notificaciones apagadas no te puedo avisar cuando esté. <button class="btn chico sec" data-accion="permisoPlan">${icono('campana')}Activar notificaciones</button>`;
+}
+
 export function hoy(S) {
   if (ancho()) return hoyAncho(S);
   const { D, M } = S;

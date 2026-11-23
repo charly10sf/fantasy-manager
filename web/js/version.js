@@ -24,6 +24,19 @@ export const VERSION = '0.8v';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (23 nov, 17:56, Carlos: «la pestaña para mirar cuánta gente hay suele tardar bastante en cargar» y «cuando me salgo
+    // de la aplicación no me sale ninguna notificación de que está cargando el plan… no sé si al final terminó saliendo»)
+    // El plan con la IA de la app lo hace el servidor aunque se corte la conexión (worker: encargarPlan, hacerPlan), con
+    // tope de 150 s; debajo de «Preparando tu plan», si las notificaciones están apagadas, se dice y se ofrece activarlas;
+    // Quién usa la app sale al momento con lo de la última vez. El detalle, en ESTADO.md del proyecto. La hora, al publicar
+    v: '0.8w', f: '2026-11-23', h: '', t: 'El plan sigue aunque salgas de la app',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan sigue aunque salgas de la app', x: 'Si salías de la app mientras la IA preparaba tu plan y el móvil cortaba la conexión, a veces el plan se perdía a medias. Ahora se termina igual y lo tienes al volver, sin gastar otro.' },
+      { tipo: 'mejora', d: 'campana', t: 'Te avisa si no puede avisarte', x: 'Mientras se prepara tu plan, si tienes las notificaciones apagadas, la app te lo dice y te deja activarlas desde ahí mismo. Con ellas, al salir ves que lo está haciendo y te avisa cuando esté.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, al momento', x: 'Sale enseguida con lo de la última vez mientras se actualiza, y lo nuevo llega antes.' },
+    ],
+  },
+  {
     // (22 nov, 19:44, Carlos: «las 3 últimas no son noticias») fuera de las noticias los directos, las páginas para ver el
     // partido (DAZN) y las de a qué hora y dónde se ve (`noEsNoticia` en util.js). La hora, al publicar
     v: '0.8v', f: '2026-11-22', h: '20:35', t: 'Solo noticias de verdad',

@@ -685,6 +685,84 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 15d: (23 nov, Carlos: «cuando me salgo de la aplicación no me sale ninguna notificación») debajo de «Preparando tu plan»,
+// en la app de Google Play: con las notificaciones apagadas se dice que así no puede avisar, con un botón que pide el permiso
+// (sin encender las alarmas), y al darlo cambia solo. Y «Quién usa la app» (23 nov, «suele tardar bastante en cargar»): sale al
+// momento lo de la última vez con «Actualizando…», se cambia por lo nuevo al llegar y, si no llega, lo dice
+{
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const puente = `window.__notif = false; window.__pidePermiso = 0; window.FantasyApp = new Proxy({ avisosPermitidos: () => window.__notif, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {}, notificar: () => {}, pedirPermisoAvisos: () => { window.__pidePermiso++; } }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});`;
+  const { ctx, page, errores } = await pagina({ init: puente });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 }).catch(() => {});
+  const tarjeta = () => page.evaluate(async () => {
+    window.S.planEstado = { cargando: true, paso: '' };
+    window.dispatchEvent(new Event('limites-nuevos'));
+    await new Promise((ok) => setTimeout(ok, 300));
+    const p = document.querySelector('#plan-notif');
+    return p ? { t: p.innerText.replace(/\s+/g, ' '), boton: !!p.querySelector('[data-accion="permisoPlan"]') } : null;
+  });
+  let t = await tarjeta();
+  if (!t || !t.boton || !/notificaciones apagadas/.test(t.t) || !/se sigue haciendo/.test(t.t)) mal(`notificaciones del plan: con ellas apagadas no se dice ni se ofrece activarlas: ${JSON.stringify(t)}`);
+  else bien(`notificaciones del plan: con ellas apagadas lo dice y ofrece activarlas («${t.t.slice(0, 90)}…»)`);
+  const tras = await page.evaluate(async () => {
+    const avisosAntes = localStorage.getItem('fm-cfg-avisos');
+    document.querySelector('#plan-notif [data-accion="permisoPlan"]').click();
+    await new Promise((ok) => setTimeout(ok, 100));
+    const pidio = window.__pidePermiso;
+    window.__notif = true;
+    window.permisoAvisos(true);
+    await new Promise((ok) => setTimeout(ok, 100));
+    const p = document.querySelector('#plan-notif');
+    const tos = document.querySelector('.tostada');
+    return { pidio, avisos: localStorage.getItem('fm-cfg-avisos') === avisosAntes, t: p ? p.innerText.replace(/\s+/g, ' ') : '', boton: !!(p && p.querySelector('button')), tostada: tos ? tos.textContent : '' };
+  });
+  if (tras.pidio !== 1 || !tras.avisos || tras.boton || !/te aviso cuando esté/.test(tras.t) || tras.tostada !== 'Notificaciones activadas') mal(`notificaciones del plan: el botón y el cambio al dar el permiso: ${JSON.stringify(tras)}`);
+  else bien('notificaciones del plan: el botón pide el permiso (sin tocar las alarmas) y al darlo cambia a «te aviso cuando esté»');
+  if (errores.length) mal(`notificaciones del plan: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+{
+  // «Quién usa la app» (en la web: en la app las peticiones van por la parte de Android): lo guardado sale al momento y lo
+  // nuevo llega a los 1,5 s
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 }).catch(() => {});
+  let modoQ = 'bien', pedidasQ = 0;
+  const cuenta = (uid, nombre, hace) => ({ uid, nombre, equipo: nombre, v: '0.8v', canal: 'play', primera: Date.now() - 5 * 864e5, ultima: Date.now() - hace, segHoy: 60, segDias: {} });
+  await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
+    const q = r.request();
+    const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
+    if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
+    if (!q.url().includes('/hola/todos')) return r.abort('blockedbyclient');
+    pedidasQ++;
+    await new Promise((ok) => setTimeout(ok, 1500));
+    if (modoQ === 'caido') return r.abort('connectionrefused');
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), cuenta(2, 'Nueva2', 2000), cuenta(3, 'Nueva3', 3000)], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
+  });
+  const abrirQ = () => page.evaluate(async () => {
+    const b = document.createElement('button'); b.dataset.accion = 'quienUsa'; document.body.appendChild(b); b.click(); b.remove();
+    await new Promise((ok) => setTimeout(ok, 250));
+    const sub = () => { const x = document.querySelector('.q-sub'); return x ? x.innerText.replace(/\s+/g, ' ') : ''; };
+    const antes = sub();
+    await new Promise((ok) => setTimeout(ok, 2200));
+    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null') };
+  });
+  await page.evaluate((viejo) => localStorage.setItem('fm-quien-ult', JSON.stringify({ d: viejo })), { lista: [cuenta(9, 'Vieja', 3600e3)], registro: [], ahora: Date.now() - 3600e3, dias: null, embudo: null, invitar: null });
+  let q = await abrirQ();
+  const nuevas = q.guardado && q.guardado.d && q.guardado.d.lista ? q.guardado.d.lista.length : 0;
+  if (!/Actualizando/.test(q.antes) || !/1 cuentas/.test(q.antes) || !/dentro ahora/.test(q.despues) || !/3 cuentas/.test(q.despues) || nuevas !== 3) mal(`Quién usa la app: lo guardado al momento y lo nuevo después: ${JSON.stringify({ antes: q.antes, despues: q.despues, nuevas })}`);
+  else bien(`Quién usa la app: sale al momento lo de la última vez («${q.antes}») y se cambia por lo nuevo («${q.despues}»)`);
+  modoQ = 'caido';
+  await page.evaluate(() => { const b = document.querySelector('[data-accion="cerrarHoja"]'); if (b) b.click(); });
+  q = await abrirQ();
+  if (!/No se ha podido actualizar/.test(q.despues) || !/3 cuentas/.test(q.despues)) mal(`Quién usa la app: sin conexión con lo guardado: ${JSON.stringify(q)}`);
+  else bien(`Quién usa la app: si no llega lo nuevo, se queda lo guardado y lo dice («${q.despues}»)`);
+  if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 15b: (16 nov, 0.7.13l) los planes a su hora y «Rehacer el plan»: por defecto a las 00:25 y las 12:25 (10 min después del
 // mercado y 12 h después); un turno pasado sin plan de la IA hace que salga solo, y no si no quedan de hoy; en el plan, «Rehacer
 // el plan» en lugar de «Compartir», y sus ajustes con el tono y las dos horas
