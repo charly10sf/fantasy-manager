@@ -2175,7 +2175,7 @@
   "2386": "ok",
   "2387": "ok",
   "2389": "out_of_league",
-  "2390": "injured",
+  "2390": "doubtful",
   "2391": "out_of_league",
   "2392": "out_of_league",
   "2394": "ok",
@@ -3124,7 +3124,9 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000,
    "SPORT|136740352": 1795422809000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000,
+   "SPORT|136740897": 1795423169000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/23/lamine-yamal-no-viatja-a-baku-en-una-decisio-consensuada-amb-el-barca-per-descans-sercat/": 1795425259000
   },
   "hechos": [
    {
@@ -3724,7 +3726,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -4658,17 +4660,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 172840,
-  "salida": 7174,
+  "entrada": 175011,
+  "salida": 8331,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.361875,
+  "dolares": 0.362671,
   "reservado": 0
  },
  "recientes": {
@@ -9594,13 +9596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5583,
+   "ok": 5584,
    "fallos": 0,
-   "ejecuciones": 4500,
+   "ejecuciones": 4501,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:41:12.236Z"
+   "ultima": "2026-11-23T09:46:23.146Z"
   }
  },
  "ptsDirecto": {
@@ -9840,15 +9842,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:41:20.610Z"
+   "ultimaBien": "2026-11-23T09:46:35.162Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:41:20.610Z"
+   "ultimaBien": "2026-11-23T09:46:35.162Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:41:20.610Z"
+   "ultimaBien": "2026-11-23T09:46:35.162Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9856,11 +9858,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:41:20.610Z"
+   "ultimaBien": "2026-11-23T09:46:35.162Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:41:20.610Z"
+   "ultimaBien": "2026-11-23T09:46:35.162Z"
   }
  },
  "avisos": [
