@@ -3124,7 +3124,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
    "SPORT|136739318": 1795429327000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000
   },
   "hechos": [
    {
@@ -3683,7 +3684,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -4619,17 +4620,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 197220,
-  "salida": 11847,
+  "entrada": 199148,
+  "salida": 12517,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.36665,
+  "dolares": 0.367178,
   "reservado": 0
  },
  "recientes": {
@@ -9555,13 +9556,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5608,
+   "ok": 5609,
    "fallos": 0,
-   "ejecuciones": 4525,
+   "ejecuciones": 4526,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:46:14.397Z"
+   "ultima": "2026-11-23T11:51:12.707Z"
   }
  },
  "ptsDirecto": {
@@ -9801,15 +9802,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:46:24.210Z"
+   "ultimaBien": "2026-11-23T11:51:19.886Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:46:24.210Z"
+   "ultimaBien": "2026-11-23T11:51:19.886Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:46:24.210Z"
+   "ultimaBien": "2026-11-23T11:51:19.886Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9817,11 +9818,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:46:24.210Z"
+   "ultimaBien": "2026-11-23T11:51:19.886Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:46:24.210Z"
+   "ultimaBien": "2026-11-23T11:51:19.886Z"
   }
  },
  "avisos": [
