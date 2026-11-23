@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
-   "SPORT|136676022": 1795189674000,
    "SPORT|136668682": 1795190209000,
    "SPORT|136676862": 1795190919000,
    "SPORT|136676667": 1795190614000,
@@ -9379,13 +9378,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5657,
+   "ok": 5658,
    "fallos": 0,
-   "ejecuciones": 4574,
+   "ejecuciones": 4575,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T15:46:15.389Z"
+   "ultima": "2026-11-23T15:51:12.672Z"
   }
  },
  "ptsDirecto": {
@@ -9625,15 +9624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:46:20.670Z"
+   "ultimaBien": "2026-11-23T15:51:16.683Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:46:20.670Z"
+   "ultimaBien": "2026-11-23T15:51:16.683Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:46:20.670Z"
+   "ultimaBien": "2026-11-23T15:51:16.683Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9641,11 +9640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:46:20.670Z"
+   "ultimaBien": "2026-11-23T15:51:16.683Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:46:20.670Z"
+   "ultimaBien": "2026-11-23T15:51:16.683Z"
   }
  },
  "avisos": [
