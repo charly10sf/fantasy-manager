@@ -2934,8 +2934,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
-   "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
@@ -3127,7 +3125,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000,
    "SPORT|136739543": 1795427080000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000
   },
   "hechos": [
    {
@@ -3141,21 +3140,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795172531000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos se pierde el derbi ante el Sevilla",
-    "motivo": "molestias sin lesión confirmada",
-    "plazo": "",
-    "nums": [
-     18,
-     30
-    ]
    },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html",
@@ -3713,7 +3697,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -4647,17 +4631,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 185777,
-  "salida": 9692,
+  "entrada": 187781,
+  "salida": 9784,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.364428,
+  "dolares": 0.364674,
   "reservado": 0
  },
  "recientes": {
@@ -9583,13 +9567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5599,
+   "ok": 5600,
    "fallos": 0,
-   "ejecuciones": 4516,
+   "ejecuciones": 4517,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:01:19.055Z"
+   "ultima": "2026-11-23T11:06:13.765Z"
   }
  },
  "ptsDirecto": {
@@ -9829,15 +9813,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:01:24.559Z"
+   "ultimaBien": "2026-11-23T11:06:19.052Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:01:24.559Z"
+   "ultimaBien": "2026-11-23T11:06:19.052Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:01:24.559Z"
+   "ultimaBien": "2026-11-23T11:06:19.052Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9845,11 +9829,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:01:24.559Z"
+   "ultimaBien": "2026-11-23T11:06:19.052Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:01:24.559Z"
+   "ultimaBien": "2026-11-23T11:06:19.052Z"
   }
  },
  "avisos": [
