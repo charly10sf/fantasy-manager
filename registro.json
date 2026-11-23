@@ -2431,7 +2431,7 @@
   "2782": "out_of_league",
   "2783": "ok",
   "2784": "ok",
-  "2785": "ok",
+  "2785": "suspended",
   "2786": "out_of_league",
   "2788": "out_of_league",
   "2789": "out_of_league",
@@ -3126,7 +3126,8 @@
    "SPORT|136740352": 1795422809000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000,
    "SPORT|136740897": 1795423169000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/23/lamine-yamal-no-viatja-a-baku-en-una-decisio-consensuada-amb-el-barca-per-descans-sercat/": 1795425259000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/23/lamine-yamal-no-viatja-a-baku-en-una-decisio-consensuada-amb-el-barca-per-descans-sercat/": 1795425259000,
+   "SPORT|136741102": 1795423218000
   },
   "hechos": [
    {
@@ -3726,7 +3727,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -4660,17 +4661,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 175011,
-  "salida": 8331,
+  "entrada": 177030,
+  "salida": 8991,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.362671,
+  "dolares": 0.363203,
   "reservado": 0
  },
  "recientes": {
@@ -9596,13 +9597,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5584,
+   "ok": 5585,
    "fallos": 0,
-   "ejecuciones": 4501,
+   "ejecuciones": 4502,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:46:23.146Z"
+   "ultima": "2026-11-23T09:51:13.976Z"
   }
  },
  "ptsDirecto": {
@@ -9842,15 +9843,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:46:35.162Z"
+   "ultimaBien": "2026-11-23T09:51:21.536Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:46:35.162Z"
+   "ultimaBien": "2026-11-23T09:51:21.536Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:46:35.162Z"
+   "ultimaBien": "2026-11-23T09:51:21.536Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9858,11 +9859,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:46:35.162Z"
+   "ultimaBien": "2026-11-23T09:51:21.536Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:46:35.162Z"
+   "ultimaBien": "2026-11-23T09:51:21.536Z"
   }
  },
  "avisos": [
