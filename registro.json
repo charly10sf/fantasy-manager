@@ -2946,7 +2946,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000,
    "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/": 1795217931000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-celta-ante-el-real-madrid-en-laliga-ea-sports-f202611-n/": 1795218102000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-deportivo-ante-el-alaves-en-laliga-ea-sports-f202611-n/": 1795217639000,
@@ -9367,13 +9366,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5724,
+   "ok": 5726,
    "fallos": 0,
-   "ejecuciones": 4633,
+   "ejecuciones": 4634,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T20:41:12.009Z"
+   "ultima": "2026-11-23T20:46:12.927Z"
   }
  },
  "ptsDirecto": {
@@ -9613,27 +9612,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:41:16.570Z"
+   "ultimaBien": "2026-11-23T20:46:19.054Z"
   }
  },
  "avisos": [
