@@ -2938,7 +2938,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000,
-   "SPORT|136657501": 1795169223000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "AS|https://as.com/futbol/hidalgo-aubameyang-yo-siempre-soy-optimista-f202611-n/": 1795172768000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253323/ceballos-sera-baja-derbi.html": 1795172531000,
@@ -9597,13 +9596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5588,
+   "ok": 5589,
    "fallos": 0,
-   "ejecuciones": 4505,
+   "ejecuciones": 4506,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T10:06:12.524Z"
+   "ultima": "2026-11-23T10:11:16.294Z"
   }
  },
  "ptsDirecto": {
@@ -9843,15 +9842,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:06:16.656Z"
+   "ultimaBien": "2026-11-23T10:11:22.652Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:06:16.656Z"
+   "ultimaBien": "2026-11-23T10:11:22.652Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:06:16.656Z"
+   "ultimaBien": "2026-11-23T10:11:22.652Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9859,11 +9858,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:06:16.656Z"
+   "ultimaBien": "2026-11-23T10:11:22.652Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:06:16.656Z"
+   "ultimaBien": "2026-11-23T10:11:22.652Z"
   }
  },
  "avisos": [
