@@ -2044,6 +2044,21 @@
    "jornada": 13,
    "id": "2124942733701976361",
    "t": "2026-11-23T19:06:42.254Z"
+  },
+  {
+   "clave": "directo|126|Roy Revivo|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124977880572834086",
+   "t": "2026-11-23T21:26:21.959Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "126",
+    "equipo": "3751",
+    "min": 62,
+    "extra": 0,
+    "jugador": "Roy Revivo"
+   }
   }
  ],
  "estados": {
@@ -4438,16 +4453,16 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 47,
-   "redactar": 16,
+   "redactar": 18,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 297103,
-  "salida": 20791,
+  "entrada": 315727,
+  "salida": 21028,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.497254,
+  "dolares": 0.536872,
   "reservado": 0
  },
  "recientes": {
@@ -4585,10 +4600,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T19:21:23.944Z",
-    "texto": "🟥 Expulsan a Catena en el 90+2' y el Osasuna 🐂 acaba con diez en El Sadar, aunque va ganando 1-0 al Málaga 🐟.\n\nEl defensa se queda en -1 punto de momento. Si lo tienes, es un golpe, pero con el partido casi cerrado no debería ir a más."
-   },
-   {
     "t": "2026-11-22T20:16:24.784Z",
     "texto": "⚽ Álex Baena abre el marcador en el 10'. Getafe 0-1 Atlético. Asistencia de Julián Alvarez, con 3 puntos de momento. Álex Baena ya suma 6 puntos."
    },
@@ -4603,6 +4614,10 @@
    {
     "t": "2026-11-22T22:26:31.803Z",
     "texto": "⚽ Grimaldo marca de penalti en el 90+2' y el Atlético cierra el 0-3 en el Coliseum.\n\nEl lateral se va a 15 puntos, casi el doble de su media, y es el defensa que más puntos lleva esta temporada. Con el partido ya acabado, es jornada redonda si lo tenías."
+   },
+   {
+    "t": "2026-11-23T21:26:21.967Z",
+    "texto": "⚽ El Elche pasa por delante en el Ciutat de València: Revivo la manda dentro en el 62' y es el 0-1 al Levante.\n\nEl defensa israelí lleva 7 puntos de momento. Germán V. da el pase y por ahora se lleva 3."
    }
   ],
   "novedades": [
@@ -9369,18 +9384,28 @@
    "m": "62'",
    "f": "2026-11-23T21:21:15.359Z",
    "rf": "62:05",
-   "avisado": true
+   "avisado": true,
+   "casado": true
+  },
+  "directo|126|Roy Revivo|gol1": {
+   "j": "Roy Revivo",
+   "m": "62'",
+   "e": "2026-11-23T21:26:13.415Z",
+   "re": "67'",
+   "w": "2026-11-23T21:20:28Z",
+   "f": "2026-11-23T21:21:15.359Z",
+   "rf": "62:05"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5740,
+   "ok": 5742,
    "fallos": 0,
-   "ejecuciones": 4641,
+   "ejecuciones": 4642,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T21:21:15.359Z"
+   "ultima": "2026-11-23T21:26:13.415Z"
   }
  },
  "ptsDirecto": {
@@ -9605,6 +9630,18 @@
    "g": 1,
    "a": 0,
    "t": 1795386378610
+  },
+  "13|126|3263": {
+   "p": 7,
+   "g": 1,
+   "a": 0,
+   "t": 1795469173415
+  },
+  "13|126|3074": {
+   "p": 3,
+   "g": 0,
+   "a": 1,
+   "t": 1795469173415
   }
  },
  "golesAnulados": {
@@ -9620,27 +9657,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:21:23.141Z"
+   "ultimaBien": "2026-11-23T21:26:27.463Z"
   }
  },
  "avisos": [
