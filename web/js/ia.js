@@ -2346,6 +2346,17 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
     else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}). ${v.porque}`);
   }
+  // (23 nov, Gulácsi) la oferta que el motor protege (un titular o uno que ha dejado de bajar, por poco más de lo que vale):
+  // aunque haga falta dinero, no se acepta mientras queden cambios de mercado antes de la jornada (se hace caja con otra
+  // cosa: en negativo entre semana no se malvende); con un clausulazo que la necesite, sí, con el aviso
+  const quedanCambios = !!(M.ventanaEsp && M.ventanaEsp.ciclos >= 1);
+  for (const o of ops) {
+    if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !quedanCambios) continue;
+    const v = (M.misVentas || []).find((x) => x.pid === o.pid && x.protege && x.consejo === 'esperar');
+    if (!v || !(o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || ''))) continue;
+    if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${v.porque}`;
+    else quitarVenta(o, `La app lo descarta: quedan ${M.ventanaEsp.ciclos} cambios de mercado antes de la jornada para hacer caja con otra cosa. ${v.porque}`);
+  }
   // el que vuelve y sigue subiendo (se hundió y ahora juega y sube varios días seguidos): no se manda vender mientras
   // siga subiendo, salvo que haga falta el dinero o sea uno comprado para revender (0.7n, el caso De Jong)
   for (const o of ops) {

@@ -184,7 +184,9 @@ function candidatos(X, vetados) {
           datos: { porque: v.porque, cuanto: `${eur(v.mejor.importe)} (${eur(prima, { signo: true })} sobre su valor)`, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', siNo: 'la oferta caduca y llega otra de LaLiga en el siguiente cambio de mercado' } }) });
     }
     // por si hace falta el dinero (solo entra en el plan si sin él no se empieza la jornada en positivo)
-    if (!ver || ver.ok || ver.sinPrisa || X.cierre) {
+    // (23 nov, Gulácsi) la que el motor protege (un titular o uno que ha dejado de bajar, por poco más de lo que vale), solo
+    // si ya no quedan cambios de mercado antes de la jornada: mientras, se hace caja con otra cosa
+    if ((!ver || ver.ok || ver.sinPrisa || X.cierre) && !(v.protege && ciclos >= 1)) {
       nuevo({ ...base, k: `FA-${v.pid}`, forzada: true, motivo: 'jornada', x,
         op: (cu) => op({ objetivo: 'caja', confianza: 'alta',
           motivo: `Hace falta para empezar la jornada en positivo (en negativo no puntúas) y es dinero que entra en el momento. ${v.mejor.sobre >= 0 ? `Te pagan ${eur(prima, { signo: true })} sobre lo que vale` : `La oferta se queda ${eur(-prima)} por debajo de lo que vale`} (${eur(v.j.valor)}).${pierdeTxt(v.pid)}${cu.resto}`,

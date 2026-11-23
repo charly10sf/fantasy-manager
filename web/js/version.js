@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8w';
+export const VERSION = '0.8x';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8w';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (23 nov, 20:32, Carlos: «me sigue saliendo que venda al portero del Villarreal… 16,01 millones… ha cambiado la
+    // tendencia de ir hacia abajo a ir hacia arriba… no tiene sentido la venta») motor.js (misVentas): por menos de un 10 %
+    // no se acepta tampoco la oferta por uno que hoy sube o se queda igual (titular o no), y la protegida (`protege`) no se
+    // acepta «porque hace falta el dinero» mientras queden cambios de mercado antes de la jornada (plan.js FA- y cuadrarPlan).
+    // La hora, al publicar
+    v: '0.8x', f: '2026-11-23', h: '', t: 'No vende al que ha dejado de bajar',
+    cosas: [
+      { tipo: 'arreglo', d: 'oferta', t: 'No vende al que ha dejado de bajar', x: 'Si un jugador tuyo venía bajando y hoy sube, la app ya no te dice que aceptes una oferta un poco por encima de su valor: lo normal es que siga subiendo. Y si vas en negativo entre semana, no te manda vender a tus titulares por poco: hay tiempo de hacer caja con otra cosa antes de la jornada.' },
+    ],
+  },
   {
     // (23 nov, 17:56, Carlos: «la pestaña para mirar cuánta gente hay suele tardar bastante en cargar» y «cuando me salgo
     // de la aplicación no me sale ninguna notificación de que está cargando el plan… no sé si al final terminó saliendo»)

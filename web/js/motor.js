@@ -2174,6 +2174,8 @@ export function analizar(D, H, c, extra = {}) {
   const sinRelevoV = (pid, j) => { const p = M.perdida(pid); return p >= 1 && p >= 0.5 * (M.ppEsperado(j) || 0); };
   const PUESTO_V = { 1: 'portero', 2: 'defensa', 3: 'centrocampista', 4: 'delantero' };
   // la jornada empieza antes de la siguiente oferta (el cambio de mercado del mismo día que empieza no da tiempo)
+  // hoy sube o se queda igual (lo de hoy, con el histórico; si no lo hay, la página de mercado)
+  const noBajaV = (t) => (t.d1 != null ? num(t.d1) >= 0 : t.p1 != null && t.p1 >= 0);
   const jornadaAntesV = !!M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini));
   M.misVentas =(D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
     const j = J(v.pid), t = M.tend(v.pid);
@@ -2182,7 +2184,7 @@ export function analizar(D, H, c, extra = {}) {
     const ofertas = (v.ofertas || []).map((o) => ({ ...o, sobre: j.valor ? o.importe / j.valor - 1 : 0 }));
     const mejor = ofertas[0] || null;
     // ¿aceptar? si paga más que su valor, o si está bajando y la oferta no se queda muy corta
-    let consejo = 'esperar', porque = '';
+    let consejo = 'esperar', porque = '', protege = false;
     const bajando = (t.p1 != null && t.p1 < -0.5) || (P7(t) != null && P7(t) < -2);
     const subiendo = (t.p1 != null && t.p1 > 0.5) || (P7(t) != null && P7(t) > 2);
     const ine = M.inercia(v.pid), pzV = M.partidazo(v.pid);
@@ -2227,22 +2229,31 @@ export function analizar(D, H, c, extra = {}) {
       porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero (tienes ${eur(D.dinero)}): los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
     }
     // (23 nov, Carlos: Gulácsi, portero titular al 92 %, con buenos puntos, partido fácil y que hoy deja de bajar, y la app
-    // mandaba aceptar un 7 % «porque te pagan más de lo que vale») aceptar una oferta es venderlo. A uno de tu once, lo
-    // mismo que para ponerlo a la venta (14 nov): solo si baja todos los días y tiene relevo, si está de baja o si te hace
-    // falta el dinero (eso lo decide el plan, FA-). Lo que LaLiga paga de más es un ±10 % y es suerte: no compensa quedarse
-    // sin él, salvo que paguen un 10 % o más (lo más alto que suele dar LaLiga; Carlos, 17 nov: «la de un 12 % por encima,
-    // aunque suba un 1 % al día, sí»). En negativo entre semana tampoco (no se malvende); sí si la jornada empieza antes de
-    // la siguiente oferta
-    else if (!(num(D.dinero) < 0 && jornadaAntesV) && M.perdida(v.pid) >= 0.3 && !M.vendeBaja({ j, tend: t }) && !(extra.reventa || {})[v.pid]
-      && mejor.sobre < 0.1 && !(M.bajaSeguido(v.pid) && !sinRelevoV(v.pid, j))) {
-      const pierde = String(Math.round(M.perdida(v.pid) * 10) / 10).replace('.', ','), bs = M.bajaSeguido(v.pid);
-      // (con lo pujado acabarías en negativo: el plan la acepta si no hay otra forma de llegar en positivo a la jornada)
-      const conPujas = num(D.dinero) - num(M.misPujas);
-      const luego = `${mejor.deLiga ? 'LaLiga te hará otra en el siguiente cambio de mercado: acéptala' : 'Acéptala'} solo si te hace falta el dinero${conPujas < 0 ? ` (con lo que tienes pujado te quedarías en ${eur(conPujas)})` : ''}.`;
-      consejo = 'esperar';
-      porque = bs
+    // mandaba aceptar un 7 % «porque te pagan más de lo que vale») aceptar una oferta es venderlo. Por poco más de lo que
+    // vale (menos de un 10 %, lo más alto que suele dar LaLiga; Carlos, 17 nov: «la de un 12 % por encima, aunque suba un
+    // 1 % al día, sí») no se vende: (1) a uno de tu once, salvo que baje todos los días y tenga relevo (la regla del 14 nov
+    // para ponerlo a la venta); (2) a ninguno que hoy suba o se quede igual (20:32, otra vez Gulácsi con 16,01 M: «ha
+    // cambiado la tendencia de ir hacia abajo a ir hacia arriba… no tiene sentido la venta»). Salvo que esté de baja, que
+    // sea para revender o que haga falta el dinero DE VERDAD: en negativo (o con lo pujado) y sin otro cambio de mercado
+    // antes de la jornada. Entre semana hay tiempo de hacer caja con otra cosa (en negativo no se malvende); el plan no la
+    // acepta «porque hace falta» mientras queden cambios de mercado (`protege`, plan.js y cuadrarPlan)
+    else if (!(jornadaAntesV && (num(D.dinero) < 0 || num(D.dinero) - num(M.misPujas) < 0)) && !M.vendeBaja({ j, tend: t }) && !(extra.reventa || {})[v.pid]
+      && mejor.sobre < 0.1 && ((M.perdida(v.pid) >= 0.3 && !(M.bajaSeguido(v.pid) && !sinRelevoV(v.pid, j))) || noBajaV(t))) {
+      const titular = M.perdida(v.pid) >= 0.3, pierde = String(Math.round(M.perdida(v.pid) * 10) / 10).replace('.', ','), bs = M.bajaSeguido(v.pid);
+      const por = mejor.sobre > 0 ? `Por un ${Math.max(1, Math.round(mejor.sobre * 100))} % más` : 'Por lo que te ofrecen';
+      // hoy sube después de N días bajando: «ha dejado de bajar»
+      const sub = Array.isArray(t.sub) ? t.sub : [];
+      let antes = 0;
+      for (let k = sub.length - 2; k >= 0 && sub[k] < -0.001; k--) antes++;
+      const giro = noBajaV(t) ? `hoy ${num(t.d1) > 0 ? `sube (${eur(t.d1, { signo: true })})` : 'no baja'}${antes >= 2 ? ` después de ${antes} días bajando: ha dejado de bajar` : ''}` : '';
+      const Giro = giro.charAt(0).toUpperCase() + giro.slice(1);
+      const luego = `${mejor.deLiga ? 'LaLiga te hará otra en el siguiente cambio de mercado: acéptala' : 'Acéptala'} solo si te hace falta el dinero.`;
+      consejo = 'esperar'; protege = true;
+      porque = bs && titular
         ? `Baja todos los días (${bs.dias} seguidos), pero es titular en tu once y no tienes otro ${PUESTO_V[j.pos] || 'en su puesto'} que puntúe como él (sin él pierdes unos ${pierde} pts por jornada): antes hace falta un sustituto. ${luego}`
-        : `Es titular en tu once (sin él pierdes unos ${pierde} pts por jornada) y no baja todos los días: ${mejor.sobre > 0 ? `por un ${Math.max(1, Math.round(mejor.sobre * 100))} % más` : 'por lo que te ofrecen'} no compensa quedarte sin él. ${luego}`;
+        : titular
+          ? `Es titular en tu once (sin él pierdes unos ${pierde} pts por jornada) y ${giro || 'no baja todos los días'}. ${por} no compensa quedarte sin él. ${luego}`
+          : `${Giro}${antes >= 2 ? '' : ': no está bajando'}. ${por} no compensa venderlo: lo normal es que siga así o suba. ${luego}`;
     }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
@@ -2268,7 +2279,7 @@ export function analizar(D, H, c, extra = {}) {
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
     else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
     const deLiga = ofertas.some((o) => o.deLiga);
-    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, liga, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
+    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, protege, liga, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
   });
   M.enVenta = new Set(M.misVentas.map((v) => v.pid));
 
