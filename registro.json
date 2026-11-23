@@ -2933,8 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
-   "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
    "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
@@ -3125,21 +3123,11 @@
    "SPORT|136739318": 1795429327000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254448/bisiwu-novedad-lista-flick-baku.html": 1795433657000,
+   "SPORT|136746976": 1795431027000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795175996000,
-    "id": "2430",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/",
     "medio": "AS",
@@ -3684,7 +3672,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4620,17 +4608,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 199148,
-  "salida": 12517,
+  "entrada": 201450,
+  "salida": 13690,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.367178,
+  "dolares": 0.367995,
   "reservado": 0
  },
  "recientes": {
@@ -9556,13 +9544,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5610,
+   "ok": 5611,
    "fallos": 0,
-   "ejecuciones": 4527,
+   "ejecuciones": 4528,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:56:12.759Z"
+   "ultima": "2026-11-23T12:01:18.272Z"
   }
  },
  "ptsDirecto": {
@@ -9802,15 +9790,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:56:17.922Z"
+   "ultimaBien": "2026-11-23T12:01:30.415Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:56:17.922Z"
+   "ultimaBien": "2026-11-23T12:01:30.415Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:56:17.922Z"
+   "ultimaBien": "2026-11-23T12:01:30.415Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9818,11 +9806,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:56:17.922Z"
+   "ultimaBien": "2026-11-23T12:01:30.415Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:56:17.922Z"
+   "ultimaBien": "2026-11-23T12:01:30.415Z"
   }
  },
  "avisos": [
