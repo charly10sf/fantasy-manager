@@ -4379,7 +4379,9 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
    "SPORT|136750461": 1795433046000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
+   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
+   "SPORT|136761298": 1795445632000
   },
   "hechos": [
    {
@@ -4432,27 +4434,25 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448775389
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 214616,
-  "salida": 15075,
+  "entrada": 216524,
+  "salida": 15293,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.370005,
+  "dolares": 0.370305,
   "reservado": 0
  },
  "recientes": {
@@ -9378,13 +9378,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5658,
+   "ok": 5659,
    "fallos": 0,
-   "ejecuciones": 4575,
+   "ejecuciones": 4576,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T15:51:12.672Z"
+   "ultima": "2026-11-23T15:56:16.288Z"
   }
  },
  "ptsDirecto": {
@@ -9624,15 +9624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:51:16.683Z"
+   "ultimaBien": "2026-11-23T15:56:24.642Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:51:16.683Z"
+   "ultimaBien": "2026-11-23T15:56:24.642Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:51:16.683Z"
+   "ultimaBien": "2026-11-23T15:56:24.642Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9640,11 +9640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:51:16.683Z"
+   "ultimaBien": "2026-11-23T15:56:24.642Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:51:16.683Z"
+   "ultimaBien": "2026-11-23T15:56:24.642Z"
   }
  },
  "avisos": [
