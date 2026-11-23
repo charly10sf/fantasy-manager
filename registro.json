@@ -2937,7 +2937,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html": 1795177015000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html": 1795176766000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
@@ -3167,18 +3166,6 @@
      18,
      30
     ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795176766000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang tiene una lesión de tobillo que no parece grave",
-    "motivo": "lesión de tobillo",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html",
@@ -4538,7 +4525,6 @@
   "vistas": {
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
-   "SPORT|136666090": 1795176736000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fase-final-nations-league-fechas-horarios-20261120_3479323.html": 1795183556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253416/barca-inter-jp-financial-jugara-pavello-nou-santa-coloma.html": 1795181265000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
@@ -4569,7 +4555,9 @@
    "SPORT|136740501": 1795422406000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000
   },
   "hechos": [
    {
@@ -4598,7 +4586,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -4606,17 +4594,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 201450,
-  "salida": 13690,
+  "entrada": 203139,
+  "salida": 13960,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.367995,
+  "dolares": 0.368299,
   "reservado": 0
  },
  "recientes": {
@@ -9542,13 +9530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5613,
+   "ok": 5614,
    "fallos": 0,
-   "ejecuciones": 4530,
+   "ejecuciones": 4531,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:11:12.755Z"
+   "ultima": "2026-11-23T12:16:14.664Z"
   }
  },
  "ptsDirecto": {
@@ -9788,15 +9776,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:11:17.124Z"
+   "ultimaBien": "2026-11-23T12:16:22.484Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:11:17.124Z"
+   "ultimaBien": "2026-11-23T12:16:22.484Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:11:17.124Z"
+   "ultimaBien": "2026-11-23T12:16:22.484Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9804,11 +9792,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:11:17.124Z"
+   "ultimaBien": "2026-11-23T12:16:22.484Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:11:17.124Z"
+   "ultimaBien": "2026-11-23T12:16:22.484Z"
   }
  },
  "avisos": [
