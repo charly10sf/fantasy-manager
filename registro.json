@@ -2059,6 +2059,21 @@
     "extra": 0,
     "jugador": "Roy Revivo"
    }
+  },
+  {
+   "clave": "directo|126|Dani Requena|gol1",
+   "tipo": "directo",
+   "jornada": 13,
+   "id": "2124984194669404478",
+   "t": "2026-11-23T21:51:27.442Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "126",
+    "equipo": "1538",
+    "min": 88,
+    "extra": 0,
+    "jugador": "Dani Requena"
+   }
   }
  ],
  "estados": {
@@ -3127,7 +3142,8 @@
    "SPORT|136772178": 1795462124000,
    "SPORT|136765874": 1795464052000,
    "SPORT|136741278": 1795466190000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0489f1e9cf4a60608b457f.html": 1795470222000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0489f1e9cf4a60608b457f.html": 1795470222000,
+   "SPORT|136770607": 1795466758000
   },
   "hechos": [
    {
@@ -3495,7 +3511,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4454,17 +4470,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 49,
-   "redactar": 18,
+   "clasificar": 50,
+   "redactar": 20,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 319741,
-  "salida": 21706,
+  "entrada": 340187,
+  "salida": 22293,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.537612,
+  "dolares": 0.577317,
   "reservado": 0
  },
  "recientes": {
@@ -4602,10 +4618,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-22T20:16:24.784Z",
-    "texto": "⚽ Álex Baena abre el marcador en el 10'. Getafe 0-1 Atlético. Asistencia de Julián Alvarez, con 3 puntos de momento. Álex Baena ya suma 6 puntos."
-   },
-   {
     "t": "2026-11-22T20:31:19.305Z",
     "texto": "⚽ El Atlético se va 0-2 en el Coliseum: Johnny la mete en el 30' y silencia al Getafe.\n\nEs su primer gol en Liga, Champions o Copa, y ya suma 6 puntos. Pone el pase Julián Alvarez, que de momento se lleva 4 y llega en racha."
    },
@@ -4620,6 +4632,10 @@
    {
     "t": "2026-11-23T21:26:21.967Z",
     "texto": "⚽ El Elche pasa por delante en el Ciutat de València: Revivo la manda dentro en el 62' y es el 0-1 al Levante.\n\nEl defensa israelí lleva 7 puntos de momento. Germán V. da el pase y por ahora se lleva 3."
+   },
+   {
+    "t": "2026-11-23T21:51:27.444Z",
+    "texto": "⚽ ¡EN EL 88'! Requena enganchó una volea y el Levante empata con el Elche en el Ciutat de València: 1-1.\n\nEl centrocampista lleva 6 puntos de momento, casi el doble de su media. Olasagasti, que hace el pase, suma 2."
    }
   ],
   "novedades": [
@@ -9397,17 +9413,33 @@
    "w": "2026-11-23T21:20:28Z",
    "f": "2026-11-23T21:21:15.359Z",
    "rf": "62:05"
+  },
+  "fm|126|1481503|88": {
+   "j": "Dani Requena",
+   "m": "88'",
+   "f": "2026-11-23T21:51:16.118Z",
+   "rf": "92:05",
+   "casado": true
+  },
+  "directo|126|Dani Requena|gol1": {
+   "j": "Dani Requena",
+   "m": "88'",
+   "e": "2026-11-23T21:51:16.118Z",
+   "re": "90'+2'",
+   "w": "2026-11-23T21:46:22Z",
+   "f": "2026-11-23T21:51:16.118Z",
+   "rf": "92:05"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5750,
+   "ok": 5752,
    "fallos": 0,
-   "ejecuciones": 4646,
+   "ejecuciones": 4647,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T21:46:13.225Z"
+   "ultima": "2026-11-23T21:51:16.118Z"
   }
  },
  "ptsDirecto": {
@@ -9644,6 +9676,18 @@
    "g": 0,
    "a": 1,
    "t": 1795469173415
+  },
+  "13|126|3228": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1795470676118
+  },
+  "13|126|2445": {
+   "p": 2,
+   "g": 0,
+   "a": 1,
+   "t": 1795470676118
   }
  },
  "golesAnulados": {
@@ -9659,27 +9703,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:46:17.819Z"
+   "ultimaBien": "2026-11-23T21:51:37.118Z"
   }
  },
  "avisos": [
