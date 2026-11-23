@@ -3116,7 +3116,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261123/1004254260/vinicius-junior-examina-psv.html": 1795413600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
    "SPORT|136730482": 1795381335000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
+   "SPORT|136739601": 1795421298000
   },
   "hechos": [
    {
@@ -3785,7 +3786,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4694,17 +4695,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 131867,
-  "salida": 3834,
+  "entrada": 133899,
+  "salida": 4409,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.285232,
+  "dolares": 0.285723,
   "reservado": 0
  },
  "recientes": {
@@ -9624,13 +9625,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5576,
+   "ok": 5577,
    "fallos": 0,
-   "ejecuciones": 4493,
+   "ejecuciones": 4494,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:06:14.805Z"
+   "ultima": "2026-11-23T09:11:12.888Z"
   }
  },
  "ptsDirecto": {
@@ -9870,15 +9871,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:06:19.242Z"
+   "ultimaBien": "2026-11-23T09:11:23.201Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:06:19.242Z"
+   "ultimaBien": "2026-11-23T09:11:23.201Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:06:19.242Z"
+   "ultimaBien": "2026-11-23T09:11:23.201Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9886,11 +9887,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:06:19.242Z"
+   "ultimaBien": "2026-11-23T09:11:23.201Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:06:19.242Z"
+   "ultimaBien": "2026-11-23T09:11:23.201Z"
   }
  },
  "avisos": [
