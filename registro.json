@@ -2074,6 +2074,20 @@
     "extra": 0,
     "jugador": "Dani Requena"
    }
+  },
+  {
+   "clave": "resumen|13|mejores|10",
+   "tipo": "resumen",
+   "jornada": 13,
+   "id": "2124991794907591149",
+   "t": "2026-11-23T22:21:39.352Z"
+  },
+  {
+   "clave": "resumen|13|peores|10",
+   "tipo": "resumen",
+   "jornada": 13,
+   "id": "2124991801983471686",
+   "t": "2026-11-23T22:21:41.173Z"
   }
  ],
  "estados": {
@@ -4470,16 +4484,16 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 50,
-   "redactar": 20,
-   "revisar": 9,
+   "redactar": 31,
+   "revisar": 15,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 340187,
-  "salida": 22293,
-  "cacheLee": 17418,
-  "cacheEscribe": 8709,
-  "dolares": 0.577317,
+  "entrada": 438522,
+  "salida": 25759,
+  "cacheLee": 44375,
+  "cacheEscribe": 17833,
+  "dolares": 0.834151,
   "reservado": 0
  },
  "recientes": {
@@ -4667,6 +4681,14 @@
    {
     "t": "2026-11-08T22:36:43.136Z",
     "texto": "📉 Los peores de la jornada 12 en LaLiga Fantasy. Gayá (Valencia) firma -3, mientras que Aznou (Málaga) suma -2 y Rioja (Valencia) -1. Cuatro de los seis peores juegan en el Valencia.\n\nDe Haas, Maffeo y Lunin también terminan en negativo con -1 cada uno."
+   },
+   {
+    "t": "2026-11-23T22:21:39.354Z",
+    "texto": "⭐ Zabiri, del Racing, lidera la jornada 13 con 16 puntos, más del doble de su media, aunque su techo del curso sigue siendo la jornada 3, con 21.\n\nDetrás, cinco con 15: Copete, Rosier, Julián Alvarez, Grimaldo y Revivo. Rosier es el que más se sale de lo suyo, más del triple de su media, y enlaza 23 puntos en tres jornadas.\n\nEl Atleti mete dos, Julián y Grimaldo."
+   },
+   {
+    "t": "2026-11-23T22:21:41.175Z",
+    "texto": "📉 Djene, del Getafe, se hunde en la jornada 13 con -6 puntos, el peor de largo. Va a 3 puntos de media, así que se nota.\n\nEl siguiente es Pau Navarro, del Villarreal, con -3. Cierran los seis con -1 Cucho y Junior, del Betis, Javi Rodríguez, del Celta, y C. Romero, otro del Villarreal.\n\nJavi Rodríguez tuvo su mejor jornada en la 9, con 17 puntos."
    }
   ],
   "caidas": [
@@ -5084,7 +5106,18 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "final|126": {
+   "n": 1,
+   "t": "2026-11-23T22:22:01.193Z",
+   "ultima": "2026-11-23T22:22:01.193Z"
+  },
+  "mvp|126": {
+   "n": 1,
+   "t": "2026-11-23T22:22:20.442Z",
+   "ultima": "2026-11-23T22:22:20.442Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9451,13 +9484,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5758,
+   "ok": 5759,
    "fallos": 0,
-   "ejecuciones": 4652,
+   "ejecuciones": 4653,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T22:16:12.908Z"
+   "ultima": "2026-11-23T22:21:18.785Z"
   }
  },
  "ptsDirecto": {
@@ -9721,23 +9754,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:16:22.287Z"
+   "ultimaBien": "2026-11-23T22:22:21.338Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:16:22.287Z"
+   "ultimaBien": "2026-11-23T22:22:21.338Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:16:22.287Z"
+   "ultimaBien": "2026-11-23T22:22:21.338Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:16:22.287Z"
+   "ultimaBien": "2026-11-23T22:22:21.338Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:16:22.287Z"
+   "ultimaBien": "2026-11-23T22:22:21.338Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
