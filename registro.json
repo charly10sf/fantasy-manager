@@ -4308,7 +4308,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000,
@@ -9340,13 +9339,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5686,
+   "ok": 5687,
    "fallos": 0,
-   "ejecuciones": 4603,
+   "ejecuciones": 4604,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T18:11:18.505Z"
+   "ultima": "2026-11-23T18:16:27.795Z"
   }
  },
  "ptsDirecto": {
@@ -9586,15 +9585,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:11:23.031Z"
+   "ultimaBien": "2026-11-23T18:16:34.099Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:11:23.031Z"
+   "ultimaBien": "2026-11-23T18:16:34.099Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:11:23.031Z"
+   "ultimaBien": "2026-11-23T18:16:34.099Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9602,11 +9601,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:11:23.031Z"
+   "ultimaBien": "2026-11-23T18:16:34.099Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:11:23.031Z"
+   "ultimaBien": "2026-11-23T18:16:34.099Z"
   }
  },
  "avisos": [
