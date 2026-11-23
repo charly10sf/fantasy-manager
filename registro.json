@@ -2934,8 +2934,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
-   "AS|https://as.com/futbol/primera/olmo-importa-cuando-juega-y-cuando-no-f202611-n/": 1795178474000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253394/convocatoria-real-madrid-celta.html": 1795178280000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
@@ -3129,21 +3127,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253394/convocatoria-real-madrid-celta.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795178280000,
-    "id": "2430",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Valverde regresa a la lista ante el Celta",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21,
-     30
-    ]
    },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html",
@@ -9471,13 +9454,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5618,
+   "ok": 5619,
    "fallos": 0,
-   "ejecuciones": 4535,
+   "ejecuciones": 4536,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:36:14.051Z"
+   "ultima": "2026-11-23T12:41:17.187Z"
   }
  },
  "ptsDirecto": {
@@ -9717,15 +9700,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:36:18.060Z"
+   "ultimaBien": "2026-11-23T12:41:22.164Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:36:18.060Z"
+   "ultimaBien": "2026-11-23T12:41:22.164Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:36:18.060Z"
+   "ultimaBien": "2026-11-23T12:41:22.164Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9733,11 +9716,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:36:18.060Z"
+   "ultimaBien": "2026-11-23T12:41:22.164Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:36:18.060Z"
+   "ultimaBien": "2026-11-23T12:41:22.164Z"
   }
  },
  "avisos": [
