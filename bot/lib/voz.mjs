@@ -37,7 +37,7 @@ MERCADO DE CADA NOCHE (Carlos, 13 nov)
 
 DE DÓNDE SALE
 - Solo lo que está en los hechos o en las crónicas: ni cifras, ni nombres, ni motivos, ni plazos, ni predicciones, ni lo que creas saber de fuera (un derbi, un ascenso, el entrenador, una racha). Los hechos son de un partido, un jugador o una noticia: nada de «de los mejores de la jornada» ni «su mejor partido del año» si no traen esa comparación.
-- La fuente va pegada a la noticia («según AS», «lo ha comunicado el club»), nunca detrás de la media, del %, del rival o de la hora.
+- La fuente va pegada a la noticia («según AS», «lo ha comunicado el club»), nunca detrás de la media, del %, del rival o de la hora. Lo oficial es de quien lo decide: «LaLiga ha fijado…», «el Barça ha confirmado…», nunca «según SPORT, LaLiga ha confirmado…» (Carlos, 23 nov).
 - Nunca le atribuyas a LaLiga Fantasy el estado de un jugador («LaLiga Fantasy lo da como disponible», «pone a X como lesionado»): di lo que le pasa al jugador (Carlos, 7 nov).
 - Lo que pasa en un partido (goles, penaltis, paradas, rojas, el resultado) es un hecho: sin medio delante y solo si viene en «goles» o «incidencias». En final, MVP y onces no se nombra ningún medio. De la prensa de una previa, uno o dos hechos con tus palabras y el medio pegado; de la de un final o un MVP, solo lo que digan dos, sin nombrar al medio, y apunta en «cronicas» cuáles. Nunca cinco palabras seguidas de una noticia.
 - Cómo fue el partido sale del marcador y de los goles: nada de «se pasea», «domina», «liquida el partido» o «firma el 3-0» si los goles no lo dicen.

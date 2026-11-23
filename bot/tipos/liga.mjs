@@ -57,6 +57,15 @@ export function hechoSeJuega(x, jornada = null) {
 export const DECISIVA = /se (juega|jugar[aá]n?|disputar[aá]n?|mantiene|aplaza|suspende)\b|habr[aá] f[uú]tbol|no se (suspender|aplazar)[aá]|suspendid[oa]s?\b|aplazad[oa]s?\b|oficial|comunicado|confirma/i;
 const GRANDES = ['COPE', 'Cadena SER', 'SPORT', 'Mundo Deportivo', 'AS', 'MARCA'];
 const OFICIAL = /comunicado|oficial|ha anunciado|anuncia(do)? (laliga|la rfef|la federaci[oó]n|el csd)|(laliga|la rfef|la federaci[oó]n|el csd|el comit[eé]) (ha )?(decidido|confirmado|anunciado|comunicado)/i;
+// quién lo ha hecho oficial, para contarlo como suyo y no «según SPORT» (Carlos, 23 nov: «es como si sale Pedro Sánchez, dice que baja
+// el IVA y me ponen "según El Mundo"»)
+export const quienOficial = (fuente) => (/\blaliga\b|la liga de f[uú]tbol profesional|la patronal/i.test(fuente) ? 'LaLiga'
+  : /\brfef\b|la federaci[oó]n|el comit[eé] de competici[oó]n/i.test(fuente) ? 'la RFEF' : /\bcsd\b|consejo superior de deportes/i.test(fuente) ? 'el CSD' : 'el club');
+// los horarios de una jornada que LaLiga publica cada pocas semanas no son un cambio de horario (23 nov: SPORT contó que LaLiga había
+// confirmado los de la jornada 16 y salió «Según SPORT, LaLiga ha confirmado el horario del Málaga-Barça», sin la hora): solo cuenta
+// lo que mueve un partido que ya tenía día y hora
+export const HORARIOS_JORNADA = /horarios? (oficiales? )?de la (jornada|j\.? ?\d)|horarios? de (los partidos de )?la (\d{1,2}|[a-zé]+)[ªa]? jornada|\bya (sabe|conoce|tiene)n? (cu[aá]ndo|el horario|la hora|d[ií]a|fecha)|(fija|fijado|publica|publicado|anuncia|anunciado|confirma|confirmado|desvela|hace oficiales?|ha hecho oficiales?) (los |el )?horarios?|programaci[oó]n de la jornada/i;
+export const CAMBIO_HORARIO = /cambi|adelant|retras|modific|traslad|\bmuev|movid|nuev[oa] (fecha|horario|hora)|otra (fecha|hora)|en (lugar|vez) de|inicialmente|estaba previsto|aplaz|suspend/i;
 
 const ESQUEMA = { type: 'OBJECT', required: ['noticias'], properties: { noticias: { type: 'ARRAY', items: { type: 'OBJECT',
   required: ['i', 'tipo', 'estado', 'primera', 'segunda', 'jornada', 'equipos', 'luto', 'oficial', 'contexto', 'detalle'],
@@ -66,7 +75,7 @@ const ESQUEMA = { type: 'OBJECT', required: ['noticias'], properties: { noticias
 
 export function prompt(lote, equipos, jornada = null) {
   return `Eres redactor de una cuenta de LaLiga Fantasy. Te paso noticias de prensa (titular y entradilla). Para cada una di si cuenta una NOVEDAD sobre la celebración de la jornada o de un partido de LaLiga de Primera división:
-- "tipo": "suspension" (se suspende la jornada o un partido), "aplazamiento" (se aplaza a otra fecha), "horario" (cambia la fecha o la hora de un partido), "puertaCerrada" (se juega sin público) o "nada" (cualquier otra cosa: partidos de otras competiciones, Champions, Copa, selección, fútbol femenino, crónicas, opiniones, sanciones a jugadores, rumores sin fuente).
+- "tipo": "suspension" (se suspende la jornada o un partido), "aplazamiento" (se aplaza a otra fecha), "horario" (cambia la fecha o la hora de un partido que ya tenía día y hora: se adelanta, se retrasa o se mueve; que LaLiga publique o confirme los horarios de una jornada, o que un club «ya sepa cuándo juega», es "nada"), "puertaCerrada" (se juega sin público) o "nada" (cualquier otra cosa: partidos de otras competiciones, Champions, Copa, selección, fútbol femenino, crónicas, opiniones, sanciones a jugadores, rumores sin fuente).
 - "estado": "se_estudia" si se está valorando o se decidirá más adelante, "confirmado" si ya está decidido, "descartado" si se ha decidido que NO (por ejemplo, la jornada se jugará).
 - "primera": true si afecta a Primera división; "segunda": true si afecta también a Segunda.
 - "jornada": el número de la jornada si la noticia lo dice con cifra${jornada ? `; si dice «este fin de semana», «la jornada actual» o «la próxima jornada», ${jornada} o ${jornada + 1} según la fecha de la noticia (la ${jornada} es la que se juega ahora o la siguiente que toca)` : ''}; si no, 0.
@@ -183,6 +192,7 @@ async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirI
     const x = lote[a.i];
     if (!x || !TIPOS.includes(a.tipo) || a.tipo === 'nada' || !ESTADOS.includes(a.estado) || !a.primera) continue;
     const fuente = `${x.titulo} ${x.entradilla}`;
+    if (a.tipo === 'horario' && HORARIOS_JORNADA.test(fuente) && !CAMBIO_HORARIO.test(fuente)) { log(`  (liga) ${x.medio}: son los horarios de la jornada, no un cambio`); continue; }
     const nums = [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30);
     // si la jornada es el tema y los partidos que nombra son la excepción («se disputen todos los partidos… salvo los ya aplazados»),
     // es de la jornada aunque Gemini ponga clubes (con ellos se tiraba entera; auditoría del 5 nov)
@@ -196,7 +206,7 @@ async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirI
       jornada: a.jornada > 0 && a.jornada <= 38 && (nums.includes(a.jornada) || (jornada && (a.jornada === jornada || a.jornada === jornada + 1))) ? a.jornada : 0,
       // si el número sale en la noticia o lo ha puesto Gemini por la fecha (para quedarse con el del texto si los hay)
       jTxt: a.jornada > 0 && nums.includes(a.jornada), clubes: clubesDe(a.equipos, equipos).slice(0, 2),
-      luto: !!a.luto, oficial: !!a.oficial && OFICIAL.test(fuente),
+      luto: !!a.luto, oficial: !!a.oficial && OFICIAL.test(fuente), quien: quienOficial(fuente),
       contexto: frase(a.contexto, { fuente, max: 100 }), detalle: frase(a.detalle, { fuente, max: 100 }), nums };
     // un partido de un solo club no se entiende sin el rival; mejor esperar a otra noticia que lo diga. Y un club que no es de Primera
     // (un partido de Segunda: «Granada-Tenerife») no puede acabar como «la jornada» por no tener clubes casados (auditoría del 5 nov)
@@ -250,7 +260,7 @@ const QUE_SE_PLANTEA = { suspension: { confirmado: 'se suspende', se_estudia: 's
   puertaCerrada: { confirmado: 'se jugará a puerta cerrada', se_estudia: 'se estudia jugarlo a puerta cerrada', descartado: 'se jugará con público' } };
 
 /** el tweet de un tema (lo de un partido o una jornada) y un estado */
-export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, oficial }) {
+export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, oficial, quien = null }) {
   const O = cap(obj), deO = obj.replace(/^el /, 'del ').replace(/^(?!del )/, 'de ');
   const alarma = luto ? '📢' : estado === 'confirmado' ? '🚨' : '⚠️';
   const cab = estado === 'descartado'
@@ -259,7 +269,8 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
       ? { suspension: `${alarma} Se estudia suspender ${obj}`, aplazamiento: `${alarma} Se estudia aplazar ${obj}`, horario: `${alarma} Puede cambiar el horario ${deO}`, puertaCerrada: `${alarma} Se estudia jugar ${obj} a puerta cerrada` }[tipo]
       : { suspension: `${alarma} Se suspende ${obj}`, aplazamiento: `${alarma} Se aplaza ${obj}`, horario: `🕐 Cambia el horario ${deO}`, puertaCerrada: `${alarma} ${O} se jugará a puerta cerrada` }[tipo];
   const lis = medios.length <= 3 ? enLista(medios) : `${medios.slice(0, 2).join(', ')} y otros medios`;
-  const fuente = oficial ? `Es oficial, según ${lis}` : `Lo cuentan ${lis}`;
+  // lo oficial es de quien lo decide, no del medio que lo cuenta
+  const fuente = oficial ? `Lo ha anunciado ${quien || 'LaLiga'}` : `Lo cuentan ${lis}`;
   const lectura = lecturaDe({ tipo, estado, luto });
   // el contexto o el detalle que repiten la cabecera («Se aplaza el partido por…» bajo «Se aplaza el Sevilla-Alavés»), fuera
   if (contexto && copia(contexto, cab, 3)) contexto = '';
@@ -341,7 +352,8 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const ultT = hs[hs.length - 1].t;
     const mejor = (k) => (hs.filter((h) => h[k] && h.t >= ultT - 6 * HORA).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
     const luto = hs.some((h) => h.luto);
-    const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial });
+    const quien = (hs.filter((h) => h.oficial).pop() || {}).quien || 'LaLiga';
+    const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial, quien });
     // el mismo número para el texto y para lib/aire.mjs
     const jn = numeroDe(hs) || null;
     // jornadaAire: la jornada de la que habla la noticia, si la dice (lib/aire.mjs apunta con ella las fechas de sus partidos)
@@ -349,7 +361,7 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const lis = medios.length <= 3 ? enLista(medios) : `${medios.slice(0, 2).join(', ')} y otros medios`;
     const lect = lecturaDe({ tipo: g.tipo, estado: g.estado, luto });
     const hechos = { tipo: 'liga', noticia: `${g.obj}: ${(QUE_SE_PLANTEA[g.tipo] || {})[g.estado] || g.estado}`, de: g.obj, estado: g.estado, queSePlantea: (QUE_SE_PLANTEA[g.tipo] || {})[g.estado],
-      fuente: oficial ? `oficial, según ${lis}` : `prensa: ${medios.join(', ')}`,
+      fuente: oficial ? `lo ha anunciado ${quien}: cuéntalo como suyo, sin nombrar al medio que lo cuenta` : `prensa: ${medios.join(', ')}`,
       ...(mejor('contexto') ? { contexto: mejor('contexto') } : {}), ...(mejor('detalle') ? { detalle: mejor('detalle') } : {}),
       ...(luto ? { sobrio: true } : {}), clubes: clubesH(...hs.flatMap((h) => h.clubes || []).map((id) => equipos[id]).filter(Boolean)), etiqueta: lect || '' };
     out.push({ tipo: 'liga', clave, jornada, jornadaAire: jn, texto, hechos, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
