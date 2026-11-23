@@ -4367,7 +4367,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
-   "SPORT|136761298": 1795445632000
+   "SPORT|136761298": 1795445632000,
+   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000
   },
   "hechos": [
    {
@@ -4420,27 +4421,25 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
-  "espera": {
-   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795464374568
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 16,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 290706,
-  "salida": 19839,
+  "entrada": 292379,
+  "salida": 19944,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.496138,
+  "dolares": 0.496358,
   "reservado": 0
  },
  "recientes": {
@@ -9360,13 +9359,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5718,
+   "ok": 5720,
    "fallos": 0,
-   "ejecuciones": 4630,
+   "ejecuciones": 4631,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T20:26:14.189Z"
+   "ultima": "2026-11-23T20:31:13.072Z"
   }
  },
  "ptsDirecto": {
@@ -9606,27 +9605,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:26:18.710Z"
+   "ultimaBien": "2026-11-23T20:31:19.966Z"
   }
  },
  "avisos": [
