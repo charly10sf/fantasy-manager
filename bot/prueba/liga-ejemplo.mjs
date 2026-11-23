@@ -3,7 +3,7 @@
 // Casos: con un solo medio espera; con dos sale «se estudia» con tono sobrio (luto); al confirmarse sale la decisión y lo que se
 // estudiaba no se repite; lo de Segunda sola no cuenta; un aplazamiento de un partido con sus dos clubes; lo que no habla de
 // suspensiones ni horarios no se pregunta a Gemini; el horario con «del».
-import { generar, clubesDe, objeto, TEMA, DECISIVA, hechoSeJuega, redactar, numeroDe } from '../tipos/liga.mjs';
+import { generar, clubesDe, objeto, TEMA, DECISIVA, hechoSeJuega, redactar, numeroDe, HORARIOS_JORNADA, CAMBIO_HORARIO, quienOficial } from '../tipos/liga.mjs';
 import { validar } from '../lib/validar.mjs';
 import { Registro } from '../lib/registro.mjs';
 
@@ -78,7 +78,7 @@ prensa = [...prensa, n('Europa Press', 'Comunicado: suspendida la jornada', 'LaL
   n('Diario de Sevilla', 'Aplazado el Sevilla-Alavés', 'El fuerte temporal de lluvia obliga a aplazar el encuentro')];
 ts = await generar({ ...base, leer: async () => prensa });
 ver('confirmaciones', ts);
-ok(ts.some((t) => /^📢 Se suspende la jornada 12 de Primera y Segunda/.test(t.texto) && /Es oficial/.test(t.texto)), 'sale la suspensión oficial');
+ok(ts.some((t) => /^📢 Se suspende la jornada 12 de Primera y Segunda/.test(t.texto) && /Lo ha anunciado LaLiga/.test(t.texto) && !/según/.test(t.texto)), 'sale la suspensión oficial, de LaLiga y sin «según» el medio');
 // (con la jornada entera suspendida, el aplazamiento de un partido no se repite: ya lo dice la jornada)
 ok(!ts.some((t) => /Se aplaza el Sevilla-Alavés/.test(t.texto)), 'con la jornada suspendida, el partido no sale aparte');
 {
@@ -194,7 +194,7 @@ R['Aplazados el Sevilla-Barça y el Alavés-Athletic'] = { tipo: 'aplazamiento',
   const b = await va([n('SPORT', si[0], si[1]), n('AS', si[0], si[1]), n('COPE', no[0], no[1]), n('MARCA', no[0], no[1])]);
   ok(b.length === 0, `dos contra dos: espero (${b.map((t) => t.texto).join(' | ')})`);
   const c = await va([n('MARCA', 'LaLiga suspende la jornada 12, comunicado oficial', 'LaLiga ha decidido suspender la jornada 12'), n('COPE', no[0], no[1]), n('AS', no[0], no[1])]);
-  ok(c.length === 1 && /Se suspende la jornada 12/.test(c[0].texto) && /Es oficial/.test(c[0].texto), `lo oficial manda: ${c.map((t) => t.texto).join(' | ')}`);
+  ok(c.length === 1 && /Se suspende la jornada 12/.test(c[0].texto) && /Lo ha anunciado LaLiga/.test(c[0].texto), `lo oficial manda: ${c.map((t) => t.texto).join(' | ')}`);
 }
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
@@ -236,6 +236,24 @@ ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13
     n('COPE', 'Así será el homenaje', 'LaLiga y la RFEF se han unido. Habrá fútbol y la jornada no se suspenderá')];
   const t3 = await generar({ ...base, registro: r3, pedirIA: nada, leer: async () => ps });
   ok(t3.length === 1 && /✅ La jornada 12 .*se jugará/.test(t3[0].texto) && /MARCA y COPE|COPE y MARCA/.test(t3[0].texto), `la decisión sale aunque Gemini no la vea (${t3.map((t) => t.texto).join(' | ')})`);
+}
+// 10) los horarios de una jornada que publica LaLiga no son un cambio de horario (23 nov: «Según SPORT, LaLiga ha confirmado el horario
+//     del Málaga-Barça», sin la hora), y lo oficial va con quien lo decide
+{
+  const rutina = (t) => HORARIOS_JORNADA.test(t) && !CAMBIO_HORARIO.test(t);
+  ok(rutina('LaLiga confirma los horarios de la jornada 16: el Málaga-Barça, el sábado 12 a las 18:30')
+    && rutina('El Málaga ya sabe cuándo recibirá al Barça en La Rosaleda') && rutina('LaLiga hace oficiales los horarios de la 16ª jornada'),
+    'los horarios de la jornada son rutina');
+  ok(!rutina('LaLiga cambia el horario del Barça-Osasuna por la Supercopa') && !rutina('Se adelanta el Betis-Sevilla: horarios de la jornada 17')
+    && !rutina('El Valencia-Real Madrid se jugará el domingo a las 21:00'), 'un cambio de horario, no');
+  ok(quienOficial('LaLiga confirma los horarios') === 'LaLiga' && quienOficial('La RFEF ha decidido aplazar') === 'la RFEF'
+    && quienOficial('Comunicado oficial del Sevilla FC') === 'el club', 'quién lo hace oficial');
+  const r4 = new Registro(config);
+  const comoHorario = async ({ prompt }) => ({ ok: true, modelo: 'falso', datos: { noticias: [...prompt.matchAll(/^\[(\d+)\]/gm)].map((m) => ({ i: Number(m[1]), tipo: 'horario', estado: 'confirmado', primera: true, segunda: false, jornada: 16, equipos: ['Málaga', 'Barcelona'], luto: false, oficial: true, contexto: 'LaLiga ha confirmado los horarios de la jornada 16', detalle: 'El partido se jugará el sábado 12 en La Rosaleda' })) } });
+  const hs = [n('SPORT', 'LaLiga confirma los horarios de la jornada 16: el Málaga-Barça se jugará el sábado 12', 'La patronal ha hecho oficiales los horarios'),
+    n('MARCA', 'El Málaga ya sabe cuándo recibirá al Barça: se jugará el sábado 12 a las 18:30', 'LaLiga ha anunciado los horarios de la jornada 16')];
+  const t4 = await generar({ ...base, registro: r4, pedirIA: comoHorario, leer: async () => hs });
+  ok(t4.length === 0, `los horarios de la jornada no salen como «cambia el horario» (${t4.map((t) => t.texto).join(' | ')})`);
 }
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);
