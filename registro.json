@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
    "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
    "SPORT|136656499": 1795167406000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
@@ -3116,39 +3115,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
    "SPORT|136730482": 1795381335000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
-   "SPORT|136739601": 1795421298000
+   "SPORT|136739601": 1795421298000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795166564000,
-    "id": "2315",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Paredes regresa a la convocatoria para recibir al Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21,
-     13
-    ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795166564000,
-    "id": "2314",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Vivian se cae de la convocatoria por su lesión muscular",
-    "motivo": "lesión muscular en el sóleo",
-    "plazo": "",
-    "nums": [
-     21,
-     13
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/",
     "medio": "AS",
@@ -3773,7 +3743,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4682,17 +4652,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 133899,
-  "salida": 4409,
+  "entrada": 135789,
+  "salida": 5015,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.285723,
+  "dolares": 0.286215,
   "reservado": 0
  },
  "recientes": {
@@ -9612,13 +9582,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5579,
+   "ok": 5580,
    "fallos": 0,
-   "ejecuciones": 4496,
+   "ejecuciones": 4497,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:21:14.053Z"
+   "ultima": "2026-11-23T09:26:22.982Z"
   }
  },
  "ptsDirecto": {
@@ -9858,15 +9828,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:21:18.128Z"
+   "ultimaBien": "2026-11-23T09:26:30.815Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:21:18.128Z"
+   "ultimaBien": "2026-11-23T09:26:30.815Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:21:18.128Z"
+   "ultimaBien": "2026-11-23T09:26:30.815Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9874,11 +9844,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:21:18.128Z"
+   "ultimaBien": "2026-11-23T09:26:30.815Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:21:18.128Z"
+   "ultimaBien": "2026-11-23T09:26:30.815Z"
   }
  },
  "avisos": [
