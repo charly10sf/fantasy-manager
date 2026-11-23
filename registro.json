@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000,
    "AS|https://as.com/futbol/primera/christensen-y-gerard-martin-la-pareja-mas-probable-por-si-falta-cubarsi-f202611-n/": 1795163445000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000,
    "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
@@ -9627,13 +9626,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5563,
+   "ok": 5564,
    "fallos": 0,
-   "ejecuciones": 4480,
+   "ejecuciones": 4481,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T08:01:24.585Z"
+   "ultima": "2026-11-23T08:06:19.010Z"
   }
  },
  "ptsDirecto": {
@@ -9873,15 +9872,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:01:35.137Z"
+   "ultimaBien": "2026-11-23T08:06:27.020Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:01:35.137Z"
+   "ultimaBien": "2026-11-23T08:06:27.020Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:01:35.137Z"
+   "ultimaBien": "2026-11-23T08:06:27.020Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9889,11 +9888,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:01:35.137Z"
+   "ultimaBien": "2026-11-23T08:06:27.020Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T08:01:35.137Z"
+   "ultimaBien": "2026-11-23T08:06:27.020Z"
   }
  },
  "avisos": [
