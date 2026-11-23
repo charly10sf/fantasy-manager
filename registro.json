@@ -3091,7 +3091,8 @@
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/oyono-vuelve-plan-terzic-sesion-berenguer-yuri-yeray.html": 1795454061000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261123/1004254610/yeray-causa-baja-sesion-puerta-abierta-laporte-ejercita-normalidad.html": 1795454608000,
    "AS|https://as.com/futbol/un-nuevo-impulso-para-el-athletic-f202611-n/": 1795456434000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000,
+   "SPORT|136746564": 1795453266000
   },
   "hechos": [
    {
@@ -3442,7 +3443,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -4310,7 +4311,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261120/1004253492/iraola-deberia-ilegal-hay-razon-entrenamos-puerta-cerrada.html": 1795198582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253531/cara-cruz-cristiano-ronaldo-cerca-mil-goles-falla-penalti.html": 1795206724000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/primera-aparicion-publica-jesus-owono-andorra-leganes-20261120_3479532.html": 1795206274000,
-   "SPORT|136684390": 1795197900000,
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1795211617000,
    "SPORT|136687529": 1795240799000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000,
@@ -4404,17 +4404,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 226799,
-  "salida": 17225,
+  "entrada": 228877,
+  "salida": 17341,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.372298,
+  "dolares": 0.372564,
   "reservado": 0
  },
  "recientes": {
@@ -9340,13 +9340,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5684,
+   "ok": 5685,
    "fallos": 0,
-   "ejecuciones": 4601,
+   "ejecuciones": 4602,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T18:01:12.486Z"
+   "ultima": "2026-11-23T18:06:12.867Z"
   }
  },
  "ptsDirecto": {
@@ -9586,15 +9586,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:01:20.591Z"
+   "ultimaBien": "2026-11-23T18:06:17.958Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:01:20.591Z"
+   "ultimaBien": "2026-11-23T18:06:17.958Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:01:20.591Z"
+   "ultimaBien": "2026-11-23T18:06:17.958Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9602,11 +9602,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:01:20.591Z"
+   "ultimaBien": "2026-11-23T18:06:17.958Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:01:20.591Z"
+   "ultimaBien": "2026-11-23T18:06:17.958Z"
   }
  },
  "avisos": [
