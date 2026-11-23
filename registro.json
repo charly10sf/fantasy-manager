@@ -2933,8 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000,
-   "AS|https://as.com/futbol/cubarsi-se-sube-al-carro-f202611-n/": 1795180432000,
    "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/": 1795182680000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
@@ -3113,18 +3111,6 @@
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html",
-    "medio": "MARCA",
-    "t": 1795180296000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos queda fuera de la lista para el derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/",
     "medio": "AS",
@@ -4438,7 +4424,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
-   "SPORT|136750461": 1795433046000
+   "SPORT|136750461": 1795433046000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000
   },
   "hechos": [
    {
@@ -4467,27 +4454,25 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438571717
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 209180,
-  "salida": 14521,
+  "entrada": 210847,
+  "salida": 14607,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.369184,
+  "dolares": 0.369394,
   "reservado": 0
  },
  "recientes": {
@@ -9413,13 +9398,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5626,
+   "ok": 5627,
    "fallos": 0,
-   "ejecuciones": 4543,
+   "ejecuciones": 4544,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T13:11:17.737Z"
+   "ultima": "2026-11-23T13:16:11.837Z"
   }
  },
  "ptsDirecto": {
@@ -9659,15 +9644,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:11:24.680Z"
+   "ultimaBien": "2026-11-23T13:16:18.141Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:11:24.680Z"
+   "ultimaBien": "2026-11-23T13:16:18.141Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:11:24.680Z"
+   "ultimaBien": "2026-11-23T13:16:18.141Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9675,11 +9660,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:11:24.680Z"
+   "ultimaBien": "2026-11-23T13:16:18.141Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:11:24.680Z"
+   "ultimaBien": "2026-11-23T13:16:18.141Z"
   }
  },
  "avisos": [
