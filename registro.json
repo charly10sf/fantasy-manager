@@ -3091,7 +3091,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
    "SPORT|136743685": 1795440168000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000,
+   "SPORT|136763275": 1795450330000
   },
   "hechos": [
    {
@@ -3472,7 +3473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4434,17 +4435,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 218531,
-  "salida": 15957,
+  "entrada": 220589,
+  "salida": 16049,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.370838,
+  "dolares": 0.37109,
   "reservado": 0
  },
  "recientes": {
@@ -9370,13 +9371,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5674,
+   "ok": 5675,
    "fallos": 0,
-   "ejecuciones": 4591,
+   "ejecuciones": 4592,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T17:11:13.684Z"
+   "ultima": "2026-11-23T17:16:18.667Z"
   }
  },
  "ptsDirecto": {
@@ -9616,15 +9617,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:11:18.929Z"
+   "ultimaBien": "2026-11-23T17:16:26.330Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:11:18.929Z"
+   "ultimaBien": "2026-11-23T17:16:26.330Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:11:18.929Z"
+   "ultimaBien": "2026-11-23T17:16:26.330Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9632,11 +9633,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:11:18.929Z"
+   "ultimaBien": "2026-11-23T17:16:26.330Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:11:18.929Z"
+   "ultimaBien": "2026-11-23T17:16:26.330Z"
   }
  },
  "avisos": [
