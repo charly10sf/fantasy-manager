@@ -29,7 +29,7 @@ export const NOVEDADES = [
     // El plan con la IA de la app lo hace el servidor aunque se corte la conexión (worker: encargarPlan, hacerPlan), con
     // tope de 150 s; debajo de «Preparando tu plan», si las notificaciones están apagadas, se dice y se ofrece activarlas;
     // Quién usa la app sale al momento con lo de la última vez. El detalle, en ESTADO.md del proyecto. La hora, al publicar
-    v: '0.8w', f: '2026-11-23', h: '', t: 'El plan sigue aunque salgas de la app',
+    v: '0.8w', f: '2026-11-23', h: '19:45', t: 'El plan sigue aunque salgas de la app',
     cosas: [
       { tipo: 'arreglo', d: 'ia', t: 'El plan sigue aunque salgas de la app', x: 'Si salías de la app mientras la IA preparaba tu plan y el móvil cortaba la conexión, a veces el plan se perdía a medias. Ahora se termina igual y lo tienes al volver, sin gastar otro.' },
       { tipo: 'arreglo', d: 'oferta', t: 'No vende a tus titulares por poco', x: 'Con una oferta un poco por encima de su valor, la app ya no te dice que vendas a un titular de tu once que no baja todos los días: por un 7 % no compensa quedarte sin él. Lo dice si te pagan un 10 % o más, si está de baja o si necesitas el dinero.' },
