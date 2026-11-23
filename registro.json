@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
    "SPORT|136671288": 1795189326000,
    "SPORT|136676022": 1795189674000,
@@ -3105,18 +3104,6 @@
    "SPORT|136743685": 1795440168000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/",
-    "medio": "Cadena SER",
-    "t": 1795187902000,
-    "id": "3152",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "control de cargas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html",
     "medio": "Mundo Deportivo",
@@ -4450,7 +4437,9 @@
    "n": 9,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-plus-ultra-bloquea-web-venta-billetes-caracas-unico-destino-regular-operativo-20261123123645.html": 1795447275990
+  }
  },
  "ia": {
   "dia": "2026-11-23",
@@ -9391,13 +9380,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5651,
+   "ok": 5652,
    "fallos": 0,
-   "ejecuciones": 4568,
+   "ejecuciones": 4569,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T15:16:15.287Z"
+   "ultima": "2026-11-23T15:21:15.990Z"
   }
  },
  "ptsDirecto": {
@@ -9637,15 +9626,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:16:20.058Z"
+   "ultimaBien": "2026-11-23T15:21:20.231Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:16:20.058Z"
+   "ultimaBien": "2026-11-23T15:21:20.231Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:16:20.058Z"
+   "ultimaBien": "2026-11-23T15:21:20.231Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9653,11 +9642,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:16:20.058Z"
+   "ultimaBien": "2026-11-23T15:21:20.231Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:16:20.058Z"
+   "ultimaBien": "2026-11-23T15:21:20.231Z"
   }
  },
  "avisos": [
