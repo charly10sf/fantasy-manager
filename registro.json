@@ -2088,6 +2088,13 @@
    "jornada": 13,
    "id": "2124991801983471686",
    "t": "2026-11-23T22:21:41.173Z"
+  },
+  {
+   "clave": "final|126",
+   "tipo": "final",
+   "jornada": 13,
+   "id": "2124993092235542531",
+   "t": "2026-11-23T22:26:48.652Z"
   }
  ],
  "estados": {
@@ -4484,16 +4491,16 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 50,
-   "redactar": 31,
-   "revisar": 15,
+   "redactar": 36,
+   "revisar": 20,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 438522,
-  "salida": 25759,
-  "cacheLee": 44375,
+  "entrada": 494797,
+  "salida": 27917,
+  "cacheLee": 58890,
   "cacheEscribe": 17833,
-  "dolares": 0.834151,
+  "dolares": 0.969731,
   "reservado": 0
  },
  "recientes": {
@@ -4521,10 +4528,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-21T22:26:28.677Z",
-    "texto": "🏁 Real Madrid 2-1 Celta. El Real Madrid remonta y lo cierra Carlos Espí en el 85'. Bellingham se va a 13 puntos fantasy. Lleva 3 jornadas seguidas con 8 o más: 17, 8 y 13.\n\nLo peor se lo lleva Javi Rodríguez: -1 punto. Pablo Durán marcó y suma 10 aunque el Celta pierde. Cumple el favorito: el Madrid, 2º, gana al Celta, 13º.\n\n✅ Si tienes a Bellingham, hoy sonríes"
-   },
-   {
     "t": "2026-11-22T15:26:50.093Z",
     "texto": "🏁 El Barça remonta un 0-2 en diez minutos y gana 3-2 al Villarreal 🚢, que se había puesto por delante con goles de Buchanan en el 5' y de Oluwaseyi en el 7'.\n\nGerard Martín recortó en el 57', Fermín empató en el 61' y el 3-2 fue en propia puerta de Pau Navarro en el 67'. Pedri es el que más puntos ha sacado de los dos equipos, 11, casi el doble de su media. Gerard Martín suma 10 y Fermín 9.\n\nLa nota mala es para Pau Navarro, con -3 y expulsado en el 90+3'. Buchanan se lleva 8 aunque el Villarreal pierde."
    },
@@ -4539,6 +4542,10 @@
    {
     "t": "2026-11-22T22:26:48.798Z",
     "texto": "🏁 El Atlético golea 0-3 al Getafe en el Coliseum y sigue pegado a la pelea por el título.\n\nJulián Álvarez y Grimaldo se van a 15 puntos, más del doble de la media del primero. Baena abrió el marcador en el 10' y suma 14. Johnny hizo el 0-2 en el 30' y Grimaldo cerró de penalti en el 90+2'. Oblak se lleva 10 con la portería a cero.\n\nPara el Getafe, que venía 16º, noche negra: Djene vio la roja en el 90' y se queda en -6."
+   },
+   {
+    "t": "2026-11-23T22:26:48.654Z",
+    "texto": "🏁 Reparto de puntos en el Ciutat de València: el Levante empata 1-1 con el Elche en un duelo entre el 18º y el 19º antes de jugar.\n\nRevivo puso por delante a los franjiverdes en el 62' y se va a 15 puntos, el que más saca de los dos equipos y mucho más de lo que acostumbra, con una media de 7,1. Requena empató en el 88' y suma 10, también muy por encima de lo habitual en él. Olasagasti, con 8, completa lo mejor del Levante."
    }
   ],
   "mvp": [
@@ -5107,15 +5114,10 @@
   }
  ],
  "fallosRedaccion": {
-  "final|126": {
-   "n": 1,
-   "t": "2026-11-23T22:22:01.193Z",
-   "ultima": "2026-11-23T22:22:01.193Z"
-  },
   "mvp|126": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-23T22:22:20.442Z",
-   "ultima": "2026-11-23T22:22:20.442Z"
+   "ultima": "2026-11-23T22:27:04.757Z"
   }
  },
  "rasgos": {
@@ -9484,13 +9486,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5759,
+   "ok": 5760,
    "fallos": 0,
-   "ejecuciones": 4653,
+   "ejecuciones": 4654,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T22:21:18.785Z"
+   "ultima": "2026-11-23T22:26:14.867Z"
   }
  },
  "ptsDirecto": {
@@ -9754,23 +9756,23 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:22:21.338Z"
+   "ultimaBien": "2026-11-23T22:27:08.193Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:22:21.338Z"
+   "ultimaBien": "2026-11-23T22:27:08.193Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:22:21.338Z"
+   "ultimaBien": "2026-11-23T22:27:08.193Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:22:21.338Z"
+   "ultimaBien": "2026-11-23T22:27:08.193Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:22:21.338Z"
+   "ultimaBien": "2026-11-23T22:27:08.193Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
