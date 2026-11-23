@@ -2933,12 +2933,10 @@
  ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/": 1795173216000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/20/6b00239de85ecec80b8b457b.html": 1795174421000,
    "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
-   "SPORT|136660186": 1795173167000,
    "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
@@ -3130,18 +3128,6 @@
   },
   "hechos": [
    {
-    "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/",
-    "medio": "Cadena SER",
-    "t": 1795173216000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang sin lesión grave, viaje a Vitoria por decidir",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html",
     "medio": "Mundo Deportivo",
     "t": 1795175996000,
@@ -3150,18 +3136,6 @@
     "oficial": false,
     "hecho": "",
     "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136660186",
-    "medio": "SPORT",
-    "t": 1795173167000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Dani Ceballos será baja en el derbi ante el Sevilla",
-    "motivo": "molestias",
     "plazo": "",
     "nums": []
    },
@@ -9569,13 +9543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5601,
+   "ok": 5602,
    "fallos": 0,
-   "ejecuciones": 4518,
+   "ejecuciones": 4519,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:11:14.403Z"
+   "ultima": "2026-11-23T11:16:14.250Z"
   }
  },
  "ptsDirecto": {
@@ -9815,15 +9789,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:11:21.329Z"
+   "ultimaBien": "2026-11-23T11:16:18.930Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:11:21.329Z"
+   "ultimaBien": "2026-11-23T11:16:18.930Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:11:21.329Z"
+   "ultimaBien": "2026-11-23T11:16:18.930Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9831,11 +9805,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:11:21.329Z"
+   "ultimaBien": "2026-11-23T11:16:18.930Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:11:21.329Z"
+   "ultimaBien": "2026-11-23T11:16:18.930Z"
   }
  },
  "avisos": [
