@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html": 1795166010000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html": 1795166564000,
    "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
    "SPORT|136656499": 1795167406000,
@@ -3120,18 +3119,6 @@
    "SPORT|136739601": 1795421298000
   },
   "hechos": [
-   {
-    "guid": "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html",
-    "medio": "El Correo",
-    "t": 1795166010000,
-    "id": "2315",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Paredes recupera su plaza en la convocatoria para el Espanyol",
-    "motivo": "lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253261/paredes-regresa-convocatoria-athletic-vivian-causa-baja.html",
     "medio": "Mundo Deportivo",
@@ -9625,13 +9612,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5577,
+   "ok": 5578,
    "fallos": 0,
-   "ejecuciones": 4494,
+   "ejecuciones": 4495,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:11:12.888Z"
+   "ultima": "2026-11-23T09:16:19.879Z"
   }
  },
  "ptsDirecto": {
@@ -9871,15 +9858,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:11:23.201Z"
+   "ultimaBien": "2026-11-23T09:16:25.075Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:11:23.201Z"
+   "ultimaBien": "2026-11-23T09:16:25.075Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:11:23.201Z"
+   "ultimaBien": "2026-11-23T09:16:25.075Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9887,11 +9874,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:11:23.201Z"
+   "ultimaBien": "2026-11-23T09:16:25.075Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:11:23.201Z"
+   "ultimaBien": "2026-11-23T09:16:25.075Z"
   }
  },
  "avisos": [
