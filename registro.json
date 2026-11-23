@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253501/aaaa.html": 1795200837000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/20/en-directo-alaves-deportivo-de-a-coruna-jornada-13-laliga-ea-sports-carrusel-deportivo-coruna-radio-coruna/": 1795203184000,
    "SPORT|136682778": 1795202245000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000,
@@ -3091,21 +3090,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261123/1004254610/yeray-causa-baja-sesion-puerta-abierta-laporte-ejercita-normalidad.html": 1795454608000,
    "AS|https://as.com/futbol/un-nuevo-impulso-para-el-athletic-f202611-n/": 1795456434000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000,
-   "SPORT|136746564": 1795453266000
+   "SPORT|136746564": 1795453266000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795200383000,
-    "id": "3197",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Cuti Romero sufre una lesión que preocupa al Atlético",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/",
     "medio": "AS",
@@ -3442,7 +3430,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -4402,17 +4390,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 228877,
-  "salida": 17341,
+  "entrada": 230777,
+  "salida": 17696,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.372564,
+  "dolares": 0.372932,
   "reservado": 0
  },
  "recientes": {
@@ -9338,13 +9326,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5693,
+   "ok": 5694,
    "fallos": 0,
-   "ejecuciones": 4610,
+   "ejecuciones": 4611,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T18:46:12.863Z"
+   "ultima": "2026-11-23T18:51:15.466Z"
   }
  },
  "ptsDirecto": {
@@ -9584,15 +9572,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:46:15.676Z"
+   "ultimaBien": "2026-11-23T18:51:24.957Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:46:15.676Z"
+   "ultimaBien": "2026-11-23T18:51:24.957Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:46:15.676Z"
+   "ultimaBien": "2026-11-23T18:51:24.957Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9600,11 +9588,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:46:15.676Z"
+   "ultimaBien": "2026-11-23T18:51:24.957Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T18:46:15.676Z"
+   "ultimaBien": "2026-11-23T18:51:24.957Z"
   }
  },
  "avisos": [
