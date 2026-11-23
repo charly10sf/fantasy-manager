@@ -3123,7 +3123,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
-   "SPORT|136739318": 1795429327000
+   "SPORT|136739318": 1795429327000,
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000
   },
   "hechos": [
    {
@@ -3666,11 +3667,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html",
+    "medio": "MARCA",
+    "t": 1795433832000,
+    "id": "2314",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Vivian sigue de baja para el partido en Málaga",
+    "motivo": "",
+    "plazo": "no estará en el partido del sábado",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4568,7 +4581,8 @@
    "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795404562000,
    "SPORT|136740501": 1795422406000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000
   },
   "hechos": [
    {
@@ -4597,7 +4611,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -4605,17 +4619,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 21,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 191729,
-  "salida": 10471,
+  "entrada": 195264,
+  "salida": 11311,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.365412,
+  "dolares": 0.366186,
   "reservado": 0
  },
  "recientes": {
@@ -9541,13 +9555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5606,
+   "ok": 5607,
    "fallos": 0,
-   "ejecuciones": 4523,
+   "ejecuciones": 4524,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:36:15.103Z"
+   "ultima": "2026-11-23T11:41:11.607Z"
   }
  },
  "ptsDirecto": {
@@ -9787,15 +9801,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:36:19.271Z"
+   "ultimaBien": "2026-11-23T11:41:24.567Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:36:19.271Z"
+   "ultimaBien": "2026-11-23T11:41:24.567Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:36:19.271Z"
+   "ultimaBien": "2026-11-23T11:41:24.567Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9803,11 +9817,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:36:19.271Z"
+   "ultimaBien": "2026-11-23T11:41:24.567Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:36:19.271Z"
+   "ultimaBien": "2026-11-23T11:41:24.567Z"
   }
  },
  "avisos": [
