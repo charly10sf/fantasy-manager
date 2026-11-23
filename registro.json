@@ -3098,7 +3098,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000,
    "SPORT|136746564": 1795453266000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
+   "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000
   },
   "hechos": [
    {
@@ -3433,11 +3434,26 @@
     "motivo": "",
     "plazo": "no estará en el partido del sábado",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/",
+    "medio": "AS",
+    "t": 1795461041000,
+    "id": "2314",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Vivian sigue lesionado y no entrena con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     2,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -4397,17 +4413,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 16,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 282490,
-  "salida": 19269,
+  "entrada": 284431,
+  "salida": 19384,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.495032,
+  "dolares": 0.495284,
   "reservado": 0
  },
  "recientes": {
@@ -9327,13 +9343,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5698,
+   "ok": 5699,
    "fallos": 0,
-   "ejecuciones": 4615,
+   "ejecuciones": 4616,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T19:11:16.198Z"
+   "ultima": "2026-11-23T19:16:12.615Z"
   }
  },
  "ptsDirecto": {
@@ -9573,15 +9589,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:11:22.198Z"
+   "ultimaBien": "2026-11-23T19:16:18.882Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:11:22.198Z"
+   "ultimaBien": "2026-11-23T19:16:18.882Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:11:22.198Z"
+   "ultimaBien": "2026-11-23T19:16:18.882Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9589,11 +9605,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:11:22.198Z"
+   "ultimaBien": "2026-11-23T19:16:18.882Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:11:22.198Z"
+   "ultimaBien": "2026-11-23T19:16:18.882Z"
   }
  },
  "avisos": [
