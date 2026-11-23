@@ -2927,7 +2927,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/radio/2026/11/20/roberto-gomez-senala-mourinho-unico-poner-titular-vinicius.html": 1795159506000,
-   "SPORT|136637651": 1795156260000,
    "MARCA|https://www.marca.com/radio/2026/11/20/pepe-brasin-alerta-problema-vinicius-puedes-estrella-rol-secundario.html": 1795160965000,
    "AS|https://as.com/futbol/primera/quisimos-fichar-a-diomande-f202611-n/": 1795161675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000,
@@ -3122,23 +3121,10 @@
    "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/": 1795394243000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261123/1004254260/vinicius-junior-examina-psv.html": 1795413600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
-   "SPORT|136730482": 1795381335000
+   "SPORT|136730482": 1795381335000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136637651",
-    "medio": "SPORT",
-    "t": 1795156260000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde vuelve a entrenar con el grupo tras las molestias",
-    "motivo": "molestias superadas",
-    "plazo": "",
-    "nums": [
-     28
-    ]
-   },
    {
     "guid": "El Correo|https://www.elcorreo.com/athletic/paredes-regresa-convocatoria-tras-lesion-muscular-20261120101330-nt.html",
     "medio": "El Correo",
@@ -3805,7 +3791,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4713,17 +4699,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 128257,
-  "salida": 3656,
+  "entrada": 130185,
+  "salida": 3748,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.284782,
+  "dolares": 0.285021,
   "reservado": 0
  },
  "recientes": {
@@ -9643,13 +9629,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5544,
+   "ok": 5545,
    "fallos": 0,
-   "ejecuciones": 4461,
+   "ejecuciones": 4462,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T06:26:12.889Z"
+   "ultima": "2026-11-23T06:31:13.419Z"
   }
  },
  "ptsDirecto": {
@@ -9889,15 +9875,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:26:19.497Z"
+   "ultimaBien": "2026-11-23T06:31:21.724Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:26:19.497Z"
+   "ultimaBien": "2026-11-23T06:31:21.724Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:26:19.497Z"
+   "ultimaBien": "2026-11-23T06:31:21.724Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9905,11 +9891,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:26:19.497Z"
+   "ultimaBien": "2026-11-23T06:31:21.724Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T06:26:19.497Z"
+   "ultimaBien": "2026-11-23T06:31:21.724Z"
   }
  },
  "avisos": [
