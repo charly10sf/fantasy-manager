@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8x';
+export const VERSION = '0.8y';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,19 @@ export const VERSION = '0.8x';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (23 nov, 23:31, Carlos con Thiago: bajando, 1 punto en la última y la cláusula al +24 %, y la ficha decía «Blíndalo
+    // gratis»: «no tiene sentido que me diga que lo blinde… me debía decir que lo vendiese») motor.js: `noBlindar` al que
+    // baja con la cláusula por encima de lo que da LaLiga (que te lo clausulen es venderlo mejor); fuera de paraEscudo, de
+    // las B- de la IA y de subir la cláusula, y cuadrarPlan lo quita si la IA lo propone. La ficha, una línea por cosa.
+    // (23:39) Quién usa: «hoy» contaba por la última entrada, que se guarda una vez por hora; ahora como la barra de hoy.
+    // La hora, al publicar
+    v: '0.8y', f: '2026-11-23', h: '', t: 'No te dice que blindes al que baja',
+    cosas: [
+      { tipo: 'arreglo', d: 'escudo', t: 'No te dice que blindes al que baja', x: 'Si un jugador tuyo está bajando y su cláusula está por encima de lo que te daría LaLiga, ya no te dice que lo blindes: si te lo clausulan, cobras más que vendiéndolo.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'grafica', t: 'Quién usa la app: hoy cuadra', x: 'La cifra de hoy y la barra de hoy de la gráfica ya dicen lo mismo.' },
+    ],
+  },
   {
     // (23 nov, 20:32, Carlos: «me sigue saliendo que venda al portero del Villarreal… 16,01 millones… ha cambiado la
     // tendencia de ir hacia abajo a ir hacia arriba… no tiene sentido la venta») motor.js (misVentas): por menos de un 10 %

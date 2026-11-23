@@ -70,7 +70,7 @@ export function acciones(D, M, c) {
     });
   });
 
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !x.noBlindar && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
     .sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x, k) => {
       const cerca = x.ratio < 1.05 ? `está en su valor (${eur(x.j.valor)})` : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor (${eur(x.j.valor)})`;
       const quien = x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) ? ` Le llega a ${[...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ')}${x.pagan.seguro.length + x.pagan.quiza.length > 3 ? ' y más' : ''}.` : '';
@@ -95,7 +95,7 @@ export function acciones(D, M, c) {
   });
 
   // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !x.noBlindar && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
     tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
     titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
     texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Subirle la cláusula hasta que no le llegue a nadie costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,

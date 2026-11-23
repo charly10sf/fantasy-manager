@@ -324,10 +324,14 @@ export function fichaJugador(S, pid) {
     const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
     const ref = mia.compra || mia.inicial || null;
     const gana = ol && ref ? ol.v - ref : null;
-    const gratis = mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido. Te quedan ${S.M.escudosMios.quedan} esta jornada.` : '';
+    // (23 nov, Carlos: «los textos, más cortos») una línea para el blindaje y otra para lo que da LaLiga; al que baja con la
+    // cláusula por encima de lo que da LaLiga, «no lo blindes» (motor: noBlindar)
+    const noBl = mia.abierta && !mia.escudo && mia.noBlindar;
+    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, más que vendiéndolo.`
+      : mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> con un anuncio en LaLiga: ${S.M.ESCUDO_H} h a salvo (te quedan ${S.M.escudosMios.quedan}).` : '';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
-      : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
-    if (gratis || liga) h += `<div class="aviso-ficha verde peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join(' ')}</div></div>`;
+      : `A LaLiga se lo venderías por unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}.`;
+    if (gratis || liga) h += `<div class="aviso-ficha ${noBl ? 'oro' : 'verde'} peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join('<br>')}</div></div>`;
     const pg = mia.pagan;
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
@@ -1311,7 +1315,10 @@ function numerosQ(Q) {
   return {
     Q, lista, reg, ahora, ds, dias, minPlay, problemas, semL,
     dentro: lista.filter((x) => ahora - x.ultima < DENTRO_Q).length,
-    hoy: lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length,
+    // (23 nov, Carlos: «hoy» 50 y la barra de hoy 53) la hora de la última entrada se guarda como mucho una vez por hora
+    // (para no gastar escrituras): quien entró ayer a última hora y hoy otra vez puede tenerla de ayer. Hoy cuenta igual
+    // que la barra: con tiempo hoy o con la última entrada de hoy
+    hoy: lista.filter((x) => segDe(x, ds[0], 0) > 0 || diaDe(x.ultima) === ds[0]).length,
     sem: (reg.length ? reg : lista).filter((x) => x.ultima >= ahora - 7 * DIA).length,
     total: (reg.length ? reg : lista).length,
     segHoy: hoyD.seg, mediaHoy: hoyD.media, mediaSem: act7 ? seg7 / act7 : 0,
@@ -1556,7 +1563,7 @@ function filaQuien(nombre, equipo, x, ahora, minPlay) {
     v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
-  const marcas = [diaDe(x.ultima) === diaDe(ahora) ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
+  const marcas = [diaDe(x.ultima) === diaDe(ahora) || x.segHoy > 0 ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
   return `<div class="quien-f ${esta ? 'dentro' : 'si'}" data-b="${esc(norm(`${nombre} ${equipo || ''} ${x.equipo || ''} ${x.nombre || ''}`))}" data-f="${marcas}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${minQ(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 

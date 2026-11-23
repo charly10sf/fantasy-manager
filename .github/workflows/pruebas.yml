@@ -74,6 +74,9 @@ jobs:
       # que esté de baja o que haga falta el dinero
       - name: La oferta por un titular
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-oferta-titular.mjs
+      # (0.8y) al que baja con la cláusula por encima de lo que da LaLiga no se le blinda
+      - name: No blindar al que baja
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-no-blindar.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs

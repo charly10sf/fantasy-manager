@@ -730,6 +730,10 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 }).catch(() => {});
   let modoQ = 'bien', pedidasQ = 0;
+  // (23 nov, «hoy» 50 y la barra 53) entró ayer a última hora y hoy otra vez: la última entrada se guarda una vez por hora y
+  // le queda la de ayer, pero tiene tiempo hoy. Cuenta en «hoy» y en la barra de hoy
+  const diaHoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+  const trasnocha = { uid: 4, nombre: 'Trasnocha', equipo: 'Trasnocha', v: '0.8v', canal: 'play', primera: Date.now() - 5 * 864e5, ultima: Date.now() - 30 * 3600e3, segHoy: 300, segDias: { [diaHoy]: 300 } };
   const cuenta = (uid, nombre, hace) => ({ uid, nombre, equipo: nombre, v: '0.8v', canal: 'play', primera: Date.now() - 5 * 864e5, ultima: Date.now() - hace, segHoy: 60, segDias: {} });
   await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
     const q = r.request();
@@ -739,7 +743,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     pedidasQ++;
     await new Promise((ok) => setTimeout(ok, 1500));
     if (modoQ === 'caido') return r.abort('connectionrefused');
-    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), cuenta(2, 'Nueva2', 2000), cuenta(3, 'Nueva3', 3000)], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), cuenta(2, 'Nueva2', 2000), cuenta(3, 'Nueva3', 3000), trasnocha], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
   });
   const abrirQ = () => page.evaluate(async () => {
     const b = document.createElement('button'); b.dataset.accion = 'quienUsa'; document.body.appendChild(b); b.click(); b.remove();
@@ -747,17 +751,21 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const sub = () => { const x = document.querySelector('.q-sub'); return x ? x.innerText.replace(/\s+/g, ' ') : ''; };
     const antes = sub();
     await new Promise((ok) => setTimeout(ok, 2200));
-    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null') };
+    const kpiHoy = [...document.querySelectorAll('.q-kpi > div')].find((d) => /^hoy$/.test(d.querySelector('span')?.innerText || ''));
+    const barraHoy = document.querySelector('.vg-v.hoy');
+    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null'), kpiHoy: kpiHoy ? kpiHoy.querySelector('b').innerText : null, barraHoy: barraHoy ? barraHoy.textContent : null };
   });
   await page.evaluate((viejo) => localStorage.setItem('fm-quien-ult', JSON.stringify({ d: viejo })), { lista: [cuenta(9, 'Vieja', 3600e3)], registro: [], ahora: Date.now() - 3600e3, dias: null, embudo: null, invitar: null });
   let q = await abrirQ();
   const nuevas = q.guardado && q.guardado.d && q.guardado.d.lista ? q.guardado.d.lista.length : 0;
-  if (!/Actualizando/.test(q.antes) || !/1 cuentas/.test(q.antes) || !/dentro ahora/.test(q.despues) || !/3 cuentas/.test(q.despues) || nuevas !== 3) mal(`Quién usa la app: lo guardado al momento y lo nuevo después: ${JSON.stringify({ antes: q.antes, despues: q.despues, nuevas })}`);
+  if (!/Actualizando/.test(q.antes) || !/1 cuentas/.test(q.antes) || !/dentro ahora/.test(q.despues) || !/4 cuentas/.test(q.despues) || nuevas !== 4) mal(`Quién usa la app: lo guardado al momento y lo nuevo después: ${JSON.stringify({ antes: q.antes, despues: q.despues, nuevas })}`);
   else bien(`Quién usa la app: sale al momento lo de la última vez («${q.antes}») y se cambia por lo nuevo («${q.despues}»)`);
+  if (q.kpiHoy !== '4' || q.barraHoy !== '4') mal(`Quién usa la app: «hoy» ${q.kpiHoy} y la barra de hoy ${q.barraHoy} (los dos tienen que ser 4, con el que entró ayer y hoy otra vez)`);
+  else bien('Quién usa la app: «hoy» y la barra de hoy dicen lo mismo (4), con el que entró ayer a última hora y hoy otra vez');
   modoQ = 'caido';
   await page.evaluate(() => { const b = document.querySelector('[data-accion="cerrarHoja"]'); if (b) b.click(); });
   q = await abrirQ();
-  if (!/No se ha podido actualizar/.test(q.despues) || !/3 cuentas/.test(q.despues)) mal(`Quién usa la app: sin conexión con lo guardado: ${JSON.stringify(q)}`);
+  if (!/No se ha podido actualizar/.test(q.despues) || !/4 cuentas/.test(q.despues)) mal(`Quién usa la app: sin conexión con lo guardado: ${JSON.stringify(q)}`);
   else bien(`Quién usa la app: si no llega lo nuevo, se queda lo guardado y lo dice («${q.despues}»)`);
   if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
@@ -1194,8 +1202,8 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
     const { diaDe } = await import('./js/util.js');
     const ahora = Date.now(), hoy = diaDe(ahora);
     const lista = [
-      { nombre: 'Con tiempo', ultima: ahora - 3600e3, primera: ahora - 9 * 86400e3, segHoy: 600, segDias: { [hoy]: 600 } },
-      { nombre: 'Alta sin tiempo', ultima: ahora - 3000e3, primera: ahora - 3000e3, segHoy: 0, segDias: {} },
+      { nombre: 'Con tiempo', ultima: ahora - 60e3, primera: ahora - 9 * 86400e3, segHoy: 600, segDias: { [hoy]: 600 } },
+      { nombre: 'Alta sin tiempo', ultima: ahora - 30e3, primera: ahora - 30e3, segHoy: 0, segDias: {} },
     ];
     const div = document.createElement('div');
     div.innerHTML = quienUsaHTML({ quien: { lista, ahora, registro: [], tab: 'hoy' } });

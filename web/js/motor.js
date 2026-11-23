@@ -2018,6 +2018,15 @@ export function analizar(D, H, c, extra = {}) {
     x.prox = M.proximoPartido(x.j.equipoId);
     x.inercia = M.inercia(x.pid);
     x.ventaInercia = M.ventaPorInercia(x.pid);
+    // (23 nov, Carlos con Thiago: baja, 1 punto en la última y la cláusula al +24 %; «no tiene sentido que me diga que lo
+    // blinde») al que está bajando, que te lo clausulen es venderlo por más de lo que te da LaLiga: no se blinda ni se
+    // sube su cláusula (salvo tras un partido de 8 o más, que suele frenar la bajada)
+    {
+      const olB = M.ofertaLigaDe(x.j), bs = M.bajaSeguido(x.pid);
+      const bajando = ((ineR && ['giro', 'baja', 'parado'].includes(ineR.fase)) || !!bs) && ((M.partidazo(x.pid) || {}).nivel || 0) < 2;
+      x.noBlindar = bajando && x.clausula && olB && x.clausula >= olB.v && !M.noVender.has(x.pid)
+        ? { texto: `si te lo clausulan te pagan ${eur(x.clausula)}, más que vendiéndolo a LaLiga (${eur(olB.v)}), y está bajando`, ol: olB.v } : null;
+    }
     return x;
   }).sort((a, b) => a.j.pos - b.j.pos || b.j.valor - a.j.valor);
   M.ganadoTotal = M.mias.reduce((s, x) => s + (x.ganado || 0), 0);
@@ -2773,7 +2782,7 @@ export function analizar(D, H, c, extra = {}) {
   // que la puede pagar; antes que gastar en subirla. Lo usan el plan, Hoy y la ficha
   {
     const ES = M.escudosMios || { quedan: 0 };
-    M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
+    M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
   }
   /* ---------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------
      Uno o dos jugadores míos y del mismo rival, cada uno con su precio. Son dos compras, una detrás de otra, y el dinero
@@ -3193,7 +3202,7 @@ export function planAuto(D, M, c) {
     op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: 'ahora',
       motivo: `Su cláusula (${eur(x.clausula)}) está abierta y algún rival la puede pagar; ${x.pierde >= 0.5 ? `te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
   }
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !y.noBlindar && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;
     // subirla cuesta dinero al momento: si no lo hay, te dejaría en negativo antes de la jornada
     if (b && b.coste > Math.min(saldo, caja)) continue;

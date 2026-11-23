@@ -603,7 +603,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
       datos: { porque: `cláusula abierta a tiro de ${quien || 'algún'} rival${quien === 1 ? '' : 'es'}`, cuanto: 'gratis (un anuncio)', cuando: 'ahora', siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
   }
   let cajaB = cu.caja, jorB = cu.jornada, margenB = cu.margen != null ? cu.margen : num(D.dinero) + M.deuda - num(M.misPujas);
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale)) && !y.ventaInercia && !vetados.has(`S-${y.pid}`)).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !y.noBlindar && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale)) && !y.ventaInercia && !vetados.has(`S-${y.pid}`)).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;
     // subirla cuesta saldo en el momento, y no puede dejarte en negativo para la jornada
     if (!b || !b.coste || b.coste > cajaB || jorB - b.coste < 0 || margenB - b.coste < 0) continue;
