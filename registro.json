@@ -3100,7 +3100,8 @@
    "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000,
-   "SPORT|136756238": 1795460438000
+   "SPORT|136756238": 1795460438000,
+   "SPORT|136772486": 1795461059000
   },
   "hechos": [
    {
@@ -3450,11 +3451,25 @@
      2,
      0
     ]
+   },
+   {
+    "guid": "SPORT|136772486",
+    "medio": "SPORT",
+    "t": 1795461059000,
+    "id": "2338",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Aimar Duñabeitia sigue con molestias tras el partido contra Las Palmas",
+    "motivo": "molestias tras pedir el cambio en el partido",
+    "plazo": "",
+    "nums": [
+     67
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -4416,17 +4431,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 16,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 288677,
-  "salida": 19698,
+  "entrada": 290706,
+  "salida": 19839,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.495865,
+  "dolares": 0.496138,
   "reservado": 0
  },
  "recientes": {
@@ -9346,13 +9361,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5714,
+   "ok": 5716,
    "fallos": 0,
-   "ejecuciones": 4628,
+   "ejecuciones": 4629,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T20:16:19.785Z"
+   "ultima": "2026-11-23T20:21:27.418Z"
   }
  },
  "ptsDirecto": {
@@ -9592,27 +9607,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:16:24.229Z"
+   "ultimaBien": "2026-11-23T20:21:35.067Z"
   }
  },
  "avisos": [
