@@ -2933,10 +2933,8 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html": 1795195312000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253441/barca-dia-espart-kounde-masia-can-planes.html": 1795196569000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000,
-   "SPORT|136612587": 1795195383000,
    "AS|https://as.com/futbol/militao-no-quiere-esperar-f202611-n/": 1795196779000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253501/aaaa.html": 1795200837000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000,
@@ -3095,22 +3093,6 @@
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/oyono-vuelve-plan-terzic-sesion-berenguer-yuri-yeray.html": 1795454061000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261120/1004253476/edu-exposito-ausencia-destacada-convocatoria-sorpreson.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795195312000,
-    "id": "3077",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Edu Expósito no entra en la convocatoria del Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     24,
-     21,
-     0
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html",
     "medio": "Mundo Deportivo",
@@ -9357,13 +9339,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5676,
+   "ok": 5677,
    "fallos": 0,
-   "ejecuciones": 4593,
+   "ejecuciones": 4594,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T17:21:16.722Z"
+   "ultima": "2026-11-23T17:26:14.534Z"
   }
  },
  "ptsDirecto": {
@@ -9603,15 +9585,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:21:24.966Z"
+   "ultimaBien": "2026-11-23T17:26:20.223Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:21:24.966Z"
+   "ultimaBien": "2026-11-23T17:26:20.223Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:21:24.966Z"
+   "ultimaBien": "2026-11-23T17:26:20.223Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9619,11 +9601,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:21:24.966Z"
+   "ultimaBien": "2026-11-23T17:26:20.223Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:21:24.966Z"
+   "ultimaBien": "2026-11-23T17:26:20.223Z"
   }
  },
  "avisos": [
