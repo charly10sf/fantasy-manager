@@ -3090,7 +3090,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-zanja-debate-penalti-barca-entrenador-ultima-palabra-20261123_3479878.html": 1795437695000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
-   "SPORT|136743685": 1795440168000
+   "SPORT|136743685": 1795440168000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000
   },
   "hechos": [
    {
@@ -3471,7 +3472,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4433,17 +4434,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 216524,
-  "salida": 15293,
+  "entrada": 218531,
+  "salida": 15957,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.370305,
+  "dolares": 0.370838,
   "reservado": 0
  },
  "recientes": {
@@ -9369,13 +9370,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5671,
+   "ok": 5672,
    "fallos": 0,
-   "ejecuciones": 4588,
+   "ejecuciones": 4589,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T16:56:13.670Z"
+   "ultima": "2026-11-23T17:01:15.756Z"
   }
  },
  "ptsDirecto": {
@@ -9615,15 +9616,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:56:17.478Z"
+   "ultimaBien": "2026-11-23T17:01:26.977Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:56:17.478Z"
+   "ultimaBien": "2026-11-23T17:01:26.977Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:56:17.478Z"
+   "ultimaBien": "2026-11-23T17:01:26.977Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9631,11 +9632,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:56:17.478Z"
+   "ultimaBien": "2026-11-23T17:01:26.977Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T16:56:17.478Z"
+   "ultimaBien": "2026-11-23T17:01:26.977Z"
   }
  },
  "avisos": [
