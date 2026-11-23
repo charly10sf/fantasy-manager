@@ -2944,7 +2944,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261120/1004253365/hidalgo-lesion-auba-no-parece-importante-queda-poco-partido.html": 1795176766000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253372/sonia-bermudez-avisa-sobre-revolucionaria-convocatoria-no-puntual.html": 1795176363000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
-   "SPORT|136657525": 1795174239000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000,
@@ -3124,7 +3123,8 @@
    "SPORT|136739543": 1795427080000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
+   "SPORT|136739318": 1795429327000
   },
   "hechos": [
    {
@@ -3671,7 +3671,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4536,7 +4536,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795176335000,
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/20/atp-finals-directo-carlos-alcaraz-136660970.html": 1795177840000,
@@ -4568,7 +4567,9 @@
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
    "SPORT|136725414": 1795408237000,
    "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795404562000,
-   "SPORT|136740501": 1795422406000
+   "SPORT|136740501": 1795422406000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000
   },
   "hechos": [
    {
@@ -4597,28 +4598,25 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795432274403,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432872500
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 19,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187781,
-  "salida": 9784,
+  "entrada": 191729,
+  "salida": 10471,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.364674,
+  "dolares": 0.365412,
   "reservado": 0
  },
  "recientes": {
@@ -9544,13 +9542,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5604,
+   "ok": 5605,
    "fallos": 0,
-   "ejecuciones": 4521,
+   "ejecuciones": 4522,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:26:12.606Z"
+   "ultima": "2026-11-23T11:31:16.670Z"
   }
  },
  "ptsDirecto": {
@@ -9790,15 +9788,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:26:16.299Z"
+   "ultimaBien": "2026-11-23T11:31:29.568Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:26:16.299Z"
+   "ultimaBien": "2026-11-23T11:31:29.568Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:26:16.299Z"
+   "ultimaBien": "2026-11-23T11:31:29.568Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9806,11 +9804,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:26:16.299Z"
+   "ultimaBien": "2026-11-23T11:31:29.568Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:26:16.299Z"
+   "ultimaBien": "2026-11-23T11:31:29.568Z"
   }
  },
  "avisos": [
