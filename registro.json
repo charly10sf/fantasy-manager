@@ -9363,17 +9363,24 @@
    "re": "90'+5'",
    "w": "2026-11-22T21:51:29Z",
    "f": "2026-11-22T22:26:18.610Z"
+  },
+  "fm|126|1337914|62": {
+   "j": "Roy Revivo",
+   "m": "62'",
+   "f": "2026-11-23T21:21:15.359Z",
+   "rf": "62:05",
+   "avisado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5738,
+   "ok": 5740,
    "fallos": 0,
-   "ejecuciones": 4640,
+   "ejecuciones": 4641,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T21:16:14.888Z"
+   "ultima": "2026-11-23T21:21:15.359Z"
   }
  },
  "ptsDirecto": {
@@ -9613,27 +9620,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:16:22.614Z"
+   "ultimaBien": "2026-11-23T21:21:23.141Z"
   }
  },
  "avisos": [
