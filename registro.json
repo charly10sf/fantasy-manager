@@ -2095,6 +2095,13 @@
    "jornada": 13,
    "id": "2124993092235542531",
    "t": "2026-11-23T22:26:48.652Z"
+  },
+  {
+   "clave": "mvp|126",
+   "tipo": "mvp",
+   "jornada": 13,
+   "id": "2124994328032387092",
+   "t": "2026-11-23T22:31:43.380Z"
   }
  ],
  "estados": {
@@ -4390,10 +4397,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-22",
-  "n": 2,
-  "ok": 0,
-  "mal": 2
+  "dia": "2026-11-23",
+  "n": 1,
+  "ok": 1,
+  "mal": 0
  },
  "liga": {
   "vistas": {
@@ -4491,16 +4498,16 @@
   "dia": "2026-11-23",
   "llamadas": {
    "clasificar": 50,
-   "redactar": 36,
-   "revisar": 20,
-   "pulir": 0
+   "redactar": 40,
+   "revisar": 23,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 494797,
-  "salida": 27917,
-  "cacheLee": 58890,
+  "entrada": 537029,
+  "salida": 29278,
+  "cacheLee": 67599,
   "cacheEscribe": 17833,
-  "dolares": 0.969731,
+  "dolares": 1.068675,
   "reservado": 0
  },
  "recientes": {
@@ -4550,10 +4557,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-21T22:26:35.204Z",
-    "texto": "⭐ Bellingham es el MVP fantasy del Real Madrid 2-1 Celta, con 13 puntos. En lo que va de temporada suma 131 puntos, a 10,1 por partido.\n\n💸 Vale 154,8 M en el mercado y vuelve a jugar en la jornada 14, contra el Alavés"
-   },
-   {
     "t": "2026-11-22T15:26:56.455Z",
     "texto": "⭐ Pedri es el mejor del Barça-Villarreal 🚢: 11 puntos, casi el doble de su media de 6,1. El Barça le dio la vuelta al 0-2 con tres goles entre el 57' y el 67' y acabó ganando 3-2.\n\nVale 80,5 M y en la jornada 14 visita al Deportivo. Con el partido que ha hecho, es de los que se quedan en el once sin discusión."
    },
@@ -4568,6 +4571,10 @@
    {
     "t": "2026-11-22T22:27:02.119Z",
     "texto": "⭐ Julián Álvarez y Grimaldo se reparten el MVP del Getafe-Atlético con 15 puntos cada uno. Grimaldo cerró el 0-3 de penalti en el 90+2'.\n\nJulián saca más del doble de su media y vale 77,4 M; Grimaldo, casi el doble de la suya y 85,2 M. El sábado a las 18:30 los dos visitan al Elche 🌴: si tienes a uno, no hay motivo para tocarlo."
+   },
+   {
+    "t": "2026-11-23T22:31:43.382Z",
+    "texto": "⭐ MVP fantasy del Levante 1-1 Elche: Revivo se lleva el partido con 15 puntos y llega a 71 en la temporada.\n\nVale 11,5 M en el mercado y vuelve a jugar el sábado a las 18:30, contra el Atlético."
    }
   ],
   "mercado": [
@@ -5113,13 +5120,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "mvp|126": {
-   "n": 2,
-   "t": "2026-11-23T22:22:20.442Z",
-   "ultima": "2026-11-23T22:27:04.757Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9486,13 +9487,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5760,
+   "ok": 5761,
    "fallos": 0,
-   "ejecuciones": 4654,
+   "ejecuciones": 4655,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T22:26:14.867Z"
+   "ultima": "2026-11-23T22:31:11.480Z"
   }
  },
  "ptsDirecto": {
@@ -9756,15 +9757,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:27:08.193Z"
+   "ultimaBien": "2026-11-23T22:31:44.625Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:27:08.193Z"
+   "ultimaBien": "2026-11-23T22:31:44.625Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:27:08.193Z"
+   "ultimaBien": "2026-11-23T22:31:44.625Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9772,7 +9773,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:27:08.193Z"
+   "ultimaBien": "2026-11-23T22:31:44.625Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
