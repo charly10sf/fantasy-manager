@@ -2933,12 +2933,9 @@
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html": 1795177760000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html": 1795177015000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/vinicius-vuelve-lista-sancion-entran-tocados.html": 1795178015000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/dani-ceballos-baja-derbi-betis_0_2008549443.html": 1795177121000,
    "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html": 1795178565000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/entrenamiento-betis-antes-derbi-imagenes_3_2008549579.html": 1795178170000,
    "AS|https://as.com/futbol/primera/olmo-importa-cuando-juega-y-cuando-no-f202611-n/": 1795178474000,
@@ -3127,20 +3124,6 @@
   },
   "hechos": [
    {
-    "guid": "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/",
-    "medio": "AS",
-    "t": 1795177062000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos queda descartado para el derbi ante el Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     15
-    ]
-   },
-   {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261120/1004253390/maguette-gueye-baja-racing.html",
     "medio": "Mundo Deportivo",
     "t": 1795177760000,
@@ -3151,21 +3134,6 @@
     "motivo": "",
     "plazo": "la recuperación dependerá de su evolución",
     "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253379/pellegrini-favorito-sienta-peor.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795177015000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos se pierde el derbi ante el Sevilla del sábado",
-    "motivo": "molestias sentidas el lunes",
-    "plazo": "",
-    "nums": [
-     18,
-     30
-    ]
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/20/alvaro-nunez-jones-abdellaoui-reciben-alta-viajan-madrid.html",
@@ -4589,7 +4557,9 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436477420
+  }
  },
  "ia": {
   "dia": "2026-11-23",
@@ -9530,13 +9500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5614,
+   "ok": 5615,
    "fallos": 0,
-   "ejecuciones": 4531,
+   "ejecuciones": 4532,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:16:14.664Z"
+   "ultima": "2026-11-23T12:21:17.420Z"
   }
  },
  "ptsDirecto": {
@@ -9776,15 +9746,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:16:22.484Z"
+   "ultimaBien": "2026-11-23T12:21:23.702Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:16:22.484Z"
+   "ultimaBien": "2026-11-23T12:21:23.702Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:16:22.484Z"
+   "ultimaBien": "2026-11-23T12:21:23.702Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9792,11 +9762,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:16:22.484Z"
+   "ultimaBien": "2026-11-23T12:21:23.702Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:16:22.484Z"
+   "ultimaBien": "2026-11-23T12:21:23.702Z"
   }
  },
  "avisos": [
