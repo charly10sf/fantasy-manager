@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253363/valverde-vuelve-entrenar-grupo-paron-selecciones.html": 1795175996000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253348/atletico-busca-9-presente-futuro.html": 1795174900000,
    "AS|https://as.com/futbol/primera/dani-ceballos-baja-para-el-derbi-f202611-n/": 1795175995000,
    "AS|https://as.com/futbol/primera/pellegrini-prefiero-ir-a-la-champions-que-ganar-el-derbi-y-quedar-el-15-f202611-n/": 1795177062000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253381/kounde-repite-entrenamiento-apunta-villarreal-barca.html": 1795177765000,
@@ -3124,7 +3123,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
    "SPORT|136739318": 1795429327000,
-   "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000
   },
   "hechos": [
    {
@@ -3683,7 +3683,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -4619,17 +4619,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 195264,
-  "salida": 11311,
+  "entrada": 197220,
+  "salida": 11847,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.366186,
+  "dolares": 0.36665,
   "reservado": 0
  },
  "recientes": {
@@ -9555,13 +9555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5607,
+   "ok": 5608,
    "fallos": 0,
-   "ejecuciones": 4524,
+   "ejecuciones": 4525,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T11:41:11.607Z"
+   "ultima": "2026-11-23T11:46:14.397Z"
   }
  },
  "ptsDirecto": {
@@ -9801,15 +9801,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:41:24.567Z"
+   "ultimaBien": "2026-11-23T11:46:24.210Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:41:24.567Z"
+   "ultimaBien": "2026-11-23T11:46:24.210Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:41:24.567Z"
+   "ultimaBien": "2026-11-23T11:46:24.210Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9817,11 +9817,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:41:24.567Z"
+   "ultimaBien": "2026-11-23T11:46:24.210Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T11:41:24.567Z"
+   "ultimaBien": "2026-11-23T11:46:24.210Z"
   }
  },
  "avisos": [
