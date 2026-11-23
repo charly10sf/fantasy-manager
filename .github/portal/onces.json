@@ -4521,7 +4521,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2755",
+     "nombre": "Ryan",
+     "pos": 1
+    },
+    {
+     "id": "2671",
+     "nombre": "Jeremy Toljan",
+     "pos": 2
+    },
+    {
+     "id": null,
+     "nombre": "Adrián de la Fuente",
+     "pos": 2
+    },
+    {
+     "id": "2624",
+     "nombre": "Manu Sánchez",
+     "pos": 2
+    },
+    {
+     "id": "3174",
+     "nombre": "Mandi",
+     "pos": 2
+    },
+    {
+     "id": "3228",
+     "nombre": "Requena",
+     "pos": 3
+    },
+    {
+     "id": "2445",
+     "nombre": "Olasagasti",
+     "pos": 3
+    },
+    {
+     "id": "3230",
+     "nombre": "Thiago",
+     "pos": 3
+    },
+    {
+     "id": "2628",
+     "nombre": "O. Rey",
+     "pos": 3
+    },
+    {
+     "id": "2302",
+     "nombre": "R. Brugué",
+     "pos": 4
+    },
+    {
+     "id": "2303",
+     "nombre": "I. Romero",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2755",
+    "2300",
+    "3174",
+    "2624",
+    "2742",
+    "3227",
+    "2445",
+    "3228",
+    "3230",
+    "3164",
+    "2302"
+   ]
   },
   {
    "id": "7",
@@ -4712,7 +4781,76 @@
      }
     ]
    },
-   "confirmado": null
+   "confirmado": [
+    {
+     "id": "2613",
+     "nombre": "M. Dituro",
+     "pos": 1
+    },
+    {
+     "id": "3263",
+     "nombre": "Revivo",
+     "pos": 2
+    },
+    {
+     "id": "2703",
+     "nombre": "Redondo",
+     "pos": 3
+    },
+    {
+     "id": "2596",
+     "nombre": "V. Chust",
+     "pos": 2
+    },
+    {
+     "id": "2949",
+     "nombre": "B. Sangare",
+     "pos": 2
+    },
+    {
+     "id": "2939",
+     "nombre": "G. Villar",
+     "pos": 3
+    },
+    {
+     "id": "2922",
+     "nombre": "Osorio",
+     "pos": 4
+    },
+    {
+     "id": "2958",
+     "nombre": "Morcillo",
+     "pos": 3
+    },
+    {
+     "id": "3074",
+     "nombre": "Germán V.",
+     "pos": 3
+    },
+    {
+     "id": "3147",
+     "nombre": "Fer Niño",
+     "pos": 4
+    },
+    {
+     "id": "2933",
+     "nombre": "Cepeda",
+     "pos": 4
+    }
+   ],
+   "probable": [
+    "2613",
+    "3263",
+    "2596",
+    "2949",
+    "3074",
+    "2939",
+    "2703",
+    "2958",
+    "3182",
+    "3147",
+    "2933"
+   ]
   }
  ]
 }
