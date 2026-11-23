@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/": 1795166861000,
    "SPORT|136656499": 1795167406000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000,
@@ -3116,21 +3115,10 @@
    "SPORT|136730482": 1795381335000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
    "SPORT|136739601": 1795421298000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/paredes-vuelve-ante-el-espanyol-f202611-n/",
-    "medio": "AS",
-    "t": 1795166861000,
-    "id": "2315",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Paredes vuelve a la lista ante el Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136656499",
     "medio": "SPORT",
@@ -3743,7 +3731,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4652,17 +4640,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 135789,
-  "salida": 5015,
+  "entrada": 137794,
+  "salida": 5152,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.286215,
+  "dolares": 0.286484,
   "reservado": 0
  },
  "recientes": {
@@ -9582,13 +9570,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5580,
+   "ok": 5581,
    "fallos": 0,
-   "ejecuciones": 4497,
+   "ejecuciones": 4498,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T09:26:22.982Z"
+   "ultima": "2026-11-23T09:31:15.155Z"
   }
  },
  "ptsDirecto": {
@@ -9828,15 +9816,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:26:30.815Z"
+   "ultimaBien": "2026-11-23T09:31:20.120Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:26:30.815Z"
+   "ultimaBien": "2026-11-23T09:31:20.120Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:26:30.815Z"
+   "ultimaBien": "2026-11-23T09:31:20.120Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9844,11 +9832,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:26:30.815Z"
+   "ultimaBien": "2026-11-23T09:31:20.120Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T09:26:30.815Z"
+   "ultimaBien": "2026-11-23T09:31:20.120Z"
   }
  },
  "avisos": [
