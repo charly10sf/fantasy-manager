@@ -2933,9 +2933,7 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253441/barca-dia-espart-kounde-masia-can-planes.html": 1795196569000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/alineaciones-probables-real-madrid-celta.html": 1795198691000,
-   "AS|https://as.com/futbol/militao-no-quiere-esperar-f202611-n/": 1795196779000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253501/aaaa.html": 1795200837000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261120/1004253505/gran-temor-atletico-cuti-romero-realidad.html": 1795200383000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/20/en-directo-alaves-deportivo-de-a-coruna-jornada-13-laliga-ea-sports-carrusel-deportivo-coruna-radio-coruna/": 1795203184000,
@@ -9340,13 +9338,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5680,
+   "ok": 5681,
    "fallos": 0,
-   "ejecuciones": 4597,
+   "ejecuciones": 4598,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T17:41:29.520Z"
+   "ultima": "2026-11-23T17:46:26.742Z"
   }
  },
  "ptsDirecto": {
@@ -9586,15 +9584,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:41:35.193Z"
+   "ultimaBien": "2026-11-23T17:46:30.403Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:41:35.193Z"
+   "ultimaBien": "2026-11-23T17:46:30.403Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:41:35.193Z"
+   "ultimaBien": "2026-11-23T17:46:30.403Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9602,11 +9600,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:41:35.193Z"
+   "ultimaBien": "2026-11-23T17:46:30.403Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T17:41:35.193Z"
+   "ultimaBien": "2026-11-23T17:46:30.403Z"
   }
  },
  "avisos": [
