@@ -2941,7 +2941,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/20/en-directo-alaves-deportivo-de-a-coruna-jornada-13-laliga-ea-sports-carrusel-deportivo-coruna-radio-coruna/": 1795203184000,
-   "SPORT|136682778": 1795202245000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/20/mourinho-pedro-leon-reencuentro-morbo-palco-di-stefano.html": 1795207273000,
    "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/": 1795217931000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-celta-ante-el-real-madrid-en-laliga-ea-sports-f202611-n/": 1795218102000,
@@ -3099,7 +3098,9 @@
    "SPORT|136746564": 1795453266000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
-   "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000
+   "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000
   },
   "hechos": [
    {
@@ -3453,7 +3454,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -4413,17 +4414,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 16,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 284431,
-  "salida": 19384,
+  "entrada": 286644,
+  "salida": 19606,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.495284,
+  "dolares": 0.495616,
   "reservado": 0
  },
  "recientes": {
@@ -9343,13 +9344,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5699,
+   "ok": 5700,
    "fallos": 0,
-   "ejecuciones": 4616,
+   "ejecuciones": 4617,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T19:16:12.615Z"
+   "ultima": "2026-11-23T19:21:12.713Z"
   }
  },
  "ptsDirecto": {
@@ -9589,15 +9590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:16:18.882Z"
+   "ultimaBien": "2026-11-23T19:21:19.633Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:16:18.882Z"
+   "ultimaBien": "2026-11-23T19:21:19.633Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:16:18.882Z"
+   "ultimaBien": "2026-11-23T19:21:19.633Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9605,11 +9606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:16:18.882Z"
+   "ultimaBien": "2026-11-23T19:21:19.633Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T19:16:18.882Z"
+   "ultimaBien": "2026-11-23T19:21:19.633Z"
   }
  },
  "avisos": [
