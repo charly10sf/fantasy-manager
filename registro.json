@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "SPORT|136672088": 1795184079000,
@@ -3109,18 +3108,6 @@
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html",
-    "medio": "MARCA",
-    "t": 1795183070000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "problema en el tobillo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/",
     "medio": "Cadena SER",
@@ -9408,13 +9395,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5635,
+   "ok": 5636,
    "fallos": 0,
-   "ejecuciones": 4552,
+   "ejecuciones": 4553,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T13:56:13.560Z"
+   "ultima": "2026-11-23T14:01:16.173Z"
   }
  },
  "ptsDirecto": {
@@ -9654,15 +9641,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:56:18.112Z"
+   "ultimaBien": "2026-11-23T14:01:22.180Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:56:18.112Z"
+   "ultimaBien": "2026-11-23T14:01:22.180Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:56:18.112Z"
+   "ultimaBien": "2026-11-23T14:01:22.180Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9670,11 +9657,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:56:18.112Z"
+   "ultimaBien": "2026-11-23T14:01:22.180Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:56:18.112Z"
+   "ultimaBien": "2026-11-23T14:01:22.180Z"
   }
  },
  "avisos": [
