@@ -4693,7 +4693,9 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795419674350
+  }
  },
  "ia": {
   "dia": "2026-11-23",
@@ -9628,13 +9630,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5558,
+   "ok": 5559,
    "fallos": 0,
-   "ejecuciones": 4475,
+   "ejecuciones": 4476,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T07:36:20.029Z"
+   "ultima": "2026-11-23T07:41:14.350Z"
   }
  },
  "ptsDirecto": {
@@ -9874,15 +9876,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:36:24.289Z"
+   "ultimaBien": "2026-11-23T07:41:24.899Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:36:24.289Z"
+   "ultimaBien": "2026-11-23T07:41:24.899Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:36:24.289Z"
+   "ultimaBien": "2026-11-23T07:41:24.899Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9890,11 +9892,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:36:24.289Z"
+   "ultimaBien": "2026-11-23T07:41:24.899Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:36:24.289Z"
+   "ultimaBien": "2026-11-23T07:41:24.899Z"
   }
  },
  "avisos": [
