@@ -3099,7 +3099,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
    "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000,
+   "SPORT|136756238": 1795460438000
   },
   "hechos": [
    {
@@ -3453,7 +3454,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -4408,22 +4409,24 @@
    "n": 10,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795464374568
+  }
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 16,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 286644,
-  "salida": 19606,
+  "entrada": 288677,
+  "salida": 19698,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.495616,
+  "dolares": 0.495865,
   "reservado": 0
  },
  "recientes": {
@@ -9343,13 +9346,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5708,
+   "ok": 5710,
    "fallos": 0,
-   "ejecuciones": 4625,
+   "ejecuciones": 4626,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T20:01:13.927Z"
+   "ultima": "2026-11-23T20:06:14.568Z"
   }
  },
  "ptsDirecto": {
@@ -9589,29 +9592,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:01:19.963Z"
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:01:19.963Z"
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:01:19.963Z"
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   },
   "ESPN, partidos en juego": {
-   "seguidas": 1,
-   "ultimaBien": "2026-11-22T22:27:02.433Z",
-   "desde": "2026-11-23T20:01:19.963Z",
-   "error": "ESPN no da ningún partido y LaLiga tiene 1 en juego"
+   "seguidas": 0,
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:01:19.963Z"
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T20:01:19.963Z"
+   "ultimaBien": "2026-11-23T20:06:21.832Z"
   }
  },
  "avisos": [
