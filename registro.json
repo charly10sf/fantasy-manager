@@ -2336,7 +2336,7 @@
   "2654": "ok",
   "2656": "ok",
   "2658": "out_of_league",
-  "2661": "ok",
+  "2661": "suspended",
   "2662": "ok",
   "2663": "out_of_league",
   "2664": "ok",
@@ -2918,25 +2918,15 @@
  },
  "novedadesPend": [
   {
-   "id": "1033",
+   "id": "2661",
    "que": "sancion",
    "antes": "ok",
-   "t": 1795384572761
+   "t": 1795413673122
   }
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/": 1795129906000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253088/lamine-yamal-no-le-basta-ganar-mundial.html": 1795153500000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253087/bastoni-lento-verano-tampoco-sera-bolt-enero.html": 1795147200000,
-   "SPORT|136636730": 1795149636000,
-   "SPORT|136508538": 1795149008000,
-   "SPORT|136647690": 1795147253000,
-   "SPORT|136647686": 1795147235000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/bellerin-revela-sueno-ceballos-derbi-sevilla-fc_0_2008543588.html": 1795152612000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/20/el-olimpic-busca-recuperar-su-mejor-version-ante-un-redovan-que-encadena-tres-victorias-radio-xativa/": 1795154920000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/19/centenar-demandas-socios-abonados-real-madrid-136643193.html": 1795127693000,
-   "SPORT|135487411": 1795154400000,
    "MARCA|https://www.marca.com/radio/2026/11/20/roberto-gomez-senala-mourinho-unico-poner-titular-vinicius.html": 1795159506000,
    "SPORT|136637651": 1795156260000,
    "MARCA|https://www.marca.com/radio/2026/11/20/pepe-brasin-alerta-problema-vinicius-puedes-estrella-rol-secundario.html": 1795160965000,
@@ -3127,21 +3117,15 @@
    "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
    "SPORT|136730837": 1795377616000,
-   "SPORT|136730813": 1795380014000
+   "SPORT|136730813": 1795380014000,
+   "AS|https://as.com/futbol/primera/dimitrievski-lanza-un-mensaje-a-braulio-f202611-n/": 1795394296000,
+   "AS|https://as.com/futbol/primera/de-las-heridas-del-derbi-a-bratislava-f202611-n/": 1795394566000,
+   "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/": 1795394243000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261123/1004254260/vinicius-junior-examina-psv.html": 1795413600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
+   "SPORT|136730482": 1795381335000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-athletic-ante-el-espanyol-en-laliga-ea-sport-f202611-n/",
-    "medio": "AS",
-    "t": 1795129906000,
-    "id": "2314",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Vivian está lesionado y no jugará ante el Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136637651",
     "medio": "SPORT",
@@ -3806,11 +3790,23 @@
     "nums": [
      21
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/",
+    "medio": "AS",
+    "t": 1795394243000,
+    "id": "3182",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Lemar regresa a la alineación posible del Elche",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-22",
-   "n": 29
+   "dia": "2026-11-23",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4230,8 +4226,8 @@
     "t": 0
    },
    "2661": {
-    "e": "ok",
-    "t": 0
+    "e": "suspended",
+    "t": 1795413673122
    },
    "2680": {
     "e": "ok",
@@ -4675,7 +4671,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-semaf-desconvoca-huelga-maquinistas-23-noviembre-alcanzar-acuerdo-seguridad-ferroviaria-20261120064428.html": 1795153468000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/20/espana-jugara-contra-francia-en-los-cuartos-de-final-de-la-nations-league-cadena-ser/": 1795174142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261120/1004253370/sancion-historica-ecuador-ocho-anos-inhabilitacion-agredir-piedra-juez-linea.html": 1795176335000,
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
@@ -4704,12 +4699,14 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000,
+   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
+   "SPORT|136725414": 1795408237000
   },
   "hechos": [],
   "gemini": {
-   "dia": "2026-11-22",
-   "n": 4,
+   "dia": "2026-11-23",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
@@ -4717,17 +4714,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 0,
+   "clasificar": 2,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 123435,
-  "salida": 2892,
+  "entrada": 128257,
+  "salida": 3656,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.283918,
+  "dolares": 0.284782,
   "reservado": 0
  },
  "recientes": {
@@ -9647,13 +9644,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5538,
+   "ok": 5539,
    "fallos": 0,
-   "ejecuciones": 4455,
+   "ejecuciones": 4456,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T05:56:14.232Z"
+   "ultima": "2026-11-23T06:01:13.122Z"
   }
  },
  "ptsDirecto": {
@@ -9893,15 +9890,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T05:56:14.749Z"
+   "ultimaBien": "2026-11-23T06:01:26.072Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T05:56:14.749Z"
+   "ultimaBien": "2026-11-23T06:01:26.072Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T05:56:14.749Z"
+   "ultimaBien": "2026-11-23T06:01:26.072Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9909,11 +9906,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T22:56:19.888Z"
+   "ultimaBien": "2026-11-23T06:01:26.072Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-22T21:56:58.543Z"
+   "ultimaBien": "2026-11-23T06:01:26.072Z"
   }
  },
  "avisos": [
