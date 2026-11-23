@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
-   "SPORT|136671288": 1795189326000,
    "SPORT|136676022": 1795189674000,
    "SPORT|136668682": 1795190209000,
    "SPORT|136676862": 1795190919000,
@@ -4438,7 +4437,7 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-plus-ultra-bloquea-web-venta-billetes-caracas-unico-destino-regular-operativo-20261123123645.html": 1795447275990
+   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448775389
   }
  },
  "ia": {
@@ -9380,13 +9379,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5656,
+   "ok": 5657,
    "fallos": 0,
-   "ejecuciones": 4573,
+   "ejecuciones": 4574,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T15:41:13.331Z"
+   "ultima": "2026-11-23T15:46:15.389Z"
   }
  },
  "ptsDirecto": {
@@ -9626,15 +9625,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:41:17.181Z"
+   "ultimaBien": "2026-11-23T15:46:20.670Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:41:17.181Z"
+   "ultimaBien": "2026-11-23T15:46:20.670Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:41:17.181Z"
+   "ultimaBien": "2026-11-23T15:46:20.670Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9642,11 +9641,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:41:17.181Z"
+   "ultimaBien": "2026-11-23T15:46:20.670Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T15:41:17.181Z"
+   "ultimaBien": "2026-11-23T15:46:20.670Z"
   }
  },
  "avisos": [
