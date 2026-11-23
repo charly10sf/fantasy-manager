@@ -2934,8 +2934,6 @@
  "noticias": {
   "vistas": {
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/20/6b002d1dfc6c83e91f8b45a2.html": 1795179212000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html": 1795178965000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html": 1795178795000,
    "ABC|https://www.abc.es/deportes/futbol/sonia-bermudez-deja-alexia-putellas-irene-paredes-20261120135417-nt.html": 1795179477000,
    "AS|https://as.com/futbol/primera/jose-alberto-tranquiliza-con-zabiri-y-pierde-a-maguette-entre-4-y-6-semanas-f202611-n/": 1795179575000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html": 1795180296000,
@@ -3115,32 +3113,6 @@
    "SPORT|136746976": 1795431027000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-derbi-sevilla-fc_0_2008549853.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795178965000,
-    "id": "2217",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cucho regresa a la convocatoria del Betis tras su lesión",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pellegrini-derbis-no-hay-favoritos_0_2008549552.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795178795000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos se queda fuera del derbi ante el Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     15
-    ]
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-baja-lista-citados-primer-derbi-temporada.html",
     "medio": "MARCA",
@@ -9440,13 +9412,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5620,
+   "ok": 5621,
    "fallos": 0,
-   "ejecuciones": 4537,
+   "ejecuciones": 4538,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T12:46:20.664Z"
+   "ultima": "2026-11-23T12:51:12.105Z"
   }
  },
  "ptsDirecto": {
@@ -9686,15 +9658,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:46:29.245Z"
+   "ultimaBien": "2026-11-23T12:51:15.370Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:46:29.245Z"
+   "ultimaBien": "2026-11-23T12:51:15.370Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:46:29.245Z"
+   "ultimaBien": "2026-11-23T12:51:15.370Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9702,11 +9674,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:46:29.245Z"
+   "ultimaBien": "2026-11-23T12:51:15.370Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T12:46:29.245Z"
+   "ultimaBien": "2026-11-23T12:51:15.370Z"
   }
  },
  "avisos": [
