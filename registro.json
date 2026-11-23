@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/radio/2026/11/20/pepe-brasin-alerta-problema-vinicius-puedes-estrella-rol-secundario.html": 1795160965000,
    "AS|https://as.com/futbol/primera/quisimos-fichar-a-diomande-f202611-n/": 1795161675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000,
    "AS|https://as.com/futbol/primera/christensen-y-gerard-martin-la-pareja-mas-probable-por-si-falta-cubarsi-f202611-n/": 1795163445000,
@@ -9630,13 +9629,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5560,
+   "ok": 5561,
    "fallos": 0,
-   "ejecuciones": 4477,
+   "ejecuciones": 4478,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T07:46:16.044Z"
+   "ultima": "2026-11-23T07:51:13.410Z"
   }
  },
  "ptsDirecto": {
@@ -9876,15 +9875,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:46:25.828Z"
+   "ultimaBien": "2026-11-23T07:51:19.843Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:46:25.828Z"
+   "ultimaBien": "2026-11-23T07:51:19.843Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:46:25.828Z"
+   "ultimaBien": "2026-11-23T07:51:19.843Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9892,11 +9891,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:46:25.828Z"
+   "ultimaBien": "2026-11-23T07:51:19.843Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:46:25.828Z"
+   "ultimaBien": "2026-11-23T07:51:19.843Z"
   }
  },
  "avisos": [
