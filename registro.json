@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
-   "SPORT|136672088": 1795184079000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
    "SPORT|136643204": 1795184677000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
@@ -9393,13 +9392,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5638,
+   "ok": 5639,
    "fallos": 0,
-   "ejecuciones": 4555,
+   "ejecuciones": 4556,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T14:11:14.979Z"
+   "ultima": "2026-11-23T14:16:12.698Z"
   }
  },
  "ptsDirecto": {
@@ -9639,15 +9638,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:11:20.757Z"
+   "ultimaBien": "2026-11-23T14:16:15.018Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:11:20.757Z"
+   "ultimaBien": "2026-11-23T14:16:15.018Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:11:20.757Z"
+   "ultimaBien": "2026-11-23T14:16:15.018Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9655,11 +9654,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:11:20.757Z"
+   "ultimaBien": "2026-11-23T14:16:15.018Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:11:20.757Z"
+   "ultimaBien": "2026-11-23T14:16:15.018Z"
   }
  },
  "avisos": [
