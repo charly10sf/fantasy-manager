@@ -71,7 +71,7 @@
       "titulo": "Mercado de LaLiga Fantasy hoy: quién sube y quién baja",
       "h1": "Mercado de LaLiga Fantasy hoy",
       "descripcion": "Los jugadores que más suben y bajan hoy en el mercado de LaLiga Fantasy, las rachas, los que están en su máximo y la semana, con el valor de cada uno. Se pone al día cada noche.",
-      "fecha": "2026-11-23",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-15"
     },
     {
@@ -81,7 +81,7 @@
       "titulo": "Equipos de LaLiga Fantasy: valor de cada plantilla",
       "h1": "Equipos de LaLiga Fantasy",
       "descripcion": "Lo que vale la plantilla de cada uno de los 20 equipos en el mercado de LaLiga Fantasy, cuánto gana o pierde cada día y su jugador más caro.",
-      "fecha": "2026-11-23",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-15"
     },
     {
@@ -91,7 +91,7 @@
       "titulo": "Jornadas de LaLiga Fantasy: previas y resúmenes",
       "h1": "Jornadas de LaLiga Fantasy",
       "descripcion": "La próxima jornada de LaLiga Fantasy con su cierre de cláusulas, y la previa y el resumen de cada jornada: mejores, peores, once ideal y MVP de cada partido.",
-      "fecha": "2026-11-23",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-15"
     },
     {
@@ -105,7 +105,7 @@
         ["Inicio", ""],
         ["Jornadas", "jornada/"]
       ],
-      "fecha": "2026-11-23",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-16"
     },
     {
@@ -113,11 +113,11 @@
       "ruta": "jornada/onces.html",
       "seccion": "jornada",
       "grupo": "onces",
-      "titulo": "Onces probables de la jornada 13 de LaLiga Fantasy",
-      "h1": "Onces probables de la jornada 13",
+      "titulo": "Onces probables de la jornada 14 de LaLiga Fantasy",
+      "h1": "Onces probables de la jornada 14",
       "corto": "Onces probables",
-      "descripcion": "Los onces probables de los 20 equipos para la jornada 13 de LaLiga Fantasy, con el % de cada jugador, las dudas y quién vuelve. Una hora antes de cada partido, el once confirmado.",
-      "fecha": "2026-11-23",
+      "descripcion": "Los onces probables de los 20 equipos para la jornada 14 de LaLiga Fantasy, con el % de cada jugador, las dudas y quién vuelve. Una hora antes de cada partido, el once confirmado.",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-16"
     },
     {
@@ -131,7 +131,7 @@
         ["Inicio", ""],
         ["Jornadas", "jornada/"]
       ],
-      "fecha": "2026-11-23",
+      "fecha": "2026-11-24",
       "publicada": "2026-11-16"
     },
     {
@@ -263,6 +263,19 @@
       "descripcion": "Resumen de la jornada 11 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
       "fecha": "2026-11-16",
       "publicada": "2026-11-16"
+    },
+    {
+      "tipo": "portal",
+      "ruta": "jornada/resumen-jornada-13.html",
+      "seccion": "jornada",
+      "grupo": "resumenes",
+      "jornada": 13,
+      "titulo": "Jornada 13 de LaLiga Fantasy: mejores, peores y once ideal",
+      "h1": "Resumen de la jornada 13",
+      "corto": "Resumen de la jornada 13",
+      "descripcion": "Resumen de la jornada 13 de LaLiga Fantasy: los jugadores que más y menos puntos han sacado, el MVP de cada partido, el once ideal y los resultados.",
+      "fecha": "2026-11-24",
+      "publicada": "2026-11-24"
     },
     {
       "ruta": "guias/jornada-13.html",
