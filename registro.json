@@ -2880,7 +2880,7 @@
   "3267": "ok",
   "3268": "ok",
   "3269": "out_of_league",
-  "3270": "suspended",
+  "3270": "ok",
   "3271": "ok",
   "3272": "ok",
   "3273": "ok",
@@ -2933,7 +2933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/": 1795182680000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html": 1795183070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261120/1004253376/xavi-espart-renovacion-2030.html": 1795183354000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
@@ -3110,18 +3109,6 @@
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/aubameyang-viaja-a-vitoria-bright-ede-y-zakaria-se-quedan-en-tierra-f202611-n/",
-    "medio": "AS",
-    "t": 1795182680000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang vuelve a la convocatoria del Deportivo ante el Alavés",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/deportivo/2026/11/20/antonio-hidalgo-aubameyang-parece-preocupante.html",
     "medio": "MARCA",
@@ -4423,7 +4410,8 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
    "SPORT|136750461": 1795433046000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000
   },
   "hechos": [
    {
@@ -4448,31 +4436,53 @@
      2026,
      12
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795440300000,
+    "tipo": "horario",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 16,
+    "jTxt": true,
+    "clubes": [
+     "2",
+     "18"
+    ],
+    "luto": false,
+    "oficial": false,
+    "contexto": "LaLiga ha publicado los horarios de la jornada 16",
+    "detalle": "",
+    "nums": [
+     16,
+     2026,
+     13,
+     14
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440680861
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 210847,
-  "salida": 14607,
+  "entrada": 212582,
+  "salida": 14752,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.369394,
+  "dolares": 0.36964,
   "reservado": 0
  },
  "recientes": {
@@ -9398,13 +9408,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5633,
+   "ok": 5634,
    "fallos": 0,
-   "ejecuciones": 4550,
+   "ejecuciones": 4551,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T13:46:13.671Z"
+   "ultima": "2026-11-23T13:51:22.276Z"
   }
  },
  "ptsDirecto": {
@@ -9644,15 +9654,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:46:17.309Z"
+   "ultimaBien": "2026-11-23T13:51:28.837Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:46:17.309Z"
+   "ultimaBien": "2026-11-23T13:51:28.837Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:46:17.309Z"
+   "ultimaBien": "2026-11-23T13:51:28.837Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9660,11 +9670,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:46:17.309Z"
+   "ultimaBien": "2026-11-23T13:51:28.837Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T13:46:17.309Z"
+   "ultimaBien": "2026-11-23T13:51:28.837Z"
   }
  },
  "avisos": [
