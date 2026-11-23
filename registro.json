@@ -2926,7 +2926,6 @@
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/quisimos-fichar-a-diomande-f202611-n/": 1795161675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261120/1004253236/golpe-florentino-perez-mercado-verano.html": 1795161756000,
    "AS|https://as.com/futbol/primera/christensen-y-gerard-martin-la-pareja-mas-probable-por-si-falta-cubarsi-f202611-n/": 1795163445000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261120/1004253244/bellerin-apunta-alto-mi-idea-pelear-tres.html": 1795163826000,
@@ -4684,32 +4683,31 @@
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000,
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
-   "SPORT|136725414": 1795408237000
+   "SPORT|136725414": 1795408237000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795404562000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795419674350
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 130185,
-  "salida": 3748,
+  "entrada": 131867,
+  "salida": 3834,
   "cacheLee": 8709,
   "cacheEscribe": 2903,
-  "dolares": 0.285021,
+  "dolares": 0.285232,
   "reservado": 0
  },
  "recientes": {
@@ -9629,13 +9627,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5562,
+   "ok": 5563,
    "fallos": 0,
-   "ejecuciones": 4479,
+   "ejecuciones": 4480,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T07:56:12.464Z"
+   "ultima": "2026-11-23T08:01:24.585Z"
   }
  },
  "ptsDirecto": {
@@ -9875,15 +9873,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:56:19.113Z"
+   "ultimaBien": "2026-11-23T08:01:35.137Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:56:19.113Z"
+   "ultimaBien": "2026-11-23T08:01:35.137Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:56:19.113Z"
+   "ultimaBien": "2026-11-23T08:01:35.137Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9891,11 +9889,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:56:19.113Z"
+   "ultimaBien": "2026-11-23T08:01:35.137Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T07:56:19.113Z"
+   "ultimaBien": "2026-11-23T08:01:35.137Z"
   }
  },
  "avisos": [
