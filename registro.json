@@ -2935,7 +2935,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/20/eric-curbelo-confiesa-que-intento-regresar-a-las-palmas-en-el-ultimo-verano-le-dije-a-mi-representante-que-hiciera-todo-lo-posible-para-volver-ser-las-palmas/": 1795185256000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/20/zabiri-goleador-del-racing-estara-disponible-contra-la-real-sociedad-radio-santander/": 1795187902000,
-   "SPORT|136643204": 1795184677000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261120/1004253466/vista-lamine-yamal-jugador-superlativo-diferencial.html": 1795192042000,
    "SPORT|136671288": 1795189326000,
    "SPORT|136676022": 1795189674000,
@@ -3103,7 +3102,8 @@
    "SPORT|136746976": 1795431027000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-zanja-debate-penalti-barca-entrenador-ultima-palabra-20261123_3479878.html": 1795437695000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
-   "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000
+   "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
+   "SPORT|136743685": 1795440168000
   },
   "hechos": [
    {
@@ -3496,7 +3496,7 @@
   ],
   "gemini": {
    "dia": "2026-11-23",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4456,17 +4456,17 @@
  "ia": {
   "dia": "2026-11-23",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 212582,
-  "salida": 14752,
+  "entrada": 214616,
+  "salida": 15075,
   "cacheLee": 11612,
   "cacheEscribe": 5806,
-  "dolares": 0.36964,
+  "dolares": 0.370005,
   "reservado": 0
  },
  "recientes": {
@@ -9392,13 +9392,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5640,
+   "ok": 5641,
    "fallos": 0,
-   "ejecuciones": 4557,
+   "ejecuciones": 4558,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T14:21:11.810Z"
+   "ultima": "2026-11-23T14:26:12.995Z"
   }
  },
  "ptsDirecto": {
@@ -9638,15 +9638,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:21:17.470Z"
+   "ultimaBien": "2026-11-23T14:26:20.881Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:21:17.470Z"
+   "ultimaBien": "2026-11-23T14:26:20.881Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:21:17.470Z"
+   "ultimaBien": "2026-11-23T14:26:20.881Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9654,11 +9654,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:21:17.470Z"
+   "ultimaBien": "2026-11-23T14:26:20.881Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T14:21:17.470Z"
+   "ultimaBien": "2026-11-23T14:26:20.881Z"
   }
  },
  "avisos": [
