@@ -2934,7 +2934,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enfado-mourinho-dos-preguntas-sobre-jj-gabriel-cristiano-ronaldo-rueda-prensa-no-feeling-20261120_3478966.html": 1795171512000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html": 1795171027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261120/1004253320/ultima-lista-ano-espana-grandes-ausencias-sonado-regreso.html": 1795171717000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rayo-vallecano/20261120/1004253315/audero-fijo-palos-vallecas.html": 1795171682000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/20/ceballos-entrena-grupo-apunta-baja-derbi.html": 1795172465000,
@@ -3130,20 +3129,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254402/alternativas-flick-suplir-lamine-sabah.html": 1795428401000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/ceballos-no-entrena-betis-normal_0_2008548189.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795171027000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos no entrena con el grupo antes del derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     24
-    ]
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/galicia/2026/11/20/hidalgo-optimista-con-aubameyang-radio-coruna/",
     "medio": "Cadena SER",
@@ -9597,13 +9582,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5594,
+   "ok": 5595,
    "fallos": 0,
-   "ejecuciones": 4511,
+   "ejecuciones": 4512,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-23T10:36:29.711Z"
+   "ultima": "2026-11-23T10:41:13.654Z"
   }
  },
  "ptsDirecto": {
@@ -9843,15 +9828,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:36:35.098Z"
+   "ultimaBien": "2026-11-23T10:41:20.126Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:36:35.098Z"
+   "ultimaBien": "2026-11-23T10:41:20.126Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:36:35.098Z"
+   "ultimaBien": "2026-11-23T10:41:20.126Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9859,11 +9844,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:36:35.098Z"
+   "ultimaBien": "2026-11-23T10:41:20.126Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T10:36:35.098Z"
+   "ultimaBien": "2026-11-23T10:41:20.126Z"
   }
  },
  "avisos": [
