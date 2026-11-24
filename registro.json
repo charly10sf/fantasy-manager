@@ -4735,11 +4735,6 @@
   ]
  },
  "puntosPartido": {
-  "13|129": {
-   "h": "c89f81136464",
-   "desde": 1795213275580,
-   "fin": 1795211774471
-  },
   "13|130": {
    "h": "f7384b71a12f",
    "desde": 1795273573944,
@@ -5261,7 +5256,8 @@
    "5868136",
    "5868134",
    "5868135",
-   "6106394"
+   "6106394",
+   "6106243"
   ],
   "equipos": [
    "9866",
@@ -5334,6 +5330,19 @@
       2,
       1,
       1,
+      1,
+      0
+     ]
+    }
+   },
+   "163670": {
+    "n": "Ivan Perišić",
+    "e": "PSV Eindhoven",
+    "g": {
+     "champions": [
+      1,
+      0,
+      0,
       1,
       0
      ]
@@ -6091,7 +6100,7 @@
       0
      ],
      "champions": [
-      4,
+      6,
       1,
       0,
       0,
@@ -6163,7 +6172,7 @@
       0
      ],
      "champions": [
-      2,
+      3,
       1,
       0,
       0,
@@ -6327,6 +6336,13 @@
     "e": "Real Madrid",
     "g": {
      "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "champions": [
       1,
       0,
       0,
@@ -7008,8 +7024,8 @@
       1
      ],
      "champions": [
+      2,
       1,
-      0,
       0,
       0,
       0
@@ -9461,13 +9477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6081,
+   "ok": 6083,
    "fallos": 0,
-   "ejecuciones": 4937,
+   "ejecuciones": 4938,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T21:51:16.051Z"
+   "ultima": "2026-11-24T21:56:15.356Z"
   }
  },
  "ptsDirecto": {},
@@ -9484,15 +9500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:51:22.608Z"
+   "ultimaBien": "2026-11-24T21:56:19.102Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:51:22.608Z"
+   "ultimaBien": "2026-11-24T21:56:19.102Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:51:22.608Z"
+   "ultimaBien": "2026-11-24T21:56:19.102Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9500,11 +9516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:51:22.608Z"
+   "ultimaBien": "2026-11-24T21:56:19.102Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:51:22.608Z"
+   "ultimaBien": "2026-11-24T21:56:19.102Z"
   }
  },
  "avisos": [
