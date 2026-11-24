@@ -3216,7 +3216,8 @@
    "SPORT|136767501": 1795500022000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
    "SPORT|136779676": 1795502755000,
-   "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000
+   "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
+   "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000
   },
   "hechos": [
    {
@@ -3510,7 +3511,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -4471,17 +4472,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 38,
    "revisar": 23,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 340501,
-  "salida": 17484,
+  "entrada": 342540,
+  "salida": 17576,
   "cacheLee": 145499,
   "cacheEscribe": 18065,
-  "dolares": 0.855095,
+  "dolares": 0.855345,
   "reservado": 0
  },
  "recientes": {
@@ -9483,13 +9484,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5920,
+   "ok": 5921,
    "fallos": 0,
-   "ejecuciones": 4777,
+   "ejecuciones": 4778,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T08:41:12.155Z"
+   "ultima": "2026-11-24T08:46:15.697Z"
   }
  },
  "ptsDirecto": {},
@@ -9506,15 +9507,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:41:20.491Z"
+   "ultimaBien": "2026-11-24T08:46:27.610Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:41:20.491Z"
+   "ultimaBien": "2026-11-24T08:46:27.610Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:41:20.491Z"
+   "ultimaBien": "2026-11-24T08:46:27.610Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9522,11 +9523,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:41:20.491Z"
+   "ultimaBien": "2026-11-24T08:46:27.610Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:41:20.491Z"
+   "ultimaBien": "2026-11-24T08:46:27.610Z"
   }
  },
  "avisos": [
