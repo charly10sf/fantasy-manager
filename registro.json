@@ -3088,7 +3088,6 @@
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
-   "SPORT|136701406": 1795275671000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000,
    "SPORT|136702543": 1795276838000,
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
@@ -9509,13 +9508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6004,
+   "ok": 6005,
    "fallos": 0,
-   "ejecuciones": 4861,
+   "ejecuciones": 4862,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T15:36:13.710Z"
+   "ultima": "2026-11-24T15:41:12.330Z"
   }
  },
  "ptsDirecto": {},
@@ -9532,15 +9531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:36:20.188Z"
+   "ultimaBien": "2026-11-24T15:41:21.720Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:36:20.188Z"
+   "ultimaBien": "2026-11-24T15:41:21.720Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:36:20.188Z"
+   "ultimaBien": "2026-11-24T15:41:21.720Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9548,11 +9547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:36:20.188Z"
+   "ultimaBien": "2026-11-24T15:41:21.720Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:36:20.188Z"
+   "ultimaBien": "2026-11-24T15:41:21.720Z"
   }
  },
  "avisos": [
