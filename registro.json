@@ -3086,8 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
-   "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000,
    "AS|https://as.com/futbol/primera/vivian-entre-el-cielo-y-el-infierno-f202611-n/": 1795306668000,
@@ -4373,7 +4371,8 @@
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795529875000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
-   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000
+   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
+   "SPORT|136810666": 1795544869000
   },
   "hechos": [
    {
@@ -4426,12 +4425,10 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 10,
+   "n": 11,
    "fallos": 1
   },
-  "espera": {
-   "SPORT|136810666": 1795548672234
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9463,13 +9460,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6054,
+   "ok": 6055,
    "fallos": 0,
-   "ejecuciones": 4911,
+   "ejecuciones": 4912,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T19:46:13.112Z"
+   "ultima": "2026-11-24T19:53:10.832Z"
   }
  },
  "ptsDirecto": {},
@@ -9486,15 +9483,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:46:19.460Z"
+   "ultimaBien": "2026-11-24T19:53:28.810Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:46:19.460Z"
+   "ultimaBien": "2026-11-24T19:53:28.810Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:46:19.460Z"
+   "ultimaBien": "2026-11-24T19:53:28.810Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9502,11 +9499,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:46:19.460Z"
+   "ultimaBien": "2026-11-24T19:53:28.810Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:46:19.460Z"
+   "ultimaBien": "2026-11-24T19:53:28.810Z"
   }
  },
  "avisos": [
