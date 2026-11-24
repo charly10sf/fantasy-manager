@@ -3767,6 +3767,8 @@ const NO_VENDE = /\b(no|nunca|ni)\b[^,.;]{0,16}\b(vend|acept)|\b(aguanta(lo|r|rl
 const CON_CONDICION = /\b(si|cuando|salvo|a no ser|solo si|excepto)\b[^.]{0,90}\b(necesit|hace falta|te pag|ofrec|fich|tengas|gir|baj|deje|llega|sub)/;
 export function consejoEnFrase(frase) {
   const k = norm(frase || '');
+  // (lo que cuenta que decía antes el plan o ella no es un consejo de ahora: «el plan de las 06:25 decía aceptar la oferta»)
+  if (/\b(decia|decias|dije|dijiste|ponia|proponia|mandaba|recomendaba|aconsejaba)\b/.test(k)) return null;
   if (NO_VENDE.test(k)) return 'A';
   if (SI_VENDE.test(k) && !CON_CONDICION.test(k)) return 'V';
   return null;

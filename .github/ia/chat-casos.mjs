@@ -154,7 +154,7 @@ export const CASOS = [
   // --- (24 nov, el aviso de Senna) la app no se contradice: para la escena «m-senna» (Hugo Duro, suplente que baja, en
   // venta con una oferta floja de LaLiga, y el plan de la IA de la mañana que mandaba aceptarla). La decisión de la app es
   // «a la venta, pero esta oferta no»: eso tiene que decir, sin negar lo que decía el plan ni lo que ella dijo antes ---
-  { id: 'senna-vendo', tipo: 'coherencia', q: '¿Vendo a Hugo Duro?', debe: /esta oferta|otra oferta|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes/, noDebe: /\b(acepta la oferta|aceptala)\b(?![^.]*\b(no|solo si)\b)|\bmejor aguantar/ },
+  { id: 'senna-vendo', tipo: 'coherencia', q: '¿Vendo a Hugo Duro?', debe: /esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper/, noDebe: /\b(acepta la oferta|aceptala)\b(?![^.]*\b(no|solo si)\b)|\bmejor aguantar/ },
   { id: 'senna-quedamos', tipo: 'coherencia', sigue: true, q: 'Pues en el plan de esta mañana me decías que aceptara la oferta. ¿En qué quedamos?', debe: /plan/, noDebe: /te he dicho que|no te (he dicho|dije)|sigue igual|nunca te/ },
   { id: 'senna-porque-plan', tipo: 'coherencia', q: '¿Por qué el plan ya no me dice que acepte la oferta por Hugo Duro?', debe: /oferta/, noDebe: /te he dicho que|sigue igual|no ha cambiado/ },
   { id: 'senna-laliga', tipo: 'coherencia', q: 'LaLiga me ofrece ya por Hugo Duro, ¿la cojo o espero?', debe: /esper|otra|siguiente|manana/, noDebe: /llega en el siguiente cambio|aun no (tiene|hay) oferta|ponlo a la venta/ },

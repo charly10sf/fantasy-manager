@@ -662,7 +662,7 @@ function fasesHTML(S, P) {
   });
   const luego = vivos.filter((o) => faseDe(o) === 'luego');
   if (luego.length) h += caja('luego', 'Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego', n: luego.length });
-  if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
+  if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.every((o) => o.decAhora) ? 'Ha cambiado desde el plan' : fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
   return h;
 }
 
@@ -1223,7 +1223,7 @@ function eqPlantillaHTML(S, op) {
       // (24 nov) a un titular el plan no lo vende hasta que baja todos los días (Carlos, 14 nov): sin «vender» en la pastilla
       ((vvP) => (vvP && (vvP.d.matiz === 'con-recambio' || !op(x.pid)) ? `<span class="pill ${vvP.n}" title="${esc(vvP.d.porque)}">${icono(vvP.icono)}${esc(vvP.pill)}</span>` : ''))(ventaVista(M, x, { sinInercia: bloqueada('inercia') })),
       x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
-      M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
+      M.enVenta.has(x.pid) && !/En venta|oferta/.test((ventaVista(M, x, { sinInercia: bloqueada('inercia') }) || {}).pill || '') ? '<span class="pill abierta">En venta</span>' : '',
       M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
       calPill(M, x.j, { soloDuro: true }),
     ],

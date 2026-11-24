@@ -150,7 +150,7 @@ function conOferta(D, M, x, b, ahora) {
     const luego = mejor.deLiga
       ? `LaLiga te hará otra en el siguiente cambio de mercado${esperado ? `, de unos ${eur(esperado)}` : ''}`
       : 'espera a la de LaLiga o a una mejor';
-    return { ...esperar('esta-oferta-no', `${b.porque} Pero esta oferta (${ofertaTxt}) no: ${luego}.`), cifras: { ...cifras, esperado } };
+    return { ...esperar('esta-oferta-no', `${b.porque} Déjalo a la venta, pero esta oferta (${ofertaTxt}) no la aceptes: ${luego}.`), cifras: { ...cifras, esperado } };
   }
   // aguantar, con una oferta: se acepta solo si la app la da por buena
   if (consejo === 'aceptar') return aceptar(porque || `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`, 'oferta');
@@ -177,7 +177,8 @@ export const claseDe = (d) => (d ? `${d.accion === 'vender' ? 'V' : 'A'}:${d.pas
 export function ventaVista(M, x, { sinInercia = false } = {}) {
   const d = M && M.decision && x ? M.decision(x.pid) : null;
   if (!d) return null;
-  if (sinInercia && ['inercia', 'titular-gira'].includes(d.regla)) return null;
+  // (lo de la oferta que tiene se dice siempre: es lo mismo que pone «en venta»)
+  if (sinInercia && ['inercia', 'titular-gira'].includes(d.regla) && !(d.enVenta && d.oferta)) return null;
   const vi = x.ventaInercia || null, ya = !vi || vi.urgencia === 'ya';
   const r = (n, pill, largo, icono = 'baja') => ({ d, n, pill, largo, icono });
   if (d.accion === 'vender') {
