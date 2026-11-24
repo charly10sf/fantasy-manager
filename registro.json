@@ -3235,7 +3235,9 @@
    "SPORT|136787219": 1795514571000,
    "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
-   "SPORT|136786191": 1795516703000
+   "SPORT|136786191": 1795516703000,
+   "SPORT|136790672": 1795518790000,
+   "SPORT|136786855": 1795518496000
   },
   "hechos": [
    {
@@ -3553,11 +3555,23 @@
     "nums": [
      1
     ]
+   },
+   {
+    "guid": "SPORT|136786855",
+    "medio": "SPORT",
+    "t": 1795518496000,
+    "id": "2562",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Marc Pubill entrena con el grupo tras superar su lesión",
+    "motivo": "esguince de tobillo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -9545,13 +9559,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5963,
+   "ok": 5964,
    "fallos": 0,
-   "ejecuciones": 4820,
+   "ejecuciones": 4821,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:11:17.845Z"
+   "ultima": "2026-11-24T12:16:11.975Z"
   }
  },
  "ptsDirecto": {},
@@ -9568,15 +9582,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:11:26.406Z"
+   "ultimaBien": "2026-11-24T12:16:22.261Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:11:26.406Z"
+   "ultimaBien": "2026-11-24T12:16:22.261Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:11:26.406Z"
+   "ultimaBien": "2026-11-24T12:16:22.261Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9584,11 +9598,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:11:26.406Z"
+   "ultimaBien": "2026-11-24T12:16:22.261Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:11:26.406Z"
+   "ultimaBien": "2026-11-24T12:16:22.261Z"
   }
  },
  "avisos": [
