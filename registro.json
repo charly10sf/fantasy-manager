@@ -3237,7 +3237,8 @@
    "SPORT|136786191": 1795516703000,
    "SPORT|136790672": 1795518790000,
    "SPORT|136786855": 1795518496000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000
   },
   "hechos": [
    {
@@ -3511,7 +3512,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -4377,7 +4378,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
    "SPORT|136574933": 1795269960000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
@@ -9500,13 +9500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5972,
+   "ok": 5973,
    "fallos": 0,
-   "ejecuciones": 4829,
+   "ejecuciones": 4830,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:56:17.102Z"
+   "ultima": "2026-11-24T13:01:20.327Z"
   }
  },
  "ptsDirecto": {},
@@ -9523,15 +9523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:56:29.711Z"
+   "ultimaBien": "2026-11-24T13:02:35.330Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:56:29.711Z"
+   "ultimaBien": "2026-11-24T13:02:35.330Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:56:29.711Z"
+   "ultimaBien": "2026-11-24T13:02:35.330Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9539,11 +9539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:56:29.711Z"
+   "ultimaBien": "2026-11-24T13:02:35.330Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:56:29.711Z"
+   "ultimaBien": "2026-11-24T13:02:35.330Z"
   }
  },
  "avisos": [
