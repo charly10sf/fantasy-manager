@@ -38,6 +38,35 @@ export function efectoTras(pts, como, valor, etapa = 0) {
   return etapa === 0 ? { e3: pv(e[0]), e7: pv(e[1]) } : { e3: pv(e[2]), e7: pv(e[3]) };
 }
 
+/* (24 nov, Carlos: «no es lo mismo uno que sube y ha hecho 15, 14 y 16 que uno que en la última ha hecho 5») lo que FRENA
+   un mal partido a uno que viene subiendo, por debajo de lo que dice `proyectar` (la subida de ahora, frenándose un 15 % al
+   día). Medido con TODA LaLiga (.github/ia/medir-puntos.mjs y claude/medida-puntos-24nov.md: 3.930 días de 311 jugadores que
+   subían más de un 0,8 % al día, jornadas 1-14), en tanto por uno a [3, 7, 10] días, por los puntos del último partido y los
+   días que han pasado desde él con el valor de ese día ([0-1], [2], [3-6]; 0 es el día del partido, con el valor aún de
+   antes). Solo lo de menos: lo de más tras un buen partido (de 5 puntos para arriba, hasta +18 % a 7 días) se ha quedado en
+   la mitad de la primera mitad de la temporada a la segunda, y sumado, la regla de aguantar pasaba a coger muchos más y
+   ganaban solo el 56 %; quitando lo de menos, aprendido con una mitad y probado con la otra, gana el 82-96 % en vez del
+   76-88 % (los que quita ganaban el 49-72 %). Lo de la caída frente a los partidos de antes (15, 14, 16 y luego 5) sale
+   casi entero en los puntos del último: con 5 o más puntos se queda en lo que dice `proyectar`, y con 4 o menos, que
+   viniera de muchos o pocos cambia de una mitad a la otra, así que no se cuenta aparte */
+const FRENO_PARTIDO = {
+  b1: [[-0.040, -0.089, -0.116], [-0.036, -0.072, -0.088], [-0.030, -0.058, -0.067]],
+  b4: [[-0.026, -0.049, -0.059], [-0.018, -0.027, -0.025], [-0.014, -0.019, -0.015]],
+};
+/** lo que frena el último partido: { e3, e7, e10 } (en tanto por uno, ≤ 0) o null. `s`: días desde el partido (0-6) */
+export function frenoTras(pts, s) {
+  if (pts == null || !(s >= 0) || s > 6) return null;
+  const b = pts <= 1 ? 'b1' : pts <= 4 ? 'b4' : null;
+  if (!b) return null;
+  const [e3, e7, e10] = FRENO_PARTIDO[b][s <= 1 ? 0 : s === 2 ? 1 : 2];
+  return { e3, e7, e10 };
+}
+/** lo de `frenoTras` a k días (de 0 a 3, de 3 a 7 y de 7 a 10, en línea; más allá, lo de 10) */
+export const frenoA = (e, k) => (!e || !(k > 0) ? 0 : k <= 3 ? (e.e3 * k) / 3 : k <= 7 ? e.e3 + ((e.e7 - e.e3) * (k - 3)) / 4 : k <= 10 ? e.e7 + ((e.e10 - e.e7) * (k - 7)) / 3 : e.e10);
+/** el valor a k días con el freno: no baja de un 3 % por debajo de lo que vale (lo que se vio de peor a 10 días, de media),
+    ni sube lo que `proyectar` ya daba por debajo */
+const conFreno = (valor, v, e) => (e < 0 ? Math.min(v, Math.max(valor * 0.97, v + valor * e)) : v);
+
 // la tendencia de 7 días para decidir: con 2 o más días subiendo seguidos, la de esos días (`p7e` de M.tend, 0.7n)
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
 
@@ -352,6 +381,28 @@ export function analizar(D, H, c, extra = {}) {
     return (cachePart[pid] = { pts, n: Number(p.jornada), fecha: p.fecha, como, etapa, e3: c, e7: l, f, vivo: vivo != null && pts === num(vivo) });
   }
   M.efectoPartido = (pid) => efectoPartido(pid, J(pid), M.tend(pid));
+  /** (24 nov) el último partido que ha jugado (de los 6 últimos días, con el valor de `hoyV`) si fue malo (4 puntos o
+      menos): lo que frena su subida (`frenoTras`), para `proyectar`. { pts, n, s, e } o null. Como en la medida, el último
+      en el que sale con puntos (el del directo, si su partido ya ha acabado) */
+  const cacheMal = {};
+  M.malPartido = (pid) => {
+    if (pid in cacheMal) return cacheMal[pid];
+    const j = J(pid);
+    if (!j || !j.pos || j.pos > 4 || !j.valor) return (cacheMal[pid] = null);
+    const partidoDe = (n) => (D.partidos || []).find((p) => Number(p.jornada) === Number(n) && p.fecha && (p.localId === j.equipoId || p.visitanteId === j.equipoId)) || null;
+    let pts = null, p = null;
+    const vivo = M.vivo && M.vivo.puntos ? M.vivo.puntos[pid] : null;
+    if (vivo != null && M.vivo.n != null) { const q = partidoDe(M.vivo.n); if (q && q.fecha + 2 * HORA <= ahora) { pts = num(vivo); p = q; } }
+    if (pts == null) {
+      const w = [...(j.semanas || [])].filter((x) => x.pts != null).sort((a, b) => b.n - a.n)[0];
+      const q = w ? partidoDe(w.n) : null;
+      if (q && q.fecha + 2 * HORA <= ahora) { pts = num(w.pts); p = q; }
+    }
+    if (!p) return (cacheMal[pid] = null);
+    const s = Math.round((mediodia(hoyV) - mediodia(diaDe(p.fecha))) / DIA);
+    const e = frenoTras(pts, s);
+    return (cacheMal[pid] = e ? { pts, n: Number(p.jornada), s, e } : null);
+  };
   /** lo que hay que ofrecerle a su dueño para que te venda a uno (ofertaDueno), para el árbitro y el chat */
   M.ofertaDuenoDe = (j) => (j ? ofertaDueno(M, j, M.tend(j.id) || {}) : null);
 
@@ -2599,7 +2650,10 @@ export function analizar(D, H, c, extra = {}) {
     const freno = vu ? (enParonLejos ? 0.89 : 0.92) : (enParonLejos ? 0.8 : 0.85);
     let v = j.valor;
     for (let k = 0; k < dias; k++) v *= 1 + r * Math.pow(freno, k);
-    return { r, v };
+    // (24 nov, Carlos) lo que frena un mal partido reciente (4 puntos o menos), por debajo de esto (`frenoTras`)
+    const mal = dias > 0 ? M.malPartido(j.id) : null;
+    if (mal) v = conFreno(j.valor, v, frenoA(mal.e, dias));
+    return { r, v, mal };
   };
   /** (0.7.13u) para tenerlo: en cuántos días recupera lo que se paga de más sobre su valor si sigue subiendo como ahora
       (frenándose igual que en `proyectar`), mirando hasta 30 días. { dias (null si no llega), deMas, r } */
@@ -2609,9 +2663,11 @@ export function analizar(D, H, c, extra = {}) {
     const { r } = proyectar(j, t || M.tend(j.id), 0, vu);
     if (!(r > 0)) return { dias: null, deMas, r };
     const freno = vu ? (paronLejos(M, ahora) ? 0.89 : 0.92) : (paronLejos(M, ahora) ? 0.8 : 0.85);
-    let v = num(j.valor);
-    for (let k = 0; k < 30; k++) { v *= 1 + r * Math.pow(freno, k); if (v >= puja) return { dias: k + 1, deMas, r }; }
-    return { dias: null, deMas, r, max: v };
+    // (24 nov) con lo que frena un mal partido reciente, igual que en `proyectar`
+    const mal = M.malPartido(j.id), valor = num(j.valor);
+    let v = valor, vk = v;
+    for (let k = 0; k < 30; k++) { v *= 1 + r * Math.pow(freno, k); vk = mal ? conFreno(valor, v, frenoA(mal.e, k + 1)) : v; if (vk >= puja) return { dias: k + 1, deMas, r }; }
+    return { dias: null, deMas, r, max: vk };
   };
   /** (24 nov, aviso de Domy: «no puede ser que la app te descarte jugadores que están subiendo millones»; con 324 M de
       saldo, Bartra, +3,6 % al día, salía en «Mirados y descartados» porque a la puja que gana en su liga no da tiempo a
@@ -2623,7 +2679,8 @@ export function analizar(D, H, c, extra = {}) {
       al día): la proyección casa (mediana real a 7 días +9,8 % frente a +9,4 %) y, pagando un +13-17 % y saliendo como
       la app (`M.aguantaReventa`), los que cumplen esta regla ganan en 8 de cada 10 casos (mediana +14-15 %, el peor 10 %
       pierde un 5-6 %); si lo pagado de más tarda 8-10 días en recuperarse, 6 de cada 10 (mediana +3-5 %), y si tarda
-      más, se pierde en 6 de cada 10: por eso 7 días y no 10.
+      más, se pierde en 6 de cada 10: por eso 7 días y no 10. (24 nov, Carlos) Con un mal partido reciente (4 puntos o menos)
+      la proyección y los días de recuperar llevan su freno (`M.malPartido`): así ganan el 85-95 % de los que quedan.
       { dias, valorFuturo, beneficio, recupera } o null */
   const AGUANTA_DIAS = 10, AGUANTA_RECUPERA = 7;
   M.aguantar = (j, t, puja, vu, te = M.tener(j, t, puja, vu)) => {
@@ -3078,11 +3135,17 @@ export function pujaRevTxt(M, e) {
 }
 
 /** (0.7.13u) por qué uno que sube fuerte no va para revender: a la puja que gana en tu liga ya no sale, y si tenerlo sí */
+/** (24 nov) si a la proyección de uno le resta un mal partido reciente (`M.malPartido`), una frase para decirlo; si no, '' */
+export function malPartidoTxt(M, pid) {
+  const m = M && M.malPartido ? M.malPartido(pid) : null;
+  return m ? `Ya cuento que en su último partido hizo ${m.pts} punto${m.pts === 1 ? '' : 's'}: tras uno así, el que sube se frena.` : '';
+}
+
 export function noRevenderTxt(M, nr) {
   const P = M.pagaLiga ? M.pagaLiga(nr.j.valor, nr.pid) : null;
   const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
   const te = nr.tener, ag = nr.aguantar;
-  const antes = `Para revender antes de la jornada no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.`;
+  const antes = `Para revender antes de la jornada no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${malPartidoTxt(M, nr.pid) ? ` ${malPartidoTxt(M, nr.pid)}` : ''}`;
   // (24 nov, aviso de Domy) aguantándolo sí sale: el plan lo propone si se paga con el saldo. Si está aquí es porque hoy no
   // te llega (o ya van dos para revender, que lo añade el plan): se dice eso, no «para tenerlo, sí» en una lista de descartados
   if (ag) {
@@ -3110,6 +3173,12 @@ export function noRevenderCorto(M, nr, { topeRev = 0 } = {}) {
   }
   const g = M.mejora ? M.mejora(nr.j) : 0;
   const deMas = te.deMas > 0 ? `${eur(te.deMas)} de más que ${te.dias ? `tardas ${te.dias} días en recuperar` : 'no recuperas'}` : 'y antes de la jornada no da tiempo a revenderlo';
+  // (24 nov) si un mal partido reciente frena la cuenta, se dice: es lo que cambia el veredicto
+  const mal = M.malPartido ? M.malPartido(nr.pid) : null;
+  if (mal) {
+    const pts = `${mal.pts} punto${mal.pts === 1 ? '' : 's'}`;
+    return g >= 0.3 ? `Mejoraría tu once (+${d1(g)} pts), pero hizo ${pts} en el último y se frena: ${deMas}.` : `Hizo ${pts} en su último partido y eso frena su subida: ${deMas}.`;
+  }
   return g >= 0.3
     ? `Mejoraría tu once (+${d1(g)} pts), pero se paga a unos ${eur(nr.puja)}: ${deMas}.`
     : `Sube un ${pct(nr.r * 100, 1, false)} al día, pero se paga a unos ${eur(nr.puja)}: ${deMas}.`;

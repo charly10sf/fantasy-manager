@@ -97,6 +97,7 @@ try {
       const M = Mo.analizar(D, H, S.c, ext(det));
       const R = Pm.planDeHoy(D, M, Dt.cfg());
       out.rico = mirar(D, M, R, pidDe);
+      out.rico.vfB = M.noRevender[pidDe.Bartra] && M.noRevender[pidDe.Bartra].aguantar ? M.noRevender[pidDe.Bartra].aguantar.valorFuturo : null;
       // lo que lee la IA de Bartra y el veredicto de la app
       const V = I.veredictos(D, M), v = V[`P-${pidDe.Bartra}`];
       out.rico.ver = v ? { ok: v.ok, para: v.para, aguantar: !!v.aguantar } : null;
@@ -139,9 +140,31 @@ try {
       const arb = arbitro(R, D, M, eur);
       out.despues = { esMio: !!x, paraRevender: !!(M.paraRevender || []).find((y) => y.pid === pid), aguanta: x ? !!M.aguantaReventa(x) : null, vende: vende ? vende.motivo : null, reglas: arb.find((l) => l.startsWith('REGLAS')) || '', L: [`DESPUÉS: Bartra mío ${!!x}, aguanta ${x ? M.aguantaReventa(x) : '?'}, plan: ${R.titular}${vende ? ` · VENDE: ${vende.motivo}` : ''}`] };
     }
+    // 4) (24 nov, Carlos: «no es lo mismo uno que ha hecho 15, 14 y 16 que uno que en la última ha hecho 5») Bartra hizo
+    //    1 punto ayer: tras un partido así, el que sube se frena (`M.malPartido`), y a esa puja aguantarlo ya no sale.
+    //    Con 7 puntos, como siempre: al plan
+    const conPartido = (pts) => {
+      const { D, H, det, pidDe } = montar(324e6);
+      const pid = pidDe.Bartra, j = D.maestro[pid];
+      const pasadas = (D.partidos || []).filter((p) => p.fecha && p.fecha < ahora).map((p) => Number(p.jornada));
+      const n = pasadas.length ? Math.max(...pasadas) : 1;
+      D.partidos = (D.partidos || []).filter((p) => !(Number(p.jornada) === n && (p.localId === j.equipoId || p.visitanteId === j.equipoId)));
+      D.partidos.push({ jornada: n, localId: j.equipoId, visitanteId: '0', fecha: ahora - 20 * 3600e3, gl: 0, gv: 1 });
+      j.semanas = [...(j.semanas || []).filter((w) => w.n < n), { n, pts }];
+      const M = Mo.analizar(D, H, S.c, ext(det));
+      const R = Pm.planDeHoy(D, M, Dt.cfg());
+      const o = mirar(D, M, R, pidDe);
+      o.mal = M.malPartido(pid);
+      o.malPepelu = M.malPartido(pidDe.Pepelu);
+      o.vfB = M.noRevender[pid] && M.noRevender[pid].aguantar ? M.noRevender[pid].aguantar.valorFuturo : null;
+      o.n = n;
+      return o;
+    };
+    out.malo = conPartido(1);
+    out.bueno = conPartido(7);
     return out;
   });
-  for (const k of ['rico', 'pobre', 'despues']) console.log(`--- ${k} ---\n${r[k].L.join('\n')}`);
+  for (const k of ['rico', 'pobre', 'despues', 'malo', 'bueno']) console.log(`--- ${k} ---\n${r[k].L.join('\n')}`);
   console.log(`veredicto de Bartra: ${JSON.stringify(r.rico.ver)}`);
   console.log(`lo que lee la IA: ${r.rico.ia.join(' // ')}`);
   const ok = (c, t) => { console.log(`${c ? 'BIEN' : 'MAL '} ${t}`); if (!c) mal++; };
@@ -169,5 +192,13 @@ try {
   ok(/REGLAS: ok/.test(r.pobre.reglas), `con 20 M, el árbitro da el plan por bueno (${r.pobre.reglas})`);
   ok(r.despues.esMio && r.despues.paraRevender && r.despues.aguanta && !r.despues.vende, 'al día siguiente, con Bartra fichado (vale menos de lo pagado, cláusula cerrada 13 días), el plan no lo vende');
   ok(/REGLAS: ok/.test(r.despues.reglas), `y el árbitro da ese plan por bueno (${r.despues.reglas})`);
+  const bm = r.malo.Bartra, bb = r.bueno.Bartra;
+  ok(!!r.malo.mal && r.malo.mal.pts === 1 && r.malo.mal.s <= 1, `con 1 punto ayer, la app ve el mal partido (${JSON.stringify(r.malo.mal)})`);
+  ok(!!bm.nr && !bm.nr.aguantar && !bm.op, 'con 1 punto ayer, Bartra no va en el plan para aguantarlo: el mal partido frena la subida');
+  ok(!!bm.mirado && /^Hizo 1 punto en su último partido y eso frena su subida: .* de más que (tardas \d+ días en recuperar|no recuperas)\.$/.test(bm.mirado) && bm.mirado.length <= 125, `y «Mirados» lo dice en una frase: «${bm.mirado}»`);
+  ok(!!bm.detalle && /en su último partido hizo 1 punto/.test(bm.detalle), 'la IA también lo lee');
+  ok(/REGLAS: ok/.test(r.malo.reglas), `el árbitro da ese plan por bueno (${r.malo.reglas})`);
+  ok(!r.bueno.mal && !!bb.op && bb.op.aguantar && Math.abs(r.bueno.vfB - r.rico.vfB) < 1e4, `con 7 puntos, como sin partido: al plan para aguantarlo, con la misma proyección (${Math.round(r.bueno.vfB)} y ${Math.round(r.rico.vfB)})`);
+  ok(!r.malo.malPepelu && !!r.malo.Pepelu.mirado && !/punto/.test(r.malo.Pepelu.mirado), 'a Pepelu no le cambia nada');
 } finally { await P.cerrar(); await cerrar(); }
 process.exit(mal ? 1 : 0);

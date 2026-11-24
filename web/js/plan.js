@@ -21,7 +21,7 @@
 import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia } from './util.js';
 
 const MALOS_PLAN = new Set(['injured', 'suspended', 'out_of_league']);
-import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, noRevenderCorto, prisaNegativo } from './motor.js';
+import { planAuto, rematarAuto, mereceClausula, mejorOnce, pujaOnceTxt, pujaRevTxt, noRevenderTxt, noRevenderCorto, prisaNegativo, malPartidoTxt } from './motor.js';
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, pujaReal } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
 
@@ -364,7 +364,7 @@ function candidatos(X, vetados) {
         op: () => ({ accion: esM ? 'pujar' : 'clausular', ref: `${esM ? 'P' : 'C'}-${e.pid}`, objetivo: 'revender', pid: e.pid, jugador: e.j.nombre,
           donde: esM ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: esM ? e.precioMercado : e.precio, puja_max: esM ? e.puja : null,
           cuando: esM ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora', vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio), confianza: e.confianza,
-          motivo: `${pujaRevTxt(M, e)}Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.${X.backtest && X.backtest.n >= 8 && X.backtest.media > 0 ? ` En esta liga, lo que la app habría comprado así en las últimas semanas salió bien ${X.backtest.bien} de ${X.backtest.n} veces (${eur(X.backtest.media, { signo: true })} de media).` : ''}`,
+          motivo: `${pujaRevTxt(M, e)}Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.${malPartidoTxt(M, e.pid) ? ` ${malPartidoTxt(M, e.pid)}` : ''}${X.backtest && X.backtest.n >= 8 && X.backtest.media > 0 ? ` En esta liga, lo que la app habría comprado así en las últimas semanas salió bien ${X.backtest.bien} de ${X.backtest.n} veces (${eur(X.backtest.media, { signo: true })} de media).` : ''}`,
           datos: { porque: `sube un ${pct(e.r * 100, 1, false)} al día`, cuanto: `${e.pujaJusta ? `puja como mucho ${eur(e.precio)} (para llevártelo hacen falta unos ${eur(e.pujaLiga)})` : eur(e.precio)}; ${elDiaVenta} valdría unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })})`, cuando: esM ? 'hoy' : 'ahora', siNo: 'te pierdes la subida; no afecta a tu once', vender: elDiaVenta } }) });
     }
   }
@@ -383,7 +383,7 @@ function candidatos(X, vetados) {
       const cuandoP = M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy';
       nuevo({ k: `G-${nr.pid}`, clase: 'pujar', objetivo: 'revender', aguantar: true, conSaldo: true, pid: nr.pid, j: nr.j, importe: nr.puja, puja: nr.puja, euros: ag.beneficio * 0.6 * X.fiable, ref: `P-${nr.pid}`,
         op: () => ({ accion: 'pujar', ref: `P-${nr.pid}`, objetivo: 'revender', aguantar: true, pid: nr.pid, jugador: nr.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: nr.puja, cuando: cuandoP, beneficio_esperado: Math.round(ag.beneficio), confianza: 'media',
-          motivo: `Para aguantarlo, no para tu once: sube un ${pct(nr.r * 100, 1, false)} al día y se paga a unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''}. Lo pagado de más lo recuperas en ${ag.recupera} día${ag.recupera === 1 ? '' : 's'} y en ${ag.dias} valdría unos ${eur(ag.valorFuturo)} (${eur(ag.beneficio, { signo: true })}). Págalo con tu saldo y véndelo cuando deje de subir: tiene la cláusula cerrada 14 días.`,
+          motivo: `Para aguantarlo, no para tu once: sube un ${pct(nr.r * 100, 1, false)} al día y se paga a unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''}. Lo pagado de más lo recuperas en ${ag.recupera} día${ag.recupera === 1 ? '' : 's'} y en ${ag.dias} valdría unos ${eur(ag.valorFuturo)} (${eur(ag.beneficio, { signo: true })}). Págalo con tu saldo y véndelo cuando deje de subir: tiene la cláusula cerrada 14 días.${malPartidoTxt(M, nr.pid) ? ` ${malPartidoTxt(M, nr.pid)}` : ''}`,
           datos: { porque: `sube un ${pct(nr.r * 100, 1, false)} al día: aguantándolo sale a cuenta`, cuanto: `puja de ${eur(nr.puja)}; en ${ag.dias} días valdría unos ${eur(ag.valorFuturo)} (${eur(ag.beneficio, { signo: true })})`, cuando: cuandoP, siNo: 'te pierdes la subida; no afecta a tu once', vender: 'cuando deje de subir' } }) });
     }
   }

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.1';
+export const VERSION = '0.8.1a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8.1';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
+    // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y
+    // `M.tener` (revender, aguantar, `M.subeTeniendo`); la frase en `noRevenderCorto`/`noRevenderTxt` y `malPartidoTxt` en los
+    // motivos de plan.js. Lo medido, en claude/medida-puntos-24nov.md (.github/ia/medir-puntos.mjs); prueba: escenas «malo» y
+    // «bueno» de .github/ia/caso-aguantar.mjs. La hora, al publicar
+    v: '0.8.1a', f: '2026-11-24', h: '14:13', t: 'Cuenta el último partido',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'Mira cómo le fue en su último partido', x: 'Antes de proponerte comprar a uno que sube para revenderlo o aguantarlo, la app mira su último partido: si hizo 4 puntos o menos, cuenta con que se va a frenar. Si así ya no sale a cuenta, lo verás en «Mirados y descartados» con el motivo.' },
+    ],
+  },
   {
     // (24 nov, aviso de Domy, 07:48: «no puede ser que la app te descarte jugadores que están subiendo millones»; 324 M de
     // saldo y Bartra, +3,6 % al día, en «Mirados y descartados» con un «para tenerlo, sí») motor.js `M.aguantar` y
