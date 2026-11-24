@@ -25,7 +25,7 @@ export const VERSION = '0.8.3a';
 export const NOVEDADES = [
   {
     // (24 nov, 19:37, Carlos: «a veces tarda 2 o 3 minutos y creo que sí que lo hace: cierro la aplicación, la abro y ya me pone el
-    // plan, hace 2 minutos… y a veces, al salirme, no sale la notificación») SIN PUBLICAR. La petición del plan se queda abierta
+    // plan, hace 2 minutos… y a veces, al salirme, no sale la notificación») La petición del plan se queda abierta
     // hasta que la IA acaba; si el final no llegaba, la app esperaba a agotar el intento (2 minutos) con el plan ya hecho en el
     // servidor. Ahora, mientras espera, pregunta aparte cada 5 s si el plan de ese pedido ya está (GET /plan/res, `mirar` en
     // `planPorApp`, ia.js) y se queda con él. El aviso al salir: el id del pedido se le pasa al móvil sin esperar a renovar la
@@ -33,7 +33,7 @@ export const NOVEDADES = [
     // Y `generarPlan` repinta siempre al acabar. Solo web. No se ha podido ver en su móvil por qué no llegaba el final
     // (claude/pendiente-plan-se-queda-haciendo.md del proyecto): cuando pase, el Diagnóstico dirá «recogido aparte».
     // Prueba: .github/ia/caso-conexion.mjs (8b). La hora, al publicar
-    v: '0.8.3a', f: '2026-11-24', h: '', t: 'El plan, sin esperas de más',
+    v: '0.8.3a', f: '2026-11-24', h: '21:16', t: 'El plan, sin esperas de más',
     cosas: [
       { tipo: 'arreglo', d: 'reloj', t: 'El plan ya no se queda «preparando» cuando ya está hecho', x: 'A veces la app seguía esperando un par de minutos con el plan ya terminado, y había que cerrarla y abrirla para verlo. Ahora lo recoge en unos segundos.' },
       { tipo: 'arreglo', d: 'campana', t: 'El aviso de que está preparando tu plan', x: 'Si salías de la app nada más pedirlo, o con una pregunta a la IA a medias, a veces no salía el aviso. Ya sale.' },
