@@ -4475,9 +4475,11 @@
   "gemini": {
    "dia": "2026-11-24",
    "n": 7,
-   "fallos": 0
+   "fallos": 1
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795530372127
+  }
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9509,13 +9511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5989,
+   "ok": 5990,
    "fallos": 0,
-   "ejecuciones": 4846,
+   "ejecuciones": 4847,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T14:21:12.119Z"
+   "ultima": "2026-11-24T14:26:12.127Z"
   }
  },
  "ptsDirecto": {},
@@ -9532,15 +9534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:21:28.464Z"
+   "ultimaBien": "2026-11-24T14:26:46.132Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:21:28.464Z"
+   "ultimaBien": "2026-11-24T14:26:46.132Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:21:28.464Z"
+   "ultimaBien": "2026-11-24T14:26:46.132Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9548,11 +9550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:21:28.464Z"
+   "ultimaBien": "2026-11-24T14:26:46.132Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:21:28.464Z"
+   "ultimaBien": "2026-11-24T14:26:46.132Z"
   }
  },
  "avisos": [
