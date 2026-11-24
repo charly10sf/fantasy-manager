@@ -3079,11 +3079,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
-   "SPORT|136697201": 1795264706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
@@ -3242,30 +3240,6 @@
    "SPORT|136786855": 1795518496000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/",
-    "medio": "AS",
-    "t": 1795264736000,
-    "id": "3114",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Hjulmand regresa a los entrenamientos antes del partido ante el Getafe",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/",
-    "medio": "AS",
-    "t": 1795264736000,
-    "id": "3079",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Lookman se queda fuera de la última sesión del Atlético",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html",
     "medio": "Mundo Deportivo",
@@ -4493,7 +4467,8 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795523472774
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795523472774,
+   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795524078137
   }
  },
  "ia": {
@@ -9526,13 +9501,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5968,
+   "ok": 5969,
    "fallos": 0,
-   "ejecuciones": 4825,
+   "ejecuciones": 4826,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:36:11.569Z"
+   "ultima": "2026-11-24T12:41:18.137Z"
   }
  },
  "ptsDirecto": {},
@@ -9549,15 +9524,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:36:20.728Z"
+   "ultimaBien": "2026-11-24T12:41:26.387Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:36:20.728Z"
+   "ultimaBien": "2026-11-24T12:41:26.387Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:36:20.728Z"
+   "ultimaBien": "2026-11-24T12:41:26.387Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9565,11 +9540,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:36:20.728Z"
+   "ultimaBien": "2026-11-24T12:41:26.387Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:36:20.728Z"
+   "ultimaBien": "2026-11-24T12:41:26.387Z"
   }
  },
  "avisos": [
