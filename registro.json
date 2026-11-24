@@ -3090,7 +3090,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
-   "SPORT|136701065": 1795280023000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
    "SPORT|136704189": 1795281115000,
@@ -3521,7 +3520,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -9506,13 +9505,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6019,
+   "ok": 6020,
    "fallos": 0,
-   "ejecuciones": 4876,
+   "ejecuciones": 4877,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T16:51:12.998Z"
+   "ultima": "2026-11-24T16:56:15.273Z"
   }
  },
  "ptsDirecto": {},
@@ -9529,15 +9528,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:51:21.230Z"
+   "ultimaBien": "2026-11-24T16:56:53.862Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:51:21.230Z"
+   "ultimaBien": "2026-11-24T16:56:53.862Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:51:21.230Z"
+   "ultimaBien": "2026-11-24T16:56:53.862Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9545,11 +9544,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:51:21.230Z"
+   "ultimaBien": "2026-11-24T16:56:53.862Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:51:21.230Z"
+   "ultimaBien": "2026-11-24T16:56:53.862Z"
   }
  },
  "avisos": [
