@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.1a';
+export const VERSION = '0.8.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,22 @@ export const VERSION = '0.8.1a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, aviso de Senna, 13:52: «me recomienda vender un jugador y luego que lo aguante o viceversa, o recomienda
+    // vender y luego me dice que es una decisión que he tomado por mi cuenta»; Carlos: «tiene razón y no es la primera vez»)
+    // UNA decisión por jugador: decide.js (`decidir`, `M.decisionBase`, `M.decision`, `M.decisionFichar`, `ventaVista`),
+    // con el orden de reglas escrito arriba del módulo y en claude/auditoria-coherencia.md (proyecto). La leen plan.js
+    // (candidatos A y V), acciones.js, Equipo, la ficha, Parón, fondo.js, avisos.js, `cuadrarPlan` (una regla en vez de cuatro),
+    // `ventasMiasTxt`, `contexto` y `revisarChat` (3e). El tiempo: `decAhora` en el paso que la app saca al repasar el plan de
+    // la IA, `pasoCambiaTxt`, `cambiosDesde` y «TÚ DIJISTE ANTES» (`consejosChat`) en `datosChat`, y el origen de cada cosa en
+    // `llevasHTML`. Prueba: .github/ia/caso-contradicciones.mjs (en «Pruebas»). La hora, al publicar
+    v: '0.8.2', f: '2026-11-24', h: '', t: 'La app ya no se contradice',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'Lo mismo en todas partes', x: 'De cada jugador tuyo la app toma una sola decisión (vender, aguantar, aceptar la oferta o esperar a otra) y te la dice igual en Hoy, en Equipo, en los avisos y cuando le preguntas a la IA.' },
+      { tipo: 'mejora', d: 'reloj', t: 'Si algo cambia, te lo dice', x: 'Si desde el plan de la mañana llega una oferta o un jugador cambia de tendencia, el paso te dice qué decía antes, qué dice ahora y por qué. Y «Lo que llevas hoy» sabe si algo lo hiciste por el plan o porque te lo aconsejó la IA.' },
+      { tipo: 'arreglo', d: 'hucha', t: '«A la venta, pero esta oferta no»', x: 'Cuando conviene vender a uno pero la oferta de hoy es floja, la app lo dice así y te cuenta lo que espera de la siguiente, en vez de «mejor aguantar».' },
+    ],
+  },
   {
     // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
     // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y

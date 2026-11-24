@@ -1,13 +1,13 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { ventaVista } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -174,6 +174,14 @@ export function conEnlaces(S, texto) {
  * plan): lo terminado, lo que está en marcha (pujas, ofertas, lo que tienes a la venta) y lo que te han hecho a ti.
  * Cada cosa dice si venía en el plan o es por tu cuenta.
  */
+/** (24 nov) un paso del plan de la IA que la app ha sacado al repasarlo con los datos de ahora: «A las 06:25: vender. Ahora: …» */
+export function pasoCambiaTxt(P, o) {
+  if (!P || !o || !o.descartada || !o.decAhora || !P.t || P.auto || P.motorHoy) return '';
+  const VERBO = { vender: 'vender', clausular: 'clausular', pujar: 'pujar', comprar: 'comprar', blindar: 'blindar', ofertar: 'ofertar' };
+  const era = o.etiqueta === 'Aceptar oferta' ? 'aceptar la oferta' : VERBO[o.accion] || o.accion;
+  const c = o.decAhora.corta || '';
+  return `A las ${horaDe(P.t)}: ${era}. Ahora: ${c.charAt(0).toLowerCase()}${c.slice(1)}.`;
+}
 export function llevasHTML(S) {
   const { M } = S;
   const P = S.plan;
@@ -186,7 +194,25 @@ export function llevasHTML(S) {
   const hoyD = diaDe(ahora);
   const accDe = (a) => String(a || '').toLowerCase().replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
   const deAntes = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD && p !== P).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion) })));
-  const delPlan = (pid, acciones) => ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || deAntes.some((o) => o.pid === pid && acciones.includes(o.accion));
+  // (24 nov, Senna: «recomienda vender y luego me dice que es una decisión que he tomado por mi cuenta») de dónde salió cada
+  // cosa: del plan (también lo que proponía cuando se hizo, aunque al repasarlo ahora ese paso haya salido: `cuadradas` y
+  // lo que la app ha sacado después, `decAhora`), de lo que le aconsejó la IA en Pregunta, o por su cuenta
+  const esIA = !!(P && P.t && !P.auto && !P.motor) || !!(P && P.modelo);
+  const horaPlan = P && P.t && esIA ? horaDe(P.t) : '';
+  const proponia = P ? P.ops.filter((o) => o.pid && o.descartada && o.decAhora).map((o) => ({ pid: o.pid, accion: o.accion })) : [];
+  const deAntesT = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion), t: p.t })));
+  let dichoIA = []; try { dichoIA = consejosChat(M, undefined, { desde: desde - 12 * HORA }); } catch (e) { dichoIA = []; }
+  const origenDe = (pid, acciones) => {
+    if (ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || proponia.some((o) => o.pid === pid && acciones.includes(o.accion))) return { plan: true, txt: horaPlan ? `Del plan de las ${horaPlan}` : 'Del plan' };
+    const a = deAntesT.find((o) => o.pid === pid && acciones.includes(o.accion));
+    if (a) return { plan: true, txt: `Del plan de las ${horaDe(a.t)}` };
+    const k = acciones.includes('vender') ? dichoIA.find((y) => y.pid === pid && y.clase === 'V') : null;
+    if (k) return { plan: true, txt: k.ts ? `Te lo aconsejó la IA a las ${horaDe(k.ts)}` : 'Te lo aconsejó la IA' };
+    return { plan: false, txt: 'Por tu cuenta' };
+  };
+  const delPlan = (pid, acciones) => origenDe(pid, acciones);
+  // y si ahora la app aconseja otra cosa con lo que tiene en venta, se dice en corto
+  const ahoraDe = (pid) => { const d = M.decision ? M.decision(pid) : null; return d && ['esta-oferta-no', 'oferta-no', 'acepta', 'por-dinero'].includes(d.matiz) ? d.corta : ''; };
   const items = [];
   for (const a of M.actividad) {
     if (!a.t || a.t <= desde || !a.pid) continue;
@@ -209,7 +235,7 @@ export function llevasHTML(S) {
   }
   for (const v of M.misVentas || []) {
     const mej = v.mejor;
-    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']),
+    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']), nota: ahoraDe(v.pid),
       texto: `${v.j.nombre} a la venta${mej ? `: la mejor oferta, ${eur(mej.importe)}${mej.deLiga ? ' (LaLiga)' : ''}` : ': aún sin ofertas'}` });
   }
   const hechos = items.filter((x) => x.estado === 'hecho').length, curso = items.filter((x) => x.estado === 'curso').length;
@@ -223,7 +249,7 @@ export function llevasHTML(S) {
   const orden = { curso: 0, contra: 1, hecho: 2 };
   items.sort((a, b) => orden[a.estado] - orden[b.estado] || b.t - a.t);
   return `<details class="llevas">${cab}
-    <ul class="llevas-l">${items.map((x) => `<li class="${x.estado}"><button class="llevas-f" data-j="${esc(x.pid)}"><span class="ll-ic">${icono(ICO[x.estado])}</span><span class="ll-t">${esc(x.texto)}${x.estado === 'hecho' && x.t ? ` <small>${esc(cuando(x.t))}</small>` : ''}</span>${x.estado === 'contra' ? '' : `<span class="ll-tag ${x.plan ? 'plan' : ''}">${x.plan ? 'Del plan' : 'Por tu cuenta'}</span>`}</button></li>`).join('')}</ul>
+    <ul class="llevas-l">${items.map((x) => `<li class="${x.estado}"><button class="llevas-f" data-j="${esc(x.pid)}"><span class="ll-ic">${icono(ICO[x.estado])}</span><span class="ll-t">${esc(x.texto)}${x.estado === 'hecho' && x.t ? ` <small>${esc(cuando(x.t))}</small>` : ''}${x.nota ? ` <small class="ll-ahora">Ahora: ${esc(x.nota.charAt(0).toLowerCase() + x.nota.slice(1))}</small>` : ''}</span>${x.estado === 'contra' ? '' : `<span class="ll-tag ${x.plan && x.plan.plan ? 'plan' : ''}">${esc((x.plan && x.plan.txt) || 'Por tu cuenta')}</span>`}</button></li>`).join('')}</ul>
     <p class="llevas-pie">${balance ? `Hecho hasta ahora: ${eur(balance, { signo: true })}. ` : ''}${M.misPujas ? `En pujas tienes ${eur(M.misPujas)} comprometidos. ` : ''}${quedan ? `Del plan te ${quedan === 1 ? 'queda 1 paso' : `quedan ${quedan} pasos`}.` : P && !P.viejo ? 'Del plan no te queda nada por hacer hoy.' : ''}</p></details>`;
 }
 
@@ -232,7 +258,7 @@ export function llevasHTML(S) {
 export const claveUrgente = (a) => `${a.tipo}|${a.pid || a.titulo}`;
 export const urgentesQuitados = () => { const q = LS.get(K('urgentes-quitados'), {}), d = diaDe(); return new Set(Object.keys(q).filter((k) => q[k] === d)); };
 /** lo urgente que no está en el plan (como mucho tres) y la nota de cada cláusula abierta después del plan */
-function urgentesDe(S) {
+export function urgentesDe(S) {
   const { M } = S;
   // lo que ya está en el plan no se repite aquí, ni lo que has quitado hoy
   const enPlan = new Set(Object.keys(S.opPorPid || {}));
@@ -258,7 +284,8 @@ function urgentesDe(S) {
   };
   // (24 nov, decide.js) y lo de vender o buscar sustituto, solo si es lo que dice la decisión del jugador con el plan delante
   const segunDec = (a) => { if (!a.pid || !M.decision || !['vender', 'sustituto'].includes(a.tipo)) return true; const d = M.decision(a.pid); return !d || (a.tipo === 'vender' ? d.accion === 'vender' && d.matiz !== 'por-dinero' : d.accion === 'aguantar'); };
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
+  const noFicha = (a) => !!a.pid && ['pujar', 'clausular'].includes(a.tipo) && !!M.decisionFichar && (M.decisionFichar(a.pid) || {}).accion === 'no';
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !noFicha(a) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
   // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
   // arriba y el plan de debajo sin Rodri, sin explicar nada)
   const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];
@@ -504,7 +531,9 @@ function pasoOp(S, P, o) {
   // tarjeta la sigue abriendo y cerrando
   // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
   const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
-  const porque = o.descartada && o.aviso ? o.aviso : fraseDecide(o);
+  // (24 nov) si la app lo ha sacado al repasar el plan con los datos de ahora, el paso dice qué ha cambiado y desde cuándo
+  const cambiaTxt = pasoCambiaTxt(P, o);
+  const porque = cambiaTxt ? `${cambiaTxt} ${String(o.decAhora.porque || '').trim()}` : o.descartada && o.aviso ? o.aviso : fraseDecide(o);
   // (24 nov, Carlos: «muchísimo texto… más resumido») un descartado dice solo por qué se descarta: sin la explicación de la
   // IA de por qué hacerlo, sin las pastillas ni la confianza
   const pie = `<div class="op-pie">${o.confianza && !o.sugerencia && !o.descartada ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null && !o.descartada ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`;
@@ -536,7 +565,7 @@ function pasoOp(S, P, o) {
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
       ${cara}
       <span class="pp-c">
-        <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
+        <span class="pp-l1">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
         <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(o.descartada ? String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, '') : porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
@@ -550,7 +579,10 @@ function pasoOp(S, P, o) {
 export function cambiosDesdePlan(S) {
   const P = S.plan, M = S.M;
   if (P && !P.auto && P.empezo && M && M.enJuego) return `La jornada ${M.enJuego.n} ha empezado y se han reabierto las cláusulas.`;
-  if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return null;
+  // (24 nov) lo que la app ha sacado del plan de la IA al repasarlo con los datos de ahora: se dice arriba, con «Rehacer el plan»
+  const camb = P && !P.auto && P.t ? (P.ops || []).filter((o) => o.descartada && o.decAhora).length : 0;
+  const cambTxt = camb ? `Desde las ${horaDe(P.t)} ${camb > 1 ? `han cambiado ${camb} pasos` : 'ha cambiado un paso'} (abajo, con su porqué).` : '';
+  if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return cambTxt || null;
   const ahora = new Set(M.mias.map((x) => x.pid)), antes = new Set(P.foto.mias);
   const mandado = new Set();
   for (const o of P.ops || []) {
@@ -561,9 +593,9 @@ export function cambiosDesdePlan(S) {
   const nombre = (id) => (S.D.maestro[id] && S.D.maestro[id].nombre) || 'uno';
   const fuera = P.foto.mias.filter((id) => !ahora.has(id) && !mandado.has(`fuera:${id}`)).map(nombre);
   const dentro = [...ahora].filter((id) => !antes.has(id) && !mandado.has(`dentro:${id}`)).map(nombre);
-  if (!fuera.length && !dentro.length) return null;
+  if (!fuera.length && !dentro.length) return cambTxt || null;
   const lista = (l) => (l.length > 2 ? `${l.slice(0, 2).join(', ')} y ${l.length - 2} más` : l.join(' y '));
-  return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : ''].filter(Boolean).join(' ');
+  return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : '', cambTxt].filter(Boolean).join(' ');
 }
 
 /**
@@ -1404,8 +1436,15 @@ export function buscaHTML(S) {
  */
 export function descartePlan(S, pid) {
   if (!S.plan || !pid || (S.opPorPid || {})[pid]) return null;
-  return (S.plan.ops || []).find((o) => o.descartada && String(o.pid) === String(pid) && ['pujar', 'comprar'].includes(o.accion)) || null;
+  const o = (S.plan.ops || []).find((x) => x.descartada && String(x.pid) === String(pid) && ['pujar', 'comprar'].includes(x.accion));
+  if (o) return o;
+  // (24 nov, decide.js) y lo que el plan ha mirado y no ficha («Mirados y descartados»): antes Mercado lo seguía llamando
+  // «Chollo» y los avisos decían «la app pujaría…» con el plan diciendo que se paga de más
+  const df = S.M && S.M.decisionFichar ? S.M.decisionFichar(pid) : null;
+  return df && df.accion === 'no' ? { accion: 'pujar', aviso: df.porque, tope: df.tope != null ? df.tope : null, descartada: true } : null;
 }
+/** la etiqueta de Mercado de uno que se vende: la del motor (chollo, sube…) o, si el plan lo descarta, eso (para las pruebas) */
+export const etiquetaFichar = (S, pid) => { const m = (S.M.mercado || []).find((y) => String(y.pid) === String(pid)); return !m || m.miPuja ? '' : descartePlan(S, pid) ? 'El plan lo descarta' : String(m.veredicto || ''); };
 
 export function mercado(S) {
   const { M } = S;

@@ -127,7 +127,7 @@ function conOferta(D, M, x, b, ahora) {
   }
   const j = x.j, val = j.valor || 0, prima = mejor.importe - val;
   const quien = mejor.deLiga ? 'LaLiga' : (mejor.de || 'un rival');
-  const ofertaTxt = `${eur(mejor.importe)} (${pct(mejor.sobre * 100)})`;
+  const ofertaTxt = `${eur(mejor.importe)}, ${pct(mejor.sobre * 100)}`;
   const cifras = { oferta: mejor.importe, sobre: mejor.sobre, de: quien };
   let consejo = v.consejoMotor || v.consejo, porque = v.porqueMotor || v.porque || '';
   // (una sola cuenta para el que sube: antes, tres) lo que sube hasta la víspera, menos 500 mil o el 1 %
@@ -150,7 +150,7 @@ function conOferta(D, M, x, b, ahora) {
     const luego = mejor.deLiga
       ? `LaLiga te hará otra en el siguiente cambio de mercado${esperado ? `, de unos ${eur(esperado)}` : ''}`
       : 'espera a la de LaLiga o a una mejor';
-    return { ...esperar('esta-oferta-no', `${b.porque} Pero esta oferta no (${ofertaTxt}): ${luego}.`), cifras: { ...cifras, esperado } };
+    return { ...esperar('esta-oferta-no', `${b.porque} Pero esta oferta (${ofertaTxt}) no: ${luego}.`), cifras: { ...cifras, esperado } };
   }
   // aguantar, con una oferta: se acepta solo si la app la da por buena
   if (consejo === 'aceptar') return aceptar(porque || `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`, 'oferta');
@@ -270,6 +270,15 @@ export function decidir(D, M, c = null) {
         r = { ...d, accion: 'vender', regla: 'dinero', matiz: 'por-dinero', paso: o.hoy === false ? 'nada' : acepta ? 'aceptar' : 'poner', antes: d, cuando: o.hoy === false ? (o.cuando || null) : null,
           porque: `Hace falta para empezar la jornada en positivo (en negativo no puntúas)${d.accion === 'aguantar' ? `. Si no, se aguantaría: ${d.porque.charAt(0).toLowerCase()}${d.porque.slice(1)}` : '.'}`, corta: CORTO['por-dinero'] };
       }
+      // el cambio que hoy no se puede hacer (no te llega la puja por el recambio, las cláusulas están cerradas…): el plan
+      // lo deja en «búscale sustituto», y eso es lo que se dice en todas partes
+      if (r === d && d.regla === 'cambio' && !o) {
+        const Pa = planApp();
+        const rec = new Set(((M.cambioDe && M.cambioDe(pid)) || { rec: [] }).rec.map((y) => String(y.pid)));
+        const puja = vivas(P).some((y) => rec.has(String(y.pid)) && ['pujar', 'comprar', 'clausular'].includes(y.accion));
+        const dm = ((Pa && Pa.descartes) || []).find((y) => y && String(y.pid) === String(pid));
+        if (!puja && dm) r = { ...d, accion: 'aguantar', regla: 'plan', matiz: 'busca-sustituto', paso: 'nada', antes: d, porque: String(dm.motivo || d.porque) };
+      }
     } else if (!o) {
       const Pa = planApp();
       const dm = ((Pa && Pa.descartes) || []).find((y) => y && String(y.pid) === String(pid));
@@ -299,7 +308,13 @@ export function decidir(D, M, c = null) {
     // el plan de la IA no trae los «Mirados» del motor: se miran en el de la app si ya está hecho
     const Pm = M._planHoy && M._planHoy.plan;
     const d2 = Pm && Pm !== P ? (Pm.descartes || []).find((y) => y && String(y.pid) === String(pid)) : null;
-    return d2 ? { pid, accion: 'no', porque: quita(d2.motivo || d2.detalle) } : null;
+    if (d2) return { pid, accion: 'no', porque: quita(d2.motivo || d2.detalle) };
+    // y lo que la app no haría hoy con esa operación suelta (no te llega, el parón, no da tiempo a revenderlo…): lo mismo
+    // que se le dice a la IA («LA APP NO LA HARÍA»)
+    const V = M._ver || null;
+    const vv = V ? ['P', 'C', 'M', 'T'].map((t) => V[`${t}-${pid}`]).filter(Boolean) : [];
+    if (vv.length && vv.every((y) => !y.ok && !y.sinPrisa)) return { pid, accion: 'no', porque: quita(vv[0].aviso) || 'La app no lo haría hoy.' };
+    return null;
   };
   return M;
 }

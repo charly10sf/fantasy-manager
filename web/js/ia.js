@@ -3588,6 +3588,34 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     if (manda) nota(`Con la oferta por ${N(v.j)} la app aconseja esperar, así que mejor no aceptarla todavía${v.porque ? `: ${cortar(v.porque, 150).replace(/[.\s]+$/, '')}` : ''}${v.porque && /…$/.test(cortar(v.porque, 150)) ? '' : '.'}`);
   }
 
+  /* 3e. (24 nov, Senna: «Te he dicho que lo vendas, no que lo aguantes. Mi recomendación sigue igual: vender», con Hoy
+     diciendo otra cosa) lo que aconseja de cada jugador tuyo tiene que ser su decisión (decide.js), la misma que ve en Hoy
+     y en Equipo: si manda vender al que la app aguanta, o aguantar al que la app vende hoy, se dice */
+  try {
+    const yoT = D.yo && D.yo.teamId, vistos = new Set();
+    let ultimo = null;
+    for (const fr of t.split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ])[.!?]\s+|\n+/).map((x) => x.trim()).filter(Boolean)) {
+      const k = norm(fr), c = consejoEnFrase(fr);
+      const suyos = enFrase(fr).filter((j) => M.dueno[j.id] === yoT);
+      if (suyos.length) ultimo = suyos[suyos.length - 1];
+      // «la cláusula no te protege» de una que nadie paga: es al revés
+      if (/clausula[^.]{0,80}\bno (te|le) protege/.test(k) && ultimo) {
+        const x = (M.mias || []).find((y) => y.pid === ultimo.id), cz = M.clausulazos && M.clausulazos.n >= 3 ? M.clausulazos.p90 : 0.3;
+        if (x && x.clausula && x.ratio != null && x.ratio - 1 > Math.max(cz, 0.5)) nota(`La cláusula de ${N(ultimo)} sí te protege: está un ${pct((x.ratio - 1) * 100, 0)} por encima de su valor y nadie la va a pagar. Lo que no hace es servirte para venderlo.`);
+      }
+      if (!c) continue;
+      for (const j of suyos) {
+        if (vistos.has(j.id)) continue;
+        const d = M.decision ? M.decision(j.id) : null;
+        if (!d) continue;
+        const v = (M.misVentas || []).find((y) => y.pid === j.id && y.mejor);
+        // (lo de aceptar una oferta que la app manda esperar ya lo dice la 3d)
+        if (c === 'V' && d.accion === 'aguantar' && !(v && notas.some((n2) => n2.includes(j.nombre)))) { vistos.add(j.id); nota(`Con ${N(j)}, lo que dice la app (en Hoy y en Equipo) es «${d.corta}»: ${cortar(d.porque, 170)}`); }
+        else if (c === 'A' && d.accion === 'vender' && ['poner', 'aceptar'].includes(d.paso)) { vistos.add(j.id); nota(`Con ${N(j)}, lo que dice la app (en Hoy y en Equipo) es «${d.corta}»: ${cortar(d.porque, 170)}`); }
+      }
+    }
+  } catch (e) { /* sin esta comprobación */ }
+
   /* 4. lo que no puede decir */
   const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
@@ -3729,10 +3757,65 @@ export function rivalesEn(texto, D, M) {
 }
 
 /** el plan que se ve en Hoy ahora: el de la IA si es de hoy; si no, el del motor de hoy (marcado con motorHoy) */
+/* (24 nov, Senna) lo que la IA ha aconsejado de cada jugador tuyo en la conversación: 'V' (véndelo, acepta la oferta) o 'A'
+   (aguántalo, no lo vendas). Lo usan «Lo que llevas hoy» («te lo aconsejó la IA a las 13:48») y los datos del chat («TÚ
+   DIJISTE ANTES…», para que no niegue lo que dijo). Solo frases que lo dicen claro y sin condición */
+const SI_VENDE = /\b(vende(lo|r|rlo)?|vendas|vendelo|acepta(la|r|rla)?|ponlo (a la|en) venta|ponerlo (a la|en) venta|deshazte)\b/;
+const NO_VENDE = /\b(no|nunca|ni)\b[^,.;]{0,16}\b(vend|acept)|\b(aguanta(lo|r|rlo)?|quedate(lo)?|mantenlo|mantener|conservalo)\b/;
+const CON_CONDICION = /\b(si|cuando|salvo|a no ser|solo si|excepto)\b[^.]{0,90}\b(necesit|hace falta|te pag|ofrec|fich|tengas|gir|baj|deje|llega|sub)/;
+export function consejoEnFrase(frase) {
+  const k = norm(frase || '');
+  if (NO_VENDE.test(k)) return 'A';
+  if (SI_VENDE.test(k) && !CON_CONDICION.test(k)) return 'V';
+  return null;
+}
+export function consejosChat(M, hist = conversacion(), { desde = 0 } = {}) {
+  const out = [];
+  const mias = (M && M.mias) || [];
+  const nombrados = (texto) => { const k = ` ${norm(texto)} `; return mias.filter((x) => { const n = norm(x.j.nombre), ult = n.split(' ').pop(); return k.includes(` ${n} `) || (ult.length >= 4 && new RegExp(`\\b${ult.replace(/[^a-z0-9]/g, '.')}\\b`).test(k)); }); };
+  let pregunta = '';
+  for (const m of hist || []) {
+    if (m && m.r === 'yo') { pregunta = m.t || ''; continue; }
+    if (!m || m.r !== 'ia' || !m.t) continue;
+    const ts = m.ts || m.cuando || 0;
+    if (ts && ts < desde) continue;
+    const cuerpo = String(m.t).replace(/\n\n\*\*Revisado por la app:\*\*[\s\S]*$/, '');
+    for (const fr of cuerpo.split(/(?<=[.!?;:])\s+|\n+/)) {
+      const c = consejoEnFrase(fr);
+      if (!c) continue;
+      // de quién habla: de los que nombra la frase; si la respuesta entera no nombra a ninguno («Véndelo: está bajando»),
+      // del único que nombraba la pregunta
+      let de = nombrados(fr);
+      if (!de.length && !nombrados(cuerpo).length) { const q = nombrados(pregunta); if (q.length === 1) de = q; }
+      for (const x of de) {
+        const ya = out.find((y) => y.pid === x.pid);
+        if (ya) { if (ts >= ya.ts) { ya.clase = c; ya.ts = ts; } } else out.push({ pid: x.pid, clase: c, ts });
+      }
+    }
+  }
+  return out;
+}
 /** el plan de hoy guardado, si sigue valiendo: no, si después le ha contado a la IA algo que manda en el motor (22 nov) */
 export function planGuardadoHoy(M) {
   const p = ultimoPlan();
   return p && p.dia === diaDe() && !((M && M.dicho) || []).some((n) => n.t > p.t) ? p : null;
+}
+/** qué ha cambiado en el plan de la IA desde que se hizo (lo que proponía entonces y la app ya no hace), para el chat */
+function cambiosDesde(p, visto, M) {
+  const antes = p.cuadradas || [];
+  const L = [];
+  for (const o of visto.ops || []) {
+    if (!o.descartada || o.ya) continue;
+    const nom = (o.j && o.j.nombre) || o.jugador || '';
+    const era = antes.find((a) => norm(a.jugador) === norm(nom));
+    // (si ya estaba descartado al hacerse el plan, no es un cambio)
+    if (era && era.estado === 'descartada') continue;
+    const d = o.decAhora || (o.pid && M.decision ? M.decision(o.pid) : null);
+    const paso = o.etiqueta === 'Aceptar oferta' ? `aceptar la oferta por ${nom}` : `${o.accion} ${o.accion === 'pujar' ? 'por' : 'a'} ${nom}`;
+    L.push(`el plan decía «${paso}»; ahora la app dice ${d && d.corta ? `«${d.corta}»: ${String(d.porque || '').replace(/[.\s]+$/, '')}` : `que no: ${motivoCorto(o.aviso)}`}`);
+  }
+  if (!L.length) return '';
+  return `\nHA CAMBIADO DESDE EL PLAN de las ${horaDe(p.t)} (los datos de ahora mandan): ${L.join('. Y ')}. Si pregunta por ello o le extraña, RECONOCE que el plan de las ${horaDe(p.t)} decía eso y explica qué ha cambiado y qué dice la app ahora. Nunca niegues lo que decía el plan ni lo des por vigente.`;
 }
 function planQueVe(D, M, c) {
   const p = planGuardadoHoy(M);
@@ -3752,6 +3835,29 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // de app.js). Antes iba siempre el último plan de la IA, aunque fuera de ayer, y sin plan de la IA no iba ninguno: a
   // «¿por qué el plan me dice que venda a X?» contestaba sin saber qué plan tenía delante
   const p = planQueVe(D, M, c);
+  // (24 nov, Senna: «Te he dicho que lo vendas, no que lo aguantes») lo que ella aconsejó antes en esta conversación y ya no
+  // es la decisión de la app: se le dice, para que lo reconozca y explique el cambio en vez de negarlo
+  // (24 nov) lo que el plan ha mirado y no ficha: la IA no lo recomienda como fichaje (antes solo lo sabía si la operación,
+  // suelta, no pasaba; lo que el plan deja fuera por pagar de más o por el resto del plan no le llegaba)
+  let noFichaTxt = '';
+  try {
+    const q0 = norm(pregunta), yoT = D.yo && D.yo.teamId;
+    const Rm = planDeHoy(D, M, c);
+    const L0 = ((Rm && Rm.descartes) || []).filter((d) => d && d.pid && d.jugador && M.dueno[d.pid] !== yoT);
+    const nombra = L0.filter((d) => q0.includes(norm(d.jugador).split(' ').pop()));
+    const lista = nombra.length ? nombra : /\b(fich|puj|compr|clausul|mercado|chollo|refuerz|a quien|que hago|que hacer|recomiend)/.test(q0) ? L0.slice(0, 6) : [];
+    if (lista.length) noFichaTxt = `\n\nLO QUE EL PLAN DE HOY HA MIRADO Y NO FICHA (lo ve en Hoy, en «Mirados y descartados»; no los recomiendes como fichaje y, si pregunta por uno, explícale este motivo): ${lista.map((d) => `${d.jugador}: ${cortar(d.motivo || d.detalle || '', 150)}`).join(' | ')}`;
+  } catch (e) { noFichaTxt = ''; }
+  let dijoAntes = '';
+  try {
+    const L = [];
+    for (const k of consejosChat(M, hist)) {
+      const d = M.decision ? M.decision(k.pid) : null;
+      if (!d || (k.clase === 'V') === (d.accion === 'vender' && d.paso !== 'esperar')) continue;
+      L.push(`${k.clase === 'V' ? 'que vendiera a' : 'que aguantara a'} ${d.j.nombre}${k.ts ? ` (${cuando(k.ts)})` : ''}; ahora la app dice «${d.corta}»: ${String(d.porque || '').replace(/[.\s]+$/, '')}`);
+    }
+    if (L.length) dijoAntes = `\n\nTÚ DIJISTE ANTES en esta conversación ${L.join('. Y ')}. Si sale el tema, di que antes le aconsejaste otra cosa y qué ha cambiado; nunca «te he dicho que…» negándolo ni «mi recomendación sigue igual» si ya no es la de la app.`;
+  } catch (e) { dijoAntes = ''; }
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
   // pila si solo hay uno («Nico»): sin eso, a la segunda pregunta ya no llevaba las cuentas ni la cláusula
@@ -3793,20 +3899,26 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   try { rivales = plantillasRivalesTxt(D, M, enteros, { nombrados: new Set(nombrados.map((j) => String(j.id))), ofertas: /\b(ofrec\w*|oferta\w*|cuanto|precio|trato|cambi\w*)\b/.test(norm(`${pregunta} ${antes}`)) }); } catch (e) { rivales = ''; }
   try { mias = misClausulasTxt(D, M); } catch (e) { mias = ''; }
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
-  let plan = '';
+  let plan = '', cambiosPlan = '';
   if (p) {
     const ops = p.operaciones || [];
     let cu = null;
-    try { cu = opsCuadradas(p.motorHoy ? p.ops.filter((o) => !o.descartada) : cuadrarPlan(p, D, M).ops); } catch (e) { cu = p.cuadradas || null; }
+    // (24 nov, Senna) el plan de la IA le llega como se ve en Hoy: repasado con los datos de ahora, con el titular que ve él
+    // (antes, el que escribió la IA: «vender a X» con Hoy diciendo otra cosa) y, si el repaso ha cambiado algo, dicho
+    let visto = null;
+    try { visto = p.motorHoy ? null : cuadrarPlan(p, D, M); cu = opsCuadradas(p.motorHoy ? p.ops.filter((o) => !o.descartada) : visto.ops); } catch (e) { cu = p.cuadradas || null; }
+    const titularHoy = visto && visto.titular ? visto.titular : p.titular;
+    cambiosPlan = visto ? cambiosDesde(p, visto, M) : '';
     const q = norm(pregunta);
     const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && !enteros.size && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
     const cab = p.motorHoy ? 'EL PLAN DE HOY QUE VE EN LA APP (lo ha hecho la app, no tú)' : `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
     // del plan de la app van también el cuándo y el porqué de cada paso (lo que ve él en Hoy), para «¿por qué me dice que…?»
     const pasos = p.motorHoy ? p.ops.filter((o) => !o.descartada).slice(0, 8).map((o) => `- ${o.accion === 'esperar' ? 'esperar a' : o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}: ${String(o.motivo || '').replace(/\s*\(interés \d+\)/g, '').split(/(?<=\.)\s/).slice(0, 3).join(' ')}`).join('\n') : '';
     plan = vaDelPlan
-      ? (pasos ? `\n\n${cab}, de referencia (no lo repitas si no viene a cuento; si te pregunta por un paso, explícalo con su porqué): ${p.titular}\n${pasos}`
-        : `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`)
-      : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
+      ? (pasos ? `\n\n${cab}, de referencia (no lo repitas si no viene a cuento; si te pregunta por un paso, explícalo con su porqué): ${titularHoy}\n${pasos}`
+        : `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${titularHoy} → ${cu ? opsTxt(cu) || 'nada' : ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`)
+      : `\n\n${cab}: «${titularHoy}». Esta pregunta no va del plan: no lo nombres.`;
+    if (cambiosPlan) plan += cambiosPlan;
   }
   // (segunda pasada con Haiku, 16 nov) «función top cerrada» de los datos lo copiaba tal cual en la respuesta
   // (lo de lo que queda para pujar ya sale bien dicho de contexto, para el plan y el chat: 17 nov)
@@ -3836,7 +3948,7 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // (22 nov, Domy) le cuenta una oferta que le han hecho: es un hecho aunque no salga en los datos
   const ofertaTxtQ = cuentaOferta(pregunta) ? '\nTE CUENTA UNA OFERTA O UN TRATO QUE LE HAN HECHO: es un HECHO, aunque no salga en los datos (lo que se habla por WhatsApp o de palabra, y a veces lo último de LaLiga, no llega a la app). NO le digas que no la ves, que no aparece o que la compruebe: dala por buena y valórala con sus cifras y las de los datos (lo que vale el jugador, su tendencia, lo que ha hecho en la jornada, lo que le daría LaLiga, lo que pagaría un rival y lo que pierde su once), y dile si la acepta, si pide más (cuánto) o si no. Si dice que LaLiga YA le da una cifra por uno suyo, es que ya lo tiene en venta y esa oferta ya está hecha: no le digas que llegará en el próximo cambio ni que tiene que ponerlo a la venta; compárala con su valor y su tendencia y dile si la coge hoy o espera a la de mañana.\n' : '';
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}`.replace(/\n+$/, '') + largoTxt;
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}${noFichaTxt}${dijoAntes}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;

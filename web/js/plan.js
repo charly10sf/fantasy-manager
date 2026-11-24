@@ -184,7 +184,9 @@ function candidatos(X, vetados) {
     const base = { clase: 'aceptar', pid: v.pid, j: v.j, importe: v.mejor.importe, cajaHoy: v.mejor.importe, sale: v.pid, euros: prima - hold, ref: `A-${v.pid}` };
     const op = (extra) => ({ accion: 'vender', ref: `A-${v.pid}`, pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', confianza: v.mejor.sobre >= 0.02 ? 'alta' : 'media', ...extra });
     if (motivo && ver && ver.ok) {
-      nuevo({ ...base, k: `A-${v.pid}`, motivo,
+      // (24 nov, caso-contradicciones) una oferta de un 10 % o más por uno que no entra en tu once es dinero sin pega: va
+      // siempre (antes, con un suplente barato, «no pagaba el paso» y Equipo decía «Aceptar» mientras el plan callaba)
+      nuevo({ ...base, k: `A-${v.pid}`, motivo, ...(v.mejor.sobre >= 0.1 && M.perdida(v.pid) < 0.3 ? { fijo: true } : {}),
         op: () => op({ objetivo: esRev ? 'revender' : null,
           motivo: `${v.porque} Vale ${eur(v.j.valor)}${v.ganado != null ? ` y lo pagaste a ${eur(v.compra)} (${eur(v.ganado, { signo: true })})` : ''}.${ine && hold > 0 ? ` Aguantándolo ${X.dias} día${X.dias === 1 ? '' : 's'} subiría unos ${eur(hold)}: te pagan ya más que eso.` : ''}${pierdeTxt(v.pid)} Si no la aceptas, caduca${v.mejor.caduca ? ` ${cuando(v.mejor.caduca)}` : ''} y LaLiga te hará otra en el siguiente cambio de mercado.`,
           datos: { porque: v.porque, cuanto: `${eur(v.mejor.importe)} (${eur(prima, { signo: true })} sobre su valor)`, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', siNo: 'la oferta caduca y llega otra de LaLiga en el siguiente cambio de mercado' } }) });

@@ -113,11 +113,11 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
     for (const xs of porVeda(expuestos)) {
       const v = xs[0].veda;
       add(`mias-reabre-${v.n}`, v.abre - am, `A las ${cuando(v.abre).split(' ').pop()} se reabren las cláusulas`,
-        `Empieza la jornada ${v.n} y ${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${xs.length > 1 ? 'Si no quieres perderlos, súbeles la cláusula antes o blíndalos a esa hora.' : 'Si no quieres perderlo, súbele la cláusula antes o blíndalo a esa hora.'}`, 'equipo');
+        `Empieza la jornada ${v.n} y ${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${xs.length > 1 ? 'Si no quieres perderlos, blíndalos gratis a esa hora.' : 'Si no quieres perderlo, blíndalo gratis a esa hora.'}`, 'equipo');
     }
     expuestos.filter((x) => !x.veda)
       .forEach((x) => add(`mia-${x.pid}`, x.protegidoHasta - am, `A ${x.j.nombre} le ${A.mias === 1 ? 'queda' : 'quedan'} ${tiempoTxt(A.mias)} de protección`,
-        `Su cláusula es ${eur(x.clausula)} y vale ${eur(x.j.valor)}. Si no quieres perderlo, súbesela.`, 'equipo'));
+        `Su cláusula es ${eur(x.clausula)} y vale ${eur(x.j.valor)}. ${x.noBlindar || ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender' ? 'La app no lo protegería: baja o está para vender.' : 'Si no quieres perderlo, blíndalo gratis cuando se abra.'}`, 'equipo'));
   }
   if (c.mercado) {
     for (const v of M.misVentas || []) {

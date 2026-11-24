@@ -76,7 +76,8 @@ export function avisosNuevos(antes, D, M) {
   const porInercia = M.vendeBaja && M.esperarVenta && M.enVenta ? ventasInercia(M, { conPlan: true }) : (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid));
   const inercia = new Set(porInercia.map((x) => x.pid));
   for (const x of porInercia) {
-    const vi = x.ventaInercia;
+    // (24 nov) el titular que baja todos los días con relevo puede no traer inercia: se vende igual (decide.js)
+    const vi = x.ventaInercia || { urgencia: 'ya', texto: ((M.decision ? M.decision(x.pid) : null) || {}).porque || 'Baja todos los días.' };
     // (24 nov) lo mismo que Hoy: al titular sin relevo que aún no baja todos los días no se le manda vender; con
     // recambio, el cambio
     const cb = M.cambioDe ? M.cambioDe(x.pid) : null;
@@ -90,12 +91,14 @@ export function avisosNuevos(antes, D, M) {
   }
   // (una sanción de un partido no hace vender: se pierde la jornada y se aguanta, salvo que su valor caiga fuerte)
   const vendeBaja = (x) => (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
-  for (const x of (M.mias || []).filter((y) => vendeBaja(y) && !enVenta.has(y.pid) && !inercia.has(y.pid))) {
+  // (24 nov, decide.js) solo si su decisión es venderlo (si has dicho que no lo vendes, no)
+  const decV = (y) => { const d = M.decision ? M.decision(y.pid) : null; return !d || d.accion === 'vender'; };
+  for (const x of (M.mias || []).filter((y) => vendeBaja(y) && decV(y) && !enVenta.has(y.pid) && !inercia.has(y.pid))) {
     const por = x.j.estado === 'suspended' ? (!M.deBaja ? 'sancionado' : M.deBaja(x.j) ? 'sancionado para más de un partido' : 'sancionado y su valor cae deprisa') : x.j.estado === 'injured' ? 'lesionado' : 'fuera de LaLiga';
     out.push({ k: `lesion-venta:${x.pid}:${x.j.estado}`, titulo: `Pon a ${x.j.nombre} en el mercado`, texto: `Está ${por}: no te va a puntuar y puede bajar de valor.`, hash: 'equipo' });
   }
   if (M.ventanaEsp && Date.now() >= M.ventanaEsp.ponerVenta) {
-    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid) && !(M.aguantaReventa && M.aguantaReventa(y)))) {
+    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid) && !(M.aguantaReventa && M.aguantaReventa(y)) && decV(y))) {
       out.push({ k: `revender:${x.pid}:${M.proxima ? M.proxima.n : diaDe()}`, titulo: `Hoy toca poner a ${x.j.nombre} a la venta`, texto: `Lo compraste para revender a ${eur(x.rev.precio)} y vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}). Ponlo ya para que llegue la oferta antes de la jornada.`, hash: 'equipo' });
     }
   }
@@ -135,8 +138,10 @@ export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
   if (!c.on || c.enMercado === false) return [];
   const yo = D.yo && D.yo.teamId;
   const habia = new Set((antes.mercado || []).map((m) => m.pid));
+  // (24 nov, decide.js) lo que el plan ha mirado y no ficha no se avisa como chollo ni con «la app pujaría» (lo que sigues, sí, sin eso)
+  const noF = (m) => !!M.decisionFichar && (M.decisionFichar(m.pid) || {}).accion === 'no';
   const xs = (M.mercado || []).filter((m) => !habia.has(m.pid) && !m.miPuja && m.vendedorTeamId !== yo && m.j
-    && (esFav(m.pid) || (c.jugadores || {})[m.pid] || m.veredicto === 'chollo' || (m.interes || 0) >= Math.max(c.interes || 55, 60)))
+    && (esFav(m.pid) || (c.jugadores || {})[m.pid] || (!noF(m) && (m.veredicto === 'chollo' || (m.interes || 0) >= Math.max(c.interes || 55, 60)))))
     .sort((a, b) => (esFav(b.pid) - esFav(a.pid)) || ((b.interes || 0) - (a.interes || 0)));
   if (!xs.length) return [];
   const de = (m) => (m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : '');
@@ -144,7 +149,7 @@ export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
     return xs.map((m) => ({
       k: `en-mercado:${m.pid}:${diaDe()}`,
       titulo: `${m.j.nombre}, en el mercado`,
-      texto: `${esFav(m.pid) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
+      texto: `${esFav(m.pid) || noF(m) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' && !noF(m) ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
       hash: 'mercado',
     }));
   }

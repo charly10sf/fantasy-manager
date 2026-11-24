@@ -72,6 +72,10 @@ export function cuentasParon(S) {
     if (((M.partidazo(x.pid) || {}).nivel || 0) >= 3) return null;
     const pierde = proyV(ine, x.j);
     if (!(pierde < -Math.max(150000, x.j.valor * 0.012))) return null;
+    // (24 nov, decide.js) solo los que su decisión manda vender: antes aquí salía «vende en lo alto» un titular que Equipo
+    // y el plan aguantaban
+    const dec = M.decision ? M.decision(x.pid) : null;
+    if (dec && dec.accion !== 'vender') return null;
     return { x, ine, pierde, pts: M.perdida ? M.perdida(x.pid) : 0, plan: enPlan(x.pid) };
   }).filter(Boolean).sort((a, b) => a.pierde - b.pierde).slice(0, 6);
   const evita = altos.reduce((s, a) => s - a.pierde, 0);
@@ -89,7 +93,7 @@ export function cuentasParon(S) {
   espNo.sort((a, b) => (b.vendiendo - a.vendiendo) || (b.beneficio - a.beneficio));
   // 3 · aguanta, que sube
   // (lo que el plan de hoy manda vender, p. ej. por una oferta buena, no sale como «aguanta»: manda el plan)
-  const vendePlan = (pid) => !!(S.opPorPid && S.opPorPid[pid] && S.opPorPid[pid].accion === 'vender');
+  const vendePlan = (pid) => !!(S.opPorPid && S.opPorPid[pid] && S.opPorPid[pid].accion === 'vender') || ((M.decision ? M.decision(pid) : null) || {}).accion === 'vender';
   const suben = sinI ? [] : M.mias.map((x) => {
     if (vendePlan(x.pid)) return null;
     const ine = M.inercia(x.pid);
