@@ -3063,7 +3063,6 @@
  ],
  "noticias": {
   "vistas": {
-   "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
    "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000,
@@ -9468,13 +9467,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5900,
+   "ok": 5901,
    "fallos": 0,
-   "ejecuciones": 4757,
+   "ejecuciones": 4758,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-24T07:01:14.607Z"
+   "ultima": "2026-11-24T07:06:15.918Z"
   }
  },
  "ptsDirecto": {},
@@ -9491,15 +9490,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:01:27.583Z"
+   "ultimaBien": "2026-11-24T07:06:24.185Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:01:27.583Z"
+   "ultimaBien": "2026-11-24T07:06:24.185Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:01:27.583Z"
+   "ultimaBien": "2026-11-24T07:06:24.185Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9507,11 +9506,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:01:27.583Z"
+   "ultimaBien": "2026-11-24T07:06:24.185Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:01:27.583Z"
+   "ultimaBien": "2026-11-24T07:06:24.185Z"
   }
  },
  "avisos": [
