@@ -3247,7 +3247,8 @@
    "SPORT|136795046": 1795521999000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
-   "AS|https://as.com/futbol/segunda/bajcetic-no-sale-del-tunel-f202611-n/": 1795465135000
+   "AS|https://as.com/futbol/segunda/bajcetic-no-sale-del-tunel-f202611-n/": 1795465135000,
+   "SPORT|136797133": 1795524053000
   },
   "hechos": [
    {
@@ -3521,7 +3522,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -9510,13 +9511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5982,
+   "ok": 5983,
    "fallos": 0,
-   "ejecuciones": 4839,
+   "ejecuciones": 4840,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T13:46:12.157Z"
+   "ultima": "2026-11-24T13:51:12.672Z"
   }
  },
  "ptsDirecto": {},
@@ -9533,15 +9534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:46:19.828Z"
+   "ultimaBien": "2026-11-24T13:51:22.697Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:46:19.828Z"
+   "ultimaBien": "2026-11-24T13:51:22.697Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:46:19.828Z"
+   "ultimaBien": "2026-11-24T13:51:22.697Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9549,11 +9550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:46:19.828Z"
+   "ultimaBien": "2026-11-24T13:51:22.697Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:46:19.828Z"
+   "ultimaBien": "2026-11-24T13:51:22.697Z"
   }
  },
  "avisos": [
