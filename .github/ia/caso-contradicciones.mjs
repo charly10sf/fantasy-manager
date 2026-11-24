@@ -24,7 +24,7 @@ const ok = (c, t) => { if (!c) mal++; console.log(`${c ? 'BIEN' : 'MAL '} ${t}`)
 // (texto: se evalúa en la página; deja en window.__cc las piezas comunes a todas las partes)
 const COMUN = `
   const Mo = await import('./js/motor.js'), Pm = await import('./js/plan.js'), I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), U = await import('./js/util.js'),
-    Vi = await import('./js/vistas.js'), De = await import('./js/decide.js'), Fo = await import('./js/fondo.js');
+    Vi = await import('./js/vistas.js'), De = await import('./js/decide.js'), Fo = await import('./js/fondo.js'), Av = await import('./js/avisos.js'), Co = await import('./js/comunes.js');
   const S = window.S, c = Dt.cfg();
   const norm = (t) => String(t || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();
   // un paso de la IA que vende a uno tuyo (acepta la oferta si la tiene), repasado por la app
@@ -74,7 +74,7 @@ const COMUN = `
     if (k === 'ia') return val === 'V' ? !vende && !(d.regla === 'plan' && d.antes && d.antes.accion === 'vender') : (vende && d.paso !== 'nada' && d.paso !== 'fichar' && d.paso !== 'esperar');
     return (val === 'V') !== vende;
   };
-  window.__cc = { Mo, Pm, I, Dt, U, Vi, De, Fo, S, c, norm, iaVende, sitios, choca };
+  window.__cc = { Mo, Pm, I, Dt, U, Vi, De, Fo, Av, Co, S, c, norm, iaVende, sitios, choca };
 `;
 
 /* ---------- A. a prueba de azar ---------- */
@@ -84,7 +84,7 @@ for (const escena of ESC) {
   const r = await P.page.evaluate(async ({ N, SEM, escena, COMUN }) => {
     // eslint-disable-next-line no-eval
     await (0, eval)(`(async () => { ${COMUN} })()`);
-    const { Mo, Pm, I, U, Vi, Fo, S, c, sitios, choca } = window.__cc;
+    const { Mo, Pm, I, U, Vi, Fo, Av, S, c, sitios, choca } = window.__cc;
     const D0 = JSON.stringify(S.D), H0 = JSON.stringify(S.H);
     let s = (SEM * 7919 + escena.length * 104729 + escena.charCodeAt(0) * 31) >>> 0;
     const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
@@ -121,6 +121,8 @@ for (const escena of ESC) {
           D.mercado.push({ id: 'v' + j.id, pid: j.id, tipo: 'manager', precio: Math.round(j.valor * 1.1), cierra: fin, pujas: 0, ofertas: of.length, vendedorTeamId: yo, vendedor: D.yo.manager, miPuja: null, clausula: null });
         }
         if (rnd() < 0.25) { const f = pick(mis); if (D.maestro[f.pid]) D.maestro[f.pid].estado = pick(['injured', 'suspended', 'doubtful']); }
+        // cláusulas tuyas casi a su valor y abiertas (proteger)
+        for (const f of mis) if (rnd() < 0.12 && D.maestro[f.pid]) { f.clausula = Math.round(D.maestro[f.pid].valor * (1.02 + rnd() * 0.1)); f.protegidoHasta = Date.now() - 3600e3; }
         // lo que ha dicho él: «a X no lo vendo»
         if (rnd() < 0.12) window.__nv = pick(mis).pid; else window.__nv = null;
       } else window.__nv = null;
@@ -158,6 +160,29 @@ for (const escena of ESC) {
         if (v && v.mejor && d.cifras && d.cifras.oferta != null && d.cifras.oferta !== v.mejor.importe) falla(`${de}; la decisión lleva otra oferta (${d.cifras.oferta} y tiene ${v.mejor.importe})`);
         if (window.__nv && String(window.__nv) === String(x.pid) && (d.accion !== 'aguantar' || d.regla !== 'dicho')) falla(`${de}; dijo que no lo vende`);
       }
+      // (repaso independiente, 24 nov) PROTEGER: al que no se blinda (baja, o su cláusula paga más que venderlo) o se vende, ni
+      // el plan («usa el blindaje en X») ni las alarmas («blíndalo gratis») le mandan blindar; y sin blindajes, tampoco a nadie
+      const planTxt = JSON.stringify([R.diasAuto || [], R.proximos_dias || [], (R.ops || []).filter((o) => !o.descartada).map((o) => [o.accion, o.jugador, o.motivo])]);
+      let alarmas = []; try { alarmas = Av.calcular(D, M, { ...Av.cfgAvisos(), on: true, mias: true, miasTodas: true, mercado: true }, R); } catch (e) { falla(`${escena}#${n}: las alarmas fallan: ${e.message}`); }
+      const sinEscudos = M.escudosMios && !M.escudosMios.quedan;
+      for (const x of M.mias) {
+        if (!x.j) continue;
+        const d = M.decision(x.pid), nom = x.j.nombre, noProt = x.noBlindar || (d && d.accion === 'vender');
+        const blinda = (R.ops || []).some((o) => !o.descartada && o.accion === 'blindar' && String(o.pid) === String(x.pid));
+        if (noProt && !blinda && new RegExp(`[úu]salo en [^.("]*${nom.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(planTxt)) falla(`${escena}#${n} ${nom}: el plan manda gastar el blindaje en él y ${x.noBlindar ? 'la app no lo blindaría' : `su decisión es venderlo (${d.regla}${d.matiz ? '/' + d.matiz : ''}, ${d.paso})`}`);
+        for (const a of alarmas) {
+          const t = `${a.titulo} ${a.texto}`;
+          if (!t.includes(nom) || !/bl[ií]nda(lo|los)? gratis|Blinda gratis/.test(t)) continue;
+          const solo = (t.match(/Blinda gratis a ([^.]*)\./) || [])[1];
+          if (solo ? solo.includes(nom) && (noProt || sinEscudos) : (noProt || sinEscudos || !['alto', 'medio'].includes(x.riesgo))) falla(`${escena}#${n} ${nom}: la alarma «${a.titulo}» manda blindarlo (${sinEscudos ? 'sin blindajes' : noProt ? 'la app no lo protegería' : `riesgo ${x.riesgo}`})`);
+        }
+        // EL ONCE: «no entra en tu once» solo de quien no va en él
+        if (d && /no entra en tu once/.test(d.porque || '') && M.once && M.once.lineas && M.once.lineas.flat().some((y) => y && y.id === x.pid)) falla(`${escena}#${n} ${nom}: la decisión dice «no entra en tu once» y va en el once de la app`);
+      }
+      // HOY CONTRA HOY: con el plan de la app delante, lo urgente no manda clausular ni pujar por lo que el plan no lleva
+      { const u2 = Vi.urgentesDe(Sx).urg.filter((a) => ['pujar', 'clausular'].includes(a.tipo)); if (u2.length) falla(`${escena}#${n}: lo urgente de Hoy manda ${u2.map((a) => a.titulo).join(' y ')} y el plan no lo lleva`); }
+      // LO QUE LEE LA IA: una operación de fichar que el plan no hace (mirada y descartada, plantilla llena, puja que retira) no le llega como «vale»
+      for (const m of datos.matchAll(/^- \[([PCMT])-([^\]]+)\][^\n]*→ LA APP: vale para/gm)) { const df = M.decisionFichar(m[2]); if (df && df.accion === 'no') falla(`${escena}#${n} ${(M.J(m[2]) || {}).nombre}: a la IA le llega «LA APP: vale para…» y el plan no lo ficha («${String(df.porque).slice(0, 80)}»)`); }
       // FICHAR: lo que el plan ha mirado y descartado no lo recomienda nadie
       const urg = Vi.urgentesDe(Sx).urg;
       let nuevosF = []; try { nuevosF = Fo.interesEnMercado({ mercado: [] }, D, M, { on: true, interes: 55, jugadores: {} }); } catch (e) { nuevosF = []; }
@@ -264,6 +289,40 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
   ok(/Aguantar/.test(r.catena.corta) && /titular/.test(r.catena.pill || '') && /se aguanta/.test(r.catena.largo || '') && /^AGUANTAR/.test(r.catena.chat || ''), `C. Catena, titular que ha girado: «${r.catena.corta}» en la pastilla («${r.catena.pill}»), en tu atención («${r.catena.largo}») y en el chat («${r.catena.chat}»)`);
   ok(!r.acc.some((t) => /Rodri/.test(t) && /beneficio/.test(t)) && !r.urg.some((t) => /Vende a Rodri/.test(t)), `C. nada de «Vende a Rodri con beneficio» mientras el plan lo aguanta (${JSON.stringify(r.acc)})`);
   ok(/hace falta el dinero/i.test(r.rodri.corta) === /HACE FALTA EL DINERO/.test(r.rodri.chat || ''), `C. Rodri: «${r.rodri.corta}» y el chat «${r.rodri.chat}»`);
+  await P.cerrar();
+}
+// E. lo que encontró el repaso independiente (24 nov), cada cosa con su escena
+for (const [escena, que] of [['m-25', 'llena'], ['veda', 'retira'], ['martes', 'pastilla']]) {
+  const P = await pagina(escena);
+  const r = await P.page.evaluate(async ({ COMUN, que }) => {
+    // eslint-disable-next-line no-eval
+    await (0, eval)(`(async () => { ${COMUN} })()`);
+    const { Pm, I, Vi, Co, S, c } = window.__cc;
+    const { D, M } = S;
+    const R = Pm.planDeHoy(D, M, c); M.verPlan(R);
+    const Sx = { D, M, plan: R, opPorPid: {} };
+    for (const o of R.ops) if (o.pid && !o.descartada && !Sx.opPorPid[o.pid]) Sx.opPorPid[o.pid] = o;
+    if (que === 'llena') {
+      const datos = I.datosChat('¿A quién ficho?', D, M, c, {});
+      const libres = M.mercado.filter((m) => m.j && !m.miPuja && String(m.vendedorTeamId || '') !== String(D.yo.teamId));
+      return { n: M.mias.length, chollos: libres.filter((m) => /chollo/i.test(Vi.etiquetaFichar(Sx, m.pid))).map((m) => m.j.nombre), vale: [...datos.matchAll(/^- \[[PCMT]-[^\]]+\] [A-ZÁÉÍÓÚ ]+ (?:por |a )?([^,:]+)[^\n]*→ LA APP: vale para/gm)].map((m) => m[1].trim()).slice(0, 4) };
+    }
+    if (que === 'retira') {
+      const o = R.ops.find((y) => y.retira && !y.descartada);
+      if (!o) return { sin: true };
+      const df = M.decisionFichar(o.pid), datos = I.datosChat('¿Qué hago hoy?', D, M, c, {});
+      return { nom: o.jugador, df: df && df.accion, tag: Vi.etiquetaFichar(Sx, o.pid), pasoChat: (datos.match(new RegExp(`^- [^\\n]*${o.jugador}[^\\n]*$`, 'm')) || [''])[0].slice(0, 60), pill: Co.planPill(o).replace(/<[^>]+>/g, '') };
+    }
+    const luego = R.ops.find((y) => y.hoy === false && !y.descartada && y.accion === 'vender');
+    const baena = M.misVentas.find((v) => v.j.nombre === 'Álex Baena');
+    return { pill: luego ? Co.planPill(luego).replace(/<[^>]+>/g, '') : null, nom: luego && luego.jugador, baena: baena ? baena.porque : null, pujas: M.misPujas, dinero: D.dinero };
+  }, { COMUN, que });
+  if (que === 'llena') ok(r.n >= 25 && !r.chollos.length && !r.vale.length, `E. con la plantilla llena (${r.n}), ni Mercado llama «Chollo» a nadie (${JSON.stringify(r.chollos)}) ni a la IA le llega ningún fichaje como «vale» (${JSON.stringify(r.vale)})`);
+  else if (que === 'retira') ok(r.sin || (r.df === 'no' && !/chollo/i.test(r.tag) && /Retirar puja/.test(r.pill) && !/esperar a/.test(r.pasoChat)), r.sin ? 'E. (veda: el plan no retira ninguna puja en esta escena)' : `E. la puja que el plan retira (${r.nom}): Mercado no lo llama chollo («${r.tag}»), la pastilla dice «${r.pill}» y al chat le llega «${r.pasoChat}»`);
+  else {
+    ok(!r.pill || !/ hoy$/.test(r.pill), `E. la pastilla de un paso para otro día (${r.nom}) no dice «hoy»: «${r.pill}»`);
+    ok(!r.baena || !(r.pujas > r.dinero && /\(tienes /.test(r.baena)), `E. con más pujado (${r.pujas}) que saldo (${r.dinero}), la oferta por Baena no dice «no te hace falta el dinero (tienes…)»: «${String(r.baena).slice(0, 120)}»`);
+  }
   await P.cerrar();
 }
 await cerrar();

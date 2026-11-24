@@ -59,6 +59,9 @@ function base(D, M, x, ahora) {
   const ine = M.inercia(pid), t = x.tend || M.tend(pid) || {};
   const pierde = M.perdida(pid), tit = pierde >= 0.3, bs = M.bajaSeguido(pid), vi = x.ventaInercia || null;
   const out = (accion, regla, matiz, porque, mas = {}) => ({ pid, j, accion, regla, matiz, porque, ...mas });
+  // (repaso del 24 nov) puede ir en tu once y no restar puntos al salir (el relevo puntúa parecido): no es «no entra en tu once»
+  const enOnce = !!(M.once && M.once.lineas && M.once.lineas.flat().some((y) => y && y.id === pid));
+  const sitio = enOnce ? 'en tu once tiene relevo (sin él no pierdes puntos)' : 'no entra en tu once';
   // 1. lo ha dicho él
   if (M.noVender && M.noVender.has(pid)) return out('aguantar', 'dicho', 'dicho', 'Me dijiste que no lo vendes.');
   // 2. el entrenador
@@ -104,8 +107,8 @@ function base(D, M, x, ahora) {
     if (vi.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula') return out('aguantar', 'clausula', 'clausula', `Se frena, pero su cláusula (${eur(x.clausula)}) paga más que LaLiga y a algún rival le llega: si te lo clausulan, cobras más.`);
     const hoy = num(vi.ult) < 0 ? ` (hoy ${eur(vi.ult, { signo: true })})` : '';
     return vi.urgencia === 'ya'
-      ? out('vender', 'inercia', null, `Ha girado a la baja${hoy} y no entra en tu once: cada día vale menos.`)
-      : out('vender', 'inercia', 'antes-del-giro', 'Ha dejado de subir y no entra en tu once: véndelo antes de que gire.');
+      ? out('vender', 'inercia', null, `Ha girado a la baja${hoy} y ${sitio}: cada día vale menos.`)
+      : out('vender', 'inercia', 'antes-del-giro', `Ha dejado de subir y ${sitio}: véndelo antes de que gire.`);
   }
   // 12. con beneficio y cayendo
   if (((M.partidazo(pid) || {}).nivel || 0) < 2 && x.ganado > 0 && P7(t) != null && P7(t) < -4 && !M.esperarVenta(x).tipo) {
@@ -299,7 +302,12 @@ export function decidir(D, M, c = null) {
     if (!pid || (M.dueno && M.dueno[pid] === yo)) return null;
     const P = planDe();
     if (!P) return null;
+    // la puja que el plan manda retirar
+    const ret = vivas(P).find((y) => String(y.pid) === String(pid) && y.retira);
+    if (ret) return { pid, accion: 'no', retira: true, porque: `El plan retira tu puja: ${String((ret.datos && ret.datos.porque) || 'con ella ganada empezarías la jornada en negativo')}.` };
     const o = vivas(P).find((y) => String(y.pid) === String(pid) && ['pujar', 'comprar', 'clausular', 'ofertar'].includes(y.accion));
+    // con la plantilla llena (25) LaLiga no deja fichar a nadie más (Carlos, 20 nov)
+    if (!o && (M.mias || []).length >= 25) return { pid, accion: 'no', porque: 'Tienes la plantilla llena (25): no puedes fichar a nadie más hasta que vendas a uno.' };
     if (o) return { pid, accion: 'fichar', como: o.accion, para: String(o.objetivo || 'titular'), importe: o.puja_max || o.importe || null, porque: (o.datos && o.datos.porque) || '' };
     const quita = (t) => String(t || '').replace(/^La app lo descarta[.:]?\s*/, '');
     const dm = (P.descartes || []).find((y) => y && String(y.pid) === String(pid));

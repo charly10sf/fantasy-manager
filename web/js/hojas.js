@@ -312,7 +312,7 @@ export function fichaJugador(S, pid) {
   if (op && !planDentro) h += avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
   // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
   const dpl = !op && descartePlan(S, pid);
-  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : 'pujes'}`, texto: dpl.aviso || '' });
+  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : (S.M.clausulas || []).some((y) => String(y.pid) === String(pid)) && !(S.M.mercado || []).some((y) => String(y.pid) === String(pid)) ? 'lo clausules' : 'pujes'}`, texto: dpl.aviso || '' });
   notasPlan(S, { j }).forEach(([et, t], n) => { h += avisoDeTexto(S, { k: `nota${n}`, pid, cls: 'azul', ico: 'ia', t: et, texto: t }); });
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;

@@ -2254,6 +2254,10 @@ export function analizar(D, H, c, extra = {}) {
   // el que sale tiene relevo y su oferta se acepta (10 días)
   const CAMB = extra.cambios || {};
   M.cambioHecho = (pid) => { const c = CAMB[pid]; return !!c && !!c.entra && M.dueno[c.entra] === yoTid && ahora - (c.t || 0) < 10 * DIA; };
+  // (repaso del 24 nov) «no te hace falta el dinero (tienes 6,43 M)» con 36 M pujados y el plan vendiendo para no empezar en
+  // negativo: la cifra del saldo solo se dice si de verdad sobra (contando lo pujado); y «no entra en tu once», solo si no va en él
+  const tienesTxt = num(D.dinero) - num(M.misPujas) >= 0 ? ` (tienes ${eur(D.dinero)})` : ' hoy';
+  const enOnceV = (pid) => !!(M.once && M.once.lineas && M.once.lineas.flat().some((y) => y && y.id === pid));
   M.misVentas =(D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
     const j = J(v.pid), t = M.tend(v.pid);
     const mia = (D.plantillas[yoTid] || []).find((f) => f.pid === v.pid);
@@ -2303,7 +2307,7 @@ export function analizar(D, H, c, extra = {}) {
       && (() => { const r = ine ? num(ine.ult) : num(t.d1), dias = (mejor.importe - j.valor) / r; return dias <= (M.perdida(v.pid) >= 0.3 ? 6 : 3); })()) {
       const r = ine ? num(ine.ult) : num(t.d1), prima = mejor.importe - j.valor, dias = Math.max(1, Math.round(prima / r)), once = M.perdida(v.pid) >= 0.3;
       consejo = 'esperar';
-      porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero (tienes ${eur(D.dinero)}): los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
+      porque = `Sigue subiendo (${eur(r, { signo: true })} al día${P7(t) != null ? `, ${pct(P7(t))} en 7 días` : ''}) y no te hace falta el dinero${tienesTxt}: los ${eur(prima)} que te pagan de más los gana solo en ${dias === 1 ? 'un día' : `unos ${dias} días`}${once ? ', y es de tu once' : ''}. Aguántalo; acéptala solo si quieres hacer caja.`;
     }
     // (23 nov, Carlos: Gulácsi, portero titular al 92 %, con buenos puntos, partido fácil y que hoy deja de bajar, y la app
     // mandaba aceptar un 7 % «porque te pagan más de lo que vale») aceptar una oferta es venderlo. Por poco más de lo que
@@ -2342,7 +2346,7 @@ export function analizar(D, H, c, extra = {}) {
     else if (num(D.dinero) >= 0 && M.perdida(v.pid) < 0.3 && !M.vendeBaja({ j, tend: t }) && !(liga && liga.posicion === 'alta')
       && !(ine && j.valor && num(ine.ult) < -0.03 * j.valor) && !(t.p1 != null && t.p1 < -3)) {
       consejo = 'esperar';
-      porque = M.sancionCorta(j) ? `${M.sancionCortaTxt(j)} No te hace falta el dinero (tienes ${eur(D.dinero)}): puede quedarse hasta que LaLiga te haga una oferta mejor.` : `No te hace falta el dinero (tienes ${eur(D.dinero)}) y no entra en tu once: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
+      porque = M.sancionCorta(j) ? `${M.sancionCortaTxt(j)} No te hace falta el dinero${tienesTxt}: puede quedarse hasta que LaLiga te haga una oferta mejor.` : `No te hace falta el dinero${tienesTxt} y ${enOnceV(v.pid) ? 'en tu once tiene relevo' : 'no entra en tu once'}: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
     }
     // salvo que acabe de hacer 8 puntos o más: ahí lo normal es que la bajada se frene o se dé la vuelta, y venderlo hoy
     // es hacerlo en el peor momento (con dinero en positivo no hay prisa)

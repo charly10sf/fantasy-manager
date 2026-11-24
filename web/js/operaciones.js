@@ -279,7 +279,10 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     if (!ops.length) return;
     L.push(`\n${titulo}`);
     for (const o of ops.slice(0, n)) {
-      const x = v(o);
+      let x = v(o);
+      // (24 nov, repaso) fichar: lo que dice el plan que se ve manda (mirado y descartado, plantilla llena, puja que se retira)
+      const df = M && M.decisionFichar && /^[PCMT]-/.test(o.ref) ? M.decisionFichar(o.pid) : null;
+      if (df && df.accion === 'no' && x && x.ok) x = { ok: false, aviso: df.porque };
       L.push(`- [${o.ref}] ${textoOp(o, M)}${x && x.ok && x.para ? ` → LA APP: vale para ${x.para}${x.aviso ? `. ${corta(x.aviso, 220)}` : ''}` : x && x.ok && x.aviso ? ` → LA APP: ${corta(x.aviso, 220)}` : x && !x.ok ? ` → LA APP NO LA HARÍA HOY${x.sinPrisa ? ' (sin prisa)' : ''}: ${corta(x.aviso, 220)}` : ''}`);
       const d = datos && datos(o);
       if (d) L.push(`    ${d}`);

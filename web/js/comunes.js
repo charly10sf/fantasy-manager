@@ -282,7 +282,7 @@ export function campoVivo(M, ids) {
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
-export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.etiqueta || ACC[op.accion] || op.accion} hoy</span>` : '');
+export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.retira ? 'Retirar puja' : op.etiqueta || ACC[op.accion] || op.accion}${op.hoy === false ? ' · otro día' : ' hoy'}</span>` : '');
 
 /* la probabilidad de ser titular al lado del nombre, en todas las listas: el motor lo pone la app cada vez que lo rehace */
 let MF = null;

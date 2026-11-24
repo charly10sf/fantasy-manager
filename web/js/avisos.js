@@ -107,17 +107,21 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
       });
   }
   if (c.mias) {
+    // (24 nov, repaso) qué hacer lo dice la app igual que en Hoy y en la ficha: blindar gratis solo a los que protegería (en
+    // riesgo, sin `noBlindar` y que no se venden) y si quedan blindajes; si no, la alarma solo avisa
+    const protege = (x) => ['alto', 'medio'].includes(x.riesgo) && !x.noBlindar && ((M.decision ? M.decision(x.pid) : null) || {}).accion !== 'vender';
+    const protTxt = (xs) => { const p = xs.filter(protege), q = M.escudosMios ? M.escudosMios.quedan : 0; return !p.length ? '' : q ? ` ${p.length === xs.length ? (p.length > 1 ? 'Si no quieres perderlos, blíndalos gratis a esa hora.' : 'Si no quieres perderlo, blíndalo gratis a esa hora.') : `Blinda gratis a ${p.map((y) => y.j.nombre).join(' y ')}.`}` : ' No te quedan blindajes gratis esta jornada.'; };
     // las que están baratas (ratio < 1,6) o, si lo eliges, todas
     const am = A.mias * MIN;
     const expuestos = M.mias.filter((x) => !x.abierta && x.abreEn < 7 * DIA && (c.miasTodas || (x.ratio != null && x.ratio < 1.6)));
     for (const xs of porVeda(expuestos)) {
       const v = xs[0].veda;
       add(`mias-reabre-${v.n}`, v.abre - am, `A las ${cuando(v.abre).split(' ').pop()} se reabren las cláusulas`,
-        `Empieza la jornada ${v.n} y ${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${xs.length > 1 ? 'Si no quieres perderlos, blíndalos gratis a esa hora.' : 'Si no quieres perderlo, blíndalo gratis a esa hora.'}`, 'equipo');
+        `Empieza la jornada ${v.n} y ${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${protTxt(xs).trim()}`, 'equipo');
     }
     expuestos.filter((x) => !x.veda)
       .forEach((x) => add(`mia-${x.pid}`, x.protegidoHasta - am, `A ${x.j.nombre} le ${A.mias === 1 ? 'queda' : 'quedan'} ${tiempoTxt(A.mias)} de protección`,
-        `Su cláusula es ${eur(x.clausula)} y vale ${eur(x.j.valor)}. ${x.noBlindar || ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender' ? 'La app no lo protegería: baja o está para vender.' : 'Si no quieres perderlo, blíndalo gratis cuando se abra.'}`, 'equipo'));
+        `Su cláusula es ${eur(x.clausula)} y vale ${eur(x.j.valor)}.${protTxt([x])}`, 'equipo'));
   }
   if (c.mercado) {
     for (const v of M.misVentas || []) {

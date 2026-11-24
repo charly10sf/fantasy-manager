@@ -146,7 +146,7 @@ function candidatos(X, vetados) {
   const nuevo = (o) => { if (vetados.has(o.k) || (o.sale && noVende.has(o.sale))) return; (o.fijo ? fijos : out).push(o); };
   const enVenta = M.enVenta || new Set();
   const revPids = new Set((M.paraRevender || []).map((x) => x.pid));
-  const pierdeTxt = (pid) => { const p = M.perdida(pid); return p >= 0.3 ? ` Es titular en tu once (${d1(p)} pts por jornada).${X.enJuego ? ' Con la jornada ya empezada, lo que haga en esta te cuenta aunque lo vendas ahora.' : ''}` : ' No entra en tu once: no pierdes puntos.'; };
+  const pierdeTxt = (pid) => { const p = M.perdida(pid); return p >= 0.3 ? ` Es titular en tu once (${d1(p)} pts por jornada).${X.enJuego ? ' Con la jornada ya empezada, lo que haga en esta te cuenta aunque lo vendas ahora.' : ''}` : (M.once && M.once.lineas && M.once.lineas.flat().some((y) => y && y.id === pid) ? ' En tu once tiene relevo: no pierdes puntos.' : ' No entra en tu once: no pierdes puntos.'); };
   // (24 nov, avisos de Domy y de Carlos) lo pagado de más por uno que se queda en tu equipo: si sube, parte vuelve sola
   // (`M.subeTeniendo`, al 60 % y nunca más que lo pagado de más: no cuenta como ganancia, solo deja de contar como pérdida)
   const deMasNeto = (j, tend, precio) => { const dm = precio - j.valor; return dm > 0 && M.subeTeniendo ? dm - 0.6 * Math.min(dm, M.subeTeniendo(j, tend)) : dm; };
@@ -184,9 +184,10 @@ function candidatos(X, vetados) {
     const base = { clase: 'aceptar', pid: v.pid, j: v.j, importe: v.mejor.importe, cajaHoy: v.mejor.importe, sale: v.pid, euros: prima - hold, ref: `A-${v.pid}` };
     const op = (extra) => ({ accion: 'vender', ref: `A-${v.pid}`, pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', confianza: v.mejor.sobre >= 0.02 ? 'alta' : 'media', ...extra });
     if (motivo && ver && ver.ok) {
-      // (24 nov, caso-contradicciones) una oferta de un 10 % o más por uno que no entra en tu once es dinero sin pega: va
-      // siempre (antes, con un suplente barato, «no pagaba el paso» y Equipo decía «Aceptar» mientras el plan callaba)
-      nuevo({ ...base, k: `A-${v.pid}`, motivo, ...(v.mejor.sobre >= 0.1 && M.perdida(v.pid) < 0.3 ? { fijo: true } : {}),
+      // (24 nov, caso-contradicciones) una oferta de un 10 % o más que la regla acepta va siempre (Carlos, 17 nov: «la de un
+      // 12 % por encima… sí»): antes, con un suplente barato «no pagaba el paso» y con un titular «pesaban más los puntos», y
+      // Equipo decía «Aceptar» mientras el plan callaba. Solo no se toca a un titular con las cláusulas ya cerradas
+      nuevo({ ...base, k: `A-${v.pid}`, motivo, ...(v.mejor.sobre >= 0.1 && (M.perdida(v.pid) < 0.3 || !X.cierre) ? { fijo: true } : {}),
         op: () => op({ objetivo: esRev ? 'revender' : null,
           motivo: `${v.porque} Vale ${eur(v.j.valor)}${v.ganado != null ? ` y lo pagaste a ${eur(v.compra)} (${eur(v.ganado, { signo: true })})` : ''}.${ine && hold > 0 ? ` Aguantándolo ${X.dias} día${X.dias === 1 ? '' : 's'} subiría unos ${eur(hold)}: te pagan ya más que eso.` : ''}${pierdeTxt(v.pid)} Si no la aceptas, caduca${v.mejor.caduca ? ` ${cuando(v.mejor.caduca)}` : ''} y LaLiga te hará otra en el siguiente cambio de mercado.`,
           datos: { porque: v.porque, cuanto: `${eur(v.mejor.importe)} (${eur(prima, { signo: true })} sobre su valor)`, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', siNo: 'la oferta caduca y llega otra de LaLiga en el siguiente cambio de mercado' } }) });
@@ -686,7 +687,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const tocados = onceFijo.lineas.flat().filter((j) => j.estado === 'doubtful');
     const sancionados = M.mias.filter((x) => !vendidos.has(x.pid) && M.sancionCorta(x.j));
     ops.push({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: antesDe(inicio), confianza: 'media',
-      motivo: `Pon el ${onceFijo.nombre}: ${onceFijo.lineas.flat().map((j) => j.nombre).join(', ')}.${onceFijo.huecos ? ` Te faltan ${onceFijo.huecos} para completarlo.` : ''}${pujados.length ? ` Si ganas la puja por ${pujados.join(' y ')}, mételo${pujados.length > 1 ? 's' : ''} en el once antes de que empiece la jornada.` : ''}${tocados.length ? ` Ojo con ${tocados.map((j) => j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
+      motivo: `Pon el ${onceFijo.nombre}: ${onceFijo.lineas.flat().map((j) => j.nombre).join(', ')}.${onceFijo.huecos ? ` Te faltan ${onceFijo.huecos} para completarlo.` : ''}${pujados.length && M.cierreMercado && M.proxima && M.cierreMercado < M.proxima.ini ? ` Si ganas la puja por ${pujados.join(' y ')}, mételo${pujados.length > 1 ? 's' : ''} en el once antes de que empiece la jornada.` : ''}${tocados.length ? ` Ojo con ${tocados.map((j) => j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
   }
   if (!ops.length) {
     ops.push({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', confianza: 'media',
@@ -755,7 +756,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const E = M.escudosMios || {};
     const usadosHoy = ops.filter((o) => o.accion === 'blindar' && !o.importe).length;
     const quedan = E.hasta && inicio > E.hasta ? 2 : Math.max(0, (E.quedan || 0) - usadosHoy);
-    const aTiro = M.mias.filter((y) => !vendidos.has(y.pid) && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
+    const aTiro = M.mias.filter((y) => !vendidos.has(y.pid) && !lista.some((o) => o.pid === y.pid && ['vender', 'aceptar'].includes(o.clase)) && !y.noBlindar && ((M.decisionBase ? M.decisionBase(y.pid) : null) || {}).accion !== 'vender' && M.perdida(y.pid) >= 0.3 && y.clausula && y.clausula <= y.j.valor * 1.1 && (!y.protegidoHasta || y.protegidoHasta <= inicio + 6 * HORA)).sort((a, b) => M.perdida(b.pid) - M.perdida(a.pid));
     if (quedan > 0 && aTiro.length) add(inicio, 98, `${hora(inicio)} se reabren las cláusulas: si te queda un blindaje gratis, úsalo en ${aTiro.slice(0, quedan).map((y) => y.j.nombre).join(' y ')} (su cláusula está casi en su valor)`);
   }
   if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);

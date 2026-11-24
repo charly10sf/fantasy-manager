@@ -285,7 +285,10 @@ export function urgentesDe(S) {
   // (24 nov, decide.js) y lo de vender o buscar sustituto, solo si es lo que dice la decisión del jugador con el plan delante
   const segunDec = (a) => { if (!a.pid || !M.decision || !['vender', 'sustituto'].includes(a.tipo)) return true; const d = M.decision(a.pid); return !d || (a.tipo === 'vender' ? d.accion === 'vender' && d.matiz !== 'por-dinero' : d.accion === 'aguantar'); };
   const noFicha = (a) => !!a.pid && ['pujar', 'clausular'].includes(a.tipo) && !!M.decisionFichar && (M.decisionFichar(a.pid) || {}).accion === 'no';
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !noFicha(a) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
+  // (repaso del 24 nov) con el plan de la app delante (el de ahora), una cláusula o una puja que el plan no lleva no es
+  // urgente: el plan la ha tenido entre lo posible y no la ha elegido (salían dos «Clausula a…» que juntas no cabían)
+  const planDeAhora = !!(P && P.motor && !conIA);
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !noFicha(a) && !(planDeAhora && a.pid && ['pujar', 'clausular'].includes(a.tipo)) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
   // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
   // arriba y el plan de debajo sin Rodri, sin explicar nada)
   const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];
@@ -881,7 +884,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   }
   const sub = real ? `el tuyo en LaLiga · J${V.n} en directo` : mio ? 'el que tienes puesto en LaLiga' : deIA ? 'el de la IA' : 'el mejor según la app';
   const cambiosApp = deIA && al.cambiosApp ? `, con ${al.cambiosApp > 1 ? `${al.cambiosApp} cambios` : 'un cambio'} de la app` : '';
-  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${mio ? 'El que tienes puesto en LaLiga.' : deIA ? `El que propone la IA${cambiosApp}.` : 'El mejor según la app. Cuando la app vea el que tienes puesto en LaLiga, saldrá aquí.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
+  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${mio ? 'El que tienes puesto en LaLiga.' : deIA ? `El que propone ${S.plan && (S.plan.auto || (S.plan.motor && !S.plan.modelo)) ? 'la app' : 'la IA'}${cambiosApp}.` : 'El mejor según la app. Cuando la app vea el que tienes puesto en LaLiga, saldrá aquí.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
   h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp${V ? ' pp-vivo' : ''}">${cabPts}</span>
     <div class="campo-modo">${[['pp', 'Puntos'], ['valor', 'Valor'], ['forma', 'Forma']].map(([k, t]) => `<button data-filtro="campo:${k}" class="${modo === k ? 'activo' : ''}">${t}</button>`).join('')}</div></div>`;
   const cambios = mio && rec ? cambiosOnce(M, lineas, form, rec) : null;
@@ -929,6 +932,8 @@ export function veredictoOnce(M, tit, cambios, plan = null) {
   // como fichaje quien el plan ha mirado y descartado (o probado y no elegido), y va delante quien el plan ficha
   const ficha = new Set(((plan && plan.ops) || []).filter((o) => !o.descartada && !o.sugerencia && ['pujar', 'comprar', 'clausular'].includes(o.accion) && o.pid).map((o) => String(o.pid)));
   const noPlan = new Set([...((plan && plan.descartes) || []).map((d) => String(d && d.pid)), ...((plan && plan.cuentas && plan.cuentas.claves) || []).filter((k) => /^[PG]-/.test(k)).map((k) => k.slice(2))].filter((pid) => pid && !ficha.has(pid)));
+  // (repaso del 24 nov) y lo que el plan no ficha por otra razón (plantilla llena, el parón, no te llega…)
+  for (const m of M.mercado || []) if (M.decisionFichar && !ficha.has(String(m.pid)) && (M.decisionFichar(m.pid) || {}).accion === 'no') noPlan.add(String(m.pid));
   const tp = (j) => { const T = M.titularidad ? M.titularidad(j) : null; return T ? T.p : null; };
   const pp = (j) => (j && j.pos < 5 ? M.ppEsperado(j) : 0);
   const salen = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
@@ -1476,15 +1481,19 @@ export function mercado(S) {
       if (dp) return `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope)}` : 'El plan lo descarta'}</span>`;
       return '';
     };
-    const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid); return filaJugador(m, {
+    // (repaso del 24 nov) la puja de la derecha es la del paso del plan si lo lleva (para revender no es la misma que para el
+    // once); si el plan lo descarta o retira tu puja, no se enseña puja ni «Chollo»
+    const opM = (m) => (S.opPorPid || {})[m.pid] || null;
+    const pujaDe = (m) => { const o = opM(m); return o && ['pujar', 'comprar'].includes(o.accion) && (o.puja_max || o.importe) ? (o.puja_max || o.importe) : m.puja; };
+    const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid) || !!ap || !!(opM(m) && opM(m).retira); return filaJugador(m, {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
         m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá: ${esc(m.noVende.replace(/^es /, ''))}</span>` : '',
-        ap, estadoPill(m.j), m.noVende || ap ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
+        ap, estadoPill(m.j), m.noVende || ap || (opM(m) && opM(m).retira) ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
         m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
       ],
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja)}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(pujaDe(m))}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
     }); };
     const PL = M.pujasLiga;
     // (por tramos de valor: cuanto más barato, más se paga en porcentaje; Carlos, 30 oct)
@@ -1585,7 +1594,7 @@ function favoritosHTML(S, { tagV }) {
     const pills = [
       enM ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'A la venta' : 'Libre'} · ${eur(enM.precio)}</span>` : '',
       enM && enM.miPuja ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(enM.miPuja)}</span>` : '',
-      cl ? clausulaPill(cl) : '', estadoPill(j), enM ? tagV[enM.veredicto] || '' : '', calPill(M, j, { soloDuro: true }),
+      cl ? clausulaPill(cl) : '', estadoPill(j), enM ? (descartePlan(S, j.id) ? '<span class="pill duda">El plan lo descarta</span>' : tagV[enM.veredicto] || '') : '', calPill(M, j, { soloDuro: true }),
     ];
     const precio = enM ? enM.precio : cl ? cl.clausula : null;
     return { hoy, html: filaJugador({ j, tend: t }, { sub, pills, derecha: `<div class="v">${eur(precio || j.valor)}</div><div class="d">${precio && precio !== j.valor ? `vale ${eur(j.valor, { dec: 1 })}` : delta(t)}</div>`, op: S.opPorPid[pid] }) };
