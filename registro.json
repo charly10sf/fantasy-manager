@@ -3233,7 +3233,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
    "SPORT|136783558": 1795512757000,
    "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000
   },
   "hechos": [
    {
@@ -3527,7 +3528,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -9515,13 +9516,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5948,
+   "ok": 5949,
    "fallos": 0,
-   "ejecuciones": 4805,
+   "ejecuciones": 4806,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T10:56:19.713Z"
+   "ultima": "2026-11-24T11:01:12.159Z"
   }
  },
  "ptsDirecto": {},
@@ -9538,15 +9539,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:58:00.630Z"
+   "ultimaBien": "2026-11-24T11:01:22.113Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:58:00.630Z"
+   "ultimaBien": "2026-11-24T11:01:22.113Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:58:00.630Z"
+   "ultimaBien": "2026-11-24T11:01:22.113Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9554,11 +9555,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:58:00.630Z"
+   "ultimaBien": "2026-11-24T11:01:22.113Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:58:00.630Z"
+   "ultimaBien": "2026-11-24T11:01:22.113Z"
   }
  },
  "avisos": [
