@@ -3234,7 +3234,9 @@
    "SPORT|136783558": 1795512757000,
    "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
+   "SPORT|136787219": 1795514571000,
+   "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000
   },
   "hechos": [
    {
@@ -3524,11 +3526,23 @@
     "motivo": "nueva lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136787219",
+    "medio": "SPORT",
+    "t": 1795514571000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lemar sufre una nueva lesión tras jugar",
+    "motivo": "lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -9516,13 +9530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5949,
+   "ok": 5950,
    "fallos": 0,
-   "ejecuciones": 4806,
+   "ejecuciones": 4807,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:01:12.159Z"
+   "ultima": "2026-11-24T11:06:27.128Z"
   }
  },
  "ptsDirecto": {},
@@ -9539,15 +9553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:01:22.113Z"
+   "ultimaBien": "2026-11-24T11:07:14.564Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:01:22.113Z"
+   "ultimaBien": "2026-11-24T11:07:14.564Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:01:22.113Z"
+   "ultimaBien": "2026-11-24T11:07:14.564Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9555,11 +9569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:01:22.113Z"
+   "ultimaBien": "2026-11-24T11:07:14.564Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:01:22.113Z"
+   "ultimaBien": "2026-11-24T11:07:14.564Z"
   }
  },
  "avisos": [
