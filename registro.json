@@ -3079,7 +3079,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-lucas-boye-alaves-2-deportivo-1-20261121_3479652.html": 1795271367000,
@@ -3241,18 +3240,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000
   },
   "hechos": [
-   {
-    "guid": "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html",
-    "medio": "La Vanguardia",
-    "t": 1795266096000,
-    "id": "1775",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Cubarsí descansará contra el Villarreal por decisión de Flick",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html",
     "medio": "Mundo Deportivo",
@@ -9500,13 +9487,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5973,
+   "ok": 5974,
    "fallos": 0,
-   "ejecuciones": 4830,
+   "ejecuciones": 4831,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T13:01:20.327Z"
+   "ultima": "2026-11-24T13:06:20.604Z"
   }
  },
  "ptsDirecto": {},
@@ -9523,15 +9510,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:02:35.330Z"
+   "ultimaBien": "2026-11-24T13:06:26.248Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:02:35.330Z"
+   "ultimaBien": "2026-11-24T13:06:26.248Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:02:35.330Z"
+   "ultimaBien": "2026-11-24T13:06:26.248Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9539,11 +9526,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:02:35.330Z"
+   "ultimaBien": "2026-11-24T13:06:26.248Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:02:35.330Z"
+   "ultimaBien": "2026-11-24T13:06:26.248Z"
   }
  },
  "avisos": [
