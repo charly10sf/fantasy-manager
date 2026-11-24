@@ -3247,7 +3247,8 @@
    "AS|https://as.com/futbol/condenan-a-casi-16-anos-de-carcel-a-un-exojeador-de-osasuna-por-abusar-de-menores-f202611-n/": 1795534730000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000,
-   "SPORT|136803573": 1795533788000
+   "SPORT|136803573": 1795533788000,
+   "SPORT|136802760": 1795532721000
   },
   "hechos": [
    {
@@ -3521,7 +3522,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -9506,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6016,
+   "ok": 6017,
    "fallos": 0,
-   "ejecuciones": 4873,
+   "ejecuciones": 4874,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T16:36:13.875Z"
+   "ultima": "2026-11-24T16:41:19.647Z"
   }
  },
  "ptsDirecto": {},
@@ -9529,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:36:21.099Z"
+   "ultimaBien": "2026-11-24T16:42:00.509Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:36:21.099Z"
+   "ultimaBien": "2026-11-24T16:42:00.509Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:36:21.099Z"
+   "ultimaBien": "2026-11-24T16:42:00.509Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9545,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:36:21.099Z"
+   "ultimaBien": "2026-11-24T16:42:00.509Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:36:21.099Z"
+   "ultimaBien": "2026-11-24T16:42:00.509Z"
   }
  },
  "avisos": [
