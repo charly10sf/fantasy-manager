@@ -3236,7 +3236,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000,
    "SPORT|136810666": 1795544869000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261124/1004255072/aramburu-luka-sucic-margen-zubieta-dos-dias-partido-londres.html": 1795548702000,
-   "SPORT|136809414": 1795547078000
+   "SPORT|136809414": 1795547078000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000
   },
   "hechos": [
    {
@@ -3474,7 +3475,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -9461,13 +9462,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6062,
+   "ok": 6063,
    "fallos": 0,
-   "ejecuciones": 4919,
+   "ejecuciones": 4920,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T20:26:13.532Z"
+   "ultima": "2026-11-24T20:31:14.169Z"
   }
  },
  "ptsDirecto": {},
@@ -9484,15 +9485,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T20:26:16.651Z"
+   "ultimaBien": "2026-11-24T20:31:23.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T20:26:16.651Z"
+   "ultimaBien": "2026-11-24T20:31:23.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T20:26:16.651Z"
+   "ultimaBien": "2026-11-24T20:31:23.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9500,11 +9501,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T20:26:16.651Z"
+   "ultimaBien": "2026-11-24T20:31:23.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T20:26:16.651Z"
+   "ultimaBien": "2026-11-24T20:31:23.245Z"
   }
  },
  "avisos": [
