@@ -1355,10 +1355,12 @@ export function opsCuadradas(ops) {
     importe: o.importe || null,
     estado: o.ya ? 'hecho' : o.descartada ? 'descartada' : o.sugerencia ? 'sugerencia' : 'ok',
     porque: o.descartada ? motivoCorto(o.aviso) : null,
+    // (24 nov) la app lo ha sacado al repasar el plan con los datos de ahora: lo que dice ahora
+    ...(o.descartada && o.decAhora ? { ahora: o.decAhora.corta } : {}),
   }));
 }
 export function opsTxt(l) {
-  return (l || []).map((o) => `${o.accion} ${o.jugador}${o.importe ? ` ${eur(o.importe)}` : ''}${o.estado === 'descartada' ? ` (LA APP LO DESCARTÓ${o.porque ? `: ${o.porque}` : ''}; no lo recomendaste al final)` : o.estado === 'sugerencia' ? ' (sugerencia sin prisa)' : o.estado === 'hecho' ? ' (ya hecho)' : ''}`).join('; ');
+  return (l || []).map((o) => `${o.accion} ${o.jugador}${o.importe ? ` ${eur(o.importe)}` : ''}${o.estado === 'descartada' && o.ahora ? ` (ESO DECÍA EL PLAN; CON LOS DATOS DE AHORA LA APP DICE «${o.ahora}»)` : o.estado === 'descartada' ? ` (LA APP LO DESCARTÓ${o.porque ? `: ${o.porque}` : ''}; no lo recomendaste al final)` : o.estado === 'sugerencia' ? ' (sugerencia sin prisa)' : o.estado === 'hecho' ? ' (ya hecho)' : ''}`).join('; ');
 }
 
 const T = (type, extra = {}) => ({ type, ...extra });

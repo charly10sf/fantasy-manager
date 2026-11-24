@@ -189,6 +189,24 @@ export function cotejar(r) {
     // (22 nov) alinear no es un paso del plan: el once va aparte
     for (const x of r.recomiendo.filter((y) => y.accion !== 'alinear')) if (!r.plan.some((o) => sinT(o.jugador) === sinT(x.jugador) && (o.accion === x.accion || (o.accion === 'vender' && x.accion === 'aceptar_oferta')))) marcas.push(`fuera del plan: ${x.accion} ${x.jugador}`);
   }
+  // (24 nov, Senna) contra la decisión de la app: de cada jugador suyo que los datos traen con «LA DECISIÓN DE LA APP: …»
+  // (antes, «VEREDICTO»), lo que la respuesta manda hacer con él tiene que ser eso: no «vende» al que se aguanta, ni
+  // «aguanta» al que se vende hoy, ni «acepta la oferta» cuando la decisión es que esa oferta no
+  for (const m of String(r.datos || '').matchAll(/^- ([^(\n]+?) \(vale [^\n]*?(?:LA DECISIÓN|VEREDICTO) DE LA APP: ([^\n]{0,60})/gm)) {
+    const nom = sinT(m[1].trim()), dec = m[2];
+    const vende = /^VENDER/.test(dec), noEsta = /ESTA OFERTA NO|NO ACEPTAR/.test(dec);
+    const ult = nom.split(' ').pop();
+    for (const fr of principal.split(/(?<=[.!?;:])\s+|\n+/)) {
+      const k = sinT(fr);
+      if (!(k.includes(nom) || (ult.length >= 4 && new RegExp(`\\b${ult}\\b`).test(k)))) continue;
+      const noV = /\b(no|nunca|ni)\b[^,.;]{0,16}\b(vend|acept)|\b(aguanta(lo|r|rlo)?|quedate(lo)?|mantenlo|conservalo)\b/.test(k);
+      const siV = !noV && /\b(vende(lo|r|rlo)?|vendas|vendelo|acepta(la|r|rla)?|deshazte)\b/.test(k) && !/\b(si|cuando|salvo|a no ser|solo si)\b[^.]{0,90}\b(necesit|hace falta|te pag|ofrec|fich|tengas|gir|baj|deje|llega|sub)/.test(k);
+      const acepta = /\b(acepta(la|r|rla)?)\b/.test(k) && !/\b(no|nunca|ni)\b[^,.;]{0,16}\bacept/.test(k) && !/\b(si|cuando|solo si)\b[^.]{0,90}\b(necesit|hace falta|sub|mejor|llega)/.test(k);
+      if (siV && !vende) marcas.push(`contradice la decisión de la app: manda vender a ${m[1].trim()} («${dec.trim().slice(0, 40)}»)`);
+      else if (noV && /\b(aguanta|quedate|mantenlo|conservalo)/.test(k) && vende && !noEsta && !/HOY NO|RECAMBIO|ESPERAR/.test(dec)) marcas.push(`contradice la decisión de la app: manda aguantar a ${m[1].trim()} («${dec.trim().slice(0, 40)}»)`);
+      else if (acepta && noEsta) marcas.push(`contradice la decisión de la app: manda aceptar la oferta por ${m[1].trim()} («${dec.trim().slice(0, 40)}»)`);
+    }
+  }
   // lo que tiene que decir (o no) ese caso
   if (r.debe && !new RegExp(r.debe.source || r.debe, 'i').test(sinT(principal)) && !new RegExp(r.debe.source || r.debe, 'i').test(principal)) marcas.push(`no dice lo que debe (${r.debe.source || r.debe})`);
   if (r.noDebe && (new RegExp(r.noDebe.source || r.noDebe, 'i').test(principal))) marcas.push(`dice lo que no debe (${r.noDebe.source || r.noDebe})`);

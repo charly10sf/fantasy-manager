@@ -178,6 +178,20 @@ export const ESCENAS = {
     for (const n of ['Jon Martin', 'Catena', 'Ionut Radu']) { const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === n); f.protegidoHasta = Date.now() + 12 * 864e5; }`,
     extra: `${SERIE} const r = {}; for (const n of ['Jon Martin', 'Catena', 'Ionut Radu']) { serie(n, 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === n); r[j.id] = { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) }; } return { reventa: r };` },
   // jueves, con uno comprado para revender (Jon Martin): toca ponerlo a la venta para el último cambio de mercado
+  // (24 nov, el aviso de Senna) un suplente barato (Hugo Duro) que baja un 1,7 % al día tras subir, en venta con la oferta
+  // de LaLiga un 2 % por debajo de su valor, saldo en positivo y sin pujas; y el plan de la IA de las 06:25, «vender a
+  // Hugo Duro» (aceptar la oferta), que queda guardado (window.__planIA)
+  'm-senna': { hora: '2026-11-03T13:48:00+01:00', prep: `for (const m of S.D.mercado) m.miPuja = null;
+    const yo = S.D.yo.teamId, j = Object.values(S.D.maestro).find((x) => x.nombre === 'Hugo Duro');
+    const ser = []; for (let k = 14; k >= 1; k--) ser.push([new Date(Date.now() - k * 864e5 + 3600e3).toISOString().slice(0, 10), Math.round(k <= 4 ? j.valor * Math.pow(1.017, k) : j.valor * Math.pow(1.017, 4) / Math.pow(1.012, k - 4))]);
+    S.H.v = S.H.v || {}; S.H.v[j.id] = ser; if (S.det && S.det[j.id]) delete S.det[j.id].valores;
+    S.D.dinero = 7260000;
+    const fin = Date.now() + 10 * 3600e3, of = Math.round(j.valor * 0.98 / 1000) * 1000;
+    S.D.mercado = S.D.mercado.filter((m) => !(m.tipo === 'manager' && String(m.vendedorTeamId) === String(yo)));
+    S.D.misVentas = [{ marketId: 'vh', pid: j.id, ptId: 'pt' + j.id, precio: j.valor, cierra: fin, ofertas: [{ id: 'oh', importe: of, estado: 'pending', caduca: fin, de: 'LaLiga', deLiga: true }] }];
+    S.D.mercado.push({ id: 'vh', pid: j.id, tipo: 'manager', precio: j.valor, cierra: fin, pujas: 0, ofertas: 1, vendedorTeamId: yo, vendedor: S.D.yo.manager, miPuja: null, clausula: null });
+    const t0 = Date.now() - 7 * 3600e3 - 23 * 60e3;
+    window.__planIA = { operaciones: [{ accion: 'aceptar_oferta', ref: 'A-' + j.id, pid: j.id, jugador: j.nombre, importe: of, motivo: 'Está bajando y no entra en tu once: mejor venderlo.', dia: 'hoy', cuando: 'ahora' }], titular: 'Hoy toca vender a Hugo Duro', situacion: 'Hugo Duro baja y no entra en tu once.', modelo: 'x', t: t0, cuadradas: [{ accion: 'aceptar', jugador: j.nombre, importe: of, estado: 'ok', porque: null }] };` },
   'm-reventa': { hora: '2026-11-05T12:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
 };
 
@@ -250,6 +264,11 @@ export async function pagina(escena, contesta = () => 'vale') {
         const U = await import('./js/util.js'), Dt = await import('./js/datos.js'), I = await import('./js/ia.js');
         U.LS.set(Dt.K('notas'), window.__notas); U.LS.set(Dt.K('notas-t'), Date.now());
         notas = I.notasVigentes();
+      }
+      // (24 nov) el plan de la IA que la escena deja hecho (window.__planIA): se guarda como el plan de hoy
+      if (window.__planIA) {
+        const U = await import('./js/util.js'), Dt = await import('./js/datos.js');
+        U.LS.set(Dt.K('planes'), [{ ...window.__planIA, dia: U.diaDe(window.__planIA.t) }]);
       }
       S.M = Mo.analizar(S.D, S.H, S.c, notas.length ? { notas } : {});
     }
