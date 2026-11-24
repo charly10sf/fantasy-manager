@@ -1382,6 +1382,70 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
   await ctx.close();
 }
 
+// 18 (24 nov, Carlos: «que saliera al menos durante las próximas 24 horas la tabla de la jornada con todos tus rivales» y
+// «quiero ver esta jornada, la anterior y la anterior, en qué puesto he quedado»). Con el reloj 3 h después de acabar la
+// última jornada de la demo, Directo la enseña («acabada», con «Tu liga» primero y todos los equipos); Por jornada, la
+// clasificación de la jornada; 30 h después, como siempre
+{
+  const fines = await (async () => {
+    const { ctx, page } = await pagina();
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+    const f = await page.evaluate(() => (window.S && window.S.M ? (window.S.M.jornadas || []).map((j) => j.fin) : []));
+    await ctx.close();
+    return f;
+  })();
+  const fin = fines[fines.length - 1];
+  if (!fin) mal('jornada acabada en Directo: la demo no tiene jornadas');
+  else {
+    for (const [horas, nombre] of [[3, '3 h después'], [30, '30 h después']]) {
+      const { ctx, page, errores } = await pagina({ reloj: fin + horas * 3600e3 });
+      try {
+        await page.goto(`${BASE}/index.html`);
+        await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 });
+        await page.evaluate(() => document.querySelector('[data-ir="directo"]').click());
+        await page.waitForTimeout(900);
+        const r = await page.evaluate(() => ({ eti: document.querySelector('.eti')?.innerText || '', tabs: [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.trim()), filas: document.querySelectorAll('.rk-jor .fila').length, sub: document.querySelector('.sec .sub')?.innerText || '', equipos: window.S.D.clasif.length }));
+        if (horas === 3) {
+          if (!/acabada/i.test(r.eti) || r.tabs[0] !== 'Tu liga' || r.filas !== r.equipos || !/quedaste \d+º con \d+/.test(r.sub)) mal(`jornada acabada en Directo, ${nombre}: ${JSON.stringify(r)}`);
+          else bien(`jornada acabada en Directo, ${nombre}: «${r.eti}», «Tu liga» primero con los ${r.filas} equipos («${r.sub}»)`);
+          await page.evaluate(() => document.querySelector('[data-seg="directo:jornadas"]').click());
+          await page.waitForTimeout(600);
+          const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
+          if (!q.chips.length || q.filas !== r.equipos) mal(`Por jornada, la clasificación de la jornada: ${JSON.stringify(q)}`);
+          else bien(`Por jornada: la clasificación de la jornada (${q.chips.join(', ')}) con los ${q.filas} equipos`);
+        } else if (/acabada/i.test(r.eti) || r.tabs.includes('Tu liga')) mal(`jornada acabada en Directo, ${nombre}: sigue saliendo: ${JSON.stringify(r)}`);
+        else bien(`jornada acabada en Directo, ${nombre}: ya no sale («${r.eti}», ${r.tabs.join(' · ')})`);
+        if (errores.length) mal(`jornada acabada en Directo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+      } catch (e) { mal(`jornada acabada en Directo, ${nombre}: ${e.message.split('\n')[0]}`); }
+      await ctx.close();
+    }
+  }
+}
+
+// 19 (24 nov, Carlos: «hay un texto abajo del todo que se corta y no se puede aumentar»): en un móvil de 360, con los pasos
+// del plan abiertos, ninguna pastilla se corta ni acaba en «…», y un paso dice una frase y deja el resto en «Más detalle»
+{
+  const { ctx, page, errores } = await pagina({ ancho: 360, alto: 780, reloj: RELOJ });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 });
+    await page.waitForTimeout(800);
+    const r = await page.evaluate(() => {
+      const ps = [...document.querySelectorAll('details.paso2')];
+      ps.forEach((d) => (d.open = true));
+      const pills = [...document.querySelectorAll('.pp-d .claves span, .pp-d .pill')];
+      const cortadas = pills.filter((e) => e.scrollWidth > e.clientWidth + 1 || /…$/.test(e.textContent.trim())).map((e) => e.textContent);
+      const largas = ps.map((d) => d.querySelector('.pp-mot1')).filter(Boolean).map((p) => p.textContent.trim().split(/\s+/).length).filter((n) => n > 40);
+      return { pasos: ps.length, pills: pills.length, cortadas, largas, mas: document.querySelectorAll('.pp-mas').length };
+    });
+    if (!r.pasos || r.cortadas.length || r.largas.length) mal(`plan en 360: ${JSON.stringify(r)}`);
+    else bien(`plan en 360: ${r.pasos} pasos, ${r.pills} pastillas sin cortar, la frase de cada paso corta y ${r.mas} con «Más detalle»`);
+    if (errores.length) mal(`plan en 360: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`plan en 360: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

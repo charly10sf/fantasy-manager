@@ -69,7 +69,7 @@ try {
     ok(!r.baja && r.p1 > 0, `(a) ${r.n}: seis días bajando y hoy sube (${r.p1 && r.p1.toFixed(2)} %), titular (pierdes ${r.perdida} pts por jornada sin él)`);
     ok(r.consejo === 'esperar' && /titular en tu once/.test(r.porque || '') && /no compensa/.test(r.porque || ''), `(a) con la oferta de LaLiga de un 7 %: ${r.consejo} («${r.porque}»)`);
     ok(!r.enPlan.length, `(a) el plan no manda venderlo ni aceptarla, ni con lo pujado por encima del saldo (${eur0(r.dinero)} y ${eur0(r.pujas)} pujados): ${JSON.stringify(r.enPlan)}`);
-    ok(/sube \([^)]*\) después de 6 días bajando: ha dejado de bajar/.test(r.porque || ''), '(a) dice que hoy sube después de 6 días bajando');
+    ok(/sube \([^)]*\) tras 6 días bajando: ha dejado de bajar/.test(r.porque || ''), '(a) dice que hoy sube después de 6 días bajando');
     ok(!r.enHoy.length, `(a) Hoy no dice aceptarla (${JSON.stringify(r.enHoy)})`);
     ok(/la app aconseja ESPERAR: Es titular en tu once/.test(r.lineaIA), `(a) lo que lee la IA: ESPERAR («${r.lineaIA.slice(-200)}»)`);
   }

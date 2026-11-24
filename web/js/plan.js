@@ -244,8 +244,8 @@ function candidatos(X, vetados) {
       euros = Math.max(euros, cobra - x.j.valor + (vi.perder || 0));
       const nota = M.esperarVenta(x).nota;
       porque = tit && bs
-        ? `Baja todos los días (${bs.dias} seguidos${bs.p7 != null && bs.p7 < 0 ? `, un ${pct(Math.abs(bs.p7), 1, false)} en 7 días` : ''}).${rangoTxt(M, x.pid)} Ponlo a la venta por si llega una oferta mejor: no tienes por qué aceptarla.`
-        : `${vi.texto}${nota && !/^Su cláusula está abierta en/.test(nota) ? ` ${nota}` : ''}${rangoTxt(M, x.pid)}`;
+        ? `Baja ${bs.planos ? 'casi ' : ''}todos los días (${bs.planos ? `${bs.dias} de los últimos ${bs.dias + bs.planos}` : `${bs.dias} seguidos`}${bs.p7 != null && bs.p7 < 0 ? `, un ${pct(Math.abs(bs.p7), 1, false)} en 7 días` : ''}).${rangoTxt(M, x.pid)} Ponlo a la venta por si llega una oferta mejor: no tienes por qué aceptarla.`
+        : `${vi.texto}${nota && !/^Su cláusula abierta:/.test(nota) ? ` ${nota}` : ''}${rangoTxt(M, x.pid)}`;
     } else if (!tit && !sigue && ((M.partidazo(x.pid) || {}).nivel || 0) < 2 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -4 && !M.esperarVenta(x).tipo) {
       motivo = 'desplome';
       euros = Math.max(euros, x.j.valor * Math.min(0.05, Math.abs(P7(x.tend)) / 100 / 2));

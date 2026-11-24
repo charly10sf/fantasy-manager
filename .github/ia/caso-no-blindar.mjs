@@ -4,6 +4,7 @@
 //  (a) bajando una semana, con la cláusula a +24 %: noBlindar; fuera de «a quién blindar», sin B- entre las
 //      operaciones, sin «Blíndalo gratis» en la ficha (sale «No lo blindes»), lo que lee la IA dice NO LO BLINDES y si la
 //      IA lo propone igual, el plan lo quita
+//      y cuenta como que baja casi todos los días (un +0,15 % en medio no corta la racha)
 //  (b) el mismo bajando con la cláusula casi a su valor (menos de lo que da LaLiga): sí se puede blindar
 //  (c) el mismo subiendo, con la cláusula a su valor: se blinda gratis
 // Uso: PW_MODULO=… node .github/ia/caso-no-blindar.mjs   (sale con 1 si algo falla)
@@ -51,7 +52,8 @@ const escena = (P, op) => P.page.evaluate(async (op) => {
   let ficha = '';
   try { ficha = Ho.fichaJugador(S2, pid) || ''; } catch (e) { ficha = `ERROR ${e.message}`; }
   if (typeof ficha !== 'string') ficha = String(ficha && ficha.html || '');
-  return { dbg: JSON.stringify({ ab: x.abierta, esc: x.escudo, imp: x.importa, pierde: x.pierde, vi: !!x.ventaInercia, est: x.j.estado, venta: M.enVenta.has(pid) }), n: j.nombre, fase: (M.inercia(pid) || {}).fase, abierta: x.abierta, riesgo: x.riesgo, noBlindar: x.noBlindar && x.noBlindar.texto, para: (M.paraEscudo || []).includes(pid), quedan: (M.escudosMios || {}).quedan, conB, lineaIA: (lineaIA.match(/\| (NO LO BLINDES|CONVIENE BLINDARLO)[^|]*/) || [''])[0], pagan: x.pagan ? x.pagan.seguro.length + x.pagan.quiza.length : 0, queda, quitado, fichaNo: /No lo blindes/.test(ficha), fichaSi: /Blíndalo gratis/.test(ficha), fichaErr: ficha.startsWith('ERROR') ? ficha : '' };
+  const bsq = M.bajaSeguido(pid);
+  return { bs: bsq ? `${bsq.dias}+${bsq.planos}` : null, dbg: JSON.stringify({ ab: x.abierta, esc: x.escudo, imp: x.importa, pierde: x.pierde, vi: !!x.ventaInercia, est: x.j.estado, venta: M.enVenta.has(pid) }), n: j.nombre, fase: (M.inercia(pid) || {}).fase, abierta: x.abierta, riesgo: x.riesgo, noBlindar: x.noBlindar && x.noBlindar.texto, para: (M.paraEscudo || []).includes(pid), quedan: (M.escudosMios || {}).quedan, conB, lineaIA: (lineaIA.match(/\| (NO LO BLINDES|CONVIENE BLINDARLO)[^|]*/) || [''])[0], pagan: x.pagan ? x.pagan.seguro.length + x.pagan.quiza.length : 0, queda, quitado, fichaNo: /No lo blindes/.test(ficha), fichaSi: /Blíndalo gratis/.test(ficha), fichaErr: ficha.startsWith('ERROR') ? ficha : '' };
 }, op);
 
 const P = await pagina('martes');
@@ -62,6 +64,7 @@ try {
   else {
     ok(r.abierta && ['giro', 'baja', 'parado'].includes(r.fase), `(a) ${r.n}: cláusula abierta y bajando (${r.fase})`);
     ok(!!r.noBlindar, `(a) noBlindar: «${r.noBlindar}»`);
+    ok(r.bs === '5+2', `(a) con un día casi plano y otro +0,15 % en medio, baja casi todos los días: ${r.bs} (5 bajando y 2 casi planos)`);
     ok(!r.para, `(a) no está entre los que blindar gratis (quedan ${r.quedan})`);
     ok(!r.conB, '(a) sin B- entre las operaciones que puede recomendar la IA');
     ok(/NO LO BLINDES/.test(r.lineaIA), `(a) lo que lee la IA: «${r.lineaIA}»`);

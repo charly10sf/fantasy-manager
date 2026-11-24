@@ -502,9 +502,16 @@ export function analizar(D, H, c, extra = {}) {
   M.bajaSeguido = (pid) => {
     const t = M.tend(pid);
     if (!t || !Array.isArray(t.sub) || !t.sub.length) return null;
-    let dias = 0;
-    for (let i = t.sub.length - 1; i >= 0 && t.sub[i] < -0.001; i--) dias++;
-    return dias >= 3 ? { dias, p7: t.p7, ...(M.rango(pid) || {}) } : null;
+    // (24 nov, Carlos con Thiago: seis días bajando con un +0,15 % en medio, «me debía decir que lo vendiese») un día
+    // casi plano en medio (menos de un 0,25 % arriba o abajo; dos como mucho) no corta la racha, pero hoy tiene que bajar
+    let dias = 0, planos = 0;
+    for (let i = t.sub.length - 1; i >= 0; i--) {
+      const x = t.sub[i];
+      if (x < -0.001) dias++;
+      else if (i < t.sub.length - 1 && x < 0.0025 && planos < 2 && dias) planos++;
+      else break;
+    }
+    return dias >= 3 ? { dias, planos, p7: t.p7, ...(M.rango(pid) || {}) } : null;
   };
   M.ventaPorInercia = (pid) => {
     // (22 nov) «a este no lo vendo», dicho en Pregunta: ni por la inercia
@@ -1423,13 +1430,14 @@ export function analizar(D, H, c, extra = {}) {
     const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? Math.max(0, M.ofertaLiga.med) : 0.05;
     const liga = x.j.valor * (1 + vLiga), sobre = x.clausula / x.j.valor - 1;
     const pg = x.pagan, llega = !!(pg && pg.seguro && pg.seguro.length), nadie = !!(pg && pg.hayDatos && !llega && !(pg.quiza && pg.quiza.length));
-    const cab = `Su cláusula está abierta en ${eur(x.clausula)} (${sobre >= 0.005 ? `${pct(sobre * 100, 0, false)} sobre su valor` : 'a su valor'}) y LaLiga te daría unos ${eur(liga)}`;
+    // (24 nov, «menos texto») más corto: la cláusula, lo que da LaLiga y qué sale mejor
+    const cab = `Su cláusula abierta: ${eur(x.clausula)} (${sobre >= 0.005 ? `+${pct(sobre * 100, 0, false)}` : 'a su valor'}); LaLiga, unos ${eur(liga)}`;
     if (x.clausula >= liga) {
-      if (llega && ['medio', 'alto'].includes(x.riesgo)) return { tipo: 'clausula', espera: true, txt: `${cab}: la cláusula paga más y a algún rival le llega, así que si te lo clausulan cobras más que vendiéndolo.` };
-      if (nadie) return { tipo: 'nadie', espera: false, txt: `${cab}: la cláusula paga más, pero no le llega a ningún rival, así que no te lo van a quitar y no hay prisa por ese lado.` };
-      return { tipo: 'alta', espera: false, txt: `${cab}: la cláusula paga más, pero no es seguro que algún rival la pague.` };
+      if (llega && ['medio', 'alto'].includes(x.riesgo)) return { tipo: 'clausula', espera: true, txt: `${cab}. A algún rival le llega: si te lo clausulan, cobras más que vendiéndolo.` };
+      if (nadie) return { tipo: 'nadie', espera: false, txt: `${cab}. No le llega a ningún rival: no te lo van a quitar.` };
+      return { tipo: 'alta', espera: false, txt: `${cab}. Paga más, pero no es seguro que alguien la pague.` };
     }
-    if (x.riesgo && x.riesgo !== 'ninguno') return { tipo: 'baja', espera: false, txt: `${cab}: te lo pueden clausular por menos de lo que te da LaLiga, así que si lo vas a vender, mejor a LaLiga.` };
+    if (x.riesgo && x.riesgo !== 'ninguno') return { tipo: 'baja', espera: false, txt: `${cab}. Te lo pueden clausular por menos: si lo vendes, mejor a LaLiga.` };
     return { tipo: 'baja', espera: false, txt: `${cab}.` };
   };
   M.esperarVenta = (x) => {
@@ -2193,7 +2201,7 @@ export function analizar(D, H, c, extra = {}) {
     const ofertas = (v.ofertas || []).map((o) => ({ ...o, sobre: j.valor ? o.importe / j.valor - 1 : 0 }));
     const mejor = ofertas[0] || null;
     // ¿aceptar? si paga más que su valor, o si está bajando y la oferta no se queda muy corta
-    let consejo = 'esperar', porque = '', protege = false;
+    let consejo = 'esperar', porque = '', protege = false, porqueCorto = '';
     const bajando = (t.p1 != null && t.p1 < -0.5) || (P7(t) != null && P7(t) < -2);
     const subiendo = (t.p1 != null && t.p1 > 0.5) || (P7(t) != null && P7(t) > 2);
     const ine = M.inercia(v.pid), pzV = M.partidazo(v.pid);
@@ -2254,15 +2262,17 @@ export function analizar(D, H, c, extra = {}) {
       const sub = Array.isArray(t.sub) ? t.sub : [];
       let antes = 0;
       for (let k = sub.length - 2; k >= 0 && sub[k] < -0.001; k--) antes++;
-      const giro = noBajaV(t) ? `hoy ${num(t.d1) > 0 ? `sube (${eur(t.d1, { signo: true })})` : 'no baja'}${antes >= 2 ? ` después de ${antes} días bajando: ha dejado de bajar` : ''}` : '';
+      const giro = noBajaV(t) ? `hoy ${num(t.d1) > 0 ? `sube (${eur(t.d1, { signo: true })})` : 'no baja'}${antes >= 2 ? ` tras ${antes} días bajando: ha dejado de bajar` : ''}` : '';
       const Giro = giro.charAt(0).toUpperCase() + giro.slice(1);
-      const luego = `${mejor.deLiga ? 'LaLiga te hará otra en el siguiente cambio de mercado: acéptala' : 'Acéptala'} solo si te hace falta el dinero.`;
+      const luego = `Acéptala solo si te hace falta el dinero${mejor.deLiga ? ': LaLiga te hará otra' : ''}.`;
       consejo = 'esperar'; protege = true;
-      porque = bs && titular
-        ? `Baja todos los días (${bs.dias} seguidos), pero es titular en tu once y no tienes otro ${PUESTO_V[j.pos] || 'en su puesto'} que puntúe como él (sin él pierdes unos ${pierde} pts por jornada): antes hace falta un sustituto. ${luego}`
+      // (24 nov, «menos texto») corto; `porqueCorto`, sin la última frase, para cuando el plan lo descarta
+      porqueCorto = bs && titular
+        ? `Baja ${bs.planos ? 'casi todos los días' : `${bs.dias} días seguidos`}, pero es titular en tu once (${pierde} pts por jornada) y no tienes otro ${PUESTO_V[j.pos] || 'en su puesto'} como él: antes hace falta un sustituto.`
         : titular
-          ? `Es titular en tu once (sin él pierdes unos ${pierde} pts por jornada) y ${giro || 'no baja todos los días'}. ${por} no compensa quedarte sin él. ${luego}`
-          : `${Giro}${antes >= 2 ? '' : ': no está bajando'}. ${por} no compensa venderlo: lo normal es que siga así o suba. ${luego}`;
+          ? `Es titular en tu once (${pierde} pts por jornada) y ${giro || 'no baja todos los días'}. ${por} no compensa.`
+          : `${Giro}${antes >= 2 ? '' : ': no está bajando'}. ${por} no compensa venderlo.`;
+      porque = `${porqueCorto} ${luego}`;
     }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
@@ -2288,7 +2298,7 @@ export function analizar(D, H, c, extra = {}) {
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
     else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
     const deLiga = ofertas.some((o) => o.deLiga);
-    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, protege, liga, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
+    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, porqueCorto: porqueCorto || porque, protege, liga, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
   });
   M.enVenta = new Set(M.misVentas.map((v) => v.pid));
 

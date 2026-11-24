@@ -99,7 +99,9 @@ function distanciaHTML(S) {
  * LaLiga ya da los puntos de la jornada en curso (todo a 0 antes de empezar), se sacan del histórico de puntos de cada
  * equipo (los de ahora menos los de antes de que empezara)
  */
-export function puntosUltimaJornada(S) {
+/** (24 nov) los puntos de cada equipo en la última jornada acabada: { teamId: pts } o null */
+export function mapaUltimaJornada(S) { const r = puntosUltimaJornada(S, { mapa: true }); return r && r.mapa; }
+export function puntosUltimaJornada(S, { mapa = false } = {}) {
   const { D, M } = S;
   const yo = M.yo;
   if (!yo) return null;
@@ -126,7 +128,7 @@ export function puntosUltimaJornada(S) {
   }
   const pts = ptsJ ? ptsJ[yo.teamId] : null;
   if (pts == null) return null;
-  return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1 };
+  return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1, ...(mapa ? { mapa: ptsJ } : {}) };
 }
 
 /** lo que va a pasar pronto, en chips: el mercado, las cláusulas, tu protección, el parón */
@@ -266,6 +268,8 @@ function urgentesDe(S) {
 }
 /** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
 const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
+/** (24 nov, «menos texto» y «nada cortado») la primera frase entera, en vez del texto cortado a dos líneas */
+const frase1 = (t) => { const x = String(t || '').trim(); const m = x.match(/^(.+?[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/); return m ? m[1] : x; };
 /** «Ahora mismo»: solo sin plan. Con plan, lo urgente va arriba de sus pasos, en «Antes de nada» (18, 9 nov) */
 function ahoraHTML(S) {
   const { M } = S;
@@ -277,7 +281,7 @@ function ahoraHTML(S) {
   // el «cuando» largo («La jornada empieza mañana 21:00», «Antes de que baje más») va debajo del título: a la derecha y sin
   // partir, dejaba el título en una columna de una palabra por línea (Carlos, 5 nov 05:34, con captura)
   const largoCu = (t) => !!t && t.length > 14;
-  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b>${largoCu(a.cuando) ? `<span class="ahora-cu2">${esc(a.cuando)}</span>` : ''}<span>${esc(a.texto)}</span>${a.pid && nota[a.pid] ? `<em class="ahora-nota">${esc(nota[a.pid])}</em>` : ''}</span>${a.cuando && !largoCu(a.cuando) ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
+  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b>${largoCu(a.cuando) ? `<span class="ahora-cu2">${esc(a.cuando)}</span>` : ''}<span>${esc(frase1(a.texto))}</span>${a.pid && nota[a.pid] ? `<em class="ahora-nota">${esc(nota[a.pid])}</em>` : ''}</span>${a.cuando && !largoCu(a.cuando) ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
 }
 
 /**
@@ -446,6 +450,23 @@ function objetivoPill(o) {
  * dinero, cuándo y el porqué en dos líneas; al tocarlo se abre el resto (datos, lo que pagaste, avisos, confianza,
  * saldo y «Hecho»)
  */
+/** (24 nov, Carlos: «muchísimo texto… más al grano») la frase que decide un paso: la de la IA si es corta; si no, la
+ *  primera frase del porqué de la app. El texto entero queda plegado debajo («Más detalle») */
+const palabras = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+const primeraFrase = (t) => String(t || '').trim().split(/(?<=[.:])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
+function fraseDecide(o) {
+  const m = String(o.motivo || '').trim();
+  if (o.descartada || palabras(m) <= 30) return m;
+  const d = o.datos && o.datos.porque ? primeraFrase(o.datos.porque) : primeraFrase(m);
+  const f = d.replace(/\.$/, '');
+  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}.` : m;
+}
+/** las cifras del paso en pastillas: las de la IA (claves) o las de la app (datos) */
+function clavesDe(o) {
+  if (Array.isArray(o.claves) && o.claves.length) return o.claves;
+  const d = o.datos || {};
+  return [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean);
+}
 function pasoOp(S, P, o) {
   const j = o.j;
   const ok = hecho(S, P, o);
@@ -461,16 +482,20 @@ function pasoOp(S, P, o) {
   // tarjeta la sigue abriendo y cerrando
   // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
   const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
-  const porque = o.descartada && o.aviso ? o.aviso : o.motivo;
-  const dentro = [
+  const porque = o.descartada && o.aviso ? o.aviso : fraseDecide(o);
+  // (24 nov, Carlos: «muchísimo texto… más resumido») un descartado dice solo por qué se descarta: sin la explicación de la
+  // IA de por qué hacerlo, sin las pastillas ni la confianza
+  const pie = `<div class="op-pie">${o.confianza && !o.sugerencia && !o.descartada ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null && !o.descartada ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`;
+  const dentro = o.descartada ? [sub ? `<p class="pp-sub">${sub}</p>` : '', porque ? `<p class="pp-mot pp-mot1">${esc(String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, ''))}</p>` : '', pie].join('') : [
     sub ? `<p class="pp-sub">${sub}</p>` : '',
     porque ? `<p class="pp-mot pp-mot1">${esc(porque)}</p>` : '',
     objetivoPill(o) || o.accion === 'pujar' && o.puja_max ? `<div class="pp-pills">${objetivoPill(o)}${o.accion === 'pujar' && o.puja_max ? `<span class="pill">Puja hasta ${eur(o.puja_max)}</span>` : ''}</div>` : '',
-    o.motivo && porque !== o.motivo ? `<p class="pp-mot">${esc(o.motivo)}</p>` : '',
+    o.motivo && porque !== o.motivo ? `<details class="pp-mas"><summary>Más detalle</summary><p class="pp-mot">${esc(o.motivo)}</p></details>` : '',
     o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no se sabe si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : '',
-    Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : '',
+    // (lo que pagaste ya va en su línea: fuera de las pastillas)
+    ((k) => (k.length ? `<div class="claves">${k.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''))(clavesDe(o).filter((c) => !(o.compra && !o.descartada && /pagaste/.test(c)))),
     o.aviso && !(o.descartada && porque === o.aviso) ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : '',
-    `<div class="op-pie">${o.confianza && !o.sugerencia ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
+    pie,
   ].join('');
   // (en la fila corta, «Aceptar oferta» se queda en «Aceptar»: en un móvil de 360 se comía el nombre; dentro va entero)
   const acc = esc(o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
@@ -482,7 +507,7 @@ function pasoOp(S, P, o) {
       ${cara}
       <span class="pp-c">
         <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
-        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
+        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(o.descartada ? String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, '') : porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
     </summary><div class="pp-d">${dentro}</div></details>`;

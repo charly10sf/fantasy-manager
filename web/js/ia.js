@@ -1648,7 +1648,7 @@ export function aplicarCorto(json, R, D, M, c) {
   const nombreK = (k) => { const x = lista.find((y) => y.k === k); return x ? x.o.jugador : ''; };
   for (const o of P.operaciones) {
     const d = o.datos || {};
-    if (d.cuanto || d.cuando) o.claves = [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean).map((t) => (t.length > 70 ? `${t.slice(0, 68)}…` : t));
+    if (d.cuanto || d.cuando) o.claves = [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean);
     const f = o._k && frases.get(o._k);
     if (!f) continue;
     const j = o.pid && D.maestro[o.pid];
@@ -2346,7 +2346,7 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     const v = (M.misVentas || []).find((x) => x.pid === o.pid);
     if (!v || v.consejo !== 'esperar' || !v.porque) continue;
     if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
-    else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}). ${v.porque}`);
+    else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (acabarías con ${eur(final - o.importe)}). ${v.porqueCorto || v.porque}`);
   }
   // (23 nov, Gulácsi) la oferta que el motor protege (un titular o uno que ha dejado de bajar, por poco más de lo que vale):
   // aunque haga falta dinero, no se acepta mientras queden cambios de mercado antes de la jornada (se hace caja con otra
@@ -2357,7 +2357,7 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     const v = (M.misVentas || []).find((x) => x.pid === o.pid && x.protege && x.consejo === 'esperar');
     if (!v || !(o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || ''))) continue;
     if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${v.porque}`;
-    else quitarVenta(o, `La app lo descarta: quedan ${M.ventanaEsp.ciclos} cambios de mercado antes de la jornada para hacer caja con otra cosa. ${v.porque}`);
+    else quitarVenta(o, `La app lo descarta: ${v.porqueCorto || v.porque} Quedan ${M.ventanaEsp.ciclos} cambios de mercado para hacer caja con otra cosa.`);
   }
   // el que vuelve y sigue subiendo (se hundió y ahora juega y sube varios días seguidos): no se manda vender mientras
   // siga subiendo, salvo que haga falta el dinero o sea uno comprado para revender (0.7n, el caso De Jong)

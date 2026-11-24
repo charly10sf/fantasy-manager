@@ -4,7 +4,7 @@
    Los datos salen de vivo.js (LaLiga Fantasy) y, si SofaScore deja, las jugadas de cada partido (externas.js). */
 import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.js';
 import { ava, posTag, nada, campoVivo, filaJugador, cromo, caraManager } from './comunes.js';
-import { ancho, cols, tabs, puntosUltimaJornada } from './vistas.js';
+import { ancho, cols, tabs, puntosUltimaJornada, mapaUltimaJornada } from './vistas.js';
 import { EVENTOS, motivoTxt, ordenMotivo } from './vivo.js';
 
 const est = (x) => { if (x == null || x === '') return null; const v = Number(x); return Number.isFinite(v) ? v : null; };
@@ -309,6 +309,31 @@ export function puntosPorJornada(S) {
   }
   return { cols, v, faltan: ns.filter((n) => !v[n] && !(S.ptsJ && S.ptsJ[n])).length };
 }
+/** (24 nov, Carlos: «quiero ver esta jornada, la anterior y la anterior, en qué puesto he quedado yo y qué han hecho los
+ *  demás») los puntos de cada equipo en una jornada acabada ({ teamId: pts } o null) y su clasificación */
+export function puntosDeJornada(S, n) {
+  const pj = puntosPorJornada(S);
+  if (pj.v[n]) return pj.v[n];
+  const ult = S.M.ultimaJornada;
+  return ult && ult.n === n ? mapaUltimaJornada(S) : null;
+}
+function rankingJornadaHTML(S, n, m, { titulo = true } = {}) {
+  const { M, D } = S;
+  const yo = M.yo ? String(M.yo.teamId) : '';
+  const filas = D.clasif.map((e) => ({ e, t: String(e.teamId), pts: m && m[e.teamId] != null ? Number(m[e.teamId]) : null }))
+    .sort((a, b) => (b.pts == null ? -1e9 : b.pts) - (a.pts == null ? -1e9 : a.pts) || a.e.pos - b.e.pos);
+  const puesto = (x) => (x.pts == null ? null : filas.filter((y) => y.pts != null && y.pts > x.pts).length + 1);
+  const mia = filas.find((x) => x.t === yo);
+  let h = titulo ? `<div class="sec"><h2>Tu liga en la jornada ${n}</h2>${mia && mia.pts != null ? `<span class="sub">quedaste ${puesto(mia)}º con ${mia.pts}</span>` : ''}</div>` : '';
+  h += `<div class="rk-jor">${filas.map((x) => {
+    const p = puesto(x), es = x.t === yo;
+    return `<button class="fila${es ? ' yo-fila' : ''}" ${es ? `data-accion="irJornada" data-n="${n}"` : `data-r="${esc(x.t)}"`}>
+      <span class="posn${es ? ' yo' : ''}">${p != null ? p : '–'}</span>${caraManager(x.e)}
+      <div class="fila-c"><div class="fila-n">${esc(x.e.nombre)}</div><div class="fila-s">${esc(x.e.manager && x.e.manager !== x.e.nombre ? `${x.e.manager} · ` : '')}${x.e.pos}º general${es ? ' · tu once ›' : ''}</div></div>
+      <div class="fila-d"><div class="v">${x.pts != null ? x.pts : '–'}</div><div class="d apag">pts J${n}</div></div></button>`;
+  }).join('')}</div>`;
+  return h;
+}
 export function porJornadaHTML(S) {
   const { M, D } = S;
   const { cols, v, faltan } = puntosPorJornada(S);
@@ -318,6 +343,12 @@ export function porJornadaHTML(S) {
   const vivoN = M.enJuego && M.vivo && M.vivo.equipos && Object.keys(M.vivo.equipos).length ? M.enJuego.n : null;
   let h = `<div class="sec"><h2>Puntos por jornada</h2><span class="sub">toca para ordenar</span></div>`;
   if (!cols.length && !vivoN) return h + nada(S.cargandoPtsJ || faltan ? 'Pidiendo a LaLiga los puntos de cada jornada…' : 'Aún no hay jornadas acabadas en tu liga.');
+  // la clasificación de una jornada (las tres últimas, a un toque; Carlos, 24 nov)
+  if (cols.length) {
+    const ult3 = [...cols].reverse().slice(0, 3);
+    const sel = cols.includes(Number(S.rkJ)) ? Number(S.rkJ) : ult3[0];
+    h = `<div class="sec"><h2>Clasificación de la jornada</h2></div><div class="filtros rk-jsel" role="group" aria-label="Elegir jornada">${ult3.map((n) => `<button class="${n === sel ? 'activo' : ''}" aria-pressed="${n === sel}" data-accion="rkJ" data-n="${n}">J${n}</button>`).join('')}${!ult3.includes(sel) ? `<button class="activo" aria-pressed="true">J${sel}</button>` : ''}</div>${rankingJornadaHTML(S, sel, v[sel], { titulo: false })}${h}`;
+  }
   const maxDe = (n) => Math.max(...tids.map((t) => (v[n][t] == null ? -1e9 : v[n][t])));
   const minDe = (n) => Math.min(...tids.map((t) => (v[n][t] == null ? 1e9 : v[n][t])));
   const tops = Object.fromEntries(cols.map((n) => [n, [maxDe(n), minDe(n)]]));
@@ -380,9 +411,13 @@ function sinJornada(S) {
   const ahora = Date.now();
   const prox = M.proxima;
   const ult = (M.jornadas || []).filter((j) => j.fin < ahora).pop() || null;
-  let h = `<div class="eti">${prox ? `Jornada ${prox.n}` : 'LaLiga'}</div><h1 class="titulo">Directo</h1>`;
+  // (24 nov, Carlos: «que saliera al menos durante las próximas 24 horas la tabla de la jornada con todos tus rivales»)
+  // las 24 h después de acabar una jornada, Directo la sigue enseñando: tu liga en esa jornada, lo primero
+  const recien = !!ult && ahora - ult.fin < 24 * HORA;
+  const mUlt = recien ? puntosDeJornada(S, ult.n) : null;
+  let h = `<div class="eti">${recien ? `Jornada ${ult.n} · acabada` : prox ? `Jornada ${prox.n}` : 'LaLiga'}</div><h1 class="titulo">Directo</h1>`;
   const ini = prox ? cuando(prox.ini) : '';
-  h += `<p class="entradilla">${prox ? `Empieza ${/^(lun|mar|mié|jue|vie|sáb|dom)/.test(ini) ? 'el ' : ''}${ini}${M.enParon ? ', tras el parón' : ''}. ` : ''}Aquí verás marcadores, puntos y tu liga al minuto.</p>`;
+  h += `<p class="entradilla">${prox ? `${recien ? `La jornada ${prox.n} empieza` : 'Empieza'} ${/^(lun|mar|mié|jue|vie|sáb|dom)/.test(ini) ? 'el ' : ''}${ini}${M.enParon ? ', tras el parón' : ''}. ` : ''}Aquí verás marcadores, puntos y tu liga al minuto.</p>`;
   // (en el móvil, sin otra cabecera «Jornada N»: ya está arriba; en el ordenador va en dos columnas y cada una lleva la suya)
   const a = prox ? `${ancho() ? `<div class="sec"><h2>Jornada ${prox.n}</h2><span class="sub">${M.enParon ? 'tras el parón' : 'la próxima'}</span></div>` : ''}${listaPartidos(S, prox.n, partidosJornada(S, prox.n))}` : '';
   let b = '';
@@ -393,8 +428,15 @@ function sinJornada(S) {
     b += listaPartidos(S, ult.n, partidosJornada(S, ult.n), { dias: false });
   }
   if (!a && !b) return h + nada('No hay jornadas a la vista.');
-  if (ancho()) return h + (a && b ? cols(a, b, 'mitades') : a + b) + porJornadaHTML(S);
-  // sin jornada en juego, dos pestañas: los partidos (la próxima y la última) y los puntos de cada uno por jornada
+  const liga = mUlt ? rankingJornadaHTML(S, ult.n, mUlt) : '';
+  if (ancho()) return h + (liga ? cols(liga, `${b}${a}`, 'mitades') : a && b ? cols(a, b, 'mitades') : a + b) + porJornadaHTML(S);
+  // sin jornada en juego, dos pestañas: los partidos (la próxima y la última) y los puntos de cada uno por jornada; las 24 h
+  // de después de una jornada, tres, con tu liga en esa jornada primero
+  if (liga) {
+    const seg = ['partidos', 'jornadas'].includes(S.seg.directo) ? S.seg.directo : 'liga';
+    h += tabs('directo', seg, [['liga', 'Tu liga'], ['partidos', 'Partidos'], ['jornadas', 'Por jornada']]);
+    return h + (seg === 'jornadas' ? porJornadaHTML(S) : seg === 'partidos' ? b + a : liga);
+  }
   const seg = S.seg.directo === 'jornadas' ? 'jornadas' : 'partidos';
   h += tabs('directo', seg, [['partidos', 'Partidos'], ['jornadas', 'Por jornada']]);
   return h + (seg === 'jornadas' ? porJornadaHTML(S) : a + b);

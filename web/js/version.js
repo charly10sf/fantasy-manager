@@ -30,9 +30,17 @@ export const NOVEDADES = [
     // las B- de la IA y de subir la cláusula, y cuadrarPlan lo quita si la IA lo propone. La ficha, una línea por cosa.
     // (23:39) Quién usa: «hoy» contaba por la última entrada, que se guarda una vez por hora; ahora como la barra de hoy.
     // La hora, al publicar
-    v: '0.8y', f: '2026-11-23', h: '', t: 'No te dice que blindes al que baja',
+    // (24 nov, 00:43, Carlos: «haz todo lo que te he ido diciendo en esta sesión… y publicas») además: el plan, más al
+    // grano (vistas.js `fraseDecide`, «Más detalle», un descartado solo con su porqué, las pastillas sin cortar; plan-sistema.js,
+    // una frase por paso), los textos de las ofertas y de la cláusula frente a LaLiga más cortos, «Ahora mismo» con la primera
+    // frase entera; Directo con la jornada acabada 24 h (directo.js `rankingJornadaHTML`, `puntosDeJornada`) y la clasificación
+    // de cada jornada en Por jornada; `bajaSeguido` con hasta dos días casi planos en medio (Thiago)
+    v: '0.8y', f: '2026-11-24', h: '01:01', t: 'Planes más al grano y la jornada acabada en Directo',
     cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Planes más al grano', x: 'Cada paso del plan dice en una frase lo que decide, con las cifras en pastillas; el resto, en «Más detalle». Lo descartado dice solo por qué, y ningún texto se queda cortado.' },
+      { tipo: 'mejora', d: 'trofeo', t: 'La jornada acabada, en Directo', x: 'Hasta 24 horas después de acabar una jornada, Directo sigue enseñando cómo ha quedado tu liga en ella. Y en «Por jornada», la clasificación de cada jornada: en qué puesto quedaste y qué hicieron los demás.' },
       { tipo: 'arreglo', d: 'escudo', t: 'No te dice que blindes al que baja', x: 'Si un jugador tuyo está bajando y su cláusula está por encima de lo que te daría LaLiga, ya no te dice que lo blindes: si te lo clausulan, cobras más que vendiéndolo.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Ve al que baja casi todos los días', x: 'Un día casi plano en medio de una racha de bajadas ya no hace que la app crea que ha dejado de bajar.' },
       { para: 'dueño', tipo: 'arreglo', d: 'grafica', t: 'Quién usa la app: hoy cuadra', x: 'La cifra de hoy y la barra de hoy de la gráfica ya dicen lo mismo.' },
     ],
   },

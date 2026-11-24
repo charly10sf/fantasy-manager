@@ -1149,7 +1149,8 @@ function pintar({ arriba = false } = {}) {
   // en Directo, la clasificación de la jornada dice cuántos le quedan a cada rival: hacen falta sus onces
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas') cargarJornadaMia();
-  if (S.vista === 'directo' && (S.seg.directo === 'jornadas' || V.ancho())) cargarPtsJornadas();
+  // (24 nov) sin jornada en juego, también: las 24 h de después de una, Directo enseña tu liga en esa jornada
+  if (S.vista === 'directo' && (S.seg.directo === 'jornadas' || V.ancho() || !S.M.enJuego)) cargarPtsJornadas();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
   // los anuncios: en la web, el de AdSense en las pestañas (nunca en Pregunta); en la app de Google Play, que ya se pueden
@@ -3945,7 +3946,8 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
-    case 'rkOrden': { const y = window.scrollY, x = ($('.rk-caja') || {}).scrollLeft || 0; S.rkCol = String(S.rkCol || 'total') === d.n ? 'total' : d.n; pintar(); window.scrollTo(0, y); const c = $('.rk-caja'); if (c) c.scrollLeft = x; break; }
+    case 'rkJ': { const y = window.scrollY; S.rkJ = Number(d.n); pintar(); window.scrollTo(0, y); break; }
+    case 'rkOrden': { const y = window.scrollY, x = ($('.rk-caja') || {}).scrollLeft || 0; S.rkCol = String(S.rkCol || 'total') === d.n ? 'total' : d.n; if (/^\d+$/.test(d.n)) S.rkJ = Number(d.n); pintar(); window.scrollTo(0, y); const c = $('.rk-caja'); if (c) c.scrollLeft = x; break; }
     case 'hecho': {
       const P = S.plan; if (!P) break;
       const todos = LS.get(K('hechos'), {});
