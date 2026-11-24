@@ -3208,7 +3208,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/mas-palos-que-futbol-en-el-empate-entre-el-elche-y-el-levante-radio-elche/": 1795476847000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/24/alvaro-benito-senala-el-gran-dilema-de-mourinho-tras-la-recuperacion-de-vinicius-el-equipo-tiene-dos-caras-cadena-ser/": 1795502068000,
    "SPORT|136767501": 1795500022000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
+   "SPORT|136779676": 1795502755000
   },
   "hechos": [
    {
@@ -3490,7 +3491,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4449,17 +4450,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 30,
    "revisar": 20,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 233674,
-  "salida": 14310,
+  "entrada": 235700,
+  "salida": 14424,
   "cacheLee": 139693,
   "cacheEscribe": 15162,
-  "dolares": 0.616711,
+  "dolares": 0.616971,
   "reservado": 0
  },
  "recientes": {
@@ -9455,13 +9456,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5909,
+   "ok": 5910,
    "fallos": 0,
-   "ejecuciones": 4766,
+   "ejecuciones": 4767,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T07:46:12.909Z"
+   "ultima": "2026-11-24T07:51:19.324Z"
   }
  },
  "ptsDirecto": {},
@@ -9478,15 +9479,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:46:21.357Z"
+   "ultimaBien": "2026-11-24T07:51:30.971Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:46:21.357Z"
+   "ultimaBien": "2026-11-24T07:51:30.971Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:46:21.357Z"
+   "ultimaBien": "2026-11-24T07:51:30.971Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9494,11 +9495,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:46:21.357Z"
+   "ultimaBien": "2026-11-24T07:51:30.971Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:46:21.357Z"
+   "ultimaBien": "2026-11-24T07:51:30.971Z"
   }
  },
  "avisos": [
