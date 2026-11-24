@@ -24,6 +24,19 @@ export const VERSION = '0.8.3';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (24 nov, 18:03, Carlos: «publica todo en una versión») TRES COSAS QUE SE HICIERON POR SEPARADO Y SALEN JUNTAS. En `pendiente`
+    // fueron la 0.8.1a (el último partido), la 0.8.2 (quién puja) y la 0.8.3 (la app no se contradice): los comentarios del
+    // código que digan «(0.8.1a)» o «(0.8.2)» son de esta versión.
+    // --- quién puja (en `pendiente`, 0.8.2) ---
+    // (24 nov, 15:35, Carlos, con la idea de un amigo de su liga: «ver cuánto puja cada rival») LaLiga no da ni quién puja ni
+    // cuánto (mirado en crudo con su liga: claude/pendiente-pujas-rivales.md del proyecto): solo cuántas pujas lleva cada libre.
+    // pujas-vistas.js apunta cuándo entra cada una (LS «pujas-vistas», lo llama app.js en `extraM`); quien-puja.js estima quién
+    // puede estar detrás y lo que pujaría (motor.js: `m.ajenas`, `m.pujasEv`, `m.quien`, `M.quienAcierto`); la tarjeta,
+    // `quienPujaHTML` en hojas.js; el aviso, `pujasNuevas` en fondo.js; función top «quienPuja» (limite.js, comunes.js y
+    // limites.json). Medido con su liga (81 compras de rivales en 45 días): el primero de la lista era quien se lo llevó el
+    // 43 % de las veces y estaba entre los tres primeros el 94 % (al azar, 12 % y 38 %): claude/medida-quien-puja-24nov.md.
+    // Pruebas: .github/ia/caso-quien-puja.mjs y, con una liga de verdad, .github/ia/medir-quien-puja.js. La hora, al publicar
+    // --- la app no se contradice (en `pendiente`, 0.8.3) ---
     // (va DETRÁS de la 0.8.2 de «quién puja», que otro chat subió a `pendiente` a la vez: se publican juntas)
     // (24 nov, aviso de Senna, 13:52: «me recomienda vender un jugador y luego que lo aguante o viceversa, o recomienda
     // vender y luego me dice que es una decisión que he tomado por mi cuenta»; Carlos: «tiene razón y no es la primera vez»)
@@ -33,39 +46,22 @@ export const NOVEDADES = [
     // `ventasMiasTxt`, `contexto` y `revisarChat` (3e). El tiempo: `decAhora` en el paso que la app saca al repasar el plan de
     // la IA, `pasoCambiaTxt`, `cambiosDesde` y «TÚ DIJISTE ANTES» (`consejosChat`) en `datosChat`, y el origen de cada cosa en
     // `llevasHTML`. Prueba: .github/ia/caso-contradicciones.mjs (en «Pruebas»). La hora, al publicar
-    v: '0.8.3', f: '2026-11-24', h: '', t: 'La app ya no se contradice',
+    // --- el último partido (en `pendiente`, 0.8.1a) ---
+    // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
+    // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y
+    // `M.tener` (revender, aguantar, `M.subeTeniendo`); la frase en `noRevenderCorto`/`noRevenderTxt` y `malPartidoTxt` en los
+    // motivos de plan.js. Lo medido, en claude/medida-puntos-24nov.md (.github/ia/medir-puntos.mjs); prueba: escenas «malo» y
+    // «bueno» de .github/ia/caso-aguantar.mjs. La hora, al publicar
+    v: '0.8.3', f: '2026-11-24', h: '18:10', t: 'Quién puja por él, y la app ya no se contradice',
     cosas: [
+      { tipo: 'nuevo', d: 'lupa', t: 'Quién puede estar detrás de cada puja', x: 'Cuando un jugador libre del mercado ya tiene pujas de otros, su ficha te dice qué rivales es más probable que estén detrás, lo que rondaría la puja de cada uno y si la tuya la pasa. Es una estimación: LaLiga no dice quién puja ni cuánto. Sale de lo que ficha cada rival, de si le hace falta alguien de ese puesto, de su dinero y de la hora a la que entró la puja.', ir: { v: 'mercado' } },
+      { tipo: 'nuevo', d: 'campana', t: 'Te avisa si entra una puja nueva', x: 'Si entra una puja de otro por un jugador por el que ya has pujado o que sigues, la app te avisa y te dice si con la tuya basta. En el mercado, la puja que acaba de entrar sale marcada como nueva.' },
       { tipo: 'mejora', d: 'ia', t: 'Lo mismo en todas partes', x: 'De cada jugador tuyo la app toma una sola decisión (vender, aguantar, aceptar la oferta o esperar a otra) y te la dice igual en Hoy, en Equipo, en los avisos y cuando le preguntas a la IA.' },
       { tipo: 'mejora', d: 'reloj', t: 'Si algo cambia, te lo dice', x: 'Si desde el plan de la mañana llega una oferta o un jugador cambia de tendencia, el paso te dice qué decía antes, qué dice ahora y por qué. Y «Lo que llevas hoy» sabe si algo lo hiciste por el plan o porque te lo aconsejó la IA.' },
       { tipo: 'arreglo', d: 'hucha', t: '«A la venta, pero esta oferta no»', x: 'Cuando conviene vender a uno pero la oferta de hoy es floja, la app lo dice así, en vez de «mejor aguantar».' },
       { tipo: 'arreglo', d: 'oferta', t: 'Las ofertas de LaLiga, como son', x: 'Cada oferta de LaLiga va de −10 % a +10 % de lo que vale el jugador, a suerte, y hay una nueva en cada cambio de mercado. La app y la IA ya no dicen que «suele dar» un tanto fijo: te dicen entre cuánto y cuánto puede salir.' },
       { tipo: 'mejora', d: 'grafica', t: 'Cuando un jugador se da la vuelta', x: 'El primer día que baja uno que venía subiendo, la app se quedaba corta con lo que iba a perder. Medido con todos los jugadores de LaLiga desde septiembre: los días siguientes baja el doble que el primero, y ahora lo cuenta así.' },
       { tipo: 'mejora', d: 'balanza', t: 'Comprarle a otro mánager para revender', x: 'Si le cuentas a la IA que un rival te deja a uno a un precio, hace las cuentas con ese precio: si te llega el saldo, lo que puedes sacarle a LaLiga rechazando las ofertas flojas y si te vale para el once.' },
-    ],
-  },
-  {
-    // (24 nov, 15:35, Carlos, con la idea de un amigo de su liga: «ver cuánto puja cada rival») LaLiga no da ni quién puja ni
-    // cuánto (mirado en crudo con su liga: claude/pendiente-pujas-rivales.md del proyecto): solo cuántas pujas lleva cada libre.
-    // pujas-vistas.js apunta cuándo entra cada una (LS «pujas-vistas», lo llama app.js en `extraM`); quien-puja.js estima quién
-    // puede estar detrás y lo que pujaría (motor.js: `m.ajenas`, `m.pujasEv`, `m.quien`, `M.quienAcierto`); la tarjeta,
-    // `quienPujaHTML` en hojas.js; el aviso, `pujasNuevas` en fondo.js; función top «quienPuja» (limite.js, comunes.js y
-    // limites.json). Medido con su liga (81 compras de rivales en 45 días): el primero de la lista era quien se lo llevó el
-    // 43 % de las veces y estaba entre los tres primeros el 94 % (al azar, 12 % y 38 %): claude/medida-quien-puja-24nov.md.
-    // Pruebas: .github/ia/caso-quien-puja.mjs y, con una liga de verdad, .github/ia/medir-quien-puja.js. La hora, al publicar
-    v: '0.8.2', f: '2026-11-24', h: '15:55', t: 'Quién puja por él',
-    cosas: [
-      { tipo: 'nuevo', d: 'lupa', t: 'Quién puede estar detrás de cada puja', x: 'Cuando un jugador libre del mercado ya tiene pujas de otros, su ficha te dice qué rivales es más probable que estén detrás, lo que rondaría la puja de cada uno y si la tuya la pasa. Es una estimación: LaLiga no dice quién puja ni cuánto. Sale de lo que ficha cada rival, de si le hace falta alguien de ese puesto, de su dinero y de la hora a la que entró la puja.', ir: { v: 'mercado' } },
-      { tipo: 'nuevo', d: 'campana', t: 'Te avisa si entra una puja nueva', x: 'Si entra una puja de otro por un jugador por el que ya has pujado o que sigues, la app te avisa y te dice si con la tuya basta. En el mercado, la puja que acaba de entrar sale marcada como nueva.' },
-    ],
-  },
-  {
-    // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
-    // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y
-    // `M.tener` (revender, aguantar, `M.subeTeniendo`); la frase en `noRevenderCorto`/`noRevenderTxt` y `malPartidoTxt` en los
-    // motivos de plan.js. Lo medido, en claude/medida-puntos-24nov.md (.github/ia/medir-puntos.mjs); prueba: escenas «malo» y
-    // «bueno» de .github/ia/caso-aguantar.mjs. La hora, al publicar
-    v: '0.8.1a', f: '2026-11-24', h: '14:13', t: 'Cuenta el último partido',
-    cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'Mira cómo le fue en su último partido', x: 'Antes de proponerte comprar a uno que sube para revenderlo o aguantarlo, la app mira su último partido: si hizo 4 puntos o menos, cuenta con que se va a frenar. Si así ya no sale a cuenta, lo verás en «Mirados y descartados» con el motivo.' },
     ],
   },
