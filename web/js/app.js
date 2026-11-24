@@ -552,7 +552,7 @@ function bloquePc() {
         ${qrEntrarHTML()}${codigoWebHTML()}</details>
       <div class="plat-fila plat-movil" id="qrMovil">
         <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(`${DOMINIO}?utm_source=qr`)}</div>
-        <div class="plat-fila-t"><h2 class="plat-n" id="platMovT">¿La quieres en el móvil?</h2><p>Escanea este QR con la <b>cámara</b>: en Android te lleva a la app de Google Play y en el iPhone se abre en Safari.</p></div>
+        <div class="plat-fila-t"><h2 class="plat-n" id="platMovT">¿La quieres en el móvil?</h2><p>Escanea este QR con la <b>cámara</b>: en Android sale el botón de Google Play y en el iPhone se entra desde Safari.</p></div>
       </div>
     </section>`;
 }
