@@ -2183,6 +2183,13 @@
    "jornada": 14,
    "id": "2125174250520891885",
    "t": "2026-11-24T10:26:40.246Z"
+  },
+  {
+   "clave": "previa|138",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125205774750110082",
+   "t": "2026-11-24T12:31:56.278Z"
   }
  ],
  "estados": {
@@ -3075,7 +3082,6 @@
    "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html": 1795264209000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "SPORT|136697201": 1795264706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
@@ -3280,18 +3286,6 @@
     "que": "descartado",
     "oficial": false,
     "hecho": "Cubarsí descansará contra el Villarreal por decisión de Flick",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795264209000,
-    "id": "2932",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Ángel Pérez se retira lesionado en el Alavés-Deportivo",
     "motivo": "",
     "plazo": "",
     "nums": []
@@ -4402,9 +4396,9 @@
  },
  "pulido": {
   "dia": "2026-11-24",
-  "n": 1,
+  "n": 2,
   "ok": 0,
-  "mal": 1
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -4498,7 +4492,9 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795523472774
+  }
  },
  "ia": {
   "dia": "2026-11-24",
@@ -4607,10 +4603,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-19T08:16:56.787Z",
-    "texto": "🗓️ El Sevilla llega al Sánchez-Pizjuán sin Miguel Sierra, lesionado, y con Isaac y Kochorashvili sin sitio asegurado en el once.\n\nPara el Betis, 4º, el sábado a las 18:30 hay un Valles que con 9,2 de media es de los que más puntos dan. Bartra y Antony tienen más papeletas de jugar que de quedarse fuera.\n\nEl Sevilla encaja 1,6 por partido, así que los delanteros y medios del Betis pueden mirar el cruce con buenos ojos."
-   },
-   {
     "t": "2026-11-19T10:26:26.924Z",
     "texto": "🗓️ Alavés-Deportivo, el sábado a las 14:00 en Mendizorroza, se juega entre dos equipos de mitad de tabla: el Alavés va 12º y el Dépor 9º.\n\nEn el Alavés falta Mikel Rodriguez, lesionado, y Sivera es el fijo bajo palos, con un 94 % de titularidad. T. Martínez tiene más papeletas de jugar que de quedarse fuera, y Valentini anda justo por encima de la mitad.\n\nEl Deportivo llega con dos dudas arriba y atrás: Aubameyang y Loureiro lo normal es que salgan, aunque no hay nada cerrado. Mario Soriano es el seguro del centro del campo."
    },
@@ -4625,6 +4617,10 @@
    {
     "t": "2026-11-24T10:26:40.248Z",
     "texto": "Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez y Rockson, lesionados. Al Valencia 🦇, Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 % de titularidad, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nEl que más suele dar de los dos es Copete, con 7,5 de media."
+   },
+   {
+    "t": "2026-11-24T12:31:56.280Z",
+    "texto": "Deportivo-Barça (el domingo a las 16:15): así llegan los dos a la jornada 14\n\nAdeyemi es la gran duda de este partido: 51 % de titularidad en el Barcelona. También con dudas: Frenkie de Jong en el Barça, y Marc Casadó y Alti en el Dépor.\n\nAl Barcelona le faltan Fermín, sancionado, y Xavi Espart y Bardghji, lesionados. Sin discusión, Raphinha (85 %, 12,3 de media) y Mario Soriano (85 %).\n\nSobre el papel, el Barça lo tiene más fácil: va 1º y el Deportivo, 12º. Lamine Yamal es quien más destaca: 12,8 de media."
    }
   ],
   "noticias": [
@@ -9530,13 +9526,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5966,
+   "ok": 5967,
    "fallos": 0,
-   "ejecuciones": 4823,
+   "ejecuciones": 4824,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:26:15.328Z"
+   "ultima": "2026-11-24T12:31:12.774Z"
   }
  },
  "ptsDirecto": {},
@@ -9553,15 +9549,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:26:37.715Z"
+   "ultimaBien": "2026-11-24T12:31:56.409Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:26:37.715Z"
+   "ultimaBien": "2026-11-24T12:31:56.409Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:26:37.715Z"
+   "ultimaBien": "2026-11-24T12:31:56.409Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9569,11 +9565,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:26:37.715Z"
+   "ultimaBien": "2026-11-24T12:31:56.409Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:26:37.715Z"
+   "ultimaBien": "2026-11-24T12:31:56.409Z"
   }
  },
  "avisos": [
