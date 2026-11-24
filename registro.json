@@ -3072,13 +3072,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261121/1004253714/cuti-importante-aun-jugar.html": 1795263520000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html": 1795263592000,
    "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
-   "SPORT|136695915": 1795263607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004251705/alaves-deportivo-coruna-directo-laliga-ea-sports.html": 1795264209000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "SPORT|136697201": 1795264706000,
@@ -3249,18 +3246,6 @@
     "oficial": false,
     "hecho": "Blanco regresa a la convocatoria para el derbi",
     "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795263592000,
-    "id": "3264",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Ceballos no podrá jugar el sábado por molestias",
-    "motivo": "molestias",
     "plazo": "",
     "nums": []
    },
@@ -9559,13 +9544,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5964,
+   "ok": 5965,
    "fallos": 0,
-   "ejecuciones": 4821,
+   "ejecuciones": 4822,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:16:11.975Z"
+   "ultima": "2026-11-24T12:21:12.789Z"
   }
  },
  "ptsDirecto": {},
@@ -9582,15 +9567,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:16:22.261Z"
+   "ultimaBien": "2026-11-24T12:21:21.261Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:16:22.261Z"
+   "ultimaBien": "2026-11-24T12:21:21.261Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:16:22.261Z"
+   "ultimaBien": "2026-11-24T12:21:21.261Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9598,11 +9583,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:16:22.261Z"
+   "ultimaBien": "2026-11-24T12:21:21.261Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:16:22.261Z"
+   "ultimaBien": "2026-11-24T12:21:21.261Z"
   }
  },
  "avisos": [
