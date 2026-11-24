@@ -1485,13 +1485,15 @@ export function mercado(S) {
     // once); si el plan lo descarta o retira tu puja, no se enseña puja ni «Chollo»
     const opM = (m) => (S.opPorPid || {})[m.pid] || null;
     const pujaDe = (m) => { const o = opM(m); return o && ['pujar', 'comprar'].includes(o.accion) && (o.puja_max || o.importe) ? (o.puja_max || o.importe) : m.puja; };
+    // (0.8.2) una puja de otro que ha entrado en las últimas 6 horas (pujas-vistas.js)
+    const pujaReciente = (m) => (m.pujasEv || []).some((e) => e[0] > 0 && Date.now() - e[1] < 6 * HORA);
     const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid) || !!ap || !!(opM(m) && opM(m).retira); return filaJugador(m, {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
         m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá: ${esc(m.noVende.replace(/^es /, ''))}</span>` : '',
         ap, estadoPill(m.j), m.noVende || ap || (opM(m) && opM(m).retira) ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
-        m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
+        m.tipo === 'liga' && m.pujas ? `<span class="pill${pujaReciente(m) ? ' duda' : ''}">${m.pujas} puja${m.pujas > 1 ? 's' : ''}${pujaReciente(m) ? ' · nueva' : ''}</span>` : '',
       ],
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(pujaDe(m))}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
     }); };

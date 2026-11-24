@@ -27,6 +27,43 @@ import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
 
+/* (0.8.2) «Quién puja»: los rivales que pueden estar detrás de las pujas de un libre, del más probable al menos, lo que
+   rondaría la puja de cada uno y si la tuya (o la de la app) la pasa. Es una estimación (quien-puja.js): se dice. El dinero
+   de un rival cerrado no se cuenta (ni su tope ni que lo paga sin deuda) */
+const ratoTxt = (a, b) => (diaDe(a) === diaDe() && diaDe(b) === diaDe() ? `las ${horaDe(a)} y las ${horaDe(b)}` : `${cuando(a)} y ${cuando(b)}`);
+export function quienPujaHTML(S, m) {
+  const M = S.M, q = m.quien, n = q.n;
+  const pc = (p) => `${Math.max(1, Math.round(p * 100))} %`;
+  const vis = q.cands.filter((c, i) => i < 4 && (i < 2 || c.p >= 0.08));
+  const top = vis[0];
+  const fila = (c) => {
+    const abierto = !bloqueada('dineroRivales', c.tid);
+    const mot = c.motivos.filter((x) => abierto || !x.dinero).map((x) => esc(x.t));
+    const ronda = c.est ? (c.alto > c.est ? `rondaría ${eur(c.est)}–${eur(c.alto)}` : `rondaría ${eur(c.est)}`) : '';
+    const tope = abierto && c.tope != null && c.alto && c.tope < c.alto * 1.15 ? ` · no pasa de ${eur(Math.max(0, c.tope))}` : '';
+    return `<b>${esc(c.nombre)}</b> · ${pc(c.p)}${mot.length ? `<br><span class="t2">${mot.join(' · ')}</span>` : ''}${ronda ? `<br>Si es suya, ${ronda}${tope}.` : ''}`;
+  };
+  const evs = (q.ev || []).filter((e) => e[0] > 0);
+  const u = evs[evs.length - 1];
+  const entro = u ? `${u[2] > 1 ? `${u[2]} entraron` : n > 1 ? 'La última entró' : 'Entró'} entre ${esc(ratoTxt(u[0], u[1]))}.` : '';
+  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ' (25 jugadores)' : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
+  // ¿la pasa tu puja, o la de la app? Sin otra cifra de «N de cada 10»: esa ya la da «Libre en el mercado»
+  const mia = Number(m.miPuja) > 0, ref = mia ? Number(m.miPuja) : m.puja, p = mia ? q.pMia : q.pApp;
+  const de = mia ? 'Tu puja' : 'La puja de la app';
+  let pasa = '';
+  if (p != null && ref) {
+    const llega = q.paraPasar && q.paraPasar - num(m.miPuja) <= M.pujaMax;
+    pasa = p >= 0.65 ? `<b>${de} (${eur(ref)}) la${n > 1 ? 's' : ''} pasa casi seguro.</b>`
+      : `<b>${de} (${eur(ref)}) ${p >= 0.4 ? 'va justa' : 'se queda corta'}.</b>${q.paraPasar && q.paraPasar > ref ? ` Para pasarla${n > 1 ? 's' : ''} casi seguro, ${eur(q.paraPasar)}${llega ? '' : ' (no te llega)'}.` : ''}`;
+  }
+  const ac = M.quienAcierto && M.quienAcierto.n >= 5 ? ` En tu liga, de ${M.quienAcierto.n} veces, quien se lo llevó era el primero de la lista en ${M.quienAcierto.top1} y estaba entre los tres primeros en ${M.quienAcierto.top3}.` : '';
+  const claro = q.conf !== 'baja' && top;
+  return aviso(S, { k: 'quien', pid: m.pid, cls: 'oro', ico: 'rivales',
+    t: n === 1 ? 'Quién puede ser la otra puja' : `Quién puede estar detrás de las ${n} pujas`,
+    l: claro ? `Lo más probable: ${esc(top.nombre)} (${pc(top.p)})${vis[1] ? ` · ${esc(vis[1].nombre)} (${pc(vis[1].p)})` : ''}` : `No está claro: ${vis.slice(0, 3).map((c) => `${esc(c.nombre)} (${pc(c.p)})`).join(' · ')}`,
+    d: parrafos(entro, ...vis.map(fila), fuera, pasa, `<span class="t2">Es una estimación: LaLiga no dice quién puja ni cuánto.${esc(ac)}</span>`) });
+}
+
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 
 /* ================= FICHA DE JUGADOR ================= */
@@ -391,6 +428,8 @@ export function fichaJugador(S, pid) {
         const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
         h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
           d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
+        // (0.8.2) quién puede estar detrás de las pujas de otros que lleva (función top)
+        if (m.ajenas > 0 && m.quien && m.quien.cands.length) { if (bloqueada('quienPuja')) cerradas.push('quienPuja'); else h += quienPujaHTML(S, m); }
       }
     }
     if (suya) {

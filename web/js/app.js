@@ -39,6 +39,7 @@ import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAvi
 import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
+import { registrarPujas } from './pujas-vistas.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML, tiraPortada } from './portada.js';
@@ -1399,6 +1400,7 @@ function rehacer() {
   ponerEquipos(S.D.equipos);
   S.M = analizar(S.D, S.H, S.c, extraM());
   fijarMotor(S.M);
+  apuntarQuien();
   // (22 nov) el plan, las preguntas, lo que le cuentas y los pasos hechos, los mismos en todos tus dispositivos (sinc.js)
   iniciarSinc({ liga: S.D && !S.D.demo && S.D.liga ? S.D.liga.id : '', llega: llegaSinc, charlando: () => !!S.charlando });
   // quién eres, para lo bloqueado (antes de pintar nada)
@@ -1657,7 +1659,7 @@ async function trabajoFondo() {
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
   return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
-    pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal };
+    pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal, pujasVistas: apuntarPujasVistas(), quienVisto: S.D && !enDemo() ? LS.get(K('quien-visto'), {}) : {} };
 }
 
 /* (0.7.13u) tus pujas del mercado, para aprender de las que ganas y pierdes: cada una que la app ve puesta (jugador, lo que
@@ -1678,6 +1680,32 @@ function apuntarMisPujas() {
   for (const [c, p] of Object.entries(ya)) if (!p || !p.cierra || ahora - p.cierra > 45 * DIA) { delete ya[c]; cambia = true; }
   if (cambia) LS.set(k, ya);
   return ya;
+}
+
+/* (0.8.2) cuándo entra cada puja de otro por un libre del mercado (pujas-vistas.js): con cada foto nueva de la liga se mira
+   si el número de pujas de cada jugador ha subido. Lo usa el motor para decir quién puede estar detrás (quien-puja.js) */
+function apuntarPujasVistas() {
+  const k = K('pujas-vistas'), ya = LS.get(k, null);
+  if (!S.D) return ya;
+  const r = registrarPujas(ya, S.D);
+  if (r.cambia) LS.set(k, r.reg);
+  return r.reg;
+}
+/* (0.8.2) la lista de «quién puja» que la app da por cada libre, tal como estaba la última vez antes de cerrarse el mercado:
+   cuando se sabe quién se lo llevó, el motor cuenta cuántas veces estaba arriba (`M.quienAcierto`). 45 días; no en la demo */
+function apuntarQuien() {
+  if (!S.D || !S.M || enDemo()) return;
+  const k = K('quien-visto'), ya = LS.get(k, {}), ahora = Date.now();
+  let cambia = false;
+  for (const m of S.M.mercado || []) {
+    if (m.tipo !== 'liga' || !m.quien || !m.quien.cands.length || !m.cierra || m.cierra < ahora) continue;
+    const c = `${m.pid}|${m.cierra}`, top = m.quien.cands.slice(0, 3).map((x) => String(x.tid));
+    if (ya[c] && ya[c].top.join() === top.join() && ya[c].n === m.ajenas) continue;
+    ya[c] = { pid: m.pid, c: m.cierra, top, n: m.ajenas, t: ahora };
+    cambia = true;
+  }
+  for (const [c, g] of Object.entries(ya)) if (!g || !g.c || ahora - g.c > 45 * DIA) { delete ya[c]; cambia = true; }
+  if (cambia) LS.set(k, ya);
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
