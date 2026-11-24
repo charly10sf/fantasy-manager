@@ -2113,6 +2113,41 @@
     "clase": "mercado",
     "chollo": "2559"
    }
+  },
+  {
+   "clave": "caidas|14|1715-3208",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125107834593399233",
+   "t": "2026-11-24T06:02:45.427Z"
+  },
+  {
+   "clave": "caidas|14|1033-2005",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125107841698521266",
+   "t": "2026-11-24T06:02:47.047Z"
+  },
+  {
+   "clave": "caidas|14|2661-3284",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125107848409473500",
+   "t": "2026-11-24T06:02:48.660Z"
+  },
+  {
+   "clave": "caidas|14|2477-2470",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125107854688297381",
+   "t": "2026-11-24T06:02:50.161Z"
+  },
+  {
+   "clave": "caidas|14|3077-2206-2746",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125107861021736986",
+   "t": "2026-11-24T06:02:51.657Z"
   }
  ],
  "estados": {
@@ -2429,7 +2464,7 @@
   "2668": "out_of_league",
   "2669": "out_of_league",
   "2670": "ok",
-  "2671": "ok",
+  "2671": "injured",
   "2672": "out_of_league",
   "2673": "ok",
   "2674": "out_of_league",
@@ -2868,7 +2903,7 @@
   "3179": "ok",
   "3180": "ok",
   "3181": "ok",
-  "3182": "ok",
+  "3182": "injured",
   "3183": "ok",
   "3184": "ok",
   "3185": "ok",
@@ -3011,26 +3046,19 @@
    "que": "vuelve",
    "antes": "injured",
    "t": 1795466183192
+  },
+  {
+   "id": "3182",
+   "que": "lesion",
+   "antes": "ok",
+   "t": 1795500075741
   }
  ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/": 1795217931000,
-   "AS|https://as.com/futbol/primera/alineacion-posible-del-celta-ante-el-real-madrid-en-laliga-ea-sports-f202611-n/": 1795218102000,
-   "AS|https://as.com/futbol/primera/alineacion-posible-del-deportivo-ante-el-alaves-en-laliga-ea-sports-f202611-n/": 1795217639000,
-   "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1795217293000,
-   "AS|https://as.com/futbol/nico-williams-tengo-que-empezar-a-simplificar-las-jugadas-f202611-n/": 1795216484000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253460/alaves-busca-primer-triunfo-septiembre-depor-pendiente-aubameyang.html": 1795240800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253606/amargo-regreso-titularidad.html": 1795244400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253434/real-madrid-celta-incognita-vinicius.html": 1795242768000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253605/no-hay-dos-tres-athletic.html": 1795240800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261121/1004253572/fortuno-serio.html": 1795215747000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261120/1004253520/athletic-partido.html": 1795212233000,
    "SPORT|136613296": 1795240876000,
-   "SPORT|136686729": 1795226464000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/20/la-curiosa-imagen-del-castilla-murcia-jose-mourinho-se-reencuentra-con-pedro-leon-cadena-ser/": 1795213478000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/derbi-nervion-semanas-visperas_0_2008552736.html": 1795237826000,
-   "El Correo|https://www.elcorreo.com/athletic/agridulce-regreso-prados-titularidad-20261120234822-nt.html": 1795214902000,
    "SPORT|135959939": 1795244400000,
    "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
@@ -3182,69 +3210,14 @@
    "SPORT|136765874": 1795464052000,
    "SPORT|136741278": 1795466190000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0489f1e9cf4a60608b457f.html": 1795470222000,
-   "SPORT|136770607": 1795466758000
+   "SPORT|136770607": 1795466758000,
+   "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/": 1795473761000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254507/desgaste-lamine-cifras.html": 1795499700000,
+   "SPORT|136775645": 1795494646000,
+   "SPORT|136774955": 1795471241000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/mas-palos-que-futbol-en-el-empate-entre-el-elche-y-el-levante-radio-elche/": 1795476847000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/el-alaves-se-aferra-a-la-historia-f202611-n/",
-    "medio": "AS",
-    "t": 1795217931000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang es seria duda para el Alavés",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-deportivo-ante-el-alaves-en-laliga-ea-sports-f202611-n/",
-    "medio": "AS",
-    "t": 1795217639000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang tiene molestias en el tobillo",
-    "motivo": "molestias en el tobillo",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-betis-ante-el-sevilla-en-laliga-ea-sports-f202611-n/",
-    "medio": "AS",
-    "t": 1795217293000,
-    "id": "3264",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Ceballos no cuenta para el Betis ante el Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253460/alaves-busca-primer-triunfo-septiembre-depor-pendiente-aubameyang.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795240800000,
-    "id": "3108",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Aubameyang tiene la duda para el Alavés",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253605/no-hay-dos-tres-athletic.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795240800000,
-    "id": "2318",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136613296",
     "medio": "SPORT",
@@ -3268,20 +3241,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/deportes/derbi-nervion-semanas-visperas_0_2008552736.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795237826000,
-    "id": "2217",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cucho Hernández vuelve a la convocatoria del Betis",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     8
-    ]
    },
    {
     "guid": "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/",
@@ -3546,11 +3505,23 @@
     "nums": [
      67
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/",
+    "medio": "AS",
+    "t": 1795473761000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lemar se lesiona de nuevo tras reaparecer ante el Levante",
+    "motivo": "rotura en el isquiotibial",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-23",
-   "n": 39
+   "dia": "2026-11-24",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4330,8 +4301,8 @@
     "t": 1793970074314
    },
    "3182": {
-    "e": "ok",
-    "t": 1795086670761
+    "e": "injured",
+    "t": 1795500075741
    },
    "3193": {
     "e": "ok",
@@ -4415,8 +4386,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136687529": 1795240799000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253254/derbi-filiales-dani-jarque.html": 1795239300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260406000,
    "SPORT|136694022": 1795257482000,
    "SPORT|136695535": 1795260962000,
@@ -4447,7 +4416,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
    "SPORT|136761298": 1795445632000,
-   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000
+   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254688/aplazado-choque-rubi-salir-volando-cristalera.html": 1795500000000
   },
   "hechos": [
    {
@@ -4499,8 +4469,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-23",
-   "n": 11,
+   "dia": "2026-11-24",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
@@ -4508,17 +4478,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 2,
+   "redactar": 16,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 13420,
-  "salida": 225,
-  "cacheLee": 0,
-  "cacheEscribe": 2903,
-  "dolares": 0.036348,
+  "entrada": 75811,
+  "salida": 6875,
+  "cacheLee": 110663,
+  "cacheEscribe": 12259,
+  "dolares": 0.232661,
   "reservado": 0
  },
  "recientes": {
@@ -4718,24 +4688,24 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-09T06:06:47.113Z",
-    "texto": "⁉️ El Málaga 🐟 viaja a El Sadar con una duda en defensa: Puga, que ha jugado 60 minutos o más en tres de sus cinco últimos partidos.\n\nCon un 39 % de titularidad en Fantasy Manager, tiene el puesto en el aire para visitar al Osasuna 🐂. Su media de 2,3 tampoco da para hacer ruido, así que la duda pesa poco."
+    "t": "2026-11-24T06:02:45.429Z",
+    "texto": "🚨 Mal asunto en el centro del campo del Barça para la visita al Deportivo en Riazor, el domingo 29: Fermín se pierde el partido por la roja de la jornada 13 y Rodri sigue en duda por una lesión en el bíceps femoral.\n\nFermín llevaba 8 goles y 5 asistencias en la liga, y a Rodri su lesión le ha costado 36,4 M de valor en un mes. Los dos eran fijos de los azulgranas."
    },
    {
-    "t": "2026-11-09T06:06:48.775Z",
-    "texto": "❌ Mantilla, defensa del Racing ⚓, lleva lesionado desde el 1 de noviembre por una rotura de ligamento cruzado anterior y no se le espera hasta junio.\n\nEra titular habitual, con 60 minutos o más en cuatro de sus cinco últimos partidos, y se pierde el Racing-Real Sociedad en El Sardinero. Si lo tienes, no hay nada que esperar: es venta obligatoria."
+    "t": "2026-11-24T06:02:47.049Z",
+    "texto": "Mala noticia en la zaga del Osasuna 🐂 de cara al domingo 29 en Mestalla: Catena se pierde el partido ante el Valencia 🦇 por la roja de la jornada 13. Esta temporada ha dejado 4 porterías a cero en 12 partidos, así que su sitio cuesta cubrirlo.\n\nAbel Bretones, que se lesionó el sóleo el 16 de noviembre, es duda para ese partido. Los dos eran fijos en el once de los rojillos."
    },
    {
-    "t": "2026-11-18T06:06:33.309Z",
-    "texto": "⁉️ Seis titulares habituales llegan tocados a la jornada 13, que arranca el sábado 21. El más grave es Barrenetxea, de la Real Sociedad: rotura en los isquiotibiales y no se le espera hasta mayo. Si lo tienes, es venta obligatoria.\n\nAbel Bretones, del Osasuna 🐂, también es baja por una lesión en el sóleo.\n\nCubarsí y Danjuma tienen un 38 % de titularidad, y Tchouaméni un 44 %. Pubill, del Atlético, es duda por un esguince de tobillo."
+    "t": "2026-11-24T06:02:48.661Z",
+    "texto": "🚨 Mala noticia para la defensa de los azulones: Djene se pierde el Espanyol-Getafe del lunes 30 a las 21:00 porque vio la roja en la jornada 13. Ya venía de capa caída: vale 12 M y ha dejado por el camino 8,6 M en el último mes.\n\nCarvajal, también fijo atrás, es duda por una lesión sin determinar desde el 22 de noviembre. No hay plazo, así que nadie sabe aún si llega a ese partido en el campo de los pericos."
    },
    {
-    "t": "2026-11-19T15:56:31.382Z",
-    "texto": "⁉️ Akhomach llega con pocas opciones al Barça-Villarreal del domingo a las 14:00: tiene un 27 % de titularidad y lo tiene difícil para salir de inicio.\n\nEl delantero del Villarreal 🚢 venía de jugar 60 minutos o más en sus cinco últimos partidos, así que esta duda pesa. Si lo tienes, mejor buscar otra opción para la visita al Barça."
+    "t": "2026-11-24T06:02:50.163Z",
+    "texto": "El Villarreal llega a Balaídos el domingo 29 con dos titulares habituales en duda.\n\nAkhomach, que jugó 60 minutos o más en sus cinco últimos partidos, tiene un 27 % de titularidad: lo tiene difícil para salir de inicio ante el Celta. Su cotización tampoco acompaña, porque vale 8,2 M tras perder 5,1 M en el último mes.\n\nFoyth, en la zaga, arrastra molestias musculares desde el 30 de octubre y también está en duda."
    },
    {
-    "t": "2026-11-20T10:16:23.550Z",
-    "texto": "❌ Edu Expósito está lesionado desde el 18 de noviembre por unas molestias que aún no se han determinado, y el Espanyol juega hoy a las 21:00 en San Mamés ante el Athletic 🦁.\n\nEra fijo en el centro del campo, con 60 minutos o más en sus cinco últimos partidos, y es el 9º centrocampista con más puntos de la temporada. Si lo tienes, hoy no cuentes con él."
+    "t": "2026-11-24T06:02:51.659Z",
+    "texto": "Tres titulares habituales llegan tocados a la jornada 14.\n\nEl más grave es Miguel Sierra: una luxación en el hombro y no se le espera hasta enero. Vale 6 M tras perder 6,7 M en un mes, así que es venta obligatoria.\n\nYoel Lago se pierde el Celta-Villarreal del domingo 29 por ciclo de amarillas, y Edu Expósito es duda para recibir al Getafe el lunes 30."
    }
   ],
   "balance": [
@@ -5147,7 +5117,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "caidas|14|701-2443": {
+   "n": 1,
+   "t": "2026-11-24T06:02:43.299Z",
+   "ultima": "2026-11-24T06:02:43.299Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9514,13 +9490,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5887,
+   "ok": 5888,
    "fallos": 0,
-   "ejecuciones": 4744,
+   "ejecuciones": 4745,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-24T05:56:12.597Z"
+   "ultima": "2026-11-24T06:01:15.741Z"
   }
  },
  "ptsDirecto": {},
@@ -9537,15 +9513,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T05:56:13.289Z"
+   "ultimaBien": "2026-11-24T06:03:07.538Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T05:56:13.289Z"
+   "ultimaBien": "2026-11-24T06:03:07.538Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T05:56:13.289Z"
+   "ultimaBien": "2026-11-24T06:03:07.538Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9553,11 +9529,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T22:56:25.007Z"
+   "ultimaBien": "2026-11-24T06:03:07.538Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-23T21:56:49.395Z"
+   "ultimaBien": "2026-11-24T06:03:07.538Z"
   }
  },
  "avisos": [
