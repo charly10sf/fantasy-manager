@@ -3246,7 +3246,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
    "SPORT|136795046": 1795521999000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
-   "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000
+   "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
+   "AS|https://as.com/futbol/segunda/bajcetic-no-sale-del-tunel-f202611-n/": 1795465135000
   },
   "hechos": [
    {
@@ -3520,7 +3521,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -9507,13 +9508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5978,
+   "ok": 5979,
    "fallos": 0,
-   "ejecuciones": 4835,
+   "ejecuciones": 4836,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T13:26:13.518Z"
+   "ultima": "2026-11-24T13:31:19.139Z"
   }
  },
  "ptsDirecto": {},
@@ -9530,15 +9531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:26:22.454Z"
+   "ultimaBien": "2026-11-24T13:31:28.761Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:26:22.454Z"
+   "ultimaBien": "2026-11-24T13:31:28.761Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:26:22.454Z"
+   "ultimaBien": "2026-11-24T13:31:28.761Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9546,11 +9547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:26:22.454Z"
+   "ultimaBien": "2026-11-24T13:31:28.761Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:26:22.454Z"
+   "ultimaBien": "2026-11-24T13:31:28.761Z"
   }
  },
  "avisos": [
