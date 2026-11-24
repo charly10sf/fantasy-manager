@@ -3087,12 +3087,10 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000,
    "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261121/1004253845/error-marca-derbi-sevilla-valles-no-podia-creer.html": 1795289826000,
-   "SPORT|136707103": 1795288603000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261121/1004253853/castellon-le-brinda-victoria-jesus-miguel-le-pone-lider.html": 1795291363000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000,
    "AS|https://as.com/futbol/primera/vivian-entre-el-cielo-y-el-infierno-f202611-n/": 1795306668000,
@@ -3244,18 +3242,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html",
-    "medio": "Diario de Sevilla",
-    "t": 1795288619000,
-    "id": "2770",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Antony se retira lesionado durante el derbi sevillano",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html",
     "medio": "Diario de Sevilla",
@@ -9489,13 +9475,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6048,
+   "ok": 6049,
    "fallos": 0,
-   "ejecuciones": 4905,
+   "ejecuciones": 4906,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T19:16:12.547Z"
+   "ultima": "2026-11-24T19:21:12.002Z"
   }
  },
  "ptsDirecto": {},
@@ -9512,15 +9498,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:16:18.945Z"
+   "ultimaBien": "2026-11-24T19:21:19.843Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:16:18.945Z"
+   "ultimaBien": "2026-11-24T19:21:19.843Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:16:18.945Z"
+   "ultimaBien": "2026-11-24T19:21:19.843Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9528,11 +9514,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:16:18.945Z"
+   "ultimaBien": "2026-11-24T19:21:19.843Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:16:18.945Z"
+   "ultimaBien": "2026-11-24T19:21:19.843Z"
   }
  },
  "avisos": [
