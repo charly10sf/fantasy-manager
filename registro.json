@@ -3079,7 +3079,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253728/hansi-flick-confirma-baja-cubarsi-villarreal-aclara-situacion-raphinha.html": 1795267197000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/no-me-preocupa-real-madrid-20261121_3479643.html": 1795269321000,
@@ -3240,18 +3239,6 @@
    "SPORT|136786855": 1795518496000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795265273000,
-    "id": "1775",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Cubarsí no jugará contra el Villarreal y viajará a Bakú",
-    "motivo": "problemas físicos leves",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html",
     "medio": "La Vanguardia",
@@ -4410,7 +4397,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
    "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000,
+   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000
   },
   "hechos": [
    {
@@ -4463,13 +4452,10 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795523472774,
-   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795524078137
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9501,13 +9487,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5970,
+   "ok": 5971,
    "fallos": 0,
-   "ejecuciones": 4827,
+   "ejecuciones": 4828,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:46:15.035Z"
+   "ultima": "2026-11-24T12:51:14.113Z"
   }
  },
  "ptsDirecto": {},
@@ -9524,15 +9510,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:46:20.994Z"
+   "ultimaBien": "2026-11-24T12:51:46.070Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:46:20.994Z"
+   "ultimaBien": "2026-11-24T12:51:46.070Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:46:20.994Z"
+   "ultimaBien": "2026-11-24T12:51:46.070Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9540,11 +9526,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:46:20.994Z"
+   "ultimaBien": "2026-11-24T12:51:46.070Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:46:20.994Z"
+   "ultimaBien": "2026-11-24T12:51:46.070Z"
   }
  },
  "avisos": [
