@@ -3215,7 +3215,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/24/alvaro-benito-senala-el-gran-dilema-de-mourinho-tras-la-recuperacion-de-vinicius-el-equipo-tiene-dos-caras-cadena-ser/": 1795502068000,
    "SPORT|136767501": 1795500022000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
-   "SPORT|136779676": 1795502755000
+   "SPORT|136779676": 1795502755000,
+   "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000
   },
   "hechos": [
    {
@@ -3493,11 +3494,23 @@
     "motivo": "rotura en el isquiotibial",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html",
+    "medio": "MARCA",
+    "t": 1795508850000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lemar sufre una lesión en el isquiotibial tras reaparecer",
+    "motivo": "pinchazo en el isquiotibial",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4458,17 +4471,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 38,
    "revisar": 23,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 338573,
-  "salida": 17351,
+  "entrada": 340501,
+  "salida": 17484,
   "cacheLee": 145499,
   "cacheEscribe": 18065,
-  "dolares": 0.854836,
+  "dolares": 0.855095,
   "reservado": 0
  },
  "recientes": {
@@ -9470,13 +9483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5918,
+   "ok": 5919,
    "fallos": 0,
-   "ejecuciones": 4775,
+   "ejecuciones": 4776,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T08:31:15.229Z"
+   "ultima": "2026-11-24T08:36:11.537Z"
   }
  },
  "ptsDirecto": {},
@@ -9493,15 +9506,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:31:26.539Z"
+   "ultimaBien": "2026-11-24T08:36:19.262Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:31:26.539Z"
+   "ultimaBien": "2026-11-24T08:36:19.262Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:31:26.539Z"
+   "ultimaBien": "2026-11-24T08:36:19.262Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9509,11 +9522,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:31:26.539Z"
+   "ultimaBien": "2026-11-24T08:36:19.262Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:31:26.539Z"
+   "ultimaBien": "2026-11-24T08:36:19.262Z"
   }
  },
  "avisos": [
