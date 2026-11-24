@@ -7,6 +7,8 @@ import { acciones } from './acciones.js';
 import { pTitularMinutos } from './titular.js';
 import { textoInercia } from './inercia-texto.js';
 import { correcciones, dichoTxt } from './dicho.js';
+import { crearQuienPuja } from './quien-puja.js';
+import { ajenasDe } from './pujas-vistas.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -2240,6 +2242,58 @@ export function analizar(D, H, c, extra = {}) {
     M.cierreMercado = comun ? +comun[0] * 60000 : Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
   }
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
+
+  /* ---------- quién puede estar detrás de cada puja de un libre (0.8.2, 24 nov; quien-puja.js) ---------- */
+  // LaLiga solo da cuántas pujas lleva cada libre. `extra.pujasVistas` (pujas-vistas.js, lo apunta app.js) dice cuándo ha
+  // entrado cada una; con eso y lo que se sabe de cada rival sale quién es más probable, lo que pujaría y con cuánto se le
+  // gana. Es una estimación: cada libre lleva `ajenas` (las pujas de otros), `pujasEv` (cuándo entraron) y `quien`
+  {
+    const reg = extra.pujasVistas && extra.pujasVistas.m ? extra.pujasVistas : null;
+    M.pujasVistas = reg;
+    const comprasQ = [], manualQ = [], yaQ = new Set();
+    const hecho = (tid, t, clase, pid) => { const k = `${tid}|${pid}|${clase}|${Math.round(t / MIN)}`; if (tid && !yaQ.has(k)) { yaQ.add(k); manualQ.push({ tid, t, clase, pid }); } };
+    for (const a of AH.lista) {
+      if (!a.t || !a.pid) continue;
+      const q = tidDe(a.quienId, a.quien), conOtro = !!(a.otroId || a.otro), o = conOtro ? tidDe(a.otroId, a.otro) : null;
+      if (a.clase === 'compra' && !conOtro) {
+        const imp = Math.abs(num(a.importe));
+        if (!q || !imp) continue;
+        const v = valorEn(a.pid, a.t - 3 * HORA), s = v ? imp / v - 1 : null;
+        // (de las de hace más de dos meses no queda lo que valía: unos 12 puntos menos de lo pagado, lo normal)
+        comprasQ.push({ tid: q, t: a.t, pid: a.pid, v: v || imp / 1.12, s: s != null && s > -0.1 && s <= 5 ? s : null });
+      } else if (a.clase === 'clausula') { hecho(q, a.t, 'clausula', a.pid); if (o && o !== q) hecho(o, a.t, 'pierde', a.pid); }
+      // (un trato entre mánagers lo cierra quien vende, al aceptar la oferta)
+      else if (a.clase === 'compra') hecho(o, a.t, 'venta', a.pid);
+      else if (a.clase === 'venta' || a.clase === 'blindaje') hecho(q, a.t, a.clase, a.pid);
+    }
+    const qp = crearQuienPuja({
+      ahora, rivales: M.rivalesTid, todos: D.clasif.map((e) => e.teamId), nombre: nombreEquipo, J,
+      plantilla: (tid) => (D.plantillas || {})[tid] || [], valorEquipo: (tid) => num((M.equipo[tid] || {}).valor),
+      capacidad: M.capacidad, compras: comprasQ, manual: manualQ, paga: (v, pid) => (M.pagaLiga ? M.pagaLiga(v, pid) : null),
+      deudaPct: num(c.deuda) / 100, minimoPos,
+    });
+    M.quienPuja = qp;
+    for (const m of M.mercado) {
+      if (m.tipo !== 'liga') continue;
+      const e = reg ? reg.m[m.id] : null;
+      m.ajenas = ajenasDe(m, reg);
+      m.pujasEv = e && e.ev ? e.ev.filter((x) => x[0] > 0 && x[2] > 0) : [];
+      m.quien = m.ajenas > 0 ? qp.para(m, m.ajenas, e && e.ev ? e.ev : []) : null;
+    }
+    // lo que ha acertado: cada lista que la app enseñó (`extra.quienVisto`, la apunta app.js antes de cerrarse el mercado)
+    // frente a quien se lo llevó (la compra de ese jugador en la actividad). Las que ganaste tú no dicen nada
+    let nQ = 0, top1 = 0, top3 = 0;
+    for (const g of Object.values(extra.quienVisto || {})) {
+      if (!g || !g.pid || !g.c || g.c > ahora - 10 * MIN || !Array.isArray(g.top) || !g.top.length) continue;
+      const cmp = AH.lista.find((a) => a.clase === 'compra' && !a.otroId && !a.otro && String(a.pid) === String(g.pid) && a.t && Math.abs(a.t - g.c) < 12 * HORA);
+      const gana = cmp ? tidDe(cmp.quienId, cmp.quien) : null;
+      if (!gana || gana === yoTid) continue;
+      nQ++;
+      if (String(g.top[0]) === String(gana)) top1++;
+      if (g.top.slice(0, 3).some((t) => String(t) === String(gana))) top3++;
+    }
+    M.quienAcierto = nQ ? { n: nQ, top1, top3 } : null;
+  }
 
   /* ---------- tus jugadores en venta y sus ofertas ---------- */
   // (23 nov) sin relevo: el que lo sustituiría en tu once puntúa mucho menos (la misma regla que plan.js, sinRelevo)
