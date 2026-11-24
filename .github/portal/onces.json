@@ -1,6 +1,6 @@
 {
  "J": 14,
- "generada": 1795477703499,
+ "generada": 1795564088821,
  "equipos": [
   {
    "id": "11",
@@ -11,7 +11,7 @@
    "rivalId": "49",
    "casa": true,
    "t": 1795809600000,
-   "formacion": "5-4-1",
+   "formacion": "4-4-2",
    "once": [
     {
      "id": "2755",
@@ -30,12 +30,6 @@
      "nombre": "Mandi",
      "pos": 2,
      "p": 84
-    },
-    {
-     "id": "2624",
-     "nombre": "Manu Sánchez",
-     "pos": 2,
-     "p": 71
     },
     {
      "id": "2742",
@@ -65,7 +59,7 @@
      "id": "3230",
      "nombre": "Thiago",
      "pos": 3,
-     "p": 67
+     "p": 66
     },
     {
      "id": "2628",
@@ -78,15 +72,15 @@
      "nombre": "R. Brugué",
      "pos": 4,
      "p": 93
-    }
-   ],
-   "suplentes": [
+    },
     {
      "id": "2303",
      "nombre": "I. Romero",
      "pos": 4,
      "p": 83
-    },
+    }
+   ],
+   "suplentes": [
     {
      "id": "2700",
      "nombre": "Etta Eyong",
@@ -97,7 +91,7 @@
      "id": "3164",
      "nombre": "Bardeli",
      "pos": 3,
-     "p": 44
+     "p": 43
     },
     {
      "id": "2670",
@@ -128,6 +122,12 @@
      "nombre": "Axel Tape",
      "pos": 2,
      "p": 20
+    },
+    {
+     "id": "3229",
+     "nombre": "Yanis Musuayi",
+     "pos": 4,
+     "p": 14
     }
    ],
    "dudas": [
@@ -141,50 +141,33 @@
      "b": {
       "id": "3164",
       "nombre": "Bardeli",
-      "p": 44
+      "p": 43
      },
-     "pa": 53
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2302",
-      "nombre": "R. Brugué",
-      "p": 93
-     },
-     "b": {
-      "id": "2303",
-      "nombre": "I. Romero",
-      "p": 83
-     },
-     "pa": 53
+     "pa": 54
     }
    ],
    "fuera": [
     {
+     "id": "2624",
+     "nombre": "Manu Sánchez",
+     "estado": "lesionado",
+     "lesion": "Rotura de lig. cruzado anterior",
+     "hasta": "junio"
+    },
+    {
      "id": "2671",
      "nombre": "Jeremy Toljan",
      "estado": "lesionado",
-     "lesion": "Molestias sin determinar"
+     "lesion": "Lesión en los isquiotibiales"
     }
    ],
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
-     {
-      "id": "2300",
-      "nombre": "Dela",
-      "pos": 2
-     },
-     {
-      "id": "2742",
-      "nombre": "Nacho Perez",
-      "pos": 2
-     },
      {
       "id": "3227",
       "nombre": "Ifeanyi Ndukwe",
@@ -193,16 +176,10 @@
     ],
     "salen": [
      {
-      "id": "2671",
-      "nombre": "Jeremy Toljan",
+      "id": "2624",
+      "nombre": "Manu Sánchez",
       "pos": 2,
       "por": "lesionado"
-     },
-     {
-      "id": "2303",
-      "nombre": "I. Romero",
-      "pos": 4,
-      "por": null
      }
     ]
    },
@@ -310,7 +287,7 @@
      "id": "3008",
      "nombre": "Manu Hernando",
      "pos": 2,
-     "p": 24
+     "p": 25
     },
     {
      "id": "1529",
@@ -350,7 +327,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [],
@@ -367,7 +344,7 @@
    "rivalId": "14",
    "casa": true,
    "t": 1795870800000,
-   "formacion": "4-3-3",
+   "formacion": "5-3-2",
    "once": [
     {
      "id": "2541",
@@ -400,6 +377,12 @@
      "p": 74
     },
     {
+     "id": "2419",
+     "nombre": "Aitor Ruibal",
+     "pos": 2,
+     "p": 30
+    },
+    {
      "id": "3090",
      "nombre": "Isco",
      "pos": 3,
@@ -409,7 +392,7 @@
      "id": "3099",
      "nombre": "Fornals",
      "pos": 3,
-     "p": 85
+     "p": 84
     },
     {
      "id": "2418",
@@ -428,15 +411,15 @@
      "nombre": "Antony",
      "pos": 4,
      "p": 75
-    },
+    }
+   ],
+   "suplentes": [
     {
      "id": "2217",
      "nombre": "Cucho",
      "pos": 4,
      "p": 57
-    }
-   ],
-   "suplentes": [
+    },
     {
      "id": "3231",
      "nombre": "Parrott",
@@ -448,12 +431,6 @@
      "nombre": "Riquelme",
      "pos": 3,
      "p": 34
-    },
-    {
-     "id": "2419",
-     "nombre": "Aitor Ruibal",
-     "pos": 2,
-     "p": 30
     },
     {
      "id": "3199",
@@ -490,45 +467,27 @@
     {
      "linea": 4,
      "a": {
+      "id": "2770",
+      "nombre": "Antony",
+      "p": 75
+     },
+     "b": {
       "id": "2217",
       "nombre": "Cucho",
       "p": 57
      },
-     "b": {
-      "id": "3231",
-      "nombre": "Parrott",
-      "p": 52
-     },
-     "pa": 52
+     "pa": 57
     }
    ],
    "fuera": [],
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
-    "entran": [
-     {
-      "id": "3089",
-      "nombre": "Ez Abde",
-      "pos": 4
-     },
-     {
-      "id": "2217",
-      "nombre": "Cucho",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "2419",
-      "nombre": "Aitor Ruibal",
-      "pos": 2,
-      "por": null
-     }
-    ]
+    "entran": [],
+    "salen": []
    },
    "confirmado": null
   },
@@ -680,7 +639,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -697,15 +656,15 @@
     ],
     "salen": [
      {
-      "id": "2386",
-      "nombre": "Nteka",
-      "pos": 4,
-      "por": null
-     },
-     {
       "id": "2382",
       "nombre": "Isi",
       "pos": 3,
+      "por": null
+     },
+     {
+      "id": "2386",
+      "nombre": "Nteka",
+      "pos": 4,
       "por": null
      }
     ]
@@ -721,7 +680,7 @@
    "rivalId": "3",
    "casa": true,
    "t": 1795878900000,
-   "formacion": "4-4-2",
+   "formacion": "5-3-2",
    "once": [
     {
      "id": "3040",
@@ -754,6 +713,12 @@
      "p": 47
     },
     {
+     "id": "3059",
+     "nombre": "Pastor",
+     "pos": 2,
+     "p": 45
+    },
+    {
      "id": "3072",
      "nombre": "Larrubia",
      "pos": 3,
@@ -772,12 +737,6 @@
      "p": 79
     },
     {
-     "id": "3207",
-     "nombre": "P. Martínez",
-     "pos": 3,
-     "p": 60
-    },
-    {
      "id": "3045",
      "nombre": "Niño",
      "pos": 4,
@@ -787,21 +746,21 @@
      "id": "3070",
      "nombre": "Chupe",
      "pos": 4,
-     "p": 77
+     "p": 76
     }
    ],
    "suplentes": [
+    {
+     "id": "3207",
+     "nombre": "P. Martínez",
+     "pos": 3,
+     "p": 60
+    },
     {
      "id": "3048",
      "nombre": "Ramon",
      "pos": 3,
      "p": 47
-    },
-    {
-     "id": "3059",
-     "nombre": "Pastor",
-     "pos": 2,
-     "p": 45
     },
     {
      "id": "3037",
@@ -845,30 +804,30 @@
     {
      "linea": 2,
      "a": {
-      "id": "2525",
-      "nombre": "Salinas",
-      "p": 47
-     },
-     "b": {
       "id": "3059",
       "nombre": "Pastor",
       "p": 45
+     },
+     "b": {
+      "id": "3037",
+      "nombre": "C. Puga",
+      "p": 43
      },
      "pa": 51
     },
     {
      "linea": 3,
      "a": {
+      "id": "3044",
+      "nombre": "Dotor",
+      "p": 79
+     },
+     "b": {
       "id": "3207",
       "nombre": "P. Martínez",
       "p": 60
      },
-     "b": {
-      "id": "3048",
-      "nombre": "Ramon",
-      "p": 47
-     },
-     "pa": 56
+     "pa": 57
     }
    ],
    "fuera": [
@@ -886,7 +845,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -913,20 +872,14 @@
     ],
     "salen": [
      {
-      "id": "3059",
-      "nombre": "Pastor",
-      "pos": 2,
-      "por": null
-     },
-     {
       "id": "3039",
       "nombre": "Murillo",
       "pos": 2,
       "por": null
      },
      {
-      "id": "3038",
-      "nombre": "Rafa Rodríguez",
+      "id": "3207",
+      "nombre": "P. Martínez",
       "pos": 3,
       "por": null
      },
@@ -935,6 +888,12 @@
       "nombre": "Joaquín",
       "pos": 4,
       "por": null
+     },
+     {
+      "id": "3037",
+      "nombre": "C. Puga",
+      "pos": 2,
+      "por": "duda"
      }
     ]
    },
@@ -967,7 +926,7 @@
      "id": "74",
      "nombre": "Yuri",
      "pos": 2,
-     "p": 92
+     "p": 93
     },
     {
      "id": "3184",
@@ -979,7 +938,7 @@
      "id": "2315",
      "nombre": "Paredes",
      "pos": 2,
-     "p": 59
+     "p": 58
     },
     {
      "id": "2549",
@@ -991,13 +950,13 @@
      "id": "3023",
      "nombre": "Peio Canales",
      "pos": 3,
-     "p": 65
+     "p": 66
     },
     {
      "id": "2318",
      "nombre": "O. Sancet",
      "pos": 3,
-     "p": 61
+     "p": 62
     },
     {
      "id": "3083",
@@ -1015,7 +974,7 @@
      "id": "91",
      "nombre": "Iñaki Williams",
      "pos": 4,
-     "p": 82
+     "p": 81
     }
    ],
    "suplentes": [
@@ -1074,7 +1033,7 @@
      "a": {
       "id": "2318",
       "nombre": "O. Sancet",
-      "p": 61
+      "p": 62
      },
      "b": {
       "id": "3185",
@@ -1096,7 +1055,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -1155,13 +1114,13 @@
      "id": "2596",
      "nombre": "V. Chust",
      "pos": 2,
-     "p": 89
+     "p": 88
     },
     {
      "id": "2949",
      "nombre": "B. Sangare",
      "pos": 2,
-     "p": 73
+     "p": 72
     },
     {
      "id": "3074",
@@ -1208,12 +1167,6 @@
    ],
    "suplentes": [
     {
-     "id": "2529",
-     "nombre": "Rubén S.",
-     "pos": 2,
-     "p": 35
-    },
-    {
      "id": "2601",
      "nombre": "Martim Neto",
      "pos": 3,
@@ -1254,6 +1207,12 @@
      "nombre": "E. Ponce",
      "pos": 4,
      "p": 13
+    },
+    {
+     "id": "2587",
+     "nombre": "Josan",
+     "pos": 3,
+     "p": 12
     }
    ],
    "dudas": [],
@@ -1268,7 +1227,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [],
@@ -1315,7 +1274,7 @@
      "id": "2562",
      "nombre": "Marc Pubill",
      "pos": 2,
-     "p": 83
+     "p": 82
     },
     {
      "id": "2534",
@@ -1333,7 +1292,7 @@
      "id": "3193",
      "nombre": "Kang-In Lee",
      "pos": 3,
-     "p": 74
+     "p": 73
     },
     {
      "id": "2326",
@@ -1359,7 +1318,7 @@
      "id": "2480",
      "nombre": "Johnny",
      "pos": 3,
-     "p": 43
+     "p": 42
     },
     {
      "id": "3114",
@@ -1371,7 +1330,7 @@
      "id": "3255",
      "nombre": "J. David",
      "pos": 4,
-     "p": 41
+     "p": 40
     },
     {
      "id": "255",
@@ -1419,10 +1378,19 @@
      "hasta": "principios de diciembre"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "2562",
+     "nombre": "Marc Pubill",
+     "dias": 10,
+     "lesion": "Esguince de tobillo",
+     "antes": 67,
+     "p": 82
+    }
+   ],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -1430,11 +1398,6 @@
       "id": "2562",
       "nombre": "Marc Pubill",
       "pos": 2
-     },
-     {
-      "id": "3193",
-      "nombre": "Kang-In Lee",
-      "pos": 3
      }
     ],
     "salen": [
@@ -1442,12 +1405,6 @@
       "id": "255",
       "nombre": "Le Normand",
       "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2480",
-      "nombre": "Johnny",
-      "pos": 3,
       "por": null
      }
     ]
@@ -1602,7 +1559,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -1619,15 +1576,15 @@
     ],
     "salen": [
      {
-      "id": "2533",
-      "nombre": "Á. Carreras",
-      "pos": 2,
-      "por": null
-     },
-     {
       "id": "1300",
       "nombre": "Camavinga",
       "pos": 3,
+      "por": null
+     },
+     {
+      "id": "2533",
+      "nombre": "Á. Carreras",
+      "pos": 2,
       "por": null
      }
     ]
@@ -1679,7 +1636,7 @@
      "id": "2569",
      "nombre": "Ibañez",
      "pos": 3,
-     "p": 79
+     "p": 78
     },
     {
      "id": "3069",
@@ -1729,7 +1686,7 @@
      "id": "2600",
      "nombre": "Mariano",
      "pos": 4,
-     "p": 40
+     "p": 39
     },
     {
      "id": "3156",
@@ -1796,7 +1753,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [],
@@ -1831,7 +1788,7 @@
      "id": "302",
      "nombre": "Gayá",
      "pos": 2,
-     "p": 86
+     "p": 85
     },
     {
      "id": "3206",
@@ -1843,7 +1800,7 @@
      "id": "3236",
      "nombre": "Arnau",
      "pos": 2,
-     "p": 64
+     "p": 63
     },
     {
      "id": "2464",
@@ -1884,15 +1841,15 @@
    ],
    "suplentes": [
     {
-     "id": "3120",
-     "nombre": "De Haas",
-     "pos": 2,
-     "p": 46
-    },
-    {
      "id": "3239",
      "nombre": "Mayol",
      "pos": 3,
+     "p": 45
+    },
+    {
+     "id": "3120",
+     "nombre": "De Haas",
+     "pos": 2,
      "p": 45
     },
     {
@@ -1938,14 +1895,14 @@
      "a": {
       "id": "3236",
       "nombre": "Arnau",
-      "p": 64
+      "p": 63
      },
      "b": {
       "id": "3120",
       "nombre": "De Haas",
-      "p": 46
+      "p": 45
      },
-     "pa": 58
+     "pa": 59
     },
     {
      "linea": 3,
@@ -1966,7 +1923,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -2049,7 +2006,7 @@
      "id": "680",
      "nombre": "Moi Gómez",
      "pos": 3,
-     "p": 78
+     "p": 79
     },
     {
      "id": "637",
@@ -2177,7 +2134,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -2218,7 +2175,7 @@
    "rivalId": "4",
    "casa": true,
    "t": 1795965300000,
-   "formacion": "4-3-3",
+   "formacion": "4-4-2",
    "once": [
     {
      "id": "3109",
@@ -2269,6 +2226,12 @@
      "p": 41
     },
     {
+     "id": "2994",
+     "nombre": "Mella",
+     "pos": 3,
+     "p": 39
+    },
+    {
      "id": "3108",
      "nombre": "Aubameyang",
      "pos": 4,
@@ -2279,26 +2242,20 @@
      "nombre": "Yeremay",
      "pos": 4,
      "p": 72
-    },
+    }
+   ],
+   "suplentes": [
     {
      "id": "2973",
      "nombre": "Bil Nsongo",
      "pos": 4,
      "p": 65
-    }
-   ],
-   "suplentes": [
+    },
     {
      "id": "2962",
      "nombre": "Luismi Cruz",
      "pos": 4,
      "p": 55
-    },
-    {
-     "id": "2994",
-     "nombre": "Mella",
-     "pos": 3,
-     "p": 39
     },
     {
      "id": "3149",
@@ -2354,47 +2311,28 @@
      "pa": 56
     },
     {
-     "linea": 3,
-     "a": {
-      "id": "2362",
-      "nombre": "M. Casadó",
-      "p": 41
-     },
-     "b": {
-      "id": "2994",
-      "nombre": "Mella",
-      "p": 39
-     },
-     "pa": 51
-    },
-    {
      "linea": 4,
      "a": {
+      "id": "3076",
+      "nombre": "Yeremay",
+      "p": 72
+     },
+     "b": {
       "id": "2973",
       "nombre": "Bil Nsongo",
       "p": 65
      },
-     "b": {
-      "id": "2962",
-      "nombre": "Luismi Cruz",
-      "p": 55
-     },
-     "pa": 54
+     "pa": 53
     }
    ],
    "fuera": [],
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
-     {
-      "id": "2324",
-      "nombre": "Giménez",
-      "pos": 2
-     },
      {
       "id": "2976",
       "nombre": "A. Alti",
@@ -2406,9 +2344,9 @@
       "pos": 3
      },
      {
-      "id": "2973",
-      "nombre": "Bil Nsongo",
-      "pos": 4
+      "id": "2994",
+      "nombre": "Mella",
+      "pos": 3
      }
     ],
     "salen": [
@@ -2419,21 +2357,15 @@
       "por": null
      },
      {
-      "id": "2990",
-      "nombre": "Ximo Navarro",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2977",
-      "nombre": "Riki",
-      "pos": 3,
-      "por": null
-     },
-     {
       "id": "2962",
       "nombre": "Luismi Cruz",
       "pos": 4,
+      "por": null
+     },
+     {
+      "id": "2990",
+      "nombre": "Ximo Navarro",
+      "pos": 2,
       "por": null
      }
     ]
@@ -2541,7 +2473,7 @@
      "id": "3224",
      "nombre": "Brian Fariñas",
      "pos": 3,
-     "p": 35
+     "p": 34
     },
     {
      "id": "2353",
@@ -2594,7 +2526,7 @@
      "b": {
       "id": "3224",
       "nombre": "Brian Fariñas",
-      "p": 35
+      "p": 34
      },
      "pa": 59
     },
@@ -2636,7 +2568,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -2852,7 +2784,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -2880,15 +2812,15 @@
       "por": "sancionado"
      },
      {
-      "id": "2913",
-      "nombre": "Burcio",
-      "pos": 3,
-      "por": null
-     },
-     {
       "id": "2397",
       "nombre": "Pablo Durán",
       "pos": 4,
+      "por": null
+     },
+     {
+      "id": "2913",
+      "nombre": "Burcio",
+      "pos": 3,
       "por": null
      }
     ]
@@ -2928,7 +2860,7 @@
      "id": "2614",
      "nombre": "C. Romero",
      "pos": 2,
-     "p": 67
+     "p": 68
     },
     {
      "id": "1959",
@@ -2970,7 +2902,7 @@
      "id": "3087",
      "nombre": "Pepe",
      "pos": 4,
-     "p": 64
+     "p": 63
     }
    ],
    "suplentes": [
@@ -3044,7 +2976,7 @@
      "a": {
       "id": "3087",
       "nombre": "Pepe",
-      "p": 64
+      "p": 63
      },
      "b": {
       "id": "2504",
@@ -3071,7 +3003,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -3136,7 +3068,7 @@
      "id": "1989",
      "nombre": "Sergio Gómez",
      "pos": 2,
-     "p": 68
+     "p": 69
     },
     {
      "id": "265",
@@ -3172,7 +3104,7 @@
      "id": "3085",
      "nombre": "Guedes",
      "pos": 4,
-     "p": 76
+     "p": 77
     },
     {
      "id": "2448",
@@ -3259,7 +3191,7 @@
       "nombre": "Kubo",
       "p": 37
      },
-     "pa": 56
+     "pa": 57
     }
    ],
    "fuera": [
@@ -3274,7 +3206,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -3322,7 +3254,7 @@
      "id": "1147",
      "nombre": "Juan Iglesias",
      "pos": 2,
-     "p": 88
+     "p": 87
     },
     {
      "id": "2753",
@@ -3364,13 +3296,13 @@
      "id": "3266",
      "nombre": "Stassin",
      "pos": 4,
-     "p": 75
+     "p": 74
     },
     {
      "id": "3117",
      "nombre": "Vargas",
      "pos": 4,
-     "p": 49
+     "p": 48
     }
    ],
    "suplentes": [
@@ -3396,7 +3328,7 @@
      "id": "3138",
      "nombre": "Sangante",
      "pos": 2,
-     "p": 29
+     "p": 28
     },
     {
      "id": "2687",
@@ -3429,7 +3361,7 @@
      "a": {
       "id": "3117",
       "nombre": "Vargas",
-      "p": 49
+      "p": 48
      },
      "b": {
       "id": "2454",
@@ -3451,7 +3383,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [],
@@ -3474,7 +3406,7 @@
      "id": "2565",
      "nombre": "A. Fortuño",
      "pos": 1,
-     "p": 77
+     "p": 78
     },
     {
      "id": "1930",
@@ -3534,7 +3466,7 @@
      "id": "3237",
      "nombre": "Bryan",
      "pos": 4,
-     "p": 44
+     "p": 43
     }
    ],
    "suplentes": [
@@ -3607,7 +3539,7 @@
      "a": {
       "id": "3237",
       "nombre": "Bryan",
-      "p": 44
+      "p": 43
      },
      "b": {
       "id": "2623",
@@ -3628,7 +3560,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -3680,7 +3612,7 @@
    "rivalId": "8",
    "casa": false,
    "t": 1796068800000,
-   "formacion": "5-3-2",
+   "formacion": "4-4-2",
    "once": [
     {
      "id": "184",
@@ -3713,12 +3645,6 @@
      "p": 75
     },
     {
-     "id": "2699",
-     "nombre": "J. Ives Valou",
-     "pos": 2,
-     "p": 30
-    },
-    {
      "id": "2511",
      "nombre": "R. Terrats",
      "pos": 3,
@@ -3737,6 +3663,12 @@
      "p": 49
     },
     {
+     "id": "3200",
+     "nombre": "Francho",
+     "pos": 3,
+     "p": 42
+    },
+    {
      "id": "3137",
      "nombre": "Satriano",
      "pos": 4,
@@ -3751,16 +3683,16 @@
    ],
    "suplentes": [
     {
-     "id": "3200",
-     "nombre": "Francho",
-     "pos": 3,
-     "p": 42
-    },
-    {
      "id": "3254",
      "nombre": "Iván Azón",
      "pos": 4,
      "p": 36
+    },
+    {
+     "id": "2699",
+     "nombre": "J. Ives Valou",
+     "pos": 2,
+     "p": 30
     },
     {
      "id": "2774",
@@ -3799,22 +3731,7 @@
      "p": 15
     }
    ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2640",
-      "nombre": "Mario Martín",
-      "p": 49
-     },
-     "b": {
-      "id": "3200",
-      "nombre": "Francho",
-      "p": 42
-     },
-     "pa": 54
-    }
-   ],
+   "dudas": [],
    "fuera": [
     {
      "id": "2661",
@@ -3831,7 +3748,7 @@
    "vuelven": [],
    "anterior": {
     "J": 13,
-    "fuente": "confirmado"
+    "fuente": "minutos"
    },
    "cambios": {
     "entran": [
@@ -3839,6 +3756,11 @@
       "id": "2452",
       "nombre": "Gudelj",
       "pos": 2
+     },
+     {
+      "id": "2511",
+      "nombre": "R. Terrats",
+      "pos": 3
      },
      {
       "id": "2640",
@@ -3859,15 +3781,21 @@
       "por": "sancionado"
      },
      {
-      "id": "3200",
-      "nombre": "Francho",
-      "pos": 3,
-      "por": null
-     },
-     {
       "id": "3254",
       "nombre": "Iván Azón",
       "pos": 4,
+      "por": null
+     },
+     {
+      "id": "2774",
+      "nombre": "Kiko F.",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "2699",
+      "nombre": "J. Ives Valou",
+      "pos": 2,
       "por": null
      }
     ]
