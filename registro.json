@@ -3086,13 +3086,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
    "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
-   "SPORT|136703359": 1795283457000,
    "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000,
@@ -3245,7 +3242,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255007/flick-actualiza-cubasi-habla-sobre-sustituto-lamine.html": 1795537999000,
    "SPORT|136752105": 1795535503000,
    "SPORT|136806032": 1795537551000,
-   "SPORT|136806910": 1795537138000
+   "SPORT|136806910": 1795537138000,
+   "SPORT|136799014": 1795538348000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000
   },
   "hechos": [
    {
@@ -3519,7 +3518,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4416,7 +4415,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795529875000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
+   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000
   },
   "hechos": [
    {
@@ -4469,12 +4469,10 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 9,
+   "n": 10,
    "fallos": 1
   },
-  "espera": {
-   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795541471920
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9506,13 +9504,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6030,
+   "ok": 6031,
    "fallos": 0,
-   "ejecuciones": 4887,
+   "ejecuciones": 4888,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:46:15.510Z"
+   "ultima": "2026-11-24T17:51:15.547Z"
   }
  },
  "ptsDirecto": {},
@@ -9529,15 +9527,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:46:23.000Z"
+   "ultimaBien": "2026-11-24T17:51:40.597Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:46:23.000Z"
+   "ultimaBien": "2026-11-24T17:51:40.597Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:46:23.000Z"
+   "ultimaBien": "2026-11-24T17:51:40.597Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9545,11 +9543,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:46:23.000Z"
+   "ultimaBien": "2026-11-24T17:51:40.597Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:46:23.000Z"
+   "ultimaBien": "2026-11-24T17:51:40.597Z"
   }
  },
  "avisos": [
