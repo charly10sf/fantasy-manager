@@ -2176,6 +2176,13 @@
    "jornada": 14,
    "id": "2125152862128775242",
    "t": "2026-11-24T09:01:40.793Z"
+  },
+  {
+   "clave": "previa|131",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125174250520891885",
+   "t": "2026-11-24T10:26:40.246Z"
   }
  ],
  "estados": {
@@ -4376,10 +4383,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-23",
+  "dia": "2026-11-24",
   "n": 1,
-  "ok": 1,
-  "mal": 0
+  "ok": 0,
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -4483,14 +4490,14 @@
    "clasificar": 12,
    "redactar": 51,
    "revisar": 30,
-   "pulir": 0
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 526454,
-  "salida": 24630,
+  "entrada": 528477,
+  "salida": 24896,
   "cacheLee": 160014,
   "cacheEscribe": 23871,
-  "dolares": 1.29166,
+  "dolares": 1.298366,
   "reservado": 0
  },
  "recientes": {
@@ -4584,10 +4591,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-19T06:11:39.105Z",
-    "texto": "🗓️ Vallecas recibe al Valencia con un cruce de los que gustan atrás: el Rayo ⚡ se mide a un rival que marca poco.\n\nA Audero y a la zaga les pinta bien, y el partido es el sábado a las 16:15. Batalla es baja por lesión, y Pedro Díaz tiene más papeletas de jugar que de quedarse fuera. Tsitaishvili está a medias.\n\nEl Valencia 🦇, 19º, tiene el cruce a favor para delanteros y medios, porque el Rayo encaja mucho. Gayá se pierde el partido sancionado, Rioja lo normal es que salga y Sadiq no tiene el puesto asegurado."
-   },
-   {
     "t": "2026-11-19T08:16:56.787Z",
     "texto": "🗓️ El Sevilla llega al Sánchez-Pizjuán sin Miguel Sierra, lesionado, y con Isaac y Kochorashvili sin sitio asegurado en el once.\n\nPara el Betis, 4º, el sábado a las 18:30 hay un Valles que con 9,2 de media es de los que más puntos dan. Bartra y Antony tienen más papeletas de jugar que de quedarse fuera.\n\nEl Sevilla encaja 1,6 por partido, así que los delanteros y medios del Betis pueden mirar el cruce con buenos ojos."
    },
@@ -4602,6 +4605,10 @@
    {
     "t": "2026-11-24T08:06:54.596Z",
     "texto": "🗓️ El cruce de Betis-Rayo, el sábado a las 14:00, favorece a los delanteros y medios del Betis, porque el Rayo es de los que más encajan: 1,8 por partido, y va 16º.\n\nEn el Betis, Valles es el fijo bajo palos, con un 94 % de titularidad, y Cucho, con un 54 %, tiene más opciones de jugar que de quedarse fuera. Isco también es fijo.\n\nEl Rayo no tendrá a Batalla, lesionado. Álvaro García y Pedrosa son duda, aunque lo más probable es que estén, y Camello y Unai López son seguros."
+   },
+   {
+    "t": "2026-11-24T10:26:40.248Z",
+    "texto": "Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez y Rockson, lesionados. Al Valencia 🦇, Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 % de titularidad, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nEl que más suele dar de los dos es Copete, con 7,5 de media."
    }
   ],
   "noticias": [
@@ -9507,13 +9514,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5940,
+   "ok": 5941,
    "fallos": 0,
-   "ejecuciones": 4797,
+   "ejecuciones": 4798,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T10:21:23.959Z"
+   "ultima": "2026-11-24T10:26:20.362Z"
   }
  },
  "ptsDirecto": {},
@@ -9530,15 +9537,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:21:52.519Z"
+   "ultimaBien": "2026-11-24T10:26:40.343Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:21:52.519Z"
+   "ultimaBien": "2026-11-24T10:26:40.343Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:21:52.519Z"
+   "ultimaBien": "2026-11-24T10:26:40.343Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9546,11 +9553,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:21:52.519Z"
+   "ultimaBien": "2026-11-24T10:26:40.343Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:21:52.519Z"
+   "ultimaBien": "2026-11-24T10:26:40.343Z"
   }
  },
  "avisos": [
