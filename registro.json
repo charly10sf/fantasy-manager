@@ -2197,6 +2197,17 @@
    "jornada": 14,
    "id": "2125216990981771432",
    "t": "2026-11-24T13:16:30.371Z"
+  },
+  {
+   "clave": "mercado|2026-11-25",
+   "tipo": "mercado",
+   "jornada": 14,
+   "id": "2125367742819598563",
+   "t": "2026-11-24T23:15:32.422Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2703"
+   }
   }
  ],
  "estados": {
@@ -4432,19 +4443,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-24",
+  "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 14,
-   "redactar": 51,
-   "revisar": 30,
-   "pulir": 1
+   "clasificar": 0,
+   "redactar": 3,
+   "revisar": 2,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 532571,
-  "salida": 25476,
-  "cacheLee": 160014,
-  "cacheEscribe": 23871,
-  "dolares": 1.299065,
+  "entrada": 37046,
+  "salida": 902,
+  "cacheLee": 2903,
+  "cacheEscribe": 2903,
+  "dolares": 0.090659,
   "reservado": 0
  },
  "recientes": {
@@ -4516,10 +4527,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-19T23:15:42.226Z",
-    "texto": "📈 Nico Williams lleva 26 días seguidos subiendo y 36 M ganados desde el 25 de octubre. Esta noche suma otros 1,3 M y se va a 74,9 M.\n\nVini Jr. es el que más sube hoy, 2,1 M, y repite tras ser también el primero ayer. Con Valverde al alza, el Real Madrid ⚪ es el que más gana sumando a sus jugadores, 5 M. En el Atlético, Marc Pubill cae 1,1 M y los suyos pierden 3,9 M.\n\nDe barato, Fortuño, del Espanyol, vale 4,2 M y suma 32 puntos en tres jornadas."
-   },
-   {
     "t": "2026-11-20T23:15:27.779Z",
     "texto": "📉 Diomande vuelve a ser el que más cae: 1,3 M menos y ya lleva cinco días de bajada, 4,4 M desde el 16 de noviembre. Aun así, es el 5º delantero con más puntos de la temporada.\n\nVini Jr. sigue en lo más alto, con trece días seguidos subiendo, aunque solo ha sumado 6 puntos en las tres últimas jornadas. Entre todos sus jugadores, el Real Madrid ⚪ gana 3,4 M y el Atlético pierde 2,6 M.\n\nBarato: Lemar, del Elche 🌴, vale 6 M y hoy sube un 1,9 %."
    },
@@ -4534,6 +4541,10 @@
    {
     "t": "2026-11-23T23:15:30.703Z",
     "texto": "Yassir Zabiri, del Racing, sigue sin techo: otros 2,3 M esta noche y ya lleva 87 días seguidos subiendo, 61 M desde el 29 de agosto. Se va a 65 M.\n\nLa mayor subida del día es para Pedri, con 2,6 M más y cinco días al alza. Y Diomande, del Real Madrid, encadena ocho días cayendo y 9 M menos desde el 16 de noviembre.\n\nEn el Atlético ganan todos juntos 4,4 M; en el Dépor pierden lo mismo."
+   },
+   {
+    "t": "2026-11-24T23:15:32.424Z",
+    "texto": "A Fermín no le sale nada en el mercado: 3,2 M menos esta noche, tercer día seguido cayendo y 6,9 M perdidos desde el 22 de noviembre. Ayer ya fue el que más bajó, aunque suma 42 puntos en las tres últimas jornadas.\n\nYassir Zabiri, en cambio, no tiene techo: otros 2,3 M y 88 días subiendo, con 63,2 M ganados desde el 29 de agosto.\n\nPedri, que repite como el que más sube, es el 9º centrocampista con más puntos de la temporada."
    }
   ],
   "previa": [
@@ -5065,6 +5076,22 @@
    "cacheLee": 67599,
    "cacheEscribe": 17833,
    "dolares": 1.068675,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-24",
+   "llamadas": {
+    "clasificar": 14,
+    "redactar": 51,
+    "revisar": 30,
+    "pulir": 1
+   },
+   "fallos": 0,
+   "entrada": 532571,
+   "salida": 25476,
+   "cacheLee": 160014,
+   "cacheEscribe": 23871,
+   "dolares": 1.299065,
    "reservado": 0
   }
  ],
@@ -9501,7 +9528,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T23:11:13.811Z"
+   "ultimaBien": "2026-11-24T23:15:32.427Z"
   },
   "FotMob": {
    "seguidas": 0,
