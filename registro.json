@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000,
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
@@ -3247,7 +3246,8 @@
    "Cadena SER|https://cadenaser.com/asturias/2026/11/24/no-descarto-que-raul-dimita-antes-de-que-le-echen-sanedrin-del-real-oviedo-radio-asturias/": 1795533671000,
    "AS|https://as.com/futbol/condenan-a-casi-16-anos-de-carcel-a-un-exojeador-de-osasuna-por-abusar-de-menores-f202611-n/": 1795534730000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254997/atletico-preparo-lluvia-duelo-viking.html": 1795534811000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/impacto-inmediato-copete-vuelta-valencia-136802359.html": 1795535526000,
+   "SPORT|136803573": 1795533788000
   },
   "hechos": [
    {
@@ -3521,7 +3521,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -9506,13 +9506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6013,
+   "ok": 6014,
    "fallos": 0,
-   "ejecuciones": 4870,
+   "ejecuciones": 4871,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T16:21:15.429Z"
+   "ultima": "2026-11-24T16:26:22.446Z"
   }
  },
  "ptsDirecto": {},
@@ -9529,15 +9529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:21:23.750Z"
+   "ultimaBien": "2026-11-24T16:26:38.690Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:21:23.750Z"
+   "ultimaBien": "2026-11-24T16:26:38.690Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:21:23.750Z"
+   "ultimaBien": "2026-11-24T16:26:38.690Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9545,11 +9545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:21:23.750Z"
+   "ultimaBien": "2026-11-24T16:26:38.690Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:21:23.750Z"
+   "ultimaBien": "2026-11-24T16:26:38.690Z"
   }
  },
  "avisos": [
