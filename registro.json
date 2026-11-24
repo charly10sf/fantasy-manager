@@ -4392,7 +4392,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253658/javi-rodriguez-ilusionado-volver-octavos-final.html": 1795260406000,
-   "SPORT|136694022": 1795257482000,
    "SPORT|136695535": 1795260962000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000,
@@ -9515,13 +9514,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5943,
+   "ok": 5944,
    "fallos": 0,
-   "ejecuciones": 4800,
+   "ejecuciones": 4801,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T10:36:28.486Z"
+   "ultima": "2026-11-24T10:41:14.868Z"
   }
  },
  "ptsDirecto": {},
@@ -9538,15 +9537,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:36:38.867Z"
+   "ultimaBien": "2026-11-24T10:41:25.132Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:36:38.867Z"
+   "ultimaBien": "2026-11-24T10:41:25.132Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:36:38.867Z"
+   "ultimaBien": "2026-11-24T10:41:25.132Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9554,11 +9553,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:36:38.867Z"
+   "ultimaBien": "2026-11-24T10:41:25.132Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:36:38.867Z"
+   "ultimaBien": "2026-11-24T10:41:25.132Z"
   }
  },
  "avisos": [
