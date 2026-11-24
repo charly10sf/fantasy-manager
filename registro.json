@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/21/valencia-basket-viste-blanco-honor-pioneras-va-septima-victoria-leganes-136708056.html": 1795295556000,
    "AS|https://as.com/futbol/primera/vivian-entre-el-cielo-y-el-infierno-f202611-n/": 1795306668000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253882/autoinculpacion.html": 1795327200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253750/dani-olmo-vuelve-magia-rotacion-perfecta.html": 1795325400000,
@@ -9462,13 +9461,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6072,
+   "ok": 6073,
    "fallos": 0,
-   "ejecuciones": 4929,
+   "ejecuciones": 4930,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T21:11:18.297Z"
+   "ultima": "2026-11-24T21:16:14.662Z"
   }
  },
  "ptsDirecto": {},
@@ -9485,15 +9484,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:11:23.572Z"
+   "ultimaBien": "2026-11-24T21:16:18.579Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:11:23.572Z"
+   "ultimaBien": "2026-11-24T21:16:18.579Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:11:23.572Z"
+   "ultimaBien": "2026-11-24T21:16:18.579Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9501,11 +9500,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:11:23.572Z"
+   "ultimaBien": "2026-11-24T21:16:18.579Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:11:23.572Z"
+   "ultimaBien": "2026-11-24T21:16:18.579Z"
   }
  },
  "avisos": [
