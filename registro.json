@@ -4434,7 +4434,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136695535": 1795260962000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/marc-marquez-logra-frenar-bezzecchi-136696471.html": 1795266079000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
@@ -9556,13 +9555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5955,
+   "ok": 5956,
    "fallos": 0,
-   "ejecuciones": 4812,
+   "ejecuciones": 4813,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:31:13.626Z"
+   "ultima": "2026-11-24T11:36:14.557Z"
   }
  },
  "ptsDirecto": {},
@@ -9579,15 +9578,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:31:54.781Z"
+   "ultimaBien": "2026-11-24T11:36:24.346Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:31:54.781Z"
+   "ultimaBien": "2026-11-24T11:36:24.346Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:31:54.781Z"
+   "ultimaBien": "2026-11-24T11:36:24.346Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9595,11 +9594,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:31:54.781Z"
+   "ultimaBien": "2026-11-24T11:36:24.346Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:31:54.781Z"
+   "ultimaBien": "2026-11-24T11:36:24.346Z"
   }
  },
  "avisos": [
