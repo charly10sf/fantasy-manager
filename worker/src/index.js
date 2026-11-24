@@ -517,6 +517,13 @@ export const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 
 export const MAX_CAPTURAS = 3, MAX_CAPTURA = 350000;
 const esCaptura = (x) => typeof x === 'string' && x.length <= MAX_CAPTURA && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]/.test(x.slice(0, 40));
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
+// (0.8.4, fase 2; Carlos, 25 nov: «Domy me ayuda con los fallos: que vea Quién usa la app y los avisos de todos») quien ayuda:
+// ve «Quién usa la app» entero y los avisos de fallo de todos con sus capturas, y nada más. No contesta, no ve el diagnóstico
+// de los demás y para todo lo demás es un usuario normal (anuncios, funciones cerradas, cupos). Por id de cuenta, nunca por
+// nombre: AYUDANTES de wrangler.toml o el secreto FM_AYUDANTES (lo pone worker.yml)
+const ayudantesDe = (env) => String(env.AYUDANTES || '').split(/[\s,;]+/).filter((x) => /^\d+$/.test(x));
+/** lo que puede ver una cuenta: 'dueño', 'ayuda' o '' */
+const papelDe = (env, uid) => (adminsDe(env).includes(String(uid)) ? 'dueño' : ayudantesDe(env).includes(String(uid)) ? 'ayuda' : '');
 
 /** quién llama, comprobado con LaLiga ({ uid, nombre }); se recuerda 10 minutos por sesión */
 // (también en la memoria del Worker: caches.default no guarda nada en *.workers.dev, y sin esto cada petición
@@ -606,6 +613,8 @@ async function fallos(req, env, c, ruta) {
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para mandar avisos', sesion: true }, 401, c);
   const admin = adminsDe(env).includes(u.uid);
+  // (0.8.4) quien ayuda ve los de todos (lista, aviso sin diagnóstico y capturas), pero no contesta
+  const ve = admin || papelDe(env, u.uid) === 'ayuda';
   const cuerpo = req.method === 'POST' ? await req.json().catch(() => null) : null;
 
   if (ruta === '/fallos' && req.method === 'POST') {
@@ -631,7 +640,7 @@ async function fallos(req, env, c, ruta) {
     const lista = (await Promise.all(ks.map((k) => env.VINCULOS.get(k.name)))).filter(Boolean).map((v) => sinDiag(JSON.parse(v)));
     let pendientes = null;
     if (admin) pendientes = (await listar(env, 'f:')).filter((k) => k.metadata && !k.metadata.r).length;
-    return json({ lista, admin, pendientes, yo: u.uid }, 200, c);
+    return json({ lista, admin, ve, pendientes, yo: u.uid }, 200, c);
   }
   if (ruta === '/fallos/visto' && req.method === 'POST') {
     const f = await buscarFallo(env, u, cuerpo && cuerpo.id, false);
@@ -642,13 +651,13 @@ async function fallos(req, env, c, ruta) {
   if (ruta === '/fallos/captura' && req.method === 'GET') {
     const q = new URL(req.url).searchParams;
     const n = Number(q.get('n'));
-    const f = await buscarFallo(env, u, q.get('id'), admin);
+    const f = await buscarFallo(env, u, q.get('id'), ve);
     if (!f || !Number.isInteger(n) || n < 0 || n >= (f.capturas || 0)) return json({ e: 'No existe' }, 404, c);
     const img = await env.VINCULOS.get(`fc:${f.id}:${n}`);
     if (!img) return json({ e: 'Esa captura ya no está' }, 404, c);
     return json({ img }, 200, c);
   }
-  if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  if (!ve) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/todos' && req.method === 'GET') {
     const ks = (await listar(env, 'f:')).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 200);
     return json({ lista: ks.map((k) => ({ id: k.name.split(':').pop(), ...(k.metadata || {}) })) }, 200, c);
@@ -657,8 +666,10 @@ async function fallos(req, env, c, ruta) {
     const f = await buscarFallo(env, u, new URL(req.url).searchParams.get('id'), true);
     if (!f) return json({ e: 'No existe' }, 404, c);
     const { uid, ...resto } = f;
-    return json(resto, 200, c);
+    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona)
+    return json(admin ? resto : sinDiag(f), 200, c);
   }
+  if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/responder' && req.method === 'POST') {
     const respuesta = corta(cuerpo && cuerpo.respuesta, MAX_RESPUESTA).trim();
     if (!respuesta) return json({ e: 'Escribe la respuesta' }, 400, c);
@@ -1557,8 +1568,10 @@ async function hola(req, env, c, ruta) {
     let r;
     try { r = await pedirQuien(env, { op: 'hola', uid: u.uid, nombre: u.nombre, foto: u.foto || '', x, ev: b.ev && typeof b.ev === 'object' ? b.ev : null }); } catch (e) { r = null; }
     if (!r || !r.ok) return json({ e: 'Sin almacén' }, 503, c);
-    // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
-    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
+    // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo; ve: también a
+    // quien ayuda, 0.8.4)
+    const papel = papelDe(env, u.uid);
+    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
@@ -1573,7 +1586,8 @@ async function hola(req, env, c, ruta) {
     try { caras = (await pedirQuien(env, { op: 'caras', ids: ids.slice(0, 40) })).caras || {}; } catch (e) { caras = {}; }
     return json({ caras }, 200, c);
   }
-  if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  // (0.8.4) el dueño y quien ayuda
+  if (!papelDe(env, u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
     // (20 nov: tardaba 112 s con 74 cuentas leyendo el KV clave a clave) ahora es una llamada al objeto, que devuelve el JSON
     // ya escrito; a la vez, las invitaciones y el embudo, con tiempo máximo. Cuánto tarda cada parte, en `tiempos` (ms)

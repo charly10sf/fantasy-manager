@@ -6,6 +6,8 @@
 # códigos van en la caché del Worker. En el mismo almacén van los avisos de fallos.
 # Opcional: FM_ADMINS (si no, vale el ADMINS de wrangler.toml), el número de tu cuenta de LaLiga (sale en la app, en Ajustes > Diagnóstico). Con él, esa
 # cuenta ve en la app los avisos de fallos de todos y puede contestarlos. Varios, separados por comas.
+# Opcional: FM_AYUDANTES (0.8.4), los números de cuenta de quien ayuda con los fallos: ven Quién usa la app y los avisos de
+# todos, sin contestar. Varios, separados por comas.
 name: Worker
 
 on:
@@ -68,11 +70,15 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           FM_ADMINS: ${{ secrets.FM_ADMINS }}
+          FM_AYUDANTES: ${{ secrets.FM_AYUDANTES }}
         run: |
           set -o pipefail
           extra=()
           adm=$(printf '%s' "$FM_ADMINS" | tr -cd '0-9,')
           if [ -n "$adm" ]; then extra=(--var "ADMINS:$adm"); echo "::notice::Avisos de fallos: con dueño"; else echo "::warning::Sin FM_ADMINS: los avisos de fallos se guardan, pero nadie los puede leer ni contestar desde la app"; fi
+          # (0.8.4) quien ayuda con los fallos (ve Quién usa la app y los avisos de todos): el número, solo en el secreto
+          ayu=$(printf '%s' "$FM_AYUDANTES" | tr -cd '0-9,')
+          if [ -n "$ayu" ]; then extra+=(--var "AYUDANTES:$ayu"); echo "::notice::Quien ayuda con los fallos: $(printf '%s' "$ayu" | tr ',' '\n' | grep -c .) cuenta(s)"; fi
           publicar() { npx --yes wrangler@4.158.0 deploy "${extra[@]}" 2>&1 | tee salida.txt; }
           fallo() { grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300; }
           if ! publicar; then

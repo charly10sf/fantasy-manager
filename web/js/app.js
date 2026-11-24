@@ -2545,11 +2545,12 @@ async function abrirAvisos() {
   if (enDemo() || !haySesion()) { S.av = { ...S.av, cargando: false, sinSesion: true }; repintarAvisos(); return; }
   try {
     const r = await misAvisos();
-    Object.assign(S.av, { cargando: false, lista: r.lista, admin: r.admin, pendientes: r.pendientes });
+    Object.assign(S.av, { cargando: false, lista: r.lista, admin: r.admin, ve: !!(r.ve || r.admin), pendientes: r.pendientes });
     repintarAvisos();
     // las respuestas que ves ahora quedan leídas (el numerito se va)
     for (const x of r.lista.filter((y) => y.respuesta && !y.vista)) marcarVisto(x.id).then(pintarNumAvisos).catch(() => {});
-    if (r.admin) {
+    // (0.8.4) los de todos: el dueño y quien ayuda con los fallos (ve)
+    if (r.admin || r.ve) {
       S.av.cargandoTodos = true; repintarAvisos();
       const t = await todosAvisos();
       Object.assign(S.av, { todos: conContestados(t.lista), cargandoTodos: false });
@@ -2581,7 +2582,7 @@ async function enviarAviso() {
     const r = await misAvisos().catch(() => null);
     const lista = (r ? r.lista : S.av.lista) || [];
     S.av.lista = lista.some((x) => x.id === env.id) ? lista : [nuevo, ...lista];
-    if (r) Object.assign(S.av, { admin: r.admin, pendientes: r.pendientes });
+    if (r) Object.assign(S.av, { admin: r.admin, ve: !!(r.ve || r.admin), pendientes: r.pendientes });
     if (!r) { const g = avisosGuardados(); LS.set('avisos', { ...g, lista: [nuevo, ...(g.lista || [])] }); }
     programarFondo();
   } catch (e) {

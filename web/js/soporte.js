@@ -34,7 +34,10 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
 }
 
 /** lo último que se sabe (para el numerito del botón sin esperar a la red) */
-export const avisosGuardados = () => LS.get('avisos', { t: 0, lista: [], admin: false, pendientes: 0 });
+export const avisosGuardados = () => LS.get('avisos', { t: 0, lista: [], admin: false, ve: false, pendientes: 0 });
+/** (0.8.4, fase 2) ves los avisos de todos y «Quién usa la app»: el dueño (admin) o quien ayuda con los fallos (ve), que no
+    contesta. Lo dice el servidor por el número de cuenta (AYUDANTES en worker/wrangler.toml) */
+export const veTodo = () => { const a = avisosGuardados(); return !!(a.admin || a.ve); };
 /** respuestas tuyas sin leer + (si eres el dueño) avisos sin contestar */
 export function numeroAvisos() {
   const a = avisosGuardados();
@@ -46,7 +49,7 @@ export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admi
 /** borra lo que el servidor guarda de ti (ficha de quién usa la app, minutos de uso y tus avisos de fallo con sus capturas) */
 export async function borrarMisDatos() {
   const r = await pedirWorker('POST', '/borrar', {}, { tiempo: 30000 });
-  LS.set('avisos', { t: Date.now(), lista: [], admin: avisosGuardados().admin, pendientes: 0 });
+  LS.set('avisos', { t: Date.now(), lista: [], admin: avisosGuardados().admin, ve: avisosGuardados().ve, pendientes: 0 });
   LS.set('avisos-mandado', 0);
   return r;
 }
@@ -67,7 +70,7 @@ export async function misAvisos() {
   const ya = new Set(LS.get('avisos-notificados', []));
   const nuevasResp = (r.lista || []).filter((x) => x.respuesta && !x.vista && !ya.has(`${x.id}:${x.respondida}`));
   const nuevosRecibidos = r.admin ? Math.max(0, (r.pendientes || 0) - (antes.admin ? antes.pendientes || 0 : 0)) : 0;
-  LS.set('avisos', { t: Date.now(), lista: r.lista || [], admin: !!r.admin, pendientes: r.pendientes || 0, yo: r.yo });
+  LS.set('avisos', { t: Date.now(), lista: r.lista || [], admin: !!r.admin, ve: !!(r.ve || r.admin), pendientes: r.pendientes || 0, yo: r.yo });
   if (nuevasResp.length) LS.set('avisos-notificados', [...ya, ...nuevasResp.map((x) => `${x.id}:${x.respondida}`)].slice(-60));
   return { ...r, nuevasResp, nuevosRecibidos };
 }
@@ -94,9 +97,11 @@ export async function saludar(datos) {
   if (r && r.bv && !LS.get('bienvenida', 0)) LS.set('bienvenida', r.bv);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
-  if (!!a.admin === r.admin) return false;
-  LS.set('avisos', { ...a, admin: r.admin });
-  return r.admin;
+  // (0.8.4) y si ve lo de todos (quien ayuda con los fallos); un servidor de antes no lo dice: solo el dueño
+  const ve = !!(r.ve || r.admin);
+  if (!!a.admin === r.admin && !!a.ve === ve) return false;
+  LS.set('avisos', { ...a, admin: r.admin, ve });
+  return r.admin || ve;
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
 /* la pantalla de bienvenida (Carlos, 9 nov 10:20): una vez por cuenta. Se guarda aquí y en el Worker (/hola con bv), para que

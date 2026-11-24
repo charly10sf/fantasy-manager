@@ -439,6 +439,50 @@ r = await pide({ m: 'GET', ruta: '/caras?liga=77', e: envQ });
 ok(r.s === 200 && r.j.caras['1111'] && Object.keys(r.j.caras).length === 1, `/caras de tu liga: ${r.s} ${r.t}`);
 r = await pide({ m: 'GET', ruta: '/caras?liga=88', e: envQ });
 ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no estás: ${r.s}`);
+// ---------- (0.8.4, fase 2) quien ayuda con los fallos (AYUDANTES): ve Quién usa la app y los avisos de todos, sin contestar ----------
+{
+  // la 2222 (token «y») ayuda; la 4242 manda avisos; el dueño es la 667015 (ADMINS de env), que aquí no llama
+  const envA = { ...envQ, AYUDANTES: '2222, Domy' };
+  minuto();
+  r = await pide({ ruta: '/hola', cuerpo: { v: '0.8.4', canal: 'web' }, tk: 'y'.repeat(30), e: envA });
+  ok(r.s === 200 && r.j.ve === true && r.j.admin === false, `/hola a quien ayuda: ve y no es el dueño (${r.t})`);
+  r = await pide({ ruta: '/hola', cuerpo: { v: '0.8.4', canal: 'web' }, tk: 'x'.repeat(30), e: envA });
+  ok(r.s === 200 && r.j.ve === false && r.j.admin === false, `/hola a los demás: ni ve ni es el dueño (${r.t})`);
+  r = await pide({ m: 'GET', ruta: '/hola/todos', tk: 'y'.repeat(30), e: envA });
+  ok(r.s === 200 && Array.isArray(r.j.lista) && r.j.lista.length > 0, `/hola/todos de quien ayuda: ${r.s}, ${r.j && r.j.lista && r.j.lista.length} cuentas`);
+  r = await pide({ m: 'GET', ruta: '/hola/todos', tk: 'x'.repeat(30), e: envA });
+  ok(r.s === 403, `/hola/todos de los demás: ${r.s}`);
+  r = await pide({ m: 'GET', ruta: '/hola/todos', tk: 'y'.repeat(30), e: { ...envQ, AYUDANTES: 'Otro' } });
+  ok(r.s === 403, `por nombre no vale, solo por número de cuenta: ${r.s}`);
+  // los avisos: uno de la 4242 con diagnóstico y una captura
+  kv.clear(); minuto();
+  r = await pide({ ruta: '/fallos', cuerpo: { texto: 'Se queda en blanco el mercado', diag: 'LaLiga: 200 · secreto de la 4242', capturas: [cap(1000)] }, ip: '7.7.8.1', tk: 'x'.repeat(30), e: envA });
+  const idA = r.j && r.j.id;
+  minuto();
+  r = await pide({ m: 'GET', ruta: '/fallos/mios', tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 200 && r.j.ve === true && r.j.admin === false && r.j.pendientes === null, `/fallos/mios de quien ayuda: ve, sin la cuenta de pendientes (${r.t.slice(0, 90)})`);
+  r = await pide({ m: 'GET', ruta: '/fallos/todos', tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 200 && r.j.lista.length === 1 && r.j.lista[0].id === idA, `/fallos/todos de quien ayuda: ${r.s}`);
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 200 && r.j.texto === 'Se queda en blanco el mercado' && !('diag' in r.j) && !('uid' in r.j) && !r.t.includes('secreto'), `/fallos/uno de quien ayuda: el aviso sin el diagnóstico ni la cuenta (${r.t.slice(0, 90)})`);
+  r = await pide({ m: 'GET', ruta: `/fallos/captura?id=${idA}&n=0`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 200 && /^data:image\/jpeg/.test(r.j.img), `/fallos/captura de quien ayuda: ${r.s}`);
+  r = await pide({ ruta: '/fallos/responder', cuerpo: { id: idA, respuesta: 'Ya está' }, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 403 && !JSON.parse(kv.get(`f:4242:${idA}`).v).respuesta, `/fallos/responder de quien ayuda: ${r.s}, sin respuesta guardada`);
+  // otra cuenta cualquiera (la 3333, con un token que empieza por «q»)
+  const fA = globalThis.fetch;
+  globalThis.fetch = async (u, o) => (String(u).includes('/user/me') && /Bearer q/.test(cabDe(o, 'authorization')) ? new Response(JSON.stringify({ id: 3333, managerName: 'Cualquiera' }), { status: 200 }) : fA(u, o));
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'q'.repeat(30), ip: '7.7.8.3', e: envA });
+  ok(r.s === 403, `/fallos/uno de los demás: ${r.s}`);
+  r = await pide({ m: 'GET', ruta: `/fallos/captura?id=${idA}&n=0`, tk: 'q'.repeat(30), ip: '7.7.8.3', e: envA });
+  ok(r.s === 404, `/fallos/captura de un aviso ajeno, para los demás: ${r.s}`);
+  globalThis.fetch = fA;
+  // el dueño lo sigue viendo entero
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'x'.repeat(30), ip: '7.7.8.4', e: { ...envA, ADMINS: '4242' } });
+  ok(r.s === 200 && /secreto/.test(r.j.diag || ''), 'el dueño ve el diagnóstico');
+  kv.clear();
+}
+
 // ---------- A4: /p e /img, con el Origin puesto a mano ----------
 const p = (url, metodo = 'GET', cab = {}, cuerpo, origen = ORI) => pide({ ruta: '/p', origen, crudo: cuerpo || '', cab: { 'x-u': url, 'x-m': metodo, 'x-h': JSON.stringify(cab) } });
 const TOKEN = 'https://login.laliga.es/laligadspprob2c.onmicrosoft.com/oauth2/v2.0/token?p=B2C_1A_5ULAIP_PARAMETRIZED_SIGNIN';
