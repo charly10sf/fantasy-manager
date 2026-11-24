@@ -163,7 +163,7 @@ export const CASOS = [
   // --- (24 nov, Carlos con Bernardo Silva y Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10») una compra
   // que el mánager cuenta es un hecho, y LaLiga no «suele dar» un tanto fijo. Escena `holgado` (Paredes, de Marcos, 20,54 M) ---
   { id: 'compra-revender', tipo: 'coherencia', q: 'le compro a Marcos a Paredes por precio mercado para revenderlo y sacar el 10%?', debe: /10 ?%|suerte|entre/, noDebe: /no vende a (su|ese)|oferta minima|suele dar(te)? (un|unos)|no lo veo|no la veo/ },
-  { id: 'compra-10', tipo: 'coherencia', sigue: true, q: 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero', debe: /suerte|puede|primera|floja/, noDebe: /no compras|el dueno no vende|suele dar(te)? (un|unos)/ },
+  { id: 'compra-10', tipo: 'coherencia', sigue: true, q: 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero', debe: /suerte|puede|primera|floja|loteria|sorteo|mejor caso|techo|maximo/, noDebe: /no compras|el dueno no vende|suele dar(te)? (un|unos)/ },
   { id: 'laliga-cuanto', tipo: 'coherencia', q: '¿Cuánto da LaLiga por un jugador cuando lo pones a la venta?', debe: /10 ?%/, noDebe: /suele dar(te)? (un|unos) \+?\d|de mediana un/ },
 
 ];
