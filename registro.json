@@ -3088,7 +3088,6 @@
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
    "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
    "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
@@ -3248,18 +3247,6 @@
    "SPORT|136805812": 1795539246000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795284623000,
-    "id": "2403",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Copete regresa a los terrenos de juego",
-    "motivo": "lesion de menisco",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html",
     "medio": "Diario de Sevilla",
@@ -9505,13 +9492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6034,
+   "ok": 6035,
    "fallos": 0,
-   "ejecuciones": 4891,
+   "ejecuciones": 4892,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T18:06:13.042Z"
+   "ultima": "2026-11-24T18:11:13.003Z"
   }
  },
  "ptsDirecto": {},
@@ -9528,15 +9515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:06:21.394Z"
+   "ultimaBien": "2026-11-24T18:11:23.547Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:06:21.394Z"
+   "ultimaBien": "2026-11-24T18:11:23.547Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:06:21.394Z"
+   "ultimaBien": "2026-11-24T18:11:23.547Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9544,11 +9531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:06:21.394Z"
+   "ultimaBien": "2026-11-24T18:11:23.547Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:06:21.394Z"
+   "ultimaBien": "2026-11-24T18:11:23.547Z"
   }
  },
  "avisos": [
