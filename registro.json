@@ -4395,7 +4395,9 @@
    "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254688/aplazado-choque-rubi-salir-volando-cristalera.html": 1795500000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254685/barceloneta-juega-77-faf-hospitalet.html": 1795500000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000
   },
   "hechos": [
    {
@@ -4448,7 +4450,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -4456,17 +4458,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 38,
    "revisar": 23,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 336752,
-  "salida": 17190,
+  "entrada": 338573,
+  "salida": 17351,
   "cacheLee": 145499,
   "cacheEscribe": 18065,
-  "dolares": 0.854573,
+  "dolares": 0.854836,
   "reservado": 0
  },
  "recientes": {
@@ -9468,13 +9470,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5914,
+   "ok": 5915,
    "fallos": 0,
-   "ejecuciones": 4771,
+   "ejecuciones": 4772,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T08:11:14.006Z"
+   "ultima": "2026-11-24T08:16:15.867Z"
   }
  },
  "ptsDirecto": {},
@@ -9491,15 +9493,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:11:23.568Z"
+   "ultimaBien": "2026-11-24T08:16:24.682Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:11:23.568Z"
+   "ultimaBien": "2026-11-24T08:16:24.682Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:11:23.568Z"
+   "ultimaBien": "2026-11-24T08:16:24.682Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9507,11 +9509,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:11:23.568Z"
+   "ultimaBien": "2026-11-24T08:16:24.682Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:11:23.568Z"
+   "ultimaBien": "2026-11-24T08:16:24.682Z"
   }
  },
  "avisos": [
