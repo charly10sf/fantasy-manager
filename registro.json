@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
@@ -9506,13 +9505,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6024,
+   "ok": 6025,
    "fallos": 0,
-   "ejecuciones": 4881,
+   "ejecuciones": 4882,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:16:29.301Z"
+   "ultima": "2026-11-24T17:21:18.392Z"
   }
  },
  "ptsDirecto": {},
@@ -9529,15 +9528,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:16:39.660Z"
+   "ultimaBien": "2026-11-24T17:21:23.729Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:16:39.660Z"
+   "ultimaBien": "2026-11-24T17:21:23.729Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:16:39.660Z"
+   "ultimaBien": "2026-11-24T17:21:23.729Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9545,11 +9544,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:16:39.660Z"
+   "ultimaBien": "2026-11-24T17:21:23.729Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:16:39.660Z"
+   "ultimaBien": "2026-11-24T17:21:23.729Z"
   }
  },
  "avisos": [
