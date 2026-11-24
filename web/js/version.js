@@ -35,7 +35,7 @@ export const NOVEDADES = [
     // y enseña la puja, no el precio de salida; fuera el texto de debajo de «Cambios que haría la app» y el «no tienes a nadie
     // fuera del once» por uno al que la app ya cambia; plan.js `deMasNeto`: al fichar para el once, al que sube le vuelve
     // parte de lo pagado de más (`M.subeTeniendo`)
-    v: '0.8.1', f: '2026-11-24', h: '00:00', t: 'Comprar para aguantar y menos texto',
+    v: '0.8.1', f: '2026-11-24', h: '13:11', t: 'Comprar para aguantar y menos texto',
     cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'Ya no descarta al que sube fuerte', x: 'Si uno del mercado sube mucho cada día y no da tiempo a revenderlo antes de la jornada, pero aguantándolo unos días sí sale a cuenta, el plan te propone pujar por él y pagarlo con tu saldo, con sus cuentas. Antes lo dejaba en «Mirados y descartados».' },
       { tipo: 'mejora', d: 'aviso', t: 'Mirados y descartados, en una frase', x: 'Cada jugador que el plan mira y descarta dice en una sola frase por qué, con la cifra que decide. Antes era un párrafo entero por jugador.' },
