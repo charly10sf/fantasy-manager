@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/castellon-duerme-lider-dedica-triunfo-jesus-miguel-20261121_3479689.html": 1795290743000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/beticos-pidieron-segunda-amarilla-kike-salas-polemica_0_2008558564.html": 1795290372000,
    "AS|https://as.com/futbol/alineacion-posible-del-racing-contra-la-real-sociedad-en-laliga-ea-sports-f202611-n/": 1795290388000,
@@ -3239,7 +3238,8 @@
    "SPORT|136799014": 1795538348000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000,
    "SPORT|136805812": 1795539246000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000,
+   "SPORT|136810666": 1795544869000
   },
   "hechos": [
    {
@@ -3489,7 +3489,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -4443,7 +4443,9 @@
    "n": 10,
    "fallos": 1
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136810666": 1795548672234
+  }
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9475,13 +9477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6050,
+   "ok": 6051,
    "fallos": 0,
-   "ejecuciones": 4907,
+   "ejecuciones": 4908,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T19:26:12.329Z"
+   "ultima": "2026-11-24T19:31:12.234Z"
   }
  },
  "ptsDirecto": {},
@@ -9498,15 +9500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:26:21.575Z"
+   "ultimaBien": "2026-11-24T19:31:28.802Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:26:21.575Z"
+   "ultimaBien": "2026-11-24T19:31:28.802Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:26:21.575Z"
+   "ultimaBien": "2026-11-24T19:31:28.802Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9514,11 +9516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:26:21.575Z"
+   "ultimaBien": "2026-11-24T19:31:28.802Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T19:26:21.575Z"
+   "ultimaBien": "2026-11-24T19:31:28.802Z"
   }
  },
  "avisos": [
