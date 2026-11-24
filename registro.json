@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
@@ -9508,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6027,
+   "ok": 6028,
    "fallos": 0,
-   "ejecuciones": 4884,
+   "ejecuciones": 4885,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:31:11.920Z"
+   "ultima": "2026-11-24T17:36:14.701Z"
   }
  },
  "ptsDirecto": {},
@@ -9531,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:31:20.098Z"
+   "ultimaBien": "2026-11-24T17:36:22.882Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:31:20.098Z"
+   "ultimaBien": "2026-11-24T17:36:22.882Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:31:20.098Z"
+   "ultimaBien": "2026-11-24T17:36:22.882Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9547,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:31:20.098Z"
+   "ultimaBien": "2026-11-24T17:36:22.882Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:31:20.098Z"
+   "ultimaBien": "2026-11-24T17:36:22.882Z"
   }
  },
  "avisos": [
