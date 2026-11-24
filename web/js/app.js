@@ -1159,7 +1159,8 @@ function pintar({ arriba = false } = {}) {
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas') cargarJornadaMia();
   // (24 nov) sin jornada en juego, también: las 24 h de después de una, Directo enseña tu liga en esa jornada
-  if (S.vista === 'directo' && (S.seg.directo === 'jornadas' || V.ancho() || !S.M.enJuego)) cargarPtsJornadas();
+  // (y en Rivales → Por jornada, donde está desde el 24 nov)
+  if ((S.vista === 'directo' && !S.M.enJuego) || (S.vista === 'rivales' && S.seg.rivales === 'jornadas')) cargarPtsJornadas();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
   // los anuncios: en la web, el de AdSense en las pestañas (nunca en Pregunta); en la app de Google Play, que ya se pueden
@@ -2171,7 +2172,7 @@ function guardarPtsJ() {
   LS.set(K('pts-jornadas'), Object.fromEntries(Object.entries(S.ptsJ || {}).filter(([k, v]) => acabada(Number(k)) && v && Object.keys(v).length)));
 }
 /**
- * Directo → Por jornada: los puntos de cada equipo en todas las jornadas acabadas (de 3 en 3; las que ya están
+ * Rivales → Por jornada: los puntos de cada equipo en todas las jornadas acabadas (de 3 en 3; las que ya están
  * guardadas no se piden; lo que falla, como mucho cada 3 minutos)
  */
 async function cargarPtsJornadas() {
@@ -2183,7 +2184,8 @@ async function cargarPtsJornadas() {
   // (24 nov) todas las acabadas, de la 1 a la última (el calendario que se baja solo trae de la pasada en adelante)
   const faltan = jornadasAcabadas(S.M, S.D).filter((n) => !S.ptsJ[n] && ahora - (S.ptsJT[n] || 0) > 3 * MIN);
   // (si ya estaban todas guardadas, se repinta una vez con ellas)
-  if (!faltan.length) { if (deGuardado && S.vista === 'directo') pintarVivo({ forzar: true }); return; }
+  const repintar = () => { if (S.hoja) return; if (S.vista === 'directo') pintarVivo({ forzar: true }); else if (S.vista === 'rivales') pintar(); };
+  if (!faltan.length) { if (deGuardado) repintar(); return; }
   S.cargandoPtsJ = true;
   try {
     for (let i = 0; i < faltan.length; i += 3) {
@@ -2195,7 +2197,7 @@ async function cargarPtsJornadas() {
   } catch (e) { /* la sesión ha caducado: se pide al volver a entrar */ }
   S.cargandoPtsJ = false;
   guardarPtsJ();
-  if (S.vista === 'directo') pintarVivo({ forzar: true });
+  repintar();
 }
 /** el once de un mánager en una jornada acabada (no cambia: se guarda; lo que falla, otra vez a los 3 minutos) */
 async function cargarOnceJornada(tid, n) {
@@ -3735,7 +3737,7 @@ document.addEventListener('click', async (ev) => {
     case 'verPuesto': S.seg.equipo = 'plantilla'; S.ordenEq = 'puesto'; cerrarHoja(); if (S.vista !== 'equipo') ir('equipo'); else pintar(); bajarA(`#eq-pos-${d.p}`); break;
     // tu once y tus puntos de una jornada, en Equipo → Jornadas
     case 'irJornada': S.seg.equipo = 'jornadas'; S.jornadaSel = Number(d.n); cerrarHoja(); ir('equipo'); break;
-    // (24 nov) el once de un mánager en una jornada acabada, con lo que sumó cada uno (desde Directo → Por jornada)
+    // (24 nov) el once de un mánager en una jornada acabada, con lo que sumó cada uno (desde Rivales → Por jornada)
     case 'onceJ': {
       const arg = `${d.t}:${Number(d.n)}`;
       if (S.hoja && S.tipoHoja && S.tipoHoja[0] === 'oj') { S.tipoHoja = ['oj', arg]; repintarHoja(); } else hoja('oj', arg);

@@ -20,7 +20,7 @@ export function jornadasVisibles(M, D) {
   return l;
 }
 /** (24 nov) las jornadas acabadas, de la 1 a la última (el calendario que se baja solo trae de la pasada en adelante: las
- *  de antes, por los resultados). Directo → Por jornada las enseña todas, no solo la última */
+ *  de antes, por los resultados). Rivales → Por jornada las enseña todas, no solo la última */
 export function jornadasAcabadas(M, D) {
   const ahora = Date.now();
   return jornadasVisibles(M, D).filter((j) => estadoJornada(M, j.n) === 'acabada' && !(j.ini && j.ini > ahora) && !(j.fin && j.fin > ahora)).map((j) => j.n);
@@ -44,7 +44,7 @@ const ptsDe = (j, n) => { const w = (j.semanas || []).find((x) => x.n === n); re
 const clsPts = (v) => (v == null ? 'cero' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'cero');
 
 /** el once de una jornada en su campo, cada uno con su rival y lo que sumó (Equipo → Jornadas y el once de cualquier
- *  mánager en una jornada, desde Directo → Por jornada) */
+ *  mánager en una jornada, desde Rivales → Por jornada) */
 export function campoJornada(S, js, forma, n, est, puntosDe) {
   const { M, D } = S;
   const campo = js.filter((j) => j.pos < 5);
@@ -136,7 +136,7 @@ export function jornadasHTML(S) {
 
 /**
  * (24 nov, Carlos: «si le das, que salga el once de ese jugador con los puntos de los jugadores, no el perfil») el once
- * de cualquier mánager en una jornada acabada, con lo que sumó cada uno. Se abre desde Directo → Por jornada; app.js lo
+ * de cualquier mánager en una jornada acabada, con lo que sumó cada uno. Se abre desde Rivales → Por jornada; app.js lo
  * pide a LaLiga (cargarOnceJornada, /teams/{id}/lineup/week/{n}) y lo guarda en S.oncesJ['tid:n']
  */
 export function onceJornadaHTML(S, arg, pjDe = null) {

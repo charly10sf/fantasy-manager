@@ -403,11 +403,11 @@ export function directo(S) {
   h += `<p class="entradilla dt-ent">${vivos ? `<span class="vivo-dot"></span><b>${vivos}</b> jugándose · ` : ''}${fin} acabado${fin === 1 ? '' : 's'} · ${ps.length - vivos - fin} por jugar
     <button class="enlace dt-act" data-accion="vivoYa">${icono('refrescar')}${S.cargandoVivo ? 'Actualizando…' : V ? `Actualizado ${rel(V.t)}` : 'Actualizar'}</button></p>`;
   h += resumenHTML(S, n, ps);
-  if (ancho()) return h + cols(listaPartidos(S, n, ps), ligaHTML(S, n, ps) + onceHTML(S, n, ps)) + porJornadaHTML(S);
-  h += tabs('directo', seg, [['partidos', 'Partidos', vivos, 'verde'], ['liga', 'Tu liga'], ['once', 'Tu once'], ['jornadas', 'Por jornada']]);
+  // (24 nov) «Por jornada» pasa a Rivales
+  if (ancho()) return h + cols(listaPartidos(S, n, ps), ligaHTML(S, n, ps) + onceHTML(S, n, ps));
+  h += tabs('directo', seg, [['partidos', 'Partidos', vivos, 'verde'], ['liga', 'Tu liga'], ['once', 'Tu once']]);
   if (seg === 'liga') h += ligaHTML(S, n, ps);
   else if (seg === 'once') h += onceHTML(S, n, ps);
-  else if (seg === 'jornadas') h += porJornadaHTML(S);
   else h += listaPartidos(S, n, ps);
   return h;
 }
@@ -434,17 +434,16 @@ function sinJornada(S) {
   }
   if (!a && !b) return h + nada('No hay jornadas a la vista.');
   const liga = mUlt ? rankingJornadaHTML(S, ult.n, mUlt) : '';
-  if (ancho()) return h + (liga ? cols(liga, `${b}${a}`, 'mitades') : a && b ? cols(a, b, 'mitades') : a + b) + porJornadaHTML(S);
+  if (ancho()) return h + (liga ? cols(liga, `${b}${a}`, 'mitades') : a && b ? cols(a, b, 'mitades') : a + b);
   // sin jornada en juego, dos pestañas: los partidos (la próxima y la última) y los puntos de cada uno por jornada; las 24 h
   // de después de una jornada, tres, con tu liga en esa jornada primero
+  // (los puntos de cada uno por jornada, en Rivales → Por jornada desde el 24 nov)
   if (liga) {
-    const seg = ['partidos', 'jornadas'].includes(S.seg.directo) ? S.seg.directo : 'liga';
-    h += tabs('directo', seg, [['liga', 'Tu liga'], ['partidos', 'Partidos'], ['jornadas', 'Por jornada']]);
-    return h + (seg === 'jornadas' ? porJornadaHTML(S) : seg === 'partidos' ? b + a : liga);
+    const seg = S.seg.directo === 'partidos' ? 'partidos' : 'liga';
+    h += tabs('directo', seg, [['liga', 'Tu liga'], ['partidos', 'Partidos']]);
+    return h + (seg === 'partidos' ? b + a : liga);
   }
-  const seg = S.seg.directo === 'jornadas' ? 'jornadas' : 'partidos';
-  h += tabs('directo', seg, [['partidos', 'Partidos'], ['jornadas', 'Por jornada']]);
-  return h + (seg === 'jornadas' ? porJornadaHTML(S) : a + b);
+  return h + a + b;
 }
 
 /* ---------------- la ficha de un partido ---------------- */

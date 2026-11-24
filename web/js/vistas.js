@@ -15,6 +15,7 @@ import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos } from './operaciones.js';
+import { porJornadaHTML } from './directo.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -1277,9 +1278,11 @@ export function rivales(S) {
   let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
+  // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
 
-  if (seg !== 'clausulas') {
+  if (seg === 'jornadas') h += porJornadaHTML(S);
+  else if (seg !== 'clausulas') {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;

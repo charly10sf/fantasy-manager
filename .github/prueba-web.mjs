@@ -1409,7 +1409,15 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
         if (horas === 3) {
           if (!/acabada/i.test(r.eti) || r.tabs[0] !== 'Tu liga' || r.filas !== r.equipos || !/quedaste \d+º con \d+/.test(r.sub)) mal(`jornada acabada en Directo, ${nombre}: ${JSON.stringify(r)}`);
           else bien(`jornada acabada en Directo, ${nombre}: «${r.eti}», «Tu liga» primero con los ${r.filas} equipos («${r.sub}»)`);
-          await page.evaluate(() => document.querySelector('[data-seg="directo:jornadas"]').click());
+          // (24 nov) «Por jornada» está en Rivales, delante de Cláusulas, y ya no en Directo
+          const enDirecto = await page.evaluate(() => !!document.querySelector('[data-seg="directo:jornadas"]'));
+          if (enDirecto) mal('Por jornada sigue en Directo');
+          await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
+          await page.waitForTimeout(600);
+          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas') mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas: ${orden.join(' · ')}`);
+          else bien('Rivales: Clasificación · Por jornada · Cláusulas');
+          await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
           await page.waitForTimeout(600);
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
           if (!q.chips.length || q.filas !== r.equipos) mal(`Por jornada, la clasificación de la jornada: ${JSON.stringify(q)}`);
