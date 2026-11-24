@@ -4372,7 +4372,8 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-avala-dni-digital-elecciones-rechaza-recurso-contra-urnas-carton-nietos-20261124151755.html": 1795529875000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
    "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
-   "SPORT|136810666": 1795544869000
+   "SPORT|136810666": 1795544869000,
+   "SPORT|136811655": 1795554036000
   },
   "hechos": [
    {
@@ -4425,7 +4426,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 11,
+   "n": 12,
    "fallos": 1
   },
   "espera": {}
@@ -9477,13 +9478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6084,
+   "ok": 6085,
    "fallos": 0,
-   "ejecuciones": 4939,
+   "ejecuciones": 4940,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T22:01:19.693Z"
+   "ultima": "2026-11-24T22:06:12.518Z"
   }
  },
  "ptsDirecto": {},
@@ -9500,15 +9501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T22:01:24.204Z"
+   "ultimaBien": "2026-11-24T22:06:16.536Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T22:01:24.204Z"
+   "ultimaBien": "2026-11-24T22:06:16.536Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T22:01:24.204Z"
+   "ultimaBien": "2026-11-24T22:06:16.536Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9516,7 +9517,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T22:01:24.204Z"
+   "ultimaBien": "2026-11-24T22:06:16.536Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
