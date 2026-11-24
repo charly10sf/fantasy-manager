@@ -56,6 +56,8 @@ const escena = (P, op) => P.page.evaluate(async (op) => {
   const mr = (M.mercado || []).find((m) => String(m.pid) === String(cand.id));
   if (mr) mr.puja = Math.round(cand.valor / 1e4) * 1e4;
   const cb = M.cambioDe(pid);
+  // (24 nov) la decisión de cada jugador se toma al analizar y ya ha mirado los recambios: la puja de la escena, también en ellos
+  if (cb && mr) for (const r of cb.rec) if (String(r.pid) === String(cand.id)) r.puja = mr.puja;
   const dbg = '';
   window.__dbgR = null;
   const R = Pl.planDeHoy(D, M, Dt.cfg());
@@ -85,7 +87,7 @@ const escena = (P, op) => P.page.evaluate(async (op) => {
   const v = (M.misVentas || []).find((y) => y.pid === pid);
   let ficha = '';
   try { ficha = String(Ho.fichaJugador({ ...S, D, H, M }, pid) || ''); } catch (e) { ficha = `ERROR ${e.message}`; }
-  return { quitadaIA, catTxt, dbg, n: j.nombre, rec: cand.nombre, bs: !!M.bajaSeguido(pid), cb: cb ? cb.rec.map((r) => r.j.nombre) : null, vV: !!vV, vP: !!vP, motivo: vV ? vV.motivo : '', quitada, consejo: v && v.consejo, porque: v && v.porque, ficha: /Véndelo y ficha a otro/.test(ficha), fichaErr: ficha.startsWith('ERROR') ? ficha : '' };
+  return { quitadaIA, catTxt, dbg, n: j.nombre, rec: cand.nombre, bs: !!M.bajaSeguido(pid), cb: cb ? cb.rec.map((r) => r.j.nombre) : null, vV: !!vV, vP: !!vP, motivo: vV ? vV.motivo : '', quitada, consejo: v && v.consejo, porque: v && v.porque, base: (M.decisionBase(pid) || {}).oferta || null, vA: ops.some((o) => o.pid === pid && o.accion === 'vender' && !o.descartada), ficha: /Véndelo y ficha a otro/.test(ficha), fichaErr: ficha.startsWith('ERROR') ? ficha : '' };
 }, op);
 
 const P = await pagina('martes');
@@ -106,7 +108,8 @@ try {
   r = await escena(P, { oferta: true, fichado: true });
   if (!r.falta) {
     ok(!r.cb, `(e) con ${r.rec} ya fichado, ya no hay cambio (${JSON.stringify(r.cb)})`);
-    ok(r.consejo === 'aceptar', `(e) y la oferta se acepta: ${r.consejo} («${r.porque}»)`);
+    // (24 nov, decide.js) el cambio ya no la frena (sin mirar el plan, se aceptaría) y Equipo dice lo que hace el plan con ella
+    ok(r.base === 'aceptar' && (r.consejo === 'aceptar') === r.vA, `(e) y la oferta ya no la frena el cambio (${r.base}); Equipo, como el plan: ${r.consejo} («${r.porque}»)`);
   }
 } finally { await cerrar(P); }
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');

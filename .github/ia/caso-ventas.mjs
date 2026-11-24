@@ -2,9 +2,9 @@
 // pregunta de vender a cuatro de los suyos «si me dan más que su cláusula», la IA dijo «a LaLiga no le sacas más que su
 // cláusula» (mezclaba la oferta de LaLiga con la cláusula) y no miró la tendencia ni el precio para un rival. Ahora las
 // cuentas las hace M.ventaMia y van al chat con su veredicto (ventasMiasTxt). Sin red, con la liga de ejemplo:
-//  (a) uno que sube con la cláusula pegada a su valor, a punto de abrirse y con un rival rico: QUEDÁRTELO Y PROTEGERLO,
+//  (a) uno que sube con la cláusula pegada a su valor, a punto de abrirse y con un rival rico: AGUANTAR Y PROTEGERLO,
 //      y sin mandar subir la cláusula si cuesta más de lo que va a subir
-//  (b) uno que baja todos los días: VENDER (o AGUANTARLO POR AHORA si el plan de hoy lo aguanta), nunca subirle la cláusula
+//  (b) uno que baja todos los días: VENDER (o AGUANTAR si su decisión es aguantarlo: decide.js), nunca subirle la cláusula
 //  (c) en martes, parón y sábado, con todos los suyos: las cifras cuadran (LaLiga entre su mínimo y su máximo, lo del rival
 //      de menos a más), cada línea lleva LaLiga, la cláusula y el rival por separado, y nada de NaN ni undefined
 //  (d) dice lo mismo que el plan de hoy (si lo vende, VENDER) y que las ofertas (si la app la acepta, ACEPTAR)
@@ -71,12 +71,12 @@ const todos = async (P) => P.page.evaluate(async () => {
 {
   const P = await pagina('martes');
   const r = await forzado(P);
-  ok(r.sube.ver === 'proteger' && /QUEDÁRTELO Y PROTEGERLO/.test(r.sube.linea), `(a) ${r.sube.n}, que sube con la cláusula a su valor a punto de abrirse: quedárselo y protegerlo (${r.sube.ver}, fase ${r.sube.fase})`);
+  ok(r.sube.ver === 'proteger' && /LA DECISIÓN DE LA APP: AGUANTAR Y PROTEGERLO/.test(r.sube.linea), `(a) ${r.sube.n}, que sube con la cláusula a su valor a punto de abrirse: quedárselo y protegerlo (${r.sube.ver}, fase ${r.sube.fase})`);
   ok(!/Súbele la cláusula/.test(r.sube.linea) || (r.sube.prot && r.sube.prot.como === 'subir' && r.sube.prot.coste <= Math.max(0, r.sube.p14) / 2), `(a) no manda pagar por subirle la cláusula más de lo que va a subir (${r.sube.prot && r.sube.prot.como})`);
   ok(/se lo llevan a precio de mercado|se llevan a precio de mercado/.test(r.sube.linea), '(a) dice que, si se lo clausulan, se llevan lo que iba a subir');
-  ok(r.baja.ver === 'vender' && /VEREDICTO DE LA APP: (VENDER|AGUANTARLO POR AHORA)/.test(r.baja.linea), `(b) ${r.baja.n}, que baja todos los días: vender o, si el plan lo aguanta, aguantarlo por ahora (${r.baja.ver}, fase ${r.baja.fase})`);
+  ok(r.baja.ver === 'vender' && /LA DECISIÓN DE LA APP: (VENDER|AGUANTAR)/.test(r.baja.linea), `(b) ${r.baja.n}, que baja todos los días: vender o, si el plan lo aguanta, aguantarlo por ahora (${r.baja.ver}, fase ${r.baja.fase})`);
   ok(!/Súbele la cláusula|Blíndalo/.test(r.baja.linea), '(b) a uno que baja no se le sube la cláusula ni se blinda');
-  ok(!(/VEREDICTO DE LA APP: VENDER:/.test(r.baja.linea) && /lo aguanta/.test(r.baja.linea)), '(b) no dice a la vez vender y que el plan lo aguanta');
+  ok(!(/LA DECISIÓN DE LA APP: VENDER/.test(r.baja.linea) && /se aguanta/.test(r.baja.linea)), '(b) no dice a la vez vender y que el plan lo aguanta');
   await P.cerrar();
 }
 for (const escena of ['martes', 'paron', 'sabado']) {
@@ -88,9 +88,9 @@ for (const escena of ['martes', 'paron', 'sabado']) {
   ok(lineas.length === r.ys.length && lineas.every((l) => /\| LALIGA: /.test(l) && /\| CLÁUSULA /.test(l) && /\| A UN RIVAL /.test(l) && /TENDENCIA: /.test(l)), `(c) ${escena}: cada uno con su tendencia, LaLiga, la cláusula y el rival por separado`);
   ok(!/NaN|undefined|null M|\bInfinity/.test(r.txt), `(c) ${escena}: sin NaN, undefined ni null`);
   const linea = (n) => lineas.find((l) => l.startsWith(`- ${n} (`)) || '';
-  const noVende = r.vende.filter((n) => linea(n) && !/VEREDICTO DE LA APP: VENDER/.test(linea(n)));
+  const noVende = r.vende.filter((n) => linea(n) && !/LA DECISIÓN DE LA APP: VENDER/.test(linea(n)));
   ok(!noVende.length, `(d) ${escena}: lo que vende el plan de hoy sale como VENDER (${r.vende.join(', ') || 'no vende a nadie'})`);
-  const malOf = r.conOferta.filter((o) => (o.consejo === 'aceptar' ? !/VEREDICTO DE LA APP: ACEPTAR LA OFERTA/.test(linea(o.n)) : !/VEREDICTO DE LA APP: (NO ACEPTAR AÚN LA OFERTA|VENDER)/.test(linea(o.n))));
+  const malOf = r.conOferta.filter((o) => (o.consejo === 'aceptar' ? !/LA DECISIÓN DE LA APP: VENDER: ACEPTAR LA OFERTA/.test(linea(o.n)) : !/LA DECISIÓN DE LA APP: (AGUANTAR[^:]*: NO ACEPTAR LA OFERTA|AGUANTAR Y PROTEGERLO \(NO ACEPTAR LA OFERTA|VENDER, PERO ESTA OFERTA NO|NO SE VENDE)/.test(linea(o.n))));
   ok(!malOf.length, `(d) ${escena}: con una oferta, lo mismo que aconseja la app en Equipo (${r.conOferta.map((o) => `${o.n} ${o.consejo}`).join(', ') || 'ninguna'})`);
   const malMias = r.enMias.filter((o) => !o.linea.includes(`CON LA OFERTA QUE TIENE: ${o.consejo.toUpperCase()}`) || /aceptaría hoy la oferta/.test(o.linea));
   ok(!malMias.length, `(d) ${escena}: en MIS JUGADORES, la oferta con el mismo consejo y sin «aceptaría» suelto${malMias.length ? `: ${malMias.map((o) => o.n).join(', ')}` : ''}`);

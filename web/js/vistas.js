@@ -4,6 +4,7 @@ import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
+import { ventaVista } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
 import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan } from './ia.js';
@@ -255,7 +256,9 @@ function urgentesDe(S) {
     nota[a.pid] = 'Se ha abierto después de tu plan: no lo tiene en cuenta.';
     return false;
   };
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
+  // (24 nov, decide.js) y lo de vender o buscar sustituto, solo si es lo que dice la decisión del jugador con el plan delante
+  const segunDec = (a) => { if (!a.pid || !M.decision || !['vender', 'sustituto'].includes(a.tipo)) return true; const d = M.decision(a.pid); return !d || (a.tipo === 'vender' ? d.accion === 'vender' && d.matiz !== 'por-dinero' : d.accion === 'aguantar'); };
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
   // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
   // arriba y el plan de debajo sin Rodri, sin explicar nada)
   const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];
@@ -317,8 +320,10 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const { M } = S;
   const xs = M.mias.filter((x) => x.j && x.j.pos !== 5);
   if (!xs.length) return '';
-  const giro = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia === 'ya');
-  const frena = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia !== 'ya');
+  // (24 nov, decide.js) lo de vender sale de la decisión de cada uno: los que se venden y los titulares que giran y se aguantan
+  const vv = xs.map((x) => ({ x, v: ventaVista(M, x, { sinInercia: bloqueada('inercia') }) })).filter((y) => y.v && !y.v.d.enVenta);
+  const giro = vv.filter((y) => y.v.d.accion === 'vender').map((y) => y.x);
+  const frena = vv.filter((y) => y.v.d.accion !== 'vender').map((y) => y.x);
   const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
   const dudas = xs.filter((x) => x.j.estado === 'doubtful');
   const riesgo = xs.filter((x) => x.riesgo === 'alto');
@@ -335,8 +340,8 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
     return v.join('');
   };
   const chips = [
-    !sinI && de(giro, 'mal', (n) => `${n} ha girado`),
-    !sinI && de(frena, 'duda', (n) => `${n} frenando`),
+    de(giro, 'mal', (n) => `${n}: vender`),
+    de(frena, 'duda', (n) => `${n} baja · titular`),
     de(confFuera, 'mal', (n) => `${n} no juega`),
     de(confSup, 'duda', (n) => `${n} suplente`),
     de(malos, 'mal', (n) => `${n} de baja`),
@@ -1135,14 +1140,16 @@ function eqEstadoHTML(S) {
     else if (['fuera', 'baja'].includes(c)) at.push({ x, n: 'mal', t: 'No va convocado', sust: true });
     else if (['suplente', 'nosale'].includes(c)) at.push({ x, n: 'duda', t: 'No es titular en el once confirmado', sust: true });
     else if (x.j.estado === 'doubtful') at.push({ x, n: 'duda', t: 'En duda para el próximo partido', sust: true });
-    if (!sinI && x.ventaInercia) at.push({ x, n: x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda', t: x.ventaInercia.urgencia === 'ya' ? 'Ha girado: toca venderlo' : 'Se está frenando: piensa en venderlo', sust: true });
+    // (24 nov, decide.js) lo mismo que la pastilla, el plan y la IA: antes aquí ponía «toca venderlo» de un titular que la pastilla aguantaba
+    const vvA = ventaVista(M, x, { sinInercia: sinI });
+    if (vvA) at.push({ x, n: vvA.n, t: vvA.largo, sust: true });
     if (x.riesgo === 'alto') at.push({ x, n: 'mal', t: `Cláusula en riesgo: ${eur(x.clausula)}${x.abierta ? ', abierta' : ''}`, cl: true });
   }
   at.sort((a, b) => (a.n === b.n ? 0 : a.n === 'mal' ? -1 : 1));
   const pueden = xs.filter((x) => !MALOS_EQ.includes(x.j.estado) && !['fuera', 'baja'].includes(conf(x))).length;
   const suben = xs.filter((x) => x.tend && num(x.tend.d1) > 0).length, bajan = xs.filter((x) => x.tend && num(x.tend.d1) < 0).length;
   const abiertas = M.mias.filter((x) => x.abierta && x.clausula).length, riesgo = M.mias.filter((x) => x.riesgo === 'alto').length;
-  const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
+  const vender = sinI ? null : xs.filter((x) => { const d = M.decision ? M.decision(x.pid) : null; return d && d.accion === 'vender'; }).length;
   const tiles = [
     // (22 nov) abre la hoja de las bajas de la jornada en «Tu liga», con los tuyos primero (bajas.js; Carlos: sin botón nuevo en Equipo)
     `<button class="eq2-t eq2-bajas ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="bajas" data-v="liga" aria-label="${pueden} de ${xs.length} pueden jugar: ver las bajas"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span><span class="cz-t cz-mini" aria-hidden="true">${icono('cruz')}</span></button>`,
@@ -1182,7 +1189,7 @@ function eqPlantillaHTML(S, op) {
     pills: [
       estadoPill(x.j),
       // (24 nov) a un titular el plan no lo vende hasta que baja todos los días (Carlos, 14 nov): sin «vender» en la pastilla
-      M.cambioDe && M.cambioDe(x.pid) ? `<span class="pill mal">${icono('cambio')}Vender · busca recambio</span>` : x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? ((tit) => `<span class="pill ${x.ventaInercia.urgencia === 'ya' && !tit ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${tit ? (x.ventaInercia.urgencia === 'ya' ? 'Ha girado · titular' : 'Frenando · titular') : x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>`)(M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) : '',
+      ((vvP) => (vvP && (vvP.d.matiz === 'con-recambio' || !op(x.pid)) ? `<span class="pill ${vvP.n}" title="${esc(vvP.d.porque)}">${icono(vvP.icono)}${esc(vvP.pill)}</span>` : ''))(ventaVista(M, x, { sinInercia: bloqueada('inercia') })),
       x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
       M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
       M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
@@ -1568,7 +1575,7 @@ function sugerenciasDe(S) {
   const out = [];
   const add = (t) => { if (t && !out.includes(t) && out.length < 6) out.push(t); };
   if (M) {
-    const vi = M.mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
+    const vi = M.mias.filter((x) => x.ventaInercia && !bloqueada('inercia') && ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender').sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
     if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${vi.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando'}`);
     const cl = M.clausulas.find((x) => x.abierta && x.meLlega && x.interes >= 55);
     if (cl) add(`¿Clausulo a ${cl.j.nombre} por ${eur(cl.clausula)}?`);

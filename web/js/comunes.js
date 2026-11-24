@@ -176,11 +176,11 @@ export function calendarioHTML(M, j, mio = false, S = {}) {
     const poco = !vi && ine && (ine.fase === 'giro' || ine.fase === 'baja') && !(pz && pz.nivel >= 3) ? Math.max(0, -ine.proyJ) : null;
     const baja = vi ? (vi.urgencia === 'ya' ? 'está bajando de valor' : 'está a punto de girar a la baja') : '';
     const pierde = vi && vi.perder > 0 ? ` (hasta la jornada, unos ${eur(vi.perder)} menos)` : '';
-    if (M.enVenta && M.enVenta.has(j.id)) consejo = `Lo tienes en venta: aquí manda la oferta (mira «En venta»)${vi ? `, y ${baja}${pierde}` : ''}.`;
-    else if (vi) {
-      consejo = c.tipo === 'favorable' ? `Le vienen partidos buenos, pero ${baja}${pierde}: manda la venta. Lo que sume en puntos no compensa lo que pierde cada día; si es titular en tu once, busca antes quién lo sustituya.`
-        : c.tipo === 'duro' ? `Partidos difíciles y ${baja}${pierde}: más motivo para venderlo.`
-        : `${baja[0].toUpperCase()}${baja.slice(1)}${pierde}: manda la venta.`;
+    // (24 nov, decide.js) con los tuyos manda su decisión: la misma frase que en Hoy, Equipo y la IA (antes aquí decía
+    // «manda la venta» de un titular que el plan aguantaba)
+    const dec = M.decision ? M.decision(j.id) : null;
+    if (dec && (dec.accion === 'vender' || dec.enVenta || dec.regla === 'titular-gira' || dec.matiz === 'busca-sustituto')) {
+      consejo = `${dec.accion === 'vender' && c.tipo === 'favorable' ? 'Le vienen partidos buenos, pero manda la venta. ' : ''}${dec.porque}`;
     } else if (poco != null) {
       consejo = `Va bajando poco a poco${poco > 0 ? ` (unos ${eur(poco)} hasta la jornada)` : ''}: ${c.tipo === 'favorable' ? 'los partidos buenos que le vienen' : 'el calendario'} no son motivo para quedártelo si te sale una buena venta.`;
     } else {

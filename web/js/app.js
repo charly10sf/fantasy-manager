@@ -1714,6 +1714,8 @@ function montarPlan() {
     // el plan corto de la IA sale del motor: mientras no cambie el saldo, sus cuentas para la jornada siguen valiendo
     if (P.motor && P.cuentas && P.foto && P.foto.dinero === S.D.dinero) S.plan = rematarMotor(S.plan, S.M, { titular: false });
   } else S.plan = planDeHoy(S.D, S.M, S.c);
+  // (24 nov, decide.js) el plan que se ve: con él, la decisión de cada jugador dice «hace falta el dinero» donde el plan lo vende por eso
+  if (S.M.verPlan) S.M.verPlan(S.plan);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
   // (24 nov) los cambios del plan (quién sale → quién entra): si ganas la puja, el motor da relevo al que sale

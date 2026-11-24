@@ -56,7 +56,7 @@ const escena = (P, op) => P.page.evaluate(async (op) => {
   const linea = (t) => t.split('\n').find((l) => l.startsWith(`- ${j.nombre} (vale`)) || '';
   const lineaIA = linea(I.contexto(D, M, Dt.cfg())) || linea(I.contexto(D, M, Dt.cfg(), { chat: true }));
   const p = M.perdida(pid), pp = M.ppEsperado(j) || 0;
-  return { n: j.nombre, consejo: v && v.consejo, porque: v && v.porque, enPlan, enHoy, lineaIA: lineaIA.slice(0, 400), perdida: Math.round(p * 10) / 10, sinRelevo: p >= 1 && p >= 0.5 * pp, baja: !!M.bajaSeguido(pid), p1: M.tend(pid).p1, dinero: D.dinero, pujas: M.misPujas, protege: !!(v && v.protege) };
+  return { n: j.nombre, consejo: v && v.consejo, porque: v && v.porque, base: (M.decisionBase(pid) || {}).oferta || null, enPlan, enHoy, lineaIA: lineaIA.slice(0, 400), perdida: Math.round(p * 10) / 10, sinRelevo: p >= 1 && p >= 0.5 * pp, baja: !!M.bajaSeguido(pid), p1: M.tend(pid).p1, dinero: D.dinero, pujas: M.misPujas, protege: !!(v && v.protege) };
 }, op);
 
 const P = await pagina('martes');
@@ -103,7 +103,9 @@ try {
   r = await escena(V, { sinPujas: true });
   ok(r.consejo === 'esperar', `(c) el viernes con dinero y sin pujas: ${r.consejo}`);
   r = await escena(V, {});
-  ok(r.consejo === 'aceptar', `(c) el viernes con lo pujado por encima del saldo y sin otra oferta antes de la jornada: ${r.consejo} («${r.porque}»)`);
+  // (24 nov, decide.js) la oferta deja de estar protegida (sin mirar el plan, se aceptaría) y lo que se enseña es lo que hace
+  // el plan: si prefiere retirar la puja y no tocar al titular, Equipo dice esperar con ese motivo; si la acepta, aceptar
+  ok(r.base === 'aceptar' && (r.consejo === 'aceptar') === (r.enPlan.length > 0), `(c) el viernes con lo pujado por encima del saldo y sin otra oferta antes de la jornada: sin protección (${r.base}) y Equipo como el plan: ${r.consejo} («${r.porque}»; plan: ${JSON.stringify(r.enPlan)})`);
 } catch (e) {
   ok(false, `la prueba se ha caído: ${e.message.split('\n')[0]}`);
 }

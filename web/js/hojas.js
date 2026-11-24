@@ -205,7 +205,8 @@ export function resumenEquipo(S) {
   // la inercia: hacia dónde va cada uno y lo que se espera hasta la jornada
   const conI = mias.filter((x) => x.inercia && x.j.pos !== 5);
   const proyJ = conI.reduce((s, x) => s + num(x.inercia.proyJ), 0);
-  const vender = mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
+  // (24 nov, decide.js) solo los que la decisión manda vender por la inercia (a un titular que gira no: se aguanta)
+  const vender = mias.filter((x) => x.ventaInercia && ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender').sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
   const sinI = bloqueada('inercia');
   if (sinI && (conI.length || vender.length)) h += candado('inercia');
   if (!sinI && M.proxima && conI.length) h += `<div class="aviso-ficha ${proyJ < 0 ? '' : 'verde'}">${icono(proyJ < 0 ? 'baja' : 'sube')}<div>Hasta la jornada ${M.proxima.n}, si cada uno sigue con su inercia, tu equipo ${proyJ >= 0 ? 'ganaría' : 'perdería'} unos <b>${eur(Math.abs(proyJ))}</b>.${vender.length ? ` Lo que más pesa: ${vender.slice(0, 3).map((x) => `${esc(x.j.nombre)} (${x.ventaInercia.urgencia === 'ya' ? 'ha girado' : 'frenando'})`).join(', ')}.` : ''}</div></div>`;
@@ -333,7 +334,7 @@ export function fichaJugador(S, pid) {
       : `A LaLiga se lo venderías por unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}.`;
     if (gratis || liga) h += `<div class="aviso-ficha ${noBl ? 'oro' : 'verde'} peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join('<br>')}</div></div>`;
     // (24 nov) el cambio: véndelo y ficha a uno de estos (los 3 mejores de su puesto que te llegan)
-    const cbF = S.M.cambioDe ? S.M.cambioDe(pid) : null;
+    const cbF = S.M.cambioDe && ((S.M.decision ? S.M.decision(pid) : null) || { regla: 'cambio' }).regla === 'cambio' ? S.M.cambioDe(pid) : null;
     if (cbF) {
       const bsF = S.M.bajaSeguido(pid);
       h += `<div class="sec"><h2>Véndelo y ficha a otro</h2><span class="sub">${bsF ? 'baja y no tienes otro como él' : 'ha girado y juega de relleno'}</span></div>`;

@@ -4,6 +4,7 @@
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
 import { paronLejos, cholloParon, subeHastaVuelta, aSuValorParon } from './operaciones.js';
 import { acciones } from './acciones.js';
+import { decidir } from './decide.js';
 import { pTitularMinutos } from './titular.js';
 import { textoInercia } from './inercia-texto.js';
 import { correcciones, dichoTxt } from './dicho.js';
@@ -3010,6 +3011,8 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   // la lista de «lo que toca» de Hoy: sus textos, en acciones.js (aquí, solo cálculos)
+  // (24 nov) UNA decisión por jugador (decide.js): la leen «Ahora mismo», el plan, Equipo, los avisos y la IA
+  decidir(D, M, c);
   M.acciones = acciones(D, M, c);
   // el próximo momento en que algo cambia solo por la hora (se abre una cláusula, cierra el mercado, empieza o acaba un
   // partido, una jornada, un cierre de cláusulas o el parón, o cambia el día): el refresco de cada minuto de app.js solo

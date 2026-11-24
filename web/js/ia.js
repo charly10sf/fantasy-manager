@@ -1194,10 +1194,14 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
       miradoP = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.detalle || d.motivo || '')]));
     } catch (e) { vendeP = null; }
   }
+  // (24 nov, decide.js) lo que se dice de vender a cada uno es su decisión, la misma de Hoy y Equipo
   const inerciaTxt = (x) => {
-    if (!x.ventaInercia) return '';
-    if (vendeP && !vendeP.has(String(x.pid))) { const mo = miradoP && miradoP.get(String(x.pid)); return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE${mo ? ` (${mo.split(/(?<=\.)\s/)[0]})` : ''} | `; }
-    return `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
+    const d = M.decision ? M.decision(x.pid) : null;
+    if (!d) return '';
+    if (d.accion === 'vender' && ['inercia', 'titular-baja'].includes(d.regla) && !d.enVenta) return `VENDER POR INERCIA (${!x.ventaInercia || x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
+    if (d.accion === 'vender') return `LA APP: ${d.corta.toUpperCase()} | `;
+    if (x.ventaInercia || d.matiz === 'busca-sustituto') return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE (${d.porque.replace(/[.\s]+$/, '')}) | `;
+    return '';
   };
   for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''}${M.noVender && M.noVender.has(x.pid) ? ' | NO LO VENDE (me lo ha dicho él): no propongas venderlo ni aceptar ofertas por él' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : x.noBlindar && x.abierta ? ` | NO LO BLINDES: ${x.noBlindar.texto}` : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
@@ -1220,7 +1224,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
     for (const v of M.misVentas) {
       const lg = v.liga ? ` [OFERTA DE LALIGA ${v.liga.posicion === 'baja' ? 'DE LAS MÁS BAJAS' : v.liga.posicion === 'alta' ? 'DE LAS ALTAS' : 'NORMAL'}: en esta liga suele dar entre ${pct(v.liga.p25 * 100)} y ${pct(v.liga.p75 * 100)}; mañana hará otra y lo normal sería ≈ ${eur(v.liga.esperado)} (${eur(v.liga.gana, { signo: true })} frente a la de hoy)${v.liga.prisa ? `; HAY PRISA: ${v.liga.prisa === 'negativo' ? 'si no vendes antes de la jornada empiezas en negativo' : 'está de baja'}` : '; no hay prisa'}]` : '';
-      L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}${lg}${v.ligaEst ? `; la de LaLiga rondará ${eur(v.ligaEst.v)}` : ''}${v.mejor ? ` → la app aconseja ${v.consejo.toUpperCase()}: ${v.porque}` : ''}`);
+      L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}${lg}${v.ligaEst ? `; la de LaLiga rondará ${eur(v.ligaEst.v)}` : ''}${v.mejor ? ` → la app aconseja ${v.consejo.toUpperCase()}${v.decision && v.decision.matiz === 'esta-oferta-no' ? ' OTRA OFERTA (sigue a la venta, pero esta no)' : ''}: ${v.porque}` : v.decision && v.decision.accion === 'vender' ? ' → la app: sigue a la venta, a esperar la oferta' : ''}`);
     }
   }
   if (M.ventanaEsp) {
@@ -2372,70 +2376,48 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     for (const x of ops) if (x.n > o.n && x.saldo != null) x.saldo -= o.importe;
     o.saldo = null;
   };
-  // vender sin necesidad: si sin esa venta acabarías en positivo y la app no la aceptaría (no entra en tu once y la
-  // oferta no es buena), se descarta; puede esperar a una oferta mejor
-  for (const o of ops) {
-    if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !o.importe || final == null || final - o.importe < 0) continue;
-    const v = (M.misVentas || []).find((x) => x.pid === o.pid);
-    if (!v || v.consejo !== 'esperar' || !v.porque) continue;
-    if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
-    else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (acabarías con ${eur(final - o.importe)}). ${v.porqueCorto || v.porque}`);
-  }
-  // (23 nov, Gulácsi) la oferta que el motor protege (un titular o uno que ha dejado de bajar, por poco más de lo que vale):
-  // aunque haga falta dinero, no se acepta mientras queden cambios de mercado antes de la jornada (se hace caja con otra
-  // cosa: en negativo entre semana no se malvende); con un clausulazo que la necesite, sí, con el aviso
+  /* (24 nov, decide.js) UNA regla donde había cuatro («vender sin necesidad», la oferta protegida, el que vuelve y el que
+     sube fuerte, cada una con su cuenta): una venta que va contra la decisión del jugador sale del plan con el porqué de
+     la decisión, el mismo que dicen Equipo, los avisos y la IA. Se queda (con el aviso) solo si hace falta el dinero: sin
+     ella se acabaría en negativo, es una venta para otro día que el plan guarda por si acaso, o detrás hay una cláusula o
+     una subida de cláusula de hoy que se pagan con lo que hay en caja. Y lo que antes no se podía decir: si la decisión es
+     vender pero no por esta oferta (Turrientes), el paso lo dice (`cambia`) y el titular también, en vez de «mejor aguantar» */
   const quedanCambios = !!(M.ventanaEsp && M.ventanaEsp.ciclos >= 1);
   for (const o of ops) {
-    if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !quedanCambios) continue;
-    const v = (M.misVentas || []).find((x) => x.pid === o.pid && x.protege && x.consejo === 'esperar');
-    if (!v || !(o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || ''))) continue;
-    if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${v.porque}`;
-    else quitarVenta(o, `La app lo descarta: ${v.porqueCorto || v.porque} Quedan ${M.ventanaEsp.ciclos} cambios de mercado para hacer caja con otra cosa.`);
-  }
-  // el que vuelve y sigue subiendo (se hundió y ahora juega y sube varios días seguidos): no se manda vender mientras
-  // siga subiendo, salvo que haga falta el dinero o sea uno comprado para revender (0.7n, el caso De Jong)
-  for (const o of ops) {
-    if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.inercia) continue;
-    const ine = M.inercia(o.pid);
-    if (!ine || !ine.vuelve || (M.paraRevender || []).some((x) => x.pid === o.pid)) continue;
-    const txt = `vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día; llegó a valer ${eur(ine.vuelve.max)}): cada día que lo aguantes vale más.`;
-    if (o.hoy && o.importe && final != null && final - o.importe >= 0 && !pagaCaja(o)) quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}) y ${txt}`);
-    else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${txt} Véndelo solo si necesitas el dinero.`;
-  }
-  // (0.7.8c, aviso de Carlos, 13 nov 17:16: «me recomienda vender a Fornals cuando vale 53 M, lo compré por 54, le quedan
-  // 9 días de cláusula cerrada y sube más de 1 M al día») lo tuyo que sube de verdad (más de un 0,5 % al día, sin frenar)
-  // no se vende si no hace falta el dinero: aguantarlo hasta la jornada vale más que lo que da hoy la oferta. Fuera de
-  // esto: lo comprado para revender, el que está de baja y una oferta que ya paga lo que subiría
-  const subeFuerte = (o) => {
-    if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.inercia) return null;
-    const x = M.mias.find((y) => y.pid === o.pid);
-    if (!x || !x.j || !x.j.valor || (M.paraRevender || []).some((y) => y.pid === o.pid) || x.ventaInercia) return null;
-    if ((M.vendeBaja && M.vendeBaja(x)) || ['injured', 'suspended'].includes(x.j.estado)) return null;
-    const ine = M.inercia(o.pid);
-    if (!ine || !['sube', 'acelera'].includes(ine.fase) || num(ine.ult) < x.j.valor * 0.005) return null;
-    // hasta el día antes de la jornada (en el parón, la de la vuelta)
-    const dias = M.proxima ? Math.max(1, Math.ceil((M.proxima.ini - Date.now()) / DIA) - 1) : ine.hastaJ;
-    const gana = ine.proy ? ine.proy(dias) : ine.proyJ;
-    const extra = (o.importe || x.j.valor) - x.j.valor;
-    // (17 nov, Baena: la oferta pagaba 2,54 M sobre su valor y aguantarlo 11 días, 2,55 M) si la diferencia es de unos
-    // pocos miles, da igual venderlo hoy que aguantarlo: no se avisa de «véndelo solo si necesitas el dinero» sobre una
-    // oferta que la app da por buena
-    if (!(gana > 0) || extra >= gana - Math.max(5e5, x.j.valor * 0.01)) return null;
-    const cerrada = !x.abierta && x.abreEn > DIA ? ` y su cláusula está cerrada ${dura ? `${dura(x.abreEn)} más` : 'unos días más'} (no te lo pueden quitar)` : '';
-    return { x, gana, dias, txt: `sube ${eur(ine.ult, { signo: true })} al día${cerrada}: aguantándolo ${dias} día${dias === 1 ? '' : 's'} más vale unos ${eur(gana)} más de lo que te dan hoy.` };
-  };
-  for (const o of ops) {
-    const sf = subeFuerte(o);
-    if (!sf) continue;
-    const sin = final != null ? final - (o.importe || 0) : null;
-    // (también ponerlo a la venta sin oferta todavía: el dinero no entra hoy, pero si sin él no te falta, es venderlo para nada)
-    if ((o.hoy || !o.importe) && sin != null && sin >= 0 && !pagaCaja(o)) {
-      const txt = `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(sin)}) y ${sf.txt}`;
-      if (o.importe) quitarVenta(o, txt); else { o.descartada = true; o.aviso = txt; o.saldo = null; }
-      o.aguanta = 'sube';
+    if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.decisionBase) continue;
+    const d = M.decisionBase(o.pid);
+    if (!d || d.regla === 'entrenador') continue;
+    const acepta = o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '');
+    const noEsta = acepta && d.accion === 'vender' && d.oferta === 'esperar' && d.matiz !== 'con-recambio';
+    if (d.accion !== 'aguantar' && !noEsta) continue;
+    const entra = o.hoy && o.importe ? o.importe : 0;
+    const sin = final != null ? final - entra : null;
+    const v = (M.misVentas || []).find((x) => x.pid === o.pid);
+    const fuera = (txt) => { if (entra) quitarVenta(o, txt); else { o.descartada = true; o.aviso = txt; o.saldo = null; } };
+    const ahoraDec = { accion: d.accion, matiz: d.matiz, corta: d.corta, porque: d.porque };
+    // la oferta que el motor protege (un titular o uno que ha dejado de bajar, por poco más de lo que vale; Gulácsi, 23 nov):
+    // aunque haga falta dinero, no se acepta mientras queden cambios de mercado (se hace caja con otra cosa)
+    if (acepta && o.hoy && v && v.protege && quedanCambios && !pagaCaja(o)) {
+      fuera(`La app lo descarta: ${v.porqueCorto || d.porque} Quedan ${M.ventanaEsp.ciclos} cambios de mercado para hacer caja con otra cosa.`);
+      o.decAhora = ahoraDec;
+      continue;
     }
-    else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${sf.txt} Véndelo solo si de verdad necesitas el dinero.`;
+    const haceFalta = !o.hoy || (sin != null && sin < 0) || pagaCaja(o);
+    if (haceFalta) {
+      o.porDinero = true;
+      if (!/hace falta/i.test(`${o.motivo || ''} ${o.aviso || ''}`)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${d.porque.replace(/\s+$/, '')} Véndelo solo si de verdad necesitas el dinero.`;
+      continue;
+    }
+    if (noEsta) {
+      fuera(`La app lo descarta: ${d.porque}`);
+      o.cambia = true;
+    } else {
+      fuera(`La app lo descarta: no te hace falta el dinero${sin != null ? ` (${entra ? 'sin esta venta ' : ''}acabarías con ${eur(sin)})` : ''}. ${d.porque}`);
+      if (d.matiz === 'sube' || d.matiz === 'vuelve') o.aguanta = 'sube';
+    }
+    o.decAhora = ahoraDec;
   }
+  const aceptaDec = (o) => { const dq = M.decisionBase ? M.decisionBase(o.pid) : null; return !!dq && dq.matiz === 'acepta' && (o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '')); };
   // lo que pagaste por él: cuánto ganas o pierdes con la venta. Perder dinero sin necesidad (no hace falta el dinero
   // y no está bajando) se avisa; si está bajando, lo que pagaste no cambia nada: lo perdido ya no vuelve
   for (const o of ops) {
@@ -2447,6 +2429,9 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     if (!x.compra) { o.compra = x.inicial ? { precio: x.inicial, gana: precio - x.inicial, con: o.importe ? 'venta' : 'valor', inicial: true } : { desconocida: true }; continue; }
     o.compra = { precio: x.compra, gana: precio - x.compra, con: o.importe ? 'venta' : 'valor' };
     if (o.descartada || o.compra.gana >= 0 || !o.hoy || final == null || final - (o.importe || 0) < 0) continue;
+    // (24 nov, decide.js) si la decisión del jugador es aceptar esa oferta (paga de más, o baja y casi iguala su valor), lo
+    // que pagaste no la cambia: antes Equipo decía «Aceptar» y el plan, «puede esperar a una oferta mejor»
+    if (aceptaDec(o)) continue;
     const t = M.tend(o.pid);
     const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || ((t.p7e !== undefined ? t.p7e : t.p7) != null && (t.p7e !== undefined ? t.p7e : t.p7) < -3) || (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended'].includes(x.j.estado)));
     if (bajando || /No hace falta venderlo/.test(o.aviso || '')) continue;
@@ -2480,6 +2465,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
   for (const o of ops) {
     if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !o.importe || !o.pid || final == null) continue;
     if (!o.compra || o.compra.desconocida || o.compra.gana >= 0 || cambiosAntes < 2 || pagaCaja(o) || final - o.importe < -M.deuda) continue;
+    if (aceptaDec(o)) continue;
     const x = M.mias.find((y) => y.pid === o.pid);
     if (!x || ['injured', 'suspended'].includes(x.j.estado)) continue;
     const t = M.tend(o.pid), ine = M.inercia ? M.inercia(o.pid) : null;
@@ -2660,13 +2646,20 @@ function textoSinDescartes(P, ops, OPERA, quitados = []) {
   const VERBO = { vender: 'vender a', clausular: 'clausular a', pujar: 'pujar por', comprar: 'comprar a', ofertar: 'hacer una oferta por', blindar: 'blindar a' };
   const hoy = vivas.filter((o) => o.hoy && !o.ya && !o.sugerencia && VERBO[o.accion] && nombreDe(o));
   const frase = (o) => o.etiqueta === 'Aceptar oferta' ? `aceptar la oferta por ${nombreDe(o)}` : o.accion === 'blindar' && o.importe ? `subir la cláusula de ${nombreDe(o)}` : `${VERBO[o.accion]} ${nombreDe(o)}`;
-  const aguanta = fuera.filter((o) => o.accion === 'vender').map(nombreDe);
+  // (24 nov) si la decisión sigue siendo vender pero no por esta oferta, el titular lo dice así: «mejor aguantar» sonaba
+  // a lo contrario de lo que le decía el chat (aviso de Senna)
+  const noOferta = fuera.filter((o) => o.accion === 'vender' && o.cambia).map(nombreDe);
+  const aguanta = fuera.filter((o) => o.accion === 'vender' && !o.cambia).map(nombreDe);
   const yDe = (l) => l.length > 1 ? `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}` : l[0];
   let lo = hoy.length ? `hoy toca ${yDe(hoy.slice(0, 2).map(frase))}${hoy.length > 2 ? ` (y ${hoy.length - 2} más)` : ''}`
     : vivas.some((o) => o.ya) ? 'lo de hoy ya está hecho' : 'hoy no hace falta vender ni fichar a nadie';
   if (aguanta.length) {
     const sube = fuera.some((o) => o.accion === 'vender' && o.aguanta === 'sube');
     lo += `${hoy.length ? ';' : ':'} mejor aguantar a ${yDe(aguanta)}${sube ? `, que sigue${aguanta.length > 1 ? 'n' : ''} subiendo` : ''}`;
+  }
+  if (noOferta.length) {
+    const cola = `${yDe(noOferta)}: a la venta, pero esta oferta no`;
+    lo = hoy.length || aguanta.length ? `${lo}; ${cola}` : cola;
   }
   const resto = limpiar(titular).replace(/[.\s]+$/, '');
   const nuevo = resto ? `${resto}; ${lo}` : `${lo.charAt(0).toUpperCase()}${lo.slice(1)}`;
@@ -2715,6 +2708,9 @@ export function veredictos(D, M) {
 }
 /** lo que la app haría con uno de tus jugadores si lo vendes hoy, en una frase (para su línea en los datos de la IA) */
 function ventaAppTxt(D, M, pid) {
+  // (24 nov, decide.js) la decisión del jugador, la misma en todos los sitios
+  const dec = M.decision ? M.decision(pid) : null;
+  if (dec && (dec.accion === 'vender' || dec.enVenta)) return `LA APP${dec.oferta ? ', CON LA OFERTA QUE TIENE' : ''}: ${dec.oferta ? (dec.oferta === 'aceptar' ? 'ACEPTAR' : dec.matiz === 'esta-oferta-no' ? 'ESPERAR OTRA OFERTA (sigue a la venta)' : 'ESPERAR') : dec.corta.toUpperCase()} (${cortar(dec.porque, 170)})`;
   const V = veredictos(D, M), a = V[`A-${pid}`], v = V[`V-${pid}`];
   // (20 nov) con una oferta, lo que aconseja la app es su consejo (ACEPTAR o ESPERAR, el de Equipo → en venta): «aceptaría»
   // solo decía que la operación se puede hacer, y con la de Hugo por Baena salían a la vez «aceptaría» y «ESPERAR»
@@ -3192,10 +3188,10 @@ const VENDE_RE = /\b(vend\w*|vendo|quedo|quedarme\w*|quedar\w*|especul\w*|renta\
 export const vaDeVender = (t) => VENDE_RE.test(norm(t || ''));
 /** los suyos que mirar si no nombra a nadie: los que la app vendería o protegería primero (como mucho 4) */
 export function vendiblesMios(M, n = 4) {
-  const orden = { vender: 0, proteger: 1, 'da-igual': 2, quedar: 3 };
-  return (M.mias || []).map((x) => M.ventaMia && M.ventaMia(x)).filter(Boolean)
-    .filter((y) => y.veredicto !== 'quedar' || y.presa)
-    .sort((a, b) => orden[a.veredicto] - orden[b.veredicto] || b.v - a.v).slice(0, n).map((y) => y.j);
+  // (24 nov) por la decisión de cada uno (decide.js): primero los que se venden, luego los que hay que proteger y los que están en venta
+  const peso = (x, y) => { const d = M.decision ? M.decision(x.pid) : null; return d && d.accion === 'vender' ? 0 : y.veredicto === 'proteger' ? 1 : d && d.enVenta ? 2 : y.veredicto === 'da-igual' ? 3 : y.presa ? 4 : 9; };
+  return (M.mias || []).map((x) => { const y = M.ventaMia && M.ventaMia(x); return y ? { y, p: peso(x, y) } : null; }).filter((z) => z && z.p < 9)
+    .sort((a, b) => a.p - b.p || b.y.v - a.y.v).slice(0, n).map((z) => z.y.j);
 }
 export function ventasMiasTxt(D, M, js, c = null, { laligaYa = false } = {}) {
   const yo = D.yo && D.yo.teamId;
@@ -3225,47 +3221,51 @@ export function ventasMiasTxt(D, M, js, c = null, { laligaYa = false } = {}) {
     const opV = opsPlan.find((o) => !o.descartada && !o.sugerencia && o.accion === 'vender' && String(o.pid || (o.j && o.j.id)) === String(j.id));
     const venV = V[`V-${j.id}`] || null;
     const noHoy = venV && !venV.ok && venV.aviso ? cortar(venV.aviso, 160) : y.espera && ['juega', 'sube'].includes(y.espera.tipo) ? cortar(y.espera.texto, 160) : '';
-    let ver = y.veredicto, motivo;
     const sube7 = futuro ? ` (${futuro.replace('si sigue la tendencia, ', '')})` : '';
-    if (opV) { ver = 'vender'; motivo = `está en el plan de hoy: ${cortar(opV.motivo || '', 170)}${opV.cuando ? ` (${opV.cuando})` : ''}`; }
-    else if (ver === 'vender') motivo = `está bajando${sube7}: cada día que pasa pierdes dinero, y subirle la cláusula sería pagar por uno que pierde valor${y.pts >= 3 ? `. En tu once pesa (${d1(y.pts)} pts por jornada sin él): mira con qué lo repones` : ''}`;
-    else if (ver === 'proteger') motivo = `sube${sube7} y su cláusula ${y.abierta ? 'está abierta' : `se abre ${cuandoF(y.abre)}`} cerca de su valor, con rivales a los que les llega: si te lo clausulan, se llevan a precio de mercado lo que iba a subir`;
-    else if (ver === 'quedar' && y.sube) motivo = `sube${sube7}${y.clausula && !y.presa ? ' y su cláusula está lejos de lo que se paga aquí' : y.clausula && !y.pronto ? ` y nadie te lo puede quitar hasta ${cuandoF(y.abre)}` : ''}: venderlo ahora es regalar lo que sube`;
-    else if (ver === 'quedar') motivo = `ni sube ni baja de verdad y te da puntos (sin él, tu once pierde ${d1(y.pts)} por jornada)`;
-    else motivo = 'ni sube ni baja de verdad y apenas te da puntos: venderlo solo vale si te pagan bien y el dinero va a uno que suba';
-    // si baja pero el plan de hoy lo ha mirado y lo aguanta (le da puntos, aún no baja todos los días), manda el plan: lo
-    // mismo que dice Hoy
-    if (!opV && ver === 'vender' && mirados.has(String(j.id))) { ver = 'aguantar'; motivo = `está bajando${sube7}, pero el plan de hoy lo ha mirado y lo aguanta: ${cortar(mirados.get(String(j.id)), 170)}`; }
-    // con una oferta que la app aceptaría, esa es la respuesta (como en MIS JUGADORES EN VENTA)
+    /* (24 nov, decide.js) LA DECISIÓN es la del jugador, la misma que dicen Hoy, Equipo y los avisos. Antes este bloque
+       sacaba su propio veredicto de `M.ventaMia` (que no mira si es titular ni la oferta que tiene) y le decía a la IA
+       «VENDER» de uno que Hoy mandaba aguantar (aviso de Senna). De `M.ventaMia` quedan las cuentas y cómo protegerlo */
+    const d = M.decision ? M.decision(j.id) : null;
     const venta = (M.misVentas || []).find((v) => v.pid === j.id);
     const mejor = venta && venta.ofertas && venta.ofertas[0];
-    // (lo que aconseja con ella es el consejo de Equipo → en venta, el mismo de MIS JUGADORES EN VENTA)
     const quien = mejor ? (mejor.de || (mejor.deLiga ? 'LaLiga' : 'un rival')) : '';
-    if (mejor && venta.consejo === 'aceptar') { ver = 'aceptar'; motivo = `ya tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja aceptarla${venta.porque ? ` (${cortar(venta.porque, 150)})` : ''}`; }
-    else if (mejor && venta.consejo === 'esperar' && ver !== 'vender') { ver = 'esperar'; motivo = `tiene una oferta de ${quien} por ${eur(mejor.importe)} y la app aconseja ESPERAR: ${cortar(venta.porque || '', 170)}`; }
-    // (22 nov) «a este no lo vendo», dicho en Pregunta: manda sobre todo lo demás
     const nv = M.noVender && M.noVender.get(j.id);
+    let ver = !d ? y.veredicto : d.accion === 'vender' ? 'vender' : y.veredicto === 'proteger' && d.regla !== 'dicho' ? 'proteger' : 'aguantar';
+    let motivo = d ? d.porque.replace(/[.\s]+$/, '') : '';
+    if (opV && d && d.accion === 'vender') motivo += `. Está en el plan de hoy${opV.cuando ? ` (${opV.cuando})` : ''}`;
+    if (ver === 'proteger') motivo = `sube${sube7} y su cláusula ${y.abierta ? 'está abierta' : `se abre ${cuandoF(y.abre)}`} cerca de su valor, con rivales a los que les llega: si te lo clausulan, se llevan a precio de mercado lo que iba a subir`;
+    if (ver === 'vender' && y.pts >= 3 && d && d.matiz !== 'con-recambio') motivo += `. En tu once pesa (${d1(y.pts)} pts por jornada sin él): mira con qué lo repones`;
+    // (22 nov) «a este no lo vendo», dicho en Pregunta: manda sobre todo lo demás
     if (nv) { ver = 'dicho'; motivo = `me dijo él que no lo vende (${cuando(nv.t)}${nv.caduca ? `; vale hasta ${cuando(nv.caduca, { hora: false })}` : ''}) y la app no lo pone en ningún plan ni aviso de venta. No le propongas venderlo; si ahora pregunta por venderlo, dale las cifras y dile que eso lo quita él en Hoy, en «Lo que me has dicho»`; }
-    const VER = { dicho: 'NO SE VENDE (LO HA DICHO ÉL)', vender: noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER', aguantar: 'AGUANTARLO POR AHORA', aceptar: `ACEPTAR LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, esperar: `NO ACEPTAR AÚN LA OFERTA DE ${eur(mejor ? mejor.importe : 0)}`, proteger: 'QUEDÁRTELO Y PROTEGERLO', quedar: 'QUEDÁRTELO', 'da-igual': 'SOLO SI TE PAGAN BIEN' }[ver];
+    const of = mejor ? eur(mejor.importe) : '';
+    const VER = ver === 'dicho' ? 'NO SE VENDE (LO HA DICHO ÉL)'
+      : ver === 'proteger' ? `AGUANTAR Y PROTEGERLO${mejor ? ` (NO ACEPTAR LA OFERTA DE ${of})` : ''}`
+        : ver === 'vender' ? ({ acepta: `VENDER: ACEPTAR LA OFERTA DE ${of}`, 'esta-oferta-no': `VENDER, PERO ESTA OFERTA NO (${of})`, 'espera-oferta': 'VENDER: YA ESTÁ A LA VENTA, ESPERAR LA OFERTA', 'con-recambio': 'VENDER CUANDO TENGA AL RECAMBIO', 'antes-del-giro': 'VENDER ANTES DE QUE GIRE', 'otro-dia': 'VENDER, PERO HOY NO', 'por-dinero': 'VENDER: HACE FALTA EL DINERO' }[d ? d.matiz : ''] || (noHoy && !opV ? 'VENDER, PERO NO HOY' : 'VENDER'))
+          : !d ? 'AGUANTAR' : mejor ? `AGUANTAR: NO ACEPTAR LA OFERTA DE ${of}` : d.matiz === 'busca-sustituto' ? 'AGUANTAR Y BUSCARLE SUSTITUTO' : d.regla === 'resto' && !d.matiz && y.pts < 1 && !y.sube ? 'AGUANTAR: VENDERLO SOLO SI LE PAGAN BIEN' : 'AGUANTAR';
     const P = y.proteger;
-    const como = ver === 'vender'
-      ? ` Al momento, a un rival que te pague ${eur(y.rival.piso)} o más; si no, a la venta para la oferta de LaLiga.${noHoy && !opV ? ` Cuándo: ${noHoy}` : ''}`
+    const como = ver === 'vender' && d && ['acepta', 'con-recambio', 'otro-dia'].includes(d.matiz) ? ''
+      : ver === 'vender'
+        ? ` Al momento, a un rival que te pague ${eur(y.rival.piso)} o más; si no, ${venta ? 'sigue a la venta' : 'a la venta'} para la ${mejor ? 'siguiente ' : ''}oferta de LaLiga.${noHoy && !opV && !(d && d.matiz) ? ` Cuándo: ${noHoy}` : ''}`
       : ver === 'proteger' && P
         ? ` ${P.como === 'ya' ? 'Ya lo tienes blindado.' : P.como === 'escudo' ? 'Blíndalo ya con el escudo (gratis, 24 h).' : P.como === 'escudo-al-abrir' ? `Blíndalo con el escudo en cuanto se abra (${cuandoF(y.abre)}): antes no se puede.` : P.como === 'subir' ? `Súbele la cláusula a ${eur(P.objetivo)} (cuesta ${eur(P.coste)}, menos de lo que va a subir).` : `Protegerlo pagando no compensa${P.coste ? ` (subirle la cláusula cuesta ${eur(P.coste)}, más de lo que va a subir)` : ''}.`} Si no, véndeselo antes a un rival por ${eur(y.rival.techo)} o cerca.`
         : '';
     // (repaso de la 0.8s) si dice que LaLiga YA le da una cifra, la oferta está hecha: lo que esperaría la app es la de mañana
-    const liga = laligaYa && !mejor ? `LALIGA: ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE: lo tiene en venta (los datos van por detrás) y esa oferta está hecha y se cobra al aceptarla, hoy. Compárala con su valor (${eur(y.v)}) y su tendencia. Si no la acepta, LaLiga le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(y.liga.v)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte). NO le digas que la oferta llega mañana, que aún no es dinero ni que lo ponga a la venta` : `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
+    // (24 nov, Senna) con la oferta de LaLiga ya hecha, la línea lo dice (antes: «su oferta llega en el siguiente cambio…»)
+    const ofLiga = venta && (venta.ofertas || []).find((o) => o.deLiga);
+    const sig = d && d.cifras && d.cifras.esperado ? d.cifras.esperado : y.liga.v;
+    const liga = ofLiga ? `LALIGA: YA LE HA HECHO SU OFERTA, ${eur(ofLiga.importe)} (${pct(ofLiga.sobre * 100)} sobre su valor): se cobra al aceptarla, hoy. Si no la acepta, le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(sig)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte)`
+      : laligaYa && !mejor ? `LALIGA: ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE: lo tiene en venta (los datos van por detrás) y esa oferta está hecha y se cobra al aceptarla, hoy. Compárala con su valor (${eur(y.v)}) y su tendencia. Si no la acepta, LaLiga le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(y.liga.v)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte). NO le digas que la oferta llega mañana, que aún no es dinero ni que lo ponga a la venta` : `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
     const cl = !y.clausula ? 'CLÁUSULA: no la sé' : `CLÁUSULA ${eur(y.clausula)} (${y.sobre != null && y.sobre <= 0.03 ? 'A SU VALOR' : y.sobre != null ? `${pct(y.sobre * 100, 0)} sobre su valor` : '?'}), ${y.abierta ? 'ABIERTA' : y.veda ? `cerrada hasta que empiece la jornada (${cuandoF(y.abre)})` : `se abre ${cuandoF(y.abre)}`}; ${paganTxt(x.pagan) || 'no se sabe a quién le llega'}. Es lo que cobras si un rival te lo quita, no lo que da LaLiga`;
     const riv = y.rival.corto
       ? `A UN RIVAL (cobras al momento): no le saques más que lo de LaLiga, ≈ ${eur(y.rival.piso)}`
       : `A UN RIVAL (cobras al momento): pídele entre ${eur(y.rival.piso)} y ${eur(y.rival.techo)}${y.clausula && y.rival.techo >= y.clausula * 0.995 ? '; más que su cláusula no te paga quien se la puede pagar' : ''}`;
     // la oferta que ya tiene, con su cifra (la de un rival o la de LaLiga)
-    const ya = mejor && !['aceptar', 'esperar'].includes(ver) ? ` | YA TIENE UNA OFERTA: ${quien} ${eur(mejor.importe)}${['aceptar', 'esperar'].includes(venta.consejo) ? `; la app aconseja ${venta.consejo.toUpperCase()}` : ''}` : '';
-    const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver === 'quedar' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
-    L.push(`- ${j.nombre} (vale ${eur(y.v)}; TENDENCIA: ${y.baja ? 'BAJA' : y.sube ? 'SUBE' : 'NI SUBE NI BAJA de verdad'}; ${tend}${ojoPz}): VEREDICTO DE LA APP: ${VER}: ${motivo}.${como} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
+    const ya = mejor ? ` | LA OFERTA QUE TIENE: ${quien}, ${eur(mejor.importe)}; la app aconseja ${venta.consejo === 'aceptar' ? 'ACEPTARLA' : 'NO ACEPTARLA'}` : '';
+    const mas = `SI UN RIVAL TE DA MÁS DE ${eur(y.aceptarDesde)}: ${ver !== 'vender' && y.pts >= 3 ? `merece la pena si no lo necesitas en el once (${d1(y.pts)} pts por jornada)` : 'acéptalo: es más de lo que cobras si te lo clausulan'}`;
+    L.push(`- ${j.nombre} (vale ${eur(y.v)}; TENDENCIA: ${y.baja ? 'BAJA' : y.sube ? 'SUBE' : 'NI SUBE NI BAJA de verdad'}; ${tend}${ojoPz}): LA DECISIÓN DE LA APP: ${VER}: ${motivo}.${como} | ${liga} | ${cl} | ${riv} | ${mas}${ya}`.replace(/…\./g, '…').replace(/\.\./g, '.'));
   }
   if (!L.length) return '';
-  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. El veredicto de cada uno es tu respuesta. De cada jugador, una o dos frases: el veredicto, su tendencia dicha con su palabra («sube», «baja» o «ni sube ni baja») y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
+  return `\n\nVENDER O QUEDÁRTELO, LAS CUENTAS DE LA APP (el dinero manda: el valor cambia una vez al día y sigue una tendencia; los puntos no se saben. Se pierde dinero vendiendo tarde uno que baja, pagando por subirle la cláusula a uno que baja y dejando que un rival se lleve a su valor uno que sube. La OFERTA DE LALIGA y la CLÁUSULA son cosas distintas: no las compares entre sí. LA DECISIÓN DE LA APP de cada uno es la misma que él ve en Hoy y en Equipo, y es tu respuesta: no la cambies ni digas otra distinta de la que pone. De cada jugador, una o dos frases: la decisión, su tendencia dicha con su palabra («sube», «baja» o «ni sube ni baja») y, si toca vender, a quién (LaLiga o un rival) y por cuánto, con estas cifras y sin rehacerlas):\n${L.join('\n')}`;
 }
 
 /* ---------------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------------

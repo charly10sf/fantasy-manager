@@ -73,7 +73,7 @@ export function avisosNuevos(antes, D, M) {
   const inerciaTop = bloqueada('inercia');
   // (17 nov) a quién vender por la inercia, lo mismo que dice Hoy (acciones.js): antes aquí iban todos los que giraban,
   // también el que Hoy manda esperar a que le paguen la cláusula y el lesionado (que tiene su aviso, abajo)
-  const porInercia = M.vendeBaja && M.esperarVenta && M.enVenta ? ventasInercia(M) : (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid));
+  const porInercia = M.vendeBaja && M.esperarVenta && M.enVenta ? ventasInercia(M, { conPlan: true }) : (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid));
   const inercia = new Set(porInercia.map((x) => x.pid));
   for (const x of porInercia) {
     const vi = x.ventaInercia;
