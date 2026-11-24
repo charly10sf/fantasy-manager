@@ -4387,7 +4387,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
-   "SPORT|136574933": 1795269960000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000,
@@ -4420,7 +4419,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/24/el-ravila-getafe-de-copa-el-3-de-diciembre-con-las-entradas-entre-los-10-y-los-45-euros-ser-avila/": 1795523812000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004254862/belletti-juega-liderato-terrassa.html": 1795521934000,
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527637000
   },
   "hechos": [
    {
@@ -4473,12 +4473,10 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/24/las-entradas-para-la-aficion-del-racing-en-reus-costaran-45-euros-radio-santander/": 1795527679835
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9510,13 +9508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5985,
+   "ok": 5986,
    "fallos": 0,
-   "ejecuciones": 4842,
+   "ejecuciones": 4843,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T14:01:15.739Z"
+   "ultima": "2026-11-24T14:06:15.483Z"
   }
  },
  "ptsDirecto": {},
@@ -9533,15 +9531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:01:23.874Z"
+   "ultimaBien": "2026-11-24T14:06:23.198Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:01:23.874Z"
+   "ultimaBien": "2026-11-24T14:06:23.198Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:01:23.874Z"
+   "ultimaBien": "2026-11-24T14:06:23.198Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9549,11 +9547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:01:23.874Z"
+   "ultimaBien": "2026-11-24T14:06:23.198Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:01:23.874Z"
+   "ultimaBien": "2026-11-24T14:06:23.198Z"
   }
  },
  "avisos": [
