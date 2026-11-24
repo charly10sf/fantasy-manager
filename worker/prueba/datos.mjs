@@ -2,6 +2,15 @@
 // Uso: node worker/prueba/datos.mjs (sale «MAL» y código 1 si algo falla)
 // prueba del Worker: /borrar, /vincular y /qr con lo cerrado, y lo de antes
 import * as sobre from '../../web/js/sobre.js';
+// (24 nov) EL RELOJ DE LA PRUEBA EMPIEZA SIEMPRE A LAS 13:00 DE MADRID DE HOY. La prueba adelanta el reloj según avanza
+// (`minuto()`, saltos de 7 horas, de un día…) y varias cosas van por día de Madrid (cupos, gasto, frenos): según la hora a
+// la que se pasara, el reloj de la prueba cruzaba la medianoche en mitad de un apartado y fallaba. Pasaba cada noche desde
+// las 21:30 y a ratos sueltos (00:11, 05:48, 09:22…): por eso «Pruebas» salía en rojo en main por la noche. Con la hora
+// fija, siempre hace lo mismo. Todo lo que mira la hora en el Worker va por Date.now()
+const ahoraReal = Date.now.bind(Date);
+const HM = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(ahoraReal())).split(':').map(Number);
+let desfase = (13 * 3600 - (HM[0] * 3600 + HM[1] * 60 + HM[2])) * 1000;
+Date.now = () => ahoraReal() + desfase;
 const W = (await import('../src/index.js')).default;
 const kv = new Map();
 // (escrituras: cuántas van; lleno: el KV no deja escribir, como con el cupo gratis del día gastado)
@@ -146,9 +155,7 @@ ok(Array.isArray(t2.dias) && t2.dias[0] === hoyM && t2.dias.length === 7, '/hola
 }
 
 // ---------- revisión total, sesión 1: frenos del KV (C1), proxy cerrado (A4), /caras (C6) y r: con caducidad (M1) ----------
-const ahoraReal = Date.now.bind(Date);
-let desfase = 0;
-Date.now = () => ahoraReal() + desfase;
+// (el reloj de la prueba, `desfase`, se pone arriba del todo)
 const minuto = () => { desfase += 61e3; };
 const pide = async ({ m = 'POST', ruta, cuerpo, tk = 'x'.repeat(30), ip = '10.0.0.1', origen = ORI, cab = {}, e = env, crudo }) => {
   const h = { 'content-type': 'application/json', Authorization: `Bearer ${tk}`, 'cf-connecting-ip': ip, ...cab };
@@ -445,7 +452,7 @@ ok(r.s === 200 && /^ +\{/.test(r.t) && r.j.plan, `con Claude lento llegan espaci
 // el tope de gasto del día entre todos
 r = await plan({}, { tk: 'w'.repeat(30), e: { ...envP, PLAN_TOPE_USD: '0' } });
 ok(r.s === 503 && r.j.tope && r.j.servicio, `con el tope de gasto del día alcanzado: 503 (${r.t})`);
-const gasto = Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date())}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
+const gasto = Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(Date.now()))}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
 ok(gasto > 0 && Math.abs(gasto - buenasClaude * (5200 * 0.1 + 2500 * 0.5)) < 1, `lo gastado se apunta (${(gasto / 1e6).toFixed(4)} $ en ${buenasClaude} respuestas)`);
 // sin el Durable Object, en la memoria del Worker (aproximado, pero con el mismo tope)
 const envSinDO = { ...envP, QR: undefined };
@@ -568,7 +575,10 @@ ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json
 }
 
 // ---------- /plan con la búsqueda en Google (punto 14 del motor, 14 nov) ----------
-const gastoYa = async () => Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date())}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
+// (24 nov) el día, con el reloj de la prueba (Date.now lleva el desfase de `minuto()`), como lo cuenta el Worker: con el de
+// verdad, a partir de las 21:30 de Madrid la prueba ya había adelantado el reloj más allá de medianoche y el gasto se
+// buscaba en el día equivocado (fallaba cada noche hasta las 00:00)
+const gastoYa = async () => Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(Date.now()))}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
 limitesPlanes = { on: true, gratis: 10, max: 10, web: 9 };
 for (let i = 0; i < 11; i++) minuto();
 ok((await W2.cfgPlanes(envP)).web === 3, 'las búsquedas por plan no pasan de 3');
