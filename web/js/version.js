@@ -31,10 +31,12 @@ export const NOVEDADES = [
     // (02:48) además: el cambio (motor.js `relleno`, `recambios`, `cambioDe`, `cambioHecho`; plan.js el par V-/P- con
     // `requiere` y `saleSi`; cuadrarPlan descarta la venta sin la puja; LS «cambios» en app.js; la ficha «Véndelo y ficha a
     // otro»; Equipo «Vender · busca recambio») y la flecha de actualizar que no se vuelve a crear al repintar
-    v: '0.8z', f: '2026-11-24', h: '03:25', t: 'Vender y fichar recambio',
+    v: '0.8z', f: '2026-11-24', h: '04:26', t: 'Vender y fichar recambio',
     cosas: [
       { tipo: 'nuevo', d: 'oferta', t: 'Vender y fichar recambio', x: 'Si un titular tuyo baja y no tienes otro como él, la app te propone a quién fichar en su lugar: lo ves en el plan, en Equipo («Vender · busca recambio») y en su ficha, con los mejores de su puesto que te llegan. La oferta por el que sale te dice que la aceptes cuando ya tengas al nuevo.' },
-      { tipo: 'arreglo', d: 'arreglo', t: 'La flecha de actualizar, sin tirones', x: 'El círculo que gira arriba mientras se actualiza ya no se corta.' },
+      { tipo: 'nuevo', d: 'campo', t: 'Todas las jornadas y el once de cada uno', x: 'En Directo → Por jornada salen todas las jornadas de la liga. Toca a un rival y ves el once que puso en esa jornada, con los puntos de cada jugador.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'La flecha de actualizar, entera', x: 'El círculo que gira arriba mientras se actualiza se ve entero y no se corta.' },
+      { tipo: 'arreglo', d: 'aviso', t: 'Avisos de Hoy más cortos', x: 'Los avisos de arriba de Hoy dicen lo justo, y a un titular que aún no hay que vender ya no te lo mandan vender.' },
       { tipo: 'arreglo', d: 'grafica', t: 'Te dice que vendas al barato que baja', x: 'Los jugadores baratos que están bajando y no te dan puntos ya salen para vender: antes la app solo se fijaba si perdían mucho dinero, y a uno barato nunca le pasaba.' },
       { tipo: 'arreglo', d: 'camiseta', t: 'Equipo y el plan dicen lo mismo', x: 'A un titular que acaba de girar a la baja, Equipo ya no le pone «vender» si el plan aún no lo vende.' },
     ],

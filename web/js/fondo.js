@@ -77,10 +77,14 @@ export function avisosNuevos(antes, D, M) {
   const inercia = new Set(porInercia.map((x) => x.pid));
   for (const x of porInercia) {
     const vi = x.ventaInercia;
+    // (24 nov) lo mismo que Hoy: al titular sin relevo que aún no baja todos los días no se le manda vender; con
+    // recambio, el cambio
+    const cb = M.cambioDe ? M.cambioDe(x.pid) : null;
+    if (!cb && M.perdida && M.bajaSeguido && M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) continue;
     out.push({
       k: `vende:${x.pid}:${vi.urgencia}:${diaDe()}`,
-      titulo: inerciaTop ? `Pon a ${x.j.nombre} en el mercado` : vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
-      texto: inerciaTop ? 'Por cómo va su valor, conviene venderlo ya. Entra para ver el plan.' : vi.texto,
+      titulo: cb ? `Cambia a ${x.j.nombre} por ${cb.rec[0].j.nombre}` : inerciaTop ? `Pon a ${x.j.nombre} en el mercado` : vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
+      texto: cb ? `Baja y no tienes otro como él: puja por ${cb.rec[0].j.nombre} y, cuando lo tengas, véndelo.` : inerciaTop ? 'Por cómo va su valor, conviene venderlo ya. Entra para ver el plan.' : vi.texto,
       hash: 'equipo',
     });
   }

@@ -26,7 +26,8 @@ import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
-import { jornadaElegida, estadoJornada } from './jornadas.js';
+import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
+import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
@@ -2165,8 +2166,8 @@ function ptsDeClasif(r) {
 }
 /* se guardan los de las jornadas acabadas (no cambian); lo vacío no, para volver a pedirlo otro día */
 function guardarPtsJ() {
-  const ahora = Date.now();
-  const acabada = (k) => (S.M.jornadas || []).some((j) => j.n === k && j.fin < ahora) && estadoJornada(S.M, k) === 'acabada';
+  const hechas = new Set(jornadasAcabadas(S.M, S.D));
+  const acabada = (k) => hechas.has(k);
   LS.set(K('pts-jornadas'), Object.fromEntries(Object.entries(S.ptsJ || {}).filter(([k, v]) => acabada(Number(k)) && v && Object.keys(v).length)));
 }
 /**
@@ -2179,7 +2180,8 @@ async function cargarPtsJornadas() {
   S.ptsJ ||= LS.get(K('pts-jornadas'), {});
   S.ptsJT ||= {};
   const ahora = Date.now();
-  const faltan = (S.M.jornadas || []).filter((j) => j.fin < ahora && !(S.M.enJuego && S.M.enJuego.n === j.n) && !S.ptsJ[j.n] && ahora - (S.ptsJT[j.n] || 0) > 3 * MIN).map((j) => j.n);
+  // (24 nov) todas las acabadas, de la 1 a la última (el calendario que se baja solo trae de la pasada en adelante)
+  const faltan = jornadasAcabadas(S.M, S.D).filter((n) => !S.ptsJ[n] && ahora - (S.ptsJT[n] || 0) > 3 * MIN);
   // (si ya estaban todas guardadas, se repinta una vez con ellas)
   if (!faltan.length) { if (deGuardado && S.vista === 'directo') pintarVivo({ forzar: true }); return; }
   S.cargandoPtsJ = true;
@@ -2194,6 +2196,30 @@ async function cargarPtsJornadas() {
   S.cargandoPtsJ = false;
   guardarPtsJ();
   if (S.vista === 'directo') pintarVivo({ forzar: true });
+}
+/** el once de un mánager en una jornada acabada (no cambia: se guarda; lo que falla, otra vez a los 3 minutos) */
+async function cargarOnceJornada(tid, n) {
+  const k = `${tid}:${n}`;
+  S.oncesJ ||= enDemo() ? {} : LS.get(K('onces-j'), {});
+  const g = S.oncesJ[k];
+  if (g && (g.ids || Date.now() - g.t < 3 * MIN)) return;
+  if (enDemo()) {
+    // (la liga de ejemplo no tiene onces de otras jornadas: el mejor once de su plantilla)
+    const js = (S.M.plantillaDe ? S.M.plantillaDe(tid) : Object.keys(S.M.dueno || {}).filter((pid) => String(S.M.dueno[pid]) === tid).map((pid) => S.M.J(pid))).filter(Boolean);
+    const o = js.length ? S.M.mejorOnce(js) : null;
+    S.oncesJ[k] = { ids: o ? [...o.lineas.flat().map((j) => j.id), ...(o.entrenador ? [o.entrenador.id] : [])] : null, t: Date.now() };
+  } else if (haySesion()) {
+    try {
+      const r = await api.onceSemana(tid, n);
+      const ids = idsOnce(r);
+      S.oncesJ[k] = { ids: ids.length >= 5 ? ids : null, forma: formaOnce(r), t: Date.now() };
+    } catch (e) {
+      if (e.sesion) return;
+      S.oncesJ[k] = { ids: null, error: e.message, t: Date.now() };
+    }
+    LS.set(K('onces-j'), Object.fromEntries(Object.entries(S.oncesJ).filter(([, v]) => v.ids).slice(-160)));
+  } else return;
+  if (S.tipoHoja && S.tipoHoja[0] === 'oj' && S.tipoHoja[1] === k) repintarHoja();
 }
 async function cargarOnceRival(tid) {
   const n = S.M && S.M.enJuego && S.M.enJuego.n;
@@ -2866,7 +2892,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3709,6 +3735,13 @@ document.addEventListener('click', async (ev) => {
     case 'verPuesto': S.seg.equipo = 'plantilla'; S.ordenEq = 'puesto'; cerrarHoja(); if (S.vista !== 'equipo') ir('equipo'); else pintar(); bajarA(`#eq-pos-${d.p}`); break;
     // tu once y tus puntos de una jornada, en Equipo → Jornadas
     case 'irJornada': S.seg.equipo = 'jornadas'; S.jornadaSel = Number(d.n); cerrarHoja(); ir('equipo'); break;
+    // (24 nov) el once de un mánager en una jornada acabada, con lo que sumó cada uno (desde Directo → Por jornada)
+    case 'onceJ': {
+      const arg = `${d.t}:${Number(d.n)}`;
+      if (S.hoja && S.tipoHoja && S.tipoHoja[0] === 'oj') { S.tipoHoja = ['oj', arg]; repintarHoja(); } else hoja('oj', arg);
+      cargarOnceJornada(String(d.t), Number(d.n));
+      break;
+    }
     case 'vivoYa': {
       if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }
       if (S.cargandoVivo) break;

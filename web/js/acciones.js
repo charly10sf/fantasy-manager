@@ -87,11 +87,34 @@ export function acciones(D, M, c) {
   // (si la cláusula está abierta por encima de LaLiga y a algún rival le llega, y aún no ha girado, no se manda vender: espera a que te la paguen)
   ventasInercia(M).slice(0, 3).forEach((x, k) => {
     const vi = x.ventaInercia, pierde = M.perdida(x.pid);
-    add({
-      tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
-      titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
-      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
-    });
+    // (24 nov, Carlos: «muchísimo texto» y Hoy decía «Vende» a un titular que el plan no vende) corto, y al titular sin
+    // relevo que aún no baja todos los días no se le manda vender (regla del 14 nov; Equipo dice «Ha girado · titular»):
+    // si hay recambio, el cambio; si no, que le busques sustituto, sin urgencia
+    const cb = M.cambioDe ? M.cambioDe(x.pid) : null;
+    const tit = !cb && pierde >= 0.3 && !M.bajaSeguido(x.pid);
+    const dias = vi.hastaJ ? `en ${vi.hastaJ} día${vi.hastaJ > 1 ? 's' : ''} ` : '';
+    const pierdeTxt = vi.perder > 0 ? `${dias}pierde unos ${eur(vi.perder)}` : '';
+    const hoy = vi.ult < 0 ? `Hoy ${eur(vi.ult, { signo: true })}` : vi.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando';
+    if (cb) {
+      const r = cb.rec[0];
+      add({
+        tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'cambio', pid: x.pid, cuando: 'Hoy',
+        titulo: `Cambia a ${x.j.nombre} por ${r.j.nombre}`,
+        texto: `Baja y no tienes otro como él: puja por ${r.j.nombre} (+${String(Math.round(r.gana * 10) / 10).replace('.', ',')} pts por jornada) y, cuando lo tengas, véndelo.`,
+      });
+    } else if (tit) {
+      add({
+        tipo: 'sustituto', prio: 64 - k, icono: 'baja', pid: x.pid, cuando: 'Esta semana',
+        titulo: `${x.j.nombre} ha girado a la baja`,
+        texto: `${hoy}${pierdeTxt ? `; si sigue así, ${pierdeTxt}` : ''}. Es titular y no tienes otro como él: búscale sustituto antes de venderlo.`,
+      });
+    } else {
+      add({
+        tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
+        titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
+        texto: `${hoy}${pierdeTxt ? `; si sigue así, ${pierdeTxt}` : ''}.`,
+      });
+    }
   });
 
   // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias

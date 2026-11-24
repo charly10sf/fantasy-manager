@@ -261,13 +261,14 @@ function urgentesDe(S) {
   for (const a of urg) {
     if (!a.pid || nota[a.pid] || !P) continue;
     const j = M.J(a.pid), d = j && desc.find((x) => x && norm(x.jugador) === norm(j.nombre));
-    if (d && d.motivo) nota[a.pid] = `El plan lo descartó: ${d.motivo}`;
-    else if (a.tipo === 'vender') nota[a.pid] = conIA ? 'El plan de la IA no lo vende: es un aviso de la app de ahora, decide tú.' : 'No entra en los pasos del plan de hoy: es un aviso aparte, decide tú.';
+    // (24 nov, Carlos: «¿qué es eso de la app dice una cosa y la IA otra? ¿A un usuario le vas a decir eso?») nada de
+    // «el plan de la IA no lo vende»: si el plan lo descartó, su porqué y nada más
+    if (d && d.motivo) nota[a.pid] = d.motivo;
   }
   return { urg, nota, fuera };
 }
 /** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
-const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
+const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || a.tipo === 'sustituto' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
 /** (24 nov, «menos texto» y «nada cortado») la primera frase entera, en vez del texto cortado a dos líneas */
 // (24 nov) sin cortar en la inicial de un nombre («puja por C. Soler»)
 const frase1 = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';

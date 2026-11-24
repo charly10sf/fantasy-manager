@@ -1414,6 +1414,15 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
           if (!q.chips.length || q.filas !== r.equipos) mal(`Por jornada, la clasificación de la jornada: ${JSON.stringify(q)}`);
           else bien(`Por jornada: la clasificación de la jornada (${q.chips.join(', ')}) con los ${q.filas} equipos`);
+          // (24 nov, Carlos: «todas las jornadas de la liga, no solo la última, y si le das, el once de ese jugador con los
+          // puntos de los jugadores, no su perfil»)
+          if (q.chips.length < 2) mal(`Por jornada: solo sale ${q.chips.join(', ')}, no todas las jornadas`);
+          await page.evaluate(() => document.querySelector('.rk-jor .fila[data-accion="onceJ"]').click());
+          await page.waitForTimeout(900);
+          const o = await page.evaluate(() => ({ tipo: window.S.tipoHoja && window.S.tipoHoja[0], cromos: document.querySelectorAll('.hoja .cancha .cromo').length, pts: [...document.querySelectorAll('.hoja .cancha .vivo-p')].filter((e) => /pts/.test(e.innerText)).length, perfil: !!document.querySelector('.hoja [data-r]') }));
+          if (o.tipo !== 'oj' || o.cromos < 5 || !o.pts || !o.perfil) mal(`Por jornada: tocar a otro no abre su once con los puntos: ${JSON.stringify(o)}`);
+          else bien(`Por jornada: ${q.chips.length} jornadas y tocar a otro abre su once de esa jornada (${o.cromos} jugadores con sus puntos)`);
+          await page.evaluate(() => document.querySelector('[data-accion="cerrarHoja"]') && document.querySelector('[data-accion="cerrarHoja"]').click());
         } else if (/acabada/i.test(r.eti) || r.tabs.includes('Tu liga')) mal(`jornada acabada en Directo, ${nombre}: sigue saliendo: ${JSON.stringify(r)}`);
         else bien(`jornada acabada en Directo, ${nombre}: ya no sale («${r.eti}», ${r.tabs.join(' · ')})`);
         if (errores.length) mal(`jornada acabada en Directo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);

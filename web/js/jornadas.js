@@ -3,7 +3,7 @@
    /teams/{id}/lineup) y los puntos de cada jugador, de sus puntos por jornada (weekPoints); los de la jornada en
    juego, de vivo.js. app.js los pide (cargarJornadaMia) y los guarda: los de las jornadas acabadas ya no cambian. */
 import { esc, cuando, horaDe, icono } from './util.js';
-import { cromo, nada } from './comunes.js';
+import { cromo, nada, caraManager } from './comunes.js';
 
 /**
  * las jornadas que se pueden ver: de la 1 a la última empezada y, si no hay ninguna en juego, la próxima. (El
@@ -18,6 +18,12 @@ export function jornadasVisibles(M, D) {
   for (let n = 1; n <= ult; n++) l.push((M.jornadas || []).find((j) => j.n === n) || { n });
   if (!M.enJuego && M.proxima && M.proxima.n > ult) l.push(M.proxima);
   return l;
+}
+/** (24 nov) las jornadas acabadas, de la 1 a la última (el calendario que se baja solo trae de la pasada en adelante: las
+ *  de antes, por los resultados). Directo → Por jornada las enseña todas, no solo la última */
+export function jornadasAcabadas(M, D) {
+  const ahora = Date.now();
+  return jornadasVisibles(M, D).filter((j) => estadoJornada(M, j.n) === 'acabada' && !(j.ini && j.ini > ahora) && !(j.fin && j.fin > ahora)).map((j) => j.n);
 }
 /** la que se enseña: la elegida o, si no, la que se juega, la última empezada o la próxima */
 export function jornadaElegida(S) {
@@ -36,6 +42,40 @@ export function estadoJornada(M, n) {
 
 const ptsDe = (j, n) => { const w = (j.semanas || []).find((x) => x.n === n); return w ? w.pts : null; };
 const clsPts = (v) => (v == null ? 'cero' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'cero');
+
+/** el once de una jornada en su campo, cada uno con su rival y lo que sumó (Equipo → Jornadas y el once de cualquier
+ *  mánager en una jornada, desde Directo → Por jornada) */
+export function campoJornada(S, js, forma, n, est, puntosDe) {
+  const { M, D } = S;
+  const campo = js.filter((j) => j.pos < 5);
+  // cada uno con su rival de esa jornada arriba y, debajo, lo que sumó (o la hora de su partido, si aún no ha jugado)
+  const deEsa = (p) => p.jornada === n;
+  const partidoDe = (j) => (D.partidos || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId)) || (D.resultados || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId));
+  const crom = (j) => {
+    const p = partidoDe(j);
+    const casa = p && p.localId === j.equipoId;
+    const rid = p ? (casa ? p.visitanteId : p.localId) : null;
+    const tag = { txt: rid ? `${casa ? '' : '@'}${((D.equipos || {})[rid] || {}).corto || ''}` : '' };
+    const v = puntosDe(j);
+    const empezo = p && p.fecha && p.fecha <= Date.now();
+    const dato = est === 'proxima' || (est === 'vivo' && v == null && !empezo)
+      ? { txt: p && p.fecha ? cuando(p.fecha).replace(/^hoy /, '').replace(/^mañana /, 'mañ. ').replace(/^(\S+) \d+, /, '$1 ') : '–', cls: 'hora' }
+      : { txt: v == null ? '–' : `${v} pts`, cls: `vivo-p ${clsPts(v)}` };
+    return cromo(M, j, { tag, marca: est === 'proxima' ? null : '', datoFijo: dato });
+  };
+  const hueco = '<span class="cromo vacio-c sin-poner"><span class="cr-hueco">–</span><span class="cr-nom">Sin poner</span></span>';
+  const lineas = [1, 2, 3, 4].map((p) => campo.filter((j) => j.pos === p));
+  const filas = [3, 2, 1, 0].map((i) => {
+    const k = i === 0 ? 1 : forma[i - 1] || 0;
+    const xs = lineas[i].slice(0, Math.max(k, lineas[i].length));
+    const celdas = xs.map(crom);
+    while (celdas.length < k) celdas.push(hueco);
+    return celdas.length ? `<div class="linea-c${celdas.length >= 5 ? ' cinco' : ''}">${celdas.join('')}</div>` : '';
+  });
+  const ent = js.find((j) => j.pos === 5);
+  return `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
+    ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, tag: { txt: '' }, marca: '', datoFijo: { txt: 'ENT', cls: '' } })}</div>` : ''}</div>`;
+}
 
 export function jornadasHTML(S) {
   const { M, D } = S;
@@ -81,33 +121,7 @@ export function jornadasHTML(S) {
   if (!g || (S.cargandoJ && S.cargandoJ[n] && !g.ids)) return h + `<p class="t2 peq">Mirando en LaLiga tu once de la jornada ${n}…</p>`;
   if (!g.ids) return h + nada(g.error ? `No se ha podido leer tu once de la jornada ${n}: ${esc(g.error)}` : `LaLiga no tiene tu once de la jornada ${n}: puede que aún no estuvieras en la liga o que no llegaras a poner equipo.`);
 
-  // cada uno con su rival de esa jornada arriba y, debajo, lo que sumó (o la hora de su partido, si aún no ha jugado)
-  const deEsa = (p) => p.jornada === n;
-  const partidoDe = (j) => (D.partidos || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId)) || (D.resultados || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId));
-  const crom = (j) => {
-    const p = partidoDe(j);
-    const casa = p && p.localId === j.equipoId;
-    const rid = p ? (casa ? p.visitanteId : p.localId) : null;
-    const tag = { txt: rid ? `${casa ? '' : '@'}${((D.equipos || {})[rid] || {}).corto || ''}` : '' };
-    const v = puntosDe(j);
-    const empezo = p && p.fecha && p.fecha <= Date.now();
-    const dato = est === 'proxima' || (est === 'vivo' && v == null && !empezo)
-      ? { txt: p && p.fecha ? cuando(p.fecha).replace(/^hoy /, '').replace(/^mañana /, 'mañ. ').replace(/^(\S+) \d+, /, '$1 ') : '–', cls: 'hora' }
-      : { txt: v == null ? '–' : `${v} pts`, cls: `vivo-p ${clsPts(v)}` };
-    return cromo(M, j, { tag, marca: est === 'proxima' ? null : '', datoFijo: dato });
-  };
-  const hueco = '<span class="cromo vacio-c sin-poner"><span class="cr-hueco">–</span><span class="cr-nom">Sin poner</span></span>';
-  const lineas = [1, 2, 3, 4].map((p) => campo.filter((j) => j.pos === p));
-  const filas = [3, 2, 1, 0].map((i) => {
-    const k = i === 0 ? 1 : forma[i - 1] || 0;
-    const xs = lineas[i].slice(0, Math.max(k, lineas[i].length));
-    const celdas = xs.map(crom);
-    while (celdas.length < k) celdas.push(hueco);
-    return celdas.length ? `<div class="linea-c${celdas.length >= 5 ? ' cinco' : ''}">${celdas.join('')}</div>` : '';
-  });
-  const ent = js.find((j) => j.pos === 5);
-  h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
-    ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, tag: { txt: '' }, marca: '', datoFijo: { txt: 'ENT', cls: '' } })}</div>` : ''}</div>`;
+  h += campoJornada(S, js, forma, n, est, puntosDe);
   const faltan = 11 - campo.length;
   const notas = [];
   if (faltan > 0) notas.push(`<b class="rojo">${est === 'acabada' ? `Jugaste con ${campo.length}` : `Tienes ${campo.length} en el once`}: ${faltan > 1 ? `los ${faltan} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
@@ -117,5 +131,36 @@ export function jornadasHTML(S) {
   if (est === 'proxima') notas.push('El once que tienes puesto ahora en LaLiga. Debajo de cada uno, cuándo juega.');
   if (est === 'vivo') notas.push(`Se pone al día solo mientras se juega${M.vivo && M.vivo.t ? ` (lo último, a las ${horaDe(M.vivo.t)})` : ''}.`);
   if (notas.length) h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
+  return h;
+}
+
+/**
+ * (24 nov, Carlos: «si le das, que salga el once de ese jugador con los puntos de los jugadores, no el perfil») el once
+ * de cualquier mánager en una jornada acabada, con lo que sumó cada uno. Se abre desde Directo → Por jornada; app.js lo
+ * pide a LaLiga (cargarOnceJornada, /teams/{id}/lineup/week/{n}) y lo guarda en S.oncesJ['tid:n']
+ */
+export function onceJornadaHTML(S, arg, pjDe = null) {
+  const { M, D } = S;
+  const [tid, nS] = String(arg).split(':'), n = Number(nS);
+  const e = (D.clasif || []).find((x) => String(x.teamId) === tid) || { nombre: 'Mánager', teamId: tid };
+  const yo = M.yo && String(M.yo.teamId) === tid;
+  const lista = jornadasAcabadas(M, D);
+  const i = lista.indexOf(n);
+  const ant = i > 0 ? lista[i - 1] : null, sig = i >= 0 && i < lista.length - 1 ? lista[i + 1] : null;
+  const flecha = (m, ic, txt) => `<button class="jor-fl" ${m ? `data-accion="onceJ" data-t="${esc(tid)}" data-n="${m}"` : 'disabled'} aria-label="${txt}">${icono(ic)}</button>`;
+  const pj = pjDe || (S.ptsJ && S.ptsJ[n]);
+  const total = pj && pj[tid] != null ? Number(pj[tid]) : null;
+  const puesto = total != null ? Object.values(pj).filter((v) => Number(v) > total).length + 1 : null;
+  let h = `<div class="hoja-cab"><h2>${esc(e.nombre)}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  h += `<div class="jor-cab">${flecha(ant, 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${puesto ? `${puesto}º de ${Object.keys(pj).length}` : 'acabada'}</span></div>${flecha(sig, 'flecha', 'Jornada siguiente')}
+    ${total != null ? `<div class="jor-pts"><b>${total}</b><small>pts</small></div>` : ''}</div>`;
+  const g = S.oncesJ && S.oncesJ[`${tid}:${n}`];
+  if (!g) return h + `<p class="t2 peq">Mirando en LaLiga su once de la jornada ${n}…</p>`;
+  if (!g.ids) return h + nada(g.error ? `No se ha podido leer su once de la jornada ${n}.` : `LaLiga no tiene su once de la jornada ${n}.`);
+  const js = g.ids.map((pid) => D.maestro[pid] || M.J(pid)).filter((j) => j && j.pos);
+  const campo = js.filter((j) => j.pos < 5);
+  const forma = g.forma && [1, 2, 3].every((k) => campo.filter((j) => j.pos === k + 1).length <= g.forma[k - 1]) ? g.forma : [2, 3, 4].map((p) => campo.filter((j) => j.pos === p).length);
+  h += campoJornada(S, js, forma, n, 'acabada', (j) => ptsDe(j, n));
+  h += `<div class="op-pie">${yo ? '' : `<button data-r="${esc(tid)}">${caraManager(e, 'p')}Ver su perfil</button>`}</div>`;
   return h;
 }

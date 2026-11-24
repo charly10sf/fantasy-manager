@@ -97,7 +97,11 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 var(--t-cuerpo)/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: var(--t-sec2); color: var(--apagado); display: flex; align-items: center; gap: 6px; }
-#supEstado { white-space: nowrap; overflow: hidden; }
+/* (24 nov, Carlos: «el círculo de recargar sigue roto») el texto se acorta con «…» y la flecha va siempre entera a su
+   lado: antes el texto no encogía y la flecha se quedaba medio cortada por el borde (con la letra grande del móvil) */
+#supEstado { white-space: nowrap; overflow: visible; min-width: 0; }
+#supEstado > .sup-tx { display: block; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#supEstado > .sup-tx .punto { margin-right: 6px; vertical-align: 1px; }
 .sup-liga .sup-queda { color: var(--oro); font-weight: 600; font-size: var(--t-mini); margin-top: 1px; }
 .sup-liga .sup-queda.poco { color: var(--baja); }
 .sup-liga .sup-queda[hidden] { display: none; }
@@ -2948,6 +2952,12 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .rk tr td.rk-min { color: var(--baja); }
 .rk td.rk-vivo { color: var(--texto); }
 .rk td.apag { color: var(--apagado); }
+/* (24 nov) cada cifra de una jornada abre el once de ese mánager en ella */
+.rk td.rk-j > button { display: block; width: 100%; margin: -8px -6px; padding: 8px 6px; box-sizing: content-box; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+/* las pastillas de las jornadas, todas en una fila que se desliza de lado (la última primero) */
+.filtros.rk-jsel { flex-wrap: nowrap; overflow-x: auto; margin-left: -16px; margin-right: -16px; padding: 0 16px 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.filtros.rk-jsel::-webkit-scrollbar { display: none; }
+.filtros.rk-jsel > button { flex: none; }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
 
 /* al deslizar de lado a la pestaña de abajo de al lado, la nueva entra desde ese lado (Carlos, 9 nov 15:24) */
@@ -3671,13 +3681,12 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .banda-inv .ic { color: var(--oro); }
 .sup-btns [hidden] { display: none !important; }
 .sup-toca { cursor: pointer; }
-.sup-tx { display: contents; }
-.sup-gir { display: inline-flex; flex: none; margin-left: 2px; color: var(--texto2); transform-origin: 50% 50%; }
-.sup-gir .ic { width: 15px; height: 15px; stroke-width: 2.2; display: block; }
+#supEstado > .sup-gir { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 18px; height: 18px; margin-left: 0; color: var(--texto2); transform-origin: 50% 50%; }
+.sup-gir .ic { width: 16px; height: 16px; stroke-width: 2.2; display: block; }
 /* (24 nov) gira la caja (HTML), no el SVG: así lo mueve la tarjeta gráfica y no se para mientras la app calcula */
-.sup-toca.girando .sup-gir { animation: sup-gira 0.9s linear infinite; will-change: transform; }
+.sup-toca.girando > .sup-gir { animation: sup-gira 0.9s linear infinite; will-change: transform; color: var(--sube); }
 @keyframes sup-gira { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .sup-toca.girando .sup-gir { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sup-toca.girando > .sup-gir { animation: none; } }
 
 /* (rework de la web, 21 nov) los 20 escudos en la portada de la web: debajo de la barra fija con JS (.tira-p) y arriba del todo
    sin JS (.sj-tira); cada uno lleva a la ficha de su equipo. Como la tira de las páginas públicas (css/paginas.css, .tira) */

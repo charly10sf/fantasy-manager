@@ -6,6 +6,7 @@ import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.j
 import { ava, posTag, nada, campoVivo, filaJugador, cromo, caraManager } from './comunes.js';
 import { ancho, cols, tabs, puntosUltimaJornada, mapaUltimaJornada } from './vistas.js';
 import { EVENTOS, motivoTxt, ordenMotivo } from './vivo.js';
+import { jornadasAcabadas } from './jornadas.js';
 
 const est = (x) => { if (x == null || x === '') return null; const v = Number(x); return Number.isFinite(v) ? v : null; };
 const enJuego = (p) => p.st != null && p.st >= 2 && p.st < 7;
@@ -284,9 +285,11 @@ function demoPorJornada(D, ns) {
 export function puntosPorJornada(S) {
   const { M, D } = S;
   const ahora = Date.now();
-  let ns = (M.jornadas || []).filter((j) => j.fin < ahora && !(M.enJuego && M.enJuego.n === j.n)).map((j) => j.n).sort((a, b) => a - b);
+  // (24 nov, Carlos: «deberían salir todas las jornadas de la liga, no solo la última») de la 1 a la última acabada: el
+  // calendario que se baja solo trae de la pasada en adelante
+  let ns = jornadasAcabadas(M, D);
   // (la liga de ejemplo solo trae los partidos de la jornada de ahora: las de antes, de la 1 a la anterior)
-  if (D.demo && !ns.length) { const n = (M.enJuego || M.proxima || {}).n || 1; ns = Array.from({ length: n - 1 }, (_, i) => i + 1); }
+  if (D.demo) { const u = Math.max(0, ...ns, ((M.enJuego || M.proxima || {}).n || 1) - 1); ns = Array.from({ length: u }, (_, i) => i + 1); }
   const tids = D.clasif.map((e) => String(e.teamId));
   let v = {};
   if (D.demo) v = demoPorJornada(D, ns);
@@ -327,9 +330,10 @@ function rankingJornadaHTML(S, n, m, { titulo = true } = {}) {
   let h = titulo ? `<div class="sec"><h2>Tu liga en la jornada ${n}</h2>${mia && mia.pts != null ? `<span class="sub">quedaste ${puesto(mia)}º con ${mia.pts}</span>` : ''}</div>` : '';
   h += `<div class="rk-jor">${filas.map((x) => {
     const p = puesto(x), es = x.t === yo;
-    return `<button class="fila${es ? ' yo-fila' : ''}" ${es ? `data-accion="irJornada" data-n="${n}"` : `data-r="${esc(x.t)}"`}>
+    // (24 nov) el de otro abre su once de esa jornada con lo que sumó cada uno (antes, su perfil)
+    return `<button class="fila${es ? ' yo-fila' : ''}" ${es ? `data-accion="irJornada" data-n="${n}"` : `data-accion="onceJ" data-t="${esc(x.t)}" data-n="${n}"`}>
       <span class="posn${es ? ' yo' : ''}">${p != null ? p : '–'}</span>${caraManager(x.e)}
-      <div class="fila-c"><div class="fila-n">${esc(x.e.nombre)}</div><div class="fila-s">${esc(x.e.manager && x.e.manager !== x.e.nombre ? `${x.e.manager} · ` : '')}${x.e.pos}º general${es ? ' · tu once ›' : ''}</div></div>
+      <div class="fila-c"><div class="fila-n">${esc(x.e.nombre)}</div><div class="fila-s">${esc(x.e.manager && x.e.manager !== x.e.nombre ? `${x.e.manager} · ` : '')}${x.e.pos}º general · ${es ? 'tu once' : 'su once'} ›</div></div>
       <div class="fila-d"><div class="v">${x.pts != null ? x.pts : '–'}</div><div class="d apag">pts J${n}</div></div></button>`;
   }).join('')}</div>`;
   return h;
@@ -345,7 +349,8 @@ export function porJornadaHTML(S) {
   if (!cols.length && !vivoN) return h + nada(S.cargandoPtsJ || faltan ? 'Pidiendo a LaLiga los puntos de cada jornada…' : 'Aún no hay jornadas acabadas en tu liga.');
   // la clasificación de una jornada (las tres últimas, a un toque; Carlos, 24 nov)
   if (cols.length) {
-    const ult3 = [...cols].reverse().slice(0, 3);
+    // (todas, de la última a la primera; se deslizan de lado)
+    const ult3 = [...cols].reverse();
     const sel = cols.includes(Number(S.rkJ)) ? Number(S.rkJ) : ult3[0];
     h = `<div class="sec"><h2>Clasificación de la jornada</h2></div><div class="filtros rk-jsel" role="group" aria-label="Elegir jornada">${ult3.map((n) => `<button class="${n === sel ? 'activo' : ''}" aria-pressed="${n === sel}" data-accion="rkJ" data-n="${n}">J${n}</button>`).join('')}${!ult3.includes(sel) ? `<button class="activo" aria-pressed="true">J${sel}</button>` : ''}</div>${rankingJornadaHTML(S, sel, v[sel], { titulo: false })}${h}`;
   }
@@ -374,7 +379,7 @@ export function porJornadaHTML(S) {
       const x = v[n][f.t];
       if (x == null) return '<td class="rk-j apag">–</td>';
       const cls = x >= tops[n][0] ? ' rk-top' : x <= tops[n][1] && tops[n][0] !== tops[n][1] ? ' rk-min' : '';
-      return `<td class="rk-j${cls}">${x}</td>`;
+      return `<td class="rk-j${cls}"><button data-accion="onceJ" data-t="${esc(f.t)}" data-n="${n}" aria-label="Su once de la J${n}">${x}</button></td>`;
     };
     t += `<tr class="${f.yo ? 'rk-yo' : ''}"><th class="rk-q"><button ${f.yo ? 'data-ir="equipo"' : `data-r="${esc(f.t)}"`}><span class="rk-p">${orden === 'total' ? f.e.pos : i + 1}</span>${caraManager(f.e, 'p')}<span class="rk-nom">${esc(f.e.nombre)}</span></button></th>
       <td><b>${f.total}</b></td><td>${f.media != null ? d1(f.media) : '–'}</td><td>${f.ganadas || '–'}</td><td>${f.mejor != null ? f.mejor : '–'}</td>${vivoN ? `<td class="rk-j rk-vivo">${f.vivo != null ? f.vivo : '–'}</td>` : ''}${js.map(celda).join('')}</tr>`;
