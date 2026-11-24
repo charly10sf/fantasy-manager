@@ -3235,7 +3235,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/mensaje-dimitrievski-valencia-cf-puertas-136785380.html": 1795517573000,
    "SPORT|136787219": 1795514571000,
    "Europa Press|https://www.europapress.es/esandalucia/sevilla/noticia-junta-prepara-ayudas-autonomos-baja-conciliacion-relevo-generacional-2027-20261124114122.html": 1795516882000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261124/1004254863/yeray-yuri-siguen-trabajar-grupo-berenguer-vuelta.html": 1795518516000,
+   "SPORT|136786191": 1795516703000
   },
   "hechos": [
    {
@@ -3569,7 +3570,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -9555,13 +9556,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5956,
+   "ok": 5957,
    "fallos": 0,
-   "ejecuciones": 4813,
+   "ejecuciones": 4814,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:36:14.557Z"
+   "ultima": "2026-11-24T11:41:15.165Z"
   }
  },
  "ptsDirecto": {},
@@ -9578,15 +9579,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:36:24.346Z"
+   "ultimaBien": "2026-11-24T11:42:35.648Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:36:24.346Z"
+   "ultimaBien": "2026-11-24T11:42:35.648Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:36:24.346Z"
+   "ultimaBien": "2026-11-24T11:42:35.648Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9594,11 +9595,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:36:24.346Z"
+   "ultimaBien": "2026-11-24T11:42:35.648Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:36:24.346Z"
+   "ultimaBien": "2026-11-24T11:42:35.648Z"
   }
  },
  "avisos": [
