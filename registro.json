@@ -3222,7 +3222,9 @@
    "SPORT|136779676": 1795502755000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000
   },
   "hechos": [
    {
@@ -3500,11 +3502,23 @@
     "motivo": "pinchazo en el isquiotibial",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795513279000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Thomas Lemar se lesiona y será baja ante el Atlético",
+    "motivo": "nueva lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -4466,17 +4480,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 39,
    "revisar": 24,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 356400,
-  "salida": 18181,
+  "entrada": 358626,
+  "salida": 18429,
   "cacheLee": 145499,
   "cacheEscribe": 20968,
-  "dolares": 0.884939,
+  "dolares": 0.885286,
   "reservado": 0
  },
  "recientes": {
@@ -9478,13 +9492,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5935,
+   "ok": 5936,
    "fallos": 0,
-   "ejecuciones": 4792,
+   "ejecuciones": 4793,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T09:56:15.430Z"
+   "ultima": "2026-11-24T10:01:16.408Z"
   }
  },
  "ptsDirecto": {},
@@ -9501,15 +9515,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:56:24.087Z"
+   "ultimaBien": "2026-11-24T10:01:24.999Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:56:24.087Z"
+   "ultimaBien": "2026-11-24T10:01:24.999Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:56:24.087Z"
+   "ultimaBien": "2026-11-24T10:01:24.999Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9517,11 +9531,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:56:24.087Z"
+   "ultimaBien": "2026-11-24T10:01:24.999Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:56:24.087Z"
+   "ultimaBien": "2026-11-24T10:01:24.999Z"
   }
  },
  "avisos": [
