@@ -3245,7 +3245,8 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
    "SPORT|136795046": 1795521999000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
+   "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000
   },
   "hechos": [
    {
@@ -3503,11 +3504,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html",
+    "medio": "Diario Sur",
+    "t": 1795526273000,
+    "id": "3039",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Murillo se ausenta del entrenamiento por molestias en la frente",
+    "motivo": "brecha sufrida en la frente",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -9494,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5977,
+   "ok": 5978,
    "fallos": 0,
-   "ejecuciones": 4834,
+   "ejecuciones": 4835,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T13:21:16.309Z"
+   "ultima": "2026-11-24T13:26:13.518Z"
   }
  },
  "ptsDirecto": {},
@@ -9517,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:21:26.178Z"
+   "ultimaBien": "2026-11-24T13:26:22.454Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:21:26.178Z"
+   "ultimaBien": "2026-11-24T13:26:22.454Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:21:26.178Z"
+   "ultimaBien": "2026-11-24T13:26:22.454Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9533,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:21:26.178Z"
+   "ultimaBien": "2026-11-24T13:26:22.454Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:21:26.178Z"
+   "ultimaBien": "2026-11-24T13:26:22.454Z"
   }
  },
  "avisos": [
