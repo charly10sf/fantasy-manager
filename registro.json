@@ -4387,8 +4387,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
    "SPORT|136700224": 1795327253000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000,
@@ -9509,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6010,
+   "ok": 6011,
    "fallos": 0,
-   "ejecuciones": 4867,
+   "ejecuciones": 4868,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T16:06:18.381Z"
+   "ultima": "2026-11-24T16:11:13.961Z"
   }
  },
  "ptsDirecto": {},
@@ -9532,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:07:02.303Z"
+   "ultimaBien": "2026-11-24T16:11:23.995Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:07:02.303Z"
+   "ultimaBien": "2026-11-24T16:11:23.995Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:07:02.303Z"
+   "ultimaBien": "2026-11-24T16:11:23.995Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9548,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:07:02.303Z"
+   "ultimaBien": "2026-11-24T16:11:23.995Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T16:07:02.303Z"
+   "ultimaBien": "2026-11-24T16:11:23.995Z"
   }
  },
  "avisos": [
