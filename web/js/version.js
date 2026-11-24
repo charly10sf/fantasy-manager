@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8y';
+export const VERSION = '0.8z';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8y';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, 01:51, Carlos: «no me puedo creer que no me recomiende vender a ninguno… incluso el defensa del Depor, que
+    // esta jornada ni jugó») motor.js `ventaPorInercia`: el corte era 150 mil para todos y los baratos nunca llegaban;
+    // ahora un 3 % de lo que vale (40-150 mil) o el 1,2 % de siempre en los caros. En Equipo, a un titular que aún no baja
+    // todos los días la pastilla ya no dice «vender» (el plan no lo vende: regla del 14 nov). La hora, al publicar
+    v: '0.8z', f: '2026-11-24', h: '', t: 'Te dice que vendas al barato que baja',
+    cosas: [
+      { tipo: 'arreglo', d: 'grafica', t: 'Te dice que vendas al barato que baja', x: 'Los jugadores baratos que están bajando y no te dan puntos ya salen para vender: antes la app solo se fijaba si perdían mucho dinero, y a uno barato nunca le pasaba.' },
+      { tipo: 'arreglo', d: 'camiseta', t: 'Equipo y el plan dicen lo mismo', x: 'A un titular que acaba de girar a la baja, Equipo ya no le pone «vender» si el plan aún no lo vende.' },
+    ],
+  },
   {
     // (23 nov, 23:31, Carlos con Thiago: bajando, 1 punto en la última y la cláusula al +24 %, y la ficha decía «Blíndalo
     // gratis»: «no tiene sentido que me diga que lo blinde… me debía decir que lo vendiese») motor.js: `noBlindar` al que

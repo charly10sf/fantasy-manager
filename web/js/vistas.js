@@ -1149,7 +1149,8 @@ function eqPlantillaHTML(S, op) {
     sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}${orden === 'puntos' ? ` · <b>${num(x.j.puntos)} pts</b>` : ''}`,
     pills: [
       estadoPill(x.j),
-      x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
+      // (24 nov) a un titular el plan no lo vende hasta que baja todos los días (Carlos, 14 nov): sin «vender» en la pastilla
+      x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? ((tit) => `<span class="pill ${x.ventaInercia.urgencia === 'ya' && !tit ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${tit ? (x.ventaInercia.urgencia === 'ya' ? 'Ha girado · titular' : 'Frenando · titular') : x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>`)(M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) : '',
       x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
       M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
       M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',

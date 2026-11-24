@@ -523,7 +523,11 @@ export function analizar(D, H, c, extra = {}) {
     const pz = M.partidazo(pid), nivel = pz ? pz.nivel : 0;
     if (nivel >= 3 && ['giro', 'baja', 'parado', 'frena'].includes(x.fase)) return null;
     const j = J(pid), perder = -x.proyJ;
-    if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: nivel >= 2 ? 'antes del giro' : 'ya', ...x, perder };
+    // (24 nov, Carlos: «no me puedo creer que no me recomiende vender a ninguno… el defensa del Depor, que ni jugó») el
+    // corte en euros era 150 mil para todos: uno de 1,6 M que baja 26 mil al día nunca llegaba (pierde ~100 mil, un 6 %).
+    // Ahora, un 3 % de lo que vale (40 mil como poco, 150 mil como mucho) o el 1,2 % de siempre en los caros
+    const umbral = Math.max(j.valor * 0.012, Math.min(150000, Math.max(40000, j.valor * 0.03)));
+    if ((x.fase === 'giro' || x.fase === 'baja') && perder >= umbral) return { urgencia: nivel >= 2 ? 'antes del giro' : 'ya', ...x, perder };
     // (21 nov, medido: el que se frena y «gira» en 2 días o menos subió +265 mil de media en los 3 días siguientes y se
     // quedó igual a los 7: venderlo ese día es venderlo antes de tiempo. Se vende cuando gira de verdad)
     if (x.fase === 'parado') return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
