@@ -3246,7 +3246,9 @@
    "SPORT|136802760": 1795532721000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255027/queremos-ayudar-arbitros-deben-ayudar.html": 1795539373000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255007/flick-actualiza-cubasi-habla-sobre-sustituto-lamine.html": 1795537999000,
-   "SPORT|136752105": 1795535503000
+   "SPORT|136752105": 1795535503000,
+   "SPORT|136806032": 1795537551000,
+   "SPORT|136806910": 1795537138000
   },
   "hechos": [
    {
@@ -3520,7 +3522,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -9505,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6025,
+   "ok": 6026,
    "fallos": 0,
-   "ejecuciones": 4882,
+   "ejecuciones": 4883,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:21:18.392Z"
+   "ultima": "2026-11-24T17:26:14.600Z"
   }
  },
  "ptsDirecto": {},
@@ -9528,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:21:23.729Z"
+   "ultimaBien": "2026-11-24T17:26:26.993Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:21:23.729Z"
+   "ultimaBien": "2026-11-24T17:26:26.993Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:21:23.729Z"
+   "ultimaBien": "2026-11-24T17:26:26.993Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9544,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:21:23.729Z"
+   "ultimaBien": "2026-11-24T17:26:26.993Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:21:23.729Z"
+   "ultimaBien": "2026-11-24T17:26:26.993Z"
   }
  },
  "avisos": [
