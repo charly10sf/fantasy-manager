@@ -3092,7 +3092,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261122/1004253973/titular-previas-primera-federacion-g2.html": 1795307700000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253851/cambios-medita-flick-villarreal-once.html": 1795302300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253893/espi-acude-vez-rescate-madrid.html": 1795298896000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261121/1004253880/luis-garcia-alguien-merecido-ganar-sido-sevilla.html": 1795296957000,
    "SPORT|136710483": 1795299986000,
    "SPORT|136710095": 1795298512000,
    "Superdeporte|https://www.superdeporte.es/futbol/futbol-valenciano/cd-castellon/2026/11/21/cd-castelllon-pablo-hernandez-lleva-136709318.html": 1795299715000,
@@ -9461,13 +9460,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6076,
+   "ok": 6077,
    "fallos": 0,
-   "ejecuciones": 4933,
+   "ejecuciones": 4934,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T21:31:15.768Z"
+   "ultima": "2026-11-24T21:36:15.674Z"
   }
  },
  "ptsDirecto": {},
@@ -9484,15 +9483,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:31:20.288Z"
+   "ultimaBien": "2026-11-24T21:36:20.181Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:31:20.288Z"
+   "ultimaBien": "2026-11-24T21:36:20.181Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:31:20.288Z"
+   "ultimaBien": "2026-11-24T21:36:20.181Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9500,11 +9499,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:31:20.288Z"
+   "ultimaBien": "2026-11-24T21:36:20.181Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:31:20.288Z"
+   "ultimaBien": "2026-11-24T21:36:20.181Z"
   }
  },
  "avisos": [
