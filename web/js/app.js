@@ -2783,9 +2783,13 @@ async function generarPlan({ extra = false, auto = false } = {}) {
     }
   } finally {
     if (S.planCtl === ctl) S.planCtl = null;
-    nativo.trabajando(false);
+    // (24 nov) con una pregunta a la IA aún en marcha no se apaga: al salir de la app, el móvil no avisaba ni la recogía
+    if (!S.charlando) nativo.trabajando(false);
+    // (24 nov) pase lo que pase (también si falla algo al repasar el plan), la pantalla no se queda en «Preparando»
+    if (S.planEstado && S.planEstado.cargando) S.planEstado = {};
+    // (sin liga: se ha cambiado de liga a medias y ya se está cargando la otra)
+    if (S.D) { try { if (!S.hoja) pintar(); else pintarSup(); } catch (e) { console.error(e); apuntarError(e.message, 'plan'); } }
   }
-  if (!S.hoja) pintar(); else pintarSup();
 }
 
 /* ---------------- ventanas de abajo ---------------- */
@@ -3248,7 +3252,8 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   } finally {
     if (S.chatCtl === ctl) S.chatCtl = null;
     S.preguntaActual = ''; S.fotosActuales = [];
-    nativo.trabajando(false);
+    // (24 nov) con el plan de la IA aún en marcha no se apaga (lo mismo, al revés, en generarPlan)
+    if (!(S.planEstado && S.planEstado.cargando)) nativo.trabajando(false);
   }
   S.charlando = false; S.parcial = '';
   if (S.vista === 'ia') pintar();

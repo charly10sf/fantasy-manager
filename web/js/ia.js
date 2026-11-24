@@ -5,7 +5,7 @@
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
-import { token } from './auth.js';
+import { token, sesion } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
 import { K } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
@@ -1734,12 +1734,36 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
   const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
   // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
   const una = () => new Promise((ok, ko) => {
-    let hecho = false, reloj = null;
-    const fin = () => { hecho = true; if (reloj) clearTimeout(reloj); window.removeEventListener('fm-vuelta', vuelta); document.removeEventListener('visibilitychange', vis); };
+    let hecho = false, reloj = null, mira = null;
+    const ini = Date.now();
+    const fin = () => { hecho = true; if (reloj) clearTimeout(reloj); if (mira) clearTimeout(mira); window.removeEventListener('fm-vuelta', vuelta); document.removeEventListener('visibilitychange', vis); };
     const vuelta = () => { if (hecho || reloj) return; reloj = setTimeout(() => { if (hecho) return; fin(); ko(Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0, detalle: 'la app ha vuelto de segundo plano' })); }, 3000); };
     const vis = () => { if (!document.hidden) vuelta(); };
     window.addEventListener('fm-vuelta', vuelta);
     document.addEventListener('visibilitychange', vis);
+    // (24 nov, Carlos: «tarda 2 o 3 minutos y creo que sí que lo hace: cierro la aplicación, la abro y ya está el plan») la
+    // petición del plan se queda abierta hasta que la IA acaba; si el final no llega (la conexión se queda muda sin
+    // cortarse), la app seguía esperando hasta agotar el intento (2 minutos) con el plan ya hecho en el servidor. Mientras
+    // espera, cada 5 s le pregunta aparte si el plan de este pedido ya está (/plan/res, lo mismo que mira el móvil al
+    // salir de la app) y, si está, se queda con él sin esperar a la petición
+    const mirar = (espera) => {
+      mira = setTimeout(async () => {
+        mira = null;
+        if (hecho) return;
+        let r = null;
+        try { r = await pedirWorker('GET', `/plan/res?rid=${rid}`, null, { tiempo: 8000 }); } catch (e) { r = null; }
+        if (hecho) return;
+        const f = r && r.fin && typeof r.fin === 'object' ? r.fin : null;
+        if (f && (f.plan || f.e)) {
+          fin();
+          apuntar({ modelo: 'app', s: 'plan', e: 'la IA de la app: el plan ya estaba hecho y la petición seguía sin contestar; recogido aparte', ms: Date.now() - ini });
+          ok(f);
+          return;
+        }
+        mirar(5000);
+      }, espera);
+    };
+    mirar(8000);
     // (17 nov) cada intento, con lo que quede de los 3 minutos (antes, 2 minutos cada uno: podían ser 4 en total). Y una
     // respuesta que no llega entera (se corta con el servidor ya contestando: solo los espacios de mientras piensa, medio
     // plan) es un corte como otro: se repite con el mismo id y, si el plan ya estaba hecho, llega sin gastar otro
@@ -1756,7 +1780,12 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
     document.addEventListener('visibilitychange', ya);
   });
   // (15 nov) para el aviso del móvil si sales de la app (versión de Google Play); en la web no hace nada
-  if (enApp) { try { nativo.planEnMarcha(rid, await token()); } catch (e) { /* sin sesión: lo dirá el Worker */ } }
+  // (24 nov) primero con la sesión que ya hay, sin esperar: si hay que renovarla tarda un momento y, saliendo de la app
+  // justo entonces, el móvil no tenía el id del pedido y ni avisaba ni lo recogía
+  if (enApp) {
+    try { const s0 = sesion(); if (s0 && s0.token) nativo.planEnMarcha(rid, s0.token); } catch (e) { /* nada */ }
+    try { nativo.planEnMarcha(rid, await token()); } catch (e) { /* sin sesión: lo dirá el Worker */ }
+  }
   // como mucho 3 minutos en total: nunca se queda «preparando» sin fin
   const TOPE = 180000;
   try {
