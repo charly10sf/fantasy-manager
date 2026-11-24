@@ -3072,7 +3072,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136694864": 1795259508000,
    "SPORT|136695150": 1795260075000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261121/1004253714/cuti-importante-aun-jugar.html": 1795263520000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
@@ -9530,13 +9529,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5951,
+   "ok": 5952,
    "fallos": 0,
-   "ejecuciones": 4808,
+   "ejecuciones": 4809,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:11:13.510Z"
+   "ultima": "2026-11-24T11:16:15.021Z"
   }
  },
  "ptsDirecto": {},
@@ -9553,15 +9552,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:11:22.177Z"
+   "ultimaBien": "2026-11-24T11:16:24.528Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:11:22.177Z"
+   "ultimaBien": "2026-11-24T11:16:24.528Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:11:22.177Z"
+   "ultimaBien": "2026-11-24T11:16:24.528Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9569,11 +9568,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:11:22.177Z"
+   "ultimaBien": "2026-11-24T11:16:24.528Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:11:22.177Z"
+   "ultimaBien": "2026-11-24T11:16:24.528Z"
   }
  },
  "avisos": [
