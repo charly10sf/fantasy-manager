@@ -2148,6 +2148,13 @@
    "jornada": 14,
    "id": "2125107861021736986",
    "t": "2026-11-24T06:02:51.657Z"
+  },
+  {
+   "clave": "caidas|14|701-2443",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125108824847577290",
+   "t": "2026-11-24T06:06:41.432Z"
   }
  ],
  "estados": {
@@ -3058,7 +3065,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253606/amargo-regreso-titularidad.html": 1795244400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253434/real-madrid-celta-incognita-vinicius.html": 1795242768000,
-   "SPORT|136613296": 1795240876000,
    "SPORT|135959939": 1795244400000,
    "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
@@ -3218,30 +3224,6 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/mas-palos-que-futbol-en-el-empate-entre-el-elche-y-el-levante-radio-elche/": 1795476847000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136613296",
-    "medio": "SPORT",
-    "t": 1795240876000,
-    "id": "1775",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Cubarsí vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136613296",
-    "medio": "SPORT",
-    "t": 1795240876000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/",
     "medio": "AS",
@@ -4479,16 +4461,16 @@
   "dia": "2026-11-24",
   "llamadas": {
    "clasificar": 2,
-   "redactar": 16,
-   "revisar": 9,
+   "redactar": 20,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 75811,
-  "salida": 6875,
-  "cacheLee": 110663,
+  "entrada": 115770,
+  "salida": 7916,
+  "cacheLee": 116469,
   "cacheEscribe": 12259,
-  "dolares": 0.232661,
+  "dolares": 0.323569,
   "reservado": 0
  },
  "recientes": {
@@ -4688,10 +4670,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-24T06:02:45.429Z",
-    "texto": "🚨 Mal asunto en el centro del campo del Barça para la visita al Deportivo en Riazor, el domingo 29: Fermín se pierde el partido por la roja de la jornada 13 y Rodri sigue en duda por una lesión en el bíceps femoral.\n\nFermín llevaba 8 goles y 5 asistencias en la liga, y a Rodri su lesión le ha costado 36,4 M de valor en un mes. Los dos eran fijos de los azulgranas."
-   },
-   {
     "t": "2026-11-24T06:02:47.049Z",
     "texto": "Mala noticia en la zaga del Osasuna 🐂 de cara al domingo 29 en Mestalla: Catena se pierde el partido ante el Valencia 🦇 por la roja de la jornada 13. Esta temporada ha dejado 4 porterías a cero en 12 partidos, así que su sitio cuesta cubrirlo.\n\nAbel Bretones, que se lesionó el sóleo el 16 de noviembre, es duda para ese partido. Los dos eran fijos en el once de los rojillos."
    },
@@ -4706,6 +4684,10 @@
    {
     "t": "2026-11-24T06:02:51.659Z",
     "texto": "Tres titulares habituales llegan tocados a la jornada 14.\n\nEl más grave es Miguel Sierra: una luxación en el hombro y no se le espera hasta enero. Vale 6 M tras perder 6,7 M en un mes, así que es venta obligatoria.\n\nYoel Lago se pierde el Celta-Villarreal del domingo 29 por ciclo de amarillas, y Edu Expósito es duda para recibir al Getafe el lunes 30."
+   },
+   {
+    "t": "2026-11-24T06:06:41.434Z",
+    "texto": "🚨 Mal domingo 29 para la Real Sociedad ante el Sevilla en Anoeta: se le caen dos titulares habituales.\n\nBarrenetxea, que se rompió los isquiotibiales el 8 de noviembre, no volverá hasta mayo. Dos goles y dos asistencias en la liga no compensan tantos meses de baja: es venta obligatoria.\n\nAramburu, con una contusión en la cadera, tiene un 35 % de titularidad y puede quedarse fuera. Su valor se ha hundido: vale 5,7 M tras perder 3,9 M en el último mes."
    }
   ],
   "balance": [
@@ -5117,13 +5099,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "caidas|14|701-2443": {
-   "n": 1,
-   "t": "2026-11-24T06:02:43.299Z",
-   "ultima": "2026-11-24T06:02:43.299Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9490,13 +9466,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5888,
+   "ok": 5889,
    "fallos": 0,
-   "ejecuciones": 4745,
+   "ejecuciones": 4746,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-24T06:01:15.741Z"
+   "ultima": "2026-11-24T06:06:18.059Z"
   }
  },
  "ptsDirecto": {},
@@ -9513,15 +9489,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:03:07.538Z"
+   "ultimaBien": "2026-11-24T06:06:45.819Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:03:07.538Z"
+   "ultimaBien": "2026-11-24T06:06:45.819Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:03:07.538Z"
+   "ultimaBien": "2026-11-24T06:06:45.819Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9529,11 +9505,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:03:07.538Z"
+   "ultimaBien": "2026-11-24T06:06:45.819Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:03:07.538Z"
+   "ultimaBien": "2026-11-24T06:06:45.819Z"
   }
  },
  "avisos": [
