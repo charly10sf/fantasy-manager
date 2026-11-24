@@ -3072,7 +3072,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136695150": 1795260075000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261121/1004253714/cuti-importante-aun-jugar.html": 1795263520000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-dani-ceballos-emocionado-escuchar-aficionados_8_2008556190.html": 1795263592000,
@@ -9529,13 +9528,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5953,
+   "ok": 5954,
    "fallos": 0,
-   "ejecuciones": 4810,
+   "ejecuciones": 4811,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:21:12.997Z"
+   "ultima": "2026-11-24T11:26:12.868Z"
   }
  },
  "ptsDirecto": {},
@@ -9552,15 +9551,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:21:20.393Z"
+   "ultimaBien": "2026-11-24T11:26:21.126Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:21:20.393Z"
+   "ultimaBien": "2026-11-24T11:26:21.126Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:21:20.393Z"
+   "ultimaBien": "2026-11-24T11:26:21.126Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9568,11 +9567,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:21:20.393Z"
+   "ultimaBien": "2026-11-24T11:26:21.126Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:21:20.393Z"
+   "ultimaBien": "2026-11-24T11:26:21.126Z"
   }
  },
  "avisos": [
