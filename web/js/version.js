@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8z';
+export const VERSION = '0.8.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,25 @@ export const VERSION = '0.8z';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, aviso de Domy, 07:48: «no puede ser que la app te descarte jugadores que están subiendo millones»; 324 M de
+    // saldo y Bartra, +3,6 % al día, en «Mirados y descartados» con un «para tenerlo, sí») motor.js `M.aguantar` y
+    // `nr.aguantar`; plan.js, candidatos «G-» (objetivo revender, `aguantar`, `conSaldo`); cuadrarPlan y veredictos lo dan
+    // por bueno pagado con saldo; el árbitro, regla rG; prueba .github/ia/caso-aguantar.mjs. Lo medido, en
+    // claude/medida-aguantar-24nov.md. La hora, al publicar. (Tras la 0.8z se acaban las letras: 0.8.1, que va detrás en `cmpVer`)
+    // (11:58, Carlos, con capturas: «una cantidad ingente de texto… más al grano» y «¿cómo puede recomendar a Pepelu en Equipo
+    // y en el plan no?») cada descartado, una frase (`motivo` corto y `detalle` para la IA; `noRevenderCorto` en motor.js y
+    // `breve` en vistas.js); Equipo → «Lo flojo de tu once» no propone a quien el plan descarta (`veredictoOnce` con el plan)
+    // y enseña la puja, no el precio de salida; fuera el texto de debajo de «Cambios que haría la app» y el «no tienes a nadie
+    // fuera del once» por uno al que la app ya cambia; plan.js `deMasNeto`: al fichar para el once, al que sube le vuelve
+    // parte de lo pagado de más (`M.subeTeniendo`)
+    v: '0.8.1', f: '2026-11-24', h: '00:00', t: 'Comprar para aguantar y menos texto',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'Ya no descarta al que sube fuerte', x: 'Si uno del mercado sube mucho cada día y no da tiempo a revenderlo antes de la jornada, pero aguantándolo unos días sí sale a cuenta, el plan te propone pujar por él y pagarlo con tu saldo, con sus cuentas. Antes lo dejaba en «Mirados y descartados».' },
+      { tipo: 'mejora', d: 'aviso', t: 'Mirados y descartados, en una frase', x: 'Cada jugador que el plan mira y descarta dice en una sola frase por qué, con la cifra que decide. Antes era un párrafo entero por jugador.' },
+      { tipo: 'arreglo', d: 'campo', t: 'Equipo y el plan dicen lo mismo', x: 'Debajo de tu once ya no sale como fichaje un jugador que el plan ha descartado por caro, y el precio que ves es lo que habría que pujar.' },
+    ],
+  },
   {
     // (24 nov, 01:51, Carlos: «no me puedo creer que no me recomiende vender a ninguno… incluso el defensa del Depor, que
     // esta jornada ni jugó») motor.js `ventaPorInercia`: el corte era 150 mil para todos y los baratos nunca llegaban;

@@ -445,6 +445,8 @@ function objetivoPill(o) {
   const k = String(o.objetivo || '').toLowerCase().replace(/^revend.*/, 'revender');
   const x = OBJ[k];
   if (!x || ['blindar', 'alinear', 'esperar'].includes(o.accion)) return '';
+  // (24 nov) lo que se compra para aguantarlo: se revende más adelante, sin día
+  if (k === 'revender' && o.aguantar) return `<span class="pill ${x[0]}">Para aguantarlo${o.beneficio_esperado ? ` · ${eur(o.beneficio_esperado, { signo: true })}` : ''}</span>`;
   return `<span class="pill ${x[0]}">${x[1]}${k === 'revender' && o.beneficio_esperado ? ` · ${eur(o.beneficio_esperado, { signo: true })}` : ''}${k === 'revender' && o.vender_el ? ` · vender ${esc(o.vender_el)}` : ''}</span>`;
 }
 
@@ -457,6 +459,17 @@ function objetivoPill(o) {
  *  primera frase del porqué de la app. El texto entero queda plegado debajo («Más detalle») */
 const palabras = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
 const primeraFrase = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.:])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
+/** (24 nov, Carlos, con capturas de «Mirados y descartados»: «una cantidad ingente de texto») un descartado, en una frase:
+ *  la primera y, si aún es larga, hasta su última pausa antes de los 120 caracteres */
+export function breve(t, n = 120) {
+  let f = primeraFrase(String(t || '').replace(/^La app lo (descarta|quita)[.:]?\s*/i, '').replace(/…$/, '')).trim();
+  if (f.length > n) {
+    const c = f.slice(0, n), i = Math.max(c.lastIndexOf(', '), c.lastIndexOf('; '), c.lastIndexOf(' y '), c.lastIndexOf(' ('), c.lastIndexOf(': '));
+    f = (i >= 45 ? c.slice(0, i) : c.slice(0, c.lastIndexOf(' '))).replace(/[\s,;:]+$/, '');
+  }
+  f = f.replace(/[.:]$/, '');
+  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}.` : '';
+}
 function fraseDecide(o) {
   const m = String(o.motivo || '').trim();
   // (el cambio se lee entero: lo de no aceptar la oferta hasta tener al nuevo es la mitad del paso)
@@ -719,7 +732,7 @@ function planHTML(S) {
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += plegado('ojo', 'Vigila', P.vigilar.length, P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join(''), abrir);
   if (Array.isArray(P.noticias) && P.noticias.length) h += plegado('info', 'Noticias que te afectan', P.noticias.length, P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join(''), abrir);
   if (Array.isArray(P.rivales) && P.rivales.length) h += plegado('rivales', 'Tus rivales', P.rivales.length, P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); const e = tid && S.D.clasif.find((x) => x.teamId === tid); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}>${e ? caraManager(e) : `<span class="ic-act">${icono('rivales')}</span>`}<div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join(''), abrir);
-  if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join(''));
+  if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, breve(d.motivo))).join(''));
   if (!conIA) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
   h += aciertosHTML(M);
   const fuentesP = (P.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u));
@@ -851,7 +864,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // no hay nada flojo). Sin banquillo ni tira de «fuera» (Carlos, 08:20: «¿de qué sirve?»); siguen en la lista de la plantilla
   const hayCambios = !!(cambios && cambios.pares.length);
   if (hayCambios) h += cambiosOnceHTML(M, cambios);
-  if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios), sinCambios: !hayCambios, conLinea: mio });
+  if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios, S.plan), sinCambios: !hayCambios, conLinea: mio });
   h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
@@ -860,8 +873,11 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
   // que marca mucho, si no hay nadie mejor fuera del once (si lo hubiera, la app ya lo habría cambiado): se dice
   if (!real) {
-    const duros = tit.filter((j) => j.pos <= 2 && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
-    if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}. No tienes a nadie fuera del once que sume bastante más en su sitio: si fichas para ${duros.length > 1 ? 'esos puestos' : 'ese puesto'}, que tenga mejor partido.`);
+    // (24 nov, captura de Carlos: «Alti → Juan Iglesias» arriba y, debajo, «no tienes a nadie fuera del once que sume más
+    // en su sitio» por el mismo Alti) el que la app ya cambia por otro no cuenta aquí
+    const cambiados = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
+    const duros = tit.filter((j) => j.pos <= 2 && !cambiados.has(String(j.id)) && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
+    if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}, y no tienes a nadie mejor fuera del once.`);
   }
   notas.push(`<span class="leyenda">Arriba, su próximo rival: <i class="facil"></i>fácil <i class="media"></i>medio <i class="dificil"></i>difícil.${V ? '' : ' Abajo, lo que tiene de ser titular: <b class="alta">75 % o más</b>, <b class="media">50-74 %</b>, <b class="baja">menos</b>.'}</span>`);
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
@@ -870,8 +886,12 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
 
 /** (19 nov) lo flojo de tu once: los que tienen menos de la mitad de ser titular (o están de baja) y no tienes a nadie
     mejor fuera (como mucho 3); para los 2 primeros, lo mejor de su puesto en el mercado que te llega y juega */
-function veredictoOnce(M, tit, cambios) {
+export function veredictoOnce(M, tit, cambios, plan = null) {
   const MAL = new Set(['injured', 'suspended', 'out_of_league']);
+  // (24 nov, Carlos: «¿cómo puede recomendar a Pepelu en Equipo y descartarlo en el plan?») el plan manda: aquí no sale
+  // como fichaje quien el plan ha mirado y descartado (o probado y no elegido), y va delante quien el plan ficha
+  const ficha = new Set(((plan && plan.ops) || []).filter((o) => !o.descartada && !o.sugerencia && ['pujar', 'comprar', 'clausular'].includes(o.accion) && o.pid).map((o) => String(o.pid)));
+  const noPlan = new Set([...((plan && plan.descartes) || []).map((d) => String(d && d.pid)), ...((plan && plan.cuentas && plan.cuentas.claves) || []).filter((k) => /^[PG]-/.test(k)).map((k) => k.slice(2))].filter((pid) => pid && !ficha.has(pid)));
   const tp = (j) => { const T = M.titularidad ? M.titularidad(j) : null; return T ? T.p : null; };
   const pp = (j) => (j && j.pos < 5 ? M.ppEsperado(j) : 0);
   const salen = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
@@ -879,8 +899,8 @@ function veredictoOnce(M, tit, cambios) {
     .sort((a, b) => (tp(a) || 0) - (tp(b) || 0)).slice(0, 3);
   const usados = new Set();
   const mercado = (j) => {
-    const m = (M.mercado || []).filter((x) => x.j && x.j.pos === j.pos && !usados.has(x.pid) && !MAL.has(x.j.estado) && x.meLlega && !x.noVende && (tp(x.j) || 0) >= 0.6 && pp(x.j) > pp(j))
-      .sort((a, b) => pp(b.j) - pp(a.j))[0] || null;
+    const m = (M.mercado || []).filter((x) => x.j && x.j.pos === j.pos && !usados.has(x.pid) && !noPlan.has(String(x.pid)) && !MAL.has(x.j.estado) && x.meLlega && !x.noVende && (tp(x.j) || 0) >= 0.6 && pp(x.j) > pp(j))
+      .sort((a, b) => (ficha.has(String(b.pid)) ? 1 : 0) - (ficha.has(String(a.pid)) ? 1 : 0) || pp(b.j) - pp(a.j))[0] || null;
     if (m) usados.add(m.pid);
     return m;
   };
@@ -893,7 +913,7 @@ function fueraOnceHTML(M, { ver, sinCambios, conLinea }) {
   let h = '';
   const fl = ver.flojos;
   if (!fl.length) return h + (sinCambios && conLinea ? `<p class="t2 peq co-ok">${icono('ok')} Nadie de fuera mejora tu once.</p>` : '');
-  h += `<div class="cambio-once vo-flojo"><div class="co-t">Lo flojo de tu once</div>${fl.map((x) => `<div class="co-f"><button class="co-j sale" data-j="${esc(x.j.id)}">${ava(x.j, 'm')}<span><b>${esc(x.j.nombre)}</b><i>${MAL.has(x.j.estado) ? est(x.j) : `titular ${pc(x.p)}`}</i></span></button><span class="co-fl" aria-hidden="true">→</span>${x.m ? `<button class="co-j entra" data-j="${esc(x.m.pid)}">${ava(x.m.j, 'm')}<span><b>${esc(x.m.j.nombre)}</b><i>${pc(ver.tp(x.m.j))} · ${eur(x.m.precio)}</i></span></button>` : `<button class="co-j entra" data-accion="sustituto" data-pid="${esc(x.j.id)}"><span><b>Ver sustitutos</b></span></button>`}</div>`).join('')}</div>`;
+  h += `<div class="cambio-once vo-flojo"><div class="co-t">Lo flojo de tu once</div>${fl.map((x) => `<div class="co-f"><button class="co-j sale" data-j="${esc(x.j.id)}">${ava(x.j, 'm')}<span><b>${esc(x.j.nombre)}</b><i>${MAL.has(x.j.estado) ? est(x.j) : `titular ${pc(x.p)}`}</i></span></button><span class="co-fl" aria-hidden="true">→</span>${x.m ? `<button class="co-j entra" data-j="${esc(x.m.pid)}">${ava(x.m.j, 'm')}<span><b>${esc(x.m.j.nombre)}</b><i>${pc(ver.tp(x.m.j))} · ${eur(x.m.puja || x.m.precio)}</i></span></button>` : `<button class="co-j entra" data-accion="sustituto" data-pid="${esc(x.j.id)}"><span><b>Ver sustitutos</b></span></button>`}</div>`).join('')}</div>`;
   return h;
 }
 
@@ -949,7 +969,7 @@ function cambiosOnceHTML(M, C) {
   if (!C.pares.length) return '';
   const filas = C.pares.map(({ sale, entra }) => `<div class="co-f">${sale ? `<button class="co-j sale" data-j="${esc(sale.id)}">${ava(sale, 'm')}<span><b>${esc(sale.nombre)}</b><i>${esc(dato(sale))}</i></span></button><span class="co-fl" aria-hidden="true">→</span>` : '<span class="co-hueco">Hueco libre</span><span class="co-fl" aria-hidden="true">→</span>'}<button class="co-j entra" data-j="${esc(entra.id)}">${ava(entra, 'm')}<span><b>${esc(entra.nombre)}</b><i>${esc(dato(entra))}</i></span></button></div>`).join('');
   const gana = C.gana >= 0.1 ? ` · <b class="sube">+${d1(C.gana)} pts esperados</b>` : '';
-  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">Solo propone un cambio si compensa contando los puntos, el rival y lo que tiene de ser titular. El once lo cambias tú en LaLiga Fantasy.</p></div>`;
+  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">El once lo cambias tú en LaLiga Fantasy.</p></div>`;
 }
 
 function notaJugador(S, nombre, texto, efecto) {

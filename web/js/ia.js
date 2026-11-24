@@ -1191,7 +1191,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
       const Rp = planQueVe(D, M, c), Rm = planDeHoy(D, M, c);
       const ops = Rp ? (Rp.motorHoy ? Rp.ops : cuadrarPlan(Rp, D, M).ops) : [];
       vendeP = new Set(ops.filter((o) => !o.descartada && !o.sugerencia && o.accion === 'vender').map((o) => String(o.pid)));
-      miradoP = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.motivo || '')]));
+      miradoP = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.detalle || d.motivo || '')]));
     } catch (e) { vendeP = null; }
   }
   const inerciaTxt = (x) => {
@@ -1465,7 +1465,7 @@ export function pedidoCorto(D, M, c, R) {
   const fijos = (R.ops || []).filter((o) => !o._k && !o.descartada && ['alinear', 'esperar'].includes(o.accion));
   if (fijos.length) L.push(`Además, la app añade por su cuenta (no los toques): ${fijos.map((o) => (o.accion === 'alinear' ? `la alineación (${cortar(o.motivo, 160)})` : `${o.jugador ? `esperar con ${o.jugador}` : 'esperar'} (${cortar(o.motivo, 130)})`)).join('; ')}.`);
   if (alts.length) { L.push('\nALTERNATIVAS QUE TAMBIÉN VALEN Y LA APP DEJÓ FUERA (se pueden meter tal cual, con su id):'); alts.forEach(paso); }
-  if (Array.isArray(R.descartes) && R.descartes.length) L.push(`\nMIRADO Y DESCARTADO POR LA APP (no se puede meter): ${R.descartes.map((d) => `${d.jugador}: ${cortar(d.motivo, 150)}`).join(' · ')}`);
+  if (Array.isArray(R.descartes) && R.descartes.length) L.push(`\nMIRADO Y DESCARTADO POR LA APP (no se puede meter): ${R.descartes.map((d) => `${d.jugador}: ${cortar(d.detalle || d.motivo, 150)}`).join(' · ')}`);
   // las noticias de los míos que no van arriba
   const ya = new Set(lista.map((x) => x.o.pid).filter(Boolean));
   const prensa = M.mias.filter((x) => !ya.has(x.pid)).map((x) => ({ x, t: prensaTxt(M, x.pid, 2) })).filter((y) => y.t).slice(0, 12);
@@ -2146,7 +2146,9 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
           // (0.7.13u) y para revender, la puja es la que gana en tu liga (`pujaGana`), sin los recortes por lo que aporta al once
           const espR = String(o.objetivo || '').startsWith('revend') ? (M.especular || []).find((e) => String(e.pid) === String(opC.pid) && e.origen === 'mercado') : null;
           const espJ = espR && espR.pujaJusta ? espR : null;
-          const objetivoP = espR ? espR.puja : (opC.puja || 0);
+          // (24 nov) y para aguantarlo (`nr.aguantar`: no sale revenderlo antes de la jornada, pero sí teniéndolo), también
+          const nrP = !espR && String(o.objetivo || '').startsWith('revend') ? (M.noRevender || {})[opC.pid] : null;
+          const objetivoP = espR ? espR.puja : nrP && nrP.aguantar ? nrP.puja : (opC.puja || 0);
           const sube = Math.min(objetivoP, Math.floor(cabe / 10000) * 10000);
           if (espJ && importe > espJ.puja) { aviso = `${aviso ? `${aviso}. ` : ''}Para revenderlo, la app la deja en ${eur(espJ.puja)}: con más ya no sale a cuenta.`; importe = Math.max(espJ.puja, opC.precio); o.puja_max = importe; }
           // (con lo que se paga por los de su valor: la mediana de todos engaña con los baratos; Carlos, 30 oct)
@@ -2190,7 +2192,21 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     // (salida, calendario, lesión). El beneficio es el de la app con el precio de este paso, no el que escribe la IA
     if (!ya && !descartada && signo < 0 && String(o.objetivo || '').startsWith('revend')) {
       const e = (M.especular || []).find((x) => x.pid === pid);
-      if (!e) {
+      // (24 nov, aviso de Domy: descartaba a uno que subía 1,4 M al día con 324 M de saldo) a la puja que gana en su liga
+      // no da tiempo a revenderlo antes de la jornada, pero aguantándolo sí sale (`M.aguantar`): vale para revender más
+      // adelante, pagado con el saldo (si hay que tirar de deuda, habría que venderlo antes de la jornada y ya no sale)
+      const nrA = !e && accion === 'pujar' ? (M.noRevender || {})[pid] : null, ag = nrA && nrA.aguantar;
+      if (o.aguantar && !ag) o.aguantar = false;
+      if (ag) {
+        const mia = opC && opC.miPuja ? +opC.miPuja : 0;
+        const ben = Math.round(ag.valorFuturo - (importe || nrA.puja));
+        o.aguantar = true;
+        o.beneficio_esperado = ben;
+        o.beneficioApp = true;
+        o.vender_el = null;
+        if (ben <= 0) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: pagando ${eur(importe)}, en ${ag.dias} días valdría unos ${eur(ag.valorFuturo)} y no ganarías nada.`; }
+        else if (saldo != null && importe - mia > saldo) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: para revender antes de la jornada no sale y, para aguantarlo, hay que pagarlo con saldo (te quedarían ${eur(saldo - (importe - mia))}): en negativo no puntúas.`; }
+      } else if (!e) {
         o.objetivo = 'titular';
         o.beneficio_esperado = null;
         aviso = `${aviso ? `${aviso} ` : ''}La IA lo ponía para revender, pero la app no lo ve subiendo hasta el día de venderlo: se mira como un fichaje normal.`;
@@ -2246,7 +2262,9 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     // pagar mucho más de lo que vale: se avisa y, si es una barbaridad sin un trato que le hayas contado, se descarta
     // lo que cuenta es el dinero que se pierde (un +25 % por uno de 3 M no es lo mismo que por uno de 40 M),
     // comparado con tu equipo y con lo que sube al día
-    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
+    // (24 nov) lo que se compra para aguantarlo ya trae su cuenta (lo pagado de más y en cuántos días se recupera): sin el
+    // «aceptable para lo que aporta», que es del once
+    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion) && !o.aguantar) {
       sobre = importe / j.valor - 1;
       const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
       const sc = M.sobrecoste ? M.sobrecoste(j, importe) : null;
@@ -2300,7 +2318,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     }
     // para revender hace falta tiempo: lo del mercado llega en el siguiente cambio y luego hay que venderlo (2 cambios);
     // una cláusula, 1. Sin eso no da tiempo a venderlo antes de la jornada
-    if (!ya && !descartada && signo < 0 && String(o.objetivo || '').startsWith('revend') && M.ventanaEsp) {
+    if (!ya && !descartada && signo < 0 && String(o.objetivo || '').startsWith('revend') && !o.aguantar && M.ventanaEsp) {
       const hace = accion === 'pujar' || accion === 'comprar' ? 2 : 1;
       if ((M.ventanaEsp.ciclos || 0) < hace) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: no da tiempo a revenderlo antes de la jornada (${M.enJuego ? 'la jornada está en juego' : `quedan ${M.ventanaEsp.ciclos || 0} cambios de mercado que cuentan y hacen falta ${hace}`}).`; }
     }
@@ -2479,7 +2497,8 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     o.aviso = `No hace falta hoy: venderías perdiendo ${eur(-o.compra.gana)} de lo que pagaste y quedan ${cambiosAntes} cambios de mercado antes de la jornada${M.proxima ? ` ${M.proxima.n} (${cuando(M.proxima.ini)})` : ''}, con una oferta nueva de LaLiga en cada uno. Lo obligatorio es empezar la jornada en positivo: ${lim ? `si te hace falta, te vale aceptar la que llegue ${cuando(lim)}` : 'si te hace falta, véndelo antes'}.${o.aviso ? ` ${o.aviso.replace(/\s*Lo venderías por [^.]*mejor\./, '').trim()}` : ''}`.trim();
   }
   // en negativo puede ser a propósito: lo comprado para revender se vende antes de la jornada
-  const rev = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && o.signo < 0 && o.importe && o.hoy);
+  // (24 nov) lo que se compra para aguantarlo no: ese dinero no vuelve antes de la jornada
+  const rev = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && !o.aguantar && o.signo < 0 && o.importe && o.hoy);
   // (A6) con el beneficio de la app (M.especular), nunca con el que escribe la IA
   const recupera = rev.reduce((s, o) => s + (o.beneficioApp && o.beneficio_esperado ? +o.importe + +o.beneficio_esperado : +o.importe), 0);
   let avisoSaldo = null, avisoTipo = null;
@@ -2681,7 +2700,11 @@ export function veredictos(D, M) {
       const tit = uno(o, { objetivo: 'titular', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null });
       const espO = (M.especular || []).find((e) => e.pid === o.pid), pujaRev = espO && espO.origen === 'mercado' ? espO.puja : o.puja;
       const rev = espO ? uno(o, { objetivo: 'revender', importe: t === 'P' ? pujaRev : o.precio, puja_max: t === 'P' ? pujaRev : null }) : { ok: false };
-      V[o.ref] = tit.ok && rev.ok ? { ...tit, para: 'el once o revender' } : tit.ok ? { ...tit, para: 'el once' } : rev.ok ? { ...rev, para: 'revender (para el once, no)' } : { ...tit, ok: false };
+      // (24 nov) y para aguantarlo (revender más adelante, pagado con saldo): `aguantar` lo lleva aparte, valga o no para el once
+      const nrA = t === 'P' && !espO ? (M.noRevender || {})[o.pid] : null;
+      const lar = nrA && nrA.aguantar ? uno(o, { objetivo: 'revender', importe: nrA.puja, puja_max: nrA.puja }) : { ok: false };
+      V[o.ref] = tit.ok && rev.ok ? { ...tit, para: 'el once o revender' } : tit.ok ? { ...tit, para: lar.ok ? 'el once o aguantarlo para revender más adelante' : 'el once' } : rev.ok ? { ...rev, para: 'revender (para el once, no)' } : lar.ok ? { ...lar, para: 'aguantarlo y revender más adelante, pagado con saldo (para el once, no)' } : { ...tit, ok: false };
+      if (lar.ok) V[o.ref].aguantar = { importe: lar.importe, aviso: lar.aviso || '' };
     } else if (t === 'B') V[o.ref] = uno(o, { objetivo: 'proteger', importe: o.escudoGratis || !o.blindaje || o.blindaje.yaVale || o.blindaje.caro ? 0 : o.blindaje.coste });
     else if (t === 'A') V[o.ref] = uno(o, { objetivo: 'caja', importe: o.precio });
     else if (t === 'V') V[o.ref] = uno(o, { objetivo: 'caja' });
@@ -3184,7 +3207,7 @@ export function ventasMiasTxt(D, M, js, c = null, { laligaYa = false } = {}) {
     const Rp = planQueVe(D, M, c);
     opsPlan = Rp ? (Rp.motorHoy ? Rp.ops : cuadrarPlan(Rp, D, M).ops) || [] : [];
     const Rm = planDeHoy(D, M, c);
-    mirados = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.motivo || '')]));
+    mirados = new Map(((Rm && Rm.descartes) || []).map((d) => [String(d.pid), String(d.detalle || d.motivo || '')]));
   } catch (e) { opsPlan = []; }
   const sinDias = bloqueada('inercia');
   const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');

@@ -285,7 +285,7 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
  * corto: el plan lo hace el motor y la IA lo ordena, lo recorta y lo explica. En el corto se ve además
  *   FRASE <jugador>: la explicación de cada paso (la de la IA, o la de la app si la de la IA no vale)
  *   CAMBIOS: lo que la IA quitó o metió y lo que la app no le dejó
- *   MIRADO <jugador>: lo mirado y descartado, con su porqué
+ *   MIRADO <jugador>: lo mirado y descartado, con su porqué (la frase que se ve y, tras «||», las cuentas enteras de la IA)
  */
 export async function plan(escena, contesta, { largo = false } = {}) {
   const P = await pagina(escena, contesta);
@@ -321,7 +321,8 @@ export async function plan(escena, contesta, { largo = false } = {}) {
         for (const o of r.ops || []) if (o._k) L.push(`FRASE ${(o.j && o.j.nombre) || o.jugador || ''}: ${o.motivo}`);
         const c = Pl.cambios || {};
         L.push(`CAMBIOS: quita [${(c.quita || []).join(', ')}]; mete [${(c.mete || []).join(', ')}]; no aplicado [${(c.noAplicado || []).join(', ')}]; frases de la app ${c.sinFrase || 0}${c.rehecho ? `; REHECHO (${c.rehecho})` : ''}`);
-        for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
+        // (24 nov) a la vista va una frase (`motivo`); las cuentas enteras (`detalle`) son las que lee la IA: las dos, en la línea
+        for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}${d.detalle ? ` || ${d.detalle}` : ''}`);
         for (const n of Pl.noticias || []) L.push(`NOTICIA ${n.jugador}: ${n.texto}`);
         // (los rivales, como se ven: cuadrarPlan quita lo que ya no es verdad con la liga de ahora)
         for (const n of r.rivales || Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);
@@ -353,7 +354,7 @@ export function arbitro(R, D, M, eur) {
   const ciclos = (M.ventanaEsp && M.ventanaEsp.ciclos) || 0;
   const rev = (o) => String(o.objetivo || '').startsWith('revend');
   const acepta = (o) => o.accion === 'vender' && o.etiqueta === 'Aceptar oferta';
-  let caja = +D.dinero, pujado = +M.misPujas || 0, n = M.mias.length, escudos = 0, vuelve = 0, ventas = 0;
+  let caja = +D.dinero, pujado = +M.misPujas || 0, n = M.mias.length, escudos = 0, vuelve = 0, ventas = 0, aguantado = 0;
   const salen = new Set(), entran = [], aceptadas = new Set();
   /* (19 nov, tercera parte) reglas que el árbitro no miraba: con 25 no se puja (17), el parón (dinero antes que once salvo lo
      que sube hasta la vuelta y los chollos o los buenos a su valor con saldo), nada «para hoy» que sea de otro día, en
@@ -413,7 +414,14 @@ export function arbitro(R, D, M, eur) {
       }
       if (hoy && n >= 25) mal.push(`r17: ${o.accion} por ${q} con ${n} jugadores`);
       if (hoy) { pujado += imp; n++; entran.push(o.j); }
-      if (rev(o)) { if (ciclos < 2) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
+      // (24 nov) lo que se compra para aguantarlo (no sale revenderlo antes de la jornada, pero teniéndolo sí): su dinero no
+      // vuelve antes de la jornada, así que se paga con saldo, y solo si el motor lo ve (`nr.aguantar`)
+      if (rev(o) && o.aguantar) {
+        const nr = (M.noRevender || {})[o.pid];
+        if (!nr || !nr.aguantar) mal.push(`rG: ${q} va para aguantarlo y el motor no lo ve`);
+        else if (imp > nr.puja * 1.02 + 1) mal.push(`rG: ${eur(imp)} por ${q} para aguantarlo, más que la puja que gana (${eur(nr.puja)})`);
+        if (hoy) aguantado += imp;
+      } else if (rev(o)) { if (ciclos < 2) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
     }
     if (paronLejos && hoy && ['clausular', 'pujar', 'comprar'].includes(o.accion) && !rev(o) && o.j && o.j.valor) {
       // en el parón, para el once solo lo que sube (inercia), un chollo (a un 5 % de su valor sin bajar) o uno bueno a su
@@ -443,6 +451,7 @@ export function arbitro(R, D, M, eur) {
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)
   if (caja - pujado < -M.deuda - 1 && caja - pujado < +D.dinero - (+M.misPujas || 0) - 1) mal.push(`r4: ${eur(caja - pujado)} pasa el tope de deuda (${eur(-M.deuda)})`);
   if (n > 25) mal.push(`r12: la plantilla se iría a ${n}`);
+  if (aguantado && caja - pujado < -1) mal.push(`rG: compra para aguantar (${eur(aguantado)}) y el saldo se queda en ${eur(caja - pujado)}: eso solo se paga con saldo`);
   // (Carlos, 20 nov: «si le preguntas una cosa a la IA, debe estar actualizada al momento») el plan, con la liga recién
   // pedida: no con la de hace más de media hora
   if (R.t && D.t && R.t - D.t > 30 * 60e3) mal.push(`rD: el plan va con la liga de hace ${Math.round((R.t - D.t) / 60e3)} min`);
@@ -524,7 +533,7 @@ export async function motor(escena) {
       if (al) L.push(`ONCE: ${al.formacion || ''} · ${(al.titulares || []).map((t) => (t && t.nombre) || t).join(', ')}`);
       if (R.avisoSaldo) L.push(`SALDO: ${R.avisoSaldo}`);
       if (R.avisoOnce) L.push(`AVISO_ONCE: ${R.avisoOnce}`);
-      for (const d of R.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
+      for (const d of R.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}${d.detalle ? ` || ${d.detalle}` : ''}`);
       for (const d of R.proximos_dias || []) L.push(`DIAS ${d.dia}: ${d.texto}`);
       if (R.cuentas && R.cuentas.punto) L.push(`MOTOR: 1 punto en una jornada ≈ ${eur(R.cuentas.punto.v)} (${R.cuentas.punto.de}) · ${R.cuentas.candidatos} candidatos, ${R.cuentas.probados} en la búsqueda${R.vueltas ? `, ${R.vueltas} vuelta${R.vueltas > 1 ? 's' : ''} por descartes` : ''}${R.cuentas.backtest ? ` · reventas pasadas: ${R.cuentas.backtest.bien} de ${R.cuentas.backtest.n} bien, ${eur(R.cuentas.backtest.media, { signo: true })} de media a ${R.cuentas.backtest.dias} días` : ''}`);
 

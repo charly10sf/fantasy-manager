@@ -2613,6 +2613,37 @@ export function analizar(D, H, c, extra = {}) {
     for (let k = 0; k < 30; k++) { v *= 1 + r * Math.pow(freno, k); if (v >= puja) return { dias: k + 1, deMas, r }; }
     return { dias: null, deMas, r, max: v };
   };
+  /** (24 nov, aviso de Domy: «no puede ser que la app te descarte jugadores que están subiendo millones»; con 324 M de
+      saldo, Bartra, +3,6 % al día, salía en «Mirados y descartados» porque a la puja que gana en su liga no da tiempo a
+      revenderlo antes de la jornada) comprarlo para AGUANTARLO: pagado con saldo no hace falta venderlo antes de la
+      jornada, y lleva 14 días con la cláusula cerrada. Sale a cuenta si lo pagado de más se recupera en `AGUANTA_RECUPERA`
+      días o menos y a los `AGUANTA_DIAS` días se gana lo mismo que se pide para revender, y solo al que sube sin frenarse.
+      Medido el 24 nov con el histórico de valor de toda LaLiga (.github/ia/medir-aguantar.mjs y
+      claude/medida-aguantar-24nov.md; 5.002 casos desde mediados de septiembre de jugadores que subían más de un 0,8 %
+      al día): la proyección casa (mediana real a 7 días +9,8 % frente a +9,4 %) y, pagando un +13-17 % y saliendo como
+      la app (`M.aguantaReventa`), los que cumplen esta regla ganan en 8 de cada 10 casos (mediana +14-15 %, el peor 10 %
+      pierde un 5-6 %); si lo pagado de más tarda 8-10 días en recuperarse, 6 de cada 10 (mediana +3-5 %), y si tarda
+      más, se pierde en 6 de cada 10: por eso 7 días y no 10.
+      { dias, valorFuturo, beneficio, recupera } o null */
+  const AGUANTA_DIAS = 10, AGUANTA_RECUPERA = 7;
+  M.aguantar = (j, t, puja, vu, te = M.tener(j, t, puja, vu)) => {
+    if (!te || te.dias == null || te.dias > AGUANTA_RECUPERA || !(te.r > 0.008) || !(te.deMas > 0)) return null;
+    const ine = M.inercia(j.id);
+    if (ine && !['sube', 'acelera', 'rebote'].includes(ine.fase)) return null;
+    const v = proyectar(j, t || M.tend(j.id), AGUANTA_DIAS, vu).v, beneficio = v - puja;
+    if (beneficio < Math.max(250000, puja * 0.025)) return null;
+    return { dias: AGUANTA_DIAS, valorFuturo: v, beneficio, recupera: te.dias };
+  };
+  /** (24 nov) lo que se espera que suba en `AGUANTA_DIAS` días uno que sube sin frenarse (0 si no sube): lo que vuelve de lo
+      pagado de más si te lo quedas. El plan lo cuenta al fichar para el once (antes lo pagado de más contaba entero,
+      subiera o no: al que mejoraba el once y recuperaba la prima en una semana lo descartaba igual) */
+  M.subeTeniendo = (j, t) => {
+    if (!j || !j.valor) return 0;
+    const ine = M.inercia(j.id);
+    if (ine && !['sube', 'acelera', 'rebote'].includes(ine.fase)) return 0;
+    const p = proyectar(j, t || M.tend(j.id), AGUANTA_DIAS, vuelve(j));
+    return p.r > 0.004 ? Math.max(0, p.v - num(j.valor)) : 0;
+  };
   // (0.7.13u) si la puja que gana en tu liga se recorta por lo que aporta a tu once, pero lo pagado de más se recupera
   // teniéndolo en 10 días o menos (sube fuerte), se puja la que gana: con la recortada casi nunca te lo llevas
   for (const m of M.mercado) {
@@ -2648,7 +2679,8 @@ export function analizar(D, H, c, extra = {}) {
         if (tope >= extraInfo.precioMercado && tope < precio && pT != null && pT >= 0.5) {
           extraInfo = { ...extraInfo, puja: tope, pujaLiga: precio }; precio = tope; beneficio = v - tope; pujaJusta = true; pGana = pT;
         } else {
-          M.noRevender[j.id] = { pid: j.id, j, puja: precio, valorFuturo: v, beneficio, r, dias, tope: tope >= extraInfo.precioMercado ? tope : null, pTope: pT, tener: M.tener(j, t, precio, vu) };
+          const te = M.tener(j, t, precio, vu);
+          M.noRevender[j.id] = { pid: j.id, j, puja: precio, valorFuturo: v, beneficio, r, dias, tope: tope >= extraInfo.precioMercado ? tope : null, pTope: pT, tener: te, aguantar: M.aguantar(j, t, precio, vu, te) };
           return;
         }
       }
@@ -3049,11 +3081,38 @@ export function pujaRevTxt(M, e) {
 export function noRevenderTxt(M, nr) {
   const P = M.pagaLiga ? M.pagaLiga(nr.j.valor, nr.pid) : null;
   const tope = nr.tope && nr.pTope != null ? `; pujando como mucho ${eur(nr.tope)} sí ganarías, pero en tu liga así ${vecesTxt(nr.pTope)}` : '';
-  const te = nr.tener;
-  const tener = !te || !(te.deMas > 2e5) ? '' : te.dias && te.dias <= 10 ? ` Para tenerlo, sí: lo pagado de más (${eur(te.deMas)}) lo recuperas en ${te.dias} día${te.dias === 1 ? '' : 's'} si sigue subiendo así.` : te.dias ? ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) tarda ${te.dias} días en recuperarse si sigue subiendo así: solo si lo quieres para tu once.` : ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) no se recupera en un mes al ritmo de ahora: solo si lo quieres para tu once.`;
+  const te = nr.tener, ag = nr.aguantar;
+  const antes = `Para revender antes de la jornada no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.`;
+  // (24 nov, aviso de Domy) aguantándolo sí sale: el plan lo propone si se paga con el saldo. Si está aquí es porque hoy no
+  // te llega (o ya van dos para revender, que lo añade el plan): se dice eso, no «para tenerlo, sí» en una lista de descartados
+  if (ag) {
+    const libre = M.pujaMax != null && M.deuda != null ? M.pujaMax - M.deuda : null;
+    const falta = libre != null && nr.puja > libre ? ` Hoy no te llega: tienes ${eur(Math.max(0, libre))} sin tirar de deuda.` : '';
+    return `${antes} Aguantándolo sí: lo pagado de más (${eur(te.deMas)}) lo recuperas en ${ag.recupera} día${ag.recupera === 1 ? '' : 's'} y en ${ag.dias} valdría unos ${eur(ag.valorFuturo)} (${eur(ag.beneficio, { signo: true })}) si sigue subiendo así, pero solo pagándolo con tu saldo, sin deuda.${falta}`;
+  }
+  const tener = !te || !(te.deMas > 2e5) ? '' : te.dias ? ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) tarda ${te.dias} día${te.dias === 1 ? '' : 's'} en recuperarse si sigue subiendo así${te.dias <= 7 ? ' y después ganarías poco' : ''}: solo si lo quieres para tu once.` : ` Y para tenerlo, lo pagado de más (${eur(te.deMas)}) no se recupera en un mes al ritmo de ahora: solo si lo quieres para tu once.`;
   // (17 nov) para quedártelo con esa puja: si te llega con tu margen de puja
   const llega = te && te.deMas > 2e5 && M.pujaMax != null ? (nr.puja <= M.pujaMax ? ` Te llega para pujar ${eur(nr.puja)}.` : ` Ahora mismo no te llega: puedes pujar como mucho ${eur(Math.max(0, M.pujaMax))}.`) : '';
-  return `Para revender no sale: sube un ${pct(nr.r * 100, 1, false)} al día, pero en tu liga a uno que viene como él se lo llevan con unos ${eur(nr.puja)}${P ? ` (${pct((nr.puja / nr.j.valor - 1) * 100)} sobre su valor)` : ''} y antes de la jornada valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })})${tope}.${tener}${llega}`;
+  return `${antes}${tener}${llega}`;
+}
+
+/** (24 nov, Carlos: «hay una cantidad ingente de texto… menos texto y más al grano») lo mismo en UNA frase, para «Mirados
+    y descartados»: lo que decide y su cifra. Las cuentas enteras (`noRevenderTxt`) quedan para la IA. `topeRev`: ya van
+    los que se pueden tener para revender a la vez. Si mejora tu once se dice (Equipo lo enseñaba como fichaje para lo flojo
+    del once y aquí salía descartado sin nombrarlo: Pepelu) */
+export function noRevenderCorto(M, nr, { topeRev = 0 } = {}) {
+  const te = nr.tener || {}, ag = nr.aguantar;
+  const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
+  if (ag) {
+    const libre = M.pujaMax != null && M.deuda != null ? M.pujaMax - M.deuda : null;
+    const pero = libre != null && nr.puja > libre ? `, pero se paga con saldo (${eur(nr.puja)}) y tienes ${eur(Math.max(0, libre))}` : topeRev ? `, pero ya van ${topeRev} para revender a la vez` : `, pagando ${eur(nr.puja)} con tu saldo`;
+    return `Aguantándolo ${ag.dias} días ganarías unos ${eur(ag.beneficio)}${pero}.`;
+  }
+  const g = M.mejora ? M.mejora(nr.j) : 0;
+  const deMas = te.deMas > 0 ? `${eur(te.deMas)} de más que ${te.dias ? `tardas ${te.dias} días en recuperar` : 'no recuperas'}` : 'y antes de la jornada no da tiempo a revenderlo';
+  return g >= 0.3
+    ? `Mejoraría tu once (+${d1(g)} pts), pero se paga a unos ${eur(nr.puja)}: ${deMas}.`
+    : `Sube un ${pct(nr.r * 100, 1, false)} al día, pero se paga a unos ${eur(nr.puja)}: ${deMas}.`;
 }
 
 /**
@@ -3070,7 +3129,7 @@ export function pujaOnceTxt(M, m) {
   const te = M.tener ? M.tener(m.j, m.tend, m.puja) : null;
   if (te && te.deMas > 2e5) L.push(te.dias && te.dias <= 10 ? `Pagas ${eur(te.deMas)} más de lo que vale; si sigue subiendo así, lo recuperas en ${te.dias} día${te.dias === 1 ? '' : 's'}: tenerlo sale a cuenta.` : te.dias ? `Pagas ${eur(te.deMas)} más de lo que vale y tarda ${te.dias} días en recuperarse si sigue subiendo así: es para tu once, no para ganar dinero.` : `Pagas ${eur(te.deMas)} más de lo que vale y, al ritmo de ahora, no lo recuperas en un mes: es para tu once, no para ganar dinero.`);
   const nr = (M.noRevender || {})[m.pid], esp = (M.especular || []).find((e) => e.pid === m.pid);
-  if (nr) L.push(`Para revender antes de la jornada no sale: con ${eur(nr.puja)}, valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })}).`);
+  if (nr) L.push(`Para revender antes de la jornada no sale: con ${eur(nr.puja)}, valdría unos ${eur(nr.valorFuturo)} (${eur(nr.beneficio, { signo: true })}).${nr.aguantar ? ` Aguantándolo ${nr.aguantar.dias} días, sí: valdría unos ${eur(nr.aguantar.valorFuturo)} (${eur(nr.aguantar.beneficio, { signo: true })}).` : ''}`);
   else if (esp && !esp.pujaJusta) L.push(`Si al final no lo quieres, revenderlo también sale a cuenta (${eur(esp.beneficio, { signo: true })}).`);
   else if (esp && esp.pujaJusta) L.push(`Para revender, en cambio, solo sale pujando como mucho ${eur(esp.puja)}.`);
   return L.length ? ` ${L.join(' ')}` : '';
