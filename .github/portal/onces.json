@@ -1,4329 +1,16 @@
 {
- "J": 13,
- "generada": 1795391274487,
+ "J": 14,
+ "generada": 1795477703499,
  "equipos": [
-  {
-   "id": "3",
-   "nombre": "Athletic",
-   "slug": "athletic",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png",
-   "rival": "Espanyol",
-   "rivalId": "8",
-   "casa": true,
-   "t": 1795204800000,
-   "formacion": "4-3-3",
-   "once": [
-    {
-     "id": "68",
-     "nombre": "Unai Simón",
-     "pos": 1,
-     "p": 93
-    },
-    {
-     "id": "3065",
-     "nombre": "Laporte",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "74",
-     "nombre": "Yuri",
-     "pos": 2,
-     "p": 92
-    },
-    {
-     "id": "3184",
-     "nombre": "H. Rincón",
-     "pos": 2,
-     "p": 66
-    },
-    {
-     "id": "2315",
-     "nombre": "Paredes",
-     "pos": 2,
-     "p": 45,
-     "duda": true
-    },
-    {
-     "id": "2549",
-     "nombre": "Navarro",
-     "pos": 3,
-     "p": 82
-    },
-    {
-     "id": "3023",
-     "nombre": "Peio Canales",
-     "pos": 3,
-     "p": 69
-    },
-    {
-     "id": "3185",
-     "nombre": "Gerenabarrena",
-     "pos": 3,
-     "p": 60
-    },
-    {
-     "id": "3083",
-     "nombre": "Nico Williams",
-     "pos": 4,
-     "p": 91
-    },
-    {
-     "id": "927",
-     "nombre": "Berenguer",
-     "pos": 4,
-     "p": 86
-    },
-    {
-     "id": "91",
-     "nombre": "Iñaki Williams",
-     "pos": 4,
-     "p": 82
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "3185",
-      "nombre": "Gerenabarrena",
-      "p": 60
-     },
-     "b": {
-      "id": "2318",
-      "nombre": "O. Sancet",
-      "p": 60
-     },
-     "pa": 50
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2314",
-     "nombre": "Vivian",
-     "estado": "lesionado",
-     "lesion": "Lesión en el sóleo",
-     "hasta": "mediados de diciembre"
-    }
-   ],
-   "vuelven": [
-    {
-     "id": "2315",
-     "nombre": "Paredes",
-     "dias": 15,
-     "lesion": "Molestias sin determinar",
-     "antes": 45,
-     "p": 45
-    }
-   ],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2315",
-      "nombre": "Paredes",
-      "pos": 2
-     }
-    ],
-    "salen": [
-     {
-      "id": "2314",
-      "nombre": "Vivian",
-      "pos": 2,
-      "por": "lesionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "68",
-     "nombre": "Unai Simón",
-     "pos": 1
-    },
-    {
-     "id": "3065",
-     "nombre": "Laporte",
-     "pos": 2
-    },
-    {
-     "id": "77",
-     "nombre": "Yeray",
-     "pos": 2
-    },
-    {
-     "id": "74",
-     "nombre": "Yuri",
-     "pos": 2
-    },
-    {
-     "id": "3184",
-     "nombre": "H. Rincón",
-     "pos": 2
-    },
-    {
-     "id": "2318",
-     "nombre": "O. Sancet",
-     "pos": 3
-    },
-    {
-     "id": "1787",
-     "nombre": "Prados",
-     "pos": 3
-    },
-    {
-     "id": "3023",
-     "nombre": "Peio Canales",
-     "pos": 3
-    },
-    {
-     "id": "91",
-     "nombre": "Iñaki Williams",
-     "pos": 4
-    },
-    {
-     "id": "3083",
-     "nombre": "Nico Williams",
-     "pos": 4
-    },
-    {
-     "id": "927",
-     "nombre": "Berenguer",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "68",
-    "3065",
-    "74",
-    "3184",
-    "2315",
-    "2549",
-    "3023",
-    "3185",
-    "3083",
-    "927",
-    "91"
-   ]
-  },
-  {
-   "id": "8",
-   "nombre": "Espanyol",
-   "slug": "espanyol",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t177/color/t177_rcd-espanyol.png",
-   "rival": "Athletic",
-   "rivalId": "3",
-   "casa": false,
-   "t": 1795204800000,
-   "formacion": "5-3-2",
-   "once": [
-    {
-     "id": "2565",
-     "nombre": "A. Fortuño",
-     "pos": 1,
-     "p": 74
-    },
-    {
-     "id": "1930",
-     "nombre": "El Hilali",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3068",
-     "nombre": "Cabrera",
-     "pos": 2,
-     "p": 91
-    },
-    {
-     "id": "3162",
-     "nombre": "Hinojo",
-     "pos": 2,
-     "p": 47
-    },
-    {
-     "id": "3177",
-     "nombre": "Vanja Drkusic",
-     "pos": 2,
-     "p": 47
-    },
-    {
-     "id": "3098",
-     "nombre": "Q. Hartman",
-     "pos": 2,
-     "p": 47
-    },
-    {
-     "id": "3077",
-     "nombre": "Edu Expósito",
-     "pos": 3,
-     "p": 93
-    },
-    {
-     "id": "3161",
-     "nombre": "Javi Hernández",
-     "pos": 3,
-     "p": 74
-    },
-    {
-     "id": "1938",
-     "nombre": "Pol Lozano",
-     "pos": 3,
-     "p": 50
-    },
-    {
-     "id": "2520",
-     "nombre": "Roberto",
-     "pos": 4,
-     "p": 93
-    },
-    {
-     "id": "3237",
-     "nombre": "Bryan",
-     "pos": 4,
-     "p": 61
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 1,
-     "a": {
-      "id": "2565",
-      "nombre": "A. Fortuño",
-      "p": 74
-     },
-     "b": {
-      "id": "2507",
-      "nombre": "Dmitrovic",
-      "p": 54
-     },
-     "pa": 58
-    },
-    {
-     "linea": 2,
-     "a": {
-      "id": "3098",
-      "nombre": "Q. Hartman",
-      "p": 47
-     },
-     "b": {
-      "id": "2785",
-      "nombre": "Riedel",
-      "p": 37
-     },
-     "pa": 56
-    }
-   ],
-   "fuera": [],
-   "vuelven": [
-    {
-     "id": "1950",
-     "nombre": "Jofre",
-     "dias": 66,
-     "lesion": "Molestias en el aductor",
-     "antes": 0,
-     "p": 10
-    }
-   ],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "3162",
-      "nombre": "Hinojo",
-      "pos": 2
-     },
-     {
-      "id": "3177",
-      "nombre": "Vanja Drkusic",
-      "pos": 2
-     },
-     {
-      "id": "3161",
-      "nombre": "Javi Hernández",
-      "pos": 3
-     },
-     {
-      "id": "3237",
-      "nombre": "Bryan",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "3305",
-      "nombre": "A. Santiago",
-      "pos": 3,
-      "por": null
-     },
-     {
-      "id": "2623",
-      "nombre": "Dolan",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "2400",
-      "nombre": "Pere Milla",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "3105",
-      "nombre": "Cala",
-      "pos": 4,
-      "por": "lesionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2565",
-     "nombre": "A. Fortuño",
-     "pos": 1
-    },
-    {
-     "id": "3068",
-     "nombre": "Cabrera",
-     "pos": 2
-    },
-    {
-     "id": "3098",
-     "nombre": "Q. Hartman",
-     "pos": 2
-    },
-    {
-     "id": "2785",
-     "nombre": "Riedel",
-     "pos": 2
-    },
-    {
-     "id": "3162",
-     "nombre": "Hinojo",
-     "pos": 2
-    },
-    {
-     "id": "1930",
-     "nombre": "El Hilali",
-     "pos": 2
-    },
-    {
-     "id": "3169",
-     "nombre": "Bauza",
-     "pos": 3
-    },
-    {
-     "id": "1938",
-     "nombre": "Pol Lozano",
-     "pos": 3
-    },
-    {
-     "id": "3305",
-     "nombre": "A. Santiago",
-     "pos": 3
-    },
-    {
-     "id": "2400",
-     "nombre": "Pere Milla",
-     "pos": 4
-    },
-    {
-     "id": "2520",
-     "nombre": "Roberto",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "2565",
-    "1930",
-    "3068",
-    "3162",
-    "3177",
-    "3098",
-    "3077",
-    "3161",
-    "1938",
-    "2520",
-    "3237"
-   ]
-  },
-  {
-   "id": "21",
-   "nombre": "Alavés",
-   "slug": "alaves",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png",
-   "rival": "Deportivo",
-   "rivalId": "26",
-   "casa": true,
-   "t": 1795266000000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "988",
-     "nombre": "Sivera",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2938",
-     "nombre": "Koski",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "1337",
-     "nombre": "Tenaglia",
-     "pos": 2,
-     "p": 85
-    },
-    {
-     "id": "2568",
-     "nombre": "Youssef",
-     "pos": 2,
-     "p": 51
-    },
-    {
-     "id": "2552",
-     "nombre": "Jonny Otto",
-     "pos": 2,
-     "p": 48
-    },
-    {
-     "id": "2932",
-     "nombre": "Ángel Pérez",
-     "pos": 3,
-     "p": 90
-    },
-    {
-     "id": "2569",
-     "nombre": "Ibañez",
-     "pos": 3,
-     "p": 83
-    },
-    {
-     "id": "3069",
-     "nombre": "Blanco",
-     "pos": 3,
-     "p": 65
-    },
-    {
-     "id": "2577",
-     "nombre": "A. Rebbach",
-     "pos": 3,
-     "p": 50
-    },
-    {
-     "id": "2768",
-     "nombre": "Lucas Boyé",
-     "pos": 4,
-     "p": 92
-    },
-    {
-     "id": "2600",
-     "nombre": "Mariano",
-     "pos": 4,
-     "p": 52
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "2552",
-      "nombre": "Jonny Otto",
-      "p": 48
-     },
-     "b": {
-      "id": "3156",
-      "nombre": "Valentini",
-      "p": 43
-     },
-     "pa": 53
-    },
-    {
-     "linea": 3,
-     "a": {
-      "id": "2577",
-      "nombre": "A. Rebbach",
-      "p": 50
-     },
-     "b": {
-      "id": "270",
-      "nombre": "Guevara",
-      "p": 39
-     },
-     "pa": 56
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2600",
-      "nombre": "Mariano",
-      "p": 52
-     },
-     "b": {
-      "id": "3078",
-      "nombre": "T. Martínez",
-      "p": 52
-     },
-     "pa": 50
-    }
-   ],
-   "fuera": [],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2552",
-      "nombre": "Jonny Otto",
-      "pos": 2
-     },
-     {
-      "id": "2577",
-      "nombre": "A. Rebbach",
-      "pos": 3
-     },
-     {
-      "id": "2600",
-      "nombre": "Mariano",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "3156",
-      "nombre": "Valentini",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "3078",
-      "nombre": "T. Martínez",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "270",
-      "nombre": "Guevara",
-      "pos": 3,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "988",
-     "nombre": "Sivera",
-     "pos": 1
-    },
-    {
-     "id": "1337",
-     "nombre": "Tenaglia",
-     "pos": 2
-    },
-    {
-     "id": "2552",
-     "nombre": "Jonny Otto",
-     "pos": 2
-    },
-    {
-     "id": "2577",
-     "nombre": "A. Rebbach",
-     "pos": 3
-    },
-    {
-     "id": "2938",
-     "nombre": "Koski",
-     "pos": 2
-    },
-    {
-     "id": "2569",
-     "nombre": "Ibañez",
-     "pos": 3
-    },
-    {
-     "id": "2932",
-     "nombre": "Ángel Pérez",
-     "pos": 3
-    },
-    {
-     "id": "3069",
-     "nombre": "Blanco",
-     "pos": 3
-    },
-    {
-     "id": "2474",
-     "nombre": "Denis Suárez",
-     "pos": 3
-    },
-    {
-     "id": "2768",
-     "nombre": "Lucas Boyé",
-     "pos": 4
-    },
-    {
-     "id": "3078",
-     "nombre": "T. Martínez",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "988",
-    "2938",
-    "1337",
-    "2568",
-    "2552",
-    "2932",
-    "2569",
-    "3069",
-    "2577",
-    "2768",
-    "2600"
-   ]
-  },
-  {
-   "id": "26",
-   "nombre": "Deportivo",
-   "slug": "deportivo",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t180/color/t180_rc-deportivo.png",
-   "rival": "Alavés",
-   "rivalId": "21",
-   "casa": false,
-   "t": 1795266000000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "3109",
-     "nombre": "Leo Román",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2324",
-     "nombre": "Giménez",
-     "pos": 2,
-     "p": 92
-    },
-    {
-     "id": "2963",
-     "nombre": "Quagliata",
-     "pos": 2,
-     "p": 67
-    },
-    {
-     "id": "2976",
-     "nombre": "A. Alti",
-     "pos": 2,
-     "p": 67
-    },
-    {
-     "id": "2965",
-     "nombre": "M. Loureiro",
-     "pos": 2,
-     "p": 64
-    },
-    {
-     "id": "2995",
-     "nombre": "Mario Soriano",
-     "pos": 3,
-     "p": 92
-    },
-    {
-     "id": "3119",
-     "nombre": "Amatucci",
-     "pos": 3,
-     "p": 73
-    },
-    {
-     "id": "2994",
-     "nombre": "Mella",
-     "pos": 3,
-     "p": 50
-    },
-    {
-     "id": "2991",
-     "nombre": "D. Villares",
-     "pos": 3,
-     "p": 32
-    },
-    {
-     "id": "3076",
-     "nombre": "Yeremay",
-     "pos": 4,
-     "p": 75
-    },
-    {
-     "id": "2973",
-     "nombre": "Bil Nsongo",
-     "pos": 4,
-     "p": 74
-    }
-   ],
-   "dudas": [],
-   "fuera": [],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "3076",
-      "nombre": "Yeremay",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "3108",
-      "nombre": "Aubameyang",
-      "pos": 4,
-      "por": "duda"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "3109",
-     "nombre": "Leo Román",
-     "pos": 1
-    },
-    {
-     "id": "2965",
-     "nombre": "M. Loureiro",
-     "pos": 2
-    },
-    {
-     "id": "2985",
-     "nombre": "Noubi",
-     "pos": 2
-    },
-    {
-     "id": "2990",
-     "nombre": "Ximo Navarro",
-     "pos": 2
-    },
-    {
-     "id": "2963",
-     "nombre": "Quagliata",
-     "pos": 2
-    },
-    {
-     "id": "2995",
-     "nombre": "Mario Soriano",
-     "pos": 3
-    },
-    {
-     "id": "2977",
-     "nombre": "Riki",
-     "pos": 3
-    },
-    {
-     "id": "2362",
-     "nombre": "M. Casadó",
-     "pos": 3
-    },
-    {
-     "id": "2962",
-     "nombre": "Luismi Cruz",
-     "pos": 4
-    },
-    {
-     "id": "3076",
-     "nombre": "Yeremay",
-     "pos": 4
-    },
-    {
-     "id": "3108",
-     "nombre": "Aubameyang",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "3109",
-    "2324",
-    "2963",
-    "2976",
-    "2965",
-    "2995",
-    "3119",
-    "2994",
-    "2991",
-    "3076",
-    "2973"
-   ]
-  },
-  {
-   "id": "14",
-   "nombre": "Rayo",
-   "slug": "rayo",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t184/color/t184_rayo-vallecano.png",
-   "rival": "Valencia",
-   "rivalId": "18",
-   "casa": true,
-   "t": 1795274100000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "3267",
-     "nombre": "Emil Audero",
-     "pos": 1,
-     "p": 93
-    },
-    {
-     "id": "3081",
-     "nombre": "Ratiu",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3082",
-     "nombre": "Lejeune",
-     "pos": 2,
-     "p": 92
-    },
-    {
-     "id": "3260",
-     "nombre": "Mujaid Sadick",
-     "pos": 2,
-     "p": 69
-    },
-    {
-     "id": "1056",
-     "nombre": "Pedrosa",
-     "pos": 2,
-     "p": 63
-    },
-    {
-     "id": "2384",
-     "nombre": "Unai Lopez",
-     "pos": 3,
-     "p": 92
-    },
-    {
-     "id": "2383",
-     "nombre": "Pathé I. Ciss",
-     "pos": 3,
-     "p": 81
-    },
-    {
-     "id": "2385",
-     "nombre": "Pedro Díaz",
-     "pos": 3,
-     "p": 60
-    },
-    {
-     "id": "1029",
-     "nombre": "Álvaro García",
-     "pos": 3,
-     "p": 41,
-     "duda": true
-    },
-    {
-     "id": "2387",
-     "nombre": "Camello",
-     "pos": 4,
-     "p": 87
-    },
-    {
-     "id": "886",
-     "nombre": "De Frutos",
-     "pos": 4,
-     "p": 70
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "1029",
-      "nombre": "Álvaro García",
-      "p": 41
-     },
-     "b": {
-      "id": "2382",
-      "nombre": "Isi",
-      "p": 31
-     },
-     "pa": 57
-    }
-   ],
-   "fuera": [],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "1029",
-      "nombre": "Álvaro García",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "3198",
-      "nombre": "Tsitaishvili",
-      "pos": 4,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "3267",
-     "nombre": "Emil Audero",
-     "pos": 1
-    },
-    {
-     "id": "3260",
-     "nombre": "Mujaid Sadick",
-     "pos": 2
-    },
-    {
-     "id": "3082",
-     "nombre": "Lejeune",
-     "pos": 2
-    },
-    {
-     "id": "3198",
-     "nombre": "Tsitaishvili",
-     "pos": 4
-    },
-    {
-     "id": "3081",
-     "nombre": "Ratiu",
-     "pos": 2
-    },
-    {
-     "id": "2384",
-     "nombre": "Unai Lopez",
-     "pos": 3
-    },
-    {
-     "id": "2386",
-     "nombre": "Nteka",
-     "pos": 4
-    },
-    {
-     "id": "2383",
-     "nombre": "Pathé I. Ciss",
-     "pos": 3
-    },
-    {
-     "id": "2387",
-     "nombre": "Camello",
-     "pos": 4
-    },
-    {
-     "id": "886",
-     "nombre": "De Frutos",
-     "pos": 4
-    },
-    {
-     "id": "2382",
-     "nombre": "Isi",
-     "pos": 3
-    }
-   ],
-   "probable": [
-    "3267",
-    "3081",
-    "3082",
-    "3260",
-    "1056",
-    "2384",
-    "2383",
-    "2385",
-    "1029",
-    "2387",
-    "886"
-   ]
-  },
-  {
-   "id": "18",
-   "nombre": "Valencia",
-   "slug": "valencia",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t191/color/t191_valencia-cf.png",
-   "rival": "Rayo",
-   "rivalId": "14",
-   "casa": false,
-   "t": 1795274100000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "2457",
-     "nombre": "Dimitrievski",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "1991",
-     "nombre": "Tárrega",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3206",
-     "nombre": "Maffeo",
-     "pos": 2,
-     "p": 72
-    },
-    {
-     "id": "3120",
-     "nombre": "De Haas",
-     "pos": 2,
-     "p": 65
-    },
-    {
-     "id": "3236",
-     "nombre": "Arnau",
-     "pos": 2,
-     "p": 52
-    },
-    {
-     "id": "2464",
-     "nombre": "Pepelu",
-     "pos": 3,
-     "p": 93
-    },
-    {
-     "id": "3075",
-     "nombre": "Javi Guerra",
-     "pos": 3,
-     "p": 77
-    },
-    {
-     "id": "3128",
-     "nombre": "Guido Rodríguez",
-     "pos": 3,
-     "p": 72
-    },
-    {
-     "id": "581",
-     "nombre": "Rioja",
-     "pos": 3,
-     "p": 56
-    },
-    {
-     "id": "2588",
-     "nombre": "Danjuma",
-     "pos": 4,
-     "p": 93
-    },
-    {
-     "id": "2617",
-     "nombre": "Sadiq",
-     "pos": 4,
-     "p": 61
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "581",
-      "nombre": "Rioja",
-      "p": 56
-     },
-     "b": {
-      "id": "3239",
-      "nombre": "Mayol",
-      "p": 44
-     },
-     "pa": 56
-    }
-   ],
-   "fuera": [
-    {
-     "id": "302",
-     "nombre": "Gayá",
-     "estado": "sancionado"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "3236",
-      "nombre": "Arnau",
-      "pos": 2
-     },
-     {
-      "id": "581",
-      "nombre": "Rioja",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "3239",
-      "nombre": "Mayol",
-      "pos": 3,
-      "por": null
-     },
-     {
-      "id": "302",
-      "nombre": "Gayá",
-      "pos": 2,
-      "por": "sancionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2457",
-     "nombre": "Dimitrievski",
-     "pos": 1
-    },
-    {
-     "id": "1991",
-     "nombre": "Tárrega",
-     "pos": 2
-    },
-    {
-     "id": "3236",
-     "nombre": "Arnau",
-     "pos": 2
-    },
-    {
-     "id": "2403",
-     "nombre": "Copete",
-     "pos": 2
-    },
-    {
-     "id": "3206",
-     "nombre": "Maffeo",
-     "pos": 2
-    },
-    {
-     "id": "3128",
-     "nombre": "Guido Rodríguez",
-     "pos": 3
-    },
-    {
-     "id": "2464",
-     "nombre": "Pepelu",
-     "pos": 3
-    },
-    {
-     "id": "581",
-     "nombre": "Rioja",
-     "pos": 3
-    },
-    {
-     "id": "2560",
-     "nombre": "Raba",
-     "pos": 4
-    },
-    {
-     "id": "3075",
-     "nombre": "Javi Guerra",
-     "pos": 3
-    },
-    {
-     "id": "2617",
-     "nombre": "Sadiq",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "2457",
-    "1991",
-    "3206",
-    "3120",
-    "3236",
-    "2464",
-    "3075",
-    "3128",
-    "581",
-    "2588",
-    "2617"
-   ]
-  },
-  {
-   "id": "17",
-   "nombre": "Sevilla",
-   "slug": "sevilla",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t179/color/t179_sevilla-fc.png",
-   "rival": "Betis",
-   "rivalId": "5",
-   "casa": true,
-   "t": 1795282200000,
-   "formacion": "4-3-3",
-   "once": [
-    {
-     "id": "2759",
-     "nombre": "Vlachodimos",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2479",
-     "nombre": "Kike Salas",
-     "pos": 2,
-     "p": 94
-    },
-    {
-     "id": "1147",
-     "nombre": "Juan Iglesias",
-     "pos": 2,
-     "p": 89
-    },
-    {
-     "id": "2753",
-     "nombre": "Suazo",
-     "pos": 2,
-     "p": 80
-    },
-    {
-     "id": "2680",
-     "nombre": "A. Castrín",
-     "pos": 2,
-     "p": 67
-    },
-    {
-     "id": "3265",
-     "nombre": "Fofana",
-     "pos": 3,
-     "p": 92
-    },
-    {
-     "id": "2453",
-     "nombre": "Agoumé",
-     "pos": 3,
-     "p": 88
-    },
-    {
-     "id": "2687",
-     "nombre": "Manu Bueno",
-     "pos": 3,
-     "p": 31
-    },
-    {
-     "id": "3262",
-     "nombre": "Félix Correia",
-     "pos": 4,
-     "p": 91
-    },
-    {
-     "id": "3266",
-     "nombre": "Stassin",
-     "pos": 4,
-     "p": 75
-    },
-    {
-     "id": "2454",
-     "nombre": "Ejuke",
-     "pos": 4,
-     "p": 55
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 4,
-     "a": {
-      "id": "2454",
-      "nombre": "Ejuke",
-      "p": 55
-     },
-     "b": {
-      "id": "2456",
-      "nombre": "Isaac",
-      "p": 51
-     },
-     "pa": 52
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2746",
-     "nombre": "Miguel Sierra",
-     "estado": "lesionado",
-     "lesion": "Luxación acromioclavicular",
-     "hasta": "enero"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2680",
-      "nombre": "A. Castrín",
-      "pos": 2
-     },
-     {
-      "id": "2687",
-      "nombre": "Manu Bueno",
-      "pos": 3
-     },
-     {
-      "id": "2454",
-      "nombre": "Ejuke",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "3138",
-      "nombre": "Sangante",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2456",
-      "nombre": "Isaac",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "3117",
-      "nombre": "Vargas",
-      "pos": 4,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2759",
-     "nombre": "Vlachodimos",
-     "pos": 1
-    },
-    {
-     "id": "2479",
-     "nombre": "Kike Salas",
-     "pos": 2
-    },
-    {
-     "id": "2680",
-     "nombre": "A. Castrín",
-     "pos": 2
-    },
-    {
-     "id": "2753",
-     "nombre": "Suazo",
-     "pos": 2
-    },
-    {
-     "id": "1147",
-     "nombre": "Juan Iglesias",
-     "pos": 2
-    },
-    {
-     "id": "856",
-     "nombre": "Guridi",
-     "pos": 3
-    },
-    {
-     "id": "2453",
-     "nombre": "Agoumé",
-     "pos": 3
-    },
-    {
-     "id": "3265",
-     "nombre": "Fofana",
-     "pos": 3
-    },
-    {
-     "id": "3266",
-     "nombre": "Stassin",
-     "pos": 4
-    },
-    {
-     "id": "3262",
-     "nombre": "Félix Correia",
-     "pos": 4
-    },
-    {
-     "id": "3117",
-     "nombre": "Vargas",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "2759",
-    "2479",
-    "1147",
-    "2753",
-    "2680",
-    "3265",
-    "2453",
-    "2687",
-    "3262",
-    "3266",
-    "2454"
-   ]
-  },
-  {
-   "id": "5",
-   "nombre": "Betis",
-   "slug": "betis",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png",
-   "rival": "Sevilla",
-   "rivalId": "17",
-   "casa": false,
-   "t": 1795282200000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "2541",
-     "nombre": "Á. Valles",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2543",
-     "nombre": "Natan",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "121",
-     "nombre": "Bartra",
-     "pos": 2,
-     "p": 77
-    },
-    {
-     "id": "2429",
-     "nombre": "Fran García",
-     "pos": 2,
-     "p": 67
-    },
-    {
-     "id": "2414",
-     "nombre": "Bellerín",
-     "pos": 2,
-     "p": 60
-    },
-    {
-     "id": "3090",
-     "nombre": "Isco",
-     "pos": 3,
-     "p": 88
-    },
-    {
-     "id": "2418",
-     "nombre": "Marc Roca",
-     "pos": 3,
-     "p": 82
-    },
-    {
-     "id": "3099",
-     "nombre": "Fornals",
-     "pos": 3,
-     "p": 78
-    },
-    {
-     "id": "2548",
-     "nombre": "Riquelme",
-     "pos": 3,
-     "p": 34
-    },
-    {
-     "id": "3089",
-     "nombre": "Ez Abde",
-     "pos": 4,
-     "p": 92
-    },
-    {
-     "id": "2217",
-     "nombre": "Cucho",
-     "pos": 4,
-     "p": 73
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2548",
-      "nombre": "Riquelme",
-      "p": 34
-     },
-     "b": {
-      "id": "3199",
-      "nombre": "F. Bernal",
-      "p": 33
-     },
-     "pa": 50
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2217",
-      "nombre": "Cucho",
-      "p": 73
-     },
-     "b": {
-      "id": "2770",
-      "nombre": "Antony",
-      "p": 70
-     },
-     "pa": 51
-    }
-   ],
-   "fuera": [
-    {
-     "id": "3264",
-     "nombre": "Ceballos",
-     "estado": "lesionado",
-     "lesion": "Molestias musculares"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2548",
-      "nombre": "Riquelme",
-      "pos": 3
-     },
-     {
-      "id": "2217",
-      "nombre": "Cucho",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "3231",
-      "nombre": "Parrott",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "2770",
-      "nombre": "Antony",
-      "pos": 4,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2541",
-     "nombre": "Á. Valles",
-     "pos": 1
-    },
-    {
-     "id": "2543",
-     "nombre": "Natan",
-     "pos": 2
-    },
-    {
-     "id": "121",
-     "nombre": "Bartra",
-     "pos": 2
-    },
-    {
-     "id": "2429",
-     "nombre": "Fran García",
-     "pos": 2
-    },
-    {
-     "id": "2414",
-     "nombre": "Bellerín",
-     "pos": 2
-    },
-    {
-     "id": "2770",
-     "nombre": "Antony",
-     "pos": 4
-    },
-    {
-     "id": "2418",
-     "nombre": "Marc Roca",
-     "pos": 3
-    },
-    {
-     "id": "3099",
-     "nombre": "Fornals",
-     "pos": 3
-    },
-    {
-     "id": "2419",
-     "nombre": "Aitor Ruibal",
-     "pos": 2
-    },
-    {
-     "id": null,
-     "nombre": "Abde Ezzalzouli",
-     "pos": 3
-    },
-    {
-     "id": "3090",
-     "nombre": "Isco",
-     "pos": 3
-    }
-   ],
-   "probable": [
-    "2541",
-    "2543",
-    "121",
-    "2429",
-    "2414",
-    "3090",
-    "2418",
-    "3099",
-    "2548",
-    "3089",
-    "2217"
-   ]
-  },
-  {
-   "id": "15",
-   "nombre": "Real Madrid",
-   "slug": "real-madrid",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
-   "rival": "Celta",
-   "rivalId": "6",
-   "casa": true,
-   "t": 1795291200000,
-   "formacion": "3-5-2",
-   "once": [
-    {
-     "id": "230",
-     "nombre": "Courtois",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2530",
-     "nombre": "Huijsen",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3106",
-     "nombre": "Cucurella",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3107",
-     "nombre": "Konaté",
-     "pos": 2,
-     "p": 91
-    },
-    {
-     "id": "3101",
-     "nombre": "Bellingham",
-     "pos": 3,
-     "p": 93
-    },
-    {
-     "id": "1674",
-     "nombre": "Arda Güler",
-     "pos": 3,
-     "p": 90
-    },
-    {
-     "id": "2430",
-     "nombre": "Valverde",
-     "pos": 3,
-     "p": 84
-    },
-    {
-     "id": "1480",
-     "nombre": "Tchouaméni",
-     "pos": 3,
-     "p": 77
-    },
-    {
-     "id": "3116",
-     "nombre": "Bernardo Silva",
-     "pos": 3,
-     "p": 67
-    },
-    {
-     "id": "3103",
-     "nombre": "Mbappé",
-     "pos": 4,
-     "p": 93
-    },
-    {
-     "id": "3143",
-     "nombre": "Diomande",
-     "pos": 4,
-     "p": 86
-    }
-   ],
-   "dudas": [],
-   "fuera": [],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [],
-    "salen": []
-   },
-   "confirmado": [
-    {
-     "id": "230",
-     "nombre": "Courtois",
-     "pos": 1
-    },
-    {
-     "id": "2530",
-     "nombre": "Huijsen",
-     "pos": 2
-    },
-    {
-     "id": "3107",
-     "nombre": "Konaté",
-     "pos": 2
-    },
-    {
-     "id": "2533",
-     "nombre": "Á. Carreras",
-     "pos": 2
-    },
-    {
-     "id": "2531",
-     "nombre": "Trent",
-     "pos": 2
-    },
-    {
-     "id": "1674",
-     "nombre": "Arda Güler",
-     "pos": 3
-    },
-    {
-     "id": "1300",
-     "nombre": "Camavinga",
-     "pos": 3
-    },
-    {
-     "id": "3116",
-     "nombre": "Bernardo Silva",
-     "pos": 3
-    },
-    {
-     "id": "3101",
-     "nombre": "Bellingham",
-     "pos": 3
-    },
-    {
-     "id": "3143",
-     "nombre": "Diomande",
-     "pos": 4
-    },
-    {
-     "id": "3103",
-     "nombre": "Mbappé",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "230",
-    "2530",
-    "3106",
-    "3107",
-    "3101",
-    "1674",
-    "2430",
-    "1480",
-    "3116",
-    "3103",
-    "3143"
-   ]
-  },
-  {
-   "id": "6",
-   "nombre": "Celta",
-   "slug": "celta",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t176/color/t176_rc-celta.png",
-   "rival": "Real Madrid",
-   "rivalId": "15",
-   "casa": false,
-   "t": 1795291200000,
-   "formacion": "5-3-2",
-   "once": [
-    {
-     "id": "2713",
-     "nombre": "Ionut Radu",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2206",
-     "nombre": "Yoel Lago",
-     "pos": 2,
-     "p": 87
-    },
-    {
-     "id": "3123",
-     "nombre": "Marcos Alonso",
-     "pos": 2,
-     "p": 83
-    },
-    {
-     "id": "2074",
-     "nombre": "Javi Rodríguez",
-     "pos": 2,
-     "p": 67
-    },
-    {
-     "id": "2714",
-     "nombre": "Javi Rueda",
-     "pos": 2,
-     "p": 61
-    },
-    {
-     "id": "2329",
-     "nombre": "Javi Galán",
-     "pos": 2,
-     "p": 57
-    },
-    {
-     "id": "2607",
-     "nombre": "Ilaix Moriba",
-     "pos": 3,
-     "p": 93
-    },
-    {
-     "id": "2078",
-     "nombre": "Hugo Alvarez",
-     "pos": 3,
-     "p": 56
-    },
-    {
-     "id": "2295",
-     "nombre": "Febas",
-     "pos": 3,
-     "p": 55
-    },
-    {
-     "id": "2603",
-     "nombre": "Ferran Jutglà",
-     "pos": 4,
-     "p": 75
-    },
-    {
-     "id": "2397",
-     "nombre": "Pablo Durán",
-     "pos": 4,
-     "p": 56
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "2329",
-      "nombre": "Javi Galán",
-      "p": 57
-     },
-     "b": {
-      "id": "2604",
-      "nombre": "Carreira",
-      "p": 52
-     },
-     "pa": 53
-    },
-    {
-     "linea": 3,
-     "a": {
-      "id": "2295",
-      "nombre": "Febas",
-      "p": 55
-     },
-     "b": {
-      "id": "2850",
-      "nombre": "H. González",
-      "p": 38
-     },
-     "pa": 59
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2397",
-      "nombre": "Pablo Durán",
-      "p": 56
-     },
-     "b": {
-      "id": "2492",
-      "nombre": "Iago Aspas",
-      "p": 44
-     },
-     "pa": 56
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2639",
-     "nombre": "M. Román",
-     "estado": "lesionado"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2206",
-      "nombre": "Yoel Lago",
-      "pos": 2
-     },
-     {
-      "id": "2329",
-      "nombre": "Javi Galán",
-      "pos": 2
-     },
-     {
-      "id": "2078",
-      "nombre": "Hugo Alvarez",
-      "pos": 3
-     },
-     {
-      "id": "2295",
-      "nombre": "Febas",
-      "pos": 3
-     },
-     {
-      "id": "2603",
-      "nombre": "Ferran Jutglà",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "2604",
-      "nombre": "Carreira",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "3259",
-      "nombre": "Cáceres",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2492",
-      "nombre": "Iago Aspas",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "3240",
-      "nombre": "Driouech",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "2954",
-      "nombre": "Antañón",
-      "pos": 3,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2713",
-     "nombre": "Ionut Radu",
-     "pos": 1
-    },
-    {
-     "id": "3123",
-     "nombre": "Marcos Alonso",
-     "pos": 2
-    },
-    {
-     "id": "2206",
-     "nombre": "Yoel Lago",
-     "pos": 2
-    },
-    {
-     "id": "2074",
-     "nombre": "Javi Rodríguez",
-     "pos": 2
-    },
-    {
-     "id": "2607",
-     "nombre": "Ilaix Moriba",
-     "pos": 3
-    },
-    {
-     "id": "2604",
-     "nombre": "Carreira",
-     "pos": 2
-    },
-    {
-     "id": "2913",
-     "nombre": "Burcio",
-     "pos": 3
-    },
-    {
-     "id": "2329",
-     "nombre": "Javi Galán",
-     "pos": 2
-    },
-    {
-     "id": "2397",
-     "nombre": "Pablo Durán",
-     "pos": 4
-    },
-    {
-     "id": "2394",
-     "nombre": "Williot",
-     "pos": 3
-    },
-    {
-     "id": "2078",
-     "nombre": "Hugo Alvarez",
-     "pos": 3
-    }
-   ],
-   "probable": [
-    "2713",
-    "2206",
-    "3123",
-    "2074",
-    "2714",
-    "2329",
-    "2607",
-    "2078",
-    "2295",
-    "2603",
-    "2397"
-   ]
-  },
-  {
-   "id": "4",
-   "nombre": "Barça",
-   "slug": "barca",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
-   "rival": "Villarreal",
-   "rivalId": "20",
-   "casa": true,
-   "t": 1795352400000,
-   "formacion": "3-4-3",
-   "once": [
-    {
-     "id": "2634",
-     "nombre": "Joan García",
-     "pos": 1,
-     "p": 93
-    },
-    {
-     "id": "1775",
-     "nombre": "Cubarsí",
-     "pos": 2,
-     "p": 92
-    },
-    {
-     "id": "2354",
-     "nombre": "Eric",
-     "pos": 2,
-     "p": 78
-    },
-    {
-     "id": "2906",
-     "nombre": "Cancelo",
-     "pos": 2,
-     "p": 77
-    },
-    {
-     "id": "1715",
-     "nombre": "Fermín",
-     "pos": 3,
-     "p": 90
-    },
-    {
-     "id": "3100",
-     "nombre": "Pedri",
-     "pos": 3,
-     "p": 81
-    },
-    {
-     "id": "2358",
-     "nombre": "F. De Jong",
-     "pos": 3,
-     "p": 44
-    },
-    {
-     "id": "3092",
-     "nombre": "Olmo",
-     "pos": 3,
-     "p": 41
-    },
-    {
-     "id": "3104",
-     "nombre": "Lamine Yamal",
-     "pos": 4,
-     "p": 92
-    },
-    {
-     "id": "2522",
-     "nombre": "Raphinha",
-     "pos": 4,
-     "p": 90
-    },
-    {
-     "id": "3210",
-     "nombre": "Gordon",
-     "pos": 4,
-     "p": 65
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "2757",
-     "nombre": "Gerard Martín",
-     "pos": 2,
-     "p": 76
-    },
-    {
-     "id": "2355",
-     "nombre": "Kounde",
-     "pos": 2,
-     "p": 56
-    },
-    {
-     "id": "3209",
-     "nombre": "Adeyemi",
-     "pos": 4,
-     "p": 40
-    },
-    {
-     "id": "2784",
-     "nombre": "Marc Bernal",
-     "pos": 3,
-     "p": 39
-    },
-    {
-     "id": "3224",
-     "nombre": "Brian Fariñas",
-     "pos": 3,
-     "p": 35
-    },
-    {
-     "id": "2353",
-     "nombre": "Christensen",
-     "pos": 2,
-     "p": 31,
-     "duda": true
-    },
-    {
-     "id": "1218",
-     "nombre": "Álex Balde",
-     "pos": 2,
-     "p": 28
-    },
-    {
-     "id": "3258",
-     "nombre": "Gabriel Jesus",
-     "pos": 4,
-     "p": 24
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "2906",
-      "nombre": "Cancelo",
-      "p": 77
-     },
-     "b": {
-      "id": "2757",
-      "nombre": "Gerard Martín",
-      "p": 76
-     },
-     "pa": 50
-    },
-    {
-     "linea": 3,
-     "a": {
-      "id": "3092",
-      "nombre": "Olmo",
-      "p": 41
-     },
-     "b": {
-      "id": "2784",
-      "nombre": "Marc Bernal",
-      "p": 39
-     },
-     "pa": 51
-    }
-   ],
-   "fuera": [
-    {
-     "id": "3208",
-     "nombre": "Rodri",
-     "estado": "lesionado",
-     "lesion": "Lesión en el bíceps femoral",
-     "hasta": "principios de diciembre"
-    },
-    {
-     "id": "2843",
-     "nombre": "Xavi Espart",
-     "estado": "lesionado",
-     "lesion": "Lesión de tobillo",
-     "hasta": "mediados de diciembre"
-    }
-   ],
-   "vuelven": [
-    {
-     "id": "2355",
-     "nombre": "Kounde",
-     "dias": 36,
-     "lesion": "Esguince de tobillo",
-     "antes": 44,
-     "p": 56
-    },
-    {
-     "id": "3092",
-     "nombre": "Olmo",
-     "dias": 33,
-     "lesion": "Rotura fibrilar en el aductor",
-     "antes": 33,
-     "p": 41
-    }
-   ],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2354",
-      "nombre": "Eric",
-      "pos": 2
-     },
-     {
-      "id": "3092",
-      "nombre": "Olmo",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "2757",
-      "nombre": "Gerard Martín",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2784",
-      "nombre": "Marc Bernal",
-      "pos": 3,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2634",
-     "nombre": "Joan García",
-     "pos": 1
-    },
-    {
-     "id": "2757",
-     "nombre": "Gerard Martín",
-     "pos": 2
-    },
-    {
-     "id": "2358",
-     "nombre": "F. De Jong",
-     "pos": 3
-    },
-    {
-     "id": "2906",
-     "nombre": "Cancelo",
-     "pos": 2
-    },
-    {
-     "id": "2354",
-     "nombre": "Eric",
-     "pos": 2
-    },
-    {
-     "id": "2784",
-     "nombre": "Marc Bernal",
-     "pos": 3
-    },
-    {
-     "id": "3100",
-     "nombre": "Pedri",
-     "pos": 3
-    },
-    {
-     "id": "1715",
-     "nombre": "Fermín",
-     "pos": 3
-    },
-    {
-     "id": "2522",
-     "nombre": "Raphinha",
-     "pos": 4
-    },
-    {
-     "id": "3209",
-     "nombre": "Adeyemi",
-     "pos": 4
-    },
-    {
-     "id": "3104",
-     "nombre": "Lamine Yamal",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "2634",
-    "1775",
-    "2354",
-    "2906",
-    "1715",
-    "3100",
-    "2358",
-    "3092",
-    "3104",
-    "2522",
-    "3210"
-   ]
-  },
-  {
-   "id": "20",
-   "nombre": "Villarreal",
-   "slug": "villarreal",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t449/color/t449_villarreal-cf.png",
-   "rival": "Barça",
-   "rivalId": "4",
-   "casa": false,
-   "t": 1795352400000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "3130",
-     "nombre": "Gulácsi",
-     "pos": 1,
-     "p": 92
-    },
-    {
-     "id": "2728",
-     "nombre": "Renato Veiga",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "1959",
-     "nombre": "Mouriño",
-     "pos": 2,
-     "p": 71
-    },
-    {
-     "id": "2934",
-     "nombre": "Freeman",
-     "pos": 2,
-     "p": 69
-    },
-    {
-     "id": "2614",
-     "nombre": "C. Romero",
-     "pos": 2,
-     "p": 56
-    },
-    {
-     "id": "3086",
-     "nombre": "Moleiro",
-     "pos": 3,
-     "p": 82
-    },
-    {
-     "id": "2556",
-     "nombre": "Buchanan",
-     "pos": 3,
-     "p": 68
-    },
-    {
-     "id": "2473",
-     "nombre": "Gueye",
-     "pos": 3,
-     "p": 68
-    },
-    {
-     "id": "2868",
-     "nombre": "Carlos Macià",
-     "pos": 3,
-     "p": 57
-    },
-    {
-     "id": "2771",
-     "nombre": "Mikautadze",
-     "pos": 4,
-     "p": 87
-    },
-    {
-     "id": "2504",
-     "nombre": "Ayoze",
-     "pos": 4,
-     "p": 66
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "3087",
-     "nombre": "Pepe",
-     "pos": 4,
-     "p": 64
-    },
-    {
-     "id": "1031",
-     "nombre": "Comesaña",
-     "pos": 3,
-     "p": 42
-    },
-    {
-     "id": "2477",
-     "nombre": "I. Akhomach",
-     "pos": 4,
-     "p": 36,
-     "duda": true
-    },
-    {
-     "id": "1614",
-     "nombre": "Cardona",
-     "pos": 2,
-     "p": 35
-    },
-    {
-     "id": "2698",
-     "nombre": "Pau Navarro",
-     "pos": 2,
-     "p": 33
-    },
-    {
-     "id": "3242",
-     "nombre": "Saliba",
-     "pos": 3,
-     "p": 30
-    },
-    {
-     "id": "2469",
-     "nombre": "Costa",
-     "pos": 2,
-     "p": 29
-    },
-    {
-     "id": "2761",
-     "nombre": "Oluwaseyi",
-     "pos": 4,
-     "p": 27
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2868",
-      "nombre": "Carlos Macià",
-      "p": 57
-     },
-     "b": {
-      "id": "1031",
-      "nombre": "Comesaña",
-      "p": 42
-     },
-     "pa": 57
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2504",
-      "nombre": "Ayoze",
-      "p": 66
-     },
-     "b": {
-      "id": "3087",
-      "nombre": "Pepe",
-      "p": 64
-     },
-     "pa": 51
-    }
-   ],
-   "fuera": [
-    {
-     "id": "356",
-     "nombre": "Gerard",
-     "estado": "lesionado",
-     "lesion": "Molestias sin determinar"
-    },
-    {
-     "id": "2470",
-     "nombre": "Foyth",
-     "estado": "lesionado",
-     "lesion": "Molestias musculares"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2934",
-      "nombre": "Freeman",
-      "pos": 2
-     },
-     {
-      "id": "2504",
-      "nombre": "Ayoze",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "2469",
-      "nombre": "Costa",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2761",
-      "nombre": "Oluwaseyi",
-      "pos": 4,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "3130",
-     "nombre": "Gulácsi",
-     "pos": 1
-    },
-    {
-     "id": "2728",
-     "nombre": "Renato Veiga",
-     "pos": 2
-    },
-    {
-     "id": "2698",
-     "nombre": "Pau Navarro",
-     "pos": 2
-    },
-    {
-     "id": "2614",
-     "nombre": "C. Romero",
-     "pos": 2
-    },
-    {
-     "id": "2934",
-     "nombre": "Freeman",
-     "pos": 2
-    },
-    {
-     "id": "2473",
-     "nombre": "Gueye",
-     "pos": 3
-    },
-    {
-     "id": "1031",
-     "nombre": "Comesaña",
-     "pos": 3
-    },
-    {
-     "id": "3086",
-     "nombre": "Moleiro",
-     "pos": 3
-    },
-    {
-     "id": "2556",
-     "nombre": "Buchanan",
-     "pos": 3
-    },
-    {
-     "id": "2771",
-     "nombre": "Mikautadze",
-     "pos": 4
-    },
-    {
-     "id": "2761",
-     "nombre": "Oluwaseyi",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "3130",
-    "2728",
-    "1959",
-    "2934",
-    "2614",
-    "3086",
-    "2556",
-    "2473",
-    "2868",
-    "2771",
-    "2504"
-   ]
-  },
-  {
-   "id": "49",
-   "nombre": "Racing",
-   "slug": "racing",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t189/color/t189_r-racing-club.png",
-   "rival": "Real Sociedad",
-   "rivalId": "16",
-   "casa": true,
-   "t": 1795360500000,
-   "formacion": "4-3-3",
-   "once": [
-    {
-     "id": "1219",
-     "nombre": "Agirrezabala",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "3011",
-     "nombre": "Jorge Salinas",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3026",
-     "nombre": "Pablo Ramón",
-     "pos": 2,
-     "p": 87
-    },
-    {
-     "id": "3261",
-     "nombre": "Belocian",
-     "pos": 2,
-     "p": 84
-    },
-    {
-     "id": "3139",
-     "nombre": "Pedro Felipe",
-     "pos": 2,
-     "p": 53
-    },
-    {
-     "id": "3125",
-     "nombre": "Canales",
-     "pos": 3,
-     "p": 91
-    },
-    {
-     "id": "3205",
-     "nombre": "Iván Martín",
-     "pos": 3,
-     "p": 73
-    },
-    {
-     "id": "3234",
-     "nombre": "Matteo Prati",
-     "pos": 3,
-     "p": 67
-    },
-    {
-     "id": "3152",
-     "nombre": "Y. Zabiri",
-     "pos": 4,
-     "p": 91
-    },
-    {
-     "id": "3002",
-     "nombre": "Iñigo Vicente",
-     "pos": 4,
-     "p": 77
-    },
-    {
-     "id": "3247",
-     "nombre": "Iker Luque",
-     "pos": 4,
-     "p": 51
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "2712",
-     "nombre": "Pablo García",
-     "pos": 4,
-     "p": 33
-    },
-    {
-     "id": "3253",
-     "nombre": "Aaron",
-     "pos": 2,
-     "p": 26,
-     "duda": true
-    },
-    {
-     "id": "3008",
-     "nombre": "Manu Hernando",
-     "pos": 2,
-     "p": 25
-    },
-    {
-     "id": "1529",
-     "nombre": "Almeida",
-     "pos": 3,
-     "p": 22
-    },
-    {
-     "id": "3027",
-     "nombre": "Facu",
-     "pos": 2,
-     "p": 21
-    },
-    {
-     "id": "3000",
-     "nombre": "Iñigo",
-     "pos": 3,
-     "p": 21
-    },
-    {
-     "id": "3017",
-     "nombre": "Guliashvili",
-     "pos": 4,
-     "p": 18
-    },
-    {
-     "id": "3022",
-     "nombre": "Villalibre",
-     "pos": 4,
-     "p": 14
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 4,
-     "a": {
-      "id": "3247",
-      "nombre": "Iker Luque",
-      "p": 51
-     },
-     "b": {
-      "id": "2712",
-      "nombre": "Pablo García",
-      "p": 33
-     },
-     "pa": 61
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2999",
-     "nombre": "Mantilla",
-     "estado": "lesionado",
-     "lesion": "Rotura de lig. cruzado anterior",
-     "hasta": "junio"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [],
-    "salen": []
-   },
-   "confirmado": [
-    {
-     "id": "1219",
-     "nombre": "Agirrezabala",
-     "pos": 1
-    },
-    {
-     "id": "3139",
-     "nombre": "Pedro Felipe",
-     "pos": 2
-    },
-    {
-     "id": "3026",
-     "nombre": "Pablo Ramón",
-     "pos": 2
-    },
-    {
-     "id": "3011",
-     "nombre": "Jorge Salinas",
-     "pos": 2
-    },
-    {
-     "id": "3261",
-     "nombre": "Belocian",
-     "pos": 2
-    },
-    {
-     "id": "3234",
-     "nombre": "Matteo Prati",
-     "pos": 3
-    },
-    {
-     "id": "3002",
-     "nombre": "Iñigo Vicente",
-     "pos": 4
-    },
-    {
-     "id": "3247",
-     "nombre": "Iker Luque",
-     "pos": 4
-    },
-    {
-     "id": "3125",
-     "nombre": "Canales",
-     "pos": 3
-    },
-    {
-     "id": "3205",
-     "nombre": "Iván Martín",
-     "pos": 3
-    },
-    {
-     "id": "3152",
-     "nombre": "Y. Zabiri",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "1219",
-    "3011",
-    "3026",
-    "3261",
-    "3139",
-    "3125",
-    "3205",
-    "3234",
-    "3152",
-    "3002",
-    "3247"
-   ]
-  },
-  {
-   "id": "16",
-   "nombre": "Real Sociedad",
-   "slug": "real-sociedad",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t188/color/t188_real-sociedad.png",
-   "rival": "Racing",
-   "rivalId": "49",
-   "casa": false,
-   "t": 1795360500000,
-   "formacion": "4-5-1",
-   "once": [
-    {
-     "id": "274",
-     "nombre": "Remiro",
-     "pos": 1,
-     "p": 93
-    },
-    {
-     "id": "2656",
-     "nombre": "Jon Martin",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "3238",
-     "nombre": "M. Sarr",
-     "pos": 2,
-     "p": 71
-    },
-    {
-     "id": "1989",
-     "nombre": "Sergio Gómez",
-     "pos": 2,
-     "p": 69
-    },
-    {
-     "id": "2443",
-     "nombre": "Aramburu",
-     "pos": 2,
-     "p": 64
-    },
-    {
-     "id": "2444",
-     "nombre": "Sucic",
-     "pos": 3,
-     "p": 88
-    },
-    {
-     "id": "2772",
-     "nombre": "C. Soler",
-     "pos": 3,
-     "p": 86
-    },
-    {
-     "id": "2621",
-     "nombre": "Gorrotxa",
-     "pos": 3,
-     "p": 48
-    },
-    {
-     "id": "1215",
-     "nombre": "Turrientes",
-     "pos": 3,
-     "p": 43
-    },
-    {
-     "id": "1197",
-     "nombre": "Kubo",
-     "pos": 3,
-     "p": 33
-    },
-    {
-     "id": "3091",
-     "nombre": "Oyarzabal",
-     "pos": 4,
-     "p": 93
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "3085",
-     "nombre": "Guedes",
-     "pos": 4,
-     "p": 75
-    },
-    {
-     "id": "2448",
-     "nombre": "Oskarsson",
-     "pos": 4,
-     "p": 60
-    },
-    {
-     "id": "265",
-     "nombre": "Zubeldia",
-     "pos": 2,
-     "p": 39
-    },
-    {
-     "id": "2834",
-     "nombre": "Beitia",
-     "pos": 2,
-     "p": 31
-    },
-    {
-     "id": "2818",
-     "nombre": "Hector Fort",
-     "pos": 2,
-     "p": 30
-    },
-    {
-     "id": "2955",
-     "nombre": "Ochieng",
-     "pos": 4,
-     "p": 20
-    },
-    {
-     "id": "2862",
-     "nombre": "Marchal",
-     "pos": 3,
-     "p": 19
-    },
-    {
-     "id": "2446",
-     "nombre": "Zakharyan",
-     "pos": 3,
-     "p": 16
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 4,
-     "a": {
-      "id": "3091",
-      "nombre": "Oyarzabal",
-      "p": 93
-     },
-     "b": {
-      "id": "3085",
-      "nombre": "Guedes",
-      "p": 75
-     },
-     "pa": 55
-    }
-   ],
-   "fuera": [
-    {
-     "id": "701",
-     "nombre": "Barrenetxea",
-     "estado": "lesionado",
-     "lesion": "Rotura en los isquiotibiales",
-     "hasta": "mayo"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "3238",
-      "nombre": "M. Sarr",
-      "pos": 2
-     },
-     {
-      "id": "1989",
-      "nombre": "Sergio Gómez",
-      "pos": 2
-     },
-     {
-      "id": "2621",
-      "nombre": "Gorrotxa",
-      "pos": 3
-     },
-     {
-      "id": "3091",
-      "nombre": "Oyarzabal",
-      "pos": 4
-     }
-    ],
-    "salen": [
-     {
-      "id": "265",
-      "nombre": "Zubeldia",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2448",
-      "nombre": "Oskarsson",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "2438",
-      "nombre": "Aihen",
-      "pos": 2,
-      "por": "lesionado"
-     },
-     {
-      "id": "701",
-      "nombre": "Barrenetxea",
-      "pos": 3,
-      "por": "lesionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "274",
-     "nombre": "Remiro",
-     "pos": 1
-    },
-    {
-     "id": "1989",
-     "nombre": "Sergio Gómez",
-     "pos": 2
-    },
-    {
-     "id": "2818",
-     "nombre": "Hector Fort",
-     "pos": 2
-    },
-    {
-     "id": "265",
-     "nombre": "Zubeldia",
-     "pos": 2
-    },
-    {
-     "id": "3238",
-     "nombre": "M. Sarr",
-     "pos": 2
-    },
-    {
-     "id": "2444",
-     "nombre": "Sucic",
-     "pos": 3
-    },
-    {
-     "id": "3085",
-     "nombre": "Guedes",
-     "pos": 4
-    },
-    {
-     "id": "2621",
-     "nombre": "Gorrotxa",
-     "pos": 3
-    },
-    {
-     "id": "2772",
-     "nombre": "C. Soler",
-     "pos": 3
-    },
-    {
-     "id": "2448",
-     "nombre": "Oskarsson",
-     "pos": 4
-    },
-    {
-     "id": "3091",
-     "nombre": "Oyarzabal",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "274",
-    "2656",
-    "3238",
-    "1989",
-    "2443",
-    "2444",
-    "2772",
-    "2621",
-    "1215",
-    "1197",
-    "3091"
-   ]
-  },
-  {
-   "id": "13",
-   "nombre": "Osasuna",
-   "slug": "osasuna",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t450/color/t450_c-a-osasuna.png",
-   "rival": "Málaga",
-   "rivalId": "12",
-   "casa": true,
-   "t": 1795368600000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "644",
-     "nombre": "Sergio Herrera",
-     "pos": 1,
-     "p": 73
-    },
-    {
-     "id": "1033",
-     "nombre": "Catena",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "1890",
-     "nombre": "Boyomo",
-     "pos": 2,
-     "p": 73
-    },
-    {
-     "id": "2559",
-     "nombre": "V. Rosier",
-     "pos": 2,
-     "p": 68
-    },
-    {
-     "id": "2336",
-     "nombre": "Herrando",
-     "pos": 2,
-     "p": 53
-    },
-    {
-     "id": "652",
-     "nombre": "Rubén García",
-     "pos": 3,
-     "p": 84
-    },
-    {
-     "id": "680",
-     "nombre": "Moi Gómez",
-     "pos": 3,
-     "p": 78
-    },
-    {
-     "id": "637",
-     "nombre": "Moncayola",
-     "pos": 3,
-     "p": 71
-    },
-    {
-     "id": "2338",
-     "nombre": "Aimar",
-     "pos": 3,
-     "p": 48
-    },
-    {
-     "id": "3084",
-     "nombre": "Budimir",
-     "pos": 4,
-     "p": 92
-    },
-    {
-     "id": "2923",
-     "nombre": "Raúl Moro",
-     "pos": 4,
-     "p": 43
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "873",
-     "nombre": "Torró",
-     "pos": 3,
-     "p": 47
-    },
-    {
-     "id": "3183",
-     "nombre": "Dubasin",
-     "pos": 4,
-     "p": 43
-    },
-    {
-     "id": "1730",
-     "nombre": "Iker Muñoz",
-     "pos": 3,
-     "p": 38
-    },
-    {
-     "id": "2721",
-     "nombre": "A. Osambela",
-     "pos": 3,
-     "p": 26
-    },
-    {
-     "id": "2339",
-     "nombre": "Raúl",
-     "pos": 4,
-     "p": 25
-    },
-    {
-     "id": "2846",
-     "nombre": "Arguibide",
-     "pos": 2,
-     "p": 25
-    },
-    {
-     "id": "3252",
-     "nombre": "Del Castillo",
-     "pos": 4,
-     "p": 20
-    },
-    {
-     "id": "2337",
-     "nombre": "Kike Barja",
-     "pos": 4,
-     "p": 19
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2338",
-      "nombre": "Aimar",
-      "p": 48
-     },
-     "b": {
-      "id": "873",
-      "nombre": "Torró",
-      "p": 47
-     },
-     "pa": 51
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "2923",
-      "nombre": "Raúl Moro",
-      "p": 43
-     },
-     "b": {
-      "id": "3183",
-      "nombre": "Dubasin",
-      "p": 43
-     },
-     "pa": 50
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2005",
-     "nombre": "Abel Bretones",
-     "estado": "lesionado",
-     "lesion": "Lesión en el sóleo"
-    },
-    {
-     "id": "204",
-     "nombre": "Aitor Fdez",
-     "estado": "lesionado"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "644",
-      "nombre": "Sergio Herrera",
-      "pos": 1
-     },
-     {
-      "id": "2336",
-      "nombre": "Herrando",
-      "pos": 2
-     },
-     {
-      "id": "2338",
-      "nombre": "Aimar",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "204",
-      "nombre": "Aitor Fdez",
-      "pos": 1,
-      "por": "lesionado"
-     },
-     {
-      "id": "2005",
-      "nombre": "Abel Bretones",
-      "pos": 2,
-      "por": "lesionado"
-     },
-     {
-      "id": "873",
-      "nombre": "Torró",
-      "pos": 3,
-      "por": null
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "644",
-     "nombre": "Sergio Herrera",
-     "pos": 1
-    },
-    {
-     "id": "2559",
-     "nombre": "V. Rosier",
-     "pos": 2
-    },
-    {
-     "id": "1033",
-     "nombre": "Catena",
-     "pos": 2
-    },
-    {
-     "id": "1890",
-     "nombre": "Boyomo",
-     "pos": 2
-    },
-    {
-     "id": "2366",
-     "nombre": "Diego Rico",
-     "pos": 2
-    },
-    {
-     "id": "2337",
-     "nombre": "Kike Barja",
-     "pos": 4
-    },
-    {
-     "id": "637",
-     "nombre": "Moncayola",
-     "pos": 3
-    },
-    {
-     "id": "680",
-     "nombre": "Moi Gómez",
-     "pos": 3
-    },
-    {
-     "id": "2338",
-     "nombre": "Aimar",
-     "pos": 3
-    },
-    {
-     "id": "652",
-     "nombre": "Rubén García",
-     "pos": 3
-    },
-    {
-     "id": "3084",
-     "nombre": "Budimir",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "644",
-    "1033",
-    "1890",
-    "2559",
-    "2336",
-    "652",
-    "680",
-    "637",
-    "2338",
-    "3084",
-    "2923"
-   ]
-  },
-  {
-   "id": "12",
-   "nombre": "Málaga",
-   "slug": "malaga",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t182/color/t182_malaga-cf.png",
-   "rival": "Osasuna",
-   "rivalId": "13",
-   "casa": false,
-   "t": 1795368600000,
-   "formacion": "5-4-1",
-   "once": [
-    {
-     "id": "3040",
-     "nombre": "A. Herrero",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "3054",
-     "nombre": "Recio",
-     "pos": 2,
-     "p": 88
-    },
-    {
-     "id": "3042",
-     "nombre": "Einar",
-     "pos": 2,
-     "p": 87
-    },
-    {
-     "id": "2398",
-     "nombre": "F. Calero",
-     "pos": 2,
-     "p": 62
-    },
-    {
-     "id": "3037",
-     "nombre": "C. Puga",
-     "pos": 2,
-     "p": 40,
-     "duda": true
-    },
-    {
-     "id": "3059",
-     "nombre": "Pastor",
-     "pos": 2,
-     "p": 36
-    },
-    {
-     "id": "3072",
-     "nombre": "Larrubia",
-     "pos": 3,
-     "p": 90
-    },
-    {
-     "id": "3036",
-     "nombre": "Dani Lorenzo",
-     "pos": 3,
-     "p": 87
-    },
-    {
-     "id": "3044",
-     "nombre": "Dotor",
-     "pos": 3,
-     "p": 78
-    },
-    {
-     "id": "3207",
-     "nombre": "P. Martínez",
-     "pos": 3,
-     "p": 60
-    },
-    {
-     "id": "3045",
-     "nombre": "Niño",
-     "pos": 4,
-     "p": 91
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "3070",
-     "nombre": "Chupe",
-     "pos": 4,
-     "p": 80
-    },
-    {
-     "id": "3048",
-     "nombre": "Ramon",
-     "pos": 3,
-     "p": 51
-    },
-    {
-     "id": "3034",
-     "nombre": "Joaquín",
-     "pos": 4,
-     "p": 41
-    },
-    {
-     "id": "2525",
-     "nombre": "Salinas",
-     "pos": 2,
-     "p": 34
-    },
-    {
-     "id": "3038",
-     "nombre": "Rafa Rodríguez",
-     "pos": 3,
-     "p": 28
-    },
-    {
-     "id": "3132",
-     "nombre": "J. Berrocal",
-     "pos": 2,
-     "p": 25
-    },
-    {
-     "id": "3140",
-     "nombre": "Juan Cruz",
-     "pos": 3,
-     "p": 19,
-     "duda": true
-    },
-    {
-     "id": "3274",
-     "nombre": "Cajuste",
-     "pos": 3,
-     "p": 19
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 2,
-     "a": {
-      "id": "3059",
-      "nombre": "Pastor",
-      "p": 36
-     },
-     "b": {
-      "id": "2525",
-      "nombre": "Salinas",
-      "p": 34
-     },
-     "pa": 51
-    },
-    {
-     "linea": 3,
-     "a": {
-      "id": "3207",
-      "nombre": "P. Martínez",
-      "p": 60
-     },
-     "b": {
-      "id": "3048",
-      "nombre": "Ramon",
-      "p": 51
-     },
-     "pa": 54
-    },
-    {
-     "linea": 4,
-     "a": {
-      "id": "3045",
-      "nombre": "Niño",
-      "p": 91
-     },
-     "b": {
-      "id": "3070",
-      "nombre": "Chupe",
-      "p": 80
-     },
-     "pa": 53
-    }
-   ],
-   "fuera": [
-    {
-     "id": "3041",
-     "nombre": "Rafita",
-     "estado": "lesionado"
-    },
-    {
-     "id": "3270",
-     "nombre": "Aznou",
-     "estado": "sancionado"
-    }
-   ],
-   "vuelven": [
-    {
-     "id": "3140",
-     "nombre": "Juan Cruz",
-     "dias": 41,
-     "lesion": "Molestias en el bíceps femoral",
-     "antes": 0,
-     "p": 19
-    }
-   ],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "3054",
-      "nombre": "Recio",
-      "pos": 2
-     },
-     {
-      "id": "3037",
-      "nombre": "C. Puga",
-      "pos": 2
-     },
-     {
-      "id": "3207",
-      "nombre": "P. Martínez",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "3070",
-      "nombre": "Chupe",
-      "pos": 4,
-      "por": null
-     },
-     {
-      "id": "3048",
-      "nombre": "Ramon",
-      "pos": 3,
-      "por": null
-     },
-     {
-      "id": "3270",
-      "nombre": "Aznou",
-      "pos": 2,
-      "por": "sancionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "3040",
-     "nombre": "A. Herrero",
-     "pos": 1
-    },
-    {
-     "id": "3059",
-     "nombre": "Pastor",
-     "pos": 2
-    },
-    {
-     "id": "3039",
-     "nombre": "Murillo",
-     "pos": 2
-    },
-    {
-     "id": "3054",
-     "nombre": "Recio",
-     "pos": 2
-    },
-    {
-     "id": "3038",
-     "nombre": "Rafa Rodríguez",
-     "pos": 3
-    },
-    {
-     "id": "3034",
-     "nombre": "Joaquín",
-     "pos": 4
-    },
-    {
-     "id": "2525",
-     "nombre": "Salinas",
-     "pos": 2
-    },
-    {
-     "id": "3072",
-     "nombre": "Larrubia",
-     "pos": 3
-    },
-    {
-     "id": "3207",
-     "nombre": "P. Martínez",
-     "pos": 3
-    },
-    {
-     "id": "3045",
-     "nombre": "Niño",
-     "pos": 4
-    },
-    {
-     "id": "3044",
-     "nombre": "Dotor",
-     "pos": 3
-    }
-   ],
-   "probable": [
-    "3040",
-    "3054",
-    "3042",
-    "2398",
-    "3037",
-    "3059",
-    "3072",
-    "3036",
-    "3044",
-    "3207",
-    "3045"
-   ]
-  },
-  {
-   "id": "9",
-   "nombre": "Getafe",
-   "slug": "getafe",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t1450/color/t1450_getafe-cf.png",
-   "rival": "Atlético",
-   "rivalId": "2",
-   "casa": true,
-   "t": 1795377600000,
-   "formacion": "5-3-2",
-   "once": [
-    {
-     "id": "184",
-     "nombre": "David Soria",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "2924",
-     "nombre": "Zaid Romero",
-     "pos": 2,
-     "p": 90
-    },
-    {
-     "id": "2661",
-     "nombre": "Djene",
-     "pos": 2,
-     "p": 87
-    },
-    {
-     "id": "3284",
-     "nombre": "Carvajal",
-     "pos": 2,
-     "p": 86
-    },
-    {
-     "id": "3150",
-     "nombre": "Mojica",
-     "pos": 2,
-     "p": 81
-    },
-    {
-     "id": "3135",
-     "nombre": "Andrés Garcia",
-     "pos": 2,
-     "p": 79
-    },
-    {
-     "id": "2511",
-     "nombre": "R. Terrats",
-     "pos": 3,
-     "p": 89
-    },
-    {
-     "id": "3133",
-     "nombre": "Mangala",
-     "pos": 3,
-     "p": 58
-    },
-    {
-     "id": "2640",
-     "nombre": "Mario Martín",
-     "pos": 3,
-     "p": 54
-    },
-    {
-     "id": "3137",
-     "nombre": "Satriano",
-     "pos": 4,
-     "p": 93
-    },
-    {
-     "id": "3154",
-     "nombre": "Enes Ünal",
-     "pos": 4,
-     "p": 66
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "2926",
-     "nombre": "Boselli",
-     "pos": 2,
-     "p": 46
-    },
-    {
-     "id": "3200",
-     "nombre": "Francho",
-     "pos": 3,
-     "p": 38
-    },
-    {
-     "id": "3254",
-     "nombre": "Iván Azón",
-     "pos": 4,
-     "p": 37
-    },
-    {
-     "id": "2699",
-     "nombre": "J. Ives Valou",
-     "pos": 2,
-     "p": 37
-    },
-    {
-     "id": "2774",
-     "nombre": "Kiko F.",
-     "pos": 2,
-     "p": 29
-    },
-    {
-     "id": "2736",
-     "nombre": "Davinchi",
-     "pos": 2,
-     "p": 25
-    },
-    {
-     "id": "3134",
-     "nombre": "Saba Sazonov",
-     "pos": 2,
-     "p": 22
-    },
-    {
-     "id": "2488",
-     "nombre": "B. Mayoral",
-     "pos": 4,
-     "p": 18
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2640",
-      "nombre": "Mario Martín",
-      "p": 54
-     },
-     "b": {
-      "id": "3200",
-      "nombre": "Francho",
-      "p": 38
-     },
-     "pa": 59
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2452",
-     "nombre": "Gudelj",
-     "estado": "sancionado"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "2924",
-      "nombre": "Zaid Romero",
-      "pos": 2
-     },
-     {
-      "id": "2640",
-      "nombre": "Mario Martín",
-      "pos": 3
-     }
-    ],
-    "salen": [
-     {
-      "id": "2926",
-      "nombre": "Boselli",
-      "pos": 2,
-      "por": null
-     },
-     {
-      "id": "2452",
-      "nombre": "Gudelj",
-      "pos": 2,
-      "por": "sancionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "184",
-     "nombre": "David Soria",
-     "pos": 1
-    },
-    {
-     "id": "3150",
-     "nombre": "Mojica",
-     "pos": 2
-    },
-    {
-     "id": "2699",
-     "nombre": "J. Ives Valou",
-     "pos": 2
-    },
-    {
-     "id": "2661",
-     "nombre": "Djene",
-     "pos": 2
-    },
-    {
-     "id": "2924",
-     "nombre": "Zaid Romero",
-     "pos": 2
-    },
-    {
-     "id": "3135",
-     "nombre": "Andrés Garcia",
-     "pos": 2
-    },
-    {
-     "id": "3200",
-     "nombre": "Francho",
-     "pos": 3
-    },
-    {
-     "id": "2511",
-     "nombre": "R. Terrats",
-     "pos": 3
-    },
-    {
-     "id": "3133",
-     "nombre": "Mangala",
-     "pos": 3
-    },
-    {
-     "id": "3254",
-     "nombre": "Iván Azón",
-     "pos": 4
-    },
-    {
-     "id": "3154",
-     "nombre": "Enes Ünal",
-     "pos": 4
-    }
-   ],
-   "probable": [
-    "184",
-    "2924",
-    "2661",
-    "3284",
-    "3150",
-    "3135",
-    "2511",
-    "3133",
-    "2640",
-    "3137",
-    "3154"
-   ]
-  },
-  {
-   "id": "2",
-   "nombre": "Atlético",
-   "slug": "atletico",
-   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
-   "rival": "Getafe",
-   "rivalId": "9",
-   "casa": false,
-   "t": 1795377600000,
-   "formacion": "4-4-2",
-   "once": [
-    {
-     "id": "2322",
-     "nombre": "Oblak",
-     "pos": 1,
-     "p": 94
-    },
-    {
-     "id": "3155",
-     "nombre": "Grimaldo",
-     "pos": 2,
-     "p": 93
-    },
-    {
-     "id": "2561",
-     "nombre": "Hancko",
-     "pos": 2,
-     "p": 88
-    },
-    {
-     "id": "67",
-     "nombre": "Marcos Llorente",
-     "pos": 2,
-     "p": 87
-    },
-    {
-     "id": "255",
-     "nombre": "Le Normand",
-     "pos": 2,
-     "p": 27
-    },
-    {
-     "id": "2534",
-     "nombre": "Álex Baena",
-     "pos": 3,
-     "p": 90
-    },
-    {
-     "id": "3193",
-     "nombre": "Kang-In Lee",
-     "pos": 3,
-     "p": 78
-    },
-    {
-     "id": "1565",
-     "nombre": "Barrios",
-     "pos": 3,
-     "p": 73
-    },
-    {
-     "id": "2326",
-     "nombre": "Koke",
-     "pos": 3,
-     "p": 60
-    },
-    {
-     "id": "3088",
-     "nombre": "Julián Alvarez",
-     "pos": 4,
-     "p": 90
-    },
-    {
-     "id": "1210",
-     "nombre": "Giuliano",
-     "pos": 4,
-     "p": 88
-    }
-   ],
-   "suplentes": [
-    {
-     "id": "3114",
-     "nombre": "Hjulmand",
-     "pos": 3,
-     "p": 58
-    },
-    {
-     "id": "2480",
-     "nombre": "Johnny",
-     "pos": 3,
-     "p": 51
-    },
-    {
-     "id": "3255",
-     "nombre": "J. David",
-     "pos": 4,
-     "p": 43
-    },
-    {
-     "id": "2332",
-     "nombre": "Sorloth",
-     "pos": 4,
-     "p": 27
-    },
-    {
-     "id": "2717",
-     "nombre": "R. Mendoza",
-     "pos": 3,
-     "p": 17
-    },
-    {
-     "id": "3194",
-     "nombre": "Arnau Ortiz",
-     "pos": 4,
-     "p": 13
-    },
-    {
-     "id": "2881",
-     "nombre": "D. Martínez",
-     "pos": 2,
-     "p": 13
-    },
-    {
-     "id": "2321",
-     "nombre": "J. Musso",
-     "pos": 1,
-     "p": 5
-    }
-   ],
-   "dudas": [
-    {
-     "linea": 3,
-     "a": {
-      "id": "2326",
-      "nombre": "Koke",
-      "p": 60
-     },
-     "b": {
-      "id": "3114",
-      "nombre": "Hjulmand",
-      "p": 58
-     },
-     "pa": 51
-    }
-   ],
-   "fuera": [
-    {
-     "id": "2562",
-     "nombre": "Marc Pubill",
-     "estado": "lesionado",
-     "lesion": "Esguince de tobillo"
-    },
-    {
-     "id": "3197",
-     "nombre": "Cuti Romero",
-     "estado": "lesionado"
-    },
-    {
-     "id": "3079",
-     "nombre": "Lookman",
-     "estado": "lesionado",
-     "lesion": "Esguince de rodilla",
-     "hasta": "principios de diciembre"
-    }
-   ],
-   "vuelven": [],
-   "anterior": {
-    "J": 12,
-    "fuente": "minutos"
-   },
-   "cambios": {
-    "entran": [
-     {
-      "id": "255",
-      "nombre": "Le Normand",
-      "pos": 2
-     }
-    ],
-    "salen": [
-     {
-      "id": "2562",
-      "nombre": "Marc Pubill",
-      "pos": 2,
-      "por": "lesionado"
-     }
-    ]
-   },
-   "confirmado": [
-    {
-     "id": "2322",
-     "nombre": "Oblak",
-     "pos": 1
-    },
-    {
-     "id": "2534",
-     "nombre": "Álex Baena",
-     "pos": 3
-    },
-    {
-     "id": "2561",
-     "nombre": "Hancko",
-     "pos": 2
-    },
-    {
-     "id": "3155",
-     "nombre": "Grimaldo",
-     "pos": 2
-    },
-    {
-     "id": "255",
-     "nombre": "Le Normand",
-     "pos": 2
-    },
-    {
-     "id": "2480",
-     "nombre": "Johnny",
-     "pos": 3
-    },
-    {
-     "id": "1210",
-     "nombre": "Giuliano",
-     "pos": 4
-    },
-    {
-     "id": "67",
-     "nombre": "Marcos Llorente",
-     "pos": 2
-    },
-    {
-     "id": "1565",
-     "nombre": "Barrios",
-     "pos": 3
-    },
-    {
-     "id": "3088",
-     "nombre": "Julián Alvarez",
-     "pos": 4
-    },
-    {
-     "id": "2326",
-     "nombre": "Koke",
-     "pos": 3
-    }
-   ],
-   "probable": [
-    "2322",
-    "3155",
-    "2561",
-    "67",
-    "255",
-    "2534",
-    "3193",
-    "1565",
-    "2326",
-    "3088",
-    "1210"
-   ]
-  },
   {
    "id": "11",
    "nombre": "Levante",
    "slug": "levante",
    "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t855/color/t855_levante-ud.png",
-   "rival": "Elche",
-   "rivalId": "7",
+   "rival": "Racing",
+   "rivalId": "49",
    "casa": true,
-   "t": 1795464000000,
+   "t": 1795809600000,
    "formacion": "5-4-1",
    "once": [
     {
@@ -4348,19 +35,19 @@
      "id": "2624",
      "nombre": "Manu Sánchez",
      "pos": 2,
-     "p": 76
+     "p": 71
     },
     {
      "id": "2742",
      "nombre": "Nacho Perez",
      "pos": 2,
-     "p": 67
+     "p": 64
     },
     {
      "id": "3227",
      "nombre": "Ifeanyi Ndukwe",
      "pos": 2,
-     "p": 63
+     "p": 45
     },
     {
      "id": "2445",
@@ -4372,25 +59,25 @@
      "id": "3228",
      "nombre": "Requena",
      "pos": 3,
-     "p": 65
+     "p": 67
     },
     {
      "id": "3230",
      "nombre": "Thiago",
      "pos": 3,
-     "p": 65
+     "p": 67
     },
     {
-     "id": "3164",
-     "nombre": "Bardeli",
+     "id": "2628",
+     "nombre": "O. Rey",
      "pos": 3,
-     "p": 45
+     "p": 51
     },
     {
      "id": "2302",
      "nombre": "R. Brugué",
      "pos": 4,
-     "p": 91
+     "p": 93
     }
    ],
    "suplentes": [
@@ -4398,43 +85,43 @@
      "id": "2303",
      "nombre": "I. Romero",
      "pos": 4,
-     "p": 82
+     "p": 83
     },
     {
      "id": "2700",
      "nombre": "Etta Eyong",
      "pos": 4,
-     "p": 53
+     "p": 49
     },
     {
-     "id": "2671",
-     "nombre": "Jeremy Toljan",
-     "pos": 2,
-     "p": 48
-    },
-    {
-     "id": "2628",
-     "nombre": "O. Rey",
+     "id": "3164",
+     "nombre": "Bardeli",
      "pos": 3,
-     "p": 37
+     "p": 44
     },
     {
      "id": "2670",
      "nombre": "Víctor G.",
      "pos": 2,
-     "p": 34
-    },
-    {
-     "id": "3256",
-     "nombre": "Ratkov",
-     "pos": 4,
-     "p": 31
+     "p": 26
     },
     {
      "id": "2395",
      "nombre": "Hugo Sotelo",
      "pos": 3,
-     "p": 25
+     "p": 24
+    },
+    {
+     "id": "3256",
+     "nombre": "Ratkov",
+     "pos": 4,
+     "p": 24
+    },
+    {
+     "id": "3165",
+     "nombre": "Marc Santos",
+     "pos": 2,
+     "p": 23
     },
     {
      "id": "3246",
@@ -4445,65 +132,63 @@
    ],
    "dudas": [
     {
-     "linea": 2,
-     "a": {
-      "id": "3227",
-      "nombre": "Ifeanyi Ndukwe",
-      "p": 63
-     },
-     "b": {
-      "id": "2671",
-      "nombre": "Jeremy Toljan",
-      "p": 48
-     },
-     "pa": 56
-    },
-    {
      "linea": 3,
      "a": {
-      "id": "3164",
-      "nombre": "Bardeli",
-      "p": 45
-     },
-     "b": {
       "id": "2628",
       "nombre": "O. Rey",
-      "p": 37
+      "p": 51
      },
-     "pa": 55
+     "b": {
+      "id": "3164",
+      "nombre": "Bardeli",
+      "p": 44
+     },
+     "pa": 53
     },
     {
      "linea": 4,
      "a": {
       "id": "2302",
       "nombre": "R. Brugué",
-      "p": 91
+      "p": 93
      },
      "b": {
       "id": "2303",
       "nombre": "I. Romero",
-      "p": 82
+      "p": 83
      },
      "pa": 53
     }
    ],
-   "fuera": [],
+   "fuera": [
+    {
+     "id": "2671",
+     "nombre": "Jeremy Toljan",
+     "estado": "lesionado",
+     "lesion": "Molestias sin determinar"
+    }
+   ],
    "vuelven": [],
    "anterior": {
-    "J": 12,
-    "fuente": "minutos"
+    "J": 13,
+    "fuente": "confirmado"
    },
    "cambios": {
     "entran": [
      {
-      "id": "2624",
-      "nombre": "Manu Sánchez",
+      "id": "2300",
+      "nombre": "Dela",
       "pos": 2
      },
      {
-      "id": "3164",
-      "nombre": "Bardeli",
-      "pos": 3
+      "id": "2742",
+      "nombre": "Nacho Perez",
+      "pos": 2
+     },
+     {
+      "id": "3227",
+      "nombre": "Ifeanyi Ndukwe",
+      "pos": 2
      }
     ],
     "salen": [
@@ -4511,97 +196,948 @@
       "id": "2671",
       "nombre": "Jeremy Toljan",
       "pos": 2,
+      "por": "lesionado"
+     },
+     {
+      "id": "2303",
+      "nombre": "I. Romero",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "49",
+   "nombre": "Racing",
+   "slug": "racing",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t189/color/t189_r-racing-club.png",
+   "rival": "Levante",
+   "rivalId": "11",
+   "casa": false,
+   "t": 1795809600000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "1219",
+     "nombre": "Agirrezabala",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "3011",
+     "nombre": "Jorge Salinas",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "3026",
+     "nombre": "Pablo Ramón",
+     "pos": 2,
+     "p": 89
+    },
+    {
+     "id": "3261",
+     "nombre": "Belocian",
+     "pos": 2,
+     "p": 84
+    },
+    {
+     "id": "3139",
+     "nombre": "Pedro Felipe",
+     "pos": 2,
+     "p": 69
+    },
+    {
+     "id": "3125",
+     "nombre": "Canales",
+     "pos": 3,
+     "p": 91
+    },
+    {
+     "id": "3205",
+     "nombre": "Iván Martín",
+     "pos": 3,
+     "p": 72
+    },
+    {
+     "id": "3234",
+     "nombre": "Matteo Prati",
+     "pos": 3,
+     "p": 70
+    },
+    {
+     "id": "3152",
+     "nombre": "Y. Zabiri",
+     "pos": 4,
+     "p": 91
+    },
+    {
+     "id": "3002",
+     "nombre": "Iñigo Vicente",
+     "pos": 4,
+     "p": 76
+    },
+    {
+     "id": "3247",
+     "nombre": "Iker Luque",
+     "pos": 4,
+     "p": 64
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2712",
+     "nombre": "Pablo García",
+     "pos": 4,
+     "p": 31
+    },
+    {
+     "id": "3027",
+     "nombre": "Facu",
+     "pos": 2,
+     "p": 26
+    },
+    {
+     "id": "3253",
+     "nombre": "Aaron",
+     "pos": 2,
+     "p": 26,
+     "duda": true
+    },
+    {
+     "id": "3008",
+     "nombre": "Manu Hernando",
+     "pos": 2,
+     "p": 24
+    },
+    {
+     "id": "1529",
+     "nombre": "Almeida",
+     "pos": 3,
+     "p": 22
+    },
+    {
+     "id": "3000",
+     "nombre": "Iñigo",
+     "pos": 3,
+     "p": 21
+    },
+    {
+     "id": "3017",
+     "nombre": "Guliashvili",
+     "pos": 4,
+     "p": 18
+    },
+    {
+     "id": "3022",
+     "nombre": "Villalibre",
+     "pos": 4,
+     "p": 13
+    }
+   ],
+   "dudas": [],
+   "fuera": [
+    {
+     "id": "2999",
+     "nombre": "Mantilla",
+     "estado": "lesionado",
+     "lesion": "Rotura de lig. cruzado anterior",
+     "hasta": "junio"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [],
+    "salen": []
+   },
+   "confirmado": null
+  },
+  {
+   "id": "5",
+   "nombre": "Betis",
+   "slug": "betis",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t185/color/t185_real-betis.png",
+   "rival": "Rayo",
+   "rivalId": "14",
+   "casa": true,
+   "t": 1795870800000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "2541",
+     "nombre": "Á. Valles",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2543",
+     "nombre": "Natan",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "121",
+     "nombre": "Bartra",
+     "pos": 2,
+     "p": 86
+    },
+    {
+     "id": "2429",
+     "nombre": "Fran García",
+     "pos": 2,
+     "p": 80
+    },
+    {
+     "id": "2414",
+     "nombre": "Bellerín",
+     "pos": 2,
+     "p": 74
+    },
+    {
+     "id": "3090",
+     "nombre": "Isco",
+     "pos": 3,
+     "p": 89
+    },
+    {
+     "id": "3099",
+     "nombre": "Fornals",
+     "pos": 3,
+     "p": 85
+    },
+    {
+     "id": "2418",
+     "nombre": "Marc Roca",
+     "pos": 3,
+     "p": 83
+    },
+    {
+     "id": "3089",
+     "nombre": "Ez Abde",
+     "pos": 4,
+     "p": 91
+    },
+    {
+     "id": "2770",
+     "nombre": "Antony",
+     "pos": 4,
+     "p": 75
+    },
+    {
+     "id": "2217",
+     "nombre": "Cucho",
+     "pos": 4,
+     "p": 57
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3231",
+     "nombre": "Parrott",
+     "pos": 4,
+     "p": 52
+    },
+    {
+     "id": "2548",
+     "nombre": "Riquelme",
+     "pos": 3,
+     "p": 34
+    },
+    {
+     "id": "2419",
+     "nombre": "Aitor Ruibal",
+     "pos": 2,
+     "p": 30
+    },
+    {
+     "id": "3199",
+     "nombre": "F. Bernal",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "2626",
+     "nombre": "Deossa",
+     "pos": 3,
+     "p": 26
+    },
+    {
+     "id": "2417",
+     "nombre": "Lo Celso",
+     "pos": 3,
+     "p": 19
+    },
+    {
+     "id": "2711",
+     "nombre": "Á. Ortiz",
+     "pos": 2,
+     "p": 17
+    },
+    {
+     "id": "2609",
+     "nombre": "Valentín Gómez",
+     "pos": 2,
+     "p": 17
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 4,
+     "a": {
+      "id": "2217",
+      "nombre": "Cucho",
+      "p": 57
+     },
+     "b": {
+      "id": "3231",
+      "nombre": "Parrott",
+      "p": 52
+     },
+     "pa": 52
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "3089",
+      "nombre": "Ez Abde",
+      "pos": 4
+     },
+     {
+      "id": "2217",
+      "nombre": "Cucho",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2419",
+      "nombre": "Aitor Ruibal",
+      "pos": 2,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "14",
+   "nombre": "Rayo",
+   "slug": "rayo",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t184/color/t184_rayo-vallecano.png",
+   "rival": "Betis",
+   "rivalId": "5",
+   "casa": false,
+   "t": 1795870800000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "3267",
+     "nombre": "Emil Audero",
+     "pos": 1,
+     "p": 93
+    },
+    {
+     "id": "3081",
+     "nombre": "Ratiu",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "3082",
+     "nombre": "Lejeune",
+     "pos": 2,
+     "p": 92
+    },
+    {
+     "id": "3260",
+     "nombre": "Mujaid Sadick",
+     "pos": 2,
+     "p": 66
+    },
+    {
+     "id": "1056",
+     "nombre": "Pedrosa",
+     "pos": 2,
+     "p": 57
+    },
+    {
+     "id": "2384",
+     "nombre": "Unai Lopez",
+     "pos": 3,
+     "p": 91
+    },
+    {
+     "id": "2383",
+     "nombre": "Pathé I. Ciss",
+     "pos": 3,
+     "p": 80
+    },
+    {
+     "id": "1029",
+     "nombre": "Álvaro García",
+     "pos": 3,
+     "p": 56
+    },
+    {
+     "id": "2387",
+     "nombre": "Camello",
+     "pos": 4,
+     "p": 90
+    },
+    {
+     "id": "886",
+     "nombre": "De Frutos",
+     "pos": 4,
+     "p": 78
+    },
+    {
+     "id": "3198",
+     "nombre": "Tsitaishvili",
+     "pos": 4,
+     "p": 49
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2385",
+     "nombre": "Pedro Díaz",
+     "pos": 3,
+     "p": 54
+    },
+    {
+     "id": "2382",
+     "nombre": "Isi",
+     "pos": 3,
+     "p": 38
+    },
+    {
+     "id": "2386",
+     "nombre": "Nteka",
+     "pos": 4,
+     "p": 27
+    },
+    {
+     "id": "3244",
+     "nombre": "G. Bouaré",
+     "pos": 3,
+     "p": 22
+    },
+    {
+     "id": "2678",
+     "nombre": "J. Vertrouwd",
+     "pos": 2,
+     "p": 22
+    },
+    {
+     "id": "2798",
+     "nombre": "Alemâo",
+     "pos": 4,
+     "p": 20
+    },
+    {
+     "id": "2378",
+     "nombre": "D. Cárdenas",
+     "pos": 1,
+     "p": 17
+    },
+    {
+     "id": "1121",
+     "nombre": "Balliu",
+     "pos": 2,
+     "p": 15
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "1029",
+      "nombre": "Álvaro García",
+      "p": 56
+     },
+     "b": {
+      "id": "2385",
+      "nombre": "Pedro Díaz",
+      "p": 54
+     },
+     "pa": 51
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "1056",
+      "nombre": "Pedrosa",
+      "pos": 2
+     },
+     {
+      "id": "1029",
+      "nombre": "Álvaro García",
+      "pos": 3
+     }
+    ],
+    "salen": [
+     {
+      "id": "2386",
+      "nombre": "Nteka",
+      "pos": 4,
       "por": null
      },
      {
-      "id": "2628",
-      "nombre": "O. Rey",
+      "id": "2382",
+      "nombre": "Isi",
       "pos": 3,
       "por": null
      }
     ]
    },
-   "confirmado": [
+   "confirmado": null
+  },
+  {
+   "id": "12",
+   "nombre": "Málaga",
+   "slug": "malaga",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t182/color/t182_malaga-cf.png",
+   "rival": "Athletic",
+   "rivalId": "3",
+   "casa": true,
+   "t": 1795878900000,
+   "formacion": "4-4-2",
+   "once": [
     {
-     "id": "2755",
-     "nombre": "Ryan",
-     "pos": 1
+     "id": "3040",
+     "nombre": "A. Herrero",
+     "pos": 1,
+     "p": 94
     },
     {
-     "id": "2671",
-     "nombre": "Jeremy Toljan",
-     "pos": 2
+     "id": "3054",
+     "nombre": "Recio",
+     "pos": 2,
+     "p": 88
     },
     {
-     "id": null,
-     "nombre": "Adrián de la Fuente",
-     "pos": 2
+     "id": "3042",
+     "nombre": "Einar",
+     "pos": 2,
+     "p": 76
     },
     {
-     "id": "2624",
-     "nombre": "Manu Sánchez",
-     "pos": 2
+     "id": "3270",
+     "nombre": "Aznou",
+     "pos": 2,
+     "p": 70
     },
     {
-     "id": "3174",
-     "nombre": "Mandi",
-     "pos": 2
+     "id": "2525",
+     "nombre": "Salinas",
+     "pos": 2,
+     "p": 47
     },
     {
-     "id": "3228",
-     "nombre": "Requena",
-     "pos": 3
+     "id": "3072",
+     "nombre": "Larrubia",
+     "pos": 3,
+     "p": 90
     },
     {
-     "id": "2445",
-     "nombre": "Olasagasti",
-     "pos": 3
+     "id": "3036",
+     "nombre": "Dani Lorenzo",
+     "pos": 3,
+     "p": 81
     },
     {
-     "id": "3230",
-     "nombre": "Thiago",
-     "pos": 3
+     "id": "3044",
+     "nombre": "Dotor",
+     "pos": 3,
+     "p": 79
     },
     {
-     "id": "2628",
-     "nombre": "O. Rey",
-     "pos": 3
+     "id": "3207",
+     "nombre": "P. Martínez",
+     "pos": 3,
+     "p": 60
     },
     {
-     "id": "2302",
-     "nombre": "R. Brugué",
-     "pos": 4
+     "id": "3045",
+     "nombre": "Niño",
+     "pos": 4,
+     "p": 92
     },
     {
-     "id": "2303",
-     "nombre": "I. Romero",
-     "pos": 4
+     "id": "3070",
+     "nombre": "Chupe",
+     "pos": 4,
+     "p": 77
     }
    ],
-   "probable": [
-    "2755",
-    "2300",
-    "3174",
-    "2624",
-    "2742",
-    "3227",
-    "2445",
-    "3228",
-    "3230",
-    "3164",
-    "2302"
-   ]
+   "suplentes": [
+    {
+     "id": "3048",
+     "nombre": "Ramon",
+     "pos": 3,
+     "p": 47
+    },
+    {
+     "id": "3059",
+     "nombre": "Pastor",
+     "pos": 2,
+     "p": 45
+    },
+    {
+     "id": "3037",
+     "nombre": "C. Puga",
+     "pos": 2,
+     "p": 43,
+     "duda": true
+    },
+    {
+     "id": "3034",
+     "nombre": "Joaquín",
+     "pos": 4,
+     "p": 40
+    },
+    {
+     "id": "3038",
+     "nombre": "Rafa Rodríguez",
+     "pos": 3,
+     "p": 32
+    },
+    {
+     "id": "3140",
+     "nombre": "Juan Cruz",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "3132",
+     "nombre": "J. Berrocal",
+     "pos": 2,
+     "p": 19
+    },
+    {
+     "id": "3204",
+     "nombre": "Juani",
+     "pos": 4,
+     "p": 18
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "2525",
+      "nombre": "Salinas",
+      "p": 47
+     },
+     "b": {
+      "id": "3059",
+      "nombre": "Pastor",
+      "p": 45
+     },
+     "pa": 51
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "3207",
+      "nombre": "P. Martínez",
+      "p": 60
+     },
+     "b": {
+      "id": "3048",
+      "nombre": "Ramon",
+      "p": 47
+     },
+     "pa": 56
+    }
+   ],
+   "fuera": [
+    {
+     "id": "3041",
+     "nombre": "Rafita",
+     "estado": "lesionado"
+    },
+    {
+     "id": "2398",
+     "nombre": "F. Calero",
+     "estado": "lesionado"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "3042",
+      "nombre": "Einar",
+      "pos": 2
+     },
+     {
+      "id": "3270",
+      "nombre": "Aznou",
+      "pos": 2
+     },
+     {
+      "id": "3036",
+      "nombre": "Dani Lorenzo",
+      "pos": 3
+     },
+     {
+      "id": "3070",
+      "nombre": "Chupe",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "3059",
+      "nombre": "Pastor",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "3039",
+      "nombre": "Murillo",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "3038",
+      "nombre": "Rafa Rodríguez",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "3034",
+      "nombre": "Joaquín",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "3",
+   "nombre": "Athletic",
+   "slug": "athletic",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t174/color/t174_athletic-club.png",
+   "rival": "Málaga",
+   "rivalId": "12",
+   "casa": false,
+   "t": 1795878900000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "68",
+     "nombre": "Unai Simón",
+     "pos": 1,
+     "p": 93
+    },
+    {
+     "id": "3065",
+     "nombre": "Laporte",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "74",
+     "nombre": "Yuri",
+     "pos": 2,
+     "p": 92
+    },
+    {
+     "id": "3184",
+     "nombre": "H. Rincón",
+     "pos": 2,
+     "p": 63
+    },
+    {
+     "id": "2315",
+     "nombre": "Paredes",
+     "pos": 2,
+     "p": 59
+    },
+    {
+     "id": "2549",
+     "nombre": "Navarro",
+     "pos": 3,
+     "p": 84
+    },
+    {
+     "id": "3023",
+     "nombre": "Peio Canales",
+     "pos": 3,
+     "p": 65
+    },
+    {
+     "id": "2318",
+     "nombre": "O. Sancet",
+     "pos": 3,
+     "p": 61
+    },
+    {
+     "id": "3083",
+     "nombre": "Nico Williams",
+     "pos": 4,
+     "p": 92
+    },
+    {
+     "id": "927",
+     "nombre": "Berenguer",
+     "pos": 4,
+     "p": 85
+    },
+    {
+     "id": "91",
+     "nombre": "Iñaki Williams",
+     "pos": 4,
+     "p": 82
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3185",
+     "nombre": "Gerenabarrena",
+     "pos": 3,
+     "p": 51
+    },
+    {
+     "id": "1070",
+     "nombre": "De Galarreta",
+     "pos": 3,
+     "p": 40
+    },
+    {
+     "id": "77",
+     "nombre": "Yeray",
+     "pos": 2,
+     "p": 34
+    },
+    {
+     "id": "1787",
+     "nombre": "Prados",
+     "pos": 3,
+     "p": 26
+    },
+    {
+     "id": "3213",
+     "nombre": "Johaneko",
+     "pos": 2,
+     "p": 18
+    },
+    {
+     "id": "2645",
+     "nombre": "Rego",
+     "pos": 3,
+     "p": 16
+    },
+    {
+     "id": "2040",
+     "nombre": "Jauregizar",
+     "pos": 3,
+     "p": 16
+    },
+    {
+     "id": "3295",
+     "nombre": "Vizcay",
+     "pos": 4,
+     "p": 15
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "2318",
+      "nombre": "O. Sancet",
+      "p": 61
+     },
+     "b": {
+      "id": "3185",
+      "nombre": "Gerenabarrena",
+      "p": 51
+     },
+     "pa": 55
+    }
+   ],
+   "fuera": [
+    {
+     "id": "2314",
+     "nombre": "Vivian",
+     "estado": "lesionado",
+     "lesion": "Lesión en el sóleo",
+     "hasta": "mediados de diciembre"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2315",
+      "nombre": "Paredes",
+      "pos": 2
+     },
+     {
+      "id": "2549",
+      "nombre": "Navarro",
+      "pos": 3
+     }
+    ],
+    "salen": [
+     {
+      "id": "77",
+      "nombre": "Yeray",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "1787",
+      "nombre": "Prados",
+      "pos": 3,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
   },
   {
    "id": "7",
    "nombre": "Elche",
    "slug": "elche",
    "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t954/color/t954_elche-c-f.png",
-   "rival": "Levante",
-   "rivalId": "11",
-   "casa": false,
-   "t": 1795464000000,
-   "formacion": "3-5-2",
+   "rival": "Atlético",
+   "rivalId": "2",
+   "casa": true,
+   "t": 1795887000000,
+   "formacion": "3-4-3",
    "once": [
     {
      "id": "2613",
@@ -4625,7 +1161,7 @@
      "id": "2949",
      "nombre": "B. Sangare",
      "pos": 2,
-     "p": 72
+     "p": 73
     },
     {
      "id": "3074",
@@ -4634,49 +1170,43 @@
      "p": 91
     },
     {
-     "id": "2939",
-     "nombre": "G. Villar",
-     "pos": 3,
-     "p": 75
-    },
-    {
      "id": "2703",
      "nombre": "Redondo",
      "pos": 3,
-     "p": 70
+     "p": 72
+    },
+    {
+     "id": "2939",
+     "nombre": "G. Villar",
+     "pos": 3,
+     "p": 72
     },
     {
      "id": "2958",
      "nombre": "Morcillo",
      "pos": 3,
-     "p": 67
-    },
-    {
-     "id": "3182",
-     "nombre": "Lemar",
-     "pos": 3,
-     "p": 57
+     "p": 68
     },
     {
      "id": "3147",
      "nombre": "Fer Niño",
      "pos": 4,
-     "p": 89
+     "p": 91
     },
     {
      "id": "2933",
      "nombre": "Cepeda",
      "pos": 4,
-     "p": 57
+     "p": 59
+    },
+    {
+     "id": "2922",
+     "nombre": "Osorio",
+     "pos": 4,
+     "p": 30
     }
    ],
    "suplentes": [
-    {
-     "id": "3151",
-     "nombre": "Buonanotte",
-     "pos": 3,
-     "p": 38
-    },
     {
      "id": "2529",
      "nombre": "Rubén S.",
@@ -4687,17 +1217,17 @@
      "id": "2601",
      "nombre": "Martim Neto",
      "pos": 3,
-     "p": 32
+     "p": 33
+    },
+    {
+     "id": "3151",
+     "nombre": "Buonanotte",
+     "pos": 3,
+     "p": 30
     },
     {
      "id": "2941",
      "nombre": "T. Morente",
-     "pos": 4,
-     "p": 30
-    },
-    {
-     "id": "2922",
-     "nombre": "Osorio",
      "pos": 4,
      "p": 28
     },
@@ -4711,7 +1241,13 @@
      "id": "2294",
      "nombre": "R.P. Bigas",
      "pos": 2,
-     "p": 20
+     "p": 19
+    },
+    {
+     "id": "3189",
+     "nombre": "Barzic",
+     "pos": 2,
+     "p": 17
     },
     {
      "id": "3188",
@@ -4720,137 +1256,2629 @@
      "p": 13
     }
    ],
-   "dudas": [
+   "dudas": [],
+   "fuera": [
     {
-     "linea": 3,
-     "a": {
-      "id": "3182",
-      "nombre": "Lemar",
-      "p": 57
-     },
-     "b": {
-      "id": "3151",
-      "nombre": "Buonanotte",
-      "p": 38
-     },
-     "pa": 60
+     "id": "3182",
+     "nombre": "Lemar",
+     "estado": "lesionado",
+     "lesion": "Lesión en los isquiotibiales"
     }
    ],
-   "fuera": [],
    "vuelven": [],
    "anterior": {
-    "J": 12,
-    "fuente": "minutos"
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [],
+    "salen": []
+   },
+   "confirmado": null
+  },
+  {
+   "id": "2",
+   "nombre": "Atlético",
+   "slug": "atletico",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t175/color/t175_atletico-de-madrid.png",
+   "rival": "Elche",
+   "rivalId": "7",
+   "casa": false,
+   "t": 1795887000000,
+   "formacion": "4-4-2",
+   "once": [
+    {
+     "id": "2322",
+     "nombre": "Oblak",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "3155",
+     "nombre": "Grimaldo",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "2561",
+     "nombre": "Hancko",
+     "pos": 2,
+     "p": 88
+    },
+    {
+     "id": "67",
+     "nombre": "Marcos Llorente",
+     "pos": 2,
+     "p": 87
+    },
+    {
+     "id": "2562",
+     "nombre": "Marc Pubill",
+     "pos": 2,
+     "p": 83
+    },
+    {
+     "id": "2534",
+     "nombre": "Álex Baena",
+     "pos": 3,
+     "p": 89
+    },
+    {
+     "id": "1565",
+     "nombre": "Barrios",
+     "pos": 3,
+     "p": 80
+    },
+    {
+     "id": "3193",
+     "nombre": "Kang-In Lee",
+     "pos": 3,
+     "p": 74
+    },
+    {
+     "id": "2326",
+     "nombre": "Koke",
+     "pos": 3,
+     "p": 68
+    },
+    {
+     "id": "1210",
+     "nombre": "Giuliano",
+     "pos": 4,
+     "p": 91
+    },
+    {
+     "id": "3088",
+     "nombre": "Julián Alvarez",
+     "pos": 4,
+     "p": 89
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2480",
+     "nombre": "Johnny",
+     "pos": 3,
+     "p": 43
+    },
+    {
+     "id": "3114",
+     "nombre": "Hjulmand",
+     "pos": 3,
+     "p": 42
+    },
+    {
+     "id": "3255",
+     "nombre": "J. David",
+     "pos": 4,
+     "p": 41
+    },
+    {
+     "id": "255",
+     "nombre": "Le Normand",
+     "pos": 2,
+     "p": 35
+    },
+    {
+     "id": "2332",
+     "nombre": "Sorloth",
+     "pos": 4,
+     "p": 25
+    },
+    {
+     "id": "2717",
+     "nombre": "R. Mendoza",
+     "pos": 3,
+     "p": 18
+    },
+    {
+     "id": "3194",
+     "nombre": "Arnau Ortiz",
+     "pos": 4,
+     "p": 13
+    },
+    {
+     "id": "2881",
+     "nombre": "D. Martínez",
+     "pos": 2,
+     "p": 13
+    }
+   ],
+   "dudas": [],
+   "fuera": [
+    {
+     "id": "3197",
+     "nombre": "Cuti Romero",
+     "estado": "lesionado"
+    },
+    {
+     "id": "3079",
+     "nombre": "Lookman",
+     "estado": "lesionado",
+     "lesion": "Esguince de rodilla",
+     "hasta": "principios de diciembre"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
    },
    "cambios": {
     "entran": [
      {
-      "id": "2949",
-      "nombre": "B. Sangare",
+      "id": "2562",
+      "nombre": "Marc Pubill",
       "pos": 2
      },
      {
-      "id": "2939",
-      "nombre": "G. Villar",
-      "pos": 3
-     },
-     {
-      "id": "3182",
-      "nombre": "Lemar",
+      "id": "3193",
+      "nombre": "Kang-In Lee",
       "pos": 3
      }
     ],
     "salen": [
      {
-      "id": "2529",
-      "nombre": "Rubén S.",
+      "id": "255",
+      "nombre": "Le Normand",
       "pos": 2,
       "por": null
      },
      {
-      "id": "2601",
-      "nombre": "Martim Neto",
+      "id": "2480",
+      "nombre": "Johnny",
       "pos": 3,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "15",
+   "nombre": "Real Madrid",
+   "slug": "real-madrid",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t186/color/t186_real-madrid.png",
+   "rival": "Alavés",
+   "rivalId": "21",
+   "casa": true,
+   "t": 1795896000000,
+   "formacion": "4-4-2",
+   "once": [
+    {
+     "id": "230",
+     "nombre": "Courtois",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2530",
+     "nombre": "Huijsen",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "3107",
+     "nombre": "Konaté",
+     "pos": 2,
+     "p": 91
+    },
+    {
+     "id": "3106",
+     "nombre": "Cucurella",
+     "pos": 2,
+     "p": 89
+    },
+    {
+     "id": "2531",
+     "nombre": "Trent",
+     "pos": 2,
+     "p": 43
+    },
+    {
+     "id": "3101",
+     "nombre": "Bellingham",
+     "pos": 3,
+     "p": 93
+    },
+    {
+     "id": "1674",
+     "nombre": "Arda Güler",
+     "pos": 3,
+     "p": 90
+    },
+    {
+     "id": "2430",
+     "nombre": "Valverde",
+     "pos": 3,
+     "p": 78
+    },
+    {
+     "id": "3116",
+     "nombre": "Bernardo Silva",
+     "pos": 3,
+     "p": 63
+    },
+    {
+     "id": "3103",
+     "nombre": "Mbappé",
+     "pos": 4,
+     "p": 93
+    },
+    {
+     "id": "3143",
+     "nombre": "Diomande",
+     "pos": 4,
+     "p": 83
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "1480",
+     "nombre": "Tchouaméni",
+     "pos": 3,
+     "p": 62
+    },
+    {
+     "id": "3102",
+     "nombre": "Vini Jr.",
+     "pos": 4,
+     "p": 59
+    },
+    {
+     "id": "1300",
+     "nombre": "Camavinga",
+     "pos": 3,
+     "p": 31
+    },
+    {
+     "id": "2533",
+     "nombre": "Á. Carreras",
+     "pos": 2,
+     "p": 25
+    },
+    {
+     "id": "3024",
+     "nombre": "Sergio",
+     "pos": 3,
+     "p": 23
+    },
+    {
+     "id": "2428",
+     "nombre": "Rüdiger",
+     "pos": 2,
+     "p": 19
+    },
+    {
+     "id": "2431",
+     "nombre": "Brahim",
+     "pos": 3,
+     "p": 19
+    },
+    {
+     "id": "3080",
+     "nombre": "Dumfries",
+     "pos": 2,
+     "p": 18
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "3116",
+      "nombre": "Bernardo Silva",
+      "p": 63
+     },
+     "b": {
+      "id": "1480",
+      "nombre": "Tchouaméni",
+      "p": 62
+     },
+     "pa": 50
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "3106",
+      "nombre": "Cucurella",
+      "pos": 2
+     },
+     {
+      "id": "2430",
+      "nombre": "Valverde",
+      "pos": 3
+     }
+    ],
+    "salen": [
+     {
+      "id": "2533",
+      "nombre": "Á. Carreras",
+      "pos": 2,
       "por": null
      },
      {
-      "id": "2780",
-      "nombre": "Grady Diangana",
+      "id": "1300",
+      "nombre": "Camavinga",
+      "pos": 3,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "21",
+   "nombre": "Alavés",
+   "slug": "alaves",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t173/color/t173_d-alaves.png",
+   "rival": "Real Madrid",
+   "rivalId": "15",
+   "casa": false,
+   "t": 1795896000000,
+   "formacion": "3-5-2",
+   "once": [
+    {
+     "id": "988",
+     "nombre": "Sivera",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2938",
+     "nombre": "Koski",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "1337",
+     "nombre": "Tenaglia",
+     "pos": 2,
+     "p": 85
+    },
+    {
+     "id": "2552",
+     "nombre": "Jonny Otto",
+     "pos": 2,
+     "p": 64
+    },
+    {
+     "id": "2932",
+     "nombre": "Ángel Pérez",
+     "pos": 3,
+     "p": 88
+    },
+    {
+     "id": "2569",
+     "nombre": "Ibañez",
+     "pos": 3,
+     "p": 79
+    },
+    {
+     "id": "3069",
+     "nombre": "Blanco",
+     "pos": 3,
+     "p": 67
+    },
+    {
+     "id": "2577",
+     "nombre": "A. Rebbach",
+     "pos": 3,
+     "p": 51
+    },
+    {
+     "id": "2474",
+     "nombre": "Denis Suárez",
+     "pos": 3,
+     "p": 43
+    },
+    {
+     "id": "2768",
+     "nombre": "Lucas Boyé",
+     "pos": 4,
+     "p": 92
+    },
+    {
+     "id": "3078",
+     "nombre": "T. Martínez",
+     "pos": 4,
+     "p": 60
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2568",
+     "nombre": "Youssef",
+     "pos": 2,
+     "p": 48
+    },
+    {
+     "id": "270",
+     "nombre": "Guevara",
+     "pos": 3,
+     "p": 41
+    },
+    {
+     "id": "2600",
+     "nombre": "Mariano",
+     "pos": 4,
+     "p": 40
+    },
+    {
+     "id": "3156",
+     "nombre": "Valentini",
+     "pos": 2,
+     "p": 32
+    },
+    {
+     "id": "2342",
+     "nombre": "Protesoni",
+     "pos": 3,
+     "p": 26
+    },
+    {
+     "id": "2887",
+     "nombre": "Mañas",
+     "pos": 4,
+     "p": 21
+    },
+    {
+     "id": "2885",
+     "nombre": "Xanet Olaiz",
+     "pos": 2,
+     "p": 16
+    },
+    {
+     "id": "2564",
+     "nombre": "Aleñá",
+     "pos": 3,
+     "p": 14
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "2552",
+      "nombre": "Jonny Otto",
+      "p": 64
+     },
+     "b": {
+      "id": "2568",
+      "nombre": "Youssef",
+      "p": 48
+     },
+     "pa": 57
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "2474",
+      "nombre": "Denis Suárez",
+      "p": 43
+     },
+     "b": {
+      "id": "270",
+      "nombre": "Guevara",
+      "p": 41
+     },
+     "pa": 51
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [],
+    "salen": []
+   },
+   "confirmado": null
+  },
+  {
+   "id": "18",
+   "nombre": "Valencia",
+   "slug": "valencia",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t191/color/t191_valencia-cf.png",
+   "rival": "Osasuna",
+   "rivalId": "13",
+   "casa": true,
+   "t": 1795957200000,
+   "formacion": "4-4-2",
+   "once": [
+    {
+     "id": "2457",
+     "nombre": "Dimitrievski",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "1991",
+     "nombre": "Tárrega",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "302",
+     "nombre": "Gayá",
+     "pos": 2,
+     "p": 86
+    },
+    {
+     "id": "3206",
+     "nombre": "Maffeo",
+     "pos": 2,
+     "p": 73
+    },
+    {
+     "id": "3236",
+     "nombre": "Arnau",
+     "pos": 2,
+     "p": 64
+    },
+    {
+     "id": "2464",
+     "nombre": "Pepelu",
+     "pos": 3,
+     "p": 93
+    },
+    {
+     "id": "3075",
+     "nombre": "Javi Guerra",
+     "pos": 3,
+     "p": 78
+    },
+    {
+     "id": "3128",
+     "nombre": "Guido Rodríguez",
+     "pos": 3,
+     "p": 71
+    },
+    {
+     "id": "581",
+     "nombre": "Rioja",
+     "pos": 3,
+     "p": 57
+    },
+    {
+     "id": "2588",
+     "nombre": "Danjuma",
+     "pos": 4,
+     "p": 93
+    },
+    {
+     "id": "2617",
+     "nombre": "Sadiq",
+     "pos": 4,
+     "p": 62
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3120",
+     "nombre": "De Haas",
+     "pos": 2,
+     "p": 46
+    },
+    {
+     "id": "3239",
+     "nombre": "Mayol",
+     "pos": 3,
+     "p": 45
+    },
+    {
+     "id": "2560",
+     "nombre": "Raba",
+     "pos": 4,
+     "p": 33
+    },
+    {
+     "id": "1191",
+     "nombre": "Hugo Duro",
+     "pos": 4,
+     "p": 33
+    },
+    {
+     "id": "2693",
+     "nombre": "Otorbi",
+     "pos": 4,
+     "p": 31
+    },
+    {
+     "id": "2612",
+     "nombre": "Ugrinic",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "2458",
+     "nombre": "Diakhaby",
+     "pos": 2,
+     "p": 24
+    },
+    {
+     "id": "2748",
+     "nombre": "Aimar Blázquez",
+     "pos": 4,
+     "p": 23
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "3236",
+      "nombre": "Arnau",
+      "p": 64
+     },
+     "b": {
+      "id": "3120",
+      "nombre": "De Haas",
+      "p": 46
+     },
+     "pa": 58
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "581",
+      "nombre": "Rioja",
+      "p": 57
+     },
+     "b": {
+      "id": "3239",
+      "nombre": "Mayol",
+      "p": 45
+     },
+     "pa": 56
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "302",
+      "nombre": "Gayá",
+      "pos": 2
+     },
+     {
+      "id": "2588",
+      "nombre": "Danjuma",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2403",
+      "nombre": "Copete",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "2560",
+      "nombre": "Raba",
       "pos": 4,
       "por": null
      }
     ]
    },
-   "confirmado": [
+   "confirmado": null
+  },
+  {
+   "id": "13",
+   "nombre": "Osasuna",
+   "slug": "osasuna",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t450/color/t450_c-a-osasuna.png",
+   "rival": "Valencia",
+   "rivalId": "18",
+   "casa": false,
+   "t": 1795957200000,
+   "formacion": "4-4-2",
+   "once": [
     {
-     "id": "2613",
-     "nombre": "M. Dituro",
-     "pos": 1
+     "id": "644",
+     "nombre": "Sergio Herrera",
+     "pos": 1,
+     "p": 84
     },
     {
-     "id": "3263",
-     "nombre": "Revivo",
-     "pos": 2
+     "id": "1890",
+     "nombre": "Boyomo",
+     "pos": 2,
+     "p": 91
     },
     {
-     "id": "2703",
-     "nombre": "Redondo",
-     "pos": 3
+     "id": "2559",
+     "nombre": "V. Rosier",
+     "pos": 2,
+     "p": 76
     },
     {
-     "id": "2596",
-     "nombre": "V. Chust",
-     "pos": 2
+     "id": "2336",
+     "nombre": "Herrando",
+     "pos": 2,
+     "p": 43
     },
     {
-     "id": "2949",
-     "nombre": "B. Sangare",
-     "pos": 2
+     "id": "2366",
+     "nombre": "Diego Rico",
+     "pos": 2,
+     "p": 31
     },
     {
-     "id": "2939",
-     "nombre": "G. Villar",
-     "pos": 3
+     "id": "652",
+     "nombre": "Rubén García",
+     "pos": 3,
+     "p": 85
     },
     {
-     "id": "2922",
-     "nombre": "Osorio",
-     "pos": 4
+     "id": "680",
+     "nombre": "Moi Gómez",
+     "pos": 3,
+     "p": 78
     },
     {
-     "id": "2958",
-     "nombre": "Morcillo",
-     "pos": 3
+     "id": "637",
+     "nombre": "Moncayola",
+     "pos": 3,
+     "p": 71
     },
     {
-     "id": "3074",
-     "nombre": "Germán V.",
-     "pos": 3
+     "id": "2338",
+     "nombre": "Aimar",
+     "pos": 3,
+     "p": 59
     },
     {
-     "id": "3147",
-     "nombre": "Fer Niño",
-     "pos": 4
+     "id": "3084",
+     "nombre": "Budimir",
+     "pos": 4,
+     "p": 92
     },
     {
-     "id": "2933",
-     "nombre": "Cepeda",
-     "pos": 4
+     "id": "2923",
+     "nombre": "Raúl Moro",
+     "pos": 4,
+     "p": 43
     }
    ],
-   "probable": [
-    "2613",
-    "3263",
-    "2596",
-    "2949",
-    "3074",
-    "2939",
-    "2703",
-    "2958",
-    "3182",
-    "3147",
-    "2933"
-   ]
+   "suplentes": [
+    {
+     "id": "1730",
+     "nombre": "Iker Muñoz",
+     "pos": 3,
+     "p": 40
+    },
+    {
+     "id": "873",
+     "nombre": "Torró",
+     "pos": 3,
+     "p": 35
+    },
+    {
+     "id": "3183",
+     "nombre": "Dubasin",
+     "pos": 4,
+     "p": 32
+    },
+    {
+     "id": "2721",
+     "nombre": "A. Osambela",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "2337",
+     "nombre": "Kike Barja",
+     "pos": 4,
+     "p": 27
+    },
+    {
+     "id": "2846",
+     "nombre": "Arguibide",
+     "pos": 2,
+     "p": 27
+    },
+    {
+     "id": "2339",
+     "nombre": "Raúl",
+     "pos": 4,
+     "p": 22
+    },
+    {
+     "id": "3252",
+     "nombre": "Del Castillo",
+     "pos": 4,
+     "p": 17
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "2338",
+      "nombre": "Aimar",
+      "p": 59
+     },
+     "b": {
+      "id": "1730",
+      "nombre": "Iker Muñoz",
+      "p": 40
+     },
+     "pa": 60
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "2923",
+      "nombre": "Raúl Moro",
+      "p": 43
+     },
+     "b": {
+      "id": "3183",
+      "nombre": "Dubasin",
+      "p": 32
+     },
+     "pa": 57
+    }
+   ],
+   "fuera": [
+    {
+     "id": "1033",
+     "nombre": "Catena",
+     "estado": "sancionado"
+    },
+    {
+     "id": "2005",
+     "nombre": "Abel Bretones",
+     "estado": "lesionado",
+     "lesion": "Lesión en el sóleo"
+    },
+    {
+     "id": "204",
+     "nombre": "Aitor Fdez",
+     "estado": "lesionado"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2336",
+      "nombre": "Herrando",
+      "pos": 2
+     },
+     {
+      "id": "2923",
+      "nombre": "Raúl Moro",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "1033",
+      "nombre": "Catena",
+      "pos": 2,
+      "por": "sancionado"
+     },
+     {
+      "id": "2337",
+      "nombre": "Kike Barja",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "26",
+   "nombre": "Deportivo",
+   "slug": "deportivo",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t180/color/t180_rc-deportivo.png",
+   "rival": "Barça",
+   "rivalId": "4",
+   "casa": true,
+   "t": 1795965300000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "3109",
+     "nombre": "Leo Román",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2324",
+     "nombre": "Giménez",
+     "pos": 2,
+     "p": 90
+    },
+    {
+     "id": "2963",
+     "nombre": "Quagliata",
+     "pos": 2,
+     "p": 69
+    },
+    {
+     "id": "2965",
+     "nombre": "M. Loureiro",
+     "pos": 2,
+     "p": 65
+    },
+    {
+     "id": "2976",
+     "nombre": "A. Alti",
+     "pos": 2,
+     "p": 50
+    },
+    {
+     "id": "2995",
+     "nombre": "Mario Soriano",
+     "pos": 3,
+     "p": 90
+    },
+    {
+     "id": "3119",
+     "nombre": "Amatucci",
+     "pos": 3,
+     "p": 63
+    },
+    {
+     "id": "2362",
+     "nombre": "M. Casadó",
+     "pos": 3,
+     "p": 41
+    },
+    {
+     "id": "3108",
+     "nombre": "Aubameyang",
+     "pos": 4,
+     "p": 84
+    },
+    {
+     "id": "3076",
+     "nombre": "Yeremay",
+     "pos": 4,
+     "p": 72
+    },
+    {
+     "id": "2973",
+     "nombre": "Bil Nsongo",
+     "pos": 4,
+     "p": 65
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2962",
+     "nombre": "Luismi Cruz",
+     "pos": 4,
+     "p": 55
+    },
+    {
+     "id": "2994",
+     "nombre": "Mella",
+     "pos": 3,
+     "p": 39
+    },
+    {
+     "id": "3149",
+     "nombre": "Bright Ede",
+     "pos": 2,
+     "p": 39,
+     "duda": true
+    },
+    {
+     "id": "2985",
+     "nombre": "Noubi",
+     "pos": 2,
+     "p": 35
+    },
+    {
+     "id": "3249",
+     "nombre": "Adama Traoré",
+     "pos": 4,
+     "p": 35
+    },
+    {
+     "id": "2990",
+     "nombre": "Ximo Navarro",
+     "pos": 2,
+     "p": 28
+    },
+    {
+     "id": "2977",
+     "nombre": "Riki",
+     "pos": 3,
+     "p": 24
+    },
+    {
+     "id": "2991",
+     "nombre": "D. Villares",
+     "pos": 3,
+     "p": 23
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "2976",
+      "nombre": "A. Alti",
+      "p": 50
+     },
+     "b": {
+      "id": "3149",
+      "nombre": "Bright Ede",
+      "p": 39
+     },
+     "pa": 56
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "2362",
+      "nombre": "M. Casadó",
+      "p": 41
+     },
+     "b": {
+      "id": "2994",
+      "nombre": "Mella",
+      "p": 39
+     },
+     "pa": 51
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "2973",
+      "nombre": "Bil Nsongo",
+      "p": 65
+     },
+     "b": {
+      "id": "2962",
+      "nombre": "Luismi Cruz",
+      "p": 55
+     },
+     "pa": 54
+    }
+   ],
+   "fuera": [],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2324",
+      "nombre": "Giménez",
+      "pos": 2
+     },
+     {
+      "id": "2976",
+      "nombre": "A. Alti",
+      "pos": 2
+     },
+     {
+      "id": "3119",
+      "nombre": "Amatucci",
+      "pos": 3
+     },
+     {
+      "id": "2973",
+      "nombre": "Bil Nsongo",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2985",
+      "nombre": "Noubi",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "2990",
+      "nombre": "Ximo Navarro",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "2977",
+      "nombre": "Riki",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "2962",
+      "nombre": "Luismi Cruz",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "4",
+   "nombre": "Barça",
+   "slug": "barca",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t178/color/t178_fc-barcelona.png",
+   "rival": "Deportivo",
+   "rivalId": "26",
+   "casa": false,
+   "t": 1795965300000,
+   "formacion": "3-4-3",
+   "once": [
+    {
+     "id": "2634",
+     "nombre": "Joan García",
+     "pos": 1,
+     "p": 93
+    },
+    {
+     "id": "1775",
+     "nombre": "Cubarsí",
+     "pos": 2,
+     "p": 86
+    },
+    {
+     "id": "2354",
+     "nombre": "Eric",
+     "pos": 2,
+     "p": 78
+    },
+    {
+     "id": "2757",
+     "nombre": "Gerard Martín",
+     "pos": 2,
+     "p": 78
+    },
+    {
+     "id": "3100",
+     "nombre": "Pedri",
+     "pos": 3,
+     "p": 90
+    },
+    {
+     "id": "2358",
+     "nombre": "F. De Jong",
+     "pos": 3,
+     "p": 63
+    },
+    {
+     "id": "2784",
+     "nombre": "Marc Bernal",
+     "pos": 3,
+     "p": 59
+    },
+    {
+     "id": "3092",
+     "nombre": "Olmo",
+     "pos": 3,
+     "p": 50
+    },
+    {
+     "id": "3104",
+     "nombre": "Lamine Yamal",
+     "pos": 4,
+     "p": 92
+    },
+    {
+     "id": "2522",
+     "nombre": "Raphinha",
+     "pos": 4,
+     "p": 90
+    },
+    {
+     "id": "3210",
+     "nombre": "Gordon",
+     "pos": 4,
+     "p": 53
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2906",
+     "nombre": "Cancelo",
+     "pos": 2,
+     "p": 77
+    },
+    {
+     "id": "2355",
+     "nombre": "Kounde",
+     "pos": 2,
+     "p": 56
+    },
+    {
+     "id": "3209",
+     "nombre": "Adeyemi",
+     "pos": 4,
+     "p": 52
+    },
+    {
+     "id": "3224",
+     "nombre": "Brian Fariñas",
+     "pos": 3,
+     "p": 35
+    },
+    {
+     "id": "2353",
+     "nombre": "Christensen",
+     "pos": 2,
+     "p": 31,
+     "duda": true
+    },
+    {
+     "id": "3258",
+     "nombre": "Gabriel Jesus",
+     "pos": 4,
+     "p": 23
+    },
+    {
+     "id": "1218",
+     "nombre": "Álex Balde",
+     "pos": 2,
+     "p": 20
+    },
+    {
+     "id": "1221",
+     "nombre": "Gavi",
+     "pos": 3,
+     "p": 19
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "2757",
+      "nombre": "Gerard Martín",
+      "p": 78
+     },
+     "b": {
+      "id": "2906",
+      "nombre": "Cancelo",
+      "p": 77
+     },
+     "pa": 50
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "3092",
+      "nombre": "Olmo",
+      "p": 50
+     },
+     "b": {
+      "id": "3224",
+      "nombre": "Brian Fariñas",
+      "p": 35
+     },
+     "pa": 59
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "3210",
+      "nombre": "Gordon",
+      "p": 53
+     },
+     "b": {
+      "id": "3209",
+      "nombre": "Adeyemi",
+      "p": 52
+     },
+     "pa": 51
+    }
+   ],
+   "fuera": [
+    {
+     "id": "1715",
+     "nombre": "Fermín",
+     "estado": "sancionado"
+    },
+    {
+     "id": "3208",
+     "nombre": "Rodri",
+     "estado": "lesionado",
+     "lesion": "Lesión en el bíceps femoral"
+    },
+    {
+     "id": "2843",
+     "nombre": "Xavi Espart",
+     "estado": "lesionado",
+     "lesion": "Lesión de tobillo",
+     "hasta": "mediados de diciembre"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "1775",
+      "nombre": "Cubarsí",
+      "pos": 2
+     },
+     {
+      "id": "3092",
+      "nombre": "Olmo",
+      "pos": 3
+     },
+     {
+      "id": "3210",
+      "nombre": "Gordon",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2906",
+      "nombre": "Cancelo",
+      "pos": 2,
+      "por": null
+     },
+     {
+      "id": "1715",
+      "nombre": "Fermín",
+      "pos": 3,
+      "por": "sancionado"
+     },
+     {
+      "id": "3209",
+      "nombre": "Adeyemi",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "6",
+   "nombre": "Celta",
+   "slug": "celta",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t176/color/t176_rc-celta.png",
+   "rival": "Villarreal",
+   "rivalId": "20",
+   "casa": true,
+   "t": 1795973400000,
+   "formacion": "5-4-1",
+   "once": [
+    {
+     "id": "2713",
+     "nombre": "Ionut Radu",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "3123",
+     "nombre": "Marcos Alonso",
+     "pos": 2,
+     "p": 86
+    },
+    {
+     "id": "2074",
+     "nombre": "Javi Rodríguez",
+     "pos": 2,
+     "p": 70
+    },
+    {
+     "id": "2604",
+     "nombre": "Carreira",
+     "pos": 2,
+     "p": 66
+    },
+    {
+     "id": "2329",
+     "nombre": "Javi Galán",
+     "pos": 2,
+     "p": 56
+    },
+    {
+     "id": "2714",
+     "nombre": "Javi Rueda",
+     "pos": 2,
+     "p": 52
+    },
+    {
+     "id": "2607",
+     "nombre": "Ilaix Moriba",
+     "pos": 3,
+     "p": 93
+    },
+    {
+     "id": "2078",
+     "nombre": "Hugo Alvarez",
+     "pos": 3,
+     "p": 54
+    },
+    {
+     "id": "2295",
+     "nombre": "Febas",
+     "pos": 3,
+     "p": 44
+    },
+    {
+     "id": "2394",
+     "nombre": "Williot",
+     "pos": 3,
+     "p": 36
+    },
+    {
+     "id": "2603",
+     "nombre": "Ferran Jutglà",
+     "pos": 4,
+     "p": 77
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2397",
+     "nombre": "Pablo Durán",
+     "pos": 4,
+     "p": 58
+    },
+    {
+     "id": "3259",
+     "nombre": "Cáceres",
+     "pos": 2,
+     "p": 45
+    },
+    {
+     "id": "2492",
+     "nombre": "Iago Aspas",
+     "pos": 4,
+     "p": 42
+    },
+    {
+     "id": "3240",
+     "nombre": "Driouech",
+     "pos": 4,
+     "p": 36
+    },
+    {
+     "id": "2346",
+     "nombre": "Álvaro Núñez",
+     "pos": 2,
+     "p": 33
+    },
+    {
+     "id": "2850",
+     "nombre": "H. González",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "2913",
+     "nombre": "Burcio",
+     "pos": 3,
+     "p": 28
+    },
+    {
+     "id": "2654",
+     "nombre": "El Abdellaoui",
+     "pos": 4,
+     "p": 27
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "2714",
+      "nombre": "Javi Rueda",
+      "p": 52
+     },
+     "b": {
+      "id": "3259",
+      "nombre": "Cáceres",
+      "p": 45
+     },
+     "pa": 53
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "2603",
+      "nombre": "Ferran Jutglà",
+      "p": 77
+     },
+     "b": {
+      "id": "2397",
+      "nombre": "Pablo Durán",
+      "p": 58
+     },
+     "pa": 57
+    }
+   ],
+   "fuera": [
+    {
+     "id": "2206",
+     "nombre": "Yoel Lago",
+     "estado": "sancionado"
+    },
+    {
+     "id": "2639",
+     "nombre": "M. Román",
+     "estado": "lesionado"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2714",
+      "nombre": "Javi Rueda",
+      "pos": 2
+     },
+     {
+      "id": "2295",
+      "nombre": "Febas",
+      "pos": 3
+     },
+     {
+      "id": "2603",
+      "nombre": "Ferran Jutglà",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2206",
+      "nombre": "Yoel Lago",
+      "pos": 2,
+      "por": "sancionado"
+     },
+     {
+      "id": "2913",
+      "nombre": "Burcio",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "2397",
+      "nombre": "Pablo Durán",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "20",
+   "nombre": "Villarreal",
+   "slug": "villarreal",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t449/color/t449_villarreal-cf.png",
+   "rival": "Celta",
+   "rivalId": "6",
+   "casa": false,
+   "t": 1795973400000,
+   "formacion": "4-4-2",
+   "once": [
+    {
+     "id": "3130",
+     "nombre": "Gulácsi",
+     "pos": 1,
+     "p": 92
+    },
+    {
+     "id": "2728",
+     "nombre": "Renato Veiga",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "2934",
+     "nombre": "Freeman",
+     "pos": 2,
+     "p": 70
+    },
+    {
+     "id": "2614",
+     "nombre": "C. Romero",
+     "pos": 2,
+     "p": 67
+    },
+    {
+     "id": "1959",
+     "nombre": "Mouriño",
+     "pos": 2,
+     "p": 56
+    },
+    {
+     "id": "3086",
+     "nombre": "Moleiro",
+     "pos": 3,
+     "p": 86
+    },
+    {
+     "id": "2473",
+     "nombre": "Gueye",
+     "pos": 3,
+     "p": 77
+    },
+    {
+     "id": "2556",
+     "nombre": "Buchanan",
+     "pos": 3,
+     "p": 67
+    },
+    {
+     "id": "1031",
+     "nombre": "Comesaña",
+     "pos": 3,
+     "p": 55
+    },
+    {
+     "id": "2771",
+     "nombre": "Mikautadze",
+     "pos": 4,
+     "p": 91
+    },
+    {
+     "id": "3087",
+     "nombre": "Pepe",
+     "pos": 4,
+     "p": 64
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2504",
+     "nombre": "Ayoze",
+     "pos": 4,
+     "p": 56
+    },
+    {
+     "id": "2868",
+     "nombre": "Carlos Macià",
+     "pos": 3,
+     "p": 45
+    },
+    {
+     "id": "2761",
+     "nombre": "Oluwaseyi",
+     "pos": 4,
+     "p": 43
+    },
+    {
+     "id": "2477",
+     "nombre": "I. Akhomach",
+     "pos": 4,
+     "p": 36,
+     "duda": true
+    },
+    {
+     "id": "1614",
+     "nombre": "Cardona",
+     "pos": 2,
+     "p": 35
+    },
+    {
+     "id": "3242",
+     "nombre": "Saliba",
+     "pos": 3,
+     "p": 30
+    },
+    {
+     "id": "2469",
+     "nombre": "Costa",
+     "pos": 2,
+     "p": 29
+    },
+    {
+     "id": "2467",
+     "nombre": "Júnior R.",
+     "pos": 1,
+     "p": 21
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "1031",
+      "nombre": "Comesaña",
+      "p": 55
+     },
+     "b": {
+      "id": "2868",
+      "nombre": "Carlos Macià",
+      "p": 45
+     },
+     "pa": 55
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "3087",
+      "nombre": "Pepe",
+      "p": 64
+     },
+     "b": {
+      "id": "2504",
+      "nombre": "Ayoze",
+      "p": 56
+     },
+     "pa": 53
+    }
+   ],
+   "fuera": [
+    {
+     "id": "356",
+     "nombre": "Gerard",
+     "estado": "lesionado",
+     "lesion": "Molestias sin determinar"
+    },
+    {
+     "id": "2470",
+     "nombre": "Foyth",
+     "estado": "lesionado",
+     "lesion": "Molestias musculares"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "1959",
+      "nombre": "Mouriño",
+      "pos": 2
+     },
+     {
+      "id": "3087",
+      "nombre": "Pepe",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2698",
+      "nombre": "Pau Navarro",
+      "pos": 2,
+      "por": "sancionado"
+     },
+     {
+      "id": "2761",
+      "nombre": "Oluwaseyi",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "16",
+   "nombre": "Real Sociedad",
+   "slug": "real-sociedad",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t188/color/t188_real-sociedad.png",
+   "rival": "Sevilla",
+   "rivalId": "17",
+   "casa": true,
+   "t": 1795982400000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "274",
+     "nombre": "Remiro",
+     "pos": 1,
+     "p": 93
+    },
+    {
+     "id": "2656",
+     "nombre": "Jon Martin",
+     "pos": 2,
+     "p": 87
+    },
+    {
+     "id": "3238",
+     "nombre": "M. Sarr",
+     "pos": 2,
+     "p": 71
+    },
+    {
+     "id": "1989",
+     "nombre": "Sergio Gómez",
+     "pos": 2,
+     "p": 68
+    },
+    {
+     "id": "265",
+     "nombre": "Zubeldia",
+     "pos": 2,
+     "p": 56
+    },
+    {
+     "id": "2772",
+     "nombre": "C. Soler",
+     "pos": 3,
+     "p": 91
+    },
+    {
+     "id": "2444",
+     "nombre": "Sucic",
+     "pos": 3,
+     "p": 90
+    },
+    {
+     "id": "2621",
+     "nombre": "Gorrotxa",
+     "pos": 3,
+     "p": 48
+    },
+    {
+     "id": "3091",
+     "nombre": "Oyarzabal",
+     "pos": 4,
+     "p": 93
+    },
+    {
+     "id": "3085",
+     "nombre": "Guedes",
+     "pos": 4,
+     "p": 76
+    },
+    {
+     "id": "2448",
+     "nombre": "Oskarsson",
+     "pos": 4,
+     "p": 59
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2443",
+     "nombre": "Aramburu",
+     "pos": 2,
+     "p": 37,
+     "duda": true
+    },
+    {
+     "id": "1197",
+     "nombre": "Kubo",
+     "pos": 3,
+     "p": 37
+    },
+    {
+     "id": "2818",
+     "nombre": "Hector Fort",
+     "pos": 2,
+     "p": 32
+    },
+    {
+     "id": "1215",
+     "nombre": "Turrientes",
+     "pos": 3,
+     "p": 31
+    },
+    {
+     "id": "2834",
+     "nombre": "Beitia",
+     "pos": 2,
+     "p": 31
+    },
+    {
+     "id": "2955",
+     "nombre": "Ochieng",
+     "pos": 4,
+     "p": 20
+    },
+    {
+     "id": "2862",
+     "nombre": "Marchal",
+     "pos": 3,
+     "p": 19
+    },
+    {
+     "id": "2446",
+     "nombre": "Zakharyan",
+     "pos": 3,
+     "p": 17
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "265",
+      "nombre": "Zubeldia",
+      "p": 56
+     },
+     "b": {
+      "id": "2443",
+      "nombre": "Aramburu",
+      "p": 37
+     },
+     "pa": 60
+    },
+    {
+     "linea": 3,
+     "a": {
+      "id": "2621",
+      "nombre": "Gorrotxa",
+      "p": 48
+     },
+     "b": {
+      "id": "1197",
+      "nombre": "Kubo",
+      "p": 37
+     },
+     "pa": 56
+    }
+   ],
+   "fuera": [
+    {
+     "id": "701",
+     "nombre": "Barrenetxea",
+     "estado": "lesionado",
+     "lesion": "Rotura en los isquiotibiales",
+     "hasta": "mayo"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2656",
+      "nombre": "Jon Martin",
+      "pos": 2
+     }
+    ],
+    "salen": [
+     {
+      "id": "2818",
+      "nombre": "Hector Fort",
+      "pos": 2,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "17",
+   "nombre": "Sevilla",
+   "slug": "sevilla",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t179/color/t179_sevilla-fc.png",
+   "rival": "Real Sociedad",
+   "rivalId": "16",
+   "casa": false,
+   "t": 1795982400000,
+   "formacion": "4-3-3",
+   "once": [
+    {
+     "id": "2759",
+     "nombre": "Vlachodimos",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2479",
+     "nombre": "Kike Salas",
+     "pos": 2,
+     "p": 94
+    },
+    {
+     "id": "1147",
+     "nombre": "Juan Iglesias",
+     "pos": 2,
+     "p": 88
+    },
+    {
+     "id": "2753",
+     "nombre": "Suazo",
+     "pos": 2,
+     "p": 79
+    },
+    {
+     "id": "2680",
+     "nombre": "A. Castrín",
+     "pos": 2,
+     "p": 66
+    },
+    {
+     "id": "3265",
+     "nombre": "Fofana",
+     "pos": 3,
+     "p": 92
+    },
+    {
+     "id": "2453",
+     "nombre": "Agoumé",
+     "pos": 3,
+     "p": 86
+    },
+    {
+     "id": "856",
+     "nombre": "Guridi",
+     "pos": 3,
+     "p": 27
+    },
+    {
+     "id": "3262",
+     "nombre": "Félix Correia",
+     "pos": 4,
+     "p": 89
+    },
+    {
+     "id": "3266",
+     "nombre": "Stassin",
+     "pos": 4,
+     "p": 75
+    },
+    {
+     "id": "3117",
+     "nombre": "Vargas",
+     "pos": 4,
+     "p": 49
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2454",
+     "nombre": "Ejuke",
+     "pos": 4,
+     "p": 47
+    },
+    {
+     "id": "2456",
+     "nombre": "Isaac",
+     "pos": 4,
+     "p": 41
+    },
+    {
+     "id": "3145",
+     "nombre": "Robbie Ure",
+     "pos": 4,
+     "p": 37
+    },
+    {
+     "id": "3138",
+     "nombre": "Sangante",
+     "pos": 2,
+     "p": 29
+    },
+    {
+     "id": "2687",
+     "nombre": "Manu Bueno",
+     "pos": 3,
+     "p": 26
+    },
+    {
+     "id": "3211",
+     "nombre": "Kochorashvili",
+     "pos": 3,
+     "p": 23
+    },
+    {
+     "id": "2912",
+     "nombre": "Julio Díaz",
+     "pos": 2,
+     "p": 16
+    },
+    {
+     "id": "3175",
+     "nombre": "Guillén",
+     "pos": 3,
+     "p": 13
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 4,
+     "a": {
+      "id": "3117",
+      "nombre": "Vargas",
+      "p": 49
+     },
+     "b": {
+      "id": "2454",
+      "nombre": "Ejuke",
+      "p": 47
+     },
+     "pa": 51
+    }
+   ],
+   "fuera": [
+    {
+     "id": "2746",
+     "nombre": "Miguel Sierra",
+     "estado": "lesionado",
+     "lesion": "Luxación acromioclavicular",
+     "hasta": "enero"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [],
+    "salen": []
+   },
+   "confirmado": null
+  },
+  {
+   "id": "8",
+   "nombre": "Espanyol",
+   "slug": "espanyol",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t177/color/t177_rcd-espanyol.png",
+   "rival": "Getafe",
+   "rivalId": "9",
+   "casa": true,
+   "t": 1796068800000,
+   "formacion": "5-3-2",
+   "once": [
+    {
+     "id": "2565",
+     "nombre": "A. Fortuño",
+     "pos": 1,
+     "p": 77
+    },
+    {
+     "id": "1930",
+     "nombre": "El Hilali",
+     "pos": 2,
+     "p": 93
+    },
+    {
+     "id": "3068",
+     "nombre": "Cabrera",
+     "pos": 2,
+     "p": 91
+    },
+    {
+     "id": "3098",
+     "nombre": "Q. Hartman",
+     "pos": 2,
+     "p": 46
+    },
+    {
+     "id": "3162",
+     "nombre": "Hinojo",
+     "pos": 2,
+     "p": 42
+    },
+    {
+     "id": "3172",
+     "nombre": "Jose Angel",
+     "pos": 2,
+     "p": 32
+    },
+    {
+     "id": "3161",
+     "nombre": "Javi Hernández",
+     "pos": 3,
+     "p": 83
+    },
+    {
+     "id": "1938",
+     "nombre": "Pol Lozano",
+     "pos": 3,
+     "p": 53
+    },
+    {
+     "id": "3169",
+     "nombre": "Bauza",
+     "pos": 3,
+     "p": 34
+    },
+    {
+     "id": "2520",
+     "nombre": "Roberto",
+     "pos": 4,
+     "p": 93
+    },
+    {
+     "id": "3237",
+     "nombre": "Bryan",
+     "pos": 4,
+     "p": 44
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "2507",
+     "nombre": "Dmitrovic",
+     "pos": 1,
+     "p": 53
+    },
+    {
+     "id": "2623",
+     "nombre": "Dolan",
+     "pos": 4,
+     "p": 42
+    },
+    {
+     "id": "2400",
+     "nombre": "Pere Milla",
+     "pos": 4,
+     "p": 35
+    },
+    {
+     "id": "3177",
+     "nombre": "Vanja Drkusic",
+     "pos": 2,
+     "p": 31
+    },
+    {
+     "id": "3127",
+     "nombre": "Moscardo",
+     "pos": 3,
+     "p": 22
+    },
+    {
+     "id": "2930",
+     "nombre": "Nuñez",
+     "pos": 2,
+     "p": 21
+    },
+    {
+     "id": "2516",
+     "nombre": "Puado",
+     "pos": 3,
+     "p": 18
+    },
+    {
+     "id": "3131",
+     "nombre": "Marcos",
+     "pos": 4,
+     "p": 18
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 2,
+     "a": {
+      "id": "3172",
+      "nombre": "Jose Angel",
+      "p": 32
+     },
+     "b": {
+      "id": "3177",
+      "nombre": "Vanja Drkusic",
+      "p": 31
+     },
+     "pa": 51
+    },
+    {
+     "linea": 4,
+     "a": {
+      "id": "3237",
+      "nombre": "Bryan",
+      "p": 44
+     },
+     "b": {
+      "id": "2623",
+      "nombre": "Dolan",
+      "p": 42
+     },
+     "pa": 51
+    }
+   ],
+   "fuera": [
+    {
+     "id": "3077",
+     "nombre": "Edu Expósito",
+     "estado": "lesionado",
+     "lesion": "Molestias sin determinar"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "3172",
+      "nombre": "Jose Angel",
+      "pos": 2
+     },
+     {
+      "id": "3161",
+      "nombre": "Javi Hernández",
+      "pos": 3
+     },
+     {
+      "id": "3237",
+      "nombre": "Bryan",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2785",
+      "nombre": "Riedel",
+      "pos": 2,
+      "por": "sancionado"
+     },
+     {
+      "id": "3305",
+      "nombre": "A. Santiago",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "2400",
+      "nombre": "Pere Milla",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
+  },
+  {
+   "id": "9",
+   "nombre": "Getafe",
+   "slug": "getafe",
+   "escudoUrl": "https://assets-fantasy.llt-services.com/teambadge/t1450/color/t1450_getafe-cf.png",
+   "rival": "Espanyol",
+   "rivalId": "8",
+   "casa": false,
+   "t": 1796068800000,
+   "formacion": "5-3-2",
+   "once": [
+    {
+     "id": "184",
+     "nombre": "David Soria",
+     "pos": 1,
+     "p": 94
+    },
+    {
+     "id": "2924",
+     "nombre": "Zaid Romero",
+     "pos": 2,
+     "p": 90
+    },
+    {
+     "id": "3135",
+     "nombre": "Andrés Garcia",
+     "pos": 2,
+     "p": 84
+    },
+    {
+     "id": "3150",
+     "nombre": "Mojica",
+     "pos": 2,
+     "p": 81
+    },
+    {
+     "id": "2452",
+     "nombre": "Gudelj",
+     "pos": 2,
+     "p": 75
+    },
+    {
+     "id": "2699",
+     "nombre": "J. Ives Valou",
+     "pos": 2,
+     "p": 30
+    },
+    {
+     "id": "2511",
+     "nombre": "R. Terrats",
+     "pos": 3,
+     "p": 86
+    },
+    {
+     "id": "3133",
+     "nombre": "Mangala",
+     "pos": 3,
+     "p": 70
+    },
+    {
+     "id": "2640",
+     "nombre": "Mario Martín",
+     "pos": 3,
+     "p": 49
+    },
+    {
+     "id": "3137",
+     "nombre": "Satriano",
+     "pos": 4,
+     "p": 90
+    },
+    {
+     "id": "3154",
+     "nombre": "Enes Ünal",
+     "pos": 4,
+     "p": 77
+    }
+   ],
+   "suplentes": [
+    {
+     "id": "3200",
+     "nombre": "Francho",
+     "pos": 3,
+     "p": 42
+    },
+    {
+     "id": "3254",
+     "nombre": "Iván Azón",
+     "pos": 4,
+     "p": 36
+    },
+    {
+     "id": "2774",
+     "nombre": "Kiko F.",
+     "pos": 2,
+     "p": 29
+    },
+    {
+     "id": "2736",
+     "nombre": "Davinchi",
+     "pos": 2,
+     "p": 23
+    },
+    {
+     "id": "2488",
+     "nombre": "B. Mayoral",
+     "pos": 4,
+     "p": 20
+    },
+    {
+     "id": "3219",
+     "nombre": "Óscar López",
+     "pos": 3,
+     "p": 17
+    },
+    {
+     "id": "2664",
+     "nombre": "Joselu",
+     "pos": 4,
+     "p": 16
+    },
+    {
+     "id": "2776",
+     "nombre": "A. Abqar",
+     "pos": 2,
+     "p": 15
+    }
+   ],
+   "dudas": [
+    {
+     "linea": 3,
+     "a": {
+      "id": "2640",
+      "nombre": "Mario Martín",
+      "p": 49
+     },
+     "b": {
+      "id": "3200",
+      "nombre": "Francho",
+      "p": 42
+     },
+     "pa": 54
+    }
+   ],
+   "fuera": [
+    {
+     "id": "2661",
+     "nombre": "Djene",
+     "estado": "sancionado"
+    },
+    {
+     "id": "3284",
+     "nombre": "Carvajal",
+     "estado": "lesionado",
+     "lesion": "Lesión indeterminada"
+    }
+   ],
+   "vuelven": [],
+   "anterior": {
+    "J": 13,
+    "fuente": "confirmado"
+   },
+   "cambios": {
+    "entran": [
+     {
+      "id": "2452",
+      "nombre": "Gudelj",
+      "pos": 2
+     },
+     {
+      "id": "2640",
+      "nombre": "Mario Martín",
+      "pos": 3
+     },
+     {
+      "id": "3137",
+      "nombre": "Satriano",
+      "pos": 4
+     }
+    ],
+    "salen": [
+     {
+      "id": "2661",
+      "nombre": "Djene",
+      "pos": 2,
+      "por": "sancionado"
+     },
+     {
+      "id": "3200",
+      "nombre": "Francho",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "3254",
+      "nombre": "Iván Azón",
+      "pos": 4,
+      "por": null
+     }
+    ]
+   },
+   "confirmado": null
   }
- ]
+ ],
+ "aciertoAnterior": {
+  "J": 13,
+  "n": 220,
+  "ok": 164,
+  "equipos": 20
+ }
 }
