@@ -153,7 +153,8 @@ export function pujasNuevas(M, c = cfgAvisos()) {
       const hace = !cerrada && q && q.paraPasar ? q.paraPasar : m.pujaGana;
       cuenta = p != null && p >= 0.65 ? ` Con tu puja de ${eur(m.miPuja)} lo normal es que te lo lleves igual.`
         : hace && hace > m.miPuja ? ` Tu puja es de ${eur(m.miPuja)}: para llevártelo casi seguro harían falta unos ${eur(hace)}.` : ` Tu puja es de ${eur(m.miPuja)}.`;
-    } else if (m.puja) cuenta = ` La app pujaría ${eur(m.puja)}.`;
+    // (0.8.3) «la app pujaría» solo si la app lo ficharía hoy: lo que el plan descarta o no se puede no lleva puja (decide.js)
+    } else if (m.puja && !(M.decisionFichar && M.decisionFichar(m.pid).accion === 'no')) cuenta = ` La app pujaría ${eur(m.puja)}.`;
     const quien = top && !cerrada && q.conf !== 'baja' ? ` Lo más probable es que sea de ${top.nombre}.` : '';
     out.push({ k: `puja-nueva:${m.id}:${m.ajenas}`, titulo: k > 1 ? `${k} pujas nuevas por ${m.j.nombre}` : `Nueva puja por ${m.j.nombre}`,
       texto: `Ya ${m.ajenas === 1 ? 'hay 1 puja' : `hay ${m.ajenas} pujas`} de otros.${cuenta}${quien}`, hash: 'mercado' });
