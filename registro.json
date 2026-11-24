@@ -3087,7 +3087,6 @@
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
@@ -4475,7 +4474,9 @@
    "n": 9,
    "fallos": 1
   },
-  "espera": {}
+  "espera": {
+   "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795541471920
+  }
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9507,13 +9508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6026,
+   "ok": 6027,
    "fallos": 0,
-   "ejecuciones": 4883,
+   "ejecuciones": 4884,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:26:14.600Z"
+   "ultima": "2026-11-24T17:31:11.920Z"
   }
  },
  "ptsDirecto": {},
@@ -9530,15 +9531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:26:26.993Z"
+   "ultimaBien": "2026-11-24T17:31:20.098Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:26:26.993Z"
+   "ultimaBien": "2026-11-24T17:31:20.098Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:26:26.993Z"
+   "ultimaBien": "2026-11-24T17:31:20.098Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9546,11 +9547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:26:26.993Z"
+   "ultimaBien": "2026-11-24T17:31:20.098Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:26:26.993Z"
+   "ultimaBien": "2026-11-24T17:31:20.098Z"
   }
  },
  "avisos": [
