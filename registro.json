@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
    "SPORT|136701406": 1795275671000,
@@ -3247,7 +3246,8 @@
    "AS|https://as.com/futbol/segunda/bajcetic-no-sale-del-tunel-f202611-n/": 1795465135000,
    "SPORT|136797133": 1795524053000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/koke-sobre-record-victorias-simeone-laliga-le-dimos-enhorabuena-increible-tantos-anos-club-grande-haber-cambiado-mentalidad-club-20261124_3481262.html": 1795529745000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000,
+   "Cadena SER|https://cadenaser.com/asturias/2026/11/24/no-descarto-que-raul-dimita-antes-de-que-le-echen-sanedrin-del-real-oviedo-radio-asturias/": 1795533671000
   },
   "hechos": [
    {
@@ -3521,7 +3521,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -9509,13 +9509,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6001,
+   "ok": 6002,
    "fallos": 0,
-   "ejecuciones": 4858,
+   "ejecuciones": 4859,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T15:21:21.436Z"
+   "ultima": "2026-11-24T15:26:12.193Z"
   }
  },
  "ptsDirecto": {},
@@ -9532,15 +9532,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:21:26.987Z"
+   "ultimaBien": "2026-11-24T15:26:22.303Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:21:26.987Z"
+   "ultimaBien": "2026-11-24T15:26:22.303Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:21:26.987Z"
+   "ultimaBien": "2026-11-24T15:26:22.303Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9548,11 +9548,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:21:26.987Z"
+   "ultimaBien": "2026-11-24T15:26:22.303Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:21:26.987Z"
+   "ultimaBien": "2026-11-24T15:26:22.303Z"
   }
  },
  "avisos": [
