@@ -150,8 +150,10 @@ function conOferta(D, M, x, b, ahora) {
     if (consejo === 'aceptar') return aceptar(porque || `Acepta la oferta de ${quien}: ${ofertaTxt}.`);
     // A LA VENTA, PERO ESTA OFERTA NO (Turrientes): lo que antes era «mejor aguantar» en un sitio y «vender» en otro
     const L = v.liga, esperado = mejor.deLiga ? ((L && L.esperado) || ((M.ofertaLigaDe && M.ofertaLigaDe(j)) || {}).v || null) : null;
+    // (24 nov, Fran) la siguiente no «será de unos X»: va de −10 % a +10 % de su valor, a suerte
+    const mej = mejor.deLiga && M.pMejorOferta ? Math.round(M.pMejorOferta(mejor.sobre) * 10) : null;
     const luego = mejor.deLiga
-      ? `LaLiga te hará otra en el siguiente cambio de mercado${esperado ? `, de unos ${eur(esperado)}` : ''}`
+      ? `LaLiga te hace otra en cada cambio de mercado, de −10 % a +10 % de su valor, a suerte${mej != null && mej >= 5 ? ` (${mej} de cada 10 veces, mejor que esta)` : ''}`
       : 'espera a la de LaLiga o a una mejor';
     return { ...esperar('esta-oferta-no', `${b.porque} Déjalo a la venta, pero esta oferta (${ofertaTxt}) no la aceptes: ${luego}.`), cifras: { ...cifras, esperado } };
   }

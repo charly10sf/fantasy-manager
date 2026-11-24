@@ -481,8 +481,15 @@ export function analizar(D, H, c, extra = {}) {
     // gira: sigue subiendo, cada vez menos (un 14 % al día); con el giro a ese ritmo se esperaban −140 mil en 7 días y
     // fueron +1,5 M
     const RITMO = { sube: 0.95, acelera: 0.96, frena: 0.86, giro: 0.94, baja: 0.9 };
+    // (24 nov, Fran: «la app sigue sin entender las tendencias»; medido con el valor público de 373 jugadores en 58 días,
+    // 16.862 jugador-días: .github/ia/medir-inercia-publico.mjs y claude/medida-tendencias-24nov.md) EL PRIMER DÍA DE UN
+    // GIRO se quedaba corto a la mitad: ese día el jugador acaba de cruzar el cero (−0,6 % de media) y los siguientes baja
+    // un 1,1-1,2 % cada día; se esperaba −3,4 % en 7 días y fueron −7,4 % (el 87 % bajó). El ritmo del primer día es lo de
+    // hoy más el 70 % de lo que se ha frenado desde ayer, sin pasar de un 2 % al día: el error a 3 días baja de 2,1 a 1,4
+    // puntos y a 7 de 5,4 a 3,9, sin sesgo. Desde el segundo día de bajada ya se acertaba (sesgo de +0,2 y −0,2): igual
+    const r0 = fase === 'giro' && baja === 1 && pen > ult ? Math.max(ult + 0.7 * (ult - pen), Math.min(ult, -0.02 * v)) : ult;
     const proy = (k) => {
-      let x = 0, r = ult;
+      let x = 0, r = fase === 'giro' ? r0 / RITMO.giro : ult;
       for (let i = 1; i <= k; i++) {
         // (cada día baja un poco más, pero no sin fin: con el ruido de los datos la pendiente salía disparada y un
         // −23 mil de hoy se proyectaba en −929 mil hasta la jornada)
@@ -1301,12 +1308,39 @@ export function analizar(D, H, c, extra = {}) {
     M.clausulazos = r.length ? { n: r.length, med: q(r, 0.5), p75: q(r, 0.75), p90: q(r, 0.9), max: Math.max(...r) } : null;
   }
 
-  /** lo que ofrecería LaLiga por un jugador: su valor ajustado con lo que suele ofrecer en tu liga */
+  /* (24 nov, Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10»; Carlos, 20 nov: «LaLiga da más o
+     menos un ±10 % y es suerte») `M.ofertaLiga` sale de las ventas a LaLiga que se ven en la liga, y esas son las ofertas que
+     alguien ACEPTÓ (las buenas): su mediana (+7 % en su liga) no es lo que LaLiga ofrece cada vez, sino lo que se acaba
+     sacando esperando a una buena. CADA oferta es una lotería entre −10 % y +10 % de lo que vale el jugador ese día, con una
+     nueva en cada cambio de mercado. Desde aquí todo lo que la app y la IA DICEN de «lo que dará LaLiga» usa las dos cosas
+     por separado: `una` (la siguiente oferta) y lo que se acepta (`v`, `min`, `max`, como antes, para las cuentas del plan) */
+  M.RANGO_LIGA = 0.10;
+  /** Lo que se saca de LaLiga pudiendo esperar hasta `n` ofertas (una por cambio de mercado), con el valor moviéndose `delta`
+   * (tanto por uno) cada día. La oferta de ayer ya no está cuando llega la de hoy, así que no es «la mejor de n»: es quedarse
+   * con la primera que supere lo que se espera de seguir esperando (la última se acepta como venga). Devuelve `gana` (sobre
+   * el valor del día de la primera oferta) y `corte` (desde qué tanto por uno se acepta la primera). Con el valor quieto:
+   * 0 con una, +2,5 % con dos, +3,9 % con tres, +4,8 % con cuatro, +6,5 % con siete */
+  M.esperarOferta = (n, delta = 0) => {
+    const r = M.RANGO_LIGA;
+    n = Math.max(1, Math.round(n));
+    let W = (n - 1) * delta, corte = -r;
+    for (let k = n - 1; k >= 1; k--) {
+      const base = (k - 1) * delta, c = W - base;
+      corte = clamp(c, -r, r);
+      if (c < r) W = base + (r + corte) ** 2 / (4 * r);
+    }
+    return { gana: W, corte: n > 1 ? corte : -r };
+  };
+  /** de cada 10 ofertas, cuántas mejoran una de `s` sobre su valor */
+  M.pMejorOferta = (s) => clamp((M.RANGO_LIGA - s) / (2 * M.RANGO_LIGA), 0, 1);
+  /** lo de LaLiga por un jugador: `una` = la siguiente oferta (entre −10 % y +10 % de su valor); `v`, `min` y `max` = lo que se
+   * acaba sacando en tu liga esperando a una buena (la mediana y la mitad central de las ventas a LaLiga que se ven) */
   M.ofertaLigaDe = (j) => {
     if (!j || !j.valor) return null;
+    const una = { min: Math.round((j.valor * (1 - M.RANGO_LIGA)) / 1e4) * 1e4, max: Math.round((j.valor * (1 + M.RANGO_LIGA)) / 1e4) * 1e4 };
     const OL = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
     const med = OL ? OL.med : 0;
-    return { v: Math.round((j.valor * (1 + med)) / 1e4) * 1e4, med, n: OL ? OL.n : 0, sinDatos: !OL, min: OL ? Math.round((j.valor * (1 + OL.p25)) / 1e4) * 1e4 : null, max: OL ? Math.round((j.valor * (1 + OL.p75)) / 1e4) * 1e4 : null };
+    return { una, v: Math.round((j.valor * (1 + med)) / 1e4) * 1e4, med, n: OL ? OL.n : 0, sinDatos: !OL, min: OL ? Math.round((j.valor * (1 + OL.p25)) / 1e4) * 1e4 : null, max: OL ? Math.round((j.valor * (1 + OL.p75)) / 1e4) * 1e4 : null };
   };
 
   /* ---------- los blindajes (el escudo de LaLiga, viendo un anuncio) ---------- */
@@ -1487,7 +1521,7 @@ export function analizar(D, H, c, extra = {}) {
     const liga = x.j.valor * (1 + vLiga), sobre = x.clausula / x.j.valor - 1;
     const pg = x.pagan, llega = !!(pg && pg.seguro && pg.seguro.length), nadie = !!(pg && pg.hayDatos && !llega && !(pg.quiza && pg.quiza.length));
     // (24 nov, «menos texto») más corto: la cláusula, lo que da LaLiga y qué sale mejor
-    const cab = `Su cláusula abierta: ${eur(x.clausula)} (${sobre >= 0.005 ? `+${pct(sobre * 100, 0, false)}` : 'a su valor'}); LaLiga, unos ${eur(liga)}`;
+    const cab = `Su cláusula abierta: ${eur(x.clausula)} (${sobre >= 0.005 ? `+${pct(sobre * 100, 0, false)}` : 'a su valor'}); a LaLiga, esperando a una buena oferta, unos ${eur(liga)}`;
     if (x.clausula >= liga) {
       if (llega && ['medio', 'alto'].includes(x.riesgo)) return { tipo: 'clausula', espera: true, txt: `${cab}. A algún rival le llega: si te lo clausulan, cobras más que vendiéndolo.` };
       if (nadie) return { tipo: 'nadie', espera: false, txt: `${cab}. No le llega a ningún rival: no te lo van a quitar.` };
@@ -1536,7 +1570,7 @@ export function analizar(D, H, c, extra = {}) {
     const p7 = ine ? ine.proy(7) : t.d7 != null ? t.d7 : null, p14 = ine ? ine.proy(14) : p7 != null ? p7 * 2 : null;
     // LaLiga: lo que suele dar en esta liga (sin datos, ±10 % de su valor, lo que ha visto Carlos)
     const OL = M.ofertaLigaDe(x.j) || {};
-    const liga = { v: OL.v || v, min: OL.min != null ? OL.min : r10(v * 0.9), max: OL.max != null ? OL.max : r10(v * 1.1), sinDatos: !!OL.sinDatos, cuando: M.cierreMercado || null };
+    const liga = { v: OL.v || v, min: OL.min != null ? OL.min : r10(v * 0.9), max: OL.max != null ? OL.max : r10(v * 1.1), sinDatos: !!OL.sinDatos, cuando: M.cierreMercado || null, med: OL.med || 0, una: OL.una || { min: r10(v * 0.9), max: r10(v * 1.1) } };
     const fase = ine ? ine.fase : null;
     const baja = ['giro', 'baja'].includes(fase) || !!x.ventaInercia || (p7 != null && p7 < -Math.max(300000, v * 0.015));
     const sube = !baja && ['sube', 'acelera', 'frena'].includes(fase) && p7 != null && p7 > Math.max(300000, v * 0.015);
@@ -2288,7 +2322,8 @@ export function analizar(D, H, c, extra = {}) {
     if (!mejor) { consejo = 'sin ofertas'; porque = 'Aún no tienes ofertas.'; }
     else if (liga && liga.posicion === 'baja' && !liga.prisa && liga.gana >= Math.max(150000, j.valor * 0.01)) {
       consejo = 'esperar';
-      porque = `La de LaLiga es de las más bajas que da (${pct(mejor.sobre * 100)} sobre su valor; en tu liga suele ofrecer entre ${pct(liga.p25 * 100)} y ${pct(liga.p75 * 100)}). Mañana te hará otra: ${liga.dia < 0 ? `aunque baje ${eur(-liga.dia)}, ` : ''}lo normal sería unos ${eur(liga.esperado)} (${eur(liga.gana, { signo: true })}). Espera, salvo que necesites el dinero hoy.`;
+      // (24 nov, Fran) «de las más bajas que da» no era verdad: es floja frente a las que se aceptan. Cada oferta va de −10 % a +10 %
+      porque = `La de LaLiga es floja (${pct(mejor.sobre * 100)} sobre su valor). Te hace otra en cada cambio de mercado, de −10 % a +10 % de su valor, a suerte; esperando a una buena lo normal es sacar unos ${eur(liga.esperado)} (${eur(liga.gana, { signo: true })}). Espera, salvo que necesites el dinero hoy.`;
     }
     // el que vuelve y sigue subiendo: mañana vale más de lo que te ofrecen hoy (salvo que haga falta el dinero, esté de
     // baja o sea uno para revender sin otro cambio de mercado antes de la jornada; 0.7n)

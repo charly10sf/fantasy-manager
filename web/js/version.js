@@ -36,7 +36,10 @@ export const NOVEDADES = [
     cosas: [
       { tipo: 'mejora', d: 'ia', t: 'Lo mismo en todas partes', x: 'De cada jugador tuyo la app toma una sola decisión (vender, aguantar, aceptar la oferta o esperar a otra) y te la dice igual en Hoy, en Equipo, en los avisos y cuando le preguntas a la IA.' },
       { tipo: 'mejora', d: 'reloj', t: 'Si algo cambia, te lo dice', x: 'Si desde el plan de la mañana llega una oferta o un jugador cambia de tendencia, el paso te dice qué decía antes, qué dice ahora y por qué. Y «Lo que llevas hoy» sabe si algo lo hiciste por el plan o porque te lo aconsejó la IA.' },
-      { tipo: 'arreglo', d: 'hucha', t: '«A la venta, pero esta oferta no»', x: 'Cuando conviene vender a uno pero la oferta de hoy es floja, la app lo dice así y te cuenta lo que espera de la siguiente, en vez de «mejor aguantar».' },
+      { tipo: 'arreglo', d: 'hucha', t: '«A la venta, pero esta oferta no»', x: 'Cuando conviene vender a uno pero la oferta de hoy es floja, la app lo dice así, en vez de «mejor aguantar».' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Las ofertas de LaLiga, como son', x: 'Cada oferta de LaLiga va de −10 % a +10 % de lo que vale el jugador, a suerte, y hay una nueva en cada cambio de mercado. La app y la IA ya no dicen que «suele dar» un tanto fijo: te dicen entre cuánto y cuánto puede salir.' },
+      { tipo: 'mejora', d: 'grafica', t: 'Cuando un jugador se da la vuelta', x: 'El primer día que baja uno que venía subiendo, la app se quedaba corta con lo que iba a perder. Medido con todos los jugadores de LaLiga desde septiembre: los días siguientes baja el doble que el primero, y ahora lo cuenta así.' },
+      { tipo: 'mejora', d: 'balanza', t: 'Comprarle a otro mánager para revender', x: 'Si le cuentas a la IA que un rival te deja a uno a un precio, hace las cuentas con ese precio: si te llega el saldo, lo que puedes sacarle a LaLiga rechazando las ofertas flojas y si te vale para el once.' },
     ],
   },
   {

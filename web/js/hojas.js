@@ -331,7 +331,7 @@ export function fichaJugador(S, pid) {
     const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, más que vendiéndolo.`
       : mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> con un anuncio en LaLiga: ${S.M.ESCUDO_H} h a salvo (te quedan ${S.M.escudosMios.quedan}).` : '';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
-      : `A LaLiga se lo venderías por unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}.`;
+      : `LaLiga te ofrecería entre <b>${eur(ol.una ? ol.una.min : ol.v)}</b> y <b>${eur(ol.una ? ol.una.max : ol.v)}</b>, a suerte, con una oferta nueva en cada cambio de mercado.`;
     if (gratis || liga) h += `<div class="aviso-ficha ${noBl ? 'oro' : 'verde'} peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join('<br>')}</div></div>`;
     // (24 nov) el cambio: véndelo y ficha a uno de estos (los 3 mejores de su puesto que te llegan)
     const cbF = S.M.cambioDe && ((S.M.decision ? S.M.decision(pid) : null) || { regla: 'cambio' }).regla === 'cambio' ? S.M.cambioDe(pid) : null;
@@ -371,14 +371,14 @@ export function fichaJugador(S, pid) {
         const ofrece = m.ofertaMin && !m.noVende && !vb;
         const oL = m.ofertaLiga;
         const liga = !oL ? '' : oL.sinDatos || vb ? 'LaLiga también le hace su oferta y se queda con la mejor: con ofrecerle su valor puede no bastar.'
-          : `LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(oL.v)}</b> (de mediana un ${pct(oL.med * 100)} sobre el valor, en ${oL.n} ventas). Se queda con la mejor: por menos lo normal es que no te lo venda.`;
+          : `LaLiga también le hace ofertas, que solo ve él: cada una va de −10 % a +10 % de su valor, y las que se aceptan en tu liga rondan <b>${eur(oL.v)}</b> (${pct(oL.med * 100)}, en ${oL.n} ventas). Se queda con la mejor: por menos lo normal es que no te lo venda.`;
         h += aviso(S, { k: 'vende', pid, cls: 'oro', ico: 'usuario', t: `Lo vende ${esc(m.vendedor || 'otro manager')}`,
           l: m.noVende ? 'Lo normal es que no te lo venda' : ofrece ? `Vale ${eur(j.valor)} · ofrécele ${eur(m.puja || m.ofertaMin)}` : `Se le oferta desde su valor, ${eur(j.valor)}`,
           d: parrafos(`Sigue siendo suyo: solo es tuyo si acepta tu oferta. No es un jugador libre de la liga. El precio que él le haya puesto en el mercado da igual: puedes ofrecerle desde su valor.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}`,
             liga,
             m.noVende ? `<b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : '',
             ofrece && m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? `Esa oferta es la más probable: con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más.` : `Con ${eur(m.ofertaAlta)} es muy probable que te lo venda.`) : '',
-            m.miPuja ? `Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que suele dar LaLiga: súbela o lo normal es que no la acepte' : ''}.` : '') });
+            m.miPuja ? `Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que puede sacarle a LaLiga: súbela o lo normal es que no la acepte' : ''}.` : '') });
         if (vb && m.ofertaMin && !m.noVende) h += candado('ventasRivales');
       } else {
         // (37) «Libre en el mercado»: a la vista, desde cuánto y lo que haría la app; dentro, la subasta y lo que se paga en tu liga
@@ -696,13 +696,13 @@ export function fichaRival(S, tid) {
     const vs = ventasDe(M, tid);
     if (vs.length && bloqueada('ventasRivales')) cerradas.push('ventasRivales');
     else if (vs.length) {
-      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que suele dar LaLiga por uno así (una estimación con lo vendido en tu liga: lo de hoy solo lo ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
+      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que se acaba sacando de LaLiga por uno así en tu liga (cada oferta suya va de −10 % a +10 %; la de hoy solo la ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
       h += vs.map((m) => {
         const ol = m.ofertaLiga, conLiga = ol && !ol.sinDatos && ol.v;
         return filaJugador(m, {
           sub: `${esc(m.j.equipo)} · vale ${eur(m.j.valor)}${m.ofertas ? ` · ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}` : ''}`,
           pills: [m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá</span>` : '', m.miPuja ? `<span class="pill abierta">Tu oferta ${eur(m.miPuja)}</span>` : '', estadoPill(m.j)],
-          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'suele dar LaLiga' : 'sin datos'}</div>${m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
+          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'se saca de LaLiga' : 'sin datos'}</div>${m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
         });
       }).join('');
     } else h += nada('No tiene a nadie en venta.');

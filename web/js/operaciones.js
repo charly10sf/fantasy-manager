@@ -200,7 +200,7 @@ export function textoOp(o, M = null) {
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
       const laliga = ol && !ol.sinDatos
-        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): por lo vendido a LaLiga en esta liga (${ol.n} ventas) suele rondar ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}, y él se queda con la mejor: por debajo de lo que suele darle LaLiga lo normal es que NO TE LO VENDA`
+        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): cada oferta de LaLiga va de −10 % a +10 % de su valor y, esperando a una buena, en esta liga (${ol.n} ventas) se le acaba sacando unos ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}; él se queda con la mejor: por debajo de eso lo normal es que NO TE LO VENDA, salvo que él mismo te diga un precio`
         : '; LaLiga TAMBIÉN le hace su oferta por él (aún no sé cuánto suele dar en esta liga) y él se queda con la mejor, así que ofrecerle solo su valor puede no bastar';
       const min = o.ofertaMin ? `; OFERTA MÍNIMA CON OPCIONES ${eur(o.ofertaMin)}${o.ofertaAlta && o.ofertaAlta > o.ofertaMin ? `, con muchas opciones (sin garantía: puede tener otras ofertas) ${eur(o.ofertaAlta)}` : ''}; la app ofrecería ${eur(o.puja || o.ofertaMin)}` : '';
       const sc = M && M.sobrecoste && j && o.puja ? M.sobrecoste(j, o.puja) : null;

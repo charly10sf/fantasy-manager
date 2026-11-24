@@ -1223,7 +1223,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
     for (const v of M.misVentas) {
-      const lg = v.liga ? ` [OFERTA DE LALIGA ${v.liga.posicion === 'baja' ? 'DE LAS MÁS BAJAS' : v.liga.posicion === 'alta' ? 'DE LAS ALTAS' : 'NORMAL'}: en esta liga suele dar entre ${pct(v.liga.p25 * 100)} y ${pct(v.liga.p75 * 100)}; mañana hará otra y lo normal sería ≈ ${eur(v.liga.esperado)} (${eur(v.liga.gana, { signo: true })} frente a la de hoy)${v.liga.prisa ? `; HAY PRISA: ${v.liga.prisa === 'negativo' ? 'si no vendes antes de la jornada empiezas en negativo' : 'está de baja'}` : '; no hay prisa'}]` : '';
+      // (24 nov, Fran) lo que da LaLiga, bien dicho: cada oferta, de −10 % a +10 %; lo que se acepta en la liga es otra cosa
+      const lg = v.liga ? ` [LA OFERTA DE LALIGA de hoy es ${v.liga.posicion === 'baja' ? 'FLOJA' : v.liga.posicion === 'alta' ? 'DE LAS BUENAS' : 'NORMAL'} (las que se aceptan aquí: de ${pct(v.liga.p25 * 100)} a ${pct(v.liga.p75 * 100)}); hace otra en cada cambio de mercado, de −10 % a +10 % de su valor, A SUERTE (${Math.round((M.pMejorOferta ? M.pMejorOferta(v.mejor ? v.mejor.sobre : 0) : 0.5) * 10)} de cada 10 mejorarían esta)${v.liga.prisa ? `; HAY PRISA: ${v.liga.prisa === 'negativo' ? 'si no vendes antes de la jornada empiezas en negativo' : 'está de baja'}` : '; no hay prisa'}]` : '';
       L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}${lg}${v.ligaEst ? `; la de LaLiga rondará ${eur(v.ligaEst.v)}` : ''}${v.mejor ? ` → la app aconseja ${v.consejo.toUpperCase()}${v.decision && v.decision.matiz === 'esta-oferta-no' ? ' OTRA OFERTA (sigue a la venta, pero esta no)' : ''}: ${v.porque}` : v.decision && v.decision.accion === 'vender' ? ' → la app: sigue a la venta, a esperar la oferta' : ''}`);
     }
   }
@@ -1256,11 +1257,13 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     if (pf.length) L.push(`\nCÓMO JUEGA CADA RIVAL (todo lo que ha hecho en la liga${M.histMov && M.histMov.completa ? '' : ', con lo que se ha podido leer'}):`, ...pf);
   }
   if (M.clausulazos && M.clausulazos.n >= 3) L.push(`\nLOS CLAUSULAZOS DE ESTA LIGA (${M.clausulazos.n}): se han pagado de mediana un ${pct(M.clausulazos.med * 100)} sobre el valor del jugador; el 90 % no pasa de ${pct(M.clausulazos.p90 * 100)}. Una cláusula tuya muy por encima de eso no corre peligro.`);
-  if (M.ofertaLiga && !M.ofertaLiga.poco) L.push(`\nLO QUE OFRECE LALIGA por lo que se pone a la venta en esta liga (${M.ofertaLiga.n} ventas): de mediana ${pct(M.ofertaLiga.med * 100)} sobre el valor (la mitad entre ${pct(M.ofertaLiga.p25 * 100)} y ${pct(M.ofertaLiga.p75 * 100)}). Las ofertas de otros managers por los jugadores de un rival no se ven (solo cuántas hay).`);
+  // (24 nov, Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10») las ventas que se ven son las que
+  // alguien aceptó: su mediana no es lo que LaLiga ofrece cada vez
+  L.push(`\nLO QUE DA LALIGA por lo que se pone a la venta: CADA oferta suya es una lotería entre −10 % y +10 % de lo que vale el jugador ese día (la mitad de las veces, por debajo de su valor), y hace una nueva en cada cambio de mercado. NUNCA digas «LaLiga suele dar un +X %» ni des una cifra fija de lo que va a ofrecer: di el intervalo.${M.ofertaLiga && !M.ofertaLiga.poco ? ` En esta liga, las ofertas que se han ACEPTADO (${M.ofertaLiga.n} ventas) rondan ${pct(M.ofertaLiga.med * 100)} sobre el valor (la mitad entre ${pct(M.ofertaLiga.p25 * 100)} y ${pct(M.ofertaLiga.p75 * 100)}): eso es lo que se acaba sacando si se espera varios cambios de mercado a una buena, no lo que da cada vez; y mientras se espera, el valor del jugador sigue su tendencia.` : ''} Las ofertas de otros managers por los jugadores de un rival no se ven (solo cuántas hay).`);
   // que te lo clausulen no es una venta: con la cláusula a su valor te lo quitan barato (y reponerlo cuesta más)
   {
     const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga.med : null, pLiga = M.pujasLiga && !M.pujasLiga.poco ? M.pujasLiga.med : null;
-    L.push(`\nQUE TE LO CLAUSULEN: es perderlo por su cláusula. Solo te sale bien si la cláusula pasa claramente de lo que sacarías vendiéndolo${vLiga != null ? ` (LaLiga da de mediana ${pct(vLiga * 100)} sobre el valor en esta liga)` : ''} y no te quita puntos ni lo que iba a subir; para reponerlo pagas más de lo que vale${pLiga != null ? ` (aquí se puja de mediana ${pct(pLiga * 100)})` : ''}. Una cláusula a su valor, o casi, es la presa más fácil: es justo lo que buscan los que clausulan.`);
+    L.push(`\nQUE TE LO CLAUSULEN: es perderlo por su cláusula. Solo te sale bien si la cláusula pasa claramente de lo que sacarías vendiéndolo${vLiga != null ? ` (esperando a una buena oferta, a LaLiga se le saca de mediana ${pct(vLiga * 100)} sobre el valor en esta liga)` : ''} y no te quita puntos ni lo que iba a subir; para reponerlo pagas más de lo que vale${pLiga != null ? ` (aquí se puja de mediana ${pct(pLiga * 100)})` : ''}. Una cláusula a su valor, o casi, es la presa más fácil: es justo lo que buscan los que clausulan.`);
   }
   const PL = M.pujasLiga;
   const tramoTxt = (x) => (x.desde === 0 ? `menos de ${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? `más de ${eur(x.desde, { dec: 0 })}` : `de ${eur(x.desde, { dec: 0 })} a ${eur(x.hasta, { dec: 0 })}`);
@@ -2181,7 +2184,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
             const min = opC.ofertaMin || opC.precio, ol = opC.ofertaLiga;
             const pedida = importe || opC.puja || min;
             importe = Math.max(pedida, min);
-            const liga = ol && !ol.sinDatos && !bloqueada('ventasRivales') ? `LaLiga le suele dar unos ${eur(ol.v)} por uno así (lo de hoy solo lo ve él)` : 'LaLiga también le hace su oferta';
+            const liga = ol && !ol.sinDatos && !bloqueada('ventasRivales') ? `esperando a una buena oferta, LaLiga le acaba dando unos ${eur(ol.v)} por uno así (cada oferta va de −10 % a +10 % y la de hoy solo la ve él)` : 'LaLiga también le hace su oferta';
             aviso = pedida < min
               ? `Subida a ${eur(min)}: ${liga} y por menos no te lo vende.`
               : `${liga}: si tu oferta no la supera, se queda con la de LaLiga.`;
@@ -3260,8 +3263,8 @@ export function ventasMiasTxt(D, M, js, c = null, { laligaYa = false } = {}) {
     // (24 nov, Senna) con la oferta de LaLiga ya hecha, la línea lo dice (antes: «su oferta llega en el siguiente cambio…»)
     const ofLiga = venta && (venta.ofertas || []).find((o) => o.deLiga);
     const sig = d && d.cifras && d.cifras.esperado ? d.cifras.esperado : y.liga.v;
-    const liga = ofLiga ? `LALIGA: YA LE HA HECHO SU OFERTA, ${eur(ofLiga.importe)} (${pct(ofLiga.sobre * 100)} sobre su valor): se cobra al aceptarla, hoy. Si no la acepta, le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(sig)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte)`
-      : laligaYa && !mejor ? `LALIGA: ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE: lo tiene en venta (los datos van por detrás) y esa oferta está hecha y se cobra al aceptarla, hoy. Compárala con su valor (${eur(y.v)}) y su tendencia. Si no la acepta, LaLiga le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, de unos ${eur(y.liga.v)} (entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte). NO le digas que la oferta llega mañana, que aún no es dinero ni que lo ponga a la venta` : `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; rondará ${eur(y.liga.v)}, entre ${eur(y.liga.min)} y ${eur(y.liga.max)} según la suerte${y.liga.sinDatos ? ' (±10 %: aún no hay ventas suficientes en esta liga)' : ''}; si sale de las bajas, se rechaza y al día siguiente hace otra`;
+    const liga = ofLiga ? `LALIGA: YA LE HA HECHO SU OFERTA, ${eur(ofLiga.importe)} (${pct(ofLiga.sobre * 100)} sobre su valor): se cobra al aceptarla, hoy. Si no la acepta, le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, entre ${eur(y.liga.una.min)} y ${eur(y.liga.una.max)} (de −10 % a +10 % de su valor, a suerte; las que se aceptan en su liga rondan ${pct(y.liga.med * 100)})`
+      : laligaYa && !mejor ? `LALIGA: ÉL DICE QUE YA LE OFRECE LA CIFRA DE SU MENSAJE: lo tiene en venta (los datos van por detrás) y esa oferta está hecha y se cobra al aceptarla, hoy. Compárala con su valor (${eur(y.v)}) y su tendencia. Si no la acepta, LaLiga le hará otra en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, entre ${eur(y.liga.una.min)} y ${eur(y.liga.una.max)} (de −10 % a +10 % de su valor, a suerte). NO le digas que la oferta llega mañana, que aún no es dinero ni que lo ponga a la venta` : `LALIGA: su oferta llega en el siguiente cambio de mercado${y.liga.cuando ? ` (${cuandoF(y.liga.cuando)})` : ''}, no al momento; puede ser de entre ${eur(y.liga.una.min)} y ${eur(y.liga.una.max)} (de −10 % a +10 % de su valor, a suerte; no des una cifra fija); si sale floja, se rechaza y en el siguiente cambio de mercado hace otra${y.liga.sinDatos ? '' : `; esperando a una buena, en su liga se acaba sacando unos ${eur(y.liga.v)}`}`;
     const cl = !y.clausula ? 'CLÁUSULA: no la sé' : `CLÁUSULA ${eur(y.clausula)} (${y.sobre != null && y.sobre <= 0.03 ? 'A SU VALOR' : y.sobre != null ? `${pct(y.sobre * 100, 0)} sobre su valor` : '?'}), ${y.abierta ? 'ABIERTA' : y.veda ? `cerrada hasta que empiece la jornada (${cuandoF(y.abre)})` : `se abre ${cuandoF(y.abre)}`}; ${paganTxt(x.pagan) || 'no se sabe a quién le llega'}. Es lo que cobras si un rival te lo quita, no lo que da LaLiga`;
     const riv = y.rival.corto
       ? `A UN RIVAL (cobras al momento): no le saques más que lo de LaLiga, ≈ ${eur(y.rival.piso)}`
@@ -3376,10 +3379,22 @@ export function compraTxt(D, M, C) {
   if (!j) return '';
   const tid = M.dueno[j.id], riv = (M.rivales || []).find((r) => r.e && r.e.teamId === tid), dueno = riv ? (riv.e.manager || riv.e.nombre) : 'su dueño';
   const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
-  const ine = M.inercia(j.id), dia = ine ? num(ine.ult) : num((M.tend(j.id) || {}).d1);
-  // la oferta de LaLiga llega en el siguiente cambio de mercado, con lo que valga entonces
-  const OL = M.ofertaLigaDe({ ...j, valor: Math.max(1, j.valor + dia) }) || { v: j.valor, min: null, max: null, sinDatos: true };
-  const gana = OL.v - C.precio, gmin = OL.min != null ? OL.min - C.precio : null, gmax = OL.max != null ? OL.max - C.precio : null;
+  // lo que se espera que cambie mañana y cada día de los siguientes (la inercia; sin ella, lo de hoy)
+  const ine = M.inercia(j.id), hoyD = ine ? num(ine.ult) : num((M.tend(j.id) || {}).d1);
+  const dia = ine && ine.proy ? num(ine.proy(1)) : hoyD;
+  /* (24 nov, Fran: «se cree que la liga da un 7 %; puede dar de −10 a +10») revenderlo a LaLiga: cada oferta va de −10 % a
+     +10 % de lo que valga ese día, a suerte, y la de ayer ya no está cuando llega la de hoy. Aceptando la primera, de media
+     se saca lo que vale; lo que da dinero es poder rechazar las flojas: con 3 cambios de mercado por delante, un +3,9 % de
+     media con el valor quieto (`M.esperarOferta`, que ya cuenta lo que sube o baja cada día mientras se espera) */
+  const RL = M.RANGO_LIGA || 0.1, N_ESPERA = 3;
+  const v1 = Math.max(1, j.valor + dia);
+  const una = { min: Math.round(v1 * (1 - RL) / 1e4) * 1e4, max: Math.round(v1 * (1 + RL) / 1e4) * 1e4 };
+  const sigue = ine && ine.proy ? (num(ine.proy(N_ESPERA)) - dia) / (N_ESPERA - 1) : dia;
+  const E = M.esperarOferta ? M.esperarOferta(N_ESPERA, sigue / v1) : { gana: 0.039, corte: 0.025 };
+  const gana = Math.round((v1 * (1 + E.gana) - C.precio) / 1e4) * 1e4;
+  const ganaUna = Math.round((v1 - C.precio) / 1e4) * 1e4;
+  const corte = Math.round(v1 * (1 + E.corte) / 1e4) * 1e4;
+  const OLa = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
   const saldo = num(D.dinero), llega = saldo >= C.precio, llena = (M.mias || []).length >= 25;
   const once = M.mejora ? num(M.mejora(j)) : 0;
   const sobre = j.valor ? C.precio / j.valor - 1 : 0;
@@ -3388,18 +3403,20 @@ export function compraTxt(D, M, C) {
   const pu = (M.puestos || []).find((y) => y.pos === j.pos), otros = (M.puestos || []).filter((y) => y.pos !== j.pos && y.faltan > 0);
   const puesto = pu && pu.faltan > 0 ? ` En su puesto le ${pu.faltan > 1 ? 'faltan' : 'falta'} ${pu.faltan}: si no lo revende, le viene bien quedárselo.` : pu && pu.sobran > 0 ? ` De ${PU[j.pos]} va sobrado: es solo para revender.` : '';
   const faltaOtros = otros.length && saldo - C.precio < 5e6 ? ` OJO: le faltan ${otros.map((y) => `${y.faltan} ${PU[y.pos]}`).join(' y ')} y con esta compra se queda con ${eur(saldo - C.precio)} hasta que lo revenda.` : '';
-  const cuandoL = M.cierreMercado ? ` (${cuandoF(M.cierreMercado)})` : '';
+  const cuandoL = M.cierreMercado ? cuandoF(M.cierreMercado) : 'en el siguiente';
   const antesJ = !!(M.cierreMercado && M.proxima && M.cierreMercado < M.proxima.ini);
-  const rango = gmin != null ? ` (entre ${eur(gmin, { signo: true })} y ${eur(gmax, { signo: true })} según la suerte)` : '';
-  const baja = dia < 0 ? `, ya contado que hoy baja ${eur(-dia)}` : dia > 0 ? `, ya contado que hoy sube ${eur(dia)}` : '';
-  const ok = gana >= Math.max(150000, C.precio * 0.01);
+  const baja = dia < 0 ? `, ya contado que baja unos ${eur(-dia)} al día` : dia > 0 ? `, ya contado que sube unos ${eur(dia)} al día` : '';
+  const ok = gana >= Math.max(150000, C.precio * 0.015);
+  const espera = `rechazando las flojas (hasta ${N_ESPERA} cambios de mercado), de media ${gana >= 0 ? `gana unos ${eur(gana, { signo: true })}` : `pierde unos ${eur(-gana)}`}`;
+  const primera = `con la primera oferta, de media ${eur(ganaUna, { signo: true })} (puede salir entre ${eur(una.min - C.precio, { signo: true })} y ${eur(una.max - C.precio, { signo: true })})`;
   let ver;
   if (llena) ver = 'NO PUEDE: tiene la plantilla llena (25) y antes tendría que vender a uno';
   else if (!llega) ver = `NO LE LLEGA: a otro mánager se le paga con saldo, sin deuda, y tiene ${eur(saldo)} (le faltan ${eur(C.precio - saldo)}); antes tendría que vender`;
-  else if (ok) ver = `SÍ, PARA REVENDERLO: lo normal es ganar unos ${eur(gana, { signo: true })}${rango}${once >= 0.3 ? `; y si se lo queda, suma ${d1(once)} pts por jornada a su once` : ''}`;
-  else if (once >= 0.3) ver = `PARA REVENDER NO (lo normal sería ${eur(gana, { signo: true })}${rango}); PARA SU ONCE, SÍ: suma ${d1(once)} pts por jornada`;
-  else ver = `NO COMPENSA: revendiéndolo lo normal sería ${eur(gana, { signo: true })}${rango} y no mejora su once`;
-  return `\n\nLA APP, LA COMPRA QUE CUENTA: ${dueno} le deja a ${j.nombre} ${C.como} (${eur(C.precio)}; vale ${eur(j.valor)}${Math.abs(sobre) >= 0.005 ? `, ${pct(sobre * 100)}` : ''}). ES UN HECHO (lo han hablado fuera de la app): NO le digas que el dueño no vende a ese precio, ni le des otra «oferta para que te lo venda» o «oferta mínima», ni que no lo ves. LAS CUENTAS: se paga con saldo (tiene ${eur(saldo)}${llega ? ` y se queda con ${eur(saldo - C.precio)}` : ''}); lo pone a la venta y LaLiga le hace su oferta en el siguiente cambio de mercado${cuandoL}${antesJ ? ', antes de la jornada' : ''}: unos ${eur(OL.v)}${OL.min != null ? ` (entre ${eur(OL.min)} y ${eur(OL.max)})` : ''}${baja}${OL.sinDatos ? '; sin datos de su liga, cerca de su valor' : `; en su liga LaLiga da de mediana un ${pct(OL.med * 100)}`}. Recién comprado, su cláusula queda cerrada 14 días.${puesto}${faltaOtros} LA DECISIÓN DE LA APP: ${ver}. Respóndele con esto y con estas cifras, sin rehacerlas.`;
+  // (el que baja: la cuenta sale por poco y cada día de espera cuesta; se dice)
+  else if (ok) ver = `${dia < 0 && gana < C.precio * 0.03 ? `SÍ, PARA REVENDERLO, PERO CON POCO MARGEN (baja unos ${eur(-dia)} al día: cuanto más espere, menos vale)` : 'SÍ, PARA REVENDERLO SIN PRISA'}: ${espera}; ${primera}. Que acepte la primera solo si pasa de ${eur(corte)}${once >= 0.3 ? `. Y si se lo queda, suma ${d1(once)} pts por jornada a su once` : ''}`;
+  else if (once >= 0.3) ver = `PARA REVENDER NO (${espera}: ${gana < 0 ? 'pierde' : 'no paga el riesgo'}); PARA SU ONCE, SÍ: suma ${d1(once)} pts por jornada`;
+  else ver = `NO COMPENSA: ${espera}${gana < 0 ? '' : ', que no paga el riesgo'}, y no mejora su once`;
+  return `\n\nLA APP, LA COMPRA QUE CUENTA: ${dueno} le deja a ${j.nombre} ${C.como} (${eur(C.precio)}; vale ${eur(j.valor)}${Math.abs(sobre) >= 0.005 ? `, ${pct(sobre * 100)}` : ''}). ES UN HECHO (lo han hablado fuera de la app): NO le digas que el dueño no vende a ese precio, ni le des otra «oferta para que te lo venda» o «oferta mínima», ni que no lo ves. LAS CUENTAS: se paga con saldo (tiene ${eur(saldo)}${llega ? ` y se queda con ${eur(saldo - C.precio)}` : ''}); lo pone a la venta y LaLiga le hace una oferta en cada cambio de mercado (la primera, ${cuandoL}${antesJ ? ', antes de la jornada' : ''}): cada una va de −10 % a +10 % de lo que valga ese día, A SUERTE, y la de ayer se pierde cuando llega la nueva (la primera, entre ${eur(una.min)} y ${eur(una.max)}). ${primera[0].toUpperCase() + primera.slice(1)}; ${espera}${baja}${OLa ? `. En su liga las ofertas que se aceptan rondan ${pct(OLa.med * 100)}: son las buenas, no lo que da cada vez` : ''}. NO digas que LaLiga «suele dar» un tanto por ciento fijo ni que «le dará el +10 %»: el +10 % es lo más alto que puede salir. Recién comprado, su cláusula queda cerrada 14 días.${puesto}${faltaOtros} LA DECISIÓN DE LA APP: ${ver}. Respóndele con esto y con estas cifras, sin rehacerlas.`;
 }
 
 /** el trato de la conversación: el de la pregunta, si no el de sus últimos mensajes y si no el último trato apuntado */
@@ -3662,7 +3679,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     if (C && /\b(no (te lo )?vende a (su|ese) (valor|precio)|oferta minima|oferta que tienes que hacer|para que te lo venda|no compras)\b/.test(norm(t))) {
       const dec = (compraTxt(D, M, C).match(/LA DECISIÓN DE LA APP: ([^.]*)\./) || [])[1];
       if (dec) {
-        const tu = dec.replace('SÍ, PARA REVENDERLO', 'sí, para revenderlo').replace('NO PUEDE: tiene', 'no puedes: tienes').replace('NO LE LLEGA', 'no te llega').replace('PARA REVENDER NO', 'para revender no').replace('PARA SU ONCE, SÍ', 'para tu once, sí').replace('NO COMPENSA', 'no compensa')
+        const tu = dec.replace('SÍ, PARA REVENDERLO SIN PRISA', 'sí, para revenderlo sin prisa').replace('SÍ, PARA REVENDERLO, PERO CON POCO MARGEN', 'sí, para revenderlo, pero con poco margen').replace('cuanto más espere', 'cuanto más esperes').replace('de media gana unos', 'de media ganas unos').replace('de media pierde unos', 'de media pierdes unos').replace('Que acepte la primera', 'Acepta la primera').replace('NO PUEDE: tiene', 'no puedes: tienes').replace('NO LE LLEGA', 'no te llega').replace('PARA REVENDER NO', 'para revender no').replace('PARA SU ONCE, SÍ', 'para tu once, sí').replace('NO COMPENSA', 'no compensa')
           .replace(/\bsu once\b/g, 'tu once').replace('y tiene ', 'y tienes ').replace('le faltan', 'te faltan').replace(/tendría\b/g, 'tendrías').replace('se lo queda', 'te lo quedas');
         nota(`Si te deja a ${N(M.J(C.pid))} por ${eur(C.precio)}, ese es el precio. Con él, ${tu}.`);
       }
