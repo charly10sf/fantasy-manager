@@ -3091,7 +3091,6 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/dimitrievski-copete-sufrido-tiburon-le-136702667.html": 1795282103000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/21/tiburon-copete-vuelve-morder-pasado-mal.html": 1795283208000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253736/inigo-perez-nunca-ganado-fc-barcelona.html": 1795283230000,
-   "SPORT|136704189": 1795281115000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/emotivas-palabras-jose-copete-despues-meses-calvario-lesion-136703986.html": 1795285047000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/ligue-1/20261121/1004253792/remontada-peaje-caro-psg-luis-enrique-vuelta-dembele.html": 1795285280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261121/1004253821/aguirre-quiero-copete-sufrido-rodilla.html": 1795284623000,
@@ -9507,13 +9506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6023,
+   "ok": 6024,
    "fallos": 0,
-   "ejecuciones": 4880,
+   "ejecuciones": 4881,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T17:11:18.851Z"
+   "ultima": "2026-11-24T17:16:29.301Z"
   }
  },
  "ptsDirecto": {},
@@ -9530,15 +9529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:12:45.649Z"
+   "ultimaBien": "2026-11-24T17:16:39.660Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:12:45.649Z"
+   "ultimaBien": "2026-11-24T17:16:39.660Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:12:45.649Z"
+   "ultimaBien": "2026-11-24T17:16:39.660Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9546,11 +9545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:12:45.649Z"
+   "ultimaBien": "2026-11-24T17:16:39.660Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T17:12:45.649Z"
+   "ultimaBien": "2026-11-24T17:16:39.660Z"
   }
  },
  "avisos": [
