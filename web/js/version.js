@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.3b';
+export const VERSION = '0.8.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -29,8 +29,20 @@ export const NOVEDADES = [
     // este ordenador», el de entrar. Escaneó el de Google Play con Ajustes → Abrir en el ordenador → QR y la app solo le decía
     // «escanea el que sale allí». Ahora `qrLeido` (app.js) reconoce el de descargar y dice qué hay que pulsar; la fila de
     // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web. La hora, al publicar
-    v: '0.8.3b', f: '2026-11-24', t: 'Entrar en el ordenador con el QR',
+    // --- (25 nov, 0.8.4) la 0.8.3b no se llegó a publicar: sale con esta ---
+    // FASE 1, la mudanza (Carlos, 25 nov 00:06: «vamos con la B»; claude/prompt-mudanza-quien-usa.md y
+    // claude/capacidad-cloudflare-24nov.md del proyecto). «Quién usa la app» (u:, p:, r: del KV VINCULOS, que llenaba sus topes
+    // gratis) pasa al Durable Object «quien|todos» con SQLite: worker/src/quien.js. Las mismas rutas y respuestas (/hola,
+    // /uso, /caras, /hola/todos), una llamada al objeto por petición, los mismos plazos y las mismas reglas de escritura de
+    // la ficha y el registro; el tiempo de uso, exacto (cada llamada). El cron copia lo del KV (`mudanzaQuien`) y, dos días
+    // después, borra p: y r: de 15 en 15 a la hora. Medido con 1.000 cuentas: worker/prueba/mide-quien.mjs. De paso: la
+    // espera del plan la hace el objeto (`esperar` en /plan/res: 1 o 2 peticiones por plan en vez de 12-19) y /sinc sube en
+    // una llamada (`base` y `choque`), junta los cambios seguidos (4 s) y no llama mientras la IA contesta (web/js/sinc.js).
+    // Y (Carlos, 25 nov 00:21: «web incluye a los de iOS… me gustaría que se diferenciasen») la web manda en /hola en qué
+    // aparato va (`disp`, canalPaso de semaforo.js) y «Desde dónde» separa iPhone, web en el ordenador y web en Android.
+    v: '0.8.4', f: '2026-11-25', t: 'Entrar en el ordenador con el QR',
     cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app: desde dónde, con el iPhone aparte', x: 'En «Desde dónde», la web ya no va toda junta: salen aparte el iPhone, el ordenador y la web en Android. Se irá llenando a medida que cada uno abra esta versión.' },
       { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app: abrirla también en este ordenador».' },
     ],
   },

@@ -2,6 +2,7 @@
 // Uso: node worker/prueba/datos.mjs (sale «MAL» y código 1 si algo falla)
 // prueba del Worker: /borrar, /vincular y /qr con lo cerrado, y lo de antes
 import * as sobre from '../../web/js/sobre.js';
+import { objetos as objetosSql, almacen as almacenSql } from './objeto.mjs';
 // (24 nov) EL RELOJ DE LA PRUEBA EMPIEZA SIEMPRE A LAS 13:00 DE MADRID DE HOY. La prueba adelanta el reloj según avanza
 // (`minuto()`, saltos de 7 horas, de un día…) y varias cosas van por día de Madrid (cupos, gasto, frenos): según la hora a
 // la que se pasara, el reloj de la prueba cruzaba la medianoche en mitad de un apartado y fallaba. Pasaba cada noche desde
@@ -12,6 +13,7 @@ const HM = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '
 let desfase = (13 * 3600 - (HM[0] * 3600 + HM[1] * 60 + HM[2])) * 1000;
 Date.now = () => ahoraReal() + desfase;
 const W = (await import('../src/index.js')).default;
+const WM = await import('../src/index.js');
 const kv = new Map();
 // (escrituras: cuántas van; lleno: el KV no deja escribir, como con el cupo gratis del día gastado)
 const cuenta = { escrituras: 0, lleno: false };
@@ -47,15 +49,40 @@ const pedir = async (m, ruta, cuerpo, tk = 'x'.repeat(30)) => {
   return { s: r.status, j, t };
 };
 const ok = (c, m) => { console.log(`${c ? 'BIEN' : 'MAL '} ${m}`); if (!c) process.exitCode = 1; };
-// datos de la cuenta 4242 y de otra
+// (0.8.4) quién usa la app (la ficha, el registro y el tiempo de uso) va en el objeto «quien|todos», con SQLite: uno de
+// mentira con SQLite de verdad (objeto.mjs). envQ es el env con él; QRq.env, lo que ve el objeto (el KV, para la mudanza)
+const QRq = objetosSql(WM.Emparejar); QRq.env = { VINCULOS: KV };
+const envQ = { ...env, QR: QRq };
+const pedirQ = async (m, ruta, cuerpo, tk = 'x'.repeat(30), e = envQ) => {
+  const r = await W.fetch(new Request(`https://w.dev${ruta}`, { method: m, headers: { Origin: ORI, 'content-type': 'application/json', Authorization: `Bearer ${tk}` }, body: cuerpo ? JSON.stringify(cuerpo) : undefined }), e, { waitUntil() {} });
+  let j = null; const t = await r.text(); try { j = JSON.parse(t); } catch (x) {}
+  return { s: r.status, j, t };
+};
+const quien = () => { QRq.get('quien|todos'); return QRq.hay.get('quien|todos'); };
+const sqlQ = (q, ...a) => quien().db.prepare(q).all(...a);
+const fichaDe = (uid) => { const x = sqlQ('SELECT d FROM ficha WHERE uid = ?', String(uid))[0]; return x ? JSON.parse(x.d) : null; };
+const regDe = (uid) => { const x = sqlQ('SELECT d FROM reg WHERE uid = ?', String(uid))[0]; return x ? JSON.parse(x.d) : null; };
+const usoDe = (uid, dia) => { const x = sqlQ('SELECT seg FROM uso WHERE uid = ? AND dia = ?', String(uid), dia)[0]; return x ? x.seg : 0; };
+const vaciarQ = () => { for (const t of ['ficha', 'reg', 'uso']) sqlQ(`DELETE FROM ${t}`); };
+const DIAM = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+const hoyQ = () => DIAM.format(new Date(Date.now()));
+// la copia desde el KV, ya hecha (la mudanza se prueba aparte, más abajo, con otro objeto)
+await QRq.get('quien|todos').fetch('https://x/quien', { method: 'POST', body: JSON.stringify({ op: 'copiar', fase: 'u', filas: [], siguiente: 'hecho' }) });
+// datos de la cuenta 4242 y de otra: lo que quede en el KV de antes de la 0.8.4 y lo del objeto
 await KV.put('p:4242', '1', { metadata: { uid: '4242' } }); await KV.put('r:4242', '1', { metadata: { uid: '4242' } });
 await KV.put('u:4242:2026-11-04', '30'); await KV.put('f:4242:abc123', '{}', { metadata: { c: 2 } }); await KV.put('fc:abc123:0', 'x'); await KV.put('fc:abc123:1', 'y');
 await KV.put('p:999', '1', { metadata: { uid: '999' } }); await KV.put('f:999:zzz999', '{}', { metadata: { c: 1 } }); await KV.put('fc:zzz999:0', 'z');
-let r = await pedir('POST', '/borrar', {});
+await pedirQ('POST', '/hola', { equipo: 'X', liga: '1', v: '0.8.4', canal: 'play', app: 1 });
+await pedirQ('POST', '/uso', { seg: 60 });
+await pedirQ('POST', '/hola', { equipo: 'Y', liga: '1', v: '0.8.4', canal: 'web', app: 0 }, 'y'.repeat(30));
+await pedirQ('POST', '/uso', { seg: 60 }, 'y'.repeat(30));
+ok(fichaDe(4242) && regDe(4242) && usoDe(4242, hoyQ()) === 60 && fichaDe(2222), 'la 4242 y la 2222 tienen ficha, registro y tiempo en el objeto');
+let r = await pedirQ('POST', '/borrar', {});
 ok(r.s === 200 && r.j.ok && r.j.avisos === 1, `/borrar contesta ${r.s} ${r.t}`);
-ok(![...kv.keys()].some((k) => k.includes('4242') || k.startsWith('fc:abc123')), 'no queda nada de la 4242');
-ok(kv.has('p:999') && kv.has('f:999:zzz999') && kv.has('fc:zzz999:0'), 'lo de la 999 sigue');
-r = await pedir('POST', '/borrar', {}, 'corto');
+ok(![...kv.keys()].some((k) => k.includes('4242') || k.startsWith('fc:abc123')), 'no queda nada de la 4242 en el KV');
+ok(!fichaDe(4242) && !regDe(4242) && !usoDe(4242, hoyQ()), 'ni en el objeto');
+ok(kv.has('p:999') && kv.has('f:999:zzz999') && kv.has('fc:zzz999:0') && fichaDe(2222) && regDe(2222) && usoDe(2222, hoyQ()) === 60, 'lo de la 999 y la 2222 sigue');
+r = await pedirQ('POST', '/borrar', {}, 'corto');
 ok(r.s === 401, 'sin sesión, 401');
 // código cerrado: al servidor solo le llega el id
 const datos = { sesion: { token: 't'.repeat(40), renovar: 'r'.repeat(40) }, cfg: { ligaId: '1' }, ia: { clave: 'AQ.secreta' }, dichos: {} };
@@ -94,64 +121,176 @@ r = await pedir('POST', '/qr/dejar', { id: 'B'.repeat(22), cif: 'v1.malo' });
 ok(r.s === 400, 'cifrado roto, 400');
 r = await pedir('POST', '/qr/dejar', { id: 'C'.repeat(22), ...datos });
 ok(r.s === 200, 'QR de antes, sin cerrar, sigue valiendo');
-// eventos con /hola
-kv.clear();
-const hola = (ev) => pedir('POST', '/hola', { equipo: 'X', liga: '1', v: '0.7a', canal: 'play', app: 1, ev });
+// eventos con /hola (en el objeto desde la 0.8.4)
+kv.clear(); vaciarQ();
+const hola = (ev) => pedirQ('POST', '/hola', { equipo: 'X', liga: '1', v: '0.7a', canal: 'play', app: 1, ev });
+// (lo que hacía restar horas a la metadata del KV: aquí, a la fila del registro)
+const atrasarReg = (uid, ms) => sqlQ("UPDATE reg SET ultima = ultima - ?, d = json_set(d, '$.ultima', CAST(json_extract(d, '$.ultima') - ? AS INTEGER)) WHERE uid = ?", ms, ms, String(uid));
 r = await hola({ '2026-11-03': { p: 2, l: 1, e: 1 }, '2026-11-04': { p: 1, c: 1, zz: 9, q: 'x' } });
 ok(r.s === 200 && r.j.ev === true, `/hola con eventos los suma (${r.t})`);
-let m = kv.get('r:4242').m;
+let m = regDe(4242);
 ok(m.tot.p === 3 && m.tot.c === 1 && !m.tot.zz && Object.keys(m.ev).length === 1, `ficha: ${JSON.stringify(m)}`);
 r = await hola({ '2026-11-04': { p: 1 } });
 ok(r.j.ev === false, 'el mismo día, menos de 12 h: no escribe y la app lo guarda para luego');
-kv.get('r:4242').m.ultima -= 13 * 3600e3;
+atrasarReg(4242, 13 * 3600e3);
 r = await hola({ '2026-11-04': { p: 1 } });
-ok(r.j.ev === true && kv.get('r:4242').m.tot.p === 4, 'a las 12 h sí');
-// muchas semanas: no pasa de 1 KB
+ok(r.j.ev === true && regDe(4242).tot.p === 4, 'a las 12 h sí');
+// muchas semanas: no pasa de 1 KB (como en los metadatos del KV: se guarda lo mismo)
 const muchas = {}; for (let i = 0; i < 15; i++) { const d = new Date(Date.UTC(2026, 8, 1 + i * 7)).toISOString().slice(0, 10); muchas[d] = { p: 5, q: 9, b: 3, t: 2, l: 1, e: 1, v: 1, c: 1 }; }
-kv.get('r:4242').m.ultima -= 13 * 3600e3;
+atrasarReg(4242, 13 * 3600e3);
 r = await hola(muchas);
-m = kv.get('r:4242').m;
-ok(JSON.stringify(m).length <= 1000 && Object.keys(m.ev).length <= 6, `metadatos ${JSON.stringify(m).length} bytes, ${Object.keys(m.ev).length} semanas`);
-r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, ADMINS: '4242' }, {});
+m = regDe(4242);
+ok(JSON.stringify(m).length <= 1000 && Object.keys(m.ev).length <= 6, `registro ${JSON.stringify(m).length} bytes, ${Object.keys(m.ev).length} semanas`);
+r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, ADMINS: '4242' }, {});
 const todos = await r.json();
 ok(todos.registro && todos.registro[0].tot, 'en /hola/todos sale con sus eventos');
+ok(todos.lista[0].uid === '4242' && todos.lista[0].equipo === 'X' && todos.lista[0].v === '0.7a' && 'invitar' in todos && 'embudo' in todos && todos.tiempos, `/hola/todos con la ficha, las invitaciones y el embudo (${JSON.stringify(todos).slice(0, 160)})`);
+// el registro con la última vez de la ficha, si es más nueva (la ficha se escribe cada hora, el registro una vez al día)
+atrasarReg(4242, 3600e3);
+r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, ADMINS: '4242' }, {});
+{ const t = await r.json(); ok(t.registro[0].ultima === t.lista[0].ultima && t.registro[0].tot, `el registro, con la última vez de la ficha (${t.registro[0].ultima} ${t.lista[0].ultima})`); }
 // tiempo de uso (0.7t): hasta 10 min de golpe, nunca más de un día, y en /hola/todos los 7 últimos días
 const W2 = await import('../src/index.js');
 const dias = W2.diasAtras('2026-03-30', 7);
 ok(dias.length === 7 && dias[0] === '2026-03-30' && dias[1] === '2026-03-29' && dias[6] === '2026-03-24', `diasAtras con cambio de hora: ${dias.join(',')}`);
-r = await pedir('POST', '/uso', { seg: 300 });
+r = await pedirQ('POST', '/uso', { seg: 300 });
 ok(r.s === 200 && r.j.seg === 300, `/uso suma 300 s (${r.t})`);
-r = await pedir('POST', '/uso', { seg: 5000 });
+r = await pedirQ('POST', '/uso', { seg: 5000 });
 ok(r.j.seg === 300 + W2.MAX_USO, `/uso no suma más de ${W2.MAX_USO} s de golpe (${r.t})`);
 const hoyM = r.j.dia, ayerM = W2.diasAtras(hoyM, 2)[1], antesM = W2.diasAtras(hoyM, 8)[7];
-await KV.put(`u:4242:${ayerM}`, '2400'); await KV.put(`u:4242:${antesM}`, '999');
-r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, ADMINS: '4242' }, {});
+sqlQ('INSERT INTO uso (uid, dia, seg, t) VALUES (?, ?, ?, ?), (?, ?, ?, ?)', '4242', ayerM, 2400, Date.now() - 864e5, '4242', antesM, 999, Date.now() - 7 * 864e5);
+r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, ADMINS: '4242' }, {});
 const t2 = await r.json(), yo = t2.lista.find((x) => String(x.uid) === '4242');
 ok(yo && yo.segHoy === 900 && yo.segDias[hoyM] === 900 && yo.segDias[ayerM] === 2400 && !(antesM in yo.segDias), `/hola/todos con hoy, ayer y sin el de hace 8 días (${JSON.stringify(yo && yo.segDias)})`);
 ok(Array.isArray(t2.dias) && t2.dias[0] === hoyM && t2.dias.length === 7, '/hola/todos devuelve los 7 días');
-// (19 nov, Carlos: «esto se ha jodido») con más de 40 cuentas en la semana, los días de atrás también de las que entraron
-// hace días (antes solo de las 40 últimas: el lunes salía con 20 en vez de 27), y nada de leer días después de su última vez
+r = await pedirQ('GET', '/hola/todos');
+ok(r.s === 403, `/hola/todos de quien no es el dueño: ${r.s}`);
+// (19 nov, Carlos: «esto se ha jodido») con más de 40 cuentas en la semana, los días de atrás de todas; y (0.8.4) sin tocar el KV
 {
   const ahoraT = Date.now();
-  for (let i = 0; i < 45; i++) await KV.put(`p:7${i}`, '1', { metadata: { uid: `7${i}`, ultima: ahoraT - i * 1000, primera: ahoraT - 5 * 86400e3 } });
-  await KV.put('p:6000', '1', { metadata: { uid: '6000', ultima: ahoraT - 3 * 86400e3, primera: ahoraT - 6 * 86400e3 } });
+  for (let i = 0; i < 45; i++) sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', `7${i}`, ahoraT - i * 1000, '', JSON.stringify({ uid: `7${i}`, ultima: ahoraT - i * 1000, primera: ahoraT - 5 * 86400e3 }));
+  sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', '6000', ahoraT - 3 * 86400e3, '', JSON.stringify({ uid: '6000', ultima: ahoraT - 3 * 86400e3, primera: ahoraT - 6 * 86400e3, canal: 'web' }));
   const dHace4 = W2.diasAtras(hoyM, 5)[4], dHace3 = W2.diasAtras(hoyM, 4)[3];
-  await KV.put(`u:6000:${dHace4}`, '120'); await KV.put(`u:6000:${dHace3}`, '60');
-  const lecturas = [], ops = [];
-  const KV2 = { ...KV, get: async (k) => { const ks = Array.isArray(k) ? k : [k]; if (ks.some((x) => String(x).startsWith('u:'))) { ops.push(ks.length); lecturas.push(...ks); } return KV.get(k); } };
-  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, VINCULOS: KV2, ADMINS: '4242' }, {});
+  sqlQ('INSERT INTO uso (uid, dia, seg, t) VALUES (?, ?, ?, ?), (?, ?, ?, ?)', '6000', dHace4, 120, ahoraT - 4 * 864e5, '6000', dHace3, 60, ahoraT - 3 * 864e5);
+  let tocaKV = 0;
+  const KVmirado = { get: async () => { tocaKV++; return null; }, getWithMetadata: async () => { tocaKV++; return { value: null, metadata: null }; }, list: async () => { tocaKV++; return { keys: [], list_complete: true }; }, put: async () => { tocaKV++; }, delete: async () => { tocaKV++; } };
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, VINCULOS: KVmirado, ADMINS: '4242' }, {});
   const t3 = await r.json(), x6 = t3.lista.find((x) => String(x.uid) === '6000');
-  ok(x6 && x6.segDias[dHace4] === 120 && x6.segDias[dHace3] === 60, `con 46 cuentas en la semana, la que entró hace 3 días tiene sus días (${JSON.stringify(x6 && x6.segDias)})`);
-  const de6000 = lecturas.filter((k) => k.startsWith('u:6000:'));
-  ok(de6000.length === 5, `de esa cuenta solo se leen hoy y los días hasta su última vez (${de6000.length}: ${de6000.join(' ')})`);
-  ok(ops.length <= Math.ceil(lecturas.length / 100) && ops.every((n) => n <= 100), `se lee en bloque, de 100 en 100 (${lecturas.length} claves en ${ops.length} lecturas)`);
-  // sin la lectura en bloque (un KV viejo), una a una
-  const KV3 = { ...KV, get: async (k) => { if (Array.isArray(k)) throw new Error('no'); return KV.get(k); } };
-  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, VINCULOS: KV3, ADMINS: '4242' }, {});
-  const t4 = await r.json(), y6 = t4.lista.find((x) => String(x.uid) === '6000');
-  ok(y6 && y6.segDias[dHace4] === 120, `sin la lectura en bloque, también (${JSON.stringify(y6 && y6.segDias)})`);
-  for (let i = 0; i < 45; i++) kv.delete(`p:7${i}`);
-  kv.delete('p:6000');
+  ok(x6 && x6.segDias[dHace4] === 120 && x6.segDias[dHace3] === 60 && x6.segHoy === 0, `con 46 cuentas en la semana, la que entró hace 3 días tiene sus días (${JSON.stringify(x6 && x6.segDias)})`);
+  ok(t3.lista.length === 47 && t3.lista.every((x, i) => !i || t3.lista[i - 1].ultima >= x.ultima), `las 47, de la más reciente a la más vieja (${t3.lista.length})`);
+  const r6 = t3.registro.find((x) => x.uid === '6000');
+  ok(r6 && r6.primera === ahoraT - 6 * 86400e3 && r6.canales === 'web' && r6.dias === 0, `quien no tiene registro sale con lo de su ficha (${JSON.stringify(r6)})`);
+  ok(tocaKV === 0, `/hola/todos no toca el KV (${tocaKV} operaciones)`);
+  // /hola y /uso tampoco
+  await W.fetch(new Request('https://w.dev/hola', { method: 'POST', headers: { Origin: ORI, 'content-type': 'application/json', Authorization: 'Bearer ' + 'x'.repeat(30) }, body: JSON.stringify({ v: '0.8.4', canal: 'web', disp: 'web-iphone' }) }), { ...envQ, VINCULOS: KVmirado }, {});
+  await W.fetch(new Request('https://w.dev/uso', { method: 'POST', headers: { Origin: ORI, 'content-type': 'application/json', Authorization: 'Bearer ' + 'x'.repeat(30) }, body: JSON.stringify({ seg: 30 }) }), { ...envQ, VINCULOS: KVmirado }, {});
+  ok(tocaKV === 0, `/hola y /uso tampoco (${tocaKV} operaciones)`);
+  // (25 nov, Carlos) en la web, en qué aparato: iPhone, Android u ordenador; en la app, nada
+  ok(fichaDe(4242).disp === 'web-iphone', `la web en un iPhone se apunta como tal (${fichaDe(4242).disp})`);
+  r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'play', disp: 'web-iphone' }, 'y'.repeat(30));
+  ok(!fichaDe(2222) || !fichaDe(2222).disp, 'en la app de Android no se apunta el aparato');
+  r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'web', disp: 'tostadora' }, 'y'.repeat(30));
+  ok(!fichaDe(2222).disp, 'un aparato que no existe, tampoco');
+  sqlQ("DELETE FROM ficha WHERE uid LIKE '7%' OR uid = '6000'"); sqlQ("DELETE FROM uso WHERE uid = '6000'");
+}
+// con 1.000 cuentas (y 7 días de uso de cada una): lo que tarda y que el Worker no vuelva a leer lo del objeto
+{
+  const ahoraT = Date.now(), dias7 = W2.diasAtras(hoyM, 7);
+  for (let i = 0; i < 1000; i++) {
+    const uid = String(100000 + i), d = { uid, nombre: `Mánager ${i}`, equipo: `Equipo «${i}»`, liga: '1234567', v: '0.8.3a', canal: i % 10 ? 'play' : 'web', app: 9000, primera: ahoraT - 40 * 864e5, ultima: ahoraT - i * 60e3, n: 50, foto: '' };
+    sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', uid, d.ultima, '', JSON.stringify(d));
+    sqlQ('INSERT INTO reg (uid, ultima, d) VALUES (?, ?, ?)', uid, ahoraT - 864e5, JSON.stringify({ uid, primera: d.primera, ultima: ahoraT - 864e5, dia: dias7[1], canales: d.canal, dias: 20, ev: { [dias7[6]]: { p: 3, q: 2 } }, tot: { p: 30, q: 9 } }));
+    for (const dd of dias7) sqlQ('INSERT INTO uso (uid, dia, seg, t) VALUES (?, ?, ?, ?)', uid, dd, 600 + i, ahoraT);
+  }
+  const ob = quien();
+  const antes = sqlQ('SELECT count(*) AS n FROM ficha')[0].n - 1000;
+  const f0 = { ...ob.filas };
+  const c0 = process.cpuUsage();
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, ADMINS: '4242' }, {});
+  const cpu = (process.cpuUsage(c0).user + process.cpuUsage(c0).system) / 1000;
+  const t5 = await r.json();
+  ok(t5.lista.length === 1000 + antes && t5.lista.find((x) => x.uid === '100005').segDias[dias7[3]] === 605 && t5.registro.length === 1000 + antes, `con 1.000 cuentas: ${t5.lista.length} en la lista y ${t5.registro.length} en el registro`);
+  console.log(`     (/hola/todos con 1.000 cuentas: ${cpu.toFixed(1)} ms de CPU en esta máquina, todo junto; ${ob.filas.leidas - f0.leidas} filas leídas)`);
+  ok(cpu < 80, `con 1.000 cuentas, sin pasarse de CPU (${cpu.toFixed(1)} ms; lo de Cloudflare, en mide-quien.mjs)`);
+  sqlQ("DELETE FROM ficha WHERE uid LIKE '10____'"); sqlQ("DELETE FROM reg WHERE uid LIKE '10____'"); sqlQ("DELETE FROM uso WHERE uid LIKE '10____'");
+}
+
+// ---------- (0.8.4) la mudanza de quién usa la app desde el KV ----------
+// Un KV con lo de antes (fichas p:, registros r:, tiempos u:) y un objeto vacío. Mientras no se ha copiado, quien llega se
+// trae antes del KV (lo nuevo se suma a lo de antes: ni la primera vez ni el historial se pierden); el cron lo copia todo
+// en tres pasadas sin pisar lo que ya está; dos días después borra del KV las fichas y los registros, 15 a la hora.
+{
+  const km = new Map();
+  let lecturasKV = 0;
+  const KVm = {
+    async get(k) { lecturasKV++; if (Array.isArray(k)) return new Map(k.map((x) => [x, km.has(x) ? km.get(x).v : null])); return km.has(k) ? km.get(k).v : null; },
+    async getWithMetadata(k) { lecturasKV++; const v = km.get(k); return v ? { value: v.v, metadata: v.m } : { value: null, metadata: null }; },
+    async put(k, v, o = {}) { km.set(k, { v, m: o.metadata || null }); },
+    async delete(k) { km.delete(k); },
+    async list({ prefix, limit = 1000 }) { const ks = [...km.keys()].filter((k) => k.startsWith(prefix)).sort().slice(0, limit); return { keys: ks.map((name) => ({ name, metadata: km.get(name).m })), list_complete: true }; },
+  };
+  const QRm = objetosSql(WM.Emparejar); QRm.env = { VINCULOS: KVm };
+  const envM = { VINCULOS: KVm, ADMINS: '4242', QR: QRm };
+  const sqlM = (q, ...a) => { QRm.get('quien|todos'); return QRm.hay.get('quien|todos').db.prepare(q).all(...a); };
+  const ahoraT = Date.now(), hoyT = hoyQ(), [, ayerT, , hace3T] = W2.diasAtras(hoyT, 4);
+  const vieja = ahoraT - 100 * 864e5;
+  await KVm.put('p:4242', '1', { metadata: { uid: '4242', nombre: 'Pepe', equipo: 'Viejo', liga: '77', v: '0.8.1', canal: 'play', app: 9000, primera: vieja, ultima: ahoraT - 864e5, n: 40, foto: '' } });
+  await KVm.put('r:4242', '1', { metadata: { uid: '4242', primera: vieja, ultima: ahoraT - 864e5, dia: ayerT, canales: 'play', dias: 30, tot: { p: 50 } } });
+  await KVm.put(`u:4242:${hoyT}`, '120', { metadata: { t: ahoraT - 600e3 } });
+  await KVm.put(`u:4242:${ayerT}`, '300', { metadata: { t: ahoraT - 864e5 } });
+  await KVm.put('p:302', '1', { metadata: { uid: '302', nombre: 'Ana', equipo: 'Otro', primera: ahoraT - 20 * 864e5, ultima: ahoraT - 3 * 864e5, canal: 'web', foto: 'https://assets-fantasy.llt-services.com/u/302.png' } });
+  await KVm.put('r:302', '1', { metadata: { uid: '302', primera: ahoraT - 20 * 864e5, ultima: ahoraT - 3 * 864e5, dia: hace3T, canales: 'web', dias: 9 } });
+  await KVm.put(`u:302:${hace3T}`, '777', { metadata: { t: ahoraT - 3 * 864e5 } });
+  await KVm.put('p:303', '1', { metadata: { uid: '303', primera: ahoraT - 2 * 864e5, ultima: ahoraT - 2 * 864e5, canal: 'play' } });
+  await KVm.put('r:304', '1', { metadata: { uid: '304', primera: ahoraT - 300 * 864e5, ultima: ahoraT - 200 * 864e5, dia: '2026-05-01', canales: 'github', dias: 4 } });
+  await KVm.put('r:2222', '1', { metadata: { uid: '2222', primera: ahoraT - 30 * 864e5, ultima: ahoraT - 5 * 864e5, dia: '2026-11-01', canales: 'play', dias: 3 } });
+  for (let i = 0; i < 20; i++) await KVm.put(`p:9${String(i).padStart(3, '0')}`, '1', { metadata: { uid: `9${String(i).padStart(3, '0')}`, primera: ahoraT - 864e5, ultima: ahoraT - 864e5 } });
+  await KVm.put('v:CODIGO12', '{}'); await KVm.put('f:4242:aviso1', '{}', { metadata: { t: 1 } });
+  // la 4242 llega antes de la copia: su primera vez y sus 30 días siguen, y el tiempo de hoy se suma al del KV
+  desfase += 61e3;
+  r = await pedirQ('POST', '/hola', { equipo: 'Nuevo', liga: '77', v: '0.8.4', canal: 'play', app: 9100 }, 'x'.repeat(30), envM);
+  ok(r.s === 200, `/hola antes de la copia: ${r.s}`);
+  let f = JSON.parse(sqlM("SELECT d FROM ficha WHERE uid = '4242'")[0].d), g = JSON.parse(sqlM("SELECT d FROM reg WHERE uid = '4242'")[0].d);
+  ok(f.primera === vieja && f.equipo === 'Nuevo' && f.n === 41 && g.primera === vieja && g.dias === 31 && g.tot.p === 50, `antes de la copia, quien llega se trae del KV: primera ${f.primera === vieja}, ${f.n} veces, ${g.dias} días`);
+  r = await pedirQ('POST', '/uso', { seg: 60 }, 'x'.repeat(30), envM);
+  ok(r.j && r.j.seg === 180, `y su tiempo de hoy sigue: 120 del KV + 60 = ${r.j && r.j.seg}`);
+  // la primera vez de otra cuenta (la de invitar), antes de la copia, también del KV
+  const prim = await (await QRm.get('quien|todos').fetch('https://x/quien', { method: 'POST', body: JSON.stringify({ op: 'primera', uid: '2222', ahora: Date.now(), dia: hoyT }) })).json();
+  ok(prim.t === ahoraT - 30 * 864e5, `la primera vez de una cuenta que aún no se ha copiado sale del KV (${prim.t})`);
+  // el cron: tres pasadas (fichas, registros, tiempos)
+  const pasos = [];
+  for (let i = 0; i < 3; i++) pasos.push(await W2.mudanzaQuien(envM, ahoraT + i * 300e3));
+  ok(pasos.map((x) => x.fase).join() === 'p,r,u', `la copia en tres pasadas: ${JSON.stringify(pasos)}`);
+  f = JSON.parse(sqlM("SELECT d FROM ficha WHERE uid = '4242'")[0].d); g = JSON.parse(sqlM("SELECT d FROM reg WHERE uid = '4242'")[0].d);
+  ok(f.equipo === 'Nuevo' && g.dias === 31 && sqlM(`SELECT seg FROM uso WHERE uid = '4242' AND dia = '${hoyT}'`)[0].seg === 180, 'la copia no pisa lo de quien ya había llegado');
+  ok(sqlM("SELECT count(*) AS n FROM ficha")[0].n === 23 && sqlM("SELECT count(*) AS n FROM reg")[0].n === 4 && sqlM(`SELECT seg FROM uso WHERE uid = '302' AND dia = '${hace3T}'`)[0].seg === 777 && sqlM(`SELECT seg FROM uso WHERE uid = '4242' AND dia = '${ayerT}'`)[0].seg === 300, `todo copiado: ${sqlM("SELECT count(*) AS n FROM ficha")[0].n} fichas, ${sqlM("SELECT count(*) AS n FROM reg")[0].n} registros y los tiempos`);
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), envM, {});
+  const tm = await r.json();
+  const a302 = tm.lista.find((x) => x.uid === '302'), a4242 = tm.lista.find((x) => x.uid === '4242');
+  ok(a302 && a302.segDias[hace3T] === 777 && a4242.segDias[ayerT] === 300 && a4242.segHoy === 180 && tm.registro.some((x) => x.uid === '304' && x.dias === 4), '«Quién usa la app» con lo copiado: los días de cada uno y las cuentas viejas');
+  r = await pedirQ('GET', '/caras?liga=77', null, 'x'.repeat(30), envM);
+  // después de copiar, ya no se mira el KV
+  lecturasKV = 0;
+  await pedirQ('POST', '/hola', { equipo: 'Y', liga: '1', v: '0.8.4', canal: 'web', disp: 'web-pc' }, 'y'.repeat(30), envM);
+  await pedirQ('POST', '/uso', { seg: 30 }, 'y'.repeat(30), envM);
+  ok(lecturasKV === 0 && JSON.parse(sqlM("SELECT d FROM reg WHERE uid = '2222'")[0].d).dias === 4, `copiado, ya no se lee el KV (${lecturasKV} lecturas) y la 2222 sigue con su historial`);
+  // los dos primeros días no se borra nada del KV
+  const est = await (await QRm.get('quien|todos').fetch('https://x/quien', { method: 'POST', body: JSON.stringify({ op: 'mudanza' }) })).json();
+  let x = await W2.mudanzaQuien(envM, est.copiado + 864e5 - ((est.copiado + 864e5) % 3600e3) + 60e3);
+  ok(x.esperando && km.has('p:4242'), `el primer día no se borra nada del KV (${JSON.stringify(x)})`);
+  // a los dos días, 15 a la hora (solo en la primera pasada de cada hora), fichas y registros; lo demás del KV no se toca
+  const hora0 = est.copiado + 2 * 864e5 - ((est.copiado + 2 * 864e5) % 3600e3) + 3600e3;
+  x = await W2.mudanzaQuien(envM, hora0 + 20 * 60e3);
+  ok(x.nada && km.has('p:4242'), 'a mitad de hora, nada');
+  const borr = [];
+  for (let h = 0; h < 4; h++) borr.push(await W2.mudanzaQuien(envM, hora0 + h * 3600e3 + 60e3));
+  ok(borr[0].borradas === 15 && borr[1].borradas === 12 && borr[2].limpio && borr[3].nada, `se borran 15 a la hora y luego queda limpio: ${JSON.stringify(borr)}`);
+  ok(![...km.keys()].some((k) => /^[pr]:/.test(k)) && km.has('v:CODIGO12') && km.has('f:4242:aviso1') && km.has(`u:4242:${hoyT}`), 'en el KV quedan los códigos, los avisos y los tiempos (que se borran solos a los 9 días)');
+  // y el cron la lleva (la de cada 5 minutos)
+  const esperas = [];
+  await W.scheduled({ cron: '*/5 * * * *', scheduledTime: Date.now() }, { ...envM }, { waitUntil: (p) => esperas.push(p) });
+  await Promise.all(esperas);
+  ok(esperas.length === 2, `el cron de cada 5 minutos lanza el bot y la mudanza (${esperas.length})`);
 }
 
 // ---------- revisión total, sesión 1: frenos del KV (C1), proxy cerrado (A4), /caras (C6) y r: con caducidad (M1) ----------
@@ -215,57 +354,76 @@ ok(estados.filter((s) => s === 429).length === 20 - W2.FRENOS.usar.min, `/vincul
 estados = [];
 for (let i = 0; i < 30; i++) estados.push((await pide({ m: 'GET', ruta: `/qr/esperar?id=${'E'.repeat(22)}`, ip: '6.6.6.7' })).s);
 ok(estados.every((s) => s === 204), 'el QR, preguntando cada 2 s, no se frena');
-// /uso: 300 llamadas de una cuenta
-kv.clear(); minuto();
+// /uso: 300 llamadas de una cuenta (0.8.4: cada una que pasa el freno es una fila escrita en el objeto, nada en el KV)
+kv.clear(); vaciarQ(); minuto();
 cuenta.escrituras = 0;
 estados = [];
-for (let i = 0; i < 300; i++) estados.push((await pide({ ruta: '/uso', cuerpo: { seg: 60 }, tk: 'y'.repeat(30) })).s);
-ok(cuenta.escrituras === 1 && estados.filter((s) => s === 200).length === W2.FRENOS.uso.min, `/uso, 300 seguidas: ${cuenta.escrituras} escritura y ${estados.filter((s) => s === 200).length} contestadas`);
-// cada minuto: escribe cada 4, pero el total que devuelve cuenta todo
-cuenta.escrituras = 0;
+let filas0 = quien().filas.escritas;
+for (let i = 0; i < 300; i++) estados.push((await pide({ ruta: '/uso', cuerpo: { seg: 60 }, tk: 'y'.repeat(30), e: envQ })).s);
+ok(cuenta.escrituras === 0 && quien().filas.escritas - filas0 === W2.FRENOS.uso.min && estados.filter((s) => s === 200).length === W2.FRENOS.uso.min, `/uso, 300 seguidas: ${quien().filas.escritas - filas0} filas escritas, ${cuenta.escrituras} en el KV y ${estados.filter((s) => s === 200).length} contestadas`);
+// cada minuto: se apunta todo, al segundo (antes, una escritura cada 4 minutos y lo de en medio en la memoria del Worker)
 let seg = 0;
-for (let i = 0; i < 12; i++) { minuto(); r = await pide({ ruta: '/uso', cuerpo: { seg: 60 }, tk: 'y'.repeat(30) }); seg = r.j.seg; }
-ok(cuenta.escrituras === 3 && seg === 360 + 12 * 60, `/uso cada minuto durante 12 min: ${cuenta.escrituras} escrituras, total ${seg} s`);
-ok(Number(kv.get(`u:2222:${r.j.dia}`).v) <= seg, 'lo guardado no pasa de lo contado');
+for (let i = 0; i < 12; i++) { minuto(); r = await pide({ ruta: '/uso', cuerpo: { seg: 60 }, tk: 'y'.repeat(30), e: envQ }); seg = r.j.seg; }
+ok(seg === 360 + 12 * 60 && usoDe(2222, r.j.dia) === seg, `/uso cada minuto durante 12 min: total ${seg} s, guardado ${usoDe(2222, r.j.dia)}`);
+// un día no pasa de 86.400 s
+sqlQ('UPDATE uso SET seg = 86300 WHERE uid = ?', '2222'); minuto();
+r = await pide({ ruta: '/uso', cuerpo: { seg: 600 }, tk: 'y'.repeat(30), e: envQ });
+ok(r.j.seg === 86400, `un día no pasa de 86.400 s (${r.j.seg})`);
 // /hola: la pantalla de bienvenida, una vez por cuenta (9 nov): sin verla no hay bv; al verla se apunta y sigue en las siguientes
 {
   const tk = 'b'.repeat(30);
-  let a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  let a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1 }, tk, e: envQ });
   ok(a.s === 200 && !a.j.bv, `/hola sin bienvenida vista: sin bv (${a.t})`);
   minuto();
-  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1, bv: true }, tk });
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1, bv: true }, tk, e: envQ });
   const bv = a.j && a.j.bv;
   ok(a.s === 200 && bv > 0, `/hola con bv: true la apunta (${a.t})`);
   minuto();
-  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk });
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk, e: envQ });
   ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
 }
 // /hola: la liga que llega después del primer aviso se apunta sin esperar la hora, y uno vacío no la borra (17 nov)
 {
-  kv.clear();
+  vaciarQ();
   const tk = 'l'.repeat(30);
-  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf', canal: 'web', app: 1 }, tk, e: envQ });
   minuto();
-  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '555', v: '0.7zf', canal: 'web', app: 1 }, tk });
-  const pk = [...kv.keys()].find((k) => k.startsWith('p:'));
-  ok(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga === '555', `la liga llega en el segundo aviso y se apunta (${pk && JSON.stringify(kv.get(pk) && kv.get(pk).m && kv.get(pk).m.liga)})`);
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '555', v: '0.7zf', canal: 'web', app: 1 }, tk, e: envQ });
+  ok(fichaDe(4242) && fichaDe(4242).liga === '555', `la liga llega en el segundo aviso y se apunta (${JSON.stringify(fichaDe(4242) && fichaDe(4242).liga)})`);
   minuto();
-  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf !', canal: 'web', app: 1, fc: 'x' }, tk });
-  ok(kv.get(pk).m.liga === '555', 'un aviso sin liga no pisa la que ya había');
+  await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '', v: '0.7zf !', canal: 'web', app: 1, fc: 'x' }, tk, e: envQ });
+  ok(fichaDe(4242).liga === '555', 'un aviso sin liga no pisa la que ya había');
 }
-// /hola: alternar la versión no escribe cada vez
-kv.clear();
-cuenta.escrituras = 0;
-for (let i = 0; i < 10; i++) { minuto(); await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: i % 2 ? '0.7y' : '0.7z', canal: 'web', app: 1 }, tk: 'h'.repeat(30) }); }
-const escP = [...kv.keys()].filter((k) => k.startsWith('p:')).length;
-ok(cuenta.escrituras <= 1 + W2.CAMBIOS_DIA + 1, `/hola con 10 cambios de versión: ${cuenta.escrituras} escrituras (p: y r:), ${escP} ficha`);
-ok(kv.get('p:4242').m.nc === W2.CAMBIOS_DIA, `apunta los cambios del día: ${kv.get('p:4242').m.nc}`);
-// r:<uid> caduca a los 400 días (se renueva al escribir)
-ok(kv.get('r:4242').ttl === 400 * 86400, `r: con expirationTtl ${kv.get('r:4242').ttl}`);
+// /hola: alternar la versión no escribe cada vez (la ficha: la primera y CAMBIOS_DIA cambios; el registro, una)
+vaciarQ();
+filas0 = quien().filas.escritas;
+for (let i = 0; i < 10; i++) { minuto(); await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: i % 2 ? '0.7y' : '0.7z', canal: 'web', app: 1 }, tk: 'h'.repeat(30), e: envQ }); }
+const escQ = quien().filas.escritas - filas0;
+ok(escQ <= 1 + W2.CAMBIOS_DIA + 1, `/hola con 10 cambios de versión: ${escQ} filas escritas (ficha y registro)`);
+ok(fichaDe(4242).nc === W2.CAMBIOS_DIA, `apunta los cambios del día: ${fichaDe(4242).nc}`);
+// lo caducado no se ve: la ficha a los 90 días y el registro a los 400 sin escribir; el tiempo de uso, a los 9
+{
+  const ahoraT = Date.now();
+  sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', '8801', ahoraT - 91 * 864e5, 'https://assets-fantasy.llt-services.com/u/8801.png', JSON.stringify({ uid: '8801', ultima: ahoraT - 91 * 864e5, primera: ahoraT - 200 * 864e5 }));
+  sqlQ('INSERT INTO reg (uid, ultima, d) VALUES (?, ?, ?)', '8801', ahoraT - 401 * 864e5, JSON.stringify({ uid: '8801', ultima: ahoraT - 401 * 864e5, primera: ahoraT - 500 * 864e5 }));
+  sqlQ('INSERT INTO reg (uid, ultima, d) VALUES (?, ?, ?)', '8802', ahoraT - 398 * 864e5, JSON.stringify({ uid: '8802', ultima: ahoraT - 398 * 864e5, primera: ahoraT - 500 * 864e5 }));
+  sqlQ('INSERT INTO uso (uid, dia, seg, t) VALUES (?, ?, ?, ?)', '8801', '2020-01-01', 50, ahoraT - 10 * 864e5);
+  r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...envQ, ADMINS: '4242' }, {});
+  const t6 = await r.json();
+  ok(!t6.lista.some((x) => x.uid === '8801') && !t6.registro.some((x) => x.uid === '8801') && t6.registro.some((x) => x.uid === '8802'), 'la ficha de hace 91 días y el registro de hace 401 no salen; el de hace 398, sí');
+  // y se borran al día siguiente (una vez al día). (14 h más: de la tarde a la mañana siguiente; con un día entero, el reloj de
+  // la prueba acababa cruzando la medianoche más abajo, en los topes por día)
+  desfase += 14 * 3600e3; minuto();
+  await pide({ ruta: '/uso', cuerpo: { seg: 1 }, tk: 'h'.repeat(30), e: envQ });
+  ok(!sqlQ("SELECT 1 FROM ficha WHERE uid = '8801'").length && !sqlQ("SELECT 1 FROM reg WHERE uid = '8801'").length && !sqlQ("SELECT 1 FROM uso WHERE uid = '8801'").length && sqlQ("SELECT 1 FROM reg WHERE uid = '8802'").length, 'lo caducado se borra al día siguiente');
+}
 estados = [];
 minuto();
-for (let i = 0; i < 10; i++) estados.push((await pide({ ruta: '/hola', cuerpo: { v: '0.7z' }, tk: 'h'.repeat(30) })).s);
+for (let i = 0; i < 10; i++) estados.push((await pide({ ruta: '/hola', cuerpo: { v: '0.7z' }, tk: 'h'.repeat(30), e: envQ })).s);
 ok(estados.filter((s) => s === 429).length === 10 - W2.FRENOS.hola.min, '/hola, 10 en un minuto: el resto 429');
+// sin el objeto: 503, y la app sigue
+r = await pide({ ruta: '/hola', cuerpo: { v: '0.7z' }, tk: 'q'.repeat(30) });
+ok(r.s === 503, `/hola sin el objeto: ${r.s}`);
 // /fallos: 5 avisos al día por cuenta y capturas de hasta 350 KB
 kv.clear(); minuto();
 const cap = (n) => 'data:image/jpeg;base64,' + 'A'.repeat(n);
@@ -276,10 +434,10 @@ minuto();
 r = await pide({ ruta: '/fallos', cuerpo: { texto: 'el sexto' }, ip: '7.7.7.9', tk: 'f'.repeat(30) });
 ok(r.s === 429 && [...kv.keys()].filter((k) => k.startsWith('f:4242:')).length === W2.AL_DIA, `/fallos: el sexto del día da ${r.s}`);
 // /caras: solo de una liga en la que estás
-await KV.put('p:1111', '1', { metadata: { uid: '1111', foto: 'https://assets-fantasy.llt-services.com/u/1111.png' } });
-r = await pide({ m: 'GET', ruta: '/caras?liga=77' });
-ok(r.s === 200 && r.j.caras['1111'], `/caras de tu liga: ${r.s}`);
-r = await pide({ m: 'GET', ruta: '/caras?liga=88' });
+sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', '1111', Date.now(), 'https://assets-fantasy.llt-services.com/u/1111.png', JSON.stringify({ uid: '1111', ultima: Date.now(), foto: 'https://assets-fantasy.llt-services.com/u/1111.png' }));
+r = await pide({ m: 'GET', ruta: '/caras?liga=77', e: envQ });
+ok(r.s === 200 && r.j.caras['1111'] && Object.keys(r.j.caras).length === 1, `/caras de tu liga: ${r.s} ${r.t}`);
+r = await pide({ m: 'GET', ruta: '/caras?liga=88', e: envQ });
 ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no estás: ${r.s}`);
 // ---------- A4: /p e /img, con el Origin puesto a mano ----------
 const p = (url, metodo = 'GET', cab = {}, cuerpo, origen = ORI) => pide({ ruta: '/p', origen, crudo: cuerpo || '', cab: { 'x-u': url, 'x-m': metodo, 'x-h': JSON.stringify(cab) } });
@@ -487,6 +645,7 @@ ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json
   // un objeto falso como el de verdad: con list, getAlarm y la alarma, que salta enseguida si es para ya
   const objsJ = new Map();
   let alarmasJ = 0, envJ = null;
+  let resJcuenta = 0;
   const QRJ = {
     idFromName: (n) => n,
     get: (id) => {
@@ -509,7 +668,7 @@ ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json
         objsJ.set(id, { o, m, alarmaDe: () => alarma });
       }
       const x = objsJ.get(id);
-      return { fetch: (u, op) => x.o.fetch(new Request(u, op)) };
+      return { fetch: (u, op) => { if (String(u).endsWith('/plan/res')) resJcuenta++; return x.o.fetch(new Request(u, op)); } };
     },
   };
   envJ = { VINCULOS: KV, ADMINS: '667015', QR: QRJ, CLAUDE_PLANES: 'sk-ant-prueba' };
@@ -524,6 +683,16 @@ ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json
   const oJ = objsJ.get(nomJ);
   ok(r.s === 200 && r.j.plan && r.j.plan.titular === 'Vende a X y espera' && r.j.cupo.usados === 1 && aClaude.length === antesJ + 1 && alarmasJ === 1, `con el objeto, el plan sale de su alarma (${r.t.trim().slice(0, 90)})`);
   ok(oJ && !oJ.m.has('job:trabajo1abcd') && !oJ.m.has('jobe:trabajo1abcd') && oJ.m.get('res:trabajo1abcd').fin.plan && oJ.alarmaDe() > Date.now() + 29 * 3600e3, `el encargo se borra, el plan queda guardado y vuelve la alarma de limpiar (${Math.round(((oJ && oJ.alarmaDe()) - Date.now()) / 3600e3)} h)`);
+  // 1b. (0.8.4) mientras Claude piensa, el Worker no le pregunta al objeto cada 1,5 s: lo espera el objeto y contesta en
+  // cuanto está (un plan de 3 s: una o dos peticiones, y sin tardar más)
+  {
+    lentoClaude = 3000; const resAntes = resJcuenta, tJ = performance.now();
+    // (como el dueño, que no gasta del cupo: las cuentas de lo que sigue no cambian)
+    r = await planJ({ rid: 'lento123abcd' }, { ...envJ, ADMINS: '5000' });
+    lentoClaude = 0;
+    const msL = performance.now() - tJ;
+    ok(r.j && r.j.plan && resJcuenta - resAntes <= 3 && msL < 4500, `un plan de 3 s: ${resJcuenta - resAntes} peticiones a /plan/res (antes, una cada 1,5 s) y sale a los ${Math.round(msL)} ms`);
+  }
   // 2. nadie esperando (la app cerrada del todo, el Worker ya no está): el objeto lo hace igual y se recoge después
   await QRJ.get(nomJ).fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid: 'solo1234abcd', trabajo: { modelo: 'claude-haiku-5-5', sistema: 'S', pedido: PEDIDO, web: 0, libre: false, cupoFin: { usados: 1 }, t0: Date.now() } }) });
   await espera(100);
@@ -909,7 +1078,8 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
       list: async ({ prefix = '' } = {}) => new Map([...m.entries()].filter(([k]) => k.startsWith(prefix)).sort(([a], [b]) => (a < b ? -1 : 1))),
     };
   };
-  const QRi = { idFromName: (n) => n, get: (id) => { if (!objs.has(id)) objs.set(id, new W2.Emparejar({ storage: almacen() })); const o = objs.get(id); return { fetch: (u, op) => o.fetch(new Request(u, op)) }; } };
+  // (0.8.4) «quien|todos», con SQL y el KV: la primera vez de una cuenta sale de ahí (y, antes de la copia, del KV)
+  const QRi = { idFromName: (n) => n, get: (id) => { if (!objs.has(id)) objs.set(id, new W2.Emparejar({ storage: id === 'quien|todos' ? almacenSql().storage : almacen() }, { VINCULOS: KV })); const o = objs.get(id); return { fetch: (u, op) => o.fetch(new Request(u, op)) }; } };
   const eI = { VINCULOS: KV, ADMINS: '667015', QR: QRi };
   // cuentas: el token «u<uid>…» es la cuenta uid; la liga 55 tiene a 501-520; la 66, a 600
   const fAntes = globalThis.fetch;

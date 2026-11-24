@@ -66,6 +66,8 @@ const A = await navegador(), B = await navegador();
 const en = (P, f, x) => P.page.evaluate(f, x);
 const sinc = (P) => en(P, async () => (await import('./js/sinc.js')).sincronizar({ ya: true }));
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+// (0.8.4) los cambios seguidos se suben juntos, SUBIR_TRAS después del último (antes, 1,2 s)
+const TRAS = (await en(A, async () => (await import('./js/sinc.js')).SUBIR_TRAS)) + 800;
 const estado = (P) => en(P, async () => {
   const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
   const p = I.ultimoPlan();
@@ -79,7 +81,7 @@ try {
     U.LS.set(Dt.K('planes'), [P]);
     I.cambioLocal('plan');
   });
-  await espera(1800);
+  await espera(TRAS);
   let a = await estado(A), b0 = await estado(B);
   ok(llamadas >= 1 && m.has('s|4455|plan'), `(a) el plan del móvil se sube solo al hacerlo (${llamadas} llamada${llamadas === 1 ? '' : 's'})`);
   const lleg = await sinc(B);
@@ -93,23 +95,23 @@ try {
     U.LS.set(Dt.K('planes'), [{ t: Date.now(), dia: U.diaDe(), titular: 'Plan rehecho en la web', situacion: '', operaciones: [], modelo: 'app' }, ...I.planes()]);
     I.cambioLocal('plan');
   });
-  await espera(1800); await sinc(A);
+  await espera(TRAS); await sinc(A);
   a = await estado(A);
   ok(a.plan === 'Plan rehecho en la web', `(a) y el que se rehace en la web llega al móvil: «${a.plan}»`);
 
   /* (b) la conversación */
   await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); I.borrarConversacion(); const t = Date.now(); U.LS.set(Dt.K('chat'), [{ r: 'yo', t: '¿Vendo a Rodri?', ts: t - 3000 }, { r: 'ia', t: 'Aguántalo.', ts: t - 2000 }]); U.LS.set(Dt.K('chat-t'), t - 2000); I.cambioLocal('chat'); });
-  await espera(1800); await sinc(B);
+  await espera(TRAS); await sinc(B);
   b = await estado(B);
   ok(b.chat.join('|') === 'yo:¿Vendo a Rodri?|ia:Aguántalo.', `(b) lo preguntado en el móvil sale en la web: ${b.chat.join(' | ')}`);
   // la web sigue la conversación; al móvil le llega entera
   await en(B, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [...I.conversacion(), { r: 'yo', t: '¿Y a Baena?', ts: t - 500 }, { r: 'ia', t: 'A ese tampoco.', ts: t }]); U.LS.set(Dt.K('chat-t'), t); I.cambioLocal('chat'); });
-  await espera(1800); await sinc(A);
+  await espera(TRAS); await sinc(A);
   a = await estado(A);
   ok(a.chat.length === 4 && a.viejos === 0, `(b) y lo que se sigue en la web, en el móvil (${a.chat.length} mensajes, sin duplicar ni archivar)`);
   // con una pregunta en marcha en el móvil, lo que llega no toca la conversación
   await en(B, async () => { const I = await import('./js/ia.js'); I.nuevoChat(); });
-  await espera(1800);
+  await espera(TRAS);
   await en(A, () => { window.__charlando = true; });
   const enMarcha = await sinc(A);
   a = await estado(A);
@@ -121,7 +123,7 @@ try {
 
   /* (c) lo que le has contado: llega y manda en el motor del otro */
   await en(A, async () => { const I = await import('./js/ia.js'); I.apuntarDicho('No me quedan blindajes', window.S.D, window.S.M, null); });
-  await espera(1800); await sinc(B);
+  await espera(TRAS); await sinc(B);
   const c = await en(B, async () => {
     const I = await import('./js/ia.js'), Mo = await import('./js/motor.js');
     const M = Mo.analizar(window.S.D, window.S.H, window.S.c, { notas: I.notasVigentes() });
@@ -130,20 +132,20 @@ try {
   ok(c.notas.join() === 'blindajes' && c.quedan === 0 && /No te quedan blindajes/.test(c.dicho.join()) && c.avisada, `(c) «no me quedan blindajes» dicho en el móvil llega a la web y allí también manda en el motor (quedan ${c.quedan}; «${c.dicho.join()}»)`);
   // quitarlo en la web lo quita en el móvil
   await en(B, async () => { const I = await import('./js/ia.js'); for (const n of I.notasVigentes()) I.borrarNota(n.id); });
-  await espera(1800); await sinc(A);
+  await espera(TRAS); await sinc(A);
   a = await estado(A);
   ok(a.notas.length === 0, '(c) y quitarlo en la web lo quita en el móvil');
 
   /* (d) los pasos hechos */
   await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); U.LS.set(Dt.K('hechos'), { [String(I.ultimoPlan().t)]: { t: Date.now(), n: [1, 3] } }); U.LS.set(Dt.K('hechos-t'), Date.now()); I.cambioLocal('hechos'); });
-  await espera(1800); await sinc(B);
+  await espera(TRAS); await sinc(B);
   b = await estado(B);
   ok(/"n":\[1,3\]/.test(b.hechos), '(d) los pasos marcados como hechos en el móvil salen marcados en la web');
 
   /* (e) lo más reciente gana; sin red se sigue igual y se sube al volver; otra liga, aparte */
   sinRed = true;
   await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [{ r: 'yo', t: 'Sin red', ts: t }]); U.LS.set(Dt.K('chat-t'), t); I.cambioLocal('chat'); });
-  await espera(1800);
+  await espera(TRAS);
   const sinR = await sinc(A);
   a = await estado(A);
   ok(Array.isArray(sinR) && a.chat.join() === 'yo:Sin red' && !A.errores.length, '(e) sin red no pasa nada: se queda lo de aquí');
@@ -156,7 +158,7 @@ try {
 
   /* (f) las miniaturas no viajan */
   await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [{ r: 'yo', t: 'Mira esto', ts: t, fotos: [{ id: 'f1', mini: 'x'.repeat(5000) }] }]); U.LS.set(Dt.K('chat-t'), t); I.cambioLocal('chat'); });
-  await espera(1800);
+  await espera(TRAS);
   const guardado = JSON.stringify(m.get('s|4455|chat'));
   ok(/"id":"f1"/.test(guardado) && guardado.length < 600, `(f) de una captura sube solo su referencia, no la imagen (${guardado.length} caracteres)`);
   /* (g) (repaso de la 0.8s, 22 nov) los dos cambian algo a la vez, sin haber visto lo del otro (el móvil abierto mientras
@@ -185,6 +187,30 @@ try {
   a = await estado(A); b = await estado(B);
   const n1 = (x) => x.notas.filter((k) => k === 'no-vender').length;
   ok(n1(a) === 1 && n1(b) === 1 && a.notas.includes('blindajes') && b.notas.includes('blindajes') && a.notas.join() === b.notas.join(), `(g) lo quitado en el móvil no vuelve y lo nuevo de la web se queda, en los dos (móvil: ${a.notas.join(', ')}; web: ${b.notas.join(', ')})`);
+  /* (h) (0.8.4) menos llamadas: eran 33 por persona y día. Una subida es UNA llamada (antes dos: mirar y subir), varios
+     cambios seguidos van en una, y con la IA contestando no se llama hasta que acaba */
+  await sinc(A); await sinc(B);
+  let antesH = llamadas;
+  await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); U.LS.set(Dt.K('hechos'), { x: { p1: Date.now() } }); U.LS.set(Dt.K('hechos-t'), Date.now()); I.cambioLocal('hechos'); });
+  await espera(TRAS);
+  ok(llamadas - antesH === 1, `(h) un cambio, una llamada (${llamadas - antesH}; antes, 2)`);
+  antesH = llamadas;
+  for (let i = 0; i < 3; i++) { await en(A, async (n) => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); U.LS.set(Dt.K('hechos'), { x: { [`p${n}`]: Date.now() } }); U.LS.set(Dt.K('hechos-t'), Date.now()); I.cambioLocal('hechos'); }, i + 2); await espera(400); }
+  await espera(TRAS);
+  ok(llamadas - antesH === 1, `(h) tres pasos marcados seguidos, una llamada (${llamadas - antesH}; antes, 6)`);
+  antesH = llamadas;
+  await en(A, async () => { window.__charlando = true; const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [...I.conversacion(), { r: 'yo', t: '¿Y el portero?', ts: t }]); U.LS.set(Dt.K('chat-t'), t); I.cambioLocal('chat'); });
+  await espera(TRAS);
+  const durante = llamadas - antesH;
+  await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); const t = Date.now(); U.LS.set(Dt.K('chat'), [...I.conversacion(), { r: 'ia', t: 'Ese, titular.', ts: t }]); U.LS.set(Dt.K('chat-t'), t); window.__charlando = false; I.cambioLocal('chat'); });
+  await espera(TRAS);
+  ok(durante === 0 && llamadas - antesH === 1 && JSON.stringify(m.get('s|4455|chat')).includes('Ese, titular.'), `(h) una pregunta: nada mientras la IA contesta y una llamada al acabar (${durante} y ${llamadas - antesH}; antes, 4)`);
+  // con la app en segundo plano, lo pendiente se sube ya
+  antesH = llamadas;
+  await en(A, async () => { const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'); U.LS.set(Dt.K('hechos'), { x: { p9: Date.now() } }); U.LS.set(Dt.K('hechos-t'), Date.now()); I.cambioLocal('hechos'); Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true }); document.dispatchEvent(new Event('visibilitychange')); });
+  await espera(600);
+  ok(llamadas - antesH === 1, `(h) al irse a segundo plano con una subida pendiente, se sube ya (${llamadas - antesH})`);
+  await en(A, async () => { Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true }); });
   ok(!A.errores.length && !B.errores.length, `sin errores en las páginas${A.errores.length || B.errores.length ? `: ${[...A.errores, ...B.errores][0]}` : ''}`);
 } finally {
   await A.ctx.close(); await B.ctx.close(); await nav.close(); srv.close();

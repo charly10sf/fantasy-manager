@@ -1397,8 +1397,10 @@ function hoyQ(C) {
     }).reverse();
     h += tarjetaQ('Altas por semana', columnasSem(sem, { alto: 170 }), { cifra: `<b>${sem.reduce((t, x) => t + x.v, 0)}</b> en 8 semanas` });
   }
-  // desde dónde: los de 7 días por canal, en una barra
-  const partes = [['Google Play', 'play', 'var(--rojo)'], ['Web', 'web', 'var(--azul)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => (x.canal || 'web') === k).length })).filter((p) => p.v);
+  // desde dónde: los de 7 días por canal, en una barra. (0.8.4; Carlos, 25 nov: «si hubiera forma de diferenciar los de iOS
+  // de la web de un ordenador») la web, por aparato (`disp`, lo manda la web desde la 0.8.4); «Web» a secas es quien aún
+  // no ha abierto esa versión
+  const partes = [['Google Play', 'play', 'var(--rojo)'], ['iPhone', 'web-iphone', 'var(--oro)'], ['Web en ordenador', 'web-pc', 'var(--azul)'], ['Web en Android', 'web-android', 'var(--sube)'], ['Web', 'web', 'rgba(88, 166, 255, 0.45)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => dondeQ(x) === k).length })).filter((p) => p.v);
   if (partes.length) {
     const tot = partes.reduce((t, p) => t + p.v, 0);
     h += tarjetaQ('Desde dónde', `<div class="q-pila" role="img" aria-label="${esc(partes.map((p) => `${p.t}: ${p.v}`).join(', '))}">${partes.map((p) => `<i style="flex:${p.v};background:${p.c}"></i>`).join('')}</div><div class="q-ley">${partes.map((p) => `<span><i style="background:${p.c}"></i>${esc(p.t)} <b>${p.v}</b> <small>${pctN(p.v, tot)} %</small></span>`).join('')}</div>`, { cifra: '7 días' });
@@ -1601,13 +1603,15 @@ function cuentasQ(S, lista, ahora, minPlay) {
   }
   return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
 }
-const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK' };
+const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK', 'web-iphone': 'iPhone', 'web-pc': 'Ordenador', 'web-android': 'Web Android' };
+/** desde dónde entra una cuenta: play, github o, en la web, el aparato (web-iphone, web-pc, web-android; web si no se sabe) */
+function dondeQ(x) { const c = x.canal || 'web'; return c === 'web' && x.disp ? x.disp : c; }
 function filaQuien(nombre, equipo, x, ahora, minPlay) {
   const esta = ahora - x.ultima < DENTRO_Q;
   const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
   const p = problemaDe(x, minPlay);
   const chips = [
-    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
+    `<i class="q-chip">${esc(DONDE_Q[dondeQ(x)] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
     v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');

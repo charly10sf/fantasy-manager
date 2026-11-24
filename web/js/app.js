@@ -47,7 +47,7 @@ import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
-import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenActual } from './semaforo.js';
+import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenActual, canalPaso } from './semaforo.js';
 import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
@@ -1870,7 +1870,7 @@ function saludarSiToca() {
   if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
   // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
-  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad })
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }) })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
     .then(() => invitarSiToca())
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos

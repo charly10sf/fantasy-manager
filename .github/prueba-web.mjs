@@ -743,7 +743,7 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     pedidasQ++;
     await new Promise((ok) => setTimeout(ok, 1500));
     if (modoQ === 'caido') return r.abort('connectionrefused');
-    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), cuenta(2, 'Nueva2', 2000), cuenta(3, 'Nueva3', 3000), trasnocha], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), { ...cuenta(2, 'Nueva2', 2000), canal: 'web', disp: 'web-pc' }, { ...cuenta(3, 'Nueva3', 3000), canal: 'web', disp: 'web-iphone' }, trasnocha], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
   });
   const abrirQ = () => page.evaluate(async () => {
     const b = document.createElement('button'); b.dataset.accion = 'quienUsa'; document.body.appendChild(b); b.click(); b.remove();
@@ -753,7 +753,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     await new Promise((ok) => setTimeout(ok, 2200));
     const kpiHoy = [...document.querySelectorAll('.q-kpi > div')].find((d) => /^hoy$/.test(d.querySelector('span')?.innerText || ''));
     const barraHoy = document.querySelector('.vg-v.hoy');
-    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null'), kpiHoy: kpiHoy ? kpiHoy.querySelector('b').innerText : null, barraHoy: barraHoy ? barraHoy.textContent : null };
+    const ley = document.querySelector('.q-ley');
+    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null'), kpiHoy: kpiHoy ? kpiHoy.querySelector('b').innerText : null, barraHoy: barraHoy ? barraHoy.textContent : null, ley: ley ? ley.innerText.replace(/\s+/g, ' ') : '' };
   });
   await page.evaluate((viejo) => localStorage.setItem('fm-quien-ult', JSON.stringify({ d: viejo })), { lista: [cuenta(9, 'Vieja', 3600e3)], registro: [], ahora: Date.now() - 3600e3, dias: null, embudo: null, invitar: null });
   let q = await abrirQ();
@@ -762,6 +763,9 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else bien(`Quién usa la app: sale al momento lo de la última vez («${q.antes}») y se cambia por lo nuevo («${q.despues}»)`);
   if (q.kpiHoy !== '4' || q.barraHoy !== '4') mal(`Quién usa la app: «hoy» ${q.kpiHoy} y la barra de hoy ${q.barraHoy} (los dos tienen que ser 4, con el que entró ayer y hoy otra vez)`);
   else bien('Quién usa la app: «hoy» y la barra de hoy dicen lo mismo (4), con el que entró ayer a última hora y hoy otra vez');
+  // (0.8.4; Carlos, 25 nov: «web incluye a los de iOS… me gustaría que se diferenciasen») «Desde dónde», con la web por aparato
+  if (!/Google Play 2\b/.test(q.ley) || !/iPhone 1\b/.test(q.ley) || !/Web en ordenador 1\b/.test(q.ley) || /Web 0/.test(q.ley)) mal(`Quién usa la app: «Desde dónde» sin la web por aparato: «${q.ley}»`);
+  else bien(`Quién usa la app: «Desde dónde» separa el iPhone y el ordenador («${q.ley}»)`);
   modoQ = 'caido';
   await page.evaluate(() => { const b = document.querySelector('[data-accion="cerrarHoja"]'); if (b) b.click(); });
   q = await abrirQ();

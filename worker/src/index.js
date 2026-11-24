@@ -70,6 +70,8 @@ import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta, partir
 import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
 import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
+import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
+export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -351,6 +353,12 @@ export class Emparejar {
     if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // (22 nov) el plan, el chat, lo contado y los pasos hechos de una cuenta, en «sinc|uid» (worker/src/sinc.js); nunca pone alarma
     if (ruta === '/sinc') return new Response(JSON.stringify(await sincObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (0.8.4) quién usa la app (ficha, registro y tiempo de uso de todas las cuentas), en «quien|todos» con SQLite
+    // (worker/src/quien.js); nunca pone alarma. «todos» devuelve el JSON ya escrito
+    if (ruta === '/quien') {
+      const x = await quienObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo);
+      return new Response(typeof x === 'string' ? x : JSON.stringify(x), { status: 200 });
+    }
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -365,12 +373,21 @@ export class Emparejar {
     // (23 nov) el plan que se encarga al objeto para que lo haga en su alarma (encargarPlan): { rid, trabajo } → { ok }
     if (ruta === '/plan/encargar') return new Response(JSON.stringify(await encargoObjeto(st, this.env, await req.json().catch(() => ({})))), { status: 200 });
     // (15 nov) el plan de un pedido (rid), para recogerlo si la app se fue a segundo plano y se cortó la conexión:
-    // { op: 'leer' | 'marcha' | 'poner' | 'borrar', rid, fin } → { marcha?, fin? }. Se borra con lo demás a las 30 h
+    // { op: 'leer' | 'esperar' | 'marcha' | 'poner' | 'borrar', rid, fin, ms } → { marcha?, fin? }. Se borra con lo demás a las 30 h
     if (ruta === '/plan/res') {
       const b = await req.json().catch(() => ({}));
       const rid = ridDe(b.rid);
       if (!rid) return new Response('{}', { status: 200 });
       const k = `res:${rid}`;
+      // (0.8.4) esperar aquí dentro a que el plan esté, mirando el almacén del objeto (eso no es una petición: son filas
+      // leídas, que sobran), como mucho `ms` (20 s). Antes el Worker preguntaba cada 1,5 s: 19 peticiones por plan, el 40 %
+      // de las de los objetos (claude/capacidad-cloudflare-24nov.md). El objeto ya está despierto haciendo el plan
+      if (b.op === 'esperar') {
+        const hasta = Date.now() + Math.min(ESPERA_RES_MS, Math.max(0, Number(b.ms) || 0));
+        let x = (await st.get(k)) || {};
+        while (!x.fin && x.marcha && Date.now() < hasta) { await new Promise((ok) => setTimeout(ok, ESPERA_RES_CADA)); x = (await st.get(k)) || {}; }
+        return new Response(JSON.stringify({ ...x, espero: 1 }), { status: 200 });
+      }
       if (b.op === 'marcha') await st.put(k, { marcha: Date.now() });
       else if (b.op === 'poner' && b.fin && typeof b.fin === 'object') await st.put(k, { fin: b.fin });
       else if (b.op === 'borrar') await st.delete(k);
@@ -679,39 +696,29 @@ export async function leerEnBloque(env, claves) {
     return out;
   }
 }
-export const MAX_USO = 600, VIVE_USO = 9 * 86400;
-/** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
-export function diasAtras(hoy, n) {
-  const t = new Date(`${hoy}T12:00:00Z`), out = [];
-  for (let i = 0; i < n; i++) { out.push(t.toISOString().slice(0, 10)); t.setUTCDate(t.getUTCDate() - 1); }
-  return out;
+/*
+ * El tiempo de uso de hoy, por cuenta (0.8.4: en el objeto «quien|todos», worker/src/quien.js; antes en el KV, u:<cuenta>:<día>,
+ * una escritura cada 4 min como mucho y lo de en medio en la memoria del Worker). Cada llamada suma lo que trae (hasta
+ * MAX_USO de golpe) y devuelve lo de hoy: { dia, seg }. Se guarda 9 días: el dueño ve hoy, ayer y los 7 últimos.
+ */
+const objQuien = (env) => env.QR.get(env.QR.idFromName('quien|todos'));
+/** una llamada al objeto de quién usa la app (la única por petición): el objeto (o el texto, con `texto`), o lanza */
+async function pedirQuien(env, b, texto = false) {
+  const r = await objQuien(env).fetch('https://freno/quien', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+  if (r.status !== 200) throw new Error(`quien ${r.status}`);
+  return texto ? r.text() : r.json();
 }
-// Como mucho una escritura cada 4 minutos por cuenta y día (revisión total, C1: antes escribía en cada llamada, y los
-// que tienen límite la mandan cada minuto). Lo que llega entre medias se suma en la memoria del Worker y entra en la
-// siguiente escritura; si esa llamada cae en otro Worker, se pierde ese rato, que no es para tanto.
-export const USO_CADA = 240;
-const PEND_USO = new Map();
 async function uso(req, env, c) {
-  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `uso|${u.uid}`, FRENOS.uso.min))) return demasiadas(c);
   const cuerpo = await req.json().catch(() => ({}));
-  // (hasta 10 minutos de golpe: los que no tienen límite mandan lo de 5 minutos, o lo que quedó al salir)
   const mas = Math.max(0, Math.min(MAX_USO, Math.round(Number(cuerpo && cuerpo.seg) || 0)));
-  const dia = hoyMadrid(), k = `u:${u.uid}:${dia}`;
-  const ya = await env.VINCULOS.getWithMetadata(k);
-  const antes = Number(ya && ya.value) || 0, ultima = Number(ya && ya.metadata && ya.metadata.t) || 0;
-  const pend = (PEND_USO.get(k) || 0) + mas;
-  // un día tiene 86 400 segundos: más de eso es que alguien manda de más
-  const seg = Math.min(86400, antes + pend);
-  if (PEND_USO.size > 5000) PEND_USO.clear();
-  // se guarda 9 días: el dueño ve hoy, ayer y la media de los 7 últimos
-  if (pend && Date.now() - ultima >= USO_CADA * 1000) {
-    // (si el almacén no deja escribir, se sigue: el tiempo de uso no es para tanto)
-    try { await env.VINCULOS.put(k, String(seg), { expirationTtl: VIVE_USO, metadata: { t: Date.now() } }); PEND_USO.delete(k); } catch (e) { PEND_USO.set(k, pend); }
-  } else if (pend) PEND_USO.set(k, pend);
-  return json({ dia, seg }, 200, c);
+  let r;
+  try { r = await pedirQuien(env, { op: 'uso', uid: u.uid, mas }); } catch (e) { return json({ e: 'Sin almacén' }, 503, c); }
+  if (!r || !r.ok) return json({ e: (r && r.e) || 'Sin almacén' }, 503, c);
+  return json({ dia: r.dia, seg: r.seg }, 200, c);
 }
 
 /* ---------- el plan del día con la IA de Carlos (Claude), 2 al día por cuenta ---------- */
@@ -798,32 +805,37 @@ export const RES_MARCHA_MS = 100000;
 // como mucho 150 s en total (PLAN_HASTA_S lo cambia, para las pruebas) y el pedido se da por en marcha 170 s desde que
 // empieza. Las preguntas del chat siguen con RES_MARCHA_MS
 export const PLAN_HASTA_MS = 150000, RES_PLAN_MS = 170000;
+// (0.8.4) lo más que espera el objeto por petición a que esté el plan o la respuesta, y cada cuánto mira su almacén
+export const ESPERA_RES_MS = 20000, ESPERA_RES_CADA = 400;
 const hastaPlan = (env) => { const s = Number(env && env.PLAN_HASTA_S); return s > 0 ? s * 1000 : PLAN_HASTA_MS; };
-async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan') {
+async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan', ms = 0) {
   rid = ridDe(rid);
   if (!rid) return {};
   const dia = hoyMadrid();
   if (env.QR) {
     try {
-      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin }) });
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin, ms }) });
       if (r.status === 200) return await r.json();
     } catch (e) { /* a la memoria */ }
   }
   const k = `${tipo}|${dia}|${uid}|${rid}`;
-  if (op === 'leer') return RES_MEM.get(k) || {};
+  // (sin el objeto, «esperar» es mirar una vez: esperarRes espera entre mirada y mirada)
+  if (op === 'leer' || op === 'esperar') return RES_MEM.get(k) || {};
   if (RES_MEM.size > 2000) RES_MEM.clear();
   if (op === 'marcha') RES_MEM.set(k, { marcha: Date.now() });
   else if (op === 'poner') RES_MEM.set(k, { fin });
   else if (op === 'borrar') RES_MEM.delete(k);
   return {};
 }
-/** espera a que acabe el plan del mismo pedido que ya está en marcha (otra petición de la app, que se cortó): su resultado o null */
+/** espera a que acabe el plan (o la pregunta) de un pedido que está en marcha: su resultado o null. (0.8.4) Espera el objeto
+    (`esperar`: contesta en cuanto está, o a los 20 s con «sigue en marcha»): con un plan de 17 s, una petición en vez de 12.
+    Si el objeto no ha esperado (sin objeto, o falla), se mira cada `cada` ms, como antes */
 async function esperarRes(env, uid, rid, desde, tipo = 'plan', dura = RES_MARCHA_MS, cada = 2000) {
   while (Date.now() - desde < dura) {
-    await new Promise((ok) => setTimeout(ok, cada));
-    const x = await resPlan(env, uid, 'leer', rid, null, tipo);
+    const x = await resPlan(env, uid, 'esperar', rid, null, tipo, Math.min(ESPERA_RES_MS, Math.max(0, dura - (Date.now() - desde))));
     if (x.fin) return x.fin;
     if (!x.marcha || Date.now() - x.marcha > dura) return null;
+    if (!x.espero) await new Promise((ok) => setTimeout(ok, cada));
   }
   return null;
 }
@@ -1040,8 +1052,9 @@ async function planIA(req, env, c, ctx) {
   const t0 = Date.now();
   const trabajo = (async () => {
     let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS).catch(() => null) : null;
-    // (23 nov) con id, lo hace el objeto en su alarma (encargarPlan): aquí solo se espera a que lo deje hecho, mirando
-    // cada 1,5 s. Si quien pide se va, el plan sigue y se recoge con el mismo id
+    // (23 nov) con id, lo hace el objeto en su alarma (encargarPlan): aquí solo se espera a que lo deje hecho. Si quien pide se
+    // va, el plan sigue y se recoge con el mismo id. (0.8.4) Lo espera el propio objeto (esperarRes): antes se le preguntaba
+    // cada 1,5 s, 19 veces por plan
     if (!fin && rid && (await encargarPlan(env, u.uid, rid, { modelo: P.modelo, sistema, pedido: b.pedido, web: P.web, libre, cupoFin: libre ? cupoLibre(P) : cupoTxt(P, y), t0, hasta: hastaPlan(env) }))) {
       fin = await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS, 1500).catch(() => null);
       if (!fin) fin = { e: 'La IA de los planes está tardando demasiado. Tienes el plan de la app; vuelve a probar en un rato.', estado: 503, servicio: true };
@@ -1368,6 +1381,7 @@ async function borrarMios(req, env, c) {
   if (ya && Date.now() - ya < 60e3) return json({ e: 'Ya está borrado. Si quieres repetirlo, espera un minuto.' }, 429, c);
   if (BORRADOS.size > 2000) BORRADOS.clear();
   BORRADOS.set(u.uid, Date.now());
+  // (las de quién usa la app que aún queden en el KV de antes de la 0.8.4: se borran solas, pero no hay que esperar)
   const claves = [`p:${u.uid}`, `r:${u.uid}`];
   for (const k of await listar(env, `u:${u.uid}:`)) claves.push(k.name);
   let avisos = 0;
@@ -1382,6 +1396,8 @@ async function borrarMios(req, env, c) {
   for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
   // (19 nov) tu código de invitar y tus premios (queda solo que la cuenta ya existía, para que no valga como nueva) y tus apodos
   if (env.QR) {
+    // (0.8.4) tu ficha, tu registro y tu tiempo de uso, en el objeto de quién usa la app
+    try { const r = await pedirQuien(env, { op: 'borrar', uid: u.uid }); if (!r.ok) fallidas++; PRIMERA_MEM.delete(u.uid); } catch (e) { fallidas++; }
     try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
     try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
     // (22 nov) y lo guardado para tener lo mismo en todos tus dispositivos (plan, chat, lo contado)
@@ -1411,12 +1427,14 @@ async function invPedir(env, b) {
   const r = await objInv(env).fetch('https://freno/inv', { method: 'POST', body: JSON.stringify({ ...b, cfg: b.cfg || (await cfgInv()), ahora: Date.now(), dia: hoyMadrid() }) });
   return r.json();
 }
-/** la primera vez que se vio la cuenta en la app (KV de /hola), o 0 si nunca */
+/** la primera vez que se vio la cuenta en la app (la ficha y el registro de /hola), o 0 si nunca. Una vez vista no cambia:
+    se recuerda en la memoria del Worker (así /invitar no le pregunta al objeto cada vez) */
+const PRIMERA_MEM = new Map();
 async function primeraVez(env, uid) {
+  if (PRIMERA_MEM.has(uid)) return PRIMERA_MEM.get(uid);
   let t = 0;
-  for (const k of [`r:${uid}`, `p:${uid}`]) {
-    try { const x = await env.VINCULOS.getWithMetadata(k); const p = Number(x && x.metadata && x.metadata.primera) || 0; if (p && (!t || p < t)) t = p; } catch (e) { /* nada */ }
-  }
+  try { t = Number((await pedirQuien(env, { op: 'primera', uid })).t) || 0; } catch (e) { return 0; }
+  if (t) { if (PRIMERA_MEM.size > 5000) PRIMERA_MEM.clear(); PRIMERA_MEM.set(uid, t); }
   return t;
 }
 // los premios de cada cuenta en la memoria del Worker (5 min), para que /plan y /pregunta no le pregunten al objeto cada vez
@@ -1517,106 +1535,30 @@ async function apodos(req, env, c) {
   return json(r, r.ok ? 200 : 400, c);
 }
 
-/* ---------- quién usa la app ---------- */
-const VIVE_HOLA = 90 * 86400, VIVE_REGISTRO = 400 * 86400;
-// cambios de versión, equipo o foto que se apuntan al momento, por cuenta y día (el resto espera a la escritura de cada hora)
-export const CAMBIOS_DIA = 3;
-const CANALES = new Set(['github', 'play', 'web']);
-/**
- * la ficha de cada cuenta que ha entrado alguna vez (r:<uid>), para contar usuarios: se borra a los 400 días sin abrir la
- * app (cada escritura vuelve a contar los 400 días; antes no caducaba nunca: revisión total, M1) y no lleva nombre ni
- * equipo, solo { uid, primera, ultima, canales: 'github,web', dias: días distintos con la app abierta }. Se escribe
- * como mucho una vez al día por cuenta (o si entra desde un sitio nuevo): las escrituras gratis de KV son unas mil al día.
+/* ---------- quién usa la app (0.8.4: en el objeto «quien|todos», worker/src/quien.js) ---------- */
+/*
+ * POST /hola        la ficha de quien llama (nombre, equipo, liga, versión, canal, foto…) y su registro (días, canales,
+ *                   eventos), en una sola llamada al objeto. Devuelve { ok, admin, ev, bv? }.
+ * GET  /caras?liga  las fotos de los de tu liga que usan la app.
+ * GET  /hola/todos  la pantalla «Quién usa la app» (el dueño): lo del objeto, más las invitaciones y el embudo.
+ * Antes iba en el KV (p:, r:, u:) y era casi todo lo que gastaba de sus topes gratis.
  */
-/* lo que hace cada cuenta (web/js/eventos.js): cuántas veces por día; aquí se suma por semanas (la clave es el lunes)
-   y en total. Solo números: ni qué jugador ni qué liga. */
-const EVENTOS = new Set(['p', 'q', 'b', 't', 'l', 'e', 'v', 'c', 'n', 'i', 'a', 'A', 'f', 'F']);
-function limpiarEventos(ev) {
-  const out = {};
-  if (!ev || typeof ev !== 'object') return out;
-  for (const [d, cs] of Object.entries(ev).slice(0, 15)) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !cs || typeof cs !== 'object') continue;
-    for (const [k, n] of Object.entries(cs)) {
-      const v = Math.round(Number(n));
-      if (EVENTOS.has(k) && v > 0 && v <= 500) (out[d] || (out[d] = {}))[k] = v;
-    }
-  }
-  return out;
-}
-const lunesDe = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
-function sumarEventos(r, ev) {
-  const sem = { ...((r && r.ev) || {}) }, tot = { ...((r && r.tot) || {}) };
-  for (const [d, cs] of Object.entries(ev)) {
-    const l = lunesDe(d), x = { ...(sem[l] || {}) };
-    for (const [k, n] of Object.entries(cs)) { x[k] = (x[k] || 0) + n; tot[k] = (tot[k] || 0) + n; }
-    sem[l] = x;
-  }
-  // las 6 semanas últimas (los metadatos del almacén no pasan de 1 KB)
-  const quedan = Object.keys(sem).sort().slice(-6);
-  return { ev: Object.fromEntries(quedan.map((l) => [l, sem[l]])), tot };
-}
-/** devuelve true si ha sumado los eventos que traía (si no, la app los vuelve a mandar en el siguiente saludo) */
-async function registrar(env, uid, canal, primera, ahora, evIn = null) {
-  try {
-    const k = `r:${uid}`, dia = hoyMadrid();
-    const ya = await env.VINCULOS.getWithMetadata(k);
-    const r = ya && ya.metadata ? ya.metadata : null;
-    const cs = new Set(String((r && r.canales) || '').split(',').filter(Boolean));
-    const nuevoCanal = CANALES.has(canal) && !cs.has(canal);
-    const ev = limpiarEventos(evIn);
-    const hayEv = Object.keys(ev).length > 0;
-    // una vez al día, o con eventos si hace 12 horas o más de la última (como mucho dos escrituras al día por cuenta)
-    if (r && r.dia === dia && !nuevoCanal && !(hayEv && ahora - (r.ultima || 0) >= 12 * 3600e3)) return false;
-    if (CANALES.has(canal)) cs.add(canal);
-    const ficha = { uid, primera: Math.min((r && r.primera) || primera, primera), ultima: ahora, dia, canales: [...cs].join(','), dias: ((r && r.dias) || 0) + (r && r.dia === dia ? 0 : 1) };
-    const s = sumarEventos(r, ev);
-    if (Object.keys(s.tot).length) { ficha.ev = s.ev; ficha.tot = s.tot; }
-    while (JSON.stringify(ficha).length > 1000 && ficha.ev && Object.keys(ficha.ev).length > 1) delete ficha.ev[Object.keys(ficha.ev).sort()[0]];
-    await env.VINCULOS.put(k, '1', { metadata: ficha, expirationTtl: VIVE_REGISTRO });
-    return hayEv;
-  } catch (e) { return false; /* nada: si el almacén no deja, se sigue */ }
-}
+// lo que se queda de lo que manda la app (el objeto lo corta y lo limpia igual)
+const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'disp'];
 async function hola(req, env, c, ruta) {
-  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   if (ruta === '/hola' && req.method === 'POST') {
     if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `hola|${u.uid}`, FRENOS.hola.min))) return demasiadas(c);
-    const b = await req.json().catch(() => ({})) || {};
-    const k = `p:${u.uid}`;
-    const ya = await env.VINCULOS.getWithMetadata(k);
-    const m = ya && ya.metadata ? ya.metadata : null;
-    const ahora = Date.now();
-    const nuevo = {
-      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20) || (m && m.liga) || '', v: corta(b.v, 12),
-      canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
-      primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
-      foto: u.foto || '',
-      // por qué no se le pone la web nueva (el último fallo de AlDia en su móvil, desde la 0.7.6)
-      ...(b.ad ? { ad: corta(b.ad, 90) } : {}),
-      // por qué no le carga la liga (16 nov): el tipo de error y el principio del mensaje, solo con la versión acabada en « !»
-      ...(b.fc && / !$/.test(String(b.v || '')) ? { fc: corta(b.fc, 60) } : {}),
-      // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
-      ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
-    };
-    // (Cloudflare deja unas mil escrituras al día gratis y las comparte con los códigos de entrar y los avisos: cada cuenta,
-    // como mucho una por hora, salvo que cambie la versión o el equipo; alternar app y web ya no escribe cada vez, y si
-    // el almacén no deja, se sigue sin más; revisión del 29 oct)
-    // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
-    // total, C1. Con más, el cambio entra en la escritura de cada hora)
-    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
-    // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
-    const bvNueva = !!nuevo.bv && !(m && m.bv);
-    // (la liga, igual, una vez por cuenta: el primer aviso sale a veces antes de que la app tenga la liga, y sin esto se quedaba
-    // «sin liga» hasta la siguiente escritura de la hora; 17 nov)
-    const ligaNueva = !!nuevo.liga && !!m && !m.liga;
-    const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
-    const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
-    if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
-    const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
+    const b = (await req.json().catch(() => ({}))) || {};
+    const x = {};
+    for (const k of HOLA_CAMPOS) if (b[k] != null && typeof b[k] !== 'object') x[k] = b[k];
+    let r;
+    try { r = await pedirQuien(env, { op: 'hola', uid: u.uid, nombre: u.nombre, foto: u.foto || '', x, ev: b.ev && typeof b.ev === 'object' ? b.ev : null }); } catch (e) { r = null; }
+    if (!r || !r.ok) return json({ e: 'Sin almacén' }, 503, c);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
-    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);
+    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
@@ -1627,69 +1569,67 @@ async function hola(req, env, c, ruta) {
     // (LaLiga da la clasificación de cualquier liga a quien la pida: que quien llama esté en ella lo mira el Worker;
     // revisión total, C6)
     if (!ids || !ids.includes(String(u.uid))) return json({ e: 'Esa liga no es tuya' }, 403, c);
-    const caras = {};
-    await Promise.all(ids.slice(0, 40).map(async (id) => {
-      try { const x = await env.VINCULOS.getWithMetadata(`p:${id}`); const f = x && x.metadata && x.metadata.foto; if (f) caras[id] = f; } catch (e) { /* nada */ }
-    }));
+    let caras = {};
+    try { caras = (await pedirQuien(env, { op: 'caras', ids: ids.slice(0, 40) })).caras || {}; } catch (e) { caras = {}; }
     return json({ caras }, 200, c);
   }
   if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
-    // (20 nov, Carlos: «de repente no me funciona esta pestaña»: tardaba 112 s con 74 cuentas y la app corta a los 20) lo
-    // de fuera, con tiempo máximo, y cuánto tarda cada parte en `tiempos` (ms) para saber cuál se atasca
+    // (20 nov: tardaba 112 s con 74 cuentas leyendo el KV clave a clave) ahora es una llamada al objeto, que devuelve el JSON
+    // ya escrito; a la vez, las invitaciones y el embudo, con tiempo máximo. Cuánto tarda cada parte, en `tiempos` (ms)
     const t0 = Date.now(), tiempos = {};
-    const marca = (k) => { tiempos[k] = Date.now() - t0; };
-    const dia = hoyMadrid();
-    // (23 nov, Carlos: «suele tardar bastante en cargar») lo que no depende de las cuentas va a la vez que ellas: el
-    // registro, las invitaciones y el embudo (antes, uno detrás de otro). Un fallo del registro se lanza donde se usa
-    const pReg = listar(env, 'r:', 50000).then((l) => { marca('registro'); return { l }; }, (e) => ({ e }));
     const pInv = env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null;
     const pEmb = conTope(leerEmbudo(env), 6000);
-    const ks = (await listar(env, 'p:', 20000)).filter((k) => k.metadata);
-    marca('cuentas');
-    ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
-    // (19 nov, Carlos: «quiero ver exactamente cuántos han entrado, al día, cuántos nuevos y el tiempo que pasan dentro, sí
-    // o sí») el tiempo de cada día, de TODAS las cuentas: hoy de todas y los 6 días de antes de las que han entrado esta
-    // semana, hasta el día de su última vez (después no pudo usarla). Se leen de 100 en 100 con la lectura en bloque de
-    // KV, que cuenta como UNA operación para el tope de mil por petición (antes, una a una y solo de las 40 últimas: con
-    // 50+ cuentas en la semana los días de atrás salían bajos, el lunes de 27 a 20)
-    const dias = diasAtras(dia, 7), hace7 = Date.now() - 7 * 86400e3;
-    const aLeer = ks.map((k) => {
-      if ((k.metadata.ultima || 0) < hace7) return [dia];
-      const hasta = diaMadrid(k.metadata.ultima || Date.now());
-      return dias.filter((d) => d === dia || d <= hasta);
-    });
-    const claves = [];
-    ks.forEach((k, i) => aLeer[i].forEach((d) => claves.push(`u:${k.metadata.uid}:${d}`)));
-    const leido = await conTope(leerEnBloque(env, claves), 8000, new Map());
-    marca('usos');
-    const usos = ks.map((k, i) => {
-      const o = {};
-      for (const d of aLeer[i]) {
-        const kk = `u:${k.metadata.uid}:${d}`;
-        const v = Math.min(86400, (Number(leido.get(kk)) || 0) + (PEND_USO.get(kk) || 0));
-        if (v) o[d] = v;
-      }
-      return o;
-    });
-    const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));
-    // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
-    // que existe), con lo de p:
-    const rr = await pReg;
-    if (rr.e) throw rr.e;
-    const reg = new Map(rr.l.filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
-    for (const x of lista) {
-      const r = reg.get(String(x.uid));
-      if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
-      else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
-    }
-    // (19 nov) las invitaciones de cada cuenta: cuántos entran y cuántos vuelven otro día, para ver si alguien abusa
-    const [invitar, embudo] = await Promise.all([pInv, pEmb]);
-    marca('fin');
-    console.log(`hola/todos: ${tiempos.fin} ms (${ks.length} cuentas, ${claves.length} días leídos; cuentas ${tiempos.cuentas}, usos ${tiempos.usos}, registro ${tiempos.registro})`);
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo, invitar, tiempos }, 200, c);
+    const pQuien = pedirQuien(env, { op: 'todos' }, true).then((t) => { tiempos.cuentas = Date.now() - t0; return t; });
+    const [txt, invitar, embudo] = await Promise.all([pQuien, pInv, pEmb]);
+    tiempos.fin = Date.now() - t0;
+    console.log(`hola/todos: ${tiempos.fin} ms (cuentas ${tiempos.cuentas}, ${txt.length} caracteres)`);
+    // (el texto del objeto no se vuelve a leer aquí: se le pega lo demás detrás; con 1.000 cuentas, el Worker no gasta CPU)
+    return new Response(`${txt.slice(0, -1)},"embudo":${JSON.stringify(embudo)},"invitar":${JSON.stringify(invitar)},"tiempos":${JSON.stringify(tiempos)}}`, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
   }
   return json({ e: 'No existe' }, 404, c);
+}
+
+/*
+ * La mudanza de quién usa la app desde el KV (0.8.4). La hace el cron del Worker (cada 5 min) hasta acabar:
+ *   1. copia las fichas (p:), los registros (r:) y los tiempos (u:) al objeto, una familia en cada pasada; el objeto solo
+ *      pone lo que no tiene (lo que ya ha traído él de una cuenta que llegó antes, `traerDeKV`, se queda);
+ *   2. dos días después de copiado (por si hubiera que volver al Worker de antes), borra del KV las fichas y los
+ *      registros, MUDANZA_LOTE a la hora (los borrados gratis son 1.000 al día y los comparte con todo). Los tiempos se
+ *      borran solos a los 9 días.
+ * Lo que va sabiendo se queda en la memoria del Worker; el objeto lleva el estado de verdad.
+ */
+export const MUDANZA_LOTE = 15, MUDANZA_ESPERA = 2 * 86400e3;
+const MUDANZA = { limpio: 0, copiado: 0 };
+export async function mudanzaQuien(env, ahora = Date.now()) {
+  if (!env.QR || !env.VINCULOS || MUDANZA.limpio) return { nada: true };
+  // ya copiado, el resto (borrar del KV) solo en la primera pasada de cada hora
+  if (MUDANZA.copiado && new Date(ahora).getUTCMinutes() >= 5) return { nada: true };
+  const est = await pedirQuien(env, { op: 'mudanza' });
+  if (est.limpio) { MUDANZA.limpio = est.limpio; return { limpio: true }; }
+  if (!est.copiado) {
+    const fase = ['p', 'r', 'u'].includes(est.fase) ? est.fase : 'p';
+    const ks = await listar(env, `${fase}:`, 50000);
+    let filas;
+    if (fase === 'u') {
+      const leido = await leerEnBloque(env, ks.map((k) => k.name));
+      filas = ks.map((k) => { const [, uid, dia] = k.name.split(':'); return [uid, dia, Number(leido.get(k.name)) || 0, Number(k.metadata && k.metadata.t) || 0]; });
+    } else filas = ks.filter((k) => k.metadata && typeof k.metadata === 'object').map((k) => [k.name.slice(2), k.metadata]);
+    const r = await pedirQuien(env, { op: 'copiar', fase, filas, siguiente: { p: 'r', r: 'u', u: 'hecho' }[fase] });
+    console.log(`mudanza de quién usa la app: ${fase}: ${filas.length} del KV, ${r.n} nuevas`);
+    return { fase, leidas: filas.length, nuevas: r.n };
+  }
+  MUDANZA.copiado = est.copiado;
+  if (ahora - est.copiado < MUDANZA_ESPERA) return { esperando: true };
+  const borrar = [];
+  for (const pre of ['p:', 'r:']) {
+    if (borrar.length >= MUDANZA_LOTE) break;
+    const l = await env.VINCULOS.list({ prefix: pre, limit: MUDANZA_LOTE - borrar.length });
+    borrar.push(...l.keys.map((k) => k.name));
+  }
+  if (!borrar.length) { await pedirQuien(env, { op: 'kvLimpio' }); MUDANZA.limpio = ahora; console.log('mudanza de quién usa la app: el KV ya está limpio'); return { limpio: true }; }
+  for (const k of borrar) { try { await env.VINCULOS.delete(k); } catch (e) { break; } }
+  return { borradas: borrar.length };
 }
 
 // El reloj del bot de X: el cron de GitHub Actions no dispara (2 nov, 0 ejecuciones por schedule), así que este Worker,
@@ -1868,6 +1808,8 @@ export default {
       inputs = { tipos: 'mercado' };
     }
     ctx.waitUntil(lanzarBot(env, fetch, inputs).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
+    // (0.8.4) la mudanza de quién usa la app desde el KV, hasta que acaba (mudanzaQuien)
+    if (evento.cron === '*/5 * * * *') ctx.waitUntil(mudanzaQuien(env, evento.scheduledTime || Date.now()).catch((e) => console.log('mudanza de quién usa la app:', String((e && e.message) || e))));
   },
 
   async fetch(req, env, ctx) {
