@@ -3520,7 +3520,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -4385,7 +4385,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-esprint/00031795276874886348770.htm": 1795277340000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261121/1004253739/aramburu-unico-apercibido-disponible-real-sociedad-sardinero.html": 1795277086000,
@@ -9508,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5997,
+   "ok": 5998,
    "fallos": 0,
-   "ejecuciones": 4854,
+   "ejecuciones": 4855,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T15:01:18.160Z"
+   "ultima": "2026-11-24T15:06:13.852Z"
   }
  },
  "ptsDirecto": {},
@@ -9531,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:02:02.129Z"
+   "ultimaBien": "2026-11-24T15:06:35.904Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:02:02.129Z"
+   "ultimaBien": "2026-11-24T15:06:35.904Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:02:02.129Z"
+   "ultimaBien": "2026-11-24T15:06:35.904Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9547,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:02:02.129Z"
+   "ultimaBien": "2026-11-24T15:06:35.904Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:02:02.129Z"
+   "ultimaBien": "2026-11-24T15:06:35.904Z"
   }
  },
  "avisos": [
