@@ -187,7 +187,8 @@ try {
   console.log(r.breves.map((t) => `   breve · ${t}`).join('\n'));
   ok(r.breves.every((t) => t.length <= 125 && /\.$/.test(t) && !/…/.test(t)) && r.breves[0] === 'No hace falta hoy: venderías perdiendo 945 mil de lo que pagaste y quedan 3 cambios de mercado antes de la jornada 14.' && r.breves[1] === 'Te da 1,3 pts por jornada y aún no baja todos los días: se aguanta.' && /^Pagarías 6,11 M/.test(r.breves[2]) && r.breves[3] === 'Sale por C. Soler y no hay más.', 'el recorte deja una frase entera, sin puntos suspensivos ni «La app lo descarta», y no corta en la inicial de un nombre');
   const F = r.rico.flojo;
-  ok(F.sinPlan === 'Pepelu' && F.conPlan !== 'Pepelu' && F.descartados.includes('Pepelu'), `Equipo no propone para lo flojo del once (${F.quien}) a quien el plan descarta: sin mirar el plan salía ${F.sinPlan}; ahora, ${F.conPlan || '«Ver sustitutos»'}`);
+  // (24 nov, decide.js) Equipo ya no lo propone ni sin pasarle el plan: lo que el plan no ficha lo sabe `M.decisionFichar`
+  ok(F.sinPlan !== 'Pepelu' && F.conPlan !== 'Pepelu' && F.descartados.includes('Pepelu'), `Equipo no propone para lo flojo del once (${F.quien}) a quien el plan descarta (Pepelu): sale ${F.conPlan || '«Ver sustitutos»'}`);
   ok(!F.conPlan || !F.descartados.includes(F.conPlan), 'y el que propone no está entre los descartados del plan');
   ok(/REGLAS: ok/.test(r.pobre.reglas), `con 20 M, el árbitro da el plan por bueno (${r.pobre.reglas})`);
   ok(r.despues.esMio && r.despues.paraRevender && r.despues.aguanta && !r.despues.vende, 'al día siguiente, con Bartra fichado (vale menos de lo pagado, cláusula cerrada 13 días), el plan no lo vende');

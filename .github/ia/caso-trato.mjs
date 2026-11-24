@@ -60,5 +60,33 @@ ok(r.sis < 16500, `las instrucciones del chat siguen por debajo de 16.500 caract
 ok(!r.rev.length, `la revisión de la app no corrige una respuesta buena del trato${r.rev.length ? `: ${JSON.stringify(r.rev)}` : ''}`);
 ok(r.bajo && r.bajo.notas.some((n) => /sube: por menos de unos/.test(n)), `ofrecer por ${r.bajo && r.bajo.j}, que sube, un 15 % menos de lo que pediría su dueño (${r.bajo && M_(r.bajo.od)} M): la revisión lo dice${r.bajo ? ` (${JSON.stringify(r.bajo.notas)})` : ' (no hay ninguno que suba)'}`);
 ok(r.justo && !r.justo.notas.some((n) => /sube: por menos de unos/.test(n)), 'y ofreciendo lo que pediría, no');
+// (24 nov, Carlos con Bernardo Silva: «le compro a Fran a Bernardo Silva por precio mercado para revenderlo» y la IA: «el dueño
+// no vende a su valor, la oferta que tienes que hacer es de 33,58 M») una compra a otro mánager a un precio que él cuenta es
+// un hecho, y las cuentas de revenderlo las hace la app
+{
+  const P2 = await pagina('holgado');
+  const c2 = await P2.page.evaluate(async () => {
+    const I = await import('./js/ia.js'), Dt = await import('./js/datos.js');
+    const { D, M } = window.S, c = Dt.cfg();
+    const x = M.clausulas.filter((y) => y.j.valor > 20e6 && y.j.valor < 45e6).sort((a, b) => a.j.valor - b.j.valor)[0];
+    const riv = x.rival.manager || x.rival.nombre, n = x.j.nombre;
+    const q1 = `le compro a ${riv} a ${n} por precio mercado para revenderlo y sacar el 10%?`;
+    const q2 = 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero';
+    const hist = [{ r: 'yo', t: q1 }, { r: 'ia', t: 'No.' }, { r: 'yo', t: q2 }];
+    const C1 = I.compraContada(q1, D, M);
+    const bloque = (t) => (t.match(/LA APP, LA COMPRA QUE CUENTA[^\n]*/) || [''])[0];
+    const rev = I.revisarChat('Con eso no compras: el dueño no vende a su valor, y la oferta que tienes que hacer es mayor.', q2, D, M, { hist });
+    return { n, valor: x.j.valor, C1, b1: bloque(I.datosChat(q1, D, M, c, {})), b2: bloque(I.datosChat(q2, D, M, c, { hist })), rev: rev.notas || [],
+      sin: I.compraContada(`¿Cuánto vale ${n}?`, D, M), conMio: I.compraContada(`le compro a ${riv} a ${n} a su valor y él me compra a ${M.mias[0].j.nombre}`, D, M),
+      pobre: (I.compraTxt({ ...D, dinero: 1e6 }, M, C1).match(/LA DECISIÓN DE LA APP: [^.]*/) || [''])[0], ol: M.ofertaLiga };
+  });
+  ok(c2.C1 && c2.C1.precio === c2.valor, `«por precio mercado» es su valor (${c2.n}: ${M_(c2.valor)} M)`);
+  ok(/ES UN HECHO/.test(c2.b1) && /NO le digas que el dueño no vende/.test(c2.b1) && /LA DECISIÓN DE LA APP: SÍ, PARA REVENDERLO/.test(c2.b1), `a su valor y con saldo de sobra, la app dice que sí para revenderlo: «${(c2.b1.match(/LA DECISIÓN DE LA APP: [^.]*/) || [''])[0]}»`);
+  ok(/LA APP, LA COMPRA QUE CUENTA/.test(c2.b2), 'en el mensaje siguiente, sin nombrarlo, sigue siendo la misma compra');
+  ok(c2.rev.some((t) => /ese es el precio/.test(t) && /para revenderlo/.test(t)), `si la IA contesta que el dueño no vende a ese precio, la revisión lo corrige: ${JSON.stringify(c2.rev).slice(0, 200)}`);
+  ok(c2.sin === null && c2.conMio === null, 'una pregunta que no es una compra no lo activa, y con uno mío en el mensaje es un trato');
+  ok(/NO LE LLEGA/.test(c2.pobre), `sin saldo, no (a otro mánager no se le paga con deuda): «${c2.pobre}»`);
+  await P2.cerrar(); await cerrar();
+}
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

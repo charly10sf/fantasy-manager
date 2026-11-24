@@ -3343,6 +3343,65 @@ export function tratoEn(texto, D, M) {
   if (igual) { const x = Math.min(...[...sm, ...ss].map((y) => y.precio)); if (sm.length === 1 && ss.length === 1) { sm[0].precio = x; ss[0].precio = x; } }
   return { mios: sm, suyos: ss, igual, supuesto: supuesto && !igual };
 }
+/* ---------------- una compra a otro mánager que él cuenta (24 nov, Carlos con Bernardo Silva) ----------------
+   «Le compro a Fran a Bernardo Silva por precio de mercado para revenderlo»: el dueño se lo deja a ese precio (lo han hablado
+   por WhatsApp) y la IA contestaba «el dueño no vende a su valor, hay que ofrecer 33,58 M» (la estimación de `ofertaDueno`,
+   que aquí no pinta nada). Como con las ofertas que cuenta (22 nov): es un HECHO, y las cuentas las hace la app: lo que le
+   daría LaLiga en el siguiente cambio de mercado, si le llega con el saldo (a otro mánager no se le paga con deuda), si le
+   cabe en la plantilla, lo que suma a su once y si le falta gente en ese puesto. Con uno suyo en el mensaje es un trato (`tratoEn`) */
+const COMPRA_DICHA = /\b(le compr\w*|se lo compr\w*|lo compr\w*|compr\w* a\b|me (?:lo |la |los )?(?:vend|dej|ofrec|pon|pas)\w*|lo (?:deja|vende|ofrece|pone)\b|me lo quedo)/;
+export function compraContada(pregunta, D, M, antes = '') {
+  const yo = D.yo && D.yo.teamId;
+  const l = ` ${liso(pregunta)} `;
+  if (!COMPRA_DICHA.test(l)) return null;
+  const de = (t) => jugadoresEn(t, D).filter((j) => M.dueno[j.id]);
+  let js = de(pregunta);
+  // «pero si lo compro por precio de mercado…»: el jugador viene de sus mensajes de antes
+  if (!js.length && antes) js = de(antes);
+  if (js.some((j) => M.dueno[j.id] === yo)) return null;
+  const suyos = js.filter((j) => M.dueno[j.id] !== yo);
+  if (suyos.length !== 1) return null;
+  const j = suyos[0];
+  let precio = null, como = '';
+  const eurM = /(\d{1,3}(?:[.,]\d{1,3})?)\s*(?:m\b|millones\b|mill\b|kilos\b|kk\b)/.exec(l);
+  const pctM = /(?:un\s+)?(\d+(?:[.,]\d+)?)\s*%\s*(mas|menos|por encima|por debajo)/.exec(l);
+  if (eurM && !/(saldo|tengo|clausula|vale|valor|valia|me quedan?)\s*(?:de|en|a|es|son)?\s*(?:unos?\s*)?$/.test(l.slice(Math.max(0, eurM.index - 28), eurM.index))) { precio = parseFloat(eurM[1].replace(',', '.')) * 1e6; como = `por ${eur(precio)}`; }
+  else if (pctM) { precio = Math.round(j.valor * (1 + parseFloat(pctM[1].replace(',', '.')) / 100 * (/menos|debajo/.test(pctM[2]) ? -1 : 1)) / 1e4) * 1e4; como = `un ${pctM[1]} % ${pctM[2]} de su valor`; }
+  else if (/\b(?:a|por|en|al)\s+(?:(?:su|el)\s+)?(?:valor|precio)(?:\s+de)?(?:\s+mercado)?\b|\bpor lo que vale\b|\ba mercado\b/.test(l)) { precio = j.valor; como = 'a su valor de mercado'; }
+  if (!precio || precio < j.valor * 0.5 || precio > j.valor * 3) return null;
+  return { pid: j.id, precio, como };
+}
+export function compraTxt(D, M, C) {
+  const j = M.J(C.pid);
+  if (!j) return '';
+  const tid = M.dueno[j.id], riv = (M.rivales || []).find((r) => r.e && r.e.teamId === tid), dueno = riv ? (riv.e.manager || riv.e.nombre) : 'su dueño';
+  const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
+  const ine = M.inercia(j.id), dia = ine ? num(ine.ult) : num((M.tend(j.id) || {}).d1);
+  // la oferta de LaLiga llega en el siguiente cambio de mercado, con lo que valga entonces
+  const OL = M.ofertaLigaDe({ ...j, valor: Math.max(1, j.valor + dia) }) || { v: j.valor, min: null, max: null, sinDatos: true };
+  const gana = OL.v - C.precio, gmin = OL.min != null ? OL.min - C.precio : null, gmax = OL.max != null ? OL.max - C.precio : null;
+  const saldo = num(D.dinero), llega = saldo >= C.precio, llena = (M.mias || []).length >= 25;
+  const once = M.mejora ? num(M.mejora(j)) : 0;
+  const sobre = j.valor ? C.precio / j.valor - 1 : 0;
+  // cómo va de gente en ese puesto (Carlos: «teniendo en cuenta si me faltan jugadores de otras posiciones»)
+  const PU = { 1: 'porteros', 2: 'defensas', 3: 'centrocampistas', 4: 'delanteros' };
+  const pu = (M.puestos || []).find((y) => y.pos === j.pos), otros = (M.puestos || []).filter((y) => y.pos !== j.pos && y.faltan > 0);
+  const puesto = pu && pu.faltan > 0 ? ` En su puesto le ${pu.faltan > 1 ? 'faltan' : 'falta'} ${pu.faltan}: si no lo revende, le viene bien quedárselo.` : pu && pu.sobran > 0 ? ` De ${PU[j.pos]} va sobrado: es solo para revender.` : '';
+  const faltaOtros = otros.length && saldo - C.precio < 5e6 ? ` OJO: le faltan ${otros.map((y) => `${y.faltan} ${PU[y.pos]}`).join(' y ')} y con esta compra se queda con ${eur(saldo - C.precio)} hasta que lo revenda.` : '';
+  const cuandoL = M.cierreMercado ? ` (${cuandoF(M.cierreMercado)})` : '';
+  const antesJ = !!(M.cierreMercado && M.proxima && M.cierreMercado < M.proxima.ini);
+  const rango = gmin != null ? ` (entre ${eur(gmin, { signo: true })} y ${eur(gmax, { signo: true })} según la suerte)` : '';
+  const baja = dia < 0 ? `, ya contado que hoy baja ${eur(-dia)}` : dia > 0 ? `, ya contado que hoy sube ${eur(dia)}` : '';
+  const ok = gana >= Math.max(150000, C.precio * 0.01);
+  let ver;
+  if (llena) ver = 'NO PUEDE: tiene la plantilla llena (25) y antes tendría que vender a uno';
+  else if (!llega) ver = `NO LE LLEGA: a otro mánager se le paga con saldo, sin deuda, y tiene ${eur(saldo)} (le faltan ${eur(C.precio - saldo)}); antes tendría que vender`;
+  else if (ok) ver = `SÍ, PARA REVENDERLO: lo normal es ganar unos ${eur(gana, { signo: true })}${rango}${once >= 0.3 ? `; y si se lo queda, suma ${d1(once)} pts por jornada a su once` : ''}`;
+  else if (once >= 0.3) ver = `PARA REVENDER NO (lo normal sería ${eur(gana, { signo: true })}${rango}); PARA SU ONCE, SÍ: suma ${d1(once)} pts por jornada`;
+  else ver = `NO COMPENSA: revendiéndolo lo normal sería ${eur(gana, { signo: true })}${rango} y no mejora su once`;
+  return `\n\nLA APP, LA COMPRA QUE CUENTA: ${dueno} le deja a ${j.nombre} ${C.como} (${eur(C.precio)}; vale ${eur(j.valor)}${Math.abs(sobre) >= 0.005 ? `, ${pct(sobre * 100)}` : ''}). ES UN HECHO (lo han hablado fuera de la app): NO le digas que el dueño no vende a ese precio, ni le des otra «oferta para que te lo venda» o «oferta mínima», ni que no lo ves. LAS CUENTAS: se paga con saldo (tiene ${eur(saldo)}${llega ? ` y se queda con ${eur(saldo - C.precio)}` : ''}); lo pone a la venta y LaLiga le hace su oferta en el siguiente cambio de mercado${cuandoL}${antesJ ? ', antes de la jornada' : ''}: unos ${eur(OL.v)}${OL.min != null ? ` (entre ${eur(OL.min)} y ${eur(OL.max)})` : ''}${baja}${OL.sinDatos ? '; sin datos de su liga, cerca de su valor' : `; en su liga LaLiga da de mediana un ${pct(OL.med * 100)}`}. Recién comprado, su cláusula queda cerrada 14 días.${puesto}${faltaOtros} LA DECISIÓN DE LA APP: ${ver}. Respóndele con esto y con estas cifras, sin rehacerlas.`;
+}
+
 /** el trato de la conversación: el de la pregunta, si no el de sus últimos mensajes y si no el último trato apuntado */
 export function tratoDeChat(pregunta, D, M, antes = []) {
   const fuentes = [pregunta, ...[...antes].reverse()];
@@ -3594,6 +3653,21 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [], apunta
     });
     if (manda) nota(`Con la oferta por ${N(v.j)} la app aconseja esperar, así que mejor no aceptarla todavía${v.porque ? `: ${cortar(v.porque, 150).replace(/[.\s]+$/, '')}` : ''}${v.porque && /…$/.test(cortar(v.porque, 150)) ? '' : '.'}`);
   }
+
+  /* 3f. (24 nov, Carlos con Bernardo Silva) le cuenta que un rival le deja a uno a un precio y la respuesta dice que el dueño
+     no vende a ese precio o le da otra «oferta mínima»: se corrige con las cuentas de la app */
+  try {
+    const antesQ = (hist || []).filter((m) => m.r === 'yo').slice(-3).map((m) => m.t || '').filter((x) => x !== pregunta).join(' ');
+    const C = compraContada(pregunta, D, M, antesQ);
+    if (C && /\b(no (te lo )?vende a (su|ese) (valor|precio)|oferta minima|oferta que tienes que hacer|para que te lo venda|no compras)\b/.test(norm(t))) {
+      const dec = (compraTxt(D, M, C).match(/LA DECISIÓN DE LA APP: ([^.]*)\./) || [])[1];
+      if (dec) {
+        const tu = dec.replace('SÍ, PARA REVENDERLO', 'sí, para revenderlo').replace('NO PUEDE: tiene', 'no puedes: tienes').replace('NO LE LLEGA', 'no te llega').replace('PARA REVENDER NO', 'para revender no').replace('PARA SU ONCE, SÍ', 'para tu once, sí').replace('NO COMPENSA', 'no compensa')
+          .replace(/\bsu once\b/g, 'tu once').replace('y tiene ', 'y tienes ').replace('le faltan', 'te faltan').replace(/tendría\b/g, 'tendrías').replace('se lo queda', 'te lo quedas');
+        nota(`Si te deja a ${N(M.J(C.pid))} por ${eur(C.precio)}, ese es el precio. Con él, ${tu}.`);
+      }
+    }
+  } catch (e) { /* sin esta comprobación */ }
 
   /* 3e. (24 nov, Senna: «Te he dicho que lo vendas, no que lo aguantes. Mi recomendación sigue igual: vender», con Hoy
      diciendo otra cosa) lo que aconseja de cada jugador tuyo tiene que ser su decisión (decide.js), la misma que ve en Hoy
@@ -3957,7 +4031,14 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
   // (22 nov, Domy) le cuenta una oferta que le han hecho: es un hecho aunque no salga en los datos
   const ofertaTxtQ = cuentaOferta(pregunta) ? '\nTE CUENTA UNA OFERTA O UN TRATO QUE LE HAN HECHO: es un HECHO, aunque no salga en los datos (lo que se habla por WhatsApp o de palabra, y a veces lo último de LaLiga, no llega a la app). NO le digas que no la ves, que no aparece o que la compruebe: dala por buena y valórala con sus cifras y las de los datos (lo que vale el jugador, su tendencia, lo que ha hecho en la jornada, lo que le daría LaLiga, lo que pagaría un rival y lo que pierde su once), y dile si la acepta, si pide más (cuánto) o si no. Si dice que LaLiga YA le da una cifra por uno suyo, es que ya lo tiene en venta y esa oferta ya está hecha: no le digas que llegará en el próximo cambio ni que tiene que ponerlo a la venta; compárala con su valor y su tendencia y dile si la coge hoy o espera a la de mañana.\n' : '';
   const largoTxt = '\n\nLARGO DE TU RESPUESTA: 5 frases como mucho en total, contando cada punto de una lista (salvo que pida la lista entera). Si pregunta por varios jugadores o varias cosas, una frase por cada una y solo lo que decide.';
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}${noFichaTxt}${dijoAntes}`.replace(/\n+$/, '') + largoTxt;
+  // (24 nov) una compra a otro mánager a un precio que él cuenta: es un hecho, con las cuentas de la app
+  let compraTxtQ = '';
+  try {
+    const antesQ = (hist || []).filter((m) => m.r === 'yo').slice(-3).map((m) => m.t || '').filter((t) => t !== pregunta).join(' ');
+    const C = compraContada(pregunta, D, M, antesQ);
+    if (C) compraTxtQ = compraTxt(D, M, C);
+  } catch (e) { compraTxtQ = ''; }
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${compraTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}${noFichaTxt}${dijoAntes}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;
