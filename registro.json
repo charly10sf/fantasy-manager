@@ -3222,7 +3222,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/24/teclas-tocado-aguirre-recuperar-mejor-cesar-tarrega-136767269.html": 1795503622000,
    "SPORT|136779676": 1795502755000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/24/quebradero-cabeza-anselmi-lemar-cae-lesionado-reaparicion.html": 1795508850000,
-   "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000
+   "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000
   },
   "hechos": [
    {
@@ -3504,7 +3505,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4460,22 +4461,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795512672181
+  }
  },
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 39,
    "revisar": 24,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 352632,
-  "salida": 17731,
+  "entrada": 354653,
+  "salida": 17823,
   "cacheLee": 145499,
   "cacheEscribe": 20968,
-  "dolares": 0.884337,
+  "dolares": 0.884585,
   "reservado": 0
  },
  "recientes": {
@@ -9477,13 +9480,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5929,
+   "ok": 5930,
    "fallos": 0,
-   "ejecuciones": 4786,
+   "ejecuciones": 4787,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 440,
-   "ultima": "2026-11-24T09:26:26.974Z"
+   "mediaMs": 441,
+   "ultima": "2026-11-24T09:31:12.181Z"
   }
  },
  "ptsDirecto": {},
@@ -9500,15 +9503,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:26:37.157Z"
+   "ultimaBien": "2026-11-24T09:31:23.918Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:26:37.157Z"
+   "ultimaBien": "2026-11-24T09:31:23.918Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:26:37.157Z"
+   "ultimaBien": "2026-11-24T09:31:23.918Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9516,11 +9519,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:26:37.157Z"
+   "ultimaBien": "2026-11-24T09:31:23.918Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:26:37.157Z"
+   "ultimaBien": "2026-11-24T09:31:23.918Z"
   }
  },
  "avisos": [
