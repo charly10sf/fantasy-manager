@@ -3072,7 +3072,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm": 1795263780000,
    "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/": 1795264736000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261121/1004253696/flick.html": 1795265273000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261121/11689886/flick-baja-christensen-esta-relacionada-fichaje-central-previa-barca-villarreal.html": 1795266096000,
@@ -3237,18 +3236,6 @@
    "SPORT|136786855": 1795518496000
   },
   "hechos": [
-   {
-    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm",
-    "medio": "La Voz de Galicia",
-    "t": 1795263780000,
-    "id": "3069",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Blanco regresa a la convocatoria para el derbi",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/con-hjulmand-pero-sin-lookman-pubill-ni-cuti-f202611-n/",
     "medio": "AS",
@@ -4454,7 +4441,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
    "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795519857000
   },
   "hechos": [
    {
@@ -4507,12 +4495,10 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795521673945
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9544,13 +9530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5965,
+   "ok": 5966,
    "fallos": 0,
-   "ejecuciones": 4822,
+   "ejecuciones": 4823,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T12:21:12.789Z"
+   "ultima": "2026-11-24T12:26:15.328Z"
   }
  },
  "ptsDirecto": {},
@@ -9567,15 +9553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:21:21.261Z"
+   "ultimaBien": "2026-11-24T12:26:37.715Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:21:21.261Z"
+   "ultimaBien": "2026-11-24T12:26:37.715Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:21:21.261Z"
+   "ultimaBien": "2026-11-24T12:26:37.715Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9583,11 +9569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:21:21.261Z"
+   "ultimaBien": "2026-11-24T12:26:37.715Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T12:21:21.261Z"
+   "ultimaBien": "2026-11-24T12:26:37.715Z"
   }
  },
  "avisos": [
