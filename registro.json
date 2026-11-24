@@ -2155,6 +2155,13 @@
    "jornada": 14,
    "id": "2125108824847577290",
    "t": "2026-11-24T06:06:41.432Z"
+  },
+  {
+   "clave": "novedades|3182:lesion,2562:vuelve,2661:sancion|2026-11-24",
+   "tipo": "novedades",
+   "jornada": 14,
+   "id": "2125131483350466967",
+   "t": "2026-11-24T07:36:43.650Z"
   }
  ],
  "estados": {
@@ -4462,16 +4469,16 @@
   "dia": "2026-11-24",
   "llamadas": {
    "clasificar": 5,
-   "redactar": 27,
-   "revisar": 17,
+   "redactar": 30,
+   "revisar": 20,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 199705,
-  "salida": 12963,
-  "cacheLee": 130984,
+  "entrada": 233674,
+  "salida": 14310,
+  "cacheLee": 139693,
   "cacheEscribe": 15162,
-  "dolares": 0.534433,
+  "dolares": 0.616711,
   "reservado": 0
  },
  "recientes": {
@@ -4631,10 +4638,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-20T12:46:39.083Z",
-    "texto": "✅ Zabiri vuelve a estar disponible: la duda queda despejada y el delantero del Racing ⚓ puede estar el domingo.\n\nLleva 9 goles en la liga, y con un 57 % de titularidad tiene más papeletas de jugar que de quedarse fuera. El partido no ayuda: recibe en El Sardinero a la Real Sociedad, que va 5º, un cruce difícil para un delantero."
-   },
-   {
     "t": "2026-11-21T12:56:36.954Z",
     "texto": "✅ Aubameyang llega a tiempo: la duda se despeja y el delantero del Dépor puede jugar hoy a las 14:00.\n\nCon un 88 % de titularidad, lo normal es verlo en el once. Visita Mendizorroza, donde el Alavés, que va 13º, pone un partido asequible para un delantero. Y si lo tienes, ya sabes de lo que es capaz: en la jornada 4 se fue hasta los 17 puntos."
    },
@@ -4649,6 +4652,10 @@
    {
     "t": "2026-11-22T21:56:58.464Z",
     "texto": "🟥 Catena no podrá jugar por sanción. Vio la roja en la jornada 13. Se pierde el partido contra el Valencia 🦇. El defensa del Osasuna 🐂 lleva 3 porterías a cero en 11 partidos.\n\nEl partido es el domingo 29 de noviembre."
+   },
+   {
+    "t": "2026-11-24T07:36:43.654Z",
+    "texto": "Lemar se lesionó ayer en los isquiotibiales y es duda para el partido contra el Atlético, el sábado 28. Es una lesión nueva y no hay plazo, así que no se sabe si llega.\n\nMarc Pubill está disponible para ese Atlético-Elche, y el defensa lleva 4 porterías a cero en 10 partidos.\n\nDjene se pierde el Getafe-Espanyol por la roja que vio en la jornada 13. Vale 12 M y ha perdido 8,6 M en el último mes."
    }
   ],
   "resumen": [
@@ -5100,13 +5107,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "novedades|3182:lesion,2562:vuelve,2661:sancion|2026-11-24": {
-   "n": 2,
-   "t": "2026-11-24T07:26:55.871Z",
-   "ultima": "2026-11-24T07:31:59.854Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -9473,13 +9474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5906,
+   "ok": 5907,
    "fallos": 0,
-   "ejecuciones": 4763,
+   "ejecuciones": 4764,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T07:31:25.964Z"
+   "ultima": "2026-11-24T07:36:14.028Z"
   }
  },
  "ptsDirecto": {},
@@ -9496,15 +9497,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:31:59.942Z"
+   "ultimaBien": "2026-11-24T07:36:43.735Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:31:59.942Z"
+   "ultimaBien": "2026-11-24T07:36:43.735Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:31:59.942Z"
+   "ultimaBien": "2026-11-24T07:36:43.735Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9512,11 +9513,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:31:59.942Z"
+   "ultimaBien": "2026-11-24T07:36:43.735Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T07:31:59.942Z"
+   "ultimaBien": "2026-11-24T07:36:43.735Z"
   }
  },
  "avisos": [
