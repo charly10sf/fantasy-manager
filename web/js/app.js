@@ -102,12 +102,18 @@ function pantallaEntrar(error = '') {
   // (21 nov) la llegada desde un anuncio en el iPhone (?utm_source=…, que se guarda 7 días): dos frases de qué es la app y
   // el botón de entrar en la primera pantalla, sin el menú del portal por encima, sin nada de Google Play y con el
   // semáforo de LaLiga debajo
-  const llegada = plat === 'iphone' && !!origenActual();
-  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' ? '' : botonPlay('hero'))}`;
+  // (24 nov) los que llegan desde un botón de las páginas de datos (utm_source=web-…) o del QR del ordenador no vienen de
+  // un anuncio: ven la portada normal
+  const llegada = plat === 'iphone' && !!origenActual() && !/^(web-|qr$)/.test(origenActual());
+  // (24 nov, Carlos: «que arriba se entienda que lo que importa es la aplicación, meterte dentro con tu cuenta y no ver los
+  // datos desde fuera») lo primero de la portada es qué es la app y cómo tenerla en tu dispositivo (`tenlaHTML`): en el
+  // ordenador y en la web de un Android, encima del portal; en el iPhone, encima de los tres pasos de entrar
+  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' || llegada ? '' : tenlaHTML(plat))}`;
   const queEs = llegada ? `<div class="lleg"><h1 class="lleg-t">Tu director deportivo para <span>LaLiga Fantasy</span></h1><p>Cada día te dice a quién vender, a quién fichar, cuánto pujar y a quién clausular en tu liga. Es gratis y entras con tu cuenta de LaLiga.</p></div>` : '';
   raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat) + tiraPortada()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${queEs}
+    ${!enApp && plat === 'iphone' && !llegada ? tenlaHTML('iphone') : ''}
     ${llegada ? '' : estadoHTML()}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
@@ -118,7 +124,7 @@ function pantallaEntrar(error = '') {
     ${PIE_ENTRAR}
   </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles()}</section>`}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
-  if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
+  if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); ponerInstalar(); }
   // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta
   pintarEstado();
   // (21 nov) en la app, «ver» es ver esta pantalla. En la web la portada se le pinta a cualquiera sin sesión (también a
@@ -261,8 +267,14 @@ function movilDe() {
 }
 /** el logo de Android (Simple Icons, CC0), para señalar lo de Android */
 const ANDROID = '<svg class="an" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993 0 .5511-.4483.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>';
-/** el logo de Apple (Simple Icons, CC0), para señalar lo de iPhone */
-const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
+/* (24 nov) Los símbolos de cada dispositivo. De Apple y de Windows no se usa el logo: Apple no deja usar su manzana suelta a
+   terceros y Microsoft pide licencia para cualquier logo, símbolo o icono de Windows (sus normas de marca, miradas el 24 nov).
+   Van dos dibujos propios, un móvil y un portátil, con el nombre al lado; el robot de Android sí se puede (está citado en
+   aviso-legal.html, como pide Google). Los tres, de un color y con el mismo peso */
+const MOVIL_G = '<svg class="dv" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.6 18.3h2.8"/></svg>';
+const PORTATIL_G = '<svg class="dv" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="4.5" width="15.6" height="11" rx="1.6"/><path d="M2 19.5h20"/></svg>';
+/** el título del desplegable del ordenador para quien ya tiene la app en el móvil (lo citan el aviso del QR y Ajustes) */
+const YA_TENGO = 'Ya tengo la app en el móvil: abrirla en este ordenador';
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
 /** en el navegador, la alternativa a los tres pasos: entrar con un código de la app (o de otra web donde ya se ha entrado) */
 const codigoWebHTML = (tit = true) => `<div class="entrar-codigo">
@@ -480,75 +492,88 @@ async function entrarConVuelta(txt) {
   try { contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); } finally { S.entrandoWeb = false; }
 }
 /**
- * (Carlos, 21 nov: «claramente separado»: lo de Android para descargar, con el logo de Google Play, y lo de Apple con el
- * logo de Apple para que entren desde ahí.) Dos bloques con su logo y su color en las tres pantallas de la web, cada uno
- * con una sola cosa que hacer: Android → la app de Google Play; Apple → entrar aquí, en la web. El de tu dispositivo va
- * entero y el otro, en corto.
+ * (Carlos, 21 nov: «claramente separado»: lo de Android para descargar, con el logo de Google Play, y lo del iPhone para que
+ * entren desde ahí.) (24 nov, Carlos: «más limpio y claro que es una aplicación… en iPhone/ordenador que aparezca también
+ * Windows, no solo Apple».) Arriba va `tenlaHTML`: qué es la app y los tres dispositivos (Android · iPhone · Ordenador), cada
+ * uno con su símbolo, una línea y una sola cosa que hacer, y el tuyo destacado. Debajo, lo de entrar de tu dispositivo.
+ * Lo que es verdad en cada uno: Android, la app de Google Play; iPhone, desde Safari (no hay app en la App Store); ordenador
+ * (Windows y Mac), en el navegador, y en Chrome y Edge se puede instalar como app (`instalarPc`).
  */
 const cabPlat = (logo, nombre, sub, id = '') => `<div class="plat-c"><span class="ent-logo">${logo}</span><div><h2 class="plat-n"${id ? ` id="${id}"` : ''}>${nombre}</h2><p class="plat-s">${sub}</p></div></div>`;
-/** el bloque de Android. plat: desde dónde se mira ('android' | 'iphone' | 'pc') */
-function bloqueAndroid(plat) {
-  if (plat === 'android') {
-    return `<section class="plat plat-and" aria-labelledby="platAndT">
-      ${cabPlat(ANDROID, 'Android', 'Descarga la app. Es gratis, se instala en un minuto y entras con tu cuenta de LaLiga, sin copiar nada.', 'platAndT')}
-      ${botonPlay('grande')}
+const DISPOSITIVOS = {
+  android: { g: ANDROID, n: 'Android', x: 'La app, en Google Play', h: 'instalar.html#android' },
+  iphone: { g: MOVIL_G, n: 'iPhone', x: 'Desde Safari, sin descargar nada', h: 'instalar.html#iphone' },
+  pc: { g: PORTATIL_G, n: 'Ordenador', s: 'Windows y Mac', x: 'En el navegador, sin descargar nada', h: 'instalar.html#ordenador' },
+};
+/** una fila de dispositivo. `desde`: desde dónde se mira; el tuyo va destacado y con su botón */
+function filaDisp(k, desde) {
+  const d = DISPOSITIVOS[k], tuyo = k === desde;
+  // en el iPhone no sale nada que lleve a Google Play (no le sirve): la fila de Android lleva a la guía
+  const hacer = k === 'android' ? (desde === 'iphone' ? `<a class="tl-ir" href="${d.h}">Cómo</a>` : botonPlay(tuyo ? 'grande' : ''))
+    : tuyo && k === 'pc' ? `<span class="tl-aqui">Estás aquí</span><button type="button" class="btn sec chico tl-inst" data-accion="instalarPc" hidden>${icono('descargar')}Instalar como app</button>`
+      : tuyo ? '<span class="tl-aqui">Estás aquí</span>' : `<a class="tl-ir" href="${d.h}">Cómo</a>`;
+  return `<li class="tl-f${tuyo ? ' tuyo' : ''}" data-d="${k}"><span class="tl-g">${d.g}</span><div class="tl-n"><b>${d.n}${d.s ? ` <small>${d.s}</small>` : ''}</b><span>${d.x}</span></div>${hacer}</li>`;
+}
+/** la lista de dispositivos: el tuyo primero */
+const dispositivosHTML = (desde, cuales = ['android', 'iphone', 'pc']) => `<ul class="tl-l" role="list">${[...cuales].sort((a, b) => (b === desde) - (a === desde)).map((k) => filaDisp(k, desde)).join('')}</ul>`;
+/** lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla. En el iPhone, solo la frase: debajo van
+    ya los tres pasos de entrar (el botón rojo sigue en la primera pantalla) y los otros dispositivos, después */
+function tenlaHTML(plat) {
+  return `<section class="tl" id="pTenla" aria-labelledby="tlT">
+    <p class="tl-k">Fantasy Manager es una app</p>
+    <h2 class="tl-h" id="tlT">Tu liga, <span>por dentro</span></h2>
+    <p class="tl-p">Entras con tu cuenta de LaLiga Fantasy y analiza tu equipo, tu mercado y a tus rivales${plat === 'iphone' ? '.' : ': cada día, a quién vender, fichar y clausular.'}</p>
+    ${plat === 'iphone' ? '' : dispositivosHTML(plat)}
+  </section>`;
+}
+/** «también en»: los otros dispositivos, en corto (en el iPhone, debajo de los pasos) */
+const tambienHTML = (desde) => `<section class="tl tl-mas" aria-label="También en otros dispositivos"><p class="tl-k">También en</p>${dispositivosHTML(desde, Object.keys(DISPOSITIVOS).filter((k) => k !== desde))}</section>`;
+/** la web abierta en un Android: la app ya está arriba (`tenlaHTML`, con Google Play); aquí, lo de usar la web */
+function bloqueAndroid() {
+  return `<section class="plat plat-and" aria-labelledby="platAndT">
+      ${cabPlat(ANDROID, 'En Android, mejor la app', 'Es gratis y entras con tu cuenta de LaLiga, sin copiar nada: está arriba, en Google Play. Si prefieres la web:', 'platAndT')}
       <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>
       <details class="sin-app"><summary>Entrar aquí, sin instalar la app</summary>${entrarDirectoHTML('android')}</details>
     </section>`;
-  }
-  if (plat === 'iphone') {
-    return `<section class="plat plat-and chico" aria-labelledby="platAndT">
-      ${cabPlat(ANDROID, 'Android', 'Para Android hay app, en Google Play.', 'platAndT')}
-      ${botonPlay()}
-    </section>`;
-  }
-  // en el ordenador: el QR de la tienda para la cámara del móvil, la insignia y, plegado, entrar aquí con la app que ya se tiene
-  return `<section class="plat plat-and" aria-labelledby="platAndT">
-    ${cabPlat(ANDROID, 'Android', 'Descarga la app en Google Play. Es gratis.', 'platAndT')}
-    <div class="plat-fila">
-      <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a Fantasy Manager en Google Play">${qrSVG(PLAY_URL)}</div>
-      <div class="plat-fila-t"><p><b>Para descargarla:</b> escanea el QR con la cámara del móvil, o pulsa:</p>${botonPlay()}</div>
-    </div>
-    <details class="sin-app" id="detApp"><summary>Ya tengo la app: abrirla también en este ordenador</summary>
-      ${qrEntrarHTML()}${codigoWebHTML()}</details>
-  </section>`;
 }
-/** el bloque de Apple: en el iPhone y en el ordenador, los tres pasos para entrar aquí; en un Android, dos líneas */
-function bloqueApple(plat) {
-  if (plat === 'android') {
-    return `<section class="plat plat-ios chico" aria-labelledby="platIosT">
-      ${cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: en el iPhone se abre <b>fantasymanagerapp.com</b> en Safari y se entra desde allí.', 'platIosT')}
+/** el iPhone: los tres pasos para entrar aquí */
+function bloqueIphone() {
+  // Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari: todo (abrir y pegar) se hace en el
+  // mismo sitio. (21 nov) el aviso de «añádela a la pantalla de inicio antes de entrar» no va aquí: estorbaba antes de
+  // entrar. Se ofrece después, ya dentro, pasando la sesión (bandaInicio)
+  return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(MOVIL_G, 'En tu iPhone', 'Sin descargar nada: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}</div>`;
+}
+/** el ordenador (Windows y Mac): los tres pasos para entrar aquí; quien ya tiene la app en el móvil entra con un QR, sin
+    copiar nada; y un solo QR a la vista, el de tenerla en el móvil (el de entrar sale al desplegar y entonces ese se quita) */
+function bloquePc() {
+  return `<div class="plat plat-ios plat-pc">${entrarDirectoHTML('pc', { cab: cabPlat(PORTATIL_G, 'En este ordenador', '<b>Windows y Mac.</b> Se usa en el navegador: entra aquí mismo, con tu cuenta de LaLiga.', 'edT') })}</div>
+    <section class="plat plat-mov" aria-labelledby="platMovT">
+      <details class="sin-app" id="detApp"><summary>${YA_TENGO}</summary>
+        ${qrEntrarHTML()}${codigoWebHTML()}</details>
+      <div class="plat-fila plat-movil" id="qrMovil">
+        <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(`${DOMINIO}?utm_source=qr`)}</div>
+        <div class="plat-fila-t"><h2 class="plat-n" id="platMovT">¿La quieres en el móvil?</h2><p>Escanea este QR con la <b>cámara</b>: en Android te lleva a la app de Google Play y en el iPhone se abre en Safari.</p></div>
+      </div>
     </section>`;
-  }
-  if (plat === 'iphone') {
-    // Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari: todo (abrir y pegar) se hace en el
-    // mismo sitio, y por eso se avisa de añadirla antes; el aviso va debajo, sin estorbar
-    // (21 nov) el aviso de «añádela a la pantalla de inicio antes de entrar» ya no va aquí: estorbaba antes de entrar. Se
-    // ofrece después, ya dentro, pasando la sesión (bandaInicio)
-    return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(APPLE, 'iPhone', 'No hay app en la App Store: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}</div>`;
-  }
-  return `<div class="plat plat-ios">${entrarDirectoHTML('pc', { cab: cabPlat(APPLE, 'iPhone y ordenador', 'No hay app en la App Store: se entra desde la web, aquí mismo, con tu cuenta de LaLiga.', 'edT') })}
-    <div class="plat-fila plat-movil">
-      <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a fantasymanagerapp.com">${qrSVG(DOMINIO)}</div>
-      <div class="plat-fila-t"><p><b>¿La quieres en el iPhone?</b> Escanea el QR con su cámara (o abre <b>fantasymanagerapp.com</b> en Safari) y entra allí con los mismos tres pasos.</p><a class="plat-guia" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
-    </div></div>`;
 }
 function entrarWebHTML(llegada = false) {
   const movil = movilDe();
-  if (movil === 'android') return `${bloqueAndroid('android')}${bloqueApple('android')}${botonDemo('sec')}`;
+  if (movil === 'android') return `${bloqueAndroid()}${botonDemo('sec')}`;
   if (movil === 'iphone') {
     // abierta desde el icono de la pantalla de inicio (guarda su sesión aparte de la de Safari): si ya se entró en Safari,
     // lo más corto es traer la sesión con un código, así que va lo primero
     const codigo = enInicio()
       ? `<section class="plat plat-cod" aria-labelledby="platCodT"><h2 class="plat-n" id="platCodT">¿Ya has entrado en Safari?</h2><p class="plat-s">Trae tu cuenta con un código: en Safari, <b>Ajustes → Abrir en otro dispositivo</b>, y escríbelo aquí.</p>${codigoWebHTML(false)}</section>`
       : `<details class="sin-app"><summary>Entrar con un código</summary>${codigoWebHTML(false)}</details>`;
-    // llegando de un anuncio: nada de Google Play en la pantalla
-    return `${enInicio() ? codigo : ''}${bloqueApple('iphone')}${llegada ? '' : bloqueAndroid('iphone')}
+    // llegando de un anuncio: nada de otros dispositivos en la pantalla; y en ningún caso un botón de Google Play (9 de 53
+    // visitas del iPhone lo pulsaban y no les llevaba a nada): los otros dispositivos llevan a la guía
+    return `${enInicio() ? codigo : ''}${bloqueIphone()}
     ${botonDemo('sec')}
-    ${enInicio() ? '' : codigo}`;
+    ${enInicio() ? '' : codigo}
+    ${llegada || enInicio() ? '' : tambienHTML('iphone')}`;
   }
-  // (21 nov) en el ordenador, primero entrar aquí («iPhone y ordenador») y debajo lo de Android
-  return `${bloqueApple('pc')}${bloqueAndroid('pc')}
+  // (21 nov) en el ordenador, primero entrar aquí; debajo, lo del móvil
+  return `${bloquePc()}
     <section class="ent-paso" aria-labelledby="entVerT"><div class="ent-ca"><h2 id="entVerT">¿Solo quieres verla?</h2></div>
       <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
       <button class="btn ancho sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>`;
@@ -651,7 +676,7 @@ window.qrLeido = async (texto, motivo) => {
     // (24 nov, Carlos) en la portada del ordenador hay tres QR y el de entrar va plegado: lo normal es escanear el de
     // descargar. Se le dice cuál es y dónde está el bueno, con el nombre de lo que tiene que pulsar
     const deDescarga = /play\.google\.com|fantasymanagerapp\.com|fantasy-manager-61v\.pages\.dev/i.test(String(texto));
-    const donde = 'pulsa «Ya tengo la app: abrirla también en este ordenador» y escanea el QR que sale ahí.';
+    const donde = `pulsa «${YA_TENGO}» y escanea el QR que sale ahí.`;
     tostada(deDescarga ? `Ese QR es el de descargar la app, no el de entrar. En la web del ordenador, ${donde}`
       : `Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador, ${donde}`, 12000);
     return;
@@ -3886,6 +3911,7 @@ document.addEventListener('click', async (ev) => {
       nativo.escanearQR();
       break;
     case 'otroQR': iniciarQR(); break;
+    case 'instalarPc': instalarPc(el); break;
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'bienvenidaOk': cerrarBienvenida(); break;
@@ -4584,7 +4610,7 @@ function itemsEmpezar() {
     // (sesión 8, A9) lo que pasa de verdad en cada sitio: en el móvil, sin la app de Android no se entra con tu liga
     const m = enApp ? null : movilDe();
     if (m === 'android') return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Con tu liga, en la app', x: 'En el móvil, tu liga se ve con la app de Android, gratis. Entras con tu cuenta en la página oficial de LaLiga y la app nunca ve tu contraseña.', b: 'Ver cómo' }];
-    if (m === 'iphone') return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Con tu liga, desde un ordenador', x: 'En el iPhone no hay app: entras una vez con tu cuenta de LaLiga en un ordenador y desde ahí sacas un código para el iPhone. Luego ya no hace falta.', b: 'Ver cómo' }];
+    if (m === 'iphone') return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Con tu liga, desde el iPhone', x: 'En el iPhone no hay app en la App Store ni hace falta: entras con tu cuenta de LaLiga desde Safari, en tres pasos, y solo la primera vez.', b: 'Ver cómo' }];
     return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: enApp ? 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.' : 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga (sin la app de Android son unos pasos, solo la primera vez) y la web nunca ve tu contraseña.', b: 'Entrar' }];
   }
   // (con la IA de la app, el plan ya va con IA sin clave: la clave es para preguntar)
@@ -4871,5 +4897,31 @@ function ponerSW() {
     if (css) urls.push(css.getAttribute('href'));
     if (reg.active && urls.length) reg.active.postMessage({ tipo: 'guardar', urls });
   }).catch((e) => console.warn('sw', e));
+}
+/* (24 nov) Instalar en el ordenador. Chrome y Edge dejan instalar la web como una app (ventana propia, icono en el menú
+   Inicio o en el Dock) si lleva manifiesto con nombre, iconos de 192 y 512, start_url y display, va por https y el visitante
+   ha tocado la página y lleva 30 s en ella; entonces lanzan `beforeinstallprompt` y la web puede enseñar su propio botón
+   (web.dev/articles/install-criteria; desde Chrome 112 ya no hace falta service worker para instalar, y este no se toca).
+   La app instalada usa el mismo perfil del navegador: la sesión es la misma (al revés que en el iPhone, donde el icono
+   guarda la suya aparte). Safari de Mac (Archivo → Añadir al Dock, con sesión aparte) y Firefox no avisan a la web: ahí el
+   botón no sale y se entra en el navegador, como siempre. Solo en el ordenador: en la web de un Android lo suyo es la app
+   de Google Play y Chrome ofrecería instalar la web en su lugar. */
+let avisoInstalar = null;
+const ponerInstalar = () => { document.querySelectorAll('[data-accion="instalarPc"]').forEach((b) => { b.hidden = !avisoInstalar; }); };
+async function instalarPc(el) {
+  const ev = avisoInstalar;
+  if (!ev) { ponerInstalar(); return; }
+  if (el) el.disabled = true;
+  try {
+    ev.prompt();
+    const r = await ev.userChoice;
+    // el aviso vale una sola vez
+    avisoInstalar = null;
+    if (r && r.outcome === 'accepted') marcarPaso('inicio', { una: true });
+  } catch (e) { avisoInstalar = null; } finally { if (el) el.disabled = false; ponerInstalar(); }
+}
+if (!EN_FONDO && !enApp && !movilDe()) {
+  window.addEventListener('beforeinstallprompt', (ev) => { ev.preventDefault(); avisoInstalar = ev; ponerInstalar(); });
+  window.addEventListener('appinstalled', () => { avisoInstalar = null; ponerInstalar(); });
 }
 if (!EN_FONDO) { if (document.readyState === 'complete') setTimeout(ponerSW, 3000); else window.addEventListener('load', () => setTimeout(ponerSW, 3000), { once: true }); }

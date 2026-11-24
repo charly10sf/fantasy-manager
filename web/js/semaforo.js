@@ -102,7 +102,10 @@ export function leerOrigen() {
     const pr = p.get('prueba');
     if (pr != null) { if (pr === '0') LS.del('prueba'); else LS.set('prueba', true); }
     if (!o && pr == null) return;
-    if (o) LS.set('origen', { o, t: Date.now() });
+    // (24 nov) los orígenes de dentro de la propia web (un botón de las páginas de datos, «web-…», o el QR del ordenador,
+    // «qr») no pisan la campaña con la que llegó: quien vino de un anuncio sigue contando para ese anuncio
+    const deDentro = (x) => /^(web-|qr$)/.test(x);
+    if (o && !(deDentro(o) && origen() && !deDentro(origen()))) LS.set('origen', { o, t: Date.now() });
     for (const k of [...p.keys()]) if (/^utm_|^ref$|^prueba$/.test(k)) p.delete(k);
     history.replaceState(null, '', location.pathname + (p.toString() ? `?${p}` : '') + location.hash);
   } catch (e) { /* nada */ }

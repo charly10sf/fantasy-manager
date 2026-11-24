@@ -148,16 +148,34 @@ def menu(raiz, hay_guias, actual=''):
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
             f'<input type="checkbox" id="busca-t" class="busca-t" aria-label="Abrir el buscador">'
-            f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> la app</span></a></div>'
+            f'<div class="cab-app"><label for="busca-t" class="busca-b" title="Buscar">{lupa}</label><a class="menu-cta c-and" href="{PLAY}" target="_blank" rel="noopener">Descargar<span class="largo"> la app</span></a>{entrar_cta(raiz)}</div>'
             f'<nav class="menu" aria-label="Secciones">{enlaces}</nav>'
             f'<form class="busca" role="search" action="{raiz}jugadores/" method="get" data-raiz="{raiz}"><input type="search" name="q" placeholder="Buscar jugador o equipo" aria-label="Buscar jugador o equipo" autocomplete="off" enterkeyhint="search"><button type="submit" aria-label="Buscar">{lupa}</button><ul class="busca-r" hidden></ul></form>'
             f'</div></header>')
 
 
-def linea_app():
-    """debajo de la barra y de los escudos, una línea que dice qué hace la app (Carlos, 22 nov). El texto lo pone el CSS desde
-    data-t, como las siglas de la tira: no es texto repetido en cada página."""
-    return (f'<a class="app-l" href="{PLAY}" target="_blank" rel="noopener" aria-label="Descargar Fantasy Manager: la app analiza tu equipo y tu liga" data-t="La app analiza TU equipo y TU liga: a quién fichar, vender y clausular" data-b="Descargar"></a>')
+# (24 nov, Carlos: «que se vea que es una aplicación… sobre todo para los de iPhone y ordenador») Lo de tener la app, según el
+# dispositivo. `DISPOSITIVO` va en el <head> de cada página y deja en <html data-d> desde dónde se mira: «a» (Android), «i»
+# (iPhone o iPad) o «p» (ordenador). Con eso el CSS enseña uno de los dos botones: en Android, «Descargar» (Google Play, como
+# hasta ahora); en el iPhone y en el ordenador, donde no hay nada que descargar de una tienda, «Entrar con tu liga», que lleva
+# a la portada, a lo de entrar. Sin JS (y para un rastreador) queda como estaba: «Descargar». El texto de lo nuevo lo pone el
+# CSS desde data-t, como las siglas de la tira: no es texto repetido en cada página. `data-o` es de dónde sale el clic
+# (portal.js lo guarda como origen, y «Antes de entrar» lo enseña como una campaña más: web-barra, web-linea, web-cta).
+DISPOSITIVO = ("<script>document.documentElement.dataset.d=/Android/i.test(navigator.userAgent)?'a':"
+               "/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'i':'p'</script>")
+LEMA_APP = 'Aquí, los datos de todos. En la app, TU equipo y TU liga'
+
+
+def entrar_cta(raiz):
+    """el botón rojo de la barra para el iPhone y el ordenador"""
+    return (f'<a class="menu-cta c-ent" href="{raiz or "./"}#entrar" data-o="web-barra" aria-label="Entrar con tu liga en Fantasy Manager" data-t="Entrar" data-l=" con tu liga"></a>')
+
+
+def linea_app(raiz=''):
+    """debajo de la barra y de los escudos, una línea que dice qué hace la app (Carlos, 22 nov) y, desde el 24 nov, que aquí se
+    ven los datos de todos y dentro, los tuyos. Dos enlaces, uno por dispositivo (ver DISPOSITIVO); el texto, por CSS."""
+    return (f'<a class="app-l c-and" href="{PLAY}" target="_blank" rel="noopener" aria-label="Descargar Fantasy Manager: la app analiza tu equipo y tu liga" data-t="{LEMA_APP}" data-b="Descargar"></a>'
+            f'<a class="app-l c-ent" href="{raiz or "./"}#entrar" data-o="web-linea" aria-label="Entrar con tu liga en Fantasy Manager: la app analiza tu equipo" data-t="{LEMA_APP}" data-b="Entrar"></a>')
 
 
 def tira(raiz, p=None):
@@ -198,14 +216,14 @@ def cta(raiz, p=None):
         return (f'<aside class="cta" aria-label="La app">'
                 f'<p class="cta-t">{CTA_CORTA[int(hashlib.md5(p["ruta"].encode()).hexdigest(), 16) % len(CTA_CORTA)]}</p>'
                 f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
-                f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
+                f'<a class="btn sec" href="{raiz or "./"}#entrar" data-o="web-cta">Abrirla en el navegador</a></div>'
                 f'</aside>')
     return (f'<aside class="cta" aria-label="La app">'
             f'<p class="cta-t">Fantasy Manager hace estas cuentas por ti con los datos de tu liga</p>'
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
             f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
-            f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
-            f'<p class="peq">En el ordenador se usa desde la web, sin descargar nada. En el iPhone también, después de entrar una vez desde un ordenador. Y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla</a></p>'
+            f'<a class="btn sec" href="{raiz or "./"}#entrar" data-o="web-cta">Abrirla en el navegador</a></div>'
+            f'<p class="peq">En el iPhone y en el ordenador se usa desde la web, sin descargar nada. Y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo tenerla en cada dispositivo</a></p>'
             f'</aside>')
 
 
@@ -412,6 +430,7 @@ def pagina(p, contenido, hay_guias):
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#08080a">
   <meta name="color-scheme" content="dark">
+  {DISPOSITIVO}
   <title>{e(p['titulo'])}</title>
   <meta name="description" content="{e(p['descripcion'])}">{robots}
   <link rel="canonical" href="{url}">
@@ -432,7 +451,7 @@ def pagina(p, contenido, hay_guias):
 </head>
 <body class="{'portal' if p['tipo'] == 'portal' else 'texto'}">
 <a class="salto" href="#contenido">Saltar al contenido</a>
-{menu(raiz, hay_guias, seccion_de(p))}{tira(raiz, p)}{linea_app()}
+{menu(raiz, hay_guias, seccion_de(p))}{tira(raiz, p)}{linea_app(raiz)}
 <main id="contenido">{migas_linea}
 {INICIO}
 {contenido}

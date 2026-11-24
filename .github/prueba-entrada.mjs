@@ -289,30 +289,55 @@ async function probar(motor, disp) {
     mira(a11y.letra >= 16, `${T} la letra del cuadro es de ${a11y.letra} px (con menos de 16, el iPhone amplía la página)`);
     mira(a11y.lista && a11y.titulo && a11y.dibs === 0 && a11y.svgSueltos === 0, `${T} los pasos son una lista con título y el dibujo tiene su texto alternativo`);
     mira(!a11y.oficial, `${T} los tres pasos no llaman «oficial» a nada`);
-    // Android y Apple, cada uno en su bloque, con su logo; el del dispositivo desde el que se mira va primero (en el ordenador, Android)
+    // (24 nov) cada dispositivo con su símbolo (el robot de Android y dos dibujos propios: ni la manzana ni el logo de
+    // Windows) y una sola cosa que hacer; lo de entrar, en el bloque del dispositivo desde el que se mira
     const bloques = await p.evaluate(() => {
-      const and = document.querySelector('#entrar .plat-and'), ios = document.querySelector('#entrar .plat-ios');
-      if (!and || !ios) return null;
-      return {
-        andAntes: !!(and.compareDocumentPosition(ios) & Node.DOCUMENT_POSITION_FOLLOWING),
-        play: !!and.querySelector('a.play-badge[href*="play.google.com/store/apps/details"] img[alt*="Google Play"]'),
-        logoAnd: !!and.querySelector('.plat-c .ent-logo svg.an'), logoIos: !!ios.querySelector('.plat-c .ent-logo svg.ap'),
-        nombres: [and.querySelector('h2').textContent, ios.querySelector('h2').textContent],
-        playEnApple: !!ios.querySelector('a[href*="play.google.com"]'),
-        pasosEnApple: !!ios.querySelector('#entrarDirecto'),
-      };
+      const ent = document.querySelector('#entrar');
+      const filas = [...document.querySelectorAll('.tl-l .tl-f')].map((f) => ({ d: f.dataset.d, tuyo: f.classList.contains('tuyo'), robot: !!f.querySelector('.tl-g svg.an'), dibujo: !!f.querySelector('.tl-g svg.dv'),
+        nombre: f.querySelector('.tl-n b').textContent.trim(), play: !!f.querySelector('a.play-badge[href*="play.google.com/store/apps/details"] img[alt*="Google Play"]'), guia: (f.querySelector('a.tl-ir') || { getAttribute: () => '' }).getAttribute('href') }));
+      const mio = ent.querySelector('.plat-and, .plat-ios');
+      return { filas, manzana: document.querySelectorAll('svg.ap').length, tit: (document.querySelector('.tl-h') || {}).textContent || '',
+        mioLogo: !!mio.querySelector('.plat-c .ent-logo svg'), mioNombre: mio.querySelector('h2').textContent, pasosDentro: !!mio.querySelector('#entrarDirecto'),
+        playEnEntrar: ent.querySelectorAll('a[href*="play.google.com"]').length, playEnPagina: document.querySelectorAll('.pantalla a[href*="play.google.com"]').length };
     });
-    mira(bloques && bloques.play && bloques.logoAnd && bloques.nombres[0] === 'Android' && !bloques.playEnApple, `${T} el bloque de Android lleva su logo y la insignia de Google Play, y solo él`);
-    mira(bloques && bloques.logoIos && /^iPhone/.test(bloques.nombres[1]) && bloques.pasosEnApple === (disp !== 'android'), `${T} el bloque de Apple lleva su logo${disp === 'android' ? ' y dice que se entra desde Safari' : ' y dentro, los tres pasos para entrar'}`);
-    mira(bloques && bloques.andAntes === (disp === 'android'), `${T} ${disp === 'android' ? 'primero el de Android y debajo el de Apple' : 'primero el de Apple y debajo el de Android'}`);
+    const fila = (d) => (bloques.filas.find((f) => f.d === d) || {});
+    mira(/Tu liga,\s*por dentro/i.test(bloques.tit) && bloques.manzana === 0, `${T} arriba dice qué es la app («Tu liga, por dentro») y no hay ninguna manzana`);
+    mira(bloques.filas.length === (disp === 'iphone' ? 2 : 3) && fila('android').robot && (disp === 'iphone' || fila('iphone').dibujo) && (disp === 'pc' ? fila('pc').dibujo && /Windows y Mac/.test(fila('pc').nombre) : fila('pc').dibujo),
+      `${T} los dispositivos van con su símbolo: el robot de Android, un móvil y un portátil («Ordenador · Windows y Mac»)`);
+    mira(disp === 'iphone' ? bloques.filas.every((f) => !f.tuyo) : bloques.filas[0].d === disp && bloques.filas[0].tuyo && bloques.filas.filter((f) => f.tuyo).length === 1,
+      `${T} ${disp === 'iphone' ? 'en el iPhone, arriba solo la frase: los otros dispositivos van debajo de los pasos' : 'el tuyo va el primero y destacado'}`);
+    mira(disp === 'iphone' ? bloques.playEnPagina === 0 && fila('android').guia === 'instalar.html#android' : fila('android').play,
+      `${T} ${disp === 'iphone' ? 'en el iPhone no hay ningún enlace a Google Play: la fila de Android lleva a la guía' : 'la fila de Android lleva la insignia de Google Play'}`);
+    mira(bloques.mioLogo && bloques.pasosDentro && (disp === 'iphone' ? /iPhone/.test(bloques.mioNombre) : disp === 'pc' ? /ordenador/i.test(bloques.mioNombre) : /Android/.test(bloques.mioNombre)),
+      `${T} lo de entrar va en el bloque de tu dispositivo («${bloques.mioNombre}»), con su símbolo`);
+    if (disp === 'pc') {
+      // un solo QR a la vista, el de tenerla en el móvil; al desplegar «Ya tengo la app» sale el de entrar y ese se quita
+      const qrs = () => p.evaluate(() => [...document.querySelectorAll('#entrar svg.qr, #entrar #eqQR svg')].filter((e) => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden').map((e) => (e.closest('#qrMovil') ? 'movil' : e.closest('#detApp') ? 'entrar' : 'otro')));
+      const q1 = await qrs();
+      mira(q1.length === 1 && q1[0] === 'movil' && /¿La quieres en el móvil\?/.test(await p.textContent('#qrMovil')) && /Ya tengo la app en el móvil/.test(await p.textContent('#detApp > summary')), `${T} en el ordenador hay un solo QR a la vista, el de tenerla en el móvil, con su rótulo (${q1.join(', ')})`);
+      await p.click('#detApp > summary');
+      await p.waitForSelector('#eqQR svg', { timeout: 5000 }).catch(() => {});
+      const q2 = await qrs();
+      mira(q2.length === 1 && q2[0] === 'entrar', `${T} al desplegar «Ya tengo la app en el móvil» sale el QR de entrar y el otro se quita (${q2.join(', ')})`);
+      await p.click('#detApp > summary');
+      // instalar como app: el botón no sale hasta que el navegador avisa (Chrome y Edge), y entonces abre su ventana
+      mira(await p.isHidden('[data-accion="instalarPc"]'), `${T} «Instalar como app» no sale mientras el navegador no lo ofrezca`);
+      await p.evaluate(() => { const ev = new Event('beforeinstallprompt', { cancelable: true }); ev.prompt = () => { window.__instalar = (window.__instalar || 0) + 1; }; ev.userChoice = Promise.resolve({ outcome: 'accepted' }); window.dispatchEvent(ev); });
+      mira(await p.isVisible('[data-accion="instalarPc"]'), `${T} cuando el navegador lo ofrece, sale «Instalar como app» en la fila del ordenador`);
+      await p.click('[data-accion="instalarPc"]'); await p.waitForTimeout(200);
+      mira(await p.evaluate(() => window.__instalar === 1) && await p.isHidden('[data-accion="instalarPc"]'), `${T} al pulsarlo abre la ventana de instalar del navegador y el botón se quita`);
+    } else {
+      await p.evaluate(() => { const ev = new Event('beforeinstallprompt', { cancelable: true }); ev.prompt = () => {}; ev.userChoice = Promise.resolve({ outcome: 'dismissed' }); window.dispatchEvent(ev); });
+      mira(await p.locator('[data-accion="instalarPc"]:visible').count() === 0, `${T} en el móvil no se ofrece instalar la web`);
+    }
     if (disp === 'pc') {
       // el tabulador dentro de los tres pasos: abrir, pegar, el cuadro, entrar y la ayuda, en ese orden
       await p.focus('#edAbrir');
       const orden = [];
       for (let i = 0; i < 4; i++) { await p.keyboard.press('Tab'); orden.push(await p.evaluate(() => (document.activeElement.id || document.activeElement.tagName))); }
       mira(orden.join(' ') === 'edPegar vueltaWeb edEntrar SUMMARY', `${T} el tabulador va en orden: ${orden.join(' → ')}`);
-      // «Ya tengo la app»: plegado no pide nada; al desplegarlo sale el QR para la app y el cuadro del código
-      mira(await p.evaluate(() => !document.getElementById('detApp').open && !document.querySelector('#eqQR svg')), `${T} el QR de la app va plegado y sin pedir nada`);
+      // «Ya tengo la app»: plegado no espera a nadie; al desplegarlo sale el QR para la app y el cuadro del código
+      mira(await p.evaluate(() => !document.getElementById('detApp').open), `${T} el QR de la app va plegado`);
       await p.click('#detApp > summary');
       await p.waitForSelector('#eqQR svg', { timeout: 5000 }).catch(() => {});
       mira(await p.evaluate(() => !!document.querySelector('#eqQR svg')) && await p.isVisible('#codigoWeb'), `${T} al desplegar «Ya tengo la app» salen el QR y el cuadro del código`);
@@ -361,21 +386,20 @@ async function probar(motor, disp) {
         const y = (sel) => { const e = document.querySelector(sel); return e ? Math.round(e.getBoundingClientRect().top + scrollY) : null; };
         const bar = document.querySelector('.pt-bar');
         const rojo = bar.querySelector('.btn.pt-cta');
-        const ios = document.querySelector('.plat-ios'), and = document.querySelector('.plat-and');
+        const tl = document.querySelector('#pTenla');
         return { rojoT: rojo.textContent.trim(), rojoH: rojo.getAttribute('href'), playBarra: bar.querySelectorAll('a[href*="play.google.com"]').length, playSec: !!bar.querySelector('a.sec[href*="play.google.com"]'),
-          insignia: !!document.querySelector('.po-top .play-badge'), yEntrar: y('#entrar'), yPortal: y('#pHoy'), yBoton: y('#edAbrir'), alto: innerHeight,
-          iosAntes: !!(ios && and && (ios.compareDocumentPosition(and) & Node.DOCUMENT_POSITION_FOLLOWING)), ancla: !!document.querySelector(rojo.getAttribute('href').startsWith('#') ? rojo.getAttribute('href') : 'body') };
+          insignia: !!document.querySelector('.pantalla .play-badge'), yEntrar: y('#entrar'), yPortal: y('.po-h1'), yBoton: y('#edAbrir'), yTenla: y('#pTenla'), yInsignia: y('.tl-f .play-badge'), alto: innerHeight,
+          tuya: (tl.querySelector('.tl-f.tuyo') || { dataset: {} }).dataset.d || '', ancla: !!document.querySelector(rojo.getAttribute('href').startsWith('#') ? rojo.getAttribute('href') : 'body') };
       });
       if (disp === 'iphone') {
         mira(P.rojoT === 'Entrar' && P.rojoH === '#entrar' && P.ancla, `${T} el botón rojo de la barra es «Entrar» y baja a #entrar`);
         mira(P.playBarra === 0 && !P.insignia, `${T} arriba no hay nada de Google Play (ni en la barra ni la insignia)`);
-        mira(P.yEntrar < P.yPortal && P.yBoton > 0 && P.yBoton < P.alto - 60, `${T} lo de entrar es lo primero y «Abrir LaLiga y entrar» cabe en la primera pantalla (y=${P.yBoton} de ${P.alto})`);
-        mira(P.iosAntes, `${T} el bloque del iPhone va antes que el de Android`);
+        mira(P.yTenla < P.yBoton && P.yEntrar < P.yPortal && P.yBoton > 0 && P.yBoton < P.alto - 60, `${T} qué es la app y lo de entrar van lo primero, y «Abrir LaLiga y entrar» cabe en la primera pantalla (y=${P.yBoton} de ${P.alto})`);
       } else if (disp === 'pc') {
         mira(P.rojoT === 'Entrar' && P.rojoH === '#entrar' && P.playBarra === 1 && P.playSec, `${T} en la barra, «Entrar» en rojo y Google Play en secundario`);
-        mira(P.iosAntes && P.yBoton < P.alto - 60, `${T} «iPhone y ordenador» va antes que Android y su botón cabe en la primera pantalla (y=${P.yBoton} de ${P.alto})`);
+        mira(P.tuya === 'pc' && P.yTenla < P.yPortal && P.yBoton < P.alto - 60, `${T} qué es la app va por encima de los datos, con el ordenador destacado, y «Abrir LaLiga y entrar» cabe en la primera pantalla (y=${P.yBoton} de ${P.alto})`);
       } else {
-        mira(/^Descargar/.test(P.rojoT) && /play\.google\.com/.test(P.rojoH) && P.insignia && !P.iosAntes, `${T} la web de un Android sigue como estaba: «Descargar» en rojo, la insignia y Android primero`);
+        mira(/^Descargar/.test(P.rojoT) && /play\.google\.com/.test(P.rojoH) && P.tuya === 'android' && P.yTenla < P.yPortal && P.yInsignia > 0 && P.yInsignia < P.alto - 60, `${T} en la web de un Android: «Descargar» en rojo, y arriba qué es la app con la insignia de Google Play en la primera pantalla (y=${P.yInsignia} de ${P.alto})`);
       }
     }
     /* ---- 10. los pasos: llega, ver (solo a la vista) y v (vuelve de LaLiga) ---- */
@@ -510,6 +534,8 @@ async function probarApp() {
     await p.waitForSelector('[data-accion="entrar"]');
     mira(await p.locator('#entrarDirecto').count() === 0 && await p.locator('#vueltaWeb').count() === 0, `${T} un solo botón de entrar, sin pasos de copiar y pegar`);
     mira(await p.locator('.abrir-con').count() === 0, `${T} la primera vez, la pantalla de entrar va sin el aviso encima`);
+    // (24 nov) dentro de la app no sale nada de tenerla o descargarla: ni el bloque de dispositivos, ni Google Play, ni instalar
+    mira(await p.locator('#pTenla, .tl-l, .pt-bar, [data-accion="instalarPc"], .pantalla a[href*="play.google.com"]').count() === 0 && !/descargar/i.test(await p.textContent('.pantalla')), `${T} dentro de la app no sale nada de descargar ni de otros dispositivos`);
     /* la primera vez: el aviso de «Abrir con» como paso propio, antes de abrir LaLiga */
     await p.click('[data-accion="entrar"]');
     await p.waitForSelector('#pantAbrirCon');
@@ -531,11 +557,11 @@ async function probarApp() {
     /* (24 nov, Carlos) el QR que se escanea desde Ajustes: el de descargar no es el de entrar, y la app dice dónde está el bueno */
     const alQR = async (texto) => { await p.evaluate((t) => window.qrLeido(t), texto); return ((await p.textContent('.tostada')) || '').replace(/\s+/g, ' '); };
     const tPlay = await alQR('https://play.google.com/store/apps/details?id=es.fantasymanager.app');
-    mira(/es el de descargar la app, no el de entrar/.test(tPlay) && /«Ya tengo la app: abrirla también en este ordenador»/.test(tPlay), `${T} al escanear el QR de Google Play, la app dice que es el de descargar y qué hay que pulsar en la web`);
+    mira(/es el de descargar la app, no el de entrar/.test(tPlay) && /«Ya tengo la app en el móvil: abrirla en este ordenador»/.test(tPlay), `${T} al escanear el QR de Google Play, la app dice que es el de descargar y qué hay que pulsar en la web`);
     const tWeb = await alQR('https://fantasymanagerapp.com/');
     mira(/es el de descargar la app, no el de entrar/.test(tWeb), `${T} y lo mismo con el QR que lleva a la web (el del iPhone)`);
     const tOtro = await alQR('WIFI:S:casa;T:WPA;P:1234;;');
-    mira(/no es el de Fantasy Manager/.test(tOtro) && /«Ya tengo la app: abrirla también en este ordenador»/.test(tOtro), `${T} con un QR de otra cosa, que no es el suyo y dónde está`);
+    mira(/no es el de Fantasy Manager/.test(tOtro) && /«Ya tengo la app en el móvil: abrirla en este ordenador»/.test(tOtro), `${T} con un QR de otra cosa, que no es el suyo y dónde está`);
     const tBueno = await alQR('https://fantasymanagerapp.com/#qr=AAAAAAAAAAAAAAAAAAAAAA.BBBBBBBBBBBBBBBBBBBBBB');
     mira(!/descargar la app|no es el de Fantasy Manager/.test(tBueno), `${T} el QR de entrar no se confunde con el de descargar («${tBueno.slice(0, 50)}»)`);
     const [a, b] = (await p.evaluate(() => window.__abiertos)).map((u) => new URL(u));

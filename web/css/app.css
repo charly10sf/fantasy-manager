@@ -3747,3 +3747,53 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .bj-ok { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
 .bj-ok .ic { color: var(--sube); width: 18px; height: 18px; }
 .bj-pie { margin: 18px 0 0; font-size: var(--t-mini); color: var(--apagado); text-align: center; }
+
+/* ------------------------------------------------------------------ (24 nov) «Tu liga, por dentro»
+   Lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla en cada dispositivo: Android · iPhone ·
+   Ordenador, cada uno con su símbolo, una línea y una sola cosa que hacer, y el tuyo destacado. Los símbolos son dibujos de
+   un color y del mismo peso (un móvil, un portátil y el robot de Android): ni la manzana ni el logo de Windows. */
+.tl { display: block; min-width: 0; margin: 0 0 24px; text-align: left; }
+.portada .pantalla p.tl-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
+.portada .pantalla h2.tl-h { margin: 0 0 10px; font: 700 44px/0.95 var(--cond); text-transform: uppercase; letter-spacing: 0; color: var(--texto); text-wrap: balance; }
+.portada .pantalla h2.tl-h span { color: var(--rojo-l); }
+.escritorio .portada .pantalla h2.tl-h { font-size: 64px; }
+.portada .pantalla p.tl-p { margin: 0 0 16px; max-width: 46ch; font-size: 16px; line-height: 1.45; color: var(--texto2); }
+.escritorio .portada .pantalla p.tl-p { font-size: 17px; }
+.tl-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tl-f { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 64px; padding: 10px 12px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--linea); }
+.tl-f.tuyo { border-color: var(--rojo3); background: var(--rojo-s); }
+.tl-g { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: var(--r-ctl); background: var(--plano3); color: var(--texto); }
+.tl-g svg { display: block; width: 25px; height: 25px; }
+.tl-n { display: grid; gap: 2px; min-width: 0; margin-right: auto; }
+.tl-n b { font: 700 19px/1.05 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.tl-n small { font: 600 12.5px/1 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; color: var(--apagado); white-space: nowrap; }
+.tl-n span { font-size: 14px; line-height: 1.3; color: var(--texto2); }
+.tl-aqui { flex: none; padding: 5px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); font: 700 12px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.8px; color: var(--texto); white-space: nowrap; }
+.portada .pantalla a.tl-ir { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; font: 600 14.5px 'Barlow', sans-serif; color: var(--texto); text-decoration: underline; text-underline-offset: 3px; }
+.tl-f .play-badge { flex: none; margin: 0; }
+.tl-f .play-badge img { width: 136px; }
+.tl-f.tuyo[data-d="android"] { flex-wrap: wrap; padding-bottom: 14px; }
+.tl-f.tuyo[data-d="android"] .play-badge { flex-basis: 100%; display: flex; justify-content: center; margin-top: 4px; }
+.tl-f.tuyo[data-d="android"] .play-badge img { width: min(240px, 68vw); }
+.tl-f .tl-inst { flex: none; min-height: 40px; }
+.tl-f .tl-inst[hidden] { display: none; }
+.tl-f.tuyo[data-d="pc"]:has(.tl-inst:not([hidden])) { flex-wrap: wrap; }
+/* con lo de la app arriba, el titular del portal baja un punto: manda «Tu liga, por dentro» */
+.portada .pantalla .po.con-app h1.po-h1 { font-size: 34px; }
+.escritorio .portada .pantalla .po.con-app h1.po-h1 { font-size: 44px; }
+/* en el iPhone va encima de los tres pasos: solo la frase, para que el botón rojo siga en la primera pantalla */
+.pant-d > .tl { margin-bottom: 12px; }
+.portada .pantalla .pant-d > .tl h2.tl-h { font-size: 36px; margin-bottom: 6px; }
+.portada .pantalla .pant-d > .tl p.tl-p { margin: 0; font-size: 15px; line-height: 1.4; }
+.portada .pantalla .pant-d > .tl p.tl-k { margin-bottom: 4px; font-size: 12px; }
+.tl.tl-mas { margin: 18px 0 0; }
+.tl.tl-mas .tl-f { min-height: 56px; }
+/* el ordenador: lo del móvil va en su tarjeta, con un solo QR a la vista; al desplegar «Ya tengo la app» sale el de entrar
+   y el otro se quita */
+.plat-mov { background: var(--plano); border: 1px solid var(--linea); }
+.plat-mov .plat-n { font-size: var(--t-sec); }
+.plat-mov:has(#detApp[open]) #qrMovil { display: none; }
+.plat .plat-mov .plat-movil, .plat-mov .plat-movil { padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.plat .ent-logo svg.dv { width: 30px; height: 30px; }
+/* «Empieza hoy», al final: en el iPhone no sale Google Play */
+.p-iphone .pz-b a[href*="play.google.com"] { display: none; }

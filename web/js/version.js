@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.3b';
+export const VERSION = '0.8.3c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -24,6 +24,22 @@ export const VERSION = '0.8.3b';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // (24 nov, 23:17, Carlos: «dejar de forma más limpia y clara en la web que Fantasy Manager es una aplicación que se descarga…
+    // sobre todo para los de iPhone y ordenador… que aparezca también Windows, no solo Apple… que arriba se entienda que lo que
+    // importa es la aplicación, meterte dentro con tu cuenta y no ver los datos desde fuera») Solo web. La portada empieza por
+    // «Tu liga, por dentro» (`tenlaHTML` en app.js) con los tres dispositivos y el tuyo destacado; en el ordenador queda un
+    // QR a la vista y se puede instalar con Chrome o Edge (`instalarPc`); en las páginas públicas el botón rojo y la línea
+    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). Sin logos de Apple ni de Windows (sus normas no dejan): un
+    // móvil y un portátil dibujados. Detalle en claude/sesion-24nov-descarga-clara.md del proyecto. La hora, al publicar
+    v: '0.8.3c', f: '2026-11-25', t: 'La app, más clara en la web',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Qué es la app, lo primero', x: 'La portada de la web empieza por lo que importa: Fantasy Manager es una app y se entra con tu liga. Debajo, cómo tenerla en tu dispositivo: Android (Google Play), iPhone (desde Safari) u ordenador (Windows y Mac, en el navegador).' },
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'En el ordenador, un solo QR', x: 'Antes había tres QR a la vista. Ahora hay uno, para tenerla en el móvil, y el de entrar sale al pulsar «Ya tengo la app en el móvil: abrirla en este ordenador». Con Chrome o Edge, además, se puede instalar como una app.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'El botón de arriba, según tu dispositivo', x: 'En las páginas de datos, el botón rojo dice «Descargar» en Android y «Entrar con tu liga» en el iPhone y en el ordenador, donde no hay nada que descargar.' },
+      { para: 'web', tipo: 'arreglo', d: 'movil', t: 'En el iPhone se entra desde el iPhone', x: 'La liga de ejemplo y las preguntas frecuentes seguían diciendo que en el iPhone había que entrar antes desde un ordenador. Ya no hace falta desde hace días, y ahora lo dicen bien.' },
+    ],
+  },
+  {
     // (24 nov, 22:27, Carlos, entrando en su portátil: «me pone que no es un código QR de Fantasy Manager») En la portada del
     // ordenador hay tres QR: el de Google Play, el de la web para el iPhone y, plegado en «Ya tengo la app: abrirla también en
     // este ordenador», el de entrar. Escaneó el de Google Play con Ajustes → Abrir en el ordenador → QR y la app solo le decía
@@ -31,7 +47,7 @@ export const NOVEDADES = [
     // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web. La hora, al publicar
     v: '0.8.3b', f: '2026-11-24', t: 'Entrar en el ordenador con el QR',
     cosas: [
-      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app: abrirla también en este ordenador».' },
+      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app en el móvil: abrirla en este ordenador».' },
     ],
   },
   {

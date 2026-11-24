@@ -8,6 +8,20 @@
   var plano = function (s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); };
   var POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
+  // ---------------------------------------------------------------- (24 nov) de qué botón sale: «Entrar con tu liga» de la
+  // barra, la línea de debajo o la llamada del final (data-o: web-barra, web-linea, web-cta) dejan dicho el origen antes de
+  // ir a la portada, como una campaña más (misma clave y formato que abajo), salvo que ya se viniera de una campaña de fuera
+  // en los últimos 7 días: esa manda. Aquí no se cuenta nada; lo cuenta la portada si luego entra
+  document.addEventListener('click', function (ev) {
+    try {
+      var a = ev.target && ev.target.closest ? ev.target.closest('a[data-o]') : null;
+      if (!a) return;
+      var ya = JSON.parse(localStorage.getItem('fm-origen') || 'null');
+      var deFuera = ya && ya.o && Date.now() - ya.t < 7 * 864e5 && !/^(web-|qr$)/.test(ya.o);
+      if (!deFuera) localStorage.setItem('fm-origen', JSON.stringify({ o: String(a.getAttribute('data-o')).slice(0, 24), t: Date.now() }));
+    } catch (e) { /* sin almacenamiento: nada */ }
+  }, true);
+
   // ---------------------------------------------------------------- de dónde viene (21 nov): si se llega a una página
   // pública con ?utm_source=… (los tuits del bot enlazan a las guías, no a la portada), se guarda 7 días igual que hace la
   // app (semaforo.js, `leerOrigen`: la misma clave y el mismo formato) y se quita de la dirección. Aquí no se cuenta nada:
