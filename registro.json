@@ -3072,7 +3072,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
    "SPORT|136694864": 1795259508000,
    "SPORT|136695150": 1795260075000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261121/1004253714/cuti-importante-aun-jugar.html": 1795263520000,
@@ -3233,7 +3232,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
    "SPORT|136783558": 1795512757000,
-   "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000
+   "AS|https://as.com/futbol/vuelve-la-calma-a-lezama-sin-gere-en-el-grupo-f202611-n/": 1795516661000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/marco-siverio-pendiente-de-una-semana-clave-para-su-renovacion-mi-prioridad-siempre-va-a-ser-el-real-jaen-radio-jaen/": 1795517386000
   },
   "hechos": [
    {
@@ -3527,7 +3527,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -9515,13 +9515,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5946,
+   "ok": 5947,
    "fallos": 0,
-   "ejecuciones": 4803,
+   "ejecuciones": 4804,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T10:46:11.684Z"
+   "ultima": "2026-11-24T10:51:15.506Z"
   }
  },
  "ptsDirecto": {},
@@ -9538,15 +9538,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:46:18.198Z"
+   "ultimaBien": "2026-11-24T10:51:49.833Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:46:18.198Z"
+   "ultimaBien": "2026-11-24T10:51:49.833Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:46:18.198Z"
+   "ultimaBien": "2026-11-24T10:51:49.833Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9554,11 +9554,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:46:18.198Z"
+   "ultimaBien": "2026-11-24T10:51:49.833Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:46:18.198Z"
+   "ultimaBien": "2026-11-24T10:51:49.833Z"
   }
  },
  "avisos": [
