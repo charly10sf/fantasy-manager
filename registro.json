@@ -3087,7 +3087,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-alaves-deportivo-decimotercera-jornada-primera-division-21-20261121_3479628.html": 1795274673000,
-   "SPORT|136694477": 1795273212000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
    "SPORT|136701406": 1795275671000,
@@ -3521,7 +3520,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -9509,13 +9508,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5996,
+   "ok": 5997,
    "fallos": 0,
-   "ejecuciones": 4853,
+   "ejecuciones": 4854,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T14:56:14.435Z"
+   "ultima": "2026-11-24T15:01:18.160Z"
   }
  },
  "ptsDirecto": {},
@@ -9532,15 +9531,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:56:22.612Z"
+   "ultimaBien": "2026-11-24T15:02:02.129Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:56:22.612Z"
+   "ultimaBien": "2026-11-24T15:02:02.129Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:56:22.612Z"
+   "ultimaBien": "2026-11-24T15:02:02.129Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9548,11 +9547,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:56:22.612Z"
+   "ultimaBien": "2026-11-24T15:02:02.129Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T14:56:22.612Z"
+   "ultimaBien": "2026-11-24T15:02:02.129Z"
   }
  },
  "avisos": [
