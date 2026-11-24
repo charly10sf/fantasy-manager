@@ -3231,7 +3231,8 @@
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261124/1004254811/hancko-queda-galones-dejo-cuti.html": 1795511382000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254835/marcos-alonso-seguro-mi-ultimo-equipo-sea-celta.html": 1795514383000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261124/1004254834/thomas-lemar-baja-elche-recibir-atletico.html": 1795513279000,
+   "SPORT|136783558": 1795512757000
   },
   "hechos": [
    {
@@ -3525,7 +3526,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -4487,17 +4488,17 @@
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 51,
    "revisar": 30,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 528477,
-  "salida": 24896,
+  "entrada": 530641,
+  "salida": 25012,
   "cacheLee": 160014,
   "cacheEscribe": 23871,
-  "dolares": 1.298366,
+  "dolares": 1.29864,
   "reservado": 0
  },
  "recientes": {
@@ -9514,13 +9515,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5942,
+   "ok": 5943,
    "fallos": 0,
-   "ejecuciones": 4799,
+   "ejecuciones": 4800,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T10:31:17.612Z"
+   "ultima": "2026-11-24T10:36:28.486Z"
   }
  },
  "ptsDirecto": {},
@@ -9537,15 +9538,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:31:26.324Z"
+   "ultimaBien": "2026-11-24T10:36:38.867Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:31:26.324Z"
+   "ultimaBien": "2026-11-24T10:36:38.867Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:31:26.324Z"
+   "ultimaBien": "2026-11-24T10:36:38.867Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9553,11 +9554,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:31:26.324Z"
+   "ultimaBien": "2026-11-24T10:36:38.867Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T10:31:26.324Z"
+   "ultimaBien": "2026-11-24T10:36:38.867Z"
   }
  },
  "avisos": [
