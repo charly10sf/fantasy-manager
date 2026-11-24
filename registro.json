@@ -3064,7 +3064,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261121/1004253606/amargo-regreso-titularidad.html": 1795244400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253434/real-madrid-celta-incognita-vinicius.html": 1795242768000,
    "SPORT|135959939": 1795244400000,
    "SPORT|136689006": 1795244766000,
    "SPORT|136555358": 1795248019000,
@@ -9468,13 +9467,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5894,
+   "ok": 5895,
    "fallos": 0,
-   "ejecuciones": 4751,
+   "ejecuciones": 4752,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 439,
-   "ultima": "2026-11-24T06:31:25.856Z"
+   "ultima": "2026-11-24T06:36:21.528Z"
   }
  },
  "ptsDirecto": {},
@@ -9491,15 +9490,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:31:40.102Z"
+   "ultimaBien": "2026-11-24T06:36:29.961Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:31:40.102Z"
+   "ultimaBien": "2026-11-24T06:36:29.961Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:31:40.102Z"
+   "ultimaBien": "2026-11-24T06:36:29.961Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9507,11 +9506,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:31:40.102Z"
+   "ultimaBien": "2026-11-24T06:36:29.961Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T06:31:40.102Z"
+   "ultimaBien": "2026-11-24T06:36:29.961Z"
   }
  },
  "avisos": [
