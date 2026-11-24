@@ -2162,6 +2162,13 @@
    "jornada": 14,
    "id": "2125131483350466967",
    "t": "2026-11-24T07:36:43.650Z"
+  },
+  {
+   "clave": "previa|140",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125139078320468409",
+   "t": "2026-11-24T08:06:54.584Z"
   }
  ],
  "estados": {
@@ -4450,16 +4457,16 @@
   "dia": "2026-11-24",
   "llamadas": {
    "clasificar": 6,
-   "redactar": 34,
-   "revisar": 22,
+   "redactar": 38,
+   "revisar": 23,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 287602,
-  "salida": 16312,
-  "cacheLee": 142596,
+  "entrada": 336752,
+  "salida": 17190,
+  "cacheLee": 145499,
   "cacheEscribe": 18065,
-  "dolares": 0.747203,
+  "dolares": 0.854573,
   "reservado": 0
  },
  "recientes": {
@@ -4553,10 +4560,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-18T10:36:46.034Z",
-    "texto": "🗓️ Getafe-Atlético, el domingo a las 21:00: posibles onces para la jornada 13\n\nLo que menos claro está es Le Normand en el Atleti, con un 38 %. También con dudas: Julián Alvarez y Barrios en el Atlético, y Francho y Boselli en el Getafe.\n\nBajas en los dos lados: en el Atleti no estarán Cuti Romero, lesionado, y en el Getafe, Gudelj, sancionado, ni Zaid Romero y Juanmi, lesionados. Sin discusión, Grimaldo (81 %, 7,9 de media) y David Soria (97 %).\n\nEl Atlético, 3º, parte como favorito frente al Getafe, que es 15º. Pocos goles a la vista: el Atleti encaja solo 0,8 por partido y el Getafe marca 0,7."
-   },
-   {
     "t": "2026-11-19T06:11:39.105Z",
     "texto": "🗓️ Vallecas recibe al Valencia con un cruce de los que gustan atrás: el Rayo ⚡ se mide a un rival que marca poco.\n\nA Audero y a la zaga les pinta bien, y el partido es el sábado a las 16:15. Batalla es baja por lesión, y Pedro Díaz tiene más papeletas de jugar que de quedarse fuera. Tsitaishvili está a medias.\n\nEl Valencia 🦇, 19º, tiene el cruce a favor para delanteros y medios, porque el Rayo encaja mucho. Gayá se pierde el partido sancionado, Rioja lo normal es que salga y Sadiq no tiene el puesto asegurado."
    },
@@ -4571,6 +4574,10 @@
    {
     "t": "2026-11-19T20:06:31.392Z",
     "texto": "🗓️ Posibles onces de Levante-Elche, el lunes a las 21:00\n\nLo que no está claro: Lemar (42 %), B. Sangare (47 %) y Cepeda en el Elche 🌴, y Manu Sánchez, Ifeanyi Ndukwe y Etta Eyong en el Levante 🐸. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y M. Dituro (92 %).\n\nEn la tabla hay poco que separar al Levante (17º) del Elche (18º)."
+   },
+   {
+    "t": "2026-11-24T08:06:54.596Z",
+    "texto": "🗓️ El cruce de Betis-Rayo, el sábado a las 14:00, favorece a los delanteros y medios del Betis, porque el Rayo es de los que más encajan: 1,8 por partido, y va 16º.\n\nEn el Betis, Valles es el fijo bajo palos, con un 94 % de titularidad, y Cucho, con un 54 %, tiene más opciones de jugar que de quedarse fuera. Isco también es fijo.\n\nEl Rayo no tendrá a Batalla, lesionado. Álvaro García y Pedrosa son duda, aunque lo más probable es que estén, y Camello y Unai López son seguros."
    }
   ],
   "noticias": [
@@ -9461,13 +9468,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5912,
+   "ok": 5913,
    "fallos": 0,
-   "ejecuciones": 4769,
+   "ejecuciones": 4770,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T08:01:12.789Z"
+   "ultima": "2026-11-24T08:06:24.237Z"
   }
  },
  "ptsDirecto": {},
@@ -9484,15 +9491,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:01:45.472Z"
+   "ultimaBien": "2026-11-24T08:06:54.754Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:01:45.472Z"
+   "ultimaBien": "2026-11-24T08:06:54.754Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:01:45.472Z"
+   "ultimaBien": "2026-11-24T08:06:54.754Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9500,11 +9507,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:01:45.472Z"
+   "ultimaBien": "2026-11-24T08:06:54.754Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:01:45.472Z"
+   "ultimaBien": "2026-11-24T08:06:54.754Z"
   }
  },
  "avisos": [
