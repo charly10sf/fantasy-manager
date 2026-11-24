@@ -3065,7 +3065,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136691896": 1795253836000,
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
    "SPORT|136694864": 1795259508000,
    "SPORT|136695150": 1795260075000,
@@ -9480,13 +9479,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5931,
+   "ok": 5932,
    "fallos": 0,
-   "ejecuciones": 4788,
+   "ejecuciones": 4789,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T09:36:19.621Z"
+   "ultima": "2026-11-24T09:41:19.859Z"
   }
  },
  "ptsDirecto": {},
@@ -9503,15 +9502,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:36:25.360Z"
+   "ultimaBien": "2026-11-24T09:41:29.258Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:36:25.360Z"
+   "ultimaBien": "2026-11-24T09:41:29.258Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:36:25.360Z"
+   "ultimaBien": "2026-11-24T09:41:29.258Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9519,11 +9518,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:36:25.360Z"
+   "ultimaBien": "2026-11-24T09:41:29.258Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:36:25.360Z"
+   "ultimaBien": "2026-11-24T09:41:29.258Z"
   }
  },
  "avisos": [
