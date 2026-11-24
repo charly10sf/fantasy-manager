@@ -2169,6 +2169,13 @@
    "jornada": 14,
    "id": "2125139078320468409",
    "t": "2026-11-24T08:06:54.584Z"
+  },
+  {
+   "clave": "caidas|14|2624",
+   "tipo": "caidas",
+   "jornada": 14,
+   "id": "2125152862128775242",
+   "t": "2026-11-24T09:01:40.793Z"
   }
  ],
  "estados": {
@@ -2448,7 +2455,7 @@
   "2621": "ok",
   "2622": "doubtful",
   "2623": "ok",
-  "2624": "ok",
+  "2624": "injured",
   "2626": "ok",
   "2627": "ok",
   "2628": "ok",
@@ -2924,7 +2931,7 @@
   "3179": "ok",
   "3180": "ok",
   "3181": "ok",
-  "3182": "injured",
+  "3182": "doubtful",
   "3183": "ok",
   "3184": "ok",
   "3185": "ok",
@@ -4291,8 +4298,8 @@
     "t": 1793970074314
    },
    "3182": {
-    "e": "injured",
-    "t": 1795500075741
+    "e": "doubtful",
+    "t": 1795510884120
    },
    "3193": {
     "e": "ok",
@@ -4473,16 +4480,16 @@
   "dia": "2026-11-24",
   "llamadas": {
    "clasificar": 9,
-   "redactar": 38,
-   "revisar": 23,
+   "redactar": 39,
+   "revisar": 24,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 342540,
-  "salida": 17576,
+  "entrada": 352632,
+  "salida": 17731,
   "cacheLee": 145499,
-  "cacheEscribe": 18065,
-  "dolares": 0.855345,
+  "cacheEscribe": 20968,
+  "dolares": 0.884337,
   "reservado": 0
  },
  "recientes": {
@@ -4682,10 +4689,6 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-24T06:02:47.049Z",
-    "texto": "Mala noticia en la zaga del Osasuna 🐂 de cara al domingo 29 en Mestalla: Catena se pierde el partido ante el Valencia 🦇 por la roja de la jornada 13. Esta temporada ha dejado 4 porterías a cero en 12 partidos, así que su sitio cuesta cubrirlo.\n\nAbel Bretones, que se lesionó el sóleo el 16 de noviembre, es duda para ese partido. Los dos eran fijos en el once de los rojillos."
-   },
-   {
     "t": "2026-11-24T06:02:48.661Z",
     "texto": "🚨 Mala noticia para la defensa de los azulones: Djene se pierde el Espanyol-Getafe del lunes 30 a las 21:00 porque vio la roja en la jornada 13. Ya venía de capa caída: vale 12 M y ha dejado por el camino 8,6 M en el último mes.\n\nCarvajal, también fijo atrás, es duda por una lesión sin determinar desde el 22 de noviembre. No hay plazo, así que nadie sabe aún si llega a ese partido en el campo de los pericos."
    },
@@ -4700,6 +4703,10 @@
    {
     "t": "2026-11-24T06:06:41.434Z",
     "texto": "🚨 Mal domingo 29 para la Real Sociedad ante el Sevilla en Anoeta: se le caen dos titulares habituales.\n\nBarrenetxea, que se rompió los isquiotibiales el 8 de noviembre, no volverá hasta mayo. Dos goles y dos asistencias en la liga no compensan tantos meses de baja: es venta obligatoria.\n\nAramburu, con una contusión en la cadera, tiene un 35 % de titularidad y puede quedarse fuera. Su valor se ha hundido: vale 5,7 M tras perder 3,9 M en el último mes."
+   },
+   {
+    "t": "2026-11-24T09:01:40.795Z",
+    "texto": "🚨 Manu Sánchez, fijo en la zaga del Levante, es duda para recibir al Racing el viernes 27 a las 21:00 en el Ciutat de València. Arrastra molestias en la rodilla y juega casi siempre.\n\nA su cotización tampoco le sienta bien: vale 1,5 M y ha perdido 1,3 M en el último mes."
    }
   ],
   "balance": [
@@ -9484,13 +9491,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5923,
+   "ok": 5924,
    "fallos": 0,
-   "ejecuciones": 4780,
+   "ejecuciones": 4781,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T08:56:14.253Z"
+   "ultima": "2026-11-24T09:01:24.120Z"
   }
  },
  "ptsDirecto": {},
@@ -9507,15 +9514,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:56:23.731Z"
+   "ultimaBien": "2026-11-24T09:01:43.903Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:56:23.731Z"
+   "ultimaBien": "2026-11-24T09:01:43.903Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:56:23.731Z"
+   "ultimaBien": "2026-11-24T09:01:43.903Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9523,11 +9530,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:56:23.731Z"
+   "ultimaBien": "2026-11-24T09:01:43.903Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T08:56:23.731Z"
+   "ultimaBien": "2026-11-24T09:01:43.903Z"
   }
  },
  "avisos": [
