@@ -3086,7 +3086,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/posible-alineacion-del-barca-ante-el-villarreal-la-suplencia-de-cubarsi-lo-altera-todo-f202611-n/": 1795286257000,
    "AS|https://as.com/futbol/primera/posible-once-del-atletico-ante-el-getafe-en-liga-f202611-n/": 1795286965000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261121/1004253843/madueke-evita-derrota-arsenal-saint-james-park-lesion-david-raya.html": 1795289303000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-retira-lesionado-derbi-anotar-betis-sevilla_0_2008558380.html": 1795288619000,
@@ -9490,13 +9489,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6040,
+   "ok": 6041,
    "fallos": 0,
-   "ejecuciones": 4897,
+   "ejecuciones": 4898,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T18:36:11.638Z"
+   "ultima": "2026-11-24T18:41:19.458Z"
   }
  },
  "ptsDirecto": {},
@@ -9513,15 +9512,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:36:18.988Z"
+   "ultimaBien": "2026-11-24T18:41:27.938Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:36:18.988Z"
+   "ultimaBien": "2026-11-24T18:41:27.938Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:36:18.988Z"
+   "ultimaBien": "2026-11-24T18:41:27.938Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9529,11 +9528,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:36:18.988Z"
+   "ultimaBien": "2026-11-24T18:41:27.938Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:36:18.988Z"
+   "ultimaBien": "2026-11-24T18:41:27.938Z"
   }
  },
  "avisos": [
