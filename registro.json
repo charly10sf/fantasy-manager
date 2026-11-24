@@ -3065,7 +3065,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/": 1795251912000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000,
    "SPORT|136691896": 1795253836000,
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
@@ -3227,18 +3226,6 @@
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-liga-real-madrid-barcelona-remontan-siguen-20261124092845-nt.html": 1795508926000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/primer-descarte-para-el-primer-partido-sin-barrenetxea-f202611-n/",
-    "medio": "AS",
-    "t": 1795251912000,
-    "id": "701",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Barrenetxea se pierde el partido contra el Racing",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/21/pujol-blanco-vuelta-convocatoria-racing/00031795263080948648106.htm",
     "medio": "La Voz de Galicia",
@@ -9491,13 +9478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5924,
+   "ok": 5925,
    "fallos": 0,
-   "ejecuciones": 4781,
+   "ejecuciones": 4782,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T09:01:24.120Z"
+   "ultima": "2026-11-24T09:06:13.619Z"
   }
  },
  "ptsDirecto": {},
@@ -9514,15 +9501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:01:43.903Z"
+   "ultimaBien": "2026-11-24T09:06:20.464Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:01:43.903Z"
+   "ultimaBien": "2026-11-24T09:06:20.464Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:01:43.903Z"
+   "ultimaBien": "2026-11-24T09:06:20.464Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9530,11 +9517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:01:43.903Z"
+   "ultimaBien": "2026-11-24T09:06:20.464Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:01:43.903Z"
+   "ultimaBien": "2026-11-24T09:06:20.464Z"
   }
  },
  "avisos": [
