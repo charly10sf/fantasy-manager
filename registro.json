@@ -3065,7 +3065,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253630/arranca-asamblea-real-madrid.html": 1795252457000,
    "SPORT|136691896": 1795253836000,
    "AS|https://as.com/futbol/luz-verde-para-kounde-frenkie-cubarsi-y-olmo-f202611-n/": 1795258095000,
    "SPORT|136694864": 1795259508000,
@@ -9478,13 +9477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5926,
+   "ok": 5927,
    "fallos": 0,
-   "ejecuciones": 4783,
+   "ejecuciones": 4784,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 440,
-   "ultima": "2026-11-24T09:11:13.220Z"
+   "ultima": "2026-11-24T09:16:14.517Z"
   }
  },
  "ptsDirecto": {},
@@ -9501,15 +9500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:11:21.553Z"
+   "ultimaBien": "2026-11-24T09:16:24.084Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:11:21.553Z"
+   "ultimaBien": "2026-11-24T09:16:24.084Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:11:21.553Z"
+   "ultimaBien": "2026-11-24T09:16:24.084Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9517,11 +9516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:11:21.553Z"
+   "ultimaBien": "2026-11-24T09:16:24.084Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:11:21.553Z"
+   "ultimaBien": "2026-11-24T09:16:24.084Z"
   }
  },
  "avisos": [
