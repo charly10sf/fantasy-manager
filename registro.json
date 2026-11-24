@@ -3089,7 +3089,6 @@
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/21/alaves-recupera-sonrisa-solvente-victoria-136701436.html": 1795278330000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-pone-pesadilla-valencia-cf-136700595.html": 1795277817000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/21/aubameyang-regresa-once-protagoniza-jugada-gol.html": 1795279551000,
-   "SPORT|136702543": 1795276838000,
    "AS|https://as.com/futbol/primera/copete-y-dimitrievski-amargan-la-fiesta-de-vallecas-f202611-n/": 1795280969000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/directo-javier-aguirre-analiza-victoria-136698276.html": 1795281632000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/21/copete-dimitrievski-devuelven-vida-valencia-batalla-supervivencia-vallecas-laliga-136703059.html": 1795282403000,
@@ -3520,7 +3519,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -9508,13 +9507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6008,
+   "ok": 6009,
    "fallos": 0,
-   "ejecuciones": 4865,
+   "ejecuciones": 4866,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T15:56:14.530Z"
+   "ultima": "2026-11-24T16:01:13.034Z"
   }
  },
  "ptsDirecto": {},
@@ -9531,15 +9530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:56:24.543Z"
+   "ultimaBien": "2026-11-24T16:01:53.343Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:56:24.543Z"
+   "ultimaBien": "2026-11-24T16:01:53.343Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:56:24.543Z"
+   "ultimaBien": "2026-11-24T16:01:53.343Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9547,11 +9546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:56:24.543Z"
+   "ultimaBien": "2026-11-24T16:01:53.343Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T15:56:24.543Z"
+   "ultimaBien": "2026-11-24T16:01:53.343Z"
   }
  },
  "avisos": [
