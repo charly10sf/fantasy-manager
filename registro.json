@@ -4511,7 +4511,9 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254870/luis-castro-borde-suspension.html": 1795521673945
+  }
  },
  "ia": {
   "dia": "2026-11-24",
@@ -9543,13 +9545,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5960,
+   "ok": 5961,
    "fallos": 0,
-   "ejecuciones": 4817,
+   "ejecuciones": 4818,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T11:56:12.990Z"
+   "ultima": "2026-11-24T12:01:13.945Z"
   }
  },
  "ptsDirecto": {},
@@ -9566,15 +9568,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:56:20.485Z"
+   "ultimaBien": "2026-11-24T12:01:23.305Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:56:20.485Z"
+   "ultimaBien": "2026-11-24T12:01:23.305Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:56:20.485Z"
+   "ultimaBien": "2026-11-24T12:01:23.305Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9582,11 +9584,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:56:20.485Z"
+   "ultimaBien": "2026-11-24T12:01:23.305Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T11:56:20.485Z"
+   "ultimaBien": "2026-11-24T12:01:23.305Z"
   }
  },
  "avisos": [
