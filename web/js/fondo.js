@@ -6,6 +6,7 @@ import { bloqueada } from './limite.js';
 import { cfgAvisos } from './avisos.js';
 import { esFav } from './favoritos.js';
 import { ventasInercia } from './acciones.js';
+import { nuevasEn } from './pujas-vistas.js';
 
 export const EN_FONDO = /[?&]fondo=1\b/.test(location.search);
 export const cfgFondo = () => ({ on: true, ...LS.get('cfg-fondo', {}) });
@@ -58,6 +59,8 @@ export function avisosNuevos(antes, D, M) {
     }
     if (pujas) out.push(...pujasPerdidas(antes, D, M, pujaDe, misAhora));
   }
+  // (0.8.2) una puja nueva de otro por un libre por el que has pujado o que sigues
+  out.push(...pujasNuevas(M));
   // (41) los que te interesan y acaban de salir al mercado (uno por día y jugador; si son muchos, en un aviso)
   if (antes && antes.liga && D.liga && antes.liga.id === D.liga.id && !antes.demo && (antes.mercado || []).length) out.push(...interesEnMercado(antes, D, M));
   // lo que hay que poner en el mercado (y que aún no está puesto)
@@ -126,6 +129,31 @@ export function pujasPerdidas(antes, D, M, pujaDe, misAhora) {
     if (!a) continue;
     const j = M.J(pid) || { nombre: 'un jugador' };
     out.push({ k: `puja-pierde:${pid}:${pj.id || diaDe()}`, titulo: `Puja perdida: ${j.nombre}`, texto: `Se lo ha llevado ${a.quien || 'otro'}${a.importe ? ` por ${eur(a.importe)}` : ''}; tú pujabas ${eur(pj.miPuja)}. Mira el plan para buscar otro.`, hash: 'mercado' });
+  }
+  return out;
+}
+
+/** (0.8.2) las pujas de otros que han entrado desde la última vez que se miró la liga, por los libres por los que has
+    pujado o que sigues (favoritos y «Avisarme»). Quién puede ser es función top: cerrada, el aviso no lo dice */
+export function pujasNuevas(M, c = cfgAvisos()) {
+  if (!c.on || c.pujas === false || !M.pujasVistas) return [];
+  const nuevas = nuevasEn(M.pujasVistas);
+  const cerrada = bloqueada('quienPuja');
+  const out = [];
+  for (const m of M.mercado || []) {
+    const k = m.tipo === 'liga' && m.j ? nuevas[m.id] : 0;
+    if (!k || !m.ajenas || !(m.miPuja || esFav(m.pid) || (c.jugadores || {})[m.pid])) continue;
+    const q = m.quien, top = q && q.cands[0];
+    let cuenta = '';
+    if (m.miPuja) {
+      const p = !cerrada && q && q.pMia != null ? q.pMia : null;
+      const hace = !cerrada && q && q.paraPasar ? q.paraPasar : m.pujaGana;
+      cuenta = p != null && p >= 0.65 ? ` Con tu puja de ${eur(m.miPuja)} lo normal es que te lo lleves igual.`
+        : hace && hace > m.miPuja ? ` Tu puja es de ${eur(m.miPuja)}: para llevártelo casi seguro harían falta unos ${eur(hace)}.` : ` Tu puja es de ${eur(m.miPuja)}.`;
+    } else if (m.puja) cuenta = ` La app pujaría ${eur(m.puja)}.`;
+    const quien = top && !cerrada && q.conf !== 'baja' ? ` Lo más probable es que sea de ${top.nombre}.` : '';
+    out.push({ k: `puja-nueva:${m.id}:${m.ajenas}`, titulo: k > 1 ? `${k} pujas nuevas por ${m.j.nombre}` : `Nueva puja por ${m.j.nombre}`,
+      texto: `Ya ${m.ajenas === 1 ? 'hay 1 puja' : `hay ${m.ajenas} pujas`} de otros.${cuenta}${quien}`, hash: 'mercado' });
   }
   return out;
 }

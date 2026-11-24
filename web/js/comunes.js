@@ -378,6 +378,7 @@ export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
+  quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],

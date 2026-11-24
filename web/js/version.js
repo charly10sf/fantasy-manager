@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.1a';
+export const VERSION = '0.8.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,21 @@ export const VERSION = '0.8.1a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, 15:35, Carlos, con la idea de un amigo de su liga: «ver cuánto puja cada rival») LaLiga no da ni quién puja ni
+    // cuánto (mirado en crudo con su liga: claude/pendiente-pujas-rivales.md del proyecto): solo cuántas pujas lleva cada libre.
+    // pujas-vistas.js apunta cuándo entra cada una (LS «pujas-vistas», lo llama app.js en `extraM`); quien-puja.js estima quién
+    // puede estar detrás y lo que pujaría (motor.js: `m.ajenas`, `m.pujasEv`, `m.quien`, `M.quienAcierto`); la tarjeta,
+    // `quienPujaHTML` en hojas.js; el aviso, `pujasNuevas` en fondo.js; función top «quienPuja» (limite.js, comunes.js y
+    // limites.json). Medido con su liga (81 compras de rivales en 45 días): el primero de la lista era quien se lo llevó el
+    // 43 % de las veces y estaba entre los tres primeros el 94 % (al azar, 12 % y 38 %): claude/medida-quien-puja-24nov.md.
+    // Pruebas: .github/ia/caso-quien-puja.mjs y, con una liga de verdad, .github/ia/medir-quien-puja.js. La hora, al publicar
+    v: '0.8.2', f: '2026-11-24', h: '15:55', t: 'Quién puja por él',
+    cosas: [
+      { tipo: 'nuevo', d: 'lupa', t: 'Quién puede estar detrás de cada puja', x: 'Cuando un jugador libre del mercado ya tiene pujas de otros, su ficha te dice qué rivales es más probable que estén detrás, lo que rondaría la puja de cada uno y si la tuya la pasa. Es una estimación: LaLiga no dice quién puja ni cuánto. Sale de lo que ficha cada rival, de si le hace falta alguien de ese puesto, de su dinero y de la hora a la que entró la puja.', ir: { v: 'mercado' } },
+      { tipo: 'nuevo', d: 'campana', t: 'Te avisa si entra una puja nueva', x: 'Si entra una puja de otro por un jugador por el que ya has pujado o que sigues, la app te avisa y te dice si con la tuya basta. En el mercado, la puja que acaba de entrar sale marcada como nueva.' },
+    ],
+  },
   {
     // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
     // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y

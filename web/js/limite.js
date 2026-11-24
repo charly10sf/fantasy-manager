@@ -87,11 +87,11 @@ function esDe(yo) {
    cuándo gira, media hora), pero solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga
    limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin
    un servidor, y no compensa). */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'quienPuja'];
 /** las que van por rival (y unas veces por jornada): solo el dinero */
 export const POR_JORNADA = ['dineroRivales'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
-const NUEVAS = [];
+const NUEVAS = ['quienPuja'];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
 const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
 const cfgTop = () => {

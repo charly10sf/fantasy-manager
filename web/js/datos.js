@@ -550,7 +550,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 /* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
-const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'pujas-vistas', 'quien-visto', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
 // para hacer sitio con el almacenamiento lleno (util.js, A8): qué es de cada liga y cuál es la de ahora
 fijarSitio({ sufijo: () => K(''), deLiga: DE_LA_CUENTA });
 const borrarClaves = (lista) => {
