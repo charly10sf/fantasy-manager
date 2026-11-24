@@ -2931,7 +2931,7 @@
   "3179": "ok",
   "3180": "ok",
   "3181": "ok",
-  "3182": "doubtful",
+  "3182": "injured",
   "3183": "ok",
   "3184": "ok",
   "3185": "ok",
@@ -4284,8 +4284,8 @@
     "t": 1793970074314
    },
    "3182": {
-    "e": "doubtful",
-    "t": 1795510884120
+    "e": "injured",
+    "t": 1795513873630
    },
    "3193": {
     "e": "ok",
@@ -4404,7 +4404,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254685/barceloneta-juega-77-faf-hospitalet.html": 1795500000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/leon-estambul-galatasaray-aston-villa_0_2008573341.html": 1795506845000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000
+   "Europa Press|https://www.europapress.es/madrid/noticia-marcha-lenta-vehiculos-huelga-educativa-complica-accesos-madrid-autopistas-radiales-20261124084752.html": 1795506472000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795510935000
   },
   "hechos": [
    {
@@ -4457,27 +4458,25 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254807/emre-mor-ex-celta-retira-temporalmente-futbol.html": 1795512672181
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-24",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 39,
    "revisar": 24,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 354653,
-  "salida": 17823,
+  "entrada": 356400,
+  "salida": 18181,
   "cacheLee": 145499,
   "cacheEscribe": 20968,
-  "dolares": 0.884585,
+  "dolares": 0.884939,
   "reservado": 0
  },
  "recientes": {
@@ -9479,13 +9478,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5933,
+   "ok": 5934,
    "fallos": 0,
-   "ejecuciones": 4790,
+   "ejecuciones": 4791,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T09:46:13.549Z"
+   "ultima": "2026-11-24T09:51:13.630Z"
   }
  },
  "ptsDirecto": {},
@@ -9502,15 +9501,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:46:21.073Z"
+   "ultimaBien": "2026-11-24T09:51:26.112Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:46:21.073Z"
+   "ultimaBien": "2026-11-24T09:51:26.112Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:46:21.073Z"
+   "ultimaBien": "2026-11-24T09:51:26.112Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9518,11 +9517,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:46:21.073Z"
+   "ultimaBien": "2026-11-24T09:51:26.112Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T09:46:21.073Z"
+   "ultimaBien": "2026-11-24T09:51:26.112Z"
   }
  },
  "avisos": [
