@@ -231,10 +231,34 @@ function candidatos(X, vetados) {
       }
       continue;
     }
+    // (24 nov, Carlos con Alti: «este jugador hay que venderlo aunque no tienes recambio, y que la app te proponga qué
+    // suplente buscar») el cambio: un titular que baja, sin nadie en tu plantilla que puntúe como él y con un recambio
+    // en el mercado. Dos pasos que van juntos (en `elegir`, la venta no va sin la puja) y el que sale solo se va si llega
+    // el recambio (`saleSi`): la oferta de LaLiga por él no se acepta hasta tenerlo (lo protege `misVentas`)
+    const cb = !sigue && ver && ver.ok && M.cambioDe ? M.cambioDe(x.pid) : null;
+    const rc = cb ? cb.rec.find((y) => { const v2 = V[`P-${y.pid}`]; return v2 && v2.ok && !(X.enCambio && X.enCambio.has(y.pid)); }) : null;
+    if (rc) {
+      (X.enCambio ||= new Set()).add(rc.pid);
+      const kP = `P-${rc.pid}`, kV = `V-${x.pid}`, bsC = M.bajaSeguido(x.pid);
+      const puesto = ['', 'portero', 'defensa', 'centrocampista', 'delantero'][x.j.pos] || 'jugador';
+      const cambio = { sale: x.pid, saleNombre: x.j.nombre, entra: rc.pid, entraNombre: rc.j.nombre, gana: Math.round(rc.gana * 10) / 10 };
+      const prox = rc.prox && rc.prox.rival ? `, juega ${rc.prox.casa ? 'en casa contra el' : 'en el campo del'} ${rc.prox.rival}` : '';
+      const baja = bsC ? `Baja ${bsC.planos ? 'casi todos los días' : `${bsC.dias} días seguidos`}` : 'Ha girado a la baja y juega de relleno';
+      nuevo({ ...base, k: kV, motivo: 'cambio', requiere: kP, saleSi: true, euros: Math.max(0, cobra - x.j.valor) + Math.max(0, -hold),
+        op: () => op({ objetivo: 'cambio', confianza: 'media', cambio,
+          motivo: `${baja} y no tienes otro ${puesto} como él: ponlo a la venta y puja por ${rc.j.nombre} (+${d1(rc.gana)} pts por jornada). La oferta de LaLiga por él, acéptala solo cuando tengas al nuevo.`,
+          datos: { porque: `cambio por ${rc.j.nombre}: ${x.j.nombre} baja y ${rc.j.nombre} te da ${d1(rc.gana)} pts más por jornada`, cuanto: `vale ${eur(x.j.valor)}`, cuando: 'hoy', siNo: 'sigue bajando en tu once' } }) });
+      nuevo({ k: kP, clase: 'pujar', objetivo: 'titular', pid: rc.pid, j: rc.j, importe: rc.puja, puja: rc.puja, entra: rc.j, incierta: true, euros: -(rc.puja - rc.j.valor), ref: kP, interes: 100, cambioDe: x.pid,
+        op: () => ({ accion: 'pujar', ref: kP, objetivo: 'titular', pid: rc.pid, jugador: rc.j.nombre, donde: 'en el mercado', importe: rc.precio, puja_max: rc.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', confianza: 'media', cambio,
+          motivo: `Recambio de ${x.j.nombre}, que baja: ${rc.tit != null ? `titular un ${Math.round(rc.tit * 100)} %` : 'juega'}${prox}; te da ${d1(rc.gana)} pts más por jornada.`,
+          datos: { porque: `recambio de ${x.j.nombre}: +${d1(rc.gana)} pts por jornada`, cuanto: `puja de ${eur(rc.puja)} (sale a ${eur(rc.precio)})`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: `${x.j.nombre} sigue en tu once` } }) });
+      continue;
+    }
     const okHoy = !!ver && ver.ok;
     const tit = M.perdida(x.pid) >= 0.3, bs = M.bajaSeguido(x.pid);
     // (Carlos, 14 nov) a un titular no se le vende por la inercia hasta que baja todos los días, y entonces solo con relevo
-    const vi = tit && !sigue ? (bs && !avisaSinRelevo(x) ? x.ventaInercia || { urgencia: 'ya', texto: '', perder: Math.max(0, -hold) } : null) : sigue ? null : x.ventaInercia;
+    // (24 nov) con el recambio del cambio ya fichado, tiene relevo
+    const vi = tit && !sigue ? (bs && (M.cambioHecho && M.cambioHecho(x.pid) || !avisaSinRelevo(x)) ? x.ventaInercia || { urgencia: 'ya', texto: '', perder: Math.max(0, -hold) } : null) : sigue ? null : x.ventaInercia;
     let motivo = null, porque = '', conf = 'media', euros = cobra - x.j.valor - hold;
     if (M.vendeBaja(x)) {
       motivo = 'baja'; conf = 'alta'; euros = Math.max(euros, x.j.valor * 0.02);
@@ -304,7 +328,7 @@ function candidatos(X, vetados) {
   const dineroP = num(D.dinero) - num(M.misPujas);
   // (con la puja que de verdad gana si con la de la app casi nunca te lo llevas: `pujaReal`)
   const vaParon = (y) => cholloParon(M, y.j, pujaReal(y)) || subeHastaVuelta(M, y.j, pujaReal(y)) || aSuValorParon(M, y, pujaReal(y), dineroP);
-  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && (((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || vaParon(y)))
+  for (const m of M.mercado.filter((y) => y.tipo === 'liga' && !y.miPuja && !M.dueno[y.pid] && y.puja && !(X.enCambio && X.enCambio.has(y.pid)) && (((y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || vaParon(y)))
     || (paron && ['normal', 'frena'].includes(y.veredicto) && aSuValorParon(M, y, pujaReal(y), dineroP)))).slice(0, 5)) {
     const ver = V[`P-${m.pid}`];
     if (!ver || !ver.ok || !/^el once/.test(ver.para || '')) continue;
@@ -411,17 +435,18 @@ function elegir(X, libres, fijos, oblig = 0) {
     const key = mask & tocanM;
     let r = memo.get(key);
     if (r) return r;
-    const fuera = new Set(fueraFijos), seguro = [], quiza = [];
+    // (24 nov) `saleSi`: el del cambio solo se va si llega su recambio (si pierdes la puja, se queda)
+    const fuera = new Set(fueraFijos), fueraSi = new Set(), seguro = [], quiza = [];
     for (let i = 0; i < N; i++) {
       if (!(key & (1 << i))) continue;
       const o = libres[i];
-      if (o.sale) fuera.add(o.sale);
+      if (o.sale) (o.saleSi ? fueraSi : fuera).add(o.sale);
       if (o.entra) (o.incierta ? quiza : seguro).push(o.entra);
     }
     const resto = X.mias.filter((j) => !fuera.has(j.id));
     const cierto = onceDe([...resto, ...seguro]);
-    const todo = quiza.length ? onceDe([...resto, ...seguro, ...quiza]) : cierto;
-    r = { cierto, todo, nota: quiza.length ? A.ganaPuja * todo.nota + (1 - A.ganaPuja) * cierto.nota : cierto.nota };
+    const todo = quiza.length || fueraSi.size ? onceDe([...resto.filter((j) => !fueraSi.has(j.id)), ...seguro, ...quiza]) : cierto;
+    r = { cierto, todo, nota: quiza.length || fueraSi.size ? A.ganaPuja * todo.nota + (1 - A.ganaPuja) * cierto.nota : cierto.nota };
     memo.set(key, r);
     return r;
   };
@@ -436,6 +461,9 @@ function elegir(X, libres, fijos, oblig = 0) {
   const venFijas = fijos.reduce((t, o) => t + (o.clase === 'vender' ? o.futura : 0), 0);
   // (lo que ya tienes para revender cuenta para los «2 a la vez», salvo lo que este plan vende)
   const maxE = Math.max(0, (X.paron ? 3 : 2) - (X.revVivos || 0) + revFuera(X, fijos));
+  // (24 nov) la venta de un cambio no va sin la puja de su recambio
+  const req = [];
+  libres.forEach((o, i) => { if (o.requiere) { const k = libres.findIndex((p) => p.k === o.requiere); req.push([1 << i, k >= 0 ? 1 << k : 0]); } });
   let mejor = null;
   for (let mask = 0; mask < T; mask++) {
     if (mask) {
@@ -455,6 +483,7 @@ function elegir(X, libres, fijos, oblig = 0) {
       mala[mask] = mala[r] || (r & choca[i]) || (choca[i] & bajo) ? 1 : 0;
     }
     if (mala[mask]) continue;
+    if (req.length && req.some(([a, b]) => (mask & a) && !(mask & b))) continue;
     const acc = sAcc[mask], cl = sCl[mask], bid = sBid[mask];
     const caja = dinero + acc - cl;
     let margen = margen0 + acc + sRet[mask] - cl;
@@ -520,11 +549,15 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   // (en apuros se deja sitio a lo que saca del apuro, pero sin echar de la búsqueda a ninguna clase: antes se quedaba
   // fuera lo de revender)
   const cupo = apuro ? [3, 2, 1, 2] : [4, 3, 2, 3];
+  // (24 nov) los cambios (venta + puja del recambio) entran siempre, los dos
+  const enPar = (o) => !!(o.requiere || o.cambioDe);
+  const pares = conMotivo.filter(enPar).slice(0, 4);
   let libres = [
-    ...mejores(conMotivo.filter((o) => o.clase === 'aceptar' || o.clase === 'vender'), cupo[0], porValor),
-    ...mejores(conMotivo.filter((o) => o.objetivo === 'titular' && o.clase === 'clausular'), cupo[1], (o) => o.interes),
-    ...mejores(conMotivo.filter((o) => o.objetivo === 'titular' && o.clase === 'pujar'), cupo[2], (o) => o.interes),
-    ...mejores(conMotivo.filter((o) => o.rev), cupo[3], (o) => o.euros * (o.vuelve ? 1.5 : 1)),
+    ...pares,
+    ...mejores(conMotivo.filter((o) => !enPar(o) && (o.clase === 'aceptar' || o.clase === 'vender')), cupo[0], porValor),
+    ...mejores(conMotivo.filter((o) => !enPar(o) && o.objetivo === 'titular' && o.clase === 'clausular'), cupo[1], (o) => o.interes),
+    ...mejores(conMotivo.filter((o) => !enPar(o) && o.objetivo === 'titular' && o.clase === 'pujar'), cupo[2], (o) => o.interes),
+    ...mejores(conMotivo.filter((o) => !enPar(o) && o.rev), cupo[3], (o) => o.euros * (o.vuelve ? 1.5 : 1)),
   ];
   if (apuro) {
     // lo que menos cuesta soltar (en euros y en puntos); con las cláusulas cerradas y sin cambios de mercado, solo vale

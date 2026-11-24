@@ -163,6 +163,16 @@ export function comoConseguir(D, M, pid, cat) {
 }
 
 /** una operación del catálogo en texto, con lo que cuesta y cómo funciona */
+/** (24 nov) el titular que baja y no tiene relevo: venderlo va junto con la puja por su recambio, y su oferta no se acepta
+ *  hasta tener al nuevo (`M.cambioDe`; lo mismo que hace el plan de la app y que comprueba `cuadrarPlan`) */
+function cambioTxt(M, pid, oferta = false) {
+  const cb = M && M.cambioDe ? M.cambioDe(pid) : null;
+  if (!cb) return '';
+  const r = cb.rec.map((x) => `${x.j.nombre} [P-${x.pid}] (+${String(Math.round(x.gana * 10) / 10).replace('.', ',')} pts)`).join(', ');
+  return oferta
+    ? `; CAMBIO: es titular en mi once, baja y no tengo otro como él: NO ACEPTAR hasta tener a su recambio (${r})`
+    : `; CAMBIO: es titular en mi once, baja y no tengo otro como él: venderlo SOLO junto con la puja por su recambio (${r}); si no, ni se propone`;
+}
 export function textoOp(o, M = null) {
   const j = o.j;
   const sobre = j && j.valor && o.precio ? o.precio / j.valor - 1 : 0;
@@ -201,8 +211,8 @@ export function textoOp(o, M = null) {
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${noMerece(M, o) ? '; LA APP NO LA RECOMIENDA (Hoy y las alarmas no la enseñan): para el once NO la propongas; solo para revender con beneficio claro' : ''}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
-    case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
-    case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
+    case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}${cambioTxt(M, o.pid, true)}`;
+    case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})${cambioTxt(M, o.pid)}`;
     case 'B': {
       const p = o.pagan, b = o.blindaje;
       // (revisión total, M4) con «quién puede pagar tu cláusula» cerrada, sin nombres: solo si a alguien le sobra o le llega justo
@@ -316,6 +326,8 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     for (const [m, os] of grupos) L.push(`- ${os.slice(0, n).map((o) => `${o.j.nombre} [${o.ref}]`).join(', ')}${os.length > n ? ` y ${os.length - n} más` : ''}: ${m}.`);
   }
   L.push(`VENDER: cualquiera de mis jugadores con [V-<id>] (ids: ${t('V').map((o) => `${o.j.nombre} V-${o.pid}`).join(', ')}).`);
+  // (24 nov) los del cambio, aparte: su venta va junto con la puja por el recambio
+  for (const o of t('V')) { const tx = cambioTxt(M, o.pid); if (tx) L.push(`- [V-${o.pid}] VENDER ${o.j.nombre}${tx}`); }
   L.push('Cualquier jugador de un rival que no esté arriba NO SE PUEDE CONSEGUIR HOY: ni comprándoselo ni de otra forma.');
   return L.join('\n');
 }

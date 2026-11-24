@@ -28,8 +28,13 @@ export const NOVEDADES = [
     // esta jornada ni jugó») motor.js `ventaPorInercia`: el corte era 150 mil para todos y los baratos nunca llegaban;
     // ahora un 3 % de lo que vale (40-150 mil) o el 1,2 % de siempre en los caros. En Equipo, a un titular que aún no baja
     // todos los días la pastilla ya no dice «vender» (el plan no lo vende: regla del 14 nov). La hora, al publicar
-    v: '0.8z', f: '2026-11-24', h: '', t: 'Te dice que vendas al barato que baja',
+    // (02:48) además: el cambio (motor.js `relleno`, `recambios`, `cambioDe`, `cambioHecho`; plan.js el par V-/P- con
+    // `requiere` y `saleSi`; cuadrarPlan descarta la venta sin la puja; LS «cambios» en app.js; la ficha «Véndelo y ficha a
+    // otro»; Equipo «Vender · busca recambio») y la flecha de actualizar que no se vuelve a crear al repintar
+    v: '0.8z', f: '2026-11-24', h: '03:25', t: 'Vender y fichar recambio',
     cosas: [
+      { tipo: 'nuevo', d: 'oferta', t: 'Vender y fichar recambio', x: 'Si un titular tuyo baja y no tienes otro como él, la app te propone a quién fichar en su lugar: lo ves en el plan, en Equipo («Vender · busca recambio») y en su ficha, con los mejores de su puesto que te llegan. La oferta por el que sale te dice que la aceptes cuando ya tengas al nuevo.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'La flecha de actualizar, sin tirones', x: 'El círculo que gira arriba mientras se actualiza ya no se corta.' },
       { tipo: 'arreglo', d: 'grafica', t: 'Te dice que vendas al barato que baja', x: 'Los jugadores baratos que están bajando y no te dan puntos ya salen para vender: antes la app solo se fijaba si perdían mucho dinero, y a uno barato nunca le pasaba.' },
       { tipo: 'arreglo', d: 'camiseta', t: 'Equipo y el plan dicen lo mismo', x: 'A un titular que acaba de girar a la baja, Equipo ya no le pone «vender» si el plan aún no lo vende.' },
     ],

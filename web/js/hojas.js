@@ -332,6 +332,14 @@ export function fichaJugador(S, pid) {
     const liga = !ol || S.M.enVenta.has(pid) ? ''
       : `A LaLiga se lo venderías por unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}.`;
     if (gratis || liga) h += `<div class="aviso-ficha ${noBl ? 'oro' : 'verde'} peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join('<br>')}</div></div>`;
+    // (24 nov) el cambio: véndelo y ficha a uno de estos (los 3 mejores de su puesto que te llegan)
+    const cbF = S.M.cambioDe ? S.M.cambioDe(pid) : null;
+    if (cbF) {
+      const bsF = S.M.bajaSeguido(pid);
+      h += `<div class="sec"><h2>Véndelo y ficha a otro</h2><span class="sub">${bsF ? 'baja y no tienes otro como él' : 'ha girado y juega de relleno'}</span></div>`;
+      h += cbF.rec.map((r) => `<button class="fila rec-f" data-j="${esc(r.pid)}">${ava(r.j)}<div class="fila-c"><div class="fila-n">${esc(r.j.nombre)}</div><div class="fila-s">${r.tit != null ? `titular ${Math.round(r.tit * 100)} %` : ''}${r.prox && r.prox.rival ? ` · ${r.prox.casa ? 'vs' : 'en'} ${esc(r.prox.rival)}` : ''}${r.sube ? ' · ▲ sube' : ''} · <b class="sube">+${String(Math.round(r.gana * 10) / 10).replace('.', ',')} pts</b></div></div><div class="fila-d"><div class="v">${eur(r.puja)}</div><div class="d apag">puja</div></div></button>`).join('');
+      h += '<p class="t2 peq">Pon a este a la venta y puja por uno de ellos. La oferta de LaLiga por él, acéptala cuando ya tengas al nuevo.</p>';
+    }
     const pg = mia.pagan;
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {

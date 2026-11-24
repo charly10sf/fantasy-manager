@@ -1960,7 +1960,7 @@ export function mejorarAlin(js, pool, M, no = new Set()) {
 /** las operaciones del plan con sus jugadores y el saldo después de cada una, con los números de la app */
 /* (revisión de la IA, 14 nov) `chat`: lo mismo para lo que la IA recomienda en el chat (su bloque «recomiendo»). Ahí lo que un
    rival tiene a la venta sí se mira (con su precio mínimo y lo que le da LaLiga) y el once va aparte (revisarChat) */
-export function cuadrarPlan(P, D, M, { chat = false } = {}) {
+export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
   if (!P) return null;
   const buscar = (n) => {
     const k = norm(n);
@@ -2327,6 +2327,21 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       o.aviso = ES.quedan ? `No te queda blindaje para este: te ${ES.quedan === 1 ? 'queda 1' : `quedan ${ES.quedan}`} esta jornada y ya va${ES.quedan === 1 ? '' : 'n'} en el plan antes.` : `Ya has gastado los ${ES.usados} blindajes de esta jornada: hasta que acabe la jornada no hay más.`;
     }
   }
+  // (24 nov) el cambio: la venta del titular que baja no va sin la puja por su recambio (si la IA la quita, o la app la
+  // descarta por dinero, la venta también; si el recambio ya es tuyo, la venta sigue sola)
+  // (24 nov) el cambio: la venta del titular que baja sin relevo va solo con la puja por su recambio (la del plan de la app
+  // lleva `cambio`; la de la IA, cualquiera de los recambios de `M.cambioDe`)
+  for (const o of ops) {
+    if (suelto || o.accion !== 'vender' || o.ya || o.descartada || !o.hoy) continue;
+    const cbM = !o.cambio && M.cambioDe ? M.cambioDe(o.pid) : null;
+    if (!o.cambio && !cbM) continue;
+    const entran = o.cambio ? [o.cambio.entra] : cbM.rec.map((r) => r.pid);
+    if (entran.some((e) => M.dueno && M.dueno[e] === (D.yo && D.yo.teamId))) continue;
+    if (ops.some((p) => entran.includes(p.pid) && !p.descartada && ['pujar', 'comprar', 'clausular'].includes(p.accion))) continue;
+    const nom = o.cambio ? o.cambio.entraNombre : cbM.rec.map((r) => r.j.nombre).slice(0, 2).join(' o ');
+    o.descartada = true;
+    o.aviso = `La app lo descarta: sin su recambio (${nom}) no lo vendas: es titular en tu once.`;
+  }
   let final = saldo;
   // (aviso de Carlos, 3 nov: Oyarzabal, «Aceptar oferta» con un aviso de que no hacía falta, perdiendo 7,67 M y con 3 días
   // hasta la jornada) una venta que no hace falta no se recomienda con un aviso al lado: se descarta y sale del saldo.
@@ -2653,7 +2668,8 @@ export function veredictos(D, M) {
   const uno = (o, mas = {}) => {
     const paso = { ref: o.ref, accion: ACC_REF[o.ref[0]], jugador: o.j.nombre, importe: null, motivo: '', dia: 'hoy', cuando: 'ahora', ...mas };
     let x = null;
-    try { x = (cuadrarPlan({ operaciones: [paso], titular: '', t: Date.now() }, D, M, { chat: true }).ops || [])[0] || null; } catch (e) { x = null; }
+    // (`suelto`: cada paso solo, sin los que van en pareja con otro, como la venta del cambio con la puja por su recambio)
+    try { x = (cuadrarPlan({ operaciones: [paso], titular: '', t: Date.now() }, D, M, { chat: true, suelto: true }).ops || [])[0] || null; } catch (e) { x = null; }
     if (!x) return { ok: false, aviso: 'la app no la haría' };
     return { ok: !x.descartada && !x.sugerencia, sinPrisa: !!x.sugerencia, aviso: x.aviso || '', importe: x.importe, cuando: x.cuando, paron: !!x.paron };
   };

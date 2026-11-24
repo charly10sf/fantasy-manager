@@ -2032,6 +2032,15 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-mot { margin: 8px 0 0; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto2); }
 /* (24 nov) el texto entero del paso, plegado */
 .pp-mas { margin-top: 8px; }
+/* (24 nov) el cambio: quién sale y quién entra */
+.pp-cambio { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.pp-cj { display: flex; align-items: center; gap: 7px; min-width: 0; flex: 1; cursor: pointer; }
+.pp-cj b { font: 700 var(--t-cuerpo)/1.1 var(--cond); min-width: 0; overflow-wrap: anywhere; }
+.pp-cj small { display: block; font-size: var(--t-mini); color: var(--apagado); }
+.pp-cj > b + small { margin-left: -2px; }
+.pp-cf { font: 700 20px var(--cond); color: var(--apagado); }
+.pp-rec { margin-top: 6px; font: 600 var(--t-sec2) 'Barlow'; color: var(--rojo-l); }
+.rec-f .fila-d .v { font-size: var(--t-cuerpo); }
 .pp-mas > summary { display: inline-flex; align-items: center; gap: 4px; font: 600 var(--t-sec2) 'Barlow'; color: var(--apagado); cursor: pointer; list-style: none; }
 .pp-mas > summary::-webkit-details-marker { display: none; }
 .pp-mas > summary::after { content: '›'; transition: transform 0.15s; }
@@ -3662,11 +3671,13 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .banda-inv .ic { color: var(--oro); }
 .sup-btns [hidden] { display: none !important; }
 .sup-toca { cursor: pointer; }
-.sup-gir { display: inline-flex; flex: none; margin-left: 2px; color: var(--texto2); }
-.sup-gir .ic { width: 15px; height: 15px; stroke-width: 2.2; transform-origin: 50% 50%; }
-.sup-toca.girando .sup-gir .ic { animation: sup-gira 0.9s linear infinite; }
+.sup-tx { display: contents; }
+.sup-gir { display: inline-flex; flex: none; margin-left: 2px; color: var(--texto2); transform-origin: 50% 50%; }
+.sup-gir .ic { width: 15px; height: 15px; stroke-width: 2.2; display: block; }
+/* (24 nov) gira la caja (HTML), no el SVG: así lo mueve la tarjeta gráfica y no se para mientras la app calcula */
+.sup-toca.girando .sup-gir { animation: sup-gira 0.9s linear infinite; will-change: transform; }
 @keyframes sup-gira { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .sup-toca.girando .sup-gir .ic { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sup-toca.girando .sup-gir { animation: none; } }
 
 /* (rework de la web, 21 nov) los 20 escudos en la portada de la web: debajo de la barra fija con JS (.tira-p) y arriba del todo
    sin JS (.sj-tira); cada uno lleva a la ficha de su equipo. Como la tira de las páginas públicas (css/paginas.css, .tira) */

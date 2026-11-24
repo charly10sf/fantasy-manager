@@ -1073,13 +1073,21 @@ function pintarSup() {
   const p = S.cargando ? 'vivo' : edad < 30 * MIN ? 'vivo' : edad < 6 * 3600e3 ? 'viejo' : 'mal';
   // en el móvil, corto: «Actualizado hace 1 min» ocupaba dos o tres líneas a 390 px (0.7.1g)
   const corto = innerWidth < 600, hace = D ? (corto ? dura(edad) : rel(D.t)) : '';
-  $('#supEstado').innerHTML = S.errorCarga && D && !S.cargando
+  const htmlEstado = S.errorCarga && D && !S.cargando
     ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin conexión' : 'Sin actualizar'} · ${diaDe(D.t) === diaDe() ? horaDe(D.t) : hace}`
     : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${hace}`
       : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : corto ? `Hace ${hace}` : `Actualizado ${hace}`) : ''}`;
   // (21 nov, Carlos: «el logo de recargar se bugea cuando sale actualizando») la flecha de actualizar es un icono de verdad:
   // el carácter ↻ girando se salía de su sitio y se cortaba, porque la letra no gira sobre su centro
-  { const st = $('#supEstado'); if (st && st.classList.contains('sup-toca')) st.insertAdjacentHTML('beforeend', `<i class="sup-gir" aria-hidden="true">${icono('refrescar')}</i>`); }
+  // (24 nov, «el circulito dando vueltas se entrecorta cuando está actualizando») la cabecera se repinta muchas veces mientras
+  // carga y rehacer el HTML volvía a crear la flecha: el giro empezaba de cero cada vez. Ahora solo se toca si cambia algo
+  { const st = $('#supEstado');
+    if (st) {
+      const conGiro = st.classList.contains('sup-toca'), tx = st.querySelector(':scope > .sup-tx'), gi = st.querySelector(':scope > .sup-gir');
+      // (la flecha no se vuelve a crear ni al pasar de «Al día» a «Actualizando…»: solo cambia el texto de al lado)
+      if (tx && !!gi === conGiro) { if (tx.innerHTML !== htmlEstado) tx.innerHTML = htmlEstado; }
+      else st.innerHTML = `<span class="sup-tx">${htmlEstado}</span>${conGiro ? `<i class="sup-gir" aria-hidden="true">${icono('refrescar')}</i>` : ''}`;
+    } }
   $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   { const st = $('#supEstado'); if (st) st.classList.toggle('girando', !!S.cargando); }
@@ -1646,7 +1654,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
+  return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
     pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal };
 }
 
@@ -1706,6 +1714,14 @@ function montarPlan() {
   } else S.plan = planDeHoy(S.D, S.M, S.c);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
+  // (24 nov) los cambios del plan (quién sale → quién entra): si ganas la puja, el motor da relevo al que sale
+  const cbs = S.plan.ops.filter((o) => o.cambio && !o.descartada);
+  if (cbs.length && !enDemo()) {
+    const g = LS.get(K('cambios'), {}), ahora = Date.now();
+    for (const k of Object.keys(g)) if (ahora - (g[k].t || 0) > 10 * DIA) delete g[k];
+    for (const o of cbs) if (!g[o.cambio.sale] || g[o.cambio.sale].entra !== o.cambio.entra) g[o.cambio.sale] = { entra: o.cambio.entra, t: ahora };
+    LS.set(K('cambios'), g);
+  }
 }
 /** el plan para los avisos (la alarma de 1 min de cada clausulazo): sin los pasos que ya has marcado como hechos */
 function planAvisos() {

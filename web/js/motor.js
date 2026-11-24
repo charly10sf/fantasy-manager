@@ -2198,6 +2198,10 @@ export function analizar(D, H, c, extra = {}) {
   // hoy sube o se queda igual (lo de hoy, con el histórico; si no lo hay, la página de mercado)
   const noBajaV = (t) => (t.d1 != null ? num(t.d1) >= 0 : t.p1 != null && t.p1 >= 0);
   const jornadaAntesV = !!M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini));
+  // (24 nov) los cambios que propuso el plan (quién sale → quién entra, LS «cambios»): con el recambio ya en tu plantilla,
+  // el que sale tiene relevo y su oferta se acepta (10 días)
+  const CAMB = extra.cambios || {};
+  M.cambioHecho = (pid) => { const c = CAMB[pid]; return !!c && !!c.entra && M.dueno[c.entra] === yoTid && ahora - (c.t || 0) < 10 * DIA; };
   M.misVentas =(D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
     const j = J(v.pid), t = M.tend(v.pid);
     const mia = (D.plantillas[yoTid] || []).find((f) => f.pid === v.pid);
@@ -2259,7 +2263,7 @@ export function analizar(D, H, c, extra = {}) {
     // antes de la jornada. Entre semana hay tiempo de hacer caja con otra cosa (en negativo no se malvende); el plan no la
     // acepta «porque hace falta» mientras queden cambios de mercado (`protege`, plan.js y cuadrarPlan)
     else if (!(jornadaAntesV && (num(D.dinero) < 0 || num(D.dinero) - num(M.misPujas) < 0)) && !M.vendeBaja({ j, tend: t }) && !(extra.reventa || {})[v.pid]
-      && mejor.sobre < 0.1 && ((M.perdida(v.pid) >= 0.3 && !(M.bajaSeguido(v.pid) && !sinRelevoV(v.pid, j))) || noBajaV(t))) {
+      && mejor.sobre < 0.1 && !M.cambioHecho(v.pid) && ((M.perdida(v.pid) >= 0.3 && !(M.bajaSeguido(v.pid) && !sinRelevoV(v.pid, j))) || noBajaV(t))) {
       const titular = M.perdida(v.pid) >= 0.3, pierde = String(Math.round(M.perdida(v.pid) * 10) / 10).replace('.', ','), bs = M.bajaSeguido(v.pid);
       const por = mejor.sobre > 0 ? `Por un ${Math.max(1, Math.round(mejor.sobre * 100))} % más` : 'Por lo que te ofrecen';
       // hoy sube después de N días bajando: «ha dejado de bajar»
@@ -2797,6 +2801,47 @@ export function analizar(D, H, c, extra = {}) {
   {
     const ES = M.escudosMios || { quedan: 0 };
     M.paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !x.noBlindar && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan).map((x) => x.pid) : [];
+  }
+  /* ---------- el cambio: vender a un titular que baja y fichar su recambio (24 nov, Carlos con Alti) ----------
+     «puedo tener un jugador en el 11 titular porque no tengo otro… este jugador hay que venderlo aunque no tienes todavía
+     recambios, y que la aplicación te proponga qué suplente buscar». Un titular de tu once que baja (todos los días, o ha
+     girado y juega «de relleno») y sin nadie en tu plantilla que puntúe como él: se propone venderlo y pujar por el mejor
+     de su puesto del mercado que te llega. La oferta de LaLiga por el que sale no se acepta hasta tener el recambio
+     (`misVentas` lo protege mientras sigue siendo titular sin relevo). Lo usan el plan, Equipo y la ficha */
+  {
+    // de relleno: está en tu once pero da poco (3 puntos esperados o menos) o juega poco con su equipo (menos del 65 %)
+    M.relleno = (x) => {
+      if (!x || M.perdida(x.pid) < 0.3) return false;
+      const T = M.titularidad ? M.titularidad(x.j) : null;
+      return (M.ppEsperado(x.j) || 0) <= 3 || (!!T && T.p != null && T.p < 0.65);
+    };
+    const sinRelevoC = (x) => { const p = M.perdida(x.pid); return p >= 1 && p >= 0.5 * (M.ppEsperado(x.j) || 0); };
+    const cacheR = {};
+    /** los mejores del mercado (de LaLiga) de su puesto que te llegan y puntúan más que él, de más a menos puntos */
+    M.recambios = (pid, n = 3) => {
+      if (pid in cacheR) return cacheR[pid].slice(0, n);
+      const x = M.mias.find((y) => y.pid === pid);
+      if (!x) return [];
+      const ppX = M.ppEsperado(x.j) || 0;
+      const l = (M.mercado || []).filter((m) => m.tipo === 'liga' && !m.miPuja && !M.dueno[m.pid] && m.j && m.j.pos === x.j.pos && !MALOS.has(m.j.estado) && m.puja && m.puja <= M.pujaMax)
+        .map((m) => {
+          const pp = M.ppEsperado(m.j) || 0, T = M.titularidad ? M.titularidad(m.j) : null, ine = M.inercia(m.pid);
+          return { pid: m.pid, j: m.j, puja: m.puja, precio: m.precio, pp, gana: pp - ppX, tit: T && T.p != null ? T.p : null, prox: M.proximoPartido(m.j.equipoId), sube: !!ine && ['sube', 'acelera'].includes(ine.fase) };
+        })
+        .filter((r) => r.gana >= 0.5 && (r.tit == null || r.tit >= 0.6))
+        .sort((a, b) => b.gana - a.gana || a.puja - b.puja);
+      cacheR[pid] = l;
+      return l.slice(0, n);
+    };
+    /** el cambio de un tuyo: { x, rec } o null */
+    M.cambioDe = (pid) => {
+      const x = M.mias.find((y) => y.pid === pid);
+      if (!x || M.noVender.has(pid) || M.vendeBaja(x) || (M.reventa || {})[pid] || M.perdida(pid) < 0.3 || M.cambioHecho(pid)) return null;
+      const baja = !!M.bajaSeguido(pid) || (!!x.ventaInercia && M.relleno(x));
+      if (!baja || !sinRelevoC(x)) return null;
+      const rec = M.recambios(pid);
+      return rec.length ? { x, rec } : null;
+    };
   }
   /* ---------- un trato entre managers (19 nov, el trueque de Carlos con Domy) ----------
      Uno o dos jugadores míos y del mismo rival, cada uno con su precio. Son dos compras, una detrás de otra, y el dinero

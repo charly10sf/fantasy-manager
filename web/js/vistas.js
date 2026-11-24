@@ -269,7 +269,8 @@ function urgentesDe(S) {
 /** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
 const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
 /** (24 nov, «menos texto» y «nada cortado») la primera frase entera, en vez del texto cortado a dos líneas */
-const frase1 = (t) => { const x = String(t || '').trim(); const m = x.match(/^(.+?[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/); return m ? m[1] : x; };
+// (24 nov) sin cortar en la inicial de un nombre («puja por C. Soler»)
+const frase1 = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
 /** «Ahora mismo»: solo sin plan. Con plan, lo urgente va arriba de sus pasos, en «Antes de nada» (18, 9 nov) */
 function ahoraHTML(S) {
   const { M } = S;
@@ -453,10 +454,11 @@ function objetivoPill(o) {
 /** (24 nov, Carlos: «muchísimo texto… más al grano») la frase que decide un paso: la de la IA si es corta; si no, la
  *  primera frase del porqué de la app. El texto entero queda plegado debajo («Más detalle») */
 const palabras = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
-const primeraFrase = (t) => String(t || '').trim().split(/(?<=[.:])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
+const primeraFrase = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.:])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
 function fraseDecide(o) {
   const m = String(o.motivo || '').trim();
-  if (o.descartada || palabras(m) <= 30) return m;
+  // (el cambio se lee entero: lo de no aceptar la oferta hasta tener al nuevo es la mitad del paso)
+  if (o.descartada || palabras(m) <= (o.cambio && o.accion === 'vender' ? 42 : 30)) return m;
   const d = o.datos && o.datos.porque ? primeraFrase(o.datos.porque) : primeraFrase(m);
   const f = d.replace(/\.$/, '');
   return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}.` : m;
@@ -486,9 +488,17 @@ function pasoOp(S, P, o) {
   // (24 nov, Carlos: «muchísimo texto… más resumido») un descartado dice solo por qué se descarta: sin la explicación de la
   // IA de por qué hacerlo, sin las pastillas ni la confianza
   const pie = `<div class="op-pie">${o.confianza && !o.sugerencia && !o.descartada ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null && !o.descartada ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`;
+  // (24 nov) el cambio: quién sale y quién entra, y los otros recambios (en la ficha del que sale)
+  // (las dos caras solo si van los dos pasos en el plan; la puja sola es una puja más)
+  const parCambio = !!o.cambio && (P.ops || []).some((p) => p !== o && p.cambio && p.cambio.sale === o.cambio.sale && !p.descartada);
+  const jS = o.cambio && parCambio && S.D.maestro[o.cambio.sale], jE = o.cambio && parCambio && S.D.maestro[o.cambio.entra];
+  const cambioHTML = o.cambio && jS && jE && !o.descartada ? `<div class="pp-cambio"><span class="pp-cj" data-j="${esc(jS.id)}">${ava(jS, 'p')}<b>${esc(jS.nombre)}</b><small>sale</small></span><span class="pp-cf" aria-hidden="true">→</span><span class="pp-cj" data-j="${esc(jE.id)}">${ava(jE, 'p')}<b>${esc(jE.nombre)}</b><small>entra</small></span></div>` : '';
+  const recHTML = o.cambio && !o.descartada && S.D.maestro[o.cambio.sale] ? `<button class="enlace pp-rec" data-j="${esc(o.cambio.sale)}">Ver los recambios de ${esc(o.cambio.saleNombre || '')} ›</button>` : '';
   const dentro = o.descartada ? [sub ? `<p class="pp-sub">${sub}</p>` : '', porque ? `<p class="pp-mot pp-mot1">${esc(String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, ''))}</p>` : '', pie].join('') : [
     sub ? `<p class="pp-sub">${sub}</p>` : '',
+    cambioHTML,
     porque ? `<p class="pp-mot pp-mot1">${esc(porque)}</p>` : '',
+    recHTML,
     objetivoPill(o) || o.accion === 'pujar' && o.puja_max ? `<div class="pp-pills">${objetivoPill(o)}${o.accion === 'pujar' && o.puja_max ? `<span class="pill">Puja hasta ${eur(o.puja_max)}</span>` : ''}</div>` : '',
     o.motivo && porque !== o.motivo ? `<details class="pp-mas"><summary>Más detalle</summary><p class="pp-mot">${esc(o.motivo)}</p></details>` : '',
     o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no se sabe si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : '',
@@ -498,7 +508,7 @@ function pasoOp(S, P, o) {
     pie,
   ].join('');
   // (en la fila corta, «Aceptar oferta» se queda en «Aceptar»: en un móvil de 360 se comía el nombre; dentro va entero)
-  const acc = esc(o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
+  const acc = esc(o.cambio && !o.descartada ? (o.accion === 'vender' ? 'Cambio' : parCambio ? 'Recambio' : ACCION[o.accion] || o.accion) : o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
   // (sesión 8, M9) un botón dentro de summary no se puede alcanzar bien: la cara es un span que abre la ficha al tocarla
   // y, con el teclado, va el botón «Ficha» de dentro
   const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
@@ -1150,7 +1160,7 @@ function eqPlantillaHTML(S, op) {
     pills: [
       estadoPill(x.j),
       // (24 nov) a un titular el plan no lo vende hasta que baja todos los días (Carlos, 14 nov): sin «vender» en la pastilla
-      x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? ((tit) => `<span class="pill ${x.ventaInercia.urgencia === 'ya' && !tit ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${tit ? (x.ventaInercia.urgencia === 'ya' ? 'Ha girado · titular' : 'Frenando · titular') : x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>`)(M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) : '',
+      M.cambioDe && M.cambioDe(x.pid) ? `<span class="pill mal">${icono('cambio')}Vender · busca recambio</span>` : x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? ((tit) => `<span class="pill ${x.ventaInercia.urgencia === 'ya' && !tit ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${tit ? (x.ventaInercia.urgencia === 'ya' ? 'Ha girado · titular' : 'Frenando · titular') : x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>`)(M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) : '',
       x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
       M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
       M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
