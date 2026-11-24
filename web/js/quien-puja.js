@@ -15,14 +15,16 @@
 import { num, clamp, DIA, HORA, MIN, horaDe } from './util.js';
 
 export const PESOS = {
-  vida: 45,          // días a los que una compra pesa la mitad
-  act0: 1, expAct: 1, // cuánto ficha: (suyo + act0) / (media + act0), elevado a expAct
+  // (medido el 24 nov con la liga de Carlos, 81 compras de rivales en 45 días: claude/medida-quien-puja-24nov.md)
+  vida: 30,          // días a los que una compra pesa la mitad
+  act0: 1, expAct: 1.3, // cuánto ficha: (suyo + act0) / (media + act0), elevado a expAct
   bValor: 3, expValor: 1, // de qué precio compra, encogido hacia lo de la liga con bValor compras
-  bPuesto: 6, expPuesto: 0.6, // de qué puesto ficha
-  nec: 0.22,         // cada jugador del puesto de menos que la media de la liga
-  corta: 1.3, llena: 0.6, mejor: 1.15, sinOnce: 1.35,
-  dineroSobra: 1.2, dineroJusto: 0.6, dineroMargen: 0.3, dineroNoSe: 0.9,
-  vende: 1.35, pierde: 1.5, recompra: 0.15, compro: 0.75,
+  bPuesto: 6, expPuesto: 0, // de qué puesto ficha (medido: no ayuda; apagado)
+  nec: 0.3,          // cada jugador del puesto de menos que la media de la liga
+  corta: 1.15, llena: 0.6, mejor: 1, sinOnce: 1.35, // (que fuera su mejor del puesto no ayuda: apagado)
+  dineroSobra: 1.2, dineroJusto: 0.6, dineroMargen: 0.3, dineroNoSe: 0.9, dineroFuera: 0.9,
+  // (recompra: 4 de las 81 las ganó quien había vendido a ese mismo jugador días antes; no se le quita peso)
+  vende: 1.2, pierde: 1.3, recompra: 1, compro: 0.85,
   visto: 2.5, priHora: 6, maxVentana: 10, // la hora: visto en ese rato, y su hora de siempre (ventanas de hasta 10 h)
   bPaga: 3,          // lo que paga él, encogido hacia lo de la liga con bPaga compras parecidas
   temp: 1,           // todo el peso, elevado a esto (menos de 1: más repartido)
@@ -90,7 +92,8 @@ export function crearQuienPuja(ctx) {
     const cap = ctx.capacidad(tid);
     const deuda = Math.max(0, num(ctx.valorEquipo(tid)) * num(ctx.deudaPct));
     const precio = num(m.precio) || num(j.valor);
-    if (cap && cap.alto + deuda < precio) return { fuera: 'dinero' };
+    // (con algo de manga: el dinero de un rival es una cuenta, y en lo medido el único descarte fallido fue por esto)
+    if (cap && cap.alto + deuda < precio * W.dineroFuera) return { fuera: 'dinero' };
     let w = 1;
     const f = (x, txt, dinero) => { w *= x; if (txt && x > 1.12) por.push([Math.log(x), txt, !!dinero]); };
     // cuánto ficha en el mercado
@@ -140,7 +143,7 @@ export function crearQuienPuja(ctx) {
     for (const x of manual) {
       if (x.tid !== tid || !x.pid) continue;
       const hace = ahora - x.t;
-      if (x.clase === 'venta' && String(x.pid) === String(j.id) && hace < 10 * DIA) { f(W.recompra); continue; }
+      if (x.clase === 'venta' && String(x.pid) === String(j.id) && hace < 10 * DIA) { f(W.recompra, 'lo tenía hace nada'); continue; }
       if (hace > 3 * DIA || J(x.pid).pos !== j.pos) continue;
       if (x.clase === 'venta') f(W.vende, `acaba de vender a ${J(x.pid).nombre}`);
       else if (x.clase === 'pierde') f(W.pierde, `le acaban de quitar a ${J(x.pid).nombre}`);

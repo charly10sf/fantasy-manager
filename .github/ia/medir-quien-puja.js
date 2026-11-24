@@ -49,6 +49,8 @@ export function medir(S, QP, Dt, { pesos = {}, X = preparar(S, Dt), detalle = fa
   const rivales = todos.filter((t) => t !== yo);
   const objetivos = X.compras.filter((x) => x.conV && x.tid !== yo && rivales.includes(x.tid));
   let top1 = 0, top3 = 0, logp = 0, n = 0, fueraMal = 0;
+  // ¿se cumple lo que dice? De las veces que al primero le da un 30-50 %, un 50 % o más… cuántas era él
+  const tramos = [[0, 0.3], [0.3, 0.5], [0.5, 1.01]].map(([a, b]) => ({ de: a, a: b, n: 0, ok: 0, p: 0 }));
   const filas = [];
   const azar = { top1: 0, top3: 0, logp: 0 };
   for (const x of objetivos) {
@@ -74,6 +76,7 @@ export function medir(S, QP, Dt, { pesos = {}, X = preparar(S, Dt), detalle = fa
     const k = rivales.length;
     azar.top1 += 1 / k; azar.top3 += Math.min(1, 3 / k); azar.logp += Math.log(1 / k);
     const i = r ? r.cands.findIndex((c) => c.tid === x.tid) : -1;
+    if (r && r.cands[0]) { const tr = tramos.find((y) => r.cands[0].p >= y.de && r.cands[0].p < y.a); if (tr) { tr.n++; tr.p += r.cands[0].p; if (i === 0) tr.ok++; } }
     if (i < 0) { fueraMal++; logp += Math.log(0.01); if (detalle) filas.push({ j: M.J(x.pid).nombre, quien: x.tid, puesto: 'descartado', por: r && (r.fuera.find((f) => f.tid === x.tid) || {}).por }); continue; }
     if (i === 0) top1++;
     if (i < 3) top3++;
@@ -81,5 +84,5 @@ export function medir(S, QP, Dt, { pesos = {}, X = preparar(S, Dt), detalle = fa
     if (detalle) filas.push({ j: M.J(x.pid).nombre, v: Math.round(x.v / 1e5) / 10, puesto: i + 1, p: Math.round(r.cands[i].p * 100), de: r.cands.length });
   }
   const pc = (a) => Math.round((a / Math.max(1, n)) * 1000) / 10;
-  return { n, top1: pc(top1), top3: pc(top3), logp: Math.round((logp / Math.max(1, n)) * 1000) / 1000, fueraMal, azar: { top1: pc(azar.top1), top3: pc(azar.top3), logp: Math.round((azar.logp / Math.max(1, n)) * 1000) / 1000 }, ...(detalle ? { filas } : {}) };
+  return { n, top1: pc(top1), top3: pc(top3), logp: Math.round((logp / Math.max(1, n)) * 1000) / 1000, fueraMal, tramos: tramos.map((y) => ({ tramo: `${y.de * 100}-${Math.min(100, y.a * 100)} %`, n: y.n, dice: y.n ? Math.round((y.p / y.n) * 100) : null, acierta: y.n ? Math.round((y.ok / y.n) * 100) : null })), azar: { top1: pc(azar.top1), top3: pc(azar.top3), logp: Math.round((azar.logp / Math.max(1, n)) * 1000) / 1000 }, ...(detalle ? { filas } : {}) };
 }
