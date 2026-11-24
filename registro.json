@@ -3240,7 +3240,8 @@
    "SPORT|136806910": 1795537138000,
    "SPORT|136799014": 1795538348000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/le-preguntan-jong-lamine-yamal-no-viajado-barcelona-quedarse-jugando-gta-20261124_3481372.html": 1795542447000,
-   "SPORT|136805812": 1795539246000
+   "SPORT|136805812": 1795539246000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255022/kounde-llego-tarde-charla-flick-previa-entrenamiento.html": 1795546012000
   },
   "hechos": [
    {
@@ -3502,7 +3503,7 @@
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -9488,13 +9489,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6044,
+   "ok": 6045,
    "fallos": 0,
-   "ejecuciones": 4901,
+   "ejecuciones": 4902,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T18:56:13.081Z"
+   "ultima": "2026-11-24T19:01:27.456Z"
   }
  },
  "ptsDirecto": {},
@@ -9511,15 +9512,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:56:23.493Z"
+   "ultimaBien": "2026-11-24T19:02:06.998Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:56:23.493Z"
+   "ultimaBien": "2026-11-24T19:02:06.998Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:56:23.493Z"
+   "ultimaBien": "2026-11-24T19:02:06.998Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9527,11 +9528,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:56:23.493Z"
+   "ultimaBien": "2026-11-24T19:02:06.998Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T18:56:23.493Z"
+   "ultimaBien": "2026-11-24T19:02:06.998Z"
   }
  },
  "avisos": [
