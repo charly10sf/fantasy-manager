@@ -507,7 +507,7 @@ function bloqueAndroid(plat) {
     ${cabPlat(ANDROID, 'Android', 'Descarga la app en Google Play. Es gratis.', 'platAndT')}
     <div class="plat-fila">
       <div class="en-apk-qr" role="img" aria-label="Código QR que lleva a Fantasy Manager en Google Play">${qrSVG(PLAY_URL)}</div>
-      <div class="plat-fila-t"><p>Escanea el QR con la cámara del móvil, o pulsa:</p>${botonPlay()}</div>
+      <div class="plat-fila-t"><p><b>Para descargarla:</b> escanea el QR con la cámara del móvil, o pulsa:</p>${botonPlay()}</div>
     </div>
     <details class="sin-app" id="detApp"><summary>Ya tengo la app: abrirla también en este ordenador</summary>
       ${qrEntrarHTML()}${codigoWebHTML()}</details>
@@ -647,7 +647,15 @@ async function traerConCodigo(cod) {
 window.qrLeido = async (texto, motivo) => {
   if (texto == null) { if (motivo) tostada(motivo, 7000); return; }
   const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})(?:\.([A-Za-z0-9_-]{22})(?![A-Za-z0-9_-]))?/);
-  if (!m) { tostada('Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador y escanea el que sale allí.', 7000); return; }
+  if (!m) {
+    // (24 nov, Carlos) en la portada del ordenador hay tres QR y el de entrar va plegado: lo normal es escanear el de
+    // descargar. Se le dice cuál es y dónde está el bueno, con el nombre de lo que tiene que pulsar
+    const deDescarga = /play\.google\.com|fantasymanagerapp\.com|fantasy-manager-61v\.pages\.dev/i.test(String(texto));
+    const donde = 'pulsa «Ya tengo la app: abrirla también en este ordenador» y escanea el QR que sale ahí.';
+    tostada(deDescarga ? `Ese QR es el de descargar la app, no el de entrar. En la web del ordenador, ${donde}`
+      : `Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador, ${donde}`, 12000);
+    return;
+  }
   if (!haySesion()) { tostada('Primero entra con tu cuenta de LaLiga en la app'); return; }
   tostada('Abriendo tu cuenta en el ordenador…');
   try {

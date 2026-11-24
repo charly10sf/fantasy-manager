@@ -528,6 +528,16 @@ async function probarApp() {
     await p.click('[data-accion="entrar"]');
     await p.waitForFunction(() => window.__abiertos.length === 2);
     mira(await p.locator('#pantAbrirCon').count() === 0, `${T} la segunda vez no hay paso de más: un toque y se abre LaLiga`);
+    /* (24 nov, Carlos) el QR que se escanea desde Ajustes: el de descargar no es el de entrar, y la app dice dónde está el bueno */
+    const alQR = async (texto) => { await p.evaluate((t) => window.qrLeido(t), texto); return ((await p.textContent('.tostada')) || '').replace(/\s+/g, ' '); };
+    const tPlay = await alQR('https://play.google.com/store/apps/details?id=es.fantasymanager.app');
+    mira(/es el de descargar la app, no el de entrar/.test(tPlay) && /«Ya tengo la app: abrirla también en este ordenador»/.test(tPlay), `${T} al escanear el QR de Google Play, la app dice que es el de descargar y qué hay que pulsar en la web`);
+    const tWeb = await alQR('https://fantasymanagerapp.com/');
+    mira(/es el de descargar la app, no el de entrar/.test(tWeb), `${T} y lo mismo con el QR que lleva a la web (el del iPhone)`);
+    const tOtro = await alQR('WIFI:S:casa;T:WPA;P:1234;;');
+    mira(/no es el de Fantasy Manager/.test(tOtro) && /«Ya tengo la app: abrirla también en este ordenador»/.test(tOtro), `${T} con un QR de otra cosa, que no es el suyo y dónde está`);
+    const tBueno = await alQR('https://fantasymanagerapp.com/#qr=AAAAAAAAAAAAAAAAAAAAAA.BBBBBBBBBBBBBBBBBBBBBB');
+    mira(!/descargar la app|no es el de Fantasy Manager/.test(tBueno), `${T} el QR de entrar no se confunde con el de descargar («${tBueno.slice(0, 50)}»)`);
     const [a, b] = (await p.evaluate(() => window.__abiertos)).map((u) => new URL(u));
     const pk = await p.evaluate(() => JSON.parse(window.FantasyApp.__m.pkce));
     mira(a.searchParams.get('redirect_uri') === 'authredirect://com.lfp.laligafantasy' && pk.vuelta === 'authredirect://com.lfp.laligafantasy', `${T} la vuelta es la de siempre (authredirect://)`);

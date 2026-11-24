@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.3a';
+export const VERSION = '0.8.3b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8.3a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (24 nov, 22:27, Carlos, entrando en su portátil: «me pone que no es un código QR de Fantasy Manager») En la portada del
+    // ordenador hay tres QR: el de Google Play, el de la web para el iPhone y, plegado en «Ya tengo la app: abrirla también en
+    // este ordenador», el de entrar. Escaneó el de Google Play con Ajustes → Abrir en el ordenador → QR y la app solo le decía
+    // «escanea el que sale allí». Ahora `qrLeido` (app.js) reconoce el de descargar y dice qué hay que pulsar; la fila de
+    // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web. La hora, al publicar
+    v: '0.8.3b', f: '2026-11-24', t: 'Entrar en el ordenador con el QR',
+    cosas: [
+      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app: abrirla también en este ordenador».' },
+    ],
+  },
   {
     // (24 nov, 19:37, Carlos: «a veces tarda 2 o 3 minutos y creo que sí que lo hace: cierro la aplicación, la abro y ya me pone el
     // plan, hace 2 minutos… y a veces, al salirme, no sale la notificación») La petición del plan se queda abierta

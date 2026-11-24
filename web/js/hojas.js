@@ -1007,7 +1007,7 @@ export function ajustes(S) {
   // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso (y en la 0.6.12, el QR)
   if ((enApp || enWeb) && !enDemo() && ses) {
     const qr = enApp && nativo.hayQR();
-    c1 += fila(enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo', qr ? 'Escanea el QR de la web. El código, para el iPhone' : 'Con un código de un solo uso, sin el F12',
+    c1 += fila(enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo', qr ? 'El QR de «Ya tengo la app», en la web. El código, para el iPhone' : 'Con un código de un solo uso, sin el F12',
       qr ? `<span class="aj-2">${btnA('escanearQR', 'QR', { sec: false })}${btnA('vincularWeb', 'Código')}</span>` : btnA('vincularWeb', 'Código', { sec: false }), 'ordenador iphone vincular qr codigo web');
   }
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
