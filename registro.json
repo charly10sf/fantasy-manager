@@ -2190,6 +2190,13 @@
    "jornada": 14,
    "id": "2125205774750110082",
    "t": "2026-11-24T12:31:56.278Z"
+  },
+  {
+   "clave": "noticias|3039:mala|2026-11-24",
+   "tipo": "noticias",
+   "jornada": 14,
+   "id": "2125216990981771432",
+   "t": "2026-11-24T13:16:30.371Z"
   }
  ],
  "estados": {
@@ -3237,7 +3244,8 @@
    "SPORT|136790672": 1795518790000,
    "SPORT|136786855": 1795518496000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/24/el-malaga-regresa-al-trabajo-sin-el-central-diego-murillo-baja-por-la-brecha-en-la-ceja-sufrida-ante-el-osasuna-ser-malaga/": 1795524815000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261124/1004254910/luis-garcia-plaza-pide-dos-refuerzos-enero.html": 1795523590000,
+   "SPORT|136795046": 1795521999000
   },
   "hechos": [
    {
@@ -3495,11 +3503,23 @@
     "motivo": "brecha en la ceja",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136795046",
+    "medio": "SPORT",
+    "t": 1795521999000,
+    "id": "3039",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Murillo entrena al margen con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-24",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4358,13 +4378,12 @@
  },
  "pulido": {
   "dia": "2026-11-24",
-  "n": 2,
+  "n": 3,
   "ok": 0,
-  "mal": 2
+  "mal": 3
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/andalucia/noticia-abascal-anuncia-querellas-contra-gobierno-urnas-consulados-nacionalizados-ley-nietos-20261121141242.html": 1795266762000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-rayo-valencia-decimotercera-jornada-primera-division-21-20261121_3479654.html": 1795273531000,
    "SPORT|136574933": 1795269960000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/21/inesperada-caida-deja-marc-marquez-titulo-sprint/00031795277380435666537.htm": 1795277460000,
@@ -4586,10 +4605,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T14:06:36.476Z",
-    "texto": "⁉️ Cubarsí es duda para el Villarreal por unas molestias en la cadera, lo ha comunicado el club.\n\nEl central vale 59,5 M, así que si lo tienes es un caso a seguir. El partido es el domingo 22 de noviembre, tras el parón, y no hay plazo para saber si llega bien. El Villarreal 🚢 va 8º, un rival de dificultad media."
-   },
-   {
     "t": "2026-11-16T15:31:34.168Z",
     "texto": "👀 Aimar vuelve a entrenar con el grupo tras la lesión, según MARCA y Mundo Deportivo.\n\nEl centrocampista del Osasuna 🐂 vale 2,1 M y ha perdido 2,4 M en el último mes, así que está barato si te fías de su vuelta. Con la liga parada, el partido que importa es el del domingo 22 de noviembre en El Sadar contra el Málaga 🐟, que va último y de los que más goles encajan. Para un medio, eso le viene bien."
    },
@@ -4604,6 +4619,10 @@
    {
     "t": "2026-11-16T20:21:40.531Z",
     "texto": "🚨 Marc Pubill sufre un esguince leve de tobillo, según ha comunicado el club.\n\nEl defensa del Atleti suma 19 puntos en las tres últimas jornadas. Su próximo partido es tras el parón, el domingo 22 de noviembre."
+   },
+   {
+    "t": "2026-11-24T13:16:30.373Z",
+    "texto": "🚨 Murillo causa baja tras sufrir una brecha en la ceja, según SPORT y Cadena SER.\n\nEl defensa del Málaga va a 7 puntos por partido.\n\nEl Athletic Club, el rival del Málaga el sábado a las 16:15, va 8º, así que el partido es de nivel medio."
    }
   ],
   "directo": [
@@ -9487,13 +9506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 5975,
+   "ok": 5976,
    "fallos": 0,
-   "ejecuciones": 4832,
+   "ejecuciones": 4833,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-24T13:11:12.986Z"
+   "ultima": "2026-11-24T13:16:12.752Z"
   }
  },
  "ptsDirecto": {},
@@ -9510,15 +9529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:11:20.374Z"
+   "ultimaBien": "2026-11-24T13:16:30.398Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:11:20.374Z"
+   "ultimaBien": "2026-11-24T13:16:30.398Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:11:20.374Z"
+   "ultimaBien": "2026-11-24T13:16:30.398Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9526,11 +9545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:11:20.374Z"
+   "ultimaBien": "2026-11-24T13:16:30.398Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T13:11:20.374Z"
+   "ultimaBien": "2026-11-24T13:16:30.398Z"
   }
  },
  "avisos": [
