@@ -24,6 +24,9 @@ DOMINIO = 'https://fantasymanagerapp.com/'
 PLAY = 'https://play.google.com/store/apps/details?id=es.fantasymanager.app'  # desde la 0.7.1h, con la app en la tienda
 CLIENTE_ADSENSE = 'ca-pub-3175956326240112'
 IMAGEN = DOMINIO + 'img/compartir.jpg'  # la de compartir (1200 × 630)
+# Cloudflare Web Analytics (25 nov): visitas y de dónde llegan, sin cookies. El dominio va por GitHub Pages (no pasa por
+# Cloudflare), así que el script va a mano. El token es público (sale en el HTML de cualquier web que lo use)
+CF_BEACON = '<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon=\'{"token": "299aacc756f14e2d84c558491aee0671"}\'></script>'
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
          'noviembre', 'diciembre']
 INICIO, FIN = '<!-- contenido -->', '<!-- /contenido -->'
@@ -447,7 +450,8 @@ def pagina(p, contenido, hay_guias):
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="{raiz}img/logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="{raiz}img/icono-180.png">
-  <link rel="stylesheet" href="{raiz}css/paginas.css?v={VERSION_CSS}">{script}{datos_estructurados(p, url)}
+  <link rel="stylesheet" href="{raiz}css/paginas.css?v={VERSION_CSS}">{script}
+  {CF_BEACON}{datos_estructurados(p, url)}
 </head>
 <body class="{'portal' if p['tipo'] == 'portal' else 'texto'}">
 <a class="salto" href="#contenido">Saltar al contenido</a>

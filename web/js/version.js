@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4c';
+export const VERSION = '0.8.4d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,16 @@ export const VERSION = '0.8.4c';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, 13:02, Carlos: «activa lo de Cloudflare Web Analytics», el día que la app se disparó y no se sabía de dónde
+    // venía la gente) Cloudflare Web Analytics con el script a mano (el dominio va por GitHub Pages: la configuración automática
+    // daba 0): en el <head> de las páginas públicas (CF_BEACON en paginas.py) y en la portada solo en la web del dominio, sin
+    // la marca de pruebas (`analiticaWeb` en app.js). Sin cookies. Contado en privacidad.html. Solo web
+    v: '0.8.4d', f: '2026-11-25', h: '13:06', t: 'Visitas de la web',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', menor: true, d: 'grafica', t: 'Las visitas de la web, contadas', x: 'Ya se cuentan las visitas de la web y de qué página o enlace llega cada una, sin cookies, para saber de dónde viene la gente.' },
+    ],
+  },
   {
     // (25 nov, 12:13, Carlos: «quiero que Domy pueda responder fallos también igual que yo») quien ayuda con los fallos
     // (AYUDANTES) ya contesta: /fallos/responder deja a 'ayuda' además de al dueño, abrir un aviso lo da por visto y le llega la

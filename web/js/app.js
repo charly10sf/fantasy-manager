@@ -47,7 +47,7 @@ import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
-import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenActual, canalPaso } from './semaforo.js';
+import { estadoHTML, pintarEstado, marcarPaso, pasoDeFallo, leerOrigen, origenActual, canalPaso, esPrueba } from './semaforo.js';
 import { turnoPendiente, intentarTurno, proximoTurno, cfgHoras, guardarCfgHoras } from './planes-hora.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 import { plegarAviso } from './avisos-ficha.js';
@@ -4850,7 +4850,21 @@ function abrirGuardada() {
     return false;
   }
 }
+/* Cloudflare Web Analytics (25 nov, Carlos): visitas y de dónde llegan a la web, sin cookies. Solo en la web del dominio
+   (nunca en la app de Android ni en una vista previa) y no con la marca de pruebas. Las páginas públicas lo llevan en el
+   <head> (CF_BEACON en paginas.py) */
+function analiticaWeb() {
+  try {
+    if (enApp || !enWeb || location.hostname !== 'fantasymanagerapp.com' || esPrueba()) return;
+    const s = document.createElement('script');
+    s.defer = true; s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', '{"token": "299aacc756f14e2d84c558491aee0671"}');
+    document.head.appendChild(s);
+  } catch (e) {}
+}
+
 async function arrancar() {
+  analiticaWeb();
   // (0.8) el reloj del rato de uso para los intersticiales (solo en la app)
   arrancarIntersticiales();
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
