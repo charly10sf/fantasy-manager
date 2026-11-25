@@ -1449,7 +1449,10 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.s === 200 && r.j.ya, 'el mismo otra vez: ya contado, no suma');
   r = await inv(501, '/invitar', null, 'GET');
   ok(r.j.entran === 1 && r.j.cuentan === 0 && r.j.amigos[0].hasta - r.j.amigos[0].t === 24 * 3600e3, `la 501 ve 1 amigo, 0 que cuentan, 24 h: ${JSON.stringify(r.j.amigos)}`);
-  ok(!JSON.stringify(r.j).includes('502'), 'sin el id del amigo');
+  // (25 nov) valor a valor: con el JSON entero, un «502» dentro de una fecha en ms la hacía fallar según la hora
+  const llevaId = (v, id) => v === id || v === String(id) || (typeof v === 'string' && new RegExp(`\\b${id}\\b`).test(v))
+    || (v && typeof v === 'object' && Object.entries(v).some(([k, x]) => k === String(id) || llevaId(x, id)));
+  ok(!llevaId(r.j, 502), 'sin el id del amigo');
   // la misma, una cuenta vieja, una que ya invitó otro, una fuera de la liga, un código que no existe
   r = await inv(501, '/invitar/canjear', { cod, liga: '55' });
   ok(r.s === 400 && r.j.motivo === 'misma', `la misma cuenta: ${r.j.motivo}`);
