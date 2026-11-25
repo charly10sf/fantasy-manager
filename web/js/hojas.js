@@ -365,7 +365,7 @@ export function fichaJugador(S, pid) {
     // (23 nov, Carlos: «los textos, más cortos») una línea para el blindaje y otra para lo que da LaLiga; al que baja con la
     // cláusula por encima de lo que da LaLiga, «no lo blindes» (motor: noBlindar)
     const noBl = mia.abierta && !mia.escudo && mia.noBlindar;
-    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, más que vendiéndolo.`
+    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, ${mia.noBlindar.igual ? 'lo mismo' : 'más'} que vendiéndolo.`
       : mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> con un anuncio en LaLiga: ${S.M.ESCUDO_H} h a salvo (te quedan ${S.M.escudosMios.quedan}).` : '';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
       : `LaLiga te ofrecería entre <b>${eur(ol.una ? ol.una.min : ol.v)}</b> y <b>${eur(ol.una ? ol.una.max : ol.v)}</b>, a suerte, con una oferta nueva en cada cambio de mercado.`;

@@ -17,7 +17,7 @@ import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } fr
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo, ofertaDueno, motivoPeligro } from './motor.js';
-import { planDeHoy, planMotor, planVueltas, titularMotor } from './plan.js';
+import { planDeHoy, planMotor, planVueltas, titularMotor, AJUSTES as AJ_PLAN } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
 import { leerDicho, dichoTxt, DURA_DICHO } from './dicho.js';
@@ -705,9 +705,13 @@ function onceTxt(M, j) {
   if (al) return `ALINEACIÓN CONFIRMADA: ${al.estado === 'titular' ? 'TITULAR' : al.estado === 'suplente' ? 'SUPLENTE' : al.estado === 'nosale' ? 'NO SALE DE TITULAR (puede estar en el banquillo o no ir convocado)' : al.estado === 'baja' ? 'BAJA' : 'NO CONVOCADO'}`;
   if (!(M.hayOnceDe ? M.hayOnceDe(j) : M.hayOnces)) return null;
   const o = M.onceProb(j.id);
-  if (!o) return 'once probable: no sale';
-  if (o.titular) return `once probable: TITULAR${o.prob != null ? ` ${o.prob} %` : ''}`;
-  return 'once probable: suplente';
+  // (25 nov, hallazgo 4: «70 % de titular» en el motivo y 66 % en Mercado y en la ficha) el % que lee la IA es el de la app
+  // (`M.titularidad`, el que sale junto al nombre en todas las listas), no el del once probable de fuera, que es solo una
+  // de sus dos fuentes: con los dos a la vez, la IA citaba uno y la app enseñaba el otro
+  const T = M.titularidad ? M.titularidad(j) : null, pA = T && T.p != null ? ` · titular ~${Math.round(T.p * 100)} %` : '';
+  if (!o) return `once probable: no sale${pA}`;
+  if (o.titular) return `once probable: TITULAR${pA}`;
+  return `once probable: suplente${pA}`;
 }
 const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
 // uno de los míos: si es titular y lo que pierde mi once sin él («NO entraría en mi once» salía con los míos)
@@ -1515,6 +1519,41 @@ function cifraSabida(x, base) {
   return false;
 }
 /**
+ * (25 nov, auditoría de fallos, hallazgo 4) Un texto de la IA con las cifras al día. La IA escribe la situación y las frases
+ * con las cifras del momento en que se pidió el plan; la app repasa el plan cada vez que lo pinta, con la liga de ahora, y
+ * un importe puede cambiar (la puja que gana en tu liga sube con cada puja nueva, LaLiga hace otra oferta). Antes el paso
+ * decía «−1,43 M · Te quedas con 48,08 M» y arriba seguía «unos 48,19 M al empezar la jornada». `pares`: [antes, ahora] de
+ * cada cifra que ha cambiado; `actuales`: las que siguen valiendo (si lo escrito puede ser una de esas, no se toca). Solo
+ * cambia un número por otro: una cifra que no es ninguna de las de `pares`, o que puede ser dos, se deja como está.
+ */
+export function cifrasAlDia(texto, pares, actuales = []) {
+  const ps = (pares || []).filter((x) => x && Number.isFinite(x[0]) && Number.isFinite(x[1]) && x[0] && Math.abs(x[0] - x[1]) >= 5000);
+  if (!texto || !ps.length) return texto;
+  return String(texto).replace(/([−-]?)(\d+(?:[.,]\d+)?)\s?(M|mil(?:lones)?)\b/gi, (todo, sg, n, u) => {
+    const mil = /^mil$/i.test(u), dec = (n.split(/[.,]/)[1] || '').length;
+    const v = aEuros(n, mil ? 'mil' : 'M'), tol = ((mil ? 1e3 : 1e6) / Math.pow(10, dec)) * 0.51;
+    const es = (y) => Math.abs(v - Math.abs(y)) <= tol;
+    if (actuales.some((y) => Number.isFinite(y) && y && es(y))) return todo;
+    // (un «−» delante solo casa con una cifra que era negativa; «3-4 M» no es un negativo, pero tampoco será una de `pares`)
+    const cs = ps.filter((x) => es(x[0]) && (!sg || x[0] < 0));
+    const nuevos = [...new Set(cs.map((x) => x[1]))];
+    if (nuevos.length !== 1) return todo;
+    const antes = cs[0][0], ahora = nuevos[0];
+    // mismo signo: cambia el número y el signo escrito se queda; si cambia de signo, va entero con el suyo (y si era
+    // negativo sin el «−» escrito, «debes 3,20 M», no se sabe cómo decirlo: se deja)
+    if (Math.sign(ahora || antes) === Math.sign(antes)) return `${sg}${eur(Math.abs(ahora))}`;
+    return antes < 0 && !sg ? todo : eur(ahora);
+  });
+}
+/** (25 nov) el % de titular de un texto, con el de la app de ahora (el mismo que sale en Mercado y en la ficha) */
+export function titularAlDia(texto, p) {
+  if (!texto || p == null || !Number.isFinite(p)) return texto;
+  const n = String(Math.round(p));
+  return String(texto)
+    .replace(/(\b[Tt]itular(?:idad)?(?:\s+probable)?\s*(?:\(|al\s+|del\s+|:\s*)?~?)(\d{1,3})(\s?%)/g, (t, a, x, c) => `${a}${n}${c}`)
+    .replace(/((?<![\d.,]))(\d{1,3})(\s?%\s+de\s+(?:titular(?:idad)?|opciones de (?:ser |salir de )?titular|probabilidad(?:es)? de (?:ser |salir de )?titular|posibilidades de (?:ser |salir de )?titular))/g, (t, a, x, c) => `${a}${n}${c}`);
+}
+/**
  * Aplica al plan del motor lo que contesta la IA. Lo que quita o mete se rehace con el propio motor (planMotor con la
  * combinación fijada: las mismas cuentas) y se cuadra; si no cuadra, se prueba sin quitar lo que hace falta, sin meter y,
  * al final, sin tocar nada. Las frases de la IA que traen una cifra que no está en los datos del paso no se usan.
@@ -1904,6 +1943,19 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
  * porque ya solo llegaba ahí con el motor roto (en 5.850 ligas al azar no pasa nunca) o con «cfg-ia.planLargo», que no
  * tenía interruptor en Ajustes. Lo que la IA escribe a mano sigue pasando por cuadrarPlan (los planes guardados de antes).
  */
+/**
+ * Lo que se guarda con un plan de la IA recién hecho: lo que la app recomendó (`recs`), cada paso como quedó al repasarlo
+ * (`cuadradas`: lo que leyó la IA y lo que se vio) y (25 nov) `vio`: el saldo, lo que quedaba y la jornada que la app daba
+ * en ese momento, para que al repasarlo más tarde el titular y la situación digan las cifras de entonces o las de ahora,
+ * nunca unas y otras mezcladas (`cifrasAlDia`, en `cuadrarPlan`)
+ */
+export function sellarPlan(P, D, M) {
+  const cu = cuadrarPlan(P, D, M);
+  P.recs = recsDe(cu.ops, M);
+  P.cuadradas = opsCuadradas(cu.ops);
+  P.vio = { dinero: D.dinero == null ? null : +D.dinero, final: cu.final == null ? null : cu.final, jornada: P.cuentas && P.cuentas.jornada != null ? P.cuentas.jornada : null };
+  return P;
+}
 export async function planDelDia(D, M, c, op = {}) {
   let P = null;
   if (planesApp(op.demo)) {
@@ -1913,7 +1965,7 @@ export async function planDelDia(D, M, c, op = {}) {
     }
   } else P = await planCorto(D, M, c, op);
   if (!P) throw new ErrorIA('Hoy la app no ha podido montar su plan con las cuentas, así que la IA no tiene qué ordenar. Tienes el plan automático.', 0);
-  try { const cu = cuadrarPlan(P, D, M); P.recs = recsDe(cu.ops, M); P.cuadradas = opsCuadradas(cu.ops); } catch (e) { P.recs = []; }
+  try { sellarPlan(P, D, M); } catch (e) { P.recs = []; }
   try { guardarRecs(P); } catch (e) { /* nada */ }
   const lista = planes();
   lista.unshift(P);
@@ -2202,6 +2254,16 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
             aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(importe)}. La app la deja en ${eur(objetivoP)}: con más pagarías de más.`;
             importe = objetivoP; o.puja_max = importe;
           }
+          // (25 nov, hallazgo 4: «puja de 1,32 M (sale a 1,27 M)» en las pastillas y, debajo, «Subida de 1,32 M a 1,43 M», con
+          // el paso en 1,43 M) UNA sola puja a la vista: si al repasar el plan cambia, las pastillas y la frase de la IA dicen
+          // la del paso, y el aviso cuenta de cuál venía y por qué
+          if (puja && importe !== puja) {
+            o.pujaAntes = puja;
+            const pon = (t) => String(t).split(eur(puja)).join(eur(importe));
+            if (Array.isArray(o.claves)) o.claves = o.claves.map((c) => (/^puja de /i.test(String(c)) ? pon(c) : c));
+            if (o.datos && /^puja de /i.test(String(o.datos.cuanto || ''))) o.datos = { ...o.datos, cuanto: pon(o.datos.cuanto) };
+            if (o.motivoApp && o.motivo) o.motivo = cifrasAlDia(o.motivo, [[puja, importe]], [opC.precio, opC.j && opC.j.valor]);
+          }
           break;
         }
         case 'M': case 'T':
@@ -2372,6 +2434,16 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     }
     return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : o.retira ? 'Retirar puja' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
   });
+  // (25 nov, hallazgo 4) en un plan de la IA, el % de titular que cita un paso es el de la app de ahora, el mismo que sale
+  // junto al nombre en Mercado y en la ficha (cambia durante el día con los onces probables)
+  if (P.modelo && M.titularidad) {
+    for (const o of ops) {
+      if (!o.j || o.j.pos === 5 || (M.alineacion && M.alineacion(o.j.id))) continue;
+      let T = null; try { T = M.titularidad(o.j); } catch (e) { T = null; }
+      if (!T || T.p == null) continue;
+      for (const c of ['motivo', 'motivoApp']) if (o[c]) o[c] = titularAlDia(o[c], T.p * 100);
+    }
+  }
   // los blindajes gratis de LaLiga: 2 por jornada. Si el plan pide más de los que te quedan, sobran los últimos
   const ES = M.escudosMios;
   if (ES) {
@@ -2436,7 +2508,13 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
       o.decAhora = ahoraDec;
       continue;
     }
-    const haceFalta = !o.hoy || (sin != null && sin < 0) || pagaCaja(o);
+    // (25 nov, azar-plan con la semilla 77) lo demás que se pone hoy a la venta a LaLiga aún no ha entrado y su oferta va de
+    // −10 % a +10 %: para saber si ESTA venta hace falta se cuenta al 90 %, como hace el motor (plan.js, `margenVenta`). Antes
+    // el motor decía «hace falta» (−13,31 M y una venta de 14,53 M: al 90 % no llega) y aquí, con el 100 %, «no te hace falta
+    // el dinero (acabarías con 1,22 M)»: se descartaba una venta por vuelta hasta agotar las vueltas y el plan salía corto
+    const otrasVentas = ops.reduce((t, x) => t + (x !== o && x.accion === 'vender' && x.hoy && !x.ya && !x.descartada && x.importe && !(x.etiqueta === 'Aceptar oferta' || /acepta/i.test(x.donde || '')) ? +x.importe : 0), 0);
+    const sinSeguro = sin != null ? sin - otrasVentas * (1 - AJ_PLAN.margenVenta) : null;
+    const haceFalta = !o.hoy || (sinSeguro != null && sinSeguro < 0) || pagaCaja(o);
     if (haceFalta) {
       o.porDinero = true;
       if (!/hace falta/i.test(`${o.motivo || ''} ${o.aviso || ''}`)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${d.porque.replace(/\s+$/, '')} Véndelo solo si de verdad necesitas el dinero.`;
@@ -2637,7 +2715,33 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     const quien = (o.j && o.j.nombre) || o.jugador;
     Object.assign(o, { j: null, pid: null, jugador: '', aviso: `${o.aviso ? `${o.aviso} ` : ''}La IA nombraba aquí a ${quien}, que no es tuyo: no puede ir en tu once.` });
   }
-  const { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA, quitados);
+  let { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA, quitados);
+  // (25 nov, hallazgo 4) el titular y la situación los escribió la IA con las cifras de cuando se pidió el plan (`P.vio`, lo
+  // que la app daba entonces): si al repasarlo ahora ha cambiado un importe, el saldo o lo que queda, dicen las de ahora, las
+  // mismas que los pasos y que «Te quedas con». Solo en los planes de la IA y solo números por números (`cifrasAlDia`)
+  if (P.modelo && Array.isArray(P.cuadradas) && (titular || situacion)) {
+    try {
+      const pares = [], actuales = [M.pujaMax, M.deuda];
+      // (lo que cada paso llevaba entonces, ya repasado por la app: `cuadradas`, que es lo que leyó la IA y lo que se vio)
+      const clave = (acc, nombre) => `${acc}|${norm(nombre)}`;
+      const antes = new Map(P.cuadradas.filter((x) => x && x.importe && x.estado !== 'descartada').map((x) => [clave(x.accion, x.jugador), +x.importe]));
+      for (const o of ops) {
+        if (o.descartada || o.ya || !o.importe) continue;
+        const v0 = antes.get(clave(o.etiqueta === 'Aceptar oferta' ? 'aceptar' : o.etiqueta === 'Subir cláusula' ? 'subir cláusula' : o.accion, (o.j && o.j.nombre) || o.jugador || ''));
+        if (v0 && Math.abs(v0 - o.importe) >= 5000) pares.push([v0, o.importe]); else actuales.push(o.importe);
+        if (o.saldo != null) actuales.push(o.saldo);
+        if (o.j && o.j.valor) actuales.push(o.j.valor);
+      }
+      const vio = P.vio || {};
+      if (D.dinero != null && vio.dinero != null) { pares.push([+vio.dinero, +D.dinero]); actuales.push(+D.dinero); }
+      if (final != null && vio.final != null) {
+        pares.push([+vio.final, final]); actuales.push(final);
+        if (vio.jornada != null) { const jAhora = +vio.jornada + (final - +vio.final); pares.push([+vio.jornada, jAhora]); actuales.push(jAhora); }
+      }
+      if (situacion) situacion = cifrasAlDia(situacion, pares, actuales);
+      if (titular && !titularApp) titular = cifrasAlDia(titular, pares, actuales);
+    } catch (e) { /* los textos, como estaban */ }
+  }
   // («Tus rivales», al día: lo que dice de un rival y ya no es verdad con la liga de ahora, fuera)
   let rivales = P.rivales;
   try { rivales = revisarRivales(P.rivales, D, M); } catch (e) { rivales = P.rivales; }

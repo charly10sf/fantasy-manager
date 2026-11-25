@@ -1998,7 +1998,9 @@ export function analizar(D, H, c, extra = {}) {
     const op = M.onceProb(j.id), alj = M.alineacion(j.id);
     let fueraOnce = 0;
     if (alj) { if (alj.estado === 'titular') partes.push('titular en la alineación confirmada'); else { fueraOnce = alj.estado === 'suplente' || alj.estado === 'nosale' ? 10 : 12; partes.push(alj.estado === 'suplente' ? 'suplente en la alineación confirmada' : alj.estado === 'nosale' ? 'no sale de titular en la alineación confirmada' : 'no va convocado'); } }
-    else if (op && op.titular) partes.push(`titular probable${op.prob != null ? ` (${op.prob} %)` : ''}`);
+    // (25 nov, hallazgo 4) el % es el de la app (`M.titularidad`, el que sale junto al nombre), no el del once probable de
+    // fuera: el motivo decía «titular probable (70 %)» y Mercado y la ficha, 66 %
+    else if (op && op.titular) { const Tt = M.titularidad(j); partes.push(`titular probable${Tt && Tt.p != null ? ` (${Math.round(Tt.p * 100)} %)` : op.prob != null ? ` (${op.prob} %)` : ''}`); }
     else if (op && op.alternativa) { fueraOnce = 10; partes.push('suplente en el once probable'); }
     else if (M.hayOnceDe(j) && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
     // el próximo rival: no es lo mismo el Barça que el colista
@@ -2125,7 +2127,9 @@ export function analizar(D, H, c, extra = {}) {
       const olB = M.ofertaLigaDe(x.j), bs = M.bajaSeguido(x.pid);
       const bajando = ((ineR && ['giro', 'baja', 'parado'].includes(ineR.fase)) || !!bs) && ((M.partidazo(x.pid) || {}).nivel || 0) < 2;
       x.noBlindar = bajando && x.clausula && olB && x.clausula >= olB.v && !M.noVender.has(x.pid)
-        ? { texto: `si te lo clausulan te pagan ${eur(x.clausula)}, más que vendiéndolo a LaLiga (${eur(olB.v)}), y está bajando`, ol: olB.v } : null;
+        // (25 nov, hallazgo 8: «te pagan 1,65 M, más que vendiéndolo a LaLiga (1,65 M)», con 1.654.843 contra 1.650.000) si
+        // las dos cifras se leen igual, «lo mismo que»
+        ? { texto: `si te lo clausulan te pagan ${eur(x.clausula)}, ${eur(x.clausula) === eur(olB.v) ? 'lo mismo que' : 'más que'} vendiéndolo a LaLiga (${eur(olB.v)}), y está bajando`, ol: olB.v, igual: eur(x.clausula) === eur(olB.v) } : null;
     }
     return x;
   }).sort((a, b) => a.j.pos - b.j.pos || b.j.valor - a.j.valor);
