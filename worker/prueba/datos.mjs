@@ -1270,7 +1270,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.j.nivel === 'rojo', `/estado con LaLiga caída: ${r.j && r.j.nivel}`);
   // los pasos: sin sesión; uno raro, 400
   laliga = 'vivo'; desfase += 3 * 60e3; minuto();
-  for (const p of ['ver', 'l', 'x-laliga', 'x-laliga', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
+  for (const p of ['ver', 'l', 'x-laliga', 'x-5xx', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
   await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
   // (21 nov) los pasos nuevos: la app vuelve sin código, y en la web llega, vuelve de LaLiga y pasa a la pantalla de inicio
   for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
@@ -1281,8 +1281,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.j.nivel === 'amarillo' && r.j.entradas.x === 3 && r.j.entradas.ok === 1, `/estado con 3 entradas fallidas y 1 buena: ${r.j && r.j.nivel}`);
   const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
   const hoy = Object.keys(dias)[0], d = dias[hoy];
-  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 3 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 2 && d.play['x-5xx'] === 1 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
   ok(d.play['x-vuelve'] === 2 && d['web-iphone'].llega === 1 && d['web-iphone'].v === 1 && d['web-iphone'].inicio === 1 && d['o:x-ios'].llega === 1 && d['o:x-ios'].v === 1, `/embudo con los pasos nuevos (x-vuelve, llega, v, inicio) y la campaña con guion: ${JSON.stringify(d['o:x-ios'])}`);
+  // (25 nov, tanda 5) lo pegado que no vale, con su motivo, y el enlace gastado: cuentan en su canal y no en el semáforo
+  minuto();
+  for (const p of ['m-vacio', 'm-login', 'm-app', 'm-jwt', 'm-otro', 'm-otro', 'x-gastado']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'web-pc' }), tk: '', e: eE });
+  const d2 = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias[hoy]['web-pc'] || {};
+  ok(d2['m-vacio'] === 1 && d2['m-login'] === 1 && d2['m-app'] === 1 && d2['m-jwt'] === 1 && d2['m-otro'] === 2 && d2['x-gastado'] === 1, `/embudo con lo pegado que no vale y el enlace gastado: ${JSON.stringify(d2)}`);
+  desfase += 3 * 60e3;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.entradas.x === 3, `/estado no cuenta lo pegado que no vale como fallo de LaLiga: ${r.j && JSON.stringify(r.j.entradas)}`);
   // freno por IP: 20 al minuto
   minuto();
   const est = [];
