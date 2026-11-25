@@ -24,11 +24,22 @@ export const VERSION = '0.8.4';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    // --- (25 nov, Carlos, 02:00: «publica todo en una») la 0.8.3b, la 0.8.3c y la 0.8.4 salen juntas como 0.8.4 ---
+    // --- la web, más clara (rama `web-descarga-clara`, 0.8.3c) ---
+    // (24 nov, 23:17, Carlos: «dejar de forma más limpia y clara en la web que Fantasy Manager es una aplicación que se descarga…
+    // sobre todo para los de iPhone y ordenador… que aparezca también Windows, no solo Apple… que arriba se entienda que lo que
+    // importa es la aplicación, meterte dentro con tu cuenta y no ver los datos desde fuera») Solo web. La portada empieza por
+    // «Tu liga, por dentro» (`tenlaHTML` en app.js) con los tres dispositivos y el tuyo destacado; en el ordenador queda un
+    // QR a la vista y se puede instalar con Chrome o Edge (`instalarPc`); en las páginas públicas el botón rojo y la línea
+    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). El iPhone va con el logo de Apple (lo pidió Carlos el 25 nov) y
+    // el ordenador con un portátil dibujado, sin logo de Windows; en los dibujos de las guías, el logo de verdad de la app.
+    // Detalle en claude/sesion-24nov-descarga-clara.md del proyecto.
+    // --- el QR del ordenador (0.8.3b) ---
     // (24 nov, 22:27, Carlos, entrando en su portátil: «me pone que no es un código QR de Fantasy Manager») En la portada del
     // ordenador hay tres QR: el de Google Play, el de la web para el iPhone y, plegado en «Ya tengo la app: abrirla también en
     // este ordenador», el de entrar. Escaneó el de Google Play con Ajustes → Abrir en el ordenador → QR y la app solo le decía
     // «escanea el que sale allí». Ahora `qrLeido` (app.js) reconoce el de descargar y dice qué hay que pulsar; la fila de
-    // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web. La hora, al publicar
+    // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web.
     // --- (25 nov, 0.8.4) la 0.8.3b no se llegó a publicar: sale con esta ---
     // FASE 1, la mudanza (Carlos, 25 nov 00:06: «vamos con la B»; claude/prompt-mudanza-quien-usa.md y
     // claude/capacidad-cloudflare-24nov.md del proyecto). «Quién usa la app» (u:, p:, r: del KV VINCULOS, que llenaba sus topes
@@ -47,11 +58,16 @@ export const NOVEDADES = [
     // notificación de cada uno). La Action «Fallos» lee y contesta por /fallos/accion (llave sacada del token de Cloudflare).
     // Lo del KV lo copia el cron (`mudanzaFallos`). La pantalla: `burbujas`, `cajaHilo` y `avisoMio` (hojas.js); `abrirHilo`
     // y `escribirHilo` (app.js). Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
-    v: '0.8.4', f: '2026-11-25', t: 'Los avisos de fallo, ahora como una conversación',
+    v: '0.8.4', f: '2026-11-25', t: 'Los avisos de fallo, como una conversación, y la web más clara',
     cosas: [
       { tipo: 'nuevo', d: 'chat', t: 'Los avisos de fallo, ahora como una conversación', x: 'Puedes contestar en el mismo aviso las veces que haga falta, con capturas en cada mensaje, y ves cuándo he leído lo tuyo.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app: desde dónde, con el iPhone aparte', x: 'En «Desde dónde», la web ya no va toda junta: salen aparte el iPhone, el ordenador y la web en Android. Se irá llenando a medida que cada uno abra esta versión.' },
-      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app: abrirla también en este ordenador».' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Qué es la app, lo primero', x: 'La portada de la web empieza por lo que importa: Fantasy Manager es una app y se entra con tu liga. Debajo, cómo tenerla en tu dispositivo: Android (Google Play), iPhone (desde Safari) u ordenador (Windows y Mac, en el navegador).' },
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'En el ordenador, un solo QR', x: 'Antes había tres QR a la vista. Ahora hay uno, para tenerla en el móvil, y el de entrar sale al pulsar «Ya tengo la app en el móvil: abrirla en este ordenador». Con Chrome o Edge, además, se puede instalar como una app.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'El botón de arriba, según tu dispositivo', x: 'En las páginas de datos, el botón rojo dice «Descargar» en Android y «Entrar con tu liga» en el iPhone y en el ordenador, donde no hay nada que descargar.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Las guías, con el logo de verdad', x: 'Los dibujos de cómo entrar y de cómo ponerla en la pantalla de inicio del iPhone llevan ya el logo de Fantasy Manager, la camiseta, y no un cuadro rojo. Y el código de ejemplo ya no sale con las letras montadas.' },
+      { para: 'web', tipo: 'arreglo', d: 'movil', t: 'En el iPhone se entra desde el iPhone', x: 'La liga de ejemplo y las preguntas frecuentes seguían diciendo que en el iPhone había que entrar antes desde un ordenador. Ya no hace falta desde hace días, y ahora lo dicen bien.' },
+      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app en el móvil: abrirla en este ordenador».' },
     ],
   },
   {

@@ -1074,7 +1074,7 @@ function bandasHoy(S) {
   if (D.demo) {
     // (sesión 8, A9) en la web del móvil, con tu liga hace falta la app (Android) o pasar una vez por un ordenador (iPhone)
     const ua = enApp ? '' : navigator.userAgent || '', mov = /Android/i.test(ua) ? 'android' : /iPhone|iPad|iPod/.test(ua) ? 'iphone' : null;
-    const conMia = mov === 'android' ? ' Para la tuya, en el móvil, hace falta la app de Android.' : mov === 'iphone' ? ' Para la tuya, en el iPhone, entra antes una vez desde un ordenador.' : '';
+    const conMia = mov === 'android' ? ' Para la tuya, en el móvil, hace falta la app de Android.' : mov === 'iphone' ? ' Para la tuya, entra con tu cuenta de LaLiga.' : '';
     h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.${conMia}</span><button data-accion="salirDemo">Usar la mía</button></div>`;
   }
   // (lo que falla pero se ha tapado con lo de la última vez, como las ofertas, no se avisa: queda en el diagnóstico)
