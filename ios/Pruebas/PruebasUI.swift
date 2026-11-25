@@ -119,23 +119,38 @@ final class PruebasUI: XCTestCase {
         } while Date() < fin
     }
 
-    /// busca un aviso del iPhone por lo que pone (en la tira de arriba o, si ya se ha ido, bajando la lista de avisos) y
-    /// lo toca. Dice si lo ha encontrado
-    private func tocarAviso(_ texto: String, _ segundos: TimeInterval, captura nombre: String) -> Bool {
+    /// baja la lista de avisos del iPhone (desde el borde de arriba)
+    private func bajarAvisos() {
+        let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.0))
+        arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+        Thread.sleep(forTimeInterval: 1.5)
+    }
+
+    /// Busca un aviso del iPhone por lo que pone, lo toca y espera a que la app llegue a donde tiene que llegar (`llega`).
+    /// La tira de arriba dura unos segundos: si el toque llega cuando ya se iba (y cae en lo de debajo), se vuelve al
+    /// inicio, se baja la lista de avisos y se toca ahí. Dice si la app ha llegado
+    private func tocarAviso(_ texto: String, _ segundos: TimeInterval, captura nombre: String, llega: @escaping ([String: Any]) -> Bool) -> Bool {
         let aviso = sistema.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", texto)).firstMatch
         let fin = Date().addingTimeInterval(segundos)
-        var bajada = false
+        var capturado = false, bajada = false
         while Date() < fin {
             if aviso.exists && aviso.isHittable {
-                captura(nombre)
-                aviso.tap()
-                return true
+                if !capturado { capturado = true; captura(nombre) }
+                if aviso.exists && aviso.isHittable {
+                    aviso.tap()
+                    if llega(esperar("la app tras tocar el aviso", 7, falla: false, llega)) { return true }
+                    print("=== tocar el aviso === el toque no ha abierto la app: a la lista de avisos")
+                }
+                XCUIDevice.shared.press(.home)
+                Thread.sleep(forTimeInterval: 1)
+                bajarAvisos()
+                bajada = true
+                continue
             }
             // a mitad del tiempo, si no está a la vista, se baja la lista de avisos
             if !bajada && Date().addingTimeInterval(segundos / 2) > fin {
                 bajada = true
-                let arriba = sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.0))
-                arriba.press(forDuration: 0.1, thenDragTo: sistema.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.85)))
+                bajarAvisos()
             }
             Thread.sleep(forTimeInterval: 0.4)
         }
@@ -329,13 +344,9 @@ final class PruebasUI: XCTestCase {
         XCTAssertLessThanOrEqual(nativa(s)["avisosTodos"] as? Int ?? 99, 64, "el iPhone no guarda más de 64 avisos pendientes")
         XCTAssertTrue(pasos(s).contains("aviso puesto"), "la app no ha llegado a poner el aviso: \(pasos(s))")
         // el aviso al momento sale también con la app abierta; al tocarlo, a su pestaña
-        if tocarAviso("Así te llegarán los avisos", 30, captura: "9-aviso") {
-            let v = esperar("la app en la pestaña del aviso", 15, falla: false) { ($0["hash"] as? String) == "#mercado" }
-            print("=== tocar el aviso === \(v["hash"] ?? "sin hash")")
-            XCTAssertEqual(v["hash"] as? String, "#mercado", "tocar un aviso tiene que abrir la app en su pestaña")
-        } else {
-            print("=== tocar el aviso === no se ha encontrado el aviso en pantalla")
-        }
+        let tocado = tocarAviso("Así te llegarán los avisos", 50, captura: "9-aviso") { ($0["hash"] as? String) == "#mercado" }
+        print("=== tocar el aviso === \(tocado ? "abre la app en #mercado" : "no se ha podido tocar")")
+        XCTAssertTrue(tocado, "tocar un aviso tiene que abrir la app en su pestaña")
         // el identificador del iPhone para los avisos del servidor (un simulador puede no darlo: se apunta lo que diga)
         apuntar("9-identificador", ["empuje": nativa(sonda())["empuje"] ?? "nada"])
         app.terminate()
@@ -362,11 +373,10 @@ final class PruebasUI: XCTestCase {
         abrirHaciendo("pregunta")
         var s = esperar("la pregunta en marcha", 20) { self.pasos($0).contains("en marcha") }
         XCUIDevice.shared.press(.home)
-        let visto = tocarAviso("director deportivo", 30, captura: "10-aviso-respuesta")
-        XCTAssertTrue(visto, "con la app fuera, al llegar la respuesta tiene que salir el aviso «Tu director deportivo ha contestado»")
-        s = esperar("la app en la pestaña de la IA", 20, falla: false) { ($0["hash"] as? String) == "#ia" }
+        let visto = tocarAviso("director deportivo", 50, captura: "10-aviso-respuesta") { ($0["hash"] as? String) == "#ia" }
+        s = sonda()
         apuntar("10-respuesta", s)
-        XCTAssertEqual(s["hash"] as? String, "#ia", "tocar el aviso de la respuesta tiene que abrir la IA")
+        XCTAssertTrue(visto, "con la app fuera, al llegar la respuesta tiene que salir el aviso «Tu director deportivo ha contestado» y, al tocarlo, abrirse la IA")
         let llamadas = (nativa(s)["empuje"] as? [String: Any])?["llamadas"] as? [String] ?? []
         XCTAssertEqual(llamadas, ["preg:avisar", "preg:quitar"], "al salir se le dice al servidor a quién avisar y, al recibir la app la respuesta, que ya no")
         XCTAssertTrue(pasos(s).contains("acabada"), "la web no ha seguido viva con la app fuera: \(pasos(s))")
@@ -375,13 +385,9 @@ final class PruebasUI: XCTestCase {
         Thread.sleep(forTimeInterval: 8)
         captura("10-abierta-sin-aviso")
         XCUIDevice.shared.press(.home)
-        if tocarAviso("Tu plan de hoy está listo", 40, captura: "10-aviso-servidor") {
-            let v = esperar("la app en Hoy", 20, falla: false) { ($0["hash"] as? String) == "#hoy" }
-            apuntar("10-servidor", v)
-            XCTAssertEqual(v["hash"] as? String, "#hoy", "tocar el aviso del plan tiene que abrir Hoy")
-        } else {
-            print("=== aviso del servidor === no ha salido el aviso de mentira (¿simctl push?)")
-        }
+        let servidor = tocarAviso("Tu plan de hoy está listo", 50, captura: "10-aviso-servidor") { ($0["hash"] as? String) == "#hoy" }
+        apuntar("10-servidor", sonda())
+        XCTAssertTrue(servidor, "con la app fuera, el aviso del servidor tiene que verse y, al tocarlo, abrirse Hoy")
         app.terminate()
     }
 
