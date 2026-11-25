@@ -3113,7 +3113,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
-   "SPORT|136598447": 1795341606000,
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
    "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
@@ -9511,13 +9510,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6263,
+   "ok": 6264,
    "fallos": 0,
-   "ejecuciones": 5082,
+   "ejecuciones": 5083,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T09:56:14.748Z"
+   "ultima": "2026-11-25T10:01:12.944Z"
   }
  },
  "ptsDirecto": {},
@@ -9534,15 +9533,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:56:24.630Z"
+   "ultimaBien": "2026-11-25T10:01:20.233Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:56:24.630Z"
+   "ultimaBien": "2026-11-25T10:01:20.233Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:56:24.630Z"
+   "ultimaBien": "2026-11-25T10:01:20.233Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9550,11 +9549,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:56:24.630Z"
+   "ultimaBien": "2026-11-25T10:01:20.233Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:56:24.630Z"
+   "ultimaBien": "2026-11-25T10:01:20.233Z"
   }
  },
  "avisos": [
