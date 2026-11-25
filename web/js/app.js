@@ -471,15 +471,40 @@ function sinErrorVuelta() {
   if (p) { p.hidden = true; p.textContent = ''; }
   if (inp) inp.removeAttribute('aria-invalid');
 }
+/** (25 nov, tanda 5) la huella de un enlace de vuelta (su código o, sin código, la dirección): para saber si se vuelve a
+    pegar el mismo que acaba de fallar sin guardar el código */
+function huellaEnlace(url) {
+  let t = String(url || '');
+  try { const u = new URL(t); t = u.searchParams.get('code') || `${u.searchParams.get('error') || ''}|${u.searchParams.get('state') || ''}|${t}`; } catch (e) { /* tal cual */ }
+  let h = 2166136261;
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
+/** el último fallo al entrar, para el Diagnóstico (paso, código de LaLiga y hora) y para reconocer el enlace gastado */
+function apuntarFalloEntrada(e, url) {
+  try { LS.set('entrada-fallo', { paso: pasoDeFallo(e), cod: String((e && e.codigo) || '').slice(0, 80), t: Date.now(), h: url ? huellaEnlace(url) : '' }); } catch (x) { /* nada */ }
+}
 /**
  * Entrar con lo pegado (el botón «Pegar y entrar», pegar en el cuadro o en cualquier parte de la pantalla, o «Entrar»).
  * Primero se mira lo pegado sin llamar a nadie (mirarVuelta dice qué se ha pegado en su lugar); el error sale debajo del
  * cuadro. Sin conexión no se pierde nada: se vuelve a pulsar con lo mismo.
  */
-async function entrarConVuelta(txt) {
+async function entrarConVuelta(txt, { solo = false } = {}) {
   if (S.entrandoWeb) return;
   const m = mirarVuelta(txt);
-  if (m.error) { errorVuelta(m.error); return; }
+  // (25 nov, tanda 5) lo pegado que no vale también cuenta, con su motivo: antes se salía sin apuntar nada
+  if (m.error) { marcarPaso(`m-${m.motivo || 'otro'}`); errorVuelta(m.error); return; }
+  // el mismo enlace que acaba de fallar (el portapapeles lo sigue teniendo): no se vuelve a probar, se dice claro. Sin
+  // conexión o con un 5xx de LaLiga sí se deja probar otra vez (el código puede seguir valiendo)
+  const f = LS.get('entrada-fallo', null);
+  if (f && f.h && f.h === huellaEnlace(m.url) && Date.now() - f.t < 30 * 60e3 && f.paso !== 'x-red' && f.paso !== 'x-5xx') {
+    // al volver de otra pestaña con lo de antes copiado no se dice nada (no lo ha pegado él)
+    if (solo) return;
+    marcarPaso('x-gastado');
+    errorVuelta('Ese enlace ya está gastado: pulsa «Abrir LaLiga» otra vez y copia la dirección nueva.');
+    const c = $('#vueltaWeb'); if (c) c.value = '';
+    return;
+  }
   sinErrorVuelta();
   const campo = $('#vueltaWeb');
   if (campo && !campo.value.trim()) campo.value = m.url;
@@ -492,6 +517,7 @@ async function entrarConVuelta(txt) {
     S.entrandoWeb = false;
     botones.forEach((b) => { b.disabled = false; });
     marcarPaso(pasoDeFallo(e));
+    apuntarFalloEntrada(e, m.url);
     errorVuelta(e.message || String(e), { ayuda: e.tipo === 'redirect' });
     // el enlace gastado no vale para otro intento: fuera del cuadro (sin conexión se queda, para volver a pulsar)
     if (campo && e.tipo !== 'red') campo.value = '';
@@ -3522,7 +3548,7 @@ async function alVolverEntrada() {
     const p = await navigator.permissions.query({ name: 'clipboard-read' });
     if (p.state !== 'granted') return;
     const t = await navigator.clipboard.readText();
-    if (mirarVuelta(t).url) entrarConVuelta(t);
+    if (mirarVuelta(t).url) entrarConVuelta(t, { solo: true });
   } catch (e) { /* sin permiso o sin esa pregunta (Safari, Firefox): se pega con el botón */ }
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.laLigaFuera) S.laLigaIda = true; } else alVolverEntrada(); });
@@ -3699,7 +3725,7 @@ window.vueltaLogin = async () => {
   S.entrandoApp = true;
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   // (0.7.13i) si entra o en qué falla, sin cuenta (semaforo.js): los fallos de la carga de después no cuentan aquí
-  try { await terminarLogin(url); } catch (e) { S.entrandoApp = false; marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); return; }
+  try { await terminarLogin(url); } catch (e) { S.entrandoApp = false; marcarPaso(pasoDeFallo(e)); apuntarFalloEntrada(e, url); pantallaEntrar(e.message || String(e)); return; }
   S.entrandoApp = false;
   marcarPaso('ok');
   try {
@@ -4001,7 +4027,7 @@ document.addEventListener('click', async (ev) => {
         const c = $('#vueltaWeb'); if (c) c.focus();
         break;
       }
-      if (!t.trim()) { errorVuelta('No tienes nada copiado. Copia primero la dirección de la página en la que acabas al entrar en LaLiga (paso 2).'); break; }
+      if (!t.trim()) { marcarPaso('m-vacio'); errorVuelta('No tienes nada copiado. Copia primero la dirección de la página en la que acabas al entrar en LaLiga (paso 2).'); break; }
       await entrarConVuelta(t);
       break;
     }

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4h';
+export const VERSION = '0.8.4i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,22 @@ export const VERSION = '0.8.4h';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, tanda 5 de claude/prompts-arreglos-auditoria-25nov.md, hallazgos 14 y 15) Contadores de la entrada, sin
+    // rediseñarla. Worker: pasos nuevos en EMB_PASOS (m-vacio, m-login, m-app, m-jwt, m-otro, x-5xx, x-gastado); el semáforo
+    // cuenta x-laliga y x-5xx como antes contaba x-laliga (EMB_FALLA). Web: `entrarConVuelta` apunta `m-<motivo>` (mirarVuelta
+    // da `motivo`) y «Pegar y entrar» sin nada copiado, m-vacio; `terminarLogin` separa el error de LaLiga (x-laliga, con su
+    // AADB2C) del 5xx del canje sin código reconocible (x-5xx) y lleva `codigo` en el error; el último fallo va a LS
+    // «entrada-fallo» (paso, código, hora y una huella FNV del enlace, nunca el código) y sale en el Diagnóstico; el mismo
+    // enlace que acaba de fallar (menos sin conexión o con un 5xx) no se vuelve a canjear: «ya está gastado» y x-gastado (al
+    // volver de otra pestaña con eso copiado no se dice nada). «Antes de entrar»: Falla LaLiga partido, lo pegado que no vale
+    // por motivo y los enlaces gastados. Pruebas: datos.mjs, prueba-entrada (Chromium y WebKit), prueba-web
+    v: '0.8.4i', f: '2026-11-25', h: '18:09', t: 'Saber dónde se atasca la entrada',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Dónde se atasca la entrada', x: 'En Quién usa la app → Antes de entrar se ve ahora qué pega la gente cuando lo pegado no vale (nada, la página de entrar sin acabar, la dirección de la app, la de LaLiga sin el final u otra cosa), si el fallo de LaLiga es un error suyo o que no contesta bien, y cuántos vuelven a pegar un enlace ya gastado. En el Diagnóstico, el último fallo al entrar con lo que contestó LaLiga.' },
+      { para: 'web', tipo: 'arreglo', d: 'conexion', t: 'Un enlace gastado lo dice claro', x: 'Si vuelves a pegar el mismo enlace de LaLiga que acaba de fallar, la app te dice que ya está gastado y que abras LaLiga otra vez, en vez de repetir el mismo error. Y si los servidores de LaLiga no contestan bien, se dice con el número de error.', menor: true },
+    ],
+  },
   {
     // (25 nov, 17:46, Carlos: «a los que ya han entrado y les ha ido mal, que les salga el aviso») La ventana sola de quien
     // parece invitado va con una marca nueva (LS «inv-preguntado2»): a quien ya vio la de antes (salía a todos los nuevos),
