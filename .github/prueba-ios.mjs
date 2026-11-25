@@ -119,6 +119,10 @@ async function probar(motor) {
     mira(ini.version === 42 && ini.nombre === '0.0.0-prueba' && ini.huella === NATIVO && ini.authTab === true && ini.web && ini.web.nativo === NATIVO, `${T} versión, huella nativa y estado de la web salen de los datos inyectados`);
     const pant = ((await p.textContent('#entrar')) || '').replace(/\s+/g, ' ');
     mira(/Entrar con mi cuenta de LaLiga/.test(pant) && (await p.locator('.abrir-con').count()) === 0 && (await p.locator('#edAbrir').count()) === 0, `${T} la pantalla de entrar es la de la app, sin el aviso de «Abrir con» ni los tres pasos de la web`);
+    // (iOS 3) la clase de la app de iOS en <html> es «app-ios»: «.en-ios» ya es otra cosa en app.css (la tarjeta del iPhone),
+    // y puesta en <html> enmarcaba la página entera y ponía los botones en blanco
+    const cls = await p.evaluate(() => ({ app: document.documentElement.classList.contains('app-ios'), en: document.documentElement.classList.contains('en-ios'), boton: getComputedStyle(document.querySelector('[data-accion="entrar"]')).backgroundColor, borde: getComputedStyle(document.documentElement).borderTopWidth }));
+    mira(cls.app && !cls.en && !/244, 242, 243/.test(cls.boton) && cls.borde === '0px', `${T} (iOS 3) <html> lleva «app-ios» y la página se ve como siempre (botón ${cls.boton})`);
     await p.click('[data-accion="entrar"]');
     await p.waitForFunction(() => window.__abiertos.length === 1, null, { timeout: 8000 });
     const u = new URL((await p.evaluate(() => window.__abiertos))[0]);

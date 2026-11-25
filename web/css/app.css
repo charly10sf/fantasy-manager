@@ -2446,7 +2446,7 @@ button.cr-p:active { background: var(--plano); }
 .portada.web .pantalla { min-height: 0; padding-bottom: 28px; }
 /* (iOS 3) en la app de iOS, la franja de la hora es negra lisa (la pone la app): el degradado rojo de la pantalla de entrar
    empieza en negro para que no haya un corte entre las dos */
-html.en-ios .portada { background: linear-gradient(var(--fondo), transparent 160px), radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
+html.app-ios .portada { background: linear-gradient(var(--fondo), transparent 160px), radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
 /* en el móvil: el logo, el titular, el botón y, por último, la lista (el botón no se queda debajo de ella) */
 .portada .pant-i { display: contents; }
 .portada .pant-d { order: 2; }

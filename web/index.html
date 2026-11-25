@@ -10,7 +10,7 @@
       document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover');
       document.documentElement.classList.add('en-app');
       // (iOS 3) en la app de iOS (su puente habla por webkit.messageHandlers), para lo poco que cambia de aspecto ahí
-      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.fm) document.documentElement.classList.add('en-ios');
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.fm) document.documentElement.classList.add('app-ios');
     }
   </script>
   <meta name="theme-color" content="#050506">
