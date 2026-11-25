@@ -14,6 +14,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import os from 'node:os';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const ENC = path.join(AQUI, 'contacto.enc');
@@ -104,8 +106,7 @@ function cifrar(publica, datos) {
   const d = Buffer.concat([c.update(Buffer.from(JSON.stringify(datos))), c.final(), c.getAuthTag()]);
   return { v: 1, e: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), iv: iv.toString('base64'), d: d.toString('base64') };
 }
-function descifrar(sobre) {
-  const priv = claveP8();
+function descifrar(sobre, priv = claveP8()) {
   const efimera = crypto.createPublicKey({ key: Buffer.from(sobre.e, 'base64'), type: 'spki', format: 'der' });
   const comun = crypto.diffieHellman({ privateKey: priv, publicKey: efimera });
   const k = Buffer.from(crypto.hkdfSync('sha256', comun, Buffer.alloc(0), INFO_HKDF, 32));
@@ -258,10 +259,58 @@ async function configurar(numero) {
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.replace(/\n/g, '\n\n') + '\n');
 }
 
+
+// ---------- el certificado de distribución propio (la firma en la nube de Apple estropea las tildes del nombre) ----------
+const NOMBRE_PERFIL = 'FM App Store (Actions)';
+const BUNDLE = 'es.fantasymanager.app';
+const sinCeros = (x) => String(x || '').toUpperCase().replace(/^0+/, '');
+
+/** crea un certificado Apple Distribution con una clave nueva y lo deja, cifrado para la sesión que lo pide, en el registro */
+async function certificado(publicaSesion) {
+  const ya = await api('GET', '/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=50&fields[certificates]=name,expirationDate,serialNumber,certificateType');
+  console.log(`certificados de distribución que ya hay: ${ya.data.length}`);
+  for (const c of ya.data) console.log(`  ${c.id} ${c.attributes.name} caduca ${c.attributes.expirationDate}`);
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'fm-cert-'));
+  const o = (args) => execFileSync('openssl', args, { cwd: d, stdio: ['ignore', 'pipe', 'pipe'] });
+  o(['genrsa', '-out', 'k.pem', '2048']);
+  o(['req', '-new', '-key', 'k.pem', '-out', 'c.csr', '-subj', '/CN=Fantasy Manager Actions/emailAddress=fantasymanager.web.app@gmail.com']);
+  const csr = fs.readFileSync(path.join(d, 'c.csr'), 'utf8');
+  const r = await api('POST', '/v1/certificates', { data: { type: 'certificates', attributes: { certificateType: 'DISTRIBUTION', csrContent: csr } } });
+  const cert = r.data;
+  fs.writeFileSync(path.join(d, 'c.der'), Buffer.from(cert.attributes.certificateContent, 'base64'));
+  o(['x509', '-inform', 'DER', '-in', 'c.der', '-out', 'c.pem']);
+  const clave = crypto.randomBytes(18).toString('base64url');
+  const legado = ['-keypbe', 'PBE-SHA1-3DES', '-certpbe', 'PBE-SHA1-3DES', '-macalg', 'sha1'];
+  try { o(['pkcs12', '-export', '-legacy', '-inkey', 'k.pem', '-in', 'c.pem', '-out', 'c.p12', '-passout', `pass:${clave}`, '-name', 'FM Distribution']); }
+  catch { o(['pkcs12', '-export', ...legado, '-inkey', 'k.pem', '-in', 'c.pem', '-out', 'c.p12', '-passout', `pass:${clave}`, '-name', 'FM Distribution']); }
+  const p12 = fs.readFileSync(path.join(d, 'c.p12')).toString('base64');
+  fs.rmSync(d, { recursive: true, force: true });
+  console.log(`certificado creado: ${cert.id} ${cert.attributes.name} caduca ${cert.attributes.expirationDate} serie ${cert.attributes.serialNumber}`);
+  console.log(`SOBRE ${JSON.stringify(cifrar(publicaSesion, { p12, clave, id: cert.id, serie: cert.attributes.serialNumber, caduca: cert.attributes.expirationDate }))}`);
+}
+
+/** el perfil App Store de la app con el certificado de esa serie, en `ruta` (se rehace cada vez: es gratis) */
+async function perfil(ruta, serie) {
+  const b = await api('GET', `/v1/bundleIds?filter[identifier]=${BUNDLE}&limit=5`);
+  const bid = b.data.find((x) => x.attributes.identifier === BUNDLE);
+  if (!bid) throw new Error(`No está el App ID ${BUNDLE}`);
+  const cs = await api('GET', '/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=50&fields[certificates]=serialNumber,name,expirationDate');
+  const c = cs.data.find((x) => sinCeros(x.attributes.serialNumber) === sinCeros(serie));
+  if (!c) throw new Error(`No está en Apple el certificado de la serie ${serie} (¿revocado?)`);
+  const ps = await api('GET', `/v1/profiles?filter[name]=${encodeURIComponent(NOMBRE_PERFIL)}&limit=20`);
+  for (const p of ps.data) await api('DELETE', `/v1/profiles/${p.id}`).catch(() => {});
+  const r = await api('POST', '/v1/profiles', { data: { type: 'profiles', attributes: { name: NOMBRE_PERFIL, profileType: 'IOS_APP_STORE' }, relationships: { bundleId: { data: { type: 'bundleIds', id: bid.id } }, certificates: { data: [{ type: 'certificates', id: c.id }] } } } });
+  fs.writeFileSync(ruta, Buffer.from(r.data.attributes.profileContent, 'base64'));
+  console.log(`perfil «${NOMBRE_PERFIL}»: ${r.data.attributes.uuid}, caduca ${r.data.attributes.expirationDate}; certificado ${c.attributes.name}, caduca ${c.attributes.expirationDate}`);
+}
+
 const [modo, a1, a2] = process.argv.slice(2);
 if (modo === 'p8') { fs.writeFileSync(a1, normaP8(process.env.ASC_KEY_P8), { mode: 0o600 }); claveP8(); console.log('la clave de la API, en su archivo'); }
 else if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
 else if (modo === 'cifrar') { fs.writeFileSync(ENC, JSON.stringify(cifrar(a1, JSON.parse(fs.readFileSync(a2, 'utf8')))) + '\n'); console.log('escrito', ENC); }
 else if (modo === 'comprobar') { const d = descifrar(JSON.parse(fs.readFileSync(ENC, 'utf8'))); console.log('contacto.enc se lee bien:', Object.keys(d.contacto || {}).join(', '), '·', (d.probadores || []).length, 'probadores'); }
+else if (modo === 'abrir') { const d = descifrar(JSON.parse(fs.readFileSync(a2, 'utf8')), crypto.createPrivateKey(fs.readFileSync(a1, 'utf8'))); fs.writeFileSync(a2 + '.abierto.json', JSON.stringify(d), { mode: 0o600 }); console.log('abierto:', d.id, d.serie, d.caduca); }
+else if (modo === 'certificado') await certificado(fs.readFileSync(path.join(AQUI, 'sesion.pub'), 'utf8').trim());
+else if (modo === 'perfil') await perfil(a1, a2);
 else if (modo === 'configurar') await configurar(a1 || process.env.BUILD || '');
 else { console.error('modo: clave | cifrar | comprobar | configurar'); process.exit(2); }

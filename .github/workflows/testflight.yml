@@ -39,8 +39,24 @@ jobs:
           node .github/ios/testflight.mjs clave
           if [ -f .github/ios/contacto.enc ]; then node .github/ios/testflight.mjs comprobar; fi
 
+  # Con «[certificado]» en el mensaje del commit: crea el certificado Apple Distribution propio (clave nueva) y lo deja en
+  # el registro cifrado con .github/ios/sesion.pub, la clave pública de la sesión que lo pide; esa sesión lo guarda en los
+  # secretos IOS_DIST_P12 e IOS_DIST_CLAVE. Una vez al año (caduca a los 12 meses), o si se pierde
+  certificado:
+    if: ${{ contains(github.event.head_commit.message, '[certificado]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: El certificado de distribución
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: node .github/ios/testflight.mjs certificado
+
   subir:
-    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') }}
     runs-on: macos-26
     timeout-minutes: 60
     outputs:
@@ -70,10 +86,39 @@ jobs:
           python3 ios/preparar.py >> "$GITHUB_ENV"
           command -v xcodegen > /dev/null || brew install xcodegen
           cd ios && xcodegen generate
-      - name: Archivar
+      # El certificado Apple Distribution propio (secretos IOS_DIST_P12 e IOS_DIST_CLAVE, los crea el trabajo «certificado»),
+      # en un llavero solo de esta pasada, con los intermedios de Apple para que la firma sea válida
+      - name: El certificado y el perfil
         env:
+          IOS_DIST_P12: ${{ secrets.IOS_DIST_P12 }}
+          IOS_DIST_CLAVE: ${{ secrets.IOS_DIST_CLAVE }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          if [ -z "$IOS_DIST_P12" ] || [ -z "$IOS_DIST_CLAVE" ]; then echo "::error::Faltan los secretos IOS_DIST_P12 e IOS_DIST_CLAVE (los crea el trabajo «certificado»)"; exit 1; fi
+          K="$RUNNER_TEMP/llavero"; mkdir -p "$K"; chmod 700 "$K"
+          printf '%s' "$IOS_DIST_P12" | base64 --decode > "$K/c.p12"
+          KC="$K/fm.keychain-db"; PASE=$(openssl rand -hex 16)
+          security create-keychain -p "$PASE" "$KC"
+          security set-keychain-settings -lut 3600 "$KC"
+          security unlock-keychain -p "$PASE" "$KC"
+          for c in AppleWWDRCAG3 AppleWWDRCAG4; do curl -fsSL -o "$K/$c.cer" "https://www.apple.com/certificateauthority/$c.cer" && security import "$K/$c.cer" -k "$KC" -T /usr/bin/codesign >/dev/null || true; done
+          security import "$K/c.p12" -k "$KC" -P "$IOS_DIST_CLAVE" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$PASE" "$KC" > /dev/null
+          security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
+          security find-identity -v -p codesigning "$KC"
+          HUELLA=$(security find-identity -v -p codesigning "$KC" | grep -m1 "Apple Distribution" | awk '{print $2}')
+          [ -n "$HUELLA" ] || { echo "::error::El certificado no sale como identidad válida para firmar"; exit 1; }
+          SERIE=$(openssl pkcs12 -in "$K/c.p12" -nokeys -passin env:IOS_DIST_CLAVE -legacy 2>/dev/null | openssl x509 -noout -serial 2>/dev/null | cut -d= -f2)
+          [ -n "$SERIE" ] || SERIE=$(openssl pkcs12 -in "$K/c.p12" -nokeys -passin env:IOS_DIST_CLAVE 2>/dev/null | openssl x509 -noout -serial | cut -d= -f2)
+          rm -f "$K/c.p12"
+          node .github/ios/testflight.mjs perfil "$K/perfil.mobileprovision" "$SERIE"
+          { echo "KC=$KC"; echo "HUELLA=$HUELLA"; echo "PERFIL=$K/perfil.mobileprovision"; } >> "$GITHUB_ENV"
+      # Se archiva sin firmar (la firma automática pide un iPhone registrado) y se firma después, a mano, con el certificado
+      # propio y el perfil App Store: lo mismo que haría Xcode, sin la firma en la nube
+      - name: Archivar
+        env:
           BUILD: ${{ steps.numero.outputs.build }}
         run: |
           set -o pipefail
@@ -82,125 +127,58 @@ jobs:
             EXTRA+=(FM_ADMOB_APP="ca-app-pub-3940256099942544~1458002511" FM_BONIFICADO="ca-app-pub-3940256099942544/1712485313"
                     FM_INTERSTICIAL="ca-app-pub-3940256099942544/4411468910" FM_APERTURA="ca-app-pub-3940256099942544/5575463023")
           fi
-          COMUN=(-project ios/FantasyManager.xcodeproj -scheme FantasyManager -configuration Release
-                 -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/app.xcarchive"
-                 DEVELOPMENT_TEAM="$TEAM" MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="$BUILD"
-                 FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" "${EXTRA[@]}")
-          AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
-          # 1) la firma automática con la clave de la API (crea ella lo que haga falta)
-          if xcodebuild archive "${COMUN[@]}" "${AUT[@]}" 2>&1 | tee "$RUNNER_TEMP/archivar.log" | grep -E "error:|warning: .*(sign|profile)|\*\* "; then :; fi
-          if ! grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar.log"; then
-            # 2) si no puede (sin ningún iPhone registrado no hay perfil de desarrollo): el archivo SIN firmar, y al exportar
-            # Apple lo firma de verdad en la nube con el certificado de distribución y los permisos del perfil de la App
-            # Store (los del App ID). (Con firma local «-» no vale: la firma de Apple conserva sus requisitos y la subida
-            # da «Invalid Signature», 90035)
-            echo "::warning::La firma automática no ha podido archivar; se archiva sin firmar y firma Apple al exportar"
-            rm -rf "$RUNNER_TEMP/app.xcarchive"
-            xcodebuild archive "${COMUN[@]}" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
-              2>&1 | tee "$RUNNER_TEMP/archivar2.log" | grep -E "error:|\*\* " || true
-            grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar2.log"
-            # Los frameworks de Google traen una firma del enlazador («adhoc,linker-signed»): se les quita para que Apple los
-            # firme desde cero (si conserva algo de una firma que no es la suya, la subida da «Invalid Signature», 90035)
-            APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
-            for fw in "$APPA"/Frameworks/*.framework; do
-              codesign -dvv "$fw" 2>&1 | grep -E "Authority|flags|Signature" | head -3 || true
-              codesign --remove-signature "$fw" || true
-            done
-          fi
+          xcodebuild archive -project ios/FantasyManager.xcodeproj -scheme FantasyManager -configuration Release \
+            -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/app.xcarchive" \
+            DEVELOPMENT_TEAM="$TEAM" MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="$BUILD" \
+            FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" "${EXTRA[@]}" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
+            2>&1 | tee "$RUNNER_TEMP/archivar.log" | grep -E "error:|\*\* " || true
+          grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar.log"
           echo "== en el archivo:"
           /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" -c "Print :CFBundleVersion" -c "Print :GADApplicationIdentifier" "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app/Info.plist"
-      # La firma de Apple en la nube (el certificado de distribución que gestiona Apple) escribe el nombre del certificado en
-      # el requisito de la firma descompuesto (NFD: «Díez»), mientras el certificado lo guarda compuesto (NFC: «Díez»),
-      # y App Store Connect rechaza toda subida con «Invalid Signature» (ITMS-90035). Es un fallo de Apple con los nombres
-      # con tilde (foros de desarrolladores de Apple, 2026). Y el archivo sin firmar no lleva los permisos (push, avisos
-      # urgentes). Arreglo: una primera exportación para leer el requisito de cada binario; se pasa a NFC; se firma cada
-      # binario del archivo en local con un certificado de usar y tirar (solo en este Mac, se borra al acabar; no es de
-      # Apple), con ese requisito y, la app, con sus permisos; y se exporta otra vez: Apple firma conservando requisito y
-      # permisos. Antes de subir se comprueba todo.
-      - name: Exportar y comprobar la firma
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      - name: Firmar y empaquetar
         run: |
-          set -o pipefail
-          cat > "$RUNNER_TEMP/opciones-export.plist" <<PLIST
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0"><dict>
-            <key>method</key><string>app-store-connect</string>
-            <key>destination</key><string>export</string>
-            <key>teamID</key><string>$TEAM</string>
-            <key>signingStyle</key><string>automatic</string>
-            <key>manageAppVersionAndBuildNumber</key><false/>
-            <key>uploadSymbols</key><true/>
-            <key>testFlightInternalTestingOnly</key><false/>
-          </dict></plist>
-          PLIST
-          AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
-          APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
-          exportar() {
-            rm -rf "$RUNNER_TEMP/ipa" "$RUNNER_TEMP/dentro"
-            xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/ipa" \
-              -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | grep -E "error|EXPORT" || true
-            IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
-            mkdir -p "$RUNNER_TEMP/dentro" && (cd "$RUNNER_TEMP/dentro" && unzip -q "$IPA")
-            APPX=$(ls -d "$RUNNER_TEMP"/dentro/Payload/*.app)
-          }
-          requisito() { codesign -d -r- "$1" 2>&1 | sed -n 's/^designated => //p'; }
-          # los nombres en hexadecimal del requisito, de NFD a NFC
-          nfc() { python3 -c '
-          import re, sys, unicodedata
-          f = lambda m: "0x" + unicodedata.normalize("NFC", bytes.fromhex(m.group(1)).decode()).encode().hex()
-          print(re.sub(r"0x([0-9a-fA-F]+)", f, sys.stdin.read().strip()))'; }
-          exportar
-          # el certificado de usar y tirar
-          K="$RUNNER_TEMP/local"; mkdir -p "$K"
-          /usr/bin/openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=FM local" -keyout "$K/k.pem" -out "$K/c.pem" \
-            -extensions v3 -config <(printf '[req]\ndistinguished_name=dn\n[dn]\n[v3]\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=critical,codeSigning\n')
-          /usr/bin/openssl pkcs12 -export -inkey "$K/k.pem" -in "$K/c.pem" -out "$K/c.p12" -passout pass:fm
-          security create-keychain -p fm "$K/local.keychain"
-          security set-keychain-settings "$K/local.keychain"
-          security unlock-keychain -p fm "$K/local.keychain"
-          security import "$K/c.p12" -k "$K/local.keychain" -P fm -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k fm "$K/local.keychain" > /dev/null
-          security list-keychains -d user -s "$K/local.keychain" $(security list-keychains -d user | tr -d '"')
-          sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$K/c.pem" || echo "::warning::sin confianza en el certificado local"
-          HUELLA=$(/usr/bin/openssl x509 -in "$K/c.pem" -noout -fingerprint -sha1 | cut -d= -f2 | tr -d :)
-          # primero los frameworks y después la app (que sella lo de dentro)
-          for fw in "$APPA"/Frameworks/*.framework; do
-            n=$(basename "$fw")
-            R=$(requisito "$APPX/Frameworks/$n" | nfc)
-            [ -n "$R" ] || { echo "::error::Sin requisito para $n"; exit 1; }
-            codesign -f -s "$HUELLA" --keychain "$K/local.keychain" -r="designated => $R" "$fw"
+          set -e
+          D="$RUNNER_TEMP/ipa"; rm -rf "$D"; mkdir -p "$D/Payload"
+          cp -R "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app" "$D/Payload/"
+          APP="$D/Payload/FantasyManager.app"
+          cp "$PERFIL" "$APP/embedded.mobileprovision"
+          # los permisos: los de la app (ios/App/FantasyManager.entitlements) con los del perfil que hacen falta
+          security cms -D -i "$PERFIL" > "$RUNNER_TEMP/perfil.plist"
+          E="$RUNNER_TEMP/permisos-app.plist"
+          cp ios/App/FantasyManager.entitlements "$E"
+          AMB=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" "$RUNNER_TEMP/perfil.plist")
+          /usr/libexec/PlistBuddy -c "Set :aps-environment $AMB" \
+            -c "Add :application-identifier string $TEAM.es.fantasymanager.app" \
+            -c "Add :com.apple.developer.team-identifier string $TEAM" \
+            -c "Add :beta-reports-active bool true" -c "Add :get-task-allow bool false" "$E"
+          plutil -p "$E"
+          find "$APP" -name '_CodeSignature' -prune -o -name '*.mobileprovision' -print | grep -v embedded.mobileprovision || true
+          for fw in "$APP"/Frameworks/*.framework "$APP"/Frameworks/*.dylib; do
+            [ -e "$fw" ] || continue
+            codesign -f -s "$HUELLA" --keychain "$KC" --generate-entitlement-der "$fw"
           done
-          cp ios/App/FantasyManager.entitlements "$K/permisos-app.plist"
-          /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$K/permisos-app.plist"
-          R=$(requisito "$APPX" | nfc)
-          [ -n "$R" ] || { echo "::error::Sin requisito para la app"; exit 1; }
-          echo "requisito en NFC: $R"
-          codesign -f -s "$HUELLA" --keychain "$K/local.keychain" --entitlements "$K/permisos-app.plist" -r="designated => $R" "$APPA"
-          exportar
-          sudo security delete-certificate -Z "$HUELLA" /Library/Keychains/System.keychain 2>/dev/null || true
-          security delete-keychain "$K/local.keychain" || true
-          rm -rf "$K"
-          # lo que se sube: firmado por Apple, sin «adhoc», con el requisito en NFC y con los permisos
-          for f in "$APPX" "$APPX"/Frameworks/*; do
+          codesign -f -s "$HUELLA" --keychain "$KC" --entitlements "$E" --generate-entitlement-der "$APP"
+          # lo que se sube: firmado por el certificado propio, sin «adhoc», con el requisito bien escrito y con los permisos
+          for f in "$APP" "$APP"/Frameworks/*; do
             echo "== $(basename "$f")"
             codesign -dvv "$f" 2>&1 | grep -E "^Authority=Apple Distribution|flags=" || true
             codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }
-            r=$(requisito "$f"); echo "$r"
-            [ "$(printf '%s' "$r" | nfc)" = "$r" ] || { echo "::error::El requisito de $(basename "$f") sigue en NFD"; exit 1; }
             codesign -dvv "$f" 2>&1 | grep -q "adhoc" && { echo "::error::$(basename "$f") lleva la marca adhoc"; exit 1; }
+            codesign -d -r- "$f" 2>&1 | grep -qi "cc81\|cc87\|cca7" && { echo "::error::El requisito de $(basename "$f") va en NFD"; exit 1; }
           done
-          codesign -d --entitlements - --xml "$APPX" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APPX" > "$RUNNER_TEMP/permisos.plist"
+          codesign --verify --deep --strict "$APP"
+          codesign -d --entitlements - --xml "$APP" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APP" > "$RUNNER_TEMP/permisos.plist"
           plutil -p "$RUNNER_TEMP/permisos.plist"
           # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
           /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production &&
           /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" | grep -qx true ||
             { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
+          (cd "$D" && zip -qry FantasyManager.ipa Payload)
+          ls -la "$D/FantasyManager.ipa"
+          echo "IPA=$D/FantasyManager.ipa" >> "$GITHUB_ENV"
           echo "firma y permisos, bien"
-          echo "IPA=$IPA" >> "$GITHUB_ENV"
-      # Se sube el .ipa comprobado. altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
+      # altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
       - name: Subir a App Store Connect
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -223,7 +201,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/salida"
           for f in archivar.log archivar2.log subir.log; do [ -f "$RUNNER_TEMP/$f" ] && tail -c 300000 "$RUNNER_TEMP/$f" > "$RUNNER_TEMP/salida/$f"; done
           cp "$RUNNER_TEMP/permisos.plist" "$RUNNER_TEMP/salida/" 2>/dev/null || true
-          rm -rf "$RUNNER_TEMP/claves"
+          rm -rf "$RUNNER_TEMP/claves" "$RUNNER_TEMP/llavero"
+          [ -n "$KC" ] && security delete-keychain "$KC" 2>/dev/null || true
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -233,7 +212,7 @@ jobs:
 
   configurar:
     needs: [clave, subir]
-    if: ${{ always() && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
