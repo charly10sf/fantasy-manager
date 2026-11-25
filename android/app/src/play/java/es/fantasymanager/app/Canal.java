@@ -26,6 +26,11 @@ final class Canal {
         return ActualizarPlay.resultado(pedido);
     }
 
+    /** (25 nov) en la primera apertura, el código de invitar que traiga la instalación de Google Play (Referrer) */
+    static void referrer(android.content.Context ctx) {
+        Referrer.leer(ctx);
+    }
+
     /** al abrir la app o volver a ella: si Google Play tiene una versión más nueva, se ofrece aquí mismo */
     static void alVolver(Principal act) {
         ActualizarPlay.mirar(act);

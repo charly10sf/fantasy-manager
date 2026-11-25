@@ -1442,13 +1442,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   desfase += 3 * 3600e3;
   r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(516), e: eI, ip: '9.9.9.9' });
   ok(r.j.propuesto === '', 'a las 3 h la llegada ya no vale');
+  // (25 nov, tanda 6) el código que trae la instalación de Google Play se cuenta aparte («play»)
+  r = await pide({ m: 'POST', ruta: '/invitar/canjear', cuerpo: { cod: cod2, liga: '55', via: 'play' }, tk: tk(516), e: eI, ip: '9.9.9.6' });
+  ok(r.s === 200 && r.j.ok, `canjea el código de la instalación de Google Play: ${r.t}`);
   // «Quién usa la app»: lo del dueño
   r = await pide({ m: 'GET', ruta: '/hola/todos', tk: tk(667015), e: eI });
   const li = r.j && r.j.invitar;
-  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 7 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 8 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
   {
     const t = Object.values((li && li.cnt) || {}).reduce((x, d) => { for (const [k, v] of Object.entries(d)) x[k] = (x[k] || 0) + v; return x; }, {});
-    ok(t.llega === 1 && t.copia === 1 && t.canje_propuesto === 1 && t.canje_escrito >= 6, `los contadores: ${JSON.stringify(t)}`);
+    ok(t.llega === 1 && t.copia === 1 && t.canje_propuesto === 1 && t.canje_play === 1 && t.canje_escrito >= 6, `los contadores: ${JSON.stringify(t)}`);
   }
   // sin el objeto, 503 y no rompe
   r = await pide({ m: 'GET', ruta: '/invitar', tk: tk(512), e: env });

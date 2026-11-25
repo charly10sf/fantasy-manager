@@ -545,7 +545,7 @@ async function probar(motor, disp) {
 /* ---- 8. la app de Android ---- */
 // el puente de mentira: guarda, «abre» LaLiga (apunta la dirección) y contesta a las peticiones de la app (el canje del
 // código; lo demás, sin respuesta). authTab: como la app nueva, que entra por Auth Tab
-const PUENTE = (authTab, idToken) => {
+const PUENTE = (authTab, idToken, inv = '') => {
   const m = {}; window.__abiertos = []; window.__pedidos = []; window.__vuelta = null;
   const resp = {};
   window.FantasyApp = {
@@ -562,6 +562,8 @@ const PUENTE = (authTab, idToken) => {
     __m: m,
   };
   if (authTab) window.FantasyApp.authTab = () => true;
+  // (25 nov, tanda 6) la parte Android nueva da UNA vez el código de invitar con el que se instaló desde Google Play
+  if (inv) { let dado = inv; window.__invPedido = 0; window.FantasyApp.invitacion = () => { window.__invPedido++; const x = dado; dado = ''; return x; }; }
 };
 async function probarApp() {
   const T = '[chromium · app de Android]';
@@ -652,8 +654,11 @@ async function probarApp() {
     await ctx.close();
 
     /* la app nueva, con Auth Tab: Android no pregunta «Abrir con» */
-    ({ ctx, p, reg } = await abrir(nav, O, { antes: `(${PUENTE})(true, ${JSON.stringify(ID_TOKEN)})` }));
+    ({ ctx, p, reg } = await abrir(nav, O, { antes: `(${PUENTE})(true, ${JSON.stringify(ID_TOKEN)}, 'abc234')` }));
     await p.waitForSelector('[data-accion="entrar"]');
+    // (25 nov, tanda 6) y con el código de invitar de la instalación de Google Play: se guarda como el del enlace, vía «play»
+    const ic = await p.evaluate(() => ({ cod: JSON.parse(localStorage.getItem('fm-inv-cod') || 'null'), n: window.__invPedido }));
+    mira(ic.cod && ic.cod.cod === 'ABC234' && ic.cod.via === 'play' && ic.n >= 1, `${T} el código de invitar de la instalación se guarda para canjearlo al entrar (${JSON.stringify(ic)})`);
     await p.click('[data-accion="entrar"]');
     await p.waitForFunction(() => window.__abiertos.length === 1);
     mira(await p.locator('#pantAbrirCon').count() === 0 && await p.locator('.abrir-con').count() === 0, `${T} con Auth Tab no hay aviso de «Abrir con»: el primer toque abre LaLiga`);

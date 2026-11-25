@@ -5,6 +5,7 @@
 //      arriba hasta que pone el código (canjea, cierra y quita la banda); «Nadie, la he encontrado yo» la quita para siempre;
 //   D. abrió el enlace desde su misma conexión hace poco: «Tu amigo te ha invitado» con el código ya puesto (vía «propuesto»);
 //   E. quien invita ve su código grande y el mensaje que comparte lleva el código en su línea, en negrita de WhatsApp;
+//   G. (tanda 6) el código que trae la instalación de Google Play se canjea solo al entrar, como «play»;
 //   F. la web de un Android con ?inv=: la tarjeta con el código, que avisa de la llegada, lo copia y abre Google Play con el
 //      código en el referrer; en el iPhone y el ordenador no sale.
 // Uso: node .github/ia/caso-invitado.mjs   (PW_MODULO como en prueba-web.mjs; CAPTURAS=carpeta deja dos capturas). Sale con 1 si algo falla.
@@ -136,6 +137,12 @@ try {
   if (process.env.CAPTURAS) { await page.evaluate(() => document.querySelectorAll('.tostada').forEach((x) => x.remove())); await page.screenshot({ path: `${process.env.CAPTURAS}/propuesto.png` }); }
   await clic('[data-accion="canjearInv"]'); await page.waitForTimeout(800);
   ok(m.get('a|906') && m.get('a|906').por === '900' && cnt().canje_propuesto === 1 && !(await texto()), `D: «Listo» y dentro, como propuesto (${JSON.stringify(cnt())})`);
+  // G (tanda 6): el código que trae la instalación de Google Play (la app lo deja como el del enlace, vía «play»): canje solo
+  quien = '908'; ids = []; red = 'd'.repeat(64);
+  await limpio('908');
+  await page.evaluate((c) => localStorage.setItem('fm-inv-cod', JSON.stringify({ cod: c, t: Date.now(), via: 'play' })), cod);
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(800);
+  ok(m.get('a|908') && m.get('a|908').por === '900' && cnt().canje_play === 1 && !(await texto()), `G Google Play: el código de la instalación se canjea solo, como «play» (${JSON.stringify(cnt())})`);
   // E: el que invita (900): su código grande y el mensaje
   quien = '900';
   await page.evaluate(() => { window.S.D.yo = { ...window.S.D.yo, userId: '900' }; localStorage.removeItem('fm-invitar'); });
