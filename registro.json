@@ -3291,7 +3291,8 @@
    "SPORT|136837025": 1795614287000,
    "SPORT|136824498": 1795614271000,
    "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/": 1795618492000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255321/competicion-sanciona-dos-partidos-fermin-no-estara-atletico.html": 1795617730000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255321/competicion-sanciona-dos-partidos-fermin-no-estara-atletico.html": 1795617730000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000
   },
   "hechos": [
    {
@@ -3571,11 +3572,25 @@
     "motivo": "expulsión tras protestar al cuarto árbitro",
     "plazo": "no estará en los dos próximos partidos",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/",
+    "medio": "Cadena SER",
+    "t": 1795619369000,
+    "id": "1715",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Fermín López se pierde dos partidos de LaLiga por sanción",
+    "motivo": "sanción disciplinaria",
+    "plazo": "",
+    "nums": [
+     7
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4538,17 +4553,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 13,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 196210,
-  "salida": 15313,
+  "entrada": 198134,
+  "salida": 15463,
   "cacheLee": 21607,
   "cacheEscribe": 23867,
-  "dolares": 0.385835,
+  "dolares": 0.386102,
   "reservado": 0
  },
  "recientes": {
@@ -9601,13 +9616,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6326,
+   "ok": 6327,
    "fallos": 0,
-   "ejecuciones": 5145,
+   "ejecuciones": 5146,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:06:14.199Z"
+   "ultima": "2026-11-25T15:11:13.530Z"
   }
  },
  "ptsDirecto": {},
@@ -9624,15 +9639,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:06:30.645Z"
+   "ultimaBien": "2026-11-25T15:11:24.629Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:06:30.645Z"
+   "ultimaBien": "2026-11-25T15:11:24.629Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:06:30.645Z"
+   "ultimaBien": "2026-11-25T15:11:24.629Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9640,11 +9655,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:06:30.645Z"
+   "ultimaBien": "2026-11-25T15:11:24.629Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:06:30.645Z"
+   "ultimaBien": "2026-11-25T15:11:24.629Z"
   }
  },
  "avisos": [
