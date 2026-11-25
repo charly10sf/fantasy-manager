@@ -33,7 +33,7 @@ export const NOVEDADES = [
     // el resumen de una jornada con un partido aplazado (bot/web/resumen.mjs `aplazadosDe`, portal-web `faltan`) y «Resumen
     // J13» en el menú de Jornada (paginas.py). B-3: `por` en /sinc y el registro del Worker. Pruebas: caso-dinero (g),
     // caso-contradicciones (E y F), portal-ejemplo, prueba-paginas, caso-sinc, datos.mjs y la IA de verdad (13 céntimos)
-    v: '0.8.4n', f: '2026-11-25', h: '00:00', t: 'El chat y la app dicen lo mismo',
+    v: '0.8.4n', f: '2026-11-25', h: '22:49', t: 'El chat y la app dicen lo mismo',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Quién paga tus cláusulas, cerrado de verdad', x: 'Si preguntas quién te puede pagar la cláusula de un jugador y eso lo tienes cerrado, el chat te dice cómo se abre y te cuenta lo que sí se ve: cuánto pide la cláusula sobre su valor y lo que se suele pagar en tu liga. Antes podía soltar que a ningún rival le llegaba.' },
       { para: 'dueño', tipo: 'arreglo', d: 'oferta', t: 'Vender, pero esa oferta no', x: 'Si preguntas si vendes a uno que la app quiere vender pero con una oferta floja encima de la mesa, la respuesta dice las dos cosas: que lo dejes a la venta y que esa oferta no la aceptes.' },
