@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261122/1004254231/comunicado-villarreal-desmintiendo-operacion-pepe-culpa-eclipse.html": 1795375479000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000,
    "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
@@ -9668,13 +9667,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6374,
+   "ok": 6375,
    "fallos": 0,
-   "ejecuciones": 5193,
+   "ejecuciones": 5194,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:21:24.825Z"
+   "ultima": "2026-11-25T19:26:18.180Z"
   }
  },
  "ptsDirecto": {},
@@ -9691,15 +9690,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:21:36.681Z"
+   "ultimaBien": "2026-11-25T19:26:26.855Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:21:36.681Z"
+   "ultimaBien": "2026-11-25T19:26:26.855Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:21:36.681Z"
+   "ultimaBien": "2026-11-25T19:26:26.855Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9707,11 +9706,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:21:36.681Z"
+   "ultimaBien": "2026-11-25T19:26:26.855Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:21:36.681Z"
+   "ultimaBien": "2026-11-25T19:26:26.855Z"
   }
  },
  "avisos": [
