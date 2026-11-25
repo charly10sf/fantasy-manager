@@ -109,19 +109,26 @@ jobs:
           fi
           echo "== en el archivo:"
           /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" -c "Print :CFBundleVersion" -c "Print :GADApplicationIdentifier" "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app/Info.plist"
+      # La firma de Apple en la nube (el certificado de distribución que gestiona Apple) escribe el nombre del certificado en
+      # el requisito de la firma descompuesto (NFD: «Díez»), mientras el certificado lo guarda compuesto (NFC: «Díez»),
+      # y App Store Connect rechaza toda subida con «Invalid Signature» (ITMS-90035). Es un fallo de Apple con los nombres
+      # con tilde (foros de desarrolladores de Apple, 2026). Y el archivo sin firmar no lleva los permisos (push, avisos
+      # urgentes). Arreglo: una primera exportación para leer el requisito de cada binario; se pasa a NFC; se firma cada
+      # binario del archivo en local con un certificado de usar y tirar (solo en este Mac, se borra al acabar; no es de
+      # Apple), con ese requisito y, la app, con sus permisos; y se exporta otra vez: Apple firma conservando requisito y
+      # permisos. Antes de subir se comprueba todo.
       - name: Exportar y comprobar la firma
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           set -o pipefail
-          opciones() {
-            cat > "$RUNNER_TEMP/opciones-$1.plist" <<PLIST
+          cat > "$RUNNER_TEMP/opciones-export.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0"><dict>
             <key>method</key><string>app-store-connect</string>
-            <key>destination</key><string>$1</string>
+            <key>destination</key><string>export</string>
             <key>teamID</key><string>$TEAM</string>
             <key>signingStyle</key><string>automatic</string>
             <key>manageAppVersionAndBuildNumber</key><false/>
@@ -129,79 +136,87 @@ jobs:
             <key>testFlightInternalTestingOnly</key><false/>
           </dict></plist>
           PLIST
-          }
           AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
           exportar() {
             rm -rf "$RUNNER_TEMP/ipa" "$RUNNER_TEMP/dentro"
             xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/ipa" \
-              -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | tail -30
+              -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | grep -E "error|EXPORT" || true
             IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
             mkdir -p "$RUNNER_TEMP/dentro" && (cd "$RUNNER_TEMP/dentro" && unzip -q "$IPA")
             APPX=$(ls -d "$RUNNER_TEMP"/dentro/Payload/*.app)
-            codesign -d --entitlements - --xml "$APPX" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APPX" > "$RUNNER_TEMP/permisos.plist"
-            plutil -p "$RUNNER_TEMP/permisos.plist"
           }
-          # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
-          permisosBien() {
-            /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" 2>/dev/null | grep -qx production &&
-            /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" 2>/dev/null | grep -qx true
-          }
-          opciones export
+          requisito() { codesign -d -r- "$1" 2>&1 | sed -n 's/^designated => //p'; }
+          # los nombres en hexadecimal del requisito, de NFD a NFC
+          nfc() { python3 -c '
+          import re, sys, unicodedata
+          f = lambda m: "0x" + unicodedata.normalize("NFC", bytes.fromhex(m.group(1)).decode()).encode().hex()
+          print(re.sub(r"0x([0-9a-fA-F]+)", f, sys.stdin.read().strip()))'; }
           exportar
-          if ! permisosBien; then
-            # El archivo sin firmar no lleva los permisos (push y avisos urgentes), y Xcode solo deja en la firma de Apple los
-            # que trae la app. Se le ponen con una firma local: un certificado propio, de usar y tirar (solo en este Mac, se
-            # borra al acabar; no es de Apple ni sirve para nada más), con el requisito de la firma de Apple sacado de la
-            # primera exportación. Una firma «-» no vale: Apple conserva su marca «adhoc» y la subida da «Invalid Signature».
-            REQ=$(codesign -d -r- "$APPX" 2>&1 | sed -n 's/^designated => //p')
-            [ -n "$REQ" ] || { echo "::error::No se ha podido leer el requisito de la firma de Apple"; exit 1; }
-            K="$RUNNER_TEMP/local"; mkdir -p "$K"
-            /usr/bin/openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=FM local" -keyout "$K/k.pem" -out "$K/c.pem" \
-              -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=critical,codeSigning" 2>/dev/null ||
-            /usr/bin/openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=FM local" -keyout "$K/k.pem" -out "$K/c.pem" \
-              -extensions v3 -config <(printf '[req]\ndistinguished_name=dn\n[dn]\n[v3]\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=critical,codeSigning\n')
-            /usr/bin/openssl pkcs12 -export -inkey "$K/k.pem" -in "$K/c.pem" -out "$K/c.p12" -passout pass:fm
-            security create-keychain -p fm "$K/local.keychain"
-            security set-keychain-settings "$K/local.keychain"
-            security unlock-keychain -p fm "$K/local.keychain"
-            security import "$K/c.p12" -k "$K/local.keychain" -P fm -T /usr/bin/codesign
-            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k fm "$K/local.keychain" > /dev/null
-            security list-keychains -d user -s "$K/local.keychain" $(security list-keychains -d user | tr -d '"')
-            sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$K/c.pem" || echo "::warning::sin confianza en el certificado local"
-            security find-identity -p codesigning "$K/local.keychain" || true
-            HUELLA=$(/usr/bin/openssl x509 -in "$K/c.pem" -noout -fingerprint -sha1 | cut -d= -f2 | tr -d :)
-            cp ios/App/FantasyManager.entitlements "$K/permisos-app.plist"
-            /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$K/permisos-app.plist"
-            APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
-            codesign -f -s "$HUELLA" --keychain "$K/local.keychain" --entitlements "$K/permisos-app.plist" -r="designated => $REQ" "$APPA"
-            codesign -dvv "$APPA" 2>&1 | grep -E "flags|Authority" || true
-            exportar
-            sudo security delete-certificate -Z "$HUELLA" /Library/Keychains/System.keychain 2>/dev/null || true
-            security delete-keychain "$K/local.keychain" || true
-            rm -rf "$K"
-          fi
-          for f in "$APPX" "$APPX"/Frameworks/*; do echo "== $f"; codesign -dvvv "$f" 2>&1 | grep -E "Authority=Apple D|flags|Signature|CDHash=" || true; done
-          codesign -d -r- "$APPX" 2>&1 | tail -1 || true
-          for f in "$APPX" "$APPX"/Frameworks/*; do codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }; done
-          # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
-          permisosBien || { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
+          # el certificado de usar y tirar
+          K="$RUNNER_TEMP/local"; mkdir -p "$K"
+          /usr/bin/openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=FM local" -keyout "$K/k.pem" -out "$K/c.pem" \
+            -extensions v3 -config <(printf '[req]\ndistinguished_name=dn\n[dn]\n[v3]\nkeyUsage=critical,digitalSignature\nextendedKeyUsage=critical,codeSigning\n')
+          /usr/bin/openssl pkcs12 -export -inkey "$K/k.pem" -in "$K/c.pem" -out "$K/c.p12" -passout pass:fm
+          security create-keychain -p fm "$K/local.keychain"
+          security set-keychain-settings "$K/local.keychain"
+          security unlock-keychain -p fm "$K/local.keychain"
+          security import "$K/c.p12" -k "$K/local.keychain" -P fm -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k fm "$K/local.keychain" > /dev/null
+          security list-keychains -d user -s "$K/local.keychain" $(security list-keychains -d user | tr -d '"')
+          sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$K/c.pem" || echo "::warning::sin confianza en el certificado local"
+          HUELLA=$(/usr/bin/openssl x509 -in "$K/c.pem" -noout -fingerprint -sha1 | cut -d= -f2 | tr -d :)
+          # primero los frameworks y después la app (que sella lo de dentro)
+          for fw in "$APPA"/Frameworks/*.framework; do
+            n=$(basename "$fw")
+            R=$(requisito "$APPX/Frameworks/$n" | nfc)
+            [ -n "$R" ] || { echo "::error::Sin requisito para $n"; exit 1; }
+            codesign -f -s "$HUELLA" --keychain "$K/local.keychain" -r="designated => $R" "$fw"
+          done
+          cp ios/App/FantasyManager.entitlements "$K/permisos-app.plist"
+          /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$K/permisos-app.plist"
+          R=$(requisito "$APPX" | nfc)
+          [ -n "$R" ] || { echo "::error::Sin requisito para la app"; exit 1; }
+          echo "requisito en NFC: $R"
+          codesign -f -s "$HUELLA" --keychain "$K/local.keychain" --entitlements "$K/permisos-app.plist" -r="designated => $R" "$APPA"
+          exportar
+          sudo security delete-certificate -Z "$HUELLA" /Library/Keychains/System.keychain 2>/dev/null || true
+          security delete-keychain "$K/local.keychain" || true
+          rm -rf "$K"
+          # lo que se sube: firmado por Apple, sin «adhoc», con el requisito en NFC y con los permisos
+          for f in "$APPX" "$APPX"/Frameworks/*; do
+            echo "== $(basename "$f")"
+            codesign -dvv "$f" 2>&1 | grep -E "^Authority=Apple Distribution|flags=" || true
+            codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }
+            r=$(requisito "$f"); echo "$r"
+            [ "$(printf '%s' "$r" | nfc)" = "$r" ] || { echo "::error::El requisito de $(basename "$f") sigue en NFD"; exit 1; }
+            codesign -dvv "$f" 2>&1 | grep -q "adhoc" && { echo "::error::$(basename "$f") lleva la marca adhoc"; exit 1; }
+          done
+          codesign -d --entitlements - --xml "$APPX" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APPX" > "$RUNNER_TEMP/permisos.plist"
+          plutil -p "$RUNNER_TEMP/permisos.plist"
+          # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
+          /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production &&
+          /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" | grep -qx true ||
+            { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
           echo "firma y permisos, bien"
-      # La sube Xcode desde el archivo («destination upload»): así firma Apple en la nube al subir. (Un .ipa exportado con la
-      # firma en la nube y subido aparte con altool da «Invalid Signature», 90035, aunque la firma se vea bien.)
+          echo "IPA=$IPA" >> "$GITHUB_ENV"
+      # Se sube el .ipa comprobado. altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
       - name: Subir a App Store Connect
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ steps.numero.outputs.build }}
         run: |
-          set -o pipefail
-          sed 's#<string>export</string>#<string>upload</string>#' "$RUNNER_TEMP/opciones-export.plist" > "$RUNNER_TEMP/opciones-upload.plist"
-          grep -q '<string>upload</string>' "$RUNNER_TEMP/opciones-upload.plist"
-          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/subida" \
-            -exportOptionsPlist "$RUNNER_TEMP/opciones-upload.plist" \
-            -allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
-            2>&1 | tee "$RUNNER_TEMP/subir.log" | grep -vE "^\s*$" | tail -40 || true
-          if grep -qiE "error:|EXPORT FAILED|Invalid Signature" "$RUNNER_TEMP/subir.log"; then echo "::error::La subida a App Store Connect ha fallado"; exit 1; fi
-          grep -qE 'EXPORT SUCCEEDED|Upload succeeded|Uploaded' "$RUNNER_TEMP/subir.log"
+          export API_PRIVATE_KEYS_DIR="$RUNNER_TEMP/claves"
+          set +e
+          xcrun altool --upload-package "$IPA" --type ios --apple-id 6839220127 --bundle-id es.fantasymanager.app \
+            --bundle-version "$BUILD" --bundle-short-version-string "$FM_MARKETING" \
+            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" > "$RUNNER_TEMP/subir.log" 2>&1
+          CODIGO=$?
+          set -e
+          grep -E "ERROR|UPLOAD|No errors|path “" "$RUNNER_TEMP/subir.log" | cut -c1-300 | head -20
+          if [ $CODIGO -ne 0 ] || grep -qiE "UPLOAD FAILED|Failed to upload|ERROR:" "$RUNNER_TEMP/subir.log"; then echo "::error::La subida a App Store Connect ha fallado"; exit 1; fi
+          grep -qiE "UPLOAD SUCCEEDED|No errors uploading" "$RUNNER_TEMP/subir.log" || { echo "::error::altool no dice que la subida haya ido bien"; exit 1; }
       - name: Los registros
         if: always()
         run: |
