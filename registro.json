@@ -3111,7 +3111,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000,
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
    "SPORT|136717129": 1795341237000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
@@ -9513,13 +9512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6257,
+   "ok": 6258,
    "fallos": 0,
-   "ejecuciones": 5076,
+   "ejecuciones": 5077,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T09:26:13.885Z"
+   "ultima": "2026-11-25T09:31:13.666Z"
   }
  },
  "ptsDirecto": {},
@@ -9536,15 +9535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:26:20.272Z"
+   "ultimaBien": "2026-11-25T09:31:22.434Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:26:20.272Z"
+   "ultimaBien": "2026-11-25T09:31:22.434Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:26:20.272Z"
+   "ultimaBien": "2026-11-25T09:31:22.434Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9552,11 +9551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:26:20.272Z"
+   "ultimaBien": "2026-11-25T09:31:22.434Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:26:20.272Z"
+   "ultimaBien": "2026-11-25T09:31:22.434Z"
   }
  },
  "avisos": [
