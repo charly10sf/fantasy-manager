@@ -90,12 +90,14 @@ jobs:
           # 1) la firma automática con la clave de la API (crea ella lo que haga falta)
           if xcodebuild archive "${COMUN[@]}" "${AUT[@]}" 2>&1 | tee "$RUNNER_TEMP/archivar.log" | grep -E "error:|warning: .*(sign|profile)|\*\* "; then :; fi
           if ! grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar.log"; then
-            # 2) si no puede (por ejemplo, sin iPhone registrado para el perfil de desarrollo): firmada en local sin
-            # certificado, con los permisos dentro; al exportar, Apple la firma de verdad en la nube
-            echo "::warning::La firma automática no ha podido archivar; se archiva con firma local y firma Apple al exportar"
+            # 2) si no puede (sin ningún iPhone registrado no hay perfil de desarrollo): el archivo SIN firmar, y al exportar
+            # Apple lo firma de verdad en la nube con el certificado de distribución y los permisos del perfil de la App
+            # Store (los del App ID). (Con firma local «-» no vale: la firma de Apple conserva sus requisitos y la subida
+            # da «Invalid Signature», 90035)
+            echo "::warning::La firma automática no ha podido archivar; se archiva sin firmar y firma Apple al exportar"
             rm -rf "$RUNNER_TEMP/app.xcarchive"
-            xcodebuild archive "${COMUN[@]}" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER= \
-              PROVISIONING_PROFILE_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES 2>&1 | tee "$RUNNER_TEMP/archivar2.log" | grep -E "error:|\*\* " || true
+            xcodebuild archive "${COMUN[@]}" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
+              2>&1 | tee "$RUNNER_TEMP/archivar2.log" | grep -E "error:|\*\* " || true
             grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar2.log"
           fi
           echo "== en el archivo:"
@@ -130,6 +132,8 @@ jobs:
           codesign -d --entitlements - --xml Payload/*.app > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- Payload/*.app > "$RUNNER_TEMP/permisos.plist"
           plutil -p "$RUNNER_TEMP/permisos.plist"
           codesign -dvv Payload/*.app 2>&1 | grep -E "Authority|TeamIdentifier" || true
+          codesign -d -r- Payload/*.app 2>&1 | tail -2 || true
+          for f in Payload/*.app Payload/*.app/Frameworks/*; do codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }; done
           # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
           # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
           /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production || { echo "::error::La app firmada no lleva aps-environment = production"; exit 1; }
