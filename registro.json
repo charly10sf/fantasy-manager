@@ -5448,7 +5448,8 @@
    "6106394",
    "6106243",
    "6106421",
-   "6106391"
+   "6106391",
+   "6106269"
   ],
   "equipos": [
    "9866",
@@ -5714,6 +5715,19 @@
       0,
       0
      ],
+     "champions": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "440330": {
+    "n": "Alexander Sørloth",
+    "e": "Atlético Madrid",
+    "g": {
      "champions": [
       1,
       0,
@@ -7005,9 +7019,9 @@
       0
      ],
      "champions": [
+      2,
       1,
-      0,
-      0,
+      1,
       0,
       0
      ]
@@ -9688,13 +9702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6406,
+   "ok": 6408,
    "fallos": 0,
-   "ejecuciones": 5223,
+   "ejecuciones": 5224,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T21:51:11.806Z"
+   "ultima": "2026-11-25T21:56:49.389Z"
   }
  },
  "ptsDirecto": {},
@@ -9711,15 +9725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:51:16.858Z"
+   "ultimaBien": "2026-11-25T21:56:56.151Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:51:16.858Z"
+   "ultimaBien": "2026-11-25T21:56:56.151Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:51:16.858Z"
+   "ultimaBien": "2026-11-25T21:56:56.151Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9727,11 +9741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:51:16.858Z"
+   "ultimaBien": "2026-11-25T21:56:56.151Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:51:16.858Z"
+   "ultimaBien": "2026-11-25T21:56:56.151Z"
   }
  },
  "avisos": [
