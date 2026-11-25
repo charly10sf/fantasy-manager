@@ -4377,7 +4377,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tas-da-razon-senegal-confirma-victoria-copa-africa-2025-20261124_3481279.html": 1795531954000,
    "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
    "SPORT|136810666": 1795544869000,
-   "SPORT|136811655": 1795554036000
+   "SPORT|136811655": 1795554036000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000
   },
   "hechos": [
    {
@@ -4430,27 +4431,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795586478484
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 70459,
-  "salida": 5237,
+  "entrada": 72188,
+  "salida": 5323,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.160855,
+  "dolares": 0.161071,
   "reservado": 0
  },
  "recientes": {
@@ -9500,13 +9499,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6220,
+   "ok": 6221,
    "fallos": 0,
-   "ejecuciones": 5039,
+   "ejecuciones": 5040,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T06:21:13.311Z"
+   "ultima": "2026-11-25T06:26:12.821Z"
   }
  },
  "ptsDirecto": {},
@@ -9523,15 +9522,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:21:24.303Z"
+   "ultimaBien": "2026-11-25T06:26:22.223Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:21:24.303Z"
+   "ultimaBien": "2026-11-25T06:26:22.223Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:21:24.303Z"
+   "ultimaBien": "2026-11-25T06:26:22.223Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9539,11 +9538,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:21:24.303Z"
+   "ultimaBien": "2026-11-25T06:26:22.223Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:21:24.303Z"
+   "ultimaBien": "2026-11-25T06:26:22.223Z"
   }
  },
  "avisos": [
