@@ -11,8 +11,9 @@ on:
   push:
     branches: [main]
     # también cuando cambia la parte Android: así el paquete.json publicado lleva su huella nueva
+    # (25 nov) y la de iOS: el paquete.json lleva también su huella («nativoIos»)
     paths: ['web/**', 'android/app/src/**', 'android/build.gradle', 'android/settings.gradle', 'android/gradle.properties',
-            'android/app/build.gradle', 'android/app/reglas-r8.pro', 'android/prueba/**', '.github/paquete.py',
+            'android/app/build.gradle', 'android/app/reglas-r8.pro', 'android/prueba/**', 'ios/App/**', 'ios/project.yml', '.github/paquete.py',
             '.github/firmar-paquete.sh', '.github/prueba-web.mjs', '.github/workflows/web.yml']
   workflow_run:
     workflows: ["App Android"]

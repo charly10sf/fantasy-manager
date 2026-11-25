@@ -41,6 +41,9 @@ jobs:
       # (0.8l) la entrada de la web de punta a punta (abrir LaLiga, copiar, pegar) en iPhone, ordenador y Android, sin tocar LaLiga
       - name: Probar la entrada de la web
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-entrada.mjs
+      # (25 nov) el puente de la app de iOS con la web de verdad y una parte nativa de mentira: entrar, guardar, la versión nueva
+      - name: Probar el puente de la app de iOS
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ios.mjs
       # los fallos reales de la IA (plan y chat), con Google de mentira: la app tiene que pararlos (.github/ia/casos.mjs)
       - name: Probar la IA sin red
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ia.mjs

@@ -83,8 +83,11 @@ export async function pintarEstado(forzar = false) {
 }
 
 /* ---------------- los pasos antes de entrar ---------------- */
-/** desde dónde: 'play' | 'github' | 'web-android' | 'web-iphone' | 'web-pc' */
+/** desde dónde: 'play' | 'github' | 'ios' | 'web-android' | 'web-iphone' | 'web-pc' */
 export function canalPaso() {
+  // (25 nov) la app de iOS va aparte: hasta que el servidor conozca ese canal no cuenta sus pasos (los rechaza), que es
+  // mejor que contarlos como si fueran de otra app
+  if (enApp && nativo.canal() === 'ios') return 'ios';
   if (enApp) return nativo.canal() === 'play' ? 'play' : 'github';
   const ua = navigator.userAgent || '';
   if (/Android/i.test(ua)) return 'web-android';

@@ -2398,7 +2398,10 @@ async function mirarAppNueva() {
   const j = await paquetePublicado();
   if (!j || cmpVer(j.version, VERSION) <= 0) return;
   const mia = nativo.huellaNativa();
-  const apk = !!(mia && j.nativo && j.nativo !== mia);
+  // (25 nov) la app de iOS tiene su propia huella nativa en el paquete («nativoIos»); la de siempre es la de Android. Si el
+  // paquete publicado aún no la trae, o es otra, la web nueva no es para esta app: la app nueva llega por la App Store
+  const ios = nativo.canal() === 'ios';
+  const apk = ios ? j.nativoIos !== mia : !!(mia && j.nativo && j.nativo !== mia);
   const play = nativo.canal() === 'play';
   // con la parte Android nueva no hay nada que poner: en Google Play la da la tienda y el APK de GitHub ya no se publica
   // (0.7.13j: solo el aviso de pasarse a Google Play, nunca una descarga de fuera)
@@ -3540,6 +3543,7 @@ window.vozTexto = (texto, error) => {
 async function buscarVersion(avisar = false) {
   // la de Google Play la actualiza la tienda; la web siempre está al día
   if (enApp && avisar && playDesfasada()) { tostada('Hay una versión nueva de la app en Google Play'); nativo.abrir(PLAY_URL); return; }
+  if (enApp && nativo.canal() === 'ios') { if (avisar) tostada('Las versiones nuevas llegan por la App Store'); return; }
   if (!enApp || nativo.canal() === 'play') { if (avisar) tostada(enApp ? 'Las versiones nuevas llegan por Google Play' : 'La web siempre está en la última versión'); return; }
   // el APK de GitHub ya no se publica: ni versión nueva ni descarga, solo el paso a Google Play (0.7.13j)
   if (enApkGithub()) { if (avisar) avisoPlay(true); return; }
@@ -3678,7 +3682,8 @@ window.addEventListener('resize', medirSup);
    abajo con --ios-dy (también la caja del chat, las hojas y los avisos de abajo). Con el teclado abierto no se toca. */
 function vigilarBarraIOS() {
   const vv = window.visualViewport;
-  if (!vv || enApp || movilDe() !== 'iphone') return;
+  // (25 nov) la app de iOS lleva el mismo motor que Safari: ahí también
+  if (!vv || (enApp && nativo.canal() !== 'ios') || movilDe() !== 'iphone') return;
   let dy = 0, pend = false;
   const campo = () => { const a = document.activeElement; return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable); };
   const ajustar = () => {
