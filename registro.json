@@ -3311,7 +3311,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255525/balde-asistencia-reivindicarse-salida-accidentada.html": 1795635755000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/25/6b073398e9cf4a9b788b45b3.html": 1795636775000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255541/adeyemi-calidad-suplir-jugador-no-depender-nadie.html": 1795639084000,
-   "SPORT|136858366": 1795636976000
+   "SPORT|136858366": 1795636976000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/julian-alvarez-vuelve-a-ver-puerta-con-un-extrano-gol-de-falta-el-reloj-del-arbitro-confirmo-que-el-balon-habia-entrado-cadena-ser/": 1795640881000
   },
   "hechos": [
    {
@@ -3645,7 +3646,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4611,17 +4612,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 259706,
-  "salida": 20673,
+  "entrada": 261641,
+  "salida": 21069,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.452534,
+  "dolares": 0.452926,
   "reservado": 0
  },
  "recientes": {
@@ -9686,13 +9687,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6397,
+   "ok": 6398,
    "fallos": 0,
-   "ejecuciones": 5214,
+   "ejecuciones": 5215,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T21:06:12.097Z"
+   "ultima": "2026-11-25T21:11:14.913Z"
   }
  },
  "ptsDirecto": {},
@@ -9709,15 +9710,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:06:17.663Z"
+   "ultimaBien": "2026-11-25T21:11:25.561Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:06:17.663Z"
+   "ultimaBien": "2026-11-25T21:11:25.561Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:06:17.663Z"
+   "ultimaBien": "2026-11-25T21:11:25.561Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9725,11 +9726,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:06:17.663Z"
+   "ultimaBien": "2026-11-25T21:11:25.561Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:06:17.663Z"
+   "ultimaBien": "2026-11-25T21:11:25.561Z"
   }
  },
  "avisos": [
