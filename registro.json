@@ -3119,7 +3119,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
    "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
@@ -9518,13 +9517,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6278,
+   "ok": 6279,
    "fallos": 0,
-   "ejecuciones": 5097,
+   "ejecuciones": 5098,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T11:11:15.356Z"
+   "ultima": "2026-11-25T11:16:25.490Z"
   }
  },
  "ptsDirecto": {},
@@ -9541,15 +9540,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:11:28.225Z"
+   "ultimaBien": "2026-11-25T11:16:35.711Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:11:28.225Z"
+   "ultimaBien": "2026-11-25T11:16:35.711Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:11:28.225Z"
+   "ultimaBien": "2026-11-25T11:16:35.711Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9557,11 +9556,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:11:28.225Z"
+   "ultimaBien": "2026-11-25T11:16:35.711Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:11:28.225Z"
+   "ultimaBien": "2026-11-25T11:16:35.711Z"
   }
  },
  "avisos": [
