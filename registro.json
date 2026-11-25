@@ -3275,7 +3275,8 @@
    "SPORT|136823365": 1795593138000,
    "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000,
-   "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000
+   "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000
   },
   "hechos": [
    {
@@ -3496,7 +3497,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4457,17 +4458,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152985,
-  "salida": 9207,
+  "entrada": 155049,
+  "salida": 9299,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.303687,
+  "dolares": 0.303939,
   "reservado": 0
  },
  "recientes": {
@@ -9517,13 +9518,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6276,
+   "ok": 6277,
    "fallos": 0,
-   "ejecuciones": 5095,
+   "ejecuciones": 5096,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T11:01:15.825Z"
+   "ultima": "2026-11-25T11:06:12.661Z"
   }
  },
  "ptsDirecto": {},
@@ -9540,15 +9541,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:01:24.808Z"
+   "ultimaBien": "2026-11-25T11:06:21.804Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:01:24.808Z"
+   "ultimaBien": "2026-11-25T11:06:21.804Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:01:24.808Z"
+   "ultimaBien": "2026-11-25T11:06:21.804Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9556,11 +9557,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:01:24.808Z"
+   "ultimaBien": "2026-11-25T11:06:21.804Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:01:24.808Z"
+   "ultimaBien": "2026-11-25T11:06:21.804Z"
   }
  },
  "avisos": [
