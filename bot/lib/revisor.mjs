@@ -71,10 +71,10 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cron
  * `hechos` (redactados) o `fuenteTexto` (pulidos: la plantilla). Sin Claude, sin cupo o si no contesta: { ok: false, caido: true }
  * (no sale: A10). Con `revisor.activo` a false: { ok: true, revisado: false }.
  */
-export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], recientes = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
+export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', tipoTuit = '', cronicas = [], recientes = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
   if ((config.revisor || {}).activo === false) return { ok: true, problemas: [], revisado: false };
   if (pedir === preguntar && !conClaude(config)) { log('  (revisor) sin Claude: no sale sin segunda lectura'); return { ok: false, caido: true, problemas: [], revisado: false, error: 'sin Claude' }; }
-  const r = await pedir({ uso: 'revisar', tipo, registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
+  const r = await pedir({ uso: 'revisar', tipo, tipoTuit, registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
     prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas, recientes }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
   if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): no sale sin segunda lectura`); return { ok: false, caido: true, problemas: [], revisado: false, error: r.error || 'sin datos' }; }
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])
