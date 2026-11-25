@@ -196,9 +196,16 @@ for (const movil of [true, false]) {
     const p = await pagina({ movil, ua: UA[disp] });
     await p.goto(`${BASE}/instalar.html`, { waitUntil: 'load' });
     const d = await p.evaluate(() => ({ tres: [...document.querySelectorAll('.disp a')].map((a) => `${a.dataset.d}${a.classList.contains('tuyo') ? '*' : ''}${a.querySelector('.disp-g svg') ? '' : '!'}`), primera: document.querySelector('.instalar .caja').id,
-      tiendas: [...document.querySelectorAll('main img')].map((i) => i.alt).filter((a) => /store|tienda|play/i.test(a)), h1: document.querySelector('h1').textContent.trim() }));
+      tiendas: [...document.querySelectorAll('main img')].map((i) => i.alt).filter((a) => /store|tienda|play/i.test(a)), h1: document.querySelector('h1').textContent.trim(),
+      camisetas: document.querySelectorAll('svg.dib svg path[fill="#EE1C3C"]').length, dePega: [...document.querySelectorAll('svg.dib text')].filter((t) => /^(11|FM)$/.test(t.textContent.trim())).length,
+      titulos: [...document.querySelectorAll('.instalar .caja[id] > h2')].map((h) => `${h.parentNode.id}:${h.querySelectorAll('.disp-g svg').length}`).join(' '),
+      pisa: (() => { const r = (e) => e.getBoundingClientRect(); const ts = [...document.querySelectorAll('svg.dib')].flatMap((d) => { const l = [...d.querySelectorAll(':scope > svg')].map(r); return [...d.querySelectorAll('text')].map(r).filter((t) => t.width && l.some((q) => q.width && !(t.right <= q.left || t.left >= q.right || t.bottom <= q.top + 2 || t.top >= q.bottom - 2))); }); return ts.length; })() }));
     bien(d.tres.length === 3 && d.tres[0] === `${id}*` && d.tres.every((x) => !x.endsWith('!')) && d.primera === id, `[${disp}] instalar.html: los tres dispositivos con su símbolo y el tuyo, el primero y marcado`, JSON.stringify(d));
     bien(d.tiendas.every((a) => /Google Play/.test(a)) && /Cómo instalar/.test(d.h1), `[${disp}] instalar.html: la única insignia de tienda es la de Google Play y el título no cambia`, JSON.stringify(d));
+    // (25 nov, Carlos) en los dibujos de la guía, el logo de Fantasy Manager es el de verdad (la camiseta), no un cuadro rojo con un 11;
+    // y cada apartado lleva el símbolo de su dispositivo (la manzana en los del iPhone)
+    bien(d.camisetas === 5 && d.dePega === 0 && d.pisa === 0, `[${disp}] instalar.html: los cinco dibujos con la app llevan el logo de verdad y ninguno pisa un texto`, JSON.stringify({ c: d.camisetas, p: d.dePega, pisa: d.pisa }));
+    bien(d.titulos === 'android:1 ordenador:1 sin-app:2 iphone:1 anadir:1' || d.titulos.split(' ').sort().join(' ') === 'anadir:1 android:1 iphone:1 ordenador:1 sin-app:2', `[${disp}] instalar.html: cada apartado, con el símbolo de su dispositivo`, d.titulos);
     await p.context().close();
   }
 }

@@ -3751,7 +3751,7 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 /* ------------------------------------------------------------------ (24 nov) «Tu liga, por dentro»
    Lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla en cada dispositivo: Android · iPhone ·
    Ordenador, cada uno con su símbolo, una línea y una sola cosa que hacer, y el tuyo destacado. Los símbolos son dibujos de
-   un color y del mismo peso (un móvil, un portátil y el robot de Android): ni la manzana ni el logo de Windows. */
+   un color y del mismo peso: el robot de Android, la manzana para el iPhone y un portátil dibujado (sin logo de Windows). */
 .tl { display: block; min-width: 0; margin: 0 0 24px; text-align: left; }
 .portada .pantalla p.tl-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
 .portada .pantalla h2.tl-h { margin: 0 0 10px; font: 700 44px/0.95 var(--cond); text-transform: uppercase; letter-spacing: 0; color: var(--texto); text-wrap: balance; }

@@ -293,17 +293,19 @@ async function probar(motor, disp) {
     // Windows) y una sola cosa que hacer; lo de entrar, en el bloque del dispositivo desde el que se mira
     const bloques = await p.evaluate(() => {
       const ent = document.querySelector('#entrar');
-      const filas = [...document.querySelectorAll('.tl-l .tl-f')].map((f) => ({ d: f.dataset.d, tuyo: f.classList.contains('tuyo'), robot: !!f.querySelector('.tl-g svg.an'), dibujo: !!f.querySelector('.tl-g svg.dv'),
+      const filas = [...document.querySelectorAll('.tl-l .tl-f')].map((f) => ({ d: f.dataset.d, tuyo: f.classList.contains('tuyo'), robot: !!f.querySelector('.tl-g svg.an'), dibujo: !!f.querySelector('.tl-g svg.dv'), manzana: !!f.querySelector('.tl-g svg.ap'),
         nombre: f.querySelector('.tl-n b').textContent.trim(), play: !!f.querySelector('a.play-badge[href*="play.google.com/store/apps/details"] img[alt*="Google Play"]'), guia: (f.querySelector('a.tl-ir') || { getAttribute: () => '' }).getAttribute('href') }));
       const mio = ent.querySelector('.plat-and, .plat-ios');
-      return { filas, manzana: document.querySelectorAll('svg.ap').length, tit: (document.querySelector('.tl-h') || {}).textContent || '',
+      return { filas, manzanas: document.querySelectorAll('svg.ap').length, mioManzana: !!mio.querySelector('.plat-c .ent-logo svg.ap'), tit: (document.querySelector('.tl-h') || {}).textContent || '',
         mioLogo: !!mio.querySelector('.plat-c .ent-logo svg'), mioNombre: mio.querySelector('h2').textContent, pasosDentro: !!mio.querySelector('#entrarDirecto'),
         playEnEntrar: ent.querySelectorAll('a[href*="play.google.com"]').length, playEnPagina: document.querySelectorAll('.pantalla a[href*="play.google.com"]').length };
     });
     const fila = (d) => (bloques.filas.find((f) => f.d === d) || {});
-    mira(/Tu liga,\s*por dentro/i.test(bloques.tit) && bloques.manzana === 0, `${T} arriba dice qué es la app («Tu liga, por dentro») y no hay ninguna manzana`);
-    mira(bloques.filas.length === (disp === 'iphone' ? 2 : 3) && fila('android').robot && (disp === 'iphone' || fila('iphone').dibujo) && (disp === 'pc' ? fila('pc').dibujo && /Windows y Mac/.test(fila('pc').nombre) : fila('pc').dibujo),
-      `${T} los dispositivos van con su símbolo: el robot de Android, un móvil y un portátil («Ordenador · Windows y Mac»)`);
+    mira(/Tu liga,\s*por dentro/i.test(bloques.tit), `${T} arriba dice qué es la app («Tu liga, por dentro»)`);
+    // (25 nov, Carlos) lo del iPhone va con el logo de Apple, y solo lo del iPhone
+    mira(bloques.manzanas === 1 && (disp === 'iphone' ? bloques.mioManzana : fila('iphone').manzana), `${T} lo del iPhone lleva el logo de Apple, y solo eso (${bloques.manzanas})`);
+    mira(bloques.filas.length === (disp === 'iphone' ? 2 : 3) && fila('android').robot && (disp === 'iphone' || fila('iphone').manzana) && (disp === 'pc' ? fila('pc').dibujo && /Windows y Mac/.test(fila('pc').nombre) : fila('pc').dibujo),
+      `${T} los dispositivos van con su símbolo: el robot de Android, la manzana y un portátil («Ordenador · Windows y Mac»)`);
     mira(disp === 'iphone' ? bloques.filas.every((f) => !f.tuyo) : bloques.filas[0].d === disp && bloques.filas[0].tuyo && bloques.filas.filter((f) => f.tuyo).length === 1,
       `${T} ${disp === 'iphone' ? 'en el iPhone, arriba solo la frase: los otros dispositivos van debajo de los pasos' : 'el tuyo va el primero y destacado'}`);
     mira(disp === 'iphone' ? bloques.playEnPagina === 0 && fila('android').guia === 'instalar.html#android' : fila('android').play,

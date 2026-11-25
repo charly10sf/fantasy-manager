@@ -29,13 +29,15 @@ export const NOVEDADES = [
     // importa es la aplicación, meterte dentro con tu cuenta y no ver los datos desde fuera») Solo web. La portada empieza por
     // «Tu liga, por dentro» (`tenlaHTML` en app.js) con los tres dispositivos y el tuyo destacado; en el ordenador queda un
     // QR a la vista y se puede instalar con Chrome o Edge (`instalarPc`); en las páginas públicas el botón rojo y la línea
-    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). Sin logos de Apple ni de Windows (sus normas no dejan): un
-    // móvil y un portátil dibujados. Detalle en claude/sesion-24nov-descarga-clara.md del proyecto. La hora, al publicar
+    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). El iPhone va con el logo de Apple (lo pidió Carlos el 25 nov) y
+    // el ordenador con un portátil dibujado, sin logo de Windows; en los dibujos de las guías, el logo de verdad de la app.
+    // Detalle en claude/sesion-24nov-descarga-clara.md del proyecto. La hora, al publicar
     v: '0.8.3c', f: '2026-11-25', t: 'La app, más clara en la web',
     cosas: [
       { para: 'web', tipo: 'mejora', d: 'movil', t: 'Qué es la app, lo primero', x: 'La portada de la web empieza por lo que importa: Fantasy Manager es una app y se entra con tu liga. Debajo, cómo tenerla en tu dispositivo: Android (Google Play), iPhone (desde Safari) u ordenador (Windows y Mac, en el navegador).' },
       { para: 'web', tipo: 'mejora', d: 'portatil', t: 'En el ordenador, un solo QR', x: 'Antes había tres QR a la vista. Ahora hay uno, para tenerla en el móvil, y el de entrar sale al pulsar «Ya tengo la app en el móvil: abrirla en este ordenador». Con Chrome o Edge, además, se puede instalar como una app.' },
       { para: 'web', tipo: 'mejora', d: 'movil', t: 'El botón de arriba, según tu dispositivo', x: 'En las páginas de datos, el botón rojo dice «Descargar» en Android y «Entrar con tu liga» en el iPhone y en el ordenador, donde no hay nada que descargar.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Las guías, con el logo de verdad', x: 'Los dibujos de cómo entrar y de cómo ponerla en la pantalla de inicio del iPhone llevan ya el logo de Fantasy Manager, la camiseta, y no un cuadro rojo. Y el código de ejemplo ya no sale con las letras montadas.' },
       { para: 'web', tipo: 'arreglo', d: 'movil', t: 'En el iPhone se entra desde el iPhone', x: 'La liga de ejemplo y las preguntas frecuentes seguían diciendo que en el iPhone había que entrar antes desde un ordenador. Ya no hace falta desde hace días, y ahora lo dicen bien.' },
     ],
   },

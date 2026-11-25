@@ -267,11 +267,13 @@ function movilDe() {
 }
 /** el logo de Android (Simple Icons, CC0), para señalar lo de Android */
 const ANDROID = '<svg class="an" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993 0 .5511-.4483.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>';
-/* (24 nov) Los símbolos de cada dispositivo. De Apple y de Windows no se usa el logo: Apple no deja usar su manzana suelta a
-   terceros y Microsoft pide licencia para cualquier logo, símbolo o icono de Windows (sus normas de marca, miradas el 24 nov).
-   Van dos dibujos propios, un móvil y un portátil, con el nombre al lado; el robot de Android sí se puede (está citado en
-   aviso-legal.html, como pide Google). Los tres, de un color y con el mismo peso */
-const MOVIL_G = '<svg class="dv" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.6 18.3h2.8"/></svg>';
+/* (24-25 nov) Los símbolos de cada dispositivo, de un color y con el mismo peso: el robot de Android (Google deja usarlo
+   citándolo; está en aviso-legal.html), la manzana para el iPhone (Carlos, 25 nov, 01:18: «quiero que aparezca el logo de
+   Apple en vez de un móvil»; se le dijo que Apple no deja usar su logo suelto a terceros y lo quiere igual) y un portátil
+   dibujado para el ordenador, con «Windows y Mac» escrito: el logo de Windows no se usa (Microsoft pide licencia para
+   cualquier logo, símbolo o icono de Windows) */
+/** el logo de Apple (Simple Icons, CC0), para señalar lo del iPhone */
+const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
 const PORTATIL_G = '<svg class="dv" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="4.5" width="15.6" height="11" rx="1.6"/><path d="M2 19.5h20"/></svg>';
 /** el título del desplegable del ordenador para quien ya tiene la app en el móvil (lo citan el aviso del QR y Ajustes) */
 const YA_TENGO = 'Ya tengo la app en el móvil: abrirla en este ordenador';
@@ -502,7 +504,7 @@ async function entrarConVuelta(txt) {
 const cabPlat = (logo, nombre, sub, id = '') => `<div class="plat-c"><span class="ent-logo">${logo}</span><div><h2 class="plat-n"${id ? ` id="${id}"` : ''}>${nombre}</h2><p class="plat-s">${sub}</p></div></div>`;
 const DISPOSITIVOS = {
   android: { g: ANDROID, n: 'Android', x: 'La app, en Google Play', h: 'instalar.html#android' },
-  iphone: { g: MOVIL_G, n: 'iPhone', x: 'Desde Safari, sin descargar nada', h: 'instalar.html#iphone' },
+  iphone: { g: APPLE, n: 'iPhone', x: 'Desde Safari, sin descargar nada', h: 'instalar.html#iphone' },
   pc: { g: PORTATIL_G, n: 'Ordenador', s: 'Windows y Mac', x: 'En el navegador, sin descargar nada', h: 'instalar.html#ordenador' },
 };
 /** una fila de dispositivo. `desde`: desde dónde se mira; el tuyo va destacado y con su botón */
@@ -541,7 +543,7 @@ function bloqueIphone() {
   // Si la web está en la pantalla de inicio, su sesión va aparte de la de Safari: todo (abrir y pegar) se hace en el
   // mismo sitio. (21 nov) el aviso de «añádela a la pantalla de inicio antes de entrar» no va aquí: estorbaba antes de
   // entrar. Se ofrece después, ya dentro, pasando la sesión (bandaInicio)
-  return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(MOVIL_G, 'En tu iPhone', 'Sin descargar nada: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}</div>`;
+  return `<div class="plat plat-ios">${entrarDirectoHTML('iphone', { cab: cabPlat(APPLE, 'En tu iPhone', 'Sin descargar nada: se entra desde aquí, con tu cuenta de LaLiga.', 'edT') })}</div>`;
 }
 /** el ordenador (Windows y Mac): los tres pasos para entrar aquí; quien ya tiene la app en el móvil entra con un QR, sin
     copiar nada; y un solo QR a la vista, el de tenerla en el móvil (el de entrar sale al desplegar y entonces ese se quita) */
