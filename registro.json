@@ -3259,7 +3259,9 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000,
    "SPORT|136805992": 1795586435000,
    "SPORT|136796550": 1795586435000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000,
+   "SPORT|136822022": 1795589209000,
+   "SPORT|136822228": 1795589185000
   },
   "hechos": [
    {
@@ -3480,7 +3482,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -4442,17 +4444,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 78263,
-  "salida": 5739,
+  "entrada": 80622,
+  "salida": 5939,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.161888,
+  "dolares": 0.162224,
   "reservado": 0
  },
  "recientes": {
@@ -9502,13 +9504,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6237,
+   "ok": 6238,
    "fallos": 0,
-   "ejecuciones": 5056,
+   "ejecuciones": 5057,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T07:46:12.125Z"
+   "ultima": "2026-11-25T07:51:13.351Z"
   }
  },
  "ptsDirecto": {},
@@ -9525,15 +9527,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:46:19.211Z"
+   "ultimaBien": "2026-11-25T07:51:23.042Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:46:19.211Z"
+   "ultimaBien": "2026-11-25T07:51:23.042Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:46:19.211Z"
+   "ultimaBien": "2026-11-25T07:51:23.042Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9541,11 +9543,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:46:19.211Z"
+   "ultimaBien": "2026-11-25T07:51:23.042Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:46:19.211Z"
+   "ultimaBien": "2026-11-25T07:51:23.042Z"
   }
  },
  "avisos": [
