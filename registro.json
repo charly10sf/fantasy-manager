@@ -3298,7 +3298,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000,
    "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
-   "SPORT|136829607": 1795618807000
+   "SPORT|136829607": 1795618807000,
+   "SPORT|136847144": 1795619882000
   },
   "hechos": [
    {
@@ -3620,7 +3621,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -4584,17 +4585,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 14,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 214864,
-  "salida": 16353,
+  "entrada": 216912,
+  "salida": 16769,
   "cacheLee": 21607,
   "cacheEscribe": 26770,
-  "dolares": 0.416988,
+  "dolares": 0.417401,
   "reservado": 0
  },
  "recientes": {
@@ -9647,13 +9648,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6338,
+   "ok": 6339,
    "fallos": 0,
-   "ejecuciones": 5157,
+   "ejecuciones": 5158,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T16:21:13.101Z"
+   "ultima": "2026-11-25T16:26:13.441Z"
   }
  },
  "ptsDirecto": {},
@@ -9670,15 +9671,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:21:23.415Z"
+   "ultimaBien": "2026-11-25T16:26:28.384Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:21:23.415Z"
+   "ultimaBien": "2026-11-25T16:26:28.384Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:21:23.415Z"
+   "ultimaBien": "2026-11-25T16:26:28.384Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9686,11 +9687,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:21:23.415Z"
+   "ultimaBien": "2026-11-25T16:26:28.384Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:21:23.415Z"
+   "ultimaBien": "2026-11-25T16:26:28.384Z"
   }
  },
  "avisos": [
