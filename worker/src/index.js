@@ -1797,7 +1797,14 @@ export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_F
 // (21 nov) pasos nuevos: «llega» (la web: llega sin sesión; «ver» pasa a ser «el bloque de entrar a la vista»), «v» (la web:
 // vuelve de la pestaña de LaLiga), «x-vuelve» (la app de Android: vuelve de LaLiga sin el código, porque eligió la otra app en
 // «Abrir con», LaLiga dio error o cerró la pestaña) «inicio» (el iPhone: pasa la sesión a la pantalla de inicio) y «saf» (el iPhone dentro de X o Instagram: toca «Abrir en Safari»)
-export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
+// (25 nov, tanda 5 de la auditoría de fallos) «m-…»: la web, lo pegado no vale y no llega a LaLiga (vacío, la página de entrar
+// sin acabar, la dirección de la app, jwt.ms sin el código u otra cosa); «x-5xx»: el canje con LaLiga contesta 5xx (antes iba
+// en «x-laliga», que ahora es solo el error de LaLiga: AADB2C90075, InternalServerError…); «x-gastado»: vuelve a pegar el
+// mismo enlace que acaba de fallar
+export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro',
+  'm-vacio', 'm-login', 'm-app', 'm-jwt', 'm-otro', 'x-5xx', 'x-gastado']);
+/** los fallos que cuentan para el semáforo como «LaLiga falla» (los mismos que antes iban juntos en «x-laliga») */
+const EMB_FALLA = new Set(['x-laliga', 'x-5xx']);
 export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
 const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
 const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
@@ -1831,7 +1838,7 @@ async function embudoObjeto(st, ruta, req, memo) {
     const o = typeof b.o === 'string' && /^[a-z0-9_-]{1,24}$/.test(b.o) ? b.o : '';
     if (o && (x[`o:${o}`] || Object.keys(x).filter((k) => k.startsWith('o:')).length < EMB_ORIGENES)) sumar(`o:${o}`);
     await st.put(kd, x);
-    if (b.p === 'ok' || b.p === 'x-laliga') {
+    if (b.p === 'ok' || EMB_FALLA.has(b.p)) {
       const kh = `h|${b.h}`, y = (await st.get(kh)) || {};
       y[b.p === 'ok' ? 'ok' : 'x'] = (y[b.p === 'ok' ? 'ok' : 'x'] || 0) + 1;
       await st.put(kh, y);

@@ -5,6 +5,7 @@
 //      arriba hasta que pone el código (canjea, cierra y quita la banda); «Nadie, la he encontrado yo» la quita para siempre;
 //   D. abrió el enlace desde su misma conexión hace poco: «Tu amigo te ha invitado» con el código ya puesto (vía «propuesto»);
 //   E. quien invita ve su código grande y el mensaje que comparte lleva el código en su línea, en negrita de WhatsApp;
+//   G. (tanda 6) el código que trae la instalación de Google Play se canjea solo al entrar, como «play»;
 //   F. la web de un Android con ?inv=: la tarjeta con el código, que avisa de la llegada, lo copia y abre Google Play con el
 //      código en el referrer; en el iPhone y el ordenador no sale.
 // Uso: node .github/ia/caso-invitado.mjs   (PW_MODULO como en prueba-web.mjs; CAPTURAS=carpeta deja dos capturas). Sale con 1 si algo falla.
@@ -86,7 +87,7 @@ try {
   await page.waitForTimeout(800);
   ok(m.get('a|902') && m.get('a|902').por === '900' && cnt().canje_enlace === 1, `A enlace: canje solo al entrar (${JSON.stringify(cnt())})`);
   ok(pedidos.includes('?liga=4455'), 'A: el estado se pide con la liga');
-  const limpio = (u) => page.evaluate((u) => { window.S.D.yo = { ...window.S.D.yo, userId: u }; for (const k of ['fm-invitar', 'fm-inv-cod', 'fm-inv-preguntado', 'fm-inv-hecho', 'fm-inv-banda-cerrada']) localStorage.removeItem(k); }, u);
+  const limpio = (u) => page.evaluate((u) => { window.S.D.yo = { ...window.S.D.yo, userId: u }; for (const k of ['fm-invitar', 'fm-inv-cod', 'fm-inv-preguntado', 'fm-inv-preguntado2', 'fm-inv-hecho', 'fm-inv-banda-cerrada']) localStorage.removeItem(k); }, u);
   const hayBanda = () => page.evaluate(() => !!document.querySelector('.banda-invitado'));
   // B: Google Play, sin pistas: nada
   quien = '903'; ids = ['600', '601']; red = 'b'.repeat(64);
@@ -117,6 +118,15 @@ try {
   await clic('[data-accion="invitadoNo"]'); await page.waitForTimeout(400);
   await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(600);
   ok(!(await hayBanda()) && !(await texto()), 'C: «Nadie» quita la banda y no vuelve');
+  // C2: quien ya vio la ventana de antes (la marca vieja) y parece invitado: le sale una vez la nueva
+  quien = '907'; ids = ['900'];
+  await limpio('907');
+  await page.evaluate(() => localStorage.setItem('fm-inv-preguntado', String(Date.now() - 3600e3)));
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(800);
+  ok(/¿Te ha invitado un amigo\?/.test(await texto()), 'C2: con la marca de la ventana de antes, le sale la nueva');
+  await clic('[data-accion="cerrarHoja"]'); await page.waitForTimeout(300);
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(600);
+  ok(!(await texto()) && (await hayBanda()), 'C2: una sola vez; después, la banda');
   // D: abrió el enlace desde esta conexión hace poco: el código ya puesto
   quien = '906'; ids = []; red = 'c'.repeat(64);
   await worker('/invitar/llega', { cod });
@@ -127,6 +137,12 @@ try {
   if (process.env.CAPTURAS) { await page.evaluate(() => document.querySelectorAll('.tostada').forEach((x) => x.remove())); await page.screenshot({ path: `${process.env.CAPTURAS}/propuesto.png` }); }
   await clic('[data-accion="canjearInv"]'); await page.waitForTimeout(800);
   ok(m.get('a|906') && m.get('a|906').por === '900' && cnt().canje_propuesto === 1 && !(await texto()), `D: «Listo» y dentro, como propuesto (${JSON.stringify(cnt())})`);
+  // G (tanda 6): el código que trae la instalación de Google Play (la app lo deja como el del enlace, vía «play»): canje solo
+  quien = '908'; ids = []; red = 'd'.repeat(64);
+  await limpio('908');
+  await page.evaluate((c) => localStorage.setItem('fm-inv-cod', JSON.stringify({ cod: c, t: Date.now(), via: 'play' })), cod);
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(800);
+  ok(m.get('a|908') && m.get('a|908').por === '900' && cnt().canje_play === 1 && !(await texto()), `G Google Play: el código de la instalación se canjea solo, como «play» (${JSON.stringify(cnt())})`);
   // E: el que invita (900): su código grande y el mensaje
   quien = '900';
   await page.evaluate(() => { window.S.D.yo = { ...window.S.D.yo, userId: '900' }; localStorage.removeItem('fm-invitar'); });

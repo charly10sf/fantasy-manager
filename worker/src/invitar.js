@@ -19,7 +19,7 @@
  *   llegadas → [{ h, cod, t }]         (25 nov) quien abre la web con ?inv=: la huella de su conexión (`h`, sha256 de la IP o
  *                                      de su /64, nunca la IP) y el código, durante VENTANA_LLEGA. Si en ese rato entra en la
  *                                      app una cuenta nueva desde la misma conexión, se le propone ese código (`pista`)
- *   cnt      → { dia: { llega, copia, canje_enlace, canje_propuesto, canje_escrito } }   los contadores (30 días)
+ *   cnt      → { dia: { llega, copia, canje_enlace, canje_propuesto, canje_escrito, canje_play } }   los contadores (30 días)
  * Los números, en «invitar» de limites.json (cfgInvitar).
  */
 
@@ -36,7 +36,8 @@ const tidOk = (x) => /^\d{1,15}$/.test(String(x || ''));
 // (25 nov) cuánto vale una llegada con el enlace para proponer su código al entrar en la app, y cuántas se guardan
 export const VENTANA_LLEGA = 2 * 3600e3;
 const MAX_LLEGADAS = 400;
-const VIAS = new Set(['enlace', 'propuesto', 'escrito']);
+// (25 nov, tanda 6) «play»: el código que trae la instalación desde Google Play (Install Referrer)
+const VIAS = new Set(['enlace', 'propuesto', 'escrito', 'play']);
 /** suma uno al contador `que` del día (y borra los de hace más de 30 días) */
 async function contar(st, que, dia) {
   if (!dia) return;

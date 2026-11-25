@@ -335,6 +335,19 @@ public class Puente {
         return Canal.NOMBRE;
     }
 
+    /**
+     * (25 nov, tanda 6) el código de invitar con el que se instaló la app desde Google Play (Referrer, solo en la de Play), o
+     * "" si no hay. Se da UNA vez: la web lo guarda como el código del enlace y lo canjea al entrar en su liga
+     */
+    @JavascriptInterface
+    public String invitacion() {
+        SharedPreferences p = prefs(ctx);
+        String c = p.getString("inv_ref", null);
+        if (c == null) return "";
+        p.edit().remove("inv_ref").apply();
+        return c;
+    }
+
     /** la huella de la parte Android de este APK: si la de la versión publicada es otra, hace falta el APK nuevo */
     @JavascriptInterface
     public String nativo() {

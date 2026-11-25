@@ -7,7 +7,7 @@
    «invitar» de limites.json (el servidor los manda con el estado, en `cfg`). */
 import { LS } from './util.js';
 import { pedirWorker } from './soporte.js';
-import { WORKER } from './puente.js';
+import { WORKER, nativo } from './puente.js';
 
 const DOMINIO = 'https://fantasymanagerapp.com/';
 const LETRAS = /^[A-HJ-NP-Z2-9]{6}$/;
@@ -39,6 +39,20 @@ export function avisarLlegada(cod, paso = 'llega') {
     fetch(`${WORKER}/invitar/llega`, { method: 'POST', body: JSON.stringify({ cod: limpiarCod(cod), paso }), headers: { 'content-type': 'text/plain' }, cache: 'no-store', keepalive: true }).catch(() => {});
   } catch (e) { /* no importa */ }
 }
+/** (25 nov, tanda 6 de la auditoría de fallos) en la app de Google Play, el código que traía la instalación (el enlace del
+    amigo lleva a Play con «&referrer=inv%3D<código>» y la parte Android lo lee una vez, Referrer.java). Se guarda como el del
+    enlace, para canjearlo al entrar en la liga (vía «play»); uno del enlace que ya esté guardado no se pisa. Las apps de
+    antes no lo tienen: nada */
+export function leerCodigoPlay() {
+  try {
+    const c = limpiarCod(nativo.invitacion());
+    if (!codValido(c) || codigoPendiente()) return '';
+    LS.set('inv-cod', { cod: c, t: Date.now(), via: 'play' });
+    return c;
+  } catch (e) { return ''; }
+}
+/** por dónde llegó el código que espera (para contar el canje): «play» o, si no, «enlace» */
+export const viaPendiente = () => { const x = LS.get('inv-cod', null); return x && x.via === 'play' ? 'play' : 'enlace'; };
 /** el código del enlace que espera a canjearse (o '') */
 export const codigoPendiente = () => { const x = LS.get('inv-cod', null); return x && codValido(x.cod) && Date.now() - x.t < 14 * 86400e3 ? x.cod : ''; };
 
