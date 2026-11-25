@@ -116,12 +116,10 @@ final class PruebasUI: XCTestCase {
         entrar.tap()
         // el iPhone pregunta si la app puede usar laliga.es para iniciar sesión
         let sistema = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        for _ in 0..<20 {
-            let seguir = sistema.buttons.matching(NSPredicate(format: "label IN %@", ["Continuar", "Continue"])).firstMatch
-            if seguir.exists { seguir.tap(); break }
-            if si(nativa(sonda())["loginAbierto"]) && app.webViews.count > 1 { break }
-            Thread.sleep(forTimeInterval: 0.5)
-        }
+        let seguir = sistema.buttons.matching(NSPredicate(format: "label IN %@", ["Continuar", "Continue"])).firstMatch
+        XCTAssertTrue(seguir.waitForExistence(timeout: 20), "el iPhone no ha preguntado si se puede usar laliga.es para iniciar sesión")
+        captura("2-permiso")
+        seguir.tap()
         let s = esperar("la ventana de entrar abierta con la página de LaLiga") { self.si(self.nativa($0)["loginAbierto"]) }
         XCTAssertEqual(nativa(s)["loginSitio"] as? String, "login.laliga.es")
         // que cargue la página de LaLiga (va por internet)
@@ -129,15 +127,14 @@ final class PruebasUI: XCTestCase {
         captura("2-laliga")
         apuntar("2-entrar", sonda())
         // se cierra sin entrar: la app tiene que enterarse y preguntar qué ha pasado
-        let cerrar = app.buttons.matching(NSPredicate(format: "label IN %@", ["Cancelar", "Cancel", "Aceptar", "Done", "OK", "Cerrar", "Close"])).firstMatch
-        if cerrar.waitForExistence(timeout: 10) {
-            cerrar.tap()
-            let v = esperar("«¿No has vuelto solo?» al cerrar sin entrar", 20) { self.si($0["noVuelto"]) && !self.si(self.nativa($0)["loginAbierto"]) }
-            captura("3-cerrada-sin-entrar")
-            apuntar("3-cerrada", v)
-        } else {
-            apuntar("3-sin-boton-de-cerrar", ["botones": app.buttons.allElementsBoundByIndex.prefix(12).map { $0.label }])
-        }
+        let cerrar = app.buttons.matching(NSPredicate(format: "label IN %@", ["Cancelar", "Cancel", "Done", "OK", "Cerrar", "Close"])).firstMatch
+        XCTAssertTrue(cerrar.waitForExistence(timeout: 15), "no encuentro cómo cerrar la ventana de entrar. Botones: \(app.buttons.allElementsBoundByIndex.prefix(20).map { $0.label })")
+        cerrar.tap()
+        let v = esperar("«¿No has vuelto solo?» al cerrar sin entrar", 20) { self.si($0["noVuelto"]) && !self.si(self.nativa($0)["loginAbierto"]) }
+        captura("3-cerrada-sin-entrar")
+        apuntar("3-cerrada", v)
+        boton("Ahora no").tap()
+        esperar("la pantalla de entrar otra vez", 15) { self.si($0["entrar"]) }
     }
 
     /// la liga de ejemplo pinta las 7 pestañas, y lo guardado sigue ahí al volver a abrir la app
@@ -148,6 +145,9 @@ final class PruebasUI: XCTestCase {
         ejemplo.tap()
         let s = esperar("la liga de ejemplo cargada", 120) { self.si($0["liga"]) && ($0["nav"] as? Int) == 6 && !self.si($0["cargando"]) && ($0["texto"] as? Int ?? 0) > 50 }
         apuntar("4-ejemplo", s)
+        // el cartel de la etiqueta BETA (una vez por móvil) tapa las pestañas: si sale, fuera
+        let vale = app.webViews.buttons["Vale"]
+        if vale.waitForExistence(timeout: 4) { vale.tap(); Thread.sleep(forTimeInterval: 1) }
         let ventana = app.windows.firstMatch.frame
         let abajo = (comprobado(s)["margenAbajo"] as? Double) ?? 34
         let pestanas = ["hoy", "equipo", "directo", "rivales", "mercado", "clubes"]
@@ -191,5 +191,33 @@ final class PruebasUI: XCTestCase {
         XCTAssertNotNil((c["idb"] as? [String: Any])?["antes"] as? NSNumber, "IndexedDB no ha aguantado")
         XCTAssertNotNil(c["llaveroAntes"] as? String, "lo guardado en el llavero no ha aguantado")
         captura("6-reabierta")
+    }
+
+    /// AlDia de punta a punta contra una web «publicada» de mentira (un servidor local de ios.yml con la web de esta
+    /// rama en otra versión, firmada con la clave de verdad): la baja, la pone y sigue ahí al volver a abrir
+    func test4AlDia() throws {
+        guard let remota = ProcessInfo.processInfo.environment["FM_REMOTA"], !remota.isEmpty else {
+            throw XCTSkip("sin la web de mentira firmada (falta el secreto de la firma): AlDia no se prueba de punta a punta")
+        }
+        app.launchArguments += ["-fmOrigen", remota]
+        app.launch()
+        // la primera mirada va a los 4 s de cargar: baja la 99.9.9, la web la pone recargando y arranca con ella
+        let s = esperar("la web nueva bajada y puesta", 120) {
+            (($0["web"] as? [String: Any])?["activa"] as? String) == "99.9.9" && (self.comprobado($0)["versionWeb"] as? String) == "99.9.9" && (self.si($0["entrar"]) || self.si($0["liga"]))
+        }
+        apuntar("7-aldia-nueva", s)
+        XCTAssertEqual(s["errores"] as? Int, 0)
+        XCTAssertGreaterThan((s["web"] as? [String: Any])?["archivos"] as? Int ?? 0, 0, "no ha bajado ningún archivo")
+        XCTAssertNil((s["web"] as? [String: Any])?["error"], "AlDia cuenta un fallo")
+        captura("7-aldia-nueva")
+        // al volver a abrir, sigue con la bajada (y la da por buena: no vuelve a la de dentro)
+        app.terminate()
+        app.launch()
+        let r = esperar("la app abierta otra vez con la web bajada", 90) {
+            (self.comprobado($0)["versionWeb"] as? String) == "99.9.9" && (self.si($0["entrar"]) || self.si($0["liga"])) && self.nativa($0)["alDia"] != nil
+        }
+        apuntar("8-aldia-reabierta", r)
+        XCTAssertEqual(nativa(r)["alDia"] as? String, "igual", "con la misma web publicada, AlDia tiene que decir que ya la tiene")
+        XCTAssertEqual((r["web"] as? [String: Any])?["activa"] as? String, "99.9.9")
     }
 }

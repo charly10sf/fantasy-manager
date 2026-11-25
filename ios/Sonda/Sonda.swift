@@ -24,10 +24,10 @@ extension Principal {
         return direccion + "?prueba=1"
     }
 
-    /// sin el tutorial de la primera vez ni la entrada del tema de evento, que taparían las pestañas
+    /// sin el tutorial de la primera vez, la entrada del tema de evento ni el cartel de la etiqueta BETA, que taparían las pestañas
     func ponerGuionPruebas(_ c: WKUserContentController) {
         guard dePrueba else { return }
-        c.addUserScript(WKUserScript(source: "try { localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-sin-tema', '1'); } catch (e) {}", injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        c.addUserScript(WKUserScript(source: "try { localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-sin-tema', '1'); localStorage.setItem('fm-beta-aviso', '1'); } catch (e) {}", injectionTime: .atDocumentStart, forMainFrameOnly: true))
     }
 
     private func montarSonda() {
@@ -91,6 +91,7 @@ extension Principal {
     var r = { seguro: window.isSecureContext === true, origen: location.origin };
     try { var d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('fm')); r.subtle = new Uint8Array(d).length === 32; } catch (e) { r.subtle = String(e); }
     try { var m = await import(new URL('js/util.js', location.href).href); r.modulo = Object.keys(m).length > 0; } catch (e) { r.modulo = String(e); }
+    try { r.versionWeb = (await import(new URL('js/version.js', location.href).href)).VERSION; } catch (e) { r.versionWeb = String(e); }
     try { var f = await fetch('limites.json?t=' + Date.now(), { cache: 'no-store' }); var j = await f.json(); r.fetch = f.ok && typeof j === 'object'; } catch (e) { r.fetch = String(e); }
     try { var f4 = await fetch('no-existe.json', { cache: 'no-store' }); r.fetch404 = f4.status; } catch (e) { r.fetch404 = String(e); }
     try { r.lsAntes = localStorage.getItem('fm-sonda'); localStorage.setItem('fm-sonda', String(Date.now())); r.ls = localStorage.getItem('fm-sonda') !== null; } catch (e) { r.ls = String(e); }

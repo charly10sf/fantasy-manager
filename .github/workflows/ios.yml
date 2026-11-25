@@ -19,11 +19,49 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # La web «publicada» de mentira con la que se prueba AlDia en el simulador: la de esta rama con otra versión (99.9.9),
+  # con su paquete.json firmado con la clave de verdad. Va en Linux porque firmar-paquete.sh es de Linux. No se publica
+  # en ningún sitio: se le pasa al otro trabajo, que la sirve en 127.0.0.1. Sin el secreto, AlDia no se prueba.
+  remota:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: La web de mentira, firmada
+        env:
+          PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/remota"
+          if [ -z "$PAQUETE_FIRMA" ]; then echo "::warning::Sin el secreto PAQUETE_FIRMA no se prueba AlDia en el simulador"; echo no > "$RUNNER_TEMP/remota/sin-firma"; exit 0; fi
+          sed -i "s/^export const VERSION = '[^']*';/export const VERSION = '99.9.9';/" web/js/version.js
+          grep -q "^export const VERSION = '99.9.9';" web/js/version.js
+          python3 .github/paquete.py
+          bash .github/firmar-paquete.sh web/paquete.json
+          python3 - "$RUNNER_TEMP/remota" <<'PY'
+          import json, os, shutil, sys
+          paquete = json.load(open('web/paquete.json'))
+          for rel in list(paquete['archivos']) + ['paquete.json', 'paquete.json.sig']:
+              destino = os.path.join(sys.argv[1], rel)
+              os.makedirs(os.path.dirname(destino), exist_ok=True)
+              shutil.copyfile(os.path.join('web', rel), destino)
+          print(paquete['version'], paquete['nativoIos'], len(paquete['archivos']), 'archivos')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ios-remota
+          path: ${{ runner.temp }}/remota
+          retention-days: 1
+
   simulador:
+    needs: remota
     runs-on: macos-26
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ios-remota
+          path: ${{ runner.temp }}/remota
       - name: Con qué se compila
         run: |
           sw_vers
@@ -57,6 +95,20 @@ jobs:
           command -v xcodegen > /dev/null || brew install xcodegen
           xcodegen --version
           cd ios && xcodegen generate
+      # La web de mentira, servida en este Mac (el simulador comparte su red). Solo para esta compilación de prueba se le
+      # deja a la app hablar sin https con direcciones locales: el Info.plist del repo no cambia (y las huellas ya están
+      # calculadas)
+      - name: La web de mentira para AlDia
+        run: |
+          if [ -f "$RUNNER_TEMP/remota/paquete.json.sig" ]; then
+            /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" -c "Add :NSAppTransportSecurity:NSAllowsLocalNetworking bool true" ios/App/Info.plist
+            (cd "$RUNNER_TEMP/remota" && nohup python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/remota.log" 2>&1 &)
+            sleep 2
+            curl -sf http://127.0.0.1:8765/paquete.json | head -c 120; echo
+            echo "TEST_RUNNER_FM_REMOTA=http://127.0.0.1:8765/" >> "$GITHUB_ENV"
+          else
+            echo "::warning::AlDia no se prueba de punta a punta: no hay web de mentira firmada"
+          fi
       - name: El simulador
         run: |
           xcrun simctl list devices available | grep -i iphone || true
@@ -123,6 +175,9 @@ jobs:
           fi
           tail -c 400000 "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/salida/xcodebuild-final.log" || true
           grep -nE "error:|: error|\*\* " "$RUNNER_TEMP/xcodebuild.log" | head -200 > "$RUNNER_TEMP/salida/errores.txt" || true
+          cp "$RUNNER_TEMP/remota.log" "$RUNNER_TEMP/salida/servidor-aldia.log" 2> /dev/null || true
+          # el vídeo de la pantalla pesa mucho y no hace falta
+          find "$RUNNER_TEMP/salida/capturas" -name '*.mp4' -delete || true
           ls -la "$RUNNER_TEMP/salida/capturas" || true
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()

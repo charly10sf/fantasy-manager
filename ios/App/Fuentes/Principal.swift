@@ -243,17 +243,20 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
     /// webBuscada(estado): «nueva», «igual», «apk» (hace falta la app nueva), «parada», «ocupada» o «error: …»
     func buscarWeb(_ aunqueReciente: Bool) {
         if !aunqueReciente && AlDia.ahora() - AlDia.ultimaBusqueda < 60000 { return }
-        Task.detached(priority: .utility) { [weak self] in
+        // (AlDia.buscar no es de la pantalla: corre fuera de su hilo y aquí se vuelve a él con el resultado)
+        Task { [weak self] in
             let r = await AlDia.buscar()
-            await MainActor.run {
-                guard let self else { return }
-                #if DEBUG
-                self.sondaNativa["alDia"] = r
-                #endif
-                self.ponerEstadoWeb()
-                self.js("window.webBuscada && webBuscada(\(Principal.cadena(r)))")
-            }
+            self?.buscada(r)
         }
+    }
+
+    private func buscada(_ r: String) {
+        #if DEBUG
+        sondaNativa["alDia"] = r
+        sondaNativa["alDiaVeces"] = (sondaNativa["alDiaVeces"] as? Int ?? 0) + 1
+        #endif
+        ponerEstadoWeb()
+        js("window.webBuscada && webBuscada(\(Principal.cadena(r)))")
     }
 
     /* ---------------- salir y volver ---------------- */
