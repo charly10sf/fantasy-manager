@@ -225,7 +225,11 @@ final class PruebasUI: XCTestCase {
         // el iPhone pregunta si la app puede usar laliga.es para iniciar sesión
         let sistema = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let seguir = sistema.buttons.matching(NSPredicate(format: "label IN %@", ["Continuar", "Continue"])).firstMatch
-        XCTAssertTrue(seguir.waitForExistence(timeout: 20), "el iPhone no ha preguntado si se puede usar laliga.es para iniciar sesión")
+        // el simulador de GitHub a veces se queda parado unos segundos: si la pregunta no sale, se toca otra vez y se espera más
+        if !seguir.waitForExistence(timeout: 25) {
+            if entrar.exists && entrar.isHittable { entrar.tap() }
+            XCTAssertTrue(seguir.waitForExistence(timeout: 45), "el iPhone no ha preguntado si se puede usar laliga.es para iniciar sesión")
+        }
         captura("2-permiso")
         seguir.tap()
         let s = esperar("la ventana de entrar abierta con la página de LaLiga") { self.si(self.nativa($0)["loginAbierto"]) }
