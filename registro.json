@@ -4437,9 +4437,7 @@
    "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/sociedad/educacion-00468/noticia-gobierno-envia-requerimiento-comunidad-madrid-revocar-orden-pide-neutralidad-profesores-20261124134311.html": 1795590372259
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
@@ -9504,13 +9502,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6232,
+   "ok": 6233,
    "fallos": 0,
-   "ejecuciones": 5051,
+   "ejecuciones": 5052,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T07:21:19.539Z"
+   "ultima": "2026-11-25T07:26:13.223Z"
   }
  },
  "ptsDirecto": {},
@@ -9527,15 +9525,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:21:31.019Z"
+   "ultimaBien": "2026-11-25T07:26:20.768Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:21:31.019Z"
+   "ultimaBien": "2026-11-25T07:26:20.768Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:21:31.019Z"
+   "ultimaBien": "2026-11-25T07:26:20.768Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9543,11 +9541,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:21:31.019Z"
+   "ultimaBien": "2026-11-25T07:26:20.768Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:21:31.019Z"
+   "ultimaBien": "2026-11-25T07:26:20.768Z"
   }
  },
  "avisos": [
