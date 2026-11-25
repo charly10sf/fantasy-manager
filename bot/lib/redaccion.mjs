@@ -7,7 +7,7 @@
 import { limitarDatos, apuntarTexto, MEDIA } from './datos-jugador.mjs';
 import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES, SE_VA_MARCADOR } from './texto.mjs';
 import { validar } from './validar.mjs';
-import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS } from './ia.mjs';
+import { preguntar, conClaude, sinCupo, estimarCoste, eleccion } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
 import { EMOJIS_ARRIBA as EMOJIS_GUIA, conEmojis, erroresEmojis, ajustarArriba } from './emojis.mjs';
@@ -705,8 +705,9 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     // ¿queda cupo para redactar Y para la segunda lectura? Sin ella no sale, así que no se gasta en redactar (A10)
     if (conRevisor && pedir === preguntar && conClaude(config)) {
       const json = JSON.stringify(t.hechos, sinFecha);
-      const estimado = estimarCoste({ modelo: MODELOS.redactar, prompt: json, sistema, uso: 'redactar', config })
-        + estimarCoste({ modelo: MODELOS.revisar, prompt: json + ' '.repeat(900), sistema: SISTEMA_REVISOR, uso: 'revisar', config });
+      const tt = t.hechos.tipo || tipo;
+      const estimado = estimarCoste({ modelo: eleccion('redactar', { config, tipo: tt }).modelo, prompt: json, sistema, uso: 'redactar', config })
+        + estimarCoste({ modelo: eleccion('revisar', { config, tipo: tt }).modelo, prompt: json + ' '.repeat(900), sistema: SISTEMA_REVISOR, uso: 'revisar', config });
       const motivo = sinCupo('revisar', { registro, config, tipo, estimado });
       if (motivo) { t.redaccion = 'sin-ia'; log(`  (redactar) ${t.clave}: sin cupo para redactar y revisar (${motivo}): sale con la plantilla`); continue; }
     }
@@ -723,7 +724,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       if (intento >= ((cfg.intentosPorTipo || {})[tipo] ?? Infinity)) break;
       // otro intento solo si el primero fue rápido (7 nov, el «baja» de Iker Luque: un fallo del validador en el directo tiraba el tuit a la plantilla)
       if (intento > 0 && cfg.reintentoSegundos && cfg.reintentoSegundos[tipo] != null && Date.now() - inicioTuit > cfg.reintentoSegundos[tipo] * 1000) { log(`  (redactar) ${t.clave}: el primer intento tardó demasiado para otro`); break; }
-      const r = await pedir({ uso: 'redactar', tipo, registro, config, sistema, cache, esquema: ESQUEMA, log,
+      const r = await pedir({ uso: 'redactar', tipo, tipoTuit: t.hechos.tipo || tipo, registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, delPartido, gastadas: [...muletillas(recientes, nombresHechos(t.hechos)), ...gastadasEn(recientes, delPartido)] }), tiempo: 40000, hasta: Date.now() + (((cfg.segundosPorTipo || {})[tipo]) ?? cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = ajustarArriba(String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(), t.hechos);
@@ -739,7 +740,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
         // (el directo no espera a un segundo editor: lo del validador de código basta, la jugada caduca en minutos)
-        const rv = (cfg.sinRevisor || []).includes(tipo) ? { ok: true, revisado: false } : await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
+        const rv = (cfg.sinRevisor || []).includes(tipo) ? { ok: true, revisado: false } : await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, tipoTuit: t.hechos.tipo || tipo, registro, config, log });
         if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
         // el revisor caído (no contesta, sin cupo, sin Claude) no deja pasar el tuit: espera a la siguiente ejecución (A10)
         if (rv.caido) { causa = 'revisor-no'; log(`  (redactar) ${t.clave}: el revisor no contesta (${rv.error || '?'}): no sale sin segunda lectura`); break; }

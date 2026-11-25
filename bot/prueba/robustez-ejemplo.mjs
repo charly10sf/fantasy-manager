@@ -23,7 +23,7 @@ const { Registro } = await import('../lib/registro.mjs');
 const { publicarSinRepetir } = await import('../lib/x.mjs');
 const S = await import('../lib/salud.mjs');
 const { redactar, revisar, deHoyMal } = await import('../lib/redaccion.mjs');
-const { preguntar, cuentaHoy, estimarCoste, sinCupo } = await import('../lib/ia.mjs');
+const { preguntar, cuentaHoy, estimarCoste, sinCupo, eleccion, MODELOS } = await import('../lib/ia.mjs');
 const { proximoPartido, cuando } = await import('../lib/redactar.mjs');
 const D = await import('../tipos/directo.mjs');
 const { generar: novedades } = await import('../tipos/novedades.mjs');
@@ -93,6 +93,32 @@ ok(preguntas === 0, `simulacro, 3 ejecuciones: ${preguntas} preguntas a la IA`);
   let llamado = false;
   await preguntar({ uso: 'redactar', registro: reg, config: cfgIa, prompt: 'x'.repeat(35000), esquema: {}, claude: async () => { llamado = true; return { ok: true, datos: {}, dolares: 0.02 }; } });
   ok(!llamado && /tope/.test(sinCupo('redactar', { registro: reg, config: cfgIa, estimado: 0.02 })), 'a 1,995 $ de 2 $, una pregunta de 0,02 $ ya no se hace');
+}
+
+// ---------- (25 nov) el modelo por tipo de tuit: ia.modelosPorTipo ----------
+{
+  const H = 'claude-haiku-5-5', S = 'claude-sonnet-5-5';
+  ok(eleccion('redactar').modelo === S && eleccion('redactar').esfuerzo === 'medium' && !eleccion('redactar').pensar, 'sin nada en config: Sonnet en redactar, esfuerzo medio, sin pensar (como antes)');
+  ok(eleccion('clasificar').modelo === MODELOS.clasificar && eleccion('revisar').esfuerzo === 'low', 'clasificar con Haiku y revisar con esfuerzo bajo, como antes');
+  const cfg = { ia: { esfuerzo: { redactar: 'medium' }, modelos: { pulir: 'sonnet' }, modelosPorTipo: { directo: { redactar: 'haiku' }, mercado: { redactar: 'haiku', revisar: 'haiku', esfuerzo: { redactar: 'high' }, pensar: { revisar: true } } } } };
+  ok(eleccion('redactar', { config: cfg, tipo: 'directo' }).modelo === H && eleccion('redactar', { config: cfg, tipo: 'directo' }).esfuerzo === 'medium', 'directo: Haiku redacta con el esfuerzo de siempre');
+  ok(eleccion('revisar', { config: cfg, tipo: 'directo' }).modelo === S, 'directo: lo que no se dice (revisar) sigue con Sonnet');
+  ok(eleccion('redactar', { config: cfg, tipo: 'final' }).modelo === S, 'un tipo que no está en la lista sigue con Sonnet');
+  const m = (u) => eleccion(u, { config: cfg, tipo: 'mercado' });
+  ok(m('redactar').modelo === H && m('redactar').esfuerzo === 'high' && m('revisar').modelo === H && m('revisar').pensar && m('revisar').esfuerzo === 'low', 'mercado: Haiku en los dos, esfuerzo y pensar por uso');
+  ok(eleccion('pulir', { config: cfg }).modelo === S, 'el nombre corto vale también en ia.modelos');
+  // preguntar le pasa a Claude lo elegido para el tipo del tuit (tipoTuit) y no lo del módulo
+  const claveAntes = process.env.ANTHROPIC_API_KEY;
+  process.env.ANTHROPIC_API_KEY = claveAntes || 'prueba';
+  const vistos = [];
+  const claudeF = async (op) => { vistos.push(`${op.modelo}/${op.esfuerzo}`); return { ok: true, datos: {}, modelo: op.modelo, uso: {}, dolares: 0 }; };
+  const reg = { datos: {}, fichero: null, guardar() {} };
+  const c2 = { ia: { ...cfg.ia, proveedor: 'claude', topeDolaresDia: 5 } };
+  await preguntar({ uso: 'redactar', tipo: 'previa', tipoTuit: 'mercado', registro: reg, config: c2, prompt: 'x', esquema: {}, claude: claudeF });
+  await preguntar({ uso: 'redactar', tipo: 'directo', registro: reg, config: c2, prompt: 'x', esquema: {}, claude: claudeF });
+  await preguntar({ uso: 'revisar', tipo: 'final', registro: reg, config: c2, prompt: 'x', esquema: {}, claude: claudeF });
+  ok(vistos.join(' ') === `${H}/high ${H}/medium ${S}/low`, `preguntar usa el modelo del tipo del tuit (${vistos.join(' ')})`);
+  if (claveAntes === undefined) delete process.env.ANTHROPIC_API_KEY;
 }
 
 // ---------- A11: X no contesta ----------

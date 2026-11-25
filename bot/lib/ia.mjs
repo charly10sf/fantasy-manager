@@ -11,6 +11,25 @@ import { diaMadrid } from './registro.mjs';
 
 // revisar (lib/revisor.mjs) y pulir (lib/pulir.mjs, desde el 7 nov con Claude: el flash-lite de Gemini enredaba los textos) con Sonnet
 export const MODELOS = { clasificar: HAIKU, redactar: SONNET, revisar: SONNET, pulir: SONNET };
+const ESFUERZO = { clasificar: 'low', redactar: 'medium', revisar: 'low', pulir: 'low' };
+// en config.json se puede escribir el nombre corto
+const ALIAS = { haiku: HAIKU, sonnet: SONNET };
+const modeloDe = (m) => ALIAS[String(m || '').toLowerCase()] || m || '';
+
+/**
+ * (25 nov, claude/bot-haiku-25nov.md del proyecto) Qué modelo, qué esfuerzo y si piensa, por uso y por tipo de tuit. Manda
+ * `ia.modelosPorTipo[tipo]` ({ "redactar": "haiku", "esfuerzo": { "redactar": "high" }, "pensar": { "redactar": true } }); si
+ * no dice nada de ese uso, `ia.modelos`, `ia.esfuerzo` e `ia.pensar` de siempre; y si tampoco, MODELOS y ESFUERZO.
+ * `tipo`: el tipo del tuit (hechos.tipo: directo, final, onces…), no el del módulo.
+ */
+export function eleccion(uso, { config = {}, tipo = '' } = {}) {
+  const ci = config.ia || {};
+  const pt = (tipo && (ci.modelosPorTipo || {})[tipo]) || {};
+  const modelo = modeloDe(pt[uso] || (ci.modelos || {})[uso]) || MODELOS[uso] || SONNET;
+  const esfuerzo = ((pt.esfuerzo || {})[uso]) ?? ({ ...ESFUERZO, ...(ci.esfuerzo || {}) })[uso] ?? null;
+  const pensar = (((pt.pensar || {})[uso]) ?? ((ci.pensar || {})[uso])) === true;
+  return { modelo, esfuerzo, pensar };
+}
 
 export const proveedor = (config = {}) => String(process.env.BOT_IA || (config.ia && config.ia.proveedor) || 'gemini').toLowerCase();
 export const conClaude = (config = {}) => proveedor(config) === 'claude' && !!process.env.ANTHROPIC_API_KEY;
@@ -81,19 +100,17 @@ function apuntar(c, r, estimado) {
  * `sistema` y `cache`. Devuelve lo mismo, con `proveedor` ('claude' o 'gemini').
  */
 export async function preguntar({ uso = 'clasificar', registro = null, config = {}, prompt, esquema, sistema = '', cache = false, log = () => {},
-  tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir, tipo = '' }) {
+  tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir, tipo = '', tipoTuit = '' }) {
   let sinCupoMotivo = '';
   if (conClaude(config)) {
-    const ci = config.ia || {};
-    const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
+    // el modelo, por tipo de tuit si se ha dicho (`tipoTuit`, el de los hechos; si no, el del módulo); el cupo sigue yendo por `tipo`
+    const { modelo, esfuerzo, pensar } = eleccion(uso, { config, tipo: tipoTuit || tipo });
     const estimado = estimarCoste({ modelo, prompt, sistema, uso, config });
     const motivo = sinCupo(uso, { registro, config, ahora, tipo, estimado });
     if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
       const cuenta = cuentaHoy(registro, ahora);
       reservar(registro, cuenta, uso, estimado);
-      const esfuerzo = ({ clasificar: 'low', redactar: 'medium', revisar: 'low', pulir: 'low', ...(ci.esfuerzo || {}) })[uso] || null;
-      const pensar = ((ci.pensar || {})[uso]) === true;
       let r;
       try {
         r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
