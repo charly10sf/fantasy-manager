@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
    "SPORT|136730837": 1795377616000,
    "SPORT|136730813": 1795380014000,
    "AS|https://as.com/futbol/primera/dimitrievski-lanza-un-mensaje-a-braulio-f202611-n/": 1795394296000,
@@ -9684,13 +9683,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6380,
+   "ok": 6381,
    "fallos": 0,
-   "ejecuciones": 5197,
+   "ejecuciones": 5198,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:41:15.544Z"
+   "ultima": "2026-11-25T19:46:15.560Z"
   }
  },
  "ptsDirecto": {},
@@ -9707,15 +9706,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:41:31.555Z"
+   "ultimaBien": "2026-11-25T19:46:25.928Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:41:31.555Z"
+   "ultimaBien": "2026-11-25T19:46:25.928Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:41:31.555Z"
+   "ultimaBien": "2026-11-25T19:46:25.928Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9723,11 +9722,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:41:31.555Z"
+   "ultimaBien": "2026-11-25T19:46:25.928Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:41:31.555Z"
+   "ultimaBien": "2026-11-25T19:46:25.928Z"
   }
  },
  "avisos": [
