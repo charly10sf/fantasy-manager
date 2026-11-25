@@ -3256,7 +3256,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/jude-bellingham-senala-dudar-clave-espectacular-rendimiento-mourinho-20261124_3481451.html": 1795560319000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-slovan-bratislava-betis-champions-league-5a-jornada-24-20261124_3481403.html": 1795557615000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/24/6b05fc64fc6c83a13b8b4583.html": 1795558081000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000
   },
   "hechos": [
    {
@@ -3477,7 +3478,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -4439,17 +4440,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 68505,
-  "salida": 5120,
+  "entrada": 70459,
+  "salida": 5237,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.160601,
+  "dolares": 0.160855,
   "reservado": 0
  },
  "recientes": {
@@ -9499,13 +9500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6219,
+   "ok": 6220,
    "fallos": 0,
-   "ejecuciones": 5038,
+   "ejecuciones": 5039,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T06:16:14.106Z"
+   "ultima": "2026-11-25T06:21:13.311Z"
   }
  },
  "ptsDirecto": {},
@@ -9522,15 +9523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:16:21.492Z"
+   "ultimaBien": "2026-11-25T06:21:24.303Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:16:21.492Z"
+   "ultimaBien": "2026-11-25T06:21:24.303Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:16:21.492Z"
+   "ultimaBien": "2026-11-25T06:21:24.303Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9538,11 +9539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:16:21.492Z"
+   "ultimaBien": "2026-11-25T06:21:24.303Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:16:21.492Z"
+   "ultimaBien": "2026-11-25T06:21:24.303Z"
   }
  },
  "avisos": [
