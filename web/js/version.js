@@ -27,7 +27,7 @@ export const NOVEDADES = [
     // (25 nov, la B-4 de claude/prompt-noticias-deno-busquedas.md del proyecto) en la web, Google Noticias da 503 a las IP
     // de Cloudflare: si falla, Bing Noticias por el Worker (externas.js: parseRSS con los dos formatos, consultaBing,
     // «noticias-bing» 6 h); Worker: www.bing.com en PERMITIDOS, solo su RSS. Pruebas: datos.mjs y prueba-noticias.mjs
-    v: '0.8.4m', f: '2026-11-25', h: 'HH:MM', t: 'Las noticias, también en la web',
+    v: '0.8.4m', f: '2026-11-25', h: '22:12', t: 'Las noticias, también en la web',
     cosas: [
       { tipo: 'arreglo', d: 'periodico', t: 'Las noticias vuelven a la web y al iPhone', x: 'En el navegador del ordenador y del iPhone las noticias de tus jugadores y de los clubes no llegaban casi nunca. Ahora, si la fuente de siempre no contesta, se buscan en otra, y el plan y la ficha de cada club vuelven a tenerlas.' },
     ],
