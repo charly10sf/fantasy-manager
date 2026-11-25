@@ -28,7 +28,9 @@ jobs:
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/planes-corto.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          TOPE_USD: "0.35"
+          TOPE_USD: "0.40"
+          ESCENAS: "hora-20,hora-20,hora-20,hora-20,veda,veda,paron,paron,m-clausula-mia"
+          VARIANTES: "A,B"
           WEB: "1"
       - name: Guardar las respuestas en la rama
         if: always()
