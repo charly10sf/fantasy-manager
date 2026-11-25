@@ -2354,7 +2354,7 @@
   "2316": "ok",
   "2317": "out_of_league",
   "2318": "ok",
-  "2319": "injured",
+  "2319": "doubtful",
   "2321": "ok",
   "2322": "ok",
   "2323": "out_of_league",
@@ -2534,7 +2534,7 @@
   "2619": "out_of_league",
   "2620": "out_of_league",
   "2621": "ok",
-  "2622": "doubtful",
+  "2622": "injured",
   "2623": "ok",
   "2624": "injured",
   "2626": "ok",
@@ -2644,7 +2644,7 @@
   "2773": "out_of_league",
   "2774": "ok",
   "2775": "out_of_league",
-  "2776": "ok",
+  "2776": "injured",
   "2778": "out_of_league",
   "2779": "injured",
   "2780": "ok",
@@ -2901,7 +2901,7 @@
   "3068": "ok",
   "3069": "ok",
   "3070": "ok",
-  "3071": "injured",
+  "3071": "doubtful",
   "3072": "ok",
   "3073": "injured",
   "3074": "ok",
@@ -3038,7 +3038,7 @@
   "3205": "ok",
   "3206": "ok",
   "3207": "ok",
-  "3208": "injured",
+  "3208": "doubtful",
   "3209": "ok",
   "3210": "ok",
   "3211": "ok",
@@ -3143,14 +3143,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "356",
-   "que": "vuelve",
-   "antes": "injured",
-   "t": 1795626372665
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000,
@@ -3314,7 +3307,9 @@
    "SPORT|136829607": 1795618807000,
    "SPORT|136847144": 1795619882000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000,
-   "SPORT|136846515": 1795622552000
+   "SPORT|136846515": 1795622552000,
+   "SPORT|136847699": 1795622684000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261125/11693363/gran-rotacion-flick-llega-baku-vuelven-gavi-balde-descansa-raphinha.html": 1795624862000
   },
   "hechos": [
    {
@@ -3636,7 +3631,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -4432,8 +4427,8 @@
     "t": 1793962572977
    },
    "3208": {
-    "e": "injured",
-    "t": 1793793674589
+    "e": "doubtful",
+    "t": 1795626673040
    },
    "3209": {
     "e": "ok",
@@ -4600,17 +4595,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 231525,
-  "salida": 17594,
+  "entrada": 233732,
+  "salida": 17787,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.448177,
+  "dolares": 0.448494,
   "reservado": 0
  },
  "recientes": {
@@ -4910,11 +4905,6 @@
   ]
  },
  "puntosPartido": {
-  "13|123": {
-   "h": "f6da482fb065",
-   "desde": 1795281673222,
-   "fin": 1795281071838
-  },
   "13|121": {
    "h": "df510dface7f",
    "desde": 1795290073039,
@@ -9663,13 +9653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6347,
+   "ok": 6348,
    "fallos": 0,
-   "ejecuciones": 5166,
+   "ejecuciones": 5167,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T17:06:12.665Z"
+   "ultima": "2026-11-25T17:11:13.040Z"
   }
  },
  "ptsDirecto": {},
@@ -9686,15 +9676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:06:33.096Z"
+   "ultimaBien": "2026-11-25T17:11:24.966Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:06:33.096Z"
+   "ultimaBien": "2026-11-25T17:11:24.966Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:06:33.096Z"
+   "ultimaBien": "2026-11-25T17:11:24.966Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9702,11 +9692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:06:33.096Z"
+   "ultimaBien": "2026-11-25T17:11:24.966Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:06:33.096Z"
+   "ultimaBien": "2026-11-25T17:11:24.966Z"
   }
  },
  "avisos": [
