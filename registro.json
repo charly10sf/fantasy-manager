@@ -5442,7 +5442,8 @@
    "5868134",
    "5868135",
    "6106394",
-   "6106243"
+   "6106243",
+   "6106421"
   ],
   "equipos": [
    "9866",
@@ -5984,7 +5985,7 @@
       0
      ],
      "champions": [
-      1,
+      2,
       0,
       0,
       0,
@@ -6062,6 +6063,19 @@
     "e": "Barcelona",
     "g": {
      "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "617465": {
+    "n": "Joy-Lance Mickels",
+    "e": "Sabah FK",
+    "g": {
+     "champions": [
       1,
       0,
       0,
@@ -6633,7 +6647,7 @@
       0
      ],
      "champions": [
-      1,
+      3,
       0,
       0,
       0,
@@ -6901,7 +6915,7 @@
       0
      ],
      "champions": [
-      2,
+      3,
       1,
       0,
       0,
@@ -9662,13 +9676,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6376,
+   "ok": 6378,
    "fallos": 0,
-   "ejecuciones": 5195,
+   "ejecuciones": 5196,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:31:16.401Z"
+   "ultima": "2026-11-25T19:36:16.373Z"
   }
  },
  "ptsDirecto": {},
@@ -9685,15 +9699,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:31:30.461Z"
+   "ultimaBien": "2026-11-25T19:36:26.633Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:31:30.461Z"
+   "ultimaBien": "2026-11-25T19:36:26.633Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:31:30.461Z"
+   "ultimaBien": "2026-11-25T19:36:26.633Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9701,11 +9715,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:31:30.461Z"
+   "ultimaBien": "2026-11-25T19:36:26.633Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:31:30.461Z"
+   "ultimaBien": "2026-11-25T19:36:26.633Z"
   }
  },
  "avisos": [
