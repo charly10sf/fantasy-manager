@@ -2229,6 +2229,13 @@
    "jornada": 14,
    "id": "2125532847100289412",
    "t": "2026-11-25T10:11:36.367Z"
+  },
+  {
+   "clave": "sancionados|14|2785",
+   "tipo": "sancionados",
+   "jornada": 14,
+   "id": "2125590764222628012",
+   "t": "2026-11-25T14:01:44.820Z"
   }
  ],
  "estados": {
@@ -4407,7 +4414,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
    "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000,
-   "SPORT|136822776": 1795604778000
+   "SPORT|136822776": 1795604778000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000
   },
   "hechos": [
    {
@@ -4460,27 +4468,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795614073323
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 24,
-   "redactar": 9,
-   "revisar": 6,
+   "clasificar": 25,
+   "redactar": 12,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169197,
-  "salida": 12890,
-  "cacheLee": 5806,
-  "cacheEscribe": 11612,
-  "dolares": 0.307149,
+  "entrada": 179264,
+  "salida": 13509,
+  "cacheLee": 21607,
+  "cacheEscribe": 20964,
+  "dolares": 0.354394,
   "reservado": 0
  },
  "recientes": {
@@ -4756,6 +4762,10 @@
    {
     "t": "2026-11-18T15:07:12.753Z",
     "texto": "🟨 Diez titulares habituales, a una amarilla de la sanción. Si ven una más en la jornada 13, se pierden la 14.\n\nOjo sobre todo con Y. Zabiri, que se perdería el Levante-Racing. Y Yoel Lago se quedaría sin el Celta-Villarreal."
+   },
+   {
+    "t": "2026-11-25T14:01:44.823Z",
+    "texto": "🟥 Riedel llegó a cinco amarillas y no estará con el Espanyol el lunes 30 de noviembre, cuando los pericos reciban al Getafe a las 21:00.\n\nEl defensa es titular habitual y lleva 3 porterías a cero en 9 partidos, así que su hueco en la zaga se nota."
    }
   ],
   "onceideal": [
@@ -9530,13 +9540,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6311,
+   "ok": 6312,
    "fallos": 0,
-   "ejecuciones": 5130,
+   "ejecuciones": 5131,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T13:56:22.325Z"
+   "ultima": "2026-11-25T14:01:13.822Z"
   }
  },
  "ptsDirecto": {},
@@ -9553,15 +9563,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:56:30.254Z"
+   "ultimaBien": "2026-11-25T14:01:44.860Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:56:30.254Z"
+   "ultimaBien": "2026-11-25T14:01:44.860Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:56:30.254Z"
+   "ultimaBien": "2026-11-25T14:01:44.860Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9569,11 +9579,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:56:30.254Z"
+   "ultimaBien": "2026-11-25T14:01:44.860Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:56:30.254Z"
+   "ultimaBien": "2026-11-25T14:01:44.860Z"
   }
  },
  "avisos": [
