@@ -3257,7 +3257,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-slovan-bratislava-betis-champions-league-5a-jornada-24-20261124_3481403.html": 1795557615000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/24/6b05fc64fc6c83a13b8b4583.html": 1795558081000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000,
+   "SPORT|136805992": 1795586435000,
+   "SPORT|136796550": 1795586435000
   },
   "hechos": [
    {
@@ -3478,7 +3480,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4435,22 +4437,24 @@
    "n": 2,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/sociedad/educacion-00468/noticia-gobierno-envia-requerimiento-comunidad-madrid-revocar-orden-pide-neutralidad-profesores-20261124134311.html": 1795590372259
+  }
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 73933,
-  "salida": 5409,
+  "entrada": 76313,
+  "salida": 5626,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.161289,
+  "dolares": 0.161636,
   "reservado": 0
  },
  "recientes": {
@@ -9500,13 +9504,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6228,
+   "ok": 6229,
    "fallos": 0,
-   "ejecuciones": 5047,
+   "ejecuciones": 5048,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T07:01:14.919Z"
+   "ultima": "2026-11-25T07:06:12.259Z"
   }
  },
  "ptsDirecto": {},
@@ -9523,15 +9527,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:01:25.395Z"
+   "ultimaBien": "2026-11-25T07:06:20.509Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:01:25.395Z"
+   "ultimaBien": "2026-11-25T07:06:20.509Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:01:25.395Z"
+   "ultimaBien": "2026-11-25T07:06:20.509Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9539,11 +9543,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:01:25.395Z"
+   "ultimaBien": "2026-11-25T07:06:20.509Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:01:25.395Z"
+   "ultimaBien": "2026-11-25T07:06:20.509Z"
   }
  },
  "avisos": [
