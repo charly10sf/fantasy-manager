@@ -35,7 +35,7 @@ export const NOVEDADES = [
     // (frases de 16 palabras, situación de una frase, rivales solo si afectan); Worker: «texto N» en el registro de cada plan,
     // `planes.pensar` (apagado no cambia nada) y la parada en «<br>». Pruebas: caso-cuentas.mjs (nueva), azar-plan con seis
     // semillas, datos.mjs y la IA de verdad (planes-corto.mjs y chat-haiku.mjs en sus ramas)
-    v: '0.8.4k', f: '2026-11-25', h: '20:15', t: 'Las cuentas del plan, cuadradas',
+    v: '0.8.4k', f: '2026-11-25', h: '20:17', t: 'Las cuentas del plan, cuadradas',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'dinero', t: 'El plan ya no te deja en negativo', x: 'Con varias ventas el mismo día, el plan podía acabar con el saldo en negativo al empezar la jornada sin avisarlo. Ahora rehace las cuentas cada vez que cambia un paso y, si hace falta otra venta, la pone.' },
       { para: 'dueño', tipo: 'arreglo', d: 'plan', t: 'Una sola cifra en cada paso', x: 'Si el mercado cambia después de pedir el plan, la puja, el saldo y lo que dice el texto se ponen al día a la vez: ya no sale una cifra en el paso y otra en la explicación. Y el porcentaje de titular es el mismo en el plan y en la ficha del jugador.' },
