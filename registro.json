@@ -3118,7 +3118,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254058/getafe-rivales-especiales-kang-in-necesita-recuperar-gol.html": 1795346088000,
    "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
@@ -4362,7 +4361,6 @@
  },
  "liga": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000,
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
    "SPORT|136725414": 1795408237000,
@@ -9519,13 +9517,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6275,
+   "ok": 6276,
    "fallos": 0,
-   "ejecuciones": 5094,
+   "ejecuciones": 5095,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T10:56:16.756Z"
+   "ultima": "2026-11-25T11:01:15.825Z"
   }
  },
  "ptsDirecto": {},
@@ -9542,15 +9540,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:56:27.374Z"
+   "ultimaBien": "2026-11-25T11:01:24.808Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:56:27.374Z"
+   "ultimaBien": "2026-11-25T11:01:24.808Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:56:27.374Z"
+   "ultimaBien": "2026-11-25T11:01:24.808Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9558,11 +9556,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:56:27.374Z"
+   "ultimaBien": "2026-11-25T11:01:24.808Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:56:27.374Z"
+   "ultimaBien": "2026-11-25T11:01:24.808Z"
   }
  },
  "avisos": [
