@@ -106,6 +106,13 @@ jobs:
       # el plan a prueba de azar: cientos de ligas removidas, y el plan (el de la app y el de la IA) tiene que salir siempre
       - name: Probar el plan con ligas al azar
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/azar-plan.mjs 60 1
+      # (25 nov, tanda 3 de la auditoría de fallos) el plan no acaba en negativo con un solo cambio de mercado (las semillas que
+      # fallaban) y las cuentas del plan: una sola puja, las cifras de la IA al día, un solo % de titular y los chollos mirados
+      - name: En negativo con un solo cambio de mercado y las cuentas del plan
+        run: |
+          AZAR_SOLO=jueves-negativo/negativo-ultimo PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/azar-plan.mjs 60 42
+          AZAR_SOLO=jueves-negativo/negativo-ultimo PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/azar-plan.mjs 60 1125
+          PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-cuentas.mjs 8 1
       # (0.8) el chat con la IA de la app de punta a punta (servidor de mentira) y los intersticiales de Google Play
       - name: Probar el chat con la IA de la app
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-chat.mjs
