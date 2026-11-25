@@ -3271,7 +3271,8 @@
    "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000
   },
   "hechos": [
    {
@@ -3474,11 +3475,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/",
+    "medio": "Cadena SER",
+    "t": 1795609225000,
+    "id": "3039",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Murillo vuelve a los entrenamientos con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4440,17 +4453,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 159056,
-  "salida": 10067,
+  "entrada": 160981,
+  "salida": 10618,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.304724,
+  "dolares": 0.305192,
   "reservado": 0
  },
  "recientes": {
@@ -9500,13 +9513,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6291,
+   "ok": 6292,
    "fallos": 0,
-   "ejecuciones": 5110,
+   "ejecuciones": 5111,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T12:16:13.963Z"
+   "ultima": "2026-11-25T12:21:23.243Z"
   }
  },
  "ptsDirecto": {},
@@ -9523,15 +9536,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:16:23.291Z"
+   "ultimaBien": "2026-11-25T12:21:36.889Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:16:23.291Z"
+   "ultimaBien": "2026-11-25T12:21:36.889Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:16:23.291Z"
+   "ultimaBien": "2026-11-25T12:21:36.889Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9539,11 +9552,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:16:23.291Z"
+   "ultimaBien": "2026-11-25T12:21:36.889Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:16:23.291Z"
+   "ultimaBien": "2026-11-25T12:21:36.889Z"
   }
  },
  "avisos": [
