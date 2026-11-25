@@ -31,7 +31,8 @@ export const VIVE_HOLA = 90 * 86400, VIVE_REGISTRO = 400 * 86400, VIVE_USO = 9 *
 export const CAMBIOS_DIA = 3;
 // lo que se suma de una vez al tiempo de uso, en segundos (los que no tienen límite mandan lo de 5 minutos, o lo que quedó)
 export const MAX_USO = 600;
-const CANALES = new Set(['github', 'play', 'web']);
+// (iOS 3, 25 nov) «ios»: la app de iOS
+const CANALES = new Set(['github', 'play', 'ios', 'web']);
 // (25 nov, Carlos: «web incluye a los de iOS… si hubiera forma de diferenciarlos de la web de un ordenador») en la web, en qué
 // aparato va: lo mismo que cuenta el embudo (canalPaso de web/js/semaforo.js, por el navegador). Desde la 0.8.4
 export const DISPOSITIVOS = new Set(['web-iphone', 'web-android', 'web-pc']);
@@ -194,8 +195,8 @@ function hola(sql, b, ahora, dia) {
     ...(String(x.canal) === 'web' && DISPOSITIVOS.has(String(x.disp)) ? { disp: String(x.disp) } : {}),
   };
   // (como en el KV: cada cuenta, como mucho una escritura por hora, salvo que cambie la versión, el equipo, la foto, lo de
-  // AlDia o el aparato, y esos cambios como mucho CAMBIOS_DIA al día; la bienvenida vista y la liga que llega tarde, siempre)
-  const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || '') || (m.disp || '') !== (nuevo.disp || ''));
+  // AlDia, el aparato o desde dónde (iOS 3: la app de iOS), y esos cambios como mucho CAMBIOS_DIA al día; la bienvenida vista y la liga que llega tarde, siempre)
+  const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || '') || (m.disp || '') !== (nuevo.disp || '') || (m.canal || '') !== nuevo.canal);
   const bvNueva = !!nuevo.bv && !(m && m.bv);
   const ligaNueva = !!nuevo.liga && !!m && !m.liga;
   const cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;

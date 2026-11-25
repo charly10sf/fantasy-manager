@@ -309,6 +309,14 @@ export function playDesfasada() {
   const min = Math.round(Number(cfg.playMin) || 0), mia = Math.round(Number(nativo.version()) || 0);
   return min > 0 && mia > 0 && mia < min;
 }
+/* (iOS 3) lo mismo en la app de iOS con «iosMin» (el número de compilación de la versión que ya ha aprobado Apple): por
+   debajo, la banda lleva a la App Store. Sin «iosMin», nada */
+export function iosDesfasada() {
+  if (!enApp || nativo.canal() !== 'ios') return false;
+  const g = LS.get('limites', null), cfg = (g && g.cfg) || {};
+  const min = Math.round(Number(cfg.iosMin) || 0), mia = Math.round(Number(nativo.version()) || 0);
+  return min > 0 && mia > 0 && mia < min;
+}
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
    de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no

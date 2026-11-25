@@ -1941,6 +1941,13 @@ button.pf-eq:active { opacity: 0.7; }
 .forzar-ic { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; align-items: center; justify-content: center; background: var(--rojo-s); color: var(--rojo-l); }
 .forzar-ic svg { width: 26px; height: 26px; }
 .forzar-b { display: grid; gap: 8px; }
+/* (iOS 3) el permiso para mandar tu liga a la IA (permiso-ia.js, solo en la app de iOS) */
+.perm-ia .forzar-c { max-width: 400px; max-height: calc(100dvh - 32px); overflow-y: auto; text-align: left; }
+.perm-ia .forzar-c > .forzar-ic, .perm-ia .forzar-c > h2 { display: flex; margin-left: auto; margin-right: auto; justify-content: center; text-align: center; }
+.perm-ia .forzar-c p { margin-bottom: 12px; }
+.perm-ia-l { margin: 0 0 12px; padding-left: 20px; color: var(--texto); line-height: 1.45; }
+.perm-ia-l li { margin-bottom: 6px; }
+.perm-ia-pol { padding: 0; border: 0; background: none; color: var(--rojo-l); font: inherit; text-decoration: underline; cursor: pointer; }
 
 /* Pregunta, arriba y en rojo (fuera de la barra de abajo desde la 0.6.3h) */
 /* (0.7.7, overhaul) Pregunta va de contorno: el rojo relleno queda para la acción principal de cada pantalla */
@@ -2437,6 +2444,9 @@ button.cr-p:active { background: var(--plano); }
    dibujados con HTML (js/portada.js). En la app de Android, solo lo de entrar. */
 .portada { background: radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
 .portada.web .pantalla { min-height: 0; padding-bottom: 28px; }
+/* (iOS 3) en la app de iOS, la franja de la hora es negra lisa (la pone la app): el degradado rojo de la pantalla de entrar
+   empieza en negro para que no haya un corte entre las dos */
+html.en-ios .portada { background: linear-gradient(var(--fondo), transparent 160px), radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
 /* en el móvil: el logo, el titular, el botón y, por último, la lista (el botón no se queda debajo de ella) */
 .portada .pant-i { display: contents; }
 .portada .pant-d { order: 2; }

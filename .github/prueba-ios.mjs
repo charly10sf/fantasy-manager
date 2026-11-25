@@ -20,6 +20,9 @@
 //      clausulazo solo se ofrece donde la hay, los bloques de anuncios de limites.json son los de iOS y en Ajustes no se
 //      ofrece trabajar con la app cerrada;
 //   7. respuesta() de una petición que no existe, compartir una imagen vacía y abrir algo que no es https no hacen nada raro.
+//   8. (iOS 3) las fotos y la versión nueva (la App Store) llegan a la app; el QR y el dictado, solo donde el iPhone los
+//      tiene; la IA, sin la clave de Google y con la ventana del permiso antes de mandar nada (qué dice, «No» y «Sí»); en la
+//      liga de ejemplo, Pregunta y Ajustes sin la clave de Google; y con «iosMin», la versión nueva en la App Store.
 // Uso: node .github/prueba-ios.mjs   (PW_MODULO: ruta del index.mjs de playwright; MOTORES: «chromium», «webkit» o los
 //      dos separados por coma, por defecto chromium y, si está instalado, webkit). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -55,7 +58,7 @@ const NATIVO = 'huella-ios-de-prueba';
 
 /* La parte nativa de mentira, dentro de la página. Lo guardado vive en sessionStorage para que aguante una recarga, que es
    lo que hace la app de verdad: guarda en el llavero y, al cargar el documento siguiente, inyecta el puente con ello. */
-const NATIVA = ({ puente, nativo, idToken, paquete, alarma }) => {
+const NATIVA = ({ puente, nativo, idToken, paquete, alarma, qr, voz }) => {
   const leerLl = () => { try { return JSON.parse(sessionStorage.getItem('fm-llavero') || '{}'); } catch (e) { return {}; } };
   const ponerLl = (m) => sessionStorage.setItem('fm-llavero', JSON.stringify(m));
   window.__msgs = []; window.__abiertos = []; window.__pedidos = []; window.__buscadas = 0;
@@ -77,19 +80,20 @@ const NATIVA = ({ puente, nativo, idToken, paquete, alarma }) => {
     },
   };
   try { Object.defineProperty(window, 'webkit', { value: { messageHandlers: { fm } }, configurable: true, writable: true }); } catch (e) { window.webkit = { messageHandlers: { fm } }; }
-  const datos = { guardado: leerLl(), version: 42, nombre: '0.0.0-prueba', nativo, web: { nativo, propia: '0.0.0-prueba', bajada: 0, archivos: 0, mirada: 0 }, via: '', avisos: false, alarma: !!alarma, privacidad: false, vista: true };
+  const datos = { guardado: leerLl(), version: 42, nombre: '0.0.0-prueba', nativo, web: { nativo, propia: '0.0.0-prueba', bajada: 0, archivos: 0, mirada: 0 }, via: '', avisos: false, alarma: !!alarma, privacidad: false, vista: true, qr: !!qr, voz: !!voz };
   // eslint-disable-next-line no-new-func
   new Function(puente.replace('/*DATOS*/{}', JSON.stringify(datos)))();
 };
 
 const DISPOSITIVO = (motor) => { const o = { ...pw.devices['iPhone 13'] }; delete o.defaultBrowserType; if (motor !== 'chromium') delete o.isMobile; return o; };
 
-async function abrir(nav, motor, { paquete = null, sesion = false, alarma = false } = {}) {
+async function abrir(nav, motor, { paquete = null, sesion = false, alarma = false, qr = false, voz = false, init = null } = {}) {
   const ctx = await nav.newContext(DISPOSITIVO(motor));
   const reg = { errores: [], fuera: [] };
   await ctx.addInitScript(() => { try { localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-sin-tema', '1'); } catch (e) { /* nada */ } });
   if (sesion) await ctx.addInitScript((t) => { try { if (!sessionStorage.getItem('fm-llavero')) sessionStorage.setItem('fm-llavero', JSON.stringify({ sesion: JSON.stringify({ token: t, idToken: t, renovar: 'r1', caduca: Date.now() + 3600e3 }) })); } catch (e) { /* nada */ } }, ID_TOKEN);
-  await ctx.addInitScript(NATIVA, { puente: PUENTE, nativo: NATIVO, idToken: ID_TOKEN, paquete, alarma });
+  if (init) await ctx.addInitScript(init);
+  await ctx.addInitScript(NATIVA, { puente: PUENTE, nativo: NATIVO, idToken: ID_TOKEN, paquete, alarma, qr, voz });
   await ctx.route(/^https?:\/\/(?!127\.0\.0\.1[:/])/, (r) => { reg.fuera.push(r.request().url().slice(0, 80)); r.abort(); });
   const p = await ctx.newPage();
   p.on('pageerror', (e) => reg.errores.push(String(e)));
@@ -162,12 +166,16 @@ async function probar(motor) {
       const n = pu.nativo;
       const antes = window.__msgs.length;
       const r = {
-        paso: se.canalPaso(), qr: n.hayQR(), fotos: n.hayFotos(), alarma: n.hayAlarma(), anuncios: n.hayAnuncios(), inter: n.hayIntersticial(), priv: n.hayPrivacidadAnuncios(), avisoPreg: n.hayAvisoPregunta(),
+        paso: se.canalPaso(), qr: n.hayQR(), fotos: n.hayFotos(), voz: n.hayVoz(), alarma: n.hayAlarma(), anuncios: n.hayAnuncios(), inter: n.hayIntersticial(), priv: n.hayPrivacidadAnuncios(), avisoPreg: n.hayAvisoPregunta(),
         permitidos: n.avisosPermitidos(), fondo: n.estadoFondo(), imagen: n.hayImagen(), hayFondo: n.hayFondo(), exactas: n.alarmasExactas(), vista: n.aLaVista(),
       };
       // lo que se llama sin existir en iOS: no puede romper
-      try { n.programarFondo(true, 0); n.fondoTerminado(); n.pedirAlarmasExactas(); n.probarAlarma(10, 'a', 'b'); n.escanearQR(); n.fotos(2); n.actualizar('https://x'); n.instalar(); r.sinRomper = true; } catch (e) { r.sinRomper = String(e); }
+      try { n.programarFondo(true, 0); n.fondoTerminado(); n.pedirAlarmasExactas(); n.probarAlarma(10, 'a', 'b'); n.escanearQR(); n.voz(); r.sinRomper = true; } catch (e) { r.sinRomper = String(e); }
       r.mensajesDeMas = window.__msgs.length - antes;
+      // (iOS 3) las fotos (con el selector del iPhone) y la versión nueva (la App Store) sí llegan a la app
+      n.fotos(2); n.fotos(9); n.actualizar('https://x'); n.instalar();
+      r.fotosMsgs = window.__msgs.filter((m) => m.a === 'fotos').map((m) => m.n).join(',');
+      r.tienda = window.__msgs.filter((m) => m.a === 'tienda').length;
       r.sinRespuesta = window.FantasyApp.respuesta('no-existe');
       r.imagenVacia = n.compartirImagen('', '');
       n.abrir('javascript:alert(1)'); n.abrir('http://sin-https.example');
@@ -178,7 +186,8 @@ async function probar(motor) {
       return r;
     });
     mira(varios.paso === 'ios', `${T} los pasos de antes de entrar salen con el canal «ios»`);
-    mira(!varios.qr && !varios.fotos && !varios.alarma && varios.fondo === null && varios.hayFondo === false, `${T} lo que aún no hay en iOS no se ofrece (QR, fotos, la alarma en un iPhone sin alarmas del sistema) ni la IA con la app cerrada`);
+    mira(!varios.qr && !varios.voz && !varios.alarma && varios.fondo === null && varios.hayFondo === false, `${T} lo que este iPhone no tiene no se ofrece (QR, dictado, la alarma en un iPhone sin alarmas del sistema) ni la IA con la app cerrada`);
+    mira(varios.fotos && varios.fotosMsgs === '2,4' && varios.tienda === 2, `${T} (iOS 3) las fotos se piden a la app (como mucho 4: ${varios.fotosMsgs}) y la versión nueva abre la App Store (${varios.tienda})`);
     mira(varios.anuncios && varios.inter && !varios.priv && varios.avisoPreg && varios.permitidos === false && varios.exactas === true && varios.vista === true, `${T} (iOS 2) hay anuncios y avisos; sin permiso de notificaciones y sin opciones de privacidad hasta que la app lo diga`);
     mira(varios.sinRomper === true && varios.mensajesDeMas === 0, `${T} llamar a lo que no existe no rompe ni manda nada a la app`);
     mira(varios.sinRespuesta === '{"s":0,"e":"sin respuesta"}' && varios.imagenVacia === false && varios.abiertos === 0, `${T} una respuesta que no existe, una imagen vacía y abrir algo que no es https no hacen nada`);
@@ -219,9 +228,6 @@ async function probar(motor) {
     mira(dos.anuncios[0].si === true && dos.anuncios[0].inter === true && /9792190459$/.test(dos.anuncios[0].b) && /9792190459$/.test(dos.anuncios[1].b) && dos.anuncios[2].toca === true && dos.anuncios[3].p === 'plan' && dos.anuncios[4] === 1 && dos.anuncios[5] === 1 && dos.mensajes === 13 && dos.zonaAntes === true, `${T} (iOS 2) los anuncios llegan a la app como en Android (zona, intersticial, apertura, bonificado, cancelar y privacidad; ${dos.mensajes} mensajes), y sin liga cargada la web no pide anuncios`);
     mira(dos.tras.join() === 'true,true,false', `${T} (iOS 2) el permiso de avisos, las opciones de privacidad y si está a la vista salen de lo que dice la app (${dos.tras.join()})`);
     mira(/2222222222$/.test(dos.bloques[0]) && /3333333333$/.test(dos.bloques[1]), `${T} (iOS 2) los bloques de anuncios de limites.json son los de iOS (${dos.bloques.join(', ')})`);
-    await p.evaluate(() => window.FantasyApp.voz());
-    await p.waitForFunction(() => /micrófono del teclado/.test([...document.querySelectorAll('.tostada')].map((t) => t.textContent).join(' ')), null, { timeout: 3000 }).catch(() => {});
-    mira(/micrófono del teclado/.test(await tostada(p)), `${T} el dictado dice que se use el micrófono del teclado`);
     mira(reg.errores.length === 0, `${T} sin errores de la página (varios)${reg.errores.length ? `: ${reg.errores[0]}` : ''}`);
     mira(reg.fuera.filter((x) => !/assets-fantasy|laliga|fonts\.g|googletag|gstatic/.test(x)).length === 0, `${T} la página no pide nada a otros sitios por su cuenta${reg.fuera.length ? ` (${reg.fuera.slice(0, 3).join(', ')})` : ''}`);
     await ctx.close();
@@ -231,6 +237,70 @@ async function probar(motor) {
     await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
     const al = await p.evaluate(async () => { const n = (await import('./js/puente.js')).nativo; const hay = n.hayAlarma(); n.probarAlarma(10.4, 'Así suena', 'texto'); return { hay, m: window.__msgs.filter((x) => x.a === 'probarAlarma')[0] }; });
     mira(al.hay === true && al.m && al.m.s === 10 && al.m.t === 'Así suena' && al.m.x === 'texto', `${T} (iOS 2) con alarmas del sistema, la alarma se ofrece y la de prueba llega a la app`);
+    await ctx.close();
+
+    /* ---- (iOS 3) el QR y el dictado, donde el iPhone los tiene; las fotos, de vuelta a la web ---- */
+    ({ ctx, p, reg } = await abrir(nav, motor, { qr: true, voz: true }));
+    await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
+    const tres = await p.evaluate(async () => {
+      const n = (await import('./js/puente.js')).nativo;
+      const r = { qr: n.hayQR(), voz: n.hayVoz(), fotos: n.hayFotos() };
+      n.escanearQR(); n.voz();
+      r.msgs = window.__msgs.filter((m) => m.a === 'escanearQR' || m.a === 'voz').map((m) => m.a).join(',');
+      return r;
+    });
+    mira(tres.qr && tres.voz && tres.fotos && tres.msgs === 'escanearQR,voz', `${T} (iOS 3) con lector de QR y dictado en el iPhone, se ofrecen y llegan a la app (${tres.msgs})`);
+    // lo que contesta la app llega como en Android: qrLeido (aquí, sin sesión, dice que hace falta entrar) y fotosApp
+    await p.evaluate(() => window.qrLeido && window.qrLeido(null, 'Sin permiso para la cámara'));
+    await p.waitForFunction(() => /Sin permiso para la cámara/.test([...document.querySelectorAll('.tostada')].map((t) => t.textContent).join(' ')), null, { timeout: 3000 }).catch(() => {});
+    mira(/Sin permiso para la cámara/.test(await tostada(p)), `${T} (iOS 3) si el QR falla, la app lo dice`);
+    mira(reg.errores.length === 0, `${T} sin errores de la página (QR y dictado)${reg.errores.length ? `: ${reg.errores[0]}` : ''}`);
+    await ctx.close();
+
+    /* ---- (iOS 3) la IA: sin clave de Google y con permiso antes de mandar nada ---- */
+    ({ ctx, p, reg } = await abrir(nav, motor, { init: () => { try { sessionStorage.setItem('fm-llavero', JSON.stringify({ gemini: 'AQ.clave-guardada' })); } catch (e) { /* nada */ } } }));
+    await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
+    const ia = await p.evaluate(async () => {
+      const m = await import('./js/ia.js');
+      const r = { clave: m.clave(), hay: m.hayClave(), pide: m.pidePermisoIA(), antes: m.permisoIA(), vale: m.iaPermitida() };
+      try { await m.charlar('hola', { demo: false }, {}, {}, () => {}, null); r.charlar = 'sin error'; } catch (e) { r.charlar = e.sinPermiso ? 'sinPermiso' : String(e.message || e); }
+      try { await m.planDelDia({ demo: false }, {}, {}); r.plan = 'sin error'; } catch (e) { r.plan = e.sinPermiso ? 'sinPermiso' : String(e.message || e); }
+      r.pedidos = window.__pedidos.filter((x) => /plan|pregunta|generativelanguage/.test(x.u)).length;
+      return r;
+    });
+    mira(ia.clave === '' && ia.hay === false, `${T} (iOS 3) la clave de Google no se usa aunque haya una guardada`);
+    mira(ia.pide && ia.antes === '' && !ia.vale && ia.charlar === 'sinPermiso' && ia.plan === 'sinPermiso' && ia.pedidos === 0, `${T} (iOS 3) sin permiso, ni la pregunta ni el plan salen hacia la IA (${ia.charlar}, ${ia.plan}, ${ia.pedidos} peticiones)`);
+    // la ventana
+    await p.evaluate(async () => { const m = await import('./js/permiso-ia.js'); window.__seguido = 0; m.pedirPermisoIA(() => { window.__seguido++; }, (si) => { window.__acabado = si; }); });
+    const vent = ((await p.textContent('#permIA').catch(() => '')) || '').replace(/\s+/g, ' ');
+    mira(/datos de tu liga/.test(vent) && /Rival 1/.test(vent) && /fotos/.test(vent) && /otra empresa/.test(vent) && /política de privacidad/.test(vent) && /plan de la app sigue saliendo/.test(vent) && !/Anthropic|Claude|Gemini|Google/.test(vent), `${T} (iOS 3) la ventana dice qué se manda, a quién (en la política) y qué pasa con «No», sin nombres de IA`);
+    await p.click('#permIA [data-perm="pol"]');
+    mira((await msgs(p, 'abrir')).some((x) => /privacidad\.html/.test(x.u)) && (await p.locator('#permIA').count()) === 1, `${T} (iOS 3) «política de privacidad» se abre fuera y la ventana sigue`);
+    await p.click('#permIA [data-perm="no"]');
+    const trasNo = await p.evaluate(async () => { const m = await import("./js/ia.js"); return { p: m.permisoIA(), seguido: window.__seguido, acabado: window.__acabado, hay: !!document.getElementById('permIA') }; });
+    mira(trasNo.p === "no" && trasNo.seguido === 0 && trasNo.acabado === false && !trasNo.hay, `${T} (iOS 3) con «No» se guarda, se cierra y no sigue (${JSON.stringify(trasNo)})`);
+    await p.evaluate(async () => { const m = await import('./js/permiso-ia.js'); m.pedirPermisoIA(() => { window.__seguido++; }); });
+    await p.click('#permIA [data-perm="si"]');
+    const tras2 = await p.evaluate(async () => { const m = await import('./js/ia.js'); return { p: m.permisoIA(), vale: m.iaPermitida(), seguido: window.__seguido }; });
+    mira(tras2.p === 'si' && tras2.vale && tras2.seguido === 1, `${T} (iOS 3) con «Sí» se guarda y sigue con lo que se iba a hacer`);
+    mira(reg.errores.length === 0, `${T} sin errores de la página (la IA)${reg.errores.length ? `: ${reg.errores[0]}` : ''}`);
+    await ctx.close();
+
+    /* ---- (iOS 3) la liga de ejemplo: Pregunta, Ajustes y el tutorial sin clave de Google ---- */
+    ({ ctx, p, reg } = await abrir(nav, motor));
+    await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
+    await p.click('[data-accion="entrarDemo"] >> visible=true');
+    await p.waitForSelector('#vista', { timeout: 25000 });
+    await p.evaluate(() => document.querySelector('[data-ir="ia"], #bPregunta')?.click());
+    await p.waitForTimeout(600);
+    const preg = ((await p.textContent('#vista').catch(() => '')) || '').replace(/\s+/g, ' ');
+    mira(/En la liga de ejemplo no se le puede preguntar/.test(preg) && !/AI Studio|clave de Google|IA de Google/.test(preg) && (await p.locator('#vista [data-accion="salirDemo"]').count()) >= 1, `${T} (iOS 3) en la liga de ejemplo, Pregunta dice que hay que entrar con tu cuenta, sin la guía de la clave de Google`);
+    await p.evaluate(() => document.querySelector('#bAjustes').click());
+    await p.waitForTimeout(600);
+    await p.evaluate(() => document.querySelectorAll('details.aj-sec').forEach((d) => { d.open = true; }));
+    const aj = ((await p.textContent('.hoja').catch(() => '')) || '').replace(/\s+/g, ' ');
+    mira(!/AI Studio|Clave de Google/.test(aj) && /App Store/.test(aj), `${T} (iOS 3) en Ajustes, nada de la clave de Google y la versión dice «App Store»`);
+    mira(reg.errores.length === 0, `${T} sin errores de la página (liga de ejemplo)${reg.errores.length ? `: ${reg.errores[0]}` : ''}`);
     await ctx.close();
 
     /* ---- 5: la versión nueva ---- */
@@ -264,6 +334,22 @@ async function probar(motor) {
     await p.waitForFunction(() => /App Store/.test([...document.querySelectorAll('.tostada')].map((t) => t.textContent).join(' ')), null, { timeout: 4000 }).catch(() => {});
     const ts = await tostada(p);
     mira(/llegan por la App Store/.test(ts) && !/Google Play/.test(ts), `${T} buscar la versión a mano dice que llega por la App Store${/App Store/.test(ts) ? '' : ` (sale: «${ts}»)`}`);
+    // (iOS 3) con «iosMin» por encima de esta compilación, la versión nueva está en la App Store y se abre su ficha
+    const des = await p.evaluate(async () => {
+      const ut = await import('./js/util.js'), li = await import('./js/limite.js');
+      const g = ut.LS.get('limites', null);
+      ut.LS.set('limites', { t: Date.now(), cfg: { ...((g && g.cfg) || {}), iosMin: 43 } });
+      const r = { des: li.iosDesfasada(), play: li.playDesfasada() };
+      const b = document.createElement('button'); b.dataset.accion = 'buscarVersion'; document.body.appendChild(b); b.click();
+      await new Promise((ok) => setTimeout(ok, 400));
+      r.tienda = window.__msgs.filter((m) => m.a === 'tienda').length;
+      r.tostada = [...document.querySelectorAll('.tostada')].map((t) => t.textContent).join(' | ');
+      ut.LS.set('limites', { t: Date.now(), cfg: { ...((g && g.cfg) || {}), iosMin: 42 } });
+      r.igual = li.iosDesfasada();
+      if (g) ut.LS.set('limites', g); else ut.LS.del('limites');
+      return r;
+    });
+    mira(des.des && !des.play && !des.igual && des.tienda === 1 && /en la App Store/.test(des.tostada), `${T} (iOS 3) con una compilación nueva aprobada («iosMin»), «Buscar nueva» abre la App Store (${JSON.stringify(des).slice(0, 160)})`);
     await ctx.close();
   } finally { await nav.close(); }
 }

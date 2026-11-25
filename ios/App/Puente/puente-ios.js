@@ -10,9 +10,10 @@
    Las respuestas de las peticiones vuelven como en Android: lo nativo deja el resultado y llama a window.__http(id), y
    la web lo recoge con respuesta(id).
 
-   Lo que aún no hay en iOS (fotos, QR, el dictado propio) y lo que no puede haber (la IA en segundo plano cada 3 horas:
-   programarFondo, estadoFondo y fondoTerminado) NO se define: puente.js mira si cada cosa existe antes de usarla (hayQR,
-   hayFotos…) y, si no, no la ofrece. La alarma del clausulazo (probarAlarma) solo se define donde la hay (iOS 26 o más). */
+   Lo que no puede haber (la IA en segundo plano cada 3 horas: programarFondo, estadoFondo y fondoTerminado) NO se define:
+   puente.js mira si cada cosa existe antes de usarla (hayQR, hayFotos, hayVoz…) y, si no, no la ofrece. Lo que depende del
+   iPhone solo se define donde lo hay: la alarma del clausulazo (probarAlarma, iOS 26 o más), el lector de QR (escanearQR,
+   los iPhone con DataScanner) y el dictado (voz, si el iPhone reconoce el español sin sacar el audio del móvil). */
 (function () {
   'use strict';
   if (window.FantasyApp || window.top !== window) return;
@@ -110,8 +111,13 @@
     hayPrivacidadAnuncios: function () { return !!estado.privacidad; },
     privacidadAnuncios: function () { enviar('privacidadAnuncios'); },
 
-    // el dictado propio llega más adelante: mientras, el del teclado del iPhone
-    voz: function () { setTimeout(function () { if (window.vozTexto) window.vozTexto(null, 'Para dictar, toca el micrófono del teclado'); }, 0); }
+    /* ---- (iOS 3) fotos, la versión nueva (Medios.swift y Principal.swift) ---- */
+    // fotos o capturas para la IA, con el selector de fotos del iPhone (sin permiso de la galería: solo lo que eliges);
+    // llegan con fotosApp([...base64], error), como en Android
+    fotos: function (max) { enviar('fotos', { n: Math.max(1, Math.min(4, +max || 1)) }); },
+    // la versión nueva de la app está en la App Store: se abre su ficha
+    actualizar: function () { enviar('tienda'); },
+    instalar: function () { enviar('tienda'); }
   };
 
   /* lo que usa la parte nativa para contestar (no se enumera: la web no lo ve al recorrer el puente) */
@@ -120,6 +126,10 @@
 
   // la alarma del clausulazo, de prueba: solo donde hay alarmas del sistema (la web la ofrece si existe)
   if (D.alarma) A.probarAlarma = function (seg, titulo, texto) { enviar('probarAlarma', { s: Math.round(+seg) || 10, t: txt(titulo), x: txt(texto) }); };
+  // (iOS 3) el QR del ordenador, con la cámara (contesta qrLeido(texto) o qrLeido(null, motivo); null solo: cancelado)
+  if (D.qr) A.escanearQR = function () { enviar('escanearQR'); };
+  // (iOS 3) dictar la pregunta: el iPhone lo pasa a texto sin sacar el audio del móvil (contesta vozTexto(texto))
+  if (D.voz) A.voz = function () { enviar('voz'); };
 
   window.FantasyApp = A;
 })();

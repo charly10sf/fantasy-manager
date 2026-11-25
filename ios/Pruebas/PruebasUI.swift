@@ -446,4 +446,31 @@ final class PruebasUI: XCTestCase {
         print("=== apertura === \(si(anuncios(s)["enPantalla"]) ? "ha salido" : "no ha salido en dos aperturas")")
         app.terminate()
     }
+
+    /// (iOS 3) las fotos para la IA (una de prueba, por el mismo camino que las del selector: girada, 1600 px por el lado
+    /// largo y en JPEG), lo que este iPhone ofrece (fotos siempre; QR y dictado, según el iPhone) y la ventana del permiso
+    /// para mandar tu liga a la IA, con «No»
+    func test9FotosYPermiso() {
+        abrirHaciendo("fotos")
+        var s = esperar("la foto de prueba en la web", 40) { (self.haz($0)["fotos"] as? [String: Any])?["w"] != nil && (self.haz($0)["fotos"] as? [String: Any])?["adjuntos"] != nil }
+        apuntar("14-fotos", ["haz": haz(s), "hayFotos": s["hayFotos"] ?? "", "hayQR": s["hayQR"] ?? "", "hayVoz": s["hayVoz"] ?? ""])
+        let f = haz(s)["fotos"] as? [String: Any] ?? [:]
+        XCTAssertEqual(f["n"] as? Int, 1, "tiene que llegar una foto: \(f)")
+        XCTAssertEqual(f["w"] as? Int, 800, "la foto, girada y reducida: 800 de ancho (\(f))")
+        XCTAssertEqual(f["h"] as? Int, 1600, "la foto, girada y reducida: 1600 de alto (\(f))")
+        XCTAssertEqual(f["adjuntos"] as? Int, 1, "la web la pone para mandarla con la pregunta: \(f)")
+        XCTAssertTrue(si(s["hayFotos"]), "las fotos se ofrecen en la app")
+        print("=== en este simulador === QR: \(s["hayQR"] ?? "") · dictado: \(s["hayVoz"] ?? "")")
+        app.terminate()
+
+        abrirHaciendo("permiso")
+        s = esperar("la ventana del permiso de la IA", 30) { self.si($0["permIA"]) }
+        Thread.sleep(forTimeInterval: 1)
+        captura("15-permiso-ia")
+        boton("No").tap()
+        s = esperar("el «No» guardado", 15) { ($0["permisoIA"] as? String) == "\"no\"" && !self.si($0["permIA"]) }
+        apuntar("15-permiso", ["haz": haz(s), "permisoIA": s["permisoIA"] ?? ""])
+        XCTAssertEqual(haz(s)["permiso"] as? Bool, false, "la ventana tiene que contestar que no")
+        app.terminate()
+    }
 }

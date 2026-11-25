@@ -4,7 +4,8 @@ import WebKit
 /// La pantalla de la app: la web de web/ en un WKWebView, servida por Esquema (fmapp://app/…), con el puente
 /// window.FantasyApp (Puente.swift y Puente/puente-ios.js). Lo mismo que Principal.java de Android.
 final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
-    static let fondo = UIColor(red: 10 / 255, green: 10 / 255, blue: 11 / 255, alpha: 1)
+    // (iOS 3) el negro de la web (--negro de app.css, #050506): así la franja de la hora no se distingue de la página
+    static let fondo = UIColor(red: 5 / 255, green: 5 / 255, blue: 6 / 255, alpha: 1)
     static let esquema = "fmapp"
     static let host = "app"
     static let inicio = "fmapp://app/index.html"
@@ -22,6 +23,8 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
     var tareaFondo: UIBackgroundTaskIdentifier = .invalid
     /// la pestaña del aviso que se ha tocado, si la página aún no ha cargado
     private var hashPendiente: String?
+    /// (iOS 3) el QR ya leído en esta vez (el lector puede ver el mismo QR varias veces seguidas)
+    var qrHecho = false
     #if DEBUG
     var sonda: UILabel?
     var sondaVentana: UIWindow?

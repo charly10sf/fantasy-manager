@@ -193,6 +193,9 @@ ok(r.s === 403, `/hola/todos de quien no es el dueño: ${r.s}`);
   ok(!fichaDe(2222) || !fichaDe(2222).disp, 'en la app de Android no se apunta el aparato');
   r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'web', disp: 'tostadora' }, 'y'.repeat(30));
   ok(!fichaDe(2222).disp, 'un aparato que no existe, tampoco');
+  // (iOS 3) la app de iOS: su canal, al momento, en la ficha y en el registro, sin aparato
+  r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'ios', app: 7, disp: 'web-iphone' }, 'y'.repeat(30));
+  ok(fichaDe(2222).canal === 'ios' && fichaDe(2222).app === 7 && !fichaDe(2222).disp && String(regDe(2222).canales).split(',').includes('ios'), `la app de iOS se apunta con su canal (${fichaDe(2222).canal}, registro: ${regDe(2222).canales})`);
   sqlQ("DELETE FROM ficha WHERE uid LIKE '7%' OR uid = '6000'"); sqlQ("DELETE FROM uso WHERE uid = '6000'");
 }
 // con 1.000 cuentas (y 7 días de uso de cada una): lo que tarda y que el Worker no vuelva a leer lo del objeto
@@ -1273,7 +1276,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   for (const p of ['ver', 'l', 'x-laliga', 'x-5xx', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
   await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
   // (21 nov) los pasos nuevos: la app vuelve sin código, y en la web llega, vuelve de LaLiga y pasa a la pantalla de inicio
-  for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
+  for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios'], ['ver', 'ios', ''], ['l', 'ios', '']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
   r = await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'borrar', k: 'play' }), tk: '', e: eE });
   ok(r.s === 400, `/embudo con un paso que no existe: ${r.s}`);
   // con más fallos de LaLiga que entradas, amarillo aunque contesten
@@ -1282,6 +1285,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
   const hoy = Object.keys(dias)[0], d = dias[hoy];
   ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 2 && d.play['x-5xx'] === 1 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  ok(d.ios && d.ios.ver === 1 && d.ios.l === 1, `/embudo cuenta la app de iOS como canal propio: ${JSON.stringify(d.ios)}`);
   ok(d.play['x-vuelve'] === 2 && d['web-iphone'].llega === 1 && d['web-iphone'].v === 1 && d['web-iphone'].inicio === 1 && d['o:x-ios'].llega === 1 && d['o:x-ios'].v === 1, `/embudo con los pasos nuevos (x-vuelve, llega, v, inicio) y la campaña con guion: ${JSON.stringify(d['o:x-ios'])}`);
   // (25 nov, tanda 5) lo pegado que no vale, con su motivo, y el enlace gastado: cuentan en su canal y no en el semáforo
   minuto();

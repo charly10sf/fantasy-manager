@@ -1857,7 +1857,8 @@ export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 've
   'm-vacio', 'm-login', 'm-app', 'm-jwt', 'm-otro', 'x-5xx', 'x-gastado']);
 /** los fallos que cuentan para el semáforo como «LaLiga falla» (los mismos que antes iban juntos en «x-laliga») */
 const EMB_FALLA = new Set(['x-laliga', 'x-5xx']);
-export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
+// (iOS 3, 25 nov) «ios»: la app de iOS (canalPaso de web/js/semaforo.js)
+export const EMB_CANALES = new Set(['play', 'ios', 'github', 'web-android', 'web-iphone', 'web-pc']);
 const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
 const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
 const horaMadrid = (t = Date.now()) => `${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t))}T${horaMadridF.format(new Date(t)).padStart(2, '0')}`;

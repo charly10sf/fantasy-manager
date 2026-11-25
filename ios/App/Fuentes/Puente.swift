@@ -21,6 +21,9 @@ extension Principal: WKScriptMessageHandler {
             "alarma": Avisos.hayAlarma,
             "privacidad": Anuncios.yo.hayPrivacidad,
             "vista": UIApplication.shared.applicationState != .background,
+            // (iOS 3) lo que depende del iPhone: si lee QR con la cámara y si dicta sin sacar el audio del móvil
+            "qr": Principal.hayQR,
+            "voz": Principal.hayVoz,
         ]
         if let l = loginPendiente { datos["login"] = l }
         guard let d = try? JSONSerialization.data(withJSONObject: datos), var j = String(data: d, encoding: .utf8) else { return base }
@@ -134,12 +137,37 @@ extension Principal: WKScriptMessageHandler {
             Anuncios.yo.cancelar()
         case "privacidadAnuncios":
             Anuncios.yo.privacidad()
+
+        /* ---- (iOS 3) fotos, QR, dictar y la App Store (Medios.swift) ---- */
+        case "fotos":
+            elegirFotos(m["n"] as? Int ?? 1)
+        case "escanearQR":
+            escanearQR()
+        case "voz":
+            escuchar()
+        case "tienda":
+            abrirTienda()
+        #if DEBUG
+        case "fotosPrueba":
+            fotosDePrueba()
+        #endif
         default:
             break
         }
     }
 
-    /* ---------------- compartir ---------------- */
+    /* ---------------- la App Store ---------------- */
+
+    static let tienda = "itms-apps://apps.apple.com/app/id6839220127"
+    static let tiendaWeb = "https://apps.apple.com/app/id6839220127"
+
+    /// la ficha de la app en la App Store (para actualizarla); si no se puede abrir la tienda, su página en Safari
+    func abrirTienda() {
+        guard let u = URL(string: Principal.tienda), let w = URL(string: Principal.tiendaWeb) else { return }
+        UIApplication.shared.open(u, options: [:]) { ok in if !ok { UIApplication.shared.open(w, options: [:], completionHandler: nil) } }
+    }
+
+        /* ---------------- compartir ---------------- */
 
     private func compartir(_ cosas: [Any]) {
         let hoja = UIActivityViewController(activityItems: cosas, applicationActivities: nil)

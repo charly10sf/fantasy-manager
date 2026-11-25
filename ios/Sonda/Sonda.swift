@@ -1,5 +1,7 @@
 #if DEBUG
+import ImageIO
 import UIKit
+import UniformTypeIdentifiers
 import UserNotifications
 import WebKit
 
@@ -14,6 +16,8 @@ import WebKit
 /// Con «-fmHaz <cosa>» la app hace además, ella sola, lo que la prueba no puede hacer desde fuera (llamar al puente):
 /// «avisos» (pide el permiso, programa una lista larga y pone un aviso), «pregunta» (una pregunta a la IA en marcha que
 /// acaba con la app fuera de la vista), «anuncio» (un bonificado), «inter» (un intersticial) y «apertura» (el de apertura).
+/// (iOS 3) «fotos» (una foto de prueba, apaisada y marcada como girada, pasa por lo mismo que las del selector y llega a la
+/// web) y «permiso» (la ventana del permiso para mandar tu liga a la IA).
 extension Principal {
     private var dePrueba: Bool { UserDefaults.standard.bool(forKey: "fmPrueba") }
 
@@ -67,7 +71,9 @@ extension Principal {
           version: (window.FantasyApp && window.FantasyApp.nombreVersion()) || '', web: window.FantasyApp ? JSON.parse(window.FantasyApp.web()) : null,
           sesion: !!(window.FantasyApp && window.FantasyApp.leer('sesion')), s: window.__sonda || null,
           hash: location.hash, haz: window.__haz || null, permitidos: !!(window.FantasyApp && window.FantasyApp.avisosPermitidos && window.FantasyApp.avisosPermitidos()),
-          aLaVista: !!(window.FantasyApp && window.FantasyApp.aLaVista && window.FantasyApp.aLaVista()), hayAlarma: !!(window.FantasyApp && window.FantasyApp.probarAlarma)
+          aLaVista: !!(window.FantasyApp && window.FantasyApp.aLaVista && window.FantasyApp.aLaVista()), hayAlarma: !!(window.FantasyApp && window.FantasyApp.probarAlarma),
+          hayFotos: !!(window.FantasyApp && window.FantasyApp.fotos), hayQR: !!(window.FantasyApp && window.FantasyApp.escanearQR), hayVoz: !!(window.FantasyApp && window.FantasyApp.voz),
+          permisoIA: (function () { try { return localStorage.getItem('fm-ia-permiso'); } catch (e) { return 'error'; } })(), permIA: !!q('#permIA')
         });
       } catch (e) { return JSON.stringify({ error: String(e) }); }
     })()
@@ -212,6 +218,23 @@ extension Principal {
         }, 3000);
         paso('pidiendo');
       });
+      if (QUE === 'fotos') cuando(lista, function () {
+        var orig = window.fotosApp;
+        window.fotosApp = function (l, e) {
+          H.fotos = { n: l.length, e: e || '', largo: l[0] ? l[0].length : 0 };
+          if (l[0]) { var im = new Image(); im.onload = function () { H.fotos.w = im.naturalWidth; H.fotos.h = im.naturalHeight; }; im.src = 'data:image/jpeg;base64,' + l[0]; }
+          window.fotosApp = orig;
+          if (orig) orig(l, e);
+          setTimeout(function () { H.fotos.adjuntos = ((window.S && window.S.adjuntos) || []).length; }, 1500);
+        };
+        window.webkit.messageHandlers.fm.postMessage({ a: 'fotosPrueba' }); paso('pedidas');
+      });
+      if (QUE === 'permiso') cuando(lista, function () {
+        import(new URL('js/permiso-ia.js', location.href).href).then(function (m) {
+          m.pedirPermisoIA(null, function (si) { H.permiso = si; });
+          paso('ventana');
+        }, function (e) { paso('error: ' + e); });
+      });
       if (QUE === 'apertura') cuando(lista, function () {
         window.aperturaVista = function (ok, m) { H.apertura = { ok: ok, motivo: m }; };
         // (unos segundos después de cargar, como cuando acaba de cargar la liga)
@@ -219,6 +242,28 @@ extension Principal {
       });
     })
     """
+
+    /// (iOS 3) una foto de prueba (3000 × 1500, marcada como girada 90°: se ve en vertical) por el mismo camino que las del
+    /// selector de fotos: tiene que llegar a la web en vertical y con 1600 px de alto
+    func fotosDePrueba() {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let w = 3000, h = 1500
+            let f = UIGraphicsImageRendererFormat()
+            f.scale = 1
+            let img = UIGraphicsImageRenderer(size: CGSize(width: w, height: h), format: f).image { c in
+                UIColor.red.setFill()
+                c.fill(CGRect(x: 0, y: 0, width: w, height: h))
+                UIColor.blue.setFill()
+                c.fill(CGRect(x: 0, y: 0, width: w / 2, height: h))
+            }
+            let d = NSMutableData()
+            guard let cg = img.cgImage, let dest = CGImageDestinationCreateWithData(d, UTType.jpeg.identifier as CFString, 1, nil) else { return }
+            CGImageDestinationAddImage(dest, cg, [kCGImagePropertyOrientation: 6] as CFDictionary)
+            CGImageDestinationFinalize(dest)
+            let b = Fotos.jpegB64(datos: d as Data)
+            DispatchQueue.main.async { self?.js(Fotos.paraLaWeb(b.map { [$0] } ?? [], mal: b == nil ? 1 : 0)) }
+        }
+    }
 
     func alCargarPruebas() {
         guard dePrueba else { return }

@@ -5,7 +5,7 @@ import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURA
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
-import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
+import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos, enAppIos, permisoIA } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
 import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
@@ -972,7 +972,7 @@ export function planAjustesHTML(S) {
   // (25 nov, hallazgo 6) la cifra, la de planesCfg (en la web y el iPhone son los de «gratisWeb»); los de más con un anuncio,
   // solo en la de Google Play
   if (pApp) {
-    const pc = planesCfg(), conAd = enApp && nativo.canal() === 'play' && pc.max > pc.gratis;
+    const pc = planesCfg(), conAd = enApp && ['play', 'ios'].includes(nativo.canal()) && pc.max > pc.gratis;
     const ord = ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo', 'noveno', 'décimo'][pc.gratis] || `${pc.gratis + 1}.º`;
     h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>${pc.gratis === 1 ? '1 plan gratis' : `${pc.gratis} planes gratis`}</b> cada día${conAd ? `. A partir del ${ord}, cada uno con un anuncio` : ''}.</span></p>`;
   }
@@ -1118,7 +1118,10 @@ export function ajustes(S) {
   // (16 nov) las preguntas del chat, también con la IA de la app: la clave queda de reserva
   const qApp = preguntasApp(enDemo()), qc = preguntasCfg(), cuQ = qApp ? cupoPreguntas() : null;
   if (qApp) c3 += fila('Preguntas a la IA', `${qc.gratis} al día, sin clave${topConAnuncio() ? `; ${qc.porAnuncio} más por anuncio, hasta ${qc.max}` : ''}${cuQ ? ` · ${cuQ.ilimitado ? 'sin límite' : cuQ.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuQ.quedan} hoy`}` : ''}`, '', 'preguntas chat ia app');
-  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  // (iOS 3) en la app de iOS no hay clave de Google; en su lugar, el permiso para mandar tu liga a la IA
+  const permIA = enAppIos() ? permisoIA() : null;
+  if (permIA !== null) c3 += fila('Mandar tu liga a la IA', permIA === 'si' ? 'Sí: para el plan con la IA y tus preguntas (los rivales, con otro nombre)' : permIA === 'no' ? 'No: no se manda nada y el plan sale sin la IA' : 'Se te pregunta antes del primer plan o pregunta', permIA === 'si' ? btnA('quitarPermisoIA', 'Apagar') : btnA('permisoIA', 'Activar', { sec: false }), 'permiso privacidad datos ia');
+  else c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
@@ -1135,12 +1138,12 @@ export function ajustes(S) {
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
-  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
+  h += sec('ia', 'ia', 'La IA', permIA !== null ? (permIA === 'no' ? 'Apagada: no se le manda nada' : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app' : 'No disponible ahora') : k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
 
   /* ---- la app ---- */
   let c4 = '';
   const ew = enApp ? nativo.estadoWeb() : null;
-  c4 += fila(`Versión ${VERSION}`, enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · al día sin reinstalar' : ''}` : 'En el navegador', btnA(enApp ? 'buscarVersion' : 'buscarWeb', 'Buscar nueva'), 'actualizar version');
+  c4 += fila(`Versión ${VERSION}`, enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : nativo.canal() === 'ios' ? ' · App Store' : ''}${ew && ew.activa ? ' · al día sin reinstalar' : ''}` : 'En el navegador', btnA(enApp ? 'buscarVersion' : 'buscarWeb', 'Buscar nueva'), 'actualizar version');
   if (estadoLimite.min != null) c4 += fila(`Hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min`, 'Se reinicia a las 00:00', '', 'tiempo limite minutos');
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
   if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
@@ -1472,7 +1475,7 @@ function hoyQ(C) {
   // desde dónde: los de 7 días por canal, en una barra. (0.8.4; Carlos, 25 nov: «si hubiera forma de diferenciar los de iOS
   // de la web de un ordenador») la web, por aparato (`disp`, lo manda la web desde la 0.8.4); «Web» a secas es quien aún
   // no ha abierto esa versión
-  const partes = [['Google Play', 'play', 'var(--rojo)'], ['iPhone', 'web-iphone', 'var(--oro)'], ['Web en ordenador', 'web-pc', 'var(--azul)'], ['Web en Android', 'web-android', 'var(--sube)'], ['Web', 'web', 'rgba(88, 166, 255, 0.45)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => dondeQ(x) === k).length })).filter((p) => p.v);
+  const partes = [['Google Play', 'play', 'var(--rojo)'], ['App de iOS', 'ios', 'var(--texto)'], ['Web en iPhone', 'web-iphone', 'var(--oro)'], ['Web en ordenador', 'web-pc', 'var(--azul)'], ['Web en Android', 'web-android', 'var(--sube)'], ['Web', 'web', 'rgba(88, 166, 255, 0.45)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => dondeQ(x) === k).length })).filter((p) => p.v);
   if (partes.length) {
     const tot = partes.reduce((t, p) => t + p.v, 0);
     h += tarjetaQ('Desde dónde', `<div class="q-pila" role="img" aria-label="${esc(partes.map((p) => `${p.t}: ${p.v}`).join(', '))}">${partes.map((p) => `<i style="flex:${p.v};background:${p.c}"></i>`).join('')}</div><div class="q-ley">${partes.map((p) => `<span><i style="background:${p.c}"></i>${esc(p.t)} <b>${p.v}</b> <small>${pctN(p.v, tot)} %</small></span>`).join('')}</div>`, { cifra: '7 días' });
@@ -1520,10 +1523,14 @@ function versionesQ(C) {
   const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, C.minPlay)).length;
   const playC = {};
   for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
+  // (iOS 3) las compilaciones de la app de iOS, igual
+  const iosC = {};
+  for (const x of v30) if (x.canal === 'ios' && x.app > 0) iosC[x.app] = (iosC[x.app] || 0) + 1;
   const pie = [
     Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
     sinMotivo ? `Atrás sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola al abrir la app)` : '',
     Object.keys(playC).length ? `App de Google Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${C.minPlay && Number(c) < C.minPlay ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${C.minPlay ? `. La web de ahora llega desde la ${C.minPlay}` : ''}` : '',
+    Object.keys(iosC).length ? `App de iOS: ${Object.entries(iosC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)} <b>${n}</b>`).join(' · ')}` : '',
   ].filter(Boolean).join('<br>');
   return tarjetaQ('Versiones', columnasSem(cols, { alto: 170, media: false }), { cifra: `<b>${porV[VERSION] || 0}</b> de ${v30.length} con la ${esc(VERSION)}`, pie });
 }
@@ -1579,7 +1586,7 @@ function invitarQ(C, Q) {
   return h;
 }
 
-const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['web', 'Web']];
+const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['ios', 'iOS'], ['web', 'Web']];
 function cuentasTabQ(S, Q, C) {
   const f = Q_FILTROS.some(([k]) => k === Q.filtro) ? Q.filtro : '';
   // las versiones, en una línea: de los que han abierto la app en 30 días, cuántos tienen la de ahora
@@ -1629,7 +1636,7 @@ export function invitacionesDatos(Q, lista, reg, ahora) {
  */
 const MAL_PEGADO = [['vacio', 'nada'], ['login', 'la página de entrar'], ['app', 'la de la app'], ['jwt', 'sin el código'], ['otro', 'otra cosa']];
 const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
-const EMB_CANALES = [['App de Android', 'play'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
+const EMB_CANALES = [['App de Android', 'play'], ['App de iOS', 'ios'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
 export function embudoDatos(E, ahora) {
   const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
   const dias = Object.entries((E && E.dias) || {}).filter(([d]) => ult7.has(d)).map(([, g]) => g || {});
@@ -1688,7 +1695,7 @@ function cuentasQ(S, lista, ahora, minPlay) {
   }
   return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
 }
-const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK', 'web-iphone': 'iPhone', 'web-pc': 'Ordenador', 'web-android': 'Web Android' };
+const DONDE_Q = { web: 'Web', play: 'Play', ios: 'iOS', github: 'APK', 'web-iphone': 'iPhone', 'web-pc': 'Ordenador', 'web-android': 'Web Android' };
 /** desde dónde entra una cuenta: play, github o, en la web, el aparato (web-iphone, web-pc, web-android; web si no se sabe) */
 function dondeQ(x) { const c = x.canal || 'web'; return c === 'web' && x.disp ? x.disp : c; }
 function filaQuien(nombre, equipo, x, ahora, minPlay) {
@@ -1700,7 +1707,7 @@ function filaQuien(nombre, equipo, x, ahora, minPlay) {
     v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
-  const marcas = [diaDe(x.ultima) === diaDe(ahora) || x.segHoy > 0 ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
+  const marcas = [diaDe(x.ultima) === diaDe(ahora) || x.segHoy > 0 ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', x.canal === 'ios' ? 'ios' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
   return `<div class="quien-f ${esta ? 'dentro' : 'si'}" data-b="${esc(norm(`${nombre} ${equipo || ''} ${x.equipo || ''} ${x.nombre || ''}`))}" data-f="${marcas}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${minQ(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 
@@ -1736,9 +1743,9 @@ export function textoDiagnostico(S) {
   const L = [
     `Fantasy Manager ${VERSION} · compilación ${nativo.version()} · ${enApp ? `app (${nativo.canal()})` : enWeb ? 'web' : 'navegador sin servidor'}${enDemo() ? ' · DEMO' : ''}`,
     `Cuenta de LaLiga: ${(D && D.yo && D.yo.userId) || (avisosGuardados().yo) || '¿?'}`,
-    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; return `Web al día sola: APK con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : 'usa la del APK'} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte Android ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
+    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; const ios = nativo.canal() === 'ios'; return `Web al día sola: ${ios ? 'app' : 'APK'} con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : (ios ? 'usa la de la app' : 'usa la del APK')} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte ${ios ? 'iOS' : 'Android'} ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
     // (21 nov) por dónde entra la app en LaLiga: con Auth Tab Android no pregunta «Abrir con»
-    ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
+    ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.canal() === 'ios' ? 'por la ventana de inicio de sesión del iPhone' : nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'sesion-ios' ? 'por la ventana del iPhone' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
     // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
     (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,

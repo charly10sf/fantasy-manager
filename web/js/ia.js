@@ -34,7 +34,16 @@ function vuelveCupo() {
   return cuando(Date.now() + 864e5 - pasado);
 }
 
-export const clave = () => leer('gemini') || '';
+/* (iOS 3, 25 nov) En la app de iOS la IA es solo la de la app: no hay clave de Google (ni se pide ni se usa, aunque quedara
+   una guardada), y nada se manda a la IA sin el permiso de quien la usa (norma 5.1.2(i) de Apple: datos personales a una
+   IA de otra empresa, con permiso expreso antes). El permiso es de ese iPhone (LS «ia-permiso»: 'si' | 'no'; sin nada,
+   aún no ha contestado). Fuera de la app de iOS no cambia nada: ni permiso ni clave distinta */
+export const enAppIos = () => enApp && nativo.canal() === 'ios';
+export const pidePermisoIA = () => enAppIos();
+export const permisoIA = () => (pidePermisoIA() ? LS.get('ia-permiso', '') || '' : 'si');
+export const iaPermitida = () => permisoIA() === 'si';
+export const ponerPermisoIA = (si) => LS.set('ia-permiso', si ? 'si' : 'no');
+export const clave = () => (enAppIos() ? '' : leer('gemini') || '');
 export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); LS.del('ia-pausa'); };
 export const hayClave = () => !!clave();
 // web: la búsqueda en Google en el chat (solo cuando hace falta). (webPlan, la del plan con tu clave, solo la usaba el plan
@@ -1707,6 +1716,8 @@ export function aplicarCorto(json, R, D, M, c) {
 export const planesApp = (demo) => !demo && planesCfg().on;
 /** ¿se puede pedir un plan con IA? (la de la app o tu clave) */
 export const puedePlanIA = (demo) => planesApp(demo) || hayClave();
+/** ¿puede pedirse un plan con IA SOLO, sin que lo pida la persona? (en la app de iOS, solo con el permiso ya dado) */
+export const planIASolo = (demo) => puedePlanIA(demo) && iaPermitida();
 /** lo último que ha dicho el Worker del cupo de hoy ({ usados, gratis, max, extras, quedan, masConAnuncio }) o null */
 export function cupoPlanes() {
   const g = LS.get('planes-cupo', null);
@@ -1905,6 +1916,7 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
  * tenía interruptor en Ajustes. Lo que la IA escribe a mano sigue pasando por cuadrarPlan (los planes guardados de antes).
  */
 export async function planDelDia(D, M, c, op = {}) {
+  if (!iaPermitida()) throw new ErrorIA('Sin tu permiso no se manda nada a la IA. Tienes el plan de la app; si quieres el de la IA, actívala en Ajustes → La IA.', 0, { sinPermiso: true });
   let P = null;
   if (planesApp(op.demo)) {
     try { P = await planCorto(D, M, c, { ...op, porApp: true }); } catch (e) {
@@ -4272,6 +4284,7 @@ export const resumenAviso = (t) => String(t || '').replace(/\n\n\*\*Revisado por
 const acabadaApp = (ok, t) => { if (enApp) nativo.preguntaAcabada(ok, ok ? resumenAviso(t) : String(t || '')); };
 
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null, { extra = false, dicho = [] } = {}) {
+  if (!iaPermitida()) throw new ErrorIA('Sin tu permiso no se manda nada a la IA. Actívala en Ajustes → La IA.', 0, { sinPermiso: true });
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
   // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
@@ -4313,7 +4326,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
  */
 export async function reanudarPregunta(D, M, c, { signal, alPaso } = {}) {
   const p = preguntaPendiente();
-  if (!p || !preguntasApp(!!D.demo)) return null;
+  if (!p || !preguntasApp(!!D.demo) || !iaPermitida()) return null;
   const hist = conversacion();
   const ult = hist[hist.length - 1];
   if (!ult || ult.r !== 'yo' || (ult.t || '') !== (p.t || '')) { LS.del('preg-rid'); return null; }

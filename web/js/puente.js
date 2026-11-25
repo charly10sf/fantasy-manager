@@ -299,7 +299,9 @@ export const nativo = {
   fondoTerminado: () => llamar('fondoTerminado'),
   // preguntar con la voz: en la app, el dictado de Google; en el navegador, el reconocimiento de voz de Chrome si lo hay
   voz: () => llamar('voz'),
-  hayVoz: () => !!N || 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+  // (iOS 3) en la app, si su parte nativa tiene dictado (la de Android siempre; la de iOS, solo si el iPhone reconoce la voz
+  // sin sacar el audio del móvil: si no, se dicta con el micrófono del teclado)
+  hayVoz: () => (N ? typeof N.voz === 'function' : 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window),
   // fotos y capturas para la IA: en la app, el selector de fotos de Android (las devuelve con fotosApp())
   hayFotos: () => !!N && typeof N.fotos === 'function',
   // sacar el teclado (si el WebView se queda sin foco al volver de otra pantalla, Android no lo saca solo)

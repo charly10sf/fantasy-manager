@@ -33,7 +33,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Para hacer una foto y adjuntarla a tu pregunta o a un aviso de fallo.</string>
+	<string>Para leer el QR del ordenador y abrir allí tu cuenta, y para hacer una foto y adjuntarla a tu pregunta o a un aviso de fallo.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Para dictar tu pregunta a la IA. Se pasa a texto en el propio iPhone: el audio no sale del móvil.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Para pasar a texto lo que dictas. Se hace en el propio iPhone: el audio no sale del móvil.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Para que los anuncios que ves tengan más que ver contigo. Si dices que no, seguirás viendo anuncios, pero menos a tu medida.</string>
 	<key>NSAlarmKitUsageDescription</key>
