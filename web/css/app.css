@@ -3421,6 +3421,14 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .inv-premios li{margin:4px 0}
 .inv-cod{display:flex;align-items:center;gap:8px;justify-content:center;font-size:15px}
 .inv-cod b{letter-spacing:2px;font-size:18px}
+/* (25 nov) el código de quien invita, grande, y la ventana de quien llega invitado */
+.inv-tucod{display:flex;flex-direction:column;align-items:center;gap:4px;margin:12px 0;padding:14px 12px;border-radius:12px;border:1px dashed var(--plano3);text-align:center}
+.inv-tucod>span{color:var(--texto-2);font-size:13px}
+.inv-tucod b{font:700 30px var(--cond);letter-spacing:6px;color:var(--texto)}
+.inv-tucod-b{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.codigo-in.grande input{padding:16px 14px;font-size:26px;letter-spacing:8px}
+.invitado .btn.ancho{margin-top:10px}
+.invitado .codigo-in{margin-top:12px}
 .inv-cuenta{display:flex;flex-direction:column;gap:2px;margin:12px 0;padding:10px 12px;border-radius:12px;background:var(--e2)}
 .inv-cuenta span{color:var(--texto-2);font-size:13px}
 .inv-canjear,.inv-elegir{display:flex;flex-direction:column;gap:6px;margin:10px 0 14px;padding:12px;border-radius:12px;border:1px solid var(--linea)}

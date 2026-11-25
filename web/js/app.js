@@ -770,6 +770,13 @@ async function codigoDeSesion() {
   return j;
 }
 /** (21 nov) la variante c de invitar: una tira fina debajo de la barra, en todas las pestañas */
+/* (25 nov) quien acaba de entrar y aún puede poner el código de quien le invitó: una banda arriba hasta que lo pone, dice
+   que nadie o la cierra (la ventana sola sale una vez y se cerraba sin leerla; desde Google Play el enlace no trae el código) */
+const bandaInvitado = () => {
+  const uid = uidYo();
+  if (!uid || enDemo() || LS.get('inv-banda-cerrada', 0) || !puedeCanjear(uid) || codigoPendiente()) return '';
+  return `<div class="banda banda-invitado">${icono('estrella')}<span><b>¿Te ha invitado un amigo?</b> Pon su código.</span><button data-accion="ponerCodigo">Poner código</button><button class="banda-x" data-accion="cerrarInvitado" aria-label="Nadie me ha invitado">${icono('cerrar')}</button></div>`;
+};
 const bandaInvita = () => (LS.get('var-inv', '') === 'c' ? `<div class="banda banda-inv">${icono('estrella')}<span><b>Invita a un amigo</b> y ve el dinero de 2 rivales por cada uno que entre.</span><button data-accion="invitarAmigo">Invitar</button></div>` : '');
 const enIPhoneWeb = () => !enApp && movilDe() === 'iphone';
 const bandaInicio = () => {
@@ -1154,6 +1161,9 @@ function pintarSup() {
    de los rivales». Una vez (por móvil); no en la liga de ejemplo, ni con el tutorial o las novedades delante */
 const apodosToca = () => !LS.get('apodos-visto', null) && !!S.D && !enDemo() && tourVisto() && !tourAbierto() && !document.body.classList.contains('con-nv');
 function marcarApodos() { const b = $('#bAjustes'); if (b) b.classList.toggle('brilla', apodosToca()); }
+/** las bandas de arriba (también sola, sin repintar la pestaña: (25 nov) al poner el código de una invitación) */
+const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
@@ -1175,7 +1185,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  pintarBanda();
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -1931,15 +1941,17 @@ async function invitarSiToca({ ya = false } = {}) {
     // (sobre todo para quien la baja de Google Play, a quien no le llega el enlace; Carlos, 19 nov)
     LS.set('inv-preguntado', Date.now());
     S.inv = {};
-    hoja('invitar');
+    hoja('invitado');
   }
   if (r.nuevos > 0) avisoAmigoInv(r.nuevos);
   const despues = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
   if (despues !== antes) {
     window.dispatchEvent(new Event('limite-cambia'));
     cerrarTopA();
-    if (S.M && !S.hoja) pintar(); else if (S.tipoHoja && ['invitar', 'ajustes'].includes(S.tipoHoja[0])) repintarHoja();
+    if (S.M && !S.hoja) pintar(); else if (S.tipoHoja && ['invitar', 'invitado', 'ajustes'].includes(S.tipoHoja[0])) repintarHoja();
   }
+  // (25 nov) la banda de «¿Te ha invitado un amigo?» depende de lo que acaba de decir el servidor
+  pintarBanda();
 }
 /** «Tu amigo ya ha entrado: elige 2 rivales, tienes 24 h» (en la app; con ella cerrada, la notificación) */
 function avisoAmigoInv(n) {
@@ -3041,7 +3053,7 @@ function bloqHTML(arg) {
         ${Hj.botonInvitarTop(clave)}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`;
 }
-const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -4289,6 +4301,11 @@ document.addEventListener('click', async (ev) => {
         .then(() => { if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja(); });
       break;
     }
+    // (25 nov) quien llega: la ventana del código (banda de arriba y Ajustes), «nadie» y cerrar la banda
+    case 'ponerCodigo': cerrarHoja(true); S.inv = { ...(S.inv || {}), errorCod: null }; hoja('invitado'); break;
+    case 'invitadoNo': LS.set('inv-banda-cerrada', Date.now()); cerrarHoja(); pintarBanda(); break;
+    case 'cerrarInvitado': { LS.set('inv-banda-cerrada', Date.now()); const b = $('.banda-invitado'); if (b) b.remove(); break; }
+    case 'copiarCod': { const e = estadoInv(uidYo()); if (e && e.cod) copiarY(e.cod, 'Código copiado'); break; }
     case 'compartirInv': case 'copiarInv': {
       const uid = uidYo();
       if (!uid) break;
@@ -4311,12 +4328,14 @@ document.addEventListener('click', async (ev) => {
       const cod = limpiarCod(inp ? inp.value : '');
       S.inv = { ...(S.inv || {}), cod, errorCod: null };
       if (!uid) break;
-      if (cod.length !== 6) { S.inv.errorCod = 'Son 6 letras y números.'; repintarHoja(); break; }
+      if (cod.length !== 6) { S.inv.errorCod = cod ? 'Son 6 letras y números.' : 'Escribe el código que te ha pasado tu amigo.'; repintarHoja(); break; }
       S.inv.canjeando = true; repintarHoja();
       const x = await canjear(uid, cod, liga);
       S.inv.canjeando = false;
       if (x.ok) { S.inv.cod = ''; tostada('Listo: has entrado con la invitación de tu amigo', 5000); } else S.inv.errorCod = x.e || 'No ha valido. Vuelve a probar en un rato.';
-      if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja();
+      if (x.ok && S.tipoHoja && S.tipoHoja[0] === 'invitado') cerrarHoja();
+      else if (S.tipoHoja && ['invitar', 'invitado'].includes(S.tipoHoja[0])) repintarHoja();
+      pintarBanda();
       break;
     }
     case 'invElegir': {

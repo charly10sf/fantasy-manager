@@ -129,8 +129,15 @@ export const puedeCanjear = (uid) => { const e = estadoInv(uid); return !!(e && 
 
 /* ---------- lo que se comparte ---------- */
 export const enlaceInv = (cod) => `${DOMINIO}?inv=${encodeURIComponent(cod)}`;
-/** el mensaje para WhatsApp: habla de la app; al amigo no se le promete nada (Carlos, 19 nov) */
-export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis. Pruébala: ${enlaceInv(cod)} (si la descargas de Google Play, al entrar mete mi código: ${cod})`;
+/** el mensaje para WhatsApp: habla de la app; al amigo no se le promete nada (Carlos, 19 nov). (25 nov) El código, en su
+    propia línea y en negrita de WhatsApp (*…*), con lo que tiene que hacer con él: casi todos la instalan desde Google
+    Play, que pierde el enlace, y el código hay que escribirlo a mano al entrar */
+export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis.
+
+Descárgala aquí: ${enlaceInv(cod)}
+
+Mi código de invitación: *${cod}*
+Cuando entres con tu cuenta de LaLiga, la app te pregunta si te ha invitado alguien: pon ese código.`;
 /** para repintar al cerrarse algo: la hora más cercana a la que se cierra un rival o un premio (o 0) */
 export function proximoCierreInv(ahora = Date.now()) {
   const e = est0();

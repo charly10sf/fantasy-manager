@@ -877,7 +877,9 @@ export function invitarHTML(S) {
   h += `<p>Pásale la app a quien juegue a LaLiga Fantasy. Ganas tú:</p>${premiosInvTxt(c)}
     <p class="t2 peq">Cuentan las cuentas que empiezan a usar la app con tu enlace o tu código.</p>`;
   h += `<button class="btn ancho" data-accion="compartirInv"${I.compartiendo ? ' disabled' : ''}>${icono('enviar')}${I.compartiendo ? 'Un momento…' : 'Invita a un amigo'}</button>`;
-  if (e.cod) h += `<p class="inv-cod">Tu código: <b>${esc(e.cod)}</b> <button class="b-ico" data-accion="copiarInv" aria-label="Copiar el enlace">${icono('copiar')}</button></p>`;
+  // (25 nov) el código, grande y con lo que tiene que hacer el amigo con él (desde Google Play el enlace no llega)
+  if (e.cod) h += `<div class="inv-tucod"><span>Tu código</span><b>${esc(e.cod)}</b><span>Tu amigo lo pone al entrar en la app, cuando le pregunta si le ha invitado alguien.</span>
+    <div class="inv-tucod-b"><button class="btn chico sec" data-accion="copiarCod">${icono('copiar')}Copiar código</button><button class="btn chico sec" data-accion="copiarInv">${icono('copiar')}Copiar enlace</button></div></div>`;
   // el contador y los premios que tienes
   const ct = contadorTxt(e);
   h += `<div class="inv-cuenta"><b>${e.entran === 1 ? '1 amigo ha entrado' : `${e.entran || 0} amigos han entrado`}</b>${e.entran ? `<span>${e.cuentan === 1 ? '1 ha vuelto otro día' : `${e.cuentan || 0} han vuelto otro día`}</span>` : ''}${ct ? `<span>${esc(ct)}</span>` : ''}</div>`;
@@ -905,6 +907,21 @@ export function invitarHTML(S) {
   }
   if (I.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(I.error)}</div></div>`;
   return `${h}</div>`;
+}
+/** (25 nov) la ventana para quien acaba de entrar: solo meter el código de quien le invitó, sin lo de invitar a otros
+    (antes era la misma de «Invita a un amigo» con el código arriba, y se cerraba sin leerla). Sale sola una vez
+    (`invitarSiToca`), desde la banda de arriba y desde Ajustes, mientras la cuenta puede canjear */
+export function invitadoHTML(S) {
+  const I = S.inv || {}, uid = S.D && S.D.yo && S.D.yo.userId, e = estadoInv(uid);
+  const cab = `<div class="hoja-cab"><h2>¿Te ha invitado un amigo?</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  if (!uid || !puedeCanjear(uid)) return `${cab}<div class="inv"><p>Ya está: esta cuenta no tiene que poner ningún código.</p><button class="btn ancho" data-accion="cerrarHoja">Vale</button></div>`;
+  return `${cab}<div class="inv invitado">
+    <p>Si alguien te ha pasado Fantasy Manager, pon su código. Son 6 letras y números y te lo habrá mandado con el enlace.</p>
+    <div class="codigo-in grande"><input id="invCod" maxlength="8" placeholder="ABC234" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="canjearInv" value="${esc(I.cod || '')}" aria-label="Código de quien te invita"></div>
+    ${I.errorCod ? `<p class="codigo-err" role="alert">${esc(I.errorCod)}</p>` : ''}
+    <button class="btn ancho" data-accion="canjearInv"${I.canjeando ? ' disabled' : ''}>${I.canjeando ? 'Un momento…' : 'Listo'}</button>
+    <p class="t2 peq">A ti no te cuesta nada y a tu amigo le das una ayuda en su liga.${e && e.canjearHasta ? ` Puedes ponerlo hasta el ${esc(cuando(e.canjearHasta, { hora: false }))}.` : ''}</p>
+    <button class="btn ancho sec" data-accion="invitadoNo">Nadie, la he encontrado yo</button></div>`;
 }
 
 /* ================= AJUSTES ================= */
@@ -1023,7 +1040,7 @@ export function ajustes(S) {
   // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
   if (!enDemo() && ses && invitarOn()) {
     const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
-    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Mete el código de quien te pasó la app', btnA('invitarAmigo', 'Meter código', { sec: false }), 'codigo invitacion amigo');
+    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Pon el código de quien te pasó la app', btnA('ponerCodigo', 'Poner código', { sec: false }), 'codigo invitacion amigo');
     c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
   }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
