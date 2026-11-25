@@ -113,7 +113,8 @@ jobs:
           security unlock-keychain -p "$PASE" "$KC"
           for c in AppleWWDRCAG3 AppleWWDRCAG4; do curl -fsSL -o "$K/$c.cer" "https://www.apple.com/certificateauthority/$c.cer" && security import "$K/$c.cer" -k "$KC" -T /usr/bin/codesign >/dev/null || true; done
           security import "$K/c.p12" -k "$KC" -P "$(cat "$K/c.p12.clave")" -T /usr/bin/codesign -T /usr/bin/security
-          rm -f "$K/c.p12" "$K/c.p12.clave"
+          SERIE=$(cat "$K/c.p12.serie")
+          rm -f "$K/c.p12" "$K/c.p12.clave" "$K/c.p12.serie"
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$PASE" "$KC" > /dev/null
           security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
           security find-identity -v -p codesigning "$KC"

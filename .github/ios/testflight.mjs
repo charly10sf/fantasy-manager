@@ -306,7 +306,7 @@ function p12(ruta) {
   fs.writeFileSync(ruta, Buffer.from(d.p12, 'base64'), { mode: 0o600 });
   fs.writeFileSync(ruta + '.clave', d.clave, { mode: 0o600 });
   console.log(`certificado ${d.id}, serie ${d.serie}, caduca ${d.caduca}`);
-  if (process.env.GITHUB_ENV) fs.appendFileSync(process.env.GITHUB_ENV, `SERIE=${d.serie}\n`);
+  fs.writeFileSync(ruta + '.serie', String(d.serie));
   const dias = (Date.parse(d.caduca) - Date.now()) / 864e5;
   if (dias < 30) console.log(`::warning::El certificado de distribución caduca en ${Math.round(dias)} días: renovarlo con [certificado]`);
 }
