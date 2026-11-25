@@ -3118,7 +3118,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
    "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000,
@@ -3275,20 +3274,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795349568000,
-    "id": "2562",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Marc Pubill no estará disponible ante el Getafe",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/",
     "medio": "AS",
@@ -9515,13 +9500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6290,
+   "ok": 6291,
    "fallos": 0,
-   "ejecuciones": 5109,
+   "ejecuciones": 5110,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T12:11:13.432Z"
+   "ultima": "2026-11-25T12:16:13.963Z"
   }
  },
  "ptsDirecto": {},
@@ -9538,15 +9523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:11:24.063Z"
+   "ultimaBien": "2026-11-25T12:16:23.291Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:11:24.063Z"
+   "ultimaBien": "2026-11-25T12:16:23.291Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:11:24.063Z"
+   "ultimaBien": "2026-11-25T12:16:23.291Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9554,11 +9539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:11:24.063Z"
+   "ultimaBien": "2026-11-25T12:16:23.291Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:11:24.063Z"
+   "ultimaBien": "2026-11-25T12:16:23.291Z"
   }
  },
  "avisos": [
