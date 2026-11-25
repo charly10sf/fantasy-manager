@@ -3133,7 +3133,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dudas-pedro-martin-1-2-barcelona-corner-protestado-villarreal-creo-toca-gulacsi-hernandez-hernandez-tendria-haber-mandado-parar-revisarlo-20261122_3479822.html": 1795361860000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254136/pedri-mvp-autocritico-hay-trabajar-no-repitan-inicios-asi.html": 1795361622000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
@@ -4505,7 +4504,8 @@
    "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000,
    "SPORT|136822776": 1795604778000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000
   },
   "hechos": [
    {
@@ -4558,7 +4558,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -4566,17 +4566,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 13,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 200320,
-  "salida": 15714,
+  "entrada": 202024,
+  "salida": 15857,
   "cacheLee": 21607,
   "cacheEscribe": 23867,
-  "dolares": 0.386446,
+  "dolares": 0.386688,
   "reservado": 0
  },
  "recientes": {
@@ -9629,13 +9629,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6331,
+   "ok": 6332,
    "fallos": 0,
-   "ejecuciones": 5150,
+   "ejecuciones": 5151,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:31:15.107Z"
+   "ultima": "2026-11-25T15:36:13.214Z"
   }
  },
  "ptsDirecto": {},
@@ -9652,15 +9652,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:31:25.814Z"
+   "ultimaBien": "2026-11-25T15:36:24.998Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:31:25.814Z"
+   "ultimaBien": "2026-11-25T15:36:24.998Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:31:25.814Z"
+   "ultimaBien": "2026-11-25T15:36:24.998Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9668,11 +9668,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:31:25.814Z"
+   "ultimaBien": "2026-11-25T15:36:24.998Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:31:25.814Z"
+   "ultimaBien": "2026-11-25T15:36:24.998Z"
   }
  },
  "avisos": [
