@@ -3269,7 +3269,8 @@
    "SPORT|135681299": 1795590000000,
    "SPORT|136822855": 1795590021000,
    "SPORT|136822696": 1795591895000,
-   "SPORT|136823365": 1795593138000
+   "SPORT|136823365": 1795593138000,
+   "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000
   },
   "hechos": [
    {
@@ -3490,7 +3491,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -4451,17 +4452,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 116677,
-  "salida": 7367,
+  "entrada": 118678,
+  "salida": 7787,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.228962,
+  "dolares": 0.229372,
   "reservado": 0
  },
  "recientes": {
@@ -9511,13 +9512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6260,
+   "ok": 6261,
    "fallos": 0,
-   "ejecuciones": 5079,
+   "ejecuciones": 5080,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T09:41:12.531Z"
+   "ultima": "2026-11-25T09:46:18.691Z"
   }
  },
  "ptsDirecto": {},
@@ -9534,15 +9535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:41:21.606Z"
+   "ultimaBien": "2026-11-25T09:46:32.610Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:41:21.606Z"
+   "ultimaBien": "2026-11-25T09:46:32.610Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:41:21.606Z"
+   "ultimaBien": "2026-11-25T09:46:32.610Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9550,11 +9551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:41:21.606Z"
+   "ultimaBien": "2026-11-25T09:46:32.610Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:41:21.606Z"
+   "ultimaBien": "2026-11-25T09:46:32.610Z"
   }
  },
  "avisos": [
