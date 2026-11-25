@@ -9,7 +9,9 @@
  *        de: quién escribió el último ('u' quien lo mandó, 'd' Fantasy Manager); ult: cuándo; n: cuántos mensajes;
  *        vu / vd: hasta cuándo lo ha visto quien lo mandó / Fantasy Manager; kv: copiado del KV (sus capturas pueden
  *        estar aún allí)
- *   msg  (hilo, n, de, t, texto, caps, por)
+ *   msg  (hilo, n, de, t, texto, caps, por, aut, autn)
+ *        aut / autn: (0.8.4c) la cuenta y el nombre de quien contestó desde la app (el dueño o quien ayuda); vacíos en los
+ *        de quien lo mandó, en los de la Action y en los de antes. Solo lo ven el dueño y quien ayuda, nunca quien lo mandó
  *   cap  (hilo, m, i, img)          una captura por fila (una fila no pasa de 2 MB; cada una, 350 KB como mucho)
  *   cupo (uid, dia, hilos, msgs, caps)
  *   meta (k, v)                     la limpieza del día, los bytes de capturas y la mudanza desde el KV
@@ -31,11 +33,19 @@ const firma = (x) => { const p = corta(x, 40).trim(); return !p || /claude/i.tes
 const TABLAS = [
   "CREATE TABLE IF NOT EXISTS hilo (id TEXT PRIMARY KEY, uid TEXT NOT NULL, t INTEGER NOT NULL, ult INTEGER NOT NULL, de TEXT NOT NULL, n INTEGER NOT NULL, vu INTEGER NOT NULL DEFAULT 0, vd INTEGER NOT NULL DEFAULT 0, quien TEXT NOT NULL DEFAULT '', equipo TEXT NOT NULL DEFAULT '', liga TEXT NOT NULL DEFAULT '', app TEXT NOT NULL DEFAULT '', diag TEXT NOT NULL DEFAULT '', kv INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID",
   'CREATE INDEX IF NOT EXISTS hilo_uid ON hilo (uid)',
-  "CREATE TABLE IF NOT EXISTS msg (hilo TEXT NOT NULL, n INTEGER NOT NULL, de TEXT NOT NULL, t INTEGER NOT NULL, texto TEXT NOT NULL, caps INTEGER NOT NULL DEFAULT 0, por TEXT NOT NULL DEFAULT '', PRIMARY KEY (hilo, n)) WITHOUT ROWID",
+  "CREATE TABLE IF NOT EXISTS msg (hilo TEXT NOT NULL, n INTEGER NOT NULL, de TEXT NOT NULL, t INTEGER NOT NULL, texto TEXT NOT NULL, caps INTEGER NOT NULL DEFAULT 0, por TEXT NOT NULL DEFAULT '', aut TEXT NOT NULL DEFAULT '', autn TEXT NOT NULL DEFAULT '', PRIMARY KEY (hilo, n)) WITHOUT ROWID",
   'CREATE TABLE IF NOT EXISTS cap (hilo TEXT NOT NULL, m INTEGER NOT NULL, i INTEGER NOT NULL, img TEXT NOT NULL, PRIMARY KEY (hilo, m, i)) WITHOUT ROWID',
   'CREATE TABLE IF NOT EXISTS cupo (uid TEXT NOT NULL, dia TEXT NOT NULL, hilos INTEGER NOT NULL DEFAULT 0, msgs INTEGER NOT NULL DEFAULT 0, caps INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (uid, dia)) WITHOUT ROWID',
   'CREATE TABLE IF NOT EXISTS meta (k TEXT PRIMARY KEY, v TEXT NOT NULL) WITHOUT ROWID',
 ];
+// (0.8.4c) las columnas que se añaden a una tabla que ya existía: se mira cuáles tiene y se añaden las que faltan (si no se
+// puede mirar, se intenta y, si ya estaban, el ALTER falla y no pasa nada)
+const COLUMNAS = [['aut', "ALTER TABLE msg ADD COLUMN aut TEXT NOT NULL DEFAULT ''"], ['autn', "ALTER TABLE msg ADD COLUMN autn TEXT NOT NULL DEFAULT ''"]];
+function ponerColumnas(sql) {
+  let hay = null;
+  try { hay = new Set([...sql.exec('PRAGMA table_info(msg)')].map((c) => c.name)); } catch (e) { hay = null; }
+  for (const [col, q] of COLUMNAS) if (!hay || !hay.has(col)) { try { sql.exec(q); } catch (e) { /* ya estaba */ } }
+}
 const fila = (cur) => { for (const x of cur) return x; return null; };
 const escribir = (sql, q, ...a) => { const c = sql.exec(q, ...a); c.toArray(); return c.rowsWritten || 0; };
 const leerMeta = (sql, k) => { const x = fila(sql.exec('SELECT v FROM meta WHERE k = ?', k)); return x ? x.v : null; };
@@ -80,13 +90,23 @@ function ponerCaps(sql, id, m, caps) {
 }
 
 /* ---------- lo que se enseña ---------- */
-const mensajes = (sql, id) => [...sql.exec('SELECT n, de, t, texto, caps, por FROM msg WHERE hilo = ? ORDER BY n', id)].map((m) => ({ n: m.n, de: m.de, t: m.t, texto: m.texto, caps: m.caps, ...(m.de === 'd' ? { por: m.por || 'Fantasy Manager' } : {}) }));
+/**
+ * los mensajes de un hilo. Con `equipo` (lo ven el dueño o quien ayuda, o la Action) cada uno de Fantasy Manager lleva `aut`:
+ * 'yo' si lo escribió quien mira (`yo`, su cuenta), el nombre de quien lo escribió si fue otro desde la app, o nada (los de la
+ * Action y los de antes de la 0.8.4c). A quien lo mandó nunca le llega
+ */
+const mensajes = (sql, id, { equipo = false, yo = '' } = {}) => [...sql.exec('SELECT n, de, t, texto, caps, por, aut, autn FROM msg WHERE hilo = ? ORDER BY n', id)].map((m) => ({
+  n: m.n, de: m.de, t: m.t, texto: m.texto, caps: m.caps,
+  ...(m.de === 'd' ? { por: m.por || 'Fantasy Manager' } : {}),
+  ...(equipo && m.de === 'd' && m.aut ? { aut: yo && m.aut === String(yo) ? 'yo' : m.autn || 'Fantasy Manager' } : {}),
+}));
 /**
  * un hilo como lo leen la app de ahora (msgs, de, ult, vu, vd) y las de antes (texto, capturas, respuesta, respondida,
- * vista y por: el primer mensaje y el último de Fantasy Manager). Sin uid; con diag solo si `diag`
+ * vista y por: el primer mensaje y el último de Fantasy Manager). Sin uid; con diag solo si `diag`; quién contestó cada uno
+ * (`aut`), solo con `equipo` (el dueño, quien ayuda y la Action)
  */
-function hiloApp(sql, h, { diag = false } = {}) {
-  const msgs = mensajes(sql, h.id);
+function hiloApp(sql, h, { diag = false, equipo = false, yo = '' } = {}) {
+  const msgs = mensajes(sql, h.id, { equipo, yo });
   const m0 = msgs[0] || { texto: '', caps: 0 };
   const ultD = [...msgs].reverse().find((m) => m.de === 'd') || null;
   return {
@@ -124,7 +144,8 @@ function nuevo(sql, b, ahora, dia) {
   sumarCupo(sql, uid, dia, 1, 1, caps.length);
   return { ok: true, id: b.id, capturas: caps.length };
 }
-/** un mensaje más en el hilo: de quien lo mandó (b.uid, solo en el suyo) o de Fantasy Manager (b.dueno) */
+/** un mensaje más en el hilo: de quien lo mandó (b.uid, solo en el suyo) o de Fantasy Manager (b.dueno; desde la app, con
+    b.aut y b.autn: la cuenta y el nombre de quien contesta, el dueño o quien ayuda) */
 function escribirMsg(sql, b, ahora, dia) {
   const h = fila(sql.exec('SELECT * FROM hilo WHERE id = ?', String(b.id || '')));
   if (!h || (!b.dueno && h.uid !== String(b.uid))) return { ok: false, estado: 404, e: 'No existe' };
@@ -138,7 +159,8 @@ function escribirMsg(sql, b, ahora, dia) {
   const caps = capturasQueCaben(sql, b.capturas, { yaHilo, cupo: cu, dueno: !!b.dueno });
   if (!texto && !caps.length) return { ok: false, estado: 429, e: 'Esa captura ya no cabe' };
   const de = b.dueno ? 'd' : 'u', n = h.n;
-  escribir(sql, 'INSERT INTO msg (hilo, n, de, t, texto, caps, por) VALUES (?, ?, ?, ?, ?, ?, ?)', h.id, n, de, ahora, texto, caps.length, b.dueno ? firma(b.por) : '');
+  const aut = b.dueno && uidOk(b.aut) ? String(b.aut) : '';
+  escribir(sql, 'INSERT INTO msg (hilo, n, de, t, texto, caps, por, aut, autn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', h.id, n, de, ahora, texto, caps.length, b.dueno ? firma(b.por) : '', aut, aut ? corta(b.autn, 40).trim() : '');
   ponerCaps(sql, h.id, n, caps);
   // (quien escribe ha visto todo lo de antes)
   escribir(sql, `UPDATE hilo SET ult = ?, de = ?, n = n + 1, ${b.dueno ? 'vd' : 'vu'} = ? WHERE id = ?`, ahora, de, ahora, h.id);
@@ -174,10 +196,11 @@ function capsQueFaltan(sql, max) {
 /**
  * b: { op, ahora, dia, ... }
  *   nuevo     { uid, id, texto, diag, quien, equipo, liga, app, capturas }      el primer mensaje → { ok, id }
- *   escribir  { uid, id, texto, capturas } o { dueno: true, id, texto, capturas, por }   uno más → { ok, n }
+ *   escribir  { uid, id, texto, capturas } o { dueno: true, id, texto, capturas, por, aut, autn }   uno más → { ok, n }
  *   mios      { uid }                     sus hilos (30), del último movimiento al más viejo → { lista }
  *   todos     {}                          el resumen de los 200 últimos → { lista, pendientes }
- *   uno       { id, uid | ver: 'dueño' | 'ayuda', marcar }   un hilo entero (diag, solo el dueño; con marcar, el dueño lo da por visto)
+ *   uno       { id, uid, ver: 'dueño' | 'ayuda', marcar }   un hilo entero (diag, solo el dueño; con marcar, el dueño o quien
+ *                                     ayuda lo da por visto; con ver, uid es quien mira: sus respuestas salen con aut 'yo')
  *   visto     { uid, id }                 quien lo mandó lo ha visto
  *   captura   { id, m, i, uid | todos }   { img } (o { falta, kv } si es de un aviso copiado que aún está en el KV)
  *   pendientes {}                         { n }: cuántos esperan respuesta
@@ -190,7 +213,11 @@ function capsQueFaltan(sql, max) {
 export function fallosObjeto(st, b, memo = {}) {
   const sql = st && st.sql;
   if (!sql) return { ok: false, estado: 503, e: 'Sin SQL' };
-  if (!memo.fallosTablas) { for (const t of TABLAS) sql.exec(t); memo.fallosTablas = true; }
+  if (!memo.fallosTablas) {
+    for (const t of TABLAS) sql.exec(t);
+    ponerColumnas(sql);
+    memo.fallosTablas = true;
+  }
   const ahora = Number(b.ahora) || Date.now();
   const dia = /^\d{4}-\d{2}-\d{2}$/.test(String(b.dia || '')) ? b.dia : new Date(ahora).toISOString().slice(0, 10);
   limpiar(sql, memo, dia, ahora);
@@ -211,8 +238,9 @@ export function fallosObjeto(st, b, memo = {}) {
       const h = hiloDe(b.id);
       if (!h || (!b.ver && h.uid !== uid)) return { ok: false, estado: 404, e: 'No existe' };
       // (lo da por visto solo al abrirlo de verdad, `marcar`: la app pide antes los pendientes para que se abran al momento)
-      if (b.ver === 'dueño' && b.marcar && h.vd < h.ult) { escribir(sql, 'UPDATE hilo SET vd = ? WHERE id = ?', ahora, h.id); h.vd = ahora; }
-      return { ok: true, ...hiloApp(sql, h, { diag: b.ver === 'dueño' }) };
+      // (0.8.4c: también quien ayuda, que ahora contesta)
+      if (b.ver && b.marcar && h.vd < h.ult) { escribir(sql, 'UPDATE hilo SET vd = ? WHERE id = ?', ahora, h.id); h.vd = ahora; }
+      return { ok: true, ...hiloApp(sql, h, { diag: b.ver === 'dueño', equipo: !!b.ver, yo: b.ver ? uid : '' }) };
     }
     case 'visto': {
       const h = hiloDe(b.id);
@@ -232,7 +260,7 @@ export function fallosObjeto(st, b, memo = {}) {
     case 'borrar': return uidOk(uid) ? { ok: true, n: borrarHilos(sql, 'uid = ?', uid) } : { ok: false, estado: 400, e: 'Cuenta no válida' };
     case 'accion': {
       const max = Math.max(1, Math.min(300, Number(b.max) || 150));
-      return { lista: [...sql.exec('SELECT * FROM hilo ORDER BY ult DESC LIMIT ?', max)].map((h) => hiloApp(sql, h, { diag: true })) };
+      return { lista: [...sql.exec('SELECT * FROM hilo ORDER BY ult DESC LIMIT ?', max)].map((h) => hiloApp(sql, h, { diag: true, equipo: true })) };
     }
     case 'contestar': {
       // cada respuesta va a un hilo por su id o, si no se tiene, a los que esperan respuesta y llevan ese trozo en lo que

@@ -20,7 +20,7 @@
  *   POST /fallos/visto        { id }: ha leído la respuesta
  *   GET  /fallos/todos        (el dueño) todos los avisos, resumidos
  *   GET  /fallos/uno?id=…     (el dueño) un aviso entero, con su diagnóstico
- *   POST /fallos/responder    (el dueño) { id, respuesta }
+ *   POST /fallos/responder    (el dueño y, desde la 0.8.4c, quien ayuda) { id, respuesta }
  *   GET  /fallos/captura?id=…&n=0  una captura de un aviso ({ img: data:image/… }): el dueño, o quien lo mandó
  *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
  *
@@ -513,8 +513,9 @@ async function qrEsperar(url, env, c) {
 export { MAX_TEXTO, MAX_RESPUESTA, MAX_DIAG, AL_DIA, MAX_CAPTURAS, MAX_CAPTURA, HILO_MSGS, HILO_CAPS, MSGS_DIA, CAPS_DIA } from './fallos.js';
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
 // (0.8.4, fase 2; Carlos, 25 nov: «Domy me ayuda con los fallos: que vea Quién usa la app y los avisos de todos») quien ayuda:
-// ve «Quién usa la app» entero y los avisos de fallo de todos con sus capturas, y nada más. No contesta, no ve el diagnóstico
-// de los demás y para todo lo demás es un usuario normal (anuncios, funciones cerradas, cupos). Por id de cuenta, nunca por
+// ve «Quién usa la app» entero y los avisos de fallo de todos con sus capturas y, desde la 0.8.4c (Carlos, 25 nov: «quiero que
+// Domy pueda responder fallos también igual que yo»), los contesta. No ve el diagnóstico de los demás ni «Copiar avisos» y
+// para todo lo demás es un usuario normal (anuncios, funciones cerradas, cupos). Por id de cuenta, nunca por
 // nombre: AYUDANTES de wrangler.toml o el secreto FM_AYUDANTES (lo pone worker.yml)
 const ayudantesDe = (env) => String(env.AYUDANTES || '').split(/[\s,;]+/).filter((x) => /^\d+$/.test(x));
 /** lo que puede ver una cuenta: 'dueño', 'ayuda' o '' */
@@ -610,9 +611,11 @@ async function capturaDe(env, b) {
  * POST /fallos/visto           { id }: has visto lo último
  * GET  /fallos/captura         ?id&n[&m]: una captura (m, el mensaje; sin m, el primero, como en las webs de antes)
  * GET  /fallos/todos           (el dueño y quien ayuda) el resumen de todos → { lista, pendientes }
- * GET  /fallos/uno             ?id[&visto=1] (el dueño y quien ayuda; el diagnóstico, solo el dueño, que con visto=1 lo da por visto)
- * POST /fallos/responder       { id, respuesta, capturas }: (el dueño) AÑADE un mensaje de Fantasy Manager; antes pisaba la
- *                              respuesta anterior. Lo usan también las webs de antes del dueño
+ * GET  /fallos/uno             ?id[&visto=1] (el dueño y quien ayuda; el diagnóstico, solo el dueño; con visto=1 lo da por visto)
+ * POST /fallos/responder       { id, respuesta, capturas }: (el dueño y, desde la 0.8.4c, quien ayuda; Carlos, 25 nov: «quiero
+ *                              que Domy pueda responder fallos también igual que yo») AÑADE un mensaje de Fantasy Manager,
+ *                              con la cuenta y el nombre de quien lo escribe (solo lo ven ellos dos). Lo usan también las webs
+ *                              de antes del dueño
  * POST /fallos/accion          (la Action «Fallos», con la llave x-fallos-clave) { op: leer | captura | contestar }
  */
 async function fallos(req, env, c, ruta) {
@@ -634,8 +637,9 @@ async function fallos(req, env, c, ruta) {
     return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/mios' && req.method === 'GET') {
-    const r = await pedirFallos(env, { op: 'mios', uid: u.uid, pend: admin });
-    return json({ lista: r.lista || [], admin, ve, pendientes: admin ? r.pendientes || 0 : null, yo: u.uid }, 200, c);
+    // (0.8.4c) cuántos esperan respuesta, también a quien ayuda, que ahora contesta
+    const r = await pedirFallos(env, { op: 'mios', uid: u.uid, pend: ve });
+    return json({ lista: r.lista || [], admin, ve, pendientes: ve ? r.pendientes || 0 : null, yo: u.uid }, 200, c);
   }
   if (ruta === '/fallos/visto' && req.method === 'POST') {
     const r = await pedirFallos(env, { op: 'visto', uid: u.uid, id: cuerpo.id });
@@ -651,15 +655,16 @@ async function fallos(req, env, c, ruta) {
     return json({ lista: r.lista || [], pendientes: r.pendientes || 0 }, 200, c);
   }
   if (ruta === '/fallos/uno' && req.method === 'GET') {
-    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona; y no lo da por visto)
-    const r = await pedirFallos(env, { op: 'uno', id: q.get('id'), ver: admin ? 'dueño' : 'ayuda', marcar: q.get('visto') === '1' });
+    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona. Desde la 0.8.4c, como contesta, abrirlo
+    // también lo da por visto; uid, para que sus respuestas le salgan como suyas)
+    const r = await pedirFallos(env, { op: 'uno', id: q.get('id'), uid: u.uid, ver: admin ? 'dueño' : 'ayuda', marcar: q.get('visto') === '1' });
     if (!r.ok) return fueraDe(r, c);
     const { ok, ...h } = r;
     return json(h, 200, c);
   }
-  if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/responder' && req.method === 'POST') {
-    const r = await pedirFallos(env, { op: 'escribir', dueno: true, id: cuerpo.id, texto: cuerpo.respuesta, capturas: cuerpo.capturas, por: 'Fantasy Manager' });
+    // (firma siempre «Fantasy Manager»: quien lo mandó no sabe quién de los dos contesta)
+    const r = await pedirFallos(env, { op: 'escribir', dueno: true, id: cuerpo.id, texto: cuerpo.respuesta, capturas: cuerpo.capturas, por: 'Fantasy Manager', aut: u.uid, autn: u.nombre });
     return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
   return json({ e: 'No existe' }, 404, c);

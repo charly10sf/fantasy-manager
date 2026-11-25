@@ -442,7 +442,7 @@ r = await pide({ m: 'GET', ruta: '/caras?liga=77', e: envQ });
 ok(r.s === 200 && r.j.caras['1111'] && Object.keys(r.j.caras).length === 1, `/caras de tu liga: ${r.s} ${r.t}`);
 r = await pide({ m: 'GET', ruta: '/caras?liga=88', e: envQ });
 ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no estás: ${r.s}`);
-// ---------- (0.8.4, fase 2) quien ayuda con los fallos (AYUDANTES): ve Quién usa la app y los avisos de todos, sin contestar ----------
+// ---------- (0.8.4, fase 2) quien ayuda con los fallos (AYUDANTES): ve Quién usa la app y los avisos de todos y (0.8.4c) los contesta ----------
 {
   // la 2222 (token «y») ayuda; la 4242 manda avisos; el dueño es la 667015 (ADMINS de env), que aquí no llama
   const envA = { ...envQ, AYUDANTES: '2222, Domy' };
@@ -463,15 +463,38 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   const idA = r.j && r.j.id;
   minuto();
   r = await pide({ m: 'GET', ruta: '/fallos/mios', tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
-  ok(r.s === 200 && r.j.ve === true && r.j.admin === false && r.j.pendientes === null, `/fallos/mios de quien ayuda: ve, sin la cuenta de pendientes (${r.t.slice(0, 90)})`);
+  ok(r.s === 200 && r.j.ve === true && r.j.admin === false && r.j.pendientes === 1, `/fallos/mios de quien ayuda: ve, con la cuenta de pendientes (0.8.4c) (${r.t.slice(0, 90)})`);
   r = await pide({ m: 'GET', ruta: '/fallos/todos', tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
   ok(r.s === 200 && r.j.lista.length === 1 && r.j.lista[0].id === idA, `/fallos/todos de quien ayuda: ${r.s}`);
   r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
   ok(r.s === 200 && r.j.texto === 'Se queda en blanco el mercado' && !('diag' in r.j) && !('uid' in r.j) && !r.t.includes('secreto'), `/fallos/uno de quien ayuda: el aviso sin el diagnóstico ni la cuenta (${r.t.slice(0, 90)})`);
   r = await pide({ m: 'GET', ruta: `/fallos/captura?id=${idA}&n=0`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
   ok(r.s === 200 && /^data:image\/jpeg/.test(r.j.img), `/fallos/captura de quien ayuda: ${r.s}`);
-  r = await pide({ ruta: '/fallos/responder', cuerpo: { id: idA, respuesta: 'Ya está' }, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
-  ok(r.s === 403 && sqlF('SELECT count(*) AS n FROM msg WHERE hilo = ?', idA)[0].n === 1, `/fallos/responder de quien ayuda: ${r.s}, sin respuesta guardada`);
+  // (0.8.4c) abrirlo de verdad lo da por visto; la precarga, no
+  ok(sqlF('SELECT vd FROM hilo WHERE id = ?', idA)[0].vd === 0, 'la precarga de quien ayuda no lo da por visto');
+  minuto();
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}&visto=1`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.s === 200 && sqlF('SELECT vd FROM hilo WHERE id = ?', idA)[0].vd > 0 && !('diag' in r.j), 'al abrirlo quien ayuda, quien lo mandó ve «Visto» (y sigue sin diagnóstico)');
+  // (0.8.4c; Carlos, 25 nov: «quiero que Domy pueda responder fallos también igual que yo») contesta, con una captura
+  minuto();
+  r = await pide({ ruta: '/fallos/responder', cuerpo: { id: idA, respuesta: 'Ya está', capturas: [cap(900)] }, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  const mA = sqlF('SELECT de, por, aut, autn, caps FROM msg WHERE hilo = ? AND n = 1', idA)[0];
+  ok(r.s === 200 && r.j.n === 1 && mA && mA.de === 'd' && mA.por === 'Fantasy Manager' && mA.aut === '2222' && mA.autn === 'Otro' && mA.caps === 1, `/fallos/responder de quien ayuda: ${r.s}, guardado como Fantasy Manager con quién lo escribió (${JSON.stringify(mA)})`);
+  minuto();
+  r = await pide({ m: 'GET', ruta: '/fallos/todos', tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.j.pendientes === 0 && r.j.lista[0].r > 0, 'contestado por quien ayuda: ya no está pendiente');
+  // quien lo mandó lo ve firmado como Fantasy Manager, sin saber quién de los dos
+  minuto();
+  r = await pide({ m: 'GET', ruta: '/fallos/mios', tk: 'x'.repeat(30), ip: '7.7.8.1', e: envA });
+  let hA = r.j.lista.find((x) => x.id === idA);
+  ok(hA && hA.respuesta === 'Ya está' && hA.por === 'Fantasy Manager' && hA.msgs[1].por === 'Fantasy Manager' && !('aut' in hA.msgs[1]) && !r.t.includes('2222') && !r.t.includes('"Otro"'), `quien lo mandó ve «Fantasy Manager», sin la cuenta ni el nombre de quien contestó (${JSON.stringify(hA && hA.msgs[1])})`);
+  // quien ayuda ve lo suyo como suyo; el dueño, con su nombre
+  minuto();
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
+  ok(r.j.msgs[1].aut === 'yo', `quien ayuda ve su respuesta como suya (${JSON.stringify(r.j.msgs[1])})`);
+  minuto();
+  r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'x'.repeat(30), ip: '7.7.8.4', e: { ...envA, ADMINS: '4242' } });
+  ok(r.j.msgs[1].aut === 'Otro', `el dueño ve quién la escribió (${JSON.stringify(r.j.msgs[1])})`);
   // otra cuenta cualquiera (la 3333, con un token que empieza por «q»)
   const fA = globalThis.fetch;
   globalThis.fetch = async (u, o) => (String(u).includes('/user/me') && /Bearer q/.test(cabDe(o, 'authorization')) ? new Response(JSON.stringify({ id: 3333, managerName: 'Cualquiera' }), { status: 200 }) : fA(u, o));
@@ -561,6 +584,7 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   r = await accion({ op: 'leer' });
   const hl = r.j.lista.find((x) => x.id === idC);
   ok(r.s === 200 && hl && hl.diag === 'diag de la 4242' && !('uid' in hl) && hl.msgs.length > 3, 'la Action lee los hilos enteros, con el diagnóstico y sin el número de cuenta');
+  ok(hl.msgs[1].aut === 'Otro' && !JSON.stringify(hl).includes('2222'), `(0.8.4c) y quién escribió lo contestado desde la app, por su nombre, sin su cuenta (${JSON.stringify(hl.msgs[1])})`);
   r = await accion({ op: 'captura', id: idC, m: 3, n: 0 });
   ok(r.s === 200 && /^data:image/.test(r.j.img), 'y sus capturas');
   minuto(); await pide({ ruta: '/fallos', cuerpo: { texto: 'Otro aviso: la ficha del jugador sale vacía' }, ip: '8.1.9.1', tk: 'x'.repeat(30), e: envC });

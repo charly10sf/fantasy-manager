@@ -983,11 +983,11 @@ export function ajustes(S) {
   {
     const av = avisosGuardados();
     const sinLeer = (av.lista || []).filter((x) => x.respuesta && !x.vista).length;
-    const pend = av.admin ? av.pendientes || 0 : 0;
-    const n = sinLeer + pend;
-    // (0.8.4) quien ayuda con los fallos ve los de todos, como el dueño, pero sin contestarlos
+    // (0.8.4) quien ayuda con los fallos ve los de todos, como el dueño, y desde la 0.8.4c también los contesta
     const ve = av.admin || av.ve;
-    const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : av.ve ? (sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Los de todos') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
+    const pend = ve ? av.pendientes || 0 : 0;
+    const n = sinLeer + pend;
+    const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : av.ve ? (pend ? `${pend} sin contestar` : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Los de todos y reportar uno') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
     h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${ve ? 'Avisos de fallo' : 'Reportar un fallo o una idea'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
       + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
@@ -1201,12 +1201,15 @@ function capsMsg(A, id, m) {
   return `<div class="aviso-capt msg-capt">${[...Array(m.caps).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(id)}" data-m="${m.n}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
     : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('')}</div>`;
 }
-/** la conversación en burbujas. lado: 'u' la ve quien lo mandó; 'd', el dueño o quien ayuda (tuFM: es el dueño) */
+/** la conversación en burbujas. lado: 'u' la ve quien lo mandó; 'd', el dueño o quien ayuda (tuFM: es el dueño). (0.8.4c) Como
+    contestan los dos, en lo de Fantasy Manager el servidor les dice quién lo escribió (`aut`: 'yo' o su nombre); sin `aut`
+    (la Action y lo de antes), «Tú» para el dueño y «Fantasy Manager» para quien ayuda */
 function burbujas(A, x, lado, tuFM = false) {
   const ms = msgsDe(x), ult = ms[ms.length - 1];
   // «Visto» / «Leído» debajo de lo último tuyo, si es lo último del hilo y el otro lado ya lo ha visto
   const visto = ult && ult.de === lado && (lado === 'u' ? (x.vd || 0) >= ult.t : (x.vu || 0) >= ult.t);
-  const nombre = (m) => (m.de === 'd' ? (tuFM ? 'Tú' : firmaDe(m.por) || 'Fantasy Manager') : lado === 'u' ? 'Tú' : x.quien || x.equipo || 'Quien lo mandó');
+  const fm = (m) => (lado === 'd' && m.aut ? (m.aut === 'yo' ? 'Tú' : m.aut) : tuFM ? 'Tú' : firmaDe(m.por) || 'Fantasy Manager');
+  const nombre = (m) => (m.de === 'd' ? fm(m) : lado === 'u' ? 'Tú' : x.quien || x.equipo || 'Quien lo mandó');
   return `<div class="msgs">${ms.map((m) => `<div class="msg ${m.de === lado ? 'mio' : 'suyo'}"><b>${esc(nombre(m))}</b>${m.texto ? `<p>${esc(m.texto)}</p>` : ''}${capsMsg(A, x.id, m)}<small>${cuando(m.t)}${m === ult && visto ? ` · ${lado === 'u' ? 'Visto' : 'Leído'}` : ''}</small></div>`).join('')}</div>`;
 }
 /** la caja de escribir del hilo abierto: el texto, las capturas que vas a mandar (hasta 3) y el botón de adjuntar */
@@ -1238,15 +1241,21 @@ function detalleAviso(A, x) {
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
     ${!A.admin ? '' : d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
     ${burbujas(A, d, 'd', !!A.admin)}
-    ${A.admin ? cajaHilo(A, d.id, 'responderAviso', 'Tu respuesta: le llega en la app', 2000) : ''}</div>`;
+    ${A.admin || A.ve ? cajaHilo(A, d.id, 'responderAviso', A.admin ? 'Tu respuesta: le llega en la app' : 'Tu respuesta: le llega como Fantasy Manager', 2000) : ''}</div>`;
 }
 export function avisos(S) {
   const A = S.av || {};
-  // (0.8.4) quien ayuda (ve) tiene la bandeja de todos, sin contestar
+  // (0.8.4) quien ayuda (ve) tiene la bandeja de todos y (0.8.4c) los contesta. (0.8.4c; Carlos, 25 nov: «me dice Domy que no
+  // le sale para reportar fallos») lo de mandar uno quedaba debajo de toda la bandeja: ahora van en dos pestañas,
+  // «Recibidos» y «Reportar un fallo» (con tus avisos), cada una con su numerito
   const ve = A.admin || A.ve;
   let h = `<div class="hoja-cab"><h2>${ve ? 'Avisos de fallos' : 'Fallos e ideas'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
-  if (ve) h += bandejaAvisos(A);
-  if (ve) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
+  if (ve) {
+    const pest = A.pest === 'mios' ? 'mios' : 'todos';
+    const sinLeer = (A.lista || avisosGuardados().lista || []).filter((x) => x.respuesta && !x.vista).length;
+    h += `<div class="q-tabs av-pest" role="tablist" aria-label="Avisos">${[['todos', 'Recibidos', A.pendientes || 0], ['mios', 'Reportar un fallo', sinLeer]].map(([k, t, n]) => `<button role="tab" aria-selected="${k === pest}" class="${k === pest ? 'on' : ''}" data-accion="pestAvisos" data-p="${k}">${t}${n ? `<span class="av-n">${n}</span>` : ''}</button>`).join('')}</div>`;
+    if (pest === 'todos') return h + bandejaAvisos(A);
+  }
   if (A.sinSesion) {
     h += `<p class="t2">Para mandarme un aviso y que te pueda contestar hace falta entrar con tu cuenta de LaLiga${enDemo() ? ' (ahora estás viendo la liga de ejemplo)' : ''}. Mientras, puedes escribirme desde la página de contacto y pegar el diagnóstico.</p>
       <button class="btn ancho" data-abrir="https://fantasymanagerapp.com/contacto.html">${icono('enviar')}Ir a contacto</button>

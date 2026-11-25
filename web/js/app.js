@@ -35,7 +35,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
 import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -926,7 +926,7 @@ const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar'
    Cerrar la pantalla de bienvenida cuenta como cerrarlo. Ni en la liga de ejemplo (se apilaría con su banda) ni en el APK de GitHub (ya lleva el suyo). */
 const BETA_VUELVE = 3 * DIA;
 const bandaBeta = () => (S.D && S.D.demo) || enApkGithub() || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
-  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="mandarFallo">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
 
 /* ---------------- la pantalla de carga ---------------- */
 // lo que se va contando mientras carga: cosas del juego que conviene tener presentes
@@ -1467,10 +1467,10 @@ function programarFondo() {
   if (!enApp) return;
   const cierre = (S.M && S.M.cierreMercado) || LS.get('fondo-cierre', 0) || 0;
   let prox = cierre ? cierre + 8 * MIN : 0;
-  // con un aviso de fallo esperando respuesta (o, para el dueño, avisos sin contestar) se mira cada 40 minutos, para
-  // que la respuesta llegue en una notificación aunque la app esté cerrada
+  // con un aviso de fallo esperando respuesta (o, para el dueño y quien ayuda con los fallos, avisos sin contestar) se mira
+  // cada 40 minutos, para que la respuesta llegue en una notificación aunque la app esté cerrada
   const a = avisosGuardados();
-  if (haySesion() && ((a.lista || []).some((x) => !x.respuesta) || (a.admin && a.pendientes > 0))) {
+  if (haySesion() && ((a.lista || []).some((x) => !x.respuesta) || ((a.admin || a.ve) && a.pendientes > 0))) {
     const t = Date.now() + 40 * MIN;
     if (!prox || prox < Date.now() || t < prox) prox = t;
   }
@@ -2570,16 +2570,18 @@ async function abrirQuien() {
   }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') { repintarHoja(); filtrarQuien(); }
 }
-async function abrirAvisos() {
-  S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '', cache: (S.av && S.av.cache) || {} };
+/* pest (0.8.4c), para el dueño y quien ayuda: 'todos' (los recibidos, lo de siempre) o 'mios' (reportar uno y los tuyos; desde
+   lo que lleva a reportar: la banda de arriba, la bienvenida, la etiqueta BETA, el tutorial y las pantallas de error) */
+async function abrirAvisos(pest = 'todos') {
+  S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '', cache: (S.av && S.av.cache) || {}, pest };
   hoja('avisos');
   if (enDemo() || !haySesion()) { S.av = { ...S.av, cargando: false, sinSesion: true }; repintarAvisos(); return; }
   try {
     const r = await misAvisos();
     Object.assign(S.av, { cargando: false, lista: r.lista, admin: r.admin, ve: !!(r.ve || r.admin), pendientes: r.pendientes });
     repintarAvisos();
-    // las respuestas que ves ahora quedan leídas (el numerito se va)
-    for (const x of r.lista.filter((y) => y.respuesta && !y.vista)) marcarVisto(x.id).then(pintarNumAvisos).catch(() => {});
+    // las respuestas que ves ahora quedan leídas (el numerito se va); quien ve los de todos, cuando abre «Reportar un fallo»
+    if (!S.av.ve || S.av.pest === 'mios') marcarMisLeidas();
     // (0.8.4) los de todos: el dueño y quien ayuda con los fallos (ve)
     if (r.admin || r.ve) {
       S.av.cargandoTodos = true; repintarAvisos();
@@ -2594,6 +2596,10 @@ async function abrirAvisos() {
     repintarAvisos();
   }
   pintarNumAvisos();
+}
+/** tus avisos con respuesta sin leer: ya leídos */
+function marcarMisLeidas() {
+  for (const x of (S.av.lista || []).filter((y) => y.respuesta && !y.vista)) marcarVisto(x.id).then(pintarNumAvisos).catch(() => {});
 }
 async function enviarAviso() {
   const t = (($('#avisoTxt') || {}).value || '').trim();
@@ -2643,10 +2649,11 @@ async function abrirAvisoRecibido(id) {
   if (S.av.abierto === id) { if (!avisoListo(id) && !(S.av.detalle && S.av.detalle.error)) return; S.av.abierto = null; repintarAvisos(); return; }
   S.av.abierto = id; S.av.detalle = avisoListo(id); S.av.hiloBorrador = ''; S.av.capHilo = [];
   repintarAvisos();
-  // (0.8.4) abrirlo de verdad: para el dueño cuenta como visto (quien lo mandó ve «Visto»); la precarga no. Los sin contestar
-  // ya vienen cargados de antes: sus capturas se piden aquí también
-  if (S.av.detalle) { cargarCapturas(id, Hj.msgsDe(S.av.detalle)); if (S.av.admin) unAviso(id, true).catch(() => {}); return; }
-  try { const d = await unAviso(id, !!S.av.admin); avisoCache()[id] = d; if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
+  // (0.8.4) abrirlo de verdad: para el dueño y (0.8.4c) para quien ayuda, que también contesta, cuenta como visto (quien lo
+  // mandó ve «Visto»); la precarga no. Los sin contestar ya vienen cargados de antes: sus capturas se piden aquí también
+  const contesta = !!(S.av.admin || S.av.ve);
+  if (S.av.detalle) { cargarCapturas(id, Hj.msgsDe(S.av.detalle)); if (contesta) unAviso(id, true).catch(() => {}); return; }
+  try { const d = await unAviso(id, contesta); avisoCache()[id] = d; if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
   // el aviso entero sí está al día: si lo último es de Fantasy Manager, cuenta como contestado aunque la lista aún no lo diga
   const d = avisoListo(id);
   if (d && d.respondida && Hj.ultimoDe(d) === 'd') { apuntarContestado(id, d.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
@@ -2808,7 +2815,7 @@ async function comprobarAvisos() {
   const resp = r.nuevasResp[0];
   if (resp) {
     const t = `${firmaDe(resp.por) || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
-    if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → Reportar un fallo o una idea`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
+    if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → ${veTodo() ? 'Avisos de fallo → Reportar un fallo' : 'Reportar un fallo o una idea'}`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
   }
   if (r.nuevosRecibidos) {
     const t = r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo';
@@ -3975,7 +3982,7 @@ document.addEventListener('click', async (ev) => {
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'bienvenidaOk': cerrarBienvenida(); break;
-    case 'bienvenidaReportar': cerrarBienvenida(); abrirAvisos(); break;
+    case 'bienvenidaReportar': cerrarBienvenida(); abrirAvisos('mios'); break;
     case 'cerrarLleno': olvidarLleno(); el.closest('.banda')?.remove(); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
@@ -3998,12 +4005,21 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'diag': hoja('diag'); break;
-    case 'mandarFallo': case 'avisos': abrirAvisos(); break;
+    case 'mandarFallo': abrirAvisos('mios'); break;
+    case 'avisos': abrirAvisos(); break;
+    case 'pestAvisos': {
+      if (!S.av) break;
+      S.av.pest = d.p === 'mios' ? 'mios' : 'todos';
+      if (S.av.pest === 'mios') marcarMisLeidas();
+      repintarAvisos();
+      const ho = $('.hoja'); if (ho) ho.scrollTop = 0;
+      break;
+    }
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
     case 'cerrarSinDescarga': LS.set('aldia-red-cerrada', diaDe()); el.closest('.banda')?.remove(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     // la etiqueta BETA del logo: al dueño le abre Quién usa la app (los fallos los mira en Ajustes); a los demás, Fallos e ideas
-    case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos(); break;
+    case 'beta': if (avisosGuardados().admin && !enDemo()) { cerrarHoja(true); abrirQuien(); } else abrirAvisos('mios'); break;
     // (21 nov) la lista de cuentas de «Quién usa la app»: los filtros (y las chapas de arriba, que además bajan a la lista)
     // (21 nov, noche) las pestañas de «Quién usa la app»: Hoy, Uso, Entrada, Invitar y Cuentas
     case 'quienTab': {
@@ -4774,7 +4790,7 @@ function quizaAvisoBeta(ms, intento = 0) {
       pasos: [{ v: 'hoy', sel: '.sup-beta', t: 'Fallos e ideas', x: PASO_BETA, saltar: 'Vale', fin: 'Reportar ahora', finAccion: 'beta' }],
       vista: () => S.vista,
       ir: (v) => ir(v),
-      alAcabar: (como) => { if (como === 'beta' || como === 'fin') abrirAvisos(); },
+      alAcabar: (como) => { if (como === 'beta' || como === 'fin') abrirAvisos('mios'); },
     });
   }, ms);
 }

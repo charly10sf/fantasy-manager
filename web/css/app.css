@@ -3816,3 +3816,6 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .tl-g svg.wn { width: 22px; height: 22px; }
 /* «Empieza hoy», al final: en el iPhone no sale Google Play */
 .p-iphone .pz-b a[href*="play.google.com"] { display: none; }
+/* (0.8.4c) las dos pestañas de los avisos del dueño y de quien ayuda: «Recibidos» y «Reportar un fallo», con su numerito */
+.av-pest button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.av-pest .av-n { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--rojo); color: #fff; font: 700 var(--t-mini)/18px 'Barlow'; }

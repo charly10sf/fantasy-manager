@@ -1,13 +1,18 @@
 // La pantalla de los avisos de fallo y «Quién usa la app» según quién mira (0.8.4). Un servidor de mentira para el Worker
 // (/fallos/*, /hola) y la web de verdad, en el móvil y en el ordenador:
-//  (a) quien ayuda con los fallos (Domy; `ve` del servidor): en Ajustes, «Avisos de fallo» y «Quién usa la app»; en los
-//      avisos, la bandeja de todos con sus capturas, sin el diagnóstico, sin «Copiar avisos» y sin poder contestar
+//  (a) quien ayuda con los fallos (Domy; `ve` del servidor): en Ajustes, «Avisos de fallo» (con los sin contestar) y «Quién
+//      usa la app»; en los avisos, la bandeja de todos con sus capturas, sin el diagnóstico ni «Copiar avisos» y, desde la
+//      0.8.4c, con la caja de contestar
 //  (b) el dueño: lo de siempre (contesta, ve el diagnóstico y «Copiar avisos»)
 //  (c) cualquier otro: solo «Reportar un fallo o una idea» y sus avisos
 //  (d) (fase 3) quien lo mandó: su aviso es una conversación en burbujas (lo suyo a la derecha), con las capturas de cada
 //      mensaje, «Visto» y la caja para seguirla con capturas; lo que escribe se añade
-//  (e) el dueño: contesta otra vez y se añade (no pisa), con captura; quien ayuda no tiene caja
+//  (e) el dueño: contesta otra vez y se añade (no pisa), con captura
 //  (f) un servidor de antes (sin `msgs`): el texto y la respuesta salen igual, como dos burbujas
+//  (g) (0.8.4c) quien ayuda contesta: abrirlo lo da por visto, lo suyo se añade con captura y sale como «Tú»
+//  (h) (0.8.4c) el dueño ve lo que contestó quien ayuda con su nombre, y lo suyo como «Tú»
+//  (i) (0.8.4c) quien ayuda también reporta los suyos: pestañas «Recibidos» y «Reportar un fallo»; desde la banda, la
+//      etiqueta BETA o una pantalla de error se abre directamente en «Reportar un fallo»
 // Uso: node .github/prueba-avisos.mjs   (PW_MODULO y CHROME como en prueba-web.mjs). Sale con 1 si algo falla.
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -31,17 +36,20 @@ const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), 
 const CAPTURA = `data:image/png;base64,${'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='}`;
 // el servidor de mentira, con estado: el aviso de Pepe (otro, para el dueño y quien ayuda) y el tuyo (para «Tus avisos"),
 // cada uno una conversación; lo que se escribe se añade. `viejo`: un servidor de antes de la 0.8.4 (sin msgs)
-function servidor(papel, { viejo = false } = {}) {
+function servidor(papel, { viejo = false, conDomy = false } = {}) {
   const t0 = Date.now() - 3600e3;
   const hilo = (id, quien, extra = {}) => ({ id, t: t0, quien, equipo: `Los ${quien}`, liga: 'Liga X', app: '0.8.4 · web', diag: `LaLiga 200 · lo de ${quien}`, vu: 0, vd: 0, msgs: [{ n: 0, de: 'u', t: t0, texto: 'Al abrir Mercado se queda en blanco', caps: 1 }], ...extra });
-  const pepe = hilo('abc123def', 'Pepe');
+  // (conDomy: Domy ya le ha contestado y el dueño, después; autDe: quién lo escribió, que el servidor da como `aut`)
+  const pepe = hilo('abc123def', 'Pepe', conDomy ? { msgs: [{ n: 0, de: 'u', t: t0, texto: 'Al abrir Mercado se queda en blanco', caps: 1 }, { n: 1, de: 'd', t: t0 + 60e3, texto: 'Lo miro yo', caps: 0, por: 'Fantasy Manager', autDe: 'ayuda' }, { n: 2, de: 'd', t: t0 + 120e3, texto: 'Ya está arreglado', caps: 0, por: 'Fantasy Manager', autDe: 'dueño' }] } : {});
   const mio = hilo('mio123abc', 'Yo', { msgs: [{ n: 0, de: 'u', t: t0, texto: 'No me sale el plan', caps: 1 }, { n: 1, de: 'd', t: t0 + 60e3, texto: 'Lo miro. ¿Desde cuándo?', caps: 0, por: 'Fantasy Manager' }], vd: t0 + 60e3 });
-  const vistos = { escribir: [], responder: [] };
-  // como lo da el servidor: lo de ahora (msgs, de, ult) y lo de antes (texto, respuesta…)
-  const app = (h) => {
+  const vistos = { escribir: [], responder: [], abierto: 0 };
+  // como lo da el servidor: lo de ahora (msgs, de, ult) y lo de antes (texto, respuesta…). `equipo` (el dueño y quien
+  // ayuda): en lo de Fantasy Manager, quién lo escribió (aut: 'yo' o su nombre)
+  const aut = (m, equipo) => { const { autDe, ...x } = m; return equipo && autDe ? { ...x, aut: autDe === papel ? 'yo' : autDe === 'ayuda' ? 'Domy' : 'Carlos' } : x; };
+  const app = (h, equipo = false) => {
     const ultD = [...h.msgs].reverse().find((m) => m.de === 'd'), ult = h.msgs[h.msgs.length - 1];
     const antes = { id: h.id, t: h.t, quien: h.quien, equipo: h.equipo, liga: h.liga, app: h.app, texto: h.msgs[0].texto, capturas: h.msgs[0].caps, respuesta: ultD ? ultD.texto : null, respondida: ultD ? ultD.t : null, vista: !ultD || h.vu >= ultD.t, por: ultD ? 'Fantasy Manager' : undefined };
-    return viejo ? antes : { ...antes, msgs: h.msgs, de: ult.de, ult: ult.t, n: h.msgs.length, vu: h.vu, vd: h.vd };
+    return viejo ? antes : { ...antes, msgs: h.msgs.map((m) => aut(m, equipo)), de: ult.de, ult: ult.t, n: h.msgs.length, vu: h.vu, vd: h.vd };
   };
   const admin = papel === 'dueño', ve = admin || papel === 'ayuda';
   const ruta = async (r) => {
@@ -50,14 +58,14 @@ function servidor(papel, { viejo = false } = {}) {
     const json = (x, s = 200) => r.fulfill({ status: s, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify(x) });
     const b = q.method() === 'POST' ? JSON.parse(q.postData() || '{}') : {};
     if (u.pathname === '/hola') return json({ ok: true, admin, ve, ev: false });
-    if (u.pathname === '/fallos/mios') return json({ lista: [app(mio)], admin, ve, pendientes: admin ? 1 : null, yo: '1' });
+    if (u.pathname === '/fallos/mios') return json({ lista: [app(mio)], admin, ve, pendientes: ve ? 1 : null, yo: '1' });
     if (u.pathname === '/fallos/visto') { mio.vu = Date.now(); return json({ ok: true }); }
     if (u.pathname === '/fallos/escribir') { vistos.escribir.push(b); mio.msgs.push({ n: mio.msgs.length, de: 'u', t: Date.now(), texto: b.texto, caps: (b.capturas || []).length }); return json({ ok: true, n: mio.msgs.length - 1 }); }
     if (u.pathname === '/fallos/captura') return json({ img: CAPTURA });
     if (!ve) return json({ e: 'Solo para el dueño de la app' }, 403);
     if (u.pathname === '/fallos/todos') { const ult = pepe.msgs[pepe.msgs.length - 1]; return json({ lista: [{ id: pepe.id, t: pepe.t, quien: pepe.quien, equipo: pepe.equipo, txt: pepe.msgs[0].texto, r: ult.de === 'd' ? ult.t : 0, v: 0, c: 1, n: pepe.msgs.length, de: ult.de, ult: ult.t }], pendientes: ult.de === 'u' ? 1 : 0 }); }
-    if (u.pathname === '/fallos/uno') { const h = app(pepe); return json(admin ? { ...h, diag: pepe.diag } : h); }
-    if (u.pathname === '/fallos/responder' && admin) { vistos.responder.push(b); pepe.msgs.push({ n: pepe.msgs.length, de: 'd', t: Date.now(), texto: b.respuesta, caps: (b.capturas || []).length, por: 'Fantasy Manager' }); return json({ ok: true, n: pepe.msgs.length - 1 }); }
+    if (u.pathname === '/fallos/uno') { if (u.searchParams.get('visto') === '1') vistos.abierto++; const h = app(pepe, true); return json(admin ? { ...h, diag: pepe.diag } : h); }
+    if (u.pathname === '/fallos/responder') { vistos.responder.push(b); pepe.msgs.push({ n: pepe.msgs.length, de: 'd', t: Date.now(), texto: b.respuesta, caps: (b.capturas || []).length, por: 'Fantasy Manager', autDe: papel }); return json({ ok: true, n: pepe.msgs.length - 1 }); }
     return json({ ok: true });
   };
   return { ruta, vistos, pepe, mio };
@@ -88,7 +96,7 @@ try {
     const donde = movil ? 'móvil' : 'ordenador';
     /* (a) quien ayuda */
     {
-      const { ctx, page, errores } = await pagina('ayuda', movil);
+      const { ctx, page, errores, sv } = await pagina('ayuda', movil);
       await accion(page, 'ajustes'); await page.waitForTimeout(400);
       let t = await hojaTxt(page);
       ok(/Avisos de fallo/.test(t) && /Los de todos/.test(t) && /Quién usa la app/.test(t) && /Para ayudar con los fallos/.test(t) && !/Reportar un fallo o una idea/.test(t), `(a) ${donde}: quien ayuda tiene en Ajustes «Avisos de fallo» y «Quién usa la app»`);
@@ -97,8 +105,28 @@ try {
       ok(/Avisos recibidos/.test(t) && /Pepe/.test(t) && !/Copiar avisos/.test(t), `(a) ${donde}: la bandeja de todos, sin «Copiar avisos»`);
       await accion(page, 'abrirAviso', { id: 'abc123def' }); await page.waitForTimeout(900);
       t = await hojaTxt(page);
-      const r = await page.evaluate(() => ({ resp: !!document.querySelector('#hiloTxt'), boton: !!document.querySelector('[data-accion="responderAviso"]'), img: !!document.querySelector('.aviso-capt img') }));
-      ok(/se queda en blanco/.test(t) && r.img && !r.resp && !r.boton && !/Diagnóstico/.test(t), `(a) ${donde}: el aviso con su captura, sin diagnóstico y sin contestar (${JSON.stringify(r)})`);
+      const r = await page.evaluate(() => ({ resp: !!document.querySelector('#hiloTxt'), boton: !!document.querySelector('[data-accion="responderAviso"]'), img: !!document.querySelector('.aviso-capt img'), ph: (document.querySelector('#hiloTxt') || {}).placeholder }));
+      ok(/se queda en blanco/.test(t) && r.img && r.resp && r.boton && /como Fantasy Manager/.test(r.ph || '') && !/Diagnóstico/.test(t), `(a) ${donde}: el aviso con su captura y la caja de contestar, sin diagnóstico (${JSON.stringify(r)})`);
+      // (i) (0.8.4c) en «Recibidos» no está lo de mandar uno; en «Reportar un fallo», sí, con los suyos
+      let p = await page.evaluate(() => ({ tabs: [...document.querySelectorAll('.av-pest button')].map((b) => b.textContent).join('|'), form: !!document.querySelector('#avisoTxt') }));
+      ok(/Recibidos/.test(p.tabs) && /Reportar un fallo/.test(p.tabs) && !p.form && !sv.mio.vu, `(i) ${donde}: dos pestañas; en «Recibidos», solo la bandeja, y su respuesta sin leer sigue sin leer (${JSON.stringify(p)})`);
+      await accion(page, 'pestAvisos', { p: 'mios' }); await page.waitForTimeout(500);
+      t = await hojaTxt(page);
+      p = await page.evaluate(() => ({ form: !!document.querySelector('#avisoTxt'), boton: !!document.querySelector('[data-accion="mandarAviso"]'), bandeja: !!document.querySelector('.aviso.recibido') }));
+      if (process.env.FOTOS) await page.evaluate(() => { const ho = document.querySelector('.hoja'); if (ho) ho.scrollTop = 0; }).then(() => page.screenshot({ path: `${process.env.FOTOS}/avisos-ayuda-reportar-${donde}.png` }));
+      ok(p.form && p.boton && !p.bandeja && /Tus avisos/.test(t) && sv.mio.vu > 0, `(i) ${donde}: en «Reportar un fallo», el formulario y sus avisos, y su respuesta queda leída (${JSON.stringify(p)})`);
+      await accion(page, 'cerrarHoja'); await page.waitForTimeout(300);
+      await accion(page, 'mandarFallo'); await page.waitForTimeout(900);
+      p = await page.evaluate(() => ({ form: !!document.querySelector('#avisoTxt'), on: (document.querySelector('.av-pest button.on') || {}).textContent }));
+      ok(p.form && /Reportar un fallo/.test(p.on || ''), `(i) ${donde}: desde la banda o un error, se abre en «Reportar un fallo» (${JSON.stringify(p)})`);
+      await accion(page, 'cerrarHoja'); await page.waitForTimeout(300);
+      await accion(page, 'beta'); await page.waitForTimeout(900);
+      p = await page.evaluate(() => ({ form: !!document.querySelector('#avisoTxt'), on: (document.querySelector('.av-pest button.on') || {}).textContent }));
+      ok(p.form && /Reportar un fallo/.test(p.on || ''), `(i) ${donde}: y desde la etiqueta BETA (${JSON.stringify(p)})`);
+      // (0.8.4c) con los avisos mirados, en Ajustes salen los que esperan respuesta, como al dueño
+      await accion(page, 'cerrarHoja'); await page.waitForTimeout(300); await accion(page, 'ajustes'); await page.waitForTimeout(400);
+      t = await hojaTxt(page);
+      ok(/1 sin contestar/.test(t), `(a) ${donde}: en Ajustes, cuántos esperan respuesta (${(t.match(/Avisos de fallo.{0,40}/) || [''])[0]})`);
       ok(!errores.length, `(a) ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
       await ctx.close();
     }
@@ -162,6 +190,31 @@ try {
       if (process.env.FOTOS) await page.evaluate(() => document.querySelector('.aviso.abierto .msgs').scrollIntoView()).then(() => page.screenshot({ path: `${process.env.FOTOS}/avisos-dueno-${donde}.png` }));
       ok(sv.vistos.responder.length === 2 && sv.vistos.responder[1].capturas.length === 1 && r.n === 3 && r.lados === 'suyo,mio,mio' && /qué móvil/.test(r.txt) && /otra cosa/.test(r.txt), `(e) ${donde}: dos respuestas seguidas, las dos en el hilo (la segunda con captura) (${JSON.stringify(r)})`);
       ok(!errores.length, `(e) ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
+      await ctx.close();
+    }
+    /* (g) (0.8.4c) quien ayuda contesta */
+    {
+      const { ctx, page, errores, sv } = await pagina('ayuda', movil);
+      await accion(page, 'avisos'); await page.waitForTimeout(900);
+      await accion(page, 'abrirAviso', { id: 'abc123def' }); await page.waitForTimeout(900);
+      ok(sv.vistos.abierto >= 1, `(g) ${donde}: al abrirlo quien ayuda, cuenta como visto (${sv.vistos.abierto})`);
+      await page.fill('#hiloTxt', 'Ya lo he mirado, ¿sigue pasando?');
+      await ponerCaptura(page);
+      await accion(page, 'responderAviso', { id: 'abc123def' }); await page.waitForTimeout(1200);
+      const r = await page.evaluate(() => { const ms = [...document.querySelectorAll('.aviso.abierto .msg')]; return { n: ms.length, lados: ms.map((m) => (m.classList.contains('mio') ? 'mio' : 'suyo')).join(','), quien: ms.map((m) => m.querySelector('b').textContent).join(','), caja: (document.querySelector('#hiloTxt') || {}).value, pill: (document.querySelector('.aviso.abierto .pill') || {}).textContent }; });
+      if (process.env.FOTOS) await page.evaluate(() => document.querySelector('.aviso.abierto .msgs').scrollIntoView()).then(() => page.screenshot({ path: `${process.env.FOTOS}/avisos-ayuda-${donde}.png` }));
+      ok(sv.vistos.responder.length === 1 && sv.vistos.responder[0].capturas.length === 1 && r.n === 2 && r.lados === 'suyo,mio' && r.quien === 'Pepe,Tú' && r.caja === '' && r.pill === 'Contestado', `(g) ${donde}: lo que contesta se añade, con captura, sale como «Tú» y queda contestado (${JSON.stringify(r)})`);
+      ok(!errores.length, `(g) ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
+      await ctx.close();
+    }
+    /* (h) (0.8.4c) el dueño ve quién contestó */
+    {
+      const { ctx, page, errores } = await pagina('dueño', movil, { conDomy: true });
+      await accion(page, 'avisos'); await page.waitForTimeout(900);
+      await accion(page, 'abrirAviso', { id: 'abc123def' }); await page.waitForTimeout(900);
+      const quien = await page.evaluate(() => [...document.querySelectorAll('.aviso.abierto .msg b')].map((b) => b.textContent).join(','));
+      ok(quien === 'Pepe,Domy,Tú', `(h) ${donde}: el dueño ve lo de quien ayuda con su nombre y lo suyo como «Tú» (${quien})`);
+      ok(!errores.length, `(h) ${donde}: sin errores${errores.length ? `: ${errores[0]}` : ''}`);
       await ctx.close();
     }
     /* (f) un servidor de antes (sin msgs) */

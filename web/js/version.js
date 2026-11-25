@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4b';
+export const VERSION = '0.8.4c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,22 @@ export const VERSION = '0.8.4b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, 12:13, Carlos: «quiero que Domy pueda responder fallos también igual que yo») quien ayuda con los fallos
+    // (AYUDANTES) ya contesta: /fallos/responder deja a 'ayuda' además de al dueño, abrir un aviso lo da por visto y le llega la
+    // cuenta de los sin contestar (el numerito y la notificación de avisos nuevos, como al dueño). Firma siempre «Fantasy
+    // Manager»; cada mensaje guarda la cuenta y el nombre de quien lo escribió (msg.aut y autn en fallos.js), que solo ven el
+    // dueño, quien ayuda y la Action («lo escribió …»), nunca quien lo mandó. Sigue sin ver el diagnóstico ni «Copiar avisos».
+    // Y (12:31, Carlos: «me dice Domy que no le sale para reportar fallos») lo de mandar uno quedaba debajo de toda la bandeja:
+    // el dueño y quien ayuda tienen dos pestañas, «Recibidos» y «Reportar un fallo» (`pest` de S.av, `pestAvisos`); la banda,
+    // la bienvenida, la etiqueta BETA, el tutorial y las pantallas de error abren directamente «Reportar un fallo».
+    // Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
+    v: '0.8.4c', f: '2026-11-25', h: '12:52', t: 'Los avisos de fallo, entre dos',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'chat', t: 'Quien te ayuda con los fallos ya puede contestarlos', x: 'Contesta los avisos desde la app igual que tú, con capturas si hace falta, y le avisa cuando llega uno nuevo. A quien lo mandó le llega firmado como Fantasy Manager; en la conversación, tú ves quién de los dos ha escrito cada respuesta.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'aviso', t: 'Reportar un fallo, a la vista', x: 'En los avisos de fallo, los recibidos y lo de mandar uno van ahora en dos pestañas, «Recibidos» y «Reportar un fallo». Antes, para mandar uno había que bajar hasta el final de todos los recibidos.' },
+    ],
+  },
   {
     // (25 nov, avisos de Fallo de Big Mac Laporta y Moukemon7) La ficha de un rival entra en las fichas apiladas
     // (`CON_PILA` en app.js): un jugador abierto desde un rival lleva «‹ Volver» y el atrás vuelve al rival. En el iPhone,

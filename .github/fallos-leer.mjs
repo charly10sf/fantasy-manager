@@ -43,7 +43,8 @@ if (que === 'llave') {
     console.log(`## ${h.id} · ${f(h.t)} · ${h.equipo || ''}${h.quien ? ` (${h.quien})` : ''} · ${h.app || ''}${h.de === 'u' ? ' · ESPERANDO RESPUESTA' : ''}`);
     const ultD = [...(h.msgs || [])].reverse().find((m) => m.de === 'd');
     for (const m of h.msgs || []) {
-      const quien = m.de === 'd' ? `→ ${m.por || 'Fantasy Manager'}` : '·';
+      // (0.8.4c) lo contestado desde la app lleva quién lo escribió (el dueño o quien ayuda); lo de la Action, no
+      const quien = m.de === 'd' ? `→ ${m.por || 'Fantasy Manager'}${m.aut ? ` (lo escribió ${m.aut})` : ''}` : '·';
       console.log(`${quien} ${f(m.t)}${m === ultD ? (h.vu >= m.t ? ' (leído)' : ' (sin leer)') : ''}: ${m.texto}`);
       if (m.caps) {
         const guardadas = [];
