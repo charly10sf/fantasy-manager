@@ -2236,6 +2236,13 @@
    "jornada": 14,
    "id": "2125590764222628012",
    "t": "2026-11-25T14:01:44.820Z"
+  },
+  {
+   "clave": "apercibidos|14|2534-3152-2387-3128-2703-2453-2562-1147-2939-3072-3026-3119",
+   "tipo": "sancionados",
+   "jornada": 14,
+   "id": "2125607062071550456",
+   "t": "2026-11-25T15:06:30.623Z"
   }
  ],
  "estados": {
@@ -4532,16 +4539,16 @@
   "dia": "2026-11-25",
   "llamadas": {
    "clasificar": 28,
-   "redactar": 12,
-   "revisar": 8,
+   "redactar": 13,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 185819,
-  "salida": 15119,
+  "entrada": 196210,
+  "salida": 15313,
   "cacheLee": 21607,
-  "cacheEscribe": 20964,
-  "dolares": 0.355855,
+  "cacheEscribe": 23867,
+  "dolares": 0.385835,
   "reservado": 0
  },
  "recientes": {
@@ -4821,6 +4828,10 @@
    {
     "t": "2026-11-25T14:01:44.823Z",
     "texto": "🟥 Riedel llegó a cinco amarillas y no estará con el Espanyol el lunes 30 de noviembre, cuando los pericos reciban al Getafe a las 21:00.\n\nEl defensa es titular habitual y lleva 3 porterías a cero en 9 partidos, así que su hueco en la zaga se nota."
+   },
+   {
+    "t": "2026-11-25T15:06:30.625Z",
+    "texto": "Doce titulares habituales van a una amarilla de la sanción: si ven otra, se pierden la jornada 15, que no se juega hasta el 5 y el 6 de diciembre.\n\nEl caso que más escuece es el de Yassir Zabiri, que llega con 30 puntos en las tres últimas jornadas y se quedaría sin el Racing-Deportivo. Y Álex Baena se perdería el Atlético-Betis.\n\nLos nombres de todos, en la imagen."
    }
   ],
   "onceideal": [
@@ -9590,13 +9601,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6325,
+   "ok": 6326,
    "fallos": 0,
-   "ejecuciones": 5144,
+   "ejecuciones": 5145,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:01:14.352Z"
+   "ultima": "2026-11-25T15:06:14.199Z"
   }
  },
  "ptsDirecto": {},
@@ -9613,15 +9624,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:01:26.434Z"
+   "ultimaBien": "2026-11-25T15:06:30.645Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:01:26.434Z"
+   "ultimaBien": "2026-11-25T15:06:30.645Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:01:26.434Z"
+   "ultimaBien": "2026-11-25T15:06:30.645Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9629,11 +9640,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:01:26.434Z"
+   "ultimaBien": "2026-11-25T15:06:30.645Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:01:26.434Z"
+   "ultimaBien": "2026-11-25T15:06:30.645Z"
   }
  },
  "avisos": [
