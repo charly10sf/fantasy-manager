@@ -115,6 +115,8 @@ public class Principal extends Activity {
         final WebViewAssetLoader cargador = Web.cargador(this);
 
         web.addJavascriptInterface(new Puente(this), "FantasyApp");
+        // (25 nov) el código de invitar con el que se instaló desde Google Play, una vez (solo en la de Play)
+        Canal.referrer(this);
         web.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {

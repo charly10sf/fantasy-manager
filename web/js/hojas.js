@@ -1562,7 +1562,7 @@ function invitarQ(C, Q) {
   const t7 = Object.entries(cnt).filter(([d]) => d >= desde).reduce((x, [, v]) => { for (const [k, n] of Object.entries(v || {})) x[k] = (x[k] || 0) + n; return x; }, {});
   if (Object.keys(cnt).length) {
     const fila = (n, t) => `<div class="q-emb-f"><b>${n || 0}</b><span>${t}</span></div>`;
-    h += tarjetaQ('Cómo llegan (7 días)', `<div class="q-inv-lleg">${fila(t7.llega, 'abren el enlace en la web')}${fila(t7.copia, 'copian el código para Google Play')}${fila(t7.canje_enlace, 'entran con el enlace (se pone solo)')}${fila(t7.canje_propuesto, 'aceptan el código que les propone la app')}${fila(t7.canje_escrito, 'lo escriben a mano')}</div>`);
+    h += tarjetaQ('Cómo llegan (7 días)', `<div class="q-inv-lleg">${fila(t7.llega, 'abren el enlace en la web')}${fila(t7.copia, 'copian el código para Google Play')}${fila(t7.canje_enlace, 'entran con el enlace (se pone solo)')}${fila(t7.canje_play, 'entran con el código de la instalación de Google Play')}${fila(t7.canje_propuesto, 'aceptan el código que les propone la app')}${fila(t7.canje_escrito, 'lo escriben a mano')}</div>`);
   }
   if (!filas.length) return `${h}<p class="q-no">Nadie ha compartido la app ni ha sacado su código todavía.</p>`;
   const max = Math.max(1, ...filas.map((x) => x.entran));

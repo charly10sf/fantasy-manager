@@ -30,7 +30,7 @@ import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
 import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
+import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
@@ -1966,9 +1966,11 @@ async function invitarSiToca({ ya = false } = {}) {
   const antes = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
   let r;
   try { r = await leerInvitar(uid, { ya, liga }); } catch (e) { return; }
+  // (25 nov, tanda 6) en la app de Google Play, el código con el que se instaló (si no se recogió al abrirla)
+  if (enApp) leerCodigoPlay();
   const cod = codigoPendiente();
   if (cod && liga && puedeCanjear(uid)) {
-    const x = await canjear(uid, cod, liga, 'enlace');
+    const x = await canjear(uid, cod, liga, viaPendiente());
     if (x.ok && !x.ya) tostada('Has entrado con la invitación de tu amigo', 5000);
   } else if (cod && r.est && r.est.puedeCanjear === false) LS.del('inv-cod');
   // (25 nov, Carlos) solo a quien parece invitado (el servidor le propone un código o alguien de su liga ha sacado el suyo);
@@ -3872,7 +3874,13 @@ if (enApp) {
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {
   // (0.7.13i) el botón de Google Play de la web, sin cuenta: una vez al día
-  if (!enApp && !haySesion() && ev.target.closest && ev.target.closest('a[href*="play.google.com/store/apps/details"]')) marcarPaso('play', { una: true });
+  if (!enApp && !haySesion() && ev.target.closest && ev.target.closest('a[href*="play.google.com/store/apps/details"]')) {
+    marcarPaso('play', { una: true });
+    // (25 nov, tanda 6) quien llegó con el código de un amigo: cualquier botón de Google Play lo lleva en el referrer, para
+    // que la app lo recoja al instalarse (no solo «Copiar el código y descargar»)
+    const a = ev.target.closest('a[href*="play.google.com/store/apps/details"]'), cp = codigoPendiente();
+    if (cp && a && !/[?&]referrer=/.test(a.getAttribute('href') || '')) a.setAttribute('href', playConCodigo(a.getAttribute('href'), cp));
+  }
   const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-club],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
   if (!el) return;
   const d = el.dataset;
@@ -5005,6 +5013,8 @@ async function arrancar() {
   leerInvitacion();
   // (25 nov) la llegada con ?inv= se cuenta y deja su huella 2 h en el servidor (para proponerle el código en la app)
   { const ci = leerCodigoEnlace(); if (ci && !enApp) avisarLlegada(ci); }
+  // (25 nov, tanda 6) y en la app de Google Play, el código que traía la instalación
+  if (enApp) leerCodigoPlay();
   leerOrigen();
   // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
   mirarWebNueva();
