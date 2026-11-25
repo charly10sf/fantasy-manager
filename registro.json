@@ -4590,7 +4590,9 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627573161
+  }
  },
  "ia": {
   "dia": "2026-11-25",
@@ -9653,13 +9655,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6350,
+   "ok": 6351,
    "fallos": 0,
-   "ejecuciones": 5169,
+   "ejecuciones": 5170,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T17:21:12.708Z"
+   "ultima": "2026-11-25T17:26:13.161Z"
   }
  },
  "ptsDirecto": {},
@@ -9676,15 +9678,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:21:21.499Z"
+   "ultimaBien": "2026-11-25T17:26:22.108Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:21:21.499Z"
+   "ultimaBien": "2026-11-25T17:26:22.108Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:21:21.499Z"
+   "ultimaBien": "2026-11-25T17:26:22.108Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9692,11 +9694,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:21:21.499Z"
+   "ultimaBien": "2026-11-25T17:26:22.108Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:21:21.499Z"
+   "ultimaBien": "2026-11-25T17:26:22.108Z"
   }
  },
  "avisos": [
