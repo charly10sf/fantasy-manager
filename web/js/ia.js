@@ -3168,8 +3168,9 @@ export function dineroPreguntado(pregunta, D, M, antes = '') {
 }
 // (25 nov) en el iPhone no hay Google Play: el dinero de un rival se abre invitando a un amigo (2 rivales por amigo)
 const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : enIPhone ? 'en el iPhone se abre invitando a un amigo, con el botón Invitar de arriba' : 'se abre viendo un anuncio en la app de Google Play');
-// «quién puede pagar tus cláusulas» se abre en la ficha de tu jugador, con un anuncio (o, en el iPhone, invitando)
-const comoSeAbreQuien = () => (topConAnuncio() ? 'se abre en la ficha de tu jugador, tocando su candado y viendo un anuncio corto' : comoSeAbre());
+// «quién puede pagar tus cláusulas» se abre en la ficha de tu jugador, con un anuncio
+// (en el iPhone, invitando solo se abre el dinero de los rivales: quién paga, de momento, no; como dondeTop de comunes.js)
+const comoSeAbreQuien = () => (topConAnuncio() ? 'se abre en la ficha de tu jugador, tocando su candado y viendo un anuncio corto' : enIPhone ? 'en el iPhone, de momento, no se puede abrir' : 'se abre viendo un anuncio en la app de Google Play');
 const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
 const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
 const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;
@@ -4258,7 +4259,7 @@ export function fotoChat(D, texto, hist = [], ahora = Date.now()) {
   return { texto, t: 0 };
 }
 /** cómo se le pide al chat el tono y lo cerrado (lo mismo va al Worker) */
-export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio() });
+export const opcionesChat = () => ({ tono: tonoDe(cfgIA().pullitas || 'normal'), bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k)), anuncio: topConAnuncio(), iphone: !!enIPhone && !topConAnuncio() });
 /** lo que va a la IA en el chat con tu clave (sin la conversación): se exporta para probarlo con la demo */
 export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web, alias = null } = {}) {
   return `${sistemaChat({ ...opcionesChat(), fotos, web, alias })}\n\n${datosChat(pregunta, D, M, c, { hist, web })}`;

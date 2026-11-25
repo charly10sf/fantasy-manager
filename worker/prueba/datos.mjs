@@ -1641,6 +1641,10 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(ch2 && !ch2.sistema[1].cache_control, 'con cacheLiga «segunda», la primera pregunta no escribe en la caché');
   const ch3 = W2.armarChat({ datos: dLiga, pregunta: '¿Vendo?', hist: [] });
   ok(ch3 && ch3.sistema.length === 2 && ch3.sistema[1].text === dLiga, 'los datos de una versión de antes (sin la marca) van como antes');
+  // (25 nov) la web del iPhone (sin anuncios) dice que lo cerrado se abre invitando, no en Google Play
+  const chI = W2.armarChat({ datos: dLiga, pregunta: '¿Cuánto dinero tiene Marcos?', hist: [], bloq: ['dineroRivales'], iphone: true });
+  const chW = W2.armarChat({ datos: dLiga, pregunta: '¿Cuánto dinero tiene Marcos?', hist: [], bloq: ['dineroRivales'] });
+  ok(chI && /invitando a un amigo/.test(chI.sistema[0].text) && !/Google Play/.test(chI.sistema[0].text) && /Google Play/.test(chW.sistema[0].text), 'chat: en la web del iPhone lo cerrado se abre invitando; en el ordenador, en la app de Google Play');
   globalThis.fetch = fAntes;
 }
 

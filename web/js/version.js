@@ -39,6 +39,7 @@ export const NOVEDADES = [
       { para: 'dueño', tipo: 'arreglo', d: 'oferta', t: 'Vender, pero esa oferta no', x: 'Si preguntas si vendes a uno que la app quiere vender pero con una oferta floja encima de la mesa, la respuesta dice las dos cosas: que lo dejes a la venta y que esa oferta no la aceptes.' },
       { para: 'dueño', tipo: 'arreglo', d: 'plan', menor: true, t: 'Lo mismo en todas partes', x: 'Una sola puja por cada libre que el plan descarta, la misma palabra para cómo va el valor de un jugador, «no se toca a los titulares» dice cuál sí se vende y por qué, y con tu puja ya puesta la ficha te dice que sigue en pie y cómo quitarla.' },
       { para: 'dueño', tipo: 'arreglo', d: 'calendario', menor: true, t: 'Jornadas con un partido aplazado', x: 'En la web, el resumen de una jornada con un partido aplazado sale con los que se han jugado y se pone al día cuando se juegue el que falta. Y el menú de Jornada lleva al resumen de la última en vez de a una previa ya jugada.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'En la web del iPhone, cómo se abre lo cerrado', x: 'Si en la web del iPhone le preguntas al chat por algo que tienes cerrado, ya no te manda a ver un anuncio en la app de Google Play: el dinero de un rival se abre invitando a un amigo, y quién paga tus cláusulas, de momento, ahí no se puede abrir.' },
     ],
   },
   {

@@ -1283,7 +1283,7 @@ export function armarChat(b, { cacheLiga = 'siempre' } = {}) {
   const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
   if (!mensajes) return null;
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
-  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
+  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, iphone: !!b.iphone && !b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
   // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
   // (19 nov) y los datos de la liga también: la app los manda en dos trozos (partirDatos), lo de la liga, que no cambia en la
   // misma conversación, y lo de esta pregunta (los jugadores y rivales que nombra, el plan, la hora); lo primero, en la caché
