@@ -3132,7 +3132,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/aprobados-y-suspensos-del-barca-ante-el-villarreal-pedri-vuelve-a-derretir-a-laporta-f202611-n/": 1795361460000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dudas-pedro-martin-1-2-barcelona-corner-protestado-villarreal-creo-toca-gulacsi-hernandez-hernandez-tendria-haber-mandado-parar-revisarlo-20261122_3479822.html": 1795361860000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254136/pedri-mvp-autocritico-hay-trabajar-no-repitan-inicios-asi.html": 1795361622000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
@@ -9630,13 +9629,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6330,
+   "ok": 6331,
    "fallos": 0,
-   "ejecuciones": 5149,
+   "ejecuciones": 5150,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:26:18.228Z"
+   "ultima": "2026-11-25T15:31:15.107Z"
   }
  },
  "ptsDirecto": {},
@@ -9653,15 +9652,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:26:29.458Z"
+   "ultimaBien": "2026-11-25T15:31:25.814Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:26:29.458Z"
+   "ultimaBien": "2026-11-25T15:31:25.814Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:26:29.458Z"
+   "ultimaBien": "2026-11-25T15:31:25.814Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9669,11 +9668,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:26:29.458Z"
+   "ultimaBien": "2026-11-25T15:31:25.814Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:26:29.458Z"
+   "ultimaBien": "2026-11-25T15:31:25.814Z"
   }
  },
  "avisos": [
