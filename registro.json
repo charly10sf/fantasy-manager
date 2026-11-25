@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136730813": 1795380014000,
    "AS|https://as.com/futbol/primera/dimitrievski-lanza-un-mensaje-a-braulio-f202611-n/": 1795394296000,
    "AS|https://as.com/futbol/primera/de-las-heridas-del-derbi-a-bratislava-f202611-n/": 1795394566000,
    "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/": 1795394243000,
@@ -9686,13 +9685,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6391,
+   "ok": 6392,
    "fallos": 0,
-   "ejecuciones": 5208,
+   "ejecuciones": 5209,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T20:37:22.248Z"
+   "ultima": "2026-11-25T20:41:51.318Z"
   }
  },
  "ptsDirecto": {},
@@ -9709,15 +9708,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T20:37:28.105Z"
+   "ultimaBien": "2026-11-25T20:41:59.599Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T20:37:28.105Z"
+   "ultimaBien": "2026-11-25T20:41:59.599Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T20:37:28.105Z"
+   "ultimaBien": "2026-11-25T20:41:59.599Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9725,11 +9724,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T20:37:28.105Z"
+   "ultimaBien": "2026-11-25T20:41:59.599Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T20:37:28.105Z"
+   "ultimaBien": "2026-11-25T20:41:59.599Z"
   }
  },
  "avisos": [
