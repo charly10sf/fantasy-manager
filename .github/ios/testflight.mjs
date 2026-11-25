@@ -51,6 +51,12 @@ Signing in ("Entrar") opens LaLiga's own login page in the system sign-in sheet 
 Ads: Google AdMob (test ads in this beta build). Before league data is sent to the AI provider, the app asks for permission and rival names are replaced with aliases.`;
 
 // ---------- la credencial de la API (JWT ES256, 20 min) ----------
+/** el .p8 tal cual lo pegue cada uno (en una línea, con \r, sin cabeceras): se rehace el PEM, como jwtApns del Worker */
+function normaP8(txt) {
+  const b = String(txt || '').replace(/-----[^-]+-----/g, '').replace(/\\n/g, '').replace(/[^A-Za-z0-9+/=]/g, '');
+  return `-----BEGIN PRIVATE KEY-----\n${b.match(/.{1,64}/g).join('\n')}\n-----END PRIVATE KEY-----\n`;
+}
+const claveP8 = () => crypto.createPrivateKey(normaP8(process.env.ASC_KEY_P8));
 const b64u = (b) => Buffer.from(b).toString('base64url');
 function credencial() {
   const id = process.env.ASC_KEY_ID, iss = process.env.ASC_ISSUER_ID, p8 = process.env.ASC_KEY_P8;
@@ -58,7 +64,7 @@ function credencial() {
   const ahora = Math.floor(Date.now() / 1000);
   const cab = b64u(JSON.stringify({ alg: 'ES256', kid: id, typ: 'JWT' }));
   const cuerpo = b64u(JSON.stringify({ iss, iat: ahora, exp: ahora + 19 * 60, aud: 'appstoreconnect-v1' }));
-  const firma = crypto.sign('sha256', Buffer.from(`${cab}.${cuerpo}`), { key: p8, dsaEncoding: 'ieee-p1363' });
+  const firma = crypto.sign('sha256', Buffer.from(`${cab}.${cuerpo}`), { key: claveP8(), dsaEncoding: 'ieee-p1363' });
   return `${cab}.${cuerpo}.${b64u(firma)}`;
 }
 
@@ -85,7 +91,7 @@ async function api(metodo, ruta, cuerpo) {
 // ---------- cifrar lo personal con la clave pública de ASC_KEY_P8 ----------
 const INFO_HKDF = Buffer.from('fantasy-manager contacto testflight');
 function clavePublica() {
-  const priv = crypto.createPrivateKey(process.env.ASC_KEY_P8);
+  const priv = claveP8();
   return crypto.createPublicKey(priv).export({ type: 'spki', format: 'der' }).toString('base64');
 }
 function cifrar(publica, datos) {
@@ -99,7 +105,7 @@ function cifrar(publica, datos) {
   return { v: 1, e: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), iv: iv.toString('base64'), d: d.toString('base64') };
 }
 function descifrar(sobre) {
-  const priv = crypto.createPrivateKey(process.env.ASC_KEY_P8);
+  const priv = claveP8();
   const efimera = crypto.createPublicKey({ key: Buffer.from(sobre.e, 'base64'), type: 'spki', format: 'der' });
   const comun = crypto.diffieHellman({ privateKey: priv, publicKey: efimera });
   const k = Buffer.from(crypto.hkdfSync('sha256', comun, Buffer.alloc(0), INFO_HKDF, 32));
@@ -244,7 +250,8 @@ async function configurar(numero) {
 }
 
 const [modo, a1, a2] = process.argv.slice(2);
-if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
+if (modo === 'p8') { fs.writeFileSync(a1, normaP8(process.env.ASC_KEY_P8), { mode: 0o600 }); claveP8(); console.log('la clave de la API, en su archivo'); }
+else if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
 else if (modo === 'cifrar') { fs.writeFileSync(ENC, JSON.stringify(cifrar(a1, JSON.parse(fs.readFileSync(a2, 'utf8')))) + '\n'); console.log('escrito', ENC); }
 else if (modo === 'comprobar') { const d = descifrar(JSON.parse(fs.readFileSync(ENC, 'utf8'))); console.log('contacto.enc se lee bien:', Object.keys(d.contacto || {}).join(', '), '·', (d.probadores || []).length, 'probadores'); }
 else if (modo === 'configurar') await configurar(a1 || process.env.BUILD || '');
