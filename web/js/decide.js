@@ -320,6 +320,10 @@ export function decidir(D, M, c = null) {
     const Pm = M._planHoy && M._planHoy.plan;
     const d2 = Pm && Pm !== P ? (Pm.descartes || []).find((y) => y && String(y.pid) === String(pid)) : null;
     if (d2) return { pid, accion: 'no', porque: quita(d2.motivo || d2.detalle) };
+    // (25 nov, hallazgo 7) el libre que Mercado llamaría «Chollo» y el plan no ficha: mirado, con su porqué (plan.js,
+    // `sinFichar`; el del plan que se ve y, si es de la IA, el de la app de ahora)
+    const sf = (P.sinFichar && P.sinFichar[pid]) || (Pm && Pm !== P && Pm.sinFichar && Pm.sinFichar[pid]) || null;
+    if (sf) return { pid, accion: 'no', porque: quita(sf), chollo: true };
     // y lo que la app no haría hoy con esa operación suelta (no te llega, el parón, no da tiempo a revenderlo…): lo mismo
     // que se le dice a la IA («LA APP NO LA HARÍA»)
     const V = M._ver || null;

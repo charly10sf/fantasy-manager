@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4j';
+export const VERSION = '0.8.4k';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,27 @@ export const VERSION = '0.8.4j';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, tanda 3 de claude/prompts-arreglos-auditoria-25nov.md, hallazgos 3, 4, 7 y 8, y el plan corto de
+    // claude/prompt-ia-cortada.md; el detalle, en claude/nota-tanda3-cuentas-plan.md y claude/nota-plan-corto.md del proyecto)
+    // (3) `cuadrarPlan` cuenta las otras ventas de hoy con el margen del motor (AJUSTES.margenVenta) antes de decir que una
+    // venta «no hace falta», y la red de `planVueltas` rehace el plan con los pasos que quedan en vez de quitar uno sin más.
+    // (4) Una sola puja: `pujaAntes`, `cifrasAlDia` y `titularAlDia` (ia.js) ponen al día las cifras y el % de titular del
+    // texto de un plan de la IA cuando se repasa con la liga de ahora (`sellarPlan` guarda lo que vio: `P.cuadradas`, `P.vio`);
+    // el % de titular es el de `M.titularidad` en todas partes. (7) `sinFichar` (plan.js) y `M.decisionFichar` (decide.js):
+    // un libre «chollo» que el plan no lleva dice por qué. (8) `noBlindar.igual`. Plan corto: SISTEMA_CORTO y `pedidoCorto`
+    // (frases de 16 palabras, situación de una frase, rivales solo si afectan); Worker: «texto N» en el registro de cada plan,
+    // `planes.pensar` (apagado no cambia nada) y la parada en «<br>». Pruebas: caso-cuentas.mjs (nueva), azar-plan con seis
+    // semillas, datos.mjs y la IA de verdad (planes-corto.mjs y chat-haiku.mjs en sus ramas)
+    v: '0.8.4k', f: '2026-11-25', h: '20:17', t: 'Las cuentas del plan, cuadradas',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'dinero', t: 'El plan ya no te deja en negativo', x: 'Con varias ventas el mismo día, el plan podía acabar con el saldo en negativo al empezar la jornada sin avisarlo. Ahora rehace las cuentas cada vez que cambia un paso y, si hace falta otra venta, la pone.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'plan', t: 'Una sola cifra en cada paso', x: 'Si el mercado cambia después de pedir el plan, la puja, el saldo y lo que dice el texto se ponen al día a la vez: ya no sale una cifra en el paso y otra en la explicación. Y el porcentaje de titular es el mismo en el plan y en la ficha del jugador.' },
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'Por qué el plan no ficha un chollo', x: 'Los libres que Mercado marcaba como chollo y el plan no fichaba ahora dicen por qué: no mejora tu once, no cabe hoy o hay que pujar de más. Los que más interesan salen en «Mirados y descartados».' },
+      { para: 'dueño', tipo: 'mejora', d: 'ia', t: 'El plan con la IA, más corto', x: 'Cada paso lleva una frase que empieza por el motivo, la situación va en una línea y de los rivales solo sale quien ha hecho algo que te afecta.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'escudo', menor: true, t: 'El blindaje que no compensa', x: 'Cuando blindar a un jugador te deja lo mismo que venderlo, lo dice así en vez de «más que».' },
+    ],
+  },
   {
     // (25 nov, tanda 6 de claude/prompts-arreglos-auditoria-25nov.md, hallazgo 16) El código de invitar desde la instalación
     // de Google Play. PARTE ANDROID NUEVA (huella nativa nueva: AAB para Play Console): Referrer.java (solo sabor play, Install

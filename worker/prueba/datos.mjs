@@ -783,9 +783,11 @@ ok(c1.b.system.includes('LOS DE LA LIGA VAN CON ALIAS') && c1.b.system.includes(
   try { rc = await plan({}); } finally { console.log = antes; respuestaClaude = respAntes; }
   const l = lineas.find((x) => /^plan .*: mal \(502\)/.test(x)) || '';
   ok(rc.s === 200 && rc.j.e && rc.j.e.includes('se ha cortado por largo') && rc.j.estado === 502, `/plan cortado por largo: el aviso de siempre (${rc.j && rc.j.e})`);
-  ok(/ en [\d.]+ s, 0 búsquedas, 5200\/8000 tokens, fin max_tokens$/.test(l), `el registro del plan cortado lleva tokens y stop_reason: «${l}»`);
-  const bien = WM.lineaPlan('abc', { plan: {} }, 23456, { busquedas: 1, entra: 12000, sale: 4100, fin: 'end_turn' });
-  ok(bien === 'plan abc: bien en 23.5 s, 1 búsquedas, 12000/4100 tokens, fin end_turn', `y el de uno bueno, también: «${bien}»`);
+  ok(/ en [\d.]+ s, 0 búsquedas, 5200\/8000 tokens, texto 47, fin max_tokens$/.test(l), `el registro del plan cortado lleva tokens, lo escrito y stop_reason: «${l}»`);
+  const bien = WM.lineaPlan('abc', { plan: {} }, 23456, { busquedas: 1, entra: 12000, sale: 4100, fin: 'end_turn', texto: 'x'.repeat(1900) });
+  ok(bien === 'plan abc: bien en 23.5 s, 1 búsquedas, 12000/4100 tokens, texto 1900, fin end_turn', `y el de uno bueno, también: «${bien}»`);
+  const sinP = WM.lineaPlan('abc', { plan: {} }, 6000, { busquedas: 0, entra: 8000, sale: 700, fin: 'end_turn', texto: 'x'.repeat(1500), sinPensar: true });
+  ok(sinP === 'plan abc: bien en 6 s, 0 búsquedas, 8000/700 tokens, texto 1500 sin pensar, fin end_turn', `y dice si iba sin pensar: «${sinP}»`);
   ok(WM.lineaPlan('', { estado: 503 }, 1000, null) === 'plan sin id: mal (503) en 1 s, sin respuesta de la IA', 'sin respuesta de la IA, sin tokens');
 }
 r = await plan({ rid: 'corte1234abc' });
@@ -1029,6 +1031,108 @@ r = await plan({}, { tk: 'u'.repeat(30) });
 cW = aClaude[aClaude.length - 1];
 ok(r.s === 200 && r.j.plan && !cW.b.tools && r.j.tok.web === 0 && (r.j.plan.fuentes || []).length === 0, `sin la búsqueda activada: se repite sin ella y sale el plan (${r.t.trim().slice(0, 100)})`);
 respuestaClaude = null;
+// (25 nov, rama worker-plan-corto) el razonamiento: por defecto no se toca; con «planes.pensar» a false, `thinking: disabled`;
+// y si el modelo no lo acepta, se repite con él y el plan sale igual
+{
+  const antesL = limitesPlanes, antesR = respuestaClaude, fetchP = globalThis.fetch;
+  limitesPlanes = { on: true, gratis: 10, max: 10, web: 0 };
+  for (let i = 0; i < 11; i++) minuto();
+  let rp = await plan({}, { tk: 'u'.repeat(30) });
+  let cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && cP.b.thinking === undefined && cP.b.output_config && cP.b.output_config.effort === 'low', 'por defecto el plan va como siempre: sin tocar el razonamiento y con esfuerzo bajo');
+  ok(Array.isArray(cP.b.stop_sequences) && cP.b.stop_sequences.includes('<br>'), 'y lleva la parada en «<br>», para que no se quede repitiéndolo hasta el tope de salida');
+  limitesPlanes = { on: true, gratis: 10, max: 10, web: 0, pensar: false };
+  for (let i = 0; i < 11; i++) minuto();
+  rp = await plan({}, { tk: 'u'.repeat(30) });
+  cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && cP.b.thinking && cP.b.thinking.type === 'disabled' && cP.b.output_config.effort === 'low', `con «pensar» a false, el plan pide contestar sin razonar (${JSON.stringify(cP.b.thinking)})`);
+  // un modelo que no lo acepta (400 con «thinking»): se repite sin eso
+  let rechazos = 0;
+  globalThis.fetch = async (u, o) => {
+    if (String(u) === 'https://api.anthropic.com/v1/messages' && JSON.parse(o.body).thinking) { rechazos++; aClaude.push({ b: JSON.parse(o.body), clave: '' }); return new Response(JSON.stringify({ type: 'error', error: { type: 'invalid_request_error', message: '"thinking.type.disabled" is not supported for this model.' } }), { status: 400 }); }
+    return fetchP(u, o);
+  };
+  const logAntes = console.log; console.log = () => {};
+  try { for (let i = 0; i < 11; i++) minuto(); rp = await plan({}, { tk: 'u'.repeat(30) }); } finally { console.log = logAntes; globalThis.fetch = fetchP; }
+  cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && rechazos === 1 && cP.b.thinking === undefined, `si el modelo no deja apagarlo, se repite con él y el plan sale (${rechazos} rechazo)`);
+  // el chat no cambia: las preguntas no llevan `thinking`
+  limitesPlanes = antesL; respuestaClaude = antesR;
+}
+// ---------- (25 nov) las búsquedas en Google, compartidas entre los planes (worker/src/busquedas.js) ----------
+{
+  const B = await import('../src/busquedas.js');
+  const QB = objetosSql(W2.Emparejar);
+  const envB = { QR: QB };
+  const t0B = Date.now();
+  const VINI = 'https://as.com/vini.html', PEDRI = 'https://www.marca.com/pedri.html';
+  const rB = { busquedas: 3, busq: [
+    { q: 'Vinícius lesión última hora', res: [{ u: VINI, t: 'Vinícius, baja dos semanas', a: 'hace 1 hora' }, { u: 'http://sin-s.com/x', t: 'x' }, { u: VINI, t: 'repetida' }] },
+    { q: 'Pedri convocatoria', res: [{ u: PEDRI, t: 'Pedri vuelve a la lista' }] },
+    { q: 'once probable laliga', res: [{ u: 'https://www.futbolfantasy.com/onces', t: 'Onces' }] },
+    { q: 'nada', res: [] },
+  ] };
+  const stA = almacenSql().storage, stB2 = almacenSql().storage;
+  await W2.webGuardar(envB, rB, stA, t0B);
+  const oB = QB.hay.get('busq|todos');
+  const clavesB = () => [...oB.m.keys()].filter((k) => k.startsWith('b|'));
+  ok(oB && clavesB().length === 3 && oB.m.get(clavesB().find((k) => oB.m.get(k).q.startsWith('Vin'))).res.length === 1, `búsquedas: se guardan las 3 con resultados, sin url repetidas ni sin https (${oB && clavesB().length})`);
+  ok((await stA.get('webt')) === t0B, 'búsquedas: y la hora en el objeto de la cuenta que buscó');
+  const PEDV = PEDIDO.replace('· X ·', '· Vinícius Júnior ·');
+  let wB = await W2.webCompartida(envB, PEDV, 1, stB2, t0B + 60e3);
+  ok(wB.web === 1 && !wB.repite && wB.recientes === 1 && wB.pedido.startsWith(PEDV) && wB.pedido.includes('BÚSQUEDAS RECIENTES') && wB.pedido.includes(VINI) && !wB.pedido.includes(PEDRI) && !wB.pedido.includes('futbolfantasy') && wB.pedido.includes('ANTES DE BUSCAR'), `búsquedas: otra cuenta con Vinícius puede buscar y le llega solo la suya (${wB.recientes}; ${wB.pedido.slice(PEDV.length, PEDV.length + 160)})`);
+  ok(wB.vistas.length === 1 && wB.vistas[0].u === VINI, 'búsquedas: su url vale como fuente');
+  const jB = PS.fuentesDe({ noticias: [{ jugador: 'Vinícius', texto: 'Baja.', efecto: 'baja', fuente: VINI }, { jugador: 'Y', texto: 'Z', fuente: 'https://inventada.com/z' }] }, [...[], ...wB.vistas], []);
+  ok(jB.noticias[0].fuente === VINI && !('fuente' in jB.noticias[1]) && jB.fuentes.length === 1, 'búsquedas: una noticia con la url de otro plan pasa; una inventada, no');
+  wB = await W2.webCompartida(envB, PEDV, 1, stA, t0B + 30 * 60e3);
+  ok(wB.web === 0 && wB.repite && wB.recientes === 1 && wB.pedido.includes('NO PUEDES BUSCAR') && !wB.pedido.includes('ANTES DE BUSCAR'), 'búsquedas: la misma cuenta a la media hora va sin buscar, con lo reciente');
+  wB = await W2.webCompartida(envB, PEDIDO, 1, stA, t0B + 30 * 60e3);
+  ok(wB.web === 0 && wB.recientes === 0 && wB.pedido === PEDIDO + '\n\nESTA VEZ NO PUEDES BUSCAR EN GOOGLE: haz el plan con lo que tienes.', 'búsquedas: sin nada reciente que le sirva, se le dice que no busque');
+  wB = await W2.webCompartida(envB, PEDV, 1, stA, t0B + 3.1 * 3600e3);
+  ok(wB.web === 1 && !wB.repite && wB.recientes === 0 && wB.pedido === PEDV, 'búsquedas: pasadas 3 h vuelve a buscar y lo de antes ya no llega');
+  wB = await W2.webCompartida(envB, PEDV, 0, stB2, t0B);
+  ok(wB.web === 0 && wB.pedido === PEDV && !wB.repite, 'búsquedas: con la búsqueda apagada, nada');
+  wB = await W2.webCompartida({}, PEDV, 1, null, t0B);
+  ok(wB.web === 1 && wB.pedido === PEDV, 'búsquedas: sin objeto, como antes');
+  await B.busqObjeto(oB.storage, { op: 'poner', xs: [{ q: 'Lamine Yamal', res: [{ u: 'https://x.es/l', t: 'L' }] }] }, PS.urlFuente, t0B + 7 * 3600e3);
+  ok(clavesB().length === 1, `búsquedas: lo de más de 6 h se borra al guardar (${clavesB().length})`);
+  const bq = W2.bloquesDe([{ type: 'server_tool_use', id: 's1', name: 'web_search', input: { query: 'Vinícius' } }, { type: 'web_search_tool_result', tool_use_id: 's1', content: [{ type: 'web_search_result', url: 'https://as.com/v', title: 'V', page_age: '1 h' }] }, { type: 'text', text: 'hola' }]);
+  ok(bq.busq.length === 1 && bq.busq[0].q === 'Vinícius' && bq.busq[0].res[0].a === '1 h' && bq.texto === 'hola', 'búsquedas: bloquesDe saca cada consulta con lo que salió');
+  ok(!B.busqRelevantes([{ q: 'lesión última hora once probable', t: 1, res: [{ u: 'https://a.com/a', t: 'a' }] }], 'lesión última hora once probable Vinícius').length, 'búsquedas: si solo coinciden palabras como «lesión» u «once», no cuenta');
+  // de punta a punta: el plan en el objeto de la cuenta busca, el siguiente de esa cuenta ya no y lleva lo reciente
+  // (un QR de mentira con SQLite y con la alarma que salta sola, como en Cloudflare: el plan se hace en la alarma)
+  const objsE = new Map();
+  let envE = null;
+  const QE = { idFromName: (n) => n, get: (id) => {
+    if (!objsE.has(id)) {
+      const a = almacenSql();
+      let o = null;
+      const pon = a.storage.setAlarm;
+      a.storage.setAlarm = async (t) => { await pon(t); if (t - Date.now() < 1000) setTimeout(() => { a.storage.deleteAlarm(); o.alarm().catch((e) => console.log('alarma de prueba:', e.message)); }, 0); };
+      o = new W2.Emparejar({ storage: a.storage }, envE);
+      objsE.set(id, { o, ...a });
+    }
+    const x = objsE.get(id);
+    return { fetch: (u, op) => x.o.fetch(new Request(u, op)) };
+  } };
+  envE = { VINCULOS: KV, ADMINS: '667015', QR: QE, CLAUDE_PLANES: 'sk-ant-prueba' };
+  limitesPlanes = { on: true, gratis: 10, max: 10, topeUsdDia: 3, web: 1 };
+  for (let i = 0; i < 11; i++) minuto();
+  const tJson = '```json\n' + JSON.stringify({ pasos: [{ id: 'p1', frase: 'Vende.' }], quita: [], mete: [], situacion: 'Bien.', noticias: [{ jugador: 'Vinícius', texto: 'Baja.', efecto: 'baja', fuente: VINI }], rivales: [], titular: 'Vende' }) + '\n```';
+  respuestaClaude = [{ content: [{ type: 'server_tool_use', id: 'su1', name: 'web_search', input: { query: 'Vinícius Júnior lesión' } }, { type: 'web_search_tool_result', tool_use_id: 'su1', content: [{ type: 'web_search_result', url: VINI, title: 'Vinícius, baja dos semanas', page_age: 'hace 1 hora' }] }, { type: 'text', text: tJson }], usage: { input_tokens: 20000, output_tokens: 3000, server_tool_use: { web_search_requests: 1 } }, stop_reason: 'end_turn' }, { content: [{ type: 'text', text: tJson }], usage: { input_tokens: 20000, output_tokens: 3000 }, stop_reason: 'end_turn' }];
+  const planE = (rid) => { minuto(); return pide({ ruta: '/plan', cuerpo: { pedido: PEDV, rid }, tk: 'h'.repeat(30), e: envE, ip: '10.9.9.5' }); };
+  let nE = aClaude.length;
+  r = await planE('busca1234abc');
+  const c1 = aClaude[nE];
+  ok(r.s === 200 && r.j.plan && r.j.plan.noticias[0].fuente === VINI && c1 && c1.b.tools && c1.b.tools[0].max_uses === 1 && !c1.b.messages[0].content.includes('BÚSQUEDAS RECIENTES'), `búsquedas: el primer plan busca (${r.t.trim().slice(0, 100)})`);
+  nE = aClaude.length;
+  r = await planE('busca5678abc');
+  const c2 = aClaude[nE];
+  ok(r.s === 200 && r.j.plan && r.j.plan.noticias[0].fuente === VINI && c2 && !c2.b.tools && c2.b.messages[0].content.includes('BÚSQUEDAS RECIENTES') && c2.b.messages[0].content.includes(VINI) && c2.b.messages[0].content.includes('NO PUEDES BUSCAR'), `búsquedas: el segundo de la misma cuenta va sin buscar, con lo del primero, y su fuente vale (${r.t.trim().slice(0, 100)})`);
+  respuestaClaude = null;
+  limitesPlanes = { on: true, gratis: 10, max: 10, web: 2 };
+  for (let i = 0; i < 11; i++) minuto();
+}
 // apagada (web: 0): ni herramienta ni párrafo
 limitesPlanes = { on: true, gratis: 10, max: 10, web: 0 };
 for (let i = 0; i < 11; i++) minuto();
@@ -1746,4 +1850,38 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   claudeMs = 0;
   ok(aApple.length === nA + 1 && aApple[nA].u.endsWith(IPHONE) && otra.j.ok === false, `sin /push no sale ningún aviso; y otra cuenta no puede quitar ni desviar el de esta (${aApple.length - nA} aviso, al iPhone de quien lo pidió)`);
   globalThis.fetch = fAntes;
+}
+
+// ---------- (25 nov) Google Noticias por el Worker: caché de Cloudflare, tope de tiempo y pausa si dice que no ----------
+{
+  const fN = globalThis.fetch;
+  const aGoogle = [];
+  let respG = 503;
+  globalThis.fetch = async (u, o) => {
+    if (String(u).startsWith('https://news.google.com/')) { aGoogle.push({ u: String(u), o }); return new Response(respG === 200 ? '<rss><channel><item><title>T</title></item></channel></rss>' : 'no', { status: respG }); }
+    return fN(u, o);
+  };
+  const UN = 'https://news.google.com/rss/search?q=Pedri&hl=es&gl=ES&ceid=ES:es';
+  const pN = () => pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': UN, 'x-m': 'GET', 'x-h': '{}' } });
+  W2.noticiasPausaHasta(0);
+  respG = 200;
+  let rN = await pN();
+  const o0 = aGoogle[0] && aGoogle[0].o;
+  ok(rN.s === 200 && rN.h.get('x-s') === '200' && rN.t.includes('<rss>') && o0 && o0.cf && o0.cf.cacheEverything && o0.cf.cacheTtlByStatus['200-299'] === W2.NOTICIAS_CACHE_S && o0.cf.cacheTtlByStatus['300-599'] === 0 && o0.signal, `noticias: lo que contesta Google se guarda en la caché de Cloudflare y con tope de tiempo (${JSON.stringify(o0 && o0.cf)})`);
+  respG = 503;
+  rN = await pN();
+  ok(rN.h.get('x-s') === '503' && aGoogle.length === 2 && W2.noticiasPausaHasta() > Date.now() + 170e3, 'noticias: Google dice 503 y empieza la pausa');
+  rN = await pN();
+  ok(rN.h.get('x-s') === '503' && aGoogle.length === 2, 'noticias: en la pausa se contesta 503 al momento, sin preguntarle');
+  W2.noticiasPausaHasta(0);
+  respG = 200;
+  rN = await pN();
+  ok(rN.h.get('x-s') === '200' && aGoogle.length === 3, 'noticias: pasada la pausa, se vuelve a preguntar');
+  // otro sitio (futbolfantasy) no lleva nada de esto
+  globalThis.fetch = async (u, o) => { if (String(u).startsWith('https://www.futbolfantasy.com/')) { aGoogle.push({ u: String(u), o }); return new Response('ok', { status: 200 }); } return fN(u, o); };
+  await pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': 'https://www.futbolfantasy.com/laliga/mercado', 'x-m': 'GET', 'x-h': '{}' } });
+  const oF = aGoogle[aGoogle.length - 1];
+  ok(oF && oF.u.includes('futbolfantasy') && !oF.o.cf && !oF.o.signal, 'noticias: lo demás que pasa por /p, como siempre');
+  W2.noticiasPausaHasta(0);
+  globalThis.fetch = fN;
 }
