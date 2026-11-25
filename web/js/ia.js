@@ -1498,7 +1498,7 @@ Ordena, recorta y explica el plan. Contesta SOLO con un bloque \`\`\`json (sin t
  "rivales": [{"manager": "nombre", "texto": "lo que ha hecho y me afecta, en una frase"}],
  "titular": "6 a 12 palabras con lo más importante de hoy"
 }
-"pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 3 noticias y 2 rivales, y solo si hay algo que contar: sin relleno.`);
+"pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 3 noticias y 2 rivales, sin relleno; la lesión o la duda de un jugador del plan se cuenta siempre.`);
   return L.join('\n');
 }
 /** las cifras en euros de un texto, cada una con lo que se le perdona por cómo está escrita («28 M» puede ser 27,84 M) */
