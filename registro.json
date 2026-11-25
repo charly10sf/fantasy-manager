@@ -4397,7 +4397,8 @@
    "SPORT|136811655": 1795554036000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
-   "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000
+   "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000
   },
   "hechos": [
    {
@@ -4450,27 +4451,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602374492
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 151322,
-  "salida": 9121,
+  "entrada": 152985,
+  "salida": 9207,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.303478,
+  "dolares": 0.303687,
   "reservado": 0
  },
  "recientes": {
@@ -9520,13 +9519,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6272,
+   "ok": 6273,
    "fallos": 0,
-   "ejecuciones": 5091,
+   "ejecuciones": 5092,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T10:41:21.139Z"
+   "ultima": "2026-11-25T10:46:15.193Z"
   }
  },
  "ptsDirecto": {},
@@ -9543,15 +9542,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:41:30.717Z"
+   "ultimaBien": "2026-11-25T10:46:26.853Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:41:30.717Z"
+   "ultimaBien": "2026-11-25T10:46:26.853Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:41:30.717Z"
+   "ultimaBien": "2026-11-25T10:46:26.853Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9559,11 +9558,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:41:30.717Z"
+   "ultimaBien": "2026-11-25T10:46:26.853Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:41:30.717Z"
+   "ultimaBien": "2026-11-25T10:46:26.853Z"
   }
  },
  "avisos": [
