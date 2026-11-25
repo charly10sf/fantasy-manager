@@ -4451,7 +4451,9 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602374492
+  }
  },
  "ia": {
   "dia": "2026-11-25",
@@ -9516,13 +9518,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6268,
+   "ok": 6269,
    "fallos": 0,
-   "ejecuciones": 5087,
+   "ejecuciones": 5088,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T10:21:14.385Z"
+   "ultima": "2026-11-25T10:26:14.492Z"
   }
  },
  "ptsDirecto": {},
@@ -9539,15 +9541,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:21:21.912Z"
+   "ultimaBien": "2026-11-25T10:26:23.762Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:21:21.912Z"
+   "ultimaBien": "2026-11-25T10:26:23.762Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:21:21.912Z"
+   "ultimaBien": "2026-11-25T10:26:23.762Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9555,11 +9557,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:21:21.912Z"
+   "ultimaBien": "2026-11-25T10:26:23.762Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:21:21.912Z"
+   "ultimaBien": "2026-11-25T10:26:23.762Z"
   }
  },
  "avisos": [
