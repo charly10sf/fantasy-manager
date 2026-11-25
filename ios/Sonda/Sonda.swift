@@ -200,13 +200,14 @@ extension Principal {
         window.anuncioVisto = function (p, v, m) { H.anuncio = { para: p, visto: v, motivo: m }; };
         var n = 0, pedir = function () { n++; H.anuncio = null; F.verAnuncio('prueba'); paso('pedido ' + n); };
         pedir();
-        // (si AdMob aún no había arrancado contesta que no hay anuncio: se pide otra vez, hasta 8)
-        setInterval(function () { if (H.anuncio && !H.anuncio.visto && H.anuncio.motivo !== 'cerrado antes de tiempo' && n < 8) pedir(); }, 5000);
+        // (si AdMob aún no había arrancado, o el anuncio de prueba tarda en llegar, contesta que no hay anuncio: se pide
+        // otra vez, hasta 30 veces)
+        setInterval(function () { if (H.anuncio && !H.anuncio.visto && H.anuncio.motivo !== 'cerrado antes de tiempo' && n < 30) pedir(); }, 5000);
       });
       if (QUE === 'inter') cuando(lista, function () {
         window.intersticialVisto = function (ok, m) { H.inter = { ok: ok, motivo: m }; };
         var n = 0, i = setInterval(function () {
-          if ((H.inter && H.inter.ok) || n++ > 25) { clearInterval(i); return; }
+          if ((H.inter && H.inter.ok) || n++ > 45) { clearInterval(i); return; }
           F.zonaAnuncios(true, '', true); F.intersticial('');
         }, 3000);
         paso('pidiendo');

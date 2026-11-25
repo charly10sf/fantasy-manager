@@ -397,7 +397,8 @@ final class PruebasUI: XCTestCase {
         var s = esperar("AdMob arrancado", 60, falla: false) { self.si(self.anuncios($0)["listo"]) }
         apuntar("11-admob", ["anuncios": anuncios(s), "pasos": pasos(s)])
         XCTAssertTrue(si(anuncios(s)["listo"]), "AdMob no ha arrancado: \(anuncios(s))")
-        s = esperar("el bonificado en pantalla", 70, falla: false) { self.si(self.anuncios($0)["enPantalla"]) }
+        // (el anuncio de prueba de Google a veces tarda en llegar: la app lo vuelve a pedir cada 5 s)
+        s = esperar("el bonificado en pantalla", 170, falla: false) { self.si(self.anuncios($0)["enPantalla"]) }
         apuntar("11-bonificado", ["anuncios": anuncios(s), "haz": haz(s)])
         XCTAssertTrue(si(anuncios(s)["enPantalla"]), "el bonificado de prueba no ha salido: \(anuncios(s)) \(haz(s))")
         Thread.sleep(forTimeInterval: 4)
@@ -419,7 +420,7 @@ final class PruebasUI: XCTestCase {
     /// El intersticial y el de apertura, con los bloques de prueba de Google
     func test8IntersticialYApertura() {
         abrirHaciendo("inter")
-        var s = esperar("el intersticial en pantalla", 90, falla: false) { self.si(self.anuncios($0)["enPantalla"]) }
+        var s = esperar("el intersticial en pantalla", 150, falla: false) { self.si(self.anuncios($0)["enPantalla"]) }
         apuntar("12-intersticial", ["anuncios": anuncios(s), "haz": haz(s)])
         if si(anuncios(s)["enPantalla"]) { Thread.sleep(forTimeInterval: 3); captura("12-intersticial") }
         XCTAssertTrue(si(anuncios(s)["enPantalla"]), "el intersticial de prueba no ha salido: \(anuncios(s)) \(haz(s))")
