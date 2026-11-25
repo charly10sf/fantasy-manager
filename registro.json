@@ -3118,7 +3118,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000,
    "SPORT|136723946": 1795356873000,
@@ -9526,13 +9525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6296,
+   "ok": 6297,
    "fallos": 0,
-   "ejecuciones": 5115,
+   "ejecuciones": 5116,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T12:41:16.469Z"
+   "ultima": "2026-11-25T12:46:20.713Z"
   }
  },
  "ptsDirecto": {},
@@ -9549,15 +9548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:41:24.744Z"
+   "ultimaBien": "2026-11-25T12:46:29.932Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:41:24.744Z"
+   "ultimaBien": "2026-11-25T12:46:29.932Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:41:24.744Z"
+   "ultimaBien": "2026-11-25T12:46:29.932Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9565,11 +9564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:41:24.744Z"
+   "ultimaBien": "2026-11-25T12:46:29.932Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:41:24.744Z"
+   "ultimaBien": "2026-11-25T12:46:29.932Z"
   }
  },
  "avisos": [
