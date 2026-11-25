@@ -4604,9 +4604,7 @@
    "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/29/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795629374138
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
@@ -9669,13 +9667,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6358,
+   "ok": 6359,
    "fallos": 0,
-   "ejecuciones": 5177,
+   "ejecuciones": 5178,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T18:01:13.227Z"
+   "ultima": "2026-11-25T18:06:13.664Z"
   }
  },
  "ptsDirecto": {},
@@ -9692,15 +9690,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:01:27.449Z"
+   "ultimaBien": "2026-11-25T18:06:22.207Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:01:27.449Z"
+   "ultimaBien": "2026-11-25T18:06:22.207Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:01:27.449Z"
+   "ultimaBien": "2026-11-25T18:06:22.207Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9708,11 +9706,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:01:27.449Z"
+   "ultimaBien": "2026-11-25T18:06:22.207Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:01:27.449Z"
+   "ultimaBien": "2026-11-25T18:06:22.207Z"
   }
  },
  "avisos": [
