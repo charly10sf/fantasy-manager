@@ -1639,6 +1639,8 @@ async function sinc(req, env, c) {
   let b = null;
   try { b = JSON.parse(txt); } catch (e) { b = null; }
   if (!b || !ligaOk(b.liga)) return json({ e: 'Liga no válida' }, 400, c);
+  // (25 nov, B-3) de dónde sale cada llamada y qué sube, para contarlo en Observability («sinc entrar -», «sinc subir chat»)
+  console.log(`sinc ${String(b.por || '?').replace(/[^a-z0-9+]/gi, '').slice(0, 12) || '?'} ${Object.keys(b.pon && typeof b.pon === 'object' ? b.pon : {}).join(',').slice(0, 40) || '-'}`);
   const obj = env.QR.get(env.QR.idFromName(`sinc|${u.uid}`));
   const r = await (await obj.fetch('https://freno/sinc', { method: 'POST', body: JSON.stringify({ op: 'sinc', liga: String(b.liga), pon: b.pon, tengo: b.tengo, ahora: Date.now() }) })).json();
   return json(r, r.ok ? 200 : 400, c);

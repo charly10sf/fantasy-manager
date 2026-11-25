@@ -42,21 +42,23 @@ export function iniciarSinc({ liga, llega = null, charlando = null } = {}) {
 /** tras un cambio de aquí: se sube a los SUBIR_TRAS sin más cambios (con la app en segundo plano, ya: ahí los relojes se paran) */
 function subirLuego() {
   if (!ligaS || enDemo()) return;
-  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') { subirYa(); return; }
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') { subirYa('oculta'); return; }
   clearTimeout(reloj);
   pendiente = true;
   reloj = setTimeout(subirYa, SUBIR_TRAS);
 }
-function subirYa() { clearTimeout(reloj); pendiente = false; sincronizar({ ya: true, subir: true }); }
+function subirYa(por = 'subir') { clearTimeout(reloj); pendiente = false; sincronizar({ ya: true, subir: true, por }); }
 // al irse a segundo plano con una subida esperando, se sube ya (Android congela los relojes de una app que no se ve)
-if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && pendiente) subirYa(); });
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && pendiente) subirYa('oculta'); });
 
 /**
  * Sube lo de aquí que el servidor no tiene y baja lo que tiene más nuevo. Devuelve las claves que han cambiado aquí
  * (plan, chat, notas, hechos). Como mucho cada ESPERA salvo `ya`. Con `subir` (viene de un cambio de aquí), si no hay
  * nada que subir no llama. Nunca lanza.
  */
-export async function sincronizar({ ya = false, conChat = false, subir = false } = {}) {
+// (25 nov, B-3) `por`: de dónde sale la llamada (entrar, cada10, volver, vista, plan, fondo, pregunta, subir, oculta); el Worker
+// lo apunta en su registro para contar en Observability de qué son las ~20 llamadas por persona y día
+export async function sincronizar({ ya = false, conChat = false, subir = false, por = '' } = {}) {
   if (!ligaS || enDemo()) return [];
   if (!ya && Date.now() - ult < ESPERA) return [];
   // (con una en marcha, lo cambiado mientras tanto se sube al acabar)
@@ -80,7 +82,7 @@ export async function sincronizar({ ya = false, conChat = false, subir = false }
       if (!conBase() && Object.entries(loc0).some(([k, d]) => d && d.t && d.t > (Number(sub[k]) || 0))) {
         const visto = {};
         for (const k of Object.keys(loc0)) visto[k] = Number(sub[k]) || 0;
-        const r0 = await pedirWorker('POST', '/sinc', { liga: ligaS, pon: {}, tengo: visto }, { tiempo: 12000 });
+        const r0 = await pedirWorker('POST', '/sinc', { liga: ligaS, pon: {}, tengo: visto, por }, { tiempo: 12000 });
         if (!r0 || !r0.ok) return [];
         poner(r0.trae);
       }
@@ -95,7 +97,7 @@ export async function sincronizar({ ya = false, conChat = false, subir = false }
         }
         // un cambio de aquí que no se puede subir aún (la conversación, con la IA contestando): ni se llama
         if ((subir || vuelta) && !Object.keys(pon).length) break;
-        const r = await pedirWorker('POST', '/sinc', { liga: ligaS, pon, tengo, base }, { tiempo: 12000 });
+        const r = await pedirWorker('POST', '/sinc', { liga: ligaS, pon, tengo, base, por: vuelta ? `${por}+` : por }, { tiempo: 12000 });
         if (!r || !r.ok) return [...llegadas];
         if (r.base === 1 && !conBase()) LS.set('sinc-base', 1);
         // lo que ha chocado (otro dispositivo lo cambió desde la última vez): se junta aquí y se vuelve a subir
@@ -119,6 +121,6 @@ export async function sincronizar({ ya = false, conChat = false, subir = false }
 }
 
 /** antes de pedir un plan solo: mira si otro dispositivo ya lo tiene (como mucho `ms` de espera) */
-export function sincAntes(ms = 5000, { conChat = false } = {}) {
-  return Promise.race([sincronizar({ ya: true, conChat }), new Promise((ok) => setTimeout(() => ok([]), ms))]);
+export function sincAntes(ms = 5000, { conChat = false, por = 'antes' } = {}) {
+  return Promise.race([sincronizar({ ya: true, conChat, por }), new Promise((ok) => setTimeout(() => ok([]), ms))]);
 }

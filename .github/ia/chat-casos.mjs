@@ -143,11 +143,11 @@ export const CASOS = [
   // contarle un hecho y preguntar después (22 nov, Carlos: «no me quedan blindajes» y el plan rehecho mandó blindar)
   { id: 'dicho-blindajes', tipo: 'contado', prep: 'blindable', q: 'No me quedan más blindajes, tenlo en cuenta la próxima vez que rehagas el plan', contado: 'blindajes', noDebe: /quito[^.]{0,60} del plan|para la pr[oó]xima vez|la pr[oó]xima vez que/ },
   { id: 'dicho-blindajes-hoy', tipo: 'contado', sigue: true, q: '¿Qué hago hoy?', noDebe: /\b(bl[ií]nda(lo|le|los)?|ponle el (blindaje|escudo)|usa (el|un|tu) (blindaje|escudo)|gasta (el|un) (blindaje|escudo))\b/ },
-  { id: 'dicho-blindar-a', tipo: 'contado', sigue: true, q: '¿Y a {BLIND} no lo blindo?', debe: /no te queda|sin blindaje|no quedan|gastad|no puedes|ning[uú]n blindaje/ },
+  { id: 'dicho-blindar-a', tipo: 'contado', sigue: true, q: '¿Y a {BLIND} no lo blindo?', debe: /no te queda|sin blindaje|no quedan|quedan 0|gastad|no puedes|ning[uú]n blindaje|ya no sirve/ },
   { id: 'dicho-novender', tipo: 'contado', q: 'A {PLANV} no lo vendo, que lo sepas', contado: 'no-vender', noDebe: /lo quito del plan|para la pr[oó]xima vez/ },
   { id: 'dicho-novender-caja', tipo: 'contado', sigue: true, q: '¿A quién vendo para hacer caja?', noDebe: /(vende|vender|venta) a \{PLANV\}|\{PLANV\}[^.]{0,60}(v[eé]ndelo|ponlo (a la|en) venta)/ },
   { id: 'dicho-puja', tipo: 'contado', q: 'Ya he pujado por {CHOLLO}', contado: 'puja' },
-  { id: 'dicho-puja-hoy', tipo: 'contado', sigue: true, q: '¿Por quién pujo hoy?', noDebe: /puja[^.]{0,40} por \{CHOLLO\}/ },
+  { id: 'dicho-puja-hoy', tipo: 'contado', sigue: true, q: '¿Por quién pujo hoy?', noDebe: /(?<!tu )puja[^.]{0,40} por \{CHOLLO\}(?![^.]{0,40}\bno la subas)/ },
   { id: 'dicho-pregunta', tipo: 'contado', q: '¿Vendo a {MIO}?' },
   { id: 'dicho-a-ese', tipo: 'contado', sigue: true, q: 'Pues a ese no lo vendo ni loco', contado: 'no-vender' },
   { id: 'dicho-opinion', tipo: 'contado', q: 'No me fío mucho de {MIO2}, tenlo en cuenta' },

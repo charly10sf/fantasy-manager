@@ -4041,6 +4041,8 @@ export function consejoEnFrase(frase) {
   const k = norm(frase || '');
   // (lo que cuenta que decía antes el plan o ella no es un consejo de ahora: «el plan de las 06:25 decía aceptar la oferta»)
   if (/\b(decia|decias|dije|dijiste|ponia|proponia|mandaba|recomendaba|aconsejaba)\b/.test(k)) return null;
+  // (25 nov) «no aparece ninguna oferta por Hugo Duro que haya que aceptar» cuenta lo que no hay, no manda nada
+  if (/\b(no|ninguna?|nada)\b[^.]{0,70}\bque (haya|hay|tengas) que (aceptar|vender)\b/.test(k)) return null;
   if (NO_VENDE.test(k)) return 'A';
   if (SI_VENDE.test(k) && !CON_CONDICION.test(k)) return 'V';
   return null;
