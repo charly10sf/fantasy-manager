@@ -2215,6 +2215,13 @@
    "jornada": 14,
    "id": "2125469955730616571",
    "t": "2026-11-25T06:01:41.938Z"
+  },
+  {
+   "clave": "previa|132",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125501377174462680",
+   "t": "2026-11-25T08:06:33.377Z"
   }
  ],
  "estados": {
@@ -3261,7 +3268,8 @@
    "SPORT|136796550": 1795586435000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000,
    "SPORT|136822022": 1795589209000,
-   "SPORT|136822228": 1795589185000
+   "SPORT|136822228": 1795589185000,
+   "SPORT|135681299": 1795590000000
   },
   "hechos": [
    {
@@ -3482,7 +3490,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -4444,17 +4452,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 7,
-   "redactar": 5,
-   "revisar": 3,
+   "clasificar": 8,
+   "redactar": 7,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 80622,
-  "salida": 5939,
+  "entrada": 108787,
+  "salida": 6641,
   "cacheLee": 2903,
-  "cacheEscribe": 5806,
-  "dolares": 0.162224,
+  "cacheEscribe": 8709,
+  "dolares": 0.22781,
   "reservado": 0
  },
  "recientes": {
@@ -4548,10 +4556,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-19T20:06:31.392Z",
-    "texto": "🗓️ Posibles onces de Levante-Elche, el lunes a las 21:00\n\nLo que no está claro: Lemar (42 %), B. Sangare (47 %) y Cepeda en el Elche 🌴, y Manu Sánchez, Ifeanyi Ndukwe y Etta Eyong en el Levante 🐸. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y M. Dituro (92 %).\n\nEn la tabla hay poco que separar al Levante (17º) del Elche (18º)."
-   },
-   {
     "t": "2026-11-24T08:06:54.596Z",
     "texto": "🗓️ El cruce de Betis-Rayo, el sábado a las 14:00, favorece a los delanteros y medios del Betis, porque el Rayo es de los que más encajan: 1,8 por partido, y va 16º.\n\nEn el Betis, Valles es el fijo bajo palos, con un 94 % de titularidad, y Cucho, con un 54 %, tiene más opciones de jugar que de quedarse fuera. Isco también es fijo.\n\nEl Rayo no tendrá a Batalla, lesionado. Álvaro García y Pedrosa son duda, aunque lo más probable es que estén, y Camello y Unai López son seguros."
    },
@@ -4566,6 +4570,10 @@
    {
     "t": "2026-11-25T06:01:41.941Z",
     "texto": "El Celta-Villarreal del domingo (18:30, Balaídos) llega con un cruce claro: los celestes encajan poco y a los delanteros y medios del Villarreal les toca picar piedra.\n\nAl portero y a los defensas amarillos les viene mejor, porque el Celta marca poco.\n\nEn el Celta faltan Román, lesionado, y Yoel Lago, sancionado. Radu es el fijo bajo palos, con un 94 % de titularidad. Pablo Durán y Hugo Alvarez son duda, aunque lo más probable es que jueguen.\n\nEn el Villarreal no está Gerard, lesionado. Freeman y C. Romero tienen más opciones de salir que de quedarse fuera."
+   },
+   {
+    "t": "2026-11-25T08:06:33.380Z",
+    "texto": "La Real y el Sevilla llegan a Anoeta, el domingo a las 21:00, pegados en la tabla: 5º y 6º.\n\nEl cruce favorece a los delanteros y medios sevillistas, porque la Real es de los que más encajan. Al portero y a los defensas del Sevilla les toca sufrir, porque los txuri-urdin también marcan mucho.\n\nEn la Real, Barrenetxea está lesionado y Sucic, con un 62 % de titularidad, y Oskarsson, con un 59 %, tienen más opciones de jugar que de no hacerlo. Oyarzabal es fijo.\n\nEl Sevilla no cuenta con Miguel Sierra, lesionado, y Guridi lo tiene difícil. Fofana y Kike Salas son seguros."
    }
   ],
   "noticias": [
@@ -9504,13 +9512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6240,
+   "ok": 6241,
    "fallos": 0,
-   "ejecuciones": 5059,
+   "ejecuciones": 5060,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T08:01:13.050Z"
+   "ultima": "2026-11-25T08:06:12.429Z"
   }
  },
  "ptsDirecto": {},
@@ -9527,15 +9535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:01:20.936Z"
+   "ultimaBien": "2026-11-25T08:06:35.026Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:01:20.936Z"
+   "ultimaBien": "2026-11-25T08:06:35.026Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:01:20.936Z"
+   "ultimaBien": "2026-11-25T08:06:35.026Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9543,11 +9551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:01:20.936Z"
+   "ultimaBien": "2026-11-25T08:06:35.026Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:01:20.936Z"
+   "ultimaBien": "2026-11-25T08:06:35.026Z"
   }
  },
  "avisos": [
