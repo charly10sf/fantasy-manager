@@ -235,6 +235,12 @@ extension Principal {
           paso('ventana');
         }, function (e) { paso('error: ' + e); });
       });
+      // (iOS 6) las capturas de la App Store: sin caras, escudos ni logo de LaLiga, como con «sinFotos» de limites.json
+      // (la web vuelve a poner la clase al leer limites.json: se repone cada vez que la quite)
+      if (QUE === 'tienda') {
+        var h = document.documentElement, poner = function () { if (!h.classList.contains('sin-fotos')) h.classList.add('sin-fotos'); };
+        poner(); new MutationObserver(poner).observe(h, { attributes: true, attributeFilter: ['class'] }); paso('sin fotos');
+      }
       if (QUE === 'apertura') cuando(lista, function () {
         window.aperturaVista = function (ok, m) { H.apertura = { ok: ok, motivo: m }; };
         // (unos segundos después de cargar, como cuando acaba de cargar la liga)
