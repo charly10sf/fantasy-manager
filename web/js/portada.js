@@ -361,7 +361,7 @@ export function portalHTML(arriba = '') {
 }
 
 /** la presentación de la app: va en su apartado, «La app», debajo del portal y de lo de entrar */
-export function seccionMoviles() {
+export function seccionMoviles(plat = '') {
   return `<div class="portada-m">
   ${seccion('pAsi', 'Paso a paso', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
@@ -392,7 +392,7 @@ export function seccionMoviles() {
 
   <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis. En Android, con la app. En el iPhone y en el ordenador se usa desde esta misma web, sin descargar nada.</p>
-    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <div class="pz-b">${plat === 'iphone' ? '' : `<a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a>`}<a class="btn${plat === 'iphone' ? '' : ' sec'}" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 

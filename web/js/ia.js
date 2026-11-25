@@ -4,7 +4,7 @@
    Google es un ajuste (en el chat, solo cuando hace falta; en el plan, apagada por defecto: tarda el doble).
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
-import { leer, guardar, http, enApp, despues, nativo } from './puente.js';
+import { leer, guardar, http, enApp, enIPhone, despues, nativo } from './puente.js';
 import { token, sesion } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
 import { K } from './datos.js';
@@ -3031,7 +3031,8 @@ export function dineroPreguntado(pregunta, D, M, antes = '') {
   const de = (cerrado) => tids.filter((t) => String(t) !== String(yo) && bloqueada('dineroRivales', t) === cerrado).map((t) => ({ tid: String(t), nombre: nombreTid(M, t) }));
   return { cerrados: de(true), abiertos: de(false) };
 }
-const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : 'se abre viendo un anuncio en la app de Google Play');
+// (25 nov) en el iPhone no hay Google Play: el dinero de un rival se abre invitando a un amigo (2 rivales por amigo)
+const comoSeAbre = () => (topConAnuncio() ? 'se abre en Rivales, tocando su candado y viendo unos anuncios cortos' : enIPhone ? 'en el iPhone se abre invitando a un amigo, con el botón Invitar de arriba' : 'se abre viendo un anuncio en la app de Google Play');
 const HABLA_DINERO = /\b(dinero|saldo|pasta|presupuesto|liquidez|banco)\b/;
 const CUANTO_DINERO = /\d[\d.,]*\s?(m\b|millones|mil\b|k\b)|\b(mucho|muchisimo|poco|poquisimo|algo|medio|media|bastante|de sobra|le sobra|les sobra|justo|justito|apretad\w*|tramo|margen|holgad\w*|limitad\w*|escaso|alto|bajo|rico|pobre|mas que|menos que|por debajo|por encima|de los que mas|de los que menos|el que mas|el que menos|le da para|le llega|no le llega|en negativo)\b/;
 const MIO_DINERO = /\b(tu saldo|tu dinero|tu caja|tienes|te queda|te quedan|te llega|te falta|te faltan)\b/;

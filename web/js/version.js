@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4e';
+export const VERSION = '0.8.4f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,24 @@ export const VERSION = '0.8.4e';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, auditoría de fallos, tanda 4: hallazgos 5, 6, 10, 11, 12, 13 y el texto del 16; con las dos decisiones por
+    // defecto, que no cambian ninguna regla de Carlos) En el iPhone, el candado de cada función top dice lo que es verdad:
+    // invitando a un amigo solo se abre el dinero de los rivales; las demás, «de momento, no se puede abrir», sin prometer la
+    // app de la App Store (`dondeTop(clave)`). El candado de la web es una ficha más ('bloq', `bloqHTML`) y desde la ficha de
+    // un rival «Entendido» y el atrás vuelven a ella. Las fichas apiladas (`CON_PILA`) llevan también el resumen de tu equipo
+    // y el once de una jornada, y un rival abierto desde otra ficha va con su pila. El chat sin preguntas solo habla de Google
+    // Play en un Android (`enAndroid`); en el iPhone y el ordenador, «Mañana tienes otras 3». Ajustes → Tu plan, con la cifra
+    // de `planesCfg` (en la web, 5) y los de más con anuncio solo en la de Google Play. En el iPhone, «Empieza hoy» de la
+    // portada sin el botón de Google Play y, a la IA, que el dinero de un rival se abre invitando. «si la descargas de Google
+    // Play» en el mensaje de invitar. Pruebas: prueba-web (bloque 20), prueba-entrada, prueba-aviso y las sondas. Solo web
+    v: '0.8.4f', f: '2026-11-25', h: '16:12', t: 'Volver a donde estabas',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'arreglo', t: 'Volver a donde estabas', x: 'Al abrir un jugador desde el resumen de tu equipo o desde el once de una jornada, o un rival desde la ficha de un jugador, el atrás te sacaba de todo. Ahora sale «Volver» y vuelves a donde estabas. Lo mismo con el candado de dentro de la ficha de un rival.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Los candados, en el iPhone', x: 'En el iPhone, cada función top dice lo que es verdad: el dinero de los rivales se abre invitando a un amigo y las demás, de momento, no se pueden abrir ahí. Y al acabar las preguntas del día, en el iPhone y el ordenador ya no se habla de Google Play.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'arreglo', t: 'Los planes gratis, bien contados', x: 'En los ajustes del plan sale el número de planes gratis que tienes de verdad cada día en la web, y lo de verlos con un anuncio solo en la app de Google Play.' },
+    ],
+  },
   {
     // (25 nov, 13:33, Carlos: «quiero que subas todo lo que queda pendiente») La tarjeta de la app para iPhone (Carlos, 13:00;
     // diseño A2 elegido a las 13:29): una vez por dispositivo a todos con su liga cargada, con la línea de su plataforma

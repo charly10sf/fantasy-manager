@@ -1469,6 +1469,85 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
   await ctx.close();
 }
 
+// 20 (25 nov, auditoría de fallos, hallazgos 10-13): el atrás desde el resumen de tu equipo, desde el once de una jornada y
+// desde un rival abierto en otra ficha vuelve a donde estabas, con «‹ Volver»; el candado de dentro de la ficha de un rival
+// vuelve a ella; y en el iPhone cada candado dice lo que es verdad (invitando solo se abre el dinero de los rivales)
+{
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
+  const est = () => page.evaluate(() => ({ tipo: window.S.tipoHoja ? window.S.tipoHoja.join(':') : null, volver: ((document.querySelector('.hoja .volver-h') || {}).textContent || '').trim() }));
+  const atras = async () => { await page.evaluate(() => window.atras()); await page.waitForTimeout(450); };
+  const cerrarTodo = async () => { for (let i = 0; i < 5 && (await page.evaluate(() => !!window.S.hoja)); i++) await page.evaluate(() => document.querySelector('.hoja .hoja-cab [data-accion="cerrarHoja"]').click()).catch(() => {}), await page.waitForTimeout(350); };
+  const tocar = async (sel) => { await page.evaluate((x) => document.querySelector(x).click(), sel); await page.waitForTimeout(600); };
+  const ir = async (v) => { await page.evaluate((x) => { location.hash = '#' + x; }, v); await page.waitForTimeout(600); };
+  const ida = async (nombre, abrir, dentro, espera) => {
+    await cerrarTodo();
+    try {
+      await abrir();
+      const a = await est();
+      const hay = await page.evaluate((x) => !!document.querySelector(x), dentro);
+      if (!a.tipo || !hay) { mal(`atrás, ${nombre}: no se abre o no hay nada dentro (${JSON.stringify(a)}, ${dentro}: ${hay})`); return; }
+      await tocar(dentro);
+      const b = await est();
+      await atras();
+      const c = await est();
+      if (b.tipo === a.tipo || !b.volver || !espera.test(b.volver) || c.tipo !== a.tipo) mal(`atrás, ${nombre}: ${JSON.stringify({ a, b, c })}`);
+      else bien(`atrás, ${nombre}: ${a.tipo} → ${b.tipo} con «‹ ${b.volver}» y el atrás vuelve a ${c.tipo}`);
+    } catch (e) { mal(`atrás, ${nombre}: ${e.message.split('\n')[0]}`); }
+  };
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 });
+    await ir('hoy');
+    await ida('desde el resumen de tu equipo', () => tocar('#app [data-accion="resumen"]'), '.hoja [data-j]:not([data-accion])', /Tu equipo hoy/);
+    // el once de un mánager en una jornada (Rivales → Por jornada)
+    await ir('rivales');
+    await page.evaluate(() => { const b = document.querySelector('#vista [data-seg="rivales:jornadas"]'); if (b) b.click(); });
+    await page.waitForTimeout(600);
+    await ida('desde el once de una jornada', () => tocar('#app [data-accion="onceJ"]'), '.hoja [data-j]:not([data-accion])', /· J\d+/);
+    // un jugador de otro mánager y, desde su ficha, su dueño
+    const pid = await page.evaluate(() => { const S = window.S, yo = String(S.D.yo && S.D.yo.teamId); const x = (S.M.clausulas || []).find((c) => c.teamId && String(c.teamId) !== yo); return x ? String(x.pid) : null; });
+    await ida('a un rival desde la ficha de un jugador', async () => { await page.evaluate((p) => { const b = document.createElement('button'); b.dataset.j = p; b.id = 'pruebaJ'; document.querySelector('#app').append(b); b.click(); b.remove(); }, pid); await page.waitForTimeout(600); }, '.hoja [data-r]', /\S/);
+    // el candado dentro de la ficha de un rival: «Entendido» vuelve a la ficha
+    await cerrarTodo();
+    await tocar('#app [data-r]');
+    const r0 = await est();
+    await tocar('.hoja [data-accion="bloqueada"]');
+    const b = await est();
+    await page.evaluate(() => { const l = [...document.querySelectorAll('.hoja .bloq-hoja [data-accion="cerrarHoja"]')]; l[l.length - 1].click(); });
+    await page.waitForTimeout(600);
+    const c = await est();
+    if (!/^r:/.test(r0.tipo || '') || !/^bloq:/.test(b.tipo || '') || !b.volver || c.tipo !== r0.tipo) mal(`atrás, el candado de la ficha de un rival: ${JSON.stringify({ r0, b, c })}`);
+    else bien(`atrás, el candado de la ficha de un rival: «Entendido» vuelve a ${c.tipo}`);
+    if (errores.length) mal(`atrás: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`atrás: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+{
+  const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1';
+  const { ctx, page, errores } = await pagina({ init: `Object.defineProperty(navigator, 'userAgent', { get: () => ${JSON.stringify(UA)} });`, reloj: RELOJ });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 });
+    const vistos = {};
+    for (const v of ['mercado', 'rivales', 'equipo', 'hoy']) {
+      await page.evaluate((x) => { location.hash = '#' + x; }, v); await page.waitForTimeout(600);
+      const claves = await page.evaluate(() => [...new Set([...document.querySelectorAll('#app [data-accion="bloqueada"]')].map((e) => e.dataset.clave))]);
+      for (const k of claves) {
+        if (vistos[k]) continue;
+        await page.evaluate((x) => [...document.querySelectorAll('#app [data-accion="bloqueada"]')].find((e) => e.dataset.clave === x).click(), k);
+        await page.waitForTimeout(500);
+        vistos[k] = await page.evaluate(() => { const h = document.querySelector('.hoja .bloq-hoja'); return h ? { t: h.innerText.replace(/\s+/g, ' '), play: !!h.querySelector('a[href*="play.google.com"]') } : null; });
+        await page.evaluate(() => window.atras()); await page.waitForTimeout(350);
+      }
+    }
+    const malos = Object.entries(vistos).filter(([k, x]) => !x || x.play || /Google Play/.test(x.t) || (k === 'dineroRivales' ? !/se abre invitando a un amigo/.test(x.t) : /invitando/.test(x.t) || !/de momento, no se puede abrir/.test(x.t)));
+    if (!vistos.dineroRivales || Object.keys(vistos).length < 2 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
+    else bien(`iPhone, los candados dicen la verdad: ${Object.keys(vistos).join(', ')} (invitando, solo el dinero; sin Google Play)`);
+    if (errores.length) mal(`iPhone, los candados: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`iPhone, los candados: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

@@ -948,7 +948,13 @@ export function planAjustesHTML(S) {
   if (cu && !cu.ilimitado) h += `<p class="t2 peq" style="margin:6px 2px 0">${cu.quedan > 0 ? (cu.quedan === 1 ? 'Hoy te queda 1 plan con la IA.' : `Hoy te quedan ${cu.quedan} planes con la IA.`) : 'Hoy ya no te quedan planes con la IA.'}</p>`;
   h += `<button class="btn ancho" style="margin-top:14px" data-accion="planYa">${icono('ia')}Rehacer el plan ahora</button>`;
   // (0.7.13n, Carlos 16 nov) sin imagen ni «Compartir»: en su lugar, cuántos planes hay gratis
-  if (pApp) h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>2 planes gratis</b> cada día. A partir del tercero, ${enApp && nativo.canal() === 'play' ? 'cada uno con un anuncio' : 'en la app de Google Play, cada uno con un anuncio'}.</span></p>`;
+  // (25 nov, hallazgo 6) la cifra, la de planesCfg (en la web y el iPhone son los de «gratisWeb»); los de más con un anuncio,
+  // solo en la de Google Play
+  if (pApp) {
+    const pc = planesCfg(), conAd = enApp && nativo.canal() === 'play' && pc.max > pc.gratis;
+    const ord = ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo', 'noveno', 'décimo'][pc.gratis] || `${pc.gratis + 1}.º`;
+    h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>${pc.gratis === 1 ? '1 plan gratis' : `${pc.gratis} planes gratis`}</b> cada día${conAd ? `. A partir del ${ord}, cada uno con un anuncio` : ''}.</span></p>`;
+  }
   return h;
 }
 

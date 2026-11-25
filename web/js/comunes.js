@@ -398,8 +398,10 @@ export function candado(clave, { como = null, rid = null } = {}) {
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
     que sale al tocarlas, nunca en las cajas */
-// (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play: ahí se abre invitando a un amigo
-export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
+// (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play. (25 nov, auditoría, hallazgo 10) invitando a un amigo
+// solo se abre el dinero de los rivales (2 por amigo): las demás, en el iPhone, de momento no se abren (sin prometer la app
+// de la App Store: Carlos, 25 nov)
+export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : ' Se abre gratis en la app de Google Play, con un anuncio.');
 /** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
     ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
