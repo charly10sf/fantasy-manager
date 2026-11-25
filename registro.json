@@ -3281,7 +3281,9 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/cesar-tarrega-habla-cambio-valencia-136836831.html": 1795611342000,
    "SPORT|136823649": 1795608059000,
    "AS|https://as.com/futbol/primera/la-defensa-en-cuadro-f202611-n/": 1795611437000,
-   "SPORT|136817073": 1795611667000
+   "SPORT|136817073": 1795611667000,
+   "SPORT|136837025": 1795614287000,
+   "SPORT|136824498": 1795614271000
   },
   "hechos": [
    {
@@ -3508,11 +3510,40 @@
     "motivo": "golpe en la cabeza con brecha",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136837025",
+    "medio": "SPORT",
+    "t": 1795614287000,
+    "id": "2562",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Marc Pubill regresa a la convocatoria del Atlético tras su esguince",
+    "motivo": "esguince leve de tobillo",
+    "plazo": "",
+    "nums": [
+     24
+    ]
+   },
+   {
+    "guid": "SPORT|136824498",
+    "medio": "SPORT",
+    "t": 1795614271000,
+    "id": "1715",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Fermín se pierde el Atlético por sanción de dos partidos",
+    "motivo": "sanción de dos partidos",
+    "plazo": "estará fuera dos partidos",
+    "nums": [
+     3,
+     2
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -4475,17 +4506,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 12,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 181280,
-  "salida": 13601,
+  "entrada": 183627,
+  "salida": 14833,
   "cacheLee": 21607,
   "cacheEscribe": 20964,
-  "dolares": 0.354642,
+  "dolares": 0.355493,
   "reservado": 0
  },
  "recientes": {
@@ -9539,13 +9570,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6322,
+   "ok": 6323,
    "fallos": 0,
-   "ejecuciones": 5141,
+   "ejecuciones": 5142,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T14:46:15.826Z"
+   "ultima": "2026-11-25T14:51:12.794Z"
   }
  },
  "ptsDirecto": {},
@@ -9562,15 +9593,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:46:29.010Z"
+   "ultimaBien": "2026-11-25T14:51:27.570Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:46:29.010Z"
+   "ultimaBien": "2026-11-25T14:51:27.570Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:46:29.010Z"
+   "ultimaBien": "2026-11-25T14:51:27.570Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9578,11 +9609,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:46:29.010Z"
+   "ultimaBien": "2026-11-25T14:51:27.570Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:46:29.010Z"
+   "ultimaBien": "2026-11-25T14:51:27.570Z"
   }
  },
  "avisos": [
