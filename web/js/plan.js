@@ -654,7 +654,10 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const fuera = paron ? null : M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > caja && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && mereceClausula(M, x, ahora) && hueco(x.j) && M.compraCal(x.j, x.clausula).ok);
   if (fuera && lista.filter((o) => o.clase === 'clausular' && !o.rev).length < X.A.maxOnce) {
     ops.push({ accion: 'esperar', pid: fuera.pid, jugador: fuera.j.nombre, donde: `cláusula de ${eur(fuera.clausula)} a ${fuera.rival.manager || fuera.rival.nombre}`, importe: null, cuando: 'si entra dinero', confianza: 'baja',
-      motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - caja)}: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él.` });
+      // (25 nov, lo que quedó de la auditoría de coherencia: Kang-In Lee, «te faltan 49,91 M» en el plan y «48,89 M» en su
+      // ficha) lo que falta es con el saldo de hoy, como en la ficha; si hoy llegaría y es el plan el que se gasta ese dinero
+      // en otra cláusula, se dice así
+      motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero ${fuera.clausula > num(D.dinero) ? `te faltan ${eur(fuera.clausula - num(D.dinero))}` : `con lo que gastas hoy te faltarían ${eur(fuera.clausula - caja)}`}: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él.` });
   }
 
   /* proteger a los tuyos: primero el blindaje gratis (2 por jornada), luego subir la cláusula si compensa y hay saldo */

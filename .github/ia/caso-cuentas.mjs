@@ -13,6 +13,7 @@
 //      mirado y dice por qué no (`M.decisionFichar`), y entonces Mercado no lo llama «Chollo». Los que van a «Mirados y
 //      descartados», con una frase.
 //   E. «LO MISMO QUE» (8). Si la cláusula y lo que da LaLiga se leen igual, no dice «más que».
+//   Y «te faltan X» del paso de esperar del plan, la misma cifra que en la ficha del jugador (lo de Kang-In Lee).
 //   F. `cifrasAlDia` y `titularAlDia`, con textos escritos a mano (lo que cambian y, sobre todo, lo que no tocan).
 // Lo del negativo con un solo cambio de mercado (3) lo prueba azar-plan.mjs con `AZAR_SOLO=jueves-negativo/negativo-ultimo`.
 // Uso: PW_MODULO=… node .github/ia/caso-cuentas.mjs [vueltas por escena, 12] [semilla, 1]
@@ -97,6 +98,14 @@ for (const escena of ['martes', 'hora-20', 'paron', 'mercado-real', 'enjuego', '
         if ((R.descartes || []).length > 10) falla(`D: ${R.descartes.length} en «Mirados y descartados»`);
         const dup = (R.descartes || []).map((d) => String(d.pid)).filter((x, i, xs) => xs.indexOf(x) !== i);
         if (dup.length) falla(`D: en «Mirados» sale dos veces el mismo (${dup.join(', ')})`);
+
+        /* --- lo que quedó de la auditoría de coherencia: «te faltan X» del plan, lo mismo que dice la ficha (cláusula − saldo) --- */
+        for (const o of (R.ops || []).filter((x) => x.accion === 'esperar' && x.pid && /te faltan /.test(x.motivo || ''))) {
+          const cl = M.clausulas.find((y) => String(y.pid) === String(o.pid));
+          const mm = String(o.motivo).match(/te faltan ([\d.,]+ (?:M|mil))/);
+          if (cl && mm && mm[1] !== U.eur(cl.clausula - D.dinero)) falla(`el plan dice de ${o.jugador} «te faltan ${mm[1]}» y su ficha, ${U.eur(cl.clausula - D.dinero)}`);
+          if (cl && mm) n.faltan = (n.faltan || 0) + 1;
+        }
 
         /* --- E: «lo mismo que» (forzado: la cláusula de uno que baja, a 3.000 € de lo que da LaLiga por él) --- */
         let ME = M;
@@ -190,7 +199,7 @@ for (const escena of ['martes', 'hora-20', 'paron', 'mercado-real', 'enjuego', '
     if (r.fallos.length > 14) console.log(`     … y ${r.fallos.length - 14} más`);
     mal += r.fallos.length;
     const k = r.n;
-    ok(!r.fallos.length, `${escena}: ${k.planes} planes, ${k.pujas} pujas (una sola cada una), ${k.deriva} repasados con la puja ya cambiada, ${k.tit} % de titular, ${k.chollos} chollos de Mercado (${k.fichados} en el plan, ${k.mirados} mirados con su porqué), ${k.igual} «lo mismo que» (${k.igualPuja || 0} sin cambio de puja, ${k.sinPuja || 0} sin ninguna puja, ${k.rehecho || 0} rehechos)${P.errores.length ? ` · errores de la página: ${P.errores.slice(0, 2).join(' | ')}` : ''}`);
+    ok(!r.fallos.length, `${escena}: ${k.planes} planes, ${k.pujas} pujas (una sola cada una), ${k.deriva} repasados con la puja ya cambiada, ${k.tit} % de titular, ${k.chollos} chollos de Mercado (${k.fichados} en el plan, ${k.mirados} mirados con su porqué), ${k.faltan || 0} «te faltan» como en la ficha, ${k.igual} «lo mismo que» (${k.igualPuja || 0} sin cambio de puja, ${k.sinPuja || 0} sin ninguna puja, ${k.rehecho || 0} rehechos)${P.errores.length ? ` · errores de la página: ${P.errores.slice(0, 2).join(' | ')}` : ''}`);
   } finally { await P.cerrar(); }
 }
 await cerrar();
