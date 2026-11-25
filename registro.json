@@ -2250,6 +2250,13 @@
    "jornada": 14,
    "id": "2125624692497326139",
    "t": "2026-11-25T16:16:33.870Z"
+  },
+  {
+   "clave": "novedades|356:vuelve|2026-11-25",
+   "tipo": "novedades",
+   "jornada": 14,
+   "id": "2125637257482940546",
+   "t": "2026-11-25T17:06:29.633Z"
   }
  ],
  "estados": {
@@ -2269,7 +2276,7 @@
   "270": "ok",
   "274": "ok",
   "302": "ok",
-  "356": "injured",
+  "356": "ok",
   "581": "ok",
   "637": "ok",
   "644": "ok",
@@ -3136,7 +3143,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "356",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1795626372665
+  }
+ ],
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000,
@@ -3299,7 +3313,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
    "SPORT|136829607": 1795618807000,
    "SPORT|136847144": 1795619882000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255447/flick-mantiene-apuesta-joan-garcia-baku.html": 1795622762000,
+   "SPORT|136846515": 1795622552000
   },
   "hechos": [
    {
@@ -3621,7 +3636,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3657,8 +3672,8 @@
     "t": 0
    },
    "356": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1795626372665
    },
    "581": {
     "e": "ok",
@@ -4585,17 +4600,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 34,
-   "redactar": 14,
-   "revisar": 10,
+   "clasificar": 35,
+   "redactar": 15,
+   "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 218904,
-  "salida": 17303,
+  "entrada": 231525,
+  "salida": 17594,
   "cacheLee": 21607,
-  "cacheEscribe": 26770,
-  "dolares": 0.417867,
+  "cacheEscribe": 29673,
+  "dolares": 0.448177,
   "reservado": 0
  },
  "recientes": {
@@ -4755,10 +4770,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-22T08:02:02.084Z",
-    "texto": "❌ Yoel Lago no estará en el Celta-Villarreal 🚢 del domingo 29 de noviembre: llegó a 5 amarillas en la jornada 13 y se queda sancionado.\n\nEl central llevaba 5 porterías a cero en 11 partidos, así que quien lo tenga se queda sin esa opción de puntos en la zaga. Queda tiempo de sobra para buscar recambio."
-   },
-   {
     "t": "2026-11-22T15:01:31.747Z",
     "texto": "❌ Fermín se queda sin jugar en Riazor: está sancionado y se pierde el Deportivo-Barça del domingo 29 de noviembre.\n\nEl centrocampista lleva 7 goles y 5 asistencias en la liga, así que quien lo tenga pierde a un jugador que daba puntos de verdad. Hay una semana por delante para buscarle sustituto."
    },
@@ -4773,6 +4784,10 @@
    {
     "t": "2026-11-25T16:16:33.872Z",
     "texto": "Edu Expósito vuelve a estar disponible tras las molestias que le tenían fuera desde el 18 de noviembre.\n\nEl centrocampista del Espanyol llega bien de valor: vale 46 M y ha ganado 12,9 M en el último mes. Con un 53 % de titularidad, lo normal es que salga cuando los pericos reciban al Getafe el lunes 30, tras el parón. El Getafe va 18º, un partido asequible."
+   },
+   {
+    "t": "2026-11-25T17:06:29.635Z",
+    "texto": "Gerard vuelve a estar disponible después de las molestias que lo apartaban desde el 30 de octubre.\n\nEl delantero del Villarreal llega con el valor por los suelos: vale 11,4 M y ha perdido 10,7 M en el último mes. El domingo 29 visita a un Celta que encaja poco, y con un 19 % de titularidad no parece que vaya a tener sitio en el once."
    }
   ],
   "resumen": [
@@ -9648,13 +9663,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6346,
+   "ok": 6347,
    "fallos": 0,
-   "ejecuciones": 5165,
+   "ejecuciones": 5166,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T17:01:14.773Z"
+   "ultima": "2026-11-25T17:06:12.665Z"
   }
  },
  "ptsDirecto": {},
@@ -9671,15 +9686,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:01:24.278Z"
+   "ultimaBien": "2026-11-25T17:06:33.096Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:01:24.278Z"
+   "ultimaBien": "2026-11-25T17:06:33.096Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:01:24.278Z"
+   "ultimaBien": "2026-11-25T17:06:33.096Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9687,11 +9702,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:01:24.278Z"
+   "ultimaBien": "2026-11-25T17:06:33.096Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T17:01:24.278Z"
+   "ultimaBien": "2026-11-25T17:06:33.096Z"
   }
  },
  "avisos": [
