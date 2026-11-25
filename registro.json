@@ -3272,7 +3272,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/25/el-central-diego-murillo-regresa-a-los-entrenamientos-y-se-apunta-ante-el-athletic-ser-malaga/": 1795609225000,
+   "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html": 1795609078000
   },
   "hechos": [
    {
@@ -3487,11 +3488,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario Sur|https://www.diariosur.es/malagacf/murillo-regresa-entrenamientos-forma-parcial-20261125131758-nt.html",
+    "medio": "Diario Sur",
+    "t": 1795609078000,
+    "id": "3039",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Murillo vuelve a entrenar de forma parcial",
+    "motivo": "golpe en la cabeza con brecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4453,17 +4466,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 160981,
-  "salida": 10618,
+  "entrada": 162903,
+  "salida": 11470,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.305192,
+  "dolares": 0.30581,
   "reservado": 0
  },
  "recientes": {
@@ -9513,13 +9526,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6293,
+   "ok": 6294,
    "fallos": 0,
-   "ejecuciones": 5112,
+   "ejecuciones": 5113,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T12:26:13.237Z"
+   "ultima": "2026-11-25T12:31:15.014Z"
   }
  },
  "ptsDirecto": {},
@@ -9536,15 +9549,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:26:21.056Z"
+   "ultimaBien": "2026-11-25T12:31:30.131Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:26:21.056Z"
+   "ultimaBien": "2026-11-25T12:31:30.131Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:26:21.056Z"
+   "ultimaBien": "2026-11-25T12:31:30.131Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9552,11 +9565,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:26:21.056Z"
+   "ultimaBien": "2026-11-25T12:31:30.131Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:26:21.056Z"
+   "ultimaBien": "2026-11-25T12:31:30.131Z"
   }
  },
  "avisos": [
