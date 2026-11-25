@@ -4548,7 +4548,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
-   "SPORT|136851440": 1795626010000
+   "SPORT|136851440": 1795626010000,
+   "SPORT|136852775": 1795628687000
   },
   "hechos": [
    {
@@ -4601,27 +4602,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136852775": 1795632684790
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 243405,
-  "salida": 18820,
+  "entrada": 245218,
+  "salida": 18970,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.449979,
+  "dolares": 0.450235,
   "reservado": 0
  },
  "recientes": {
@@ -9669,13 +9668,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6372,
+   "ok": 6373,
    "fallos": 0,
-   "ejecuciones": 5191,
+   "ejecuciones": 5192,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:11:14.405Z"
+   "ultima": "2026-11-25T19:16:12.827Z"
   }
  },
  "ptsDirecto": {},
@@ -9692,15 +9691,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:11:27.094Z"
+   "ultimaBien": "2026-11-25T19:16:23.345Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:11:27.094Z"
+   "ultimaBien": "2026-11-25T19:16:23.345Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:11:27.094Z"
+   "ultimaBien": "2026-11-25T19:16:23.345Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9708,11 +9707,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:11:27.094Z"
+   "ultimaBien": "2026-11-25T19:16:23.345Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:11:27.094Z"
+   "ultimaBien": "2026-11-25T19:16:23.345Z"
   }
  },
  "avisos": [
