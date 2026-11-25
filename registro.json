@@ -3119,7 +3119,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
    "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000,
@@ -4394,7 +4393,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
    "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000,
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/25/mas-de-1500-realistas-rumbo-a-londres-hoja-de-ruta-huelga-de-metro-y-afecciones-radio-san-sebastian/": 1795602346000,
+   "SPORT|136822776": 1795604778000
   },
   "hechos": [
    {
@@ -4447,7 +4447,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -4455,17 +4455,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 157289,
-  "salida": 9957,
+  "entrada": 159056,
+  "salida": 10067,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.304492,
+  "dolares": 0.304724,
   "reservado": 0
  },
  "recientes": {
@@ -9515,13 +9515,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6289,
+   "ok": 6290,
    "fallos": 0,
-   "ejecuciones": 5108,
+   "ejecuciones": 5109,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T12:06:16.783Z"
+   "ultima": "2026-11-25T12:11:13.432Z"
   }
  },
  "ptsDirecto": {},
@@ -9538,15 +9538,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:06:26.228Z"
+   "ultimaBien": "2026-11-25T12:11:24.063Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:06:26.228Z"
+   "ultimaBien": "2026-11-25T12:11:24.063Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:06:26.228Z"
+   "ultimaBien": "2026-11-25T12:11:24.063Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9554,11 +9554,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:06:26.228Z"
+   "ultimaBien": "2026-11-25T12:11:24.063Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T12:06:26.228Z"
+   "ultimaBien": "2026-11-25T12:11:24.063Z"
   }
  },
  "avisos": [
