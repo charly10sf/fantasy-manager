@@ -24,6 +24,11 @@ targets:
     platform: iOS
     sources:
       - path: App/Fuentes
+      # el JS del puente (window.FantasyApp), que se inyecta en cada página
+      - path: App/Puente
+        buildPhase: resources
+      # lo que la app cuenta de sí misma a las pruebas del simulador: solo se compila en Debug (#if DEBUG)
+      - path: Sonda
       - path: App/Assets.xcassets
       - path: App/PrivacyInfo.xcprivacy
       # la web de web/ (solo lo que va en paquete.json), como carpeta tal cual dentro de la app
