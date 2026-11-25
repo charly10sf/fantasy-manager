@@ -2725,14 +2725,26 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
       // (lo que cada paso llevaba entonces, ya repasado por la app: `cuadradas`, que es lo que leyó la IA y lo que se vio)
       const clave = (acc, nombre) => `${acc}|${norm(nombre)}`;
       const antes = new Map(P.cuadradas.filter((x) => x && x.importe && x.estado !== 'descartada').map((x) => [clave(x.accion, x.jugador), +x.importe]));
+      // (los mismos pasos que entonces: se puede saber lo que quedaba aunque el plan no lo traiga apuntado)
+      let mismos = true, delta = 0;
+      const vistos = new Set();
       for (const o of ops) {
         if (o.descartada || o.ya || !o.importe) continue;
-        const v0 = antes.get(clave(o.etiqueta === 'Aceptar oferta' ? 'aceptar' : o.etiqueta === 'Subir cláusula' ? 'subir cláusula' : o.accion, (o.j && o.j.nombre) || o.jugador || ''));
-        if (v0 && Math.abs(v0 - o.importe) >= 5000) pares.push([v0, o.importe]); else actuales.push(o.importe);
+        const k = clave(o.etiqueta === 'Aceptar oferta' ? 'aceptar' : o.etiqueta === 'Subir cláusula' ? 'subir cláusula' : o.accion, (o.j && o.j.nombre) || o.jugador || '');
+        const v0 = antes.get(k);
+        vistos.add(k);
+        if (!v0) mismos = false;
+        if (v0 && Math.abs(v0 - o.importe) >= 5000) { pares.push([v0, o.importe]); if (o.hoy && o.signo) delta += o.signo * (o.importe - v0); } else actuales.push(o.importe);
         if (o.saldo != null) actuales.push(o.saldo);
         if (o.j && o.j.valor) actuales.push(o.j.valor);
       }
-      const vio = P.vio || {};
+      if ([...antes.keys()].some((k) => !vistos.has(k))) mismos = false;
+      // (`vio` lo llevan los planes hechos desde el 25 nov; en los de antes, o los que llegan de un dispositivo con la versión
+      // anterior, se saca de la foto del saldo y, si los pasos son los mismos, de lo que ha cambiado cada importe)
+      const vio = { ...(P.vio || {}) };
+      if (vio.dinero == null && P.foto && P.foto.dinero != null) vio.dinero = +P.foto.dinero;
+      if (vio.final == null && final != null && mismos && vio.dinero != null && D.dinero != null && +vio.dinero === +D.dinero) vio.final = final - delta;
+      if (vio.jornada == null && vio.final != null && P.cuentas && P.cuentas.jornada != null) vio.jornada = P.cuentas.jornada;
       if (D.dinero != null && vio.dinero != null) { pares.push([+vio.dinero, +D.dinero]); actuales.push(+D.dinero); }
       if (final != null && vio.final != null) {
         pares.push([+vio.final, final]); actuales.push(final);

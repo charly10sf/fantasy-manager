@@ -159,6 +159,10 @@ for (const escena of ['martes', 'hora-20', 'paron', 'mercado-real', 'enjuego', '
         if (!sit.includes(U.eur(C.final))) falla(`B: la situación no dice lo que queda ahora (${U.eur(C.final)}): «${sit}»`);
         if (!sit.includes(U.eur(caja0))) falla(`B: la situación ha perdido el saldo (${U.eur(caja0)}), que no ha cambiado: «${sit}»`);
         if (cifras(sit).length !== cifras(PIA.situacion).length) falla(`B: la situación ha ganado o perdido cifras: «${PIA.situacion}» → «${sit}»`);
+        // y un plan guardado con la versión de antes (sin `vio`, con la foto del saldo): lo mismo
+        const viejo = { ...PIA, foto: { dinero: D.dinero } }; delete viejo.vio;
+        const CV = I.cuadrarPlan(viejo, D2, M2);
+        if (String(CV.situacion || '') !== sit) falla(`B: en un plan guardado sin «vio» la situación no queda igual: «${CV.situacion}» (con «vio»: «${sit}»)`);
         // el % de titular de la frase, el de ahora
         const T2 = o2.j && !M2.alineacion(o2.j.id) ? M2.titularidad(o2.j) : null;
         if (T2 && T2.p != null) { const p2 = Math.round(T2.p * 100), en = [...String(o2.motivo).matchAll(/(\d{1,3}) % de titular/g)].map((x) => +x[1]); if (en.some((x) => x !== p2)) falla(`B: la frase dice ${en.join(', ')} % de titular y la app enseña ${p2} %`); }
