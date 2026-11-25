@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136730837": 1795377616000,
    "SPORT|136730813": 1795380014000,
    "AS|https://as.com/futbol/primera/dimitrievski-lanza-un-mensaje-a-braulio-f202611-n/": 1795394296000,
    "AS|https://as.com/futbol/primera/de-las-heridas-del-derbi-a-bratislava-f202611-n/": 1795394566000,
@@ -3310,7 +3309,8 @@
    "SPORT|136851215": 1795630845000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sabah-fk-1-4-fc-barcelona-resumen-resultado-y-goles-del-partido-de-la-fase-liga-en-la-champions-league-cadena-ser/": 1795635260000,
    "SPORT|136855738": 1795632549000,
-   "ABC|https://www.abc.es/deportes/futbol/cronica-sabah-barcelona-champions-20261125101204-nt.html": 1795636111000
+   "ABC|https://www.abc.es/deportes/futbol/cronica-sabah-barcelona-champions-20261125101204-nt.html": 1795636111000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255525/balde-asistencia-reivindicarse-salida-accidentada.html": 1795635755000
   },
   "hechos": [
    {
@@ -3644,7 +3644,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -4610,17 +4610,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 251547,
-  "salida": 20063,
+  "entrada": 253557,
+  "salida": 20155,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.451414,
+  "dolares": 0.451661,
   "reservado": 0
  },
  "recientes": {
@@ -9685,13 +9685,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6383,
+   "ok": 6384,
    "fallos": 0,
-   "ejecuciones": 5200,
+   "ejecuciones": 5201,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:56:23.558Z"
+   "ultima": "2026-11-25T20:01:14.522Z"
   }
  },
  "ptsDirecto": {},
@@ -9708,15 +9708,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:56:32.257Z"
+   "ultimaBien": "2026-11-25T20:01:22.026Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:56:32.257Z"
+   "ultimaBien": "2026-11-25T20:01:22.026Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:56:32.257Z"
+   "ultimaBien": "2026-11-25T20:01:22.026Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9724,11 +9724,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:56:32.257Z"
+   "ultimaBien": "2026-11-25T20:01:22.026Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:56:32.257Z"
+   "ultimaBien": "2026-11-25T20:01:22.026Z"
   }
  },
  "avisos": [
