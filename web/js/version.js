@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4';
+export const VERSION = '0.8.4a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,18 @@ export const VERSION = '0.8.4';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, 02:06, Carlos: «en vez de salir un icono de un ordenador, que salga un icono de Windows») Lo último de la
+    // sesión de «que se vea que es una app», que no llegó a entrar en la 0.8.4: el ordenador va con el logo de Windows
+    // (`WINDOWS` en app.js y en instalar.html; en un Mac, la manzana: `ordenadorG`) y los tres dispositivos de arriba de
+    // instalar.html van siempre uno debajo de otro. Carlos sabe lo que dicen las normas de Microsoft y de Apple y los quiere
+    // igual. Solo web. Detalle en claude/sesion-24nov-descarga-clara.md del proyecto
+    v: '0.8.4a', f: '2026-11-25', h: '02:41', t: 'Cada dispositivo, con su símbolo',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'El ordenador, con su logo', x: 'En la portada y en la guía de instalar, el ordenador sale con el logo de Windows (o con el de Apple si entras desde un Mac) en vez de un dibujo de un portátil.' },
+      { para: 'web', tipo: 'arreglo', d: 'portatil', t: 'La guía de instalar, en el ordenador', x: 'Los tres dispositivos de arriba salían apretados en tres columnas y el nombre del tuyo se partía en varias líneas. Ahora van uno debajo de otro.' },
+    ],
+  },
   {
     // --- (25 nov, Carlos, 02:00: «publica todo en una») la 0.8.3b, la 0.8.3c y la 0.8.4 salen juntas como 0.8.4 ---
     // --- la web, más clara (rama `web-descarga-clara`, 0.8.3c) ---

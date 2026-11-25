@@ -3769,7 +3769,7 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 /* ------------------------------------------------------------------ (24 nov) «Tu liga, por dentro»
    Lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla en cada dispositivo: Android · iPhone ·
    Ordenador, cada uno con su símbolo, una línea y una sola cosa que hacer, y el tuyo destacado. Los símbolos son dibujos de
-   un color y del mismo peso: el robot de Android, la manzana para el iPhone y un portátil dibujado (sin logo de Windows). */
+   un color y del mismo peso: el robot de Android, la manzana para el iPhone y el logo de Windows para el ordenador. */
 .tl { display: block; min-width: 0; margin: 0 0 24px; text-align: left; }
 .portada .pantalla p.tl-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
 .portada .pantalla h2.tl-h { margin: 0 0 10px; font: 700 44px/0.95 var(--cond); text-transform: uppercase; letter-spacing: 0; color: var(--texto); text-wrap: balance; }
@@ -3812,6 +3812,7 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .plat-mov .plat-n { font-size: var(--t-sec); }
 .plat-mov:has(#detApp[open]) #qrMovil { display: none; }
 .plat .plat-mov .plat-movil, .plat-mov .plat-movil { padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-.plat .ent-logo svg.dv { width: 30px; height: 30px; }
+.plat .ent-logo svg.wn { width: 26px; height: 26px; }
+.tl-g svg.wn { width: 22px; height: 22px; }
 /* «Empieza hoy», al final: en el iPhone no sale Google Play */
 .p-iphone .pz-b a[href*="play.google.com"] { display: none; }

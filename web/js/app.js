@@ -269,12 +269,14 @@ function movilDe() {
 const ANDROID = '<svg class="an" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4483.9993.9993 0 .5511-.4483.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>';
 /* (24-25 nov) Los símbolos de cada dispositivo, de un color y con el mismo peso: el robot de Android (Google deja usarlo
    citándolo; está en aviso-legal.html), la manzana para el iPhone (Carlos, 25 nov, 01:18: «quiero que aparezca el logo de
-   Apple en vez de un móvil»; se le dijo que Apple no deja usar su logo suelto a terceros y lo quiere igual) y un portátil
-   dibujado para el ordenador, con «Windows y Mac» escrito: el logo de Windows no se usa (Microsoft pide licencia para
-   cualquier logo, símbolo o icono de Windows) */
+   Apple en vez de un móvil») y el logo de Windows para el ordenador (Carlos, 25 nov, 02:06: «en vez de salir un icono de
+   un ordenador, que salga un icono de Windows»). Se le dijo dos veces que Apple no deja usar su logo suelto a terceros y
+   que Microsoft pide licencia para cualquier logo, símbolo o icono de Windows, y los quiere igual: no se quitan sin que
+   él lo diga. En un Mac, lo de «este ordenador» va con la manzana (`ordenadorG`): el de Windows ahí sería mentira. */
 /** el logo de Apple (Simple Icons, CC0), para señalar lo del iPhone */
 const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
-const PORTATIL_G = '<svg class="dv" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.2" y="4.5" width="15.6" height="11" rx="1.6"/><path d="M2 19.5h20"/></svg>';
+/** el logo de Windows (las cuatro ventanas, dibujadas aquí), para señalar el ordenador */
+const WINDOWS = '<svg class="wn" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M2 2h9.5v9.5H2zM12.5 2H22v9.5h-9.5zM2 12.5h9.5V22H2zM12.5 12.5H22V22h-9.5z"/></svg>';
 /** el título del desplegable del ordenador para quien ya tiene la app en el móvil (lo citan el aviso del QR y Ajustes) */
 const YA_TENGO = 'Ya tengo la app en el móvil: abrirla en este ordenador';
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
@@ -505,11 +507,13 @@ const cabPlat = (logo, nombre, sub, id = '') => `<div class="plat-c"><span class
 const DISPOSITIVOS = {
   android: { g: ANDROID, n: 'Android', x: 'La app, en Google Play', h: 'instalar.html#android' },
   iphone: { g: APPLE, n: 'iPhone', x: 'Desde Safari, sin descargar nada', h: 'instalar.html#iphone' },
-  pc: { g: PORTATIL_G, n: 'Ordenador', s: 'Windows y Mac', x: 'En el navegador, sin descargar nada', h: 'instalar.html#ordenador' },
+  pc: { g: WINDOWS, n: 'Ordenador', s: 'Windows y Mac', x: 'En el navegador, sin descargar nada', h: 'instalar.html#ordenador' },
 };
+/** el símbolo de este ordenador: Windows, o la manzana si es un Mac */
+const ordenadorG = () => (esMac() ? APPLE : WINDOWS);
 /** una fila de dispositivo. `desde`: desde dónde se mira; el tuyo va destacado y con su botón */
 function filaDisp(k, desde) {
-  const d = DISPOSITIVOS[k], tuyo = k === desde;
+  const tuyo = k === desde, d = tuyo && k === 'pc' ? { ...DISPOSITIVOS.pc, g: ordenadorG() } : DISPOSITIVOS[k];
   // en el iPhone no sale nada que lleve a Google Play (no le sirve): la fila de Android lleva a la guía
   const hacer = k === 'android' ? (desde === 'iphone' ? `<a class="tl-ir" href="${d.h}">Cómo</a>` : botonPlay(tuyo ? 'grande' : ''))
     : tuyo && k === 'pc' ? `<span class="tl-aqui">Estás aquí</span><button type="button" class="btn sec chico tl-inst" data-accion="instalarPc" hidden>${icono('descargar')}Instalar como app</button>`
@@ -548,7 +552,7 @@ function bloqueIphone() {
 /** el ordenador (Windows y Mac): los tres pasos para entrar aquí; quien ya tiene la app en el móvil entra con un QR, sin
     copiar nada; y un solo QR a la vista, el de tenerla en el móvil (el de entrar sale al desplegar y entonces ese se quita) */
 function bloquePc() {
-  return `<div class="plat plat-ios plat-pc">${entrarDirectoHTML('pc', { cab: cabPlat(PORTATIL_G, 'En este ordenador', '<b>Windows y Mac.</b> Se usa en el navegador: entra aquí mismo, con tu cuenta de LaLiga.', 'edT') })}</div>
+  return `<div class="plat plat-ios plat-pc">${entrarDirectoHTML('pc', { cab: cabPlat(ordenadorG(), 'En este ordenador', '<b>Windows y Mac.</b> Se usa en el navegador: entra aquí mismo, con tu cuenta de LaLiga.', 'edT') })}</div>
     <section class="plat plat-mov" aria-labelledby="platMovT">
       <details class="sin-app" id="detApp"><summary>${YA_TENGO}</summary>
         ${qrEntrarHTML()}${codigoWebHTML()}</details>
