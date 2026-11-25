@@ -5,6 +5,7 @@
 import { eur, pct, dura, cuando, DIA, HORA } from './util.js';
 import { paronLejos } from './operaciones.js';
 import { esClausulable } from './motor.js';
+import { comoVa } from './decide.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -96,7 +97,7 @@ export function acciones(D, M, c) {
     const vi = x.ventaInercia || { urgencia: 'ya', ult: 0, perder: 0 };
     const dias = vi.hastaJ ? `en ${vi.hastaJ} día${vi.hastaJ > 1 ? 's' : ''} ` : '';
     const pierdeTxt = vi.perder > 0 ? `${dias}pierde unos ${eur(vi.perder)}` : '';
-    const hoy = vi.ult < 0 ? `Hoy ${eur(vi.ult, { signo: true })}` : vi.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando';
+    const hoy = vi.ult < 0 ? `Hoy ${eur(vi.ult, { signo: true })}` : comoVa(M, x.pid, vi);
     return { vi, pierdeTxt, hoy };
   };
   ventasInercia(M).slice(0, 3).forEach((x, k) => {

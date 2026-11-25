@@ -17,6 +17,7 @@ import { bloqueada, topConAnuncio, planesCfg, preguntasCfg, rivalesAbiertos } fr
 import { pedirWorker } from './soporte.js';
 import { turnoPendiente } from './planes-hora.js';
 import { rematarAuto, prisaNegativo, ofertaDueno, motivoPeligro } from './motor.js';
+import { comoVa } from './decide.js';
 import { planDeHoy, planMotor, planVueltas, titularMotor, AJUSTES as AJ_PLAN } from './plan.js';
 import { SOBRE_BLOQUEO, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl, SISTEMA_CORTO } from './plan-sistema.js';
 import { sistemaChat, tonoDe, separarNotas, sinCodigos, CABECERA_DATOS, MARCA_PREGUNTA } from './chat-sistema.js';
@@ -1207,7 +1208,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     if (!d) return '';
     if (d.accion === 'vender' && ['inercia', 'titular-baja'].includes(d.regla) && !d.enVenta) return `VENDER POR INERCIA (${!x.ventaInercia || x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | `;
     if (d.accion === 'vender') return `LA APP: ${d.corta.toUpperCase()} | `;
-    if (x.ventaInercia || d.matiz === 'busca-sustituto') return `HA GIRADO A LA BAJA, PERO EL PLAN DE HOY NO LO VENDE (${d.porque.replace(/[.\s]+$/, '')}) | `;
+    if (x.ventaInercia || d.matiz === 'busca-sustituto') return `${x.ventaInercia ? comoVa(M, x.pid, x.ventaInercia).toUpperCase() : 'BAJA'}, PERO EL PLAN DE HOY NO LO VENDE (${d.porque.replace(/[.\s]+$/, '')}) | `;
     return '';
   };
   for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${chat ? (M._tit && M._tit.has(x.pid) ? 'EN MI ONCE: titular' : 'EN MI ONCE: suplente') : (M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente')}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''}${M.noVender && M.noVender.has(x.pid) ? ' | NO LO VENDE (me lo ha dicho él): no propongas venderlo ni aceptar ofertas por él' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (hasta esa hora no se le puede poner el blindaje)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : x.noBlindar && x.abierta ? ` | NO LO BLINDES: ${x.noBlindar.texto}` : ''} | ${inerciaTxt(x)}${noVenderAun(x) ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan, chat) ? ` (${paganTxt(x.pagan, chat)})` : ''}${blindajeTxt(x.blindaje, chat) ? ` | ${blindajeTxt(x.blindaje, chat)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);

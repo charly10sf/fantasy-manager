@@ -4,7 +4,7 @@ import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
-import { ventaVista } from './decide.js';
+import { ventaVista, comoVa } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
 import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat } from './ia.js';
@@ -1446,7 +1446,7 @@ export function descartePlan(S, pid) {
   // (24 nov, decide.js) y lo que el plan ha mirado y no ficha («Mirados y descartados»): antes Mercado lo seguía llamando
   // «Chollo» y los avisos decían «la app pujaría…» con el plan diciendo que se paga de más
   const df = S.M && S.M.decisionFichar ? S.M.decisionFichar(pid) : null;
-  return df && df.accion === 'no' ? { accion: 'pujar', aviso: df.porque, tope: df.tope != null ? df.tope : null, descartada: true } : null;
+  return df && df.accion === 'no' ? { accion: 'pujar', aviso: df.porque, tope: df.tope != null ? df.tope : null, descartada: true, yaPujada: df.yaPujada || null } : null;
 }
 /** la etiqueta de Mercado de uno que se vende: la del motor (chollo, sube…) o, si el plan lo descarta, eso (para las pruebas) */
 export const etiquetaFichar = (S, pid) => { const m = (S.M.mercado || []).find((y) => String(y.pid) === String(pid)); return !m || m.miPuja ? '' : descartePlan(S, pid) ? 'El plan lo descarta' : String(m.veredicto || ''); };
@@ -1626,7 +1626,7 @@ function sugerenciasDe(S) {
   const add = (t) => { if (t && !out.includes(t) && out.length < 6) out.push(t); };
   if (M) {
     const vi = M.mias.filter((x) => x.ventaInercia && !bloqueada('inercia') && ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender').sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
-    if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${vi.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando'}`);
+    if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${comoVa(M, vi.pid, vi.ventaInercia)}`);
     const cl = M.clausulas.find((x) => x.abierta && x.meLlega && x.interes >= 55);
     if (cl) add(`¿Clausulo a ${cl.j.nombre} por ${eur(cl.clausula)}?`);
     const ml = M.mercado.find((m) => m.tipo === 'liga' && m.interes >= 55);

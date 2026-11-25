@@ -110,6 +110,18 @@ assert.equal(hr.once.lineas[0].length, 1, 'un portero');
 assert.equal(hr.once.suma, hr.once.lineas.flat().reduce((s, x) => s + x.pts, 0));
 assert.ok(hr.mejores[0].pts >= hr.mejores[9].pts);
 assert.ok(hr.peores.every((x) => x.pts < 0));
+// (25 nov, B9) un partido aplazado (la J8 real: Rayo-Athletic al 9 dic) no deja la jornada sin resumen; uno que se juega mañana, sí
+{
+  const conApl = semana(12), ult = conApl[conApl.length - 1];
+  Object.assign(ult, { matchState: 1, localScore: null, visitorScore: null, date: new Date(Date.parse(ult.date) + 14 * DIA).toISOString() });
+  ult.local.players = []; ult.visitor.players = [];
+  const ha = hechosResumen(12, conApl, jug, { ahora: hoy });
+  assert.ok(ha && ha.aplazados.length === 1 && ha.partidos.length === 5, 'con un aplazado sale el resumen de los demás');
+  assert.match(contenidoResumen(ha, {}), /Falta un partido, aplazado: [^<]+-[^<]+ \(/, 'y dice cuál falta');
+  Object.assign(ult, { date: new Date(Date.parse(conApl[0].date) + DIA).toISOString() });
+  assert.equal(hechosResumen(12, conApl, jug, { ahora: hoy }), null, 'uno que se juega en la misma semana no es aplazado');
+  assert.equal((hr.aplazados || []).length, 0);
+}
 for (const p of hr.partidos) assert.equal(p.mvp.pts, Math.max(...p.jugadores.map((x) => x.pts)), 'el MVP es el que más puntos saca');
 const cr = contenidoResumen(hr, { previa: 'guias/jornada-12.html', siguiente: { ruta: 'guias/jornada-13.html', jornada: 13 }, tarjeta: 'img/resumen-12.webp', tarjetaAlto: 875 });
 limpio(cr, 'resumen');
