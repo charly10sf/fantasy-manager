@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/22/francia-gol-valenciano-ferran-torres-grave-lesion-psg-136730012.html": 1795376710000,
    "SPORT|136730837": 1795377616000,
    "SPORT|136730813": 1795380014000,
@@ -3309,7 +3308,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/javi-guerra-nominado-premios-laliga-136849583.html": 1795627892000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dani-senabre-analiza-sancion-dos-partidos-fermin-depor-mejor-no-grave-atletico-madrid-mi-importante-20261125_3482176.html": 1795629378000,
    "SPORT|136851580": 1795628507000,
-   "SPORT|136851215": 1795630845000
+   "SPORT|136851215": 1795630845000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sabah-fk-1-4-fc-barcelona-resumen-resultado-y-goles-del-partido-de-la-fase-liga-en-la-champions-league-cadena-ser/": 1795635260000
   },
   "hechos": [
    {
@@ -3643,7 +3643,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -4609,17 +4609,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 247275,
-  "salida": 19359,
+  "entrada": 249206,
+  "salida": 19869,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.450635,
+  "dolares": 0.451083,
   "reservado": 0
  },
  "recientes": {
@@ -5443,7 +5443,8 @@
    "5868135",
    "6106394",
    "6106243",
-   "6106421"
+   "6106421",
+   "6106391"
   ],
   "equipos": [
    "9866",
@@ -7087,6 +7088,13 @@
      "liga": [
       2,
       1,
+      0,
+      0,
+      0
+     ],
+     "champions": [
+      1,
+      0,
       0,
       0,
       0
@@ -9676,13 +9684,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6378,
+   "ok": 6380,
    "fallos": 0,
-   "ejecuciones": 5196,
+   "ejecuciones": 5197,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:36:16.373Z"
+   "ultima": "2026-11-25T19:41:15.544Z"
   }
  },
  "ptsDirecto": {},
@@ -9699,15 +9707,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:36:26.633Z"
+   "ultimaBien": "2026-11-25T19:41:31.555Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:36:26.633Z"
+   "ultimaBien": "2026-11-25T19:41:31.555Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:36:26.633Z"
+   "ultimaBien": "2026-11-25T19:41:31.555Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9715,11 +9723,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:36:26.633Z"
+   "ultimaBien": "2026-11-25T19:41:31.555Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:36:26.633Z"
+   "ultimaBien": "2026-11-25T19:41:31.555Z"
   }
  },
  "avisos": [
