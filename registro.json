@@ -4389,7 +4389,8 @@
    "SPORT|136810666": 1795544869000,
    "SPORT|136811655": 1795554036000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795593881000
   },
   "hechos": [
    {
@@ -4442,27 +4443,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-nidal-hasan-pide-suspender-ejecucion-fusilamiento-tiroteo-2009-base-militar-fort-hood-20261125090441.html": 1795598176016
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 114946,
-  "salida": 7281,
+  "entrada": 116677,
+  "salida": 7367,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.228746,
+  "dolares": 0.228962,
   "reservado": 0
  },
  "recientes": {
@@ -9512,13 +9511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6259,
+   "ok": 6260,
    "fallos": 0,
-   "ejecuciones": 5078,
+   "ejecuciones": 5079,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T09:36:13.661Z"
+   "ultima": "2026-11-25T09:41:12.531Z"
   }
  },
  "ptsDirecto": {},
@@ -9535,15 +9534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:36:21.033Z"
+   "ultimaBien": "2026-11-25T09:41:21.606Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:36:21.033Z"
+   "ultimaBien": "2026-11-25T09:41:21.606Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:36:21.033Z"
+   "ultimaBien": "2026-11-25T09:41:21.606Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9551,11 +9550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:36:21.033Z"
+   "ultimaBien": "2026-11-25T09:41:21.606Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:36:21.033Z"
+   "ultimaBien": "2026-11-25T09:41:21.606Z"
   }
  },
  "avisos": [
