@@ -1,0 +1,2673 @@
+{
+ "tuits": [],
+ "jugadores": [
+  {
+   "nickname": "Unai Simón"
+  },
+  {
+   "nickname": "Iván Villar"
+  },
+  {
+   "nickname": "David Soria"
+  },
+  {
+   "nickname": "Aitor Fdez"
+  },
+  {
+   "nickname": "Courtois"
+  },
+  {
+   "nickname": "Remiro"
+  },
+  {
+   "nickname": "Sergio Herrera"
+  },
+  {
+   "nickname": "Sivera"
+  },
+  {
+   "nickname": "Agirrezabala"
+  },
+  {
+   "nickname": "J. Musso"
+  },
+  {
+   "nickname": "Oblak"
+  },
+  {
+   "nickname": "Iñaki Peña"
+  },
+  {
+   "nickname": "Letacek"
+  },
+  {
+   "nickname": "D. Cárdenas"
+  },
+  {
+   "nickname": "Adrián"
+  },
+  {
+   "nickname": "Lunin"
+  },
+  {
+   "nickname": "Marrero"
+  },
+  {
+   "nickname": "Dimitrievski"
+  },
+  {
+   "nickname": "Júnior R."
+  },
+  {
+   "nickname": "Diego Conde"
+  },
+  {
+   "nickname": "Dmitrovic"
+  },
+  {
+   "nickname": "A. Batalla"
+  },
+  {
+   "nickname": "C. Rivero"
+  },
+  {
+   "nickname": "Á. Valles"
+  },
+  {
+   "nickname": "A. Fortuño"
+  },
+  {
+   "nickname": "Raúl Fernández"
+  },
+  {
+   "nickname": "Fran González"
+  },
+  {
+   "nickname": "Marc Vidal"
+  },
+  {
+   "nickname": "Pau López"
+  },
+  {
+   "nickname": "M. Dituro"
+  },
+  {
+   "nickname": "Joan García"
+  },
+  {
+   "nickname": "Esquivel"
+  },
+  {
+   "nickname": "Padilla"
+  },
+  {
+   "nickname": "Kochen"
+  },
+  {
+   "nickname": "Tristán"
+  },
+  {
+   "nickname": "P. Campos"
+  },
+  {
+   "nickname": "A. Primo"
+  },
+  {
+   "nickname": "Cayetano"
+  },
+  {
+   "nickname": "Rafa Romero"
+  },
+  {
+   "nickname": "Ruben"
+  },
+  {
+   "nickname": "Ionut Radu"
+  },
+  {
+   "nickname": "A. Iturbe"
+  },
+  {
+   "nickname": "Stamatakis"
+  },
+  {
+   "nickname": "Mestre"
+  },
+  {
+   "nickname": "Adrián Molina"
+  },
+  {
+   "nickname": "Juanpe Gil"
+  },
+  {
+   "nickname": "Alberto F."
+  },
+  {
+   "nickname": "Swiderski"
+  },
+  {
+   "nickname": "Ryan"
+  },
+  {
+   "nickname": "Arnau Tenas"
+  },
+  {
+   "nickname": "Vlachodimos"
+  },
+  {
+   "nickname": "Szczesny"
+  },
+  {
+   "nickname": "Montero"
+  },
+  {
+   "nickname": "Folgado"
+  },
+  {
+   "nickname": "Germán"
+  },
+  {
+   "nickname": "Manu G."
+  },
+  {
+   "nickname": "M. Santos"
+  },
+  {
+   "nickname": "Ferrer"
+  },
+  {
+   "nickname": "J. Benito"
+  },
+  {
+   "nickname": "Eder Aller"
+  },
+  {
+   "nickname": "Fraga"
+  },
+  {
+   "nickname": "Javi Navarro"
+  },
+  {
+   "nickname": "Bachmann"
+  },
+  {
+   "nickname": "Rios"
+  },
+  {
+   "nickname": "A. Ferllo"
+  },
+  {
+   "nickname": "Eric Puerto"
+  },
+  {
+   "nickname": "Germán"
+  },
+  {
+   "nickname": "Jokin Ezkieta"
+  },
+  {
+   "nickname": "Alvaro J."
+  },
+  {
+   "nickname": "Eriksson"
+  },
+  {
+   "nickname": "Andreev"
+  },
+  {
+   "nickname": "Laro"
+  },
+  {
+   "nickname": "A. Herrero"
+  },
+  {
+   "nickname": "Carlos Lopez"
+  },
+  {
+   "nickname": "Andrés"
+  },
+  {
+   "nickname": "Leo Román"
+  },
+  {
+   "nickname": "Moldovan"
+  },
+  {
+   "nickname": "Gulácsi"
+  },
+  {
+   "nickname": "Owono"
+  },
+  {
+   "nickname": "A. Rodriguez"
+  },
+  {
+   "nickname": "Galdin"
+  },
+  {
+   "nickname": "Llorenç"
+  },
+  {
+   "nickname": "Bayindir"
+  },
+  {
+   "nickname": "Van Oevelen"
+  },
+  {
+   "nickname": "A. De Pablo"
+  },
+  {
+   "nickname": "Livakovic"
+  },
+  {
+   "nickname": "Emil Audero"
+  },
+  {
+   "nickname": "Kinareikin"
+  },
+  {
+   "nickname": "Iker Rodriguez"
+  },
+  {
+   "nickname": "Bermejo"
+  },
+  {
+   "nickname": "Rafa Fdez."
+  },
+  {
+   "nickname": "Illia Voloshyn"
+  },
+  {
+   "nickname": "Marcos Llorente"
+  },
+  {
+   "nickname": "Yuri"
+  },
+  {
+   "nickname": "Yeray"
+  },
+  {
+   "nickname": "Bartra"
+  },
+  {
+   "nickname": "Le Normand"
+  },
+  {
+   "nickname": "Zubeldia"
+  },
+  {
+   "nickname": "Gayá"
+  },
+  {
+   "nickname": "Domingos Duarte"
+  },
+  {
+   "nickname": "Catena"
+  },
+  {
+   "nickname": "Pedrosa"
+  },
+  {
+   "nickname": "Balliu"
+  },
+  {
+   "nickname": "Juan Iglesias"
+  },
+  {
+   "nickname": "Álex Balde"
+  },
+  {
+   "nickname": "Carmona"
+  },
+  {
+   "nickname": "Tenaglia"
+  },
+  {
+   "nickname": "Chavarría"
+  },
+  {
+   "nickname": "Cardona"
+  },
+  {
+   "nickname": "Cubarsí"
+  },
+  {
+   "nickname": "Boyomo"
+  },
+  {
+   "nickname": "El Hilali"
+  },
+  {
+   "nickname": "Mouriño"
+  },
+  {
+   "nickname": "Sergio Gómez"
+  },
+  {
+   "nickname": "Tárrega"
+  },
+  {
+   "nickname": "Abel Bretones"
+  },
+  {
+   "nickname": "Javi Rodríguez"
+  },
+  {
+   "nickname": "Asencio"
+  },
+  {
+   "nickname": "F. Garcés"
+  },
+  {
+   "nickname": "Yoel Lago"
+  },
+  {
+   "nickname": "John C."
+  },
+  {
+   "nickname": "R.P. Bigas"
+  },
+  {
+   "nickname": "Dela"
+  },
+  {
+   "nickname": "Vivian"
+  },
+  {
+   "nickname": "Paredes"
+  },
+  {
+   "nickname": "Gorosabel"
+  },
+  {
+   "nickname": "Lenglet"
+  },
+  {
+   "nickname": "Giménez"
+  },
+  {
+   "nickname": "Molina"
+  },
+  {
+   "nickname": "Javi Galán"
+  },
+  {
+   "nickname": "Juan Cruz"
+  },
+  {
+   "nickname": "Areso"
+  },
+  {
+   "nickname": "Herrando"
+  },
+  {
+   "nickname": "Álvaro Núñez"
+  },
+  {
+   "nickname": "Christensen"
+  },
+  {
+   "nickname": "Eric"
+  },
+  {
+   "nickname": "Kounde"
+  },
+  {
+   "nickname": "R. Araujo"
+  },
+  {
+   "nickname": "Diego Rico"
+  },
+  {
+   "nickname": "A. Mumin"
+  },
+  {
+   "nickname": "Pacha"
+  },
+  {
+   "nickname": "O. Mingueza"
+  },
+  {
+   "nickname": "Starfelt"
+  },
+  {
+   "nickname": "Ristic"
+  },
+  {
+   "nickname": "C. Dominguez"
+  },
+  {
+   "nickname": "F. Calero"
+  },
+  {
+   "nickname": "Copete"
+  },
+  {
+   "nickname": "Bellerín"
+  },
+  {
+   "nickname": "Llorente "
+  },
+  {
+   "nickname": "Aitor Ruibal"
+  },
+  {
+   "nickname": "F. Mendy"
+  },
+  {
+   "nickname": "E. Militão"
+  },
+  {
+   "nickname": "Rüdiger"
+  },
+  {
+   "nickname": "Fran García"
+  },
+  {
+   "nickname": "Aritz"
+  },
+  {
+   "nickname": "Aihen"
+  },
+  {
+   "nickname": "Pacheco"
+  },
+  {
+   "nickname": "Odriozola"
+  },
+  {
+   "nickname": "Aramburu"
+  },
+  {
+   "nickname": "Marcao"
+  },
+  {
+   "nickname": "Nianzou"
+  },
+  {
+   "nickname": "Gudelj"
+  },
+  {
+   "nickname": "Diakhaby"
+  },
+  {
+   "nickname": "J. Vázquez"
+  },
+  {
+   "nickname": "Cömert"
+  },
+  {
+   "nickname": "Costa"
+  },
+  {
+   "nickname": "Foyth"
+  },
+  {
+   "nickname": "Kambwala"
+  },
+  {
+   "nickname": "Kike Salas"
+  },
+  {
+   "nickname": "Thierry Correia"
+  },
+  {
+   "nickname": "Salinas"
+  },
+  {
+   "nickname": "Miguel Rubio"
+  },
+  {
+   "nickname": "Aidoo Jr"
+  },
+  {
+   "nickname": "Rubén S."
+  },
+  {
+   "nickname": "Huijsen"
+  },
+  {
+   "nickname": "Trent"
+  },
+  {
+   "nickname": "Ruggeri"
+  },
+  {
+   "nickname": "Á. Carreras"
+  },
+  {
+   "nickname": "I. Lekue"
+  },
+  {
+   "nickname": "Rafa Marín"
+  },
+  {
+   "nickname": "Natan"
+  },
+  {
+   "nickname": "Adama"
+  },
+  {
+   "nickname": "Foulquier"
+  },
+  {
+   "nickname": "Luiz Felipe"
+  },
+  {
+   "nickname": "Jonny Otto"
+  },
+  {
+   "nickname": "V. Rosier"
+  },
+  {
+   "nickname": "Hancko"
+  },
+  {
+   "nickname": "Marc Pubill"
+  },
+  {
+   "nickname": "Youssef"
+  },
+  {
+   "nickname": "Fortea"
+  },
+  {
+   "nickname": "Diego Aguado"
+  },
+  {
+   "nickname": "Kostis"
+  },
+  {
+   "nickname": "V. Chust"
+  },
+  {
+   "nickname": "Carreira"
+  },
+  {
+   "nickname": "V. Parada"
+  },
+  {
+   "nickname": "Valentín Gómez"
+  },
+  {
+   "nickname": "C. Romero"
+  },
+  {
+   "nickname": "Manu Sánchez"
+  },
+  {
+   "nickname": "Junior"
+  },
+  {
+   "nickname": "Elgezabal"
+  },
+  {
+   "nickname": "Rodríguez"
+  },
+  {
+   "nickname": "Léo Pétrot"
+  },
+  {
+   "nickname": "Jofre"
+  },
+  {
+   "nickname": "Manuel Fernández"
+  },
+  {
+   "nickname": "Jon Martin"
+  },
+  {
+   "nickname": "Djene"
+  },
+  {
+   "nickname": "Ismael"
+  },
+  {
+   "nickname": "Matías Moreno"
+  },
+  {
+   "nickname": "Víctor G."
+  },
+  {
+   "nickname": "Jeremy Toljan"
+  },
+  {
+   "nickname": "J. Vertrouwd"
+  },
+  {
+   "nickname": "A. Castrín"
+  },
+  {
+   "nickname": "Rubo"
+  },
+  {
+   "nickname": "Pau Navarro"
+  },
+  {
+   "nickname": "J. Ives Valou"
+  },
+  {
+   "nickname": "Á. Ortiz"
+  },
+  {
+   "nickname": "Javi Rueda"
+  },
+  {
+   "nickname": "Albert"
+  },
+  {
+   "nickname": "R. Chasco"
+  },
+  {
+   "nickname": "De Las Sias"
+  },
+  {
+   "nickname": "Renato Veiga"
+  },
+  {
+   "nickname": "Davinchi"
+  },
+  {
+   "nickname": "Jon De Luis"
+  },
+  {
+   "nickname": "Vilaplana"
+  },
+  {
+   "nickname": "Martin Krug"
+  },
+  {
+   "nickname": "Nacho Perez"
+  },
+  {
+   "nickname": "Suazo"
+  },
+  {
+   "nickname": "Gerard Martín"
+  },
+  {
+   "nickname": "Alan Matturro"
+  },
+  {
+   "nickname": "Kiko F."
+  },
+  {
+   "nickname": "A. Abqar"
+  },
+  {
+   "nickname": "Riedel"
+  },
+  {
+   "nickname": "Oso"
+  },
+  {
+   "nickname": "Cardoso"
+  },
+  {
+   "nickname": "Navarro"
+  },
+  {
+   "nickname": "D. Jiménez"
+  },
+  {
+   "nickname": "Bladi"
+  },
+  {
+   "nickname": "Nyom"
+  },
+  {
+   "nickname": "Hector Fort"
+  },
+  {
+   "nickname": "Monreal"
+  },
+  {
+   "nickname": "Ballestero"
+  },
+  {
+   "nickname": "N. Mendy"
+  },
+  {
+   "nickname": "Beitia"
+  },
+  {
+   "nickname": "Sierra"
+  },
+  {
+   "nickname": "Xavi Espart"
+  },
+  {
+   "nickname": "David Delgado"
+  },
+  {
+   "nickname": "Arguibide"
+  },
+  {
+   "nickname": "P. Meixus"
+  },
+  {
+   "nickname": "Álvaro García"
+  },
+  {
+   "nickname": "Egoitz M.l."
+  },
+  {
+   "nickname": "Lucas Laso"
+  },
+  {
+   "nickname": "Yassin T."
+  },
+  {
+   "nickname": "Huseini"
+  },
+  {
+   "nickname": "Panach"
+  },
+  {
+   "nickname": "Marc Jurado"
+  },
+  {
+   "nickname": "Valdepeñas"
+  },
+  {
+   "nickname": "Mikel"
+  },
+  {
+   "nickname": "Santos"
+  },
+  {
+   "nickname": "Joan Martínez"
+  },
+  {
+   "nickname": "Iker Muñoz"
+  },
+  {
+   "nickname": "D. Martínez"
+  },
+  {
+   "nickname": "J. Boñar"
+  },
+  {
+   "nickname": "Purić"
+  },
+  {
+   "nickname": "Xanet Olaiz"
+  },
+  {
+   "nickname": "Tommy Marqués"
+  },
+  {
+   "nickname": "Montes"
+  },
+  {
+   "nickname": "Kita"
+  },
+  {
+   "nickname": "Fontanet"
+  },
+  {
+   "nickname": "Cancelo"
+  },
+  {
+   "nickname": "Julio Díaz"
+  },
+  {
+   "nickname": "Bema Sina"
+  },
+  {
+   "nickname": "Zaid Romero"
+  },
+  {
+   "nickname": "Boselli"
+  },
+  {
+   "nickname": "Nuñez"
+  },
+  {
+   "nickname": "Freeman"
+  },
+  {
+   "nickname": "Egiluz"
+  },
+  {
+   "nickname": "Koski"
+  },
+  {
+   "nickname": "B. Sangare"
+  },
+  {
+   "nickname": "Saravia"
+  },
+  {
+   "nickname": "Lamini"
+  },
+  {
+   "nickname": "Gattoni"
+  },
+  {
+   "nickname": "Spina"
+  },
+  {
+   "nickname": "Quagliata"
+  },
+  {
+   "nickname": "M. Loureiro"
+  },
+  {
+   "nickname": "Quique T."
+  },
+  {
+   "nickname": "Damián"
+  },
+  {
+   "nickname": "A. Alti"
+  },
+  {
+   "nickname": "Samu"
+  },
+  {
+   "nickname": "I.vidal"
+  },
+  {
+   "nickname": "Noubi"
+  },
+  {
+   "nickname": "Comas"
+  },
+  {
+   "nickname": "Dani Barcia"
+  },
+  {
+   "nickname": "Ximo Navarro"
+  },
+  {
+   "nickname": "Escudero"
+  },
+  {
+   "nickname": "Pablo"
+  },
+  {
+   "nickname": "Mantilla"
+  },
+  {
+   "nickname": "Mario García"
+  },
+  {
+   "nickname": "Manu Hernando"
+  },
+  {
+   "nickname": "Castro"
+  },
+  {
+   "nickname": "Suleiman"
+  },
+  {
+   "nickname": "Jorge Salinas"
+  },
+  {
+   "nickname": "Calera"
+  },
+  {
+   "nickname": "Carlos Sánchez"
+  },
+  {
+   "nickname": "Pablo Ramón"
+  },
+  {
+   "nickname": "Facu"
+  },
+  {
+   "nickname": "Aitor Crespo"
+  },
+  {
+   "nickname": "C. Puga"
+  },
+  {
+   "nickname": "Murillo"
+  },
+  {
+   "nickname": "Rafita"
+  },
+  {
+   "nickname": "Einar"
+  },
+  {
+   "nickname": "Montero"
+  },
+  {
+   "nickname": "Dani Sánchez"
+  },
+  {
+   "nickname": "Victor"
+  },
+  {
+   "nickname": "Recio"
+  },
+  {
+   "nickname": "Gabilondo"
+  },
+  {
+   "nickname": "Pastor"
+  },
+  {
+   "nickname": "Arriaza"
+  },
+  {
+   "nickname": "M. Santaella"
+  },
+  {
+   "nickname": "Moussa"
+  },
+  {
+   "nickname": "Laporte"
+  },
+  {
+   "nickname": "Affengruber"
+  },
+  {
+   "nickname": "Cabrera"
+  },
+  {
+   "nickname": "Dumfries"
+  },
+  {
+   "nickname": "Ratiu"
+  },
+  {
+   "nickname": "Lejeune"
+  },
+  {
+   "nickname": "Q. Hartman"
+  },
+  {
+   "nickname": "Cucurella"
+  },
+  {
+   "nickname": "Konaté"
+  },
+  {
+   "nickname": "Cabello"
+  },
+  {
+   "nickname": "Diaby"
+  },
+  {
+   "nickname": "De Haas"
+  },
+  {
+   "nickname": "Marcos Alonso"
+  },
+  {
+   "nickname": "J. Berrocal"
+  },
+  {
+   "nickname": "Saba Sazonov"
+  },
+  {
+   "nickname": "Andrés Garcia"
+  },
+  {
+   "nickname": "Sangante"
+  },
+  {
+   "nickname": "Pedro Felipe"
+  },
+  {
+   "nickname": "Angeliño"
+  },
+  {
+   "nickname": "Kumbulla"
+  },
+  {
+   "nickname": "Bright Ede"
+  },
+  {
+   "nickname": "Mojica"
+  },
+  {
+   "nickname": "Grimaldo"
+  },
+  {
+   "nickname": "Valentini"
+  },
+  {
+   "nickname": "Pelayo"
+  },
+  {
+   "nickname": "Diarra"
+  },
+  {
+   "nickname": "Novoa"
+  },
+  {
+   "nickname": "Hinojo"
+  },
+  {
+   "nickname": "Marc Santos"
+  },
+  {
+   "nickname": "Timera"
+  },
+  {
+   "nickname": "Jose Angel"
+  },
+  {
+   "nickname": "Mandi"
+  },
+  {
+   "nickname": "Vanja Drkusic"
+  },
+  {
+   "nickname": "Lozano"
+  },
+  {
+   "nickname": "H. Rincón"
+  },
+  {
+   "nickname": "Barzic"
+  },
+  {
+   "nickname": "Faye"
+  },
+  {
+   "nickname": "Cuti Romero"
+  },
+  {
+   "nickname": "Maffeo"
+  },
+  {
+   "nickname": "Johaneko"
+  },
+  {
+   "nickname": "Córdoba"
+  },
+  {
+   "nickname": "Curro "
+  },
+  {
+   "nickname": "Mario Rivas"
+  },
+  {
+   "nickname": "Cortés"
+  },
+  {
+   "nickname": "Jordi Pesquer"
+  },
+  {
+   "nickname": "Ifeanyi Ndukwe"
+  },
+  {
+   "nickname": "Arnau"
+  },
+  {
+   "nickname": "M. Sarr"
+  },
+  {
+   "nickname": "Ribes"
+  },
+  {
+   "nickname": "Rockson"
+  },
+  {
+   "nickname": "Axel Tape"
+  },
+  {
+   "nickname": "Xavi Grande"
+  },
+  {
+   "nickname": "Aaron"
+  },
+  {
+   "nickname": "Cáceres"
+  },
+  {
+   "nickname": "Mujaid Sadick"
+  },
+  {
+   "nickname": "Belocian"
+  },
+  {
+   "nickname": "Revivo"
+  },
+  {
+   "nickname": "Lomonaco"
+  },
+  {
+   "nickname": "Rodrigo Gamón"
+  },
+  {
+   "nickname": "Aznou"
+  },
+  {
+   "nickname": "Javier Gil"
+  },
+  {
+   "nickname": "J. Dominguez"
+  },
+  {
+   "nickname": "Carvajal"
+  },
+  {
+   "nickname": "Alex Campos"
+  },
+  {
+   "nickname": "Alvaro Fdez"
+  },
+  {
+   "nickname": "Hector"
+  },
+  {
+   "nickname": "Gaby"
+  },
+  {
+   "nickname": "Guillem Victor"
+  },
+  {
+   "nickname": "Vesga"
+  },
+  {
+   "nickname": "Guevara"
+  },
+  {
+   "nickname": "Rioja"
+  },
+  {
+   "nickname": "Moncayola"
+  },
+  {
+   "nickname": "Rubén García"
+  },
+  {
+   "nickname": "Moi Gómez"
+  },
+  {
+   "nickname": "Barrenetxea"
+  },
+  {
+   "nickname": "Guridi"
+  },
+  {
+   "nickname": "Torró"
+  },
+  {
+   "nickname": "Álvaro García"
+  },
+  {
+   "nickname": "Comesaña"
+  },
+  {
+   "nickname": "De Galarreta"
+  },
+  {
+   "nickname": "Óscar Valentín"
+  },
+  {
+   "nickname": "Kubo"
+  },
+  {
+   "nickname": "Turrientes"
+  },
+  {
+   "nickname": "Gavi"
+  },
+  {
+   "nickname": "Camavinga"
+  },
+  {
+   "nickname": "Tchouaméni"
+  },
+  {
+   "nickname": "Almeida"
+  },
+  {
+   "nickname": "Barrios"
+  },
+  {
+   "nickname": "Arda Güler"
+  },
+  {
+   "nickname": "Altimira"
+  },
+  {
+   "nickname": "Sow"
+  },
+  {
+   "nickname": "Fermín"
+  },
+  {
+   "nickname": "Iker Muñoz"
+  },
+  {
+   "nickname": "Juanlu"
+  },
+  {
+   "nickname": "Prados"
+  },
+  {
+   "nickname": "Pol Lozano"
+  },
+  {
+   "nickname": "Jauregizar"
+  },
+  {
+   "nickname": "Hugo Alvarez"
+  },
+  {
+   "nickname": "Febas"
+  },
+  {
+   "nickname": "Unai G."
+  },
+  {
+   "nickname": "O. Sancet"
+  },
+  {
+   "nickname": "Koke"
+  },
+  {
+   "nickname": "Carlos Martín"
+  },
+  {
+   "nickname": "Aimar"
+  },
+  {
+   "nickname": "Protesoni"
+  },
+  {
+   "nickname": "Y. Santiago"
+  },
+  {
+   "nickname": "M. Aguado"
+  },
+  {
+   "nickname": "F. De Jong"
+  },
+  {
+   "nickname": "M. Casadó"
+  },
+  {
+   "nickname": "Herrera"
+  },
+  {
+   "nickname": "Isi"
+  },
+  {
+   "nickname": "Pathé I. Ciss"
+  },
+  {
+   "nickname": "Unai Lopez"
+  },
+  {
+   "nickname": "Pedro Díaz"
+  },
+  {
+   "nickname": "Williot"
+  },
+  {
+   "nickname": "Hugo Sotelo"
+  },
+  {
+   "nickname": "Lo Celso"
+  },
+  {
+   "nickname": "Marc Roca"
+  },
+  {
+   "nickname": "Valverde"
+  },
+  {
+   "nickname": "Brahim"
+  },
+  {
+   "nickname": "Sucic"
+  },
+  {
+   "nickname": "Olasagasti"
+  },
+  {
+   "nickname": "Zakharyan"
+  },
+  {
+   "nickname": "Agoumé"
+  },
+  {
+   "nickname": "Pepelu"
+  },
+  {
+   "nickname": "Fran Pérez"
+  },
+  {
+   "nickname": "Gueye"
+  },
+  {
+   "nickname": "Denis Suárez"
+  },
+  {
+   "nickname": "Johnny"
+  },
+  {
+   "nickname": "Brais Méndez"
+  },
+  {
+   "nickname": "Vencedor"
+  },
+  {
+   "nickname": "R. Terrats"
+  },
+  {
+   "nickname": "Puado"
+  },
+  {
+   "nickname": "Álex Baena"
+  },
+  {
+   "nickname": "Gumbau"
+  },
+  {
+   "nickname": "Riquelme"
+  },
+  {
+   "nickname": "Navarro"
+  },
+  {
+   "nickname": "Almada"
+  },
+  {
+   "nickname": "Buchanan"
+  },
+  {
+   "nickname": "A. Roca"
+  },
+  {
+   "nickname": "Aleñá"
+  },
+  {
+   "nickname": "Ibañez"
+  },
+  {
+   "nickname": "Thomas Partey"
+  },
+  {
+   "nickname": "A. Rebbach"
+  },
+  {
+   "nickname": "Santamaría"
+  },
+  {
+   "nickname": "Josan"
+  },
+  {
+   "nickname": "Martim Neto"
+  },
+  {
+   "nickname": "Ilaix Moriba"
+  },
+  {
+   "nickname": "Ugrinic"
+  },
+  {
+   "nickname": "C. Alvarez"
+  },
+  {
+   "nickname": "Calebe"
+  },
+  {
+   "nickname": "Gorrotxa"
+  },
+  {
+   "nickname": "Urko"
+  },
+  {
+   "nickname": "Deossa"
+  },
+  {
+   "nickname": "O. Rey"
+  },
+  {
+   "nickname": "M. Román"
+  },
+  {
+   "nickname": "Mario Martín"
+  },
+  {
+   "nickname": "Rego"
+  },
+  {
+   "nickname": "Guille Fernández"
+  },
+  {
+   "nickname": "Risco"
+  },
+  {
+   "nickname": "Marín"
+  },
+  {
+   "nickname": "Pampin"
+  },
+  {
+   "nickname": "Becerra"
+  },
+  {
+   "nickname": "Januzaj"
+  },
+  {
+   "nickname": "Manu Bueno"
+  },
+  {
+   "nickname": "Redondo"
+  },
+  {
+   "nickname": "L. Pinillos"
+  },
+  {
+   "nickname": "D. Pérez"
+  },
+  {
+   "nickname": "R. Mendoza"
+  },
+  {
+   "nickname": "A. Osambela"
+  },
+  {
+   "nickname": "Mauro"
+  },
+  {
+   "nickname": "Jano"
+  },
+  {
+   "nickname": "Thiago Pitarch"
+  },
+  {
+   "nickname": "Iván"
+  },
+  {
+   "nickname": "Joan Ruiz"
+  },
+  {
+   "nickname": "Edu Altozano"
+  },
+  {
+   "nickname": "Pickel"
+  },
+  {
+   "nickname": "Arriaga"
+  },
+  {
+   "nickname": "C. Soler"
+  },
+  {
+   "nickname": "Mendy"
+  },
+  {
+   "nickname": "Javi Muñoz"
+  },
+  {
+   "nickname": "Nico Gonzalez"
+  },
+  {
+   "nickname": "Marc Bernal"
+  },
+  {
+   "nickname": "Jordán"
+  },
+  {
+   "nickname": "Lucas Núñez"
+  },
+  {
+   "nickname": "Hugo Lopez"
+  },
+  {
+   "nickname": "Amrabat"
+  },
+  {
+   "nickname": "Lucas Beltrán"
+  },
+  {
+   "nickname": "Taufik Seidu"
+  },
+  {
+   "nickname": "Javi Serrano"
+  },
+  {
+   "nickname": "A. Boayar"
+  },
+  {
+   "nickname": "A. Martinez"
+  },
+  {
+   "nickname": "Pedroarena"
+  },
+  {
+   "nickname": "Morcillo"
+  },
+  {
+   "nickname": "Lebarbier"
+  },
+  {
+   "nickname": "Barry"
+  },
+  {
+   "nickname": "Juan Hernández"
+  },
+  {
+   "nickname": "Selton"
+  },
+  {
+   "nickname": "H. González"
+  },
+  {
+   "nickname": "Roson"
+  },
+  {
+   "nickname": "Marchal"
+  },
+  {
+   "nickname": "Carlos Macià"
+  },
+  {
+   "nickname": "Jon Garcia"
+  },
+  {
+   "nickname": "Eder García"
+  },
+  {
+   "nickname": "A. Arcos"
+  },
+  {
+   "nickname": "Izei"
+  },
+  {
+   "nickname": "Cestero"
+  },
+  {
+   "nickname": "Solozabal"
+  },
+  {
+   "nickname": "Ferri"
+  },
+  {
+   "nickname": "Astiazaran"
+  },
+  {
+   "nickname": "Aguirre"
+  },
+  {
+   "nickname": "Diatta"
+  },
+  {
+   "nickname": "J. Gaitán"
+  },
+  {
+   "nickname": "K. Tunde"
+  },
+  {
+   "nickname": "Manuel Ángel"
+  },
+  {
+   "nickname": "Palacios"
+  },
+  {
+   "nickname": "Raghouber"
+  },
+  {
+   "nickname": "Burcio"
+  },
+  {
+   "nickname": "Álex Sánchez"
+  },
+  {
+   "nickname": "Meso"
+  },
+  {
+   "nickname": "Pol Fortuny"
+  },
+  {
+   "nickname": "Mestanza"
+  },
+  {
+   "nickname": "A. Riquelme"
+  },
+  {
+   "nickname": "Fer López"
+  },
+  {
+   "nickname": "Ángel Pérez"
+  },
+  {
+   "nickname": "G. Villar"
+  },
+  {
+   "nickname": "Fidalgo"
+  },
+  {
+   "nickname": "Obed Vargas"
+  },
+  {
+   "nickname": "Vecino"
+  },
+  {
+   "nickname": "Antañón"
+  },
+  {
+   "nickname": "Morcillo"
+  },
+  {
+   "nickname": "Gragera"
+  },
+  {
+   "nickname": "Mané"
+  },
+  {
+   "nickname": "Fabi"
+  },
+  {
+   "nickname": "Nájera"
+  },
+  {
+   "nickname": "Noé"
+  },
+  {
+   "nickname": "Riki"
+  },
+  {
+   "nickname": "Enrique"
+  },
+  {
+   "nickname": "Rubén López"
+  },
+  {
+   "nickname": "D. Villares"
+  },
+  {
+   "nickname": "Jose Angel"
+  },
+  {
+   "nickname": "Diego Gómez"
+  },
+  {
+   "nickname": "Mella"
+  },
+  {
+   "nickname": "Mario Soriano"
+  },
+  {
+   "nickname": "Patiño"
+  },
+  {
+   "nickname": "Iñigo"
+  },
+  {
+   "nickname": "Aldasoro"
+  },
+  {
+   "nickname": "Maguette"
+  },
+  {
+   "nickname": "Diego Fuentes"
+  },
+  {
+   "nickname": "A. Vallecillo"
+  },
+  {
+   "nickname": "Peio Canales"
+  },
+  {
+   "nickname": "Sergio"
+  },
+  {
+   "nickname": "G. Puerta"
+  },
+  {
+   "nickname": "Izan"
+  },
+  {
+   "nickname": "M. Solorzano"
+  },
+  {
+   "nickname": "Izan M."
+  },
+  {
+   "nickname": "Dani Lorenzo"
+  },
+  {
+   "nickname": "Rafa Rodríguez"
+  },
+  {
+   "nickname": "Dotor"
+  },
+  {
+   "nickname": "Aaron Ochoa"
+  },
+  {
+   "nickname": "Ramon"
+  },
+  {
+   "nickname": "Darko"
+  },
+  {
+   "nickname": "Juanpe"
+  },
+  {
+   "nickname": "Luismi"
+  },
+  {
+   "nickname": "Dorrio O."
+  },
+  {
+   "nickname": "Blanco"
+  },
+  {
+   "nickname": "Larrubia"
+  },
+  {
+   "nickname": "Germán V."
+  },
+  {
+   "nickname": "Javi Guerra"
+  },
+  {
+   "nickname": "Edu Expósito"
+  },
+  {
+   "nickname": "Moleiro"
+  },
+  {
+   "nickname": "Isco"
+  },
+  {
+   "nickname": "Olmo"
+  },
+  {
+   "nickname": "Fornals"
+  },
+  {
+   "nickname": "Pedri"
+  },
+  {
+   "nickname": "Bellingham"
+  },
+  {
+   "nickname": "Hjulmand"
+  },
+  {
+   "nickname": "Bernardo Silva"
+  },
+  {
+   "nickname": "Amatucci"
+  },
+  {
+   "nickname": "Dieng"
+  },
+  {
+   "nickname": "Damián "
+  },
+  {
+   "nickname": "Canales"
+  },
+  {
+   "nickname": "Moscardo"
+  },
+  {
+   "nickname": "Guido Rodríguez"
+  },
+  {
+   "nickname": "Mangala"
+  },
+  {
+   "nickname": "Neyou"
+  },
+  {
+   "nickname": "Juan Cruz"
+  },
+  {
+   "nickname": "Mikel Rodriguez"
+  },
+  {
+   "nickname": "Asp Jensen"
+  },
+  {
+   "nickname": "Buonanotte"
+  },
+  {
+   "nickname": "Javi Hernández"
+  },
+  {
+   "nickname": "Caste"
+  },
+  {
+   "nickname": "Bardeli"
+  },
+  {
+   "nickname": "Manel Usedo"
+  },
+  {
+   "nickname": "Alberto Calatrava"
+  },
+  {
+   "nickname": "Bauza"
+  },
+  {
+   "nickname": "Cheikh Thiam"
+  },
+  {
+   "nickname": "Guillén"
+  },
+  {
+   "nickname": "Marco Román"
+  },
+  {
+   "nickname": "Lemar"
+  },
+  {
+   "nickname": "Gerenabarrena"
+  },
+  {
+   "nickname": "Gijselhart"
+  },
+  {
+   "nickname": "Kang-In Lee"
+  },
+  {
+   "nickname": "F. Bernal"
+  },
+  {
+   "nickname": "Francho"
+  },
+  {
+   "nickname": "Castillo"
+  },
+  {
+   "nickname": "Goti"
+  },
+  {
+   "nickname": "Otu Jr"
+  },
+  {
+   "nickname": "Iván Martín"
+  },
+  {
+   "nickname": "P. Martínez"
+  },
+  {
+   "nickname": "Rodri"
+  },
+  {
+   "nickname": "Kochorashvili"
+  },
+  {
+   "nickname": "Hugo Pérez"
+  },
+  {
+   "nickname": "Manuel Ángel"
+  },
+  {
+   "nickname": "Jaume Durà"
+  },
+  {
+   "nickname": "Óscar López"
+  },
+  {
+   "nickname": "Brian Fariñas"
+  },
+  {
+   "nickname": "Requena"
+  },
+  {
+   "nickname": "Thiago"
+  },
+  {
+   "nickname": "Matteo Prati"
+  },
+  {
+   "nickname": "Mayol"
+  },
+  {
+   "nickname": "Saliba"
+  },
+  {
+   "nickname": "G. Bouaré"
+  },
+  {
+   "nickname": "Moha"
+  },
+  {
+   "nickname": "Harvey Elliott"
+  },
+  {
+   "nickname": "Diallo"
+  },
+  {
+   "nickname": "Ceballos"
+  },
+  {
+   "nickname": "Fofana"
+  },
+  {
+   "nickname": "Cajuste"
+  },
+  {
+   "nickname": "Bonafé"
+  },
+  {
+   "nickname": "Jesús Martínez"
+  },
+  {
+   "nickname": "Yayo"
+  },
+  {
+   "nickname": "Orian Goren"
+  },
+  {
+   "nickname": "Jan Peries"
+  },
+  {
+   "nickname": "A. Santiago"
+  },
+  {
+   "nickname": "Mauro Roca"
+  },
+  {
+   "nickname": "Barrera"
+  },
+  {
+   "nickname": "Ebrima Tunkara"
+  },
+  {
+   "nickname": "Romeo"
+  },
+  {
+   "nickname": "Iñaki Williams"
+  },
+  {
+   "nickname": "Gerard"
+  },
+  {
+   "nickname": "De Frutos"
+  },
+  {
+   "nickname": "Berenguer"
+  },
+  {
+   "nickname": "Hugo Duro"
+  },
+  {
+   "nickname": "Giuliano"
+  },
+  {
+   "nickname": "Diego López"
+  },
+  {
+   "nickname": "Guruzeta"
+  },
+  {
+   "nickname": "Jofre"
+  },
+  {
+   "nickname": "Cucho"
+  },
+  {
+   "nickname": "R. Brugué"
+  },
+  {
+   "nickname": "I. Romero"
+  },
+  {
+   "nickname": "Maroan"
+  },
+  {
+   "nickname": "Sorloth"
+  },
+  {
+   "nickname": "Kike Barja"
+  },
+  {
+   "nickname": "Raúl"
+  },
+  {
+   "nickname": "Ferran"
+  },
+  {
+   "nickname": "Nteka"
+  },
+  {
+   "nickname": "Camello"
+  },
+  {
+   "nickname": "Franco Cervi"
+  },
+  {
+   "nickname": "Pablo Durán"
+  },
+  {
+   "nickname": "Pere Milla"
+  },
+  {
+   "nickname": "Bakambu"
+  },
+  {
+   "nickname": "Chimy Ávila"
+  },
+  {
+   "nickname": "Rodrygo"
+  },
+  {
+   "nickname": "Oskarsson"
+  },
+  {
+   "nickname": "Ejuke"
+  },
+  {
+   "nickname": "Peque"
+  },
+  {
+   "nickname": "Isaac"
+  },
+  {
+   "nickname": "I. Akhomach"
+  },
+  {
+   "nickname": "B. Mayoral"
+  },
+  {
+   "nickname": "Iago Aspas"
+  },
+  {
+   "nickname": "Nico Serrano"
+  },
+  {
+   "nickname": "Ayoze"
+  },
+  {
+   "nickname": "Kike García"
+  },
+  {
+   "nickname": "Roberto"
+  },
+  {
+   "nickname": "Raphinha"
+  },
+  {
+   "nickname": "I. Benito"
+  },
+  {
+   "nickname": "Raba"
+  },
+  {
+   "nickname": "Gonzalo"
+  },
+  {
+   "nickname": "Danjuma"
+  },
+  {
+   "nickname": "Mariano"
+  },
+  {
+   "nickname": "Álvaro"
+  },
+  {
+   "nickname": "Ferran Jutglà"
+  },
+  {
+   "nickname": "Sadiq"
+  },
+  {
+   "nickname": "Karrikaburu"
+  },
+  {
+   "nickname": "Dolan"
+  },
+  {
+   "nickname": "Rashford"
+  },
+  {
+   "nickname": "A. Liso"
+  },
+  {
+   "nickname": "Izeta"
+  },
+  {
+   "nickname": "Toni Fernández"
+  },
+  {
+   "nickname": "Iker Losada"
+  },
+  {
+   "nickname": "El Abdellaoui"
+  },
+  {
+   "nickname": "Joselu"
+  },
+  {
+   "nickname": "Paco Cortes"
+  },
+  {
+   "nickname": "A. J. Morales"
+  },
+  {
+   "nickname": "Otorbi"
+  },
+  {
+   "nickname": "Etta Eyong"
+  },
+  {
+   "nickname": "Cabanes"
+  },
+  {
+   "nickname": "Rafa Mir"
+  },
+  {
+   "nickname": "André Silva"
+  },
+  {
+   "nickname": "Pablo García"
+  },
+  {
+   "nickname": "F. Mastantuono"
+  },
+  {
+   "nickname": "Miguel Sierra"
+  },
+  {
+   "nickname": "Aimar Blázquez"
+  },
+  {
+   "nickname": "Alfon"
+  },
+  {
+   "nickname": "Ramazani"
+  },
+  {
+   "nickname": "Oluwaseyi"
+  },
+  {
+   "nickname": "Lucas Boyé"
+  },
+  {
+   "nickname": "Antony"
+  },
+  {
+   "nickname": "Mikautadze"
+  },
+  {
+   "nickname": "Álex Sancris"
+  },
+  {
+   "nickname": "Juanmi"
+  },
+  {
+   "nickname": "Grady Diangana"
+  },
+  {
+   "nickname": "Alex Costa"
+  },
+  {
+   "nickname": "Alemâo"
+  },
+  {
+   "nickname": "Alexis Sánchez"
+  },
+  {
+   "nickname": "Kamara"
+  },
+  {
+   "nickname": "Bardghji"
+  },
+  {
+   "nickname": "Rayane"
+  },
+  {
+   "nickname": "Mykyta"
+  },
+  {
+   "nickname": "Adrián"
+  },
+  {
+   "nickname": "Ibon Sánchez"
+  },
+  {
+   "nickname": "R. Arroyo"
+  },
+  {
+   "nickname": "Óscar Marcos"
+  },
+  {
+   "nickname": "Nordin Al-Lal"
+  },
+  {
+   "nickname": "Gorka Carrera"
+  },
+  {
+   "nickname": "Mariezkurrena"
+  },
+  {
+   "nickname": "Asier Hierro"
+  },
+  {
+   "nickname": "Bujan"
+  },
+  {
+   "nickname": "Mañas"
+  },
+  {
+   "nickname": "Osorio"
+  },
+  {
+   "nickname": "Raúl Moro"
+  },
+  {
+   "nickname": "Luis Vázquez"
+  },
+  {
+   "nickname": "Cepeda"
+  },
+  {
+   "nickname": "Ngonge"
+  },
+  {
+   "nickname": "T. Morente"
+  },
+  {
+   "nickname": "Diabate"
+  },
+  {
+   "nickname": "Birma"
+  },
+  {
+   "nickname": "Ochieng"
+  },
+  {
+   "nickname": "Yañez"
+  },
+  {
+   "nickname": "Miguel Cubo"
+  },
+  {
+   "nickname": "Luismi Cruz"
+  },
+  {
+   "nickname": "Bil Nsongo"
+  },
+  {
+   "nickname": "Cristian H."
+  },
+  {
+   "nickname": "Eddahchouri"
+  },
+  {
+   "nickname": "Iñigo Vicente"
+  },
+  {
+   "nickname": "Sangalli"
+  },
+  {
+   "nickname": "Arana"
+  },
+  {
+   "nickname": "Guliashvili"
+  },
+  {
+   "nickname": "Mata"
+  },
+  {
+   "nickname": "Villalibre"
+  },
+  {
+   "nickname": "S. Franco"
+  },
+  {
+   "nickname": "Diego Diaz"
+  },
+  {
+   "nickname": "Joaquín"
+  },
+  {
+   "nickname": "Niño"
+  },
+  {
+   "nickname": "Lobete"
+  },
+  {
+   "nickname": "Jauregi"
+  },
+  {
+   "nickname": "Haitam"
+  },
+  {
+   "nickname": "Chupe"
+  },
+  {
+   "nickname": "B. Iglesias"
+  },
+  {
+   "nickname": "Andrés Martín"
+  },
+  {
+   "nickname": "Yeremay"
+  },
+  {
+   "nickname": "T. Martínez"
+  },
+  {
+   "nickname": "Lookman"
+  },
+  {
+   "nickname": "Nico Williams"
+  },
+  {
+   "nickname": "Budimir"
+  },
+  {
+   "nickname": "Guedes"
+  },
+  {
+   "nickname": "Pepe"
+  },
+  {
+   "nickname": "Julián Alvarez"
+  },
+  {
+   "nickname": "Ez Abde"
+  },
+  {
+   "nickname": "Oyarzabal"
+  },
+  {
+   "nickname": "Vini Jr."
+  },
+  {
+   "nickname": "Mbappé"
+  },
+  {
+   "nickname": "Lamine Yamal"
+  },
+  {
+   "nickname": "Cala"
+  },
+  {
+   "nickname": "Aubameyang"
+  },
+  {
+   "nickname": "C. Pérez"
+  },
+  {
+   "nickname": "Endrick"
+  },
+  {
+   "nickname": "Tenés"
+  },
+  {
+   "nickname": "Vargas"
+  },
+  {
+   "nickname": "Djalo"
+  },
+  {
+   "nickname": "Uche"
+  },
+  {
+   "nickname": "Carlos Espí"
+  },
+  {
+   "nickname": "Marcos"
+  },
+  {
+   "nickname": "Satriano"
+  },
+  {
+   "nickname": "Diomande"
+  },
+  {
+   "nickname": "Robbie Ure"
+  },
+  {
+   "nickname": "Fer Niño"
+  },
+  {
+   "nickname": "Y. Zabiri"
+  },
+  {
+   "nickname": "Miguel Rodríguez"
+  },
+  {
+   "nickname": "Enes Ünal"
+  },
+  {
+   "nickname": "Ibra"
+  },
+  {
+   "nickname": "Alonso"
+  },
+  {
+   "nickname": "Ibra Drj"
+  },
+  {
+   "nickname": "Dubasin"
+  },
+  {
+   "nickname": "Kevin"
+  },
+  {
+   "nickname": "E. Ponce"
+  },
+  {
+   "nickname": "Ali Houary"
+  },
+  {
+   "nickname": "Á. Padilla"
+  },
+  {
+   "nickname": "Umaru"
+  },
+  {
+   "nickname": "Arnau Ortiz"
+  },
+  {
+   "nickname": "Tsitaishvili"
+  },
+  {
+   "nickname": "Juani"
+  },
+  {
+   "nickname": "Adeyemi"
+  },
+  {
+   "nickname": "Gordon"
+  },
+  {
+   "nickname": "Sato"
+  },
+  {
+   "nickname": "Nizar El Jmili"
+  },
+  {
+   "nickname": "Alexis Ciria"
+  },
+  {
+   "nickname": "Abdelkarim"
+  },
+  {
+   "nickname": "Yanis Musuayi"
+  },
+  {
+   "nickname": "Parrott"
+  },
+  {
+   "nickname": "A. Bonel"
+  },
+  {
+   "nickname": "Bryan"
+  },
+  {
+   "nickname": "Driouech"
+  },
+  {
+   "nickname": "Iker Luque"
+  },
+  {
+   "nickname": "Adama Traoré"
+  },
+  {
+   "nickname": "Del Castillo"
+  },
+  {
+   "nickname": "Iván Azón"
+  },
+  {
+   "nickname": "J. David"
+  },
+  {
+   "nickname": "Ratkov"
+  },
+  {
+   "nickname": "Gabriel Jesus"
+  },
+  {
+   "nickname": "Félix Correia"
+  },
+  {
+   "nickname": "Stassin"
+  },
+  {
+   "nickname": "Moha Achraf"
+  },
+  {
+   "nickname": "RDT"
+  },
+  {
+   "nickname": "Morante"
+  },
+  {
+   "nickname": "A. García"
+  },
+  {
+   "nickname": "Mullerat"
+  },
+  {
+   "nickname": "Imga"
+  },
+  {
+   "nickname": "Martín"
+  },
+  {
+   "nickname": "Jesús Cruz"
+  },
+  {
+   "nickname": "Vizcay"
+  },
+  {
+   "nickname": "Junior Bita"
+  },
+  {
+   "nickname": "Laso"
+  },
+  {
+   "nickname": "Conde"
+  },
+  {
+   "nickname": "Danfakha"
+  },
+  {
+   "nickname": "Marcelino"
+  },
+  {
+   "nickname": "Ernesto Valverde"
+  },
+  {
+   "nickname": "Bordalás"
+  },
+  {
+   "nickname": "Iñigo Perez"
+  },
+  {
+   "nickname": "Claudio Giraldez"
+  },
+  {
+   "nickname": "Hansi Flick"
+  },
+  {
+   "nickname": "Simeone"
+  },
+  {
+   "nickname": "Carlos Corberán"
+  },
+  {
+   "nickname": "Manuel Pellegrini"
+  },
+  {
+   "nickname": "Alessio Lisci"
+  },
+  {
+   "nickname": "Manolo González"
+  },
+  {
+   "nickname": "Matarazzo"
+  },
+  {
+   "nickname": "Luís Castro"
+  },
+  {
+   "nickname": "Sánchez Flores"
+  },
+  {
+   "nickname": "Luis García"
+  },
+  {
+   "nickname": "Antonio Hidalgo"
+  },
+  {
+   "nickname": "José Alberto"
+  },
+  {
+   "nickname": "Funes"
+  },
+  {
+   "nickname": "Mourinho"
+  },
+  {
+   "nickname": "Edin Terzic"
+  },
+  {
+   "nickname": "Ramis"
+  },
+  {
+   "nickname": "Martín Anselmi"
+  },
+  {
+   "nickname": "Beñat"
+  },
+  {
+   "nickname": "Oscar Sánchez"
+  },
+  {
+   "nickname": "Javier Aguirre"
+  },
+  {
+   "nickname": "Arrasate"
+  },
+  {
+   "nickname": "Eder Sarabia"
+  }
+ ],
+ "equipos": {
+  "2": "Atlético de Madrid",
+  "3": "Athletic Club",
+  "4": "FC Barcelona",
+  "5": "Real Betis",
+  "6": "Celta",
+  "7": "Elche CF",
+  "8": "RCD Espanyol",
+  "9": "Getafe CF",
+  "11": "Levante UD",
+  "12": "Málaga CF",
+  "13": "C.A. Osasuna",
+  "14": "Rayo Vallecano",
+  "15": "Real Madrid",
+  "16": "Real Sociedad",
+  "17": "Sevilla FC",
+  "18": "Valencia CF",
+  "20": "Villarreal CF",
+  "21": "Deportivo Alavés",
+  "26": "RC Deportivo",
+  "49": "R. Racing Club"
+ }
+}
