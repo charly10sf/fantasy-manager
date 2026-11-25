@@ -3291,7 +3291,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255321/competicion-sanciona-dos-partidos-fermin-no-estara-atletico.html": 1795617730000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000,
    "AS|https://as.com/futbol/nico-williams-de-nuevo-ligado-al-psg-f202611-n/": 1795618637000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000,
+   "AS|https://as.com/futbol/el-regreso-de-herrando-f202611-n/": 1795621780000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html": 1795622209000,
+   "SPORT|136829607": 1795618807000
   },
   "hechos": [
    {
@@ -3597,11 +3600,23 @@
     "motivo": "expulsión por protestar desde el banquillo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261125/1004255441/lesion-tenia-muchas-ganas-demostrar-comerme-campo.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795622209000,
+    "id": "1991",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "César Tárrega regresa tras una lesión y es clave en el Valencia",
+    "motivo": "lesión previa",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -4565,17 +4580,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 13,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 202024,
-  "salida": 15857,
+  "entrada": 204458,
+  "salida": 16170,
   "cacheLee": 21607,
   "cacheEscribe": 23867,
-  "dolares": 0.386688,
+  "dolares": 0.387088,
   "reservado": 0
  },
  "recientes": {
@@ -9628,13 +9643,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6334,
+   "ok": 6335,
    "fallos": 0,
-   "ejecuciones": 5153,
+   "ejecuciones": 5154,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:46:18.863Z"
+   "ultima": "2026-11-25T16:01:15.578Z"
   }
  },
  "ptsDirecto": {},
@@ -9651,15 +9666,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:46:29.495Z"
+   "ultimaBien": "2026-11-25T16:01:28.630Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:46:29.495Z"
+   "ultimaBien": "2026-11-25T16:01:28.630Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:46:29.495Z"
+   "ultimaBien": "2026-11-25T16:01:28.630Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9667,11 +9682,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:46:29.495Z"
+   "ultimaBien": "2026-11-25T16:01:28.630Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:46:29.495Z"
+   "ultimaBien": "2026-11-25T16:01:28.630Z"
   }
  },
  "avisos": [
