@@ -913,10 +913,12 @@ export function invitarHTML(S) {
     (`invitarSiToca`), desde la banda de arriba y desde Ajustes, mientras la cuenta puede canjear */
 export function invitadoHTML(S) {
   const I = S.inv || {}, uid = S.D && S.D.yo && S.D.yo.userId, e = estadoInv(uid);
-  const cab = `<div class="hoja-cab"><h2>¿Te ha invitado un amigo?</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  // (25 nov) con el código que propone el servidor (abrió el enlace desde esta conexión hace poco), ya puesto
+  const pr = I.propuesto && I.cod === I.propuesto;
+  const cab = `<div class="hoja-cab"><h2>${pr ? 'Tu amigo te ha invitado' : '¿Te ha invitado un amigo?'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (!uid || !puedeCanjear(uid)) return `${cab}<div class="inv"><p>Ya está: esta cuenta no tiene que poner ningún código.</p><button class="btn ancho" data-accion="cerrarHoja">Vale</button></div>`;
   return `${cab}<div class="inv invitado">
-    <p>Si alguien te ha pasado Fantasy Manager, pon su código. Son 6 letras y números y te lo habrá mandado con el enlace.</p>
+    <p>${pr ? 'Abriste su enlace hace un rato: su código ya está puesto. Dale a «Listo».' : 'Si alguien te ha pasado Fantasy Manager, pon su código. Son 6 letras y números y te lo habrá mandado con el enlace.'}</p>
     <div class="codigo-in grande"><input id="invCod" maxlength="8" placeholder="ABC234" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="canjearInv" value="${esc(I.cod || '')}" aria-label="Código de quien te invita"></div>
     ${I.errorCod ? `<p class="codigo-err" role="alert">${esc(I.errorCod)}</p>` : ''}
     <button class="btn ancho" data-accion="canjearInv"${I.canjeando ? ' disabled' : ''}>${I.canjeando ? 'Un momento…' : 'Listo'}</button>
@@ -1552,6 +1554,14 @@ function invitarQ(C, Q) {
   if (!Q.invitar && !C.reg.length) return '<p class="q-no">Sin datos de invitaciones.</p>';
   const { filas, total: T } = invitacionesDatos(Q, C.lista, C.reg, C.ahora);
   let h = kpiQ([[T.comparten, `han invitado${T.veces ? ` · ${T.veces} veces` : ''}`], [T.entran, 'amigos dentro'], [T.siguen != null ? T.siguen : T.vuelven, T.siguen != null ? 'siguen (7 días)' : 'volvieron otro día']]);
+  // (25 nov) cómo llegan los amigos, en 7 días: los que abren el enlace en la web, los que copian el código para Google Play y
+  // los que lo ponen en la app (solo, propuesto por el servidor o escrito a mano)
+  const cnt = (Q.invitar && Q.invitar.cnt) || {}, desde = diaDe(C.ahora - 6 * DIA);
+  const t7 = Object.entries(cnt).filter(([d]) => d >= desde).reduce((x, [, v]) => { for (const [k, n] of Object.entries(v || {})) x[k] = (x[k] || 0) + n; return x; }, {});
+  if (Object.keys(cnt).length) {
+    const fila = (n, t) => `<div class="q-emb-f"><b>${n || 0}</b><span>${t}</span></div>`;
+    h += tarjetaQ('Cómo llegan (7 días)', `<div class="q-inv-lleg">${fila(t7.llega, 'abren el enlace en la web')}${fila(t7.copia, 'copian el código para Google Play')}${fila(t7.canje_enlace, 'entran con el enlace (se pone solo)')}${fila(t7.canje_propuesto, 'aceptan el código que les propone la app')}${fila(t7.canje_escrito, 'lo escriben a mano')}</div>`);
+  }
   if (!filas.length) return `${h}<p class="q-no">Nadie ha compartido la app ni ha sacado su código todavía.</p>`;
   const max = Math.max(1, ...filas.map((x) => x.entran));
   h += tarjetaQ('Quién invita', `<div class="q-rank q-inv">${filas.slice(0, 20).map((x) => `<div><b>${esc(x.nombre)}</b><i style="--n:${pctN(x.entran, max)}"></i><span>${x.entran} ${x.entran === 1 ? 'amigo' : 'amigos'}</span><small>${[

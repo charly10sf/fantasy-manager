@@ -16,6 +16,10 @@
  *              inv: [{ u, t, dia, v (ha vuelto otro día: 0/1), vt, r: [tid], l (liga de los rivales) }]
  *   a|uid    → { por, t, dia, v }      a quién ha invitado quién (para no contar dos veces y para «volver otro día»)
  *   b|uid    → t                       la cuenta ya existía y borró sus datos: no vale como nueva
+ *   llegadas → [{ h, cod, t }]         (25 nov) quien abre la web con ?inv=: la huella de su conexión (`h`, sha256 de la IP o
+ *                                      de su /64, nunca la IP) y el código, durante VENTANA_LLEGA. Si en ese rato entra en la
+ *                                      app una cuenta nueva desde la misma conexión, se le propone ese código (`pista`)
+ *   cnt      → { dia: { llega, copia, canje_enlace, canje_propuesto, canje_escrito } }   los contadores (30 días)
  * Los números, en «invitar» de limites.json (cfgInvitar).
  */
 
@@ -28,6 +32,21 @@ export const codValido = (x) => typeof x === 'string' && new RegExp(`^[${LETRAS}
 export const limpiarCod = (x) => String(x == null ? '' : x).toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/O/g, '0').replace(/I/g, '1').slice(0, 12);
 const uidOk = (x) => /^\d{1,15}$/.test(String(x || ''));
 const tidOk = (x) => /^\d{1,15}$/.test(String(x || ''));
+
+// (25 nov) cuánto vale una llegada con el enlace para proponer su código al entrar en la app, y cuántas se guardan
+export const VENTANA_LLEGA = 2 * 3600e3;
+const MAX_LLEGADAS = 400;
+const VIAS = new Set(['enlace', 'propuesto', 'escrito']);
+/** suma uno al contador `que` del día (y borra los de hace más de 30 días) */
+async function contar(st, que, dia) {
+  if (!dia) return;
+  const c = (await st.get('cnt')) || {};
+  c[dia] = c[dia] || {};
+  c[dia][que] = (c[dia][que] || 0) + 1;
+  const dias = Object.keys(c).sort();
+  for (const d of dias.slice(0, Math.max(0, dias.length - 30))) delete c[d];
+  await st.put('cnt', c);
+}
 
 /** «invitar» de limites.json, con sus topes (lo raro, a lo de por defecto) */
 export function cfgInvitar(lim) {
@@ -91,7 +110,21 @@ export async function invObjeto(st, b) {
     // (21 nov) para la hoja del dueño: también quien ha sacado su código y aún no tiene a nadie dentro (antes solo salían los
     // que tenían algún amigo: con todo a cero no se sabía si es que nadie invitaba o que no entraba nadie), cuándo lo sacó
     // y quiénes son sus amigos (`inv`: cuenta, cuándo entró y si ha vuelto otro día), para ver cuántos siguen usando la app
-    return { ok: true, lista: ks.map(([kk, k]) => ({ uid: kk.slice(2), cod: k.cod, t: k.t || 0, entran: (k.inv || []).length, cuentan: (k.inv || []).filter((x) => x.v).length, esc: Object.keys(k.esc || {}), ultima: Math.max(0, ...(k.inv || []).map((x) => x.t)), inv: (k.inv || []).map((x) => ({ u: String(x.u), t: x.t, v: x.v ? 1 : 0 })) })).filter((x) => x.cod || x.entran), codigos: ks.filter(([, k]) => k.cod).length, invitados: as.length, vuelven: as.filter((x) => x.v).length };
+    const cnt = (await st.get('cnt')) || {};
+    return { ok: true, cnt, lista: ks.map(([kk, k]) => ({ uid: kk.slice(2), cod: k.cod, t: k.t || 0, entran: (k.inv || []).length, cuentan: (k.inv || []).filter((x) => x.v).length, esc: Object.keys(k.esc || {}), ultima: Math.max(0, ...(k.inv || []).map((x) => x.t)), inv: (k.inv || []).map((x) => ({ u: String(x.u), t: x.t, v: x.v ? 1 : 0 })) })).filter((x) => x.cod || x.entran), codigos: ks.filter(([, k]) => k.cod).length, invitados: as.length, vuelven: as.filter((x) => x.v).length };
+  }
+  // (25 nov) la llegada a la web con ?inv= (sin cuenta: aún no ha entrado) o el botón «Copiar el código y descargar»
+  if (b.op === 'llega') {
+    const paso = b.paso === 'copia' ? 'copia' : 'llega';
+    const cod = limpiarCod(b.cod), h = String(b.red || '');
+    if (!codValido(cod) || !(await st.get(`c|${cod}`))) return { ok: false, e: 'Código no válido' };
+    await contar(st, paso, dia);
+    if (/^[0-9a-f]{64}$/.test(h)) {
+      const L = ((await st.get('llegadas')) || []).filter((x) => ahora - x.t < VENTANA_LLEGA && x.h !== h);
+      L.push({ h, cod, t: ahora });
+      await st.put('llegadas', L.slice(-MAX_LLEGADAS));
+    }
+    return { ok: true };
   }
   if (!uidOk(uid)) return { ok: false, e: 'Cuenta no válida' };
   const kK = `k|${uid}`, kA = `a|${uid}`;
@@ -133,6 +166,25 @@ export async function invObjeto(st, b) {
     }
     return est;
   }
+  // (25 nov) las pistas de que a una cuenta nueva la han invitado: el código de quien abrió el enlace desde su misma conexión
+  // hace poco (`propuesto`) y si alguien de su liga ha sacado código (`ligaInvita`). Sin ellas, la app no le pregunta nada
+  if (b.op === 'pista') {
+    if (await st.get(kA)) return { ok: true, propuesto: '', ligaInvita: false };
+    let propuesto = '';
+    const h = String(b.red || '');
+    if (h) {
+      const x = ((await st.get('llegadas')) || []).filter((y) => y.h === h && ahora - y.t < VENTANA_LLEGA).pop();
+      const por = x ? await st.get(`c|${x.cod}`) : null;
+      if (por && String(por) !== uid) propuesto = x.cod;
+    }
+    let ligaInvita = false;
+    for (const m of (Array.isArray(b.ids) ? b.ids : []).slice(0, 40).map(String)) {
+      if (m === uid || !uidOk(m)) continue;
+      const k = await st.get(`k|${m}`);
+      if (k && k.cod) { ligaInvita = true; break; }
+    }
+    return { ok: true, propuesto, ligaInvita };
+  }
   if (b.op === 'canjear') {
     if (!cfg.on) return { ok: false, motivo: 'apagado', e: 'Las invitaciones están paradas ahora.' };
     const cod = limpiarCod(b.cod);
@@ -153,6 +205,7 @@ export async function invObjeto(st, b) {
     // (primero el invitado: si algo falla a medias, al repetir no se cuenta dos veces)
     await st.put(kA, { por: String(por), t: ahora, dia, v: 0 });
     await st.put(`k|${por}`, p);
+    await contar(st, `canje_${VIAS.has(b.via) ? b.via : 'escrito'}`, dia);
     return { ok: true };
   }
   if (b.op === 'rivales') {

@@ -30,7 +30,7 @@ import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
 import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
+import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
@@ -108,7 +108,10 @@ function pantallaEntrar(error = '') {
   // (24 nov, Carlos: «que arriba se entienda que lo que importa es la aplicación, meterte dentro con tu cuenta y no ver los
   // datos desde fuera») lo primero de la portada es qué es la app y cómo tenerla en tu dispositivo (`tenlaHTML`): en el
   // ordenador y en la web de un Android, encima del portal; en el iPhone, encima de los tres pasos de entrar
-  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' || llegada ? '' : tenlaHTML(plat))}`;
+  // (25 nov) quien llega con el enlace de un amigo a la web de un Android se va a descargar la app de Google Play, que no
+  // recibe el enlace: el código, en grande y arriba del todo, con un botón que lo copia y abre Google Play
+  const invLlega = !enApp && plat === 'android' && codigoPendiente() ? tarjetaInvLlega(codigoPendiente()) : '';
+  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${invLlega}${portalHTML(plat === 'iphone' || llegada ? '' : tenlaHTML(plat))}`;
   const queEs = llegada ? `<div class="lleg"><h1 class="lleg-t">Tu director deportivo para <span>LaLiga Fantasy</span></h1><p>Cada día te dice a quién vender, a quién fichar, cuánto pujar y a quién clausular en tu liga. Es gratis y entras con tu cuenta de LaLiga.</p></div>` : '';
   raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat) + tiraPortada()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
@@ -522,6 +525,11 @@ function filaDisp(k, desde) {
       : tuyo ? '<span class="tl-aqui">Estás aquí</span>' : `<a class="tl-ir" href="${d.h}">Cómo</a>`;
   return `<li class="tl-f${tuyo ? ' tuyo' : ''}" data-d="${k}"><span class="tl-g">${d.g}</span><div class="tl-n"><b>${d.n}${d.s ? ` <small>${d.s}</small>` : ''}</b><span>${d.x}</span></div>${hacer}</li>`;
 }
+/** (25 nov) la llegada con el código de un amigo a la web de un Android */
+const tarjetaInvLlega = (cod) => `<section class="inv-llega" aria-labelledby="invLlegaT"><h2 id="invLlegaT">Tu amigo te ha invitado</h2>
+  <p>Este es su código:</p><b class="inv-llega-cod">${esc(cod)}</b>
+  <button class="btn ancho" data-accion="invCopiarPlay">${icono('copiar')}Copiar el código y descargar</button>
+  <p>Cuando entres en la app, te preguntará si te ha invitado alguien: pégalo ahí.</p></section>`;
 /** la lista de dispositivos: el tuyo primero */
 const dispositivosHTML = (desde, cuales = ['android', 'iphone', 'pc']) => `<ul class="tl-l" role="list">${[...cuales].sort((a, b) => (b === desde) - (a === desde)).map((k) => filaDisp(k, desde)).join('')}</ul>`;
 /** lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla. En el iPhone, solo la frase: debajo van
@@ -774,7 +782,7 @@ async function codigoDeSesion() {
    que nadie o la cierra (la ventana sola sale una vez y se cerraba sin leerla; desde Google Play el enlace no trae el código) */
 const bandaInvitado = () => {
   const uid = uidYo();
-  if (!uid || enDemo() || LS.get('inv-banda-cerrada', 0) || !puedeCanjear(uid) || codigoPendiente()) return '';
+  if (!uid || enDemo() || LS.get('inv-banda-cerrada', 0) || !pareceInvitado(uid) || codigoPendiente()) return '';
   return `<div class="banda banda-invitado">${icono('estrella')}<span><b>¿Te ha invitado un amigo?</b> Pon su código.</span><button data-accion="ponerCodigo">Poner código</button><button class="banda-x" data-accion="cerrarInvitado" aria-label="Nadie me ha invitado">${icono('cerrar')}</button></div>`;
 };
 const bandaInvita = () => (LS.get('var-inv', '') === 'c' ? `<div class="banda banda-inv">${icono('estrella')}<span><b>Invita a un amigo</b> y ve el dinero de 2 rivales por cada uno que entre.</span><button data-accion="invitarAmigo">Invitar</button></div>` : '');
@@ -1931,16 +1939,18 @@ async function invitarSiToca({ ya = false } = {}) {
   if (!uid || enDemo() || !haySesion()) return;
   const antes = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
   let r;
-  try { r = await leerInvitar(uid, { ya }); } catch (e) { return; }
+  try { r = await leerInvitar(uid, { ya, liga }); } catch (e) { return; }
   const cod = codigoPendiente();
   if (cod && liga && puedeCanjear(uid)) {
-    const x = await canjear(uid, cod, liga);
+    const x = await canjear(uid, cod, liga, 'enlace');
     if (x.ok && !x.ya) tostada('Has entrado con la invitación de tu amigo', 5000);
   } else if (cod && r.est && r.est.puedeCanjear === false) LS.del('inv-cod');
-  else if (!cod && puedeCanjear(uid) && !LS.get('inv-preguntado', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
+  // (25 nov, Carlos) solo a quien parece invitado (el servidor le propone un código o alguien de su liga ha sacado el suyo);
+  // a los demás, nada: lo tienen en Ajustes
+  else if (!cod && pareceInvitado(uid) && !LS.get('inv-preguntado', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
     // (sobre todo para quien la baja de Google Play, a quien no le llega el enlace; Carlos, 19 nov)
     LS.set('inv-preguntado', Date.now());
-    S.inv = {};
+    S.inv = { cod: codigoPropuesto(uid), propuesto: codigoPropuesto(uid) };
     hoja('invitado');
   }
   if (r.nuevos > 0) avisoAmigoInv(r.nuevos);
@@ -4297,12 +4307,20 @@ document.addEventListener('click', async (ev) => {
       cerrarHoja(true);
       hoja('invitar');
       if (!uid) break;
-      leerInvitar(uid, { ya: true }).then(() => { S.inv.cargando = false; S.inv.error = null; }, (e) => { S.inv.cargando = false; S.inv.error = e.message; })
+      leerInvitar(uid, { ya: true, liga: (S.D && S.D.liga && S.D.liga.id) || '' }).then(() => { S.inv.cargando = false; S.inv.error = null; }, (e) => { S.inv.cargando = false; S.inv.error = e.message; })
         .then(() => { if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja(); });
       break;
     }
     // (25 nov) quien llega: la ventana del código (banda de arriba y Ajustes), «nadie» y cerrar la banda
-    case 'ponerCodigo': cerrarHoja(true); S.inv = { ...(S.inv || {}), errorCod: null }; hoja('invitado'); break;
+    case 'ponerCodigo': { const pr = codigoPropuesto(uidYo()); cerrarHoja(true); S.inv = { ...(S.inv || {}), errorCod: null, propuesto: pr, cod: (S.inv && S.inv.cod) || pr }; hoja('invitado'); break; }
+    case 'invCopiarPlay': {
+      const cod = codigoPendiente();
+      if (!cod) break;
+      try { if (navigator.clipboard) navigator.clipboard.writeText(cod).catch(() => {}); } catch (e) { /* se ve en grande igual */ }
+      avisarLlegada(cod, 'copia');
+      location.href = playConCodigo(PLAY_URL, cod);
+      break;
+    }
     case 'invitadoNo': LS.set('inv-banda-cerrada', Date.now()); cerrarHoja(); pintarBanda(); break;
     case 'cerrarInvitado': { LS.set('inv-banda-cerrada', Date.now()); const b = $('.banda-invitado'); if (b) b.remove(); break; }
     case 'copiarCod': { const e = estadoInv(uidYo()); if (e && e.cod) copiarY(e.cod, 'Código copiado'); break; }
@@ -4330,7 +4348,7 @@ document.addEventListener('click', async (ev) => {
       if (!uid) break;
       if (cod.length !== 6) { S.inv.errorCod = cod ? 'Son 6 letras y números.' : 'Escribe el código que te ha pasado tu amigo.'; repintarHoja(); break; }
       S.inv.canjeando = true; repintarHoja();
-      const x = await canjear(uid, cod, liga);
+      const x = await canjear(uid, cod, liga, S.inv.propuesto && cod === S.inv.propuesto ? 'propuesto' : 'escrito');
       S.inv.canjeando = false;
       if (x.ok) { S.inv.cod = ''; tostada('Listo: has entrado con la invitación de tu amigo', 5000); } else S.inv.errorCod = x.e || 'No ha valido. Vuelve a probar en un rato.';
       if (x.ok && S.tipoHoja && S.tipoHoja[0] === 'invitado') cerrarHoja();
@@ -4957,7 +4975,8 @@ async function arrancar() {
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
   leerInvitacion();
-  leerCodigoEnlace();
+  // (25 nov) la llegada con ?inv= se cuenta y deja su huella 2 h en el servidor (para proponerle el código en la app)
+  { const ci = leerCodigoEnlace(); if (ci && !enApp) avisarLlegada(ci); }
   leerOrigen();
   // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
   mirarWebNueva();

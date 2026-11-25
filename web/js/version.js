@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4f';
+export const VERSION = '0.8.4g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,24 @@ export const VERSION = '0.8.4f';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, Carlos: «hay gente sacando códigos y no ha entrado nadie» y «que solo salga si de verdad te ha invitado»;
+    // claude/prompt-invitar-codigo.md, hallazgo 16 de la auditoría) Invitar sin AAB. Quien entra nuevo solo ve «¿Te ha
+    // invitado un amigo?» (hoja 'invitado', `invitadoHTML`) si hay una pista (`pareceInvitado`): el servidor le propone el
+    // código de quien abrió el enlace desde su misma conexión en las últimas 2 h (POST /invitar/llega guarda sha256 de la IP
+    // o su /64, op 'pista' en worker/src/invitar.js), que sale ya puesto, o alguien de su liga ha sacado código. Si la cierra,
+    // banda arriba (`bandaInvitado`) hasta que lo pone o dice «Nadie»; sin pistas, solo Ajustes. La web de un Android con ?inv=
+    // enseña el código en grande con «Copiar el código y descargar» (copia, cuenta y abre Google Play con
+    // `&referrer=inv%3DCODIGO`, para la tanda 6). Quien invita ve su código grande con «Copiar código» y el mensaje lleva el
+    // código en su línea, en negrita. Contadores por día (llega, copia, canje_enlace, canje_propuesto, canje_escrito) en
+    // Quién usa la app → Invitar. Pruebas: caso-invitado.mjs (nueva), caso-invitar, datos.mjs, prueba-aviso y prueba-web.
+    // Web y Worker; sin AAB
+    v: '0.8.4g', f: '2026-11-25', h: '17:17', t: 'Entrar con el código de un amigo',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'regalo', t: 'Entrar con el código de un amigo', x: 'Si alguien entra en la app con tu invitación, la app se lo pone fácil: si abrió tu enlace en el móvil, su código ya sale puesto y solo tiene que darle a «Listo». A quien no ha invitado nadie no le sale nada.' },
+      { para: 'dueño', tipo: 'mejora', d: 'compartir', t: 'Tu código, a la vista', x: 'En «Invita a un amigo» tu código sale en grande, con un botón para copiarlo, y el mensaje que mandas lo lleva en su propia línea, con lo que tiene que hacer tu amigo.' },
+    ],
+  },
   {
     // (25 nov, auditoría de fallos, tanda 4: hallazgos 5, 6, 10, 11, 12, 13 y el texto del 16; con las dos decisiones por
     // defecto, que no cambian ninguna regla de Carlos) En el iPhone, el candado de cada función top dice lo que es verdad:

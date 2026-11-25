@@ -1411,10 +1411,37 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const { cfgInvitar } = await import('../src/invitar.js');
   const cI = cfgInvitar({ invitar: { on: false, rivales: 3, horas: 'x', escalones: [{ n: 9, premio: 'sinIntersticiales', dias: 10 }, { n: 2, premio: 'doble', dias: 3 }, { n: 4, premio: 'otro' }] } });
   ok(!cI.on && cI.rivales === 3 && cI.horas === 24 && cI.escalones.map((e) => `${e.n}${e.premio}`).join() === '2doble,9sinIntersticiales', `invitar de limites.json: ${JSON.stringify(cI)}`);
+  // (25 nov) las pistas de que a una cuenta nueva la han invitado: alguien de su liga con código, o abrió el enlace desde su conexión
+  r = await inv(513, '/invitar?liga=55', null, 'GET');
+  ok(r.j.puedeCanjear && r.j.ligaInvita === true && r.j.propuesto === '', `alguien de su liga tiene código: ${r.j.ligaInvita}/${r.j.propuesto}`);
+  r = await inv(600, '/invitar?liga=66', null, 'GET');
+  ok(r.j.puedeCanjear && r.j.ligaInvita === false && r.j.propuesto === '', `nadie de su liga con código y sin enlace: nada (${r.j.ligaInvita}/${r.j.propuesto})`);
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: cod2.toLowerCase() }, tk: '', e: eI, ip: '9.9.9.9' });
+  ok(r.s === 200 && r.j.ok, `la llegada a la web con ?inv=, sin sesión: ${r.t}`);
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: 'ZZZZZZ' }, tk: '', e: eI, ip: '9.9.9.8' });
+  ok(r.s === 200 && r.j.ok === false, 'con un código que no existe no se apunta');
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: cod2, paso: 'copia' }, tk: '', e: eI, ip: '9.9.9.9' });
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(r.j.propuesto === cod2, `misma conexión: le propone el código (${r.j.propuesto})`);
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(515), e: eI, ip: '9.9.9.7' });
+  ok(r.j.propuesto === '', 'otra conexión: no');
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(506), e: eI, ip: '9.9.9.9' });
+  ok(!r.j.propuesto, 'a quien es el dueño del código, nunca se lo propone');
+  r = await pide({ m: 'POST', ruta: '/invitar/canjear', cuerpo: { cod: cod2, liga: '55', via: 'propuesto' }, tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(r.s === 200 && r.j.ok, `canjea el propuesto: ${r.t}`);
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=55', tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(!r.j.puedeCanjear && !r.j.propuesto && !r.j.ligaInvita, 'ya invitada: sin pistas');
+  desfase += 3 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(516), e: eI, ip: '9.9.9.9' });
+  ok(r.j.propuesto === '', 'a las 3 h la llegada ya no vale');
   // «Quién usa la app»: lo del dueño
   r = await pide({ m: 'GET', ruta: '/hola/todos', tk: tk(667015), e: eI });
   const li = r.j && r.j.invitar;
-  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 6 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 7 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  {
+    const t = Object.values((li && li.cnt) || {}).reduce((x, d) => { for (const [k, v] of Object.entries(d)) x[k] = (x[k] || 0) + v; return x; }, {});
+    ok(t.llega === 1 && t.copia === 1 && t.canje_propuesto === 1 && t.canje_escrito >= 6, `los contadores: ${JSON.stringify(t)}`);
+  }
   // sin el objeto, 503 y no rompe
   r = await pide({ m: 'GET', ruta: '/invitar', tk: tk(512), e: env });
   ok(r.s === 503, `sin Durable Object: ${r.s}`);

@@ -1486,14 +1486,40 @@ export async function cupoConPremio(env, uid, P) {
   const p = await premiosDe(env, uid);
   return premioActivo({ premios: p }, 'doble') ? { ...P, gratis: P.gratis * 2, max: P.max * 2, doble: true } : P;
 }
+/** (25 nov) la huella de la conexión de quien llama: sha256 de su IP (o de su /64 en IPv6), nunca la IP; solo para emparejar
+    la llegada a la web con ?inv= y la entrada en la app desde el mismo sitio, y se borra a las 2 h (VENTANA_LLEGA) */
+async function huellaRed(req) {
+  const ip = ipDe(req);
+  if (!ip || ip === 'sin-ip') return '';
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-inv|${ip}`));
+  return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
+}
 async function invitar(req, env, c, ruta) {
   if (!env.QR) return json({ e: 'Las invitaciones no están disponibles ahora.', servicio: true }, 503, c);
+  // (25 nov) la llegada a la web con ?inv= y «Copiar el código y descargar»: aún no hay cuenta, así que va sin sesión
+  if (ruta === '/invitar/llega') {
+    if (req.method !== 'POST') return json({ e: 'No existe' }, 404, c);
+    if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `invl|${ipDe(req)}`, FRENOS.canjear.min))) return demasiadas(c);
+    const b = (await req.json().catch(() => ({}))) || {};
+    const r = await invPedir(env, { op: 'llega', cod: limpiarCod(b.cod), paso: b.paso, red: await huellaRed(req) });
+    return json({ ok: !!r.ok }, 200, c);
+  }
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   const escribe = req.method === 'POST';
   if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `inv${escribe ? 'w' : 'r'}|${u.uid}`, escribe ? FRENOS.canjear.min : FRENOS.invitar.min))) return demasiadas(c);
   const cfg = await cfgInv();
-  if (ruta === '/invitar' && req.method === 'GET') return json(await invPedir(env, { op: 'estado', uid: u.uid, cfg, primera: await primeraVez(env, u.uid) }), 200, c);
+  if (ruta === '/invitar' && req.method === 'GET') {
+    const est = await invPedir(env, { op: 'estado', uid: u.uid, cfg, primera: await primeraVez(env, u.uid) });
+    // (25 nov) a una cuenta que aún puede poner un código, las pistas de que la han invitado (`pista` en invitar.js)
+    const liga = new URL(req.url).searchParams.get('liga') || '';
+    if (est && est.puedeCanjear) {
+      const ids = /^\d{1,20}$/.test(liga) ? await conTope(miembros(req, liga), 4000, null) : null;
+      const p = await conTope(invPedir(env, { op: 'pista', uid: u.uid, red: await huellaRed(req), ids: ids || [], cfg }), 4000, null);
+      if (p && p.ok) { est.propuesto = p.propuesto || ''; est.ligaInvita = !!p.ligaInvita; }
+    }
+    return json(est, 200, c);
+  }
   if (!escribe) return json({ e: 'No existe' }, 404, c);
   const b = (await req.json().catch(() => ({}))) || {};
   if (ruta === '/invitar/codigo') {
@@ -1505,7 +1531,7 @@ async function invitar(req, env, c, ruta) {
     const liga = String(b.liga || '');
     if (!/^\d{1,20}$/.test(liga)) return json({ e: 'Entra antes en tu liga de LaLiga Fantasy y vuelve a probar.', motivo: 'liga' }, 400, c);
     const ids = await miembros(req, liga);
-    const r = await invPedir(env, { op: 'canjear', uid: u.uid, cod: limpiarCod(b.cod), enLiga: !!(ids && ids.includes(String(u.uid))), primera: await primeraVez(env, u.uid), cfg });
+    const r = await invPedir(env, { op: 'canjear', uid: u.uid, via: String(b.via || ''), cod: limpiarCod(b.cod), enLiga: !!(ids && ids.includes(String(u.uid))), primera: await primeraVez(env, u.uid), cfg });
     if (r.ok) console.log('invitar: canjeado');
     return json(r, r.ok ? 200 : 400, c);
   }
