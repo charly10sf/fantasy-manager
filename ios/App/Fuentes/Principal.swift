@@ -24,6 +24,7 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
     private var hashPendiente: String?
     #if DEBUG
     var sonda: UILabel?
+    var sondaVentana: UIWindow?
     var sondaNativa: [String: Any] = [:]
     #endif
 

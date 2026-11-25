@@ -67,13 +67,32 @@ extension Principal {
           version: (window.FantasyApp && window.FantasyApp.nombreVersion()) || '', web: window.FantasyApp ? JSON.parse(window.FantasyApp.web()) : null,
           sesion: !!(window.FantasyApp && window.FantasyApp.leer('sesion')), s: window.__sonda || null,
           hash: location.hash, haz: window.__haz || null, permitidos: !!(window.FantasyApp && window.FantasyApp.avisosPermitidos && window.FantasyApp.avisosPermitidos()),
-          vista: !!(window.FantasyApp && window.FantasyApp.aLaVista && window.FantasyApp.aLaVista()), hayAlarma: !!(window.FantasyApp && window.FantasyApp.probarAlarma)
+          aLaVista: !!(window.FantasyApp && window.FantasyApp.aLaVista && window.FantasyApp.aLaVista()), hayAlarma: !!(window.FantasyApp && window.FantasyApp.probarAlarma)
         });
       } catch (e) { return JSON.stringify({ error: String(e) }); }
     })()
     """
 
+    /// La etiqueta va en una ventanita propia, por encima de todo: así se sigue leyendo con un anuncio a pantalla
+    /// completa delante (que quita de en medio la pantalla de la app)
+    private func subirSonda() {
+        guard sondaVentana == nil, let l = sonda, let escena = view.window?.windowScene else { return }
+        let w = UIWindow(windowScene: escena)
+        w.frame = CGRect(x: 0, y: 0, width: 60, height: 3)
+        w.windowLevel = .alert + 1
+        w.isUserInteractionEnabled = false
+        w.backgroundColor = .clear
+        let vc = UIViewController()
+        vc.view.backgroundColor = .clear
+        vc.view.isUserInteractionEnabled = false
+        w.rootViewController = vc
+        vc.view.addSubview(l)
+        w.isHidden = false
+        sondaVentana = w
+    }
+
     private func mirar() {
+        subirSonda()
         // cuántos avisos tiene programados el iPhone (los de la lista de la web y todos)
         UNUserNotificationCenter.current().getPendingNotificationRequests { [weak self] r in
             let lista = r.filter { $0.identifier.hasPrefix("av:") }.count, todos = r.count
@@ -159,7 +178,11 @@ extension Principal {
           l.push({ id: 'pasado', t: a - 60e3, titulo: 'Ya pasó', texto: 'no sale', hash: '' });
           l.push({ id: 'clausulazo', t: a + 7200e3, titulo: 'Clausulazo en 1 minuto', texto: 'Pedri, 74,2 M', hash: 'rivales', alarma: true });
           F.programarAvisos(JSON.stringify(l)); paso('lista puesta');
-          F.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'mercado'); paso('aviso puesto');
+          // (el aviso al momento, varias veces: la tira de arriba dura unos segundos y puede pillar a la prueba contestando
+          // a otra pregunta del iPhone; con el mismo título sustituye al anterior)
+          var k = 0, poner = function () { F.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'mercado'); };
+          poner(); paso('aviso puesto');
+          var i = setInterval(function () { if (k++ > 6 || location.hash === '#mercado') clearInterval(i); else poner(); }, 6000);
         });
       });
       if (QUE === 'alarma') cuando(lista, function () {

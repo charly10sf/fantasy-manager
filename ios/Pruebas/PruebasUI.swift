@@ -329,7 +329,7 @@ final class PruebasUI: XCTestCase {
         XCTAssertLessThanOrEqual(nativa(s)["avisosTodos"] as? Int ?? 99, 64, "el iPhone no guarda más de 64 avisos pendientes")
         XCTAssertTrue(pasos(s).contains("aviso puesto"), "la app no ha llegado a poner el aviso: \(pasos(s))")
         // el aviso al momento sale también con la app abierta; al tocarlo, a su pestaña
-        if tocarAviso("Así te llegarán los avisos", 14, captura: "9-aviso") {
+        if tocarAviso("Así te llegarán los avisos", 30, captura: "9-aviso") {
             let v = esperar("la app en la pestaña del aviso", 15, falla: false) { ($0["hash"] as? String) == "#mercado" }
             print("=== tocar el aviso === \(v["hash"] ?? "sin hash")")
             XCTAssertEqual(v["hash"] as? String, "#mercado", "tocar un aviso tiene que abrir la app en su pestaña")
