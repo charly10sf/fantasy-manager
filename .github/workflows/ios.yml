@@ -147,7 +147,7 @@ jobs:
             -test-timeouts-enabled YES -maximum-test-execution-time-allowance 900 \
             MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
             FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" \
-            2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error|warning: (unre|var|depre)|Test Case|Test Suite|=== |\*\* |passed|failed|No ha llegado|XCTAssert|Testing started" || true
+            2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error:|warning: (unre|var|depre|reference)|Test Case|Test Suite|^=== |\*\* |XCTAssert" || true
           grep -q '\*\* TEST SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"
       # las capturas y lo que ha contado la app, también si la prueba falla
       - name: Sacar las capturas
@@ -166,6 +166,10 @@ jobs:
                   # «1-entrada_0_UUID.png» → «1-entrada.png» (y «-2», «-3» si se repite)
                   base, ext = os.path.splitext(nombre)
                   base = re.sub(r'_\d+_[0-9A-Fa-f-]{36}$', '', base)
+                  # solo lo que apuntan las pruebas (lo demás lo añade Xcode por su cuenta y lleva nombres que no se pueden subir)
+                  if not re.match(r'(\d+-|fallo)', base):
+                      continue
+                  base = re.sub(r'[^A-Za-z0-9._ -]', '_', base)
                   vistos[base] = vistos.get(base, 0) + 1
                   if vistos[base] > 1:
                       base += f'-{vistos[base]}'

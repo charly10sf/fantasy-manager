@@ -1,4 +1,3 @@
-import SafariServices
 import UIKit
 import WebKit
 
@@ -125,26 +124,23 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
         return url.path.isEmpty || url.path == "/" || url.path == "/index.html"
     }
 
-    /// Lo que no es la app se abre fuera. Las otras páginas de la web (privacidad, condiciones, guías), que en Android se
-    /// abren dentro y se sale de ellas con «atrás», aquí van en una hoja de Safari con su botón de cerrar, desde la web
-    /// publicada
+    /// Lo que no es la app se abre fuera, en Safari (dentro de la app no se navega por internet). Las otras páginas de la
+    /// web (privacidad, condiciones, guías), que en Android se abren dentro y se sale de ellas con «atrás», aquí también
+    /// van a Safari, desde la web publicada
     func abrirFuera(_ url: URL) {
         let e = url.scheme?.lowercased() ?? ""
+        var destino = url
         if e == Principal.esquema {
             guard url.host == Principal.host, var c = URLComponents(string: Principal.dominio) else { return }
             c.path = url.path.hasPrefix("/") ? url.path : "/" + url.path
             c.query = url.query
             c.fragment = url.fragment
             guard let publica = c.url else { return }
-            let hoja = SFSafariViewController(url: publica)
-            hoja.preferredBarTintColor = Principal.fondo
-            hoja.preferredControlTintColor = .white
-            hoja.dismissButtonStyle = .close
-            presentar(hoja)
+            destino = publica
+        } else if !["https", "http", "mailto", "tel", "sms"].contains(e) {
             return
         }
-        guard ["https", "http", "mailto", "tel", "sms"].contains(e) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(destino, options: [:], completionHandler: nil)
     }
 
     /// enseña algo encima de lo que haya en pantalla

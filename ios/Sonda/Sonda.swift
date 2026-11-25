@@ -70,6 +70,7 @@ extension Principal {
             guard let self, let l = self.sonda else { return }
             var j: [String: Any] = [:]
             if let t = r as? String, let d = t.data(using: .utf8), let o = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any] { j = o }
+            if j["s"] is NSNull, (j["puente"] as? Bool) == true { self.alCargarPruebas() }
             if let error { j["errorJS"] = error.localizedDescription }
             var nativa = self.sondaNativa
             nativa["llaveroFallo"] = Int(Llavero.ultimoFallo)
@@ -88,15 +89,19 @@ extension Principal {
     /// lo que se comprueba una vez en cada carga: que la página servida por el esquema propio es un sitio seguro y que
     /// lo que guarda aguanta de una apertura a otra
     private static let comprobar = """
+    if (window.__sondaEnMarcha) return 'en marcha';
+    window.__sondaEnMarcha = true;
     var r = { seguro: window.isSecureContext === true, origen: location.origin };
-    try { var d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('fm')); r.subtle = new Uint8Array(d).length === 32; } catch (e) { r.subtle = String(e); }
-    try { var m = await import(new URL('js/util.js', location.href).href); r.modulo = Object.keys(m).length > 0; } catch (e) { r.modulo = String(e); }
-    try { r.versionWeb = (await import(new URL('js/version.js', location.href).href)).VERSION; } catch (e) { r.versionWeb = String(e); }
-    try { var f = await fetch('limites.json?t=' + Date.now(), { cache: 'no-store' }); var j = await f.json(); r.fetch = f.ok && typeof j === 'object'; } catch (e) { r.fetch = String(e); }
-    try { var f4 = await fetch('no-existe.json', { cache: 'no-store' }); r.fetch404 = f4.status; } catch (e) { r.fetch404 = String(e); }
+    // cada cosa, con su tope: si algo no contesta, se dice cuál y lo demás sigue
+    var con = function (p) { return Promise.race([p, new Promise(function (ok) { setTimeout(function () { ok('no contesta'); }, 8000); })]); };
+    try { var d = await con(crypto.subtle.digest('SHA-256', new TextEncoder().encode('fm'))); r.subtle = d instanceof ArrayBuffer ? new Uint8Array(d).length === 32 : d; } catch (e) { r.subtle = String(e); }
+    try { var m = await con(import(new URL('js/util.js', location.href).href)); r.modulo = typeof m === 'string' ? m : Object.keys(m).length > 0; } catch (e) { r.modulo = String(e); }
+    try { var mv = await con(import(new URL('js/version.js', location.href).href)); r.versionWeb = typeof mv === 'string' ? mv : mv.VERSION; } catch (e) { r.versionWeb = String(e); }
+    try { r.fetch = await con(fetch('limites.json?t=' + Date.now(), { cache: 'no-store' }).then(function (f) { return f.json().then(function (j) { return f.ok && typeof j === 'object'; }); })); } catch (e) { r.fetch = String(e); }
+    try { r.fetch404 = await con(fetch('no-existe.json', { cache: 'no-store' }).then(function (f) { return f.status; })); } catch (e) { r.fetch404 = String(e); }
     try { r.lsAntes = localStorage.getItem('fm-sonda'); localStorage.setItem('fm-sonda', String(Date.now())); r.ls = localStorage.getItem('fm-sonda') !== null; } catch (e) { r.ls = String(e); }
     try {
-      r.idb = await new Promise(function (ok, mal) {
+      r.idb = await con(new Promise(function (ok, mal) {
         var q = indexedDB.open('fm-sonda', 1);
         q.onupgradeneeded = function () { q.result.createObjectStore('s'); };
         q.onerror = function () { mal(q.error); };
@@ -105,13 +110,15 @@ extension Principal {
           g.onsuccess = function () { var antes = g.result === undefined ? null : g.result; st.put(Date.now(), 'k'); tx.oncomplete = function () { db.close(); ok({ antes: antes }); }; };
           tx.onerror = function () { mal(tx.error); };
         };
-      });
+      }));
     } catch (e) { r.idb = String(e); }
     try { r.llaveroAntes = window.FantasyApp.leer('sonda'); window.FantasyApp.guardar('sonda', String(Date.now())); r.llavero = window.FantasyApp.leer('sonda') !== null; } catch (e) { r.llavero = String(e); }
-    try { r.trabajador = await new Promise(function (ok) { var w = new Worker(URL.createObjectURL(new Blob(['postMessage(1)'], { type: 'text/javascript' }))); w.onmessage = function () { ok(true); }; w.onerror = function (e) { ok('error'); }; setTimeout(function () { ok('nada'); }, 3000); }); } catch (e) { r.trabajador = String(e); }
+    try { r.trabajador = await con(new Promise(function (ok) { var w = new Worker(URL.createObjectURL(new Blob(['postMessage(1)'], { type: 'text/javascript' }))); w.onmessage = function () { ok(true); }; w.onerror = function (e) { ok('error'); }; })); } catch (e) { r.trabajador = String(e); }
     try { r.mapa = !!(window.HTMLScriptElement && HTMLScriptElement.supports && HTMLScriptElement.supports('importmap')); } catch (e) { r.mapa = String(e); }
-    r.margenAbajo = (function () { var d = document.createElement('div'); d.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom);width:1px'; document.body.appendChild(d); var h = d.offsetHeight; d.remove(); return h; })();
-    r.margenArriba = (function () { var d = document.createElement('div'); d.style.cssText = 'position:fixed;top:0;height:env(safe-area-inset-top);width:1px'; document.body.appendChild(d); var h = d.offsetHeight; d.remove(); return h; })();
+    try {
+      r.margenAbajo = (function () { var d = document.createElement('div'); d.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom);width:1px'; document.body.appendChild(d); var h = d.offsetHeight; d.remove(); return h; })();
+      r.margenArriba = (function () { var d = document.createElement('div'); d.style.cssText = 'position:fixed;top:0;height:env(safe-area-inset-top);width:1px'; document.body.appendChild(d); var h = d.offsetHeight; d.remove(); return h; })();
+    } catch (e) { r.margenAbajo = String(e); }
     window.__sonda = r;
     return JSON.stringify(r);
     """

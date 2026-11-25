@@ -26,6 +26,11 @@ final class PruebasUI: XCTestCase {
         return t
     }
 
+    private func enLinea(_ j: [String: Any]) -> String {
+        guard let d = try? JSONSerialization.data(withJSONObject: j, options: [.sortedKeys]), let t = String(data: d, encoding: .utf8) else { return "\(j)" }
+        return t
+    }
+
     /// espera a que la app cuente lo que se pide; si no llega, falla diciendo lo último que contó
     @discardableResult
     private func esperar(_ que: String, _ segundos: TimeInterval = 45, falla: Bool = true, _ vale: ([String: Any]) -> Bool) -> [String: Any] {
@@ -38,6 +43,7 @@ final class PruebasUI: XCTestCase {
         }
         if falla {
             captura("fallo")
+            print("=== FALLO: \(que) === \(enLinea(ultimo))")
             XCTFail("No ha llegado: \(que). La app cuenta: \(texto(ultimo))")
         }
         return ultimo
@@ -55,7 +61,7 @@ final class PruebasUI: XCTestCase {
         a.name = nombre
         a.lifetime = .keepAlways
         add(a)
-        print("=== \(nombre) ===\n\(texto(j))")
+        print("=== \(nombre) === \(enLinea(j))")
     }
 
     private func comprobado(_ s: [String: Any]) -> [String: Any] { s["s"] as? [String: Any] ?? [:] }
@@ -64,7 +70,7 @@ final class PruebasUI: XCTestCase {
 
     /// un botón de la página por lo que pone
     private func boton(_ rotulo: String) -> XCUIElement {
-        let exacto = app.webViews.buttons[rotulo]
+        let exacto = app.webViews.buttons.matching(NSPredicate(format: "label == %@", rotulo)).firstMatch
         if exacto.waitForExistence(timeout: 15) { return exacto }
         return app.webViews.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", rotulo)).firstMatch
     }
@@ -145,9 +151,6 @@ final class PruebasUI: XCTestCase {
         ejemplo.tap()
         let s = esperar("la liga de ejemplo cargada", 120) { self.si($0["liga"]) && ($0["nav"] as? Int) == 6 && !self.si($0["cargando"]) && ($0["texto"] as? Int ?? 0) > 50 }
         apuntar("4-ejemplo", s)
-        // el cartel de la etiqueta BETA (una vez por móvil) tapa las pestañas: si sale, fuera
-        let vale = app.webViews.buttons["Vale"]
-        if vale.waitForExistence(timeout: 4) { vale.tap(); Thread.sleep(forTimeInterval: 1) }
         let ventana = app.windows.firstMatch.frame
         let abajo = (comprobado(s)["margenAbajo"] as? Double) ?? 34
         let pestanas = ["hoy", "equipo", "directo", "rivales", "mercado", "clubes"]
@@ -173,8 +176,8 @@ final class PruebasUI: XCTestCase {
             captura("5-\(k)")
         }
         // la séptima, Pregunta, va arriba
-        let pregunta = boton("Pregunta")
-        XCTAssertTrue(pregunta.exists, "no encuentro Pregunta")
+        let pregunta = app.webViews.buttons.matching(NSPredicate(format: "label == %@", "Pregunta")).firstMatch
+        XCTAssertTrue(pregunta.waitForExistence(timeout: 15), "no encuentro Pregunta")
         pregunta.tap()
         let p = esperar("la pestaña Pregunta", 20) { ($0["vista"] as? String) == "ia" && ($0["texto"] as? Int ?? 0) > 20 }
         XCTAssertEqual(p["errores"] as? Int, 0, "Pregunta pinta un error")
