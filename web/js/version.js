@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4n';
+export const VERSION = '0.8.4o';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,17 @@ export const VERSION = '0.8.4n';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, claude/prompt-dinero-rivales.md del proyecto) apuntar lo que te ha dicho un rival que tiene, también con su
+    // dinero cerrado (dinero-dicho.js): la hoja (ficha y Rivales), la ficha ya apuntada, las tostadas, la pastilla y el aviso
+    // de Rivales, la ventana «Quién y cuánto», la novedad una vez por cuenta (LS «nov-dinero» y /hola nd del Worker) y la
+    // tarjeta de Pregunta (tipo «dinero» en las notas del chat, `dineroDeNota`). Con el dinero cerrado el motor no recibe la
+    // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
+    v: '0.8.4o', f: '2026-11-26', h: '00:21', t: 'Apunta el dinero de tus rivales',
+    cosas: [
+      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. La app y la IA lo usan para aprender a calcular mejor el dinero de cada rival.' },
+    ],
+  },
   {
     // (25 nov, claude/prompt-tandas-b.md: las tandas B-5, B-1, B-2 y B-3 de claude/auditoria-fallos-25nov-b.md) B-5: con
     // «quién paga» cerrado al chat no le llega a quién le llega una cláusula (`paganTxt`, `blindajeTxt` con chat), la pregunta

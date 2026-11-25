@@ -15,6 +15,7 @@ import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
+import { dichoDe, fichaDichoHTML, tileDicho } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
@@ -704,20 +705,20 @@ export function fichaRival(S, tid) {
     h += r.fichas.length ? (ya.length || luego.length ? '' : `<p class="t2 peq">Con tu dinero de ahora no te llega ninguna de sus cláusulas.</p>`) + grupo('Abiertas y te llegan', ya) + grupo('Te llegan cuando se abran', luego) + grupo('No te llegan', resto) : nada('No se ha podido leer su plantilla.');
   } else if (seg === 'clausulas') {
     // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
-    if (bloqueada('dineroRivales', tid)) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
+    // (0.8.4o) con su dinero cerrado, solo la cifra que pusiste tú (dinero-dicho.js): la cuenta de la app, «ahora daría» y
+    // la diferencia, solo con su dinero abierto
+    const cerradoD = bloqueada('dineroRivales', tid), exactoD = !!(r.dinero && r.dinero.exacto), ddR = exactoD ? null : dichoDe(tid);
+    if (cerradoD) cerradas.push('dineroRivales');
+    h += `<div class="eq2-tiles">${cerradoD ? (ddR ? `${tileDicho(ddR)}<button type="button" class="eq2-t dd-cerr" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}Cerrado</b><span>su dinero en la app</span></button>` : '') : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)} por la recompensa diaria`) : 'su dinero: no se sabe'}</span></div>`}
       <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado` : 'sin compras al mercado'}</span></div></div>`;
-    // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
-    if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', tid)) {
-      const dc = r.dinero && r.dinero.dicho, cu = (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
-      h += `<div class="dicho">`;
-      if (dc) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''} <button class="enlace" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></p>`;
-      h += `<details class="dicho-f"><summary>${icono('euro')}${dc ? 'Te ha dicho otra cifra' : '¿Te ha dicho cuánto tiene?'}</summary>
-        <div class="dicho-in"><span>Entre</span><input id="dichoMin" type="text" inputmode="decimal" placeholder="50" autocomplete="off" aria-label="Mínimo, en millones"><span>y</span><input id="dichoMax" type="text" inputmode="decimal" placeholder="60" autocomplete="off" aria-label="Máximo, en millones"><span>M</span><button class="btn chico" data-accion="guardarDicho" data-tid="${esc(tid)}">Apuntar</button></div>
-        <p class="t2 peq">En millones. Si te dijo una cifra, ponla en los dos. A partir de ahora su dinero sale de esto más lo que mueva, y la app aprende cuánto fallaba la cuenta.</p>
-      </details></div>`;
+    // si te ha dicho cuánto tiene, se apunta (la hoja «dicho»): con su dinero abierto, desde entonces sale de eso más lo que mueva
+    if (!exactoD) {
+      h += fichaDichoHTML(tid, { cerrado: cerradoD });
+      const dc = !cerradoD && r.dinero && r.dinero.dicho, cu = dc && (M.dineroCuentaBruta || M.dineroCuenta) ? (M.dineroCuentaBruta || M.dineroCuenta)(tid) : null;
+      if (dc && (dc.est != null || (cu && cu.v != null))) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''}</p>`;
     }
-    if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga', tid)) cerradas.push('quienPaga');
+    // (0.8.4o) con quién paga cerrado, su candado aunque ahora no le llegue a ninguna: «no le llega» también sale de su dinero
+    if (bloqueada('quienPaga', tid)) cerradas.push('quienPaga');
     else if (r.leLlegan && r.leLlegan.length) {
       h += `<div class="grupo"><span>Tus cláusulas a su alcance · ${r.leLlegan.length}</span><span>${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
       h += r.leLlegan.map((x) => filaJugador(x, {
@@ -1773,11 +1774,12 @@ export function textoDiagnostico(S) {
       const m1 = (v) => String(Math.round(num(v) / 1e5) / 10);
       const ex = Object.entries(D.dineros || {}).filter(([tid]) => tid !== D.yo.teamId);
       const hm = M.histMov || {};
-      return `Dinero de los rivales: ${ex.length ? `${ex.length} exactos (${[...new Set(ex.map(([, x]) => x.fuente))].join(', ')})` : 'ninguno exacto'} · el resto estimado con ${hm.n || 0} movimientos desde ${hm.desde ? new Date(hm.desde).toISOString().slice(0, 10) : '?'}${hm.completa ? ' (desde el principio)' : ' (no llega al principio)'} · ${M.rivales.map((r) => `${r.e.manager || r.e.nombre} ${r.dinero && r.dinero.v != null ? `${r.dinero.exacto ? '' : '≈'}${m1(r.dinero.v)}M` : `? (${(r.dinero && r.dinero.motivo) || 'sin datos'})`}`).join(', ')}`
+      return `Dinero de los rivales: ${ex.length ? `${ex.length} exactos (${[...new Set(ex.map(([, x]) => x.fuente))].join(', ')})` : 'ninguno exacto'} · el resto estimado con ${hm.n || 0} movimientos desde ${hm.desde ? new Date(hm.desde).toISOString().slice(0, 10) : '?'}${hm.completa ? ' (desde el principio)' : ' (no llega al principio)'} · ${M.rivales.map((r) => `${r.e.manager || r.e.nombre} ${bloqueada('dineroRivales', r.e.teamId) ? 'cerrado' : r.dinero && r.dinero.v != null ? `${r.dinero.exacto ? '' : '≈'}${m1(r.dinero.v)}M` : `? (${(r.dinero && r.dinero.motivo) || 'sin datos'})`}`).join(', ')}`
         // de dónde sale cada cifra: la base común, y por rival lo movido, las subidas de cláusula y lo que te dijo
         + (M.baseDinero ? `\n  base: tu saldo ${m1(M.baseDinero.saldo)}M − tus movimientos ${m1(M.baseDinero.mov)}M + tus subidas de cláusula ${m1(M.baseDinero.subidas)}M = ${m1(M.baseDinero.v)}M (debería estar entre ${m1(M.baseDinero.min)} y ${m1(M.baseDinero.max)}M${M.baseDinero.desvio ? `: NO CUADRA por ${m1(M.baseDinero.desvio)}M` : ''})` : '')
         + `\n  tipos: ${Object.entries(M.histTipos || {}).map(([k, x]) => `${k}×${x.n}${x.conImporte && x.conImporte !== x.n ? ` (${x.conImporte} con importe)` : ''}`).join(' ')} · clausulazos detectados ${M.czDetectados || 0}`
-        + M.rivales.filter((r) => !(r.dinero && r.dinero.exacto)).map((r) => {
+        // (0.8.4o) de un rival con su dinero cerrado, nada: ni la cuenta ni lo que te dijo
+        + M.rivales.filter((r) => !(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', r.e.teamId)).map((r) => {
           const f = (M.flujos || {})[r.e.teamId] || {}, sb = (M.subidas || {})[r.e.teamId] || {}, dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(r.e.teamId) : null;
           return `\n  ${r.e.manager || r.e.nombre}: mov ${m1(f.v || 0)}M (gasta ${m1(f.gastado || 0)}, ingresa ${m1(f.ingresado || 0)}, premios ${m1(f.premios || 0)}${f.raros ? `, ${f.raros} raros` : ''}) · subidas −${m1(sb.v || 0)}M en ${sb.n || 0}${sb.vistas ? ` (${sb.vistas} vistas)` : ''}${sb.sinBase ? ` · ${sb.sinBase} sin base` : ''} · cuenta ${cu && cu.v != null ? `${m1(cu.v)}M ±${m1(cu.margen)}${cu.partes ? ` (fija ${m1(cu.partes.fija)} + recompensas ${m1(cu.partes.rec)} + subidas dudosas ${m1(cu.partes.dudas)} + base ${m1(cu.partes.desvio)} + raros ${m1(cu.partes.raros)}${cu.centro ? `; centro ${cu.centro > 0 ? '+' : ''}${m1(cu.centro)}` : ''})` : ''}` : '?'}${dc ? ` · te dijo ${m1(dc.v)}M ${new Date(dc.t).toISOString().slice(5, 16)}${dc.est != null ? ` (la cuenta daba ${m1(dc.est)}M)` : ''}` : ''}`;
         }).join('');

@@ -16,7 +16,7 @@ import * as Cl from './clubes.js';
 import * as Bj from './bajas.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, guardarChat, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
 import { pedirPermisoIA } from './permiso-ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
@@ -36,7 +36,8 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import * as DD from './dinero-dicho.js';
 import { presentarNovedades, tarjetaNovedad, tarjetaIphone, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -1204,6 +1205,7 @@ const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaI
 function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
+  alDiaDichos();
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
   const escrito = ['pregunta', 'claveIA'].map((id) => { const el = $(`#${id}`); return el && el.value ? [id, el.value, document.activeElement === el ? el.selectionStart : null] : null; }).filter(Boolean);
   // (el buscador del Mercado guarda lo escrito en S.busca; solo hay que devolverle el cursor)
@@ -1487,6 +1489,8 @@ function rehacer() {
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
+  // (0.8.4o) quién eres, ya antes del análisis: lo que le llega al motor de lo que te dijeron depende de lo que tienes abierto
+  fijarYo(yoReal(), enDemo());
   S.M = analizar(S.D, S.H, S.c, extraM());
   fijarMotor(S.M);
   apuntarQuien();
@@ -1744,10 +1748,21 @@ async function trabajoFondo() {
   }
 }
 
+/* (0.8.4o) lo que te han dicho los rivales llega al motor solo de los que tienen su dinero abierto (dinero-dicho.js): al
+   abrirse o cerrarse uno con una cifra apuntada se rehace el análisis (alDiaDichos, al pintar) */
+function dichosMotorF() { S.firmaD = DD.firmaDichos(); return DD.dichosMotor(); }
+function alDiaDichos() {
+  if (!S.D || !S.M || S.firmaD == null || DD.firmaDichos() === S.firmaD) return;
+  const ap = S.M.aprende;
+  S.M = analizar(S.D, S.H, S.c, extraM());
+  S.M.aprende = ap;
+  fijarMotor(S.M);
+  montarPlan();
+}
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}), calDinero: calDineroGuardada().cal,
+  return { cambios: S.D && !enDemo() ? LS.get(K('cambios'), {}) : {}, det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: dichosMotorF(), calDinero: calDineroGuardada().cal,
     pujasMias: apuntarMisPujas(), calPujas: calPujasGuardada().cal, pujasVistas: apuntarPujasVistas(), quienVisto: S.D && !enDemo() ? LS.get(K('quien-visto'), {}) : {} };
 }
 
@@ -1951,7 +1966,7 @@ function saludarSiToca(por = 'cada10') {
   if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
   // si lo último que se dijo es que no le cargaba, que se sepa ya que sí (sin esperar los 9 minutos)
   if (LS.get('fc-dicho', '')) { LS.set('hola-t', 0); LS.del('fc-dicho'); }
-  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }) })
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad, ...(enApp ? {} : { disp: canalPaso() }), ...(LS.get('nov-dinero', 0) ? { nd: true } : {}) })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {})
     .then(() => invitarSiToca())
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
@@ -2057,6 +2072,98 @@ async function apunteDinero(tid, dicho, cu) {
     h, e: dicho.v - dicho.est, m: cu.margen || 0, r: dicho.r || 0, dl: Math.round(dl), dp: Math.round(dp), mov: cu.n || 0, sub: (cu.cuenta && cu.cuenta.nSubidas) || 0,
     pago: !!(S.D.liga && S.D.liga.premium), val: Math.max(0, Number(eq.valor) || 0), pos: Number(eq.pos) || 0, nr: (S.D.clasif || []).length, est: dicho.est,
   });
+}
+/* (0.8.4o) apuntar lo que te dijo un rival (la hoja, la ventana «Quién y cuánto» y la tarjeta del chat), con el mismo
+   formato de siempre; con su dinero cerrado, el motor no lo recibe (dinero-dicho.js) y la tostada no habla de la cuenta */
+function apuntarDichoDe(tid, v, aprox) {
+  const cu = S.M && (S.M.dineroCuentaBruta || S.M.dineroCuenta) ? (S.M.dineroCuentaBruta || S.M.dineroCuenta)(tid) : null;
+  const todos = DD.dichos();
+  todos[tid] = DD.entradaDicho(v, aprox, cu && cu.v != null ? cu.v : null);
+  LS.set(K('dinero-dicho'), todos);
+  apunteDinero(tid, todos[tid], cu).catch(() => {});
+  DD.quitarAvisoRivales();
+  rehacer();
+  return { d: todos[tid], cu };
+}
+function tostadaDicho(tid, dc, cu) {
+  tostada(!bloqueada('dineroRivales', tid) && cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(dc.v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
+}
+const modoAprox = (f) => !!(f && f.querySelector('[data-accion="ddModo"][data-m="aprox"][aria-pressed="true"]'));
+function notaDichoErr(f, t) { const n = f && f.querySelector('.dd-nota'); if (n) { n.textContent = t; n.classList.add('err'); } }
+/** − y +, los atajos y «Esa cifra / Más o menos»: se cambia lo que hay en pantalla, sin repintar (para no perder lo escrito) */
+function formDicho(el, d) {
+  const f = el.closest('.dd-hoja, #dd-ventana');
+  if (!f) return;
+  const inp = f.querySelector('.dd-in');
+  if (d.accion === 'ddPaso' && inp) { const v = DD.leerCifra(inp.value); inp.value = String(Math.max(0, Math.round((v || 0) / 1e6) + Number(d.n))); }
+  if (d.accion === 'ddAtajo' && inp) inp.value = String(d.v);
+  if (d.accion === 'ddModo') f.querySelectorAll('[data-accion="ddModo"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === d.m)));
+  notaDicho(f);
+}
+function notaDicho(f) {
+  const v = DD.leerCifra((f.querySelector('.dd-in') || {}).value);
+  const n = f.querySelector('.dd-nota');
+  if (n) { n.textContent = DD.notaModo(v, modoAprox(f)); n.classList.remove('err'); }
+  f.querySelectorAll('[data-accion="ddAtajo"]').forEach((b) => b.setAttribute('aria-pressed', String(v === Number(b.dataset.v) * 1e6)));
+  const er = f.querySelector('.dd-err'); if (er) er.remove();
+}
+document.addEventListener('input', (ev) => {
+  const t = ev.target;
+  if (!t || !t.classList || !t.classList.contains('dd-in')) return;
+  const limpio = t.value.replace(/[^0-9.,]/g, '');
+  if (limpio !== t.value) t.value = limpio;
+  const f = t.closest('.dd-hoja, #dd-ventana');
+  if (f) notaDicho(f);
+});
+/** la ventana «Quién y cuánto» (la abre la novedad): en el centro, como las tarjetas de una vez */
+function ventanaDinero(st = null) {
+  if (!S.D) return;
+  S.ddV = st || { sel: '', v: null, aprox: false, err: '', fase: 'pide' };
+  let capa = $('#dd-capa');
+  if (!capa) {
+    capa = document.createElement('div');
+    capa.id = 'dd-capa'; capa.className = 'nvt-capa dd-capa';
+    capa.innerHTML = '<div class="nvt-velo" data-accion="ddCerrar"></div><div class="nvt dd-ventana" id="dd-ventana" role="dialog" aria-modal="true" aria-labelledby="dd-v-t"></div>';
+    document.body.append(capa);
+  }
+  const v = $('#dd-ventana');
+  v.innerHTML = DD.ventanaDineroHTML(S, S.ddV);
+  const foco = v.querySelector(S.ddV.fase === 'hecho' ? '.dd-v-pri' : S.ddV.err ? '.dd-err' : 'h2');
+  if (foco) { if (!foco.hasAttribute('tabindex')) foco.tabIndex = -1; foco.focus({ preventScroll: true }); }
+}
+function cerrarVentanaDinero() { const c = $('#dd-capa'); if (c) c.remove(); S.ddV = null; }
+/* (0.8.4o; Carlos, 25 nov, 23:51: «que salga un pop up a todos explicando que está la función…») la novedad de apuntar
+   el dinero de un rival: UNA vez por cuenta (LS «nov-dinero» y el Worker con /hola nd), a todos (también en la liga de
+   ejemplo, para probarla) con algún rival, después del tutorial y con la pantalla libre: ni encima de la bienvenida, del
+   tutorial ni de otra tarjeta. Si hoy ya ha salido la de la app para iPhone o la de invitar, mañana; y si sale esta, esas
+   esperan a otro día. Con un navegador manejado por un programa, no (las pruebas) */
+const novDineroHoy = () => { const t = Number(LS.get('nov-dinero', 0)) || 0; return !!t && new Date(t).toDateString() === new Date().toDateString(); };
+const otraHoy = () => { const t = Number(LS.get('tarjeta-inv-t', 0)) || 0; return iphoneHoy() || (!!t && new Date(t).toDateString() === new Date().toDateString()); };
+let novDineroEsperando = false;
+function novDineroEsperar() {
+  if (novDineroEsperando || LS.get('nov-dinero', 0) || navigator.webdriver === true) return;
+  novDineroEsperando = true;
+  const hasta = Date.now() + 10 * 60e3;
+  const mirar = () => {
+    if (LS.get('nov-dinero', 0) || Date.now() > hasta) { novDineroEsperando = false; return; }
+    if (otraHoy()) { novDineroEsperando = false; return; }
+    const libre = S.D && S.M && !S.cargando && !S.hoja && tourVisto() && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente && !iphoneToca();
+    if (!libre || !(S.M.rivales || []).length) { setTimeout(mirar, 1500); return; }
+    novDineroEsperando = false;
+    const capa = document.createElement('div');
+    capa.id = 'nvd-capa'; capa.className = 'nvt-capa';
+    capa.innerHTML = DD.novedadDineroHTML();
+    document.body.append(capa);
+    const b = capa.querySelector('.dd-v-pri'); if (b) b.focus({ preventScroll: true });
+  };
+  // (después del saludo al Worker: si ya la vio en otro dispositivo, el saludo lo dice)
+  setTimeout(mirar, 6000);
+}
+function cerrarNovDinero() {
+  const c = $('#nvd-capa'); if (c) c.remove();
+  const yo = S.D && S.M && S.M.yo;
+  if (enDemo() || !haySesion()) LS.set('nov-dinero', Date.now());
+  else apuntarNovDinero({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: (S.D && S.D.liga && S.D.liga.id) || '', equipo: yo ? yo.nombre : '' });
 }
 // con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
 if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) { comprobarAvisos(); planAHora(); } }, 10 * 60e3 + 5e3);
@@ -3106,7 +3213,7 @@ function bloqHTML(arg) {
         ${Hj.botonInvitarTop(clave)}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`;
 }
-const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : tipo === 'dicho' ? DD.hojaDichoHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3114,7 +3221,7 @@ const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'qu
 // (25 nov, aviso de Big Mac Laporta) también la ficha de un rival: al abrir uno de sus jugadores, «‹ Volver» lleva al rival
 // (25 nov, auditoría, hallazgos 12 y 13) y el resumen de tu equipo y el once de una jornada: abrir un jugador desde ahí y
 // volver te deja donde estabas. El candado de una función top ('bloq') vuelve a la ficha desde la que se abrió
-const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r', 'resumen', 'oj', 'bloq']);
+const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r', 'resumen', 'oj', 'bloq', 'dicho']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -3137,7 +3244,7 @@ function cuerpoHoja(tipo, arg, pila = S.pila) {
   const atras = pila && pila.length ? `<button class="volver-h" data-accion="volverHoja">${icono('atras')}<span>${esc(nombreHoja(pila[pila.length - 1]))}</span></button>` : '';
   return atras + htmlHoja(tipo, arg);
 }
-function hoja(tipo, arg, pila = []) { abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
+function hoja(tipo, arg, pila = []) { alDiaDichos(); abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
 /* en la web, el «atrás» del navegador (o el gesto del móvil) cierra la ficha en vez de salir de la app: al abrir una
    ficha se apunta un paso en el historial y, al cerrarla con la X, se quita (revisión del 29 oct). En la app de
    Android lo hace window.atras */
@@ -3241,6 +3348,7 @@ async function pintarTarjeta() {
 }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
+  alDiaDichos();
   const sc = S.hoja.scrollTop;
   const dentro = S.hoja.contains(document.activeElement);
   S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
@@ -4224,29 +4332,50 @@ document.addEventListener('click', async (ev) => {
     case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (importantesPara() && hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.D) rehacer(); if (S.hoja) repintarHoja(); else pintar(); break;
-    case 'guardarDicho': {
-      // lo que te ha dicho un rival que tiene (en millones; si escribe en euros, se entiende igual)
-      const leer = (id) => { const x = parseFloat(String(($(id) || {}).value || '').replace(/\s/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.')); return Number.isFinite(x) ? (Math.abs(x) >= 10000 ? x : x * 1e6) : null; };
-      let a = leer('#dichoMin'), b = leer('#dichoMax');
-      if (a == null && b == null) { tostada('Pon cuánto te ha dicho que tiene'); break; }
-      if (a == null) a = b; if (b == null) b = a;
-      if (a > b) [a, b] = [b, a];
-      const cu = S.M && (S.M.dineroCuentaBruta || S.M.dineroCuenta) ? (S.M.dineroCuentaBruta || S.M.dineroCuenta)(d.tid) : null;
-      const todos = LS.get(K('dinero-dicho'), {});
-      todos[d.tid] = { v: Math.round((a + b) / 2), r: Math.round((b - a) / 2), min: Math.round(a), max: Math.round(b), t: Date.now(), est: cu && cu.v != null ? Math.round(cu.v) : null };
-      LS.set(K('dinero-dicho'), todos);
-      apunteDinero(d.tid, todos[d.tid], cu).catch(() => {});
-      rehacer(); repintarHoja(); pintar();
-      tostada(cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(todos[d.tid].v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
+    // (0.8.4o) lo que te ha dicho un rival que tiene: la hoja (desde su ficha o su fila de Rivales), sin repintar al tocar
+    case 'abrirDicho': if (S.D && d.tid) { DD.quitarAvisoRivales(); hoja('dicho', d.tid, pilaDesde(el, 'dicho', d.tid)); } break;
+    case 'ddPaso': case 'ddAtajo': case 'ddModo': formDicho(el, d); break;
+    case 'dichoGuardar': {
+      const f = el.closest('.dd-hoja'), v = f ? DD.leerCifra((f.querySelector('.dd-in') || {}).value) : null;
+      if (v == null) { notaDichoErr(f, 'Pon cuánto te dijo, en millones.'); break; }
+      const { d: dc, cu } = apuntarDichoDe(d.tid, v, modoAprox(f));
+      if (!volverHoja()) cerrarHoja();
+      pintar();
+      tostadaDicho(d.tid, dc, cu);
       break;
     }
     case 'mejorarIA': ponerMejorarIA(!mejorarIA()); repintarHoja(); tostada(mejorarIA() ? 'Gracias: así la IA afina más' : 'Hecho: no se manda nada más'); break;
     case 'borrarDicho': {
-      const todos = LS.get(K('dinero-dicho'), {});
+      const todos = DD.dichos();
       delete todos[d.tid];
       LS.set(K('dinero-dicho'), todos);
       rehacer(); repintarHoja(); pintar();
-      tostada('Olvidado: vuelve a salir de la cuenta');
+      // (0.8.4o) con su dinero cerrado, sin hablar de la cuenta
+      tostada(bloqueada('dineroRivales', d.tid) ? 'Olvidado' : 'Olvidado: vuelve a salir de la cuenta');
+      break;
+    }
+    case 'quitarAvisoDicho': { const y = window.scrollY; DD.quitarAvisoRivales(); pintar(); window.scrollTo(0, y); break; }
+    case 'novDineroSi': cerrarNovDinero(); ventanaDinero(); break;
+    case 'novDineroNo': cerrarNovDinero(); break;
+    case 'ddElegir': { const v = $('#dd-ventana'); if (!v || !S.ddV) break; S.ddV.sel = d.tid; v.querySelectorAll('[data-accion="ddElegir"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tid === d.tid))); const er = v.querySelector('.dd-err'); if (er) er.remove(); break; }
+    case 'ddApuntar': {
+      const v = $('#dd-ventana'); if (!v || !S.ddV) break;
+      const cant = DD.leerCifra((v.querySelector('.dd-in') || {}).value), aprox = modoAprox(v);
+      S.ddV = { ...S.ddV, v: cant, aprox, err: !S.ddV.sel ? 'Elige quién te lo dijo.' : cant == null ? 'Pon cuánto te dijo, en millones.' : '' };
+      if (!S.ddV.err) { apuntarDichoDe(S.ddV.sel, cant, aprox); S.ddV.fase = 'hecho'; pintar(); }
+      ventanaDinero(S.ddV);
+      break;
+    }
+    case 'ddOtro': ventanaDinero(); break;
+    case 'ddCerrar': cerrarVentanaDinero(); break;
+    case 'dichoChat': {
+      // (0.8.4o) la tarjeta de debajo de una respuesta: solo se guarda al tocar
+      const h2 = conversacion(), m = h2[Number(d.i)];
+      if (!m || !m.dr || m.dr.hecho) break;
+      apuntarDichoDe(m.dr.tid, m.dr.v, d.m === 'aprox');
+      m.dr = { ...m.dr, hecho: d.m === 'aprox' ? 'aprox' : 'exacto' };
+      guardarChat(h2);
+      pintar();
       break;
     }
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
@@ -4638,6 +4767,7 @@ function novedades() {
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
   iphoneEsperar();
+  novDineroEsperar();
   novAvisoAlArrancar(vista);
   if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
@@ -4713,6 +4843,7 @@ function novAvisoVisto(v) {
   // (la de invitar cuenta también como la última vez que se le recordó)
   g.invT = Date.now();
   LS.set('avisos-nov', g);
+  LS.set('tarjeta-inv-t', Date.now());
 }
 /* (20 nov, Carlos: «que el pop-up de invitar amigos aparezca una vez cada 5 días para quien no ha invitado a ningún amigo;
    si ha invitado a un amigo, que no le salga nunca más») La misma tarjeta de invitar, de recordatorio: a quien no tiene
@@ -4743,6 +4874,7 @@ function novInvRecordado() {
   const g = novAvisos() || { visto: [], pend: null };
   g.invT = Date.now();
   LS.set('avisos-nov', g);
+  LS.set('tarjeta-inv-t', Date.now());
 }
 let novAvisoEsperando = false;
 function novAvisoEsperar() {
@@ -4756,6 +4888,8 @@ function novAvisoEsperar() {
     // (0.8.4e) la de la app para iPhone va antes y, si sale hoy, la de invitar se deja para otro día
     if (iphoneToca()) { setTimeout(mirar, 1500); return; }
     if (iphoneHoy()) { novAvisoEsperando = false; return; }
+    // (0.8.4o) si hoy ha salido la novedad del dinero de los rivales, la de invitar, otro día
+    if (novDineroHoy()) { novAvisoEsperando = false; return; }
     const g = novAvisos();
     const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
     if (n) {
@@ -4799,6 +4933,7 @@ function iphoneEsperar() {
   const hasta = Date.now() + 10 * 60e3;
   const mirar = () => {
     if (iphoneNunca() || Date.now() > hasta) { iphoneEsperando = false; return; }
+    if (novDineroHoy()) { iphoneEsperando = false; return; }
     // (en la liga de ejemplo, sin sesión o sin el tutorial visto, se espera: puede entrar con su liga en este rato)
     // (ni encima de la bienvenida ni de la presentación de un tema de evento: lo mismo que espera el tutorial)
     if (!iphoneToca() || !(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente)) { setTimeout(mirar, 1500); return; }

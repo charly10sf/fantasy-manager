@@ -1014,6 +1014,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const t = Date.now() - 60 * 864e5, d = {};
     for (const tid of ids.slice(0, 3)) { const c = M.dineroCuentaBruta(tid); d[tid] = { v: Math.round(c.v + 3e6), r: 0, min: Math.round(c.v + 3e6), max: Math.round(c.v + 3e6), t, est: Math.round(c.v) }; }
     LS.set(K('dinero-dicho'), d);
+    // (0.8.4o) lo apuntado solo entra en la cuenta con el dinero de ese rival abierto: se abren los cuatro (como con sus anuncios)
+    LS.set('top-rivales', { j: null, usos: 0, abiertos: Object.fromEntries(ids.map((x) => [String(x), Date.now() + 5 * 60e3])), uno: null });
     return { ids, bruta: ids.map((tid) => M.dineroCuentaBruta(tid).v) };
   });
   await page.reload();
@@ -1024,6 +1026,14 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   const dif = (a, b) => Math.abs(a - b) < 2e5;
   if (antes.ids.length < 4 || !r.propio || !r.otro || r.corr.n !== 3 || !r.propio.correccion || !r.propio.correccion.propio || !dif(r.propio.v - r.brutaP.v, 3e6) || !r.otro.correccion || !dif(r.otro.v - r.brutaOtro.v, 1.5e6)) mal(`dinero corregido con lo apuntado: ${JSON.stringify({ antes, r })}`);
   else bien(`dinero corregido con lo apuntado: el que lo dijo hace 60 días, +3 M (el suyo); otro rival, +1,5 M (mediana de 3, a medias)`);
+  // (0.8.4o) y con su dinero cerrado, lo apuntado no corrige nada (ni lo suyo ni lo de los demás): sería enseñar lo cerrado
+  await page.evaluate(async () => { const { LS } = await import('/js/util.js'); LS.del('top-rivales'); });
+  await page.reload();
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const rc = await page.evaluate((ids) => { const M = window.S.M; return { corr: M.correccionDinero, propio: M.dineroCuenta(ids[0]), otro: M.dineroCuenta(ids[3]) }; }, antes.ids);
+  if (rc.corr.n !== 0 || (rc.propio && rc.propio.correccion) || (rc.otro && rc.otro.correccion)) mal(`dinero cerrado: lo apuntado no corrige nada: ${JSON.stringify(rc.corr)}`);
+  else bien('dinero cerrado: lo apuntado no corrige la cuenta de nadie mientras está cerrado');
   if (errores.length) mal(`dinero corregido: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }

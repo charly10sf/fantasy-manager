@@ -388,6 +388,19 @@ ok(r.j.seg === 86400, `un día no pasa de 86.400 s (${r.j.seg})`);
   a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk, e: envQ });
   ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
 }
+// (0.8.4o) la novedad de apuntar el dinero de un rival, igual: una vez por cuenta
+{
+  const tk = 'n'.repeat(30);
+  let a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.8.4o', canal: 'web', app: 1 }, tk, e: envQ });
+  ok(a.s === 200 && !a.j.nd, `/hola sin la novedad del dinero vista: sin nd (${a.t})`);
+  minuto();
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.8.4o', canal: 'web', app: 1, nd: true }, tk, e: envQ });
+  const nd = a.j && a.j.nd;
+  ok(a.s === 200 && nd > 0, `/hola con nd: true la apunta (${a.t})`);
+  minuto();
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.8.4o', canal: 'play', app: 1 }, tk, e: envQ });
+  ok(a.s === 200 && a.j.nd === nd, `la novedad del dinero, desde otro dispositivo: ya vista (nd ${a.j && a.j.nd})`);
+}
 // /hola: la liga que llega después del primer aviso se apunta sin esperar la hora, y uno vacío no la borra (17 nov)
 {
   vaciarQ();

@@ -1,5 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
+import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
@@ -1355,14 +1356,16 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>${caraManager(e)}
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} en&nbsp;7&nbsp;días</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales', r.e.teamId) ? '' : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${bloqueada('dineroRivales', r.e.teamId) ? (r.dinero && r.dinero.exacto ? '' : pillRival(r.e.teamId)) : r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}<span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span>${quitaYa(r) && !bloqueada('quienPaga', r.e.teamId) ? `<span class="pill mal">Te puede quitar ${quitaYa(r)}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">${ptsJornadaTxt(M, e) || 'pts'}</div>`}</div></button>`;
     }).join('');
     // el dinero de cada uno cerrado: un solo candado arriba (antes, uno en cada fila)
     const candDinero = M.rivales.some((r) => r.dinero && r.dinero.v != null && bloqueada('dineroRivales', r.e.teamId)) ? `<div class="cand-cab">${candadoMini('dineroRivales', 'Dinero de cada rival')}</div>` : '';
+    // (0.8.4o) con el dinero de alguno cerrado, en su fila «Apuntar» (o «Te dijo 48 M»): un aviso arriba hasta que se quita
+    const avisoD = !avisoRivalesVisto() && M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId) && !(r.dinero && r.dinero.exacto)) ? avisoRivalesHTML() : '';
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
-    h += ancho() ? cols(candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : candDinero + tabla;
+    h += ancho() ? cols(avisoD + candDinero + tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : avisoD + candDinero + tabla;
   } else {
     const f = S.filtro.cl || 'llegan';
     h += `<div class="filtros">${[['llegan', 'Te llegan'], ['pronto', 'Se abren pronto'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
@@ -1678,7 +1681,7 @@ export function ia(S) {
   const hora = (ts) => (ts ? cuando(ts) : '');
   h += msgs.map((m, i) => (m.r === 'yo'
     ? `<div class="msg yo${m.fotos && m.fotos.length ? ' con-fotos' : ''}">${fotosMsg(m.fotos, i)}${m.t ? `<div>${esc(m.t)}</div>` : ''}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
-    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+    : `<div class="msg ia"><div class="quien-ia">IA${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${respuestaHTML(sinWebs(m.t))}${(m.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).length ? `<div class="fuentes">${m.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${m.dr ? tarjetaChatHTML(m.dr, i, S.D) : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   // para seguir la conversación sin escribir
   if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat

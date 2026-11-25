@@ -2949,7 +2949,7 @@ let alCambiar = () => {};
 /** sinc.js se apunta aquí para subir lo que cambie */
 export const escucharCambios = (f) => { alCambiar = typeof f === 'function' ? f : () => {}; };
 export const cambioLocal = (clave) => { try { alCambiar(clave); } catch (e) { /* sin sincronizar, como antes */ } };
-const guardarChat = (l) => { LS.set(K('chat'), l); LS.set(K('chat-t'), Date.now()); cambioLocal('chat'); };
+export const guardarChat = (l) => { LS.set(K('chat'), l); LS.set(K('chat-t'), Date.now()); cambioLocal('chat'); };
 /** lo de este dispositivo, cada cosa con cuándo se cambió: { plan, chat, notas, hechos } (null lo que no hay) */
 export function paraSinc() {
   const p = ultimoPlan();
@@ -3249,7 +3249,10 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = nu
   const recientes = deEstaPregunta(DICHO_AHORA, pregunta) ? notas().filter((n) => DICHO_AHORA.ids.includes(n.id)) : [];
   const pend = M && deEstaPregunta(PENDIENTE, pregunta) ? PENDIENTE.lista : [];
   const dichas = [];
+  // (0.8.4o) lo que un rival le dijo que tiene: no se guarda solo; sale una tarjeta debajo de la respuesta para apuntarlo
+  let dineroRival = null;
   for (const a of j.apuntar || []) {
+    if (a && String(a.tipo || '') === 'dinero') { if (!dineroRival) dineroRival = dineroDeNota(a, D, pregunta); continue; }
     if (!a || !a.texto) continue;
     const pidA = a.jugador ? pidDe(a.jugador, D) : null;
     const k = pend.findIndex((x) => valeDicho(x.corr, pidA, D, M));
@@ -3273,7 +3276,25 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false, M = nu
   }
   if (apuntadas.length || olvidadas) guardarNotas([...lista, ...apuntadas]);
   if (dichas.length) apuntadas.push(...guardarDicho(dichas));
-  return { texto: limpio, apuntadas, olvidadas, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
+  return { texto: limpio, apuntadas, olvidadas, dineroRival, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
+}
+/** (0.8.4o) de la nota «dinero» de la IA: qué rival y qué cifra, solo si la cifra está en lo que ha escrito él (en millones o
+    entera) y el rival es uno de tu liga (por su nombre, su equipo o su apodo). Si no, null: no sale la tarjeta */
+export function dineroDeNota(a, D, pregunta) {
+  if (!a || pregunta == null || !/\d/.test(String(pregunta))) return null;
+  let v = num(a.importe);
+  if (!(v > 0)) return null;
+  if (v < 5000) v *= 1e6;
+  const cifras = [...String(pregunta).matchAll(/\d[\d.,]*/g)].map((m) => {
+    const t = m[0].replace(/[.,]$/, ''), x = parseFloat(t.replace(/\.(?=\d{3}\b)/g, '').replace(',', '.'));
+    return Number.isFinite(x) ? (x >= 10000 ? x : x * 1e6) : null;
+  }).filter((x) => x != null);
+  if (!cifras.some((x) => Math.abs(x - v) <= Math.max(1e5, v * 0.01))) return null;
+  const yo = D && D.yo && D.yo.teamId, ap = apodosLiga();
+  const nombres = String(a.jugador || a.rival || '').split(/[()]/).map((x) => norm(x).trim()).filter((x) => x.length >= 2);
+  if (!nombres.length) return null;
+  const e = ((D && D.clasif) || []).find((x) => x.teamId !== yo && [x.manager, x.nombre, ...listaApodos(ap[String(x.teamId)])].some((n) => n && nombres.includes(norm(n).trim())));
+  return e ? { tid: String(e.teamId), v: Math.round(v), t: Date.now() } : null;
 }
 
 /** los últimos mensajes para Gemini, con las fotos enteras de los más recientes (como mucho 6) */
@@ -4368,11 +4389,11 @@ function rematarRespuesta(r, pregunta, D, M, fotos, hist, dicho = []) {
   // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
   // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
   let rev = { texto: n.texto, notas: [] };
-  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
+  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist, apuntado: n.apuntadas.length + n.olvidadas + (n.dineroRival ? 1 : 0) }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
   n.texto = rev.texto;
   n.texto = repasoFinal(n.texto, pregunta, D, M, hist);
   const h2 = conversacion();
-  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
+  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: (r.fuentes || []).slice(0, 8), modelo: r.modelo, ...(n.dineroRival ? { dr: n.dineroRival } : {}), apuntadas: n.apuntadas.map((x) => (x.corr ? `${dichoTxt(x, x.jugador)}${x.corr === 'puja' && x.importe ? ` (${eur(x.importe)})` : ''}${x.caduca ? `, hasta ${cuando(x.caduca, { hora: x.corr !== 'no-vender' })}` : ''}. El plan ya lo cuenta así.` : x.texto)), olvidadas: n.olvidadas });
   guardarChat(h2.slice(-40));
   return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }

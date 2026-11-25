@@ -97,6 +97,8 @@ export async function saludar(datos) {
   if (r && r.ev === true) mandados(ev);
   // la bienvenida ya vista en otro dispositivo con esta cuenta: aquí tampoco sale
   if (r && r.bv && !LS.get('bienvenida', 0)) LS.set('bienvenida', r.bv);
+  // (0.8.4o) y la novedad del dinero de los rivales
+  if (r && r.nd && !LS.get('nov-dinero', 0)) LS.set('nov-dinero', r.nd);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
   // (0.8.4) y si ve lo de todos (quien ayuda con los fallos); un servidor de antes no lo dice: solo el dueño
@@ -112,6 +114,11 @@ export const bienvenidaVista = () => !!LS.get('bienvenida', 0);
 export function apuntarBienvenida(datos) {
   LS.set('bienvenida', Date.now());
   return pedirWorker('POST', '/hola', { ...datos, bv: true }).then((r) => { if (r && r.bv) LS.set('bienvenida', r.bv); }).catch(() => {});
+}
+/** (0.8.4o) la novedad de apuntar el dinero de un rival: una vez por cuenta (aquí y en el Worker, /hola con nd) */
+export function apuntarNovDinero(datos) {
+  LS.set('nov-dinero', Date.now());
+  return pedirWorker('POST', '/hola', { ...datos, nd: true }).then((r) => { if (r && r.nd) LS.set('nov-dinero', r.nd); }).catch(() => {});
 }
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
 export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});

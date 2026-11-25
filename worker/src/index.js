@@ -37,7 +37,8 @@
  *                             días (segDias: { 'AAAA-MM-DD': seg }, solo los días con algo). Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
  *                             que han entrado alguna vez (r:<uid>, sin nombre ni equipo; se borra a los 400 días sin abrir la app), para contar
  *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
- *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
+ *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver; nd, lo mismo con la
+ *                             novedad de apuntar el dinero de un rival, 0.8.4o).
  *
  *   POST /plan                { pedido, tono, bloq, anuncio, alias, extra, rid }: el plan del día con la IA de Carlos (Claude), con
  *                             la sesión de LaLiga; 2 al día por cuenta y más con un anuncio bonificado, hasta 5 (planIA).
@@ -1741,7 +1742,7 @@ async function apodos(req, env, c) {
  * Antes iba en el KV (p:, r:, u:) y era casi todo lo que gastaba de sus topes gratis.
  */
 // lo que se queda de lo que manda la app (el objeto lo corta y lo limpia igual)
-const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'disp'];
+const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'nd', 'disp'];
 async function hola(req, env, c, ruta) {
   if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
@@ -1757,7 +1758,7 @@ async function hola(req, env, c, ruta) {
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo; ve: también a
     // quien ayuda, 0.8.4)
     const papel = papelDe(env, u.uid);
-    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
+    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}), ...(r.nd ? { nd: r.nd } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
