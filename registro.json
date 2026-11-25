@@ -3311,7 +3311,8 @@
    "SPORT|136847699": 1795622684000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261125/11693363/gran-rotacion-flick-llega-baku-vuelven-gavi-balde-descansa-raphinha.html": 1795624862000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/javi-guerra-nominado-premios-laliga-136849583.html": 1795627892000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dani-senabre-analiza-sancion-dos-partidos-fermin-depor-mejor-no-grave-atletico-madrid-mi-importante-20261125_3482176.html": 1795629378000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dani-senabre-analiza-sancion-dos-partidos-fermin-depor-mejor-no-grave-atletico-madrid-mi-importante-20261125_3482176.html": 1795629378000,
+   "SPORT|136851580": 1795628507000
   },
   "hechos": [
    {
@@ -3645,7 +3646,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -4548,7 +4549,8 @@
    "SPORT|136822776": 1795604778000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/25/penultima-sesion-ano-malata-disputara-1200-horas/00031795612482398223144.htm": 1795613461000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
-   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000
+   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
+   "SPORT|136851440": 1795626010000
   },
   "hechos": [
    {
@@ -4601,27 +4603,25 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136851440": 1795630886096
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 41,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 239528,
-  "salida": 18622,
+  "entrada": 243405,
+  "salida": 18820,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.449492,
+  "dolares": 0.449979,
   "reservado": 0
  },
  "recientes": {
@@ -9669,13 +9669,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6366,
+   "ok": 6367,
    "fallos": 0,
-   "ejecuciones": 5185,
+   "ejecuciones": 5186,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T18:41:16.168Z"
+   "ultima": "2026-11-25T18:46:17.128Z"
   }
  },
  "ptsDirecto": {},
@@ -9692,15 +9692,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:41:28.364Z"
+   "ultimaBien": "2026-11-25T18:46:27.716Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:41:28.364Z"
+   "ultimaBien": "2026-11-25T18:46:27.716Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:41:28.364Z"
+   "ultimaBien": "2026-11-25T18:46:27.716Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9708,11 +9708,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:41:28.364Z"
+   "ultimaBien": "2026-11-25T18:46:27.716Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T18:41:28.364Z"
+   "ultimaBien": "2026-11-25T18:46:27.716Z"
   }
  },
  "avisos": [
