@@ -3105,7 +3105,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254001/oportunidad-raphinha-ampliar-ventaja-lucha-primer-pichichi.html": 1795335516000,
-   "SPORT|136713918": 1795332440000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000,
    "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000,
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
@@ -3259,7 +3258,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/es-un-tiron-de-orejas-a-los-de-arriba-las-palabras-de-mourinho-sobre-bellingham-que-senalan-directamente-a-vinicius-y-mbappe-cadena-ser/": 1795587336000,
    "SPORT|136805992": 1795586435000,
-   "SPORT|136796550": 1795586435000
+   "SPORT|136796550": 1795586435000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000
   },
   "hechos": [
    {
@@ -3480,7 +3480,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4442,17 +4442,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 76313,
-  "salida": 5626,
+  "entrada": 78263,
+  "salida": 5739,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.161636,
+  "dolares": 0.161888,
   "reservado": 0
  },
  "recientes": {
@@ -9502,13 +9502,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6233,
+   "ok": 6234,
    "fallos": 0,
-   "ejecuciones": 5052,
+   "ejecuciones": 5053,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T07:26:13.223Z"
+   "ultima": "2026-11-25T07:31:15.288Z"
   }
  },
  "ptsDirecto": {},
@@ -9525,15 +9525,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:26:20.768Z"
+   "ultimaBien": "2026-11-25T07:31:26.039Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:26:20.768Z"
+   "ultimaBien": "2026-11-25T07:31:26.039Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:26:20.768Z"
+   "ultimaBien": "2026-11-25T07:31:26.039Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9541,11 +9541,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:26:20.768Z"
+   "ultimaBien": "2026-11-25T07:31:26.039Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T07:26:20.768Z"
+   "ultimaBien": "2026-11-25T07:31:26.039Z"
   }
  },
  "avisos": [
