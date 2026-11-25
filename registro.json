@@ -2243,6 +2243,13 @@
    "jornada": 14,
    "id": "2125607062071550456",
    "t": "2026-11-25T15:06:30.623Z"
+  },
+  {
+   "clave": "novedades|3077:vuelve|2026-11-25",
+   "tipo": "novedades",
+   "jornada": 14,
+   "id": "2125624692497326139",
+   "t": "2026-11-25T16:16:33.870Z"
   }
  ],
  "estados": {
@@ -2853,7 +2860,7 @@
   "3034": "ok",
   "3035": "ok",
   "3036": "ok",
-  "3037": "doubtful",
+  "3037": "ok",
   "3038": "ok",
   "3039": "ok",
   "3040": "ok",
@@ -2893,7 +2900,7 @@
   "3074": "ok",
   "3075": "ok",
   "3076": "ok",
-  "3077": "injured",
+  "3077": "ok",
   "3078": "ok",
   "3079": "injured",
   "3080": "ok",
@@ -3058,7 +3065,7 @@
   "3239": "ok",
   "3240": "ok",
   "3241": "out_of_league",
-  "3242": "ok",
+  "3242": "injured",
   "3243": "injured",
   "3244": "ok",
   "3245": "out_of_league",
@@ -3129,10 +3136,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3077",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1795623375226
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
    "SPORT|136726389": 1795364350000,
@@ -4228,8 +4241,8 @@
     "t": 0
    },
    "3077": {
-    "e": "injured",
-    "t": 1795169770990
+    "e": "ok",
+    "t": 1795623375226
    },
    "3079": {
     "e": "injured",
@@ -4581,16 +4594,16 @@
   "dia": "2026-11-25",
   "llamadas": {
    "clasificar": 32,
-   "redactar": 13,
-   "revisar": 9,
+   "redactar": 14,
+   "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 204458,
-  "salida": 16170,
+  "entrada": 214864,
+  "salida": 16353,
   "cacheLee": 21607,
-  "cacheEscribe": 23867,
-  "dolares": 0.387088,
+  "cacheEscribe": 26770,
+  "dolares": 0.416988,
   "reservado": 0
  },
  "recientes": {
@@ -4750,10 +4763,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-21T12:56:36.954Z",
-    "texto": "✅ Aubameyang llega a tiempo: la duda se despeja y el delantero del Dépor puede jugar hoy a las 14:00.\n\nCon un 88 % de titularidad, lo normal es verlo en el once. Visita Mendizorroza, donde el Alavés, que va 13º, pone un partido asequible para un delantero. Y si lo tienes, ya sabes de lo que es capaz: en la jornada 4 se fue hasta los 17 puntos."
-   },
-   {
     "t": "2026-11-22T08:02:02.084Z",
     "texto": "❌ Yoel Lago no estará en el Celta-Villarreal 🚢 del domingo 29 de noviembre: llegó a 5 amarillas en la jornada 13 y se queda sancionado.\n\nEl central llevaba 5 porterías a cero en 11 partidos, así que quien lo tenga se queda sin esa opción de puntos en la zaga. Queda tiempo de sobra para buscar recambio."
    },
@@ -4768,6 +4777,10 @@
    {
     "t": "2026-11-24T07:36:43.654Z",
     "texto": "Lemar se lesionó ayer en los isquiotibiales y es duda para el partido contra el Atlético, el sábado 28. Es una lesión nueva y no hay plazo, así que no se sabe si llega.\n\nMarc Pubill está disponible para ese Atlético-Elche, y el defensa lleva 4 porterías a cero en 10 partidos.\n\nDjene se pierde el Getafe-Espanyol por la roja que vio en la jornada 13. Vale 12 M y ha perdido 8,6 M en el último mes."
+   },
+   {
+    "t": "2026-11-25T16:16:33.872Z",
+    "texto": "Edu Expósito vuelve a estar disponible tras las molestias que le tenían fuera desde el 18 de noviembre.\n\nEl centrocampista del Espanyol llega bien de valor: vale 46 M y ha ganado 12,9 M en el último mes. Con un 53 % de titularidad, lo normal es que salga cuando los pericos reciban al Getafe el lunes 30, tras el parón. El Getafe va 18º, un partido asequible."
    }
   ],
   "resumen": [
@@ -9643,13 +9656,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6336,
+   "ok": 6337,
    "fallos": 0,
-   "ejecuciones": 5155,
+   "ejecuciones": 5156,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T16:06:16.833Z"
+   "ultima": "2026-11-25T16:16:15.226Z"
   }
  },
  "ptsDirecto": {},
@@ -9666,15 +9679,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:06:25.946Z"
+   "ultimaBien": "2026-11-25T16:16:36.207Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:06:25.946Z"
+   "ultimaBien": "2026-11-25T16:16:36.207Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:06:25.946Z"
+   "ultimaBien": "2026-11-25T16:16:36.207Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9682,11 +9695,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:06:25.946Z"
+   "ultimaBien": "2026-11-25T16:16:36.207Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:06:25.946Z"
+   "ultimaBien": "2026-11-25T16:16:36.207Z"
   }
  },
  "avisos": [
