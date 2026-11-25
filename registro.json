@@ -3312,7 +3312,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/25/6b073398e9cf4a9b788b45b3.html": 1795636775000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255541/adeyemi-calidad-suplir-jugador-no-depender-nadie.html": 1795639084000,
    "SPORT|136858366": 1795636976000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/julian-alvarez-vuelve-a-ver-puerta-con-un-extrano-gol-de-falta-el-reloj-del-arbitro-confirmo-que-el-balon-habia-entrado-cadena-ser/": 1795640881000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/julian-alvarez-vuelve-a-ver-puerta-con-un-extrano-gol-de-falta-el-reloj-del-arbitro-confirmo-que-el-balon-habia-entrado-cadena-ser/": 1795640881000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/umar-sadiq-jugador-valencia-cf-136859136.html": 1795643111000
   },
   "hechos": [
    {
@@ -3646,7 +3647,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -4612,17 +4613,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 261641,
-  "salida": 21069,
+  "entrada": 263693,
+  "salida": 21185,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.452926,
+  "dolares": 0.453189,
   "reservado": 0
  },
  "recientes": {
@@ -9687,13 +9688,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6404,
+   "ok": 6405,
    "fallos": 0,
-   "ejecuciones": 5221,
+   "ejecuciones": 5222,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T21:41:18.981Z"
+   "ultima": "2026-11-25T21:46:20.711Z"
   }
  },
  "ptsDirecto": {},
@@ -9710,15 +9711,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:41:27.318Z"
+   "ultimaBien": "2026-11-25T21:46:32.092Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:41:27.318Z"
+   "ultimaBien": "2026-11-25T21:46:32.092Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:41:27.318Z"
+   "ultimaBien": "2026-11-25T21:46:32.092Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9726,11 +9727,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:41:27.318Z"
+   "ultimaBien": "2026-11-25T21:46:32.092Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:41:27.318Z"
+   "ultimaBien": "2026-11-25T21:46:32.092Z"
   }
  },
  "avisos": [
