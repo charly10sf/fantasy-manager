@@ -130,9 +130,10 @@ jobs:
           codesign -d --entitlements - --xml Payload/*.app > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- Payload/*.app > "$RUNNER_TEMP/permisos.plist"
           plutil -p "$RUNNER_TEMP/permisos.plist"
           codesign -dvv Payload/*.app 2>&1 | grep -E "Authority|TeamIdentifier" || true
+          # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
           # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
-          plutil -extract aps-environment raw "$RUNNER_TEMP/permisos.plist" | grep -qx production || { echo "::error::La app firmada no lleva aps-environment = production"; exit 1; }
-          plutil -extract com.apple.developer.usernotifications.time-sensitive raw "$RUNNER_TEMP/permisos.plist" | grep -qx true || { echo "::error::La app firmada no lleva el permiso de avisos urgentes"; exit 1; }
+          /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production || { echo "::error::La app firmada no lleva aps-environment = production"; exit 1; }
+          /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" | grep -qx true || { echo "::error::La app firmada no lleva el permiso de avisos urgentes"; exit 1; }
           echo "firma y permisos, bien"
       - name: Subir a App Store Connect
         env:
