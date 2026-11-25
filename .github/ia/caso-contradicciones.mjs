@@ -250,7 +250,11 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
     const pasoHTML = Vi.pasoCambiaTxt ? Vi.pasoCambiaTxt(C, o) : '';
     // D. la respuesta de la IA que niega lo que dijo
     const rev = I.revisarChat('Te he dicho que lo vendas, no que lo aguantes. Mi recomendación sigue igual: vender a Hugo Duro, acepta la oferta de LaLiga. Su cláusula de 15,16 M no te protege: está un +486 % y nadie paga eso.', 'me dices que lo venda y en el plan que lo aguante, ¿en qué quedamos?', D, M, { hist: [] });
-    return { d: { accion: d.accion, matiz: d.matiz, corta: d.corta, porque: d.porque, esperado: d.cifras && d.cifras.esperado, oferta }, valor: j.valor,
+    // E. (25 nov, B14) «¿Vendo a Hugo Duro?» → «Sí, véndelo: …» sin decir nada de la oferta que tiene
+    const rev14 = I.revisarChat('Sí, véndelo: baja cada día y no entra en tu once. Si quieres cobrar ya, ofrécelo a un rival; si no, a la venta para la oferta de LaLiga de mañana.', '¿Vendo a Hugo Duro?', D, M, { hist: [] });
+    const rev14b = I.revisarChat('Sí, véndelo, pero esta oferta no la aceptes: LaLiga te hará otra mañana.', '¿Vendo a Hugo Duro?', D, M, { hist: [] });
+    const r14 = { con: (rev14.notas || []).join(' | '), sin: (rev14b.notas || []).filter((n) => /esta oferta no/.test(n)).length };
+    return { r14, d: { accion: d.accion, matiz: d.matiz, corta: d.corta, porque: d.porque, esperado: d.cifras && d.cifras.esperado, oferta }, valor: j.valor,
       o: { descartada: o.descartada, cambia: !!o.cambia, aviso: o.aviso, decAhora: o.decAhora || null, dec0: o.dec0 || null }, titular: C.titular, pill: vv && vv.pill, largo: vv && vv.largo,
       consejo: v.consejo, porque: v.porque, ventasTxt, datos, llevas, pasoHTML, rev: typeof rev === 'string' ? rev : (rev && rev.texto) || JSON.stringify(rev),
       urg: Vi.urgentesDe(Sx).urg.filter((a) => String(a.pid) === String(j.id)).map((a) => a.titulo), enPlan: (R.ops || []).filter((q) => String(q.pid) === String(j.id) && !q.descartada).map((q) => q.accion) };
@@ -269,6 +273,7 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
   ok(/Lo proponía el plan de las|Del plan de las/.test(r.llevas) && !/Por tu cuenta/.test((r.llevas.match(/Hugo Duro a la venta[^]*?<\/li>/) || [''])[0]), `B. «Lo que llevas hoy»: Hugo Duro a la venta sale como del plan de la mañana, no «Por tu cuenta» («${((r.llevas.match(/Hugo Duro a la venta[^]*?<\/li>/) || [''])[0].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')).slice(0, 160)}»)`);
   ok(/A las \d\d:\d\d/.test(r.pasoHTML) && /[Aa]hora/.test(r.pasoHTML), `B. el paso dice qué ha cambiado: «${r.pasoHTML}»`);
   ok(/Revisado por la app/.test(r.rev) && /esta oferta \([^)]*\) no|esta oferta no/.test(r.rev), `D. revisarChat corrige el «mi recomendación sigue igual: vender… acepta la oferta»: «${(r.rev.match(/Revisado por la app:[^]*/) || [''])[0].slice(0, 300)}»`);
+  ok(/esta oferta[^.]{0,30} no/.test(r.r14.con) && /no la aceptes/.test(r.r14.con) && r.r14.sin === 0, `E. «¿Vendo a Hugo Duro?» → «Sí, véndelo» sin la oferta: la app añade que esa oferta no («${r.r14.con.slice(0, 200)}»); si ya lo dice, nada`);
   ok(/sí te protege|te protege/.test((r.rev.match(/Revisado por la app:[^]*/) || [''])[0]), 'D. y lo de «la cláusula no te protege» con una cláusula que nadie paga');
   await P.cerrar();
 }

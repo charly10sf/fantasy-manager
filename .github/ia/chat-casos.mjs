@@ -154,7 +154,7 @@ export const CASOS = [
   // --- (24 nov, el aviso de Senna) la app no se contradice: para la escena «m-senna» (Hugo Duro, suplente que baja, en
   // venta con una oferta floja de LaLiga, y el plan de la IA de la mañana que mandaba aceptarla). La decisión de la app es
   // «a la venta, pero esta oferta no»: eso tiene que decir, sin negar lo que decía el plan ni lo que ella dijo antes ---
-  { id: 'senna-vendo', tipo: 'coherencia', q: '¿Vendo a Hugo Duro?', debe: /esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper/, noDebe: /\b(acepta la oferta|aceptala)\b(?![^.]*\b(no|solo si)\b)|\bmejor aguantar/ },
+  { id: 'senna-vendo', tipo: 'coherencia', prep: 'senna', q: '¿Vendo a Hugo Duro?', debe: /esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper/, noDebe: /\b(acepta la oferta|aceptala)\b(?![^.]*\b(no|solo si)\b)|\bmejor aguantar/ },
   { id: 'senna-quedamos', tipo: 'coherencia', sigue: true, q: 'Pues en el plan de esta mañana me decías que aceptara la oferta. ¿En qué quedamos?', debe: /plan/, noDebe: /te he dicho que|no te (he dicho|dije)|sigue igual|nunca te/ },
   { id: 'senna-porque-plan', tipo: 'coherencia', q: '¿Por qué el plan ya no me dice que acepte la oferta por Hugo Duro?', debe: /oferta/, noDebe: /te he dicho que|sigue igual|no ha cambiado/ },
   { id: 'senna-laliga', tipo: 'coherencia', q: 'LaLiga me ofrece ya por Hugo Duro, ¿la cojo o espero?', debe: /esper|otra|siguiente|manana/, noDebe: /llega en el siguiente cambio|aun no (tiene|hay) oferta|ponlo a la venta/ },
@@ -224,6 +224,14 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
     };
   }
   const mk = window.__marcas;
+  // (25 nov) lo que estaba en venta al empezar: «blindable» lo vacía y las preguntas de Senna (que van detrás) se quedaban
+  // sin la oferta de Hugo Duro (en las dos pasadas del 25 nov, «véndelo» era lo correcto con esa liga: no había oferta)
+  if (!window.__ventas0) window.__ventas0 = JSON.parse(JSON.stringify(D.misVentas || []));
+  if (prep === 'senna' && window.__blindable && !window.__sennaRepuesta) {
+    D.misVentas = JSON.parse(JSON.stringify(window.__ventas0));
+    window.__sennaRepuesta = true;
+    await rehacer();
+  }
   // un titular suyo con la cláusula a su valor y abierta, un rival con dinero y nada suyo en venta: la app quiere blindarlo
   if (prep === 'blindable' && !window.__blindable) {
     const yo = D.yo.teamId;
@@ -289,6 +297,10 @@ export async function vistaEnPagina({ texto, pre, hist }) {
   const apuntado = dicho.length + n.apuntadas.length + n.olvidadas;
   let rev = { texto: n.texto, notas: [] };
   try { rev = I.revisarChat(n.texto, pre, D, M, { rec: n.recomiendo, hist, apuntado }); } catch (e) { /* como en la app */ }
+  // (25 nov) y lo último que hace la app (lo cerrado, «no la veo», «llega mañana»), si el código lo tiene
+  const antesDel = rev.texto;
+  try { if (I.repasoFinal) rev.texto = I.repasoFinal(rev.texto, pre, D, M, [...hist, { r: 'yo', t: pre }]); } catch (e) { /* como en la app */ }
+  if (rev.texto !== antesDel) rev.notas = [...rev.notas, 'repaso final'];
   // lo que apunta la IA también puede mandar en el motor (el jugador de «a ese no lo vendo»)
   const corr = [...dicho, ...n.apuntadas].filter((x) => x.corr).map((x) => x.corr);
   if (n.apuntadas.some((x) => x.corr)) { if (window.__fmRehacer) window.__fmRehacer(); }
