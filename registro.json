@@ -2301,7 +2301,7 @@
   "1197": "ok",
   "1210": "ok",
   "1215": "ok",
-  "1218": "ok",
+  "1218": "doubtful",
   "1219": "ok",
   "1221": "ok",
   "1251": "injured",
@@ -3146,7 +3146,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261122/1004254231/comunicado-villarreal-desmintiendo-operacion-pepe-culpa-eclipse.html": 1795375479000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/villarreal-desmiente-operacion-ojos-pepe-fuera-ver-eclipse-proteccion-20261122_3479850.html": 1795375738000,
    "AS|https://as.com/futbol/osasuna-malaga-en-directo-laliga-ea-sports-hoy-en-vivo-f202611-d/": 1795376339000,
@@ -9670,13 +9669,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6371,
+   "ok": 6372,
    "fallos": 0,
-   "ejecuciones": 5190,
+   "ejecuciones": 5191,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:06:12.760Z"
+   "ultima": "2026-11-25T19:11:14.405Z"
   }
  },
  "ptsDirecto": {},
@@ -9693,15 +9692,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:06:20.929Z"
+   "ultimaBien": "2026-11-25T19:11:27.094Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:06:20.929Z"
+   "ultimaBien": "2026-11-25T19:11:27.094Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:06:20.929Z"
+   "ultimaBien": "2026-11-25T19:11:27.094Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9709,11 +9708,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:06:20.929Z"
+   "ultimaBien": "2026-11-25T19:11:27.094Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:06:20.929Z"
+   "ultimaBien": "2026-11-25T19:11:27.094Z"
   }
  },
  "avisos": [
