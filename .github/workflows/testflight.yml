@@ -124,20 +124,43 @@ jobs:
           PLIST
           }
           AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
-          opciones export
-          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/ipa" \
-            -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | tail -30
-          IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
-          mkdir -p "$RUNNER_TEMP/dentro" && cd "$RUNNER_TEMP/dentro" && unzip -q "$IPA"
-          codesign -d --entitlements - --xml Payload/*.app > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- Payload/*.app > "$RUNNER_TEMP/permisos.plist"
-          plutil -p "$RUNNER_TEMP/permisos.plist"
-          codesign -dvv Payload/*.app 2>&1 | grep -E "Authority|TeamIdentifier" || true
-          codesign -d -r- Payload/*.app 2>&1 | tail -2 || true
-          for f in Payload/*.app Payload/*.app/Frameworks/*; do codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }; done
+          exportar() {
+            rm -rf "$RUNNER_TEMP/ipa" "$RUNNER_TEMP/dentro"
+            xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/ipa" \
+              -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | tail -30
+            IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
+            mkdir -p "$RUNNER_TEMP/dentro" && (cd "$RUNNER_TEMP/dentro" && unzip -q "$IPA")
+            APPX=$(ls -d "$RUNNER_TEMP"/dentro/Payload/*.app)
+            codesign -d --entitlements - --xml "$APPX" > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- "$APPX" > "$RUNNER_TEMP/permisos.plist"
+            plutil -p "$RUNNER_TEMP/permisos.plist"
+          }
           # (PlistBuddy y no plutil -extract, que toma los puntos de la clave por niveles)
+          permisosBien() {
+            /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" 2>/dev/null | grep -qx production &&
+            /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" 2>/dev/null | grep -qx true
+          }
+          opciones export
+          exportar
+          if ! permisosBien; then
+            # El archivo sin firmar no lleva los permisos (push, avisos urgentes) y Apple solo deja los que pide la app. Se le
+            # ponen con una firma local que ya declara el requisito de la firma de Apple (sacado de la primera exportación:
+            # con «-» a secas, la firma de Apple conserva el requisito de la local y la subida da «Invalid Signature», 90035),
+            # y se exporta otra vez
+            REQ=$(codesign -d -r- "$APPX" 2>&1 | sed -n 's/^designated => //p')
+            [ -n "$REQ" ] || { echo "::error::No se ha podido leer el requisito de la firma de Apple"; exit 1; }
+            echo "requisito: $REQ"
+            cp ios/App/FantasyManager.entitlements "$RUNNER_TEMP/permisos-app.plist"
+            /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$RUNNER_TEMP/permisos-app.plist"
+            APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
+            codesign -f -s - --entitlements "$RUNNER_TEMP/permisos-app.plist" -r="designated => $REQ" "$APPA"
+            codesign -d -r- "$APPA" 2>&1 | tail -1
+            exportar
+          fi
+          codesign -dvv "$APPX" 2>&1 | grep -E "Authority|TeamIdentifier" || true
+          codesign -d -r- "$APPX" 2>&1 | tail -1 || true
+          for f in "$APPX" "$APPX"/Frameworks/*; do codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }; done
           # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
-          /usr/libexec/PlistBuddy -c "Print :aps-environment" "$RUNNER_TEMP/permisos.plist" | grep -qx production || { echo "::error::La app firmada no lleva aps-environment = production"; exit 1; }
-          /usr/libexec/PlistBuddy -c "Print :com.apple.developer.usernotifications.time-sensitive" "$RUNNER_TEMP/permisos.plist" | grep -qx true || { echo "::error::La app firmada no lleva el permiso de avisos urgentes"; exit 1; }
+          permisosBien || { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
           echo "firma y permisos, bien"
       # Se sube el .ipa ya firmado por Apple en el paso anterior. (Con «destination upload» desde un archivo con firma local,
       # Apple lo rechaza: «Invalid Signature».) altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
