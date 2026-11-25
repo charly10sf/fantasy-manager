@@ -4,6 +4,10 @@
 # .github/ios/testflight.mjs: la información de la beta, el grupo externo «Probadores» con enlace público, los probadores
 # y el envío a la revisión de la beta. No toca la App Store: enviar la app a revisión de la tienda es otra cosa (iOS 6).
 # Con «[sin-subir]» en el mensaje del commit no compila: solo configura TestFlight con la última compilación.
+# (iOS 6) Con «[ficha]»: no compila; rellena la ficha de la App Store (.github/ios/ficha.mjs: textos, categoría, precio,
+# países, edad, datos para la revisión y las capturas del último «App Store» de ios.yml) y dice qué falta para enviar.
+# Con «[app-store]»: compila con los anuncios de verdad, NO la mete en TestFlight y la deja elegida en la ficha de la App
+# Store. Ninguno de los dos envía nada a revisión.
 name: TestFlight
 
 on:
@@ -23,7 +27,7 @@ env:
   # Los anuncios de las compilaciones de TestFlight: «prueba» (los bloques de prueba de Google; a los de la liga no les
   # cuenta nada tocarlos, y AdMob cierra cuentas por clics de gente cercana) o «reales» (los de project.yml, para la
   # compilación que se envíe a la App Store en iOS 6)
-  ANUNCIOS: prueba
+  ANUNCIOS: ${{ contains(github.event.head_commit.message, '[app-store]') && 'reales' || 'prueba' }}
 
 jobs:
   # la clave pública con la que se cifra .github/ios/contacto.enc (el teléfono y los correos: el repo es público)
@@ -67,7 +71,7 @@ jobs:
           git push -q origin HEAD:${GITHUB_REF_NAME}
 
   subir:
-    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') }}
     runs-on: macos-26
     timeout-minutes: 60
     outputs:
@@ -219,7 +223,7 @@ jobs:
 
   configurar:
     needs: [clave, subir]
-    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    if: ${{ always() && !contains(github.event.head_commit.message, '[certificado]') && !contains(github.event.head_commit.message, '[ficha]') && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -230,4 +234,40 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           BUILD: ${{ needs.subir.outputs.build }}
-        run: node .github/ios/testflight.mjs configurar
+          APP_STORE: ${{ contains(github.event.head_commit.message, '[app-store]') && 'si' || '' }}
+        # la de la App Store (anuncios de verdad) no va a TestFlight: nadie de la liga puede tocar anuncios de verdad
+        run: |
+          if [ -n "$APP_STORE" ]; then node .github/ios/ficha.mjs version "$BUILD"; else node .github/ios/testflight.mjs configurar; fi
+
+  # (iOS 6) la ficha de la App Store, con «[ficha]» en el mensaje del commit. Las capturas salen del artefacto
+  # «ios-tienda» de la última «App iOS» que salió bien en la rama `ios`
+  ficha:
+    if: ${{ contains(github.event.head_commit.message, '[ficha]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Las capturas del simulador
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 10 --json databaseId -q '.[].databaseId' | while read -r r; do
+            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda; then echo "$r"; break; fi; done)
+          if [ -n "$ID" ]; then
+            gh run download "$ID" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas"
+            echo "CAPTURAS=$RUNNER_TEMP/capturas" >> "$GITHUB_ENV"
+            echo "capturas de la ejecución $ID:"; find "$RUNNER_TEMP/capturas" -name '*.png' | sort
+          else
+            echo "::warning::No hay capturas para la tienda (artefacto ios-tienda): la ficha se rellena sin ellas"
+          fi
+      - name: La ficha
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          REVISOR_USUARIO: ${{ secrets.REVISOR_USUARIO }}
+          REVISOR_CLAVE: ${{ secrets.REVISOR_CLAVE }}
+        run: node .github/ios/ficha.mjs ficha
