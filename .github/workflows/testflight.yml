@@ -166,7 +166,9 @@ jobs:
             security unlock-keychain -p fm "$K/local.keychain"
             security import "$K/c.p12" -k "$K/local.keychain" -P fm -T /usr/bin/codesign
             security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k fm "$K/local.keychain" > /dev/null
-            sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$K/c.pem" || true
+            security list-keychains -d user -s "$K/local.keychain" $(security list-keychains -d user | tr -d '"')
+            sudo security add-trusted-cert -d -r trustRoot -p codeSign -k /Library/Keychains/System.keychain "$K/c.pem" || echo "::warning::sin confianza en el certificado local"
+            security find-identity -p codesigning "$K/local.keychain" || true
             HUELLA=$(/usr/bin/openssl x509 -in "$K/c.pem" -noout -fingerprint -sha1 | cut -d= -f2 | tr -d :)
             cp ios/App/FantasyManager.entitlements "$K/permisos-app.plist"
             /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$K/permisos-app.plist"
