@@ -130,7 +130,7 @@ export const puedeCanjear = (uid) => { const e = estadoInv(uid); return !!(e && 
 /* ---------- lo que se comparte ---------- */
 export const enlaceInv = (cod) => `${DOMINIO}?inv=${encodeURIComponent(cod)}`;
 /** el mensaje para WhatsApp: habla de la app; al amigo no se le promete nada (Carlos, 19 nov) */
-export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis. Pruébala: ${enlaceInv(cod)} (si la bajas de Google Play, al entrar mete mi código: ${cod})`;
+export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis. Pruébala: ${enlaceInv(cod)} (si la descargas de Google Play, al entrar mete mi código: ${cod})`;
 /** para repintar al cerrarse algo: la hora más cercana a la que se cierra un rival o un premio (o 0) */
 export function proximoCierreInv(ahora = Date.now()) {
   const e = est0();

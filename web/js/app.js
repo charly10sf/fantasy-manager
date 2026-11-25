@@ -122,7 +122,7 @@ function pantallaEntrar(error = '') {
     <p class="peq apag" style="margin-top:12px">Se abre la página de LaLiga: entra como siempre (con Google, si es como lo haces). Al terminar vuelves aquí.</p>${botonDemo('sec')}` : entrarWebHTML(llegada)}
     ${llegada ? estadoHTML() : ''}
     ${PIE_ENTRAR}
-  </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles()}</section>`}</div>`;
+  </div></div>${enApp ? '' : `<section class="po-app" id="pApp" aria-labelledby="pAppT"><div class="po-hero"><div class="ps-k">La app</div>${heroApp('h2', 'pAppT')}</div>${seccionMoviles(plat)}</section>`}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); ponerInstalar(); }
   // (0.7.13i) el semáforo de LaLiga y el paso «ha visto la pantalla de entrar» (una vez al día), sin cuenta
@@ -258,6 +258,8 @@ function invitarALiga() {
   if (navigator.share) { navigator.share({ text: t }).catch(() => {}); return; }
   copiarY(t, 'Copiado: pégalo en el grupo de tu liga');
 }
+/** (25 nov) ¿esto es un Android? la web en un Android o la app de la liga (la de Google Play ya lleva anuncios) */
+const enAndroid = () => (enApp ? nativo.canal() === 'github' : movilDe() === 'android');
 /** desde qué móvil se abre la web: 'android', 'iphone' o null (ordenador) */
 function movilDe() {
   const ua = navigator.userAgent || '';
@@ -3028,13 +3030,26 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+/** el candado de una función top en la web y el iPhone (donde no se abre con un anuncio); arg: «clave|como» */
+function bloqHTML(arg) {
+  const [clave, como] = String(arg || '').split('|');
+  const [t, x] = BLOQUEO[como] || BLOQUEO[clave] || ['Función top', ''];
+  return `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <p>${esc(dondeTop(clave).trim())}</p>
+        ${enApp || enIPhone ? '' : botonPlay()}
+        ${Hj.botonInvitarTop(clave)}
+        <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`;
+}
+const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
  */
 // (25 nov, aviso de Big Mac Laporta) también la ficha de un rival: al abrir uno de sus jugadores, «‹ Volver» lleva al rival
-const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r']);
+// (25 nov, auditoría, hallazgos 12 y 13) y el resumen de tu equipo y el once de una jornada: abrir un jugador desde ahí y
+// volver te deja donde estabas. El candado de una función top ('bloq') vuelve a la ficha desde la que se abrió
+const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r', 'resumen', 'oj', 'bloq']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -3046,6 +3061,11 @@ function nombreHoja([tipo, arg]) {
   if (tipo === 'sust') return 'Sustitutos';
   if (tipo === 'bajas') return 'Bajas';
   if (tipo === 'r') { const r = S.M && S.M.rivales.find((x) => String(x.e.teamId) === String(arg)); return (r && r.e.nombre) || 'el rival'; }
+  if (tipo === 'resumen') return 'Tu equipo hoy';
+  if (tipo === 'oj') {
+    const [tid, n] = String(arg).split(':'), e = S.D && (S.D.clasif || []).find((x) => String(x.teamId) === tid);
+    return `${(e && e.nombre) || 'Mánager'} · J${n}`;
+  }
   return 'el partido';
 }
 function cuerpoHoja(tipo, arg, pila = S.pila) {
@@ -3078,6 +3098,7 @@ function alAbrir(tipo, arg) {
   if (tipo === 'j') cargarDetalle(arg);
   else if (tipo === 'p') { const [n, id] = String(arg).split(':'); cargarPartido(Number(n), id); } else if (tipo === 'c') cargarClub(arg);
   else if (tipo === 'r') cargarOnceRival(arg);
+  else if (tipo === 'oj') { const [t, n] = String(arg).split(':'); cargarOnceJornada(t, Number(n)); } else if (tipo === 'resumen') { encuadrar(S.hoja); valoresMios(); }
 }
 function volverHoja() {
   const pila = [...(S.pila || [])];
@@ -3348,8 +3369,9 @@ async function enviarPregunta(texto, { extra = false } = {}) {
       S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
       if (e.clave) S.claveMal = true;
       // (16 nov) sin preguntas hoy con la IA de la app: el anuncio para 3 más (en la de Google Play); si no hay anuncio, lo dice
+      // (25 nov, hallazgo 5) lo de Google Play, solo en un Android: en el iPhone y el ordenador, «Mañana tienes otras 3»
       else if (e.cupo && e.cupo.masConAnuncio && conAnuncios() && !extra) { S.anuncio = { para: 'pregunta', cupo: e.cupo, t }; setTimeout(() => hoja('anuncio', 'pregunta'), 0); }
-      else S.errorChat = { t, n: fotos.length, msg: e.cupo ? `${e.message} ${e.cupo.masConAnuncio && !conAnuncios() ? 'En la app de Google Play puedes sacar más viendo un anuncio corto.' : `Mañana tienes otras ${e.cupo.gratis}.`}` : (e.message || 'No ha contestado'), cupo: !!e.cupo };
+      else S.errorChat = { t, n: fotos.length, msg: e.cupo ? `${e.message} ${e.cupo.masConAnuncio && !conAnuncios() && enAndroid() ? 'En la app de Google Play puedes sacar más viendo un anuncio corto.' : `Mañana tienes otras ${e.cupo.gratis}.`}` : (e.message || 'No ha contestado'), cupo: !!e.cupo };
       if (!nativo.aLaVista() && !(preguntasApp(enDemo()) && nativo.hayAvisoPregunta())) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
     }
   } finally {
@@ -3812,7 +3834,7 @@ document.addEventListener('click', async (ev) => {
   // dentro del resumen de una tarjeta que se despliega (los pasos del plan), abrir la ficha sin desplegarla
   if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
   if (d.club && S.D && !d.accion) { S.segClub = null; hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
-  if (d.r && S.D) { S.segRival = null; hoja('r', d.r); cargarOnceRival(d.r); return; }
+  if (d.r && S.D) { S.segRival = null; hoja('r', d.r, pilaDesde(el, 'r', d.r)); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) {
     // (0.8) cambiar de pestaña con la barra de abajo es una pausa natural (a Pregunta, no: va a escribir)
     const pausa = !!el.closest('.nav') && d.ir !== 'ia' && (ALIAS[d.ir] || d.ir) !== S.vista && !S.hoja;
@@ -3881,7 +3903,7 @@ document.addEventListener('click', async (ev) => {
     // (24 nov) el once de un mánager en una jornada acabada, con lo que sumó cada uno (desde Rivales → Por jornada)
     case 'onceJ': {
       const arg = `${d.t}:${Number(d.n)}`;
-      if (S.hoja && S.tipoHoja && S.tipoHoja[0] === 'oj') { S.tipoHoja = ['oj', arg]; repintarHoja(); } else hoja('oj', arg);
+      if (S.hoja && S.tipoHoja && S.tipoHoja[0] === 'oj') { S.tipoHoja = ['oj', arg]; repintarHoja(); } else hoja('oj', arg, pilaDesde(el, 'oj', arg));
       cargarOnceJornada(String(d.t), Number(d.n));
       break;
     }
@@ -4052,13 +4074,9 @@ document.addEventListener('click', async (ev) => {
         S.anuncio = { para: 'top', clave: d.clave, como: d.como || null, rival: d.rival != null ? String(d.rival) : null, volver: prev };
         hoja('anuncio', 'top'); break;
       }
-      const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
-      abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-        <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
-        <p>${esc(dondeTop().trim())}</p>
-        ${enApp || enIPhone ? '' : botonPlay()}
-        ${Hj.botonInvitarTop(d.clave)}
-        <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`);
+      // (25 nov, hallazgo 11) es una ficha más ('bloq'): abierta desde la de un rival, «Entendido» y el atrás vuelven a él
+      const arg = `${d.clave}|${d.como || ''}`;
+      hoja('bloq', arg, pilaDesde(el, 'bloq', arg));
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
@@ -4098,7 +4116,8 @@ document.addEventListener('click', async (ev) => {
     }
     case 'cambiarClave': guardarClave(''); S.planEstado = {}; S.claveMal = false; rehacer(); ir('ia'); tostada('Pega la clave nueva'); break;
     // (el toque que acaba un arrastre que no llegó a cerrar no cuenta como tocar el asa)
-    case 'cerrarHoja': if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) { const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); } break;
+    case 'cerrarHoja': if (S.tipoHoja && S.tipoHoja[0] === 'bloq' && S.pila && S.pila.length && !(el && el.classList.contains('asa'))) { volverHoja(); break; }
+      if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) { const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); } break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)

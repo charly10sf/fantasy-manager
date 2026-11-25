@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.pages.outputs.page_url }}
+      url: ${{ steps.pages.outputs.page_url || steps.pages2.outputs.page_url || steps.pages3.outputs.page_url }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -81,5 +81,22 @@ jobs:
       # named "github-pages"», dos veces seguidas): un rato de espera
       - name: Esperar a que GitHub vea el artefacto
         run: sleep 20
+      # (25 nov) GitHub Pages falla a ratos al crear el despliegue (500, 502, «Deployment failed, try again later»; 17 de
+      # las 20 «Web» fallidas del 23 al 25 nov fueron aquí, ninguna por el código): dos intentos más, a 1 y a 3 minutos,
+      # antes de darlo por fallado. Si falla el último, la «Web» sale en rojo como siempre
       - id: pages
+        continue-on-error: true
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+      - name: Otro intento dentro de 1 minuto
+        if: steps.pages.outcome == 'failure'
+        run: sleep 60
+      - id: pages2
+        if: steps.pages.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+      - name: Otro intento dentro de 3 minutos
+        if: steps.pages.outcome == 'failure' && steps.pages2.outcome == 'failure'
+        run: sleep 180
+      - id: pages3
+        if: steps.pages.outcome == 'failure' && steps.pages2.outcome == 'failure'
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

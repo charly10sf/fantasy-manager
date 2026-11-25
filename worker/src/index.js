@@ -765,7 +765,14 @@ async function uso(req, env, c) {
  * estado 200 y { e } en el cuerpo.
  */
 export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
-export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
+// (25 nov, hallazgo 1 de la auditoría de fallos) el tope de salida, de 5.000 a 8.000: un 6,9 % de los planes se cortaba a
+// mitad del JSON. Solo se paga lo que se escribe: a los que ya cabían no les cuesta más; al más largo, 3.000 tokens de más
+// (0,0015 $ con Haiku). Que la IA escriba menos va aparte, sin publicar (rama `worker-plan-corto`)
+export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 8000;
+/** (25 nov) una línea en los registros de Cloudflare por cada plan, bien o mal: lo que tarda, las búsquedas, los tokens
+ * (entrada/salida) y por qué acabó la IA (`stop_reason`: max_tokens es que se ha cortado por largo). Para contarlos:
+ * filtrar por «: bien en» o «: mal (» y agrupar por «fin …». */
+export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas, ${r.entra || 0}/${r.sale || 0} tokens, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
 // cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
@@ -904,7 +911,7 @@ async function hacerPlan(st, env, k, tr) {
   };
   // una alarma que se cortó a medias y Cloudflare repite: si ya pasó su tiempo, no se vuelve a pedir
   const emp = await st.get(`jobe:${rid}`);
-  let fin;
+  let fin, dijo = null;
   if (emp && Date.now() - emp > (Number(tr.hasta) || PLAN_HASTA_MS)) {
     await devolver();
     fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
@@ -914,6 +921,7 @@ async function hacerPlan(st, env, k, tr) {
     await st.put(`res:${rid}`, { marcha: ini });
     try {
       const r = await llamarClaude(env, tr.modelo, tr.sistema, tr.pedido, fetch, { web: tr.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS) });
+      dijo = r;
       await gastoHoy(env, costeDe(r, tr.modelo)).catch(() => {});
       // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
       const j = jsonDe(r.texto);
@@ -929,7 +937,7 @@ async function hacerPlan(st, env, k, tr) {
     }
   }
   // (para ver en los registros de Cloudflare cuánto tarda cada plan)
-  console.log(`plan ${rid}: ${fin.plan ? 'bien' : `mal (${fin.estado})`} en ${Math.round((Date.now() - t0) / 100) / 10} s${fin.tok ? `, ${fin.tok.web || 0} búsquedas, ${fin.tok.entra}/${fin.tok.sale} tokens` : ''}`);
+  console.log(lineaPlan(rid, fin, Date.now() - t0, dijo));
   // (también el error: si la app vuelve con el mismo id, lo recibe en vez de esperar otro)
   await st.put(`res:${rid}`, { fin });
   await st.delete([k, `jobe:${rid}`]);
@@ -1106,8 +1114,10 @@ async function planIA(req, env, c, ctx) {
       return;
     }
     if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
+    let dijo = null;
     try {
       const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web, hasta: t0 + hastaPlan(env) });
+      dijo = r;
       const gasto = costeDe(r, P.modelo);
       ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
       // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
@@ -1126,6 +1136,7 @@ async function planIA(req, env, c, ctx) {
       if (rid) await resPlan(env, u.uid, 'borrar', rid).catch(() => {});
       fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
     }
+    console.log(lineaPlan(rid, fin, Date.now() - t0, dijo));
     clearInterval(latido);
     try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido: ya está contado */ }
   })();

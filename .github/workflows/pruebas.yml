@@ -1,7 +1,9 @@
 # Las pruebas en cada push (revisión total, A13), en cualquier rama menos bot-estado (la escribe el bot cada 5 min):
-#   web: la misma prueba de la web que hace «Web» antes de publicar (.github/prueba-web.mjs) y los casos de la IA sin
-#     red (.github/prueba-ia.mjs), el plan con cientos de ligas al azar (.github/ia/azar-plan.mjs), el chat con la IA
-#     de la app (.github/ia/caso-chat.mjs) y los intersticiales de Google Play (.github/prueba-intersticial.mjs);
+#   web: la misma prueba de la web que hace «Web» antes de publicar (.github/prueba-web.mjs), los intersticiales de
+#     Google Play (.github/prueba-intersticial.mjs) y las páginas públicas (.github/prueba-paginas.mjs);
+#   entrada: la entrada de la web y el puente de iOS (Chromium y WebKit), la tarjeta de una novedad y los avisos de fallo;
+#   ia: los casos de la IA sin red (.github/prueba-ia.mjs), el plan con cientos de ligas al azar (.github/ia/azar-plan.mjs),
+#     el chat con la IA de la app (.github/ia/caso-chat.mjs) y todos los caso-*;
 #   sin-red: worker/prueba/datos.mjs y las bot/prueba/*-ejemplo.mjs con la red cortada (.github/pruebas-sin-red.sh).
 #   firma: Ed25519.java (el que comprueba paquete.json en el APK) contra los vectores del RFC 8032 y, con el secreto
 #     PAQUETE_FIRMA, firma el paquete.json de esta rama y lo verifica con la clave pública de AlDia.java, igual que
@@ -23,6 +25,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # (25 nov, hallazgo 17 de la auditoría de fallos) el trabajo «web» de antes ya no cabía en sus 25 min (24,9 la última vez
+  # que acabó): va partido en tres que corren a la vez, cada uno con su Playwright y los navegadores guardados en caché.
+  # Lo de navegador puro en dos (la prueba de la web sola tarda ~9 min) y la IA y los casos en el tercero.
   web:
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -31,19 +36,70 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
+      # los navegadores de Playwright se guardan entre pasadas (la clave lleva la versión y los navegadores)
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-1.63.0-chromium
+      - name: Playwright, Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Probar la web
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-web.mjs
+      - name: Probar los intersticiales
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-intersticial.mjs
+      # (25 nov) las páginas públicas con navegador (estaba apuntada como «sin hacer»)
+      - name: Las páginas públicas
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-paginas.mjs
+
+  entrada:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      # los navegadores de Playwright se guardan entre pasadas (la clave lleva la versión y los navegadores)
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-1.63.0-chromium-webkit
       # WebKit es el motor de Safari: la entrada del iPhone no la puede probar nadie en un móvil de verdad, así que se prueba aquí
       - name: Playwright, Chromium y WebKit
         run: |
           npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
           "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium webkit
-      - name: Probar la web
-        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-web.mjs
       # (0.8l) la entrada de la web de punta a punta (abrir LaLiga, copiar, pegar) en iPhone, ordenador y Android, sin tocar LaLiga
       - name: Probar la entrada de la web
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-entrada.mjs
       # (25 nov) el puente de la app de iOS con la web de verdad y una parte nativa de mentira: entrar, guardar, la versión nueva
       - name: Probar el puente de la app de iOS
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ios.mjs
+      - name: La tarjeta de una novedad no se pierde (invitar a un amigo)
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-aviso.mjs
+      # (0.8.4) los avisos de fallo según quién mira: el dueño, quien ayuda con los fallos (sin contestar) y los demás
+      - name: Los avisos de fallo
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-avisos.mjs
+
+  ia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      # los navegadores de Playwright se guardan entre pasadas (la clave lleva la versión y los navegadores)
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-1.63.0-chromium
+      - name: Playwright, Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
       # los fallos reales de la IA (plan y chat), con Google de mentira: la app tiene que pararlos (.github/ia/casos.mjs)
       - name: Probar la IA sin red
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-ia.mjs
@@ -53,13 +109,6 @@ jobs:
       # (0.8) el chat con la IA de la app de punta a punta (servidor de mentira) y los intersticiales de Google Play
       - name: Probar el chat con la IA de la app
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-chat.mjs
-      - name: Probar los intersticiales
-        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-intersticial.mjs
-      - name: La tarjeta de una novedad no se pierde (invitar a un amigo)
-        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-aviso.mjs
-      # (0.8.4) los avisos de fallo según quién mira: el dueño, quien ayuda con los fallos (sin contestar) y los demás
-      - name: Los avisos de fallo
-        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-avisos.mjs
       # el plan con la IA de la app cuando la conexión falla a medias: siempre queda el de la app, con un aviso que dice la verdad
       - name: Probar el plan cuando falla la conexión
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-conexion.mjs
