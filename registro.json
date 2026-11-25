@@ -4378,7 +4378,8 @@
    "AS|https://as.com/futbol/el-levante-quiere-un-derbi-granota-f202611-n/": 1795538432000,
    "SPORT|136810666": 1795544869000,
    "SPORT|136811655": 1795554036000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795584900000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255069/debate-proyecto-terzic-athletic.html": 1795586400000
   },
   "hechos": [
    {
@@ -4431,7 +4432,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -4439,17 +4440,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 72188,
-  "salida": 5323,
+  "entrada": 73933,
+  "salida": 5409,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.161071,
+  "dolares": 0.161289,
   "reservado": 0
  },
  "recientes": {
@@ -9499,13 +9500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6221,
+   "ok": 6222,
    "fallos": 0,
-   "ejecuciones": 5040,
+   "ejecuciones": 5041,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T06:26:12.821Z"
+   "ultima": "2026-11-25T06:31:12.665Z"
   }
  },
  "ptsDirecto": {},
@@ -9522,15 +9523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:26:22.223Z"
+   "ultimaBien": "2026-11-25T06:31:21.652Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:26:22.223Z"
+   "ultimaBien": "2026-11-25T06:31:21.652Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:26:22.223Z"
+   "ultimaBien": "2026-11-25T06:31:21.652Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9538,11 +9539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:26:22.223Z"
+   "ultimaBien": "2026-11-25T06:31:21.652Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T06:26:22.223Z"
+   "ultimaBien": "2026-11-25T06:31:21.652Z"
   }
  },
  "avisos": [
