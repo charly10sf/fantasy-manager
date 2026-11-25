@@ -4357,7 +4357,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000,
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
@@ -9513,13 +9512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6247,
+   "ok": 6248,
    "fallos": 0,
-   "ejecuciones": 5066,
+   "ejecuciones": 5067,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T08:36:21.163Z"
+   "ultima": "2026-11-25T08:41:12.427Z"
   }
  },
  "ptsDirecto": {},
@@ -9536,15 +9535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:36:28.189Z"
+   "ultimaBien": "2026-11-25T08:41:20.247Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:36:28.189Z"
+   "ultimaBien": "2026-11-25T08:41:20.247Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:36:28.189Z"
+   "ultimaBien": "2026-11-25T08:41:20.247Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9552,11 +9551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:36:28.189Z"
+   "ultimaBien": "2026-11-25T08:41:20.247Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:36:28.189Z"
+   "ultimaBien": "2026-11-25T08:41:20.247Z"
   }
  },
  "avisos": [
