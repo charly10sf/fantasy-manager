@@ -3151,7 +3151,6 @@
    "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/": 1795394243000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261123/1004254260/vinicius-junior-examina-psv.html": 1795413600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
-   "SPORT|136730482": 1795381335000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
    "SPORT|136739601": 1795421298000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
@@ -3311,7 +3310,8 @@
    "ABC|https://www.abc.es/deportes/futbol/cronica-sabah-barcelona-champions-20261125101204-nt.html": 1795636111000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255525/balde-asistencia-reivindicarse-salida-accidentada.html": 1795635755000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/25/6b073398e9cf4a9b788b45b3.html": 1795636775000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255541/adeyemi-calidad-suplir-jugador-no-depender-nadie.html": 1795639084000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255541/adeyemi-calidad-suplir-jugador-no-depender-nadie.html": 1795639084000,
+   "SPORT|136858366": 1795636976000
   },
   "hechos": [
    {
@@ -3645,7 +3645,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -4611,17 +4611,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 257646,
-  "salida": 20557,
+  "entrada": 259706,
+  "salida": 20673,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.45227,
+  "dolares": 0.452534,
   "reservado": 0
  },
  "recientes": {
@@ -9686,13 +9686,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6396,
+   "ok": 6397,
    "fallos": 0,
-   "ejecuciones": 5213,
+   "ejecuciones": 5214,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T21:01:16.754Z"
+   "ultima": "2026-11-25T21:06:12.097Z"
   }
  },
  "ptsDirecto": {},
@@ -9709,15 +9709,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:01:24.197Z"
+   "ultimaBien": "2026-11-25T21:06:17.663Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:01:24.197Z"
+   "ultimaBien": "2026-11-25T21:06:17.663Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:01:24.197Z"
+   "ultimaBien": "2026-11-25T21:06:17.663Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9725,11 +9725,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:01:24.197Z"
+   "ultimaBien": "2026-11-25T21:06:17.663Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:01:24.197Z"
+   "ultimaBien": "2026-11-25T21:06:17.663Z"
   }
  },
  "avisos": [
