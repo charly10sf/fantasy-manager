@@ -780,9 +780,11 @@ ok(c1.b.system.includes('LOS DE LA LIGA VAN CON ALIAS') && c1.b.system.includes(
   try { rc = await plan({}); } finally { console.log = antes; respuestaClaude = respAntes; }
   const l = lineas.find((x) => /^plan .*: mal \(502\)/.test(x)) || '';
   ok(rc.s === 200 && rc.j.e && rc.j.e.includes('se ha cortado por largo') && rc.j.estado === 502, `/plan cortado por largo: el aviso de siempre (${rc.j && rc.j.e})`);
-  ok(/ en [\d.]+ s, 0 búsquedas, 5200\/8000 tokens, fin max_tokens$/.test(l), `el registro del plan cortado lleva tokens y stop_reason: «${l}»`);
-  const bien = WM.lineaPlan('abc', { plan: {} }, 23456, { busquedas: 1, entra: 12000, sale: 4100, fin: 'end_turn' });
-  ok(bien === 'plan abc: bien en 23.5 s, 1 búsquedas, 12000/4100 tokens, fin end_turn', `y el de uno bueno, también: «${bien}»`);
+  ok(/ en [\d.]+ s, 0 búsquedas, 5200\/8000 tokens, texto 47, fin max_tokens$/.test(l), `el registro del plan cortado lleva tokens, lo escrito y stop_reason: «${l}»`);
+  const bien = WM.lineaPlan('abc', { plan: {} }, 23456, { busquedas: 1, entra: 12000, sale: 4100, fin: 'end_turn', texto: 'x'.repeat(1900) });
+  ok(bien === 'plan abc: bien en 23.5 s, 1 búsquedas, 12000/4100 tokens, texto 1900, fin end_turn', `y el de uno bueno, también: «${bien}»`);
+  const sinP = WM.lineaPlan('abc', { plan: {} }, 6000, { busquedas: 0, entra: 8000, sale: 700, fin: 'end_turn', texto: 'x'.repeat(1500), sinPensar: true });
+  ok(sinP === 'plan abc: bien en 6 s, 0 búsquedas, 8000/700 tokens, texto 1500 sin pensar, fin end_turn', `y dice si iba sin pensar: «${sinP}»`);
   ok(WM.lineaPlan('', { estado: 503 }, 1000, null) === 'plan sin id: mal (503) en 1 s, sin respuesta de la IA', 'sin respuesta de la IA, sin tokens');
 }
 r = await plan({ rid: 'corte1234abc' });
@@ -1026,6 +1028,33 @@ r = await plan({}, { tk: 'u'.repeat(30) });
 cW = aClaude[aClaude.length - 1];
 ok(r.s === 200 && r.j.plan && !cW.b.tools && r.j.tok.web === 0 && (r.j.plan.fuentes || []).length === 0, `sin la búsqueda activada: se repite sin ella y sale el plan (${r.t.trim().slice(0, 100)})`);
 respuestaClaude = null;
+// (25 nov, rama worker-plan-corto) el razonamiento: por defecto no se toca; con «planes.pensar» a false, `thinking: disabled`;
+// y si el modelo no lo acepta, se repite con él y el plan sale igual
+{
+  const antesL = limitesPlanes, antesR = respuestaClaude, fetchP = globalThis.fetch;
+  limitesPlanes = { on: true, gratis: 10, max: 10, web: 0 };
+  for (let i = 0; i < 11; i++) minuto();
+  let rp = await plan({}, { tk: 'u'.repeat(30) });
+  let cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && cP.b.thinking === undefined && cP.b.output_config && cP.b.output_config.effort === 'low', 'por defecto el plan va como siempre: sin tocar el razonamiento y con esfuerzo bajo');
+  limitesPlanes = { on: true, gratis: 10, max: 10, web: 0, pensar: false };
+  for (let i = 0; i < 11; i++) minuto();
+  rp = await plan({}, { tk: 'u'.repeat(30) });
+  cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && cP.b.thinking && cP.b.thinking.type === 'disabled' && cP.b.output_config.effort === 'low', `con «pensar» a false, el plan pide contestar sin razonar (${JSON.stringify(cP.b.thinking)})`);
+  // un modelo que no lo acepta (400 con «thinking»): se repite sin eso
+  let rechazos = 0;
+  globalThis.fetch = async (u, o) => {
+    if (String(u) === 'https://api.anthropic.com/v1/messages' && JSON.parse(o.body).thinking) { rechazos++; aClaude.push({ b: JSON.parse(o.body), clave: '' }); return new Response(JSON.stringify({ type: 'error', error: { type: 'invalid_request_error', message: '"thinking.type.disabled" is not supported for this model.' } }), { status: 400 }); }
+    return fetchP(u, o);
+  };
+  const logAntes = console.log; console.log = () => {};
+  try { for (let i = 0; i < 11; i++) minuto(); rp = await plan({}, { tk: 'u'.repeat(30) }); } finally { console.log = logAntes; globalThis.fetch = fetchP; }
+  cP = aClaude[aClaude.length - 1];
+  ok(rp.s === 200 && rp.j.plan && rechazos === 1 && cP.b.thinking === undefined, `si el modelo no deja apagarlo, se repite con él y el plan sale (${rechazos} rechazo)`);
+  // el chat no cambia: las preguntas no llevan `thinking`
+  limitesPlanes = antesL; respuestaClaude = antesR;
+}
 // apagada (web: 0): ni herramienta ni párrafo
 limitesPlanes = { on: true, gratis: 10, max: 10, web: 0 };
 for (let i = 0; i < 11; i++) minuto();
