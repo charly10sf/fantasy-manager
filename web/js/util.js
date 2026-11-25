@@ -420,4 +420,6 @@ export const LOGO_P = `<svg class="logo" viewBox="6 10 188 188" aria-hidden="tru
 /* Google Play (desde la 0.7.1h, con la ficha aprobada). El distintivo es el oficial de Google (img/google-play.png), tal
    cual: sus normas no dejan cambiarle colores ni letras. La imagen trae su margen transparente alrededor. */
 export const PLAY_URL = 'https://play.google.com/store/apps/details?id=es.fantasymanager.app';
+// (iOS 3) la ficha de la app de iOS en la App Store (Apple ID 6839220127; funciona desde que Apple la aprueba)
+export const APP_STORE_URL = 'https://apps.apple.com/app/id6839220127';
 export const botonPlay = (cls = '') => `<a class="play-badge${cls ? ` ${cls}` : ''}" href="${PLAY_URL}" target="_blank" rel="noopener"><img src="img/google-play.png" alt="Disponible en Google Play" width="646" height="250"></a>`;

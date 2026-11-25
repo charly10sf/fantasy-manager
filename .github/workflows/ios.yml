@@ -1,7 +1,8 @@
 # La app de iOS (ios/): la misma web de web/ en un WKWebView con su puente. Aquí se compila para el simulador, sin
 # certificados ni cuenta de Apple, y se prueba en el simulador (ios/Pruebas/PruebasUI.swift): arranca, la web servida por
 # el esquema propio es un sitio seguro y guarda bien, «Entrar» abre la página de LaLiga, la liga de ejemplo pinta las 7
-# pestañas y lo guardado aguanta al volver a abrir. Las capturas y lo que cuenta la app quedan como artefacto.
+# pestañas y lo guardado aguanta al volver a abrir. (iOS 2) Y los avisos, el aviso del servidor y los anuncios (con la app
+# y los bloques de prueba de Google). Las capturas y lo que cuenta la app quedan como artefacto.
 # No firma, no sube nada a Apple y no publica nada. Solo en la rama `ios` (y a mano cuando el archivo esté en main).
 name: App iOS
 
@@ -55,7 +56,7 @@ jobs:
   simulador:
     needs: remota
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -137,9 +138,18 @@ jobs:
           echo "UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
+      # (iOS 2) Mientras duran las pruebas, cada 5 s se le manda a la app del simulador un aviso «del servidor» de mentira
+      # (`simctl push`: lo mismo que mandaría el Worker por APNs cuando el plan está listo, sin pasar por Apple). Con la app
+      # abierta no se enseña; con la app fuera, la prueba lo busca y lo toca (test6AvisoDelServidor). Antes de que la app
+      # tenga permiso de notificaciones no hace nada.
       - name: Compilar y probar en el simulador
         run: |
           set -o pipefail
+          cat > "$RUNNER_TEMP/push.apns" <<'JSON'
+          {"aps":{"alert":{"title":"Tu plan de hoy está listo","body":"Vende a X y espera"},"sound":"default","thread-id":"plan"},"hash":"hoy","fm":"plan"}
+          JSON
+          ( while true; do xcrun simctl push "$UDID" es.fantasymanager.app "$RUNNER_TEMP/push.apns" > /dev/null 2>&1 || true; sleep 5; done ) &
+          AVISOS=$!
           xcodebuild test \
             -project ios/FantasyManager.xcodeproj -scheme FantasyManager \
             -destination "id=$UDID" \
@@ -148,6 +158,7 @@ jobs:
             MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
             FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" \
             2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error:|warning: (unre|var|depre|reference)|Test Case|Test Suite|^=== |\*\* |XCTAssert" || true
+          kill "$AVISOS" 2> /dev/null || true
           grep -q '\*\* TEST SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"
       # las capturas y lo que ha contado la app, también si la prueba falla
       - name: Sacar las capturas

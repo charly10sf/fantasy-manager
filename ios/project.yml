@@ -9,6 +9,14 @@ options:
   developmentLanguage: es
   createIntermediateGroups: true
   generateEmptyDirectories: true
+# Los anuncios: el SDK de Google (AdMob) y el del consentimiento de la UE (UMP), por Swift Package Manager
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    from: "13.13.0"
+  GoogleUserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git
+    from: "3.1.0"
 settings:
   base:
     SWIFT_VERSION: "5.0"
@@ -46,6 +54,26 @@ targets:
         CODE_SIGN_STYLE: Automatic
         ENABLE_BITCODE: NO
         SWIFT_EMIT_LOC_STRINGS: NO
+        OTHER_LDFLAGS: "$(inherited) -ObjC"
+        # los avisos del servidor (push) y los avisos urgentes (el clausulazo sin alarma del sistema)
+        CODE_SIGN_ENTITLEMENTS: App/FantasyManager.entitlements
+      # Los anuncios. En las compilaciones de prueba (Debug: el simulador de GitHub), la app y los bloques de prueba de
+      # Google, que salen marcados como «Test Ad» y no pagan (lo mismo que hace bloque() en android/app/build.gradle con
+      # fm.anunciosReales=false). En la que se publica (Release), los de verdad de la cuenta de Fantasy Manager
+      configs:
+        Debug:
+          FM_ADMOB_APP: "ca-app-pub-3940256099942544~1458002511"
+          FM_BONIFICADO: "ca-app-pub-3940256099942544/1712485313"
+          FM_INTERSTICIAL: "ca-app-pub-3940256099942544/4411468910"
+          FM_APERTURA: "ca-app-pub-3940256099942544/5575463023"
+        Release:
+          FM_ADMOB_APP: "ca-app-pub-3175956326240112~7887955530"
+          FM_BONIFICADO: "ca-app-pub-3175956326240112/9065819186"
+          FM_INTERSTICIAL: "ca-app-pub-3175956326240112/9792190459"
+          FM_APERTURA: "ca-app-pub-3175956326240112/6191730483"
+    dependencies:
+      - package: GoogleMobileAds
+      - package: GoogleUserMessagingPlatform
   FantasyManagerPruebas:
     type: bundle.ui-testing
     platform: iOS

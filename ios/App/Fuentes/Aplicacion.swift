@@ -6,7 +6,19 @@ import UIKit
 final class Aplicacion: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         Llavero.alInstalar()
+        // los avisos, antes de que la app acabe de abrirse: así llega el toque en el aviso que la abre
+        Avisos.yo.alArrancar()
         return true
+    }
+
+    /// el identificador de este iPhone para los avisos del servidor (el plan y la pregunta con la app cerrada)
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Empuje.yo.tokenNuevo(deviceToken)
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        // sin identificador (sin red, o en un simulador): los avisos del servidor no llegan; todo lo demás, igual
+        Empuje.yo.sinToken(error)
     }
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
@@ -36,5 +48,9 @@ final class Escena: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         if primera { primera = false; return }
         principal?.alVolver()
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        principal?.alSalir()
     }
 }

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4l';
+export const VERSION = '0.8.4m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -33,12 +33,24 @@ export const NOVEDADES = [
     // el resumen de una jornada con un partido aplazado (bot/web/resumen.mjs `aplazadosDe`, portal-web `faltan`) y «Resumen
     // J13» en el menú de Jornada (paginas.py). B-3: `por` en /sinc y el registro del Worker. Pruebas: caso-dinero (g),
     // caso-contradicciones (E y F), portal-ejemplo, prueba-paginas, caso-sinc, datos.mjs y la IA de verdad (13 céntimos)
-    v: '0.8.4l', f: '2026-11-25', h: '00:00', t: 'El chat y la app dicen lo mismo',
+    v: '0.8.4m', f: '2026-11-25', h: '00:00', t: 'El chat y la app dicen lo mismo',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Quién paga tus cláusulas, cerrado de verdad', x: 'Si preguntas quién te puede pagar la cláusula de un jugador y eso lo tienes cerrado, el chat te dice cómo se abre y te cuenta lo que sí se ve: cuánto pide la cláusula sobre su valor y lo que se suele pagar en tu liga. Antes podía soltar que a ningún rival le llegaba.' },
       { para: 'dueño', tipo: 'arreglo', d: 'oferta', t: 'Vender, pero esa oferta no', x: 'Si preguntas si vendes a uno que la app quiere vender pero con una oferta floja encima de la mesa, la respuesta dice las dos cosas: que lo dejes a la venta y que esa oferta no la aceptes.' },
       { para: 'dueño', tipo: 'arreglo', d: 'plan', menor: true, t: 'Lo mismo en todas partes', x: 'Una sola puja por cada libre que el plan descarta, la misma palabra para cómo va el valor de un jugador, «no se toca a los titulares» dice cuál sí se vende y por qué, y con tu puja ya puesta la ficha te dice que sigue en pie y cómo quitarla.' },
       { para: 'dueño', tipo: 'arreglo', d: 'calendario', menor: true, t: 'Jornadas con un partido aplazado', x: 'En la web, el resumen de una jornada con un partido aplazado sale con los que se han jugado y se pone al día cuando se juegue el que falta. Y el menú de Jornada lleva al resumen de la última en vez de a una previa ya jugada.' },
+    ],
+  },
+  {
+    // (25 nov, sesión iOS 4 de claude/plan-ios.md) Se publica lo de iOS 2 e iOS 3 (rama `ios`): el Worker con `/push` (APNs)
+    // y el canal «ios» en «Quién usa la app», `bloqueIos` en limites.json, permiso-ia.js, `hayFondo()`, los textos y la IA
+    // sin clave de Google dentro de la app de iOS, y el apartado «La app de iPhone» de privacidad.html. Fuera de la app de
+    // iOS no cambia nada de lo que se ve (el paquete de Android sale con la misma huella nativa). El detalle, en
+    // claude/sesion-25nov-ios-2.md, -ios-3.md e -ios-4.md del proyecto. OJO: la rama `noticias-bing` llevaba también
+    // la 0.8.4l: al publicarla, pasa a ser la 0.8.4m.
+    v: '0.8.4l', f: '2026-11-25', h: '21:34', t: 'La app de iPhone, en pruebas',
+    cosas: [
+      { para: 'dueño', tipo: 'nuevo', d: 'movil', t: 'La app de iPhone, aparte en «Quién usa la app»', x: 'Los que entran con la app de iPhone salen como canal propio: antes de entrar, desde dónde entran y qué versión llevan.' },
     ],
   },
   {

@@ -7,7 +7,7 @@ import { esClausulable } from './motor.js';
 import { ventaVista, comoVa } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat, enAppIos, permisoIA } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -732,7 +732,8 @@ function planHTML(S) {
   const rehacer = conIA && !E.cargando && P ? `<button class="plan-rehacer" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Rehacer el plan' : 'Hacerlo con la IA'}</button>` : '';
   const ajB = P && (conIA || !E.cargando) ? `<button class="b-ico plan-aj-b" data-accion="planAjustes" aria-label="Ajustes del plan" title="Ajustes del plan">${icono('ajustes')}</button>` : '';
   const pt = conIA ? proximoTurno(M) : null;
-  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada: a su hora con la app abierta y, si no, al abrirla
+  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}${enApp && !nativo.hayFondo() ? ', o al abrir la app' : ''}` : '';
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2" id="plan-notif">${notifPlanHTML()}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
@@ -1037,7 +1038,7 @@ function saludoHTML(S) {
     notificaciones») debajo de «Preparando tu plan», en la app: si sale de la app, se sigue haciendo; con las notificaciones
     apagadas, se le dice que así no le puede avisar y se le ofrece activarlas (app.js lo cambia al volver del permiso) */
 export function notifPlanHTML() {
-  const t = nativo.canal() === 'play' ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
+  const t = ['play', 'ios'].includes(nativo.canal()) ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
   if (nativo.avisosPermitidos()) return `${t}. Puedes salir de la app: se sigue haciendo y te aviso cuando esté.`;
   return `${t}. Si sales de la app se sigue haciendo, pero con las notificaciones apagadas no te puedo avisar cuando esté. <button class="btn chico sec" data-accion="permisoPlan">${icono('campana')}Activar notificaciones</button>`;
 }
@@ -1651,12 +1652,22 @@ export function adjuntosHTML(S) {
 // (la miniatura guardada está en IndexedDB: si aún no está en memoria, la pone app.js al pintar, por data-mini)
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
+/* (iOS 3) en la app de iOS no hay clave de Google: sin la IA de la app (en la liga de ejemplo, o si no está disponible),
+   se dice qué pasa en vez de la guía para sacar la clave */
+function iaSinClaveIos(S) {
+  const demo = !!(S.D && S.D.demo);
+  return `<div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1>${demo
+    ? `<p class="entradilla">En la liga de ejemplo no se le puede preguntar a la IA. Entra con tu cuenta de LaLiga y pregúntale lo que quieras de tu liga, también con capturas.</p><button class="btn ancho" data-accion="salirDemo">Entrar con mi cuenta</button>`
+    : '<p class="entradilla">Ahora mismo no se le puede preguntar a la IA. Vuelve a probar en un rato: mientras, en Hoy tienes el plan de la app.</p>'}`;
+}
 export function ia(S) {
-  if (!puedeChat(!!(S.D && S.D.demo))) return guiaClave(planesApp(!!(S.D && S.D.demo)));
+  if (!puedeChat(!!(S.D && S.D.demo))) return enAppIos() ? iaSinClaveIos(S) : guiaClave(planesApp(!!(S.D && S.D.demo)));
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>
     <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
+  // (iOS 3) dijo que no a mandar su liga a la IA: no se manda nada hasta que diga que sí
+  if (enAppIos() && permisoIA() === 'no') h += `<div class="banda">${icono('candado')}<span>La IA está apagada en este iPhone: no se le manda nada.</span><button data-accion="permisoIA">Activar</button></div>`;
   const ns = notasVigentes();
   if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;
   if (!msgs.length && !S.charlando) {
