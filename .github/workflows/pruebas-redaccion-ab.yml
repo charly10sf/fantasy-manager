@@ -1,59 +1,72 @@
-# SOLO EN LA RAMA pruebas-redaccion-ab (no se fusiona): la redacción del bot con la guía de antes (f8df132, `pendiente` del 22 nov) y
-# con la nueva (`bot-redaccion`), con la IA de verdad y lado a lado (fase 4 de claude/auditoria-redaccion-bot.md del proyecto).
-# Los hechos salen de un simulacro de ahora (`ejecutar.mjs --volcar`, sin redactar ni publicar: sin las claves de X) y los últimos tuits
-# de cada tipo, del registro de bot-estado de antes de la jornada 13 (para que no estén ya los de estos mismos partidos). Deja
-# .github/ia/ab-redaccion.md y .json en la misma rama. Tope de gasto: TOPE_USD entre las dos versiones.
+# SOLO EN LA RAMA pruebas-redaccion-ab (no se fusiona). La prueba de Haiku del bot (25-26 nov, claude/bot-haiku-25nov.md del proyecto):
+# los mismos tuits reales con los mismos hechos y la misma prensa, redactados por cuatro variantes (A como ahora, B Haiku redacta y
+# Sonnet revisa, C Haiku en todo, D Haiku en todo con más esfuerzo) con la IA de verdad, y lo que se mide solo.
+# El material (los tuits con sus hechos de `ejecutar.mjs --volcar`, la J13 y lo de entre semana, y los «recientes» de antes de cada
+# tuit) está en .github/ia/haiku/; aquí solo se añaden las noticias, que hay que clasificar con la IA. Lo de antes de esta prueba (la
+# A/B de la guía del 22 nov) queda en .github/ia/ab-redaccion*.md. Tope de gasto: TOPE_USD para TODO (clasificar las noticias incluido).
 name: Pruebas redaccion A/B
 on:
   push:
     branches: [pruebas-redaccion-ab]
-    paths-ignore: ['.github/ia/ab-redaccion*.md', '.github/ia/ab-redaccion*.json']
+    paths-ignore: ['.github/ia/ab-redaccion*.md', '.github/ia/ab-redaccion*.json', '.github/ia/haiku/pasada*', '.github/ia/haiku/medida*', '.github/ia/haiku/noticias.json']
+  workflow_dispatch:
 permissions:
   contents: write
-concurrency: { group: pruebas-redaccion-ab, cancel-in-progress: true }
+concurrency: { group: pruebas-redaccion-ab, cancel-in-progress: false }
 jobs:
-  ab:
+  haiku:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 100
     env:
       BOT_IA: claude
-      TOPE_USD: '0.22'
+      TOPE_USD: '2'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with: { fetch-depth: 0 }
+        with: { fetch-depth: 1 }
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with: { node-version: 22 }
       - run: npm ci --prefix bot --no-audit --no-fund
-      - name: La redacción de antes (f8df132)
+      - name: Si ya está hecha, no se repite (no se gasta dos veces)
+        id: hecha
         run: |
-          git worktree add -q /tmp/antes f8df13216cbb873b454444b3b146dbf95c5d86d9
-          npm ci --prefix /tmp/antes/bot --no-audit --no-fund
-      - name: Registro de antes de la jornada 13 (copia, solo lectura)
-        run: |
-          git fetch -q origin bot-estado --shallow-since="2026-11-18"
-          C=$(git rev-list -1 --before="2026-11-20T19:30:00Z" FETCH_HEAD)
-          git show "$C:registro.json" > /tmp/registro.json
-          echo "Registro de $(git show -s --format=%ci "$C")"
-      - name: Los tuits de ahora con sus hechos (simulacro, sin redactar ni publicar)
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=directo,final,mvp,caidas,mercado,previa,novedades,noticias,sancionados,lloros --volcar=/tmp/tuits.json > /tmp/simulacro.txt 2>&1 || true
-          grep -E "^## |^# " /tmp/simulacro.txt | head -40
-          node -e "const d=require('/tmp/tuits.json'); console.log(d.tuits.length, 'tuits con hechos')"
-      - name: Antes y ahora con la IA de verdad
+          if [ -f .github/ia/haiku/pasada.json ]; then echo "La pasada ya está en la rama: borra .github/ia/haiku/pasada.json para repetirla"; echo "si=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Las noticias de entre semana (con el registro del 24 nov, solo lectura; clasificar con Haiku)
+        if: steps.hecha.outputs.si != '1'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-          # segunda pasada (22 nov, 00:20): solo la versión nueva, en los tipos que más fallaban, con los motivos enteros (lo que queda del tope de 3 $)
-          node bot/prueba/ab-redaccion.mjs --tuits=/tmp/tuits.json --registro=/tmp/registro.json --antes=/tmp/antes/bot --salida=.github/ia/ab-redaccion-3 --solo=ahora --tipos=mvp --cupo='{"mvp":3}' --tope="$TOPE_USD"
-      - name: Guardar en la rama
-        if: always()
+          git fetch -q origin bot-estado --shallow-since="2026-11-22"
+          C=$(git rev-list -1 --before="2026-11-24T06:00:00Z" FETCH_HEAD)
+          git show "$C:registro.json" > /tmp/registro-24.json
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=noticias --estado=/tmp/registro-24.json --volcar=.github/ia/haiku/noticias.json > /tmp/noticias.txt 2>&1 || true
+          grep -E "^## |\(ia\) gasto" /tmp/noticias.txt | tail -5
+          G=$(node -e "const s=require('fs').readFileSync('/tmp/noticias.txt','utf8').split('\n').filter(l=>l.includes('(ia) gasto de hoy')).pop()||''; const m=s.match(/([0-9.]+) \\\$\s*$/); console.log(m?m[1]:'0')")
+          echo "GASTO_NOTICIAS=${G:-0}" >> "$GITHUB_ENV"
+          echo "Clasificar las noticias: ${G:-0} $"
+      - name: El material, con las noticias
+        if: steps.hecha.outputs.si != '1'
+        run: node bot/prueba/haiku-material.mjs .github/ia/haiku .github/ia/haiku/noticias.json --solo-noticias
+      - name: Las cuatro variantes con la IA de verdad
+        if: steps.hecha.outputs.si != '1'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          [ -f .github/ia/ab-redaccion.md ] || exit 0
+          T=$(node -e "console.log(Math.max(0, Number(process.env.TOPE_USD) - Number(process.env.GASTO_NOTICIAS || 0) - 0.03).toFixed(3))")
+          echo "Tope para la pasada: $T $"
+          node bot/prueba/ab-modelos.mjs --material=.github/ia/haiku/material.json --dir=.github/ia/haiku --salida=.github/ia/haiku/pasada --tope="$T"
+      - name: Lo que se mide solo
+        if: always() && steps.hecha.outputs.si != '1'
+        run: |
+          [ -f .github/ia/haiku/pasada.json ] || exit 0
+          node bot/prueba/haiku-medir.mjs .github/ia/haiku/pasada.json .github/ia/haiku/medida .github/ia/haiku/material.json > /dev/null
+          head -60 .github/ia/haiku/medida.md
+      - name: Guardar en la rama
+        if: always() && steps.hecha.outputs.si != '1'
+        run: |
+          [ -f .github/ia/haiku/pasada.json ] || exit 0
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
-          git add .github/ia/ab-redaccion*.md .github/ia/ab-redaccion*.json
-          git commit -q -m "A/B de la redacción del bot" || exit 0
+          git add .github/ia/haiku/
+          git commit -q -m "Prueba de Haiku: la pasada con la IA de verdad" || exit 0
           git push -q origin HEAD:pruebas-redaccion-ab
