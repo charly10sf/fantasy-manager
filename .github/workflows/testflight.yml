@@ -186,25 +186,22 @@ jobs:
           # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
           permisosBien || { echo "::error::La app firmada no lleva aps-environment = production y el permiso de avisos urgentes"; exit 1; }
           echo "firma y permisos, bien"
-      # Se sube el .ipa ya firmado por Apple en el paso anterior. (Con «destination upload» desde un archivo con firma local,
-      # Apple lo rechaza: «Invalid Signature».) altool de Xcode 26 no siempre devuelve error al fallar: se lee lo que dice
+      # La sube Xcode desde el archivo («destination upload»): así firma Apple en la nube al subir. (Un .ipa exportado con la
+      # firma en la nube y subido aparte con altool da «Invalid Signature», 90035, aunque la firma se vea bien.)
       - name: Subir a App Store Connect
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          BUILD: ${{ steps.numero.outputs.build }}
         run: |
-          IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
-          export API_PRIVATE_KEYS_DIR="$RUNNER_TEMP/claves"
-          set +e
-          xcrun altool --upload-package "$IPA" --type ios --apple-id 6839220127 --bundle-id es.fantasymanager.app \
-            --bundle-version "$BUILD" --bundle-short-version-string "$FM_MARKETING" \
-            --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" > "$RUNNER_TEMP/subir.log" 2>&1
-          CODIGO=$?
-          set -e
-          tail -40 "$RUNNER_TEMP/subir.log"
-          if [ $CODIGO -ne 0 ] || grep -qiE "^\s*ERROR|UPLOAD FAILED|Failed to upload" "$RUNNER_TEMP/subir.log"; then echo "::error::La subida a App Store Connect ha fallado"; exit 1; fi
-          grep -qiE "UPLOAD SUCCEEDED|No errors uploading" "$RUNNER_TEMP/subir.log" || { echo "::error::altool no dice que la subida haya ido bien"; exit 1; }
+          set -o pipefail
+          sed 's#<string>export</string>#<string>upload</string>#' "$RUNNER_TEMP/opciones-export.plist" > "$RUNNER_TEMP/opciones-upload.plist"
+          grep -q '<string>upload</string>' "$RUNNER_TEMP/opciones-upload.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/subida" \
+            -exportOptionsPlist "$RUNNER_TEMP/opciones-upload.plist" \
+            -allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee "$RUNNER_TEMP/subir.log" | grep -vE "^\s*$" | tail -40 || true
+          if grep -qiE "error:|EXPORT FAILED|Invalid Signature" "$RUNNER_TEMP/subir.log"; then echo "::error::La subida a App Store Connect ha fallado"; exit 1; fi
+          grep -qE 'EXPORT SUCCEEDED|Upload succeeded|Uploaded' "$RUNNER_TEMP/subir.log"
       - name: Los registros
         if: always()
         run: |
