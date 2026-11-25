@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4k';
+export const VERSION = '0.8.4l';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,15 @@ export const VERSION = '0.8.4k';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, la B-4 de claude/prompt-noticias-deno-busquedas.md del proyecto) en la web, Google Noticias da 503 a las IP
+    // de Cloudflare: si falla, Bing Noticias por el Worker (externas.js: parseRSS con los dos formatos, consultaBing,
+    // «noticias-bing» 6 h); Worker: www.bing.com en PERMITIDOS, solo su RSS. Pruebas: datos.mjs y prueba-noticias.mjs
+    v: '0.8.4l', f: '2026-11-25', h: 'HH:MM', t: 'Las noticias, también en la web',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Las noticias vuelven a la web y al iPhone', x: 'En el navegador del ordenador y del iPhone las noticias de tus jugadores y de los clubes no llegaban casi nunca. Ahora, si la fuente de siempre no contesta, se buscan en otra, y el plan y la ficha de cada club vuelven a tenerlas.' },
+    ],
+  },
   {
     // (25 nov, tanda 3 de claude/prompts-arreglos-auditoria-25nov.md, hallazgos 3, 4, 7 y 8, y el plan corto de
     // claude/prompt-ia-cortada.md; el detalle, en claude/nota-tanda3-cuentas-plan.md y claude/nota-plan-corto.md del proyecto)
