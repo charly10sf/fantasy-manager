@@ -54,8 +54,10 @@ final class Tienda: XCTestCase {
         let rastreo = ["Pedir a la app que no rastree", "Ask App Not to Track"]
         let seguir = app.webViews.buttons.matching(NSPredicate(format: "label IN %@", ["Continue", "Continuar"])).firstMatch
         let fin = Date().addingTimeInterval(segundos)
+        var tocado = false
         repeat {
-            if seguir.exists { seguir.tap() }
+            // (una sola vez: mientras se va, el botón sigue un momento en el árbol y tocarlo otra vez falla)
+            if !tocado && seguir.exists && seguir.isHittable { seguir.tap(); tocado = true }
             for r in rastreo where sistema.buttons[r].exists { sistema.buttons[r].tap(); return }
             Thread.sleep(forTimeInterval: 0.5)
         } while Date() < fin
