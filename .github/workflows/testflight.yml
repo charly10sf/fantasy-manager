@@ -39,13 +39,16 @@ jobs:
           node .github/ios/testflight.mjs clave
           if [ -f .github/ios/contacto.enc ]; then node .github/ios/testflight.mjs comprobar; fi
 
-  # Con «[certificado]» en el mensaje del commit: crea el certificado Apple Distribution propio (clave nueva) y lo deja en
-  # el registro cifrado con .github/ios/sesion.pub, la clave pública de la sesión que lo pide; esa sesión lo guarda en los
-  # secretos IOS_DIST_P12 e IOS_DIST_CLAVE. Una vez al año (caduca a los 12 meses), o si se pierde
+  # Con «[certificado]» en el mensaje del commit: crea el certificado Apple Distribution propio (clave nueva, solo en este
+  # trabajo) y lo sube a la rama cifrado con la clave pública de ASC_KEY_P8 (.github/ios/distribucion.enc): solo la Action,
+  # con ese secreto, lo puede abrir. La firma en la nube de Apple no vale para este equipo (estropea las tildes del nombre).
+  # Una vez al año (caduca a los 12 meses; la Action avisa 30 días antes). Revoca antes los ids de .github/ios/revocar.txt
   certificado:
     if: ${{ contains(github.event.head_commit.message, '[certificado]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: El certificado de distribución
@@ -54,6 +57,14 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: node .github/ios/testflight.mjs certificado
+      - name: Guardarlo cifrado en la rama
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/ios/distribucion.enc
+          git rm -q --ignore-unmatch .github/ios/revocar.txt
+          git commit -q -m "TestFlight: el certificado de distribución, cifrado [sin-subir]"
+          git push -q origin HEAD:${GITHUB_REF_NAME}
 
   subir:
     if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') && !contains(github.event.head_commit.message, '[certificado]') }}
@@ -86,33 +97,28 @@ jobs:
           python3 ios/preparar.py >> "$GITHUB_ENV"
           command -v xcodegen > /dev/null || brew install xcodegen
           cd ios && xcodegen generate
-      # El certificado Apple Distribution propio (secretos IOS_DIST_P12 e IOS_DIST_CLAVE, los crea el trabajo «certificado»),
-      # en un llavero solo de esta pasada, con los intermedios de Apple para que la firma sea válida
+      # El certificado Apple Distribution propio (.github/ios/distribucion.enc, lo crea el trabajo «certificado»), en un
+      # llavero solo de esta pasada, con los intermedios de Apple para que la firma sea válida
       - name: El certificado y el perfil
         env:
-          IOS_DIST_P12: ${{ secrets.IOS_DIST_P12 }}
-          IOS_DIST_CLAVE: ${{ secrets.IOS_DIST_CLAVE }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
-          if [ -z "$IOS_DIST_P12" ] || [ -z "$IOS_DIST_CLAVE" ]; then echo "::error::Faltan los secretos IOS_DIST_P12 e IOS_DIST_CLAVE (los crea el trabajo «certificado»)"; exit 1; fi
           K="$RUNNER_TEMP/llavero"; mkdir -p "$K"; chmod 700 "$K"
-          printf '%s' "$IOS_DIST_P12" | base64 --decode > "$K/c.p12"
+          node .github/ios/testflight.mjs p12 "$K/c.p12"
           KC="$K/fm.keychain-db"; PASE=$(openssl rand -hex 16)
           security create-keychain -p "$PASE" "$KC"
           security set-keychain-settings -lut 3600 "$KC"
           security unlock-keychain -p "$PASE" "$KC"
           for c in AppleWWDRCAG3 AppleWWDRCAG4; do curl -fsSL -o "$K/$c.cer" "https://www.apple.com/certificateauthority/$c.cer" && security import "$K/$c.cer" -k "$KC" -T /usr/bin/codesign >/dev/null || true; done
-          security import "$K/c.p12" -k "$KC" -P "$IOS_DIST_CLAVE" -T /usr/bin/codesign -T /usr/bin/security
+          security import "$K/c.p12" -k "$KC" -P "$(cat "$K/c.p12.clave")" -T /usr/bin/codesign -T /usr/bin/security
+          rm -f "$K/c.p12" "$K/c.p12.clave"
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$PASE" "$KC" > /dev/null
           security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
           security find-identity -v -p codesigning "$KC"
           HUELLA=$(security find-identity -v -p codesigning "$KC" | grep -m1 "Apple Distribution" | awk '{print $2}')
           [ -n "$HUELLA" ] || { echo "::error::El certificado no sale como identidad válida para firmar"; exit 1; }
-          SERIE=$(openssl pkcs12 -in "$K/c.p12" -nokeys -passin env:IOS_DIST_CLAVE -legacy 2>/dev/null | openssl x509 -noout -serial 2>/dev/null | cut -d= -f2)
-          [ -n "$SERIE" ] || SERIE=$(openssl pkcs12 -in "$K/c.p12" -nokeys -passin env:IOS_DIST_CLAVE 2>/dev/null | openssl x509 -noout -serial | cut -d= -f2)
-          rm -f "$K/c.p12"
           node .github/ios/testflight.mjs perfil "$K/perfil.mobileprovision" "$SERIE"
           { echo "KC=$KC"; echo "HUELLA=$HUELLA"; echo "PERFIL=$K/perfil.mobileprovision"; } >> "$GITHUB_ENV"
       # Se archiva sin firmar (la firma automática pide un iPhone registrado) y se firma después, a mano, con el certificado

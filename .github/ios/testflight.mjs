@@ -19,6 +19,7 @@ import os from 'node:os';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const ENC = path.join(AQUI, 'contacto.enc');
+const DIST = path.join(AQUI, 'distribucion.enc'); // el certificado de distribución propio (.p12 y su contraseña), cifrado
 const APP = '6839220127'; // Apple ID de la app en App Store Connect
 const API = 'https://api.appstoreconnect.apple.com';
 const GRUPO = 'Probadores'; // el grupo externo, con enlace público
@@ -266,10 +267,16 @@ const BUNDLE = 'es.fantasymanager.app';
 const sinCeros = (x) => String(x || '').toUpperCase().replace(/^0+/, '');
 
 /** crea un certificado Apple Distribution con una clave nueva y lo deja, cifrado para la sesión que lo pide, en el registro */
-async function certificado(publicaSesion) {
+async function certificado() {
   const ya = await api('GET', '/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&limit=50&fields[certificates]=name,expirationDate,serialNumber,certificateType');
   console.log(`certificados de distribución que ya hay: ${ya.data.length}`);
   for (const c of ya.data) console.log(`  ${c.id} ${c.attributes.name} caduca ${c.attributes.expirationDate}`);
+  // los que se piden revocar a mano (revocar.txt, un id por línea); nunca se revoca uno sin pedirlo: una compilación
+  // pendiente de revisión firmada con él podría quedar como binario no válido
+  const RV = path.join(AQUI, 'revocar.txt');
+  if (fs.existsSync(RV)) for (const id of fs.readFileSync(RV, 'utf8').split(/\s+/).filter(Boolean)) {
+    try { await api('DELETE', `/v1/certificates/${id}`); console.log(`revocado ${id}`); } catch (e) { console.log(`no se ha podido revocar ${id}: ${e.message}`); }
+  }
   const d = fs.mkdtempSync(path.join(os.tmpdir(), 'fm-cert-'));
   const o = (args) => execFileSync('openssl', args, { cwd: d, stdio: ['ignore', 'pipe', 'pipe'] });
   o(['genrsa', '-out', 'k.pem', '2048']);
@@ -285,8 +292,23 @@ async function certificado(publicaSesion) {
   catch { o(['pkcs12', '-export', ...legado, '-inkey', 'k.pem', '-in', 'c.pem', '-out', 'c.p12', '-passout', `pass:${clave}`, '-name', 'FM Distribution']); }
   const p12 = fs.readFileSync(path.join(d, 'c.p12')).toString('base64');
   fs.rmSync(d, { recursive: true, force: true });
-  console.log(`certificado creado: ${cert.id} ${cert.attributes.name} caduca ${cert.attributes.expirationDate} serie ${cert.attributes.serialNumber}`);
-  console.log(`SOBRE ${JSON.stringify(cifrar(publicaSesion, { p12, clave, id: cert.id, serie: cert.attributes.serialNumber, caduca: cert.attributes.expirationDate }))}`);
+  const datos = { p12, clave, id: cert.id, serie: cert.attributes.serialNumber, caduca: cert.attributes.expirationDate };
+  fs.writeFileSync(DIST, JSON.stringify(cifrar(clavePublica(), datos)) + '\n');
+  if (fs.existsSync(RV)) fs.rmSync(RV);
+  console.log(`certificado creado: ${cert.id} ${cert.attributes.name} caduca ${cert.attributes.expirationDate} serie ${cert.attributes.serialNumber}; guardado cifrado en .github/ios/distribucion.enc`);
+}
+
+/** deja el .p12 del certificado propio en `ruta` y su contraseña en `ruta`.clave (para la firma; nunca en el registro) */
+function p12(ruta) {
+  if (!fs.existsSync(DIST)) throw new Error('No hay .github/ios/distribucion.enc: lanzar antes el trabajo «certificado» ([certificado] en el commit)');
+  const d = descifrar(JSON.parse(fs.readFileSync(DIST, 'utf8')));
+  ocultar(d.clave);
+  fs.writeFileSync(ruta, Buffer.from(d.p12, 'base64'), { mode: 0o600 });
+  fs.writeFileSync(ruta + '.clave', d.clave, { mode: 0o600 });
+  console.log(`certificado ${d.id}, serie ${d.serie}, caduca ${d.caduca}`);
+  if (process.env.GITHUB_ENV) fs.appendFileSync(process.env.GITHUB_ENV, `SERIE=${d.serie}\n`);
+  const dias = (Date.parse(d.caduca) - Date.now()) / 864e5;
+  if (dias < 30) console.log(`::warning::El certificado de distribución caduca en ${Math.round(dias)} días: renovarlo con [certificado]`);
 }
 
 /** el perfil App Store de la app con el certificado de esa serie, en `ruta` (se rehace cada vez: es gratis) */
@@ -309,8 +331,8 @@ if (modo === 'p8') { fs.writeFileSync(a1, normaP8(process.env.ASC_KEY_P8), { mod
 else if (modo === 'clave') console.log(`CLAVE PÚBLICA PARA contacto.enc: ${clavePublica()}`);
 else if (modo === 'cifrar') { fs.writeFileSync(ENC, JSON.stringify(cifrar(a1, JSON.parse(fs.readFileSync(a2, 'utf8')))) + '\n'); console.log('escrito', ENC); }
 else if (modo === 'comprobar') { const d = descifrar(JSON.parse(fs.readFileSync(ENC, 'utf8'))); console.log('contacto.enc se lee bien:', Object.keys(d.contacto || {}).join(', '), '·', (d.probadores || []).length, 'probadores'); }
-else if (modo === 'abrir') { const d = descifrar(JSON.parse(fs.readFileSync(a2, 'utf8')), crypto.createPrivateKey(fs.readFileSync(a1, 'utf8'))); fs.writeFileSync(a2 + '.abierto.json', JSON.stringify(d), { mode: 0o600 }); console.log('abierto:', d.id, d.serie, d.caduca); }
-else if (modo === 'certificado') await certificado(fs.readFileSync(path.join(AQUI, 'sesion.pub'), 'utf8').trim());
+else if (modo === 'certificado') await certificado();
+else if (modo === 'p12') p12(a1);
 else if (modo === 'perfil') await perfil(a1, a2);
 else if (modo === 'configurar') await configurar(a1 || process.env.BUILD || '');
 else { console.error('modo: clave | cifrar | comprobar | configurar'); process.exit(2); }
