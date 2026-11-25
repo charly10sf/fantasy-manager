@@ -193,6 +193,9 @@ ok(r.s === 403, `/hola/todos de quien no es el dueño: ${r.s}`);
   ok(!fichaDe(2222) || !fichaDe(2222).disp, 'en la app de Android no se apunta el aparato');
   r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'web', disp: 'tostadora' }, 'y'.repeat(30));
   ok(!fichaDe(2222).disp, 'un aparato que no existe, tampoco');
+  // (iOS 3) la app de iOS: su canal, al momento, en la ficha y en el registro, sin aparato
+  r = await pedirQ('POST', '/hola', { v: '0.8.4', canal: 'ios', app: 7, disp: 'web-iphone' }, 'y'.repeat(30));
+  ok(fichaDe(2222).canal === 'ios' && fichaDe(2222).app === 7 && !fichaDe(2222).disp && String(regDe(2222).canales).split(',').includes('ios'), `la app de iOS se apunta con su canal (${fichaDe(2222).canal}, registro: ${regDe(2222).canales})`);
   sqlQ("DELETE FROM ficha WHERE uid LIKE '7%' OR uid = '6000'"); sqlQ("DELETE FROM uso WHERE uid = '6000'");
 }
 // con 1.000 cuentas (y 7 días de uso de cada una): lo que tarda y que el Worker no vuelva a leer lo del objeto
@@ -1377,7 +1380,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   for (const p of ['ver', 'l', 'x-laliga', 'x-5xx', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
   await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
   // (21 nov) los pasos nuevos: la app vuelve sin código, y en la web llega, vuelve de LaLiga y pasa a la pantalla de inicio
-  for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
+  for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios'], ['ver', 'ios', ''], ['l', 'ios', '']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
   r = await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'borrar', k: 'play' }), tk: '', e: eE });
   ok(r.s === 400, `/embudo con un paso que no existe: ${r.s}`);
   // con más fallos de LaLiga que entradas, amarillo aunque contesten
@@ -1386,6 +1389,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
   const hoy = Object.keys(dias)[0], d = dias[hoy];
   ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 2 && d.play['x-5xx'] === 1 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  ok(d.ios && d.ios.ver === 1 && d.ios.l === 1, `/embudo cuenta la app de iOS como canal propio: ${JSON.stringify(d.ios)}`);
   ok(d.play['x-vuelve'] === 2 && d['web-iphone'].llega === 1 && d['web-iphone'].v === 1 && d['web-iphone'].inicio === 1 && d['o:x-ios'].llega === 1 && d['o:x-ios'].v === 1, `/embudo con los pasos nuevos (x-vuelve, llega, v, inicio) y la campaña con guion: ${JSON.stringify(d['o:x-ios'])}`);
   // (25 nov, tanda 5) lo pegado que no vale, con su motivo, y el enlace gastado: cuentan en su canal y no en el semáforo
   minuto();
@@ -1640,6 +1644,214 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(ch2 && !ch2.sistema[1].cache_control, 'con cacheLiga «segunda», la primera pregunta no escribe en la caché');
   const ch3 = W2.armarChat({ datos: dLiga, pregunta: '¿Vendo?', hist: [] });
   ok(ch3 && ch3.sistema.length === 2 && ch3.sistema[1].text === dLiga, 'los datos de una versión de antes (sin la marca) van como antes');
+  globalThis.fetch = fAntes;
+}
+
+// ---------- (25 nov) la app de iOS: el aviso push cuando el plan o la respuesta están (worker/src/push.js) ----------
+{
+  const PU = await import('../src/push.js');
+  const CS = await import('../../web/js/chat-sistema.js');
+  // una clave de mentira como la .p8 de Apple (P-256, PKCS8 en PEM)
+  const par = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  const p8 = `-----BEGIN PRIVATE KEY-----\n${Buffer.from(await crypto.subtle.exportKey('pkcs8', par.privateKey)).toString('base64').replace(/(.{64})/g, '$1\n')}\n-----END PRIVATE KEY-----\n`;
+  const fAntes = globalThis.fetch;
+  const aApple = [], aClaudeU = [];
+  let claudeMs = 0, claudeCae = false, claudeTexto = null, appleDice = null;
+  globalThis.fetch = async (u, o) => {
+    const s = String(u);
+    if (s.includes('/user/me')) return new Response(JSON.stringify(/Bearer k/.test(cabDe(o, 'authorization')) ? { id: 7000, managerName: 'iPhone' } : { id: 7001, managerName: 'Otro' }), { status: 200 });
+    if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ ligas: [], planes: { on: true, gratis: 50, max: 50, topeUsdDia: 3 }, preguntas: { on: true, gratis: 50, porAnuncio: 3, max: 50, topeUsdDia: 3 } }), { status: 200 });
+    if (s === 'https://api.anthropic.com/v1/messages') {
+      aClaudeU.push(1);
+      if (claudeMs) await new Promise((ok2) => setTimeout(ok2, claudeMs));
+      if (claudeCae) return new Response(JSON.stringify({ type: 'error', error: { type: 'overloaded_error', message: 'Overloaded' } }), { status: 529 });
+      const texto = claudeTexto || '```json\n{"pasos":[{"id":"p1","frase":"Vende a X: sube poco."}],"quita":[],"mete":[],"situacion":"Vas bien.","noticias":[],"rivales":[],"titular":"Vende a X y espera"}\n```';
+      return new Response(JSON.stringify({ content: [{ type: 'text', text: texto }], usage: { input_tokens: 100, output_tokens: 100 }, stop_reason: 'end_turn' }), { status: 200 });
+    }
+    if (/^https:\/\/api\.(sandbox\.)?push\.apple\.com\/3\/device\//.test(s)) {
+      const h = new Headers(o.headers);
+      aApple.push({ u: s, auth: h.get('authorization'), tema: h.get('apns-topic'), tipo: h.get('apns-push-type'), junta: h.get('apns-collapse-id'), b: JSON.parse(o.body) });
+      if (appleDice) { const d = appleDice(s); if (d) return new Response(JSON.stringify({ reason: d[1] }), { status: d[0] }); }
+      return new Response(null, { status: 200 });
+    }
+    return fAntes(u, o);
+  };
+  // objetos falsos con su alarma de verdad (salta a su hora si es para dentro de poco)
+  const objs = new Map();
+  let envU = null;
+  const QRU = {
+    idFromName: (n) => n,
+    get: (id) => {
+      if (!objs.has(id)) {
+        const m = new Map();
+        let alarma = null, reloj = null, o = null;
+        const saltar = () => { alarma = null; o.alarm().catch((e) => console.log('alarma de prueba:', e.message)); };
+        const storage = {
+          get: async (k) => m.get(k),
+          put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, v); },
+          delete: async (k) => { for (const x of [].concat(k)) m.delete(x); },
+          deleteAll: async () => m.clear(),
+          list: async ({ prefix }) => new Map([...m].filter(([k]) => k.startsWith(prefix))),
+          getAlarm: async () => alarma,
+          setAlarm: async (t) => { alarma = t; clearTimeout(reloj); if (t - Date.now() < 8000) reloj = setTimeout(saltar, Math.max(0, t - Date.now())); },
+        };
+        o = new W2.Emparejar({ storage }, envU);
+        objs.set(id, { o, m, alarmaDe: () => alarma, saltar });
+      }
+      const x = objs.get(id);
+      return { fetch: (u, op) => x.o.fetch(new Request(u, op)) };
+    },
+  };
+  // (que limites.json se vuelva a leer: 10 planes y 10 preguntas al día para esta cuenta, que aquí se hacen varios)
+  for (let i = 0; i < 11; i++) minuto();
+  envU = { VINCULOS: KV, ADMINS: '667015', QR: QRU, CLAUDE_PLANES: 'sk-ant-prueba', PUSH_TRAS_MS: '300', APNS_KEY_P8: p8, APNS_KEY_ID: 'ABC123DEFG', APNS_TEAM_ID: '23Q6T569UK' };
+  const espera = (ms) => new Promise((ok2) => setTimeout(ok2, ms));
+  const TK = 'k'.repeat(30), IPHONE = 'a1b2c3d4'.repeat(8), dia = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(Date.now()));
+  const push = (cuerpo, tk = TK) => pide({ ruta: '/push', cuerpo, tk, origen: null, e: envU, ip: '10.7.7.7' });
+  const pidePlan = (rid) => { minuto(); return pide({ ruta: '/plan', cuerpo: { pedido: PEDIDO, rid }, tk: TK, e: envU, ip: '10.7.7.7' }); };
+  const DATOS = `${CS.CABECERA_DATOS}\nAHORA: lunes 16 nov.\nMIS JUGADORES (en corto):\n- DEL Mbappé | valor 150 M\nPLANTILLAS DE LOS RIVALES:\nEquipo 1 (Rival 1):\n  - MED Diomande | 130 M`;
+  const pidePreg = (rid) => { minuto(); return pide({ ruta: '/pregunta', cuerpo: { datos: DATOS, pregunta: '¿A quién vendo?', hist: [], tono: 'normal', bloq: [], alias: { puesto: true, ex: false }, rid }, tk: TK, e: envU, ip: '10.7.7.7' }); };
+
+  // 0. los textos: los de Recoger.java; con un alias de rival dentro, el genérico (el servidor no tiene los nombres)
+  const t1 = PU.textoPush('plan', { plan: { titular: 'Vende a X y espera' } }), t2 = PU.textoPush('plan', { plan: { titular: 'Clausula a uno del Rival 2' } }), t3 = PU.textoPush('plan', { e: 'falló' }), t4 = PU.textoPush('plan', null);
+  ok(t1.titulo === 'Tu plan de hoy está listo' && t1.texto === 'Vende a X y espera' && t1.hash === 'hoy' && t2.texto === 'Entra para ver los pasos' && t3.titulo === 'No ha salido el plan de hoy' && t3.texto === 'Entra y dale a Reintentar' && t4.titulo === t3.titulo, 'push: los textos del plan (listo con su titular, sin alias de rivales; y el de que no ha salido)');
+  const q1 = PU.textoPush('preg', { texto: 'x', resumen: 'Vende a Pedri ya.' }), q2 = PU.textoPush('preg', { texto: 'x', resumen: 'El Equipo 3 va a por él.' }), q3 = PU.textoPush('preg', null);
+  ok(q1.titulo === 'Tu director deportivo ha contestado' && q1.texto === 'Vende a Pedri ya.' && q1.hash === 'ia' && q2.texto === 'Entra para leer la respuesta' && q3.titulo === 'No ha podido contestar' && q3.texto === 'Entra y vuelve a preguntar', 'push: los textos de la pregunta');
+  ok(PU.tokenDe(IPHONE) === IPHONE && PU.tokenDe(IPHONE.toUpperCase()) === IPHONE && PU.tokenDe('abc') === '' && PU.tokenDe(`${IPHONE}zz`) === '' && PU.tokenDe(null) === '', 'push: el identificador del iPhone solo vale si es hexadecimal y de su largo');
+
+  // 1. lo que no vale
+  r = await push({ rid: 'aviso1234abc', tipo: 'plan', tk: IPHONE }, 'corto');
+  ok(r.s === 401, `/push sin sesión: ${r.s}`);
+  r = await push({ rid: 'aviso1234abc', tipo: 'plan', tk: 'no-es-un-token' });
+  ok(r.s === 400, `/push con un identificador que no lo es: ${r.s}`);
+  r = await push({ rid: '¡mal!', tipo: 'plan', tk: IPHONE });
+  ok(r.s === 400, `/push sin id de pedido: ${r.s}`);
+  r = await push({ rid: 'noexiste0001', tipo: 'plan', tk: IPHONE });
+  ok(r.s === 200 && r.j.ok === false && aApple.length === 0, `/push de un pedido que no existe: no se apunta nada (${r.t})`);
+  r = await pide({ ruta: '/push', cuerpo: { rid: 'aviso1234abc', tipo: 'plan', tk: IPHONE }, tk: TK, e: { ...envU, QR: undefined }, origen: null, ip: '10.7.7.7' });
+  ok(r.s === 200 && r.j.ok === false, 'sin objetos, /push dice que no (y nada falla)');
+
+  // 2. la app se va con el plan a medias: cuando está, el aviso (una vez), con la credencial firmada
+  claudeMs = 700;
+  let pp = pidePlan('pushplan0001');
+  await espera(200);
+  r = await push({ rid: 'pushplan0001', tipo: 'plan', tk: IPHONE, amb: 'prod' });
+  const oPlan = objs.get(`plan|${dia}|7000`);
+  ok(r.s === 200 && r.j.ok === true && oPlan.m.has('push:pushplan0001') && oPlan.m.has('pe:pushplan0001'), `/push con el plan en marcha: apuntado (${r.t})`);
+  r = await pp;
+  ok(r.s === 200 && r.j.plan && aApple.length === 0, 'el plan sale, y el aviso todavía no (espera por si la app lo recibe ella)');
+  await espera(700);
+  const a1 = aApple[0] || {};
+  ok(aApple.length === 1 && a1.u === `https://api.push.apple.com/3/device/${IPHONE}` && a1.tema === 'es.fantasymanager.app' && a1.tipo === 'alert' && a1.junta === 'fm-plan' && a1.b.aps.alert.title === 'Tu plan de hoy está listo' && a1.b.aps.alert.body === 'Vende a X y espera' && a1.b.hash === 'hoy' && a1.b.aps.sound === 'default', `a los 0,3 s de estar el plan, UN aviso a Apple con el plan listo (${aApple.length}; ${JSON.stringify(a1.b || {}).slice(0, 120)})`);
+  // la credencial: un JWT ES256 de verdad, con la clave, el equipo y la hora
+  {
+    const [c, d, f] = String(a1.auth || '').replace(/^bearer /, '').split('.');
+    const de = (x) => JSON.parse(Buffer.from(x, 'base64url').toString());
+    const vale = c && d && f ? await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, par.publicKey, Buffer.from(f, 'base64url'), new TextEncoder().encode(`${c}.${d}`)) : false;
+    ok(vale && de(c).alg === 'ES256' && de(c).kid === 'ABC123DEFG' && de(d).iss === '23Q6T569UK' && Math.abs(de(d).iat * 1000 - Date.now()) < 5000, `la credencial de APNs va bien firmada (ES256, su clave y su equipo): ${vale}`);
+  }
+  ok(!oPlan.m.has('push:pushplan0001') && !oPlan.m.has('pe:pushplan0001') && oPlan.m.get('res:pushplan0001').fin.plan && oPlan.m.get('plan').u === 1 && oPlan.alarmaDe() > Date.now() + 29 * 3600e3, `mandado el aviso, se borra a quién avisar; el plan y el cupo siguen, y vuelve la alarma de limpiar (${Math.round((oPlan.alarmaDe() - Date.now()) / 3600e3)} h)`);
+  r = await pide({ m: 'GET', ruta: '/plan/res?rid=pushplan0001', origen: null, tk: TK, e: envU });
+  ok(r.s === 200 && r.j.fin && r.j.fin.plan, 'al volver, la app recoge el plan con el mismo id, como siempre');
+
+  // 3. la app sigue viva y recibe ella el plan: lo dice (quitar) y no hay aviso
+  pp = pidePlan('pushplan0002');
+  await espera(200);
+  await push({ rid: 'pushplan0002', tipo: 'plan', tk: IPHONE });
+  r = await pp;
+  r = await push({ rid: 'pushplan0002', tipo: 'plan', quitar: true });
+  await espera(600);
+  ok(r.s === 200 && r.j.ok === true && aApple.length === 1 && !oPlan.m.has('push:pushplan0002') && oPlan.alarmaDe() > Date.now() + 29 * 3600e3 && oPlan.m.get('plan').u === 2, `si la app recibe ella el plan y lo dice, no hay aviso (${aApple.length}) y el cupo sigue (${oPlan.m.get('plan') && oPlan.m.get('plan').u})`);
+
+  // 4. dos pedidos seguidos con aviso: ninguna alarma de aviso se queda como la de limpiar (se vaciaría el cupo del día)
+  pp = pidePlan('pushplan0003');
+  await espera(150);
+  await push({ rid: 'pushplan0003', tipo: 'plan', tk: IPHONE });
+  await pp;
+  const pp4 = pidePlan('pushplan0004');
+  await espera(150);
+  await push({ rid: 'pushplan0004', tipo: 'plan', tk: IPHONE });
+  await pp4;
+  await espera(900);
+  ok(aApple.length === 3 && oPlan.m.get('plan').u === 4 && oPlan.alarmaDe() > Date.now() + 29 * 3600e3 && !oPlan.m.has('job-limpia') && ![...oPlan.m.keys()].some((k) => k.startsWith('pe:') || k.startsWith('push:')), `dos planes seguidos con aviso: dos avisos más (${aApple.length}), el cupo sigue (${oPlan.m.get('plan').u}) y la alarma que queda es la de limpiar`);
+
+  // 5. la IA caída: el aviso de que no ha salido
+  claudeCae = true; claudeMs = 300;
+  pp = pidePlan('pushplan0005');
+  await espera(100);
+  await push({ rid: 'pushplan0005', tipo: 'plan', tk: IPHONE });
+  r = await pp;
+  await espera(700);
+  claudeCae = false;
+  const a5 = aApple[aApple.length - 1];
+  ok(r.j && r.j.e && aApple.length === 4 && a5.b.aps.alert.title === 'No ha salido el plan de hoy' && a5.b.aps.alert.body === 'Entra y dale a Reintentar', `con la IA caída, el aviso dice que no ha salido (${a5.b.aps.alert.title})`);
+
+  // 6. el plan ya estaba hecho cuando la app se va (la respuesta iba de camino): el aviso llega igual, a los 0,3 s
+  claudeMs = 0;
+  r = await pidePlan('pushplan0006');
+  r = await push({ rid: 'pushplan0006', tipo: 'plan', tk: IPHONE, amb: 'dev' });
+  await espera(600);
+  const a6 = aApple[aApple.length - 1];
+  ok(r.j.ok === true && aApple.length === 5 && a6.u.startsWith('https://api.sandbox.push.apple.com/') && a6.auth === a1.auth, `con el plan ya hecho, el aviso sale a los 0,3 s; una app de prueba va al servicio de pruebas de Apple y la credencial es la misma de antes (no se hace una por aviso)`);
+
+  // 7. el pedido que no acaba nunca (el objeto se quedó a medias): al pasar su tiempo máximo, el aviso de que no ha salido
+  await QRU.get(`plan|${dia}|7000`).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op: 'marcha', rid: 'pushplan0007' }) });
+  r = await push({ rid: 'pushplan0007', tipo: 'plan', tk: IPHONE });
+  const tope7 = oPlan.m.get('pe:pushplan0007').t - Date.now();
+  await espera(500);
+  const antes7 = aApple.length;
+  for (let i = 0; i < 4; i++) minuto();
+  await oPlan.o.alarm();
+  ok(r.j.ok === true && tope7 > 170e3 && tope7 < 190e3 && antes7 === 5 && aApple.length === 6 && aApple[5].b.aps.alert.title === 'No ha salido el plan de hoy', `un plan que no acaba: nada hasta su tiempo máximo (${Math.round(tope7 / 1000)} s) y entonces, el aviso de que no ha salido`);
+
+  // 8. la pregunta: el aviso con el principio de la respuesta (sin alias de rivales) o el genérico
+  claudeTexto = 'Vende a Pedri: está en su pico.\n\n```notas\n{"recomiendo":[],"apuntar":[],"olvidar":[]}\n```'; claudeMs = 600;
+  pp = pidePreg('pushpreg0001');
+  await espera(200);
+  r = await push({ rid: 'pushpreg0001', tipo: 'preg', tk: IPHONE });
+  const rp = await pp;
+  await espera(700);
+  const a8 = aApple[aApple.length - 1];
+  ok(r.j.ok === true && rp.s === 200 && /Pedri/.test(rp.j.texto) && aApple.length === 7 && a8.junta === 'fm-preg' && a8.b.aps.alert.title === 'Tu director deportivo ha contestado' && a8.b.aps.alert.body === 'Vende a Pedri: está en su pico.' && a8.b.hash === 'ia', `la pregunta: el aviso con el principio de la respuesta (${a8.b.aps.alert.body})`);
+  claudeTexto = 'El Rival 1 va a por Diomande.\n\n```notas\n{"recomiendo":[],"apuntar":[],"olvidar":[]}\n```';
+  pp = pidePreg('pushpreg0002');
+  await espera(200);
+  await push({ rid: 'pushpreg0002', tipo: 'preg', tk: IPHONE });
+  await pp;
+  await espera(700);
+  ok(aApple.length === 8 && aApple[7].b.aps.alert.body === 'Entra para leer la respuesta', `una respuesta que nombra a un rival por su alias: el aviso no la enseña (${aApple[7] && aApple[7].b.aps.alert.body})`);
+  claudeTexto = null; claudeMs = 0;
+
+  // 9. Apple dice que ese identificador no es de ese servicio: se prueba una vez con el otro
+  appleDice = (s) => (s.includes('api.push.apple.com') ? [400, 'BadDeviceToken'] : null);
+  let x = await (await QRU.get('apns|todos').fetch('https://freno/apns', { method: 'POST', body: JSON.stringify({ tk: IPHONE, amb: 'prod', tipo: 'plan', titulo: 'T', texto: 'x', hash: 'hoy' }) })).json();
+  ok(x.ok === true && aApple.length === 10 && aApple[9].u.includes('sandbox'), `un identificador de app de prueba mandado al servicio de verdad: se prueba con el de pruebas (${JSON.stringify(x)})`);
+  appleDice = () => [410, 'Unregistered'];
+  x = await (await QRU.get('apns|todos').fetch('https://freno/apns', { method: 'POST', body: JSON.stringify({ tk: IPHONE, amb: 'prod', tipo: 'plan', titulo: 'T', texto: 'x' }) })).json();
+  ok(x.ok === false && x.estado === 410 && x.motivo === 'Unregistered' && aApple.length === 11, `un iPhone que ya no tiene la app: Apple dice que no y no se insiste (${JSON.stringify(x)})`);
+  appleDice = null;
+
+  // 10. sin las claves de APNs en el servidor: no se manda nada y todo lo demás sigue
+  const envSin = { ...envU, APNS_KEY_P8: undefined };
+  const objSin = new W2.Emparejar({ storage: { get: async () => undefined, put: async () => {} } }, envSin);
+  x = await (await objSin.fetch(new Request('https://freno/apns', { method: 'POST', body: JSON.stringify({ tk: IPHONE, titulo: 'T', texto: 'x' }) }))).json();
+  ok(x.ok === false && x.motivo === 'sin clave' && aApple.length === 11, 'sin las claves de APNs no se manda ningún aviso');
+
+  // 11. Android y la web no llaman a /push: un plan y una pregunta suyos no mandan nada a Apple, y otra cuenta no puede
+  //     quitar ni poner avisos en los pedidos de esta
+  const nA = aApple.length;
+  await pidePlan('sinpush00001');
+  await pidePreg('sinpush00002');
+  claudeMs = 500;
+  pp = pidePlan('pushplan0011');
+  await espera(150);
+  await push({ rid: 'pushplan0011', tipo: 'plan', tk: IPHONE });
+  r = await push({ rid: 'pushplan0011', tipo: 'plan', quitar: true }, 'y'.repeat(30));
+  const otra = await push({ rid: 'pushplan0011', tipo: 'plan', tk: 'f'.repeat(64) }, 'y'.repeat(30));
+  await pp;
+  await espera(700);
+  claudeMs = 0;
+  ok(aApple.length === nA + 1 && aApple[nA].u.endsWith(IPHONE) && otra.j.ok === false, `sin /push no sale ningún aviso; y otra cuenta no puede quitar ni desviar el de esta (${aApple.length - nA} aviso, al iPhone de quien lo pidió)`);
   globalThis.fetch = fAntes;
 }
 

@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, norm, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, guardarTexto, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
+import { esc, norm, icono, botonPlay, PLAY_URL, APP_STORE_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, guardarTexto, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
 import { enApp, enWeb, enInicio, enIPhone, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -16,7 +16,8 @@ import * as Cl from './clubes.js';
 import * as Bj from './bajas.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
-import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
+import { pedirPermisoIA } from './permiso-ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -31,7 +32,7 @@ import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -255,7 +256,8 @@ function invitarALiga() {
   const l = S.D && S.D.liga && S.D.liga.id;
   if (!l || enDemo()) { tostada('Entra con tu cuenta para invitar a los de tu liga'); return; }
   const url = `${DOMINIO}?l=${encodeURIComponent(l)}`;
-  const t = `Uso Fantasy Manager para la liga: cada día me dice qué fichar, qué vender y a quién clausular. Gratis, en Android y en el navegador: ${url}`;
+  // (iOS 3) desde la app de iOS, también el iPhone
+  const t = `Uso Fantasy Manager para la liga: cada día me dice qué fichar, qué vender y a quién clausular. Gratis, en ${enAppIos() ? 'Android, iPhone' : 'Android'} y en el navegador: ${url}`;
   contar('n');
   if (enApp) { nativo.compartir(t); return; }
   if (navigator.share) { navigator.share({ text: t }).catch(() => {}); return; }
@@ -757,7 +759,7 @@ function traerVinculo(j) {
   guardar('sesion', j.sesion);
   mirarCuentaNueva();
   if (j.cfg) guardarCfg({ ligaId: j.cfg.ligaId || null });
-  if (j.ia && j.ia.clave && !hayClave()) guardarClave(j.ia.clave);
+  if (j.ia && j.ia.clave && !hayClave() && !enAppIos()) guardarClave(j.ia.clave);
   if (j.dichos && typeof j.dichos === 'object') LS.set(K('dinero-dicho'), { ...j.dichos, ...LS.get(K('dinero-dicho'), {}) });
 }
 /* ---------------- la mudanza de la web: de charly10sf.github.io a fantasymanagerapp.com ----------------
@@ -940,7 +942,9 @@ const bandaPlay = () => {
 };
 /* la app de Google Play por debajo de «playMin» (0.7.13w): ya hay otra en la tienda y esta deja de recibir las mejoras.
    Fija, sin cerrar, hasta que se actualice (al actualizarse ya no está por debajo). Ni en la liga de ejemplo */
-const bandaActualizarPlay = () => ((S.D && S.D.demo) || !playDesfasada() ? ''
+const bandaActualizarPlay = () => ((S.D && S.D.demo) ? ''
+  : iosDesfasada() ? `<div class="banda banda-actualizar">${icono('descargar')}<span><b>Hay una versión nueva de la app</b></span><button data-accion="irAppStore">Actualizar en la App Store</button></div>`
+  : !playDesfasada() ? ''
   : `<div class="banda banda-actualizar">${icono('descargar')}<span><b>Hay una versión nueva de la app</b></span><button data-abrir="${PLAY_URL}">Actualizar en Google Play</button></div>`);
 /* (19 nov, el fallo de Bryan) el móvil no consigue descargar la web nueva con la conexión que tiene (su red no llega a
    donde está publicada). Cada vez que la app mira si hay versión nueva (webBuscada) se apunta desde cuándo falla por la
@@ -958,7 +962,7 @@ function apuntarAlDia(estado) {
   if (!g || g.v !== VERSION) LS.set('aldia-red', { t: Date.now(), v: VERSION });
 }
 const bandaSinDescarga = () => {
-  if (!enApp || enApkGithub() || (S.D && S.D.demo) || playDesfasada()) return '';
+  if (!enApp || enApkGithub() || (S.D && S.D.demo) || playDesfasada() || iosDesfasada()) return '';
   const g = LS.get('aldia-red', null);
   if (!g || g.v !== VERSION || Date.now() - g.t < DIA || LS.get('aldia-red-cerrada', '') === diaDe()) return '';
   return `<div class="banda">${icono('alerta')}<span>No se ha podido descargar la actualización con esta conexión: abre la app con wifi.</span><button class="banda-x" data-accion="cerrarSinDescarga" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
@@ -1524,7 +1528,7 @@ function programarFondo() {
   const tOnce = (S.D ? pasadasOnce(S.D) : LS.get('fondo-onces', [])).find((x) => x > Date.now() + MIN);
   if (tOnce && (!prox || prox < Date.now() || tOnce < prox)) prox = tOnce;
   // (0.7.13l) y a la hora del próximo plan que sale solo (un minuto después, para que ya le toque)
-  const pt = puedePlanIA(enDemo()) ? proximoTurno(S.M || { cierreMercado: cierre }) : null;
+  const pt = planIASolo(enDemo()) ? proximoTurno(S.M || { cierreMercado: cierre }) : null;
   if (pt && (!prox || prox < Date.now() || pt.t + MIN < prox)) prox = pt.t + MIN;
   nativo.programarFondo(cfgFondo().on && !enDemo(), prox);
 }
@@ -1663,12 +1667,12 @@ async function trabajoFondo() {
     if (!haySesion()) { paso('sin sesión de LaLiga'); return; }
     // (0.7.13l) de noche nada, salvo un plan a su hora (si eligió una de madrugada)
     const turnoF = () => turnoPendiente(S.M || { cierreMercado: LS.get('fondo-cierre', 0) }, ultimoPlan());
-    if (deNoche() && !(puedePlanIA(enDemo()) && turnoF())) { paso('de noche: nada'); return; }
+    if (deNoche() && !(planIASolo(enDemo()) && turnoF())) { paso('de noche: nada'); return; }
     // (de madrugada no se miran: se darían por avisadas sin avisar)
     const fallos = callado() ? [] : [...(await avisosDeFallos()), ...(await avisosInvitarFondo())];
     if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo o de amigos`);
     const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
-    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre && !(puedePlanIA(enDemo()) && turnoF())) {
+    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre && !(planIASolo(enDemo()) && turnoF())) {
       const lista = [...fallos];
       // con un partido de los tuyos a punto de empezar, el once confirmado (con la liga guardada: está al día)
       const g = foto();
@@ -1702,7 +1706,7 @@ async function trabajoFondo() {
     if (planViejo(S.M) || turnoF()) {
       let conIA = false;
       // (con la IA de la app, 2 al día: solos, a sus horas, y cuentan en los del día; planViejoAuto y planes-hora.js)
-      if (puedePlanIA(enDemo()) && planViejoAuto(S.M, enDemo())) {
+      if (planIASolo(enDemo()) && planViejoAuto(S.M, enDemo())) {
         intentarTurno(turnoF());
         try {
           // (con un reloj que no se para en segundo plano, y que corta de verdad la pregunta si salta)
@@ -2456,7 +2460,8 @@ async function mirarAppNueva() {
   // paquete publicado aún no la trae, o es otra, la web nueva no es para esta app: la app nueva llega por la App Store
   const ios = nativo.canal() === 'ios';
   const apk = ios ? j.nativoIos !== mia : !!(mia && j.nativo && j.nativo !== mia);
-  const play = nativo.canal() === 'play';
+  // (iOS 3) en la app de iOS, como en la de Google Play: la tienda la actualiza; aquí solo se pone la web nueva
+  const play = nativo.canal() === 'play' || ios;
   // con la parte Android nueva no hay nada que poner: en Google Play la da la tienda y el APK de GitHub ya no se publica
   // (0.7.13j: solo el aviso de pasarse a Google Play, nunca una descarga de fuera)
   if (apk) return;
@@ -2489,7 +2494,7 @@ function forzarAppNueva(paso, detalle = '') {
     forzarT = setTimeout(() => { if (S.appNueva && S.appNueva.paso === 'bajando') forzarAppNueva('fallo', 'no ha contestado'); }, 60000);
   } else if (paso === 'fallo') {
     txt = A.play
-      ? `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Prueba otra vez en un rato y, si sigue, actualiza la app desde Google Play.`
+      ? `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Prueba otra vez en un rato y, si sigue, actualiza la app desde ${nativo.canal() === 'ios' ? 'la App Store' : 'Google Play'}.`
       : `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Instala la app desde Google Play.`;
     botones = A.play ? otra(true) : bajar + otra(false);
   } else {
@@ -2578,6 +2583,12 @@ async function planAHora(alAbrir = false) {
     return planViejoAuto(S.M, enDemo()) ? { turno } : null;
   };
   if (!toca()) return;
+  // (iOS 3) en la app de iOS, nada a la IA sin permiso: si aún no ha contestado, se le pregunta ahora (una vez por apertura);
+  // si dijo que no, se queda el plan de la app
+  if (!iaPermitida()) {
+    if (permisoIA() === '' && !S.permisoIAPreguntado) { S.permisoIAPreguntado = true; pedirPermisoIA(() => planAHora(alAbrir)); }
+    return;
+  }
   // (22 nov) antes de pedirlo, se mira si otro dispositivo tuyo ya lo tiene: el móvil y la web, con el mismo plan
   planAHoraEnCurso = true;
   try { await sincAntes(); } finally { planAHoraEnCurso = false; }
@@ -2900,6 +2911,8 @@ window.addEventListener('online', () => {
 const sinErrorPlan = () => { if (!S.planEstado.cargando) S.planEstado = {}; };
 async function generarPlan({ extra = false, auto = false } = {}) {
   if (S.planEstado.cargando || !S.D) return;
+  // (iOS 3) en la app de iOS, lo primero el permiso para mandar tu liga a la IA (pedido por ti: se pregunta siempre)
+  if (!iaPermitida()) { if (!auto) pedirPermisoIA(() => generarPlan({ extra, auto })); return; }
   S.planEstado = { cargando: true, paso: '' };
   montarPlan();
   if (S.vista === 'hoy') pintar();
@@ -3372,6 +3385,8 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   if (S.charlando || S.preparandoFotos) return;
   const fotos = S.adjuntos.slice();
   if (!t && !fotos.length) { tostada('Escribe tu pregunta (o manda una foto) y dale a enviar'); const ta = $('#pregunta'); if (ta) ta.focus(); return; }
+  // (iOS 3) en la app de iOS, nada a la IA sin permiso: se pregunta antes y, si dice que sí, sale la pregunta tal cual
+  if (!iaPermitida()) { pedirPermisoIA(() => enviarPregunta(texto, { extra })); return; }
   S.adjuntos = [];
   if (S.vista !== 'ia') ir('ia');
   S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t; S.fotosActuales = fotos; S.errorChat = null;
@@ -3617,6 +3632,7 @@ window.vozTexto = (texto, error) => {
 async function buscarVersion(avisar = false) {
   // la de Google Play la actualiza la tienda; la web siempre está al día
   if (enApp && avisar && playDesfasada()) { tostada('Hay una versión nueva de la app en Google Play'); nativo.abrir(PLAY_URL); return; }
+  if (enApp && avisar && iosDesfasada()) { tostada('Hay una versión nueva de la app en la App Store'); nativo.instalar(); return; }
   if (enApp && nativo.canal() === 'ios') { if (avisar) tostada('Las versiones nuevas llegan por la App Store'); return; }
   if (!enApp || nativo.canal() === 'play') { if (avisar) tostada(enApp ? 'Las versiones nuevas llegan por Google Play' : 'La web siempre está en la última versión'); return; }
   // el APK de GitHub ya no se publica: ni versión nueva ni descarga, solo el paso a Google Play (0.7.13j)
@@ -3692,7 +3708,8 @@ window.progresoApp = (pct, estado) => {
 window.addEventListener('fm-vuelta', () => { const pn = $('#plan-notif'); if (pn) pn.innerHTML = V.notifPlanHTML(); });
 window.permisoAvisos = (ok) => {
   // (23 nov) si Android ya no enseña la pregunta (dicho que no dos veces), contesta que no al momento: se dice dónde se activan
-  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada. Actívalas en los ajustes del móvil: Aplicaciones → Fantasy Manager → Notificaciones', 7000);
+  // (25 nov) en el iPhone están en otro sitio (y la app lleva allí si se vuelve a pulsar)
+  if (!ok) tostada(`Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada. Actívalas en los ajustes del ${nativo.canal() === 'ios' ? 'iPhone: Notificaciones → Fantasy Manager' : 'móvil: Aplicaciones → Fantasy Manager → Notificaciones'}`, 7000);
   else { if (S.D) programar(S.D, S.M, planAvisos()); tostada('Notificaciones activadas'); }
   // lo de debajo de «Preparando tu plan», con el permiso nuevo
   const pn = $('#plan-notif');
@@ -4177,6 +4194,9 @@ document.addEventListener('click', async (ev) => {
       if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) { const t = S.tipoHoja && S.tipoHoja[0]; if (cerrarHoja() && FICHAS_PAUSA.has(t)) pausaNatural(); } break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
+    // (iOS 3) el permiso para mandar tu liga a la IA (Pregunta y Ajustes → La IA)
+    case 'permisoIA': pedirPermisoIA(null, () => { if (S.hoja) repintarHoja(); pintar(); }); break;
+    case 'quitarPermisoIA': ponerPermisoIA(false); if (S.hoja) repintarHoja(); pintar(); tostada('La IA, apagada: no se le manda nada'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
     case 'fav': { const j = S.M && S.M.J(d.pid); if (!j) break; const on = cambiarFav(d.pid); tostada(on ? `${j.nombre}, en tus favoritos (Mercado → Favoritos)` : `${j.nombre}, fuera de tus favoritos`, 2600); repintarHoja(); if (S.vista === 'mercado') pintar(); break; }
     case 'copiarDiag': copiarY(Hj.diagnosticoParaMandar(S)); break;
@@ -4269,7 +4289,7 @@ document.addEventListener('click', async (ev) => {
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     // (0.7.13l) los planes que salen solos a su hora, y los ajustes del plan desde el propio plan
-    case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? 'Los planes saldrán solos a su hora' : 'Los planes solo saldrán cuando los pidas'); break; }
+    case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? (enApp && !nativo.hayFondo() ? 'Los planes saldrán a su hora con la app abierta; si no, al abrirla' : 'Los planes saldrán solos a su hora') : 'Los planes solo saldrán cuando los pidas'); break; }
     case 'planAjustes': hoja('planAj'); break;
     case 'fondo': {
       const on = !cfgFondo().on;
@@ -4320,7 +4340,9 @@ document.addEventListener('click', async (ev) => {
     case 'ponerAppNueva': ponerAppNueva(); break;
     case 'avisoPlay': avisoPlay(true); break;
     case 'cerrarAvisoPlay': { const d = document.getElementById('aviso-play'); if (d) d.remove(); break; }
-    case 'bajarApp': if (enApkGithub()) avisoPlay(true); else nativo.abrir(PLAY_URL); break;
+    case 'bajarApp': if (enApkGithub()) avisoPlay(true); else if (enAppIos()) nativo.instalar(); else nativo.abrir(PLAY_URL); break;
+    // (iOS 3) la ficha de la app en la App Store (la abre la app con la tienda; en otro sitio, la página)
+    case 'irAppStore': if (enAppIos()) nativo.instalar(); else nativo.abrir(APP_STORE_URL); break;
     case 'recargarWeb': recargarWeb(); break;
     case 'buscarWeb': {
       tostada('Buscando versión nueva…', 2000);
@@ -4329,7 +4351,7 @@ document.addEventListener('click', async (ev) => {
       if (S.webNuevaWeb) recargarWeb(); else tostada(`Tienes la última: la ${VERSION}`);
       break;
     }
-    case 'actualizarApp': if (enApkGithub()) avisoPlay(true); else if (S.nueva) nativo.abrir(PLAY_URL); break;
+    case 'actualizarApp': if (enApkGithub()) avisoPlay(true); else if (enAppIos()) nativo.instalar(); else if (S.nueva) nativo.abrir(PLAY_URL); break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); olvidarLleno(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarServidor':
       if (!confirm('¿Borrar lo que guarda Fantasy Manager de ti en su servidor? Es que usas la app, cuánto rato y tus avisos de fallo con sus respuestas. Tu liga, tu sesión y tu clave están en este dispositivo y no se tocan. Si sigues usando la app, se volverá a apuntar que la usas.')) break;
@@ -4834,7 +4856,7 @@ function itemsEmpezar() {
   }
   // (con la IA de la app, el plan ya va con IA sin clave: la clave es para preguntar)
   // (16 nov) con las preguntas también por la IA de la app, no hace falta clave: el paso no sale
-  const l = preguntasApp(enDemo()) ? [] : [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: planesApp(enDemo()) ? 'Una clave gratis de Google en unos 3 minutos para preguntarle lo que quieras de tu liga. El plan de cada día ya lo hace la IA de la app.' : 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
+  const l = preguntasApp(enDemo()) || enAppIos() ? [] : [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: planesApp(enDemo()) ? 'Una clave gratis de Google en unos 3 minutos para preguntarle lo que quieras de tu liga. El plan de cada día ya lo hace la IA de la app.' : 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
   if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
   return l;
 }
@@ -4853,9 +4875,11 @@ function pasosTour() {
     { v: 'hoy', sel: '.plan-cab', b: true, con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Lo que toca hacer hoy, en orden y con el saldo que te queda tras cada paso. Cuando lo hagas en LaLiga, el paso se tacha solo (o lo marcas con «Hecho»).' },
     conIA
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: planesApp(demo) ? `La IA hace el plan sola al empezar el día y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien: tienes ${planesCfg().gratis} al día con la IA${topConAnuncio() ? ' y, viendo un anuncio corto, alguno más' : ''}. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.` : 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
+      // (iOS 3) en la app de iOS no hay clave de Google: la IA es la de la app, con tu cuenta
+      : enAppIos() ? { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Aquí el plan sale de los números. Con tu cuenta de LaLiga, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar lo que quieras de tu liga.' }
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar:not([hidden]), #supEstado.sup-toca', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
-    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
+    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: `Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están ${enAppIos() ? 'la IA' : 'tu clave de la IA'}, los avisos, abrir la app en otro dispositivo y este tutorial.` },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
@@ -4866,7 +4890,7 @@ function pasosTour() {
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },
-    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? `${rojo[0].toUpperCase()}${rojo.slice(1)}, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.` : `${rojo[0].toUpperCase()}${rojo.slice(1)}: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.` },
+    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? `${rojo[0].toUpperCase()}${rojo.slice(1)}, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.` : `${rojo[0].toUpperCase()}${rojo.slice(1)}: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. ${enAppIos() ? 'En la liga de ejemplo no contesta: hace falta entrar con tu cuenta.' : 'Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.'}` },
     demo
       ? { v: 'hoy', b: true, t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }
       : { v: 'hoy', b: true, t: 'Para empezar', x: () => `${itemsEmpezar().some((y) => !y.ok) ? 'Esto se hace una vez (si no, lo tienes en Ajustes). Después, empieza por el paso 1 de tu plan de hoy.' : 'Ya lo tienes todo. Empieza por el paso 1 de tu plan de hoy.'} ${T_BASICO() ? 'El tutorial entero, con el resto de pestañas, está en Ajustes.' : 'El tutorial queda en Ajustes por si quieres repetirlo.'}`, lista: itemsEmpezar, fin: 'Ver mi plan', finAccion: 'plan' },
@@ -5060,7 +5084,8 @@ async function arrancar() {
   setTimeout(() => migrarMinis().catch(() => {}), 5000);
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
-  if (enApp && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
+  // (25 nov) en la app de iOS no hay IA con la app cerrada: el permiso se pide al activar los avisos o al pedir un plan
+  if (enApp && nativo.hayFondo() && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
     LS.set('permiso-fondo', Date.now());
     setTimeout(() => nativo.pedirPermisoAvisos(), 2500);
   }

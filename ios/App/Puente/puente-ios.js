@@ -10,8 +10,10 @@
    Las respuestas de las peticiones vuelven como en Android: lo nativo deja el resultado y llama a window.__http(id), y
    la web lo recoge con respuesta(id).
 
-   Lo que aún no hay en iOS (avisos, anuncios, el plan con la app cerrada, fotos, QR, la alarma) NO se define: puente.js
-   mira si cada cosa existe antes de usarla (hayQR, hayFotos, hayAlarma, hayAnuncios…) y, si no, no la ofrece. */
+   Lo que no puede haber (la IA en segundo plano cada 3 horas: programarFondo, estadoFondo y fondoTerminado) NO se define:
+   puente.js mira si cada cosa existe antes de usarla (hayQR, hayFotos, hayVoz…) y, si no, no la ofrece. Lo que depende del
+   iPhone solo se define donde lo hay: la alarma del clausulazo (probarAlarma, iOS 26 o más), el lector de QR (escanearQR,
+   los iPhone con DataScanner) y el dictado (voz, si el iPhone reconoce el español sin sacar el audio del móvil). */
 (function () {
   'use strict';
   if (window.FantasyApp || window.top !== window) return;
@@ -19,7 +21,7 @@
   if (!mh) return;
   var D = /*DATOS*/{};
   var guardado = D.guardado || {};
-  var estado = { web: D.web || null, login: D.login || null, via: D.via || '' };
+  var estado = { web: D.web || null, login: D.login || null, via: D.via || '', avisos: !!D.avisos, privacidad: !!D.privacidad, vista: D.vista !== false };
   var resp = {};
   var tiene = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
   var txt = function (x) { return x == null ? '' : String(x); };
@@ -80,13 +82,54 @@
     teclado: function () { enviar('teclado'); },
     trabajando: function (si, texto) { enviar('trabajando', { si: !!si, titulo: '', texto: txt(texto) }); },
     trabajandoCon: function (si, titulo, texto) { enviar('trabajando', { si: !!si, titulo: txt(titulo), texto: txt(texto) }); },
-    // el dictado propio llega más adelante: mientras, el del teclado del iPhone
-    voz: function () { setTimeout(function () { if (window.vozTexto) window.vozTexto(null, 'Para dictar, toca el micrófono del teclado'); }, 0); }
+    aLaVista: function () { return estado.vista !== false; },
+
+    /* ---- los avisos (Avisos.swift): la lista de la web, el permiso y los que se ponen al momento ---- */
+    programarAvisos: function (json) { enviar('programarAvisos', { j: txt(json) }); },
+    avisosPermitidos: function () { return !!estado.avisos; },
+    pedirPermisoAvisos: function () { enviar('pedirPermisoAvisos'); },
+    // en el iPhone los avisos llegan siempre a su minuto: no hay un permiso aparte, como en Android
+    alarmasExactas: function () { return true; },
+    pedirAlarmasExactas: function () {},
+    notificar: function (titulo, texto, hash) { enviar('notificar', { t: txt(titulo), x: txt(texto), h: txt(hash) }); },
+
+    /* ---- el plan y la pregunta a la IA si sales de la app a medias: avisa el servidor (Empuje, en Avisos.swift) ---- */
+    planEnMarcha: function (rid, tk) { enviar('planEnMarcha', { rid: txt(rid), tk: txt(tk) }); },
+    planAcabado: function () { enviar('planAcabado'); },
+    // (la vuelta de los alias y lo preguntado no salen del móvil ni hacen falta aquí: el aviso con los nombres lo pone
+    // la app cuando la respuesta le llega a ella, con el resumen que le pasa la web)
+    preguntaEnMarcha: function (rid, tk) { enviar('preguntaEnMarcha', { rid: txt(rid), tk: txt(tk) }); },
+    preguntaAcabada: function (ok, resumen) { enviar('preguntaAcabada', { ok: !!ok, r: txt(resumen) }); },
+
+    /* ---- los anuncios (Anuncios.swift): lo mismo que en la app de Google Play ---- */
+    hayAnuncios: function () { return true; },
+    zonaAnuncios: function (si, bloque, inter) { enviar('zonaAnuncios', { si: !!si, b: txt(bloque), inter: !!inter }); },
+    intersticial: function (bloque) { enviar('intersticial', { b: txt(bloque) }); },
+    aperturaAnuncios: function (toca, bloque) { enviar('aperturaAnuncios', { toca: !!toca, b: txt(bloque) }); },
+    verAnuncio: function (para) { enviar('verAnuncio', { p: txt(para) }); },
+    cancelarAnuncio: function () { enviar('cancelarAnuncio'); },
+    hayPrivacidadAnuncios: function () { return !!estado.privacidad; },
+    privacidadAnuncios: function () { enviar('privacidadAnuncios'); },
+
+    /* ---- (iOS 3) fotos, la versión nueva (Medios.swift y Principal.swift) ---- */
+    // fotos o capturas para la IA, con el selector de fotos del iPhone (sin permiso de la galería: solo lo que eliges);
+    // llegan con fotosApp([...base64], error), como en Android
+    fotos: function (max) { enviar('fotos', { n: Math.max(1, Math.min(4, +max || 1)) }); },
+    // la versión nueva de la app está en la App Store: se abre su ficha
+    actualizar: function () { enviar('tienda'); },
+    instalar: function () { enviar('tienda'); }
   };
 
   /* lo que usa la parte nativa para contestar (no se enumera: la web no lo ve al recorrer el puente) */
   Object.defineProperty(A, '__r', { value: function (id, json) { resp[id] = json; if (window.__http) window.__http(id); } });
   Object.defineProperty(A, '__pon', { value: function (x) { for (var k in x) if (tiene(x, k)) estado[k] = x[k]; } });
+
+  // la alarma del clausulazo, de prueba: solo donde hay alarmas del sistema (la web la ofrece si existe)
+  if (D.alarma) A.probarAlarma = function (seg, titulo, texto) { enviar('probarAlarma', { s: Math.round(+seg) || 10, t: txt(titulo), x: txt(texto) }); };
+  // (iOS 3) el QR del ordenador, con la cámara (contesta qrLeido(texto) o qrLeido(null, motivo); null solo: cancelado)
+  if (D.qr) A.escanearQR = function () { enviar('escanearQR'); };
+  // (iOS 3) dictar la pregunta: el iPhone lo pasa a texto sin sacar el audio del móvil (contesta vozTexto(texto))
+  if (D.voz) A.voz = function () { enviar('voz'); };
 
   window.FantasyApp = A;
 })();

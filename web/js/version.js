@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4l';
+export const VERSION = '0.8.4m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -27,9 +27,21 @@ export const NOVEDADES = [
     // (25 nov, la B-4 de claude/prompt-noticias-deno-busquedas.md del proyecto) en la web, Google Noticias da 503 a las IP
     // de Cloudflare: si falla, Bing Noticias por el Worker (externas.js: parseRSS con los dos formatos, consultaBing,
     // «noticias-bing» 6 h); Worker: www.bing.com en PERMITIDOS, solo su RSS. Pruebas: datos.mjs y prueba-noticias.mjs
-    v: '0.8.4l', f: '2026-11-25', h: 'HH:MM', t: 'Las noticias, también en la web',
+    v: '0.8.4m', f: '2026-11-25', h: 'HH:MM', t: 'Las noticias, también en la web',
     cosas: [
       { tipo: 'arreglo', d: 'periodico', t: 'Las noticias vuelven a la web y al iPhone', x: 'En el navegador del ordenador y del iPhone las noticias de tus jugadores y de los clubes no llegaban casi nunca. Ahora, si la fuente de siempre no contesta, se buscan en otra, y el plan y la ficha de cada club vuelven a tenerlas.' },
+    ],
+  },
+  {
+    // (25 nov, sesión iOS 4 de claude/plan-ios.md) Se publica lo de iOS 2 e iOS 3 (rama `ios`): el Worker con `/push` (APNs)
+    // y el canal «ios» en «Quién usa la app», `bloqueIos` en limites.json, permiso-ia.js, `hayFondo()`, los textos y la IA
+    // sin clave de Google dentro de la app de iOS, y el apartado «La app de iPhone» de privacidad.html. Fuera de la app de
+    // iOS no cambia nada de lo que se ve (el paquete de Android sale con la misma huella nativa). El detalle, en
+    // claude/sesion-25nov-ios-2.md, -ios-3.md e -ios-4.md del proyecto. OJO: la rama `noticias-bing` llevaba también
+    // la 0.8.4l: al publicarla, pasa a ser la 0.8.4m.
+    v: '0.8.4l', f: '2026-11-25', h: '21:34', t: 'La app de iPhone, en pruebas',
+    cosas: [
+      { para: 'dueño', tipo: 'nuevo', d: 'movil', t: 'La app de iPhone, aparte en «Quién usa la app»', x: 'Los que entran con la app de iPhone salen como canal propio: antes de entrar, desde dónde entran y qué versión llevan.' },
     ],
   },
   {
