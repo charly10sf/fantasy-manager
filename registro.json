@@ -2208,6 +2208,13 @@
     "clase": "mercado",
     "chollo": "2703"
    }
+  },
+  {
+   "clave": "previa|139",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125469955730616571",
+   "t": "2026-11-25T06:01:41.938Z"
   }
  ],
  "estados": {
@@ -3097,15 +3104,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/vivian-entre-el-cielo-y-el-infierno-f202611-n/": 1795306668000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253882/autoinculpacion.html": 1795327200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253750/dani-olmo-vuelve-magia-rotacion-perfecta.html": 1795325400000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261122/1004253973/titular-previas-primera-federacion-g2.html": 1795307700000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253851/cambios-medita-flick-villarreal-once.html": 1795302300000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261121/1004253893/espi-acude-vez-rescate-madrid.html": 1795298896000,
-   "SPORT|136710483": 1795299986000,
-   "SPORT|136710095": 1795298512000,
-   "Superdeporte|https://www.superdeporte.es/futbol/futbol-valenciano/cd-castellon/2026/11/21/cd-castelllon-pablo-hernandez-lleva-136709318.html": 1795299715000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254001/oportunidad-raphinha-ampliar-ventaja-lucha-primer-pichichi.html": 1795335516000,
    "SPORT|136713918": 1795332440000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000,
@@ -3246,38 +3244,21 @@
    "SPORT|136810666": 1795544869000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261124/1004255072/aramburu-luka-sucic-margen-zubieta-dos-dias-partido-londres.html": 1795548702000,
    "SPORT|136809414": 1795547078000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261124/1004255090/pendientes-joan-garcia.html": 1795550536000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/24/mourinho-vestuario-vegas-pasa-vegas-queda-vegas.html": 1795559768000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255140/posible-once-barca-baku-flick-estrenara-tridente-dia-rotaciones.html": 1795586400000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255201/portada-md-bizkaia-araba-hoy-miercoles.html": 1795562595000,
+   "SPORT|136811567": 1795581071000,
+   "SPORT|136820003": 1795579703000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/24/cucho-hernandez-queremos-pasar-ocho-primeros.html": 1795558554000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/24/mbappe-empenado-en-recuperar-al-mejor-vinicius-detalle-de-grandeza-del-frances-con-el-trofeo-de-mejor-jugador-cadena-ser/": 1795562856000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-rinde-bellingham-jugador-forma-mundo-20261124_3481452.html": 1795560376000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/jude-bellingham-senala-dudar-clave-espectacular-rendimiento-mourinho-20261124_3481451.html": 1795560319000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-slovan-bratislava-betis-champions-league-5a-jornada-24-20261124_3481403.html": 1795557615000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/24/6b05fc64fc6c83a13b8b4583.html": 1795558081000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-equipo-ambicion-pies_0_2008578947.html": 1795558467000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253750/dani-olmo-vuelve-magia-rotacion-perfecta.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795325400000,
-    "id": "3092",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Olmo vuelve tras su lesión en el aductor izquierdo",
-    "motivo": "lesión en el aductor izquierdo",
-    "plazo": "",
-    "nums": [
-     4,
-     2,
-     20,
-     28
-    ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004253851/cambios-medita-flick-villarreal-once.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795302300000,
-    "id": "2355",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kounde se recupera y vuelve para recibir al Villarreal",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/",
     "medio": "AS",
@@ -3480,11 +3461,23 @@
     "motivo": "brecha sufrida en la frente",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255201/portada-md-bizkaia-araba-hoy-miercoles.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795562595000,
+    "id": "927",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-24",
-   "n": 45
+   "dia": "2026-11-25",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4349,7 +4342,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136700224": 1795327253000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/22/thalys-se-instala-en-el-banquillo-y-el-almeria-mira-al-mercado-ser-almeria/": 1795336805000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
@@ -4436,26 +4428,28 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-24",
-   "n": 12,
-   "fallos": 1
+   "dia": "2026-11-25",
+   "n": 0,
+   "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255125/barca-ninos.html": 1795586478484
+  }
  },
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 3,
-   "revisar": 2,
+   "clasificar": 1,
+   "redactar": 5,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 37046,
-  "salida": 902,
+  "entrada": 68505,
+  "salida": 5120,
   "cacheLee": 2903,
-  "cacheEscribe": 2903,
-  "dolares": 0.090659,
+  "cacheEscribe": 5806,
+  "dolares": 0.160601,
   "reservado": 0
  },
  "recientes": {
@@ -4549,10 +4543,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-19T10:26:26.924Z",
-    "texto": "🗓️ Alavés-Deportivo, el sábado a las 14:00 en Mendizorroza, se juega entre dos equipos de mitad de tabla: el Alavés va 12º y el Dépor 9º.\n\nEn el Alavés falta Mikel Rodriguez, lesionado, y Sivera es el fijo bajo palos, con un 94 % de titularidad. T. Martínez tiene más papeletas de jugar que de quedarse fuera, y Valentini anda justo por encima de la mitad.\n\nEl Deportivo llega con dos dudas arriba y atrás: Aubameyang y Loureiro lo normal es que salgan, aunque no hay nada cerrado. Mario Soriano es el seguro del centro del campo."
-   },
-   {
     "t": "2026-11-19T20:06:31.392Z",
     "texto": "🗓️ Posibles onces de Levante-Elche, el lunes a las 21:00\n\nLo que no está claro: Lemar (42 %), B. Sangare (47 %) y Cepeda en el Elche 🌴, y Manu Sánchez, Ifeanyi Ndukwe y Etta Eyong en el Levante 🐸. Al Elche le falta M. Aguado, lesionado.\n\nLo seguro: Ryan (94 %, 6,8 de media) y M. Dituro (92 %).\n\nEn la tabla hay poco que separar al Levante (17º) del Elche (18º)."
    },
@@ -4567,6 +4557,10 @@
    {
     "t": "2026-11-24T12:31:56.280Z",
     "texto": "Deportivo-Barça (el domingo a las 16:15): así llegan los dos a la jornada 14\n\nAdeyemi es la gran duda de este partido: 51 % de titularidad en el Barcelona. También con dudas: Frenkie de Jong en el Barça, y Marc Casadó y Alti en el Dépor.\n\nAl Barcelona le faltan Fermín, sancionado, y Xavi Espart y Bardghji, lesionados. Sin discusión, Raphinha (85 %, 12,3 de media) y Mario Soriano (85 %).\n\nSobre el papel, el Barça lo tiene más fácil: va 1º y el Deportivo, 12º. Lamine Yamal es quien más destaca: 12,8 de media."
+   },
+   {
+    "t": "2026-11-25T06:01:41.941Z",
+    "texto": "El Celta-Villarreal del domingo (18:30, Balaídos) llega con un cruce claro: los celestes encajan poco y a los delanteros y medios del Villarreal les toca picar piedra.\n\nAl portero y a los defensas amarillos les viene mejor, porque el Celta marca poco.\n\nEn el Celta faltan Román, lesionado, y Yoel Lago, sancionado. Radu es el fijo bajo palos, con un 94 % de titularidad. Pablo Durán y Hugo Alvarez son duda, aunque lo más probable es que jueguen.\n\nEn el Villarreal no está Gerard, lesionado. Freeman y C. Romero tienen más opciones de salir que de quedarse fuera."
    }
   ],
   "noticias": [
@@ -9505,13 +9499,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6215,
+   "ok": 6216,
    "fallos": 0,
-   "ejecuciones": 5034,
+   "ejecuciones": 5035,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T05:56:12.665Z"
+   "ultima": "2026-11-25T06:01:18.484Z"
   }
  },
  "ptsDirecto": {},
@@ -9528,15 +9522,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T05:56:13.378Z"
+   "ultimaBien": "2026-11-25T06:01:56.195Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T05:56:13.378Z"
+   "ultimaBien": "2026-11-25T06:01:56.195Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T05:56:13.378Z"
+   "ultimaBien": "2026-11-25T06:01:56.195Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9544,11 +9538,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T22:56:17.277Z"
+   "ultimaBien": "2026-11-25T06:01:56.195Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-24T21:56:19.102Z"
+   "ultimaBien": "2026-11-25T06:01:56.195Z"
   }
  },
  "avisos": [
