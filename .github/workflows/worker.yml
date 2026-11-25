@@ -133,6 +133,22 @@ jobs:
             echo "::error::No se ha podido guardar BOT_DISPATCH_TOKEN en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi
+      # (0.8.4) La llave de la Action «Fallos» para leer y contestar los avisos por el Worker (/fallos/accion): ya no están en
+      # el KV, sino en un Durable Object, y la API de Cloudflare no llega ahí. Es el sha256 de «fallos|» más el token de
+      # Cloudflare, que la Action «Fallos» también tiene: nadie crea ni copia nada, y el token no sale de GitHub. Se vuelve a
+      # poner en cada publicación (si cambia el token, cambia la llave en los dos sitios). El valor nunca sale en el log.
+      - name: Llave de los avisos para la Action
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if printf 'fallos|%s' "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -c1-64 | npx --yes wrangler@4.158.0 secret put FALLOS_CLAVE > salida.txt 2>&1; then
+            echo "::notice::Llave de los avisos lista: la Action «Fallos» lee y contesta por el Worker"
+          else
+            echo "::warning::No se ha podido guardar FALLOS_CLAVE en el Worker: la Action «Fallos» no podrá leer los avisos ($(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-200))"
+          fi
       # La clave de Claude para los planes del día (/plan), aparte de la del bot: la crea Carlos en la consola de Claude con
       # su tope de gasto y la pone en GitHub como secreto de Actions CLAUDE_PLANES. Se copia al Worker en cada publicación;
       # sin el secreto no se toca la que ya tenga el Worker (y si no tiene ninguna, /plan contesta que falta y la app se queda

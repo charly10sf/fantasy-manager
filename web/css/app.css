@@ -143,6 +143,24 @@ b, strong { font-weight: 600; color: var(--texto); }
 .aviso-det summary { cursor: pointer; color: var(--texto2); font-size: var(--t-sec2); }
 .aviso-det pre.diag { max-height: 260px; overflow: auto; }
 .aviso-texto { font-size: var(--t-cuerpo) !important; color: var(--texto); }
+/* (0.8.4) los avisos como conversación: burbujas (lo tuyo a la derecha, en rojo suave; lo del otro a la izquierda) y la caja
+   de escribir abajo, con el clip de adjuntar a la izquierda y enviar a la derecha */
+.aviso.hilo .aviso-cab { cursor: pointer; }
+.aviso-ult { margin-top: 6px !important; }
+.aviso-ult b { color: var(--texto2); font-weight: 600; }
+.msgs { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 10px; }
+.msg { max-width: 86%; padding: 8px 11px 6px; border-radius: 14px; background: var(--plano3); display: flex; flex-direction: column; gap: 2px; align-self: flex-start; border-bottom-left-radius: 4px; }
+.msg.mio { align-self: flex-end; background: var(--rojo-s); border-bottom-left-radius: 14px; border-bottom-right-radius: 4px; }
+.msg b { font-size: var(--t-mini); color: var(--texto2); font-weight: 600; }
+.msg p { margin: 0 !important; font-size: var(--t-cuerpo); line-height: 1.42; white-space: pre-wrap; word-break: break-word; }
+.msg small { font-size: var(--t-mini); color: var(--apagado); align-self: flex-end; }
+.msg .aviso-capt { margin: 4px 0 2px; }
+.hilo-caja { border-top: 1px solid var(--linea); padding-top: 10px; }
+.hilo-fila { display: flex; gap: 6px; align-items: flex-end; }
+.hilo-fila textarea { flex: 1; min-height: 44px; resize: vertical; font-size: var(--t-cuerpo); line-height: 1.4; margin: 0; }
+.hilo-fila .b-ico { flex: none; width: 44px; height: 44px; }
+.hilo-env { color: var(--rojo-l); }
+.hilo-caja .aviso-capt { margin: 0 0 8px; }
 /* un fallo al cargar, explicado */
 .banda.mal { background: var(--baja-s); }
 .banda.mal .ic { color: var(--baja); }

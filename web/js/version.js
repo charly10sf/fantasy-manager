@@ -40,8 +40,16 @@ export const NOVEDADES = [
     // una llamada (`base` y `choque`), junta los cambios seguidos (4 s) y no llama mientras la IA contesta (web/js/sinc.js).
     // Y (Carlos, 25 nov 00:21: «web incluye a los de iOS… me gustaría que se diferenciasen») la web manda en /hola en qué
     // aparato va (`disp`, canalPaso de semaforo.js) y «Desde dónde» separa iPhone, web en el ordenador y web en Android.
-    v: '0.8.4', f: '2026-11-25', t: 'Entrar en el ordenador con el QR',
+    // FASE 3 (Carlos, 25 nov: «no pongas audios, pero que sea una conversación»): cada aviso de fallo es un hilo (worker/src/
+    // fallos.js, el objeto «fallos|todos» con SQLite; antes en el KV, f: y fc:). Mensajes de los dos lados con capturas
+    // (hasta 3 por mensaje), «Visto» por cada lado, pendiente = el último es de quien lo mandó; /fallos/responder AÑADE (las
+    // webs de antes del dueño también); para las webs de antes, `respuesta` es el último de Fantasy Manager (así les llega la
+    // notificación de cada uno). La Action «Fallos» lee y contesta por /fallos/accion (llave sacada del token de Cloudflare).
+    // Lo del KV lo copia el cron (`mudanzaFallos`). La pantalla: `burbujas`, `cajaHilo` y `avisoMio` (hojas.js); `abrirHilo`
+    // y `escribirHilo` (app.js). Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
+    v: '0.8.4', f: '2026-11-25', t: 'Los avisos de fallo, ahora como una conversación',
     cosas: [
+      { tipo: 'nuevo', d: 'chat', t: 'Los avisos de fallo, ahora como una conversación', x: 'Puedes contestar en el mismo aviso las veces que haga falta, con capturas en cada mensaje, y ves cuándo he leído lo tuyo.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app: desde dónde, con el iPhone aparte', x: 'En «Desde dónde», la web ya no va toda junta: salen aparte el iPhone, el ordenador y la web en Android. Se irá llenando a medida que cada uno abra esta versión.' },
       { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app: abrirla también en este ordenador».' },
     ],

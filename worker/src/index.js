@@ -71,6 +71,7 @@ import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
 import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
 import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
+import { fallosObjeto, MAX_CAPTURAS } from './fallos.js';
 export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
 
 const PERMITIDOS = new Set([
@@ -355,6 +356,8 @@ export class Emparejar {
     if (ruta === '/sinc') return new Response(JSON.stringify(await sincObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // (0.8.4) quién usa la app (ficha, registro y tiempo de uso de todas las cuentas), en «quien|todos» con SQLite
     // (worker/src/quien.js); nunca pone alarma. «todos» devuelve el JSON ya escrito
+    // (0.8.4, fase 3) los avisos de fallo como conversación, en «fallos|todos» con SQLite (worker/src/fallos.js)
+    if (ruta === '/fallos') return new Response(JSON.stringify(fallosObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
     if (ruta === '/quien') {
       const x = await quienObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo);
       return new Response(typeof x === 'string' ? x : JSON.stringify(x), { status: 200 });
@@ -504,18 +507,10 @@ async function qrEsperar(url, env, c) {
   return new Response(v, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 }
 
-/* ---------- los avisos de fallos ---------- */
-// Van en el mismo almacén KV que los códigos, con la clave f:<cuenta>:<id> (así se listan los de cada uno) y un
-// resumen en los metadatos (para listarlos todos sin leerlos uno a uno). Si no hay almacén, no hay avisos.
-const VIVE = 180 * 86400; // lo que se guarda un aviso, en segundos
-// (5 avisos al día por cuenta y capturas de hasta 350 KB: antes, 15 y 700 KB, y una cuenta podía meter 32 MB al día durante
-// 180 días, el GB del plan gratis en un mes; revisión total, C1)
-export const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 5;
-// las capturas van aparte, una por clave (fc:<id>:<n>), para que la lista de avisos no las tenga que leer
-// (la app las manda ya reducidas, por debajo de 340 KB desde la 0.7z (fotos.js); solo se mira el principio: el plan
-// gratis de Workers da 10 ms de CPU por petición y recorrer megas con una expresión regular se los come)
-export const MAX_CAPTURAS = 3, MAX_CAPTURA = 350000;
-const esCaptura = (x) => typeof x === 'string' && x.length <= MAX_CAPTURA && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]/.test(x.slice(0, 40));
+/* ---------- los avisos de fallos (0.8.4: conversaciones en el objeto «fallos|todos», worker/src/fallos.js) ---------- */
+// (antes en el KV: f:<cuenta>:<id> con un resumen en los metadatos y las capturas en fc:<id>:<n>; lo que quede ahí lo copia
+// el cron, `mudanzaFallos`. Los topes, en fallos.js)
+export { MAX_TEXTO, MAX_RESPUESTA, MAX_DIAG, AL_DIA, MAX_CAPTURAS, MAX_CAPTURA, HILO_MSGS, HILO_CAPS, MSGS_DIA, CAPS_DIA } from './fallos.js';
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
 // (0.8.4, fase 2; Carlos, 25 nov: «Domy me ayuda con los fallos: que vea Quién usa la app y los avisos de todos») quien ayuda:
 // ve «Quién usa la app» entero y los avisos de fallo de todos con sus capturas, y nada más. No contesta, no ve el diagnóstico
@@ -583,10 +578,6 @@ async function miembros(req, liga) {
   return ids;
 }
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
-const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
-async function guardarFallo(env, f) {
-  await env.VINCULOS.put(`f:${f.uid}:${f.id}`, JSON.stringify(f), { expirationTtl: VIVE, metadata: resumen(f) });
-}
 async function listar(env, prefijo, max = 1000) {
   const out = [];
   let cursor;
@@ -597,88 +588,100 @@ async function listar(env, prefijo, max = 1000) {
   } while (cursor && out.length < max);
   return out;
 }
-/** un aviso por su id (de quien sea, para el dueño; de quien llama, para los demás) */
-async function buscarFallo(env, u, id, admin) {
-  if (!/^[a-z0-9]{6,40}$/.test(String(id || ''))) return null;
-  if (!admin) { const v = await env.VINCULOS.get(`f:${u.uid}:${id}`); return v ? JSON.parse(v) : null; }
-  const k = (await listar(env, 'f:')).find((x) => x.name.endsWith(`:${id}`));
-  if (!k) return null;
-  const v = await env.VINCULOS.get(k.name);
-  return v ? JSON.parse(v) : null;
+const objFallos = (env) => env.QR.get(env.QR.idFromName('fallos|todos'));
+/** una llamada al objeto de los avisos: lo que conteste ({ ok: false, estado, e } si no vale) */
+async function pedirFallos(env, b) {
+  const r = await objFallos(env).fetch('https://freno/fallos', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+  if (r.status !== 200) throw new Error(`fallos ${r.status}`);
+  return r.json();
 }
-const sinDiag = ({ diag, uid, ...f }) => f;
-
+const fueraDe = (r, c) => json({ e: r.e || 'No existe' }, r.estado || 400, c);
+/** una captura (n) de un mensaje (m) de un aviso; las de un aviso copiado del KV que aún no han llegado al objeto, del KV */
+async function capturaDe(env, b) {
+  const r = await pedirFallos(env, { op: 'captura', ...b });
+  if (r.ok) return r;
+  if (r.falta && r.kv && env.VINCULOS) { const img = await env.VINCULOS.get(`fc:${b.id}:${b.i}`).catch(() => null); if (img) return { ok: true, img }; }
+  return { ok: false, estado: 404, e: r.e || 'Esa captura ya no está' };
+}
+/*
+ * POST /fallos                 { texto, diag, equipo, liga, app, capturas }: un aviso nuevo (el primer mensaje del hilo) → { ok, id }
+ * POST /fallos/escribir        { id, texto, capturas }: (0.8.4) un mensaje más de quien lo mandó, en su hilo → { ok, n }
+ * GET  /fallos/mios            tus hilos enteros → { lista, admin, ve, pendientes, yo }
+ * POST /fallos/visto           { id }: has visto lo último
+ * GET  /fallos/captura         ?id&n[&m]: una captura (m, el mensaje; sin m, el primero, como en las webs de antes)
+ * GET  /fallos/todos           (el dueño y quien ayuda) el resumen de todos → { lista, pendientes }
+ * GET  /fallos/uno             ?id[&visto=1] (el dueño y quien ayuda; el diagnóstico, solo el dueño, que con visto=1 lo da por visto)
+ * POST /fallos/responder       { id, respuesta, capturas }: (el dueño) AÑADE un mensaje de Fantasy Manager; antes pisaba la
+ *                              respuesta anterior. Lo usan también las webs de antes del dueño
+ * POST /fallos/accion          (la Action «Fallos», con la llave x-fallos-clave) { op: leer | captura | contestar }
+ */
 async function fallos(req, env, c, ruta) {
-  if (!env.VINCULOS) return json({ e: 'El servidor no tiene dónde guardar los avisos' }, 503, c);
+  if (ruta === '/fallos/accion') return fallosAccion(req, env, c);
+  if (!env.QR) return json({ e: 'El servidor no tiene dónde guardar los avisos' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para mandar avisos', sesion: true }, 401, c);
-  const admin = adminsDe(env).includes(u.uid);
-  // (0.8.4) quien ayuda ve los de todos (lista, aviso sin diagnóstico y capturas), pero no contesta
-  const ve = admin || papelDe(env, u.uid) === 'ayuda';
-  const cuerpo = req.method === 'POST' ? await req.json().catch(() => null) : null;
+  const papel = papelDe(env, u.uid), admin = papel === 'dueño', ve = !!papel;
+  const cuerpo = req.method === 'POST' ? (await req.json().catch(() => null)) || {} : null;
+  const q = new URL(req.url).searchParams;
 
   if (ruta === '/fallos' && req.method === 'POST') {
-    const texto = corta(cuerpo && cuerpo.texto, MAX_TEXTO).trim();
-    if (!texto) return json({ e: 'Cuenta qué ha pasado' }, 400, c);
-    const mios = await listar(env, `f:${u.uid}:`);
-    const hoy = Date.now() - 86400e3;
-    if (mios.filter((k) => k.metadata && k.metadata.t > hoy).length >= AL_DIA) return json({ e: `Como mucho ${AL_DIA} avisos al día` }, 429, c);
     const id = Date.now().toString(36) + [...crypto.getRandomValues(new Uint8Array(4))].map((b) => b.toString(36)).join('').slice(0, 6);
-    const caps = (Array.isArray(cuerpo.capturas) ? cuerpo.capturas : []).filter(esCaptura).slice(0, MAX_CAPTURAS);
-    const f = {
-      id, t: Date.now(), uid: u.uid, quien: u.nombre, equipo: corta(cuerpo.equipo, 60), liga: corta(cuerpo.liga, 60),
-      texto, diag: corta(cuerpo.diag, MAX_DIAG), app: corta(cuerpo.app, 120), respuesta: null, respondida: null, vista: true,
-      capturas: caps.length,
-    };
-    // primero las capturas: si el aviso se guarda, ya están
-    for (let n = 0; n < caps.length; n++) await env.VINCULOS.put(`fc:${id}:${n}`, caps[n], { expirationTtl: VIVE });
-    await guardarFallo(env, f);
-    return json({ ok: true, id }, 200, c);
+    const r = await pedirFallos(env, { op: 'nuevo', uid: u.uid, id, quien: u.nombre, texto: cuerpo.texto, diag: cuerpo.diag, equipo: cuerpo.equipo, liga: cuerpo.liga, app: cuerpo.app, capturas: cuerpo.capturas });
+    return r.ok ? json({ ok: true, id: r.id }, 200, c) : fueraDe(r, c);
+  }
+  if (ruta === '/fallos/escribir' && req.method === 'POST') {
+    const r = await pedirFallos(env, { op: 'escribir', uid: u.uid, id: cuerpo.id, texto: cuerpo.texto, capturas: cuerpo.capturas });
+    return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/mios' && req.method === 'GET') {
-    const ks = (await listar(env, `f:${u.uid}:`)).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 30);
-    const lista = (await Promise.all(ks.map((k) => env.VINCULOS.get(k.name)))).filter(Boolean).map((v) => sinDiag(JSON.parse(v)));
-    let pendientes = null;
-    if (admin) pendientes = (await listar(env, 'f:')).filter((k) => k.metadata && !k.metadata.r).length;
-    return json({ lista, admin, ve, pendientes, yo: u.uid }, 200, c);
+    const r = await pedirFallos(env, { op: 'mios', uid: u.uid, pend: admin });
+    return json({ lista: r.lista || [], admin, ve, pendientes: admin ? r.pendientes || 0 : null, yo: u.uid }, 200, c);
   }
   if (ruta === '/fallos/visto' && req.method === 'POST') {
-    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, false);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    if (!f.vista) { f.vista = true; await guardarFallo(env, f); }
-    return json({ ok: true }, 200, c);
+    const r = await pedirFallos(env, { op: 'visto', uid: u.uid, id: cuerpo.id });
+    return r.ok ? json({ ok: true }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/captura' && req.method === 'GET') {
-    const q = new URL(req.url).searchParams;
-    const n = Number(q.get('n'));
-    const f = await buscarFallo(env, u, q.get('id'), ve);
-    if (!f || !Number.isInteger(n) || n < 0 || n >= (f.capturas || 0)) return json({ e: 'No existe' }, 404, c);
-    const img = await env.VINCULOS.get(`fc:${f.id}:${n}`);
-    if (!img) return json({ e: 'Esa captura ya no está' }, 404, c);
-    return json({ img }, 200, c);
+    const r = await capturaDe(env, { id: q.get('id'), m: Number(q.get('m')) || 0, i: Number(q.get('n')), uid: u.uid, todos: ve });
+    return r.ok ? json({ img: r.img }, 200, c) : fueraDe(r, c);
   }
   if (!ve) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/todos' && req.method === 'GET') {
-    const ks = (await listar(env, 'f:')).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 200);
-    return json({ lista: ks.map((k) => ({ id: k.name.split(':').pop(), ...(k.metadata || {}) })) }, 200, c);
+    const r = await pedirFallos(env, { op: 'todos' });
+    return json({ lista: r.lista || [], pendientes: r.pendientes || 0 }, 200, c);
   }
   if (ruta === '/fallos/uno' && req.method === 'GET') {
-    const f = await buscarFallo(env, u, new URL(req.url).searchParams.get('id'), true);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    const { uid, ...resto } = f;
-    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona)
-    return json(admin ? resto : sinDiag(f), 200, c);
+    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona; y no lo da por visto)
+    const r = await pedirFallos(env, { op: 'uno', id: q.get('id'), ver: admin ? 'dueño' : 'ayuda', marcar: q.get('visto') === '1' });
+    if (!r.ok) return fueraDe(r, c);
+    const { ok, ...h } = r;
+    return json(h, 200, c);
   }
   if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/responder' && req.method === 'POST') {
-    const respuesta = corta(cuerpo && cuerpo.respuesta, MAX_RESPUESTA).trim();
-    if (!respuesta) return json({ e: 'Escribe la respuesta' }, 400, c);
-    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, true);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    f.respuesta = respuesta; f.respondida = Date.now(); f.vista = false; f.por = u.nombre;
-    await guardarFallo(env, f);
-    return json({ ok: true }, 200, c);
+    const r = await pedirFallos(env, { op: 'escribir', dueno: true, id: cuerpo.id, texto: cuerpo.respuesta, capturas: cuerpo.capturas, por: 'Fantasy Manager' });
+    return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
+  return json({ e: 'No existe' }, 404, c);
+}
+/*
+ * (0.8.4) La Action «Fallos» (.github/fallos.mjs) ya no puede leer los avisos del KV con la API de Cloudflare: los pide aquí.
+ * La llave es FALLOS_CLAVE, que worker.yml saca del token de Cloudflare (sha256 de «fallos|token») y la Action saca igual:
+ * nadie tiene que crear ni copiar nada. Sin ella, la ruta no existe. Sin Origin (la llama la Action, no una página).
+ *   { op: 'leer', max }                → { lista }: los hilos enteros, con el diagnóstico, sin el número de cuenta
+ *   { op: 'captura', id, m, n }        → { img }
+ *   { op: 'contestar', respuestas }    → { n }: añade un mensaje de Fantasy Manager a cada uno ([{ id | buscar, respuesta }])
+ */
+async function fallosAccion(req, env, c) {
+  const clave = String(env.FALLOS_CLAVE || ''), llega = String(req.headers.get('x-fallos-clave') || '');
+  if (req.method !== 'POST' || clave.length < 32 || llega.length !== clave.length) return json({ e: 'No existe' }, 404, c);
+  let dif = 0;
+  for (let i = 0; i < clave.length; i++) dif |= clave.charCodeAt(i) ^ llega.charCodeAt(i);
+  if (dif || !env.QR) return json({ e: 'No existe' }, 404, c);
+  const b = (await req.json().catch(() => null)) || {};
+  if (b.op === 'leer') return json(await pedirFallos(env, { op: 'accion', max: b.max }), 200, c);
+  if (b.op === 'captura') { const r = await capturaDe(env, { id: b.id, m: Number(b.m) || 0, i: Number(b.n), todos: true }); return r.ok ? json({ img: r.img }, 200, c) : fueraDe(r, c); }
+  if (b.op === 'contestar') return json(await pedirFallos(env, { op: 'contestar', respuestas: b.respuestas }), 200, c);
   return json({ e: 'No existe' }, 404, c);
 }
 
@@ -1395,6 +1398,7 @@ async function borrarMios(req, env, c) {
   // (las de quién usa la app que aún queden en el KV de antes de la 0.8.4: se borran solas, pero no hay que esperar)
   const claves = [`p:${u.uid}`, `r:${u.uid}`];
   for (const k of await listar(env, `u:${u.uid}:`)) claves.push(k.name);
+  // (los avisos de antes de la 0.8.4 que aún queden en el KV, con sus capturas)
   let avisos = 0;
   for (const k of await listar(env, `f:${u.uid}:`)) {
     avisos++;
@@ -1407,8 +1411,10 @@ async function borrarMios(req, env, c) {
   for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
   // (19 nov) tu código de invitar y tus premios (queda solo que la cuenta ya existía, para que no valga como nueva) y tus apodos
   if (env.QR) {
-    // (0.8.4) tu ficha, tu registro y tu tiempo de uso, en el objeto de quién usa la app
+    // (0.8.4) tu ficha, tu registro y tu tiempo de uso, en el objeto de quién usa la app, y tus avisos de fallo (los hilos
+    // enteros, con todas sus capturas), en el de los avisos
     try { const r = await pedirQuien(env, { op: 'borrar', uid: u.uid }); if (!r.ok) fallidas++; PRIMERA_MEM.delete(u.uid); } catch (e) { fallidas++; }
+    try { const r = await pedirFallos(env, { op: 'borrar', uid: u.uid }); if (r.ok) avisos += r.n; else fallidas++; } catch (e) { fallidas++; }
     try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
     try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
     // (22 nov) y lo guardado para tener lo mismo en todos tus dispositivos (plan, chat, lo contado)
@@ -1646,6 +1652,52 @@ export async function mudanzaQuien(env, ahora = Date.now()) {
   return { borradas: borrar.length };
 }
 
+/*
+ * La mudanza de los avisos de fallo desde el KV (0.8.4, fase 3), con el mismo cron y después de la de quién usa la app:
+ *   1. los hilos: cada aviso (f:<cuenta>:<id>) pasa a ser un hilo con su texto y, si tenía respuesta, la respuesta como
+ *      segundo mensaje; MUDANZA_AVISOS por pasada, de los más nuevos a los más viejos, sin pisar los que ya están;
+ *   2. las capturas (fc:<id>:<n>), MUDANZA_CAPS por pasada (hasta entonces /fallos/captura las lee del KV);
+ *   3. dos días después, borra del KV las f: y las fc:, MUDANZA_LOTE a la hora. Con eso el KV se queda con los códigos.
+ */
+export const MUDANZA_AVISOS = 15, MUDANZA_CAPS = 6;
+const MUDANZA_F = { limpio: 0, copiado: 0 };
+export async function mudanzaFallos(env, ahora = Date.now()) {
+  if (!env.QR || !env.VINCULOS || MUDANZA_F.limpio) return { nada: true };
+  if (MUDANZA_F.copiado && new Date(ahora).getUTCMinutes() >= 5) return { nada: true };
+  const est = await pedirFallos(env, { op: 'mudanza' });
+  if (est.limpio) { MUDANZA_F.limpio = est.limpio; return { limpio: true }; }
+  if (!est.copiado) {
+    if (est.fase !== 'caps') {
+      const ks = (await listar(env, 'f:', 50000)).sort((a, b) => ((b.metadata || {}).t || 0) - ((a.metadata || {}).t || 0));
+      const id = (k) => k.name.split(':').pop();
+      const { faltan = [] } = ks.length ? await pedirFallos(env, { op: 'faltan', ids: ks.map(id) }) : {};
+      if (!faltan.length) { await pedirFallos(env, { op: 'copiar', avisos: [], siguiente: 'caps' }); return { fase: 'hilos', hecho: true }; }
+      const lote = new Set(faltan.slice(0, MUDANZA_AVISOS));
+      const leido = await leerEnBloque(env, ks.filter((k) => lote.has(id(k))).map((k) => k.name));
+      // (el texto de cada aviso tal cual: lo lee el objeto, no el Worker)
+      const r = await pedirFallos(env, { op: 'copiar', avisos: [...leido.values()] });
+      console.log(`mudanza de los avisos: ${r.n} hilos copiados, quedan ${faltan.length - lote.size}`);
+      return { fase: 'hilos', copiados: r.n, quedan: faltan.length - lote.size };
+    }
+    const { caps = [] } = await pedirFallos(env, { op: 'faltanCaps', max: MUDANZA_CAPS });
+    if (!caps.length) { await pedirFallos(env, { op: 'copiado' }); console.log('mudanza de los avisos: copiada'); return { fase: 'caps', hecho: true }; }
+    const imgs = await Promise.all(caps.map(([i, n]) => env.VINCULOS.get(`fc:${i}:${n}`).catch(() => null)));
+    const r = await pedirFallos(env, { op: 'copiarCaps', caps: caps.map(([i, n], k) => [i, n, imgs[k]]) });
+    return { fase: 'caps', copiadas: r.n };
+  }
+  MUDANZA_F.copiado = est.copiado;
+  if (ahora - est.copiado < MUDANZA_ESPERA) return { esperando: true };
+  const borrar = [];
+  for (const pre of ['f:', 'fc:']) {
+    if (borrar.length >= MUDANZA_LOTE) break;
+    const l = await env.VINCULOS.list({ prefix: pre, limit: MUDANZA_LOTE - borrar.length });
+    borrar.push(...l.keys.map((k) => k.name));
+  }
+  if (!borrar.length) { await pedirFallos(env, { op: 'kvLimpio' }); MUDANZA_F.limpio = ahora; console.log('mudanza de los avisos: el KV ya está limpio'); return { limpio: true }; }
+  for (const k of borrar) { try { await env.VINCULOS.delete(k); } catch (e) { break; } }
+  return { borradas: borrar.length };
+}
+
 // El reloj del bot de X: el cron de GitHub Actions no dispara (2 nov, 0 ejecuciones por schedule), así que este Worker,
 // con su cron de wrangler.toml, lanza «Bot X» en main cada 5 min con la API de GitHub. Token de grano fino solo para
 // este repo con Actions: lectura y escritura, en el secreto BOT_DISPATCH_TOKEN (lo pone worker.yml). Sin él, no hace nada.
@@ -1823,7 +1875,13 @@ export default {
     }
     ctx.waitUntil(lanzarBot(env, fetch, inputs).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
     // (0.8.4) la mudanza de quién usa la app desde el KV, hasta que acaba (mudanzaQuien)
-    if (evento.cron === '*/5 * * * *') ctx.waitUntil(mudanzaQuien(env, evento.scheduledTime || Date.now()).catch((e) => console.log('mudanza de quién usa la app:', String((e && e.message) || e))));
+    // (fase 3) y, ya copiado eso, la de los avisos de fallo (mudanzaFallos), una detrás de otra
+    if (evento.cron === '*/5 * * * *') {
+      const t = evento.scheduledTime || Date.now();
+      ctx.waitUntil(mudanzaQuien(env, t).catch((e) => console.log('mudanza de quién usa la app:', String((e && e.message) || e)))
+        .then(() => (MUDANZA.copiado || MUDANZA.limpio ? mudanzaFallos(env, t) : null))
+        .catch((e) => console.log('mudanza de los avisos:', String((e && e.message) || e))));
+    }
   },
 
   async fetch(req, env, ctx) {
@@ -1835,7 +1893,8 @@ export default {
     // viene; sin ella (un script, curl) no se pasa nada (revisión del 23 oct: era un proxy abierto a LaLiga)
     if ((url.pathname === '/p' || url.pathname === '/img') && !req.headers.get('Origin')) return new Response('Solo para la web de Fantasy Manager', { status: 403, headers: c });
     try {
-      const freno = FRENO_RUTA[`${req.method} ${url.pathname}`] || (url.pathname.startsWith('/fallos') ? 'fallos' : null);
+      // (/fallos/accion es la Action «Fallos», con su llave: sin freno por IP, que pide una captura detrás de otra)
+      const freno = FRENO_RUTA[`${req.method} ${url.pathname}`] || (url.pathname.startsWith('/fallos') && url.pathname !== '/fallos/accion' ? 'fallos' : null);
       if (freno) { const no = await frenoIP(req, env, c, freno); if (no) return no; }
       if (url.pathname === '/p' && req.method === 'POST') return await pasar(req, c);
       if (url.pathname === '/img' && req.method === 'GET') return await imagen(url, c);

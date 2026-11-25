@@ -779,7 +779,9 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 // mercado y 12 h después); un turno pasado sin plan de la IA hace que salga solo, y no si no quedan de hoy; en el plan, «Rehacer
 // el plan» en lugar de «Compartir», y sus ajustes con el tono y las dos horas
 {
-  const { ctx, page, errores } = await pagina();
+  // (25 nov) con el reloj de la página fijo (el miércoles a las 12:00 de Madrid): la Action de las 00:07 de Madrid fallaba en
+  // «el turno pasado sin plan» (de 00:00 a 01:00 de Madrid, el día de la Action, en UTC, y el de Madrid no son el mismo)
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
   await page.waitForTimeout(800);

@@ -59,6 +59,8 @@ const pedirQ = async (m, ruta, cuerpo, tk = 'x'.repeat(30), e = envQ) => {
   return { s: r.status, j, t };
 };
 const quien = () => { QRq.get('quien|todos'); return QRq.hay.get('quien|todos'); };
+// (0.8.4, fase 3) los avisos, en «fallos|todos»
+const sqlF = (q, ...a) => { QRq.get('fallos|todos'); return QRq.hay.get('fallos|todos').db.prepare(q).all(...a); };
 const sqlQ = (q, ...a) => quien().db.prepare(q).all(...a);
 const fichaDe = (uid) => { const x = sqlQ('SELECT d FROM ficha WHERE uid = ?', String(uid))[0]; return x ? JSON.parse(x.d) : null; };
 const regDe = (uid) => { const x = sqlQ('SELECT d FROM reg WHERE uid = ?', String(uid))[0]; return x ? JSON.parse(x.d) : null; };
@@ -329,8 +331,9 @@ r = await pide({ ruta: '/vincular', cuerpo: datos, ip: '5.5.5.5', tk: '', e: env
 ok(r.s === 503 && /tope/.test(r.j.e) && !r.j.codigo, `/vincular con el KV lleno: ${r.s} «${r.j && r.j.e}»`);
 r = await pide({ ruta: '/vincular', cuerpo: { id: await sobre.idDeCodigo(sobre.nuevoCodigo()), cif }, ip: '5.5.5.6', tk: '', e: env2 });
 ok(r.s === 503, `lo cerrado con el KV lleno: ${r.s}`);
-r = await pide({ ruta: '/fallos', cuerpo: { texto: 'falla' }, ip: '5.5.5.7', e: env2 });
-ok(r.s === 503 && /tope/.test(r.j.e), `/fallos con el KV lleno: ${r.s} «${r.j && r.j.e}»`);
+// (0.8.4) los avisos ya no van al KV: con el KV lleno se mandan igual
+r = await pide({ ruta: '/fallos', cuerpo: { texto: 'falla' }, ip: '5.5.5.7', e: { ...env2, QR: QRq } });
+ok(r.s === 200 && r.j.ok, `/fallos con el KV lleno: ${r.s} (ya no va al KV)`);
 cuenta.lleno = false;
 // sin KV: 503, nada de la caché
 r = await pide({ ruta: '/vincular', cuerpo: datos, ip: '5.5.5.8', tk: '', e: { ADMINS: '1' } });
@@ -424,15 +427,15 @@ ok(estados.filter((s) => s === 429).length === 10 - W2.FRENOS.hola.min, '/hola, 
 // sin el objeto: 503, y la app sigue
 r = await pide({ ruta: '/hola', cuerpo: { v: '0.7z' }, tk: 'q'.repeat(30) });
 ok(r.s === 503, `/hola sin el objeto: ${r.s}`);
-// /fallos: 5 avisos al día por cuenta y capturas de hasta 350 KB
-kv.clear(); minuto();
+// /fallos: 5 avisos al día por cuenta y capturas de hasta 350 KB (0.8.4: en el objeto de los avisos, nada en el KV)
+kv.clear(); sqlF('DELETE FROM hilo'); sqlF('DELETE FROM msg'); sqlF('DELETE FROM cap'); sqlF('DELETE FROM cupo'); minuto();
 const cap = (n) => 'data:image/jpeg;base64,' + 'A'.repeat(n);
-r = await pide({ ruta: '/fallos', cuerpo: { texto: 'uno', capturas: [cap(300000), cap(W2.MAX_CAPTURA + 10)] }, ip: '7.7.7.1', tk: 'f'.repeat(30) });
-ok(r.s === 200 && [...kv.keys()].filter((k) => k.startsWith('fc:')).length === 1, `/fallos: la captura de más de 350 KB no se guarda (${[...kv.keys()].filter((k) => k.startsWith('fc:')).length} guardada)`);
-for (let i = 0; i < 4; i++) { minuto(); await pide({ ruta: '/fallos', cuerpo: { texto: `más ${i}` }, ip: `7.7.7.${i + 2}`, tk: 'f'.repeat(30) }); }
+r = await pide({ ruta: '/fallos', cuerpo: { texto: 'uno', capturas: [cap(300000), cap(W2.MAX_CAPTURA + 10)] }, ip: '7.7.7.1', tk: 'f'.repeat(30), e: envQ });
+ok(r.s === 200 && sqlF('SELECT count(*) AS n FROM cap')[0].n === 1 && ![...kv.keys()].length, `/fallos: la captura de más de 350 KB no se guarda (${sqlF('SELECT count(*) AS n FROM cap')[0].n} guardada) y nada en el KV`);
+for (let i = 0; i < 4; i++) { minuto(); await pide({ ruta: '/fallos', cuerpo: { texto: `más ${i}` }, ip: `7.7.7.${i + 2}`, tk: 'f'.repeat(30), e: envQ }); }
 minuto();
-r = await pide({ ruta: '/fallos', cuerpo: { texto: 'el sexto' }, ip: '7.7.7.9', tk: 'f'.repeat(30) });
-ok(r.s === 429 && [...kv.keys()].filter((k) => k.startsWith('f:4242:')).length === W2.AL_DIA, `/fallos: el sexto del día da ${r.s}`);
+r = await pide({ ruta: '/fallos', cuerpo: { texto: 'el sexto' }, ip: '7.7.7.9', tk: 'f'.repeat(30), e: envQ });
+ok(r.s === 429 && sqlF("SELECT count(*) AS n FROM hilo WHERE uid = '4242'")[0].n === W2.AL_DIA, `/fallos: el sexto del día da ${r.s}`);
 // /caras: solo de una liga en la que estás
 sqlQ('INSERT INTO ficha (uid, ultima, foto, d) VALUES (?, ?, ?, ?)', '1111', Date.now(), 'https://assets-fantasy.llt-services.com/u/1111.png', JSON.stringify({ uid: '1111', ultima: Date.now(), foto: 'https://assets-fantasy.llt-services.com/u/1111.png' }));
 r = await pide({ m: 'GET', ruta: '/caras?liga=77', e: envQ });
@@ -455,7 +458,7 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   r = await pide({ m: 'GET', ruta: '/hola/todos', tk: 'y'.repeat(30), e: { ...envQ, AYUDANTES: 'Otro' } });
   ok(r.s === 403, `por nombre no vale, solo por número de cuenta: ${r.s}`);
   // los avisos: uno de la 4242 con diagnóstico y una captura
-  kv.clear(); minuto();
+  kv.clear(); for (const t of ['hilo', 'msg', 'cap', 'cupo']) sqlF(`DELETE FROM ${t}`); minuto();
   r = await pide({ ruta: '/fallos', cuerpo: { texto: 'Se queda en blanco el mercado', diag: 'LaLiga: 200 · secreto de la 4242', capturas: [cap(1000)] }, ip: '7.7.8.1', tk: 'x'.repeat(30), e: envA });
   const idA = r.j && r.j.id;
   minuto();
@@ -468,7 +471,7 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   r = await pide({ m: 'GET', ruta: `/fallos/captura?id=${idA}&n=0`, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
   ok(r.s === 200 && /^data:image\/jpeg/.test(r.j.img), `/fallos/captura de quien ayuda: ${r.s}`);
   r = await pide({ ruta: '/fallos/responder', cuerpo: { id: idA, respuesta: 'Ya está' }, tk: 'y'.repeat(30), ip: '7.7.8.2', e: envA });
-  ok(r.s === 403 && !JSON.parse(kv.get(`f:4242:${idA}`).v).respuesta, `/fallos/responder de quien ayuda: ${r.s}, sin respuesta guardada`);
+  ok(r.s === 403 && sqlF('SELECT count(*) AS n FROM msg WHERE hilo = ?', idA)[0].n === 1, `/fallos/responder de quien ayuda: ${r.s}, sin respuesta guardada`);
   // otra cuenta cualquiera (la 3333, con un token que empieza por «q»)
   const fA = globalThis.fetch;
   globalThis.fetch = async (u, o) => (String(u).includes('/user/me') && /Bearer q/.test(cabDe(o, 'authorization')) ? new Response(JSON.stringify({ id: 3333, managerName: 'Cualquiera' }), { status: 200 }) : fA(u, o));
@@ -481,6 +484,144 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   r = await pide({ m: 'GET', ruta: `/fallos/uno?id=${idA}`, tk: 'x'.repeat(30), ip: '7.7.8.4', e: { ...envA, ADMINS: '4242' } });
   ok(r.s === 200 && /secreto/.test(r.j.diag || ''), 'el dueño ve el diagnóstico');
   kv.clear();
+}
+
+// ---------- (0.8.4, fase 3) los avisos como una conversación ----------
+{
+  // la 4242 (token «x») manda el aviso; el dueño es la 2222 (token «y»); la 3333 (token «q») es otra cualquiera
+  const fA = globalThis.fetch;
+  globalThis.fetch = async (u, o) => (String(u).includes('/user/me') && /Bearer q/.test(cabDe(o, 'authorization')) ? new Response(JSON.stringify({ id: 3333, managerName: 'Cualquiera' }), { status: 200 }) : fA(u, o));
+  const envC = { ...envQ, ADMINS: '2222', AYUDANTES: '' };
+  for (const t of ['hilo', 'msg', 'cap', 'cupo']) sqlF(`DELETE FROM ${t}`);
+  let ipC = 0;
+  const yo = (m, ruta, cuerpo) => { minuto(); return pide({ m, ruta, cuerpo, tk: 'x'.repeat(30), ip: `8.1.1.${++ipC}`, e: envC }); };
+  const dueno = (m, ruta, cuerpo) => { minuto(); return pide({ m, ruta, cuerpo, tk: 'y'.repeat(30), ip: `8.1.2.${++ipC}`, e: envC }); };
+  const otro = (m, ruta, cuerpo) => { minuto(); return pide({ m, ruta, cuerpo, tk: 'q'.repeat(30), ip: `8.1.3.${++ipC}`, e: envC }); };
+  r = await yo('POST', '/fallos', { texto: 'No me carga el mercado', diag: 'diag de la 4242', equipo: 'Pepes', liga: 'L', app: '0.8.4 · web', capturas: [cap(2000)] });
+  const idC = r.j.id;
+  let mios = (await yo('GET', '/fallos/mios')).j;
+  let h = mios.lista.find((x) => x.id === idC);
+  ok(h && h.msgs.length === 1 && h.de === 'u' && h.texto === 'No me carga el mercado' && h.capturas === 1 && h.respuesta === null && !('diag' in h), `el aviso es un hilo con su primer mensaje (${JSON.stringify(h && h.msgs)})`);
+  r = await dueno('GET', '/fallos/todos');
+  ok(r.j.pendientes === 1 && r.j.lista[0].r === 0 && r.j.lista[0].de === 'u', `el dueño lo tiene pendiente (${r.t.slice(0, 120)})`);
+  r = await dueno('GET', `/fallos/uno?id=${idC}`);
+  h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
+  ok(r.s === 200 && r.j.diag === 'diag de la 4242' && r.j.msgs.length === 1 && !('uid' in r.j) && h.vd === 0, 'el dueño lo pide (la precarga) con el diagnóstico, sin darlo por visto');
+  r = await dueno('GET', `/fallos/uno?id=${idC}&visto=1`);
+  h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
+  ok(h.vd >= h.ult, 'al abrirlo, quien lo mandó ve que el dueño lo ha visto («Visto»)');
+  // dos respuestas seguidas: la segunda no pisa la primera
+  r = await dueno('POST', '/fallos/responder', { id: idC, respuesta: 'Lo miro, ¿qué móvil tienes?' });
+  ok(r.s === 200 && r.j.n === 1, `la primera respuesta, el mensaje 2 (${r.t})`);
+  h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
+  const resp1 = h.respondida;
+  r = await dueno('POST', '/fallos/responder', { id: idC, respuesta: 'Y una captura de lo que ves', capturas: [cap(1500)] });
+  h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
+  ok(h.msgs.length === 3 && h.msgs[1].texto === 'Lo miro, ¿qué móvil tienes?' && h.msgs[2].caps === 1 && h.msgs[2].por === 'Fantasy Manager' && h.de === 'd', `la segunda respuesta se añade, no pisa (${h.msgs.map((x) => x.de).join('')})`);
+  ok(h.respuesta === 'Y una captura de lo que ves' && h.respondida > resp1 && h.vista === false, 'para las webs de antes, «respuesta» es la última y vuelve a estar sin leer (le llega otra notificación)');
+  r = await dueno('GET', '/fallos/todos');
+  ok(r.j.pendientes === 0 && r.j.lista[0].r > 0, 'contestado: ya no está pendiente');
+  // él contesta, con una captura
+  r = await yo('POST', '/fallos/escribir', { id: idC, texto: 'Un Xiaomi, va con la última versión', capturas: [cap(1800)] });
+  ok(r.s === 200 && r.j.n === 3, `él contesta en el mismo aviso (${r.t})`);
+  r = await dueno('GET', '/fallos/todos');
+  ok(r.j.pendientes === 1 && r.j.lista[0].r === 0 && r.j.lista[0].ultTxt.startsWith('Un Xiaomi'), 'y vuelve a estar pendiente para el dueño');
+  r = await yo('POST', '/fallos/visto', { id: idC });
+  h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
+  ok(h.vista === true && h.vu >= h.respondida && h.vd < h.ult, 'visto por cada lado: él ha leído lo último del dueño; el dueño aún no ha visto lo suyo');
+  // las capturas de cada mensaje
+  r = await yo('GET', `/fallos/captura?id=${idC}&m=2&n=0`);
+  const r2 = await dueno('GET', `/fallos/captura?id=${idC}&m=3&n=0`);
+  const r3 = await yo('GET', `/fallos/captura?id=${idC}&n=0`);
+  ok(r.s === 200 && r.j.img.length === 1500 + 23 && r2.s === 200 && r2.j.img.length === 1800 + 23 && r3.s === 200 && r3.j.img.length === 2000 + 23, 'las capturas de cada mensaje, de los dos (y sin «m», la del primero, como en las webs de antes)');
+  // otro no lo ve ni escribe en él
+  r = await otro('POST', '/fallos/escribir', { id: idC, texto: 'hola' });
+  const r4 = await otro('GET', `/fallos/captura?id=${idC}&m=0&n=0`);
+  const r5 = await otro('GET', `/fallos/uno?id=${idC}`);
+  ok(r.s === 404 && r4.s === 404 && r5.s === 403, `otra cuenta ni escribe, ni ve capturas, ni lo abre (${r.s} ${r4.s} ${r5.s})`);
+  r = await yo('POST', '/fallos/responder', { id: idC, respuesta: 'me contesto' });
+  ok(r.s === 403, `quien lo mandó no contesta como Fantasy Manager (${r.s})`);
+  // topes: capturas por hilo y por día, mensajes por día y por hilo
+  for (let i = 0; i < 6; i++) await yo('POST', '/fallos/escribir', { id: idC, texto: `más ${i}`, capturas: [cap(900), cap(900), cap(900)] });
+  const cs = sqlF('SELECT coalesce(sum(caps), 0) AS c FROM msg WHERE hilo = ?', idC)[0].c;
+  ok(cs === W2.HILO_CAPS, `como mucho ${W2.HILO_CAPS} capturas en un hilo (${cs})`);
+  sqlF('UPDATE cupo SET msgs = ? WHERE uid = ?', W2.MSGS_DIA, '4242');
+  r = await yo('POST', '/fallos/escribir', { id: idC, texto: 'uno más' });
+  ok(r.s === 429, `como mucho ${W2.MSGS_DIA} mensajes al día por cuenta (${r.s})`);
+  sqlF('UPDATE cupo SET msgs = 0 WHERE uid = ?', '4242'); sqlF('UPDATE hilo SET n = ? WHERE id = ?', W2.HILO_MSGS, idC);
+  r = await yo('POST', '/fallos/escribir', { id: idC, texto: 'otro más' });
+  ok(r.s === 429 && /aviso nuevo/.test(r.j.e), `como mucho ${W2.HILO_MSGS} mensajes en un hilo (${r.s})`);
+  sqlF('UPDATE hilo SET n = (SELECT count(*) FROM msg WHERE hilo = ?) WHERE id = ?', idC, idC);
+  // la Action «Fallos», con su llave
+  const CLAVEF = 'f'.repeat(64);
+  const accion = (cuerpo, clave = CLAVEF) => W.fetch(new Request('https://w.dev/fallos/accion', { method: 'POST', headers: { 'content-type': 'application/json', 'x-fallos-clave': clave }, body: JSON.stringify(cuerpo) }), { ...envC, FALLOS_CLAVE: CLAVEF }, {}).then(async (x) => ({ s: x.status, j: await x.json().catch(() => null) }));
+  r = await accion({ op: 'leer' }, 'g'.repeat(64));
+  const sinClave = await W.fetch(new Request('https://w.dev/fallos/accion', { method: 'POST', headers: { 'x-fallos-clave': CLAVEF }, body: '{"op":"leer"}' }), envC, {});
+  ok(r.s === 404 && sinClave.status === 404, `la Action con otra llave, o un Worker sin llave: 404 (${r.s} ${sinClave.status})`);
+  r = await accion({ op: 'leer' });
+  const hl = r.j.lista.find((x) => x.id === idC);
+  ok(r.s === 200 && hl && hl.diag === 'diag de la 4242' && !('uid' in hl) && hl.msgs.length > 3, 'la Action lee los hilos enteros, con el diagnóstico y sin el número de cuenta');
+  r = await accion({ op: 'captura', id: idC, m: 3, n: 0 });
+  ok(r.s === 200 && /^data:image/.test(r.j.img), 'y sus capturas');
+  minuto(); await pide({ ruta: '/fallos', cuerpo: { texto: 'Otro aviso: la ficha del jugador sale vacía' }, ip: '8.1.9.1', tk: 'x'.repeat(30), e: envC });
+  r = await accion({ op: 'contestar', respuestas: [{ buscar: 'FICHA DEL JUGADOR sale vacia', respuesta: 'Arreglado en la próxima versión' }, { id: idC, respuesta: 'Mirado: es la conexión' }] });
+  const otroH = sqlF("SELECT id FROM hilo WHERE id != ? AND uid = '4242'", idC)[0].id;
+  const ultMsg = (id) => sqlF('SELECT texto, de, por FROM msg WHERE hilo = ? ORDER BY n DESC LIMIT 1', id)[0];
+  ok(r.j.n === 2 && ultMsg(otroH).texto === 'Arreglado en la próxima versión' && ultMsg(otroH).por === 'Fantasy Manager' && ultMsg(idC).texto === 'Mirado: es la conexión', `la Action contesta añadiendo un mensaje, por id o por un trozo (sin tildes ni mayúsculas) (${r.j.n})`);
+  // borrar mis datos: los hilos con todas sus capturas
+  minuto();
+  r = await pide({ ruta: '/borrar', cuerpo: {}, tk: 'x'.repeat(30), e: envC });
+  ok(r.s === 200 && !sqlF("SELECT 1 FROM hilo WHERE uid = '4242'").length && !sqlF('SELECT 1 FROM cap WHERE hilo = ?', idC).length && !sqlF('SELECT 1 FROM msg WHERE hilo = ?', idC).length, `«Borrar mis datos» borra los hilos con sus mensajes y capturas (${r.t})`);
+  // a los 180 días del último mensaje se borra
+  minuto(); r = await pide({ ruta: '/fallos', cuerpo: { texto: 'viejo' }, ip: '8.1.9.2', tk: 'q'.repeat(30), e: envC });
+  sqlF("UPDATE hilo SET ult = ult - ? WHERE uid = '3333'", 181 * 864e5); sqlF("DELETE FROM meta WHERE k = 'limpio'");
+  QRq.hay.get('fallos|todos').o.memo.fallosLimpio = '';
+  await otro('GET', '/fallos/mios');
+  ok(!sqlF("SELECT 1 FROM hilo WHERE uid = '3333'").length, 'a los 180 días del último mensaje, fuera');
+  globalThis.fetch = fA;
+}
+
+// ---------- (0.8.4, fase 3) la mudanza de los avisos desde el KV ----------
+{
+  const km = new Map();
+  const KVf = {
+    async get(k) { if (Array.isArray(k)) return new Map(k.map((x) => [x, km.has(x) ? km.get(x).v : null])); return km.has(k) ? km.get(k).v : null; },
+    async getWithMetadata(k) { const v = km.get(k); return v ? { value: v.v, metadata: v.m } : { value: null, metadata: null }; },
+    async put(k, v, o = {}) { km.set(k, { v, m: o.metadata || null }); },
+    async delete(k) { km.delete(k); },
+    async list({ prefix, limit = 1000 }) { const ks = [...km.keys()].filter((k) => k.startsWith(prefix)).sort().slice(0, limit); return { keys: ks.map((name) => ({ name, metadata: km.get(name).m })), list_complete: true }; },
+  };
+  const QRf = objetosSql(WM.Emparejar); QRf.env = { VINCULOS: KVf };
+  const envF = { VINCULOS: KVf, ADMINS: '2222', QR: QRf };
+  const sqlM = (q, ...a) => { QRf.get('fallos|todos'); return QRf.hay.get('fallos|todos').db.prepare(q).all(...a); };
+  const ahoraT = Date.now();
+  // 20 avisos viejos: el 0 contestado por «Claude · Fantasy Manager» y ya leído, con 2 capturas; el resto sin contestar
+  for (let i = 0; i < 20; i++) {
+    const id = `viejo${String(i).padStart(3, '0')}`, t = ahoraT - (30 - i) * 864e5;
+    const f = { id, t, uid: '4242', quien: 'Pepe', equipo: 'Pepes', liga: 'L', texto: `Aviso viejo ${i}`, diag: 'd', app: '0.8.1', respuesta: i === 0 ? 'Arreglado' : null, respondida: i === 0 ? t + 3600e3 : null, vista: true, capturas: i === 0 ? 2 : 0, ...(i === 0 ? { por: 'Claude · Fantasy Manager' } : {}) };
+    await KVf.put(`f:4242:${id}`, JSON.stringify(f), { metadata: { t, r: f.respondida || 0, c: f.capturas } });
+  }
+  await KVf.put('fc:viejo000:0', cap(700)); await KVf.put('fc:viejo000:1', cap(800)); await KVf.put('v:CODIGO', '{}');
+  const pasos = [];
+  for (let i = 0; i < 2; i++) { pasos.push(await W2.mudanzaFallos(envF, ahoraT + i * 300e3)); }
+  ok(pasos[0].copiados === W2.MUDANZA_AVISOS && pasos[1].copiados === 5, `los hilos, de ${W2.MUDANZA_AVISOS} en ${W2.MUDANZA_AVISOS} (${JSON.stringify(pasos)})`);
+  const h0 = sqlM("SELECT * FROM hilo WHERE id = 'viejo000'")[0], m0 = sqlM("SELECT * FROM msg WHERE hilo = 'viejo000' ORDER BY n");
+  ok(h0 && h0.de === 'd' && h0.n === 2 && m0.length === 2 && m0[1].texto === 'Arreglado' && m0[1].por === 'Fantasy Manager' && h0.vu >= m0[1].t, `el aviso contestado es un hilo de dos mensajes, firmado Fantasy Manager y leído (${JSON.stringify(m0.map((x) => [x.de, x.texto, x.por]))})`);
+  ok(sqlM("SELECT de FROM hilo WHERE id = 'viejo005'")[0].de === 'u', 'los sin contestar, pendientes');
+  // antes de copiar las capturas, se leen del KV
+  r = await pide({ m: 'GET', ruta: '/fallos/captura?id=viejo000&n=1', tk: 'x'.repeat(30), ip: '8.2.1.1', e: envF });
+  ok(r.s === 200 && r.j.img.length === 800 + 23, `una captura aún sin copiar sale del KV (${r.s})`);
+  for (let i = 0; i < 3; i++) { pasos.push(await W2.mudanzaFallos(envF, ahoraT + (2 + i) * 300e3)); }
+  ok(sqlM("SELECT count(*) AS n FROM cap WHERE hilo = 'viejo000'")[0].n === 2 && (await (await QRf.get('fallos|todos').fetch('https://x/fallos', { method: 'POST', body: '{"op":"mudanza"}' })).json()).copiado > 0, `las capturas copiadas y la mudanza, hecha (${JSON.stringify(pasos.slice(2))})`);
+  // lo de la app de ahora no se pisa: lo nuevo de un hilo copiado sigue
+  r = await pide({ ruta: '/fallos/escribir', cuerpo: { id: 'viejo005', texto: 'sigue pasando' }, tk: 'x'.repeat(30), ip: '8.2.1.2', e: envF });
+  ok(r.s === 200 && sqlM("SELECT n FROM hilo WHERE id = 'viejo005'")[0].n === 2, 'en un aviso de antes ya se puede seguir la conversación');
+  // a los dos días se borran del KV (f: y fc:), 15 a la hora; los códigos se quedan
+  const est = await (await QRf.get('fallos|todos').fetch('https://x/fallos', { method: 'POST', body: '{"op":"mudanza"}' })).json();
+  const hora0 = est.copiado + 2 * 864e5 - ((est.copiado + 2 * 864e5) % 3600e3) + 3600e3;
+  const borr = [];
+  for (let h2 = 0; h2 < 3; h2++) { borr.push(await W2.mudanzaFallos(envF, hora0 + h2 * 3600e3 + 60e3)); }
+  ok(borr[0].borradas === 15 && borr[1].borradas === 7 && borr[2].limpio && ![...km.keys()].some((k) => /^fc?:/.test(k)) && km.has('v:CODIGO'), `del KV se van los avisos y sus capturas, 15 a la hora; quedan los códigos (${JSON.stringify(borr)})`);
 }
 
 // ---------- A4: /p e /img, con el Origin puesto a mano ----------

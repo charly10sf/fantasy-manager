@@ -113,11 +113,15 @@ export function apuntarBienvenida(datos) {
 }
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
 export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});
-export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
-/** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera) */
-export const capturaAviso = (id, n) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
-export async function responderAviso(id, respuesta) {
-  const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta });
+/** un aviso entero (el dueño y quien ayuda); `abrir`: lo abres de verdad y, si eres el dueño, cuenta como visto (0.8.4) */
+export const unAviso = (id, abrir = false) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}${abrir ? '&visto=1' : ''}`);
+/** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera). (0.8.4) `m`: de qué mensaje del hilo */
+export const capturaAviso = (id, n, m = 0) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}&m=${Number(m) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
+/** (0.8.4) un mensaje más en tu aviso (la conversación), con sus capturas */
+export const escribirAviso = (id, texto, capturas = []) => pedirWorker('POST', '/fallos/escribir', { id, texto, capturas }, { tiempo: capturas.length ? 60000 : 20000 });
+/** (el dueño) contestar: añade un mensaje al hilo (desde la 0.8.4 no pisa lo de antes), con capturas si las lleva */
+export async function responderAviso(id, respuesta, capturas = []) {
+  const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta, capturas }, { tiempo: capturas.length ? 60000 : 20000 });
   const a = avisosGuardados();
   if (a.admin) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;

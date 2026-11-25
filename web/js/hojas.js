@@ -1184,31 +1184,61 @@ function capturasHTML(A) {
   const mas = caps.length < 3 ? `<button class="ac-mas${caps.length ? ' cuadro' : ''}" data-accion="capturaAviso">${icono('foto')}<span>${caps.length ? 'Otra' : 'Añadir una captura'}</span></button>` : '';
   return `<div class="aviso-capt">${minis}${mas}</div>${caps.length ? '' : '<p class="t2 peq ac-nota">Una captura de lo que ves ayuda mucho. Hasta 3.</p>'}`;
 }
-/** las capturas de un aviso recibido (el dueño): se cargan al abrirlo */
-function capturasRecibidas(A, d) {
-  if (!d.capturas) return '';
-  const l = (A.capt && A.capt[d.id]) || [];
-  const cel = [...Array(d.capturas).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(d.id)}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
-    : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('');
-  return `<div class="aviso-capt">${cel}</div>`;
+/* (0.8.4, fase 3; Carlos, 25 nov: «que sea una conversación») cada aviso es un hilo: el primer mensaje y, debajo, todos los
+   que vayan escribiendo quien lo mandó y Fantasy Manager, en burbujas (lo tuyo a la derecha), cada uno con sus capturas, y
+   abajo la caja para escribir con su botón de adjuntar captura. Audios, no. */
+/** los mensajes de un aviso: los del servidor o, con uno de antes de la 0.8.4, el texto y la respuesta */
+export function msgsDe(x) {
+  if (x && Array.isArray(x.msgs) && x.msgs.length) return x.msgs;
+  return [{ n: 0, de: 'u', t: x.t, texto: x.texto || x.txt || '', caps: x.capturas || x.c || 0 }, ...(x.respuesta ? [{ n: 1, de: 'd', t: x.respondida, texto: x.respuesta, por: x.por }] : [])];
 }
-const avisoMio = (x) => `<div class="aviso${x.respuesta && !x.vista ? ' nuevo' : ''}">
-  <div class="aviso-cab"><span>${cuando(x.t)}</span>${x.respuesta ? '<span class="pill sube">Contestado</span>' : '<span class="pill">Esperando respuesta</span>'}</div>
-  <p>${esc(x.texto)}</p>${x.capturas ? `<p class="t2 peq">${icono('foto')} ${x.capturas} captura${x.capturas > 1 ? 's' : ''}</p>` : ''}
-  ${x.respuesta ? `<div class="aviso-resp"><b>${esc(firmaDe(x.por) || 'Respuesta')}</b><span>${esc(x.respuesta)}</span><small>${cuando(x.respondida)}</small></div>` : ''}</div>`;
+/** quién escribió el último: 'u' (quien lo mandó) o 'd' (Fantasy Manager) */
+export const ultimoDe = (x) => x.de || (x.respuesta || x.r ? 'd' : 'u');
+/** las capturas de un mensaje: se cargan al abrir el hilo (A.capt['id:mensaje']) */
+function capsMsg(A, id, m) {
+  if (!m.caps) return '';
+  const l = (A.capt && A.capt[`${id}:${m.n}`]) || [];
+  return `<div class="aviso-capt msg-capt">${[...Array(m.caps).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(id)}" data-m="${m.n}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
+    : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('')}</div>`;
+}
+/** la conversación en burbujas. lado: 'u' la ve quien lo mandó; 'd', el dueño o quien ayuda (tuFM: es el dueño) */
+function burbujas(A, x, lado, tuFM = false) {
+  const ms = msgsDe(x), ult = ms[ms.length - 1];
+  // «Visto» / «Leído» debajo de lo último tuyo, si es lo último del hilo y el otro lado ya lo ha visto
+  const visto = ult && ult.de === lado && (lado === 'u' ? (x.vd || 0) >= ult.t : (x.vu || 0) >= ult.t);
+  const nombre = (m) => (m.de === 'd' ? (tuFM ? 'Tú' : firmaDe(m.por) || 'Fantasy Manager') : lado === 'u' ? 'Tú' : x.quien || x.equipo || 'Quien lo mandó');
+  return `<div class="msgs">${ms.map((m) => `<div class="msg ${m.de === lado ? 'mio' : 'suyo'}"><b>${esc(nombre(m))}</b>${m.texto ? `<p>${esc(m.texto)}</p>` : ''}${capsMsg(A, x.id, m)}<small>${cuando(m.t)}${m === ult && visto ? ` · ${lado === 'u' ? 'Visto' : 'Leído'}` : ''}</small></div>`).join('')}</div>`;
+}
+/** la caja de escribir del hilo abierto: el texto, las capturas que vas a mandar (hasta 3) y el botón de adjuntar */
+function cajaHilo(A, id, accion, placeholder, max) {
+  const caps = A.capHilo || [];
+  const minis = caps.map((c, i) => `<span class="ac-m"><button class="ac-ver" data-accion="verCapturaHilo" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(c.mini)}" alt=""></button><button class="ac-x" data-accion="quitarCapturaHilo" data-i="${i}" aria-label="Quitar la captura ${i + 1}">${icono('cerrar')}</button></span>`).join('');
+  return `<div class="hilo-caja">${caps.length ? `<div class="aviso-capt">${minis}</div>` : ''}
+    <div class="hilo-fila"><button class="b-ico hilo-adj" data-accion="capturaHilo" aria-label="Adjuntar una captura"${caps.length >= 3 ? ' disabled' : ''}>${icono('foto')}</button>
+    <textarea id="hiloTxt" class="campo-t" rows="2" maxlength="${max}" placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}">${esc(A.hiloBorrador || '')}</textarea>
+    <button class="b-ico hilo-env" data-accion="${accion}" data-id="${esc(id)}" aria-label="Mandar"${A.escribiendo ? ' disabled' : ''}>${icono(A.escribiendo ? 'reloj' : 'enviar')}</button></div></div>`;
+}
+/** un aviso tuyo: cerrado, lo último; abierto, la conversación entera y la caja para seguirla */
+function avisoMio(A, x) {
+  const ms = msgsDe(x), ult = ms[ms.length - 1], abierto = A.hilo === x.id;
+  const nuevo = !!x.respuesta && !x.vista;
+  const pill = ultimoDe(x) === 'd' ? `<span class="pill sube">${nuevo ? 'Respuesta nueva' : 'Contestado'}</span>` : '<span class="pill">Esperando respuesta</span>';
+  const cuerpo = abierto ? burbujas(A, x, 'u') + cajaHilo(A, x.id, 'escribirHilo', 'Escribe aquí', 4000)
+    : `<p>${esc(ms[0].texto)}</p>${ms.length > 1 ? `<p class="t2 peq aviso-ult"><b>${ult.de === 'd' ? 'Fantasy Manager' : 'Tú'}:</b> ${esc(String(ult.texto || (ult.caps ? 'una captura' : '')).slice(0, 140))}</p>` : ''}${ms[0].caps && ms.length === 1 ? `<p class="t2 peq">${icono('foto')} ${ms[0].caps} captura${ms[0].caps > 1 ? 's' : ''}</p>` : ''}`;
+  return `<div class="aviso hilo${nuevo ? ' nuevo' : ''}${abierto ? ' abierto' : ''}">
+  <button class="aviso-cab" data-accion="abrirHilo" data-id="${esc(x.id)}" aria-expanded="${abierto}"><span>${cuando(x.t)}</span>${ms.length > 1 ? `<span class="aviso-t2">${ms.length} mensajes</span>` : ''}${pill}</button>
+  ${cuerpo}</div>`;
+}
 function detalleAviso(A, x) {
   const d = A.detalle;
   // mientras llega el aviso entero, su texto (el de la lista) y que se está cargando
   if (!d) return `<div class="aviso-det"><p class="aviso-texto">${esc((x && x.txt) || '')}</p><p class="t2 peq cargando-av">${icono('reloj')}Cargando el aviso entero…</p></div>`;
   if (d.error) return `<div class="error-c">${esc(d.error)}</div>`;
   return `<div class="aviso-det">
-    <p class="aviso-texto">${esc(d.texto)}</p>
-    ${capturasRecibidas(A, d)}
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
     ${!A.admin ? '' : d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
-    ${d.respuesta ? `<div class="aviso-resp"><b>${A.admin ? 'Le contestaste' : 'Respuesta'}</b><span>${esc(d.respuesta)}</span><small>${cuando(d.respondida)}${d.vista ? ' · leído' : ' · sin leer'}</small></div>` : ''}
-    ${A.admin ? `<textarea id="respTxt" class="campo-t aviso-t" rows="3" maxlength="2000" placeholder="${d.respuesta ? 'Cambiar la respuesta' : 'Tu respuesta: le llega en la app'}">${esc(A.respBorrador || '')}</textarea>
-    <button class="btn chico" data-accion="responderAviso" data-id="${esc(d.id)}"${A.respondiendo ? ' disabled' : ''}>${A.respondiendo ? 'Mandando…' : `${icono('enviar')}Responder`}</button>` : ''}</div>`;
+    ${burbujas(A, d, 'd', !!A.admin)}
+    ${A.admin ? cajaHilo(A, d.id, 'responderAviso', 'Tu respuesta: le llega en la app', 2000) : ''}</div>`;
 }
 export function avisos(S) {
   const A = S.av || {};
@@ -1230,7 +1260,7 @@ export function avisos(S) {
       ${A.error ? `<div class="error-c" style="margin-top:10px">${esc(A.error)}</div>` : ''}`;
   }
   const mios = A.lista || avisosGuardados().lista || [];
-  if (mios.length) h += `<div class="grupo"><span>Tus avisos</span><span>${mios.length}</span></div>${mios.map(avisoMio).join('')}`;
+  if (mios.length) h += `<div class="grupo"><span>Tus avisos</span><span>${mios.length}</span></div>${mios.map((x) => avisoMio(A, x)).join('')}`;
   else if (A.cargando) h += '<p class="t2 peq">Mirando tus avisos…</p>';
   return h;
 }
@@ -1241,8 +1271,8 @@ function bandejaAvisos(A) {
   // para revisarlos con Claude: los sin contestar, enteros y con su diagnóstico, listos para pegar en el chat (solo el dueño)
   else if (A.admin) h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar avisos</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
   h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
-    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.t)}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
-    ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
+    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}" aria-expanded="${A.abierto === x.id}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.ult || x.t)}${x.n > 1 ? ` · ${x.n} mensajes` : ''}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
+    ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>${x.n > 1 && x.ultTxt ? `<p class="t2 peq aviso-ult"><b>${x.de === 'd' ? 'Fantasy Manager' : 'Último'}:</b> ${esc(x.ultTxt)}</p>` : ''}`}</div>`).join('');
   return h;
 }
 

@@ -35,7 +35,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
 import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -2509,9 +2509,9 @@ function pintarNumAvisos() {
 /** lo escrito en la hoja se guarda antes de repintarla, para no perderlo */
 function repintarAvisos() {
   if (!S.av) return;
-  const t = $('#avisoTxt'), r = $('#respTxt'), dg = $('#avisoDiag');
+  const t = $('#avisoTxt'), r = $('#hiloTxt'), dg = $('#avisoDiag');
   if (t) S.av.borrador = t.value;
-  if (r) S.av.respBorrador = r.value;
+  if (r) S.av.hiloBorrador = r.value;
   if (dg) S.av.sinDiag = !dg.checked;
   if (S.tipoHoja && S.tipoHoja[0] === 'avisos') repintarHoja();
 }
@@ -2610,32 +2610,74 @@ function precargarAvisos() {
 async function abrirAvisoRecibido(id) {
   // tocarlo otra vez lo cierra, salvo mientras carga (parecía que no hacía nada y se quedaba pillado)
   if (S.av.abierto === id) { if (!avisoListo(id) && !(S.av.detalle && S.av.detalle.error)) return; S.av.abierto = null; repintarAvisos(); return; }
-  S.av.abierto = id; S.av.detalle = avisoListo(id); S.av.respBorrador = '';
+  S.av.abierto = id; S.av.detalle = avisoListo(id); S.av.hiloBorrador = ''; S.av.capHilo = [];
   repintarAvisos();
-  // (los sin contestar ya vienen cargados de antes: sus capturas se piden aquí también)
-  if (S.av.detalle) { if (S.av.detalle.capturas) cargarCapturas(id, S.av.detalle.capturas); return; }
-  try { const d = await pedirAviso(id); if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
-  // el aviso entero sí está al día: si ya tiene respuesta, cuenta como contestado aunque la lista aún no lo diga
+  // (0.8.4) abrirlo de verdad: para el dueño cuenta como visto (quien lo mandó ve «Visto»); la precarga no. Los sin contestar
+  // ya vienen cargados de antes: sus capturas se piden aquí también
+  if (S.av.detalle) { cargarCapturas(id, Hj.msgsDe(S.av.detalle)); if (S.av.admin) unAviso(id, true).catch(() => {}); return; }
+  try { const d = await unAviso(id, !!S.av.admin); avisoCache()[id] = d; if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
+  // el aviso entero sí está al día: si lo último es de Fantasy Manager, cuenta como contestado aunque la lista aún no lo diga
   const d = avisoListo(id);
-  if (d && d.respondida) { apuntarContestado(id, d.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
+  if (d && d.respondida && Hj.ultimoDe(d) === 'd') { apuntarContestado(id, d.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
   if (S.av.abierto === id) repintarAvisos();
-  if (d && d.capturas) cargarCapturas(id, d.capturas);
+  if (d) cargarCapturas(id, Hj.msgsDe(d));
 }
-/** las capturas de un aviso (el dueño, al abrirlo): se piden una vez y se guardan mientras la app está abierta */
-async function cargarCapturas(id, n) {
+/** las capturas de los mensajes de un hilo (al abrirlo): se piden una vez y se guardan mientras la app está abierta
+    (S.av.capt['id:mensaje']) */
+async function cargarCapturas(id, msgs) {
   const c = (S.av.capt ||= {});
-  if (c[id] && !c[id].some((x) => x === '')) return;
-  c[id] = new Array(n).fill(null);
-  await enParalelo([...Array(n).keys()], 2, async (i) => {
-    try { c[id][i] = await capturaAviso(id, i); } catch (e) { c[id][i] = ''; }
-    if (S.av.abierto === id) repintarAvisos();
+  const tareas = [];
+  for (const m of msgs || []) {
+    if (!m.caps) continue;
+    const k = `${id}:${m.n}`;
+    if (c[k] && !c[k].some((x) => x === '')) continue;
+    c[k] = new Array(m.caps).fill(null);
+    for (let i = 0; i < m.caps; i++) tareas.push([k, m.n, i]);
+  }
+  await enParalelo(tareas, 2, async ([k, m, i]) => {
+    try { c[k][i] = await capturaAviso(id, i, m); } catch (e) { c[k][i] = ''; }
+    if (S.av.abierto === id || S.av.hilo === id) repintarAvisos();
   });
+}
+/** (0.8.4) uno de tus avisos: abrirlo enseña la conversación entera y la caja para seguirla; si había respuesta nueva, ya está leída */
+function abrirHilo(id) {
+  if (S.av.hilo === id) { S.av.hilo = null; repintarAvisos(); return; }
+  S.av.hilo = id; S.av.hiloBorrador = ''; S.av.capHilo = [];
+  const x = (S.av.lista || []).find((y) => y.id === id);
+  repintarAvisos();
+  if (!x) return;
+  cargarCapturas(id, Hj.msgsDe(x));
+  if (x.respuesta && !x.vista) marcarVisto(id).then(() => { x.vista = true; pintarNumAvisos(); repintarAvisos(); }).catch(() => {});
+}
+/** (0.8.4) escribir en tu aviso: el mensaje sale al momento en la conversación y se manda con sus capturas */
+async function escribirHilo(id) {
+  const t = (($('#hiloTxt') || {}).value || '').trim(), caps = (S.av.capHilo || []).slice();
+  if (!t && !caps.length) { tostada('Escribe algo o adjunta una captura'); return; }
+  S.av.hiloBorrador = t; S.av.escribiendo = true;
+  repintarAvisos();
+  try {
+    await escribirAviso(id, t, caps.map((c) => c.url));
+    // (la caja, vacía también en la pantalla: repintarAvisos guarda lo que haya en ella)
+    const ta = $('#hiloTxt'); if (ta) ta.value = '';
+    S.av.hiloBorrador = ''; S.av.capHilo = []; S.av.escribiendo = false;
+    const r = await misAvisos().catch(() => null);
+    if (r) S.av.lista = r.lista;
+    const x = (S.av.lista || []).find((y) => y.id === id);
+    if (x) { const ms = Hj.msgsDe(x), m = ms[ms.length - 1]; if (m && m.caps && caps.length) (S.av.capt ||= {})[`${id}:${m.n}`] = caps.map((c) => c.url); }
+    tostada(enApp ? 'Mandado: cuando conteste te llega una notificación' : 'Mandado: te aviso cuando conteste', 4000);
+    programarFondo();
+  } catch (e) { S.av.escribiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
+  repintarAvisos();
+  pintarNumAvisos();
 }
 /* las capturas para un aviso que vas a mandar: de la galería (en la app, con su selector de fotos) o de un archivo */
 const MAX_CAPTURAS = 3;
-function elegirCapturas() {
-  const caps = (S.av.capturas ||= []);
-  if (caps.length >= MAX_CAPTURAS) { tostada(`Como mucho ${MAX_CAPTURAS} capturas por aviso`); return; }
+/* (0.8.4) las capturas van al aviso nuevo o, con `hilo`, al mensaje que escribes en un hilo abierto (S.av.capHilo) */
+const capsDestino = () => (S.av.capDest === 'hilo' ? (S.av.capHilo ||= []) : (S.av.capturas ||= []));
+function elegirCapturas(destino = 'aviso') {
+  S.av.capDest = destino;
+  const caps = capsDestino();
+  if (caps.length >= MAX_CAPTURAS) { tostada(`Como mucho ${MAX_CAPTURAS} capturas por mensaje`); return; }
   S.fotosPara = 'aviso';
   if (enApp && nativo.hayFotos()) { nativo.fotos(MAX_CAPTURAS - caps.length); return; }
   let inp = $('#capturaArchivo');
@@ -2650,7 +2692,7 @@ function elegirCapturas() {
 async function anadirCapturas(lista, preparar) {
   S.fotosPara = null;
   if (!S.av) return;
-  const caps = (S.av.capturas ||= []);
+  const caps = capsDestino();
   let mal = 0;
   for (const x of (lista || []).slice(0, MAX_CAPTURAS - caps.length)) {
     try { caps.push(await preparar(x)); } catch (e) { mal++; }
@@ -2681,10 +2723,11 @@ async function copiarAvisosClaude() {
   const partes = lista.map((x, i) => {
     const d = det[i] || {};
     const cab = `## ${x.id} · ${cuandoT(x.t)} · ${x.equipo || '?'}${x.quien ? ` (${x.quien})` : ''}${d.app ? ` · ${d.app}` : ''}`;
-    const resp = d.respuesta ? `\n→ Le contestaste: ${d.respuesta}` : '';
-    const caps = d.capturas ? `\n(${d.capturas} captura${d.capturas > 1 ? 's' : ''}: ábrelas en la bandeja de la app y mándamelas)` : '';
+    // (0.8.4) la conversación entera, mensaje a mensaje, con las capturas de cada uno
+    const ms = d.texto || d.msgs ? Hj.msgsDe(d) : [{ de: 'u', texto: x.txt || '', caps: x.c || 0 }];
+    const conv = ms.map((m) => `${m.de === 'd' ? '→ Le contestaste' : '·'}${m.t ? ` (${cuandoT(m.t)})` : ''}: ${m.texto || ''}${m.caps ? ` [${m.caps} captura${m.caps > 1 ? 's' : ''}: ábrelas en la bandeja de la app y mándamelas]` : ''}`).join('\n');
     const diag = d.diag ? `\n--- diagnóstico (recortado) ---\n${String(d.diag).slice(0, 3000)}` : '';
-    return `${cab}\n${d.texto || x.txt || ''}${caps}${resp}${diag}`;
+    return `${cab}\n${conv}${diag}`;
   });
   // (en el navegador, copiar después de esperar a la red puede fallar: el texto queda a la vista con su botón)
   S.av.paraClaude = `Avisos de fallos de Fantasy Manager (${sinContestar ? 'sin contestar' : 'los últimos'}), a ${cuandoT(Date.now())}:\n\n${partes.join('\n\n')}`;
@@ -2696,24 +2739,31 @@ async function copiarAvisosClaude() {
    lista con retraso): se apunta aquí y manda sobre la lista durante un día */
 const contestados = () => { const c = LS.get('avisos-contestados', {}); for (const [k, t] of Object.entries(c)) if (Date.now() - t > 86400e3) delete c[k]; return c; };
 function apuntarContestado(id, t = Date.now()) { const c = contestados(); c[id] = t; LS.set('avisos-contestados', c); }
-const conContestados = (lista) => { const c = contestados(); return (lista || []).map((x) => (!x.r && c[x.id] ? { ...x, r: c[x.id] } : x)); };
+// (0.8.4) solo si lo contestado aquí es de después del último mensaje: si él ha vuelto a escribir, vuelve a estar sin contestar
+const conContestados = (lista) => { const c = contestados(); return (lista || []).map((x) => (!x.r && c[x.id] && c[x.id] >= (x.ult || 0) ? { ...x, r: c[x.id] } : x)); };
 async function contestarAviso(id) {
-  const t = (($('#respTxt') || {}).value || '').trim();
+  const t = (($('#hiloTxt') || {}).value || '').trim(), caps = (S.av.capHilo || []).slice();
   if (!t) { tostada('Escribe la respuesta'); return; }
-  S.av.respBorrador = t; S.av.respondiendo = true;
+  S.av.hiloBorrador = t; S.av.escribiendo = true;
   repintarAvisos();
   try {
-    await responderAviso(id, t);
-    S.av.respBorrador = ''; S.av.respondiendo = false;
+    await responderAviso(id, t, caps.map((c) => c.url));
+    const ta = $('#hiloTxt'); if (ta) ta.value = '';
+    S.av.hiloBorrador = ''; S.av.capHilo = []; S.av.escribiendo = false;
     tostada('Respuesta mandada: le llega en la app');
-    // lo contestado, a mano ya (el servidor tarda unos segundos en listarlo)
-    if (S.av.detalle && S.av.detalle.id === id) Object.assign(S.av.detalle, { respuesta: t, respondida: Date.now(), vista: false });
-    if (avisoListo(id)) Object.assign(avisoListo(id), { respuesta: t, respondida: Date.now(), vista: false });
+    // (0.8.4) la conversación como está ahora (la respuesta se añade, no pisa la de antes)
+    const d = await unAviso(id, true).catch(() => null);
+    if (d) {
+      avisoCache()[id] = d;
+      if (S.av.detalle && S.av.detalle.id === id) S.av.detalle = d;
+      const ms = Hj.msgsDe(d), m = ms[ms.length - 1];
+      if (m && m.caps && caps.length) (S.av.capt ||= {})[`${id}:${m.n}`] = caps.map((c) => c.url);
+    }
     apuntarContestado(id);
     S.av.todos = conContestados(S.av.todos);
     await misAvisos().catch(() => null);
     S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
-  } catch (e) { S.av.respondiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
+  } catch (e) { S.av.escribiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
   repintarAvisos();
   pintarNumAvisos();
 }
@@ -3956,10 +4006,16 @@ document.addEventListener('click', async (ev) => {
     }
     case 'mandarAviso': enviarAviso(); break;
     case 'capturaAviso': repintarAvisos(); elegirCapturas(); break;
+    // (0.8.4) la conversación de un aviso
+    case 'abrirHilo': abrirHilo(d.id); break;
+    case 'escribirHilo': escribirHilo(d.id); break;
+    case 'capturaHilo': repintarAvisos(); elegirCapturas('hilo'); break;
+    case 'quitarCapturaHilo': if (S.av && S.av.capHilo) { repintarAvisos(); S.av.capHilo.splice(Number(d.i), 1); repintarAvisos(); } break;
+    case 'verCapturaHilo': { const c = S.av && S.av.capHilo && S.av.capHilo[Number(d.n)]; if (c) verImagen(c.url, `Captura ${Number(d.n) + 1}`); break; }
     case 'quitarCaptura': if (S.av && S.av.capturas) { S.av.capturas.splice(Number(d.i), 1); repintarAvisos(); } break;
     case 'verCaptura': {
       const n = Number(d.n);
-      if (d.id) { const l = S.av && S.av.capt && S.av.capt[d.id]; if (l && l[n]) verImagen(l[n], `Captura ${n + 1}`); } else if (S.av && S.av.capturas && S.av.capturas[n]) verImagen(S.av.capturas[n].url, `Captura ${n + 1}`);
+      if (d.id) { const l = S.av && S.av.capt && S.av.capt[`${d.id}:${Number(d.m) || 0}`]; if (l && l[n]) verImagen(l[n], `Captura ${n + 1}`); } else if (S.av && S.av.capturas && S.av.capturas[n]) verImagen(S.av.capturas[n].url, `Captura ${n + 1}`);
       break;
     }
     case 'tutorial': lanzarTutorial(); break;
