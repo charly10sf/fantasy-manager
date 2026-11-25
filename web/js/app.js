@@ -1,6 +1,6 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, norm, icono, botonPlay, PLAY_URL, LOGO, LOGO_P, LOGO_D, $, $$, LS, guardarTexto, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe, fechaLarga } from './util.js';
-import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
+import { enApp, enWeb, enInicio, enIPhone, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, prepararLogin, marcarAbierto, mirarVuelta, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
@@ -3023,7 +3023,8 @@ const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo =
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
  */
-const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas']);
+// (25 nov, aviso de Big Mac Laporta) también la ficha de un rival: al abrir uno de sus jugadores, «‹ Volver» lleva al rival
+const CON_PILA = new Set(['c', 'j', 'p', 'sust', 'bajas', 'r']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -3034,6 +3035,7 @@ function nombreHoja([tipo, arg]) {
   if (tipo === 'j') { const j = S.M && S.M.J(arg); return (j && j.nombre) || 'el jugador'; }
   if (tipo === 'sust') return 'Sustitutos';
   if (tipo === 'bajas') return 'Bajas';
+  if (tipo === 'r') { const r = S.M && S.M.rivales.find((x) => String(x.e.teamId) === String(arg)); return (r && r.e.nombre) || 'el rival'; }
   return 'el partido';
 }
 function cuerpoHoja(tipo, arg, pila = S.pila) {
@@ -3065,6 +3067,7 @@ if (!enApp) {
 function alAbrir(tipo, arg) {
   if (tipo === 'j') cargarDetalle(arg);
   else if (tipo === 'p') { const [n, id] = String(arg).split(':'); cargarPartido(Number(n), id); } else if (tipo === 'c') cargarClub(arg);
+  else if (tipo === 'r') cargarOnceRival(arg);
 }
 function volverHoja() {
   const pila = [...(S.pila || [])];
@@ -4031,7 +4034,7 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><div class="top-sello">${selloTop()}</div><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>${esc(dondeTop().trim())}</p>
-        ${enApp ? '' : botonPlay()}
+        ${enApp || enIPhone ? '' : botonPlay()}
         ${Hj.botonInvitarTop(d.clave)}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`);
       break;

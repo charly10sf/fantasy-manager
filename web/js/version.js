@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4a';
+export const VERSION = '0.8.4b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,16 @@ export const VERSION = '0.8.4a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, avisos de Fallo de Big Mac Laporta y Moukemon7) La ficha de un rival entra en las fichas apiladas
+    // (`CON_PILA` en app.js): un jugador abierto desde un rival lleva «‹ Volver» y el atrás vuelve al rival. En el iPhone,
+    // el candado de las funciones top ya no pone el botón de Google Play ni dice que se abre allí (`dondeTop`). Solo web
+    v: '0.8.4b', f: '2026-11-25', h: '12:29', t: 'Volver al rival',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Los jugadores de un rival', x: 'Al abrir un jugador desde la ficha de un rival y volver atrás, te sacaba a la lista de Rivales. Ahora arriba sale «Volver» y vuelves a la ficha del rival donde estabas.' },
+      { para: 'web', tipo: 'arreglo', d: 'candado', t: 'El candado, en el iPhone', x: 'En el iPhone, el dinero de los rivales y las demás funciones top te mandaban a Google Play, que ahí no sirve. Ahora te dice que se abren invitando a un amigo.' },
+    ],
+  },
   {
     // (25 nov, 02:06, Carlos: «en vez de salir un icono de un ordenador, que salga un icono de Windows») Lo último de la
     // sesión de «que se vea que es una app», que no llegó a entrar en la 0.8.4: el ordenador va con el logo de Windows

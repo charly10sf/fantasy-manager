@@ -1,6 +1,6 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
 import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
-import { enApp } from './puente.js';
+import { enApp, enIPhone } from './puente.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien } from './limite.js';
 import { esFav } from './favoritos.js';
@@ -398,7 +398,8 @@ export function candado(clave, { como = null, rid = null } = {}) {
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
     que sale al tocarlas, nunca en las cajas */
-export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
+// (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play: ahí se abre invitando a un amigo
+export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
 /** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
     ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {
