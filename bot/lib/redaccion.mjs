@@ -166,6 +166,7 @@ export const GASTADAS = [
   { re: /\bla (?:nota|parte) mala\b|\blo peor se lo lleva\b/i, que: '«la nota mala» o «lo peor se lo lleva»', ventana: 2 },
   { re: /\baunque (?:el \S+ )?(?:pierde|perdió|perdiera)\b|\bpese a perder\b/i, que: '«aunque pierde» o «pese a perder»', ventana: 2 },
   { re: /\bentre todos\b/i, que: 'los clubes «entre todos»', ventana: 2 },
+  { re: /\bde barato\b|\bbarato:|\bel chollo\b|\bchollo de\b/i, que: 'el chollo o «de barato» (Carlos, 13 nov: que no salga siempre)', ventana: 2 },
   { re: /\bno encuentra suelo\b/i, que: '«no encuentra suelo»', ventana: 4 },
   { re: /\b60 minutos o más en\b/i, que: '«60 minutos o más en N de sus cinco últimos partidos»', ventana: 2 },
   { re: /\bvale \d+(?:,\d+)? M\b[^.\n]{0,40}\bjornada \d+/i, que: '«vale N M y en la jornada N…»', ventana: 2 },

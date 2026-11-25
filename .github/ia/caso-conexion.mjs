@@ -25,9 +25,9 @@ const JSONC = (status, j) => ({ status, headers: cors, contentType: 'application
  * reloj de la página cada vez que llega un pedido que se cuelga. `clave`: con tu clave de Google además.
  */
 const PLAN_JS = await readFile(join(WEB, 'js', 'plan.js'), 'utf8');
-async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000, romperMotor = false, escena = 'martes', pendAntes = 0 }) {
+async function caso({ servir, adelantar = 0, clave = false, google = null, espera = 25000, romperMotor = false, escena = 'martes', pendAntes = 0, res = null }) {
   const P = await pagina(escena, google || undefined);
-  const rids = [];
+  const rids = [], consultas = [];
   try {
     const { page } = P;
     await page.route('**/js/ia.js*', (r) => r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: IA }));
@@ -37,6 +37,8 @@ async function caso({ servir, adelantar = 0, clave = false, google = null, esper
     await page.route(`${SERVIDOR}/**`, async (r) => {
       const q = r.request();
       if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
+      // (24 nov) la consulta aparte de si el plan del pedido ya está (/plan/res): `res(n, rid)` dice lo que contesta
+      if (/\/plan\/res$/.test(new URL(q.url()).pathname)) { const rid = new URL(q.url()).searchParams.get('rid'); consultas.push(rid); return r.fulfill(JSONC(200, res ? res(consultas.length - 1, rid) : {})); }
       if (!/\/plan$/.test(new URL(q.url()).pathname)) return r.fulfill(JSONC(200, {}));
       let cuerpo = null;
       try { cuerpo = JSON.parse(q.postData() || 'null'); } catch (e) { cuerpo = null; }
@@ -76,7 +78,7 @@ async function caso({ servir, adelantar = 0, clave = false, google = null, esper
         plan: S.plan ? { auto: !!S.plan.auto, motor: !!S.plan.motor, ia: !S.plan.auto, titular: S.plan.titular, pasos: (S.plan.ops || []).filter((o) => !o.descartada && !o.sugerencia).length, tachados: (S.plan.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia)).length } : null,
         banda: (document.querySelector('#vista .plan .banda') || {}).textContent || '',
       };
-    })), antes, rids, veces: n, errores: P.errores };
+    })), antes, rids, consultas, veces: n, errores: P.errores };
   } finally { await P.cerrar(); }
 }
 
@@ -154,6 +156,22 @@ for (const [que, body] of [['vacía', ''], ['solo los espacios', '      '], ['co
   ok(r.tarda <= 195000, `no contesta: se rinde a los ${Math.round(r.tarda / 1000)} s (como mucho 3 min)`);
   ok(/ha tardado demasiado/.test(r.error), `no contesta: dice que ha tardado demasiado («${r.error.slice(0, 120)}»)`);
   ok(r.veces >= 2 && r.veces <= 4, `no contesta: ${r.veces} pedidos antes de rendirse`);
+}
+// 8b. (24 nov, Carlos: «tarda 2 o 3 minutos y creo que sí que lo hace: cierro la aplicación, la abro y ya está») la petición
+// se queda muda con el plan ya hecho en el servidor: la app lo recoge aparte en segundos, sin esperar a agotar el intento
+{
+  const r = await caso({ servir: () => 'colgar', adelantar: 2000, espera: 40000, res: (n) => (n < 1 ? { marcha: true } : { fin: PLAN_OK }) });
+  ok(r.plan && r.plan.ia && !r.error && !r.cargando && !r.preparando, `la petición no contesta y el plan ya está: sale el plan de la IA (${r.plan && r.plan.titular})`);
+  ok(r.tarda <= 30000, `la petición no contesta y el plan ya está: a los ${Math.round(r.tarda / 1000)} s (antes, 2 minutos)`);
+  ok(r.veces === 1 && r.consultas.length >= 2 && r.consultas.every((x) => x === r.rids[0]), `la petición no contesta y el plan ya está: un solo pedido y ${r.consultas.length} consultas con su mismo id`);
+  if (r.errores.length) ok(false, `la petición no contesta y el plan ya está: errores de la página: ${r.errores.slice(0, 2).join(' | ')}`);
+  // y si lo que hay en el servidor es que la IA ha fallado, se dice ya, no a los 3 minutos
+  const r2 = await caso({ servir: () => 'colgar', adelantar: 2000, espera: 40000, res: () => ({ fin: { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true } }) });
+  sigueLaApp(r2, 'la petición no contesta y la IA ha fallado');
+  ok(/no contesta ahora mismo/.test(r2.error) && r2.tarda <= 30000 && r2.veces === 1, `la petición no contesta y la IA ha fallado: lo dice a los ${Math.round(r2.tarda / 1000)} s («${r2.error.slice(0, 110)}»)`);
+  // la consulta que no sabe nada (o que falla) no cambia nada: llega la petición y sale su plan
+  const r3 = await caso({ servir: () => new Promise((ok2) => setTimeout(() => ok2(JSONC(200, PLAN_OK)), 12000)), espera: 40000, res: () => ({ marcha: true }) });
+  ok(r3.plan && r3.plan.ia && !r3.error && r3.veces === 1, `la consulta dice que sigue en marcha y la petición contesta a los 12 s: sale su plan (${r3.consultas.length} consultas)`);
 }
 // 9. 503 y con tu clave de Google: el plan sale con ella
 {

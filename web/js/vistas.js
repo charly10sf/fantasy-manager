@@ -1,12 +1,13 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
+import { ventaVista, comoVa } from './decide.js';
 import { linea, barra } from './graficos.js';
 import { proximoTurno } from './planes-hora.js';
-import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, puedeChat, preguntasApp, cupoPreguntas, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes, ultimoPlan, consejosChat, enAppIos, permisoIA } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -15,6 +16,7 @@ import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos } from './operaciones.js';
+import { porJornadaHTML } from './directo.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -99,7 +101,9 @@ function distanciaHTML(S) {
  * LaLiga ya da los puntos de la jornada en curso (todo a 0 antes de empezar), se sacan del histórico de puntos de cada
  * equipo (los de ahora menos los de antes de que empezara)
  */
-export function puntosUltimaJornada(S) {
+/** (24 nov) los puntos de cada equipo en la última jornada acabada: { teamId: pts } o null */
+export function mapaUltimaJornada(S) { const r = puntosUltimaJornada(S, { mapa: true }); return r && r.mapa; }
+export function puntosUltimaJornada(S, { mapa = false } = {}) {
   const { D, M } = S;
   const yo = M.yo;
   if (!yo) return null;
@@ -126,7 +130,7 @@ export function puntosUltimaJornada(S) {
   }
   const pts = ptsJ ? ptsJ[yo.teamId] : null;
   if (pts == null) return null;
-  return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1 };
+  return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1, ...(mapa ? { mapa: ptsJ } : {}) };
 }
 
 /** lo que va a pasar pronto, en chips: el mercado, las cláusulas, tu protección, el parón */
@@ -170,6 +174,14 @@ export function conEnlaces(S, texto) {
  * plan): lo terminado, lo que está en marcha (pujas, ofertas, lo que tienes a la venta) y lo que te han hecho a ti.
  * Cada cosa dice si venía en el plan o es por tu cuenta.
  */
+/** (24 nov) un paso del plan de la IA que la app ha sacado al repasarlo con los datos de ahora: «A las 06:25: vender. Ahora: …» */
+export function pasoCambiaTxt(P, o) {
+  if (!P || !o || !o.descartada || !o.decAhora || !P.t || P.auto || P.motorHoy) return '';
+  const VERBO = { vender: 'vender', clausular: 'clausular', pujar: 'pujar', comprar: 'comprar', blindar: 'blindar', ofertar: 'ofertar' };
+  const era = o.etiqueta === 'Aceptar oferta' ? 'aceptar la oferta' : VERBO[o.accion] || o.accion;
+  const c = o.decAhora.corta || '';
+  return `A las ${horaDe(P.t)}: ${era}. Ahora: ${c.charAt(0).toLowerCase()}${c.slice(1)}.`;
+}
 export function llevasHTML(S) {
   const { M } = S;
   const P = S.plan;
@@ -182,7 +194,25 @@ export function llevasHTML(S) {
   const hoyD = diaDe(ahora);
   const accDe = (a) => String(a || '').toLowerCase().replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
   const deAntes = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD && p !== P).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion) })));
-  const delPlan = (pid, acciones) => ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || deAntes.some((o) => o.pid === pid && acciones.includes(o.accion));
+  // (24 nov, Senna: «recomienda vender y luego me dice que es una decisión que he tomado por mi cuenta») de dónde salió cada
+  // cosa: del plan (también lo que proponía cuando se hizo, aunque al repasarlo ahora ese paso haya salido: `cuadradas` y
+  // lo que la app ha sacado después, `decAhora`), de lo que le aconsejó la IA en Pregunta, o por su cuenta
+  const esIA = !!(P && P.t && !P.auto && !P.motor) || !!(P && P.modelo);
+  const horaPlan = P && P.t && esIA ? horaDe(P.t) : '';
+  const proponia = P ? P.ops.filter((o) => o.pid && o.descartada && o.decAhora).map((o) => ({ pid: o.pid, accion: o.accion })) : [];
+  const deAntesT = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion), t: p.t })));
+  let dichoIA = []; try { dichoIA = consejosChat(M, undefined, { desde: desde - 12 * HORA }); } catch (e) { dichoIA = []; }
+  const origenDe = (pid, acciones) => {
+    if (ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || proponia.some((o) => o.pid === pid && acciones.includes(o.accion))) return { plan: true, txt: horaPlan ? `Del plan de las ${horaPlan}` : 'Del plan' };
+    const a = deAntesT.find((o) => o.pid === pid && acciones.includes(o.accion));
+    if (a) return { plan: true, txt: `Del plan de las ${horaDe(a.t)}` };
+    const k = acciones.includes('vender') ? dichoIA.find((y) => y.pid === pid && y.clase === 'V') : null;
+    if (k) return { plan: true, txt: k.ts ? `Te lo aconsejó la IA a las ${horaDe(k.ts)}` : 'Te lo aconsejó la IA' };
+    return { plan: false, txt: 'Por tu cuenta' };
+  };
+  const delPlan = (pid, acciones) => origenDe(pid, acciones);
+  // y si ahora la app aconseja otra cosa con lo que tiene en venta, se dice en corto
+  const ahoraDe = (pid) => { const d = M.decision ? M.decision(pid) : null; return d && ['esta-oferta-no', 'oferta-no', 'acepta', 'por-dinero'].includes(d.matiz) ? d.corta : ''; };
   const items = [];
   for (const a of M.actividad) {
     if (!a.t || a.t <= desde || !a.pid) continue;
@@ -205,7 +235,7 @@ export function llevasHTML(S) {
   }
   for (const v of M.misVentas || []) {
     const mej = v.mejor;
-    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']),
+    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']), nota: ahoraDe(v.pid),
       texto: `${v.j.nombre} a la venta${mej ? `: la mejor oferta, ${eur(mej.importe)}${mej.deLiga ? ' (LaLiga)' : ''}` : ': aún sin ofertas'}` });
   }
   const hechos = items.filter((x) => x.estado === 'hecho').length, curso = items.filter((x) => x.estado === 'curso').length;
@@ -219,7 +249,7 @@ export function llevasHTML(S) {
   const orden = { curso: 0, contra: 1, hecho: 2 };
   items.sort((a, b) => orden[a.estado] - orden[b.estado] || b.t - a.t);
   return `<details class="llevas">${cab}
-    <ul class="llevas-l">${items.map((x) => `<li class="${x.estado}"><button class="llevas-f" data-j="${esc(x.pid)}"><span class="ll-ic">${icono(ICO[x.estado])}</span><span class="ll-t">${esc(x.texto)}${x.estado === 'hecho' && x.t ? ` <small>${esc(cuando(x.t))}</small>` : ''}</span>${x.estado === 'contra' ? '' : `<span class="ll-tag ${x.plan ? 'plan' : ''}">${x.plan ? 'Del plan' : 'Por tu cuenta'}</span>`}</button></li>`).join('')}</ul>
+    <ul class="llevas-l">${items.map((x) => `<li class="${x.estado}"><button class="llevas-f" data-j="${esc(x.pid)}"><span class="ll-ic">${icono(ICO[x.estado])}</span><span class="ll-t">${esc(x.texto)}${x.estado === 'hecho' && x.t ? ` <small>${esc(cuando(x.t))}</small>` : ''}${x.nota ? ` <small class="ll-ahora">Ahora: ${esc(x.nota.charAt(0).toLowerCase() + x.nota.slice(1))}</small>` : ''}</span>${x.estado === 'contra' ? '' : `<span class="ll-tag ${x.plan && x.plan.plan ? 'plan' : ''}">${esc((x.plan && x.plan.txt) || 'Por tu cuenta')}</span>`}</button></li>`).join('')}</ul>
     <p class="llevas-pie">${balance ? `Hecho hasta ahora: ${eur(balance, { signo: true })}. ` : ''}${M.misPujas ? `En pujas tienes ${eur(M.misPujas)} comprometidos. ` : ''}${quedan ? `Del plan te ${quedan === 1 ? 'queda 1 paso' : `quedan ${quedan} pasos`}.` : P && !P.viejo ? 'Del plan no te queda nada por hacer hoy.' : ''}</p></details>`;
 }
 
@@ -228,7 +258,7 @@ export function llevasHTML(S) {
 export const claveUrgente = (a) => `${a.tipo}|${a.pid || a.titulo}`;
 export const urgentesQuitados = () => { const q = LS.get(K('urgentes-quitados'), {}), d = diaDe(); return new Set(Object.keys(q).filter((k) => q[k] === d)); };
 /** lo urgente que no está en el plan (como mucho tres) y la nota de cada cláusula abierta después del plan */
-function urgentesDe(S) {
+export function urgentesDe(S) {
   const { M } = S;
   // lo que ya está en el plan no se repite aquí, ni lo que has quitado hoy
   const enPlan = new Set(Object.keys(S.opPorPid || {}));
@@ -252,20 +282,30 @@ function urgentesDe(S) {
     nota[a.pid] = 'Se ha abierto después de tu plan: no lo tiene en cuenta.';
     return false;
   };
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
+  // (24 nov, decide.js) y lo de vender o buscar sustituto, solo si es lo que dice la decisión del jugador con el plan delante
+  const segunDec = (a) => { if (!a.pid || !M.decision || !['vender', 'sustituto'].includes(a.tipo)) return true; const d = M.decision(a.pid); return !d || (a.tipo === 'vender' ? d.accion === 'vender' && d.matiz !== 'por-dinero' : d.accion === 'aguantar'); };
+  const noFicha = (a) => !!a.pid && ['pujar', 'clausular'].includes(a.tipo) && !!M.decisionFichar && (M.decisionFichar(a.pid) || {}).accion === 'no';
+  // (repaso del 24 nov) con el plan de la app delante (el de ahora), una cláusula o una puja que el plan no lleva no es
+  // urgente: el plan la ha tenido entre lo posible y no la ha elegido (salían dos «Clausula a…» que juntas no cabían)
+  const planDeAhora = !!(P && P.motor && !conIA);
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && segunDec(a) && !noFicha(a) && !(planDeAhora && a.pid && ['pujar', 'clausular'].includes(a.tipo)) && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a) && !(a.pid && delMotor.has(String(a.pid)) && ['vender', 'clausular', 'pujar'].includes(a.tipo))).slice(0, 3);
   // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
   // arriba y el plan de debajo sin Rodri, sin explicar nada)
   const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];
   for (const a of urg) {
     if (!a.pid || nota[a.pid] || !P) continue;
     const j = M.J(a.pid), d = j && desc.find((x) => x && norm(x.jugador) === norm(j.nombre));
-    if (d && d.motivo) nota[a.pid] = `El plan lo descartó: ${d.motivo}`;
-    else if (a.tipo === 'vender') nota[a.pid] = conIA ? 'El plan de la IA no lo vende: es un aviso de la app de ahora, decide tú.' : 'No entra en los pasos del plan de hoy: es un aviso aparte, decide tú.';
+    // (24 nov, Carlos: «¿qué es eso de la app dice una cosa y la IA otra? ¿A un usuario le vas a decir eso?») nada de
+    // «el plan de la IA no lo vende»: si el plan lo descartó, su porqué y nada más
+    if (d && d.motivo) nota[a.pid] = d.motivo;
   }
   return { urg, nota, fuera };
 }
 /** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
-const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
+const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || a.tipo === 'sustituto' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
+/** (24 nov, «menos texto» y «nada cortado») la primera frase entera, en vez del texto cortado a dos líneas */
+// (24 nov) sin cortar en la inicial de un nombre («puja por C. Soler»)
+const frase1 = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
 /** «Ahora mismo»: solo sin plan. Con plan, lo urgente va arriba de sus pasos, en «Antes de nada» (18, 9 nov) */
 function ahoraHTML(S) {
   const { M } = S;
@@ -277,7 +317,7 @@ function ahoraHTML(S) {
   // el «cuando» largo («La jornada empieza mañana 21:00», «Antes de que baje más») va debajo del título: a la derecha y sin
   // partir, dejaba el título en una columna de una palabra por línea (Carlos, 5 nov 05:34, con captura)
   const largoCu = (t) => !!t && t.length > 14;
-  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b>${largoCu(a.cuando) ? `<span class="ahora-cu2">${esc(a.cuando)}</span>` : ''}<span>${esc(a.texto)}</span>${a.pid && nota[a.pid] ? `<em class="ahora-nota">${esc(nota[a.pid])}</em>` : ''}</span>${a.cuando && !largoCu(a.cuando) ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
+  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b>${largoCu(a.cuando) ? `<span class="ahora-cu2">${esc(a.cuando)}</span>` : ''}<span>${esc(frase1(a.texto))}</span>${a.pid && nota[a.pid] ? `<em class="ahora-nota">${esc(nota[a.pid])}</em>` : ''}</span>${a.cuando && !largoCu(a.cuando) ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
 }
 
 /**
@@ -310,8 +350,10 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const { M } = S;
   const xs = M.mias.filter((x) => x.j && x.j.pos !== 5);
   if (!xs.length) return '';
-  const giro = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia === 'ya');
-  const frena = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia !== 'ya');
+  // (24 nov, decide.js) lo de vender sale de la decisión de cada uno: los que se venden y los titulares que giran y se aguantan
+  const vv = xs.map((x) => ({ x, v: ventaVista(M, x, { sinInercia: bloqueada('inercia') }) })).filter((y) => y.v && !y.v.d.enVenta);
+  const giro = vv.filter((y) => y.v.d.accion === 'vender').map((y) => y.x);
+  const frena = vv.filter((y) => y.v.d.accion !== 'vender').map((y) => y.x);
   const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
   const dudas = xs.filter((x) => x.j.estado === 'doubtful');
   const riesgo = xs.filter((x) => x.riesgo === 'alto');
@@ -328,8 +370,8 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
     return v.join('');
   };
   const chips = [
-    !sinI && de(giro, 'mal', (n) => `${n} ha girado`),
-    !sinI && de(frena, 'duda', (n) => `${n} frenando`),
+    de(giro, 'mal', (n) => `${n}: vender`),
+    de(frena, 'duda', (n) => `${n} baja · titular`),
     de(confFuera, 'mal', (n) => `${n} no juega`),
     de(confSup, 'duda', (n) => `${n} suplente`),
     de(malos, 'mal', (n) => `${n} de baja`),
@@ -438,6 +480,8 @@ function objetivoPill(o) {
   const k = String(o.objetivo || '').toLowerCase().replace(/^revend.*/, 'revender');
   const x = OBJ[k];
   if (!x || ['blindar', 'alinear', 'esperar'].includes(o.accion)) return '';
+  // (24 nov) lo que se compra para aguantarlo: se revende más adelante, sin día
+  if (k === 'revender' && o.aguantar) return `<span class="pill ${x[0]}">Para aguantarlo${o.beneficio_esperado ? ` · ${eur(o.beneficio_esperado, { signo: true })}` : ''}</span>`;
   return `<span class="pill ${x[0]}">${x[1]}${k === 'revender' && o.beneficio_esperado ? ` · ${eur(o.beneficio_esperado, { signo: true })}` : ''}${k === 'revender' && o.vender_el ? ` · vender ${esc(o.vender_el)}` : ''}</span>`;
 }
 
@@ -446,6 +490,35 @@ function objetivoPill(o) {
  * dinero, cuándo y el porqué en dos líneas; al tocarlo se abre el resto (datos, lo que pagaste, avisos, confianza,
  * saldo y «Hecho»)
  */
+/** (24 nov, Carlos: «muchísimo texto… más al grano») la frase que decide un paso: la de la IA si es corta; si no, la
+ *  primera frase del porqué de la app. El texto entero queda plegado debajo («Más detalle») */
+const palabras = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+const primeraFrase = (t) => String(t || '').trim().split(/(?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.)(?<=[.:])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/)[0] || '';
+/** (24 nov, Carlos, con capturas de «Mirados y descartados»: «una cantidad ingente de texto») un descartado, en una frase:
+ *  la primera y, si aún es larga, hasta su última pausa antes de los 120 caracteres */
+export function breve(t, n = 120) {
+  let f = primeraFrase(String(t || '').replace(/^La app lo (descarta|quita)[.:]?\s*/i, '').replace(/…$/, '')).trim();
+  if (f.length > n) {
+    const c = f.slice(0, n), i = Math.max(c.lastIndexOf(', '), c.lastIndexOf('; '), c.lastIndexOf(' y '), c.lastIndexOf(' ('), c.lastIndexOf(': '));
+    f = (i >= 45 ? c.slice(0, i) : c.slice(0, c.lastIndexOf(' '))).replace(/[\s,;:]+$/, '');
+  }
+  f = f.replace(/[.:]$/, '');
+  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}.` : '';
+}
+function fraseDecide(o) {
+  const m = String(o.motivo || '').trim();
+  // (el cambio se lee entero: lo de no aceptar la oferta hasta tener al nuevo es la mitad del paso)
+  if (o.descartada || palabras(m) <= (o.cambio && o.accion === 'vender' ? 42 : 30)) return m;
+  const d = o.datos && o.datos.porque ? primeraFrase(o.datos.porque) : primeraFrase(m);
+  const f = d.replace(/\.$/, '');
+  return f ? `${f.charAt(0).toUpperCase()}${f.slice(1)}.` : m;
+}
+/** las cifras del paso en pastillas: las de la IA (claves) o las de la app (datos) */
+function clavesDe(o) {
+  if (Array.isArray(o.claves) && o.claves.length) return o.claves;
+  const d = o.datos || {};
+  return [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean);
+}
 function pasoOp(S, P, o) {
   const j = o.j;
   const ok = hecho(S, P, o);
@@ -461,19 +534,33 @@ function pasoOp(S, P, o) {
   // tarjeta la sigue abriendo y cerrando
   // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
   const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
-  const porque = o.descartada && o.aviso ? o.aviso : o.motivo;
-  const dentro = [
+  // (24 nov) si la app lo ha sacado al repasar el plan con los datos de ahora, el paso dice qué ha cambiado y desde cuándo
+  const cambiaTxt = pasoCambiaTxt(P, o);
+  const porque = cambiaTxt ? `${cambiaTxt} ${String(o.decAhora.porque || '').trim()}` : o.descartada && o.aviso ? o.aviso : fraseDecide(o);
+  // (24 nov, Carlos: «muchísimo texto… más resumido») un descartado dice solo por qué se descarta: sin la explicación de la
+  // IA de por qué hacerlo, sin las pastillas ni la confianza
+  const pie = `<div class="op-pie">${o.confianza && !o.sugerencia && !o.descartada ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null && !o.descartada ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`;
+  // (24 nov) el cambio: quién sale y quién entra, y los otros recambios (en la ficha del que sale)
+  // (las dos caras solo si van los dos pasos en el plan; la puja sola es una puja más)
+  const parCambio = !!o.cambio && (P.ops || []).some((p) => p !== o && p.cambio && p.cambio.sale === o.cambio.sale && !p.descartada);
+  const jS = o.cambio && parCambio && S.D.maestro[o.cambio.sale], jE = o.cambio && parCambio && S.D.maestro[o.cambio.entra];
+  const cambioHTML = o.cambio && jS && jE && !o.descartada ? `<div class="pp-cambio"><span class="pp-cj" data-j="${esc(jS.id)}">${ava(jS, 'p')}<b>${esc(jS.nombre)}</b><small>sale</small></span><span class="pp-cf" aria-hidden="true">→</span><span class="pp-cj" data-j="${esc(jE.id)}">${ava(jE, 'p')}<b>${esc(jE.nombre)}</b><small>entra</small></span></div>` : '';
+  const recHTML = o.cambio && !o.descartada && S.D.maestro[o.cambio.sale] ? `<button class="enlace pp-rec" data-j="${esc(o.cambio.sale)}">Ver los recambios de ${esc(o.cambio.saleNombre || '')} ›</button>` : '';
+  const dentro = o.descartada ? [sub ? `<p class="pp-sub">${sub}</p>` : '', porque ? `<p class="pp-mot pp-mot1">${esc(String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, ''))}</p>` : '', pie].join('') : [
     sub ? `<p class="pp-sub">${sub}</p>` : '',
+    cambioHTML,
     porque ? `<p class="pp-mot pp-mot1">${esc(porque)}</p>` : '',
+    recHTML,
     objetivoPill(o) || o.accion === 'pujar' && o.puja_max ? `<div class="pp-pills">${objetivoPill(o)}${o.accion === 'pujar' && o.puja_max ? `<span class="pill">Puja hasta ${eur(o.puja_max)}</span>` : ''}</div>` : '',
-    o.motivo && porque !== o.motivo ? `<p class="pp-mot">${esc(o.motivo)}</p>` : '',
+    o.motivo && porque !== o.motivo ? `<details class="pp-mas"><summary>Más detalle</summary><p class="pp-mot">${esc(o.motivo)}</p></details>` : '',
     o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no se sabe si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : '',
-    Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : '',
+    // (lo que pagaste ya va en su línea: fuera de las pastillas)
+    ((k) => (k.length ? `<div class="claves">${k.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''))(clavesDe(o).filter((c) => !(o.compra && !o.descartada && /pagaste/.test(c)))),
     o.aviso && !(o.descartada && porque === o.aviso) ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : '',
-    `<div class="op-pie">${o.confianza && !o.sugerencia ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
+    pie,
   ].join('');
   // (en la fila corta, «Aceptar oferta» se queda en «Aceptar»: en un móvil de 360 se comía el nombre; dentro va entero)
-  const acc = esc(o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
+  const acc = esc(o.cambio && !o.descartada ? (o.accion === 'vender' ? 'Cambio' : parCambio ? 'Recambio' : ACCION[o.accion] || o.accion) : o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
   // (sesión 8, M9) un botón dentro de summary no se puede alcanzar bien: la cara es un span que abre la ficha al tocarla
   // y, con el teclado, va el botón «Ficha» de dentro
   const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
@@ -481,8 +568,8 @@ function pasoOp(S, P, o) {
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
       ${cara}
       <span class="pp-c">
-        <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
-        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
+        <span class="pp-l1">${o.descartada ? `<span class="accion-t descartada">${cambiaTxt ? 'Ha cambiado' : 'Descartado'}</span>` : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
+        <span class="pp-l2s${liga ? ' con-est' : ''}">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(o.descartada ? String(porque).replace(/^La app lo (descarta|quita)[.:]\s*/, '') : porque)}</span>` : ''}</span>
       </span>
       ${imp || '<span></span>'}
     </summary><div class="pp-d">${dentro}</div></details>`;
@@ -495,7 +582,10 @@ function pasoOp(S, P, o) {
 export function cambiosDesdePlan(S) {
   const P = S.plan, M = S.M;
   if (P && !P.auto && P.empezo && M && M.enJuego) return `La jornada ${M.enJuego.n} ha empezado y se han reabierto las cláusulas.`;
-  if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return null;
+  // (24 nov) lo que la app ha sacado del plan de la IA al repasarlo con los datos de ahora: se dice arriba, con «Rehacer el plan»
+  const camb = P && !P.auto && P.t ? (P.ops || []).filter((o) => o.descartada && o.decAhora).length : 0;
+  const cambTxt = camb ? `Desde las ${horaDe(P.t)} ${camb > 1 ? `han cambiado ${camb} pasos` : 'ha cambiado un paso'} (abajo, con su porqué).` : '';
+  if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return cambTxt || null;
   const ahora = new Set(M.mias.map((x) => x.pid)), antes = new Set(P.foto.mias);
   const mandado = new Set();
   for (const o of P.ops || []) {
@@ -506,9 +596,9 @@ export function cambiosDesdePlan(S) {
   const nombre = (id) => (S.D.maestro[id] && S.D.maestro[id].nombre) || 'uno';
   const fuera = P.foto.mias.filter((id) => !ahora.has(id) && !mandado.has(`fuera:${id}`)).map(nombre);
   const dentro = [...ahora].filter((id) => !antes.has(id) && !mandado.has(`dentro:${id}`)).map(nombre);
-  if (!fuera.length && !dentro.length) return null;
+  if (!fuera.length && !dentro.length) return cambTxt || null;
   const lista = (l) => (l.length > 2 ? `${l.slice(0, 2).join(', ')} y ${l.length - 2} más` : l.join(' y '));
-  return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : ''].filter(Boolean).join(' ');
+  return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : '', cambTxt].filter(Boolean).join(' ');
 }
 
 /**
@@ -575,7 +665,7 @@ function fasesHTML(S, P) {
   });
   const luego = vivos.filter((o) => faseDe(o) === 'luego');
   if (luego.length) h += caja('luego', 'Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego', n: luego.length });
-  if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
+  if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.every((o) => o.decAhora) ? 'Ha cambiado desde el plan' : fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
   return h;
 }
 
@@ -642,9 +732,10 @@ function planHTML(S) {
   const rehacer = conIA && !E.cargando && P ? `<button class="plan-rehacer" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Rehacer el plan' : 'Hacerlo con la IA'}</button>` : '';
   const ajB = P && (conIA || !E.cargando) ? `<button class="b-ico plan-aj-b" data-accion="planAjustes" aria-label="Ajustes del plan" title="Ajustes del plan">${icono('ajustes')}</button>` : '';
   const pt = conIA ? proximoTurno(M) : null;
-  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}` : '';
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada: a su hora con la app abierta y, si no, al abrirla
+  const sigue = pt ? ` · el siguiente sale solo ${diaDe(pt.t) !== diaDe() ? 'mañana ' : ''}a las ${pt.txt}${enApp && !nativo.hayFondo() ? ', o al abrir la app' : ''}` : '';
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${rehacer}${ajB}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}${sigue}</span></div>` : ''}`;
-  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2">${nativo.canal() === 'play' ? 'Tarda menos de un minuto. Si sales de la app, se sigue haciendo y al volver lo tienes aquí.' : 'Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.'}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
+  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? `<div class="p2" id="plan-notif">${notifPlanHTML()}</div>` : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto && !/plan de la app|plan automático/i.test(E.error) ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (E.cupo && !E.callado) h += cupoPlanHTML(E.cupo);
@@ -682,7 +773,7 @@ function planHTML(S) {
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += plegado('ojo', 'Vigila', P.vigilar.length, P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join(''), abrir);
   if (Array.isArray(P.noticias) && P.noticias.length) h += plegado('info', 'Noticias que te afectan', P.noticias.length, P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join(''), abrir);
   if (Array.isArray(P.rivales) && P.rivales.length) h += plegado('rivales', 'Tus rivales', P.rivales.length, P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); const e = tid && S.D.clasif.find((x) => x.teamId === tid); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}>${e ? caraManager(e) : `<span class="ic-act">${icono('rivales')}</span>`}<div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join(''), abrir);
-  if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join(''));
+  if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, breve(d.motivo))).join(''));
   if (!conIA) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
   h += aciertosHTML(M);
   const fuentesP = (P.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u));
@@ -794,7 +885,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   }
   const sub = real ? `el tuyo en LaLiga · J${V.n} en directo` : mio ? 'el que tienes puesto en LaLiga' : deIA ? 'el de la IA' : 'el mejor según la app';
   const cambiosApp = deIA && al.cambiosApp ? `, con ${al.cambiosApp > 1 ? `${al.cambiosApp} cambios` : 'un cambio'} de la app` : '';
-  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${mio ? 'El que tienes puesto en LaLiga.' : deIA ? `El que propone la IA${cambiosApp}.` : 'El mejor según la app. Cuando la app vea el que tienes puesto en LaLiga, saldrá aquí.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
+  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${mio ? 'El que tienes puesto en LaLiga.' : deIA ? `El que propone ${S.plan && (S.plan.auto || (S.plan.motor && !S.plan.modelo)) ? 'la app' : 'la IA'}${cambiosApp}.` : 'El mejor según la app. Cuando la app vea el que tienes puesto en LaLiga, saldrá aquí.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
   h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp${V ? ' pp-vivo' : ''}">${cabPts}</span>
     <div class="campo-modo">${[['pp', 'Puntos'], ['valor', 'Valor'], ['forma', 'Forma']].map(([k, t]) => `<button data-filtro="campo:${k}" class="${modo === k ? 'activo' : ''}">${t}</button>`).join('')}</div></div>`;
   const cambios = mio && rec ? cambiosOnce(M, lineas, form, rec) : null;
@@ -814,7 +905,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // no hay nada flojo). Sin banquillo ni tira de «fuera» (Carlos, 08:20: «¿de qué sirve?»); siguen en la lista de la plantilla
   const hayCambios = !!(cambios && cambios.pares.length);
   if (hayCambios) h += cambiosOnceHTML(M, cambios);
-  if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios), sinCambios: !hayCambios, conLinea: mio });
+  if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios, S.plan), sinCambios: !hayCambios, conLinea: mio });
   h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
@@ -823,8 +914,11 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
   // que marca mucho, si no hay nadie mejor fuera del once (si lo hubiera, la app ya lo habría cambiado): se dice
   if (!real) {
-    const duros = tit.filter((j) => j.pos <= 2 && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
-    if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}. No tienes a nadie fuera del once que sume bastante más en su sitio: si fichas para ${duros.length > 1 ? 'esos puestos' : 'ese puesto'}, que tenga mejor partido.`);
+    // (24 nov, captura de Carlos: «Alti → Juan Iglesias» arriba y, debajo, «no tienes a nadie fuera del once que sume más
+    // en su sitio» por el mismo Alti) el que la app ya cambia por otro no cuenta aquí
+    const cambiados = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
+    const duros = tit.filter((j) => j.pos <= 2 && !cambiados.has(String(j.id)) && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
+    if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}, y no tienes a nadie mejor fuera del once.`);
   }
   notas.push(`<span class="leyenda">Arriba, su próximo rival: <i class="facil"></i>fácil <i class="media"></i>medio <i class="dificil"></i>difícil.${V ? '' : ' Abajo, lo que tiene de ser titular: <b class="alta">75 % o más</b>, <b class="media">50-74 %</b>, <b class="baja">menos</b>.'}</span>`);
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
@@ -833,8 +927,14 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
 
 /** (19 nov) lo flojo de tu once: los que tienen menos de la mitad de ser titular (o están de baja) y no tienes a nadie
     mejor fuera (como mucho 3); para los 2 primeros, lo mejor de su puesto en el mercado que te llega y juega */
-function veredictoOnce(M, tit, cambios) {
+export function veredictoOnce(M, tit, cambios, plan = null) {
   const MAL = new Set(['injured', 'suspended', 'out_of_league']);
+  // (24 nov, Carlos: «¿cómo puede recomendar a Pepelu en Equipo y descartarlo en el plan?») el plan manda: aquí no sale
+  // como fichaje quien el plan ha mirado y descartado (o probado y no elegido), y va delante quien el plan ficha
+  const ficha = new Set(((plan && plan.ops) || []).filter((o) => !o.descartada && !o.sugerencia && ['pujar', 'comprar', 'clausular'].includes(o.accion) && o.pid).map((o) => String(o.pid)));
+  const noPlan = new Set([...((plan && plan.descartes) || []).map((d) => String(d && d.pid)), ...((plan && plan.cuentas && plan.cuentas.claves) || []).filter((k) => /^[PG]-/.test(k)).map((k) => k.slice(2))].filter((pid) => pid && !ficha.has(pid)));
+  // (repaso del 24 nov) y lo que el plan no ficha por otra razón (plantilla llena, el parón, no te llega…)
+  for (const m of M.mercado || []) if (M.decisionFichar && !ficha.has(String(m.pid)) && (M.decisionFichar(m.pid) || {}).accion === 'no') noPlan.add(String(m.pid));
   const tp = (j) => { const T = M.titularidad ? M.titularidad(j) : null; return T ? T.p : null; };
   const pp = (j) => (j && j.pos < 5 ? M.ppEsperado(j) : 0);
   const salen = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
@@ -842,8 +942,8 @@ function veredictoOnce(M, tit, cambios) {
     .sort((a, b) => (tp(a) || 0) - (tp(b) || 0)).slice(0, 3);
   const usados = new Set();
   const mercado = (j) => {
-    const m = (M.mercado || []).filter((x) => x.j && x.j.pos === j.pos && !usados.has(x.pid) && !MAL.has(x.j.estado) && x.meLlega && !x.noVende && (tp(x.j) || 0) >= 0.6 && pp(x.j) > pp(j))
-      .sort((a, b) => pp(b.j) - pp(a.j))[0] || null;
+    const m = (M.mercado || []).filter((x) => x.j && x.j.pos === j.pos && !usados.has(x.pid) && !noPlan.has(String(x.pid)) && !MAL.has(x.j.estado) && x.meLlega && !x.noVende && (tp(x.j) || 0) >= 0.6 && pp(x.j) > pp(j))
+      .sort((a, b) => (ficha.has(String(b.pid)) ? 1 : 0) - (ficha.has(String(a.pid)) ? 1 : 0) || pp(b.j) - pp(a.j))[0] || null;
     if (m) usados.add(m.pid);
     return m;
   };
@@ -856,7 +956,7 @@ function fueraOnceHTML(M, { ver, sinCambios, conLinea }) {
   let h = '';
   const fl = ver.flojos;
   if (!fl.length) return h + (sinCambios && conLinea ? `<p class="t2 peq co-ok">${icono('ok')} Nadie de fuera mejora tu once.</p>` : '');
-  h += `<div class="cambio-once vo-flojo"><div class="co-t">Lo flojo de tu once</div>${fl.map((x) => `<div class="co-f"><button class="co-j sale" data-j="${esc(x.j.id)}">${ava(x.j, 'm')}<span><b>${esc(x.j.nombre)}</b><i>${MAL.has(x.j.estado) ? est(x.j) : `titular ${pc(x.p)}`}</i></span></button><span class="co-fl" aria-hidden="true">→</span>${x.m ? `<button class="co-j entra" data-j="${esc(x.m.pid)}">${ava(x.m.j, 'm')}<span><b>${esc(x.m.j.nombre)}</b><i>${pc(ver.tp(x.m.j))} · ${eur(x.m.precio)}</i></span></button>` : `<button class="co-j entra" data-accion="sustituto" data-pid="${esc(x.j.id)}"><span><b>Ver sustitutos</b></span></button>`}</div>`).join('')}</div>`;
+  h += `<div class="cambio-once vo-flojo"><div class="co-t">Lo flojo de tu once</div>${fl.map((x) => `<div class="co-f"><button class="co-j sale" data-j="${esc(x.j.id)}">${ava(x.j, 'm')}<span><b>${esc(x.j.nombre)}</b><i>${MAL.has(x.j.estado) ? est(x.j) : `titular ${pc(x.p)}`}</i></span></button><span class="co-fl" aria-hidden="true">→</span>${x.m ? `<button class="co-j entra" data-j="${esc(x.m.pid)}">${ava(x.m.j, 'm')}<span><b>${esc(x.m.j.nombre)}</b><i>${pc(ver.tp(x.m.j))} · ${eur(x.m.puja || x.m.precio)}</i></span></button>` : `<button class="co-j entra" data-accion="sustituto" data-pid="${esc(x.j.id)}"><span><b>Ver sustitutos</b></span></button>`}</div>`).join('')}</div>`;
   return h;
 }
 
@@ -912,7 +1012,7 @@ function cambiosOnceHTML(M, C) {
   if (!C.pares.length) return '';
   const filas = C.pares.map(({ sale, entra }) => `<div class="co-f">${sale ? `<button class="co-j sale" data-j="${esc(sale.id)}">${ava(sale, 'm')}<span><b>${esc(sale.nombre)}</b><i>${esc(dato(sale))}</i></span></button><span class="co-fl" aria-hidden="true">→</span>` : '<span class="co-hueco">Hueco libre</span><span class="co-fl" aria-hidden="true">→</span>'}<button class="co-j entra" data-j="${esc(entra.id)}">${ava(entra, 'm')}<span><b>${esc(entra.nombre)}</b><i>${esc(dato(entra))}</i></span></button></div>`).join('');
   const gana = C.gana >= 0.1 ? ` · <b class="sube">+${d1(C.gana)} pts esperados</b>` : '';
-  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">Solo propone un cambio si compensa contando los puntos, el rival y lo que tiene de ser titular. El once lo cambias tú en LaLiga Fantasy.</p></div>`;
+  return `<div class="cambio-once"><div class="co-t">Cambios que haría ${quien}${C.forma ? ` (con ${esc(C.forma)})` : ''}${gana}</div>${filas}<p class="t2 peq">El once lo cambias tú en LaLiga Fantasy.</p></div>`;
 }
 
 function notaJugador(S, nombre, texto, efecto) {
@@ -934,6 +1034,15 @@ function saludoHTML(S) {
   const fecha = new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' });
   return `<div class="saludo"><span class="eti">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span><span class="t2">${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span></div>`;
 }
+/** (23 nov, Carlos: «cuando me salgo de la aplicación no me sale ninguna notificación… no sé si es porque he quitado las
+    notificaciones») debajo de «Preparando tu plan», en la app: si sale de la app, se sigue haciendo; con las notificaciones
+    apagadas, se le dice que así no le puede avisar y se le ofrece activarlas (app.js lo cambia al volver del permiso) */
+export function notifPlanHTML() {
+  const t = ['play', 'ios'].includes(nativo.canal()) ? 'Tarda menos de un minuto' : 'Tarda uno o dos minutos';
+  if (nativo.avisosPermitidos()) return `${t}. Puedes salir de la app: se sigue haciendo y te aviso cuando esté.`;
+  return `${t}. Si sales de la app se sigue haciendo, pero con las notificaciones apagadas no te puedo avisar cuando esté. <button class="btn chico sec" data-accion="permisoPlan">${icono('campana')}Activar notificaciones</button>`;
+}
+
 export function hoy(S) {
   if (ancho()) return hoyAncho(S);
   const { D, M } = S;
@@ -966,7 +1075,7 @@ function bandasHoy(S) {
   if (D.demo) {
     // (sesión 8, A9) en la web del móvil, con tu liga hace falta la app (Android) o pasar una vez por un ordenador (iPhone)
     const ua = enApp ? '' : navigator.userAgent || '', mov = /Android/i.test(ua) ? 'android' : /iPhone|iPad|iPod/.test(ua) ? 'iphone' : null;
-    const conMia = mov === 'android' ? ' Para la tuya, en el móvil, hace falta la app de Android.' : mov === 'iphone' ? ' Para la tuya, en el iPhone, entra antes una vez desde un ordenador.' : '';
+    const conMia = mov === 'android' ? ' Para la tuya, en el móvil, hace falta la app de Android.' : mov === 'iphone' ? ' Para la tuya, entra con tu cuenta de LaLiga.' : '';
     h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.${conMia}</span><button data-accion="salirDemo">Usar la mía</button></div>`;
   }
   // (lo que falla pero se ha tapado con lo de la última vez, como las ofertas, no se avisa: queda en el diagnóstico)
@@ -1019,7 +1128,7 @@ export function ventaHTML(v) {
         <div class="fila-s">Puesto a ${eur(v.precio)} · vale ${eur(v.j.valor)}${v.compra ? ` · pagaste ${eur(v.compra)}` : ''}</div>
         <div class="fila-x">${CONSEJO[v.consejo] || ''}${v.ofertas.length ? `<span class="pill">${v.ofertas.length} oferta${v.ofertas.length === 1 ? '' : 's'}</span>` : ''}</div></div>
       <div class="fila-d">${m ? `<div class="v ${m.sobre >= 0 ? 'sube' : ''}">${eur(m.importe)}</div><div class="d apag">mejor oferta</div>` : '<div class="d apag">sin ofertas</div>'}</div></button>
-    ${ofs ? `<div class="ofertas">${ofs}</div>` : ''}${v.ligaEst ? `<p class="t2 peq" style="margin:6px 0 0">La oferta de LaLiga llegará con el cambio de mercado y rondará <b>${eur(v.ligaEst.v)}</b>${v.ligaEst.sinDatos ? ' (cerca de su valor)' : ` (en tu liga ofrece de mediana un ${pct(v.ligaEst.med * 100)} sobre el valor)`}.</p>` : ''}${v.porque && v.consejo !== 'sin ofertas' ? `<p class="t2 peq" style="margin:6px 0 0">${esc(v.porque)}${v.ganado != null ? ` Con la mejor oferta ganas <b class="${clase(v.ganado)}">${eur(v.ganado, { signo: true })}</b> sobre lo que pagaste.` : ''}</p>` : ''}</div>`;
+    ${ofs ? `<div class="ofertas">${ofs}</div>` : ''}${v.ligaEst ? `<p class="t2 peq" style="margin:6px 0 0">La oferta de LaLiga llegará con el cambio de mercado: entre <b>${eur(v.ligaEst.una ? v.ligaEst.una.min : v.ligaEst.v)}</b> y <b>${eur(v.ligaEst.una ? v.ligaEst.una.max : v.ligaEst.v)}</b>, a suerte (de −10 % a +10 % de su valor).</p>` : ''}${v.porque && v.consejo !== 'sin ofertas' ? `<p class="t2 peq" style="margin:6px 0 0">${esc(v.porque)}${v.ganado != null ? ` Con la mejor oferta ganas <b class="${clase(v.ganado)}">${eur(v.ganado, { signo: true })}</b> sobre lo que pagaste.` : ''}</p>` : ''}</div>`;
 }
 
 /* ================= EQUIPO ================= */
@@ -1069,14 +1178,16 @@ function eqEstadoHTML(S) {
     else if (['fuera', 'baja'].includes(c)) at.push({ x, n: 'mal', t: 'No va convocado', sust: true });
     else if (['suplente', 'nosale'].includes(c)) at.push({ x, n: 'duda', t: 'No es titular en el once confirmado', sust: true });
     else if (x.j.estado === 'doubtful') at.push({ x, n: 'duda', t: 'En duda para el próximo partido', sust: true });
-    if (!sinI && x.ventaInercia) at.push({ x, n: x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda', t: x.ventaInercia.urgencia === 'ya' ? 'Ha girado: toca venderlo' : 'Se está frenando: piensa en venderlo', sust: true });
+    // (24 nov, decide.js) lo mismo que la pastilla, el plan y la IA: antes aquí ponía «toca venderlo» de un titular que la pastilla aguantaba
+    const vvA = ventaVista(M, x, { sinInercia: sinI });
+    if (vvA) at.push({ x, n: vvA.n, t: vvA.largo, sust: true });
     if (x.riesgo === 'alto') at.push({ x, n: 'mal', t: `Cláusula en riesgo: ${eur(x.clausula)}${x.abierta ? ', abierta' : ''}`, cl: true });
   }
   at.sort((a, b) => (a.n === b.n ? 0 : a.n === 'mal' ? -1 : 1));
   const pueden = xs.filter((x) => !MALOS_EQ.includes(x.j.estado) && !['fuera', 'baja'].includes(conf(x))).length;
   const suben = xs.filter((x) => x.tend && num(x.tend.d1) > 0).length, bajan = xs.filter((x) => x.tend && num(x.tend.d1) < 0).length;
   const abiertas = M.mias.filter((x) => x.abierta && x.clausula).length, riesgo = M.mias.filter((x) => x.riesgo === 'alto').length;
-  const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
+  const vender = sinI ? null : xs.filter((x) => { const d = M.decision ? M.decision(x.pid) : null; return d && d.accion === 'vender'; }).length;
   const tiles = [
     // (22 nov) abre la hoja de las bajas de la jornada en «Tu liga», con los tuyos primero (bajas.js; Carlos: sin botón nuevo en Equipo)
     `<button class="eq2-t eq2-bajas ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="bajas" data-v="liga" aria-label="${pueden} de ${xs.length} pueden jugar: ver las bajas"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span><span class="cz-t cz-mini" aria-hidden="true">${icono('cruz')}</span></button>`,
@@ -1115,9 +1226,10 @@ function eqPlantillaHTML(S, op) {
     sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}${orden === 'puntos' ? ` · <b>${num(x.j.puntos)} pts</b>` : ''}`,
     pills: [
       estadoPill(x.j),
-      x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
+      // (24 nov) a un titular el plan no lo vende hasta que baja todos los días (Carlos, 14 nov): sin «vender» en la pastilla
+      ((vvP) => (vvP && (vvP.d.matiz === 'con-recambio' || !op(x.pid)) ? `<span class="pill ${vvP.n}" title="${esc(vvP.d.porque)}">${icono(vvP.icono)}${esc(vvP.pill)}</span>` : ''))(ventaVista(M, x, { sinInercia: bloqueada('inercia') })),
       x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
-      M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
+      M.enVenta.has(x.pid) && !/En venta|oferta/.test((ventaVista(M, x, { sinInercia: bloqueada('inercia') }) || {}).pill || '') ? '<span class="pill abierta">En venta</span>' : '',
       M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
       calPill(M, x.j, { soloDuro: true }),
     ],
@@ -1231,9 +1343,11 @@ export function rivales(S) {
   let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
+  // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
 
-  if (seg !== 'clausulas') {
+  if (seg === 'jornadas') h += porJornadaHTML(S);
+  else if (seg !== 'clausulas') {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;
@@ -1328,8 +1442,15 @@ export function buscaHTML(S) {
  */
 export function descartePlan(S, pid) {
   if (!S.plan || !pid || (S.opPorPid || {})[pid]) return null;
-  return (S.plan.ops || []).find((o) => o.descartada && String(o.pid) === String(pid) && ['pujar', 'comprar'].includes(o.accion)) || null;
+  const o = (S.plan.ops || []).find((x) => x.descartada && String(x.pid) === String(pid) && ['pujar', 'comprar'].includes(x.accion));
+  if (o) return o;
+  // (24 nov, decide.js) y lo que el plan ha mirado y no ficha («Mirados y descartados»): antes Mercado lo seguía llamando
+  // «Chollo» y los avisos decían «la app pujaría…» con el plan diciendo que se paga de más
+  const df = S.M && S.M.decisionFichar ? S.M.decisionFichar(pid) : null;
+  return df && df.accion === 'no' ? { accion: 'pujar', aviso: df.porque, tope: df.tope != null ? df.tope : null, descartada: true, yaPujada: df.yaPujada || null } : null;
 }
+/** la etiqueta de Mercado de uno que se vende: la del motor (chollo, sube…) o, si el plan lo descarta, eso (para las pruebas) */
+export const etiquetaFichar = (S, pid) => { const m = (S.M.mercado || []).find((y) => String(y.pid) === String(pid)); return !m || m.miPuja ? '' : descartePlan(S, pid) ? 'El plan lo descarta' : String(m.veredicto || ''); };
 
 export function mercado(S) {
   const { M } = S;
@@ -1361,15 +1482,21 @@ export function mercado(S) {
       if (dp) return `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope)}` : 'El plan lo descarta'}</span>`;
       return '';
     };
-    const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid); return filaJugador(m, {
+    // (repaso del 24 nov) la puja de la derecha es la del paso del plan si lo lleva (para revender no es la misma que para el
+    // once); si el plan lo descarta o retira tu puja, no se enseña puja ni «Chollo»
+    const opM = (m) => (S.opPorPid || {})[m.pid] || null;
+    const pujaDe = (m) => { const o = opM(m); return o && ['pujar', 'comprar'].includes(o.accion) && (o.puja_max || o.importe) ? (o.puja_max || o.importe) : m.puja; };
+    // (0.8.2) una puja de otro que ha entrado en las últimas 6 horas (pujas-vistas.js)
+    const pujaReciente = (m) => (m.pujasEv || []).some((e) => e[0] > 0 && Date.now() - e[1] < 6 * HORA);
+    const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid) || !!ap || !!(opM(m) && opM(m).retira); return filaJugador(m, {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
         m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá: ${esc(m.noVende.replace(/^es /, ''))}</span>` : '',
-        ap, estadoPill(m.j), m.noVende || ap ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
-        m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
+        ap, estadoPill(m.j), m.noVende || ap || (opM(m) && opM(m).retira) ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
+        m.tipo === 'liga' && m.pujas ? `<span class="pill${pujaReciente(m) ? ' duda' : ''}">${m.pujas} puja${m.pujas > 1 ? 's' : ''}${pujaReciente(m) ? ' · nueva' : ''}</span>` : '',
       ],
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja)}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(pujaDe(m))}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
     }); };
     const PL = M.pujasLiga;
     // (por tramos de valor: cuanto más barato, más se paga en porcentaje; Carlos, 30 oct)
@@ -1470,7 +1597,7 @@ function favoritosHTML(S, { tagV }) {
     const pills = [
       enM ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'A la venta' : 'Libre'} · ${eur(enM.precio)}</span>` : '',
       enM && enM.miPuja ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(enM.miPuja)}</span>` : '',
-      cl ? clausulaPill(cl) : '', estadoPill(j), enM ? tagV[enM.veredicto] || '' : '', calPill(M, j, { soloDuro: true }),
+      cl ? clausulaPill(cl) : '', estadoPill(j), enM ? (descartePlan(S, j.id) ? '<span class="pill duda">El plan lo descarta</span>' : tagV[enM.veredicto] || '') : '', calPill(M, j, { soloDuro: true }),
     ];
     const precio = enM ? enM.precio : cl ? cl.clausula : null;
     return { hoy, html: filaJugador({ j, tend: t }, { sub, pills, derecha: `<div class="v">${eur(precio || j.valor)}</div><div class="d">${precio && precio !== j.valor ? `vale ${eur(j.valor, { dec: 1 })}` : delta(t)}</div>`, op: S.opPorPid[pid] }) };
@@ -1499,8 +1626,8 @@ function sugerenciasDe(S) {
   const out = [];
   const add = (t) => { if (t && !out.includes(t) && out.length < 6) out.push(t); };
   if (M) {
-    const vi = M.mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
-    if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${vi.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando'}`);
+    const vi = M.mias.filter((x) => x.ventaInercia && !bloqueada('inercia') && ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender').sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
+    if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${comoVa(M, vi.pid, vi.ventaInercia)}`);
     const cl = M.clausulas.find((x) => x.abierta && x.meLlega && x.interes >= 55);
     if (cl) add(`¿Clausulo a ${cl.j.nombre} por ${eur(cl.clausula)}?`);
     const ml = M.mercado.find((m) => m.tipo === 'liga' && m.interes >= 55);
@@ -1525,12 +1652,22 @@ export function adjuntosHTML(S) {
 // (la miniatura guardada está en IndexedDB: si aún no está en memoria, la pone app.js al pintar, por data-mini)
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
+/* (iOS 3) en la app de iOS no hay clave de Google: sin la IA de la app (en la liga de ejemplo, o si no está disponible),
+   se dice qué pasa en vez de la guía para sacar la clave */
+function iaSinClaveIos(S) {
+  const demo = !!(S.D && S.D.demo);
+  return `<div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1>${demo
+    ? `<p class="entradilla">En la liga de ejemplo no se le puede preguntar a la IA. Entra con tu cuenta de LaLiga y pregúntale lo que quieras de tu liga, también con capturas.</p><button class="btn ancho" data-accion="salirDemo">Entrar con mi cuenta</button>`
+    : '<p class="entradilla">Ahora mismo no se le puede preguntar a la IA. Vuelve a probar en un rato: mientras, en Hoy tienes el plan de la app.</p>'}`;
+}
 export function ia(S) {
-  if (!puedeChat(!!(S.D && S.D.demo))) return guiaClave(planesApp(!!(S.D && S.D.demo)));
+  if (!puedeChat(!!(S.D && S.D.demo))) return enAppIos() ? iaSinClaveIos(S) : guiaClave(planesApp(!!(S.D && S.D.demo)));
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>
     <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
+  // (iOS 3) dijo que no a mandar su liga a la IA: no se manda nada hasta que diga que sí
+  if (enAppIos() && permisoIA() === 'no') h += `<div class="banda">${icono('candado')}<span>La IA está apagada en este iPhone: no se le manda nada.</span><button data-accion="permisoIA">Activar</button></div>`;
   const ns = notasVigentes();
   if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;
   if (!msgs.length && !S.charlando) {

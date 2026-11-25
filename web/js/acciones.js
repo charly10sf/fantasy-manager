@@ -5,6 +5,7 @@
 import { eur, pct, dura, cuando, DIA, HORA } from './util.js';
 import { paronLejos } from './operaciones.js';
 import { esClausulable } from './motor.js';
+import { comoVa } from './decide.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -15,9 +16,13 @@ const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
  * tengan, en «Tus jugadores en venta»), ni los de baja (tienen su propio aviso), ni los que aún no han girado con la
  * cláusula abierta por encima de LaLiga y algún rival que la paga (mejor esperar a que te la paguen)
  */
-export function ventasInercia(M) {
-  return (M.mias || []).filter((x) => x.ventaInercia && !M.vendeBaja(x) && !M.enVenta.has(x.pid) && !(x.ventaInercia.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula'))
-    .sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
+export function ventasInercia(M, { conPlan = false } = {}) {
+  // (24 nov, decide.js) los que la decisión manda vender por cómo va su valor: el suplente que gira o baja, el titular
+  // que baja todos los días con relevo y el cambio por un recambio. Antes cada sitio filtraba por su cuenta.
+  // `conPlan`: con lo que añade el plan (lo que hoy no vende porque sus puntos pesan más); dentro del análisis, sin él
+  const dec = (x) => (conPlan && M.decision ? M.decision(x.pid) : M.decisionBase ? M.decisionBase(x.pid) : null);
+  return (M.mias || []).filter((x) => { const d = dec(x); return d && d.accion === 'vender' && ['inercia', 'titular-baja', 'cambio'].includes(d.regla) && !M.enVenta.has(x.pid); })
+    .sort((a, b) => ((b.ventaInercia || {}).perder || 0) - ((a.ventaInercia || {}).perder || 0));
 }
 
 export function acciones(D, M, c) {
@@ -70,7 +75,7 @@ export function acciones(D, M, c) {
     });
   });
 
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !x.noBlindar && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
     .sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x, k) => {
       const cerca = x.ratio < 1.05 ? `está en su valor (${eur(x.j.valor)})` : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor (${eur(x.j.valor)})`;
       const quien = x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) ? ` Le llega a ${[...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ')}${x.pagan.seguro.length + x.pagan.quiza.length > 3 ? ' y más' : ''}.` : '';
@@ -85,23 +90,51 @@ export function acciones(D, M, c) {
   // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
   // (los que ya están en venta no: ahí manda la oferta que tengan, en «Tus jugadores en venta»)
   // (si la cláusula está abierta por encima de LaLiga y a algún rival le llega, y aún no ha girado, no se manda vender: espera a que te la paguen)
+  // (24 nov, decide.js) todo sale de la decisión de cada jugador: vender (o cambiar por un recambio) y, al titular que gira
+  // o baja sin relevo, «búscale sustituto» (Carlos, 14 nov: a un titular no se le vende hasta que baja todos los días)
+  const dec = (x) => (M.decisionBase ? M.decisionBase(x.pid) : null);
+  const cifrasVi = (x) => {
+    const vi = x.ventaInercia || { urgencia: 'ya', ult: 0, perder: 0 };
+    const dias = vi.hastaJ ? `en ${vi.hastaJ} día${vi.hastaJ > 1 ? 's' : ''} ` : '';
+    const pierdeTxt = vi.perder > 0 ? `${dias}pierde unos ${eur(vi.perder)}` : '';
+    const hoy = vi.ult < 0 ? `Hoy ${eur(vi.ult, { signo: true })}` : comoVa(M, x.pid, vi);
+    return { vi, pierdeTxt, hoy };
+  };
   ventasInercia(M).slice(0, 3).forEach((x, k) => {
-    const vi = x.ventaInercia, pierde = M.perdida(x.pid);
-    add({
-      tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
-      titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
-      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
-    });
+    const d = dec(x), { vi, pierdeTxt, hoy } = cifrasVi(x);
+    if (d.regla === 'cambio' && d.recambio) {
+      const r = d.recambio;
+      add({
+        tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'cambio', pid: x.pid, cuando: 'Hoy',
+        titulo: `Cambia a ${x.j.nombre} por ${r.j.nombre}`,
+        texto: `Baja y no tienes otro como él: puja por ${r.j.nombre} (+${String(Math.round(r.gana * 10) / 10).replace('.', ',')} pts por jornada) y, cuando lo tengas, véndelo.`,
+      });
+    } else {
+      add({
+        tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
+        titulo: d.regla === 'titular-baja' ? `Pon a la venta a ${x.j.nombre}: baja todos los días` : vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
+        texto: `${hoy}${pierdeTxt ? `; si sigue así, ${pierdeTxt}` : ''}.`,
+      });
+    }
   });
+  (M.mias || []).filter((x) => { const d = dec(x); return d && d.accion === 'aguantar' && (d.regla === 'titular-gira' || d.matiz === 'busca-sustituto') && !M.enVenta.has(x.pid); })
+    .sort((a, b) => ((b.ventaInercia || {}).perder || 0) - ((a.ventaInercia || {}).perder || 0)).slice(0, 3).forEach((x, k) => {
+      const { pierdeTxt, hoy } = cifrasVi(x);
+      add({
+        tipo: 'sustituto', prio: 64 - k, icono: 'baja', pid: x.pid, cuando: 'Esta semana',
+        titulo: `${x.j.nombre} ${dec(x).matiz === 'busca-sustituto' ? 'baja todos los días' : 'ha girado a la baja'}`,
+        texto: `${hoy}${pierdeTxt ? `; si sigue así, ${pierdeTxt}` : ''}. Es titular y no tienes otro como él: búscale sustituto antes de venderlo.`,
+      });
+    });
 
   // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !x.noBlindar && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
     tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
     titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
     texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Subirle la cláusula hasta que no le llegue a nadie costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
   }));
 
-  M.mias.filter((x) => M.vendeBaja(x)).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => M.vendeBaja(x) && (dec(x) || {}).regla === 'baja').slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 60, icono: 'lesion', pid: x.pid, cuando: 'Esta semana',
     titulo: `${x.j.nombre}: ${x.j.estado === 'injured' ? 'lesionado' : x.j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'}`,
     texto: `${M.deBaja(x.j) ? `${M.bajaTxt(x.j)}: no` : 'Sancionado una jornada, pero su valor cae deprisa: no'} te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
@@ -114,7 +147,9 @@ export function acciones(D, M, c) {
     hash: 'equipo',
   }));
 
-  M.mias.filter((x) => !x.ventaInercia && !(M.noVender && M.noVender.has(x.pid)) && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -3 && !M.vendeBaja(x) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
+  // (24 nov) un solo corte para «vende con beneficio», el de la decisión (−4 % en 7 días y solo a suplentes; antes, −3 %
+  // aquí y −4 % en el plan, y a Rodri, titular, lo mandaba vender Hoy mientras el plan lo aguantaba)
+  M.mias.filter((x) => { const d = dec(x); return d && d.accion === 'vender' && d.regla === 'desplome' && !M.enVenta.has(x.pid); }).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,

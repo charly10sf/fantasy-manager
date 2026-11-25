@@ -34,19 +34,22 @@ export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000,
 }
 
 /** lo último que se sabe (para el numerito del botón sin esperar a la red) */
-export const avisosGuardados = () => LS.get('avisos', { t: 0, lista: [], admin: false, pendientes: 0 });
-/** respuestas tuyas sin leer + (si eres el dueño) avisos sin contestar */
+export const avisosGuardados = () => LS.get('avisos', { t: 0, lista: [], admin: false, ve: false, pendientes: 0 });
+/** (0.8.4, fase 2) ves los avisos de todos y «Quién usa la app»: el dueño (admin) o quien ayuda con los fallos (ve), que desde
+    la 0.8.4c también los contesta. Lo dice el servidor por el número de cuenta (AYUDANTES en worker/wrangler.toml) */
+export const veTodo = () => { const a = avisosGuardados(); return !!(a.admin || a.ve); };
+/** respuestas tuyas sin leer + (si eres el dueño o ayudas con los fallos) avisos sin contestar */
 export function numeroAvisos() {
   const a = avisosGuardados();
-  return (a.lista || []).filter((x) => x.respuesta && !x.vista).length + (a.admin ? a.pendientes || 0 : 0);
+  return (a.lista || []).filter((x) => x.respuesta && !x.vista).length + (a.admin || a.ve ? a.pendientes || 0 : 0);
 }
-/** ¿merece la pena preguntar? solo si has mandado alguno o eres el dueño (para no gastar el servidor por nada) */
-export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admin || (a.lista || []).some((x) => !x.respuesta || !x.vista) || LS.get('avisos-mandado', 0)); };
+/** ¿merece la pena preguntar? solo si has mandado alguno o contestas los de todos (para no gastar el servidor por nada) */
+export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admin || a.ve || (a.lista || []).some((x) => !x.respuesta || !x.vista) || LS.get('avisos-mandado', 0)); };
 
 /** borra lo que el servidor guarda de ti (ficha de quién usa la app, minutos de uso y tus avisos de fallo con sus capturas) */
 export async function borrarMisDatos() {
   const r = await pedirWorker('POST', '/borrar', {}, { tiempo: 30000 });
-  LS.set('avisos', { t: Date.now(), lista: [], admin: avisosGuardados().admin, pendientes: 0 });
+  LS.set('avisos', { t: Date.now(), lista: [], admin: avisosGuardados().admin, ve: avisosGuardados().ve, pendientes: 0 });
   LS.set('avisos-mandado', 0);
   return r;
 }
@@ -58,7 +61,7 @@ export async function mandarAviso(datos) {
   return r;
 }
 /**
- * tus avisos con sus respuestas (y si eres el dueño, cuántos hay sin contestar). Devuelve también lo nuevo desde la
+ * tus avisos con sus respuestas (y si eres el dueño o ayudas con los fallos, cuántos hay sin contestar). Devuelve también lo nuevo desde la
  * última vez: respuestas que no habías visto llegar y avisos recibidos de más, para avisar.
  */
 export async function misAvisos() {
@@ -66,8 +69,10 @@ export async function misAvisos() {
   const r = await pedirWorker('GET', '/fallos/mios');
   const ya = new Set(LS.get('avisos-notificados', []));
   const nuevasResp = (r.lista || []).filter((x) => x.respuesta && !x.vista && !ya.has(`${x.id}:${x.respondida}`));
-  const nuevosRecibidos = r.admin ? Math.max(0, (r.pendientes || 0) - (antes.admin ? antes.pendientes || 0 : 0)) : 0;
-  LS.set('avisos', { t: Date.now(), lista: r.lista || [], admin: !!r.admin, pendientes: r.pendientes || 0, yo: r.yo });
+  // (0.8.4c) también a quien ayuda; un servidor de antes no le daba la cuenta (pendientes null): ahí no hay nada nuevo
+  const contesta = !!(r.admin || r.ve) && r.pendientes != null, antesC = !!(antes.admin || antes.ve);
+  const nuevosRecibidos = contesta ? Math.max(0, (r.pendientes || 0) - (antesC ? antes.pendientes || 0 : 0)) : 0;
+  LS.set('avisos', { t: Date.now(), lista: r.lista || [], admin: !!r.admin, ve: !!(r.ve || r.admin), pendientes: r.pendientes || 0, yo: r.yo });
   if (nuevasResp.length) LS.set('avisos-notificados', [...ya, ...nuevasResp.map((x) => `${x.id}:${x.respondida}`)].slice(-60));
   return { ...r, nuevasResp, nuevosRecibidos };
 }
@@ -78,7 +83,7 @@ export async function marcarVisto(id) {
 }
 export const todosAvisos = () => pedirWorker('GET', '/fallos/todos');
 /** los sin contestar contados por la app (la cuenta del servidor llega con retraso tras contestar) */
-export function fijarPendientes(n) { const a = avisosGuardados(); if (a.admin) LS.set('avisos', { ...a, pendientes: n }); }
+export function fijarPendientes(n) { const a = avisosGuardados(); if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: n }); }
 
 /* quién usa la app: cada app avisa al abrirse (y cada 10 minutos a la vista) y el dueño ve la lista */
 /** devuelve true si acaba de saberse que eres el dueño (para enseñar «Quién usa la app» en Ajustes, también en la web) */
@@ -94,9 +99,11 @@ export async function saludar(datos) {
   if (r && r.bv && !LS.get('bienvenida', 0)) LS.set('bienvenida', r.bv);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
-  if (!!a.admin === r.admin) return false;
-  LS.set('avisos', { ...a, admin: r.admin });
-  return r.admin;
+  // (0.8.4) y si ve lo de todos (quien ayuda con los fallos); un servidor de antes no lo dice: solo el dueño
+  const ve = !!(r.ve || r.admin);
+  if (!!a.admin === r.admin && !!a.ve === ve) return false;
+  LS.set('avisos', { ...a, admin: r.admin, ve });
+  return r.admin || ve;
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
 /* la pantalla de bienvenida (Carlos, 9 nov 10:20): una vez por cuenta. Se guarda aquí y en el Worker (/hola con bv), para que
@@ -108,13 +115,18 @@ export function apuntarBienvenida(datos) {
 }
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
 export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});
-export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
-/** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera) */
-export const capturaAviso = (id, n) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
-export async function responderAviso(id, respuesta) {
-  const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta });
+/** un aviso entero (el dueño y quien ayuda); `abrir`: lo abres de verdad y cuenta como visto (0.8.4; quien ayuda, desde la 0.8.4c) */
+export const unAviso = (id, abrir = false) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}${abrir ? '&visto=1' : ''}`);
+/** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera). (0.8.4) `m`: de qué mensaje del hilo */
+export const capturaAviso = (id, n, m = 0) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}&m=${Number(m) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
+/** (0.8.4) un mensaje más en tu aviso (la conversación), con sus capturas */
+export const escribirAviso = (id, texto, capturas = []) => pedirWorker('POST', '/fallos/escribir', { id, texto, capturas }, { tiempo: capturas.length ? 60000 : 20000 });
+/** (el dueño y, desde la 0.8.4c, quien ayuda) contestar: añade un mensaje al hilo (desde la 0.8.4 no pisa lo de antes), con
+    capturas si las lleva */
+export async function responderAviso(id, respuesta, capturas = []) {
+  const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta, capturas }, { tiempo: capturas.length ? 60000 : 20000 });
   const a = avisosGuardados();
-  if (a.admin) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
+  if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;
 }
 

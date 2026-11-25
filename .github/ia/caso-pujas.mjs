@@ -116,7 +116,7 @@ try {
   for (const [n, x] of Object.entries(r.filas)) ok(!!(x.rev || x.nr), `${n}: el plan sabe si sale revenderlo (${x.rev ? 'sí' : 'no'})`);
   const enPlan = (n) => r.plan.some((o) => o.jugador === n) || r.mirados.some((m) => m.startsWith(`${n}:`));
   for (const n of ['Valverde', 'Unai López', 'Pepe']) ok(enPlan(n), `${n} sale en el plan o en «Mirados» con sus cuentas`);
-  ok(r.plan.concat(r.mirados.map((m) => ({ motivo: m }))).some((o) => /tenerlo|recuperas/.test(o.motivo || '')), 'el plan dice si sale a cuenta tenerlo');
+  ok(r.plan.concat(r.mirados.map((m) => ({ motivo: m }))).some((o) => /tenerlo|recuper|Aguantándolo/.test(o.motivo || '')), 'el plan dice si sale a cuenta tenerlo');
   ok(r.todas.todos >= 8 && r.todas.n === 0 && r.todas.con > r.todas.sin * 1.08 && /todas las ligas/.test(r.todas.txt), `una liga sin compras tira de todas las ligas (Valverde ${r.todas.sin} → ${r.todas.con})`);
 } finally { await P.cerrar(); await cerrar(); }
 process.exit(mal ? 1 : 0);

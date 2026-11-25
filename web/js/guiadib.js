@@ -3,6 +3,7 @@
 // de copiar, y en el ordenador se hace clic y Ctrl + C. Son esquemas pequeños (no capturas) con su texto alternativo; el aro
 // rojo late con la clase .pulso (app.css) y se queda quieto con «reducir movimiento».
 // (Los cinco dibujos grandes del método con F12 que había aquí se han quitado: el método a mano queda en texto, plegado.)
+import { LOGO_D } from './util.js';
 const marco = (alt, dentro) => `<svg class="dib" viewBox="0 0 320 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${alt}" font-family="Barlow, system-ui, sans-serif"><rect x="0.5" y="0.5" width="319" height="111" rx="12" fill="#17171c" stroke="#34343c"/>${dentro}</svg>`;
 const candado = (x, y) => `<g fill="none" stroke="#bdb8c0" stroke-width="1.4" stroke-linecap="round"><rect x="${x}" y="${y + 4}" width="9" height="7" rx="1.5"/><path d="M${x + 2} ${y + 4}v-2a2.5 2.5 0 0 1 5 0v2"/></g>`;
 
@@ -42,13 +43,14 @@ export const dibCopiar = (plat, mac = false) => (plat === 'iphone' ? IPHONE : pl
 
 /* (21 nov) El cuadro «Abrir con» que saca Android al volver de LaLiga cuando en el móvil están las dos apps (las dos
    recogen la misma vuelta). Es un esquema, no una captura: Fantasy Manager marcada con el aro rojo y «Solo una vez».
-   Sin logos de nadie: el de LaLiga Fantasy es un cuadro gris con sus iniciales. */
+   Fantasy Manager va con su icono de verdad (Carlos, 25 nov: «el logo de Fantasy Manager, el original»); el de LaLiga
+   Fantasy es un cuadro gris con sus iniciales: sin logos de otros. */
 export const dibAbrirCon = () => `<svg class="dib dib-ac" viewBox="0 0 320 214" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="El cuadro «Abrir con» de Android, con dos apps en la lista: Fantasy Manager, que es la que hay que tocar, y LaLiga Fantasy. Debajo, los botones «Solo una vez», que es el que hay que pulsar, y «Siempre»." font-family="Barlow, system-ui, sans-serif">
   <rect x="0.5" y="0.5" width="319" height="213" rx="18" fill="#17171c" stroke="#34343c"/>
   <rect x="136" y="10" width="48" height="4" rx="2" fill="#4a4a55"/>
   <text x="22" y="42" font-size="16" font-weight="700" fill="#f4f2f3">Abrir con</text>
   <rect x="12" y="56" width="296" height="48" rx="12" fill="#26262d"/>
-  <rect x="24" y="64" width="32" height="32" rx="8" fill="#ee1c3c"/><text x="40" y="85.500" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">FM</text>
+  <rect x="24" y="64" width="32" height="32" rx="8" fill="#141418" stroke="#3d3d46"/><svg x="29.500" y="69.500" width="21" height="21" viewBox="6 10 188 188"><path d="${LOGO_D.camiseta}" fill="#EE1C3C"/><path d="${LOGO_D.punos}" fill="#fff"/><path d="${LOGO_D.cuello}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="${LOGO_D.letras}" fill="#fff"/><path d="${LOGO_D.dorsal}" fill="#fff"/></svg>
   <text x="68" y="85.500" font-size="15" font-weight="700" fill="#f4f2f3">Fantasy Manager</text>
   <circle cx="284" cy="80" r="10" fill="#ee1c3c"/><path d="M279.500 80.500l3.200 3.200 6-6.400" fill="none" stroke="#fff" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"/>
   <rect class="pulso" x="9" y="53" width="302" height="54" rx="15" fill="none" stroke="#ee1c3c" stroke-width="3"/>

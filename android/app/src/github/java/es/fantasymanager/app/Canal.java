@@ -20,6 +20,10 @@ final class Canal {
     private Canal() {
     }
 
+    /** (25 nov) el código de invitar de la instalación solo lo da Google Play: aquí, nada */
+    static void referrer(android.content.Context ctx) {
+    }
+
     /** baja el APK de la dirección (solo las releases del repositorio) */
     static void actualizar(Principal act, String url) {
         if (!Actualizador.valida(url)) {

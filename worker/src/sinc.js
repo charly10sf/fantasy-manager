@@ -31,9 +31,14 @@ export function sincLimpio(pon, ahora = Date.now()) {
 }
 
 /**
- * lo que hace el objeto de la cuenta: { op: 'sinc' | 'borrar', liga, pon: { clave: { t, v } }, tengo: { clave: t }, ahora }
+ * lo que hace el objeto de la cuenta: { op: 'sinc' | 'borrar', liga, pon: { clave: { t, v } }, tengo: { clave: t }, base, ahora }
  * Guarda lo que llega si es más nuevo que lo guardado y devuelve lo guardado que es más nuevo que lo que tiene la app:
- * { ok, trae: { clave: { t, v } } }
+ * { ok, trae: { clave: { t, v } }, choque: [clave], base: 1 }
+ * (0.8.4) `base` ({ clave: t }): lo último de cada cosa que esa app subió o recibió. Si lo guardado es de después (otro
+ * dispositivo lo ha cambiado desde entonces), lo que llega NO se guarda: se devuelve lo guardado en `trae` y la clave en
+ * `choque`, y la app lo junta con lo suyo y lo vuelve a subir. Antes la app, con algo que subir, preguntaba primero (una
+ * llamada sin subir nada) y luego subía: dos llamadas cada vez; ahora, una (y dos solo si ha chocado). Las webs de antes
+ * no mandan `base` y siguen como siempre.
  */
 export async function sincObjeto(st, b) {
   if (b.op === 'borrar') { await st.deleteAll(); return { ok: true }; }
@@ -43,6 +48,8 @@ export async function sincObjeto(st, b) {
   const ahora = Number(b.ahora) || Date.now();
   const pon = sincLimpio(b.pon, ahora);
   const tengo = b.tengo && typeof b.tengo === 'object' ? b.tengo : {};
+  const base = b.base && typeof b.base === 'object' && !Array.isArray(b.base) ? b.base : null;
+  const choque = [];
   // (una liga nueva para esta cuenta: como mucho SINC_MAX.ligas)
   const guardadas = await st.list({ prefix: 's|' });
   const ligas = new Set([...guardadas.keys()].map((k) => k.split('|')[1]));
@@ -60,9 +67,10 @@ export async function sincObjeto(st, b) {
     // lo que lleva demasiado sin tocarse, fuera
     if (ya && ahora - (ya.t || 0) > SINC_MAX.dias * DIA) { await st.delete(clave); ya = null; }
     const llega = pon[k];
+    if (llega && ya && base && Number.isFinite(Number(base[k])) && ya.t > Number(base[k]) && ya.t !== llega.t) { choque.push(k); trae[k] = ya; continue; }
     if (llega && (!ya || llega.t > ya.t)) { await st.put(clave, llega); ya = llega; }
     const tApp = Math.max(Number(tengo[k]) || 0, (llega && llega.t) || 0);
     if (ya && ya.t > tApp) trae[k] = ya;
   }
-  return { ok: true, trae };
+  return { ok: true, trae, choque, base: 1 };
 }

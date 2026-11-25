@@ -30,7 +30,9 @@ const RETOQUES = [
   [new RegExp(`(?<![\\p{L}])([Ss])e\\s+${VA}\\s+${MARC}`, 'gu'), (_, S, v, m) => `${S}e ${TIEMPO(v, PONE)} ${m}`],
 ];
 // los nombres con la inicial con punto que deja la ficha de LaLiga («Y. Zabiri»), sin ella (Carlos, 7 nov: «no siempre C. Romero»)
-RETOQUES.push([/(?<![\p{L}.])\p{Lu}{1,2}\.\s(?:(?:[Dd]e|[Dd]el|[Vv]an|[Dd]i)\s)?\p{Lu}\p{Ll}[\p{L}'’-]*/gu, (m) => sinInicial(m)]);
+// (no un «80,5 M. Su próximo partido…»: la M de millones al final de una frase; la pasada con la IA del 22 nov lo vio)
+const NO_APELLIDO = new Set(['su', 'sus', 'el', 'la', 'los', 'las', 'lo', 'un', 'una', 'en', 'de', 'del', 'ya', 'es', 'se', 'le', 'al', 'no', 'si', 'con', 'por', 'para', 'pero', 'mas', 'más', 'hoy', 'y', 'tras', 'era', 'fue', 'va', 'vale', 'suma', 'lleva', 'cae', 'sube', 'baja']);
+RETOQUES.push([/(?<![\p{L}\p{N}.,])(?<!\d\s)\p{Lu}{1,2}\.\s(?:(?:[Dd]e|[Dd]el|[Vv]an|[Dd]i)\s)?\p{Lu}\p{Ll}[\p{L}'’-]*/gu, (m) => (NO_APELLIDO.has(m.split(/\s+/).pop().toLowerCase()) ? m : sinInicial(m))]);
 // el % a secas, sin «en Fantasy Manager» detrás (Carlos, 9 nov: «suena raro»)
 RETOQUES.push([/(\d\s?% de titularidad),? (?:en|según|de) Fantasy Manager\b/gu, '$1']);
 /** el primer % de un tuit de titularidad con «de titularidad» (Carlos, 6 nov: «un 97 % suelto: falta DE TITULARIDAD»), para lo que
@@ -87,12 +89,13 @@ export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, 
 export const esEtiquetaFinal = (s) => /^(✅|❌|⁉️|👀|💸|🟨|💔) .*(para la (jornada|próxima jornada)|de la jornada \d|Venta obligatoria|Novedades para la|Pendientes de la decisión|Atentos a cómo lo aplica)/u.test(String(s || ''));
 
 // Todos llevan «Fantasy» (Carlos, 2 nov 15:52) y ninguno lleva enlace: la dirección va en el campo «Sitio web» del perfil.
+// (22 nov, política de emojis) sin el 📲 ni el 👉: el cierre era otro párrafo con emoji delante
 export const CIERRES = [
   'Fantasy Manager · enlace en la bio',
-  '📲 Fantasy Manager (enlace en la bio)',
+  'Fantasy Manager (enlace en la bio)',
   'Fantasy Manager: la app, enlace en la bio',
   'Más en Fantasy Manager · enlace en la bio',
-  '👉 Fantasy Manager, enlace en la bio',
+  'Fantasy Manager, enlace en la bio',
   'Tu Fantasy con Fantasy Manager · enlace en la bio',
   'Fantasy Manager · todo en el enlace de la bio',
   'Fantasy Manager · app en la bio',

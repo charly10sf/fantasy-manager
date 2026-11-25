@@ -60,5 +60,58 @@ ok(r.sis < 16500, `las instrucciones del chat siguen por debajo de 16.500 caract
 ok(!r.rev.length, `la revisión de la app no corrige una respuesta buena del trato${r.rev.length ? `: ${JSON.stringify(r.rev)}` : ''}`);
 ok(r.bajo && r.bajo.notas.some((n) => /sube: por menos de unos/.test(n)), `ofrecer por ${r.bajo && r.bajo.j}, que sube, un 15 % menos de lo que pediría su dueño (${r.bajo && M_(r.bajo.od)} M): la revisión lo dice${r.bajo ? ` (${JSON.stringify(r.bajo.notas)})` : ' (no hay ninguno que suba)'}`);
 ok(r.justo && !r.justo.notas.some((n) => /sube: por menos de unos/.test(n)), 'y ofreciendo lo que pediría, no');
+// (24 nov, Carlos con Bernardo Silva: «le compro a Fran a Bernardo Silva por precio mercado para revenderlo» y la IA: «el dueño
+// no vende a su valor, la oferta que tienes que hacer es de 33,58 M») una compra a otro mánager a un precio que él cuenta es
+// un hecho, y las cuentas de revenderlo las hace la app
+{
+  const P2 = await pagina('holgado');
+  const c2 = await P2.page.evaluate(async () => {
+    const I = await import('./js/ia.js'), Dt = await import('./js/datos.js');
+    const { D, M } = window.S, c = Dt.cfg();
+    const x = M.clausulas.filter((y) => y.j.valor > 20e6 && y.j.valor < 45e6).sort((a, b) => a.j.valor - b.j.valor)[0];
+    const riv = x.rival.manager || x.rival.nombre, n = x.j.nombre;
+    const q1 = `le compro a ${riv} a ${n} por precio mercado para revenderlo y sacar el 10%?`;
+    const q2 = 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero';
+    const hist = [{ r: 'yo', t: q1 }, { r: 'ia', t: 'No.' }, { r: 'yo', t: q2 }];
+    const C1 = I.compraContada(q1, D, M);
+    const bloque = (t) => (t.match(/LA APP, LA COMPRA QUE CUENTA[^\n]*/) || [''])[0];
+    const rev = I.revisarChat('Con eso no compras: el dueño no vende a su valor, y la oferta que tienes que hacer es mayor.', q2, D, M, { hist });
+    return { n, valor: x.j.valor, C1, b1: bloque(I.datosChat(q1, D, M, c, {})), b2: bloque(I.datosChat(q2, D, M, c, { hist })), rev: rev.notas || [],
+      sin: I.compraContada(`¿Cuánto vale ${n}?`, D, M), conMio: I.compraContada(`le compro a ${riv} a ${n} a su valor y él me compra a ${M.mias[0].j.nombre}`, D, M),
+      pobre: (I.compraTxt({ ...D, dinero: 1e6 }, M, C1).match(/LA DECISIÓN DE LA APP: [^.]*/) || [''])[0], ol: M.ofertaLiga };
+  });
+  ok(c2.C1 && c2.C1.precio === c2.valor, `«por precio mercado» es su valor (${c2.n}: ${M_(c2.valor)} M)`);
+  ok(/ES UN HECHO/.test(c2.b1) && /NO le digas que el dueño no vende/.test(c2.b1) && /LA DECISIÓN DE LA APP: SÍ, PARA REVENDERLO/.test(c2.b1), `a su valor y con saldo de sobra, la app dice que sí para revenderlo: «${(c2.b1.match(/LA DECISIÓN DE LA APP: [^.]*/) || [''])[0]}»`);
+  ok(/LA APP, LA COMPRA QUE CUENTA/.test(c2.b2), 'en el mensaje siguiente, sin nombrarlo, sigue siendo la misma compra');
+  ok(c2.rev.some((t) => /ese es el precio/.test(t) && /para revenderlo/.test(t)), `si la IA contesta que el dueño no vende a ese precio, la revisión lo corrige: ${JSON.stringify(c2.rev).slice(0, 200)}`);
+  ok(c2.sin === null && c2.conMio === null, 'una pregunta que no es una compra no lo activa, y con uno mío en el mensaje es un trato');
+  ok(/NO LE LLEGA/.test(c2.pobre), `sin saldo, no (a otro mánager no se le paga con deuda): «${c2.pobre}»`);
+  // (24 nov, Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10») las cuentas de revender a LaLiga
+  ok(/de −10 % a \+10 %/.test(c2.b1) && !/LaLiga da de mediana|suele rondar|rondará/.test(c2.b1) && /NO digas que LaLiga «suele dar»/.test(c2.b1), 'las cuentas dicen que cada oferta de LaLiga va de −10 % a +10 %, sin un tanto fijo');
+  ok(/Con la primera oferta, de media/.test(c2.b1) && /rechazando las flojas/.test(c2.b1) && /solo si pasa de/.test(c2.b1), 'y separan aceptar la primera de esperar a una buena, con desde cuánto aceptar');
+  // el caso de Bernardo Silva: venía subiendo cada día menos y hoy baja por primera vez
+  const c3 = await P2.page.evaluate(async () => {
+    const I = await import('./js/ia.js'), U = await import('./js/util.js');
+    const { D, M: M0, H } = window.S;
+    const E = [1, 2, 3].map((n) => M0.esperarOferta(n).gana), Eb = M0.esperarOferta(3, -0.02);
+    const x = M0.clausulas.filter((y) => y.j.valor > 20e6 && y.j.valor < 45e6).sort((a, b) => a.j.valor - b.j.valor)[0];
+    const pid = x.j.id, v = x.j.valor, hoy = U.diaDe(Date.now());
+    // de hoy hacia atrás: −0,55 % hoy, y antes +0,2 %, +1,3 %, +1,4 %, +1,6 %, +1,8 %, +2,5 %, +2,6 %
+    const cambios = [-0.0055, 0.002, 0.013, 0.014, 0.016, 0.018, 0.025, 0.026];
+    const serie = [[hoy, v]]; let w = v;
+    cambios.forEach((c, i) => { w = Math.round(w / (1 + c)); serie.unshift([U.otroDia(hoy, -(i + 1)), w]); });
+    H.v[pid] = serie; if (D.tendencias) delete D.tendencias[pid];
+    await window.__fmRehacer();
+    const M = window.S.M, ine = M.inercia(pid), riv = x.rival.manager || x.rival.nombre;
+    const C = I.compraContada(`le compro a ${riv} a ${x.j.nombre} por precio mercado para revenderlo`, window.S.D, M);
+    const b = C ? I.compraTxt(window.S.D, M, C) : '';
+    return { E, Eb, fase: ine && ine.fase, ult: ine && ine.ult / v, p1: ine && ine.proy(1) / v, p3: ine && ine.proy(3) / v, p7: ine && ine.proy(7) / v, b: b.slice(0, 1500), n: x.j.nombre };
+  });
+  ok(c3.E[0] === 0 && Math.abs(c3.E[1] - 0.025) < 1e-9 && Math.abs(c3.E[2] - 0.0390625) < 1e-9, `esperar a una buena oferta: con una, lo que vale; con dos, +2,5 %; con tres, +3,9 % (${c3.E.map((e) => (e * 100).toFixed(2)).join(' · ')})`);
+  ok(c3.Eb.gana < c3.E[2] && c3.Eb.corte < 0.025, `y si baja un 2 % al día, esperar da menos y se acepta antes (${(c3.Eb.gana * 100).toFixed(2)} %, desde ${(c3.Eb.corte * 100).toFixed(2)} %)`);
+  ok(c3.fase === 'giro' && c3.p1 < c3.ult * 1.5 && c3.p3 < -0.025 && c3.p7 < -0.05, `el primer día de un giro (${c3.n}: hoy ${(c3.ult * 100).toFixed(2)} %) no se proyecta con lo de hoy: mañana ${(c3.p1 * 100).toFixed(2)} %, ${(c3.p3 * 100).toFixed(1)} % en 3 días y ${(c3.p7 * 100).toFixed(1)} % en 7`);
+  ok(/ya contado que baja unos/.test(c3.b) && /LA DECISIÓN DE LA APP: (SÍ, PARA REVENDERLO, PERO CON POCO MARGEN|PARA REVENDER NO|NO COMPENSA)/.test(c3.b), `y la compra para revender cuenta esa bajada: «${(c3.b.match(/LA DECISIÓN DE LA APP: [^.]*/) || [''])[0]}»`);
+  await P2.cerrar(); await cerrar();
+}
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

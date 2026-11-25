@@ -685,11 +685,103 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 15d: (23 nov, Carlos: «cuando me salgo de la aplicación no me sale ninguna notificación») debajo de «Preparando tu plan»,
+// en la app de Google Play: con las notificaciones apagadas se dice que así no puede avisar, con un botón que pide el permiso
+// (sin encender las alarmas), y al darlo cambia solo. Y «Quién usa la app» (23 nov, «suele tardar bastante en cargar»): sale al
+// momento lo de la última vez con «Actualizando…», se cambia por lo nuevo al llegar y, si no llega, lo dice
+{
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const puente = `window.__notif = false; window.__pidePermiso = 0; window.FantasyApp = new Proxy({ avisosPermitidos: () => window.__notif, alarmasExactas: () => true, version: () => '9999', canal: () => 'play', hayQR: () => false, programarAvisos: () => {}, notificar: () => {}, pedirPermisoAvisos: () => { window.__pidePermiso++; } }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});`;
+  const { ctx, page, errores } = await pagina({ init: puente });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 }).catch(() => {});
+  const tarjeta = () => page.evaluate(async () => {
+    window.S.planEstado = { cargando: true, paso: '' };
+    window.dispatchEvent(new Event('limites-nuevos'));
+    await new Promise((ok) => setTimeout(ok, 300));
+    const p = document.querySelector('#plan-notif');
+    return p ? { t: p.innerText.replace(/\s+/g, ' '), boton: !!p.querySelector('[data-accion="permisoPlan"]') } : null;
+  });
+  let t = await tarjeta();
+  if (!t || !t.boton || !/notificaciones apagadas/.test(t.t) || !/se sigue haciendo/.test(t.t)) mal(`notificaciones del plan: con ellas apagadas no se dice ni se ofrece activarlas: ${JSON.stringify(t)}`);
+  else bien(`notificaciones del plan: con ellas apagadas lo dice y ofrece activarlas («${t.t.slice(0, 90)}…»)`);
+  const tras = await page.evaluate(async () => {
+    const avisosAntes = localStorage.getItem('fm-cfg-avisos');
+    document.querySelector('#plan-notif [data-accion="permisoPlan"]').click();
+    await new Promise((ok) => setTimeout(ok, 100));
+    const pidio = window.__pidePermiso;
+    window.__notif = true;
+    window.permisoAvisos(true);
+    await new Promise((ok) => setTimeout(ok, 100));
+    const p = document.querySelector('#plan-notif');
+    const tos = document.querySelector('.tostada');
+    return { pidio, avisos: localStorage.getItem('fm-cfg-avisos') === avisosAntes, t: p ? p.innerText.replace(/\s+/g, ' ') : '', boton: !!(p && p.querySelector('button')), tostada: tos ? tos.textContent : '' };
+  });
+  if (tras.pidio !== 1 || !tras.avisos || tras.boton || !/te aviso cuando esté/.test(tras.t) || tras.tostada !== 'Notificaciones activadas') mal(`notificaciones del plan: el botón y el cambio al dar el permiso: ${JSON.stringify(tras)}`);
+  else bien('notificaciones del plan: el botón pide el permiso (sin tocar las alarmas) y al darlo cambia a «te aviso cuando esté»');
+  if (errores.length) mal(`notificaciones del plan: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+{
+  // «Quién usa la app» (en la web: en la app las peticiones van por la parte de Android): lo guardado sale al momento y lo
+  // nuevo llega a los 1,5 s
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 }).catch(() => {});
+  let modoQ = 'bien', pedidasQ = 0;
+  // (23 nov, «hoy» 50 y la barra 53) entró ayer a última hora y hoy otra vez: la última entrada se guarda una vez por hora y
+  // le queda la de ayer, pero tiene tiempo hoy. Cuenta en «hoy» y en la barra de hoy
+  const diaHoy = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+  const trasnocha = { uid: 4, nombre: 'Trasnocha', equipo: 'Trasnocha', v: '0.8v', canal: 'play', primera: Date.now() - 5 * 864e5, ultima: Date.now() - 30 * 3600e3, segHoy: 300, segDias: { [diaHoy]: 300 } };
+  const cuenta = (uid, nombre, hace) => ({ uid, nombre, equipo: nombre, v: '0.8v', canal: 'play', primera: Date.now() - 5 * 864e5, ultima: Date.now() - hace, segHoy: 60, segDias: {} });
+  await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
+    const q = r.request();
+    const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
+    if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
+    if (!q.url().includes('/hola/todos')) return r.abort('blockedbyclient');
+    pedidasQ++;
+    await new Promise((ok) => setTimeout(ok, 1500));
+    if (modoQ === 'caido') return r.abort('connectionrefused');
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ lista: [cuenta(1, 'Nueva1', 1000), { ...cuenta(2, 'Nueva2', 2000), canal: 'web', disp: 'web-pc' }, { ...cuenta(3, 'Nueva3', 3000), canal: 'web', disp: 'web-iphone' }, trasnocha], registro: [], ahora: Date.now(), dias: null, embudo: null, invitar: null }) });
+  });
+  const abrirQ = () => page.evaluate(async () => {
+    const b = document.createElement('button'); b.dataset.accion = 'quienUsa'; document.body.appendChild(b); b.click(); b.remove();
+    await new Promise((ok) => setTimeout(ok, 250));
+    const sub = () => { const x = document.querySelector('.q-sub'); return x ? x.innerText.replace(/\s+/g, ' ') : ''; };
+    const antes = sub();
+    await new Promise((ok) => setTimeout(ok, 2200));
+    const kpiHoy = [...document.querySelectorAll('.q-kpi > div')].find((d) => /^hoy$/.test(d.querySelector('span')?.innerText || ''));
+    const barraHoy = document.querySelector('.vg-v.hoy');
+    const ley = document.querySelector('.q-ley');
+    return { antes, despues: sub(), guardado: JSON.parse(localStorage.getItem('fm-quien-ult') || 'null'), kpiHoy: kpiHoy ? kpiHoy.querySelector('b').innerText : null, barraHoy: barraHoy ? barraHoy.textContent : null, ley: ley ? ley.innerText.replace(/\s+/g, ' ') : '' };
+  });
+  await page.evaluate((viejo) => localStorage.setItem('fm-quien-ult', JSON.stringify({ d: viejo })), { lista: [cuenta(9, 'Vieja', 3600e3)], registro: [], ahora: Date.now() - 3600e3, dias: null, embudo: null, invitar: null });
+  let q = await abrirQ();
+  const nuevas = q.guardado && q.guardado.d && q.guardado.d.lista ? q.guardado.d.lista.length : 0;
+  if (!/Actualizando/.test(q.antes) || !/1 cuentas/.test(q.antes) || !/dentro ahora/.test(q.despues) || !/4 cuentas/.test(q.despues) || nuevas !== 4) mal(`Quién usa la app: lo guardado al momento y lo nuevo después: ${JSON.stringify({ antes: q.antes, despues: q.despues, nuevas })}`);
+  else bien(`Quién usa la app: sale al momento lo de la última vez («${q.antes}») y se cambia por lo nuevo («${q.despues}»)`);
+  if (q.kpiHoy !== '4' || q.barraHoy !== '4') mal(`Quién usa la app: «hoy» ${q.kpiHoy} y la barra de hoy ${q.barraHoy} (los dos tienen que ser 4, con el que entró ayer y hoy otra vez)`);
+  else bien('Quién usa la app: «hoy» y la barra de hoy dicen lo mismo (4), con el que entró ayer a última hora y hoy otra vez');
+  // (0.8.4; Carlos, 25 nov: «web incluye a los de iOS… me gustaría que se diferenciasen») «Desde dónde», con la web por aparato
+  if (!/Google Play 2\b/.test(q.ley) || !/iPhone 1\b/.test(q.ley) || !/Web en ordenador 1\b/.test(q.ley) || /Web 0/.test(q.ley)) mal(`Quién usa la app: «Desde dónde» sin la web por aparato: «${q.ley}»`);
+  else bien(`Quién usa la app: «Desde dónde» separa el iPhone y el ordenador («${q.ley}»)`);
+  modoQ = 'caido';
+  await page.evaluate(() => { const b = document.querySelector('[data-accion="cerrarHoja"]'); if (b) b.click(); });
+  q = await abrirQ();
+  if (!/No se ha podido actualizar/.test(q.despues) || !/4 cuentas/.test(q.despues)) mal(`Quién usa la app: sin conexión con lo guardado: ${JSON.stringify(q)}`);
+  else bien(`Quién usa la app: si no llega lo nuevo, se queda lo guardado y lo dice («${q.despues}»)`);
+  if (errores.length) mal(`Quién usa la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 15b: (16 nov, 0.7.13l) los planes a su hora y «Rehacer el plan»: por defecto a las 00:25 y las 12:25 (10 min después del
 // mercado y 12 h después); un turno pasado sin plan de la IA hace que salga solo, y no si no quedan de hoy; en el plan, «Rehacer
 // el plan» en lugar de «Compartir», y sus ajustes con el tono y las dos horas
 {
-  const { ctx, page, errores } = await pagina();
+  // (25 nov) con el reloj de la página fijo (el miércoles a las 12:00 de Madrid): la Action de las 00:07 de Madrid fallaba en
+  // «el turno pasado sin plan» (de 00:00 a 01:00 de Madrid, el día de la Action, en UTC, y el de Madrid no son el mismo)
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
   await page.goto(`${BASE}/index.html`);
   await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
   await page.waitForTimeout(800);
@@ -1116,8 +1208,8 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
     const { diaDe } = await import('./js/util.js');
     const ahora = Date.now(), hoy = diaDe(ahora);
     const lista = [
-      { nombre: 'Con tiempo', ultima: ahora - 3600e3, primera: ahora - 9 * 86400e3, segHoy: 600, segDias: { [hoy]: 600 } },
-      { nombre: 'Alta sin tiempo', ultima: ahora - 3000e3, primera: ahora - 3000e3, segHoy: 0, segDias: {} },
+      { nombre: 'Con tiempo', ultima: ahora - 60e3, primera: ahora - 9 * 86400e3, segHoy: 600, segDias: { [hoy]: 600 } },
+      { nombre: 'Alta sin tiempo', ultima: ahora - 30e3, primera: ahora - 30e3, segHoy: 0, segDias: {} },
     ];
     const div = document.createElement('div');
     div.innerHTML = quienUsaHTML({ quien: { lista, ahora, registro: [], tab: 'hoy' } });
@@ -1293,6 +1385,166 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
     else bien(`directo con el once de la jornada: el que ya no es tuyo sale en su partido y en la ficha como tuyo`);
     if (errores.length) mal(`directo con el once de la jornada: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   } catch (e) { mal(`directo con el once de la jornada: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+
+// 18 (24 nov, Carlos: «que saliera al menos durante las próximas 24 horas la tabla de la jornada con todos tus rivales» y
+// «quiero ver esta jornada, la anterior y la anterior, en qué puesto he quedado»). Con el reloj 3 h después de acabar la
+// última jornada de la demo, Directo la enseña («acabada», con «Tu liga» primero y todos los equipos); Por jornada, la
+// clasificación de la jornada; 30 h después, como siempre
+{
+  const fines = await (async () => {
+    const { ctx, page } = await pagina();
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+    const f = await page.evaluate(() => (window.S && window.S.M ? (window.S.M.jornadas || []).map((j) => j.fin) : []));
+    await ctx.close();
+    return f;
+  })();
+  const fin = fines[fines.length - 1];
+  if (!fin) mal('jornada acabada en Directo: la demo no tiene jornadas');
+  else {
+    for (const [horas, nombre] of [[3, '3 h después'], [30, '30 h después']]) {
+      const { ctx, page, errores } = await pagina({ reloj: fin + horas * 3600e3 });
+      try {
+        await page.goto(`${BASE}/index.html`);
+        await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 });
+        await page.evaluate(() => document.querySelector('[data-ir="directo"]').click());
+        await page.waitForTimeout(900);
+        const r = await page.evaluate(() => ({ eti: document.querySelector('.eti')?.innerText || '', tabs: [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.trim()), filas: document.querySelectorAll('.rk-jor .fila').length, sub: document.querySelector('.sec .sub')?.innerText || '', equipos: window.S.D.clasif.length }));
+        if (horas === 3) {
+          if (!/acabada/i.test(r.eti) || r.tabs[0] !== 'Tu liga' || r.filas !== r.equipos || !/quedaste \d+º con \d+/.test(r.sub)) mal(`jornada acabada en Directo, ${nombre}: ${JSON.stringify(r)}`);
+          else bien(`jornada acabada en Directo, ${nombre}: «${r.eti}», «Tu liga» primero con los ${r.filas} equipos («${r.sub}»)`);
+          // (24 nov) «Por jornada» está en Rivales, delante de Cláusulas, y ya no en Directo
+          const enDirecto = await page.evaluate(() => !!document.querySelector('[data-seg="directo:jornadas"]'));
+          if (enDirecto) mal('Por jornada sigue en Directo');
+          await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
+          await page.waitForTimeout(600);
+          const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas') mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas: ${orden.join(' · ')}`);
+          else bien('Rivales: Clasificación · Por jornada · Cláusulas');
+          await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
+          await page.waitForTimeout(600);
+          const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
+          if (!q.chips.length || q.filas !== r.equipos) mal(`Por jornada, la clasificación de la jornada: ${JSON.stringify(q)}`);
+          else bien(`Por jornada: la clasificación de la jornada (${q.chips.join(', ')}) con los ${q.filas} equipos`);
+          // (24 nov, Carlos: «todas las jornadas de la liga, no solo la última, y si le das, el once de ese jugador con los
+          // puntos de los jugadores, no su perfil»)
+          if (q.chips.length < 2) mal(`Por jornada: solo sale ${q.chips.join(', ')}, no todas las jornadas`);
+          await page.evaluate(() => document.querySelector('.rk-jor .fila[data-accion="onceJ"]').click());
+          await page.waitForTimeout(900);
+          const o = await page.evaluate(() => ({ tipo: window.S.tipoHoja && window.S.tipoHoja[0], cromos: document.querySelectorAll('.hoja .cancha .cromo').length, pts: [...document.querySelectorAll('.hoja .cancha .vivo-p')].filter((e) => /pts/.test(e.innerText)).length, perfil: !!document.querySelector('.hoja [data-r]') }));
+          if (o.tipo !== 'oj' || o.cromos < 5 || !o.pts || !o.perfil) mal(`Por jornada: tocar a otro no abre su once con los puntos: ${JSON.stringify(o)}`);
+          else bien(`Por jornada: ${q.chips.length} jornadas y tocar a otro abre su once de esa jornada (${o.cromos} jugadores con sus puntos)`);
+          await page.evaluate(() => document.querySelector('[data-accion="cerrarHoja"]') && document.querySelector('[data-accion="cerrarHoja"]').click());
+        } else if (/acabada/i.test(r.eti) || r.tabs.includes('Tu liga')) mal(`jornada acabada en Directo, ${nombre}: sigue saliendo: ${JSON.stringify(r)}`);
+        else bien(`jornada acabada en Directo, ${nombre}: ya no sale («${r.eti}», ${r.tabs.join(' · ')})`);
+        if (errores.length) mal(`jornada acabada en Directo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+      } catch (e) { mal(`jornada acabada en Directo, ${nombre}: ${e.message.split('\n')[0]}`); }
+      await ctx.close();
+    }
+  }
+}
+
+// 19 (24 nov, Carlos: «hay un texto abajo del todo que se corta y no se puede aumentar»): en un móvil de 360, con los pasos
+// del plan abiertos, ninguna pastilla se corta ni acaba en «…», y un paso dice una frase y deja el resto en «Más detalle»
+{
+  const { ctx, page, errores } = await pagina({ ancho: 360, alto: 780, reloj: RELOJ });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 });
+    await page.waitForTimeout(800);
+    const r = await page.evaluate(() => {
+      const ps = [...document.querySelectorAll('details.paso2')];
+      ps.forEach((d) => (d.open = true));
+      const pills = [...document.querySelectorAll('.pp-d .claves span, .pp-d .pill')];
+      const cortadas = pills.filter((e) => e.scrollWidth > e.clientWidth + 1 || /…$/.test(e.textContent.trim())).map((e) => e.textContent);
+      const largas = ps.map((d) => d.querySelector('.pp-mot1')).filter(Boolean).map((p) => p.textContent.trim().split(/\s+/).length).filter((n) => n > 40);
+      return { pasos: ps.length, pills: pills.length, cortadas, largas, mas: document.querySelectorAll('.pp-mas').length };
+    });
+    if (!r.pasos || r.cortadas.length || r.largas.length) mal(`plan en 360: ${JSON.stringify(r)}`);
+    else bien(`plan en 360: ${r.pasos} pasos, ${r.pills} pastillas sin cortar, la frase de cada paso corta y ${r.mas} con «Más detalle»`);
+    if (errores.length) mal(`plan en 360: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`plan en 360: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+
+// 20 (25 nov, auditoría de fallos, hallazgos 10-13): el atrás desde el resumen de tu equipo, desde el once de una jornada y
+// desde un rival abierto en otra ficha vuelve a donde estabas, con «‹ Volver»; el candado de dentro de la ficha de un rival
+// vuelve a ella; y en el iPhone cada candado dice lo que es verdad (invitando solo se abre el dinero de los rivales)
+{
+  const { ctx, page, errores } = await pagina({ reloj: RELOJ });
+  const est = () => page.evaluate(() => ({ tipo: window.S.tipoHoja ? window.S.tipoHoja.join(':') : null, volver: ((document.querySelector('.hoja .volver-h') || {}).textContent || '').trim() }));
+  const atras = async () => { await page.evaluate(() => window.atras()); await page.waitForTimeout(450); };
+  const cerrarTodo = async () => { for (let i = 0; i < 5 && (await page.evaluate(() => !!window.S.hoja)); i++) await page.evaluate(() => document.querySelector('.hoja .hoja-cab [data-accion="cerrarHoja"]').click()).catch(() => {}), await page.waitForTimeout(350); };
+  const tocar = async (sel) => { await page.evaluate((x) => document.querySelector(x).click(), sel); await page.waitForTimeout(600); };
+  const ir = async (v) => { await page.evaluate((x) => { location.hash = '#' + x; }, v); await page.waitForTimeout(600); };
+  const ida = async (nombre, abrir, dentro, espera) => {
+    await cerrarTodo();
+    try {
+      await abrir();
+      const a = await est();
+      const hay = await page.evaluate((x) => !!document.querySelector(x), dentro);
+      if (!a.tipo || !hay) { mal(`atrás, ${nombre}: no se abre o no hay nada dentro (${JSON.stringify(a)}, ${dentro}: ${hay})`); return; }
+      await tocar(dentro);
+      const b = await est();
+      await atras();
+      const c = await est();
+      if (b.tipo === a.tipo || !b.volver || !espera.test(b.volver) || c.tipo !== a.tipo) mal(`atrás, ${nombre}: ${JSON.stringify({ a, b, c })}`);
+      else bien(`atrás, ${nombre}: ${a.tipo} → ${b.tipo} con «‹ ${b.volver}» y el atrás vuelve a ${c.tipo}`);
+    } catch (e) { mal(`atrás, ${nombre}: ${e.message.split('\n')[0]}`); }
+  };
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 });
+    await ir('hoy');
+    await ida('desde el resumen de tu equipo', () => tocar('#app [data-accion="resumen"]'), '.hoja [data-j]:not([data-accion])', /Tu equipo hoy/);
+    // el once de un mánager en una jornada (Rivales → Por jornada)
+    await ir('rivales');
+    await page.evaluate(() => { const b = document.querySelector('#vista [data-seg="rivales:jornadas"]'); if (b) b.click(); });
+    await page.waitForTimeout(600);
+    await ida('desde el once de una jornada', () => tocar('#app [data-accion="onceJ"]'), '.hoja [data-j]:not([data-accion])', /· J\d+/);
+    // un jugador de otro mánager y, desde su ficha, su dueño
+    const pid = await page.evaluate(() => { const S = window.S, yo = String(S.D.yo && S.D.yo.teamId); const x = (S.M.clausulas || []).find((c) => c.teamId && String(c.teamId) !== yo); return x ? String(x.pid) : null; });
+    await ida('a un rival desde la ficha de un jugador', async () => { await page.evaluate((p) => { const b = document.createElement('button'); b.dataset.j = p; b.id = 'pruebaJ'; document.querySelector('#app').append(b); b.click(); b.remove(); }, pid); await page.waitForTimeout(600); }, '.hoja [data-r]', /\S/);
+    // el candado dentro de la ficha de un rival: «Entendido» vuelve a la ficha
+    await cerrarTodo();
+    await tocar('#app [data-r]');
+    const r0 = await est();
+    await tocar('.hoja [data-accion="bloqueada"]');
+    const b = await est();
+    await page.evaluate(() => { const l = [...document.querySelectorAll('.hoja .bloq-hoja [data-accion="cerrarHoja"]')]; l[l.length - 1].click(); });
+    await page.waitForTimeout(600);
+    const c = await est();
+    if (!/^r:/.test(r0.tipo || '') || !/^bloq:/.test(b.tipo || '') || !b.volver || c.tipo !== r0.tipo) mal(`atrás, el candado de la ficha de un rival: ${JSON.stringify({ r0, b, c })}`);
+    else bien(`atrás, el candado de la ficha de un rival: «Entendido» vuelve a ${c.tipo}`);
+    if (errores.length) mal(`atrás: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`atrás: ${e.message.split('\n')[0]}`); }
+  await ctx.close();
+}
+{
+  const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1';
+  const { ctx, page, errores } = await pagina({ init: `Object.defineProperty(navigator, 'userAgent', { get: () => ${JSON.stringify(UA)} });`, reloj: RELOJ });
+  try {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => window.S && window.S.M && window.S.D, null, { timeout: 25000 });
+    const vistos = {};
+    for (const v of ['mercado', 'rivales', 'equipo', 'hoy']) {
+      await page.evaluate((x) => { location.hash = '#' + x; }, v); await page.waitForTimeout(600);
+      const claves = await page.evaluate(() => [...new Set([...document.querySelectorAll('#app [data-accion="bloqueada"]')].map((e) => e.dataset.clave))]);
+      for (const k of claves) {
+        if (vistos[k]) continue;
+        await page.evaluate((x) => [...document.querySelectorAll('#app [data-accion="bloqueada"]')].find((e) => e.dataset.clave === x).click(), k);
+        await page.waitForTimeout(500);
+        vistos[k] = await page.evaluate(() => { const h = document.querySelector('.hoja .bloq-hoja'); return h ? { t: h.innerText.replace(/\s+/g, ' '), play: !!h.querySelector('a[href*="play.google.com"]') } : null; });
+        await page.evaluate(() => window.atras()); await page.waitForTimeout(350);
+      }
+    }
+    const malos = Object.entries(vistos).filter(([k, x]) => !x || x.play || /Google Play/.test(x.t) || (k === 'dineroRivales' ? !/se abre invitando a un amigo/.test(x.t) : /invitando/.test(x.t) || !/de momento, no se puede abrir/.test(x.t)));
+    if (!vistos.dineroRivales || Object.keys(vistos).length < 2 || malos.length) mal(`iPhone, los candados: ${JSON.stringify(vistos)}`);
+    else bien(`iPhone, los candados dicen la verdad: ${Object.keys(vistos).join(', ')} (invitando, solo el dinero; sin Google Play)`);
+    if (errores.length) mal(`iPhone, los candados: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  } catch (e) { mal(`iPhone, los candados: ${e.message.split('\n')[0]}`); }
   await ctx.close();
 }
 

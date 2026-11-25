@@ -62,7 +62,9 @@ export function cuentasParon(S) {
   // (lo del mercado, con tu margen de puja; lo de cláusula, con tu saldo: lo que no te llega va aparte y no cuenta en «Puedes ganar»)
   const llegaEsp = (e) => (e.origen === 'mercado' ? (e.puja || e.precio) <= pujaMax : e.precio <= saldo);
   const espTodos = M.especular || [];
-  const esp = espTodos.filter(llegaEsp).slice(0, 5);
+  // (24 nov, repaso) lo que el plan ha mirado y no ficha no sale aquí como «compra y revende» ni como chollo
+  const noF = (pid) => !!M.decisionFichar && (M.decisionFichar(pid) || {}).accion === 'no';
+  const esp = espTodos.filter(llegaEsp).filter((e) => !noF(e.pid)).slice(0, 5);
   const espNo = espTodos.filter((e) => !llegaEsp(e)).slice(0, 3).map((e) => ({ ...e, falta: e.origen === 'mercado' ? (e.puja || e.precio) - pujaMax : e.precio - saldo }));
   const yaRevender = (M.paraRevender || []).map((x) => ({ x, ben: x.beneficioYa }));
   // 2 · vende en lo alto: lo tuyo que ha girado, se ha parado o se frena, con lo que perdería hasta la vuelta
@@ -72,6 +74,10 @@ export function cuentasParon(S) {
     if (((M.partidazo(x.pid) || {}).nivel || 0) >= 3) return null;
     const pierde = proyV(ine, x.j);
     if (!(pierde < -Math.max(150000, x.j.valor * 0.012))) return null;
+    // (24 nov, decide.js) solo los que su decisión manda vender: antes aquí salía «vende en lo alto» un titular que Equipo
+    // y el plan aguantaban
+    const dec = M.decision ? M.decision(x.pid) : null;
+    if (dec && dec.accion !== 'vender') return null;
     return { x, ine, pierde, pts: M.perdida ? M.perdida(x.pid) : 0, plan: enPlan(x.pid) };
   }).filter(Boolean).sort((a, b) => a.pierde - b.pierde).slice(0, 6);
   const evita = altos.reduce((s, a) => s - a.pierde, 0);
@@ -89,7 +95,7 @@ export function cuentasParon(S) {
   espNo.sort((a, b) => (b.vendiendo - a.vendiendo) || (b.beneficio - a.beneficio));
   // 3 · aguanta, que sube
   // (lo que el plan de hoy manda vender, p. ej. por una oferta buena, no sale como «aguanta»: manda el plan)
-  const vendePlan = (pid) => !!(S.opPorPid && S.opPorPid[pid] && S.opPorPid[pid].accion === 'vender');
+  const vendePlan = (pid) => !!(S.opPorPid && S.opPorPid[pid] && S.opPorPid[pid].accion === 'vender') || ((M.decision ? M.decision(pid) : null) || {}).accion === 'vender';
   const suben = sinI ? [] : M.mias.map((x) => {
     if (vendePlan(x.pid)) return null;
     const ine = M.inercia(x.pid);
@@ -154,12 +160,13 @@ export function cuentasParon(S) {
   const pierdesBaja = misBajan.reduce((t, o) => t - o.d, 0);
   const llegan = ligaSube.filter((o) => o.como.llega === true).length;
   // 4 · el once de la vuelta: chollos que ya se pueden pagar y cláusulas que se abren los días de antes de la vuelta
-  const chollos = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !(M.dueno[x.pid] === (S.D.yo || {}).teamId) && cholloParon(M, x.j, x.clausula)).sort((a, b) => b.interes - a.interes).slice(0, 3);
+  const chollos = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !(M.dueno[x.pid] === (S.D.yo || {}).teamId) && cholloParon(M, x.j, x.clausula) && !noF(x.pid)).sort((a, b) => b.interes - a.interes).slice(0, 3);
   const seAbren = M.clausulas.filter((x) => x.interes >= 55 && !x.abierta && x.protegidoHasta > Math.min(once, ahora + DIA) - DIA && x.protegidoHasta < cierre).sort((a, b) => a.protegidoHasta - b.protegidoHasta).slice(0, 4);
   // con la vuelta cerca: las abiertas que merecen la pena y te llegan
   const paraOnce = lejos ? [] : M.clausulas.filter((x) => x.abierta && x.interes >= 60 && x.meLlega).sort((a, b) => b.interes - a.interes).slice(0, 4);
   // que no te los quiten: cláusula abierta y riesgo alto
-  const peligro = M.mias.filter((x) => x.abierta && x.riesgo === 'alto').slice(0, 4);
+  // (24 nov, repaso) solo los que la app protegería: ni el que no se blinda (baja, o su cláusula paga más que venderlo) ni el que se vende
+  const peligro = M.mias.filter((x) => x.abierta && x.riesgo === 'alto' && !x.noBlindar && ((M.decision ? M.decision(x.pid) : null) || {}).accion !== 'vender').slice(0, 4);
   const escudos = (M.escudosMios || {}).quedan || 0;
   return { v, lejos, sinI, diasV, vender, cierre, once, esp, espNo, gana, saldo, pujaMax, tengo, plazas, ventas, venta, caben, ligaSubeTu, misBajan, pierdesBaja, llegan, faltaPuesto: (M.puestos || []).filter((p) => p.faltan > 0 || p.conviene > 0), yaRevender, altos, evita, suben, ligaSube, ligaBaja, chollos, seAbren, paraOnce, peligro, escudos, enPlan };
 }

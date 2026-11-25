@@ -216,7 +216,7 @@ const PREGUNTAS = [
   ['¿Cuánto cuesta?', 'Nada. Se paga con anuncios de Google, en esta web y en la app de Google Play. No hay plan de pago y no se venden datos de nadie.'],
   ['¿La app ve mi contraseña?', 'No. Entras en la página oficial de LaLiga, como siempre (también con Google), y LaLiga le da a la app una sesión para leer tu liga.'],
   ['¿Dónde se guardan los datos de mi liga?', 'Solo en tu móvil o en tu navegador. Lo que se guarda y dónde está contado en la política de privacidad.'],
-  ['¿Funciona en iPhone y en el ordenador?', 'En Android, con la app de Google Play. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella la web te explica cómo entrar. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador, porque LaLiga no deja hacerlo en el iPhone; ya dentro, en Ajustes → Abrir en otro dispositivo sacas un código para el iPhone. Antes puedes verla con la liga de ejemplo.'],
+  ['¿Funciona en iPhone y en el ordenador?', 'Sí. En Android, con la app de Google Play. En el iPhone y en el ordenador (Windows y Mac) se usa desde esta web, sin descargar nada: entras con tu cuenta de LaLiga en tres pasos, solo la primera vez, y si ya tienes la app en el móvil, en el ordenador entras escaneando un QR. En el iPhone la puedes dejar en la pantalla de inicio y en el ordenador, con Chrome o Edge, instalarla como una app. Antes puedes verla con la liga de ejemplo.'],
   ['¿Qué hace la IA y qué necesito para usarla?', 'Lee lesiones, convocatorias y alineaciones antes de proponerte el plan o de contestar lo que le preguntes. Usa una clave gratuita tuya; la app te enseña a sacarla en un par de minutos. Lo que propone pasa antes por la app, que comprueba que las cuentas de dinero salen.'],
   ['¿De dónde salen los datos de fútbol?', 'Los de tu liga, de LaLiga Fantasy con tu sesión. Las alineaciones probables, lesiones, estadísticas y noticias, de páginas públicas.'],
 ];
@@ -347,10 +347,11 @@ export function barraPortal(plat = 'android') {
     <nav class="pt-menu" aria-label="Secciones"><a href="#pHoy" data-ir-a="pHoy" class="on">Hoy</a>${PORTAL.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="#pApp" data-ir-a="pApp">La app</a></nav>
     ${botones}</div><i class="pt-prog"></i></div>`;
 }
-/** el portal, arriba a la izquierda (en el móvil, lo primero): la insignia de Google Play, el bloque «Hoy» y las secciones */
-export function portalHTML(insignia = '') {
-  return `<div class="po" id="pHoy">
-    ${insignia ? `<div class="po-top">${insignia}</div>` : ''}
+/** el portal, arriba a la izquierda (en el móvil, lo primero): (24 nov) lo de la app (`arriba`: qué es y cómo tenerla en tu
+    dispositivo; lo arma app.js), y debajo el bloque «Hoy» y las secciones */
+export function portalHTML(arriba = '') {
+  return `<div class="po${arriba ? ' con-app' : ''}" id="pHoy">
+    ${arriba}
     <p class="po-k">Datos de cada día · gratis y sin entrar</p>
     <h1 class="po-h1">LaLiga Fantasy, <span>hoy</span></h1>
     <p class="po-i">El mercado, la jornada, los 20 equipos y todos los jugadores, con los datos de LaLiga Fantasy de esta noche.</p>
@@ -360,7 +361,7 @@ export function portalHTML(insignia = '') {
 }
 
 /** la presentación de la app: va en su apartado, «La app», debajo del portal y de lo de entrar */
-export function seccionMoviles() {
+export function seccionMoviles(plat = '') {
   return `<div class="portada-m">
   ${seccion('pAsi', 'Paso a paso', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
@@ -390,8 +391,8 @@ export function seccionMoviles() {
   ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article class="rv">${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
 
   <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
-    <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
-    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <p class="ps-i">Gratis. En Android, con la app. En el iPhone y en el ordenador se usa desde esta misma web, sin descargar nada.</p>
+    <div class="pz-b">${plat === 'iphone' ? '' : `<a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a>`}<a class="btn${plat === 'iphone' ? '' : ' sec'}" href="#entrar">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 

@@ -85,18 +85,19 @@ export const BUSCAR_CHAT = 'BUSCA EN GOOGLE SOLO SI HACE FALTA: si se contesta c
  * Las instrucciones enteras del chat. tono: 'serio' | 'normal' | 'saco'; bloq: las funciones cerradas; anuncio: si se
  * abren con anuncios; alias: null o { puesto, ex }; fotos: si hay capturas en la conversación; web: si tiene búsqueda.
  */
-export function sistemaChat({ tono = 'normal', bloq = [], anuncio = false, alias = null, fotos = false, web = false } = {}) {
+export function sistemaChat({ tono = 'normal', bloq = [], anuncio = false, iphone = false, alias = null, fotos = false, web = false } = {}) {
   const t = TONO_CHAT[tono] ? tono : 'normal';
   return SISTEMA_CHAT.replace('{{REGLAS}}', REGLAS_LALIGA).replace('{{CHISTES}}', CHISTES[t === 'serio' ? 'serio' : 'broma']).replace('{{TONO}}', TONO_CHAT[t])
     + (fotos ? SOBRE_FOTOS : '') + `\n\n${NOTAS_CHAT}\n\n${web ? BUSCAR_CHAT : SIN_BUSCAR_CHAT}`
-    + bloqueoChat(bloq, !!anuncio) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '');
+    + bloqueoChat(bloq, !!anuncio, !!iphone) + (alias ? avisoAlias(!!alias.puesto, !!alias.ex) : '');
 }
 
 /* lo de las funciones cerradas, como en el plan (bloqueoTxt), pero sin «función top»: en la segunda pasada con Haiku (16 nov)
    la IA lo copiaba tal cual («es una función top y se desbloqueará…»). En el chat se dice que va con su candado. */
-export const bloqueoChat = (bloq, anuncio) => bloqueoTxt(bloq, anuncio)
+// (25 nov) en la web del iPhone no hay app de Google Play: el dinero de un rival se abre invitando y lo demás aún no
+export const bloqueoChat = (bloq, anuncio, iphone = false) => bloqueoTxt(bloq, anuncio)
   .replace(/FUNCIONES BLOQUEADAS EN ESTA CUENTA \([^]*?\): /, 'LO QUE ESTÁ CERRADO EN SU CUENTA (con candado en la app): ')
-  .replace(/ Si te lo pide, dile en una frase que es una función top y que [^]*$/, ` Si te lo pide, dile en media frase que eso ${anuncio ? 'lo abre tocando su candado y viendo un anuncio corto' : 'se abre viendo un anuncio en la app de Google Play'}. Nunca digas «función top», «bloqueada» ni «desbloquear».`);
+  .replace(/ Si te lo pide, dile en una frase que es una función top y que [^]*$/, ` Si te lo pide, dile en media frase que eso ${anuncio ? 'lo abre tocando su candado y viendo un anuncio corto' : iphone ? 'en el iPhone el dinero de un rival se abre invitando a un amigo (botón Invitar) y lo demás aún no se puede abrir' : 'se abre viendo un anuncio en la app de Google Play'}. Nunca digas «función top», «bloqueada» ni «desbloquear».`);
 
 /* ---------- lo que el Worker deja pasar en /pregunta ---------- */
 export const CHAT_MAX = { datos: 160000, pregunta: 3000, mensaje: 6000, hist: 12, fotos: 3, foto: 900000 };

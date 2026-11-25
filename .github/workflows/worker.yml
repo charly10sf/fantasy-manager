@@ -6,6 +6,8 @@
 # códigos van en la caché del Worker. En el mismo almacén van los avisos de fallos.
 # Opcional: FM_ADMINS (si no, vale el ADMINS de wrangler.toml), el número de tu cuenta de LaLiga (sale en la app, en Ajustes > Diagnóstico). Con él, esa
 # cuenta ve en la app los avisos de fallos de todos y puede contestarlos. Varios, separados por comas.
+# Opcional: FM_AYUDANTES (0.8.4), los números de cuenta de quien ayuda con los fallos: ven Quién usa la app y los avisos de
+# todos y (0.8.4c) los contestan, sin el diagnóstico. Varios, separados por comas.
 name: Worker
 
 on:
@@ -68,11 +70,15 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           FM_ADMINS: ${{ secrets.FM_ADMINS }}
+          FM_AYUDANTES: ${{ secrets.FM_AYUDANTES }}
         run: |
           set -o pipefail
           extra=()
           adm=$(printf '%s' "$FM_ADMINS" | tr -cd '0-9,')
           if [ -n "$adm" ]; then extra=(--var "ADMINS:$adm"); echo "::notice::Avisos de fallos: con dueño"; else echo "::warning::Sin FM_ADMINS: los avisos de fallos se guardan, pero nadie los puede leer ni contestar desde la app"; fi
+          # (0.8.4) quien ayuda con los fallos (ve Quién usa la app y los avisos de todos): el número, solo en el secreto
+          ayu=$(printf '%s' "$FM_AYUDANTES" | tr -cd '0-9,')
+          if [ -n "$ayu" ]; then extra+=(--var "AYUDANTES:$ayu"); echo "::notice::Quien ayuda con los fallos: $(printf '%s' "$ayu" | tr ',' '\n' | grep -c .) cuenta(s)"; fi
           publicar() { npx --yes wrangler@4.158.0 deploy "${extra[@]}" 2>&1 | tee salida.txt; }
           fallo() { grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300; }
           if ! publicar; then
@@ -127,6 +133,22 @@ jobs:
             echo "::error::No se ha podido guardar BOT_DISPATCH_TOKEN en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi
+      # (0.8.4) La llave de la Action «Fallos» para leer y contestar los avisos por el Worker (/fallos/accion): ya no están en
+      # el KV, sino en un Durable Object, y la API de Cloudflare no llega ahí. Es el sha256 de «fallos|» más el token de
+      # Cloudflare, que la Action «Fallos» también tiene: nadie crea ni copia nada, y el token no sale de GitHub. Se vuelve a
+      # poner en cada publicación (si cambia el token, cambia la llave en los dos sitios). El valor nunca sale en el log.
+      - name: Llave de los avisos para la Action
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if printf 'fallos|%s' "$CLOUDFLARE_API_TOKEN" | sha256sum | cut -c1-64 | npx --yes wrangler@4.158.0 secret put FALLOS_CLAVE > salida.txt 2>&1; then
+            echo "::notice::Llave de los avisos lista: la Action «Fallos» lee y contesta por el Worker"
+          else
+            echo "::warning::No se ha podido guardar FALLOS_CLAVE en el Worker: la Action «Fallos» no podrá leer los avisos ($(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-200))"
+          fi
       # La clave de Claude para los planes del día (/plan), aparte de la del bot: la crea Carlos en la consola de Claude con
       # su tope de gasto y la pone en GitHub como secreto de Actions CLAUDE_PLANES. Se copia al Worker en cada publicación;
       # sin el secreto no se toca la que ya tenga el Worker (y si no tiene ninguna, /plan contesta que falta y la app se queda
@@ -149,3 +171,30 @@ jobs:
             echo "::error::No se ha podido guardar CLAUDE_PLANES en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi
+      # (25 nov, la app de iOS) Las claves para los avisos push de Apple (APNs): con ellas el Worker avisa al iPhone de que
+      # el plan o la respuesta de la IA están listos cuando se ha salido de la app (worker/src/push.js). Las crea Carlos en
+      # developer.apple.com (Keys, con «Apple Push Notifications service») y las pone en GitHub como secretos de Actions:
+      # APNS_KEY_P8 (el texto entero del archivo .p8), APNS_KEY_ID y APNS_TEAM_ID. Se copian al Worker en cada
+      # publicación; sin ellas no se toca nada (y sin claves el Worker no manda avisos: lo demás sigue igual). Los valores
+      # nunca salen en el log.
+      - name: Claves de los avisos del iPhone
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          APNS_KEY_P8: ${{ secrets.APNS_KEY_P8 }}
+          APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
+          APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
+        run: |
+          if [ -z "$APNS_KEY_P8" ] || [ -z "$APNS_KEY_ID" ] || [ -z "$APNS_TEAM_ID" ]; then
+            echo "::notice::Sin los secretos APNS_KEY_P8, APNS_KEY_ID y APNS_TEAM_ID: la app de iOS no recibe avisos del servidor (lo demás, igual)"
+            exit 0
+          fi
+          for nombre in APNS_KEY_P8 APNS_KEY_ID APNS_TEAM_ID; do
+            if ! printf '%s' "${!nombre}" | npx --yes wrangler@4.158.0 secret put "$nombre" > salida.txt 2>&1; then
+              echo "::error::No se ha podido guardar $nombre en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+              exit 1
+            fi
+          done
+          echo "::notice::Claves de los avisos del iPhone listas"

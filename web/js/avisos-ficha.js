@@ -12,7 +12,8 @@ export function plegarAviso(S, k, abierto) { if (abierto) abiertos(S)[k] = 1; el
 /** [primera frase, el resto] de un texto sin HTML. No parte «14,76 M. Si…» por el punto de los números */
 export function frases(t) {
   const s = String(t || '').trim();
-  const m = s.match(/^(.+?[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/);
+  // (sin cortar en la inicial de un nombre: «C. Soler»)
+  const m = s.match(/^(.+?[.!?](?<!(?:^|[\s(«"])[A-ZÁÉÍÓÚÑ]\.))\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/);
   return m ? [m[1], s.slice(m[0].length)] : [s, ''];
 }
 export const parrafos = (...ps) => ps.filter(Boolean).map((p) => `<p>${p}</p>`).join('');

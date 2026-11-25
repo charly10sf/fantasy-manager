@@ -10,11 +10,26 @@ import { proximaCaja } from './mercado.mjs';
 const num = (x) => Number(x) || 0;
 
 /** los hechos del resumen de la jornada J, o null si no ha acabado entera */
+/* (25 nov, B9) un partido aplazado (Rayo-Athletic de la J8, al 9 dic) dejaba la jornada sin resumen para siempre: el resumen
+   solo salía con los 10 acabados, y la Action solo mira la jornada de ahora y la de antes. Un partido sin jugar cuya fecha
+   es 3 días o más después del último acabado de su jornada cuenta como aplazado: el resumen sale con los demás, lo dice y
+   se rehace cuando se juegue (portal-web.mjs, `aplazados` en estado.json). */
+const APLAZADO_DIAS = 3;
+export function aplazadosDe(stats) {
+  const hechos = stats.filter((m) => m.matchState === 7);
+  if (!hechos.length) return null;
+  const ult = Math.max(...hechos.map((m) => Date.parse(m.date)));
+  const sin = stats.filter((m) => m.matchState !== 7);
+  if (sin.some((m) => !(Date.parse(m.date) - ult >= APLAZADO_DIAS * 864e5))) return null;
+  return sin.map((m) => ({ local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), t: Date.parse(m.date) }));
+}
 export function hechosResumen(J, stats, jugadores = [], { ahora = Date.now() } = {}) {
-  if (!stats.length || stats.some((m) => m.matchState !== 7)) return null;
+  if (!stats.length) return null;
+  const aplazados = stats.some((m) => m.matchState !== 7) ? aplazadosDe(stats) : [];
+  if (!aplazados) return null;
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const partidos = [], filas = [];
-  for (const m of [...stats].sort((a, b) => Date.parse(a.date) - Date.parse(b.date))) {
+  for (const m of [...stats].filter((x) => x.matchState === 7).sort((a, b) => Date.parse(a.date) - Date.parse(b.date))) {
     const P = { t: Date.parse(m.date), local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), escL: m.local.badgeColor, escV: m.visitor.badgeColor,
       gl: m.localScore, gv: m.visitorScore, jugadores: [] };
     for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
@@ -46,7 +61,7 @@ export function hechosResumen(J, stats, jugadores = [], { ahora = Date.now() } =
   const equipos = Object.values(eqs).sort((a, b) => b.pts - a.pts);
   const doblan = filas.filter((f) => f.media >= 3 && f.pts >= 2 * f.media && f.pts >= 10).sort((a, b) => b.pts / b.media - a.pts / a.media).slice(0, 6);
   const goles = partidos.reduce((s, p) => s + num(p.gl) + num(p.gv), 0);
-  return { jornada: J, generada: ahora, primero: partidos[0].t, ultimo: partidos[partidos.length - 1].t, partidos, mejores, peores, once, equipos, doblan, goles, nJugadores: filas.length,
+  return { jornada: J, generada: ahora, primero: partidos[0].t, ultimo: partidos[partidos.length - 1].t, aplazados, partidos, mejores, peores, once, equipos, doblan, goles, nJugadores: filas.length,
     media: filas.reduce((s, f) => s + f.pts, 0) / filas.length };
 }
 
@@ -181,6 +196,7 @@ export function contenidoResumen(h, { previa = null, siguiente = null, tarjeta =
   if (previa) ir.push(`<a href="../${e(previa)}">La previa de la jornada ${J}</a>`);
   if (siguiente) ir.push(`<a href="../${e(siguiente.ruta)}">Previa de la jornada ${siguiente.jornada}</a>`);
   if (ir.length) o.push(`  <p class="enl-j">${ir.join(' · ')}</p>`);
+  if (h.aplazados && h.aplazados.length) o.push(`  <p class="aviso">${h.aplazados.length === 1 ? 'Falta un partido, aplazado' : `Faltan ${h.aplazados.length} partidos, aplazados`}: ${h.aplazados.map((x) => `${e(x.local)}-${e(x.visitante)} (${e(fecha(x.t))})`).join(' y ')}. Aquí va lo de los ${h.partidos.length} que se han jugado; cuando se juegue, este resumen se pone al día con sus puntos.</p>`);
   o.push(subnav([['mejores', 'Mejores'], h.once && ['once', 'Once ideal'], ['partidos', 'Partidos'], h.doblan.length && ['doblan', 'Doblan su media'], h.peores.length && ['peores', 'Peores'], ['equipos', 'Equipos'], semana && semana.ganan.length && ['semana', 'Mercado'], ['analisis', 'Análisis']]));
 
   const tPts = (xs, rango = true) => tabla([rango && { t: '#', c: 'n m' }, { t: 'Jugador', c: 'j' }, { t: 'Pts', c: 'n' }, { t: 'Media', c: 'n' }].filter(Boolean),

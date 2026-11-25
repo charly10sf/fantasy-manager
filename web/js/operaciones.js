@@ -113,7 +113,7 @@ export function catalogo(D, M, notas = []) {
     // (22 nov) «a este no lo vendo», dicho en Pregunta: venderlo no está entre lo que se puede hacer hoy
     if (!(M.noVender && M.noVender.has(x.pid))) add({ ref: `V-${x.pid}`, tipo: 'vender', pid: x.pid, j: x.j, precio: x.j.valor, compra: x.compra || null, ganado: x.ganado });
     // (sin riesgo, ni se ofrece: con la cláusula lejos de su valor no hace falta blindarlo; lo vio Carlos el 30 oct)
-    if (x.clausula && x.riesgo !== 'ninguno' && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: x.abierta && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
+    if (x.clausula && x.riesgo !== 'ninguno' && !x.noBlindar && (x.abierta || x.abreEn < 2 * DIA)) add({ ref: `B-${x.pid}`, tipo: 'blindar', pid: x.pid, j: x.j, clausula: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, riesgo: x.riesgo, pagan: x.pagan, blindaje: x.blindaje, escudo: x.escudo, escudoGratis: x.abierta && !x.escudo && !!(M.escudosMios && M.escudosMios.quedan), sugerido: (M.paraEscudo || []).includes(x.pid) });
   }
   // P: libres de la liga
   for (const m of M.mercado) {
@@ -163,6 +163,16 @@ export function comoConseguir(D, M, pid, cat) {
 }
 
 /** una operación del catálogo en texto, con lo que cuesta y cómo funciona */
+/** (24 nov) el titular que baja y no tiene relevo: venderlo va junto con la puja por su recambio, y su oferta no se acepta
+ *  hasta tener al nuevo (`M.cambioDe`; lo mismo que hace el plan de la app y que comprueba `cuadrarPlan`) */
+function cambioTxt(M, pid, oferta = false) {
+  const cb = M && M.cambioDe ? M.cambioDe(pid) : null;
+  if (!cb) return '';
+  const r = cb.rec.map((x) => `${x.j.nombre} [P-${x.pid}] (+${String(Math.round(x.gana * 10) / 10).replace('.', ',')} pts)`).join(', ');
+  return oferta
+    ? `; CAMBIO: es titular en mi once, baja y no tengo otro como él: NO ACEPTAR hasta tener a su recambio (${r})`
+    : `; CAMBIO: es titular en mi once, baja y no tengo otro como él: venderlo SOLO junto con la puja por su recambio (${r}); si no, ni se propone`;
+}
 export function textoOp(o, M = null) {
   const j = o.j;
   const sobre = j && j.valor && o.precio ? o.precio / j.valor - 1 : 0;
@@ -180,17 +190,24 @@ export function textoOp(o, M = null) {
       const pvTxt = PV ? `; por ${M.pagaTxt(PV)} se paga de mediana un ${pct(PV.med * 100)} (para él, ${enE(PV.med)}), 3 de cada 4 hasta ${pct(PV.p75 * 100)} (${enE(PV.p75)}) y el 90 % hasta ${pct(PV.p90 * 100)} (${enE(PV.p90)})` : '';
       const ganaTxt = o.pGana != null ? `; con la puja de la app, ${Math.round(o.pGana * 10) <= 0 ? 'casi nunca se gana' : `se gana ${Math.round(o.pGana * 10)} de cada 10 veces`} en esta liga` : '';
       const nr = M && M.noRevender && M.noRevender[o.pid], te = M && M.tener && j ? M.tener(j, null, o.puja) : null;
-      const cuentaTxt = `${nr ? `; PARA REVENDER NO SALE con la puja que gana aquí (${eur(nr.puja)}: valdría ${eur(nr.valorFuturo)}, ${eur(nr.beneficio, { signo: true })})` : ''}${te && te.deMas > 2e5 ? `; TENERLO: lo pagado de más (${eur(te.deMas)}) ${te.dias ? `se recupera en ${te.dias} días si sigue subiendo así` : 'no se recupera en un mes al ritmo de ahora'}` : ''}`;
+      const cuentaTxt = `${nr ? `; PARA REVENDER NO SALE con la puja que gana aquí (${eur(nr.puja)}: valdría ${eur(nr.valorFuturo)}, ${eur(nr.beneficio, { signo: true })})` : ''}${te && te.deMas > 2e5 ? `; TENERLO: lo pagado de más (${eur(te.deMas)}) ${te.dias ? `se recupera en ${te.dias} días si sigue subiendo así` : 'no se recupera en un mes al ritmo de ahora'}` : ''}${nr && nr.aguantar ? `; AGUANTÁNDOLO SÍ SALE (para revender más adelante, no antes de la jornada): pujando ${eur(nr.puja)} y PAGÁNDOLO CON SALDO, sin deuda, en ${nr.aguantar.dias} días valdría unos ${eur(nr.aguantar.valorFuturo)} (${eur(nr.aguantar.beneficio, { signo: true })}); tiene 14 días la cláusula cerrada y se vende cuando deje de subir` : ''}`;
       // (19 nov, Carlos: «manda la del plan») si para revenderlo la puja es otra, se dice aquí: el plan va con esa y el chat
       // no puede decir «no pujes tanto» contra el plan (Cubarsí en el parón: 44,70 M para tenerlo, 49,81 M para revender)
       const espP = !nr && (M && M.especular || []).find((e) => e.pid === o.pid && e.origen === 'mercado');
       const revTxt = espP && espP.puja && Math.abs(espP.puja - o.puja) > 1e5 ? `; PARA REVENDERLO la app puja ${eur(espP.puja)}: si EL PLAN DE HOY lo lleva, la puja que vale es la del plan` : '';
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}${cuentaTxt}${revTxt}`;
+      // (25 nov, B7) si el plan lo ha mirado y no lo ficha, la cifra es la del plan («se paga a unos 45,04 M», la que gana en
+      // tu liga), no «la app pujaría 39,45 M»: eran dos pujas del motor y al chat le llegaban las dos (Xavi Espart)
+      const df = M && M.decisionFichar ? M.decisionFichar(o.pid) : null;
+      const gana = (nr && nr.puja) || (o.pujaGana > (o.puja || 0) ? o.pujaGana : null);
+      const pujaTxt = df && df.accion === 'no' && !df.retira && gana
+        ? `; para ganarlo en tu liga se paga a unos ${eur(gana)} (${pct((gana / o.precio - 1) * 100)})`
+        : `; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}`;
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}${pujaTxt}${cuentaTxt}${revTxt}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
       const laliga = ol && !ol.sinDatos
-        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): por lo vendido a LaLiga en esta liga (${ol.n} ventas) suele rondar ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}, y él se queda con la mejor: por debajo de lo que suele darle LaLiga lo normal es que NO TE LO VENDA`
+        ? `; LaLiga TAMBIÉN le hace su oferta por él, que SOLO VE ÉL (yo no sé cuánto es hoy): cada oferta de LaLiga va de −10 % a +10 % de su valor y, esperando a una buena, en esta liga (${ol.n} ventas) se le acaba sacando unos ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}; él se queda con la mejor: por debajo de eso lo normal es que NO TE LO VENDA, salvo que él mismo te diga un precio`
         : '; LaLiga TAMBIÉN le hace su oferta por él (aún no sé cuánto suele dar en esta liga) y él se queda con la mejor, así que ofrecerle solo su valor puede no bastar';
       const min = o.ofertaMin ? `; OFERTA MÍNIMA CON OPCIONES ${eur(o.ofertaMin)}${o.ofertaAlta && o.ofertaAlta > o.ofertaMin ? `, con muchas opciones (sin garantía: puede tener otras ofertas) ${eur(o.ofertaAlta)}` : ''}; la app ofrecería ${eur(o.puja || o.ofertaMin)}` : '';
       const sc = M && M.sobrecoste && j && o.puja ? M.sobrecoste(j, o.puja) : null;
@@ -201,8 +218,8 @@ export function textoOp(o, M = null) {
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${noMerece(M, o) ? '; LA APP NO LA RECOMIENDA (Hoy y las alarmas no la enseñan): para el once NO la propongas; solo para revender con beneficio claro' : ''}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
-    case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
-    case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
+    case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}${cambioTxt(M, o.pid, true)}`;
+    case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})${cambioTxt(M, o.pid)}`;
     case 'B': {
       const p = o.pagan, b = o.blindaje;
       // (revisión total, M4) con «quién puede pagar tu cláusula» cerrada, sin nombres: solo si a alguien le sobra o le llega justo
@@ -269,7 +286,10 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     if (!ops.length) return;
     L.push(`\n${titulo}`);
     for (const o of ops.slice(0, n)) {
-      const x = v(o);
+      let x = v(o);
+      // (24 nov, repaso) fichar: lo que dice el plan que se ve manda (mirado y descartado, plantilla llena, puja que se retira)
+      const df = M && M.decisionFichar && /^[PCMT]-/.test(o.ref) ? M.decisionFichar(o.pid) : null;
+      if (df && df.accion === 'no' && x && x.ok) x = { ok: false, aviso: df.porque };
       L.push(`- [${o.ref}] ${textoOp(o, M)}${x && x.ok && x.para ? ` → LA APP: vale para ${x.para}${x.aviso ? `. ${corta(x.aviso, 220)}` : ''}` : x && x.ok && x.aviso ? ` → LA APP: ${corta(x.aviso, 220)}` : x && !x.ok ? ` → LA APP NO LA HARÍA HOY${x.sinPrisa ? ' (sin prisa)' : ''}: ${corta(x.aviso, 220)}` : ''}`);
       const d = datos && datos(o);
       if (d) L.push(`    ${d}`);
@@ -316,6 +336,8 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     for (const [m, os] of grupos) L.push(`- ${os.slice(0, n).map((o) => `${o.j.nombre} [${o.ref}]`).join(', ')}${os.length > n ? ` y ${os.length - n} más` : ''}: ${m}.`);
   }
   L.push(`VENDER: cualquiera de mis jugadores con [V-<id>] (ids: ${t('V').map((o) => `${o.j.nombre} V-${o.pid}`).join(', ')}).`);
+  // (24 nov) los del cambio, aparte: su venta va junto con la puja por el recambio
+  for (const o of t('V')) { const tx = cambioTxt(M, o.pid); if (tx) L.push(`- [V-${o.pid}] VENDER ${o.j.nombre}${tx}`); }
   L.push('Cualquier jugador de un rival que no esté arriba NO SE PUEDE CONSEGUIR HOY: ni comprándoselo ni de otra forma.');
   return L.join('\n');
 }

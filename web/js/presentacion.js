@@ -213,6 +213,42 @@ export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {})
   if (bt) bt.focus({ preventScroll: true });
 }
 
+/* (0.8.4e; Carlos, 25 nov, 13:00: «un pop-up que diga que por las muchas peticiones se está trabajando en una versión de
+   Apple… con el logo de Apple»; a las 13:29 eligió el diseño A, «sin el anillo rojo del logo de Apple y que el logo no esté
+   sobre esa circunferencia») La tarjeta de la app para iPhone: la manzana sola, «En camino», el título, el texto de todos,
+   la línea de cada plataforma (linea) en la caja dorada y «Entendido». Se cierra con el botón, tocando fuera o con el atrás
+   de Android (cerrarPresentacion); cuándo sale lo decide app.js (iphoneToca). apple: el svg de la manzana */
+export const TEXTO_IPHONE = 'Me lo habéis pedido muchos y ya estoy con la app para iPhone. Espero tenerla en la App Store lo antes posible.';
+export function tarjetaIphone({ apple = '', linea = '', alCerrar = () => {} } = {}) {
+  if (abierta) abierta(true);
+  const capa = document.createElement('div');
+  capa.className = 'nvt-capa';
+  capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
+    <div class="nvt nvt-ios" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+      <div class="ios-logo">${apple}</div>
+      <span class="ios-eti"><i></i>En camino</span>
+      <h2 id="nvt-t">Fantasy Manager<br>para iPhone</h2>
+      <p>${esc(TEXTO_IPHONE)}</p>
+      ${linea ? `<span class="ios-mas">${esc(linea)}</span>` : ''}
+      <button type="button" class="ios-ok" data-nvt="no">Entendido</button>
+    </div>`;
+  const cerrar = (sinAviso) => {
+    capa.remove();
+    abierta = null;
+    if (!sinAviso) alCerrar();
+  };
+  capa.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-nvt]');
+    if (!b) return;
+    e.stopPropagation();
+    cerrar();
+  });
+  document.body.append(capa);
+  abierta = cerrar;
+  const bt = capa.querySelector('.ios-ok');
+  if (bt) bt.focus({ preventScroll: true });
+}
+
 /** la lista entera, versión a versión, para la hoja de Novedades de Ajustes */
 export function listaNovedades() {
   return visibles().map((n) => `<div class="nvl">

@@ -5,7 +5,7 @@ import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURA
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
-import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
+import { hayClave, planesApp, cupoPlanes, preguntasApp, cupoPreguntas, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos, enAppIos, permisoIA } from './ia.js';
 import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
 import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
@@ -26,6 +26,43 @@ import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.j
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
+
+/* (0.8.2) «Quién puja»: los rivales que pueden estar detrás de las pujas de un libre, del más probable al menos, lo que
+   rondaría la puja de cada uno y si la tuya (o la de la app) la pasa. Es una estimación (quien-puja.js): se dice. El dinero
+   de un rival cerrado no se cuenta (ni su tope ni que lo paga sin deuda) */
+const ratoTxt = (a, b) => (diaDe(a) === diaDe() && diaDe(b) === diaDe() ? `las ${horaDe(a)} y las ${horaDe(b)}` : `${cuando(a)} y ${cuando(b)}`);
+export function quienPujaHTML(S, m) {
+  const M = S.M, q = m.quien, n = q.n;
+  const pc = (p) => `${Math.max(1, Math.round(p * 100))} %`;
+  const vis = q.cands.filter((c, i) => i < 4 && (i < 2 || c.p >= 0.08));
+  const top = vis[0];
+  const fila = (c) => {
+    const abierto = !bloqueada('dineroRivales', c.tid);
+    const mot = c.motivos.filter((x) => abierto || !x.dinero).map((x) => esc(x.t));
+    const ronda = c.est ? (c.alto > c.est ? `rondaría ${eur(c.est)}–${eur(c.alto)}` : `rondaría ${eur(c.est)}`) : '';
+    const tope = abierto && c.tope != null && c.alto && c.tope < c.alto * 1.15 ? ` · no pasa de ${eur(Math.max(0, c.tope))}` : '';
+    return `<b>${esc(c.nombre)}</b> · ${pc(c.p)}${mot.length ? `<br><span class="t2">${mot.join(' · ')}</span>` : ''}${ronda ? `<br>Si es suya, ${ronda}${tope}.` : ''}`;
+  };
+  const evs = (q.ev || []).filter((e) => e[0] > 0);
+  const u = evs[evs.length - 1];
+  const entro = u ? `${u[2] > 1 ? `${u[2]} entraron` : n > 1 ? 'La última entró' : 'Entró'} entre ${esc(ratoTxt(u[0], u[1]))}.` : '';
+  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ' (25 jugadores)' : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
+  // ¿la pasa tu puja, o la de la app? Sin otra cifra de «N de cada 10»: esa ya la da «Libre en el mercado»
+  const mia = Number(m.miPuja) > 0, ref = mia ? Number(m.miPuja) : m.puja, p = mia ? q.pMia : q.pApp;
+  const de = mia ? 'Tu puja' : 'La puja de la app';
+  let pasa = '';
+  if (p != null && ref) {
+    const llega = q.paraPasar && q.paraPasar - num(m.miPuja) <= M.pujaMax;
+    pasa = p >= 0.65 ? `<b>${de} (${eur(ref)}) la${n > 1 ? 's' : ''} pasa casi seguro.</b>`
+      : `<b>${de} (${eur(ref)}) ${p >= 0.4 ? 'va justa' : 'se queda corta'}.</b>${q.paraPasar && q.paraPasar > ref ? ` Para pasarla${n > 1 ? 's' : ''} casi seguro, ${eur(q.paraPasar)}${llega ? '' : ' (no te llega)'}.` : ''}`;
+  }
+  const ac = M.quienAcierto && M.quienAcierto.n >= 5 ? ` En tu liga, de ${M.quienAcierto.n} veces, quien se lo llevó era el primero de la lista en ${M.quienAcierto.top1} y estaba entre los tres primeros en ${M.quienAcierto.top3}.` : '';
+  const claro = q.conf !== 'baja' && top;
+  return aviso(S, { k: 'quien', pid: m.pid, cls: 'oro', ico: 'rivales',
+    t: n === 1 ? 'Quién puede ser la otra puja' : `Quién puede estar detrás de las ${n} pujas`,
+    l: claro ? `Lo más probable: ${esc(top.nombre)} (${pc(top.p)})${vis[1] ? ` · ${esc(vis[1].nombre)} (${pc(vis[1].p)})` : ''}` : `No está claro: ${vis.slice(0, 3).map((c) => `${esc(c.nombre)} (${pc(c.p)})`).join(' · ')}`,
+    d: parrafos(entro, ...vis.map(fila), fuera, pasa, `<span class="t2">Es una estimación: LaLiga no dice quién puja ni cuánto.${esc(ac)}</span>`) });
+}
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 
@@ -205,7 +242,8 @@ export function resumenEquipo(S) {
   // la inercia: hacia dónde va cada uno y lo que se espera hasta la jornada
   const conI = mias.filter((x) => x.inercia && x.j.pos !== 5);
   const proyJ = conI.reduce((s, x) => s + num(x.inercia.proyJ), 0);
-  const vender = mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
+  // (24 nov, decide.js) solo los que la decisión manda vender por la inercia (a un titular que gira no: se aguanta)
+  const vender = mias.filter((x) => x.ventaInercia && ((M.decision ? M.decision(x.pid) : null) || {}).accion === 'vender').sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
   const sinI = bloqueada('inercia');
   if (sinI && (conI.length || vender.length)) h += candado('inercia');
   if (!sinI && M.proxima && conI.length) h += `<div class="aviso-ficha ${proyJ < 0 ? '' : 'verde'}">${icono(proyJ < 0 ? 'baja' : 'sube')}<div>Hasta la jornada ${M.proxima.n}, si cada uno sigue con su inercia, tu equipo ${proyJ >= 0 ? 'ganaría' : 'perdería'} unos <b>${eur(Math.abs(proyJ))}</b>.${vender.length ? ` Lo que más pesa: ${vender.slice(0, 3).map((x) => `${esc(x.j.nombre)} (${x.ventaInercia.urgencia === 'ya' ? 'ha girado' : 'frenando'})`).join(', ')}.` : ''}</div></div>`;
@@ -311,7 +349,7 @@ export function fichaJugador(S, pid) {
   if (op && !planDentro) h += avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
   // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
   const dpl = !op && descartePlan(S, pid);
-  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : 'pujes'}`, texto: dpl.aviso || '' });
+  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: dpl.yaPujada ? 'Plan de hoy: no pujaría, pero tu puja sigue' : `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : (S.M.clausulas || []).some((y) => String(y.pid) === String(pid)) && !(S.M.mercado || []).some((y) => String(y.pid) === String(pid)) ? 'lo clausules' : 'pujes'}`, texto: dpl.aviso || '' });
   notasPlan(S, { j }).forEach(([et, t], n) => { h += avisoDeTexto(S, { k: `nota${n}`, pid, cls: 'azul', ico: 'ia', t: et, texto: t }); });
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
@@ -324,10 +362,22 @@ export function fichaJugador(S, pid) {
     const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
     const ref = mia.compra || mia.inicial || null;
     const gana = ol && ref ? ol.v - ref : null;
-    const gratis = mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido. Te quedan ${S.M.escudosMios.quedan} esta jornada.` : '';
+    // (23 nov, Carlos: «los textos, más cortos») una línea para el blindaje y otra para lo que da LaLiga; al que baja con la
+    // cláusula por encima de lo que da LaLiga, «no lo blindes» (motor: noBlindar)
+    const noBl = mia.abierta && !mia.escudo && mia.noBlindar;
+    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, ${mia.noBlindar.igual ? 'lo mismo' : 'más'} que vendiéndolo.`
+      : mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> con un anuncio en LaLiga: ${S.M.ESCUDO_H} h a salvo (te quedan ${S.M.escudosMios.quedan}).` : '';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
-      : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
-    if (gratis || liga) h += `<div class="aviso-ficha verde peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join(' ')}</div></div>`;
+      : `LaLiga te ofrecería entre <b>${eur(ol.una ? ol.una.min : ol.v)}</b> y <b>${eur(ol.una ? ol.una.max : ol.v)}</b>, a suerte, con una oferta nueva en cada cambio de mercado.`;
+    if (gratis || liga) h += `<div class="aviso-ficha ${noBl ? 'oro' : 'verde'} peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join('<br>')}</div></div>`;
+    // (24 nov) el cambio: véndelo y ficha a uno de estos (los 3 mejores de su puesto que te llegan)
+    const cbF = S.M.cambioDe && ((S.M.decision ? S.M.decision(pid) : null) || { regla: 'cambio' }).regla === 'cambio' ? S.M.cambioDe(pid) : null;
+    if (cbF) {
+      const bsF = S.M.bajaSeguido(pid);
+      h += `<div class="sec"><h2>Véndelo y ficha a otro</h2><span class="sub">${bsF ? 'baja y no tienes otro como él' : 'ha girado y juega de relleno'}</span></div>`;
+      h += cbF.rec.map((r) => `<button class="fila rec-f" data-j="${esc(r.pid)}">${ava(r.j)}<div class="fila-c"><div class="fila-n">${esc(r.j.nombre)}</div><div class="fila-s">${r.tit != null ? `titular ${Math.round(r.tit * 100)} %` : ''}${r.prox && r.prox.rival ? ` · ${r.prox.casa ? 'vs' : 'en'} ${esc(r.prox.rival)}` : ''}${r.sube ? ' · ▲ sube' : ''} · <b class="sube">+${String(Math.round(r.gana * 10) / 10).replace('.', ',')} pts</b></div></div><div class="fila-d"><div class="v">${eur(r.puja)}</div><div class="d apag">puja</div></div></button>`).join('');
+      h += '<p class="t2 peq">Pon a este a la venta y puja por uno de ellos. La oferta de LaLiga por él, acéptala cuando ya tengas al nuevo.</p>';
+    }
     const pg = mia.pagan;
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
@@ -358,14 +408,14 @@ export function fichaJugador(S, pid) {
         const ofrece = m.ofertaMin && !m.noVende && !vb;
         const oL = m.ofertaLiga;
         const liga = !oL ? '' : oL.sinDatos || vb ? 'LaLiga también le hace su oferta y se queda con la mejor: con ofrecerle su valor puede no bastar.'
-          : `LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(oL.v)}</b> (de mediana un ${pct(oL.med * 100)} sobre el valor, en ${oL.n} ventas). Se queda con la mejor: por menos lo normal es que no te lo venda.`;
+          : `LaLiga también le hace ofertas, que solo ve él: cada una va de −10 % a +10 % de su valor, y las que se aceptan en tu liga rondan <b>${eur(oL.v)}</b> (${pct(oL.med * 100)}, en ${oL.n} ventas). Se queda con la mejor: por menos lo normal es que no te lo venda.`;
         h += aviso(S, { k: 'vende', pid, cls: 'oro', ico: 'usuario', t: `Lo vende ${esc(m.vendedor || 'otro manager')}`,
           l: m.noVende ? 'Lo normal es que no te lo venda' : ofrece ? `Vale ${eur(j.valor)} · ofrécele ${eur(m.puja || m.ofertaMin)}` : `Se le oferta desde su valor, ${eur(j.valor)}`,
           d: parrafos(`Sigue siendo suyo: solo es tuyo si acepta tu oferta. No es un jugador libre de la liga. El precio que él le haya puesto en el mercado da igual: puedes ofrecerle desde su valor.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}`,
             liga,
             m.noVende ? `<b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : '',
             ofrece && m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? `Esa oferta es la más probable: con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más.` : `Con ${eur(m.ofertaAlta)} es muy probable que te lo venda.`) : '',
-            m.miPuja ? `Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que suele dar LaLiga: súbela o lo normal es que no la acepte' : ''}.` : '') });
+            m.miPuja ? `Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que puede sacarle a LaLiga: súbela o lo normal es que no la acepte' : ''}.` : '') });
         if (vb && m.ofertaMin && !m.noVende) h += candado('ventasRivales');
       } else {
         // (37) «Libre en el mercado»: a la vista, desde cuánto y lo que haría la app; dentro, la subasta y lo que se paga en tu liga
@@ -378,6 +428,8 @@ export function fichaJugador(S, pid) {
         const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
         h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
           d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
+        // (0.8.2) quién puede estar detrás de las pujas de otros que lleva (función top)
+        if (m.ajenas > 0 && m.quien && m.quien.cands.length) { if (bloqueada('quienPuja')) cerradas.push('quienPuja'); else h += quienPujaHTML(S, m); }
       }
     }
     if (suya) {
@@ -683,13 +735,13 @@ export function fichaRival(S, tid) {
     const vs = ventasDe(M, tid);
     if (vs.length && bloqueada('ventasRivales')) cerradas.push('ventasRivales');
     else if (vs.length) {
-      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que suele dar LaLiga por uno así (una estimación con lo vendido en tu liga: lo de hoy solo lo ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
+      h += `<p class="t2 peq" style="margin:0 0 6px">Lo que se acaba sacando de LaLiga por uno así en tu liga (cada oferta suya va de −10 % a +10 %; la de hoy solo la ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
       h += vs.map((m) => {
         const ol = m.ofertaLiga, conLiga = ol && !ol.sinDatos && ol.v;
         return filaJugador(m, {
           sub: `${esc(m.j.equipo)} · vale ${eur(m.j.valor)}${m.ofertas ? ` · ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}` : ''}`,
           pills: [m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá</span>` : '', m.miPuja ? `<span class="pill abierta">Tu oferta ${eur(m.miPuja)}</span>` : '', estadoPill(m.j)],
-          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'suele dar LaLiga' : 'sin datos'}</div>${m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
+          derecha: `<div class="v">${conLiga ? `~${eur(ol.v, { dec: 1 })}` : '?'}</div><div class="d apag">${conLiga ? 'se saca de LaLiga' : 'sin datos'}</div>${m.ofertaMin && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja || m.ofertaMin, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
         });
       }).join('');
     } else h += nada('No tiene a nadie en venta.');
@@ -825,7 +877,9 @@ export function invitarHTML(S) {
   h += `<p>Pásale la app a quien juegue a LaLiga Fantasy. Ganas tú:</p>${premiosInvTxt(c)}
     <p class="t2 peq">Cuentan las cuentas que empiezan a usar la app con tu enlace o tu código.</p>`;
   h += `<button class="btn ancho" data-accion="compartirInv"${I.compartiendo ? ' disabled' : ''}>${icono('enviar')}${I.compartiendo ? 'Un momento…' : 'Invita a un amigo'}</button>`;
-  if (e.cod) h += `<p class="inv-cod">Tu código: <b>${esc(e.cod)}</b> <button class="b-ico" data-accion="copiarInv" aria-label="Copiar el enlace">${icono('copiar')}</button></p>`;
+  // (25 nov) el código, grande y con lo que tiene que hacer el amigo con él (desde Google Play el enlace no llega)
+  if (e.cod) h += `<div class="inv-tucod"><span>Tu código</span><b>${esc(e.cod)}</b><span>Tu amigo lo pone al entrar en la app, cuando le pregunta si le ha invitado alguien.</span>
+    <div class="inv-tucod-b"><button class="btn chico sec" data-accion="copiarCod">${icono('copiar')}Copiar código</button><button class="btn chico sec" data-accion="copiarInv">${icono('copiar')}Copiar enlace</button></div></div>`;
   // el contador y los premios que tienes
   const ct = contadorTxt(e);
   h += `<div class="inv-cuenta"><b>${e.entran === 1 ? '1 amigo ha entrado' : `${e.entran || 0} amigos han entrado`}</b>${e.entran ? `<span>${e.cuentan === 1 ? '1 ha vuelto otro día' : `${e.cuentan || 0} han vuelto otro día`}</span>` : ''}${ct ? `<span>${esc(ct)}</span>` : ''}</div>`;
@@ -854,6 +908,23 @@ export function invitarHTML(S) {
   if (I.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(I.error)}</div></div>`;
   return `${h}</div>`;
 }
+/** (25 nov) la ventana para quien acaba de entrar: solo meter el código de quien le invitó, sin lo de invitar a otros
+    (antes era la misma de «Invita a un amigo» con el código arriba, y se cerraba sin leerla). Sale sola una vez
+    (`invitarSiToca`), desde la banda de arriba y desde Ajustes, mientras la cuenta puede canjear */
+export function invitadoHTML(S) {
+  const I = S.inv || {}, uid = S.D && S.D.yo && S.D.yo.userId, e = estadoInv(uid);
+  // (25 nov) con el código que propone el servidor (abrió el enlace desde esta conexión hace poco), ya puesto
+  const pr = I.propuesto && I.cod === I.propuesto;
+  const cab = `<div class="hoja-cab"><h2>${pr ? 'Tu amigo te ha invitado' : '¿Te ha invitado un amigo?'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  if (!uid || !puedeCanjear(uid)) return `${cab}<div class="inv"><p>Ya está: esta cuenta no tiene que poner ningún código.</p><button class="btn ancho" data-accion="cerrarHoja">Vale</button></div>`;
+  return `${cab}<div class="inv invitado">
+    <p>${pr ? 'Abriste su enlace hace un rato: su código ya está puesto. Dale a «Listo».' : 'Si alguien te ha pasado Fantasy Manager, pon su código. Son 6 letras y números y te lo habrá mandado con el enlace.'}</p>
+    <div class="codigo-in grande"><input id="invCod" maxlength="8" placeholder="ABC234" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="canjearInv" value="${esc(I.cod || '')}" aria-label="Código de quien te invita"></div>
+    ${I.errorCod ? `<p class="codigo-err" role="alert">${esc(I.errorCod)}</p>` : ''}
+    <button class="btn ancho" data-accion="canjearInv"${I.canjeando ? ' disabled' : ''}>${I.canjeando ? 'Un momento…' : 'Listo'}</button>
+    <p class="t2 peq">A ti no te cuesta nada y a tu amigo le das una ayuda en su liga.${e && e.canjearHasta ? ` Puedes ponerlo hasta el ${esc(cuando(e.canjearHasta, { hora: false }))}.` : ''}</p>
+    <button class="btn ancho sec" data-accion="invitadoNo">Nadie, la he encontrado yo</button></div>`;
+}
 
 /* ================= AJUSTES ================= */
 /*
@@ -877,7 +948,9 @@ function filasHorasPlan(S, pApp) {
   // (0.7.13n) la de cada liga: 10 minutos después de que se refresque SU mercado
   const d1 = def ? `${def[0]}, 10 min después de que se refresque el mercado de tu liga` : '10 min después de que se refresque el mercado de tu liga';
   const d2 = def ? `${def[1]}, 12 h después` : '12 h después del primero';
-  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después';
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada: salen a su hora con la app abierta y, si no, al abrirla
+  const sinFondo = enApp && !nativo.hayFondo();
+  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : `${hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después'}${sinFondo ? ' · con la app cerrada, al abrirla' : ''}`;
   let h = fila('Planes que salen solos', sub, interr(c.on, 'planesHora', '', 'Planes que salen solos'), 'plan automatico hora horas');
   if (c.on) {
     h += fila('Primer plan', `Por defecto, ${d1}`, selA('planH1', [['', def ? `${def[0]} (mercado)` : 'Con el mercado'], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
@@ -896,7 +969,13 @@ export function planAjustesHTML(S) {
   if (cu && !cu.ilimitado) h += `<p class="t2 peq" style="margin:6px 2px 0">${cu.quedan > 0 ? (cu.quedan === 1 ? 'Hoy te queda 1 plan con la IA.' : `Hoy te quedan ${cu.quedan} planes con la IA.`) : 'Hoy ya no te quedan planes con la IA.'}</p>`;
   h += `<button class="btn ancho" style="margin-top:14px" data-accion="planYa">${icono('ia')}Rehacer el plan ahora</button>`;
   // (0.7.13n, Carlos 16 nov) sin imagen ni «Compartir»: en su lugar, cuántos planes hay gratis
-  if (pApp) h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>2 planes gratis</b> cada día. A partir del tercero, ${enApp && nativo.canal() === 'play' ? 'cada uno con un anuncio' : 'en la app de Google Play, cada uno con un anuncio'}.</span></p>`;
+  // (25 nov, hallazgo 6) la cifra, la de planesCfg (en la web y el iPhone son los de «gratisWeb»); los de más con un anuncio,
+  // solo en la de Google Play
+  if (pApp) {
+    const pc = planesCfg(), conAd = enApp && ['play', 'ios'].includes(nativo.canal()) && pc.max > pc.gratis;
+    const ord = ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo', 'noveno', 'décimo'][pc.gratis] || `${pc.gratis + 1}.º`;
+    h += `<p class="plan-cupo">${icono('info')}<span>Fantasy Manager te da <b>${pc.gratis === 1 ? '1 plan gratis' : `${pc.gratis} planes gratis`}</b> cada día${conAd ? `. A partir del ${ord}, cada uno con un anuncio` : ''}.</span></p>`;
+  }
   return h;
 }
 
@@ -931,10 +1010,12 @@ export function ajustes(S) {
   {
     const av = avisosGuardados();
     const sinLeer = (av.lista || []).filter((x) => x.respuesta && !x.vista).length;
-    const pend = av.admin ? av.pendientes || 0 : 0;
+    // (0.8.4) quien ayuda con los fallos ve los de todos, como el dueño, y desde la 0.8.4c también los contesta
+    const ve = av.admin || av.ve;
+    const pend = ve ? av.pendientes || 0 : 0;
     const n = sinLeer + pend;
-    const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
-    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo o una idea'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
+    const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : av.ve ? (pend ? `${pend} sin contestar` : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Los de todos y reportar uno') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
+    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${ve ? 'Avisos de fallo' : 'Reportar un fallo o una idea'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
       + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
 
@@ -955,7 +1036,7 @@ export function ajustes(S) {
   // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso (y en la 0.6.12, el QR)
   if ((enApp || enWeb) && !enDemo() && ses) {
     const qr = enApp && nativo.hayQR();
-    c1 += fila(enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo', qr ? 'Escanea el QR de la web. El código, para el iPhone' : 'Con un código de un solo uso, sin el F12',
+    c1 += fila(enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo', qr ? 'El QR de «Ya tengo la app», en la web. El código, para el iPhone' : 'Con un código de un solo uso, sin el F12',
       qr ? `<span class="aj-2">${btnA('escanearQR', 'QR', { sec: false })}${btnA('vincularWeb', 'Código')}</span>` : btnA('vincularWeb', 'Código', { sec: false }), 'ordenador iphone vincular qr codigo web');
   }
   if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
@@ -963,7 +1044,7 @@ export function ajustes(S) {
   // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
   if (!enDemo() && ses && invitarOn()) {
     const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
-    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Mete el código de quien te pasó la app', btnA('invitarAmigo', 'Meter código', { sec: false }), 'codigo invitacion amigo');
+    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Pon el código de quien te pasó la app', btnA('ponerCodigo', 'Poner código', { sec: false }), 'codigo invitacion amigo');
     c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
   }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
@@ -1007,8 +1088,9 @@ export function ajustes(S) {
       if (ca.mias) c2 += fila('De cuáles', 'Baratas: menos de 1,6 veces su valor', selA('miasCuales', [['baratas', 'Las baratas'], ['todas', 'Todas']], ca.miasTodas ? 'todas' : 'baratas', 'De cuáles de tus cláusulas'), 'mis clausulas todas', 'sub');
       c2 += tipo('mercado', 'Cambio de mercado', '', 'mercado pujas ofertas');
       // (41) lo que pasa al cambiar el mercado: con la app cerrada, cuando trabaja sola (Ajustes → La IA)
-      c2 += tipo('pujas', 'Pujas que ganas o pierdes', 'Al cambiar el mercado', 'mercado pujas ganada perdida', false);
-      c2 += tipo('enMercado', 'Te interesan y salen al mercado', 'Tus favoritos y los de interés alto', 'mercado favoritos interes sale venta', false);
+      // (25 nov) en la app de iOS no hay pasadas con la app cerrada: se miran al abrirla
+      c2 += tipo('pujas', 'Pujas que ganas o pierdes', nativo.hayFondo() ? 'Al cambiar el mercado' : 'Al abrir la app tras el cambio de mercado', 'mercado pujas ganada perdida', false);
+      c2 += tipo('enMercado', 'Te interesan y salen al mercado', nativo.hayFondo() ? 'Tus favoritos y los de interés alto' : 'Tus favoritos y los de interés alto, al abrir la app', 'mercado favoritos interes sale venta', false);
       c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
       c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
       // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo
@@ -1036,8 +1118,11 @@ export function ajustes(S) {
   // (16 nov) las preguntas del chat, también con la IA de la app: la clave queda de reserva
   const qApp = preguntasApp(enDemo()), qc = preguntasCfg(), cuQ = qApp ? cupoPreguntas() : null;
   if (qApp) c3 += fila('Preguntas a la IA', `${qc.gratis} al día, sin clave${topConAnuncio() ? `; ${qc.porAnuncio} más por anuncio, hasta ${qc.max}` : ''}${cuQ ? ` · ${cuQ.ilimitado ? 'sin límite' : cuQ.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuQ.quedan} hoy`}` : ''}`, '', 'preguntas chat ia app');
-  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
-  if (enApp && !enDemo()) {
+  // (iOS 3) en la app de iOS no hay clave de Google; en su lugar, el permiso para mandar tu liga a la IA
+  const permIA = enAppIos() ? permisoIA() : null;
+  if (permIA !== null) c3 += fila('Mandar tu liga a la IA', permIA === 'si' ? 'Sí: para el plan con la IA y tus preguntas (los rivales, con otro nombre)' : permIA === 'no' ? 'No: no se manda nada y el plan sale sin la IA' : 'Se te pregunta antes del primer plan o pregunta', permIA === 'si' ? btnA('quitarPermisoIA', 'Apagar') : btnA('permisoIA', 'Activar', { sec: false }), 'permiso privacidad datos ia');
+  else c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
+  if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
     c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h, al cambiar el mercado y a la hora de tus planes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
@@ -1053,12 +1138,12 @@ export function ajustes(S) {
     c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
     if (k) c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
-  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
+  h += sec('ia', 'ia', 'La IA', permIA !== null ? (permIA === 'no' ? 'Apagada: no se le manda nada' : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app' : 'No disponible ahora') : k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : qApp ? 'Planes y preguntas con la IA de la app' : pApp ? 'Plan con la IA de la app · sin clave para preguntar' : 'Sin clave', c3, 'gemini');
 
   /* ---- la app ---- */
   let c4 = '';
   const ew = enApp ? nativo.estadoWeb() : null;
-  c4 += fila(`Versión ${VERSION}`, enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · al día sin reinstalar' : ''}` : 'En el navegador', btnA(enApp ? 'buscarVersion' : 'buscarWeb', 'Buscar nueva'), 'actualizar version');
+  c4 += fila(`Versión ${VERSION}`, enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : nativo.canal() === 'ios' ? ' · App Store' : ''}${ew && ew.activa ? ' · al día sin reinstalar' : ''}` : 'En el navegador', btnA(enApp ? 'buscarVersion' : 'buscarWeb', 'Buscar nueva'), 'actualizar version');
   if (estadoLimite.min != null) c4 += fila(`Hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min`, 'Se reinicia a las 00:00', '', 'tiempo limite minutos');
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
   if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
@@ -1069,6 +1154,7 @@ export function ajustes(S) {
     c4 += fila('Novedades', LS.get('importante-vista', null) === u ? 'Lo más importante de cada versión' : `Nuevo en la ${u}`, btnA('novedades', 'Ver'), 'cambios version');
   }
   if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
+  else if (avisosGuardados().ve && !enDemo()) c4 += fila('Quién usa la app', 'Para ayudar con los fallos', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
   if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
   // (13 nov, Carlos) el tema de evento de index.html (TEMA_EVENTO), que se puede apagar; sin él, la fila no sale
   c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
@@ -1129,37 +1215,78 @@ function capturasHTML(A) {
   const mas = caps.length < 3 ? `<button class="ac-mas${caps.length ? ' cuadro' : ''}" data-accion="capturaAviso">${icono('foto')}<span>${caps.length ? 'Otra' : 'Añadir una captura'}</span></button>` : '';
   return `<div class="aviso-capt">${minis}${mas}</div>${caps.length ? '' : '<p class="t2 peq ac-nota">Una captura de lo que ves ayuda mucho. Hasta 3.</p>'}`;
 }
-/** las capturas de un aviso recibido (el dueño): se cargan al abrirlo */
-function capturasRecibidas(A, d) {
-  if (!d.capturas) return '';
-  const l = (A.capt && A.capt[d.id]) || [];
-  const cel = [...Array(d.capturas).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(d.id)}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
-    : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('');
-  return `<div class="aviso-capt">${cel}</div>`;
+/* (0.8.4, fase 3; Carlos, 25 nov: «que sea una conversación») cada aviso es un hilo: el primer mensaje y, debajo, todos los
+   que vayan escribiendo quien lo mandó y Fantasy Manager, en burbujas (lo tuyo a la derecha), cada uno con sus capturas, y
+   abajo la caja para escribir con su botón de adjuntar captura. Audios, no. */
+/** los mensajes de un aviso: los del servidor o, con uno de antes de la 0.8.4, el texto y la respuesta */
+export function msgsDe(x) {
+  if (x && Array.isArray(x.msgs) && x.msgs.length) return x.msgs;
+  return [{ n: 0, de: 'u', t: x.t, texto: x.texto || x.txt || '', caps: x.capturas || x.c || 0 }, ...(x.respuesta ? [{ n: 1, de: 'd', t: x.respondida, texto: x.respuesta, por: x.por }] : [])];
 }
-const avisoMio = (x) => `<div class="aviso${x.respuesta && !x.vista ? ' nuevo' : ''}">
-  <div class="aviso-cab"><span>${cuando(x.t)}</span>${x.respuesta ? '<span class="pill sube">Contestado</span>' : '<span class="pill">Esperando respuesta</span>'}</div>
-  <p>${esc(x.texto)}</p>${x.capturas ? `<p class="t2 peq">${icono('foto')} ${x.capturas} captura${x.capturas > 1 ? 's' : ''}</p>` : ''}
-  ${x.respuesta ? `<div class="aviso-resp"><b>${esc(firmaDe(x.por) || 'Respuesta')}</b><span>${esc(x.respuesta)}</span><small>${cuando(x.respondida)}</small></div>` : ''}</div>`;
+/** quién escribió el último: 'u' (quien lo mandó) o 'd' (Fantasy Manager) */
+export const ultimoDe = (x) => x.de || (x.respuesta || x.r ? 'd' : 'u');
+/** las capturas de un mensaje: se cargan al abrir el hilo (A.capt['id:mensaje']) */
+function capsMsg(A, id, m) {
+  if (!m.caps) return '';
+  const l = (A.capt && A.capt[`${id}:${m.n}`]) || [];
+  return `<div class="aviso-capt msg-capt">${[...Array(m.caps).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(id)}" data-m="${m.n}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
+    : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('')}</div>`;
+}
+/** la conversación en burbujas. lado: 'u' la ve quien lo mandó; 'd', el dueño o quien ayuda (tuFM: es el dueño). (0.8.4c) Como
+    contestan los dos, en lo de Fantasy Manager el servidor les dice quién lo escribió (`aut`: 'yo' o su nombre); sin `aut`
+    (la Action y lo de antes), «Tú» para el dueño y «Fantasy Manager» para quien ayuda */
+function burbujas(A, x, lado, tuFM = false) {
+  const ms = msgsDe(x), ult = ms[ms.length - 1];
+  // «Visto» / «Leído» debajo de lo último tuyo, si es lo último del hilo y el otro lado ya lo ha visto
+  const visto = ult && ult.de === lado && (lado === 'u' ? (x.vd || 0) >= ult.t : (x.vu || 0) >= ult.t);
+  const fm = (m) => (lado === 'd' && m.aut ? (m.aut === 'yo' ? 'Tú' : m.aut) : tuFM ? 'Tú' : firmaDe(m.por) || 'Fantasy Manager');
+  const nombre = (m) => (m.de === 'd' ? fm(m) : lado === 'u' ? 'Tú' : x.quien || x.equipo || 'Quien lo mandó');
+  return `<div class="msgs">${ms.map((m) => `<div class="msg ${m.de === lado ? 'mio' : 'suyo'}"><b>${esc(nombre(m))}</b>${m.texto ? `<p>${esc(m.texto)}</p>` : ''}${capsMsg(A, x.id, m)}<small>${cuando(m.t)}${m === ult && visto ? ` · ${lado === 'u' ? 'Visto' : 'Leído'}` : ''}</small></div>`).join('')}</div>`;
+}
+/** la caja de escribir del hilo abierto: el texto, las capturas que vas a mandar (hasta 3) y el botón de adjuntar */
+function cajaHilo(A, id, accion, placeholder, max) {
+  const caps = A.capHilo || [];
+  const minis = caps.map((c, i) => `<span class="ac-m"><button class="ac-ver" data-accion="verCapturaHilo" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(c.mini)}" alt=""></button><button class="ac-x" data-accion="quitarCapturaHilo" data-i="${i}" aria-label="Quitar la captura ${i + 1}">${icono('cerrar')}</button></span>`).join('');
+  return `<div class="hilo-caja">${caps.length ? `<div class="aviso-capt">${minis}</div>` : ''}
+    <div class="hilo-fila"><button class="b-ico hilo-adj" data-accion="capturaHilo" aria-label="Adjuntar una captura"${caps.length >= 3 ? ' disabled' : ''}>${icono('foto')}</button>
+    <textarea id="hiloTxt" class="campo-t" rows="2" maxlength="${max}" placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}">${esc(A.hiloBorrador || '')}</textarea>
+    <button class="b-ico hilo-env" data-accion="${accion}" data-id="${esc(id)}" aria-label="Mandar"${A.escribiendo ? ' disabled' : ''}>${icono(A.escribiendo ? 'reloj' : 'enviar')}</button></div></div>`;
+}
+/** un aviso tuyo: cerrado, lo último; abierto, la conversación entera y la caja para seguirla */
+function avisoMio(A, x) {
+  const ms = msgsDe(x), ult = ms[ms.length - 1], abierto = A.hilo === x.id;
+  const nuevo = !!x.respuesta && !x.vista;
+  const pill = ultimoDe(x) === 'd' ? `<span class="pill sube">${nuevo ? 'Respuesta nueva' : 'Contestado'}</span>` : '<span class="pill">Esperando respuesta</span>';
+  const cuerpo = abierto ? burbujas(A, x, 'u') + cajaHilo(A, x.id, 'escribirHilo', 'Escribe aquí', 4000)
+    : `<p>${esc(ms[0].texto)}</p>${ms.length > 1 ? `<p class="t2 peq aviso-ult"><b>${ult.de === 'd' ? 'Fantasy Manager' : 'Tú'}:</b> ${esc(String(ult.texto || (ult.caps ? 'una captura' : '')).slice(0, 140))}</p>` : ''}${ms[0].caps && ms.length === 1 ? `<p class="t2 peq">${icono('foto')} ${ms[0].caps} captura${ms[0].caps > 1 ? 's' : ''}</p>` : ''}`;
+  return `<div class="aviso hilo${nuevo ? ' nuevo' : ''}${abierto ? ' abierto' : ''}">
+  <button class="aviso-cab" data-accion="abrirHilo" data-id="${esc(x.id)}" aria-expanded="${abierto}"><span>${cuando(x.t)}</span>${ms.length > 1 ? `<span class="aviso-t2">${ms.length} mensajes</span>` : ''}${pill}</button>
+  ${cuerpo}</div>`;
+}
 function detalleAviso(A, x) {
   const d = A.detalle;
   // mientras llega el aviso entero, su texto (el de la lista) y que se está cargando
   if (!d) return `<div class="aviso-det"><p class="aviso-texto">${esc((x && x.txt) || '')}</p><p class="t2 peq cargando-av">${icono('reloj')}Cargando el aviso entero…</p></div>`;
   if (d.error) return `<div class="error-c">${esc(d.error)}</div>`;
   return `<div class="aviso-det">
-    <p class="aviso-texto">${esc(d.texto)}</p>
-    ${capturasRecibidas(A, d)}
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
-    ${d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
-    ${d.respuesta ? `<div class="aviso-resp"><b>Le contestaste</b><span>${esc(d.respuesta)}</span><small>${cuando(d.respondida)}${d.vista ? ' · leído' : ' · sin leer'}</small></div>` : ''}
-    <textarea id="respTxt" class="campo-t aviso-t" rows="3" maxlength="2000" placeholder="${d.respuesta ? 'Cambiar la respuesta' : 'Tu respuesta: le llega en la app'}">${esc(A.respBorrador || '')}</textarea>
-    <button class="btn chico" data-accion="responderAviso" data-id="${esc(d.id)}"${A.respondiendo ? ' disabled' : ''}>${A.respondiendo ? 'Mandando…' : `${icono('enviar')}Responder`}</button></div>`;
+    ${!A.admin ? '' : d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
+    ${burbujas(A, d, 'd', !!A.admin)}
+    ${A.admin || A.ve ? cajaHilo(A, d.id, 'responderAviso', A.admin ? 'Tu respuesta: le llega en la app' : 'Tu respuesta: le llega como Fantasy Manager', 2000) : ''}</div>`;
 }
 export function avisos(S) {
   const A = S.av || {};
-  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Fallos e ideas'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
-  if (A.admin) h += bandejaAvisos(A);
-  if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
+  // (0.8.4) quien ayuda (ve) tiene la bandeja de todos y (0.8.4c) los contesta. (0.8.4c; Carlos, 25 nov: «me dice Domy que no
+  // le sale para reportar fallos») lo de mandar uno quedaba debajo de toda la bandeja: ahora van en dos pestañas,
+  // «Recibidos» y «Reportar un fallo» (con tus avisos), cada una con su numerito
+  const ve = A.admin || A.ve;
+  let h = `<div class="hoja-cab"><h2>${ve ? 'Avisos de fallos' : 'Fallos e ideas'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  if (ve) {
+    const pest = A.pest === 'mios' ? 'mios' : 'todos';
+    const sinLeer = (A.lista || avisosGuardados().lista || []).filter((x) => x.respuesta && !x.vista).length;
+    h += `<div class="q-tabs av-pest" role="tablist" aria-label="Avisos">${[['todos', 'Recibidos', A.pendientes || 0], ['mios', 'Reportar un fallo', sinLeer]].map(([k, t, n]) => `<button role="tab" aria-selected="${k === pest}" class="${k === pest ? 'on' : ''}" data-accion="pestAvisos" data-p="${k}">${t}${n ? `<span class="av-n">${n}</span>` : ''}</button>`).join('')}</div>`;
+    if (pest === 'todos') return h + bandejaAvisos(A);
+  }
   if (A.sinSesion) {
     h += `<p class="t2">Para mandarme un aviso y que te pueda contestar hace falta entrar con tu cuenta de LaLiga${enDemo() ? ' (ahora estás viendo la liga de ejemplo)' : ''}. Mientras, puedes escribirme desde la página de contacto y pegar el diagnóstico.</p>
       <button class="btn ancho" data-abrir="https://fantasymanagerapp.com/contacto.html">${icono('enviar')}Ir a contacto</button>
@@ -1173,7 +1300,7 @@ export function avisos(S) {
       ${A.error ? `<div class="error-c" style="margin-top:10px">${esc(A.error)}</div>` : ''}`;
   }
   const mios = A.lista || avisosGuardados().lista || [];
-  if (mios.length) h += `<div class="grupo"><span>Tus avisos</span><span>${mios.length}</span></div>${mios.map(avisoMio).join('')}`;
+  if (mios.length) h += `<div class="grupo"><span>Tus avisos</span><span>${mios.length}</span></div>${mios.map((x) => avisoMio(A, x)).join('')}`;
   else if (A.cargando) h += '<p class="t2 peq">Mirando tus avisos…</p>';
   return h;
 }
@@ -1181,11 +1308,11 @@ function bandejaAvisos(A) {
   const todos = A.todos || [];
   let h = `<div class="grupo"><span>Avisos recibidos</span><span>${A.pendientes || 0} sin contestar</span></div>`;
   if (!todos.length) h += `<p class="t2 peq">${A.cargandoTodos ? 'Cargando…' : 'Ninguno todavía.'}</p>`;
-  // para revisarlos con Claude: los sin contestar, enteros y con su diagnóstico, listos para pegar en el chat
-  else h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar avisos</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
+  // para revisarlos con Claude: los sin contestar, enteros y con su diagnóstico, listos para pegar en el chat (solo el dueño)
+  else if (A.admin) h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar avisos</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
   h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
-    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.t)}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
-    ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
+    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}" aria-expanded="${A.abierto === x.id}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.ult || x.t)}${x.n > 1 ? ` · ${x.n} mensajes` : ''}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
+    ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>${x.n > 1 && x.ultTxt ? `<p class="t2 peq aviso-ult"><b>${x.de === 'd' ? 'Fantasy Manager' : 'Último'}:</b> ${esc(x.ultTxt)}</p>` : ''}`}</div>`).join('');
   return h;
 }
 
@@ -1277,7 +1404,9 @@ export function quienUsaHTML(S) {
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
   const C = numerosQ(Q);
   const tab = Q_TABS.some(([k]) => k === Q.tab) ? Q.tab : 'hoy';
-  h += `<p class="q-sub"><span class="q-vivo${C.dentro ? ' on' : ''}" aria-hidden="true"></span>${C.dentro} dentro ahora · ${C.total} cuentas en total</p>`;
+  // (23 nov) mientras llega lo nuevo sale lo de la última vez: «dentro ahora» no vale hasta que se actualiza
+  const estadoQ = Q.viejo ? `Actualizando… (lo de las ${horaDe(Q.ahora)})` : Q.sinActualizar ? `No se ha podido actualizar: es de las ${horaDe(Q.ahora)}` : `${C.dentro} dentro ahora`;
+  h += `<p class="q-sub"><span class="q-vivo${C.dentro && !Q.viejo && !Q.sinActualizar ? ' on' : ''}" aria-hidden="true"></span>${estadoQ} · ${C.total} cuentas en total</p>`;
   h += `<div class="q-tabs" role="tablist" aria-label="Apartados">${Q_TABS.map(([k, t]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? 'on' : ''}" data-accion="quienTab" data-t="${k}">${t}</button>`).join('')}</div>`;
   if (tab === 'hoy') h += hoyQ(C);
   else if (tab === 'uso') h += usoQ(C);
@@ -1309,7 +1438,10 @@ function numerosQ(Q) {
   return {
     Q, lista, reg, ahora, ds, dias, minPlay, problemas, semL,
     dentro: lista.filter((x) => ahora - x.ultima < DENTRO_Q).length,
-    hoy: lista.filter((x) => diaDe(x.ultima) === diaDe(ahora)).length,
+    // (23 nov, Carlos: «hoy» 50 y la barra de hoy 53) la hora de la última entrada se guarda como mucho una vez por hora
+    // (para no gastar escrituras): quien entró ayer a última hora y hoy otra vez puede tenerla de ayer. Hoy cuenta igual
+    // que la barra: con tiempo hoy o con la última entrada de hoy
+    hoy: lista.filter((x) => segDe(x, ds[0], 0) > 0 || diaDe(x.ultima) === ds[0]).length,
     sem: (reg.length ? reg : lista).filter((x) => x.ultima >= ahora - 7 * DIA).length,
     total: (reg.length ? reg : lista).length,
     segHoy: hoyD.seg, mediaHoy: hoyD.media, mediaSem: act7 ? seg7 / act7 : 0,
@@ -1340,8 +1472,10 @@ function hoyQ(C) {
     }).reverse();
     h += tarjetaQ('Altas por semana', columnasSem(sem, { alto: 170 }), { cifra: `<b>${sem.reduce((t, x) => t + x.v, 0)}</b> en 8 semanas` });
   }
-  // desde dónde: los de 7 días por canal, en una barra
-  const partes = [['Google Play', 'play', 'var(--rojo)'], ['Web', 'web', 'var(--azul)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => (x.canal || 'web') === k).length })).filter((p) => p.v);
+  // desde dónde: los de 7 días por canal, en una barra. (0.8.4; Carlos, 25 nov: «si hubiera forma de diferenciar los de iOS
+  // de la web de un ordenador») la web, por aparato (`disp`, lo manda la web desde la 0.8.4); «Web» a secas es quien aún
+  // no ha abierto esa versión
+  const partes = [['Google Play', 'play', 'var(--rojo)'], ['App de iOS', 'ios', 'var(--texto)'], ['Web en iPhone', 'web-iphone', 'var(--oro)'], ['Web en ordenador', 'web-pc', 'var(--azul)'], ['Web en Android', 'web-android', 'var(--sube)'], ['Web', 'web', 'rgba(88, 166, 255, 0.45)'], ['APK de fuera', 'github', 'var(--texto-3)']].map(([t, k, c]) => ({ t, c, v: C.semL.filter((x) => dondeQ(x) === k).length })).filter((p) => p.v);
   if (partes.length) {
     const tot = partes.reduce((t, p) => t + p.v, 0);
     h += tarjetaQ('Desde dónde', `<div class="q-pila" role="img" aria-label="${esc(partes.map((p) => `${p.t}: ${p.v}`).join(', '))}">${partes.map((p) => `<i style="flex:${p.v};background:${p.c}"></i>`).join('')}</div><div class="q-ley">${partes.map((p) => `<span><i style="background:${p.c}"></i>${esc(p.t)} <b>${p.v}</b> <small>${pctN(p.v, tot)} %</small></span>`).join('')}</div>`, { cifra: '7 días' });
@@ -1389,10 +1523,14 @@ function versionesQ(C) {
   const sinMotivo = v30.filter((x) => cmpVer(webDe(x), VERSION) < 0 && !problemaDe(x, C.minPlay)).length;
   const playC = {};
   for (const x of v30) if (x.canal === 'play' && x.app > 0) playC[x.app] = (playC[x.app] || 0) + 1;
+  // (iOS 3) las compilaciones de la app de iOS, igual
+  const iosC = {};
+  for (const x of v30) if (x.canal === 'ios' && x.app > 0) iosC[x.app] = (iosC[x.app] || 0) + 1;
   const pie = [
     Object.entries(motivos).map(([k, n]) => `${esc(k)}: <b>${n}</b>`).join(' · '),
     sinMotivo ? `Atrás sin problema a la vista: <b>${sinMotivo}</b> (se les pone sola al abrir la app)` : '',
     Object.keys(playC).length ? `App de Google Play: ${Object.entries(playC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)}${C.minPlay && Number(c) < C.minPlay ? ' (vieja)' : ''} <b>${n}</b>`).join(' · ')}${C.minPlay ? `. La web de ahora llega desde la ${C.minPlay}` : ''}` : '',
+    Object.keys(iosC).length ? `App de iOS: ${Object.entries(iosC).sort((a, b) => b[0] - a[0]).map(([c, n]) => `${esc(c)} <b>${n}</b>`).join(' · ')}` : '',
   ].filter(Boolean).join('<br>');
   return tarjetaQ('Versiones', columnasSem(cols, { alto: 170, media: false }), { cifra: `<b>${porV[VERSION] || 0}</b> de ${v30.length} con la ${esc(VERSION)}`, pie });
 }
@@ -1409,7 +1547,9 @@ const notasCanal = (c) => [
   c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
   c.saf ? `Tocan «Abrir en Safari»: <b>${c.saf}</b>` : '',
   c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
-  c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
+  c.laliga || c.l5xx ? `Falla LaLiga: <b>${c.laliga + c.l5xx}</b>${c.l5xx ? ` (error suyo ${c.laliga} · sin contestar bien ${c.l5xx})` : ''}` : '',
+  (() => { const m = c.mal || {}, t = MAL_PEGADO.reduce((x, [k]) => x + (m[k] || 0), 0); return t ? `Pegan algo que no vale: <b>${t}</b> (${MAL_PEGADO.filter(([k]) => m[k]).map(([k, txt]) => `${txt} ${m[k]}`).join(' · ')})` : ''; })(),
+  c.gastado ? `Repiten un enlace gastado: <b>${c.gastado}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
   c.ok > c.l ? `Entran más de los que abren LaLiga: <b>${c.ok - c.l}</b> con un código o por otro camino` : '',
 ].filter(Boolean).join(' · ');
 const pctCanal = (c) => { const p = pctN(c.ok, c.l); return `<span class="q-pct${!c.l || c.ok > c.l ? '' : p >= 50 ? ' bien' : p < 30 ? ' mal' : ''}">${c.l && c.ok <= c.l ? `${p} %` : '—'}<small>${c.ok} de ${c.l} entran</small></span>`; };
@@ -1426,6 +1566,14 @@ function invitarQ(C, Q) {
   if (!Q.invitar && !C.reg.length) return '<p class="q-no">Sin datos de invitaciones.</p>';
   const { filas, total: T } = invitacionesDatos(Q, C.lista, C.reg, C.ahora);
   let h = kpiQ([[T.comparten, `han invitado${T.veces ? ` · ${T.veces} veces` : ''}`], [T.entran, 'amigos dentro'], [T.siguen != null ? T.siguen : T.vuelven, T.siguen != null ? 'siguen (7 días)' : 'volvieron otro día']]);
+  // (25 nov) cómo llegan los amigos, en 7 días: los que abren el enlace en la web, los que copian el código para Google Play y
+  // los que lo ponen en la app (solo, propuesto por el servidor o escrito a mano)
+  const cnt = (Q.invitar && Q.invitar.cnt) || {}, desde = diaDe(C.ahora - 6 * DIA);
+  const t7 = Object.entries(cnt).filter(([d]) => d >= desde).reduce((x, [, v]) => { for (const [k, n] of Object.entries(v || {})) x[k] = (x[k] || 0) + n; return x; }, {});
+  if (Object.keys(cnt).length) {
+    const fila = (n, t) => `<div class="q-emb-f"><b>${n || 0}</b><span>${t}</span></div>`;
+    h += tarjetaQ('Cómo llegan (7 días)', `<div class="q-inv-lleg">${fila(t7.llega, 'abren el enlace en la web')}${fila(t7.copia, 'copian el código para Google Play')}${fila(t7.canje_enlace, 'entran con el enlace (se pone solo)')}${fila(t7.canje_play, 'entran con el código de la instalación de Google Play')}${fila(t7.canje_propuesto, 'aceptan el código que les propone la app')}${fila(t7.canje_escrito, 'lo escriben a mano')}</div>`);
+  }
   if (!filas.length) return `${h}<p class="q-no">Nadie ha compartido la app ni ha sacado su código todavía.</p>`;
   const max = Math.max(1, ...filas.map((x) => x.entran));
   h += tarjetaQ('Quién invita', `<div class="q-rank q-inv">${filas.slice(0, 20).map((x) => `<div><b>${esc(x.nombre)}</b><i style="--n:${pctN(x.entran, max)}"></i><span>${x.entran} ${x.entran === 1 ? 'amigo' : 'amigos'}</span><small>${[
@@ -1438,7 +1586,7 @@ function invitarQ(C, Q) {
   return h;
 }
 
-const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['web', 'Web']];
+const Q_FILTROS = [['', 'Todas'], ['hoy', 'Hoy'], ['sem', '7 días'], ['prob', 'Con problema'], ['play', 'Google Play'], ['ios', 'iOS'], ['web', 'Web']];
 function cuentasTabQ(S, Q, C) {
   const f = Q_FILTROS.some(([k]) => k === Q.filtro) ? Q.filtro : '';
   // las versiones, en una línea: de los que han abierto la app en 30 días, cuántos tienen la de ahora
@@ -1486,8 +1634,9 @@ export function invitacionesDatos(Q, lista, reg, ahora) {
  * «llegan» es llegar sin sesión y «ven entrar», tener el botón de entrar en pantalla (antes del 21 nov solo había «ver»,
  * que era llegar). Debajo, lo mismo por campaña (?utm_source=…).
  */
+const MAL_PEGADO = [['vacio', 'nada'], ['login', 'la página de entrar'], ['app', 'la de la app'], ['jwt', 'sin el código'], ['otro', 'otra cosa']];
 const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
-const EMB_CANALES = [['App de Android', 'play'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
+const EMB_CANALES = [['App de Android', 'play'], ['App de iOS', 'ios'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
 export function embudoDatos(E, ahora) {
   const ult7 = new Set(Array.from({ length: 7 }, (_, i) => diaDe(ahora - i * DIA)));
   const dias = Object.entries((E && E.dias) || {}).filter(([d]) => ult7.has(d)).map(([, g]) => g || {});
@@ -1498,7 +1647,9 @@ export function embudoDatos(E, ahora) {
     const ven = dias.reduce((t, d) => { const x = d[g] || {}; return t + (x.llega ? Number(x.ver) || 0 : 0); }, 0);
     const hayVen = dias.some((d) => (d[g] || {}).llega);
     return { llegan, ven: hayVen ? ven : null, ver: n('ver'), play: n('play'), demo: n('demo'), l: n('l'), v: n('v'), p: n('p'), ok: n('ok'), inicio: n('inicio'), saf: n('saf'),
-      vuelve: n('x-vuelve'), laliga: n('x-laliga'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0) };
+      vuelve: n('x-vuelve'), laliga: n('x-laliga'), l5xx: n('x-5xx'), gastado: n('x-gastado'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0),
+      // (25 nov, tanda 5) lo pegado que no vale, por motivo (las webs de antes no lo mandan)
+      mal: Object.fromEntries(MAL_PEGADO.map(([k]) => [k, n(`m-${k}`)])) };
   };
   const canales = EMB_CANALES.map(([t, k]) => ({ t, k, web: k.startsWith('web'), ...de(k) })).filter((c) => c.llegan || c.l || c.ok);
   const origenes = [...new Set(dias.flatMap((d) => Object.keys(d).filter((k) => k.startsWith('o:'))))].map((k) => ({ t: k.slice(2), k, web: true, ...de(k) })).sort((x, y) => y.llegan - x.llegan);
@@ -1544,17 +1695,19 @@ function cuentasQ(S, lista, ahora, minPlay) {
   }
   return h || '<p class="quien-res">Aún no ha entrado nadie.</p>';
 }
-const DONDE_Q = { web: 'Web', play: 'Play', github: 'APK' };
+const DONDE_Q = { web: 'Web', play: 'Play', ios: 'iOS', github: 'APK', 'web-iphone': 'iPhone', 'web-pc': 'Ordenador', 'web-android': 'Web Android' };
+/** desde dónde entra una cuenta: play, github o, en la web, el aparato (web-iphone, web-pc, web-android; web si no se sabe) */
+function dondeQ(x) { const c = x.canal || 'web'; return c === 'web' && x.disp ? x.disp : c; }
 function filaQuien(nombre, equipo, x, ahora, minPlay) {
   const esta = ahora - x.ultima < DENTRO_Q;
   const v = webDe(x), atras = !!v && cmpVer(v, VERSION) < 0;
   const p = problemaDe(x, minPlay);
   const chips = [
-    `<i class="q-chip">${esc(DONDE_Q[x.canal] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
+    `<i class="q-chip">${esc(DONDE_Q[dondeQ(x)] || 'Android')}${x.canal !== 'web' && x.app > 0 ? ` ${esc(String(x.app))}` : ''}</i>`,
     v ? `<i class="q-chip${atras ? ' viejo' : ''}">${esc(v)}</i>` : '',
     p ? `<i class="q-chip mal">${esc(p.corto)}</i>` : '',
   ].join('');
-  const marcas = [diaDe(x.ultima) === diaDe(ahora) ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
+  const marcas = [diaDe(x.ultima) === diaDe(ahora) || x.segHoy > 0 ? 'hoy' : '', ahora - x.ultima < 7 * DIA ? 'sem' : '', p ? 'prob' : '', x.canal === 'play' ? 'play' : '', x.canal === 'ios' ? 'ios' : '', (x.canal || 'web') === 'web' ? 'web' : ''].filter(Boolean).join(' ');
   return `<div class="quien-f ${esta ? 'dentro' : 'si'}" data-b="${esc(norm(`${nombre} ${equipo || ''} ${x.equipo || ''} ${x.nombre || ''}`))}" data-f="${marcas}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${esta ? 'ahora' : cuando(x.ultima)}${x.segHoy ? ` · ${minQ(x.segHoy)} hoy` : ''}</span><span class="q-chips">${chips}</span>${(() => { const q = queLePasa(p, x, minPlay); return q ? `<span class="qf-por">${esc(q[0])} <b>${esc(q[1])}</b></span>` : ''; })()}</div></div>`;
 }
 
@@ -1590,9 +1743,11 @@ export function textoDiagnostico(S) {
   const L = [
     `Fantasy Manager ${VERSION} · compilación ${nativo.version()} · ${enApp ? `app (${nativo.canal()})` : enWeb ? 'web' : 'navegador sin servidor'}${enDemo() ? ' · DEMO' : ''}`,
     `Cuenta de LaLiga: ${(D && D.yo && D.yo.userId) || (avisosGuardados().yo) || '¿?'}`,
-    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; return `Web al día sola: APK con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : 'usa la del APK'} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte Android ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
+    ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; const ios = nativo.canal() === 'ios'; return `Web al día sola: ${ios ? 'app' : 'APK'} con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : (ios ? 'usa la de la app' : 'usa la del APK')} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte ${ios ? 'iOS' : 'Android'} ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
     // (21 nov) por dónde entra la app en LaLiga: con Auth Tab Android no pregunta «Abrir con»
-    ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
+    ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.canal() === 'ios' ? 'por la ventana de inicio de sesión del iPhone' : nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'sesion-ios' ? 'por la ventana del iPhone' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
+    // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
+    (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
     D ? `Datos: ${new Date(D.t).toISOString()} · liga ${D.liga && D.liga.id} · equipos ${D.clasif.length} · mío ${D.yo.teamId || '¿?'} · jugadores ${Object.keys(D.maestro).length} (con cara ${Object.values(D.maestro).filter((j) => j.img).length}) · mercado ${D.mercado.length} (${D.mercado.filter((m) => m.tipo === 'manager').length} de managers${S.M && S.M.mercadoFantasma && S.M.mercadoFantasma.length ? `, ${S.M.mercadoFantasma.length} ya con dueño quitados` : ''}) · actividad ${D.actividad.length} (con nombre ${D.actividad.filter((a) => a.quien).length}, con id ${D.actividad.filter((a) => a.quienId).length}) · partidos ${D.partidos.length} · tendencias ${Object.keys(D.tendencias || {}).length} · dinero ${D.dinero}` : 'Sin datos',
     D && D.avisos && D.avisos.length ? `Fallos: ${D.avisos.map((a) => `${a.paso}: ${a.e}`).join(' | ')}` : 'Sin fallos',
@@ -1632,7 +1787,7 @@ export function textoDiagnostico(S) {
     ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p ?? x.tok.entra ?? '?'} entran, ${x.tok.th ?? 0} pensando, ${x.tok.r ?? x.tok.sale ?? '?'} escritos)` : ''}` : `✗ ${x.s} ${ia.t(x.e)}`}${x.google ? ` «${ia.t(x.google)}»` : ''} ${x.ms}ms`),
     (() => {
       const uf = ultimoFondo(), nf = nativo.estadoFondo() || {};
-      return `Segundo plano: ${cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;
+      return `Segundo plano: ${!nativo.hayFondo() ? 'no lo hay en esta app' : cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;
     })(),
     ...((ultimoFondo() || {}).ia || []).map((x) => `  [fondo] ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''} ${x.ok ? 'OK' : `✗ ${x.s} ${ia.t(x.e)}`} ${x.ms}ms`),
     '',

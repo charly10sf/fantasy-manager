@@ -20,7 +20,7 @@
  *   POST /fallos/visto        { id }: ha leído la respuesta
  *   GET  /fallos/todos        (el dueño) todos los avisos, resumidos
  *   GET  /fallos/uno?id=…     (el dueño) un aviso entero, con su diagnóstico
- *   POST /fallos/responder    (el dueño) { id, respuesta }
+ *   POST /fallos/responder    (el dueño y, desde la 0.8.4c, quien ayuda) { id, respuesta }
  *   GET  /fallos/captura?id=…&n=0  una captura de un aviso ({ img: data:image/… }): el dueño, o quien lo mandó
  *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
  *
@@ -70,10 +70,17 @@ import { sistemaChat, esDatosChat, CHAT_MAX, TONO_CHAT, resumenRespuesta, partir
 import { cfgInvitar, invObjeto, premioActivo, limpiarCod } from './invitar.js';
 import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
+import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
+import { fallosObjeto, MAX_CAPTURAS } from './fallos.js';
+import { pushArmar, pushQuitar, pushAlAcabar, pushesDebidos, apnsObjeto, tokenDe } from './push.js';
+import { busqObjeto, busqRelevantes, bloqueBusq, vistasBusq, BUSQ_HORAS, BUSQ_REPITE_H } from './busquedas.js';
+export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
   'www.futbolfantasy.com', 'futbolfantasy.com', 'understat.com', 'www.understat.com', 'api.sofascore.com', 'www.sofascore.com', 'news.google.com',
+  // (25 nov) Bing Noticias: lo que usa la web cuando Google Noticias dice 503 a Cloudflare (solo su RSS, abajo en reglaDe)
+  'www.bing.com',
 ]);
 // la web: su dominio (y su dirección de Cloudflare Pages, con las vistas previas de las ramas web-…) y, mientras dura la
 // mudanza, la de GitHub Pages. La de Pages va fijada al proyecto de Carlos: antes valía cualquier fantasy-manager-<algo>,
@@ -102,6 +109,7 @@ export function reglaDe(d, m, cab) {
     if (!/^Bearer\s+\S{20,}/i.test(auth) && !LALIGA_SIN_SESION.has(d.pathname)) return `En ${h}, con tu sesión`;
     return null;
   }
+  if (h === 'www.bing.com') return m === 'GET' && d.pathname === '/news/search' && /^rss$/i.test(d.searchParams.get('format') || '') ? null : 'En www.bing.com solo el RSS de noticias';
   return m === 'GET' ? null : `En ${h} solo se lee (GET)`;
 }
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
@@ -150,6 +158,16 @@ async function traer(d, op, vale = () => true) {
   return new Response('Demasiadas redirecciones', { status: 508 });
 }
 
+/*
+ * (25 nov) Google Noticias por el Worker: casi siempre contesta 503 a las IP de Cloudflare y tarda 6-9 s en hacerlo (452
+ * peticiones en 24 h, 376 con 5xx; claude/medida-25nov-tarde.md del proyecto). Y el intermediario de Deno, el respaldo,
+ * estaba suspendido por uso. Ahora: lo que sí contesta se guarda NOTICIAS_CACHE_S en la caché de Cloudflare (la misma
+ * búsqueda de otro usuario no vuelve a Google), cada intento tiene NOTICIAS_MS como mucho y, si Google dice que no
+ * (503/429) o no contesta, durante NOTICIAS_PAUSA_MS se contesta 503 al momento sin preguntarle (en ese aislado)
+ */
+export const NOTICIAS_CACHE_S = 1200, NOTICIAS_MS = 5000, NOTICIAS_PAUSA_MS = 180e3;
+let noticiasPausa = 0;
+export const noticiasPausaHasta = (t) => { if (t !== undefined) noticiasPausa = t; return noticiasPausa; };
 async function pasar(req, c) {
   const d = destinoDe(req.headers.get('x-u'));
   if (!d) return sinRespuesta(`Sitio no permitido: ${req.headers.get('x-u') || '(nada)'}`, c);
@@ -163,12 +181,20 @@ async function pasar(req, c) {
   const no = reglaDe(d, m, cab);
   if (no) return sinRespuesta(no, c);
   const cuerpo = m === 'GET' ? undefined : await req.arrayBuffer();
+  // (25 nov) Bing Noticias, con la misma caché y el mismo tope de tiempo; la pausa es solo de Google
+  const google = d.hostname === 'news.google.com' && m === 'GET';
+  const noticias = google || d.hostname === 'www.bing.com';
+  if (google && Date.now() < noticiasPausa) return new Response('Google Noticias no contesta ahora', { status: 200, headers: { ...c, 'x-s': '503', 'x-t': 'text/plain', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
+  const op = { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined };
+  if (noticias) { op.cf = { cacheEverything: true, cacheTtlByStatus: { '200-299': NOTICIAS_CACHE_S, '300-599': 0 } }; op.signal = AbortSignal.timeout(NOTICIAS_MS); }
   let r;
   try {
-    r = await traer(d, { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined }, (u, m2) => !reglaDe(u, m2, cab));
+    r = await traer(d, op, (u, m2) => !reglaDe(u, m2, cab));
   } catch (e) {
+    if (google) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
     return sinRespuesta(String((e && e.message) || e || 'sin respuesta'), c);
   }
+  if (google && (r.status === 503 || r.status === 429)) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
   // el cuerpo pasa tal cual, sin leerlo (las páginas de futbolfantasy pesan varios megas)
   return new Response(r.body, { status: 200, headers: { ...c, 'x-s': String(r.status), 'x-t': r.headers.get('content-type') || '', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
 }
@@ -240,6 +266,8 @@ export const FRENOS = {
   plan: { min: 3 },
   // (16 nov) /pregunta, por cuenta: 6 al minuto (el cupo del día va aparte)
   pregunta: { min: 6 },
+  // (25 nov) /push (la app de iOS, al salir con un plan o una pregunta a medias y al recibirlos), por cuenta: 20 al minuto
+  push: { min: 20 },
   // (19 nov) invita a un amigo, por cuenta: mirar, 20 al minuto; canjear un código o elegir rivales, 5
   invitar: { min: 20 }, canjear: { min: 5 },
   // (19 nov) los apodos, por cuenta: 20 al minuto
@@ -337,7 +365,8 @@ async function usar(req, env, c) {
 const idQR = (x) => (typeof x === 'string' && /^[A-Za-z0-9_-]{22,64}$/.test(x) ? x : null);
 
 export class Emparejar {
-  constructor(estado) { this.estado = estado; this.memo = {}; }
+  // (23 nov) con env: la alarma hace los planes encargados (hacerPlan) y necesita la clave de Claude y los demás objetos
+  constructor(estado, env) { this.estado = estado; this.env = env; this.memo = {}; }
   async fetch(req) {
     const st = this.estado.storage;
     // los frenos por día (cabeHoy): un objeto por clave y día, que se borra solo a las 30 h
@@ -350,6 +379,18 @@ export class Emparejar {
     if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // (22 nov) el plan, el chat, lo contado y los pasos hechos de una cuenta, en «sinc|uid» (worker/src/sinc.js); nunca pone alarma
     if (ruta === '/sinc') return new Response(JSON.stringify(await sincObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (25 nov) las búsquedas en Google de los planes, compartidas unas horas, en «busq|todos» (worker/src/busquedas.js); nunca pone alarma
+    if (ruta === '/busq') return new Response(JSON.stringify(await busqObjeto(st, await req.json().catch(() => ({})), urlFuente)), { status: 200 });
+    // (0.8.4) quién usa la app (ficha, registro y tiempo de uso de todas las cuentas), en «quien|todos» con SQLite
+    // (worker/src/quien.js); nunca pone alarma. «todos» devuelve el JSON ya escrito
+    // (0.8.4, fase 3) los avisos de fallo como conversación, en «fallos|todos» con SQLite (worker/src/fallos.js)
+    if (ruta === '/fallos') return new Response(JSON.stringify(fallosObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
+    // (25 nov, la app de iOS) los avisos push por APNs, todos por «apns|todos» (worker/src/push.js); nunca pone alarma
+    if (ruta === '/apns') return new Response(JSON.stringify(await apnsObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
+    if (ruta === '/quien') {
+      const x = await quienObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo);
+      return new Response(typeof x === 'string' ? x : JSON.stringify(x), { status: 200 });
+    }
     // el cupo de planes de una cuenta en un día (planIA): { op, gratis, max, extra } → { ok, u, x }
     if (ruta === '/plan') {
       const b = await req.json().catch(() => ({}));
@@ -361,16 +402,30 @@ export class Emparejar {
       }
       return new Response(JSON.stringify(y), { status: 200 });
     }
+    // (23 nov) el plan que se encarga al objeto para que lo haga en su alarma (encargarPlan): { rid, trabajo } → { ok }
+    if (ruta === '/plan/encargar') return new Response(JSON.stringify(await encargoObjeto(st, this.env, await req.json().catch(() => ({})))), { status: 200 });
     // (15 nov) el plan de un pedido (rid), para recogerlo si la app se fue a segundo plano y se cortó la conexión:
-    // { op: 'leer' | 'marcha' | 'poner' | 'borrar', rid, fin } → { marcha?, fin? }. Se borra con lo demás a las 30 h
+    // { op: 'leer' | 'esperar' | 'marcha' | 'poner' | 'borrar', rid, fin, ms } → { marcha?, fin? }. Se borra con lo demás a las 30 h
     if (ruta === '/plan/res') {
       const b = await req.json().catch(() => ({}));
       const rid = ridDe(b.rid);
       if (!rid) return new Response('{}', { status: 200 });
       const k = `res:${rid}`;
+      // (0.8.4) esperar aquí dentro a que el plan esté, mirando el almacén del objeto (eso no es una petición: son filas
+      // leídas, que sobran), como mucho `ms` (20 s). Antes el Worker preguntaba cada 1,5 s: 19 peticiones por plan, el 40 %
+      // de las de los objetos (claude/capacidad-cloudflare-24nov.md). El objeto ya está despierto haciendo el plan
+      if (b.op === 'esperar') {
+        const hasta = Date.now() + Math.min(ESPERA_RES_MS, Math.max(0, Number(b.ms) || 0));
+        let x = (await st.get(k)) || {};
+        while (!x.fin && x.marcha && Date.now() < hasta) { await new Promise((ok) => setTimeout(ok, ESPERA_RES_CADA)); x = (await st.get(k)) || {}; }
+        return new Response(JSON.stringify({ ...x, espero: 1 }), { status: 200 });
+      }
+      // (25 nov, la app de iOS) a quién avisar con un push cuando esté (la app se ha ido con el pedido a medias), o ya no
+      if (b.op === 'push') return new Response(JSON.stringify(await pushArmar(st, this.env, rid, b.push, b.push && b.push.tipo === 'preg' ? RES_MARCHA_MS : RES_PLAN_MS)), { status: 200 });
+      if (b.op === 'sinpush') return new Response(JSON.stringify(await pushQuitar(st, rid)), { status: 200 });
       if (b.op === 'marcha') await st.put(k, { marcha: Date.now() });
-      else if (b.op === 'poner' && b.fin && typeof b.fin === 'object') await st.put(k, { fin: b.fin });
-      else if (b.op === 'borrar') await st.delete(k);
+      else if (b.op === 'poner' && b.fin && typeof b.fin === 'object') { await st.put(k, { fin: b.fin }); await pushAlAcabar(st, this.env, rid); }
+      else if (b.op === 'borrar') { await st.delete(k); await pushAlAcabar(st, this.env, rid); }
       else return new Response(JSON.stringify((await st.get(k)) || {}), { status: 200 });
       if (b.op !== 'borrar' && !(await st.getAlarm())) await st.setAlarm(Date.now() + 30 * 3600e3);
       return new Response('{}', { status: 200 });
@@ -441,7 +496,7 @@ export class Emparejar {
     if (Date.now() - t > DURA * 1000) return new Response(null, { status: 204 });
     return new Response(d, { status: 200 });
   }
-  async alarm() { await this.estado.storage.deleteAll(); }
+  async alarm() { await alarmaObjeto(this.estado.storage, this.env); }
 }
 
 async function qrDejar(req, env, c) {
@@ -484,19 +539,19 @@ async function qrEsperar(url, env, c) {
   return new Response(v, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 }
 
-/* ---------- los avisos de fallos ---------- */
-// Van en el mismo almacén KV que los códigos, con la clave f:<cuenta>:<id> (así se listan los de cada uno) y un
-// resumen en los metadatos (para listarlos todos sin leerlos uno a uno). Si no hay almacén, no hay avisos.
-const VIVE = 180 * 86400; // lo que se guarda un aviso, en segundos
-// (5 avisos al día por cuenta y capturas de hasta 350 KB: antes, 15 y 700 KB, y una cuenta podía meter 32 MB al día durante
-// 180 días, el GB del plan gratis en un mes; revisión total, C1)
-export const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 5;
-// las capturas van aparte, una por clave (fc:<id>:<n>), para que la lista de avisos no las tenga que leer
-// (la app las manda ya reducidas, por debajo de 340 KB desde la 0.7z (fotos.js); solo se mira el principio: el plan
-// gratis de Workers da 10 ms de CPU por petición y recorrer megas con una expresión regular se los come)
-export const MAX_CAPTURAS = 3, MAX_CAPTURA = 350000;
-const esCaptura = (x) => typeof x === 'string' && x.length <= MAX_CAPTURA && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]/.test(x.slice(0, 40));
+/* ---------- los avisos de fallos (0.8.4: conversaciones en el objeto «fallos|todos», worker/src/fallos.js) ---------- */
+// (antes en el KV: f:<cuenta>:<id> con un resumen en los metadatos y las capturas en fc:<id>:<n>; lo que quede ahí lo copia
+// el cron, `mudanzaFallos`. Los topes, en fallos.js)
+export { MAX_TEXTO, MAX_RESPUESTA, MAX_DIAG, AL_DIA, MAX_CAPTURAS, MAX_CAPTURA, HILO_MSGS, HILO_CAPS, MSGS_DIA, CAPS_DIA } from './fallos.js';
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
+// (0.8.4, fase 2; Carlos, 25 nov: «Domy me ayuda con los fallos: que vea Quién usa la app y los avisos de todos») quien ayuda:
+// ve «Quién usa la app» entero y los avisos de fallo de todos con sus capturas y, desde la 0.8.4c (Carlos, 25 nov: «quiero que
+// Domy pueda responder fallos también igual que yo»), los contesta. No ve el diagnóstico de los demás ni «Copiar avisos» y
+// para todo lo demás es un usuario normal (anuncios, funciones cerradas, cupos). Por id de cuenta, nunca por
+// nombre: AYUDANTES de wrangler.toml o el secreto FM_AYUDANTES (lo pone worker.yml)
+const ayudantesDe = (env) => String(env.AYUDANTES || '').split(/[\s,;]+/).filter((x) => /^\d+$/.test(x));
+/** lo que puede ver una cuenta: 'dueño', 'ayuda' o '' */
+const papelDe = (env, uid) => (adminsDe(env).includes(String(uid)) ? 'dueño' : ayudantesDe(env).includes(String(uid)) ? 'ayuda' : '');
 
 /** quién llama, comprobado con LaLiga ({ uid, nombre }); se recuerda 10 minutos por sesión */
 // (también en la memoria del Worker: caches.default no guarda nada en *.workers.dev, y sin esto cada petición
@@ -556,10 +611,6 @@ async function miembros(req, liga) {
   return ids;
 }
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
-const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
-async function guardarFallo(env, f) {
-  await env.VINCULOS.put(`f:${f.uid}:${f.id}`, JSON.stringify(f), { expirationTtl: VIVE, metadata: resumen(f) });
-}
 async function listar(env, prefijo, max = 1000) {
   const out = [];
   let cursor;
@@ -570,84 +621,104 @@ async function listar(env, prefijo, max = 1000) {
   } while (cursor && out.length < max);
   return out;
 }
-/** un aviso por su id (de quien sea, para el dueño; de quien llama, para los demás) */
-async function buscarFallo(env, u, id, admin) {
-  if (!/^[a-z0-9]{6,40}$/.test(String(id || ''))) return null;
-  if (!admin) { const v = await env.VINCULOS.get(`f:${u.uid}:${id}`); return v ? JSON.parse(v) : null; }
-  const k = (await listar(env, 'f:')).find((x) => x.name.endsWith(`:${id}`));
-  if (!k) return null;
-  const v = await env.VINCULOS.get(k.name);
-  return v ? JSON.parse(v) : null;
+const objFallos = (env) => env.QR.get(env.QR.idFromName('fallos|todos'));
+/** una llamada al objeto de los avisos: lo que conteste ({ ok: false, estado, e } si no vale) */
+async function pedirFallos(env, b) {
+  const r = await objFallos(env).fetch('https://freno/fallos', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+  if (r.status !== 200) throw new Error(`fallos ${r.status}`);
+  return r.json();
 }
-const sinDiag = ({ diag, uid, ...f }) => f;
-
+const fueraDe = (r, c) => json({ e: r.e || 'No existe' }, r.estado || 400, c);
+/** una captura (n) de un mensaje (m) de un aviso; las de un aviso copiado del KV que aún no han llegado al objeto, del KV */
+async function capturaDe(env, b) {
+  const r = await pedirFallos(env, { op: 'captura', ...b });
+  if (r.ok) return r;
+  if (r.falta && r.kv && env.VINCULOS) { const img = await env.VINCULOS.get(`fc:${b.id}:${b.i}`).catch(() => null); if (img) return { ok: true, img }; }
+  return { ok: false, estado: 404, e: r.e || 'Esa captura ya no está' };
+}
+/*
+ * POST /fallos                 { texto, diag, equipo, liga, app, capturas }: un aviso nuevo (el primer mensaje del hilo) → { ok, id }
+ * POST /fallos/escribir        { id, texto, capturas }: (0.8.4) un mensaje más de quien lo mandó, en su hilo → { ok, n }
+ * GET  /fallos/mios            tus hilos enteros → { lista, admin, ve, pendientes, yo }
+ * POST /fallos/visto           { id }: has visto lo último
+ * GET  /fallos/captura         ?id&n[&m]: una captura (m, el mensaje; sin m, el primero, como en las webs de antes)
+ * GET  /fallos/todos           (el dueño y quien ayuda) el resumen de todos → { lista, pendientes }
+ * GET  /fallos/uno             ?id[&visto=1] (el dueño y quien ayuda; el diagnóstico, solo el dueño; con visto=1 lo da por visto)
+ * POST /fallos/responder       { id, respuesta, capturas }: (el dueño y, desde la 0.8.4c, quien ayuda; Carlos, 25 nov: «quiero
+ *                              que Domy pueda responder fallos también igual que yo») AÑADE un mensaje de Fantasy Manager,
+ *                              con la cuenta y el nombre de quien lo escribe (solo lo ven ellos dos). Lo usan también las webs
+ *                              de antes del dueño
+ * POST /fallos/accion          (la Action «Fallos», con la llave x-fallos-clave) { op: leer | captura | contestar }
+ */
 async function fallos(req, env, c, ruta) {
-  if (!env.VINCULOS) return json({ e: 'El servidor no tiene dónde guardar los avisos' }, 503, c);
+  if (ruta === '/fallos/accion') return fallosAccion(req, env, c);
+  if (!env.QR) return json({ e: 'El servidor no tiene dónde guardar los avisos' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para mandar avisos', sesion: true }, 401, c);
-  const admin = adminsDe(env).includes(u.uid);
-  const cuerpo = req.method === 'POST' ? await req.json().catch(() => null) : null;
+  const papel = papelDe(env, u.uid), admin = papel === 'dueño', ve = !!papel;
+  const cuerpo = req.method === 'POST' ? (await req.json().catch(() => null)) || {} : null;
+  const q = new URL(req.url).searchParams;
 
   if (ruta === '/fallos' && req.method === 'POST') {
-    const texto = corta(cuerpo && cuerpo.texto, MAX_TEXTO).trim();
-    if (!texto) return json({ e: 'Cuenta qué ha pasado' }, 400, c);
-    const mios = await listar(env, `f:${u.uid}:`);
-    const hoy = Date.now() - 86400e3;
-    if (mios.filter((k) => k.metadata && k.metadata.t > hoy).length >= AL_DIA) return json({ e: `Como mucho ${AL_DIA} avisos al día` }, 429, c);
     const id = Date.now().toString(36) + [...crypto.getRandomValues(new Uint8Array(4))].map((b) => b.toString(36)).join('').slice(0, 6);
-    const caps = (Array.isArray(cuerpo.capturas) ? cuerpo.capturas : []).filter(esCaptura).slice(0, MAX_CAPTURAS);
-    const f = {
-      id, t: Date.now(), uid: u.uid, quien: u.nombre, equipo: corta(cuerpo.equipo, 60), liga: corta(cuerpo.liga, 60),
-      texto, diag: corta(cuerpo.diag, MAX_DIAG), app: corta(cuerpo.app, 120), respuesta: null, respondida: null, vista: true,
-      capturas: caps.length,
-    };
-    // primero las capturas: si el aviso se guarda, ya están
-    for (let n = 0; n < caps.length; n++) await env.VINCULOS.put(`fc:${id}:${n}`, caps[n], { expirationTtl: VIVE });
-    await guardarFallo(env, f);
-    return json({ ok: true, id }, 200, c);
+    const r = await pedirFallos(env, { op: 'nuevo', uid: u.uid, id, quien: u.nombre, texto: cuerpo.texto, diag: cuerpo.diag, equipo: cuerpo.equipo, liga: cuerpo.liga, app: cuerpo.app, capturas: cuerpo.capturas });
+    return r.ok ? json({ ok: true, id: r.id }, 200, c) : fueraDe(r, c);
+  }
+  if (ruta === '/fallos/escribir' && req.method === 'POST') {
+    const r = await pedirFallos(env, { op: 'escribir', uid: u.uid, id: cuerpo.id, texto: cuerpo.texto, capturas: cuerpo.capturas });
+    return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/mios' && req.method === 'GET') {
-    const ks = (await listar(env, `f:${u.uid}:`)).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 30);
-    const lista = (await Promise.all(ks.map((k) => env.VINCULOS.get(k.name)))).filter(Boolean).map((v) => sinDiag(JSON.parse(v)));
-    let pendientes = null;
-    if (admin) pendientes = (await listar(env, 'f:')).filter((k) => k.metadata && !k.metadata.r).length;
-    return json({ lista, admin, pendientes, yo: u.uid }, 200, c);
+    // (0.8.4c) cuántos esperan respuesta, también a quien ayuda, que ahora contesta
+    const r = await pedirFallos(env, { op: 'mios', uid: u.uid, pend: ve });
+    return json({ lista: r.lista || [], admin, ve, pendientes: ve ? r.pendientes || 0 : null, yo: u.uid }, 200, c);
   }
   if (ruta === '/fallos/visto' && req.method === 'POST') {
-    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, false);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    if (!f.vista) { f.vista = true; await guardarFallo(env, f); }
-    return json({ ok: true }, 200, c);
+    const r = await pedirFallos(env, { op: 'visto', uid: u.uid, id: cuerpo.id });
+    return r.ok ? json({ ok: true }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/captura' && req.method === 'GET') {
-    const q = new URL(req.url).searchParams;
-    const n = Number(q.get('n'));
-    const f = await buscarFallo(env, u, q.get('id'), admin);
-    if (!f || !Number.isInteger(n) || n < 0 || n >= (f.capturas || 0)) return json({ e: 'No existe' }, 404, c);
-    const img = await env.VINCULOS.get(`fc:${f.id}:${n}`);
-    if (!img) return json({ e: 'Esa captura ya no está' }, 404, c);
-    return json({ img }, 200, c);
+    const r = await capturaDe(env, { id: q.get('id'), m: Number(q.get('m')) || 0, i: Number(q.get('n')), uid: u.uid, todos: ve });
+    return r.ok ? json({ img: r.img }, 200, c) : fueraDe(r, c);
   }
-  if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  if (!ve) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/todos' && req.method === 'GET') {
-    const ks = (await listar(env, 'f:')).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 200);
-    return json({ lista: ks.map((k) => ({ id: k.name.split(':').pop(), ...(k.metadata || {}) })) }, 200, c);
+    const r = await pedirFallos(env, { op: 'todos' });
+    return json({ lista: r.lista || [], pendientes: r.pendientes || 0 }, 200, c);
   }
   if (ruta === '/fallos/uno' && req.method === 'GET') {
-    const f = await buscarFallo(env, u, new URL(req.url).searchParams.get('id'), true);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    const { uid, ...resto } = f;
-    return json(resto, 200, c);
+    // (quien ayuda, sin el diagnóstico: lleva lo que contestó LaLiga a esa persona. Desde la 0.8.4c, como contesta, abrirlo
+    // también lo da por visto; uid, para que sus respuestas le salgan como suyas)
+    const r = await pedirFallos(env, { op: 'uno', id: q.get('id'), uid: u.uid, ver: admin ? 'dueño' : 'ayuda', marcar: q.get('visto') === '1' });
+    if (!r.ok) return fueraDe(r, c);
+    const { ok, ...h } = r;
+    return json(h, 200, c);
   }
   if (ruta === '/fallos/responder' && req.method === 'POST') {
-    const respuesta = corta(cuerpo && cuerpo.respuesta, MAX_RESPUESTA).trim();
-    if (!respuesta) return json({ e: 'Escribe la respuesta' }, 400, c);
-    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, true);
-    if (!f) return json({ e: 'No existe' }, 404, c);
-    f.respuesta = respuesta; f.respondida = Date.now(); f.vista = false; f.por = u.nombre;
-    await guardarFallo(env, f);
-    return json({ ok: true }, 200, c);
+    // (firma siempre «Fantasy Manager»: quien lo mandó no sabe quién de los dos contesta)
+    const r = await pedirFallos(env, { op: 'escribir', dueno: true, id: cuerpo.id, texto: cuerpo.respuesta, capturas: cuerpo.capturas, por: 'Fantasy Manager', aut: u.uid, autn: u.nombre });
+    return r.ok ? json({ ok: true, n: r.n }, 200, c) : fueraDe(r, c);
   }
+  return json({ e: 'No existe' }, 404, c);
+}
+/*
+ * (0.8.4) La Action «Fallos» (.github/fallos.mjs) ya no puede leer los avisos del KV con la API de Cloudflare: los pide aquí.
+ * La llave es FALLOS_CLAVE, que worker.yml saca del token de Cloudflare (sha256 de «fallos|token») y la Action saca igual:
+ * nadie tiene que crear ni copiar nada. Sin ella, la ruta no existe. Sin Origin (la llama la Action, no una página).
+ *   { op: 'leer', max }                → { lista }: los hilos enteros, con el diagnóstico, sin el número de cuenta
+ *   { op: 'captura', id, m, n }        → { img }
+ *   { op: 'contestar', respuestas }    → { n }: añade un mensaje de Fantasy Manager a cada uno ([{ id | buscar, respuesta }])
+ */
+async function fallosAccion(req, env, c) {
+  const clave = String(env.FALLOS_CLAVE || ''), llega = String(req.headers.get('x-fallos-clave') || '');
+  if (req.method !== 'POST' || clave.length < 32 || llega.length !== clave.length) return json({ e: 'No existe' }, 404, c);
+  let dif = 0;
+  for (let i = 0; i < clave.length; i++) dif |= clave.charCodeAt(i) ^ llega.charCodeAt(i);
+  if (dif || !env.QR) return json({ e: 'No existe' }, 404, c);
+  const b = (await req.json().catch(() => null)) || {};
+  if (b.op === 'leer') return json(await pedirFallos(env, { op: 'accion', max: b.max }), 200, c);
+  if (b.op === 'captura') { const r = await capturaDe(env, { id: b.id, m: Number(b.m) || 0, i: Number(b.n), todos: true }); return r.ok ? json({ img: r.img }, 200, c) : fueraDe(r, c); }
+  if (b.op === 'contestar') return json(await pedirFallos(env, { op: 'contestar', respuestas: b.respuestas }), 200, c);
   return json({ e: 'No existe' }, 404, c);
 }
 
@@ -661,9 +732,11 @@ const diaMadrid = (t) => FMT_DIA.format(new Date(t));
 export async function leerEnBloque(env, claves) {
   const out = new Map();
   try {
-    for (let i = 0; i < claves.length; i += 100) {
-      const trozo = claves.slice(i, i + 100);
-      const m = await env.VINCULOS.get(trozo);
+    // (23 nov, Carlos: «Quién usa la app suele tardar bastante en cargar») los trozos a la vez, no uno detrás de otro
+    const trozos = [];
+    for (let i = 0; i < claves.length; i += 100) trozos.push(claves.slice(i, i + 100));
+    const ms = await Promise.all(trozos.map((t) => env.VINCULOS.get(t)));
+    for (const m of ms) {
       if (!(m instanceof Map)) throw new Error('sin lectura en bloque');
       for (const [k, v] of m) if (v != null) out.set(k, v);
     }
@@ -674,39 +747,29 @@ export async function leerEnBloque(env, claves) {
     return out;
   }
 }
-export const MAX_USO = 600, VIVE_USO = 9 * 86400;
-/** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
-export function diasAtras(hoy, n) {
-  const t = new Date(`${hoy}T12:00:00Z`), out = [];
-  for (let i = 0; i < n; i++) { out.push(t.toISOString().slice(0, 10)); t.setUTCDate(t.getUTCDate() - 1); }
-  return out;
+/*
+ * El tiempo de uso de hoy, por cuenta (0.8.4: en el objeto «quien|todos», worker/src/quien.js; antes en el KV, u:<cuenta>:<día>,
+ * una escritura cada 4 min como mucho y lo de en medio en la memoria del Worker). Cada llamada suma lo que trae (hasta
+ * MAX_USO de golpe) y devuelve lo de hoy: { dia, seg }. Se guarda 9 días: el dueño ve hoy, ayer y los 7 últimos.
+ */
+const objQuien = (env) => env.QR.get(env.QR.idFromName('quien|todos'));
+/** una llamada al objeto de quién usa la app (la única por petición): el objeto (o el texto, con `texto`), o lanza */
+async function pedirQuien(env, b, texto = false) {
+  const r = await objQuien(env).fetch('https://freno/quien', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+  if (r.status !== 200) throw new Error(`quien ${r.status}`);
+  return texto ? r.text() : r.json();
 }
-// Como mucho una escritura cada 4 minutos por cuenta y día (revisión total, C1: antes escribía en cada llamada, y los
-// que tienen límite la mandan cada minuto). Lo que llega entre medias se suma en la memoria del Worker y entra en la
-// siguiente escritura; si esa llamada cae en otro Worker, se pierde ese rato, que no es para tanto.
-export const USO_CADA = 240;
-const PEND_USO = new Map();
 async function uso(req, env, c) {
-  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `uso|${u.uid}`, FRENOS.uso.min))) return demasiadas(c);
   const cuerpo = await req.json().catch(() => ({}));
-  // (hasta 10 minutos de golpe: los que no tienen límite mandan lo de 5 minutos, o lo que quedó al salir)
   const mas = Math.max(0, Math.min(MAX_USO, Math.round(Number(cuerpo && cuerpo.seg) || 0)));
-  const dia = hoyMadrid(), k = `u:${u.uid}:${dia}`;
-  const ya = await env.VINCULOS.getWithMetadata(k);
-  const antes = Number(ya && ya.value) || 0, ultima = Number(ya && ya.metadata && ya.metadata.t) || 0;
-  const pend = (PEND_USO.get(k) || 0) + mas;
-  // un día tiene 86 400 segundos: más de eso es que alguien manda de más
-  const seg = Math.min(86400, antes + pend);
-  if (PEND_USO.size > 5000) PEND_USO.clear();
-  // se guarda 9 días: el dueño ve hoy, ayer y la media de los 7 últimos
-  if (pend && Date.now() - ultima >= USO_CADA * 1000) {
-    // (si el almacén no deja escribir, se sigue: el tiempo de uso no es para tanto)
-    try { await env.VINCULOS.put(k, String(seg), { expirationTtl: VIVE_USO, metadata: { t: Date.now() } }); PEND_USO.delete(k); } catch (e) { PEND_USO.set(k, pend); }
-  } else if (pend) PEND_USO.set(k, pend);
-  return json({ dia, seg }, 200, c);
+  let r;
+  try { r = await pedirQuien(env, { op: 'uso', uid: u.uid, mas }); } catch (e) { return json({ e: 'Sin almacén' }, 503, c); }
+  if (!r || !r.ok) return json({ e: (r && r.e) || 'Sin almacén' }, 503, c);
+  return json({ dia: r.dia, seg: r.seg }, 200, c);
 }
 
 /* ---------- el plan del día con la IA de Carlos (Claude), 2 al día por cuenta ---------- */
@@ -725,8 +788,21 @@ async function uso(req, env, c) {
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
-export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
+// (25 nov, rama worker-plan-corto) pensar: false le pide a la IA que conteste sin razonar antes (`thinking: disabled`, que
+// Haiku 5.5 acepta con este esfuerzo). Lo que piensa es el 80 % de lo que se paga de salida y casi todo lo que tarda un
+// plan; por defecto se queda como está (true) hasta comparar planes de verdad con y sin él
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0, pensar: true };
+// (25 nov, hallazgo 1 de la auditoría de fallos) el tope de salida, de 5.000 a 8.000: un 6,9 % de los planes se cortaba a
+// mitad del JSON. Solo se paga lo que se escribe: a los que ya cabían no les cuesta más; al más largo, 3.000 tokens de más
+// (0,0015 $ con Haiku). Que la IA escriba menos va aparte, sin publicar (rama `worker-plan-corto`)
+export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 8000;
+/** (25 nov) una línea en los registros de Cloudflare por cada plan, bien o mal: lo que tarda, las búsquedas, los tokens
+ * (entrada/salida) y por qué acabó la IA (`stop_reason`: max_tokens es que se ha cortado por largo). Para contarlos:
+ * filtrar por «: bien en» o «: mal (» y agrupar por «fin …».
+ * (25 nov, rama worker-plan-corto) y «texto N»: los caracteres de lo que la IA ha escrito de verdad. Lo que piensa antes
+ * de contestar se cobra como salida y no se ve: en 16 planes de verdad (22 nov) el texto eran unos 600 tokens de 3.283
+ * (a ~3,2 caracteres por token); el resto, razonamiento. Con esto se mide en cada plan sin gastar nada. */
+export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas${r.recientes ? `, ${r.recientes} recientes` : ''}${r.repite ? ', sin buscar (ya buscó)' : ''}, ${r.entra || 0}/${r.sale || 0} tokens, texto ${String(r.texto || '').length}${r.sinPensar ? ' sin pensar' : ''}, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
 // cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
@@ -753,7 +829,7 @@ export async function cfgPlanes(env) {
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
   // (17 nov, Carlos, por Domy) gratisWeb: los planes gratis de quien usa la web o el iPhone, que no tienen anuncios para pedir más
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)) };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)), pensar: p.pensar !== false };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
@@ -789,33 +865,172 @@ async function cupo(env, uid, op, c, tipo = 'plan') {
 /** el plan guardado de un pedido (rid) en el Durable Object de la cuenta y el día; sin él, en la memoria del Worker */
 const RES_MEM = new Map();
 export const RES_MARCHA_MS = 100000;
-async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan') {
+// (23 nov) el plan con id lo hace el objeto de la cuenta y el día en su alarma (encargarPlan, hacerPlan): Claude tiene
+// como mucho 150 s en total (PLAN_HASTA_S lo cambia, para las pruebas) y el pedido se da por en marcha 170 s desde que
+// empieza. Las preguntas del chat siguen con RES_MARCHA_MS
+export const PLAN_HASTA_MS = 150000, RES_PLAN_MS = 170000;
+// (0.8.4) lo más que espera el objeto por petición a que esté el plan o la respuesta, y cada cuánto mira su almacén
+export const ESPERA_RES_MS = 20000, ESPERA_RES_CADA = 400;
+const hastaPlan = (env) => { const s = Number(env && env.PLAN_HASTA_S); return s > 0 ? s * 1000 : PLAN_HASTA_MS; };
+async function resPlan(env, uid, op, rid, fin = null, tipo = 'plan', ms = 0) {
   rid = ridDe(rid);
   if (!rid) return {};
   const dia = hoyMadrid();
   if (env.QR) {
     try {
-      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin }) });
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: JSON.stringify({ op, rid, fin, ms }) });
       if (r.status === 200) return await r.json();
     } catch (e) { /* a la memoria */ }
   }
   const k = `${tipo}|${dia}|${uid}|${rid}`;
-  if (op === 'leer') return RES_MEM.get(k) || {};
+  // (sin el objeto, «esperar» es mirar una vez: esperarRes espera entre mirada y mirada)
+  if (op === 'leer' || op === 'esperar') return RES_MEM.get(k) || {};
   if (RES_MEM.size > 2000) RES_MEM.clear();
   if (op === 'marcha') RES_MEM.set(k, { marcha: Date.now() });
   else if (op === 'poner') RES_MEM.set(k, { fin });
   else if (op === 'borrar') RES_MEM.delete(k);
   return {};
 }
-/** espera a que acabe el plan del mismo pedido que ya está en marcha (otra petición de la app, que se cortó): su resultado o null */
-async function esperarRes(env, uid, rid, desde, tipo = 'plan') {
-  while (Date.now() - desde < RES_MARCHA_MS) {
-    await new Promise((ok) => setTimeout(ok, 2000));
-    const x = await resPlan(env, uid, 'leer', rid, null, tipo);
+/** espera a que acabe el plan (o la pregunta) de un pedido que está en marcha: su resultado o null. (0.8.4) Espera el objeto
+    (`esperar`: contesta en cuanto está, o a los 20 s con «sigue en marcha»): con un plan de 17 s, una petición en vez de 12.
+    Si el objeto no ha esperado (sin objeto, o falla), se mira cada `cada` ms, como antes */
+async function esperarRes(env, uid, rid, desde, tipo = 'plan', dura = RES_MARCHA_MS, cada = 2000) {
+  while (Date.now() - desde < dura) {
+    const x = await resPlan(env, uid, 'esperar', rid, null, tipo, Math.min(ESPERA_RES_MS, Math.max(0, dura - (Date.now() - desde))));
     if (x.fin) return x.fin;
-    if (!x.marcha || Date.now() - x.marcha > RES_MARCHA_MS) return null;
+    if (!x.marcha || Date.now() - x.marcha > dura) return null;
+    if (!x.espero) await new Promise((ok) => setTimeout(ok, cada));
   }
   return null;
+}
+/**
+ * (23 nov, Carlos: «cuando me salgo de la aplicación no sale ninguna notificación… tardaba 3 o 4 minutos y no sé si
+ * terminó saliendo el plan») Cuando quien pide se va (Android congela o cierra la app y se corta la conexión), Cloudflare
+ * solo le da al Worker 30 s más, aunque esté en waitUntil: un plan lento se perdía a medias, sin guardarse ni devolver el
+ * cupo. Con id, el plan se le pasa al objeto de la cuenta y el día, que lo hace en su alarma (hasta 15 min, no depende de
+ * ninguna conexión) y lo deja en res:<rid>, donde lo recogen el Worker, el móvil (Recoger.java, /plan/res) y la app al
+ * volver. true si el objeto lo ha cogido; si no (sin objeto o sin la clave), el Worker lo hace como antes
+ */
+async function encargarPlan(env, uid, rid, trabajo) {
+  if (!env.QR || !rid) return false;
+  try {
+    const r = await env.QR.get(env.QR.idFromName(`plan|${hoyMadrid()}|${uid}`)).fetch('https://freno/plan/encargar', { method: 'POST', body: JSON.stringify({ rid, trabajo }) });
+    return r.status === 200 && !!(await r.json()).ok;
+  } catch (e) { return false; }
+}
+/** (en el objeto) apunta el encargo y pone la alarma ya; la de limpiar a las 30 h se guarda para ponerla otra vez al acabar */
+async function encargoObjeto(st, env, b) {
+  const rid = ridDe(b && b.rid), tr = b && b.trabajo;
+  if (!rid || !tr || typeof tr !== 'object' || typeof tr.pedido !== 'string' || !tr.pedido || !tr.modelo || !env || !env.CLAUDE_PLANES || !st.list || !st.getAlarm) return { ok: false };
+  const antes = await st.getAlarm();
+  // (la de limpiar es a 30 h; una alarma a pocos minutos es la de un aviso push pendiente, que no se guarda como la de limpiar)
+  if (antes && antes > Date.now() + 20 * 60e3 && !(await st.get('job-limpia'))) await st.put('job-limpia', antes);
+  await st.put(`job:${rid}`, { ...tr, rid, t: Date.now() });
+  await st.put(`res:${rid}`, { marcha: Date.now() });
+  await st.setAlarm(Date.now());
+  return { ok: true };
+}
+/* ---------- (25 nov) las búsquedas en Google compartidas entre los planes (worker/src/busquedas.js) ---------- */
+async function busqPedir(env, b) {
+  if (!env || !env.QR) return null;
+  try {
+    const r = await env.QR.get(env.QR.idFromName('busq|todos')).fetch('https://freno/busq', { method: 'POST', body: JSON.stringify(b) });
+    return r.status === 200 ? await r.json() : null;
+  } catch (e) { return null; }
+}
+/**
+ * Antes de pedir un plan con búsqueda: las búsquedas recientes de todos que hablan de algo de su pedido, añadidas al pedido
+ * (sus url valen como fuente: van en `vistas`), y si este puede buscar. st: el objeto de la cuenta y el día; si esa cuenta
+ * ya hizo un plan con búsqueda hace menos de BUSQ_REPITE_H, este va sin buscar. Si algo falla, como antes.
+ * → { pedido, web, vistas, recientes, repite }
+ */
+export async function webCompartida(env, pedido, web, st = null, ahora = Date.now()) {
+  const out = { pedido, web, vistas: [], recientes: 0, repite: false };
+  if (!webN(web)) return out;
+  try {
+    const t = st ? Number(await st.get('webt')) || 0 : 0;
+    const repite = !!t && ahora - t < BUSQ_REPITE_H * 3600e3;
+    const x = await busqPedir(env, { op: 'leer', desde: ahora - BUSQ_HORAS * 3600e3 });
+    const rel = busqRelevantes((x && x.xs) || [], pedido);
+    return { pedido: pedido + bloqueBusq(rel, !repite), web: repite ? 0 : web, vistas: vistasBusq(rel), recientes: rel.length, repite };
+  } catch (e) { return out; }
+}
+/** después: lo que ha buscado este plan, para los demás, y la hora en su objeto (si ha buscado) */
+export async function webGuardar(env, r, st = null, ahora = Date.now()) {
+  try {
+    if (r && Array.isArray(r.busq) && r.busq.length) await busqPedir(env, { op: 'poner', xs: r.busq });
+    if (st && r && r.busquedas > 0) await st.put('webt', ahora);
+  } catch (e) { /* no pasa nada: el siguiente buscará */ }
+}
+/** (en el objeto, en la alarma) un plan encargado: lo pide a Claude y deja el resultado en res:<rid>; si falla, devuelve el cupo */
+async function hacerPlan(st, env, k, tr) {
+  const rid = tr.rid, t0 = Number(tr.t0) || tr.t || Date.now(), libre = !!tr.libre;
+  const devolver = async () => {
+    if (libre) return;
+    const ya = (await st.get('plan')) || {};
+    const y = cupoCuenta(ya, 'devolver', { gratis: 0, max: 0 });
+    await st.put('plan', { u: y.u, x: y.x, r: y.r || '' });
+  };
+  // una alarma que se cortó a medias y Cloudflare repite: si ya pasó su tiempo, no se vuelve a pedir
+  const emp = await st.get(`jobe:${rid}`);
+  let fin, dijo = null;
+  if (emp && Date.now() - emp > (Number(tr.hasta) || PLAN_HASTA_MS)) {
+    await devolver();
+    fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
+  } else {
+    const ini = Date.now();
+    await st.put(`jobe:${rid}`, ini);
+    await st.put(`res:${rid}`, { marcha: ini });
+    try {
+      // (25 nov) con las búsquedas recientes de todos; sin buscar si esta cuenta ya buscó hace poco
+      const wc = await webCompartida(env, tr.pedido, tr.web, st);
+      const r = await llamarClaude(env, tr.modelo, tr.sistema, wc.pedido, fetch, { web: wc.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS), pensar: tr.pensar !== false });
+      r.recientes = wc.recientes; r.repite = wc.repite;
+      dijo = r;
+      await gastoHoy(env, costeDe(r, tr.modelo)).catch(() => {});
+      await webGuardar(env, r, st);
+      // (las fuentes, solo las que salieron de verdad en la búsqueda, la suya o las recientes: lo que la IA ponga de más se borra)
+      const j = jsonDe(r.texto);
+      const plan = planLimpio(j ? fuentesDe(j, [...r.vistas, ...wc.vistas], r.citadas) : null);
+      if (!plan) {
+        await devolver();
+        fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
+      } else fin = { plan, cupo: tr.cupoFin || null, tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+    } catch (e) {
+      await devolver().catch(() => {});
+      console.log('plan:', String((e && e.message) || e));
+      fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
+    }
+  }
+  // (para ver en los registros de Cloudflare cuánto tarda cada plan)
+  console.log(lineaPlan(rid, fin, Date.now() - t0, dijo));
+  // (también el error: si la app vuelve con el mismo id, lo recibe en vez de esperar otro)
+  await st.put(`res:${rid}`, { fin });
+  await st.delete([k, `jobe:${rid}`]);
+  // (25 nov) si la app de iOS se fue con este plan a medias, el aviso push (en 5 s, por si lo recibe ella)
+  await pushAlAcabar(st, env, rid).catch(() => {});
+}
+/** (en el objeto) la alarma: los planes encargados, a la vez; sin ninguno, la limpieza de siempre (lo borra todo) */
+async function alarmaObjeto(st, env) {
+  const jobs = st.list ? await st.list({ prefix: 'job:' }) : new Map();
+  // (25 nov) y los avisos push pendientes (la app de iOS se fue con un pedido a medias: worker/src/push.js)
+  const avisos = st.list ? await st.list({ prefix: 'pe:' }) : new Map();
+  if (!jobs.size && !avisos.size) {
+    // (una alarma puesta para un aviso que al final no hizo falta, porque la app recibió ella el plan: no es la de limpiar.
+    // Si se tomara por ella, el objeto se vaciaría con el cupo del día dentro. Se vuelve a poner la de limpiar)
+    const l = st.get ? await st.get('job-limpia') : null;
+    if (l && l > Date.now() + 60e3) { await st.delete('job-limpia'); await st.setAlarm(l); return; }
+    await st.deleteAll();
+    return;
+  }
+  if (jobs.size) await Promise.all([...jobs].map(([k, tr]) => hacerPlan(st, env, k, tr).catch((e) => console.log('plan (alarma):', String((e && e.message) || e)))));
+  const sigAviso = await pushesDebidos(st, env).catch((e) => { console.log('push (alarma):', String((e && e.message) || e)); return 0; });
+  // lo que se haya encargado mientras, otra vuelta; si queda algún aviso, a su hora; si no, la alarma de limpiar que había
+  if ((await st.list({ prefix: 'job:' })).size) { await st.setAlarm(Date.now()); return; }
+  if (sigAviso) { await st.setAlarm(sigAviso); return; }
+  const l = await st.get('job-limpia');
+  await st.delete('job-limpia');
+  await st.setAlarm(l && l > Date.now() ? l : Date.now() + 30 * 3600e3);
 }
 /** lo gastado hoy entre todos, en millonésimas de dólar (mas: lo que se suma) */
 const GASTO_MEM = {};
@@ -843,9 +1058,13 @@ const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
 export function bloquesDe(content) {
   let texto = '';
   const vistas = [], citadas = [], ya = new Set(), yaC = new Set();
+  // (25 nov) cada búsqueda con su consulta y lo que salió, para compartirla con los demás planes (worker/src/busquedas.js)
+  const consultas = {}, busq = [];
   const una = (u, t, a, s) => { const k = claveUrl(u); if (k && !s.has(k) && a.length < 40) { s.add(k); a.push({ u: urlFuente(u), t: String(t || '') }); } };
   for (const b of Array.isArray(content) ? content : []) {
     if (!b || typeof b !== 'object') continue;
+    if (b.type === 'server_tool_use' && b.id && b.input && typeof b.input.query === 'string') consultas[b.id] = b.input.query;
+    if (b.type === 'web_search_tool_result' && Array.isArray(b.content) && consultas[b.tool_use_id]) busq.push({ q: consultas[b.tool_use_id], res: b.content.filter((r) => r && r.type === 'web_search_result' && r.url).map((r) => ({ u: r.url, t: r.title, a: r.page_age })) });
     if (b.type === 'text' && typeof b.text === 'string') {
       texto += b.text;
       for (const c of Array.isArray(b.citations) ? b.citations : []) if (c && c.url) { una(c.url, c.title, citadas, yaC); una(c.url, c.title, vistas, ya); }
@@ -853,25 +1072,34 @@ export function bloquesDe(content) {
       for (const r of b.content) if (r && r.type === 'web_search_result' && r.url) una(r.url, r.title, vistas, ya);
     }
   }
-  return { texto, vistas, citadas };
+  return { texto, vistas, citadas, busq };
 }
 /**
  * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
  * Google puede hacer (0, sin búsqueda). Si la cuenta de Anthropic no la tiene activada, se repite sin ella (sinWeb: true).
  */
-export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low' } = {}) {
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low', hasta = 0, pensar = true } = {}) {
+  // (23 nov) hasta: la hora tope de todo (reintentos y «pause_turn» incluidos); 0, sin tope (cada intento, 100 s como mucho).
+  // Antes, con Claude saturado, podían ser 3 vueltas × 3 intentos × 100 s
+  const queda = () => (hasta ? hasta - Date.now() : 100000);
   // (16 nov) el chat manda la conversación entera (mensajes) y el sistema en bloques, con la parte fija en caché
   const cuerpo = { model: modelo, max_tokens: tokens, output_config: { effort: esfuerzo }, system: sistema, messages: mensajes || [{ role: 'user', content: pedido }] };
+  // (25 nov) la IA de verdad, 1 respuesta de 54 del chat: después de contestar se quedó repitiendo «<br>» hasta el tope de
+  // salida (8.000 tokens, 42 s). Ni un plan ni una respuesta llevan «<br>»: si lo escribe, se para ahí
+  cuerpo.stop_sequences = ['<br>'];
+  // (25 nov) sin razonar antes de contestar (solo si se pide: «planes.pensar» a false en limites.json)
+  if (pensar === false) cuerpo.thinking = { type: 'disabled' };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
-  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false };
+  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], busq: [], sinWeb: false, sinPensar: pensar === false };
   let ult = '';
   // (con búsqueda, una respuesta larga puede volver a medias, «pause_turn»: se sigue desde ahí, como mucho dos veces)
   for (let vuelta = 0; vuelta < 3; vuelta++) {
     let x = null;
     for (let n = 0; n < 3; n++) {
+      if (queda() < 1000) { ult = ult || 'sin tiempo'; break; }
       let r;
       try {
-        r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(100000) });
+        r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(Math.min(100000, Math.max(1000, queda()))) });
         x = await r.json().catch(() => ({}));
       } catch (e) { ult = String((e && e.message) || e); x = null; continue; }
       if (r.ok && Array.isArray(x.content)) break;
@@ -879,10 +1107,16 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
       x = null;
       // (por si el modelo no conoce el esfuerzo: se quita y se repite)
       if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(ult)) { delete cuerpo.output_config; n--; continue; }
+      // (por si no admite la parada: sin ella, como siempre)
+      if (r.status === 400 && cuerpo.stop_sequences && /stop_sequence/i.test(ult)) { delete cuerpo.stop_sequences; n--; continue; }
+      // (y si el modelo no deja apagar el razonamiento: con él, como siempre)
+      if (r.status === 400 && cuerpo.thinking && /thinking/i.test(ult)) { console.log('plan: no se puede apagar el razonamiento:', ult); delete cuerpo.thinking; acc.sinPensar = false; n--; continue; }
       // (la búsqueda sin activar en la consola de Anthropic, o una versión que no conoce: sin ella, como siempre)
       if ((r.status === 400 || r.status === 403) && cuerpo.tools && /web.?search|tool/i.test(ult)) { console.log('plan: sin búsqueda:', ult); delete cuerpo.tools; acc.sinWeb = true; n--; continue; }
       if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
-      await new Promise((ok) => setTimeout(ok, r.status === 429 ? 4000 : 1500));
+      const pausa = r.status === 429 ? 4000 : 1500;
+      if (queda() < pausa + 1000) break;
+      await new Promise((ok) => setTimeout(ok, pausa));
     }
     if (!x) break;
     const u = x.usage || {}, b = bloquesDe(x.content);
@@ -891,8 +1125,9 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     // (19 nov) lo leído y escrito en la caché, aparte, para medir lo que ahorra
     acc.cache = { lee: ((acc.cache && acc.cache.lee) || 0) + (u.cache_read_input_tokens || 0), escribe: ((acc.cache && acc.cache.escribe) || 0) + (u.cache_creation_input_tokens || 0), sin: ((acc.cache && acc.cache.sin) || 0) + (u.input_tokens || 0) };
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
+    acc.busq.push(...b.busq);
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
-    if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
+    if (x.stop_reason === 'pause_turn' && vuelta < 2 && queda() >= 5000) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
     return acc;
   }
   if (acc.texto) return acc;
@@ -928,7 +1163,7 @@ async function planIA(req, env, c, ctx) {
   const rid = ridDe(b.rid);
   const previo = rid ? await resPlan(env, u.uid, 'leer', rid) : {};
   if (previo.fin) return json(previo.fin, 200, c);
-  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_MARCHA_MS);
+  const enMarcha = !!(previo.marcha && Date.now() - previo.marcha < RES_PLAN_MS);
   // entre todos, el tope de gasto del día
   if (!enMarcha && (await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const libre = adminsDe(env).includes(String(u.uid));
@@ -945,20 +1180,33 @@ async function planIA(req, env, c, ctx) {
   const latido = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 5000);
   const t0 = Date.now();
   const trabajo = (async () => {
-    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now()).catch(() => null) : null;
+    let fin = enMarcha ? await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS).catch(() => null) : null;
+    // (23 nov) con id, lo hace el objeto en su alarma (encargarPlan): aquí solo se espera a que lo deje hecho. Si quien pide se
+    // va, el plan sigue y se recoge con el mismo id. (0.8.4) Lo espera el propio objeto (esperarRes): antes se le preguntaba
+    // cada 1,5 s, 19 veces por plan
+    if (!fin && rid && (await encargarPlan(env, u.uid, rid, { modelo: P.modelo, sistema, pedido: b.pedido, web: P.web, pensar: P.pensar, libre, cupoFin: libre ? cupoLibre(P) : cupoTxt(P, y), t0, hasta: hastaPlan(env) }))) {
+      fin = await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS, 1500).catch(() => null);
+      if (!fin) fin = { e: 'La IA de los planes está tardando demasiado. Tienes el plan de la app; vuelve a probar en un rato.', estado: 503, servicio: true };
+    }
     if (fin) {
       clearInterval(latido);
       try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido */ }
       return;
     }
     if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
+    let dijo = null;
     try {
-      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web });
+      // (25 nov) con las búsquedas recientes de todos (aquí no hay objeto de la cuenta: puede buscar siempre)
+      const wc = await webCompartida(env, b.pedido, P.web);
+      const r = await llamarClaude(env, P.modelo, sistema, wc.pedido, fetch, { web: wc.web, hasta: t0 + hastaPlan(env), pensar: P.pensar });
+      r.recientes = wc.recientes; r.repite = wc.repite;
+      dijo = r;
       const gasto = costeDe(r, P.modelo);
       ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
-      // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
+      ctx && ctx.waitUntil ? ctx.waitUntil(webGuardar(env, r)) : await webGuardar(env, r);
+      // (las fuentes, solo las que salieron de verdad en la búsqueda, la suya o las recientes: lo que la IA ponga de más se borra)
       const j = jsonDe(r.texto);
-      const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
+      const plan = planLimpio(j ? fuentesDe(j, [...r.vistas, ...wc.vistas], r.citadas) : null);
       if (!plan) {
         if (!libre) await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
@@ -972,6 +1220,7 @@ async function planIA(req, env, c, ctx) {
       if (rid) await resPlan(env, u.uid, 'borrar', rid).catch(() => {});
       fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
     }
+    console.log(lineaPlan(rid, fin, Date.now() - t0, dijo));
     clearInterval(latido);
     try { await w.write(enc.encode(JSON.stringify(fin))); await w.close(); } catch (e) { /* se ha ido: ya está contado */ }
   })();
@@ -1039,7 +1288,7 @@ export function armarChat(b, { cacheLiga = 'siempre' } = {}) {
   const mensajes = mensajesChat(b.hist, b.pregunta, b.fotos);
   if (!mensajes) return null;
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
-  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
+  const fijo = sistemaChat({ tono: TONO_CHAT[b.tono] ? b.tono : 'normal', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, iphone: !!b.iphone && !b.anuncio, alias, fotos: (Array.isArray(b.fotos) && b.fotos.length > 0) || b.conFotos === true, web: false });
   // (la parte fija, en la caché de Anthropic: en una conversación seguida cuesta una décima parte)
   // (19 nov) y los datos de la liga también: la app los manda en dos trozos (partirDatos), lo de la liga, que no cambia en la
   // misma conversación, y lo de esta pregunta (los jugadores y rivales que nombra, el plan, la hora); lo primero, en la caché
@@ -1111,6 +1360,36 @@ async function preguntaIA(req, env, c, ctx) {
   })();
   if (ctx && ctx.waitUntil) ctx.waitUntil(trabajo);
   return new Response(readable, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store, no-transform' } });
+}
+
+/* ---------- (25 nov) la app de iOS: avisar con un push cuando el plan o la respuesta estén ---------- */
+/*
+ * POST /push { rid, tipo: 'plan' | 'preg', tk, amb: 'dev' | 'prod' } o { rid, tipo, quitar: true }. Lo llama la app de iOS
+ * (no la web): al salir con un plan o una pregunta a medias, y otra vez con `quitar` si al final los recibe ella. Quién
+ * llama lo dice LaLiga (quienEs). Se apunta en el objeto de esa cuenta y ese día, al lado del pedido; si el pedido es de
+ * ayer (se pidió antes de medianoche), en el de ayer. Sin objetos no hay avisos. El detalle, en worker/src/push.js
+ */
+async function pushRuta(req, env, c) {
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Sin sesión' }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_LEER', `push|${u.uid}`, FRENOS.push.min))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  const rid = ridDe(b && b.rid);
+  if (!rid) return json({ e: 'Pedido no válido' }, 400, c);
+  const tipo = b.tipo === 'preg' ? 'preg' : 'plan';
+  if (!b.quitar && !tokenDe(b.tk)) return json({ e: 'Pedido no válido' }, 400, c);
+  if (!env.QR) return json({ ok: false }, 200, c);
+  const cuerpo = JSON.stringify(b.quitar ? { op: 'sinpush', rid } : { op: 'push', rid, push: { tk: b.tk, tipo, amb: b.amb === 'dev' ? 'dev' : 'prod' } });
+  let x = { ok: false };
+  for (const dia of [hoyMadrid(), diaMadrid(Date.now() - 864e5)]) {
+    try {
+      const r = await env.QR.get(env.QR.idFromName(`${tipo}|${dia}|${u.uid}`)).fetch('https://freno/plan/res', { method: 'POST', body: cuerpo });
+      x = r.status === 200 ? await r.json() : { ok: false };
+    } catch (e) { x = { ok: false }; }
+    // (quitar, en los dos; apuntar, en el de ayer solo si en el de hoy no está ese pedido)
+    if (!b.quitar && !x.desconocido) break;
+  }
+  return json({ ok: !!x.ok }, 200, c);
 }
 
 /* ---------- el dinero de los rivales: aprender de lo que apunta todo el mundo (0.7.13) ---------- */
@@ -1268,8 +1547,10 @@ async function borrarMios(req, env, c) {
   if (ya && Date.now() - ya < 60e3) return json({ e: 'Ya está borrado. Si quieres repetirlo, espera un minuto.' }, 429, c);
   if (BORRADOS.size > 2000) BORRADOS.clear();
   BORRADOS.set(u.uid, Date.now());
+  // (las de quién usa la app que aún queden en el KV de antes de la 0.8.4: se borran solas, pero no hay que esperar)
   const claves = [`p:${u.uid}`, `r:${u.uid}`];
   for (const k of await listar(env, `u:${u.uid}:`)) claves.push(k.name);
+  // (los avisos de antes de la 0.8.4 que aún queden en el KV, con sus capturas)
   let avisos = 0;
   for (const k of await listar(env, `f:${u.uid}:`)) {
     avisos++;
@@ -1282,6 +1563,10 @@ async function borrarMios(req, env, c) {
   for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
   // (19 nov) tu código de invitar y tus premios (queda solo que la cuenta ya existía, para que no valga como nueva) y tus apodos
   if (env.QR) {
+    // (0.8.4) tu ficha, tu registro y tu tiempo de uso, en el objeto de quién usa la app, y tus avisos de fallo (los hilos
+    // enteros, con todas sus capturas), en el de los avisos
+    try { const r = await pedirQuien(env, { op: 'borrar', uid: u.uid }); if (!r.ok) fallidas++; PRIMERA_MEM.delete(u.uid); } catch (e) { fallidas++; }
+    try { const r = await pedirFallos(env, { op: 'borrar', uid: u.uid }); if (r.ok) avisos += r.n; else fallidas++; } catch (e) { fallidas++; }
     try { await invPedir(env, { op: 'borrar', uid: u.uid }); PREMIOS_MEM.delete(u.uid); } catch (e) { fallidas++; }
     try { await env.QR.get(env.QR.idFromName(`apodos|${u.uid}`)).fetch('https://freno/apodos', { method: 'POST', body: JSON.stringify({ op: 'borrar' }) }); } catch (e) { fallidas++; }
     // (22 nov) y lo guardado para tener lo mismo en todos tus dispositivos (plan, chat, lo contado)
@@ -1311,12 +1596,14 @@ async function invPedir(env, b) {
   const r = await objInv(env).fetch('https://freno/inv', { method: 'POST', body: JSON.stringify({ ...b, cfg: b.cfg || (await cfgInv()), ahora: Date.now(), dia: hoyMadrid() }) });
   return r.json();
 }
-/** la primera vez que se vio la cuenta en la app (KV de /hola), o 0 si nunca */
+/** la primera vez que se vio la cuenta en la app (la ficha y el registro de /hola), o 0 si nunca. Una vez vista no cambia:
+    se recuerda en la memoria del Worker (así /invitar no le pregunta al objeto cada vez) */
+const PRIMERA_MEM = new Map();
 async function primeraVez(env, uid) {
+  if (PRIMERA_MEM.has(uid)) return PRIMERA_MEM.get(uid);
   let t = 0;
-  for (const k of [`r:${uid}`, `p:${uid}`]) {
-    try { const x = await env.VINCULOS.getWithMetadata(k); const p = Number(x && x.metadata && x.metadata.primera) || 0; if (p && (!t || p < t)) t = p; } catch (e) { /* nada */ }
-  }
+  try { t = Number((await pedirQuien(env, { op: 'primera', uid })).t) || 0; } catch (e) { return 0; }
+  if (t) { if (PRIMERA_MEM.size > 5000) PRIMERA_MEM.clear(); PRIMERA_MEM.set(uid, t); }
   return t;
 }
 // los premios de cada cuenta en la memoria del Worker (5 min), para que /plan y /pregunta no le pregunten al objeto cada vez
@@ -1335,14 +1622,40 @@ export async function cupoConPremio(env, uid, P) {
   const p = await premiosDe(env, uid);
   return premioActivo({ premios: p }, 'doble') ? { ...P, gratis: P.gratis * 2, max: P.max * 2, doble: true } : P;
 }
+/** (25 nov) la huella de la conexión de quien llama: sha256 de su IP (o de su /64 en IPv6), nunca la IP; solo para emparejar
+    la llegada a la web con ?inv= y la entrada en la app desde el mismo sitio, y se borra a las 2 h (VENTANA_LLEGA) */
+async function huellaRed(req) {
+  const ip = ipDe(req);
+  if (!ip || ip === 'sin-ip') return '';
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-inv|${ip}`));
+  return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
+}
 async function invitar(req, env, c, ruta) {
   if (!env.QR) return json({ e: 'Las invitaciones no están disponibles ahora.', servicio: true }, 503, c);
+  // (25 nov) la llegada a la web con ?inv= y «Copiar el código y descargar»: aún no hay cuenta, así que va sin sesión
+  if (ruta === '/invitar/llega') {
+    if (req.method !== 'POST') return json({ e: 'No existe' }, 404, c);
+    if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `invl|${ipDe(req)}`, FRENOS.canjear.min))) return demasiadas(c);
+    const b = (await req.json().catch(() => ({}))) || {};
+    const r = await invPedir(env, { op: 'llega', cod: limpiarCod(b.cod), paso: b.paso, red: await huellaRed(req) });
+    return json({ ok: !!r.ok }, 200, c);
+  }
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   const escribe = req.method === 'POST';
   if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `inv${escribe ? 'w' : 'r'}|${u.uid}`, escribe ? FRENOS.canjear.min : FRENOS.invitar.min))) return demasiadas(c);
   const cfg = await cfgInv();
-  if (ruta === '/invitar' && req.method === 'GET') return json(await invPedir(env, { op: 'estado', uid: u.uid, cfg, primera: await primeraVez(env, u.uid) }), 200, c);
+  if (ruta === '/invitar' && req.method === 'GET') {
+    const est = await invPedir(env, { op: 'estado', uid: u.uid, cfg, primera: await primeraVez(env, u.uid) });
+    // (25 nov) a una cuenta que aún puede poner un código, las pistas de que la han invitado (`pista` en invitar.js)
+    const liga = new URL(req.url).searchParams.get('liga') || '';
+    if (est && est.puedeCanjear) {
+      const ids = /^\d{1,20}$/.test(liga) ? await conTope(miembros(req, liga), 4000, null) : null;
+      const p = await conTope(invPedir(env, { op: 'pista', uid: u.uid, red: await huellaRed(req), ids: ids || [], cfg }), 4000, null);
+      if (p && p.ok) { est.propuesto = p.propuesto || ''; est.ligaInvita = !!p.ligaInvita; }
+    }
+    return json(est, 200, c);
+  }
   if (!escribe) return json({ e: 'No existe' }, 404, c);
   const b = (await req.json().catch(() => ({}))) || {};
   if (ruta === '/invitar/codigo') {
@@ -1354,7 +1667,7 @@ async function invitar(req, env, c, ruta) {
     const liga = String(b.liga || '');
     if (!/^\d{1,20}$/.test(liga)) return json({ e: 'Entra antes en tu liga de LaLiga Fantasy y vuelve a probar.', motivo: 'liga' }, 400, c);
     const ids = await miembros(req, liga);
-    const r = await invPedir(env, { op: 'canjear', uid: u.uid, cod: limpiarCod(b.cod), enLiga: !!(ids && ids.includes(String(u.uid))), primera: await primeraVez(env, u.uid), cfg });
+    const r = await invPedir(env, { op: 'canjear', uid: u.uid, via: String(b.via || ''), cod: limpiarCod(b.cod), enLiga: !!(ids && ids.includes(String(u.uid))), primera: await primeraVez(env, u.uid), cfg });
     if (r.ok) console.log('invitar: canjeado');
     return json(r, r.ok ? 200 : 400, c);
   }
@@ -1383,6 +1696,8 @@ async function sinc(req, env, c) {
   let b = null;
   try { b = JSON.parse(txt); } catch (e) { b = null; }
   if (!b || !ligaOk(b.liga)) return json({ e: 'Liga no válida' }, 400, c);
+  // (25 nov, B-3) de dónde sale cada llamada y qué sube, para contarlo en Observability («sinc entrar -», «sinc subir chat»)
+  console.log(`sinc ${String(b.por || '?').replace(/[^a-z0-9+]/gi, '').slice(0, 12) || '?'} ${Object.keys(b.pon && typeof b.pon === 'object' ? b.pon : {}).join(',').slice(0, 40) || '-'}`);
   const obj = env.QR.get(env.QR.idFromName(`sinc|${u.uid}`));
   const r = await (await obj.fetch('https://freno/sinc', { method: 'POST', body: JSON.stringify({ op: 'sinc', liga: String(b.liga), pon: b.pon, tengo: b.tengo, ahora: Date.now() }) })).json();
   return json(r, r.ok ? 200 : 400, c);
@@ -1417,106 +1732,32 @@ async function apodos(req, env, c) {
   return json(r, r.ok ? 200 : 400, c);
 }
 
-/* ---------- quién usa la app ---------- */
-const VIVE_HOLA = 90 * 86400, VIVE_REGISTRO = 400 * 86400;
-// cambios de versión, equipo o foto que se apuntan al momento, por cuenta y día (el resto espera a la escritura de cada hora)
-export const CAMBIOS_DIA = 3;
-const CANALES = new Set(['github', 'play', 'web']);
-/**
- * la ficha de cada cuenta que ha entrado alguna vez (r:<uid>), para contar usuarios: se borra a los 400 días sin abrir la
- * app (cada escritura vuelve a contar los 400 días; antes no caducaba nunca: revisión total, M1) y no lleva nombre ni
- * equipo, solo { uid, primera, ultima, canales: 'github,web', dias: días distintos con la app abierta }. Se escribe
- * como mucho una vez al día por cuenta (o si entra desde un sitio nuevo): las escrituras gratis de KV son unas mil al día.
+/* ---------- quién usa la app (0.8.4: en el objeto «quien|todos», worker/src/quien.js) ---------- */
+/*
+ * POST /hola        la ficha de quien llama (nombre, equipo, liga, versión, canal, foto…) y su registro (días, canales,
+ *                   eventos), en una sola llamada al objeto. Devuelve { ok, admin, ev, bv? }.
+ * GET  /caras?liga  las fotos de los de tu liga que usan la app.
+ * GET  /hola/todos  la pantalla «Quién usa la app» (el dueño): lo del objeto, más las invitaciones y el embudo.
+ * Antes iba en el KV (p:, r:, u:) y era casi todo lo que gastaba de sus topes gratis.
  */
-/* lo que hace cada cuenta (web/js/eventos.js): cuántas veces por día; aquí se suma por semanas (la clave es el lunes)
-   y en total. Solo números: ni qué jugador ni qué liga. */
-const EVENTOS = new Set(['p', 'q', 'b', 't', 'l', 'e', 'v', 'c', 'n', 'i', 'a', 'A', 'f', 'F']);
-function limpiarEventos(ev) {
-  const out = {};
-  if (!ev || typeof ev !== 'object') return out;
-  for (const [d, cs] of Object.entries(ev).slice(0, 15)) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !cs || typeof cs !== 'object') continue;
-    for (const [k, n] of Object.entries(cs)) {
-      const v = Math.round(Number(n));
-      if (EVENTOS.has(k) && v > 0 && v <= 500) (out[d] || (out[d] = {}))[k] = v;
-    }
-  }
-  return out;
-}
-const lunesDe = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
-function sumarEventos(r, ev) {
-  const sem = { ...((r && r.ev) || {}) }, tot = { ...((r && r.tot) || {}) };
-  for (const [d, cs] of Object.entries(ev)) {
-    const l = lunesDe(d), x = { ...(sem[l] || {}) };
-    for (const [k, n] of Object.entries(cs)) { x[k] = (x[k] || 0) + n; tot[k] = (tot[k] || 0) + n; }
-    sem[l] = x;
-  }
-  // las 6 semanas últimas (los metadatos del almacén no pasan de 1 KB)
-  const quedan = Object.keys(sem).sort().slice(-6);
-  return { ev: Object.fromEntries(quedan.map((l) => [l, sem[l]])), tot };
-}
-/** devuelve true si ha sumado los eventos que traía (si no, la app los vuelve a mandar en el siguiente saludo) */
-async function registrar(env, uid, canal, primera, ahora, evIn = null) {
-  try {
-    const k = `r:${uid}`, dia = hoyMadrid();
-    const ya = await env.VINCULOS.getWithMetadata(k);
-    const r = ya && ya.metadata ? ya.metadata : null;
-    const cs = new Set(String((r && r.canales) || '').split(',').filter(Boolean));
-    const nuevoCanal = CANALES.has(canal) && !cs.has(canal);
-    const ev = limpiarEventos(evIn);
-    const hayEv = Object.keys(ev).length > 0;
-    // una vez al día, o con eventos si hace 12 horas o más de la última (como mucho dos escrituras al día por cuenta)
-    if (r && r.dia === dia && !nuevoCanal && !(hayEv && ahora - (r.ultima || 0) >= 12 * 3600e3)) return false;
-    if (CANALES.has(canal)) cs.add(canal);
-    const ficha = { uid, primera: Math.min((r && r.primera) || primera, primera), ultima: ahora, dia, canales: [...cs].join(','), dias: ((r && r.dias) || 0) + (r && r.dia === dia ? 0 : 1) };
-    const s = sumarEventos(r, ev);
-    if (Object.keys(s.tot).length) { ficha.ev = s.ev; ficha.tot = s.tot; }
-    while (JSON.stringify(ficha).length > 1000 && ficha.ev && Object.keys(ficha.ev).length > 1) delete ficha.ev[Object.keys(ficha.ev).sort()[0]];
-    await env.VINCULOS.put(k, '1', { metadata: ficha, expirationTtl: VIVE_REGISTRO });
-    return hayEv;
-  } catch (e) { return false; /* nada: si el almacén no deja, se sigue */ }
-}
+// lo que se queda de lo que manda la app (el objeto lo corta y lo limpia igual)
+const HOLA_CAMPOS = ['equipo', 'liga', 'v', 'canal', 'app', 'ad', 'fc', 'bv', 'disp'];
 async function hola(req, env, c, ruta) {
-  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   if (ruta === '/hola' && req.method === 'POST') {
     if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `hola|${u.uid}`, FRENOS.hola.min))) return demasiadas(c);
-    const b = await req.json().catch(() => ({})) || {};
-    const k = `p:${u.uid}`;
-    const ya = await env.VINCULOS.getWithMetadata(k);
-    const m = ya && ya.metadata ? ya.metadata : null;
-    const ahora = Date.now();
-    const nuevo = {
-      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20) || (m && m.liga) || '', v: corta(b.v, 12),
-      canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
-      primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
-      foto: u.foto || '',
-      // por qué no se le pone la web nueva (el último fallo de AlDia en su móvil, desde la 0.7.6)
-      ...(b.ad ? { ad: corta(b.ad, 90) } : {}),
-      // por qué no le carga la liga (16 nov): el tipo de error y el principio del mensaje, solo con la versión acabada en « !»
-      ...(b.fc && / !$/.test(String(b.v || '')) ? { fc: corta(b.fc, 60) } : {}),
-      // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
-      ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
-    };
-    // (Cloudflare deja unas mil escrituras al día gratis y las comparte con los códigos de entrar y los avisos: cada cuenta,
-    // como mucho una por hora, salvo que cambie la versión o el equipo; alternar app y web ya no escribe cada vez, y si
-    // el almacén no deja, se sigue sin más; revisión del 29 oct)
-    // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
-    // total, C1. Con más, el cambio entra en la escritura de cada hora)
-    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || '') || (m.fc || '') !== (nuevo.fc || ''));
-    // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
-    const bvNueva = !!nuevo.bv && !(m && m.bv);
-    // (la liga, igual, una vez por cuenta: el primer aviso sale a veces antes de que la app tenga la liga, y sin esto se quedaba
-    // «sin liga» hasta la siguiente escritura de la hora; 17 nov)
-    const ligaNueva = !!nuevo.liga && !!m && !m.liga;
-    const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
-    const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
-    if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || bvNueva || ligaNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
-    const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
-    // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
-    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);
+    const b = (await req.json().catch(() => ({}))) || {};
+    const x = {};
+    for (const k of HOLA_CAMPOS) if (b[k] != null && typeof b[k] !== 'object') x[k] = b[k];
+    let r;
+    try { r = await pedirQuien(env, { op: 'hola', uid: u.uid, nombre: u.nombre, foto: u.foto || '', x, ev: b.ev && typeof b.ev === 'object' ? b.ev : null }); } catch (e) { r = null; }
+    if (!r || !r.ok) return json({ e: 'Sin almacén' }, 503, c);
+    // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo; ve: también a
+    // quien ayuda, 0.8.4)
+    const papel = papelDe(env, u.uid);
+    return json({ ok: true, admin: papel === 'dueño', ve: !!papel, ev: !!r.ev, ...(r.bv ? { bv: r.bv } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
@@ -1527,64 +1768,114 @@ async function hola(req, env, c, ruta) {
     // (LaLiga da la clasificación de cualquier liga a quien la pida: que quien llama esté en ella lo mira el Worker;
     // revisión total, C6)
     if (!ids || !ids.includes(String(u.uid))) return json({ e: 'Esa liga no es tuya' }, 403, c);
-    const caras = {};
-    await Promise.all(ids.slice(0, 40).map(async (id) => {
-      try { const x = await env.VINCULOS.getWithMetadata(`p:${id}`); const f = x && x.metadata && x.metadata.foto; if (f) caras[id] = f; } catch (e) { /* nada */ }
-    }));
+    let caras = {};
+    try { caras = (await pedirQuien(env, { op: 'caras', ids: ids.slice(0, 40) })).caras || {}; } catch (e) { caras = {}; }
     return json({ caras }, 200, c);
   }
-  if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  // (0.8.4) el dueño y quien ayuda
+  if (!papelDe(env, u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
-    // (20 nov, Carlos: «de repente no me funciona esta pestaña»: tardaba 112 s con 74 cuentas y la app corta a los 20) lo
-    // de fuera, con tiempo máximo, y cuánto tarda cada parte en `tiempos` (ms) para saber cuál se atasca
+    // (20 nov: tardaba 112 s con 74 cuentas leyendo el KV clave a clave) ahora es una llamada al objeto, que devuelve el JSON
+    // ya escrito; a la vez, las invitaciones y el embudo, con tiempo máximo. Cuánto tarda cada parte, en `tiempos` (ms)
     const t0 = Date.now(), tiempos = {};
-    const marca = (k) => { tiempos[k] = Date.now() - t0; };
-    const dia = hoyMadrid();
-    const ks = (await listar(env, 'p:', 20000)).filter((k) => k.metadata);
-    marca('cuentas');
-    ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
-    // (19 nov, Carlos: «quiero ver exactamente cuántos han entrado, al día, cuántos nuevos y el tiempo que pasan dentro, sí
-    // o sí») el tiempo de cada día, de TODAS las cuentas: hoy de todas y los 6 días de antes de las que han entrado esta
-    // semana, hasta el día de su última vez (después no pudo usarla). Se leen de 100 en 100 con la lectura en bloque de
-    // KV, que cuenta como UNA operación para el tope de mil por petición (antes, una a una y solo de las 40 últimas: con
-    // 50+ cuentas en la semana los días de atrás salían bajos, el lunes de 27 a 20)
-    const dias = diasAtras(dia, 7), hace7 = Date.now() - 7 * 86400e3;
-    const aLeer = ks.map((k) => {
-      if ((k.metadata.ultima || 0) < hace7) return [dia];
-      const hasta = diaMadrid(k.metadata.ultima || Date.now());
-      return dias.filter((d) => d === dia || d <= hasta);
-    });
-    const claves = [];
-    ks.forEach((k, i) => aLeer[i].forEach((d) => claves.push(`u:${k.metadata.uid}:${d}`)));
-    const leido = await conTope(leerEnBloque(env, claves), 8000, new Map());
-    marca('usos');
-    const usos = ks.map((k, i) => {
-      const o = {};
-      for (const d of aLeer[i]) {
-        const kk = `u:${k.metadata.uid}:${d}`;
-        const v = Math.min(86400, (Number(leido.get(kk)) || 0) + (PEND_USO.get(kk) || 0));
-        if (v) o[d] = v;
-      }
-      return o;
-    });
-    const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));
-    // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
-    // que existe), con lo de p:
-    const reg = new Map((await listar(env, 'r:', 50000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
-    marca('registro');
-    for (const x of lista) {
-      const r = reg.get(String(x.uid));
-      if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
-      else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
-    }
-    // (19 nov) las invitaciones de cada cuenta: cuántos entran y cuántos vuelven otro día, para ver si alguien abusa
-    let invitar = null;
-    const [inv, embudo] = await Promise.all([env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null, conTope(leerEmbudo(env), 6000)]);
-    invitar = inv;
-    marca('fin');
-    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias, embudo, invitar, tiempos }, 200, c);
+    const pInv = env.QR ? conTope(invPedir(env, { op: 'todos' }), 6000) : null;
+    const pEmb = conTope(leerEmbudo(env), 6000);
+    const pQuien = pedirQuien(env, { op: 'todos' }, true).then((t) => { tiempos.cuentas = Date.now() - t0; return t; });
+    const [txt, invitar, embudo] = await Promise.all([pQuien, pInv, pEmb]);
+    tiempos.fin = Date.now() - t0;
+    console.log(`hola/todos: ${tiempos.fin} ms (cuentas ${tiempos.cuentas}, ${txt.length} caracteres)`);
+    // (el texto del objeto no se vuelve a leer aquí: se le pega lo demás detrás; con 1.000 cuentas, el Worker no gasta CPU)
+    return new Response(`${txt.slice(0, -1)},"embudo":${JSON.stringify(embudo)},"invitar":${JSON.stringify(invitar)},"tiempos":${JSON.stringify(tiempos)}}`, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
   }
   return json({ e: 'No existe' }, 404, c);
+}
+
+/*
+ * La mudanza de quién usa la app desde el KV (0.8.4). La hace el cron del Worker (cada 5 min) hasta acabar:
+ *   1. copia las fichas (p:), los registros (r:) y los tiempos (u:) al objeto, una familia en cada pasada; el objeto solo
+ *      pone lo que no tiene (lo que ya ha traído él de una cuenta que llegó antes, `traerDeKV`, se queda);
+ *   2. dos días después de copiado (por si hubiera que volver al Worker de antes), borra del KV las fichas y los
+ *      registros, MUDANZA_LOTE a la hora (los borrados gratis son 1.000 al día y los comparte con todo). Los tiempos se
+ *      borran solos a los 9 días.
+ * Lo que va sabiendo se queda en la memoria del Worker; el objeto lleva el estado de verdad.
+ */
+export const MUDANZA_LOTE = 15, MUDANZA_ESPERA = 2 * 86400e3;
+const MUDANZA = { limpio: 0, copiado: 0 };
+export async function mudanzaQuien(env, ahora = Date.now()) {
+  if (!env.QR || !env.VINCULOS || MUDANZA.limpio) return { nada: true };
+  // ya copiado, el resto (borrar del KV) solo en la primera pasada de cada hora
+  if (MUDANZA.copiado && new Date(ahora).getUTCMinutes() >= 5) return { nada: true };
+  const est = await pedirQuien(env, { op: 'mudanza' });
+  if (est.limpio) { MUDANZA.limpio = est.limpio; return { limpio: true }; }
+  if (!est.copiado) {
+    const fase = ['p', 'r', 'u'].includes(est.fase) ? est.fase : 'p';
+    const ks = await listar(env, `${fase}:`, 50000);
+    let filas;
+    if (fase === 'u') {
+      const leido = await leerEnBloque(env, ks.map((k) => k.name));
+      filas = ks.map((k) => { const [, uid, dia] = k.name.split(':'); return [uid, dia, Number(leido.get(k.name)) || 0, Number(k.metadata && k.metadata.t) || 0]; });
+    } else filas = ks.filter((k) => k.metadata && typeof k.metadata === 'object').map((k) => [k.name.slice(2), k.metadata]);
+    const r = await pedirQuien(env, { op: 'copiar', fase, filas, siguiente: { p: 'r', r: 'u', u: 'hecho' }[fase] });
+    console.log(`mudanza de quién usa la app: ${fase}: ${filas.length} del KV, ${r.n} nuevas`);
+    return { fase, leidas: filas.length, nuevas: r.n };
+  }
+  MUDANZA.copiado = est.copiado;
+  if (ahora - est.copiado < MUDANZA_ESPERA) return { esperando: true };
+  const borrar = [];
+  for (const pre of ['p:', 'r:']) {
+    if (borrar.length >= MUDANZA_LOTE) break;
+    const l = await env.VINCULOS.list({ prefix: pre, limit: MUDANZA_LOTE - borrar.length });
+    borrar.push(...l.keys.map((k) => k.name));
+  }
+  if (!borrar.length) { await pedirQuien(env, { op: 'kvLimpio' }); MUDANZA.limpio = ahora; console.log('mudanza de quién usa la app: el KV ya está limpio'); return { limpio: true }; }
+  for (const k of borrar) { try { await env.VINCULOS.delete(k); } catch (e) { break; } }
+  return { borradas: borrar.length };
+}
+
+/*
+ * La mudanza de los avisos de fallo desde el KV (0.8.4, fase 3), con el mismo cron y después de la de quién usa la app:
+ *   1. los hilos: cada aviso (f:<cuenta>:<id>) pasa a ser un hilo con su texto y, si tenía respuesta, la respuesta como
+ *      segundo mensaje; MUDANZA_AVISOS por pasada, de los más nuevos a los más viejos, sin pisar los que ya están;
+ *   2. las capturas (fc:<id>:<n>), MUDANZA_CAPS por pasada (hasta entonces /fallos/captura las lee del KV);
+ *   3. dos días después, borra del KV las f: y las fc:, MUDANZA_LOTE a la hora. Con eso el KV se queda con los códigos.
+ */
+export const MUDANZA_AVISOS = 15, MUDANZA_CAPS = 6;
+const MUDANZA_F = { limpio: 0, copiado: 0 };
+export async function mudanzaFallos(env, ahora = Date.now()) {
+  if (!env.QR || !env.VINCULOS || MUDANZA_F.limpio) return { nada: true };
+  if (MUDANZA_F.copiado && new Date(ahora).getUTCMinutes() >= 5) return { nada: true };
+  const est = await pedirFallos(env, { op: 'mudanza' });
+  if (est.limpio) { MUDANZA_F.limpio = est.limpio; return { limpio: true }; }
+  if (!est.copiado) {
+    if (est.fase !== 'caps') {
+      const ks = (await listar(env, 'f:', 50000)).sort((a, b) => ((b.metadata || {}).t || 0) - ((a.metadata || {}).t || 0));
+      const id = (k) => k.name.split(':').pop();
+      const { faltan = [] } = ks.length ? await pedirFallos(env, { op: 'faltan', ids: ks.map(id) }) : {};
+      if (!faltan.length) { await pedirFallos(env, { op: 'copiar', avisos: [], siguiente: 'caps' }); return { fase: 'hilos', hecho: true }; }
+      const lote = new Set(faltan.slice(0, MUDANZA_AVISOS));
+      const leido = await leerEnBloque(env, ks.filter((k) => lote.has(id(k))).map((k) => k.name));
+      // (el texto de cada aviso tal cual: lo lee el objeto, no el Worker)
+      const r = await pedirFallos(env, { op: 'copiar', avisos: [...leido.values()] });
+      console.log(`mudanza de los avisos: ${r.n} hilos copiados, quedan ${faltan.length - lote.size}`);
+      return { fase: 'hilos', copiados: r.n, quedan: faltan.length - lote.size };
+    }
+    const { caps = [] } = await pedirFallos(env, { op: 'faltanCaps', max: MUDANZA_CAPS });
+    if (!caps.length) { await pedirFallos(env, { op: 'copiado' }); console.log('mudanza de los avisos: copiada'); return { fase: 'caps', hecho: true }; }
+    const imgs = await Promise.all(caps.map(([i, n]) => env.VINCULOS.get(`fc:${i}:${n}`).catch(() => null)));
+    const r = await pedirFallos(env, { op: 'copiarCaps', caps: caps.map(([i, n], k) => [i, n, imgs[k]]) });
+    return { fase: 'caps', copiadas: r.n };
+  }
+  MUDANZA_F.copiado = est.copiado;
+  if (ahora - est.copiado < MUDANZA_ESPERA) return { esperando: true };
+  const borrar = [];
+  for (const pre of ['f:', 'fc:']) {
+    if (borrar.length >= MUDANZA_LOTE) break;
+    const l = await env.VINCULOS.list({ prefix: pre, limit: MUDANZA_LOTE - borrar.length });
+    borrar.push(...l.keys.map((k) => k.name));
+  }
+  if (!borrar.length) { await pedirFallos(env, { op: 'kvLimpio' }); MUDANZA_F.limpio = ahora; console.log('mudanza de los avisos: el KV ya está limpio'); return { limpio: true }; }
+  for (const k of borrar) { try { await env.VINCULOS.delete(k); } catch (e) { break; } }
+  return { borradas: borrar.length };
 }
 
 // El reloj del bot de X: el cron de GitHub Actions no dispara (2 nov, 0 ejecuciones por schedule), así que este Worker,
@@ -1644,8 +1935,16 @@ export async function lanzarBot(env, pedir = fetch, inputs = null, flujo = BOT_F
 // (21 nov) pasos nuevos: «llega» (la web: llega sin sesión; «ver» pasa a ser «el bloque de entrar a la vista»), «v» (la web:
 // vuelve de la pestaña de LaLiga), «x-vuelve» (la app de Android: vuelve de LaLiga sin el código, porque eligió la otra app en
 // «Abrir con», LaLiga dio error o cerró la pestaña) «inicio» (el iPhone: pasa la sesión a la pantalla de inicio) y «saf» (el iPhone dentro de X o Instagram: toca «Abrir en Safari»)
-export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro']);
-export const EMB_CANALES = new Set(['play', 'github', 'web-android', 'web-iphone', 'web-pc']);
+// (25 nov, tanda 5 de la auditoría de fallos) «m-…»: la web, lo pegado no vale y no llega a LaLiga (vacío, la página de entrar
+// sin acabar, la dirección de la app, jwt.ms sin el código u otra cosa); «x-5xx»: el canje con LaLiga contesta 5xx (antes iba
+// en «x-laliga», que ahora es solo el error de LaLiga: AADB2C90075, InternalServerError…); «x-gastado»: vuelve a pegar el
+// mismo enlace que acaba de fallar
+export const EMB_PASOS = new Set(['llega', 'v', 'x-vuelve', 'inicio', 'saf', 'ver', 'demo', 'play', 'l', 'p', 'ok', 'x-cancel', 'x-caduca', 'x-laliga', 'x-redirect', 'x-perdido', 'x-red', 'x-otro',
+  'm-vacio', 'm-login', 'm-app', 'm-jwt', 'm-otro', 'x-5xx', 'x-gastado']);
+/** los fallos que cuentan para el semáforo como «LaLiga falla» (los mismos que antes iban juntos en «x-laliga») */
+const EMB_FALLA = new Set(['x-laliga', 'x-5xx']);
+// (iOS 3, 25 nov) «ios»: la app de iOS (canalPaso de web/js/semaforo.js)
+export const EMB_CANALES = new Set(['play', 'ios', 'github', 'web-android', 'web-iphone', 'web-pc']);
 const EMB_DIAS = 60, EMB_VER = 14, EMB_ORIGENES = 20, ESTADO_CADA = 120e3, ESTADO_TIEMPO = 8000;
 const horaMadridF = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', hourCycle: 'h23' });
 const horaMadrid = (t = Date.now()) => `${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t))}T${horaMadridF.format(new Date(t)).padStart(2, '0')}`;
@@ -1678,7 +1977,7 @@ async function embudoObjeto(st, ruta, req, memo) {
     const o = typeof b.o === 'string' && /^[a-z0-9_-]{1,24}$/.test(b.o) ? b.o : '';
     if (o && (x[`o:${o}`] || Object.keys(x).filter((k) => k.startsWith('o:')).length < EMB_ORIGENES)) sumar(`o:${o}`);
     await st.put(kd, x);
-    if (b.p === 'ok' || b.p === 'x-laliga') {
+    if (b.p === 'ok' || EMB_FALLA.has(b.p)) {
       const kh = `h|${b.h}`, y = (await st.get(kh)) || {};
       y[b.p === 'ok' ? 'ok' : 'x'] = (y[b.p === 'ok' ? 'ok' : 'x'] || 0) + 1;
       await st.put(kh, y);
@@ -1763,6 +2062,14 @@ export default {
       inputs = { tipos: 'mercado' };
     }
     ctx.waitUntil(lanzarBot(env, fetch, inputs).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
+    // (0.8.4) la mudanza de quién usa la app desde el KV, hasta que acaba (mudanzaQuien)
+    // (fase 3) y, ya copiado eso, la de los avisos de fallo (mudanzaFallos), una detrás de otra
+    if (evento.cron === '*/5 * * * *') {
+      const t = evento.scheduledTime || Date.now();
+      ctx.waitUntil(mudanzaQuien(env, t).catch((e) => console.log('mudanza de quién usa la app:', String((e && e.message) || e)))
+        .then(() => (MUDANZA.copiado || MUDANZA.limpio ? mudanzaFallos(env, t) : null))
+        .catch((e) => console.log('mudanza de los avisos:', String((e && e.message) || e))));
+    }
   },
 
   async fetch(req, env, ctx) {
@@ -1774,7 +2081,8 @@ export default {
     // viene; sin ella (un script, curl) no se pasa nada (revisión del 23 oct: era un proxy abierto a LaLiga)
     if ((url.pathname === '/p' || url.pathname === '/img') && !req.headers.get('Origin')) return new Response('Solo para la web de Fantasy Manager', { status: 403, headers: c });
     try {
-      const freno = FRENO_RUTA[`${req.method} ${url.pathname}`] || (url.pathname.startsWith('/fallos') ? 'fallos' : null);
+      // (/fallos/accion es la Action «Fallos», con su llave: sin freno por IP, que pide una captura detrás de otra)
+      const freno = FRENO_RUTA[`${req.method} ${url.pathname}`] || (url.pathname.startsWith('/fallos') && url.pathname !== '/fallos/accion' ? 'fallos' : null);
       if (freno) { const no = await frenoIP(req, env, c, freno); if (no) return no; }
       if (url.pathname === '/p' && req.method === 'POST') return await pasar(req, c);
       if (url.pathname === '/img' && req.method === 'GET') return await imagen(url, c);
@@ -1792,7 +2100,7 @@ export default {
         const u = await quienEs(req);
         if (!u) return json({ e: 'Sin sesión' }, 401, c);
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '');
-        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
+        return json(x.fin ? { fin: x.fin } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_PLAN_MS) }, 200, c);
       }
       // (16 nov) lo mismo con una pregunta del chat (Recoger.java, desde la 0.8): { fin: { resumen } } o { marcha }
       if (url.pathname === '/pregunta/res' && req.method === 'GET') {
@@ -1801,6 +2109,7 @@ export default {
         const x = await resPlan(env, u.uid, 'leer', url.searchParams.get('rid') || '', null, 'preg');
         return json(x.fin ? { fin: x.fin.texto ? { resumen: x.fin.resumen || resumenRespuesta(x.fin.texto) } : { e: x.fin.e || '' } } : { marcha: !!(x.marcha && Date.now() - x.marcha < RES_MARCHA_MS) }, 200, c);
       }
+      if (url.pathname === '/push' && req.method === 'POST') return await pushRuta(req, env, c);
       if (url.pathname === '/dinero' && req.method === 'POST') return await dineroApunte(req, env, c);
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
       if (url.pathname === '/pujas' && req.method === 'POST') return await pujasApunte(req, env, c);

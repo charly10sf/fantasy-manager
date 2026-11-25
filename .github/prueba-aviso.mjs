@@ -11,7 +11,7 @@ import { join, extname, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const pw = await import(process.env.PW_MODULO || 'playwright');
 const WEB = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'web');
-const { VERSION } = await import(join(WEB, 'js', 'version.js'));
+const { VERSION, NOVEDADES } = await import(join(WEB, 'js', 'version.js'));
 let mal = 0;
 const TIPOS = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2' };
 const srv = http.createServer(async (q, r) => {
@@ -66,6 +66,57 @@ await caso('recordatorio: con un amigo dentro, nunca más', 'nada → nada', { v
 await caso('recordatorio: la primera vez sin fecha no sale (empieza a contar ese día)', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: null }, 'reabre', 'mira'] });
 await caso('recordatorio: con el estado de hace dos días (puede haber entrado un amigo desde entonces), no sale hasta tener el de ahora', 'nada → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: 9, viejo: 48 }, 'reabre', 'mira'] });
 await caso('recordatorio: su botón abre invitar y cuenta como recordado', 'nada → TARJETA → hoja:invitar → nada', { vista: 'ACTUAL', app: false, pasos: ['mira', { amigos: 0, hace: 9 }, 'reabre', 'mira', 'invitar', 'reabre', 'mira'] });
+
+// ---------- (0.8.4e; Carlos, 25 nov, 13:00 y 13:29) la tarjeta de la app para iPhone ----------
+// Una vez por dispositivo, con su liga cargada (no en la de ejemplo), con la línea de su plataforma; si toca la de invitar
+// el mismo día, primero esta y la de invitar otro día. Con un navegador manejado por un programa no sale (por eso las
+// demás pruebas no la ven): aquí se le dice que no lo es. «Su liga»: la de ejemplo, que en cuanto carga pasa a ser «la
+// suya» (fuera de la demo, con una sesión de mentira y un Worker de mentira, como prueba-avisos): así la tarjeta y la de
+// invitar se deciden ya fuera de la demo, como al abrir la app con tu liga. Las tarjetas de versión, ya vistas.
+const UA = { iphone: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1', android: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Mobile Safari/537.36' };
+const LINEAS = { '¿Amigos con iPhone en tu liga? Ya pueden entrar desde la web.': 'android', 'Mientras, sigue usándola desde Safari como hasta ahora.': 'ios', 'Si tienes iPhone, ya puedes usarla desde Safari.': 'pc' };
+const SESION = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+async function casoIphone(nombre, espera, { app = false, ua = null, real = true, pasos }) {
+  const ctx = await nav.newContext({ viewport: { width: 396, height: 859 }, timezoneId: 'Europe/Madrid', locale: 'es-ES', ...(ua ? { userAgent: UA[ua] } : {}) });
+  await ctx.route('**/*', (r) => (new URL(r.request().url()).hostname === '127.0.0.1' ? r.continue() : r.abort('blockedbyclient')));
+  const page = await ctx.newPage();
+  const errores = []; page.on('pageerror', (e) => errores.push(String(e)));
+  await ctx.route('https://w.prueba/**', (r) => r.fulfill({ status: 200, headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*', 'content-type': 'application/json' }, body: '{}' }));
+  const vistas = JSON.stringify(NOVEDADES.filter((n) => n.aviso).map((n) => n.v));
+  const suya = real ? "const fmSuya = setInterval(() => { if (window.S && window.S.D && window.S.M) { localStorage.setItem('fm-demo', 'false'); clearInterval(fmSuya); } }, 1);" : '';
+  await page.addInitScript("Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false });" + (app ? APP : '') + BASE_LS.replace('__EXTRA__', `localStorage.setItem('fm-version-vista2', JSON.stringify('${VERSION}')); localStorage.setItem('fm-avisos-nov', JSON.stringify({ visto: ${vistas}, pend: null })); localStorage.setItem('fm-n-sesion', ${JSON.stringify(SESION)}); localStorage.setItem('fm-tema-intro', '1'); ${app ? '' : "localStorage.setItem('fm-worker', 'https://w.prueba');"}`) + suya);
+  const lista = async () => { await page.waitForFunction(() => window.S && window.S.D && window.S.M && document.querySelector('.nav'), null, { timeout: 30000 }); await page.waitForTimeout(4000); };
+  await page.goto(`${BASE}/index.html`);
+  await lista();
+  const r = [];
+  const mira = () => page.evaluate((L) => { const t = document.querySelector('.nvt-ios'); if (t) { const m = t.querySelector('.ios-mas'); return 'IPHONE:' + (m ? L[m.textContent.trim()] || '¿' + m.textContent + '?' : 'sin línea'); } return document.querySelector('.nvt') ? 'TARJETA' : 'nada'; }, LINEAS);
+  for (const p of pasos) {
+    if (p === 'mira') r.push(await mira());
+    if (p === 'entendido' || p === 'fuera') {
+      if (!(await page.$('.nvt-ios'))) { r.push('(sin tarjeta)'); continue; }
+      if (p === 'entendido') await page.click('.nvt-ios .ios-ok'); else await page.mouse.click(8, 8);
+      await page.waitForTimeout(400);
+      if (await page.$('.nvt-ios')) r.push('(no se cerró)');
+    }
+    // otra vez: la app se abre de nuevo (con la liga de ejemplo y otra vez fuera de ella)
+    if (p === 'reabre') { await page.evaluate(() => localStorage.setItem('fm-demo', 'true')); await page.reload(); await lista(); }
+    // la cerró ayer
+    if (p === 'ayer') await page.evaluate(() => localStorage.setItem('fm-aviso-iphone', JSON.stringify(Date.now() - 86400e3)));
+    if (p && p.amigos != null) await page.evaluate(({ amigos, hace }) => { const uid = window.S.D.yo.userId; localStorage.setItem('fm-invitar', JSON.stringify({ uid: String(uid), t: Date.now(), est: { ok: true, on: true, entran: amigos, cuentan: 0, amigos: [] } })); const g = JSON.parse(localStorage.getItem('fm-avisos-nov') || '{"visto":[],"pend":null}'); g.invT = Date.now() - hace * 86400e3; localStorage.setItem('fm-avisos-nov', JSON.stringify(g)); }, p);
+    if (p === 'foto' && process.env.FOTOS) await page.screenshot({ path: `${process.env.FOTOS}/aviso-iphone-${ua || (app ? 'app' : 'pc')}.png` });
+  }
+  const sale = r.join(' → '), bien = sale === espera && !errores.length;
+  if (!bien) mal++;
+  console.log(`${bien ? 'BIEN' : 'MAL '} ${nombre}: ${sale}${bien ? '' : `  (se esperaba: ${espera})`}${errores.length ? '  ERRORES ' + errores.slice(0, 2).join(' | ') : ''}`);
+  await ctx.close();
+}
+await casoIphone('iPhone (web): sale con su línea; con «Entendido» no vuelve', 'IPHONE:ios → nada', { ua: 'iphone', pasos: ['mira', 'foto', 'entendido', 'reabre', 'mira'] });
+await casoIphone('la app de Android: sale con la de Android; tocando fuera se cierra y no vuelve', 'IPHONE:android → nada', { app: true, pasos: ['mira', 'foto', 'fuera', 'reabre', 'mira'] });
+await casoIphone('el ordenador: la del ordenador', 'IPHONE:pc', { pasos: ['mira', 'foto'] });
+await casoIphone('la web en un Android: la de Android', 'IPHONE:android', { ua: 'android', pasos: ['mira'] });
+await casoIphone('sin cerrarla, al volver a abrir sale otra vez', 'IPHONE:pc → IPHONE:pc', { pasos: ['mira', 'reabre', 'mira'] });
+await casoIphone('en la liga de ejemplo: nada', 'nada', { real: false, pasos: ['mira'] });
+await casoIphone('con la de invitar también por salir: primero esta, la de invitar otro día', 'IPHONE:pc → nada → TARJETA', { pasos: [{ amigos: 0, hace: 9 }, 'reabre', 'mira', 'entendido', 'reabre', 'mira', 'ayer', 'reabre', 'mira'] });
 await nav.close(); srv.close();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);

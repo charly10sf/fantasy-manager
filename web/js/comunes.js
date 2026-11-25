@@ -1,6 +1,6 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
 import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
-import { enApp } from './puente.js';
+import { enApp, enIPhone } from './puente.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, anunciosPorVez, minutosRival, horasQuien } from './limite.js';
 import { esFav } from './favoritos.js';
@@ -176,11 +176,11 @@ export function calendarioHTML(M, j, mio = false, S = {}) {
     const poco = !vi && ine && (ine.fase === 'giro' || ine.fase === 'baja') && !(pz && pz.nivel >= 3) ? Math.max(0, -ine.proyJ) : null;
     const baja = vi ? (vi.urgencia === 'ya' ? 'está bajando de valor' : 'está a punto de girar a la baja') : '';
     const pierde = vi && vi.perder > 0 ? ` (hasta la jornada, unos ${eur(vi.perder)} menos)` : '';
-    if (M.enVenta && M.enVenta.has(j.id)) consejo = `Lo tienes en venta: aquí manda la oferta (mira «En venta»)${vi ? `, y ${baja}${pierde}` : ''}.`;
-    else if (vi) {
-      consejo = c.tipo === 'favorable' ? `Le vienen partidos buenos, pero ${baja}${pierde}: manda la venta. Lo que sume en puntos no compensa lo que pierde cada día; si es titular en tu once, busca antes quién lo sustituya.`
-        : c.tipo === 'duro' ? `Partidos difíciles y ${baja}${pierde}: más motivo para venderlo.`
-        : `${baja[0].toUpperCase()}${baja.slice(1)}${pierde}: manda la venta.`;
+    // (24 nov, decide.js) con los tuyos manda su decisión: la misma frase que en Hoy, Equipo y la IA (antes aquí decía
+    // «manda la venta» de un titular que el plan aguantaba)
+    const dec = M.decision ? M.decision(j.id) : null;
+    if (dec && (dec.accion === 'vender' || dec.enVenta || dec.regla === 'titular-gira' || dec.matiz === 'busca-sustituto')) {
+      consejo = `${dec.accion === 'vender' && c.tipo === 'favorable' ? 'Le vienen partidos buenos, pero manda la venta. ' : ''}${dec.porque}`;
     } else if (poco != null) {
       consejo = `Va bajando poco a poco${poco > 0 ? ` (unos ${eur(poco)} hasta la jornada)` : ''}: ${c.tipo === 'favorable' ? 'los partidos buenos que le vienen' : 'el calendario'} no son motivo para quedártelo si te sale una buena venta.`;
     } else {
@@ -282,7 +282,7 @@ export function campoVivo(M, ids) {
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
-export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.etiqueta || ACC[op.accion] || op.accion} hoy</span>` : '');
+export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.retira ? 'Retirar puja' : op.etiqueta || ACC[op.accion] || op.accion}${op.hoy === false ? ' · otro día' : ' hoy'}</span>` : '');
 
 /* la probabilidad de ser titular al lado del nombre, en todas las listas: el motor lo pone la app cada vez que lo rehace */
 let MF = null;
@@ -378,6 +378,7 @@ export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales pueden pagar cada cláusula tuya.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor y cuándo venderlo.'],
+  quienPuja: ['Quién puja por él', 'Qué rival puede estar detrás de cada puja y con cuánto le ganas.'],
   perfilRival: ['Cómo juega cada rival', 'A quién clausula, cuánto paga y cómo se mueve.'],
   radar: ['Radar de subidas', 'Los que más van a subir estos días.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué tiene cada rival en venta y cuánto ofrecerle.'],
@@ -397,7 +398,10 @@ export function candado(clave, { como = null, rid = null } = {}) {
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios): para la ventana
     que sale al tocarlas, nunca en las cajas */
-export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' Se abre gratis en la app de Google Play, con un anuncio.');
+// (25 nov, aviso de Moukemon7) en el iPhone no hay app de Google Play. (25 nov, auditoría, hallazgo 10) invitando a un amigo
+// solo se abre el dinero de los rivales (2 por amigo): las demás, en el iPhone, de momento no se abren (sin prometer la app
+// de la App Store: Carlos, 25 nov)
+export const dondeTop = (clave) => (enApp ? ' En esta versión de la app no se abren.' : enIPhone ? (clave === 'dineroRivales' ? ' En el iPhone, de momento, se abre invitando a un amigo.' : ' En el iPhone, de momento, no se puede abrir.') : ' Se abre gratis en la app de Google Play, con un anuncio.');
 /** lo que dice un candado de cómo se abre (0.8a, Carlos 17 nov, 22:26: en las cajas, solo qué es; cómo se abre lo dice la
     ventana al tocarlas, en la web y en Google Play). Se queda por si vuelve a hacer falta */
 export function colaCandado(clave, rid = null) {

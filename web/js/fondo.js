@@ -6,6 +6,7 @@ import { bloqueada } from './limite.js';
 import { cfgAvisos } from './avisos.js';
 import { esFav } from './favoritos.js';
 import { ventasInercia } from './acciones.js';
+import { nuevasEn } from './pujas-vistas.js';
 
 export const EN_FONDO = /[?&]fondo=1\b/.test(location.search);
 export const cfgFondo = () => ({ on: true, ...LS.get('cfg-fondo', {}) });
@@ -58,6 +59,8 @@ export function avisosNuevos(antes, D, M) {
     }
     if (pujas) out.push(...pujasPerdidas(antes, D, M, pujaDe, misAhora));
   }
+  // (0.8.2) una puja nueva de otro por un libre por el que has pujado o que sigues
+  out.push(...pujasNuevas(M));
   // (41) los que te interesan y acaban de salir al mercado (uno por día y jugador; si son muchos, en un aviso)
   if (antes && antes.liga && D.liga && antes.liga.id === D.liga.id && !antes.demo && (antes.mercado || []).length) out.push(...interesEnMercado(antes, D, M));
   // lo que hay que poner en el mercado (y que aún no está puesto)
@@ -73,25 +76,32 @@ export function avisosNuevos(antes, D, M) {
   const inerciaTop = bloqueada('inercia');
   // (17 nov) a quién vender por la inercia, lo mismo que dice Hoy (acciones.js): antes aquí iban todos los que giraban,
   // también el que Hoy manda esperar a que le paguen la cláusula y el lesionado (que tiene su aviso, abajo)
-  const porInercia = M.vendeBaja && M.esperarVenta && M.enVenta ? ventasInercia(M) : (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid));
+  const porInercia = M.vendeBaja && M.esperarVenta && M.enVenta ? ventasInercia(M, { conPlan: true }) : (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid));
   const inercia = new Set(porInercia.map((x) => x.pid));
   for (const x of porInercia) {
-    const vi = x.ventaInercia;
+    // (24 nov) el titular que baja todos los días con relevo puede no traer inercia: se vende igual (decide.js)
+    const vi = x.ventaInercia || { urgencia: 'ya', texto: ((M.decision ? M.decision(x.pid) : null) || {}).porque || 'Baja todos los días.' };
+    // (24 nov) lo mismo que Hoy: al titular sin relevo que aún no baja todos los días no se le manda vender; con
+    // recambio, el cambio
+    const cb = M.cambioDe ? M.cambioDe(x.pid) : null;
+    if (!cb && M.perdida && M.bajaSeguido && M.perdida(x.pid) >= 0.3 && !M.bajaSeguido(x.pid)) continue;
     out.push({
       k: `vende:${x.pid}:${vi.urgencia}:${diaDe()}`,
-      titulo: inerciaTop ? `Pon a ${x.j.nombre} en el mercado` : vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
-      texto: inerciaTop ? 'Por cómo va su valor, conviene venderlo ya. Entra para ver el plan.' : vi.texto,
+      titulo: cb ? `Cambia a ${x.j.nombre} por ${cb.rec[0].j.nombre}` : inerciaTop ? `Pon a ${x.j.nombre} en el mercado` : vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
+      texto: cb ? `Baja y no tienes otro como él: puja por ${cb.rec[0].j.nombre} y, cuando lo tengas, véndelo.` : inerciaTop ? 'Por cómo va su valor, conviene venderlo ya. Entra para ver el plan.' : vi.texto,
       hash: 'equipo',
     });
   }
   // (una sanción de un partido no hace vender: se pierde la jornada y se aguanta, salvo que su valor caiga fuerte)
   const vendeBaja = (x) => (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
-  for (const x of (M.mias || []).filter((y) => vendeBaja(y) && !enVenta.has(y.pid) && !inercia.has(y.pid))) {
+  // (24 nov, decide.js) solo si su decisión es venderlo (si has dicho que no lo vendes, no)
+  const decV = (y) => { const d = M.decision ? M.decision(y.pid) : null; return !d || d.accion === 'vender'; };
+  for (const x of (M.mias || []).filter((y) => vendeBaja(y) && decV(y) && !enVenta.has(y.pid) && !inercia.has(y.pid))) {
     const por = x.j.estado === 'suspended' ? (!M.deBaja ? 'sancionado' : M.deBaja(x.j) ? 'sancionado para más de un partido' : 'sancionado y su valor cae deprisa') : x.j.estado === 'injured' ? 'lesionado' : 'fuera de LaLiga';
     out.push({ k: `lesion-venta:${x.pid}:${x.j.estado}`, titulo: `Pon a ${x.j.nombre} en el mercado`, texto: `Está ${por}: no te va a puntuar y puede bajar de valor.`, hash: 'equipo' });
   }
   if (M.ventanaEsp && Date.now() >= M.ventanaEsp.ponerVenta) {
-    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid) && !(M.aguantaReventa && M.aguantaReventa(y)))) {
+    for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid) && !(M.aguantaReventa && M.aguantaReventa(y)) && decV(y))) {
       out.push({ k: `revender:${x.pid}:${M.proxima ? M.proxima.n : diaDe()}`, titulo: `Hoy toca poner a ${x.j.nombre} a la venta`, texto: `Lo compraste para revender a ${eur(x.rev.precio)} y vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}). Ponlo ya para que llegue la oferta antes de la jornada.`, hash: 'equipo' });
     }
   }
@@ -126,13 +136,41 @@ export function pujasPerdidas(antes, D, M, pujaDe, misAhora) {
   return out;
 }
 
+/** (0.8.2) las pujas de otros que han entrado desde la última vez que se miró la liga, por los libres por los que has
+    pujado o que sigues (favoritos y «Avisarme»). Quién puede ser es función top: cerrada, el aviso no lo dice */
+export function pujasNuevas(M, c = cfgAvisos()) {
+  if (!c.on || c.pujas === false || !M.pujasVistas) return [];
+  const nuevas = nuevasEn(M.pujasVistas);
+  const cerrada = bloqueada('quienPuja');
+  const out = [];
+  for (const m of M.mercado || []) {
+    const k = m.tipo === 'liga' && m.j ? nuevas[m.id] : 0;
+    if (!k || !m.ajenas || !(m.miPuja || esFav(m.pid) || (c.jugadores || {})[m.pid])) continue;
+    const q = m.quien, top = q && q.cands[0];
+    let cuenta = '';
+    if (m.miPuja) {
+      const p = !cerrada && q && q.pMia != null ? q.pMia : null;
+      const hace = !cerrada && q && q.paraPasar ? q.paraPasar : m.pujaGana;
+      cuenta = p != null && p >= 0.65 ? ` Con tu puja de ${eur(m.miPuja)} lo normal es que te lo lleves igual.`
+        : hace && hace > m.miPuja ? ` Tu puja es de ${eur(m.miPuja)}: para llevártelo casi seguro harían falta unos ${eur(hace)}.` : ` Tu puja es de ${eur(m.miPuja)}.`;
+    // (0.8.3) «la app pujaría» solo si la app lo ficharía hoy: lo que el plan descarta o no se puede no lleva puja (decide.js)
+    } else if (m.puja && !(M.decisionFichar && M.decisionFichar(m.pid).accion === 'no')) cuenta = ` La app pujaría ${eur(m.puja)}.`;
+    const quien = top && !cerrada && q.conf !== 'baja' ? ` Lo más probable es que sea de ${top.nombre}.` : '';
+    out.push({ k: `puja-nueva:${m.id}:${m.ajenas}`, titulo: k > 1 ? `${k} pujas nuevas por ${m.j.nombre}` : `Nueva puja por ${m.j.nombre}`,
+      texto: `Ya ${m.ajenas === 1 ? 'hay 1 puja' : `hay ${m.ajenas} pujas`} de otros.${cuenta}${quien}`, hash: 'mercado' });
+  }
+  return out;
+}
+
 /** (41) los que te interesan (favoritos, los de «Avisarme» y los de interés alto o chollos) que acaban de salir al mercado */
 export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
   if (!c.on || c.enMercado === false) return [];
   const yo = D.yo && D.yo.teamId;
   const habia = new Set((antes.mercado || []).map((m) => m.pid));
+  // (24 nov, decide.js) lo que el plan ha mirado y no ficha no se avisa como chollo ni con «la app pujaría» (lo que sigues, sí, sin eso)
+  const noF = (m) => !!M.decisionFichar && (M.decisionFichar(m.pid) || {}).accion === 'no';
   const xs = (M.mercado || []).filter((m) => !habia.has(m.pid) && !m.miPuja && m.vendedorTeamId !== yo && m.j
-    && (esFav(m.pid) || (c.jugadores || {})[m.pid] || m.veredicto === 'chollo' || (m.interes || 0) >= Math.max(c.interes || 55, 60)))
+    && (esFav(m.pid) || (c.jugadores || {})[m.pid] || (!noF(m) && (m.veredicto === 'chollo' || (m.interes || 0) >= Math.max(c.interes || 55, 60)))))
     .sort((a, b) => (esFav(b.pid) - esFav(a.pid)) || ((b.interes || 0) - (a.interes || 0)));
   if (!xs.length) return [];
   const de = (m) => (m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : '');
@@ -140,7 +178,7 @@ export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
     return xs.map((m) => ({
       k: `en-mercado:${m.pid}:${diaDe()}`,
       titulo: `${m.j.nombre}, en el mercado`,
-      texto: `${esFav(m.pid) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
+      texto: `${esFav(m.pid) || noF(m) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' && !noF(m) ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
       hash: 'mercado',
     }));
   }

@@ -119,7 +119,8 @@ export function erroresEmojis(texto, hechos = {}) {
  */
 export function aplicarEmojis(texto, t = {}) {
   let s = String(texto || '');
-  if (!s.trim()) return s;
+  // (un tipo fuera de la política, como las respuestas, tal cual)
+  if (!s.trim() || !((t.tipo || (t.hechos && t.hechos.tipo) || '') in ARRIBA)) return s;
   const d = decidirEmojis({ ...t, texto: s });
   const ps = s.split(/\n\s*\n/);
   const ult = ps.length > 1 ? ps[ps.length - 1] : null;
@@ -131,7 +132,7 @@ export function aplicarEmojis(texto, t = {}) {
   // de club: los quita si no van, o si no salen dos clubes que los tengan los dos
   const cuerpo = etq ? ps.slice(0, -1) : ps;
   // ningún otro párrafo empieza por emoji (menos las listas de su línea, «🥇 … · 🥈 …»)
-  for (let i = 1; i < cuerpo.length; i++) if (primero(cuerpo[i]) && !/ · /.test(cuerpo[i])) cuerpo[i] = cuerpo[i].replace(/^\s*\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u, '').replace(/^\p{Ll}/u, (c) => c.toUpperCase());
+  for (let i = 1; i < cuerpo.length; i++) if (primero(cuerpo[i]) && !/ · /.test(cuerpo[i])) cuerpo[i] = cuerpo[i].replace(/^\s*\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u, '').replace(/^\p{Ll}/u, (c) => c.toUpperCase()).replace(/([^.!?…:])\s*$/u, '$1.');
   const enTexto = [...new Set(Object.entries(APODOS).filter(([c, a]) => a.a.some((n) => ` ${norm(cuerpo.join(' '))} `.includes(` ${norm(n).replace(/^(el|la) /, '')} `)) || ` ${norm(cuerpo.join(' '))} `.includes(` ${norm(c)} `)).map(([c]) => c))];
   const conE = enTexto.filter((c) => APODOS[c].e.length);
   const van = d.clubes && enTexto.length === 2 && conE.length === 2;

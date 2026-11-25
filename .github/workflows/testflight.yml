@@ -1,0 +1,177 @@
+# La app de iOS a TestFlight (sesión iOS 4). Se lanza al subir a la rama `testflight` (git push origin ios:testflight) o a
+# mano. Compila la app para el iPhone con la firma en la nube de Apple (la clave de la API de App Store Connect, secretos
+# ASC_*: ni certificados ni perfiles en el repo), la sube a App Store Connect y deja TestFlight listo con
+# .github/ios/testflight.mjs: la información de la beta, el grupo externo «Probadores» con enlace público, los probadores
+# y el envío a la revisión de la beta. No toca la App Store: enviar la app a revisión de la tienda es otra cosa (iOS 6).
+# Con «[sin-subir]» en el mensaje del commit no compila: solo configura TestFlight con la última compilación.
+name: TestFlight
+
+on:
+  push:
+    branches: [testflight]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+env:
+  TEAM: 23Q6T569UK
+  # Los anuncios de las compilaciones de TestFlight: «prueba» (los bloques de prueba de Google; a los de la liga no les
+  # cuenta nada tocarlos, y AdMob cierra cuentas por clics de gente cercana) o «reales» (los de project.yml, para la
+  # compilación que se envíe a la App Store en iOS 6)
+  ANUNCIOS: prueba
+
+jobs:
+  # la clave pública con la que se cifra .github/ios/contacto.enc (el teléfono y los correos: el repo es público)
+  clave:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: La clave pública
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          node .github/ios/testflight.mjs clave
+          if [ -f .github/ios/contacto.enc ]; then node .github/ios/testflight.mjs comprobar; fi
+
+  subir:
+    if: ${{ !contains(github.event.head_commit.message, '[sin-subir]') }}
+    runs-on: macos-26
+    timeout-minutes: 60
+    outputs:
+      build: ${{ steps.numero.outputs.build }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Con qué se compila
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+      - name: El número de compilación
+        id: numero
+        # como en Android: el número de la ejecución × 10 + el intento (sube siempre; Apple no deja repetir)
+        run: echo "build=$(( GITHUB_RUN_NUMBER * 10 + GITHUB_RUN_ATTEMPT ))" >> "$GITHUB_OUTPUT"
+      - name: La clave de la API
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          if [ -z "$ASC_KEY_P8" ] || [ -z "$ASC_KEY_ID" ]; then echo "::error::Faltan los secretos ASC_KEY_P8 y ASC_KEY_ID"; exit 1; fi
+          D="$RUNNER_TEMP/claves"; mkdir -p "$D"; chmod 700 "$D"
+          printf '%s\n' "$ASC_KEY_P8" > "$D/AuthKey_$ASC_KEY_ID.p8"; chmod 600 "$D/AuthKey_$ASC_KEY_ID.p8"
+          echo "CLAVE_P8=$D/AuthKey_$ASC_KEY_ID.p8" >> "$GITHUB_ENV"
+      - name: La web y el proyecto de Xcode
+        run: |
+          python3 .github/paquete.py >> "$GITHUB_ENV"
+          python3 ios/preparar.py >> "$GITHUB_ENV"
+          command -v xcodegen > /dev/null || brew install xcodegen
+          cd ios && xcodegen generate
+      - name: Archivar
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ steps.numero.outputs.build }}
+        run: |
+          set -o pipefail
+          EXTRA=()
+          if [ "$ANUNCIOS" = "prueba" ]; then
+            EXTRA+=(FM_ADMOB_APP="ca-app-pub-3940256099942544~1458002511" FM_BONIFICADO="ca-app-pub-3940256099942544/1712485313"
+                    FM_INTERSTICIAL="ca-app-pub-3940256099942544/4411468910" FM_APERTURA="ca-app-pub-3940256099942544/5575463023")
+          fi
+          COMUN=(-project ios/FantasyManager.xcodeproj -scheme FantasyManager -configuration Release
+                 -destination generic/platform=iOS -archivePath "$RUNNER_TEMP/app.xcarchive"
+                 DEVELOPMENT_TEAM="$TEAM" MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="$BUILD"
+                 FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" "${EXTRA[@]}")
+          AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          # 1) la firma automática con la clave de la API (crea ella lo que haga falta)
+          if xcodebuild archive "${COMUN[@]}" "${AUT[@]}" 2>&1 | tee "$RUNNER_TEMP/archivar.log" | grep -E "error:|warning: .*(sign|profile)|\*\* "; then :; fi
+          if ! grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar.log"; then
+            # 2) si no puede (por ejemplo, sin iPhone registrado para el perfil de desarrollo): firmada en local sin
+            # certificado, con los permisos dentro; al exportar, Apple la firma de verdad en la nube
+            echo "::warning::La firma automática no ha podido archivar; se archiva con firma local y firma Apple al exportar"
+            rm -rf "$RUNNER_TEMP/app.xcarchive"
+            xcodebuild archive "${COMUN[@]}" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER= \
+              PROVISIONING_PROFILE_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES 2>&1 | tee "$RUNNER_TEMP/archivar2.log" | grep -E "error:|\*\* " || true
+            grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar2.log"
+          fi
+          echo "== en el archivo:"
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" -c "Print :CFBundleVersion" -c "Print :GADApplicationIdentifier" "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app/Info.plist"
+      - name: Exportar y comprobar la firma
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          opciones() {
+            cat > "$RUNNER_TEMP/opciones-$1.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>$1</string>
+            <key>teamID</key><string>$TEAM</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+            <key>uploadSymbols</key><true/>
+            <key>testFlightInternalTestingOnly</key><false/>
+          </dict></plist>
+          PLIST
+          }
+          AUT=(-allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          opciones export
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/ipa" \
+            -exportOptionsPlist "$RUNNER_TEMP/opciones-export.plist" "${AUT[@]}" 2>&1 | tail -30
+          IPA=$(ls "$RUNNER_TEMP"/ipa/*.ipa)
+          mkdir -p "$RUNNER_TEMP/dentro" && cd "$RUNNER_TEMP/dentro" && unzip -q "$IPA"
+          codesign -d --entitlements - --xml Payload/*.app > "$RUNNER_TEMP/permisos.plist" 2>/dev/null || codesign -d --entitlements :- Payload/*.app > "$RUNNER_TEMP/permisos.plist"
+          plutil -p "$RUNNER_TEMP/permisos.plist"
+          codesign -dvv Payload/*.app 2>&1 | grep -E "Authority|TeamIdentifier" || true
+          # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
+          plutil -extract aps-environment raw "$RUNNER_TEMP/permisos.plist" | grep -qx production || { echo "::error::La app firmada no lleva aps-environment = production"; exit 1; }
+          plutil -extract com.apple.developer.usernotifications.time-sensitive raw "$RUNNER_TEMP/permisos.plist" | grep -qx true || { echo "::error::La app firmada no lleva el permiso de avisos urgentes"; exit 1; }
+          echo "firma y permisos, bien"
+      - name: Subir a App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -o pipefail
+          sed 's#<string>export</string>#<string>upload</string>#' "$RUNNER_TEMP/opciones-export.plist" > "$RUNNER_TEMP/opciones-upload.plist"
+          grep -q '<string>upload</string>' "$RUNNER_TEMP/opciones-upload.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/app.xcarchive" -exportPath "$RUNNER_TEMP/subida" \
+            -exportOptionsPlist "$RUNNER_TEMP/opciones-upload.plist" \
+            -allowProvisioningUpdates -authenticationKeyPath "$CLAVE_P8" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee "$RUNNER_TEMP/subir.log" | tail -30
+          grep -qE 'EXPORT SUCCEEDED|Upload succeeded|Uploaded' "$RUNNER_TEMP/subir.log"
+      - name: Los registros
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/salida"
+          for f in archivar.log archivar2.log subir.log; do [ -f "$RUNNER_TEMP/$f" ] && tail -c 300000 "$RUNNER_TEMP/$f" > "$RUNNER_TEMP/salida/$f"; done
+          cp "$RUNNER_TEMP/permisos.plist" "$RUNNER_TEMP/salida/" 2>/dev/null || true
+          rm -rf "$RUNNER_TEMP/claves"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: testflight-registros
+          path: ${{ runner.temp }}/salida
+          retention-days: 14
+
+  configurar:
+    needs: [clave, subir]
+    if: ${{ always() && needs.clave.result == 'success' && (needs.subir.result == 'success' || needs.subir.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: TestFlight
+        env:
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          BUILD: ${{ needs.subir.outputs.build }}
+        run: node .github/ios/testflight.mjs configurar

@@ -9,6 +9,8 @@
     if (window.FantasyApp) {
       document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover');
       document.documentElement.classList.add('en-app');
+      // (iOS 3) en la app de iOS (su puente habla por webkit.messageHandlers), para lo poco que cambia de aspecto ahí
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.fm) document.documentElement.classList.add('app-ios');
     }
   </script>
   <meta name="theme-color" content="#050506">
@@ -196,7 +198,7 @@
       <h2>Preguntas frecuentes</h2>
       <p><b>¿La app ve mi contraseña?</b> No. Entras en la página oficial de LaLiga y LaLiga le da a la app una sesión para leer tu liga. Los datos de tu liga se guardan solo en tu móvil o en tu navegador.</p>
       <p><b>¿Cuánto cuesta?</b> Nada. Se paga con anuncios de Google. No hay plan de pago y no se venden datos de nadie.</p>
-      <p><b>¿Funciona en iPhone y en el ordenador?</b> En Android, con la app. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella también se puede. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador y, ya dentro, sacar un código para el iPhone. Antes puedes verla con la liga de ejemplo.</p>
+      <p><b>¿Funciona en iPhone y en el ordenador?</b> Sí. En Android, con la app de Google Play. En el iPhone y en el ordenador (Windows y Mac) se usa desde esta web, sin descargar nada: entras con tu cuenta de LaLiga en tres pasos, solo la primera vez. Antes puedes verla con la liga de ejemplo.</p>
       <p><b>¿Qué hace la IA?</b> Lee lesiones, convocatorias y alineaciones antes de proponerte el plan o de contestar lo que le preguntes, con una clave gratuita tuya. La app comprueba sus cuentas antes de enseñártelas.</p>
       <h2>Guías de LaLiga Fantasy</h2>
       <p>Cómo funcionan las cláusulas, el mercado, los puntos y el dinero del juego, explicado con números. <a href="guias/">Todas las guías</a>.</p>

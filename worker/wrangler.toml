@@ -12,6 +12,10 @@ workers_dev = true
 # que de verdad es esa cuenta. Si existe el secreto FM_ADMINS, manda el secreto.
 [vars]
 ADMINS = "667015"
+# (0.8.4) quien ayuda con los fallos: ve «Quién usa la app» y los avisos de fallo de todos y (0.8.4c) los contesta, sin ver
+# el diagnóstico; para lo demás es un usuario normal. Números de cuenta de LaLiga, separados por comas (por número, nunca
+# por nombre: un nombre lo puede copiar cualquiera). Si existe el secreto FM_AYUDANTES de GitHub, manda el secreto
+AYUDANTES = "4452517"
 # El paso al ordenador con la sesión sin cerrar (la app antes de la 0.7a). Cuando en «Quién usa la app» no quede nadie por
 # debajo de la 0.7a, ponlo a "no" (revisión total, C6).
 FORMATO_VIEJO = "si"

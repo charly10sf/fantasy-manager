@@ -97,7 +97,11 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 var(--t-cuerpo)/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: var(--t-sec2); color: var(--apagado); display: flex; align-items: center; gap: 6px; }
-#supEstado { white-space: nowrap; overflow: hidden; }
+/* (24 nov, Carlos: «el círculo de recargar sigue roto») el texto se acorta con «…» y la flecha va siempre entera a su
+   lado: antes el texto no encogía y la flecha se quedaba medio cortada por el borde (con la letra grande del móvil) */
+#supEstado { white-space: nowrap; overflow: visible; min-width: 0; }
+#supEstado > .sup-tx { display: block; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#supEstado > .sup-tx .punto { margin-right: 6px; vertical-align: 1px; }
 .sup-liga .sup-queda { color: var(--oro); font-weight: 600; font-size: var(--t-mini); margin-top: 1px; }
 .sup-liga .sup-queda.poco { color: var(--baja); }
 .sup-liga .sup-queda[hidden] { display: none; }
@@ -139,6 +143,24 @@ b, strong { font-weight: 600; color: var(--texto); }
 .aviso-det summary { cursor: pointer; color: var(--texto2); font-size: var(--t-sec2); }
 .aviso-det pre.diag { max-height: 260px; overflow: auto; }
 .aviso-texto { font-size: var(--t-cuerpo) !important; color: var(--texto); }
+/* (0.8.4) los avisos como conversación: burbujas (lo tuyo a la derecha, en rojo suave; lo del otro a la izquierda) y la caja
+   de escribir abajo, con el clip de adjuntar a la izquierda y enviar a la derecha */
+.aviso.hilo .aviso-cab { cursor: pointer; }
+.aviso-ult { margin-top: 6px !important; }
+.aviso-ult b { color: var(--texto2); font-weight: 600; }
+.msgs { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 10px; }
+.msg { max-width: 86%; padding: 8px 11px 6px; border-radius: 14px; background: var(--plano3); display: flex; flex-direction: column; gap: 2px; align-self: flex-start; border-bottom-left-radius: 4px; }
+.msg.mio { align-self: flex-end; background: var(--rojo-s); border-bottom-left-radius: 14px; border-bottom-right-radius: 4px; }
+.msg b { font-size: var(--t-mini); color: var(--texto2); font-weight: 600; }
+.msg p { margin: 0 !important; font-size: var(--t-cuerpo); line-height: 1.42; white-space: pre-wrap; word-break: break-word; }
+.msg small { font-size: var(--t-mini); color: var(--apagado); align-self: flex-end; }
+.msg .aviso-capt { margin: 4px 0 2px; }
+.hilo-caja { border-top: 1px solid var(--linea); padding-top: 10px; }
+.hilo-fila { display: flex; gap: 6px; align-items: flex-end; }
+.hilo-fila textarea { flex: 1; min-height: 44px; resize: vertical; font-size: var(--t-cuerpo); line-height: 1.4; margin: 0; }
+.hilo-fila .b-ico { flex: none; width: 44px; height: 44px; }
+.hilo-env { color: var(--rojo-l); }
+.hilo-caja .aviso-capt { margin: 0 0 8px; }
 /* un fallo al cargar, explicado */
 .banda.mal { background: var(--baja-s); }
 .banda.mal .ic { color: var(--baja); }
@@ -572,6 +594,7 @@ h1.titulo { font-weight: 700; }
 .cr-ley { margin: 8px 0 0; font-size: var(--t-sec2); line-height: 1.4; color: var(--apagado); }
 .cr-consejo { margin: 10px 0 0; font-size: var(--t-sec2); line-height: 1.4; font-weight: 600; }
 .cargando-ia .p2 { margin-top: 10px; font-size: var(--t-sec2); color: var(--apagado); }
+.cargando-ia .p2 .btn { display: flex; width: fit-content; margin-top: 8px; }
 
 /* ---------- hojas que suben ---------- */
 .velo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: 50; opacity: 0; transition: opacity 0.2s; }
@@ -1035,7 +1058,7 @@ body.con-nv { overflow: hidden; }
 .ahora-f.t-clausular .ahora-ic { background: var(--sube-s); } .ahora-f.t-clausular .ahora-ic .ic { color: var(--sube); }
 .ahora-c { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
 .ahora-c b { font: 600 var(--t-cuerpo) 'Barlow'; color: var(--texto); }
-.ahora-c span { font-size: var(--t-sec2); color: var(--texto2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ahora-c span { font-size: var(--t-sec2); color: var(--texto2); display: block; }
 .ahora-cu { flex: none; font: 600 var(--t-sec2) 'Barlow'; color: var(--apagado); white-space: nowrap; margin-top: 2px; }
 .ahora-c .ahora-cu2 { display: block; -webkit-line-clamp: unset; font: 600 var(--t-sec2) 'Barlow'; color: var(--apagado); }
 .eq-hoy { margin: 14px 0 0; padding: 12px 14px; border-radius: var(--r-tarj); background: var(--plano); border: 1px solid var(--linea); }
@@ -1918,6 +1941,13 @@ button.pf-eq:active { opacity: 0.7; }
 .forzar-ic { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; align-items: center; justify-content: center; background: var(--rojo-s); color: var(--rojo-l); }
 .forzar-ic svg { width: 26px; height: 26px; }
 .forzar-b { display: grid; gap: 8px; }
+/* (iOS 3) el permiso para mandar tu liga a la IA (permiso-ia.js, solo en la app de iOS) */
+.perm-ia .forzar-c { max-width: 400px; max-height: calc(100dvh - 32px); overflow-y: auto; text-align: left; }
+.perm-ia .forzar-c > .forzar-ic, .perm-ia .forzar-c > h2 { display: flex; margin-left: auto; margin-right: auto; justify-content: center; text-align: center; }
+.perm-ia .forzar-c p { margin-bottom: 12px; }
+.perm-ia-l { margin: 0 0 12px; padding-left: 20px; color: var(--texto); line-height: 1.45; }
+.perm-ia-l li { margin-bottom: 6px; }
+.perm-ia-pol { padding: 0; border: 0; background: none; color: var(--rojo-l); font: inherit; text-decoration: underline; cursor: pointer; }
 
 /* Pregunta, arriba y en rojo (fuera de la barra de abajo desde la 0.6.3h) */
 /* (0.7.7, overhaul) Pregunta va de contorno: el rojo relleno queda para la acción principal de cada pantalla */
@@ -2029,6 +2059,24 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-d .aviso-op .ic { width: 15px; height: 15px; flex: none; margin-top: 2px; }
 .pp-pills { display: flex; flex-wrap: wrap; gap: 6px; }
 .pp-mot { margin: 8px 0 0; font-size: var(--t-sec2); line-height: 1.45; color: var(--texto2); }
+/* (24 nov) el texto entero del paso, plegado */
+.pp-mas { margin-top: 8px; }
+/* (24 nov) el cambio: quién sale y quién entra */
+.pp-cambio { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.pp-cj { display: flex; align-items: center; gap: 7px; min-width: 0; flex: 1; cursor: pointer; }
+.pp-cj b { font: 700 var(--t-cuerpo)/1.1 var(--cond); min-width: 0; overflow-wrap: anywhere; }
+.pp-cj small { display: block; font-size: var(--t-mini); color: var(--apagado); }
+.pp-cj > b + small { margin-left: -2px; }
+.pp-cf { font: 700 20px var(--cond); color: var(--apagado); }
+.pp-rec { margin-top: 6px; font: 600 var(--t-sec2) 'Barlow'; color: var(--rojo-l); }
+.rec-f .fila-d .v { font-size: var(--t-cuerpo); }
+.pp-mas > summary { display: inline-flex; align-items: center; gap: 4px; font: 600 var(--t-sec2) 'Barlow'; color: var(--apagado); cursor: pointer; list-style: none; }
+.pp-mas > summary::-webkit-details-marker { display: none; }
+.pp-mas > summary::after { content: '›'; transition: transform 0.15s; }
+.pp-mas[open] > summary::after { transform: rotate(90deg); }
+.pp-mas .pp-mot { margin-top: 4px; }
+/* las pastillas de un paso se parten en varias líneas: nunca cortadas */
+.claves span { white-space: normal; overflow-wrap: anywhere; }
 .paso2 .op-pie { margin-top: 10px; padding-top: 9px; }
 .paso2 .op-pie button + button { margin-left: 6px; }
 .llevas { margin: 12px 0 6px; }
@@ -2396,6 +2444,9 @@ button.cr-p:active { background: var(--plano); }
    dibujados con HTML (js/portada.js). En la app de Android, solo lo de entrar. */
 .portada { background: radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
 .portada.web .pantalla { min-height: 0; padding-bottom: 28px; }
+/* (iOS 3) en la app de iOS, la franja de la hora es negra lisa (la pone la app): el degradado rojo de la pantalla de entrar
+   empieza en negro para que no haya un corte entre las dos */
+html.app-ios .portada { background: linear-gradient(var(--fondo), transparent 160px), radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
 /* en el móvil: el logo, el titular, el botón y, por último, la lista (el botón no se queda debajo de ella) */
 .portada .pant-i { display: contents; }
 .portada .pant-d { order: 2; }
@@ -2929,6 +2980,12 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .rk tr td.rk-min { color: var(--baja); }
 .rk td.rk-vivo { color: var(--texto); }
 .rk td.apag { color: var(--apagado); }
+/* (24 nov) cada cifra de una jornada abre el once de ese mánager en ella */
+.rk td.rk-j > button { display: block; width: 100%; margin: -8px -6px; padding: 8px 6px; box-sizing: content-box; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+/* las pastillas de las jornadas, todas en una fila que se desliza de lado (la última primero) */
+.filtros.rk-jsel { flex-wrap: nowrap; overflow-x: auto; margin-left: -16px; margin-right: -16px; padding: 0 16px 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.filtros.rk-jsel::-webkit-scrollbar { display: none; }
+.filtros.rk-jsel > button { flex: none; }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
 
 /* al deslizar de lado a la pestaña de abajo de al lado, la nueva entra desde ese lado (Carlos, 9 nov 15:24) */
@@ -3374,6 +3431,14 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .inv-premios li{margin:4px 0}
 .inv-cod{display:flex;align-items:center;gap:8px;justify-content:center;font-size:15px}
 .inv-cod b{letter-spacing:2px;font-size:18px}
+/* (25 nov) el código de quien invita, grande, y la ventana de quien llega invitado */
+.inv-tucod{display:flex;flex-direction:column;align-items:center;gap:4px;margin:12px 0;padding:14px 12px;border-radius:12px;border:1px dashed var(--plano3);text-align:center}
+.inv-tucod>span{color:var(--texto-2);font-size:13px}
+.inv-tucod b{font:700 30px var(--cond);letter-spacing:6px;color:var(--texto)}
+.inv-tucod-b{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.codigo-in.grande input{padding:16px 14px;font-size:26px;letter-spacing:8px}
+.invitado .btn.ancho{margin-top:10px}
+.invitado .codigo-in{margin-top:12px}
 .inv-cuenta{display:flex;flex-direction:column;gap:2px;margin:12px 0;padding:10px 12px;border-radius:12px;background:var(--e2)}
 .inv-cuenta span{color:var(--texto-2);font-size:13px}
 .inv-canjear,.inv-elegir{display:flex;flex-direction:column;gap:6px;margin:10px 0 14px;padding:12px;border-radius:12px;border:1px solid var(--linea)}
@@ -3652,11 +3717,12 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .banda-inv .ic { color: var(--oro); }
 .sup-btns [hidden] { display: none !important; }
 .sup-toca { cursor: pointer; }
-.sup-gir { display: inline-flex; flex: none; margin-left: 2px; color: var(--texto2); }
-.sup-gir .ic { width: 15px; height: 15px; stroke-width: 2.2; transform-origin: 50% 50%; }
-.sup-toca.girando .sup-gir .ic { animation: sup-gira 0.9s linear infinite; }
+#supEstado > .sup-gir { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 18px; height: 18px; margin-left: 0; color: var(--texto2); transform-origin: 50% 50%; }
+.sup-gir .ic { width: 16px; height: 16px; stroke-width: 2.2; display: block; }
+/* (24 nov) gira la caja (HTML), no el SVG: así lo mueve la tarjeta gráfica y no se para mientras la app calcula */
+.sup-toca.girando > .sup-gir { animation: sup-gira 0.9s linear infinite; will-change: transform; color: var(--sube); }
 @keyframes sup-gira { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .sup-toca.girando .sup-gir .ic { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sup-toca.girando > .sup-gir { animation: none; } }
 
 /* (rework de la web, 21 nov) los 20 escudos en la portada de la web: debajo de la barra fija con JS (.tira-p) y arriba del todo
    sin JS (.sj-tira); cada uno lleva a la ficha de su equipo. Como la tira de las páginas públicas (css/paginas.css, .tira) */
@@ -3717,3 +3783,75 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .bj-ok { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
 .bj-ok .ic { color: var(--sube); width: 18px; height: 18px; }
 .bj-pie { margin: 18px 0 0; font-size: var(--t-mini); color: var(--apagado); text-align: center; }
+
+/* ------------------------------------------------------------------ (24 nov) «Tu liga, por dentro»
+   Lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla en cada dispositivo: Android · iPhone ·
+   Ordenador, cada uno con su símbolo, una línea y una sola cosa que hacer, y el tuyo destacado. Los símbolos son dibujos de
+   un color y del mismo peso: el robot de Android, la manzana para el iPhone y el logo de Windows para el ordenador. */
+.tl { display: block; min-width: 0; margin: 0 0 24px; text-align: left; }
+.portada .pantalla p.tl-k { margin: 0 0 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 1.2px; color: var(--rojo-l); }
+.portada .pantalla h2.tl-h { margin: 0 0 10px; font: 700 44px/0.95 var(--cond); text-transform: uppercase; letter-spacing: 0; color: var(--texto); text-wrap: balance; }
+.portada .pantalla h2.tl-h span { color: var(--rojo-l); }
+.escritorio .portada .pantalla h2.tl-h { font-size: 64px; }
+.portada .pantalla p.tl-p { margin: 0 0 16px; max-width: 46ch; font-size: 16px; line-height: 1.45; color: var(--texto2); }
+.escritorio .portada .pantalla p.tl-p { font-size: 17px; }
+.tl-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tl-f { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 64px; padding: 10px 12px; border-radius: var(--r-ctl); background: var(--plano); border: 1px solid var(--linea); }
+.tl-f.tuyo { border-color: var(--rojo3); background: var(--rojo-s); }
+.tl-g { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: var(--r-ctl); background: var(--plano3); color: var(--texto); }
+.tl-g svg { display: block; width: 25px; height: 25px; }
+.tl-n { display: grid; gap: 2px; min-width: 0; margin-right: auto; }
+.tl-n b { font: 700 19px/1.05 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.tl-n small { font: 600 12.5px/1 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; color: var(--apagado); white-space: nowrap; }
+.tl-n span { font-size: 14px; line-height: 1.3; color: var(--texto2); }
+.tl-aqui { flex: none; padding: 5px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); font: 700 12px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.8px; color: var(--texto); white-space: nowrap; }
+.portada .pantalla a.tl-ir { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; font: 600 14.5px 'Barlow', sans-serif; color: var(--texto); text-decoration: underline; text-underline-offset: 3px; }
+.tl-f .play-badge { flex: none; margin: 0; }
+.tl-f .play-badge img { width: 136px; }
+.tl-f.tuyo[data-d="android"] { flex-wrap: wrap; padding-bottom: 14px; }
+.tl-f.tuyo[data-d="android"] .play-badge { flex-basis: 100%; display: flex; justify-content: center; margin-top: 4px; }
+.tl-f.tuyo[data-d="android"] .play-badge img { width: min(240px, 68vw); }
+.tl-f .tl-inst { flex: none; min-height: 40px; }
+.tl-f .tl-inst[hidden] { display: none; }
+.tl-f.tuyo[data-d="pc"]:has(.tl-inst:not([hidden])) { flex-wrap: wrap; }
+/* con lo de la app arriba, el titular del portal baja un punto: manda «Tu liga, por dentro» */
+.portada .pantalla .po.con-app h1.po-h1 { font-size: 34px; }
+.escritorio .portada .pantalla .po.con-app h1.po-h1 { font-size: 44px; }
+/* en el iPhone va encima de los tres pasos: solo la frase, para que el botón rojo siga en la primera pantalla */
+.pant-d > .tl { margin-bottom: 12px; }
+.portada .pantalla .pant-d > .tl h2.tl-h { font-size: 36px; margin-bottom: 6px; }
+.portada .pantalla .pant-d > .tl p.tl-p { margin: 0; font-size: 15px; line-height: 1.4; }
+.portada .pantalla .pant-d > .tl p.tl-k { margin-bottom: 4px; font-size: 12px; }
+.tl.tl-mas { margin: 18px 0 0; }
+.tl.tl-mas .tl-f { min-height: 56px; }
+/* el ordenador: lo del móvil va en su tarjeta, con un solo QR a la vista; al desplegar «Ya tengo la app» sale el de entrar
+   y el otro se quita */
+.plat-mov { background: var(--plano); border: 1px solid var(--linea); }
+.plat-mov .plat-n { font-size: var(--t-sec); }
+.plat-mov:has(#detApp[open]) #qrMovil { display: none; }
+.plat .plat-mov .plat-movil, .plat-mov .plat-movil { padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.plat .ent-logo svg.wn { width: 26px; height: 26px; }
+.tl-g svg.wn { width: 22px; height: 22px; }
+/* «Empieza hoy», al final: en el iPhone no sale Google Play */
+.p-iphone .pz-b a[href*="play.google.com"] { display: none; }
+/* (0.8.4c) las dos pestañas de los avisos del dueño y de quien ayuda: «Recibidos» y «Reportar un fallo», con su numerito */
+.av-pest button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.av-pest .av-n { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--rojo); color: #fff; font: 700 var(--t-mini)/18px 'Barlow'; }
+/* (0.8.4e) la tarjeta de la app para iPhone (el diseño A que eligió Carlos el 25 nov, 13:29: la manzana sola, sin círculo
+   ni anillo), sobre la de las novedades (.nvt) */
+.nvt.nvt-ios { padding: 26px 22px 14px; background: #141418; }
+.nvt-ios .ios-logo { width: 56px; height: 56px; margin: 2px auto 12px; color: #fff; }
+.nvt-ios .ios-logo svg { display: block; width: 56px; height: 56px; }
+.nvt-ios .ios-eti { display: inline-flex; align-items: center; gap: 6px; font: 700 12px 'Barlow'; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rojo-texto); }
+.nvt-ios .ios-eti i { width: 7px; height: 7px; border-radius: 50%; background: var(--rojo); }
+.nvt-ios h2 { margin: 6px 0 0; font-size: 26px; line-height: 1.02; }
+.nvt-ios p { margin: 10px 0 14px; line-height: 1.38; }
+.nvt-ios .ios-mas { display: block; margin: 0 0 14px; padding: 9px 12px; border-radius: 12px; background: rgba(255, 197, 71, 0.1); color: #ffc547; font: 600 13.5px 'Barlow'; line-height: 1.3; }
+.nvt-ios .ios-ok { display: block; width: 100%; min-height: 44px; margin: 2px 0 0; padding: 12px; border: 0; border-radius: 12px; background: var(--rojo-accion); color: #fff; font: 700 15px 'Barlow'; }
+/* (25 nov) cómo llegan los amigos invitados (Quién usa la app → Invitar) y la llegada con ?inv= a la web de un Android */
+.q-inv-lleg{display:flex;flex-direction:column;gap:6px}
+.inv-llega{margin:0 0 16px;padding:16px;border-radius:14px;border:1px solid var(--rojo);background:rgba(255,255,255,.03);text-align:center}
+.inv-llega h2{margin:0 0 4px;font:700 20px var(--cond);text-transform:uppercase}
+.inv-llega .inv-llega-cod{display:block;margin:10px 0;font:700 34px var(--cond);letter-spacing:8px;color:var(--texto);user-select:all}
+.inv-llega p{margin:6px 0;color:var(--texto-2);font-size:14px}
+.inv-llega .btn{margin-top:8px}

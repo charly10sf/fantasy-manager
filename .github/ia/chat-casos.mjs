@@ -143,14 +143,29 @@ export const CASOS = [
   // contarle un hecho y preguntar después (22 nov, Carlos: «no me quedan blindajes» y el plan rehecho mandó blindar)
   { id: 'dicho-blindajes', tipo: 'contado', prep: 'blindable', q: 'No me quedan más blindajes, tenlo en cuenta la próxima vez que rehagas el plan', contado: 'blindajes', noDebe: /quito[^.]{0,60} del plan|para la pr[oó]xima vez|la pr[oó]xima vez que/ },
   { id: 'dicho-blindajes-hoy', tipo: 'contado', sigue: true, q: '¿Qué hago hoy?', noDebe: /\b(bl[ií]nda(lo|le|los)?|ponle el (blindaje|escudo)|usa (el|un|tu) (blindaje|escudo)|gasta (el|un) (blindaje|escudo))\b/ },
-  { id: 'dicho-blindar-a', tipo: 'contado', sigue: true, q: '¿Y a {BLIND} no lo blindo?', debe: /no te queda|sin blindaje|no quedan|gastad|no puedes|ning[uú]n blindaje/ },
+  { id: 'dicho-blindar-a', tipo: 'contado', sigue: true, q: '¿Y a {BLIND} no lo blindo?', debe: /no te queda|sin blindaje|no quedan|quedan 0|gastad|no puedes|ning[uú]n blindaje|ya no sirve/ },
   { id: 'dicho-novender', tipo: 'contado', q: 'A {PLANV} no lo vendo, que lo sepas', contado: 'no-vender', noDebe: /lo quito del plan|para la pr[oó]xima vez/ },
   { id: 'dicho-novender-caja', tipo: 'contado', sigue: true, q: '¿A quién vendo para hacer caja?', noDebe: /(vende|vender|venta) a \{PLANV\}|\{PLANV\}[^.]{0,60}(v[eé]ndelo|ponlo (a la|en) venta)/ },
   { id: 'dicho-puja', tipo: 'contado', q: 'Ya he pujado por {CHOLLO}', contado: 'puja' },
-  { id: 'dicho-puja-hoy', tipo: 'contado', sigue: true, q: '¿Por quién pujo hoy?', noDebe: /puja[^.]{0,40} por \{CHOLLO\}/ },
+  { id: 'dicho-puja-hoy', tipo: 'contado', sigue: true, q: '¿Por quién pujo hoy?', noDebe: /(?<!tu )puja[^.]{0,40} por \{CHOLLO\}(?![^.]{0,40}\bno la subas)/ },
   { id: 'dicho-pregunta', tipo: 'contado', q: '¿Vendo a {MIO}?' },
   { id: 'dicho-a-ese', tipo: 'contado', sigue: true, q: 'Pues a ese no lo vendo ni loco', contado: 'no-vender' },
   { id: 'dicho-opinion', tipo: 'contado', q: 'No me fío mucho de {MIO2}, tenlo en cuenta' },
+  // --- (24 nov, el aviso de Senna) la app no se contradice: para la escena «m-senna» (Hugo Duro, suplente que baja, en
+  // venta con una oferta floja de LaLiga, y el plan de la IA de la mañana que mandaba aceptarla). La decisión de la app es
+  // «a la venta, pero esta oferta no»: eso tiene que decir, sin negar lo que decía el plan ni lo que ella dijo antes ---
+  { id: 'senna-vendo', tipo: 'coherencia', prep: 'senna', q: '¿Vendo a Hugo Duro?', debe: /esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper/, noDebe: /\b(acepta la oferta|aceptala)\b(?![^.]*\b(no|solo si)\b)|\bmejor aguantar/ },
+  { id: 'senna-quedamos', tipo: 'coherencia', sigue: true, q: 'Pues en el plan de esta mañana me decías que aceptara la oferta. ¿En qué quedamos?', debe: /plan/, noDebe: /te he dicho que|no te (he dicho|dije)|sigue igual|nunca te/ },
+  { id: 'senna-porque-plan', tipo: 'coherencia', q: '¿Por qué el plan ya no me dice que acepte la oferta por Hugo Duro?', debe: /oferta/, noDebe: /te he dicho que|sigue igual|no ha cambiado/ },
+  { id: 'senna-laliga', tipo: 'coherencia', q: 'LaLiga me ofrece ya por Hugo Duro, ¿la cojo o espero?', debe: /esper|otra|siguiente|manana/, noDebe: /llega en el siguiente cambio|aun no (tiene|hay) oferta|ponlo a la venta/ },
+  { id: 'senna-aguanto', tipo: 'coherencia', q: 'Entonces, ¿a Hugo Duro lo aguanto y lo quito de la venta?', debe: /venta/, noDebe: /quitalo de la venta|sacalo de la venta|mejor aguantar/ },
+
+  // --- (24 nov, Carlos con Bernardo Silva y Fran: «se cree que la liga da un 7 % en las ofertas; puede dar de −10 a +10») una compra
+  // que el mánager cuenta es un hecho, y LaLiga no «suele dar» un tanto fijo. Escena `holgado` (Paredes, de Marcos, 20,54 M) ---
+  { id: 'compra-revender', tipo: 'coherencia', q: 'le compro a Marcos a Paredes por precio mercado para revenderlo y sacar el 10%?', debe: /10 ?%|suerte|entre/, noDebe: /no vende a (su|ese)|oferta minima|suele dar(te)? (un|unos)|no lo veo|no la veo/ },
+  { id: 'compra-10', tipo: 'coherencia', sigue: true, q: 'pero si lo compro por precio de mercado y la liga me ofrece cerca del +10% posible, estaria ganando dinero', debe: /suerte|puede|primera|floja|loteria|sorteo|mejor caso|techo|maximo/, noDebe: /no compras|el dueno no vende|suele dar(te)? (un|unos)/ },
+  { id: 'laliga-cuanto', tipo: 'coherencia', q: '¿Cuánto da LaLiga por un jugador cuando lo pones a la venta?', debe: /10 ?%/, noDebe: /suele dar(te)? (un|unos) \+?\d|de mediana un/ },
+
 ];
 
 /* lo que se cambia en la liga de ejemplo antes de preguntar (lo mismo en todas las escenas): un rival con el nombre de un
@@ -209,6 +224,14 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
     };
   }
   const mk = window.__marcas;
+  // (25 nov) lo que estaba en venta al empezar: «blindable» lo vacía y las preguntas de Senna (que van detrás) se quedaban
+  // sin la oferta de Hugo Duro (en las dos pasadas del 25 nov, «véndelo» era lo correcto con esa liga: no había oferta)
+  if (!window.__ventas0) window.__ventas0 = JSON.parse(JSON.stringify(D.misVentas || []));
+  if (prep === 'senna' && window.__blindable && !window.__sennaRepuesta) {
+    D.misVentas = JSON.parse(JSON.stringify(window.__ventas0));
+    window.__sennaRepuesta = true;
+    await rehacer();
+  }
   // un titular suyo con la cláusula a su valor y abierta, un rival con dinero y nada suyo en venta: la app quiere blindarlo
   if (prep === 'blindable' && !window.__blindable) {
     const yo = D.yo.teamId;
@@ -274,6 +297,10 @@ export async function vistaEnPagina({ texto, pre, hist }) {
   const apuntado = dicho.length + n.apuntadas.length + n.olvidadas;
   let rev = { texto: n.texto, notas: [] };
   try { rev = I.revisarChat(n.texto, pre, D, M, { rec: n.recomiendo, hist, apuntado }); } catch (e) { /* como en la app */ }
+  // (25 nov) y lo último que hace la app (lo cerrado, «no la veo», «llega mañana»), si el código lo tiene
+  const antesDel = rev.texto;
+  try { if (I.repasoFinal) rev.texto = I.repasoFinal(rev.texto, pre, D, M, [...hist, { r: 'yo', t: pre }]); } catch (e) { /* como en la app */ }
+  if (rev.texto !== antesDel) rev.notas = [...rev.notas, 'repaso final'];
   // lo que apunta la IA también puede mandar en el motor (el jugador de «a ese no lo vendo»)
   const corr = [...dicho, ...n.apuntadas].filter((x) => x.corr).map((x) => x.corr);
   if (n.apuntadas.some((x) => x.corr)) { if (window.__fmRehacer) window.__fmRehacer(); }

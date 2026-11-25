@@ -7,6 +7,11 @@ que salen idénticas: la de la app lo mete en el APK (lo que trae dentro) y la d
 Pages (lo último). La app compara las dos y baja solo lo que ha cambiado, y solo si la parte Android es la misma.
 
 Imprime NATIVO=<huella> para añadirlo a $GITHUB_ENV (la compilación la mete en BuildConfig.NATIVO).
+
+(25 nov) La app de iOS tiene su propia huella nativa, aparte: «nativoIos» (ios/App y lo que decide cómo se compila:
+IOS_COMPILACION). Es un campo más del paquete.json; los APK no lo leen, y ni «nativo» ni «huella» ni «archivos» cambian
+por él. La app de iOS (ios/App/Fuentes/AlDia.swift) solo baja la web nueva si «nativoIos» es el suyo. Se imprime también
+como NATIVO_IOS=<huella>.
 Con --parar, el paquete.json publicado le dice a todas las apps que vuelvan a la web de su APK.
 """
 import hashlib
@@ -22,6 +27,9 @@ NATIVA = os.path.join(RAIZ, 'android', 'app', 'src')
 # fm.anunciosReales. Si cambia cualquiera, cambia la huella nativa y hace falta el APK nuevo
 NATIVA_COMPILACION = ('android/build.gradle', 'android/settings.gradle', 'android/gradle.properties',
                       'android/app/build.gradle', 'android/app/reglas-r8.pro')
+# la parte de iOS: lo que va dentro de la app (sin las pruebas ni lo que solo se compila para probar, ios/Sonda)
+IOS_NATIVA = os.path.join(RAIZ, 'ios', 'App')
+IOS_COMPILACION = ('ios/project.yml',)
 FIRMA = 'paquete.json.sig'
 # lo que solo sirve la web pública (guías, portal de datos), no la app: fuera del paquete, así no baja cada noche
 SOLO_WEB = ('guias/', 'mercado/', 'jornada/', 'equipos/', 'jugadores/', 'clausulas/', 'bajas/', 'portal/', 'sitemap', 'google', 'metodo.html')
@@ -94,6 +102,16 @@ def main():
     with open(os.path.join(WEB, 'js', 'version.js'), encoding='utf-8') as f:
         version = re.search(r"VERSION = '([^']+)'", f.read()).group(1)
     paquete = {'version': version, 'nativo': nativo, 'huella': junta(archivos.items()), 'archivos': archivos}
+    nativo_ios = None
+    if os.path.isdir(IOS_NATIVA):
+        pares_ios = [(rel, sha(os.path.join(IOS_NATIVA, rel))) for rel in arbol(IOS_NATIVA)]
+        for rel in IOS_COMPILACION:
+            ruta = os.path.join(RAIZ, rel)
+            if not os.path.isfile(ruta):
+                sys.exit(f'Falta {rel} (va en la huella nativa de iOS)')
+            pares_ios.append((':' + rel, sha(ruta)))
+        nativo_ios = junta(pares_ios)
+        paquete['nativoIos'] = nativo_ios
     if '--parar' in sys.argv:
         paquete['parar'] = True
     # la firma de una pasada anterior ya no vale para este paquete.json: la pone .github/firmar-paquete.sh
@@ -102,6 +120,8 @@ def main():
     with open(os.path.join(WEB, 'paquete.json'), 'w', encoding='utf-8') as f:
         json.dump(paquete, f, separators=(',', ':'), sort_keys=True)
     print(f'NATIVO={nativo}')
+    if nativo_ios:
+        print(f'NATIVO_IOS={nativo_ios}')
     print(f'web {version}: {len(archivos)} archivos, huella {paquete["huella"]}', file=sys.stderr)
 
 

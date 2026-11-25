@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8v';
+export const VERSION = '0.8.4n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,392 @@ export const VERSION = '0.8v';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, claude/prompt-tandas-b.md: las tandas B-5, B-1, B-2 y B-3 de claude/auditoria-fallos-25nov-b.md) B-5: con
+    // «quién paga» cerrado al chat no le llega a quién le llega una cláusula (`paganTxt`, `blindajeTxt` con chat), la pregunta
+    // «¿quién me puede pagar…?» va marcada (`dineroPreguntado().quien`) y `sinDineroCerrado` quita «a ninguno le llega» y pone
+    // el candado de quién paga; `repasoFinal` (lo último de la respuesta, también en chat-haiku); revisarChat 3e añade «esa
+    // oferta no» a un «véndelo» con la decisión «a la venta, pero esta oferta no». B-1: B5 (plan.js, «salvo X»), B6
+    // (decisionFichar `yaPujada`), B7 (operaciones.js, la puja del plan para lo descartado), B8 (`comoVa` de decide.js). B-2:
+    // el resumen de una jornada con un partido aplazado (bot/web/resumen.mjs `aplazadosDe`, portal-web `faltan`) y «Resumen
+    // J13» en el menú de Jornada (paginas.py). B-3: `por` en /sinc y el registro del Worker. Pruebas: caso-dinero (g),
+    // caso-contradicciones (E y F), portal-ejemplo, prueba-paginas, caso-sinc, datos.mjs y la IA de verdad (13 céntimos)
+    v: '0.8.4n', f: '2026-11-25', h: '22:49', t: 'El chat y la app dicen lo mismo',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Quién paga tus cláusulas, cerrado de verdad', x: 'Si preguntas quién te puede pagar la cláusula de un jugador y eso lo tienes cerrado, el chat te dice cómo se abre y te cuenta lo que sí se ve: cuánto pide la cláusula sobre su valor y lo que se suele pagar en tu liga. Antes podía soltar que a ningún rival le llegaba.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'oferta', t: 'Vender, pero esa oferta no', x: 'Si preguntas si vendes a uno que la app quiere vender pero con una oferta floja encima de la mesa, la respuesta dice las dos cosas: que lo dejes a la venta y que esa oferta no la aceptes.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'plan', menor: true, t: 'Lo mismo en todas partes', x: 'Una sola puja por cada libre que el plan descarta, la misma palabra para cómo va el valor de un jugador, «no se toca a los titulares» dice cuál sí se vende y por qué, y con tu puja ya puesta la ficha te dice que sigue en pie y cómo quitarla.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'calendario', menor: true, t: 'Jornadas con un partido aplazado', x: 'En la web, el resumen de una jornada con un partido aplazado sale con los que se han jugado y se pone al día cuando se juegue el que falta. Y el menú de Jornada lleva al resumen de la última en vez de a una previa ya jugada.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'En la web del iPhone, cómo se abre lo cerrado', x: 'Si en la web del iPhone le preguntas al chat por algo que tienes cerrado, ya no te manda a ver un anuncio en la app de Google Play: el dinero de un rival se abre invitando a un amigo, y quién paga tus cláusulas, de momento, ahí no se puede abrir.' },
+    ],
+  },
+  {
+    // (25 nov, la B-4 de claude/prompt-noticias-deno-busquedas.md del proyecto) en la web, Google Noticias da 503 a las IP
+    // de Cloudflare: si falla, Bing Noticias por el Worker (externas.js: parseRSS con los dos formatos, consultaBing,
+    // «noticias-bing» 6 h); Worker: www.bing.com en PERMITIDOS, solo su RSS. Pruebas: datos.mjs y prueba-noticias.mjs
+    v: '0.8.4m', f: '2026-11-25', h: '22:12', t: 'Las noticias, también en la web',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Las noticias vuelven a la web y al iPhone', x: 'En el navegador del ordenador y del iPhone las noticias de tus jugadores y de los clubes no llegaban casi nunca. Ahora, si la fuente de siempre no contesta, se buscan en otra, y el plan y la ficha de cada club vuelven a tenerlas.' },
+    ],
+  },
+  {
+    // (25 nov, sesión iOS 4 de claude/plan-ios.md) Se publica lo de iOS 2 e iOS 3 (rama `ios`): el Worker con `/push` (APNs)
+    // y el canal «ios» en «Quién usa la app», `bloqueIos` en limites.json, permiso-ia.js, `hayFondo()`, los textos y la IA
+    // sin clave de Google dentro de la app de iOS, y el apartado «La app de iPhone» de privacidad.html. Fuera de la app de
+    // iOS no cambia nada de lo que se ve (el paquete de Android sale con la misma huella nativa). El detalle, en
+    // claude/sesion-25nov-ios-2.md, -ios-3.md e -ios-4.md del proyecto. OJO: la rama `noticias-bing` llevaba también
+    // la 0.8.4l: al publicarla, pasa a ser la 0.8.4m.
+    v: '0.8.4l', f: '2026-11-25', h: '21:34', t: 'La app de iPhone, en pruebas',
+    cosas: [
+      { para: 'dueño', tipo: 'nuevo', d: 'movil', t: 'La app de iPhone, aparte en «Quién usa la app»', x: 'Los que entran con la app de iPhone salen como canal propio: antes de entrar, desde dónde entran y qué versión llevan.' },
+    ],
+  },
+  {
+    // (25 nov, tanda 3 de claude/prompts-arreglos-auditoria-25nov.md, hallazgos 3, 4, 7 y 8, y el plan corto de
+    // claude/prompt-ia-cortada.md; el detalle, en claude/nota-tanda3-cuentas-plan.md y claude/nota-plan-corto.md del proyecto)
+    // (3) `cuadrarPlan` cuenta las otras ventas de hoy con el margen del motor (AJUSTES.margenVenta) antes de decir que una
+    // venta «no hace falta», y la red de `planVueltas` rehace el plan con los pasos que quedan en vez de quitar uno sin más.
+    // (4) Una sola puja: `pujaAntes`, `cifrasAlDia` y `titularAlDia` (ia.js) ponen al día las cifras y el % de titular del
+    // texto de un plan de la IA cuando se repasa con la liga de ahora (`sellarPlan` guarda lo que vio: `P.cuadradas`, `P.vio`);
+    // el % de titular es el de `M.titularidad` en todas partes. (7) `sinFichar` (plan.js) y `M.decisionFichar` (decide.js):
+    // un libre «chollo» que el plan no lleva dice por qué. (8) `noBlindar.igual`. Plan corto: SISTEMA_CORTO y `pedidoCorto`
+    // (frases de 16 palabras, situación de una frase, rivales solo si afectan); Worker: «texto N» en el registro de cada plan,
+    // `planes.pensar` (apagado no cambia nada) y la parada en «<br>». Pruebas: caso-cuentas.mjs (nueva), azar-plan con seis
+    // semillas, datos.mjs y la IA de verdad (planes-corto.mjs y chat-haiku.mjs en sus ramas)
+    v: '0.8.4k', f: '2026-11-25', h: '20:17', t: 'Las cuentas del plan, cuadradas',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'dinero', t: 'El plan ya no te deja en negativo', x: 'Con varias ventas el mismo día, el plan podía acabar con el saldo en negativo al empezar la jornada sin avisarlo. Ahora rehace las cuentas cada vez que cambia un paso y, si hace falta otra venta, la pone.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'plan', t: 'Una sola cifra en cada paso', x: 'Si el mercado cambia después de pedir el plan, la puja, el saldo y lo que dice el texto se ponen al día a la vez: ya no sale una cifra en el paso y otra en la explicación. Y el porcentaje de titular es el mismo en el plan y en la ficha del jugador.' },
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'Por qué el plan no ficha un chollo', x: 'Los libres que Mercado marcaba como chollo y el plan no fichaba ahora dicen por qué: no mejora tu once, no cabe hoy o hay que pujar de más. Los que más interesan salen en «Mirados y descartados».' },
+      { para: 'dueño', tipo: 'mejora', d: 'ia', t: 'El plan con la IA, más corto', x: 'Cada paso lleva una frase que empieza por el motivo, la situación va en una línea y de los rivales solo sale quien ha hecho algo que te afecta.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'escudo', menor: true, t: 'El blindaje que no compensa', x: 'Cuando blindar a un jugador te deja lo mismo que venderlo, lo dice así en vez de «más que».' },
+    ],
+  },
+  {
+    // (25 nov, tanda 6 de claude/prompts-arreglos-auditoria-25nov.md, hallazgo 16) El código de invitar desde la instalación
+    // de Google Play. PARTE ANDROID NUEVA (huella nativa nueva: AAB para Play Console): Referrer.java (solo sabor play, Install
+    // Referrer API 2.2) lee en la primera apertura el referrer de la instalación y guarda el `inv` (preferencia inv_ref);
+    // Puente.invitacion() lo da UNA vez. Web: `leerCodigoPlay` (invitar.js) lo guarda como el código del enlace (LS inv-cod con
+    // via 'play'), al arrancar y en `invitarSiToca`, y se canjea al entrar en la liga con la vía «play» (Worker: VIAS con
+    // 'play', contador canje_play en Quién usa la app → Invitar). En la web de un Android con el código del enlace, cualquier
+    // botón de Google Play lleva el referrer (antes solo «Copiar el código y descargar»). Con la app de antes (sin el método
+    // del puente) todo sigue igual. Pruebas: datos.mjs, caso-invitado (G), caso-invitar, prueba-aviso, prueba-entrada
+    // (puente de mentira con el código) y Referrer.codigo con javac
+    v: '0.8.4j', f: '2026-11-25', h: '18:24', t: 'El código del amigo llega solo desde Google Play',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'regalo', t: 'El código del amigo llega solo', x: 'Quien abre el enlace de un amigo en un Android y descarga la app de Google Play ya no tiene que escribir el código: la app lo recoge de la instalación y lo pone solo al entrar en su liga. En Quién usa la app → Invitar se cuentan aparte los que entran así.' },
+    ],
+  },
+  {
+    // (25 nov, tanda 5 de claude/prompts-arreglos-auditoria-25nov.md, hallazgos 14 y 15) Contadores de la entrada, sin
+    // rediseñarla. Worker: pasos nuevos en EMB_PASOS (m-vacio, m-login, m-app, m-jwt, m-otro, x-5xx, x-gastado); el semáforo
+    // cuenta x-laliga y x-5xx como antes contaba x-laliga (EMB_FALLA). Web: `entrarConVuelta` apunta `m-<motivo>` (mirarVuelta
+    // da `motivo`) y «Pegar y entrar» sin nada copiado, m-vacio; `terminarLogin` separa el error de LaLiga (x-laliga, con su
+    // AADB2C) del 5xx del canje sin código reconocible (x-5xx) y lleva `codigo` en el error; el último fallo va a LS
+    // «entrada-fallo» (paso, código, hora y una huella FNV del enlace, nunca el código) y sale en el Diagnóstico; el mismo
+    // enlace que acaba de fallar (menos sin conexión o con un 5xx) no se vuelve a canjear: «ya está gastado» y x-gastado (al
+    // volver de otra pestaña con eso copiado no se dice nada). «Antes de entrar»: Falla LaLiga partido, lo pegado que no vale
+    // por motivo y los enlaces gastados. Pruebas: datos.mjs, prueba-entrada (Chromium y WebKit), prueba-web
+    v: '0.8.4i', f: '2026-11-25', h: '18:09', t: 'Saber dónde se atasca la entrada',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Dónde se atasca la entrada', x: 'En Quién usa la app → Antes de entrar se ve ahora qué pega la gente cuando lo pegado no vale (nada, la página de entrar sin acabar, la dirección de la app, la de LaLiga sin el final u otra cosa), si el fallo de LaLiga es un error suyo o que no contesta bien, y cuántos vuelven a pegar un enlace ya gastado. En el Diagnóstico, el último fallo al entrar con lo que contestó LaLiga.' },
+      { para: 'web', tipo: 'arreglo', d: 'conexion', t: 'Un enlace gastado lo dice claro', x: 'Si vuelves a pegar el mismo enlace de LaLiga que acaba de fallar, la app te dice que ya está gastado y que abras LaLiga otra vez, en vez de repetir el mismo error. Y si los servidores de LaLiga no contestan bien, se dice con el número de error.', menor: true },
+    ],
+  },
+  {
+    // (25 nov, 17:46, Carlos: «a los que ya han entrado y les ha ido mal, que les salga el aviso») La ventana sola de quien
+    // parece invitado va con una marca nueva (LS «inv-preguntado2»): a quien ya vio la de antes (salía a todos los nuevos),
+    // le sale una vez la nueva si tiene pista. Solo web. Prueba: caso-invitado (C2)
+    v: '0.8.4h', f: '2026-11-25', h: '17:53', t: 'El código, también para los que ya habían entrado',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'regalo', t: 'El código, también para los que ya habían entrado', x: 'A quien entró en los últimos días con la invitación de un amigo y no puso su código, la app se lo vuelve a preguntar una vez.' },
+    ],
+  },
+  {
+    // (25 nov, Carlos: «hay gente sacando códigos y no ha entrado nadie» y «que solo salga si de verdad te ha invitado»;
+    // claude/prompt-invitar-codigo.md, hallazgo 16 de la auditoría) Invitar sin AAB. Quien entra nuevo solo ve «¿Te ha
+    // invitado un amigo?» (hoja 'invitado', `invitadoHTML`) si hay una pista (`pareceInvitado`): el servidor le propone el
+    // código de quien abrió el enlace desde su misma conexión en las últimas 2 h (POST /invitar/llega guarda sha256 de la IP
+    // o su /64, op 'pista' en worker/src/invitar.js), que sale ya puesto, o alguien de su liga ha sacado código. Si la cierra,
+    // banda arriba (`bandaInvitado`) hasta que lo pone o dice «Nadie»; sin pistas, solo Ajustes. La web de un Android con ?inv=
+    // enseña el código en grande con «Copiar el código y descargar» (copia, cuenta y abre Google Play con
+    // `&referrer=inv%3DCODIGO`, para la tanda 6). Quien invita ve su código grande con «Copiar código» y el mensaje lleva el
+    // código en su línea, en negrita. Contadores por día (llega, copia, canje_enlace, canje_propuesto, canje_escrito) en
+    // Quién usa la app → Invitar. Pruebas: caso-invitado.mjs (nueva), caso-invitar, datos.mjs, prueba-aviso y prueba-web.
+    // Web y Worker; sin AAB
+    v: '0.8.4g', f: '2026-11-25', h: '17:17', t: 'Entrar con el código de un amigo',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'regalo', t: 'Entrar con el código de un amigo', x: 'Si alguien entra en la app con tu invitación, la app se lo pone fácil: si abrió tu enlace en el móvil, su código ya sale puesto y solo tiene que darle a «Listo». A quien no ha invitado nadie no le sale nada.' },
+      { para: 'dueño', tipo: 'mejora', d: 'compartir', t: 'Tu código, a la vista', x: 'En «Invita a un amigo» tu código sale en grande, con un botón para copiarlo, y el mensaje que mandas lo lleva en su propia línea, con lo que tiene que hacer tu amigo.' },
+    ],
+  },
+  {
+    // (25 nov, auditoría de fallos, tanda 4: hallazgos 5, 6, 10, 11, 12, 13 y el texto del 16; con las dos decisiones por
+    // defecto, que no cambian ninguna regla de Carlos) En el iPhone, el candado de cada función top dice lo que es verdad:
+    // invitando a un amigo solo se abre el dinero de los rivales; las demás, «de momento, no se puede abrir», sin prometer la
+    // app de la App Store (`dondeTop(clave)`). El candado de la web es una ficha más ('bloq', `bloqHTML`) y desde la ficha de
+    // un rival «Entendido» y el atrás vuelven a ella. Las fichas apiladas (`CON_PILA`) llevan también el resumen de tu equipo
+    // y el once de una jornada, y un rival abierto desde otra ficha va con su pila. El chat sin preguntas solo habla de Google
+    // Play en un Android (`enAndroid`); en el iPhone y el ordenador, «Mañana tienes otras 3». Ajustes → Tu plan, con la cifra
+    // de `planesCfg` (en la web, 5) y los de más con anuncio solo en la de Google Play. En el iPhone, «Empieza hoy» de la
+    // portada sin el botón de Google Play y, a la IA, que el dinero de un rival se abre invitando. «si la descargas de Google
+    // Play» en el mensaje de invitar. Pruebas: prueba-web (bloque 20), prueba-entrada, prueba-aviso y las sondas. Solo web
+    v: '0.8.4f', f: '2026-11-25', h: '16:12', t: 'Volver a donde estabas',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'arreglo', t: 'Volver a donde estabas', x: 'Al abrir un jugador desde el resumen de tu equipo o desde el once de una jornada, o un rival desde la ficha de un jugador, el atrás te sacaba de todo. Ahora sale «Volver» y vuelves a donde estabas. Lo mismo con el candado de dentro de la ficha de un rival.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Los candados, en el iPhone', x: 'En el iPhone, cada función top dice lo que es verdad: el dinero de los rivales se abre invitando a un amigo y las demás, de momento, no se pueden abrir ahí. Y al acabar las preguntas del día, en el iPhone y el ordenador ya no se habla de Google Play.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'arreglo', t: 'Los planes gratis, bien contados', x: 'En los ajustes del plan sale el número de planes gratis que tienes de verdad cada día en la web, y lo de verlos con un anuncio solo en la app de Google Play.' },
+    ],
+  },
+  {
+    // (25 nov, 13:33, Carlos: «quiero que subas todo lo que queda pendiente») La tarjeta de la app para iPhone (Carlos, 13:00;
+    // diseño A2 elegido a las 13:29): una vez por dispositivo a todos con su liga cargada, con la línea de su plataforma
+    // (`tarjetaIphone` en presentacion.js; cuándo sale, `iphoneEsperar`/`iphoneToca` en app.js, LS «aviso-iphone»; si toca
+    // la de invitar el mismo día, la de invitar otro día). Lo pidió él aunque choca con la regla de no cambiar los textos del
+    // iPhone en la web hasta que Apple apruebe la app. Van también, sin novedad: el bot con los horarios que publica LaLiga
+    // (rama `bot-horarios`) y la base de la app de iOS (rama `ios`, iOS 1; en Android y en la web no cambia nada).
+    // Pruebas: .github/prueba-aviso.mjs (los casos de la tarjeta de iPhone)
+    v: '0.8.4e', f: '2026-11-25', h: '14:05', t: 'La app para iPhone, en camino',
+    cosas: [
+      { tipo: 'nuevo', d: 'movil', t: 'La app para iPhone, en camino', x: 'Un aviso, una sola vez, de que estoy con la app para iPhone. Mientras, en el iPhone se sigue entrando desde Safari, y desde Android se puede avisar a los amigos con iPhone de que ya pueden entrar por la web.' },
+    ],
+  },
+  {
+    // (25 nov, 13:02, Carlos: «activa lo de Cloudflare Web Analytics», el día que la app se disparó y no se sabía de dónde
+    // venía la gente) Cloudflare Web Analytics con el script a mano (el dominio va por GitHub Pages: la configuración automática
+    // daba 0): en el <head> de las páginas públicas (CF_BEACON en paginas.py) y en la portada solo en la web del dominio, sin
+    // la marca de pruebas (`analiticaWeb` en app.js). Sin cookies. Contado en privacidad.html. Solo web
+    v: '0.8.4d', f: '2026-11-25', h: '13:06', t: 'Visitas de la web',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', menor: true, d: 'grafica', t: 'Las visitas de la web, contadas', x: 'Ya se cuentan las visitas de la web y de qué página o enlace llega cada una, sin cookies, para saber de dónde viene la gente.' },
+    ],
+  },
+  {
+    // (25 nov, 12:13, Carlos: «quiero que Domy pueda responder fallos también igual que yo») quien ayuda con los fallos
+    // (AYUDANTES) ya contesta: /fallos/responder deja a 'ayuda' además de al dueño, abrir un aviso lo da por visto y le llega la
+    // cuenta de los sin contestar (el numerito y la notificación de avisos nuevos, como al dueño). Firma siempre «Fantasy
+    // Manager»; cada mensaje guarda la cuenta y el nombre de quien lo escribió (msg.aut y autn en fallos.js), que solo ven el
+    // dueño, quien ayuda y la Action («lo escribió …»), nunca quien lo mandó. Sigue sin ver el diagnóstico ni «Copiar avisos».
+    // Y (12:31, Carlos: «me dice Domy que no le sale para reportar fallos») lo de mandar uno quedaba debajo de toda la bandeja:
+    // el dueño y quien ayuda tienen dos pestañas, «Recibidos» y «Reportar un fallo» (`pest` de S.av, `pestAvisos`); la banda,
+    // la bienvenida, la etiqueta BETA, el tutorial y las pantallas de error abren directamente «Reportar un fallo».
+    // Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
+    v: '0.8.4c', f: '2026-11-25', h: '12:52', t: 'Los avisos de fallo, entre dos',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'chat', t: 'Quien te ayuda con los fallos ya puede contestarlos', x: 'Contesta los avisos desde la app igual que tú, con capturas si hace falta, y le avisa cuando llega uno nuevo. A quien lo mandó le llega firmado como Fantasy Manager; en la conversación, tú ves quién de los dos ha escrito cada respuesta.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'aviso', t: 'Reportar un fallo, a la vista', x: 'En los avisos de fallo, los recibidos y lo de mandar uno van ahora en dos pestañas, «Recibidos» y «Reportar un fallo». Antes, para mandar uno había que bajar hasta el final de todos los recibidos.' },
+    ],
+  },
+  {
+    // (25 nov, avisos de Fallo de Big Mac Laporta y Moukemon7) La ficha de un rival entra en las fichas apiladas
+    // (`CON_PILA` en app.js): un jugador abierto desde un rival lleva «‹ Volver» y el atrás vuelve al rival. En el iPhone,
+    // el candado de las funciones top ya no pone el botón de Google Play ni dice que se abre allí (`dondeTop`). Solo web
+    v: '0.8.4b', f: '2026-11-25', h: '12:29', t: 'Volver al rival',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Los jugadores de un rival', x: 'Al abrir un jugador desde la ficha de un rival y volver atrás, te sacaba a la lista de Rivales. Ahora arriba sale «Volver» y vuelves a la ficha del rival donde estabas.' },
+      { para: 'web', tipo: 'arreglo', d: 'candado', t: 'El candado, en el iPhone', x: 'En el iPhone, el dinero de los rivales y las demás funciones top te mandaban a Google Play, que ahí no sirve. Ahora te dice que se abren invitando a un amigo.' },
+    ],
+  },
+  {
+    // (25 nov, 02:06, Carlos: «en vez de salir un icono de un ordenador, que salga un icono de Windows») Lo último de la
+    // sesión de «que se vea que es una app», que no llegó a entrar en la 0.8.4: el ordenador va con el logo de Windows
+    // (`WINDOWS` en app.js y en instalar.html; en un Mac, la manzana: `ordenadorG`) y los tres dispositivos de arriba de
+    // instalar.html van siempre uno debajo de otro. Carlos sabe lo que dicen las normas de Microsoft y de Apple y los quiere
+    // igual. Solo web. Detalle en claude/sesion-24nov-descarga-clara.md del proyecto
+    v: '0.8.4a', f: '2026-11-25', h: '02:41', t: 'Cada dispositivo, con su símbolo',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'El ordenador, con su logo', x: 'En la portada y en la guía de instalar, el ordenador sale con el logo de Windows (o con el de Apple si entras desde un Mac) en vez de un dibujo de un portátil.' },
+      { para: 'web', tipo: 'arreglo', d: 'portatil', t: 'La guía de instalar, en el ordenador', x: 'Los tres dispositivos de arriba salían apretados en tres columnas y el nombre del tuyo se partía en varias líneas. Ahora van uno debajo de otro.' },
+    ],
+  },
+  {
+    // --- (25 nov, Carlos, 02:00: «publica todo en una») la 0.8.3b, la 0.8.3c y la 0.8.4 salen juntas como 0.8.4 ---
+    // --- la web, más clara (rama `web-descarga-clara`, 0.8.3c) ---
+    // (24 nov, 23:17, Carlos: «dejar de forma más limpia y clara en la web que Fantasy Manager es una aplicación que se descarga…
+    // sobre todo para los de iPhone y ordenador… que aparezca también Windows, no solo Apple… que arriba se entienda que lo que
+    // importa es la aplicación, meterte dentro con tu cuenta y no ver los datos desde fuera») Solo web. La portada empieza por
+    // «Tu liga, por dentro» (`tenlaHTML` en app.js) con los tres dispositivos y el tuyo destacado; en el ordenador queda un
+    // QR a la vista y se puede instalar con Chrome o Edge (`instalarPc`); en las páginas públicas el botón rojo y la línea
+    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). El iPhone va con el logo de Apple (lo pidió Carlos el 25 nov) y
+    // el ordenador con un portátil dibujado, sin logo de Windows; en los dibujos de las guías, el logo de verdad de la app.
+    // Detalle en claude/sesion-24nov-descarga-clara.md del proyecto.
+    // --- el QR del ordenador (0.8.3b) ---
+    // (24 nov, 22:27, Carlos, entrando en su portátil: «me pone que no es un código QR de Fantasy Manager») En la portada del
+    // ordenador hay tres QR: el de Google Play, el de la web para el iPhone y, plegado en «Ya tengo la app: abrirla también en
+    // este ordenador», el de entrar. Escaneó el de Google Play con Ajustes → Abrir en el ordenador → QR y la app solo le decía
+    // «escanea el que sale allí». Ahora `qrLeido` (app.js) reconoce el de descargar y dice qué hay que pulsar; la fila de
+    // Ajustes lo dice también y el QR de Google Play lleva «Para descargarla». Solo web.
+    // --- (25 nov, 0.8.4) la 0.8.3b no se llegó a publicar: sale con esta ---
+    // FASE 1, la mudanza (Carlos, 25 nov 00:06: «vamos con la B»; claude/prompt-mudanza-quien-usa.md y
+    // claude/capacidad-cloudflare-24nov.md del proyecto). «Quién usa la app» (u:, p:, r: del KV VINCULOS, que llenaba sus topes
+    // gratis) pasa al Durable Object «quien|todos» con SQLite: worker/src/quien.js. Las mismas rutas y respuestas (/hola,
+    // /uso, /caras, /hola/todos), una llamada al objeto por petición, los mismos plazos y las mismas reglas de escritura de
+    // la ficha y el registro; el tiempo de uso, exacto (cada llamada). El cron copia lo del KV (`mudanzaQuien`) y, dos días
+    // después, borra p: y r: de 15 en 15 a la hora. Medido con 1.000 cuentas: worker/prueba/mide-quien.mjs. De paso: la
+    // espera del plan la hace el objeto (`esperar` en /plan/res: 1 o 2 peticiones por plan en vez de 12-19) y /sinc sube en
+    // una llamada (`base` y `choque`), junta los cambios seguidos (4 s) y no llama mientras la IA contesta (web/js/sinc.js).
+    // Y (Carlos, 25 nov 00:21: «web incluye a los de iOS… me gustaría que se diferenciasen») la web manda en /hola en qué
+    // aparato va (`disp`, canalPaso de semaforo.js) y «Desde dónde» separa iPhone, web en el ordenador y web en Android.
+    // FASE 3 (Carlos, 25 nov: «no pongas audios, pero que sea una conversación»): cada aviso de fallo es un hilo (worker/src/
+    // fallos.js, el objeto «fallos|todos» con SQLite; antes en el KV, f: y fc:). Mensajes de los dos lados con capturas
+    // (hasta 3 por mensaje), «Visto» por cada lado, pendiente = el último es de quien lo mandó; /fallos/responder AÑADE (las
+    // webs de antes del dueño también); para las webs de antes, `respuesta` es el último de Fantasy Manager (así les llega la
+    // notificación de cada uno). La Action «Fallos» lee y contesta por /fallos/accion (llave sacada del token de Cloudflare).
+    // Lo del KV lo copia el cron (`mudanzaFallos`). La pantalla: `burbujas`, `cajaHilo` y `avisoMio` (hojas.js); `abrirHilo`
+    // y `escribirHilo` (app.js). Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
+    v: '0.8.4', f: '2026-11-25', h: '02:28', t: 'Los avisos de fallo, como una conversación, y la web más clara',
+    cosas: [
+      { tipo: 'nuevo', d: 'chat', t: 'Los avisos de fallo, ahora como una conversación', x: 'Puedes contestar en el mismo aviso las veces que haga falta, con capturas en cada mensaje, y ves cuándo he leído lo tuyo.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app: desde dónde, con el iPhone aparte', x: 'En «Desde dónde», la web ya no va toda junta: salen aparte el iPhone, el ordenador y la web en Android. Se irá llenando a medida que cada uno abra esta versión.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Qué es la app, lo primero', x: 'La portada de la web empieza por lo que importa: Fantasy Manager es una app y se entra con tu liga. Debajo, cómo tenerla en tu dispositivo: Android (Google Play), iPhone (desde Safari) u ordenador (Windows y Mac, en el navegador).' },
+      { para: 'web', tipo: 'mejora', d: 'portatil', t: 'En el ordenador, un solo QR', x: 'Antes había tres QR a la vista. Ahora hay uno, para tenerla en el móvil, y el de entrar sale al pulsar «Ya tengo la app en el móvil: abrirla en este ordenador». Con Chrome o Edge, además, se puede instalar como una app.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'El botón de arriba, según tu dispositivo', x: 'En las páginas de datos, el botón rojo dice «Descargar» en Android y «Entrar con tu liga» en el iPhone y en el ordenador, donde no hay nada que descargar.' },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Las guías, con el logo de verdad', x: 'Los dibujos de cómo entrar y de cómo ponerla en la pantalla de inicio del iPhone llevan ya el logo de Fantasy Manager, la camiseta, y no un cuadro rojo. Y el código de ejemplo ya no sale con las letras montadas.' },
+      { para: 'web', tipo: 'arreglo', d: 'movil', t: 'En el iPhone se entra desde el iPhone', x: 'La liga de ejemplo y las preguntas frecuentes seguían diciendo que en el iPhone había que entrar antes desde un ordenador. Ya no hace falta desde hace días, y ahora lo dicen bien.' },
+      { tipo: 'arreglo', d: 'portatil', t: 'El QR para entrar en el ordenador', x: 'Si escaneabas el QR de descargar la app en vez del de entrar, la app solo decía que no era el suyo. Ahora te dice dónde está el bueno: en la web, en «Ya tengo la app en el móvil: abrirla en este ordenador».' },
+    ],
+  },
+  {
+    // (24 nov, 19:37, Carlos: «a veces tarda 2 o 3 minutos y creo que sí que lo hace: cierro la aplicación, la abro y ya me pone el
+    // plan, hace 2 minutos… y a veces, al salirme, no sale la notificación») La petición del plan se queda abierta
+    // hasta que la IA acaba; si el final no llegaba, la app esperaba a agotar el intento (2 minutos) con el plan ya hecho en el
+    // servidor. Ahora, mientras espera, pregunta aparte cada 5 s si el plan de ese pedido ya está (GET /plan/res, `mirar` en
+    // `planPorApp`, ia.js) y se queda con él. El aviso al salir: el id del pedido se le pasa al móvil sin esperar a renovar la
+    // sesión, y una pregunta a la IA que acaba no apaga el aviso del plan (ni al revés: `nativo.trabajando(false)` en app.js).
+    // Y `generarPlan` repinta siempre al acabar. Solo web. No se ha podido ver en su móvil por qué no llegaba el final
+    // (claude/pendiente-plan-se-queda-haciendo.md del proyecto): cuando pase, el Diagnóstico dirá «recogido aparte».
+    // Prueba: .github/ia/caso-conexion.mjs (8b). La hora, al publicar
+    v: '0.8.3a', f: '2026-11-24', h: '21:16', t: 'El plan, sin esperas de más',
+    cosas: [
+      { tipo: 'arreglo', d: 'reloj', t: 'El plan ya no se queda «preparando» cuando ya está hecho', x: 'A veces la app seguía esperando un par de minutos con el plan ya terminado, y había que cerrarla y abrirla para verlo. Ahora lo recoge en unos segundos.' },
+      { tipo: 'arreglo', d: 'campana', t: 'El aviso de que está preparando tu plan', x: 'Si salías de la app nada más pedirlo, o con una pregunta a la IA a medias, a veces no salía el aviso. Ya sale.' },
+    ],
+  },
+  {
+    // (24 nov, 18:03, Carlos: «publica todo en una versión») TRES COSAS QUE SE HICIERON POR SEPARADO Y SALEN JUNTAS. En `pendiente`
+    // fueron la 0.8.1a (el último partido), la 0.8.2 (quién puja) y la 0.8.3 (la app no se contradice): los comentarios del
+    // código que digan «(0.8.1a)» o «(0.8.2)» son de esta versión.
+    // --- quién puja (en `pendiente`, 0.8.2) ---
+    // (24 nov, 15:35, Carlos, con la idea de un amigo de su liga: «ver cuánto puja cada rival») LaLiga no da ni quién puja ni
+    // cuánto (mirado en crudo con su liga: claude/pendiente-pujas-rivales.md del proyecto): solo cuántas pujas lleva cada libre.
+    // pujas-vistas.js apunta cuándo entra cada una (LS «pujas-vistas», lo llama app.js en `extraM`); quien-puja.js estima quién
+    // puede estar detrás y lo que pujaría (motor.js: `m.ajenas`, `m.pujasEv`, `m.quien`, `M.quienAcierto`); la tarjeta,
+    // `quienPujaHTML` en hojas.js; el aviso, `pujasNuevas` en fondo.js; función top «quienPuja» (limite.js, comunes.js y
+    // limites.json). Medido con su liga (81 compras de rivales en 45 días): el primero de la lista era quien se lo llevó el
+    // 43 % de las veces y estaba entre los tres primeros el 94 % (al azar, 12 % y 38 %): claude/medida-quien-puja-24nov.md.
+    // Pruebas: .github/ia/caso-quien-puja.mjs y, con una liga de verdad, .github/ia/medir-quien-puja.js. La hora, al publicar
+    // --- la app no se contradice (en `pendiente`, 0.8.3) ---
+    // (va DETRÁS de la 0.8.2 de «quién puja», que otro chat subió a `pendiente` a la vez: se publican juntas)
+    // (24 nov, aviso de Senna, 13:52: «me recomienda vender un jugador y luego que lo aguante o viceversa, o recomienda
+    // vender y luego me dice que es una decisión que he tomado por mi cuenta»; Carlos: «tiene razón y no es la primera vez»)
+    // UNA decisión por jugador: decide.js (`decidir`, `M.decisionBase`, `M.decision`, `M.decisionFichar`, `ventaVista`),
+    // con el orden de reglas escrito arriba del módulo y en claude/auditoria-coherencia.md (proyecto). La leen plan.js
+    // (candidatos A y V), acciones.js, Equipo, la ficha, Parón, fondo.js, avisos.js, `cuadrarPlan` (una regla en vez de cuatro),
+    // `ventasMiasTxt`, `contexto` y `revisarChat` (3e). El tiempo: `decAhora` en el paso que la app saca al repasar el plan de
+    // la IA, `pasoCambiaTxt`, `cambiosDesde` y «TÚ DIJISTE ANTES» (`consejosChat`) en `datosChat`, y el origen de cada cosa en
+    // `llevasHTML`. Prueba: .github/ia/caso-contradicciones.mjs (en «Pruebas»). La hora, al publicar
+    // --- el último partido (en `pendiente`, 0.8.1a) ---
+    // (24 nov, 13:43, Carlos, con la tarjeta de Bartra «Para aguantarlo · +1,67 M»: «no es lo mismo uno que ha hecho 15, 14 y
+    // 16 que uno que en la última ha hecho 5») motor.js `FRENO_PARTIDO`, `frenoTras`, `M.malPartido`; lo usan `proyectar` y
+    // `M.tener` (revender, aguantar, `M.subeTeniendo`); la frase en `noRevenderCorto`/`noRevenderTxt` y `malPartidoTxt` en los
+    // motivos de plan.js. Lo medido, en claude/medida-puntos-24nov.md (.github/ia/medir-puntos.mjs); prueba: escenas «malo» y
+    // «bueno» de .github/ia/caso-aguantar.mjs. La hora, al publicar
+    v: '0.8.3', f: '2026-11-24', h: '18:10', t: 'Quién puja por él, y la app ya no se contradice',
+    cosas: [
+      { tipo: 'nuevo', d: 'lupa', t: 'Quién puede estar detrás de cada puja', x: 'Cuando un jugador libre del mercado ya tiene pujas de otros, su ficha te dice qué rivales es más probable que estén detrás, lo que rondaría la puja de cada uno y si la tuya la pasa. Es una estimación: LaLiga no dice quién puja ni cuánto. Sale de lo que ficha cada rival, de si le hace falta alguien de ese puesto, de su dinero y de la hora a la que entró la puja.', ir: { v: 'mercado' } },
+      { tipo: 'nuevo', d: 'campana', t: 'Te avisa si entra una puja nueva', x: 'Si entra una puja de otro por un jugador por el que ya has pujado o que sigues, la app te avisa y te dice si con la tuya basta. En el mercado, la puja que acaba de entrar sale marcada como nueva.' },
+      { tipo: 'mejora', d: 'ia', t: 'Lo mismo en todas partes', x: 'De cada jugador tuyo la app toma una sola decisión (vender, aguantar, aceptar la oferta o esperar a otra) y te la dice igual en Hoy, en Equipo, en los avisos y cuando le preguntas a la IA.' },
+      { tipo: 'mejora', d: 'reloj', t: 'Si algo cambia, te lo dice', x: 'Si desde el plan de la mañana llega una oferta o un jugador cambia de tendencia, el paso te dice qué decía antes, qué dice ahora y por qué. Y «Lo que llevas hoy» sabe si algo lo hiciste por el plan o porque te lo aconsejó la IA.' },
+      { tipo: 'arreglo', d: 'hucha', t: '«A la venta, pero esta oferta no»', x: 'Cuando conviene vender a uno pero la oferta de hoy es floja, la app lo dice así, en vez de «mejor aguantar».' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Las ofertas de LaLiga, como son', x: 'Cada oferta de LaLiga va de −10 % a +10 % de lo que vale el jugador, a suerte, y hay una nueva en cada cambio de mercado. La app y la IA ya no dicen que «suele dar» un tanto fijo: te dicen entre cuánto y cuánto puede salir.' },
+      { tipo: 'mejora', d: 'grafica', t: 'Cuando un jugador se da la vuelta', x: 'El primer día que baja uno que venía subiendo, la app se quedaba corta con lo que iba a perder. Medido con todos los jugadores de LaLiga desde septiembre: los días siguientes baja el doble que el primero, y ahora lo cuenta así.' },
+      { tipo: 'mejora', d: 'balanza', t: 'Comprarle a otro mánager para revender', x: 'Si le cuentas a la IA que un rival te deja a uno a un precio, hace las cuentas con ese precio: si te llega el saldo, lo que puedes sacarle a LaLiga rechazando las ofertas flojas y si te vale para el once.' },
+      { tipo: 'mejora', d: 'grafica', t: 'Mira cómo le fue en su último partido', x: 'Antes de proponerte comprar a uno que sube para revenderlo o aguantarlo, la app mira su último partido: si hizo 4 puntos o menos, cuenta con que se va a frenar. Si así ya no sale a cuenta, lo verás en «Mirados y descartados» con el motivo.' },
+    ],
+  },
+  {
+    // (24 nov, aviso de Domy, 07:48: «no puede ser que la app te descarte jugadores que están subiendo millones»; 324 M de
+    // saldo y Bartra, +3,6 % al día, en «Mirados y descartados» con un «para tenerlo, sí») motor.js `M.aguantar` y
+    // `nr.aguantar`; plan.js, candidatos «G-» (objetivo revender, `aguantar`, `conSaldo`); cuadrarPlan y veredictos lo dan
+    // por bueno pagado con saldo; el árbitro, regla rG; prueba .github/ia/caso-aguantar.mjs. Lo medido, en
+    // claude/medida-aguantar-24nov.md. La hora, al publicar. (Tras la 0.8z se acaban las letras: 0.8.1, que va detrás en `cmpVer`)
+    // (11:58, Carlos, con capturas: «una cantidad ingente de texto… más al grano» y «¿cómo puede recomendar a Pepelu en Equipo
+    // y en el plan no?») cada descartado, una frase (`motivo` corto y `detalle` para la IA; `noRevenderCorto` en motor.js y
+    // `breve` en vistas.js); Equipo → «Lo flojo de tu once» no propone a quien el plan descarta (`veredictoOnce` con el plan)
+    // y enseña la puja, no el precio de salida; fuera el texto de debajo de «Cambios que haría la app» y el «no tienes a nadie
+    // fuera del once» por uno al que la app ya cambia; plan.js `deMasNeto`: al fichar para el once, al que sube le vuelve
+    // parte de lo pagado de más (`M.subeTeniendo`)
+    v: '0.8.1', f: '2026-11-24', h: '13:11', t: 'Comprar para aguantar y menos texto',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'Ya no descarta al que sube fuerte', x: 'Si uno del mercado sube mucho cada día y no da tiempo a revenderlo antes de la jornada, pero aguantándolo unos días sí sale a cuenta, el plan te propone pujar por él y pagarlo con tu saldo, con sus cuentas. Antes lo dejaba en «Mirados y descartados».' },
+      { tipo: 'mejora', d: 'aviso', t: 'Mirados y descartados, en una frase', x: 'Cada jugador que el plan mira y descarta dice en una sola frase por qué, con la cifra que decide. Antes era un párrafo entero por jugador.' },
+      { tipo: 'arreglo', d: 'campo', t: 'Equipo y el plan dicen lo mismo', x: 'Debajo de tu once ya no sale como fichaje un jugador que el plan ha descartado por caro, y el precio que ves es lo que habría que pujar.' },
+    ],
+  },
+  {
+    // (24 nov, 01:51, Carlos: «no me puedo creer que no me recomiende vender a ninguno… incluso el defensa del Depor, que
+    // esta jornada ni jugó») motor.js `ventaPorInercia`: el corte era 150 mil para todos y los baratos nunca llegaban;
+    // ahora un 3 % de lo que vale (40-150 mil) o el 1,2 % de siempre en los caros. En Equipo, a un titular que aún no baja
+    // todos los días la pastilla ya no dice «vender» (el plan no lo vende: regla del 14 nov). La hora, al publicar
+    // (02:48) además: el cambio (motor.js `relleno`, `recambios`, `cambioDe`, `cambioHecho`; plan.js el par V-/P- con
+    // `requiere` y `saleSi`; cuadrarPlan descarta la venta sin la puja; LS «cambios» en app.js; la ficha «Véndelo y ficha a
+    // otro»; Equipo «Vender · busca recambio») y la flecha de actualizar que no se vuelve a crear al repintar
+    v: '0.8z', f: '2026-11-24', h: '06:59', t: 'Vender y fichar recambio',
+    cosas: [
+      { tipo: 'nuevo', d: 'oferta', t: 'Vender y fichar recambio', x: 'Si un titular tuyo baja y no tienes otro como él, la app te propone a quién fichar en su lugar: lo ves en el plan, en Equipo («Vender · busca recambio») y en su ficha, con los mejores de su puesto que te llegan. La oferta por el que sale te dice que la aceptes cuando ya tengas al nuevo.' },
+      { tipo: 'nuevo', d: 'campo', t: 'Todas las jornadas y el once de cada uno', x: 'La clasificación de cada jornada está ahora en Rivales → Por jornada, con todas las jornadas de la liga. Toca a un rival y ves el once que puso en esa jornada, con los puntos de cada jugador.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'La flecha de actualizar, entera', x: 'El círculo que gira arriba mientras se actualiza se ve entero y no se corta.' },
+      { tipo: 'arreglo', d: 'aviso', t: 'Avisos de Hoy más cortos', x: 'Los avisos de arriba de Hoy dicen lo justo, y a un titular que aún no hay que vender ya no te lo mandan vender.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Te dice que vendas al barato que baja', x: 'Los jugadores baratos que están bajando y no te dan puntos ya salen para vender: antes la app solo se fijaba si perdían mucho dinero, y a uno barato nunca le pasaba.' },
+      { tipo: 'arreglo', d: 'camiseta', t: 'Equipo y el plan dicen lo mismo', x: 'A un titular que acaba de girar a la baja, Equipo ya no le pone «vender» si el plan aún no lo vende.' },
+    ],
+  },
+  {
+    // (23 nov, 23:31, Carlos con Thiago: bajando, 1 punto en la última y la cláusula al +24 %, y la ficha decía «Blíndalo
+    // gratis»: «no tiene sentido que me diga que lo blinde… me debía decir que lo vendiese») motor.js: `noBlindar` al que
+    // baja con la cláusula por encima de lo que da LaLiga (que te lo clausulen es venderlo mejor); fuera de paraEscudo, de
+    // las B- de la IA y de subir la cláusula, y cuadrarPlan lo quita si la IA lo propone. La ficha, una línea por cosa.
+    // (23:39) Quién usa: «hoy» contaba por la última entrada, que se guarda una vez por hora; ahora como la barra de hoy.
+    // La hora, al publicar
+    // (24 nov, 00:43, Carlos: «haz todo lo que te he ido diciendo en esta sesión… y publicas») además: el plan, más al
+    // grano (vistas.js `fraseDecide`, «Más detalle», un descartado solo con su porqué, las pastillas sin cortar; plan-sistema.js,
+    // una frase por paso), los textos de las ofertas y de la cláusula frente a LaLiga más cortos, «Ahora mismo» con la primera
+    // frase entera; Directo con la jornada acabada 24 h (directo.js `rankingJornadaHTML`, `puntosDeJornada`) y la clasificación
+    // de cada jornada en Por jornada; `bajaSeguido` con hasta dos días casi planos en medio (Thiago)
+    v: '0.8y', f: '2026-11-24', h: '01:01', t: 'Planes más al grano y la jornada acabada en Directo',
+    cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Planes más al grano', x: 'Cada paso del plan dice en una frase lo que decide, con las cifras en pastillas; el resto, en «Más detalle». Lo descartado dice solo por qué, y ningún texto se queda cortado.' },
+      { tipo: 'mejora', d: 'trofeo', t: 'La jornada acabada, en Directo', x: 'Hasta 24 horas después de acabar una jornada, Directo sigue enseñando cómo ha quedado tu liga en ella. Y en «Por jornada», la clasificación de cada jornada: en qué puesto quedaste y qué hicieron los demás.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'No te dice que blindes al que baja', x: 'Si un jugador tuyo está bajando y su cláusula está por encima de lo que te daría LaLiga, ya no te dice que lo blindes: si te lo clausulan, cobras más que vendiéndolo.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Ve al que baja casi todos los días', x: 'Un día casi plano en medio de una racha de bajadas ya no hace que la app crea que ha dejado de bajar.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'grafica', t: 'Quién usa la app: hoy cuadra', x: 'La cifra de hoy y la barra de hoy de la gráfica ya dicen lo mismo.' },
+    ],
+  },
+  {
+    // (23 nov, 20:32, Carlos: «me sigue saliendo que venda al portero del Villarreal… 16,01 millones… ha cambiado la
+    // tendencia de ir hacia abajo a ir hacia arriba… no tiene sentido la venta») motor.js (misVentas): por menos de un 10 %
+    // no se acepta tampoco la oferta por uno que hoy sube o se queda igual (titular o no), y la protegida (`protege`) no se
+    // acepta «porque hace falta el dinero» mientras queden cambios de mercado antes de la jornada (plan.js FA- y cuadrarPlan).
+    // La hora, al publicar
+    v: '0.8x', f: '2026-11-23', h: '21:24', t: 'No vende al que ha dejado de bajar',
+    cosas: [
+      { tipo: 'arreglo', d: 'oferta', t: 'No vende al que ha dejado de bajar', x: 'Si un jugador tuyo venía bajando y hoy sube, la app ya no te dice que aceptes una oferta un poco por encima de su valor: lo normal es que siga subiendo. Y si vas en negativo entre semana, no te manda vender a tus titulares por poco: hay tiempo de hacer caja con otra cosa antes de la jornada.' },
+    ],
+  },
+  {
+    // (23 nov, 17:56, Carlos: «la pestaña para mirar cuánta gente hay suele tardar bastante en cargar» y «cuando me salgo
+    // de la aplicación no me sale ninguna notificación de que está cargando el plan… no sé si al final terminó saliendo»)
+    // El plan con la IA de la app lo hace el servidor aunque se corte la conexión (worker: encargarPlan, hacerPlan), con
+    // tope de 150 s; debajo de «Preparando tu plan», si las notificaciones están apagadas, se dice y se ofrece activarlas;
+    // Quién usa la app sale al momento con lo de la última vez. El detalle, en ESTADO.md del proyecto. La hora, al publicar
+    v: '0.8w', f: '2026-11-23', h: '19:45', t: 'El plan sigue aunque salgas de la app',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan sigue aunque salgas de la app', x: 'Si salías de la app mientras la IA preparaba tu plan y el móvil cortaba la conexión, a veces el plan se perdía a medias. Ahora se termina igual y lo tienes al volver, sin gastar otro.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'No vende a tus titulares por poco', x: 'Con una oferta un poco por encima de su valor, la app ya no te dice que vendas a un titular de tu once que no baja todos los días: por un 7 % no compensa quedarte sin él. Lo dice si te pagan un 10 % o más, si está de baja o si necesitas el dinero.' },
+      { tipo: 'mejora', d: 'campana', t: 'Te avisa si no puede avisarte', x: 'Mientras se prepara tu plan, si tienes las notificaciones apagadas, la app te lo dice y te deja activarlas desde ahí mismo. Con ellas, al salir ves que lo está haciendo y te avisa cuando esté.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app, al momento', x: 'Sale enseguida con lo de la última vez mientras se actualiza, y lo nuevo llega antes.' },
+    ],
+  },
   {
     // (22 nov, 19:44, Carlos: «las 3 últimas no son noticias») fuera de las noticias los directos, las páginas para ver el
     // partido (DAZN) y las de a qué hora y dónde se ve (`noEsNoticia` en util.js). La hora, al publicar
