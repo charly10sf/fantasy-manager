@@ -1373,7 +1373,7 @@ const TXT = T('STRING'), TXTN = T('STRING', { nullable: true });
    Antes la IA escribía la lista de operaciones (y la app tachaba lo que no cuadraba). Ahora el plan lo hace el motor
    (plan.js): a la IA le llegan sus pasos, cada uno con su id y sus datos, tres o cuatro alternativas que también valen y
    lo mínimo de contexto (noticias, lo que el mánager le ha contado, los rivales). Devuelve poco: el orden, qué quita y
-   por qué, qué alternativa mete, una o dos frases por paso, el titular, la situación, las noticias y los rivales. La app
+   por qué, qué alternativa mete, una frase por paso, el titular, la situación, las noticias y los rivales. La app
    aplica los cambios con el propio motor (que rehace las cuentas) y lo pasa otra vez por cuadrarPlan: si lo que pide la
    IA no cuadra, se queda el plan del motor con sus frases. Si la IA no contesta, el plan del motor ya está en pantalla. */
 /** lo que elige la app para las instrucciones del plan corto (el Worker las arma igual con esto: plan-sistema.js) */
@@ -1490,15 +1490,15 @@ export function pedidoCorto(D, M, c, R) {
   L.push(`
 Ordena, recorta y explica el plan. Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 {
- "pasos": [{"id": "p1", "frase": "una o dos frases: por qué, con las cifras de arriba y la noticia si la hay"}],
- "quita": [{"id": "p3", "motivo": "la noticia o lo que me contaste que lo desaconseja"}],
- "mete": [{"id": "a1", "frase": "por qué entra, en una o dos frases"}],
- "situacion": "2 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
- "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
- "rivales": [{"manager": "nombre", "texto": "qué está haciendo y si va a por mis jugadores"}],
- "titular": "8 a 16 palabras con lo más importante de hoy"
+ "pasos": [{"id": "p1", "frase": "UNA frase de 16 palabras como mucho: el motivo, con la cifra que decide o la noticia"}],
+ "quita": [{"id": "p3", "motivo": "la noticia o lo que me contaste que lo desaconseja, en una frase"}],
+ "mete": [{"id": "a1", "frase": "por qué entra, en una frase corta"}],
+ "situacion": "UNA frase de 30 palabras como mucho: cómo llego a la jornada, con una o dos cifras",
+ "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta, en una frase", "efecto": "sube|baja|neutro"}],
+ "rivales": [{"manager": "nombre", "texto": "lo que ha hecho y me afecta, en una frase"}],
+ "titular": "6 a 12 palabras con lo más importante de hoy"
 }
-"pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 4 noticias y 3 rivales.`);
+"pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 3 noticias y 2 rivales, sin relleno; la lesión o la duda de un jugador del plan se cuenta siempre.`);
   return L.join('\n');
 }
 /** las cifras en euros de un texto, cada una con lo que se le perdona por cómo está escrita («28 M» puede ser 27,84 M) */
@@ -1668,7 +1668,8 @@ export function aplicarCorto(json, R, D, M, c) {
     const rara = cifrasDe(f).find((x) => !cifraSabida(x, sabidas));
     if (rara) { sinFrase++; frasesNo.push({ jugador: o.jugador, cifra: eur(rara.v), frase: f.slice(0, 260) }); continue; }
     o.motivoApp = o.motivo;
-    o.motivo = String(sinWebsChat(sinModelos(f)).trim()).split(/(?<=[.!?])\s+/).slice(0, 3).join(' ');
+    // (25 nov, «menos texto»: se le pide UNA frase; si aun así escribe más, se quedan dos, no tres)
+    o.motivo = String(sinWebsChat(sinModelos(f)).trim()).split(/(?<=[.!?])\s+/).slice(0, 2).join(' ');
   }
   const limpio = (t) => sinWebsChat(sinModelos(String(t || ''))).trim();
   // (dos frases y 240 caracteres como mucho: el modelo ligero a veces repite la misma frase en bucle)

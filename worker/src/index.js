@@ -756,15 +756,21 @@ async function uso(req, env, c) {
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0 };
+// (25 nov, rama worker-plan-corto) pensar: false le pide a la IA que conteste sin razonar antes (`thinking: disabled`, que
+// Haiku 5.5 acepta con este esfuerzo). Lo que piensa es el 80 % de lo que se paga de salida y casi todo lo que tarda un
+// plan; por defecto se queda como está (true) hasta comparar planes de verdad con y sin él
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0, gratisWeb: 0, pensar: true };
 // (25 nov, hallazgo 1 de la auditoría de fallos) el tope de salida, de 5.000 a 8.000: un 6,9 % de los planes se cortaba a
 // mitad del JSON. Solo se paga lo que se escribe: a los que ya cabían no les cuesta más; al más largo, 3.000 tokens de más
 // (0,0015 $ con Haiku). Que la IA escriba menos va aparte, sin publicar (rama `worker-plan-corto`)
 export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 8000;
 /** (25 nov) una línea en los registros de Cloudflare por cada plan, bien o mal: lo que tarda, las búsquedas, los tokens
  * (entrada/salida) y por qué acabó la IA (`stop_reason`: max_tokens es que se ha cortado por largo). Para contarlos:
- * filtrar por «: bien en» o «: mal (» y agrupar por «fin …». */
-export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas, ${r.entra || 0}/${r.sale || 0} tokens, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
+ * filtrar por «: bien en» o «: mal (» y agrupar por «fin …».
+ * (25 nov, rama worker-plan-corto) y «texto N»: los caracteres de lo que la IA ha escrito de verdad. Lo que piensa antes
+ * de contestar se cobra como salida y no se ve: en 16 planes de verdad (22 nov) el texto eran unos 600 tokens de 3.283
+ * (a ~3,2 caracteres por token); el resto, razonamiento. Con esto se mide en cada plan sin gastar nada. */
+export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas, ${r.entra || 0}/${r.sale || 0} tokens, texto ${String(r.texto || '').length}${r.sinPensar ? ' sin pensar' : ''}, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
 // cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
@@ -791,7 +797,7 @@ export async function cfgPlanes(env) {
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
   // (17 nov, Carlos, por Domy) gratisWeb: los planes gratis de quien usa la web o el iPhone, que no tienen anuncios para pedir más
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)) };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web), gratisWeb: Math.floor(n(p.gratisWeb, 0, 0, 10)), pensar: p.pensar !== false };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
@@ -911,7 +917,7 @@ async function hacerPlan(st, env, k, tr) {
     await st.put(`jobe:${rid}`, ini);
     await st.put(`res:${rid}`, { marcha: ini });
     try {
-      const r = await llamarClaude(env, tr.modelo, tr.sistema, tr.pedido, fetch, { web: tr.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS) });
+      const r = await llamarClaude(env, tr.modelo, tr.sistema, tr.pedido, fetch, { web: tr.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS), pensar: tr.pensar !== false });
       dijo = r;
       await gastoHoy(env, costeDe(r, tr.modelo)).catch(() => {});
       // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
@@ -986,14 +992,19 @@ export function bloquesDe(content) {
  * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
  * Google puede hacer (0, sin búsqueda). Si la cuenta de Anthropic no la tiene activada, se repite sin ella (sinWeb: true).
  */
-export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low', hasta = 0 } = {}) {
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0, mensajes = null, tokens = PLAN_TOKENS, esfuerzo = 'low', hasta = 0, pensar = true } = {}) {
   // (23 nov) hasta: la hora tope de todo (reintentos y «pause_turn» incluidos); 0, sin tope (cada intento, 100 s como mucho).
   // Antes, con Claude saturado, podían ser 3 vueltas × 3 intentos × 100 s
   const queda = () => (hasta ? hasta - Date.now() : 100000);
   // (16 nov) el chat manda la conversación entera (mensajes) y el sistema en bloques, con la parte fija en caché
   const cuerpo = { model: modelo, max_tokens: tokens, output_config: { effort: esfuerzo }, system: sistema, messages: mensajes || [{ role: 'user', content: pedido }] };
+  // (25 nov) la IA de verdad, 1 respuesta de 54 del chat: después de contestar se quedó repitiendo «<br>» hasta el tope de
+  // salida (8.000 tokens, 42 s). Ni un plan ni una respuesta llevan «<br>»: si lo escribe, se para ahí
+  cuerpo.stop_sequences = ['<br>'];
+  // (25 nov) sin razonar antes de contestar (solo si se pide: «planes.pensar» a false en limites.json)
+  if (pensar === false) cuerpo.thinking = { type: 'disabled' };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
-  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false };
+  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false, sinPensar: pensar === false };
   let ult = '';
   // (con búsqueda, una respuesta larga puede volver a medias, «pause_turn»: se sigue desde ahí, como mucho dos veces)
   for (let vuelta = 0; vuelta < 3; vuelta++) {
@@ -1010,6 +1021,10 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
       x = null;
       // (por si el modelo no conoce el esfuerzo: se quita y se repite)
       if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(ult)) { delete cuerpo.output_config; n--; continue; }
+      // (por si no admite la parada: sin ella, como siempre)
+      if (r.status === 400 && cuerpo.stop_sequences && /stop_sequence/i.test(ult)) { delete cuerpo.stop_sequences; n--; continue; }
+      // (y si el modelo no deja apagar el razonamiento: con él, como siempre)
+      if (r.status === 400 && cuerpo.thinking && /thinking/i.test(ult)) { console.log('plan: no se puede apagar el razonamiento:', ult); delete cuerpo.thinking; acc.sinPensar = false; n--; continue; }
       // (la búsqueda sin activar en la consola de Anthropic, o una versión que no conoce: sin ella, como siempre)
       if ((r.status === 400 || r.status === 403) && cuerpo.tools && /web.?search|tool/i.test(ult)) { console.log('plan: sin búsqueda:', ult); delete cuerpo.tools; acc.sinWeb = true; n--; continue; }
       if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
@@ -1082,7 +1097,7 @@ async function planIA(req, env, c, ctx) {
     // (23 nov) con id, lo hace el objeto en su alarma (encargarPlan): aquí solo se espera a que lo deje hecho. Si quien pide se
     // va, el plan sigue y se recoge con el mismo id. (0.8.4) Lo espera el propio objeto (esperarRes): antes se le preguntaba
     // cada 1,5 s, 19 veces por plan
-    if (!fin && rid && (await encargarPlan(env, u.uid, rid, { modelo: P.modelo, sistema, pedido: b.pedido, web: P.web, libre, cupoFin: libre ? cupoLibre(P) : cupoTxt(P, y), t0, hasta: hastaPlan(env) }))) {
+    if (!fin && rid && (await encargarPlan(env, u.uid, rid, { modelo: P.modelo, sistema, pedido: b.pedido, web: P.web, pensar: P.pensar, libre, cupoFin: libre ? cupoLibre(P) : cupoTxt(P, y), t0, hasta: hastaPlan(env) }))) {
       fin = await esperarRes(env, u.uid, rid, Date.now(), 'plan', RES_PLAN_MS, 1500).catch(() => null);
       if (!fin) fin = { e: 'La IA de los planes está tardando demasiado. Tienes el plan de la app; vuelve a probar en un rato.', estado: 503, servicio: true };
     }
@@ -1094,7 +1109,7 @@ async function planIA(req, env, c, ctx) {
     if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
     let dijo = null;
     try {
-      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web, hasta: t0 + hastaPlan(env) });
+      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web, hasta: t0 + hastaPlan(env), pensar: P.pensar });
       dijo = r;
       const gasto = costeDe(r, P.modelo);
       ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
