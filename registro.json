@@ -3292,7 +3292,9 @@
    "SPORT|136824498": 1795614271000,
    "AS|https://as.com/futbol/sin-perdon-para-fermin-dos-partidos-de-sancion-f202611-n/": 1795618492000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255321/competicion-sanciona-dos-partidos-fermin-no-estara-atletico.html": 1795617730000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/disciplina-desestima-las-alegaciones-del-barca-y-sanciona-a-fermin-lopez-con-dos-partidos-cadena-ser/": 1795619369000,
+   "AS|https://as.com/futbol/nico-williams-de-nuevo-ligado-al-psg-f202611-n/": 1795618637000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html": 1795619503000
   },
   "hechos": [
    {
@@ -3586,11 +3588,23 @@
     "nums": [
      7
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-sanciona-dos-partidos-fermin-le-deja-jugar-atletico-20261125_3482091.html",
+    "medio": "COPE",
+    "t": 1795619503000,
+    "id": "1715",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Fermín se pierde dos partidos de Liga por sanción",
+    "motivo": "expulsión por protestar desde el banquillo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -4553,17 +4567,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 13,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 198134,
-  "salida": 15463,
+  "entrada": 200320,
+  "salida": 15714,
   "cacheLee": 21607,
   "cacheEscribe": 23867,
-  "dolares": 0.386102,
+  "dolares": 0.386446,
   "reservado": 0
  },
  "recientes": {
@@ -9616,13 +9630,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6327,
+   "ok": 6328,
    "fallos": 0,
-   "ejecuciones": 5146,
+   "ejecuciones": 5147,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:11:13.530Z"
+   "ultima": "2026-11-25T15:16:12.847Z"
   }
  },
  "ptsDirecto": {},
@@ -9639,15 +9653,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:11:24.629Z"
+   "ultimaBien": "2026-11-25T15:16:23.302Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:11:24.629Z"
+   "ultimaBien": "2026-11-25T15:16:23.302Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:11:24.629Z"
+   "ultimaBien": "2026-11-25T15:16:23.302Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9655,11 +9669,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:11:24.629Z"
+   "ultimaBien": "2026-11-25T15:16:23.302Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:11:24.629Z"
+   "ultimaBien": "2026-11-25T15:16:23.302Z"
   }
  },
  "avisos": [
