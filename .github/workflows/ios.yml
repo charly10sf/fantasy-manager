@@ -1,0 +1,132 @@
+# La app de iOS (ios/): la misma web de web/ en un WKWebView con su puente. Aquí se compila para el simulador, sin
+# certificados ni cuenta de Apple, y se prueba en el simulador (ios/Pruebas/PruebasUI.swift): arranca, la web servida por
+# el esquema propio es un sitio seguro y guarda bien, «Entrar» abre la página de LaLiga, la liga de ejemplo pinta las 7
+# pestañas y lo guardado aguanta al volver a abrir. Las capturas y lo que cuenta la app quedan como artefacto.
+# No firma, no sube nada a Apple y no publica nada. Solo en la rama `ios` (y a mano cuando el archivo esté en main).
+name: App iOS
+
+on:
+  push:
+    branches: [ios]
+    paths: ['ios/**', 'web/**', '.github/paquete.py', '.github/workflows/ios.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulador:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Con qué se compila
+        run: |
+          sw_vers
+          xcodebuild -version
+          ls /Applications | grep -i '^Xcode' || true
+          xcodebuild -showsdks | grep -i iphone || true
+      # lo que tiene que ser igual que en Android: la clave pública que firma paquete.json y los sitios a los que la web
+      # puede pedir por el puente
+      - name: Lo mismo que en Android
+        run: |
+          J=$(grep -oE 'CLAVE_PAQUETE = "[A-Za-z0-9+/=]+"' android/app/src/main/java/es/fantasymanager/app/AlDia.java | cut -d'"' -f2)
+          S=$(grep -oE 'clavePaquete = "[A-Za-z0-9+/=]+"' ios/App/Fuentes/AlDia.swift | cut -d'"' -f2)
+          if [ -z "$J" ] || [ "$J" != "$S" ]; then echo "::error::La clave pública de paquete.json no es la misma en AlDia.java ($J) y en AlDia.swift ($S)"; exit 1; fi
+          python3 - <<'PY'
+          import re, sys
+          j = open('android/app/src/main/java/es/fantasymanager/app/Puente.java', encoding='utf-8').read()
+          s = open('ios/App/Fuentes/Red.swift', encoding='utf-8').read()
+          dj = set(re.findall(r'"([a-z0-9.-]+\.[a-z]+)"', re.search(r'HOSTS = new HashSet<>\(Arrays\.asList\((.*?)\)\);', j, re.S).group(1)))
+          ds = set(re.findall(r'"([a-z0-9.-]+\.[a-z]+)"', re.search(r'static let hosts: Set<String> = \[(.*?)\n    \]', s, re.S).group(1)))
+          if dj != ds:
+              sys.exit(f'::error::Los sitios del puente no son los mismos en Puente.java y en Red.swift: {sorted(dj ^ ds)}')
+          print(f'{len(dj)} sitios, los mismos')
+          PY
+      # la web con sus huellas (como en «Web» y «App Android») y lo que va dentro de la app
+      - name: La web
+        run: |
+          python3 .github/paquete.py >> "$GITHUB_ENV"
+          python3 ios/preparar.py >> "$GITHUB_ENV"
+      - name: El proyecto de Xcode
+        run: |
+          command -v xcodegen > /dev/null || brew install xcodegen
+          xcodegen --version
+          cd ios && xcodegen generate
+      - name: El simulador
+        run: |
+          xcrun simctl list devices available | grep -i iphone || true
+          SDK=$(xcodebuild -showsdks | grep -oE 'iphonesimulator[0-9]+' | head -1 | grep -oE '[0-9]+')
+          UDID=$(xcrun simctl list devices available -j | SDK="$SDK" python3 -c "
+          import json, os, re, sys
+          sdk = int(os.environ.get('SDK') or 0)
+          mejor = None
+          for rt, lista in json.load(sys.stdin)['devices'].items():
+              m = re.search(r'iOS-(\d+)-(\d+)', rt)
+              if not m:
+                  continue
+              v = (int(m.group(1)), int(m.group(2)))
+              for d in lista:
+                  if not d.get('isAvailable', True) or not d['name'].startswith('iPhone'):
+                      continue
+                  # el de la versión con la que se compila, y un iPhone normal (ni Pro Max, ni Plus, ni SE)
+                  nota = (v[0] == sdk, bool(re.fullmatch(r'iPhone \d+( Pro)?', d['name'])), v, d['name'])
+                  if mejor is None or nota > mejor[0]:
+                      mejor = (nota, d['udid'], d['name'], rt)
+          if not mejor:
+              sys.exit('No hay ningún simulador de iPhone')
+          print(mejor[2], mejor[3], file=sys.stderr)
+          print(mejor[1])
+          ")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+      - name: Compilar y probar en el simulador
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project ios/FantasyManager.xcodeproj -scheme FantasyManager \
+            -destination "id=$UDID" \
+            -derivedDataPath "$RUNNER_TEMP/dd" -resultBundlePath "$RUNNER_TEMP/pruebas.xcresult" \
+            -test-timeouts-enabled YES -maximum-test-execution-time-allowance 900 \
+            MARKETING_VERSION="$FM_MARKETING" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            FM_VERSION="$FM_VERSION" FM_NATIVO="$NATIVO_IOS" \
+            2>&1 | tee "$RUNNER_TEMP/xcodebuild.log" | grep -E "error|warning: (unre|var|depre)|Test Case|Test Suite|=== |\*\* |passed|failed|No ha llegado|XCTAssert|Testing started" || true
+          grep -q '\*\* TEST SUCCEEDED \*\*' "$RUNNER_TEMP/xcodebuild.log"
+      # las capturas y lo que ha contado la app, también si la prueba falla
+      - name: Sacar las capturas
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/salida/capturas"
+          if [ -d "$RUNNER_TEMP/pruebas.xcresult" ]; then
+            xcrun xcresulttool export attachments --path "$RUNNER_TEMP/pruebas.xcresult" --output-path "$RUNNER_TEMP/adjuntos" || true
+            python3 - "$RUNNER_TEMP/adjuntos" "$RUNNER_TEMP/salida/capturas" <<'PY' || true
+          import json, os, re, shutil, sys
+          de, a = sys.argv[1], sys.argv[2]
+          vistos = {}
+          for prueba in json.load(open(os.path.join(de, 'manifest.json'))):
+              for x in prueba.get('attachments', []):
+                  nombre = x.get('suggestedHumanReadableName') or x['exportedFileName']
+                  # «1-entrada_0_UUID.png» → «1-entrada.png» (y «-2», «-3» si se repite)
+                  base, ext = os.path.splitext(nombre)
+                  base = re.sub(r'_\d+_[0-9A-Fa-f-]{36}$', '', base)
+                  vistos[base] = vistos.get(base, 0) + 1
+                  if vistos[base] > 1:
+                      base += f'-{vistos[base]}'
+                  shutil.copyfile(os.path.join(de, x['exportedFileName']), os.path.join(a, base + ext))
+                  print(base + ext)
+          PY
+          fi
+          tail -c 400000 "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/salida/xcodebuild-final.log" || true
+          grep -nE "error:|: error|\*\* " "$RUNNER_TEMP/xcodebuild.log" | head -200 > "$RUNNER_TEMP/salida/errores.txt" || true
+          ls -la "$RUNNER_TEMP/salida/capturas" || true
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: ios-simulador
+          path: ${{ runner.temp }}/salida
+          retention-days: 14

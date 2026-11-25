@@ -1,0 +1,6 @@
+# lo que se genera: el proyecto de Xcode (XcodeGen), la web copiada (preparar.py) y lo que deja compilar
+*.xcodeproj
+/Recursos/
+build/
+DerivedData/
+*.xcresult
