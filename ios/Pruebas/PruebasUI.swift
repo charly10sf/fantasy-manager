@@ -99,9 +99,24 @@ final class PruebasUI: XCTestCase {
         return nil
     }
 
-    /// la pregunta del rastreo (sale una sola vez, la primera vez que se abre la app, después del consentimiento): que no
+    /// Lo primero que sale al abrir la app por primera vez: el mensaje de Google que explica el permiso de rastreo (con la
+    /// app de prueba de Google, la del simulador, sale siempre; tapa la pantalla hasta que se contesta) y, después, la
+    /// pregunta del iPhone, con nuestro texto. Se sigue y se dice que no. Las demás veces no sale nada
     private func sinRastreo(_ segundos: TimeInterval = 12) {
-        if let r = contestar(["Pedir a la app que no rastree", "Ask App Not to Track"], segundos, captura: "0-rastreo") { print("=== rastreo === \(r)") }
+        let rastreo = ["Pedir a la app que no rastree", "Ask App Not to Track"]
+        let seguir = app.webViews.buttons.matching(NSPredicate(format: "label IN %@", ["Continue", "Continuar"])).firstMatch
+        let fin = Date().addingTimeInterval(segundos)
+        repeat {
+            if seguir.exists {
+                captura("0-mensaje-rastreo")
+                seguir.tap()
+                let r = contestar(rastreo, 20, captura: "0-rastreo")
+                print("=== rastreo === mensaje de Google y \(r ?? "sin pregunta del iPhone")")
+                return
+            }
+            if let r = contestar(rastreo, 0.1, captura: "0-rastreo") { print("=== rastreo === \(r)"); return }
+            Thread.sleep(forTimeInterval: 0.5)
+        } while Date() < fin
     }
 
     /// busca un aviso del iPhone por lo que pone (en la tira de arriba o, si ya se ha ido, bajando la lista de avisos) y

@@ -7,7 +7,9 @@ import UserMessagingPlatform
 /// reglas, y lo que solo hay en el iPhone (el permiso de rastreo):
 /// - Al abrir la app, por este orden (el que pide Google): el consentimiento de la UE (UMP), después el permiso de
 ///   rastreo del iPhone (solo si no se ha dicho que no en el anterior) y, con eso, AdMob. Sin consentimiento no se pide
-///   ningún anuncio. El consentimiento se cambia desde Ajustes («Privacidad de los anuncios»).
+///   ningún anuncio. El consentimiento se cambia desde Ajustes («Privacidad de los anuncios»). Si en AdMob hay un
+///   «mensaje del IDFA», Google enseña antes su explicación y hace él la pregunta del rastreo (así va con la app de
+///   prueba de Google, la del simulador); si no lo hay, la pregunta la hace la app (pedirRastreo).
 /// - Sin banner. Un intersticial que la web pide solo en una pausa natural y con sus tiempos (intersticial.js y
 ///   «intersticial» de limites.json); aquí se vuelve a comprobar lo que solo sabe la app: a la vista, sin teclado, sin la
 ///   IA trabajando, sin otro anuncio en pantalla o recién visto y con un mínimo de minutos desde el anterior.
@@ -44,7 +46,7 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
     private static let pToca = "ap_toca", pVisto = "ap_visto"
 
     private weak var act: Principal?
-    private var pidiendo = false, pidiendoRastreo = false
+    private var pidiendo = false, pidiendoRastreo = false, enFormulario = false
     /// lo que hay que hacer cuando se conteste a la pregunta del rastreo
     private var rastreoPendiente: (() -> Void)?
     /// iniciado: ya se ha llamado a AdMob; listo: AdMob ya ha arrancado
@@ -123,7 +125,8 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
     @objc private func tecladoDentro() { teclado = false }
 
     private func pedirConsentimiento() {
-        guard let a = act, !pidiendo else { return }
+        // (con el formulario del consentimiento en pantalla no se pide otra vez: al volver a la app, por ejemplo)
+        guard let a = act, !pidiendo, !enFormulario else { return }
         pidiendo = true
         let p = RequestParameters()
         #if DEBUG
@@ -147,8 +150,10 @@ final class Anuncios: NSObject, FullScreenContentDelegate {
                     return
                 }
                 guard let a, a === self.act else { return }
+                self.enFormulario = true
                 ConsentForm.loadAndPresentIfRequired(from: a) { [weak self] error in
                     DispatchQueue.main.async {
+                        self?.enFormulario = false
                         if let error { self?.ultimoFallo = "formulario: \(error.localizedDescription)" }
                         self?.seguir()
                     }
