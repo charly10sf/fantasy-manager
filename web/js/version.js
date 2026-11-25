@@ -29,8 +29,8 @@ export const NOVEDADES = [
     // importa es la aplicación, meterte dentro con tu cuenta y no ver los datos desde fuera») Solo web. La portada empieza por
     // «Tu liga, por dentro» (`tenlaHTML` en app.js) con los tres dispositivos y el tuyo destacado; en el ordenador queda un
     // QR a la vista y se puede instalar con Chrome o Edge (`instalarPc`); en las páginas públicas el botón rojo y la línea
-    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). El iPhone va con el logo de Apple (lo pidió Carlos el 25 nov) y
-    // el ordenador con un portátil dibujado, sin logo de Windows; en los dibujos de las guías, el logo de verdad de la app.
+    // cambian con el dispositivo (paginas.py, `DISPOSITIVO`). El iPhone va con el logo de Apple y el ordenador con el de
+    // Windows (los pidió Carlos el 25 nov, sabiendo lo que dicen sus normas); en los dibujos de las guías, el logo de verdad.
     // Detalle en claude/sesion-24nov-descarga-clara.md del proyecto. La hora, al publicar
     v: '0.8.3c', f: '2026-11-25', t: 'La app, más clara en la web',
     cosas: [
