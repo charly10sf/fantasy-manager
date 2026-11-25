@@ -3282,7 +3282,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261125/1004255367/dani-diaz-entra-convocatoria-real-enfrentarse-crystal-palace.html": 1795610979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/cesar-tarrega-habla-cambio-valencia-136836831.html": 1795611342000,
    "SPORT|136823649": 1795608059000,
-   "AS|https://as.com/futbol/primera/la-defensa-en-cuadro-f202611-n/": 1795611437000
+   "AS|https://as.com/futbol/primera/la-defensa-en-cuadro-f202611-n/": 1795611437000,
+   "SPORT|136817073": 1795611667000
   },
   "hechos": [
    {
@@ -3513,7 +3514,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4476,17 +4477,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 12,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 179264,
-  "salida": 13509,
+  "entrada": 181280,
+  "salida": 13601,
   "cacheLee": 21607,
   "cacheEscribe": 20964,
-  "dolares": 0.354394,
+  "dolares": 0.354642,
   "reservado": 0
  },
  "recientes": {
@@ -9540,13 +9541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6312,
+   "ok": 6313,
    "fallos": 0,
-   "ejecuciones": 5131,
+   "ejecuciones": 5132,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T14:01:13.822Z"
+   "ultima": "2026-11-25T14:06:13.860Z"
   }
  },
  "ptsDirecto": {},
@@ -9563,15 +9564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:01:44.860Z"
+   "ultimaBien": "2026-11-25T14:06:23.373Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:01:44.860Z"
+   "ultimaBien": "2026-11-25T14:06:23.373Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:01:44.860Z"
+   "ultimaBien": "2026-11-25T14:06:23.373Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9579,11 +9580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:01:44.860Z"
+   "ultimaBien": "2026-11-25T14:06:23.373Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T14:01:44.860Z"
+   "ultimaBien": "2026-11-25T14:06:23.373Z"
   }
  },
  "avisos": [
