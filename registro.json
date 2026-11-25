@@ -3112,7 +3112,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
-   "SPORT|136717129": 1795341237000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "SPORT|136598447": 1795341606000,
    "AS|https://as.com/futbol/primera/kike-salas-se-hace-gigante-f202611-n/": 1795346558000,
@@ -9512,13 +9511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6262,
+   "ok": 6263,
    "fallos": 0,
-   "ejecuciones": 5081,
+   "ejecuciones": 5082,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T09:51:18.888Z"
+   "ultima": "2026-11-25T09:56:14.748Z"
   }
  },
  "ptsDirecto": {},
@@ -9535,15 +9534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:51:28.421Z"
+   "ultimaBien": "2026-11-25T09:56:24.630Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:51:28.421Z"
+   "ultimaBien": "2026-11-25T09:56:24.630Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:51:28.421Z"
+   "ultimaBien": "2026-11-25T09:56:24.630Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9551,11 +9550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:51:28.421Z"
+   "ultimaBien": "2026-11-25T09:56:24.630Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T09:51:28.421Z"
+   "ultimaBien": "2026-11-25T09:56:24.630Z"
   }
  },
  "avisos": [
