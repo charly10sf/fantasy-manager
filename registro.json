@@ -3136,19 +3136,10 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3077",
-   "que": "vuelve",
-   "antes": "injured",
-   "t": 1795623375226
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
-   "SPORT|136726389": 1795364350000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/22/rodri-en-modo-entrenador-dio-ordenes-desde-la-grada-a-eric-cuando-peor-estaba-el-barca-ante-el-villarreal-cadena-ser/": 1795374582000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261122/1004254231/comunicado-villarreal-desmintiendo-operacion-pepe-culpa-eclipse.html": 1795375479000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254128/rodri-dio-instrucciones-eric-acerco-grada-hablar.html": 1795373560000,
@@ -9656,13 +9647,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6337,
+   "ok": 6338,
    "fallos": 0,
-   "ejecuciones": 5156,
+   "ejecuciones": 5157,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T16:16:15.226Z"
+   "ultima": "2026-11-25T16:21:13.101Z"
   }
  },
  "ptsDirecto": {},
@@ -9679,15 +9670,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:16:36.207Z"
+   "ultimaBien": "2026-11-25T16:21:23.415Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:16:36.207Z"
+   "ultimaBien": "2026-11-25T16:21:23.415Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:16:36.207Z"
+   "ultimaBien": "2026-11-25T16:21:23.415Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9695,11 +9686,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:16:36.207Z"
+   "ultimaBien": "2026-11-25T16:21:23.415Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T16:16:36.207Z"
+   "ultimaBien": "2026-11-25T16:21:23.415Z"
   }
  },
  "avisos": [
