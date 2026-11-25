@@ -3118,10 +3118,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
-   "SPORT|136715788": 1795347290000,
    "MARCA|https://www.marca.com/futbol/getafe/2026/11/22/boselli-baja-ultima-hora-atletico-madrid.html": 1795351398000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000,
@@ -3278,18 +3276,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/",
-    "medio": "AS",
-    "t": 1795347337000,
-    "id": "2770",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Antony sale lesionado tras marcar al Sevilla",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html",
     "medio": "Mundo Deportivo",
@@ -9529,13 +9515,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6282,
+   "ok": 6283,
    "fallos": 0,
-   "ejecuciones": 5101,
+   "ejecuciones": 5102,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T11:31:12.602Z"
+   "ultima": "2026-11-25T11:36:14.072Z"
   }
  },
  "ptsDirecto": {},
@@ -9552,15 +9538,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:31:23.576Z"
+   "ultimaBien": "2026-11-25T11:36:22.097Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:31:23.576Z"
+   "ultimaBien": "2026-11-25T11:36:22.097Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:31:23.576Z"
+   "ultimaBien": "2026-11-25T11:36:22.097Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9568,11 +9554,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:31:23.576Z"
+   "ultimaBien": "2026-11-25T11:36:22.097Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:31:23.576Z"
+   "ultimaBien": "2026-11-25T11:36:22.097Z"
   }
  },
  "avisos": [
