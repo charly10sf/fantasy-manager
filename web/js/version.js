@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4d';
+export const VERSION = '0.8.4e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,19 @@ export const VERSION = '0.8.4d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, 13:33, Carlos: «quiero que subas todo lo que queda pendiente») La tarjeta de la app para iPhone (Carlos, 13:00;
+    // diseño A2 elegido a las 13:29): una vez por dispositivo a todos con su liga cargada, con la línea de su plataforma
+    // (`tarjetaIphone` en presentacion.js; cuándo sale, `iphoneEsperar`/`iphoneToca` en app.js, LS «aviso-iphone»; si toca
+    // la de invitar el mismo día, la de invitar otro día). Lo pidió él aunque choca con la regla de no cambiar los textos del
+    // iPhone en la web hasta que Apple apruebe la app. Van también, sin novedad: el bot con los horarios que publica LaLiga
+    // (rama `bot-horarios`) y la base de la app de iOS (rama `ios`, iOS 1; en Android y en la web no cambia nada).
+    // Pruebas: .github/prueba-aviso.mjs (los casos de la tarjeta de iPhone)
+    v: '0.8.4e', f: '2026-11-25', h: '14:05', t: 'La app para iPhone, en camino',
+    cosas: [
+      { tipo: 'nuevo', d: 'movil', t: 'La app para iPhone, en camino', x: 'Un aviso, una sola vez, de que estoy con la app para iPhone. Mientras, en el iPhone se sigue entrando desde Safari, y desde Android se puede avisar a los amigos con iPhone de que ya pueden entrar por la web.' },
+    ],
+  },
   {
     // (25 nov, 13:02, Carlos: «activa lo de Cloudflare Web Analytics», el día que la app se disparó y no se sabía de dónde
     // venía la gente) Cloudflare Web Analytics con el script a mano (el dominio va por GitHub Pages: la configuración automática

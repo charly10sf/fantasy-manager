@@ -3819,3 +3819,14 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 /* (0.8.4c) las dos pestañas de los avisos del dueño y de quien ayuda: «Recibidos» y «Reportar un fallo», con su numerito */
 .av-pest button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .av-pest .av-n { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--rojo); color: #fff; font: 700 var(--t-mini)/18px 'Barlow'; }
+/* (0.8.4e) la tarjeta de la app para iPhone (el diseño A que eligió Carlos el 25 nov, 13:29: la manzana sola, sin círculo
+   ni anillo), sobre la de las novedades (.nvt) */
+.nvt.nvt-ios { padding: 26px 22px 14px; background: #141418; }
+.nvt-ios .ios-logo { width: 56px; height: 56px; margin: 2px auto 12px; color: #fff; }
+.nvt-ios .ios-logo svg { display: block; width: 56px; height: 56px; }
+.nvt-ios .ios-eti { display: inline-flex; align-items: center; gap: 6px; font: 700 12px 'Barlow'; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rojo-texto); }
+.nvt-ios .ios-eti i { width: 7px; height: 7px; border-radius: 50%; background: var(--rojo); }
+.nvt-ios h2 { margin: 6px 0 0; font-size: 26px; line-height: 1.02; }
+.nvt-ios p { margin: 10px 0 14px; line-height: 1.38; }
+.nvt-ios .ios-mas { display: block; margin: 0 0 14px; padding: 9px 12px; border-radius: 12px; background: rgba(255, 197, 71, 0.1); color: #ffc547; font: 600 13.5px 'Barlow'; line-height: 1.3; }
+.nvt-ios .ios-ok { display: block; width: 100%; min-height: 44px; margin: 2px 0 0; padding: 12px; border: 0; border-radius: 12px; background: var(--rojo-accion); color: #fff; font: 700 15px 'Barlow'; }

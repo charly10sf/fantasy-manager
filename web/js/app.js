@@ -36,7 +36,7 @@ import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, a
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
-import { presentarNovedades, tarjetaNovedad, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
+import { presentarNovedades, tarjetaNovedad, tarjetaIphone, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { registrarPujas } from './pujas-vistas.js';
@@ -4523,6 +4523,7 @@ function novedades() {
   // y ya. La lista de Ajustes sigue, solo para el dueño (y su botón «Ver en presentación»)
   // (17 nov, Carlos) salvo las versiones gordas, con «todos: true» (la 0.8): esas se presentan a todos al actualizar
   const vista = versionVista();
+  iphoneEsperar();
   novAvisoAlArrancar(vista);
   if (!vista || !NOVEDADES.some((n) => todosMi(n) && cmpVer(n.v, vista) > 0 && cmpVer(n.v, '0.8') >= 0)) { LS.set('version-vista2', VERSION); return; }
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
@@ -4638,6 +4639,9 @@ function novAvisoEsperar() {
     // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
     if (Date.now() > hasta) { novAvisoEsperando = false; return; }
     if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa'))) { setTimeout(mirar, 1000); return; }
+    // (0.8.4e) la de la app para iPhone va antes y, si sale hoy, la de invitar se deja para otro día
+    if (iphoneToca()) { setTimeout(mirar, 1500); return; }
+    if (iphoneHoy()) { novAvisoEsperando = false; return; }
     const g = novAvisos();
     const n = g && g.pend ? NOVEDADES.find((x) => x.v === g.pend && x.aviso && todosMi(x)) : null;
     if (n) {
@@ -4652,6 +4656,42 @@ function novAvisoEsperar() {
     if (rec) tarjetaNovedad(rec, { alIr: (a) => { novInvRecordado(); irNovedad(a); }, alCerrar: () => { novInvRecordado(); } });
   };
   setTimeout(mirar, 500);
+}
+/* (0.8.4e; Carlos, 25 nov, 13:00 y 13:29) La tarjeta de la app para iPhone (tarjetaIphone, presentacion.js): UNA vez por
+   dispositivo a todos, también al dueño (para verla) y en Android («para que lo sepan si tienen amigos»), con su liga
+   cargada (no en la liga de ejemplo, ni en la portada ni en la entrada) y la pantalla libre, después del tutorial. Si
+   tocan la de invitar y esta, primero esta y la de invitar otro día (iphoneHoy, en novAvisoEsperar). Se da por vista al
+   cerrarla (LS «aviso-iphone»): si la app recarga o se cierra antes, vuelve a salir. Ni dentro de la app de iOS ni con un
+   navegador manejado por un programa (las pruebas). OJO: lo pidió él aunque choca con la regla de no cambiar los textos
+   del iPhone en la web hasta que Apple apruebe la app (claude/ESTADO-reglas.md del proyecto) */
+const LINEA_IPHONE = {
+  android: '¿Amigos con iPhone en tu liga? Ya pueden entrar desde la web.',
+  ios: 'Mientras, sigue usándola desde Safari como hasta ahora.',
+  pc: 'Si tienes iPhone, ya puedes usarla desde Safari.',
+};
+const iphoneNunca = () => !!LS.get('aviso-iphone', 0) || navigator.webdriver === true || (enApp && nativo.canal() === 'ios');
+const iphoneToca = () => !iphoneNunca() && !enDemo() && haySesion() && tourVisto();
+const iphoneHoy = () => { const t = Number(LS.get('aviso-iphone', 0)) || 0; return !!t && new Date(t).toDateString() === new Date().toDateString(); };
+/** la línea de cada plataforma: la app de Android y la web en un Android, la de Android; el iPhone, la suya; el resto, el ordenador */
+function lineaIphone() {
+  if (enApp) return LINEA_IPHONE.android;
+  const c = canalPaso();
+  return c === 'web-iphone' ? LINEA_IPHONE.ios : c === 'web-android' ? LINEA_IPHONE.android : LINEA_IPHONE.pc;
+}
+let iphoneEsperando = false;
+function iphoneEsperar() {
+  if (iphoneEsperando) return;
+  iphoneEsperando = true;
+  const hasta = Date.now() + 10 * 60e3;
+  const mirar = () => {
+    if (iphoneNunca() || Date.now() > hasta) { iphoneEsperando = false; return; }
+    // (en la liga de ejemplo, sin sesión o sin el tutorial visto, se espera: puede entrar con su liga en este rato)
+    // (ni encima de la bienvenida ni de la presentación de un tema de evento: lo mismo que espera el tutorial)
+    if (!iphoneToca() || !(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente)) { setTimeout(mirar, 1500); return; }
+    iphoneEsperando = false;
+    tarjetaIphone({ apple: APPLE, linea: lineaIphone(), alCerrar: () => { LS.set('aviso-iphone', Date.now()); quizaTutorial(700); } });
+  };
+  setTimeout(mirar, 800);
 }
 // a donde lleva el botón de una novedad: una pestaña (v, seg) o lo mismo que un botón con ese data-accion (accion)
 function irNovedad(a) {
