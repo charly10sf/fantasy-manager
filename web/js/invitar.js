@@ -7,6 +7,7 @@
    «invitar» de limites.json (el servidor los manda con el estado, en `cfg`). */
 import { LS } from './util.js';
 import { pedirWorker } from './soporte.js';
+import { WORKER, nativo } from './puente.js';
 
 const DOMINIO = 'https://fantasymanagerapp.com/';
 const LETRAS = /^[A-HJ-NP-Z2-9]{6}$/;
@@ -28,6 +29,30 @@ export function leerCodigoEnlace() {
     return c;
   } catch (e) { return ''; }
 }
+/** (25 nov) la llegada con ?inv= a la web (una vez por código y dispositivo) y el botón «Copiar el código y descargar»:
+    el servidor las cuenta y guarda la huella de la conexión 2 h, para proponerle ese código si entra en la app desde el mismo
+    sitio (la app de Google Play no recibe el enlace). Sin sesión: aún no ha entrado */
+export function avisarLlegada(cod, paso = 'llega') {
+  try {
+    if (!WORKER || !codValido(cod)) return;
+    if (paso === 'llega') { if (LS.get('inv-llega-dicho', '') === cod) return; LS.set('inv-llega-dicho', cod); }
+    fetch(`${WORKER}/invitar/llega`, { method: 'POST', body: JSON.stringify({ cod: limpiarCod(cod), paso }), headers: { 'content-type': 'text/plain' }, cache: 'no-store', keepalive: true }).catch(() => {});
+  } catch (e) { /* no importa */ }
+}
+/** (25 nov, tanda 6 de la auditoría de fallos) en la app de Google Play, el código que traía la instalación (el enlace del
+    amigo lleva a Play con «&referrer=inv%3D<código>» y la parte Android lo lee una vez, Referrer.java). Se guarda como el del
+    enlace, para canjearlo al entrar en la liga (vía «play»); uno del enlace que ya esté guardado no se pisa. Las apps de
+    antes no lo tienen: nada */
+export function leerCodigoPlay() {
+  try {
+    const c = limpiarCod(nativo.invitacion());
+    if (!codValido(c) || codigoPendiente()) return '';
+    LS.set('inv-cod', { cod: c, t: Date.now(), via: 'play' });
+    return c;
+  } catch (e) { return ''; }
+}
+/** por dónde llegó el código que espera (para contar el canje): «play» o, si no, «enlace» */
+export const viaPendiente = () => { const x = LS.get('inv-cod', null); return x && x.via === 'play' ? 'play' : 'enlace'; };
 /** el código del enlace que espera a canjearse (o '') */
 export const codigoPendiente = () => { const x = LS.get('inv-cod', null); return x && codValido(x.cod) && Date.now() - x.t < 14 * 86400e3 ? x.cod : ''; };
 
@@ -43,13 +68,14 @@ const guardar = (uid, est) => { if (est && est.ok !== false) LS.set('invitar', {
 let pidiendo = null;
 /** pide el estado al servidor (como mucho cada 20 min, salvo `ya`). Devuelve { est, nuevos } (nuevos: amigos que han entrado
     desde la última vez que se miró, para el aviso) */
-export async function leerInvitar(uid, { ya = false } = {}) {
+export async function leerInvitar(uid, { ya = false, liga = '' } = {}) {
   const g = LS.get('invitar', null);
   if (!ya && g && String(g.uid) === String(uid) && Date.now() - g.t < 20 * 60e3) return { est: g.est, nuevos: 0 };
   if (pidiendo) return pidiendo;
   pidiendo = (async () => {
     try {
-      const est = await pedirWorker('GET', '/invitar', null, { tiempo: 15000 });
+      // (25 nov) con la liga: a una cuenta nueva, el servidor le dice si hay pistas de que la han invitado
+      const est = await pedirWorker('GET', `/invitar${liga ? `?liga=${encodeURIComponent(liga)}` : ''}`, null, { tiempo: 15000 });
       const antes = g && String(g.uid) === String(uid) && g.est ? g.est.entran || 0 : null;
       guardar(uid, est);
       return { est, nuevos: antes == null ? 0 : Math.max(0, (est.entran || 0) - antes) };
@@ -66,9 +92,9 @@ export async function miCodigo(uid) {
   return est.cod;
 }
 /** canjea un código al entrar (el del enlace o el que escribe). { ok, e } */
-export async function canjear(uid, cod, liga) {
+export async function canjear(uid, cod, liga, via = 'escrito') {
   try {
-    const r = await pedirWorker('POST', '/invitar/canjear', { cod: limpiarCod(cod), liga: String(liga || '') }, { tiempo: 15000 });
+    const r = await pedirWorker('POST', '/invitar/canjear', { cod: limpiarCod(cod), liga: String(liga || ''), via }, { tiempo: 15000 });
     LS.del('inv-cod');
     LS.set('inv-hecho', { t: Date.now() });
     await leerInvitar(uid, { ya: true }).catch(() => {});
@@ -126,11 +152,26 @@ export function contadorTxt(e = est0()) {
 }
 /** ¿le sale «¿Te ha invitado alguien?»? (cuenta nueva sin invitación, en sus primeros días) */
 export const puedeCanjear = (uid) => { const e = estadoInv(uid); return !!(e && e.puedeCanjear && !e.invitado && !LS.get('inv-hecho', null)); };
+/** (25 nov) el código que el servidor le propone (abrió el enlace desde esta misma conexión hace poco), o '' */
+export const codigoPropuesto = (uid) => { const e = estadoInv(uid); return (puedeCanjear(uid) && e && codValido(e.propuesto || '') && limpiarCod(e.propuesto)) || ''; };
+/** (25 nov, Carlos: «solo debería salir si de verdad te ha invitado, no a todos los que entren nuevos») la ventana sola y
+    la banda, solo con una pista: el código propuesto o alguien de su liga que ha sacado código. Si no, solo en Ajustes */
+export const pareceInvitado = (uid) => { const e = estadoInv(uid); return puedeCanjear(uid) && !!(e && (codigoPropuesto(uid) || e.ligaInvita)); };
 
 /* ---------- lo que se comparte ---------- */
 export const enlaceInv = (cod) => `${DOMINIO}?inv=${encodeURIComponent(cod)}`;
-/** el mensaje para WhatsApp: habla de la app; al amigo no se le promete nada (Carlos, 19 nov) */
-export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis. Pruébala: ${enlaceInv(cod)} (si la descargas de Google Play, al entrar mete mi código: ${cod})`;
+/** (25 nov) la llegada a la web desde Google Play lleva el código en el referrer de la instalación: hoy no lo lee nadie, pero
+    lo deja listo para cuando la app lo lea al instalarse (tanda 6 de la auditoría de fallos) */
+export const playConCodigo = (base, cod) => `${base}&referrer=${encodeURIComponent(`inv=${limpiarCod(cod)}`)}`;
+/** el mensaje para WhatsApp: habla de la app; al amigo no se le promete nada (Carlos, 19 nov). (25 nov) El código, en su
+    propia línea y en negrita de WhatsApp (*…*), con lo que tiene que hacer con él: casi todos la instalan desde Google
+    Play, que pierde el enlace, y el código hay que escribirlo a mano al entrar */
+export const textoInv = (cod) => `Uso Fantasy Manager para LaLiga Fantasy: cada día me dice qué fichar, qué vender y a quién clausular. Es gratis.
+
+Descárgala aquí: ${enlaceInv(cod)}
+
+Mi código de invitación: *${cod}*
+Cuando entres con tu cuenta de LaLiga, la app te pregunta si te ha invitado alguien: pon ese código.`;
 /** para repintar al cerrarse algo: la hora más cercana a la que se cierra un rival o un premio (o 0) */
 export function proximoCierreInv(ahora = Date.now()) {
   const e = est0();

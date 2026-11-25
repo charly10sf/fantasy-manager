@@ -30,7 +30,7 @@ import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
 import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { leerCodigoEnlace, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
+import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
@@ -108,7 +108,10 @@ function pantallaEntrar(error = '') {
   // (24 nov, Carlos: «que arriba se entienda que lo que importa es la aplicación, meterte dentro con tu cuenta y no ver los
   // datos desde fuera») lo primero de la portada es qué es la app y cómo tenerla en tu dispositivo (`tenlaHTML`): en el
   // ordenador y en la web de un Android, encima del portal; en el iPhone, encima de los tres pasos de entrar
-  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${portalHTML(plat === 'iphone' || llegada ? '' : tenlaHTML(plat))}`;
+  // (25 nov) quien llega con el enlace de un amigo a la web de un Android se va a descargar la app de Google Play, que no
+  // recibe el enlace: el código, en grande y arriba del todo, con un botón que lo copia y abre Google Play
+  const invLlega = !enApp && plat === 'android' && codigoPendiente() ? tarjetaInvLlega(codigoPendiente()) : '';
+  const izq = enApp ? `<div class="pant-top">${LOGO}</div>${heroApp('h1')}${mudanza}` : `${mudanza}${invLlega}${portalHTML(plat === 'iphone' || llegada ? '' : tenlaHTML(plat))}`;
   const queEs = llegada ? `<div class="lleg"><h1 class="lleg-t">Tu director deportivo para <span>LaLiga Fantasy</span></h1><p>Cada día te dice a quién vender, a quién fichar, cuánto pujar y a quién clausular en tu liga. Es gratis y entras con tu cuenta de LaLiga.</p></div>` : '';
   raiz().innerHTML = `<div class="portada${enApp ? '' : ` web p-${plat}${llegada ? ' p-llegada' : ''}`}">${enApp ? '' : barraPortal(plat) + tiraPortada()}<div class="pantalla"><div class="pant-i">${izq}</div><div class="pant-d" id="entrar">
     ${error ? `<div class="error-c" role="alert" style="margin:0 0 16px">${esc(error)}</div>` : ''}
@@ -468,15 +471,40 @@ function sinErrorVuelta() {
   if (p) { p.hidden = true; p.textContent = ''; }
   if (inp) inp.removeAttribute('aria-invalid');
 }
+/** (25 nov, tanda 5) la huella de un enlace de vuelta (su código o, sin código, la dirección): para saber si se vuelve a
+    pegar el mismo que acaba de fallar sin guardar el código */
+function huellaEnlace(url) {
+  let t = String(url || '');
+  try { const u = new URL(t); t = u.searchParams.get('code') || `${u.searchParams.get('error') || ''}|${u.searchParams.get('state') || ''}|${t}`; } catch (e) { /* tal cual */ }
+  let h = 2166136261;
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
+/** el último fallo al entrar, para el Diagnóstico (paso, código de LaLiga y hora) y para reconocer el enlace gastado */
+function apuntarFalloEntrada(e, url) {
+  try { LS.set('entrada-fallo', { paso: pasoDeFallo(e), cod: String((e && e.codigo) || '').slice(0, 80), t: Date.now(), h: url ? huellaEnlace(url) : '' }); } catch (x) { /* nada */ }
+}
 /**
  * Entrar con lo pegado (el botón «Pegar y entrar», pegar en el cuadro o en cualquier parte de la pantalla, o «Entrar»).
  * Primero se mira lo pegado sin llamar a nadie (mirarVuelta dice qué se ha pegado en su lugar); el error sale debajo del
  * cuadro. Sin conexión no se pierde nada: se vuelve a pulsar con lo mismo.
  */
-async function entrarConVuelta(txt) {
+async function entrarConVuelta(txt, { solo = false } = {}) {
   if (S.entrandoWeb) return;
   const m = mirarVuelta(txt);
-  if (m.error) { errorVuelta(m.error); return; }
+  // (25 nov, tanda 5) lo pegado que no vale también cuenta, con su motivo: antes se salía sin apuntar nada
+  if (m.error) { marcarPaso(`m-${m.motivo || 'otro'}`); errorVuelta(m.error); return; }
+  // el mismo enlace que acaba de fallar (el portapapeles lo sigue teniendo): no se vuelve a probar, se dice claro. Sin
+  // conexión o con un 5xx de LaLiga sí se deja probar otra vez (el código puede seguir valiendo)
+  const f = LS.get('entrada-fallo', null);
+  if (f && f.h && f.h === huellaEnlace(m.url) && Date.now() - f.t < 30 * 60e3 && f.paso !== 'x-red' && f.paso !== 'x-5xx') {
+    // al volver de otra pestaña con lo de antes copiado no se dice nada (no lo ha pegado él)
+    if (solo) return;
+    marcarPaso('x-gastado');
+    errorVuelta('Ese enlace ya está gastado: pulsa «Abrir LaLiga» otra vez y copia la dirección nueva.');
+    const c = $('#vueltaWeb'); if (c) c.value = '';
+    return;
+  }
   sinErrorVuelta();
   const campo = $('#vueltaWeb');
   if (campo && !campo.value.trim()) campo.value = m.url;
@@ -489,6 +517,7 @@ async function entrarConVuelta(txt) {
     S.entrandoWeb = false;
     botones.forEach((b) => { b.disabled = false; });
     marcarPaso(pasoDeFallo(e));
+    apuntarFalloEntrada(e, m.url);
     errorVuelta(e.message || String(e), { ayuda: e.tipo === 'redirect' });
     // el enlace gastado no vale para otro intento: fuera del cuadro (sin conexión se queda, para volver a pulsar)
     if (campo && e.tipo !== 'red') campo.value = '';
@@ -522,6 +551,11 @@ function filaDisp(k, desde) {
       : tuyo ? '<span class="tl-aqui">Estás aquí</span>' : `<a class="tl-ir" href="${d.h}">Cómo</a>`;
   return `<li class="tl-f${tuyo ? ' tuyo' : ''}" data-d="${k}"><span class="tl-g">${d.g}</span><div class="tl-n"><b>${d.n}${d.s ? ` <small>${d.s}</small>` : ''}</b><span>${d.x}</span></div>${hacer}</li>`;
 }
+/** (25 nov) la llegada con el código de un amigo a la web de un Android */
+const tarjetaInvLlega = (cod) => `<section class="inv-llega" aria-labelledby="invLlegaT"><h2 id="invLlegaT">Tu amigo te ha invitado</h2>
+  <p>Este es su código:</p><b class="inv-llega-cod">${esc(cod)}</b>
+  <button class="btn ancho" data-accion="invCopiarPlay">${icono('copiar')}Copiar el código y descargar</button>
+  <p>Cuando entres en la app, te preguntará si te ha invitado alguien: pégalo ahí.</p></section>`;
 /** la lista de dispositivos: el tuyo primero */
 const dispositivosHTML = (desde, cuales = ['android', 'iphone', 'pc']) => `<ul class="tl-l" role="list">${[...cuales].sort((a, b) => (b === desde) - (a === desde)).map((k) => filaDisp(k, desde)).join('')}</ul>`;
 /** lo primero de la portada de la web: qué es la app (una frase) y cómo tenerla. En el iPhone, solo la frase: debajo van
@@ -770,6 +804,13 @@ async function codigoDeSesion() {
   return j;
 }
 /** (21 nov) la variante c de invitar: una tira fina debajo de la barra, en todas las pestañas */
+/* (25 nov) quien acaba de entrar y aún puede poner el código de quien le invitó: una banda arriba hasta que lo pone, dice
+   que nadie o la cierra (la ventana sola sale una vez y se cerraba sin leerla; desde Google Play el enlace no trae el código) */
+const bandaInvitado = () => {
+  const uid = uidYo();
+  if (!uid || enDemo() || LS.get('inv-banda-cerrada', 0) || !pareceInvitado(uid) || codigoPendiente()) return '';
+  return `<div class="banda banda-invitado">${icono('estrella')}<span><b>¿Te ha invitado un amigo?</b> Pon su código.</span><button data-accion="ponerCodigo">Poner código</button><button class="banda-x" data-accion="cerrarInvitado" aria-label="Nadie me ha invitado">${icono('cerrar')}</button></div>`;
+};
 const bandaInvita = () => (LS.get('var-inv', '') === 'c' ? `<div class="banda banda-inv">${icono('estrella')}<span><b>Invita a un amigo</b> y ve el dinero de 2 rivales por cada uno que entre.</span><button data-accion="invitarAmigo">Invitar</button></div>` : '');
 const enIPhoneWeb = () => !enApp && movilDe() === 'iphone';
 const bandaInicio = () => {
@@ -1154,6 +1195,9 @@ function pintarSup() {
    de los rivales». Una vez (por móvil); no en la liga de ejemplo, ni con el tutorial o las novedades delante */
 const apodosToca = () => !LS.get('apodos-visto', null) && !!S.D && !enDemo() && tourVisto() && !tourAbierto() && !document.body.classList.contains('con-nv');
 function marcarApodos() { const b = $('#bAjustes'); if (b) b.classList.toggle('brilla', apodosToca()); }
+/** las bandas de arriba (también sola, sin repintar la pestaña: (25 nov) al poner el código de una invitación) */
+const htmlBanda = () => bandaLleno() + bandaMudanza() + bandaInvitado() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+function pintarBanda() { const b = $('#banda'); if (b) b.innerHTML = htmlBanda(); }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
@@ -1175,7 +1219,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaInvita() + bandaInicio() + bandaActualizarPlay() + bandaSinDescarga() + bandaBeta() + bandaPlay() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  pintarBanda();
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -1921,25 +1965,33 @@ async function invitarSiToca({ ya = false } = {}) {
   if (!uid || enDemo() || !haySesion()) return;
   const antes = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
   let r;
-  try { r = await leerInvitar(uid, { ya }); } catch (e) { return; }
+  try { r = await leerInvitar(uid, { ya, liga }); } catch (e) { return; }
+  // (25 nov, tanda 6) en la app de Google Play, el código con el que se instaló (si no se recogió al abrirla)
+  if (enApp) leerCodigoPlay();
   const cod = codigoPendiente();
   if (cod && liga && puedeCanjear(uid)) {
-    const x = await canjear(uid, cod, liga);
+    const x = await canjear(uid, cod, liga, viaPendiente());
     if (x.ok && !x.ya) tostada('Has entrado con la invitación de tu amigo', 5000);
   } else if (cod && r.est && r.est.puedeCanjear === false) LS.del('inv-cod');
-  else if (!cod && puedeCanjear(uid) && !LS.get('inv-preguntado', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
+  // (25 nov, Carlos) solo a quien parece invitado (el servidor le propone un código o alguien de su liga ha sacado el suyo);
+  // a los demás, nada: lo tienen en Ajustes
+  // (25 nov, 17:46, Carlos: «a los que ya han entrado y les ha ido mal, que les salga») la marca es nueva («inv-preguntado2»):
+  // a quien ya vio la ventana de antes (a todos los nuevos, sin pistas) y parece invitado, le sale una vez esta
+  else if (!cod && pareceInvitado(uid) && !LS.get('inv-preguntado2', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
     // (sobre todo para quien la baja de Google Play, a quien no le llega el enlace; Carlos, 19 nov)
-    LS.set('inv-preguntado', Date.now());
-    S.inv = {};
-    hoja('invitar');
+    LS.set('inv-preguntado2', Date.now());
+    S.inv = { cod: codigoPropuesto(uid), propuesto: codigoPropuesto(uid) };
+    hoja('invitado');
   }
   if (r.nuevos > 0) avisoAmigoInv(r.nuevos);
   const despues = `${sinIntersticiales()}|${semanaDoble()}|${JSON.stringify((estadoInv(uid) || {}).amigos || [])}`;
   if (despues !== antes) {
     window.dispatchEvent(new Event('limite-cambia'));
     cerrarTopA();
-    if (S.M && !S.hoja) pintar(); else if (S.tipoHoja && ['invitar', 'ajustes'].includes(S.tipoHoja[0])) repintarHoja();
+    if (S.M && !S.hoja) pintar(); else if (S.tipoHoja && ['invitar', 'invitado', 'ajustes'].includes(S.tipoHoja[0])) repintarHoja();
   }
+  // (25 nov) la banda de «¿Te ha invitado un amigo?» depende de lo que acaba de decir el servidor
+  pintarBanda();
 }
 /** «Tu amigo ya ha entrado: elige 2 rivales, tienes 24 h» (en la app; con ella cerrada, la notificación) */
 function avisoAmigoInv(n) {
@@ -3041,7 +3093,7 @@ function bloqHTML(arg) {
         ${Hj.botonInvitarTop(clave)}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar" style="margin-top:8px">Entendido</button></div>`;
 }
-const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'bloq' ? bloqHTML(arg) : tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'planAj' ? Hj.planAjustesHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'oj' ? Jo.onceJornadaHTML(S, arg, Dr.puntosDeJornada(S, Number(String(arg).split(':')[1]))) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'bajas' ? Bj.hojaBajas(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'invitar' ? Hj.invitarHTML(S) : tipo === 'invitado' ? Hj.invitadoHTML(S) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -3498,7 +3550,7 @@ async function alVolverEntrada() {
     const p = await navigator.permissions.query({ name: 'clipboard-read' });
     if (p.state !== 'granted') return;
     const t = await navigator.clipboard.readText();
-    if (mirarVuelta(t).url) entrarConVuelta(t);
+    if (mirarVuelta(t).url) entrarConVuelta(t, { solo: true });
   } catch (e) { /* sin permiso o sin esa pregunta (Safari, Firefox): se pega con el botón */ }
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.laLigaFuera) S.laLigaIda = true; } else alVolverEntrada(); });
@@ -3676,7 +3728,7 @@ window.vueltaLogin = async () => {
   S.entrandoApp = true;
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   // (0.7.13i) si entra o en qué falla, sin cuenta (semaforo.js): los fallos de la carga de después no cuentan aquí
-  try { await terminarLogin(url); } catch (e) { S.entrandoApp = false; marcarPaso(pasoDeFallo(e)); pantallaEntrar(e.message || String(e)); return; }
+  try { await terminarLogin(url); } catch (e) { S.entrandoApp = false; marcarPaso(pasoDeFallo(e)); apuntarFalloEntrada(e, url); pantallaEntrar(e.message || String(e)); return; }
   S.entrandoApp = false;
   marcarPaso('ok');
   try {
@@ -3823,7 +3875,13 @@ if (enApp) {
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {
   // (0.7.13i) el botón de Google Play de la web, sin cuenta: una vez al día
-  if (!enApp && !haySesion() && ev.target.closest && ev.target.closest('a[href*="play.google.com/store/apps/details"]')) marcarPaso('play', { una: true });
+  if (!enApp && !haySesion() && ev.target.closest && ev.target.closest('a[href*="play.google.com/store/apps/details"]')) {
+    marcarPaso('play', { una: true });
+    // (25 nov, tanda 6) quien llegó con el código de un amigo: cualquier botón de Google Play lo lleva en el referrer, para
+    // que la app lo recoja al instalarse (no solo «Copiar el código y descargar»)
+    const a = ev.target.closest('a[href*="play.google.com/store/apps/details"]'), cp = codigoPendiente();
+    if (cp && a && !/[?&]referrer=/.test(a.getAttribute('href') || '')) a.setAttribute('href', playConCodigo(a.getAttribute('href'), cp));
+  }
   const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-club],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
   if (!el) return;
   const d = el.dataset;
@@ -3978,7 +4036,7 @@ document.addEventListener('click', async (ev) => {
         const c = $('#vueltaWeb'); if (c) c.focus();
         break;
       }
-      if (!t.trim()) { errorVuelta('No tienes nada copiado. Copia primero la dirección de la página en la que acabas al entrar en LaLiga (paso 2).'); break; }
+      if (!t.trim()) { marcarPaso('m-vacio'); errorVuelta('No tienes nada copiado. Copia primero la dirección de la página en la que acabas al entrar en LaLiga (paso 2).'); break; }
       await entrarConVuelta(t);
       break;
     }
@@ -4286,10 +4344,23 @@ document.addEventListener('click', async (ev) => {
       cerrarHoja(true);
       hoja('invitar');
       if (!uid) break;
-      leerInvitar(uid, { ya: true }).then(() => { S.inv.cargando = false; S.inv.error = null; }, (e) => { S.inv.cargando = false; S.inv.error = e.message; })
+      leerInvitar(uid, { ya: true, liga: (S.D && S.D.liga && S.D.liga.id) || '' }).then(() => { S.inv.cargando = false; S.inv.error = null; }, (e) => { S.inv.cargando = false; S.inv.error = e.message; })
         .then(() => { if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja(); });
       break;
     }
+    // (25 nov) quien llega: la ventana del código (banda de arriba y Ajustes), «nadie» y cerrar la banda
+    case 'ponerCodigo': { const pr = codigoPropuesto(uidYo()); cerrarHoja(true); S.inv = { ...(S.inv || {}), errorCod: null, propuesto: pr, cod: (S.inv && S.inv.cod) || pr }; hoja('invitado'); break; }
+    case 'invCopiarPlay': {
+      const cod = codigoPendiente();
+      if (!cod) break;
+      try { if (navigator.clipboard) navigator.clipboard.writeText(cod).catch(() => {}); } catch (e) { /* se ve en grande igual */ }
+      avisarLlegada(cod, 'copia');
+      location.href = playConCodigo(PLAY_URL, cod);
+      break;
+    }
+    case 'invitadoNo': LS.set('inv-banda-cerrada', Date.now()); cerrarHoja(); pintarBanda(); break;
+    case 'cerrarInvitado': { LS.set('inv-banda-cerrada', Date.now()); const b = $('.banda-invitado'); if (b) b.remove(); break; }
+    case 'copiarCod': { const e = estadoInv(uidYo()); if (e && e.cod) copiarY(e.cod, 'Código copiado'); break; }
     case 'compartirInv': case 'copiarInv': {
       const uid = uidYo();
       if (!uid) break;
@@ -4312,12 +4383,14 @@ document.addEventListener('click', async (ev) => {
       const cod = limpiarCod(inp ? inp.value : '');
       S.inv = { ...(S.inv || {}), cod, errorCod: null };
       if (!uid) break;
-      if (cod.length !== 6) { S.inv.errorCod = 'Son 6 letras y números.'; repintarHoja(); break; }
+      if (cod.length !== 6) { S.inv.errorCod = cod ? 'Son 6 letras y números.' : 'Escribe el código que te ha pasado tu amigo.'; repintarHoja(); break; }
       S.inv.canjeando = true; repintarHoja();
-      const x = await canjear(uid, cod, liga);
+      const x = await canjear(uid, cod, liga, S.inv.propuesto && cod === S.inv.propuesto ? 'propuesto' : 'escrito');
       S.inv.canjeando = false;
       if (x.ok) { S.inv.cod = ''; tostada('Listo: has entrado con la invitación de tu amigo', 5000); } else S.inv.errorCod = x.e || 'No ha valido. Vuelve a probar en un rato.';
-      if (S.tipoHoja && S.tipoHoja[0] === 'invitar') repintarHoja();
+      if (x.ok && S.tipoHoja && S.tipoHoja[0] === 'invitado') cerrarHoja();
+      else if (S.tipoHoja && ['invitar', 'invitado'].includes(S.tipoHoja[0])) repintarHoja();
+      pintarBanda();
       break;
     }
     case 'invElegir': {
@@ -4939,7 +5012,10 @@ async function arrancar() {
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
   leerInvitacion();
-  leerCodigoEnlace();
+  // (25 nov) la llegada con ?inv= se cuenta y deja su huella 2 h en el servidor (para proponerle el código en la app)
+  { const ci = leerCodigoEnlace(); if (ci && !enApp) avisarLlegada(ci); }
+  // (25 nov, tanda 6) y en la app de Google Play, el código que traía la instalación
+  if (enApp) leerCodigoPlay();
   leerOrigen();
   // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
   mirarWebNueva();

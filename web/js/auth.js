@@ -25,7 +25,8 @@ const PKCE_DURA = 24 * 3600e3;
 
 export class ErrorSesion extends Error {
   // tipo (0.7.13i): para contar en qué falla la entrada (semaforo.js): cancel, caduca, laliga, redirect, perdido u otro
-  constructor(m, tipo = 'otro') { super(m); this.sesion = true; this.tipo = tipo; }
+  // codigo (25 nov): lo que contestó LaLiga, corto, para el Diagnóstico («AADB2C90075», «canje 503»…)
+  constructor(m, tipo = 'otro', codigo = '') { super(m); this.sesion = true; this.tipo = tipo; this.codigo = codigo; }
 }
 
 const b64url = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -128,15 +129,15 @@ export function extraerVuelta(txt) {
  */
 export function mirarVuelta(txt) {
   const s = String(txt || '').trim();
-  if (!s) return { error: 'No hay nada pegado. Copia la dirección de la página en la que acabas al entrar en LaLiga y pégala aquí.' };
+  if (!s) return { motivo: 'vacio', error: 'No hay nada pegado. Copia la dirección de la página en la que acabas al entrar en LaLiga y pégala aquí.' };
   const v = extraerVuelta(s);
   let u = null;
   try { u = new URL(v); } catch (e) { u = null; }
   if (u && /^(https?|authredirect|msauth[\w.]*):$/i.test(u.protocol) && (u.searchParams.get('code') || u.searchParams.get('error'))) return { url: v };
-  if (/login\.laliga\.es|b2clogin\.com|accounts\.google\.|appleid\.apple\./i.test(s)) return { error: 'Esa es la dirección de la página de entrar: aún no has terminado. Acaba de entrar en LaLiga y copia la dirección de la página en la que te deja al final (empieza por jwt.ms).' };
-  if (/fantasymanagerapp\.com|fantasy-manager[\w.-]*\.pages\.dev|charly10sf\.github\.io/i.test(s)) return { error: 'Esa es la dirección de Fantasy Manager. La que hace falta es la de la página en la que acabas al entrar en LaLiga (empieza por jwt.ms).' };
-  if (/jwt\.ms/i.test(s)) return { error: 'A esa dirección le falta el final (la parte de «code=»). Vuelve a esa página y cópiala entera, sin seleccionar un trozo a mano.' };
-  return { error: 'Eso no es la dirección que hace falta. Es la de la página en la que acabas al entrar en LaLiga: empieza por jwt.ms y lleva «code=».' };
+  if (/login\.laliga\.es|b2clogin\.com|accounts\.google\.|appleid\.apple\./i.test(s)) return { motivo: 'login', error: 'Esa es la dirección de la página de entrar: aún no has terminado. Acaba de entrar en LaLiga y copia la dirección de la página en la que te deja al final (empieza por jwt.ms).' };
+  if (/fantasymanagerapp\.com|fantasy-manager[\w.-]*\.pages\.dev|charly10sf\.github\.io/i.test(s)) return { motivo: 'app', error: 'Esa es la dirección de Fantasy Manager. La que hace falta es la de la página en la que acabas al entrar en LaLiga (empieza por jwt.ms).' };
+  if (/jwt\.ms/i.test(s)) return { motivo: 'jwt', error: 'A esa dirección le falta el final (la parte de «code=»). Vuelve a esa página y cópiala entera, sin seleccionar un trozo a mano.' };
+  return { motivo: 'otro', error: 'Eso no es la dirección que hace falta. Es la de la página en la que acabas al entrar en LaLiga: empieza por jwt.ms y lleva «code=».' };
 }
 
 /** la vuelta de LaLiga con el código: lo cambia por la sesión */
@@ -144,7 +145,7 @@ export async function terminarLogin(url) {
   let u;
   try { u = new URL(extraerVuelta(url)); } catch (e) { throw new ErrorSesion('La vuelta de LaLiga no se entiende. Copia la dirección entera de la página en la que acabas al entrar.'); }
   const q = u.searchParams;
-  if (q.get('error')) { const x = q.get('error_description') || q.get('error'); throw new ErrorSesion(textoError(x), tipoDe(x)); }
+  if (q.get('error')) { const x = q.get('error_description') || q.get('error'); throw new ErrorSesion(textoError(x), tipoDe(x), codigoDe(x, q.get('error'))); }
   const codigo = q.get('code');
   const pk = leer('pkce', true);
   if (!codigo) throw new ErrorSesion('LaLiga no ha devuelto el código para entrar');
@@ -161,13 +162,17 @@ export async function terminarLogin(url) {
     code_verifier: pk.verificador, scope: 'openid offline_access',
   });
   // sin conexión el código no se ha gastado: el inicio a medias se queda y se puede volver a pulsar con lo mismo pegado
-  if (r.s === 0) throw Object.assign(new Error(`Sin conexión con LaLiga (${r.e}). Mira que tengas internet y vuelve a pulsar: el enlace que has pegado sigue valiendo unos minutos.`), { tipo: 'red' });
+  if (r.s === 0) throw Object.assign(new Error(`Sin conexión con LaLiga (${r.e}). Mira que tengas internet y vuelve a pulsar: el enlace que has pegado sigue valiendo unos minutos.`), { tipo: 'red', codigo: `sin respuesta: ${String(r.e || '').slice(0, 60)}` });
   // en la web el inicio a medias sigue valiendo para otro enlace (el código caducó o ya se usó): solo se borra al entrar
   if (enApp) guardar('pkce', null);
   if (r.s >= 400 || !j) {
     const x = (j && (j.error_description || j.error)) || `error ${r.s}`;
-    if (otro && r.s < 500) throw new ErrorSesion('Ese enlace es de otro intento o de otro navegador. Pulsa aquí «Abrir LaLiga» y copia la dirección nueva.', 'perdido');
-    throw new ErrorSesion(textoError(x), r.s >= 500 ? 'laliga' : tipoDe(x));
+    const cx = codigoDe(x, j && j.error), cod = `canje ${r.s}${cx ? ` ${cx}` : ''}`;
+    if (otro && r.s < 500) throw new ErrorSesion('Ese enlace es de otro intento o de otro navegador. Pulsa aquí «Abrir LaLiga» y copia la dirección nueva.', 'perdido', cod);
+    // (25 nov, tanda 5) un 5xx del canje sin un error de LaLiga reconocible va aparte («5xx»); con su código (AADB2C90075…),
+    // «laliga», como el que llega en la vuelta. Antes los dos eran «laliga»
+    if (r.s >= 500) throw tipoDe(x) === 'laliga' ? new ErrorSesion(textoError(x), 'laliga', cod) : new ErrorSesion(textoError(`5xx ${r.s}`), '5xx', cod);
+    throw new ErrorSesion(textoError(x), tipoDe(x), cod);
   }
   const ses = guardarTokens(j);
   guardar('pkce', null);
@@ -216,6 +221,13 @@ function tipoDe(m) {
   if (/AADB2C90075|InternalServerError|Internal Server Error|server_error|temporarily_unavailable/i.test(t)) return 'laliga';
   return 'otro';
 }
+/** el código corto de un error de LaLiga (AADB2C…), o el error tal cual si es corto */
+function codigoDe(m, error = '') {
+  const t = String(m || ''), c = t.match(/AADB2C\d+/i);
+  if (c) return c[0].toUpperCase();
+  if (/InternalServerError|Internal Server Error/i.test(t)) return 'InternalServerError';
+  return String(error || '').slice(0, 40);
+}
 function textoError(m) {
   const t = String(m || '');
   const otra = enApp ? 'Vuelve a probar.' : 'Pulsa «Abrir LaLiga» otra vez y copia la dirección nueva.';
@@ -226,5 +238,6 @@ function textoError(m) {
   // (14 nov, Carlos) la primera vez con Google, los servidores de LaLiga a veces fallan al dar de alta la cuenta (AADB2C90075,
   // «InternalServerError»): es cosa suya y a la segunda entra
   if (/AADB2C90075|InternalServerError|Internal Server Error/i.test(t)) return enApp ? 'Los servidores de LaLiga han fallado al entrar (es cosa suya, no de tu cuenta). Vuelve a darle a «Entrar con mi cuenta de LaLiga»: a la segunda suele entrar.' : `Los servidores de LaLiga han fallado al entrar (es cosa suya, no de tu cuenta). ${otra} A la segunda suele entrar.`;
+  if (/^5xx (\d+)/.test(t)) return enApp ? `Los servidores de LaLiga no han contestado bien (error ${t.slice(4)}). Es cosa suya: vuelve a probar en un momento.` : `Los servidores de LaLiga no han contestado bien (error ${t.slice(4)}). Es cosa suya. ${otra}`;
   return t.slice(0, 220) || 'No se ha podido entrar';
 }

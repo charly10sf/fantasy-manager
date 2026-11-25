@@ -52,6 +52,9 @@ const PISTA = 'copia-esta-direccion-entera-y-pegala-en-Fantasy-Manager-';
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const ID_TOKEN = `${b64({ alg: 'none' })}.${b64({ name: 'Prueba', emails: ['prueba@example.com'], exp: Math.floor(Date.now() / 1000) + 3600 })}.x`;
 const CODIGO = `eyJraWQiOiJwcnVlYmEi.${'A1b2C3d4-_'.repeat(150)}`;
+const COD_B = `${CODIGO.slice(0, -4)}bbbb`, COD_C = `${CODIGO.slice(0, -4)}cccc`;
+/** quita el error de debajo del cuadro (para que el siguiente se vea de nuevo) */
+const sinErr = (p) => p.evaluate(() => { const e = document.getElementById('vueltaErr'); if (e) { e.hidden = true; e.textContent = ''; } const c = document.getElementById('vueltaWeb'); if (c) c.value = ''; });
 
 /** una página nueva en la pantalla de entrar. canje(datos del canje) → { s, cuerpo } o null para «sin respuesta» */
 async function abrir(nav, opciones, { antes = null, ruta = '/index.html' } = {}) {
@@ -145,6 +148,8 @@ async function probar(motor, disp) {
     await p.click('#edEntrar');
     mira(/No hay nada pegado/.test(await errorVisto(p).catch(() => '')), `${T} «Entrar» con el cuadro vacío lo dice`);
     mira(reg.canjes.length === 0, `${T} nada de eso llama a LaLiga`);
+    // (25 nov, tanda 5) y cada cosa se apunta en el embudo con su motivo
+    mira(['m-login', 'm-app', 'm-jwt', 'm-otro', 'm-vacio'].every((x) => reg.pasos.includes(x)) && !reg.pasos.includes('p'), `${T} el embudo apunta lo pegado que no vale con su motivo (${reg.pasos.filter((x) => x.startsWith('m-')).join(', ')})`);
 
     /* ---- abrir LaLiga: otra pestaña, y el paso de pegar por delante ---- */
     const [otra] = await Promise.all([ctx.waitForEvent('page', { timeout: 8000 }).catch(() => null), p.click('#edAbrir')]);
@@ -167,9 +172,38 @@ async function probar(motor, disp) {
     mira(/otro intento/.test(await errorVisto(p).catch(() => '')) && (await pkce(p)).estado === pk.estado, `${T} un enlace de otro intento se explica y no gasta el inicio`);
     reg.canjes.length = 0;
     reg.canje = () => ({ s: 400, cuerpo: { error: 'invalid_grant', error_description: 'AADB2C90080: The provided grant has expired.' } });
-    await pegar(p, '#vueltaWeb', vuelta(pk.estado));
+    await pegar(p, '#vueltaWeb', vuelta(pk.estado, COD_B));
     mira(/ya no vale/.test(await errorVisto(p).catch(() => '')) && await p.inputValue('#vueltaWeb') === '', `${T} un enlace caducado dice que se abra LaLiga otra vez y vacía el cuadro`);
     mira((await pkce(p)).estado === pk.estado && await enlace(p) === h.href, `${T} y el mismo enlace sigue valiendo para repetir`);
+    // (25 nov, tanda 5) el mismo enlace otra vez (sigue en el portapapeles): gastado, sin llamar a LaLiga
+    reg.canjes.length = 0;
+    await sinErr(p);
+    await pegar(p, '#vueltaWeb', vuelta(pk.estado, COD_B));
+    mira(/ya está gastado/.test(await errorVisto(p).catch(() => '')) && reg.canjes.length === 0 && reg.pasos.includes('x-gastado'), `${T} pegar otra vez el enlace que acaba de fallar dice que está gastado y no llama a LaLiga`);
+    // un 5xx del canje va aparte («x-5xx») y ese enlace se deja probar otra vez
+    reg.canje = () => ({ s: 503, cuerpo: {} });
+    await sinErr(p);
+    await pegar(p, '#vueltaWeb', vuelta(pk.estado, COD_C));
+    const e5 = await errorVisto(p).catch(() => '');
+    mira(/no han contestado bien \(error 503\)/.test(e5) && reg.pasos.includes('x-5xx') && !reg.pasos.includes('x-laliga'), `${T} un 5xx del canje se dice con su número y se cuenta aparte (${e5.slice(0, 70)})`);
+    const f5 = await p.evaluate(() => JSON.parse(localStorage.getItem('fm-entrada-fallo') || 'null'));
+    mira(f5 && f5.paso === 'x-5xx' && f5.cod === 'canje 503' && !JSON.stringify(f5).includes(COD_C), `${T} el Diagnóstico guarda el fallo con el código, sin guardar el enlace (${JSON.stringify(f5)})`);
+    reg.canjes.length = 0;
+    await sinErr(p);
+    await pegar(p, '#vueltaWeb', vuelta(pk.estado, COD_C));
+    await errorVisto(p).catch(() => '');
+    mira(reg.canjes.length === 1, `${T} tras un 5xx, el mismo enlace se puede volver a probar`);
+    // el error de LaLiga en la vuelta (AADB2C90075): «x-laliga», y repetirlo, gastado
+    await sinErr(p);
+    const v75 = `https://jwt.ms/?error=server_error&error_description=${encodeURIComponent('AADB2C90075: The claims exchange returned InternalServerError.')}&state=${pk.estado}`;
+    await pegar(p, '#vueltaWeb', v75);
+    mira(/servidores de LaLiga han fallado/.test(await errorVisto(p).catch(() => '')) && reg.pasos.includes('x-laliga'), `${T} el error AADB2C90075 de LaLiga se explica y se cuenta como «x-laliga»`);
+    const f75 = await p.evaluate(() => JSON.parse(localStorage.getItem('fm-entrada-fallo') || 'null'));
+    mira(f75 && f75.cod === 'AADB2C90075', `${T} con su código en el Diagnóstico`);
+    const nG = reg.pasos.filter((x) => x === 'x-gastado').length;
+    await sinErr(p);
+    await pegar(p, '#vueltaWeb', v75);
+    mira(/ya está gastado/.test(await errorVisto(p).catch(() => '')) && reg.pasos.filter((x) => x === 'x-gastado').length === nG + 1, `${T} y pegar otra vez esa misma vuelta dice que está gastada`);
     reg.canje = () => null;
     await p.fill('#vueltaWeb', '');
     await pegar(p, '#vueltaWeb', vuelta(pk.estado));
@@ -511,7 +545,7 @@ async function probar(motor, disp) {
 /* ---- 8. la app de Android ---- */
 // el puente de mentira: guarda, «abre» LaLiga (apunta la dirección) y contesta a las peticiones de la app (el canje del
 // código; lo demás, sin respuesta). authTab: como la app nueva, que entra por Auth Tab
-const PUENTE = (authTab, idToken) => {
+const PUENTE = (authTab, idToken, inv = '') => {
   const m = {}; window.__abiertos = []; window.__pedidos = []; window.__vuelta = null;
   const resp = {};
   window.FantasyApp = {
@@ -528,6 +562,8 @@ const PUENTE = (authTab, idToken) => {
     __m: m,
   };
   if (authTab) window.FantasyApp.authTab = () => true;
+  // (25 nov, tanda 6) la parte Android nueva da UNA vez el código de invitar con el que se instaló desde Google Play
+  if (inv) { let dado = inv; window.__invPedido = 0; window.FantasyApp.invitacion = () => { window.__invPedido++; const x = dado; dado = ''; return x; }; }
 };
 async function probarApp() {
   const T = '[chromium · app de Android]';
@@ -618,8 +654,11 @@ async function probarApp() {
     await ctx.close();
 
     /* la app nueva, con Auth Tab: Android no pregunta «Abrir con» */
-    ({ ctx, p, reg } = await abrir(nav, O, { antes: `(${PUENTE})(true, ${JSON.stringify(ID_TOKEN)})` }));
+    ({ ctx, p, reg } = await abrir(nav, O, { antes: `(${PUENTE})(true, ${JSON.stringify(ID_TOKEN)}, 'abc234')` }));
     await p.waitForSelector('[data-accion="entrar"]');
+    // (25 nov, tanda 6) y con el código de invitar de la instalación de Google Play: se guarda como el del enlace, vía «play»
+    const ic = await p.evaluate(() => ({ cod: JSON.parse(localStorage.getItem('fm-inv-cod') || 'null'), n: window.__invPedido }));
+    mira(ic.cod && ic.cod.cod === 'ABC234' && ic.cod.via === 'play' && ic.n >= 1, `${T} el código de invitar de la instalación se guarda para canjearlo al entrar (${JSON.stringify(ic)})`);
     await p.click('[data-accion="entrar"]');
     await p.waitForFunction(() => window.__abiertos.length === 1);
     mira(await p.locator('#pantAbrirCon').count() === 0 && await p.locator('.abrir-con').count() === 0, `${T} con Auth Tab no hay aviso de «Abrir con»: el primer toque abre LaLiga`);

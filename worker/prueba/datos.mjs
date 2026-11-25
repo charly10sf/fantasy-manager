@@ -1270,7 +1270,7 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.j.nivel === 'rojo', `/estado con LaLiga caída: ${r.j && r.j.nivel}`);
   // los pasos: sin sesión; uno raro, 400
   laliga = 'vivo'; desfase += 3 * 60e3; minuto();
-  for (const p of ['ver', 'l', 'x-laliga', 'x-laliga', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
+  for (const p of ['ver', 'l', 'x-laliga', 'x-5xx', 'x-laliga', 'ok']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'play' }), tk: '', e: eE, cab: { 'content-type': 'text/plain' } });
   await pide({ ruta: '/embudo', crudo: JSON.stringify({ p: 'ver', k: 'web-android', o: 'x' }), tk: '', e: eE });
   // (21 nov) los pasos nuevos: la app vuelve sin código, y en la web llega, vuelve de LaLiga y pasa a la pantalla de inicio
   for (const [p, k, o] of [['x-vuelve', 'play', ''], ['x-vuelve', 'play', ''], ['llega', 'web-iphone', 'x-ios'], ['v', 'web-iphone', 'x-ios'], ['inicio', 'web-iphone', 'x-ios']]) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k, o }), tk: '', e: eE });
@@ -1281,8 +1281,16 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.j.nivel === 'amarillo' && r.j.entradas.x === 3 && r.j.entradas.ok === 1, `/estado con 3 entradas fallidas y 1 buena: ${r.j && r.j.nivel}`);
   const dias = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias;
   const hoy = Object.keys(dias)[0], d = dias[hoy];
-  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 3 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
+  ok(d.play.ver === 1 && d.play.l === 1 && d.play['x-laliga'] === 2 && d.play['x-5xx'] === 1 && d.play.ok === 1 && d['web-android'].ver === 1 && d['o:x'].ver === 1, `/embudo suma por canal y por campaña: ${JSON.stringify(d)}`);
   ok(d.play['x-vuelve'] === 2 && d['web-iphone'].llega === 1 && d['web-iphone'].v === 1 && d['web-iphone'].inicio === 1 && d['o:x-ios'].llega === 1 && d['o:x-ios'].v === 1, `/embudo con los pasos nuevos (x-vuelve, llega, v, inicio) y la campaña con guion: ${JSON.stringify(d['o:x-ios'])}`);
+  // (25 nov, tanda 5) lo pegado que no vale, con su motivo, y el enlace gastado: cuentan en su canal y no en el semáforo
+  minuto();
+  for (const p of ['m-vacio', 'm-login', 'm-app', 'm-jwt', 'm-otro', 'm-otro', 'x-gastado']) await pide({ ruta: '/embudo', crudo: JSON.stringify({ p, k: 'web-pc' }), tk: '', e: eE });
+  const d2 = JSON.parse(await (await QRE.get('embudo|todos').fetch('https://embudo/embudo/leer')).text()).dias[hoy]['web-pc'] || {};
+  ok(d2['m-vacio'] === 1 && d2['m-login'] === 1 && d2['m-app'] === 1 && d2['m-jwt'] === 1 && d2['m-otro'] === 2 && d2['x-gastado'] === 1, `/embudo con lo pegado que no vale y el enlace gastado: ${JSON.stringify(d2)}`);
+  desfase += 3 * 60e3;
+  r = await pide({ m: 'GET', ruta: '/estado', tk: '', e: eE });
+  ok(r.j.entradas.x === 3, `/estado no cuenta lo pegado que no vale como fallo de LaLiga: ${r.j && JSON.stringify(r.j.entradas)}`);
   // freno por IP: 20 al minuto
   minuto();
   const est = [];
@@ -1411,10 +1419,40 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   const { cfgInvitar } = await import('../src/invitar.js');
   const cI = cfgInvitar({ invitar: { on: false, rivales: 3, horas: 'x', escalones: [{ n: 9, premio: 'sinIntersticiales', dias: 10 }, { n: 2, premio: 'doble', dias: 3 }, { n: 4, premio: 'otro' }] } });
   ok(!cI.on && cI.rivales === 3 && cI.horas === 24 && cI.escalones.map((e) => `${e.n}${e.premio}`).join() === '2doble,9sinIntersticiales', `invitar de limites.json: ${JSON.stringify(cI)}`);
+  // (25 nov) las pistas de que a una cuenta nueva la han invitado: alguien de su liga con código, o abrió el enlace desde su conexión
+  r = await inv(513, '/invitar?liga=55', null, 'GET');
+  ok(r.j.puedeCanjear && r.j.ligaInvita === true && r.j.propuesto === '', `alguien de su liga tiene código: ${r.j.ligaInvita}/${r.j.propuesto}`);
+  r = await inv(600, '/invitar?liga=66', null, 'GET');
+  ok(r.j.puedeCanjear && r.j.ligaInvita === false && r.j.propuesto === '', `nadie de su liga con código y sin enlace: nada (${r.j.ligaInvita}/${r.j.propuesto})`);
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: cod2.toLowerCase() }, tk: '', e: eI, ip: '9.9.9.9' });
+  ok(r.s === 200 && r.j.ok, `la llegada a la web con ?inv=, sin sesión: ${r.t}`);
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: 'ZZZZZZ' }, tk: '', e: eI, ip: '9.9.9.8' });
+  ok(r.s === 200 && r.j.ok === false, 'con un código que no existe no se apunta');
+  r = await pide({ m: 'POST', ruta: '/invitar/llega', cuerpo: { cod: cod2, paso: 'copia' }, tk: '', e: eI, ip: '9.9.9.9' });
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(r.j.propuesto === cod2, `misma conexión: le propone el código (${r.j.propuesto})`);
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(515), e: eI, ip: '9.9.9.7' });
+  ok(r.j.propuesto === '', 'otra conexión: no');
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(506), e: eI, ip: '9.9.9.9' });
+  ok(!r.j.propuesto, 'a quien es el dueño del código, nunca se lo propone');
+  r = await pide({ m: 'POST', ruta: '/invitar/canjear', cuerpo: { cod: cod2, liga: '55', via: 'propuesto' }, tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(r.s === 200 && r.j.ok, `canjea el propuesto: ${r.t}`);
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=55', tk: tk(514), e: eI, ip: '9.9.9.9' });
+  ok(!r.j.puedeCanjear && !r.j.propuesto && !r.j.ligaInvita, 'ya invitada: sin pistas');
+  desfase += 3 * 3600e3;
+  r = await pide({ m: 'GET', ruta: '/invitar?liga=66', tk: tk(516), e: eI, ip: '9.9.9.9' });
+  ok(r.j.propuesto === '', 'a las 3 h la llegada ya no vale');
+  // (25 nov, tanda 6) el código que trae la instalación de Google Play se cuenta aparte («play»)
+  r = await pide({ m: 'POST', ruta: '/invitar/canjear', cuerpo: { cod: cod2, liga: '55', via: 'play' }, tk: tk(516), e: eI, ip: '9.9.9.6' });
+  ok(r.s === 200 && r.j.ok, `canjea el código de la instalación de Google Play: ${r.t}`);
   // «Quién usa la app»: lo del dueño
   r = await pide({ m: 'GET', ruta: '/hola/todos', tk: tk(667015), e: eI });
   const li = r.j && r.j.invitar;
-  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 6 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  ok(li && li.lista.find((x) => x.uid === '501' && x.entran === 6 && x.cuentan === 5) && li.invitados === 8 && li.vuelven === 5, `el dueño ve las invitaciones: ${JSON.stringify(li && li.lista)}`);
+  {
+    const t = Object.values((li && li.cnt) || {}).reduce((x, d) => { for (const [k, v] of Object.entries(d)) x[k] = (x[k] || 0) + v; return x; }, {});
+    ok(t.llega === 1 && t.copia === 1 && t.canje_propuesto === 1 && t.canje_play === 1 && t.canje_escrito >= 6, `los contadores: ${JSON.stringify(t)}`);
+  }
   // sin el objeto, 503 y no rompe
   r = await pide({ m: 'GET', ruta: '/invitar', tk: tk(512), e: env });
   ok(r.s === 503, `sin Durable Object: ${r.s}`);

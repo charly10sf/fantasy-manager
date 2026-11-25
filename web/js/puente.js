@@ -234,6 +234,9 @@ export const nativo = {
   authTab: () => !!(N && typeof N.authTab === 'function' && llamar('authTab')),
   // por dónde llegó la última vuelta de LaLiga: 'authtab', 'intent' o '' (las apps de antes no lo dicen)
   loginVia: () => (N && typeof N.loginVia === 'function' ? llamar('loginVia') || '' : ''),
+  // (25 nov, tanda 6) el código de invitar con el que se instaló desde Google Play (la parte Android lo da UNA vez); las apps
+  // de antes no tienen el método: ''
+  invitacion: () => (N && typeof N.invitacion === 'function' ? String(llamar('invitacion') || '') : ''),
   programarAvisos: (lista) => llamar('programarAvisos', JSON.stringify(lista || [])),
   avisosPermitidos: () => (N ? !!llamar('avisosPermitidos') : false),
   pedirPermisoAvisos: () => llamar('pedirPermisoAvisos'),

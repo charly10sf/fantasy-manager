@@ -877,7 +877,9 @@ export function invitarHTML(S) {
   h += `<p>Pásale la app a quien juegue a LaLiga Fantasy. Ganas tú:</p>${premiosInvTxt(c)}
     <p class="t2 peq">Cuentan las cuentas que empiezan a usar la app con tu enlace o tu código.</p>`;
   h += `<button class="btn ancho" data-accion="compartirInv"${I.compartiendo ? ' disabled' : ''}>${icono('enviar')}${I.compartiendo ? 'Un momento…' : 'Invita a un amigo'}</button>`;
-  if (e.cod) h += `<p class="inv-cod">Tu código: <b>${esc(e.cod)}</b> <button class="b-ico" data-accion="copiarInv" aria-label="Copiar el enlace">${icono('copiar')}</button></p>`;
+  // (25 nov) el código, grande y con lo que tiene que hacer el amigo con él (desde Google Play el enlace no llega)
+  if (e.cod) h += `<div class="inv-tucod"><span>Tu código</span><b>${esc(e.cod)}</b><span>Tu amigo lo pone al entrar en la app, cuando le pregunta si le ha invitado alguien.</span>
+    <div class="inv-tucod-b"><button class="btn chico sec" data-accion="copiarCod">${icono('copiar')}Copiar código</button><button class="btn chico sec" data-accion="copiarInv">${icono('copiar')}Copiar enlace</button></div></div>`;
   // el contador y los premios que tienes
   const ct = contadorTxt(e);
   h += `<div class="inv-cuenta"><b>${e.entran === 1 ? '1 amigo ha entrado' : `${e.entran || 0} amigos han entrado`}</b>${e.entran ? `<span>${e.cuentan === 1 ? '1 ha vuelto otro día' : `${e.cuentan || 0} han vuelto otro día`}</span>` : ''}${ct ? `<span>${esc(ct)}</span>` : ''}</div>`;
@@ -905,6 +907,23 @@ export function invitarHTML(S) {
   }
   if (I.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(I.error)}</div></div>`;
   return `${h}</div>`;
+}
+/** (25 nov) la ventana para quien acaba de entrar: solo meter el código de quien le invitó, sin lo de invitar a otros
+    (antes era la misma de «Invita a un amigo» con el código arriba, y se cerraba sin leerla). Sale sola una vez
+    (`invitarSiToca`), desde la banda de arriba y desde Ajustes, mientras la cuenta puede canjear */
+export function invitadoHTML(S) {
+  const I = S.inv || {}, uid = S.D && S.D.yo && S.D.yo.userId, e = estadoInv(uid);
+  // (25 nov) con el código que propone el servidor (abrió el enlace desde esta conexión hace poco), ya puesto
+  const pr = I.propuesto && I.cod === I.propuesto;
+  const cab = `<div class="hoja-cab"><h2>${pr ? 'Tu amigo te ha invitado' : '¿Te ha invitado un amigo?'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  if (!uid || !puedeCanjear(uid)) return `${cab}<div class="inv"><p>Ya está: esta cuenta no tiene que poner ningún código.</p><button class="btn ancho" data-accion="cerrarHoja">Vale</button></div>`;
+  return `${cab}<div class="inv invitado">
+    <p>${pr ? 'Abriste su enlace hace un rato: su código ya está puesto. Dale a «Listo».' : 'Si alguien te ha pasado Fantasy Manager, pon su código. Son 6 letras y números y te lo habrá mandado con el enlace.'}</p>
+    <div class="codigo-in grande"><input id="invCod" maxlength="8" placeholder="ABC234" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="canjearInv" value="${esc(I.cod || '')}" aria-label="Código de quien te invita"></div>
+    ${I.errorCod ? `<p class="codigo-err" role="alert">${esc(I.errorCod)}</p>` : ''}
+    <button class="btn ancho" data-accion="canjearInv"${I.canjeando ? ' disabled' : ''}>${I.canjeando ? 'Un momento…' : 'Listo'}</button>
+    <p class="t2 peq">A ti no te cuesta nada y a tu amigo le das una ayuda en su liga.${e && e.canjearHasta ? ` Puedes ponerlo hasta el ${esc(cuando(e.canjearHasta, { hora: false }))}.` : ''}</p>
+    <button class="btn ancho sec" data-accion="invitadoNo">Nadie, la he encontrado yo</button></div>`;
 }
 
 /* ================= AJUSTES ================= */
@@ -1025,7 +1044,7 @@ export function ajustes(S) {
   // (19 nov) invita a un amigo: lo que ganas y, a una cuenta nueva, «¿Te ha invitado alguien?»
   if (!enDemo() && ses && invitarOn()) {
     const uid = S.D && S.D.yo && S.D.yo.userId, ei = estadoInv(uid), ct = ei && contadorTxt(ei), pe = porElegir().length;
-    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Mete el código de quien te pasó la app', btnA('invitarAmigo', 'Meter código', { sec: false }), 'codigo invitacion amigo');
+    if (puedeCanjear(uid)) c1 += fila('¿Te ha invitado alguien?', 'Pon el código de quien te pasó la app', btnA('ponerCodigo', 'Poner código', { sec: false }), 'codigo invitacion amigo');
     c1 += fila('Invita a un amigo', pe ? `<b>Tienes rivales por elegir</b>` : ct ? esc(ct) : 'Por cada amigo que entra, el dinero de 2 rivales', btnA('invitarAmigo', 'Invitar', { sec: false, ic: 'estrella' }), 'invitar amigo referido premio codigo rivales dinero semana doble anuncios');
   }
   h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
@@ -1521,7 +1540,9 @@ const notasCanal = (c) => [
   c.demo ? `Miran el ejemplo: <b>${c.demo}</b>` : '',
   c.saf ? `Tocan «Abrir en Safari»: <b>${c.saf}</b>` : '',
   c.inicio ? `Pasan a la pantalla de inicio: <b>${c.inicio}</b>` : '',
-  c.laliga ? `Falla LaLiga: <b>${c.laliga}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
+  c.laliga || c.l5xx ? `Falla LaLiga: <b>${c.laliga + c.l5xx}</b>${c.l5xx ? ` (error suyo ${c.laliga} · sin contestar bien ${c.l5xx})` : ''}` : '',
+  (() => { const m = c.mal || {}, t = MAL_PEGADO.reduce((x, [k]) => x + (m[k] || 0), 0); return t ? `Pegan algo que no vale: <b>${t}</b> (${MAL_PEGADO.filter(([k]) => m[k]).map(([k, txt]) => `${txt} ${m[k]}`).join(' · ')})` : ''; })(),
+  c.gastado ? `Repiten un enlace gastado: <b>${c.gastado}</b>` : '', c.cancel ? `Cancelan: <b>${c.cancel}</b>` : '', c.otros ? `Otros fallos: <b>${c.otros}</b>` : '',
   c.ok > c.l ? `Entran más de los que abren LaLiga: <b>${c.ok - c.l}</b> con un código o por otro camino` : '',
 ].filter(Boolean).join(' · ');
 const pctCanal = (c) => { const p = pctN(c.ok, c.l); return `<span class="q-pct${!c.l || c.ok > c.l ? '' : p >= 50 ? ' bien' : p < 30 ? ' mal' : ''}">${c.l && c.ok <= c.l ? `${p} %` : '—'}<small>${c.ok} de ${c.l} entran</small></span>`; };
@@ -1538,6 +1559,14 @@ function invitarQ(C, Q) {
   if (!Q.invitar && !C.reg.length) return '<p class="q-no">Sin datos de invitaciones.</p>';
   const { filas, total: T } = invitacionesDatos(Q, C.lista, C.reg, C.ahora);
   let h = kpiQ([[T.comparten, `han invitado${T.veces ? ` · ${T.veces} veces` : ''}`], [T.entran, 'amigos dentro'], [T.siguen != null ? T.siguen : T.vuelven, T.siguen != null ? 'siguen (7 días)' : 'volvieron otro día']]);
+  // (25 nov) cómo llegan los amigos, en 7 días: los que abren el enlace en la web, los que copian el código para Google Play y
+  // los que lo ponen en la app (solo, propuesto por el servidor o escrito a mano)
+  const cnt = (Q.invitar && Q.invitar.cnt) || {}, desde = diaDe(C.ahora - 6 * DIA);
+  const t7 = Object.entries(cnt).filter(([d]) => d >= desde).reduce((x, [, v]) => { for (const [k, n] of Object.entries(v || {})) x[k] = (x[k] || 0) + n; return x; }, {});
+  if (Object.keys(cnt).length) {
+    const fila = (n, t) => `<div class="q-emb-f"><b>${n || 0}</b><span>${t}</span></div>`;
+    h += tarjetaQ('Cómo llegan (7 días)', `<div class="q-inv-lleg">${fila(t7.llega, 'abren el enlace en la web')}${fila(t7.copia, 'copian el código para Google Play')}${fila(t7.canje_enlace, 'entran con el enlace (se pone solo)')}${fila(t7.canje_play, 'entran con el código de la instalación de Google Play')}${fila(t7.canje_propuesto, 'aceptan el código que les propone la app')}${fila(t7.canje_escrito, 'lo escriben a mano')}</div>`);
+  }
   if (!filas.length) return `${h}<p class="q-no">Nadie ha compartido la app ni ha sacado su código todavía.</p>`;
   const max = Math.max(1, ...filas.map((x) => x.entran));
   h += tarjetaQ('Quién invita', `<div class="q-rank q-inv">${filas.slice(0, 20).map((x) => `<div><b>${esc(x.nombre)}</b><i style="--n:${pctN(x.entran, max)}"></i><span>${x.entran} ${x.entran === 1 ? 'amigo' : 'amigos'}</span><small>${[
@@ -1598,6 +1627,7 @@ export function invitacionesDatos(Q, lista, reg, ahora) {
  * «llegan» es llegar sin sesión y «ven entrar», tener el botón de entrar en pantalla (antes del 21 nov solo había «ver»,
  * que era llegar). Debajo, lo mismo por campaña (?utm_source=…).
  */
+const MAL_PEGADO = [['vacio', 'nada'], ['login', 'la página de entrar'], ['app', 'la de la app'], ['jwt', 'sin el código'], ['otro', 'otra cosa']];
 const OTROS_FALLOS = ['x-caduca', 'x-redirect', 'x-perdido', 'x-red', 'x-otro'];
 const EMB_CANALES = [['App de Android', 'play'], ['Web en iPhone', 'web-iphone'], ['Web en ordenador', 'web-pc'], ['Web en Android', 'web-android'], ['APK de fuera', 'github']];
 export function embudoDatos(E, ahora) {
@@ -1610,7 +1640,9 @@ export function embudoDatos(E, ahora) {
     const ven = dias.reduce((t, d) => { const x = d[g] || {}; return t + (x.llega ? Number(x.ver) || 0 : 0); }, 0);
     const hayVen = dias.some((d) => (d[g] || {}).llega);
     return { llegan, ven: hayVen ? ven : null, ver: n('ver'), play: n('play'), demo: n('demo'), l: n('l'), v: n('v'), p: n('p'), ok: n('ok'), inicio: n('inicio'), saf: n('saf'),
-      vuelve: n('x-vuelve'), laliga: n('x-laliga'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0) };
+      vuelve: n('x-vuelve'), laliga: n('x-laliga'), l5xx: n('x-5xx'), gastado: n('x-gastado'), cancel: n('x-cancel'), otros: OTROS_FALLOS.reduce((t, k) => t + n(k), 0),
+      // (25 nov, tanda 5) lo pegado que no vale, por motivo (las webs de antes no lo mandan)
+      mal: Object.fromEntries(MAL_PEGADO.map(([k]) => [k, n(`m-${k}`)])) };
   };
   const canales = EMB_CANALES.map(([t, k]) => ({ t, k, web: k.startsWith('web'), ...de(k) })).filter((c) => c.llegan || c.l || c.ok);
   const origenes = [...new Set(dias.flatMap((d) => Object.keys(d).filter((k) => k.startsWith('o:'))))].map((k) => ({ t: k.slice(2), k, web: true, ...de(k) })).sort((x, y) => y.llegan - x.llegan);
@@ -1707,6 +1739,8 @@ export function textoDiagnostico(S) {
     ...(enApp ? [(() => { const w = nativo.estadoWeb(); if (!w) return 'Web al día sola: no (APK de antes)'; return `Web al día sola: APK con la ${w.propia || '¿?'} · ${w.activa ? `puesta la ${w.activa} (${w.archivos} archivos, ${horaDe(w.bajada)})` : 'usa la del APK'} · mirado ${w.mirada ? horaDe(w.mirada) : 'aún no'} · parte Android ${w.nativo}${w.error ? ` · último fallo: ${w.error}` : ''}${w.via ? ` · bajada del ${w.via}` : ''}`; })()] : []),
     // (21 nov) por dónde entra la app en LaLiga: con Auth Tab Android no pregunta «Abrir con»
     ...(enApp ? [(() => { const v = LS.get('login-via', null); return `Entrada con LaLiga: ${nativo.authTab() ? 'por Auth Tab (Android no pregunta «Abrir con»)' : 'por pestaña normal (Android puede preguntar «Abrir con»)'}${v && v.t ? ` · última entrada: ${v.via === 'authtab' ? 'por Auth Tab' : v.via === 'intent' ? 'por el camino de antes (intent)' : 'no se sabe (app de antes)'}, ${horaDe(v.t)}` : ''}`; })()] : []),
+    // (25 nov, tanda 5) el último fallo al entrar, con lo que contestó LaLiga
+    (() => { const f = LS.get('entrada-fallo', null); return f && f.t ? `Último fallo al entrar: ${f.paso}${f.cod ? ` · ${f.cod}` : ''} · ${horaDe(f.t)}` : 'Último fallo al entrar: ninguno'; })(),
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
     D ? `Datos: ${new Date(D.t).toISOString()} · liga ${D.liga && D.liga.id} · equipos ${D.clasif.length} · mío ${D.yo.teamId || '¿?'} · jugadores ${Object.keys(D.maestro).length} (con cara ${Object.values(D.maestro).filter((j) => j.img).length}) · mercado ${D.mercado.length} (${D.mercado.filter((m) => m.tipo === 'manager').length} de managers${S.M && S.M.mercadoFantasma && S.M.mercadoFantasma.length ? `, ${S.M.mercadoFantasma.length} ya con dueño quitados` : ''}) · actividad ${D.actividad.length} (con nombre ${D.actividad.filter((a) => a.quien).length}, con id ${D.actividad.filter((a) => a.quienId).length}) · partidos ${D.partidos.length} · tendencias ${Object.keys(D.tendencias || {}).length} · dinero ${D.dinero}` : 'Sin datos',
     D && D.avisos && D.avisos.length ? `Fallos: ${D.avisos.map((a) => `${a.paso}: ${a.e}`).join(' | ')}` : 'Sin fallos',
