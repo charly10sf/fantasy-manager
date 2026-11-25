@@ -998,6 +998,9 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
   const queda = () => (hasta ? hasta - Date.now() : 100000);
   // (16 nov) el chat manda la conversación entera (mensajes) y el sistema en bloques, con la parte fija en caché
   const cuerpo = { model: modelo, max_tokens: tokens, output_config: { effort: esfuerzo }, system: sistema, messages: mensajes || [{ role: 'user', content: pedido }] };
+  // (25 nov) la IA de verdad, 1 respuesta de 54 del chat: después de contestar se quedó repitiendo «<br>» hasta el tope de
+  // salida (8.000 tokens, 42 s). Ni un plan ni una respuesta llevan «<br>»: si lo escribe, se para ahí
+  cuerpo.stop_sequences = ['<br>'];
   // (25 nov) sin razonar antes de contestar (solo si se pide: «planes.pensar» a false en limites.json)
   if (pensar === false) cuerpo.thinking = { type: 'disabled' };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
@@ -1018,6 +1021,8 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
       x = null;
       // (por si el modelo no conoce el esfuerzo: se quita y se repite)
       if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(ult)) { delete cuerpo.output_config; n--; continue; }
+      // (por si no admite la parada: sin ella, como siempre)
+      if (r.status === 400 && cuerpo.stop_sequences && /stop_sequence/i.test(ult)) { delete cuerpo.stop_sequences; n--; continue; }
       // (y si el modelo no deja apagar el razonamiento: con él, como siempre)
       if (r.status === 400 && cuerpo.thinking && /thinking/i.test(ult)) { console.log('plan: no se puede apagar el razonamiento:', ult); delete cuerpo.thinking; acc.sinPensar = false; n--; continue; }
       // (la búsqueda sin activar en la consola de Anthropic, o una versión que no conoce: sin ella, como siempre)

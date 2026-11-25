@@ -1037,6 +1037,7 @@ respuestaClaude = null;
   let rp = await plan({}, { tk: 'u'.repeat(30) });
   let cP = aClaude[aClaude.length - 1];
   ok(rp.s === 200 && rp.j.plan && cP.b.thinking === undefined && cP.b.output_config && cP.b.output_config.effort === 'low', 'por defecto el plan va como siempre: sin tocar el razonamiento y con esfuerzo bajo');
+  ok(Array.isArray(cP.b.stop_sequences) && cP.b.stop_sequences.includes('<br>'), 'y lleva la parada en «<br>», para que no se quede repitiéndolo hasta el tope de salida');
   limitesPlanes = { on: true, gratis: 10, max: 10, web: 0, pensar: false };
   for (let i = 0; i < 11; i++) minuto();
   rp = await plan({}, { tk: 'u'.repeat(30) });
