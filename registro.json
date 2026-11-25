@@ -3269,7 +3269,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255196/padilla-asume-rol-athletic-unai-simon.html": 1795590600000,
    "SPORT|136822022": 1795589209000,
    "SPORT|136822228": 1795589185000,
-   "SPORT|135681299": 1795590000000
+   "SPORT|135681299": 1795590000000,
+   "SPORT|136822855": 1795590021000
   },
   "hechos": [
    {
@@ -3490,7 +3491,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4452,17 +4453,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 7,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 108787,
-  "salida": 6641,
+  "entrada": 110797,
+  "salida": 6733,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.22781,
+  "dolares": 0.228057,
   "reservado": 0
  },
  "recientes": {
@@ -9512,13 +9513,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6241,
+   "ok": 6242,
    "fallos": 0,
-   "ejecuciones": 5060,
+   "ejecuciones": 5061,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T08:06:12.429Z"
+   "ultima": "2026-11-25T08:11:15.754Z"
   }
  },
  "ptsDirecto": {},
@@ -9535,15 +9536,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:06:35.026Z"
+   "ultimaBien": "2026-11-25T08:11:26.742Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:06:35.026Z"
+   "ultimaBien": "2026-11-25T08:11:26.742Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:06:35.026Z"
+   "ultimaBien": "2026-11-25T08:11:26.742Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9551,11 +9552,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:06:35.026Z"
+   "ultimaBien": "2026-11-25T08:11:26.742Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:06:35.026Z"
+   "ultimaBien": "2026-11-25T08:11:26.742Z"
   }
  },
  "avisos": [
