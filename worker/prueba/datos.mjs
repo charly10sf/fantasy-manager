@@ -1673,6 +1673,18 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   await pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': 'https://www.futbolfantasy.com/laliga/mercado', 'x-m': 'GET', 'x-h': '{}' } });
   const oF = aGoogle[aGoogle.length - 1];
   ok(oF && oF.u.includes('futbolfantasy') && !oF.o.cf && !oF.o.signal, 'noticias: lo demás que pasa por /p, como siempre');
+  // (25 nov) Bing Noticias: solo su RSS, con caché y tope de tiempo, y sin la pausa de Google
+  const aBing = [];
+  globalThis.fetch = async (u, o) => { if (String(u).startsWith('https://www.bing.com/')) { aBing.push({ u: String(u), o }); return new Response('<rss><channel><item><title>B</title></item></channel></rss>', { status: 200 }); } return fN(u, o); };
+  const pB = (u) => pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': u, 'x-m': 'GET', 'x-h': '{}' } });
+  W2.noticiasPausaHasta(Date.now() + 60e3);
+  rN = await pB('https://www.bing.com/news/search?q=Pedri%20LaLiga&format=rss&setlang=es&cc=ES');
+  const oB = aBing[0] && aBing[0].o;
+  ok(rN.h.get('x-s') === '200' && rN.t.includes('<title>B</title>') && oB && oB.cf && oB.cf.cacheTtlByStatus['200-299'] === W2.NOTICIAS_CACHE_S && oB.signal, 'noticias: Bing contesta aunque Google esté en pausa, con caché y tope de tiempo');
+  rN = await pB('https://www.bing.com/search?q=Pedri');
+  ok(aBing.length === 1 && /solo el RSS/.test(rN.t), `noticias: de Bing, solo el RSS de noticias (${rN.s} ${rN.t.slice(0, 60)})`);
+  rN = await pB('https://www.bing.com/news/search?q=Pedri');
+  ok(aBing.length === 1, 'noticias: Bing sin format=rss, no');
   W2.noticiasPausaHasta(0);
   globalThis.fetch = fN;
 }

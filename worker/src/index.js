@@ -78,6 +78,8 @@ export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
   'www.futbolfantasy.com', 'futbolfantasy.com', 'understat.com', 'www.understat.com', 'api.sofascore.com', 'www.sofascore.com', 'news.google.com',
+  // (25 nov) Bing Noticias: lo que usa la web cuando Google Noticias dice 503 a Cloudflare (solo su RSS, abajo en reglaDe)
+  'www.bing.com',
 ]);
 // la web: su dominio (y su dirección de Cloudflare Pages, con las vistas previas de las ramas web-…) y, mientras dura la
 // mudanza, la de GitHub Pages. La de Pages va fijada al proyecto de Carlos: antes valía cualquier fantasy-manager-<algo>,
@@ -106,6 +108,7 @@ export function reglaDe(d, m, cab) {
     if (!/^Bearer\s+\S{20,}/i.test(auth) && !LALIGA_SIN_SESION.has(d.pathname)) return `En ${h}, con tu sesión`;
     return null;
   }
+  if (h === 'www.bing.com') return m === 'GET' && d.pathname === '/news/search' && /^rss$/i.test(d.searchParams.get('format') || '') ? null : 'En www.bing.com solo el RSS de noticias';
   return m === 'GET' ? null : `En ${h} solo se lee (GET)`;
 }
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
@@ -177,18 +180,20 @@ async function pasar(req, c) {
   const no = reglaDe(d, m, cab);
   if (no) return sinRespuesta(no, c);
   const cuerpo = m === 'GET' ? undefined : await req.arrayBuffer();
-  const noticias = d.hostname === 'news.google.com' && m === 'GET';
-  if (noticias && Date.now() < noticiasPausa) return new Response('Google Noticias no contesta ahora', { status: 200, headers: { ...c, 'x-s': '503', 'x-t': 'text/plain', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
+  // (25 nov) Bing Noticias, con la misma caché y el mismo tope de tiempo; la pausa es solo de Google
+  const google = d.hostname === 'news.google.com' && m === 'GET';
+  const noticias = google || d.hostname === 'www.bing.com';
+  if (google && Date.now() < noticiasPausa) return new Response('Google Noticias no contesta ahora', { status: 200, headers: { ...c, 'x-s': '503', 'x-t': 'text/plain', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
   const op = { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined };
   if (noticias) { op.cf = { cacheEverything: true, cacheTtlByStatus: { '200-299': NOTICIAS_CACHE_S, '300-599': 0 } }; op.signal = AbortSignal.timeout(NOTICIAS_MS); }
   let r;
   try {
     r = await traer(d, op, (u, m2) => !reglaDe(u, m2, cab));
   } catch (e) {
-    if (noticias) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
+    if (google) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
     return sinRespuesta(String((e && e.message) || e || 'sin respuesta'), c);
   }
-  if (noticias && (r.status === 503 || r.status === 429)) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
+  if (google && (r.status === 503 || r.status === 429)) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
   // el cuerpo pasa tal cual, sin leerlo (las páginas de futbolfantasy pesan varios megas)
   return new Response(r.body, { status: 200, headers: { ...c, 'x-s': String(r.status), 'x-t': r.headers.get('content-type') || '', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
 }
