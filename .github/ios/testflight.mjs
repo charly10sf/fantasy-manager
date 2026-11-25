@@ -223,7 +223,16 @@ async function configurar(numero) {
     for (const p of datos.probadores || []) ocultar(p.email);
   } else console.log('::warning::Sin .github/ios/contacto.enc: no se pone el contacto ni los probadores, ni se envía a revisión');
 
-  const build = await compilacion(numero);
+  let build = null;
+  try { build = await compilacion(numero); } catch (e) {
+    if (numero || !/ninguna compilación/.test(e.message)) throw e;
+    // sin compilación todavía: se deja hecho todo lo que no depende de ella
+    console.log('::notice::Aún no hay compilación: se deja lista la información de la beta, el grupo, el contacto y los probadores');
+    await infoBeta();
+    const g0 = await grupoExterno();
+    if (datos) { await contactoRevision(datos.contacto); await probadores(g0, datos.probadores); }
+    return;
+  }
   console.log(`la compilación ${build.attributes.version}: lista`);
   if (build.attributes.usesNonExemptEncryption == null) {
     await api('PATCH', `/v1/builds/${build.id}`, { data: { type: 'builds', id: build.id, attributes: { usesNonExemptEncryption: false } } });
