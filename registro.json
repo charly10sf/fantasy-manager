@@ -3132,7 +3132,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dudas-pedro-martin-1-2-barcelona-corner-protestado-villarreal-creo-toca-gulacsi-hernandez-hernandez-tendria-haber-mandado-parar-revisarlo-20261122_3479822.html": 1795361860000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-encuentro-slovan-bratislava_0_2008563258.html": 1795363752000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/fc-barcelona/20261122/11690519/flick-arbitro-siempre-pasa-quejas-hernandez-hernandez-barca-villarreal.html": 1795364437000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261122/1004254172/eric-barca-segunda-parte-queremos-ver-siempre.html": 1795366172000,
@@ -9629,13 +9628,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6332,
+   "ok": 6333,
    "fallos": 0,
-   "ejecuciones": 5151,
+   "ejecuciones": 5152,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T15:36:13.214Z"
+   "ultima": "2026-11-25T15:41:11.332Z"
   }
  },
  "ptsDirecto": {},
@@ -9652,15 +9651,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:36:24.998Z"
+   "ultimaBien": "2026-11-25T15:41:20.467Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:36:24.998Z"
+   "ultimaBien": "2026-11-25T15:41:20.467Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:36:24.998Z"
+   "ultimaBien": "2026-11-25T15:41:20.467Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9668,11 +9667,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:36:24.998Z"
+   "ultimaBien": "2026-11-25T15:41:20.467Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T15:36:24.998Z"
+   "ultimaBien": "2026-11-25T15:41:20.467Z"
   }
  },
  "avisos": [
