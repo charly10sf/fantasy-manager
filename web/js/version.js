@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4m';
+export const VERSION = '0.8.4n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -33,13 +33,22 @@ export const NOVEDADES = [
     // el resumen de una jornada con un partido aplazado (bot/web/resumen.mjs `aplazadosDe`, portal-web `faltan`) y «Resumen
     // J13» en el menú de Jornada (paginas.py). B-3: `por` en /sinc y el registro del Worker. Pruebas: caso-dinero (g),
     // caso-contradicciones (E y F), portal-ejemplo, prueba-paginas, caso-sinc, datos.mjs y la IA de verdad (13 céntimos)
-    v: '0.8.4m', f: '2026-11-25', h: '00:00', t: 'El chat y la app dicen lo mismo',
+    v: '0.8.4n', f: '2026-11-25', h: '00:00', t: 'El chat y la app dicen lo mismo',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'Quién paga tus cláusulas, cerrado de verdad', x: 'Si preguntas quién te puede pagar la cláusula de un jugador y eso lo tienes cerrado, el chat te dice cómo se abre y te cuenta lo que sí se ve: cuánto pide la cláusula sobre su valor y lo que se suele pagar en tu liga. Antes podía soltar que a ningún rival le llegaba.' },
       { para: 'dueño', tipo: 'arreglo', d: 'oferta', t: 'Vender, pero esa oferta no', x: 'Si preguntas si vendes a uno que la app quiere vender pero con una oferta floja encima de la mesa, la respuesta dice las dos cosas: que lo dejes a la venta y que esa oferta no la aceptes.' },
       { para: 'dueño', tipo: 'arreglo', d: 'plan', menor: true, t: 'Lo mismo en todas partes', x: 'Una sola puja por cada libre que el plan descarta, la misma palabra para cómo va el valor de un jugador, «no se toca a los titulares» dice cuál sí se vende y por qué, y con tu puja ya puesta la ficha te dice que sigue en pie y cómo quitarla.' },
       { para: 'dueño', tipo: 'arreglo', d: 'calendario', menor: true, t: 'Jornadas con un partido aplazado', x: 'En la web, el resumen de una jornada con un partido aplazado sale con los que se han jugado y se pone al día cuando se juegue el que falta. Y el menú de Jornada lleva al resumen de la última en vez de a una previa ya jugada.' },
       { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'En la web del iPhone, cómo se abre lo cerrado', x: 'Si en la web del iPhone le preguntas al chat por algo que tienes cerrado, ya no te manda a ver un anuncio en la app de Google Play: el dinero de un rival se abre invitando a un amigo, y quién paga tus cláusulas, de momento, ahí no se puede abrir.' },
+    ],
+  },
+  {
+    // (25 nov, la B-4 de claude/prompt-noticias-deno-busquedas.md del proyecto) en la web, Google Noticias da 503 a las IP
+    // de Cloudflare: si falla, Bing Noticias por el Worker (externas.js: parseRSS con los dos formatos, consultaBing,
+    // «noticias-bing» 6 h); Worker: www.bing.com en PERMITIDOS, solo su RSS. Pruebas: datos.mjs y prueba-noticias.mjs
+    v: '0.8.4m', f: '2026-11-25', h: '22:12', t: 'Las noticias, también en la web',
+    cosas: [
+      { tipo: 'arreglo', d: 'periodico', t: 'Las noticias vuelven a la web y al iPhone', x: 'En el navegador del ordenador y del iPhone las noticias de tus jugadores y de los clubes no llegaban casi nunca. Ahora, si la fuente de siempre no contesta, se buscan en otra, y el plan y la ficha de cada club vuelven a tenerlas.' },
     ],
   },
   {

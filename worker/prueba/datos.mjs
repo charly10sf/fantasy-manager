@@ -1453,7 +1453,10 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.s === 200 && r.j.ya, 'el mismo otra vez: ya contado, no suma');
   r = await inv(501, '/invitar', null, 'GET');
   ok(r.j.entran === 1 && r.j.cuentan === 0 && r.j.amigos[0].hasta - r.j.amigos[0].t === 24 * 3600e3, `la 501 ve 1 amigo, 0 que cuentan, 24 h: ${JSON.stringify(r.j.amigos)}`);
-  ok(!JSON.stringify(r.j).includes('502'), 'sin el id del amigo');
+  // (25 nov) valor a valor: con el JSON entero, un «502» dentro de una fecha en ms la hacía fallar según la hora
+  const llevaId = (v, id) => v === id || v === String(id) || (typeof v === 'string' && new RegExp(`\\b${id}\\b`).test(v))
+    || (v && typeof v === 'object' && Object.entries(v).some(([k, x]) => k === String(id) || llevaId(x, id)));
+  ok(!llevaId(r.j, 502), 'sin el id del amigo');
   // la misma, una cuenta vieja, una que ya invitó otro, una fuera de la liga, un código que no existe
   r = await inv(501, '/invitar/canjear', { cod, liga: '55' });
   ok(r.s === 400 && r.j.motivo === 'misma', `la misma cuenta: ${r.j.motivo}`);
@@ -1886,6 +1889,18 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   await pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': 'https://www.futbolfantasy.com/laliga/mercado', 'x-m': 'GET', 'x-h': '{}' } });
   const oF = aGoogle[aGoogle.length - 1];
   ok(oF && oF.u.includes('futbolfantasy') && !oF.o.cf && !oF.o.signal, 'noticias: lo demás que pasa por /p, como siempre');
+  // (25 nov) Bing Noticias: solo su RSS, con caché y tope de tiempo, y sin la pausa de Google
+  const aBing = [];
+  globalThis.fetch = async (u, o) => { if (String(u).startsWith('https://www.bing.com/')) { aBing.push({ u: String(u), o }); return new Response('<rss><channel><item><title>B</title></item></channel></rss>', { status: 200 }); } return fN(u, o); };
+  const pB = (u) => pide({ ruta: '/p', crudo: '', cab: { 'content-type': 'text/plain;charset=utf-8', 'x-u': u, 'x-m': 'GET', 'x-h': '{}' } });
+  W2.noticiasPausaHasta(Date.now() + 60e3);
+  rN = await pB('https://www.bing.com/news/search?q=Pedri%20LaLiga&format=rss&setlang=es&cc=ES');
+  const oB = aBing[0] && aBing[0].o;
+  ok(rN.h.get('x-s') === '200' && rN.t.includes('<title>B</title>') && oB && oB.cf && oB.cf.cacheTtlByStatus['200-299'] === W2.NOTICIAS_CACHE_S && oB.signal, 'noticias: Bing contesta aunque Google esté en pausa, con caché y tope de tiempo');
+  rN = await pB('https://www.bing.com/search?q=Pedri');
+  ok(aBing.length === 1 && /solo el RSS/.test(rN.t), `noticias: de Bing, solo el RSS de noticias (${rN.s} ${rN.t.slice(0, 60)})`);
+  rN = await pB('https://www.bing.com/news/search?q=Pedri');
+  ok(aBing.length === 1, 'noticias: Bing sin format=rss, no');
   W2.noticiasPausaHasta(0);
   globalThis.fetch = fN;
 }
