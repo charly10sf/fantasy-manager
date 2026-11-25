@@ -58,7 +58,7 @@ export const NOVEDADES = [
     // notificación de cada uno). La Action «Fallos» lee y contesta por /fallos/accion (llave sacada del token de Cloudflare).
     // Lo del KV lo copia el cron (`mudanzaFallos`). La pantalla: `burbujas`, `cajaHilo` y `avisoMio` (hojas.js); `abrirHilo`
     // y `escribirHilo` (app.js). Pruebas: worker/prueba/datos.mjs y .github/prueba-avisos.mjs
-    v: '0.8.4', f: '2026-11-25', t: 'Los avisos de fallo, como una conversación, y la web más clara',
+    v: '0.8.4', f: '2026-11-25', h: '02:28', t: 'Los avisos de fallo, como una conversación, y la web más clara',
     cosas: [
       { tipo: 'nuevo', d: 'chat', t: 'Los avisos de fallo, ahora como una conversación', x: 'Puedes contestar en el mismo aviso las veces que haga falta, con capturas en cada mensaje, y ves cuándo he leído lo tuyo.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Quién usa la app: desde dónde, con el iPhone aparte', x: 'En «Desde dónde», la web ya no va toda junta: salen aparte el iPhone, el ordenador y la web en Android. Se irá llenando a medida que cada uno abra esta versión.' },
