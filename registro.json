@@ -3308,7 +3308,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/dani-senabre-analiza-sancion-dos-partidos-fermin-depor-mejor-no-grave-atletico-madrid-mi-importante-20261125_3482176.html": 1795629378000,
    "SPORT|136851580": 1795628507000,
    "SPORT|136851215": 1795630845000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sabah-fk-1-4-fc-barcelona-resumen-resultado-y-goles-del-partido-de-la-fase-liga-en-la-champions-league-cadena-ser/": 1795635260000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sabah-fk-1-4-fc-barcelona-resumen-resultado-y-goles-del-partido-de-la-fase-liga-en-la-champions-league-cadena-ser/": 1795635260000,
+   "SPORT|136855738": 1795632549000,
+   "ABC|https://www.abc.es/deportes/futbol/cronica-sabah-barcelona-champions-20261125101204-nt.html": 1795636111000
   },
   "hechos": [
    {
@@ -3642,7 +3644,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -4608,17 +4610,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 15,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 249206,
-  "salida": 19869,
+  "entrada": 251547,
+  "salida": 20063,
   "cacheLee": 21607,
   "cacheEscribe": 29673,
-  "dolares": 0.451083,
+  "dolares": 0.451414,
   "reservado": 0
  },
  "recientes": {
@@ -9683,13 +9685,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6381,
+   "ok": 6382,
    "fallos": 0,
-   "ejecuciones": 5198,
+   "ejecuciones": 5199,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T19:46:15.560Z"
+   "ultima": "2026-11-25T19:51:12.878Z"
   }
  },
  "ptsDirecto": {},
@@ -9706,15 +9708,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:46:25.928Z"
+   "ultimaBien": "2026-11-25T19:51:25.343Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:46:25.928Z"
+   "ultimaBien": "2026-11-25T19:51:25.343Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:46:25.928Z"
+   "ultimaBien": "2026-11-25T19:51:25.343Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9722,11 +9724,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:46:25.928Z"
+   "ultimaBien": "2026-11-25T19:51:25.343Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T19:46:25.928Z"
+   "ultimaBien": "2026-11-25T19:51:25.343Z"
   }
  },
  "avisos": [
