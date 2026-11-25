@@ -3111,7 +3111,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/22/vio-victoria-valencia-cf-casa-rayo-vallecano-laliga-136707429.html": 1795338014000,
    "Europa Press|https://www.europapress.es/islas-canarias/noticia-salvamento-maritimo-guardia-civil-interceptan-madrugada-dos-cayucos-escoltan-hierro-20261122102848.html": 1795339728000,
    "AS|https://as.com/futbol/primera/copete-9-meses-de-un-tiburon-fuera-del-agua-f202611-n/": 1795342384000,
    "SPORT|136717129": 1795341237000,
@@ -4357,7 +4356,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261122/1004253825/galarreta-peligro-real-madrid.html": 1795338000000,
    "AS|https://as.com/futbol/primera/sin-noticias-de-nico-paz-en-el-real-madrid-f202611-n/": 1795345012000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fallece-joven-futbolista-18-anos-accidente-trafico-badajoz-20261122_3479841.html": 1795370347000,
    "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
@@ -9513,13 +9511,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6251,
+   "ok": 6252,
    "fallos": 0,
-   "ejecuciones": 5070,
+   "ejecuciones": 5071,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T08:56:18.067Z"
+   "ultima": "2026-11-25T09:01:15.321Z"
   }
  },
  "ptsDirecto": {},
@@ -9536,15 +9534,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:56:30.923Z"
+   "ultimaBien": "2026-11-25T09:01:24.451Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:56:30.923Z"
+   "ultimaBien": "2026-11-25T09:01:24.451Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:56:30.923Z"
+   "ultimaBien": "2026-11-25T09:01:24.451Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9552,11 +9550,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:56:30.923Z"
+   "ultimaBien": "2026-11-25T09:01:24.451Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T08:56:30.923Z"
+   "ultimaBien": "2026-11-25T09:01:24.451Z"
   }
  },
  "avisos": [
