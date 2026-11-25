@@ -13,8 +13,12 @@
 //   5. la versión nueva: con la huella de iOS del paquete publicado («nativoIos») igual que la de la app, la ventana de
 //      actualizar y «Actualizar ahora» pide la web nueva; si el paquete no la trae o es otra, nada (la app nueva llega por
 //      la tienda); buscar la versión a mano dice que llega por la App Store;
-//   6. los pasos de antes de entrar salen con el canal «ios»; lo que aún no hay en iOS no se ofrece (QR, fotos, alarma,
-//      anuncios) y lo que se llama sin existir no rompe nada; el dictado dice qué hacer;
+//   6. los pasos de antes de entrar salen con el canal «ios»; lo que aún no hay en iOS no se ofrece (QR, fotos) ni lo que
+//      no puede haber (la IA con la app cerrada), y lo que se llama sin existir no rompe nada; el dictado dice qué hacer;
+//   6b. (iOS 2) los avisos, el plan y la pregunta con la app cerrada y los anuncios llegan a la app como en Android: cada
+//      llamada con sus datos, lo que la web lee al momento sale de lo que la app va diciendo (__pon), la alarma del
+//      clausulazo solo se ofrece donde la hay, los bloques de anuncios de limites.json son los de iOS y en Ajustes no se
+//      ofrece trabajar con la app cerrada;
 //   7. respuesta() de una petición que no existe, compartir una imagen vacía y abrir algo que no es https no hacen nada raro.
 // Uso: node .github/prueba-ios.mjs   (PW_MODULO: ruta del index.mjs de playwright; MOTORES: «chromium», «webkit» o los
 //      dos separados por coma, por defecto chromium y, si está instalado, webkit). Sale con 1 si algo falla.
@@ -51,7 +55,7 @@ const NATIVO = 'huella-ios-de-prueba';
 
 /* La parte nativa de mentira, dentro de la página. Lo guardado vive en sessionStorage para que aguante una recarga, que es
    lo que hace la app de verdad: guarda en el llavero y, al cargar el documento siguiente, inyecta el puente con ello. */
-const NATIVA = ({ puente, nativo, idToken, paquete }) => {
+const NATIVA = ({ puente, nativo, idToken, paquete, alarma }) => {
   const leerLl = () => { try { return JSON.parse(sessionStorage.getItem('fm-llavero') || '{}'); } catch (e) { return {}; } };
   const ponerLl = (m) => sessionStorage.setItem('fm-llavero', JSON.stringify(m));
   window.__msgs = []; window.__abiertos = []; window.__pedidos = []; window.__buscadas = 0;
@@ -73,19 +77,19 @@ const NATIVA = ({ puente, nativo, idToken, paquete }) => {
     },
   };
   try { Object.defineProperty(window, 'webkit', { value: { messageHandlers: { fm } }, configurable: true, writable: true }); } catch (e) { window.webkit = { messageHandlers: { fm } }; }
-  const datos = { guardado: leerLl(), version: 42, nombre: '0.0.0-prueba', nativo, web: { nativo, propia: '0.0.0-prueba', bajada: 0, archivos: 0, mirada: 0 }, via: '' };
+  const datos = { guardado: leerLl(), version: 42, nombre: '0.0.0-prueba', nativo, web: { nativo, propia: '0.0.0-prueba', bajada: 0, archivos: 0, mirada: 0 }, via: '', avisos: false, alarma: !!alarma, privacidad: false, vista: true };
   // eslint-disable-next-line no-new-func
   new Function(puente.replace('/*DATOS*/{}', JSON.stringify(datos)))();
 };
 
 const DISPOSITIVO = (motor) => { const o = { ...pw.devices['iPhone 13'] }; delete o.defaultBrowserType; if (motor !== 'chromium') delete o.isMobile; return o; };
 
-async function abrir(nav, motor, { paquete = null, sesion = false } = {}) {
+async function abrir(nav, motor, { paquete = null, sesion = false, alarma = false } = {}) {
   const ctx = await nav.newContext(DISPOSITIVO(motor));
   const reg = { errores: [], fuera: [] };
   await ctx.addInitScript(() => { try { localStorage.setItem('fm-tour', '1'); localStorage.setItem('fm-prueba', 'true'); localStorage.setItem('fm-sin-tema', '1'); } catch (e) { /* nada */ } });
   if (sesion) await ctx.addInitScript((t) => { try { if (!sessionStorage.getItem('fm-llavero')) sessionStorage.setItem('fm-llavero', JSON.stringify({ sesion: JSON.stringify({ token: t, idToken: t, renovar: 'r1', caduca: Date.now() + 3600e3 }) })); } catch (e) { /* nada */ } }, ID_TOKEN);
-  await ctx.addInitScript(NATIVA, { puente: PUENTE, nativo: NATIVO, idToken: ID_TOKEN, paquete });
+  await ctx.addInitScript(NATIVA, { puente: PUENTE, nativo: NATIVO, idToken: ID_TOKEN, paquete, alarma });
   await ctx.route(/^https?:\/\/(?!127\.0\.0\.1[:/])/, (r) => { reg.fuera.push(r.request().url().slice(0, 80)); r.abort(); });
   const p = await ctx.newPage();
   p.on('pageerror', (e) => reg.errores.push(String(e)));
@@ -159,10 +163,10 @@ async function probar(motor) {
       const antes = window.__msgs.length;
       const r = {
         paso: se.canalPaso(), qr: n.hayQR(), fotos: n.hayFotos(), alarma: n.hayAlarma(), anuncios: n.hayAnuncios(), inter: n.hayIntersticial(), priv: n.hayPrivacidadAnuncios(), avisoPreg: n.hayAvisoPregunta(),
-        permitidos: n.avisosPermitidos(), fondo: n.estadoFondo(), imagen: n.hayImagen(),
+        permitidos: n.avisosPermitidos(), fondo: n.estadoFondo(), imagen: n.hayImagen(), hayFondo: n.hayFondo(), exactas: n.alarmasExactas(), vista: n.aLaVista(),
       };
       // lo que se llama sin existir en iOS: no puede romper
-      try { n.programarAvisos([]); n.pedirPermisoAvisos(); n.notificar('a', 'b'); n.programarFondo(true, 0); n.fondoTerminado(); n.planEnMarcha('x', 'y'); n.planAcabado(); n.zonaAnuncios(true, '', true); n.verAnuncio('plan'); n.cancelarAnuncio(); n.actualizar('https://x'); n.instalar(); r.sinRomper = true; } catch (e) { r.sinRomper = String(e); }
+      try { n.programarFondo(true, 0); n.fondoTerminado(); n.pedirAlarmasExactas(); n.probarAlarma(10, 'a', 'b'); n.escanearQR(); n.fotos(2); n.actualizar('https://x'); n.instalar(); r.sinRomper = true; } catch (e) { r.sinRomper = String(e); }
       r.mensajesDeMas = window.__msgs.length - antes;
       r.sinRespuesta = window.FantasyApp.respuesta('no-existe');
       r.imagenVacia = n.compartirImagen('', '');
@@ -174,15 +178,59 @@ async function probar(motor) {
       return r;
     });
     mira(varios.paso === 'ios', `${T} los pasos de antes de entrar salen con el canal «ios»`);
-    mira(!varios.qr && !varios.fotos && !varios.alarma && !varios.anuncios && !varios.inter && !varios.priv && !varios.avisoPreg && varios.permitidos === false && varios.fondo === null, `${T} lo que aún no hay en iOS no se ofrece (QR, fotos, alarma, anuncios, avisos)`);
+    mira(!varios.qr && !varios.fotos && !varios.alarma && varios.fondo === null && varios.hayFondo === false, `${T} lo que aún no hay en iOS no se ofrece (QR, fotos, la alarma en un iPhone sin alarmas del sistema) ni la IA con la app cerrada`);
+    mira(varios.anuncios && varios.inter && !varios.priv && varios.avisoPreg && varios.permitidos === false && varios.exactas === true && varios.vista === true, `${T} (iOS 2) hay anuncios y avisos; sin permiso de notificaciones y sin opciones de privacidad hasta que la app lo diga`);
     mira(varios.sinRomper === true && varios.mensajesDeMas === 0, `${T} llamar a lo que no existe no rompe ni manda nada a la app`);
     mira(varios.sinRespuesta === '{"s":0,"e":"sin respuesta"}' && varios.imagenVacia === false && varios.abiertos === 0, `${T} una respuesta que no existe, una imagen vacía y abrir algo que no es https no hacen nada`);
     mira(varios.buenos === '1,1,1,1,1,2' && varios.imagen && varios.imagenBuena === true, `${T} abrir, copiar, compartir, el toque, el teclado y «trabajando» llegan a la app`);
+    /* ---- 6b (iOS 2): los avisos, el plan y la pregunta con la app cerrada y los anuncios ---- */
+    const dos = await p.evaluate(async () => {
+      const pu = await import('./js/puente.js'), li = await import('./js/limite.js'), ut = await import('./js/util.js');
+      const n = pu.nativo, de = (a) => window.__msgs.filter((m) => m.a === a), r = {};
+      const antes = window.__msgs.length;
+      const lista = [{ id: 'c1', t: Date.now() + 60e3, titulo: 'Clausulazo', texto: 'Pedri', hash: 'rivales', alarma: true }, { id: 'diario', t: Date.now() + 3600e3, titulo: 'Tu liga hoy', texto: 'x', hash: '', cada: 86400e3 }];
+      n.programarAvisos(lista); n.pedirPermisoAvisos(); n.notificar('Título', 'Texto', 'hoy');
+      n.planEnMarcha('rid12345abc', 'SESION'); n.planAcabado();
+      n.preguntaEnMarcha('preg1234abc', 'SESION', { 'rival 2': 'Marcos' }, '¿a quién vendo?'); n.preguntaAcabada(true, 'Vende a Pedri');
+      n.zonaAnuncios(true, 'ca-app-pub-3175956326240112/9792190459', true); n.intersticial('ca-app-pub-3175956326240112/9792190459'); n.aperturaAnuncios(true, ''); n.verAnuncio('plan'); n.cancelarAnuncio(); n.privacidadAnuncios();
+      r.avisos = JSON.parse(de('programarAvisos')[0].j);
+      r.permiso = de('pedirPermisoAvisos').length;
+      r.notificar = de('notificar')[0];
+      r.plan = [de('planEnMarcha')[0], de('planAcabado').length];
+      r.preg = [de('preguntaEnMarcha')[0], de('preguntaAcabada')[0]];
+      // (la web ya le ha dicho antes a la app que aún no hay liga cargada: vale lo último)
+      const ult = (a) => de(a).slice(-1)[0];
+      r.zonaAntes = de('zonaAnuncios').slice(0, -1).every((m) => m.si === false);
+      r.anuncios = [ult('zonaAnuncios'), ult('intersticial'), ult('aperturaAnuncios'), ult('verAnuncio'), de('cancelarAnuncio').length, de('privacidadAnuncios').length];
+      r.mensajes = window.__msgs.length - antes;
+      // lo que la web lee al momento, cuando la app lo cambia
+      window.FantasyApp.__pon({ avisos: true, privacidad: true, vista: false });
+      r.tras = [n.avisosPermitidos(), n.hayPrivacidadAnuncios(), n.aLaVista()];
+      window.FantasyApp.__pon({ vista: true });
+      // los bloques de anuncios de limites.json: en la app de iOS, los de iOS
+      const g = ut.LS.get('limites', null);
+      ut.LS.set('limites', { t: Date.now(), cfg: { intersticial: { on: true, bloque: 'ca-app-pub-3175956326240112/1111111111', bloqueIos: 'ca-app-pub-3175956326240112/2222222222' }, apertura: { on: true, bloque: '', bloqueIos: 'ca-app-pub-3175956326240112/3333333333' } } });
+      r.bloques = [li.intersticialCfg().bloque, li.aperturaCfg().bloque];
+      if (g) ut.LS.set('limites', g); else ut.LS.del('limites');
+      return r;
+    });
+    mira(dos.avisos.length === 2 && dos.avisos[0].alarma === true && dos.avisos[1].cada === 86400e3 && dos.permiso === 1 && dos.notificar.t === 'Título' && dos.notificar.x === 'Texto' && dos.notificar.h === 'hoy', `${T} (iOS 2) la lista de avisos, el permiso y un aviso al momento llegan a la app`);
+    mira(dos.plan[0].rid === 'rid12345abc' && dos.plan[0].tk === 'SESION' && dos.plan[1] === 1 && dos.preg[0].rid === 'preg1234abc' && dos.preg[0].tk === 'SESION' && !JSON.stringify(dos.preg[0]).includes('Marcos') && !JSON.stringify(dos.preg[0]).includes('vendo') && dos.preg[1].ok === true && dos.preg[1].r === 'Vende a Pedri', `${T} (iOS 2) el plan y la pregunta en marcha llegan con su id y la sesión (los nombres de los rivales y lo preguntado no hacen falta), y el final de la pregunta, con su resumen`);
+    mira(dos.anuncios[0].si === true && dos.anuncios[0].inter === true && /9792190459$/.test(dos.anuncios[0].b) && /9792190459$/.test(dos.anuncios[1].b) && dos.anuncios[2].toca === true && dos.anuncios[3].p === 'plan' && dos.anuncios[4] === 1 && dos.anuncios[5] === 1 && dos.mensajes === 13 && dos.zonaAntes === true, `${T} (iOS 2) los anuncios llegan a la app como en Android (zona, intersticial, apertura, bonificado, cancelar y privacidad; ${dos.mensajes} mensajes), y sin liga cargada la web no pide anuncios`);
+    mira(dos.tras.join() === 'true,true,false', `${T} (iOS 2) el permiso de avisos, las opciones de privacidad y si está a la vista salen de lo que dice la app (${dos.tras.join()})`);
+    mira(/2222222222$/.test(dos.bloques[0]) && /3333333333$/.test(dos.bloques[1]), `${T} (iOS 2) los bloques de anuncios de limites.json son los de iOS (${dos.bloques.join(', ')})`);
     await p.evaluate(() => window.FantasyApp.voz());
     await p.waitForFunction(() => /micrófono del teclado/.test([...document.querySelectorAll('.tostada')].map((t) => t.textContent).join(' ')), null, { timeout: 3000 }).catch(() => {});
     mira(/micrófono del teclado/.test(await tostada(p)), `${T} el dictado dice que se use el micrófono del teclado`);
     mira(reg.errores.length === 0, `${T} sin errores de la página (varios)${reg.errores.length ? `: ${reg.errores[0]}` : ''}`);
     mira(reg.fuera.filter((x) => !/assets-fantasy|laliga|fonts\.g|googletag|gstatic/.test(x)).length === 0, `${T} la página no pide nada a otros sitios por su cuenta${reg.fuera.length ? ` (${reg.fuera.slice(0, 3).join(', ')})` : ''}`);
+    await ctx.close();
+
+    /* ---- 6b: la alarma del clausulazo, solo donde hay alarmas del sistema (iOS 26 o más) ---- */
+    ({ ctx, p, reg } = await abrir(nav, motor, { alarma: true }));
+    await p.waitForSelector('[data-accion="entrar"]', { timeout: 20000 });
+    const al = await p.evaluate(async () => { const n = (await import('./js/puente.js')).nativo; const hay = n.hayAlarma(); n.probarAlarma(10.4, 'Así suena', 'texto'); return { hay, m: window.__msgs.filter((x) => x.a === 'probarAlarma')[0] }; });
+    mira(al.hay === true && al.m && al.m.s === 10 && al.m.t === 'Así suena' && al.m.x === 'texto', `${T} (iOS 2) con alarmas del sistema, la alarma se ofrece y la de prueba llega a la app`);
     await ctx.close();
 
     /* ---- 5: la versión nueva ---- */

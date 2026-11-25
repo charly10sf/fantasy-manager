@@ -3618,7 +3618,8 @@ window.progresoApp = (pct, estado) => {
 window.addEventListener('fm-vuelta', () => { const pn = $('#plan-notif'); if (pn) pn.innerHTML = V.notifPlanHTML(); });
 window.permisoAvisos = (ok) => {
   // (23 nov) si Android ya no enseña la pregunta (dicho que no dos veces), contesta que no al momento: se dice dónde se activan
-  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada. Actívalas en los ajustes del móvil: Aplicaciones → Fantasy Manager → Notificaciones', 7000);
+  // (25 nov) en el iPhone están en otro sitio (y la app lleva allí si se vuelve a pulsar)
+  if (!ok) tostada(`Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada. Actívalas en los ajustes del ${nativo.canal() === 'ios' ? 'iPhone: Notificaciones → Fantasy Manager' : 'móvil: Aplicaciones → Fantasy Manager → Notificaciones'}`, 7000);
   else { if (S.D) programar(S.D, S.M, planAvisos()); tostada('Notificaciones activadas'); }
   // lo de debajo de «Preparando tu plan», con el permiso nuevo
   const pn = $('#plan-notif');
@@ -4192,7 +4193,7 @@ document.addEventListener('click', async (ev) => {
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     // (0.7.13l) los planes que salen solos a su hora, y los ajustes del plan desde el propio plan
-    case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? 'Los planes saldrán solos a su hora' : 'Los planes solo saldrán cuando los pidas'); break; }
+    case 'planesHora': { const on = !cfgHoras().on; guardarCfgHoras({ on }); programarFondo(); repintarHoja(); if (S.vista === 'hoy') pintar(); tostada(on ? (enApp && !nativo.hayFondo() ? 'Los planes saldrán a su hora con la app abierta; si no, al abrirla' : 'Los planes saldrán solos a su hora') : 'Los planes solo saldrán cuando los pidas'); break; }
     case 'planAjustes': hoja('planAj'); break;
     case 'fondo': {
       const on = !cfgFondo().on;
@@ -4965,7 +4966,8 @@ async function arrancar() {
   setTimeout(() => migrarMinis().catch(() => {}), 5000);
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
-  if (enApp && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
+  // (25 nov) en la app de iOS no hay IA con la app cerrada: el permiso se pide al activar los avisos o al pedir un plan
+  if (enApp && nativo.hayFondo() && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
     LS.set('permiso-fondo', Date.now());
     setTimeout(() => nativo.pedirPermisoAvisos(), 2500);
   }

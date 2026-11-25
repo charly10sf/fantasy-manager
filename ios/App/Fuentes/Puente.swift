@@ -2,8 +2,9 @@ import UIKit
 import WebKit
 
 /// Lo que la web puede pedirle a la app: la parte nativa de window.FantasyApp (la de JS es Puente/puente-ios.js, que se
-/// inyecta en cada documento con los datos de ese momento). Lo mismo que Puente.java, con lo de esta sesión: peticiones,
-/// lo guardado en el llavero, la entrada con LaLiga, la web al día, copiar, compartir, abrir fuera y el toque.
+/// inyecta en cada documento con los datos de ese momento). Lo mismo que Puente.java: peticiones, lo guardado en el
+/// llavero, la entrada con LaLiga, la web al día, copiar, compartir, abrir fuera, el toque, los avisos (Avisos.swift), el
+/// plan y la pregunta con la app cerrada (Empuje, en Avisos.swift) y los anuncios (Anuncios.swift).
 extension Principal: WKScriptMessageHandler {
     /// el JS del puente, con lo que la web lee al momento: lo guardado, la versión, la huella y la vuelta pendiente
     private func guion() -> String {
@@ -15,6 +16,11 @@ extension Principal: WKScriptMessageHandler {
             "nativo": AlDia.nativo,
             "web": AlDia.estado(),
             "via": loginVia,
+            // lo que la web lee al momento de los avisos y los anuncios (después, ponerEstadoNativo)
+            "avisos": Avisos.yo.permitidos,
+            "alarma": Avisos.hayAlarma,
+            "privacidad": Anuncios.yo.hayPrivacidad,
+            "vista": UIApplication.shared.applicationState != .background,
         ]
         if let l = loginPendiente { datos["login"] = l }
         guard let d = try? JSONSerialization.data(withJSONObject: datos), var j = String(data: d, encoding: .utf8) else { return base }
@@ -37,6 +43,14 @@ extension Principal: WKScriptMessageHandler {
     func ponerEstadoWeb() {
         guard let d = try? JSONSerialization.data(withJSONObject: AlDia.estado()), let j = String(data: d, encoding: .utf8) else { return }
         js("window.FantasyApp && window.FantasyApp.__pon({ web: \(j) })")
+    }
+
+    /// lo que la web lee al momento y cambia con la app abierta: si hay permiso de notificaciones, si hay que dejar
+    /// cambiar el consentimiento de los anuncios y si la app está a la vista
+    func ponerEstadoNativo(vista deVuelta: Bool = false) {
+        // (al volver a la app el iPhone aún la da por «en segundo plano» un instante: se dice desde fuera)
+        let vista = deVuelta || UIApplication.shared.applicationState != .background
+        js("window.FantasyApp && window.FantasyApp.__pon({ avisos: \(Avisos.yo.permitidos), privacidad: \(Anuncios.yo.hayPrivacidad), vista: \(vista) })")
     }
 
     /// la respuesta de una petición: se deja en la página y se la avisa con __http(id), como en Android
@@ -85,6 +99,41 @@ extension Principal: WKScriptMessageHandler {
             if !web.isFirstResponder { web.becomeFirstResponder() }
         case "trabajando":
             trabajando(m["si"] as? Bool ?? false)
+
+        /* ---- los avisos ---- */
+        case "programarAvisos":
+            Avisos.yo.programar(texto("j"))
+        case "pedirPermisoAvisos":
+            Avisos.yo.pedirPermiso()
+        case "notificar":
+            Avisos.yo.mostrar("web:" + texto("t"), texto("t"), texto("x"), texto("h"))
+        case "probarAlarma":
+            Avisos.yo.probarAlarma(m["s"] as? Int ?? 10, texto("t"), texto("x"))
+
+        /* ---- el plan y la pregunta con la app cerrada ---- */
+        case "planEnMarcha":
+            Empuje.yo.planEnMarcha(texto("rid"), texto("tk"))
+        case "planAcabado":
+            Empuje.yo.planAcabado()
+            if UIApplication.shared.applicationState == .active { Avisos.yo.quitar(Avisos.deListo) }
+        case "preguntaEnMarcha":
+            Empuje.yo.preguntaEnMarcha(texto("rid"), texto("tk"))
+        case "preguntaAcabada":
+            preguntaAcabada(m["ok"] as? Bool ?? false, texto("r"))
+
+        /* ---- los anuncios ---- */
+        case "zonaAnuncios":
+            Anuncios.yo.zona(m["si"] as? Bool ?? false, texto("b"), m["inter"] as? Bool ?? false)
+        case "intersticial":
+            Anuncios.yo.pedirIntersticial(texto("b"))
+        case "aperturaAnuncios":
+            Anuncios.yo.apertura(m["toca"] as? Bool ?? false, texto("b"))
+        case "verAnuncio":
+            Anuncios.yo.ver(texto("p"))
+        case "cancelarAnuncio":
+            Anuncios.yo.cancelar()
+        case "privacidadAnuncios":
+            Anuncios.yo.privacidad()
         default:
             break
         }
@@ -118,12 +167,39 @@ extension Principal: WKScriptMessageHandler {
         }
     }
 
+    /* ---------------- la respuesta de la IA ---------------- */
+
+    /// La respuesta ha llegado a la web (o ha fallado): el servidor ya no tiene que avisar. Con la app fuera de la vista,
+    /// el aviso lo pone la app, con el principio de la respuesta ya con los nombres (los mismos textos que Recoger.java)
+    private func preguntaAcabada(_ ok: Bool, _ resumen: String) {
+        Empuje.yo.preguntaAcabada()
+        if UIApplication.shared.applicationState != .background {
+            Avisos.yo.quitar(["fm-preg"])
+            return
+        }
+        let r = resumen.trimmingCharacters(in: .whitespacesAndNewlines)
+        if ok {
+            Avisos.yo.mostrar("fm-preg", "Tu director deportivo ha contestado", r.isEmpty ? "Entra para leer la respuesta" : Principal.corto(r, 230), "ia", hilo: "pregunta")
+        } else {
+            Avisos.yo.mostrar("fm-preg", "No ha podido contestar", r.isEmpty ? "Entra y vuelve a preguntar" : Principal.corto(r, 200), "ia", hilo: "pregunta")
+        }
+    }
+
+    static func corto(_ t: String, _ n: Int) -> String {
+        if t.count <= n { return t }
+        let trozo = String(t.prefix(n - 1))
+        if let i = trozo.lastIndex(of: " "), trozo.distance(from: trozo.startIndex, to: i) > n / 2 { return String(trozo[..<i]) + "…" }
+        return trozo + "…"
+    }
+
     /* ---------------- mientras la IA trabaja ---------------- */
 
     /// La IA empieza o termina de trabajar: mientras trabaja, la pantalla no se apaga sola y, si sales de la app, el
     /// sistema le deja un rato más (unos 30 s) para acabar lo que tenía a medias. Lo de avisar cuando acabe con la app
-    /// cerrada llega con los avisos (más adelante)
+    /// cerrada lo hace el servidor (Empuje, en Avisos.swift)
     private func trabajando(_ si: Bool) {
+        // (con la IA trabajando, ningún anuncio encima)
+        Anuncios.yo.ocupada = si
         UIApplication.shared.isIdleTimerDisabled = si
         if si {
             if tareaFondo != .invalid { return }

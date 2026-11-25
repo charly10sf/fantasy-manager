@@ -20,6 +20,8 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
     var loginVia = ""
     /// lo que hay que hacer mientras la IA trabaja (Puente.swift)
     var tareaFondo: UIBackgroundTaskIdentifier = .invalid
+    /// la pestaña del aviso que se ha tocado, si la página aún no ha cargado
+    private var hashPendiente: String?
     #if DEBUG
     var sonda: UILabel?
     var sondaNativa: [String: Any] = [:]
@@ -71,7 +73,12 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
         // si la web bajada no arrancó las dos últimas veces, se vuelve a la de dentro
         AlDia.alAbrir()
+        Avisos.yo.act = self
+        Anuncios.yo.alCrear(self)
         var direccion = Principal.inicio
+        // abierta tocando un aviso: en su pestaña
+        if let h = Avisos.yo.hashPendiente, !h.isEmpty { direccion += "#" + h }
+        Avisos.yo.hashPendiente = nil
         #if DEBUG
         direccion = prepararPruebas(direccion)
         #endif
@@ -143,21 +150,36 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
         UIApplication.shared.open(destino, options: [:], completionHandler: nil)
     }
 
-    /// enseña algo encima de lo que haya en pantalla
-    func presentar(_ vc: UIViewController) {
+    /// lo que hay encima de todo en pantalla (desde ahí se enseña lo siguiente)
+    func arriba() -> UIViewController {
         var arriba: UIViewController = self
         while let p = arriba.presentedViewController, !p.isBeingDismissed { arriba = p }
-        arriba.present(vc, animated: true)
+        return arriba
+    }
+
+    /// enseña algo encima de lo que haya en pantalla
+    func presentar(_ vc: UIViewController) {
+        arriba().present(vc, animated: true)
+    }
+
+    /// Un aviso abre la app en una pestaña concreta (#mercado, #rivales…), como en Android
+    func irA(_ hash: String) {
+        if hash.isEmpty { return }
+        if cargada { js("location.hash = \(Principal.cadena(hash))") } else { hashPendiente = hash }
     }
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         AlDia.cargaT = AlDia.ahora()
+        // cada página empieza sin anuncios (al recargar, o al volver a la entrada): hasta que la web nueva diga que su
+        // liga está cargada, nada de anuncios encima de la carga
+        Anuncios.yo.paginaNueva()
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let primera = !cargada
         cargada = true
         entregarLogin()
+        if let h = hashPendiente { hashPendiente = nil; irA(h) }
         vigilar()
         if primera {
             DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in self?.buscarWeb(false) }
@@ -259,9 +281,21 @@ final class Principal: UIViewController, WKNavigationDelegate, WKUIDelegate {
 
     /// de vuelta a la app (Escena). Con la ventana de entrar abierta no: se avisa cuando se cierre (abrirLogin)
     func alVolver() {
+        // (primero, que la web sepa que vuelve a estar a la vista; y los avisos y los anuncios, lo suyo)
+        ponerEstadoNativo(vista: true)
+        Avisos.yo.alVolver()
+        Anuncios.yo.alVolver()
         if entrada.abierta { return }
         js("window.alVolver && alVolver()")
         // de vuelta tras un rato: ¿hay web nueva?
         if cargada && AlDia.ahora() - AlDia.ultimaBusqueda > 20 * 60000 { buscarWeb(false) }
+    }
+
+    /// La app sale de la vista (Escena). Si hay un plan o una pregunta a medias, se le dice al servidor a quién avisar
+    /// cuando estén: el iPhone congela la app a los pocos segundos
+    func alSalir() {
+        js("window.FantasyApp && window.FantasyApp.__pon({ vista: false })")
+        Anuncios.yo.alPausar()
+        Empuje.yo.alSalir()
     }
 }

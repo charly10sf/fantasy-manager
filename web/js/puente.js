@@ -291,6 +291,8 @@ export const nativo = {
   preguntaAcabada: (ok, resumen) => llamar('preguntaAcabada', !!ok, String(resumen || '')),
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada (el iPhone no las deja): la web no las ofrece ni las promete
+  hayFondo: () => !!(N && typeof N.programarFondo === 'function'),
   fondoTerminado: () => llamar('fondoTerminado'),
   // preguntar con la voz: en la app, el dictado de Google; en el navegador, el reconocimiento de voz de Chrome si lo hay
   voz: () => llamar('voz'),

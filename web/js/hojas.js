@@ -929,7 +929,9 @@ function filasHorasPlan(S, pApp) {
   // (0.7.13n) la de cada liga: 10 minutos después de que se refresque SU mercado
   const d1 = def ? `${def[0]}, 10 min después de que se refresque el mercado de tu liga` : '10 min después de que se refresque el mercado de tu liga';
   const d2 = def ? `${def[1]}, 12 h después` : '12 h después del primero';
-  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después';
+  // (25 nov) en la app de iOS no hay pasadas con la app cerrada: salen a su hora con la app abierta y, si no, al abrirla
+  const sinFondo = enApp && !nativo.hayFondo();
+  const sub = !c.on ? 'Apagado: solo cuando lo pidas' : `${hs.length === 2 ? `A las ${hs[0].txt} y a las ${hs[1].txt}${pApp ? ' · cuentan en los del día' : ''}` : 'Al refrescarse el mercado de tu liga y 12 h después'}${sinFondo ? ' · con la app cerrada, al abrirla' : ''}`;
   let h = fila('Planes que salen solos', sub, interr(c.on, 'planesHora', '', 'Planes que salen solos'), 'plan automatico hora horas');
   if (c.on) {
     h += fila('Primer plan', `Por defecto, ${d1}`, selA('planH1', [['', def ? `${def[0]} (mercado)` : 'Con el mercado'], ...OPC_HORA], c.h1 || '', 'Hora del primer plan'), 'plan hora');
@@ -1061,8 +1063,9 @@ export function ajustes(S) {
       if (ca.mias) c2 += fila('De cuáles', 'Baratas: menos de 1,6 veces su valor', selA('miasCuales', [['baratas', 'Las baratas'], ['todas', 'Todas']], ca.miasTodas ? 'todas' : 'baratas', 'De cuáles de tus cláusulas'), 'mis clausulas todas', 'sub');
       c2 += tipo('mercado', 'Cambio de mercado', '', 'mercado pujas ofertas');
       // (41) lo que pasa al cambiar el mercado: con la app cerrada, cuando trabaja sola (Ajustes → La IA)
-      c2 += tipo('pujas', 'Pujas que ganas o pierdes', 'Al cambiar el mercado', 'mercado pujas ganada perdida', false);
-      c2 += tipo('enMercado', 'Te interesan y salen al mercado', 'Tus favoritos y los de interés alto', 'mercado favoritos interes sale venta', false);
+      // (25 nov) en la app de iOS no hay pasadas con la app cerrada: se miran al abrirla
+      c2 += tipo('pujas', 'Pujas que ganas o pierdes', nativo.hayFondo() ? 'Al cambiar el mercado' : 'Al abrir la app tras el cambio de mercado', 'mercado pujas ganada perdida', false);
+      c2 += tipo('enMercado', 'Te interesan y salen al mercado', nativo.hayFondo() ? 'Tus favoritos y los de interés alto' : 'Tus favoritos y los de interés alto, al abrir la app', 'mercado favoritos interes sale venta', false);
       c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
       c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
       // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo
@@ -1091,7 +1094,7 @@ export function ajustes(S) {
   const qApp = preguntasApp(enDemo()), qc = preguntasCfg(), cuQ = qApp ? cupoPreguntas() : null;
   if (qApp) c3 += fila('Preguntas a la IA', `${qc.gratis} al día, sin clave${topConAnuncio() ? `; ${qc.porAnuncio} más por anuncio, hasta ${qc.max}` : ''}${cuQ ? ` · ${cuQ.ilimitado ? 'sin límite' : cuQ.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuQ.quedan} hoy`}` : ''}`, '', 'preguntas chat ia app');
   c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : qApp ? 'Sin clave (no hace falta): de reserva si la IA de la app falla' : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
-  if (enApp && !enDemo()) {
+  if (enApp && !enDemo() && nativo.hayFondo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
     c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h, al cambiar el mercado y a la hora de tus planes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
@@ -1737,7 +1740,7 @@ export function textoDiagnostico(S) {
     ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p ?? x.tok.entra ?? '?'} entran, ${x.tok.th ?? 0} pensando, ${x.tok.r ?? x.tok.sale ?? '?'} escritos)` : ''}` : `✗ ${x.s} ${ia.t(x.e)}`}${x.google ? ` «${ia.t(x.google)}»` : ''} ${x.ms}ms`),
     (() => {
       const uf = ultimoFondo(), nf = nativo.estadoFondo() || {};
-      return `Segundo plano: ${cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;
+      return `Segundo plano: ${!nativo.hayFondo() ? 'no lo hay en esta app' : cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;
     })(),
     ...((ultimoFondo() || {}).ia || []).map((x) => `  [fondo] ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''} ${x.ok ? 'OK' : `✗ ${x.s} ${ia.t(x.e)}`} ${x.ms}ms`),
     '',

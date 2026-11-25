@@ -230,13 +230,19 @@ export function preguntasCfg() {
     «graciaMin» ya solo lo leen las webs de antes del 20 nov); maxDia: cuántos al día; trasBonificado: minutos sin intersticial después de un bonificado; bloque:
     el id del bloque de AdMob (si la app no lo lleva puesto; Android solo acepta los de la cuenta de Carlos); suLiga: si
     también a los de sus ligas («ligas»). Sin «intersticial» (o con «on»: false), ninguno */
+/** el bloque de anuncios de limites.json, si la app no lo lleva puesto: en la app de iOS, «bloqueIos» (los bloques de
+    AdMob son distintos en cada plataforma); en la de Google Play, «bloque», como siempre */
+function bloqueDe(p) {
+  const b = p && (enApp && nativo.canal() === 'ios' ? p.bloqueIos : p.bloque);
+  return typeof b === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(b) ? b : '';
+}
 export function intersticialCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.intersticial) || null;
   const n = (x, d, min, max) => { const v = Number(x); return Number.isFinite(v) ? Math.max(min, Math.min(max, v)) : d; };
   return {
     on: !!(p && p.on), sesion: n(p && p.sesionMin, 1, 0, 30) * 60e3, cada: n(p && p.cadaMin, 7, 3, 240) * 60e3,
     maxDia: Math.floor(n(p && p.maxDia, 5, 0, 20)), trasBonificado: n(p && p.trasBonificadoMin, 3, 0, 60) * 60e3,
-    bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '', suLiga: !!(p && p.suLiga),
+    bloque: bloqueDe(p), suLiga: !!(p && p.suLiga),
     // (para que Carlos los vea en su móvil, que está como dispositivo de prueba en AdMob: le salen «de prueba»)
     dueno: !!(p && p.dueno),
   };
@@ -245,7 +251,7 @@ export function intersticialCfg() {
     Android lo enseña solo en los primeros segundos). «apertura» de limites.json: on y bloque (si la app no lo lleva) */
 export function aperturaCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.apertura) || null;
-  return { on: !!(p && p.on), bloque: p && typeof p.bloque === 'string' && /^ca-app-pub-\d{16}\/\d{10}$/.test(p.bloque) ? p.bloque : '' };
+  return { on: !!(p && p.on), bloque: bloqueDe(p) };
 }
 let yoB = null, demoB = false;
 /** ¿a esta cuenta se le enseñan intersticiales? Al dueño no (salvo «dueno», para probarlos); a los de sus ligas, solo con «suLiga» */

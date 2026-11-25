@@ -1,5 +1,6 @@
 #if DEBUG
 import UIKit
+import UserNotifications
 import WebKit
 
 /// Solo en las compilaciones de prueba (Debug), y solo si la app se abre con «-fmPrueba 1» (lo hace
@@ -8,7 +9,11 @@ import WebKit
 /// Como nadie tiene un iPhone para mirar, la app cuenta por dentro cómo está y la prueba lo lee: una etiqueta invisible
 /// («fm-sonda») con un JSON que se rehace cada segundo: lo que ve la página (si hay puente, la pestaña abierta, si hay
 /// errores pintados), lo que se comprobó al cargar (sitio seguro, crypto.subtle, módulos, fetch, localStorage,
-/// IndexedDB y lo que quedaba guardado de la apertura anterior) y lo de la parte nativa (el llavero, la entrada, AlDia).
+/// IndexedDB y lo que quedaba guardado de la apertura anterior) y lo de la parte nativa (el llavero, la entrada, AlDia,
+/// los avisos, los anuncios y el aviso del servidor).
+/// Con «-fmHaz <cosa>» la app hace además, ella sola, lo que la prueba no puede hacer desde fuera (llamar al puente):
+/// «avisos» (pide el permiso, programa una lista larga y pone un aviso), «pregunta» (una pregunta a la IA en marcha que
+/// acaba con la app fuera de la vista), «anuncio» (un bonificado), «inter» (un intersticial) y «apertura» (el de apertura).
 extension Principal {
     private var dePrueba: Bool { UserDefaults.standard.bool(forKey: "fmPrueba") }
 
@@ -21,6 +26,7 @@ extension Principal {
             Origenes.sinHttps = true
         }
         montarSonda()
+        Empuje.yo.tokenDePrueba()
         return direccion + "?prueba=1"
     }
 
@@ -59,13 +65,23 @@ extension Principal {
           errores: document.querySelectorAll('.error-c').length, entrar: !!q('[data-accion="entrar"]'),
           noVuelto: !!q('#pantNoVuelto'), forzar: !!q('#forzar'), hoja: !!S.hoja,
           version: (window.FantasyApp && window.FantasyApp.nombreVersion()) || '', web: window.FantasyApp ? JSON.parse(window.FantasyApp.web()) : null,
-          sesion: !!(window.FantasyApp && window.FantasyApp.leer('sesion')), s: window.__sonda || null
+          sesion: !!(window.FantasyApp && window.FantasyApp.leer('sesion')), s: window.__sonda || null,
+          hash: location.hash, haz: window.__haz || null, permitidos: !!(window.FantasyApp && window.FantasyApp.avisosPermitidos && window.FantasyApp.avisosPermitidos()),
+          vista: !!(window.FantasyApp && window.FantasyApp.aLaVista && window.FantasyApp.aLaVista()), hayAlarma: !!(window.FantasyApp && window.FantasyApp.probarAlarma)
         });
       } catch (e) { return JSON.stringify({ error: String(e) }); }
     })()
     """
 
     private func mirar() {
+        // cuántos avisos tiene programados el iPhone (los de la lista de la web y todos)
+        UNUserNotificationCenter.current().getPendingNotificationRequests { [weak self] r in
+            let lista = r.filter { $0.identifier.hasPrefix("av:") }.count, todos = r.count
+            DispatchQueue.main.async {
+                self?.sondaNativa["avisosLista"] = lista
+                self?.sondaNativa["avisosTodos"] = todos
+            }
+        }
         web.evaluateJavaScript(Principal.mirada) { [weak self] r, error in
             guard let self, let l = self.sonda else { return }
             var j: [String: Any] = [:]
@@ -78,6 +94,9 @@ extension Principal {
             nativa["loginSitio"] = self.entrada.ultimaAbierta
             nativa["nativo"] = AlDia.nativo
             nativa["compilacion"] = AlDia.compilacion
+            nativa["anuncios"] = Anuncios.yo.estado()
+            nativa["empuje"] = Empuje.yo.estado()
+            nativa["avisos"] = Avisos.yo.permitidos
             j["n"] = nativa
             if let d = try? JSONSerialization.data(withJSONObject: j, options: [.sortedKeys]), let t = String(data: d, encoding: .utf8) {
                 l.text = t
@@ -123,8 +142,65 @@ extension Principal {
     return JSON.stringify(r);
     """
 
+    /// lo que la app hace sola en cada prueba («-fmHaz»), una vez por página y cuando la web ya ha arrancado
+    private static let hacer = """
+    (function (QUE) {
+      if (window.__haz || !window.FantasyApp) return;
+      var H = window.__haz = { que: QUE, pasos: [] }, F = window.FantasyApp;
+      var paso = function (t) { H.pasos.push(t); };
+      var cuando = function (cond, f, cada) { var i = setInterval(function () { try { if (cond()) { clearInterval(i); f(); } } catch (e) { clearInterval(i); paso('error: ' + e); } }, cada || 500); };
+      var lista = function () { return !!window.S && typeof window.alVolver === 'function'; };
+      if (QUE === 'avisos') cuando(lista, function () {
+        F.pedirPermisoAvisos(); paso('permiso pedido');
+        cuando(function () { return F.avisosPermitidos(); }, function () {
+          var a = Date.now(), l = [];
+          for (var i = 0; i < 70; i++) l.push({ id: 'p' + i, t: a + 3600e3 + i * 600e3, titulo: 'Aviso ' + i, texto: 'de prueba', hash: 'mercado' });
+          l.push({ id: 'diario', t: a + 1800e3, titulo: 'Tu liga hoy', texto: 'de prueba', hash: '', cada: 86400e3 });
+          l.push({ id: 'pasado', t: a - 60e3, titulo: 'Ya pasó', texto: 'no sale', hash: '' });
+          l.push({ id: 'clausulazo', t: a + 7200e3, titulo: 'Clausulazo en 1 minuto', texto: 'Pedri, 74,2 M', hash: 'rivales', alarma: true });
+          F.programarAvisos(JSON.stringify(l)); paso('lista puesta');
+          F.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'mercado'); paso('aviso puesto');
+        });
+      });
+      if (QUE === 'alarma') cuando(lista, function () {
+        if (!F.probarAlarma) { paso('sin alarma'); return; }
+        F.probarAlarma(6, 'Así suena la alarma del clausulazo', 'Te llega 1 minuto antes de que se abra la cláusula que manda tu plan.'); paso('alarma puesta');
+      });
+      if (QUE === 'pregunta') cuando(lista, function () {
+        F.trabajando(true, 'prueba'); F.preguntaEnMarcha('pregsim00001', 'sesion-de-prueba-0123456789abcdef'); paso('en marcha');
+        cuando(function () { return !F.aLaVista(); }, function () {
+          paso('fuera');
+          setTimeout(function () { F.preguntaAcabada(true, 'Vende a Pedri: está en su pico.'); F.trabajando(false); paso('acabada'); }, 2500);
+        }, 300);
+      });
+      if (QUE === 'anuncio') cuando(lista, function () {
+        window.anuncioVisto = function (p, v, m) { H.anuncio = { para: p, visto: v, motivo: m }; };
+        var n = 0, pedir = function () { n++; H.anuncio = null; F.verAnuncio('prueba'); paso('pedido ' + n); };
+        pedir();
+        // (si AdMob aún no había arrancado contesta que no hay anuncio: se pide otra vez, hasta 8)
+        setInterval(function () { if (H.anuncio && !H.anuncio.visto && H.anuncio.motivo !== 'cerrado antes de tiempo' && n < 8) pedir(); }, 5000);
+      });
+      if (QUE === 'inter') cuando(lista, function () {
+        window.intersticialVisto = function (ok, m) { H.inter = { ok: ok, motivo: m }; };
+        var n = 0, i = setInterval(function () {
+          if ((H.inter && H.inter.ok) || n++ > 25) { clearInterval(i); return; }
+          F.zonaAnuncios(true, '', true); F.intersticial('');
+        }, 3000);
+        paso('pidiendo');
+      });
+      if (QUE === 'apertura') cuando(lista, function () {
+        window.aperturaVista = function (ok, m) { H.apertura = { ok: ok, motivo: m }; };
+        // (unos segundos después de cargar, como cuando acaba de cargar la liga)
+        setTimeout(function () { F.zonaAnuncios(true, '', true); F.aperturaAnuncios(true, ''); paso('le toca'); }, 9000);
+      });
+    })
+    """
+
     func alCargarPruebas() {
         guard dePrueba else { return }
+        if let que = UserDefaults.standard.string(forKey: "fmHaz"), !que.isEmpty {
+            web.evaluateJavaScript("\(Principal.hacer)(\(Principal.cadena(que)))", completionHandler: nil)
+        }
         web.callAsyncJavaScript(Principal.comprobar, arguments: [:], in: nil, in: .page) { [weak self] r in
             if case .failure(let e) = r { self?.sondaNativa["comprobarFallo"] = "\(e)" }
         }

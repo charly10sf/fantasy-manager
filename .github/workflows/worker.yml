@@ -171,3 +171,30 @@ jobs:
             echo "::error::No se ha podido guardar CLAUDE_PLANES en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi
+      # (25 nov, la app de iOS) Las claves para los avisos push de Apple (APNs): con ellas el Worker avisa al iPhone de que
+      # el plan o la respuesta de la IA están listos cuando se ha salido de la app (worker/src/push.js). Las crea Carlos en
+      # developer.apple.com (Keys, con «Apple Push Notifications service») y las pone en GitHub como secretos de Actions:
+      # APNS_KEY_P8 (el texto entero del archivo .p8), APNS_KEY_ID y APNS_TEAM_ID. Se copian al Worker en cada
+      # publicación; sin ellas no se toca nada (y sin claves el Worker no manda avisos: lo demás sigue igual). Los valores
+      # nunca salen en el log.
+      - name: Claves de los avisos del iPhone
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          APNS_KEY_P8: ${{ secrets.APNS_KEY_P8 }}
+          APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
+          APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
+        run: |
+          if [ -z "$APNS_KEY_P8" ] || [ -z "$APNS_KEY_ID" ] || [ -z "$APNS_TEAM_ID" ]; then
+            echo "::notice::Sin los secretos APNS_KEY_P8, APNS_KEY_ID y APNS_TEAM_ID: la app de iOS no recibe avisos del servidor (lo demás, igual)"
+            exit 0
+          fi
+          for nombre in APNS_KEY_P8 APNS_KEY_ID APNS_TEAM_ID; do
+            if ! printf '%s' "${!nombre}" | npx --yes wrangler@4.158.0 secret put "$nombre" > salida.txt 2>&1; then
+              echo "::error::No se ha podido guardar $nombre en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+              exit 1
+            fi
+          done
+          echo "::notice::Claves de los avisos del iPhone listas"
