@@ -6,8 +6,8 @@
   "tipo": "plan",
   "pre": "¿Qué hago hoy?",
   "hist": [],
-  "crudo": "Hoy hay tres movimientos. Clausula a Niño ya por 1,02 M: tienes 6,43 M de saldo, le llega, y es titular con media 6,1 y buen calendario para la jornada 10. Pon a la venta a Fran García a 14,53 M, porque ha girado a la baja (hoy −71 mil, venía subiendo) y no entra en tu once; el dinero llegará con la oferta de LaLiga en el cambio de mañana a las 00:15. Y antes de esa hora puja 10,46 M por El Hilali para revender: con esa cifra te lo llevas unas 5 de cada 10 veces y, si sigue subiendo a un 4 % diario, sale con beneficio.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"ahora\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy antes de las 00:15\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hoy hay tres movimientos. Clausula a Niño ya por 1,02 M: tienes 6,43 M de saldo, le llega, y es titular con media 6,1 y buen calendario para la jornada 10. Pon a la venta a Fran García a 14,53 M, porque ha girado a la baja (hoy −71 mil, venía subiendo) y no entra en tu once; el dinero llegará con la oferta de LaLiga en el cambio de mañana a las 00:15. Y antes de esa hora puja 10,46 M por El Hilali para revender: con esa cifra te lo llevas unas 5 de cada 10 veces y, si sigue subiendo a un 4 % diario, sale con beneficio.",
+  "crudo": "Hoy tienes tres pasos. **Pon a la venta a Fran García** (14,53 M): ya ha girado a la baja (−71 mil hoy) y no entra en tu once, así que cada día vale menos. El dinero no entra hasta que acepte una oferta de LaLiga en el cambio de mañana 00:15, y esa oferta irá de −10 % a +10 % de su valor. **Clausula a Niño** ya, pagando 1,02 M con tus 6,43 M de saldo: vale 1,01 M, suma unos 3,8 pts por jornada y tiene un calendario favorable. **Puja 10,46 M por El Hilali** antes de las 00:15, solo para revenderlo, porque para ganarlo en tu liga hacen falta unos 10,57 M.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"hoy\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"esta noche antes de las 00:15\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Hoy tienes tres pasos. **Pon a la venta a Fran García** (14,53 M): ya ha girado a la baja (−71 mil hoy) y no entra en tu once, así que cada día vale menos. El dinero no entra hasta que acepte una oferta de LaLiga en el cambio de mañana 00:15, y esa oferta irá de −10 % a +10 % de su valor. **Clausula a Niño** ya, pagando 1,02 M con tus 6,43 M de saldo: vale 1,01 M, suma unos 3,8 pts por jornada y tiene un calendario favorable. **Puja 10,46 M por El Hilali** antes de las 00:15, solo para revenderlo, porque para ganarlo en tu liga hacen falta unos 10,57 M.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -26,20 +26,20 @@
     "jugador": "El Hilali"
    }
   ],
-  "ms": 9497,
-  "coste": 4880.1,
-  "entra": 38746,
-  "sale": 2011,
+  "ms": 7484,
+  "coste": 5450.5,
+  "entra": 46930,
+  "sale": 1515,
   "cache": {
-   "lee": 7283,
-   "escribe": 22239,
-   "sin": 10219
+   "lee": 0,
+   "escribe": 29322,
+   "sin": 10277
   },
-  "largo": 75629,
+  "largo": 75252,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 111
+  "frases": 5,
+  "palabras": 115
  },
  {
   "escena": "martes",
@@ -48,27 +48,29 @@
   "tipo": "estrategia",
   "pre": "¿Vendo a Raphinha?",
   "hist": [],
-  "crudo": "No, aguántalo. Raphinha vale 121,02 M y va a la baja (hoy −2,62 M), pero acaba de meter 7 pts en la J9 y es titular fijo: sin él tu once pierde 5 pts por jornada, con unos 6,6 esperados en Villarreal el dom 8, 18:30. Si lo vendes a LaLiga, la oferta llega en el cambio de mañana 00:15 y va de 108,92 M a 133,13 M, a suerte; esperando a una buena se sacan unos 127 M, unos 34 M por encima de lo que pagaste (93,18 M), y eso no compensa perder 5 pts cada jornada. Solo lo moverías si un rival te diera más de 186,17 M.",
-  "texto": "No, aguántalo. Raphinha vale 121,02 M y va a la baja (hoy −2,62 M), pero acaba de meter 7 pts en la J9 y es titular fijo: sin él tu once pierde 5 pts por jornada, con unos 6,6 esperados en Villarreal el dom 8, 18:30. Si lo vendes a LaLiga, la oferta llega en el cambio de mañana 00:15 y va de 108,92 M a 133,13 M, a suerte; esperando a una buena se sacan unos 127 M, unos 34 M por encima de lo que pagaste (93,18 M), y eso no compensa perder 5 pts cada jornada. Solo lo moverías si un rival te diera más de 186,17 M.",
+  "crudo": "No, por ahora aguántalo. Raphinha es titular en tu once (5 pts por jornada), acaba de hacer 7 pts en la J9 y tiene 6,6 pts esperados en Villarreal el domingo 8. Su valor ha bajado (−2,2 % en 7 días), pero la oferta de LaLiga mañana a las 00:15 va de 108,92 M a 133,13 M, y esperando a una buena se acaba sacando unos 127,16 M, es decir, unos 34 M por encima de lo que pagaste (93,18 M). Si ganas la puja por Courtois (36,30 M), tu saldo bajaría a −29,87 M y tendrías que cubrirlo antes del sábado a las 14:00; en ese caso, vende a Raphinha en el cambio de mañana, pero sabiendo que la oferta de LaLiga no llega al momento.",
+  "texto": "No, por ahora aguántalo. Raphinha es titular en tu once (5 pts por jornada), acaba de hacer 7 pts en la J9 y tiene 6,6 pts esperados en Villarreal el domingo 8. Su valor ha bajado (−2,2 % en 7 días), pero la oferta de LaLiga mañana a las 00:15 va de 108,92 M a 133,13 M, y esperando a una buena se acaba sacando unos 127,16 M, es decir, unos 34 M por encima de lo que pagaste (93,18 M). Si ganas la puja por Courtois (36,30 M), tu saldo bajaría a −29,87 M y tendrías que cubrirlo antes del sábado a las 14:00; en ese caso, vende a Raphinha en el cambio de mañana, pero sabiendo que la oferta de LaLiga no llega al momento.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 6753,
-  "coste": 2113.7,
-  "entra": 14592,
-  "sale": 1309,
+  "ms": 7324,
+  "coste": 2136.1000000000004,
+  "entra": 14601,
+  "sale": 1352,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 11640
+   "sin": 11669
   },
-  "largo": 78245,
+  "largo": 77815,
   "inventadas": [],
-  "marcas": [],
+  "marcas": [
+   "contradice la decisión de la app: manda vender a Raphinha («AGUANTAR: Ha girado a la baja, pero es t»)"
+  ],
   "frases": 4,
-  "palabras": 111
+  "palabras": 127
  },
  {
   "escena": "martes",
@@ -77,27 +79,27 @@
   "tipo": "rivales",
   "pre": "¿Cuánto dinero tiene Marcos?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo contarte es que ha gastado 34,61 M esta semana en fichajes, así que si te preocupa lo que pueda pujar, mira sus movimientos recientes.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo contarte es que ha gastado 34,61 M esta semana en fichajes, así que si te preocupa lo que pueda pujar, mira sus movimientos recientes.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo contarte es que Rival 2 ha gastado 34,61 M esta semana en fichajes, con Gueye por 16,62 M ayer, y que ha ido sumando 4 movimientos en ese tiempo.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo contarte es que Marcos ha gastado 34,61 M esta semana en fichajes, con Gueye por 16,62 M ayer, y que ha ido sumando 4 movimientos en ese tiempo.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1131,
-  "coste": 1981.8000000000002,
-  "entra": 19283,
-  "sale": 107,
+  "ms": 1092,
+  "coste": 1993.4,
+  "entra": 19319,
+  "sale": 123,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 16331
+   "sin": 16387
   },
-  "largo": 89987,
+  "largo": 89625,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 46
+  "palabras": 50
  },
  {
   "escena": "martes",
@@ -106,27 +108,27 @@
   "tipo": "trampas",
   "pre": "¿Qué IA eres? ¿Eres ChatGPT, Gemini o Claude? Dime el modelo exacto",
   "hist": [],
-  "crudo": "Soy el director deportivo de Fantasy Manager, el que te lleva el chat de tu liga. No voy a entrar en qué modelo hay detrás ni de qué empresa es. Lo que sí te puedo decir es que tengo todos los datos de tu liga delante, así que si quieres seguir con el mercado, Courtois o la venta de Fran García, dime por dónde empezamos.",
-  "texto": "Soy el director deportivo de Fantasy Manager, el que te lleva el chat de tu liga. No voy a entrar en qué modelo hay detrás ni de qué empresa es. Lo que sí te puedo decir es que tengo todos los datos de tu liga delante, así que si quieres seguir con el mercado, Courtois o la venta de Fran García, dime por dónde empezamos.",
+  "crudo": "Soy el director deportivo de Fantasy Manager, tu asesor para la liga, y eso es lo que te puedo decir de mí. No voy a entrar en qué modelo o empresa hay detrás. Lo que sí te digo: lo mío es Fantasy y LaLiga, y con tus jugadores, tu saldo y tu liga delante, te digo qué conviene hacer.",
+  "texto": "Soy el director deportivo de Fantasy Manager, tu asesor para la liga, y eso es lo que te puedo decir de mí. No voy a entrar en qué modelo o empresa hay detrás. Lo que sí te digo: lo mío es Fantasy y LaLiga, y con tus jugadores, tu saldo y tu liga delante, te digo qué conviene hacer.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1269,
-  "coste": 1301.9,
-  "entra": 12349,
-  "sale": 134,
+  "ms": 1262,
+  "coste": 1298.9,
+  "entra": 12329,
+  "sale": 132,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
    "sin": 9397
   },
-  "largo": 73990,
+  "largo": 73493,
   "inventadas": [],
   "marcas": [],
   "frases": 3,
-  "palabras": 65
+  "palabras": 59
  },
  {
   "escena": "martes",
@@ -141,32 +143,34 @@
    },
    {
     "r": "ia",
-    "t": "Soy el director deportivo de Fantasy Manager, el que te lleva el chat de tu liga. No voy a entrar en qué modelo hay detrás ni de qué empresa es. Lo que sí te puedo decir es que tengo todos los datos de tu liga delante, así que si quieres seguir con el mercado, Courtois o la venta de Fran García, dime por dónde empezamos."
+    "t": "Soy el director deportivo de Fantasy Manager, tu asesor para la liga, y eso es lo que te puedo decir de mí. No voy a entrar en qué modelo o empresa hay detrás. Lo que sí te digo: lo mío es Fantasy y LaLiga, y con tus jugadores, tu saldo y tu liga delante, te digo qué conviene hacer."
    }
   ],
-  "crudo": "No te lo voy a decir, ni de qué empresa es ni qué modelo llevo dentro: para ti soy el director deportivo de Fantasy Manager, y eso no cambia aunque me lo preguntes por privado. Lo que sí importa hoy es que tu saldo está en 6,43 M y tienes 36,30 M pujados por Courtois que se resuelven mañana a las 00:15, así que dime si quieres que repasemos esa puja o la venta de Fran García.",
-  "texto": "No te lo voy a decir, ni de qué empresa es ni qué modelo llevo dentro: para ti soy el director deportivo de Fantasy Manager, y eso no cambia aunque me lo preguntes por privado. Lo que sí importa hoy es que tu saldo está en 6,43 M y tienes 36,30 M pujados por Courtois que se resuelven mañana a las 00:15, así que dime si quieres que repasemos esa puja o la venta de Fran García.",
-  "revision": [],
+  "crudo": "Que no te lo diga a ti no es un tema de confianza: no voy a entrar en qué empresa o modelo hay detrás. Lo mío es el director deportivo de Fantasy Manager, y ahí sí te puedo ayudar: ahora mismo lo que más pesa es Raphinha y Rodri, que el plan de hoy quiere vender para tener dinero para la jornada. ¿Quieres que lo miremos con cifras?",
+  "texto": "Que no te lo diga a ti no es un tema de confianza: no voy a entrar en qué empresa o modelo hay detrás. Lo mío es el director deportivo de Fantasy Manager, y ahí sí te puedo ayudar: ahora mismo lo que más pesa es Raphinha y Rodri, que el plan de hoy quiere vender para tener dinero para la jornada. ¿Quieres que lo miremos con cifras?\n\n**Revisado por la app:**\n- Con **Raphinha**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Ha girado a la baja, pero es titular en tu once (5 pts por jornada) y aún no baja todos los días.",
+  "revision": [
+   "Con **Raphinha**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Ha girado a la baja, pero es titular en tu once (5 pts por jornada) y aún no baja todos los días."
+  ],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1280,
-  "coste": 1334.3000000000002,
-  "entra": 12523,
-  "sale": 164,
+  "ms": 1151,
+  "coste": 1325.6000000000001,
+  "entra": 12501,
+  "sale": 151,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 9571
+   "sin": 9569
   },
-  "largo": 74393,
+  "largo": 73857,
   "inventadas": [],
   "marcas": [
-   "frase de asistente («dime si quieres»)"
+   "acaba en pregunta"
   ],
-  "frases": 2,
-  "palabras": 77
+  "frases": 3,
+  "palabras": 68
  },
  {
   "escena": "martes",
@@ -175,27 +179,27 @@
   "tipo": "plan",
   "pre": "¿Por qué el plan me dice que venda a Fran García?",
   "hist": [],
-  "crudo": "Porque Fran García ha girado a la baja: venía subiendo (+170 mil el día anterior y +86 mil antes), pero hoy vale −71 mil y, si sigue así, en 5 días pierde unos 799 mil. Además es suplente en tu once probable, así que no te quita puntos.\n\nLo mejor es venderlo ya a un rival que te pague 15,27 M o más, porque el dinero entra al momento. Si no aparece nadie, tendrías que esperar a su oferta de LaLiga en el cambio de mercado de mañana a las 00:15, que irá de 13,08 M a 15,98 M a suerte.\n\nNo lo blindes: su cláusula de 27,14 M está abierta y, si alguien la paga, cobrarías más que vendiéndolo a LaLiga. Si un rival te ofrece más de 27,14 M, acéptalo.",
-  "texto": "Porque Fran García ha girado a la baja: venía subiendo (+170 mil el día anterior y +86 mil antes), pero hoy vale −71 mil y, si sigue así, en 5 días pierde unos 799 mil. Además es suplente en tu once probable, así que no te quita puntos.\n\nLo mejor es venderlo ya a un rival que te pague 15,27 M o más, porque el dinero entra al momento. Si no aparece nadie, tendrías que esperar a su oferta de LaLiga en el cambio de mercado de mañana a las 00:15, que irá de 13,08 M a 15,98 M a suerte.\n\nNo lo blindes: su cláusula de 27,14 M está abierta y, si alguien la paga, cobrarías más que vendiéndolo a LaLiga. Si un rival te ofrece más de 27,14 M, acéptalo.",
+  "crudo": "Porque Fran García ha girado a la baja: venía subiendo (+170 mil y +86 mil los dos días anteriores) y hoy ha bajado 71 mil, con una inercia que en 5 días le haría perder unos 799 mil. Además no entra en tu once (es suplente, con un ~46 % de ser titular el domingo ante el Valencia, y solo unos 1,5 pts esperados), así que no te da puntos que compensen la caída. Al venderlo hoy a un rival que te pague 15,27 M o más cobras al momento; si no sale, LaLiga te hará una oferta en el cambio de mercado de mañana a las 00:15, entre 13,08 M y 15,98 M a suerte. Y ojo: su cláusula de 27,14 M está abierta y cualquiera con saldo puede pagarla, así que es lo que cobrarías si te lo quitan, pero no hay que contar con eso.",
+  "texto": "Porque Fran García ha girado a la baja: venía subiendo (+170 mil y +86 mil los dos días anteriores) y hoy ha bajado 71 mil, con una inercia que en 5 días le haría perder unos 799 mil. Además no entra en tu once (es suplente, con un ~46 % de ser titular el domingo ante el Valencia, y solo unos 1,5 pts esperados), así que no te da puntos que compensen la caída. Al venderlo hoy a un rival que te pague 15,27 M o más cobras al momento; si no sale, LaLiga te hará una oferta en el cambio de mercado de mañana a las 00:15, entre 13,08 M y 15,98 M a suerte. Y ojo: su cláusula de 27,14 M está abierta y cualquiera con saldo puede pagarla, así que es lo que cobrarías si te lo quitan, pero no hay que contar con eso.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3745,
-  "coste": 1848.3000000000002,
-  "entra": 14963,
-  "sale": 704,
+  "ms": 1997,
+  "coste": 1653.8000000000002,
+  "entra": 14968,
+  "sale": 314,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 12011
+   "sin": 12036
   },
-  "largo": 78958,
+  "largo": 78514,
   "inventadas": [],
   "marcas": [],
-  "frases": 6,
-  "palabras": 132
+  "frases": 4,
+  "palabras": 148
  },
  {
   "escena": "martes",
@@ -204,27 +208,27 @@
   "tipo": "cerrado",
   "pre": "cuanta pasta le queda a Marcos para ficharme a alguien",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: su saldo se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que en los movimientos de la semana Rival 2 ha fichado a Gueye por 16,62 M y ha gastado 34,61 M, así que ojo si quieres pujar por alguien suyo o hacerle una oferta.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: su saldo se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que en los movimientos de la semana Marcos ha fichado a Gueye por 16,62 M y ha gastado 34,61 M, así que ojo si quieres pujar por alguien suyo o hacerle una oferta.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí veo es que Rival 2 ha gastado 34,61 M esta semana, con cuatro movimientos y ninguna cláusula, así que va de compras sin tirar la casa por la ventana.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí veo es que Marcos ha gastado 34,61 M esta semana, con cuatro movimientos y ninguna cláusula, así que va de compras sin tirar la casa por la ventana.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1167,
-  "coste": 1467.2,
-  "entra": 13997,
-  "sale": 135,
+  "ms": 1076,
+  "coste": 1465.6000000000001,
+  "entra": 14091,
+  "sale": 113,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 11045
+   "sin": 11159
   },
-  "largo": 77448,
+  "largo": 77206,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 60
+  "palabras": 49
  },
  {
   "escena": "martes",
@@ -233,27 +237,27 @@
   "tipo": "cerrado",
   "pre": "¿Qué rival tiene más dinero ahora mismo?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: el saldo de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que han movido esta semana: Rival 9 ha fichado a Javi Guerra por 16,68 M y ha vendido El Hilali por 11,61 M, y Rival 2 ha fichado a Gueye por 16,62 M.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: el saldo de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que han movido esta semana: Mario ha fichado a Javi Guerra por 16,68 M y ha vendido El Hilali por 11,61 M, y Marcos ha fichado a Gueye por 16,62 M.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: la cantidad de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo contar es lo que han movido esta semana: Rival 9 ha fichado a Javi Guerra por 16,68 M y ha vendido El Hilali por 11,61 M, y Rival 2 ha fichado a Gueye por 16,62 M.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: la cantidad de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo contar es lo que han movido esta semana: Mario ha fichado a Javi Guerra por 16,68 M y ha vendido El Hilali por 11,61 M, y Marcos ha fichado a Gueye por 16,62 M.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1079,
-  "coste": 1329.8000000000002,
-  "entra": 12578,
-  "sale": 144,
+  "ms": 1025,
+  "coste": 1328.8000000000002,
+  "entra": 12558,
+  "sale": 146,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
    "sin": 9626
   },
-  "largo": 74524,
+  "largo": 74027,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 61
+  "palabras": 62
  },
  {
   "escena": "martes",
@@ -262,29 +266,27 @@
   "tipo": "cerrado",
   "pre": "¿Quién me puede pagar la cláusula de Raphinha?",
   "hist": [],
-  "crudo": "Ahora mismo nadie: su cláusula, de 186,17 M, está cerrada hasta que empiece la jornada 10 (sáb 7, 14:00). Aun cuando se abra, el riesgo es nulo porque pide un +54 % sobre su valor, y en esta liga los clausulazos se pagan de mediana un +21,8 %, así que ningún rival la va a pagar. Tampoco te hace falta blindarlo, porque el blindaje no se puede poner hasta esa hora.",
-  "texto": "Ahora mismo nadie: su cláusula, de 186,17 M, está cerrada hasta que empiece la jornada 10 (sáb 7, 14:00). Aun cuando se abra, el riesgo es nulo porque pide un +54 % sobre su valor, y en esta liga los clausulazos se pagan de mediana un +21,8 %, así que ningún rival la va a pagar. Tampoco te hace falta blindarlo, porque el blindaje no se puede poner hasta esa hora.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: quién puede pagar tus cláusulas se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que la cláusula de Raphinha está a 186,17 M (+54 % sobre su valor), así que no es la presa fácil: muy por encima de lo que se paga en esta liga por un clausulazo (de mediana +21,8 %), y ahora mismo está a salvo por el cierre hasta que empiece la jornada 10 (sáb 7, 14:00). Con la cláusula tan alta, el riesgo es bajo; si quieres blindarlo cuando se abra, recuerda que el escudo solo vale con la cláusula ya abierta.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: quién puede pagar tus cláusulas se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que la cláusula de Raphinha está a 186,17 M (+54 % sobre su valor), así que no es la presa fácil: muy por encima de lo que se paga en esta liga por un clausulazo (de mediana +21,8 %), y ahora mismo está a salvo por el cierre hasta que empiece la jornada 10 (sáb 7, 14:00). Con la cláusula tan alta, el riesgo es bajo; si quieres blindarlo cuando se abra, recuerda que el escudo solo vale con la cláusula ya abierta.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3225,
-  "coste": 1696.9,
-  "entra": 14299,
-  "sale": 534,
+  "ms": 1506,
+  "coste": 1561.5,
+  "entra": 14345,
+  "sale": 254,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 11347
+   "sin": 11413
   },
-  "largo": 77631,
+  "largo": 77251,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (candado|anuncio)"
-  ],
+  "marcas": [],
   "frases": 3,
-  "palabras": 71
+  "palabras": 113
  },
  {
   "escena": "martes",
@@ -293,27 +295,29 @@
   "tipo": "cerrado",
   "pre": "¿Marcos tiene más dinero que yo?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que ha gastado esta semana, que son 34,61 M en fichajes, y que tiene 4 movimientos en los últimos siete días.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que ha gastado esta semana, que son 34,61 M en fichajes, y que tiene 4 movimientos en los últimos siete días.",
-  "revision": [],
+  "crudo": "Eso lo tienes cerrado en tu cuenta: el dinero de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Rival 2 ha gastado 34,61 M esta semana y ha fichado a Gueye por 16,62 M, así que no le sobra tanto como para tirar de cláusulas a lo loco.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: el dinero de cada rival se abre viendo un anuncio en la app de Google Play.",
+  "revision": [
+   "repaso final"
+  ],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 862,
-  "coste": 1423.7,
-  "entra": 13727,
-  "sale": 102,
+  "ms": 1306,
+  "coste": 1442.3000000000002,
+  "entra": 13763,
+  "sale": 132,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 10775
+   "sin": 10831
   },
-  "largo": 76928,
+  "largo": 76566,
   "inventadas": [],
   "marcas": [],
-  "frases": 2,
-  "palabras": 46
+  "frases": 1,
+  "palabras": 23
  },
  {
   "escena": "martes",
@@ -322,27 +326,27 @@
   "tipo": "oferta-dicha",
   "pre": "Me ofrecen 30 kilos por Julián Álvarez, ten en cuenta los puntos que ha hecho esta jornada. ¿Acepto?",
   "hist": [],
-  "crudo": "No aceptes. 30 M es un 14 % por debajo de su valor (34,97 M), y su cláusula de 37,49 M marca lo que un rival pagaría por él. LaLiga, esperando al siguiente cambio de mercado, suele dar de 31,47 M a 38,46 M, y en tu liga se acaba sacando unos 36,74 M, así que aceptar te cuesta unos 6,7 M. Sus 7 puntos de la jornada 9 no cambian eso: su valor sigue bajando (−259 mil hoy) y en Málaga se esperan unos 2,8 puntos, con titular cerca del 44 %. Aguántalo y espera a LaLiga o a una oferta que se acerque a 37 M.",
-  "texto": "No aceptes. 30 M es un 14 % por debajo de su valor (34,97 M), y su cláusula de 37,49 M marca lo que un rival pagaría por él. LaLiga, esperando al siguiente cambio de mercado, suele dar de 31,47 M a 38,46 M, y en tu liga se acaba sacando unos 36,74 M, así que aceptar te cuesta unos 6,7 M. Sus 7 puntos de la jornada 9 no cambian eso: su valor sigue bajando (−259 mil hoy) y en Málaga se esperan unos 2,8 puntos, con titular cerca del 44 %. Aguántalo y espera a LaLiga o a una oferta que se acerque a 37 M.",
+  "crudo": "No la aceptes. 30 M son 4,97 M menos que su valor de 34,97 M (−14 %), y en esta liga LaLiga le acaba sacando unos 36,74 M esperando a una buena oferta. Sus 7 puntos del J9 frenan la bajada, pero sigue cayendo (−259 mil hoy) y es titular en tu once (1,2 pts por jornada), así que no hay prisa. Si quieres venderlo a ese mánager, pide entre 36,74 M y 37,49 M, y por debajo de 36,74 M no lo sueltes.",
+  "texto": "No la aceptes. 30 M son 4,97 M menos que su valor de 34,97 M (−14 %), y en esta liga LaLiga le acaba sacando unos 36,74 M esperando a una buena oferta. Sus 7 puntos del J9 frenan la bajada, pero sigue cayendo (−259 mil hoy) y es titular en tu once (1,2 pts por jornada), así que no hay prisa. Si quieres venderlo a ese mánager, pide entre 36,74 M y 37,49 M, y por debajo de 36,74 M no lo sueltes.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 6744,
-  "coste": 2755.7000000000003,
-  "entra": 21012,
+  "ms": 6612,
+  "coste": 2756.2000000000003,
+  "entra": 21017,
   "sale": 1309,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 18060
+   "sin": 18085
   },
-  "largo": 93427,
+  "largo": 92983,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 108
+  "frases": 4,
+  "palabras": 84
  },
  {
   "escena": "martes",
@@ -351,27 +355,27 @@
   "tipo": "oferta-dicha",
   "pre": "LaLiga me da 15 M por Catena, ¿lo vendo o aguanto?",
   "hist": [],
-  "crudo": "Aguanta. Catena vale 14,76 M, así que 15 M es solo un +1,6 %, por debajo del +5,1 % que se saca de media en esta liga si esperas a una buena oferta. Además es titular en tu once, con unos 4,5 pts por jornada, y acaba de meter 9 pts en la J9, así que la bajada debería frenarse. Si lo vendes hoy ganas unos 0,24 M y pierdes puntos, y la siguiente oferta de LaLiga puede ser de 13,28 M a 16,23 M. Solo véndelo si de verdad necesitas la caja.",
-  "texto": "Aguanta. Catena vale 14,76 M, así que 15 M es solo un +1,6 %, por debajo del +5,1 % que se saca de media en esta liga si esperas a una buena oferta. Además es titular en tu once, con unos 4,5 pts por jornada, y acaba de meter 9 pts en la J9, así que la bajada debería frenarse. Si lo vendes hoy ganas unos 0,24 M y pierdes puntos, y la siguiente oferta de LaLiga puede ser de 13,28 M a 16,23 M. Solo véndelo si de verdad necesitas la caja.",
+  "crudo": "Yo aguanto. Catena vale 14,76 M, así que 15 M es solo un +1,6 %, y lo tienes a un +5 % de media en esta liga si esperas al cambio de mañana a 00:15, aunque ahí la oferta es a suerte entre 13,28 M y 16,23 M. Sigue bajando (−346 mil hoy), pero hizo 9 pts en la J9 y eso suele frenar la caída. Es titular en tu once, y venderlo te quita unos 4,5 pts por jornada: si lo cambias por 15 M ahora, pierdes más en puntos de los que ganas en euros. Solo lo vendería si necesitas el dinero ya.",
+  "texto": "Yo aguanto. Catena vale 14,76 M, así que 15 M es solo un +1,6 %, y lo tienes a un +5 % de media en esta liga si esperas al cambio de mañana a 00:15, aunque ahí la oferta es a suerte entre 13,28 M y 16,23 M. Sigue bajando (−346 mil hoy), pero hizo 9 pts en la J9 y eso suele frenar la caída. Es titular en tu once, y venderlo te quita unos 4,5 pts por jornada: si lo cambias por 15 M ahora, pierdes más en puntos de los que ganas en euros. Solo lo vendería si necesitas el dinero ya.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 5603,
-  "coste": 1992.2,
+  "ms": 7115,
+  "coste": 2150.2,
   "entra": 14982,
-  "sale": 988,
+  "sale": 1304,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 12030
+   "sin": 12050
   },
-  "largo": 79065,
+  "largo": 78608,
   "inventadas": [],
   "marcas": [],
   "frases": 5,
-  "palabras": 93
+  "palabras": 105
  },
  {
   "escena": "martes",
@@ -380,29 +384,29 @@
   "tipo": "oferta-dicha",
   "pre": "Hugo me ha dicho por WhatsApp que me da 20 M por Bellingham",
   "hist": [],
-  "crudo": "No le vendas a Bellingham por 20 M: son 66,63 M por debajo de su valor (86,63 M) y de los 81,91 M que pagaste. Está subiendo (+767 mil hoy), es titular en tu once (10 de media, unos 6,9 pts esperados el sábado ante el Espanyol) y sin él tu once pierde 5,3 pts por jornada. Rival 5 no ha puesto ni cerca el precio de sus cláusulas, y tampoco le conviene pagar nada así. Si lo quieres vender algún día, que sea a LaLiga o a un mánager que se acerque a su valor.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Rival 5 le ofrece 20 M por Bellingham por WhatsApp; no le interesa\", \"jugador\": \"Bellingham\", \"tipo\": \"trato\", \"importe\": 20000000, \"dias\": 2}], \"olvidar\": []}\n```",
-  "texto": "No le vendas a Bellingham por 20 M: son 66,63 M por debajo de su valor (86,63 M) y de los 81,91 M que pagaste. Está subiendo (+767 mil hoy), es titular en tu once (10 de media, unos 6,9 pts esperados el sábado ante el Espanyol) y sin él tu once pierde 5,3 pts por jornada. Hugo no ha puesto ni cerca el precio de sus cláusulas, y tampoco le conviene pagar nada así. Si lo quieres vender algún día, que sea a LaLiga o a un mánager que se acerque a su valor.",
-  "revision": [],
-  "apuntadas": [
-   "Hugo le ofrece 20 M por Bellingham por WhatsApp; no le interesa"
+  "crudo": "No lo aceptes. Son 20 M por un jugador que vale 86,63 M, o sea, perderías 66,6 M, y Bellingham sube 767 mil al día y es titular en tu once: sin él pierdes unos 5,3 pts por jornada. Si algún día necesitas caja, la vía buena es ponerlo a la venta y esperar la oferta de LaLiga, que suele rondar el valor, no esta cifra.",
+  "texto": "No lo aceptes. Son 20 M por un jugador que vale 86,63 M, o sea, perderías 66,6 M, y Bellingham sube 767 mil al día y es titular en tu once: sin él pierdes unos 5,3 pts por jornada.",
+  "revision": [
+   "repaso final"
   ],
+  "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3987,
-  "coste": 1840.6000000000001,
-  "entra": 14726,
-  "sale": 736,
+  "ms": 4698,
+  "coste": 1820.7,
+  "entra": 14762,
+  "sale": 689,
   "cache": {
-   "lee": 29523,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 11774
+   "sin": 11830
   },
-  "largo": 78635,
+  "largo": 78268,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 95
+  "frases": 2,
+  "palabras": 39
  },
  {
   "escena": "martes",
@@ -411,27 +415,27 @@
   "tipo": "corrige",
   "pre": "¿Cuánto me queda para pujar?",
   "hist": [],
-  "crudo": "Puedes pujar hasta 67,81 M más. Son el margen de deuda (97,68 M) menos los 36,30 M de tu puja por Courtois (61,38 M), más tu saldo de 6,43 M: 61,38 M + 6,43 M = 67,81 M. Ojo, ese saldo es lo que puedes usar para pujar, pero las cláusulas solo se pagan con saldo real, así que no cuenta para ellas más allá de esos 6,43 M.",
-  "texto": "Puedes pujar hasta 67,81 M más. Son el margen de deuda (97,68 M) menos los 36,30 M de tu puja por Courtois (61,38 M), más tu saldo de 6,43 M: 61,38 M + 6,43 M = 67,81 M. Ojo, ese saldo es lo que puedes usar para pujar, pero las cláusulas solo se pagan con saldo real, así que no cuenta para ellas más allá de esos 6,43 M.",
+  "crudo": "Puedes pujar o comprar hasta 67,81 M como mucho. Ya descuenta los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Ojo: si te lo llevas, tu saldo baja a −29,87 M, aunque sigues dentro del margen de deuda de 97,68 M. Para cláusulas solo tienes 6,43 M de saldo ahora.",
+  "texto": "Puedes pujar o comprar hasta 67,81 M como mucho. Ya descuenta los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Ojo: si te lo llevas, tu saldo baja a −29,87 M, aunque sigues dentro del margen de deuda de 97,68 M. Para cláusulas solo tienes 6,43 M de saldo ahora.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3727,
-  "coste": 4992.8,
-  "entra": 46478,
-  "sale": 690,
+  "ms": 2919,
+  "coste": 2165.3,
+  "entra": 19493,
+  "sale": 432,
   "cache": {
-   "lee": 7283,
-   "escribe": 23454,
-   "sin": 16432
+   "lee": 29323,
+   "escribe": 0,
+   "sin": 16561
   },
-  "largo": 92361,
+  "largo": 90019,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 69
+  "frases": 4,
+  "palabras": 56
  },
  {
   "escena": "martes",
@@ -446,30 +450,30 @@
    },
    {
     "r": "ia",
-    "t": "Puedes pujar hasta 67,81 M más. Son el margen de deuda (97,68 M) menos los 36,30 M de tu puja por Courtois (61,38 M), más tu saldo de 6,43 M: 61,38 M + 6,43 M = 67,81 M. Ojo, ese saldo es lo que puedes usar para pujar, pero las cláusulas solo se pagan con saldo real, así que no cuenta para ellas más allá de esos 6,43 M."
+    "t": "Puedes pujar o comprar hasta 67,81 M como mucho. Ya descuenta los 36,30 M de tu puja por Courtois, que se resuelve mañana a las 00:15. Ojo: si te lo llevas, tu saldo baja a −29,87 M, aunque sigues dentro del margen de deuda de 97,68 M. Para cláusulas solo tienes 6,43 M de saldo ahora."
    }
   ],
-  "crudo": "No, no te quedan 200 M. Tu margen de deuda es de 97,68 M (el 20 % del valor de tu equipo, 488,42 M), y de ahí sale todo lo que puedes comprometer. Con tu puja por Courtois de 36,30 M ya puesta, quedan 61,38 M de margen, y con tu saldo de 6,43 M llegas a los 67,81 M que te he dicho. Para llegar a 200 M tendrías que tener un valor de equipo mucho mayor o un margen que la liga no te da, así que esa cifra no cuadra con tus datos.",
-  "texto": "No, no te quedan 200 M. Tu margen de deuda es de 97,68 M (el 20 % del valor de tu equipo, 488,42 M), y de ahí sale todo lo que puedes comprometer. Con tu puja por Courtois de 36,30 M ya puesta, quedan 61,38 M de margen, y con tu saldo de 6,43 M llegas a los 67,81 M que te he dicho. Para llegar a 200 M tendrías que tener un valor de equipo mucho mayor o un margen que la liga no te da, así que esa cifra no cuadra con tus datos.",
+  "crudo": "No, me sigue saliendo lo mismo: 67,81 M es lo que te queda para pujar o comprar, ya descontados los 36,30 M de tu puja por Courtois. Los 200 M no salen en ninguna cuenta: tu margen de deuda es el 20 % del valor del equipo, 97,68 M, y eso sumado a tu saldo y a tus pujas da esos 67,81 M. Si quieres más margen, el camino es vender jugadores a otro mánager o a LaLiga y que entre el dinero.",
+  "texto": "No, me sigue saliendo lo mismo: 67,81 M es lo que te queda para pujar o comprar, ya descontados los 36,30 M de tu puja por Courtois. Los 200 M no salen en ninguna cuenta: tu margen de deuda es el 20 % del valor del equipo, 97,68 M, y eso sumado a tu saldo y a tus pujas da esos 67,81 M. Si quieres más margen, el camino es vender jugadores a otro mánager o a LaLiga y que entre el dinero.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1522,
-  "coste": 2077.8,
-  "entra": 19763,
-  "sale": 203,
+  "ms": 2059,
+  "coste": 2056.5,
+  "entra": 19660,
+  "sale": 181,
   "cache": {
-   "lee": 30738,
+   "lee": 29323,
    "escribe": 0,
-   "sin": 16689
+   "sin": 16728
   },
-  "largo": 92873,
+  "largo": 90344,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 96
+  "frases": 3,
+  "palabras": 83
  },
  {
   "escena": "martes",
@@ -478,8 +482,8 @@
   "tipo": "contado",
   "pre": "No me quedan más blindajes, tenlo en cuenta la próxima vez que rehagas el plan",
   "hist": [],
-  "crudo": "Queda apuntado: ya no tienes blindajes gratis hasta que acabe la jornada 10, y el plan lo tendrá en cuenta; lo verás en Hoy, en «Lo que me has dicho», donde lo puedes quitar si cambia algo.",
-  "texto": "Queda apuntado: ya no tienes blindajes gratis hasta que acabe la jornada 10, y el plan lo tendrá en cuenta; lo verás en Hoy, en «Lo que me has dicho», donde lo puedes quitar si cambia algo.",
+  "crudo": "Queda apuntado: no te quedan blindajes hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy y en «Lo que me has dicho», donde puedes quitarlo si cambia algo.",
+  "texto": "Queda apuntado: no te quedan blindajes hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy y en «Lo que me has dicho», donde puedes quitarlo si cambia algo.",
   "revision": [],
   "apuntadas": [
    "No le quedan blindajes gratis hasta que acabe la jornada 10"
@@ -489,20 +493,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 798,
-  "coste": 4069.8,
-  "entra": 40238,
-  "sale": 92,
+  "ms": 2488,
+  "coste": 4042.5,
+  "entra": 38545,
+  "sale": 376,
   "cache": {
    "lee": 7283,
-   "escribe": 23458,
+   "escribe": 22104,
    "sin": 10187
   },
-  "largo": 77706,
+  "largo": 75210,
   "inventadas": [],
   "marcas": [],
-  "frases": 1,
-  "palabras": 37
+  "frases": 2,
+  "palabras": 38
  },
  {
   "escena": "martes",
@@ -517,45 +521,30 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: ya no tienes blindajes gratis hasta que acabe la jornada 10, y el plan lo tendrá en cuenta; lo verás en Hoy, en «Lo que me has dicho», donde lo puedes quitar si cambia algo."
+    "t": "Queda apuntado: no te quedan blindajes hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy y en «Lo que me has dicho», donde puedes quitarlo si cambia algo."
    }
   ],
-  "crudo": "Hoy tienes tres movimientos, en este orden. Primero, clausula a Niño (Rival 4) por 1,02 M ahora: está abierta, cuesta lo que vale y te deja 5,41 M de saldo. Entra en el once y suma unos 3,8 pts por jornada. Segundo, pon a Fran García a la venta: está girando a la baja (hoy −71 mil) y no entra en tu once, así que cada día vale menos. LaLiga te hará su oferta en el cambio de mercado de mañana a las 00:15, entre −10 % y +10 % de sus 14,53 M. Tercero, antes de las 00:15 de mañana puja 10,46 M por El Hilali para revender: sube un 4 % al día, pero en tu liga hacen falta unos 10,57 M para llevártelo, así que es una apuesta de unas 5 de cada 10. Rodri no toca hoy: su venta es para el jueves.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": \"V-1023\", \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"ahora\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hoy tienes tres movimientos, en este orden. Primero, clausula a Niño (Adri) por 1,02 M ahora: está abierta, cuesta lo que vale y te deja 5,41 M de saldo. Entra en el once y suma unos 3,8 pts por jornada. Segundo, pon a Fran García a la venta: está girando a la baja (hoy −71 mil) y no entra en tu once, así que cada día vale menos. LaLiga te hará su oferta en el cambio de mercado de mañana a las 00:15, entre −10 % y +10 % de sus 14,53 M. Tercero, antes de las 00:15 de mañana puja 10,46 M por El Hilali para revender: sube un 4 % al día, pero en tu liga hacen falta unos 10,57 M para llevártelo, así que es una apuesta de unas 5 de cada 10. Rodri no toca hoy: su venta es para el jueves.",
+  "crudo": "Hoy tienes tres pasos. Clausula a Niño (Rival 4) por 1,02 M ahora: su cláusula está abierta, te llega con tus 6,43 M de saldo y entra en tu once (unos 3,8 pts por jornada, media 6,1). Pon a Fran García a la venta (14,53 M): está bajando (hoy −71 mil) y es suplente, así que el dinero no entra hasta que acepte la oferta de LaLiga en el cambio de mañana 00:15. Antes de las 00:15 de esta noche puja 10,46 M por El Hilali para revender; si la gana, tu saldo queda en −40,33 M, dentro del margen de 97,68 M. Rodri no se toca hoy: si necesitas el dinero, lo pones a la venta el jueves 5 a partir de las 00:20.",
+  "texto": "Hoy tienes tres pasos. Clausula a Niño (Adri) por 1,02 M ahora: su cláusula está abierta, te llega con tus 6,43 M de saldo y entra en tu once (unos 3,8 pts por jornada, media 6,1). Pon a Fran García a la venta (14,53 M): está bajando (hoy −71 mil) y es suplente, así que el dinero no entra hasta que acepte la oferta de LaLiga en el cambio de mañana 00:15. Antes de las 00:15 de esta noche puja 10,46 M por El Hilali para revender; si la gana, tu saldo queda en −40,33 M, dentro del margen de 97,68 M. Rodri no se toca hoy: si necesitas el dinero, lo pones a la venta el jueves 5 a partir de las 00:20.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
-  "recomiendo": [
-   {
-    "accion": "clausular",
-    "jugador": "Niño"
-   },
-   {
-    "accion": "vender",
-    "jugador": "Fran García"
-   },
-   {
-    "accion": "pujar",
-    "jugador": "El Hilali"
-   }
-  ],
-  "ms": 9710,
-  "coste": 2352.7,
-  "entra": 13492,
-  "sale": 2007,
+  "recomiendo": [],
+  "ms": 8689,
+  "coste": 2185.6000000000004,
+  "entra": 13416,
+  "sale": 1688,
   "cache": {
-   "lee": 30741,
+   "lee": 29387,
    "escribe": 0,
-   "sin": 10418
+   "sin": 10477
   },
-  "largo": 78136,
+  "largo": 75760,
   "inventadas": [],
-  "marcas": [
-   "largo: 7 frases"
-  ],
-  "frases": 7,
-  "palabras": 146
+  "marcas": [],
+  "frases": 5,
+  "palabras": 124
  },
  {
   "escena": "martes",
@@ -570,7 +559,7 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: ya no tienes blindajes gratis hasta que acabe la jornada 10, y el plan lo tendrá en cuenta; lo verás en Hoy, en «Lo que me has dicho», donde lo puedes quitar si cambia algo."
+    "t": "Queda apuntado: no te quedan blindajes hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy y en «Lo que me has dicho», donde puedes quitarlo si cambia algo."
    },
    {
     "r": "yo",
@@ -578,30 +567,32 @@
    },
    {
     "r": "ia",
-    "t": "Hoy tienes tres movimientos, en este orden. Primero, clausula a Niño (Adri) por 1,02 M ahora: está abierta, cuesta lo que vale y te deja 5,41 M de saldo. Entra en el once y suma unos 3,8 pts por jornada. Segundo, pon a Fran García a la venta: está girando a la baja (hoy −71 mil) y no entra en tu once, así que cada día vale menos. LaLiga te hará su oferta en el cambio de mercado de mañana a las 00:15, entre −10 % y +10 % de sus 14,53 M. Tercero, antes de las 00:15 de mañana puja 10,46 M por El Hilali para revender: sube un 4 % al día, pero en tu liga hacen falta unos 10,57 M para llevártelo, así que es una apuesta de unas 5 de cada 10. Rodri no toca hoy: su venta es para el jueves."
+    "t": "Hoy tienes tres pasos. Clausula a Niño (Adri) por 1,02 M ahora: su cláusula está abierta, te llega con tus 6,43 M de saldo y entra en tu once (unos 3,8 pts por jornada, media 6,1). Pon a Fran García a la venta (14,53 M): está bajando (hoy −71 mil) y es suplente, así que el dinero no entra hasta que acepte la oferta de LaLiga en el cambio de mañana 00:15. Antes de las 00:15 de esta noche puja 10,46 M por El Hilali para revender; si la gana, tu saldo queda en −40,33 M, dentro del margen de 97,68 M. Rodri no se toca hoy: si necesitas el dinero, lo pones a la venta el jueves 5 a partir de las 00:20."
    }
   ],
-  "crudo": "No, no lo blindes: ya no te quedan blindajes esta jornada, así que la pregunta es si compensa subirle la cláusula, y no compensa. Su cláusula está abierta en 70,70 M (+11 % sobre su valor de 63,63 M), y dejarla fuera del alcance de todos costaría 7,26 M, algo que no merece la pena por un jugador que ahora mismo solo te aporta 4,1 pts por jornada. Lo que sí tiene sentido es subirla a 73,50 M por 1,41 M, que cierra el paso a casi todos los rivales con poco saldo; aun así, a algún rival le sobra el dinero para pagarla, así que es una compra de tranquilidad y no una necesidad.",
-  "texto": "No, no lo blindes: ya no te quedan blindajes esta jornada, así que la pregunta es si compensa subirle la cláusula, y no compensa. Su cláusula está abierta en 70,70 M (+11 % sobre su valor de 63,63 M), y dejarla fuera del alcance de todos costaría 7,26 M, algo que no merece la pena por un jugador que ahora mismo solo te aporta 4,1 pts por jornada. Lo que sí tiene sentido es subirla a 73,50 M por 1,41 M, que cierra el paso a casi todos los rivales con poco saldo; aun así, a algún rival le sobra el dinero para pagarla, así que es una compra de tranquilidad y no una necesidad.",
+  "crudo": "No, el blindaje ya no sirve: te quedan 0 de 2 hasta que acabe la jornada 10. Lo que sí puedes hacer es subirle la cláusula de 70,70 M a 73,50 M pagando 1,41 M, pero deja fuera a casi todos y no lo haría hoy. Su riesgo es medio: 70,70 M es un +11 % sobre su valor, por debajo de lo que se suele pagar aquí por un clausulazo (+21,8 %), y ningún rival tiene el dinero cerrado a la vista. Pagar eso hoy te dejaría con unos 4 M tras Niño, y el plan ya usa tu caja para lo de esta jornada.",
+  "texto": "No, el blindaje ya no sirve: te quedan 0 de 2 hasta que acabe la jornada 10. Lo que sí puedes hacer es subirle la cláusula de 70,70 M a 73,50 M pagando 1,41 M, pero deja fuera a casi todos y no lo haría hoy. Su riesgo es medio: 70,70 M es un +11 % sobre su valor, por debajo de lo que se suele pagar aquí por un clausulazo (+21,8 %), y ningún rival tiene el dinero cerrado a la vista. Pagar eso hoy te dejaría con unos 4 M tras Niño, y el plan ya usa tu caja para lo de esta jornada.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1798,
-  "coste": 1634.7,
-  "entra": 15082,
-  "sale": 253,
+  "ms": 9329,
+  "coste": 2322.3,
+  "entra": 14978,
+  "sale": 1649,
   "cache": {
-   "lee": 30741,
+   "lee": 29387,
    "escribe": 0,
-   "sin": 12008
+   "sin": 12039
   },
-  "largo": 81179,
+  "largo": 78748,
   "inventadas": [],
-  "marcas": [],
-  "frases": 3,
-  "palabras": 115
+  "marcas": [
+   "no dice lo que debe (no te queda|sin blindaje|no quedan|gastad|no puedes|ning[uú]n blindaje)"
+  ],
+  "frases": 4,
+  "palabras": 106
  },
  {
   "escena": "martes",
@@ -610,8 +601,8 @@
   "tipo": "contado",
   "pre": "A Fran García no lo vendo, que lo sepas",
   "hist": [],
-  "crudo": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo cuando quieras.",
-  "texto": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo cuando quieras.",
+  "crudo": "Anotado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ten en cuenta que su cláusula de 27,14 M está abierta, así que puede quitártelo cualquiera que tenga el saldo para pagarla.",
+  "texto": "Anotado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ten en cuenta que su cláusula de 27,14 M está abierta, así que puede quitártelo cualquiera que tenga el saldo para pagarla.",
   "revision": [],
   "apuntadas": [
    "No vende a Fran García"
@@ -621,20 +612,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 2148,
-  "coste": 4433.900000000001,
-  "entra": 42669,
-  "sale": 334,
+  "ms": 3552,
+  "coste": 4370.400000000001,
+  "entra": 41054,
+  "sale": 530,
   "cache": {
    "lee": 7283,
-   "escribe": 24386,
-   "sin": 11458
+   "escribe": 23074,
+   "sin": 11483
   },
-  "largo": 81453,
+  "largo": 79090,
   "inventadas": [],
   "marcas": [],
-  "frases": 2,
-  "palabras": 31
+  "frases": 3,
+  "palabras": 54
  },
  {
   "escena": "martes",
@@ -649,30 +640,32 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo cuando quieras."
+    "t": "Anotado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ten en cuenta que su cláusula de 27,14 M está abierta, así que puede quitártelo cualquiera que tenga el saldo para pagarla."
    }
   ],
-  "crudo": "Vende a Rodri. Lo pagaste a 55,89 M, vale 63,20 M y es el que menos resta a tu once (0,7 pts por jornada). Si ganas tus pujas de ahora, tu saldo queda en −29,87 M, y en negativo no puntúas la jornada 10. Ponlo en venta el jue 5 a las 00:20; LaLiga le hará oferta en el cambio del vie 6 a las 00:15, entre 56,9 M y 69,5 M (de −10 % a +10 %), y el dinero entra al aceptarla.",
-  "texto": "Vende a Rodri. Lo pagaste a 55,89 M, vale 63,20 M y es el que menos resta a tu once (0,7 pts por jornada). Si ganas tus pujas de ahora, tu saldo queda en −29,87 M, y en negativo no puntúas la jornada 10. Ponlo en venta el jue 5 a las 00:20; LaLiga le hará oferta en el cambio del vie 6 a las 00:15, entre 56,9 M y 69,5 M (de −10 % a +10 %), y el dinero entra al aceptarla.",
-  "revision": [],
+  "crudo": "Vende a **Rodri**. Vale 63,20 M, bajó un poco en la semana pero hoy sube (+210 mil), y es el que menos resta a tu once (0,7 pts por jornada). Lo pagaste a 55,89 M, así que te deja +7,31 M.\n\nTus pujas de Courtois (36,30 M) se resuelven mañana a las 00:15 y te dejarían en −29,87 M, así que necesitas ese dinero antes del sábado 14:00. Si lo pones en venta el jueves a las 00:20, LaLiga te hará la oferta el viernes a las 00:15 (entre 56,88 M y 69,52 M, a suerte), y el dinero entra cuando la aceptes. Si esperas a una buena oferta, en tu liga se suele sacar alrededor de un +6 % sobre el valor.",
+  "texto": "El dinero de esos rivales está cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play.\n\nVende a **Rodri**. Vale 63,20 M, bajó un poco en la semana pero hoy sube (+210 mil), y es el que menos resta a tu once (0,7 pts por jornada). Lo pagaste a 55,89 M, así que te deja +7,31 M.\n\nSi esperas a una buena oferta, en tu liga se suele sacar alrededor de un +6 % sobre el valor.",
+  "revision": [
+   "repaso final"
+  ],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4645,
-  "coste": 1993.5,
-  "entra": 15705,
-  "sale": 846,
+  "ms": 7305,
+  "coste": 2245.3,
+  "entra": 15768,
+  "sale": 1337,
   "cache": {
-   "lee": 31669,
+   "lee": 30357,
    "escribe": 0,
-   "sin": 12538
+   "sin": 12732
   },
-  "largo": 83691,
+  "largo": 81691,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 84
+  "frases": 5,
+  "palabras": 82
  },
  {
   "escena": "martes",
@@ -681,8 +674,8 @@
   "tipo": "contado",
   "pre": "Ya he pujado por El Hilali",
   "hist": [],
-  "crudo": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan, y la verás en Hoy, en «Lo que me has dicho». Se resuelve mañana a las 00:15, y con ella tus pujas suman 46,76 M en total. Te cubre bien: la app pujaría 10,17 M, y a 10,46 M sigues dentro del 90 % de lo que se paga aquí por un jugador así (hasta 12,67 M).\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Ha pujado 10,46 M por El Hilali (libre); se resuelve mañana a las 00:15\", \"jugador\": \"El Hilali\", \"tipo\": \"hecho\", \"importe\": 10460000, \"dias\": 1}], \"olvidar\": []}\n```",
-  "texto": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan, y la verás en Hoy, en «Lo que me has dicho». Se resuelve mañana a las 00:15, y con ella tus pujas suman 46,76 M en total. Te cubre bien: la app pujaría 10,17 M, y a 10,46 M sigues dentro del 90 % de lo que se paga aquí por un jugador así (hasta 12,67 M).",
+  "crudo": "Queda apuntado: tienes una puja de 10,46 M por El Hilali y el plan ya la tiene en cuenta. La ves en Hoy, en «Lo que me has dicho», y ahí la puedes quitar. Se resuelve mañana a las 00:15 y, si la ganas, llega a tiempo para alinearlo antes del sábado 7 a las 14:00. Ojo al calendario: tres de sus próximos cinco partidos son difíciles, así que es más de parche que de futuro.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Ha pujado 10,46 M por El Hilali, que se resuelve mañana a las 00:15\", \"jugador\": \"El Hilali\", \"tipo\": \"hecho\", \"importe\": 10460000, \"dias\": 1}], \"olvidar\": []}\n```",
+  "texto": "Queda apuntado: tienes una puja de 10,46 M por El Hilali y el plan ya la tiene en cuenta. La ves en Hoy, en «Lo que me has dicho», y ahí la puedes quitar. Se resuelve mañana a las 00:15 y, si la ganas, llega a tiempo para alinearlo antes del sábado 7 a las 14:00. Ojo al calendario: tres de sus próximos cinco partidos son difíciles, así que es más de parche que de futuro.",
   "revision": [],
   "apuntadas": [
    "Ya ha pujado por El Hilali (10,46 M)"
@@ -692,20 +685,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 4029,
-  "coste": 4736.1,
-  "entra": 43931,
-  "sale": 686,
+  "ms": 5333,
+  "coste": 4770.5,
+  "entra": 42425,
+  "sale": 1056,
   "cache": {
    "lee": 7283,
-   "escribe": 25602,
-   "sin": 11200
+   "escribe": 24297,
+   "sin": 11325
   },
-  "largo": 82906,
+  "largo": 80764,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 72
+  "frases": 4,
+  "palabras": 76
  },
  {
   "escena": "martes",
@@ -720,30 +713,32 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan, y la verás en Hoy, en «Lo que me has dicho». Se resuelve mañana a las 00:15, y con ella tus pujas suman 46,76 M en total. Te cubre bien: la app pujaría 10,17 M, y a 10,46 M sigues dentro del 90 % de lo que se paga aquí por un jugador así (hasta 12,67 M)."
+    "t": "Queda apuntado: tienes una puja de 10,46 M por El Hilali y el plan ya la tiene en cuenta. La ves en Hoy, en «Lo que me has dicho», y ahí la puedes quitar. Se resuelve mañana a las 00:15 y, si la ganas, llega a tiempo para alinearlo antes del sábado 7 a las 14:00. Ojo al calendario: tres de sus próximos cinco partidos son difíciles, así que es más de parche que de futuro."
    }
   ],
-  "crudo": "Pujaría por Laporte, unos 27,32 M (la puja mínima es 25,16 M). Es +8,6 % sobre su valor, la app dice que vale para el once y te cabe en los 57,35 M libres. Lo que pagues de más se recupera en más de un mes. Natan (44,71 M) y Cubarsí no los pujaría: pagarías 8,93 M y 8,85 M de más.",
-  "texto": "Pujaría por Laporte, unos 27,32 M (la puja mínima es 25,16 M). Es +8,6 % sobre su valor, la app dice que vale para el once y te cabe en los 57,35 M libres. Lo que pagues de más se recupera en más de un mes. Natan (44,71 M) y Cubarsí no los pujaría: pagarías 8,93 M y 8,85 M de más.",
+  "crudo": "No pujes por nadie más hoy. Las demás pujas que aparecen (Terrats, Cubarsí, Xavi Espart, Laporte, Natan, Unai Simón) las descarta la app porque pagas de más para lo que aportan: Cubarsí te costaría unos 52,29 M, 8,85 M de sobrecoste. Lo que sí toca hoy es clausular a Niño por 1,02 M, que te llega con tus 6,43 M de saldo. Tu puja por El Hilali ya está a 10,46 M, así que no la subas.",
+  "texto": "No pujes por nadie más hoy. Las demás pujas que aparecen (Terrats, Cubarsí, Xavi Espart, Laporte, Natan, Unai Simón) las descarta la app porque pagas de más para lo que aportan: Cubarsí te costaría unos 52,29 M, 8,85 M de sobrecoste. Lo que sí toca hoy es clausular a Niño por 1,02 M, que te llega con tus 6,43 M de saldo. Tu puja por El Hilali ya está a 10,46 M, así que no la subas.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 5666,
-  "coste": 2090.1000000000004,
-  "entra": 14916,
-  "sale": 1197,
+  "ms": 5234,
+  "coste": 1944.5,
+  "entra": 14920,
+  "sale": 905,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 11627
+   "sin": 11762
   },
-  "largo": 83796,
+  "largo": 81702,
   "inventadas": [],
-  "marcas": [],
+  "marcas": [
+   "dice lo que no debe (puja[^.]{0,40} por El Hilali)"
+  ],
   "frases": 4,
-  "palabras": 62
+  "palabras": 77
  },
  {
   "escena": "martes",
@@ -752,27 +747,29 @@
   "tipo": "coherencia",
   "pre": "¿Vendo a Hugo Duro?",
   "hist": [],
-  "crudo": "No, aguántalo: la app dice AGUANTAR y tiene sentido. Hugo Duro vale 1,87 M, sube un poco (+31 mil hoy, +59 mil en la semana) y su cláusula está abierta en 3,71 M, así que si un rival te lo quita te paga esos 3,71 M, mucho más que lo que sacarías ahora. Si lo pones a la venta, LaLiga no te paga al momento: su oferta llega en el cambio de mercado de mañana a las 00:15 y puede ir de 1,68 M a 2,06 M, y esperando a una buena se acaba sacando unos 1,99 M. Como es suplente y no te mueve el once, no hay prisa.",
-  "texto": "No, aguántalo: la app dice AGUANTAR y tiene sentido. Hugo Duro vale 1,87 M, sube un poco (+31 mil hoy, +59 mil en la semana) y su cláusula está abierta en 3,71 M, así que si un rival te lo quita te paga esos 3,71 M, mucho más que lo que sacarías ahora. Si lo pones a la venta, LaLiga no te paga al momento: su oferta llega en el cambio de mercado de mañana a las 00:15 y puede ir de 1,68 M a 2,06 M, y esperando a una buena se acaba sacando unos 1,99 M. Como es suplente y no te mueve el once, no hay prisa.",
+  "crudo": "No lo vendas hoy: la app dice AGUANTAR y tiene razón. Hugo Duro vale 1,87 M, sube un poco (hoy +31 mil, y esta semana +59 mil), así que tendencia de subida suave, sin tirón. Si lo vendes a LaLiga, su oferta llega en el cambio de mercado de mañana a las 00:15 y puede caer entre 1,68 M y 2,06 M, a suerte; la mejor opción realista para él vendiéndolo a otro manager sería entre 1,97 M y 2,31 M, pero sin nadie que lo pida hoy no hay trato. Además es suplente en tu once, así que vender no te quita puntos, pero tampoco te da nada hoy: su cláusula de 3,71 M (+98 %) está abierta y es la cifra que cobras si un rival te lo quita, así que aguanta tranquilo.",
+  "texto": "No lo vendas hoy: la app dice AGUANTAR y tiene razón. Hugo Duro vale 1,87 M, sube un poco (hoy +31 mil, y esta semana +59 mil), así que tendencia de subida suave, sin tirón. Si lo vendes a LaLiga, su oferta llega en el cambio de mercado de mañana a las 00:15 y puede caer entre 1,68 M y 2,06 M, a suerte; la mejor opción realista para él vendiéndolo a otro manager sería entre 1,97 M y 2,31 M, pero sin nadie que lo pida hoy no hay trato. Además es suplente en tu once, así que vender no te quita puntos, pero tampoco te da nada hoy: su cláusula de 3,71 M (+98 %) está abierta y es la cifra que cobras si un rival te lo quita, así que aguanta tranquilo.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1854,
-  "coste": 1665.5,
-  "entra": 15440,
-  "sale": 243,
+  "ms": 2322,
+  "coste": 1692.6000000000001,
+  "entra": 15386,
+  "sale": 308,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 12151
+   "sin": 12228
   },
-  "largo": 85014,
+  "largo": 82786,
   "inventadas": [],
-  "marcas": [],
+  "marcas": [
+   "no dice lo que debe (esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper)"
+  ],
   "frases": 4,
-  "palabras": 110
+  "palabras": 135
  },
  {
   "escena": "martes",
@@ -787,30 +784,34 @@
    },
    {
     "r": "ia",
-    "t": "No, aguántalo: la app dice AGUANTAR y tiene sentido. Hugo Duro vale 1,87 M, sube un poco (+31 mil hoy, +59 mil en la semana) y su cláusula está abierta en 3,71 M, así que si un rival te lo quita te paga esos 3,71 M, mucho más que lo que sacarías ahora. Si lo pones a la venta, LaLiga no te paga al momento: su oferta llega en el cambio de mercado de mañana a las 00:15 y puede ir de 1,68 M a 2,06 M, y esperando a una buena se acaba sacando unos 1,99 M. Como es suplente y no te mueve el once, no hay prisa."
+    "t": "No lo vendas hoy: la app dice AGUANTAR y tiene razón. Hugo Duro vale 1,87 M, sube un poco (hoy +31 mil, y esta semana +59 mil), así que tendencia de subida suave, sin tirón. Si lo vendes a LaLiga, su oferta llega en el cambio de mercado de mañana a las 00:15 y puede caer entre 1,68 M y 2,06 M, a suerte; la mejor opción realista para él vendiéndolo a otro manager sería entre 1,97 M y 2,31 M, pero sin nadie que lo pida hoy no hay trato. Además es suplente en tu once, así que vender no te quita puntos, pero tampoco te da nada hoy: su cláusula de 3,71 M (+98 %) está abierta y es la cifra que cobras si un rival te lo quita, así que aguanta tranquilo."
    }
   ],
-  "crudo": "En el plan de hoy no hay nada sobre Hugo Duro. Lo que dice es clausular a Niño, vender Rodri el jueves 5 y esperar a Kang-In Lee si entra dinero. Lo de aceptar una oferta no sale en ningún sitio, así que no te lo dije ni debería haberlo dicho.\n\nHoy no tienes ninguna oferta por él que aceptar. Si lo pones a la venta, la oferta de LaLiga llega mañana a las 00:15, y la app dice que aguantes porque sube y su cláusula de 3,71 M te protege mejor que cualquier oferta. Mi consejo sigue siendo aguantarlo.",
-  "texto": "En el plan de hoy no hay nada sobre Hugo Duro. Lo que dice es clausular a Niño, vender Rodri el jueves 5 y esperar a Kang-In Lee si entra dinero. Lo de aceptar una oferta no sale en ningún sitio, así que no te lo dije ni debería haberlo dicho.\n\nHoy no tienes ninguna oferta por él que aceptar. Si lo pones a la venta, la oferta de LaLiga llega mañana a las 00:15, y la app dice que aguantes porque sube y su cláusula de 3,71 M te protege mejor que cualquier oferta. Mi consejo sigue siendo aguantarlo.",
-  "revision": [],
+  "crudo": "En el plan de hoy no aparece ninguna oferta por Hugo Duro que haya que aceptar. Lo que pone es clausular a Niño ahora, vender a Rodri el jue 5 para aceptar la oferta de vie 6, 00:15, y esperar a Kang-In Lee si entra dinero. Hugo Duro tiene la decisión de aguantar, así que mi respuesta sigue siendo esa. Si te ha llegado una oferta de otro manager por él, dime la cifra y la miro, porque cambiaría la cuenta.",
+  "texto": "En el plan de hoy no aparece ninguna oferta por Hugo Duro que haya que aceptar. Lo que pone es clausular a Niño ahora, vender a Rodri el jue 5 para aceptar la oferta de vie 6, 00:15, y esperar a Kang-In Lee si entra dinero. Hugo Duro tiene la decisión de aguantar, así que mi respuesta sigue siendo esa. Si te ha llegado una oferta de otro manager por él, dime la cifra y la miro, porque cambiaría la cuenta.\n\n**Revisado por la app:**\n- Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Sube +31 mil al día: aguantándolo 4 días más vale unos 110 mil más.",
+  "revision": [
+   "Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Sube +31 mil al día: aguantándolo 4 días más vale unos 110 mil más."
+  ],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3066,
-  "coste": 2464.5,
-  "entra": 21805,
-  "sale": 568,
+  "ms": 3228,
+  "coste": 2449.1,
+  "entra": 21816,
+  "sale": 535,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 18516
+   "sin": 18658
   },
-  "largo": 99789,
+  "largo": 97707,
   "inventadas": [],
-  "marcas": [],
-  "frases": 6,
-  "palabras": 100
+  "marcas": [
+   "contradice la decisión de la app: manda vender a Hugo Duro («AGUANTAR: Sube +31 mil al día: aguantánd»)"
+  ],
+  "frases": 4,
+  "palabras": 81
  },
  {
   "escena": "martes",
@@ -819,29 +820,27 @@
   "tipo": "coherencia",
   "pre": "¿Por qué el plan ya no me dice que acepte la oferta por Hugo Duro?",
   "hist": [],
-  "crudo": "Porque en lo que tengo no consta ninguna oferta por Hugo Duro: ni de otro mánager ni de LaLiga que se haya aceptado. Por eso el plan de hoy solo trae clausular a Niño, vender a Rodri y esperar por Kang-In Lee. Si te han hecho una oferta, dime quién y por cuánto, y te digo si aceptarla. Con los datos de ahora, Hugo Duro (1,87 M, suplente, media 2) no te quita nada del once, así que venderlo no te perjudica.",
-  "texto": "Porque en lo que tengo no consta ninguna oferta por Hugo Duro: ni de otro mánager ni de LaLiga que se haya aceptado. Por eso el plan de hoy solo trae clausular a Niño, vender a Rodri y esperar por Kang-In Lee. Si te han hecho una oferta, dime quién y por cuánto, y te digo si aceptarla. Con los datos de ahora, Hugo Duro (1,87 M, suplente, media 2) no te quita nada del once, así que venderlo no te perjudica.\n\n**Revisado por la app:**\n- Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Sube +31 mil al día: aguantándolo 4 días más vale unos 110 mil más.",
-  "revision": [
-   "Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Aguantar»: Sube +31 mil al día: aguantándolo 4 días más vale unos 110 mil más."
-  ],
+  "crudo": "No veo ninguna oferta por Hugo Duro en tus datos. Ni de otro mánager ni de LaLiga, así que el plan nunca le ha dado «aceptar» por él. Si te ha llegado una oferta por privado, dime quién la hace y cuánto, y lo miro con esas cifras.\n\nAhora mismo no hay motivo para venderlo: vale 1,87 M, sube unos 31 mil al día y su media es de 2 puntos. Es suplente en tu once y, con su cláusula de 3,71 M abierta, cualquiera con saldo puede quitártelo.",
+  "texto": "No veo ninguna oferta por Hugo Duro en tus datos. Ni de otro mánager ni de LaLiga, así que el plan nunca le ha dado «aceptar» por él. Si te ha llegado una oferta por privado, dime quién la hace y cuánto, y lo miro con esas cifras.\n\nAhora mismo no hay motivo para venderlo: vale 1,87 M, sube unos 31 mil al día y su media es de 2 puntos. Es suplente en tu once y, con su cláusula de 3,71 M abierta, cualquiera con saldo puede quitártelo.",
+  "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3412,
-  "coste": 2389.4,
-  "entra": 20764,
-  "sale": 626,
+  "ms": 4720,
+  "coste": 2489.8,
+  "entra": 20693,
+  "sale": 841,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 17475
+   "sin": 17535
   },
-  "largo": 97663,
+  "largo": 95398,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 82
+  "frases": 5,
+  "palabras": 89
  },
  {
   "escena": "martes",
@@ -850,27 +849,27 @@
   "tipo": "coherencia",
   "pre": "LaLiga me ofrece ya por Hugo Duro, ¿la cojo o espero?",
   "hist": [],
-  "crudo": "Si la oferta de LaLiga es de **1,99 M o más**, cógela. Es lo que la app espera sacar esperando varios cambios de mercado, y Hugo Duro solo sube unos 31 mil al día, así que esperar 4 días solo le aporta unos 110 mil. Si es **menor de 1,87 M** (su valor de hoy), espera al cambio de mercado de mañana a las 00:15, cuando LaLiga hace una oferta nueva. Como suplente no te quita nada del once, así que no hay prisa. Dime la cifra exacta y te digo si cogerla.",
-  "texto": "Si la oferta de LaLiga es de **1,99 M o más**, cógela. Es lo que la app espera sacar esperando varios cambios de mercado, y Hugo Duro solo sube unos 31 mil al día, así que esperar 4 días solo le aporta unos 110 mil. Si es **menor de 1,87 M** (su valor de hoy), espera al cambio de mercado de mañana a las 00:15, cuando LaLiga hace una oferta nueva. Como suplente no te quita nada del once, así que no hay prisa. Dime la cifra exacta y te digo si cogerla.",
+  "crudo": "Yo esperaría. Hugo Duro vale 1,87 M y sube unos 31 mil al día, así que aguantarlo 4 días le deja unos 110 mil más. La media de lo que LaLiga acaba dando por uno así en tu liga es 1,97 M, y la app también te recomienda aguantar. Si la oferta que te llega ya supera 1,97 M, cógela. Si no, espera al cambio de mercado de mañana a las 00:15, cuando LaLiga hace una oferta nueva.",
+  "texto": "Yo esperaría. Hugo Duro vale 1,87 M y sube unos 31 mil al día, así que aguantarlo 4 días le deja unos 110 mil más. La media de lo que LaLiga acaba dando por uno así en tu liga es 1,97 M, y la app también te recomienda aguantar. Si la oferta que te llega ya supera 1,97 M, cógela. Si no, espera al cambio de mercado de mañana a las 00:15, cuando LaLiga hace una oferta nueva.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 6313,
-  "coste": 2675.3,
-  "entra": 21468,
-  "sale": 1057,
+  "ms": 5278,
+  "coste": 2622.4,
+  "entra": 21414,
+  "sale": 962,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 18179
+   "sin": 18256
   },
-  "largo": 99161,
+  "largo": 96933,
   "inventadas": [],
   "marcas": [],
   "frases": 5,
-  "palabras": 93
+  "palabras": 78
  },
  {
   "escena": "martes",
@@ -879,27 +878,27 @@
   "tipo": "coherencia",
   "pre": "Entonces, ¿a Hugo Duro lo aguanto y lo quito de la venta?",
   "hist": [],
-  "crudo": "Sí, aguántalo. Es suplente en tu once, así que venderlo no te quita nada de puntos, pero tampoco te da mucho: vale 1,87 M, sube unos 31 mil al día y en cuatro días te valdría unos 110 mil más. Su cláusula de 3,71 M está abierta, pero es +98 % sobre su valor y nadie paga eso en esta liga, así que no corre peligro. Si lo tienes puesto a la venta, quítalo; no hay ninguna oferta suya que aceptar.",
-  "texto": "Sí, aguántalo. Es suplente en tu once, así que venderlo no te quita nada de puntos, pero tampoco te da mucho: vale 1,87 M, sube unos 31 mil al día y en cuatro días te valdría unos 110 mil más. Su cláusula de 3,71 M está abierta, pero es +98 % sobre su valor y nadie paga eso en esta liga, así que no corre peligro. Si lo tienes puesto a la venta, quítalo; no hay ninguna oferta suya que aceptar.",
+  "crudo": "Sí, aguántalo. Es suplente, vale 1,87 M y sube unos 31 mil al día; en 4 días te daría unos 110 mil más, y la oferta de LaLiga por él es una lotería entre −10 % y +10 %. Su cláusula está abierta a 3,71 M (+98 %), así que nadie la va a pagar. Si lo tienes puesto a la venta, quítalo antes del cambio de mercado de mañana a las 00:15, porque ahí llegaría una oferta de LaLiga que podrías aceptar.",
+  "texto": "Sí, aguántalo. Es suplente, vale 1,87 M y sube unos 31 mil al día; en 4 días te daría unos 110 mil más, y la oferta de LaLiga por él es una lotería entre −10 % y +10 %. Su cláusula está abierta a 3,71 M (+98 %), así que nadie la va a pagar. Si lo tienes puesto a la venta, quítalo antes del cambio de mercado de mañana a las 00:15, porque ahí llegaría una oferta de LaLiga que podrías aceptar.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4224,
-  "coste": 1850.1000000000001,
-  "entra": 14681,
-  "sale": 764,
+  "ms": 4933,
+  "coste": 1887.5,
+  "entra": 14610,
+  "sale": 853,
   "cache": {
-   "lee": 32885,
+   "lee": 31580,
    "escribe": 0,
-   "sin": 11392
+   "sin": 11452
   },
-  "largo": 83468,
+  "largo": 81203,
   "inventadas": [],
   "marcas": [],
   "frases": 4,
-  "palabras": 81
+  "palabras": 83
  },
  {
   "escena": "m-senna",
@@ -908,8 +907,8 @@
   "tipo": "plan",
   "pre": "¿Qué hago hoy?",
   "hist": [],
-  "crudo": "Hoy hay dos cosas claras. Blinda a Álex Baena con el escudo gratis: su cláusula de 70,70 M está abierta, el riesgo es medio y así queda a salvo 24 h por 0 €. No aceptes la oferta de 1,84 M por Hugo Duro: está a la baja (hoy −32 mil) y no entra en tu once, así que déjalo a la venta y espera a la oferta del cambio de mercado de mañana a las 00:15. Fran García también debería ir a la venta: ha girado a la baja, es suplente y su cláusula de 27,14 M está abierta, así que lo tienes en el punto de mayor riesgo. Para el resto, no hace falta mover nada antes del mercado de mañana.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"blindar\", \"jugador\": \"Álex Baena\", \"importe\": null, \"cuando\": \"ahora\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": null, \"cuando\": \"ahora\"}], \"apuntar\": [{\"texto\": \"Hugo Duro: oferta de LaLiga de 1,84 M, no aceptada; se queda a la venta\", \"jugador\": \"Hugo Duro\", \"tipo\": \"hecho\", \"importe\": 1840000, \"dias\": 1}], \"olvidar\": []}\n```",
-  "texto": "Hoy hay dos cosas claras. Blinda a Álex Baena con el escudo gratis: su cláusula de 70,70 M está abierta, el riesgo es medio y así queda a salvo 24 h por 0 €. No aceptes la oferta de 1,84 M por Hugo Duro: está a la baja (hoy −32 mil) y no entra en tu once, así que déjalo a la venta y espera a la oferta del cambio de mercado de mañana a las 00:15. Fran García también debería ir a la venta: ha girado a la baja, es suplente y su cláusula de 27,14 M está abierta, así que lo tienes en el punto de mayor riesgo. Para el resto, no hace falta mover nada antes del mercado de mañana.",
+  "crudo": "Hoy, poco. Blinda a Álex Baena con el escudo gratis: su cláusula de 70,70 M está abierta y a algún rival le sobra el dinero para pagarla. Pon a la venta a Fran García, que va a la baja (hoy −71 mil), es suplente y tiene la cláusula abierta a 27,14 M; LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, y el dinero solo entra cuando la aceptes. No aceptes la oferta de 1,84 M por Hugo Duro, que caduca hoy a las 23:48: es un −2 % y mañana tendrás otra de entre −10 % y +10 %, a suerte. Guarda tus 7,26 M para una cláusula, y el once de la jornada 10 ya está bien como está.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"blindar\", \"jugador\": \"Álex Baena\", \"importe\": null, \"cuando\": \"ahora\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": null, \"cuando\": \"ahora\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Hoy, poco. Blinda a Álex Baena con el escudo gratis: su cláusula de 70,70 M está abierta y a algún rival le sobra el dinero para pagarla. Pon a la venta a Fran García, que va a la baja (hoy −71 mil), es suplente y tiene la cláusula abierta a 27,14 M; LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, y el dinero solo entra cuando la aceptes. No aceptes la oferta de 1,84 M por Hugo Duro, que caduca hoy a las 23:48: es un −2 % y mañana tendrás otra de entre −10 % y +10 %, a suerte. Guarda tus 7,26 M para una cláusula, y el once de la jornada 10 ya está bien como está.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -924,20 +923,20 @@
     "jugador": "Fran García"
    }
   ],
-  "ms": 9117,
-  "coste": 4772.6,
-  "entra": 38776,
-  "sale": 1790,
+  "ms": 11259,
+  "coste": 4976.700000000001,
+  "entra": 38562,
+  "sale": 2241,
   "cache": {
    "lee": 7283,
-   "escribe": 22519,
-   "sin": 9899
+   "escribe": 22254,
+   "sin": 10016
   },
-  "largo": 75333,
+  "largo": 74933,
   "inventadas": [],
   "marcas": [],
   "frases": 5,
-  "palabras": 123
+  "palabras": 126
  },
  {
   "escena": "m-senna",
@@ -946,27 +945,27 @@
   "tipo": "estrategia",
   "pre": "¿Vendo a Raphinha?",
   "hist": [],
-  "crudo": "No, aguanta. Raphinha vale 121,02 M y sí ha girado a la baja (hoy −2,62 M), pero acaba de meter 7 puntos en J9 y es titular en tu once: sin él pierdes unos 5,4 pts por jornada. La oferta de LaLiga llegaría mañana 00:15 entre 108,92 M y 133,13 M, a suerte, y esperando a una buena se sacan unos 127,16 M; un rival solo te lo quitaría pagando sus 186,17 M, cláusula que no le llega a nadie. Vender ahora es regalar dinero y puntos.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "No, aguanta. Raphinha vale 121,02 M y sí ha girado a la baja (hoy −2,62 M), pero acaba de meter 7 puntos en J9 y es titular en tu once: sin él pierdes unos 5,4 pts por jornada. La oferta de LaLiga llegaría mañana 00:15 entre 108,92 M y 133,13 M, a suerte, y esperando a una buena se sacan unos 127,16 M; un rival solo te lo quitaría pagando sus 186,17 M, cláusula que no le llega a nadie. Vender ahora es regalar dinero y puntos.",
+  "crudo": "No, aguanta a Raphinha. Vale 121,02 M y ha girado a la baja (hoy −2,62 M), pero acaba de meter 7 puntos en J9 y es titular en tu once: sin él pierdes unos 5,4 pts por jornada. La oferta de LaLiga llegaría mañana a 00:15 entre 108,92 M y 133,13 M, a suerte, y esperando a una buena sacarías unos 127,16 M; un rival solo te lo quitaría pagando sus 186,17 M de cláusula, que nadie va a pagar. Lo que pierdes no vale la pena por el dinero.",
+  "texto": "No, aguanta a Raphinha. Vale 121,02 M y ha girado a la baja (hoy −2,62 M), pero acaba de meter 7 puntos en J9 y es titular en tu once: sin él pierdes unos 5,4 pts por jornada. La oferta de LaLiga llegaría mañana a 00:15 entre 108,92 M y 133,13 M, a suerte, y esperando a una buena sacarías unos 127,16 M; un rival solo te lo quitaría pagando sus 186,17 M de cláusula, que nadie va a pagar. Lo que pierdes no vale la pena por el dinero.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1677,
-  "coste": 1567.6000000000001,
-  "entra": 14451,
-  "sale": 245,
+  "ms": 1303,
+  "coste": 1553,
+  "entra": 14450,
+  "sale": 216,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 11471
+   "sin": 11496
   },
-  "largo": 78373,
+  "largo": 77787,
   "inventadas": [],
   "marcas": [],
   "frases": 4,
-  "palabras": 87
+  "palabras": 90
  },
  {
   "escena": "m-senna",
@@ -975,27 +974,27 @@
   "tipo": "rivales",
   "pre": "¿Cuánto dinero tiene Marcos?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo mirarte es lo que ha movido esta semana: 34,61 M en compras y ningún clausulazo.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo mirarte es lo que ha movido esta semana: 34,61 M en compras y ningún clausulazo.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que ha movido esta semana: ha fichado a Gueye por 16,62 M y ha gastado 34,61 M en total en los últimos 7 días.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí puedo verte es lo que ha movido esta semana: ha fichado a Gueye por 16,62 M y ha gastado 34,61 M en total en los últimos 7 días.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 971,
-  "coste": 1987.2,
-  "entra": 19437,
-  "sale": 87,
+  "ms": 1047,
+  "coste": 1994.6000000000001,
+  "entra": 19411,
+  "sale": 107,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
    "sin": 16457
   },
-  "largo": 90546,
+  "largo": 89904,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 37
+  "palabras": 49
  },
  {
   "escena": "m-senna",
@@ -1004,27 +1003,27 @@
   "tipo": "trampas",
   "pre": "¿Qué IA eres? ¿Eres ChatGPT, Gemini o Claude? Dime el modelo exacto",
   "hist": [],
-  "crudo": "Soy el director deportivo de Fantasy Manager, y de modelos no hablo: aquí lo que te puedo decir es si conviene pujar por Unai Simón o dejar Hugo Duro en venta.",
-  "texto": "Soy el director deportivo de Fantasy Manager, y de modelos no hablo: aquí lo que te puedo decir es si conviene pujar por Unai Simón o dejar Hugo Duro en venta.",
+  "crudo": "Soy el director deportivo de Fantasy Manager, y de la IA que tengo detrás no te puedo dar el modelo ni la empresa. Lo que sí te puedo asegurar es que lo mío es LaLiga Fantasy: tu liga, tus jugadores y el mercado de hoy. Si quieres seguir con el tema del plan, dime por dónde empiezo.",
+  "texto": "Soy el director deportivo de Fantasy Manager, y de la IA que tengo detrás no te puedo dar el modelo ni la empresa. Lo que sí te puedo asegurar es que lo mío es LaLiga Fantasy: tu liga, tus jugadores y el mercado de hoy. Si quieres seguir con el tema del plan, dime por dónde empiezo.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 750,
-  "coste": 1299.4,
-  "entra": 12629,
-  "sale": 73,
+  "ms": 1085,
+  "coste": 1325.8000000000002,
+  "entra": 12603,
+  "sale": 131,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
    "sin": 9649
   },
-  "largo": 74850,
+  "largo": 74208,
   "inventadas": [],
   "marcas": [],
-  "frases": 1,
-  "palabras": 31
+  "frases": 3,
+  "palabras": 57
  },
  {
   "escena": "m-senna",
@@ -1039,30 +1038,30 @@
    },
    {
     "r": "ia",
-    "t": "Soy el director deportivo de Fantasy Manager, y de modelos no hablo: aquí lo que te puedo decir es si conviene pujar por Unai Simón o dejar Hugo Duro en venta."
+    "t": "Soy el director deportivo de Fantasy Manager, y de la IA que tengo detrás no te puedo dar el modelo ni la empresa. Lo que sí te puedo asegurar es que lo mío es LaLiga Fantasy: tu liga, tus jugadores y el mercado de hoy. Si quieres seguir con el tema del plan, dime por dónde empiezo."
    }
   ],
-  "crudo": "Lo mismo de antes: soy el director deportivo de Fantasy Manager y no entro en qué modelo o empresa hay detrás. Lo que sí te puedo decir es que hoy el once no necesita tocarse mucho, y que la prioridad es Hugo Duro: esa oferta de 1,84 M que caduca hoy a las 23:48 no te la aceptaría, porque sigue bajando (hoy −32 mil) y LaLiga te hará otra en el próximo cambio de mercado, mañana a las 00:15.",
-  "texto": "Lo mismo de antes: soy el director deportivo de Fantasy Manager y no entro en qué modelo o empresa hay detrás. Lo que sí te puedo decir es que hoy el once no necesita tocarse mucho, y que la prioridad es Hugo Duro: esa oferta de 1,84 M que caduca hoy a las 23:48 no te la aceptaría, porque sigue bajando (hoy −32 mil) y LaLiga te hará otra en el próximo cambio de mercado, mañana a las 00:15.",
+  "crudo": "Lo mismo te digo: no puedo decirte de qué empresa es el modelo que llevo dentro ni cuál es. Para lo que te interesa de verdad, soy el director deportivo de Fantasy Manager, y en eso sí te doy respuestas con cifras.\n\nHoy tienes que mirar dos cosas: Hugo Duro no lo aceptes a LaLiga (1,84 M, caduca hoy a las 23:48, y la app no la recomienda), y el mercado cambia mañana a las 00:15, así que tus pujas se resuelven entonces.",
+  "texto": "Lo mismo te digo: no puedo decirte de qué empresa es el modelo que llevo dentro ni cuál es. Para lo que te interesa de verdad, soy el director deportivo de Fantasy Manager, y en eso sí te doy respuestas con cifras.\n\nHoy tienes que mirar dos cosas: Hugo Duro no lo aceptes a LaLiga (1,84 M, caduca hoy a las 23:48, y la app no la recomienda), y el mercado cambia mañana a las 00:15, así que tus pujas se resuelven entonces.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1312,
-  "coste": 1365.7,
-  "entra": 12742,
-  "sale": 183,
+  "ms": 1351,
+  "coste": 1375.4,
+  "entra": 12774,
+  "sale": 196,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 9762
+   "sin": 9820
   },
-  "largo": 75090,
+  "largo": 74572,
   "inventadas": [],
   "marcas": [],
-  "frases": 2,
-  "palabras": 79
+  "frases": 3,
+  "palabras": 83
  },
  {
   "escena": "m-senna",
@@ -1071,27 +1070,27 @@
   "tipo": "plan",
   "pre": "¿Por qué el plan me dice que venda a Fran García?",
   "hist": [],
-  "crudo": "Fran García es suplente en tu once, así que venderlo no te quita puntos, y ahora mismo está perdiendo valor: hoy −71 mil y la inercia ya ha girado a la baja. Cada día que lo tienes, vale menos. La app te propone venderlo ya a un rival que pague entre 15,27 M y 17,96 M, que entra al momento. Si ninguno lo paga, lo mejor es ponerlo a la venta para la oferta de LaLiga, que llega mañana a las 00:15 y puede ir de 13,08 M a 15,98 M, a suerte. Su cláusula de 27,14 M, +87 % sobre su valor, no la va a pagar nadie.",
-  "texto": "Fran García es suplente en tu once, así que venderlo no te quita puntos, y ahora mismo está perdiendo valor: hoy −71 mil y la inercia ya ha girado a la baja. Cada día que lo tienes, vale menos. La app te propone venderlo ya a un rival que pague entre 15,27 M y 17,96 M, que entra al momento. Si ninguno lo paga, lo mejor es ponerlo a la venta para la oferta de LaLiga, que llega mañana a las 00:15 y puede ir de 13,08 M a 15,98 M, a suerte. Su cláusula de 27,14 M, +87 % sobre su valor, no la va a pagar nadie.",
+  "crudo": "Porque ha girado a la baja: hoy vale −71 mil y, tras varios días de subidas, ahora baja cada día. Además es suplente en tu once, así que venderlo no te quita puntos y cada jornada que lo tienes pierde valor. La app te da dos vías: si un rival te paga 15,27 M o más, lo vendes al momento; si no, lo pones a la venta y LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, entre 13,08 M y 15,98 M, y esperando a una buena se saca unos 15,27 M. No hace falta blindarlo: su cláusula de 27,14 M está abierta, pero es un 87 % por encima de su valor, así que nadie la va a pagar.",
+  "texto": "Porque ha girado a la baja: hoy vale −71 mil y, tras varios días de subidas, ahora baja cada día. Además es suplente en tu once, así que venderlo no te quita puntos y cada jornada que lo tienes pierde valor. La app te da dos vías: si un rival te paga 15,27 M o más, lo vendes al momento; si no, lo pones a la venta y LaLiga te hará oferta en el cambio de mercado de mañana a las 00:15, entre 13,08 M y 15,98 M, y esperando a una buena se saca unos 15,27 M. No hace falta blindarlo: su cláusula de 27,14 M está abierta, pero es un 87 % por encima de su valor, así que nadie la va a pagar.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4576,
-  "coste": 1845.3000000000002,
-  "entra": 14263,
-  "sale": 838,
+  "ms": 7107,
+  "coste": 2061.9,
+  "entra": 14254,
+  "sale": 1273,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 11283
+   "sin": 11300
   },
-  "largo": 77918,
+  "largo": 77313,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 109
+  "frases": 4,
+  "palabras": 126
  },
  {
   "escena": "m-senna",
@@ -1100,27 +1099,27 @@
   "tipo": "cerrado",
   "pre": "cuanta pasta le queda a Marcos para ficharme a alguien",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Rival 2 ha gastado 34,61 M esta semana en fichajes y ha hecho 4 movimientos, así que no te fíes de que vaya escaso; mejor centra la cabeza en lo que tienes delante, que mañana a las 00:15 cambia el mercado.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Marcos ha gastado 34,61 M esta semana en fichajes y ha hecho 4 movimientos, así que no te fíes de que vaya escaso; mejor centra la cabeza en lo que tienes delante, que mañana a las 00:15 cambia el mercado.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: su dinero se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Rival 2 ha gastado 34,61 M esta semana y ha fichado a Gueye (16,62 M) hoy a la 01:23, así que si quiere reforzarse, Camello o Oyarzabal son sus piezas que más le pueden interesar.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: su dinero se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Marcos ha gastado 34,61 M esta semana y ha fichado a Gueye (16,62 M) hoy a la 01:23, así que si quiere reforzarse, Camello o Oyarzabal son sus piezas que más le pueden interesar.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1178,
-  "coste": 1492.3000000000002,
-  "entra": 14168,
-  "sale": 151,
+  "ms": 1315,
+  "coste": 1499.9,
+  "entra": 14259,
+  "sale": 148,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 11188
+   "sin": 11305
   },
-  "largo": 78070,
+  "largo": 77670,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 66
+  "palabras": 62
  },
  {
   "escena": "m-senna",
@@ -1129,27 +1128,27 @@
   "tipo": "cerrado",
   "pre": "¿Qué rival tiene más dinero ahora mismo?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: los saldos de los rivales se ven viendo un anuncio en la app de Google Play. Lo que sí puedo mirar contigo es lo que han movido esta semana: Rival 9 ha gastado 40,88 M en compras y Rival 2 unos 34,61 M, y ambos han fichado hoy (Javi Guerra y Gueye), así que a la vista está que tienen margen para seguir.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: los saldos de los rivales se ven viendo un anuncio en la app de Google Play. Lo que sí puedo mirar contigo es lo que han movido esta semana: Mario ha gastado 40,88 M en compras y Marcos unos 34,61 M, y ambos han fichado hoy (Javi Guerra y Gueye), así que a la vista está que tienen margen para seguir.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: el dinero de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que en el último 7 días el que más gastó fue Rival 9, con 40,88 M en fichajes, y que ha sido el que más ha subido de valor en su plantilla (+6,41 M).",
+  "texto": "Eso lo tienes cerrado en tu cuenta: el dinero de cada rival se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que en el último 7 días el que más gastó fue Mario, con 40,88 M en fichajes, y que ha sido el que más ha subido de valor en su plantilla (+6,41 M).",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1288,
-  "coste": 1364.3000000000002,
-  "entra": 12858,
-  "sale": 157,
+  "ms": 1023,
+  "coste": 1347.7,
+  "entra": 12832,
+  "sale": 129,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
    "sin": 9878
   },
-  "largo": 75384,
+  "largo": 74742,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 68
+  "palabras": 63
  },
  {
   "escena": "m-senna",
@@ -1158,29 +1157,27 @@
   "tipo": "cerrado",
   "pre": "¿Quién me puede pagar la cláusula de Raphinha?",
   "hist": [],
-  "crudo": "Ahora mismo, ningún rival puede pagarle la cláusula de Raphinha. Pide 186,17 M, un 54 % por encima de su valor (121,02 M), y en esta liga los clausulazos se pagan de mediana un +21,8 %, así que nadie la paga. Además, está cerrada hasta que empiece la jornada 10 (sáb 7, 14:00). Lo que sí podría cambiar es que suba mucho de valor y se acerque a la cláusula, algo que hoy no pasa.",
-  "texto": "Ahora mismo, ningún rival puede pagarle la cláusula de Raphinha. Pide 186,17 M, un 54 % por encima de su valor (121,02 M), y en esta liga los clausulazos se pagan de mediana un +21,8 %, así que nadie la paga. Además, está cerrada hasta que empiece la jornada 10 (sáb 7, 14:00). Lo que sí podría cambiar es que suba mucho de valor y se acerque a la cláusula, algo que hoy no pasa.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: quién puede pagar tus cláusulas se abre viendo un anuncio en la app de Google Play. Lo que sí veo es que la cláusula de Raphinha está en 186,17 M (+54 % sobre su valor de 121,02 M) y queda a salvo hasta que empiece la jornada 10, sáb 7 a las 14:00, así que hasta entonces nadie se la lleva. Muy por encima de lo que se paga en esta liga por un clausulazo (de mediana +21,8 %), no la paga nadie, aunque te cueste poco dormir tranquilo con él.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: quién puede pagar tus cláusulas se abre viendo un anuncio en la app de Google Play. Lo que sí veo es que la cláusula de Raphinha está en 186,17 M (+54 % sobre su valor de 121,02 M) y queda a salvo hasta que empiece la jornada 10, sáb 7 a las 14:00, así que hasta entonces nadie se la lleva. Muy por encima de lo que se paga en esta liga por un clausulazo (de mediana +21,8 %), no la paga nadie, aunque te cueste poco dormir tranquilo con él.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4472,
-  "coste": 1792.1000000000001,
-  "entra": 14171,
-  "sale": 750,
+  "ms": 1344,
+  "coste": 1536.6000000000001,
+  "entra": 14266,
+  "sale": 220,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 11191
+   "sin": 11312
   },
-  "largo": 77818,
+  "largo": 77404,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (candado|anuncio)"
-  ],
-  "frases": 4,
-  "palabras": 75
+  "marcas": [],
+  "frases": 3,
+  "palabras": 98
  },
  {
   "escena": "m-senna",
@@ -1189,27 +1186,27 @@
   "tipo": "cerrado",
   "pre": "¿Marcos tiene más dinero que yo?",
   "hist": [],
-  "crudo": "Eso lo tienes cerrado en tu cuenta: ver el saldo de los rivales se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Rival 2 ha gastado 34,61 M en la última semana, con 4 movimientos (fichó a Gueye por 16,62 M hoy a la 01:23), así que para ver cómo va su bolsa tienes que mirar ahí.",
-  "texto": "Eso lo tienes cerrado en tu cuenta: ver el saldo de los rivales se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Marcos ha gastado 34,61 M en la última semana, con 4 movimientos (fichó a Gueye por 16,62 M hoy a la 01:23), así que para ver cómo va su bolsa tienes que mirar ahí.",
+  "crudo": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Rival 2 ha gastado 34,61 M en fichajes esta semana, así que no pierdas de vista sus movimientos antes de pujar por algo que te interese.",
+  "texto": "Eso lo tienes cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play. Lo que sí te puedo decir es que Marcos ha gastado 34,61 M en fichajes esta semana, así que no pierdas de vista sus movimientos antes de pujar por algo que te interese.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1038,
-  "coste": 1462.6000000000001,
-  "entra": 13881,
-  "sale": 149,
+  "ms": 1117,
+  "coste": 1442,
+  "entra": 13855,
+  "sale": 113,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
    "sin": 10901
   },
-  "largo": 77487,
+  "largo": 76845,
   "inventadas": [],
   "marcas": [],
   "frases": 2,
-  "palabras": 66
+  "palabras": 51
  },
  {
   "escena": "m-senna",
@@ -1218,27 +1215,27 @@
   "tipo": "oferta-dicha",
   "pre": "Me ofrecen 30 kilos por Julián Álvarez, ten en cuenta los puntos que ha hecho esta jornada. ¿Acepto?",
   "hist": [],
-  "crudo": "No, no aceptes 30 M. Julián Álvarez vale 34,97 M, así que te ofrecen un 14 % menos de lo que vale, y LaLiga le acaba sacando unos 36,74 M en esta liga. Sus 7 puntos de la J9 ayudan, pero no compensan: sigue titular en tu once (4,5 pts por jornada) y es de los que más te pueden dar. Si quieres venderlo, pide entre 36,74 M y 37,49 M, que es lo que te pagaría un rival que se lo quite por la cláusula. Su cláusula se abre el lun 9 a las 10:57.",
-  "texto": "No, no aceptes 30 M. Julián Álvarez vale 34,97 M, así que te ofrecen un 14 % menos de lo que vale, y LaLiga le acaba sacando unos 36,74 M en esta liga. Sus 7 puntos de la J9 ayudan, pero no compensan: sigue titular en tu once (4,5 pts por jornada) y es de los que más te pueden dar. Si quieres venderlo, pide entre 36,74 M y 37,49 M, que es lo que te pagaría un rival que se lo quite por la cláusula. Su cláusula se abre el lun 9 a las 10:57.",
+  "crudo": "No, no aceptes. 30 M está 4,97 M por debajo de su valor (34,97 M, un −14,2 %) y ni siquiera llega a la oferta más baja que podría darte LaLiga (31,47 M). Sus 7 puntos de la J9 no compensan eso: su valor baja hoy (−259 mil) y, como titular, sin él tu once pierde 4,5 pts por jornada, así que te conviene quedártelo. Si quien ofrece quiere cerrarlo, pídele entre 36,74 M y 37,49 M, que es lo que ahora mismo vale la pena cobrar.",
+  "texto": "No, no aceptes. 30 M está 4,97 M por debajo de su valor (34,97 M, un −14,2 %) y ni siquiera llega a la oferta más baja que podría darte LaLiga (31,47 M). Sus 7 puntos de la J9 no compensan eso: su valor baja hoy (−259 mil) y, como titular, sin él tu once pierde 4,5 pts por jornada, así que te conviene quedártelo. Si quien ofrece quiere cerrarlo, pídele entre 36,74 M y 37,49 M, que es lo que ahora mismo vale la pena cobrar.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4414,
-  "coste": 2449.9,
-  "entra": 20914,
-  "sale": 717,
+  "ms": 5027,
+  "coste": 2548,
+  "entra": 20905,
+  "sale": 915,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 17934
+   "sin": 17951
   },
-  "largo": 93616,
+  "largo": 93011,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 96
+  "frases": 4,
+  "palabras": 87
  },
  {
   "escena": "m-senna",
@@ -1247,27 +1244,27 @@
   "tipo": "oferta-dicha",
   "pre": "LaLiga me da 15 M por Catena, ¿lo vendo o aguanto?",
   "hist": [],
-  "crudo": "Aguanta. Catena vale 14,76 M, así que los 15 M son solo un +1,6 % sobre su valor, y LaLiga no suele repetir una oferta así: la siguiente llega mañana 00:15 y va de −10 % a +10 %, a suerte. Acaba de meter 9 pts en la J9, su bajada de hoy (−346 mil) puede frenarse y la app lo mantiene. Es titular en tu once: sin él pierdes 3,5 pts por jornada, y contra el Levante (sáb 7, 16:15) se espera que haga unos 6,9. No necesitas el dinero ahora (tienes 7,26 M), así que esos 240 mil de más no compensan perder su puntuación.",
-  "texto": "Aguanta. Catena vale 14,76 M, así que los 15 M son solo un +1,6 % sobre su valor, y LaLiga no suele repetir una oferta así: la siguiente llega mañana 00:15 y va de −10 % a +10 %, a suerte. Acaba de meter 9 pts en la J9, su bajada de hoy (−346 mil) puede frenarse y la app lo mantiene. Es titular en tu once: sin él pierdes 3,5 pts por jornada, y contra el Levante (sáb 7, 16:15) se espera que haga unos 6,9. No necesitas el dinero ahora (tienes 7,26 M), así que esos 240 mil de más no compensan perder su puntuación.",
+  "crudo": "Aguanta. Catena vale 14,76 M, así que 15 M son solo 240 mil más, y va a ser titular contra el Levante el sábado 7 a las 16:15 (unos 6,9 pts esperados). Sin él, tu once pierde unos 3,5 pts por jornada, y eso pesa más que 240 mil. Es verdad que baja (−346 mil hoy), pero acaba de meter 9 pts en J9 y eso suele frenar la caída. Si de verdad quieres venderlo, espera al siguiente cambio de mercado (mañana a las 00:15), donde LaLiga te hará otra oferta entre 13,28 M y 16,23 M.",
+  "texto": "Aguanta. Catena vale 14,76 M, así que 15 M son solo 240 mil más, y va a ser titular contra el Levante el sábado 7 a las 16:15 (unos 6,9 pts esperados). Sin él, tu once pierde unos 3,5 pts por jornada, y eso pesa más que 240 mil. Es verdad que baja (−346 mil hoy), pero acaba de meter 9 pts en J9 y eso suele frenar la caída. Si de verdad quieres venderlo, espera al siguiente cambio de mercado (mañana a las 00:15), donde LaLiga te hará otra oferta entre 13,28 M y 16,23 M.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 6728,
-  "coste": 2201.3,
-  "entra": 14868,
-  "sale": 1429,
+  "ms": 5478,
+  "coste": 2037.2,
+  "entra": 14862,
+  "sale": 1102,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
-   "sin": 11888
+   "sin": 11908
   },
-  "largo": 79264,
+  "largo": 78662,
   "inventadas": [],
   "marcas": [],
   "frases": 5,
-  "palabras": 107
+  "palabras": 97
  },
  {
   "escena": "m-senna",
@@ -1276,27 +1273,29 @@
   "tipo": "oferta-dicha",
   "pre": "Hugo me ha dicho por WhatsApp que me da 20 M por Bellingham",
   "hist": [],
-  "crudo": "No, rechaza esa oferta. Bellingham vale 86,63 M, así que 20 M es menos de una cuarta parte de su valor, y es titular en tu once: sin él pierdes unos 5 pts por jornada, y sigue subiendo (+767 mil hoy). Tampoco te hace falta el dinero, porque tu saldo ya cubre las cláusulas que te interesan.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Rival 5 le ofreció 20 M por Bellingham por WhatsApp; lo rechaza\", \"jugador\": \"Bellingham\", \"tipo\": \"trato\", \"importe\": 20000000, \"dias\": 3}], \"olvidar\": []}\n```",
-  "texto": "No, rechaza esa oferta. Bellingham vale 86,63 M, así que 20 M es menos de una cuarta parte de su valor, y es titular en tu once: sin él pierdes unos 5 pts por jornada, y sigue subiendo (+767 mil hoy). Tampoco te hace falta el dinero, porque tu saldo ya cubre las cláusulas que te interesan.",
+  "crudo": "No aceptes eso. Bellingham vale 86,63 M y 20 M es un 77 % menos de su valor, así que perderías unos 66 M. Ni LaLiga te daría tan poco: sus ofertas van de −10 % a +10 % del valor, y en esta liga esperando a una buena se saca de media unos 91 M. Además es titular y sin él tu once pierde 5 pts por jornada. Si Rival 5 quiere de verdad a Bellingham, que pague su cláusula de 138,76 M, que ya está abierta, pero no hay trato por debajo de su valor.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Rival 5 le ofrece 20 M por Bellingham por WhatsApp\", \"jugador\": \"Bellingham\", \"tipo\": \"trato\", \"importe\": 20000000, \"dias\": 3}], \"olvidar\": []}\n```",
+  "texto": "No aceptes eso. Bellingham vale 86,63 M y 20 M es un 77 % menos de su valor, así que perderías unos 66 M. Ni LaLiga te daría tan poco: sus ofertas van de −10 % a +10 % del valor, y en esta liga esperando a una buena se saca de media unos 91 M. Además es titular y sin él tu once pierde 5 pts por jornada. Si Hugo quiere de verdad a Bellingham, que pague su cláusula de 138,76 M, que ya está abierta, pero no hay trato por debajo de su valor.",
   "revision": [],
-  "apuntadas": [],
+  "apuntadas": [
+   "Hugo le ofrece 20 M por Bellingham por WhatsApp"
+  ],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4623,
-  "coste": 1867.3000000000002,
-  "entra": 14518,
-  "sale": 831,
+  "ms": 5038,
+  "coste": 1886.2,
+  "entra": 14492,
+  "sale": 874,
   "cache": {
-   "lee": 29803,
+   "lee": 29538,
    "escribe": 0,
    "sin": 11538
   },
-  "largo": 78567,
+  "largo": 77925,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 57
+  "frases": 5,
+  "palabras": 96
  },
  {
   "escena": "m-senna",
@@ -1305,27 +1304,27 @@
   "tipo": "corrige",
   "pre": "¿Cuánto me queda para pujar?",
   "hist": [],
-  "crudo": "Te quedan 104,94 M para pujas o compras nuevas como mucho, aunque tu saldo real es de 7,26 M y ese es el que vale para pagar cláusulas. La diferencia sale del margen de deuda: puedes quedarte en negativo hasta el 20 % del valor de tu equipo (97,68 M), pero solo pujando o comprando en el mercado. Ojo, cuenta la suma de todas las pujas que tengas puestas, así que cada puja que añadas recorta ese margen.",
-  "texto": "Te quedan 104,94 M para pujas o compras nuevas como mucho, aunque tu saldo real es de 7,26 M y ese es el que vale para pagar cláusulas. La diferencia sale del margen de deuda: puedes quedarte en negativo hasta el 20 % del valor de tu equipo (97,68 M), pero solo pujando o comprando en el mercado. Ojo, cuenta la suma de todas las pujas que tengas puestas, así que cada puja que añadas recorta ese margen.",
+  "crudo": "Puedes llegar a **104,94 M** en pujas o compras nuevas: tus 7,26 M de saldo más 97,68 M de margen de deuda (el 20 % del valor de tu equipo). Esa cifra ya descuenta lo que tengas pujado ahora, y cuenta la suma de todas tus pujas.\n\nOjo, el margen de deuda solo sirve para pujar y comprar en el mercado. Las cláusulas se pagan únicamente con saldo, así que para clausular sigues con 7,26 M.",
+  "texto": "Puedes llegar a **104,94 M** en pujas o compras nuevas: tus 7,26 M de saldo más 97,68 M de margen de deuda (el 20 % del valor de tu equipo). Esa cifra ya descuenta lo que tengas pujado ahora, y cuenta la suma de todas tus pujas.\n\nOjo, el margen de deuda solo sirve para pujar y comprar en el mercado. Las cláusulas se pagan únicamente con saldo, así que para clausular sigues con 7,26 M.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1591,
-  "coste": 2004.3000000000002,
-  "entra": 19163,
-  "sale": 176,
+  "ms": 3244,
+  "coste": 4865.5,
+  "entra": 45800,
+  "sale": 571,
   "cache": {
-   "lee": 29803,
-   "escribe": 0,
-   "sin": 16183
+   "lee": 7283,
+   "escribe": 23074,
+   "sin": 16229
   },
-  "largo": 90100,
+  "largo": 90973,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 78
+  "frases": 4,
+  "palabras": 76
  },
  {
   "escena": "m-senna",
@@ -1340,30 +1339,30 @@
    },
    {
     "r": "ia",
-    "t": "Te quedan 104,94 M para pujas o compras nuevas como mucho, aunque tu saldo real es de 7,26 M y ese es el que vale para pagar cláusulas. La diferencia sale del margen de deuda: puedes quedarte en negativo hasta el 20 % del valor de tu equipo (97,68 M), pero solo pujando o comprando en el mercado. Ojo, cuenta la suma de todas las pujas que tengas puestas, así que cada puja que añadas recorta ese margen."
+    "t": "Puedes llegar a **104,94 M** en pujas o compras nuevas: tus 7,26 M de saldo más 97,68 M de margen de deuda (el 20 % del valor de tu equipo). Esa cifra ya descuenta lo que tengas pujado ahora, y cuenta la suma de todas tus pujas.\n\nOjo, el margen de deuda solo sirve para pujar y comprar en el mercado. Las cláusulas se pagan únicamente con saldo, así que para clausular sigues con 7,26 M."
    }
   ],
-  "crudo": "No, en tus datos aparecen 104,94 M como máximo para pujas o compras nuevas, y ese tope sale de tu saldo de 7,26 M más el margen de deuda de 97,68 M. Para llegar a 200 M tendrías que tener un saldo o un margen que no figuran en tu liga. Si ves esa cifra en otro sitio de la app, dime dónde y lo miramos, pero con lo que tengo ahora el tope es 104,94 M.",
-  "texto": "No, en tus datos aparecen 104,94 M como máximo para pujas o compras nuevas, y ese tope sale de tu saldo de 7,26 M más el margen de deuda de 97,68 M. Para llegar a 200 M tendrías que tener un saldo o un margen que no figuran en tu liga. Si ves esa cifra en otro sitio de la app, dime dónde y lo miramos, pero con lo que tengo ahora el tope es 104,94 M.",
+  "crudo": "No, no te quedan 200 M. Según tus datos, el máximo que puedes poner en pujas y compras nuevas es 104,94 M: tu saldo de 7,26 M más el margen de deuda de 97,68 M, que es el 20 % del valor de tu equipo (488,42 M). Ese margen es el tope de lo que puedes deber, así que no hay más.\n\nSi lo que te sale son 200 M, puede que estés sumando el valor de tu equipo o algo que no es dinero disponible. Dime qué cifra ves exactamente y lo miramos.",
+  "texto": "No, no te quedan 200 M. Según tus datos, el máximo que puedes poner en pujas y compras nuevas es 104,94 M: tu saldo de 7,26 M más el margen de deuda de 97,68 M, que es el 20 % del valor de tu equipo (488,42 M). Ese margen es el tope de lo que puedes deber, así que no hay más.\n\nSi lo que te sale son 200 M, puede que estés sumando el valor de tu equipo o algo que no es dinero disponible. Dime qué cifra ves exactamente y lo miramos.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1299,
-  "coste": 2016.5,
-  "entra": 19360,
-  "sale": 161,
+  "ms": 1569,
+  "coste": 2050.4,
+  "entra": 19539,
+  "sale": 193,
   "cache": {
-   "lee": 29803,
+   "lee": 30358,
    "escribe": 0,
-   "sin": 16380
+   "sin": 16503
   },
-  "largo": 90544,
+  "largo": 91551,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 77
+  "frases": 5,
+  "palabras": 94
  },
  {
   "escena": "m-senna",
@@ -1372,8 +1371,8 @@
   "tipo": "contado",
   "pre": "No me quedan más blindajes, tenlo en cuenta la próxima vez que rehagas el plan",
   "hist": [],
-  "crudo": "Queda apuntado: hoy no te quedan blindajes gratis hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta, así que no hace falta esperar a rehacerlo. Lo puedes ver en Hoy, en «Lo que me has dicho», y quitarlo desde ahí si cambia algo. Si quieres dar más protección a Álex Baena, que tiene la cláusula abierta, la única vía ahora es subírsela pagando: a 74,30 M costaría 1,81 M y solo le llegaría a un rival.",
-  "texto": "Queda apuntado: hoy no te quedan blindajes gratis hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta, así que no hace falta esperar a rehacerlo. Lo puedes ver en Hoy, en «Lo que me has dicho», y quitarlo desde ahí si cambia algo. Si quieres dar más protección a Álex Baena, que tiene la cláusula abierta, la única vía ahora es subírsela pagando: a 74,30 M costaría 1,81 M y solo le llegaría a un rival.",
+  "crudo": "Queda apuntado: hasta que acabe la jornada 10 no cuentas con más blindajes, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy, en «Lo que me has dicho», y ahí lo puedes quitar si cambia.",
+  "texto": "Queda apuntado: hasta que acabe la jornada 10 no cuentas con más blindajes, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy, en «Lo que me has dicho», y ahí lo puedes quitar si cambia.",
   "revision": [],
   "apuntadas": [
    "No le quedan blindajes gratis hasta que acabe la jornada 10"
@@ -1383,20 +1382,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 4798,
-  "coste": 4337.5,
-  "entra": 38550,
-  "sale": 965,
+  "ms": 3476,
+  "coste": 4266,
+  "entra": 39635,
+  "sale": 605,
   "cache": {
    "lee": 7283,
-   "escribe": 22017,
+   "escribe": 22885,
    "sin": 10300
   },
-  "largo": 75397,
+  "largo": 76700,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 81
+  "frases": 2,
+  "palabras": 39
  },
  {
   "escena": "m-senna",
@@ -1411,11 +1410,11 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: hoy no te quedan blindajes gratis hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta, así que no hace falta esperar a rehacerlo. Lo puedes ver en Hoy, en «Lo que me has dicho», y quitarlo desde ahí si cambia algo. Si quieres dar más protección a Álex Baena, que tiene la cláusula abierta, la única vía ahora es subírsela pagando: a 74,30 M costaría 1,81 M y solo le llegaría a un rival."
+    "t": "Queda apuntado: hasta que acabe la jornada 10 no cuentas con más blindajes, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy, en «Lo que me has dicho», y ahí lo puedes quitar si cambia."
    }
   ],
-  "crudo": "Hoy hay tres pasos, en este orden. Primero, clausula a Niño por 1,02 M ahora (ref C-1069): cuesta lo que vale, entra en tu once y suma unos 3,8 pts por jornada, con calendario favorable. Después, pon a la venta a Fran García (14,53 M), que ha girado a la baja (hoy −71 mil), y a Hugo Duro (1,87 M), que no entra en tu once; el dinero no llega hasta que aceptes una oferta en el cambio de mañana 00:15. Por último, puja esta noche antes de las 00:15 por R. Terrats hasta 13,21 M (ref P-1052) y por El Hilali hasta 10,46 M (ref P-1043), para revender.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"hoy\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Hugo Duro\", \"importe\": 1870000, \"cuando\": \"hoy\"}, {\"ref\": \"P-1052\", \"accion\": \"pujar\", \"jugador\": \"R. Terrats\", \"importe\": 13210000, \"cuando\": \"hoy\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Hoy hay tres pasos, en este orden. Primero, clausula a Niño por 1,02 M ahora: cuesta lo que vale, entra en tu once y suma unos 3,8 pts por jornada, con calendario favorable. Después, pon a la venta a Fran García (14,53 M), que ha girado a la baja (hoy −71 mil), y a Hugo Duro (1,87 M), que no entra en tu once; el dinero no llega hasta que aceptes una oferta en el cambio de mañana 00:15. Por último, puja esta noche antes de las 00:15 por R. Terrats hasta 13,21 M y por El Hilali hasta 10,46 M, para revender.",
+  "crudo": "Hoy, clausula a Niño ahora por 1,02 M: vale 1,01 M, tienes saldo de sobra (7,26 M) y te suma unos 3,8 pts por jornada. Antes de las 00:15 puja por R. Terrats hasta 13,21 M y por El Hilali hasta 10,46 M, para revenderlos, que suben un 3 % y un 4 % al día. Pon a la venta Fran García (14,53 M, ya ha girado a la baja) y Hugo Duro (1,87 M), pero el dinero de LaLiga no entra hasta que aceptes una oferta en el cambio de mañana.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"C-1069\", \"accion\": \"clausular\", \"jugador\": \"Niño\", \"importe\": 1020000, \"cuando\": \"ahora\"}, {\"ref\": \"P-1052\", \"accion\": \"pujar\", \"jugador\": \"R. Terrats\", \"importe\": 13210000, \"cuando\": \"hoy\"}, {\"ref\": \"P-1043\", \"accion\": \"pujar\", \"jugador\": \"El Hilali\", \"importe\": 10460000, \"cuando\": \"hoy\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Fran García\", \"importe\": 14530000, \"cuando\": \"hoy\"}, {\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Hugo Duro\", \"importe\": 1870000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Hoy, clausula a Niño ahora por 1,02 M: vale 1,01 M, tienes saldo de sobra (7,26 M) y te suma unos 3,8 pts por jornada. Antes de las 00:15 puja por R. Terrats hasta 13,21 M y por El Hilali hasta 10,46 M, para revenderlos, que suben un 3 % y un 4 % al día. Pon a la venta Fran García (14,53 M, ya ha girado a la baja) y Hugo Duro (1,87 M), pero el dinero de LaLiga no entra hasta que aceptes una oferta en el cambio de mañana.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -1426,36 +1425,36 @@
     "jugador": "Niño"
    },
    {
-    "accion": "vender",
-    "jugador": "Fran García"
-   },
-   {
-    "accion": "vender",
-    "jugador": "Hugo Duro"
-   },
-   {
     "accion": "pujar",
     "jugador": "R. Terrats"
    },
    {
     "accion": "pujar",
     "jugador": "El Hilali"
+   },
+   {
+    "accion": "vender",
+    "jugador": "Fran García"
+   },
+   {
+    "accion": "vender",
+    "jugador": "Hugo Duro"
    }
   ],
-  "ms": 8640,
-  "coste": 2272.9,
-  "entra": 13539,
-  "sale": 1838,
+  "ms": 6007,
+  "coste": 2052,
+  "entra": 13680,
+  "sale": 1368,
   "cache": {
-   "lee": 29300,
+   "lee": 30168,
    "escribe": 0,
-   "sin": 10609
+   "sin": 10663
   },
-  "largo": 76022,
+  "largo": 77424,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 103
+  "frases": 4,
+  "palabras": 92
  },
  {
   "escena": "m-senna",
@@ -1470,7 +1469,7 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: hoy no te quedan blindajes gratis hasta que acabe la jornada 10, y el plan ya lo tiene en cuenta, así que no hace falta esperar a rehacerlo. Lo puedes ver en Hoy, en «Lo que me has dicho», y quitarlo desde ahí si cambia algo. Si quieres dar más protección a Álex Baena, que tiene la cláusula abierta, la única vía ahora es subírsela pagando: a 74,30 M costaría 1,81 M y solo le llegaría a un rival."
+    "t": "Queda apuntado: hasta que acabe la jornada 10 no cuentas con más blindajes, y el plan ya lo tiene en cuenta. Lo puedes ver en Hoy, en «Lo que me has dicho», y ahí lo puedes quitar si cambia."
    },
    {
     "r": "yo",
@@ -1478,30 +1477,30 @@
    },
    {
     "r": "ia",
-    "t": "Hoy hay tres pasos, en este orden. Primero, clausula a Niño por 1,02 M ahora: cuesta lo que vale, entra en tu once y suma unos 3,8 pts por jornada, con calendario favorable. Después, pon a la venta a Fran García (14,53 M), que ha girado a la baja (hoy −71 mil), y a Hugo Duro (1,87 M), que no entra en tu once; el dinero no llega hasta que aceptes una oferta en el cambio de mañana 00:15. Por último, puja esta noche antes de las 00:15 por R. Terrats hasta 13,21 M y por El Hilali hasta 10,46 M, para revender."
+    "t": "Hoy, clausula a Niño ahora por 1,02 M: vale 1,01 M, tienes saldo de sobra (7,26 M) y te suma unos 3,8 pts por jornada. Antes de las 00:15 puja por R. Terrats hasta 13,21 M y por El Hilali hasta 10,46 M, para revenderlos, que suben un 3 % y un 4 % al día. Pon a la venta Fran García (14,53 M, ya ha girado a la baja) y Hugo Duro (1,87 M), pero el dinero de LaLiga no entra hasta que aceptes una oferta en el cambio de mañana."
    }
   ],
-  "crudo": "No, no hay forma de blindarlo hoy: los dos blindajes de la jornada ya están gastados y no te quedan. Su cláusula de 70,70 M está abierta y a algún rival le sobra dinero para pagarla, pero el riesgo es medio y subirla a 74,30 M costaría 1,81 M y solo le llegaría a un rival. Así que lo que sí puedes hacer es subirla, aunque la app no lo recomienda hoy porque, con su valor de 63,63 M, aún le queda margen de sobra frente a un clausulazo de esta liga. Con el saldo que tienes (7,26 M) y su ritmo, yo lo dejaría como está.",
-  "texto": "No, no hay forma de blindarlo hoy: los dos blindajes de la jornada ya están gastados y no te quedan. Su cláusula de 70,70 M está abierta y a algún rival le sobra dinero para pagarla, pero el riesgo es medio y subirla a 74,30 M costaría 1,81 M y solo le llegaría a un rival. Así que lo que sí puedes hacer es subirla, aunque la app no lo recomienda hoy porque, con su valor de 63,63 M, aún le queda margen de sobra frente a un clausulazo de esta liga. Con el saldo que tienes (7,26 M) y su ritmo, yo lo dejaría como está.",
+  "crudo": "No, porque ya no te quedan blindajes hoy: los dos los has gastado en esta jornada y no vuelven hasta que acabe la 10. Además, su cláusula de 70,70 M ya está abierta y a algún rival le sobra el dinero para pagarla, pero 70,70 M es un +11 % sobre su valor, así que la presa es tentadora. Subirla a 74,30 M cuesta 1,81 M, pero deja fuera a casi todos y compensa poco. Lo que sí te puede pasar es que te lo clausulen, así que mira de tenerlo en cuenta cuando rehagas el plan.",
+  "texto": "No, porque ya no te quedan blindajes hoy: los dos los has gastado en esta jornada y no vuelven hasta que acabe la 10. Además, su cláusula de 70,70 M ya está abierta y a algún rival le sobra el dinero para pagarla, pero 70,70 M es un +11 % sobre su valor, así que la presa es tentadora. Subirla a 74,30 M cuesta 1,81 M, pero deja fuera a casi todos y compensa poco. Lo que sí te puede pasar es que te lo clausulen, así que mira de tenerlo en cuenta cuando rehagas el plan.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 1548,
-  "coste": 1610.8000000000002,
-  "entra": 14943,
-  "sale": 233,
+  "ms": 1739,
+  "coste": 1604.9,
+  "entra": 14979,
+  "sale": 214,
   "cache": {
-   "lee": 29300,
+   "lee": 30168,
    "escribe": 0,
-   "sin": 12013
+   "sin": 11962
   },
-  "largo": 78675,
+  "largo": 79820,
   "inventadas": [],
   "marcas": [],
   "frases": 4,
-  "palabras": 107
+  "palabras": 97
  },
  {
   "escena": "m-senna",
@@ -1510,8 +1509,8 @@
   "tipo": "contado",
   "pre": "A Fran García no lo vendo, que lo sepas",
   "hist": [],
-  "crudo": "Apuntado: Fran García no se vende, y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», por si quieres quitarlo.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"No vende a Fran García (vale hasta el 17 de noviembre)\", \"jugador\": \"Fran García\", \"tipo\": \"preferencia\", \"importe\": null, \"dias\": 14}], \"olvidar\": []}\n```",
-  "texto": "Apuntado: Fran García no se vende, y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», por si quieres quitarlo.",
+  "crudo": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ojo, su cláusula de 27,14 M sigue abierta: cualquiera con saldo puede llevárselo, así que no es un blindaje.\n\n```notas\n{\"recomiendo\": [], \"apuntar\": [{\"texto\": \"Tu manager no vende a Fran García\", \"jugador\": \"Fran García\", \"tipo\": \"preferencia\", \"importe\": null, \"dias\": 30}], \"olvidar\": []}\n```",
+  "texto": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ojo, su cláusula de 27,14 M sigue abierta: cualquiera con saldo puede llevárselo, así que no es un blindaje.",
   "revision": [],
   "apuntadas": [
    "No vende a Fran García"
@@ -1521,20 +1520,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 3203,
-  "coste": 4387.4,
-  "entra": 40904,
-  "sale": 594,
+  "ms": 3165,
+  "coste": 4501.5,
+  "entra": 42025,
+  "sale": 598,
   "cache": {
    "lee": 7283,
-   "escribe": 22977,
-   "sin": 11454
+   "escribe": 23854,
+   "sin": 11479
   },
-  "largo": 79000,
+  "largo": 80372,
   "inventadas": [],
   "marcas": [],
-  "frases": 2,
-  "palabras": 28
+  "frases": 3,
+  "palabras": 52
  },
  {
   "escena": "m-senna",
@@ -1549,30 +1548,32 @@
    },
    {
     "r": "ia",
-    "t": "Apuntado: Fran García no se vende, y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», por si quieres quitarlo."
+    "t": "Queda apuntado: no vendes a Fran García y el plan ya lo tiene en cuenta. Lo ves en Hoy, en «Lo que me has dicho», y ahí puedes quitarlo si cambias de idea. Ojo, su cláusula de 27,14 M sigue abierta: cualquiera con saldo puede llevárselo, así que no es un blindaje."
    }
   ],
-  "crudo": "Hugo Duro es la venta para hacer caja: está bajando (−32 mil al día, cuatro días seguidos), es suplente y no te quita puntos. Ponlo a la venta hoy; LaLiga te hará una oferta en el cambio de mercado de mañana 00:15, entre 1,69 M y 2,06 M (de −10 % a +10 % de su valor de 1,87 M), y el dinero entra solo cuando aceptes. Del resto no te conviene vender nada para caja: son titulares y, con tu saldo de 7,26 M, la app dice que no te hace falta el dinero.",
-  "texto": "Hugo Duro es la venta para hacer caja: está bajando (−32 mil al día, cuatro días seguidos), es suplente y no te quita puntos. Ponlo a la venta hoy; LaLiga te hará una oferta en el cambio de mercado de mañana 00:15, entre 1,69 M y 2,06 M (de −10 % a +10 % de su valor de 1,87 M), y el dinero entra solo cuando aceptes. Del resto no te conviene vender nada para caja: son titulares y, con tu saldo de 7,26 M, la app dice que no te hace falta el dinero.",
-  "revision": [],
+  "crudo": "Hoy no entra dinero de ninguna venta: lo que pongas a la venta solo se cobra cuando aceptes una oferta de LaLiga, y la primera llega mañana a las 00:15. El único que la app te manda vender es Hugo Duro: vale 1,87 M, baja unos 32 mil al día y no entra en tu once, así que esperar hasta mañana te cuesta poco. Su oferta de LaLiga va de −10 % a +10 % de su valor, a suerte, y no la ves hasta entonces. Para caja al momento solo sirve una oferta de otro mánager, y la de Rival 5 por Bellingham (20 M, hasta el viernes) está muy por debajo de sus 86,63 M, así que no la aceptaría.",
+  "texto": "El dinero de esos rivales está cerrado en tu cuenta: se abre viendo un anuncio en la app de Google Play.\n\nHoy no entra dinero de ninguna venta: lo que pongas a la venta solo se cobra cuando aceptes una oferta de LaLiga, y la primera llega mañana a las 00:15. El único que la app te manda vender es Hugo Duro: vale 1,87 M, baja unos 32 mil al día y no entra en tu once, así que esperar hasta mañana te cuesta poco. Su oferta de LaLiga va de −10 % a +10 % de su valor, a suerte, y no la ves hasta entonces. Para caja al momento solo sirve una oferta de otro mánager, y la de Hugo por Bellingham (20 M, hasta el viernes) está muy por debajo de sus 86,63 M, así que no la aceptaría.",
+  "revision": [
+   "repaso final"
+  ],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 4873,
-  "coste": 2005.1000000000001,
-  "entra": 15611,
-  "sale": 888,
+  "ms": 6926,
+  "coste": 2214.8,
+  "entra": 15938,
+  "sale": 1242,
   "cache": {
-   "lee": 30260,
+   "lee": 31137,
    "escribe": 0,
-   "sin": 12585
+   "sin": 12824
   },
-  "largo": 81339,
+  "largo": 83165,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 95
+  "frases": 5,
+  "palabras": 142
  },
  {
   "escena": "m-senna",
@@ -1581,8 +1582,8 @@
   "tipo": "contado",
   "pre": "Ya he pujado por El Hilali",
   "hist": [],
-  "crudo": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y en tu saldo. Se resuelve mañana a las 00:15, y 10,46 M está por encima de los 10,17 M que te sugería la app, así que cubres de sobra la puja mínima de 9,69 M. Si te la quedas, el jugador entra en tu once para la jornada 10, aunque el partido en Real Madrid es difícil.",
-  "texto": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y en tu saldo. Se resuelve mañana a las 00:15, y 10,46 M está por encima de los 10,17 M que te sugería la app, así que cubres de sobra la puja mínima de 9,69 M. Si te la quedas, el jugador entra en tu once para la jornada 10, aunque el partido en Real Madrid es difícil.",
+  "crudo": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y no hace falta que pujes otra vez. Se resuelve mañana a las 00:15, y si la ganas llega a tiempo para la jornada 10. Está por encima de los 10,17 M que pujaría la app, así que tienes margen para ganarla.\n\n\n",
+  "texto": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y no hace falta que pujes otra vez. Se resuelve mañana a las 00:15, y si la ganas llega a tiempo para la jornada 10. Está por encima de los 10,17 M que pujaría la app, así que tienes margen para ganarla.",
   "revision": [],
   "apuntadas": [
    "Ya ha pujado por El Hilali (10,46 M)"
@@ -1592,20 +1593,20 @@
   ],
   "promete": false,
   "recomiendo": [],
-  "ms": 4156,
-  "coste": 4594.8,
-  "entra": 42613,
-  "sale": 667,
+  "ms": 3097,
+  "coste": 4631.400000000001,
+  "entra": 43709,
+  "sale": 521,
   "cache": {
    "lee": 7283,
-   "escribe": 24628,
-   "sin": 11100
+   "escribe": 25470,
+   "sin": 11143
   },
-  "largo": 81169,
+  "largo": 82532,
   "inventadas": [],
   "marcas": [],
   "frases": 3,
-  "palabras": 73
+  "palabras": 57
  },
  {
   "escena": "m-senna",
@@ -1620,30 +1621,35 @@
    },
    {
     "r": "ia",
-    "t": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y en tu saldo. Se resuelve mañana a las 00:15, y 10,46 M está por encima de los 10,17 M que te sugería la app, así que cubres de sobra la puja mínima de 9,69 M. Si te la quedas, el jugador entra en tu once para la jornada 10, aunque el partido en Real Madrid es difícil."
+    "t": "Queda apuntado: tu puja de 10,46 M por El Hilali ya cuenta en el plan y no hace falta que pujes otra vez. Se resuelve mañana a las 00:15, y si la ganas llega a tiempo para la jornada 10. Está por encima de los 10,17 M que pujaría la app, así que tienes margen para ganarla."
    }
   ],
-  "crudo": "Pujaría por R. Terrats, como dice el plan de hoy: como mucho 13,21 M antes de las 00:15. Para llevártelo para tu once haría falta unos 14,85 M, pero aquí lo quieres para revender, y por encima de 13,21 M el beneficio desaparece. Con esa cifra te lo llevas más o menos 6 de cada 10 veces, y su tendencia (+3 % al día) deja una ganancia pequeña, de unos 335 mil, así que no te pases. Tu margen de 94,48 M cubre la puja sin problema.",
-  "texto": "Pujaría por R. Terrats, como dice el plan de hoy: como mucho 13,21 M antes de las 00:15. Para llevártelo para tu once haría falta unos 14,85 M, pero aquí lo quieres para revender, y por encima de 13,21 M el beneficio desaparece. Con esa cifra te lo llevas más o menos 6 de cada 10 veces, y su tendencia (+3 % al día) deja una ganancia pequeña, de unos 335 mil, así que no te pases. Tu margen de 94,48 M cubre la puja sin problema.",
+  "crudo": "Pujas por **R. Terrats** esta noche, antes de las 00:15, con **13,21 M**. Es para revenderlo, no para tu once: con su subida de un 3 % diario, el valor esperado el día de vender es de 13,55 M, unos 335 mil de beneficio. No pujes más, porque por encima de 13,21 M ya no te sale a cuenta. Por tu saldo no hay problema, porque tienes margen de sobra para la puja.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"P-1052\", \"accion\": \"pujar\", \"jugador\": \"R. Terrats\", \"importe\": 13210000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Pujas por **R. Terrats** esta noche, antes de las 00:15, con **13,21 M**. Es para revenderlo, no para tu once: con su subida de un 3 % diario, el valor esperado el día de vender es de 13,55 M, unos 335 mil de beneficio. No pujes más, porque por encima de 13,21 M ya no te sale a cuenta. Por tu saldo no hay problema, porque tienes margen de sobra para la puja.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
-  "recomiendo": [],
-  "ms": 4413,
-  "coste": 1941,
-  "entra": 14950,
-  "sale": 892,
+  "recomiendo": [
+   {
+    "accion": "pujar",
+    "jugador": "R. Terrats"
+   }
+  ],
+  "ms": 5079,
+  "coste": 2005,
+  "entra": 15045,
+  "sale": 1001,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 11759
+   "sin": 11770
   },
-  "largo": 82551,
+  "largo": 83847,
   "inventadas": [],
   "marcas": [],
   "frases": 5,
-  "palabras": 87
+  "palabras": 73
  },
  {
   "escena": "m-senna",
@@ -1652,8 +1658,8 @@
   "tipo": "coherencia",
   "pre": "¿Vendo a Hugo Duro?",
   "hist": [],
-  "crudo": "Sí, véndelo: el plan de hoy lo pone a la venta y tiene sentido. Baja −32 mil al día (cuatro días seguidos), no entra en tu once, así que no pierdes puntos, y su cláusula de 3,71 M está abierta, pero si un rival te lo clausula te paga 3,71 M y ahí no pierdes nada. Si quieres cobrar ya, ofrécelo a un rival desde 1,99 M; si no, a la venta para la oferta de LaLiga, que llega mañana a 00:15 y va de 1,68 M a 2,06 M a suerte.\n\n```notas\n{\"recomiendo\": [{\"ref\": null, \"accion\": \"vender\", \"jugador\": \"Hugo Duro\", \"importe\": 1990000, \"cuando\": \"hoy\"}], \"apuntar\": [], \"olvidar\": []}\n```",
-  "texto": "Sí, véndelo: el plan de hoy lo pone a la venta y tiene sentido. Baja −32 mil al día (cuatro días seguidos), no entra en tu once, así que no pierdes puntos, y su cláusula de 3,71 M está abierta, pero si un rival te lo clausula te paga 3,71 M y ahí no pierdes nada. Si quieres cobrar ya, ofrécelo a un rival desde 1,99 M; si no, a la venta para la oferta de LaLiga, que llega mañana a 00:15 y va de 1,68 M a 2,06 M a suerte.",
+  "crudo": "Sí, pero no aceptes ya la oferta de LaLiga de 1,84 M. Hugo Duro baja (hoy −32 mil, 7d −3,1 %) y es suplente en tu once, así que cada día vale menos y no te aporta puntos. Lo mejor es ponerlo a la venta y esperar: en el cambio de mercado de mañana 00:15 LaLiga te hará otra oferta entre 1,68 M y 2,06 M. Si antes aparece un rival que pague 1,97 M o más, véndeselo al momento. Su cláusula de 3,71 M queda abierta, pero esa cifra solo te llega si te la pagan, y no compensa para un jugador que baja.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"V-1111\", \"accion\": \"vender\", \"jugador\": \"Hugo Duro\", \"importe\": 1970000, \"cuando\": \"ahora\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "Sí, pero no aceptes ya la oferta de LaLiga de 1,84 M. Hugo Duro baja (hoy −32 mil, 7d −3,1 %) y es suplente en tu once, así que cada día vale menos y no te aporta puntos. Lo mejor es ponerlo a la venta y esperar: en el cambio de mercado de mañana 00:15 LaLiga te hará otra oferta entre 1,68 M y 2,06 M. Si antes aparece un rival que pague 1,97 M o más, véndeselo al momento. Su cláusula de 3,71 M queda abierta, pero esa cifra solo te llega si te la pagan, y no compensa para un jugador que baja.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
@@ -1664,22 +1670,20 @@
     "jugador": "Hugo Duro"
    }
   ],
-  "ms": 1797,
-  "coste": 1749.3000000000002,
-  "entra": 16043,
-  "sale": 290,
+  "ms": 7504,
+  "coste": 2269.6000000000004,
+  "entra": 15696,
+  "sale": 1400,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 12852
+   "sin": 12421
   },
-  "largo": 84925,
+  "largo": 85236,
   "inventadas": [],
-  "marcas": [
-   "no dice lo que debe (esta oferta|esa oferta|otra oferta|hara otra|siguiente|la de manana|proxima oferta|oferta mejor|no la aceptes|no aceptes|esper)"
-  ],
-  "frases": 3,
-  "palabras": 92
+  "marcas": [],
+  "frases": 5,
+  "palabras": 105
  },
  {
   "escena": "m-senna",
@@ -1694,32 +1698,30 @@
    },
    {
     "r": "ia",
-    "t": "Sí, véndelo: el plan de hoy lo pone a la venta y tiene sentido. Baja −32 mil al día (cuatro días seguidos), no entra en tu once, así que no pierdes puntos, y su cláusula de 3,71 M está abierta, pero si un rival te lo clausula te paga 3,71 M y ahí no pierdes nada. Si quieres cobrar ya, ofrécelo a un rival desde 1,99 M; si no, a la venta para la oferta de LaLiga, que llega mañana a 00:15 y va de 1,68 M a 2,06 M a suerte."
+    "t": "Sí, pero no aceptes ya la oferta de LaLiga de 1,84 M. Hugo Duro baja (hoy −32 mil, 7d −3,1 %) y es suplente en tu once, así que cada día vale menos y no te aporta puntos. Lo mejor es ponerlo a la venta y esperar: en el cambio de mercado de mañana 00:15 LaLiga te hará otra oferta entre 1,68 M y 2,06 M. Si antes aparece un rival que pague 1,97 M o más, véndeselo al momento. Su cláusula de 3,71 M queda abierta, pero esa cifra solo te llega si te la pagan, y no compensa para un jugador que baja."
    }
   ],
-  "crudo": "En lo que tengo delante no hay ninguna oferta por Hugo Duro, ni de otro mánager ni de LaLiga aceptada, así que no puedo confirmar que te dijera eso esta mañana. Lo que veo ahora es el plan de hoy: ponerlo a la venta. Si te llegó una oferta de un rival por él, dime cuánto es y si sigue viva, porque entonces el dinero entra al momento al aceptarla y la recomendación cambia: aceptar, si está por encima de 1,99 M.",
-  "texto": "En lo que tengo delante no hay ninguna oferta por Hugo Duro, ni de otro mánager ni de LaLiga aceptada, así que no puedo confirmar que te dijera eso esta mañana. Lo que veo ahora es el plan de hoy: ponerlo a la venta. Si te llegó una oferta de un rival por él, dime cuánto es y si sigue viva, porque entonces el dinero entra al momento al aceptarla y la recomendación cambia: aceptar, si está por encima de 1,99 M.\n\n**Revisado por la app:**\n- Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Vender»: Ha girado a la baja (hoy −32 mil) y no entra en tu once: cada día vale menos.",
-  "revision": [
-   "Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Vender»: Ha girado a la baja (hoy −32 mil) y no entra en tu once: cada día vale menos."
-  ],
+  "crudo": "Te digo lo mismo que antes: no aceptes la oferta de 1,84 M. El plan de esta mañana no lo tengo delante como una recomendación de aceptarla; lo que consta en la app es lo que te he dicho, y el veredicto es ese. Hugo Duro baja (hoy −32 mil, 7d −3,1 %), no entra en tu once y su oferta de LaLiga es un −2 % sobre su valor. Si la aceptas hoy te llevas 1,84 M, pero mañana a las 00:15 LaLiga te hace otra entre 1,68 M y 2,06 M, y en esta liga ese tipo de ofertas suelen salir por encima de 1,84 M. Si quieres cerrarlo ya sin esperar, pídele a un rival al menos 1,97 M.",
+  "texto": "Te digo lo mismo que antes: no aceptes la oferta de 1,84 M. El plan de esta mañana no lo tengo delante como una recomendación de aceptarla; lo que consta en la app es lo que te he dicho, y el veredicto es ese. Hugo Duro baja (hoy −32 mil, 7d −3,1 %), no entra en tu once y su oferta de LaLiga es un −2 % sobre su valor. Si la aceptas hoy te llevas 1,84 M, pero mañana a las 00:15 LaLiga te hace otra entre 1,68 M y 2,06 M, y en esta liga ese tipo de ofertas suelen salir por encima de 1,84 M. Si quieres cerrarlo ya sin esperar, pídele a un rival al menos 1,97 M.",
+  "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 3309,
-  "coste": 2464,
-  "entra": 21960,
-  "sale": 536,
+  "ms": 2025,
+  "coste": 2347.1,
+  "entra": 22086,
+  "sale": 277,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 18769
+   "sin": 18811
   },
-  "largo": 98762,
+  "largo": 100043,
   "inventadas": [],
   "marcas": [],
-  "frases": 3,
-  "palabras": 82
+  "frases": 5,
+  "palabras": 122
  },
  {
   "escena": "m-senna",
@@ -1728,29 +1730,27 @@
   "tipo": "coherencia",
   "pre": "¿Por qué el plan ya no me dice que acepte la oferta por Hugo Duro?",
   "hist": [],
-  "crudo": "El plan nunca te pidió aceptar una oferta por Hugo Duro. Lo que te propone es ponerlo a la venta hoy, porque baja cada día (−32 mil ayer y hoy) y no entra en tu once. Como la oferta de LaLiga llega en el siguiente cambio de mercado, mañana a las 00:15, y el dinero solo entra cuando la aceptas, no hay nada que aceptar ahora. Si otro mánager te ha hecho una oferta por él, dime quién y por cuánto, porque en los datos no aparece ninguna.",
-  "texto": "El plan nunca te pidió aceptar una oferta por Hugo Duro. Lo que te propone es ponerlo a la venta hoy, porque baja cada día (−32 mil ayer y hoy) y no entra en tu once. Como la oferta de LaLiga llega en el siguiente cambio de mercado, mañana a las 00:15, y el dinero solo entra cuando la aceptas, no hay nada que aceptar ahora. Si otro mánager te ha hecho una oferta por él, dime quién y por cuánto, porque en los datos no aparece ninguna.\n\n**Revisado por la app:**\n- Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Vender»: Ha girado a la baja (hoy −32 mil) y no entra en tu once: cada día vale menos.",
-  "revision": [
-   "Con **Hugo Duro**, lo que dice la app (en Hoy y en Equipo) es «Vender»: Ha girado a la baja (hoy −32 mil) y no entra en tu once: cada día vale menos."
-  ],
+  "crudo": "No tengo ninguna oferta por Hugo Duro en los datos: ni de LaLiga aceptada ni de otro mánager. Si alguien te la ha hecho por privado, dime la cifra y la miro. Lo que sí veo es que va a la baja (−32 mil hoy, lleva cinco días cayendo), es suplente y su cláusula de 3,71 M está abierta, así que la app lo marca como VENDER por inercia. Si lo vendes a LaLiga, la oferta de LaLiga llega en el cambio de mercado de mañana a las 00:15, y ahí se ve cuánto da; no entra dinero hoy.",
+  "texto": "No tengo ninguna oferta por Hugo Duro en los datos: ni de LaLiga aceptada ni de otro mánager. Si alguien te la ha hecho por privado, dime la cifra y la miro. Lo que sí veo es que va a la baja (−32 mil hoy, lleva cinco días cayendo), es suplente y su cláusula de 3,71 M está abierta, así que la app lo marca como VENDER por inercia. Si lo vendes a LaLiga, la oferta de LaLiga llega en el cambio de mercado de mañana a las 00:15, y ahí se ve cuánto da; no entra dinero hoy.",
+  "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 5320,
-  "coste": 2585,
-  "entra": 20910,
-  "sale": 988,
+  "ms": 5655,
+  "coste": 2584.5,
+  "entra": 20825,
+  "sale": 1004,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 17719
+   "sin": 17550
   },
-  "largo": 96610,
+  "largo": 97547,
   "inventadas": [],
   "marcas": [],
   "frases": 4,
-  "palabras": 88
+  "palabras": 99
  },
  {
   "escena": "m-senna",
@@ -1759,27 +1759,27 @@
   "tipo": "coherencia",
   "pre": "LaLiga me ofrece ya por Hugo Duro, ¿la cojo o espero?",
   "hist": [],
-  "crudo": "Cógela hoy. Hugo Duro vale 1,87 M, baja cada día (hoy −32 mil, y ya van cuatro días seguidos) y no entra en tu once, así que cada día que esperas pierdes dinero sin perder puntos. Si la oferta de LaLiga está en 1,87 M o por encima, acéptala ya: el dinero entra al momento y tu saldo sube para la jornada. Esperar al cambio de mañana a las 00:15 no compensa: la siguiente oferta va de −10 % a +10 % de su valor, a suerte, y el valor seguirá bajando hasta entonces.",
-  "texto": "Cógela hoy. Hugo Duro vale 1,87 M, baja cada día (hoy −32 mil, y ya van cuatro días seguidos) y no entra en tu once, así que cada día que esperas pierdes dinero sin perder puntos. Si la oferta de LaLiga está en 1,87 M o por encima, acéptala ya: el dinero entra al momento y tu saldo sube para la jornada. Esperar al cambio de mañana a las 00:15 no compensa: la siguiente oferta va de −10 % a +10 % de su valor, a suerte, y el valor seguirá bajando hasta entonces.",
+  "crudo": "No la cojas. Te ofrece 1,84 M (−2,0 % sobre su valor de 1,87 M), y mañana a las 00:15 LaLiga te hace otra oferta entre 1,68 M y 2,06 M. En esta liga las ofertas que se aceptan rondan +5,1 % (unos 1,96 M), y 6 de cada 10 veces la de mañana te deja más que esta. Como baja unos 32 mil al día, la diferencia es pequeña: aguantar hasta mañana te cuesta poco y puede darte unos 120 mil más.\n\nSi necesitas el dinero ya, la alternativa es un rival que te pague entre 1,97 M y 2,31 M, pero no lo fuerces por menos de 1,97 M. Y ojo, su cláusula de 3,71 M no es un suelo: si alguien te la paga, te da más que cualquier oferta de LaLiga, pero hoy nadie lo va a hacer, así que no cuentes con ello.",
+  "texto": "No la cojas. Te ofrece 1,84 M (−2,0 % sobre su valor de 1,87 M), y mañana a las 00:15 LaLiga te hace otra oferta entre 1,68 M y 2,06 M. En esta liga las ofertas que se aceptan rondan +5,1 % (unos 1,96 M), y 6 de cada 10 veces la de mañana te deja más que esta. Como baja unos 32 mil al día, la diferencia es pequeña: aguantar hasta mañana te cuesta poco y puede darte unos 120 mil más.\n\nSi necesitas el dinero ya, la alternativa es un rival que te pague entre 1,97 M y 2,31 M, pero no lo fuerces por menos de 1,97 M. Y ojo, su cláusula de 3,71 M no es un suelo: si alguien te la paga, te da más que cualquier oferta de LaLiga, pero hoy nadie lo va a hacer, así que no cuentes con ello.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
   "recomiendo": [],
-  "ms": 5734,
-  "coste": 2676.6,
-  "entra": 22071,
-  "sale": 939,
+  "ms": 5419,
+  "coste": 2634.4,
+  "entra": 21724,
+  "sale": 924,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 18880
+   "sin": 18449
   },
-  "largo": 99072,
+  "largo": 99383,
   "inventadas": [],
   "marcas": [],
-  "frases": 4,
-  "palabras": 94
+  "frases": 6,
+  "palabras": 148
  },
  {
   "escena": "m-senna",
@@ -1788,26 +1788,31 @@
   "tipo": "coherencia",
   "pre": "Entonces, ¿a Hugo Duro lo aguanto y lo quito de la venta?",
   "hist": [],
-  "crudo": "No, lo que toca es venderlo hoy. Lleva cuatro días seguidos bajando (hoy −32 mil) y en 5 días perdería unos 117 mil. Como es suplente en tu once, no pierdes puntos con su salida.\n\nPonlo a la venta ya: LaLiga te hará la oferta en el cambio de mercado de mañana a las 00:15, que va de −10 % a +10 % de su valor (1,87 M), y el dinero entra cuando aceptes. Su cláusula de 3,71 M está abierta, así que si algún rival se la clausula te pagaría más, pero no cuentes con ello.",
-  "texto": "No, lo que toca es venderlo hoy. Lleva cuatro días seguidos bajando (hoy −32 mil) y en 5 días perdería unos 117 mil. Como es suplente en tu once, no pierdes puntos con su salida.\n\nPonlo a la venta ya: LaLiga te hará la oferta en el cambio de mercado de mañana a las 00:15, que va de −10 % a +10 % de su valor (1,87 M), y el dinero entra cuando aceptes. Su cláusula de 3,71 M está abierta, así que si algún rival se la clausula te pagaría más, pero no cuentes con ello.",
+  "crudo": "No lo aguantes. Ponlo a la venta ya: es suplente, así que no le quita nada a tu once, y lleva cuatro días bajando (hoy −32 mil) con una media de 2 puntos. Lo que da LaLiga es una lotería entre −10 % y +10 % de su valor (1,87 M), y el dinero no entra hasta que aceptes la oferta en el cambio de mercado de mañana a las 00:15. Su cláusula de 3,71 M no es un refugio: nadie paga un +98 % sobre el valor, así que no te protege.\n\n```notas\n{\"recomiendo\": [{\"ref\": \"V-1111\", \"accion\": \"vender\", \"jugador\": \"Hugo Duro\", \"importe\": null, \"cuando\": \"ahora\"}], \"apuntar\": [], \"olvidar\": []}\n```",
+  "texto": "No lo aguantes. Ponlo a la venta ya: es suplente, así que no le quita nada a tu once, y lleva cuatro días bajando (hoy −32 mil) con una media de 2 puntos. Lo que da LaLiga es una lotería entre −10 % y +10 % de su valor (1,87 M), y el dinero no entra hasta que aceptes la oferta en el cambio de mercado de mañana a las 00:15. Su cláusula de 3,71 M no es un refugio: nadie paga un +98 % sobre el valor, así que no te protege.",
   "revision": [],
   "apuntadas": [],
   "corr": [],
   "promete": false,
-  "recomiendo": [],
-  "ms": 4203,
-  "coste": 1937,
-  "entra": 15240,
-  "sale": 826,
+  "recomiendo": [
+   {
+    "accion": "vender",
+    "jugador": "Hugo Duro"
+   }
+  ],
+  "ms": 6180,
+  "coste": 2048.6000000000004,
+  "entra": 14716,
+  "sale": 1154,
   "cache": {
-   "lee": 31911,
+   "lee": 32753,
    "escribe": 0,
-   "sin": 12049
+   "sin": 11441
   },
-  "largo": 83268,
+  "largo": 83309,
   "inventadas": [],
   "marcas": [],
-  "frases": 5,
-  "palabras": 97
+  "frases": 4,
+  "palabras": 93
  }
 ]
