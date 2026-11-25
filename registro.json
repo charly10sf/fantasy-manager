@@ -3119,7 +3119,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/antony-enciende-su-luz-f202611-n/": 1795347337000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261122/1004254062/copete-sido-vuelta-sonada.html": 1795347039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261122/1004254066/convocados-simeone-asaltar-coliseum.html": 1795349568000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261122/1004254070/antony-estara-disponible-duelo-champions-slovan.html": 1795349185000,
    "SPORT|136715788": 1795347290000,
@@ -3274,7 +3273,9 @@
    "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000,
    "El Correo|https://www.elcorreo.com/athletic/psg-nico-williams-lista-posibles-fichajes-enero-20261125112614-nt.html": 1795602420000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/hijo-nadal-flipa-golazo-bellingham-vuelve-viral-celebracion-valverde-20261125_3481690.html": 1795604249000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html": 1795605992000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255318/psg-interesa-nico-williams.html": 1795604875000
   },
   "hechos": [
    {
@@ -3491,11 +3492,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261125/1004255325/terzic-tira-bilbao-athletic-lezama.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795605992000,
+    "id": "927",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Berenguer no empieza la sesión con el grupo en Lezama",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -4456,17 +4469,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 155049,
-  "salida": 9299,
+  "entrada": 157289,
+  "salida": 9957,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.303939,
+  "dolares": 0.304492,
   "reservado": 0
  },
  "recientes": {
@@ -9516,13 +9529,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6281,
+   "ok": 6282,
    "fallos": 0,
-   "ejecuciones": 5100,
+   "ejecuciones": 5101,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T11:26:14.275Z"
+   "ultima": "2026-11-25T11:31:12.602Z"
   }
  },
  "ptsDirecto": {},
@@ -9539,15 +9552,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:26:23.498Z"
+   "ultimaBien": "2026-11-25T11:31:23.576Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:26:23.498Z"
+   "ultimaBien": "2026-11-25T11:31:23.576Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:26:23.498Z"
+   "ultimaBien": "2026-11-25T11:31:23.576Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9555,11 +9568,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:26:23.498Z"
+   "ultimaBien": "2026-11-25T11:31:23.576Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T11:26:23.498Z"
+   "ultimaBien": "2026-11-25T11:31:23.576Z"
   }
  },
  "avisos": [
