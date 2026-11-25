@@ -2222,6 +2222,13 @@
    "jornada": 14,
    "id": "2125501377174462680",
    "t": "2026-11-25T08:06:33.377Z"
+  },
+  {
+   "clave": "previa|136",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125532847100289412",
+   "t": "2026-11-25T10:11:36.367Z"
   }
  ],
  "estados": {
@@ -4451,16 +4458,16 @@
   "dia": "2026-11-25",
   "llamadas": {
    "clasificar": 13,
-   "redactar": 7,
-   "revisar": 4,
+   "redactar": 9,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118678,
-  "salida": 7787,
-  "cacheLee": 2903,
-  "cacheEscribe": 8709,
-  "dolares": 0.229372,
+  "entrada": 147529,
+  "salida": 8609,
+  "cacheLee": 5806,
+  "cacheEscribe": 11612,
+  "dolares": 0.302842,
   "reservado": 0
  },
  "recientes": {
@@ -4554,10 +4561,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-24T08:06:54.596Z",
-    "texto": "🗓️ El cruce de Betis-Rayo, el sábado a las 14:00, favorece a los delanteros y medios del Betis, porque el Rayo es de los que más encajan: 1,8 por partido, y va 16º.\n\nEn el Betis, Valles es el fijo bajo palos, con un 94 % de titularidad, y Cucho, con un 54 %, tiene más opciones de jugar que de quedarse fuera. Isco también es fijo.\n\nEl Rayo no tendrá a Batalla, lesionado. Álvaro García y Pedrosa son duda, aunque lo más probable es que estén, y Camello y Unai López son seguros."
-   },
-   {
     "t": "2026-11-24T10:26:40.248Z",
     "texto": "Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez y Rockson, lesionados. Al Valencia 🦇, Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 % de titularidad, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nEl que más suele dar de los dos es Copete, con 7,5 de media."
    },
@@ -4572,6 +4575,10 @@
    {
     "t": "2026-11-25T08:06:33.380Z",
     "texto": "La Real y el Sevilla llegan a Anoeta, el domingo a las 21:00, pegados en la tabla: 5º y 6º.\n\nEl cruce favorece a los delanteros y medios sevillistas, porque la Real es de los que más encajan. Al portero y a los defensas del Sevilla les toca sufrir, porque los txuri-urdin también marcan mucho.\n\nEn la Real, Barrenetxea está lesionado y Sucic, con un 62 % de titularidad, y Oskarsson, con un 59 %, tienen más opciones de jugar que de no hacerlo. Oyarzabal es fijo.\n\nEl Sevilla no cuenta con Miguel Sierra, lesionado, y Guridi lo tiene difícil. Fofana y Kike Salas son seguros."
+   },
+   {
+    "t": "2026-11-25T10:11:36.369Z",
+    "texto": "🗓️ Espanyol-Getafe, el lunes a las 21:00: los pericos reciben a un Getafe que va 18º y marca 0,6 goles por partido.\n\nEso le viene bien al portero y a los defensas del Espanyol. Cabrera, con un 90 % de titularidad, y El Hilali son fijos atrás, aunque falta Riedel por sanción. Hinojo tiene más papeletas de jugar que de no hacerlo, y Dolan, arriba, puede quedarse fuera.\n\nEn el Getafe no está Djene, sancionado. David Soria es el fijo bajo palos y Francho está a medias."
    }
   ],
   "noticias": [
@@ -9510,13 +9517,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6265,
+   "ok": 6266,
    "fallos": 0,
-   "ejecuciones": 5084,
+   "ejecuciones": 5085,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T10:06:13.372Z"
+   "ultima": "2026-11-25T10:11:12.985Z"
   }
  },
  "ptsDirecto": {},
@@ -9533,15 +9540,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:06:19.893Z"
+   "ultimaBien": "2026-11-25T10:11:36.483Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:06:19.893Z"
+   "ultimaBien": "2026-11-25T10:11:36.483Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:06:19.893Z"
+   "ultimaBien": "2026-11-25T10:11:36.483Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9549,11 +9556,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:06:19.893Z"
+   "ultimaBien": "2026-11-25T10:11:36.483Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:06:19.893Z"
+   "ultimaBien": "2026-11-25T10:11:36.483Z"
   }
  },
  "avisos": [
