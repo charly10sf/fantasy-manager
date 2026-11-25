@@ -1947,9 +1947,11 @@ async function invitarSiToca({ ya = false } = {}) {
   } else if (cod && r.est && r.est.puedeCanjear === false) LS.del('inv-cod');
   // (25 nov, Carlos) solo a quien parece invitado (el servidor le propone un código o alguien de su liga ha sacado el suyo);
   // a los demás, nada: lo tienen en Ajustes
-  else if (!cod && pareceInvitado(uid) && !LS.get('inv-preguntado', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
+  // (25 nov, 17:46, Carlos: «a los que ya han entrado y les ha ido mal, que les salga») la marca es nueva («inv-preguntado2»):
+  // a quien ya vio la ventana de antes (a todos los nuevos, sin pistas) y parece invitado, le sale una vez esta
+  else if (!cod && pareceInvitado(uid) && !LS.get('inv-preguntado2', 0) && !S.hoja && !tourAbierto() && !$('#bienvenida') && document.visibilityState !== 'hidden') {
     // (sobre todo para quien la baja de Google Play, a quien no le llega el enlace; Carlos, 19 nov)
-    LS.set('inv-preguntado', Date.now());
+    LS.set('inv-preguntado2', Date.now());
     S.inv = { cod: codigoPropuesto(uid), propuesto: codigoPropuesto(uid) };
     hoja('invitado');
   }

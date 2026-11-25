@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4g';
+export const VERSION = '0.8.4h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,15 @@ export const VERSION = '0.8.4g';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (25 nov, 17:46, Carlos: «a los que ya han entrado y les ha ido mal, que les salga el aviso») La ventana sola de quien
+    // parece invitado va con una marca nueva (LS «inv-preguntado2»): a quien ya vio la de antes (salía a todos los nuevos),
+    // le sale una vez la nueva si tiene pista. Solo web. Prueba: caso-invitado (C2)
+    v: '0.8.4h', f: '2026-11-25', h: '17:53', t: 'El código, también para los que ya habían entrado',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'regalo', t: 'El código, también para los que ya habían entrado', x: 'A quien entró en los últimos días con la invitación de un amigo y no puso su código, la app se lo vuelve a preguntar una vez.' },
+    ],
+  },
   {
     // (25 nov, Carlos: «hay gente sacando códigos y no ha entrado nadie» y «que solo salga si de verdad te ha invitado»;
     // claude/prompt-invitar-codigo.md, hallazgo 16 de la auditoría) Invitar sin AAB. Quien entra nuevo solo ve «¿Te ha

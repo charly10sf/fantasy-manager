@@ -86,7 +86,7 @@ try {
   await page.waitForTimeout(800);
   ok(m.get('a|902') && m.get('a|902').por === '900' && cnt().canje_enlace === 1, `A enlace: canje solo al entrar (${JSON.stringify(cnt())})`);
   ok(pedidos.includes('?liga=4455'), 'A: el estado se pide con la liga');
-  const limpio = (u) => page.evaluate((u) => { window.S.D.yo = { ...window.S.D.yo, userId: u }; for (const k of ['fm-invitar', 'fm-inv-cod', 'fm-inv-preguntado', 'fm-inv-hecho', 'fm-inv-banda-cerrada']) localStorage.removeItem(k); }, u);
+  const limpio = (u) => page.evaluate((u) => { window.S.D.yo = { ...window.S.D.yo, userId: u }; for (const k of ['fm-invitar', 'fm-inv-cod', 'fm-inv-preguntado', 'fm-inv-preguntado2', 'fm-inv-hecho', 'fm-inv-banda-cerrada']) localStorage.removeItem(k); }, u);
   const hayBanda = () => page.evaluate(() => !!document.querySelector('.banda-invitado'));
   // B: Google Play, sin pistas: nada
   quien = '903'; ids = ['600', '601']; red = 'b'.repeat(64);
@@ -117,6 +117,15 @@ try {
   await clic('[data-accion="invitadoNo"]'); await page.waitForTimeout(400);
   await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(600);
   ok(!(await hayBanda()) && !(await texto()), 'C: «Nadie» quita la banda y no vuelve');
+  // C2: quien ya vio la ventana de antes (la marca vieja) y parece invitado: le sale una vez la nueva
+  quien = '907'; ids = ['900'];
+  await limpio('907');
+  await page.evaluate(() => localStorage.setItem('fm-inv-preguntado', String(Date.now() - 3600e3)));
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(800);
+  ok(/¿Te ha invitado un amigo\?/.test(await texto()), 'C2: con la marca de la ventana de antes, le sale la nueva');
+  await clic('[data-accion="cerrarHoja"]'); await page.waitForTimeout(300);
+  await page.evaluate(() => window.__inv({ ya: true })); await page.waitForTimeout(600);
+  ok(!(await texto()) && (await hayBanda()), 'C2: una sola vez; después, la banda');
   // D: abrió el enlace desde esta conexión hace poco: el código ya puesto
   quien = '906'; ids = []; red = 'c'.repeat(64);
   await worker('/invitar/llega', { cod });
