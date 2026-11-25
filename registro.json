@@ -3118,7 +3118,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261122/11690468/paredes-desmaya-plena-entrevista-ganar-copa-sudamericana.html": 1795354161000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254111/matarazzo-alinea-sarr-da-oportunidad-fort-inicio-santander.html": 1795356570000,
    "SPORT|136723946": 1795356873000,
    "AS|https://as.com/futbol/aprobados-y-suspensos-del-barca-ante-el-villarreal-pedri-vuelve-a-derretir-a-laporta-f202611-n/": 1795361460000,
@@ -9529,13 +9528,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6305,
+   "ok": 6306,
    "fallos": 0,
-   "ejecuciones": 5124,
+   "ejecuciones": 5125,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T13:26:16.992Z"
+   "ultima": "2026-11-25T13:31:18.059Z"
   }
  },
  "ptsDirecto": {},
@@ -9552,15 +9551,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:26:25.802Z"
+   "ultimaBien": "2026-11-25T13:31:27.477Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:26:25.802Z"
+   "ultimaBien": "2026-11-25T13:31:27.477Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:26:25.802Z"
+   "ultimaBien": "2026-11-25T13:31:27.477Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9568,11 +9567,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:26:25.802Z"
+   "ultimaBien": "2026-11-25T13:31:27.477Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T13:26:25.802Z"
+   "ultimaBien": "2026-11-25T13:31:27.477Z"
   }
  },
  "avisos": [
