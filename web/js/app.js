@@ -1460,7 +1460,7 @@ function ir(vista, { arriba = true } = {}) {
   pintar({ arriba });
   // (repaso de la 0.8s) al ir a Hoy o a Pregunta, lo último de los otros dispositivos (como mucho cada 20 s): con la app
   // abierta en el móvil mientras se usa la web, antes no llegaba nada hasta salir de la app y volver
-  if ((vista === 'hoy' || vista === 'ia') && S.D && !enDemo()) sincronizar();
+  if ((vista === 'hoy' || vista === 'ia') && S.D && !enDemo()) sincronizar({ por: 'vista' });
 }
 const bajarChat = () => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 30);
 
@@ -1702,7 +1702,7 @@ async function trabajoFondo() {
     } catch (e) { if (e.sesion) throw e; paso(`once confirmado: ${e.message}`); }
     LS.set('fondo-completo', Date.now()); LS.set('fondo-cierre', (S.M && S.M.cierreMercado) || 0);
     // (22 nov) antes de pedir el plan con la app cerrada: puede que otro dispositivo tuyo ya lo tenga
-    try { await sincAntes(); } catch (e) { /* como antes */ }
+    try { await sincAntes(5000, { por: 'fondo' }); } catch (e) { /* como antes */ }
     if (planViejo(S.M) || turnoF()) {
       let conIA = false;
       // (con la IA de la app, 2 al día: solos, a sus horas, y cuentan en los del día; planViejoAuto y planes-hora.js)
@@ -1940,7 +1940,7 @@ async function cargar0({ silencio = false } = {}) {
 
 /** lo que va después de cargar, sin bloquear: las fichas de los jugadores (forma y caras) y el plan con IA */
 /** avisa al servidor de que la app está abierta (para la lista «Quién usa la app» del dueño); nada en la de ejemplo */
-function saludarSiToca() {
+function saludarSiToca(por = 'cada10') {
   if (!S.D || enDemo() || !haySesion() || document.hidden) return Promise.resolve();
   calDineroSiToca();
   calPujasSiToca();
@@ -1957,7 +1957,7 @@ function saludarSiToca() {
     // (19 nov) los apodos de los rivales con tu cuenta: los de este dispositivo y los de los otros, juntos
     .then(() => sincronizarApodos(S.D && S.D.liga && S.D.liga.id))
     // (22 nov) y el plan, las preguntas y lo que le has contado
-    .then((x) => sincronizar({ ya: true }).then(() => x, () => x))
+    .then((x) => sincronizar({ ya: true, por: typeof por === 'string' ? por : 'cada10' }).then(() => x, () => x))
     .then((cambia) => { if (cambia && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); })
     .catch(() => {});
 }
@@ -2550,7 +2550,7 @@ async function mirarMiOnce() {
 async function despues() {
   // la bienvenida, después del saludo al Worker (si ya la vio en otro dispositivo, el saludo lo dice) o a los 4 s como mucho
   S.bienvenidaPendiente = tocaBienvenida();
-  const saludo = saludarSiToca();
+  const saludo = saludarSiToca('entrar');
   if (S.bienvenidaPendiente) Promise.race([saludo, new Promise((r) => setTimeout(r, 4000))]).then(() => quizaBienvenida(300));
   mirarMiOnce();
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
@@ -2591,7 +2591,7 @@ async function planAHora(alAbrir = false) {
   }
   // (22 nov) antes de pedirlo, se mira si otro dispositivo tuyo ya lo tiene: el móvil y la web, con el mismo plan
   planAHoraEnCurso = true;
-  try { await sincAntes(); } finally { planAHoraEnCurso = false; }
+  try { await sincAntes(5000, { por: 'plan' }); } finally { planAHoraEnCurso = false; }
   const t = toca();
   if (!t || !S.D || enDemo()) return;
   intentarTurno(t.turno);
@@ -3400,7 +3400,7 @@ async function enviarPregunta(texto, { extra = false } = {}) {
   try {
     // (repaso de la 0.8s) antes de preguntar, lo último de los otros dispositivos: la pregunta va detrás de la conversación de
     // verdad y no pisa lo que se haya preguntado en el otro (como mucho 2,5 s)
-    if (S.D && !enDemo()) { try { await sincAntes(2500, { conChat: true }); } catch (e) { /* como antes */ } }
+    if (S.D && !enDemo()) { try { await sincAntes(2500, { conChat: true, por: 'pregunta' }); } catch (e) { /* como antes */ } }
     await ligaAlDiaParaPreguntar();
     // (22 nov, Carlos) lo que cuenta como un hecho («no me quedan blindajes», «a este no lo vendo», «ya he pujado») se
     // apunta antes de preguntar y se rehace el análisis: la IA ya lee los datos corregidos y Hoy dice lo mismo
@@ -4602,9 +4602,9 @@ document.addEventListener('visibilitychange', () => {
 // la web nueva: al volver a la pestaña y cada 10 minutos con ella a la vista (como mucho cada 5)
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D) mirarWebNueva(); });
 // (22 nov) al volver a la app: lo que hayas hecho en otro dispositivo (un plan nuevo, una pregunta, algo que le has contado)
-document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D && !enDemo()) sincronizar(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D && !enDemo()) sincronizar({ por: 'volver' }); });
 // (y al volver a la ventana en el ordenador, que no siempre cambia la visibilidad)
-window.addEventListener('focus', () => { if (S.D && !enDemo()) sincronizar(); });
+window.addEventListener('focus', () => { if (S.D && !enDemo()) sincronizar({ por: 'volver' }); });
 setInterval(() => { if (!document.hidden && S.D) mirarWebNueva(); }, 10 * MIN);
 
 /* ---------------- lo nuevo de esta versión ---------------- */

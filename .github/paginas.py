@@ -268,7 +268,10 @@ def secnav(raiz, p):
               ('guias/valor-de-mercado.html', 'Cómo se mueve el valor')]
     elif s == 'jornada':
         xs = [('jornada/index.html', 'Jornadas'), ('jornada/onces.html', 'Onces probables')]
-        if previa:
+        # (25 nov, B10) la previa más nueva ya jugada (la de la siguiente aún no ha salido): su resumen, no «Previa J13»
+        if previa and RESUMENES.get(previa['jornada']):
+            xs.append((RESUMENES[previa['jornada']]['ruta'], f'Resumen J{previa["jornada"]}'))
+        elif previa:
             xs.append((previa['ruta'], f'Previa J{previa["jornada"]}'))
         xs += [('bajas/index.html', 'Bajas'), ('clausulas/index.html', 'Cláusulas')]
     elif s in ('aprende', 'calculadoras'):

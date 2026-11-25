@@ -82,6 +82,9 @@ jobs:
       # (0.8.4) los avisos de fallo según quién mira: el dueño, quien ayuda con los fallos (sin contestar) y los demás
       - name: Los avisos de fallo
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-avisos.mjs
+      # (25 nov) las noticias de la web: el RSS de Google y el de Bing, y Bing cuando Google dice 503 por el Worker
+      - name: Las noticias de la web (Google y Bing)
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-noticias.mjs
 
   ia:
     runs-on: ubuntu-latest

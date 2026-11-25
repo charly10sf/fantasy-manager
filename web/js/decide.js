@@ -32,7 +32,11 @@
     11 inercia       suplente que ha girado, baja o se ha parado (`M.ventaPorInercia`)       → vender
     12 desplome      suplente con beneficio que lleva un −4 % en 7 días                      → vender
     13 resto                                                                                 → aguantar
-   Encima, la oferta que tenga (el consejo de `M.misVentas`, con UNA cuenta para el que sube) y, encima de todo, el dinero. */
+   Encima, la oferta que tenga (el consejo de `M.misVentas`, con UNA cuenta para el que sube) y, encima de todo, el dinero.
+
+   FICHAR (`M.decisionFichar`, uno que no es tuyo): la puja que el plan retira → plantilla llena → el paso vivo del plan →
+   mirado y descartado (los «Mirados», `sinFichar`, lo que la app no haría hoy). Encima de un «no», si ya tiene tu puja y el
+   plan no la retira: «no pujaría, pero tu puja sigue» (`yaPujada`, 25 nov). La palabra de cómo va su valor, `comoVa`. */
 import { eur, pct, cuando, DIA, HORA } from './util.js';
 
 const num = (x) => +x || 0;
@@ -51,6 +55,17 @@ export function tocaRevender(M, x, ahora = Date.now()) {
   const baja = t.p1 != null && t.p1 < -1;
   const protege = !!x.protegidoHasta && x.protegidoHasta - ahora <= 1.5 * DIA;
   return { toca: !ventana || ahora >= ventana.ponerVenta - 6 * HORA || baja || protege, baja, protege, cuando: ventana ? ventana.ponerVenta : null };
+}
+
+/** (25 nov, B8) cómo va su valor, con la MISMA palabra que la línea de la inercia (la fase de `M.inercia`): Catena salía
+ * «HA GIRADO A LA BAJA» en lo que lee la IA y «se está frenando» en la decisión. Sin fase, lo de la venta por inercia */
+export function comoVa(M, pid, vi = null) {
+  const f = ((M && M.inercia && M.inercia(pid)) || {}).fase;
+  if (f === 'giro') return 'Ha girado a la baja';
+  if (f === 'baja') return 'Está bajando';
+  if (f === 'parado') return 'Se ha estancado';
+  if (f === 'frena') return 'Se está frenando';
+  return vi && vi.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando';
 }
 
 /** la decisión de vender o aguantar a uno tuyo, sin mirar ofertas ni el plan */
@@ -99,7 +114,7 @@ function base(D, M, x, ahora) {
       if (sinRelevo(M, x) && !(M.cambioHecho && M.cambioHecho(pid))) return out('aguantar', 'titular-baja', 'busca-sustituto', `${baja}, pero es titular y no tienes otro ${PUESTO[j.pos] || 'en su puesto'} como él: búscale sustituto antes de venderlo.`);
       return out('vender', 'titular-baja', null, `${baja} y tienes relevo en tu plantilla: a la venta, por si llega una buena oferta.`);
     }
-    if (vi) return out('aguantar', 'titular-gira', 'titular', `${vi.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando'}, pero es titular en tu once (${d1(pierde)} pts por jornada) y aún no baja todos los días.`);
+    if (vi) return out('aguantar', 'titular-gira', 'titular', `${comoVa(M, pid, vi)}, pero es titular en tu once (${d1(pierde)} pts por jornada) y aún no baja todos los días.`);
     return out('aguantar', 'resto', 'titular', `Es titular en tu once (${d1(pierde)} pts por jornada) y no está bajando.`);
   }
   // 10-11. un suplente, por la inercia
@@ -300,7 +315,17 @@ export function decidir(D, M, c = null) {
   };
   /* FICHAR: lo que dice el plan que se ve de uno que no es tuyo. { accion: 'fichar', como, para, importe, porque } si hay un
      paso vivo; { accion: 'no', porque } si el plan lo ha mirado y descartado; null si no dice nada de él */
+  /* (25 nov, B6) Courtois en el parón: la ficha decía «no pujes» con su puja ya puesta y el plan sin retirarla (solo retira
+     la que te deja en negativo). Lo que el plan no ficharía y ya tiene tu puja: se dice que hoy no pujaría, que tu puja sigue
+     y cómo quitarla. Va después de lo de retirar y de la plantilla llena, y encima de todo lo demás que dice «no» */
   M.decisionFichar = (pid) => {
+    const d = fichar0(pid);
+    if (!d || d.accion !== 'no' || d.retira) return d;
+    const m = (M.mercado || []).find((y) => String(y.pid) === String(pid) && y.miPuja);
+    if (!m || (M.mias || []).length >= 25) return d;
+    return { ...d, yaPujada: m.miPuja, porque: `${String(d.porque || '').replace(/[.\s]*$/, '.')} Tu puja de ${eur(m.miPuja)} sigue puesta: el plan no te la quita porque no te deja en negativo. Si ya no lo quieres, retírala en el mercado antes de que se resuelva.`.replace(/^\.\s*/, '').replace(/^\p{Ll}/u, (c) => c.toUpperCase()) };
+  };
+  const fichar0 = (pid) => {
     if (!pid || (M.dueno && M.dueno[pid] === yo)) return null;
     const P = planDe();
     if (!P) return null;

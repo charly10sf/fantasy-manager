@@ -195,7 +195,14 @@ export function textoOp(o, M = null) {
       // no puede decir «no pujes tanto» contra el plan (Cubarsí en el parón: 44,70 M para tenerlo, 49,81 M para revender)
       const espP = !nr && (M && M.especular || []).find((e) => e.pid === o.pid && e.origen === 'mercado');
       const revTxt = espP && espP.puja && Math.abs(espP.puja - o.puja) > 1e5 ? `; PARA REVENDERLO la app puja ${eur(espP.puja)}: si EL PLAN DE HOY lo lleva, la puja que vale es la del plan` : '';
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}${cuentaTxt}${revTxt}`;
+      // (25 nov, B7) si el plan lo ha mirado y no lo ficha, la cifra es la del plan («se paga a unos 45,04 M», la que gana en
+      // tu liga), no «la app pujaría 39,45 M»: eran dos pujas del motor y al chat le llegaban las dos (Xavi Espart)
+      const df = M && M.decisionFichar ? M.decisionFichar(o.pid) : null;
+      const gana = (nr && nr.puja) || (o.pujaGana > (o.puja || 0) ? o.pujaGana : null);
+      const pujaTxt = df && df.accion === 'no' && !df.retira && gana
+        ? `; para ganarlo en tu liga se paga a unos ${eur(gana)} (${pct((gana / o.precio - 1) * 100)})`
+        : `; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? `, recortada para no pagar de más por lo que aporta${o.pujaGana > o.puja ? ` (para llevárselo casi seguro harían falta ${eur(o.pujaGana)})` : ''}` : ''}${ganaTxt}`;
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, pujaReal(o), o.saldo)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}${pujaTxt}${cuentaTxt}${revTxt}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);

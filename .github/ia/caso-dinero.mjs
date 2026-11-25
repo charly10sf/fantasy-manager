@@ -63,6 +63,17 @@ const r = await P.page.evaluate(async () => {
   out.d = { abierto: !L.bloqueada('dineroRivales', r2.e.teamId), cifra: /dinero (≈ )?\d[^|]*ABIERTO/.test(l2(r2.e.manager)), otro: /sin cifra\)|no se sabe/.test(l2(r3.e.manager)) && !/dinero (≈ )?\d/.test(l2(r3.e.manager)),
     orden: /PREGUNTA POR EL DINERO DE [^\n]*CERRADO/.test(datos2), dilo: /QUE LO TIENE ABIERTO \(ha visto sus anuncios\): díselo/.test(datos2), deOtro: I.dineroCerradoDe(`¿Cuánto dinero tiene ${r3.e.manager}?`, D, M).length, conoce: !!(r2.dinero && r2.dinero.v != null) };
   U.LS.del('top-rivales');
+  // (g) (25 nov, B13) «¿quién me puede pagar la cláusula de X?» con «quién paga» cerrado: a la IA no le llega a quién le
+  // llega (ni «no le llega a ningún rival»), se le dice que lo diga cerrado y la app quita «a ninguno le llega»
+  const qp = `¿Quién me puede pagar la cláusula de ${M.mias[0].j.nombre}?`;
+  const dqp = I.datosChat(qp, D, M, c, {}), pqp = JSON.stringify(I.pedidoChat(qp, D, M, c, [], [], {}));
+  const dp = I.dineroPreguntado(qp, D, M);
+  const respQ = [
+    `Ahora mismo nadie: a ninguno le llega el saldo para pagarla. Pide un 54 % sobre su valor y en esta liga los clausulazos se pagan a un +22 %.`,
+    `Ningún rival puede pagarte esa cláusula. Además, está cerrada hasta que empiece la jornada.`,
+  ].map((t) => I.sinDineroCerrado(t, dp.cerrados, { quien: dp.quien }).texto);
+  out.g = { cerrado: L.bloqueada('quienPaga'), quien: dp.quien, fuga: /le sobra el dinero para pagarla|le llega justo|no le llega a ningún rival/.test(dqp), orden: /PREGUNTA QUIÉN PUEDE PAGARLE UNA CLÁUSULA/.test(pqp),
+    resp: respQ, limpia: respQ.every((t) => /quién paga tus cláusulas lo tienes cerrado/.test(t) && !/a ninguno le llega|Ningún rival puede pagar/.test(t)), queda: /54 %/.test(respQ[0]) };
   // (f) plegar lo largo
   const larga = Array.from({ length: 9 }, (_, i) => `Esta es la frase ${i + 1} de la respuesta.`).join(' ');
   const h = V.respuestaHTML(`${larga}\n\n**Revisado por la app:**\n- Ojo con una cosa.`);
@@ -81,9 +92,31 @@ ok(!r.c.fuga && r.c.candado && r.c.resto, `(c) por el chat, con una IA que lo su
 ok(r.c.otra, '(e) en otra pregunta (el peligro de los rivales), lo que dice la app de quién tiene dinero no se quita');
 ok(r.e.mio === 0 && r.e.peligro === 0 && r.e.jug === 0, '(e) su propio saldo, el peligro o el valor de un jugador no son preguntar por el dinero de un rival');
 ok(r.d.abierto && (!r.d.conoce || r.d.cifra) && r.d.otro && !r.d.orden && r.d.dilo && r.d.deOtro === 1, '(d) con un rival abierto, de ese va la cifra y se le puede decir; de los demás, no');
+ok(r.g.cerrado && r.g.quien && !r.g.fuga && r.g.orden, '(g) «¿quién me puede pagar la cláusula de X?» con quién paga cerrado: a la IA no le llega si le llega a alguien y se le dice que lo diga cerrado');
+ok(r.g.limpia && r.g.queda, `(g) y de la respuesta se quita «a ninguno le llega» y queda lo de la cláusula sobre su valor: «${(r.g.resp[0] || '').slice(0, 160)}»`);
 ok(r.f.plegada && r.f.vistas === 5 && r.f.todas === 9 && r.f.rev && r.f.corta && r.f.lista, `(f) una respuesta de 9 frases: ${r.f.vistas} a la vista y el resto en «Seguir leyendo»; lo revisado, siempre a la vista; las cortas y las listas, enteras`);
 ok(!P.errores.length, `sin errores en la página${P.errores.length ? `: ${P.errores[0]}` : ''}`);
 await P.cerrar();
+// (h) (25 nov) en la web del iPhone no hay app de Google Play: lo cerrado se abre invitando (el dinero) o aún no (quién paga)
+{
+  const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+  const Pi = await pagina('martes', () => 'vale', { ua: UA });
+  const h = await Pi.page.evaluate(async () => {
+    const I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), C = await import('./js/chat-sistema.js');
+    const { D, M } = window.S, c = Dt.cfg();
+    const o = I.opcionesChat(), sis = C.sistemaChat(o);
+    const r2 = (M.rivales.find((x) => x.e.pos === 2) || M.rivales[1]).e.manager;
+    const ped = (q) => JSON.stringify(I.pedidoChat(q, D, M, c, [], [], {}));
+    const qp = `¿Quién me puede pagar la cláusula de ${M.mias[0].j.nombre}?`, dp = I.dineroPreguntado(qp, D, M);
+    const t1 = I.sinDineroCerrado('Ahora mismo nadie: a ninguno le llega el saldo para pagarla.', dp.cerrados, { quien: dp.quien }).texto;
+    const t2 = I.sinDineroCerrado(`${r2} tiene un saldo medio.`, I.dineroCerradoDe(`¿Cuánto dinero tiene ${r2}?`, D, M)).texto;
+    return { o, gp: /Google Play/.test(sis), inv: /invitando a un amigo/.test(sis), pDinero: /invitando a un amigo/.test(ped(`¿Cuánto dinero tiene ${r2}?`)) && !/Google Play/.test(ped(`¿Cuánto dinero tiene ${r2}?`)), pQuien: /no se puede abrir/.test(ped(qp)), t1, t2 };
+  });
+  ok(h.o.iphone && !h.o.anuncio && !h.gp && h.inv, `(h) en la web del iPhone, las instrucciones dicen que lo cerrado se abre invitando, sin Google Play`);
+  ok(h.pDinero && h.pQuien && !/Google Play/.test(h.t1 + h.t2) && /invitando/.test(h.t2) && /no se puede abrir/.test(h.t1), `(h) y lo de cada pregunta y lo que repone la app, igual: «${h.t2.slice(0, 120)}» · «${h.t1.slice(0, 120)}»`);
+  ok(!Pi.errores.length, 'sin errores en la página del iPhone');
+  await Pi.cerrar();
+}
 await cerrar();
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');
 process.exit(mal ? 1 : 0);

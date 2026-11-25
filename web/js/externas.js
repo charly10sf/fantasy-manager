@@ -245,36 +245,85 @@ export async function oncesProbables(D) {
   return salida;
 }
 
-/* ---------------- titulares de prensa (Google Noticias) ---------------- */
+/* ---------------- titulares de prensa (Google Noticias y, en la web, Bing Noticias) ---------------- */
+// (25 nov) el RSS de Bing no es el de Google: la fuente va en <News:Source> (con espacio de nombres: querySelector('source')
+// no la ve) y el enlace pasa por su redireccionador (apiclick.aspx) con la dirección de verdad en «url»
+const enlaceBing = (l) => {
+  try {
+    const u = new URL(l);
+    if (/(^|\.)bing\.com$/i.test(u.hostname) && u.searchParams.get('url')) return u.searchParams.get('url');
+  } catch (e) { /* tal cual */ }
+  return l;
+};
 export function parseRSS(xml) {
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
-  return [...doc.querySelectorAll('item')].map((it) => {
-    const tx = (s) => ((it.querySelector(s) || {}).textContent || '').trim();
+  return [...doc.getElementsByTagName('item')].map((it) => {
+    const tx = (s) => ((it.getElementsByTagName(s)[0] || {}).textContent || '').trim();
     let titulo = tx('title');
-    const fuente = tx('source');
+    const fuente = tx('source') || tx('News:Source');
     if (fuente && titulo.endsWith(` - ${fuente}`)) titulo = titulo.slice(0, -(fuente.length + 3));
-    return { titulo, fuente, link: tx('link'), t: ms(tx('pubDate')) };
+    return { titulo, fuente, link: enlaceBing(tx('link')), t: ms(tx('pubDate')) };
   }).filter((x) => x.titulo);
 }
+/**
+ * (25 nov) la consulta de Google, para Bing: sin «when:» (los días se filtran al leer) y con un solo grupo de OR. Bing
+ * devuelve 0 con dos grupos («(A OR B) (C OR D)») o con solo un grupo: del segundo grupo en adelante se queda la primera
+ * palabra, y a un grupo suelto se le pone delante «LaLiga» (medido el 25 nov con las consultas de noticias())
+ * → { q, dias }
+ */
+export function consultaBing(q) {
+  const m = /\bwhen:(\d+)([dh])\b/i.exec(q);
+  const dias = m ? (m[2].toLowerCase() === 'h' ? Number(m[1]) / 24 : Number(m[1])) : 0;
+  let n = 0;
+  let s = String(q).replace(/\s*\bwhen:\d+[dh]\b/gi, '').replace(/\(([^()]*)\)/g, (g, dentro) => (n++ ? dentro.split(/\s+OR\s+/)[0].trim() : g));
+  s = s.replace(/\s+/g, ' ').trim();
+  if (/^\([^()]*\)$/.test(s)) s = `LaLiga ${s}`;
+  return { q: s, dias };
+}
+// Bing devuelve una página (no el RSS) a un navegador de móvil: se le pide como un navegador de ordenador
+const UA_PC = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36';
+const urlBing = (q) => `https://www.bing.com/news/search?q=${encodeURIComponent(q)}&format=rss&setlang=es&cc=ES`;
 async function buscarNoticias(q) {
   const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=es&gl=ES&ceid=ES:es`;
   const op = { cabeceras: { Accept: 'application/rss+xml, application/xml', 'User-Agent': UA } };
   const apuntar = (r, t0, via) => apuntarRegistro({ ruta: `noticias${via} «${q.slice(0, 50)}»`, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
-  // en la web, Google Noticias suele dar 503 por el Worker (no le gustan las IP de Cloudflare): si falla, se prueba por
-  // el intermediario de Deno y, si allí contesta, se sigue por Deno 6 horas
+  const bien = (r) => r.s === 200 && r.b && /<rss[\s>]/.test(r.b.slice(0, 600));
+  // (25 nov) en la web, Google Noticias da 503 casi siempre por el Worker (no le gustan las IP de Cloudflare) y Bing sí
+  // contesta: si Google falla, se le pide a Bing y, si contesta, se sigue con Bing 6 horas (LS «noticias-bing»). Si
+  // Bing tampoco, el intermediario de Deno como antes (solo con Google). En la app (Android) todo va desde el móvil: igual
+  if (enWeb && LS.get('noticias-bing', 0) > Date.now()) {
+    const l = await porBing(q, apuntar, bien);
+    if (l) return l;
+    LS.del('noticias-bing');
+  }
   const porDeno = enWeb && hayDeno() && LS.get('noticias-deno', 0) > Date.now();
   let t0 = Date.now();
   let r = await (porDeno ? httpPorDeno('GET', url, op) : http('GET', url, op));
   apuntar(r, t0, porDeno ? ' por Deno' : '');
-  if (porDeno && r.s !== 200) LS.del('noticias-deno');
-  else if (!porDeno && r.s !== 200 && enWeb && hayDeno()) {
+  if (bien(r)) return parseRSS(r.b);
+  if (porDeno) LS.del('noticias-deno');
+  if (enWeb) {
+    const l = await porBing(q, apuntar, bien);
+    if (l) { LS.set('noticias-bing', Date.now() + 6 * HORA); return l; }
+  }
+  if (!porDeno && enWeb && hayDeno()) {
     t0 = Date.now();
     const d = await httpPorDeno('GET', url, op);
     apuntar(d, t0, ' por Deno');
-    if (d.s === 200 && d.b) { LS.set('noticias-deno', Date.now() + 6 * HORA); r = d; }
+    if (bien(d)) { LS.set('noticias-deno', Date.now() + 6 * HORA); return parseRSS(d.b); }
   }
   // null si no ha contestado bien (no es lo mismo que «no hay noticias»)
-  return r.s === 200 && r.b ? parseRSS(r.b) : null;
+  return null;
+}
+// Bing por el Worker: null si no contesta bien; si contesta, lo de los días que pedía la consulta (con medio día de margen)
+async function porBing(q, apuntar, bien) {
+  const b = consultaBing(q);
+  const t0 = Date.now();
+  const r = await http('GET', urlBing(b.q), { cabeceras: { Accept: 'application/rss+xml, application/xml', 'User-Agent': UA_PC } });
+  apuntar(r, t0, ' por Bing');
+  if (!bien(r)) return null;
+  const l = parseRSS(r.b);
+  return b.dias ? l.filter((n) => !n.t || Date.now() - n.t < (b.dias + 0.5) * DIA) : l;
 }
 
 /**

@@ -221,11 +221,12 @@ const respuestaGoogle = (texto) => ({ candidates: [{ content: { role: 'model', p
  * una página con la liga de ejemplo en ese escenario. `contesta(cuerpo, url)` devuelve el texto que «dice» la IA (o el
  * JSON entero de Google); lo que la app le manda queda en `pedidos`.
  */
-export async function pagina(escena, contesta = () => 'vale') {
+export async function pagina(escena, contesta = () => 'vale', { ua = null } = {}) {
   await arrancar();
   const E = ESCENAS[escena] || ESCENAS.martes;
   demoDe = E.demo || null;
-  const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Europe/Madrid', locale: 'es-ES' });
+  // (25 nov) ua: el de otro dispositivo (el iPhone, para lo que cambia en su web)
+  const ctx = await nav.newContext({ viewport: { width: 390, height: 844 }, timezoneId: 'Europe/Madrid', locale: 'es-ES', ...(ua ? { userAgent: ua } : {}) });
   const pedidos = [];
   const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
   await ctx.route('**/*', async (r) => {
