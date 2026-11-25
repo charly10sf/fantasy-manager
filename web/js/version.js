@@ -30,7 +30,7 @@ export const NOVEDADES = [
     // iOS no cambia nada de lo que se ve (el paquete de Android sale con la misma huella nativa). El detalle, en
     // claude/sesion-25nov-ios-2.md, -ios-3.md e -ios-4.md del proyecto. OJO: la rama `noticias-bing` llevaba también
     // la 0.8.4l: al publicarla, pasa a ser la 0.8.4m.
-    v: '0.8.4l', f: '2026-11-25', h: 'HH:MM', t: 'La app de iPhone, en pruebas',
+    v: '0.8.4l', f: '2026-11-25', h: '21:34', t: 'La app de iPhone, en pruebas',
     cosas: [
       { para: 'dueño', tipo: 'nuevo', d: 'movil', t: 'La app de iPhone, aparte en «Quién usa la app»', x: 'Los que entran con la app de iPhone salen como canal propio: antes de entrar, desde dónde entran y qué versión llevan.' },
     ],
