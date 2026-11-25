@@ -250,7 +250,11 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
     const pasoHTML = Vi.pasoCambiaTxt ? Vi.pasoCambiaTxt(C, o) : '';
     // D. la respuesta de la IA que niega lo que dijo
     const rev = I.revisarChat('Te he dicho que lo vendas, no que lo aguantes. Mi recomendación sigue igual: vender a Hugo Duro, acepta la oferta de LaLiga. Su cláusula de 15,16 M no te protege: está un +486 % y nadie paga eso.', 'me dices que lo venda y en el plan que lo aguante, ¿en qué quedamos?', D, M, { hist: [] });
-    return { d: { accion: d.accion, matiz: d.matiz, corta: d.corta, porque: d.porque, esperado: d.cifras && d.cifras.esperado, oferta }, valor: j.valor,
+    // E. (25 nov, B14) «¿Vendo a Hugo Duro?» → «Sí, véndelo: …» sin decir nada de la oferta que tiene
+    const rev14 = I.revisarChat('Sí, véndelo: baja cada día y no entra en tu once. Si quieres cobrar ya, ofrécelo a un rival; si no, a la venta para la oferta de LaLiga de mañana.', '¿Vendo a Hugo Duro?', D, M, { hist: [] });
+    const rev14b = I.revisarChat('Sí, véndelo, pero esta oferta no la aceptes: LaLiga te hará otra mañana.', '¿Vendo a Hugo Duro?', D, M, { hist: [] });
+    const r14 = { con: (rev14.notas || []).join(' | '), sin: (rev14b.notas || []).filter((n) => /esta oferta no/.test(n)).length };
+    return { r14, d: { accion: d.accion, matiz: d.matiz, corta: d.corta, porque: d.porque, esperado: d.cifras && d.cifras.esperado, oferta }, valor: j.valor,
       o: { descartada: o.descartada, cambia: !!o.cambia, aviso: o.aviso, decAhora: o.decAhora || null, dec0: o.dec0 || null }, titular: C.titular, pill: vv && vv.pill, largo: vv && vv.largo,
       consejo: v.consejo, porque: v.porque, ventasTxt, datos, llevas, pasoHTML, rev: typeof rev === 'string' ? rev : (rev && rev.texto) || JSON.stringify(rev),
       urg: Vi.urgentesDe(Sx).urg.filter((a) => String(a.pid) === String(j.id)).map((a) => a.titulo), enPlan: (R.ops || []).filter((q) => String(q.pid) === String(j.id) && !q.descartada).map((q) => q.accion) };
@@ -269,6 +273,7 @@ ok(Object.keys(tot.porRegla).some((x) => /esta-oferta-no/.test(x)) && Object.key
   ok(/Lo proponía el plan de las|Del plan de las/.test(r.llevas) && !/Por tu cuenta/.test((r.llevas.match(/Hugo Duro a la venta[^]*?<\/li>/) || [''])[0]), `B. «Lo que llevas hoy»: Hugo Duro a la venta sale como del plan de la mañana, no «Por tu cuenta» («${((r.llevas.match(/Hugo Duro a la venta[^]*?<\/li>/) || [''])[0].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')).slice(0, 160)}»)`);
   ok(/A las \d\d:\d\d/.test(r.pasoHTML) && /[Aa]hora/.test(r.pasoHTML), `B. el paso dice qué ha cambiado: «${r.pasoHTML}»`);
   ok(/Revisado por la app/.test(r.rev) && /esta oferta \([^)]*\) no|esta oferta no/.test(r.rev), `D. revisarChat corrige el «mi recomendación sigue igual: vender… acepta la oferta»: «${(r.rev.match(/Revisado por la app:[^]*/) || [''])[0].slice(0, 300)}»`);
+  ok(/esta oferta[^.]{0,30} no/.test(r.r14.con) && /no la aceptes/.test(r.r14.con) && r.r14.sin === 0, `E. «¿Vendo a Hugo Duro?» → «Sí, véndelo» sin la oferta: la app añade que esa oferta no («${r.r14.con.slice(0, 200)}»); si ya lo dice, nada`);
   ok(/sí te protege|te protege/.test((r.rev.match(/Revisado por la app:[^]*/) || [''])[0]), 'D. y lo de «la cláusula no te protege» con una cláusula que nadie paga');
   await P.cerrar();
 }
@@ -323,6 +328,43 @@ for (const [escena, que] of [['m-25', 'llena'], ['veda', 'retira'], ['martes', '
     ok(!r.pill || !/ hoy$/.test(r.pill), `E. la pastilla de un paso para otro día (${r.nom}) no dice «hoy»: «${r.pill}»`);
     ok(!r.baena || !(r.pujas > r.dinero && /\(tienes /.test(r.baena)), `E. con más pujado (${r.pujas}) que saldo (${r.dinero}), la oferta por Baena no dice «no te hace falta el dinero (tienes…)»: «${String(r.baena).slice(0, 120)}»`);
   }
+  await P.cerrar();
+}
+// F. (25 nov, tanda B-1) las cuatro «Quedan» de la auditoría de coherencia (B5 a B8)
+for (const escena of ['martes', 'paron', 'm-cierre-negativo']) {
+  const P = await pagina(escena);
+  const r = await P.page.evaluate(async () => {
+    const Pm = await import('./js/plan.js'), I = await import('./js/ia.js'), Dt = await import('./js/datos.js'), Vi = await import('./js/vistas.js');
+    const S = window.S, { D, M } = S, c = Dt.cfg();
+    const R = Pm.planDeHoy(D, M, c); M.verPlan(R);
+    const chat = I.datosChat('¿Qué hago hoy?', D, M, c, {});
+    // B7: de un libre que el plan mira y no ficha, al chat le llega la cifra del plan, no «la app pujaría» otra
+    const dos = [];
+    for (const m of M.mercado.filter((x) => x.tipo === 'liga')) {
+      const df = M.decisionFichar(m.pid);
+      const cif = df && df.accion === 'no' ? [...String(df.porque || '').matchAll(/se paga a unos ([\d.,]+ M)/g)].map((x) => x[1]) : [];
+      const l = chat.split('\n').find((y) => y.includes(`] PUJAR por ${m.j.nombre},`)) || '';
+      const ap = (l.match(/la app pujaría ([\d.,]+ M)/) || [])[1];
+      if (cif.length && ap && !cif.includes(ap)) dos.push(`${m.j.nombre}: plan ${cif[0]}, chat ${ap}`);
+    }
+    // B8: la palabra de la inercia que lee la IA y la de la decisión, la misma
+    const palabras = [];
+    for (const x of M.mias) {
+      const d = M.decision(x.pid), l = chat.split('\n').find((y) => y.includes(` | ${x.j.nombre} | `)) || '';
+      if (d && /INERCIA HA GIRADO/.test(l) && /se est[áa] frenando/i.test(d.porque || '')) palabras.push(x.j.nombre);
+    }
+    // B5: «hoy no se toca a los titulares» con un titular en el plan, con su salvedad
+    const tit = (R.ops || []).filter((o) => !o.descartada && o.accion === 'vender' && o.pid && M.perdida(o.pid) >= 0.3).map((o) => o.jugador || (o.j && o.j.nombre));
+    const sinSalvedad = /no se toca a los titulares/.test(R.situacion || '') && tit.length && !tit.every((n) => new RegExp(`salvo [^.]*${n}`).test(R.situacion));
+    // B6: una puja ya puesta por uno que el plan no ficha y no retira: la ficha no dice «no pujes»
+    const pujadas = M.mercado.filter((m) => m.miPuja).map((m) => { const dpl = Vi.descartePlan({ D, M, plan: R, opPorPid: {} }, m.pid); return { n: m.j.nombre, df: M.decisionFichar(m.pid), dpl }; })
+      .filter((x) => x.df && x.df.accion === 'no' && !x.df.retira);
+    return { dos, palabras, sinSalvedad, tit, sit: R.situacion, pujadas: pujadas.map((x) => ({ n: x.n, ya: !!x.df.yaPujada, sigue: /Tu puja de [^ ]+ M sigue puesta/.test(x.df.porque || ''), dpl: !!(x.dpl && x.dpl.yaPujada) })) };
+  });
+  ok(!r.dos.length, `F. ${escena}: de lo que el plan mira y no ficha, al chat le llega la puja del plan (${r.dos.join('; ') || 'ninguna distinta'})`);
+  ok(!r.palabras.length, `F. ${escena}: la inercia y la decisión dicen lo mismo (${r.palabras.join(', ') || 'todos'})`);
+  ok(!r.sinSalvedad, `F. ${escena}: «hoy no se toca a los titulares» dice quién sí (${r.tit.join(', ') || 'ninguno'})`);
+  ok(r.pujadas.every((x) => x.ya && x.sigue && x.dpl), `F. ${escena}: con tu puja puesta, «no pujaría, pero tu puja sigue» (${r.pujadas.map((x) => x.n).join(', ') || 'sin pujas'})`);
   await P.cerrar();
 }
 await cerrar();

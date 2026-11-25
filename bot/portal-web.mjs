@@ -114,7 +114,17 @@ cargarEncuadres();
 // --resumen=12 rehace ese; --resumen=1-11, todos los de ese tramo (sesión 4: los de la J1 a la J11 de una vez)
 const rango = arg('resumen') && /^\d+-\d+$/.test(arg('resumen')) ? arg('resumen').split('-').map(Number) : null;
 const candidatas = rango ? Array.from({ length: rango[1] - rango[0] + 1 }, (_, i) => rango[0] + i)
-  : arg('resumen') ? [Number(arg('resumen'))] : [sem.weekNumber, sem.previousWeek].filter((x) => x > 0);
+  : arg('resumen') ? [Number(arg('resumen'))] : [sem.weekNumber, sem.previousWeek, ...faltan()].filter((x, i, l) => x > 0 && l.indexOf(x) === i);
+/** (25 nov, B9) las jornadas de antes sin resumen (la J8, con un aplazado) y las que lo tienen con un partido aplazado cuya fecha
+ * ya ha pasado, para ponerlo al día: como mucho 3 por noche */
+function faltan() {
+  const hasta = Math.max(0, (sem.previousWeek || sem.weekNumber || 1) - 1), out = [];
+  for (let J = 1; J <= hasta && out.length < 3; J++) {
+    const ya = estado.resumenes[J];
+    if (!ya || (ya.aplazados || []).some((x) => x.t + 3 * HORA < Date.now())) out.push(J);
+  }
+  return out;
+}
 // (sesión 4) el mercado de hoy antes del resumen: la semana del mercado de cada jornada (idea 7) sale de su serie de valor
 const hoy = diaMadrid();
 const tocaMercado = forzar || !estado.mercado || estado.mercado.dia !== hoy;
@@ -132,7 +142,8 @@ for (const J of candidatas) {
   const h = hechosResumen(J, st, jugadores);
   if (!h) { log(`Jornada ${J}: no ha acabado entera, sin resumen`); continue; }
   const ya = estado.resumenes[J];
-  const toca = arg('resumen') || !ya || (ya.generada - h.ultimo < 48 * HORA && Date.now() - ya.generada > 20 * HORA);
+  const toca = arg('resumen') || !ya || (ya.generada - h.ultimo < 48 * HORA && Date.now() - ya.generada > 20 * HORA)
+    || ((ya.aplazados || []).length > (h.aplazados || []).length);
   if (!toca) { log(`Jornada ${J}: resumen ya hecho`); continue; }
   let tarjeta = null, tarjetaAlto = null;
   if (arg('sin-tarjeta') !== '1') {
@@ -176,7 +187,7 @@ for (const J of candidatas) {
   const acO = (oncesPrevio && oncesPrevio.J === J && aciertoDe(oncesPrevio)) || (estado.oncesAcierto || {})[J] || null;
   if (acO) estado.oncesAcierto = { ...(estado.oncesAcierto || {}), [J]: acO };
   escribirPagina({ ruta, seccion: 'jornada', grupo: 'resumenes', jornada: J, ...metasResumen(J) }, contenidoResumen(h, { previa: pv ? pv.ruta : null, siguiente: sig, tarjeta, tarjetaAlto, rutas, temporada, semana, onces: lineaResumen(acO, J) }));
-  estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3), ...(semana ? { semana } : {}) };
+  estado.resumenes[J] = { generada: h.generada, ultimo: h.ultimo, mejores: h.mejores.slice(0, 3), ...(semana ? { semana } : {}), ...(h.aplazados && h.aplazados.length ? { aplazados: h.aplazados } : {}) };
   cambios = true;
   log(`Jornada ${J}: resumen hecho (${h.mejores[0].nombre} ${h.mejores[0].pts})`);
 }

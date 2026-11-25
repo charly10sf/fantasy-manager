@@ -654,7 +654,10 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const fuera = paron ? null : M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > caja && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && mereceClausula(M, x, ahora) && hueco(x.j) && M.compraCal(x.j, x.clausula).ok);
   if (fuera && lista.filter((o) => o.clase === 'clausular' && !o.rev).length < X.A.maxOnce) {
     ops.push({ accion: 'esperar', pid: fuera.pid, jugador: fuera.j.nombre, donde: `cláusula de ${eur(fuera.clausula)} a ${fuera.rival.manager || fuera.rival.nombre}`, importe: null, cuando: 'si entra dinero', confianza: 'baja',
-      motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - caja)}: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él.` });
+      // (25 nov, lo que quedó de la auditoría de coherencia: Kang-In Lee, «te faltan 49,91 M» en el plan y «48,89 M» en su
+      // ficha) lo que falta es con el saldo de hoy, como en la ficha; si hoy llegaría y es el plan el que se gasta ese dinero
+      // en otra cláusula, se dice así
+      motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero ${fuera.clausula > num(D.dinero) ? `te faltan ${eur(fuera.clausula - num(D.dinero))}` : `con lo que gastas hoy te faltarían ${eur(fuera.clausula - caja)}`}: una cláusula solo se paga con saldo, sin deuda, y lo que pones en venta no entra hasta que aceptas la oferta. Si entra ese dinero y sigue abierta, ve a por él.` });
   }
 
   /* proteger a los tuyos: primero el blindaje gratis (2 por jornada), luego subir la cláusula si compensa y hay saldo */
@@ -725,6 +728,37 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid))
     .filter((a, i, xs) => xs.findIndex((b) => b.pid === a.pid) === i).slice(0, 6)
     .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador && !alternativas.some((o) => o.pid === d.pid) && !X.avisos.some((v) => v.pid === d.pid));
+  /* (25 nov, auditoría de fallos, hallazgo 7: Mercado marcaba «Chollo» a tres y el plan solo llevaba uno; de los otros dos
+     no decía nada, ni paso ni «mirado») Los libres que Mercado llama «Chollo» y el plan no ficha: cada uno con su porqué en
+     `sinFichar` (lo lee `M.decisionFichar`: Mercado, la ficha, los avisos y la IA dejan de darlo por chollo y dicen por
+     qué no). «Chollo» sale del precio de salida; el plan mira lo que hay que pujar para ganarlo en tu liga, si entra en tu
+     once y si cabe con lo demás. Los tres de más interés van también a «Mirados y descartados», con una frase. Los que
+     quedan de alternativa para la IA no entran en «Mirados» (ahí va lo que no se puede meter), pero sí con su porqué */
+  const sinFichar = {};
+  {
+    const enAlt = new Set(alternativas.map((o) => String(o.pid)));
+    const visto = new Set([...descartes.map((d) => String(d.pid)), ...X.avisos.map((v) => String(v.pid))]);
+    const porQueNoChollo = (m) => {
+      const cand = todos.find((o) => o.pid === m.pid && !o.forzada);
+      const ver = X.V[`P-${m.pid}`];
+      if (ver && !ver.ok) return corto(ver.aviso, 160) || 'La app no pujaría hoy por él.';
+      if (llena) return 'Tienes la plantilla llena (25): no se puede pujar por nadie más sin vender antes.';
+      if (enAlt.has(String(m.pid))) return 'Vale para tu once, pero el plan de hoy lleva otros pasos antes: si te sobra dinero, es una opción.';
+      if (cand && !cuentas(X, [...lista, cand])) return 'No cabe hoy: con lo que ya llevas pujado y el resto del plan pasarías del tope de deuda.';
+      const deMas = num(m.puja) - num(m.j.valor);
+      const gana = M.mejora ? M.mejora(m.j) : 0;
+      if (!cand && ver && !/^el once/.test(ver.para || '')) return 'No entra en tu once: para revender, míralo en Especular.';
+      if (!cand && gana < 0.3) return 'No mejora tu once: en su puesto ya tienes a quien rinde igual o más.';
+      const cm = M.compraCal ? M.compraCal(m.j, m.puja) : null;
+      if (!cand && cm && !cm.ok) return corto(cm.txt, 160) || 'Su calendario no acompaña para lo que cuesta.';
+      if (deMas > Math.max(3e5, num(m.j.valor) * 0.08)) return `Sale a su valor, pero para ganarlo en tu liga hay que pujar ${eur(m.puja)}: ${eur(deMas)} de más para lo que mejora tu once.`;
+      return 'Con el resto del plan ya no mejora tu once lo bastante para lo que cuesta.';
+    };
+    const chollos = (M.mercado || []).filter((m) => m.tipo === 'liga' && m.veredicto === 'chollo' && m.j && !m.miPuja && !M.dueno[m.pid] && !enPlan.has(m.pid) && !lista.some((o) => o.pid === m.pid))
+      .sort((a, b) => (b.interes || 0) - (a.interes || 0));
+    for (const m of chollos) { try { const t = String(porQueNoChollo(m) || '').trim(); if (t) sinFichar[m.pid] = `${t.charAt(0).toUpperCase()}${t.slice(1)}`; } catch (e) { /* sin su porqué: se queda como estaba */ } }
+    descartes.push(...chollos.filter((m) => sinFichar[m.pid] && !enAlt.has(String(m.pid)) && !visto.has(String(m.pid))).slice(0, 3).map((m) => ({ pid: m.pid, jugador: m.j.nombre, motivo: sinFichar[m.pid] })));
+  }
   // (24 nov, decide.js) todo el que su decisión manda vender y el plan hoy no vende, con su porqué (también los que quedan
   // como alternativa para la IA, que no salen en «Mirados»): la decisión que se enseña en Equipo, los avisos y el chat pasa
   // a «aguantar» con ese motivo. Antes Equipo decía «vender» y el plan no decía nada de él
@@ -766,15 +800,19 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const diasAuto = Object.values(dias).sort((a, b) => a.t - b.t);
 
   const modo = paron ? 'paron' : M.enJuego ? 'enjuego' : M.vedaAhora ? 'cierre' : num(D.dinero) < 0 ? 'negativo' : 'normal';
+  // (25 nov, B5) «hoy no se toca a los titulares» encima de «Aceptar oferta Álex Baena», titular, porque hace falta el dinero:
+  // se dice quién es la excepción y por qué
+  const titVende = modo === 'cierre' ? ops.filter((o) => !o.descartada && o.accion === 'vender' && o.pid && M.perdida(o.pid) >= 0.3) : [];
+  const titTxt = titVende.length ? `${titVende.map((o) => (o.j && o.j.nombre) || o.jugador).join(' y ')}${base.jornada < 0 ? ', porque hace falta el dinero para no empezar la jornada en negativo' : ''}` : '';
   const situacion = `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`
     + (llena ? ` Tienes la plantilla llena (${M.mias.length} de 25): LaLiga no te deja pujar por nadie más hasta que vendas a uno.` : M.mias.length >= 23 ? ` Tienes ${M.mias.length} de 25 jugadores: te ${25 - M.mias.length === 1 ? 'queda 1 sitio' : `quedan ${25 - M.mias.length} sitios`}${X.nPujas && M.mias.length + X.nPujas >= 25 ? `, y ${X.nPujas === 1 ? 'la puja que tienes puesta lo ocupa si la ganas' : `las ${X.nPujas} pujas que tienes puestas los ocupan si las ganas`}: no se ficha a nadie más` : ''}.` : '')
     + (modo === 'paron' ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero (comprar lo que sube para venderlo antes de la jornada y vender lo que ha girado). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : '')
-    + (modo === 'cierre' ? ` Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} (${cuando(M.vedaAhora.fin)}): hoy no se toca a los titulares, que no habría con qué reponerlos.` : '')
+    + (modo === 'cierre' ? ` Las cláusulas están cerradas hasta que empiece la jornada ${M.vedaAhora.n} (${cuando(M.vedaAhora.fin)}): hoy no se toca a los titulares, que no habría con qué reponerlos${titTxt ? `, salvo ${titTxt}` : ''}.` : '')
     + (modo === 'enjuego' ? ` La jornada ${M.enJuego.n} está en juego y tu once está cerrado: el plan ya mira a la siguiente.` : '')
     + (base.jornada < 0 ? ` Contando lo que tienes pujado, sin vender empezarías la jornada con ${eur(base.jornada)}: en negativo no se puntúa, así que el plan dice qué vender y cuándo.` : '');
   return {
     auto: true, motor: true, t: ahora, dia: diaDe(ahora), modo,
-    titular: '', situacion, operaciones: ops, alternativas, descartes,
+    titular: '', situacion, operaciones: ops, alternativas, descartes, sinFichar,
     proximos_dias: [], diasAuto,
     alineacion: onceFijo.formacion ? { formacion: onceFijo.nombre, titulares: onceFijo.lineas.flat().map((j) => j.nombre), dudas: onceFijo.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
     cuentas: { ...cu, sinVender: base.jornada, punto: X.vp, valor: E.valor, candidatos: todos.length, probados: libres.length, claves: libres.map((o) => o.k), backtest: X.backtest },
@@ -821,8 +859,18 @@ export function planVueltas(D, M, c, op = {}) {
     for (const o of mal) { vetados.add(o._k); vetos.push({ k: o._k, jugador: (o.j && o.j.nombre) || o.jugador, aviso: o.aviso || '' }); }
   }
   // (red de seguridad: si tras las vueltas quedara algo descartado, fuera)
-  if ((R.ops || []).some((o) => o.descartada || o.sugerencia)) {
-    P = { ...P, operaciones: (P.operaciones || []).filter((o) => !(R.ops || []).some((x) => x._k && x._k === o._k && (x.descartada || x.sugerencia))) };
+  // (25 nov, azar-plan con las semillas 11, 25, 42, 77 y 1125) al quitarlo, LAS CUENTAS SE REHACEN con los pasos que quedan:
+  // antes se quitaba el paso y se dejaban las cuentas de antes, que seguían contando esa venta («a la jornada llegas con
+  // unos 108,69 M» con un único paso de 14,53 M y el saldo en −13,31 M). El plan se monta otra vez solo con lo que queda
+  // (`fijar`): si con eso no se llega en positivo, las cuentas lo dicen y sale «Ni con este plan llegas en positivo»
+  for (let red = 0; red < 3 && (R.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); red++) {
+    const malK = new Set((R.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia)).map((o) => o._k));
+    for (const o of (R.ops || []).filter((x) => x._k && malK.has(x._k) && !vetados.has(x._k))) { vetados.add(o._k); vetos.push({ k: o._k, jugador: (o.j && o.j.nombre) || o.jugador, aviso: o.aviso || '' }); }
+    const quedan = new Set((P.operaciones || []).filter((o) => o._k && !malK.has(o._k)).map((o) => o._k));
+    let P2 = null;
+    try { P2 = planMotor(D, M, c, { ...op, vetados, fijar: quedan }); } catch (e) { P2 = null; }
+    // (si lo que queda no se puede hacer tal cual, p. ej. una cláusula que pagaba la venta quitada, se busca otra vez sin lo vetado)
+    P = P2 || planMotor(D, M, c, { ...op, vetados });
     R = cuadrarPlan(P, D, M);
   }
   // (lo que la app no dejó pasar al cuadrar, con su motivo: para el diagnóstico, las pruebas y para rehacer el mismo plan)

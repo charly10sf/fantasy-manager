@@ -349,7 +349,7 @@ export function fichaJugador(S, pid) {
   if (op && !planDentro) h += avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
   // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
   const dpl = !op && descartePlan(S, pid);
-  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : (S.M.clausulas || []).some((y) => String(y.pid) === String(pid)) && !(S.M.mercado || []).some((y) => String(y.pid) === String(pid)) ? 'lo clausules' : 'pujes'}`, texto: dpl.aviso || '' });
+  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: dpl.yaPujada ? 'Plan de hoy: no pujaría, pero tu puja sigue' : `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : (S.M.clausulas || []).some((y) => String(y.pid) === String(pid)) && !(S.M.mercado || []).some((y) => String(y.pid) === String(pid)) ? 'lo clausules' : 'pujes'}`, texto: dpl.aviso || '' });
   notasPlan(S, { j }).forEach(([et, t], n) => { h += avisoDeTexto(S, { k: `nota${n}`, pid, cls: 'azul', ico: 'ia', t: et, texto: t }); });
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
@@ -365,7 +365,7 @@ export function fichaJugador(S, pid) {
     // (23 nov, Carlos: «los textos, más cortos») una línea para el blindaje y otra para lo que da LaLiga; al que baja con la
     // cláusula por encima de lo que da LaLiga, «no lo blindes» (motor: noBlindar)
     const noBl = mia.abierta && !mia.escudo && mia.noBlindar;
-    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, más que vendiéndolo.`
+    const gratis = noBl ? `<b>No lo blindes:</b> si te lo clausulan cobras <b>${eur(mia.clausula)}</b>, ${mia.noBlindar.igual ? 'lo mismo' : 'más'} que vendiéndolo.`
       : mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> con un anuncio en LaLiga: ${S.M.ESCUDO_H} h a salvo (te quedan ${S.M.escudosMios.quedan}).` : '';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
       : `LaLiga te ofrecería entre <b>${eur(ol.una ? ol.una.min : ol.v)}</b> y <b>${eur(ol.una ? ol.una.max : ol.v)}</b>, a suerte, con una oferta nueva en cada cambio de mercado.`;

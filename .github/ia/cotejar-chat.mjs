@@ -201,7 +201,10 @@ export function cotejar(r) {
       if (!(k.includes(nom) || (ult.length >= 4 && new RegExp(`\\b${ult}\\b`).test(k)))) continue;
       // (lo que cuenta que decía antes el plan no es lo que manda ahora)
       if (/\b(decia|decias|dije|dijiste|ponia|proponia|mandaba|recomendaba|aconsejaba)\b/.test(k)) continue;
-      const noV = /\b(no|nunca|ni)\b[^,.;]{0,16}\b(vend|acept)|\b(aguanta(lo|r|rlo)?|quedate(lo)?|mantenlo|conservalo)\b/.test(k);
+      // (25 nov) la pregunta repetida («¿Vender a Hugo Duro? No lo vendas ahora.») no manda nada
+      if (/\?\s*$/.test(fr)) continue;
+      // (25 nov) «no lo vendas ahora», «venderlo hoy no tiene sentido», «sería un error venderlo»: es no vender
+      const noV = /\b(no|nunca|ni)\b[^,.;]{0,16}\b(vend|acept)|\b(aguanta(lo|r|rlo)?|quedate(lo)?|mantenlo|conservalo)\b|\bvend\w*\b[^,.;]{0,30}\bno (compensa|tiene sentido|conviene|merece|interesa|toca|es buena idea)\b|\b(seria|es) un error\b|\bno (lo )?haria\b/.test(k);
       const siV = !noV && /\b(vende(lo|r|rlo)?|vendas|vendelo|acepta(la|r|rla)?|deshazte)\b/.test(k) && !/\b(si|cuando|salvo|a no ser|solo si)\b[^.]{0,90}\b(necesit|hace falta|te pag|ofrec|fich|tengas|gir|baj|deje|llega|sub)/.test(k);
       const acepta = /\b(acepta(la|r|rla)?)\b/.test(k) && !/\b(no|nunca|ni)\b[^,.;]{0,16}\bacept/.test(k) && !/\b(si|cuando|solo si)\b[^.]{0,90}\b(necesit|hace falta|sub|mejor|llega)/.test(k);
       if (siV && !vende) marcas.push(`contradice la decisión de la app: manda vender a ${m[1].trim()} («${dec.trim().slice(0, 40)}»)`);

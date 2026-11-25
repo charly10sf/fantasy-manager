@@ -72,6 +72,7 @@ import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
 import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
 import { fallosObjeto, MAX_CAPTURAS } from './fallos.js';
+import { busqObjeto, busqRelevantes, bloqueBusq, vistasBusq, BUSQ_HORAS, BUSQ_REPITE_H } from './busquedas.js';
 export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
 
 const PERMITIDOS = new Set([
@@ -153,6 +154,16 @@ async function traer(d, op, vale = () => true) {
   return new Response('Demasiadas redirecciones', { status: 508 });
 }
 
+/*
+ * (25 nov) Google Noticias por el Worker: casi siempre contesta 503 a las IP de Cloudflare y tarda 6-9 s en hacerlo (452
+ * peticiones en 24 h, 376 con 5xx; claude/medida-25nov-tarde.md del proyecto). Y el intermediario de Deno, el respaldo,
+ * estaba suspendido por uso. Ahora: lo que sí contesta se guarda NOTICIAS_CACHE_S en la caché de Cloudflare (la misma
+ * búsqueda de otro usuario no vuelve a Google), cada intento tiene NOTICIAS_MS como mucho y, si Google dice que no
+ * (503/429) o no contesta, durante NOTICIAS_PAUSA_MS se contesta 503 al momento sin preguntarle (en ese aislado)
+ */
+export const NOTICIAS_CACHE_S = 1200, NOTICIAS_MS = 5000, NOTICIAS_PAUSA_MS = 180e3;
+let noticiasPausa = 0;
+export const noticiasPausaHasta = (t) => { if (t !== undefined) noticiasPausa = t; return noticiasPausa; };
 async function pasar(req, c) {
   const d = destinoDe(req.headers.get('x-u'));
   if (!d) return sinRespuesta(`Sitio no permitido: ${req.headers.get('x-u') || '(nada)'}`, c);
@@ -166,12 +177,18 @@ async function pasar(req, c) {
   const no = reglaDe(d, m, cab);
   if (no) return sinRespuesta(no, c);
   const cuerpo = m === 'GET' ? undefined : await req.arrayBuffer();
+  const noticias = d.hostname === 'news.google.com' && m === 'GET';
+  if (noticias && Date.now() < noticiasPausa) return new Response('Google Noticias no contesta ahora', { status: 200, headers: { ...c, 'x-s': '503', 'x-t': 'text/plain', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
+  const op = { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined };
+  if (noticias) { op.cf = { cacheEverything: true, cacheTtlByStatus: { '200-299': NOTICIAS_CACHE_S, '300-599': 0 } }; op.signal = AbortSignal.timeout(NOTICIAS_MS); }
   let r;
   try {
-    r = await traer(d, { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined }, (u, m2) => !reglaDe(u, m2, cab));
+    r = await traer(d, op, (u, m2) => !reglaDe(u, m2, cab));
   } catch (e) {
+    if (noticias) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
     return sinRespuesta(String((e && e.message) || e || 'sin respuesta'), c);
   }
+  if (noticias && (r.status === 503 || r.status === 429)) noticiasPausa = Date.now() + NOTICIAS_PAUSA_MS;
   // el cuerpo pasa tal cual, sin leerlo (las páginas de futbolfantasy pesan varios megas)
   return new Response(r.body, { status: 200, headers: { ...c, 'x-s': String(r.status), 'x-t': r.headers.get('content-type') || '', 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } });
 }
@@ -354,6 +371,8 @@ export class Emparejar {
     if (ruta === '/apodos') return new Response(JSON.stringify(await apodosObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
     // (22 nov) el plan, el chat, lo contado y los pasos hechos de una cuenta, en «sinc|uid» (worker/src/sinc.js); nunca pone alarma
     if (ruta === '/sinc') return new Response(JSON.stringify(await sincObjeto(st, await req.json().catch(() => ({})))), { status: 200 });
+    // (25 nov) las búsquedas en Google de los planes, compartidas unas horas, en «busq|todos» (worker/src/busquedas.js); nunca pone alarma
+    if (ruta === '/busq') return new Response(JSON.stringify(await busqObjeto(st, await req.json().catch(() => ({})), urlFuente)), { status: 200 });
     // (0.8.4) quién usa la app (ficha, registro y tiempo de uso de todas las cuentas), en «quien|todos» con SQLite
     // (worker/src/quien.js); nunca pone alarma. «todos» devuelve el JSON ya escrito
     // (0.8.4, fase 3) los avisos de fallo como conversación, en «fallos|todos» con SQLite (worker/src/fallos.js)
@@ -770,7 +789,7 @@ export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 8000;
  * (25 nov, rama worker-plan-corto) y «texto N»: los caracteres de lo que la IA ha escrito de verdad. Lo que piensa antes
  * de contestar se cobra como salida y no se ve: en 16 planes de verdad (22 nov) el texto eran unos 600 tokens de 3.283
  * (a ~3,2 caracteres por token); el resto, razonamiento. Con esto se mide en cada plan sin gastar nada. */
-export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas, ${r.entra || 0}/${r.sale || 0} tokens, texto ${String(r.texto || '').length}${r.sinPensar ? ' sin pensar' : ''}, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
+export const lineaPlan = (rid, fin, ms, r) => `plan ${rid || 'sin id'}: ${fin && fin.plan ? 'bien' : `mal (${(fin && fin.estado) || '?'})`} en ${Math.round(ms / 100) / 10} s${r ? `, ${r.busquedas || 0} búsquedas${r.recientes ? `, ${r.recientes} recientes` : ''}${r.repite ? ', sin buscar (ya buscó)' : ''}, ${r.entra || 0}/${r.sale || 0} tokens, texto ${String(r.texto || '').length}${r.sinPensar ? ' sin pensar' : ''}, fin ${r.fin || '?'}` : ', sin respuesta de la IA'}`;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
 // cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
@@ -897,6 +916,38 @@ async function encargoObjeto(st, env, b) {
   await st.setAlarm(Date.now());
   return { ok: true };
 }
+/* ---------- (25 nov) las búsquedas en Google compartidas entre los planes (worker/src/busquedas.js) ---------- */
+async function busqPedir(env, b) {
+  if (!env || !env.QR) return null;
+  try {
+    const r = await env.QR.get(env.QR.idFromName('busq|todos')).fetch('https://freno/busq', { method: 'POST', body: JSON.stringify(b) });
+    return r.status === 200 ? await r.json() : null;
+  } catch (e) { return null; }
+}
+/**
+ * Antes de pedir un plan con búsqueda: las búsquedas recientes de todos que hablan de algo de su pedido, añadidas al pedido
+ * (sus url valen como fuente: van en `vistas`), y si este puede buscar. st: el objeto de la cuenta y el día; si esa cuenta
+ * ya hizo un plan con búsqueda hace menos de BUSQ_REPITE_H, este va sin buscar. Si algo falla, como antes.
+ * → { pedido, web, vistas, recientes, repite }
+ */
+export async function webCompartida(env, pedido, web, st = null, ahora = Date.now()) {
+  const out = { pedido, web, vistas: [], recientes: 0, repite: false };
+  if (!webN(web)) return out;
+  try {
+    const t = st ? Number(await st.get('webt')) || 0 : 0;
+    const repite = !!t && ahora - t < BUSQ_REPITE_H * 3600e3;
+    const x = await busqPedir(env, { op: 'leer', desde: ahora - BUSQ_HORAS * 3600e3 });
+    const rel = busqRelevantes((x && x.xs) || [], pedido);
+    return { pedido: pedido + bloqueBusq(rel, !repite), web: repite ? 0 : web, vistas: vistasBusq(rel), recientes: rel.length, repite };
+  } catch (e) { return out; }
+}
+/** después: lo que ha buscado este plan, para los demás, y la hora en su objeto (si ha buscado) */
+export async function webGuardar(env, r, st = null, ahora = Date.now()) {
+  try {
+    if (r && Array.isArray(r.busq) && r.busq.length) await busqPedir(env, { op: 'poner', xs: r.busq });
+    if (st && r && r.busquedas > 0) await st.put('webt', ahora);
+  } catch (e) { /* no pasa nada: el siguiente buscará */ }
+}
 /** (en el objeto, en la alarma) un plan encargado: lo pide a Claude y deja el resultado en res:<rid>; si falla, devuelve el cupo */
 async function hacerPlan(st, env, k, tr) {
   const rid = tr.rid, t0 = Number(tr.t0) || tr.t || Date.now(), libre = !!tr.libre;
@@ -917,12 +968,16 @@ async function hacerPlan(st, env, k, tr) {
     await st.put(`jobe:${rid}`, ini);
     await st.put(`res:${rid}`, { marcha: ini });
     try {
-      const r = await llamarClaude(env, tr.modelo, tr.sistema, tr.pedido, fetch, { web: tr.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS), pensar: tr.pensar !== false });
+      // (25 nov) con las búsquedas recientes de todos; sin buscar si esta cuenta ya buscó hace poco
+      const wc = await webCompartida(env, tr.pedido, tr.web, st);
+      const r = await llamarClaude(env, tr.modelo, tr.sistema, wc.pedido, fetch, { web: wc.web, hasta: ini + (Number(tr.hasta) || PLAN_HASTA_MS), pensar: tr.pensar !== false });
+      r.recientes = wc.recientes; r.repite = wc.repite;
       dijo = r;
       await gastoHoy(env, costeDe(r, tr.modelo)).catch(() => {});
-      // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
+      await webGuardar(env, r, st);
+      // (las fuentes, solo las que salieron de verdad en la búsqueda, la suya o las recientes: lo que la IA ponga de más se borra)
       const j = jsonDe(r.texto);
-      const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
+      const plan = planLimpio(j ? fuentesDe(j, [...r.vistas, ...wc.vistas], r.citadas) : null);
       if (!plan) {
         await devolver();
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
@@ -976,9 +1031,13 @@ const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
 export function bloquesDe(content) {
   let texto = '';
   const vistas = [], citadas = [], ya = new Set(), yaC = new Set();
+  // (25 nov) cada búsqueda con su consulta y lo que salió, para compartirla con los demás planes (worker/src/busquedas.js)
+  const consultas = {}, busq = [];
   const una = (u, t, a, s) => { const k = claveUrl(u); if (k && !s.has(k) && a.length < 40) { s.add(k); a.push({ u: urlFuente(u), t: String(t || '') }); } };
   for (const b of Array.isArray(content) ? content : []) {
     if (!b || typeof b !== 'object') continue;
+    if (b.type === 'server_tool_use' && b.id && b.input && typeof b.input.query === 'string') consultas[b.id] = b.input.query;
+    if (b.type === 'web_search_tool_result' && Array.isArray(b.content) && consultas[b.tool_use_id]) busq.push({ q: consultas[b.tool_use_id], res: b.content.filter((r) => r && r.type === 'web_search_result' && r.url).map((r) => ({ u: r.url, t: r.title, a: r.page_age })) });
     if (b.type === 'text' && typeof b.text === 'string') {
       texto += b.text;
       for (const c of Array.isArray(b.citations) ? b.citations : []) if (c && c.url) { una(c.url, c.title, citadas, yaC); una(c.url, c.title, vistas, ya); }
@@ -986,7 +1045,7 @@ export function bloquesDe(content) {
       for (const r of b.content) if (r && r.type === 'web_search_result' && r.url) una(r.url, r.title, vistas, ya);
     }
   }
-  return { texto, vistas, citadas };
+  return { texto, vistas, citadas, busq };
 }
 /**
  * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
@@ -1004,7 +1063,7 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
   // (25 nov) sin razonar antes de contestar (solo si se pide: «planes.pensar» a false en limites.json)
   if (pensar === false) cuerpo.thinking = { type: 'disabled' };
   if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
-  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false, sinPensar: pensar === false };
+  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], busq: [], sinWeb: false, sinPensar: pensar === false };
   let ult = '';
   // (con búsqueda, una respuesta larga puede volver a medias, «pause_turn»: se sigue desde ahí, como mucho dos veces)
   for (let vuelta = 0; vuelta < 3; vuelta++) {
@@ -1039,6 +1098,7 @@ export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, 
     // (19 nov) lo leído y escrito en la caché, aparte, para medir lo que ahorra
     acc.cache = { lee: ((acc.cache && acc.cache.lee) || 0) + (u.cache_read_input_tokens || 0), escribe: ((acc.cache && acc.cache.escribe) || 0) + (u.cache_creation_input_tokens || 0), sin: ((acc.cache && acc.cache.sin) || 0) + (u.input_tokens || 0) };
     acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
+    acc.busq.push(...b.busq);
     for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
     if (x.stop_reason === 'pause_turn' && vuelta < 2 && queda() >= 5000) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
     return acc;
@@ -1109,13 +1169,17 @@ async function planIA(req, env, c, ctx) {
     if (rid) await resPlan(env, u.uid, 'marcha', rid).catch(() => {});
     let dijo = null;
     try {
-      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web, hasta: t0 + hastaPlan(env), pensar: P.pensar });
+      // (25 nov) con las búsquedas recientes de todos (aquí no hay objeto de la cuenta: puede buscar siempre)
+      const wc = await webCompartida(env, b.pedido, P.web);
+      const r = await llamarClaude(env, P.modelo, sistema, wc.pedido, fetch, { web: wc.web, hasta: t0 + hastaPlan(env), pensar: P.pensar });
+      r.recientes = wc.recientes; r.repite = wc.repite;
       dijo = r;
       const gasto = costeDe(r, P.modelo);
       ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
-      // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
+      ctx && ctx.waitUntil ? ctx.waitUntil(webGuardar(env, r)) : await webGuardar(env, r);
+      // (las fuentes, solo las que salieron de verdad en la búsqueda, la suya o las recientes: lo que la IA ponga de más se borra)
       const j = jsonDe(r.texto);
-      const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
+      const plan = planLimpio(j ? fuentesDe(j, [...r.vistas, ...wc.vistas], r.citadas) : null);
       if (!plan) {
         if (!libre) await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
