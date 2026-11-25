@@ -99,6 +99,20 @@ jobs:
             xcodebuild archive "${COMUN[@]}" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= \
               2>&1 | tee "$RUNNER_TEMP/archivar2.log" | grep -E "error:|\*\* " || true
             grep -q '\*\* ARCHIVE SUCCEEDED \*\*' "$RUNNER_TEMP/archivar2.log"
+            # Sin firma, el archivo no lleva los permisos (push y avisos urgentes): Xcode los lee al exportar de
+            # archived-expanded-entitlements.xcent, el archivo que deja él mismo dentro de la app cuando firma al archivar.
+            # Y los frameworks de Google, sin la firma que traen, para que Apple los firme desde cero (si se conserva algo
+            # de una firma que no es la suya, la subida da «Invalid Signature», 90035)
+            APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
+            cp ios/App/FantasyManager.entitlements "$APPA/archived-expanded-entitlements.xcent"
+            /usr/libexec/PlistBuddy -c "Set :aps-environment production" \
+              -c "Add :application-identifier string $TEAM.es.fantasymanager.app" \
+              -c "Add :com.apple.developer.team-identifier string $TEAM" "$APPA/archived-expanded-entitlements.xcent"
+            plutil -p "$APPA/archived-expanded-entitlements.xcent"
+            for fw in "$APPA"/Frameworks/*.framework; do
+              codesign -dvv "$fw" 2>&1 | grep -E "Authority|flags|Signature" | head -3 || true
+              codesign --remove-signature "$fw" || true
+            done
           fi
           echo "== en el archivo:"
           /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" -c "Print :CFBundleVersion" -c "Print :GADApplicationIdentifier" "$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app/Info.plist"
@@ -141,22 +155,7 @@ jobs:
           }
           opciones export
           exportar
-          if ! permisosBien; then
-            # El archivo sin firmar no lleva los permisos (push, avisos urgentes) y Apple solo deja los que pide la app. Se le
-            # ponen con una firma local que ya declara el requisito de la firma de Apple (sacado de la primera exportación:
-            # con «-» a secas, la firma de Apple conserva el requisito de la local y la subida da «Invalid Signature», 90035),
-            # y se exporta otra vez
-            REQ=$(codesign -d -r- "$APPX" 2>&1 | sed -n 's/^designated => //p')
-            [ -n "$REQ" ] || { echo "::error::No se ha podido leer el requisito de la firma de Apple"; exit 1; }
-            echo "requisito: $REQ"
-            cp ios/App/FantasyManager.entitlements "$RUNNER_TEMP/permisos-app.plist"
-            /usr/libexec/PlistBuddy -c "Set :aps-environment production" "$RUNNER_TEMP/permisos-app.plist"
-            APPA="$RUNNER_TEMP/app.xcarchive/Products/Applications/FantasyManager.app"
-            codesign -f -s - --entitlements "$RUNNER_TEMP/permisos-app.plist" -r="designated => $REQ" "$APPA"
-            codesign -d -r- "$APPA" 2>&1 | tail -1
-            exportar
-          fi
-          codesign -dvv "$APPX" 2>&1 | grep -E "Authority|TeamIdentifier" || true
+          for f in "$APPX" "$APPX"/Frameworks/*; do echo "== $f"; codesign -dvvv "$f" 2>&1 | grep -E "Authority=Apple D|flags|Signature|CDHash=" || true; done
           codesign -d -r- "$APPX" 2>&1 | tail -1 || true
           for f in "$APPX" "$APPX"/Frameworks/*; do codesign --verify --strict "$f" || { echo "::error::Mal firmado: $f"; exit 1; }; done
           # los avisos del servidor necesitan el permiso de push de producción, y el clausulazo el de los urgentes
