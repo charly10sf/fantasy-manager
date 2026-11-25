@@ -3274,7 +3274,8 @@
    "SPORT|136822855": 1795590021000,
    "SPORT|136822696": 1795591895000,
    "SPORT|136823365": 1795593138000,
-   "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000
+   "AS|https://as.com/futbol/primera/aubameyang-y-yeremay-la-sociedad-que-todavia-espera-el-depor-f202611-n/": 1795599108000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/25/cucho-regresa-puerta-grande.html": 1795602324000
   },
   "hechos": [
    {
@@ -3495,7 +3496,7 @@
   ],
   "gemini": {
    "dia": "2026-11-25",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -4458,17 +4459,17 @@
  "ia": {
   "dia": "2026-11-25",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 9,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 147529,
-  "salida": 8609,
+  "entrada": 149410,
+  "salida": 9008,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.302842,
+  "dolares": 0.30323,
   "reservado": 0
  },
  "recientes": {
@@ -9518,13 +9519,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6269,
+   "ok": 6270,
    "fallos": 0,
-   "ejecuciones": 5088,
+   "ejecuciones": 5089,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-25T10:26:14.492Z"
+   "ultima": "2026-11-25T10:31:14.537Z"
   }
  },
  "ptsDirecto": {},
@@ -9541,15 +9542,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:26:23.762Z"
+   "ultimaBien": "2026-11-25T10:31:25.307Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:26:23.762Z"
+   "ultimaBien": "2026-11-25T10:31:25.307Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:26:23.762Z"
+   "ultimaBien": "2026-11-25T10:31:25.307Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9557,11 +9558,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:26:23.762Z"
+   "ultimaBien": "2026-11-25T10:31:25.307Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T10:26:23.762Z"
+   "ultimaBien": "2026-11-25T10:31:25.307Z"
   }
  },
  "avisos": [
