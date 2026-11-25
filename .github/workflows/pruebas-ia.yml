@@ -1,0 +1,41 @@
+# Solo en la rama pruebas-ia (no se fusiona). CUESTA DINERO (la IA de verdad): no se sube nada a `pruebas-ia` sin que
+# Carlos diga cuánto se puede gastar. Esta rama, `pruebas-ia-corto`, es la misma preparada y NO lanza nada.
+# Para lanzarlo: git push -f origin origin/pruebas-ia-corto:pruebas-ia
+# (25 nov, parte 2 de claude/prompt-cerrar-auditoria-1.md) «Que la IA escriba menos en los planes»: el mismo plan pedido
+# como está publicado, con las instrucciones nuevas y con las nuevas sin razonar (.github/ia/planes-corto.mjs); deja
+# .github/ia/planes-corto.md y .json en la rama pruebas-ia. 8 escenas × 3 = 24 planes, unos 16 céntimos de dólar.
+name: Pruebas IA
+on:
+  push:
+    branches: [pruebas-ia]
+    paths-ignore: ['.github/ia/planes-corto.md', '.github/ia/planes-corto.json']
+permissions:
+  contents: write
+concurrency: { group: pruebas-ia, cancel-in-progress: true }
+jobs:
+  planes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - name: Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Los planes, antes y después (Haiku de verdad)
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/planes-corto.mjs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TOPE_USD: "0.35"
+          WEB: "1"
+      - name: Guardar las respuestas en la rama
+        if: always()
+        run: |
+          [ -f .github/ia/planes-corto.md ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add .github/ia/planes-corto.md .github/ia/planes-corto.json
+          git commit -q -m "Los planes, antes y después (Haiku de verdad)" || exit 0
+          git push -q origin HEAD:pruebas-ia
