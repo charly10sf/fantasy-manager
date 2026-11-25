@@ -51,7 +51,7 @@ Por tipo: tuits · redactados · errores de datos (en cuántos tuits; solo en lo
 
 | | tuits | redact. | errores datos | reglas | muletillas | entrada rep. / parecidas | revisor tumba | validador tumba | plantilla | tarde | $ por publicado | s (máx.) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| A | 1 | 1 | 1 (1) | 0 | 0 | 0 / 0 de 0 | 2 | 1 | 0 | 0 | 0.11713 | 17.3 (17.3) |
+| A | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 2 | 1 | 0 | 0 | 0.11713 | 17.3 (17.3) |
 | B | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | 0.00818 | 8.7 (8.7) |
 | C | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | 0.00223 | 9.5 (9.5) |
 | D | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | 0.00295 | 14.9 (14.9) |
@@ -60,10 +60,10 @@ Por tipo: tuits · redactados · errores de datos (en cuántos tuits; solo en lo
 
 | | tuits | redact. | errores datos | reglas | muletillas | entrada rep. / parecidas | revisor tumba | validador tumba | plantilla | tarde | $ por publicado | s (máx.) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| A | 1 | 0 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 3 | 0 | 1 | 0 | — | 15 (15) |
-| B | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 1 | 0 | 0 | -0.04821 | 17.6 (17.6) |
-| C | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | -0.01452 | 11.4 (11.4) |
-| D | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | -0.01917 | 19 (19) |
+| A | 1 | 0 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 3 | 0 | 1 | 0 | sin medir | 15 (15) |
+| B | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 1 | 0 | 0 | sin medir | 17.6 (17.6) |
+| C | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | sin medir | 11.4 (11.4) |
+| D | 1 | 1 | 0 (0) | 0 | 0 | 0 / 0 de 0 | 0 | 0 | 0 | 0 | sin medir | 19 (19) |
 
 ## sancionados
 
@@ -112,7 +112,6 @@ Por tipo: tuits · redactados · errores de datos (en cuántos tuits; solo en lo
 - A · mvp|128 (plantilla): inicial con punto («Y. Zabiri»)
 - A · mvp|129: «más del doble» / «de lo que suele»
 - A · previa|134: inicial con punto («Y. Zabiri»)
-- A · mercado|2026-11-25: DATO: nombre que no está en los hechos: Yassir
 - A · resumen|13|mejores|10: «más del doble» / «de lo que suele»
 - A · onceideal|14: «se va a N»; inicial con punto («Y. Zabiri»)
 - A · selecciones|13 (plantilla): club sin artículo: «án Alvarez (Atlético»

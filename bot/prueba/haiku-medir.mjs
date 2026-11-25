@@ -88,6 +88,9 @@ function erroresDatos(texto, hechos, prensa) {
       // (las palabras en mayúsculas, «¡GOLAZO DE LEJOS!», solo si son el nombre de alguien)
       if (w.length > 2 && w === w.toUpperCase() && !CONOCIDOS.has(n)) return;
       if (n.length <= 1) return;
+      // (el nombre de pila que pone `retocar` delante de una inicial de los hechos: «Y. Zabiri» → «Yassir Zabiri»)
+      const sig = norm(ws[i + 1] || '');
+      if (sig && corpus.includes(` ${n[0]} ${sig} `)) return;
       for (const parte of n.split(' ')) if (parte.length > 1 && !corpus.includes(` ${parte} `) && !corpus.includes(` ${parte}`) && !COMUNES.has(parte)) { out.push(`nombre que no está en los hechos: ${w}`); return; }
     });
   }
@@ -195,7 +198,9 @@ for (const v of VS) {
       const y = f[v];
       const hechos = JSON.parse(JSON.stringify(f.hechos));
       conApodos(hechos);
-      x.dolares += y.dolares || 0; x.segundos.push(y.segundos || 0);
+      // (un tuit que cruzó la medianoche de Madrid sale con el gasto en negativo: el registro empieza el día nuevo a cero; no se cuenta)
+      if ((y.dolares || 0) < 0) x.costeSinMedir = (x.costeSinMedir || 0) + 1; else { x.dolares += y.dolares || 0; x.conCoste = (x.conCoste || 0) + 1; if (y.redactado) x.redactadosConCoste = (x.redactadosConCoste || 0) + 1; }
+      x.segundos.push(y.segundos || 0);
       x.rechazosRevisor += y.rechazosRevisor || 0; x.rechazosValidador += y.rechazosValidador || 0;
       if (y.sinEsfuerzo) x.sinEsfuerzo++;
       if (y.redactado) x.redactados++; else x.plantilla++;
@@ -217,8 +222,8 @@ for (const v of VS) {
     let pares = 0, parecidos = 0;
     for (let i = 0; i < txs.length; i++) for (let j = i + 1; j < txs.length; j++) { pares++; if (parecido(txs[i].texto, txs[j].texto, [...txs[i].nombres, ...txs[j].nombres]) >= 0.3) parecidos++; }
     x.parejasParecidas = parecidos; x.parejas = pares;
-    x.porPublicado = x.redactados ? Math.round((x.dolares / x.redactados) * 1e5) / 1e5 : null;
-    x.porTuit = Math.round((x.dolares / fs.length) * 1e5) / 1e5;
+    x.porPublicado = x.redactadosConCoste ? Math.round((x.dolares / x.redactadosConCoste) * 1e5) / 1e5 : null;
+    x.porTuit = x.conCoste ? Math.round((x.dolares / x.conCoste) * 1e5) / 1e5 : null;
     x.dolares = Math.round(x.dolares * 1e5) / 1e5;
     x.segundosMax = Math.max(...x.segundos); x.segundos = Math.round((x.segundos.reduce((a, b) => a + b, 0) / x.segundos.length) * 10) / 10;
     x.palabras = Math.round(x.palabras.reduce((a, b) => a + b, 0) / x.palabras.length);
@@ -235,7 +240,7 @@ for (const tipo of tipos) {
   for (const v of VS) {
     const x = R[v][tipo];
     if (!x) { out.push(`| ${v} | igual que C | | | | | | | | | | | |`); continue; }
-    out.push(`| ${v} | ${x.tuits} | ${x.redactados} | ${x.erroresDatos} (${x.tuitsConError}) | ${x.tics} | ${x.muletillas} | ${x.mismaEntrada} / ${x.parejasParecidas} de ${x.parejas} | ${x.rechazosRevisor} | ${x.rechazosValidador} | ${x.plantilla} | ${x.tarde} | ${x.porPublicado ?? '—'} | ${x.segundos} (${x.segundosMax}) |`);
+    out.push(`| ${v} | ${x.tuits} | ${x.redactados} | ${x.erroresDatos} (${x.tuitsConError}) | ${x.tics} | ${x.muletillas} | ${x.mismaEntrada} / ${x.parejasParecidas} de ${x.parejas} | ${x.rechazosRevisor} | ${x.rechazosValidador} | ${x.plantilla} | ${x.tarde} | ${x.porPublicado ?? (x.costeSinMedir ? 'sin medir' : '—')} | ${x.segundos} (${x.segundosMax}) |`);
   }
   out.push('');
 }
