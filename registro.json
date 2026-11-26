@@ -3199,7 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
    "SPORT|136743685": 1795440168000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000,
    "SPORT|136763275": 1795450330000,
@@ -3381,7 +3380,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255745/gerard-lopez-espina-clavada-barca-no-rendi-valencia.html": 1795694899000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261126/1004255793/accidente-coche-aubameyang-pequeno-susto.html": 1795694622000,
    "MARCA|https://www.marca.com/futbol/levante/2026/11/26/luis-castro-hay-parar-zabiri-parar-racing.html": 1795696696000,
-   "AS|https://as.com/futbol/primera/aubameyang-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-ante-el-barca-f202611-n/": 1795696512000
+   "AS|https://as.com/futbol/primera/aubameyang-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-ante-el-barca-f202611-n/": 1795696512000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255820/aubameyang-pedri-jugador-me-impresiona.html": 1795697311000
   },
   "hechos": [
    {
@@ -3828,7 +3828,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -4767,17 +4767,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 161219,
-  "salida": 18589,
+  "entrada": 163267,
+  "salida": 19049,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.474158,
+  "dolares": 0.474593,
   "reservado": 0
  },
  "recientes": {
@@ -9856,13 +9856,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6626,
+   "ok": 6627,
    "fallos": 0,
-   "ejecuciones": 5405,
+   "ejecuciones": 5406,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:56:18.948Z"
+   "ultima": "2026-11-26T13:01:15.193Z"
   }
  },
  "ptsDirecto": {},
@@ -9879,15 +9879,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:56:28.989Z"
+   "ultimaBien": "2026-11-26T13:01:29.295Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:56:28.989Z"
+   "ultimaBien": "2026-11-26T13:01:29.295Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:56:28.989Z"
+   "ultimaBien": "2026-11-26T13:01:29.295Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9895,11 +9895,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:56:28.989Z"
+   "ultimaBien": "2026-11-26T13:01:29.295Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:56:28.989Z"
+   "ultimaBien": "2026-11-26T13:01:29.295Z"
   }
  },
  "avisos": [
