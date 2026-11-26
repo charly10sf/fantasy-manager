@@ -3192,7 +3192,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-zanja-debate-penalti-barca-entrenador-ultima-palabra-20261123_3479878.html": 1795437695000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
    "SPORT|136743685": 1795440168000,
@@ -3375,7 +3374,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255810/elche-recupera-dos-efectivos-visita-atletico.html": 1795694991000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255745/gerard-lopez-espina-clavada-barca-no-rendi-valencia.html": 1795694899000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261126/1004255793/accidente-coche-aubameyang-pequeno-susto.html": 1795694622000,
-   "MARCA|https://www.marca.com/futbol/levante/2026/11/26/luis-castro-hay-parar-zabiri-parar-racing.html": 1795696696000
+   "MARCA|https://www.marca.com/futbol/levante/2026/11/26/luis-castro-hay-parar-zabiri-parar-racing.html": 1795696696000,
+   "AS|https://as.com/futbol/primera/aubameyang-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-ante-el-barca-f202611-n/": 1795696512000
   },
   "hechos": [
    {
@@ -3822,7 +3822,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -4762,17 +4762,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 19,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 150298,
-  "salida": 17320,
+  "entrada": 152243,
+  "salida": 18004,
   "cacheLee": 98733,
   "cacheEscribe": 44840,
-  "dolares": 0.443115,
+  "dolares": 0.443652,
   "reservado": 0
  },
  "recientes": {
@@ -9851,13 +9851,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6623,
+   "ok": 6624,
    "fallos": 0,
-   "ejecuciones": 5402,
+   "ejecuciones": 5403,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:41:11.453Z"
+   "ultima": "2026-11-26T12:46:11.389Z"
   }
  },
  "ptsDirecto": {},
@@ -9874,15 +9874,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:41:28.007Z"
+   "ultimaBien": "2026-11-26T12:46:23.533Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:41:28.007Z"
+   "ultimaBien": "2026-11-26T12:46:23.533Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:41:28.007Z"
+   "ultimaBien": "2026-11-26T12:46:23.533Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9890,11 +9890,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:41:28.007Z"
+   "ultimaBien": "2026-11-26T12:46:23.533Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:41:28.007Z"
+   "ultimaBien": "2026-11-26T12:46:23.533Z"
   }
  },
  "avisos": [
