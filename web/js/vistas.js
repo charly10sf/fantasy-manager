@@ -1355,14 +1355,30 @@ const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', '
 const PARTE_POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 /** el resumen de arriba: cuántos rivales hay de cada cosa, contando SOLO lo que se ve */
 const PARTE_RES = [['rojo', 'en negativo', 'en negativo', ''], ['falta', 'corto de un puesto', 'cortos de un puesto', 'oro'], ['blindajes', 'sin blindajes', 'sin blindajes', 'azul']];
-/** la gráfica de «le falta»: los que tiene de cada puesto que pueden jugar, con el que le falta marcado */
-const partePuestos = (ps) => `<span class="parte-ps">${ps.map((x) => `<span class="parte-p${x.falta ? ' mal' : ''}"><i>${PARTE_POS[x.p]}</i><b>${x.n}</b>${x.falta ? `<em>falta${x.falta > 1 ? 'n' : ''} ${x.falta}</em>` : ''}</span>`).join('')}</span>`;
+/** la gráfica de «le falta» (Carlos, 26 nov, 18:33: fuera los cuadrados por puesto; «algo que denote calidad»): SU CAMPO en
+    pequeño, de portería a portería. En cada línea, un punto por cada uno que tiene y puede jugar (hasta lo que cabe en un
+    once: 1, 5, 5 y 3) y, donde le falta, un aro que late. `ps`: [{ p, n, falta }] de parte.js */
+const PARTE_CABE = { 1: 1, 2: 5, 3: 5, 4: 3 }, PARTE_X = { 1: 30, 2: 106, 3: 190, 4: 274 };
+function parteCampo(ps) {
+  const fig = ps.map((x) => {
+    const hay = Math.min(num(x.n), PARTE_CABE[x.p]), aros = Math.min(num(x.falta), PARTE_CABE[x.p]), n = Math.min(hay + aros, 5);
+    const paso = n > 4 ? 14.5 : 17, cx = PARTE_X[x.p], antes = Math.floor((n - aros) / 2);
+    let g = '';
+    for (let k = 0; k < n; k++) {
+      const cy = Math.round((45 + (k - (n - 1) / 2) * paso) * 10) / 10, aro = k >= antes && k < antes + aros;
+      g += aro ? `<circle class="pc-a" cx="${cx}" cy="${cy}" r="6.2"/>` : `<circle class="pc-d" cx="${cx}" cy="${cy}" r="4.6"/>`;
+    }
+    return `${g}<text class="pc-t${x.falta ? ' mal' : ''}" x="${cx}" y="103" text-anchor="middle">${PARTE_POS[x.p]}</text>`;
+  }).join('');
+  const txt = ps.map((x) => `${PARTE_POS[x.p]} ${x.n}${x.falta ? ` (falta${x.falta > 1 ? 'n' : ''} ${x.falta})` : ''}`).join(', ');
+  return `<svg class="parte-campo" viewBox="0 0 304 108" role="img" aria-label="${esc(txt)}"><rect class="pc-c" x="1" y="1" width="302" height="88" rx="10"/><path class="pc-l" d="M152 1v88M1 23h30v44H1M303 23h-30v44h30"/><circle class="pc-l" cx="152" cy="45" r="15"/>${fig}</svg>`;
+}
 /** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que te cambia los planes, con su acción.
     CORTO (Carlos, 26 nov, 18:10: «menos texto y más sintetizado y entendible»): arriba, cuándo empieza la jornada y cuántos
     rivales hay de cada cosa; de cada línea, el hecho en negrita con su cifra, UNA frase con lo que puedes hacer y, en «le
-    falta», la gráfica de sus puestos. Sale desde 4 días antes de la jornada (antes dice cuándo, sin candado: no hay nada
-    que abrir). Lo que sale del dinero de un rival, solo con su dinero abierto; el candado del final sale siempre que alguno
-    lo tenga cerrado, haya o no algo detrás (no puede dar pistas) */
+    falta», su campo en pequeño (`parteCampo`); los blindajes gastados, dos escudos apagados. Sale desde 4 días antes de la jornada (antes dice cuándo, sin candado: no hay nada
+    que abrir). QUIÉN está en negativo sale con el parte abierto (Carlos, 26 nov, 18:34: «solo eso, no por cuánto»); la cifra,
+    solo con el dinero de ese rival abierto, y entonces el candado del final lo dice */
 function parteHTML(S, PV) {
   const { M } = S;
   if (!PV.jornada) return nada('El parte sale cuando hay una jornada por delante.');
@@ -1374,10 +1390,11 @@ function parteHTML(S, PV) {
     h += `<div class="parte-res">${res}</div>`;
     h += PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
     ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0];
-      const cuerpo = `${icono(ic)}<div><span class="parte-t"><b>${esc(l.txt)}</b>${l.dato ? `<span class="parte-d">${esc(l.dato)}</span>` : ''}</span>${l.puestos ? partePuestos(l.puestos) : ''}<span class="parte-a">${esc(l.accion)}</span>${l.nota ? `<span class="parte-n">${esc(l.nota)}</span>` : ''}</div>`;
+      const cuerpo = `${icono(ic)}<div><span class="parte-t"><b>${esc(l.txt)}</b>${l.tipo === 'blindajes' ? `<span class="parte-esc" title="${esc(l.dato || '')}">${icono('escudo')}${icono('escudo')}</span>` : l.dato ? `<span class="parte-d">${esc(l.dato)}</span>` : ''}</span>${l.puestos ? parteCampo(l.puestos) : ''}<span class="parte-a">${esc(l.accion)}</span>${l.nota ? `<span class="parte-n">${esc(l.nota)}</span>` : ''}</div>`;
       return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('');
   } else h += nada('Hoy no hay nada de tus rivales que te cambie los planes.');
-  if (M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con su dinero abierto, también sale quién está en negativo.</span></div>`;
+  // quién está en negativo ya se ve; por cuánto, solo con su dinero abierto: el candado sale si a alguno de los que salen le falta la cifra
+  if (PV.rivales.some((x) => x.lineas.some((l) => l.sinCifra))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con su dinero abierto, sale también por cuánto.</span></div>`;
   return h;
 }
 

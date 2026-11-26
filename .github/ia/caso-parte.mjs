@@ -102,15 +102,17 @@ try {
       const sirve = vende.length > 0;
       const soloSuyos = lg.every((l) => G.M.mercado.some((m) => m.tipo === 'manager' && m.pid === l.pid && m.vendedorTeamId === tid));
       const H2 = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; premio(D); D.dinero = 1e4; });
-      out.lineaRojo = { sale: sirve ? lg.length === 1 && soloSuyos && lg[0].llave === 'dinero' && vende.some((m) => m.pid === lg[0].pid && cifra(m) === lg[0].importe) && /^En negativo$/.test(lg[0].txt) && /^-|^−/.test(lg[0].dato) && /no puntúa/.test(lg[0].nota) && /en venta/.test(lg[0].accion) && /ofértale/.test(lg[0].accion) : lg.length === 0, sirve, sinSaldo: lineasDe(H2).filter((l) => l.tipo === 'rojo').length === 0, txt: lg[0] ? `${lg[0].txt} [${lg[0].dato}] ${lg[0].accion} ${lg[0].nota}` : '' };
+      const lh = lineasDe(H2).filter((l) => l.tipo === 'rojo');
+      const sinOferta = (l) => !l.pid && !l.importe && /^Tiene que vender .* o no puntúa\.$/.test(l.accion) && !/ofértale/i.test(l.accion);
+      out.lineaRojo = { sale: lg.length === 1 && lg[0].llave === 'parte' && lg[0].datoDinero === true && /^En negativo$/.test(lg[0].txt) && /^-|^−/.test(lg[0].dato) && (sirve ? soloSuyos && vende.some((m) => m.pid === lg[0].pid && cifra(m) === lg[0].importe) && /no puntúa/.test(lg[0].nota) && /en venta/.test(lg[0].accion) && /ofértale/.test(lg[0].accion) : sinOferta(lg[0])), sirve, sinSaldo: lh.length === 1 && sinOferta(lh[0]), txt: lg[0] ? `${lg[0].txt} [${lg[0].dato}] ${lg[0].accion} ${lg[0].nota}` : '' };
       // las llaves: con su dinero cerrado no se ve, y el candado sale igual con y sin línea detrás
       // el mismo caso con ese rival en positivo: con su dinero cerrado, todo tiene que salir IGUAL (también el orden)
       const G0 = montar((D) => { D.dineros = { [tid]: { v: 5e6 } }; premio(D); D.dinero = 900e6; });
       const PG = parteDe(G), PE = parteDe(G0);
       const vg = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ve = Pa.visibles(PE, { abierto: true, dineroAbierto: () => false });
       const va = Pa.visibles(PG, { abierto: true, dineroAbierto: (t) => t === tid });
-      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: !JSON.stringify(vg).includes('"rojo"') && !/negativo|no puntúa/.test(JSON.stringify(vg)), ordenIgual: JSON.stringify(vg.map((x) => [x.tid, x.lineas.map((l) => l.txt + l.accion)])) === JSON.stringify(ve.map((x) => [x.tid, x.lineas.map((l) => l.txt + l.accion)])), primero: !sirve || va[0].tid === tid,
-        abierto: !sirve || (va.find((x) => x.tid === tid) || { lineas: [] }).lineas.some((l) => l.tipo === 'rojo') };
+      out.llaves = { cerradoNada: Pa.visibles(PG, { abierto: false, dineroAbierto: () => true }).length === 0, sinDinero: (() => { const l = (vg.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && l.dato === '' && l.sinCifra === true && !/30,0|estimado/.test(JSON.stringify(vg)); })(), ordenIgual: !JSON.stringify(ve).includes('"rojo"'), primero: va[0].tid === tid && vg[0].tid === tid,
+        abierto: (() => { const l = (va.find((x) => x.tid === tid) || { lineas: [] }).lineas.find((y) => y.tipo === 'rojo'); return !!l && /^[-−]30/.test(l.dato) && !l.sinCifra; })() };
       window.__G = G; window.__G0 = G0;
     }
 
@@ -180,12 +182,12 @@ try {
       const conDinero = pinta(G);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Sin blindajes|Puede pujar|Plantilla llena|parte-ps|parte-res|parte-d/;
+      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Sin blindajes|Puede pujar|Plantilla llena|parte-campo|parte-res|parte-d/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
         cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
-        abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && !/>En negativo<|no puntúa|\d (rival )?en negativo/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
-        igualCerrado: trozo(abierta) === trozo(abierta0),
-        conDinero: !out.lineaRojo.sirve || (/>En negativo</.test(conDinero) && /ofértale/.test(conDinero) && /<b>1<\/b> en negativo/.test(conDinero)), pieSiempre: /parte-pie/.test(conDinero) };
+        abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && />En negativo</.test(abierta) && /<b>1<\/b> en negativo/.test(abierta) && !/parte-d"|30,0 M|estimado/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
+        igualCerrado: !/>En negativo<|en negativo<|parte-pie/.test(abierta0),
+        conDinero: />En negativo</.test(conDinero) && /parte-d">[-−]30,0 M/.test(conDinero) && (!out.lineaRojo.sirve || /ofértale/.test(conDinero)), pieSiempre: !/parte-pie/.test(conDinero) };
     }
     return out;
   });
@@ -210,13 +212,13 @@ try {
   ok(r.rojo.positivo, 'en positivo no está en rojo');
   ok(r.rojo.estimado, 'con el dinero estimado, solo si es negativo también con el margen y la holgura; sin su dinero, no se sabe');
   ok(r.rojo.enJuego, 'con una jornada en juego nadie está «en negativo»: cobrará sus puntos al acabarla');
-  ok(r.lineaRojo.sale, `«en negativo» sale solo con algo que tiene a la venta, te sirve y puedes pagar, con la cifra de Mercado (${r.lineaRojo.sirve ? 'lo hay' : 'no lo hay: no sale'}): ${r.lineaRojo.txt}`);
-  ok(r.lineaRojo.sinSaldo, '«en rojo» no sale si no puedes pagar la oferta con tu saldo');
+  ok(r.lineaRojo.sale, `«en negativo» sale siempre que es seguro; la oferta, solo por algo que tiene a la venta, te sirve y puedes pagar, con la cifra de Mercado (${r.lineaRojo.sirve ? 'lo hay' : 'no lo hay: sin oferta'}): ${r.lineaRojo.txt}`);
+  ok(r.lineaRojo.sinSaldo, 'si no puedes pagar la oferta con tu saldo, «en negativo» sale sin oferta: «Tiene que vender… o no puntúa»');
   ok(r.llaves.cerradoNada, 'con el parte cerrado no se enseña nada');
-  ok(r.llaves.sinDinero, 'con el dinero de ese rival cerrado no sale que está en negativo');
-  ok(r.llaves.ordenIgual, 'con su dinero cerrado, el parte sale igual (mismas líneas y mismo orden) esté o no en negativo');
-  ok(r.llaves.primero, 'con su dinero abierto, el que está en negativo sale el primero');
-  ok(r.llaves.abierto, 'con el dinero de ese rival abierto, sale');
+  ok(r.llaves.sinDinero, 'con el dinero de ese rival cerrado sale QUIÉN está en negativo, sin la cifra (Carlos, 26 nov, 18:34)');
+  ok(r.llaves.ordenIgual, 'el mismo rival en positivo no sale como en negativo');
+  ok(r.llaves.primero, 'el que está en negativo sale el primero, con su dinero abierto o cerrado');
+  ok(r.llaves.abierto, 'con el dinero de ese rival abierto, sale también la cifra');
   ok(r.blindajes.cero && r.blindajes.uno && r.blindajes.dos, 'los blindajes de un rival se cuentan con sus movimientos de esta jornada (0, 1 y 2 gastados)');
   ok(r.blindajes.linea, `«sin blindajes» sale solo si hay algo suyo que clausularías hoy (${r.blindajes.hay ? 'lo hay' : 'no lo hay'})`);
   ok(r.blindajes.conUno, 'con un blindaje por gastar no se dice nada');
@@ -237,10 +239,10 @@ try {
   ok(r.pantalla.fuera, 'antes de los 4 días dice cuándo sale, sin candado y sin nada de dentro');
   ok(r.pantalla.cerrada, 'cerrado: el candado y ni una palabra de lo de dentro');
   ok(r.pantalla.sinNumero, 'cerrado, la pestaña no lleva número');
-  ok(r.pantalla.igualCerrado, 'con su dinero cerrado, la pantalla es idéntica esté o no en negativo');
-  ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: sin «negativo» y con el candado del dinero al pie');
-  ok(r.pantalla.conDinero, 'con el dinero de ese rival abierto: «Está en negativo» y la oferta por lo que vende');
-  ok(r.pantalla.pieSiempre, 'el candado del pie sigue mientras algún rival tenga el dinero cerrado');
+  ok(r.pantalla.igualCerrado, 'con ese rival en positivo, ni «En negativo» ni el candado del dinero al pie');
+  ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: «En negativo» sin cifra y el candado del dinero al pie');
+  ok(r.pantalla.conDinero, 'con el dinero de ese rival abierto: «En negativo» con su cifra y la oferta por lo que vende');
+  ok(r.pantalla.pieSiempre, 'con la cifra a la vista, el candado del pie ya no sale');
 } finally { await cerrar(); }
 console.log(mal ? `\n${mal} MAL` : '\nTodo BIEN');
 process.exit(mal ? 1 : 0);

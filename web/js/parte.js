@@ -12,8 +12,9 @@
    cláusula y una compra a otro mánager solo se pagan con saldo (19 nov); 2 blindajes por jornada, que se recargan al acabar
    una (22 nov); a un mánager se le oferta desde el valor de mercado, nunca menos, y lo que él pida no cuenta (22 nov).
 
-   LAS LLAVES: lo que sale del dinero de un rival (`llave: 'dinero'`: que no le llega para empezar la jornada) solo se enseña
-   con el dinero de ESE rival abierto; lo demás son hechos de LaLiga (`llave: 'parte'`) y va con la llave del parte. Aquí no
+   LAS LLAVES (Carlos, 26 nov, 18:34: «debería salir quién está en negativo. Solo eso, no por cuánto»): todo va con la llave
+   del parte (`llave: 'parte'`), también QUIÉN está en negativo; lo único que pide el dinero de ESE rival abierto es su CIFRA
+   (`dato` con `datoDinero`). (`llave: 'dinero'` sigue valiendo para una línea que no deba verse sin su dinero: hoy, ninguna.) Aquí no
    se mira ninguna llave: lo hace `visibles`, que es lo ÚNICO que puede leer quien pinta (vistas.js) o quien se lo cuente a la
    IA. OJO: el orden de los rivales se decide en `visibles`, con lo que se ve; ordenar antes dejaba arriba al que está en
    negativo aunque su línea no saliera (revisión de fuera, 26 nov).
@@ -169,22 +170,23 @@ export function parte(M, D, opc = {}) {
     const topePuja = h.cap && h.cap.alto != null ? h.cap.alto + 0.2 * num(r.e.valor) : null;
     const enVenta = (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId) === String(tid) && m.j);
 
-    /* 1. EN NEGATIVO SEGURO (llave: su dinero). Tiene que vender antes del primer partido o no puntúa. Solo sale si tú
-       puedes aprovecharlo: algo que YA tiene a la venta, que te sirve, que Mercado no da por «no te lo venderá», que el plan
-       no descarta y que puedes pagar con tu saldo. La cifra, la de Mercado (o la del plan si ya lleva ese paso); si su
-       cláusula está abierta y no pasa de esa cifra, no sale (lo que toca es la cláusula, y eso lo dice el plan) */
-    if (L.rojo && h.rojo && !yoLleno) {
-      const cands = enVenta.filter((m) => !MALOS.has(m.j.estado) && !m.noVende && !planNo(m.pid) && (M.mejora(m.j) >= 0.5 || (M.puestos || []).some((p) => p.pos === m.j.pos && p.faltan > 0)))
+    /* 1. EN NEGATIVO SEGURO (llave: el parte; Carlos, 26 nov, 18:34: «si alguien la desbloquea, debería salir quién está
+       en negativo. Solo eso, no por cuánto»). Tiene que vender antes del primer partido o no puntúa. QUIÉN lo está sale
+       siempre con el parte abierto; POR CUÁNTO (`dato`, con `datoDinero`), solo con el dinero de ESE rival abierto: lo
+       quita `visibles`. Si además YA tiene a la venta algo que te sirve, que Mercado no da por «no te lo venderá», que el
+       plan no descarta y que puedes pagar con tu saldo, la oferta: la cifra de Mercado (o la del plan si ya lleva ese
+       paso); si su cláusula está abierta y no pasa de esa cifra, sin oferta (lo que toca es la cláusula: lo dice el plan) */
+    if (L.rojo && h.rojo) {
+      const cands = yoLleno ? [] : enVenta.filter((m) => !MALOS.has(m.j.estado) && !m.noVende && !planNo(m.pid) && (M.mejora(m.j) >= 0.5 || (M.puestos || []).some((p) => p.pos === m.j.pos && p.faltan > 0)))
         .map((m) => { const d = dF(m.pid), cl = (M.clausulas || []).find((x) => x.pid === m.pid); return { j: m.j, of: num(d && d.accion === 'fichar' && d.importe) || num(m.puja), gana: M.mejora(m.j), cl }; })
         .filter((x) => x.of > 0 && x.of >= num(x.j.valor) && x.of <= saldoLibre && !(x.cl && x.cl.abierta && num(x.cl.clausula) <= x.of))
         .sort((a, b) => b.gana - a.gana);
-      if (cands.length) {
-        const c = cands[0];
-        lineas.push({ tipo: 'rojo', llave: 'dinero', orden: 0, pid: c.j.id, importe: c.of,
-          txt: 'En negativo', dato: h.cap.exacto ? eur(h.cap.v, { dec: 1 }) : 'estimado',
-          accion: `Tiene en venta a ${c.j.nombre}: ofértale ${eur(c.of)}${c.gana >= 0.1 ? ` (+${d1(c.gana)} pts por jornada)` : ''}.`,
-          nota: `Si no vende ${antesDe(jo.ini)}, no puntúa.` });
-      }
+      const c = cands[0] || null;
+      const base = { tipo: 'rojo', llave: 'parte', orden: 0, txt: 'En negativo', dato: h.cap.exacto ? eur(h.cap.v, { dec: 1 }) : 'estimado', datoDinero: true };
+      if (c) lineas.push({ ...base, pid: c.j.id, importe: c.of,
+        accion: `Tiene en venta a ${c.j.nombre}: ofértale ${eur(c.of)}${c.gana >= 0.1 ? ` (+${d1(c.gana)} pts por jornada)` : ''}.`,
+        nota: `Si no vende ${antesDe(jo.ini)}, no puntúa.` });
+      else lineas.push({ ...base, accion: `Tiene que vender ${antesDe(jo.ini)} o no puntúa.` });
     }
 
     /* 2. LE FALTA GENTE EN UN PUESTO (llave: el parte). Quien va corto ficha de ese puesto en 48 h el 64 % de las veces
@@ -258,8 +260,10 @@ export function parte(M, D, opc = {}) {
 
 /**
  * Lo que se puede enseñar del parte con las llaves de ahora: SOLO esto se pinta o se cuenta. `abierto`: la llave del parte;
- * `dineroAbierto(tid)`: el dinero de ese rival. Con el parte cerrado, nada. De cada rival quedan las líneas que se ven (las
- * del dinero, solo con su dinero abierto; y con él abierto se quitan las que su dinero desmiente, `sinDinero`), y el ORDEN
+ * `dineroAbierto(tid)`: el dinero de ese rival. Con el parte cerrado, nada. De cada rival quedan las líneas que se ven: QUIÉN
+ * está en negativo se ve con el parte abierto (Carlos, 26 nov, 18:34), pero su CIFRA (`datoDinero`) solo con su dinero
+ * abierto: sin él la línea sale sin `dato` y con `sinCifra`; con él abierto se quitan las que su dinero desmiente
+ * (`sinDinero`). El ORDEN
  * sale de lo que se ve: primero el que tiene la línea que más te cambia, después el que más líneas tiene y, a igualdad, por
  * la clasificación. Así nada de lo que tapa una llave mueve a nadie de sitio.
  */
@@ -267,7 +271,7 @@ export function visibles(P, { abierto = false, dineroAbierto = () => false } = {
   if (!P || !abierto) return [];
   return P.rivales.map((x) => {
     const ab = !!dineroAbierto(x.tid);
-    return { ...x, lineas: x.lineas.filter((l) => (l.llave !== 'dinero' || ab) && !(ab && l.sinDinero)).sort((a, b) => a.orden - b.orden) };
+    return { ...x, lineas: x.lineas.filter((l) => (l.llave !== 'dinero' || ab) && !(ab && l.sinDinero)).map((l) => (l.datoDinero && !ab ? { ...l, dato: '', sinCifra: true } : l)).sort((a, b) => a.orden - b.orden) };
   }).filter((x) => x.lineas.length)
     .sort((a, b) => a.lineas[0].orden - b.lineas[0].orden || b.lineas.length - a.lineas.length || num(a.e && a.e.pos) - num(b.e && b.e.pos) || String(a.tid).localeCompare(String(b.tid)));
 }
