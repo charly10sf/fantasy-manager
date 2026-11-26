@@ -4694,7 +4694,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255642/grupo-1-pone-dia-disputa-dos-aplazados.html": 1795647744000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795676131000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795679085000,
-   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000
+   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000,
+   "SPORT|136876189": 1795689597000
   },
   "hechos": [
    {
@@ -4724,27 +4725,25 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136876189": 1795693278511
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 19,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 139848,
-  "salida": 15509,
+  "entrada": 141689,
+  "salida": 15595,
   "cacheLee": 98733,
   "cacheEscribe": 44840,
-  "dolares": 0.441163,
+  "dolares": 0.44139,
   "reservado": 0
  },
  "recientes": {
@@ -9823,13 +9822,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6615,
+   "ok": 6616,
    "fallos": 0,
-   "ejecuciones": 5394,
+   "ejecuciones": 5395,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:01:13.933Z"
+   "ultima": "2026-11-26T12:06:13.770Z"
   }
  },
  "ptsDirecto": {},
@@ -9846,15 +9845,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:01:51.561Z"
+   "ultimaBien": "2026-11-26T12:06:24.574Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:01:51.561Z"
+   "ultimaBien": "2026-11-26T12:06:24.574Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:01:51.561Z"
+   "ultimaBien": "2026-11-26T12:06:24.574Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9862,11 +9861,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:01:51.561Z"
+   "ultimaBien": "2026-11-26T12:06:24.574Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:01:51.561Z"
+   "ultimaBien": "2026-11-26T12:06:24.574Z"
   }
  },
  "avisos": [
