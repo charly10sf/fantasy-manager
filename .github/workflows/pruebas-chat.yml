@@ -24,14 +24,14 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
           "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
-      - name: El chat con Haiku (sesión B)
+      - name: El chat con Haiku (ligas premium)
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/chat-haiku.mjs
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ESFUERZOS: low
-          ESCENAS: martes,m-senna
-          TOPE_USD: "0.40"
-          SOLO: dinero-rival,dinero-pasta,dinero-todos,dinero-refilon,dinero-mas-que-yo,que-ia,que-ia-insiste,plan-por-que,que-hago-hoy,vender-mio,senna-vendo,senna-quedamos,senna-porque-plan,senna-laliga,senna-aguanto,oferta-dicha,oferta-dicha-laliga,oferta-dicha-whatsapp,dicho-blindajes,dicho-blindajes-hoy,dicho-blindar-a,dicho-novender,dicho-novender-caja,dicho-puja,dicho-puja-hoy,corrige-cifra,corrige-cifra-no
+          ESCENAS: m-premium,sabado-premium,martes
+          TOPE_USD: "1.00"
+          SOLO: pm-capitan,pm-capitan-no-juega,pm-capitan-entrenador,pm-banquillo,pm-banquillo-regla,pm-entrenador,pm-entrenador-vendo,pm-entrenador-puntos,pm-tope,pm-formacion,pm-once,pm-ideal,pm-cesion,pm-que-hago,pm-fichar-ent,pm-fichar-ent-cuanto,pm-apagado-capitan,pm-estandar-capitan
       - name: Guardar las respuestas en la rama
         if: always()
         run: |
@@ -39,5 +39,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
           git add .github/ia/respuestas-chat.md .github/ia/respuestas-chat.json
-          git commit -q -m "Respuestas del chat con Haiku (sesión B)" || exit 0
+          git commit -q -m "Respuestas del chat con Haiku (ligas premium)" || exit 0
           git push -q origin HEAD:pruebas-chat-haiku
