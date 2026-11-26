@@ -41,7 +41,7 @@ export const NOVEDADES = [
     // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
     v: '0.8.4o', f: '2026-11-26', h: '02:50', t: 'Apunta el dinero de tus rivales',
     cosas: [
-      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú, y ayudas a que la app y la IA afinen aún más el dinero de cada rival.' },
+      { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. Solo ves la cifra que has puesto tú. La cuenta de la app, con su más o menos, ya es buena: con lo que apuntas, la app y la IA la afinan aún más.' },
     ],
   },
   {

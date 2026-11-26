@@ -8,7 +8,7 @@
    cambia por haberla apuntado. Abierto (anuncio o invitar), entra en la cuenta como siempre; al cerrarse, vuelve a salir.
    Lo apuntado se sigue mandando para aprender (apunteDinero, con «Ayudar a mejorar la IA»). La app no lo pide sola: solo
    la novedad, una vez. (Carlos, 26 nov, 03:34-03:35: nada de «aprende a calcular mejor», que daba a entender que sus
-   cuentas fallan: «ayudas a afinar aún más».) Prueba: .github/ia/caso-dinero-dicho.mjs */
+   cuentas fallan: «ayudas a afinar aún más»; 03:36: que quede claro que la cuenta con su más o menos ya es buena.) Prueba: .github/ia/caso-dinero-dicho.mjs */
 import { LS, esc, icono, cuando } from './util.js';
 import { K } from './datos.js';
 import { bloqueada } from './limite.js';
@@ -113,7 +113,7 @@ export function ventanaDineroHTML(S, st) {
     return `<div class="dd-v-hecho"><span class="dd-v-ok" aria-hidden="true">${icono('ok')}</span>
       <h2 id="dd-v-t">Apuntado</h2>
       <p class="dd-v-res">${esc(q)} tiene ${st.aprox ? 'unos ' : ''}${esc(mill(st.v))} M.</p>
-      <p class="dd-v-sub">Lo tienes en su ficha, y ayuda a afinar aún más el dinero de los rivales.</p>
+      <p class="dd-v-sub">Lo tienes en su ficha, y ayuda a afinar aún más la cuenta de la app.</p>
       <button type="button" class="dd-v-sec" data-accion="ddOtro">Apuntar otro rival</button>
       <button type="button" class="dd-v-pri" data-accion="ddCerrar">Listo</button></div>`;
   }
@@ -146,7 +146,7 @@ export const novedadDineroHTML = () => `<div class="nvt-velo" data-accion="novDi
     <span class="dd-eti-r"><i></i>Novedad</span>
     <div class="nvd-dib" aria-hidden="true"><span class="nvd-cara">FR</span><span class="nvd-bur">«Tengo 52 kilos, tío»</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="nvd-m">52 M</span></div>
     <h2 id="nvd-t">Apunta el dinero de tus rivales</h2>
-    <p>Si sabes cuánto dinero tiene alguien de tu liga porque te lo ha dicho, apúntalo: ayudas a que el motor de la app y la IA afinen aún más el dinero de cada rival.</p>
+    <p>Fantasy Manager ya calcula el dinero de cada rival, con su más o menos, y esa cuenta es buena. Si alguien de tu liga te ha dicho cuánto tiene, apúntalo: ayudas a que el motor de la app y la IA lo afinen aún más.</p>
     <ul class="nvd-l">${['Puedes apuntarlo aunque tengas su dinero cerrado.', 'Solo ves lo que has puesto tú. Lo cerrado sigue cerrado.', 'No te lo vamos a estar pidiendo: lo apuntas cuando quieras.'].map((t) => `<li>${icono('ok')}${esc(t)}</li>`).join('')}</ul>
     <button type="button" class="dd-v-pri" data-accion="novDineroSi">Apuntar ahora</button>
     <button type="button" class="dd-v-no" data-accion="novDineroNo">Ahora no</button>
