@@ -1,7 +1,7 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
 import { pillRival, avisoRivalesVisto, avisoRivalesHTML, tarjetaChatHTML } from './dinero-dicho.js';
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs, horaDe, elDia } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
@@ -899,7 +899,10 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     while (js.length < n) js.push(null);
     return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
   });
-  const ent = M.once && M.once.entrenador;
+  // (26 nov) el entrenador del campo (solo sale en una liga premium que los tiene): si el campo es el que tienes puesto en
+  // LaLiga o el de la jornada en juego, el que TÚ alineaste (o ninguno); el que elige la app, solo en el once de la app
+  const entDe = (ids) => { if (!(M.premium && M.premium.entrenador)) return null; const mias = new Set(M.mias.map((x) => String(x.pid))); return (ids || []).map((pid) => M.J(pid)).find((j) => j && j.pos === 5 && mias.has(String(j.id))) || null; };
+  const ent = real ? entDe(V && V.once) : mio ? entDe((LS.get(K('mi-once'), null) || {}).ids) : deIA ? null : M.once && M.once.entrenador;
   h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true, directo: !!V })}</div>` : ''}</div>`;
   // (19 nov, Carlos: «no veo el sentido a cómo pone banquillo y lo del once de la app») fuera del directo, debajo del campo
@@ -1243,7 +1246,7 @@ function eqPlantillaHTML(S, op) {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
       if (!xs.length) continue;
-      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 && !(M.premium && M.premium.entrenador) ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
   } else if (orden === 'titular') {
@@ -1339,25 +1342,30 @@ export function equipo(S) {
 /* ================= RIVALES ================= */
 /** una cláusula de un rival que te llega: con tu dinero, abierta o que se abre en menos de 48 h */
 const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
-/** el parte de los rivales con las llaves de ahora: { jornada, abierto, rivales: los que tienen algo que se pueda enseñar } */
+/** el parte de los rivales con las llaves de ahora: { jornada, toca, desde, abierto, rivales: los que tienen algo que se pueda
+    enseñar, ya ordenados }. Lo ÚNICO que se pinta sale de `visibles`. Si algo falla dentro, Rivales no se cae: sale vacío */
 export function parteVisto(S) {
-  const P = parte(S.M, S.D);
-  const abierto = !bloqueada('parteRivales');
-  return { jornada: P.jornada, ini: P.ini, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }).filter((x) => x.lineas.length) };
+  try {
+    const P = parte(S.M, S.D);
+    const abierto = !bloqueada('parteRivales');
+    return { jornada: P.jornada, ini: P.ini, toca: P.toca, desde: P.desde, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }) };
+  } catch (e) { return { jornada: null, toca: false, abierto: false, rivales: [] }; }
 }
 const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', 'oro'], blindajes: ['escudo', 'azul'] };
-/** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que cambia lo que puedes hacer tú, con su
-    acción. Lo que sale del dinero de un rival, solo con su dinero abierto; el candado del final sale siempre que alguno lo
-    tenga cerrado, haya o no algo detrás (no puede dar pistas) */
+/** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que te cambia los planes, con su acción.
+    Sale desde 4 días antes de la jornada (antes dice cuándo, sin candado: no hay nada que abrir). Lo que sale del dinero
+    de un rival, solo con su dinero abierto; el candado del final sale siempre que alguno lo tenga cerrado, haya o no algo
+    detrás (no puede dar pistas) */
 function parteHTML(S, PV) {
   const { M } = S;
   if (!PV.jornada) return nada('El parte sale cuando hay una jornada por delante.');
-  let h = `<p class="t2 peq">Antes de la jornada ${PV.jornada}: de cada rival, solo lo que cambia lo que puedes hacer tú.</p>`;
+  if (!PV.toca) return nada(`El parte de la jornada ${PV.jornada} sale ${PV.desde && PV.desde > Date.now() ? `${elDia(PV.desde)}, 4 días antes de que empiece` : 'cuando acabe la que se está jugando'}.`);
+  let h = `<p class="t2 peq">Antes de la jornada ${PV.jornada}: lo de cada rival que te cambia los planes.</p>`;
   if (!PV.abierto) return h + candado('parteRivales');
   h += PV.rivales.length ? PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
     ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0]; const cuerpo = `${icono(ic)}<div><b>${esc(l.txt)}</b>${esc(l.accion)}</div>`; return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('')
-    : nada('Hoy ningún rival te deja nada que hacer.');
-  if (M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Si a un rival no le llega para empezar la jornada, sale aquí con su dinero abierto.</span></div>`;
+    : nada('Hoy no hay nada de tus rivales que te cambie los planes.');
+  if (M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Con el dinero de un rival abierto, aquí sale también si está en negativo y vende algo que te sirve.</span></div>`;
   return h;
 }
 

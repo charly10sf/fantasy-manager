@@ -111,10 +111,13 @@ let jornadaB = 0, inicioB = 0;
 export function fijarJornada(n, ini = 0) { if (Number(n) > 0) jornadaB = Number(n); inicioB = Number(ini) > 0 ? Number(ini) : 0; }
 /* el parte de los rivales (26 nov): { hasta, n, t } (n: los anuncios ya vistos de los que pide; t: cuándo se vio el último,
    para que uno visto hace días no cuente). Se abre hasta que empieza la próxima jornada (sin saberla, 24 h) */
+const PARTE_MAX = 5 * 24 * 3600e3; // el parte sale desde 4 días antes de la jornada: abierto más que eso no puede estar
 const parteG = () => { const g = LS.get('top-parte', null); return g && typeof g === 'object' ? g : {}; };
-const parteHasta = () => { const h = Number(parteG().hasta) || 0; return h > Date.now() ? h : 0; };
-const parteVistos = () => { const g = parteG(); return g.t && Date.now() - g.t < 12 * 3600e3 ? Number(g.n) || 0 : 0; };
-const abrirParte = (ms = 0) => LS.set('top-parte', { hasta: ms ? Date.now() + ms : inicioB > Date.now() ? inicioB : Date.now() + 24 * 3600e3, n: 0, t: Date.now() });
+const parteHasta = () => { const h = Number(parteG().hasta), t = Date.now(); return Number.isFinite(h) && h > t && h - t <= PARTE_MAX ? h : 0; };
+const parteVistos = () => { const g = parteG(), n = Math.floor(Number(g.n)); return Number(g.t) > 0 && Date.now() - g.t < 12 * 3600e3 && n > 0 ? Math.min(n, cfgTop().parteAnuncios - 1) : 0; };
+const abrirParte = (ms = 0) => { const t = Date.now(); LS.set('top-parte', { hasta: ms ? t + ms : inicioB > t ? Math.min(inicioB, t + PARTE_MAX) : t + 24 * 3600e3, n: ms ? parteVistos() : 0, t: ms ? Number(parteG().t) || t : t }); };
+/** cuándo empieza la próxima jornada (0 si no se sabe): hasta entonces queda abierto el parte */
+export const inicioJornada = () => (inicioB > Date.now() ? inicioB : 0);
 
 /* lo de hoy (para cuándo gira): cuántos anuncios has visto y, si no había anuncio, hasta cuándo va abierta gratis */
 function hoyTop() {

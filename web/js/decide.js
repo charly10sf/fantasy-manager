@@ -21,6 +21,7 @@
    EL ORDEN DE LAS REGLAS (la primera que se cumple decide; la tabla, también en claude/auditoria-coherencia.md):
      1 dicho         «a X no lo vendo», dicho en Pregunta                                   → aguantar
      2 entrenador    no puntúa en la versión gratuita                                        → vender
+                     (en una liga premium con entrenador puntúa: aguantar; destituido, vender)
      3 baja          lesión larga, fuera de LaLiga o sancionado y cayendo (`M.vendeBaja`)    → vender
      4 reventa       comprado para revender: `M.aguantaReventa` → aguantar; si no → vender (hoy si toca, o la víspera)
      5 vuelve        el que vuelve y sigue subiendo                                          → aguantar
@@ -37,7 +38,7 @@
    FICHAR (`M.decisionFichar`, uno que no es tuyo): la puja que el plan retira → plantilla llena → el paso vivo del plan →
    mirado y descartado (los «Mirados», `sinFichar`, lo que la app no haría hoy). Encima de un «no», si ya tiene tu puja y el
    plan no la retira: «no pujaría, pero tu puja sigue» (`yaPujada`, 25 nov). La palabra de cómo va su valor, `comoVa`. */
-import { eur, pct, cuando, DIA, HORA } from './util.js';
+import { eur, pct, cuando, DIA, HORA, TOPE_PLANTILLA } from './util.js';
 
 const num = (x) => +x || 0;
 const P7 = (t) => (!t ? null : t.p7e !== undefined ? t.p7e : t.p7);
@@ -80,6 +81,13 @@ function base(D, M, x, ahora) {
   // 1. lo ha dicho él
   if (M.noVender && M.noVender.has(pid)) return out('aguantar', 'dicho', 'dicho', 'Me dijiste que no lo vendes.');
   // 2. el entrenador
+  //    (26 nov) en una liga premium con entrenador sí puntúa (5 si su equipo gana, 2 si empata; ayuda de LaLiga,
+  //    «Entrenador»): se aguanta, salvo el destituido («No disponible»), que ya no suma
+  if (j.pos === 5 && M.premium && M.premium.entrenador) {
+    return j.estado === 'out_of_league'
+      ? out('vender', 'entrenador', null, `Ya no entrena en LaLiga y no puntúa: son ${eur(v)} parados.`)
+      : out('aguantar', 'entrenador', null, 'Es entrenador: en tu liga puntúa si lo alineas (5 si su equipo gana, 2 si empata).');
+  }
   if (j.pos === 5) return out('vender', 'entrenador', null, `Es entrenador y no puntúa: son ${eur(v)} parados.`);
   // 3. de baja
   if (M.vendeBaja(x)) return out('vender', 'baja', null, `${M.deBaja(j) ? M.bajaTxt(j) : 'Sancionado una jornada y su valor cae deprisa'}: no te va a puntuar y pierde valor.`);
@@ -173,6 +181,9 @@ function conOferta(D, M, x, b, ahora) {
     return { ...esperar('esta-oferta-no', `${b.porque} Déjalo a la venta, pero esta oferta (${ofertaTxt}) no la aceptes: ${luego}.`), cifras: { ...cifras, esperado } };
   }
   // aguantar, con una oferta: se acepta solo si la app la da por buena
+  // (26 nov) el entrenador de una liga premium: el consejo del motor lo mira como a un suplente que no da puntos (no entra
+  // en el total del once). La oferta no se acepta sola
+  if (b.regla === 'entrenador') return esperar('oferta-no', `${b.porque} No aceptes la oferta.`);
   if (consejo === 'aceptar') return aceptar(porque || `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`, 'oferta');
   return esperar(b.matiz === 'reventa' || b.matiz === 'vuelve' || b.matiz === 'sube' || b.matiz === 'busca-sustituto' ? b.matiz : 'oferta-no', b.matiz === 'busca-sustituto' || b.matiz === 'reventa' ? `${b.porque} No aceptes la oferta.` : (porque || `${b.porque} No aceptes la oferta.`));
 }
@@ -322,7 +333,7 @@ export function decidir(D, M, c = null) {
     const d = fichar0(pid);
     if (!d || d.accion !== 'no' || d.retira) return d;
     const m = (M.mercado || []).find((y) => String(y.pid) === String(pid) && y.miPuja);
-    if (!m || (M.mias || []).length >= 25) return d;
+    if (!m || M.llena) return d;
     return { ...d, yaPujada: m.miPuja, porque: `${String(d.porque || '').replace(/[.\s]*$/, '.')} Tu puja de ${eur(m.miPuja)} sigue puesta: el plan no te la quita porque no te deja en negativo. Si ya no lo quieres, retírala en el mercado antes de que se resuelva.`.replace(/^\.\s*/, '').replace(/^\p{Ll}/u, (c) => c.toUpperCase()) };
   };
   const fichar0 = (pid) => {
@@ -333,8 +344,8 @@ export function decidir(D, M, c = null) {
     const ret = vivas(P).find((y) => String(y.pid) === String(pid) && y.retira);
     if (ret) return { pid, accion: 'no', retira: true, porque: `El plan retira tu puja: ${String((ret.datos && ret.datos.porque) || 'con ella ganada empezarías la jornada en negativo')}.` };
     const o = vivas(P).find((y) => String(y.pid) === String(pid) && ['pujar', 'comprar', 'clausular', 'ofertar'].includes(y.accion));
-    // con la plantilla llena (25) LaLiga no deja fichar a nadie más (Carlos, 20 nov)
-    if (!o && (M.mias || []).length >= 25) return { pid, accion: 'no', porque: 'Tienes la plantilla llena (25): no puedes fichar a nadie más hasta que vendas a uno.' };
+    // con la plantilla llena (24) LaLiga no deja fichar a nadie más (Carlos, 20 nov)
+    if (!o && M.llena) return { pid, accion: 'no', porque: `Tienes la plantilla llena (${TOPE_PLANTILLA}): no puedes fichar a nadie más hasta que vendas a uno.` };
     if (o) return { pid, accion: 'fichar', como: o.accion, para: String(o.objetivo || 'titular'), importe: o.puja_max || o.importe || null, porque: (o.datos && o.datos.porque) || '' };
     const quita = (t) => String(t || '').replace(/^La app lo descarta[.:]?\s*/, '');
     const dm = (P.descartes || []).find((y) => y && String(y.pid) === String(pid));

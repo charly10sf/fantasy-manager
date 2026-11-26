@@ -18,7 +18,7 @@ import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
 import { planDelDia, planViejo, planViejoAuto, planesApp, puedePlanIA, cupoPlanes, ultimoPlan, cuadrarPlan, charlar, puedeChat, preguntasApp, preguntaPendiente, reanudarPregunta, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, apuntarDicho, planGuardadoHoy, cambioLocal, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, guardarChat, chatsAnteriores, enAppIos, iaPermitida, permisoIA, planIASolo, ponerPermisoIA } from './ia.js';
 import { pedirPermisoIA } from './permiso-ia.js';
-import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
+import { ultimaVersion, api, apuntarRegistro, nuevaCarga, forma as formaDatos } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
@@ -26,7 +26,7 @@ import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop, selloTop } from './comunes
 import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
-import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
+import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, alineacionDe, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada, jornadasAcabadas } from './jornadas.js';
 import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
@@ -1359,7 +1359,7 @@ function cerrarTopA() {
   clearTimeout(topT);
   const hasta = proximoCierreTop();
   if (!hasta) return;
-  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.max(1000, hasta - Date.now() + 500));
+  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.min(2e9, Math.max(1000, hasta - Date.now() + 500)));
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
@@ -1552,12 +1552,23 @@ function onceSabido() {
   const v = LS.get(K('vivo'), null);
   return v && Array.isArray(v.once) && v.once.length >= 5 ? v.once : null;
 }
-const apuntarMiOnce = (ids, forma = null) => {
+/** (26 nov) solo en una liga premium: el capitán, el banquillo y el entrenador de tu alineación de LaLiga, y la forma en
+ *  que vienen (nombres de campos, sin datos) para el Diagnóstico, que es como se confirma lo que aún no se ha visto */
+const premiumDeOnce = (D, r) => {
+  if (!(D && D.liga && D.liga.premium === true)) return null;
+  try {
+    const a = alineacionDe(r), d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r, f = (d && d.formation) || {};
+    return { cap: a.capitan, banq: a.banquillo, ent: a.entrenador, hay: a.hay, capF: f.captain == null ? '' : formaDatos(f.captain), banqF: f.bench == null ? '' : formaDatos(f.bench) };
+  } catch (e) { return null; }
+};
+const apuntarMiOnce = (ids, forma = null, mas = null) => {
   if (!ids || ids.length < 5) return;
   // (19 nov) con la formación, para pintar en Hoy y en Equipo el once que tiene puesto en LaLiga
   const g = LS.get(K('mi-once'), null);
   const f = forma || (g && (g.ids || []).join() === ids.map(String).join() ? g.forma : null) || null;
-  LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String), forma: f });
+  // (26 nov) en una liga premium, lo que lleva de más la alineación de LaLiga (capitán, banquillo, entrenador): `mas`
+  const pr = mas || (g && (g.ids || []).join() === ids.map(String).join() ? g.pr : null) || null;
+  LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String), forma: f, ...(pr ? { pr } : {}) });
 };
 /** «Actualizar» vuelve a pedir tu once a LaLiga aunque se mirara hace menos de 10 minutos */
 let forzarOnce = false;
@@ -2223,8 +2234,8 @@ async function vigilarClausulables(antes) {
   // (21 nov, Carlos: «si un jugador hace muchísimos puntos… y tiene justo la cláusula abierta, que te salga clausúlalo
   // ya») el que acaba de hacer 8 puntos o más, con su partido ya acabado, la cláusula abierta y que te llega: los días
   // siguientes sube bastante más de lo que dice la inercia (medido con su liga, `efectoTras`). Si lo que se espera que
-  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con 25 jugadores no, que no se puede clausular
-  if ((M.mias || []).length < 25) {
+  // valga en 3 días pasa su cláusula, te avisa (una vez por jornada); con la plantilla llena no, que no se puede clausular
+  if (!M.llena) {
     const acabado = (j) => { const p = (S.D.partidos || []).find((q) => q.jornada === V.n && (q.localId === j.equipoId || q.visitanteId === j.equipoId)); return !!(p && p.fecha && p.fecha + 2 * HORA <= Date.now()); };
     for (const x of M.clausulas || []) {
       const pts = V.puntos[x.pid];
@@ -2775,7 +2786,7 @@ async function mirarMiOnce() {
     const ids = idsOnce(r).map(String), forma = formaOnce(r);
     if (ids.length < 5 || S.D !== D) return;
     const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join();
-    apuntarMiOnce(ids, forma);
+    apuntarMiOnce(ids, forma, premiumDeOnce(D, r));
     if (antes !== ids.join() + '|' + (forma || []).join()) rehacerLuego();
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }

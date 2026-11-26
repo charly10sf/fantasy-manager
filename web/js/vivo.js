@@ -22,11 +22,61 @@ function lista(r) {
   return [];
 }
 
+const LINEAS = ['goalkeeper', 'defender', 'midfield', 'striker'];
+const idDe = (x) => { const pm = x && typeof x === 'object' ? (x.playerMaster || x.player || x) : null; const id = pm && (pm.id != null ? pm.id : pm.playerId); return id != null ? String(id) : null; };
+
+/**
+ * (26 nov) Lo que una liga premium añade a la alineación (/teams/{equipo}/lineup): el entrenador alineado
+ * (`formation.coach`, una lista de 0 o 1), el capitán (`formation.captain`, que solo viene si hay uno puesto) y el
+ * banquillo (`formation.bench`, un objeto con una clave por posición). Visto por la forma de las respuestas en tres
+ * ligas premium (25 nov); NO se ha visto por dentro cómo viene el capitán ni cada hueco del banquillo, así que se lee
+ * con cuidado: el capitán solo vale si resulta ser uno de los once (por su id de jugador o por su `playerTeamId`), y de
+ * cada hueco del banquillo, un jugador con su id. Lo que no se reconoce se queda en null.
+ * → { once: [pid], entrenador: pid | null, capitan: pid | null, banquillo: { 1, 2, 3, 4 } (pid por posición), hay: { capitan, banquillo } }
+ */
+export function alineacionDe(r) {
+  const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r;
+  const f = d && d.formation && typeof d.formation === 'object' && !Array.isArray(d.formation) ? d.formation : null;
+  const out = { once: [], entrenador: null, capitan: null, banquillo: {}, hay: { capitan: false, banquillo: false } };
+  if (!f) return out;
+  const porFicha = {};
+  for (const k of LINEAS) for (const x of (Array.isArray(f[k]) ? f[k] : [])) {
+    const id = idDe(x);
+    if (id == null || out.once.includes(id)) continue;
+    out.once.push(id);
+    if (x && x.playerTeamId != null) porFicha[String(x.playerTeamId)] = id;
+  }
+  if (Array.isArray(f.coach) && f.coach.length) out.entrenador = idDe(f.coach[0]);
+  if (f.captain != null && f.captain !== '') {
+    out.hay.capitan = true;
+    const c = f.captain;
+    const cands = typeof c === 'object' ? [idDe(c), c.playerTeamId != null ? porFicha[String(c.playerTeamId)] : null, c.playerMasterId != null ? String(c.playerMasterId) : null] : [String(c), porFicha[String(c)]];
+    out.capitan = cands.find((id) => id != null && out.once.includes(id)) || null;
+  }
+  if (f.bench && typeof f.bench === 'object' && !Array.isArray(f.bench)) {
+    LINEAS.forEach((k, i) => {
+      const v = f.bench[k], x = Array.isArray(v) ? v[0] : v;
+      if (x == null) return;
+      out.hay.banquillo = true;
+      const id = typeof x === 'object' ? idDe(x) : String(x);
+      if (id != null && !out.once.includes(id)) out.banquillo[i + 1] = id;
+    });
+  }
+  return out;
+}
+
 /** los jugadores de una alineación de LaLiga (los once y el entrenador): [pid] */
 export function idsOnce(r) {
   const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r;
   const f = d && (d.formation || d.lineup || d.players);
   const out = [];
+  // (26 nov) una alineación con sus líneas por nombre (la de siempre, y en las ligas premium con `coach`, `bench` y
+  // `captain`): se leen solo las cuatro líneas y el entrenador. El banquillo y el capitán no son «los once» y, según
+  // cómo vengan, podían colar un id que no es de jugador: van aparte, en `alineacionDe`
+  if (f && typeof f === 'object' && !Array.isArray(f) && LINEAS.some((k) => Array.isArray(f[k]))) {
+    for (const k of [...LINEAS, 'coach']) for (const x of (Array.isArray(f[k]) ? f[k] : [])) { const id = idDe(x); if (id != null && !out.includes(id)) out.push(id); }
+    return out;
+  }
   const meter = (x) => {
     const pm = (x && (x.playerMaster || x.player)) || x;
     const id = pm && (pm.id != null ? pm.id : pm.playerId);

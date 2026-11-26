@@ -143,7 +143,7 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
 
   alPaso(1, PASOS[1]);
   const ligasR = await A.ligas();
-  const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
+  const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, ...N.premiumDe(l) })).filter((l) => l.id);
   if (!ligas.length && N.lista(ligasR).length) throw cambioDeFormato('ligas', ligasR);
   if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
   // si se entró con una invitación de tu liga (?l=… en la dirección) y aún no habías elegido liga, esa (0.7a)
@@ -215,6 +215,8 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
     if (!r) { if (anterior && anterior.length) { plantillas[e.teamId] = anterior; plantillasViejas.push(e.teamId); } return; }
     if (!muestras.plantilla) { const l = (r && (r.players || (r.data && r.data.players))) || N.lista(r); if (l && l[0]) muestras.plantilla = recorte(l[0]); }
     const { fichas, info } = N.plantilla(r, equipos);
+    // (26 nov) cómo viene un cedido (solo nombres de campos), para el Diagnóstico: aún no se ha visto ninguno
+    if (!muestras.cedido && r && Array.isArray(r.loanedPlayers) && r.loanedPlayers[0]) muestras.cedido = forma(r.loanedPlayers[0]);
     if (!fichas.length && anterior && anterior.length) { plantillas[e.teamId] = anterior; plantillasViejas.push(e.teamId); return; }
     plantillas[e.teamId] = fichas.map((f) => { if (f.jugador) maestro[f.pid] = mezclar(maestro[f.pid], f.jugador); const { jugador, ...resto } = f; return resto; });
     infoEquipos[e.teamId] = info;
@@ -227,6 +229,7 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
   const dineros = {};
   for (const e of clasif) {
     const inf = infoEquipos[e.teamId];
+    if (inf && inf.cedidos != null) e.cedidos = inf.cedidos;   // (26 nov) cuántos cedidos tiene (ligas premium)
     if (e.dinero != null) dineros[e.teamId] = { v: e.dinero, fuente: 'clasificación' };
     else if (inf && inf.dinero != null) dineros[e.teamId] = { v: inf.dinero, fuente: 'plantilla' };
   }

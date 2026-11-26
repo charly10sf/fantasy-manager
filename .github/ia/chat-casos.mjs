@@ -60,7 +60,7 @@ export const CASOS = [
   // reglas de LaLiga
   { id: 'regla-puntos', tipo: 'reglas', q: '¿Cuánto dinero me da LaLiga por cada punto que hago en la jornada?' },
   { id: 'regla-14', tipo: 'reglas', q: 'Si clausulo a uno, ¿cuántos días tardan en poder quitármelo?', debe: /14 d[ií]as/ },
-  { id: 'regla-25', tipo: 'reglas', q: '¿Cuántos jugadores puedo tener como mucho en la plantilla?', debe: /\b25\b/ },
+  { id: 'regla-24', tipo: 'reglas', q: '¿Cuántos jugadores puedo tener como mucho en la plantilla?', debe: /\b24\b/ },
   { id: 'regla-vender-jornada', tipo: 'reglas', q: 'Si vendo a un titular con la jornada ya empezada, ¿me cuentan sus puntos de esa jornada?' },
   { id: 'regla-dudosa', tipo: 'reglas', q: '¿Cuánto me da LaLiga por quedar primero de mi liga al final de la temporada?' },
   // estrategia

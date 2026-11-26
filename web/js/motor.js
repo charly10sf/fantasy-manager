@@ -10,7 +10,7 @@ import { textoInercia } from './inercia-texto.js';
 import { correcciones, dichoTxt } from './dicho.js';
 import { crearQuienPuja } from './quien-puja.js';
 import { ajenasDe } from './pujas-vistas.js';
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj, TOPE_PLANTILLA } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -96,6 +96,23 @@ export function analizar(D, H, c, extra = {}) {
   const J = (pid) => D.maestro[pid] || { id: pid, nombre: 'Jugador', valor: 0, media: 0, puntos: 0, pos: 0, estado: 'ok' };
   M.J = J;
   const yoTid = D.yo && D.yo.teamId;
+  /* (26 nov) Las Ligas Premium de LaLiga. `D.liga.premium` y `D.liga.pf` salen de los campos de la liga (normalizar.js,
+     `premiumDe`); el administrador enciende y apaga cada función por separado, así que se mira una a una. Una foto de la
+     liga guardada antes de esta versión no trae `pf`: hasta que se actualice, ninguna función cuenta (solo el blindaje de
+     48 h, que va con `premium`). Reglas: la ayuda oficial de LaLiga Fantasy («Ligas premium», «Entrenador», «Cesiones»). */
+  {
+    const L = D.liga || {}, pf = (L.premium === true && L.pf) || {}, pc = (L.premium === true && L.pc) || {};
+    M.premium = {
+      liga: L.premium === true, leido: L.premium === true && !!L.pf,
+      entrenador: pf.coach === true, capitan: pf.captain === true, banquillo: pf.bench === true,
+      formaciones: pf.formations === true, cesiones: pf.loan === true, ideal: pf.ideal === true,
+      idealPremio: pc.ideal || null, cesionMax: pc.cesionMax || null, cesionMin: pc.cesionMin || null, cesionJornadas: pc.cesionJornadas || null,
+    };
+  }
+  /** el tope de la plantilla, 24 (`TOPE_PLANTILLA`; Carlos, 14 y 20 nov: lleno, no se puja ni se clausula). En una liga premium con entrenador,
+   *  los entrenadores (2 como mucho) no cuentan en ese tope (ayuda de LaLiga, «Entrenador», ago 2026) */
+  M.TOPE = TOPE_PLANTILLA;
+  M.cuentaPlantilla = (js) => (js || []).filter((j) => j && !(M.premium.entrenador && j.pos === 5)).length;
   const yoEntrada = D.clasif.find((e) => e.teamId === yoTid) || null;
   M.yo = yoEntrada;
 
@@ -647,7 +664,8 @@ export function analizar(D, H, c, extra = {}) {
   const huecos = [...PAR];
   for (let i = 1; i < jornadas.length; i++) { const a = jornadas[i - 1], b = jornadas[i]; if (b.ini - a.fin > 9 * DIA) huecos.push({ ini: a.fin, fin: b.ini }); }
   const enHueco = (t) => huecos.some((p) => t >= p.ini && t < p.fin);
-  M.RECOMPENSA = 0.1e6;
+  // (26 nov) en una liga premium son 200 mil (LaLiga, «La Recompensa Diaria aterriza en LALIGA FANTASY», 16 dic 2025)
+  M.RECOMPENSA = M.premium.liga ? 0.2e6 : 0.1e6;
   /** la recompensa diaria de un día (lo que da LaLiga si la coges): el doble en un parón */
   M.recompensaDia = (t) => (enHueco(t) ? 2 : 1) * M.RECOMPENSA;
   /** lo que suman las recompensas diarias entre dos momentos (cada día con la suya; el trozo del final, en proporción) */
@@ -1843,7 +1861,7 @@ export function analizar(D, H, c, extra = {}) {
     const texto = `${n} partido${n === 1 ? '' : 's'}${enProteccion > 5 ? ', los de sus 14 días con la cláusula protegida,' : ''} (${resumen}): ~${d1c(pts)} pts (${d1c(pts / n)} por partido${j.media ? `; su media es ${d1c(num(j.media))}` : ''})${pTit != null ? `, titular ~${Math.round(pTit * 100)} %` : ''}.`;
     return (cacheCal[j.id] = { partidos: out, n, fAvg, nDif, nMed, nFac, pts, pTit, tipo, riesgo, maxSobre, consejo, texto, resumen, hasta: out[out.length - 1].fecha });
   };
-  M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
+  M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado, { entrenador: M.premium.entrenador });
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
@@ -2144,6 +2162,9 @@ export function analizar(D, H, c, extra = {}) {
     }
     return x;
   }).sort((a, b) => a.j.pos - b.j.pos || b.j.valor - a.j.valor);
+  /** los que cuentan en el tope de tu plantilla (sin los entrenadores en una liga premium que los tiene) y si está llena */
+  M.nPlantilla = M.cuentaPlantilla(M.mias.map((x) => x.j));
+  M.llena = M.nPlantilla >= M.TOPE;
   M.ganadoTotal = M.mias.reduce((s, x) => s + (x.ganado || 0), 0);
   M.conCompra = M.mias.filter((x) => x.compra).length;
 
@@ -2320,7 +2341,7 @@ export function analizar(D, H, c, extra = {}) {
       ahora, rivales: M.rivalesTid, todos: D.clasif.map((e) => e.teamId), nombre: nombreEquipo, J,
       plantilla: (tid) => (D.plantillas || {})[tid] || [], valorEquipo: (tid) => num((M.equipo[tid] || {}).valor),
       capacidad: M.capacidad, compras: comprasQ, manual: manualQ, paga: (v, pid) => (M.pagaLiga ? M.pagaLiga(v, pid) : null),
-      deudaPct: num(c.deuda) / 100, minimoPos,
+      deudaPct: num(c.deuda) / 100, minimoPos, tope: M.TOPE, cuenta: (tid) => M.cuentaPlantilla(((D.plantillas || {})[tid] || []).map((f) => J(f.pid))),
     });
     M.quienPuja = qp;
     for (const m of M.mercado) {
@@ -2523,7 +2544,9 @@ export function analizar(D, H, c, extra = {}) {
      *  los movimientos desde que acabó la última. `completo`: el historial guardado llega hasta entonces (si no, puede
      *  haber gastado alguno que no se ha visto y no se dice nada) */
     M.escudosDe = (tid) => {
-      const n = Math.min(2, (blindaRival[tid] || []).length);
+      // (los de las 6 h siguientes al final de la jornada no se cuentan: LaLiga cierra la jornada y paga el premio 5-6 h
+      // después, y no se sabe si uno puesto en ese rato gasta de la jornada vieja o de la nueva; contarlo de menos calla)
+      const n = Math.min(2, (blindaRival[tid] || []).filter((a) => a.t > (desde || 0) + 6 * HORA).length);
       const hist = extra.actHist || null;
       return { usados: n, quedan: 2 - n, desde, completo: !!D.demo || !!(hist && hist.lista && hist.lista.length && (hist.completa || (hist.desde && hist.desde <= (desde || 0) + HORA))) };
     };
@@ -2625,8 +2648,8 @@ export function analizar(D, H, c, extra = {}) {
       const js = fichas.map((x) => x.j).filter(Boolean);
       const falta = {};
       for (const p of [1, 2, 3, 4]) falta[p] = js.filter((j) => j.pos === p && !MALOS.has(j.estado)).length < MIN_PUESTO[p];
-      // con 25 no puede clausular: tendría que vender antes (Carlos, 20 nov)
-      const lleno = js.length >= 25;
+      // con la plantilla llena no puede clausular: tendría que vender antes (Carlos, 20 nov)
+      const lleno = M.cuentaPlantilla(js) >= M.TOPE;
       // (20 nov, tarde, Carlos: «¿cómo puede ser peligro medio gente con un patrimonio de 600 M igual que otro con 90 M?»)
       // lo que puede sacar vendiendo: sus jugadores fuera de los 11 más caros, a lo que suele dar LaLiga (≈ su valor). Una
       // cláusula que solo paga vendiendo antes cuenta la mitad: vende en el cambio de mercado y clausula al día siguiente
@@ -2663,7 +2686,7 @@ export function analizar(D, H, c, extra = {}) {
       // una sola cláusula tuya a tiro (Gulácsi) salían siete de ocho igual y el 1º, con 534 M de equipo y cuatro
       // clausulazos a ti, «bajo» por tener poco saldo hoy. Ahora, como lo ve él: PUEDE PAGAR (lo rico que es frente al más
       // rico de la liga: su saldo y la cuarta parte de su equipo) × SUELE CLAUSULAR, y lo que tiene a tiro ahora lo mueve
-      // de ×0,85 (nada) a ×1,35 (todo). Con 25 jugadores, ×0,7 (tiene que vender antes); quien te pelea el puesto, hasta un 10 % más
+      // de ×0,85 (nada) a ×1,35 (todo). Con la plantilla llena, ×0,7 (tiene que vender antes); quien te pelea el puesto, hasta un 10 % más
       const riq = riqMax > 0 ? riqDe[e.teamId] / riqMax : 0.5;
       const nivelDe = (p) => Math.min(100, 100 * Math.pow(riq, 0.6) * (lleno ? 0.7 : 1) * (0.4 + 0.6 * suele / 100) * (0.85 + 0.5 * (p / 100) ** 2) * (1 + 0.1 * cerca));
       const ah = calc(false);
@@ -3346,10 +3369,10 @@ export function planAuto(D, M, c) {
     saldo += v.mejor.importe; caja += v.mejor.importe; vendidos.add(v.pid);
   }
 
-  // 0b. los entrenadores no puntúan en la versión gratuita: dinero parado
-  for (const x of M.mias.filter((y) => y.j.pos === 5 && !vendidos.has(y.pid))) {
+  // 0b. los entrenadores no puntúan en la versión gratuita: dinero parado (en una liga premium con entrenador sí puntúan)
+  for (const x of M.mias.filter((y) => y.j.pos === 5 && !vendidos.has(y.pid) && !(M.premium.entrenador && y.j.estado !== 'out_of_league'))) {
     op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
-      motivo: `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.`, confianza: 'alta' });
+      motivo: M.premium.entrenador ? `Ya no entrena en LaLiga y no puntúa: son ${eur(x.j.valor)} parados.` : `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 
@@ -3609,7 +3632,7 @@ export function puntosEsperados(j, forma, once = null) {
   return Math.max(0, pp);
 }
 /** el mejor once con esos jugadores entre las formaciones dadas: { formacion, lineas: [[POR],[DEF],[MED],[DEL]], entrenador, total, huecos } */
-export function mejorOnce(lista, formaciones, pp) {
+export function mejorOnce(lista, formaciones, pp, op = {}) {
   const por = { 1: [], 2: [], 3: [], 4: [], 5: [] };
   for (const j of lista || []) if (j && por[j.pos]) por[j.pos].push({ j, p: pp(j), ok: !MALOS.has(j.estado) });
   for (const k of Object.keys(por)) por[k].sort((a, b) => b.p - a.p);
@@ -3623,7 +3646,9 @@ export function mejorOnce(lista, formaciones, pp) {
       total += disp.reduce((s, x) => s + x.p, 0);
       return disp.map((x) => x.j);
     });
-    const ent = null; // la versión gratuita no alinea entrenador
+    // la versión gratuita no alinea entrenador; en una liga premium que los tiene, uno: de dos, el que más puntos lleva
+    // por jornada (cuál conviene con el partido de cada uno se elige en la parte B). No entra en el total ni en la nota
+    const ent = (op.entrenador && por[5].filter((x) => x.ok).sort((a, b) => (Number(b.j.media) || 0) - (Number(a.j.media) || 0))[0]) || null;
     const nota = total - huecos * 4;
     if (!mejor || nota > mejor.nota) mejor = { formacion: f, nombre: f.join('-'), lineas, entrenador: ent ? ent.j : null, total, huecos, nota };
   }
@@ -3658,7 +3683,7 @@ export function motivoPeligro(r, { quien = true } = {}) {
   else if (!p.czTotal && ll) partes.push('~no ha clausulado en toda la temporada');
   if (riqueza && (!ricoPobre || ll)) partes.push(riqueza);
   if (p.cerca >= 0.5) partes.push('te pelea el puesto');
-  if (p.lleno) partes.push('con 25 jugadores no puede clausular sin vender antes');
+  if (p.lleno) partes.push('con la plantilla llena no puede clausular sin vender antes');
   if (!ll && !p.lleno && quien) {
     if (p.caras) partes.push('las cláusulas tuyas que puede pagar están caras para esta liga');
     else if (pobreSin || (p.sinDinero && p.riq == null)) partes.unshift(p.czTotal ? 'suele clausular, pero no le llega para ninguna cláusula tuya que se abre pronto' : 'no le llega para tus cláusulas que se abren pronto');

@@ -14,13 +14,13 @@ import { qrSVG } from './qr.js';
 import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
-import { enDemo } from './datos.js';
+import { enDemo, K } from './datos.js';
 import { dichoDe, fichaDichoHTML, tileDicho } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, importantesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
+import { estadoLimite, novedadesPara, importantesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien, inicioJornada } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
@@ -47,7 +47,7 @@ export function quienPujaHTML(S, m) {
   const evs = (q.ev || []).filter((e) => e[0] > 0);
   const u = evs[evs.length - 1];
   const entro = u ? `${u[2] > 1 ? `${u[2]} entraron` : n > 1 ? 'La última entró' : 'Entró'} entre ${esc(ratoTxt(u[0], u[1]))}.` : '';
-  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ' (25 jugadores)' : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
+  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ' (plantilla llena)' : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
   // ¿la pasa tu puja, o la de la app? Sin otra cifra de «N de cada 10»: esa ya la da «Libre en el mercado»
   const mia = Number(m.miPuja) > 0, ref = mia ? Number(m.miPuja) : m.puja, p = mia ? q.pMia : q.pApp;
   const de = mia ? 'Tu puja' : 'La puja de la app';
@@ -482,7 +482,10 @@ export function fichaJugador(S, pid) {
       }
       if (c.length) h += `<details class="fj-pleg"><summary><div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div></summary><div class="previa">${c.join('')}</div></details>`;
     }
-  } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
+  }
+  // (26 nov, 13:50, Carlos, con la captura de la ficha de un entrenador: «No quiero nada de ese cartel. En ningún lado»)
+  // la ficha de un entrenador no lleva ningún cartel que explique qué es o cómo puntúa (ni en premium, ni destituido,
+  // ni en la versión gratis)
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
   const nots = M.noticiasDe(pid).slice(0, 6);
   if (nots.length) h += `<div class="sec"><h2>Noticias</h2></div>${nots.map(filaNoticia).join('')}`;
@@ -836,11 +839,12 @@ function anuncioTopHTML(A, S) {
     return h;
   }
   const faltan = faltanAnuncios(A.clave, rid), parteT = A.clave === 'parteRivales';
+  const hastaJ = parteT && inicioJornada() ? ` (${cuando(inicioJornada())})` : '';
   if (rivales && faltan >= a) h += `<p>Mira el dinero de <b>${esc(nom(rid))}</b> durante ${min} minutos viendo ${ads}. Puedes hacerlo ${veces(n)} por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
   else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y verás el dinero de ${esc(nom(rid))} ${min} minutos.</p>`;
   else if (A.clave === 'quienPaga') h += `<p>Mira un anuncio corto y se abre <b>${horasQuien()} horas</b>.</p>`;
-  else if (parteT && faltan >= a) h += `<p>Mira ${ads}${a > 1 ? ',' : ''} y se abre <b>hasta que empiece la jornada</b>.</p>`;
-  else if (parteT) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y se abre hasta que empiece la jornada.</p>`;
+  else if (parteT && faltan >= a) h += `<p>Mira ${ads}${a > 1 ? ',' : ''} y se abre <b>hasta que empiece la jornada</b>${hastaJ}.</p>`;
+  else if (parteT) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y se abre hasta que empiece la jornada${hastaJ}.</p>`;
   else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   const txt = A.cargando ? 'Cargando el anuncio…' : (rivales || parteT) && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';
@@ -1751,6 +1755,23 @@ function nombresIA() {
   const t = (x) => (x ? String(x).replace(/\b(?:models\/)?(?:gemini|gemma|learnlm|imagen)-[\w.-]*/gi, (y) => m(y)).replace(/\b(?:Gemini|Gemma)(?: [\d.]+)?(?: (?:Pro|Flash|Lite|Flash-Lite|Nano|Ultra|It|\(preview\)))*/g, 'la IA') : '');
   return { m, t, lista: () => orden };
 }
+/** (26 nov) solo en una liga premium: qué funciones tiene encendidas y CÓMO vienen de LaLiga el capitán, el banquillo, los
+ *  cedidos y los movimientos (nombres de campos y tipos, sin datos de nadie). Es la manera de confirmar lo que aún no se
+ *  ha visto de las ligas premium (claude/nota-premium.md del proyecto, «Por confirmar») */
+function premiumDiag(D, M) {
+  const L = D.liga || {}, pf = L.pf || {}, pc = L.pc || {};
+  const on = Object.keys(pf).filter((k) => pf[k]);
+  const g = LS.get(K('mi-once'), null), pr = (g && g.pr) || null;
+  const ents = ((M && M.mias) || []).filter((x) => x.j && x.j.pos === 5).length;
+  const ced = (D.clasif || []).reduce((n, e) => (e && e.cedidos != null ? (n || 0) + e.cedidos : n), null);
+  return `Premium: ${on.length ? on.join(', ') : L.pf ? 'ninguna función encendida' : 'funciones sin leer (liga guardada de antes)'}`
+    + ` · 11 ideal ${pc.ideal != null ? pc.ideal : '¿?'} · cesiones máx ${pc.cesionMax != null ? pc.cesionMax : '¿?'}, mín ${pc.cesionMin != null ? pc.cesionMin : '¿?'}`
+    + ` · capitán ${pr ? (pr.hay && pr.hay.capitan ? `${pr.capF || '¿?'} → ${pr.cap ? 'reconocido' : 'SIN RECONOCER'}` : 'sin poner') : 'sin mirar'}`
+    + ` · banquillo ${pr ? (pr.hay && pr.hay.banquillo ? `${pr.banqF || '¿?'} → ${Object.keys(pr.banq || {}).length} reconocidos` : 'vacío') : 'sin mirar'}`
+    + ` · entrenador ${pr && pr.ent ? 'alineado' : 'sin alinear'} (${ents} en plantilla)`
+    + ` · cedidos ${ced == null ? '¿?' : ced}${D.muestras && D.muestras.cedido ? ` ${D.muestras.cedido}` : ''}`
+    + ` · tipos: ${Object.entries((M && M.histTipos) || {}).map(([k, x]) => `${k}×${x.n}${x.conImporte ? `(${x.conImporte}€)` : ''}`).join(' ') || '¿?'}`;
+}
 export function textoDiagnostico(S) {
   const s = sesion();
   const D = S.D;
@@ -1778,6 +1799,7 @@ export function textoDiagnostico(S) {
     ...(enWeb ? [(() => { const x = estadoProxy(); if (!x) return 'Intermediario: ¿?'; return `Intermediario: ${x.ahora === 'deno' ? 'Deno (el Worker no contestaba)' : 'Worker'}${x.hay ? '' : ' · sin segundo'}${x.cambios ? ` · pasó a Deno ${x.cambios} ${x.cambios > 1 ? 'veces' : 'vez'}, la última ${horaDe(x.ultimo)} (${x.porque})` : ''}${x.usos ? ` · ${x.usos} peticiones por Deno` : ''}`; })()] : []),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     ocupado(),
+    ...(D && D.liga && D.liga.premium === true ? [premiumDiag(D, S.M)] : []),
     `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),
     `Fuentes: onces ${S.M && S.M.hayOnces ? `${Object.keys(((S.fuentes || {}).onces || {}).jugadores || {}).length} jugadores, ${((S.fuentes || {}).onces || {}).equipos ?? '?'}/${((S.fuentes || {}).onces || {}).de ?? '?'} equipos` : 'no'} · noticias ${S.M ? S.M.noticias.length : 0}${S.M && S.M.noticiasFallo ? ` (${S.M.noticiasFallo.viejas ? 'las de antes: ' : ''}${S.M.noticiasFallo.fallo})` : ''} · avanzadas ${S.M && S.M.fuentesAv ? Object.entries(S.M.fuentesAv).map(([k, v]) => `${k} ${v}`).join(', ') : 'sin datos'} · histórico de valor ${LS.get('ruta-valor', null) != null ? `ruta ${LS.get('ruta-valor')}` : LS.get('ruta-valor-falla', 0) ? 'ninguna ruta' : 'sin probar'}`,

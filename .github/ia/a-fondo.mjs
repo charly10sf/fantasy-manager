@@ -1,4 +1,4 @@
-// El motor del plan, a fondo: la liga de ejemplo movida al azar (saldo, pujas puestas, plantilla de 11 a 25, lesionados,
+// El motor del plan, a fondo: la liga de ejemplo movida al azar (saldo, pujas puestas, plantilla de 11 a 24, lesionados,
 // cláusulas mías abiertas a su valor, ofertas por lo que vendo, cosas compradas para revender) en nueve momentos de la
 // semana. En cada una, el plan del motor pasa por el árbitro de banco.mjs: no puede saltarse ninguna regla de LaLiga ni
 // llevar nada que la app descarte. No va en la Action (tarda): se pasa a mano al tocar web/js/plan.js.
@@ -49,8 +49,8 @@ for (const [nombre, E] of Object.entries(MOMENTOS)) {
       if (r() < 0.35) {
         const con = new Set(Object.values(D.plantillas).flat().map((x) => x.pid)), enM = new Set(D.mercado.map((m) => m.pid));
         const libres = Object.values(D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5);
-        const n = r() < 0.5 ? 25 - mios.length : 1 + Math.floor(r() * 6);
-        for (let i = 0; i < n && libres.length && mios.length < 25; i++) { const j = libres.splice(Math.floor(r() * libres.length), 1)[0]; mios.push({ pid: j.id, ptId: `pt${j.id}`, clausula: Math.round(j.valor * (1.1 + r())), protegidoHasta: r() < 0.5 ? null : Date.now() + r() * 12 * 864e5, compra: Math.round(j.valor * (0.7 + r() * 0.5)) }); }
+        const n = r() < 0.5 ? 24 - mios.length : 1 + Math.floor(r() * 6);
+        for (let i = 0; i < n && libres.length && mios.length < 24; i++) { const j = libres.splice(Math.floor(r() * libres.length), 1)[0]; mios.push({ pid: j.id, ptId: `pt${j.id}`, clausula: Math.round(j.valor * (1.1 + r())), protegidoHasta: r() < 0.5 ? null : Date.now() + r() * 12 * 864e5, compra: Math.round(j.valor * (0.7 + r() * 0.5)) }); }
         cambios.push(`plantilla ${mios.length}`);
       }
       // cláusulas mías abiertas y casi a su valor
