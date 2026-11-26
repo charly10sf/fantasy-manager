@@ -3189,7 +3189,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
-   "SPORT|136739318": 1795429327000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000,
@@ -3350,7 +3349,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255707/alba-redondo-madrina-primer-torneo-femenino-iniesta-cup-soliss.html": 1795683769000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255722/datos-impecables-debut-alex-campos.html": 1795686361000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261126/1004255688/afilado-estilete-amenaza-real-madrid.html": 1795686324000,
-   "AS|https://as.com/futbol/primera/terrats-somos-conscientes-de-lo-que-nos-jugamos-f202611-n/": 1795687568000
+   "AS|https://as.com/futbol/primera/terrats-somos-conscientes-de-lo-que-nos-jugamos-f202611-n/": 1795687568000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-ez-abde-no-entrena-betis_8_2008590012.html": 1795688088000
   },
   "hechos": [
    {
@@ -3692,11 +3692,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-ez-abde-no-entrena-betis_8_2008590012.html",
+    "medio": "Diario de Sevilla",
+    "t": 1795688088000,
+    "id": "3089",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "golpe",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -4641,17 +4653,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 105734,
-  "salida": 7240,
+  "entrada": 107643,
+  "salida": 7361,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.361466,
+  "dolares": 0.361717,
   "reservado": 0
  },
  "recientes": {
@@ -9730,13 +9742,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6595,
+   "ok": 6596,
    "fallos": 0,
-   "ejecuciones": 5374,
+   "ejecuciones": 5375,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:21:12.766Z"
+   "ultima": "2026-11-26T10:26:11.686Z"
   }
  },
  "ptsDirecto": {},
@@ -9753,15 +9765,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:21:21.853Z"
+   "ultimaBien": "2026-11-26T10:26:20.525Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:21:21.853Z"
+   "ultimaBien": "2026-11-26T10:26:20.525Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:21:21.853Z"
+   "ultimaBien": "2026-11-26T10:26:20.525Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9769,11 +9781,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:21:21.853Z"
+   "ultimaBien": "2026-11-26T10:26:20.525Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:21:21.853Z"
+   "ultimaBien": "2026-11-26T10:26:20.525Z"
   }
  },
  "avisos": [
