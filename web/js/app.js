@@ -9,7 +9,7 @@ import { planDeHoy, rematarMotor } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { ponerApodo, sincronizarApodos } from './apodos.js';
-import { iniciarSinc, sincronizar, sincAntes } from './sinc.js';
+import { iniciarSinc, sincronizar, sincAntes, pararSinc } from './sinc.js';
 import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
@@ -3129,6 +3129,8 @@ function cambiarDeLiga(id) {
   if (trasCargar(() => cambiarDeLiga(id))) return;
   if (S.planCtl) S.planCtl.abort();
   if (S.chatCtl) S.chatCtl.abort();
+  // (26 nov) la sincronización, parada antes de que K apunte a la otra liga (sinc.js, pararSinc)
+  pararSinc();
   guardarCfg({ ligaId: id });
   S.D = null; S.M = null; S.plan = null; S.planEstado = {}; S.det = {}; S.fuentes = null; S.opPorPid = {}; S.errorCarga = null; S.adjuntos = [];
   cargar();

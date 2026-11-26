@@ -28,6 +28,9 @@ function cambioDeFormato(que, r) {
 }
 
 export const K = (k) => (enDemo() ? `${k}-demo` : `${k}${ligaK()}`);
+/** (26 nov, aviso «No son mis jugadores») la liga a la que apuntan ahora las claves de K: lo que se guarda o se recoge a
+    destiempo (la sincronización, el plan o la pregunta que se recogen después) solo se pone si es de esta liga */
+export const ligaActiva = () => { const c = LS.get('cfg', {}) || {}; return c.ligaId != null && c.ligaId !== '' ? String(c.ligaId) : ''; };
 
 let carasPedidas = null;
 /**

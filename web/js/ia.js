@@ -7,7 +7,7 @@
 import { leer, guardar, http, enApp, enIPhone, despues, nativo } from './puente.js';
 import { token, sesion } from './auth.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta, fechaLarga, horaDe } from './util.js';
-import { K } from './datos.js';
+import { K, ligaActiva } from './datos.js';
 import { apodosLiga, listaApodos, aproximar, sinArticulo } from './apodos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, subeHastaVuelta, aSuValorParon, PARON_VUELTA, noMerece } from './operaciones.js';
@@ -1778,13 +1778,16 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false, ids = 
   // el servidor, pero el plan se sigue haciendo allí y se guarda con este id: al volver se pide otra vez con el mismo id y
   // llega el que ya estaba hecho (sin gastar otro plan del día ni volver a pedírselo a la IA). El id se queda guardado
   // hasta que llega el plan, por si Android cierra la app del todo: el siguiente plan de los 30 min siguientes lo recoge.
-  const pend = LS.get('plan-rid', null);
+  // (26 nov, aviso «No son mis jugadores») el id va con su liga: con dos ligas, un plan cortado en una y pedido otra vez en
+  // la otra recogía el de la primera, con sus jugadores. El de otra liga se queda guardado para cuando se vuelva a ella
+  const liga = ligaActiva();
+  const pend0 = LS.get('plan-rid', null), pend = pend0 && (pend0.liga || '') === liga ? pend0 : null;
   const rid = pend && pend.dia === diaDe() && Date.now() - pend.t < 30 * 60e3 && /^[a-z0-9]{8,24}$/.test(pend.rid || '') ? pend.rid
     : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
   // (17 nov) con el id va lo que era cada paso de ese pedido (p1 → vender a X…): si se recoge después, el plan de ahora
   // puede ser otro y sus p1, p2… ya no son los mismos (ver planCorto)
   const idsDe = pend && pend.rid === rid && Array.isArray(pend.ids) ? pend.ids : ids;
-  if (!pend || pend.rid !== rid) LS.set('plan-rid', { rid, t: Date.now(), dia: diaDe(), ...(ids ? { ids } : {}) });
+  if (!pend || pend.rid !== rid) LS.set('plan-rid', { rid, t: Date.now(), dia: diaDe(), liga, ...(ids ? { ids } : {}) });
   const cuerpo = { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra, rid };
   const parado = () => Object.assign(new Error('Parado'), { name: 'AbortError' });
   // una petición que, si la app vuelve de segundo plano con ella aún sin contestar, se da por cortada a los 3 s
@@ -4303,7 +4306,8 @@ export function cupoPreguntas() {
 }
 const guardarCupoP = (cu) => { if (cu && typeof cu === 'object') LS.set('preg-cupo', { ...cu, dia: diaDe() }); };
 /** la pregunta en marcha (para recogerla al volver o al abrir la app): { rid, t, ts, dia } */
-export const preguntaPendiente = () => { const p = LS.get('preg-rid', null); return p && p.dia === diaDe() && Date.now() - p.ts < 15 * 60e3 && /^[a-z0-9]{8,24}$/.test(p.rid || '') ? p : null; };
+// (26 nov) la de otra liga no: se recoge al volver a esa liga
+export const preguntaPendiente = () => { const p = LS.get('preg-rid', null); return p && (p.liga || '') === ligaActiva() && p.dia === diaDe() && Date.now() - p.ts < 15 * 60e3 && /^[a-z0-9]{8,24}$/.test(p.rid || '') ? p : null; };
 const nuevoRid = () => (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)).slice(0, 20);
 /** al Worker: devuelve { texto (destapado), tok, cupo } o lanza un ErrorIA (cupo: sin preguntas; servicio: no está) */
 async function preguntaPorApp(cuerpo, seudo, { signal, alPaso, textoQ = '' } = {}) {
@@ -4480,7 +4484,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
     // (la misma pregunta otra vez tras un corte: con el mismo id, así llega la que ya estaba hecha y no cuenta dos veces)
     const pend = preguntaPendiente();
     const rid = pend && pend.t === pregunta && !(fotos || []).length ? pend.rid : nuevoRid();
-    LS.set('preg-rid', { rid, t: pregunta, ts: pend && pend.rid === rid ? pend.ts : Date.now(), dia: diaDe(), fotos: (fotos || []).length });
+    LS.set('preg-rid', { rid, t: pregunta, ts: pend && pend.rid === rid ? pend.ts : Date.now(), dia: diaDe(), liga: ligaActiva(), fotos: (fotos || []).length });
     try {
       r = await charlarApp(pregunta, D, M, c, hist, fotos, { signal, alPaso, extra, rid });
       LS.del('preg-rid');
