@@ -2289,6 +2289,13 @@
    "jornada": 14,
    "id": "2125863895080550905",
    "t": "2026-11-26T08:07:04.290Z"
+  },
+  {
+   "clave": "previa|137",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125895235419189332",
+   "t": "2026-11-26T10:11:36.556Z"
   }
  ],
  "estados": {
@@ -3178,7 +3185,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254402/alternativas-flick-suplir-lamine-sabah.html": 1795428401000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
@@ -4635,16 +4641,16 @@
   "dia": "2026-11-26",
   "llamadas": {
    "clasificar": 9,
-   "redactar": 14,
-   "revisar": 6,
+   "redactar": 15,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 97788,
-  "salida": 6858,
+  "entrada": 103820,
+  "salida": 7125,
   "cacheLee": 73819,
-  "cacheEscribe": 23316,
-  "dolares": 0.301347,
+  "cacheEscribe": 34600,
+  "dolares": 0.361217,
   "reservado": 0
  },
  "recientes": {
@@ -4738,10 +4744,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-25T06:01:41.941Z",
-    "texto": "El Celta-Villarreal del domingo (18:30, Balaídos) llega con un cruce claro: los celestes encajan poco y a los delanteros y medios del Villarreal les toca picar piedra.\n\nAl portero y a los defensas amarillos les viene mejor, porque el Celta marca poco.\n\nEn el Celta faltan Román, lesionado, y Yoel Lago, sancionado. Radu es el fijo bajo palos, con un 94 % de titularidad. Pablo Durán y Hugo Alvarez son duda, aunque lo más probable es que jueguen.\n\nEn el Villarreal no está Gerard, lesionado. Freeman y C. Romero tienen más opciones de salir que de quedarse fuera."
-   },
-   {
     "t": "2026-11-25T08:06:33.380Z",
     "texto": "La Real y el Sevilla llegan a Anoeta, el domingo a las 21:00, pegados en la tabla: 5º y 6º.\n\nEl cruce favorece a los delanteros y medios sevillistas, porque la Real es de los que más encajan. Al portero y a los defensas del Sevilla les toca sufrir, porque los txuri-urdin también marcan mucho.\n\nEn la Real, Barrenetxea está lesionado y Sucic, con un 62 % de titularidad, y Oskarsson, con un 59 %, tienen más opciones de jugar que de no hacerlo. Oyarzabal es fijo.\n\nEl Sevilla no cuenta con Miguel Sierra, lesionado, y Guridi lo tiene difícil. Fofana y Kike Salas son seguros."
    },
@@ -4756,6 +4758,10 @@
    {
     "t": "2026-11-26T08:06:47.621Z",
     "texto": "El Málaga cierra la tabla y recibe al Athletic el sábado, a las 16:15.\n\nEl cruce no le ayuda: los leones encajan poco, así que a sus delanteros y medios les toca picar piedra. Rafita está lesionado y Joaquín puede quedarse fuera. Herrero, con un 94 % de titularidad, es el fijo bajo palos.\n\nAl Athletic le viene al revés: los boquerones marcan poco, y eso es buena noticia para Unai Simón y la zaga. Nico Williams es fijo, y a Vivian le toca ver el partido lesionado."
+   },
+   {
+    "t": "2026-11-26T10:11:36.559Z",
+    "texto": "🗓️ El Elche recibe al Atlético el sábado a las 18:30 en el Martínez Valero con el cruce en contra: los rojiblancos encajan poco y marcan mucho.\n\nA los delanteros y medios franjiverdes les costará, y al portero y los defensas del Elche les tocará sufrir. Falta Lemar, lesionado, y Cepeda tiene más opciones de salir que de quedarse fuera, con un 65 % de titularidad. Dituro y Revivo no se mueven.\n\nEn el Atlético, ausencias de Cuti Romero y Lookman por lesión. Oblak y Grimaldo, con una media de 8 o más, son los que dan puntos."
    }
   ],
   "noticias": [
@@ -5293,11 +5299,6 @@
   }
  ],
  "fallosRedaccion": {
-  "previa|137": {
-   "n": 1,
-   "t": "2026-11-24T10:17:03.293Z",
-   "ultima": "2026-11-24T10:17:03.293Z"
-  },
   "previa|133": {
    "n": 1,
    "t": "2026-11-24T10:21:52.395Z",
@@ -9728,13 +9729,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6592,
+   "ok": 6593,
    "fallos": 0,
-   "ejecuciones": 5371,
+   "ejecuciones": 5372,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:06:12.000Z"
+   "ultima": "2026-11-26T10:11:13.858Z"
   }
  },
  "ptsDirecto": {},
@@ -9751,15 +9752,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:06:25.746Z"
+   "ultimaBien": "2026-11-26T10:11:38.972Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:06:25.746Z"
+   "ultimaBien": "2026-11-26T10:11:38.972Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:06:25.746Z"
+   "ultimaBien": "2026-11-26T10:11:38.972Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9767,11 +9768,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:06:25.746Z"
+   "ultimaBien": "2026-11-26T10:11:38.972Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:06:25.746Z"
+   "ultimaBien": "2026-11-26T10:11:38.972Z"
   }
  },
  "avisos": [
