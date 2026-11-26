@@ -3066,7 +3066,7 @@
   "3187": "out_of_league",
   "3188": "ok",
   "3189": "ok",
-  "3190": "injured",
+  "3190": "ok",
   "3191": "ok",
   "3192": "out_of_league",
   "3193": "ok",
@@ -4656,7 +4656,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
@@ -9820,13 +9819,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6618,
+   "ok": 6619,
    "fallos": 0,
-   "ejecuciones": 5397,
+   "ejecuciones": 5398,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:16:11.984Z"
+   "ultima": "2026-11-26T12:21:13.416Z"
   }
  },
  "ptsDirecto": {},
@@ -9843,15 +9842,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:16:19.758Z"
+   "ultimaBien": "2026-11-26T12:21:24.455Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:16:19.758Z"
+   "ultimaBien": "2026-11-26T12:21:24.455Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:16:19.758Z"
+   "ultimaBien": "2026-11-26T12:21:24.455Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9859,11 +9858,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:16:19.758Z"
+   "ultimaBien": "2026-11-26T12:21:24.455Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:16:19.758Z"
+   "ultimaBien": "2026-11-26T12:21:24.455Z"
   }
  },
  "avisos": [
