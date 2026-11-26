@@ -3369,7 +3369,12 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255789/optimismo-rodri-christensen.html": 1795693326000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/26/aubameyang-sufre-accidente-dirigia-entrenar.html": 1795693975000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-terna-candidatos-psg-suplir-doue-kvaratskhelia-20261126_3482766.html": 1795694210000,
-   "Cadena SER|https://cadenaser.com/galicia/2026/11/26/aubameyang-antes-del-deportivo-barca-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-radio-coruna/": 1795695972000
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/26/aubameyang-antes-del-deportivo-barca-es-la-hora-de-demostrar-caracter-jugar-sin-complejos-radio-coruna/": 1795695972000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255814/lemar-fecha-regreso-elche.html": 1795695298000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255454/gerard-lopez-rompe-silencio-sobre-caso-negreira-mi-informes-total-utilidad.html": 1795695064000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255810/elche-recupera-dos-efectivos-visita-atletico.html": 1795694991000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255745/gerard-lopez-espina-clavada-barca-no-rendi-valencia.html": 1795694899000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261126/1004255793/accidente-coche-aubameyang-pequeno-susto.html": 1795694622000
   },
   "hechos": [
    {
@@ -3800,11 +3805,23 @@
     "motivo": "problemas físicos",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255810/elche-recupera-dos-efectivos-visita-atletico.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795694991000,
+    "id": "3182",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lemar entrena al margen del grupo antes del Atlético",
+    "motivo": "lesionado ante el Levante",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -4743,17 +4760,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 19,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 143669,
-  "salida": 16104,
+  "entrada": 146557,
+  "salida": 16636,
   "cacheLee": 98733,
   "cacheEscribe": 44840,
-  "dolares": 0.441843,
+  "dolares": 0.442398,
   "reservado": 0
  },
  "recientes": {
@@ -9832,13 +9849,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6620,
+   "ok": 6621,
    "fallos": 0,
-   "ejecuciones": 5399,
+   "ejecuciones": 5400,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:26:14.134Z"
+   "ultima": "2026-11-26T12:31:17.139Z"
   }
  },
  "ptsDirecto": {},
@@ -9855,15 +9872,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:26:30.988Z"
+   "ultimaBien": "2026-11-26T12:31:32.336Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:26:30.988Z"
+   "ultimaBien": "2026-11-26T12:31:32.336Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:26:30.988Z"
+   "ultimaBien": "2026-11-26T12:31:32.336Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9871,11 +9888,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:26:30.988Z"
+   "ultimaBien": "2026-11-26T12:31:32.336Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:26:30.988Z"
+   "ultimaBien": "2026-11-26T12:31:32.336Z"
   }
  },
  "avisos": [
