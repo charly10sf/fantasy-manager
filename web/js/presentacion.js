@@ -182,17 +182,40 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alC
 /* (20 nov, Carlos: «que aparezca en la pantalla pero no ocupe toda, y que no diga mucho texto») una novedad corta: una
    tarjeta en el centro, encima de la app, con su dibujo, el título, una línea, una chapita (mas) y un botón. Se cierra con
    «Ahora no», tocando fuera o con el atrás de Android (cerrarPresentacion). a: el «aviso» de una versión de version.js */
+/* (0.8.4s; Carlos, 26 nov: «el icono de la Liga Premium… morado» y «pásame varios diseños») los iconos de la tarjeta de
+   novedades, uno por cosa (`ico`). El de premium es nuestro (una corona en un cuadro morado), no el logo de LaLiga */
+const ICO_NOV = {
+  parte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 8l2 2m0-2l-2 2M15 13l2 2m0-2l-2 2"/><path d="M10 9.5c2 0 3 1 4 3" stroke-dasharray="1.5 2"/><path d="M9 21h6"/></svg>',
+  premium: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8l4 3 4-6 4 6 4-3-1.6 9H5.6z"/><rect x="5.6" y="18.4" width="12.8" height="1.8" rx=".9"/></svg>',
+  origen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg>',
+  ordenador: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+};
+const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.ico)}" aria-hidden="true">${ICO_NOV[c.ico]}</i>` : '');
+/** la lista de la tarjeta de novedades en sus tres diseños: «lista» (una fila por cosa), «rejilla» (la primera a lo ancho
+    y las demás en cuadros) y «destacada» (la primera grande, con su dibujo, y las demás en una línea cada una) */
+function listaNov(a) {
+  const L = a.lista;
+  if (a.estilo === 'rejilla') {
+    return `<div class="nvt-rej">${L.map((c, i) => `<div class="nr-c${i === 0 ? ' ancha' : ''}">${icoNov(c)}<b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div>`).join('')}</div>`;
+  }
+  if (a.estilo === 'destacada') {
+    const [p, ...r] = L;
+    return `<div class="nvt-des"><svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg><b>${esc(p.t)}</b>${p.x ? `<span>${esc(p.x)}</span>` : ''}</div>
+      ${r.length ? `<div class="nvt-mas-t">Y además</div><ul class="nvt-cor">${r.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}`;
+  }
+  return `<ul class="nvt-lista">${L.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
+}
 export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
   const capa = document.createElement('div');
   capa.className = 'nvt-capa';
   capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
-    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
-      <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
+    <div class="nvt${a.lista && a.lista.length ? ` nvt-novs nvt-e-${esc(a.estilo || 'lista')}` : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+      ${a.estilo === 'destacada' ? '' : `<svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>`}
       <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
       <h2 id="nvt-t">${esc(a.t)}</h2>
       ${a.x ? `<p>${esc(a.x)}</p>` : ''}
-      ${a.lista && a.lista.length ? `<ul class="nvt-lista">${a.lista.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</li>`).join('')}</ul>` : ''}
+      ${a.lista && a.lista.length ? listaNov(a) : ''}
       ${a.mas ? `<span class="nvt-mas">${esc(a.mas)}</span>` : ''}
       ${a.ir ? `<button type="button" class="btn ancho" data-nvt="ir">${esc(a.ir.txt || 'Verlo')}</button>` : ''}
       <button type="button" class="nvt-no" data-nvt="no">${a.ir ? 'Ahora no' : 'Vale'}</button>

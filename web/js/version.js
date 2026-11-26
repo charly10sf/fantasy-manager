@@ -63,12 +63,12 @@ export const NOVEDADES = [
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'El parte de los rivales', todos: true,
     aviso: {
       d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
+      estilo: 'lista',
       lista: [
-        { t: 'Parte de los rivales', x: 'Quién va en negativo, a quién le falta un puesto y quién ya no puede blindar.' },
-        { t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
-        { t: 'De dónde sale cada fichaje', x: 'En el plan: mercado, en venta o cláusula.' },
-        { t: 'Plantilla de 24', x: 'Como en LaLiga Fantasy.' },
-        { t: 'Más ancha en el ordenador', x: 'Equipo y Clubes usan toda la pantalla.', solo: 'pc' },
+        { ico: 'parte', t: 'Parte de los rivales', x: 'Quién va en negativo, a quién le falta un puesto y quién ya no puede blindar.' },
+        { ico: 'premium', t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
+        { ico: 'origen', t: 'De dónde sale cada fichaje', x: 'En el plan: mercado, en venta o cláusula.' },
+        { ico: 'ordenador', t: 'Más ancha en el ordenador', x: 'Equipo y Clubes usan toda la pantalla.', solo: 'pc' },
       ],
       ir: { v: 'rivales', seg: 'rivales:parte', txt: 'Ver el parte' },
     },

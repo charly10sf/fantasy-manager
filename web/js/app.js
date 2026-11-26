@@ -5185,9 +5185,8 @@ function novAvisoEsperar() {
   const mirar = () => {
     // (pasado un rato sin hueco, se deja: lo pendiente sigue pendiente y sale la próxima vez que se abra)
     if (Date.now() > hasta) { novAvisoEsperando = false; return; }
-    // (0.8.4s) ni encima de la bienvenida ni de la presentación de un tema (lo mismo que espera la del iPhone), y en la liga
-    // de ejemplo se espera: la novedad sale con tu liga
-    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente && !enDemo())) { setTimeout(mirar, 1000); return; }
+    // (0.8.4s) ni encima de la bienvenida ni de la presentación de un tema (lo mismo que espera la del iPhone)
+    if (!(S.D && S.M && !S.cargando && !S.hoja && !tourAbierto() && !document.hidden && !$('#limite') && !$('#forzar') && !$('.carga') && !$('.nv') && !$('.nvt-capa') && !$('.atardecer-intro') && !$('#bienvenida') && !S.bienvenidaPendiente)) { setTimeout(mirar, 1000); return; }
     // (0.8.4e) la de la app para iPhone va antes y, si sale hoy, la de invitar se deja para otro día
     if (iphoneToca()) { setTimeout(mirar, 1500); return; }
     if (iphoneHoy()) { novAvisoEsperando = false; return; }

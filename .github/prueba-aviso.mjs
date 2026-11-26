@@ -37,6 +37,7 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
   const hay = () => page.evaluate(() => !!document.querySelector('.nvt'));
   const r = [];
   for (const p of pasos) {
+    if (p === 'novs') r.push(await page.evaluate(() => (document.querySelector('.nvt.nvt-novs .nvt-eti') || {}).textContent === 'Novedades' && document.querySelectorAll('.nvt-novs li, .nvt-novs .nr-c').length >= 2 && !/ordenador/i.test(document.querySelector('.nvt').textContent) ? 'NOVEDADES' : 'otra'));
     if (p === 'mira') r.push(await hay() ? 'TARJETA' : (await page.evaluate(() => !!document.querySelector('.nv'))) ? 'PRESENTACIÓN' : 'nada');
     if (p === 'recarga-app') { await Promise.all([page.waitForNavigation({ timeout: 15000 }).catch(() => r.push('(no recargó)')), page.evaluate(() => window.webBuscada('nueva'))]); await lista(); }
     if (p === 'reabre') { await page.reload(); await lista(); }
@@ -44,6 +45,8 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
     if (p && p.amigos != null) await page.evaluate(({ amigos, hace, viejo }) => { const uid = window.S.D.yo.userId; localStorage.setItem('fm-invitar', JSON.stringify({ uid: String(uid), t: Date.now() - (viejo || 0) * 3600e3, est: { ok: true, on: true, entran: amigos, cuentan: 0, amigos: [] } })); const g = JSON.parse(localStorage.getItem('fm-avisos-nov') || '{"visto":[],"pend":null}'); if (hace == null) delete g.invT; else g.invT = Date.now() - hace * 86400e3; localStorage.setItem('fm-avisos-nov', JSON.stringify(g)); }, p);
     if (p === 'ahora-no') { if (!(await hay())) { r.push('(sin tarjeta que cerrar)'); continue; } await page.click('.nvt [data-nvt="no"]'); await page.waitForTimeout(400); }
     if (p === 'invitar') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } await page.click('.nvt [data-nvt="ir"]'); await page.waitForTimeout(900); r.push('hoja:' + await page.evaluate(() => (window.S.tipoHoja || [])[0] || (document.querySelector('.hoja') ? 'sí' : 'no'))); }
+    // (0.8.4s) el botón de la tarjeta de novedades lleva a Rivales → Parte
+    if (p === 'ver') { if (!(await hay())) { r.push('(sin tarjeta que pulsar)'); continue; } await page.click('.nvt [data-nvt="ir"]'); await page.waitForTimeout(900); r.push('vista:' + await page.evaluate(() => `${window.S.vista}:${(window.S.seg || {}).rivales || ''}`)); }
   }
   const sale = r.join(' → '), bien = sale === espera && !errores.length;
   if (!bien) mal++;
@@ -53,10 +56,12 @@ async function caso(nombre, espera, { app = true, vista = '0.8f', pasos }) {
 await caso('en la app, al venir de la 0.8f: sale, la app no recarga con ella en pantalla y sigue al reabrir', 'TARJETA → (no recargó) → TARJETA → TARJETA', { pasos: ['mira', 'recarga-app', 'mira', 'reabre', 'mira'] });
 await caso('cerrada con «Ahora no», no vuelve', 'TARJETA → nada', { pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 await caso('sin tocarla, al reabrir la app vuelve a salir', 'TARJETA → TARJETA', { pasos: ['mira', 'reabre', 'mira'] });
-await caso('quien ya tenía esta versión en la app sin haberla cerrado (la recarga se la llevó): la ve, el botón abre invitar y no vuelve', 'TARJETA → hoja:invitar → nada', { vista: 'ACTUAL', pasos: ['mira', 'invitar', 'reabre', 'mira'] });
+await caso('quien ya tenía esta versión en la app sin haberla cerrado (la recarga se la llevó): la ve, el botón lleva al parte y no vuelve', 'TARJETA → vista:rivales:parte → nada', { vista: 'ACTUAL', pasos: ['mira', 'ver', 'reabre', 'mira'] });
 await caso('quien ya tenía esta versión en la web: nada', 'nada', { app: false, vista: 'ACTUAL', pasos: ['mira'] });
 await caso('instalación nueva en la app: nada', 'nada → nada', { vista: '', pasos: ['mira', 'reabre', 'mira'] });
-await caso('en la web, al venir de la 0.8f: sale, el botón abre invitar y no vuelve', 'TARJETA → hoja:invitar → nada', { app: false, pasos: ['mira', 'invitar', 'reabre', 'mira'] });
+await caso('en la web, al venir de la 0.8f: sale la de novedades (la más nueva), el botón lleva al parte y no vuelve', 'TARJETA → vista:rivales:parte → nada', { app: false, pasos: ['mira', 'ver', 'reabre', 'mira'] });
+// (0.8.4s) la tarjeta que sale es la de novedades, con su lista, y en el móvil sin la línea del ordenador
+await caso('la tarjeta de la versión nueva es la de novedades, con su lista', 'NOVEDADES', { app: false, pasos: ['novs'] });
 // (20 nov, Carlos: «no quiero que les salga nada de las novedades a no ser que yo lo estipule; ahora, solo la de invitar»)
 await caso('quien viene de antes de la 0.8 (no es el dueño): solo la tarjeta, sin la presentación de todo lo de después', 'TARJETA → nada', { app: false, vista: '0.7.13za', pasos: ['mira', 'ahora-no', 'reabre', 'mira'] });
 // (20 nov, Carlos) el recordatorio: cada 5 días a quien no tiene ningún amigo dentro; con un amigo, nunca más

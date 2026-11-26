@@ -1365,14 +1365,16 @@ for (const [nombre, canal] of [['Play', 'play'], ['web', null], ['APK de GitHub'
         const entera = !!document.querySelector('.nv-cap');
         const boton = document.querySelector(corta ? '[data-nvt="ir"]' : '[data-nv-ir]');
         if (boton) { boton.click(); await new Promise((ok) => setTimeout(ok, 1200)); }
-        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, sigue: !!document.querySelector('.nvt') };
+        return { abierta, entera, boton: boton ? boton.innerText : null, hoja: (window.S.tipoHoja || [])[0] || null, vista: `${window.S.vista}:${(window.S.seg || {})[window.S.vista] || ''}`, sigue: !!document.querySelector('.nvt') };
       }, !!nw.aviso);
       const accion = nw.aviso ? nw.aviso.ir : (nw.cosas.find((c) => c.ir && c.ir.accion) || {}).ir;
       if (nw.aviso && (r.entera || r.sigue)) r.abierta = false;
       const sale = nw.todos === true || nw.todos === (app ? 'app' : 'web');
-      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && r.hoja));
+      // (0.8.4s) el botón puede abrir una hoja (accion) o llevar a una pestaña (v, seg: «Ver el parte» → Rivales → Parte)
+      const llega = !accion ? true : accion.accion ? !!r.hoja : accion.seg ? r.vista === accion.seg : r.vista.startsWith(`${accion.v}:`);
+      const ok = !sale ? !r.abierta : r.abierta && (!accion || (r.boton === (accion.txt || 'Verlo') && llega));
       if (!ok) mal(`novedades de una versión (${nw.v}), ${app ? 'app' : 'web'}: ${JSON.stringify(r)}`);
-      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja}` : 'no se abre'}`);
+      else bien(`novedades de una versión (${nw.v}, todos: ${nw.todos}), ${app ? 'app' : 'web'}: ${sale ? `se abre sola y «${r.boton}» abre ${r.hoja || r.vista}` : 'no se abre'}`);
       if (errores.length) mal(`novedades solo para la web: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
       await ctx.close();
     }
