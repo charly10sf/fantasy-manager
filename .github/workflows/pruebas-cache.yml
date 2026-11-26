@@ -1,0 +1,45 @@
+# SOLO EN LA RAMA pruebas-cache (no se fusiona). La caché de 1 hora del bot con la IA de verdad (26 nov, claude/prompt-cache-bot.md del
+# proyecto): 3 directos y 2 finales reales con el código de bot-cache, con una espera de 5,5 min tras el primero (bot/prueba/cache-real.mjs).
+# Tope de gasto: TOPE_USD. Si ya está .github/ia/cache/pasada.json, no se repite (no se gasta dos veces).
+name: Pruebas cache
+on:
+  push:
+    branches: [pruebas-cache]
+    paths-ignore: ['.github/ia/cache/pasada*']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: pruebas-cache, cancel-in-progress: false }
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      BOT_IA: claude
+      TOPE_USD: '0.8'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with: { fetch-depth: 1 }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: Si ya está hecha, no se repite
+        id: hecha
+        run: |
+          if [ -f .github/ia/cache/pasada.json ]; then echo "La pasada ya está en la rama: borra .github/ia/cache/pasada.json para repetirla"; echo "si=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Los 5 tuits con la IA de verdad
+        if: steps.hecha.outputs.si != '1'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
+          node bot/prueba/cache-real.mjs --material=.github/ia/cache/material.json --dir=.github/ia/cache --salida=.github/ia/cache/pasada.json --tope="$TOPE_USD" --espera=330
+      - name: Guardar en la rama
+        if: always() && steps.hecha.outputs.si != '1'
+        run: |
+          [ -f .github/ia/cache/pasada.json ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898732+github-actions[bot]@users.noreply.github.com"
+          git add .github/ia/cache/pasada.json
+          git commit -q -m "Prueba de la caché: la pasada con la IA de verdad" || exit 0
+          git push -q origin HEAD:pruebas-cache
