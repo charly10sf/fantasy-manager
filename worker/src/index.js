@@ -54,6 +54,19 @@
  *                             sesión de LaLiga solo para frenar. Como mucho 80 por vez y 4 veces al día por cuenta.
  *   GET  /pujas/cal           lo pagado sobre el valor por tramo de valor y de subida (calPujas), rehecho cada 6 h. Sin sesión.
  *
+ *   Lo que solo se ve juntando todas las ligas (26 nov; worker/src/ligas.js): lo pagado por cada jugador, la demanda (cuántas
+ *   pujas lleva cada libre) y las cláusulas que se abren y se pagan. Sin liga, sin mánager y sin cuenta: de la liga solo
+ *   llega una huella (`l`), que el objeto vuelve a cifrar con una sal que no sale de él.
+ *   POST /pujas               (lo de arriba) desde el 26 nov cada compra puede traer `p` (el id del jugador, que es público) y el
+ *                             cuerpo, `l` (y `t`, el tipo de liga): con las dos cosas se apunta además lo pagado por ese jugador.
+ *   POST /ligas               { l, t, m: [[id del jugador, pujas]], a: [{ k, d, v, cs, r, pos, tit, ida, bl }] }: los libres del
+ *                             mercado de tu liga con sus pujas y las cláusulas que se abrieron hace más de 24 h. Con la sesión
+ *                             de LaLiga solo para frenar.
+ *   POST /ligas/ver           { l, t, ids } → { p: { [id]: { n, med, max } }, d: { [id]: [hoy, ayer] } }: lo pagado en las DEMÁS
+ *                             ligas de su tipo (`t`: privada o pública, su clase y si es Premium) en 3 días y el nivel de demanda (1 a 3). Solo lo que esté encendido en «otrasLigas» de
+ *                             limites.json (apagado: vacío). Con sesión.
+ *   GET  /ligas/medida        (el dueño) lo guardado entre dos días, para medir si sirve (.github/ia/medir-otras-ligas.mjs).
+ *
  *   El semáforo de LaLiga y la entrada paso a paso (0.7.13i; Carlos, 15 nov: con 27 clics en la campaña de X no se veía
  *   a nadie entrar, y lo que pasa antes de entrar con la cuenta no llegaba al servidor):
  *   GET  /estado              { nivel: verde | amarillo | rojo, t, login, api, cuenta, entradas }: cómo van los servidores de
@@ -73,6 +86,7 @@ import { apodosObjeto, ligaOk } from './apodos.js';
 import { sincObjeto } from './sinc.js';
 import { quienObjeto, diasAtras, MAX_USO } from './quien.js';
 import { fallosObjeto, MAX_CAPTURAS } from './fallos.js';
+import { ligasObjeto, huellaOk, pidOk } from './ligas.js';
 import { pushArmar, pushQuitar, pushAlAcabar, pushesDebidos, apnsObjeto, tokenDe } from './push.js';
 import { busqObjeto, busqRelevantes, bloqueBusq, vistasBusq, BUSQ_HORAS, BUSQ_REPITE_H } from './busquedas.js';
 export { diasAtras, MAX_USO, VIVE_USO, CAMBIOS_DIA } from './quien.js';
@@ -279,6 +293,9 @@ export const FRENOS = {
   dinero: { min: 6, dia: 60 }, dineroCal: { min: 20 },
   // (0.7.13u) las compras de cada liga (lo pagado por los libres): por IP; por cuenta van aparte
   pujas: { min: 6, dia: 30 }, pujasCal: { min: 20 },
+  // (26 nov) lo de todas las ligas: por IP y minuto nada más, y holgado (detrás de una misma IP de móvil hay mucha gente); sin
+  // tope por día por IP, que sería otra petición a otro objeto en cada envío: el de cada cuenta lo lleva «ligas|todos»
+  ligas: { min: 20 }, ligasVer: { min: 20 },
   // (0.7.13i) los pasos antes de entrar y el semáforo de LaLiga, sin sesión: por IP
   embudo: { min: 20, dia: 120 }, estado: { min: 30 },
 };
@@ -388,6 +405,9 @@ export class Emparejar {
     if (ruta === '/fallos') return new Response(JSON.stringify(fallosObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
     // (25 nov, la app de iOS) los avisos push por APNs, todos por «apns|todos» (worker/src/push.js); nunca pone alarma
     if (ruta === '/apns') return new Response(JSON.stringify(await apnsObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
+    // (26 nov) lo de todas las ligas (lo pagado por jugador, la demanda y las cláusulas que se abren), en «ligas|todos» con
+    // SQLite (worker/src/ligas.js); nunca pone alarma
+    if (ruta === '/ligas') return new Response(JSON.stringify(await ligasObjeto(st, (await req.json().catch(() => null)) || {}, this.memo)), { status: 200 });
     if (ruta === '/quien') {
       const x = await quienObjeto(st, this.env, (await req.json().catch(() => null)) || {}, this.memo);
       return new Response(typeof x === 'string' ? x : JSON.stringify(x), { status: 200 });
@@ -1514,12 +1534,24 @@ async function pujasApunte(req, env, c) {
   const lista = b && Array.isArray(b.c) ? b.c.slice(0, PUJAS_POR_VEZ) : null;
   if (!lista || !lista.length) return json({ e: 'Nada que apuntar' }, 400, c);
   const xs = {};
-  for (const y of lista) { const x = compraLimpia(y); if (x) xs[`c|${y.d}|${y.k}`] = x; }
+  // (26 nov) las que traen su jugador (`p`), además, para lo pagado por cada jugador en todas las ligas (ligas.js)
+  const conJug = [];
+  for (const y of lista) {
+    const x = compraLimpia(y);
+    if (!x) continue;
+    xs[`c|${y.d}|${y.k}`] = x;
+    const p = pidOk(y.p);
+    if (p != null) conJug.push({ k: y.k, d: y.d, p, ...x });
+  }
   if (!Object.keys(xs).length) return json({ e: 'Compras no válidas' }, 400, c);
   if (!(await cabeHoy(env, `pujas|${u.uid}`, PUJAS_CUENTA_DIA))) return demasiadas(c, 'mañana');
   if (!(await cabeHoy(env, 'pujas|todos', PUJAS_TODOS_DIA))) return json({ e: 'Por hoy ya está' }, 503, c);
   const r = await objPujas(env).fetch('https://pujas/pujas/poner', { method: 'POST', body: JSON.stringify({ xs }) });
-  return r.status === 200 ? json({ ok: true, n: Object.keys(xs).length }, 200, c) : json({ e: 'No se ha podido guardar' }, 503, c);
+  if (r.status !== 200) return json({ e: 'No se ha podido guardar' }, 503, c);
+  // (si esto falla, lo de siempre ya está guardado: no se le dice a la app que repita)
+  let jug = 0;
+  if (conJug.length && huellaOk(b.l)) { const x = await pedirLigas(env, { op: 'pago', l: b.l, t: b.t, uid: u.uid, xs: conJug }); jug = (x && x.n) || 0; }
+  return json({ ok: true, n: Object.keys(xs).length, jug }, 200, c);
 }
 let PUJAS_MEM = { t: 0, cal: null };
 async function pujasCal(env, c) {
@@ -1530,6 +1562,61 @@ async function pujasCal(env, c) {
     PUJAS_MEM = { t: Date.now(), cal: await r.json() };
   }
   return json(PUJAS_MEM.cal, 200, c);
+}
+
+/* ---------- lo que solo se ve juntando todas las ligas (26 nov; worker/src/ligas.js) ---------- */
+const objLigas = (env) => env.QR.get(env.QR.idFromName('ligas|todos'));
+/** una llamada al objeto «ligas|todos» (la única por petición); null si no contesta */
+async function pedirLigas(env, b) {
+  try {
+    const r = await objLigas(env).fetch('https://freno/ligas', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyMadrid(), ...b }) });
+    return r.status === 200 ? await r.json() : null;
+  } catch (e) { return null; }
+}
+/** «otrasLigas» de limites.json: qué se enseña de lo de las demás ligas y a quién. Cada cosa: false (a nadie; lo de por
+    defecto), 'dueño' (solo a Carlos, para verlo con datos de verdad antes de abrirlo) o true (a todos) */
+export async function cfgOtrasLigas(env, uid, lim = null) {
+  const o = ((lim || (await limitesJson())).otrasLigas) || {};
+  const soy = papelDe(env, uid) === 'dueño';
+  const on = (x) => x === true || ((x === 'dueño' || x === 'dueno') && soy);
+  return { pagado: on(o.pagado), demanda: on(o.demanda) };
+}
+/** POST /ligas: los libres del mercado de una liga con sus pujas y las cláusulas que se abrieron, sin nombres */
+async function ligasApunte(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_ESCRIBIR', `ligas|${u.uid}`, 3))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  if (!b || !huellaOk(b.l) || (!Array.isArray(b.m) && !Array.isArray(b.a))) return json({ e: 'Apunte no válido' }, 400, c);
+  const x = await pedirLigas(env, { op: 'apunte', l: b.l, t: b.t, uid: u.uid, m: Array.isArray(b.m) ? b.m.slice(0, 200) : [], a: Array.isArray(b.a) ? b.a.slice(0, 80) : [] });
+  if (!x) return json({ e: 'No se ha podido guardar' }, 503, c);
+  if (x.tope) return demasiadas(c, 'mañana');
+  if (!x.ok) return json({ e: 'Apunte no válido' }, 400, c);
+  return json({ ok: true, m: x.m || 0, a: x.a || 0 }, 200, c);
+}
+/** POST /ligas/ver: lo pagado en las demás ligas y la demanda de esos jugadores; apagado en limites.json, vacío */
+async function ligasVer(req, env, c) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (!(await cabeAhora(env, 'FRENO_LEER', `ligasver|${u.uid}`, 10))) return demasiadas(c);
+  const b = await req.json().catch(() => null);
+  if (!b || !huellaOk(b.l) || !Array.isArray(b.ids)) return json({ e: 'Pedido no válido' }, 400, c);
+  const on = await cfgOtrasLigas(env, u.uid);
+  if (!on.pagado && !on.demanda) return json({ ok: true, on, p: {}, d: {} }, 200, c);
+  const x = await pedirLigas(env, { op: 'ver', l: b.l, t: b.t, ids: b.ids.slice(0, 200), pagado: on.pagado, demanda: on.demanda });
+  if (!x || !x.ok) return json({ e: 'No se ha podido leer' }, 503, c);
+  return json({ ok: true, on, p: x.p || {}, d: x.d || {} }, 200, c);
+}
+/** GET /ligas/medida?desde=&hasta= (el dueño): lo guardado, para medir si lo de las demás ligas sirve */
+async function ligasMedida(req, env, c, url) {
+  if (!env.QR) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (papelDe(env, u.uid) !== 'dueño') return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  const x = await pedirLigas(env, { op: 'medida', desde: url.searchParams.get('desde') || '', hasta: url.searchParams.get('hasta') || '' });
+  return x && x.ok ? json(x, 200, c) : json({ e: 'No se ha podido leer' }, 503, c);
 }
 
 /* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
@@ -2047,6 +2134,7 @@ const FRENO_RUTA = {
   'POST /vincular': 'vincular', 'POST /vincular/usar': 'usar', 'POST /qr/dejar': 'qrDejar', 'GET /qr/esperar': 'qrEsperar', 'POST /fallos': 'falloNuevo',
   'POST /dinero': 'dinero', 'GET /dinero/cal': 'dineroCal',
   'POST /pujas': 'pujas', 'GET /pujas/cal': 'pujasCal',
+  'POST /ligas': 'ligas', 'POST /ligas/ver': 'ligasVer', 'GET /ligas/medida': 'ligasVer',
   'POST /embudo': 'embudo', 'GET /estado': 'estado',
 };
 
@@ -2115,6 +2203,9 @@ export default {
       if (url.pathname === '/dinero/cal' && req.method === 'GET') return await dineroCal(env, c);
       if (url.pathname === '/pujas' && req.method === 'POST') return await pujasApunte(req, env, c);
       if (url.pathname === '/pujas/cal' && req.method === 'GET') return await pujasCal(env, c);
+      if (url.pathname === '/ligas' && req.method === 'POST') return await ligasApunte(req, env, c);
+      if (url.pathname === '/ligas/ver' && req.method === 'POST') return await ligasVer(req, env, c);
+      if (url.pathname === '/ligas/medida' && req.method === 'GET') return await ligasMedida(req, env, c, url);
       if (url.pathname === '/embudo' && req.method === 'POST') return await embudoApunte(req, env, c);
       if (url.pathname === '/estado' && req.method === 'GET') return await estadoLaLiga(env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);

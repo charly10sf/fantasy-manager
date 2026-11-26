@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4r';
+export const VERSION = '0.8.4s';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,21 @@ export const VERSION = '0.8.4r';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, 12:37, Carlos: «la demanda de otras ligas y lo que se paga en otras ligas por un jugador se puede hacer todo en
+    // uno»; claude/prompts-26nov-premium-ligas-parte.md del proyecto, encargo 2; la nota, claude/nota-otras-ligas.md) LO QUE
+    // SOLO SE VE JUNTANDO TODAS LAS LIGAS, la recogida: otras-ligas.js y, en el servidor, worker/src/ligas.js («ligas|todos»).
+    // Con «Ayudar a mejorar la IA»: las compras van con el id del jugador (las de 45 días atrás, otra vez, una sola vez), los
+    // libres del mercado con sus pujas (como mucho cada media hora) y las cláusulas que se abren con si se pagaron en 24 h.
+    // Sin liga, sin mánager, sin cuenta: de la liga, una huella que el servidor vuelve a cifrar con una sal que no sale de él.
+    // LO QUE SE VE, HECHO Y APAGADO («otrasLigas» de limites.json: false, 'dueño' o true): en la ficha de un libre, «Lo pagado
+    // en otras ligas» (3 ligas o más, sin la tuya) y «Demanda en otras ligas» (un nivel). No toca la puja ni le llega a la IA.
+    // La medida, preparada: .github/ia/medir-otras-ligas.mjs. Pruebas: .github/ia/caso-otras-ligas.mjs y worker/prueba/datos.mjs
+    v: '0.8.4s', f: '2026-11-26', h: '00:00', t: 'Lo que se paga en otras ligas, recogiéndose',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', menor: true, t: 'Lo que se paga y se puja en todas las ligas', x: 'La app empieza a juntar, sin nombres ni ligas, lo que se paga por cada jugador, cuántas pujas lleva cada libre y qué cláusulas se pagan en todas las ligas que la usan. Todavía no se enseña nada: hacen falta unas semanas de datos y comprobar que acierta. Cuando lo enciendas, en la ficha de un libre del mercado saldrá «Lo pagado en otras ligas».', ir: { v: 'mercado' } },
+    ],
+  },
   {
     // (26 nov, 04:47, Carlos: «¿por qué cada vez que publico una versión que no es de la Play Store sale un aviso para que la
     // actualice? ¿No se podría hacer de forma automática?»; claude/prompt-actualizar-solo.md del proyecto) la versión nueva se

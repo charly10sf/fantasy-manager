@@ -32,16 +32,17 @@ import * as Jo from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { leerCodigoEnlace, leerCodigoPlay, viaPendiente, codigoPendiente, leerInvitar, miCodigo, canjear, elegirRivales, textoInv, enlaceInv, puedeCanjear, pareceInvitado, codigoPropuesto, avisarLlegada, playConCodigo, estadoInv, porElegir, sinIntersticiales, semanaDoble, cfgInv, limpiarCod, invitarOn } from './invitar.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarLiga, fijarJornada, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, abiertaHasta, minutosRival, anunciosWebModo, novedadesPara, importantesPara, cierreApk, playDesfasada, iosDesfasada, intersticialCfg, intersticialParaMi, aperturaCfg } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas, huellaLiga, huellaApertura, mandarLigas, verOtrasLigas } from './soporte.js';
 import * as DD from './dinero-dicho.js';
 import { presentarNovedades, tarjetaNovedad, tarjetaIphone, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { registrarPujas } from './pujas-vistas.js';
+import * as OL from './otras-ligas.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca, estadoIntersticial } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML, tiraPortada } from './portada.js';
@@ -58,6 +59,8 @@ const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado
 window.S = S;
 // (22 nov) para las pruebas: el análisis otra vez, como tras apuntar algo que le cuentas a la IA
 window.__fmRehacer = () => { if (S.D) rehacer(); };
+// (26 nov) lo que se manda y se lee de lo de todas las ligas, para probarlo de punta a punta (.github/ia/caso-otras-ligas.mjs)
+window.__fmLigas = { compras: () => comprasSiToca(), ligas: () => ligasSiToca(), otras: () => otrasSiToca() };
 // la app ha arrancado: el aviso de index.html («no ha podido abrirse») ya no sale, y si ya había salido se quita
 window.__fmArranco = true;
 try { const f = document.querySelector('.arranque-fallo'); if (f) f.remove(); } catch (e) { /* nada */ }
@@ -1962,6 +1965,9 @@ function saludarSiToca(por = 'cada10') {
   calDineroSiToca();
   calPujasSiToca();
   comprasSiToca();
+  // (26 nov) lo de todas las ligas: si algo de esto falla, que no pase nada (no es de lo que se ve)
+  ligasSiToca().catch(() => {});
+  try { otrasSiToca(); } catch (e) { /* nada */ }
   const yo = S.M && S.M.yo;
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
@@ -2045,21 +2051,98 @@ function calPujasSiToca() {
    usuario deja «Ayudar a mejorar la IA» */
 async function comprasSiToca() {
   if (enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !S.D.liga) return;
-  const hoy = diaDe(), kd = K('pujas-mandadas');
-  const ya = LS.get(kd, { dia: '', c: {} });
-  if (ya.dia === hoy) return;
-  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya.c[`${x.pid}|${x.t}`]).slice(0, 80);
-  if (!nuevas.length) { LS.set(kd, { ...ya, dia: hoy }); return; }
+  const hoy = diaDe(), kd = K('pujas-mandadas'), liga = S.D.liga.id;
+  const g = LS.get(kd, { dia: '', c: {} });
+  if (g.dia === hoy) return;
+  // (26 nov) cada compra va ahora con el id del jugador (el de LaLiga, público), para saber lo que se paga por cada uno en
+  // todas las ligas. Las mandadas antes iban sin él: se mandan otra vez, una sola vez (`jug`: lo apuntado ya es con jugador),
+  // y el servidor las junta con las de entonces por su huella. De más reciente a más antigua, 80 al día
+  const ya = { dia: g.dia, c: g.jug ? g.c || {} : {}, jug: 1 };
+  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya.c[`${x.pid}|${x.t}`]).sort((a, b) => b.t - a.t).slice(0, 80);
+  if (!nuevas.length) { LS.set(kd, g.jug ? { ...ya, dia: hoy } : { ...g, dia: hoy }); return; }
   const c = [];
   for (const x of nuevas) {
-    c.push({ k: await huellaCompra(S.D.liga.id, x.pid, x.t), d: new Date(x.t).toISOString().slice(0, 10), s: Math.round(x.s * 1000) / 1000, v: Math.round(x.v / 1e4) * 1e4,
-      r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top });
+    const p = Number(x.pid);
+    c.push({ k: await huellaCompra(liga, x.pid, x.t), d: new Date(x.t).toISOString().slice(0, 10), s: Math.round(x.s * 1000) / 1000, v: Math.round(x.v / 1e4) * 1e4,
+      r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top, ...(Number.isInteger(p) && p > 0 ? { p } : {}) });
   }
-  if (!(await mandarCompras(c))) return;
-  const ahora = Date.now();
-  for (const x of nuevas) ya.c[`${x.pid}|${x.t}`] = x.t;
-  for (const [k, t] of Object.entries(ya.c)) if (ahora - t > 50 * DIA) delete ya.c[k];
-  LS.set(kd, { dia: hoy, c: ya.c });
+  // (sin saber de qué clase es la liga, van como siempre, sin jugador para lo de todas las ligas: no se mezclan clases)
+  const tl = OL.tipoLiga(S.D.liga);
+  const r = await mandarCompras(c, tl ? await huellaLiga(liga) : '', tl);
+  if (!r) return;
+  // (un servidor de antes no mira el jugador: se apunta como siempre, sin `jug`, y se mandarán otra vez cuando lo mire.
+  // Si mientras tanto se ha cambiado de liga, lo apuntado es de la de antes: `kd` ya lleva su liga)
+  const sabe = !!tl && typeof r.jug === 'number', ahora = Date.now();
+  const hechas = sabe ? ya.c : { ...(g.c || {}) };
+  for (const x of nuevas) hechas[`${x.pid}|${x.t}`] = x.t;
+  for (const [k, t] of Object.entries(hechas)) if (ahora - t > 50 * DIA) delete hechas[k];
+  LS.set(kd, sabe ? { dia: hoy, c: hechas, jug: 1 } : { dia: hoy, c: hechas });
+}
+/* (26 nov) lo que solo se ve juntando todas las ligas (otras-ligas.js): los libres del mercado de tu liga con las pujas que
+   lleva cada uno y las cláusulas que se abrieron hace más de 24 h (cómo era el jugador y si se lo llevaron), sin liga, sin
+   mánager y sin nombres. Como mucho cada media hora y solo si ha cambiado algo; solo con «Ayudar a mejorar la IA» */
+let ligasEnMarcha = false;
+async function ligasSiToca() {
+  if (ligasEnMarcha || enDemo() || !haySesion() || !mejorarIA() || !S.D || !S.M || !S.D.liga || !S.D.t) return;
+  const tl = OL.tipoLiga(S.D.liga);
+  if (!tl) return;
+  const M = S.M, liga = S.D.liga.id, ahora = Date.now(), hoy = diaDe();
+  const ke = K('ligas-env'), ka = K('ligas-aperturas');
+  // las cláusulas a punto de abrirse (las de todos los equipos, también el tuyo), como están ahora
+  const ap = OL.apuntarAperturas(LS.get(ka, {}), OL.fichasDe(M), ahora);
+  let reg = ap.reg;
+  if (ap.cambia) LS.set(ka, reg);
+  const AH = actHist(liga);
+  const res = OL.resolverAperturas(reg, AH.lista, AH.desde, S.D.t);
+  // (la demanda, solo con la liga recién leída: con la guardada de hace rato las pujas pueden ser ya otras)
+  const m = ahora - S.D.t <= OL.FOTO_FRESCA ? OL.demandaDe(M.mercado, ahora) : [], firma = OL.firmaDemanda(m);
+  const ya = LS.get(ke, { t: 0, f: '', dia: '', n: 0, mal: 0 });
+  if (!OL.tocaMandar(ya, firma, res.listas.length, ahora, hoy)) {
+    if (res.quitar.length) { reg = { ...reg }; for (const k of res.quitar) delete reg[k]; LS.set(ka, reg); }
+    return;
+  }
+  ligasEnMarcha = true;
+  try {
+    const a = [];
+    for (const x of res.listas.slice(0, 40)) {
+      const e = reg[x.c];
+      a.push({ k: await huellaApertura(liga, e.pid, e.base), d: new Date(x.abre).toISOString().slice(0, 10), v: Math.round(x.v / 1e4) * 1e4, cs: Math.round(x.cs * 1000) / 1000,
+        r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, pos: x.pos, tit: x.tit == null ? null : Math.round(x.tit * 100) / 100, ida: x.ida, bl: x.bl });
+    }
+    const bien = await mandarLigas({ l: await huellaLiga(liga), t: tl, m, a });
+    // (las claves llevan la liga de cuando se empezó: si se ha cambiado de liga mientras, no se mezclan)
+    const n = (ya.dia === hoy ? Number(ya.n) || 0 : 0) + 1;
+    if (!bien) { LS.set(ke, { ...ya, mal: Date.now() }); return; }
+    LS.set(ke, { t: Date.now(), f: firma, dia: hoy, n, mal: 0 });
+    const queda = { ...LS.get(ka, {}) };
+    for (const x of res.listas.slice(0, 40)) delete queda[x.c];
+    for (const k of res.quitar) delete queda[k];
+    LS.set(ka, queda);
+  } finally { ligasEnMarcha = false; }
+}
+/* (26 nov) lo de las demás ligas para los libres de tu mercado (lo pagado por cada uno en 3 días y su demanda): solo si
+   «otrasLigas» de limites.json lo enciende (apagado, ni se pide). Se guarda por liga y se pide otra vez cuando cambian los
+   libres o cada 3 h. La ficha del jugador lo lee de `S.otras` */
+let otrasEnMarcha = false;
+const otrasGuardadas = () => LS.get(K('otras-ligas'), null);
+function otrasSiToca() {
+  const on = otrasLigasCfg();
+  if (!on.pagado && !on.demanda) { if (S.otras) S.otras = null; return; }
+  if (otrasEnMarcha || enDemo() || !haySesion() || !S.D || !S.M || !S.D.liga) return;
+  const liga = S.D.liga.id, ko = K('otras-ligas'), ahora = Date.now(), tl = OL.tipoLiga(S.D.liga);
+  if (!tl) return;
+  const ids = OL.idsDe(S.M.mercado, ahora), clave = ids.join(',');
+  const ya = otrasGuardadas();
+  // (lo de otra liga no vale aquí: lo que se pide no trae lo de tu propia liga, y en otra liga tuya eso cambia)
+  if (S.otras && S.otras.liga !== liga) S.otras = null;
+  if (ya && ya.liga === liga && !S.otras) S.otras = ya;
+  if (!OL.tocaVer(ya, clave, ahora)) return;
+  otrasEnMarcha = true;
+  return huellaLiga(liga).then((l) => verOtrasLigas(l, tl, ids)).then((r) => {
+    const x = { liga, k: clave, t: Date.now(), p: (r && r.p) || {}, d: (r && r.d) || {} };
+    LS.set(ko, x);
+    if (S.D && S.D.liga && S.D.liga.id === liga) S.otras = x;
+  }).catch(() => { LS.set(ko, { ...(ya || { liga, k: '', t: 0, p: {}, d: {} }), mal: Date.now() }); }).finally(() => { otrasEnMarcha = false; });
 }
 /** (0.7.13) lo apuntado de un rival, sin nombres ni ids, para afinar la cuenta de todos (si el usuario lo deja) */
 async function apunteDinero(tid, dicho, cu) {

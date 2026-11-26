@@ -155,6 +155,10 @@ jobs:
       # (0.8.2) cuándo entra cada puja de otro y quién puede estar detrás: el registro, el motor, la tarjeta y el aviso
       - name: Quién puja
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-quien-puja.mjs
+      # (26 nov) lo de todas las ligas: lo que se manda (compras con jugador, pujas de cada libre, cláusulas que se abren), el
+      # Worker de verdad detrás, la línea de la ficha apagada y encendida, y la medida
+      - name: Lo de todas las ligas
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-otras-ligas.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs

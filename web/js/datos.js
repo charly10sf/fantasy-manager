@@ -143,7 +143,10 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
 
   alPaso(1, PASOS[1]);
   const ligasR = await A.ligas();
-  const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
+  // (26 nov) acceso y tipo: la clase de liga, como la da LaLiga (`access` y `type.id`; vistos ese día en la liga de Carlos:
+  // «private» y «8»). Solo para no mezclar clases de liga distintas en lo que se junta de todas (otras-ligas.js)
+  const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))),
+    acceso: typeof l.access === 'string' ? l.access : '', tipo: l.type && typeof l.type === 'object' && l.type.id != null ? String(l.type.id) : '' })).filter((l) => l.id);
   if (!ligas.length && N.lista(ligasR).length) throw cambioDeFormato('ligas', ligasR);
   if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
   // si se entró con una invitación de tu liga (?l=… en la dirección) y aún no habías elegido liga, esa (0.7a)

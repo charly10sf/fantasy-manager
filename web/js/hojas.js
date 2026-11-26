@@ -14,16 +14,17 @@ import { qrSVG } from './qr.js';
 import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
-import { enDemo } from './datos.js';
+import { enDemo, K } from './datos.js';
 import { dichoDe, fichaDichoHTML, tileDicho } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, importantesPara, bloqueada, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
+import { estadoLimite, novedadesPara, importantesPara, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
+import { pagadoTxt, demandaTxt } from './otras-ligas.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
@@ -63,6 +64,20 @@ export function quienPujaHTML(S, m) {
     t: n === 1 ? 'Quién puede ser la otra puja' : `Quién puede estar detrás de las ${n} pujas`,
     l: claro ? `Lo más probable: ${esc(top.nombre)} (${pc(top.p)})${vis[1] ? ` · ${esc(vis[1].nombre)} (${pc(vis[1].p)})` : ''}` : `No está claro: ${vis.slice(0, 3).map((c) => `${esc(c.nombre)} (${pc(c.p)})`).join(' · ')}`,
     d: parrafos(entro, ...vis.map(fila), fuera, pasa, `<span class="t2">Es una estimación: LaLiga no dice quién puja ni cuánto.${esc(ac)}</span>`) });
+}
+
+/* (26 nov) Lo de las demás ligas que usan la app, en la ficha de un libre del mercado: lo pagado por él en 3 días y su nivel
+   de demanda (otras-ligas.js). APAGADO mientras «otrasLigas» de limites.json no lo encienda: entonces no sale nada, ni se
+   pide. Nunca con lo leído para otra liga tuya, ni con algo de hace más de medio día. No toca la puja de la app: es un dato */
+export function otrasLigasHTML(S, m) {
+  const on = otrasLigasCfg(), ot = S.otras;
+  if ((!on.pagado && !on.demanda) || !ot || !m || m.tipo === 'manager' || !S.D || !S.D.liga || ot.liga !== S.D.liga.id || Date.now() - num(ot.t) > DIA / 2) return '';
+  let h = '';
+  const pg = on.pagado ? pagadoTxt(ot.p && ot.p[m.pid], num(m.j && m.j.valor)) : null;
+  if (pg) h += aviso(S, { k: 'otras-pagado', pid: m.pid, cls: 'azul', ico: 'mercado', t: 'Lo pagado en otras ligas', l: pg.l, d: parrafos(...pg.d) });
+  const dm = on.demanda ? demandaTxt(ot.d && ot.d[m.pid]) : null;
+  if (dm) h += aviso(S, { k: 'otras-demanda', pid: m.pid, cls: 'azul', ico: 'rayo', t: 'Demanda en otras ligas', l: dm.l, d: parrafos(...dm.d) });
+  return h;
 }
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
@@ -429,6 +444,8 @@ export function fichaJugador(S, pid) {
         const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
         h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
           d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
+        // (26 nov) lo pagado por él y su demanda en las demás ligas (apagado en limites.json: no sale nada)
+        h += otrasLigasHTML(S, m);
         // (0.8.2) quién puede estar detrás de las pujas de otros que lleva (función top)
         if (m.ajenas > 0 && m.quien && m.quien.cands.length) { if (bloqueada('quienPuja')) cerradas.push('quienPuja'); else h += quienPujaHTML(S, m); }
       }
@@ -1776,7 +1793,15 @@ export function textoDiagnostico(S) {
     ...(enWeb ? [(() => { const x = estadoProxy(); if (!x) return 'Intermediario: ¿?'; return `Intermediario: ${x.ahora === 'deno' ? 'Deno (el Worker no contestaba)' : 'Worker'}${x.hay ? '' : ' · sin segundo'}${x.cambios ? ` · pasó a Deno ${x.cambios} ${x.cambios > 1 ? 'veces' : 'vez'}, la última ${horaDe(x.ultimo)} (${x.porque})` : ''}${x.usos ? ` · ${x.usos} peticiones por Deno` : ''}`; })()] : []),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     ocupado(),
-    `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
+    `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.acceso || l.tipo ? ` [${l.acceso || '?'}/${l.tipo || '?'}]` : ''}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
+    // (26 nov) lo que se manda de la liga para lo de todas las ligas (otras-ligas.js) y si se enseña algo
+    (() => {
+      if (!D || !D.liga || enDemo()) return 'Otras ligas: nada (liga de ejemplo o sin liga)';
+      const e = LS.get(K('ligas-env'), null), ap = LS.get(K('ligas-aperturas'), {}), c = LS.get(K('pujas-mandadas'), null), o = otrasLigasCfg();
+      const manda = !mejorarIA() ? 'no se manda nada («Ayudar a mejorar la IA», apagado)'
+        : `último envío ${e && e.t ? `${cuando(e.t)} (${e.dia === diaDe() ? e.n || 0 : 0} hoy)` : 'ninguno'}${e && e.mal ? ` · falló ${cuando(e.mal)}` : ''} · ${Object.keys(ap || {}).length} cláusulas apuntadas · compras ${c && c.jug ? 'con jugador' : 'aún sin jugador'}`;
+      return `Otras ligas: ${manda} · se enseña: ${[o.pagado ? 'lo pagado' : '', o.demanda ? 'la demanda' : ''].filter(Boolean).join(' y ') || 'nada'}`;
+    })(),
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),
     `Fuentes: onces ${S.M && S.M.hayOnces ? `${Object.keys(((S.fuentes || {}).onces || {}).jugadores || {}).length} jugadores, ${((S.fuentes || {}).onces || {}).equipos ?? '?'}/${((S.fuentes || {}).onces || {}).de ?? '?'} equipos` : 'no'} · noticias ${S.M ? S.M.noticias.length : 0}${S.M && S.M.noticiasFallo ? ` (${S.M.noticiasFallo.viejas ? 'las de antes: ' : ''}${S.M.noticiasFallo.fallo})` : ''} · avanzadas ${S.M && S.M.fuentesAv ? Object.entries(S.M.fuentesAv).map(([k, v]) => `${k} ${v}`).join(', ') : 'sin datos'} · histórico de valor ${LS.get('ruta-valor', null) != null ? `ruta ${LS.get('ruta-valor')}` : LS.get('ruta-valor-falla', 0) ? 'ninguna ruta' : 'sin probar'}`,
     (() => {

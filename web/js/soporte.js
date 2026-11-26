@@ -157,11 +157,27 @@ export async function huellaCompra(liga, pid, t) {
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`fm-puja|${liga}|${pid}|${t}`));
   return [...new Uint8Array(b)].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
 }
-/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top }] }; true si han entrado */
-export async function mandarCompras(c) {
+/** manda las compras de tu liga, sin nombres (si el usuario lo deja): { c: [{ k, d, s, v, r, top, p }], l }; devuelve lo que
+    contesta el servidor si han entrado y false si no. (26 nov) `p` es el id del jugador (el de LaLiga, público) y `l`, la
+    huella de la liga: con ellos el servidor apunta además lo pagado por cada jugador en todas las ligas y contesta con `jug`
+    (cuántas ha apuntado así); un servidor de antes no los mira y contesta sin `jug` */
+export async function mandarCompras(c, l = '', t = '') {
   if (!mejorarIA() || !c || !c.length) return false;
-  try { await pedirWorker('POST', '/pujas', { c }, { tiempo: 15000 }); return true; } catch (e) { return false; }
+  try { return (await pedirWorker('POST', '/pujas', l ? { c, l, t } : { c }, { tiempo: 15000 })) || false; } catch (e) { return false; }
 }
+/* ---------- (26 nov) lo que solo se ve juntando todas las ligas (otras-ligas.js; el servidor, worker/src/ligas.js) ---------- */
+const huella24 = async (texto) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto)))].slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+/** la huella de la liga (24 hex): al servidor nunca le llega el id de la liga, y él la vuelve a cifrar con una sal suya */
+export const huellaLiga = (liga) => huella24(`fm-liga|${liga}`);
+/** la huella de una cláusula que se abrió (liga|jugador|hasta cuándo estaba protegida): solo para no contarla dos veces */
+export const huellaApertura = (liga, pid, base) => huella24(`fm-cla|${liga}|${pid}|${base}`);
+/** manda los libres del mercado con sus pujas y las cláusulas que se abrieron, sin nombres (si el usuario lo deja); true si entra */
+export async function mandarLigas(cuerpo) {
+  if (!mejorarIA() || !cuerpo || !cuerpo.l) return false;
+  try { await pedirWorker('POST', '/ligas', cuerpo, { tiempo: 15000 }); return true; } catch (e) { return false; }
+}
+/** lo pagado en las demás ligas de la misma clase (`t`) y la demanda de esos jugadores: { on, p, d } (lanza si no contesta) */
+export const verOtrasLigas = (l, t, ids) => pedirWorker('POST', '/ligas/ver', { l, t, ids }, { tiempo: 15000 });
 /** lo que se paga en todas las ligas por tramo de valor y de subida, con 6 h de caché: { t, cal } */
 export const calPujasGuardada = () => LS.get('pujas-cal', { t: 0, cal: null });
 export async function leerCalPujas() {
