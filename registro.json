@@ -3238,7 +3238,6 @@
    "SPORT|136795046": 1795521999000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/amarilla-lucien-agoume-indignado-aficion-sevilla_0_2008575550.html": 1795525780000,
    "Diario Sur|https://www.diariosur.es/malagacf/malaga-entrenamiento-murillo-futbol-20261124141753-nt.html": 1795526273000,
-   "AS|https://as.com/futbol/segunda/bajcetic-no-sale-del-tunel-f202611-n/": 1795465135000,
    "SPORT|136797133": 1795524053000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/koke-sobre-record-victorias-simeone-laliga-le-dimos-enhorabuena-increible-tantos-anos-club-grande-haber-cambiado-mentalidad-club-20261124_3481262.html": 1795529745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261124/1004254957/16-anos-carcel-abuso-sexual-menores.html": 1795530870000,
@@ -9829,13 +9828,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6715,
+   "ok": 6716,
    "fallos": 0,
-   "ejecuciones": 5494,
+   "ejecuciones": 5495,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T20:16:12.818Z"
+   "ultima": "2026-11-26T20:21:12.470Z"
   }
  },
  "ptsDirecto": {},
@@ -9852,15 +9851,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:16:20.369Z"
+   "ultimaBien": "2026-11-26T20:21:18.498Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:16:20.369Z"
+   "ultimaBien": "2026-11-26T20:21:18.498Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:16:20.369Z"
+   "ultimaBien": "2026-11-26T20:21:18.498Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9868,11 +9867,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:16:20.369Z"
+   "ultimaBien": "2026-11-26T20:21:18.498Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:16:20.369Z"
+   "ultimaBien": "2026-11-26T20:21:18.498Z"
   }
  },
  "avisos": [
