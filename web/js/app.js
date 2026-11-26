@@ -1966,8 +1966,8 @@ function saludarSiToca(por = 'cada10') {
   calPujasSiToca();
   comprasSiToca();
   // (26 nov) lo de todas las ligas: si algo de esto falla, que no pase nada (no es de lo que se ve)
-  ligasSiToca().catch(() => {});
-  try { otrasSiToca(); } catch (e) { /* nada */ }
+  // (leer lo de las demás va después de mandar lo de la tuya: el servidor solo contesta a quien ha mandado algo de su liga)
+  ligasSiToca().catch(() => {}).then(() => { try { otrasSiToca(); } catch (e) { /* nada */ } });
   const yo = S.M && S.M.yo;
   // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
   const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
@@ -2056,10 +2056,14 @@ async function comprasSiToca() {
   if (g.dia === hoy) return;
   // (26 nov) cada compra va ahora con el id del jugador (el de LaLiga, público), para saber lo que se paga por cada uno en
   // todas las ligas. Las mandadas antes iban sin él: se mandan otra vez, una sola vez (`jug`: lo apuntado ya es con jugador),
-  // y el servidor las junta con las de entonces por su huella. De más reciente a más antigua, 80 al día
-  const ya = { dia: g.dia, c: g.jug ? g.c || {} : {}, jug: 1 };
-  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya.c[`${x.pid}|${x.t}`]).sort((a, b) => b.t - a.t).slice(0, 80);
-  if (!nuevas.length) { LS.set(kd, g.jug ? { ...ya, dia: hoy } : { ...g, dia: hoy }); return; }
+  // y el servidor las junta con las de entonces por su huella. De más reciente a más antigua, 80 al día.
+  // Si el servidor no las apunta con jugador (es el de antes, o esa cuenta ya manda de las ligas que caben), se apuntan como
+  // siempre y el reenvío de todas se vuelve a probar a la semana (`rj`), no cada día
+  const tl = OL.tipoLiga(S.D.liga), ahora = Date.now();
+  const todas = !g.jug && !!tl && !(g.rj && ahora - g.rj < 7 * DIA);
+  const ya = g.jug || !todas ? g.c || {} : {};
+  const nuevas = (S.M.comprasLiga || []).filter((x) => x.pid && x.t && !ya[`${x.pid}|${x.t}`]).sort((a, b) => b.t - a.t).slice(0, 80);
+  if (!nuevas.length) { LS.set(kd, { ...g, dia: hoy }); return; }
   const c = [];
   for (const x of nuevas) {
     const p = Number(x.pid);
@@ -2067,16 +2071,19 @@ async function comprasSiToca() {
       r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, top: !!x.top, ...(Number.isInteger(p) && p > 0 ? { p } : {}) });
   }
   // (sin saber de qué clase es la liga, van como siempre, sin jugador para lo de todas las ligas: no se mezclan clases)
-  const tl = OL.tipoLiga(S.D.liga);
   const r = await mandarCompras(c, tl ? await huellaLiga(liga) : '', tl);
   if (!r) return;
-  // (un servidor de antes no mira el jugador: se apunta como siempre, sin `jug`, y se mandarán otra vez cuando lo mire.
-  // Si mientras tanto se ha cambiado de liga, lo apuntado es de la de antes: `kd` ya lleva su liga)
-  const sabe = !!tl && typeof r.jug === 'number', ahora = Date.now();
-  const hechas = sabe ? ya.c : { ...(g.c || {}) };
+  // (si mientras tanto se ha cambiado de liga, lo apuntado es de la de antes: `kd` ya lleva su liga)
+  const sabe = !!tl && r.jug === 1;
+  // (ya iban con jugador y esta vez no se han podido apuntar así: si ha sido un fallo, no se dan por mandadas y se prueba
+  // mañana; si es que esta cuenta no puede mandar de esta liga (`sinJug`: ya manda de las que caben), se apuntan como
+  // siempre, que insistir no sirve)
+  if (g.jug && !sabe && !r.sinJug) { LS.set(kd, { ...g, dia: hoy }); return; }
+  // (la primera vez que el servidor las apunta con jugador, lo apuntado empieza de cero: lo de antes iba sin él)
+  const hechas = sabe && !g.jug ? {} : { ...(g.c || {}) };
   for (const x of nuevas) hechas[`${x.pid}|${x.t}`] = x.t;
-  for (const [k, t] of Object.entries(hechas)) if (ahora - t > 50 * DIA) delete hechas[k];
-  LS.set(kd, sabe ? { dia: hoy, c: hechas, jug: 1 } : { dia: hoy, c: hechas });
+  for (const [k, t] of Object.entries(hechas)) if (Date.now() - t > 50 * DIA) delete hechas[k];
+  LS.set(kd, sabe || g.jug ? { dia: hoy, c: hechas, jug: 1 } : { dia: hoy, c: hechas, ...(todas ? { rj: ahora } : g.rj ? { rj: g.rj } : {}) });
 }
 /* (26 nov) lo que solo se ve juntando todas las ligas (otras-ligas.js): los libres del mercado de tu liga con las pujas que
    lleva cada uno y las cláusulas que se abrieron hace más de 24 h (cómo era el jugador y si se lo llevaron), sin liga, sin
@@ -2088,18 +2095,23 @@ async function ligasSiToca() {
   if (!tl) return;
   const M = S.M, liga = S.D.liga.id, ahora = Date.now(), hoy = diaDe();
   const ke = K('ligas-env'), ka = K('ligas-aperturas');
-  // las cláusulas a punto de abrirse (las de todos los equipos, también el tuyo), como están ahora
-  const ap = OL.apuntarAperturas(LS.get(ka, {}), OL.fichasDe(M), ahora);
+  // las cláusulas a punto de abrirse (las de todos los equipos, también el tuyo), como están en la liga que se ve
+  const fichas = OL.fichasDe(M);
+  const ap = OL.apuntarAperturas(LS.get(ka, {}), fichas, ahora, S.D.t);
   let reg = ap.reg;
   if (ap.cambia) LS.set(ka, reg);
   const AH = actHist(liga);
   // (lo que valía cada jugador cada día, de lo que guarda la app: por si LaLiga subió sola la cláusula hasta el valor)
   const valorEl = (pid, t) => { let v = null; const d = diaDe(t); for (const [dd, vv] of (S.H && S.H.v && S.H.v[pid]) || []) { if (dd <= d) v = vv; else break; } return v; };
-  const res = OL.resolverAperturas(reg, AH.lista, AH.desde, S.D.t, valorEl);
+  // (solo se resuelve con la actividad guardada sin huecos y leída bien esta vez: si su lectura ha fallado, otra vez será)
+  const actMal = (S.D.avisos || []).some((x) => x && x.paso === 'actividad');
+  const res = actMal ? { listas: [], quitar: [] } : OL.resolverAperturas(reg, AH.lista, { seguido: AH.seguido, hasta: AH.hasta }, S.D.t, valorEl, OL.duenosDe(fichas));
   // (la demanda, solo con la liga recién leída: con la guardada de hace rato las pujas pueden ser ya otras)
   const m = ahora - S.D.t <= OL.FOTO_FRESCA ? OL.demandaDe(M.mercado, ahora) : [], firma = OL.firmaDemanda(m);
   const ya = LS.get(ke, { t: 0, f: '', dia: '', n: 0, mal: 0 });
-  if (!OL.tocaMandar(ya, firma, res.listas.length, ahora, hoy)) {
+  // (el servidor ha dicho que por hoy ya está: los envíos del día, o esa cuenta ya manda de las ligas que caben)
+  const topeHoy = !!ya.tope && ya.dia === hoy;
+  if (topeHoy || !OL.tocaMandar(ya, firma, res.listas.length, ahora, hoy)) {
     if (res.quitar.length) { reg = { ...reg }; for (const k of res.quitar) delete reg[k]; LS.set(ka, reg); }
     return;
   }
@@ -2108,12 +2120,13 @@ async function ligasSiToca() {
     const a = [];
     for (const x of res.listas.slice(0, 40)) {
       const e = reg[x.c];
-      a.push({ k: await huellaApertura(liga, e.pid, e.base), d: new Date(x.abre).toISOString().slice(0, 10), v: Math.round(x.v / 1e4) * 1e4, cs: Math.round(x.cs * 1000) / 1000,
-        r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, pos: x.pos, tit: x.tit == null ? null : Math.round(x.tit * 100) / 100, ida: x.ida, bl: x.bl });
+      a.push({ k: await huellaApertura(liga, e.pid, e.base), d: diaDe(x.abre), v: Math.round(x.v / 1e4) * 1e4, cs: Math.round(x.cs * 1000) / 1000,
+        r: x.r == null ? null : Math.round(x.r * 1e4) / 1e4, pos: x.pos, tit: x.tit == null ? null : Math.round(x.tit * 100) / 100, ida: x.ida, bl: x.bl, ...(x.hp == null ? {} : { hp: x.hp }) });
     }
     const bien = await mandarLigas({ l: await huellaLiga(liga), t: tl, m, a });
     // (las claves llevan la liga de cuando se empezó: si se ha cambiado de liga mientras, no se mezclan)
     const n = (ya.dia === hoy ? Number(ya.n) || 0 : 0) + 1;
+    if (bien && bien.tope) { LS.set(ke, { ...ya, dia: hoy, n: ya.dia === hoy ? Number(ya.n) || 0 : 0, tope: bien.tope }); return; }
     if (!bien) { LS.set(ke, { ...ya, mal: Date.now() }); return; }
     LS.set(ke, { t: Date.now(), f: firma, dia: hoy, n, mal: 0 });
     const queda = { ...LS.get(ka, {}) };
@@ -2123,25 +2136,31 @@ async function ligasSiToca() {
   } finally { ligasEnMarcha = false; }
 }
 /* (26 nov) lo de las demás ligas para los libres de tu mercado (lo pagado por cada uno en 3 días y su demanda): solo si
-   «otrasLigas» de limites.json lo enciende (apagado, ni se pide). Se guarda por liga y se pide otra vez cuando cambian los
-   libres o cada 3 h. La ficha del jugador lo lee de `S.otras` */
+   «otrasLigas» de limites.json lo enciende (apagado, ni se pide) y solo con «Ayudar a mejorar la IA» (quien no manda lo de
+   su liga no pide lo de las demás; y el servidor solo contesta a quien ha mandado algo de esa liga estos días). Se guarda
+   por liga y se pide otra vez cuando cambian los libres, cada 3 h o al cambiar de día. La ficha del jugador lo lee de `S.otras` */
 let otrasEnMarcha = false;
 const otrasGuardadas = () => LS.get(K('otras-ligas'), null);
 function otrasSiToca() {
   const on = otrasLigasCfg();
-  if (!on.pagado && !on.demanda) { if (S.otras) S.otras = null; return; }
+  if ((!on.pagado && !on.demanda) || !mejorarIA()) { if (S.otras) S.otras = null; return; }
   if (otrasEnMarcha || enDemo() || !haySesion() || !S.D || !S.M || !S.D.liga) return;
-  const liga = S.D.liga.id, ko = K('otras-ligas'), ahora = Date.now(), tl = OL.tipoLiga(S.D.liga);
+  const liga = S.D.liga.id, ko = K('otras-ligas'), ahora = Date.now(), hoy = diaDe(), tl = OL.tipoLiga(S.D.liga);
   if (!tl) return;
   const ids = OL.idsDe(S.M.mercado, ahora), clave = ids.join(',');
   const ya = otrasGuardadas();
+  // (si el servidor ha dicho hoy que esta cuenta no puede mandar de esta liga, tampoco le va a contestar: no se pide)
+  const env = LS.get(K('ligas-env'), null);
+  if (env && env.dia === hoy && (env.tope === 'ligas' || env.tope === 'ajena')) return;
   // (lo de otra liga no vale aquí: lo que se pide no trae lo de tu propia liga, y en otra liga tuya eso cambia)
   if (S.otras && S.otras.liga !== liga) S.otras = null;
   if (ya && ya.liga === liga && !S.otras) S.otras = ya;
-  if (!OL.tocaVer(ya, clave, ahora)) return;
+  if (!OL.tocaVer(ya, clave, ahora, hoy)) return;
   otrasEnMarcha = true;
   return huellaLiga(liga).then((l) => verOtrasLigas(l, tl, ids)).then((r) => {
-    const x = { liga, k: clave, t: Date.now(), p: (r && r.p) || {}, d: (r && r.d) || {} };
+    // (`falta`: el servidor aún no tiene nada de esta liga mandado por esta cuenta; se prueba otra vez en un rato)
+    if (r && r.falta) { LS.set(ko, { ...(ya || { liga, k: '', t: 0, p: {}, d: {} }), mal: Date.now() }); return; }
+    const x = { liga, k: clave, t: Date.now(), dia: hoy, p: (r && r.p) || {}, d: (r && r.d) || {} };
     LS.set(ko, x);
     if (S.D && S.D.liga && S.D.liga.id === liga) S.otras = x;
   }).catch(() => { LS.set(ko, { ...(ya || { liga, k: '', t: 0, p: {}, d: {} }), mal: Date.now() }); }).finally(() => { otrasEnMarcha = false; });

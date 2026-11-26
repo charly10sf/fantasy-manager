@@ -1933,7 +1933,8 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
 
 // ---------- (26 nov) lo que solo se ve juntando todas las ligas: /pujas con jugador, /ligas, /ligas/ver y /ligas/medida ----------
 // (worker/src/ligas.js; el objeto «ligas|todos», con SQLite) Una comprobación por regla: sin liga ni cuenta en lo guardado, la
-// sal no sale, una liga cuenta una vez, nadie ve lo de su liga, los mínimos, el interruptor de limites.json y los frenos
+// sal no sale, una liga cuenta una vez, nadie ve lo de su liga, los mínimos, el interruptor de limites.json, los frenos, que
+// una cuenta sola no fabrica «3 ligas», que solo se lee con una liga propia y que lo que se contesta no dice qué había
 {
   const L = await import('../src/ligas.js');
   // el reloj, a las 13:00 de Madrid de mañana: todo el apartado en el mismo día salvo donde se salta a propósito
@@ -1941,25 +1942,39 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   desfase += ((24 + 13) * 3600 - (hmL[0] * 3600 + hmL[1] * 60 + hmL[2])) * 1000;
   const fAntes = globalThis.fetch;
   let limL = { ligas: [] };
-  // cuentas: el token «q0…» es el dueño (667015); «q1…», «q2…»…, la 7001, la 7002…
+  // cuentas: el token «q0…» es el dueño (667015); «q1…», «q2…», «q109…»…, la 7001, la 7002, la 7109…
   globalThis.fetch = async (u, o) => {
     const s = String(u), tk = cabDe(o, 'authorization').replace('Bearer ', '');
-    if (s.includes('/user/me') && /^q\d/.test(tk)) return new Response(JSON.stringify({ id: tk[1] === '0' ? 667015 : 7000 + Number(tk[1]), managerName: 'Q' }), { status: 200 });
+    if (s.includes('/user/me') && /^q\d/.test(tk)) { const n = Number(/^q(\d+)/.exec(tk)[1]); return new Response(JSON.stringify({ id: n === 0 ? 667015 : 7000 + n, managerName: 'Q' }), { status: 200 }); }
     if (s.includes('limites.json')) return new Response(JSON.stringify(limL), { status: 200 });
+    // la lista de ligas de la cuenta, como la da LaLiga (el Worker la pide para comprobar que la liga que se manda es suya)
+    if (/\/competition\/1\/leagues\?/.test(s) && /^q\d/.test(tk)) { pedidasL++; if (laligaCaida) return new Response('no', { status: 503 }); const n = Number(/^q(\d+)/.exec(tk)[1]); return new Response(JSON.stringify([...(socio.get(n) || [])].map((id) => ({ id: String(id), name: 'Liga' }))), { status: 200 }); }
     return fAntes(u, o);
   };
+  // de qué ligas es cada cuenta (por el número de su token): `pL` apunta la liga del cuerpo salvo que se le diga que no
+  const socio = new Map();
+  let pedidasL = 0, laligaCaida = false;
   const QRl = objetosSql(WM.Emparejar); QRl.env = { VINCULOS: KV };
   const eL = { VINCULOS: KV, ADMINS: '667015', QR: QRl };
-  const tkL = (n) => `q${n}`.padEnd(30, 'q');
+  const tkL = (n) => `q${n}`.padEnd(30, 'x');
   const dbL = () => { QRl.get('ligas|todos'); return QRl.hay.get('ligas|todos').db; };
   const sqlL = (q, ...a) => dbL().prepare(q).all(...a);
-  const objL = async (b) => (await QRl.get('ligas|todos').fetch('https://x/ligas', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyQ(), ...b }) })).json();
+  // (directo al objeto, como lo llama el Worker DESPUÉS de comprobar con LaLiga que la liga es de esa cuenta: `verificada`)
+  const objL = async (b) => (await QRl.get('ligas|todos').fetch('https://x/ligas', { method: 'POST', body: JSON.stringify({ ahora: Date.now(), dia: hoyQ(), verificada: true, ...b }) })).json();
   const hx = (i) => i.toString(16).padStart(24, '0');
-  const hl = (n) => hx(0xabc0000 + n), hk = (n) => hx(0xdef0000 + n);
+  // la huella de la liga n, como la hace la app (SHA-256 de «fm-liga|id», 24 hex): la liga n tiene el id 5000 + n
+  const { createHash } = await import('node:crypto');
+  const HL = new Map(), NL = new Map();
+  const hl = (n) => { if (!HL.has(n)) { const h = createHash('sha256').update(`fm-liga|${5000 + n}`).digest('hex').slice(0, 24); HL.set(n, h); NL.set(h, n); } return HL.get(n); };
+  const hk = (n) => hx(0xdef0000 + n);
   const hoyU = () => new Date(Date.now()).toISOString().slice(0, 10);
   const cp = (i, o = {}) => ({ k: hk(i), d: hoyU(), s: 0.1, v: 30e6, r: 0.01, top: false, p: 500, ...o });
   let ipn = 0;
-  const pL = (ruta, cuerpo, n = 1, m = 'POST') => { minuto(); return pide({ m, ruta, cuerpo, tk: tkL(n), ip: `10.9.${Math.floor(ipn / 200)}.${ipn++ % 200}`, e: eL }); };
+  const pL = (ruta, cuerpo, n = 1, m = 'POST', ajena = false) => {
+    minuto();
+    if (!ajena && cuerpo && NL.has(cuerpo.l)) { if (!socio.has(n)) socio.set(n, new Set()); socio.get(n).add(5000 + NL.get(cuerpo.l)); }
+    return pide({ m, ruta, cuerpo, tk: tkL(n), ip: `10.9.${Math.floor(ipn / 200)}.${ipn++ % 200}`, e: eL });
+  };
 
   // lo que entra, limpio
   ok(L.pidOk(68) === 68 && L.pidOk('3311') === 3311 && L.pidOk('1e3') == null && L.pidOk(0) == null && L.pidOk(-4) == null && L.pidOk(1.5) == null && L.pidOk(null) == null && L.pidOk('abc') == null && L.pidOk(1e7) == null, 'ligas: el id del jugador, un entero pequeño o nada');
@@ -1973,32 +1988,68 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   ok(r.s === 401, `/ligas sin sesión: ${r.s}`);
   r = await pide({ ruta: '/ligas/ver', cuerpo: { l: hl(1), ids: [500] }, tk: 'corto', ip: '10.9.9.2', e: eL });
   ok(r.s === 401, `/ligas/ver sin sesión: ${r.s}`);
+  // leer: solo se puede con una liga de la que esa cuenta ha mandado algo estos días. `lee(liga, ids)` pregunta con una
+  // cuenta propia de esa liga (la 7100 + liga), que antes manda algo de ella (un envío de compras vacío: solo la apunta)
+  const suya = new Set();
+  const lee = async (liga, ids, extra = {}, n = 100 + liga) => {
+    if (!suya.has(`${n}|${liga}`)) { suya.add(`${n}|${liga}`); await objL({ op: 'pago', l: hl(liga), uid: String(n === 0 ? 667015 : 7000 + n), xs: [] }); }
+    return pL('/ligas/ver', { l: hl(liga), ids, ...extra }, n);
+  };
 
   // 2) /pujas con el jugador y la huella de la liga: lo de siempre y, además, lo pagado por ese jugador
   r = await pL('/pujas', { l: hl(1), c: [cp(1), cp(2, { p: 501, s: 0.2 }), cp(3, { p: 'x' }), cp(4, { p: undefined })] });
   let pg = sqlL('SELECT * FROM pago ORDER BY pid');
-  const todoL = () => JSON.stringify([sqlL('SELECT * FROM pago'), sqlL('SELECT * FROM dem'), sqlL('SELECT * FROM cla'), sqlL('SELECT * FROM tope')]);
-  ok(r.s === 200 && r.j.n === 4 && r.j.jug === 2 && pg.length === 2 && pg[0].pid === 500 && pg[1].pid === 501 && pg[1].s === 0.2 && pg[0].v === 30e6, `/pujas con jugador: las 4 como siempre y 2 con su jugador (${r.s} ${r.t})`);
-  // (la cuenta solo entra en los frenos del día, y cifrada: «u|…» los envíos y «x|…|…» sus ligas)
-  const topesBien = () => sqlL('SELECT k FROM tope').every((x) => /^(u\|[0-9a-f]{16}|x\|[0-9a-f]{16}\|[0-9a-f]{16})$/.test(x.k));
-  ok(!todoL().includes(hl(1)) && !todoL().includes(hk(1)) && topesBien() && sqlL('SELECT k FROM tope').length > 0 && Object.keys(pg[0]).join() === 'h,dia,pid,lg,tl,s,v,r,top' && /^[0-9a-f]{24}$/.test(pg[0].h) && pg[0].lg !== hl(1) && /^[0-9a-f]{16}$/.test(pg[0].lg) && pg[0].lg === pg[1].lg, 'lo guardado no lleva la huella que manda el móvil (ni de la liga ni de la compra) ni la cuenta: solo las de dentro');
+  const todoL = () => JSON.stringify([sqlL('SELECT * FROM pago'), sqlL('SELECT * FROM dem'), sqlL('SELECT * FROM cla'), sqlL('SELECT * FROM tope'), sqlL('SELECT * FROM cta')]);
+  ok(r.s === 200 && r.j.n === 4 && r.j.jug === 1 && pg.length === 2 && pg[0].pid === 500 && pg[1].pid === 501 && pg[1].s === 0.2 && pg[0].v === 30e6 && pg[0].ll === hoyQ(), `/pujas con jugador: las 4 como siempre y 2 con su jugador (${r.s} ${r.t})`);
+  // (la cuenta solo entra, cifrada, en sus ligas de estos días (`cta`) y en los frenos del día: «u|…» los envíos; «a|…» son
+  // las cláusulas de una liga)
+  const topesBien = () => sqlL('SELECT k FROM tope').every((x) => /^(u|a)\|[0-9a-f]{16}$/.test(x.k)) && sqlL('SELECT * FROM cta').every((x) => /^[0-9a-f]{16}$/.test(x.hs) && /^[0-9a-f]{16}$/.test(x.lg) && Object.keys(x).join() === 'hs,lg,dia,v' && x.v === x.dia);
+  ok(!todoL().includes(hl(1)) && !todoL().includes(hk(1)) && !/"700[12]"|:700[12][,}]/.test(todoL()) && topesBien() && sqlL('SELECT * FROM cta').length === 1 && Object.keys(pg[0]).join() === 'h,dia,pid,lg,tl,s,v,r,top,ll' && /^[0-9a-f]{24}$/.test(pg[0].h) && pg[0].lg !== hl(1) && /^[0-9a-f]{16}$/.test(pg[0].lg) && pg[0].lg === pg[1].lg, 'lo guardado no lleva la huella que manda el móvil (ni de la liga ni de la compra) ni la cuenta: solo las de dentro');
   const sal = sqlL("SELECT v FROM meta WHERE k = 'sal'")[0].v;
   ok(/^[0-9a-f]{64}$/.test(sal) && !r.t.includes(sal), 'la sal se crea al azar en el objeto');
-  // la misma compra desde otro móvil de la misma liga: una sola
-  r = await pL('/pujas', { l: hl(1), c: [cp(1, { s: 0.3 })] }, 2);
-  ok(r.s === 200 && r.j.jug === 0 && sqlL('SELECT * FROM pago').length === 2 && sqlL('SELECT s FROM pago WHERE pid = 500')[0].s === 0.1, 'la misma compra desde otro móvil de la liga no se cuenta dos veces');
+  // la misma compra desde otro móvil de la misma liga: una sola, y la respuesta es la misma que si fuera nueva (no dice si
+  // ya estaba: nadie puede preguntar con la huella de otra liga qué hay guardado)
+  const rA = r.t;
+  r = await pL('/pujas', { l: hl(1), c: [cp(1, { s: 0.3 }), cp(2, { p: 501, s: 0.2 }), cp(3, { p: 'x' }), cp(4, { p: undefined })] }, 2);
+  ok(r.s === 200 && r.t === rA && sqlL('SELECT * FROM pago').length === 2 && sqlL('SELECT s FROM pago WHERE pid = 500')[0].s === 0.1, `la misma compra desde otro móvil de la liga no se cuenta dos veces, y se contesta lo mismo (${r.t})`);
   // una web de antes (sin `l`) o sin jugador: lo de siempre y nada más
   r = await pL('/pujas', { c: [cp(5)] }, 3);
-  ok(r.s === 200 && r.j.n === 1 && r.j.jug === 0 && sqlL('SELECT * FROM pago').length === 2, `/pujas de una web de antes (sin la huella de la liga): como siempre (${r.t})`);
+  ok(r.s === 200 && r.j.n === 1 && !('jug' in r.j) && sqlL('SELECT * FROM pago').length === 2, `/pujas de una web de antes (sin la huella de la liga): como siempre (${r.t})`);
   r = await pL('/pujas', { l: 'NO', c: [cp(6)] }, 3);
-  ok(r.s === 200 && r.j.jug === 0 && sqlL('SELECT * FROM pago').length === 2, '/pujas con una huella de liga que no vale: como siempre');
+  ok(r.s === 200 && !('jug' in r.j) && sqlL('SELECT * FROM pago').length === 2, '/pujas con una huella de liga que no vale: como siempre');
+
+  // 2b) LA LIGA TIENE QUE SER SUYA: la primera vez que una cuenta manda algo de una liga, el Worker pregunta a LaLiga en qué
+  // ligas juega; con la huella de una liga ajena (los ids son números: se puede calcular la de cualquiera) no entra nada
+  ok(pedidasL === 2, `la primera vez de cada cuenta con una liga se pregunta a LaLiga si es suya (${pedidasL} veces: las dos cuentas de la liga 1)`);
+  const nPagoA = sqlL('SELECT COUNT(*) AS c FROM pago')[0].c, nCtaA = sqlL('SELECT COUNT(*) AS c FROM cta')[0].c;
+  r = await pL('/ligas', { l: hl(1), m: [[500, 9], [501, 9]] }, 30, 'POST', true);
+  ok(r.s === 429 && r.j.tope === 'ajena' && sqlL('SELECT COUNT(*) AS c FROM dem')[0].c === 0 && sqlL('SELECT COUNT(*) AS c FROM cta')[0].c === nCtaA, `/ligas con la huella de una liga que no es de esa cuenta: no entra nada (${r.s} ${r.t})`);
+  r = await pL('/pujas', { l: hl(1), c: [cp(50, { p: 500, s: 0.9 })] }, 30, 'POST', true);
+  ok(r.s === 200 && r.j.n === 1 && !('jug' in r.j) && r.j.sinJug === 'ajena' && sqlL('SELECT COUNT(*) AS c FROM pago')[0].c === nPagoA, `/pujas con la huella de una liga ajena: lo de siempre, y nada por jugador (${r.t})`);
+  // (y no se puede colar `verificada` desde fuera: el Worker no lo pasa)
+  r = await pL('/ligas', { l: hl(1), m: [[500, 9]], verificada: true }, 31, 'POST', true);
+  ok(r.s === 429 && r.j.tope === 'ajena' && sqlL('SELECT COUNT(*) AS c FROM dem')[0].c === 0, 'y `verificada` no se puede mandar desde fuera');
+  // si LaLiga no contesta, no se apunta nada y la app lo probará más tarde (503, no un «no»)
+  laligaCaida = true;
+  r = await pL('/ligas', { l: hl(1), m: [[500, 9]] }, 32);
+  laligaCaida = false;
+  ok(r.s === 503 && sqlL('SELECT COUNT(*) AS c FROM dem')[0].c === 0, `si LaLiga no contesta al comprobar, no se apunta nada: ${r.s}`);
+  // una vez comprobada, no se vuelve a preguntar (las lecturas de la misma cuenta y liga van directas) hasta los 30 días
+  const pedA = pedidasL;
+  r = await pL('/pujas', { l: hl(1), c: [cp(1)] }, 1);
+  ok(r.s === 200 && r.j.jug === 1 && pedidasL === pedA, 'comprobada una vez, no se pregunta otra a LaLiga');
+  // el objeto, sin `verificada`, no apunta nada de una liga que no conste como de esa cuenta
+  const rV = await objL({ op: 'pago', l: hl(2), uid: '9001', xs: [cp(60, { p: 500 })], verificada: false });
+  ok(rV.ok === false && rV.verificar === true && sqlL('SELECT COUNT(*) AS c FROM pago')[0].c === nPagoA && sqlL('SELECT COUNT(*) AS c FROM cta')[0].c === nCtaA, `el objeto pide comprobar antes de apuntar nada de una liga nueva para esa cuenta (${JSON.stringify(rV)})`);
 
   // 3) la demanda: los libres con sus pujas; otro de la misma liga que manda lo mismo no escribe nada; si cambian, lo último y lo más
   r = await pL('/ligas', { l: hl(1), m: [[500, 2], [501, 0], ['x', 1], [502, -3]] });
   let dm = sqlL('SELECT * FROM dem ORDER BY pid');
-  ok(r.s === 200 && r.j.m === 2 && dm.length === 2 && dm[0].n === 2 && dm[1].n === 0 && dm[0].dia === hoyQ() && dm[0].lg === pg[0].lg, `/ligas apunta la demanda: 2 de 4 (${r.s} ${r.t})`);
+  ok(r.s === 200 && r.t === '{"ok":true}' && dm.length === 2 && dm[0].n === 2 && dm[1].n === 0 && dm[0].dia === hoyQ() && dm[0].lg === pg[0].lg, `/ligas apunta la demanda: 2 de 4 (${r.s} ${r.t})`);
+  const t500 = dm[0].t;
+  desfase += 2000;
   r = await pL('/ligas', { l: hl(1), m: [[500, 2], [501, 0]] }, 2);
-  ok(r.s === 200 && r.j.m === 0 && sqlL('SELECT * FROM dem').length === 2, 'lo mismo desde otro móvil de la liga: ninguna fila escrita');
+  ok(r.s === 200 && r.t === '{"ok":true}' && sqlL('SELECT * FROM dem').length === 2 && sqlL('SELECT t FROM dem WHERE pid = 500')[0].t === t500, 'lo mismo desde otro móvil de la liga: ninguna fila tocada, y se contesta lo mismo que la primera vez');
   r = await pL('/ligas', { l: hl(1), m: [[500, 5]] }, 2);
   r = await pL('/ligas', { l: hl(1), m: [[500, 3]] });
   dm = sqlL('SELECT * FROM dem WHERE pid = 500');
@@ -2008,54 +2059,73 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   r = await pL('/ligas', { l: hl(1), m: [['x', 1]], a: [] });
   ok(r.s === 400, `/ligas sin nada válido: ${r.s}`);
 
-  // 4) las cláusulas que se abren: sin jugador; repetida, una vez
-  r = await pL('/ligas', { l: hl(1), a: [apB, { ...apB, k: hk(901), ida: false, bl: true }, { ...apB, k: hk(902), pos: 5 }, { ...apB, pid: 500, nombre: 'Pedri', k: hk(903) }] });
-  let cl = sqlL('SELECT * FROM cla ORDER BY ida');
-  ok(r.s === 200 && r.j.a === 3 && cl.length === 3 && cl[0].bl === 1 && cl[2].ida === 1 && cl[2].tit === 85 && !JSON.stringify(cl).includes('Pedri') && !('pid' in cl[0]) && !JSON.stringify(cl).includes(hk(900)), `/ligas apunta las cláusulas abiertas, sin jugador (${r.s} ${r.t})`);
+  // 4) las cláusulas que se abren: sin jugador; repetida, una vez; con las horas en las que se podía pagar
+  r = await pL('/ligas', { l: hl(1), a: [apB, { ...apB, k: hk(901), ida: false, bl: true, hp: 6 }, { ...apB, k: hk(902), pos: 5 }, { ...apB, pid: 500, nombre: 'Pedri', k: hk(903), hp: 24 }, { ...apB, k: hk(904), hp: 30 }] });
+  let cl = sqlL('SELECT * FROM cla ORDER BY ida, hp');
+  ok(r.s === 200 && r.t === '{"ok":true}' && cl.length === 3 && cl[0].bl === 1 && cl[0].hp === 6 && cl[2].ida === 1 && cl[2].tit === 85 && cl[2].hp === 24 && cl[1].hp === null && cl[0].lg === pg[0].lg && !JSON.stringify(cl).includes('Pedri') && !('pid' in cl[0]) && !JSON.stringify(cl).includes(hk(900)), `/ligas apunta las cláusulas abiertas, sin jugador (${r.s} ${r.t} ${JSON.stringify(cl.map((x) => [x.ida, x.bl, x.hp]))})`);
   r = await pL('/ligas', { l: hl(1), a: [apB] }, 2);
-  ok(r.s === 200 && r.j.a === 0 && sqlL('SELECT * FROM cla').length === 3, 'la misma cláusula desde otro móvil de la liga, una vez');
+  ok(r.s === 200 && r.t === '{"ok":true}' && sqlL('SELECT * FROM cla').length === 3, 'la misma cláusula desde otro móvil de la liga, una vez');
+  // una liga que mande cláusulas a montones: hasta CLA_LIGA_DIA al día
+  for (let k = 0; k < 3; k++) await objL({ op: 'apunte', l: hl(40), uid: '8040', a: Array.from({ length: 40 }, (_, i) => ({ ...apB, k: hk(5000 + k * 40 + i) })) });
+  ok(sqlL('SELECT COUNT(*) AS c FROM cla WHERE lg <> ?', pg[0].lg)[0].c === L.CLA_LIGA_DIA, `de una liga no entran más de ${L.CLA_LIGA_DIA} cláusulas al día (${sqlL('SELECT COUNT(*) AS c FROM cla WHERE lg <> ?', pg[0].lg)[0].c})`);
 
   // 5) apagado en limites.json (lo de por defecto): /ligas/ver no devuelve nada aunque haya datos, tampoco al dueño
   for (let n = 2; n <= 6; n++) await objL({ op: 'pago', l: hl(n), uid: String(8000 + n), xs: [cp(100 + n, { p: 500, s: 0.1 + n / 100 })] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [500, 501] }, 0);
+  r = await lee(9, [500, 501], {}, 0);
   ok(r.s === 200 && JSON.stringify(r.j.p) === '{}' && JSON.stringify(r.j.d) === '{}' && !r.j.on.pagado, `/ligas/ver apagado: vacío también para el dueño (${r.t})`);
   // solo para el dueño
   limL = { ligas: [], otrasLigas: { pagado: 'dueño', demanda: false } }; desfase += 11 * 60e3;
-  r = await pL('/ligas/ver', { l: hl(9), ids: [500, 501] }, 0);
-  const r2 = await pL('/ligas/ver', { l: hl(9), ids: [500, 501] }, 3);
+  r = await lee(9, [500, 501], {}, 0);
+  const r2 = await lee(9, [500, 501]);
   ok(r.s === 200 && r.j.p['500'] && r.j.on.pagado && JSON.stringify(r2.j.p) === '{}' && !r2.j.on.pagado, `«dueño»: lo ve Carlos y nadie más (${r.t} | ${r2.t})`);
 
   // 6) encendido: lo pagado. Ligas 1 a 6 han pagado por el 500: +10 %, +12 %, +13 %, +14 %, +15 %, +16 %
   limL = { ligas: [], otrasLigas: { pagado: true, demanda: true } }; desfase += 11 * 60e3;
-  r = await pL('/ligas/ver', { l: hl(9), ids: [500, 501, 'x', 500] }, 3);
-  ok(r.s === 200 && r.j.p['500'].n === 6 && Math.abs(r.j.p['500'].med - 0.135) < 1e-9 && r.j.p['500'].max === 0.16 && !r.j.p['501'], `lo pagado en las demás ligas: 6 ligas, mediana +13,5 % y lo más +16 % (${r.t})`);
+  r = await lee(9, [500, 501, 'x', 500]);
+  // (en puntos enteros y con las ligas por tramos: de 6 ligas se dice «5 o más»; la mediana, +13,5 %, sale +14 %)
+  ok(r.s === 200 && r.j.p['500'].n === 5 && r.j.p['500'].med === 0.14 && r.j.p['500'].max === 0.16 && !r.j.p['501'], `lo pagado en las demás ligas: 6 ligas («5 o más»), mediana +14 % y lo más +16 % (${r.t})`);
   ok(!r.t.includes(sal) && !/"lg"|[0-9a-f]{16}/.test(r.t), 'lo que se devuelve no lleva huellas ni la sal');
   // nunca lo de tu propia liga: el de la liga 6 no ve su +16 %
-  r = await pL('/ligas/ver', { l: hl(6), ids: [500] }, 3);
+  r = await lee(6, [500]);
   ok(r.j.p['500'].n === 5 && r.j.p['500'].max === 0.15, `quien pregunta no ve lo de su liga (${r.t})`);
+  // SOLO SE LEE CON UNA LIGA SUYA: con la huella de una liga de la que esa cuenta no ha mandado nada, vacío (no se puede
+  // preguntar «sin la liga X» para sacar lo de X restando)
+  r = await pL('/ligas/ver', { l: hl(6), ids: [500] }, 109);
+  ok(r.s === 200 && JSON.stringify(r.j.p) === '{}' && r.j.falta === true, `con la huella de una liga que no es suya no se lee nada (${r.t})`);
   // el 501 solo se ha pagado en la liga 1 (y luego en 2: con menos de 3 ligas, nada)
   await objL({ op: 'pago', l: hl(2), uid: '8002', xs: [cp(120, { p: 501 })] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [501] }, 3);
+  r = await lee(9, [501]);
   ok(!r.j.p['501'], 'con compras de menos de 3 ligas, nada');
   // con 3 ligas contando la tuya, tampoco (para ti son 2)
   await objL({ op: 'pago', l: hl(3), uid: '8003', xs: [cp(121, { p: 501 })] });
-  r = await pL('/ligas/ver', { l: hl(3), ids: [501] }, 3);
-  const r3 = await pL('/ligas/ver', { l: hl(9), ids: [501] }, 3);
+  r = await lee(3, [501]);
+  const r3 = await lee(9, [501]);
   ok(!r.j.p['501'] && r3.j.p['501'].n === 3, 'el mínimo de 3 ligas se cuenta sin la tuya');
+  // UNA CUENTA SOLA NO FABRICA «3 LIGAS»: se inventa cinco ligas y manda que en todas se pagó el 540 al doble; solo le
+  // entran LIGAS_POR_CUENTA, que no llegan al mínimo, y nadie ve nada
+  let entranF = 0;
+  for (let k = 0; k < 5; k++) { const x = await objL({ op: 'pago', l: hl(900 + k), uid: '8999', xs: [cp(900 + k, { p: 540, s: 1, v: 2e6 })] }); if (x.ok) entranF++; else ok(x.tope === 'ligas', 'la liga de más se rechaza con su motivo'); }
+  r = await lee(9, [540]);
+  ok(entranF === L.LIGAS_POR_CUENTA && L.LIGAS_POR_CUENTA < L.PAGADO_MIN && sqlL('SELECT COUNT(DISTINCT lg) AS c FROM pago WHERE pid = 540')[0].c === L.LIGAS_POR_CUENTA && !r.j.p['540'], `una cuenta que se inventa 5 ligas solo mete ${L.LIGAS_POR_CUENTA}: no llega al mínimo y no se enseña nada (${r.t})`);
+  // (y por /pujas, igual: la tercera liga de una cuenta no se apunta con jugador y la app se entera, sin `jug`)
+  await pL('/pujas', { l: hl(910), c: [cp(910, { p: 541 })] }, 7); await pL('/pujas', { l: hl(911), c: [cp(911, { p: 541 })] }, 7);
+  r = await pL('/pujas', { l: hl(912), c: [cp(912, { p: 541 })] }, 7);
+  ok(r.s === 200 && r.j.n === 1 && !('jug' in r.j) && r.j.sinJug === 'ligas' && sqlL('SELECT COUNT(*) AS c FROM pago WHERE pid = 541')[0].c === 2, `por /pujas, la tercera liga de una cuenta se apunta como siempre pero no con jugador, y la app se entera (${r.t})`);
   // una liga que manda 30 compras infladas del mismo jugador pesa como una; y lo que no puede ser (uno de 30 M por 5 veces
   // y media su valor: el motor de la app nunca lo manda) ni se guarda
   await objL({ op: 'pago', l: hl(7), uid: '8007', xs: [...Array.from({ length: 30 }, (_, i) => cp(200 + i, { p: 500, s: 1 })), cp(250, { p: 500, s: 4.5 })] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [500] }, 3);
-  ok(r.j.p['500'].n === 7 && Math.abs(r.j.p['500'].med - 0.14) < 1e-9 && r.j.p['500'].max === 1 && sqlL('SELECT COUNT(*) AS c FROM pago WHERE s > 1')[0].c === 0, `una liga que infla cuenta una vez: la mediana pasa de +13,5 % a +14 % y no más (${r.t})`);
+  r = await lee(9, [500]);
+  ok(r.j.p['500'].n === 5 && r.j.p['500'].med === 0.14 && r.j.p['500'].max === 1 && sqlL('SELECT COUNT(*) AS c FROM pago WHERE s > 1')[0].c === 0, `una liga que infla cuenta una vez: la mediana sigue en +14 % (${r.t})`);
   ok(L.pagoLimpio(cp(1, { s: 1.5, v: 1e6 }), hoyU()) && !L.pagoLimpio(cp(1, { s: 1.5, v: 30e6 }), hoyU()), 'un barato por más del doble vale; uno caro por más del doble, no (como en el motor de la app)');
-  // lo de hace más de 3 días ya no cuenta
-  await objL({ op: 'pago', l: hl(8), uid: '8008', xs: [cp(300, { p: 500, s: 0.9, d: L.otroDia(hoyU(), -5) })] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [500] }, 3);
-  ok(r.j.p['500'].n === 7, 'lo pagado hace más de 3 días no entra');
-  // la cuenta de ligas, recortada a 20
+  // lo de hace más de 3 días ya no cuenta (lo de hace 3, sí)
+  for (let n = 30; n < 33; n++) await objL({ op: 'pago', l: hl(n), uid: String(8000 + n), xs: [cp(300 + n, { p: 545, s: 0.2, d: L.otroDia(hoyQ(), -3) }), cp(330 + n, { p: 546, s: 0.2, d: L.otroDia(hoyQ(), -4) })] });
+  r = await lee(9, [545, 546]);
+  ok(r.j.p['545'] && r.j.p['545'].n === 3 && !r.j.p['546'], `lo pagado hace 3 días entra y lo de hace 4 no (${r.t})`);
+  // en cuántas ligas, por tramos: de 25 se dice «10 o más» (así no se sabe cuántas ligas usan la app)
   for (let n = 20; n < 45; n++) await objL({ op: 'pago', l: hl(n), uid: String(8000 + n), xs: [cp(400 + n, { p: 502, s: 0.05 })] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [502] }, 3);
-  ok(r.j.p['502'].n === L.PAGADO_N_MAX && sqlL('SELECT COUNT(*) AS c FROM pago WHERE pid = 502')[0].c === 25, `la cuenta de ligas no pasa de ${L.PAGADO_N_MAX} (${r.t})`);
+  r = await lee(9, [502]);
+  ok(r.j.p['502'].n === L.PAGADO_TRAMOS[0] && L.PAGADO_TRAMOS[0] === 10 && sqlL('SELECT COUNT(*) AS c FROM pago WHERE pid = 502')[0].c === 25, `de 25 ligas se dice «10 o más» (${r.t})`);
+  ok(Object.values({ ...r.j.p, ...r3.j.p }).every((x) => L.PAGADO_TRAMOS.includes(x.n) && Number.isInteger(Math.round(x.med * 100)) && Math.abs(x.med * 100 - Math.round(x.med * 100)) < 1e-9 && Math.abs(x.max * 100 - Math.round(x.max * 100)) < 1e-9), 'lo pagado sale siempre por tramos de ligas y en puntos enteros');
 
   // 6b) el tipo de liga: solo se juntan las ligas del mismo tipo que la de quien pregunta (privadas con privadas, Premium con
   // Premium…); lo que no tiene la forma de un tipo se guarda sin tipo
@@ -2063,62 +2133,71 @@ ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMI
   for (let n = 80; n < 84; n++) await objL({ op: 'pago', l: hl(n), t: 'private|8|n', uid: String(8000 + n), xs: [cp(800 + n, { p: 520, s: 0.1 })] });
   for (let n = 84; n < 88; n++) await objL({ op: 'pago', l: hl(n), t: 'private|8|p', uid: String(8000 + n), xs: [cp(800 + n, { p: 520, s: 0.4 })] });
   await objL({ op: 'pago', l: hl(88), t: '<script>|8|n', uid: '8088', xs: [cp(888, { p: 520, s: 0.2 })] });
-  const rT = [await pL('/ligas/ver', { l: hl(9), t: 'private|8|n', ids: [520] }, 3), await pL('/ligas/ver', { l: hl(9), t: 'private|8|p', ids: [520] }, 3), await pL('/ligas/ver', { l: hl(9), t: 'public|3|n', ids: [520] }, 3), await pL('/ligas/ver', { l: hl(9), ids: [520] }, 3)];
-  ok(rT[0].j.p['520'].n === 4 && rT[0].j.p['520'].med === 0.1 && rT[1].j.p['520'].med === 0.4 && !rT[2].j.p['520'] && !rT[3].j.p['520'] && sqlL("SELECT tl FROM pago WHERE pid = 520 AND s = 0.2")[0].tl === '', `solo se juntan las ligas del mismo tipo que la tuya: ${rT.map((x) => JSON.stringify(x.j.p)).join(' | ')}`);
+  const rT = [await lee(9, [520], { t: 'private|8|n' }), await lee(9, [520], { t: 'private|8|p' }), await lee(9, [520], { t: 'public|3|n' }), await lee(9, [520])];
+  ok(rT[0].j.p['520'].n === 3 && rT[0].j.p['520'].med === 0.1 && rT[1].j.p['520'].med === 0.4 && !rT[2].j.p['520'] && !rT[3].j.p['520'] && sqlL("SELECT tl FROM pago WHERE pid = 520 AND s = 0.2")[0].tl === '', `solo se juntan las ligas del mismo tipo que la tuya: ${rT.map((x) => JSON.stringify(x.j.p)).join(' | ')}`);
 
   // 7) la demanda: solo un nivel de 1 a 3, sin la tuya y solo con 5 ligas o más
   // 12 libres (600 a 611) en las ligas 20 a 27: el 600 con 4 pujas en cada una, el 601 con 1, los demás sin pujas; el 620, solo en 3 ligas
   for (let n = 20; n < 28; n++) await objL({ op: 'apunte', l: hl(n), uid: String(8000 + n), m: [[600, 4], [601, 1], ...Array.from({ length: 10 }, (_, i) => [602 + i, 0]), ...(n < 23 ? [[620, 9]] : [])] });
   // (dónde se cortan los niveles se rehace cada 10 minutos)
   desfase += 11 * 60e3;
-  r = await pL('/ligas/ver', { l: hl(9), ids: [600, 601, 602, 620, 999] }, 3);
+  r = await lee(9, [600, 601, 602, 620, 999]);
   ok(r.s === 200 && r.j.d['600'][0] === 3 && r.j.d['601'][0] >= 2 && r.j.d['602'][0] === 1 && r.j.d['600'][1] === 0 && !r.j.d['620'] && !r.j.d['999'], `la demanda: el más pujado, nivel 3; sin pujas, 1; en menos de 5 ligas, nada (${JSON.stringify(r.j.d)})`);
   ok(Object.values(r.j.d).every((x) => Array.isArray(x) && x.length === 2 && x.every((v) => [0, 1, 2, 3].includes(v))), 'de la demanda solo salen niveles: ni cuántas ligas pujan ni cuántas hay');
   // el 630 está libre en 5 ligas: para quien es de una de ellas son 4 y no se le dice nada
   for (let n = 20; n < 25; n++) await objL({ op: 'apunte', l: hl(n), uid: String(8100 + n), m: [[630, 2]] });
   desfase += 11 * 60e3;
-  r = await pL('/ligas/ver', { l: hl(20), ids: [630] }, 3);
-  const r4 = await pL('/ligas/ver', { l: hl(9), ids: [630] }, 3);
+  r = await lee(20, [630]);
+  const r4 = await lee(9, [630]);
   ok(!r.j.d['630'] && r4.j.d['630'] && r4.j.d['630'][0] >= 1, `la demanda tampoco cuenta tu liga (${JSON.stringify(r.j.d)} | ${JSON.stringify(r4.j.d)})`);
 
-  // 8) los frenos: 24 envíos por cuenta al día y 10 ligas distintas por cuenta
+  // 8) los frenos: 24 envíos por cuenta al día, y de 2 ligas distintas en 7 días
   let cabenL = 0;
   for (let k = 0; k < L.LIGAS_CUENTA_DIA + 3; k++) { const x = await objL({ op: 'apunte', l: hl(50), uid: '8500', m: [[700, k]] }); if (x.ok) cabenL++; }
   ok(cabenL === L.LIGAS_CUENTA_DIA, `por cuenta, ${L.LIGAS_CUENTA_DIA} envíos al día (${cabenL})`);
   let ligasL = 0;
   for (let k = 0; k < L.LIGAS_POR_CUENTA + 4; k++) { const x = await objL({ op: 'pago', l: hl(60 + k), uid: '8600', xs: [cp(600 + k, { p: 700 })] }); if (x.ok) ligasL++; }
-  ok(ligasL === L.LIGAS_POR_CUENTA && sqlL('SELECT COUNT(*) AS c FROM pago WHERE pid = 700')[0].c === L.LIGAS_POR_CUENTA, `una cuenta no puede hacerse pasar por más de ${L.LIGAS_POR_CUENTA} ligas en un día (${ligasL})`);
+  ok(ligasL === L.LIGAS_POR_CUENTA && sqlL('SELECT COUNT(*) AS c FROM pago WHERE pid = 700')[0].c === L.LIGAS_POR_CUENTA, `una cuenta no puede hacerse pasar por más de ${L.LIGAS_POR_CUENTA} ligas (${ligasL})`);
   ok((await objL({ op: 'pago', l: hl(60), uid: '8600', xs: [cp(699, { p: 701 })] })).ok, 'y sus ligas de antes siguen entrando');
-  // (por la ruta, el tope sale como un 429)
+  // (por la ruta, el tope sale como un 429 que dice cuál es, para que la app no insista hasta mañana)
   for (let k = 0; k < L.LIGAS_CUENTA_DIA; k++) await objL({ op: 'apunte', l: hl(70), uid: '7005', m: [[710, k]] });
   r = await pL('/ligas', { l: hl(70), m: [[710, 99]] }, 5);
-  ok(r.s === 429, `/ligas pasado el tope del día: ${r.s}`);
-  ok(topesBien() && sqlL("SELECT COUNT(*) AS c FROM tope WHERE k LIKE 'u|%'")[0].c >= 3, 'ni en los frenos queda el número de la cuenta: solo su huella de ese día');
+  ok(r.s === 429 && r.j.tope === 'dia', `/ligas pasado el tope del día: ${r.s} ${r.t}`);
+  await objL({ op: 'pago', l: hl(71), uid: '7005', xs: [] });
+  r = await pL('/ligas', { l: hl(72), m: [[710, 1]] }, 5);
+  ok(r.s === 429 && r.j.tope === 'ligas', `/ligas con una tercera liga de la misma cuenta: ${r.s} ${r.t}`);
+  ok(topesBien() && sqlL("SELECT COUNT(*) AS c FROM tope WHERE k LIKE 'u|%'")[0].c >= 3, 'ni en los frenos ni en las ligas de cada cuenta queda su número: solo su huella');
 
   // 9) /ligas/medida: solo el dueño; sin huellas de dentro ni la sal
   r = await pL('/ligas/medida', null, 3, 'GET');
   ok(r.s === 403, `/ligas/medida no es para cualquiera: ${r.s}`);
   r = await pL('/ligas/medida', null, 0, 'GET');
   const lgs = sqlL('SELECT DISTINCT lg FROM pago').map((x) => x.lg);
-  ok(r.s === 200 && r.j.pago.length === sqlL('SELECT COUNT(*) AS c FROM pago WHERE dia >= ?', r.j.desde)[0].c && r.j.dem.some((x) => x[1] === 600 && x[2] === 8 && x[3] === 8 && x[4] === 32) && r.j.cla.length === 3 && r.j.hay.pago.c > 0, `/ligas/medida para el dueño: lo pagado, la demanda por día y jugador y las cláusulas (${r.s})`);
+  ok(r.s === 200 && r.j.pago.length === sqlL('SELECT COUNT(*) AS c FROM pago WHERE dia >= ?', r.j.desde)[0].c && r.j.pago.every((x) => x.length === 9 && x[8] === hoyQ()) && r.j.dem.some((x) => x[1] === 600 && x[2] === 8 && x[3] === 8 && x[4] === 32) && r.j.cla.length === 3 + L.CLA_LIGA_DIA && r.j.cla.every((x) => x.length === 11 && /^[0-9a-f]{10}$/.test(x[9])) && r.j.cla.some((x) => x[10] === 6) && new Set(r.j.cla.map((x) => x[9])).size === 2 && r.j.hay.pago.c > 0, `/ligas/medida para el dueño: lo pagado (con el día que llegó), la demanda por día y jugador y las cláusulas (con su liga, por alias, y sus horas) (${r.s})`);
   ok(!r.t.includes(sal) && !lgs.some((x) => r.t.includes(x)) && new Set(r.j.pago.map((x) => x[6])).size === new Set(sqlL('SELECT lg FROM pago WHERE dia >= ?', r.j.desde).map((x) => x.lg)).size, 'la medida agrupa por liga con otro alias: ni la huella de dentro ni la sal salen del objeto');
 
   // 10) lo caducado se borra al día siguiente de caducar; lo de hoy sigue
-  const nP = sqlL('SELECT COUNT(*) AS c FROM pago')[0].c;
+  const nP = sqlL('SELECT COUNT(*) AS c FROM pago')[0].c, nC = sqlL('SELECT COUNT(*) AS c FROM cta')[0].c;
   dbL().prepare('INSERT INTO pago (h, dia, pid, lg, s, v, r, top) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run('viejo', L.otroDia(hoyQ(), -L.PAGO_DIAS - 2), 1, 'x', 0, 1e6, null, 0);
   dbL().prepare('INSERT INTO dem (dia, pid, lg, n, mx, t0, t) VALUES (?, ?, ?, ?, ?, ?, ?)').run(L.otroDia(hoyQ(), -L.DEM_DIAS - 2), 1, 'x', 0, 0, 1, 1);
   dbL().prepare('INSERT INTO cla (h, dia, v, cs, r, pos, tit, ida, bl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run('vieja', L.otroDia(hoyQ(), -L.CLA_DIAS - 2), 1e6, 0, null, 1, null, 0, 0);
   desfase += 864e5;
-  await objL({ op: 'ver', l: hl(9), ids: [500], pagado: true });
-  ok(sqlL("SELECT COUNT(*) AS c FROM pago WHERE h = 'viejo'")[0].c === 0 && sqlL("SELECT COUNT(*) AS c FROM dem WHERE lg = 'x'")[0].c === 0 && sqlL("SELECT COUNT(*) AS c FROM cla WHERE h = 'vieja'")[0].c === 0 && sqlL('SELECT COUNT(*) AS c FROM tope')[0].c === 0 && sqlL('SELECT COUNT(*) AS c FROM pago')[0].c === nP, 'lo caducado y los frenos de ayer se borran al cambiar de día; lo demás sigue');
+  await objL({ op: 'ver', l: hl(9), uid: '1', ids: [500], pagado: true });
+  ok(sqlL("SELECT COUNT(*) AS c FROM pago WHERE h = 'viejo'")[0].c === 0 && sqlL("SELECT COUNT(*) AS c FROM dem WHERE lg = 'x'")[0].c === 0 && sqlL("SELECT COUNT(*) AS c FROM cla WHERE h = 'vieja'")[0].c === 0 && sqlL('SELECT COUNT(*) AS c FROM tope')[0].c === 0 && sqlL('SELECT COUNT(*) AS c FROM pago')[0].c === nP && sqlL('SELECT COUNT(*) AS c FROM cta')[0].c === nC, 'lo caducado y los frenos de ayer se borran al cambiar de día; lo demás (y las ligas de cada cuenta, que duran 7 días) sigue');
+  // (al día siguiente la cuenta de las 2 ligas sigue sin poder con una tercera: el tope es de 7 días, no de un día)
+  ok((await objL({ op: 'pago', l: hl(69), uid: '8600', xs: [] })).tope === 'ligas' && (await objL({ op: 'apunte', l: hl(50), uid: '8500', m: [[700, 1]] })).ok, 'al día siguiente: los envíos del día vuelven a caber, pero una tercera liga de la misma cuenta, no');
   // ayer y hoy en la demanda: lo de ayer sale en el segundo sitio
   for (let n = 20; n < 28; n++) await objL({ op: 'apunte', l: hl(n), uid: String(8000 + n), m: [[600, 0], [601, 6], ...Array.from({ length: 10 }, (_, i) => [602 + i, 0])] });
-  r = await pL('/ligas/ver', { l: hl(9), ids: [600, 601] }, 3);
+  r = await lee(9, [600, 601]);
   ok(r.j.d['600'][0] === 1 && r.j.d['600'][1] === 3 && r.j.d['601'][0] === 3, `la demanda de hoy y la de ayer, cada una en su sitio (${JSON.stringify(r.j.d)})`);
+  // pasados los 7 días sin mandar nada de una liga, deja de contar para esa cuenta: cabe otra, y ya no se lee con la vieja
+  desfase += 864e5 * (L.LIGAS_CUENTA_DIAS + 1);
+  const r5 = await pL('/ligas/ver', { l: hl(9), ids: [600] }, 109);
+  ok((await objL({ op: 'pago', l: hl(69), uid: '8600', xs: [] })).ok && r5.j.falta === true && sqlL('SELECT COUNT(*) AS c FROM cta WHERE dia <= ?', L.otroDia(hoyQ(), -L.LIGAS_CUENTA_DIAS - 1))[0].c === 0, `a los ${L.LIGAS_CUENTA_DIAS} días sin mandar nada de una liga, ya no cuenta para esa cuenta (ni para mandar ni para leer) y se borra`);
 
   // 11) sin el objeto, 503; y una petición rara al objeto no rompe nada
   r = await pide({ ruta: '/ligas', cuerpo: { l: hl(1), m: [[500, 1]] }, tk: tkL(1), ip: '10.9.9.9', e: { VINCULOS: KV, ADMINS: '667015' } });
   ok(r.s === 503, `/ligas sin objeto: ${r.s}`);
-  ok((await objL({ op: 'otra', l: hl(1), uid: '1' })).ok === false && (await objL({ op: 'pago', l: 'no', uid: '1', xs: [] })).ok === false && (await objL({ op: 'apunte', l: hl(1), uid: 'x', m: [[1, 1]] })).ok === false, 'el objeto rechaza lo que no entiende');
+  ok((await objL({ op: 'otra', l: hl(1), uid: '1' })).ok === false && (await objL({ op: 'pago', l: 'no', uid: '1', xs: [] })).ok === false && (await objL({ op: 'apunte', l: hl(1), uid: 'x', m: [[1, 1]] })).ok === false && (await objL({ op: 'ver', l: hl(1), ids: [1] })).ok === false, 'el objeto rechaza lo que no entiende (y leer sin cuenta)');
   globalThis.fetch = fAntes;
 }

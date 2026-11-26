@@ -24,7 +24,7 @@ import { estadoLimite, novedadesPara, importantesPara, bloqueada, otrasLigasCfg,
 import { jornadaJugadorHTML } from './directo.js';
 import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
-import { pagadoTxt, demandaTxt } from './otras-ligas.js';
+import { pagadoTxt, demandaTxt, otrasTxt } from './otras-ligas.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
@@ -68,16 +68,14 @@ export function quienPujaHTML(S, m) {
 
 /* (26 nov) Lo de las demás ligas que usan la app, en la ficha de un libre del mercado: lo pagado por él en 3 días y su nivel
    de demanda (otras-ligas.js). APAGADO mientras «otrasLigas» de limites.json no lo encienda: entonces no sale nada, ni se
-   pide. Nunca con lo leído para otra liga tuya, ni con algo de hace más de medio día. No toca la puja de la app: es un dato */
+   pide. Nunca con lo leído para otra liga tuya, ni con algo de hace más de medio día o de otro día (lo de «hoy» y «ayer» ya
+   sería otro). No toca la puja de la app: es un dato. UNA tarjeta con una línea, sin nada que desplegar (Carlos, 26 nov:
+   «textos más reducidos y mejor integrados… tampoco 60 pestañas para cada texto») */
 export function otrasLigasHTML(S, m) {
   const on = otrasLigasCfg(), ot = S.otras;
-  if ((!on.pagado && !on.demanda) || !ot || !m || m.tipo === 'manager' || !S.D || !S.D.liga || ot.liga !== S.D.liga.id || Date.now() - num(ot.t) > DIA / 2) return '';
-  let h = '';
-  const pg = on.pagado ? pagadoTxt(ot.p && ot.p[m.pid], num(m.j && m.j.valor)) : null;
-  if (pg) h += aviso(S, { k: 'otras-pagado', pid: m.pid, cls: 'azul', ico: 'mercado', t: 'Lo pagado en otras ligas', l: pg.l, d: parrafos(...pg.d) });
-  const dm = on.demanda ? demandaTxt(ot.d && ot.d[m.pid]) : null;
-  if (dm) h += aviso(S, { k: 'otras-demanda', pid: m.pid, cls: 'azul', ico: 'rayo', t: 'Demanda en otras ligas', l: dm.l, d: parrafos(...dm.d) });
-  return h;
+  if ((!on.pagado && !on.demanda) || !ot || !m || m.tipo === 'manager' || !S.D || !S.D.liga || ot.liga !== S.D.liga.id || Date.now() - num(ot.t) > DIA / 2 || ot.dia !== diaDe()) return '';
+  const l = otrasTxt(on.pagado ? pagadoTxt(ot.p && ot.p[m.pid]) : null, on.demanda ? demandaTxt(ot.d && ot.d[m.pid]) : null);
+  return l ? aviso(S, { k: 'otras', pid: m.pid, cls: 'azul', ico: 'grafico', t: 'En otras ligas', l }) : '';
 }
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
@@ -1797,9 +1795,9 @@ export function textoDiagnostico(S) {
     // (26 nov) lo que se manda de la liga para lo de todas las ligas (otras-ligas.js) y si se enseña algo
     (() => {
       if (!D || !D.liga || enDemo()) return 'Otras ligas: nada (liga de ejemplo o sin liga)';
-      const e = LS.get(K('ligas-env'), null), ap = LS.get(K('ligas-aperturas'), {}), c = LS.get(K('pujas-mandadas'), null), o = otrasLigasCfg();
+      const e = LS.get(K('ligas-env'), null), ap = LS.get(K('ligas-aperturas'), {}), c = LS.get(K('pujas-mandadas'), null), ah = LS.get(K('acthist'), null), o = otrasLigasCfg();
       const manda = !mejorarIA() ? 'no se manda nada («Ayudar a mejorar la IA», apagado)'
-        : `último envío ${e && e.t ? `${cuando(e.t)} (${e.dia === diaDe() ? e.n || 0 : 0} hoy)` : 'ninguno'}${e && e.mal ? ` · falló ${cuando(e.mal)}` : ''} · ${Object.keys(ap || {}).length} cláusulas apuntadas · compras ${c && c.jug ? 'con jugador' : 'aún sin jugador'}`;
+        : `último envío ${e && e.t ? `${cuando(e.t)} (${e.dia === diaDe() ? e.n || 0 : 0} hoy)` : 'ninguno'}${e && e.mal ? ` · falló ${cuando(e.mal)}` : ''}${e && e.tope && e.dia === diaDe() ? ` · por hoy no cabe más (${e.tope === 'ligas' ? 'esta cuenta ya manda de 2 ligas' : e.tope === 'ajena' ? 'LaLiga no da esta liga como de esta cuenta' : 'los envíos del día'})` : ''} · ${Object.keys(ap || {}).length} cláusulas apuntadas · compras ${c && c.jug ? 'con jugador' : 'aún sin jugador'} · movimientos sin huecos ${ah && ah.seguido ? `desde ${cuando(ah.seguido)}` : 'aún no se sabe'}`;
       return `Otras ligas: ${manda} · se enseña: ${[o.pagado ? 'lo pagado' : '', o.demanda ? 'la demanda' : ''].filter(Boolean).join(' y ') || 'nada'}`;
     })(),
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),

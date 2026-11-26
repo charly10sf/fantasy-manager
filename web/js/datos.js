@@ -68,7 +68,9 @@ try { window.addEventListener('storage', (e) => { if (!e.key || /^fm-hist(-|$)/.
 
 /* ---------- el historial de movimientos de la liga, guardado aparte (para el dinero de los rivales) ---------- */
 const claveAct = (a) => a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}`;
-/** { liga, lista (lo viejo sin el texto), completa (llega al principio de la liga), desde, profundo } */
+/** { liga, lista (lo viejo sin el texto), completa (llega al principio de la liga), desde, profundo, seguido, hasta, nueva }.
+    (26 nov) `seguido` y `hasta`: desde cuándo y hasta cuándo lo guardado está SIN HUECOS (null si no se sabe). Lo usa lo de
+    las cláusulas que se abren (otras-ligas.js): con un hueco en medio no se puede decir «no se lo llevaron» */
 export function actHist(ligaId) {
   const h = LS.get(K('acthist'), null);
   if (!h || (ligaId && h.liga !== ligaId)) return { liga: ligaId || null, lista: [], completa: false, desde: null, profundo: null };
@@ -83,7 +85,31 @@ function entraronTodos(lista, equipos) {
   const entro = (e) => [e.userId, e.managerId].some((x) => x && ids.has(x)) || (e.manager && nombres.has(norm(e.manager)));
   return equipos.length > 1 && equipos.every(entro);
 }
-function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, equipos = []) {
+/**
+ * (26 nov) desde cuándo y hasta cuándo queda SIN HUECOS la actividad guardada después de una lectura: { seguido, hasta, nueva }.
+ * AH: lo guardado antes ({ seguido, hasta, nueva }); leida: { bien (la lectura ha salido entera), t (cuándo empezó, hora del
+ * móvil), masVieja y masNueva (el movimiento más viejo y el más nuevo de las páginas leídas seguidas desde la primera, hora
+ * de LaLiga), fin (esas páginas han llegado al principio de la liga) }; desde: el movimiento más viejo que queda guardado.
+ * Lo leído ahora va seguido desde `masVieja` hasta ahora. Si llega hasta el movimiento más nuevo de la lectura anterior
+ * (`nueva`: las dos horas son de LaLiga, así que un reloj del móvil adelantado no engaña), lo seguido de antes sigue
+ * valiendo; si no llega, solo vale lo de ahora (hay un hueco en medio). Si la lectura falla, ya no se sabe (null) hasta la
+ * próxima que salga bien. `hasta` (hora del móvil) dice hasta cuándo se ha mirado.
+ */
+export function seguidoTras(AH, leida, desde) {
+  let seguido = null, hasta = (AH && AH.hasta) || null, nueva = (AH && AH.nueva) || null;
+  if (leida && leida.bien) {
+    const mv = leida.masVieja > 0 ? leida.masVieja : null;
+    const enlaza = mv != null && !!AH && AH.seguido > 0 && AH.nueva > 0 && mv <= AH.nueva;
+    if (leida.fin) seguido = mv != null ? mv : leida.t;
+    else seguido = enlaza ? AH.seguido : mv;
+    hasta = leida.t || Date.now();
+    nueva = Math.max(leida.masNueva > 0 ? leida.masNueva : 0, enlaza || leida.fin ? (AH && AH.nueva) || 0 : 0) || null;
+  }
+  // (de lo guardado solo quedan los 4.000 últimos: lo seguido no puede empezar antes)
+  if (seguido != null && desde != null && seguido < desde) seguido = desde;
+  return { seguido, hasta, nueva };
+}
+function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, equipos = [], leida = null) {
   const m = new Map();
   for (const a of AH.lista) m.set(claveAct(a), a);
   for (const a of nuevas) { const { texto, ...resto } = a; m.set(claveAct(a), resto); }
@@ -91,11 +117,15 @@ function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, equipos = []) {
   const desde = lista.length ? Math.min(...lista.map((a) => a.t || Date.now())) : null;
   // también está completo si sale cuándo entró cada uno de los que siguen en la liga
   const completa = AH.completa || llegoAlFinal || entraronTodos(lista, equipos);
-  const h = { liga: ligaId, lista, completa, desde, profundo: AH.profundo || null, pagina: completa ? 0 : AH.pagina || 0, v: 2, t: Date.now() };
+  const { seguido, hasta, nueva } = seguidoTras(AH, leida, desde);
+  const h = { liga: ligaId, lista, completa, desde, profundo: AH.profundo || null, pagina: completa ? 0 : AH.pagina || 0, v: 2, t: Date.now(), seguido, hasta, nueva };
   // si no cabe, se quitan los campos que no hacen falta para las cuentas antes que movimientos
   if (!LS.set(K('acthist'), h)) {
     const ligera = lista.map(({ id, t, clase, quienId, quien, otroId, otro, pid, importe }) => ({ id, t, clase, quienId, quien, otroId, otro, pid, importe }));
-    if (!LS.set(K('acthist'), { ...h, lista: ligera })) LS.set(K('acthist'), { ...h, lista: ligera.slice(0, 1500), completa: false });
+    if (!LS.set(K('acthist'), { ...h, lista: ligera })) {
+      const corta = ligera.slice(0, 1500), d2 = corta.length ? Math.min(...corta.map((a) => a.t || Date.now())) : null;
+      LS.set(K('acthist'), { ...h, lista: corta, completa: false, seguido: seguido != null && d2 != null ? Math.max(seguido, d2) : null });
+    }
   }
   return h;
 }
@@ -344,7 +374,10 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
   if (AH.completa && AH.v !== 2 && !entraronTodos(AH.lista, clasif)) { AH.completa = false; AH.profundo = null; }
   const conocidos = new Set(AH.lista.map(claveAct));
   let llegoAlFinal = false;
-  await blando('actividad', async () => {
+  // (para saber si lo guardado queda sin huecos: lo más viejo de las páginas leídas seguidas desde la primera)
+  const actT = Date.now();
+  let actVieja = null, actNueva = null, actFin = false;
+  const actBien = await blando('actividad', async () => {
     // a fondo solo una vez por semana si no se llegó al principio (son muchas páginas)
     const aFondo = !AH.completa && !(AH.profundo && Date.now() - AH.profundo < 7 * DIA);
     if (aFondo) AH.profundo = Date.now();
@@ -355,15 +388,17 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
       const r = await A.actividad(liga.id, i);
       if (i === 0) muestras.actividad = recorte(r);
       const pag = N.actividad(r);
-      if (!pag.length) { llegoAlFinal = true; break; }
+      if (!pag.length) { llegoAlFinal = true; actFin = true; break; }
       act.push(...pag);
-      if (aFondo) continue;
       const masVieja = Math.min(...pag.map((a) => a.t || Date.now()));
+      actVieja = actVieja == null ? masVieja : Math.min(actVieja, masVieja);
+      if (actNueva == null) actNueva = Math.max(...pag.map((a) => a.t || 0));
+      if (aFondo) continue;
       // ya se tenía guardado lo de esta página: no hace falta seguir
       if (pag.some((a) => conocidos.has(claveAct(a))) && Date.now() - masVieja > 2 * DIA) break;
       if (Date.now() - masVieja > 21 * DIA) break;
     }
-    if (!aFondo || llegoAlFinal) return;
+    if (!aFondo || llegoAlFinal) return true;
     // a fondo: 50 páginas más desde donde se quedó la vez anterior (antes empezaba siempre de cero y en ligas largas
     // no pasaba de la 50). Lo viejo solo se mueve hacia páginas más altas, así que retomar ahí no deja huecos
     const desde = Math.max(i, AH.pagina || 0);
@@ -374,11 +409,12 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
       act.push(...pag);
       AH.pagina = p + 1;
     }
+    return true;
   });
   // sin repetidos y lo nuevo arriba
   const vistos = new Set();
   act = act.filter((a) => { const k = claveAct(a); if (vistos.has(k)) return false; vistos.add(k); return true; }).sort((a, b) => (b.t || 0) - (a.t || 0));
-  guardarActHist(liga.id, AH, act, llegoAlFinal, clasif);
+  guardarActHist(liga.id, AH, act, llegoAlFinal, clasif, { bien: actBien === true, t: actT, masVieja: actVieja, masNueva: actNueva, fin: actFin });
 
   alPaso(9, PASOS[9]);
   // las subidas y bajadas de cada jugador (de una web de fuera): si no contesta, las que se leyeron antes ese mismo
@@ -553,7 +589,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 /* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
-const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'pujas-vistas', 'quien-visto', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'ligas-aperturas', 'ligas-env', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'otras-ligas', 'planes', 'previs', 'pts-jornadas', 'pujas-vistas', 'quien-visto', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
 // para hacer sitio con el almacenamiento lleno (util.js, A8): qué es de cada liga y cuál es la de ahora
 fijarSitio({ sufijo: () => K(''), deLiga: DE_LA_CUENTA });
 const borrarClaves = (lista) => {

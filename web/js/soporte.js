@@ -171,10 +171,11 @@ const huella24 = async (texto) => [...new Uint8Array(await crypto.subtle.digest(
 export const huellaLiga = (liga) => huella24(`fm-liga|${liga}`);
 /** la huella de una cláusula que se abrió (liga|jugador|hasta cuándo estaba protegida): solo para no contarla dos veces */
 export const huellaApertura = (liga, pid, base) => huella24(`fm-cla|${liga}|${pid}|${base}`);
-/** manda los libres del mercado con sus pujas y las cláusulas que se abrieron, sin nombres (si el usuario lo deja); true si entra */
+/** manda los libres del mercado con sus pujas y las cláusulas que se abrieron, sin nombres (si el usuario lo deja): true si
+    entra, { tope } si el servidor dice que por hoy ya está (no se insiste hasta mañana) y false si falla */
 export async function mandarLigas(cuerpo) {
   if (!mejorarIA() || !cuerpo || !cuerpo.l) return false;
-  try { await pedirWorker('POST', '/ligas', cuerpo, { tiempo: 15000 }); return true; } catch (e) { return false; }
+  try { await pedirWorker('POST', '/ligas', cuerpo, { tiempo: 15000 }); return true; } catch (e) { return e && e.estado === 429 && e.datos && e.datos.tope ? { tope: String(e.datos.tope) } : false; }
 }
 /** lo pagado en las demás ligas de la misma clase (`t`) y la demanda de esos jugadores: { on, p, d } (lanza si no contesta) */
 export const verOtrasLigas = (l, t, ids) => pedirWorker('POST', '/ligas/ver', { l, t, ids }, { tiempo: 15000 });
