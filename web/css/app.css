@@ -1748,6 +1748,7 @@ body.limitado .tostada { z-index: 120; }
 .cf-cab { padding: 0 2px 7px 0; font: 600 var(--t-mini) 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
 .cf-cab span:nth-child(n+5) { text-align: right; }
 .cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol, .cf-cab .cf-casa, .cf-cab .cf-fuera, .club-f .cf-casa, .club-f .cf-fuera { display: none; }
+.cf-cab :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero), .club-f :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero) { display: none; }
 .club-f { position: relative; width: 100%; padding: 11px 2px 11px 0; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
   grid-template-areas: "kit pos esc n pj dg pts" "kit pos esc s s s s";
   --eu: transparent; --eu-f: transparent; background: linear-gradient(90deg, var(--eu-f), transparent 62%); transition: background-color 0.15s; }
@@ -1786,6 +1787,17 @@ body.limitado .tostada { z-index: 120; }
 .escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg casa fuera pts" "kit pos esc s forma pj gep gol dg casa fuera pts"; padding: 12px 6px 12px 0; }
 .escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol, .escritorio .cf-cab .cf-casa, .escritorio .cf-cab .cf-fuera { display: block; }
 .escritorio .club-f .cf-casa { display: block; grid-area: casa; } .escritorio .club-f .cf-fuera { display: block; grid-area: fuera; }
+/* (26 nov, Carlos: «añade más datos a la clasificación, los típicos de una tabla de liga») con 1500 px o más: G, E y P y GF y GC
+   por separado, puntos por partido y partidos sin encajar */
+@media (min-width: 1500px) {
+  .escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 26px 26px 26px 34px 34px 38px 44px 44px 46px 50px 38px; column-gap: 12px; }
+  .escritorio .club-f { grid-template-areas: "kit pos esc n forma pj g e p gf gc dg casa fuera ppp cero pts" "kit pos esc s forma pj g e p gf gc dg casa fuera ppp cero pts"; }
+  .escritorio .club-lista :is(.cf-cab, .club-f) :is(.cf-gep, .cf-gol) { display: none; }
+  .escritorio .cf-cab :is(.cf-g, .cf-e, .cf-p, .cf-gf, .cf-gc, .cf-ppp, .cf-cero) { display: block; }
+  .escritorio .club-f .cf-g { display: block; grid-area: g; } .escritorio .club-f .cf-e { display: block; grid-area: e; } .escritorio .club-f .cf-p { display: block; grid-area: p; }
+  .escritorio .club-f .cf-gf { display: block; grid-area: gf; } .escritorio .club-f .cf-gc { display: block; grid-area: gc; }
+  .escritorio .club-f .cf-ppp { display: block; grid-area: ppp; } .escritorio .club-f .cf-cero { display: block; grid-area: cero; }
+}
 .escritorio .club-f .cf-forma { display: flex; grid-area: forma; justify-content: flex-end; }
 .escritorio .club-f .cf-gep { display: block; grid-area: gep; } .escritorio .club-f .cf-gol { display: block; grid-area: gol; }
 .escritorio .club-f:hover { background-color: var(--plano); }
