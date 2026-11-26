@@ -3199,7 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136743685": 1795440168000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000,
    "SPORT|136763275": 1795450330000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/oyono-vuelve-plan-terzic-sesion-berenguer-yuri-yeray.html": 1795454061000,
@@ -4695,7 +4694,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
    "SPORT|136761298": 1795445632000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000,
@@ -4733,32 +4731,7 @@
    "SPORT|136876189": 1795689597000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/26/confirmacion-oficial-mestalla-acogera-partido-136879209.html": 1795696482000
   },
-  "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html",
-    "medio": "Mundo Deportivo",
-    "t": 1795440300000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 16,
-    "jTxt": true,
-    "clubes": [
-     "2",
-     "18"
-    ],
-    "luto": false,
-    "oficial": false,
-    "contexto": "LaLiga ha publicado los horarios de la jornada 16",
-    "detalle": "",
-    "nums": [
-     16,
-     2026,
-     13,
-     14
-    ]
-   }
-  ],
+  "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
    "n": 5,
@@ -9858,13 +9831,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6631,
+   "ok": 6632,
    "fallos": 0,
-   "ejecuciones": 5410,
+   "ejecuciones": 5411,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T13:21:11.283Z"
+   "ultima": "2026-11-26T13:26:21.900Z"
   }
  },
  "ptsDirecto": {},
@@ -9881,15 +9854,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:21:26.175Z"
+   "ultimaBien": "2026-11-26T13:26:34.271Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:21:26.175Z"
+   "ultimaBien": "2026-11-26T13:26:34.271Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:21:26.175Z"
+   "ultimaBien": "2026-11-26T13:26:34.271Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9897,11 +9870,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:21:26.175Z"
+   "ultimaBien": "2026-11-26T13:26:34.271Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T13:21:26.175Z"
+   "ultimaBien": "2026-11-26T13:26:34.271Z"
   }
  },
  "avisos": [
