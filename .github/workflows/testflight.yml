@@ -254,10 +254,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ID=$(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 10 --json databaseId -q '.[].databaseId' | while read -r r; do
-            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda; then echo "$r"; break; fi; done)
+          # la más reciente que trae las cinco buenas de los dos tamaños (una con una prueba fallida trae «fallo.png»)
+          ID=""
+          for r in $(gh run list -R "$GITHUB_REPOSITORY" -w ios.yml -b ios -s success -L 15 --json databaseId -q '.[].databaseId'); do
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$r/artifacts" -q '.artifacts[].name' | grep -qx ios-tienda || continue
+            rm -rf "$RUNNER_TEMP/capturas"; gh run download "$r" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas" || continue
+            if [ "$(ls "$RUNNER_TEMP/capturas/61" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ] && [ "$(ls "$RUNNER_TEMP/capturas/67" 2> /dev/null | grep -cE '^[0-9]+-')" -ge 5 ]; then ID=$r; break; fi
+            echo "la ejecución $r no trae las cinco de cada tamaño: la siguiente"
+          done
           if [ -n "$ID" ]; then
-            gh run download "$ID" -R "$GITHUB_REPOSITORY" -n ios-tienda -D "$RUNNER_TEMP/capturas"
             echo "CAPTURAS=$RUNNER_TEMP/capturas" >> "$GITHUB_ENV"
             echo "capturas de la ejecución $ID:"; find "$RUNNER_TEMP/capturas" -name '*.png' | sort
           else

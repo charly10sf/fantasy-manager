@@ -238,8 +238,9 @@ async function capturas(vl) {
   const sets = await todo(`/v1/appStoreVersionLocalizations/${vl.id}/appScreenshotSets?limit=50`);
   for (const [sub, tipo] of [['61', 'APP_IPHONE_61'], ['67', 'APP_IPHONE_67']]) {
     const d = path.join(dir, sub);
-    const archivos = fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /\.(png|jpe?g)$/i.test(f)).sort().slice(0, 10) : [];
-    if (!archivos.length) { console.log(`capturas ${tipo}: ninguna en ${sub}/`); continue; }
+    // solo las de la prueba Tienda («1-hoy.png»…): nunca la de un fallo («fallo.png»); sin las cinco, no se toca ese tamaño
+    const archivos = fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /^\d+-[a-z]+\.(png|jpe?g)$/i.test(f)).sort().slice(0, 10) : [];
+    if (archivos.length < 5) { console.log(`capturas ${tipo}: ${archivos.length} buenas en ${sub}/; no se tocan las que hay`); continue; }
     let set = sets.find((s) => s.attributes.screenshotDisplayType === tipo);
     if (!set) set = (await api('POST', '/v1/appScreenshotSets', { data: { type: 'appScreenshotSets', attributes: { screenshotDisplayType: tipo }, relationships: { appStoreVersionLocalization: { data: { type: 'appStoreVersionLocalizations', id: vl.id } } } } })).data;
     for (const viejo of await todo(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=50`)) await api('DELETE', `/v1/appScreenshots/${viejo.id}`);
