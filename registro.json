@@ -4748,32 +4748,31 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/suspenden-besiktas-hapoel-beer-sheva-europa-league-batalla-campal-pancartas-apoyo-palestina-20261126_3483274.html": 1795720025000,
    "SPORT|136894988": 1795715585000,
    "SPORT|136892989": 1795715495000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 14,
+   "n": 15,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795726280340
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 24,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 227518,
-  "salida": 27461,
+  "entrada": 229252,
+  "salida": 27547,
   "cacheLee": 126777,
   "cacheEscribe": 57099,
-  "dolares": 0.54386,
+  "dolares": 0.544076,
   "reservado": 0
  },
  "recientes": {
@@ -9831,13 +9830,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6726,
+   "ok": 6727,
    "fallos": 0,
-   "ejecuciones": 5505,
+   "ejecuciones": 5506,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T21:11:15.036Z"
+   "ultima": "2026-11-26T21:16:12.342Z"
   }
  },
  "ptsDirecto": {},
@@ -9854,15 +9853,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:11:21.136Z"
+   "ultimaBien": "2026-11-26T21:16:18.062Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:11:21.136Z"
+   "ultimaBien": "2026-11-26T21:16:18.062Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:11:21.136Z"
+   "ultimaBien": "2026-11-26T21:16:18.062Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9870,11 +9869,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:11:21.136Z"
+   "ultimaBien": "2026-11-26T21:16:18.062Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:11:21.136Z"
+   "ultimaBien": "2026-11-26T21:16:18.062Z"
   }
  },
  "avisos": [
