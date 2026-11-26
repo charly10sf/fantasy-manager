@@ -147,6 +147,23 @@ export async function medirParte(B, datos, ctx, opc = {}) {
     if (a.o) { if (!esCz(a)) tratos.push({ s: a.imp / v - 1, conHueco, v, yo: a.q === P.yo || a.o === P.yo, eraSobrante: !!(foto && foto[a.o] && (foto[a.o].sob[p] || []).includes(a.pid)), eraTitular: !!(foto && foto[a.o] && foto[a.o].tit && foto[a.o].tit.has(a.pid)) }); }
     else if (a.q !== P.yo) mercado.push({ s: a.imp / v - 1, conHueco, v });
   }
+  // la reventa de verdad: cada compra al mercado (de cualquiera) de un puesto que ese día le faltaba a OTRO mánager: ¿acabó
+  // vendiéndoselo a ese en 10 días?, ¿a otro mánager?, ¿a LaLiga?, y cuánto ganó o perdió sobre lo que pagó
+  const directa = { con: [], sin: [] };
+  for (const c of evs) {
+    if (c.clase !== 'compra' || c.o || !c.q || !c.imp || c.t < dia0 || c.t > dia1 - 10 * DIA) continue;
+    const p = pos(c.pid), foto = fotoAntes(c.t);
+    if (!p || p > 4 || !foto) continue;
+    const cortos = rivales.filter((t) => t !== c.q && foto[t] && num(foto[t].falta[p]) > 0);
+    const sig = evs.find((b) => b.t > c.t && b.t <= c.t + 10 * DIA && b.pid === c.pid && ((b.clase === 'venta' && b.q === c.q) || (b.clase !== 'venta' && b.o === c.q)));
+    const fila = { g: sig ? sig.imp / c.imp - 1 : null, gM: sig ? (sig.imp - c.imp) / 1e6 : null, v: c.imp,
+      como: !sig ? 'se-queda' : sig.clase === 'venta' ? 'liga' : esCz(sig) ? 'clausulado' : cortos.includes(sig.q) ? 'al-corto' : 'otro-manager' };
+    (cortos.length ? directa.con : directa.sin).push(fila);
+  }
+  const resD = (l) => {
+    const de = (k) => l.filter((x) => x.como === k), g = (k) => { const y = de(k); return { n: y.length, medG: r3(q(y.map((x) => x.g), 0.5)), medM: r2(q(y.map((x) => x.gM), 0.5)), pierden: y.filter((x) => x.g < 0).length }; };
+    return { n: l.length, alCorto: g('al-corto'), otroManager: g('otro-manager'), liga: g('liga'), clausulado: g('clausulado'), seQueda: de('se-queda').length };
+  };
   const resS = (l) => (l.length ? { n: l.length, p25: r3(q(l.map((x) => x.s), 0.25)), med: r3(q(l.map((x) => x.s), 0.5)), p75: r3(q(l.map((x) => x.s), 0.75)), bajoValor: l.filter((x) => x.s < 0).length, mas5: l.filter((x) => x.s >= 0.05).length, mas10: l.filter((x) => x.s >= 0.1).length } : { n: 0 });
   const caros = (l) => l.filter((x) => x.v >= 5e6);
 
@@ -170,6 +187,7 @@ export async function medirParte(B, datos, ctx, opc = {}) {
     sobra: Object.fromEntries(Object.entries(sobra).map(([k, l]) => [k, { sale7: tasa(l, (x) => x.sale), aManager7: tasa(l, (x) => x.aManager), clausulado7: tasa(l, (x) => x.cz) }])),
     reventa: {
       tratos: { todos: resS(tratos), sinYo: resS(tratos.filter((x) => !x.yo)), conHueco: resS(tratos.filter((x) => x.conHueco)), sinHueco: resS(tratos.filter((x) => !x.conHueco)), de5M: resS(caros(tratos)), eraSobrante: tratos.filter((x) => x.eraSobrante).length, eraTitular: tratos.filter((x) => x.eraTitular).length },
+      directa: { conOtroCorto: resD(directa.con), sinNadieCorto: resD(directa.sin) },
       mercado: { todos: resS(mercado), conHueco: resS(mercado.filter((x) => x.conHueco)), sinHueco: resS(mercado.filter((x) => !x.conHueco)), de5M: resS(caros(mercado)), de5MConHueco: resS(caros(mercado.filter((x) => x.conHueco))) },
     },
     blindajes: { rivalJornada: blind },
