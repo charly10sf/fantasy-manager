@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4q';
+export const VERSION = '0.8.4r';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,20 @@ export const VERSION = '0.8.4q';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, 04:47, Carlos: «¿por qué cada vez que publico una versión que no es de la Play Store sale un aviso para que la
+    // actualice? ¿No se podría hacer de forma automática?»; claude/prompt-actualizar-solo.md del proyecto) la versión nueva se
+    // pone sola, sin la ventana: `nuevaSola`, `intentarSola` y `aMedias` en app.js (en la web, recargarWeb; en la app de Play
+    // y de iOS, AlDia con nativo.buscarWeb). Espera si hay algo a medias (pregunta o plan de la IA, escribiendo, una hoja
+    // para apuntar, un anuncio, el tutorial) o a que la app se vaya a segundo plano; la ventana de siempre, de reserva: tras 2
+    // intentos que no cambian la versión (LS «nueva-sola»), si AlDia falla o tras ESPERA_SOLA (3 h) esperando. Vuelve a la
+    // misma pestaña, ficha y scroll (LS «tras-recarga»). Las webs de antes enseñan la ventana una última vez (es la que pone
+    // esta). Pruebas: el bloque 13 de .github/prueba-web.mjs y el 5 de .github/prueba-ios.mjs
+    v: '0.8.4r', f: '2026-11-26', h: '05:31', t: 'Las versiones nuevas, solas',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'versiones', menor: true, t: 'Las versiones nuevas se ponen solas', x: 'Cuando sale una versión nueva ya no sale la ventana de «Hay una versión nueva»: se pone sola en un momento en que no estés haciendo nada (o al salir de la app) y vuelves a la misma pantalla. Si estás preguntando a la IA, escribiendo o apuntando algo, espera a que acabes. Si no se puede poner sola, sale la ventana de siempre.' },
+    ],
+  },
   {
     // (26 nov, 04:18, Carlos: «solo salen 10 ligas y 2 jugadores en todas… uno ha invitado a 2 amigos, tendrían que salir
     // mínimo 3») cada cuenta mandaba solo la liga que tenía abierta, y quien está en varias salía en otra (el que invitó a dos:

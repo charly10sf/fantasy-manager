@@ -43,7 +43,7 @@ import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './t
 import { cambiarFav } from './favoritos.js';
 import { registrarPujas } from './pujas-vistas.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca } from './intersticial.js';
+import { arrancarIntersticiales, quizaIntersticial, bonificadoVisto, aperturaToca, estadoIntersticial } from './intersticial.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada, barraPortal, portalHTML, tiraPortada } from './portada.js';
 import { dibCopiar, dibAbrirCon } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
@@ -1289,6 +1289,8 @@ function ponerBanner(si, zona = si) {
   bannerYa = k;
   nativo.zonaAnuncios(z, ic.bloque, inter);
   nativo.aperturaAnuncios(ap, ac.bloque);
+  // (0.8.4r) mientras pueda estar el de apertura en pantalla, la versión nueva no recarga encima
+  aperturaT = ap ? Date.now() : 0;
 }
 window.addEventListener('apertura-vista', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia', !!S.D && !!$('#vista')));
 // (al volver a la app, por si ha cambiado el día y hoy toca otra vez el de apertura)
@@ -2484,8 +2486,122 @@ async function mirarWebNueva() {
     const r = await fetch(`paquete.json?t=${Date.now()}`, { cache: 'no-store' });
     if (!r.ok) return;
     const j = await r.json();
-    if (j && j.version && cmpVer(j.version, VERSION) > 0) { const antes = S.webNuevaWeb; S.webNuevaWeb = j; forzarWebNueva(j); if (!antes && S.D && !S.hoja) pintar(); }
+    if (j && j.version && cmpVer(j.version, VERSION) > 0) {
+      const antes = S.webNuevaWeb; S.webNuevaWeb = j;
+      if (!nuevaSola(j.version, 'web')) forzarWebNueva(j);
+      if (!antes && S.D && !S.hoja && !aMedias()) pintar();
+    }
   } catch (e) { /* sin red: ya se mirará */ }
+}
+/*
+ * (0.8.4r, 26 nov; Carlos: «¿por qué cada vez que publico una versión sale un aviso para que la actualice? ¿No se podría
+ * hacer de forma automática?») La versión nueva se pone sola, sin ventana: en la web, recargarWeb; en la app (Play e iOS),
+ * AlDia la baja (nativo.buscarWeb) y la página se recarga con ella. Solo si no tiene nada a medias (`aMedias`); si lo
+ * tiene, espera a que acabe (se mira cada 10 s) o a que la app se vaya a segundo plano (entonces vale con lo que no se
+ * pierde: una ficha abierta, una novedad…). La ventana de siempre queda de reserva: tras 2 intentos que no han cambiado
+ * la versión (LS «nueva-sola», n), si AlDia falla o si lleva ESPERA_SOLA esperando. Lo que se ve (pestaña, ficha,
+ * scroll) vuelve tras recargar (`guardarVuelta`, `volverTrasRecarga`)
+ */
+const ESPERA_SOLA = 3 * HORA;
+// lo que no se recarga ni con la app en segundo plano (se perdería algo o se cortaría a medias)
+const MEDIAS_FUERTES = new Set(['cargando', 'pregunta', 'plan', 'fotos', 'anuncio', 'escribiendo', 'apuntando', 'entrando', 'tutorial']);
+let aperturaT = 0;
+const interEnCurso = () => { try { return !!estadoIntersticial().enCurso; } catch (e) { return false; } };
+window.addEventListener('apertura-vista', () => { aperturaT = 0; });
+function regNueva(v) {
+  const g = LS.get('nueva-sola', null);
+  if (g && g.v === v) return g;
+  const n = { v, n: 0 };
+  LS.set('nueva-sola', n);
+  return n;
+}
+/** qué tiene a medias el usuario ('' si nada): lo que se perdería o se cortaría al recargar */
+function aMedias() {
+  if ($('#limite')) return '';
+  // (al arrancar, antes de pintar nada, no hay nada que perder: es el mejor momento)
+  if (S.cargando && S.D) return 'cargando';
+  if (/[?&]code=/.test(location.search)) return 'entrando';
+  if (S.charlando || S.chatCtl || preguntaPendiente()) return 'pregunta';
+  if (S.planEstado && S.planEstado.cargando) return 'plan';
+  if (S.preparandoFotos) return 'fotos';
+  if (S.anuncio || interEnCurso() || (aperturaT && Date.now() - aperturaT < 45000)) return 'anuncio';
+  if (tourAbierto() || document.body.classList.contains('en-tour')) return 'tutorial';
+  // en la pantalla de entrar, recién abierta no hay nada que perder; después puede estar a mitad de la entrada
+  if (!S.D && !haySesion() && !enDemo() && Date.now() - arranqueT > 20000) return 'entrando';
+  const campos = [...document.querySelectorAll('textarea, input:not([type]), input[type="text"], input[type="number"], input[type="search"], input[type="email"], input[type="url"]')];
+  if (campos.some((e) => e.value && e.value.trim() && !e.closest('#forzar'))) return 'escribiendo';
+  // una hoja o ventana para apuntar algo (lo que te dijo un rival, una oferta, una puja…), aunque aún no haya escrito
+  const formas = [S.hoja, ...document.querySelectorAll('.hoja, [role="dialog"]')].filter(Boolean);
+  if (formas.some((h) => h.querySelector('input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="search"]), textarea, select'))) return 'apuntando';
+  const a = document.activeElement;
+  if (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return 'foco';
+  if ($('.nvt-capa') || $('.nv') || $('#bienvenida') || document.body.classList.contains('con-nv')) return 'novedad';
+  if (S.hoja || $('.visor') || [...document.querySelectorAll('[role="dialog"],[role="alertdialog"]')].some((d) => d.id !== 'forzar')) return 'ventana';
+  return '';
+}
+/** con versión nueva: ¿se pone sola? (false: la ventana de siempre) */
+function nuevaSola(v, modo) {
+  if (EN_FONDO) return true;
+  const g = regNueva(v);
+  if ($('#forzar') || g.n >= 2) return false;
+  // (lo que lleva esperando cuenta con la app abierta: si se cierra a medias, al abrirla otra vez se prueba de nuevo)
+  if (!S.sola || S.sola.v !== v) S.sola = { v, modo, fase: 'espera', t0: Date.now() };
+  intentarSola();
+  return true;
+}
+function ventanaSola() {
+  const s = S.sola;
+  S.sola = null;
+  clearTimeout(forzarT);
+  if (!s) return;
+  if (s.modo === 'web') forzarWebNueva(S.webNuevaWeb);
+  else if (S.appNueva) forzarAppNueva('pide');
+}
+function intentarSola(oculta = false) {
+  const s = S.sola;
+  // (al irse de la página para recargar, el navegador también avisa de que se oculta: eso no es otro intento)
+  if (!s || EN_FONDO || s.fase === 'bajando' || s.fase === 'recargando') return;
+  const m = aMedias();
+  if (m && (!oculta || MEDIAS_FUERTES.has(m))) {
+    s.espera = m;
+    if (Date.now() - s.t0 > ESPERA_SOLA) ventanaSola();
+    return;
+  }
+  // en la app con la web nueva ya bajada, basta con recargar
+  if (s.modo === 'app' && S.webNueva) { s.fase = 'recargando'; ponerWebNueva(); return; }
+  const g = regNueva(s.v);
+  g.n++; g.t = Date.now();
+  LS.set('nueva-sola', g);
+  if (!oculta) tostada('Poniendo la versión nueva…', 4000);
+  guardarVuelta();
+  if (s.modo === 'web') { s.fase = 'recargando'; recargarWeb(); return; }
+  s.fase = 'bajando';
+  if (!nativo.buscarWeb()) { s.fase = 'espera'; ventanaSola(); if (S.appNueva) forzarAppNueva('fallo', 'esta app no sabe descargarla sola'); return; }
+  // si AlDia no contesta en un minuto, la ventana con «Volver a intentarlo»
+  clearTimeout(forzarT);
+  forzarT = setTimeout(() => { if (S.sola && S.sola.fase === 'bajando') { S.sola = null; forzarAppNueva('fallo', 'no ha contestado'); } }, 60000);
+}
+/* lo que se ve, para dejarlo igual tras recargar con la versión nueva (la pestaña también va en la dirección, #hoy…) */
+const FICHAS_VUELTA = new Set(['j', 'r', 'c', 'p']);
+function guardarVuelta() {
+  const th = S.tipoHoja && FICHAS_VUELTA.has(S.tipoHoja[0]) && (typeof S.tipoHoja[1] === 'string' || typeof S.tipoHoja[1] === 'number') ? S.tipoHoja : null;
+  LS.set('tras-recarga', { t: Date.now(), vista: S.vista, seg: S.seg || {}, hoja: th, y: Math.round(window.scrollY || 0) });
+}
+function leerVuelta() {
+  const g = LS.get('tras-recarga', null);
+  if (!g) return;
+  LS.del('tras-recarga');
+  if (Date.now() - g.t > 10 * MIN) return;
+  if (g.vista && VISTAS[g.vista]) { S.vista = g.vista; try { history.replaceState(null, '', location.pathname + location.search + '#' + g.vista); } catch (e) { /* nada */ } }
+  if (g.seg && typeof g.seg === 'object') S.seg = { ...g.seg, ...S.seg };
+  S.vuelta = g;
+}
+function volverTrasRecarga() {
+  const g = S.vuelta;
+  S.vuelta = null;
+  if (!g || !S.D || !S.M || tourAbierto()) return;
+  if (g.y) requestAnimationFrame(() => window.scrollTo(0, g.y));
+  if (g.hoja && !S.hoja) { try { hoja(g.hoja[0], g.hoja[1]); } catch (e) { /* la ficha ya no está (otro día, otra liga) */ } }
 }
 /* Con versión nueva en la web, una ventana en mitad de la pantalla que no se puede cerrar: «Actualizar ahora» y
    nada más (lo pidió Carlos el 25 oct: con solo la banda, Domy se quedaba en una vieja). Si tras dos intentos sigue en
@@ -2494,6 +2610,7 @@ function forzarWebNueva(j) {
   if (enApp || !j || document.getElementById('forzar')) return;
   let intentos = 0;
   try { intentos = Number(sessionStorage.getItem('fm-forzar-' + j.version)) || 0; } catch (e) { /* sin almacenamiento */ }
+  intentos = Math.max(intentos, regNueva(j.version).n);
   const d = document.createElement('div');
   d.id = 'forzar'; d.className = 'forzar'; d.setAttribute('role', 'alertdialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'forzar-t');
   d.innerHTML = `<div class="forzar-c"><span class="forzar-ic">${icono('refrescar')}</span><h2 id="forzar-t">Hay una versión nueva</h2>
@@ -2505,7 +2622,8 @@ function forzarWebNueva(j) {
 }
 async function recargarWeb() {
   const j = S.webNuevaWeb;
-  tostada('Poniendo la versión nueva…', 4000);
+  if (!S.sola) tostada('Poniendo la versión nueva…', 4000);
+  LS.set('web-puesta', { t: Date.now() });
   // primero la página tal como se abrió (puede ser la carpeta, «/», y no «index.html»: el navegador las guarda aparte);
   // index.html ya pide cada módulo con su huella (paquete.py), así que con ella nueva llega todo lo demás nuevo
   const pagina = location.href.split('#')[0];
@@ -2577,6 +2695,8 @@ async function mirarAppNueva() {
   // (0.7.13j: solo el aviso de pasarse a Google Play, nunca una descarga de fuera)
   if (apk) return;
   S.appNueva = { version: j.version, apk, play };
+  // (0.8.4r) se pone sola; la ventana, solo de reserva
+  if (!$('#forzar') && nuevaSola(j.version, 'app')) return;
   forzarAppNueva(apk ? 'apk' : 'pide');
 }
 /* paso: 'pide' (Actualizar ahora), 'bajando', 'apk' (hace falta descargar la app) o 'fallo' (AlDia no ha podido) */
@@ -2617,6 +2737,7 @@ function forzarAppNueva(paso, detalle = '') {
   if (b) b.focus();
 }
 function ponerAppNueva() {
+  S.sola = null;
   // ya bajada antes (no se pudo recargar en su momento): basta con recargar
   if (S.webNueva) { ponerWebNueva(); return; }
   forzarAppNueva('bajando');
@@ -2664,6 +2785,7 @@ async function despues() {
   const saludo = saludarSiToca('entrar');
   if (S.bienvenidaPendiente) Promise.race([saludo, new Promise((r) => setTimeout(r, 4000))]).then(() => quizaBienvenida(300));
   mirarMiOnce();
+  volverTrasRecarga();
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
   setTimeout(cargarCaras, 3000);
   mirarWebNueva();
@@ -3780,14 +3902,28 @@ function sePuedeRecargar(alVolver = false) {
 }
 function ponerWebNueva() {
   LS.set('web-puesta', { t: Date.now() });
+  guardarVuelta();
   location.reload();
 }
 window.webBuscada = (estado) => {
   apuntarAlDia(estado);
   const avisar = S.buscaAvisar && Date.now() - S.buscaAvisar < 120000;
   S.buscaAvisar = 0;
+  // (0.8.4r) la que se está poniendo sola: con la web bajada se recarga en cuanto no haya nada a medias; si AlDia no
+  // puede, la ventana de siempre con lo que ha pasado
+  if (S.sola && S.sola.modo === 'app' && S.sola.fase === 'bajando') {
+    if (estado === 'ocupada') return;
+    clearTimeout(forzarT);
+    S.sola.fase = 'espera';
+    if (estado === 'nueva' || (estado === 'igual' && S.webNueva)) { S.webNueva = true; intentarSola(document.hidden); return; }
+    if (estado === 'parada') { S.sola = null; S.appNueva = null; return; }
+    S.sola = null;
+    if (S.appNueva) forzarAppNueva(estado === 'apk' && !S.appNueva.play ? 'apk' : 'fallo', String(estado).startsWith('error') ? String(estado).slice(7) : estado === 'igual' ? 'la descartó antes' : '');
+    return;
+  }
   if (estado === 'nueva') {
     S.webNueva = true;
+    if (S.sola) { intentarSola(document.hidden); return; }
     if (sePuedeRecargar()) ponerWebNueva();
     else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Hay una versión nueva: toca «Descargar»'); }
     return;
@@ -3805,11 +3941,12 @@ window.webBuscada = (estado) => {
   else if (!S.nueva) tostada('Tienes la última versión');
 };
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { fueraT = Date.now(); return; }
+  // (0.8.4r) al irse a segundo plano, el mejor momento para ponerla: al volver ya está
+  if (document.hidden) { fueraT = Date.now(); if (S.sola) intentarSola(true); return; }
   if (S.webNueva && fueraT && Date.now() - fueraT > 60000 && sePuedeRecargar(true)) ponerWebNueva();
 });
 // por si llegó en mal momento (cargando la liga, la IA trabajando): se vuelve a mirar cada poco
-setInterval(() => { if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
+setInterval(() => { if (S.sola) { if (!document.hidden) intentarSola(); return; } if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
 window.progresoApp = (pct, estado) => {
   if (pct < 0) tostada(`No se ha podido descargar: ${estado}`, 5000);
   else if (estado === 'permiso') tostada('Dale permiso para instalar y vuelve a pulsar Actualizar', 6000);
@@ -5182,6 +5319,8 @@ async function arrancar() {
   arrancarIntersticiales();
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
+  // (0.8.4r) recién recargada con la versión nueva: la misma pestaña (y luego la ficha y el scroll, en despues)
+  leerVuelta();
   const aFallos = h === 'fallos';
   if (aFallos) history.replaceState(null, '', '#hoy');
   // venía de la web de antes con un código de mudanza
