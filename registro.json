@@ -3186,8 +3186,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254448/bisiwu-novedad-lista-flick-baku.html": 1795433657000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-zanja-debate-penalti-barca-entrenador-ultima-palabra-20261123_3479878.html": 1795437695000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
@@ -3357,7 +3355,8 @@
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/26/yeray-berenguer-vuelven-grupo-terzic-saca-oyono.html": 1795691381000,
    "AS|https://as.com/futbol/primera/leve-accidente-de-trafico-de-aubameyang-camino-al-entrenamiento-del-depor-f202611-n/": 1795690722000,
    "AS|https://as.com/futbol/primera/aguado-se-apunta-al-atletico-y-la-lesion-de-lemar-queda-en-un-susto-f202611-n/": 1795691815000,
-   "MARCA|https://www.marca.com/futbol/elche/2026/11/26/lemar-esquiva-lesion-gravedad-enciende-esperanza.html": 1795692480000
+   "MARCA|https://www.marca.com/futbol/elche/2026/11/26/lemar-esquiva-lesion-gravedad-enciende-esperanza.html": 1795692480000,
+   "SPORT|136875046": 1795689021000
   },
   "hechos": [
    {
@@ -3780,7 +3779,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -4645,7 +4644,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
@@ -4722,17 +4720,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 122494,
-  "salida": 11834,
+  "entrada": 124533,
+  "salida": 12280,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.36544,
+  "dolares": 0.365867,
   "reservado": 0
  },
  "recientes": {
@@ -9811,13 +9809,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6609,
+   "ok": 6610,
    "fallos": 0,
-   "ejecuciones": 5388,
+   "ejecuciones": 5389,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:31:11.712Z"
+   "ultima": "2026-11-26T11:36:11.567Z"
   }
  },
  "ptsDirecto": {},
@@ -9834,15 +9832,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:31:25.783Z"
+   "ultimaBien": "2026-11-26T11:36:23.204Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:31:25.783Z"
+   "ultimaBien": "2026-11-26T11:36:23.204Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:31:25.783Z"
+   "ultimaBien": "2026-11-26T11:36:23.204Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9850,11 +9848,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:31:25.783Z"
+   "ultimaBien": "2026-11-26T11:36:23.204Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:31:25.783Z"
+   "ultimaBien": "2026-11-26T11:36:23.204Z"
   }
  },
  "avisos": [
