@@ -3178,7 +3178,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000,
    "AS|https://as.com/futbol/primera/aubameyang-lo-es-todo-para-el-depor-f202611-n/": 1795428299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254402/alternativas-flick-suplir-lamine-sabah.html": 1795428401000,
    "SPORT|136743099": 1795426988000,
@@ -3344,7 +3343,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/musculares-fortuitas-lesiones-sevilla-fc-medico-garcia-plaza_0_2008586719.html": 1795668433000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorloth-julian-alvarez-alivian-atletico-champions-2-0_0_2008587527.html": 1795644575000,
    "SPORT|136864955": 1795675911000,
-   "MARCA|https://www.marca.com/futbol/valencia/2026/11/26/sadiq-sobre-aguirre-me-dijo-vas-salir-vas-marcar-vas-venir-abrazarme.html": 1795680956000
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/26/sadiq-sobre-aguirre-me-dijo-vas-salir-vas-marcar-vas-venir-abrazarme.html": 1795680956000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255707/alba-redondo-madrina-primer-torneo-femenino-iniesta-cup-soliss.html": 1795683769000
   },
   "hechos": [
    {
@@ -3690,7 +3690,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -4635,17 +4635,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 14,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 91620,
-  "salida": 6243,
+  "entrada": 93644,
+  "salida": 6335,
   "cacheLee": 73819,
   "cacheEscribe": 23316,
-  "dolares": 0.300423,
+  "dolares": 0.300671,
   "reservado": 0
  },
  "recientes": {
@@ -9729,13 +9729,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6585,
+   "ok": 6586,
    "fallos": 0,
-   "ejecuciones": 5364,
+   "ejecuciones": 5365,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T09:31:15.258Z"
+   "ultima": "2026-11-26T09:36:12.919Z"
   }
  },
  "ptsDirecto": {},
@@ -9752,15 +9752,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:31:26.784Z"
+   "ultimaBien": "2026-11-26T09:36:25.634Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:31:26.784Z"
+   "ultimaBien": "2026-11-26T09:36:25.634Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:31:26.784Z"
+   "ultimaBien": "2026-11-26T09:36:25.634Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9768,11 +9768,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:31:26.784Z"
+   "ultimaBien": "2026-11-26T09:36:25.634Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:31:26.784Z"
+   "ultimaBien": "2026-11-26T09:36:25.634Z"
   }
  },
  "avisos": [
