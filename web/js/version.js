@@ -45,6 +45,9 @@ export const NOVEDADES = [
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
       { para: 'dueño', tipo: 'nuevo', d: 'campo', menor: true, t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, el plan lleva la puja por el que conviene fichar, con su dinero contado. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
+      // (26 nov, 20:26, idea de IsmaelMartín; claude/prompt-origen-fichajes.md del proyecto) `origenFichaje` en operaciones.js,
+      // pintado al lado del nombre en los pasos de fichar del plan y en «Antes de nada» (vistas.js); prueba: caso-origen.mjs
+      { para: 'dueño', tipo: 'mejora', d: 'plan', menor: true, t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
       { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
     ],
   },
