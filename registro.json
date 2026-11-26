@@ -4695,7 +4695,6 @@
  },
  "liga": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254688/aplazado-choque-rubi-salir-volando-cristalera.html": 1795500000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254685/barceloneta-juega-77-faf-hospitalet.html": 1795500000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254682/tres-duelos-no-acaban-choques-fortuitos.html": 1795500000000,
@@ -9830,13 +9829,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6710,
+   "ok": 6711,
    "fallos": 0,
-   "ejecuciones": 5489,
+   "ejecuciones": 5490,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T19:51:12.045Z"
+   "ultima": "2026-11-26T19:56:11.787Z"
   }
  },
  "ptsDirecto": {},
@@ -9853,15 +9852,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:51:22.376Z"
+   "ultimaBien": "2026-11-26T19:56:22.063Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:51:22.376Z"
+   "ultimaBien": "2026-11-26T19:56:22.063Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:51:22.376Z"
+   "ultimaBien": "2026-11-26T19:56:22.063Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9869,11 +9868,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:51:22.376Z"
+   "ultimaBien": "2026-11-26T19:56:22.063Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:51:22.376Z"
+   "ultimaBien": "2026-11-26T19:56:22.063Z"
   }
  },
  "avisos": [
