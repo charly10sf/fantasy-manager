@@ -649,6 +649,7 @@ async function capturaDe(env, b) {
  *                              que Domy pueda responder fallos también igual que yo») AÑADE un mensaje de Fantasy Manager,
  *                              con la cuenta y el nombre de quien lo escribe (solo lo ven ellos dos). Lo usan también las webs
  *                              de antes del dueño
+ * POST /fallos/terminar       { id }: (el dueño y quien ayuda; 26 nov) lo da por terminado → { ok, cer }
  * POST /fallos/accion          (la Action «Fallos», con la llave x-fallos-clave) { op: leer | captura | contestar }
  */
 async function fallos(req, env, c, ruta) {
@@ -694,6 +695,11 @@ async function fallos(req, env, c, ruta) {
     if (!r.ok) return fueraDe(r, c);
     const { ok, ...h } = r;
     return json(h, 200, c);
+  }
+  if (ruta === '/fallos/terminar' && req.method === 'POST') {
+    // (26 nov) darlo por terminado: deja de contar como sin contestar hasta que quien lo mandó vuelva a escribir
+    const r = await pedirFallos(env, { op: 'terminar', id: cuerpo.id });
+    return r.ok ? json({ ok: true, cer: r.cer }, 200, c) : fueraDe(r, c);
   }
   if (ruta === '/fallos/responder' && req.method === 'POST') {
     // (firma siempre «Fantasy Manager»: quien lo mandó no sabe quién de los dos contesta)

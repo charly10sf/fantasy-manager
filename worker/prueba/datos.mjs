@@ -568,6 +568,15 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   r = await yo('POST', '/fallos/visto', { id: idC });
   h = (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC);
   ok(h.vista === true && h.vu >= h.respondida && h.vd < h.ult, 'visto por cada lado: él ha leído lo último del dueño; el dueño aún no ha visto lo suyo');
+  // (26 nov) darlo por terminado: deja de estar pendiente; quien lo mandó no lo ve ni puede hacerlo
+  r = await yo('POST', '/fallos/terminar', { id: idC });
+  ok(r.s === 403, `quien lo mandó no lo da por terminado (${r.s})`);
+  r = await dueno('POST', '/fallos/terminar', { id: idC });
+  ok(r.s === 200 && r.j.cer > 0, `el dueño lo da por terminado (${r.t})`);
+  r = await dueno('GET', '/fallos/todos');
+  ok(r.j.pendientes === 0 && r.j.lista[0].r > 0 && r.j.lista[0].cer > 0 && r.j.lista[0].de === 'u', `terminado: ya no está pendiente y lo dice (${r.t.slice(0, 120)})`);
+  ok((await dueno('GET', `/fallos/uno?id=${idC}`)).j.cer > 0 && !('cer' in (await yo('GET', '/fallos/mios')).j.lista.find((x) => x.id === idC)), 'el dueño lo ve terminado al abrirlo; quien lo mandó, no');
+  ok((await dueno('GET', '/fallos/mios')).j.pendientes === 0, 'la cuenta de /fallos/mios tampoco lo cuenta');
   // las capturas de cada mensaje
   r = await yo('GET', `/fallos/captura?id=${idC}&m=2&n=0`);
   const r2 = await dueno('GET', `/fallos/captura?id=${idC}&m=3&n=0`);
@@ -582,6 +591,7 @@ ok(r.s === 403 && !r.t.includes('1111.png'), `/caras de una liga en la que no es
   ok(r.s === 403, `quien lo mandó no contesta como Fantasy Manager (${r.s})`);
   // topes: capturas por hilo y por día, mensajes por día y por hilo
   for (let i = 0; i < 6; i++) await yo('POST', '/fallos/escribir', { id: idC, texto: `más ${i}`, capturas: [cap(900), cap(900), cap(900)] });
+  ok((await dueno('GET', '/fallos/todos')).j.pendientes === 1, 'si vuelve a escribir, el terminado vuelve a estar pendiente');
   const cs = sqlF('SELECT coalesce(sum(caps), 0) AS c FROM msg WHERE hilo = ?', idC)[0].c;
   ok(cs === W2.HILO_CAPS, `como mucho ${W2.HILO_CAPS} capturas en un hilo (${cs})`);
   sqlF('UPDATE cupo SET msgs = ? WHERE uid = ?', W2.MSGS_DIA, '4242');

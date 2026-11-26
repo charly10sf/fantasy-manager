@@ -136,6 +136,13 @@ export async function responderAviso(id, respuesta, capturas = []) {
   if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;
 }
+/** (26 nov; el dueño y quien ayuda) da un aviso por terminado: deja de contar como sin contestar hasta que vuelva a escribir */
+export async function terminarAviso(id) {
+  const r = await pedirWorker('POST', '/fallos/terminar', { id });
+  const a = avisosGuardados();
+  if (a.admin || a.ve) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
+  return r;
+}
 
 /* ---------- (0.7.13) el dinero de los rivales: aprender de lo que apunta todo el mundo ---------- */
 /** si el usuario deja mandar datos de su liga, sin nombres, para afinar la IA (Ajustes → Datos y privacidad; viene activado) */

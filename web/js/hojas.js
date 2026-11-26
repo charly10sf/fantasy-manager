@@ -1264,6 +1264,14 @@ function avisoMio(A, x) {
   <button class="aviso-cab" data-accion="abrirHilo" data-id="${esc(x.id)}" aria-expanded="${abierto}"><span>${cuando(x.t)}</span>${ms.length > 1 ? `<span class="aviso-t2">${ms.length} mensajes</span>` : ''}${pill}</button>
   ${cuerpo}</div>`;
 }
+/* (26 nov, Carlos: «un botón para dar un chat por finalizado para que no me salga que tengo algo por leer») el dueño y quien
+   ayuda lo dan por terminado sin contestar (un «gracias», algo ya hablado): deja de salir sin contestar hasta que vuelva a
+   escribir. Quien lo mandó no ve nada */
+function terminarHTML(A, d) {
+  if (ultimoDe(d) !== 'u') return '';
+  if (d.cer && d.cer >= (d.ult || 0)) return `<p class="t2 peq av-term av-hecho">${icono('ok')}<span>Lo diste por terminado. Si vuelve a escribir, sale otra vez como sin contestar.</span></p>`;
+  return `<div class="av-term"><button class="btn chico sec" data-accion="terminarAviso" data-id="${esc(d.id)}"${A.terminando ? ' disabled' : ''}>${icono(A.terminando ? 'reloj' : 'ok')}Dar por terminado</button><span class="t2 peq">Sin contestarle: deja de salir como pendiente.</span></div>`;
+}
 function detalleAviso(A, x) {
   const d = A.detalle;
   // mientras llega el aviso entero, su texto (el de la lista) y que se está cargando
@@ -1273,6 +1281,7 @@ function detalleAviso(A, x) {
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
     ${!A.admin ? '' : d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
     ${burbujas(A, d, 'd', !!A.admin)}
+    ${A.admin || A.ve ? terminarHTML(A, d) : ''}
     ${A.admin || A.ve ? cajaHilo(A, d.id, 'responderAviso', A.admin ? 'Tu respuesta: le llega en la app' : 'Tu respuesta: le llega como Fantasy Manager', 2000) : ''}</div>`;
 }
 export function avisos(S) {
@@ -1312,7 +1321,7 @@ function bandejaAvisos(A) {
   // para revisarlos con Claude: los sin contestar, enteros y con su diagnóstico, listos para pegar en el chat (solo el dueño)
   else if (A.admin) h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar avisos</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
   h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
-    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}" aria-expanded="${A.abierto === x.id}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.ult || x.t)}${x.n > 1 ? ` · ${x.n} mensajes` : ''}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
+    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}" aria-expanded="${A.abierto === x.id}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.ult || x.t)}${x.n > 1 ? ` · ${x.n} mensajes` : ''}</span>${x.cer ? '<span class="pill">Terminado</span>' : x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
     ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>${x.n > 1 && x.ultTxt ? `<p class="t2 peq aviso-ult"><b>${x.de === 'd' ? 'Fantasy Manager' : 'Último'}:</b> ${esc(x.ultTxt)}</p>` : ''}`}</div>`).join('');
   return h;
 }

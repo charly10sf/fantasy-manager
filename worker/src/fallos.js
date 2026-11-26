@@ -5,7 +5,9 @@
  *
  * Todo en un Durable Object con SQLite, «fallos|todos» (antes en el KV: f:<cuenta>:<id> y fc:<id>:<n>, y cada mensaje o
  * captura era una escritura de las 1.000 gratis al día):
- *   hilo (id, uid, t, ult, de, n, vu, vd, quien, equipo, liga, app, diag, kv)
+ *   hilo (id, uid, t, ult, de, n, vu, vd, quien, equipo, liga, app, diag, kv, cer)
+ *        cer: (26 nov) cuándo lo dio por terminado el dueño o quien ayuda; si quien lo mandó vuelve a escribir (ult > cer),
+ *        vuelve a estar pendiente. Quien lo mandó no lo ve
  *        de: quién escribió el último ('u' quien lo mandó, 'd' Fantasy Manager); ult: cuándo; n: cuántos mensajes;
  *        vu / vd: hasta cuándo lo ha visto quien lo mandó / Fantasy Manager; kv: copiado del KV (sus capturas pueden
  *        estar aún allí)
@@ -15,7 +17,7 @@
  *   cap  (hilo, m, i, img)          una captura por fila (una fila no pasa de 2 MB; cada una, 350 KB como mucho)
  *   cupo (uid, dia, hilos, msgs, caps)
  *   meta (k, v)                     la limpieza del día, los bytes de capturas y la mudanza desde el KV
- * Pendiente (para el dueño) = el último mensaje es de quien lo mandó. Se borra a los 180 días del último mensaje.
+ * Pendiente (para el dueño) = el último mensaje es de quien lo mandó y no se ha dado por terminado después (PEND). Se borra a los 180 días del último mensaje.
  * Lo que ve una web de antes (que solo sabe de una respuesta): `respuesta` es el último mensaje de Fantasy Manager.
  */
 export const VIVE_FALLO = 180 * 86400e3;
@@ -31,7 +33,7 @@ export const esCaptura = (x) => typeof x === 'string' && x.length <= MAX_CAPTURA
 const firma = (x) => { const p = corta(x, 40).trim(); return !p || /claude/i.test(p) ? 'Fantasy Manager' : p; };
 
 const TABLAS = [
-  "CREATE TABLE IF NOT EXISTS hilo (id TEXT PRIMARY KEY, uid TEXT NOT NULL, t INTEGER NOT NULL, ult INTEGER NOT NULL, de TEXT NOT NULL, n INTEGER NOT NULL, vu INTEGER NOT NULL DEFAULT 0, vd INTEGER NOT NULL DEFAULT 0, quien TEXT NOT NULL DEFAULT '', equipo TEXT NOT NULL DEFAULT '', liga TEXT NOT NULL DEFAULT '', app TEXT NOT NULL DEFAULT '', diag TEXT NOT NULL DEFAULT '', kv INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID",
+  "CREATE TABLE IF NOT EXISTS hilo (id TEXT PRIMARY KEY, uid TEXT NOT NULL, t INTEGER NOT NULL, ult INTEGER NOT NULL, de TEXT NOT NULL, n INTEGER NOT NULL, vu INTEGER NOT NULL DEFAULT 0, vd INTEGER NOT NULL DEFAULT 0, quien TEXT NOT NULL DEFAULT '', equipo TEXT NOT NULL DEFAULT '', liga TEXT NOT NULL DEFAULT '', app TEXT NOT NULL DEFAULT '', diag TEXT NOT NULL DEFAULT '', kv INTEGER NOT NULL DEFAULT 0, cer INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID",
   'CREATE INDEX IF NOT EXISTS hilo_uid ON hilo (uid)',
   "CREATE TABLE IF NOT EXISTS msg (hilo TEXT NOT NULL, n INTEGER NOT NULL, de TEXT NOT NULL, t INTEGER NOT NULL, texto TEXT NOT NULL, caps INTEGER NOT NULL DEFAULT 0, por TEXT NOT NULL DEFAULT '', aut TEXT NOT NULL DEFAULT '', autn TEXT NOT NULL DEFAULT '', PRIMARY KEY (hilo, n)) WITHOUT ROWID",
   'CREATE TABLE IF NOT EXISTS cap (hilo TEXT NOT NULL, m INTEGER NOT NULL, i INTEGER NOT NULL, img TEXT NOT NULL, PRIMARY KEY (hilo, m, i)) WITHOUT ROWID',
@@ -40,12 +42,18 @@ const TABLAS = [
 ];
 // (0.8.4c) las columnas que se añaden a una tabla que ya existía: se mira cuáles tiene y se añaden las que faltan (si no se
 // puede mirar, se intenta y, si ya estaban, el ALTER falla y no pasa nada)
-const COLUMNAS = [['aut', "ALTER TABLE msg ADD COLUMN aut TEXT NOT NULL DEFAULT ''"], ['autn', "ALTER TABLE msg ADD COLUMN autn TEXT NOT NULL DEFAULT ''"]];
+const COLUMNAS = [['msg', 'aut', "ALTER TABLE msg ADD COLUMN aut TEXT NOT NULL DEFAULT ''"], ['msg', 'autn', "ALTER TABLE msg ADD COLUMN autn TEXT NOT NULL DEFAULT ''"],
+  ['hilo', 'cer', 'ALTER TABLE hilo ADD COLUMN cer INTEGER NOT NULL DEFAULT 0']];
 function ponerColumnas(sql) {
-  let hay = null;
-  try { hay = new Set([...sql.exec('PRAGMA table_info(msg)')].map((c) => c.name)); } catch (e) { hay = null; }
-  for (const [col, q] of COLUMNAS) if (!hay || !hay.has(col)) { try { sql.exec(q); } catch (e) { /* ya estaba */ } }
+  const hay = {};
+  for (const t of new Set(COLUMNAS.map((c) => c[0]))) {
+    try { hay[t] = new Set([...sql.exec(`PRAGMA table_info(${t})`)].map((c) => c.name)); } catch (e) { hay[t] = null; }
+  }
+  for (const [t, col, q] of COLUMNAS) if (!hay[t] || !hay[t].has(col)) { try { sql.exec(q); } catch (e) { /* ya estaba */ } }
 }
+// los que esperan respuesta: el último es de quien lo mandó y no se ha dado por terminado después
+const PEND = "de = 'u' AND cer < ult";
+const terminado = (h) => h.de === 'u' && Number(h.cer) >= h.ult;
 const fila = (cur) => { for (const x of cur) return x; return null; };
 const escribir = (sql, q, ...a) => { const c = sql.exec(q, ...a); c.toArray(); return c.rowsWritten || 0; };
 const leerMeta = (sql, k) => { const x = fila(sql.exec('SELECT v FROM meta WHERE k = ?', k)); return x ? x.v : null; };
@@ -114,6 +122,7 @@ function hiloApp(sql, h, { diag = false, equipo = false, yo = '' } = {}) {
     texto: m0.texto, capturas: m0.caps, respuesta: ultD ? ultD.texto : null, respondida: ultD ? ultD.t : null, vista: !ultD || h.vu >= ultD.t,
     ...(ultD ? { por: ultD.por } : {}),
     msgs, de: h.de, ult: h.ult, n: h.n, vu: h.vu, vd: h.vd,
+    ...(equipo && terminado(h) ? { cer: h.cer } : {}),
     ...(diag ? { diag: h.diag } : {}),
   };
 }
@@ -123,8 +132,10 @@ function resumen(sql, h) {
   const ult = fila(sql.exec('SELECT texto FROM msg WHERE hilo = ? ORDER BY n DESC LIMIT 1', h.id)) || { texto: '' };
   return {
     id: h.id, t: h.t, quien: h.quien, equipo: h.equipo, txt: corta(m0.texto.replace(/\s+/g, ' '), 90),
-    r: h.de === 'd' ? h.ult : 0, v: h.de === 'd' && h.vu >= h.ult ? 1 : 0, c: m0.caps,
+    // (uno dado por terminado cuenta como contestado también para las webs de antes del dueño: r)
+    r: h.de === 'd' ? h.ult : terminado(h) ? h.cer : 0, v: h.de === 'd' && h.vu >= h.ult ? 1 : 0, c: m0.caps,
     n: h.n, de: h.de, ult: h.ult, vd: h.vd, ultTxt: corta(ult.texto.replace(/\s+/g, ' '), 90),
+    ...(terminado(h) ? { cer: h.cer } : {}),
   };
 }
 
@@ -204,6 +215,8 @@ function capsQueFaltan(sql, max) {
  *   visto     { uid, id }                 quien lo mandó lo ha visto
  *   captura   { id, m, i, uid | todos }   { img } (o { falta, kv } si es de un aviso copiado que aún está en el KV)
  *   pendientes {}                         { n }: cuántos esperan respuesta
+ *   terminar  { id }                      (el dueño o quien ayuda) lo da por terminado: deja de esperar respuesta hasta que
+ *                                     quien lo mandó vuelva a escribir → { ok, cer }
  *   borrar    { uid }                     todo lo de esa cuenta → { ok, n }
  *   accion    { max }                     para la Action «Fallos»: los hilos enteros, con diag, sin uid
  *   contestar { respuestas: [{ id | buscar, respuesta, por }] }   (la Action) añade un mensaje de Fantasy Manager → { n }
@@ -230,10 +243,10 @@ export function fallosObjeto(st, b, memo = {}) {
       if (!uidOk(uid)) return { lista: [] };
       // (pend: el dueño, cuántos esperan respuesta, en la misma llamada)
       const lista = [...sql.exec('SELECT * FROM hilo WHERE uid = ? ORDER BY ult DESC LIMIT 30', uid)].map((h) => hiloApp(sql, h));
-      return { lista, ...(b.pend ? { pendientes: (fila(sql.exec("SELECT count(*) AS n FROM hilo WHERE de = 'u'")) || { n: 0 }).n } : {}) };
+      return { lista, ...(b.pend ? { pendientes: (fila(sql.exec(`SELECT count(*) AS n FROM hilo WHERE ${PEND}`)) || { n: 0 }).n } : {}) };
     }
-    case 'todos': return { lista: [...sql.exec('SELECT * FROM hilo ORDER BY ult DESC LIMIT 200')].map((h) => resumen(sql, h)), pendientes: (fila(sql.exec("SELECT count(*) AS n FROM hilo WHERE de = 'u'")) || { n: 0 }).n };
-    case 'pendientes': return { n: (fila(sql.exec("SELECT count(*) AS n FROM hilo WHERE de = 'u'")) || { n: 0 }).n };
+    case 'todos': return { lista: [...sql.exec('SELECT * FROM hilo ORDER BY ult DESC LIMIT 200')].map((h) => resumen(sql, h)), pendientes: (fila(sql.exec(`SELECT count(*) AS n FROM hilo WHERE ${PEND}`)) || { n: 0 }).n };
+    case 'pendientes': return { n: (fila(sql.exec(`SELECT count(*) AS n FROM hilo WHERE ${PEND}`)) || { n: 0 }).n };
     case 'uno': {
       const h = hiloDe(b.id);
       if (!h || (!b.ver && h.uid !== uid)) return { ok: false, estado: 404, e: 'No existe' };
@@ -241,6 +254,15 @@ export function fallosObjeto(st, b, memo = {}) {
       // (0.8.4c: también quien ayuda, que ahora contesta)
       if (b.ver && b.marcar && h.vd < h.ult) { escribir(sql, 'UPDATE hilo SET vd = ? WHERE id = ?', ahora, h.id); h.vd = ahora; }
       return { ok: true, ...hiloApp(sql, h, { diag: b.ver === 'dueño', equipo: !!b.ver, yo: b.ver ? uid : '' }) };
+    }
+    case 'terminar': {
+      // (26 nov, Carlos: «un botón para dar un chat por finalizado para que no me salga que tengo algo por leer»)
+      const h = hiloDe(b.id);
+      if (!h) return { ok: false, estado: 404, e: 'No existe' };
+      if (h.de !== 'u') return { ok: true, cer: 0 };
+      const cer = Math.max(ahora, h.ult);
+      escribir(sql, 'UPDATE hilo SET cer = ?, vd = max(vd, ?) WHERE id = ?', cer, h.ult, h.id);
+      return { ok: true, cer };
     }
     case 'visto': {
       const h = hiloDe(b.id);
@@ -273,7 +295,7 @@ export function fallosObjeto(st, b, memo = {}) {
         if (r.id) ids = hiloDe(r.id) ? [String(r.id)] : [];
         else if (r.buscar) {
           const q = norm(r.buscar);
-          ids = [...sql.exec("SELECT id FROM hilo WHERE de = 'u'")].map((h) => h.id).filter((id) => [...sql.exec("SELECT texto FROM msg WHERE hilo = ? AND de = 'u'", id)].some((m) => norm(m.texto).includes(q)));
+          ids = [...sql.exec(`SELECT id FROM hilo WHERE ${PEND}`)].map((h) => h.id).filter((id) => [...sql.exec("SELECT texto FROM msg WHERE hilo = ? AND de = 'u'", id)].some((m) => norm(m.texto).includes(q)));
         }
         for (const id of ids) if (escribirMsg(sql, { dueno: true, id, texto: r.respuesta, por: r.por }, ahora, dia).ok) n++;
       }
