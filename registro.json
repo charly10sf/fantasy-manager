@@ -3352,7 +3352,8 @@
    "SPORT|136872017": 1795684898000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lemar-y-aguado-vuelven-a-los-entrenamientos-radio-elche/": 1795688548000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/aviso-gonzalo-miro-sorloth-julian-alvarez-no-vale-marque-no-vuelve-ver-porteria-siete-jornadas-20261126_3482301.html": 1795688452000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lucho-tiene-pendiente-enmarcar-el-100-y-ganarse-el-200-radio-xativa/": 1795690083000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lucho-tiene-pendiente-enmarcar-el-100-y-ganarse-el-200-radio-xativa/": 1795690083000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html": 1795690419000
   },
   "hechos": [
    {
@@ -3747,11 +3748,23 @@
     "nums": [
      17
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html",
+    "medio": "Mundo Deportivo",
+    "t": 1795690419000,
+    "id": "3197",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cuti Romero vuelve a entrenar con el grupo del Atlético",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -4696,17 +4709,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 112618,
-  "salida": 8408,
+  "entrada": 114631,
+  "salida": 9139,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.362738,
+  "dolares": 0.363305,
   "reservado": 0
  },
  "recientes": {
@@ -9785,13 +9798,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6602,
+   "ok": 6603,
    "fallos": 0,
-   "ejecuciones": 5381,
+   "ejecuciones": 5382,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:56:23.982Z"
+   "ultima": "2026-11-26T11:01:14.661Z"
   }
  },
  "ptsDirecto": {},
@@ -9808,15 +9821,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:56:34.757Z"
+   "ultimaBien": "2026-11-26T11:01:29.403Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:56:34.757Z"
+   "ultimaBien": "2026-11-26T11:01:29.403Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:56:34.757Z"
+   "ultimaBien": "2026-11-26T11:01:29.403Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9824,11 +9837,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:56:34.757Z"
+   "ultimaBien": "2026-11-26T11:01:29.403Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:56:34.757Z"
+   "ultimaBien": "2026-11-26T11:01:29.403Z"
   }
  },
  "avisos": [
