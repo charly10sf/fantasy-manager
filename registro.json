@@ -3392,7 +3392,8 @@
    "SPORT|136881446": 1795703413000,
    "AS|https://as.com/futbol/cuidados-para-aimar-oroz-f202611-n/": 1795708117000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255869/barca-no-recurrira-sancion-fermin.html": 1795707067000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261126/11694243/aubameyang-deportivo-accidente-ferrari.html": 1795708297000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261126/11694243/aubameyang-deportivo-accidente-ferrari.html": 1795708297000,
+   "SPORT|136829154": 1795706247000
   },
   "hechos": [
    {
@@ -3847,11 +3848,26 @@
     "motivo": "expulsión por protestas",
     "plazo": "se perderá dos partidos",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136829154",
+    "medio": "SPORT",
+    "t": 1795706247000,
+    "id": "2634",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Joan García juega con molestias en la rodilla derecha",
+    "motivo": "edema en la rodilla derecha",
+    "plazo": "",
+    "nums": [
+     16
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -4767,17 +4783,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 191226,
-  "salida": 22034,
+  "entrada": 193240,
+  "salida": 22561,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.478882,
+  "dolares": 0.479347,
   "reservado": 0
  },
  "recientes": {
@@ -9851,13 +9867,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6667,
+   "ok": 6668,
    "fallos": 0,
-   "ejecuciones": 5446,
+   "ejecuciones": 5447,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T16:16:19.246Z"
+   "ultima": "2026-11-26T16:21:21.068Z"
   }
  },
  "ptsDirecto": {},
@@ -9874,15 +9890,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:16:32.856Z"
+   "ultimaBien": "2026-11-26T16:21:33.279Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:16:32.856Z"
+   "ultimaBien": "2026-11-26T16:21:33.279Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:16:32.856Z"
+   "ultimaBien": "2026-11-26T16:21:33.279Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9890,11 +9906,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:16:32.856Z"
+   "ultimaBien": "2026-11-26T16:21:33.279Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:16:32.856Z"
+   "ultimaBien": "2026-11-26T16:21:33.279Z"
   }
  },
  "avisos": [
