@@ -32,7 +32,7 @@ export const NOVEDADES = [
     // intentos que no cambian la versión (LS «nueva-sola»), si AlDia falla o tras ESPERA_SOLA (3 h) esperando. Vuelve a la
     // misma pestaña, ficha y scroll (LS «tras-recarga»). Las webs de antes enseñan la ventana una última vez (es la que pone
     // esta). Pruebas: el bloque 13 de .github/prueba-web.mjs y el 5 de .github/prueba-ios.mjs
-    v: '0.8.4r', f: '2026-11-26', h: '05:31', t: 'Las versiones nuevas, solas',
+    v: '0.8.4r', f: '2026-11-26', h: '06:28', t: 'Las versiones nuevas, solas',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'versiones', menor: true, t: 'Las versiones nuevas se ponen solas', x: 'Cuando sale una versión nueva ya no sale la ventana de «Hay una versión nueva»: se pone sola en un momento en que no estés haciendo nada (o al salir de la app) y vuelves a la misma pantalla. Si estás preguntando a la IA, escribiendo o apuntando algo, espera a que acabes. Si no se puede poner sola, sale la ventana de siempre.' },
     ],
