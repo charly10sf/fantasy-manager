@@ -104,6 +104,8 @@ export function analizar(D, H, c, extra = {}) {
     const L = D.liga || {}, pf = (L.premium === true && L.pf) || {}, pc = (L.premium === true && L.pc) || {};
     M.premium = {
       liga: L.premium === true, leido: L.premium === true && !!L.pf,
+      // (26 nov, noche) leída con esta versión y NO es premium: se sabe seguro que no hay capitán, banquillo ni cesiones
+      estandar: L.premium === false && !!L.pf,
       entrenador: pf.coach === true, capitan: pf.captain === true, banquillo: pf.bench === true,
       formaciones: pf.formations === true, cesiones: pf.loan === true, ideal: pf.ideal === true,
       idealPremio: pc.ideal || null, cesionMax: pc.cesionMax || null, cesionMin: pc.cesionMin || null, cesionJornadas: pc.cesionJornadas || null,
@@ -1924,9 +1926,9 @@ export function analizar(D, H, c, extra = {}) {
     // (solo con los que ya son tuyos: lo mismo que dicen Equipo, la ficha y la IA aunque el plan fiche a alguien)
     const mio = (j) => j && misJs.some((x) => x.id === j.id);
     const c = M.capitanDe(once.lineas.flat().filter(mio)), b = M.banquilloDe(once.lineas, (plantilla || []).filter(mio)) || [];
-    // (sin entrenador y con uno libre que puedes pagar: se dice aquí también; no es un paso con su dinero contado)
+    // (sin entrenador y con uno libre que puedes pagar: se dice aquí también, con la puja del paso de pujar del plan)
     const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
-    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}${fe ? ` No tienes entrenador: ${fe.j.nombre} está libre en el mercado y vale ${eur(fe.precio)}.` : ''}`;
+    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}${fe ? ` No tienes entrenador: ${fe.j.nombre} está libre en el mercado (puja ${eur(fe.puja)}).` : ''}`;
   };
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
   const cacheMejora = {};
@@ -2263,9 +2265,14 @@ export function analizar(D, H, c, extra = {}) {
      jugadores), solo en una liga premium que los tiene. Medido con los datos públicos de J4-J13
      (.github/ia/medir-entrenador.mjs): los 20 que siguen dan 2,45 puntos por jornada de media (5 si gana, 2 si empata) y
      valen de 0,68 a 1,33 M; no ocupan sitio en la plantilla. Por eso, sin ninguno, fichar uno compensa (`M.ficharEntrenador`) */
+  /* (26 nov, noche) lo que se puja por un entrenador libre: un 10 % sobre su valor, redondeado a 10 mil hacia arriba. NO ESTÁ
+     MEDIDO (no hay datos de ninguna liga premium: cuando los haya, medir lo que se paga por ellos); valen sobre 1 M y dan
+     unos 2,4 puntos por jornada, así que un 10 % de más (unos 100 mil) se paga solo en media jornada. Es la ÚNICA cifra:
+     la leen el plan (paso de pujar, plan.js), Equipo, Mercado y la IA */
+  const pujaEntrenador = (precio) => Math.ceil(precio * 1.1 / 10000) * 10000;
   M.entrenadoresMercado = M.premium.entrenador
     ? (D.mercado || []).filter((m) => esEnt(m.pid) && m.tipo !== 'manager' && !M.dueno[m.pid])
-      .map((m) => { const j = J(m.pid); return { pid: m.pid, tipo: m.tipo, j, precio: num(j.valor) || num(m.precio), media: num(j.media), pts: M.ppEntrenador(j), miPuja: m.miPuja || null }; })
+      .map((m) => { const j = J(m.pid); const precio = num(j.valor) || num(m.precio); return { pid: m.pid, tipo: m.tipo, j, precio, puja: pujaEntrenador(precio), media: num(j.media), pts: M.ppEntrenador(j), miPuja: m.miPuja || null, cierra: m.cierra || null }; })
       .filter((m) => m.j.estado !== 'out_of_league' && m.precio > 0).sort((a, b) => b.media - a.media || b.pts - a.pts)
     : [];
   /** sin entrenador en una liga premium que los tiene: el libre del mercado que más puntos lleva por jornada (2 o más) y que
@@ -2275,7 +2282,7 @@ export function analizar(D, H, c, extra = {}) {
     // (con una puja ya puesta por uno, no se propone otro; y lo que tienes pujado no está para gastar)
     if (M.entrenadoresMercado.some((m) => m.miPuja)) return null;
     const saldo = num(D.dinero) - num(M.misPujas);
-    return M.entrenadoresMercado.find((m) => m.media >= 2 && m.precio * 1.1 <= saldo) || null;
+    return M.entrenadoresMercado.find((m) => m.media >= 2 && m.puja <= saldo) || null;
   };
   // lo que le quedaría al que vende: si se queda sin portero, o con menos defensas, medios o delanteros de los que
   // pide la formación gratuita más justa, no podría alinear un once y no te lo va a vender (aunque lo tenga a la venta:

@@ -181,14 +181,15 @@ export const CASOS = [
   { id: 'pm-tope', tipo: 'premium', en: 'premium', q: 'Tengo dos entrenadores, ¿me cuentan para el máximo de jugadores de la plantilla?', debe: /no (te )?(cuentan|ocupan|suman|entran)|aparte|fuera del tope/ },
   { id: 'pm-formacion', tipo: 'premium', en: 'premium', q: '¿Puedo jugar con un 4-2-4 en mi liga?', debe: /\bs[ií]\b/ },
   { id: 'pm-once', tipo: 'premium', en: 'premium', q: '¿Qué once pongo para la próxima jornada, con capitán y banquillo?', debe: /\{CAP\}/ },
-  { id: 'pm-ideal', tipo: 'premium', en: 'premium', q: '¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?', noDebe: /\b100[ .]?(000|mil)\b/ },
+  { id: 'pm-ideal', tipo: 'premium', en: 'premium', q: '¿Cuánto dinero me dan si uno mío entra en el 11 ideal de la jornada?', noDebe: /\b100[ .]?(000|mil)\b(?! ?€? por (cada )?punto)/ },
   { id: 'pm-cesion', tipo: 'premium', en: 'premium', q: '¿Puedo pedirle cedido a {R2} a {SUYO} para esta jornada? ¿Cuánto me costaría?' },
   { id: 'pm-que-hago', tipo: 'plan', en: 'premium', q: '¿Qué hago hoy?' },
   { id: 'pm-fichar-ent', tipo: 'premium', en: 'premium', prep: 'sin-entrenador', q: 'No tengo entrenador. ¿Ficho alguno?', debe: /\{ENTL\}/ },
-  { id: 'pm-fichar-ent-cuanto', tipo: 'premium', en: 'premium', sigue: true, q: '¿Y cuánto pujo por él?' },
+  { id: 'pm-fichar-ent-cuanto', tipo: 'premium', en: 'premium', sigue: true, q: '¿Y cuánto pujo por él?', debe: /\{ENTPUJA\}/ },
+  { id: 'pm-fichar-ent-plan', tipo: 'plan', en: 'premium', q: '¿Qué hago hoy?', debe: /\{ENTL\}/ },
   { id: 'pm-apagado-capitan', tipo: 'premium', en: 'premium', prep: 'premium-apagado', q: '¿A quién pongo de capitán y en el banquillo?', debe: /apagad|desactivad|no (hay|tiene|est[aá]|se puede)|administrador/ },
   // y en una liga estándar: no hay capitán
-  { id: 'pm-estandar-capitan', tipo: 'premium', en: '^(martes|sabado)$', q: '¿A quién pongo de capitán esta jornada?', debe: /no (hay|tiene|existe|est[aá])|premium/ },
+  { id: 'pm-estandar-capitan', tipo: 'premium', en: '^(martes|sabado)$', prep: 'estandar', q: '¿A quién pongo de capitán esta jornada?', debe: /no (hay|tiene|existe|est[aá])|premium/ },
 
 ];
 
@@ -284,12 +285,24 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
   if (prep === 'sin-entrenador' && !window.__sinEnt) {
     const yo = D.yo.teamId;
     D.plantillas[yo] = D.plantillas[yo].filter((x) => (D.maestro[x.pid] || {}).pos !== 5);
+    // (sin pujas puestas: el saldo, libre; y la liga «recién leída», D.t: si no, en la misma sesión el bloque de la liga que va
+    // a la IA se repite tal cual 10 min, `fotoChat`, y no se enteraría del cambio)
+    for (const m of D.mercado || []) m.miPuja = null;
+    D.t = (D.t || Date.now()) + 1000;
     window.__sinEnt = true;
+    await rehacer();
+  }
+  // (26 nov, premium) una liga estándar leída con esta versión (la de ejemplo no trae el campo)
+  if (prep === 'estandar' && !window.__estandar) {
+    D.liga = { ...D.liga, premium: false, pf: { formations: false, captain: false, bench: false, loan: false, ideal: false, coach: false } };
+    D.t = (D.t || Date.now()) + 1000;
+    window.__estandar = true;
     await rehacer();
   }
   // (26 nov, premium) el administrador apaga capitán y banquillo
   if (prep === 'premium-apagado' && !window.__pmApagado) {
     D.liga = { ...D.liga, pf: { ...(D.liga.pf || {}), captain: false, bench: false } };
+    D.t = (D.t || Date.now()) + 1000;
     window.__pmApagado = true;
     await rehacer();
   }
@@ -301,7 +314,7 @@ export async function prepararEnPagina({ q, hist, prep = null }) {
     const ents = (M.mias || []).filter((x) => x.j && x.j.pos === 5).map((x) => x.j);
     if (M.once && M.once.entrenador) { mk.ENTA = M.once.entrenador.nombre; const o = ents.find((j) => j.id !== M.once.entrenador.id); if (o) mk.ENTB = o.nombre; }
     const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
-    if (fe) mk.ENTL = fe.j.nombre;
+    if (fe) { mk.ENTL = fe.j.nombre; mk.ENTPUJA = U.eur(fe.puja).replace(/\s+/g, ' '); }
   }
   const poner = (s) => String(s).replace(/\{([A-Za-z0-9]+)\}/g, (a, k) => (mk[k] != null ? mk[k] : a));
   const pre = poner(q);

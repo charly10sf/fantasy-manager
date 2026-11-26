@@ -698,9 +698,9 @@ export function premiumTxt(M) {
   const fe = P.entrenador && M.ficharEntrenador ? M.ficharEntrenador() : null;
   const otroE = mios.length >= 2 && M.once && M.once.entrenador ? (mios.find((x) => x.j.id !== M.once.entrenador.id) || {}).j : null;
   const entTxt = otroE && !M.enJuego ? `. De los suyos, LA APP ALINEA A ${M.once.entrenador.nombre}${M.mejorPartidoEnt(M.once.entrenador, otroE) ? ' (mejor partido esta jornada)' : ''}`
-    : fe ? `. NO TIENE ENTRENADOR y fichar uno compensa (no ocupa sitio y dan unos 2,4 puntos por jornada de media): la app ficharía a ${fe.j.nombre}, libre en el mercado (vale ${eur(fe.precio)}, ${d1(fe.media)} puntos por jornada)` : '';
+    : fe ? `. NO TIENE ENTRENADOR y fichar uno compensa (no ocupa sitio y dan unos 2,4 puntos por jornada de media): la app ficharía a ${fe.j.nombre}, libre en el mercado (vale ${eur(fe.precio)}, ${d1(fe.media)} puntos por jornada), PUJANDO ${eur(fe.puja)} [P-${fe.pid}], pagado con saldo: di esa puja` : '';
   if (P.entrenador) si.push(`ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de ${TOPE_PLANTILLA} jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador${entTxt}`); else no.push('entrenador (no se alinea ni puntúa)');
-  if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega' + (cap ? `. LA APP PROPONE DE CAPITÁN A ${cap.j.nombre} (~${d1(cap.pp)} puntos esperados, el que más de los suyos): di ese` : '')); else no.push('capitán');
+  if (P.capitan) si.push('CAPITÁN: uno de los once jugadores (el entrenador NO puede ser capitán) puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega' + (cap ? `. LA APP PROPONE DE CAPITÁN A ${cap.j.nombre} (~${d1(cap.pp)} puntos esperados, el que más de los suyos): di ese` : '')); else no.push('capitán');
   if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán' + (ban.length ? `. LA APP PROPONE EN EL BANQUILLO: ${ban.map((b) => `${b.j.nombre} (${POS[b.pos]})`).join(', ')}: di esos` : '')); else no.push('banquillo');
   if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): ya van en la lista de formaciones que puede usar'); else no.push('formaciones de más');
   if (P.cesiones) si.push(`CESIONES: un jugador de otro mánager por ${P.cesionJornadas > 1 ? `${P.cesionJornadas} jornadas` : 'una jornada'}${P.cesionMax ? ` (${P.cesionMax} como mucho entre cedidos y peticiones)` : ''}, pagándole un mínimo que depende de su valor; se piden hasta 24 h antes de la jornada y el cedido no cuenta en el tope de plantilla`); else no.push('cesiones');
@@ -2281,6 +2281,20 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
           const puja = o.puja_max != null ? +o.puja_max : importe || opC.puja;
           importe = Math.max(puja || 0, opC.precio); o.puja_max = importe; o.donde = 'libre en el mercado de la liga';
           if (puja && puja < opC.precio) aviso = `La puja mínima es ${eur(opC.precio)}`;
+          // (26 nov, noche) un entrenador (liga premium): la puja es la de la app (`M.ficharEntrenador`), sin lo de los
+          // jugadores (lo que se paga por los de su valor, revender); no es para el once de los cuatro puestos ni para revender
+          if (opC.entrenador) {
+            o.entrenador = true; o.objetivo = 'entrenador'; o.beneficio_esperado = null; o.vender_el = null; o.aguantar = false;
+            if (importe !== opC.puja) { if (puja && puja > opC.puja) aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(puja)}. La app la deja en ${eur(opC.puja)}: con más pagarías de más.`; importe = Math.max(opC.puja, opC.precio); o.puja_max = importe; }
+            if (puja && importe !== puja) {
+              o.pujaAntes = puja;
+              const ponE = (t) => String(t).split(eur(puja)).join(eur(importe));
+              if (Array.isArray(o.claves)) o.claves = o.claves.map((c) => (/^puja de /i.test(String(c)) ? ponE(c) : c));
+              if (o.datos && /^puja de /i.test(String(o.datos.cuanto || ''))) o.datos = { ...o.datos, cuanto: ponE(o.datos.cuanto) };
+              if (o.motivoApp && o.motivo) o.motivo = cifrasAlDia(o.motivo, [[puja, importe]], [opC.precio, opC.j && opC.j.valor]);
+            }
+            break;
+          }
           // lo que se paga en esta liga (aviso de Domy, 29 oct): la puja de la app ya lo cuenta; por debajo, lo normal es perderlo
           const PL = M.pujasLiga;
           // (como mucho hasta lo que se puede pujar hoy: si no, la puja entera se descartaría)
@@ -2376,7 +2390,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     // (0.7.13p, aviso de Domy del 16 nov: «no puede ser que descarte un fichaje que sube 2 M y medio al día») en el parón
     // manda el dinero: si la app lo ve subiendo hasta la vuelta y pagando esto se gana, no se descarta aunque la IA lo
     // ponga para el once: es dinero en el parón y llega a tiempo para la jornada
-    const subeParon = !ya && !descartada && signo < 0 && importe && j && ['pujar', 'comprar', 'clausular'].includes(accion) && paronLejos(M) ? subeHastaVuelta(M, j, importe) : null;
+    const subeParon = !ya && !descartada && !o.entrenador && signo < 0 && importe && j && ['pujar', 'comprar', 'clausular'].includes(accion) && paronLejos(M) ? subeHastaVuelta(M, j, importe) : null;
     if (subeParon && !String(o.objetivo || '').startsWith('revend') && !cholloParon(M, j, importe)) {
       o.paronSube = true;
       if (subeParon.futuro) { o.beneficio_esperado = Math.round(subeParon.futuro - importe); o.beneficioApp = true; }
@@ -2384,7 +2398,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     }
     // (0.7.13p) ni uno del mercado a su valor, bueno y sin bajar que se paga con el saldo, sin deuda (aSuValorParon)
     const mParon = accion !== 'clausular' && (M.mercado || []).find((x) => String(x.pid) === String(pid));
-    if (!ya && !descartada && !subeParon && signo < 0 && importe && j && ['clausular', 'pujar', 'comprar'].includes(accion) && !String(o.objetivo || '').startsWith('revend') && paronLejos(M) && !cholloParon(M, j, importe)
+    if (!ya && !descartada && !subeParon && !o.entrenador && signo < 0 && importe && j && ['clausular', 'pujar', 'comprar'].includes(accion) && !String(o.objetivo || '').startsWith('revend') && paronLejos(M) && !cholloParon(M, j, importe)
       && !(mParon && aSuValorParon(M, mParon, importe, num(D.dinero) - num(M.misPujas)))
       && !(opC && opC.trato) && !notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe)) {
       descartada = true;
@@ -2417,7 +2431,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     // comparado con tu equipo y con lo que sube al día
     // (24 nov) lo que se compra para aguantarlo ya trae su cuenta (lo pagado de más y en cuántos días se recupera): sin el
     // «aceptable para lo que aporta», que es del once
-    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion) && !o.aguantar) {
+    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion) && !o.aguantar && !o.entrenador) {
       sobre = importe / j.valor - 1;
       const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
       const sc = M.sobrecoste ? M.sobrecoste(j, importe) : null;
@@ -2465,7 +2479,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
     // (lo ya hecho ya está en tu saldo de ahora)
     // un fichaje para el once con un calendario duro o de riesgo alto, solo de parche y cerca de su valor (lo dice el
     // motor con M.compraCal): se avisa
-    if (!ya && !descartada && signo < 0 && j && importe && ['clausular', 'comprar', 'pujar'].includes(accion) && !String(o.objetivo || '').startsWith('revend') && M.compraCal) {
+    if (!ya && !descartada && !o.entrenador && signo < 0 && j && importe && ['clausular', 'comprar', 'pujar'].includes(accion) && !String(o.objetivo || '').startsWith('revend') && M.compraCal) {
       const cc = M.compraCal(j, importe);
       if (!cc.ok && cc.txt) aviso = `${aviso ? `${aviso} ` : ''}Ojo: ${cc.txt.charAt(0).toLowerCase()}${cc.txt.slice(1)}`;
     }
@@ -4305,7 +4319,12 @@ export function datosChat(pregunta, D, M, c, { hist = [], web = false } = {}) {
     const C = compraContada(pregunta, D, M, antesQ);
     if (C) compraTxtQ = compraTxt(D, M, C);
   } catch (e) { compraTxtQ = ''; }
-  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${compraTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}${noFichaTxt}${dijoAntes}`.replace(/\n+$/, '') + largoTxt;
+  // (26 nov, noche; visto con la IA de verdad: en una liga estándar, a «¿a quién pongo de capitán?» elegía uno) si pregunta
+  // por algo de las Ligas Premium y su liga no lo es (o lo tiene apagado, que ya va arriba), se le dice. Solo con esa pregunta
+  // (no cuesta nada en las demás) y solo si la liga se ha leído con esta versión y no es premium (`M.premium.estandar`)
+  const premiumNoTxtQ = M.premium && M.premium.estandar && /\b(capitan\w*|banquillo|suplentes? del banquillo|cesion\w*|cedid\w*|ceder\w*|11 ideal|once ideal|premium)\b/.test(norm(pregunta))
+    ? '\nPREGUNTA POR ALGO DE LAS LIGAS PREMIUM DE LALIGA Y SU LIGA NO LO ES: en su liga no hay capitán, banquillo, cesiones ni premio del 11 ideal, y el entrenador no se alinea ni puntúa. Díselo en una frase y no elijas capitán ni suplentes.\n' : '';
+  return `${liga.texto}${MARCA_PREGUNTA}${ahoraTxt}${dichoAhora}${dineroTxtQ}${ofertaTxtQ}${compraTxtQ}${premiumNoTxtQ}${rivales ? `${rivales}\n` : ''}${extra}${ventas}${plan}${noFichaTxt}${dijoAntes}`.replace(/\n+$/, '') + largoTxt;
 }
 /** lo de la liga del chat, repetido igual en la misma conversación: { texto, t } (t: la hora de la foto si es de antes) */
 let FOTO = null;
