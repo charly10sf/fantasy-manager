@@ -3353,7 +3353,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lemar-y-aguado-vuelven-a-los-entrenamientos-radio-elche/": 1795688548000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/aviso-gonzalo-miro-sorloth-julian-alvarez-no-vale-marque-no-vuelve-ver-porteria-siete-jornadas-20261126_3482301.html": 1795688452000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lucho-tiene-pendiente-enmarcar-el-100-y-ganarse-el-200-radio-xativa/": 1795690083000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html": 1795690419000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html": 1795690419000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mantiene-guion-entrenamiento-sevilla-fc_0_2008590120.html": 1795690401000
   },
   "hechos": [
    {
@@ -3764,7 +3765,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -4630,7 +4631,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/23/delio-fernandez-ciclista-retirado-suspendido-cuatro-anos-desajustes-pasaporte-biologico/00031795433572481600929.htm": 1795433760000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
@@ -4709,17 +4709,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 114631,
-  "salida": 9139,
+  "entrada": 116607,
+  "salida": 9495,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.363305,
+  "dolares": 0.363681,
   "reservado": 0
  },
  "recientes": {
@@ -9798,13 +9798,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6603,
+   "ok": 6604,
    "fallos": 0,
-   "ejecuciones": 5382,
+   "ejecuciones": 5383,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:01:14.661Z"
+   "ultima": "2026-11-26T11:06:11.489Z"
   }
  },
  "ptsDirecto": {},
@@ -9821,15 +9821,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:01:29.403Z"
+   "ultimaBien": "2026-11-26T11:06:23.645Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:01:29.403Z"
+   "ultimaBien": "2026-11-26T11:06:23.645Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:01:29.403Z"
+   "ultimaBien": "2026-11-26T11:06:23.645Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9837,11 +9837,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:01:29.403Z"
+   "ultimaBien": "2026-11-26T11:06:23.645Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:01:29.403Z"
+   "ultimaBien": "2026-11-26T11:06:23.645Z"
   }
  },
  "avisos": [
