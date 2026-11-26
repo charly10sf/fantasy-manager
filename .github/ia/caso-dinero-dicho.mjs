@@ -140,11 +140,11 @@ await page.clock.runFor(400);
 const g = await page.evaluate(async (tid) => {
   const b = document.createElement('button'); b.dataset.accion = 'novDineroSi'; document.body.append(b); b.click(); b.remove();
   const v = () => document.getElementById('dd-ventana');
-  const out = { abre: !!v(), caras: v() ? v().querySelectorAll('[data-accion="ddElegir"]').length : 0 };
+  const out = { abre: !!v(), caras: v() ? v().querySelectorAll('#ddRival option[value]:not([value=""])').length : 0 };
   v().querySelector('.dd-in').value = '48';
   v().querySelector('[data-accion="ddApuntar"]').click();
   out.sinRival = (v().querySelector('.dd-err') || {}).textContent || '';
-  v().querySelector(`[data-accion="ddElegir"][data-tid="${tid}"]`).click();
+  const sel = v().querySelector('#ddRival'); sel.value = tid; sel.dispatchEvent(new Event('change', { bubbles: true }));
   v().querySelector('.dd-in').value = '';
   v().querySelector('[data-accion="ddApuntar"]').click();
   out.sinCifra = (v().querySelector('.dd-err') || {}).textContent || '';
@@ -159,7 +159,7 @@ const g = await page.evaluate(async (tid) => {
   out.cerrada = !v();
   return out;
 }, info.tid);
-ok(g.abre && g.caras === info.n, `(g) la ventana, con las caras de los ${info.n} rivales`);
+ok(g.abre && g.caras === info.n, `(g) la ventana, con los ${info.n} rivales en el desplegable`);
 ok(g.sinRival === 'Elige quién te lo dijo.' && g.sinCifra === 'Pon cuánto te dijo, en millones.', `(g) sin rival o sin cifra no guarda: «${g.sinRival}» «${g.sinCifra}»`);
 ok(g.nota === 'Lo contamos entre 43 y 53 M.' && new RegExp(`Apuntado[\\s\\S]*${R} tiene unos 48 M[\\s\\S]*Lo verás en su ficha`).test(g.hecho), `(g) «Más o menos» y lo apuntado: «${g.nota}» · «${g.hecho.replace(/\s+/g, ' ').slice(0, 90)}»`);
 ok(g.guard && g.guard.min === 43e6 && g.guard.max === 53e6 && g.guard.v === 48e6 && g.cerrada, `(g) guardado entre 43 y 53 M y la ventana cerrada`);

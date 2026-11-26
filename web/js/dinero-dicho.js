@@ -119,8 +119,11 @@ export function ventanaDineroHTML(S, st) {
   return `<span class="dd-eti-r"><i></i>Apuntar dinero</span>
     <h2 id="dd-v-t">¿Quién te lo dijo y cuánto?</h2>
     <p class="dd-v-p">Elige al rival y pon la cifra que te dijo, en millones.</p>
-    <div class="dd-eti">Quién</div>
-    <div class="dd-caras" role="group" aria-label="Quién te lo dijo">${ri.map((e) => `<button type="button" data-accion="ddElegir" data-tid="${esc(e.teamId)}" aria-pressed="${String(st.sel) === String(e.teamId)}">${caraManager(e)}<span>${esc(e.manager || e.nombre)}</span></button>`).join('')}</div>
+    <label class="dd-eti" for="ddRival">Quién</label>
+    <div class="dd-sel-c"><select id="ddRival" class="dd-sel" required>
+      <option value=""${st.sel ? '' : ' selected'} disabled>Elige al rival</option>
+      ${[...ri].sort((a, b) => String(a.manager || a.nombre).localeCompare(String(b.manager || b.nombre), 'es')).map((e) => `<option value="${esc(e.teamId)}"${String(st.sel) === String(e.teamId) ? ' selected' : ''}>${esc(e.manager || e.nombre)}${e.manager && e.nombre && e.manager !== e.nombre ? ` · ${esc(e.nombre)}` : ''}</option>`).join('')}
+    </select><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
     <div class="dd-eti">Cuánto</div>
     ${formCifra({ v: st.v, aprox: st.aprox, atajos: false, modos: ['Me dijo esa cifra', 'Más o menos'], id: 'ddCantV', grande: false })}
     ${st.err ? `<p class="dd-err" role="alert">${esc(st.err)}</p>` : ''}

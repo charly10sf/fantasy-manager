@@ -2107,6 +2107,12 @@ function notaDicho(f) {
   f.querySelectorAll('[data-accion="ddAtajo"]').forEach((b) => b.setAttribute('aria-pressed', String(v === Number(b.dataset.v) * 1e6)));
   const er = f.querySelector('.dd-err'); if (er) er.remove();
 }
+// (0.8.4o; Carlos, 26 nov, 01:34: «debería de ser un desplegable para seleccionar rival») el rival de la ventana
+document.addEventListener('change', (ev) => {
+  if (!ev.target || ev.target.id !== 'ddRival' || !S.ddV) return;
+  S.ddV.sel = ev.target.value;
+  const er = document.querySelector('#dd-ventana .dd-err'); if (er) er.remove();
+});
 document.addEventListener('input', (ev) => {
   const t = ev.target;
   if (!t || !t.classList || !t.classList.contains('dd-in')) return;
@@ -4357,10 +4363,10 @@ document.addEventListener('click', async (ev) => {
     case 'quitarAvisoDicho': { const y = window.scrollY; DD.quitarAvisoRivales(); pintar(); window.scrollTo(0, y); break; }
     case 'novDineroSi': cerrarNovDinero(); ventanaDinero(); break;
     case 'novDineroNo': cerrarNovDinero(); break;
-    case 'ddElegir': { const v = $('#dd-ventana'); if (!v || !S.ddV) break; S.ddV.sel = d.tid; v.querySelectorAll('[data-accion="ddElegir"]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tid === d.tid))); const er = v.querySelector('.dd-err'); if (er) er.remove(); break; }
     case 'ddApuntar': {
       const v = $('#dd-ventana'); if (!v || !S.ddV) break;
       const cant = DD.leerCifra((v.querySelector('.dd-in') || {}).value), aprox = modoAprox(v);
+      S.ddV.sel = (v.querySelector('#ddRival') || {}).value || '';
       S.ddV = { ...S.ddV, v: cant, aprox, err: !S.ddV.sel ? 'Elige quién te lo dijo.' : cant == null ? 'Pon cuánto te dijo, en millones.' : '' };
       if (!S.ddV.err) { apuntarDichoDe(S.ddV.sel, cant, aprox); S.ddV.fase = 'hecho'; pintar(); }
       ventanaDinero(S.ddV);
