@@ -64,7 +64,9 @@ export function hechosRival(M, r, ahora = Date.now()) {
     [1, 2, 3, 4].forEach((p, i) => { const k = (p === 1 ? 1 : o.formacion[p - 2]) - o.lineas[i].length; if (k > 0) f[p] = k; });
     return f;
   };
-  const falta = faltaDe(onceFirme), faltaDuda = faltaDe(once);
+  // sin su plantilla (LaLiga no la ha dado, o acaba de entrar en la liga) no se sabe qué le falta: no se dice nada
+  const sinPlantilla = fichas.length < 5;
+  const falta = sinPlantilla ? {} : faltaDe(onceFirme), faltaDuda = sinPlantilla ? {} : faltaDe(once);
   const titulares = new Set(once.lineas.flat().map((j) => j.id));
   const suplentes = {}, sobran = {};
   for (const p of [1, 2, 3, 4]) {
@@ -79,7 +81,7 @@ export function hechosRival(M, r, ahora = Date.now()) {
   const rec = jo ? M.recompensas(ahora, jo.ini) : 0;
   const premioFalta = M.premioPagado ? M.premioPagado(tid) === false : false;
   const rojo = cap && cap.alto != null ? cap.alto + rec < 0 && !premioFalta : null;
-  return { tid, n: todas.length, lleno: todas.length >= 25, estado, once, falta, faltaDuda, titulares, suplentes, sobran, cap, rojo, rec, escudos: M.escudosDe ? M.escudosDe(tid) : null, fichas };
+  return { tid, n: todas.length, sinPlantilla, lleno: todas.length >= 25, estado, once, falta, faltaDuda, titulares, suplentes, sobran, cap, rojo, rec, escudos: M.escudosDe ? M.escudosDe(tid) : null, fichas };
 }
 
 /* LO MEDIDO con la liga de Carlos (26 nov; 8 rivales, J4-J13, 85 días y 808 movimientos; .github/ia/medir-parte.mjs):
@@ -135,7 +137,8 @@ export function parte(M, D, opc = {}) {
         const c = cands[0];
         lineas.push({ tipo: 'rojo', llave: 'dinero', orden: 0, pid: c.j.id, importe: c.of,
           txt: `Está en negativo: si no vende antes de ${cuando(jo.ini)}, no puntúa en la jornada.`,
-          accion: `Ofértale ${eur(c.of)} por ${c.j.nombre}${c.venta ? ', que lo tiene a la venta' : ''}${c.gana >= 0.1 ? `: te da ${d1(c.gana)} pts más por jornada` : ''}.` });
+          // (si no lo tiene a la venta, que lo ponga: lo que es seguro en LaLiga es ofertar por lo que está en el mercado)
+          accion: `${c.venta ? `Ofértale ${eur(c.of)} por ${c.j.nombre}, que lo tiene a la venta` : `Dile que ponga a la venta a ${c.j.nombre} y ofértale ${eur(c.of)}`}${c.gana >= 0.1 ? `: te da ${d1(c.gana)} pts más por jornada` : ''}.` });
       }
     }
 

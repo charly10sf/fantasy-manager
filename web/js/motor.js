@@ -939,13 +939,16 @@ export function analizar(D, H, c, extra = {}) {
     }
   }
   M.flujos = flujos;
-  /** (26 nov, el parte de los rivales) ¿LaLiga ya le ha pagado el premio de la última jornada acabada? true o false; null si
-   *  no ha acabado ninguna. El dinero de cada rival no cuenta el premio hasta que sale en los movimientos, así que con él sin
-   *  pagar no se puede dar a nadie por «en rojo»: le entra de golpe (100 mil por punto) */
+  /** (26 nov, el parte de los rivales) ¿LaLiga ya le ha pagado el premio de la última jornada acabada? true: pagado; false:
+   *  aún puede llegarle; null: no ha acabado ninguna o ya no se espera. El dinero de cada rival no cuenta el premio hasta que
+   *  sale en los movimientos, así que con él por llegar no se puede dar a nadie por «en rojo»: le entra de golpe (100 mil
+   *  por punto). LaLiga lo paga entre 5 y 6 horas después de `fin` (131 premios de la liga de Carlos: de 4,9 a 5,8 h) y no
+   *  todos lo cobran cada jornada: pasadas 12 horas, el que no lo tiene ya no lo va a tener */
   M.premioPagado = (tid) => {
     const ult = jornadas.filter((jo) => jo.fin <= ahora).pop();
     if (!ult) return null;
-    return AH.lista.some((x) => x.clase === 'premio' && x.t > ult.ini && tidDe(x.quienId, x.quien) === tid);
+    if (AH.lista.some((x) => x.clase === 'premio' && x.t > ult.ini && tidDe(x.quienId, x.quien) === tid)) return true;
+    return ahora - ult.fin < 12 * HORA ? false : null;
   };
   M.histMov = { desde: AH.desde || null, completa: !!AH.completa, n: AH.lista.length };
   // cuántos de cada tipo (para el diagnóstico)

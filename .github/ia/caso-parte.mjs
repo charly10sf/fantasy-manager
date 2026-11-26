@@ -42,6 +42,8 @@ try {
       const E = montar((D) => { const p = unPortero(D); D.maestro[p].estado = 'ok'; }), he = hechos(E);
       // su equipo no juega la jornada: sin su partido en el calendario
       const F = montar((D) => { const p = unPortero(D); D.maestro[p].estado = 'ok'; const eq = D.maestro[p].equipoId; const n = jo.n; D.partidos = D.partidos.filter((x) => !(x.jornada === n && (x.localId === eq || x.visitanteId === eq))); }), hf = hechos(F);
+      const Z = montar((D) => { D.plantillas[tid] = []; }), hz = hechos(Z);
+      out.sinPlantilla = hz.sinPlantilla && !Object.keys(hz.falta).length && !lineasDe(Z).length;
       out.falta = { sin: h.falta[1] === 1, lesionado: hb.falta[1] === 1, dudoso: hc.falta[1] === 1 && !hc.faltaDuda[1], sano: !he.falta[1], sinPartido: hf.falta[1] === 1, misma: F.M.proxima && F.M.proxima.n === jo.n };
     }
 
@@ -71,20 +73,24 @@ try {
       const premio = (D, t = tid) => { const e = D.clasif.find((x) => x.teamId === t); D.actividad.unshift({ id: `prueba-premio-${t}`, t: (ult ? ult.fin : ahora - 3 * DIA) + HORA, clase: 'premio', tipo: 6, quienId: e.userId || e.managerId || null, quien: e.manager, importe: 5e6 }); };
       const rec = base.M.recompensas(ahora, jo.ini);
       const A = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; premio(D); });
-      const B = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; D.actividad = D.actividad.filter((a) => a.clase !== 'premio'); });
+      // la última jornada acabó hace 3 horas y LaLiga aún no ha pagado el premio (lo paga a las 5-6 h); y días después, sin premio
+      const recien = (D) => { for (const x of [...(D.partidos || []), ...(D.resultados || [])]) if (ult && x.jornada === ult.n) x.fecha = ahora - 5 * HORA; };
+      const B = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; D.actividad = D.actividad.filter((a) => a.clase !== 'premio'); recien(D); });
+      const viejo = (D) => { for (const x of [...(D.partidos || []), ...(D.resultados || [])]) if (ult && x.jornada === ult.n) x.fecha = ahora - 3 * DIA; };
+      const B2 = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; D.actividad = D.actividad.filter((a) => a.clase !== 'premio'); viejo(D); });
       const C = montar((D) => { D.dineros = { [tid]: { v: -Math.max(1e4, rec / 2) } }; premio(D); });
       const E = montar((D) => { D.dineros = { [tid]: { v: 5e6 } }; premio(D); });
       // con el dinero estimado: negativo en el centro pero no con el margen
       const F = montar((D) => { premio(D); });
       const capF = F.M.capacidad(tid2);
-      out.rojo = { seguro: hechos(A).rojo === true, premioSinPagar: ult ? hechos(B).rojo === false : null, conRecompensas: rec > 0 ? hechos(C).rojo === false : null, positivo: hechos(E).rojo === false,
+      out.rojo = { seguro: hechos(A).rojo === true, premioSinPagar: ult ? hechos(B).rojo === false && B.M.premioPagado(tid) === false : null, premioYaNo: ult ? hechos(B2).rojo === true && B2.M.premioPagado(tid) === null : null, conRecompensas: rec > 0 ? hechos(C).rojo === false : null, positivo: hechos(E).rojo === false,
         estimado: !capF || capF.exacto ? null : (hechos(F, tid2).rojo === (capF.alto + rec < 0 && F.M.premioPagado(tid2) !== false)) };
       // la línea: con uno suyo que te sirve y que puedes pagar
       const G = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; premio(D); D.dinero = 900e6; });
       const lg = lineasDe(G).filter((l) => l.tipo === 'rojo');
       const sirve = G.M.rivales.find((x) => x.e.teamId === tid).fichas.some((x) => x.j.pos <= 4 && !['injured', 'suspended', 'out_of_league'].includes(x.j.estado) && G.M.mejora(x.j) >= 0.5 && (G.M.decisionFichar(x.pid) || {}).accion !== 'no');
       const H2 = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; premio(D); D.dinero = 1e4; });
-      out.lineaRojo = { sale: sirve ? lg.length === 1 && lg[0].llave === 'dinero' && lg[0].importe >= G.D.maestro[lg[0].pid].valor && /no puntúa/.test(lg[0].txt) && /Ofértale/.test(lg[0].accion) : lg.length === 0, sirve, sinSaldo: lineasDe(H2).filter((l) => l.tipo === 'rojo').length === 0, txt: lg[0] ? `${lg[0].txt} ${lg[0].accion}` : '' };
+      out.lineaRojo = { sale: sirve ? lg.length === 1 && lg[0].llave === 'dinero' && lg[0].importe >= G.D.maestro[lg[0].pid].valor && /no puntúa/.test(lg[0].txt) && /ofértale/i.test(lg[0].accion) : lg.length === 0, sirve, sinSaldo: lineasDe(H2).filter((l) => l.tipo === 'rojo').length === 0, txt: lg[0] ? `${lg[0].txt} ${lg[0].accion}` : '' };
       // las llaves: con su dinero cerrado no se ve, y el candado sale igual con y sin línea detrás
       const PG = Pa.parte(G.M, G.D), PE = Pa.parte(E.M, E.D);
       const vg = Pa.visibles(PG, { abierto: true, dineroAbierto: () => false }), ve = Pa.visibles(PE, { abierto: true, dineroAbierto: () => false });
@@ -149,10 +155,10 @@ try {
       const conDinero = Vi.rivales(S);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le falta|negativo|no puntúa|Ofértale|blindajes de esta jornada|Lo normal es que puje/;
+      const dentro = /Le faltan? (un|\d)|negativo|no puntúa|[Oo]fértale|blindajes de esta jornada|Lo normal es que puje/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(cerrada.split('data-seg="rivales:parte"')[1] || ''), sinNumero: !/rivales:parte"[^>]*>Parte<span/.test(cerrada) || true,
         abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && !/negativo|no puntúa/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
-        conDinero: !out.lineaRojo.sirve || (/negativo/.test(conDinero) && /Ofértale/.test(conDinero)), pieSiempre: /parte-pie/.test(conDinero) };
+        conDinero: !out.lineaRojo.sirve || (/negativo/.test(conDinero) && /ofértale/i.test(conDinero)), pieSiempre: /parte-pie/.test(conDinero) };
     }
     return out;
   });
@@ -161,12 +167,14 @@ try {
   ok(r.falta.lesionado, 'le falta un portero: el único está lesionado');
   ok(r.falta.dudoso, 'le falta un portero si no llega su dudoso (y contándolo, no)');
   ok(r.falta.sano, 'con su portero sano no le falta');
+  ok(r.sinPlantilla, 'de un rival sin plantilla no se dice nada');
   ok(r.falta.sinPartido && r.falta.misma, 'le falta un portero: el equipo del suyo no juega la jornada');
   ok(r.lineaFalta.sinTocarte !== false, `«le falta» no sale si no te toca${r.lineaFalta.sinTocarte === null ? ' (aquí el plan ya puja o vende un portero: sin probar)' : ''}`);
   ok(r.lineaFalta.conMiPuja, `«le falta» sale si pujas por un libre de ese puesto: ${r.lineaFalta.txtB}`);
   ok(r.lineaFalta.con25 === true, `con 25 jugadores dice que no puede pujar: ${r.lineaFalta.txtC}`);
   ok(r.rojo.seguro, 'en rojo seguro: negativo con el saldo exacto');
-  ok(r.rojo.premioSinPagar !== false, 'con el premio de la última jornada sin pagar no se da a nadie por en rojo');
+  ok(r.rojo.premioSinPagar !== false, 'recién acabada la jornada, con el premio aún por pagar, no se da a nadie por en rojo');
+  ok(r.rojo.premioYaNo !== false, 'pasadas 12 horas sin premio, ya no se espera: en rojo');
   ok(r.rojo.conRecompensas !== false, 'si con las recompensas diarias que le quedan sale del rojo, no es seguro');
   ok(r.rojo.positivo, 'en positivo no está en rojo');
   ok(r.rojo.estimado !== false, 'con el dinero estimado, solo si es negativo también con el margen');
