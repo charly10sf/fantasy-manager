@@ -3203,7 +3203,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261123/1004254610/yeray-causa-baja-sesion-puerta-abierta-laporte-ejercita-normalidad.html": 1795454608000,
    "AS|https://as.com/futbol/un-nuevo-impulso-para-el-athletic-f202611-n/": 1795456434000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000,
-   "SPORT|136746564": 1795453266000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
    "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
@@ -9873,13 +9872,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6675,
+   "ok": 6676,
    "fallos": 0,
-   "ejecuciones": 5454,
+   "ejecuciones": 5455,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T16:56:13.657Z"
+   "ultima": "2026-11-26T17:01:17.768Z"
   }
  },
  "ptsDirecto": {},
@@ -9896,15 +9895,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:56:24.806Z"
+   "ultimaBien": "2026-11-26T17:01:27.290Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:56:24.806Z"
+   "ultimaBien": "2026-11-26T17:01:27.290Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:56:24.806Z"
+   "ultimaBien": "2026-11-26T17:01:27.290Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9912,11 +9911,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:56:24.806Z"
+   "ultimaBien": "2026-11-26T17:01:27.290Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T16:56:24.806Z"
+   "ultimaBien": "2026-11-26T17:01:27.290Z"
   }
  },
  "avisos": [
