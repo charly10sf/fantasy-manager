@@ -90,7 +90,9 @@ export function crearQuienPuja(ctx) {
   function base(tid, m, j) {
     const por = [];
     const P = plantillaDe(tid);
-    if (P.n >= TOPE) return { fuera: 'llena' };
+    // (lo que cuenta para el tope lo dice el motor, `ctx.cuenta`: en una liga normal el entrenador también ocupa sitio)
+    const nTope = ctx.cuenta ? num(ctx.cuenta(tid)) : P.n;
+    if (nTope >= TOPE) return { fuera: 'llena' };
     const cap = ctx.capacidad(tid);
     const deuda = Math.max(0, num(ctx.valorEquipo(tid)) * num(ctx.deudaPct));
     const precio = num(m.precio) || num(j.valor);
@@ -129,7 +131,7 @@ export function crearQuienPuja(ctx) {
       if (num(j.valor) > 0 && P.mejor[j.pos] > 0 && num(j.valor) >= P.mejor[j.pos]) f(W.mejor, `sería su mejor ${PUESTO[j.pos][0]}`);
     }
     if (P.n > 0 && P.n < 15) f(W.corta, `tiene la plantilla corta (${P.n})`);
-    else if (P.n >= TOPE - 1) f(W.llena);
+    else if (nTope >= TOPE - 1) f(W.llena);
     // el dinero
     const ref = num(m.pujaGana) || num(m.puja) || precio;
     let tope = null;

@@ -371,7 +371,7 @@ export const CASOS = [
     debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
 
   /* -------------------- la segunda vuelta del motor: lo que contestó Carlos el 14 nov (claude/prompt-motor-2.md) -------------------- */
-  ...['m-baja-sin-relevo', 'm-baja-con-relevo', 'm-reventa-aguanta', 'm-reventa-protege', 'm-reventa-perdiendo', 'm-24-puja', 'm-blinda-arranque'].map((escena) => ({
+  ...['m-baja-sin-relevo', 'm-baja-con-relevo', 'm-reventa-aguanta', 'm-reventa-protege', 'm-reventa-perdiendo', 'm-23-puja', 'm-blinda-arranque'].map((escena) => ({
     id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md, en las escenas de la segunda vuelta',
     debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
   { id: 'motor-baja-sin-relevo-avisa', tipo: 'motor', escena: 'm-baja-sin-relevo', de: 'Carlos, 14 nov (punto 2, Pedrosa): un titular que baja todos los días y no tiene a otro en su puesto que puntúe no se vende: se avisa de que hace falta sustituto',
@@ -388,7 +388,7 @@ export const CASOS = [
     debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
   { id: 'motor-reventa-de-mas-cuentas', tipo: 'motor', escena: 'm-reventa-de-mas', de: 'Carlos, 15 nov: con 60 M y tres comprados para revender (uno más del tope) la app decía «sin vender empezarías la jornada con −1 €» y «no cabe hoy: el saldo del plan ya está gastado»: las cuentas, las de verdad',
     debe: ['^OP: clausular Niño', '^JORNADA: 7\\d,\\d+ M', '^REGLAS: ok'], nunca: ['empezarías la jornada con', 'el del plan ya está gastado', 'pasarías del tope de deuda'] },
-  { id: 'motor-24-no-puja-de-mas', tipo: 'motor', escena: 'm-24-puja', de: 'regla 7 sin comprobar (Carlos, 14 nov: no lo sabe): con 24 y una puja viva, no se ficha a nadie más (podrías acabar con 26)',
+  { id: 'motor-23-no-puja-de-mas', tipo: 'motor', escena: 'm-23-puja', de: 'regla 7 sin comprobar (Carlos, 14 nov: no lo sabe): con 23 y una puja viva, no se ficha a nadie más (podrías acabar con 25)',
     nunca: ['^OP: (pujar|clausular)'] },
   { id: 'motor-oferta-sube-no-se-acepta', tipo: 'motor', escena: 'm-oferta-sube', de: 'Carlos, 17 nov (Fornals): con dinero en positivo, una oferta un poco por encima de su valor no se acepta si el jugador sube y la gana solo en pocos días',
     nunca: ['^OP: (vender|Aceptar oferta) Álex Baena', 'liquidez'] },

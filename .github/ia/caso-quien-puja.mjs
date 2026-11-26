@@ -89,7 +89,7 @@ try {
       nombres: qb.cands.slice(0, 2).every((c) => html.includes(c.nombre.replace(/&/g, '&amp;'))),
       sinDinero: !/sin tirar de deuda|\(no le llega\)|no pasa de/.test(html),
       cerradoDinero: Li.bloqueada('dineroRivales', R3) === true,
-      fuera: /No pueden pujar: /.test(html) && /\(24 jugadores\)/.test(html),
+      fuera: /No pueden pujar: /.test(html) && /\(plantilla llena\)/.test(html),
       largo: html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length,
     };
     // en la ficha del jugador, con la función cerrada (la liga de ejemplo): el candado dorado, no la lista

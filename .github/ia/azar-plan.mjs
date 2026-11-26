@@ -96,7 +96,8 @@ for (const [escena, caso] of ESCENAS_AZAR) {
         const libres = (n) => { const con = new Set(Object.values(D.plantillas).flat().map((x) => x.pid)), enM = new Set(D.mercado.map((m) => m.pid)); return Object.values(D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, n); };
         const meter = (js) => { for (const j of js) mios.push({ pid: j.id, ptId: `pt${j.id}`, clausula: Math.round(j.valor * 1.6), protegidoHasta: ahora0 + 10 * 864e5, compra: j.valor }); };
         // a veces, la plantilla casi llena
-        if (!caso && az() < 0.15) { meter(libres(uno([8, 9, 10]))); cambios.push(`plantilla ${mios.length}`); }
+        // (26 nov) la plantilla casi llena o llena, sin pasar del tope de LaLiga Fantasy (24)
+        if (!caso && az() < 0.15) { meter(libres(Math.min(uno([7, 8, 9]), Math.max(0, 24 - mios.length)))); cambios.push(`plantilla ${mios.length}`); }
         /* --- el caso: lo forzado y lo que se apunta para comprobarlo después --- */
         const C = {};
         const rivales = Object.keys(D.plantillas).filter((t) => t !== yo);

@@ -146,10 +146,10 @@ export const ESCENAS = {
   'm-reventa-protege': { hora: '2026-11-05T12:00:00+01:00', prep: `S.D.dinero = 60000000; for (const m of S.D.mercado) m.miPuja = null;
     const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Jon Martin'); f.protegidoHasta = Date.now() + 20 * 3600e3;`,
     extra: `${SERIE} serie('Jon Martin', 40, 0); const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 12 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
-  // 24 jugadores, con dinero y la puja de 36,3 M que trae la liga de ejemplo: una puja más podría dejarte con 26
-  'm-24-puja': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 60000000;
+  // 23 jugadores (uno menos del tope), con dinero y la puja de 36,3 M que trae la liga de ejemplo: una puja más podría dejarte con 25
+  'm-23-puja': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.dinero = 60000000;
     const con = new Set(Object.values(S.D.plantillas).flat().map((f) => f.pid)), enM = new Set(S.D.mercado.map((m) => m.pid));
-    const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, 9);
+    const libres = Object.values(S.D.maestro).filter((j) => !con.has(j.id) && !enM.has(j.id) && j.pos !== 5).sort((a, b) => a.valor - b.valor).slice(0, Math.max(0, 23 - S.D.plantillas[S.D.yo.teamId].length));
     for (const j of libres) S.D.plantillas[S.D.yo.teamId].push({ pid: j.id, ptId: 'pt' + j.id, clausula: Math.round(j.valor * 1.6), protegidoHasta: Date.now() + 10 * 864e5, compra: j.valor });` },
   // martes, con 30 M y Álex Baena en venta subiendo un 1 % al día: una oferta un 3 % por encima de su valor la gana solo
   // en 3 días, no se acepta (Fornals, Carlos 17 nov); una un 12 % por encima, sí

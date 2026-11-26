@@ -1,7 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados, mejorarIA } from './soporte.js';
-import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe, TOPE_PLANTILLA } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager, selloTop } from './comunes.js';
 import { linea, barra, mini, columnasSem, areaSem } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
@@ -47,7 +47,7 @@ export function quienPujaHTML(S, m) {
   const evs = (q.ev || []).filter((e) => e[0] > 0);
   const u = evs[evs.length - 1];
   const entro = u ? `${u[2] > 1 ? `${u[2]} entraron` : n > 1 ? 'La última entró' : 'Entró'} entre ${esc(ratoTxt(u[0], u[1]))}.` : '';
-  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ` (${TOPE_PLANTILLA} jugadores)` : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
+  const fuera = q.fuera.length ? `No pueden pujar: ${q.fuera.map((f) => `${esc(f.nombre)}${f.por === 'llena' ? ' (plantilla llena)' : !bloqueada('dineroRivales', f.tid) ? ' (no le llega)' : ''}`).join(', ')}.` : '';
   // ¿la pasa tu puja, o la de la app? Sin otra cifra de «N de cada 10»: esa ya la da «Libre en el mercado»
   const mia = Number(m.miPuja) > 0, ref = mia ? Number(m.miPuja) : m.puja, p = mia ? q.pMia : q.pApp;
   const de = mia ? 'Tu puja' : 'La puja de la app';

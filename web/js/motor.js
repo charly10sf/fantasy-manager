@@ -2330,7 +2330,7 @@ export function analizar(D, H, c, extra = {}) {
       ahora, rivales: M.rivalesTid, todos: D.clasif.map((e) => e.teamId), nombre: nombreEquipo, J,
       plantilla: (tid) => (D.plantillas || {})[tid] || [], valorEquipo: (tid) => num((M.equipo[tid] || {}).valor),
       capacidad: M.capacidad, compras: comprasQ, manual: manualQ, paga: (v, pid) => (M.pagaLiga ? M.pagaLiga(v, pid) : null),
-      deudaPct: num(c.deuda) / 100, minimoPos, tope: M.TOPE,
+      deudaPct: num(c.deuda) / 100, minimoPos, tope: M.TOPE, cuenta: (tid) => M.cuentaPlantilla(((D.plantillas || {})[tid] || []).map((f) => J(f.pid))),
     });
     M.quienPuja = qp;
     for (const m of M.mercado) {
@@ -3660,7 +3660,7 @@ export function motivoPeligro(r, { quien = true } = {}) {
   else if (!p.czTotal && ll) partes.push('~no ha clausulado en toda la temporada');
   if (riqueza && (!ricoPobre || ll)) partes.push(riqueza);
   if (p.cerca >= 0.5) partes.push('te pelea el puesto');
-  if (p.lleno) partes.push(`con ${TOPE_PLANTILLA} jugadores no puede clausular sin vender antes`);
+  if (p.lleno) partes.push('con la plantilla llena no puede clausular sin vender antes');
   if (!ll && !p.lleno && quien) {
     if (p.caras) partes.push('las cláusulas tuyas que puede pagar están caras para esta liga');
     else if (pobreSin || (p.sinDinero && p.riq == null)) partes.unshift(p.czTotal ? 'suele clausular, pero no le llega para ninguna cláusula tuya que se abre pronto' : 'no le llega para tus cláusulas que se abren pronto');
