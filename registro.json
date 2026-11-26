@@ -4586,7 +4586,8 @@
    "SPORT|136852775": 1795628687000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/levante/20261126/1004255538/levante-rompe-laterales-toljan-manu-sanchez-ko.html": 1795672800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255643/1-2-prat-vence-vic.html": 1795647889000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255642/grupo-1-pone-dia-disputa-dos-aplazados.html": 1795647744000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255642/grupo-1-pone-dia-disputa-dos-aplazados.html": 1795647744000,
+   "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795676131000
   },
   "hechos": [
    {
@@ -4639,27 +4640,25 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795677677013
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 47921,
-  "salida": 2222,
+  "entrada": 49686,
+  "salida": 2308,
   "cacheLee": 5806,
   "cacheEscribe": 11284,
-  "dolares": 0.142445,
+  "dolares": 0.142665,
   "reservado": 0
  },
  "recientes": {
@@ -9744,13 +9743,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6562,
+   "ok": 6563,
    "fallos": 0,
-   "ejecuciones": 5341,
+   "ejecuciones": 5342,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T07:36:14.280Z"
+   "ultima": "2026-11-26T07:41:21.370Z"
   }
  },
  "ptsDirecto": {},
@@ -9767,15 +9766,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:36:26.617Z"
+   "ultimaBien": "2026-11-26T07:41:35.201Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:36:26.617Z"
+   "ultimaBien": "2026-11-26T07:41:35.201Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:36:26.617Z"
+   "ultimaBien": "2026-11-26T07:41:35.201Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9783,11 +9782,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:36:26.617Z"
+   "ultimaBien": "2026-11-26T07:41:35.201Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:36:26.617Z"
+   "ultimaBien": "2026-11-26T07:41:35.201Z"
   }
  },
  "avisos": [
