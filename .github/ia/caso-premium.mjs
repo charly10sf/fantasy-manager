@@ -119,6 +119,13 @@ const r = await P.page.evaluate(async () => {
           entMerc: (M.entrenadoresMercado || []).map((m) => m.pid), fichar: (() => { const f = M.ficharEntrenador(); return f ? f.pid : null; })(), dosPartido: dosPartido ? dosPartido.id : null,
           seVenden: [cap && cap.j.id, ...(ban || []).map((x) => x.j.id)].filter(Boolean).filter(seVende).length, sale460: M.formacionApagada('4-6-0'), sale433: M.formacionApagada([4, 3, 3]),
           pm: pm ? { cap: pm.cap ? pm.cap.j.id : null, capIgual: !!(pm.cap && cap && pm.cap.j.id === cap.j.id), ban: pm.ban.length, banDentro: pm.ban.every((x) => (ban || []).some((y) => y.j.id === x.j.id)), ent: pm.ent ? pm.ent.j.id : null, fichar: pm.fichar ? pm.fichar.pid : null } : null,
+          // lo que tienes puesto en LaLiga (`pr`): el mismo capitán, otro de tu once y uno que no se reconoce
+          pr: (() => {
+            if (!cap) return null;
+            const otro = once.find((j) => j.pos < 5 && String(j.id) !== String(cap.j.id));
+            const a = Vi.premiumOnce(M, M.once.lineas, { cap: cap.j.id, banq: {} }), c = Vi.premiumOnce(M, M.once.lineas, { cap: otro.id }), x = Vi.premiumOnce(M, M.once.lineas, { cap: 'no-existe', banq: { 2: cap.j.id } });
+            return { igual: !!(a && a.capTuyo && String(a.capTuyo.id) === String(cap.j.id)), otro: !!(c && c.capTuyo && String(c.capTuyo.id) === String(otro.id)), raro: x ? x.capTuyo : 'x', banqMalPuesto: x ? x.banTuyo(2) : 'x' };
+          })(),
           ctxCap: /LA APP PROPONE DE CAPITÁN A /.test(ctx), ctxBan: /LA APP PROPONE EN EL BANQUILLO: /.test(ctx), ctxFichar: /NO TIENE ENTRENADOR y fichar uno compensa/.test(ctx), ctxCapNombre: cap ? ctx.includes(`CAPITÁN A ${cap.j.nombre}`) : null,
         };
       })(),
@@ -255,6 +262,8 @@ ok(t.ctxCap && t.ctxBan && t.ctxCapNombre === true && !e.ctxCap && !e.ctxBan && 
 ok(r.todoSinEnt.b.ctxFichar && !t.ctxFichar && !e.ctxFichar, '(13) y, sin entrenador, que fichar uno compensa y cuál');
 ok(t.pm && t.pm.capIgual && t.pm.banDentro && t.pm.ban <= t.ban.length && e.pm === null, '(13) Equipo pinta el mismo capitán y suplentes de la misma propuesta que la ficha y la IA, y nada en estándar');
 ok(t.seVenden === 0 && r.medios.b.seVenden === 0, '(13) a quien la app te manda vender no se le propone de capitán ni de suplente');
+ok(t.pr && t.pr.igual && t.pr.otro && t.pr.raro === null && (t.pr.banqMalPuesto === null || t.cap.pos === 2), '(13) «puesto» y «ahora, X» solo con un capitán tuyo reconocido; uno que no se reconoce, nada (y un suplente apuntado en un puesto que no es el suyo, tampoco)');
+ok(/No tienes entrenador: Míster Libre está libre en el mercado/.test(r.todoSinEnt.b.alin) && !/No tienes entrenador/.test(t.alin) && !/No tienes entrenador/.test(r.todoPujaEnt.b.alin), '(12) el paso de alinear dice qué entrenador fichar solo si no tienes ninguno ni una puja puesta por uno');
 ok(r.todoSinEnt.b.pm && r.todoSinEnt.b.pm.fichar === 'ent3' && r.todoDos.b.pm && r.todoDos.b.pm.ent, '(13) Equipo: sin entrenador, el que conviene fichar; con dos, cuál alinear');
 ok(r.todo.ctxLargo - r.est.ctxLargo < 1650, `(13) lo que crece lo que lee la IA con todo encendido: ${r.todo.ctxLargo - r.est.ctxLargo} caracteres (0 en estándar; solo con entrenador, ${r.pre.ctxLargo - r.est.ctxLargo})`);
 

@@ -1924,7 +1924,9 @@ export function analizar(D, H, c, extra = {}) {
     // (solo con los que ya son tuyos: lo mismo que dicen Equipo, la ficha y la IA aunque el plan fiche a alguien)
     const mio = (j) => j && misJs.some((x) => x.id === j.id);
     const c = M.capitanDe(once.lineas.flat().filter(mio)), b = M.banquilloDe(once.lineas, (plantilla || []).filter(mio)) || [];
-    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}`;
+    // (sin entrenador y con uno libre que puedes pagar: se dice aquí también; no es un paso con su dinero contado)
+    const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}${fe ? ` No tienes entrenador: ${fe.j.nombre} está libre en el mercado y vale ${eur(fe.precio)}.` : ''}`;
   };
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
   const cacheMejora = {};
@@ -3440,7 +3442,7 @@ export function planAuto(D, M, c) {
   // 0b. los entrenadores no puntúan en la versión gratuita: dinero parado (en una liga premium con entrenador sí puntúan)
   for (const x of M.mias.filter((y) => y.j.pos === 5 && !vendidos.has(y.pid) && !(M.premium.entrenador && y.j.estado !== 'out_of_league'))) {
     op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
-      motivo: M.premium.entrenador ? `Ya no entrena en LaLiga y no puntúa: son ${eur(x.j.valor)} parados.` : `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.`, confianza: 'alta' });
+      motivo: M.premium.entrenador ? `Ya no entrena en LaLiga y no puntúa: son ${eur(x.j.valor)} parados.` : `Es entrenador y ${M.premium.liga ? 'en tu liga' : 'en la versión gratuita'} no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 

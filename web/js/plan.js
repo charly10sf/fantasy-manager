@@ -228,7 +228,7 @@ function candidatos(X, vetados) {
     }
     if (x.j.pos === 5) {
       nuevo({ ...base, k: `V-${x.pid}`, fijo: true, motivo: 'entrenador', euros: 0,
-        op: () => op({ objetivo: 'caja', confianza: 'alta', motivo: `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.${llega}`,
+        op: () => op({ objetivo: 'caja', confianza: 'alta', motivo: `Es entrenador y ${M.premium.liga ? 'en tu liga' : 'en la versión gratuita'} no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.${llega}`,
           datos: { porque: 'es entrenador: no puntúa en la versión gratuita', cuanto: eur(x.j.valor), cuando: 'hoy', siNo: 'ese dinero sigue parado' } }) });
       continue;
     }

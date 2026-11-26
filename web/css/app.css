@@ -1724,6 +1724,7 @@ body.limitado .tostada { z-index: 120; }
 .linea-c.seis .cromo { width: 16%; }
 .linea-c.seis .ava.cr { width: 46px; height: 46px; }
 .linea-c.seis .cr-nom { font-size: var(--t-mini); padding: 2px 4px; }
+.linea-c.seis .cr-tit { left: -2px; min-width: 22px; font-size: var(--t-mini); padding: 0 2px; } .linea-c.seis .cr-rv { left: -4px; } .linea-c.seis .cr-est { right: -2px; }
 .cr-rv.tuyo { background: var(--rojo-btn); } .cr-rv.suyo { background: #3c3c47; color: #e6e3e8; }
 .cr-est.ev { display: inline-flex; align-items: center; justify-content: center; gap: 1px; background: rgba(8, 8, 10, 0.9); }
 .cr-est.ev.gol { background: #fff; color: #0b1a10; }

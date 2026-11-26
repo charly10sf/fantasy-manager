@@ -2784,9 +2784,12 @@ async function mirarMiOnce() {
     const r = await api.miOnce(D.yo.teamId);
     const ids = idsOnce(r).map(String), forma = formaOnce(r);
     if (ids.length < 5 || S.D !== D) return;
-    const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join();
-    apuntarMiOnce(ids, forma, premiumDeOnce(D, r));
-    if (antes !== ids.join() + '|' + (forma || []).join()) rehacerLuego();
+    // (26 nov, parte B) también si cambia lo de premium (capitán, banquillo, entrenador): Equipo dice «puesto» o «ahora, X»
+    const prTxt = (x) => (x ? `${x.cap || ''}/${JSON.stringify(x.banq || {})}/${x.ent || ''}` : '');
+    const pr = premiumDeOnce(D, r);
+    const antes = ((g && g.ids) || []).join() + '|' + ((g && g.forma) || []).join() + '|' + prTxt(g && g.pr);
+    apuntarMiOnce(ids, forma, pr);
+    if (antes !== ids.join() + '|' + (forma || []).join() + '|' + prTxt(pr)) rehacerLuego();
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }
 async function despues() {
@@ -5181,7 +5184,7 @@ function pasosTour() {
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: `Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están ${enAppIos() ? 'la IA' : 'tu clave de la IA'}, los avisos, abrir la app en otro dispositivo y este tutorial.` },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
-    { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
+    { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones de tu liga.' },
     // (21) en el parón, el mismo sitio es la pestaña Parón
     Pz.hayParon(S.M)
       ? { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Parón', x: 'Mientras dura el parón de selecciones: qué comprar para revender antes de la vuelta, qué vender antes de que baje y desde cuándo pensar en el once. Arriba puedes cambiar a Directo para ver los partidos de la vuelta.' }
