@@ -2275,6 +2275,20 @@
    "jornada": 14,
    "id": "2125832335559897098",
    "t": "2026-11-26T06:01:40.037Z"
+  },
+  {
+   "clave": "previa|134",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125863825090191576",
+   "t": "2026-11-26T08:06:47.619Z"
+  },
+  {
+   "clave": "onceideal|14",
+   "tipo": "onceideal",
+   "jornada": 14,
+   "id": "2125863895080550905",
+   "t": "2026-11-26T08:07:04.290Z"
   }
  ],
  "estados": {
@@ -4645,23 +4659,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795680081562
+   "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795680081562,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795680373762
   }
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
    "clasificar": 4,
-   "redactar": 8,
-   "revisar": 3,
+   "redactar": 14,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 60987,
-  "salida": 3860,
-  "cacheLee": 24712,
-  "cacheEscribe": 17586,
-  "dolares": 0.197416,
+  "entrada": 87785,
+  "salida": 5966,
+  "cacheLee": 73819,
+  "cacheEscribe": 23316,
+  "dolares": 0.299901,
   "reservado": 0
  },
  "recientes": {
@@ -4755,10 +4770,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-24T12:31:56.280Z",
-    "texto": "Deportivo-Barça (el domingo a las 16:15): así llegan los dos a la jornada 14\n\nAdeyemi es la gran duda de este partido: 51 % de titularidad en el Barcelona. También con dudas: Frenkie de Jong en el Barça, y Marc Casadó y Alti en el Dépor.\n\nAl Barcelona le faltan Fermín, sancionado, y Xavi Espart y Bardghji, lesionados. Sin discusión, Raphinha (85 %, 12,3 de media) y Mario Soriano (85 %).\n\nSobre el papel, el Barça lo tiene más fácil: va 1º y el Deportivo, 12º. Lamine Yamal es quien más destaca: 12,8 de media."
-   },
-   {
     "t": "2026-11-25T06:01:41.941Z",
     "texto": "El Celta-Villarreal del domingo (18:30, Balaídos) llega con un cruce claro: los celestes encajan poco y a los delanteros y medios del Villarreal les toca picar piedra.\n\nAl portero y a los defensas amarillos les viene mejor, porque el Celta marca poco.\n\nEn el Celta faltan Román, lesionado, y Yoel Lago, sancionado. Radu es el fijo bajo palos, con un 94 % de titularidad. Pablo Durán y Hugo Alvarez son duda, aunque lo más probable es que jueguen.\n\nEn el Villarreal no está Gerard, lesionado. Freeman y C. Romero tienen más opciones de salir que de quedarse fuera."
    },
@@ -4773,6 +4784,10 @@
    {
     "t": "2026-11-26T06:01:40.039Z",
     "texto": "Etta Eyong está a medias para el Levante-Racing de mañana (21:00, Ciutat de València): con un 49 % de titularidad, puede jugar o quedarse en el banquillo.\n\nEl cruce favorece a los delanteros y medios granotas, porque el Racing es de los que más encajan. En el Levante también hay duda con Ifeanyi Ndukwe, y falta Manu Sánchez, lesionado. Roger Brugué y Ryan son fijos.\n\nLos racinguistas no cuentan con Andrés Martín, lesionado. Zabiri, con 7,2 de media, es el seguro arriba."
+   },
+   {
+    "t": "2026-11-26T08:06:47.621Z",
+    "texto": "El Málaga cierra la tabla y recibe al Athletic el sábado, a las 16:15.\n\nEl cruce no le ayuda: los leones encajan poco, así que a sus delanteros y medios les toca picar piedra. Rafita está lesionado y Joaquín puede quedarse fuera. Herrero, con un 94 % de titularidad, es el fijo bajo palos.\n\nAl Athletic le viene al revés: los boquerones marcan poco, y eso es buena noticia para Unai Simón y la zaga. Nico Williams es fijo, y a Vivian le toca ver el partido lesionado."
    }
   ],
   "noticias": [
@@ -4951,6 +4966,10 @@
    {
     "t": "2026-11-19T08:01:45.973Z",
     "texto": "⭐ El once ideal de la jornada 13 sale con un 3-4-3 y Mbappé como gran apuesta: recibe al Celta, un partido asequible, y es fijo con un 97 % de titularidad.\n\nBajo palos, Oblak visita al Getafe, que solo marca 0,7 goles por partido: el mejor cruce del once. El chollo es Revivo, del Elche 🌴, por 10,7 M ante un Levante 🐸 que va 17º.\n\nAubameyang se queda fuera: con un 50 %, es duda, y no compensa pagar 75 M por ella."
+   },
+   {
+    "t": "2026-11-26T08:07:04.292Z",
+    "texto": "Mbappé es la gran apuesta de un 4-3-3 que costaría 1069,5 M. El Real Madrid recibe al Alavés, un rival de nivel medio que va 9º, y el delantero es el 2º con más puntos de la temporada. Juega casi seguro, con un 94 % de titularidad.\n\nEn defensa, el mejor cruce es el de Cabrera: el Espanyol recibe a un Getafe que solo marca 0,6 goles por partido. Bartra llega en racha, con 37 puntos en las tres últimas jornadas, y se mide al Rayo, que va 16º.\n\nEdu Expósito se queda fuera por la duda."
    }
   ],
   "liga": [
@@ -5306,11 +5325,6 @@
   }
  ],
  "fallosRedaccion": {
-  "previa|134": {
-   "n": 1,
-   "t": "2026-11-24T10:11:51.096Z",
-   "ultima": "2026-11-24T10:11:51.096Z"
-  },
   "previa|137": {
    "n": 1,
    "t": "2026-11-24T10:17:03.293Z",
@@ -5320,11 +5334,6 @@
    "n": 1,
    "t": "2026-11-24T10:21:52.395Z",
    "ultima": "2026-11-24T10:21:52.395Z"
-  },
-  "onceideal|14": {
-   "n": 1,
-   "t": "2026-11-26T08:01:56.132Z",
-   "ultima": "2026-11-26T08:01:56.132Z"
   }
  },
  "rasgos": {
@@ -9751,13 +9760,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6567,
+   "ok": 6568,
    "fallos": 0,
-   "ejecuciones": 5346,
+   "ejecuciones": 5347,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T08:01:21.562Z"
+   "ultima": "2026-11-26T08:06:13.762Z"
   }
  },
  "ptsDirecto": {},
@@ -9774,15 +9783,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:02:01.290Z"
+   "ultimaBien": "2026-11-26T08:07:05.322Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:02:01.290Z"
+   "ultimaBien": "2026-11-26T08:07:05.322Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:02:01.290Z"
+   "ultimaBien": "2026-11-26T08:07:05.322Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9790,11 +9799,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:02:01.290Z"
+   "ultimaBien": "2026-11-26T08:07:05.322Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:02:01.290Z"
+   "ultimaBien": "2026-11-26T08:07:05.322Z"
   }
  },
  "avisos": [
