@@ -2296,6 +2296,13 @@
    "jornada": 14,
    "id": "2125895235419189332",
    "t": "2026-11-26T10:11:36.556Z"
+  },
+  {
+   "clave": "noticias|3197:buena|2026-11-26",
+   "tipo": "noticias",
+   "jornada": 14,
+   "id": "2125922972669976576",
+   "t": "2026-11-26T12:01:49.455Z"
   }
  ],
  "estados": {
@@ -3357,7 +3364,11 @@
    "MARCA|https://www.marca.com/futbol/elche/2026/11/26/lemar-esquiva-lesion-gravedad-enciende-esperanza.html": 1795692480000,
    "SPORT|136875046": 1795689021000,
    "SPORT|136856712": 1795689830000,
-   "SPORT|136876574": 1795689822000
+   "SPORT|136876574": 1795689822000,
+   "AS|https://as.com/futbol/champions/paso-adelante-del-cuti-romero-salta-al-campo-y-mira-hacia-el-barca-f202611-n/": 1795693366000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255789/optimismo-rodri-christensen.html": 1795693326000,
+   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/26/aubameyang-sufre-accidente-dirigia-entrenar.html": 1795693975000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-terna-candidatos-psg-suplir-doue-kvaratskhelia-20261126_3482766.html": 1795694210000
   },
   "hechos": [
    {
@@ -3764,11 +3775,23 @@
     "motivo": "sobrecarga muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/champions/paso-adelante-del-cuti-romero-salta-al-campo-y-mira-hacia-el-barca-f202611-n/",
+    "medio": "AS",
+    "t": 1795693366000,
+    "id": "3197",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Cuti Romero retoma progresivamente los entrenamientos con el equipo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -4711,17 +4734,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 20,
-   "redactar": 15,
-   "revisar": 7,
+   "clasificar": 21,
+   "redactar": 19,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 126829,
-  "salida": 12953,
-  "cacheLee": 73819,
-  "cacheEscribe": 34600,
-  "dolares": 0.366433,
+  "entrada": 139848,
+  "salida": 15509,
+  "cacheLee": 98733,
+  "cacheEscribe": 44840,
+  "dolares": 0.441163,
   "reservado": 0
  },
  "recientes": {
@@ -4837,10 +4860,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-16T15:31:34.168Z",
-    "texto": "👀 Aimar vuelve a entrenar con el grupo tras la lesión, según MARCA y Mundo Deportivo.\n\nEl centrocampista del Osasuna 🐂 vale 2,1 M y ha perdido 2,4 M en el último mes, así que está barato si te fías de su vuelta. Con la liga parada, el partido que importa es el del domingo 22 de noviembre en El Sadar contra el Málaga 🐟, que va último y de los que más goles encajan. Para un medio, eso le viene bien."
-   },
-   {
     "t": "2026-11-16T18:31:47.168Z",
     "texto": "👀 Olmo vuelve a entrenar con el grupo, según Mundo Deportivo y SPORT.\n\nEl centrocampista del Barça lleva 1 gol y 3 asistencias en la liga, así que su regreso es una buena noticia si lo tienes. Con la liga parada, el partido que importa es el del domingo 22 de noviembre, tras el parón, contra el Villarreal 🚢, que va 8º. Aún no se sabe si llega con sitio en el once."
    },
@@ -4855,6 +4874,10 @@
    {
     "t": "2026-11-24T13:16:30.373Z",
     "texto": "🚨 Murillo causa baja tras sufrir una brecha en la ceja, según SPORT y Cadena SER.\n\nEl defensa del Málaga va a 7 puntos por partido.\n\nEl Athletic Club, el rival del Málaga el sábado a las 16:15, va 8º, así que el partido es de nivel medio."
+   },
+   {
+    "t": "2026-11-26T12:01:49.457Z",
+    "texto": "El Cuti vuelve a entrenar poco a poco con el Atleti, según AS y Mundo Deportivo.\n\nEl central ha dejado la portería a cero en cuatro de los seis partidos que ha jugado, un buen aval para su vuelta. El sábado a las 18:30 el Atleti visita al Elche en el Martínez Valero, que va 19º de 20: un partido asequible para el portero y los defensas rojiblancos. De momento no está claro que llegue a tiempo."
    }
   ],
   "directo": [
@@ -9800,13 +9823,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6614,
+   "ok": 6615,
    "fallos": 0,
-   "ejecuciones": 5393,
+   "ejecuciones": 5394,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:56:14.782Z"
+   "ultima": "2026-11-26T12:01:13.933Z"
   }
  },
  "ptsDirecto": {},
@@ -9823,15 +9846,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:56:23.572Z"
+   "ultimaBien": "2026-11-26T12:01:51.561Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:56:23.572Z"
+   "ultimaBien": "2026-11-26T12:01:51.561Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:56:23.572Z"
+   "ultimaBien": "2026-11-26T12:01:51.561Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9839,11 +9862,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:56:23.572Z"
+   "ultimaBien": "2026-11-26T12:01:51.561Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:56:23.572Z"
+   "ultimaBien": "2026-11-26T12:01:51.561Z"
   }
  },
  "avisos": [
