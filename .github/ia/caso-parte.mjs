@@ -60,7 +60,7 @@ try {
       const lc = lineasDe(C).filter((l) => l.tipo === 'falta' && l.pos === 1);
       out.lineaFalta = {
         sinTocarte: planPuja || vendoPortero ? null : la.length === 0,
-        conMiPuja: lb.length === 1 && lb[0].llave === 'parte' && lb[0].pids.includes(pidPuja) && /Le falta un portero/.test(lb[0].txt) && /Lo normal es que puje/.test(lb[0].accion), txtB: lb[0] ? `${lb[0].txt} ${lb[0].accion}` : '',
+        conMiPuja: lb.length === 1 && lb[0].llave === 'parte' && lb[0].pids.includes(pidPuja) && /^Le faltan? .*\bun portero\b/.test(lb[0].txt) && /Lo normal es que puje/.test(lb[0].accion), txtB: lb[0] ? `${lb[0].txt} ${lb[0].accion}` : '',
         con25: window.__n25 < 25 ? null : hechos(C).lleno && lc.length === 1 && /tiene 25 jugadores/.test(lc[0].accion) && !/Lo normal es que puje/.test(lc[0].accion), txtC: lc[0] ? lc[0].accion : '',
       };
     }

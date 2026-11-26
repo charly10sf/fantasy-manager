@@ -24,6 +24,7 @@ import { ofertaDueno, esClausulable } from './motor.js';
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 export const PUESTO_P = { 1: ['portero', 'porteros'], 2: ['defensa', 'defensas'], 3: ['centrocampista', 'centrocampistas'], 4: ['delantero', 'delanteros'] };
 const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
+const enLista = (l) => (l.length <= 1 ? l.join('') : `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}`);
 
 /** los equipos que juegan la jornada (sin los partidos aplazados): null si no se sabe */
 export function equiposQueJuegan(jo) {
@@ -141,23 +142,34 @@ export function parte(M, D, opc = {}) {
     /* 2. LE FALTA GENTE EN UN PUESTO (llave: el parte). Lo normal es que fiche de ese puesto en 48 h (64 % frente a 20 %).
        Sale si te toca: pujas tú (o el plan) por un libre de ese puesto, o tienes de ese puesto uno que la app ya vende */
     if (L.falta) {
+      const conPuja = [], conVenta = [];
       for (const p of [1, 2, 3, 4]) {
         if (!h.falta[p]) continue;
-        const cuantos = h.falta[p] === 1 ? `Le falta un ${PUESTO_P[p][0]}` : `Le faltan ${h.falta[p]} ${PUESTO_P[p][1]}`;
-        const txt = `${cuantos} para alinear once${h.faltaDuda[p] ? '' : ' si no llega su dudoso'}.`;
-        const mios = libres.filter((m) => m.j.pos === p && (num(m.miPuja) > 0 || planSi(m.pid))).sort((a, b) => num(b.j.valor) - num(a.j.valor)).slice(0, 2);
-        const nombres = mios.map((m) => m.j.nombre).join(' o por ');
-        if (mios.length) {
-          lineas.push({ tipo: 'falta', llave: 'parte', orden: 1, pos: p, pids: mios.map((m) => m.pid), lleno: h.lleno, txt,
-            accion: h.lleno ? `Pero tiene 25 jugadores: hasta que venda a uno no puede pujar ni por ${nombres.replace(/ o por /g, ' ni por ')}.`
-              : `Lo normal es que puje por ${nombres}: si ${mios.length > 1 ? 'quieres a alguno' : 'lo quieres'}, cuenta con su puja al poner la tuya.` });
-          continue;
-        }
+        // (primero por los que ya has pujado; después, los que el plan manda fichar, del más caro al más barato)
+        const mios = libres.filter((m) => m.j.pos === p && (num(m.miPuja) > 0 || planSi(m.pid))).sort((a, b) => (num(b.miPuja) > 0) - (num(a.miPuja) > 0) || num(b.j.valor) - num(a.j.valor)).slice(0, 2);
+        if (mios.length) { conPuja.push({ p, mios }); continue; }
         const mio = misVentas.filter((x) => x.j.pos === p).sort((a, b) => num(b.j.valor) - num(a.j.valor))[0];
-        if (mio && !h.lleno) {
-          lineas.push({ tipo: 'falta', llave: 'parte', orden: 2, pos: p, pid: mio.pid, vendo: true, txt,
-            accion: `Vas a vender a ${mio.j.nombre}: ponlo a la venta y díselo antes de aceptar la oferta de LaLiga. Quien va corto de un puesto suele pagar más.` });
-        }
+        if (mio && !h.lleno) conVenta.push({ p, mio });
+      }
+      // una sola línea por rival: los puestos que le faltan seguro (o, si todos dependen de un dudoso, esos, y se dice)
+      const frase = (l0) => {
+        const firmes = l0.filter((x) => h.faltaDuda[x.p]), l = firmes.length ? firmes : l0;
+        const n = l.reduce((t, x) => t + h.falta[x.p], 0);
+        const cuanto = (x) => (h.falta[x.p] === 1 ? `un ${PUESTO_P[x.p][0]}` : `${h.falta[x.p]} ${PUESTO_P[x.p][1]}`);
+        return { l, txt: `Le falta${n > 1 ? 'n' : ''} ${enLista(l.map(cuanto))} para alinear once${firmes.length ? '' : ' si no llega su dudoso'}.` };
+      };
+      if (conPuja.length) {
+        const { l, txt } = frase(conPuja);
+        // de un solo puesto, hasta dos libres («por A o por B»: fichará uno); de varios, el mejor de cada uno («por A y por B»)
+        const ms = l.length === 1 ? l[0].mios : l.slice(0, 2).map((x) => x.mios[0]);
+        const nombres = ms.map((m) => m.j.nombre), une = l.length === 1 ? ' o por ' : ' y por ';
+        lineas.push({ tipo: 'falta', llave: 'parte', orden: 1, pos: l[0].p, pids: ms.map((m) => m.pid), lleno: h.lleno, txt,
+          accion: h.lleno ? `Pero tiene 25 jugadores: hasta que venda a uno no puede pujar ni por ${nombres.join(' ni por ')}.`
+            : `Lo normal es que puje por ${nombres.join(une)}: si ${ms.length > 1 ? 'quieres a alguno' : 'lo quieres'}, cuenta con su puja al poner la tuya.` });
+      } else if (conVenta.length) {
+        const { l, txt } = frase(conVenta), mio = l[0].mio;
+        lineas.push({ tipo: 'falta', llave: 'parte', orden: 2, pos: l[0].p, pid: mio.pid, vendo: true, txt,
+          accion: `Vas a vender a ${mio.j.nombre}: ponlo a la venta y díselo antes de aceptar la oferta de LaLiga. Quien va corto de un puesto suele pagar más.` });
       }
     }
 
