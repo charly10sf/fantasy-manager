@@ -17,8 +17,8 @@
    con el dinero de ESE rival abierto; lo demás son hechos de LaLiga (`llave: 'parte'`) y va con la llave del parte. Aquí no
    se mira ninguna llave: lo hace quien pinta (hojas.js) y quien se lo cuenta a la IA (ia.js), con `visibles`.
 
-   LO MEDIDO con la liga de Carlos (J4-J13): arriba de cada regla y en claude/nota-parte.md del proyecto. */
-import { num, DIA, HORA, eur, cuando } from './util.js';
+   LO MEDIDO con la liga de Carlos (J4-J13) decide qué líneas salen: está encima de LINEAS y en claude/nota-parte.md. */
+import { num, eur, cuando } from './util.js';
 import { ofertaDueno, esClausulable } from './motor.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
@@ -81,80 +81,107 @@ export function hechosRival(M, r, ahora = Date.now()) {
   return { tid, n: todas.length, lleno: todas.length >= 25, estado, once, falta, faltaDuda, titulares, suplentes, sobran, cap, rojo, rec, escudos: M.escudosDe ? M.escudosDe(tid) : null, fichas };
 }
 
+/* LO MEDIDO con la liga de Carlos (26 nov; 8 rivales, J4-J13, 85 días y 808 movimientos; .github/ia/medir-parte.mjs):
+     rojo       5 veces en 80 jornadas de rival alguien estaba «en rojo seguro» de 1 a 3 días antes: las 5 vendió antes del
+                primer partido (16 ventas: 10 a LaLiga y 6 a otro mánager) y las 5 puntuó. Sale.
+     falta      56 casos (rival, puesto y día, en los 4 días antes de una jornada): ficha de ese puesto en 48 h el 64 % de
+                las veces, frente al 20 % de quien no va corto (del mercado, 45 % frente a 16 %). Sale. Y cuando al que
+                compra le faltaba el puesto, entre mánagers se pagó un +14 % sobre el valor de mediana (25 tratos; 22 de
+                ellos, un +5 % o más): por eso se dice a quién ofrecerle lo que ya ibas a vender.
+     sobra      NO SALE: de los que la app daría por sobrantes, en 7 días se vende el 12 % (el 1 % a otro mánager), menos
+                que los titulares (26 % y 8 %). En esa liga se traspasan los titulares, no los que sobran.
+     reventa    NO SALE: de 123 compras al mercado de un puesto que le faltaba a otro, 4 acabaron vendidas a ese rival en
+                10 días (ganando un 6 % de mediana); 39 fueron a LaLiga y 11 de esas perdieron dinero.
+     blindajes  5 de 80 jornadas de rival con los 2 gastados (y 10 con 1). Es un hecho: sale cuando pasa.
+     25         ningún rival llegó a 25 en esos 85 días (van por 15 de media). Es una regla: sale cuando pasa. */
+export const LINEAS = { rojo: true, falta: true, blindajes: true, sobra: false };
+
 /** ¿puedes comprarle a otro mánager por ese importe? Solo con saldo y con sitio en la plantilla */
 const puedoComprar = (M, D, importe) => importe > 0 && importe <= num(D.dinero) && (M.mias || []).length < 25;
 
 /**
  * El parte: una entrada por rival que tenga algo, cada una con sus líneas.
  *   { tid, nombre, e, lineas: [{ tipo, llave, txt, accion, pid, pids, pos, importe, orden }] }
- * tipo: 'rojo' | 'falta' | 'sobra' | 'blindajes'. `txt` es el hecho y `accion` lo que puedes hacer tú.
+ * tipo: 'rojo' | 'falta' | 'blindajes' (y 'sobra', apagada). `txt` es el hecho y `accion` lo que puedes hacer tú.
  * Los rivales salen por lo que más te cambia (orden menor, antes). No se mira ninguna llave: ver `visibles`.
+ * `opc.lineas` cambia qué líneas salen (LINEAS), para probar las apagadas.
  */
 export function parte(M, D, opc = {}) {
   const ahora = opc.ahora || Date.now();
+  const L = { ...LINEAS, ...(opc.lineas || {}) };
   const jo = M.proxima || null;
-  if (!D || !Array.isArray(M.rivales) || !jo) return { jornada: null, rivales: [] };
+  if (!D || !Array.isArray(M.rivales) || !jo) return { jornada: null, ini: null, rivales: [] };
   const libres = (M.mercado || []).filter((m) => m.tipo === 'liga' && m.j && m.j.pos >= 1 && m.j.pos <= 4 && !MALOS.has(m.j.estado));
+  // lo que dice el plan de fichar a uno (decide.js): el parte nunca manda fichar lo que el plan descarta
+  const planNo = (pid) => { const d = M.decisionFichar ? M.decisionFichar(pid) : null; return !!(d && d.accion === 'no'); };
+  const planSi = (pid) => { const d = M.decisionFichar ? M.decisionFichar(pid) : null; return !!(d && d.accion === 'fichar'); };
+  // lo tuyo que la app ya manda vender (la misma decisión que en Equipo, la ficha y el plan)
+  const misVentas = (M.mias || []).filter((x) => x.j && x.j.pos >= 1 && x.j.pos <= 4 && !MALOS.has(x.j.estado) && M.decision && (M.decision(x.pid) || {}).accion === 'vender');
   const out = [];
   for (const r of M.rivales) {
     const h = hechosRival(M, r, ahora), tid = h.tid, lineas = [];
     const nombre = r.e.manager || r.e.nombre || 'Rival';
     const enVenta = (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId) === String(tid) && m.j);
     const oferta = (j) => { const m = enVenta.find((x) => x.pid === j.id); const o = ofertaDueno(M, j, M.tend(j.id) || {}, ahora); return Math.max(num(m && m.ofertaMin), num(o && o.v), num(j.valor)); };
-    const meSirve = (j) => !MALOS.has(j.estado) && (M.mejora(j) >= 0.5 || (M.puestos || []).some((p) => p.pos === j.pos && p.faltan > 0));
+    const meSirve = (j) => !MALOS.has(j.estado) && !planNo(j.id) && (M.mejora(j) >= 0.5 || (M.puestos || []).some((p) => p.pos === j.pos && p.faltan > 0));
 
-    /* 1. EN ROJO SEGURO (llave: su dinero). Tiene que vender antes del primer partido o no puntúa: es cuando acepta lo que
-       otro día no. Solo sale si tú puedes aprovecharlo: uno suyo que te sirve y que puedes pagar con tu saldo */
-    if (h.rojo) {
+    /* 1. EN ROJO SEGURO (llave: su dinero). Tiene que vender antes del primer partido o no puntúa. Solo sale si tú puedes
+       aprovecharlo: uno suyo que te sirve y que puedes pagar con tu saldo */
+    if (L.rojo && h.rojo) {
       const cands = h.fichas.map((x) => x.j).filter((j) => meSirve(j)).map((j) => ({ j, of: oferta(j), venta: enVenta.some((m) => m.pid === j.id), gana: M.mejora(j) }))
         .filter((x) => puedoComprar(M, D, x.of)).sort((a, b) => (b.venta - a.venta) || (b.gana - a.gana));
       if (cands.length) {
         const c = cands[0];
         lineas.push({ tipo: 'rojo', llave: 'dinero', orden: 0, pid: c.j.id, importe: c.of,
-          txt: `En rojo: si no vende antes de ${cuando(jo.ini)}, no puntúa en la jornada.`,
-          accion: `Ofértale ${eur(c.of)} por ${c.j.nombre}${c.venta ? ', que lo tiene a la venta' : ''}: te da ${d1(c.gana)} pts más por jornada y a él le saca del apuro.` });
+          txt: `Está en negativo: si no vende antes de ${cuando(jo.ini)}, no puntúa en la jornada.`,
+          accion: `Ofértale ${eur(c.of)} por ${c.j.nombre}${c.venta ? ', que lo tiene a la venta' : ''}${c.gana >= 0.1 ? `: te da ${d1(c.gana)} pts más por jornada` : ''}.` });
       }
     }
 
-    /* 2. LE FALTA GENTE EN UN PUESTO (llave: el parte). Va a ir al mercado a por ese puesto, salvo que tenga 25 (entonces
-       no puede pujar hasta que venda). Sale con los libres de ese puesto que hay hoy en el mercado */
-    for (const p of [1, 2, 3, 4]) {
-      if (!h.falta[p]) continue;
-      const del = libres.filter((m) => m.j.pos === p).sort((a, b) => num(b.j.valor) - num(a.j.valor));
-      if (!del.length) continue;
-      const mios = del.filter((m) => num(m.miPuja) > 0 || (M.decisionFichar && (M.decisionFichar(m.pid) || {}).accion === 'fichar'));
-      const cuantos = h.falta[p] === 1 ? `un ${PUESTO_P[p][0]}` : `${h.falta[p]} ${PUESTO_P[p][1]}`;
-      const porque = h.faltaDuda[p] ? '' : ' (depende de un dudoso)';
-      const nombres = (l) => l.slice(0, 2).map((m) => m.j.nombre).join(' y ');
-      let accion;
-      if (h.lleno) accion = `Tiene 25 jugadores: hasta que venda no puede pujar por ${nombres(del)}.`;
-      else if (mios.length) accion = `Cuenta con su puja por ${nombres(mios)}: o subes la tuya o lo dejas pasar.`;
-      else accion = `Irá a por ${nombres(del)}: si no ${del.length > 1 ? 'los' : 'lo'} necesitas, no entres en esa subasta.`;
-      lineas.push({ tipo: 'falta', llave: 'parte', orden: mios.length ? 1 : 3, pos: p, pids: (mios.length ? mios : del).slice(0, 2).map((m) => m.pid), lleno: h.lleno,
-        txt: `Le falta ${cuantos} para su once${porque}.`, accion });
+    /* 2. LE FALTA GENTE EN UN PUESTO (llave: el parte). Lo normal es que fiche de ese puesto en 48 h (64 % frente a 20 %).
+       Sale si te toca: pujas tú (o el plan) por un libre de ese puesto, o tienes de ese puesto uno que la app ya vende */
+    if (L.falta) {
+      for (const p of [1, 2, 3, 4]) {
+        if (!h.falta[p]) continue;
+        const cuantos = h.falta[p] === 1 ? `Le falta un ${PUESTO_P[p][0]}` : `Le faltan ${h.falta[p]} ${PUESTO_P[p][1]}`;
+        const txt = `${cuantos} para alinear once${h.faltaDuda[p] ? '' : ' si no llega su dudoso'}.`;
+        const mios = libres.filter((m) => m.j.pos === p && (num(m.miPuja) > 0 || planSi(m.pid))).sort((a, b) => num(b.j.valor) - num(a.j.valor)).slice(0, 2);
+        const nombres = mios.map((m) => m.j.nombre).join(' o por ');
+        if (mios.length) {
+          lineas.push({ tipo: 'falta', llave: 'parte', orden: 1, pos: p, pids: mios.map((m) => m.pid), lleno: h.lleno, txt,
+            accion: h.lleno ? `Pero tiene 25 jugadores: hasta que venda a uno no puede pujar ni por ${nombres.replace(/ o por /g, ' ni por ')}.`
+              : `Lo normal es que puje por ${nombres}: si ${mios.length > 1 ? 'quieres a alguno' : 'lo quieres'}, cuenta con su puja al poner la tuya.` });
+          continue;
+        }
+        const mio = misVentas.filter((x) => x.j.pos === p).sort((a, b) => num(b.j.valor) - num(a.j.valor))[0];
+        if (mio && !h.lleno) {
+          lineas.push({ tipo: 'falta', llave: 'parte', orden: 2, pos: p, pid: mio.pid, vendo: true, txt,
+            accion: `Vas a vender a ${mio.j.nombre}: ponlo a la venta y díselo antes de aceptar la oferta de LaLiga. Quien va corto de un puesto suele pagar más.` });
+        }
+      }
     }
 
-    /* 3. LE SOBRA GENTE EN UN PUESTO (llave: el parte). Uno que no le cabe en el once ni es su recambio y que a ti te
-       sirve: se le puede pedir. La oferta, la de `ofertaDueno` (desde su valor; si sube, lo que ganaría quedándoselo) */
-    {
+    /* 3. LE SOBRA GENTE EN UN PUESTO: APAGADA (lo medido, arriba). Uno que no le cabe en el once ni es su recambio y que a
+       ti te sirve. La oferta, la de `ofertaDueno` (desde su valor; si sube, lo que ganaría quedándoselo) */
+    if (L.sobra) {
       const cands = [1, 2, 3, 4].flatMap((p) => h.sobran[p].map((j) => ({ j, p }))).filter((x) => meSirve(x.j))
         .map((x) => ({ ...x, of: oferta(x.j), gana: M.mejora(x.j) })).filter((x) => puedoComprar(M, D, x.of)).sort((a, b) => b.gana - a.gana);
-      if (cands.length && !(lineas[0] && lineas[0].tipo === 'rojo' && lineas[0].pid === cands[0].j.id)) {
+      if (cands.length && !lineas.some((l) => l.tipo === 'rojo' && l.pid === cands[0].j.id)) {
         const c = cands[0], tot = h.fichas.filter((x) => x.j.pos === c.p && h.estado(x.j) !== 'baja').length;
         lineas.push({ tipo: 'sobra', llave: 'parte', orden: 2, pos: c.p, pid: c.j.id, importe: c.of, lleno: h.lleno,
-          txt: `Tiene ${tot} ${PUESTO_P[c.p][1]} y ${c.j.nombre} no le cabe en el once${h.lleno ? '; con 25 jugadores, tiene que soltar a alguien para fichar' : ''}.`,
-          accion: `Pídeselo: desde ${eur(c.of)}. A ti te da ${d1(c.gana)} pts más por jornada.` });
+          txt: `Tiene ${tot} ${PUESTO_P[c.p][1]} y ${c.j.nombre} no le cabe en el once.`,
+          accion: `Pídeselo: desde ${eur(c.of)}${c.gana >= 0.1 ? `. A ti te da ${d1(c.gana)} pts más por jornada` : ''}.` });
       }
     }
 
     /* 4. SIN BLINDAJES (llave: el parte). Con los 2 gastados no puede proteger a nadie hasta que acabe la jornada: lo suyo
-       que tú clausularías hoy (te llega y merece la pena) no corre prisa por ese lado */
-    if (h.escudos && h.escudos.completo && h.escudos.quedan === 0) {
-      const mias = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.abierta && !x.veda && esClausulable(M, x, ahora)).slice(0, 2);
+       que tú clausularías hoy (te llega y merece la pena) no te lo puede cerrar (otro rival sí puede adelantarse) */
+    if (L.blindajes && h.escudos && h.escudos.completo && h.escudos.quedan === 0) {
+      const mias = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.abierta && !planNo(x.pid) && esClausulable(M, x, ahora)).slice(0, 2);
       if (mias.length) {
         lineas.push({ tipo: 'blindajes', llave: 'parte', orden: 2, pids: mias.map((x) => x.pid),
           txt: 'Ha gastado sus 2 blindajes de esta jornada.',
-          accion: `No puede blindar a ${mias.map((x) => `${x.j.nombre} (${eur(x.clausula)})`).join(' ni a ')} hasta que acabe la jornada: puedes clausular cuando te venga mejor.` });
+          accion: `No puede blindar a ${mias.map((x) => `${x.j.nombre} (${eur(x.clausula)})`).join(' ni a ')} hasta que acabe la jornada: si vas a por él, no te lo puede cerrar.` });
       }
     }
 

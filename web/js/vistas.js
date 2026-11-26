@@ -18,6 +18,7 @@ import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
 import { paronLejos } from './operaciones.js';
 import { porJornadaHTML } from './directo.js';
+import { parte, visibles } from './parte.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -1338,6 +1339,28 @@ export function equipo(S) {
 /* ================= RIVALES ================= */
 /** una cláusula de un rival que te llega: con tu dinero, abierta o que se abre en menos de 48 h */
 const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
+/** el parte de los rivales con las llaves de ahora: { jornada, abierto, rivales: los que tienen algo que se pueda enseñar } */
+export function parteVisto(S) {
+  const P = parte(S.M, S.D);
+  const abierto = !bloqueada('parteRivales');
+  return { jornada: P.jornada, ini: P.ini, abierto, rivales: visibles(P, { abierto, dineroAbierto: (tid) => !bloqueada('dineroRivales', tid) }).filter((x) => x.lineas.length) };
+}
+const PARTE_IC = { rojo: ['euro', ''], falta: ['info', 'oro'], sobra: ['info', 'oro'], blindajes: ['escudo', 'azul'] };
+/** Rivales → Parte (26 nov, función top «parteRivales»): de cada rival, solo lo que cambia lo que puedes hacer tú, con su
+    acción. Lo que sale del dinero de un rival, solo con su dinero abierto; el candado del final sale siempre que alguno lo
+    tenga cerrado, haya o no algo detrás (no puede dar pistas) */
+function parteHTML(S, PV) {
+  const { M } = S;
+  if (!PV.jornada) return nada('El parte sale cuando hay una jornada por delante.');
+  let h = `<p class="t2 peq">Antes de la jornada ${PV.jornada}: de cada rival, solo lo que cambia lo que puedes hacer tú.</p>`;
+  if (!PV.abierto) return h + candado('parteRivales');
+  h += PV.rivales.length ? PV.rivales.map((x) => `<div class="parte-r"><button class="fila" data-r="${esc(x.tid)}">${caraManager(x.e)}<div class="fila-c"><div class="fila-n">${esc(x.e.nombre || x.nombre)}</div>${x.e.manager && x.e.manager !== x.e.nombre ? `<div class="fila-s">${esc(x.e.manager)}</div>` : ''}</div></button>
+    ${x.lineas.map((l) => { const [ic, col] = PARTE_IC[l.tipo] || ['info', 'oro'], pid = l.pid || (l.pids || [])[0]; const cuerpo = `${icono(ic)}<div><b>${esc(l.txt)}</b>${esc(l.accion)}</div>`; return pid ? `<button class="aviso-ficha av peq parte-l ${col}" data-j="${esc(pid)}">${cuerpo}</button>` : `<div class="aviso-ficha av peq parte-l ${col}">${cuerpo}</div>`; }).join('')}</div>`).join('')
+    : nada('Hoy ningún rival te deja nada que hacer.');
+  if (M.rivales.some((r) => bloqueada('dineroRivales', r.e.teamId))) h += `<div class="parte-pie">${candadoMini('dineroRivales', 'Su dinero')}<span>Si a un rival no le llega para empezar la jornada, sale aquí con su dinero abierto.</span></div>`;
+  return h;
+}
+
 export function rivales(S) {
   const { M } = S;
   const seg = S.seg.rivales || 'clasif';
@@ -1345,9 +1368,12 @@ export function rivales(S) {
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
   // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
+  // (26 nov) el parte de los rivales: su número, solo con la llave abierta (cerrado no dice ni cuántos)
+  const PV = parteVisto(S);
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['parte', 'Parte', PV.abierto ? PV.rivales.length : 0, 'verde']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
+  else if (seg === 'parte') h += parteHTML(S, PV);
   else if (seg !== 'clausulas') {
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);

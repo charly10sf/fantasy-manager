@@ -87,27 +87,34 @@ function esDe(yo) {
    cuándo gira, media hora), pero solo una vez al día. En la de la liga, que no lleva anuncios, siguen como diga
    limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar sin
    un servidor, y no compensa). */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'quienPuja'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'quienPuja', 'parteRivales'];
 /** las que van por rival (y unas veces por jornada): solo el dinero */
 export const POR_JORNADA = ['dineroRivales'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
-const NUEVAS = ['quienPuja'];
+const NUEVAS = ['quienPuja', 'parteRivales'];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
 const num0 = (x, d) => (Number(x) > 0 ? Number(x) : d);
 const cfgTop = () => {
   const g = LS.get('limites', null), t = (g && g.cfg && g.cfg.top) || {};
-  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5) };
+  return { rivales: Math.floor(num0(t.rivales, 2)), anuncios: Math.min(3, Math.floor(num0(t.anuncios, 2))), minutos: num0(t.minutos, 5), horasQuien: num0(t.horasQuien, 5), parteAnuncios: Math.min(3, Math.floor(num0(t.parteAnuncios, 2))) };
 };
 /** cuántos anuncios pide cada vez (los del dinero de un rival, todos seguidos) */
-export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : 1);
+export const anunciosPorVez = (clave) => (porJornada(clave) ? cfgTop().anuncios : clave === 'parteRivales' ? cfgTop().parteAnuncios : 1);
 /** cuánto queda abierto el dinero de un rival (minutos) y quién paga (horas) */
 export const minutosRival = () => cfgTop().minutos;
 export const horasQuien = () => cfgTop().horasQuien;
 /** ¿se pueden abrir viendo un anuncio? (solo en la versión de Google Play) */
 export const topConAnuncio = () => enApp && nativo.hayAnuncios();
-let jornadaB = 0;
-/** la jornada para contar las veces: la que se juega o, si no, la próxima (lo pone la app al rehacer los datos) */
-export function fijarJornada(n) { if (Number(n) > 0) jornadaB = Number(n); }
+let jornadaB = 0, inicioB = 0;
+/** la jornada para contar las veces: la que se juega o, si no, la próxima (lo pone la app al rehacer los datos); `ini`:
+    cuándo empieza la próxima (hasta entonces queda abierto el parte de los rivales) */
+export function fijarJornada(n, ini = 0) { if (Number(n) > 0) jornadaB = Number(n); inicioB = Number(ini) > 0 ? Number(ini) : 0; }
+/* el parte de los rivales (26 nov): { hasta, n, t } (n: los anuncios ya vistos de los que pide; t: cuándo se vio el último,
+   para que uno visto hace días no cuente). Se abre hasta que empieza la próxima jornada (sin saberla, 24 h) */
+const parteG = () => { const g = LS.get('top-parte', null); return g && typeof g === 'object' ? g : {}; };
+const parteHasta = () => { const h = Number(parteG().hasta) || 0; return h > Date.now() ? h : 0; };
+const parteVistos = () => { const g = parteG(); return g.t && Date.now() - g.t < 12 * 3600e3 ? Number(g.n) || 0 : 0; };
+const abrirParte = (ms = 0) => LS.set('top-parte', { hasta: ms ? Date.now() + ms : inicioB > Date.now() ? inicioB : Date.now() + 24 * 3600e3, n: 0, t: Date.now() });
 
 /* lo de hoy (para cuándo gira): cuántos anuncios has visto y, si no había anuncio, hasta cuándo va abierta gratis */
 function hoyTop() {
@@ -149,13 +156,14 @@ export const rivalPorInvitar = (rid) => rid != null && !!ligaB && !demoB && (riv
 const quienHasta = () => { const g = LS.get('top-quien', null); return g && g.hasta > Date.now() ? g.hasta : 0; };
 /** la hora más cercana a la que se cierra algo abierto por un rato (para volver a pintar), o 0 */
 export function proximoCierreTop() {
-  const t = Date.now(), hs = [...Object.values(abiertosTodos()), quienHasta(), hoyTop().libreHasta, proximoCierreInv()].filter((h) => h > t);
+  const t = Date.now(), hs = [...Object.values(abiertosTodos()), quienHasta(), parteHasta(), hoyTop().libreHasta, proximoCierreInv()].filter((h) => h > t);
   return hs.length ? Math.min(...hs) : 0;
 }
 /** hasta cuándo está abierta (las de un rato); 0 si no lo está o si va hasta medianoche */
 export function abiertaHasta(clave, rid = null) {
   if (porJornada(clave)) return rivalAbiertoHasta(rid);
   if (clave === 'quienPaga') return quienHasta();
+  if (clave === 'parteRivales') return parteHasta();
   return 0;
 }
 
@@ -163,6 +171,7 @@ export function abiertaHasta(clave, rid = null) {
 export function topAbierto(clave, rid = null) {
   if (porJornada(clave)) return abiertoRival(rid);
   if (clave === 'quienPaga') return quienHasta() > 0;
+  if (clave === 'parteRivales') return parteHasta() > 0;
   const h = hoyTop();
   return h.vistos > 0 || Date.now() < h.libreHasta;
 }
@@ -172,6 +181,7 @@ export const usosPorJornada = () => cfgTop().rivales;
 /** cuántos anuncios te faltan para abrirla (el dinero, para ese rival) */
 export function faltanAnuncios(clave, rid = null) {
   if (topAbierto(clave, rid)) return 0;
+  if (clave === 'parteRivales') return Math.max(1, cfgTop().parteAnuncios - parteVistos());
   if (!porJornada(clave)) return 1;
   const u = rivalesTop().uno, n = cfgTop().anuncios;
   return u && rid != null && String(u.tid) === String(rid) ? Math.max(1, n - (u.n || 0)) : n;
@@ -182,6 +192,11 @@ export function anuncioTopVisto(clave, rid = null) {
   guardarHoy({ ...h, vistos: h.vistos + 1 });
   contar('b');
   if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + cfgTop().horasQuien * 3600e3 }); contar('t'); return true; }
+  if (clave === 'parteRivales') {
+    const n = parteVistos() + 1;
+    if (n < cfgTop().parteAnuncios) { LS.set('top-parte', { hasta: 0, n, t: Date.now() }); return false; }
+    abrirParte(); contar('t'); return true;
+  }
   if (!porJornada(clave)) { contar('t'); return true; }
   if (rid == null) return false;
   const g = rivalesTop(), c = cfgTop();
@@ -199,6 +214,7 @@ export const puedeTopGratis = () => { const g = LS.get('top-sin-anuncio', null);
 export function abrirTopGratis(clave, min = 30, rid = null) {
   LS.set('top-sin-anuncio', { dia: diaDe() });
   if (clave === 'quienPaga') { LS.set('top-quien', { hasta: Date.now() + min * 60e3 }); return; }
+  if (clave === 'parteRivales') { abrirParte(min * 60e3); return; }
   if (!porJornada(clave)) { const h = hoyTop(); guardarHoy({ ...h, libreHasta: Date.now() + min * 60e3 }); return; }
   if (rid == null) return;
   abrirRival(rivalesTop(), rid, cfgTop().minutos);

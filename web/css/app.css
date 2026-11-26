@@ -3969,3 +3969,12 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .dd-chat-b .dd-v-pri, .dd-chat-b .dd-v-sec { margin: 0; flex: 1; font-size: 15px; padding: 12px 8px; }
 .dd-chat .dd-v-pie { text-align: left; margin-top: 8px !important; }
 .dd-ventana h2:focus, .nvt-dd h2:focus { outline: none; }
+
+/* Rivales → Parte (26 nov): una caja por rival y, debajo, cada línea con su acción */
+.parte-r { margin: 0 0 16px; }
+.parte-r > .fila { border-bottom: 0; }
+.parte-l { width: 100%; text-align: left; border: 0; color: inherit; font-family: inherit; margin: 6px 0 0; }
+button.parte-l { cursor: pointer; }
+.parte-l b { display: block; margin-bottom: 2px; }
+.parte-pie { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.35; }
+.parte-pie .pill { flex: none; }
