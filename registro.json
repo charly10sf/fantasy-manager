@@ -3206,7 +3206,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136741278": 1795466190000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0489f1e9cf4a60608b457f.html": 1795470222000,
    "SPORT|136770607": 1795466758000,
    "AS|https://as.com/futbol/primera/drama-en-el-elche-lemar-vuelve-a-lesionarse-f202611-n/": 1795473761000,
@@ -9829,13 +9828,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6719,
+   "ok": 6720,
    "fallos": 0,
-   "ejecuciones": 5498,
+   "ejecuciones": 5499,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T20:36:19.380Z"
+   "ultima": "2026-11-26T20:41:13.293Z"
   }
  },
  "ptsDirecto": {},
@@ -9852,15 +9851,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:36:23.018Z"
+   "ultimaBien": "2026-11-26T20:41:20.982Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:36:23.018Z"
+   "ultimaBien": "2026-11-26T20:41:20.982Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:36:23.018Z"
+   "ultimaBien": "2026-11-26T20:41:20.982Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9868,11 +9867,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:36:23.018Z"
+   "ultimaBien": "2026-11-26T20:41:20.982Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T20:36:23.018Z"
+   "ultimaBien": "2026-11-26T20:41:20.982Z"
   }
  },
  "avisos": [
