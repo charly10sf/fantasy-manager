@@ -4742,32 +4742,31 @@
    "SPORT|136893721": 1795712134000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/suspenden-besiktas-hapoel-beer-sheva-europa-league-batalla-campal-pancartas-apoyo-palestina-20261126_3483274.html": 1795720025000,
    "SPORT|136894988": 1795715585000,
-   "SPORT|136892989": 1795715495000
+   "SPORT|136892989": 1795715495000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 13,
+   "n": 14,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721470533
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 213877,
-  "salida": 26249,
+  "entrada": 215701,
+  "salida": 26335,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.483254,
+  "dolares": 0.483479,
   "reservado": 0
  },
  "recientes": {
@@ -9831,13 +9830,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6709,
+   "ok": 6710,
    "fallos": 0,
-   "ejecuciones": 5488,
+   "ejecuciones": 5489,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T19:46:13.924Z"
+   "ultima": "2026-11-26T19:51:12.045Z"
   }
  },
  "ptsDirecto": {},
@@ -9854,15 +9853,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:46:26.807Z"
+   "ultimaBien": "2026-11-26T19:51:22.376Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:46:26.807Z"
+   "ultimaBien": "2026-11-26T19:51:22.376Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:46:26.807Z"
+   "ultimaBien": "2026-11-26T19:51:22.376Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9870,11 +9869,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:46:26.807Z"
+   "ultimaBien": "2026-11-26T19:51:22.376Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:46:26.807Z"
+   "ultimaBien": "2026-11-26T19:51:22.376Z"
   }
  },
  "avisos": [
