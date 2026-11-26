@@ -4636,7 +4636,6 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/23/antequera-levante-y-jaen-valencia-en-segunda-ronda-de-copa-del-rey-radio-valencia/": 1795436144000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/23/el-valencia-visitara-la-victoria-en-la-copa-del-rey-radio-jaen/": 1795436022000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/23/el-cd-tenerife-se-medira-al-eldense-en-copa-del-rey-justo-antes-de-enfrentarse-de-nuevo-en-liga-radio-club-tenerife/": 1795436367000,
-   "SPORT|136750461": 1795433046000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
@@ -9799,13 +9798,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6607,
+   "ok": 6608,
    "fallos": 0,
-   "ejecuciones": 5386,
+   "ejecuciones": 5387,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:21:14.717Z"
+   "ultima": "2026-11-26T11:26:13.782Z"
   }
  },
  "ptsDirecto": {},
@@ -9822,15 +9821,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:21:25.856Z"
+   "ultimaBien": "2026-11-26T11:26:24.243Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:21:25.856Z"
+   "ultimaBien": "2026-11-26T11:26:24.243Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:21:25.856Z"
+   "ultimaBien": "2026-11-26T11:26:24.243Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9838,11 +9837,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:21:25.856Z"
+   "ultimaBien": "2026-11-26T11:26:24.243Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:21:25.856Z"
+   "ultimaBien": "2026-11-26T11:26:24.243Z"
   }
  },
  "avisos": [
