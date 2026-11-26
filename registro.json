@@ -3391,7 +3391,8 @@
    "SPORT|136892937": 1795716898000,
    "AS|https://as.com/futbol/videos/aubameyang-busca-venganza-f202611-v/": 1795724302000,
    "SPORT|136880190": 1795722404000,
-   "SPORT|136894748": 1795723203000
+   "SPORT|136894748": 1795723203000,
+   "SPORT|136901059": 1795724253000
   },
   "hechos": [
    {
@@ -3836,7 +3837,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -4762,17 +4763,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 58,
+   "clasificar": 59,
    "redactar": 24,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 229252,
-  "salida": 27547,
+  "entrada": 231300,
+  "salida": 27665,
   "cacheLee": 126777,
   "cacheEscribe": 57099,
-  "dolares": 0.544076,
+  "dolares": 0.54434,
   "reservado": 0
  },
  "recientes": {
@@ -9830,13 +9831,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6727,
+   "ok": 6728,
    "fallos": 0,
-   "ejecuciones": 5506,
+   "ejecuciones": 5507,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T21:16:12.342Z"
+   "ultima": "2026-11-26T21:21:11.992Z"
   }
  },
  "ptsDirecto": {},
@@ -9853,15 +9854,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:16:18.062Z"
+   "ultimaBien": "2026-11-26T21:21:22.012Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:16:18.062Z"
+   "ultimaBien": "2026-11-26T21:21:22.012Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:16:18.062Z"
+   "ultimaBien": "2026-11-26T21:21:22.012Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9869,11 +9870,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:16:18.062Z"
+   "ultimaBien": "2026-11-26T21:21:22.012Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:16:18.062Z"
+   "ultimaBien": "2026-11-26T21:21:22.012Z"
   }
  },
  "avisos": [
