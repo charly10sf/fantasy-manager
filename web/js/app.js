@@ -2093,7 +2093,9 @@ async function ligasSiToca() {
   let reg = ap.reg;
   if (ap.cambia) LS.set(ka, reg);
   const AH = actHist(liga);
-  const res = OL.resolverAperturas(reg, AH.lista, AH.desde, S.D.t);
+  // (lo que valía cada jugador cada día, de lo que guarda la app: por si LaLiga subió sola la cláusula hasta el valor)
+  const valorEl = (pid, t) => { let v = null; const d = diaDe(t); for (const [dd, vv] of (S.H && S.H.v && S.H.v[pid]) || []) { if (dd <= d) v = vv; else break; } return v; };
+  const res = OL.resolverAperturas(reg, AH.lista, AH.desde, S.D.t, valorEl);
   // (la demanda, solo con la liga recién leída: con la guardada de hace rato las pujas pueden ser ya otras)
   const m = ahora - S.D.t <= OL.FOTO_FRESCA ? OL.demandaDe(M.mercado, ahora) : [], firma = OL.firmaDemanda(m);
   const ya = LS.get(ke, { t: 0, f: '', dia: '', n: 0, mal: 0 });

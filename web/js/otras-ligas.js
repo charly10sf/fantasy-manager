@@ -33,8 +33,9 @@ export function demandaDe(mercado, ahora) {
   const out = [];
   for (const m of Array.isArray(mercado) ? mercado : []) {
     if (!m || m.tipo !== 'liga' || m.pid == null || (m.cierra && m.cierra <= ahora)) continue;
-    // (solo jugadores que la app conoce, con su valor: los de la lista de LaLiga)
-    if (!m.j || !(m.j.valor > 0)) continue;
+    // (solo jugadores que la app conoce, con su valor: los de la lista de LaLiga; los entrenadores, que en las ligas
+    // Premium también salen al mercado, no)
+    if (!m.j || !(m.j.valor > 0) || m.j.pos === 5) continue;
     const p = Number(m.pid);
     if (!Number.isInteger(p) || p < 1 || p > 999999) continue;
     out.push([p, Math.max(0, Math.min(500, Math.round(num(m.pujas))))]);
@@ -62,13 +63,16 @@ const TRASPASO = new Set(['compra', 'venta', 'clausula']);
 export function fichasDe(M) {
   return [...((M && M.clausulas) || []), ...((M && M.mias) || [])].filter((x) => x && x.j).map((x) => {
     const ti = M.titularidad ? M.titularidad(x.j) : null;
-    return { pid: x.pid, tid: x.teamId, base: x.protLiga, abre: x.protegidoHasta, abierta: !!x.abierta, escudo: !!x.escudo, cl: x.clausula, v: x.j.valor, r: M.subidaEn ? M.subidaEn(x.pid) : null, pos: x.j.pos, tit: ti && Number.isFinite(ti.p) ? ti.p : null };
+    return { pid: x.pid, tid: x.teamId, base: x.protLiga, abre: x.protegidoHasta, veda: x.veda ? x.veda.cierra : null, abierta: !!x.abierta, escudo: !!x.escudo, cl: x.clausula, v: x.j.valor, r: M.subidaEn ? M.subidaEn(x.pid) : null, pos: x.j.pos, tit: ti && Number.isFinite(ti.p) ? ti.p : null };
   });
 }
 /**
- * Apunta las cláusulas que están a punto de abrirse. `fichas`: [{ pid, tid, base, abre, abierta, escudo, cl, v, r, pos, tit }]
+ * Apunta las cláusulas que están a punto de abrirse. `fichas`: [{ pid, tid, base, abre, veda, abierta, escudo, cl, v, r, pos, tit }]
  * (base: hasta cuándo la protege LaLiga por el fichaje, que no cambia; abre: cuándo se puede pagar de verdad, con el cierre
- * de la jornada). Devuelve { reg, cambia }; el registro de entrada no se toca.
+ * de la jornada; veda: desde cuándo están cerradas las cláusulas por la jornada, si lo están). Devuelve { reg, cambia }; el
+ * registro de entrada no se toca.
+ * Solo cuenta la PRIMERA vez que se abre: una que LaLiga dejó de proteger hace días y que ahora solo espera a que empiece la
+ * jornada (todas las abiertas se cierran 24 h antes) ya estaba abierta, y no es lo que se quiere contar.
  */
 export function apuntarAperturas(reg0, fichas, ahora) {
   const reg = { ...(reg0 && typeof reg0 === 'object' ? reg0 : {}) };
@@ -76,6 +80,7 @@ export function apuntarAperturas(reg0, fichas, ahora) {
   for (const f of Array.isArray(fichas) ? fichas : []) {
     if (!f || f.abierta || f.escudo || !(f.base > 0) || !(f.abre > ahora) || f.abre - ahora > AP_ANTES) continue;
     if (!(f.cl > 0) || !(f.v > 0) || !(f.pos >= 1 && f.pos <= 4) || f.pid == null) continue;
+    if (f.base <= ahora && !(f.veda > 0 && f.base >= f.veda)) continue;
     const k = `${f.pid}|${f.base}`;
     reg[k] = { pid: f.pid, tid: f.tid == null ? null : f.tid, base: f.base, abre: f.abre, cl: f.cl, v: f.v, r: f.r == null ? null : f.r, pos: f.pos, tit: f.tit == null ? null : f.tit, t: ahora };
     cambia = true;
@@ -90,10 +95,12 @@ const cerca = (a, b) => Math.abs(a - b) <= Math.max(1000, b * 0.002);
 /**
  * Las apuntadas cuyas 24 h ya han pasado. `lista`: la actividad de la liga (la guardada, que lleva la de hoy); `desde`: desde
  * cuándo llega esa actividad; `fotoT`: de cuándo es la liga que se está viendo (no la hora de ahora: con la liga guardada de
- * hace días no se sabe qué pasó después). Devuelve { listas: [{ c, abre, v, cs, r, pos, tit, ida, bl }], quitar: [claves] }:
- * `listas`, para mandar (c es la clave del registro); `quitar`, las que no cuentan (cambió de dueño de otra forma).
+ * hace días no se sabe qué pasó después); `valorEn(pid, t)`: lo que valía ese día (si el valor pasa de la cláusula, LaLiga
+ * la sube sola hasta el valor: un clausulazo de esos días se paga por ese valor, no por la cláusula apuntada).
+ * Devuelve { listas: [{ c, abre, v, cs, r, pos, tit, ida, bl }], quitar: [claves] }: `listas`, para mandar (c es la clave del
+ * registro); `quitar`, las que no cuentan (cambió de dueño de otra forma).
  */
-export function resolverAperturas(reg, lista, desde, fotoT) {
+export function resolverAperturas(reg, lista, desde, fotoT, valorEn = null) {
   const listas = [], quitar = [];
   for (const [k, e] of Object.entries(reg || {})) {
     if (!e || !e.abre) continue;
@@ -102,7 +109,8 @@ export function resolverAperturas(reg, lista, desde, fotoT) {
     // (la actividad tiene que llegar hasta antes de la última vez que se vio: si no, no se sabe qué pasó en medio)
     if (!(desde > 0) || desde > e.t) continue;
     const movs = (lista || []).filter((a) => a && a.t && String(a.pid) === String(e.pid) && a.t > e.t && a.t <= fin).sort((a, b) => a.t - b.t);
-    const cz = movs.find((a) => a.t >= e.abre - MIN && (a.clase === 'clausula' || (a.clase === 'compra' && (a.otroId || a.otro) && cerca(Math.abs(num(a.importe)), e.cl))));
+    const porClausula = (a) => { const imp = Math.abs(num(a.importe)), v = valorEn ? num(valorEn(e.pid, a.t)) : 0; return cerca(imp, e.cl) || (v > e.cl && cerca(imp, v)); };
+    const cz = movs.find((a) => a.t >= e.abre - MIN && (a.clase === 'clausula' || (a.clase === 'compra' && (a.otroId || a.otro) && porClausula(a))));
     // otro traspaso suyo (lo vendió, se lo compraron con una oferta, lo fichó otro antes de abrirse…): no cuenta
     const otro = movs.some((a) => TRASPASO.has(a.clase) && (!cz || a.t < cz.t - 2 * MIN));
     if (otro) { quitar.push(k); continue; }

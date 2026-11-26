@@ -185,11 +185,15 @@ try {
     const a1 = OL.apuntarAperturas(null, [f1, { ...f1, pid: '8', abierta: true }, { ...f1, pid: '9', abre: ahora + 50 * HORA, base: ahora + 50 * HORA }, { ...f1, pid: '10', pos: 5 }, { ...f1, pid: '11', escudo: true }], ahora);
     const a2 = OL.apuntarAperturas(a1.reg, [{ ...f1, v: 26e6 }], ahora + HORA);
     const a3 = OL.apuntarAperturas(a2.reg, [], ahora + 5 * HORA + OL.AP_VENTANA + OL.AP_CADUCA + HORA);
+    // solo la primera vez que se abre: la que LaLiga dejó de proteger hace días y solo espera al principio de la jornada, no;
+    // la que deja de proteger con las cláusulas ya cerradas por la jornada (se abre al empezar), sí
+    const a4 = OL.apuntarAperturas(null, [{ ...f1, pid: '20', base: ahora - 9 * 864e5, abre: ahora + 5 * HORA, veda: ahora - 19 * HORA }, { ...f1, pid: '21', base: ahora - 3 * HORA, abre: ahora + 5 * HORA, veda: ahora - 19 * HORA }, { ...f1, pid: '22', base: ahora - 3 * HORA, abre: ahora + 5 * HORA, veda: null }], ahora);
+    out.veda = Object.keys(a4.reg).map((k) => k.split('|')[0]).join();
     out.reg = { una: Object.keys(a1.reg).join() === `7|${f1.base}`, pisa: a2.reg[`7|${f1.base}`].v === 26e6 && a2.reg[`7|${f1.base}`].t === ahora + HORA && a1.reg[`7|${f1.base}`].v === 25e6, caduca: Object.keys(a3.reg).length === 0 && a3.cambia };
     // resolver: cuatro cláusulas que se abrieron hace 30 h, vistas 2 h antes
     const abre = ahora - 30 * HORA, visto = abre - 2 * HORA;
     const e = (pid, cl = 30e6) => ({ pid, tid: 'A', base: abre, abre, cl, v: 25e6, r: 0.01, pos: 3, tit: 0.8, t: visto });
-    const R = { 'cz|1': e('cz'), 'trato|1': e('trato'), 'nada|1': e('nada'), 'blinda|1': e('blinda'), 'vendido|1': e('vendido'), 'par|1': e('par'), 'antes|1': e('antes') };
+    const R = { 'cz|1': e('cz'), 'trato|1': e('trato'), 'nada|1': e('nada'), 'blinda|1': e('blinda'), 'vendido|1': e('vendido'), 'par|1': e('par'), 'antes|1': e('antes'), 'sube|1': e('sube') };
     const act = [
       { t: abre + 3 * HORA, clase: 'clausula', pid: 'cz', quienId: 'x', otroId: 'y', importe: 30e6 },
       { t: abre + 4 * HORA, clase: 'compra', pid: 'trato', quienId: 'x', otroId: 'y', importe: 27e6 },
@@ -199,10 +203,14 @@ try {
       { t: abre + 2 * HORA, clase: 'compra', pid: 'par', quienId: 'x', otroId: 'y', importe: 30e6 }, { t: abre + 2 * HORA + 1000, clase: 'venta', pid: 'par', quienId: 'y', otroId: 'x', importe: 30e6 },
       // (lo fichó otro ANTES de abrirse: ya no es del mismo dueño)
       { t: abre - HORA, clase: 'compra', pid: 'antes', quienId: 'z', otroId: 'y', importe: 28e6 },
+      // (su valor pasó de la cláusula esa noche y LaLiga la subió sola: el clausulazo se paga por lo que vale ese día, 31,2 M)
+      { t: abre + 20 * HORA, clase: 'compra', pid: 'sube', quienId: 'x', otroId: 'y', importe: 31.2e6 },
       // (fuera de las 24 h: no cuenta)
       { t: abre + 26 * HORA, clase: 'clausula', pid: 'nada', quienId: 'x', otroId: 'y', importe: 30e6 },
     ];
-    const res = OL.resolverAperturas(R, act, abre - 10 * 864e5, ahora);
+    const valorEn = (pid, t) => (pid === 'sube' && t > abre + 10 * HORA ? 31.2e6 : pid === 'trato' ? 26e6 : 25e6);
+    const res = OL.resolverAperturas(R, act, abre - 10 * 864e5, ahora, valorEn);
+    out.sinValor = OL.resolverAperturas(R, act, abre - 10 * 864e5, ahora).quitar.includes('sube|1');
     const por = Object.fromEntries(res.listas.map((x) => [x.c.split('|')[0], x]));
     out.res = { listas: res.listas.map((x) => `${x.c.split('|')[0]}:${x.ida ? 1 : 0}${x.bl ? 'b' : ''}`).sort().join(), quitar: [...res.quitar].sort().join(), cs: por.cz && Math.round(por.cz.cs * 1000) / 1000,
       // con la liga guardada de hace días (la foto es de antes de acabar las 24 h) o sin actividad que llegue hasta entonces, nada
@@ -220,7 +228,8 @@ try {
   });
   ok(ap.motor.campos && ap.motor.fichas > 20 && ap.motor.apuntadas === ap.motor.pronto && ap.motor.abiertas > 0, `del motor salen las fichas de todos los equipos y se apuntan las que se abren en día y medio (${JSON.stringify(ap.motor)})`);
   ok(ap.reg.una && ap.reg.pisa && ap.reg.caduca, `el registro: solo lo que está a punto de abrirse, con lo último visto, y lo caducado fuera (${JSON.stringify(ap.reg)})`);
-  ok(ap.res.listas === 'blinda:0b,cz:1,nada:0,par:1' && ap.res.quitar === 'antes|1,trato|1,vendido|1' && ap.res.cs === 0.2, `al pasar las 24 h: clausulado, no clausulado y blindado se mandan; vendido, pactado o fichado antes, no (${JSON.stringify(ap.res)})`);
+  ok(ap.veda === '21', `solo cuenta la primera vez que se abre: la que ya estaba abierta y espera al principio de la jornada, no (${ap.veda})`);
+  ok(ap.res.listas === 'blinda:0b,cz:1,nada:0,par:1,sube:1' && ap.res.quitar === 'antes|1,trato|1,vendido|1' && ap.res.cs === 0.2 && ap.sinValor, `al pasar las 24 h: clausulado, no clausulado y blindado se mandan; vendido, pactado o fichado antes, no (${JSON.stringify(ap.res)})`);
   ok(ap.res.fotoVieja === 0 && ap.res.sinActividad === 0, 'con la liga guardada de antes, o sin actividad que llegue hasta entonces, no se manda nada');
   const dA = JSON.parse(de('/ligas')[de('/ligas').length - 1].cuerpo);
   const cla = sql('SELECT * FROM cla ORDER BY ida');
@@ -349,7 +358,7 @@ try {
         OL.tocaMandar({ t: t - 2 * HORA, f: 'x', dia: 'a', n: 1, mal: t - 20 * 60e3 }, '1:1', 0, t, 'a'), OL.tocaMandar({ t: t - HORA, f: '', dia: 'a', n: 1 }, '', 0, t, 'a'),
       ].map((x) => (x ? 1 : 0)).join(''),
       ver: [OL.tocaVer(null, '1,2', t), OL.tocaVer({ k: '1,2', t: t - HORA }, '1,2', t), OL.tocaVer({ k: '1,2', t: t - HORA }, '1,3', t), OL.tocaVer({ k: '1,2', t: t - 4 * HORA }, '1,2', t), OL.tocaVer({ k: '', t: 0, mal: t - 60e3 }, '1,2', t), OL.tocaVer(null, '', t)].map((x) => (x ? 1 : 0)).join(''),
-      dem: JSON.stringify(OL.demandaDe([{ tipo: 'liga', pid: '12', pujas: 2, cierra: t + 1, j: { valor: 1e6 } }, { tipo: 'manager', pid: '13', pujas: 9, j: { valor: 1e6 } }, { tipo: 'liga', pid: '3', pujas: null, j: { valor: 2e6 } }, { tipo: 'liga', pid: 'p9', pujas: 1, j: { valor: 1e6 } }, { tipo: 'liga', pid: '14', pujas: 1, cierra: t - 1, j: { valor: 1e6 } }, { tipo: 'liga', pid: '15', pujas: 4, j: { valor: 0 } }, { tipo: 'liga', pid: '16', pujas: 4 }, null], t)),
+      dem: JSON.stringify(OL.demandaDe([{ tipo: 'liga', pid: '12', pujas: 2, cierra: t + 1, j: { valor: 1e6 } }, { tipo: 'manager', pid: '13', pujas: 9, j: { valor: 1e6 } }, { tipo: 'liga', pid: '3', pujas: null, j: { valor: 2e6 } }, { tipo: 'liga', pid: 'p9', pujas: 1, j: { valor: 1e6 } }, { tipo: 'liga', pid: '14', pujas: 1, cierra: t - 1, j: { valor: 1e6 } }, { tipo: 'liga', pid: '15', pujas: 4, j: { valor: 0 } }, { tipo: 'liga', pid: '16', pujas: 4 }, { tipo: 'liga', pid: '17', pujas: 4, j: { valor: 3e6, pos: 5 } }, null], t)),
     };
   });
   ok(tx.p1 && tx.p1.l === 'En 3 días: +11,0 % de mediana · lo más, +19,0 %' && tx.p1.d[0] === 'Se lo han llevado en 9 ligas que usan la app en los 3 últimos días. La mitad pagó un +11,0 % sobre su valor o menos, y quien más, un +19,0 %.' && /^Con lo que vale hoy serían 66,49 M€? y 71,28 M€?\.$/.test(tx.p1.d[1].replace(/ /g, ' ')) && tx.p1.d.length === 3 && tx.p1.d[2] === '<span class="t2">Cada liga paga distinto: es un dato más, y la puja de la app no cambia por él.</span>', `el texto de lo pagado: «${tx.p1 && `${tx.p1.l} | ${tx.p1.d.join(' | ')}`}»`);
