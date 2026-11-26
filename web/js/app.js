@@ -36,7 +36,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas, huellaLiga, huellaApertura, mandarLigas, verOtrasLigas } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, veTodo, todosAvisos, unAviso, capturaAviso, responderAviso, terminarAviso, escribirAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida, apuntarNovDinero, mejorarIA, ponerMejorarIA, huellaDinero, mandarDinero, calDineroGuardada, leerCalDinero, huellaCompra, mandarCompras, calPujasGuardada, leerCalPujas, huellaLiga, huellaApertura, mandarLigas, verOtrasLigas } from './soporte.js';
 import * as DD from './dinero-dicho.js';
 import { presentarNovedades, tarjetaNovedad, tarjetaIphone, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
@@ -3223,6 +3223,23 @@ async function contestarAviso(id) {
   repintarAvisos();
   pintarNumAvisos();
 }
+/** (26 nov) el dueño o quien ayuda da un aviso por terminado sin contestarle: deja de contar como sin contestar */
+async function darPorTerminado(id) {
+  if (!id || S.av.terminando) return;
+  S.av.terminando = true; repintarAvisos();
+  try {
+    const r = await terminarAviso(id);
+    const cer = (r && r.cer) || Date.now();
+    if (S.av.detalle && S.av.detalle.id === id) S.av.detalle = { ...S.av.detalle, cer };
+    if (avisoCache()[id]) avisoCache()[id] = { ...avisoCache()[id], cer };
+    S.av.todos = (S.av.todos || []).map((x) => (x.id === id ? { ...x, r: x.r || cer, cer } : x));
+    S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
+    tostada('Dado por terminado');
+  } catch (e) { tostada(`No se ha podido: ${e.message}`, 6000); }
+  S.av.terminando = false;
+  repintarAvisos();
+  pintarNumAvisos();
+}
 /** de vez en cuando (al abrir y al volver a la app): ¿hay respuesta a tus avisos o, si eres el dueño, avisos nuevos? */
 async function comprobarAvisos() {
   if (enDemo() || !haySesion() || !hayQueMirar()) return;
@@ -4543,6 +4560,7 @@ document.addEventListener('click', async (ev) => {
     case 'permisoPlan': nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
+    case 'terminarAviso': darPorTerminado(d.id); break;
     case 'copiarAvisos': copiarAvisosClaude(); break;
     case 'copiarParaClaude': if (S.av && S.av.paraClaude) copiarY(S.av.paraClaude); break;
     case 'ligas': {

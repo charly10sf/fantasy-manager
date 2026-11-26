@@ -156,6 +156,12 @@ b, strong { font-weight: 600; color: var(--texto); }
 .msg small { font-size: var(--t-mini); color: var(--apagado); align-self: flex-end; }
 .msg .aviso-capt { margin: 4px 0 2px; }
 .hilo-caja { border-top: 1px solid var(--linea); padding-top: 10px; }
+/* (26 nov) dar un aviso por terminado sin contestar */
+.av-term { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+.av-term .btn { flex: none; }
+.av-term.av-hecho { flex-wrap: nowrap; align-items: flex-start; }
+.av-term.av-hecho span { flex: 1; min-width: 0; }
+.av-term .icono, .av-term svg { flex: none; }
 .hilo-fila { display: flex; gap: 6px; align-items: flex-end; }
 .hilo-fila textarea { flex: 1; min-height: 44px; resize: vertical; font-size: var(--t-cuerpo); line-height: 1.4; margin: 0; }
 .hilo-fila .b-ico { flex: none; width: 44px; height: 44px; }
