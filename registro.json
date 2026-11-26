@@ -3199,7 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
    "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
@@ -9869,13 +9868,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6696,
+   "ok": 6697,
    "fallos": 0,
-   "ejecuciones": 5475,
+   "ejecuciones": 5476,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T18:41:10.722Z"
+   "ultima": "2026-11-26T18:46:19.687Z"
   }
  },
  "ptsDirecto": {},
@@ -9892,15 +9891,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:41:21.845Z"
+   "ultimaBien": "2026-11-26T18:46:29.814Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:41:21.845Z"
+   "ultimaBien": "2026-11-26T18:46:29.814Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:41:21.845Z"
+   "ultimaBien": "2026-11-26T18:46:29.814Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9908,11 +9907,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:41:21.845Z"
+   "ultimaBien": "2026-11-26T18:46:29.814Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:41:21.845Z"
+   "ultimaBien": "2026-11-26T18:46:29.814Z"
   }
  },
  "avisos": [
