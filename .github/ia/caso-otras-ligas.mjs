@@ -375,11 +375,11 @@ try {
     let ctx = '', chat = '';
     try { ctx = Ia.contexto(S.D, S.M, cfg()); } catch (e) { ctx = `ERROR ${e.message}`; }
     try { const dc = Ia.datosChat(`¿Cuánto pujo por ${mA.j.nombre}?`, S.D, S.M, cfg()); chat = typeof dc === 'string' ? dc : JSON.stringify(dc); } catch (e) { chat = `ERROR ${e.message}`; }
-    return { otras: S.otras, lineaA: txt(Hj.otrasLigasHTML(S, mA)), lineaB: Hj.otrasLigasHTML(S, mB), enFicha: /En otras ligas/.test(ficha), demEnFicha: /Demanda (alta|media|baja)/.test(ficha), tarjetas: (ficha.match(/En otras ligas/g) || []).length, plegable: /<details[^>]*>(?:(?!<\/details>)[\s\S])*En otras ligas/.test(ficha), valor: mA.j.valor, puja: mA.puja, nombre: mA.j.nombre,
+    return { otras: S.otras, lineaA: txt(Hj.otrasLigasHTML(S, mA)), lineaB: Hj.otrasLigasHTML(S, mB), enFicha: /En otras ligas/.test(ficha), demEnFicha: /Demanda (alta|media|baja)/.test(ficha), tarjetas: (ficha.match(/En otras ligas/g) || []).length, suelta: /class="av-t">En otras ligas/.test(ficha), dentro: /Libre en el mercado de la liga<\/b><span class="av-l">(?:(?!<\/summary>)[\s\S])*En otras ligas: /.test(ficha), candado: /data-clave="otras/.test(ficha), valor: mA.j.valor, puja: mA.puja, nombre: mA.j.nombre,
       ia: /otras ligas|demás ligas/i.test(ctx) || /otras ligas|demás ligas/i.test(chat), iaErr: /^ERROR/.test(ctx) || /^ERROR/.test(chat) ? `${ctx.slice(0, 80)} | ${chat.slice(0, 80)}` : '', ctxLargo: ctx.length, chatLargo: chat.length };
   }, [pidA, pidB]);
   ok(de('/ligas/ver').length === 1 && fx.otras && fx.otras.p[pidA] && fx.otras.p[pidA].n === 5 && fx.otras.p[pidA].med === 0.11 && fx.otras.p[pidA].max === 0.19 && !fx.otras.p[pidB] && Object.keys(fx.otras.d).length === 0, `encendido lo pagado: se pide una vez y llega lo del que tiene 5 ligas de la misma clase, sin la Premium (${JSON.stringify(fx.otras && fx.otras.p)})`);
-  ok(fx.enFicha && !fx.demEnFicha && fx.tarjetas === 1 && !fx.plegable && fx.lineaB === '' && /^En otras ligas ?Se paga \+11 % sobre su valor \(hasta \+19 %\)$/.test(fx.lineaA), `la ficha lo dice en una tarjeta de una línea, sin nada que desplegar, y del que solo tiene 2 ligas no dice nada: «${fx.lineaA}»`);
+  ok(fx.enFicha && !fx.demEnFicha && fx.tarjetas === 1 && !fx.suelta && fx.dentro && !fx.candado && fx.lineaB === '' && /^En otras ligas: \+11 % sobre su valor \(hasta \+19 %\)$/.test(fx.lineaA), `la ficha lo dice en una línea DENTRO de la tarjeta del libre, a la vista, sin tarjeta propia ni candado (Carlos, 19:31), y del que solo tiene 2 ligas no dice nada: «${fx.lineaA}»`);
   ok(!fx.ia && !fx.iaErr && fx.ctxLargo > 500 && fx.chatLargo > 100, `a la IA (plan y chat) no le llega nada de esto (${fx.iaErr || `${fx.ctxLargo} y ${fx.chatLargo} caracteres mirados`})`);
   // no cambia la puja de la app
   const pujas = await en((pid) => {
@@ -425,7 +425,7 @@ try {
     const txt = (h) => { const d = document.createElement('div'); d.innerHTML = h; return d.textContent.replace(/\s+/g, ' ').trim(); };
     return { d: S.otras.d, linea: txt(Hj.otrasLigasHTML(S, mA)) };
   }, [pidA, pidB]);
-  ok(fx.d[pidA] && fx.d[pidA][0] === 3 && Object.values(fx.d).every((x) => x.every((v) => [0, 1, 2, 3].includes(v))) && /^En otras ligas ?Se paga \+11 % sobre su valor \(hasta \+19 %\) · Demanda alta$/.test(fx.linea) && !/\d+ ligas/.test(fx.linea), `con la demanda encendida, en la misma línea, como un nivel y sin cifras de ligas: «${fx.linea}»`);
+  ok(fx.d[pidA] && fx.d[pidA][0] === 3 && Object.values(fx.d).every((x) => x.every((v) => [0, 1, 2, 3].includes(v))) && /^En otras ligas: \+11 % sobre su valor \(hasta \+19 %\) · demanda alta$/.test(fx.linea) && !/\d+ ligas/.test(fx.linea), `con la demanda encendida, en la misma línea, como un nivel y sin cifras de ligas: «${fx.linea}»`);
 
   /* ---- capturas de la ficha con la línea encendida (para enseñárselas a Carlos) ---- */
   if (process.env.CAPTURAS) {
@@ -449,7 +449,7 @@ try {
       // (si no había nada que tocar en esa pestaña, por Mercado)
       if (!(await Q.page.$('.hoja, .ficha-j, #hoja'))) { await Q.page.evaluate(() => { const b = document.querySelector('[data-ir="mercado"], [data-v="mercado"]'); if (b) b.click(); }); await Q.page.waitForTimeout(600); await Q.page.evaluate(() => { const x = document.querySelector(`[data-j="${window.__pidCaptura}"]`); if (x) x.click(); }); }
       await Q.page.waitForTimeout(900);
-      await Q.page.evaluate(() => { const x = [...document.querySelectorAll('.aviso-ficha')].find((d) => /En otras ligas/.test(d.textContent)); if (x) x.scrollIntoView({ block: 'center' }); });
+      await Q.page.evaluate(() => { const x = document.querySelector('.av-l2'); if (x) x.scrollIntoView({ block: 'center' }); });
       await Q.page.waitForTimeout(300);
       await Q.page.screenshot({ path: join(process.env.CAPTURAS, `otras-ligas-${nombre}.png`) });
       if (Q !== P) await Q.ctx.close();
@@ -464,6 +464,7 @@ try {
     return {
       p1: OL.pagadoTxt({ n: 5, med: 0.11, max: 0.19 }), p2: OL.pagadoTxt({ n: 10, med: 0.05, max: 0.05 }), p3: OL.pagadoTxt({ n: 2, med: 0.1, max: 0.2 }), p4: OL.pagadoTxt(null), p5: OL.pagadoTxt({ n: 5, med: 'x', max: 0.2 }), p6: OL.pagadoTxt({ n: 3, med: -0.02, max: 0.03 }), p7: OL.pagadoTxt({ n: 3, med: -0.02, max: -0.01 }),
       junta: [OL.otrasTxt('A', 'B'), OL.otrasTxt(null, 'B'), OL.otrasTxt('A', null), OL.otrasTxt(null, null)],
+      lin: [OL.otrasLinea('Se paga a su valor', 'Demanda alta (ayer, baja)'), OL.otrasLinea(null, 'Demanda media'), OL.otrasLinea('Se paga +5 % sobre su valor', null), OL.otrasLinea(null, null)],
       d1: OL.demandaTxt([3, 1]), d2: OL.demandaTxt([2, 0]), d3: OL.demandaTxt([0, 3]), d4: OL.demandaTxt(null), d5: OL.demandaTxt([1, 1]),
       manda: [
         OL.tocaMandar(null, '1:0', 0, t, 'a'), OL.tocaMandar({ t: t - 10 * 60e3, f: 'x', dia: 'a', n: 1 }, '1:0', 0, t, 'a'), OL.tocaMandar({ t: t - HORA, f: '1:0', dia: 'a', n: 1 }, '1:0', 0, t, 'a'), OL.tocaMandar({ t: t - HORA, f: '1:0', dia: 'a', n: 1 }, '1:1', 0, t, 'a'),
@@ -480,6 +481,7 @@ try {
   ok(np(tx.p6) === 'Se paga a su valor (hasta~+3~%)' && tx.p7 === 'Se paga a su valor' && !/−/.test(tx.p6 + tx.p7), `por debajo de su valor no se dice nada: «a su valor» (la subasta empieza ahí): «${tx.p6}» · «${tx.p7}»`);
   ok(tx.d1 === 'Demanda alta (ayer, baja)' && tx.d2 === 'Demanda media' && tx.d3 === 'Demanda alta ayer' && !tx.d4 && tx.d5 === 'Demanda baja', `la demanda, en dos o tres palabras; a primera hora, con lo de hoy sin saberse, la de ayer: «${tx.d1}» · «${tx.d2}» · «${tx.d3}» · «${tx.d5}»`);
   ok(JSON.stringify(tx.junta) === '["A · B","B","A",null]' && [tx.p1, tx.p2, tx.p6, tx.d1, tx.d3].every((x) => x.length <= 45), 'las dos cosas van en una sola línea corta (45 letras como mucho cada una), y sin nada, nada');
+  ok(JSON.stringify(tx.lin) === '["En otras ligas: a su valor · demanda alta (ayer, baja)","En otras ligas: demanda media","En otras ligas: +5 % sobre su valor",null]', `dentro de la tarjeta del libre, una línea que empieza por «En otras ligas:»; sin nada, nada: «${tx.lin[0]}»`);
   ok(tx.manda === '1001110100', `cuándo se manda: la primera vez, con cambios pasada media hora, lo mismo una vez al día, con cláusulas resueltas; no antes de media hora, ni sin cambios, ni pasado el tope del día, ni tras un fallo, ni sin nada (${tx.manda})`);
   ok(tx.ver === '10110001', `cuándo se pide lo de las demás ligas: la primera vez, al cambiar los libres, a las 3 h o al cambiar de día; no tras un fallo ni sin libres (${tx.ver})`);
   ok(tx.dem === '[[3,0],[12,2]]', `de la demanda salen solo los libres de la liga con la subasta abierta que la app conoce (${tx.dem})`);

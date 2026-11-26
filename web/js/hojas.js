@@ -24,7 +24,7 @@ import { estadoLimite, novedadesPara, importantesPara, bloqueada, otrasLigasCfg,
 import { jornadaJugadorHTML } from './directo.js';
 import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
-import { pagadoTxt, demandaTxt, otrasTxt } from './otras-ligas.js';
+import { pagadoTxt, demandaTxt, otrasLinea } from './otras-ligas.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 import { estadoInv, contadorTxt, porElegir, cfgInv, PREMIO_TXT, premioHasta, puedeCanjear, rivalesInvitados, invitarOn } from './invitar.js';
@@ -69,13 +69,16 @@ export function quienPujaHTML(S, m) {
 /* (26 nov) Lo de las demás ligas que usan la app, en la ficha de un libre del mercado: lo pagado por él en 3 días y su nivel
    de demanda (otras-ligas.js). APAGADO mientras «otrasLigas» de limites.json no lo encienda: entonces no sale nada, ni se
    pide. Nunca con lo leído para otra liga tuya, ni con algo de hace más de medio día o de otro día (lo de «hoy» y «ayer» ya
-   sería otro). No toca la puja de la app: es un dato. UNA tarjeta con una línea, sin nada que desplegar (Carlos, 26 nov:
-   «textos más reducidos y mejor integrados… tampoco 60 pestañas para cada texto») */
+   sería otro). No toca la puja de la app: es un dato. UNA línea, sin nada que desplegar (Carlos, 26 nov, 18:53: «textos
+   más reducidos y mejor integrados… tampoco 60 pestañas para cada texto») y, desde las 19:31 («lo dejaría gratis, y mejor
+   integrado con la pestaña de arriba y abajo»), SIN TARJETA PROPIA Y SIN CANDADO: la segunda línea de la tarjeta «Libre
+   en el mercado de la liga» (devuelve solo esa línea) */
 export function otrasLigasHTML(S, m) {
   const on = otrasLigasCfg(), ot = S.otras;
   if ((!on.pagado && !on.demanda) || !ot || !m || m.tipo === 'manager' || !S.D || !S.D.liga || ot.liga !== S.D.liga.id || Date.now() - num(ot.t) > DIA / 2 || ot.dia !== diaDe()) return '';
-  const l = otrasTxt(on.pagado ? pagadoTxt(ot.p && ot.p[m.pid]) : null, on.demanda ? demandaTxt(ot.d && ot.d[m.pid]) : null);
-  return l ? aviso(S, { k: 'otras', pid: m.pid, cls: 'azul', ico: 'grafico', t: 'En otras ligas', l }) : '';
+  const l = otrasLinea(on.pagado ? pagadoTxt(ot.p && ot.p[m.pid]) : null, on.demanda ? demandaTxt(ot.d && ot.d[m.pid]) : null);
+  // (Carlos, 26 nov, 19:31) sin tarjeta propia: la segunda línea de «Libre en el mercado de la liga»
+  return l ? `<span class="av-l2">${icono('grafico')}${esc(l)}</span>` : '';
 }
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
@@ -440,10 +443,10 @@ export function fichaJugador(S, pid) {
         // (0.7.13u) por los que venían como él (su subida y si es de los top) y, si tu liga tiene pocos, con todas las ligas
         const liga = PV ? `Por ${M.pagaTxt(PV)} se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.${m.pGana != null ? ` Con la puja de la app te lo llevarías más o menos ${Math.max(1, Math.round(m.pGana * 10))} de cada 10 veces.` : ''}` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
         const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
-        h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
+        // (26 nov) debajo, en la misma tarjeta, lo pagado por él y su demanda en las demás ligas (apagado en limites.json:
+        // no sale nada); gratis, sin candado (Carlos, 19:31)
+        h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL + otrasLigasHTML(S, m),
           d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
-        // (26 nov) lo pagado por él y su demanda en las demás ligas (apagado en limites.json: no sale nada)
-        h += otrasLigasHTML(S, m);
         // (0.8.2) quién puede estar detrás de las pujas de otros que lleva (función top)
         if (m.ajenas > 0 && m.quien && m.quien.cands.length) { if (bloqueada('quienPuja')) cerradas.push('quienPuja'); else h += quienPujaHTML(S, m); }
       }

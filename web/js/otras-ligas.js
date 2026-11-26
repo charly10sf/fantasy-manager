@@ -168,8 +168,9 @@ export function tocaVer(ya, clave, ahora, hoy = '') {
 
 /* ---------- lo que se enseña en la ficha de un libre ---------- */
 /* (Carlos, 26 nov, 18:53: «hay en general mucho texto. Quiero textos más reducidos y mejor integrados y fáciles de entender,
-   tampoco 60 pestañas para cada texto») UNA sola tarjeta, «En otras ligas», con UNA línea y sin nada que desplegar:
-   «Se paga +11 % sobre su valor (hasta +19 %) · Demanda alta». */
+   tampoco 60 pestañas para cada texto») UNA línea y sin nada que desplegar. Y a las 19:31 («lo dejaría gratis, y mejor
+   integrado con la pestaña de arriba y abajo»): sin tarjeta propia y sin candado, dentro de la tarjeta del libre
+   (`otrasLinea`): «En otras ligas: +11 % sobre su valor (hasta +19 %) · demanda alta». */
 // (el espacio de antes del % no se parte: que la cifra no se quede en una línea y el % en otra)
 const pc = (s) => pct(Math.round(s * 100), 0).replace(/ %/g, ' %');
 /**
@@ -190,5 +191,14 @@ export function demandaTxt(x) {
   if (!hoy && !ayer) return null;
   return hoy ? `Demanda ${hoy}${ayer && ayer !== hoy ? ` (ayer, ${ayer})` : ''}` : `Demanda ${ayer} ayer`;
 }
-/** la línea de la tarjeta «En otras ligas»: lo pagado y la demanda juntos, o null si no hay nada que decir */
+/** lo pagado y la demanda juntos, o null si no hay nada que decir */
 export const otrasTxt = (pagado, demanda) => [pagado, demanda].filter(Boolean).join(' · ') || null;
+/**
+ * (Carlos, 26 nov, 19:31: «no lo veo una función tan premium, lo dejaría gratis, y mejor integrado con la pestaña de arriba
+ * y abajo») ya no es una tarjeta aparte ni lleva candado: es la SEGUNDA LÍNEA de «Libre en el mercado de la liga», debajo
+ * de «Desde X · la app pujaría Y»: «En otras ligas: +11 % sobre su valor (hasta +19 %) · demanda alta». O null
+ */
+export function otrasLinea(pagado, demanda) {
+  const l = otrasTxt(pagado ? pagado.replace(/^Se paga /, '') : null, demanda ? demanda[0].toLowerCase() + demanda.slice(1) : null);
+  return l ? `En otras ligas: ${l}` : null;
+}

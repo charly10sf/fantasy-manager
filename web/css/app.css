@@ -634,6 +634,9 @@ h1.titulo { font-weight: 700; }
 .av-t { font-weight: 700; line-height: 1.25; }
 .av-sub { font-weight: 500; color: var(--texto2); }
 .av-l { font-size: var(--t-sec2); line-height: 1.35; color: var(--texto2); }
+/* (26 nov) la segunda línea de una tarjeta: lo de otras ligas, dentro de «Libre en el mercado de la liga» */
+.av-l2 { display: flex; align-items: flex-start; gap: 6px; margin-top: 5px; padding-top: 6px; border-top: 1px solid var(--linea, rgba(255, 255, 255, .08)); color: var(--texto); }
+.av-l2 .ic { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--azul); }
 .av-chip { display: none; }
 .av-pleg { display: block; padding: 0; }
 .av-pleg > summary { list-style: none; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; cursor: pointer; border-radius: var(--r-ctl); }

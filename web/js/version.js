@@ -32,8 +32,9 @@ export const NOVEDADES = [
     // Sin liga, sin mánager, sin cuenta: de la liga, una huella que el servidor vuelve a cifrar con una sal que no sale de él.
     // Una cuenta, 2 ligas en 7 días, y el Worker comprueba con LaLiga que la liga es de quien la manda (revisión de fuera).
     // LO QUE SE VE, HECHO Y APAGADO («otrasLigas» de limites.json: false, 'dueño' o true): en la ficha de un libre, UNA
-    // tarjeta de una línea, «En otras ligas» («Se paga +11 % sobre su valor (hasta +19 %) · Demanda alta»; 3 ligas o más, sin
-    // la tuya; Carlos, 18:53: «textos más reducidos… tampoco 60 pestañas»). No toca la puja ni le llega a la IA.
+    // línea dentro de la tarjeta «Libre en el mercado de la liga» («En otras ligas: +11 % sobre su valor (hasta +19 %) ·
+    // demanda alta»; 3 ligas o más, sin la tuya; Carlos, 18:53: «textos más reducidos… tampoco 60 pestañas», y 19:31:
+    // «lo dejaría gratis, y mejor integrado»: sin tarjeta propia ni candado). No toca la puja ni le llega a la IA.
     // La medida, preparada: .github/ia/medir-otras-ligas.mjs. Pruebas: .github/ia/caso-otras-ligas.mjs y worker/prueba/datos.mjs
     v: '0.8.4s', f: '2026-11-26', h: '00:00', t: 'Lo que se paga en otras ligas, en preparación',
     cosas: [
