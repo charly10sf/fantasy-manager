@@ -3354,7 +3354,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/aviso-gonzalo-miro-sorloth-julian-alvarez-no-vale-marque-no-vuelve-ver-porteria-siete-jornadas-20261126_3482301.html": 1795688452000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lucho-tiene-pendiente-enmarcar-el-100-y-ganarse-el-200-radio-xativa/": 1795690083000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html": 1795690419000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mantiene-guion-entrenamiento-sevilla-fc_0_2008590120.html": 1795690401000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mantiene-guion-entrenamiento-sevilla-fc_0_2008590120.html": 1795690401000,
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/26/yeray-berenguer-vuelven-grupo-terzic-saca-oyono.html": 1795691381000
   },
   "hechos": [
    {
@@ -3765,7 +3766,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -4709,17 +4710,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 116607,
-  "salida": 9495,
+  "entrada": 118507,
+  "salida": 10469,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.363681,
+  "dolares": 0.364358,
   "reservado": 0
  },
  "recientes": {
@@ -9798,13 +9799,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6604,
+   "ok": 6605,
    "fallos": 0,
-   "ejecuciones": 5383,
+   "ejecuciones": 5384,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:06:11.489Z"
+   "ultima": "2026-11-26T11:11:12.156Z"
   }
  },
  "ptsDirecto": {},
@@ -9821,15 +9822,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:06:23.645Z"
+   "ultimaBien": "2026-11-26T11:11:27.667Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:06:23.645Z"
+   "ultimaBien": "2026-11-26T11:11:27.667Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:06:23.645Z"
+   "ultimaBien": "2026-11-26T11:11:27.667Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9837,11 +9838,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:06:23.645Z"
+   "ultimaBien": "2026-11-26T11:11:27.667Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:06:23.645Z"
+   "ultimaBien": "2026-11-26T11:11:27.667Z"
   }
  },
  "avisos": [
