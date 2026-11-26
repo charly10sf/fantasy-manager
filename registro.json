@@ -3178,7 +3178,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254389/lamine-yamal-baja-sabah-molestias-tobillo-derecho.html": 1795426051000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-perdera-partido-sabah-baku-leves-molestias-tobillo-derecho-20261123_3480055.html": 1795426542000,
    "AS|https://as.com/futbol/primera/aubameyang-lo-es-todo-para-el-depor-f202611-n/": 1795428299000,
@@ -9731,13 +9730,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6582,
+   "ok": 6583,
    "fallos": 0,
-   "ejecuciones": 5361,
+   "ejecuciones": 5362,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T09:16:16.798Z"
+   "ultima": "2026-11-26T09:21:18.572Z"
   }
  },
  "ptsDirecto": {},
@@ -9754,15 +9753,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:16:26.814Z"
+   "ultimaBien": "2026-11-26T09:21:29.322Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:16:26.814Z"
+   "ultimaBien": "2026-11-26T09:21:29.322Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:16:26.814Z"
+   "ultimaBien": "2026-11-26T09:21:29.322Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9770,11 +9769,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:16:26.814Z"
+   "ultimaBien": "2026-11-26T09:21:29.322Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:16:26.814Z"
+   "ultimaBien": "2026-11-26T09:21:29.322Z"
   }
  },
  "avisos": [
