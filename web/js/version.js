@@ -31,8 +31,9 @@ export const NOVEDADES = [
     // (`mejorOnce`); no cuenta en el tope de 25 (`M.nPlantilla`, `M.llena`); recompensa diaria de 200 mil; la alineación de
     // LaLiga con capitán, banquillo y entrenador leída aparte (`alineacionDe` en vivo.js; `idsOnce` ya no puede colar un id
     // que no es de jugador); las reglas de lo encendido, a la IA (`premiumTxt`); y la línea «Premium» del Diagnóstico.
+    // La ficha de un entrenador, sin ningún cartel (Carlos, 13:50: «No quiero nada de ese cartel. En ningún lado»).
     // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
-    v: '0.8.4s', f: '2026-11-26', h: '13:46', t: 'Ligas premium',
+    v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 25 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
     ],

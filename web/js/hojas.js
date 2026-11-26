@@ -482,10 +482,10 @@ export function fichaJugador(S, pid) {
       }
       if (c.length) h += `<details class="fj-pleg"><summary><div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div></summary><div class="previa">${c.join('')}</div></details>`;
     }
-  } else if (M.premium && M.premium.entrenador) {
-    // (26 nov) liga premium con entrenador: puntúa 5, 2 o 0 según el resultado de su equipo (ayuda de LaLiga, «Entrenador»)
-    h += `<div class="aviso-ficha">${icono('info')}<div>${j.estado === 'out_of_league' ? 'Ya no entrena en LaLiga: no puntúa. Si es tuyo, véndelo.' : 'Es entrenador: en tu liga se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde.'}</div></div>`;
-  } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: ${M.premium && M.premium.leido ? 'en tu liga los entrenadores están desactivados y' : 'en la versión gratis'} no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
+  }
+  // (26 nov, 13:50, Carlos, con la captura de la ficha de un entrenador: «No quiero nada de ese cartel. En ningún lado»)
+  // la ficha de un entrenador no lleva ningún cartel que explique qué es o cómo puntúa (ni en premium, ni destituido,
+  // ni en la versión gratis)
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
   const nots = M.noticiasDe(pid).slice(0, 6);
   if (nots.length) h += `<div class="sec"><h2>Noticias</h2></div>${nots.map(filaNoticia).join('')}`;
