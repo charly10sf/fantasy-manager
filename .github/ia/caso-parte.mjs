@@ -68,9 +68,9 @@ try {
       const lc = lineasDe(C).filter((l) => l.tipo === 'falta' && l.pos === 1);
       out.lineaFalta = {
         sinTocarte: planPuja || vendoPortero ? null : la.length === 0,
-        conMiPuja: lb.length === 1 && lb[0].llave === 'parte' && lb[0].pids.includes(pidPuja) && /^Le faltan? .*\bun portero\b/.test(lb[0].txt) && /^Vas a por /.test(lb[0].accion) && /puede ser uno de los que pujen contra ti/.test(lb[0].accion), txtB: lb[0] ? `${lb[0].txt} ${lb[0].accion}` : '',
+        conMiPuja: lb.length === 1 && lb[0].llave === 'parte' && lb[0].pids.includes(pidPuja) && /^Le faltan? .*\bun portero\b/.test(lb[0].txt) && /^Puede pujar contra ti por /.test(lb[0].accion) && Array.isArray(lb[0].puestos) && lb[0].puestos.length === 4 && lb[0].puestos[0].p === 1 && lb[0].puestos[0].n === 0 && lb[0].puestos[0].falta === 1 && lb[0].accion.length <= 70, txtB: lb[0] ? `${lb[0].txt} ${lb[0].accion}` : '',
         yoLleno: lineasDe(montar((D) => { sinPorteros(D); const m = meterPorteroLibre(D); for (const x of D.mercado) if (pos(D, x.pid) === 1) x.miPuja = null; m.miPuja = m.precio; const mol = Object.values(D.maestro).find((j) => j.pos === 2 && j.estado === 'ok'); for (let i = 0; D.plantillas[yo].length < 24; i++) { const id = `prueba-mio-${i}`; D.maestro[id] = { ...mol, id, nombre: `Mío ${i}` }; D.plantillas[yo].push({ pid: id, clausula: Math.max(1e6, mol.valor) }); } })).filter((l) => l.tipo === 'falta' && !l.vendo).length === 0,
-        con25: window.__n25 < 24 ? null : hechos(C).lleno && lc.length === 1 && /tiene la plantilla llena/.test(lc[0].accion) && !/pujen contra ti/.test(lc[0].accion), txtC: lc[0] ? lc[0].accion : '',
+        con25: window.__n25 < 24 ? null : hechos(C).lleno && lc.length === 1 && /^Plantilla llena: no puede pujar/.test(lc[0].accion) && !/Puede pujar contra ti/.test(lc[0].accion), txtC: lc[0] ? lc[0].accion : '',
       };
     }
 
@@ -102,7 +102,7 @@ try {
       const sirve = vende.length > 0;
       const soloSuyos = lg.every((l) => G.M.mercado.some((m) => m.tipo === 'manager' && m.pid === l.pid && m.vendedorTeamId === tid));
       const H2 = montar((D) => { D.dineros = { [tid]: { v: -30e6 } }; premio(D); D.dinero = 1e4; });
-      out.lineaRojo = { sale: sirve ? lg.length === 1 && soloSuyos && lg[0].llave === 'dinero' && vende.some((m) => m.pid === lg[0].pid && cifra(m) === lg[0].importe) && /^Está en negativo/.test(lg[0].txt) && /no puntúa/.test(lg[0].txt) && /a la venta/.test(lg[0].accion) && /ofértale/.test(lg[0].accion) : lg.length === 0, sirve, sinSaldo: lineasDe(H2).filter((l) => l.tipo === 'rojo').length === 0, txt: lg[0] ? `${lg[0].txt} ${lg[0].accion}` : '' };
+      out.lineaRojo = { sale: sirve ? lg.length === 1 && soloSuyos && lg[0].llave === 'dinero' && vende.some((m) => m.pid === lg[0].pid && cifra(m) === lg[0].importe) && /^En negativo$/.test(lg[0].txt) && /^-|^−/.test(lg[0].dato) && /no puntúa/.test(lg[0].nota) && /en venta/.test(lg[0].accion) && /ofértale/.test(lg[0].accion) : lg.length === 0, sirve, sinSaldo: lineasDe(H2).filter((l) => l.tipo === 'rojo').length === 0, txt: lg[0] ? `${lg[0].txt} [${lg[0].dato}] ${lg[0].accion} ${lg[0].nota}` : '' };
       // las llaves: con su dinero cerrado no se ve, y el candado sale igual con y sin línea detrás
       // el mismo caso con ese rival en positivo: con su dinero cerrado, todo tiene que salir IGUAL (también el orden)
       const G0 = montar((D) => { D.dineros = { [tid]: { v: 5e6 } }; premio(D); D.dinero = 900e6; });
@@ -131,7 +131,7 @@ try {
         const C = montar((D) => { abre(D); const e = D.clasif.find((x) => x.teamId === obj.teamId); const otros = D.plantillas[obj.teamId].filter((f) => f.pid !== obj.pid).slice(0, 2); otros.forEach((f, i) => D.actividad.unshift({ id: `prueba-c${i}`, t: Math.max(desde + HORA, ahora - (i + 1) * HORA), clase: 'blindaje', tipo: 4, pid: f.pid, quienId: e.userId || e.managerId || null, quien: e.manager })); });
         const lc = lineasDe(C, obj.teamId).filter((l) => l.tipo === 'blindajes');
         lineaSi = lc.length === 1 && lc[0].llave === 'parte' && lc[0].pids.includes(obj.pid) && /no puede blindarlo/.test(lc[0].accion);
-        out.txtBlind = lc[0] ? `${lc[0].txt} ${lc[0].accion}` : '';
+        out.txtBlind = lc[0] ? `${lc[0].txt} [${lc[0].dato}] ${lc[0].accion}` : '';
       }
       out.lineaBlind = lineaSi;
       // uno puesto en las 6 h siguientes al final de la jornada no se cuenta (no se sabe de qué jornada gasta)
@@ -180,12 +180,12 @@ try {
       const conDinero = pinta(G);
       U.LS.del('top-rivales'); U.LS.del('top-parte');
       S.D = antesD; S.M = antesM; S.seg.rivales = seg0;
-      const dentro = /Le faltan? (un|\d)|Está en negativo|no puntúa|[Oo]fértale|blindajes de esta jornada|Vas a por|plantilla llena/;
+      const dentro = /Le faltan? (un|\d)|>En negativo<|no puntúa|[Oo]fértale|Sin blindajes|Puede pujar|Plantilla llena|parte-ps|parte-res|parte-d/;
       out.pantalla = { pestaña: /data-seg="rivales:parte"/.test(cerrada), fuera: /El parte de la jornada \d+ sale/.test(fuera) && !/data-clave="parteRivales"/.test(fuera) && !dentro.test(trozo(fuera)),
         cerrada: /data-clave="parteRivales"/.test(cerrada) && !dentro.test(trozo(cerrada)), sinNumero: !/tab-n/.test(boton(cerrada)) && !/tab-n/.test(boton(fuera)),
-        abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && !/Está en negativo|no puntúa/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
+        abiertaSinRojo: !/data-clave="parteRivales"/.test(abierta) && !/>En negativo<|no puntúa|\d (rival )?en negativo/.test(abierta) && /parte-pie/.test(abierta) && /data-clave="dineroRivales"/.test(abierta),
         igualCerrado: trozo(abierta) === trozo(abierta0),
-        conDinero: !out.lineaRojo.sirve || (/Está en negativo/.test(conDinero) && /ofértale/.test(conDinero)), pieSiempre: /parte-pie/.test(conDinero) };
+        conDinero: !out.lineaRojo.sirve || (/>En negativo</.test(conDinero) && /ofértale/.test(conDinero) && /<b>1<\/b> en negativo/.test(conDinero)), pieSiempre: /parte-pie/.test(conDinero) };
     }
     return out;
   });

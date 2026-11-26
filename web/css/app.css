@@ -3975,6 +3975,20 @@ html.sin-fotos .tira-p, html.sin-fotos .sj-tira { display: none; }
 .parte-r > .fila { border-bottom: 0; }
 .parte-l { width: 100%; text-align: left; border: 0; color: inherit; font-family: inherit; margin: 6px 0 0; }
 button.parte-l { cursor: pointer; }
-.parte-l b { display: block; margin-bottom: 2px; }
+.parte-l > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.parte-t { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.parte-d { flex: none; font: 700 var(--t-sec2) 'Barlow'; color: var(--texto2); white-space: nowrap; }
+.parte-l:not(.oro):not(.azul) .parte-d { color: var(--rojo-l); }
+.parte-n { color: var(--texto2); font-size: var(--t-sec2); }
+.parte-ps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 1px 0; max-width: 340px; }
+.parte-p { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 2px 4px; border-radius: 8px; background: var(--plano2); color: var(--texto2); line-height: 1.15; }
+.parte-p i { font: 700 var(--t-mini) 'Barlow'; font-style: normal; letter-spacing: 0.6px; }
+.parte-p b { font: 700 17px 'Barlow'; color: var(--texto); }
+.parte-p em { font: 600 var(--t-mini) 'Barlow'; font-style: normal; }
+.parte-p.mal { background: var(--rojo-s); color: var(--rojo-l); box-shadow: inset 0 0 0 1px var(--rojo-l); }
+.parte-p.mal b { color: var(--rojo-l); }
+.parte-res { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+.parte-c b { color: var(--texto); }
+.parte-c.oro { box-shadow: inset 0 0 0 1px var(--oro); } .parte-c.azul { box-shadow: inset 0 0 0 1px var(--azul); } .parte-c:not(.oro):not(.azul) { box-shadow: inset 0 0 0 1px var(--rojo-l); }
 .parte-pie { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.35; }
 .parte-pie .pill { flex: none; }

@@ -30,7 +30,8 @@ import { esClausulable } from './motor.js';
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 export const PUESTO_P = { 1: ['portero', 'porteros'], 2: ['defensa', 'defensas'], 3: ['centrocampista', 'centrocampistas'], 4: ['delantero', 'delanteros'] };
 const d1 = (x) => String(Math.round(x * 10) / 10).replace('.', ',');
-const enLista = (l) => (l.length <= 1 ? l.join('') : `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}`);
+// («Unai Simón e Ilaix Moriba»: «e» delante de i- o hi-, no de hie-)
+const enLista = (l) => (l.length <= 1 ? l.join('') : `${l.slice(0, -1).join(', ')} ${/^h?i(?!e)/i.test(String(l[l.length - 1])) ? 'e' : 'y'} ${l[l.length - 1]}`);
 /** el parte sale desde estos días antes del primer partido (lo medido va de 1 a 4 días antes) y nunca con una jornada en juego */
 export const DIAS_ANTES = 4;
 /** lo que se le deja de más a un rival antes de darlo por «en negativo»: las recompensas diarias pueden ser más de lo que se
@@ -58,6 +59,7 @@ export function ventanaParte(M, ahora = Date.now()) {
  * Lo que se sabe de un rival para la próxima jornada, sin textos. `r` es su entrada de `M.rivales`.
  *   n, lleno            cuántos jugadores le cuentan en el tope (`M.cuentaPlantilla`) y si tiene la plantilla llena
  *   estado(j)           'ok' | 'duda' | 'baja' (lesionado, sancionado o fuera de LaLiga) | 'sin-partido' (aplazado)
+ *   porPuesto { pos: { ok, duda } }  cuántos tiene de cada puesto que seguro pueden jugar, y cuántos dudosos
  *   falta { pos: k }    los que le faltan SEGURO en cada puesto con los que seguro que pueden jugar ('ok'): lo menos que le
  *                       falta de ese puesto en cualquiera de las formaciones (si con una le llega, no le falta)
  *   faltaDuda           lo mismo contando a los dudosos como si jugaran (si aquí no falta, depende de un dudoso)
@@ -92,6 +94,8 @@ export function hechosRival(M, r, ahora = Date.now()) {
     return f;
   };
   const falta = faltaDe(firmes), faltaDuda = faltaDe(pueden);
+  const porPuesto = {};
+  for (const p of [1, 2, 3, 4]) porPuesto[p] = { ok: firmes.filter((j) => j.pos === p).length, duda: pueden.filter((j) => j.pos === p).length - firmes.filter((j) => j.pos === p).length };
   const once = M.mejorOnce(pueden);
   const lineasOnce = [0, 1, 2, 3].map((i) => (once.lineas && once.lineas[i]) || []);
   const titulares = new Set(lineasOnce.flat().map((j) => j.id));
@@ -107,7 +111,7 @@ export function hechosRival(M, r, ahora = Date.now()) {
   const premioFalta = M.premioPagado ? M.premioPagado(tid) === false : false;
   const rojo = cap && cap.alto != null ? !M.enJuego && !premioFalta && cap.alto + rec + HOLGURA_ROJO < 0 : null;
   const n = M.cuentaPlantilla ? M.cuentaPlantilla(todas.map((x) => x.j)) : todas.length;
-  return { tid, n, sinPlantilla, lleno: n >= (M.TOPE || 24), estado, once, falta, faltaDuda, titulares, suplentes, sobran, cap, rojo, rec, escudos: M.escudosDe ? M.escudosDe(tid) : null, fichas };
+  return { tid, n, sinPlantilla, lleno: n >= (M.TOPE || 24), estado, once, falta, faltaDuda, porPuesto, titulares, suplentes, sobran, cap, rojo, rec, escudos: M.escudosDe ? M.escudosDe(tid) : null, fichas };
 }
 
 /* LO MEDIDO con la liga de Carlos (26 nov; 8 rivales, J4-J13, 85 días y 808 movimientos; .github/ia/medir-parte.mjs):
@@ -130,7 +134,10 @@ export const LINEAS = { rojo: true, falta: true, blindajes: true, sobra: false }
  * El parte: una entrada por rival que tenga algo, cada una con sus líneas. SIN ORDENAR y sin mirar llaves: lo que se
  * enseña sale de `visibles`.
  *   { jornada, ini, toca, desde, rivales: [{ tid, nombre, e, lineas: [{ tipo, llave, txt, accion, pid, pids, pos, importe, orden, sinDinero }] }] }
- * tipo: 'rojo' | 'falta' | 'blindajes' (y 'sobra', apagada). `txt` es el hecho y `accion` lo que puedes hacer tú.
+ * tipo: 'rojo' | 'falta' | 'blindajes' (y 'sobra', apagada). CORTO (Carlos, 26 nov, 18:10: «menos texto y más sintetizado»):
+ * `txt` es el hecho en tres o cuatro palabras, `dato` su cifra (el saldo, «0 de 2»), `accion` UNA frase con lo que puedes
+ * hacer tú, `nota` la letra pequeña (hasta cuándo) y `puestos` la gráfica de «le falta»: [{ p, n, falta }] con los que tiene
+ * de cada puesto que seguro pueden jugar.
  * `sinDinero`: con lo que tiene (y lo que puede endeudarse) no le llega para lo que dice la línea; quien la enseñe la quita
  * si el dinero de ese rival está abierto (cerrado no se puede saber, y se deja). `opc.lineas` cambia qué líneas salen.
  */
@@ -174,8 +181,9 @@ export function parte(M, D, opc = {}) {
       if (cands.length) {
         const c = cands[0];
         lineas.push({ tipo: 'rojo', llave: 'dinero', orden: 0, pid: c.j.id, importe: c.of,
-          txt: `${h.cap.exacto ? 'Está en negativo' : 'Por sus movimientos, está en negativo'}: si no vende ${antesDe(jo.ini)}, no puntúa en la jornada.`,
-          accion: `Tiene a la venta a ${c.j.nombre}: ofértale ${eur(c.of)}${c.gana >= 0.1 ? ` (te da ${d1(c.gana)} pts más por jornada)` : ''}.` });
+          txt: 'En negativo', dato: h.cap.exacto ? eur(h.cap.v, { dec: 1 }) : 'estimado',
+          accion: `Tiene en venta a ${c.j.nombre}: ofértale ${eur(c.of)}${c.gana >= 0.1 ? ` (+${d1(c.gana)} pts por jornada)` : ''}.`,
+          nota: `Si no vende ${antesDe(jo.ini)}, no puntúa.` });
       }
     }
 
@@ -198,23 +206,25 @@ export function parte(M, D, opc = {}) {
         const seguros = l0.filter((x) => h.faltaDuda[x.p]), l = seguros.length ? seguros : l0, k = (x) => (seguros.length ? h.faltaDuda[x.p] : h.falta[x.p]);
         const n = l.reduce((t, x) => t + k(x), 0);
         const cuanto = (x) => (k(x) === 1 ? `un ${PUESTO_P[x.p][0]}` : `${k(x)} ${PUESTO_P[x.p][1]}`);
-        return { l, txt: `Le falta${n > 1 ? 'n' : ''} ${enLista(l.map(cuanto))} para alinear once${seguros.length ? '' : ' si no llega su dudoso'}.` };
+        const puestos = [1, 2, 3, 4].map((p) => ({ p, n: h.porPuesto[p].ok + (seguros.length ? h.porPuesto[p].duda : 0), falta: (l.find((x) => x.p === p) && k(l.find((x) => x.p === p))) || 0 }));
+        return { l, puestos, txt: `Le falta${n > 1 ? 'n' : ''} ${enLista(l.map(cuanto))}${seguros.length ? '' : ' si no llega su dudoso'}` };
       };
       if (conPuja.length) {
-        const { l, txt } = frase(conPuja);
+        const { l, txt, puestos } = frase(conPuja);
         const ms = l.length === 1 ? l[0].mios : l.slice(0, 2).map((x) => x.mios[0]);
         const nombres = ms.map((m) => m.j.nombre);
-        lineas.push({ tipo: 'falta', llave: 'parte', orden: 1, pos: l[0].p, pids: ms.map((m) => m.pid), lleno: h.lleno, txt,
+        lineas.push({ tipo: 'falta', llave: 'parte', orden: 1, pos: l[0].p, pids: ms.map((m) => m.pid), lleno: h.lleno, txt, puestos,
           sinDinero: topePuja != null && ms.every((m) => num(m.precio) > topePuja),
-          accion: h.lleno ? `Pero tiene la plantilla llena: hasta que venda a uno no puede pujar ni por ${nombres.join(' ni por ')}.`
-            : `Vas a por ${enLista(nombres)}: puede ser uno de los que pujen contra ti.` });
+          accion: h.lleno ? `Plantilla llena: no puede pujar por ${nombres.join(' ni por ')} hasta que venda.`
+            : `Puede pujar contra ti por ${enLista(nombres)}.` });
       } else if (conVenta.length) {
-        const { l, txt } = frase(conVenta), mio = l[0].mio;
+        const { l, txt, puestos } = frase(conVenta), mio = l[0].mio;
         avisados.add(mio.pid);
         const ya = !!(M.enVenta && M.enVenta.has && M.enVenta.has(mio.pid));
-        lineas.push({ tipo: 'falta', llave: 'parte', orden: 2, pos: l[0].p, pid: mio.pid, vendo: true, txt,
+        lineas.push({ tipo: 'falta', llave: 'parte', orden: 2, pos: l[0].p, pid: mio.pid, vendo: true, txt, puestos,
           sinDinero: !!(h.cap && h.cap.alto != null && num(mio.j.valor) > h.cap.alto),
-          accion: `${ya ? `Tienes a la venta a ${mio.j.nombre}: díselo` : `Vas a vender a ${mio.j.nombre}: ponlo a la venta y díselo`} antes de aceptar la oferta de LaLiga. Quien va corto de un puesto suele pagar más.` });
+          accion: ya ? `Tienes en venta a ${mio.j.nombre}: díselo. Quien va corto suele pagar más.`
+            : `Ofrécele a ${mio.j.nombre} antes que a LaLiga: quien va corto suele pagar más.` });
       }
     }
 
@@ -225,8 +235,8 @@ export function parte(M, D, opc = {}) {
       if (cands.length) {
         const c = cands[0], tot = h.fichas.filter((x) => x.j.pos === c.p && h.estado(x.j) !== 'baja').length;
         lineas.push({ tipo: 'sobra', llave: 'parte', orden: 2, pos: c.p, pid: c.j.id, lleno: h.lleno,
-          txt: `Tiene ${tot} ${PUESTO_P[c.p][1]} y ${c.j.nombre} no le cabe en el once.`,
-          accion: `A ti te da ${d1(c.gana)} pts más por jornada: pregúntale si lo vende.` });
+          txt: `Le sobra ${c.j.nombre}`, dato: `${tot} ${PUESTO_P[c.p][1]}`,
+          accion: `Pregúntale si lo vende (+${d1(c.gana)} pts por jornada).` });
       }
     }
 
@@ -236,8 +246,8 @@ export function parte(M, D, opc = {}) {
       const mias = (M.clausulas || []).filter((x) => String(x.teamId) === String(tid) && x.abierta && !planNo(x.pid) && esClausulable(M, x, ahora)).slice(0, 2);
       if (mias.length) {
         lineas.push({ tipo: 'blindajes', llave: 'parte', orden: 2, pids: mias.map((x) => x.pid),
-          txt: 'Ha gastado sus 2 blindajes de esta jornada.',
-          accion: `Si vas a clausular a ${mias.map((x) => `${x.j.nombre} (${eur(x.clausula)})`).join(' o a ')}, no puede blindarlo${mias.length > 1 ? 's' : ''} hasta que acabe la jornada.` });
+          txt: 'Sin blindajes', dato: '0 de 2',
+          accion: `Si clausulas a ${mias.map((x) => `${x.j.nombre} (${eur(x.clausula)})`).join(' o a ')}, no puede blindarlo${mias.length > 1 ? 's' : ''}.` });
       }
     }
 
