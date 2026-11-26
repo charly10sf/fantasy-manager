@@ -2317,6 +2317,17 @@
    "jornada": 14,
    "id": "2126043695736865278",
    "t": "2026-11-26T20:01:32.096Z"
+  },
+  {
+   "clave": "mercado|2026-11-27",
+   "tipo": "mercado",
+   "jornada": 14,
+   "id": "2126092486158242079",
+   "t": "2026-11-26T23:15:24.697Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2565"
+   }
   }
  ],
  "estados": {
@@ -4762,19 +4773,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-26",
+  "dia": "2026-11-27",
   "llamadas": {
-   "clasificar": 61,
-   "redactar": 24,
-   "revisar": 11,
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 235055,
-  "salida": 27843,
-  "cacheLee": 126777,
-  "cacheEscribe": 57099,
-  "dolares": 0.544805,
+  "entrada": 6268,
+  "salida": 232,
+  "cacheLee": 0,
+  "cacheEscribe": 9582,
+  "dolares": 0.053184,
   "reservado": 0
  },
  "recientes": {
@@ -4846,10 +4857,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-21T23:15:26.011Z",
-    "texto": "📈 El Real Madrid ⚪ se lleva la noche: sus jugadores ganan 7 M entre todos, mientras que los del Villarreal 🚢 pierden 2,6 M.\n\nNico Williams es el caso que más llama la atención: otros 1,9 M y 28 días seguidos al alza, 39,1 M desde el 25 de octubre. Vini Jr. también repite arriba, con 14 días subiendo, aunque solo ha sumado 6 puntos en las tres últimas jornadas.\n\nEn el otro lado, Rodri no encuentra suelo: 26 días cayendo y 35,3 M menos."
-   },
-   {
     "t": "2026-11-22T23:16:17.455Z",
     "texto": "📈 Rioja, del Valencia 🦇, es el chollo de hoy: vale 3,1 M, sube un 1,8 % y trae una media de 4,6. Para tapar un hueco barato, merece un vistazo.\n\nArriba del todo repite Vini Jr., con quince días seguidos subiendo y 28,8 M ganados desde el 8 de noviembre.\n\nAbajo repite Diomande: siete días cayendo y 7,1 M menos desde el 16 de noviembre, aunque sigue siendo el 5º delantero con más puntos de la temporada."
    },
@@ -4864,6 +4871,10 @@
    {
     "t": "2026-11-25T23:15:37.980Z",
     "texto": "📉 Fermín no levanta cabeza: otros 3,2 M menos esta noche, un 2,4 %, y cuatro días seguidos de bajada, 10,1 M desde el 22 de noviembre. Ya se queda en 131,8 M.\n\nLa otra cara es Álex Baena, que lleva cuatro días subiendo y 7,2 M ganados. Entre todos sus jugadores, el Atlético suma 6,5 M, y el Dépor pierde 4,4 M."
+   },
+   {
+    "t": "2026-11-26T23:15:24.699Z",
+    "texto": "El chollo de hoy es Fortuño, del Espanyol: vale 5,5 M, sube un 3,3 % y suma 38 puntos en las tres últimas jornadas. Para un fichaje barato, es de los que merece un vistazo.\n\nArriba sigue Yassir Zabiri, con otros 2 M y 90 días seguidos subiendo: 67,4 M desde el 29 de agosto. Y Fermín repite abajo, 3,1 M menos y cinco días cayendo.\n\nEn el Atlético, 4,7 M de ganancia sumando a sus jugadores."
    }
   ],
   "previa": [
@@ -5399,6 +5410,22 @@
    "cacheLee": 21607,
    "cacheEscribe": 29673,
    "dolares": 0.453189,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-26",
+   "llamadas": {
+    "clasificar": 61,
+    "redactar": 24,
+    "revisar": 11,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 235055,
+   "salida": 27843,
+   "cacheLee": 126777,
+   "cacheEscribe": 57099,
+   "dolares": 0.544805,
    "reservado": 0
   }
  ],
@@ -9850,7 +9877,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T23:11:16.006Z"
+   "ultimaBien": "2026-11-26T23:15:24.702Z"
   },
   "FotMob": {
    "seguidas": 0,
