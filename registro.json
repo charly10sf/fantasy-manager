@@ -3392,7 +3392,8 @@
    "AS|https://as.com/futbol/videos/aubameyang-busca-venganza-f202611-v/": 1795724302000,
    "SPORT|136880190": 1795722404000,
    "SPORT|136894748": 1795723203000,
-   "SPORT|136901059": 1795724253000
+   "SPORT|136901059": 1795724253000,
+   "Diario Sur|https://www.diariosur.es/malagacf/rival-malaga-athletic-rendimiento-figuras-20261126223317-nt.html": 1795728798000
   },
   "hechos": [
    {
@@ -3837,7 +3838,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -4750,12 +4751,13 @@
    "SPORT|136894988": 1795715585000,
    "SPORT|136892989": 1795715495000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261126/1004255972/batalla-campal-besiktas-hapoel-mostrarse-bandera-palestina-grada.html": 1795721138000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/lugo/2026/11/27/duran-maquinaria-ensino-cae-polonia-contra-lider-juega-pase-grecia/0003_202611L27P43991.htm": 1795725780000,
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-colau-suspende-sanchez-materia-vivienda-le-exige-expropiar-fondos-buitre-20261126223230.html": 1795728750000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 15,
+   "n": 16,
    "fallos": 0
   },
   "espera": {}
@@ -4763,17 +4765,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 59,
+   "clasificar": 61,
    "redactar": 24,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 231300,
-  "salida": 27665,
+  "entrada": 235055,
+  "salida": 27843,
   "cacheLee": 126777,
   "cacheEscribe": 57099,
-  "dolares": 0.54434,
+  "dolares": 0.544805,
   "reservado": 0
  },
  "recientes": {
@@ -9831,13 +9833,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6730,
+   "ok": 6731,
    "fallos": 0,
-   "ejecuciones": 5509,
+   "ejecuciones": 5510,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T21:31:16.971Z"
+   "ultima": "2026-11-26T21:36:13.083Z"
   }
  },
  "ptsDirecto": {},
@@ -9854,15 +9856,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:31:22.187Z"
+   "ultimaBien": "2026-11-26T21:36:22.482Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:31:22.187Z"
+   "ultimaBien": "2026-11-26T21:36:22.482Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:31:22.187Z"
+   "ultimaBien": "2026-11-26T21:36:22.482Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9870,11 +9872,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:31:22.187Z"
+   "ultimaBien": "2026-11-26T21:36:22.482Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:31:22.187Z"
+   "ultimaBien": "2026-11-26T21:36:22.482Z"
   }
  },
  "avisos": [
