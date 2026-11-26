@@ -43,6 +43,10 @@ export const NOVEDADES = [
     // (`M.ppEntrenador`); los del mercado, aparte (`M.entrenadoresMercado`, `M.ficharEntrenador`).
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
     cosas: [
+      // (26 nov, aviso de «como comiendo lomo»: «No son mis jugadores») con dos ligas, al cambiar de una a otra la
+      // sincronización de esos segundos y el plan o la pregunta que se recogen después ponían lo de una liga en la otra
+      // (sinc.js `pararSinc`/`ligaBien`, `ligaActiva` de datos.js, `liga` en plan-rid y preg-rid; caso-sinc (i))
+      { para: 'dueño', tipo: 'arreglo', d: 'ia', menor: true, t: 'Con dos ligas, cada una lo suyo', x: 'Si juegas en dos ligas, al cambiar de una a otra ya no se cuelan el plan, las preguntas ni lo que le has contado a la IA de la otra liga.' },
       { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
       { para: 'dueño', tipo: 'nuevo', d: 'campo', menor: true, t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, el plan lleva la puja por el que conviene fichar, con su dinero contado. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
       // (26 nov, 20:26, idea de IsmaelMartín; claude/prompt-origen-fichajes.md del proyecto) `origenFichaje` en operaciones.js,

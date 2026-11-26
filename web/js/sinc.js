@@ -17,7 +17,7 @@
    volver a la app se mira como mucho una vez por minuto (ESPERA). Si la app se va a segundo plano con una subida
    pendiente, se sube ya. */
 import { LS } from './util.js';
-import { K, enDemo } from './datos.js';
+import { K, enDemo, ligaActiva } from './datos.js';
 import { pedirWorker } from './soporte.js';
 import { paraSinc, ponerRemoto, escucharCambios } from './ia.js';
 
@@ -39,9 +39,17 @@ export function iniciarSinc({ liga, llega = null, charlando = null } = {}) {
   if (charlando) ocupado = charlando;
   escucharCambios(() => subirLuego());
 }
+/* (26 nov, aviso «No son mis jugadores» de un usuario con dos ligas) al cambiar de liga, K apunta ya a la liga nueva pero
+   ligaS seguía siendo la de antes hasta acabar de cargar: una subida pendiente o una mirada de ese rato subía lo de la liga
+   nueva a la vieja y ponía lo de la vieja (su plan, su conversación, sus notas) en la nueva. Ahora se para al cambiar y no
+   se sincroniza nada mientras la liga de K no sea la de ligaS (iniciarSinc la vuelve a poner al cargar la nueva) */
+export function pararSinc() {
+  ligaS = ''; clearTimeout(reloj); pendiente = false; otra = false;
+}
+const ligaBien = (l) => !!l && l === ligaS && ligaActiva() === l;
 /** tras un cambio de aquí: se sube a los SUBIR_TRAS sin más cambios (con la app en segundo plano, ya: ahí los relojes se paran) */
 function subirLuego() {
-  if (!ligaS || enDemo()) return;
+  if (!ligaBien(ligaS) || enDemo()) return;
   if (typeof document !== 'undefined' && document.visibilityState === 'hidden') { subirYa('oculta'); return; }
   clearTimeout(reloj);
   pendiente = true;
@@ -59,7 +67,7 @@ if (typeof document !== 'undefined') document.addEventListener('visibilitychange
 // (25 nov, B-3) `por`: de dónde sale la llamada (entrar, cada10, volver, vista, plan, fondo, pregunta, subir, oculta); el Worker
 // lo apunta en su registro para contar en Observability de qué son las ~20 llamadas por persona y día
 export async function sincronizar({ ya = false, conChat = false, subir = false, por = '' } = {}) {
-  if (!ligaS || enDemo()) return [];
+  if (!ligaBien(ligaS) || enDemo()) return [];
   if (!ya && Date.now() - ult < ESPERA) return [];
   // (con una en marcha, lo cambiado mientras tanto se sube al acabar)
   if (enCurso) { if (ya) otra = true; return enCurso; }
@@ -67,7 +75,10 @@ export async function sincronizar({ ya = false, conChat = false, subir = false, 
     // (0.8.4) sin esto, una vuelta que no llama (nada que subir) acababa antes de guardarse en enCurso y lo dejaba puesto
     // para siempre: ya no se sincronizaba nada más
     await null;
+    // la liga de esta vuelta: si cambia mientras se espera al servidor, lo que llega no se pone ni se apunta
+    const liga = ligaS;
     try {
+      if (!ligaBien(liga)) return [];
       const charlando = !conChat && !!ocupado();
       const sub = { ...subido() }, llegadas = new Set();
       const poner = (trae) => {
@@ -82,8 +93,8 @@ export async function sincronizar({ ya = false, conChat = false, subir = false, 
       if (!conBase() && Object.entries(loc0).some(([k, d]) => d && d.t && d.t > (Number(sub[k]) || 0))) {
         const visto = {};
         for (const k of Object.keys(loc0)) visto[k] = Number(sub[k]) || 0;
-        const r0 = await pedirWorker('POST', '/sinc', { liga: ligaS, pon: {}, tengo: visto, por }, { tiempo: 12000 });
-        if (!r0 || !r0.ok) return [];
+        const r0 = await pedirWorker('POST', '/sinc', { liga, pon: {}, tengo: visto, por }, { tiempo: 12000 });
+        if (!r0 || !r0.ok || !ligaBien(liga)) return [];
         poner(r0.trae);
       }
       // (0.8.4) una vuelta normalmente; dos si ha chocado: lo juntado aquí se sube enseguida, en la misma
@@ -97,8 +108,8 @@ export async function sincronizar({ ya = false, conChat = false, subir = false, 
         }
         // un cambio de aquí que no se puede subir aún (la conversación, con la IA contestando): ni se llama
         if ((subir || vuelta) && !Object.keys(pon).length) break;
-        const r = await pedirWorker('POST', '/sinc', { liga: ligaS, pon, tengo, base, por: vuelta ? `${por}+` : por }, { tiempo: 12000 });
-        if (!r || !r.ok) return [...llegadas];
+        const r = await pedirWorker('POST', '/sinc', { liga, pon, tengo, base, por: vuelta ? `${por}+` : por }, { tiempo: 12000 });
+        if (!r || !r.ok || !ligaBien(liga)) return [...llegadas];
         if (r.base === 1 && !conBase()) LS.set('sinc-base', 1);
         // lo que ha chocado (otro dispositivo lo cambió desde la última vez): se junta aquí y se vuelve a subir
         const choque = new Set(Array.isArray(r.choque) ? r.choque.filter((k) => k in pon) : []);

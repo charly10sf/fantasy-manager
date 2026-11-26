@@ -56,6 +56,8 @@ async function navegador() {
   // fuera de la liga de ejemplo (la misma cuenta y la misma liga en los dos) y la sincronización, en marcha para esa liga
   await page.evaluate(async () => {
     localStorage.setItem('fm-demo', 'false');
+    // (26 nov) la liga de K tiene que ser la de la sincronización (sinc.js no sincroniza si no lo es)
+    { const U = await import('./js/util.js'); U.LS.set('cfg', { ...(U.LS.get('cfg', {}) || {}), ligaId: '4455' }); U.LS.set('liga-principal', '4455'); }
     const Sn = await import('./js/sinc.js');
     window.__llegadas = [];
     Sn.iniciarSinc({ liga: '4455', llega: (c) => window.__llegadas.push(...c), charlando: () => !!window.__charlando });
@@ -153,7 +155,7 @@ try {
   await sinc(A); await sinc(B);
   b = await estado(B);
   ok(b.chat.join() === 'yo:Sin red', '(e) y al volver la red se sube y llega al otro');
-  const otra = await en(B, async () => { const Sn = await import('./js/sinc.js'); Sn.iniciarSinc({ liga: '9988' }); const r = await Sn.sincronizar({ ya: true }); Sn.iniciarSinc({ liga: '4455' }); return r; });
+  const otra = await en(B, async () => { const Sn = await import('./js/sinc.js'); const U = await import('./js/util.js'); U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '9988' }); Sn.iniciarSinc({ liga: '9988' }); const r = await Sn.sincronizar({ ya: true }); U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '4455' }); Sn.iniciarSinc({ liga: '4455' }); return r; });
   ok(otra.length === 0 && [...m.keys()].every((k) => k.startsWith('s|4455|')) && m.size >= 4, `(e) a otra liga de la misma cuenta no le llega nada de esta (${m.size} cosas guardadas, todas de su liga)`);
 
   /* (f) las miniaturas no viajan */
@@ -211,6 +213,44 @@ try {
   await espera(600);
   ok(llamadas - antesH === 1, `(h) al irse a segundo plano con una subida pendiente, se sube ya (${llamadas - antesH})`);
   await en(A, async () => { Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true }); });
+  /* (i) (26 nov, aviso «No son mis jugadores» de un usuario con dos ligas) al cambiar de liga, K apunta ya a la nueva pero
+     la sincronización seguía con la vieja hasta acabar de cargar: subía lo de la nueva a la vieja y ponía en la nueva el plan,
+     la conversación y las notas de la vieja. Con una subida pendiente en la 4455 se cambia a la 9988 (sin parar la
+     sincronización, como un cambio que llega a medias, y parándola, como hace cambiarDeLiga) */
+  for (const parar of [false, true]) {
+    await sinc(A);
+    const antesI = llamadas;
+    const r = await en(A, async (pararla) => {
+      const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js'), Sn = await import('./js/sinc.js');
+      const t = Date.now();
+      U.LS.set(Dt.K('chat'), [...I.conversacion(), { r: 'yo', t: 'De la 4455', ts: t }]); U.LS.set(Dt.K('chat-t'), t); I.cambioLocal('chat');
+      if (pararla) Sn.pararSinc();
+      U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '9988' });
+      const enOtra = Dt.K('chat');
+      const llega = await Sn.sincronizar({ ya: true });
+      await new Promise((ok) => setTimeout(ok, Sn.SUBIR_TRAS + 800));
+      const r = { enOtra, llega, chatOtra: JSON.stringify(U.LS.get(enOtra, null)), planesOtra: JSON.stringify(U.LS.get(Dt.K('planes'), null)) };
+      // de vuelta a la 4455 y en marcha otra vez para ella
+      U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '4455' }); Sn.iniciarSinc({ liga: '4455' });
+      return r;
+    }, parar);
+    const servidor = JSON.stringify(m.get('s|4455|chat') || '');
+    ok(r.enOtra === 'chat-l9988' && !r.llega.length && llamadas === antesI && r.chatOtra === 'null' && r.planesOtra === 'null' && [...m.keys()].every((k) => k.startsWith('s|4455|')),
+      `(i) ${parar ? 'parando la sincronización' : 'sin pararla'}, al cambiar de liga no se llama ni se pone nada de la otra liga en la nueva (${llamadas - antesI} llamadas, chat de la nueva: ${r.chatOtra.slice(0, 40)}, plan: ${r.planesOtra.slice(0, 40)})`);
+    await sinc(A);
+    ok(JSON.stringify(m.get('s|4455|chat') || '').includes('De la 4455') || servidor.includes('De la 4455'), '(i) y lo pendiente de la 4455 se sube al volver a ella');
+  }
+  // la pregunta que se recoge después, solo en su liga
+  const pp = await en(A, async () => {
+    const I = await import('./js/ia.js'), U = await import('./js/util.js');
+    U.LS.set('preg-rid', { rid: 'abcdefgh1234', t: 'hola', ts: Date.now(), dia: U.diaDe(), liga: '4455' });
+    const aqui = !!I.preguntaPendiente();
+    U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '9988' });
+    const otraL = !!I.preguntaPendiente();
+    U.LS.set('cfg', { ...U.LS.get('cfg', {}), ligaId: '4455' }); U.LS.del('preg-rid');
+    return { aqui, otraL };
+  });
+  ok(pp.aqui && !pp.otraL, `(i) la pregunta que se recoge después, solo en la liga en la que se hizo (en la suya: ${pp.aqui}; en la otra: ${pp.otraL})`);
   ok(!A.errores.length && !B.errores.length, `sin errores en las páginas${A.errores.length || B.errores.length ? `: ${[...A.errores, ...B.errores][0]}` : ''}`);
 } finally {
   await A.ctx.close(); await B.ctx.close(); await nav.close(); srv.close();
