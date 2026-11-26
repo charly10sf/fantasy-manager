@@ -14,7 +14,7 @@ import { qrSVG } from './qr.js';
 import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
 import { VERSION, cmpVer } from './version.js';
-import { enDemo } from './datos.js';
+import { enDemo, K } from './datos.js';
 import { dichoDe, fichaDichoHTML, tileDicho } from './dinero-dicho.js';
 import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
@@ -482,7 +482,10 @@ export function fichaJugador(S, pid) {
       }
       if (c.length) h += `<details class="fj-pleg"><summary><div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div></summary><div class="previa">${c.join('')}</div></details>`;
     }
-  } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
+  } else if (M.premium && M.premium.entrenador) {
+    // (26 nov) liga premium con entrenador: puntúa 5, 2 o 0 según el resultado de su equipo (ayuda de LaLiga, «Entrenador»)
+    h += `<div class="aviso-ficha">${icono('info')}<div>${j.estado === 'out_of_league' ? 'Ya no entrena en LaLiga: no puntúa. Si es tuyo, véndelo.' : 'Es entrenador: en tu liga se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde.'}</div></div>`;
+  } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: ${M.premium && M.premium.leido ? 'en tu liga los entrenadores están desactivados y' : 'en la versión gratis'} no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
   const nots = M.noticiasDe(pid).slice(0, 6);
   if (nots.length) h += `<div class="sec"><h2>Noticias</h2></div>${nots.map(filaNoticia).join('')}`;
@@ -1749,6 +1752,23 @@ function nombresIA() {
   const t = (x) => (x ? String(x).replace(/\b(?:models\/)?(?:gemini|gemma|learnlm|imagen)-[\w.-]*/gi, (y) => m(y)).replace(/\b(?:Gemini|Gemma)(?: [\d.]+)?(?: (?:Pro|Flash|Lite|Flash-Lite|Nano|Ultra|It|\(preview\)))*/g, 'la IA') : '');
   return { m, t, lista: () => orden };
 }
+/** (26 nov) solo en una liga premium: qué funciones tiene encendidas y CÓMO vienen de LaLiga el capitán, el banquillo, los
+ *  cedidos y los movimientos (nombres de campos y tipos, sin datos de nadie). Es la manera de confirmar lo que aún no se
+ *  ha visto de las ligas premium (claude/nota-premium.md del proyecto, «Por confirmar») */
+function premiumDiag(D, M) {
+  const L = D.liga || {}, pf = L.pf || {}, pc = L.pc || {};
+  const on = Object.keys(pf).filter((k) => pf[k]);
+  const g = LS.get(K('mi-once'), null), pr = (g && g.pr) || null;
+  const ents = ((M && M.mias) || []).filter((x) => x.j && x.j.pos === 5).length;
+  const ced = (D.clasif || []).reduce((n, e) => (e && e.cedidos != null ? (n || 0) + e.cedidos : n), null);
+  return `Premium: ${on.length ? on.join(', ') : L.pf ? 'ninguna función encendida' : 'funciones sin leer (liga guardada de antes)'}`
+    + ` · 11 ideal ${pc.ideal != null ? pc.ideal : '¿?'} · cesiones máx ${pc.cesionMax != null ? pc.cesionMax : '¿?'}, mín ${pc.cesionMin != null ? pc.cesionMin : '¿?'}`
+    + ` · capitán ${pr ? (pr.hay && pr.hay.capitan ? `${pr.capF || '¿?'} → ${pr.cap ? 'reconocido' : 'SIN RECONOCER'}` : 'sin poner') : 'sin mirar'}`
+    + ` · banquillo ${pr ? (pr.hay && pr.hay.banquillo ? `${pr.banqF || '¿?'} → ${Object.keys(pr.banq || {}).length} reconocidos` : 'vacío') : 'sin mirar'}`
+    + ` · entrenador ${pr && pr.ent ? 'alineado' : 'sin alinear'} (${ents} en plantilla)`
+    + ` · cedidos ${ced == null ? '¿?' : ced}${D.muestras && D.muestras.cedido ? ` ${D.muestras.cedido}` : ''}`
+    + ` · tipos: ${Object.entries((M && M.histTipos) || {}).map(([k, x]) => `${k}×${x.n}${x.conImporte ? `(${x.conImporte}€)` : ''}`).join(' ') || '¿?'}`;
+}
 export function textoDiagnostico(S) {
   const s = sesion();
   const D = S.D;
@@ -1776,6 +1796,7 @@ export function textoDiagnostico(S) {
     ...(enWeb ? [(() => { const x = estadoProxy(); if (!x) return 'Intermediario: ¿?'; return `Intermediario: ${x.ahora === 'deno' ? 'Deno (el Worker no contestaba)' : 'Worker'}${x.hay ? '' : ' · sin segundo'}${x.cambios ? ` · pasó a Deno ${x.cambios} ${x.cambios > 1 ? 'veces' : 'vez'}, la última ${horaDe(x.ultimo)} (${x.porque})` : ''}${x.usos ? ` · ${x.usos} peticiones por Deno` : ''}`; })()] : []),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     ocupado(),
+    ...(D && D.liga && D.liga.premium === true ? [premiumDiag(D, S.M)] : []),
     `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),
     `Fuentes: onces ${S.M && S.M.hayOnces ? `${Object.keys(((S.fuentes || {}).onces || {}).jugadores || {}).length} jugadores, ${((S.fuentes || {}).onces || {}).equipos ?? '?'}/${((S.fuentes || {}).onces || {}).de ?? '?'} equipos` : 'no'} · noticias ${S.M ? S.M.noticias.length : 0}${S.M && S.M.noticiasFallo ? ` (${S.M.noticiasFallo.viejas ? 'las de antes: ' : ''}${S.M.noticiasFallo.fallo})` : ''} · avanzadas ${S.M && S.M.fuentesAv ? Object.entries(S.M.fuentesAv).map(([k, v]) => `${k} ${v}`).join(', ') : 'sin datos'} · histórico de valor ${LS.get('ruta-valor', null) != null ? `ruta ${LS.get('ruta-valor')}` : LS.get('ruta-valor-falla', 0) ? 'ninguna ruta' : 'sin probar'}`,

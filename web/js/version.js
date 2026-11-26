@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4r';
+export const VERSION = '0.8.4s';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -23,6 +23,20 @@ export const VERSION = '0.8.4r';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    // (26 nov, Carlos: «vamos a hacer lo de las funciones del fantasy premium despacito…»; claude/nota-premium.md del proyecto)
+    // LAS LIGAS PREMIUM DE LALIGA, PARTE A: que la app las entienda. La liga y cada función por sus campos de verdad
+    // (`premium`, `config.premiumFeatures`: normalizar.js `premiumDe`, motor `M.premium`); el entrenador, que en premium puntúa
+    // 5/2/0, ya no se manda vender (decide.js regla 2, plan.js, `planAuto`, la ficha, lo que lee la IA) y va en el once
+    // (`mejorOnce`); no cuenta en el tope de 25 (`M.nPlantilla`, `M.llena`); recompensa diaria de 200 mil; la alineación de
+    // LaLiga con capitán, banquillo y entrenador leída aparte (`alineacionDe` en vivo.js; `idsOnce` ya no puede colar un id
+    // que no es de jugador); las reglas de lo encendido, a la IA (`premiumTxt`); y la línea «Premium» del Diagnóstico.
+    // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
+    v: '0.8.4s', f: '2026-11-26', h: '13:46', t: 'Ligas premium',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 25 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
+    ],
+  },
   {
     // (26 nov, 04:47, Carlos: «¿por qué cada vez que publico una versión que no es de la Play Store sale un aviso para que la
     // actualice? ¿No se podría hacer de forma automática?»; claude/prompt-actualizar-solo.md del proyecto) la versión nueva se

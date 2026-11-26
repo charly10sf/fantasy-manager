@@ -678,6 +678,28 @@ const ESTADO_TXT = {
   suspended: 'SANCIONADO',
   out_of_league: 'FUERA DE LA LIGA (ya no está en LaLiga)',
 };
+/**
+ * (26 nov) Solo en una liga premium: las reglas de las funciones que el administrador tiene ENCENDIDAS, tal cual las da
+ * la ayuda de LaLiga Fantasy («Ligas premium», «Entrenador», «Cesiones») y las cifras de la propia liga. Las instrucciones
+ * de la IA dan por hecho la versión gratis («sin entrenador»): esto manda sobre ellas. Son reglas, no consejos: a quién
+ * poner de capitán o en el banquillo lo dirá la app cuando esté medido (parte B). Unos 100 tokens, y solo en ligas premium.
+ */
+export function premiumTxt(M) {
+  const P = M && M.premium;
+  if (!P || !P.liga || !P.leido) return '';   // una liga guardada de antes no trae qué funciones tiene: nada hasta actualizar
+  const si = [], no = [];
+  if (P.entrenador) si.push('ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de 25 jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador'); else no.push('entrenador (no se alinea ni puntúa)');
+  if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega'); else no.push('capitán');
+  if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán'); else no.push('banquillo');
+  if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): la liga las tiene, pero la app aún no hace cuentas con ellas; propón solo las de la lista de formaciones'); else no.push('formaciones de más');
+  if (P.cesiones) si.push(`CESIONES: un jugador de otro mánager por ${P.cesionJornadas > 1 ? `${P.cesionJornadas} jornadas` : 'una jornada'}${P.cesionMax ? ` (${P.cesionMax} como mucho entre cedidos y peticiones)` : ''}, pagándole un mínimo que depende de su valor; se piden hasta 24 h antes de la jornada y el cedido no cuenta en el tope de plantilla`); else no.push('cesiones');
+  if (P.ideal) si.push('11 IDEAL: LaLiga paga un premio en dinero por cada jugador mío que entre en el 11 ideal de la jornada'); else no.push('premio del 11 ideal');
+  return `LIGA PREMIUM (esto manda sobre las reglas 10 y 11 en lo que digan de «versión gratis», entrenador y recompensa): recompensa diaria de ${eur(M.RECOMPENSA || 200000)} y blindaje de ${M.ESCUDO_H || 48} h.${si.length ? ` ${si.join('. ')}.` : ''}${no.length ? ` El administrador tiene APAGADO: ${no.join(', ')}.` : ''}`;
+}
+/** lo que se le dice a la IA de un entrenador: en una liga premium que los tiene, puntúa (ayuda de LaLiga, «Entrenador») */
+const entrenadorTxt = (M, j, largo) => (M && M.premium && M.premium.entrenador
+  ? (j.estado === 'out_of_league' ? 'ENTRENADOR DESTITUIDO: ya no puntúa' : 'ENTRENADOR: en esta liga premium se alinea uno y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; NO se vende por «no puntuar»')
+  : `ENTRENADOR: no se alinea ni puntúa${M && M.premium && M.premium.leido ? ' (el administrador de la liga tiene apagados los entrenadores)' : largo ? ' en la versión gratis' : ''}`);
 const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   (() => { const ine = M.inercia ? M.inercia(j.id) : null; if (ine && ine.fase !== 'plano') return null; return x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null; })(),
@@ -685,7 +707,7 @@ const lineaJ = (M, j, x = {}) => [
   // (la de 7 días lleva dentro los días de bajada: con el que acaba de empezar a subir, lo que sube estos días)
   x.tend && x.tend.rRec != null && x.tend.p7 != null && x.tend.p7 < 2 ? `lleva ${x.tend.racha} días subiendo (${pct(x.tend.rRec / 0.9 * 100)}/día)` : null,
   inerciaTxt(M, j),
-  j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa en la versión gratis' : null,
+  j.pos === 5 ? entrenadorTxt(M, j, true) : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
   j.pos < 5 ? forma(M, j.id) : null,
   j.pos < 5 ? historialTxt(M, j, PLAN_CORTO ? 3 : 5) : null,
@@ -705,7 +727,7 @@ const lineaBreve = (M, j) => {
     POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
     t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null,
     inerciaTxt(M, j),
-    j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa' : null,
+    j.pos === 5 ? entrenadorTxt(M, j, false) : null,
     j.media ? `media ${String(j.media).replace('.', ',')}` : null,
     onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null),
     j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts esperados` : null,
@@ -1121,6 +1143,9 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   L.push(`AHORA: ${ahora} (hora de España)`);
   L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo (${eur(M.deuda)}), pero solo pujando o comprando en el mercado: las cláusulas se pagan con saldo.`);
+  // (26 nov) en una liga premium, sus reglas (las instrucciones dan por hecho la versión gratis)
+  const prem = premiumTxt(M);
+  if (prem) L.push(prem);
   // (aviso de Domy, 31 oct) LaLiga cierra el once con el primer partido de la jornada: con ella en juego, todo lo que se
   // haga es para la siguiente (o para el parón, si va antes)
   if (M.enJuego) {
@@ -1170,8 +1195,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     L.push(`CAJA PARA CLÁUSULAS: ${eur(num(D.dinero))} ahora${cajaA > num(D.dinero) ? `; ${eur(cajaA)} si antes acepto las ofertas que ya tengo` : ''}. Lo que ponga a la venta hoy no entra hasta que acepte una oferta${M.cierreMercado ? ` (llegan en el cambio de mercado, ${cuando(M.cierreMercado)})` : ''}.${M.misPujas ? ` SALDO SI GANO MIS PUJAS DE AHORA: ${eur(num(D.dinero) - M.misPujas)} (cuenta así para empezar la jornada en positivo).` : ''}`);
   }
   if (M.once) {
-    const tit = new Set(M.once.lineas.flat().map((j) => j.id));
-    L.push(`\nJUEGA CON LA VERSIÓN GRATUITA. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
+    const tit = new Set([...M.once.lineas.flat().map((j) => j.id), ...(M.once.entrenador ? [M.once.entrenador.id] : [])]);
+    L.push(`\n${M.premium && M.premium.leido ? 'LIGA PREMIUM' : 'JUEGA CON LA VERSIÓN GRATUITA'}. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
     L.push(`MI PLANTILLA POR PUESTOS (sanos/total): ${M.puestos.map((p) => `${POS[p.pos]} ${p.sanos}/${p.total}${p.faltan ? ` (FALTAN ${p.faltan})` : ''}${p.conviene ? ` (conviene tener ${p.conviene} más, no es obligatorio)` : ''}${p.sobran ? ` (sobran ${p.sobran})` : ''}`).join(' · ')}.`);
     // con la jornada en juego, el «próximo partido» de cada uno mezcla esta jornada y la siguiente: solo quién es titular
     if (M.enJuego) L.push(`MI MEJOR ONCE (solo de referencia, para saber quién es titular y quién no; la alineación de la jornada ${M.proxima ? M.proxima.n : 'siguiente'} se decide cuando acabe esta): ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}.`);
@@ -2509,7 +2534,7 @@ export function cuadrarPlan(P, D, M, { chat = false, suelto = false } = {}) {
   for (const o of ops) {
     if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.decisionBase) continue;
     const d = M.decisionBase(o.pid);
-    if (!d || d.regla === 'entrenador') continue;
+    if (!d || (d.regla === 'entrenador' && d.accion === 'vender')) continue;   // en premium el entrenador se aguanta: esa venta sí se mira
     const acepta = o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '');
     const noEsta = acepta && d.accion === 'vender' && d.oferta === 'esperar' && d.matiz !== 'con-recambio';
     if (d.accion !== 'aguantar' && !noEsta) continue;
@@ -3589,7 +3614,7 @@ export function compraTxt(D, M, C) {
   const ganaUna = Math.round((v1 - C.precio) / 1e4) * 1e4;
   const corte = Math.round(v1 * (1 + E.corte) / 1e4) * 1e4;
   const OLa = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
-  const saldo = num(D.dinero), llega = saldo >= C.precio, llena = (M.mias || []).length >= 25;
+  const saldo = num(D.dinero), llega = saldo >= C.precio, llena = !!M.llena;
   const once = M.mejora ? num(M.mejora(j)) : 0;
   const sobre = j.valor ? C.precio / j.valor - 1 : 0;
   // cómo va de gente en ese puesto (Carlos: «teniendo en cuenta si me faltan jugadores de otras posiciones»)

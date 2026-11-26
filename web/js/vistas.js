@@ -898,7 +898,10 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     while (js.length < n) js.push(null);
     return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
   });
-  const ent = M.once && M.once.entrenador;
+  // (26 nov) el entrenador del campo (solo sale en una liga premium que los tiene): si el campo es el que tienes puesto en
+  // LaLiga o el de la jornada en juego, el que TÚ alineaste (o ninguno); el que elige la app, solo en el once de la app
+  const entDe = (ids) => { if (!(M.premium && M.premium.entrenador)) return null; const mias = new Set(M.mias.map((x) => String(x.pid))); return (ids || []).map((pid) => M.J(pid)).find((j) => j && j.pos === 5 && mias.has(String(j.id))) || null; };
+  const ent = real ? entDe(V && V.once) : mio ? entDe((LS.get(K('mi-once'), null) || {}).ids) : deIA ? null : M.once && M.once.entrenador;
   h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true, directo: !!V })}</div>` : ''}</div>`;
   // (19 nov, Carlos: «no veo el sentido a cómo pone banquillo y lo del once de la app») fuera del directo, debajo del campo
@@ -1242,7 +1245,7 @@ function eqPlantillaHTML(S, op) {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
       if (!xs.length) continue;
-      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 && !(M.premium && M.premium.entrenador) ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
   } else if (orden === 'titular') {

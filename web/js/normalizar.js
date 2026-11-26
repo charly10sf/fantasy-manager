@@ -102,6 +102,8 @@ export function plantilla(r, equipos) {
     valor: num(primero(datos && datos.teamValue, datos && datos.team && datos.team.teamValue)),
     nombre: (datos && (datos.name || (datos.team && datos.team.name))) || '',
     dinero: datos && datos.teamMoney != null ? num(datos.teamMoney) : null,
+    // (26 nov) los cedidos de una liga premium (`loanedPlayers`, visto vacío en todas las ligas miradas): solo cuántos
+    ...(datos && Array.isArray(datos.loanedPlayers) ? { cedidos: datos.loanedPlayers.length } : {}),
   };
   return { fichas, info };
 }
@@ -247,6 +249,27 @@ export function partidos(r, equipos, n) {
 }
 
 /* ---------- actividad de la liga ---------- */
+/* ---------- las Ligas Premium de LaLiga (26 nov) ----------
+ * Lo que trae cada liga de /leagues (visto el 26 nov en una liga estándar y, por la forma, en tres premium):
+ *   premium: true | false
+ *   config.premiumFeatures: { formations, captain, bench, loan, ideal, coach }   (el administrador las enciende y apaga una a una)
+ *   config.premiumConfigurations: { loan: { duration, maxLoans, enableConclude, minPercentage }, ideal: { reward } }
+ * Sin el campo `premium` a true no hay nada de premium; una función solo cuenta si la liga es premium Y su campo es true. */
+export const FUNCIONES_PREMIUM = ['formations', 'captain', 'bench', 'loan', 'ideal', 'coach'];
+export function premiumDe(l) {
+  const premium = !!(l && l.premium === true);
+  const cfg = (l && l.config) || {}, f = cfg.premiumFeatures || {}, c = cfg.premiumConfigurations || {};
+  const pf = {};
+  for (const k of FUNCIONES_PREMIUM) pf[k] = premium && f[k] === true;
+  const out = { premium, pf };
+  if (premium) {
+    const pos = (v) => (typeof v === 'number' && Number.isFinite(v) && v > 0 ? v : null);
+    const lo = c.loan || {}, ide = c.ideal || {};
+    out.pc = { ideal: pos(ide.reward), cesionMax: pos(lo.maxLoans), cesionMin: pos(lo.minPercentage), cesionJornadas: pos(lo.duration), cesionAcabar: lo.enableConclude === true };
+  }
+  return out;
+}
+
 // «Pepe ha fichado a Pedri por ... a Juan»: el primero es quien lo hace y el segundo, el otro
 function deDescripcion(t, n) {
   const s = String(t || '');
