@@ -2268,6 +2268,13 @@
     "clase": "mercado",
     "chollo": "3045"
    }
+  },
+  {
+   "clave": "previa|135",
+   "tipo": "previa",
+   "jornada": 14,
+   "id": "2125832335559897098",
+   "t": "2026-11-26T06:01:40.037Z"
   }
  ],
  "estados": {
@@ -3157,11 +3164,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/dimitrievski-lanza-un-mensaje-a-braulio-f202611-n/": 1795394296000,
-   "AS|https://as.com/futbol/primera/de-las-heridas-del-derbi-a-bratislava-f202611-n/": 1795394566000,
-   "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/": 1795394243000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261123/1004254260/vinicius-junior-examina-psv.html": 1795413600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254283/gerard-martin-jong-reivindicativos-pleno-debate-fichaje-central.html": 1795413000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/las-dudas-en-torno-a-rafa-nadal-como-proximo-presidente-del-real-madrid-y-su-mayor-diferencia-respecto-a-florentino-perez-cadena-ser/": 1795415357000,
    "SPORT|136739601": 1795421298000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/lamine-yamal-no-viaja-a-baku-en-una-decision-consensuada-con-el-barca-por-descanso-cadena-ser/": 1795425635000,
@@ -3324,21 +3326,19 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255541/adeyemi-calidad-suplir-jugador-no-depender-nadie.html": 1795639084000,
    "SPORT|136858366": 1795636976000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/julian-alvarez-vuelve-a-ver-puerta-con-un-extrano-gol-de-falta-el-reloj-del-arbitro-confirmo-que-el-balon-habia-entrado-cadena-ser/": 1795640881000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/umar-sadiq-jugador-valencia-cf-136859136.html": 1795643111000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/25/umar-sadiq-jugador-valencia-cf-136859136.html": 1795643111000,
+   "AS|https://as.com/futbol/primera/ejuke-condenado-a-revulsivo-f202611-n/": 1795654739000,
+   "AS|https://as.com/futbol/champions/gordon-vuelve-a-encontrar-el-gol-en-azerbaiyan-f202611-n/": 1795655077000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/champions-league/20261125/1004255562/inter-stuttgart.html": 1795643782000,
+   "SPORT|136860599": 1795645142000,
+   "SPORT|136860635": 1795644403000,
+   "SPORT|136860051": 1795643334000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/25/simeone-desvela-por-que-koke-sigue-siendo-indiscutible-a-sus-34-anos-es-raro-verle-errar-un-pase-cadena-ser/": 1795648430000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/26/6b0763d8fc6c83a13b8b45ca.html": 1795647636000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/musculares-fortuitas-lesiones-sevilla-fc-medico-garcia-plaza_0_2008586719.html": 1795668433000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorloth-julian-alvarez-alivian-atletico-champions-2-0_0_2008587527.html": 1795644575000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/alineacion-posible-del-elche-ante-el-levante-en-laliga-ea-sports-f202611-n/",
-    "medio": "AS",
-    "t": 1795394243000,
-    "id": "3182",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Lemar regresa a la alineación posible del Elche",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html",
     "medio": "MARCA",
@@ -3654,11 +3654,35 @@
     "motivo": "expulsión en el Barcelona-Villarreal",
     "plazo": "se perderá dos partidos de Liga",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/ejuke-condenado-a-revulsivo-f202611-n/",
+    "medio": "AS",
+    "t": 1795654739000,
+    "id": "2746",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Miguel Sierra sufre una lesión que le aparta del equipo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136860051",
+    "medio": "SPORT",
+    "t": 1795643334000,
+    "id": "2444",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Sucic reaparece tras la lesión y vuelve a jugar",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-25",
-   "n": 41
+   "dia": "2026-11-26",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -4523,9 +4547,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/23/iturralde-senala-penalti-desapercibido-barcelona-villarreal-sancion-fermin.html": 1795412971000,
-   "SPORT|136725414": 1795408237000,
-   "Europa Press|https://www.europapress.es/internacional/noticia-trafico-aereo-belgica-queda-practicamente-paralizado-lunes-huelga-general-20261123042922.html": 1795404562000,
    "SPORT|136740501": 1795422406000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-nueva-huelga-general-belgica-obliga-cierre-espacio-aereo-lunes-paro-controladores-20261123121513.html": 1795432513000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_10_2008567121.html": 1795431701000,
@@ -4563,7 +4584,10 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/25/sterling-condenado-a-un-ano-de-prision-suspendida-por-conduccion-temeraria-y-posesion-de-oxido-nitroso-cadena-ser/": 1795620910000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/25/aficion-sevilla-pagara-60-euros-entradas-atletico-paso.html": 1795627360000,
    "SPORT|136851440": 1795626010000,
-   "SPORT|136852775": 1795628687000
+   "SPORT|136852775": 1795628687000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/levante/20261126/1004255538/levante-rompe-laterales-toljan-manu-sanchez-ko.html": 1795672800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255643/1-2-prat-vence-vic.html": 1795647889000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261126/1004255642/grupo-1-pone-dia-disputa-dos-aplazados.html": 1795647744000
   },
   "hechos": [
    {
@@ -4615,8 +4639,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-25",
-   "n": 10,
+   "dia": "2026-11-26",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
@@ -4624,17 +4648,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 3,
-   "revisar": 2,
+   "clasificar": 2,
+   "redactar": 4,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 36724,
-  "salida": 865,
+  "entrada": 47921,
+  "salida": 2222,
   "cacheLee": 5806,
-  "cacheEscribe": 0,
-  "dolares": 0.082678,
+  "cacheEscribe": 11284,
+  "dolares": 0.142445,
   "reservado": 0
  },
  "recientes": {
@@ -4728,10 +4752,6 @@
   ],
   "previa": [
    {
-    "t": "2026-11-24T10:26:40.248Z",
-    "texto": "Posibles onces de Valencia-Osasuna, el domingo a las 14:00\n\nAl Osasuna 🐂 le faltan Catena, sancionado, y Aitor Fdez y Rockson, lesionados. Al Valencia 🦇, Vázquez y Diego López, lesionados. Los que no fallan: Budimir (93 % de titularidad, 7,5 de media) y Dimitrievski (94 %).\n\nLo que no está claro: Kike Barja (38 %), Diego Rico (51 %) y Herrando en el Osasuna; Rioja en el Valencia.\n\nEl que más suele dar de los dos es Copete, con 7,5 de media."
-   },
-   {
     "t": "2026-11-24T12:31:56.280Z",
     "texto": "Deportivo-Barça (el domingo a las 16:15): así llegan los dos a la jornada 14\n\nAdeyemi es la gran duda de este partido: 51 % de titularidad en el Barcelona. También con dudas: Frenkie de Jong en el Barça, y Marc Casadó y Alti en el Dépor.\n\nAl Barcelona le faltan Fermín, sancionado, y Xavi Espart y Bardghji, lesionados. Sin discusión, Raphinha (85 %, 12,3 de media) y Mario Soriano (85 %).\n\nSobre el papel, el Barça lo tiene más fácil: va 1º y el Deportivo, 12º. Lamine Yamal es quien más destaca: 12,8 de media."
    },
@@ -4746,6 +4766,10 @@
    {
     "t": "2026-11-25T10:11:36.369Z",
     "texto": "🗓️ Espanyol-Getafe, el lunes a las 21:00: los pericos reciben a un Getafe que va 18º y marca 0,6 goles por partido.\n\nEso le viene bien al portero y a los defensas del Espanyol. Cabrera, con un 90 % de titularidad, y El Hilali son fijos atrás, aunque falta Riedel por sanción. Hinojo tiene más papeletas de jugar que de no hacerlo, y Dolan, arriba, puede quedarse fuera.\n\nEn el Getafe no está Djene, sancionado. David Soria es el fijo bajo palos y Francho está a medias."
+   },
+   {
+    "t": "2026-11-26T06:01:40.039Z",
+    "texto": "Etta Eyong está a medias para el Levante-Racing de mañana (21:00, Ciutat de València): con un 49 % de titularidad, puede jugar o quedarse en el banquillo.\n\nEl cruce favorece a los delanteros y medios granotas, porque el Racing es de los que más encajan. En el Levante también hay duda con Ifeanyi Ndukwe, y falta Manu Sánchez, lesionado. Roger Brugué y Ryan son fijos.\n\nLos racinguistas no cuentan con Andrés Martín, lesionado. Zabiri, con 7,2 de media, es el seguro arriba."
    }
   ],
   "noticias": [
@@ -5279,11 +5303,6 @@
   }
  ],
  "fallosRedaccion": {
-  "previa|135": {
-   "n": 1,
-   "t": "2026-11-24T08:01:45.285Z",
-   "ultima": "2026-11-24T08:01:45.285Z"
-  },
   "previa|134": {
    "n": 1,
    "t": "2026-11-24T10:11:51.096Z",
@@ -9724,13 +9743,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6543,
+   "ok": 6544,
    "fallos": 0,
-   "ejecuciones": 5322,
+   "ejecuciones": 5323,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T05:56:19.784Z"
+   "ultima": "2026-11-26T06:01:12.170Z"
   }
  },
  "ptsDirecto": {},
@@ -9747,15 +9766,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T05:56:20.269Z"
+   "ultimaBien": "2026-11-26T06:01:48.415Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T05:56:20.269Z"
+   "ultimaBien": "2026-11-26T06:01:48.415Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T05:56:20.269Z"
+   "ultimaBien": "2026-11-26T06:01:48.415Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9763,11 +9782,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T22:56:13.921Z"
+   "ultimaBien": "2026-11-26T06:01:48.415Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-25T21:56:56.151Z"
+   "ultimaBien": "2026-11-26T06:01:48.415Z"
   }
  },
  "avisos": [
