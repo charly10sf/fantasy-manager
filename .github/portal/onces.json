@@ -1,6 +1,6 @@
 {
  "J": 14,
- "generada": 1795564088821,
+ "generada": 1795650491447,
  "equipos": [
   {
    "id": "11",
@@ -65,7 +65,7 @@
      "id": "2628",
      "nombre": "O. Rey",
      "pos": 3,
-     "p": 51
+     "p": 50
     },
     {
      "id": "2302",
@@ -136,7 +136,7 @@
      "a": {
       "id": "2628",
       "nombre": "O. Rey",
-      "p": 51
+      "p": 50
      },
      "b": {
       "id": "3164",
@@ -212,7 +212,7 @@
      "id": "3026",
      "nombre": "Pablo Ramón",
      "pos": 2,
-     "p": 89
+     "p": 90
     },
     {
      "id": "3261",
@@ -236,7 +236,7 @@
      "id": "3205",
      "nombre": "Iván Martín",
      "pos": 3,
-     "p": 72
+     "p": 71
     },
     {
      "id": "3234",
@@ -254,7 +254,7 @@
      "id": "3002",
      "nombre": "Iñigo Vicente",
      "pos": 4,
-     "p": 76
+     "p": 75
     },
     {
      "id": "3247",
@@ -362,7 +362,7 @@
      "id": "121",
      "nombre": "Bartra",
      "pos": 2,
-     "p": 86
+     "p": 87
     },
     {
      "id": "2429",
@@ -410,7 +410,7 @@
      "id": "2770",
      "nombre": "Antony",
      "pos": 4,
-     "p": 75
+     "p": 76
     }
    ],
    "suplentes": [
@@ -460,7 +460,7 @@
      "id": "2609",
      "nombre": "Valentín Gómez",
      "pos": 2,
-     "p": 17
+     "p": 16
     }
    ],
    "dudas": [
@@ -469,7 +469,7 @@
      "a": {
       "id": "2770",
       "nombre": "Antony",
-      "p": 75
+      "p": 76
      },
      "b": {
       "id": "2217",
@@ -518,7 +518,7 @@
      "id": "3082",
      "nombre": "Lejeune",
      "pos": 2,
-     "p": 92
+     "p": 93
     },
     {
      "id": "3260",
@@ -698,7 +698,13 @@
      "id": "3042",
      "nombre": "Einar",
      "pos": 2,
-     "p": 76
+     "p": 75
+    },
+    {
+     "id": "3037",
+     "nombre": "C. Puga",
+     "pos": 2,
+     "p": 72
     },
     {
      "id": "3270",
@@ -710,13 +716,7 @@
      "id": "2525",
      "nombre": "Salinas",
      "pos": 2,
-     "p": 47
-    },
-    {
-     "id": "3059",
-     "nombre": "Pastor",
-     "pos": 2,
-     "p": 45
+     "p": 48
     },
     {
      "id": "3072",
@@ -746,7 +746,7 @@
      "id": "3070",
      "nombre": "Chupe",
      "pos": 4,
-     "p": 76
+     "p": 75
     }
    ],
    "suplentes": [
@@ -763,17 +763,16 @@
      "p": 47
     },
     {
-     "id": "3037",
-     "nombre": "C. Puga",
+     "id": "3059",
+     "nombre": "Pastor",
      "pos": 2,
-     "p": 43,
-     "duda": true
+     "p": 45
     },
     {
      "id": "3034",
      "nombre": "Joaquín",
      "pos": 4,
-     "p": 40
+     "p": 39
     },
     {
      "id": "3038",
@@ -791,7 +790,7 @@
      "id": "3132",
      "nombre": "J. Berrocal",
      "pos": 2,
-     "p": 19
+     "p": 20
     },
     {
      "id": "3204",
@@ -804,14 +803,14 @@
     {
      "linea": 2,
      "a": {
+      "id": "2525",
+      "nombre": "Salinas",
+      "p": 48
+     },
+     "b": {
       "id": "3059",
       "nombre": "Pastor",
       "p": 45
-     },
-     "b": {
-      "id": "3037",
-      "nombre": "C. Puga",
-      "p": 43
      },
      "pa": 51
     },
@@ -890,10 +889,10 @@
       "por": null
      },
      {
-      "id": "3037",
-      "nombre": "C. Puga",
+      "id": "3059",
+      "nombre": "Pastor",
       "pos": 2,
-      "por": "duda"
+      "por": null
      }
     ]
    },
@@ -956,7 +955,7 @@
      "id": "2318",
      "nombre": "O. Sancet",
      "pos": 3,
-     "p": 62
+     "p": 63
     },
     {
      "id": "3083",
@@ -1009,6 +1008,13 @@
      "p": 18
     },
     {
+     "id": "2319",
+     "nombre": "Maroan",
+     "pos": 4,
+     "p": 18,
+     "duda": true
+    },
+    {
      "id": "2645",
      "nombre": "Rego",
      "pos": 3,
@@ -1019,12 +1025,6 @@
      "nombre": "Jauregizar",
      "pos": 3,
      "p": 16
-    },
-    {
-     "id": "3295",
-     "nombre": "Vizcay",
-     "pos": 4,
-     "p": 15
     }
    ],
    "dudas": [
@@ -1033,7 +1033,7 @@
      "a": {
       "id": "2318",
       "nombre": "O. Sancet",
-      "p": 62
+      "p": 63
      },
      "b": {
       "id": "3185",
@@ -1138,13 +1138,13 @@
      "id": "2939",
      "nombre": "G. Villar",
      "pos": 3,
-     "p": 72
+     "p": 71
     },
     {
      "id": "2958",
      "nombre": "Morcillo",
      "pos": 3,
-     "p": 68
+     "p": 67
     },
     {
      "id": "3147",
@@ -1268,7 +1268,7 @@
      "id": "67",
      "nombre": "Marcos Llorente",
      "pos": 2,
-     "p": 87
+     "p": 86
     },
     {
      "id": "2562",
@@ -1292,7 +1292,7 @@
      "id": "3193",
      "nombre": "Kang-In Lee",
      "pos": 3,
-     "p": 73
+     "p": 72
     },
     {
      "id": "2326",
@@ -1324,13 +1324,13 @@
      "id": "3114",
      "nombre": "Hjulmand",
      "pos": 3,
-     "p": 42
+     "p": 41
     },
     {
      "id": "3255",
      "nombre": "J. David",
      "pos": 4,
-     "p": 40
+     "p": 39
     },
     {
      "id": "255",
@@ -1378,16 +1378,7 @@
      "hasta": "principios de diciembre"
     }
    ],
-   "vuelven": [
-    {
-     "id": "2562",
-     "nombre": "Marc Pubill",
-     "dias": 10,
-     "lesion": "Esguince de tobillo",
-     "antes": 67,
-     "p": 82
-    }
-   ],
+   "vuelven": [],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -1444,7 +1435,7 @@
      "id": "3106",
      "nombre": "Cucurella",
      "pos": 2,
-     "p": 89
+     "p": 88
     },
     {
      "id": "2531",
@@ -1500,7 +1491,7 @@
      "id": "3102",
      "nombre": "Vini Jr.",
      "pos": 4,
-     "p": 59
+     "p": 60
     },
     {
      "id": "1300",
@@ -1521,22 +1512,22 @@
      "p": 23
     },
     {
-     "id": "2428",
-     "nombre": "Rüdiger",
-     "pos": 2,
-     "p": 19
-    },
-    {
      "id": "2431",
      "nombre": "Brahim",
      "pos": 3,
      "p": 19
     },
     {
+     "id": "2428",
+     "nombre": "Rüdiger",
+     "pos": 2,
+     "p": 19
+    },
+    {
      "id": "3080",
      "nombre": "Dumfries",
      "pos": 2,
-     "p": 18
+     "p": 17
     }
    ],
    "dudas": [
@@ -1642,7 +1633,7 @@
      "id": "3069",
      "nombre": "Blanco",
      "pos": 3,
-     "p": 67
+     "p": 66
     },
     {
      "id": "2577",
@@ -1788,13 +1779,13 @@
      "id": "302",
      "nombre": "Gayá",
      "pos": 2,
-     "p": 85
+     "p": 84
     },
     {
      "id": "3206",
      "nombre": "Maffeo",
      "pos": 2,
-     "p": 73
+     "p": 72
     },
     {
      "id": "3236",
@@ -1850,13 +1841,13 @@
      "id": "3120",
      "nombre": "De Haas",
      "pos": 2,
-     "p": 45
+     "p": 43
     },
     {
      "id": "2560",
      "nombre": "Raba",
      "pos": 4,
-     "p": 33
+     "p": 34
     },
     {
      "id": "1191",
@@ -1900,7 +1891,7 @@
      "b": {
       "id": "3120",
       "nombre": "De Haas",
-      "p": 45
+      "p": 43
      },
      "pa": 59
     },
@@ -2396,16 +2387,16 @@
      "p": 86
     },
     {
-     "id": "2354",
-     "nombre": "Eric",
-     "pos": 2,
-     "p": 78
-    },
-    {
      "id": "2757",
      "nombre": "Gerard Martín",
      "pos": 2,
-     "p": 78
+     "p": 79
+    },
+    {
+     "id": "2354",
+     "nombre": "Eric",
+     "pos": 2,
+     "p": 79
     },
     {
      "id": "3100",
@@ -2417,19 +2408,20 @@
      "id": "2358",
      "nombre": "F. De Jong",
      "pos": 3,
-     "p": 63
+     "p": 64
     },
     {
      "id": "2784",
      "nombre": "Marc Bernal",
      "pos": 3,
-     "p": 59
+     "p": 58
     },
     {
-     "id": "3092",
-     "nombre": "Olmo",
+     "id": "3208",
+     "nombre": "Rodri",
      "pos": 3,
-     "p": 50
+     "p": 52,
+     "duda": true
     },
     {
      "id": "3104",
@@ -2455,7 +2447,7 @@
      "id": "2906",
      "nombre": "Cancelo",
      "pos": 2,
-     "p": 77
+     "p": 78
     },
     {
      "id": "2355",
@@ -2467,7 +2459,13 @@
      "id": "3209",
      "nombre": "Adeyemi",
      "pos": 4,
-     "p": 52
+     "p": 51
+    },
+    {
+     "id": "3092",
+     "nombre": "Olmo",
+     "pos": 3,
+     "p": 50
     },
     {
      "id": "3224",
@@ -2489,12 +2487,6 @@
      "p": 23
     },
     {
-     "id": "1218",
-     "nombre": "Álex Balde",
-     "pos": 2,
-     "p": 20
-    },
-    {
      "id": "1221",
      "nombre": "Gavi",
      "pos": 3,
@@ -2505,30 +2497,30 @@
     {
      "linea": 2,
      "a": {
-      "id": "2757",
-      "nombre": "Gerard Martín",
-      "p": 78
+      "id": "2354",
+      "nombre": "Eric",
+      "p": 79
      },
      "b": {
       "id": "2906",
       "nombre": "Cancelo",
-      "p": 77
+      "p": 78
      },
      "pa": 50
     },
     {
      "linea": 3,
      "a": {
+      "id": "3208",
+      "nombre": "Rodri",
+      "p": 52
+     },
+     "b": {
       "id": "3092",
       "nombre": "Olmo",
       "p": 50
      },
-     "b": {
-      "id": "3224",
-      "nombre": "Brian Fariñas",
-      "p": 34
-     },
-     "pa": 59
+     "pa": 51
     },
     {
      "linea": 4,
@@ -2540,7 +2532,7 @@
      "b": {
       "id": "3209",
       "nombre": "Adeyemi",
-      "p": 52
+      "p": 51
      },
      "pa": 51
     }
@@ -2550,12 +2542,6 @@
      "id": "1715",
      "nombre": "Fermín",
      "estado": "sancionado"
-    },
-    {
-     "id": "3208",
-     "nombre": "Rodri",
-     "estado": "lesionado",
-     "lesion": "Lesión en el bíceps femoral"
     },
     {
      "id": "2843",
@@ -2578,8 +2564,8 @@
       "pos": 2
      },
      {
-      "id": "3092",
-      "nombre": "Olmo",
+      "id": "3208",
+      "nombre": "Rodri",
       "pos": 3
      },
      {
@@ -2674,7 +2660,7 @@
      "id": "2295",
      "nombre": "Febas",
      "pos": 3,
-     "p": 44
+     "p": 43
     },
     {
      "id": "2394",
@@ -2694,7 +2680,7 @@
      "id": "2397",
      "nombre": "Pablo Durán",
      "pos": 4,
-     "p": 58
+     "p": 59
     },
     {
      "id": "3259",
@@ -2718,13 +2704,7 @@
      "id": "2346",
      "nombre": "Álvaro Núñez",
      "pos": 2,
-     "p": 33
-    },
-    {
-     "id": "2850",
-     "nombre": "H. González",
-     "pos": 3,
-     "p": 28
+     "p": 32
     },
     {
      "id": "2913",
@@ -2737,6 +2717,12 @@
      "nombre": "El Abdellaoui",
      "pos": 4,
      "p": 27
+    },
+    {
+     "id": "2954",
+     "nombre": "Antañón",
+     "pos": 3,
+     "p": 25
     }
    ],
    "dudas": [
@@ -2764,7 +2750,7 @@
      "b": {
       "id": "2397",
       "nombre": "Pablo Durán",
-      "p": 58
+      "p": 59
      },
      "pa": 57
     }
@@ -2884,7 +2870,7 @@
      "id": "2556",
      "nombre": "Buchanan",
      "pos": 3,
-     "p": 67
+     "p": 68
     },
     {
      "id": "1031",
@@ -2910,7 +2896,13 @@
      "id": "2504",
      "nombre": "Ayoze",
      "pos": 4,
-     "p": 56
+     "p": 55
+    },
+    {
+     "id": "356",
+     "nombre": "Gerard",
+     "pos": 4,
+     "p": 47
     },
     {
      "id": "2868",
@@ -2936,12 +2928,6 @@
      "nombre": "Cardona",
      "pos": 2,
      "p": 35
-    },
-    {
-     "id": "3242",
-     "nombre": "Saliba",
-     "pos": 3,
-     "p": 30
     },
     {
      "id": "2469",
@@ -2981,18 +2967,12 @@
      "b": {
       "id": "2504",
       "nombre": "Ayoze",
-      "p": 56
+      "p": 55
      },
      "pa": 53
     }
    ],
    "fuera": [
-    {
-     "id": "356",
-     "nombre": "Gerard",
-     "estado": "lesionado",
-     "lesion": "Molestias sin determinar"
-    },
     {
      "id": "2470",
      "nombre": "Foyth",
@@ -3000,7 +2980,16 @@
      "lesion": "Molestias musculares"
     }
    ],
-   "vuelven": [],
+   "vuelven": [
+    {
+     "id": "356",
+     "nombre": "Gerard",
+     "dias": 27,
+     "lesion": "Molestias sin determinar",
+     "antes": 36,
+     "p": 47
+    }
+   ],
    "anterior": {
     "J": 13,
     "fuente": "minutos"
@@ -3266,7 +3255,7 @@
      "id": "2680",
      "nombre": "A. Castrín",
      "pos": 2,
-     "p": 66
+     "p": 65
     },
     {
      "id": "3265",
@@ -3322,7 +3311,7 @@
      "id": "3145",
      "nombre": "Robbie Ure",
      "pos": 4,
-     "p": 37
+     "p": 36
     },
     {
      "id": "3138",
@@ -3406,7 +3395,7 @@
      "id": "2565",
      "nombre": "A. Fortuño",
      "pos": 1,
-     "p": 78
+     "p": 79
     },
     {
      "id": "1930",
@@ -3439,22 +3428,22 @@
      "p": 32
     },
     {
+     "id": "3077",
+     "nombre": "Edu Expósito",
+     "pos": 3,
+     "p": 93
+    },
+    {
      "id": "3161",
      "nombre": "Javi Hernández",
      "pos": 3,
-     "p": 83
+     "p": 66
     },
     {
      "id": "1938",
      "nombre": "Pol Lozano",
      "pos": 3,
-     "p": 53
-    },
-    {
-     "id": "3169",
-     "nombre": "Bauza",
-     "pos": 3,
-     "p": 34
+     "p": 52
     },
     {
      "id": "2520",
@@ -3489,6 +3478,12 @@
      "p": 35
     },
     {
+     "id": "3169",
+     "nombre": "Bauza",
+     "pos": 3,
+     "p": 33
+    },
+    {
      "id": "3177",
      "nombre": "Vanja Drkusic",
      "pos": 2,
@@ -3498,19 +3493,13 @@
      "id": "3127",
      "nombre": "Moscardo",
      "pos": 3,
-     "p": 22
+     "p": 21
     },
     {
      "id": "2930",
      "nombre": "Nuñez",
      "pos": 2,
      "p": 21
-    },
-    {
-     "id": "2516",
-     "nombre": "Puado",
-     "pos": 3,
-     "p": 18
     },
     {
      "id": "3131",
@@ -3535,6 +3524,20 @@
      "pa": 51
     },
     {
+     "linea": 3,
+     "a": {
+      "id": "1938",
+      "nombre": "Pol Lozano",
+      "p": 52
+     },
+     "b": {
+      "id": "3169",
+      "nombre": "Bauza",
+      "p": 33
+     },
+     "pa": 61
+    },
+    {
      "linea": 4,
      "a": {
       "id": "3237",
@@ -3546,17 +3549,10 @@
       "nombre": "Dolan",
       "p": 42
      },
-     "pa": 51
+     "pa": 50
     }
    ],
-   "fuera": [
-    {
-     "id": "3077",
-     "nombre": "Edu Expósito",
-     "estado": "lesionado",
-     "lesion": "Molestias sin determinar"
-    }
-   ],
+   "fuera": [],
    "vuelven": [],
    "anterior": {
     "J": 13,
@@ -3568,6 +3564,11 @@
       "id": "3172",
       "nombre": "Jose Angel",
       "pos": 2
+     },
+     {
+      "id": "3077",
+      "nombre": "Edu Expósito",
+      "pos": 3
      },
      {
       "id": "3161",
@@ -3590,6 +3591,12 @@
      {
       "id": "3305",
       "nombre": "A. Santiago",
+      "pos": 3,
+      "por": null
+     },
+     {
+      "id": "3169",
+      "nombre": "Bauza",
       "pos": 3,
       "por": null
      },
@@ -3725,10 +3732,10 @@
      "p": 16
     },
     {
-     "id": "2776",
-     "nombre": "A. Abqar",
+     "id": "3134",
+     "nombre": "Saba Sazonov",
      "pos": 2,
-     "p": 15
+     "p": 14
     }
    ],
    "dudas": [],
