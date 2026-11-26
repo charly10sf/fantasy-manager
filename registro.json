@@ -4642,7 +4642,9 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795677677013
+  }
  },
  "ia": {
   "dia": "2026-11-26",
@@ -9742,13 +9744,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6558,
+   "ok": 6559,
    "fallos": 0,
-   "ejecuciones": 5337,
+   "ejecuciones": 5338,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T07:16:13.567Z"
+   "ultima": "2026-11-26T07:21:17.013Z"
   }
  },
  "ptsDirecto": {},
@@ -9765,15 +9767,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:16:23.139Z"
+   "ultimaBien": "2026-11-26T07:21:29.616Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:16:23.139Z"
+   "ultimaBien": "2026-11-26T07:21:29.616Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:16:23.139Z"
+   "ultimaBien": "2026-11-26T07:21:29.616Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9781,11 +9783,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:16:23.139Z"
+   "ultimaBien": "2026-11-26T07:21:29.616Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T07:16:23.139Z"
+   "ultimaBien": "2026-11-26T07:21:29.616Z"
   }
  },
  "avisos": [
