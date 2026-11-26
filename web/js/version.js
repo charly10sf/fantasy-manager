@@ -35,9 +35,16 @@ export const NOVEDADES = [
     // Prueba: .github/ia/caso-premium.mjs. La parte B (capitán, banquillo, formaciones, a quién alinear) va después, medida.
     // (15:02, Carlos: «sí, el máximo son 24») El tope de la plantilla es 24, no 25, en toda la app: `TOPE_PLANTILLA` de
     // util.js, del que lo leen el motor (`M.TOPE`), quién puja (`ctx.tope`), el plan, decide.js, el parón, la IA y el chat.
+    // (26 nov, tarde) LA PARTE B: que ayude a jugarla, medido antes con J4-J13 (claude/nota-premium-parte-b.md del proyecto;
+    // .github/ia/medir-premium.js y medir-entrenador.mjs). Las 5 formaciones de más en el mejor once (`M.formaciones`,
+    // `M.formacionVale`; `formaOnce` lee un 4-6-0); el capitán y el banquillo que propone el motor (`M.capitanDe`,
+    // `M.banquilloDe`, `M.once.capitan`, `M.once.banquillo`) en Equipo (`premiumOnce` en vistas.js), la ficha, el paso de
+    // alinear del plan (`M.premiumAlinTxt`) y lo que lee la IA (`premiumTxt`); de dos entrenadores, el de mejor partido
+    // (`M.ppEntrenador`); los del mercado, aparte (`M.entrenadoresMercado`, `M.ficharEntrenador`).
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'campo', menor: true, t: 'Las ligas premium, bien entendidas', x: 'En una liga premium con entrenador, la app ya no te dice que lo vendas: puntúa 5 si su equipo gana y 2 si empata, sale en tu once y no cuenta en el tope de 24 jugadores. En Pregunta, la IA ya sabe qué tiene activado tu liga (capitán, banquillo, cesiones, 11 ideal) y sus reglas.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'campo', menor: true, t: 'Capitán, banquillo y entrenador en las ligas premium', x: 'En una liga premium, Equipo te dice a quién poner de capitán (el que más puntos se espera de tu once), a quién dejar en el banquillo de cada puesto y, si tienes dos entrenadores, cuál tiene mejor partido; sin entrenador, cuál fichar. El mejor once ya usa las cinco formaciones de más, el plan lo cuenta al alinear y la IA dice lo mismo en Pregunta.' },
       { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
     ],
   },

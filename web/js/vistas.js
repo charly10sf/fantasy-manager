@@ -957,7 +957,7 @@ function premiumOnceHTML(pm) {
   const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
   const fila = (j, sub, tuyo) => `<div class="co-f pm-f"><button class="co-j" data-j="${esc(j.id)}">${ava(j, 'm')}<span><b>${esc(j.nombre)}</b><i>${sub}</i></span></button>${tuyo ? (String(tuyo.id) === String(j.id) ? `<span class="pm-ya">${icono('ok')} puesto</span>` : `<span class="pm-ya no">ahora, ${esc(tuyo.nombre)}</span>`) : ''}</div>`;
   let h = '';
-  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts, los que más de tu once`, pm.capTuyo);
+  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados, el que más de tu once`, pm.capTuyo);
   for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
   if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el de mejor partido')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
   if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · libre en el mercado, vale ${eur(pm.fichar.precio)} · ${d1(pm.fichar.media)} pts por jornada`, null);

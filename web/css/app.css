@@ -554,7 +554,7 @@ h1.titulo { font-weight: 700; }
 /* (26 nov, parte B) ligas premium: la «C» del capitán que propone la app (abajo a la derecha de la cara) y su bloque bajo el campo */
 .cr-cap { position: absolute; bottom: -4px; right: -9px; min-width: 18px; height: 18px; border-radius: 50%; background: var(--oro); color: #111; font: 800 var(--t-mini)/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
 .linea-c.cinco .cr-cap, .linea-c.seis .cr-cap { right: -3px; }
-.cambio-once .pm-f { grid-template-columns: 1fr auto; }
+.cambio-once .co-f.pm-f { grid-template-columns: minmax(0, 1fr) auto; }
 .pm-ya { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-mini); color: var(--sube, #3ddc84); white-space: nowrap; }
 .pm-ya .ic { width: 13px; height: 13px; stroke-width: 3; }
 .pm-ya.no { color: var(--apagado); }
