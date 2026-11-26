@@ -60,7 +60,7 @@ export const NOVEDADES = [
     // la presentación entera. Una vez por dispositivo (LS «avisos-nov»), con la liga cargada y sin pisar la bienvenida, el
     // tutorial ni la del iPhone. `lista`: una línea por cosa; `solo` la enseña solo donde se nota ('pc': el ordenador ancho;
     // 'premium': una liga premium). Lo de otras ligas (apagado), las dos ligas y los avisos terminados no se cuentan
-    v: '0.8.5', f: '2026-11-26', h: '23:59', t: 'El parte de los rivales', todos: true,
+    v: '0.8.5', f: '2026-11-26', h: '23:35', t: 'El parte de los rivales', todos: true,
     aviso: {
       d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
       lista: [

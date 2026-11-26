@@ -1524,9 +1524,10 @@ for (const [conPartes, ancho] of [[true, 390], [false, 390], [true, 1280]]) {
           await page.evaluate(() => document.querySelector('[data-ir="rivales"]').click());
           await page.waitForTimeout(600);
           const orden = await page.evaluate(() => [...document.querySelectorAll('.tabs button')].map((b) => b.innerText.replace(/\d+/g, '').trim()));
-          // (26 nov) y, al final, el parte de los rivales
-          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas|Parte') mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas · Parte: ${orden.join(' · ')}`);
-          else bien('Rivales: Clasificación · Por jornada · Cláusulas · Parte');
+          // (0.8.5) el parte de los rivales ya no es una pestaña: es el botón dorado junto al título
+          const parteBtn = await page.evaluate(() => !!document.querySelector('h1 .parte-top[data-seg="rivales:parte"]'));
+          if (orden.join('|') !== 'Clasificación|Por jornada|Cláusulas' || !parteBtn) mal(`Rivales: las pestañas no son Clasificación · Por jornada · Cláusulas con el botón del Parte al lado del título: ${orden.join(' · ')}${parteBtn ? '' : ' (sin el botón)'}`);
+          else bien('Rivales: Clasificación · Por jornada · Cláusulas y el botón dorado del Parte junto al título');
           await page.evaluate(() => document.querySelector('[data-seg="rivales:jornadas"]').click());
           await page.waitForTimeout(600);
           const q = await page.evaluate(() => ({ chips: [...document.querySelectorAll('.rk-jsel button')].map((b) => b.innerText), filas: document.querySelectorAll('.rk-jor .fila').length }));
