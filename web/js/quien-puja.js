@@ -125,7 +125,8 @@ export function crearQuienPuja(ctx) {
     if (PUESTO[j.pos]) {
       const tiene = P.sanos[j.pos];
       const nec = clamp(1 + W.nec * (mediaPos[j.pos] - tiene), 0.55, 1.8);
-      const minimo = num((ctx.minimoPos || {})[j.pos]) || 1;
+      const mp = (ctx.minimoPos || {})[j.pos];
+      const minimo = mp != null ? num(mp) : 1;
       if (tiene < minimo) f(nec * W.sinOnce, `no le llegan los ${PUESTO[j.pos][1]} para alinear`);
       else f(nec, nec >= 1.2 ? `va corto de ${PUESTO[j.pos][1]} (${tiene})` : null);
       if (num(j.valor) > 0 && P.mejor[j.pos] > 0 && num(j.valor) >= P.mejor[j.pos]) f(W.mejor, `sería su mejor ${PUESTO[j.pos][0]}`);

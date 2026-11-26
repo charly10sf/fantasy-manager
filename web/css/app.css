@@ -551,6 +551,13 @@ h1.titulo { font-weight: 700; }
 .cromo.vacio-c .cr-hueco { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.5); font: 600 var(--t-cifra) var(--cond); color: rgba(255, 255, 255, 0.8); }
 .cromo.vacio-c .cr-nom { background: rgba(238, 28, 60, 0.85); }
 .cr-ent { position: absolute; left: 12px; bottom: 14px; z-index: 1; }
+/* (26 nov, parte B) ligas premium: la «C» del capitán que propone la app (abajo a la derecha de la cara) y su bloque bajo el campo */
+.cr-cap { position: absolute; bottom: -4px; right: -9px; min-width: 18px; height: 18px; border-radius: 50%; background: var(--oro); color: #111; font: 800 var(--t-mini)/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
+.linea-c.cinco .cr-cap, .linea-c.seis .cr-cap { right: -3px; }
+.cambio-once .co-f.pm-f { grid-template-columns: minmax(0, 1fr) auto; }
+.pm-ya { display: inline-flex; align-items: center; gap: 4px; font-size: var(--t-mini); color: var(--sube, #3ddc84); white-space: nowrap; }
+.pm-ya .ic { width: 13px; height: 13px; stroke-width: 3; }
+.pm-ya.no { color: var(--apagado); }
 .cromo.chico { flex: none; width: 66px; }
 .cromo.chico .ava.cr { width: 44px; height: 44px; } .cromo.chico .ava .ini { font-size: var(--t-cuerpo); }
 .cromo.chico .cr-nom { font-size: var(--t-mini); }

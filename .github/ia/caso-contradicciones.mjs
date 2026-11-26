@@ -16,7 +16,7 @@
 import { pagina, cerrar } from './banco.mjs';
 
 const N = Number(process.argv[2]) || 12, SEM = Number(process.argv[3]) || 1;
-const ESC = (process.argv[4] || 'martes,m-limpio,veda,sabado,enjuego,paron,m-negativo,holgado,jueves-negativo,mercado-real,m-reventa,m-cierre,m-baja-sin-relevo,m-baja-con-relevo,m-reventa-aguanta').split(',');
+const ESC = (process.argv[4] || 'martes,m-limpio,veda,sabado,enjuego,paron,m-negativo,holgado,jueves-negativo,mercado-real,m-reventa,m-cierre,m-baja-sin-relevo,m-baja-con-relevo,m-reventa-aguanta,m-premium,sabado-premium').split(',');
 let mal = 0;
 const ok = (c, t) => { if (!c) mal++; console.log(`${c ? 'BIEN' : 'MAL '} ${t}`); };
 

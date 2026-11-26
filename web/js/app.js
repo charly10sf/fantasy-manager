@@ -984,7 +984,6 @@ const CONSEJOS = [
   'Lo que pagas por encima del valor de un jugador se pierde: si lo vendes, te dan cerca de su valor.',
   'En el mercado de la liga se puja a ciegas: gana la puja más alta cuando cambia el mercado.',
   'Lo que vende otro manager sigue siendo suyo hasta que acepta tu oferta.',
-  'En la versión gratis no hay entrenador: no gastes en ellos.',
   'Un defensa con poca portería a cero esperada puntúa poco aunque sea titular.',
   'Si un jugador marca menos de lo que dice su xG, lo normal es que acaben llegando los goles.',
   'Antes de un parón los valores se paran: buen momento para vender lo que está arriba.',

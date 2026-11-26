@@ -893,11 +893,17 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   const cambios = mio && rec ? cambiosOnce(M, lineas, form, rec) : null;
   const saleIds = new Set(cambios ? cambios.pares.filter((x) => x.sale).map((x) => String(x.sale.id)) : []);
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
+  // (26 nov, parte B) en una liga premium, el capitán y el banquillo que propone la app para el once que recomienda (el
+  // suyo, el de la IA o el tuyo con sus cambios): una sola cuenta, la del motor. Con la jornada en juego ya no se cambian
+  const pm = V || M.enJuego ? null : premiumOnce(M, rec ? rec.lineas : lineas, mio ? (LS.get(K('mi-once'), null) || {}).pr : null);
+  const capId = mio ? (pm && pm.capTuyo ? String(pm.capTuyo.id) : null) : pm && pm.cap ? String(pm.cap.j.id) : null;
   const filas = [3, 2, 1, 0].map((i) => {
     const n = i === 0 ? 1 : f[i - 1] || 0;
+    // (una línea vacía, como la delantera de un 4-6-0, no se pinta)
+    if (!n && !(lineas[i] || []).length) return '';
     const js = (lineas[i] || []).slice(0, n);
     while (js.length < n) js.push(null);
-    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
+    return `<div class="linea-c${n >= 6 ? ' seis' : n >= 5 ? ' cinco' : ''}">${js.map((j) => { const c = cromo(M, j, { modo, directo: !!V, cap: !!(j && capId === String(j.id)) }); return j && saleIds.has(String(j.id)) ? c.replace('class="cromo ', 'class="cromo sale-c ') : c; }).join('')}</div>`;
   });
   // (26 nov) el entrenador del campo (solo sale en una liga premium que los tiene): si el campo es el que tienes puesto en
   // LaLiga o el de la jornada en juego, el que TÚ alineaste (o ninguno); el que elige la app, solo en el once de la app
@@ -910,10 +916,15 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // no hay nada flojo). Sin banquillo ni tira de «fuera» (Carlos, 08:20: «¿de qué sirve?»); siguen en la lista de la plantilla
   const hayCambios = !!(cambios && cambios.pares.length);
   if (hayCambios) h += cambiosOnceHTML(M, cambios);
+  if (pm) h += premiumOnceHTML(pm);
   if (!V) h += fueraOnceHTML(M, { ver: veredictoOnce(M, tit, cambios, S.plan), sinCambios: !hayCambios, conLinea: mio });
   h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
+  // (26 nov, parte B) la formación que tienes puesta en LaLiga ya no vale en tu liga (una de las de premium con esa función
+  // apagada por el administrador): con ella no se puntúa (ayuda de LaLiga, «Ligas premium»)
+  const fPuesta = real ? V.forma : mio ? (LS.get(K('mi-once'), null) || {}).forma : null;
+  if (Array.isArray(fPuesta) && M.formacionApagada(fPuesta)) notas.push(`<b class="rojo">Tu ${esc(fPuesta.join('-'))} no vale ahora en tu liga y con él no puntúas${real ? '' : ': pon otra formación en LaLiga Fantasy'}.</b>`);
   if ((real || mio) && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
@@ -929,6 +940,39 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;
 }
+
+/** (26 nov, parte B) el capitán y el banquillo de una liga premium para ese once: lo que propone el motor (`M.capitanDe`,
+    `M.banquilloDe`) y, si la app ha reconocido lo que tienes puesto en LaLiga (`pr`, de `alineacionDe`), si ya coincide */
+export function premiumOnce(M, lineas, pr = null) {
+  if (!M.premium || !(M.premium.capitan || M.premium.banquillo || M.premium.entrenador) || !Array.isArray(lineas)) return null;
+  // la propuesta del motor (sin los que la app te manda vender), la misma de la ficha y la IA; del banquillo no sale
+  // quien sigue en el campo que se ve
+  const pp = M.premiumPropuesta ? M.premiumPropuesta() : null;
+  const enEste = new Set(lineas.flat().filter(Boolean).map((j) => String(j.id)));
+  const cap = pp ? pp.capitan : null, ban = pp ? pp.banquillo.filter((b) => !enEste.has(String(b.j.id))) : [];
+  // el entrenador: con dos, el que alinea `mejorOnce`; sin ninguno, el que conviene fichar
+  const mios = M.premium.entrenador ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league').map((x) => x.j) : [];
+  const elegido = mios.length >= 2 && M.once && M.once.entrenador ? M.once.entrenador : null;
+  const otro = elegido ? mios.find((j) => j.id !== elegido.id) || null : null;
+  const ent = elegido ? { j: elegido, otro: otro && M.mejorPartidoEnt(elegido, otro) ? otro : null } : null;
+  const fichar = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  if (!cap && !ban.length && !ent && !fichar) return null;
+  const tuyo = (id, pos) => { const j = id != null && M.mias.some((x) => String(x.pid) === String(id)) ? M.J(id) : null; return j && (pos == null ? j.pos < 5 : j.pos === pos) ? j : null; };
+  return { cap, ban, ent, fichar, capTuyo: pr && pr.cap ? tuyo(pr.cap) : null, banTuyo: (p) => (pr && pr.banq && pr.banq[p] ? tuyo(pr.banq[p], p) : null), entTuyo: pr && pr.ent ? tuyo(pr.ent, 5) : null, partido: (j) => { const p = M.proximoPartido(j.equipoId); return p ? `${p.casa ? 'en casa contra' : 'fuera, contra'} ${p.rival}` : ''; } };
+}
+function premiumOnceHTML(pm) {
+  const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  const fila = (j, sub, tuyo) => `<div class="co-f pm-f"><button class="co-j" data-j="${esc(j.id)}">${ava(j, 'm')}<span><b>${esc(j.nombre)}</b><i>${sub}</i></span></button>${tuyo ? (String(tuyo.id) === String(j.id) ? `<span class="pm-ya">${icono('ok')} puesto</span>` : `<span class="pm-ya no">ahora, ${esc(tuyo.nombre)}</span>`) : ''}</div>`;
+  let h = '';
+  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados`, pm.capTuyo);
+  for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
+  if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el que más lleva por jornada')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
+  if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · libre en el mercado, vale ${eur(pm.fichar.precio)} · ${d1(pm.fichar.media)} pts por jornada`, null);
+  const partes = [pm.cap && 'capitán', pm.ban.length && 'banquillo', (pm.ent || pm.fichar) && 'entrenador'].filter(Boolean);
+  const titulo = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}` : partes[0] || '';
+  return `<div class="cambio-once pm-once"><div class="co-t">${titulo.charAt(0).toUpperCase()}${titulo.slice(1)}</div>${h}</div>`;
+}
+const POS_CORTA = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
 
 /** (19 nov) lo flojo de tu once: los que tienen menos de la mitad de ser titular (o están de baja) y no tienes a nadie
     mejor fuera (como mucho 3); para los 2 primeros, lo mejor de su puesto en el mercado que te llega y juega */
@@ -1240,7 +1284,7 @@ function eqPlantillaHTML(S, op) {
     ],
     maxPills: 2, conMini: true, op: op(x.pid),
   });
-  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
+  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.premium && M.premium.entrenador && M.mias.some((x) => x.j.pos === 5) ? `${M.mias.filter((x) => x.j.pos !== 5).length} jugadores y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : `${M.mias.length} jugadores`}</span></div>
     <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
@@ -1574,6 +1618,17 @@ export function mercado(S) {
     // (con lo de los rivales cerrado, su candado va con el del radar en una tarjeta, debajo de la lista)
     if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div>`;
     else if (man.length) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;
+    // (26 nov, parte B) en una liga premium con entrenador, los del mercado, aparte de los jugadores y sin veredictos
+    const ents = M.entrenadoresMercado || [];
+    if (ents.length) {
+      const d1e = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+      const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+      ml += `<div class="grupo"><span>Entrenadores</span><span>${ents.length}</span></div>${ents.map((m) => filaJugador(m, {
+        sub: `${esc(m.j.equipo)}${M.proximoPartido(m.j.equipoId) ? ` · ${rivalSub(M, m.j)}` : ''}`,
+        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? '<span class="pill bien">No tienes entrenador</span>' : '', estadoPill(m.j)],
+        derecha: `<div class="v">${eur(m.precio)}</div><div class="d apag">${d1e(m.media)} pts por jornada</div>`,
+      })).join('')}`;
+    }
     h += lista2(ml);
     // el radar de subidas, debajo de la lista (antes iba arriba y la tapaba); cerrado, junto a los otros candados
     h += bloqueada('inercia') ? '' : radarHTML(S);
