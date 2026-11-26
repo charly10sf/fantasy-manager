@@ -3355,7 +3355,9 @@
    "AS|https://as.com/futbol/primera/leve-accidente-de-trafico-de-aubameyang-camino-al-entrenamiento-del-depor-f202611-n/": 1795690722000,
    "AS|https://as.com/futbol/primera/aguado-se-apunta-al-atletico-y-la-lesion-de-lemar-queda-en-un-susto-f202611-n/": 1795691815000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/26/lemar-esquiva-lesion-gravedad-enciende-esperanza.html": 1795692480000,
-   "SPORT|136875046": 1795689021000
+   "SPORT|136875046": 1795689021000,
+   "SPORT|136856712": 1795689830000,
+   "SPORT|136876574": 1795689822000
   },
   "hechos": [
    {
@@ -3766,7 +3768,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -4709,17 +4711,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 124533,
-  "salida": 12280,
+  "entrada": 126829,
+  "salida": 12953,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.365867,
+  "dolares": 0.366433,
   "reservado": 0
  },
  "recientes": {
@@ -9798,13 +9800,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6612,
+   "ok": 6613,
    "fallos": 0,
-   "ejecuciones": 5391,
+   "ejecuciones": 5392,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:46:13.156Z"
+   "ultima": "2026-11-26T11:51:16.279Z"
   }
  },
  "ptsDirecto": {},
@@ -9821,15 +9823,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:46:20.668Z"
+   "ultimaBien": "2026-11-26T11:51:32.137Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:46:20.668Z"
+   "ultimaBien": "2026-11-26T11:51:32.137Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:46:20.668Z"
+   "ultimaBien": "2026-11-26T11:51:32.137Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9837,11 +9839,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:46:20.668Z"
+   "ultimaBien": "2026-11-26T11:51:32.137Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:46:20.668Z"
+   "ultimaBien": "2026-11-26T11:51:32.137Z"
   }
  },
  "avisos": [
