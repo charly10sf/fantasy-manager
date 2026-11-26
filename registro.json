@@ -3349,7 +3349,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/26/6b0763d8fc6c83a13b8b45ca.html": 1795647636000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/musculares-fortuitas-lesiones-sevilla-fc-medico-garcia-plaza_0_2008586719.html": 1795668433000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorloth-julian-alvarez-alivian-atletico-champions-2-0_0_2008587527.html": 1795644575000,
-   "SPORT|136864955": 1795675911000
+   "SPORT|136864955": 1795675911000,
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/26/sadiq-sobre-aguirre-me-dijo-vas-salir-vas-marcar-vas-venir-abrazarme.html": 1795680956000
   },
   "hechos": [
    {
@@ -3695,7 +3696,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -4665,17 +4666,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 14,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 87785,
-  "salida": 5966,
+  "entrada": 89717,
+  "salida": 6082,
   "cacheLee": 73819,
   "cacheEscribe": 23316,
-  "dolares": 0.299901,
+  "dolares": 0.300152,
   "reservado": 0
  },
  "recientes": {
@@ -9759,13 +9760,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6570,
+   "ok": 6571,
    "fallos": 0,
-   "ejecuciones": 5349,
+   "ejecuciones": 5350,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T08:16:11.207Z"
+   "ultima": "2026-11-26T08:21:13.198Z"
   }
  },
  "ptsDirecto": {},
@@ -9782,15 +9783,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:16:20.389Z"
+   "ultimaBien": "2026-11-26T08:21:25.110Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:16:20.389Z"
+   "ultimaBien": "2026-11-26T08:21:25.110Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:16:20.389Z"
+   "ultimaBien": "2026-11-26T08:21:25.110Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9798,11 +9799,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:16:20.389Z"
+   "ultimaBien": "2026-11-26T08:21:25.110Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T08:16:20.389Z"
+   "ultimaBien": "2026-11-26T08:21:25.110Z"
   }
  },
  "avisos": [
