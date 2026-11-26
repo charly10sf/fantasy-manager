@@ -3349,7 +3349,8 @@
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/26/sadiq-sobre-aguirre-me-dijo-vas-salir-vas-marcar-vas-venir-abrazarme.html": 1795680956000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255707/alba-redondo-madrina-primer-torneo-femenino-iniesta-cup-soliss.html": 1795683769000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255722/datos-impecables-debut-alex-campos.html": 1795686361000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261126/1004255688/afilado-estilete-amenaza-real-madrid.html": 1795686324000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261126/1004255688/afilado-estilete-amenaza-real-madrid.html": 1795686324000,
+   "AS|https://as.com/futbol/primera/terrats-somos-conscientes-de-lo-que-nos-jugamos-f202611-n/": 1795687568000
   },
   "hechos": [
    {
@@ -3695,7 +3696,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -4640,17 +4641,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 103820,
-  "salida": 7125,
+  "entrada": 105734,
+  "salida": 7240,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.361217,
+  "dolares": 0.361466,
   "reservado": 0
  },
  "recientes": {
@@ -9729,13 +9730,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6593,
+   "ok": 6594,
    "fallos": 0,
-   "ejecuciones": 5372,
+   "ejecuciones": 5373,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:11:13.858Z"
+   "ultima": "2026-11-26T10:16:12.726Z"
   }
  },
  "ptsDirecto": {},
@@ -9752,15 +9753,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:11:38.972Z"
+   "ultimaBien": "2026-11-26T10:16:24.308Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:11:38.972Z"
+   "ultimaBien": "2026-11-26T10:16:24.308Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:11:38.972Z"
+   "ultimaBien": "2026-11-26T10:16:24.308Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9768,11 +9769,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:11:38.972Z"
+   "ultimaBien": "2026-11-26T10:16:24.308Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:11:38.972Z"
+   "ultimaBien": "2026-11-26T10:16:24.308Z"
   }
  },
  "avisos": [
