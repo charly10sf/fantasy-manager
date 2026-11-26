@@ -3374,7 +3374,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255454/gerard-lopez-rompe-silencio-sobre-caso-negreira-mi-informes-total-utilidad.html": 1795695064000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255810/elche-recupera-dos-efectivos-visita-atletico.html": 1795694991000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255745/gerard-lopez-espina-clavada-barca-no-rendi-valencia.html": 1795694899000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261126/1004255793/accidente-coche-aubameyang-pequeno-susto.html": 1795694622000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261126/1004255793/accidente-coche-aubameyang-pequeno-susto.html": 1795694622000,
+   "MARCA|https://www.marca.com/futbol/levante/2026/11/26/luis-castro-hay-parar-zabiri-parar-racing.html": 1795696696000
   },
   "hechos": [
    {
@@ -3821,7 +3822,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -4722,7 +4723,8 @@
    "Europa Press|https://www.europapress.es/catalunya/noticia-medio-centenar-docentes-entran-palau-generalitat-reclamar-mas-recursos-20261126075531.html": 1795676131000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795679085000,
    "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000,
-   "SPORT|136876189": 1795689597000
+   "SPORT|136876189": 1795689597000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/26/confirmacion-oficial-mestalla-acogera-partido-136879209.html": 1795696482000
   },
   "hechos": [
    {
@@ -4752,7 +4754,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -4760,17 +4762,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 26,
    "redactar": 19,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 146557,
-  "salida": 16636,
+  "entrada": 150298,
+  "salida": 17320,
   "cacheLee": 98733,
   "cacheEscribe": 44840,
-  "dolares": 0.442398,
+  "dolares": 0.443115,
   "reservado": 0
  },
  "recientes": {
@@ -9849,13 +9851,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6622,
+   "ok": 6623,
    "fallos": 0,
-   "ejecuciones": 5401,
+   "ejecuciones": 5402,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:36:11.911Z"
+   "ultima": "2026-11-26T12:41:11.453Z"
   }
  },
  "ptsDirecto": {},
@@ -9872,15 +9874,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:36:20.776Z"
+   "ultimaBien": "2026-11-26T12:41:28.007Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:36:20.776Z"
+   "ultimaBien": "2026-11-26T12:41:28.007Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:36:20.776Z"
+   "ultimaBien": "2026-11-26T12:41:28.007Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9888,11 +9890,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:36:20.776Z"
+   "ultimaBien": "2026-11-26T12:41:28.007Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:36:20.776Z"
+   "ultimaBien": "2026-11-26T12:41:28.007Z"
   }
  },
  "avisos": [
