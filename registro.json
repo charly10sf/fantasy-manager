@@ -3199,8 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/un-nuevo-impulso-para-el-athletic-f202611-n/": 1795456434000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254617/barca-llega-baku-viaje-medio-gran-expectacion.html": 1795456497000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/bellingham-haaland-y-ekitike-visitan-a-musiala-en-el-hospital-cadena-ser/": 1795459399000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/23/lamine-yamalbaja-champions-league-contra-sabah/00031795459735439167632.htm": 1795459861000,
    "AS|https://as.com/futbol/terzic-es-agasajado-ante-mas-de-2000-hinchas-en-lezama-f202611-n/": 1795461041000,
@@ -9870,13 +9868,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6686,
+   "ok": 6687,
    "fallos": 0,
-   "ejecuciones": 5465,
+   "ejecuciones": 5466,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T17:51:16.820Z"
+   "ultima": "2026-11-26T17:56:14.617Z"
   }
  },
  "ptsDirecto": {},
@@ -9893,15 +9891,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:51:26.543Z"
+   "ultimaBien": "2026-11-26T17:56:26.630Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:51:26.543Z"
+   "ultimaBien": "2026-11-26T17:56:26.630Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:51:26.543Z"
+   "ultimaBien": "2026-11-26T17:56:26.630Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9909,11 +9907,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:51:26.543Z"
+   "ultimaBien": "2026-11-26T17:56:26.630Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T17:51:26.543Z"
+   "ultimaBien": "2026-11-26T17:56:26.630Z"
   }
  },
  "avisos": [
