@@ -4776,32 +4776,31 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255905/atletico-rival-octavos-final.html": 1795710000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261126/1004255895/athletic-medira-deportivo-octavos-final-copa-reina.html": 1795709462000,
    "SPORT|136891331": 1795708026000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255938/alemania-pierde-lideres-mundial-sancion.html": 1795714036000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261126/1004255938/alemania-pierde-lideres-mundial-sancion.html": 1795714036000,
+   "SPORT|136893721": 1795712134000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136893721": 1795716074188
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 207754,
-  "salida": 25493,
+  "entrada": 209581,
+  "salida": 25588,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.482264,
+  "dolares": 0.482494,
   "reservado": 0
  },
  "recientes": {
@@ -9870,13 +9869,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6691,
+   "ok": 6692,
    "fallos": 0,
-   "ejecuciones": 5470,
+   "ejecuciones": 5471,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T18:16:12.487Z"
+   "ultima": "2026-11-26T18:21:14.404Z"
   }
  },
  "ptsDirecto": {},
@@ -9893,15 +9892,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:16:21.723Z"
+   "ultimaBien": "2026-11-26T18:21:27.523Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:16:21.723Z"
+   "ultimaBien": "2026-11-26T18:21:27.523Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:16:21.723Z"
+   "ultimaBien": "2026-11-26T18:21:27.523Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9909,11 +9908,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:16:21.723Z"
+   "ultimaBien": "2026-11-26T18:21:27.523Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T18:16:21.723Z"
+   "ultimaBien": "2026-11-26T18:21:27.523Z"
   }
  },
  "avisos": [
