@@ -65,7 +65,7 @@ export const NOVEDADES = [
       d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
       estilo: 'lista',
       lista: [
-        { ico: 'parte', t: 'Parte de los rivales', tag: 'Función top', x: 'Quién va en negativo, a quién le falta un puesto y quién no puede blindar. De momento, solo en la app de Android.' },
+        { ico: 'parte', t: 'Parte de los rivales', tag: 'Función top', x: 'Las debilidades de cada rival: quién va en negativo, a quién le falta un puesto y quién no puede blindar. De momento, solo en Android.' },
         { ico: 'premium', t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
         { ico: 'origen', t: 'De dónde sale cada fichaje', x: 'En el plan: mercado, en venta o cláusula.' },
         { ico: 'ordenador', t: 'Más ancha en el ordenador', x: 'Equipo y Clubes usan toda la pantalla.', solo: 'pc' },
