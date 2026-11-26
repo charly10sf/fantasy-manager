@@ -3390,7 +3390,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255926/balde-aire-goleada-baku-pedri-mando-gerard-lopez-foco.html": 1795712627000,
    "SPORT|136892937": 1795716898000,
    "AS|https://as.com/futbol/videos/aubameyang-busca-venganza-f202611-v/": 1795724302000,
-   "SPORT|136880190": 1795722404000
+   "SPORT|136880190": 1795722404000,
+   "SPORT|136894748": 1795723203000
   },
   "hechos": [
    {
@@ -3835,7 +3836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -4762,17 +4763,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 24,
    "revisar": 11,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 225425,
-  "salida": 27340,
+  "entrada": 227518,
+  "salida": 27461,
   "cacheLee": 126777,
   "cacheEscribe": 57099,
-  "dolares": 0.54359,
+  "dolares": 0.54386,
   "reservado": 0
  },
  "recientes": {
@@ -9830,13 +9831,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6724,
+   "ok": 6725,
    "fallos": 0,
-   "ejecuciones": 5503,
+   "ejecuciones": 5504,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T21:01:11.222Z"
+   "ultima": "2026-11-26T21:06:10.744Z"
   }
  },
  "ptsDirecto": {},
@@ -9853,15 +9854,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:01:17.288Z"
+   "ultimaBien": "2026-11-26T21:06:17.783Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:01:17.288Z"
+   "ultimaBien": "2026-11-26T21:06:17.783Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:01:17.288Z"
+   "ultimaBien": "2026-11-26T21:06:17.783Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9869,11 +9870,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:01:17.288Z"
+   "ultimaBien": "2026-11-26T21:06:17.783Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T21:01:17.288Z"
+   "ultimaBien": "2026-11-26T21:06:17.783Z"
   }
  },
  "avisos": [
