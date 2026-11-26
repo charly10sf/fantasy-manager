@@ -273,6 +273,15 @@ export function aperturaCfg() {
   return { on: !!(p && p.on), bloque: bloqueDe(p) };
 }
 let yoB = null, demoB = false;
+/** (26 nov) «otrasLigas» de limites.json: lo de las demás ligas que se enseña en la ficha de un libre (lo pagado por él y su
+    demanda). Cada cosa: false o sin poner (a nadie), 'dueño' (solo a los de «todoAbierto», para verlo con datos de verdad
+    antes de abrirlo) o true (a todos). Quien manda es el servidor, que lee lo mismo: apagado, no devuelve nada */
+export function otrasLigasCfg() {
+  const g = LS.get('limites', null), cfg = g && g.cfg, o = (cfg && cfg.otrasLigas) || {};
+  const soy = !!(cfg && yoB && !demoB && (cfg.todoAbierto || []).some(esDe(yoB)));
+  const on = (x) => !demoB && !!yoB && (x === true || ((x === 'dueño' || x === 'dueno') && soy));
+  return { pagado: on(o.pagado), demanda: on(o.demanda) };
+}
 /** ¿a esta cuenta se le enseñan intersticiales? Al dueño no (salvo «dueno», para probarlos); a los de sus ligas, solo con «suLiga» */
 export function intersticialParaMi() {
   const g = LS.get('limites', null), cfg = g && g.cfg;

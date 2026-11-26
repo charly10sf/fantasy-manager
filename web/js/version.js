@@ -43,6 +43,18 @@ export const NOVEDADES = [
     // `M.banquilloDe`, `M.premiumPropuesta`) en Equipo (`premiumOnce` en vistas.js), la ficha, el paso de
     // alinear del plan (`M.premiumAlinTxt`) y lo que lee la IA (`premiumTxt`); de dos entrenadores, el de mejor partido
     // (`M.ppEntrenador`); los del mercado, aparte (`M.entrenadoresMercado`, `M.ficharEntrenador`).
+    // (26 nov, 12:37, Carlos: «la demanda de otras ligas y lo que se paga en otras ligas por un jugador se puede hacer todo en
+    // uno»; claude/prompts-26nov-premium-ligas-parte.md del proyecto, encargo 2; la nota, claude/nota-otras-ligas.md) LO QUE
+    // SOLO SE VE JUNTANDO TODAS LAS LIGAS, la recogida: otras-ligas.js y, en el servidor, worker/src/ligas.js («ligas|todos»).
+    // Con «Ayudar a mejorar la IA»: las compras van con el id del jugador (las de 45 días atrás, otra vez, una sola vez), los
+    // libres del mercado con sus pujas (como mucho cada media hora) y las cláusulas que se abren con si se pagaron en 24 h.
+    // Sin liga, sin mánager, sin cuenta: de la liga, una huella que el servidor vuelve a cifrar con una sal que no sale de él.
+    // Una cuenta, 2 ligas en 7 días, y el Worker comprueba con LaLiga que la liga es de quien la manda (revisión de fuera).
+    // LO QUE SE VE, HECHO Y APAGADO («otrasLigas» de limites.json: false, 'dueño' o true): en la ficha de un libre, UNA
+    // línea dentro de la tarjeta «Libre en el mercado de la liga» («En otras ligas: +11 % sobre su valor (hasta +19 %) ·
+    // demanda alta»; 3 ligas o más, sin la tuya; Carlos, 18:53: «textos más reducidos… tampoco 60 pestañas», y 19:31:
+    // «lo dejaría gratis, y mejor integrado»: sin tarjeta propia ni candado). No toca la puja ni le llega a la IA.
+    // La medida, preparada: .github/ia/medir-otras-ligas.mjs. Pruebas: .github/ia/caso-otras-ligas.mjs y worker/prueba/datos.mjs
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',
     cosas: [
       // (26 nov, aviso de «como comiendo lomo»: «No son mis jugadores») con dos ligas, al cambiar de una a otra la
@@ -56,6 +68,7 @@ export const NOVEDADES = [
       { para: 'dueño', tipo: 'mejora', d: 'plan', menor: true, t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
       { para: 'dueño', tipo: 'arreglo', d: 'candado', menor: true, t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
       { para: 'dueño', tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre con dos anuncios hasta que empieza la jornada.' },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', menor: true, t: 'Lo que se paga y se puja en todas las ligas', x: 'La app empieza a juntar, sin nombres ni ligas, lo que se paga por cada jugador, cuántas pujas lleva cada libre y qué cláusulas se pagan en todas las ligas que la usan. Todavía no se ve nada: hacen falta unas semanas de datos y comprobar que acierta. Después, la ficha de un libre del mercado dirá lo que se ha pagado por él en otras ligas.', ir: { v: 'mercado' } },
     ],
   },
   {

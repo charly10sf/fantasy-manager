@@ -161,6 +161,10 @@ jobs:
       # (26 nov) el parte de los rivales: los hechos de cada rival, las líneas, las llaves y la pestaña de Rivales
       - name: El parte de los rivales
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-parte.mjs
+      # (26 nov) lo de todas las ligas: lo que se manda (compras con jugador, pujas de cada libre, cláusulas que se abren), el
+      # Worker de verdad detrás, la línea de la ficha apagada y encendida, y la medida
+      - name: Lo de todas las ligas
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-otras-ligas.mjs
       # (0.8a) los nombres de los rivales mal dictados y los apodos
       - name: Apodos y nombres aproximados
         run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/ia/caso-apodos.mjs
