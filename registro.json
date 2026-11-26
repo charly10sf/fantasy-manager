@@ -3388,7 +3388,8 @@
    "AS|https://as.com/futbol/primera/quique-mourino-es-un-entrenador-que-trasciende-a-los-tiempos-f202611-n/": 1795700836000,
    "AS|https://as.com/futbol/primera/castro-zabiri-ha-cambiado-la-cara-al-racing-f202611-n/": 1795700555000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/ruben-martin-parte-aficion-no-le-perdonado-le-pegado-bronca-julian-alvarez-simeone-poniendo-pecho-20261126_3482294.html": 1795701725000,
-   "SPORT|136884904": 1795698136000
+   "SPORT|136884904": 1795698136000,
+   "SPORT|136875363": 1795702557000
   },
   "hechos": [
    {
@@ -3835,7 +3836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -4749,17 +4750,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 181025,
-  "salida": 20903,
+  "entrada": 183044,
+  "salida": 21238,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.477297,
+  "dolares": 0.477666,
   "reservado": 0
  },
  "recientes": {
@@ -9833,13 +9834,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6655,
+   "ok": 6656,
    "fallos": 0,
-   "ejecuciones": 5434,
+   "ejecuciones": 5435,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T15:21:22.294Z"
+   "ultima": "2026-11-26T15:26:11.871Z"
   }
  },
  "ptsDirecto": {},
@@ -9856,15 +9857,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:21:34.184Z"
+   "ultimaBien": "2026-11-26T15:26:25.583Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:21:34.184Z"
+   "ultimaBien": "2026-11-26T15:26:25.583Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:21:34.184Z"
+   "ultimaBien": "2026-11-26T15:26:25.583Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9872,11 +9873,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:21:34.184Z"
+   "ultimaBien": "2026-11-26T15:26:25.583Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:21:34.184Z"
+   "ultimaBien": "2026-11-26T15:26:25.583Z"
   }
  },
  "avisos": [
