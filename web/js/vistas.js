@@ -461,7 +461,7 @@ export function hechoEnLiga(S, P, o) {
       const a = mio(['compra', 'clausula']);
       if (a) return { estado: 'hecho', texto: porImp(a, a.clase === 'clausula' ? 'Clausulado' : 'Fichado') };
       if (o.accion !== 'clausular') {
-        const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja);
+        const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja) || (M.entrenadoresMercado || []).find((x) => x.pid === o.pid && x.miPuja);
         if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}` };
       }
       return null;
@@ -476,7 +476,7 @@ export function hechoEnLiga(S, P, o) {
   }
 }
 
-const OBJ = { titular: ['bien', 'Para tu once'], revender: ['oro', 'Para revender'], caja: ['', 'Para hacer caja'] };
+const OBJ = { titular: ['bien', 'Para tu once'], revender: ['oro', 'Para revender'], caja: ['', 'Para hacer caja'], entrenador: ['bien', 'Entrenador'] };
 function objetivoPill(o) {
   const k = String(o.objetivo || '').toLowerCase().replace(/^revend.*/, 'revender');
   const x = OBJ[k];
@@ -966,7 +966,7 @@ function premiumOnceHTML(pm) {
   if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados`, pm.capTuyo);
   for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
   if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el que más lleva por jornada')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
-  if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · libre en el mercado, vale ${eur(pm.fichar.precio)} · ${d1(pm.fichar.media)} pts por jornada`, null);
+  if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · puja ${eur(pm.fichar.puja)} · ${d1(pm.fichar.media)} pts por jornada`, null);
   const partes = [pm.cap && 'capitán', pm.ban.length && 'banquillo', (pm.ent || pm.fichar) && 'entrenador'].filter(Boolean);
   const titulo = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}` : partes[0] || '';
   return `<div class="cambio-once pm-once"><div class="co-t">${titulo.charAt(0).toUpperCase()}${titulo.slice(1)}</div>${h}</div>`;
@@ -1565,7 +1565,7 @@ export function mercado(S) {
       const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
       ml += `<div class="grupo"><span>Entrenadores</span><span>${ents.length}</span></div>${ents.map((m) => filaJugador(m, {
         sub: `${esc(m.j.equipo)}${M.proximoPartido(m.j.equipoId) ? ` · ${rivalSub(M, m.j)}` : ''}`,
-        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? '<span class="pill bien">No tienes entrenador</span>' : '', estadoPill(m.j)],
+        pills: [m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : '', fe && fe.pid === m.pid ? `<span class="pill bien">No tienes entrenador · puja ${eur(fe.puja)}</span>` : '', estadoPill(m.j)],
         derecha: `<div class="v">${eur(m.precio)}</div><div class="d apag">${d1e(m.media)} pts por jornada</div>`,
       })).join('')}`;
     }

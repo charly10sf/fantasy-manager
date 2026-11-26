@@ -121,8 +121,11 @@ export function catalogo(D, M, notas = []) {
   }
   // (26 nov) P de entrenador: en una liga premium que los tiene y sin ninguno, el libre que la app ficharía
   // (`M.ficharEntrenador`: los entrenadores no van en `M.mercado`). Se paga con saldo y no ocupa sitio en la plantilla
+  // (con la puja ya puesta sigue aquí, con `miPuja`: el paso de un plan guardado no sale como «no está en el mercado»)
   const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
-  if (fe && !lista.some((o) => o.pid === fe.pid)) add({ ref: `P-${fe.pid}`, tipo: 'pujar', entrenador: true, pid: fe.pid, j: fe.j, precio: fe.precio, puja: fe.puja, media: fe.media, miPuja: null, cierra: fe.cierra || M.cierreMercado || null, interes: 100, saldo: num(D.dinero) - num(M.misPujas) });
+  const ep = !fe && M.premium && M.premium.entrenador && !M.mias.some((x) => x.j && x.j.pos === 5 && x.j.estado !== 'out_of_league') ? (M.entrenadoresMercado || []).find((m) => m.miPuja) : null;
+  const eo = fe || ep;
+  if (eo && !lista.some((o) => o.pid === eo.pid)) add({ ref: `P-${eo.pid}`, tipo: 'pujar', entrenador: true, pid: eo.pid, j: eo.j, precio: eo.precio, puja: eo.puja, media: eo.media, miPuja: eo.miPuja || null, cierra: eo.cierra || M.cierreMercado || null, interes: 100, saldo: num(D.dinero) - num(M.misPujas) });
   // M: lo que venden otros managers
   for (const m of M.mercado) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
@@ -187,7 +190,7 @@ export function textoOp(o, M = null) {
   switch (o.ref[0]) {
     case 'P': {
       // (26 nov) un entrenador (liga premium): sin lo de los jugadores (ni lo que se paga por los de su valor, ni revender)
-      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)}), pagado con saldo`;
+      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; ${o.miPuja ? `MI PUJA ACTUAL ${eur(o.miPuja)}; ` : ''}la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)}), pagado con saldo`;
       // (lo que se paga en esta liga por los libres va entero una sola vez, en su bloque; aquí, lo de los de su valor,
       // que es con lo que hay que comparar: un +100 % por uno de 600 mil puede ser lo normal; Carlos, 30 oct)
       const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor, o.pid) : null;

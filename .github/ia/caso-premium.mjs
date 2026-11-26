@@ -126,6 +126,18 @@ const r = await P.page.evaluate(async () => {
             const a = Vi.premiumOnce(M, M.once.lineas, { cap: cap.j.id, banq: {} }), c = Vi.premiumOnce(M, M.once.lineas, { cap: otro.id }), x = Vi.premiumOnce(M, M.once.lineas, { cap: 'no-existe', banq: { 2: cap.j.id } });
             return { igual: !!(a && a.capTuyo && String(a.capTuyo.id) === String(cap.j.id)), otro: !!(c && c.capTuyo && String(c.capTuyo.id) === String(otro.id)), raro: x ? x.capTuyo : 'x', banqMalPuesto: x ? x.banTuyo(2) : 'x' };
           })(),
+          // (14) el paso de pujar por el entrenador en el plan de la app, con su dinero contado
+          planEnt: (() => {
+            try {
+              const R = Pm.planDeHoy(D, M, S.c), f = M.ficharEntrenador(), cat = I.veredictos(D, M);
+              const vivas = (R.ops || []).filter((o) => !o.descartada && !o.sugerencia);
+              const pasos = vivas.filter((o) => o.accion === 'pujar' && o.j && o.j.pos === 5);
+              const o = pasos[0] || null;
+              const pujados = vivas.filter((x) => x.accion === 'pujar' && x.hoy !== false).reduce((t, x) => t + (+x.importe || 0), 0);
+              return { n: pasos.length, pid: o ? o.pid : null, imp: o ? o.importe : null, pujaMax: o ? o.puja_max : null, obj: o ? o.objetivo : null, motivo: o ? String(o.motivo || '') : '', cuanto: o && o.datos ? o.datos.cuanto : '', puja: f ? f.puja : null, precio: f ? f.precio : null,
+                saldoPaso: o ? o.saldo : null, pujados, ver: f ? !!(cat[`P-${f.pid}`] && cat[`P-${f.pid}`].ok) : null, enTitular: o ? String(R.titular || '').includes(o.j.nombre) : null };
+            } catch (e) { return { err: String(e && e.stack || e).slice(0, 300) }; }
+          })(),
           ctxCap: /LA APP PROPONE DE CAPITÁN A /.test(ctx), ctxBan: /LA APP PROPONE EN EL BANQUILLO: /.test(ctx), ctxFichar: /NO TIENE ENTRENADOR y fichar uno compensa/.test(ctx), ctxCapNombre: cap ? ctx.includes(`CAPITÁN A ${cap.j.nombre}`) : null,
         };
       })(),
@@ -201,7 +213,7 @@ ok(r.preOferta.vendePlan === false && r.estOferta.vendePlan === true, `(3) y el 
 ok(r.pre.ctxForm && !r.pre.ctxGratis && r.est.ctxGratis && !r.est.ctxForm, '(3) la IA ya no lee «juega con la versión gratuita» en una liga premium (y sí en estándar)');
 ok(!/suplente/i.test(r.pre.ctxTit), `(3) premium: el entrenador alineado no le sale a la IA como suplente (${r.pre.ctxTit.slice(0, 160)})`);
 ok(/^LIGA PREMIUM/.test(r.pre.ctxPrem) && /ENTRENADOR: se alinea 1/.test(r.pre.ctxPrem) && /APAGADO: capitán, banquillo, formaciones de más, cesiones, premio del 11 ideal\./.test(r.pre.ctxPrem) && /200 mil/.test(r.pre.ctxPrem) && /48 h/.test(r.pre.ctxPrem), `(3) premium: la IA lee las reglas de lo encendido y qué está apagado (${r.pre.ctxPrem.length} caracteres)`);
-ok(/CAPITÁN: uno del once puntúa doble/.test(r.preSinEnt.ctxPrem) && /APAGADO: entrenador \(no se alinea ni puntúa\)/.test(r.preSinEnt.ctxPrem), '(3) premium con capitán y sin entrenador: lo dice así');
+ok(/CAPITÁN: uno de los once jugadores \(el entrenador NO puede ser capitán\) puntúa doble/.test(r.preSinEnt.ctxPrem) && /APAGADO: entrenador \(no se alinea ni puntúa\)/.test(r.preSinEnt.ctxPrem), '(3) premium con capitán y sin entrenador: lo dice así');
 ok(r.est.ctxPrem === '' && r.viejo.ctxPrem === '', '(3) en una liga estándar (y en una premium guardada sin sus funciones) la IA no lee nada de premium');
 ok(r.pre.ctxLargo - r.est.ctxLargo < 900, `(3) lo que crece lo que lee la IA en premium: ${r.pre.ctxLargo - r.est.ctxLargo} caracteres (0 en estándar)`);
 // (4)
@@ -266,6 +278,17 @@ ok(t.pr && t.pr.igual && t.pr.otro && t.pr.raro === null && (t.pr.banqMalPuesto 
 ok(/No tienes entrenador: Míster Libre está libre en el mercado/.test(r.todoSinEnt.b.alin) && !/No tienes entrenador/.test(t.alin) && !/No tienes entrenador/.test(r.todoPujaEnt.b.alin), '(12) el paso de alinear dice qué entrenador fichar solo si no tienes ninguno ni una puja puesta por uno');
 ok(r.todoSinEnt.b.pm && r.todoSinEnt.b.pm.fichar === 'ent3' && r.todoDos.b.pm && r.todoDos.b.pm.ent, '(13) Equipo: sin entrenador, el que conviene fichar; con dos, cuál alinear');
 ok(r.todo.ctxLargo - r.est.ctxLargo < 1650, `(13) lo que crece lo que lee la IA con todo encendido: ${r.todo.ctxLargo - r.est.ctxLargo} caracteres (0 en estándar; solo con entrenador, ${r.pre.ctxLargo - r.est.ctxLargo})`);
+
+// (14) fichar entrenador como paso del plan, con su dinero contado (26 nov, noche)
+{
+  const s = r.todoSinEnt.b.planEnt, c = r.todo.b.planEnt, pe = r.todoPujaEnt.b.planEnt, es = r.est.b.planEnt, se = r.preSinEnt.b.planEnt;
+  ok(s && !s.err && s.n === 1 && s.pid === 'ent3' && s.obj === 'entrenador', `(14) premium sin entrenador: el plan lleva UN paso de pujar por el entrenador libre (${JSON.stringify(s && { n: s.n, pid: s.pid, obj: s.obj, err: s.err })})`);
+  ok(s && s.imp === s.puja && s.pujaMax === s.puja && s.puja >= s.precio && s.puja <= Math.ceil(s.precio * 1.1 / 10000) * 10000, `(14) con la puja de la app, la misma en todos los sitios (${s && s.imp}, vale ${s && s.precio})`);
+  ok(s && s.ver === true && s.enTitular === true, '(14) la operación pasa el repaso de la app y el titular del plan lo nombra');
+  ok(s && /No tienes entrenador/.test(s.motivo) && !/5 si|su equipo gana|empata|puntúa/.test(s.motivo) && /^puja de /.test(s.cuanto), `(14) el motivo no explica cómo puntúa un entrenador («${s && s.motivo}»)`);
+  ok(/\(puja [\d.,]+ (M|mil)\)/.test(r.todoSinEnt.b.alin), `(14) y el paso de alinear da la misma puja (${r.todoSinEnt.b.alin.slice(-80)})`);
+  ok(c && c.n === 0 && pe && pe.n === 0 && es && es.n === 0 && se && se.n === 0, `(14) ningún paso así con entrenador, con la puja ya puesta, en estándar ni con los entrenadores apagados (${[c, pe, es, se].map((x) => x && (x.err || x.n)).join(', ')})`);
+}
 
 await cerrar();
 console.log(mal ? `\n${mal} MAL` : '\nTodo bien');

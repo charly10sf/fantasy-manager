@@ -103,6 +103,31 @@ await probar('mercado-real', `${COMUN}
     ['una cláusula de más del saldo', 'r5', (() => { const c = M.clausulas.find((x) => x.abierta && x.clausula > D.dinero + 1e6) || M.clausulas.find((x) => x.abierta); return plan([op({ accion: 'clausular', pid: c.pid, j: c.j, jugador: c.j.nombre, importe: Math.max(c.clausula, D.dinero + 5e6) })]); })()],
   ];
 `);
+// (26 nov, noche) pujar por un entrenador (liga premium): el plan de la app sin entrenador lo lleva y vale; y lo que no se puede
+await probar('m-premium-sin', `${COMUN}
+  const fe = M.ficharEntrenador();
+  const pe = (imp) => op({ accion: 'pujar', objetivo: 'entrenador', pid: fe.pid, j: fe.j, jugador: fe.j.nombre, importe: imp, puja_max: imp });
+  return [
+    ['el plan de la app, con su paso de pujar por el entrenador', null, base],
+    ['(el plan lleva ese paso)', base.ops.some((o) => !o.descartada && o.accion === 'pujar' && String(o.pid) === String(fe.pid) && o.importe === fe.puja) ? null : 'nunca', plan([pe(fe.puja)])],
+    ['pujar por el entrenador más que la app', 'rE: [^·]*más que la puja de la app', plan([pe(fe.puja + 500000)])],
+    ['pujar por el entrenador por debajo de lo que vale', 'rE: [^·]*por debajo', plan([pe(fe.precio - 100000)])],
+    ['pujar por un entrenador que no está libre en el mercado', 'rE: [^·]*no es un entrenador libre', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: 'ent1', j: M.J('ent1'), jugador: 'Míster Uno', importe: 990000 })])],
+  ];
+`);
+await probar('m-premium', `${COMUN}
+  const em = M.entrenadoresMercado[0];
+  return [
+    ['el plan de la app con dos entrenadores (sin puja por otro)', base.ops.some((o) => !o.descartada && o.accion === 'pujar' && o.j && o.j.pos === 5) ? 'nunca' : null, base],
+    ['pujar por un entrenador teniendo ya uno', 'rE: [^·]*ya tiene entrenador', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: em.pid, j: em.j, jugador: em.j.nombre, importe: em.puja })])],
+  ];
+`);
+await probar('martes', `${COMUN}
+  const j = { id: 'entX', pos: 5, nombre: 'Míster Equis', valor: 900000, estado: 'ok' };
+  return [
+    ['pujar por un entrenador en una liga estándar', 'rE: [^·]*en esta liga no puntúan', plan([op({ accion: 'pujar', objetivo: 'entrenador', pid: 'entX', j, jugador: j.nombre, importe: 990000 })])],
+  ];
+`);
 await cerrar();
 console.log(mal ? `${mal} MAL` : 'Todo BIEN');
 process.exit(mal ? 1 : 0);
