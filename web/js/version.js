@@ -29,7 +29,7 @@ export const NOVEDADES = [
     // de Rivales, la ventana «Quién y cuánto», la novedad una vez por cuenta (LS «nov-dinero» y /hola nd del Worker) y la
     // tarjeta de Pregunta (tipo «dinero» en las notas del chat, `dineroDeNota`). Con el dinero cerrado el motor no recibe la
     // cifra (`dichosMotor` en extraM; `alDiaDichos` rehace al abrirse o cerrarse). Prueba: .github/ia/caso-dinero-dicho.mjs
-    v: '0.8.4o', f: '2026-11-26', h: '00:21', t: 'Apunta el dinero de tus rivales',
+    v: '0.8.4o', f: '2026-11-26', h: '02:50', t: 'Apunta el dinero de tus rivales',
     cosas: [
       { tipo: 'nuevo', d: 'dinero', importante: true, t: 'Apunta el dinero que te dice un rival', x: 'Si alguien de tu liga te ha dicho cuánto dinero tiene, apúntalo en su ficha o en Rivales, aunque tengas su dinero cerrado: solo verás la cifra que has puesto tú. La app y la IA lo usan para aprender a calcular mejor el dinero de cada rival.' },
     ],
