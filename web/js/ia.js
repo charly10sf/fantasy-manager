@@ -688,10 +688,18 @@ export function premiumTxt(M) {
   const P = M && M.premium;
   if (!P || !P.liga || !P.leido) return '';   // una liga guardada de antes no trae qué funciones tiene: nada hasta actualizar
   const si = [], no = [];
-  if (P.entrenador) si.push(`ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de ${TOPE_PLANTILLA} jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador`); else no.push('entrenador (no se alinea ni puntúa)');
-  if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega'); else no.push('capitán');
-  if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán'); else no.push('banquillo');
-  if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): la liga las tiene, pero la app aún no hace cuentas con ellas; propón solo las de la lista de formaciones'); else no.push('formaciones de más');
+  // (26 nov, parte B) lo que propone la app, medido con las jornadas jugadas: el capitán y el banquillo de su mejor once, a
+  // cuál de sus entrenadores alinear y, si no tiene, cuál fichar (`M.once`, `M.ficharEntrenador`): la IA dice lo mismo
+  const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+  const cap = P.capitan && M.once ? M.once.capitan : null, ban = (P.banquillo && M.once && M.once.banquillo) || [];
+  const mios = P.entrenador && M.mias ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league') : [];
+  const fe = P.entrenador && M.ficharEntrenador ? M.ficharEntrenador() : null;
+  const entTxt = mios.length >= 2 && M.once && M.once.entrenador ? `. De los suyos, LA APP ALINEA A ${M.once.entrenador.nombre} (mejor partido esta jornada)`
+    : fe ? `. NO TIENE ENTRENADOR y fichar uno compensa (no ocupa sitio y dan unos 2,4 puntos por jornada de media): la app ficharía a ${fe.j.nombre}, libre en el mercado (vale ${eur(fe.precio)}, ${d1(fe.media)} puntos por jornada)` : '';
+  if (P.entrenador) si.push(`ENTRENADOR: se alinea 1 (2 en plantilla como mucho, y no cuentan en el tope de ${TOPE_PLANTILLA} jugadores); puntúa 5 si su equipo gana, 2 si empata y 0 si pierde; se ficha y se vende como un jugador${entTxt}`); else no.push('entrenador (no se alinea ni puntúa)');
+  if (P.capitan) si.push('CAPITÁN: uno del once puntúa doble, también si saca negativos; se elige antes de que empiece la jornada y solo dobla si juega' + (cap ? `. LA APP PROPONE DE CAPITÁN A ${cap.j.nombre} (~${d1(cap.pp)} puntos esperados, el que más de su once): di ese` : '')); else no.push('capitán');
+  if (P.banquillo) si.push('BANQUILLO: hasta 4, uno por posición; el de una posición entra solo si un titular de esa misma posición no juega ni un minuto, y no hereda el doble del capitán' + (ban.length ? `. LA APP PROPONE EN EL BANQUILLO: ${ban.map((b) => `${b.j.nombre} (${POS[b.pos]})`).join(', ')}: di esos` : '')); else no.push('banquillo');
+  if (P.formaciones) si.push('FORMACIONES de más (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3): ya van en la lista de formaciones que puede usar'); else no.push('formaciones de más');
   if (P.cesiones) si.push(`CESIONES: un jugador de otro mánager por ${P.cesionJornadas > 1 ? `${P.cesionJornadas} jornadas` : 'una jornada'}${P.cesionMax ? ` (${P.cesionMax} como mucho entre cedidos y peticiones)` : ''}, pagándole un mínimo que depende de su valor; se piden hasta 24 h antes de la jornada y el cedido no cuenta en el tope de plantilla`); else no.push('cesiones');
   if (P.ideal) si.push('11 IDEAL: LaLiga paga un premio en dinero por cada jugador mío que entre en el 11 ideal de la jornada'); else no.push('premio del 11 ideal');
   return `LIGA PREMIUM (esto manda sobre las reglas 10 y 11 en lo que digan de «versión gratis», entrenador y recompensa): recompensa diaria de ${eur(M.RECOMPENSA || 200000)} y blindaje de ${M.ESCUDO_H || 48} h.${si.length ? ` ${si.join('. ')}.` : ''}${no.length ? ` El administrador tiene APAGADO: ${no.join(', ')}.` : ''}`;

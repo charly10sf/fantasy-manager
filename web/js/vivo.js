@@ -96,7 +96,8 @@ export function idsOnce(r) {
 export function formaOnce(r) {
   const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r;
   const f = d && d.formation && Array.isArray(d.formation.tacticalFormation) ? d.formation.tacticalFormation.map(Number) : null;
-  return f && f.length === 3 && f.every((x) => Number.isInteger(x) && x >= 1 && x <= 6) && f[0] + f[1] + f[2] === 10 ? f : null;
+  // (26 nov, parte B) una línea puede venir vacía: 4-6-0 es una de las formaciones de las ligas premium
+  return f && f.length === 3 && f.every((x) => Number.isInteger(x) && x >= 0 && x <= 6) && f[0] >= 3 && f[0] + f[1] + f[2] === 10 ? f : null;
 }
 
 const txt = (x) => (x == null || x === '' ? '' : String(x));

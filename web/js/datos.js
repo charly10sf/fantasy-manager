@@ -229,7 +229,7 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
   const dineros = {};
   for (const e of clasif) {
     const inf = infoEquipos[e.teamId];
-    if (inf && inf.cedidos != null) e.cedidos = inf.cedidos;   // (26 nov) cuántos cedidos tiene (ligas premium)
+    if (liga.premium === true && inf && inf.cedidos != null) e.cedidos = inf.cedidos;   // (26 nov) cuántos cedidos tiene (solo en ligas premium)
     if (e.dinero != null) dineros[e.teamId] = { v: e.dinero, fuente: 'clasificación' };
     else if (inf && inf.dinero != null) dineros[e.teamId] = { v: inf.dinero, fuente: 'plantilla' };
   }

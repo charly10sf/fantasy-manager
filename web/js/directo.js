@@ -645,7 +645,7 @@ function oncePrevio(M, os) {
   const porP = (a, b) => b.T.p - a.T.p;
   const por = os.filter((o) => o.j.pos === 1).sort(porP)[0];
   const lin = [2, 3, 4].map((pos) => os.filter((o) => o.j.pos === pos).sort(porP));
-  const forms = M.formaciones && M.formaciones.length ? M.formaciones : [[4, 4, 2], [4, 3, 3], [3, 5, 2], [3, 4, 3], [5, 3, 2], [4, 5, 1], [5, 4, 1]];
+  const forms = M.formacionesGratis && M.formacionesGratis.length ? M.formacionesGratis : [[4, 4, 2], [4, 3, 3], [3, 5, 2], [3, 4, 3], [5, 3, 2], [4, 5, 1], [5, 4, 1]];
   let mejor = null;
   for (const f of forms) {
     if (lin.some((l, i) => l.length < f[i])) continue;

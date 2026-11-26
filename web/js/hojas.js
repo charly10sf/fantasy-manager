@@ -333,6 +333,15 @@ export function fichaJugador(S, pid) {
     ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small><small class="cl-cuando">${f.abierta ? `<b class="${!mia || mia.riesgo === 'alto' ? 'rojo' : ''}">Abierta${mia ? (mia.riesgo === 'ninguno' ? ' · sin riesgo' : ` · riesgo ${mia.riesgo}`) : ' ya'}</b>` : f.protegidoHasta ? `<b>${f.veda ? 'A salvo' : 'Se abre'} en ${cuenta(f.protegidoHasta)}</b>` : ''}</small></div></button>` : ''}
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
+  // (26 nov, parte B) en una liga premium, si es el capitán o un suplente del banquillo que propone la app para tu once
+  // (la misma cuenta que Equipo y el plan: `M.once.capitan`, `M.once.banquillo`)
+  if (mia && M.once && !M.enJuego) {
+    const capO = M.once.capitan && String(M.once.capitan.j.id) === String(pid) ? M.once.capitan : null;
+    const banO = (M.once.banquillo || []).find((x) => String(x.j.id) === String(pid)) || null;
+    const u1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+    if (capO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Buen capitán esta jornada:</b> ~${u1(capO.pp)} puntos esperados, los que más de tu once.</p>`;
+    else if (banO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Para tu banquillo:</b> de los que no alineas en su puesto, el que más opciones tiene de jugar${banO.cubre ? ` (por si no juega ${esc(banO.cubre.nombre)})` : ''}.</p>`;
+  }
   // (40) «Avisarme»: una alarma antes de que se abra su cláusula, con la antelación que elijas (solo en la app, que es la que avisa)
   {
     const aj = cfgAvisos().jugadores[pid];
@@ -642,6 +651,15 @@ function apodoRival(S, e) {
   return `<div class="apodo-l"><button class="apodo-chip" data-accion="apodoEditar" data-tid="${esc(tid)}">${icono('lapiz')}Ponle un apodo</button><span>para la IA y la voz</span></div>`;
 }
 
+/** (26 nov, parte B) lo de premium de un rival, en su cabecera: su entrenador (o los dos) y cuántos cedidos tiene. Solo en
+ *  una liga premium con esa función; '' si no hay nada que decir */
+function premiumRivalTxt(S, tid, e) {
+  const { M, D } = S;
+  if (!M.premium || !M.premium.liga) return '';
+  const ents = M.premium.entrenador ? ((D.plantillas || {})[tid] || []).map((f) => M.J(f.pid)).filter((j) => j && j.pos === 5) : [];
+  const ced = M.premium.cesiones && e && e.cedidos > 0 ? e.cedidos : 0;
+  return `${ents.length ? ` · entrenador${ents.length > 1 ? 'es' : ''}: ${esc(ents.map((j) => j.nombre).join(' y '))}` : ''}${ced ? ` · ${ced} cedido${ced > 1 ? 's' : ''}` : ''}`;
+}
 export function fichaRival(S, tid) {
   const { M } = S;
   const r = M.rivales.find((x) => x.e.teamId === tid);
@@ -666,7 +684,7 @@ export function fichaRival(S, tid) {
     `<button class="eq2-t" ${ir('juego', 'movs')}><b>${eur(r.gastado, { dec: 1 })}</b><span>gastado en 7 días · ${r.movs} movimiento${r.movs === 1 ? '' : 's'} ›</span></button>`,
   ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2></div>
-  <p class="t2 rival-sub"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></p>
+  <p class="t2 rival-sub"><span>${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos${premiumRivalTxt(S, tid, e)}</span><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></p>
   <p class="peligro-por">${esc(motivoPeligro(r, { quien: !bloqueada('quienPaga', tid) }))}</p>
   ${apodoRival(S, e)}
   <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>

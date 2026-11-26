@@ -1403,7 +1403,13 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- tu once: posiciones, formaciones gratuitas y huecos ---------- */
   const misFichasRaw = ((D.plantillas || {})[yoTid] || []).filter((f) => !vendidos[f.pid]);
-  M.formaciones = (D.formaciones && D.formaciones.length ? D.formaciones : FORMACIONES).map(partirFormacion).filter(Boolean);
+  M.formacionesGratis = (D.formaciones && D.formaciones.length ? D.formaciones : FORMACIONES).map(partirFormacion).filter(Boolean);
+  // (26 nov, parte B) en una liga premium con las formaciones de más encendidas, las 5 de premium además de las de siempre
+  // (ayuda de LaLiga, «Ligas premium», y /v4/teams/lineup/formations?option=premium, visto el 26 nov). Si el administrador
+  // las apaga dejan de valer al momento: con una puesta, no se puntúa (`M.formacionVale`)
+  M.formaciones = [...M.formacionesGratis, ...(M.premium.formaciones ? FORMACIONES_PREMIUM.map(partirFormacion).filter((f) => !M.formacionesGratis.some((g) => g.join('-') === f.join('-'))) : [])];
+  /** ¿vale en tu liga esa formación ([4,6,0] o '4-6-0')? null si no se entiende */
+  M.formacionVale = (f) => { const g = Array.isArray(f) ? (f.length === 3 && f.every((x) => Number.isInteger(x)) && f[0] + f[1] + f[2] === 10 ? f : null) : partirFormacion(f); return g ? M.formaciones.some((x) => x.join('-') === g.join('-')) : null; };
   const onces = (extra.onces && extra.onces.jugadores) || {};
   M.hayOnces = Object.keys(onces).length > 0;
   M.onceProb = (pid) => onces[pid] || null;
@@ -1850,9 +1856,61 @@ export function analizar(D, H, c, extra = {}) {
     const texto = `${n} partido${n === 1 ? '' : 's'}${enProteccion > 5 ? ', los de sus 14 días con la cláusula protegida,' : ''} (${resumen}): ~${d1c(pts)} pts (${d1c(pts / n)} por partido${j.media ? `; su media es ${d1c(num(j.media))}` : ''})${pTit != null ? `, titular ~${Math.round(pTit * 100)} %` : ''}.`;
     return (cacheCal[j.id] = { partidos: out, n, fAvg, nDif, nMed, nFac, pts, pTit, tipo, riesgo, maxSobre, consejo, texto, resumen, hasta: out[out.length - 1].fecha });
   };
-  M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado, { entrenador: M.premium.entrenador });
+  /** lo que se espera de un entrenador esta jornada: 5 si su equipo gana, 2 si empata y 0 si pierde, con los goles que se
+   *  esperan de cada equipo (`M.previa`). Sin partido o sin datos de los dos equipos, null */
+  const cacheEnt = {};
+  M.ppEntrenador = (j) => {
+    if (!j || j.pos !== 5 || MALOS.has(j.estado)) return 0;
+    if (cacheEnt[j.id] !== undefined) return cacheEnt[j.id];
+    const pr = M.previa(j);
+    if (!pr || pr.golesFavor == null) return (cacheEnt[j.id] = pr ? num(j.media) : 0);
+    return (cacheEnt[j.id] = esperadoEntrenador(pr.golesFavor, pr.golesContra).pts);
+  };
+  M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado, { entrenador: M.premium.entrenador, ppEntrenador: M.ppEntrenador });
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
+  /* (26 nov, parte B) EL CAPITÁN Y EL BANQUILLO de una liga premium (ayuda de LaLiga, «Ligas premium»), medidos con J4-J13
+     de una liga de verdad antes de enseñarlos (.github/ia/medir-premium.js; las cifras, en claude/nota-premium-parte-b.md):
+     - capitán (puntúa doble, también si resta; solo si juega; nunca el entrenador): el de más puntos esperados del once.
+       En 90 onces de verdad sumó 6,2-6,5 puntos por jornada frente a 5,7 del «de más media que juegue seguro» y 4,0 de uno
+       al azar (el mejor posible, 11,2). Buscar además «al que juegue seguro» no mejoró: no se hace.
+     - banquillo (uno por puesto, solo de los puestos de tu formación; entra si un titular de su puesto no juega ni un minuto):
+       de los que no alineas, el que juega fijo (6 de cada 10 o más de ser titular) con más puntos esperados y, si no hay
+       ninguno, el que más opciones tiene de jugar: un suplente que tampoco juega no salva nada. En esos 90 onces habría
+       entrado alguno en 54 y salvado 0,87 puntos por once y jornada (0,72 eligiendo solo por puntos esperados).
+     Una sola fuente para Equipo, la ficha, el plan y la IA: `M.capitanDe`, `M.banquilloDe`, `M.once.capitan`, `M.once.banquillo` */
+  M.capitanDe = (js) => {
+    if (!M.premium.capitan) return null;
+    let mejor = null;
+    for (const j of js || []) { if (!j || !j.pos || j.pos > 4 || MALOS.has(j.estado)) continue; const p = M.ppEsperado(j); if (p > 0 && (!mejor || p > mejor.pp)) mejor = { j, pp: p }; }
+    return mejor;
+  };
+  M.banquilloDe = (lineas, plantilla) => {
+    if (!M.premium.banquillo || !Array.isArray(lineas)) return null;
+    const dentro = new Set(lineas.flat().filter(Boolean).map((j) => String(j.id)));
+    const tp = (j) => { const T = M.titularidad(j); return T ? num(T.p) : 0; };
+    const out = [];
+    for (const p of [1, 2, 3, 4]) {
+      const tit = (lineas[p - 1] || []).filter(Boolean);
+      if (!tit.length) continue; // sin ese puesto en tu formación (4-6-0), no hay suplente de ese puesto
+      const cands = (plantilla || []).filter((j) => j && j.pos === p && !dentro.has(String(j.id)) && !MALOS.has(j.estado)).map((j) => ({ j, pp: M.ppEsperado(j), p: tp(j) })).filter((x) => x.p > 0 || x.pp > 0);
+      if (!cands.length) continue;
+      const fijos = cands.filter((x) => x.p >= 0.6);
+      const el = fijos.length ? fijos.sort((a, b) => b.pp - a.pp)[0] : cands.sort((a, b) => b.p - a.p || b.pp - a.pp)[0];
+      // a quién cubre: el titular de su puesto con menos opciones de jugar, solo si de verdad está en el aire
+      const flojo = tit.map((j) => ({ j, p: tp(j) })).sort((a, b) => a.p - b.p)[0];
+      out.push({ pos: p, j: el.j, pp: el.pp, p: el.p, cubre: flojo && (flojo.p < 0.6 || flojo.j.estado === 'doubtful') ? flojo.j : null });
+    }
+    return out;
+  };
+  M.once.capitan = M.capitanDe(M.once.lineas.flat());
+  M.once.banquillo = M.banquilloDe(M.once.lineas, misJs);
+  /** lo que añade una liga premium al paso de alinear del plan: « Capitán: X. Banquillo: A (POR), B (DEF).» ('' si no toca) */
+  M.premiumAlinTxt = (once, plantilla) => {
+    if (!once || !Array.isArray(once.lineas)) return '';
+    const c = M.capitanDe(once.lineas.flat()), b = M.banquilloDe(once.lineas, plantilla) || [];
+    return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}`;
+  };
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
   const cacheMejora = {};
   M.mejora = (j) => {
@@ -2184,6 +2242,22 @@ export function analizar(D, H, c, extra = {}) {
   M.mercadoFantasma = (D.mercado || []).filter((m) => m.tipo !== 'manager' && M.dueno[m.pid]).map((m) => m.pid);
   // en la versión gratuita no se alinea entrenador: no cuentan para fichar
   const esEnt = (pid) => (D.maestro[pid] || {}).pos === 5;
+  /* (26 nov, parte B) los entrenadores del mercado, aparte de `M.mercado` (ni chollo, ni radar, ni inercia: no son
+     jugadores), solo en una liga premium que los tiene. Medido con los datos públicos de J4-J13
+     (.github/ia/medir-entrenador.mjs): los 20 que siguen dan 2,45 puntos por jornada de media (5 si gana, 2 si empata) y
+     valen de 0,68 a 1,33 M; no ocupan sitio en la plantilla. Por eso, sin ninguno, fichar uno compensa (`M.ficharEntrenador`) */
+  M.entrenadoresMercado = M.premium.entrenador
+    ? (D.mercado || []).filter((m) => esEnt(m.pid) && (m.tipo === 'manager' || !M.dueno[m.pid]) && !(m.tipo === 'manager' && m.vendedorTeamId === yoTid))
+      .map((m) => { const j = J(m.pid); return { pid: m.pid, tipo: m.tipo, j, precio: num(j.valor) || num(m.precio), media: num(j.media), pts: M.ppEntrenador(j), miPuja: m.miPuja || null }; })
+      .filter((m) => m.j.estado !== 'out_of_league' && m.precio > 0).sort((a, b) => b.media - a.media || b.pts - a.pts)
+    : [];
+  /** sin entrenador en una liga premium que los tiene: el libre del mercado que más puntos lleva por jornada (2 o más) y que
+   *  puedes pagar con tu saldo; null si ya tienes uno, si no hay o si no te llega */
+  M.ficharEntrenador = () => {
+    if (!M.premium.entrenador || M.mias.some((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league')) return null;
+    const saldo = num(D.dinero);
+    return M.entrenadoresMercado.find((m) => m.tipo !== 'manager' && !m.miPuja && m.media >= 2 && m.precio * 1.1 <= saldo) || null;
+  };
   // lo que le quedaría al que vende: si se queda sin portero, o con menos defensas, medios o delanteros de los que
   // pide la formación gratuita más justa, no podría alinear un once y no te lo va a vender (aunque lo tenga a la venta:
   // será para ver qué le ofrece LaLiga)
@@ -3524,7 +3598,7 @@ export function planAuto(D, M, c) {
     const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && x.j.estado === 'doubtful');
     const sancionados = M.mias.filter((x) => !vendidos.has(x.pid) && M.sancionCorta(x.j));
     op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: antesDe(inicio),
-      motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
+      motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${M.premiumAlinTxt(onceAhora, plantilla)}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
   }
   if (!ops.length) op({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', motivo: 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas ni chollos en el mercado. Mejor guardar el dinero.', confianza: 'media' });
 
@@ -3587,6 +3661,8 @@ export function rematarAuto(P) {
 /* ---------- el once: formaciones gratuitas, puntos esperados y el mejor once posible ---------- */
 // las formaciones gratuitas de LaLiga Fantasy, por si la API no las da
 const FORMACIONES = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-3-2', '5-4-1'];
+// las 5 de más de las ligas premium (solo si el administrador las tiene encendidas)
+const FORMACIONES_PREMIUM = ['5-2-3', '4-6-0', '4-2-4', '3-6-1', '3-3-4'];
 const NOMBRE_POS = { 1: 'portería', 2: 'defensa', 3: 'el medio', 4: 'delantera' };
 const dec1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
 export function partirFormacion(f) {
@@ -3608,6 +3684,13 @@ export function puntosEsperados(j, forma, once = null) {
   }
   return Math.max(0, pp);
 }
+/** lo que se espera de un entrenador (5 si gana, 2 si empata, 0 si pierde) con los goles que se esperan de su equipo y del rival */
+export function esperadoEntrenador(gf, gc) {
+  const pois = (l, k) => { let p = Math.exp(-l); for (let i = 1; i <= k; i++) p *= l / i; return p; };
+  let pw = 0, pd = 0;
+  for (let a = 0; a <= 8; a++) for (let b = 0; b <= 8; b++) { const p = pois(Math.max(0.05, gf), a) * pois(Math.max(0.05, gc), b); if (a > b) pw += p; else if (a === b) pd += p; }
+  return { pw, pd, pts: 5 * pw + 2 * pd };
+}
 /** el mejor once con esos jugadores entre las formaciones dadas: { formacion, lineas: [[POR],[DEF],[MED],[DEL]], entrenador, total, huecos } */
 export function mejorOnce(lista, formaciones, pp, op = {}) {
   const por = { 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -3623,9 +3706,11 @@ export function mejorOnce(lista, formaciones, pp, op = {}) {
       total += disp.reduce((s, x) => s + x.p, 0);
       return disp.map((x) => x.j);
     });
-    // la versión gratuita no alinea entrenador; en una liga premium que los tiene, uno: de dos, el que más puntos lleva
-    // por jornada (cuál conviene con el partido de cada uno se elige en la parte B). No entra en el total ni en la nota
-    const ent = (op.entrenador && por[5].filter((x) => x.ok).sort((a, b) => (Number(b.j.media) || 0) - (Number(a.j.media) || 0))[0]) || null;
+    // la versión gratuita no alinea entrenador; en una liga premium que los tiene, uno: de dos, el de mejor partido esta
+    // jornada (`M.ppEntrenador`; medido con J4-J13: 2,89 puntos por jornada frente a 2,66 del que más lleva por jornada,
+    // .github/ia/medir-entrenador.mjs); sin esa cuenta, el que más lleva por jornada. No entra en el total ni en la nota
+    const ptsEnt = (x) => (op.ppEntrenador ? op.ppEntrenador(x.j) : Number(x.j.media) || 0);
+    const ent = (op.entrenador && por[5].filter((x) => x.ok).sort((a, b) => ptsEnt(b) - ptsEnt(a) || (Number(b.j.media) || 0) - (Number(a.j.media) || 0))[0]) || null;
     const nota = total - huecos * 4;
     if (!mejor || nota > mejor.nota) mejor = { formacion: f, nombre: f.join('-'), lineas, entrenador: ent ? ent.j : null, total, huecos, nota };
   }
