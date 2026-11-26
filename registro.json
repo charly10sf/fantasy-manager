@@ -3199,7 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "AS|https://as.com/futbol/primera/depor-voa-documental-sobre-el-regreso-a-primera-se-estrenara-en-cines-f202611-n/": 1795438588000,
    "SPORT|136743685": 1795440168000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254531/lamine-yamal-baja-champions-barca-rumbo-baku.html": 1795451684000,
@@ -4694,7 +4693,6 @@
  },
  "liga": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/champions-league/2026/11/23/6b0426a1fdddff9b5e8b4586.html": 1795438371000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254445/atletico-dia-hora-fiesta-navidad.html": 1795440300000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
    "SPORT|136761298": 1795445632000,
@@ -9858,13 +9856,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6625,
+   "ok": 6626,
    "fallos": 0,
-   "ejecuciones": 5404,
+   "ejecuciones": 5405,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T12:51:20.568Z"
+   "ultima": "2026-11-26T12:56:18.948Z"
   }
  },
  "ptsDirecto": {},
@@ -9881,15 +9879,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:51:46.103Z"
+   "ultimaBien": "2026-11-26T12:56:28.989Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:51:46.103Z"
+   "ultimaBien": "2026-11-26T12:56:28.989Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:51:46.103Z"
+   "ultimaBien": "2026-11-26T12:56:28.989Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9897,11 +9895,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:51:46.103Z"
+   "ultimaBien": "2026-11-26T12:56:28.989Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T12:51:46.103Z"
+   "ultimaBien": "2026-11-26T12:56:28.989Z"
   }
  },
  "avisos": [
