@@ -31,14 +31,26 @@ export function cuentaHoy(registro, ahora = Date.now()) {
 // Valencia-Madrid y la roja de Gayá, el final y el MVP salieron con la plantilla.
 export const PRIORITARIOS = ['directo', 'final', 'mvp'];
 
+/** cuánto dura la caché de las instrucciones: `ia.cacheTTL` de config.json, "1h" (sin él) o "5m" (26 nov; se cambia sin versión) */
+export const ttlCache = (config = {}) => (String((config.ia || {}).cacheTTL || '1h').toLowerCase() === '5m' ? '5m' : '1h');
+/** `sistema` como un solo texto (puede llegar como lista de bloques: lib/claude.mjs) */
+export const textoSistema = (sistema) => (Array.isArray(sistema) ? sistema.map((t) => String(t || '')).join('') : String(sistema || ''));
+
 // lo que se espera que salga de cada pregunta, en tokens (para la reserva de antes de llamar: M16). Se puede cambiar en config.ia.salidaEstimada
 const SALIDA = { clasificar: 2500, redactar: 700, revisar: 300, pulir: 500 };
-/** lo que se reserva antes de preguntar, en dólares: la entrada (unos 3,5 caracteres por token) y la salida esperada */
-export function estimarCoste({ modelo = SONNET, prompt = '', sistema = '', uso = 'redactar', config = {} } = {}) {
+/**
+ * lo que se reserva antes de preguntar, en dólares: la entrada (unos 3,5 caracteres por token) y la salida esperada. Con `cache`, las
+ * instrucciones al precio de escribirlas en caché (lo más caro que puede pasar: 2 veces la entrada a 1 hora), para no quedarse corto.
+ */
+export function estimarCoste({ modelo = SONNET, prompt = '', sistema = '', uso = 'redactar', config = {}, cache = false } = {}) {
   const p = PRECIOS[modelo] || PRECIOS[SONNET];
-  const entrada = Math.ceil((String(prompt).length + String(sistema).length) / 3.5);
   const salida = ((config.ia || {}).salidaEstimada || {})[uso] ?? SALIDA[uso] ?? 800;
-  return Math.round(((entrada * p.entrada + salida * p.salida) / 1e6) * 1e6) / 1e6;
+  const sis = textoSistema(sistema);
+  // (sin caché, la cuenta de siempre)
+  if (!cache || !sis) return Math.round(((Math.ceil((String(prompt).length + sis.length) / 3.5) * p.entrada + salida * p.salida) / 1e6) * 1e6) / 1e6;
+  const precioInstr = ttlCache(config) === '1h' ? (p.cacheEscribe1h ?? p.entrada * 2) : p.cacheEscribe;
+  const entrada = Math.ceil(String(prompt).length / 3.5), instr = Math.ceil(sis.length / 3.5);
+  return Math.round(((entrada * p.entrada + instr * precioInstr + salida * p.salida) / 1e6) * 1e6) / 1e6;
 }
 
 /** ¿queda cupo hoy para este uso? '' si sí; si no, el motivo. `tipo`: el tipo de tuit (directo, final, mvp… o vacío al clasificar).
@@ -78,7 +90,7 @@ function apuntar(c, r, estimado) {
 
 /**
  * Pregunta con Claude o con Gemini según la configuración. Mismos argumentos que preguntarJson de gemini.mjs, más `uso`,
- * `sistema` y `cache`. Devuelve lo mismo, con `proveedor` ('claude' o 'gemini').
+ * `sistema` (texto o lista de bloques) y `cache` (con la duración de `ia.cacheTTL`). Devuelve lo mismo, con `proveedor` ('claude' o 'gemini').
  */
 export async function preguntar({ uso = 'clasificar', registro = null, config = {}, prompt, esquema, sistema = '', cache = false, log = () => {},
   tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir, tipo = '' }) {
@@ -86,7 +98,7 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
   if (conClaude(config)) {
     const ci = config.ia || {};
     const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
-    const estimado = estimarCoste({ modelo, prompt, sistema, uso, config });
+    const estimado = estimarCoste({ modelo, prompt, sistema, uso, config, cache });
     const motivo = sinCupo(uso, { registro, config, ahora, tipo, estimado });
     if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
@@ -96,7 +108,7 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
       const pensar = ((ci.pensar || {})[uso]) === true;
       let r;
       try {
-        r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
+        r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, ttl: ttlCache(config), modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
           ...(uso === 'clasificar' ? { maxTokens: 16000 } : {}), ...(pedir ? { pedir } : {}) });
       } catch (e) { r = { ok: false, error: String((e && e.message) || e), dolares: estimado }; }
       apuntar(cuenta, r, estimado);
@@ -110,7 +122,8 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
   // (con el tope de gasto, el error empieza por «tope»: lib/respaldo.mjs no espera en ese caso, esperar no lo arreglaría)
   if (uso === 'redactar' && !(config.ia || {}).geminiRedacta) return { ok: false, error: sinCupoMotivo || (conClaude(config) ? 'Claude no contesta' : 'sin Claude'), proveedor: 'claude' };
   const clave = process.env.GEMINI_API_KEY;
-  const r = await gemini({ clave, prompt: sistema ? `${sistema}\n\n${prompt}` : prompt, esquema, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}), ...(pedir ? { pedir } : {}) });
+  const sis = textoSistema(sistema);
+  const r = await gemini({ clave, prompt: sis ? `${sis}\n\n${prompt}` : prompt, esquema, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}), ...(pedir ? { pedir } : {}) });
   return { ...r, proveedor: 'gemini' };
 }
 
