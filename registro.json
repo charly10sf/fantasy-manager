@@ -3186,7 +3186,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/23/vivian-maroan-continuaran-baja-partido-sabado-malaga.html": 1795433832000,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261123/11691038/villarreal-desmiente-pepe-fuera-operado-ojos-mirar-sol-eclipse-agosto.html": 1795433199000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alineacion-probable-betis-slovan-bratislava-champions_0_2008567596.html": 1795433617000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254448/bisiwu-novedad-lista-flick-baku.html": 1795433657000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-zanja-debate-penalti-barca-entrenador-ultima-palabra-20261123_3479878.html": 1795437695000,
@@ -3356,7 +3355,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255749/cuti-vuelta.html": 1795690419000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mantiene-guion-entrenamiento-sevilla-fc_0_2008590120.html": 1795690401000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/26/yeray-berenguer-vuelven-grupo-terzic-saca-oyono.html": 1795691381000,
-   "AS|https://as.com/futbol/primera/leve-accidente-de-trafico-de-aubameyang-camino-al-entrenamiento-del-depor-f202611-n/": 1795690722000
+   "AS|https://as.com/futbol/primera/leve-accidente-de-trafico-de-aubameyang-camino-al-entrenamiento-del-depor-f202611-n/": 1795690722000,
+   "AS|https://as.com/futbol/primera/aguado-se-apunta-al-atletico-y-la-lesion-de-lemar-queda-en-un-susto-f202611-n/": 1795691815000,
+   "MARCA|https://www.marca.com/futbol/elche/2026/11/26/lemar-esquiva-lesion-gravedad-enciende-esperanza.html": 1795692480000
   },
   "hechos": [
    {
@@ -3763,11 +3764,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/aguado-se-apunta-al-atletico-y-la-lesion-de-lemar-queda-en-un-susto-f202611-n/",
+    "medio": "AS",
+    "t": 1795691815000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lemar sufre una sobrecarga y será baja ante el Atlético",
+    "motivo": "sobrecarga muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -4709,17 +4722,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 120447,
-  "salida": 10840,
+  "entrada": 122494,
+  "salida": 11834,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.364738,
+  "dolares": 0.36544,
   "reservado": 0
  },
  "recientes": {
@@ -9798,13 +9811,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6608,
+   "ok": 6609,
    "fallos": 0,
-   "ejecuciones": 5387,
+   "ejecuciones": 5388,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T11:26:13.782Z"
+   "ultima": "2026-11-26T11:31:11.712Z"
   }
  },
  "ptsDirecto": {},
@@ -9821,15 +9834,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:26:24.243Z"
+   "ultimaBien": "2026-11-26T11:31:25.783Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:26:24.243Z"
+   "ultimaBien": "2026-11-26T11:31:25.783Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:26:24.243Z"
+   "ultimaBien": "2026-11-26T11:31:25.783Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9837,11 +9850,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:26:24.243Z"
+   "ultimaBien": "2026-11-26T11:31:25.783Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T11:26:24.243Z"
+   "ultimaBien": "2026-11-26T11:31:25.783Z"
   }
  },
  "avisos": [
