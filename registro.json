@@ -2461,7 +2461,7 @@
   "2413": "out_of_league",
   "2414": "ok",
   "2415": "ok",
-  "2417": "ok",
+  "2417": "doubtful",
   "2418": "ok",
   "2419": "ok",
   "2420": "out_of_league",
@@ -3387,7 +3387,8 @@
    "SPORT|136888251": 1795708781000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261126/1004255935/llorente-vuelve-responder-preocupa-caviar-azucar-problema.html": 1795713983000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/getafe/20261126/1004255936/sazonov-vuelve-once-getafe-georgia.html": 1795713887000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255926/balde-aire-goleada-baku-pedri-mando-gerard-lopez-foco.html": 1795712627000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255926/balde-aire-goleada-baku-pedri-mando-gerard-lopez-foco.html": 1795712627000,
+   "SPORT|136892937": 1795716898000
   },
   "hechos": [
    {
@@ -3832,7 +3833,7 @@
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -4757,17 +4758,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 211845,
-  "salida": 25932,
+  "entrada": 213877,
+  "salida": 26249,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.482892,
+  "dolares": 0.483254,
   "reservado": 0
  },
  "recientes": {
@@ -9836,13 +9837,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6704,
+   "ok": 6705,
    "fallos": 0,
-   "ejecuciones": 5483,
+   "ejecuciones": 5484,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T19:21:19.082Z"
+   "ultima": "2026-11-26T19:26:13.121Z"
   }
  },
  "ptsDirecto": {},
@@ -9859,15 +9860,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:21:28.333Z"
+   "ultimaBien": "2026-11-26T19:26:25.693Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:21:28.333Z"
+   "ultimaBien": "2026-11-26T19:26:25.693Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:21:28.333Z"
+   "ultimaBien": "2026-11-26T19:26:25.693Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9875,11 +9876,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:21:28.333Z"
+   "ultimaBien": "2026-11-26T19:26:25.693Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:21:28.333Z"
+   "ultimaBien": "2026-11-26T19:26:25.693Z"
   }
  },
  "avisos": [
