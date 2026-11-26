@@ -80,6 +80,14 @@ export const ESCENAS = {
     S.D.maestro.ent1 = ent('ent1', 'Míster Uno', 3.1, eqs[0], 900000); S.D.maestro.ent2 = ent('ent2', 'Míster Dos', 2.2, eqs[1], 760000); S.D.maestro.ent3 = ent('ent3', 'Míster Libre', 3.6, eqs[2], 970000);
     S.D.plantillas[S.D.yo.teamId].push({ pid: 'ent1', ptId: 'pt-ent1', clausula: 1500000, protegidoHasta: 0 }, { pid: 'ent2', ptId: 'pt-ent2', clausula: 1500000, protegidoHasta: 0 });
     const l0 = (S.D.mercado || []).find((m) => m.tipo !== 'manager'); if (l0) S.D.mercado.push({ ...l0, id: 'm-ent3', pid: 'ent3', miPuja: null });` },
+  // (26 nov, noche) premium SIN entrenador en la plantilla, sin pujas puestas (el saldo libre) y uno libre en el mercado: el plan lleva el
+  // paso de pujar por él
+  'm-premium-sin': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.liga = { ...S.D.liga, premium: true, pf: { formations: true, captain: true, bench: true, loan: true, ideal: true, coach: true }, pc: { ideal: 100000, cesionMax: 3, cesionMin: 0.25, cesionJornadas: 1 } };
+    const eqs = [...new Set(Object.values(S.D.maestro).filter((j) => j.pos === 2 && j.equipoId).map((j) => j.equipoId))];
+    const ent = (id, nombre, media, eq, valor) => ({ id, pos: 5, nombre, largo: nombre, valor, estado: 'ok', equipoId: eq, media, puntos: Math.round(media * 13), equipo: (Object.values(S.D.maestro).find((j) => j.equipoId === eq) || {}).equipo || '' });
+    S.D.maestro.ent1 = ent('ent1', 'Míster Uno', 3.1, eqs[0], 900000); S.D.maestro.ent2 = ent('ent2', 'Míster Dos', 2.2, eqs[1], 760000); S.D.maestro.ent3 = ent('ent3', 'Míster Libre', 3.6, eqs[2], 970000);
+    const l0 = (S.D.mercado || []).find((m) => m.tipo !== 'manager'); if (l0) for (const m of S.D.mercado || []) m.miPuja = null;
+    S.D.mercado.push({ ...l0, id: 'm-ent3', pid: 'ent3', miPuja: null });` },
   // (19 nov, escenas nuevas del plan) el sábado del partido por la mañana, en una liga con el mercado a las 12:00: queda el
   // cambio del mismo día del primer partido (14:00), con dos horas de margen
   'sabado-justo': { hora: '2026-11-07T09:00:00+01:00', prep: `const t = Date.parse('2026-11-07T12:00:00+01:00');
@@ -437,6 +445,20 @@ export function arbitro(R, D, M, eur) {
       if (rev(o)) { if (ciclos < 1) mal.push(`r3: no da tiempo a revender a ${q}`); vuelve += imp * 0.92; if (!o.vender_el) mal.push(`${q}: para revender y sin día de venta`); }
       else if (M.mereceClausula && !M.mereceClausula(cl) && !String(o.objetivo || '').startsWith('revend')) mal.push(`hoy: la cláusula de ${q} no pasa la regla de Hoy y las alarmas`);
       if (hoy && n > TOPE) mal.push(`r17: clausula a ${q} con la plantilla llena`);
+    } else if (o.accion === 'pujar' && o.j && o.j.pos === 5) {
+      // (26 nov, noche) pujar por un entrenador: solo en una liga premium que los tiene, sin ninguno en la plantilla, por
+      // uno libre del mercado, a la puja de la app y que quepa en el saldo que no está pujado; no ocupa sitio ni toca el once
+      const em = (M.entrenadoresMercado || []).find((m) => String(m.pid) === String(o.pid));
+      if (!(M.premium && M.premium.entrenador)) mal.push(`rE: puja por ${q}, un entrenador, y en esta liga no puntúan`);
+      else if (M.mias.some((x) => x.j && x.j.pos === 5 && x.j.estado !== 'out_of_league')) mal.push(`rE: puja por ${q} y ya tiene entrenador`);
+      else if (!em) mal.push(`rE: ${q} no es un entrenador libre del mercado`);
+      else {
+        if (imp > em.puja + 1) mal.push(`rE: ${eur(imp)} por ${q}, más que la puja de la app (${eur(em.puja)})`);
+        if (imp < em.precio - 1) mal.push(`rE: ${eur(imp)} por ${q}, por debajo de lo que vale (${eur(em.precio)})`);
+        if (hoy && imp > +D.dinero - (+M.misPujas || 0) + 1) mal.push(`rE: ${eur(imp)} por ${q} no cabe en el saldo que no está pujado (${eur(+D.dinero - (+M.misPujas || 0))})`);
+      }
+      if (hoy) pujado += imp;
+      continue;
     } else if (o.accion === 'pujar' || o.accion === 'comprar') {
       if (M.dueno[o.pid] && o.accion === 'pujar') mal.push(`${q} tiene dueño: no se puja`);
       const enM = (M.mercado || []).find((m) => m.pid === o.pid);

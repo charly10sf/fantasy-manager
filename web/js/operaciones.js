@@ -119,6 +119,10 @@ export function catalogo(D, M, notas = []) {
   for (const m of M.mercado) {
     if (m.tipo === 'liga') add({ ref: `P-${m.pid}`, tipo: 'pujar', pid: m.pid, j: m.j, precio: m.precio, puja: m.puja, pujaLiga: m.pujaLiga, recortada: m.recortada, pujaGana: m.pujaGana, pGana: m.pGana, pujas: m.pujas, miPuja: m.miPuja, cierra: m.cierra, interes: m.interes, sobre: m.sobre, saldo: num(D.dinero) - num(M.misPujas) });
   }
+  // (26 nov) P de entrenador: en una liga premium que los tiene y sin ninguno, el libre que la app ficharía
+  // (`M.ficharEntrenador`: los entrenadores no van en `M.mercado`). Se paga con saldo y no ocupa sitio en la plantilla
+  const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  if (fe && !lista.some((o) => o.pid === fe.pid)) add({ ref: `P-${fe.pid}`, tipo: 'pujar', entrenador: true, pid: fe.pid, j: fe.j, precio: fe.precio, puja: fe.puja, media: fe.media, miPuja: null, cierra: fe.cierra || M.cierreMercado || null, interes: 100, saldo: num(D.dinero) - num(M.misPujas) });
   // M: lo que venden otros managers
   for (const m of M.mercado) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
@@ -182,6 +186,8 @@ export function textoOp(o, M = null) {
     : '';
   switch (o.ref[0]) {
     case 'P': {
+      // (26 nov) un entrenador (liga premium): sin lo de los jugadores (ni lo que se paga por los de su valor, ni revender)
+      if (o.entrenador) return `PUJAR por ${j.nombre}, ENTRENADOR LIBRE en el mercado (no tengo entrenador; no ocupa sitio en la plantilla y puntúa 5 si su equipo gana, 2 si empata y 0 si pierde): vale ${eur(o.precio)}, ${String(Math.round(num(o.media) * 10) / 10).replace('.', ',')} puntos por jornada de media${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)}), pagado con saldo`;
       // (lo que se paga en esta liga por los libres va entero una sola vez, en su bloque; aquí, lo de los de su valor,
       // que es con lo que hay que comparar: un +100 % por uno de 600 mil puede ser lo normal; Carlos, 30 oct)
       const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor, o.pid) : null;

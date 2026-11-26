@@ -31,7 +31,7 @@ const ESCENAS_AZAR = [['martes'], ['veda'], ['enjuego'], ['paron'], ['m-cierre']
   // (19 nov, tercera parte) el sábado del partido con el cambio de ese mismo día, una liga con el mercado a otra hora, en
   // negativo con un solo cambio por delante, un titular lesionado largo, una cuenta nueva, una liga sin clausulazos y los
   // dos últimos días del parón
-  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado'], ['m-premium'], ['sabado-premium'],
+  ['sabado-justo', 'justo'], ['hora-20', 'hora-20'], ['jueves-negativo', 'negativo-ultimo'], ['martes', 'lesionado'], ['martes', 'nueva'], ['martes', 'sin-clausulazos'], ['paron-final', 'paron-final'], ['sabado'], ['m-premium'], ['sabado-premium'], ['m-premium-sin'],
   // (19 nov, sesión larga) sin salida de verdad: el día antes de la jornada (sin cambios de mercado que sirvan para vender),
   // muy en negativo y sin ofertas que aceptar: el plan lo avisa y la IA no puede meter compras encima
   ['veda', 'sin-salida']];

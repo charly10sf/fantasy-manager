@@ -368,6 +368,21 @@ function candidatos(X, vetados) {
         datos: { porque: cu.gana >= 0.3 ? `mejora tu once: +${d1(cu.gana)} pts por jornada` : 'refuerza tu plantilla', cuanto: `puja de ${eur(m.puja)} (sale a ${eur(m.precio)})`, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy', siNo: 'se lo lleva otro o vuelve a LaLiga' } }) });
   }
 
+  /* P-ent. (26 nov, noche) en una liga premium con entrenadores y sin ninguno: pujar por el libre que la app ficharía
+     (`M.ficharEntrenador`, con su puja). No es un jugador: no ocupa sitio en la plantilla (`ent`: no cuenta en el tope ni en
+     las «2 pujas para el once»), no toca el once de los cuatro puestos y solo se propone si te llega con el saldo que no
+     tienes pujado (`M.ficharEntrenador`). No entra en la
+     búsqueda de `elegir`: `planMotor` lo añade al final si cabe con todo lo demás (nunca le quita el sitio a otro paso) */
+  const fe = M.ficharEntrenador ? M.ficharEntrenador() : null;
+  const verE = fe ? V[`P-${fe.pid}`] : null;
+  if (fe && verE && verE.ok) {
+    const kE = `P-${fe.pid}`, cuandoE = M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy';
+    nuevo({ k: kE, clase: 'pujar', objetivo: 'entrenador', ent: true, pid: fe.pid, j: fe.j, importe: fe.puja, puja: fe.puja, euros: X.punto * fe.media - (fe.puja - fe.precio), ref: kE, interes: 100,
+      op: () => ({ accion: 'pujar', ref: kE, objetivo: 'entrenador', pid: fe.pid, jugador: fe.j.nombre, donde: 'en el mercado', importe: fe.precio, puja_max: fe.puja, cuando: cuandoE, confianza: 'media',
+        motivo: `No tienes entrenador: ${fe.j.nombre} lleva ${d1(fe.media)} puntos por jornada y vale ${eur(fe.precio)}. No ocupa sitio en la plantilla. Es una subasta a ciegas: si no la ganas, no pagas nada.`,
+        datos: { porque: `no tienes entrenador: lleva ${d1(fe.media)} pts por jornada`, cuanto: `puja de ${eur(fe.puja)} (vale ${eur(fe.precio)})`, cuando: cuandoE, siNo: 'sigues sin entrenador' } }) });
+  }
+
   /* E. especular: comprar lo que sube y venderlo antes de la jornada (con el margen de deuda) */
   // (2 a la vez, 3 en el parón, contando lo que ya tienes para revender: ahora se puede aguantar más de una jornada)
   if (ventana && ciclos >= 1 && (X.revVivos < (paron ? 3 : 2) || M.especular.some((e) => e.vuelve))) {
@@ -444,7 +459,10 @@ function cuentas(X, lista) {
   for (const o of lista) {
     if (o.clase !== 'pujar') continue;
     if (o.importe > margen) return null;
-    margen -= o.importe; n++;
+    margen -= o.importe;
+    // (26 nov) un entrenador (liga premium) no ocupa sitio ni cuenta como puja para el once
+    if (o.ent) continue;
+    n++;
     // (24 nov) lo que se compra para aguantarlo cuenta para los «2 a la vez», pero su dinero no vuelve antes de la jornada
     if (o.rev) { hayRev = true; vuelve += o.importe * A.margenRev; nE++; } else if (o.aguantar) nE++; else nP++;
   }
@@ -523,7 +541,7 @@ function elegir(X, libres, fijos, oblig = 0) {
       sEur[mask] = sEur[r] + o.euros;
       nAcc[mask] = nAcc[r] + (o.clase === 'aceptar' || o.clase === 'retirar' ? 1 : 0);
       nC[mask] = nC[r] + (o.clase === 'clausular' && !o.rev ? 1 : 0);
-      nP[mask] = nP[r] + (o.clase === 'pujar' && !o.rev && !o.aguantar ? 1 : 0);
+      nP[mask] = nP[r] + (o.clase === 'pujar' && !o.rev && !o.aguantar && !o.ent ? 1 : 0);
       nE[mask] = nE[r] + (o.rev || o.aguantar ? 1 : 0);
       nOps[mask] = nOps[r] + 1;
       mala[mask] = mala[r] || (r & choca[i]) || (choca[i] & bajo) ? 1 : 0;
@@ -638,8 +656,12 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     if (!c2) return null;
     E = { lista: l2, cu: c2, valor: null };
   } else E = elegir(X, libres, fijos, oblig);
-  const lista = E.lista || fijos;
-  const cu = E.cu || base;
+  let lista = E.lista || fijos;
+  let cu = E.cu || base;
+  // (26 nov, noche) el entrenador (liga premium, sin ninguno): va si cabe con todo lo demás sin dejar la jornada en
+  // negativo (a él no se le revende: su dinero no vuelve). Con `fijar` la combinación viene dada (ya lo lleva o no)
+  const entC = !fijar && E.lista ? todos.find((o) => o.ent && !lista.some((l) => l.pid === o.pid)) : null;
+  if (entC) { const c3 = cuentas(X, [...lista, entC]); if (c3 && c3.jornada >= 0) { lista = [...lista, entC]; cu = c3; } }
 
   /* el orden: lo que mete dinero ya, lo que se pone a la venta, las cláusulas, las pujas (el once antes que revender) */
   const ORDEN = (o) => (o.clase === 'retirar' ? -1 : o.clase === 'aceptar' ? 0 : o.clase === 'vender' ? (o.luego ? 6 : 1) : o.clase === 'clausular' ? (o.rev ? 3 : 2) : o.rev || o.aguantar ? 5 : 4);
