@@ -1747,7 +1747,7 @@ body.limitado .tostada { z-index: 120; }
 .cf-cab, .club-f { display: grid; grid-template-columns: 5px 26px 28px minmax(0, 1fr) 24px 34px 30px; column-gap: 10px; align-items: center; }
 .cf-cab { padding: 0 2px 7px 0; font: 600 var(--t-mini) 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
 .cf-cab span:nth-child(n+5) { text-align: right; }
-.cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol { display: none; }
+.cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol, .cf-cab .cf-casa, .cf-cab .cf-fuera, .club-f .cf-casa, .club-f .cf-fuera { display: none; }
 .club-f { position: relative; width: 100%; padding: 11px 2px 11px 0; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
   grid-template-areas: "kit pos esc n pj dg pts" "kit pos esc s s s s";
   --eu: transparent; --eu-f: transparent; background: linear-gradient(90deg, var(--eu-f), transparent 62%); transition: background-color 0.15s; }
@@ -1782,9 +1782,10 @@ body.limitado .tostada { z-index: 120; }
 .cf-ley small { flex-basis: 100%; font-size: var(--t-mini); line-height: 1.4; }
 .ch-eu { padding: 2px 8px; border-radius: var(--r-red); font: 700 var(--t-mini) 'Barlow'; color: #fff; background: var(--eu); }
 /* en el ordenador, la tabla entera */
-.escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 38px; column-gap: 14px; }
-.escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg pts" "kit pos esc s forma pj gep gol dg pts"; padding: 12px 6px 12px 0; }
-.escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol { display: block; }
+.escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 44px 44px 38px; column-gap: 14px; }
+.escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg casa fuera pts" "kit pos esc s forma pj gep gol dg casa fuera pts"; padding: 12px 6px 12px 0; }
+.escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol, .escritorio .cf-cab .cf-casa, .escritorio .cf-cab .cf-fuera { display: block; }
+.escritorio .club-f .cf-casa { display: block; grid-area: casa; } .escritorio .club-f .cf-fuera { display: block; grid-area: fuera; }
 .escritorio .club-f .cf-forma { display: flex; grid-area: forma; justify-content: flex-end; }
 .escritorio .club-f .cf-gep { display: block; grid-area: gep; } .escritorio .club-f .cf-gol { display: block; grid-area: gol; }
 .escritorio .club-f:hover { background-color: var(--plano); }
@@ -1903,15 +1904,27 @@ button.pf-eq:active { opacity: 0.7; }
 /* con 7 pestañas abajo, las letras un poco más pequeñas en los móviles estrechos */
 @media (max-width: 400px) { .nav button { font-size: 11.5px; letter-spacing: -0.2px; } .nav button .ic { width: 23px; height: 23px; } }
 .escritorio .club-lista, .escritorio .cf-ley { max-width: 1100px; }
-/* (26 nov) en una pantalla ancha, «Tus clubes» a la derecha de la clasificación y en rejilla, sin carril que se corta */
-@media (min-width: 1560px) {
-  .escritorio .clubes-e:not(.sin-tus) { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(440px, 1fr); column-gap: 48px; align-items: start; }
-  .escritorio .clubes-e .cl-tabla { grid-column: 1; grid-row: 1; }
-  .escritorio .clubes-e .cl-tus { grid-column: 2; grid-row: 1; }
-  .escritorio .clubes-e .club-lista { max-width: none; }
-  .escritorio .clubes-e .club-carril { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 12px; overflow: visible; margin: 0; padding: 2px 0 0; scroll-snap-type: none; }
-  .escritorio .clubes-e .club-card { width: auto; min-height: 150px; }
-}
+/* (26 nov) «Tus clubes» plegable en el ordenador: el título hace de botón, con su flecha que gira */
+.tus-cl > summary { list-style: none; cursor: pointer; align-items: center; }
+.tus-cl > summary::-webkit-details-marker { display: none; }
+.tus-cl > summary .ic { width: 20px; height: 20px; flex: none; color: var(--texto2); transform: rotate(90deg); transition: transform 0.2s; }
+.tus-cl:not([open]) > summary .ic { transform: none; }
+.tus-cl > summary:hover h2 { color: var(--rojo-l); }
+.tus-cl:not([open]) > summary { margin-bottom: 0; }
+/* (26 nov) en el ordenador, «Tus clubes» en rejilla de hasta 10 por fila (sin carril) y la clasificación debajo, a todo lo ancho */
+.escritorio .clubes-e .club-lista { max-width: none; }
+.escritorio .clubes-e .club-carril { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(150px, calc((100% - 90px) / 10)), 1fr)); gap: 10px; overflow: visible; margin: 0; padding: 2px 0 0; scroll-snap-type: none; }
+.escritorio .clubes-e .club-card { width: auto; min-height: 150px; padding: 11px 11px 12px; }
+.escritorio .clubes-e .cc-cam { width: 64px; height: 64px; right: -8px; top: 12px; }
+.escritorio .clubes-e .cc-cab { padding-right: 40px; gap: 6px; }
+.escritorio .clubes-e .cc-cab .pt-esc { width: 22px; height: 22px; flex: none; }
+.escritorio .clubes-e .cc-n { font-size: var(--t-cuerpo); }
+.escritorio .clubes-e .cc-caras .ava { width: 26px; height: 26px; }
+.escritorio .clubes-e .cc-hoy { font-size: var(--t-mini); padding-left: 4px; }
+/* (26 nov) Equipo → Plantilla en el ordenador, como Hoy: las casillas del estado en una fila y la plantilla (columna estrecha) alineada arriba */
+.escritorio .ce-i > .eq2-tiles:first-child { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.escritorio .ce-i > .eq2-tiles:first-child > .eq2-t:last-child { grid-column: auto; }
+.escritorio .cols-e .eq-pl > .sec:first-child { margin-top: 0; }
 /* (26 nov) Equipo → Plantilla: con la columna de la derecha ancha, los jugadores a dos columnas (los títulos de cada puesto, a lo ancho) */
 .escritorio .eq-pl { container-type: inline-size; }
 @container (min-width: 860px) {

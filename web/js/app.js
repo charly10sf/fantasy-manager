@@ -3773,6 +3773,8 @@ window.fotosApp = (lista, error) => {
 /* ---------------- la entrada de la web: pegar y volver (0.8l) ---------------- */
 // «Ya tengo la app» del ordenador: el QR se pide al desplegarlo y se deja de esperar al móvil al plegarlo
 document.addEventListener('toggle', (ev) => {
+  // (26 nov) «Tus clubes» plegado o abierto en el ordenador: se recuerda en este dispositivo
+  if (ev.target && ev.target.id === 'tusClubes') { LS.set('tus-clubes-plegado', !ev.target.open); return; }
   if (!ev.target || ev.target.id !== 'detApp') return;
   if (ev.target.open) iniciarQR(); else pararQR();
 }, true);

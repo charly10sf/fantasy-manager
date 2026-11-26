@@ -1378,7 +1378,8 @@ export function equipo(S) {
   if (seg === 'plantilla') {
     const once = `<div id="eq-once" data-ancla>${onceHTML(S, null, { conBanquillo: true, directo: true })}</div>`;
     // en el ordenador, el estado y el once a la izquierda y la plantilla al lado
-    h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op), 'lado-izq') : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
+    // (26 nov, Carlos: «el campo más ancho, como en la pestaña del plan») como en Hoy: lo del once a lo ancho y la plantilla en la columna estrecha de la derecha
+    h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op)) : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
   } else if (seg === 'jornadas') {
     h += jornadasHTML(S);
   } else if (seg === 'venta') {
