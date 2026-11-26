@@ -4735,12 +4735,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261126/1004255684/socios-sabadell-tendran-pagar-ver-encuentro-copa-frente-sporting.html": 1795679085000,
    "Europa Press|https://www.europapress.es/internacional/noticia-salida-pista-avion-carga-fedex-obliga-paralizar-vuelos-miami-eeuu-20261126040511.html": 1795662311000,
    "SPORT|136876189": 1795689597000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/26/confirmacion-oficial-mestalla-acogera-partido-136879209.html": 1795696482000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/26/confirmacion-oficial-mestalla-acogera-partido-136879209.html": 1795696482000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/26/depor-abanca-as-celtas-esperan-rival-sorteo-puede-cruzarles-elitebr-/00031795704015834337438.htm": 1795704240000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -4748,17 +4749,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 23,
    "revisar": 10,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 177515,
-  "salida": 20731,
+  "entrada": 179258,
+  "salida": 20817,
   "cacheLee": 126777,
   "cacheEscribe": 45815,
-  "dolares": 0.47686,
+  "dolares": 0.477077,
   "reservado": 0
  },
  "recientes": {
@@ -9837,13 +9838,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6647,
+   "ok": 6648,
    "fallos": 0,
-   "ejecuciones": 5426,
+   "ejecuciones": 5427,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T14:41:11.812Z"
+   "ultima": "2026-11-26T14:46:12.033Z"
   }
  },
  "ptsDirecto": {},
@@ -9860,15 +9861,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:41:20.589Z"
+   "ultimaBien": "2026-11-26T14:46:23.578Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:41:20.589Z"
+   "ultimaBien": "2026-11-26T14:46:23.578Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:41:20.589Z"
+   "ultimaBien": "2026-11-26T14:46:23.578Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9876,11 +9877,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:41:20.589Z"
+   "ultimaBien": "2026-11-26T14:46:23.578Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T14:41:20.589Z"
+   "ultimaBien": "2026-11-26T14:46:23.578Z"
   }
  },
  "avisos": [
