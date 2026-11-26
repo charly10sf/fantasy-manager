@@ -3350,7 +3350,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261126/1004255722/datos-impecables-debut-alex-campos.html": 1795686361000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261126/1004255688/afilado-estilete-amenaza-real-madrid.html": 1795686324000,
    "AS|https://as.com/futbol/primera/terrats-somos-conscientes-de-lo-que-nos-jugamos-f202611-n/": 1795687568000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-ez-abde-no-entrena-betis_8_2008590012.html": 1795688088000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/video-ez-abde-no-entrena-betis_8_2008590012.html": 1795688088000,
+   "AS|https://as.com/futbol/abde-es-duda-para-recibir-al-rayo-f202611-n/": 1795688492000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261126/1004255731/vinicius-reabre-debate.html": 1795687291000,
+   "SPORT|136857895": 1795685052000,
+   "SPORT|136872017": 1795684898000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lemar-y-aguado-vuelven-a-los-entrenamientos-radio-elche/": 1795688548000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/aviso-gonzalo-miro-sorloth-julian-alvarez-no-vale-marque-no-vuelve-ver-porteria-siete-jornadas-20261126_3482301.html": 1795688452000
   },
   "hechos": [
    {
@@ -3704,11 +3710,52 @@
     "motivo": "golpe",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/abde-es-duda-para-recibir-al-rayo-f202611-n/",
+    "medio": "AS",
+    "t": 1795688492000,
+    "id": "3264",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Ceballos se ausenta del entrenamiento y es duda para el Rayo",
+    "motivo": "golpe tras el partido de Bratislava",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136872017",
+    "medio": "SPORT",
+    "t": 1795684898000,
+    "id": "3182",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lemar se pierde solo el partido contra el Atlético de Madrid",
+    "motivo": "molestias físicas en Orriols",
+    "plazo": "se perderá únicamente un partido",
+    "nums": [
+     18,
+     30
+    ]
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/26/lemar-y-aguado-vuelven-a-los-entrenamientos-radio-elche/",
+    "medio": "Cadena SER",
+    "t": 1795688548000,
+    "id": "3182",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Lemar regresa con el grupo tras su lesión",
+    "motivo": "lesión contra el Villarreal",
+    "plazo": "",
+    "nums": [
+     17
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-26",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -4653,17 +4700,17 @@
  "ia": {
   "dia": "2026-11-26",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 107643,
-  "salida": 7361,
+  "entrada": 110700,
+  "salida": 7983,
   "cacheLee": 73819,
   "cacheEscribe": 34600,
-  "dolares": 0.361717,
+  "dolares": 0.362334,
   "reservado": 0
  },
  "recientes": {
@@ -9742,13 +9789,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6596,
+   "ok": 6597,
    "fallos": 0,
-   "ejecuciones": 5375,
+   "ejecuciones": 5376,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T10:26:11.686Z"
+   "ultima": "2026-11-26T10:31:13.736Z"
   }
  },
  "ptsDirecto": {},
@@ -9765,15 +9812,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:26:20.525Z"
+   "ultimaBien": "2026-11-26T10:31:28.361Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:26:20.525Z"
+   "ultimaBien": "2026-11-26T10:31:28.361Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:26:20.525Z"
+   "ultimaBien": "2026-11-26T10:31:28.361Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9781,11 +9828,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:26:20.525Z"
+   "ultimaBien": "2026-11-26T10:31:28.361Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T10:26:20.525Z"
+   "ultimaBien": "2026-11-26T10:31:28.361Z"
   }
  },
  "avisos": [
