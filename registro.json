@@ -3199,8 +3199,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/23/cuantos-goles-marcara-zabiri-vuelve-a-escuchar-el-sanedrin-del-racing-radio-santander/": 1795461507000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/estilosas-exclusivas-botas-futbol-dieron-136770536.html": 1795461466000,
    "SPORT|136769461": 1795462222000,
    "SPORT|136772532": 1795462129000,
    "SPORT|136772178": 1795462124000,
@@ -9838,13 +9836,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6703,
+   "ok": 6704,
    "fallos": 0,
-   "ejecuciones": 5482,
+   "ejecuciones": 5483,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T19:16:15.051Z"
+   "ultima": "2026-11-26T19:21:19.082Z"
   }
  },
  "ptsDirecto": {},
@@ -9861,15 +9859,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:16:28.521Z"
+   "ultimaBien": "2026-11-26T19:21:28.333Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:16:28.521Z"
+   "ultimaBien": "2026-11-26T19:21:28.333Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:16:28.521Z"
+   "ultimaBien": "2026-11-26T19:21:28.333Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9877,11 +9875,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:16:28.521Z"
+   "ultimaBien": "2026-11-26T19:21:28.333Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T19:16:28.521Z"
+   "ultimaBien": "2026-11-26T19:21:28.333Z"
   }
  },
  "avisos": [
