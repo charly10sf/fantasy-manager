@@ -4702,7 +4702,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-suspende-todas-operaciones-pleno-preconcurso-20261123164407.html": 1795448647000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-mide-copa-numancia-lider-grupo-segunda-20261123134743-nt.html": 1795463747000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254688/aplazado-choque-rubi-salir-volando-cristalera.html": 1795500000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261124/1004254685/barceloneta-juega-77-faf-hospitalet.html": 1795500000000,
@@ -4747,7 +4746,8 @@
    "fallos": 0
   },
   "espera": {
-   "SPORT|136881446": 1795707550886
+   "SPORT|136881446": 1795707550886,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/basquetcoruna/2026/11/26/leyma-baskonia-jugara-domingo-13-1230-horas-coincidira-depor-athletic-club-1615-horas/00031795707085629474191.htm": 1795707972391
   }
  },
  "ia": {
@@ -9837,13 +9837,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6660,
+   "ok": 6661,
    "fallos": 0,
-   "ejecuciones": 5439,
+   "ejecuciones": 5440,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T15:41:11.177Z"
+   "ultima": "2026-11-26T15:46:12.391Z"
   }
  },
  "ptsDirecto": {},
@@ -9860,15 +9860,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:41:17.970Z"
+   "ultimaBien": "2026-11-26T15:46:22.049Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:41:17.970Z"
+   "ultimaBien": "2026-11-26T15:46:22.049Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:41:17.970Z"
+   "ultimaBien": "2026-11-26T15:46:22.049Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9876,11 +9876,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:41:17.970Z"
+   "ultimaBien": "2026-11-26T15:46:22.049Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T15:41:17.970Z"
+   "ultimaBien": "2026-11-26T15:46:22.049Z"
   }
  },
  "avisos": [
