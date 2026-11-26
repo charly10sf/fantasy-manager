@@ -334,13 +334,14 @@ export function fichaJugador(S, pid) {
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
   // (26 nov, parte B) en una liga premium, si es el capitán o un suplente del banquillo que propone la app para tu once
-  // (la misma cuenta que Equipo y el plan: `M.once.capitan`, `M.once.banquillo`)
-  if (mia && M.once && !M.enJuego) {
-    const capO = M.once.capitan && String(M.once.capitan.j.id) === String(pid) ? M.once.capitan : null;
-    const banO = (M.once.banquillo || []).find((x) => String(x.j.id) === String(pid)) || null;
+  // (la misma cuenta que Equipo y la IA: `M.premiumPropuesta`)
+  const ppB = mia && !M.enJuego && M.premiumPropuesta ? M.premiumPropuesta() : null;
+  if (ppB) {
+    const capO = ppB.capitan && String(ppB.capitan.j.id) === String(pid) ? ppB.capitan : null;
+    const banO = ppB.banquillo.find((x) => String(x.j.id) === String(pid)) || null;
     const u1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
-    if (capO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Buen capitán esta jornada:</b> ~${u1(capO.pp)} puntos esperados, los que más de tu once.</p>`;
-    else if (banO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Para tu banquillo:</b> de los que no alineas en su puesto, el que más opciones tiene de jugar${banO.cubre ? ` (por si no juega ${esc(banO.cubre.nombre)})` : ''}.</p>`;
+    if (capO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Buen capitán esta jornada:</b> ~${u1(capO.pp)} puntos esperados, el que más de los tuyos.</p>`;
+    else if (banO) h += `<p class="t2 peq" style="margin:8px 0 0"><b>Para tu banquillo:</b> ${banO.fijo ? 'de los que no alineas en su puesto, el que juega fijo con más puntos esperados' : 'de los que no alineas en su puesto, el que más opciones tiene de jugar'}${banO.cubre ? ` (por si no juega ${esc(banO.cubre.nombre)})` : ''}.</p>`;
   }
   // (40) «Avisarme»: una alarma antes de que se abra su cláusula, con la antelación que elijas (solo en la app, que es la que avisa)
   {

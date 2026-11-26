@@ -66,6 +66,20 @@ export const ESCENAS = {
   // (19 nov) sábado por la mañana, día del primer partido (14:00): cláusulas cerradas, el once aún se toca y el último
   // cambio de mercado de antes de la jornada ya ha pasado (00:15)
   sabado: { hora: '2026-11-07T10:30:00+01:00' },
+  // (26 nov, parte B) la liga de ejemplo hecha premium SOLO dentro de la prueba, con todas las funciones encendidas, dos
+  // entrenadores tuyos y uno libre en el mercado: entre semana y el sábado por la mañana (con el paso de alinear)
+  'm-premium': { hora: '2026-11-03T10:00:00+01:00', prep: `S.D.liga = { ...S.D.liga, premium: true, pf: { formations: true, captain: true, bench: true, loan: true, ideal: true, coach: true }, pc: { ideal: 100000, cesionMax: 3, cesionMin: 0.25, cesionJornadas: 1 } };
+    const eqs = [...new Set(Object.values(S.D.maestro).filter((j) => j.pos === 2 && j.equipoId).map((j) => j.equipoId))];
+    const ent = (id, nombre, media, eq, valor) => ({ id, pos: 5, nombre, largo: nombre, valor, estado: 'ok', equipoId: eq, media, puntos: Math.round(media * 13), equipo: (Object.values(S.D.maestro).find((j) => j.equipoId === eq) || {}).equipo || '' });
+    S.D.maestro.ent1 = ent('ent1', 'Míster Uno', 3.1, eqs[0], 900000); S.D.maestro.ent2 = ent('ent2', 'Míster Dos', 2.2, eqs[1], 760000); S.D.maestro.ent3 = ent('ent3', 'Míster Libre', 3.6, eqs[2], 970000);
+    S.D.plantillas[S.D.yo.teamId].push({ pid: 'ent1', ptId: 'pt-ent1', clausula: 1500000, protegidoHasta: 0 }, { pid: 'ent2', ptId: 'pt-ent2', clausula: 1500000, protegidoHasta: 0 });
+    const l0 = (S.D.mercado || []).find((m) => m.tipo !== 'manager'); if (l0) S.D.mercado.push({ ...l0, id: 'm-ent3', pid: 'ent3', miPuja: null });` },
+  'sabado-premium': { hora: '2026-11-07T10:30:00+01:00', prep: `S.D.liga = { ...S.D.liga, premium: true, pf: { formations: true, captain: true, bench: true, loan: true, ideal: true, coach: true }, pc: { ideal: 100000, cesionMax: 3, cesionMin: 0.25, cesionJornadas: 1 } };
+    const eqs = [...new Set(Object.values(S.D.maestro).filter((j) => j.pos === 2 && j.equipoId).map((j) => j.equipoId))];
+    const ent = (id, nombre, media, eq, valor) => ({ id, pos: 5, nombre, largo: nombre, valor, estado: 'ok', equipoId: eq, media, puntos: Math.round(media * 13), equipo: (Object.values(S.D.maestro).find((j) => j.equipoId === eq) || {}).equipo || '' });
+    S.D.maestro.ent1 = ent('ent1', 'Míster Uno', 3.1, eqs[0], 900000); S.D.maestro.ent2 = ent('ent2', 'Míster Dos', 2.2, eqs[1], 760000); S.D.maestro.ent3 = ent('ent3', 'Míster Libre', 3.6, eqs[2], 970000);
+    S.D.plantillas[S.D.yo.teamId].push({ pid: 'ent1', ptId: 'pt-ent1', clausula: 1500000, protegidoHasta: 0 }, { pid: 'ent2', ptId: 'pt-ent2', clausula: 1500000, protegidoHasta: 0 });
+    const l0 = (S.D.mercado || []).find((m) => m.tipo !== 'manager'); if (l0) S.D.mercado.push({ ...l0, id: 'm-ent3', pid: 'ent3', miPuja: null });` },
   // (19 nov, escenas nuevas del plan) el sábado del partido por la mañana, en una liga con el mercado a las 12:00: queda el
   // cambio del mismo día del primer partido (14:00), con dos horas de margen
   'sabado-justo': { hora: '2026-11-07T09:00:00+01:00', prep: `const t = Date.parse('2026-11-07T12:00:00+01:00');

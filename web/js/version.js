@@ -38,7 +38,7 @@ export const NOVEDADES = [
     // (26 nov, tarde) LA PARTE B: que ayude a jugarla, medido antes con J4-J13 (claude/nota-premium-parte-b.md del proyecto;
     // .github/ia/medir-premium.js y medir-entrenador.mjs). Las 5 formaciones de más en el mejor once (`M.formaciones`,
     // `M.formacionVale`; `formaOnce` lee un 4-6-0); el capitán y el banquillo que propone el motor (`M.capitanDe`,
-    // `M.banquilloDe`, `M.once.capitan`, `M.once.banquillo`) en Equipo (`premiumOnce` en vistas.js), la ficha, el paso de
+    // `M.banquilloDe`, `M.premiumPropuesta`) en Equipo (`premiumOnce` en vistas.js), la ficha, el paso de
     // alinear del plan (`M.premiumAlinTxt`) y lo que lee la IA (`premiumTxt`); de dos entrenadores, el de mejor partido
     // (`M.ppEntrenador`); los del mercado, aparte (`M.entrenadoresMercado`, `M.ficharEntrenador`).
     v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'Ligas premium',

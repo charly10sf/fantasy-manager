@@ -1409,6 +1409,8 @@ export function analizar(D, H, c, extra = {}) {
   // las apaga dejan de valer al momento: con una puesta, no se puntúa (`M.formacionVale`)
   M.formaciones = [...M.formacionesGratis, ...(M.premium.formaciones ? FORMACIONES_PREMIUM.map(partirFormacion).filter((f) => !M.formacionesGratis.some((g) => g.join('-') === f.join('-'))) : [])];
   /** ¿vale en tu liga esa formación ([4,6,0] o '4-6-0')? null si no se entiende */
+  /** ¿es una de las 5 de premium y tu liga, que es premium y ya se ha leído, las tiene apagadas? (con ella no se puntúa) */
+  M.formacionApagada = (f) => { const g = Array.isArray(f) ? f : partirFormacion(f); return !!(g && M.premium.leido && !M.premium.formaciones && FORMACIONES_PREMIUM.includes(g.join('-'))); };
   M.formacionVale = (f) => { const g = Array.isArray(f) ? (f.length === 3 && f.every((x) => Number.isInteger(x)) && f[0] + f[1] + f[2] === 10 ? f : null) : partirFormacion(f); return g ? M.formaciones.some((x) => x.join('-') === g.join('-')) : null; };
   const onces = (extra.onces && extra.onces.jugadores) || {};
   M.hayOnces = Object.keys(onces).length > 0;
@@ -1866,6 +1868,8 @@ export function analizar(D, H, c, extra = {}) {
     if (!pr || pr.golesFavor == null) return (cacheEnt[j.id] = pr ? num(j.media) : 0);
     return (cacheEnt[j.id] = esperadoEntrenador(pr.golesFavor, pr.golesContra).pts);
   };
+  /** ¿a ese entrenador se le espera más que al otro por su partido de esta jornada? (los dos con partido y con los goles de la previa) */
+  M.mejorPartidoEnt = (a, b) => { const pa = a && M.previa(a), pb = b && M.previa(b); return !!(pa && pb && pa.golesFavor != null && pb.golesFavor != null && !MALOS.has(b.estado) && M.ppEntrenador(a) > M.ppEntrenador(b) + 0.1); };
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado, { entrenador: M.premium.entrenador, ppEntrenador: M.ppEntrenador });
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
@@ -1878,7 +1882,8 @@ export function analizar(D, H, c, extra = {}) {
        de los que no alineas, el que juega fijo (6 de cada 10 o más de ser titular) con más puntos esperados y, si no hay
        ninguno, el que más opciones tiene de jugar: un suplente que tampoco juega no salva nada. En esos 90 onces habría
        entrado alguno en 54 y salvado 0,87 puntos por once y jornada (0,72 eligiendo solo por puntos esperados).
-     Una sola fuente para Equipo, la ficha, el plan y la IA: `M.capitanDe`, `M.banquilloDe`, `M.once.capitan`, `M.once.banquillo` */
+     Una sola fuente para Equipo, la ficha y la IA: `M.premiumPropuesta()` (con `M.capitanDe` y `M.banquilloDe`); el paso de
+     alinear del plan, `M.premiumAlinTxt` con su once */
   M.capitanDe = (js) => {
     if (!M.premium.capitan) return null;
     let mejor = null;
@@ -1898,17 +1903,27 @@ export function analizar(D, H, c, extra = {}) {
       const fijos = cands.filter((x) => x.p >= 0.6);
       const el = fijos.length ? fijos.sort((a, b) => b.pp - a.pp)[0] : cands.sort((a, b) => b.p - a.p || b.pp - a.pp)[0];
       // a quién cubre: el titular de su puesto con menos opciones de jugar, solo si de verdad está en el aire
-      const flojo = tit.map((j) => ({ j, p: tp(j) })).sort((a, b) => a.p - b.p)[0];
-      out.push({ pos: p, j: el.j, pp: el.pp, p: el.p, cubre: flojo && (flojo.p < 0.6 || flojo.j.estado === 'doubtful') ? flojo.j : null });
+      const flojo = tit.filter((j) => M.titularidad(j)).map((j) => ({ j, p: tp(j) })).sort((a, b) => a.p - b.p)[0];
+      out.push({ pos: p, j: el.j, pp: el.pp, p: el.p, fijo: fijos.length > 0, cubre: flojo && (flojo.p < 0.6 || flojo.j.estado === 'doubtful') ? flojo.j : null });
     }
     return out;
   };
-  M.once.capitan = M.capitanDe(M.once.lineas.flat());
-  M.once.banquillo = M.banquilloDe(M.once.lineas, misJs);
+  /** LA PROPUESTA de capitán y banquillo, la única que se enseña (Equipo, la ficha, la IA): con tu plantilla SIN los que la
+   *  app te manda vender (`M.decision`, que ya cuenta el plan que se ve): a quien vas a vender no se le propone de capitán
+   *  ni de suplente. Se calcula al pedirla, porque la decisión sale al final del análisis. null si no hay nada que proponer */
+  M.premiumPropuesta = () => {
+    if (!(M.premium.capitan || M.premium.banquillo)) return null;
+    const vende = (j) => { const d = M.decision ? M.decision(j.id) : null; return !!(d && d.accion === 'vender'); };
+    const plantilla = misJs.filter((j) => !vende(j));
+    const once = M.mejorOnce(plantilla);
+    return { once, capitan: M.capitanDe(once.lineas.flat()), banquillo: M.banquilloDe(once.lineas, plantilla) || [] };
+  };
   /** lo que añade una liga premium al paso de alinear del plan: « Capitán: X. Banquillo: A (POR), B (DEF).» ('' si no toca) */
   M.premiumAlinTxt = (once, plantilla) => {
     if (!once || !Array.isArray(once.lineas)) return '';
-    const c = M.capitanDe(once.lineas.flat()), b = M.banquilloDe(once.lineas, plantilla) || [];
+    // (solo con los que ya son tuyos: lo mismo que dicen Equipo, la ficha y la IA aunque el plan fiche a alguien)
+    const mio = (j) => j && misJs.some((x) => x.id === j.id);
+    const c = M.capitanDe(once.lineas.flat().filter(mio)), b = M.banquilloDe(once.lineas, (plantilla || []).filter(mio)) || [];
     return `${c ? ` Capitán: ${c.j.nombre}.` : ''}${b.length ? ` Banquillo: ${b.map((x) => `${x.j.nombre} (${POS[x.pos] || ''})`).join(', ')}.` : ''}`;
   };
   /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
@@ -2247,7 +2262,7 @@ export function analizar(D, H, c, extra = {}) {
      (.github/ia/medir-entrenador.mjs): los 20 que siguen dan 2,45 puntos por jornada de media (5 si gana, 2 si empata) y
      valen de 0,68 a 1,33 M; no ocupan sitio en la plantilla. Por eso, sin ninguno, fichar uno compensa (`M.ficharEntrenador`) */
   M.entrenadoresMercado = M.premium.entrenador
-    ? (D.mercado || []).filter((m) => esEnt(m.pid) && (m.tipo === 'manager' || !M.dueno[m.pid]) && !(m.tipo === 'manager' && m.vendedorTeamId === yoTid))
+    ? (D.mercado || []).filter((m) => esEnt(m.pid) && m.tipo !== 'manager' && !M.dueno[m.pid])
       .map((m) => { const j = J(m.pid); return { pid: m.pid, tipo: m.tipo, j, precio: num(j.valor) || num(m.precio), media: num(j.media), pts: M.ppEntrenador(j), miPuja: m.miPuja || null }; })
       .filter((m) => m.j.estado !== 'out_of_league' && m.precio > 0).sort((a, b) => b.media - a.media || b.pts - a.pts)
     : [];
@@ -2255,8 +2270,10 @@ export function analizar(D, H, c, extra = {}) {
    *  puedes pagar con tu saldo; null si ya tienes uno, si no hay o si no te llega */
   M.ficharEntrenador = () => {
     if (!M.premium.entrenador || M.mias.some((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league')) return null;
-    const saldo = num(D.dinero);
-    return M.entrenadoresMercado.find((m) => m.tipo !== 'manager' && !m.miPuja && m.media >= 2 && m.precio * 1.1 <= saldo) || null;
+    // (con una puja ya puesta por uno, no se propone otro; y lo que tienes pujado no está para gastar)
+    if (M.entrenadoresMercado.some((m) => m.miPuja)) return null;
+    const saldo = num(D.dinero) - num(M.misPujas);
+    return M.entrenadoresMercado.find((m) => m.media >= 2 && m.precio * 1.1 <= saldo) || null;
   };
   // lo que le quedaría al que vende: si se queda sin portero, o con menos defensas, medios o delanteros de los que
   // pide la formación gratuita más justa, no podría alinear un once y no te lo va a vender (aunque lo tenga a la venta:

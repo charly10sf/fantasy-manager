@@ -38,11 +38,11 @@ const r = await P.page.evaluate(async () => {
   };
 
   const yo = S.D.yo.teamId;
-  const montar = ({ premium = false, pf = null, sinPf = false, estado = 'ok', jugadores = null, dos = false, oferta = false, sinEnt = false, otroEq = false, soloMedios = false } = {}) => {
+  const montar = ({ premium = false, pf = null, sinPf = false, estado = 'ok', jugadores = null, dos = false, oferta = false, sinEnt = false, otroEq = false, soloMedios = false, entMedia = 2.4, pujaEnt = false } = {}) => {
     const D = JSON.parse(JSON.stringify(S.D));
     const eqId = Object.values(D.maestro).find((j) => j.pos === 2 && j.equipoId).equipoId;
     const ent = (id, nombre, media) => ({ id, pos: 5, nombre, largo: nombre, valor: 900000, estado, equipoId: eqId, media, puntos: Math.round(media * 13), equipo: (D.maestro[Object.keys(D.maestro)[0]] || {}).equipo || '' });
-    D.maestro.ent1 = ent('ent1', 'Míster Uno', 2.4);
+    D.maestro.ent1 = ent('ent1', 'Míster Uno', entMedia);
     if (!sinEnt) D.plantillas[yo] = [...D.plantillas[yo], { pid: 'ent1', ptId: 'pt-ent1', clausula: 1500000, protegidoHasta: 0 }];
     if (dos) { D.maestro.ent2 = { ...ent('ent2', 'Míster Dos', 3.5), estado: 'ok' }; D.plantillas[yo].push({ pid: 'ent2', ptId: 'pt-ent2', clausula: 1500000, protegidoHasta: 0 }); }
     // (parte B) el segundo entrenador, de menos media pero en otro equipo: se le pone más abajo el mejor partido
@@ -65,7 +65,11 @@ const r = await P.page.evaluate(async () => {
     // un entrenador libre en el mercado de la liga (salen en todas las ligas): la app no lo mezcla con los jugadores
     const libre0 = (D.mercado || []).find((m) => m.tipo !== 'manager');
     D.maestro.ent3 = ent('ent3', 'Míster Libre', 3);
-    if (libre0) D.mercado.push({ ...libre0, id: 'm-ent3', pid: 'ent3', miPuja: null });
+    if (libre0) D.mercado.push({ ...libre0, id: 'm-ent3', pid: 'ent3', miPuja: pujaEnt ? 1000000 : null });
+    // (parte B) y otro libre más, para ver que con una puja puesta por uno no se propone fichar otro
+    D.maestro.ent4 = ent('ent4', 'Míster Otro', 2.9);
+    if (libre0) D.mercado.push({ ...libre0, id: 'm-ent4', pid: 'ent4', miPuja: null });
+    if (pujaEnt || sinEnt) D.dinero = Math.max(Number(D.dinero) || 0, 60e6);
     // una oferta de LaLiga un 8 % por encima de su valor por el entrenador, puesto en venta
     if (oferta) {
       const fin = Date.now() + 20 * 3600e3, v = D.maestro.ent1.valor;
@@ -97,9 +101,11 @@ const r = await P.page.evaluate(async () => {
       enMercado: (M.mercado || []).some((m) => (D.maestro[m.pid] || {}).pos === 5),
       // --- parte B ---
       b: (() => {
-        const once = M.once.lineas.flat(), ids = new Set(once.map((j) => String(j.id)));
+        const pro = M.premiumPropuesta();
+        const once = (pro ? pro.once : M.once).lineas.flat(), ids = new Set(once.map((j) => String(j.id)));
         const pps = once.map((j) => M.ppEsperado(j)), tope = Math.max(...pps);
-        const cap = M.once.capitan, ban = M.once.banquillo;
+        const cap = pro ? pro.capitan : null, ban = pro && M.premium.banquillo ? pro.banquillo : null;
+        const seVende = (id) => (M.decision(id) || {}).accion === 'vender';
         const mias = new Set(M.mias.map((x) => String(x.pid)));
         const pm = Vi.premiumOnce(M, M.once.lineas, null);
         if (otroEq) { M.ppEntrenador = (j) => (j.id === 'ent2' ? 4 : 1); }
@@ -111,7 +117,8 @@ const r = await P.page.evaluate(async () => {
           ban: ban ? ban.map((x) => ({ pos: x.pos, jpos: x.j.pos, enOnce: ids.has(String(x.j.id)), mio: mias.has(String(x.j.id)), estado: x.j.estado })) : null,
           alin: M.premiumAlinTxt(M.once, M.mias.map((x) => x.j)),
           entMerc: (M.entrenadoresMercado || []).map((m) => m.pid), fichar: (() => { const f = M.ficharEntrenador(); return f ? f.pid : null; })(), dosPartido: dosPartido ? dosPartido.id : null,
-          pm: pm ? { cap: !!pm.cap, ban: pm.ban.length, ent: pm.ent ? pm.ent.j.id : null, fichar: pm.fichar ? pm.fichar.pid : null } : null,
+          seVenden: [cap && cap.j.id, ...(ban || []).map((x) => x.j.id)].filter(Boolean).filter(seVende).length, sale460: M.formacionApagada('4-6-0'), sale433: M.formacionApagada([4, 3, 3]),
+          pm: pm ? { cap: pm.cap ? pm.cap.j.id : null, capIgual: !!(pm.cap && cap && pm.cap.j.id === cap.j.id), ban: pm.ban.length, banDentro: pm.ban.every((x) => (ban || []).some((y) => y.j.id === x.j.id)), ent: pm.ent ? pm.ent.j.id : null, fichar: pm.fichar ? pm.fichar.pid : null } : null,
           ctxCap: /LA APP PROPONE DE CAPITÁN A /.test(ctx), ctxBan: /LA APP PROPONE EN EL BANQUILLO: /.test(ctx), ctxFichar: /NO TIENE ENTRENADOR y fichar uno compensa/.test(ctx), ctxCapNombre: cap ? ctx.includes(`CAPITÁN A ${cap.j.nombre}`) : null,
         };
       })(),
@@ -133,6 +140,8 @@ const r = await P.page.evaluate(async () => {
   out.todo = montar({ premium: true, pf: TODO });
   out.todoDos = montar({ premium: true, pf: TODO, otroEq: true });
   out.todoSinEnt = montar({ premium: true, pf: TODO, sinEnt: true });
+  out.todoPujaEnt = montar({ premium: true, pf: TODO, sinEnt: true, pujaEnt: true });
+  out.todoEnt30 = montar({ premium: true, pf: TODO, entMedia: 30 });
   out.medios = montar({ premium: true, pf: TODO, soloMedios: true });
   out.mediosSinForm = montar({ premium: true, pf: { ...TODO, formations: false }, soloMedios: true });
   out.f460 = { lee: V.formaOnce({ formation: { tacticalFormation: [4, 6, 0] } }), mala: V.formaOnce({ formation: { tacticalFormation: [0, 6, 4] } }), suma: V.formaOnce({ formation: { tacticalFormation: [4, 4, 1] } }) };
@@ -219,12 +228,14 @@ const t = r.todo.b, e = r.est.b, p = r.pre.b;
 // (9)
 ok(PREM.every((f) => t.formas.includes(f)) && t.formas.length === t.gratis + 5 && t.vale460 === true, `(9) premium con las formaciones encendidas: las de siempre y las 5 de más (${t.formas.length})`);
 ok(!PREM.some((f) => p.formas.includes(f)) && p.vale460 === false && p.vale433 === true && !PREM.some((f) => e.formas.includes(f)) && e.vale460 === false, '(9) con esa función apagada (o en estándar): solo las de siempre, y un 4-6-0 no vale');
+ok(p.sale460 === true && p.sale433 === false && t.sale460 === false && e.sale460 === false && r.viejo.b.sale460 === false, '(9) «con ella no puntúas» solo sale con una de premium puesta, en una liga premium ya leída que las tiene apagadas');
 ok(t.valeRara === null, '(9) una formación que no se entiende: ni vale ni deja de valer');
 ok(r.f460.lee && r.f460.lee.join() === '4,6,0' && r.f460.mala === null && r.f460.suma === null, '(9) la formación 4-6-0 de LaLiga se lee (y una sin defensas o que no suma 10, no)');
 ok(r.medios.b.onceForma === '4-6-0' && r.medios.b.onceHuecos === 0 && r.medios.b.onceLineas.join() === '1,4,6,0', `(9) sin delanteros y con medios de sobra, el mejor once es un 4-6-0 entero (${r.medios.b.onceForma}, ${r.medios.b.onceHuecos} huecos)`);
 ok(r.mediosSinForm.b.onceForma !== '4-6-0' && r.mediosSinForm.b.onceHuecos > 0, `(9) la misma plantilla con las formaciones apagadas: una de las de siempre, con huecos (${r.mediosSinForm.b.onceForma}, ${r.mediosSinForm.b.onceHuecos})`);
 // (10)
 ok(t.cap && t.cap.esTope && t.cap.enOnce && t.cap.pos >= 1 && t.cap.pos <= 4 && t.cap.pp > 0, '(10) el capitán: el de más puntos esperados del once, y nunca el entrenador');
+ok(r.todoEnt30.b.cap && r.todoEnt30.b.cap.pos <= 4, '(10) ni con un entrenador de 30 puntos de media: el capitán es un jugador');
 ok(e.cap === null && p.cap === null && r.preSinEnt.b.cap !== null && r.preSinEnt.b.ban === null, '(10) sin la función encendida no hay capitán (ni en estándar); con solo el capitán encendido, capitán sí y banquillo no');
 ok(/ Capitán: /.test(t.alin) && e.alin === '' && p.alin === '', `(10) el paso de alinear del plan lo lleva solo en premium (${t.alin.trim().slice(0, 90)})`);
 // (11)
@@ -237,11 +248,13 @@ ok(/ Banquillo: /.test(t.alin), '(11) el paso de alinear del plan lleva el banqu
 ok(r.todoDos.b.dosPartido === 'ent2', `(12) con dos entrenadores se alinea el de mejor partido, aunque lleve menos puntos por jornada (${r.todoDos.b.dosPartido})`);
 ok(t.entMerc.includes('ent3') && e.entMerc.length === 0 && r.preSinEnt.b.entMerc.length === 0, '(12) los entrenadores del mercado van aparte, solo en una liga premium que los tiene');
 ok(t.fichar === null && r.todoSinEnt.b.fichar === 'ent3' && e.fichar === null, `(12) con entrenador no se propone fichar otro; sin ninguno, el libre del mercado (${r.todoSinEnt.b.fichar})`);
+ok(r.todoPujaEnt.b.fichar === null && r.todoPujaEnt.b.entMerc.includes('ent3'), '(12) con una puja ya puesta por un entrenador no se propone fichar otro');
 ok(r.todoSinEnt.vendePlan === false && !r.todoSinEnt.errPlan && r.todoSinEnt.enMercado === false, '(12) y el plan sigue saliendo, con los entrenadores fuera del mercado de jugadores');
 // (13)
 ok(t.ctxCap && t.ctxBan && t.ctxCapNombre === true && !e.ctxCap && !e.ctxBan && !p.ctxCap, '(13) la IA lee el capitán y el banquillo que propone la app, solo con esas funciones encendidas');
 ok(r.todoSinEnt.b.ctxFichar && !t.ctxFichar && !e.ctxFichar, '(13) y, sin entrenador, que fichar uno compensa y cuál');
-ok(t.pm && t.pm.cap && t.pm.ban === t.ban.length && e.pm === null, '(13) Equipo pinta el mismo capitán y el mismo banquillo que el motor, y nada en estándar');
+ok(t.pm && t.pm.capIgual && t.pm.banDentro && t.pm.ban <= t.ban.length && e.pm === null, '(13) Equipo pinta el mismo capitán y suplentes de la misma propuesta que la ficha y la IA, y nada en estándar');
+ok(t.seVenden === 0 && r.medios.b.seVenden === 0, '(13) a quien la app te manda vender no se le propone de capitán ni de suplente');
 ok(r.todoSinEnt.b.pm && r.todoSinEnt.b.pm.fichar === 'ent3' && r.todoDos.b.pm && r.todoDos.b.pm.ent, '(13) Equipo: sin entrenador, el que conviene fichar; con dos, cuál alinear');
 ok(r.todo.ctxLargo - r.est.ctxLargo < 1650, `(13) lo que crece lo que lee la IA con todo encendido: ${r.todo.ctxLargo - r.est.ctxLargo} caracteres (0 en estándar; solo con entrenador, ${r.pre.ctxLargo - r.est.ctxLargo})`);
 

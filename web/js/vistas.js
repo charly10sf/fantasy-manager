@@ -894,8 +894,8 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
   // (26 nov, parte B) en una liga premium, el capitán y el banquillo que propone la app para el once que recomienda (el
   // suyo, el de la IA o el tuyo con sus cambios): una sola cuenta, la del motor. Con la jornada en juego ya no se cambian
-  const pm = V ? null : premiumOnce(M, rec ? rec.lineas : lineas, mio ? (LS.get(K('mi-once'), null) || {}).pr : null);
-  const capId = pm && pm.cap ? String(pm.cap.j.id) : null;
+  const pm = V || M.enJuego ? null : premiumOnce(M, rec ? rec.lineas : lineas, mio ? (LS.get(K('mi-once'), null) || {}).pr : null);
+  const capId = mio ? (pm && pm.capTuyo ? String(pm.capTuyo.id) : null) : pm && pm.cap ? String(pm.cap.j.id) : null;
   const filas = [3, 2, 1, 0].map((i) => {
     const n = i === 0 ? 1 : f[i - 1] || 0;
     // (una línea vacía, como la delantera de un 4-6-0, no se pinta)
@@ -923,7 +923,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // (26 nov, parte B) la formación que tienes puesta en LaLiga ya no vale en tu liga (una de las de premium con esa función
   // apagada por el administrador): con ella no se puntúa (ayuda de LaLiga, «Ligas premium»)
   const fPuesta = real ? V.forma : mio ? (LS.get(K('mi-once'), null) || {}).forma : null;
-  if (Array.isArray(fPuesta) && M.formacionVale(fPuesta) === false) notas.push(`<b class="rojo">Tu ${esc(fPuesta.join('-'))} no vale ahora en tu liga y con él no puntúas: pon otra formación en LaLiga Fantasy.</b>`);
+  if (Array.isArray(fPuesta) && M.formacionApagada(fPuesta)) notas.push(`<b class="rojo">Tu ${esc(fPuesta.join('-'))} no vale ahora en tu liga y con él no puntúas${real ? '' : ': pon otra formación en LaLiga Fantasy'}.</b>`);
   if ((real || mio) && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
   // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
@@ -944,22 +944,28 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     `M.banquilloDe`) y, si la app ha reconocido lo que tienes puesto en LaLiga (`pr`, de `alineacionDe`), si ya coincide */
 export function premiumOnce(M, lineas, pr = null) {
   if (!M.premium || !(M.premium.capitan || M.premium.banquillo || M.premium.entrenador) || !Array.isArray(lineas)) return null;
-  const cap = M.capitanDe(lineas.flat()), ban = M.banquilloDe(lineas, M.mias.map((x) => x.j)) || [];
-  // el entrenador: con dos, el de mejor partido (el que alinea `mejorOnce`); sin ninguno, el que conviene fichar
+  // la propuesta del motor (sin los que la app te manda vender), la misma de la ficha y la IA; del banquillo no sale
+  // quien sigue en el campo que se ve
+  const pp = M.premiumPropuesta ? M.premiumPropuesta() : null;
+  const enEste = new Set(lineas.flat().filter(Boolean).map((j) => String(j.id)));
+  const cap = pp ? pp.capitan : null, ban = pp ? pp.banquillo.filter((b) => !enEste.has(String(b.j.id))) : [];
+  // el entrenador: con dos, el que alinea `mejorOnce`; sin ninguno, el que conviene fichar
   const mios = M.premium.entrenador ? M.mias.filter((x) => x.j.pos === 5 && x.j.estado !== 'out_of_league').map((x) => x.j) : [];
-  const ent = mios.length >= 2 && M.once && M.once.entrenador ? { j: M.once.entrenador, otro: mios.find((j) => j.id !== M.once.entrenador.id) || null } : null;
+  const elegido = mios.length >= 2 && M.once && M.once.entrenador ? M.once.entrenador : null;
+  const otro = elegido ? mios.find((j) => j.id !== elegido.id) || null : null;
+  const ent = elegido ? { j: elegido, otro: otro && M.mejorPartidoEnt(elegido, otro) ? otro : null } : null;
   const fichar = M.ficharEntrenador ? M.ficharEntrenador() : null;
   if (!cap && !ban.length && !ent && !fichar) return null;
-  const tuyo = (id) => (id != null && M.mias.some((x) => String(x.pid) === String(id)) ? M.J(id) : null);
-  return { cap, ban, ent, fichar, capTuyo: pr && pr.cap ? tuyo(pr.cap) : null, banTuyo: (p) => (pr && pr.banq && pr.banq[p] ? tuyo(pr.banq[p]) : null), entTuyo: pr && pr.ent ? tuyo(pr.ent) : null, partido: (j) => { const p = M.proximoPartido(j.equipoId); return p ? `${p.casa ? 'en casa contra' : 'fuera, contra'} ${p.rival}` : ''; } };
+  const tuyo = (id, pos) => { const j = id != null && M.mias.some((x) => String(x.pid) === String(id)) ? M.J(id) : null; return j && (pos == null ? j.pos < 5 : j.pos === pos) ? j : null; };
+  return { cap, ban, ent, fichar, capTuyo: pr && pr.cap ? tuyo(pr.cap) : null, banTuyo: (p) => (pr && pr.banq && pr.banq[p] ? tuyo(pr.banq[p], p) : null), entTuyo: pr && pr.ent ? tuyo(pr.ent, 5) : null, partido: (j) => { const p = M.proximoPartido(j.equipoId); return p ? `${p.casa ? 'en casa contra' : 'fuera, contra'} ${p.rival}` : ''; } };
 }
 function premiumOnceHTML(pm) {
   const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
   const fila = (j, sub, tuyo) => `<div class="co-f pm-f"><button class="co-j" data-j="${esc(j.id)}">${ava(j, 'm')}<span><b>${esc(j.nombre)}</b><i>${sub}</i></span></button>${tuyo ? (String(tuyo.id) === String(j.id) ? `<span class="pm-ya">${icono('ok')} puesto</span>` : `<span class="pm-ya no">ahora, ${esc(tuyo.nombre)}</span>`) : ''}</div>`;
   let h = '';
-  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados, el que más de tu once`, pm.capTuyo);
+  if (pm.cap) h += fila(pm.cap.j, `capitán · ~${d1(pm.cap.pp)} pts esperados`, pm.capTuyo);
   for (const b of pm.ban) h += fila(b.j, `banquillo ${POS_CORTA[b.pos]}${b.cubre ? ` · por si no juega ${esc(b.cubre.nombre)}` : ''}`, pm.banTuyo(b.pos));
-  if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el de mejor partido')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
+  if (pm.ent) h += fila(pm.ent.j, `entrenador · ${esc(pm.partido(pm.ent.j) || 'el que más lleva por jornada')}${pm.ent.otro ? `, mejor partido que ${esc(pm.ent.otro.nombre)}` : ''}`, pm.entTuyo);
   if (pm.fichar) h += fila(pm.fichar.j, `no tienes entrenador · libre en el mercado, vale ${eur(pm.fichar.precio)} · ${d1(pm.fichar.media)} pts por jornada`, null);
   const partes = [pm.cap && 'capitán', pm.ban.length && 'banquillo', (pm.ent || pm.fichar) && 'entrenador'].filter(Boolean);
   const titulo = partes.length > 1 ? `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}` : partes[0] || '';
@@ -1277,7 +1283,7 @@ function eqPlantillaHTML(S, op) {
     ],
     maxPills: 2, conMini: true, op: op(x.pid),
   });
-  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.mias.filter((x) => x.j.pos !== 5).length} jugadores${M.mias.some((x) => x.j.pos === 5) ? ` y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : ''}</span></div>
+  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.premium && M.premium.entrenador && M.mias.some((x) => x.j.pos === 5) ? `${M.mias.filter((x) => x.j.pos !== 5).length} jugadores y ${M.mias.filter((x) => x.j.pos === 5).length} entr.` : `${M.mias.length} jugadores`}</span></div>
     <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
