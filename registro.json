@@ -3180,9 +3180,7 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/aubameyang-lo-es-todo-para-el-depor-f202611-n/": 1795428299000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261123/1004254402/alternativas-flick-suplir-lamine-sabah.html": 1795428401000,
-   "SPORT|136743099": 1795426988000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/valencia-cf-papo-gordon-cantera-real-madrid-barcelona-bayern-milan-136743333.html": 1795430489000,
-   "SPORT|136739543": 1795427080000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/23/abde-lookman-nico-williams-los-futbolistas-que-mejor-encajan-en-el-psg-para-sustituir-a-los-lesionados-doue-y-kvaratskhelia-cadena-ser/": 1795430496000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/23/premio-javier-aguirre-plantilla-valencia-descanso-libres-entrenamiento-136741918.html": 1795430944000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261123/1004254422/ironica-reivindicacion-cholo-entrenador-ganado-laliga.html": 1795430488000,
@@ -9729,13 +9727,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 6587,
+   "ok": 6588,
    "fallos": 0,
-   "ejecuciones": 5366,
+   "ejecuciones": 5367,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-26T09:41:20.370Z"
+   "ultima": "2026-11-26T09:46:13.103Z"
   }
  },
  "ptsDirecto": {},
@@ -9752,15 +9750,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:41:28.600Z"
+   "ultimaBien": "2026-11-26T09:46:24.920Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:41:28.600Z"
+   "ultimaBien": "2026-11-26T09:46:24.920Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:41:28.600Z"
+   "ultimaBien": "2026-11-26T09:46:24.920Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -9768,11 +9766,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:41:28.600Z"
+   "ultimaBien": "2026-11-26T09:46:24.920Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-26T09:41:28.600Z"
+   "ultimaBien": "2026-11-26T09:46:24.920Z"
   }
  },
  "avisos": [
