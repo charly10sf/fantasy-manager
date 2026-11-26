@@ -411,7 +411,7 @@ export function colaCandado(clave, rid = null) {
 export function colaCandadoLarga(clave, rid = null) {
   if (!topConAnuncio()) return '';
   if (clave === 'quienPaga') return ` Ábrela ${horasQuien()} h con un anuncio.`;
-  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo hasta que empiece la jornada con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
+  if (clave === 'parteRivales') { const a = anunciosPorVez(clave); return ` Ábrelo 24 horas con ${a === 1 ? 'un anuncio' : `${a} anuncios`}.`; }
   if (!POR_JORNADA.includes(clave)) return ' Ábrela hasta medianoche con un anuncio.';
   const q = usosQuedan(clave), n = usosPorJornada(), a = anunciosPorVez(clave);
   if (!q) return ` Ya la has usado las ${n} veces de esta jornada.`;

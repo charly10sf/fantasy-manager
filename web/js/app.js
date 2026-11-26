@@ -1397,7 +1397,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const deRival = rid != null && POR_JORNADA.includes(clave);
       const hasta = abiertaHasta(clave, rid);
-      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto hasta que empiece la jornada' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
+      tostada(deRival ? `Su dinero, abierto ${minutosRival()} minutos${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : clave === 'parteRivales' ? (visto ? 'El parte, abierto 24 horas' : 'No había anuncio ahora: abierto gratis media hora') : hasta ? `Abierta hasta las ${horaDe(hasta)}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -5168,7 +5168,9 @@ function novInvRecordar() {
 function avisoMio(a) {
   if (!a || !Array.isArray(a.lista)) return a;
   const pc = document.documentElement.classList.contains('escritorio') && !enApp;
-  const prem = !!(S.D && S.D.liga && S.D.liga.premium === true);
+  // (Carlos, 26 nov, 23:08: «a quien no lo tenga, que no le salga nada relacionado») solo si LaLiga dice que la liga es
+  // premium y está leída con esta versión (`pf`): con lo guardado de antes no se da por premium
+  const prem = !!(S.D && S.D.liga && S.D.liga.premium === true && S.D.liga.pf);
   return { ...a, lista: a.lista.filter((c) => !c.solo || (c.solo === 'pc' && pc) || (c.solo === 'premium' && prem)) };
 }
 function novInvRecordado() {

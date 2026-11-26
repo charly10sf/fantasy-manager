@@ -7,7 +7,7 @@
 //    dice que no puede pujar; «en rojo» solo con uno suyo que te sirve y que puedes pagar; «sin blindajes» solo si hay algo
 //    suyo que clausularías hoy; lo que el plan descarta no sale nunca; «le sobra» está apagada (lo medido: no se cumple);
 //  - las llaves: lo del dinero no se ve con el dinero de ese rival cerrado, y el candado del dinero sale igual haya o no algo
-//    detrás; con el parte cerrado no se ve nada; se abre con 2 anuncios y hasta que empieza la jornada;
+//    detrás; con el parte cerrado no se ve nada; se abre con 2 anuncios y 24 horas;
 //  - la pantalla: Rivales → Parte, cerrada (ni una palabra de dentro) y abierta.
 // Sin IA ni red. Uso: node .github/ia/caso-parte.mjs   (PW_MODULO como en prueba-web.mjs). Sale con 1 si algo falla.
 import { pagina, cerrar } from './banco.mjs';
@@ -150,14 +150,14 @@ try {
       out.sobra = { hecho: hechos(A).sobran[1].length === 1, apagada: !todas.some((l) => l.tipo === 'sobra'), planManda: [...pids(todas), ...pids(conSobra)].every((p) => (A.M.decisionFichar(p) || {}).accion !== 'no') };
     }
 
-    /* ---- la llave del parte: 2 anuncios, hasta que empieza la jornada ---- */
+    /* ---- la llave del parte: 2 anuncios, 24 horas (0.8.5) ---- */
     {
       U.LS.del('top-parte');
       Li.fijarJornada(jo.n, jo.ini);
       const antes = Li.bloqueada('parteRivales'), f0 = Li.faltanAnuncios('parteRivales');
       const a1 = Li.anuncioTopVisto('parteRivales'), medio = Li.bloqueada('parteRivales'), f1 = Li.faltanAnuncios('parteRivales');
       const a2 = Li.anuncioTopVisto('parteRivales'), despues = Li.bloqueada('parteRivales');
-      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Li.abiertaHasta('parteRivales') === jo.ini, cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= jo.ini, dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
+      out.llave = { antes, f0, a1, medio, f1, a2, despues, hasta: Math.abs(Li.abiertaHasta('parteRivales') - Date.now() - 24 * 3600e3) < 5000, cierre: Li.proximoCierreTop() > 0 && Li.proximoCierreTop() <= Date.now() + 24 * 3600e3 + 5000, dineroSigue: Li.bloqueada('dineroRivales', tid), pagaSigue: Li.bloqueada('quienPaga') };
       const raro = (v) => { U.LS.set('top-parte', v); return Li.bloqueada('parteRivales') && Li.faltanAnuncios('parteRivales') >= 1 && Li.faltanAnuncios('parteRivales') <= 2 && Li.abiertaHasta('parteRivales') === 0; };
       out.llave.raros = raro({ hasta: 'Infinity', n: -5, t: Date.now() }) && raro({ hasta: 1e300, n: 99, t: Date.now() }) && raro({ hasta: Date.now() + 40 * DIA }) && raro('x') && raro([1]);
       U.LS.set('top-parte', { hasta: 0, n: 1, t: Date.now() }); Li.abrirTopGratis('parteRivales');
@@ -230,15 +230,15 @@ try {
   ok(r.llave.antes && r.llave.f0 === 2, 'el parte está cerrado y pide 2 anuncios');
   ok(r.llave.a1 === false && r.llave.medio && r.llave.f1 === 1, 'con el primer anuncio sigue cerrado y falta 1');
   ok(r.llave.a2 === true && !r.llave.despues, 'con el segundo se abre');
-  ok(r.llave.hasta && r.llave.cierre, 'abierto hasta que empieza la jornada');
+  ok(r.llave.hasta && r.llave.cierre, 'abierto 24 horas');
   ok(r.llave.dineroSigue && r.llave.pagaSigue, 'abrir el parte no abre el dinero de los rivales ni quién paga');
   ok(r.llave.raros, 'con valores raros en lo guardado sigue cerrado y pide 1 o 2 anuncios');
   ok(r.llave.gratis, 'si no hay anuncio se abre media hora');
   ok(r.llave.cerradaOtraVez, 'sin lo guardado, cerrado otra vez');
-  ok(r.pantalla.pestaña, 'Rivales tiene la pestaña Parte');
+  ok(r.pantalla.pestaña, 'Rivales tiene el botón dorado del Parte');
   ok(r.pantalla.fuera, 'antes de los 4 días dice cuándo sale, sin candado y sin nada de dentro');
   ok(r.pantalla.cerrada, 'cerrado: el candado y ni una palabra de lo de dentro');
-  ok(r.pantalla.sinNumero, 'cerrado, la pestaña no lleva número');
+  ok(r.pantalla.sinNumero, 'cerrado, el botón no lleva número');
   ok(r.pantalla.igualCerrado, 'con ese rival en positivo, ni «En negativo» ni el candado del dinero al pie');
   ok(r.pantalla.abiertaSinRojo, 'abierto con el dinero cerrado: «En negativo» sin cifra y el candado del dinero al pie');
   ok(r.pantalla.conDinero, 'con el dinero de ese rival abierto: «En negativo» con su cifra y la oferta por lo que vende');

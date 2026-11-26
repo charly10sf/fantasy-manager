@@ -20,7 +20,7 @@ import { apodosDe, apodosLiga, listaApodos } from './apodos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { cfgHoras, horasPlan, horasDefecto, proximoTurno } from './planes-hora.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, importantesPara, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien, inicioJornada } from './limite.js';
+import { estadoLimite, novedadesPara, importantesPara, bloqueada, otrasLigasCfg, topConAnuncio, planesCfg, preguntasCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos, rivalAbiertoHasta, minutosRival, horasQuien } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { motivoPeligro } from './motor.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
@@ -876,12 +876,11 @@ function anuncioTopHTML(A, S) {
     return h;
   }
   const faltan = faltanAnuncios(A.clave, rid), parteT = A.clave === 'parteRivales';
-  const hastaJ = parteT && inicioJornada() ? ` (${cuando(inicioJornada())})` : '';
   if (rivales && faltan >= a) h += `<p>Mira el dinero de <b>${esc(nom(rid))}</b> durante ${min} minutos viendo ${ads}. Puedes hacerlo ${veces(n)} por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
   else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y verás el dinero de ${esc(nom(rid))} ${min} minutos.</p>`;
   else if (A.clave === 'quienPaga') h += `<p>Mira un anuncio corto y se abre <b>${horasQuien()} horas</b>.</p>`;
-  else if (parteT && faltan >= a) h += `<p>Mira ${ads}${a > 1 ? ',' : ''} y se abre <b>hasta que empiece la jornada</b>${hastaJ}.</p>`;
-  else if (parteT) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y se abre hasta que empiece la jornada${hastaJ}.</p>`;
+  else if (parteT && faltan >= a) h += `<p>Mira ${ads}${a > 1 ? ',' : ''} y se abre <b>24 horas</b>.</p>`;
+  else if (parteT) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y se abre 24 horas.</p>`;
   else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   const txt = A.cargando ? 'Cargando el anuncio…' : (rivales || parteT) && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';

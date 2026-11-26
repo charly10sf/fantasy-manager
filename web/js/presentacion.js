@@ -192,27 +192,18 @@ const ICO_NOV = {
 };
 const tagNov = (c) => (c.tag ? ` <em class="nvt-tag">${esc(c.tag)}</em>` : '');
 const icoNov = (c) => (c.ico && ICO_NOV[c.ico] ? `<i class="nvt-ico ni-${esc(c.ico)}" aria-hidden="true">${ICO_NOV[c.ico]}</i>` : '');
-/** la lista de la tarjeta de novedades en sus tres diseños: «lista» (una fila por cosa), «rejilla» (la primera a lo ancho
-    y las demás en cuadros) y «destacada» (la primera grande, con su dibujo, y las demás en una línea cada una) */
+/** la lista de la tarjeta de novedades (Carlos, 26 nov, 23:07, de tres diseños eligió la lista): una fila por cosa, con su
+    icono, el título (y su etiqueta, `tag`) y una línea */
 function listaNov(a) {
-  const L = a.lista;
-  if (a.estilo === 'rejilla') {
-    return `<div class="nvt-rej">${L.map((c, i) => `<div class="nr-c${i === 0 ? ' ancha' : ''}">${icoNov(c)}<b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div>`).join('')}</div>`;
-  }
-  if (a.estilo === 'destacada') {
-    const [p, ...r] = L;
-    return `<div class="nvt-des"><svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg><b>${esc(p.t)}${tagNov(p)}</b>${p.x ? `<span>${esc(p.x)}</span>` : ''}</div>
-      ${r.length ? `<div class="nvt-mas-t">Y además</div><ul class="nvt-cor">${r.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>` : ''}`;
-  }
-  return `<ul class="nvt-lista">${L.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
+  return `<ul class="nvt-lista">${a.lista.map((c) => `<li>${icoNov(c)}<div><b>${esc(c.t)}${tagNov(c)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}</div></li>`).join('')}</ul>`;
 }
 export function tarjetaNovedad(a, { alIr = () => {}, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
   const capa = document.createElement('div');
   capa.className = 'nvt-capa';
   capa.innerHTML = `<div class="nvt-velo" data-nvt="no"></div>
-    <div class="nvt${a.lista && a.lista.length ? ` nvt-novs nvt-e-${esc(a.estilo || 'lista')}` : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
-      ${a.estilo === 'destacada' ? '' : `<svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>`}
+    <div class="nvt${a.lista && a.lista.length ? ' nvt-novs' : ''}" role="dialog" aria-modal="true" aria-labelledby="nvt-t">
+      <svg class="dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[a.d] || DIBUJOS.ia}</svg>
       <span class="nvt-eti">${esc(a.eti || 'Nuevo')}</span>
       <h2 id="nvt-t">${esc(a.t)}</h2>
       ${a.x ? `<p>${esc(a.x)}</p>` : ''}

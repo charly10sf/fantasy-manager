@@ -3520,7 +3520,7 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt-no { display: block; margin: 6px auto 0; padding: 10px 16px; min-height: 40px; background: none; border: 0; color: var(--texto-2); font: 600 14px 'Barlow'; }
 
 /* (26 nov, Carlos: «un pequeño pop-up de las novedades»; y «el icono de la Liga Premium… morado», «varios diseños») la
-   tarjeta de novedades: un icono por cosa (el de premium, morado) y tres diseños (lista, rejilla y destacada) */
+   tarjeta de novedades: un icono por cosa (el de premium, morado) y la lista (de los tres diseños, el que eligió Carlos) */
 .nvt.nvt-novs { padding: 18px 18px 12px; }
 .nvt-novs .dib { width: 84px; height: 63px; margin-bottom: 2px; }
 .nvt-novs h2 { font-size: 22px; }
@@ -3531,27 +3531,10 @@ button.bloq.dorado, div.bloq-g.dorado { position: relative; overflow: hidden; bo
 .nvt-ico.ni-ordenador { background: rgba(94, 178, 255, 0.14); color: #5eb2ff; }
 .nvt-novs b { display: block; font: 700 14.5px/1.25 'Barlow'; color: var(--texto); }
 .nvt-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px; vertical-align: 2px; background: rgba(255, 197, 71, 0.14); color: #ffc547; font: 700 10.5px/1.5 'Barlow'; font-style: normal; letter-spacing: .6px; text-transform: uppercase; white-space: nowrap; }
-.nvt-novs li span, .nvt-novs .nr-c span, .nvt-des span { display: block; font: 400 13.5px/1.3 'Barlow'; color: var(--texto-2); }
-/* A, lista */
-.nvt-lista, .nvt-cor { list-style: none; margin: 12px 0 14px; padding: 0; text-align: left; }
-.nvt-lista li, .nvt-cor li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
-.nvt-lista li:first-child, .nvt-cor li:first-child { border-top: 0; }
-/* B, rejilla: la primera a lo ancho y las demás en cuadros */
-.nvt-rej { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 14px; text-align: left; }
-.nr-c { padding: 10px 11px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); }
-.nr-c .nvt-ico { margin-bottom: 7px; }
-.nr-c.ancha { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; background: rgba(255, 79, 163, 0.07); border-color: rgba(255, 79, 163, 0.25); }
-.nr-c.ancha .nvt-ico { grid-row: span 2; margin: 0; }
-.nvt-rej > .nr-c:last-child:nth-child(even) { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; }
-.nvt-rej > .nr-c:last-child:nth-child(even) .nvt-ico { grid-row: span 2; margin: 0; }
-/* C, destacada: la primera grande con su dibujo y las demás en una línea */
-.nvt-des { margin: 12px 0 4px; padding: 12px 12px 14px; border-radius: 16px; background: rgba(255, 79, 163, 0.07); border: 1px solid rgba(255, 79, 163, 0.25); }
-.nvt-des .dib { width: 96px; height: 72px; margin: 0 auto 4px; }
-.nvt-des b { font-size: 17px; }
-.nvt-mas-t { margin: 12px 0 0; font: 700 11px 'Barlow'; letter-spacing: 1.4px; text-transform: uppercase; color: var(--apagado, #8b8494); text-align: left; }
-.nvt-cor { margin-top: 4px; }
-.nvt-cor .nvt-ico { width: 28px; height: 28px; border-radius: 9px; }
-.nvt-cor .nvt-ico svg { width: 16px; height: 16px; }
+.nvt-novs li span { display: block; font: 400 13.5px/1.3 'Barlow'; color: var(--texto-2); }
+.nvt-lista { list-style: none; margin: 12px 0 14px; padding: 0; text-align: left; }
+.nvt-lista li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.nvt-lista li:first-child { border-top: 0; }
 @keyframes nvt-velo { from { opacity: 0; } }
 @keyframes nvt-sube { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
 @media (prefers-reduced-motion: reduce) { .nvt, .nvt-velo { animation: none; } }
@@ -4091,3 +4074,14 @@ button.parte-l { cursor: pointer; }
 .parte-c.oro { box-shadow: inset 0 0 0 1px var(--oro); } .parte-c.azul { box-shadow: inset 0 0 0 1px var(--azul); } .parte-c:not(.oro):not(.azul) { box-shadow: inset 0 0 0 1px var(--rojo-l); }
 .parte-pie { display: flex; gap: 10px; align-items: center; margin: 18px 0 0; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.35; }
 .parte-pie .pill { flex: none; }
+
+/* (0.8.5; Carlos, 26 nov, 23:13) el parte de los rivales: un botón dorado a la derecha del título de Rivales, como función top */
+.riv-tit .parte-top { margin-left: auto; }
+.parte-top { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px 6px 10px; border-radius: 99px; border: 1px solid rgba(255, 197, 71, 0.45); background: linear-gradient(135deg, rgba(255, 197, 71, 0.16), rgba(255, 197, 71, 0.06)); color: #ffc547; font: 700 15px 'Barlow'; letter-spacing: 0.2px; text-transform: none; cursor: pointer; }
+.parte-top .ic { width: 16px; height: 16px; }
+.parte-top small { padding: 1px 6px; border-radius: 99px; background: #ffc547; color: #1a1420; font: 800 10px/1.5 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; }
+.parte-top .tab-n { margin-left: 2px; }
+.parte-top.activo { background: #ffc547; color: #1a1420; border-color: #ffc547; }
+.parte-top.activo small { background: #1a1420; color: #ffc547; }
+.parte-top .tab-n { background: #ffc547; color: #1a1420; }
+.parte-top.activo .tab-n { background: #1a1420; color: #ffc547; }

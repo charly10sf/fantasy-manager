@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.8.4s';
+export const VERSION = '0.8.5';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -36,7 +36,7 @@ export const NOVEDADES = [
     // (15:02, Carlos: «sí, el máximo son 24») El tope de la plantilla es 24, no 25, en toda la app: `TOPE_PLANTILLA` de
     // util.js, del que lo leen el motor (`M.TOPE`), quién puja (`ctx.tope`), el plan, decide.js, el parón, la IA y el chat.
     // (26 nov, el encargo 3) EL PARTE DE LOS RIVALES: Rivales → Parte (parte.js, `parteHTML` en vistas.js; función top
-    // «parteRivales», 2 anuncios hasta que empieza la jornada). Lo medido y las reglas, en claude/nota-parte.md del proyecto.
+    // «parteRivales», 2 anuncios y 24 h). Lo medido y las reglas, en claude/nota-parte.md del proyecto.
     // (26 nov, tarde) LA PARTE B: que ayude a jugarla, medido antes con J4-J13 (claude/nota-premium-parte-b.md del proyecto;
     // .github/ia/medir-premium.js y medir-entrenador.mjs). Las 5 formaciones de más en el mejor once (`M.formaciones`,
     // `M.formacionVale`; `formaOnce` lee un 4-6-0); el capitán y el banquillo que propone el motor (`M.capitanDe`,
@@ -60,10 +60,9 @@ export const NOVEDADES = [
     // la presentación entera. Una vez por dispositivo (LS «avisos-nov»), con la liga cargada y sin pisar la bienvenida, el
     // tutorial ni la del iPhone. `lista`: una línea por cosa; `solo` la enseña solo donde se nota ('pc': el ordenador ancho;
     // 'premium': una liga premium). Lo de otras ligas (apagado), las dos ligas y los avisos terminados no se cuentan
-    v: '0.8.4s', f: '2026-11-26', h: '14:27', t: 'El parte de los rivales', todos: true,
+    v: '0.8.5', f: '2026-11-26', h: '23:59', t: 'El parte de los rivales', todos: true,
     aviso: {
       d: 'pizarra', eti: 'Novedades', t: 'Lo nuevo de la app',
-      estilo: 'lista',
       lista: [
         { ico: 'parte', t: 'Parte de los rivales', tag: 'Función top', x: 'Las debilidades de cada rival: quién va en negativo, a quién le falta un puesto y quién no puede blindar. De momento, solo en Android.' },
         { ico: 'premium', t: 'Ligas premium', x: 'Capitán, banquillo, entrenador y las formaciones nuevas.', solo: 'premium' },
@@ -85,7 +84,7 @@ export const NOVEDADES = [
       // pintado al lado del nombre en los pasos de fichar del plan y en «Antes de nada» (vistas.js); prueba: caso-origen.mjs
       { tipo: 'mejora', d: 'plan', t: 'De dónde sale cada fichaje', x: 'En el plan, cada jugador que te recomienda fichar dice al lado de dónde sale: «Mercado» si es libre, «En venta» si lo vende otro mánager o «Cláusula» si hay que pagársela a un rival, con el nombre de su equipo.' },
       { tipo: 'arreglo', d: 'candado', t: 'La plantilla, de 24 como mucho', x: 'La app contaba que cabían 25 jugadores y en LaLiga Fantasy son 24. Ahora, con 24, el plan, el mercado y Pregunta ya saben que no puedes pujar ni clausular hasta que vendas a uno, y quién puja por un libre descarta a los rivales que están llenos.' },
-      { tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre con dos anuncios hasta que empieza la jornada.' },
+      { tipo: 'nuevo', d: 'pizarra', t: 'El parte de los rivales', x: 'En Rivales hay una pestaña nueva, Parte, los cuatro días antes de cada jornada: de cada rival, solo lo que te cambia los planes. A quién le falta un puesto y puede pujar contra ti, con su campo dibujado; quién está en negativo y tiene que vender; y quién ha gastado sus blindajes y no puede proteger a uno que te interesa. Se abre 24 horas con dos anuncios.' },
       // (26 nov, 20:41-21:55, Carlos: «hay mucho espacio a la derecha») Equipo como Hoy y Clubes a todo lo ancho (vistas.js, clubes.js, app.css)
       { para: 'web', tipo: 'mejora', d: 'portatil', t: 'Más ancha en el ordenador', x: 'En el ordenador, Equipo pone tu once a lo ancho, como Hoy, y Clubes enseña tus clubes arriba (se pliegan) y la clasificación entera, con casa, fuera y más datos.' },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', menor: true, t: 'Lo que se paga y se puja en todas las ligas', x: 'La app empieza a juntar, sin nombres ni ligas, lo que se paga por cada jugador, cuántas pujas lleva cada libre y qué cláusulas se pagan en todas las ligas que la usan. Todavía no se ve nada: hacen falta unas semanas de datos y comprobar que acierta. Después, la ficha de un libre del mercado dirá lo que se ha pagado por él en otras ligas.', ir: { v: 'mercado' } },

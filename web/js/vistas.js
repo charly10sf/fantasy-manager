@@ -1455,13 +1455,15 @@ function parteHTML(S, PV) {
 export function rivales(S) {
   const { M } = S;
   const seg = S.seg.rivales || 'clasif';
-  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
+  // (0.8.5; Carlos, 26 nov, 23:13: «que salga a la derecha de Rivales, en dorado… el parte como función top», y no entre las
+  // pestañas) el parte va en un botón dorado al lado del título; su número, solo con la llave abierta
+  const PV = parteVisto(S);
+  const nParte = PV.abierto ? PV.rivales.length : 0;
+  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo riv-tit">Rivales<button type="button" class="parte-top${seg === 'parte' ? ' activo' : ''}" data-seg="rivales:parte" aria-pressed="${seg === 'parte'}">${icono(PV.abierto ? 'corona' : 'candado')}<span>Parte</span><small>Top</small>${nParte ? `<span class="tab-n oro">${nParte}</span>` : ''}</button></h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
   // (24 nov, Carlos: «la clasificación por jornadas debería ir en Rivales, delante de Cláusulas») antes estaba en Directo
-  // (26 nov) el parte de los rivales: su número, solo con la llave abierta (cerrado no dice ni cuántos)
-  const PV = parteVisto(S);
-  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['parte', 'Parte', PV.abierto ? PV.rivales.length : 0, 'verde']]);
+  h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['jornadas', 'Por jornada'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : '']]);
 
   if (seg === 'jornadas') h += porJornadaHTML(S);
   else if (seg === 'parte') h += parteHTML(S, PV);

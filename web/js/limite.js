@@ -111,11 +111,12 @@ let jornadaB = 0, inicioB = 0;
 export function fijarJornada(n, ini = 0) { if (Number(n) > 0) jornadaB = Number(n); inicioB = Number(ini) > 0 ? Number(ini) : 0; }
 /* el parte de los rivales (26 nov): { hasta, n, t } (n: los anuncios ya vistos de los que pide; t: cuándo se vio el último,
    para que uno visto hace días no cuente). Se abre hasta que empieza la próxima jornada (sin saberla, 24 h) */
-const PARTE_MAX = 5 * 24 * 3600e3; // el parte sale desde 4 días antes de la jornada: abierto más que eso no puede estar
+// (0.8.5; Carlos, 26 nov, 23:07: «2 anuncios para que se desbloquee durante 24h») abierto 24 h; más que eso, lo guardado no vale
+const PARTE_H = 24 * 3600e3, PARTE_MAX = PARTE_H + 60e3;
 const parteG = () => { const g = LS.get('top-parte', null); return g && typeof g === 'object' ? g : {}; };
 const parteHasta = () => { const h = Number(parteG().hasta), t = Date.now(); return Number.isFinite(h) && h > t && h - t <= PARTE_MAX ? h : 0; };
 const parteVistos = () => { const g = parteG(), n = Math.floor(Number(g.n)); return Number(g.t) > 0 && Date.now() - g.t < 12 * 3600e3 && n > 0 ? Math.min(n, cfgTop().parteAnuncios - 1) : 0; };
-const abrirParte = (ms = 0) => { const t = Date.now(); LS.set('top-parte', { hasta: ms ? t + ms : inicioB > t ? Math.min(inicioB, t + PARTE_MAX) : t + 24 * 3600e3, n: ms ? parteVistos() : 0, t: ms ? Number(parteG().t) || t : t }); };
+const abrirParte = (ms = 0) => { const t = Date.now(); LS.set('top-parte', { hasta: ms ? t + ms : t + PARTE_H, n: ms ? parteVistos() : 0, t: ms ? Number(parteG().t) || t : t }); };
 /** cuándo empieza la próxima jornada (0 si no se sabe): hasta entonces queda abierto el parte */
 export const inicioJornada = () => (inicioB > Date.now() ? inicioB : 0);
 
