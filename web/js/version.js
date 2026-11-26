@@ -28,7 +28,7 @@ export const NOVEDADES = [
     // ayudar a afinar aún más el dinero que tiene cada rival… que lo pongan»; a quien ya vio la de antes no le sale otra vez)
     // los textos de apuntar el dinero de un rival, sin «aprende a calcular mejor»: la novedad, la ventana al guardar, el pie de
     // la ficha y la línea de la 0.8.4o (dinero-dicho.js y version.js)
-    v: '0.8.4p', f: '2026-11-26', h: '', t: 'Retoques de textos',
+    v: '0.8.4p', f: '2026-11-26', h: '03:53', t: 'Retoques de textos',
     cosas: [
       { para: 'dueño', tipo: 'arreglo', d: 'dinero', menor: true, t: 'El dinero apuntado, más claro', x: 'La ventana de la novedad ya no sale: lo cuenta un aviso corto en Rivales, que se quita con su ×. A quien ya vio la ventana no le sale. Los textos dicen que la app ya calcula el dinero exacto a falta de las recompensas diarias y que lo apuntado lo afina.' },
     ],
